@@ -115,7 +115,7 @@ const UserMenus = [
       component: <span />
     },
     name: 'Edit',
-    accessibleBy: ['admin', 'client', 'resident']
+    accessibleBy: ['admin', 'client', 'resident', 'prospective_client', 'custodian', 'contractor', 'security_guard']
   },
   {
     routeProps: {
@@ -123,7 +123,7 @@ const UserMenus = [
       component: <span />
     },
     name: 'Print ID',
-    accessibleBy: ['admin', 'client', 'resident']
+    accessibleBy: ['admin', 'client', 'resident', 'prospective_client', 'custodian', 'contractor', 'security_guard']
   },
   {
     routeProps: {
@@ -131,7 +131,7 @@ const UserMenus = [
       component: <span />
     },
     name: 'Message Support',
-    accessibleBy: ['admin', 'client', 'resident']
+    accessibleBy: ['admin', 'client', 'resident', 'prospective_client', 'custodian', 'contractor', 'security_guard']
   },
   {
     routeProps: {

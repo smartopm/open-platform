@@ -14,7 +14,7 @@ const routes = [
       path: '/user/:id',
       component: UserShow
     },
-    accessibleBy: ['admin', 'client', 'resident', 'security_guard', 'custodian',],
+    accessibleBy: ['admin', 'client', 'resident', 'security_guard', 'custodian', 'prospective_client', 'contractor',],
     name: 'user_info'
   },
   {
@@ -30,7 +30,7 @@ const routes = [
       path: '/user/:id/edit',
       component: UserEdit
     },
-    accessibleBy: ['admin', 'client', 'resident'],
+    accessibleBy: ['admin', 'client', 'resident', 'prospective_client', 'custodian', 'contractor', 'security_guard'],
     name: 'user_edit'
   },
   {
@@ -38,7 +38,7 @@ const routes = [
       path: '/print/:id/',
       component: IdPrintPage
     },
-    accessibleBy: ['admin', 'client', 'resident'],
+    accessibleBy: ['admin', 'client', 'resident', 'prospective_client', 'custodian', 'contractor', 'security_guard'],
     name: 'print_id'
   },
   {
@@ -46,7 +46,7 @@ const routes = [
       path: '/message/:id/',
       component: UserMessagePage
     },
-    accessibleBy: ['admin', 'client', 'resident'],
+    accessibleBy: ['admin', 'client', 'resident', 'prospective_client', 'custodian', 'contractor', 'security_guard'],
     name: 'user_message'
   },
   {
