@@ -14,5 +14,6 @@ module Types
     field :start_date, GraphQL::Types::ISO8601DateTime, null: true
     field :created_at, GraphQL::Types::ISO8601DateTime, null: false
     field :updated_at, GraphQL::Types::ISO8601DateTime, null: false
+    field :payment_day, Integer, null: false
   end
 end

@@ -18,12 +18,22 @@ RSpec.describe PaymentPlan, type: :model do
     it { is_expected.to have_db_column(:monthly_amount).of_type(:decimal) }
     it { is_expected.to have_db_column(:created_at).of_type(:datetime) }
     it { is_expected.to have_db_column(:updated_at).of_type(:datetime) }
+    it { is_expected.to have_db_column(:payment_day).of_type(:integer) }
   end
 
   describe 'associations' do
     it { is_expected.to have_many(:invoices) }
     it { is_expected.to belong_to(:user) }
     it { is_expected.to belong_to(:land_parcel) }
+  end
+
+  describe 'validations' do
+    it do
+      is_expected.to validate_numericality_of(:payment_day)
+        .only_integer
+        .is_greater_than(0)
+        .is_less_than_or_equal_to(28)
+    end
   end
 
   describe 'callbacks' do
