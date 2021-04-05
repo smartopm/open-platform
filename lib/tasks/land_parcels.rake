@@ -79,7 +79,10 @@ namespace :land_parcels do
         end
 
         comm_plot_no, govt_plot_no = parcel_number.split(/\(|\)/i).map(&:strip)
-        parcel_with_comm_no, parcel_with_govt_no = user.regular_and_govt_plots(parcel_number)
+        parcel_with_comm_no, parcel_with_govt_no = user.regular_and_govt_plots(
+          comm_plot_no,
+          govt_plot_no,
+        )
         if parcel_with_comm_no.present? && parcel_with_govt_no.present?
           errors[row_num + 1] = "Error: Both Govt plot number and #{community_name} plot number \
                               are found. Kindly confirm why we have the two, and resolve manually."
