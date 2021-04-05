@@ -152,17 +152,11 @@ namespace :imports do
         date          = row['DATE']&.strip&.presence
         amount        = row['AMOUNT PAID']&.strip&.presence
         ext_ref_id    = row['NRC']&.strip&.presence
-        record_number = row['REC. NUMBER']&.strip&.presence
 
         puts "processing row: #{row_num + 1}, NRC: #{ext_ref_id}"
 
         if [email, phone_number].compact.empty?
           errors[row_num + 1] = 'Error: No means of identification'
-          next
-        end
-
-        if record_number.nil?
-          errors[row_num + 1] = 'Error: REC. NUMBER is missing.'
           next
         end
 
@@ -234,7 +228,11 @@ namespace :imports do
         if existing_parcel.present?
           payment_plan = existing_parcel.payment_plan
           if payment_plan.present?
-            if community.wallet_transactions.find_by(transaction_number: record_number).present?
+            if community.wallet_transactions.find_by(
+              created_at: date,
+              payment_plan_id: payment_plan.id,
+              user_id: user.id,
+            ).present?
               next
             end
 
@@ -255,7 +253,6 @@ namespace :imports do
               originally_created_at: current_user.current_time_in_timezone,
               payment_plan_id: payment_plan.id,
               amount: amount,
-              transaction_number: record_number,
             )
 
             unless transaction.persisted?
