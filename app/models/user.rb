@@ -525,6 +525,16 @@ class User < ApplicationRecord
     Time.now.in_time_zone('Africa/Lusaka')
   end
 
+  def regular_and_govt_plots(plot_number)
+    # Some plot numbers come in the form 227(A97), containing both
+    # govt number and that from the community, we need to extract both
+    comm_plot_no, govt_plot_no = plot_number.split(/\(|\)/i).map(&:strip)
+    [
+      land_parcels.find_by(parcel_number: comm_plot_no),
+      land_parcels.find_by(parcel_number: govt_plot_no),
+    ]
+  end
+
   private
 
   def phone_number_valid?

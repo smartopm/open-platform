@@ -72,17 +72,14 @@ namespace :imports do
           next
         end
 
-        comm_plot_no, govt_plot_no = parcel_number.split(/\(|\)/i).map(&:strip)
-        existing_parcel_with_comm_no = community.land_parcels.find_by(parcel_number: comm_plot_no)
-        existing_parcel_with_govt_no = community.land_parcels.find_by(parcel_number: govt_plot_no)
-
-        if existing_parcel_with_comm_no.present? && existing_parcel_with_govt_no.present?
+        parcel_with_comm_no, parcel_with_govt_no = user.regular_and_govt_plots(parcel_number)
+        if parcel_with_comm_no.present? && parcel_with_govt_no.present?
           errors[row_num + 1] = "Error: Both Govt plot number and #{community_name} plot number \
                               are found. Kindly confirm why we have the two, and resolve manually."
           next
         end
 
-        existing_parcel = existing_parcel_with_comm_no || existing_parcel_with_govt_no
+        existing_parcel = parcel_with_comm_no || parcel_with_govt_no
         if existing_parcel.present?
           parcel_accounts = existing_parcel.accounts
           if parcel_accounts.find_by(user_id: user.id).present?
@@ -122,7 +119,7 @@ namespace :imports do
                   Kindly confirm if they both own the plot and resolve manually"
           end
         else
-          errors[row_num + 1] = 'Error: Property not found.'
+          errors[row_num + 1] = 'Error: Property not found for this user.'
         end
       end
 
@@ -214,17 +211,14 @@ namespace :imports do
           next
         end
 
-        comm_plot_no, govt_plot_no = parcel_number.split(/\(|\)/i).map(&:strip)
-        existing_parcel_with_comm_no = community.land_parcels.find_by(parcel_number: comm_plot_no)
-        existing_parcel_with_govt_no = community.land_parcels.find_by(parcel_number: govt_plot_no)
-
-        if existing_parcel_with_comm_no.present? && existing_parcel_with_govt_no.present?
+        parcel_with_comm_no, parcel_with_govt_no = user.regular_and_govt_plots(parcel_number)
+        if parcel_with_comm_no.present? && parcel_with_govt_no.present?
           errors[row_num + 1] = "Error: Both Govt plot number and #{community_name} plot number \
                               are found. Kindly confirm why we have the two, and resolve manually."
           next
         end
 
-        existing_parcel = existing_parcel_with_comm_no || existing_parcel_with_govt_no
+        existing_parcel = parcel_with_comm_no || parcel_with_govt_no
         if existing_parcel.present?
           payment_plan = existing_parcel.payment_plan
           if payment_plan.present?
@@ -267,7 +261,7 @@ namespace :imports do
             errors[row_num + 1] = 'Error: Payment plan not available.'
           end
         else
-          errors[row_num + 1] = 'Error: Property not found.'
+          errors[row_num + 1] = 'Error: Property not found for this user.'
         end
       end
 
