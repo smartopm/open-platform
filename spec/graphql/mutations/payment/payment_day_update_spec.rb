@@ -104,5 +104,22 @@ RSpec.describe Mutations::Payment::PaymentDayUpdate do
           .to eql 'Payment day must be less than or equal to 28'
       end
     end
+
+    context 'When the payment day is not a number' do
+
+      before { variables[:paymentDay] = nil }
+
+      it 'updates payment day of payment plan' do
+        result = DoubleGdpSchema.execute(
+          payment_day_mutation,
+          variables: variables,
+          context: context,
+        ).as_json
+
+        expect(result.dig('errors', 0, 'message'))
+          .to eql 'Payment day is not a number'
+      end
+    end
+
   end
 end
