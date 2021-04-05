@@ -9,6 +9,7 @@ class WalletTransaction < ApplicationRecord
   belongs_to :community
   belongs_to :depositor, class_name: 'User', optional: true
   belongs_to :email_template, optional: true
+  belongs_to :payment_plan, optional: true
   has_one :payment_invoice, dependent: :destroy
 
   has_paper_trail

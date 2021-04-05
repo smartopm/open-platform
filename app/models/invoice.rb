@@ -75,7 +75,7 @@ class Invoice < ApplicationRecord
   # rubocop:enable Metrics/MethodLength
 
   def settle_amount
-    pending_amount = amount - land_parcel.payment_plan&.plot_balance.to_i
+    pending_amount = amount - land_parcel.payment_plan&.plot_balance.to_f
     return amount - pending_amount if pending_amount.positive?
 
     paid!

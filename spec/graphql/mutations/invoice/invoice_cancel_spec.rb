@@ -36,7 +36,7 @@ RSpec.describe Mutations::Invoice::InvoiceCancel do
       }
       expect(user.wallet.pending_balance).to eql 200.0
       expect(user.wallet_transactions.count).to eql 1
-      expect(invoice.land_parcel.payment_plan.plot_balance).to eql 0
+      expect(invoice.land_parcel.payment_plan.plot_balance).to eql 0.0
       result = DoubleGdpSchema.execute(query, variables: variables,
                                               context: {
                                                 current_user: admin,
@@ -47,7 +47,7 @@ RSpec.describe Mutations::Invoice::InvoiceCancel do
         result.dig('data', 'invoiceCancel', 'invoice', 'status'),
       ).to eql 'cancelled'
       expect(user.wallet.pending_balance).to eql 0.0
-      expect(invoice.land_parcel.payment_plan.reload.plot_balance).to eql 100
+      expect(invoice.land_parcel.payment_plan.reload.plot_balance).to eql 100.0
       expect(user.wallet_transactions.count).to eql 2
       expect(result['errors']).to be_nil
     end

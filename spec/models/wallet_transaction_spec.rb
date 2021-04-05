@@ -24,6 +24,7 @@ RSpec.describe WalletTransaction, type: :model do
   describe 'associations' do
     it { is_expected.to belong_to(:community) }
     it { is_expected.to belong_to(:user) }
+    it { is_expected.to belong_to(:payment_plan).optional }
     it { is_expected.to belong_to(:depositor).optional }
     it { is_expected.to have_one(:payment_invoice) }
   end
@@ -31,5 +32,6 @@ RSpec.describe WalletTransaction, type: :model do
   describe 'callbacks' do
     it { is_expected.to callback(:revert_payments).after(:update) }
     it { is_expected.to callback(:update_wallet_balance).before(:update) }
+    it { is_expected.to callback(:set_precision).before(:save) }
   end
 end

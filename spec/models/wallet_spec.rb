@@ -25,6 +25,10 @@ RSpec.describe Wallet, type: :model do
     it { is_expected.to belong_to(:user) }
   end
 
+  describe 'callbacks' do
+    it { is_expected.to callback(:set_precision).before(:save) }
+  end
+
   describe 'methods' do
     it 'should add balance to the wallet' do
       expect(user.wallet.balance).to eql 0.0
@@ -44,7 +48,7 @@ RSpec.describe Wallet, type: :model do
       user.payment_plans.update(plot_balance: invoice.amount)
       user.wallet.update_balance(invoice.amount)
       expect(user.wallet.balance).to eql 0.0
-      expect(invoice.land_parcel.payment_plan.reload.plot_balance).to eql 0
+      expect(invoice.land_parcel.payment_plan.reload.plot_balance).to eql 0.0
       expect(invoice.reload.status).to eql 'paid'
     end
   end

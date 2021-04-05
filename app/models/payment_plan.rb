@@ -7,6 +7,7 @@ class PaymentPlan < ApplicationRecord
   belongs_to :user
   belongs_to :land_parcel
   has_many :invoices, dependent: :nullify
+  has_many :wallet_transactions, dependent: :nullify
 
   after_create :generate_monthly_invoices_for_the_year
 
