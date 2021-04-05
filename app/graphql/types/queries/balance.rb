@@ -6,7 +6,7 @@ module Types::Queries::Balance
 
   included do
     # Get balance
-    field :user_balance, Integer, null: true do
+    field :user_balance, Float, null: true do
       description 'Get a balance by user id'
       argument :user_id, GraphQL::Types::ID, required: true
     end

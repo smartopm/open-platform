@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_04_02_081948) do
+ActiveRecord::Schema.define(version: 2021_04_05_054429) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -491,7 +491,7 @@ ActiveRecord::Schema.define(version: 2021_04_02_081948) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.boolean "generated", default: false
-    t.integer "plot_balance", default: 0
+    t.float "plot_balance", default: 0.0
     t.decimal "total_amount", precision: 11, scale: 2
     t.integer "duration_in_month"
     t.float "pending_balance", default: 0.0
