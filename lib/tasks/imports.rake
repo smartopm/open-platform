@@ -139,19 +139,20 @@ namespace :imports do
     errors        = {}
     warnings      = {}
     community     = Community.find_by(name: args.community_name)
-    current_user  = community.users.find_by(email: 'mutale@doublegdp.com')
+    current_user  = community.users.find_by(email: 'nurudeen@doublegdp.com')
 
     row_num = 0
     ActiveRecord::Base.transaction do
       CSV.parse(URI.open(args.csv_path).read, headers: true) do |row|
         row_num += 1
-        email = row['EMAIL']&.strip&.presence
+        email         = row['EMAIL']&.strip&.presence
         parcel_number = row['PLOT NUMBER']&.strip
         payment_mode  = row['PAYMENT MODE']&.strip&.presence
         phone_number  = row['PHONE NUMBER']&.strip&.presence
         date          = row['DATE']&.strip&.presence
         amount        = row['AMOUNT PAID']&.strip&.presence
         ext_ref_id    = row['NRC']&.strip&.presence
+        record_number = row['REC. NUMBER']&.strip&.presence
 
         puts "processing row: #{row_num + 1}, NRC: #{ext_ref_id}"
 
@@ -159,6 +160,18 @@ namespace :imports do
           errors[row_num + 1] = 'Error: No means of identification'
           next
         end
+
+        if record_number.nil?
+          errors[row_num + 1] = 'Error: REC. NUMBER is missing.'
+          next
+        end
+
+        if amount.nil?
+          errors[row_num + 1] = 'Error: Amount is missing.'
+          next
+        end
+
+        amount = BigDecimal(amount.gsub(",", "_"))
 
         user = community.users.find_by(ext_ref_id: ext_ref_id)
 
@@ -219,38 +232,40 @@ namespace :imports do
 
         existing_parcel = existing_parcel_with_comm_no || existing_parcel_with_govt_no
         if existing_parcel.present?
+          payment_plan = existing_parcel.payment_plan
+          if payment_plan.present?
+            next if community.wallet_transactions.find_by(transaction_number: record_number).present?
 
-          modes = {
-            'CASH' => 'cash',
-            'POS' => 'pos',
-            'EFT' => 'bank_transfer/eft',
-            'MTN Mobile Money' => 'mobile_money',
-          }
-          # Is there a way to check for duplicate transactions
-          # so we don't process dulicate transactions if the same doc
-          # is imported multiple time???
-          transaction = user.wallet_transactions.create(
-            source: modes[payment_mode],
-            land_parcel_id: existing_parcel,
-            created_at: date,
-            status: 'settled', # is this status correct?
-            destination: 'wallet', # is this correct?
-            community_id: community.id,
-            depositor_id: current_user.id,
-            originally_created_at: current_user.current_time_in_timezone,
-            payment_plan_id: land_parcel.payment_plan&.id,
-            amount: amount,
-          )
+            modes = {
+              'CASH' => 'cash',
+              'POS' => 'pos',
+              'EFT' => 'bank_transfer/eft',
+              'MTN Mobile Money' => 'mobile_money',
+            }
 
-          unless transaction.persisted?
-            errors[row_num + 1] = transaction.errors.full_messages
-            next
-          end
+            transaction = user.wallet_transactions.create(
+              source: modes[payment_mode],
+              created_at: date,
+              status: 'settled',
+              destination: 'wallet',
+              community_id: community.id,
+              depositor_id: current_user.id,
+              originally_created_at: current_user.current_time_in_timezone,
+              payment_plan_id: payment_plan.id,
+              amount: amount,
+              transaction_number: record_number
+            )
 
-          existing_parcel.payment_plan&.update_plot_balance(amount)
-          if transaction.settled?
+            unless transaction.persisted?
+              errors[row_num + 1] = transaction.errors.full_messages
+              next
+            end
+
+            payment_plan.update_plot_balance(amount)
             transaction.update(current_wallet_balance: user.wallet.balance + amount)
             user.wallet.update_balance(amount)
+          else
+            errors[row_num + 1] = 'Error: Payment plan not available.'
           end
         else
           errors[row_num + 1] = 'Error: Property not found.'
