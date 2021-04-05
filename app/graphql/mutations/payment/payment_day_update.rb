@@ -19,7 +19,7 @@ module Mutations
 
         # error messages if payment day is not updated.
         raise GraphQL::ExecutionError, payment_plan.errors.full_messages&.join(', ')
-      rescue ActiveRecord::RecordNotFound => e
+      rescue ActiveRecord::RecordNotFound
         # error if user or payment plan not found.
         raise GraphQL::ExecutionError, 'Record not found'
       end

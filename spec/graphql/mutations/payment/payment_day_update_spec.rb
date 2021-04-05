@@ -90,7 +90,6 @@ RSpec.describe Mutations::Payment::PaymentDayUpdate do
     end
 
     context 'When the payment day is other than 1-28' do
-
       before { variables[:paymentDay] = 29 }
 
       it 'updates payment day of payment plan' do
@@ -106,7 +105,6 @@ RSpec.describe Mutations::Payment::PaymentDayUpdate do
     end
 
     context 'When the payment day is not a number' do
-
       before { variables[:paymentDay] = nil }
 
       it 'updates payment day of payment plan' do
@@ -120,6 +118,5 @@ RSpec.describe Mutations::Payment::PaymentDayUpdate do
           .to eql 'Payment day is not a number'
       end
     end
-
   end
 end
