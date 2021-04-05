@@ -139,7 +139,7 @@ namespace :imports do
     errors        = {}
     warnings      = {}
     community     = Community.find_by(name: args.community_name)
-    current_user  = community.users.find_by(email: 'nurudeen@doublegdp.com')
+    current_user  = community.users.find_by(email: 'mutale@doublegdp.com')
 
     row_num = 0
     ActiveRecord::Base.transaction do
