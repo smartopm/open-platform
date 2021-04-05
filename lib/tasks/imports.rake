@@ -145,7 +145,7 @@ namespace :imports do
     ActiveRecord::Base.transaction do
       CSV.parse(URI.open(args.csv_path).read, headers: true) do |row|
         row_num += 1
-        email         = row['EMAIL']&.strip&.presence
+        email = row['EMAIL']&.strip&.presence
         parcel_number = row['PLOT NUMBER']&.strip
         payment_mode  = row['PAYMENT MODE']&.strip&.presence
         phone_number  = row['PHONE NUMBER']&.strip&.presence
@@ -171,7 +171,7 @@ namespace :imports do
           next
         end
 
-        amount = BigDecimal(amount.gsub(",", "_"))
+        amount = BigDecimal(amount.gsub(',', '_'))
 
         user = community.users.find_by(ext_ref_id: ext_ref_id)
 
@@ -234,7 +234,9 @@ namespace :imports do
         if existing_parcel.present?
           payment_plan = existing_parcel.payment_plan
           if payment_plan.present?
-            next if community.wallet_transactions.find_by(transaction_number: record_number).present?
+            if community.wallet_transactions.find_by(transaction_number: record_number).present?
+              next
+            end
 
             modes = {
               'CASH' => 'cash',
@@ -253,7 +255,7 @@ namespace :imports do
               originally_created_at: current_user.current_time_in_timezone,
               payment_plan_id: payment_plan.id,
               amount: amount,
-              transaction_number: record_number
+              transaction_number: record_number,
             )
 
             unless transaction.persisted?
