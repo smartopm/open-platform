@@ -2,9 +2,12 @@
 
 # PaymentPlan
 class PaymentPlan < ApplicationRecord
+  include PrecisionSetable
+
   belongs_to :user
   belongs_to :land_parcel
   has_many :invoices, dependent: :nullify
+  has_many :wallet_transactions, dependent: :nullify
 
   after_create :generate_monthly_invoices_for_the_year
 
@@ -13,8 +16,15 @@ class PaymentPlan < ApplicationRecord
   def update_plot_balance(amount, type = 'credit')
     return if amount.zero?
 
-    balance = type.eql?('credit') ? (plot_balance + amount) : (plot_balance - amount)
-    update(plot_balance: balance)
+    type.eql?('credit') ? update(plot_balance: plot_balance + amount) : debit_plot_balance(amount)
+  end
+
+  def debit_plot_balance(amount)
+    if amount > plot_balance
+      update(plot_balance: 0, pending_balance: pending_balance + amount - plot_balance)
+    else
+      update(plot_balance: plot_balance - amount)
+    end
   end
 
   private

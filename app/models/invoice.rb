@@ -3,6 +3,7 @@
 # Invoice Record
 class Invoice < ApplicationRecord
   include SearchCop
+  include PrecisionSetable
 
   belongs_to :land_parcel
   belongs_to :community
@@ -35,28 +36,26 @@ class Invoice < ApplicationRecord
   end
 
   # rubocop:disable Metrics/AbcSize
+  # rubocop:disable Metrics/MethodLength
   def collect_payment_from_wallet
     ActiveRecord::Base.transaction do
       cur_payment = settle_amount
       user.wallet.update_balance(amount, 'debit')
-      bal = land_parcel.payment_plan&.plot_balance
-      return if bal.nil? || cur_payment.zero?
+      plan = land_parcel.payment_plan
+      if plan.plot_balance.nil? || cur_payment.zero?
+        plan.update(pending_balance: plan.pending_balance + amount)
+        return
+      end
 
-      land_parcel.payment_plan.update(plot_balance: bal - cur_payment)
+      plan.update(
+        plot_balance: plan.plot_balance - cur_payment,
+        pending_balance: plan.pending_balance + amount - cur_payment,
+      )
       user.wallet.make_payment(self, cur_payment)
     end
   end
   # rubocop:enable Metrics/AbcSize
 
-  def settle_amount
-    pending_amount = amount - land_parcel.payment_plan&.plot_balance.to_i
-    return amount - pending_amount if pending_amount.positive?
-
-    paid!
-    amount
-  end
-
-  # rubocop:disable Metrics/MethodLength
   def self.invoice_stat(com)
     Invoice.connection.select_all(
       sanitize_sql("select
@@ -74,6 +73,14 @@ class Invoice < ApplicationRecord
     )
   end
   # rubocop:enable Metrics/MethodLength
+
+  def settle_amount
+    pending_amount = amount - land_parcel.payment_plan&.plot_balance.to_f
+    return amount - pending_amount if pending_amount.positive?
+
+    paid!
+    amount
+  end
 
   def modify_status
     return if pending_amount.positive? || status.eql?('paid')

@@ -75,7 +75,7 @@ export function renderPlan(plan, currencyData) {
   </Grid>,
     Balance:
   <Grid item xs={12} md={2} data-testid="balance">
-    {formatMoney(currencyData, plan.plotBalance)}
+    {plan.pendingBalance > 0 ? `-${formatMoney(currencyData, plan.pendingBalance)}` : formatMoney(currencyData, plan.plotBalance)}
   </Grid>,
     'Start Date':
   <Grid item xs={12} md={2} data-testid="start-date">

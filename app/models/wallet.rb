@@ -2,6 +2,8 @@
 
 # Stores user wallet balance and pending balance
 class Wallet < ApplicationRecord
+  include PrecisionSetable
+
   belongs_to :user
 
   DEFAULT_CURRENCY = 'ZMW'
@@ -38,7 +40,8 @@ class Wallet < ApplicationRecord
   def make_payment(inv, payment_amount)
     transaction = create_transaction(payment_amount)
     payment = Payment.create(amount: payment_amount, payment_type: 'wallet',
-                             user_id: user.id, community_id: user.community_id)
+                             user_id: user.id, community_id: user.community_id,
+                             payment_status: 'settled')
     payment.payment_invoices.create(invoice_id: inv.id, wallet_transaction_id: transaction.id)
     inv.update(pending_amount: inv.pending_amount - payment_amount)
     inv.paid! if inv.pending_amount.zero?
@@ -47,8 +50,11 @@ class Wallet < ApplicationRecord
   # rubocop:disable Style/OptionalBooleanParameter
   def settle_from_plot_balance(inv, payment_amount, prepaid = false)
     update_balance(payment_amount, 'debit') unless prepaid
-    bal = inv.land_parcel.payment_plan&.plot_balance
-    inv.land_parcel.payment_plan.update(plot_balance: bal - payment_amount)
+    plan = inv.land_parcel.payment_plan
+    plan.update(
+      plot_balance: plan.plot_balance - payment_amount,
+      pending_balance: plan.pending_balance - payment_amount,
+    )
     make_payment(inv, payment_amount)
   end
   # rubocop:enable Style/OptionalBooleanParameter

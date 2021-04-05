@@ -19,4 +19,8 @@ RSpec.describe Payment, type: :model do
   describe 'associations' do
     it { is_expected.to have_many(:invoices) }
   end
+
+  describe 'callbacks' do
+    it { is_expected.to callback(:set_precision).before(:save) }
+  end
 end
