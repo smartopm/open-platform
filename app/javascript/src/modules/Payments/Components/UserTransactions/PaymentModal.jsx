@@ -1,3 +1,4 @@
+/* eslint-disable no-nested-ternary */
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useMutation, useQuery } from 'react-apollo';
@@ -41,6 +42,7 @@ export default function PaymentModal({ open, handleModalClose, userId, currencyD
   const [isError, setIsError] = useState(false);
   const [submitting, setIsSubmitting] = useState(false);
   const [isConfirm, setIsConfirm] = useState(false);
+  const [mutationLoading, setMutationStatus] = useState(false);
 
   function confirm(event) {
     event.preventDefault();
@@ -78,6 +80,7 @@ export default function PaymentModal({ open, handleModalClose, userId, currencyD
 
   function handleSubmit(event) {
     event.preventDefault()
+    setMutationStatus(true)
     createPayment({
       variables: {
         userId,
@@ -103,11 +106,13 @@ export default function PaymentModal({ open, handleModalClose, userId, currencyD
         setInputValue(initialValues);
         setPromptOpen(true);
         setIsConfirm(false);
+        setMutationStatus(false)
       })
       .catch(err => {
         setIsConfirm(false);
         setMessageAlert(formatError(err.message));
         setIsSuccessAlert(false);
+        setMutationStatus(false)
         history.push(`/user/${userId}?tab=Payments`);
       });
   }
@@ -147,8 +152,9 @@ export default function PaymentModal({ open, handleModalClose, userId, currencyD
           isConfirm ? 'You are about to make a payment with following details' : 'Make a Payment'
         }
         handleBatchFilter={isConfirm ? handleSubmit : confirm}
-        saveAction={isConfirm ? 'Confirm' : 'Pay'}
+        saveAction={isConfirm && !mutationLoading ? 'Confirm' : mutationLoading ? 'Submitting ...' : 'Pay'}
         cancelAction={isConfirm ? 'Go Back' : 'Cancel'}
+        disableActionBtn={mutationLoading}
       >
         {isConfirm ? (
           <PaymentDetails inputValue={inputValue} currencyData={currencyData} />
