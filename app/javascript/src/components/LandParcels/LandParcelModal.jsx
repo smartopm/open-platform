@@ -164,22 +164,22 @@ export default function LandParcelModal({
   function handleTriggerMergeRoutine(){
     // eslint-disable-next-line react/prop-types
     const existingPlot = landParcels.find(p => p.parcelNumber === parcelNumber)
-    
+
     // skip merge when both properties have accounts or payments
     if(checkPlotAccountsAndPayments({ plot: existingPlot})
     && checkPlotAccountsAndPayments({ plot: landParcel})
     ){
       return cleanUpOnModalClosing()
     }
-    
+
     // skip merge when both plots have geo-coordinates
     if(landParcel.geom && existingPlot.geom){
       return cleanUpOnModalClosing()
     }
- 
+
     const { plotToMerge, plotToRemove } = getPlotsToMerge({ existingPlot, selectedPlot: landParcel })
 
-    setMergeData({ 
+    setMergeData({
       plotToMerge,
       plotToRemove,
       selectedPlot: { ...landParcel },
@@ -306,11 +306,11 @@ export default function LandParcelModal({
   function handleEditCoordinatesOpen(){
     setEditCoordinates(true)
   }
-  
+
   function handleEditCoordinatesClose(){
     setEditCoordinates(false)
   }
-  
+
   function handleSaveMapEdit({ feature }){
     setEditCoordinates(false);
 
@@ -454,9 +454,9 @@ export default function LandParcelModal({
               landParcel?.accounts.map(owner => (
                 <div key={owner.id} className={classes.parcelForm}>
                   <TextField
-                    id={`user-search-${owner.name}`}
+                    id={`user-search-${owner.fullName || owner.user.name}`}
                     focused
-                    value={owner.fullName || ''}
+                    value={owner.fullName || owner.user.name || ''}
                     label="Owner"
                     name="name"
                     className={classes.textField}
