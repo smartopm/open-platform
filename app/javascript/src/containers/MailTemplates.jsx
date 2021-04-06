@@ -1,5 +1,5 @@
 import React from 'react';
-import MailTemplateList from '../components/EmailTemplate/MailTemplateList';
+import MailTemplateList from '../modules/Emails/components/MailTemplateList';
 
 export default function MailTemplates() {
   return <MailTemplateList />;

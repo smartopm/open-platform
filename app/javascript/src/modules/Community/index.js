@@ -7,6 +7,7 @@ import Business from '../Business';
 import Labels from '../Labels';
 import Campaigns from '../Campaigns';
 import PermitRequestForms from '../Forms/PermitRequestForms';
+import Emails from '../Emails';
 
 export default {
   routeProps: {
@@ -26,5 +27,5 @@ export default {
     'resident',
     'visitor'
   ],
-  subMenu: [News, Message, Discussions, Campaigns , Labels, Business, PermitRequestForms]
+  subMenu: [News, Message, Discussions, Campaigns , Labels, Business, PermitRequestForms, Emails]
 };
