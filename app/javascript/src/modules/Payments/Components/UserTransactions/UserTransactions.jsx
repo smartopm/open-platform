@@ -20,6 +20,7 @@ import MessageAlert from "../../../../components/MessageAlert"
 
 const transactionHeader = [
   { title: 'Date Created', col: 1 },
+  { title: 'Parcel Number', col: 1 },
   { title: 'Description', col: 1 },
   { title: 'Amount', col: 1 },
   { title: 'Balance', col: 1 },
@@ -183,6 +184,16 @@ export function renderTransactions(transaction, currencyData, menuData) {
           transaction.__typename === 'WalletTransaction'
             ? dateToString(transaction.createdAt)
             : dateToString(transaction.createdAt)
+        }
+      />
+    ),
+    'Parcel Number': (
+      <GridText
+        col={12}
+        content={
+          transaction.__typename === 'WalletTransaction'
+            ? transaction.paymentPlan?.landParcel?.parcelNumber
+            : transaction.parcelNumber
         }
       />
     ),

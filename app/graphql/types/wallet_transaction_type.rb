@@ -16,6 +16,7 @@ module Types
     field :user, Types::UserType, null: false
     field :depositor, Types::UserType, null: true
     field :community, Types::CommunityType, null: false
+    field :payment_plan, Types::PaymentPlanType, null: true
     field :created_at, GraphQL::Types::ISO8601DateTime, null: false
     field :updated_at, GraphQL::Types::ISO8601DateTime, null: false
   end

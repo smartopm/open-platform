@@ -38,7 +38,7 @@ class Wallet < ApplicationRecord
 
   # rubocop:disable Metrics/AbcSize
   def make_payment(inv, payment_amount)
-    transaction = create_transaction(payment_amount)
+    transaction = create_transaction(payment_amount, inv)
     payment = Payment.create(amount: payment_amount, payment_type: 'wallet',
                              user_id: user.id, community_id: user.community_id,
                              payment_status: 'settled')
@@ -72,7 +72,7 @@ class Wallet < ApplicationRecord
   end
   # rubocop:enable Metrics/AbcSize
 
-  def create_transaction(payment_amount)
+  def create_transaction(payment_amount, inv)
     user.wallet_transactions.create!({
                                        source: 'wallet',
                                        destination: 'invoice',
@@ -81,6 +81,7 @@ class Wallet < ApplicationRecord
                                        user_id: user.id,
                                        current_wallet_balance: balance,
                                        community_id: user.community_id,
+                                       payment_plan: inv.payment_plan,
                                      })
   end
 end

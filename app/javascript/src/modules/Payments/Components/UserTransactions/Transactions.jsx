@@ -59,11 +59,12 @@ export default function TransactionsList({ userId, user, userData }) {
 
   const transactionHeader = [
     { title: 'Deposit/Issue date', col: 4 },
-    { title: 'Description', col: 4 },
-    { title: 'Amount', col: 3 },
-    { title: 'Balance', col: 3 },
-    { title: 'Status', col: 4 },
-    { title: 'Menu', col: 4 }
+    { title: 'Parcel Number', col: 3 },
+    { title: 'Description', col: 3 },
+    { title: 'Amount', col: 2 },
+    { title: 'Balance', col: 2 },
+    { title: 'Status', col: 2 },
+    { title: 'Menu', col: 3 }
   ];
 
   const invoiceHeader = [
