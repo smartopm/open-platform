@@ -18,13 +18,11 @@ import AuthStateProvider, {
 } from '../src/containers/Provider/AuthStateProvider';
 import UserShow from '../src/containers/UserShow';
 import IDCard from '../src/containers/IdCard';
-import IDPrint from '../src/containers/IdPrint';
 import EntryLogs from '../src/containers/AllLogs/EntryLogs';
-import UserLogs from '../src/containers/AllLogs/UserLogs';
 import EventLogs from '../src/containers/AllLogs/EventLogs';
 import Search from '../src/containers/Search';
 import UserEdit from '../src/containers/UserEdit';
-import Loading from '../src/shared/Loading.jsx';
+import Loading from '../src/shared/Loading';
 import '../src/i18n';
 import Map from '../src/containers/Map';
 import LoginScreen from '../src/components/AuthScreens/LoginScreen';
@@ -48,17 +46,15 @@ import { AUTH_TOKEN_KEY } from '../src/utils/apollo';
 import CheckInComplete from '../src/containers/showroom/CheckInComplete';
 import Todo from '../src/containers/Todo';
 import TaskUpdate from '../src/containers/Task/TaskUpdate';
-import OTPFeedbackScreen from '../src/containers/OTPScreen';
 import Feedback from '../src/containers/Activity/Feedback';
 import FeedbackSuccess from '../src/containers/Activity/FeedbackSuccess';
 import AllNotes from '../src/containers/Activity/AllNotes';
 import FeedbackPage from '../src/containers/Activity/AllFeedback';
 import ShowroomLogs from '../src/containers/showroom/ShowroomLogs';
-import UserMessages from '../src/containers/Messages/UserMessagePage';
 import EmployeeLogs from '../src/containers/TimeSheet/EmployeeLogs';
 import ClientRequestForm from '../src/containers/ClientRequestForm';
 import CampaignCreate from '../src/containers/Campaigns/CampaignCreate';
-import Scan from '../src/containers/Scan.jsx';
+import Scan from '../src/containers/Scan';
 import WelcomePage from '../src/components/AuthScreens/WelcomePage';
 import CampaignUpdate from '../src/containers/Campaigns/CampaignUpdate';
 import Posts from '../src/containers/Posts/Posts';
@@ -76,10 +72,9 @@ import FormBuilderPage from '../src/containers/Forms/FormBuilderPage';
 import CommentsPage from '../src/containers/Comments/CommentPage';
 import CommunitySettings from '../src/containers/Settings/CommunitySettings';
 import MailTemplates from '../src/containers/MailTemplates';
-import StatsPage from '../src/containers/User/StatsPage';
-import Main from '../src/Main';
+import { MainMenu } from "../src/modules/Menu";
 import modules from '../src/modules';
-
+import UserRoutes from '../src/modules/Users/UserRoutes';
 
 // The routes defined here are carefully arranged, be mindful when changing them
 
@@ -194,7 +189,7 @@ const App = () => {
                     <Route path="/news/post/:id" exact component={PostPage} />
 
                     <LoggedInOnly>
-                      <Main />
+                      <MainMenu />
                       <div className={classes.appContainer}>
                         <Switch>
                           <Consumer>
@@ -212,7 +207,7 @@ const App = () => {
                                   exact
                                   path="/communication"
                                   render={() => (
-                                    <Redirect to={`/user/${user.id}?tab=Communication`} />
+                                    <Redirect to={`/message/${user.id}`} />
                                   )}
                                 />
                                 <Route
@@ -233,38 +228,26 @@ const App = () => {
                                   render={() => <Redirect to={`/user/${user.id}?tab=Payments`} />}
                                 />
                                 {/* end of redirects */}
-
-                                {modules.map(module => {
+                                {[...modules, ...UserRoutes].map(module => {
                                   if (module.subMenu) {
                                     return module.subMenu.map(sub => (
                                       <Route {...sub.routeProps} key={sub.name} />
-                                    ));
-                                  }
-                                  if (module.accessibleBy.includes(user.userType)) {
-                                    return <Route {...module.routeProps} key={module.name} />;
+                                      ));
+                                    }
+                                    if (module.accessibleBy.includes(user.userType)) {
+                                    return <Route exact {...module.routeProps} key={module.name} />;
                                   }
                                 })}
-                                {/* routes will need to be moved up here so that the not found can catch them all */}
-                                <Route path="/user/:id/edit" component={UserEdit} />
-                                {' '}
-                                <Route path="/user/:id/logs" component={UserLogs} />
-                                {' '}
-                                <Route
-                                  path={['/user/:id/:tm?/:dg?', '/user/:id/:tab?']}
-                                  component={UserShow}
-                                />
                                 <Route exact path="/scan" component={Scan} />
                                 <Route exact path="/search" component={Search} />
                                 <Route path="/id/:id" component={IDCard} />
-                                <Route path="/print/:id" component={IDPrint} />
                                 <Route path="/entry_logs/:userId" component={EntryLogs} />
-                                <Route path="/user" exact component={UserEdit} />
                                 <Route path="/map" component={Map} />
                                 <Route path="/myplot" component={GeoMap} />
                                 <Route path="/mobile_money" component={MobileMoney} />
                                 <Route path="/contact" component={Support} />
                                 <Route path="/settings" component={Notifications} />
-                                <Route path="/otp_sent" component={OTPFeedbackScreen} />
+                                {/* <Route path="/otp_sent" component={OTPFeedbackScreen} /> */}
                                 <Route path="/referral" component={UserEdit} />
                                 <Route path="/myaccount/:id" component={UserShow} />
                                 {/* requests */}
@@ -289,17 +272,8 @@ const App = () => {
                                 {/* activity */}
                                 <Route path="/feedback" component={Feedback} />
                                 <Route path="/feedback_success" component={FeedbackSuccess} />
-                                <Route path="/message/:id" component={UserMessages} />
                                 <Route path="/campaign-create" component={CampaignCreate} />
                                 <Route path="/campaign/:id" component={CampaignUpdate} />
-                                <Route path="/user/:id/edit" component={UserEdit} />
-                                {/* Still admin route */}
-                                <Route path="/user/:id/logs" component={UserLogs} />
-                                {/* Still admin route */}
-                                <Route
-                                  path={['/user/:id/:tm?/:dg?', '/user/:id/:tab?']}
-                                  component={UserShow}
-                                />
                                 <Route path="/timesheet/:id" exact component={EmployeeLogs} />
                                 <Route
                                   path="/client_request_from"
@@ -319,7 +293,6 @@ const App = () => {
                                 <AdminRoutes>
                                   <Switch>
                                     <Route path="/users/import" component={UsersImport} />
-                                    <Route path="/users/stats" component={StatsPage} />
                                     <Route path="/showroom_logs" component={ShowroomLogs} />
                                     <Route path="/notes" component={AllNotes} />
                                     <Route path="/tasks/:taskId" exact component={TaskUpdate} />

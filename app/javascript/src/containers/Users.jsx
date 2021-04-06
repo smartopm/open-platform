@@ -11,7 +11,6 @@ import ErrorPage from '../components/Error'
 import { UsersDetails, LabelsQuery, UsersCount } from '../graphql/queries'
 import {
   CreateNote,
-  SendOneTimePasscode,
   UserLabelCreate,
   CampaignCreateThroughUsers
 } from '../graphql/mutations'
@@ -44,7 +43,6 @@ export default function UsersList() {
   const [modalAction, setModalAction] = useState('')
   const [noteCreate, { loading: mutationLoading }] = useMutation(CreateNote)
   const authState = useContext(AuthStateContext)
-  const [sendOneTimePasscode] = useMutation(SendOneTimePasscode)
   const [labelError, setError] = useState('')
   const [campaignCreate] = useMutation(CampaignCreateThroughUsers)
   const [campaignCreateOption, setCampaignCreateOption] = useState('none')
@@ -563,7 +561,6 @@ export default function UsersList() {
               userData={data}
               handleNoteModal={handleNoteModal}
               currentUserType={authState.user.userType}
-              sendOneTimePasscode={sendOneTimePasscode}
               handleUserSelect={handleUserSelect}
               selectedUsers={selectedUsers}
               offset={offset}

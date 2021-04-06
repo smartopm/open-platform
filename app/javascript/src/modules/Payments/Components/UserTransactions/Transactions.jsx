@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import React, { useContext, useState } from 'react'
+import React, { useContext, useState, useEffect } from 'react'
 import { useQuery } from 'react-apollo'
 import { Typography } from '@material-ui/core'
 import PropTypes from 'prop-types'
@@ -22,7 +22,7 @@ import UserPaymentPlanItem from './UserPaymentPlanItem'
 import PaymentModal from './PaymentModal'
 import ListHeader from '../../../../shared/list/ListHeader';
 
-export default function TransactionsList({ userId, user, userData }) {
+export default function TransactionsList({ userId, user, userData, paymentSubTabValue }) {
   const history = useHistory()
   const path = useParamsQuery()
   const authState = useContext(AuthStateContext)
@@ -84,7 +84,11 @@ export default function TransactionsList({ userId, user, userData }) {
   const currency = currencies[user.community.currency] || ''
   const { locale } = user.community
   const currencyData = { currency, locale }
-  const [tabValue, setTabValue] = useState('Invoices')
+  const [tabValue, setTabValue] = useState(paymentSubTabValue)
+
+  useEffect(() => {
+    setTabValue(paymentSubTabValue)
+  }, [paymentSubTabValue])
 
   function handleModalOpen() {
     history.push(`/user/${userId}?tab=Payments&invoices=new`)
@@ -92,6 +96,7 @@ export default function TransactionsList({ userId, user, userData }) {
   }
 
   function handleChange(_event, newValue) {
+    history.push(`/user/${userId}?tab=Payments&payment_sub_tab=${newValue}`)
     setTabValue(newValue)
   }
 
@@ -230,6 +235,7 @@ TransactionsList.propTypes = {
   userId: PropTypes.string.isRequired,
   // eslint-disable-next-line react/forbid-prop-types
   userData: PropTypes.object,
+  paymentSubTabValue: PropTypes.string.isRequired,
   user: PropTypes.shape({
     id: PropTypes.string,
     userType: PropTypes.string,

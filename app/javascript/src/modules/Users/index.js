@@ -7,6 +7,8 @@ import Users from '../../containers/Users';
 // to: '/user/id:',
 // to: '/messages/:id',
 // to: '/plots/id:'
+// users menu
+  // ==> for admin
 export default {
   routeProps: {
     path: '/users',
