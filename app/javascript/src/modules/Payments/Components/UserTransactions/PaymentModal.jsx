@@ -102,9 +102,10 @@ export default function PaymentModal({ open, handleModalClose, userId, currencyD
         setPaymentData(res.data.walletTransactionCreate.walletTransaction);
         setInputValue(initialValues);
         setPromptOpen(true);
+        setIsConfirm(false);
       })
       .catch(err => {
-        handleModalClose();
+        setIsConfirm(false);
         setMessageAlert(formatError(err.message));
         setIsSuccessAlert(false);
         history.push(`/user/${userId}?tab=Payments`);
