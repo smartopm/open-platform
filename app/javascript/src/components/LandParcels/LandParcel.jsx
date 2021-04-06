@@ -16,7 +16,7 @@ import LandParcelModal from './LandParcelModal';
 import { UpdateProperty } from '../../graphql/mutations';
 import { MergeProperty } from '../../graphql/mutations/land_parcel';
 import MessageAlert from '../MessageAlert';
-import { formatError, handleQueryOnChange } from '../../utils/helpers';
+import { formatError, handleQueryOnChange, useParamsQuery } from '../../utils/helpers';
 import SearchInput from '../../shared/search/SearchInput';
 import Toggler from '../Campaign/ToggleButton'
 import LandParcelMap from './LandParcelMap'
@@ -56,6 +56,9 @@ export default function LandParcelList() {
   const theme = useTheme();
   const matches = useMediaQuery(theme.breakpoints.up('sm'));
 
+  const path = useParamsQuery('')
+  const plot = path.get('plot');
+
   const { loading, error, data, refetch } = useQuery(ParcelsQuery, {
     variables: { query: debouncedValue || searchQuery, limit, offset }
   });
@@ -90,11 +93,8 @@ export default function LandParcelList() {
   }
 
   useEffect(() => {
-    const pathName = window.location.pathname;
-    const paths = pathName.match(/^\/land_parcels\/((?!new)(?!new_poi)\w+)/);
-    if (paths) {
-      const urlInfo = pathName.split('/');
-      loadParcel({ variables: { id: urlInfo[urlInfo.length - 1] } });
+    if (plot) {
+      loadParcel({ variables: { id: plot } });
       setSelectedLandParcel(parcelData?.landParcel || {});
       setDetailsModalOpen(true);
     }
@@ -117,7 +117,7 @@ export default function LandParcelList() {
 
   function onParcelClick(landParcel) {
     setSelectedLandParcel(landParcel);
-    history.push(`/land_parcels/${landParcel.id}`);
+    history.push(`/land_parcels?plot=${landParcel.id}`);
     setDetailsModalOpen(true);
   }
 
