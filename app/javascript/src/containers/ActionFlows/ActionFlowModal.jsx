@@ -30,7 +30,8 @@ import {
   LabelsQuery,
   UsersLiteQuery,
 } from '../../graphql/queries';
-import { EmailTemplatesQuery } from '../../graphql/queries/email_templates'
+// from a different module
+import { EmailTemplatesQuery } from '../../modules/Emails/graphql/email_queries'
 import QueryBuilder from '../../components/QueryBuilder';
 import { titleize, capitalize, sentencizeAction } from '../../utils/helpers';
 import { NotesCategories } from '../../utils/constants';
