@@ -192,7 +192,7 @@ module Types::Queries::Invoice
     payment_plans.each do |payment_plan|
       next if payment_plan.total_amount.nil? || payment_plan.total_amount.zero?
 
-      amount += ((payment_plan.percentage.to_i * payment_plan.total_amount) / 12)
+      amount += payment_plan.calculate_invoice_amount
     end
     amount
   end
