@@ -75,7 +75,6 @@ import UsersImport from '../src/containers/UsersImport';
 import FormBuilderPage from '../src/containers/Forms/FormBuilderPage';
 import CommentsPage from '../src/containers/Comments/CommentPage';
 import CommunitySettings from '../src/containers/Settings/CommunitySettings';
-import MailTemplates from '../src/containers/MailTemplates';
 import StatsPage from '../src/containers/User/StatsPage';
 import Main from '../src/Main';
 import modules from '../src/modules';
@@ -342,7 +341,6 @@ const App = () => {
                                     <Route path="/new/user" exact component={UserEdit} />
                                     <Route path="/comments" exact component={CommentsPage} />
                                     <Route path="/community" component={CommunitySettings} />
-                                    <Route path="/mail_templates" component={MailTemplates} />
                                     <Route path="/visit_request" component={EntryRequest} />
                                   </Switch>
                                 </AdminRoutes>
