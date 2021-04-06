@@ -31,7 +31,7 @@ module Mutations
       # rubocop:enable Metrics/AbcSize
 
       def create_invoice(payment_plan, land_parcel)
-        amount = ((payment_plan.percentage.to_i * payment_plan.total_amount) / 12)
+        amount = payment_plan.calculate_invoice_amount
         payment_plan.invoices.create({
                                        land_parcel: land_parcel,
                                        amount: amount,

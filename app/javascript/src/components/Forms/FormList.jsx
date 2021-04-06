@@ -126,7 +126,7 @@ export default function FormLinkList({ userType, community }) {
       </Dialog>
       <List data-testid="forms-link-holder" style={{ cursor: 'pointer' }}>
         <FormLinks community={community} />
-        {data.forms.map(form => (
+        {data.forms.length ? data.forms.map(form => (
           <Fragment key={form.id}>
             <ListItem
               key={form.id}
@@ -177,7 +177,14 @@ export default function FormLinkList({ userType, community }) {
             }
             <Divider variant="middle" />
           </Fragment>
-        ))}
+        ))
+      : (
+        <CenteredContent>
+          <Typography>
+            No Forms to Submit
+          </Typography>
+        </CenteredContent>
+    )}
       </List>
 
       {userType === 'admin' && (

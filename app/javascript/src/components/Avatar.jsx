@@ -67,7 +67,7 @@ const styles = StyleSheet.create({
   avatarMedium: {
     width: '80px',
     height: '80px',
-    borderRadius: '8px'
+    borderRadius: '13px'
   },
   avatarBig: {
     maxWidth: '200px',

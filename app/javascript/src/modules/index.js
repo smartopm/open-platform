@@ -7,6 +7,7 @@ import Forms from './Forms';
 import Plots from './Plots';
 import Communication from './Communication';
 import CustomerJourney from './CustomerJourney';
+import UserJourneyStats from './CustomerJourney/stats';
 import ActionFlows from './ActionFlows';
 import TimeCard from './TimeCard';
 import LogBook from './LogBook';
@@ -24,6 +25,7 @@ export default [
   UserPayments,
   Forms,
   CustomerJourney,
+  UserJourneyStats, 
   Users,
   Properties,
   Community,
