@@ -7,7 +7,7 @@ import { makeStyles } from "@material-ui/core/styles"
 import { PointOfInterestCreate } from '../../graphql/mutations/land_parcel';
 import MessageAlert from "../MessageAlert"
 import PointOfInterestModal from './PointOfInterestModal'
-import { formatError } from '../../utils/helpers'
+import { formatError, useParamsQuery } from '../../utils/helpers'
 
 export default function CreatePointOfInterest({ refetch }) {
   const classes = useStyles()
@@ -15,15 +15,16 @@ export default function CreatePointOfInterest({ refetch }) {
   const [isSuccessAlert, setIsSuccessAlert] = useState(false)
   const [messageAlert, setMessageAlert] = useState('')
   const history = useHistory()
+  const path = useParamsQuery('')
+  const type = path.get('type');
 
   const [addPointOfInterest] = useMutation(PointOfInterestCreate);
 
   useEffect(() => {
-    const locationInfo = window.location.pathname.split('/')
-    if (locationInfo[locationInfo.length - 1] === 'new_poi') {
+    if (type === 'new_poi') {
       setOpen(true)
     }
-  }, [])
+  }, [type])
 
   function handleMessageAlertClose(_event, reason) {
     if (reason === 'clickaway') {
@@ -47,7 +48,7 @@ export default function CreatePointOfInterest({ refetch }) {
 
   function openNewPointOfInterestModal() {
     setOpen(true)
-    history.push('/land_parcels/new_poi')
+    history.push('/land_parcels?type=new_poi')
   }
 
   function closeNewPointOfInterestModal() {

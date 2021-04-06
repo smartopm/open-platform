@@ -7,7 +7,7 @@ import { makeStyles } from "@material-ui/core/styles"
 import { AddNewProperty } from '../../graphql/mutations'
 import MessageAlert from "../MessageAlert"
 import LandParcelModal from './LandParcelModal'
-import { formatError } from '../../utils/helpers'
+import { formatError, useParamsQuery } from '../../utils/helpers'
 
 export default function CreateLandParcel({ refetch }) {
   const classes = useStyles()
@@ -15,15 +15,15 @@ export default function CreateLandParcel({ refetch }) {
   const [isSuccessAlert, setIsSuccessAlert] = useState(false)
   const [messageAlert, setMessageAlert] = useState('')
   const history = useHistory()
-
+  const path = useParamsQuery('')
+  const type = path.get('type');
   const [addProperty] = useMutation(AddNewProperty);
 
   useEffect(() => {
-    const locationInfo = window.location.pathname.split('/')
-    if (locationInfo[locationInfo.length - 1] === 'new') {
+    if (type === 'new') {
       setOpen(true)
     }
-  }, [])
+  }, [type])
 
   function handleMessageAlertClose(_event, reason) {
     if (reason === 'clickaway') {
@@ -46,7 +46,7 @@ export default function CreateLandParcel({ refetch }) {
 
   function openNewParcelModal() {
     setOpen(true)
-    history.push('/land_parcels/new')
+    history.push('/land_parcels?type=new')
   }
 
   function closeNewParcelModal() {
