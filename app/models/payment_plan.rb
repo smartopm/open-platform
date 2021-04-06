@@ -32,7 +32,7 @@ class PaymentPlan < ApplicationRecord
   def generate_monthly_invoices_for_the_year
     return if total_amount.nil? || total_amount.zero?
 
-    amount = ((percentage.to_i * total_amount) / 12)
+    amount = ((percentage.to_f * total_amount) / 1200)
     (0...12).each { |index| create_invoice_for_month(amount, start_date + index.month) }
   end
 
