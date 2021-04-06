@@ -22,9 +22,20 @@ export default function UserPlotInfo({ account }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [account]);
 
+  function parcels() {
+    if (account) {
+      const landParcels = account
+        .map(acc => {
+          return acc.landParcels.map(plot => plot);
+        })
+      return [].concat(...landParcels);
+    }
+    return [];
+  }
+
   return (
     <>
-      {account && account[0]?.landParcels?.length > 0 ? (
+      {parcels().length > 0 ? (
         <div className="container">
           <div className={css(styles.body)}>
             <div>
@@ -33,18 +44,16 @@ export default function UserPlotInfo({ account }) {
                   <b>Plots associated with this account:</b>
                 </Typography>
               </div>
-              {
-                account.map((acc) => (
-                  acc.landParcels.map((plot, index) => (
-                    // eslint-disable-next-line react/no-array-index-key
-                    <div style={{ display: 'flex' }} key={index}>
-                      <li className={css(styles.plotNumber)}>{plot.parcelNumber}</li>
-                    </div>
-                  ))
-                ))
-              }
+              {parcels().map((plot, index) => (
+                // eslint-disable-next-line react/no-array-index-key
+                <div style={{ display: 'flex' }} key={index}>
+                  <li className={css(styles.plotNumber)}>{plot.parcelNumber}</li>
+                </div>
+              ))}
               <Typography variant="body2">
-                {`This data was updated on ${dateToString(account[0]?.updatedAt)}. If Something seems incorrect, contact our`}
+                {`This data was updated on ${dateToString(
+                  parcels()[parcels().length - 1]?.updatedAt
+                )}. If Something seems incorrect, contact our`}
                 <span className={css(styles.supportLink)}>
                   &nbsp;
                   <Link data-testid="support_link" to="/contact" className={css(styles.routeLink)}>
@@ -107,7 +116,7 @@ const styles = StyleSheet.create({
 });
 
 UserPlotInfo.defaultProps = {
-  account: [],
+  account: []
 };
 
 UserPlotInfo.propTypes = {
@@ -122,5 +131,5 @@ UserPlotInfo.propTypes = {
       ),
       updatedAt: PropTypes.string
     })
-  ),
+  )
 };
