@@ -32,6 +32,7 @@ export default function EmailBuilderDialog({ open, handleClose }) {
     emailEditorRef.current.editor.exportHtml(data => {
       // You can also get the design details of the created email
       const { html } = data
+      console.log(data)
       createEmailTemplate({
         variables: { ...details, body: html }
       })

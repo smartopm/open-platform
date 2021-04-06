@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import { useQuery } from 'react-apollo'
 import PropTypes from 'prop-types'
 import { FormControl, InputLabel, MenuItem, Select } from '@material-ui/core'
-import { EmailTemplatesQuery } from '../../graphql/queries'
+import { EmailTemplatesQuery } from '../../graphql/queries/email_templates'
 import { Spinner } from '../../shared/Loading'
 
 export default function TemplateList({ value, handleValue, createTemplate, shouldRefecth, isRequired }) {

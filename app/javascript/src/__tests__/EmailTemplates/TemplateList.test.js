@@ -2,7 +2,7 @@ import React from 'react'
 import { render, waitFor } from '@testing-library/react'
 import '@testing-library/jest-dom/extend-expect'
 import { MockedProvider } from '@apollo/react-testing'
-import { EmailTemplatesQuery } from '../../graphql/queries'
+import { EmailTemplatesQuery } from '../../graphql/queries/email_templates'
 import TemplateList from '../../components/EmailTemplate/TemplateList'
 import { Spinner } from '../../shared/Loading'
 

@@ -29,8 +29,8 @@ import {
   RuleFields,
   LabelsQuery,
   UsersLiteQuery,
-  EmailTemplatesQuery
 } from '../../graphql/queries';
+import { EmailTemplatesQuery } from '../../graphql/queries/email_templates'
 import QueryBuilder from '../../components/QueryBuilder';
 import { titleize, capitalize, sentencizeAction } from '../../utils/helpers';
 import { NotesCategories } from '../../utils/constants';
