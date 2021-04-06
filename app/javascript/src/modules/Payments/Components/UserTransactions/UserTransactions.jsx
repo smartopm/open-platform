@@ -179,7 +179,6 @@ export function renderTransactions(transaction, currencyData, menuData) {
   return {
     'Date Created': (
       <GridText
-        col={12}
         content={
           transaction.__typename === 'WalletTransaction'
             ? dateToString(transaction.createdAt)
@@ -189,7 +188,6 @@ export function renderTransactions(transaction, currencyData, menuData) {
     ),
     'Parcel Number': (
       <GridText
-        col={12}
         content={
           transaction.__typename === 'WalletTransaction'
             ? transaction.paymentPlan?.landParcel?.parcelNumber
@@ -199,7 +197,6 @@ export function renderTransactions(transaction, currencyData, menuData) {
     ),
     Description: (
       <GridText
-        col={12}
         data-testid="description"
         content={`${
           transaction.__typename !== 'WalletTransaction'
@@ -211,7 +208,7 @@ export function renderTransactions(transaction, currencyData, menuData) {
       />
     ),
     Amount: (
-      <Grid item xs={12} md={2} data-testid="amount">
+      <Grid item xs={12} md={1} data-testid="amount">
         {transaction.__typename === 'WalletTransaction' ? (
           <Text content={formatMoney(currencyData, transaction.amount)} />
         ) : (
@@ -226,7 +223,6 @@ export function renderTransactions(transaction, currencyData, menuData) {
     Balance: (
       <GridText
         statusColor={transaction.__typename !== 'WalletTransaction' && '#D65252'}
-        col={12}
         data-testid="balance"
         content={
           transaction.__typename === 'WalletTransaction'
