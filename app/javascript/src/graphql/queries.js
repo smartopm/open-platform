@@ -26,6 +26,7 @@ export const UserAccountQuery = gql`
           longX
           latY
           geom
+          updatedAt
         }
       }
     }

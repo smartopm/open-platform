@@ -21,7 +21,8 @@ describe("User information component loads",()=>{
     const parcelData = [
       {
         id: 'hiuwkeh',
-        parcelNumber: 'ho2ij3'
+        parcelNumber: 'ho2ij3',
+        updatedAt: "2020-10-20T06:23:12Z",
       }
   ]
 
@@ -32,7 +33,8 @@ describe("User information component loads",()=>{
           updatedAt: "2020-10-21T06:23:12Z",
           landParcels: [{
             id: "c9de32f7-ad64-41ed-9c05-79d85d088b1b",
-            parcelNumber: "las"
+            parcelNumber: "las",
+            updatedAt: "2020-10-22T06:23:12Z",
           }]
         }]
       }
