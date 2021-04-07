@@ -3,7 +3,6 @@
 # Record the transactions
 class WalletTransaction < ApplicationRecord
   include SearchCop
-  include PrecisionSetable
 
   belongs_to :user
   belongs_to :community

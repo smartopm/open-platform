@@ -2,8 +2,6 @@
 
 # Stores user wallet balance and pending balance
 class Wallet < ApplicationRecord
-  include PrecisionSetable
-
   belongs_to :user
 
   DEFAULT_CURRENCY = 'ZMW'
