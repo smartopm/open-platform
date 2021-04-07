@@ -96,8 +96,8 @@ module Types::Queries::Invoice
 
     {
       invoices: user.invoices.eager_load(:land_parcel, :payments).reverse,
-      payments: user.invoices.map(&:payments).flatten,
-      payment_plans: user.payment_plans,
+      payments: user.payments,
+      payment_plans: user.payment_plans.includes(invoices: :payments),
     }
   end
 
