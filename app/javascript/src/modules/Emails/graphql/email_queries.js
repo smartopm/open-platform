@@ -7,6 +7,9 @@ export const EmailTemplatesQuery = gql`
       name
       id
       variableNames
+      createdAt
+      subject
+      data
     }
   }
 `
