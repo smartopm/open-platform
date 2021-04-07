@@ -1029,13 +1029,3 @@ export const UpdateActionFlow = gql`
     }
   }
 `
-
-export const GenerateCurrentMonthInvoices = gql`
-  mutation autogenerateInvoice {
-    autogenerateInvoice {
-      invoices {
-        id
-      }
-    }
-  }
-`

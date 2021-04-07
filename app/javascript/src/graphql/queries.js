@@ -1263,15 +1263,6 @@ export const PaymentsQuery = gql`
     }
 `
 
-export const InvoiceAutogenerationData = gql`
-  query invoiceAutogenerationData {
-    invoiceAutogenerationData {
-      numberOfInvoices
-      totalAmount
-    }
-  }
-`
-
 export const EmailTemplateVariables = gql`
   query emailTemplateVariables($templateId: ID!) {
     emailTemplateVariables(id: $templateId)
