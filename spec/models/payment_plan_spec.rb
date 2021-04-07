@@ -14,6 +14,8 @@ RSpec.describe PaymentPlan, type: :model do
     it { is_expected.to have_db_column(:generated).of_type(:boolean) }
     it { is_expected.to have_db_column(:plot_balance).of_type(:decimal) }
     it { is_expected.to have_db_column(:pending_balance).of_type(:decimal) }
+    it { is_expected.to have_db_column(:total_amount).of_type(:decimal) }
+    it { is_expected.to have_db_column(:monthly_amount).of_type(:decimal) }
     it { is_expected.to have_db_column(:created_at).of_type(:datetime) }
     it { is_expected.to have_db_column(:updated_at).of_type(:datetime) }
   end

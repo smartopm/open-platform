@@ -16,7 +16,7 @@ const initialPlanState = {
   percentage: '',
   startDate: new Date(),
   userId: '',
-  totalAmount: '',
+  monthlyAmount: '',
   durationInMonth: ''
 };
 export default function PaymentPlanForm({ landParcel, refetch }) {
@@ -55,7 +55,7 @@ export default function PaymentPlanForm({ landParcel, refetch }) {
       variables: {
         ...paymentPlanState,
         landParcelId: landParcel.id,
-        totalAmount: parseFloat(paymentPlanState.totalAmount),
+        monthlyAmount: parseFloat(paymentPlanState.monthlyAmount),
         durationInMonth: parseInt(paymentPlanState.durationInMonth, 10)
       }
     })
@@ -72,17 +72,17 @@ export default function PaymentPlanForm({ landParcel, refetch }) {
       });
   }
 
-  function calculatedMonthlyAmount() {
-    const { percentage, totalAmount, durationInMonth } = paymentPlanState;
-    if (Number(percentage) <= 0 || Number(totalAmount) <= 0 || Number(durationInMonth) <= 0) {
+  function calculatedTotalAmount() {
+    const { percentage, monthlyAmount, durationInMonth } = paymentPlanState;
+    if (Number(percentage) <= 0 || Number(monthlyAmount) <= 0 || Number(durationInMonth) <= 0) {
       return 0;
     }
 
-    let monthlyAmount = 0;
-    if (percentage && totalAmount && durationInMonth) {
-      monthlyAmount = (percentage * totalAmount) / (100 * durationInMonth);
+    let totalAmount = 0;
+    if (percentage && monthlyAmount && durationInMonth) {
+      totalAmount = (monthlyAmount * durationInMonth * 100) / percentage;
     }
-    return monthlyAmount;
+    return totalAmount;
   }
 
   return (
@@ -171,12 +171,12 @@ export default function PaymentPlanForm({ landParcel, refetch }) {
       />
       <TextField
         margin="normal"
-        id="total-amount"
-        label="Total Value of Property"
-        aria-label="total-amount"
-        value={paymentPlanState.totalAmount}
+        id="monthly-amount"
+        label="Monthly Amount"
+        aria-label="monthly-amount"
+        value={paymentPlanState.monthlyAmount}
         onChange={handleOnChange}
-        name="totalAmount"
+        name="monthlyAmount"
         style={{ width: '100%' }}
         type="number"
         InputProps={{
@@ -185,11 +185,11 @@ export default function PaymentPlanForm({ landParcel, refetch }) {
           },
           startAdornment: <InputAdornment position="start">{currency}</InputAdornment>
         }}
-        error={errorInfo.isError && !paymentPlanState.totalAmount}
+        error={errorInfo.isError && !paymentPlanState.monthlyAmount}
         helperText={
           errorInfo.isError &&
-          !paymentPlanState.totalAmount &&
-          'Total Value of Property is required'
+          !paymentPlanState.monthlyAmount &&
+          'Monthly amount is required'
         }
       />
       <TextField
@@ -218,14 +218,14 @@ export default function PaymentPlanForm({ landParcel, refetch }) {
         label="Start Date"
         required
       />
-      {!!calculatedMonthlyAmount() && (
+      {!!calculatedTotalAmount() && (
         <Typography
           variant="caption"
           color="textSecondary"
           component="p"
-          data-testid="monthly-amount-txt"
+          data-testid="total-amount-txt"
         >
-          {`Monthly amount: ${currency} ${parseFloat(calculatedMonthlyAmount()).toFixed(2)}`}
+          {`Approx. Total Property Valuation: ${currency} ${parseFloat(calculatedTotalAmount()).toFixed(2)}`}
         </Typography>
       )}
       {mutationInfo.loading ? (
