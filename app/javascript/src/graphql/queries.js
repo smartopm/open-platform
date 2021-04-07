@@ -1143,6 +1143,10 @@ export const AllTransactionQuery = gql`
           status
           createdAt
           dueDate
+          payments {
+            id
+            createdAt
+          }
         }
         landParcel {
           id
