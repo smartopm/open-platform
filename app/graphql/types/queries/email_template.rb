@@ -33,7 +33,7 @@ module Types::Queries::EmailTemplate
   def email_templates
     raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user]&.admin?
 
-    context[:site_community].email_templates
+    context[:site_community].email_templates.order(created_at: :desc)
   end
 
   def email_template_variables(id:)

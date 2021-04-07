@@ -16,8 +16,8 @@ RSpec.describe Mutations::EmailTemplate::TemplateUpdate do
 
     let(:template_mutation) do
       <<~GQL
-        mutation template($id: ID!, $name: String!, $subject: String!, $body: String!) {
-          emailTemplateUpdate(id: $id, name: $name, subject: $subject, body: $body){
+        mutation template($id: ID!, $name: String!, $subject: String!, $body: String!, $data: JSON!) {
+          emailTemplateUpdate(id: $id, name: $name, subject: $subject, body: $body, data: $data){
             emailTemplate {
               name
               id
@@ -33,6 +33,7 @@ RSpec.describe Mutations::EmailTemplate::TemplateUpdate do
         name: 'W Again',
         subject: 'Welcome back',
         body: '<h2>Hello there, welcome to our community</h2>',
+        data: { "design": { "data": 'something' } },
       }
       result = DoubleGdpSchema.execute(template_mutation, variables: variables,
                                                           context: {
@@ -50,6 +51,7 @@ RSpec.describe Mutations::EmailTemplate::TemplateUpdate do
         name: 'welcome',
         subject: 'Welcome back',
         body: '<h2>Hello there, welcome to our community</h2>',
+        data: { "design": { "data": 'something' } },
       }
       result = DoubleGdpSchema.execute(template_mutation, variables: variables,
                                                           context: {
@@ -65,6 +67,7 @@ RSpec.describe Mutations::EmailTemplate::TemplateUpdate do
         name: 23_232,
         subject: 'Welcome back',
         body: '<h2>Hello there, welcome to our community</h2>',
+        data: { "design": { "data": 'something' } },
       }
       result = DoubleGdpSchema.execute(template_mutation, variables: variables,
                                                           context: {
@@ -81,6 +84,7 @@ RSpec.describe Mutations::EmailTemplate::TemplateUpdate do
         name: 'Template name',
         subject: 'Welcome back',
         body: '<h2>Hello there, welcome to our community</h2>',
+        data: { "design": { "data": 'something' } },
       }
       result = DoubleGdpSchema.execute(template_mutation, variables: variables,
                                                           context: {

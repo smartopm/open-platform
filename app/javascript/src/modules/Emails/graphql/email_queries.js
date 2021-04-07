@@ -13,3 +13,17 @@ export const EmailTemplatesQuery = gql`
     }
   }
 `
+
+
+export const EmailTemplateQuery = gql`
+query emailTemplate($id: ID!) {
+  emailTemplate(id: $id) {
+    name
+    id
+    variableNames
+    createdAt
+    subject
+    data
+  }
+}
+`
