@@ -9,16 +9,16 @@ import Slide from '@material-ui/core/Slide'
 import Button from '@material-ui/core/Button'
 import PropTypes from 'prop-types'
 import { useMutation } from 'react-apollo'
-import CreateEmailTemplateMutation from '../../../graphql/mutations/email_templates'
 import EmailDetailsDialog from './EmailDetailsDialog'
 import MessageAlert from '../../../components/MessageAlert'
 import { formatError } from '../../../utils/helpers'
+import CreateEmailTemplateMutation from '../graphql/email_mutations'
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />
 })
 
-export default function EmailBuilderDialog({ open, handleClose }) {
+export default function EmailBuilderDialog({ initialData, open, handleClose }) {
   const emailEditorRef = useRef(null)
   const [createEmailTemplate] = useMutation(CreateEmailTemplateMutation)
   const [detailsOpen, setOpenDetails] = useState(false)
@@ -28,13 +28,13 @@ export default function EmailBuilderDialog({ open, handleClose }) {
   function handleAlertClose(){
     setAlertOpen(false)
   }
+
   function saveTemplate(details) {
     emailEditorRef.current.editor.exportHtml(data => {
       // You can also get the design details of the created email
       const { html } = data
-      console.log(data)
       createEmailTemplate({
-        variables: { ...details, body: html }
+        variables: { ...details, body: html, data }
       })
       .then(() => {
         setMessage({ ...message, detail: 'Email Template successfully saved' })
@@ -49,11 +49,11 @@ export default function EmailBuilderDialog({ open, handleClose }) {
     })
   }
 
-  const onLoad = () => {
-    // you can load your template here;
-    // const templateJson = {};
-    // emailEditorRef.current.editor.loadDesign(templateJson);
+
+  function onLoad(){
+    emailEditorRef.current.loadDesign(initialData.design);
   }
+
   function handleCloseDetails() {
     setOpenDetails(false)
   }
@@ -97,13 +97,17 @@ export default function EmailBuilderDialog({ open, handleClose }) {
             </Button>
           </Toolbar>
         </AppBar>
-        <EmailEditor ref={emailEditorRef} onLoad={onLoad} style={{}} />
+        <EmailEditor ref={emailEditorRef} onLoad={onLoad} />
       </Dialog>
     </>
   )
 }
-
+EmailBuilderDialog.defaultProps = {
+  initialData: {}
+}
 EmailBuilderDialog.propTypes = {
   open: PropTypes.bool.isRequired,
-  handleClose: PropTypes.func.isRequired
+  handleClose: PropTypes.func.isRequired,
+  // eslint-disable-next-line react/forbid-prop-types
+  initialData: PropTypes.object
 }
