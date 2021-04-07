@@ -6,7 +6,6 @@ import UserItem from './UserItem'
 export default function UserListCard({
   userData,
   currentUserType,
-  sendOneTimePasscode,
   handleUserSelect,
   selectedUsers,
   offset,
@@ -19,7 +18,6 @@ export default function UserListCard({
           key={user.id}
           user={user}
           currentUserType={currentUserType}
-          sendOneTimePasscode={sendOneTimePasscode}
           handleUserSelect={handleUserSelect}
           selectedUsers={selectedUsers}
           offset={offset}
@@ -35,7 +33,6 @@ UserListCard.propTypes = {
     users: PropTypes.arrayOf(PropTypes.object)
   }).isRequired,
   currentUserType: PropTypes.string.isRequired,
-  sendOneTimePasscode: PropTypes.func.isRequired,
   handleUserSelect: PropTypes.func.isRequired,
   offset: PropTypes.number.isRequired,
   selectCheckBox: PropTypes.bool.isRequired,

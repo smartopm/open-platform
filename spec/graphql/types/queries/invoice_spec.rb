@@ -202,7 +202,7 @@ RSpec.describe Types::Queries::Invoice do
       expect(result.dig('data', 'invoiceAutogenerationData', 'numberOfInvoices')).to eql 1
       expect(
         result.dig('data', 'invoiceAutogenerationData', 'totalAmount').floor,
-      ).to eql ((payment_plan.percentage.to_i * payment_plan.total_amount) / 12).floor
+      ).to eql ((payment_plan.percentage.to_f * payment_plan.total_amount) / 1200).floor
     end
 
     it 'should retrieve invoices for a user with transactions' do

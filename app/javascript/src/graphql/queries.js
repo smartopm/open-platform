@@ -26,6 +26,7 @@ export const UserAccountQuery = gql`
           longX
           latY
           geom
+          updatedAt
         }
       }
     }
@@ -492,6 +493,7 @@ export const ParcelsQuery = gql`
         address1
         user {
           id
+          name
         }
       }
     }

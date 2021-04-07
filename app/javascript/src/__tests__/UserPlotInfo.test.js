@@ -13,11 +13,13 @@ describe('User Plot Info Page', () => {
       landParcels: [
         {
           id: '6f1f-4200-8cqa',
-          parcelNumber: 'Standard434'
+          parcelNumber: 'Standard434',
+          updatedAt: '2020-05-10T17:09:37Z',
         },
         {
           id: '6f1f-4200-8cea',
-          parcelNumber: 'Basic-1'
+          parcelNumber: 'Basic-1',
+          updatedAt: '2020-05-11T17:09:37Z',
         }
       ]
     },
@@ -27,7 +29,8 @@ describe('User Plot Info Page', () => {
       landParcels: [
         {
           id: '6f1f-4200-8jfa',
-          parcelNumber: 'Basic-1'
+          parcelNumber: 'Basic-1',
+          updatedAt: '2020-05-12T17:09:37Z',
         }
       ]
     }

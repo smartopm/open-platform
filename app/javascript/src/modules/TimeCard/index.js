@@ -11,5 +11,5 @@ export default {
     icon: <HourglassFullIcon />
   },
   name: 'Time Card',
-  accessibleBy: ['admin']
+  accessibleBy: ['admin', 'custodian']
 };

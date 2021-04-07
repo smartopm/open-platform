@@ -14,7 +14,6 @@ export default {
   },
   name: 'Forms',
   accessibleBy: [
-    'admin',
     'client',
     'prospective_client',
     'contractor',

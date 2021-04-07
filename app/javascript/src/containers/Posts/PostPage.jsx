@@ -24,7 +24,7 @@ import { DiscussionMutation } from '../../graphql/mutations'
 import CenteredContent from '../../components/CenteredContent'
 import TagsComponent from '../../components/NewsPage/Tags'
 import MessageAlert from "../../components/MessageAlert"
-import { NewsNav } from '../../Main'
+import { NewsNav } from '../../modules/Menu'
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;

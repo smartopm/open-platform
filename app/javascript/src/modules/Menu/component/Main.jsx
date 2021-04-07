@@ -4,17 +4,17 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Drawer from '@material-ui/core/Drawer';
 import MenuIcon from '@material-ui/icons/Menu';
 import { StyleSheet, css } from 'aphrodite';
-import { Button, Hidden, IconButton, useTheme } from '@material-ui/core';
+import { Button, Hidden, IconButton } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import PropTypes from 'prop-types';
-import { Context as AuthStateContext } from './containers/Provider/AuthStateProvider';
-import SideMenu from './shared/SideMenu';
-import NotificationBell from './components/NotificationBell';
-import modules from './modules';
-import CommunityName from './shared/CommunityName';
-import CenteredContent from './components/CenteredContent';
-import userProps from './shared/types/user';
+import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider';
+import SideMenu from './SideMenu';
+import NotificationBell from '../../../components/NotificationBell';
+import modules from '../..';
+import CommunityName from '../../../shared/CommunityName';
+import CenteredContent from '../../../components/CenteredContent';
+import userProps from '../../../shared/types/user';
 
 const drawerWidth = 260;
 
@@ -60,7 +60,6 @@ export default function Main() {
 
 export function MainNav({ authState }) {
   const classes = useStyles();
-  const theme = useTheme();
   const [mobileOpen, setMobileOpen] = useState(false);
 
   const handleDrawerToggle = () => {
@@ -93,12 +92,10 @@ export function MainNav({ authState }) {
           <Hidden smUp implementation="css">
             <Drawer
               variant="temporary"
-              anchor={theme.direction === 'rtl' ? 'right' : 'left'}
+              anchor="left"
               open={mobileOpen}
               onClose={handleDrawerToggle}
-              classes={{
-                paper: classes.drawerPaper
-              }}
+              classes={{ paper: classes.drawerPaper }}
               ModalProps={{
                 keepMounted: true
               }}
@@ -107,15 +104,14 @@ export function MainNav({ authState }) {
                 toggleDrawer={handleDrawerToggle}
                 menuItems={modules}
                 userType={authState.user.userType}
+                direction="left"
                 mobileOpen
               />
             </Drawer>
           </Hidden>
           <Hidden xsDown implementation="css">
             <Drawer
-              classes={{
-                paper: classes.drawerPaper
-              }}
+              classes={{ paper: classes.drawerPaper}}
               variant="permanent"
               open
             >
@@ -123,6 +119,7 @@ export function MainNav({ authState }) {
                 toggleDrawer={handleDrawerToggle}
                 menuItems={modules}
                 userType={authState.user.userType}
+                direction="left"
                 mobileOpen={false}
               />
             </Drawer>

@@ -21,7 +21,8 @@ describe("User information component loads",()=>{
     const parcelData = [
       {
         id: 'hiuwkeh',
-        parcelNumber: 'ho2ij3'
+        parcelNumber: 'ho2ij3',
+        updatedAt: "2020-10-20T06:23:12Z",
       }
   ]
 
@@ -32,7 +33,8 @@ describe("User information component loads",()=>{
           updatedAt: "2020-10-21T06:23:12Z",
           landParcels: [{
             id: "c9de32f7-ad64-41ed-9c05-79d85d088b1b",
-            parcelNumber: "las"
+            parcelNumber: "las",
+            updatedAt: "2020-10-22T06:23:12Z",
           }]
         }]
       }
@@ -85,7 +87,7 @@ describe("User information component loads",()=>{
           }
         }
       };
-      const { getByText } = render(
+      const { getAllByText } = render(
         <MockedProvider mocks={[anotherMock]}>
           <BrowserRouter>
             <UserInformation
@@ -100,36 +102,12 @@ describe("User information component loads",()=>{
 
       await waitFor(
         () => {
-          expect(getByText('Plots')).toBeInTheDocument();
-          expect(getByText('Communication')).toBeInTheDocument();
-          expect(getByText('Payments')).toBeInTheDocument();
-          expect(getByText('Contact')).toBeInTheDocument();
+          expect(getAllByText('Plots')[0]).toBeInTheDocument();
+          expect(getAllByText('Communication')[0]).toBeInTheDocument();
+          expect(getAllByText('Payments')[0]).toBeInTheDocument();
+          expect(getAllByText('Contact')[0]).toBeInTheDocument();
         },
         { timeout: 50 }
       );
     });
-
-    it('should render Menue', async ()=>{
-        const {getByText} = render(
-          <MockedProvider mock={data}>
-            <BrowserRouter>
-              <UserInformation
-                data={data}
-                authState={authstate}
-                accountData={accountData}
-                parcelData={parcelData}
-              />
-            </BrowserRouter>
-          </MockedProvider>
-        )
-
-        await waitFor(
-          () => { expect(getByText('Print')).toBeInTheDocument()
-          expect(getByText('Send One Time Passcode')).toBeInTheDocument()
-          expect(getByText('Message Support')).toBeInTheDocument() },
-          { timeout: 50 }
-        )
-
-    })
-
 })
