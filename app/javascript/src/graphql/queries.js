@@ -1140,6 +1140,7 @@ export const AllTransactionQuery = gql`
           invoiceNumber
           status
           createdAt
+          dueDate
         }
         landParcel {
           id
