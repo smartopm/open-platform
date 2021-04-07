@@ -11,7 +11,7 @@ import { formatError } from '../../utils/helpers';
 import { Context as AuthStateContext } from '../../containers/Provider/AuthStateProvider';
 
 const initialPlanState = {
-  status: '0',
+  status: 0,
   planType: 'lease',
   percentage: '',
   startDate: new Date(),
@@ -142,7 +142,7 @@ export default function PaymentPlanForm({ landParcel, refetch }) {
         required
         select
         error={errorInfo.isError && !Number.isInteger(paymentPlanState.status)}
-        helperText={errorInfo.isError && !paymentPlanState.status && 'Status is required'}
+        helperText={errorInfo.isError && paymentPlanState.status === '' && 'Status is required'}
       >
         {Object.entries(paymentPlanStatus).map(([key, val]) => (
           <MenuItem key={key} value={Number(key)}>
