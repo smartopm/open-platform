@@ -142,7 +142,8 @@ RSpec.describe Types::Queries::LandParcel do
     describe 'user_land_parcel' do
       let!(:land_parcel_2) { create(:land_parcel, community_id: current_user.community_id) }
       let!(:payment_plan) do
-        create(:payment_plan, land_parcel_id: land_parcel.id, user_id: current_user.id, plot_balance: 0)
+        create(:payment_plan, land_parcel_id: land_parcel.id,
+                              user_id: current_user.id, plot_balance: 0)
       end
 
       let(:user_land_parcel_query) do
@@ -152,7 +153,7 @@ RSpec.describe Types::Queries::LandParcel do
             }
           })
       end
-   
+
       let(:user_land_parcel_with_plan_query) do
         %(query {
             userLandParcelWithPlan(userId: "#{current_user.id}"){
@@ -161,30 +162,30 @@ RSpec.describe Types::Queries::LandParcel do
           })
       end
 
-      let!(:land_parcel_account) do 
+      let!(:land_parcel_account) do
         create(:land_parcel_account, land_parcel_id: land_parcel.id, account_id: account.id)
       end
 
-      let!(:land_parcel_account_2) do 
+      let!(:land_parcel_account_2) do
         create(:land_parcel_account, land_parcel_id: land_parcel_2.id, account_id: account.id)
       end
 
       it 'should return a single land parcel by id' do
         result = DoubleGdpSchema.execute(user_land_parcel_query,
-                                          context: {
-                                            current_user: admin_user,
-                                            site_community: admin_user.community,
-                                          }).as_json
+                                         context: {
+                                           current_user: admin_user,
+                                           site_community: admin_user.community,
+                                         }).as_json
         expect(result.dig('data', 'userLandParcel', 1, 'id')).to eql land_parcel.id
         expect(result.dig('data', 'userLandParcel').count).to eql 2
       end
 
       it 'should return a single land parcel by id' do
         result = DoubleGdpSchema.execute(user_land_parcel_with_plan_query,
-                                          context: {
-                                            current_user: admin_user,
-                                            site_community: admin_user.community,
-                                          }).as_json
+                                         context: {
+                                           current_user: admin_user,
+                                           site_community: admin_user.community,
+                                         }).as_json
         expect(result.dig('data', 'userLandParcelWithPlan', 0, 'id')).to eql land_parcel.id
         expect(result.dig('data', 'userLandParcelWithPlan').count).to eql 1
       end
