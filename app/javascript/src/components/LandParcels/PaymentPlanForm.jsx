@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Button, MenuItem, TextField, InputAdornment, Typography } from '@material-ui/core';
 import { useMutation } from 'react-apollo';
 import DatePickerDialog from '../DatePickerDialog';
-import { paymentPlanStatus , currencies } from '../../utils/constants';
+import { paymentPlanStatus, currencies } from '../../utils/constants';
 import { LandPaymentPlanCreateMutation } from '../../graphql/mutations/land_parcel';
 import { Spinner } from '../../shared/Loading';
 import { formatError } from '../../utils/helpers';
@@ -80,7 +80,7 @@ export default function PaymentPlanForm({ landParcel, refetch }) {
 
     let monthlyAmount = 0;
     if (percentage && totalAmount && durationInMonth) {
-      monthlyAmount = (percentage * totalAmount) / (100 * durationInMonth)
+      monthlyAmount = (percentage * totalAmount) / (100 * durationInMonth);
     }
     return monthlyAmount;
   }
@@ -187,7 +187,9 @@ export default function PaymentPlanForm({ landParcel, refetch }) {
         }}
         error={errorInfo.isError && !paymentPlanState.totalAmount}
         helperText={
-          errorInfo.isError && !paymentPlanState.totalAmount && 'Total amount is required'
+          errorInfo.isError &&
+          !paymentPlanState.totalAmount &&
+          'Total Value of Property is required'
         }
       />
       <TextField
@@ -216,17 +218,16 @@ export default function PaymentPlanForm({ landParcel, refetch }) {
         label="Start Date"
         required
       />
-      {
-        !!calculatedMonthlyAmount() && (
-          <Typography
-            variant="caption"
-            color="textSecondary"
-            component="p"
-          >
-            {`Monthly amount: ${currency} ${parseFloat(calculatedMonthlyAmount()).toFixed(2)}`}
-          </Typography>
-        )
-      }
+      {!!calculatedMonthlyAmount() && (
+        <Typography
+          variant="caption"
+          color="textSecondary"
+          component="p"
+          data-testid="monthly-amount-txt"
+        >
+          {`Monthly amount: ${currency} ${parseFloat(calculatedMonthlyAmount()).toFixed(2)}`}
+        </Typography>
+      )}
       {mutationInfo.loading ? (
         <Spinner />
       ) : (
