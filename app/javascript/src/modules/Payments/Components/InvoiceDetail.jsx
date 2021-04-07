@@ -23,6 +23,10 @@ export  default function InvoiceDetails({ data, detailsOpen, handleClose, curren
           title='Issued Date'
           value={dateToString(data?.createdAt)}
         />
+        <DetailsField 
+          title="Due Date" 
+          value={dateToString(data?.dueDate)}
+        />
         <DetailsField
           title='Amount'
           value={formatMoney(currencyData, data?.amount)}

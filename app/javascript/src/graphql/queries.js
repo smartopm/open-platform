@@ -26,6 +26,7 @@ export const UserAccountQuery = gql`
           longX
           latY
           geom
+          updatedAt
         }
       }
     }
@@ -1132,6 +1133,11 @@ export const AllTransactionQuery = gql`
           invoiceNumber
           status
           createdAt
+          dueDate
+          payments {
+            id
+            createdAt
+          }
         }
         landParcel {
           id

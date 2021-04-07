@@ -184,6 +184,12 @@ export default function TransactionDetails({ data, detailsOpen, handleClose, cur
                 ))
               }}
             />
+            <DetailsField
+              editable={isEditing}
+              title="Transaction Number"
+              value={inputValues.TransactionNumber}
+              handleChange={handleChange}
+            />
             {
               inputValues.PaymentType === 'cheque/cashier_cheque' && (
                 <>
@@ -191,12 +197,6 @@ export default function TransactionDetails({ data, detailsOpen, handleClose, cur
                     editable={isEditing}
                     title="Bank Name"
                     value={inputValues.BankName}
-                    handleChange={handleChange}
-                  />
-                  <DetailsField
-                    editable={isEditing}
-                    title="TransactionNumber"
-                    value={inputValues.TransactionNumber}
                     handleChange={handleChange}
                   />
                   <DetailsField

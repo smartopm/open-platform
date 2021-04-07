@@ -525,6 +525,13 @@ class User < ApplicationRecord
     Time.now.in_time_zone('Africa/Lusaka')
   end
 
+  def regular_and_govt_plots(property_number, gov_property_number)
+    [
+      land_parcels.find_by(parcel_number: property_number),
+      land_parcels.find_by(parcel_number: gov_property_number),
+    ]
+  end
+
   private
 
   def phone_number_valid?
