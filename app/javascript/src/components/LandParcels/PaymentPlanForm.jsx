@@ -1,6 +1,6 @@
 import React, { useState, useContext } from 'react';
 import PropTypes from 'prop-types';
-import { Button, MenuItem, TextField, InputAdornment } from '@material-ui/core';
+import { Button, MenuItem, TextField, InputAdornment, Typography } from '@material-ui/core';
 import { useMutation } from 'react-apollo';
 import DatePickerDialog from '../DatePickerDialog';
 import { paymentPlanStatus , currencies } from '../../utils/constants';
@@ -11,7 +11,7 @@ import { formatError } from '../../utils/helpers';
 import { Context as AuthStateContext } from '../../containers/Provider/AuthStateProvider';
 
 const initialPlanState = {
-  status: '',
+  status: '0',
   planType: 'lease',
   percentage: '',
   startDate: new Date(),
@@ -71,6 +71,20 @@ export default function PaymentPlanForm({ landParcel, refetch }) {
         setMutationInfo({ isError: true, message: formatError(error.message), loading: false });
       });
   }
+
+  function calculatedMonthlyAmount() {
+    const { percentage, totalAmount, durationInMonth } = paymentPlanState;
+    if (Number(percentage) <= 0 || Number(totalAmount) <= 0 || Number(durationInMonth) <= 0) {
+      return 0;
+    }
+
+    let monthlyAmount = 0;
+    if (percentage && totalAmount && durationInMonth) {
+      monthlyAmount = (percentage * totalAmount) / (100 * durationInMonth)
+    }
+    return monthlyAmount;
+  }
+
   return (
     <>
       <TextField
@@ -145,13 +159,20 @@ export default function PaymentPlanForm({ landParcel, refetch }) {
         onChange={handleOnChange}
         name="percentage"
         style={{ width: '100%' }}
+        type="number"
+        InputProps={{
+          inputProps: {
+            min: 1
+          },
+          startAdornment: <InputAdornment position="start">%</InputAdornment>
+        }}
         error={errorInfo.isError && !paymentPlanState.percentage}
         helperText={errorInfo.isError && !paymentPlanState.percentage && 'Percentage is required'}
       />
       <TextField
         margin="normal"
         id="total-amount"
-        label="Total Amount"
+        label="Total Value of Property"
         aria-label="total-amount"
         value={paymentPlanState.totalAmount}
         onChange={handleOnChange}
@@ -195,6 +216,17 @@ export default function PaymentPlanForm({ landParcel, refetch }) {
         label="Start Date"
         required
       />
+      {
+        !!calculatedMonthlyAmount() && (
+          <Typography
+            variant="caption"
+            color="textSecondary"
+            component="p"
+          >
+            {`Monthly amount: ${currency} ${parseFloat(calculatedMonthlyAmount()).toFixed(2)}`}
+          </Typography>
+        )
+      }
       {mutationInfo.loading ? (
         <Spinner />
       ) : (
