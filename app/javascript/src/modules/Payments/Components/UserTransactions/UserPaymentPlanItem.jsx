@@ -6,7 +6,7 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import DataList from '../../../../shared/list/DataList';
 import { dateToString } from '../../../../components/DateContainer';
 import { formatMoney, InvoiceStatusColor, propAccessor } from '../../../../utils/helpers';
-import Text from '../../../../shared/Text';
+import Text, { HiddenText } from '../../../../shared/Text';
 import Label from '../../../../shared/label/Label';
 import { invoiceStatus } from '../../../../utils/constants';
 
@@ -20,11 +20,12 @@ export default function UserPaymentPlanItem({ plans, currencyData }) {
   ];
 
   const invoiceHeader = [
-    { title: 'Issue Date', col: 4 },
-    { title: 'Description', col: 4 },
-    { title: 'Amount', col: 3 },
-    { title: 'Payment Date', col: 3 },
-    { title: 'Status', col: 4 }
+    { title: 'Issue Date', col: 2 },
+    { title: 'Due Date', col: 2 },
+    { title: 'Description', col: 2 },
+    { title: 'Amount', col: 2 },
+    { title: 'Payment Date', col: 2 },
+    { title: 'Status', col: 2}
   ];
 
   return (
@@ -92,30 +93,31 @@ export function renderInvoice(inv, currencyData) {
   return {
     'Issue Date': (
       <Grid item xs={12} md={2} data-testid="issue-date">
+        <HiddenText smDown title="Issue Date" />
         <Text content={dateToString(inv.createdAt)} />
-        <br />
-        <Typography variant='caption' style={{fontWeight: 'bold'}}>Issue Date</Typography>
+      </Grid>),
+    'Due Date': (
+      <Grid item xs={12} md={2} data-testid="due-date">
+        <HiddenText smDown title="Due Date" />
+        <Text content={dateToString(inv.dueDate)} />
       </Grid>),
     'Description': (
       <Grid item xs={12} md={2} data-testid="description">
+        <HiddenText smDown title="Description" />
         <Text content={`Invoice #${inv.invoiceNumber}`} />
-        <br />
-        <Typography variant='caption' style={{fontWeight: 'bold'}}>Description</Typography>
       </Grid>
     ),
     Amount: (
       <Grid item xs={12} md={2} data-testid="amount">
+        <HiddenText smDown title="Amount" />
         <Text content={formatMoney(currencyData, inv.amount)} />
-        <br />
-        <Typography variant='caption' style={{fontWeight: 'bold'}}>Amount</Typography>
       </Grid>
     ),
     'Payment Date': (
       <Grid item xs={12} md={2} data-testid="payment-date">
+        <HiddenText smDown title="Payment Date" />
         {inv.status === 'paid' && inv.payments?.length
           ? <Text content={dateToString(inv.payments[0]?.createdAt)} /> : '-'}
-        <br />
-        <Typography variant='caption' style={{fontWeight: 'bold'}}>Payment Date</Typography>
       </Grid>
     ),
     'Status': (
