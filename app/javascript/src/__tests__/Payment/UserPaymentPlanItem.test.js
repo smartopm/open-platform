@@ -19,6 +19,7 @@ describe('Render Payment Plan Item', () => {
       id: 'a54d6184-b10e-4865-bee7-7957701d423d',
       amount: 500,
       createdAt: '2021-03-01T09:55:05Z',
+      dueDate: '2021-03-06T09:55:05Z',
       status: 'paid',
       invoiceNumber: 123
     }],
@@ -50,6 +51,7 @@ describe('Render Payment Plan Item', () => {
     expect(container.getAllByTestId("payment-date")[0]).toBeInTheDocument()
     expect(container.getAllByTestId("status")[0]).toBeInTheDocument()
     expect(container.getAllByTestId("amount")[0]).toBeInTheDocument()
+    expect(container.getAllByTestId("due-date")[0]).toBeInTheDocument()
   })
 
   it('should check if renderPlan works as expected', () => {

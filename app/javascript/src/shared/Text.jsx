@@ -24,7 +24,7 @@ export function GridText({ content, col, statusColor, ...otherProps }) {
 
 export function HiddenText({ title ,...props }){
   return (
-    <Hidden {...props}>
+    <Hidden {...props} data-testid="hidden_text">
       <Typography variant='caption' style={{fontWeight: 'bold'}}>{title}</Typography>
       <br />
     </Hidden>

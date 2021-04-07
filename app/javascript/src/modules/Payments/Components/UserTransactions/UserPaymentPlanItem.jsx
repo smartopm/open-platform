@@ -103,7 +103,7 @@ export function renderInvoice(inv, currencyData) {
         <Text content={dateToString(inv.createdAt)} />
       </Grid>),
     'Due Date': (
-      <Grid item xs={12} md={2} data-testid="issue-date">
+      <Grid item xs={12} md={2} data-testid="due-date">
         <HiddenText smDown title="Due Date" />
         <Text content={dateToString(inv.dueDate)} />
       </Grid>),
