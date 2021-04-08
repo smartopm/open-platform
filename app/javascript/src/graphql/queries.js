@@ -1186,6 +1186,11 @@ export const TransactionQuery = gql`
           id
           name
         }
+        paymentPlan {
+          landParcel {
+            parcelNumber
+          }
+        }
       }
       pendingInvoices {
         amount
@@ -1195,6 +1200,7 @@ export const TransactionQuery = gql`
         balance
         createdAt
         id
+        parcelNumber
       }
     }
   }
