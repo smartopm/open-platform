@@ -113,7 +113,7 @@ namespace :imports do
               plan_type: 'lease',
               percentage: 2.75,
               monthly_amount: monthly_amount,
-              total_amount: ((monthly_amount * 12 * 100) / 2.75)
+              total_amount: ((monthly_amount * 12 * 100) / 2.75),
               duration_in_month: 12,
             )
 

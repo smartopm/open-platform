@@ -31,7 +31,9 @@ class PaymentPlan < ApplicationRecord
     return if monthly_amount.nil? || monthly_amount.zero?
 
     no_of_invoices = duration_in_month || 12
-    no_of_invoices.times { |index| create_invoice_for_month(monthly_amount, start_date + index.month) }
+    no_of_invoices.times do |index|
+      create_invoice_for_month(monthly_amount, start_date + index.month)
+    end
   end
 
   def create_invoice_for_month(amount, date)
