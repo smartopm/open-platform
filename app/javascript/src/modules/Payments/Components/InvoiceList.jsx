@@ -4,15 +4,7 @@ import React, { useState } from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 import { useHistory } from 'react-router';
-import {
-  Button,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  Grid,
-  List,
-  IconButton
-} from '@material-ui/core'
+import { Grid, List, IconButton } from '@material-ui/core'
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { useQuery, useLazyQuery, useMutation } from 'react-apollo';
@@ -43,7 +35,6 @@ import Text from '../../../shared/Text';
 import InvoiceDetails from './InvoiceDetail';
 import ListHeader from '../../../shared/list/ListHeader';
 import currencyTypes from '../../../shared/types/currency';
-import AutogenerateInvoice from './AutogenerateInvoice';
 import InvoiceGraph from './InvoiceGraph'
 import QueryBuilder from '../../../components/QueryBuilder'
 import MenuList from '../../../shared/MenuList';
@@ -72,7 +63,6 @@ export default function InvoiceList({ currencyData, userType }) {
   const [searchValue, setSearchValue] = useState('');
   const [listType, setListType] = useState('nongraph')
   const debouncedValue = useDebounce(searchValue, 500);
-  const [isDialogOpen, setDialogOpen] = useState(false)
   const [query, setQuery] = useState('')
   const theme = useTheme();
   const matches = useMediaQuery(theme.breakpoints.up('sm'));
@@ -140,10 +130,6 @@ export default function InvoiceList({ currencyData, userType }) {
     fetchPolicy: 'cache-and-network',
     errorPolicy: 'all'
   });
-
-  function handleGenerateDialog() {
-    setDialogOpen(!isDialogOpen)
-  }
 
   function setGraphQuery(qu){
     setQuery(qu.noOfDays)
@@ -214,48 +200,14 @@ export default function InvoiceList({ currencyData, userType }) {
         open={!!messageAlert}
         handleClose={handleMessageAlertClose}
       />
-      <Grid container>
-        <Grid item xs={12} sm={10}>
-          <SearchInput
-            title='Invoices'
-            searchValue={searchValue}
-            handleSearch={event => setsearch(event.target.value)}
-            // Todo: add a proper filter toggle function
-            handleFilter={toggleFilterMenu}
-            handleClear={() => setSearchClear()}
-          />
-        </Grid>
-        <Grid item xs={12} sm={2}>
-          <Dialog
-            open={isDialogOpen}
-            fullWidth
-            maxWidth="md"
-            scroll="paper"
-            onClose={handleGenerateDialog}
-            aria-labelledby="generate_invoices"
-          >
-            <DialogTitle id="generate_invoices_dialog">
-              <CenteredContent>
-                <span>Generate Monthly Invoices</span>
-              </CenteredContent>
-            </DialogTitle>
-            <DialogContent>
-              <AutogenerateInvoice close={handleGenerateDialog} currencyData={currencyData} />
-            </DialogContent>
-          </Dialog>
-          <CenteredContent>
-            <Button
-              variant="contained"
-              data-testid="invoice-generate-button"
-              color="primary"
-              onClick={handleGenerateDialog}
-              style={{marginLeft: '5px', marginTop: '10px'}}
-            >
-              Create Monthly Invoices
-            </Button>
-          </CenteredContent>
-        </Grid>
-      </Grid>
+      <SearchInput
+        title='Invoices'
+        searchValue={searchValue}
+        handleSearch={event => setsearch(event.target.value)}
+        // Todo: add a proper filter toggle function
+        handleFilter={toggleFilterMenu}
+        handleClear={() => setSearchClear()}
+      />
       <Grid
         container
         justify="flex-end"
