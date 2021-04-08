@@ -49,7 +49,7 @@ export default function MailTemplateList() {
     }
 
     if (called && !templateError) {
-      setCurrentEmail(templateData?.emailTemplate.data || {});
+      setCurrentEmail(templateData?.emailTemplate || {});
       setDialogOpen(true);
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -78,7 +78,7 @@ export default function MailTemplateList() {
         initialData={currentEmail}
         open={templateDialogOpen}
         handleClose={handleClose}
-        type={type}
+        type={type || ''}
       />
       {data?.emailTemplates.map(email => (
         <DataList

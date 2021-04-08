@@ -52,10 +52,10 @@ export default function EmailBuilderDialog({ initialData, open, handleClose, typ
     // avoid preloading previous state into the editor
     if (type !== 'new') {
       if (emailEditorRef.current) {
-        emailEditorRef.current.loadDesign(initialData.design);
+        emailEditorRef.current.loadDesign(initialData.data.design);
       } else {
         // wait for the editor to initialize
-        setTimeout(() => emailEditorRef.current.loadDesign(initialData.design), 3000);
+        setTimeout(() => emailEditorRef.current.loadDesign(initialData.data.design), 3000);
       }
     }
   }
