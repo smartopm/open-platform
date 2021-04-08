@@ -70,28 +70,22 @@ export default function UserPaymentPlanItem({ plans, currencyData }) {
 
 export function renderPlan(plan, currencyData) {
   return {
-    'Plot Number': (
-      <Grid item xs={12} md={2} data-testid="plot-number">
-        {plan.landParcel.parcelNumber}
-      </Grid>
-    ),
-    Balance: (
-      <Grid item xs={12} md={2} data-testid="balance">
-        {plan.pendingBalance > 0
-          ? `-${formatMoney(currencyData, plan.pendingBalance)}`
-          : formatMoney(currencyData, plan.plotBalance)}
-      </Grid>
-    ),
-    'Start Date': (
-      <Grid item xs={12} md={2} data-testid="start-date">
-        {dateToString(plan.startDate)}
-      </Grid>
-    ),
-    '% of total valuation': (
-      <Grid item xs={12} md={2} data-testid="percentage">
-        {plan.percentage}
-      </Grid>
-    )
+    'Plot Number':
+  <Grid item xs={12} md={2} data-testid="plot-number">
+    {plan.landParcel.parcelNumber}
+  </Grid>,
+    Balance:
+  <Grid item xs={12} md={2} data-testid="balance">
+    {`-${formatMoney(currencyData, plan.pendingBalance)}`}
+  </Grid>,
+    'Start Date':
+  <Grid item xs={12} md={2} data-testid="start-date">
+    {dateToString(plan.startDate)}
+  </Grid>,
+    '% of total valuation':
+  <Grid item xs={12} md={2} data-testid="percentage">
+    {plan.percentage}
+  </Grid>,
   };
 }
 
