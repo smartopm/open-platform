@@ -28,7 +28,7 @@ const transactionHeader = [
   { title: 'Menu', col: 1 },
 ];
 
-export default function UserTransactionsList({ transaction, currencyData, userData, userType }) {
+export default function UserTransactionsList({ transaction, currencyData, userData, userType, walletRefetch }) {
   const [open, setOpen] = useState(false)
   const [receiptOpen, setReceiptOpen] = useState(false)
   const [anchorEl, setAnchorEl] = useState(null)
@@ -67,6 +67,7 @@ export default function UserTransactionsList({ transaction, currencyData, userDa
     }).then(() => {
       setAnchorEl(null)
       setMessageAlert('Transaction reverted')
+      walletRefetch()
       setIsSuccessAlert(true)
       setRevertModalOpen(false)
     })
@@ -282,5 +283,6 @@ UserTransactionsList.propTypes = {
   userData: PropTypes.shape({
     name: PropTypes.string.isRequired
   }).isRequired,
-  userType: PropTypes.string.isRequired
+  userType: PropTypes.string.isRequired,
+  walletRefetch: PropTypes.func.isRequired,
 };
