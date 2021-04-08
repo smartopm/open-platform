@@ -24,6 +24,5 @@ export default {
   },
   name: 'Email Templates',
   accessibleBy: ['admin'],
-  included: true,
   subRoutes,
 };

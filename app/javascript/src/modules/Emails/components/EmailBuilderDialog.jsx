@@ -51,8 +51,11 @@ export default function EmailBuilderDialog({ initialData, open, handleClose }) {
 
 
   function onLoad(){
-    emailEditorRef.current.loadDesign(initialData.design);
+    // if(emailEditorRef.current){
+      emailEditorRef.current.loadDesign(initialData.design);
+    // }
   }
+  console.log(emailEditorRef)
 
   function handleCloseDetails() {
     setOpenDetails(false)

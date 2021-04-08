@@ -230,19 +230,14 @@ const App = () => {
                                 {[...modules, ...UserRoutes].map(module => {
                                   if (module.subMenu) {
                                     return module.subMenu.map(sub => {
-                                      if (sub.included && sub.subRoutes) {
-                                        //  sub.subRoutes.map(subRoute => (
-                                        //   <Route {...subRoute.routeProps} key={subRoute.name} />
-                                        //   ))
-                                        sub.subRoutes.forEach(subRoute => {
-                                          return <Route {...subRoute.routeProps} key={subRoute.name} />
-                                        })
-                                          return <Route {...sub.routeProps} key={sub.name} />
-                                      }
-                                      // if (sub.included) {
-                                      //   return <Route {...sub.routeProps} key={sub.name} />
-                                      // }
-                                      return <Route {...sub.routeProps} key={sub.name} />
+                                      let routes = []
+                                      if (sub.subRoutes) {
+                                        routes = sub.subRoutes.map(subRoute => (
+                                          <Route {...subRoute.routeProps} key={subRoute.name} />
+                                        ))
+                                      } 
+                                      routes.push(<Route {...sub.routeProps} key={sub.name} />)
+                                      return routes
                                     });
                                   }
                                   if (module.accessibleBy.includes(user.userType)) {
