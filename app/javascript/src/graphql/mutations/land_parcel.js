@@ -10,6 +10,7 @@ export const LandPaymentPlanCreateMutation = gql`
     $planType: String!
     $percentage: String!
     $monthlyAmount: Float!
+    $totalAmount: Float!
     $durationInMonth: Int!
 
   ) {
@@ -21,6 +22,7 @@ export const LandPaymentPlanCreateMutation = gql`
       planType: $planType
       percentage: $percentage
       monthlyAmount: $monthlyAmount
+      totalAmount: $totalAmount
       durationInMonth: $durationInMonth
     ) {
       paymentPlan {

@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Button, MenuItem, TextField, InputAdornment, Typography } from '@material-ui/core';
 import { useMutation } from 'react-apollo';
@@ -17,6 +17,7 @@ const initialPlanState = {
   startDate: new Date(),
   userId: '',
   monthlyAmount: '',
+  totalAmount: '',
   durationInMonth: ''
 };
 export default function PaymentPlanForm({ landParcel, refetch }) {
@@ -30,6 +31,17 @@ export default function PaymentPlanForm({ landParcel, refetch }) {
   const [errorInfo, setErrorInfo] = useState({ isError: false, isSubmitting: false });
   const authState = useContext(AuthStateContext);
   const currency = currencies[authState.user?.community.currency] || '';
+
+  useEffect(() => {
+    const { percentage, monthlyAmount, durationInMonth } = paymentPlanState;
+
+    let totalAmount = 0;
+    if (Number(percentage) > 0 || Number(monthlyAmount) > 0 || Number(durationInMonth) > 0) {
+      totalAmount = (monthlyAmount * durationInMonth * 100) / percentage;
+    }
+    console.log('tota', parseFloat(totalAmount).toFixed(2));
+    setPaymentPlanState({ ...paymentPlanState, totalAmount: parseFloat(totalAmount).toFixed(2) })
+  }, [paymentPlanState.percentage, paymentPlanState.monthlyAmount, paymentPlanState.durationInMonth]);
 
   function handleOnChange(event) {
     const { name, value } = event.target;
@@ -70,19 +82,6 @@ export default function PaymentPlanForm({ landParcel, refetch }) {
       .catch(error => {
         setMutationInfo({ isError: true, message: formatError(error.message), loading: false });
       });
-  }
-
-  function calculatedTotalAmount() {
-    const { percentage, monthlyAmount, durationInMonth } = paymentPlanState;
-    if (Number(percentage) <= 0 || Number(monthlyAmount) <= 0 || Number(durationInMonth) <= 0) {
-      return 0;
-    }
-
-    let totalAmount = 0;
-    if (percentage && monthlyAmount && durationInMonth) {
-      totalAmount = (monthlyAmount * durationInMonth * 100) / percentage;
-    }
-    return totalAmount;
   }
 
   return (
@@ -218,14 +217,14 @@ export default function PaymentPlanForm({ landParcel, refetch }) {
         label="Start Date"
         required
       />
-      {!!calculatedTotalAmount() && (
+      {!!paymentPlanState.totalAmount && (
         <Typography
           variant="caption"
           color="textSecondary"
           component="p"
           data-testid="total-amount-txt"
         >
-          {`Approx. Total Property Valuation: ${currency} ${parseFloat(calculatedTotalAmount()).toFixed(2)}`}
+          {`Approx. Total Property Valuation: ${currency} ${paymentPlanState.totalAmount}`}
         </Typography>
       )}
       {mutationInfo.loading ? (

@@ -19,6 +19,7 @@ RSpec.describe Mutations::Payment::PaymentPlanCreate do
             $percentage: String!
             $durationInMonth: Int!
             $monthlyAmount: Float!
+            $totalAmount: Float!
         ) {
             paymentPlanCreate(
             landParcelId: $landParcelId
@@ -29,6 +30,7 @@ RSpec.describe Mutations::Payment::PaymentPlanCreate do
             percentage: $percentage
             durationInMonth: $durationInMonth
             monthlyAmount: $monthlyAmount
+            totalAmount: $totalAmount
             ) {
             paymentPlan {
                 id
@@ -48,6 +50,7 @@ RSpec.describe Mutations::Payment::PaymentPlanCreate do
         percentage: '50%',
         durationInMonth: (rand * 10).ceil,
         monthlyAmount: 0,
+        totalAmount: 0,
       }
       result = DoubleGdpSchema.execute(payment_plan_mutation, variables: variables,
                                                               context: {
@@ -76,6 +79,7 @@ RSpec.describe Mutations::Payment::PaymentPlanCreate do
         percentage: '50%',
         durationInMonth: (rand * 10).ceil,
         monthlyAmount: 100.0,
+        totalAmount: 100.0,
       }
       result = DoubleGdpSchema.execute(payment_plan_mutation, variables: variables,
                                                               context: {
