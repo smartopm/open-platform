@@ -17,7 +17,7 @@ const initialPlanState = {
   startDate: new Date(),
   userId: '',
   monthlyAmount: '',
-  totalAmount: '',
+  totalAmount: 0,
   durationInMonth: ''
 };
 export default function PaymentPlanForm({ landParcel, refetch }) {
@@ -39,8 +39,8 @@ export default function PaymentPlanForm({ landParcel, refetch }) {
     if (Number(percentage) > 0 || Number(monthlyAmount) > 0 || Number(durationInMonth) > 0) {
       totalAmount = (monthlyAmount * durationInMonth * 100) / percentage;
     }
-    console.log('tota', parseFloat(totalAmount).toFixed(2));
-    setPaymentPlanState({ ...paymentPlanState, totalAmount: parseFloat(totalAmount).toFixed(2) })
+
+    setPaymentPlanState({ ...paymentPlanState, totalAmount: Number(parseFloat(totalAmount).toFixed(2)) })
   }, [paymentPlanState.percentage, paymentPlanState.monthlyAmount, paymentPlanState.durationInMonth]);
 
   function handleOnChange(event) {
@@ -217,7 +217,7 @@ export default function PaymentPlanForm({ landParcel, refetch }) {
         label="Start Date"
         required
       />
-      {!!paymentPlanState.totalAmount && (
+      {paymentPlanState.totalAmount > 0 && (
         <Typography
           variant="caption"
           color="textSecondary"
