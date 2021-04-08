@@ -1,64 +1,67 @@
-import React, { useRef, useState } from 'react'
-import Dialog from '@material-ui/core/Dialog'
-import EmailEditor from 'react-email-editor'
-import AppBar from '@material-ui/core/AppBar'
-import Toolbar from '@material-ui/core/Toolbar'
-import IconButton from '@material-ui/core/IconButton'
-import CloseIcon from '@material-ui/icons/Close'
-import Slide from '@material-ui/core/Slide'
-import Button from '@material-ui/core/Button'
-import PropTypes from 'prop-types'
-import { useMutation } from 'react-apollo'
-import EmailDetailsDialog from './EmailDetailsDialog'
-import MessageAlert from '../../../components/MessageAlert'
-import { formatError } from '../../../utils/helpers'
-import CreateEmailTemplateMutation from '../graphql/email_mutations'
+import React, { useRef, useState } from 'react';
+import Dialog from '@material-ui/core/Dialog';
+import EmailEditor from 'react-email-editor';
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import IconButton from '@material-ui/core/IconButton';
+import CloseIcon from '@material-ui/icons/Close';
+import Slide from '@material-ui/core/Slide';
+import Button from '@material-ui/core/Button';
+import PropTypes from 'prop-types';
+import { useMutation } from 'react-apollo';
+import EmailDetailsDialog from './EmailDetailsDialog';
+import MessageAlert from '../../../components/MessageAlert';
+import { formatError } from '../../../utils/helpers';
+import CreateEmailTemplateMutation from '../graphql/email_mutations';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="up" ref={ref} {...props} />
-})
+  return <Slide direction="up" ref={ref} {...props} />;
+});
 
-export default function EmailBuilderDialog({ initialData, open, handleClose }) {
-  const emailEditorRef = useRef(null)
-  const [createEmailTemplate] = useMutation(CreateEmailTemplateMutation)
-  const [detailsOpen, setOpenDetails] = useState(false)
-  const [alertOpen, setAlertOpen] = useState(false)
-  const [message, setMessage] = useState({ isError: false, detail: '' })
+export default function EmailBuilderDialog({ initialData, open, handleClose, type }) {
+  const emailEditorRef = useRef(null);
+  const [createEmailTemplate] = useMutation(CreateEmailTemplateMutation);
+  const [detailsOpen, setOpenDetails] = useState(false);
+  const [alertOpen, setAlertOpen] = useState(false);
+  const [message, setMessage] = useState({ isError: false, detail: '' });
 
-  function handleAlertClose(){
-    setAlertOpen(false)
+  function handleAlertClose() {
+    setAlertOpen(false);
   }
 
   function saveTemplate(details) {
     emailEditorRef.current.editor.exportHtml(data => {
-      // You can also get the design details of the created email
-      const { html } = data
+      const { html } = data;
       createEmailTemplate({
         variables: { ...details, body: html, data }
       })
-      .then(() => {
-        setMessage({ ...message, detail: 'Email Template successfully saved' })
-        setAlertOpen(true)
-        handleClose('closed')
-        handleCloseDetails()
-      })
-      .catch(err => {
-        setMessage({ isError: true, detail: formatError(err.message) })
-        setAlertOpen(true)
-      })
-    })
+        .then(() => {
+          setMessage({ ...message, detail: 'Email Template successfully saved' });
+          setAlertOpen(true);
+          handleClose();
+          handleCloseDetails();
+        })
+        .catch(err => {
+          setMessage({ isError: true, detail: formatError(err.message) });
+          setAlertOpen(true);
+        });
+    });
   }
 
-
-  function onLoad(){
-    // if(emailEditorRef.current){
-      emailEditorRef.current.loadDesign(initialData.design);
-    // }
+  function onLoad() {
+    // avoid preloading previous state into the editor
+    if (type !== 'new') {
+      if (emailEditorRef.current) {
+        emailEditorRef.current.loadDesign(initialData.design);
+      } else {
+        // wait for the editor to initialize
+        setTimeout(() => emailEditorRef.current.loadDesign(initialData.design), 3000);
+      }
+    }
   }
-  console.log(emailEditorRef)
 
   function handleCloseDetails() {
-    setOpenDetails(false)
+    setOpenDetails(false);
   }
   return (
     <>
@@ -67,26 +70,16 @@ export default function EmailBuilderDialog({ initialData, open, handleClose }) {
         handleClose={handleCloseDetails}
         handleSave={saveTemplate}
       />
-      <MessageAlert 
+      <MessageAlert
         type={message.isError ? 'error' : 'success'}
         message={message.detail}
         open={alertOpen}
         handleClose={handleAlertClose}
       />
-      <Dialog
-        fullScreen
-        open={open}
-        onClose={handleClose}
-        TransitionComponent={Transition}
-      >
+      <Dialog fullScreen open={open} onClose={handleClose} TransitionComponent={Transition}>
         <AppBar position="relative">
           <Toolbar>
-            <IconButton
-              edge="start"
-              color="inherit"
-              onClick={handleClose}
-              aria-label="close"
-            >
+            <IconButton edge="start" color="inherit" onClick={handleClose} aria-label="close">
               <CloseIcon />
             </IconButton>
 
@@ -103,14 +96,15 @@ export default function EmailBuilderDialog({ initialData, open, handleClose }) {
         <EmailEditor ref={emailEditorRef} onLoad={onLoad} />
       </Dialog>
     </>
-  )
+  );
 }
 EmailBuilderDialog.defaultProps = {
   initialData: {}
-}
+};
 EmailBuilderDialog.propTypes = {
   open: PropTypes.bool.isRequired,
   handleClose: PropTypes.func.isRequired,
+  type: PropTypes.string.isRequired,
   // eslint-disable-next-line react/forbid-prop-types
   initialData: PropTypes.object
-}
+};

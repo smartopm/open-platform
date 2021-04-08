@@ -54,7 +54,7 @@ export default function EmailDetailsDialog({ open, handleClose, handleSave }) {
 }
 
 EmailDetailsDialog.propTypes = {
-  open: PropTypes.bool.isRequired,
   handleClose: PropTypes.func.isRequired,
+  open: PropTypes.bool.isRequired,
   handleSave: PropTypes.func.isRequired
 }
