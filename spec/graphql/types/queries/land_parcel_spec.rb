@@ -5,6 +5,7 @@ require 'rails_helper'
 RSpec.describe Types::Queries::LandParcel do
   describe 'parcel queries' do
     let!(:current_user) { create(:user_with_community) }
+    let!(:account) { create(:account, user: current_user, community: current_user.community) }
     let!(:land_parcel) do
       current_user.community.land_parcels.create(address1: 'This address',
                                                  parcel_number: 'basic-123',
@@ -12,8 +13,8 @@ RSpec.describe Types::Queries::LandParcel do
                                                  long_x: 28.234,
                                                  lat_y: -15.234)
     end
-
     let!(:admin_user) { create(:admin_user, community_id: current_user.community.id) }
+
     let(:fetch_land_parcel_query) do
       %(query {
         fetchLandParcel {
@@ -119,7 +120,7 @@ RSpec.describe Types::Queries::LandParcel do
                                              current_user: admin_user,
                                              site_community: admin_user.community,
                                            }).as_json
-
+          expect(result.dig('data', 'landParcel', 'id')).to eql land_parcel.id
           expect(result.dig('data', 'landParcel', 'id')).to eql land_parcel.id
         end
       end
@@ -135,6 +136,58 @@ RSpec.describe Types::Queries::LandParcel do
           expect(result.dig('data', 'landParcel')).to be_nil
           expect(result.dig('errors', 0, 'message')).to eql 'Unauthorized'
         end
+      end
+    end
+
+    describe 'user_land_parcel' do
+      let!(:land_parcel_2) { create(:land_parcel, community_id: current_user.community_id) }
+      let!(:payment_plan) do
+        create(:payment_plan, land_parcel_id: land_parcel.id,
+                              user_id: current_user.id, plot_balance: 0)
+      end
+
+      let(:user_land_parcel_query) do
+        %(query {
+            userLandParcel(userId: "#{current_user.id}"){
+              id
+            }
+          })
+      end
+
+      let(:user_land_parcel_with_plan_query) do
+        %(query {
+            userLandParcelWithPlan(userId: "#{current_user.id}"){
+              id
+            }
+          })
+      end
+
+      let!(:land_parcel_account) do
+        create(:land_parcel_account, land_parcel_id: land_parcel.id, account_id: account.id)
+      end
+
+      let!(:land_parcel_account_2) do
+        create(:land_parcel_account, land_parcel_id: land_parcel_2.id, account_id: account.id)
+      end
+
+      it 'should return a single land parcel by id' do
+        result = DoubleGdpSchema.execute(user_land_parcel_query,
+                                         context: {
+                                           current_user: admin_user,
+                                           site_community: admin_user.community,
+                                         }).as_json
+        expect(result.dig('data', 'userLandParcel', 1, 'id')).to eql land_parcel.id
+        expect(result.dig('data', 'userLandParcel').count).to eql 2
+      end
+
+      it 'should return a single land parcel by id' do
+        result = DoubleGdpSchema.execute(user_land_parcel_with_plan_query,
+                                         context: {
+                                           current_user: admin_user,
+                                           site_community: admin_user.community,
+                                         }).as_json
+        expect(result.dig('data', 'userLandParcelWithPlan', 0, 'id')).to eql land_parcel.id
+        expect(result.dig('data', 'userLandParcelWithPlan').count).to eql 1
       end
     end
   end

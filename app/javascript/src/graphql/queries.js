@@ -351,6 +351,15 @@ export const UserLandParcel = gql`
   }
 `
 
+export const UserLandParcelWithPlan = gql`
+  query userLandParcelWithPlan($userId: ID!) {
+    userLandParcelWithPlan(userId: $userId) {
+      id
+      parcelNumber
+    }
+  }
+`
+
 export const lastUserTimeSheet = gql`
   query userLastShift($userId: ID!) {
     userLastShift(userId: $userId) {
