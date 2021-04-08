@@ -229,12 +229,24 @@ const App = () => {
                                 {/* end of redirects */}
                                 {[...modules, ...UserRoutes].map(module => {
                                   if (module.subMenu) {
-                                    return module.subMenu.map(sub => (
-                                      <Route {...sub.routeProps} key={sub.name} />
-                                      ));
-                                    }
-                                    if (module.accessibleBy.includes(user.userType)) {
-                                    return <Route exact {...module.routeProps} key={module.name} />;
+                                    return module.subMenu.map(sub => {
+                                      if (sub.included && sub.subRoutes) {
+                                        //  sub.subRoutes.map(subRoute => (
+                                        //   <Route {...subRoute.routeProps} key={subRoute.name} />
+                                        //   ))
+                                        sub.subRoutes.forEach(subRoute => {
+                                          return <Route {...subRoute.routeProps} key={subRoute.name} />
+                                        })
+                                          return <Route {...sub.routeProps} key={sub.name} />
+                                      }
+                                      // if (sub.included) {
+                                      //   return <Route {...sub.routeProps} key={sub.name} />
+                                      // }
+                                      return <Route {...sub.routeProps} key={sub.name} />
+                                    });
+                                  }
+                                  if (module.accessibleBy.includes(user.userType)) {
+                                  return <Route exact {...module.routeProps} key={module.name} />;
                                   }
                                 })}
                                 <Route exact path="/scan" component={Scan} />

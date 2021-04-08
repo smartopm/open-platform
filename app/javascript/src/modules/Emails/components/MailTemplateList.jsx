@@ -37,7 +37,7 @@ export default function MailTemplateList() {
   function handleOpenEmailDialog(_event, emailData) {
     setCurrentEmail(emailData.data)
     history.push(`/mail_templates?email=${emailData.id}`)
-    setDialogOpen(!templateDialogOpen);
+    // setDialogOpen(!templateDialogOpen);
   }
 
   return (
