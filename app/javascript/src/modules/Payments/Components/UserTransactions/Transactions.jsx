@@ -177,6 +177,7 @@ export default function TransactionsList({ userId, user, userData, paymentSubTab
             userData={userData}
             userType={authState.user?.userType}
             walletRefetch={walletRefetch}
+            depRefetch={depRefetch}
           />
         ))}
         {transactionsData?.userDeposits.transactions.map((trans) => (
@@ -187,6 +188,7 @@ export default function TransactionsList({ userId, user, userData, paymentSubTab
             userData={userData}
             userType={authState.user?.userType}
             walletRefetch={walletRefetch}
+            depRefetch={depRefetch}
           />
         ))}
       </TabPanel>
