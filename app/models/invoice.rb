@@ -3,7 +3,6 @@
 # Invoice Record
 class Invoice < ApplicationRecord
   include SearchCop
-  include PrecisionSetable
 
   belongs_to :land_parcel
   belongs_to :community

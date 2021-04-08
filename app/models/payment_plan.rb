@@ -2,8 +2,6 @@
 
 # PaymentPlan
 class PaymentPlan < ApplicationRecord
-  include PrecisionSetable
-
   belongs_to :user
   belongs_to :land_parcel
   has_many :invoices, dependent: :nullify

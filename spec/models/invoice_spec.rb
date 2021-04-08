@@ -8,10 +8,11 @@ RSpec.describe Invoice, type: :model do
     it { is_expected.to have_db_column(:community_id).of_type(:uuid) }
     it { is_expected.to have_db_column(:land_parcel_id).of_type(:uuid) }
     it { is_expected.to have_db_column(:created_by_id).of_type(:uuid) }
-    it { is_expected.to have_db_column(:amount).of_type(:float) }
+    it { is_expected.to have_db_column(:amount).of_type(:decimal) }
     it { is_expected.to have_db_column(:note).of_type(:string) }
     it { is_expected.to have_db_column(:description).of_type(:string) }
     it { is_expected.to have_db_column(:invoice_number).of_type(:integer) }
+    it { is_expected.to have_db_column(:pending_amount).of_type(:decimal) }
   end
 
   describe 'associations' do
