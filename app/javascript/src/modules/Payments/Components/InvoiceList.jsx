@@ -4,15 +4,7 @@ import React, { useState } from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 import { useHistory } from 'react-router';
-import {
-  Button,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  Grid,
-  List,
-  IconButton
-} from '@material-ui/core'
+import { Grid, List, IconButton } from '@material-ui/core'
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { useQuery, useLazyQuery, useMutation } from 'react-apollo';
