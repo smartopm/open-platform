@@ -41,7 +41,7 @@ export default function EmailDetailsDialog({ open, handleClose, handleSave, load
       </DialogContent>
       <br />
       <DialogActions style={{ justifyContent: 'flex-start' }}>
-        <Button onClick={handleClose} color="secondary" variant="outlined">
+        <Button onClick={handleClose} color="secondary" variant="outlined" data-testid="cancel_btn">
           Cancel
         </Button>
         <Button
@@ -49,7 +49,7 @@ export default function EmailDetailsDialog({ open, handleClose, handleSave, load
           color="primary"
           variant="contained"
           disabled={loading}
-          data-testid="action_btn"
+          data-testid="save_btn"
         >
           {`${loading ? 'Saving Changes' : ' Save Changes'}`}
         </Button>
