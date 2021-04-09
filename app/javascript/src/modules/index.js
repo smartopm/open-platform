@@ -1,6 +1,6 @@
 // all modules should be imported in here
 import Payments from './Payments';
-import Users from './Users';
+import Users, { Logout, Profile } from './Users';
 import Dashboard from './Dashboard';
 import Community from './Community';
 import Forms from './Forms';
@@ -14,10 +14,13 @@ import LogBook from './LogBook';
 import Portal from './Portal'; // thebe portal
 import Properties from './Plots/Properties';
 import UserPayments from './Payments/UserPayments';
+import Search from './Search';
 
 // and exported back here
 export default [
   Dashboard,
+  Search,
+  Profile,
   Plots,
   Communication,
   LogBook,
@@ -32,4 +35,5 @@ export default [
   Portal,
   ActionFlows,
   TimeCard,
+  Logout
 ];
