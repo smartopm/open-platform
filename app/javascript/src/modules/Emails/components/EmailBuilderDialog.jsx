@@ -103,7 +103,7 @@ export default function EmailBuilderDialog({ initialData, open, handleClose, ema
       <Dialog fullScreen open={open} onClose={handleClose} TransitionComponent={Transition}>
         <AppBar position="relative">
           <Toolbar>
-            <IconButton edge="start" color="inherit" onClick={handleClose} aria-label="close">
+            <IconButton edge="start" color="inherit" data-testid="close_btn" onClick={handleClose} aria-label="close">
               <CloseIcon />
             </IconButton>
 
@@ -113,6 +113,7 @@ export default function EmailBuilderDialog({ initialData, open, handleClose, ema
               color="inherit"
               onClick={emailId ?  updateTemplate : handleDetailsDialog}
               disabled={message.loading}
+              data-testid="submit_btn"
             >
               {`${emailId && message.loading ? 'Saving...' : emailId ? 'Update' :  'Save'}`}
             </Button>
