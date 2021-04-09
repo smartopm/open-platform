@@ -9,7 +9,7 @@ import {
 } from '@material-ui/core'
 import PropTypes from 'prop-types'
 
-export default function EmailDetailsDialog({ open, handleClose, handleSave }) {
+export default function EmailDetailsDialog({ open, handleClose, handleSave, loading }) {
   const [details, setDetails] = useState({ name: '', subject: '' })
   return (
     <Dialog open={open} onClose={handleClose}>
@@ -24,6 +24,7 @@ export default function EmailDetailsDialog({ open, handleClose, handleSave }) {
           value={details.name}
           onChange={event =>
             setDetails({ ...details, name: event.target.value })}
+          required
         />
         <TextField
           label="Template Subject"
@@ -34,6 +35,7 @@ export default function EmailDetailsDialog({ open, handleClose, handleSave }) {
           value={details.subject}
           onChange={event =>
             setDetails({ ...details, subject: event.target.value })}
+          required
         />
       </DialogContent>
       <br />
@@ -45,8 +47,9 @@ export default function EmailDetailsDialog({ open, handleClose, handleSave }) {
           onClick={() => handleSave(details)}
           color="primary"
           variant="contained"
+          disabled={loading}
         >
-          Save Changes
+          {`${loading ? 'Saving Changes' : ' Save Changes'}`}
         </Button>
       </DialogActions>
     </Dialog>
@@ -57,5 +60,6 @@ export default function EmailDetailsDialog({ open, handleClose, handleSave }) {
 EmailDetailsDialog.propTypes = {
   handleClose: PropTypes.func.isRequired,
   open: PropTypes.bool.isRequired,
+  loading: PropTypes.bool.isRequired,
   handleSave: PropTypes.func.isRequired,
 }

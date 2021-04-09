@@ -1,3 +1,4 @@
+/* eslint-disable no-nested-ternary */
 import React, { useRef, useState } from 'react';
 import Dialog from '@material-ui/core/Dialog';
 import EmailEditor from 'react-email-editor';
@@ -24,13 +25,14 @@ export default function EmailBuilderDialog({ initialData, open, handleClose, ema
   const [updateEmailTemplate] = useMutation(EmailUpdateMutation);
   const [detailsOpen, setOpenDetails] = useState(false);
   const [alertOpen, setAlertOpen] = useState(false);
-  const [message, setMessage] = useState({ isError: false, detail: '' });
+  const [message, setMessage] = useState({ isError: false, detail: '', loading: false });
 
   function handleAlertClose() {
     setAlertOpen(false);
   }
 
   function updateTemplate(){
+    setMessage({ ...message, loading: true });
     emailEditorRef.current.editor.exportHtml(data => {
       updateEmailTemplate({
         variables: { id: emailId, body: data.html, data }
@@ -41,26 +43,27 @@ export default function EmailBuilderDialog({ initialData, open, handleClose, ema
           handleClose();
         })
         .catch(err => {
-          setMessage({ isError: true, detail: formatError(err.message) });
+          setMessage({ isError: true, detail: formatError(err.message), loading: false });
           setAlertOpen(true);
         });
     });
   }
 
   function saveTemplate(details) {
+    setMessage({ ...message, loading: true });
     emailEditorRef.current.editor.exportHtml(data => {
       const { html } = data;
       createEmailTemplate({
         variables: { ...details, body: html, data }
       })
         .then(() => {
-          setMessage({ ...message, detail: 'Email Template successfully saved' });
+          setMessage({ ...message, detail: 'Email Template successfully saved', loading: false});
           setAlertOpen(true);
           handleClose();
           handleDetailsDialog();
         })
         .catch(err => {
-          setMessage({ isError: true, detail: formatError(err.message) });
+          setMessage({ isError: true, detail: formatError(err.message), loading: false});
           setAlertOpen(true);
         });
     });
@@ -87,6 +90,7 @@ export default function EmailBuilderDialog({ initialData, open, handleClose, ema
         open={detailsOpen}
         handleClose={handleDetailsDialog}
         handleSave={saveTemplate}
+        loading={message.loading}
       />
       <MessageAlert
         type={message.isError ? 'error' : 'success'}
@@ -106,8 +110,9 @@ export default function EmailBuilderDialog({ initialData, open, handleClose, ema
               autoFocus
               color="inherit"
               onClick={emailId ?  updateTemplate : handleDetailsDialog}
+              disabled={message.loading}
             >
-              {`${emailId ? 'Update' : 'Save'}`}
+              {`${emailId ? 'Update' : emailId && message.loading ? 'Saving ...' : 'Save'}`}
             </Button>
           </Toolbar>
         </AppBar>
