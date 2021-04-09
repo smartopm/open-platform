@@ -11,6 +11,7 @@ import PropTypes from 'prop-types'
 
 export default function EmailDetailsDialog({ open, handleClose, handleSave, loading }) {
   const [details, setDetails] = useState({ name: '', subject: '' })
+  
   return (
     <Dialog open={open} onClose={handleClose}>
       <DialogTitle>Add Email Details</DialogTitle>
@@ -20,7 +21,7 @@ export default function EmailDetailsDialog({ open, handleClose, handleSave, load
           className="form-control"
           aria-label="template_name"
           inputProps={{ 'data-testid': 'template_name' }}
-          name="templateStyle"
+          name="templateName"
           value={details.name}
           onChange={event =>
             setDetails({ ...details, name: event.target.value })}
@@ -31,7 +32,7 @@ export default function EmailDetailsDialog({ open, handleClose, handleSave, load
           className="form-control"
           aria-label="template_subject"
           inputProps={{ 'data-testid': 'template_subject' }}
-          name="templateStyle"
+          name="templateSubject"
           value={details.subject}
           onChange={event =>
             setDetails({ ...details, subject: event.target.value })}
