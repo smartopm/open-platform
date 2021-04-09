@@ -19,7 +19,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function EmailBuilderDialog({ initialData, open, handleClose, emailId }) {
+export default function EmailBuilderDialog({ initialData, open, handleClose, emailId, refetchEmails }) {
   const emailEditorRef = useRef(null);
   const [createEmailTemplate] = useMutation(CreateEmailTemplateMutation);
   const [updateEmailTemplate] = useMutation(EmailUpdateMutation);
@@ -41,6 +41,7 @@ export default function EmailBuilderDialog({ initialData, open, handleClose, ema
           setMessage({ ...message, isError: false, detail: 'Email Template successfully updated', loading: false});
           setAlertOpen(true);
           handleClose();
+          refetchEmails()
         })
         .catch(err => {
           setMessage({ isError: true, detail: formatError(err.message), loading: false });
@@ -61,6 +62,7 @@ export default function EmailBuilderDialog({ initialData, open, handleClose, ema
           setAlertOpen(true);
           handleClose();
           handleDetailsDialog();
+          refetchEmails()
         })
         .catch(err => {
           setMessage({ isError: true, detail: formatError(err.message), loading: false});
@@ -76,7 +78,7 @@ export default function EmailBuilderDialog({ initialData, open, handleClose, ema
         emailEditorRef.current.loadDesign(initialData.data.design);
       } else {
         // wait for the editor to initialize
-        setTimeout(() => emailEditorRef.current.loadDesign(initialData.data.design), 3000);
+        setTimeout(() => emailEditorRef.current.loadDesign(initialData.data?.design), 3000);
       }
     }
   }
@@ -128,6 +130,7 @@ EmailBuilderDialog.defaultProps = {
 EmailBuilderDialog.propTypes = {
   open: PropTypes.bool.isRequired,
   handleClose: PropTypes.func.isRequired,
+  refetchEmails: PropTypes.func.isRequired,
   emailId: PropTypes.string,
   // eslint-disable-next-line react/forbid-prop-types
   initialData: PropTypes.object

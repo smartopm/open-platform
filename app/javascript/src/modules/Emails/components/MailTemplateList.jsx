@@ -30,7 +30,7 @@ export default function MailTemplateList() {
   const limit = 50;
   const [offset, setOffset] = useState(0);
 
-  const { loading, error, data } = useQuery(EmailTemplatesQuery, {
+  const { loading, error, data, refetch } = useQuery(EmailTemplatesQuery, {
     errorPolicy: 'all',
     variables: { limit, offset }
   });
@@ -91,6 +91,7 @@ export default function MailTemplateList() {
         open={templateDialogOpen}
         handleClose={handleClose}
         emailId={emailId}
+        refetchEmails={refetch}
       />
       {data?.emailTemplates.map(email => (
         <DataList
