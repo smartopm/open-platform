@@ -4,6 +4,7 @@ import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import Users from '../../containers/Users';
 import UserShow from '../../containers/UserShow';
+import { allUserTypes } from '../../utils/constants';
 
 // for nested links, I think these will likely be on the user
 // we can have a to prop and substitute once we are on the right menu
@@ -35,15 +36,7 @@ export const Profile = {
     icon: <AccountCircleIcon />
   },
   name: 'My Profile',
-  accessibleBy: [
-    'admin',
-    'client',
-    'security_guard',
-    'prospective_client',
-    'contractor',
-    'resident',
-    'visitor'
-  ]
+  accessibleBy: allUserTypes
 }
 
 export const Logout = {
@@ -55,13 +48,5 @@ export const Logout = {
     icon: <ExitToAppIcon />
   },
   name: 'Logout',
-  accessibleBy: [
-    'admin',
-    'client',
-    'security_guard',
-    'prospective_client',
-    'contractor',
-    'resident',
-    'visitor'
-  ]
+  accessibleBy: allUserTypes
 }
