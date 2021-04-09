@@ -12,6 +12,7 @@ describe('Render Payment Plan Item', () => {
     planType: 'lease',
     createdAt: '2021-03-01T09:55:05Z',
     plotBalance: 0,
+    pendingBalance: 10,
     startDate: '2021-03-01T09:55:05Z',
     status: 'active',
     id: '3b464fb7-bb2b-41cb-9245-9300b6d8a729',
@@ -64,6 +65,6 @@ describe('Render Payment Plan Item', () => {
 
       const balanceContainer = render(results.Balance)
 
-      expect(balanceContainer.queryByTestId('balance').textContent).toContain(0)
+      expect(balanceContainer.queryByTestId('balance').textContent).toContain(10)
   });
 });

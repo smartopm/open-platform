@@ -11,7 +11,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import { CustomizedDialogs } from '../../../../components/Dialog'
 import { PaymentCreate } from '../../../../graphql/mutations'
-import { UserLandParcel } from '../../../../graphql/queries'
+import { UserLandParcelWithPlan } from '../../../../graphql/queries'
 import MessageAlert from "../../../../components/MessageAlert"
 import { extractCurrency, formatError, formatMoney } from '../../../../utils/helpers'
 import ReceiptModal from './ReceiptModal'
@@ -57,7 +57,7 @@ export default function PaymentModal({ open, handleModalClose, userId, currencyD
     setIsConfirm(true);
   }
 
-  const { loading, data: landParcels } = useQuery(UserLandParcel, {
+  const { loading, data: landParcels } = useQuery(UserLandParcelWithPlan, {
     variables: { userId },
     fetchPolicy: 'cache-and-network',
     errorPolicy: 'all'
@@ -130,6 +130,7 @@ export default function PaymentModal({ open, handleModalClose, userId, currencyD
   }
   
   if (loading) return <Spinner />
+
   return (
     <>
       <MessageAlert
@@ -196,7 +197,7 @@ export default function PaymentModal({ open, handleModalClose, userId, currencyD
                 error={isError && submitting && !inputValue.landParcelId}
                 helperText={isError && !inputValue.landParcelId && 'Land Parcel is required'}
               >
-                {landParcels?.userLandParcel?.map(land => (
+                {landParcels?.userLandParcelWithPlan?.map(land => (
                   <MenuItem value={land.id} key={land.id}>
                     {land.parcelNumber}
                   </MenuItem>

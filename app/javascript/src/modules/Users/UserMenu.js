@@ -14,6 +14,7 @@
  * Edit
  */
 import React from 'react';
+import { allUserTypes } from '../../utils/constants';
 
 const paymentSubMenus = [
   {
@@ -115,7 +116,7 @@ const UserMenus = [
       component: <span />
     },
     name: 'Edit',
-    accessibleBy: ['admin', 'client', 'resident', 'prospective_client', 'custodian', 'contractor', 'security_guard']
+    accessibleBy: allUserTypes
   },
   {
     routeProps: {
@@ -123,7 +124,7 @@ const UserMenus = [
       component: <span />
     },
     name: 'Print ID',
-    accessibleBy: ['admin', 'client', 'resident', 'prospective_client', 'custodian', 'contractor', 'security_guard']
+    accessibleBy: allUserTypes
   },
   {
     routeProps: {
@@ -131,7 +132,7 @@ const UserMenus = [
       component: <span />
     },
     name: 'Message Support',
-    accessibleBy: ['admin', 'client', 'resident', 'prospective_client', 'custodian', 'contractor', 'security_guard']
+    accessibleBy: allUserTypes
   },
   {
     routeProps: {

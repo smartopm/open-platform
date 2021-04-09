@@ -5,6 +5,7 @@ import UserLogs from '../../containers/AllLogs/UserLogs';
 import IdPrintPage from '../../containers/IdPrint';
 import UserMessagePage from '../../containers/Messages/UserMessagePage';
 import OTPFeedbackScreen from '../../containers/OTPScreen';
+import { allUserTypes } from '../../utils/constants';
 
 // name in here is only used as key in routes, make sure it is unique
 
@@ -14,7 +15,7 @@ const routes = [
       path: '/user/:id',
       component: UserShow
     },
-    accessibleBy: ['admin', 'client', 'resident', 'security_guard', 'custodian', 'prospective_client', 'contractor',],
+    accessibleBy: allUserTypes,
     name: 'user_info'
   },
   {
@@ -30,7 +31,7 @@ const routes = [
       path: '/user/:id/edit',
       component: UserEdit
     },
-    accessibleBy: ['admin', 'client', 'resident', 'prospective_client', 'custodian', 'contractor', 'security_guard'],
+    accessibleBy: allUserTypes,
     name: 'user_edit'
   },
   {
@@ -38,7 +39,7 @@ const routes = [
       path: '/print/:id/',
       component: IdPrintPage
     },
-    accessibleBy: ['admin', 'client', 'resident', 'prospective_client', 'custodian', 'contractor', 'security_guard'],
+    accessibleBy: allUserTypes,
     name: 'print_id'
   },
   {
@@ -46,7 +47,7 @@ const routes = [
       path: '/message/:id/',
       component: UserMessagePage
     },
-    accessibleBy: ['admin', 'client', 'resident', 'prospective_client', 'custodian', 'contractor', 'security_guard'],
+    accessibleBy: allUserTypes,
     name: 'user_message'
   },
   {

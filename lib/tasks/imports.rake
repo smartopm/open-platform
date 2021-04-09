@@ -87,18 +87,18 @@ namespace :imports do
         if existing_parcel.present?
           parcel_accounts = existing_parcel.accounts
           if parcel_accounts.find_by(user_id: user.id).present?
-            valuation_amount = nil
+            monthly_amount = nil
             plot_type = existing_parcel.parcel_type&.downcase
 
             case plot_type
             when 'starter'
-              valuation_amount = 230_000
+              monthly_amount = 527
             when 'basic'
-              valuation_amount = 305_000
+              monthly_amount = 698.95
             when 'standard'
-              valuation_amount = 540_000
+              monthly_amount = 1237.6
             when 'premium'
-              valuation_amount = 1_417_940
+              monthly_amount = 3249.45
             else
               errors[row_num + 1] = 'Error: Invalid plot type'
               next
@@ -111,8 +111,9 @@ namespace :imports do
               status: PaymentPlan.statuses[:active],
               start_date: start_date,
               plan_type: 'lease',
-              percentage: '2.75%',
-              total_amount: valuation_amount,
+              percentage: 2.75,
+              monthly_amount: monthly_amount,
+              total_amount: ((monthly_amount * 12 * 100) / 2.75),
               duration_in_month: 12,
             )
 

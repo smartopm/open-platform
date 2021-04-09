@@ -97,7 +97,8 @@ module Types::Queries::Invoice
     {
       invoices: user.invoices.eager_load(:land_parcel, :payments).reverse,
       payments: user.payments,
-      payment_plans: user.payment_plans.includes(invoices: :payments),
+      payment_plans: user.payment_plans.includes(invoices: :payments)
+                         .where.not(pending_balance: 0),
     }
   end
 
@@ -144,19 +145,6 @@ module Types::Queries::Invoice
     }
   end
 
-  def invoice_autogeneration_data
-    raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user]&.admin?
-
-    month = Time.zone.now.month
-    payment_plans = ::PaymentPlan.where(
-      'extract(month from start_date) = ? AND generated = ?', month, false
-    )
-    {
-      number_of_invoices: payment_plans.count,
-      total_amount: calculate_total_amount(payment_plans),
-    }
-  end
-
   def invoice_accounting_stats
     Invoice.invoice_stat(context[:site_community].id)
   end
@@ -186,15 +174,5 @@ module Types::Queries::Invoice
     pending_invoices
   end
   # rubocop:enable Metrics/AbcSize
-
-  def calculate_total_amount(payment_plans)
-    amount = 0
-    payment_plans.each do |payment_plan|
-      next if payment_plan.total_amount.nil? || payment_plan.total_amount.zero?
-
-      amount += payment_plan.calculate_invoice_amount
-    end
-    amount
-  end
 end
 # rubocop:enable Metrics/ModuleLength

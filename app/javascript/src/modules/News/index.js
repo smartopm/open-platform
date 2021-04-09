@@ -1,4 +1,5 @@
 import News from '../../containers/Posts/Posts'
+import { allUserTypes } from '../../utils/constants';
 
 export default {
   routeProps: {
@@ -6,13 +7,5 @@ export default {
     component: News
   },
   name: 'News',
-  accessibleBy: [
-    'admin',
-    'client',
-    'security_guard',
-    'prospective_client',
-    'contractor',
-    'resident',
-    'visitor'
-  ]
+  accessibleBy: allUserTypes
 };

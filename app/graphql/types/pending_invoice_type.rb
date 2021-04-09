@@ -11,7 +11,7 @@ module Types
     field :balance, Float, null: true
     field :community, Types::CommunityType, null: false
     field :due_date, GraphQL::Types::ISO8601DateTime, null: true
-    field :land_parcel, Types::LandParcelType, null: false
+    field :parcel_number, String, null: true
     field :user, Types::UserType, null: false
     field :created_at, GraphQL::Types::ISO8601DateTime, null: false
 

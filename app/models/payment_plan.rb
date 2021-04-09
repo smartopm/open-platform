@@ -2,14 +2,12 @@
 
 # PaymentPlan
 class PaymentPlan < ApplicationRecord
-  include PrecisionSetable
-
   belongs_to :user
   belongs_to :land_parcel
   has_many :invoices, dependent: :nullify
   has_many :wallet_transactions, dependent: :nullify
 
-  after_create :generate_monthly_invoices_for_the_year
+  after_create :generate_monthly_invoices
 
   enum status: { active: 0, cancelled: 1, deleted: 2 }
 
@@ -27,19 +25,15 @@ class PaymentPlan < ApplicationRecord
     end
   end
 
-  def calculate_invoice_amount
-    no_of_invoices = duration_in_month || 12
-    (percentage.to_f * total_amount) / (no_of_invoices * 100)
-  end
-
   private
 
-  def generate_monthly_invoices_for_the_year
-    return if total_amount.nil? || total_amount.zero?
+  def generate_monthly_invoices
+    return if monthly_amount.nil? || monthly_amount.zero?
 
-    amount = calculate_invoice_amount
     no_of_invoices = duration_in_month || 12
-    no_of_invoices.times { |index| create_invoice_for_month(amount, start_date + index.month) }
+    no_of_invoices.times do |index|
+      create_invoice_for_month(monthly_amount, start_date + index.month)
+    end
   end
 
   def create_invoice_for_month(amount, date)

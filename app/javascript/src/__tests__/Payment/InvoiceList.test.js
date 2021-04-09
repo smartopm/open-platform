@@ -116,7 +116,6 @@ describe('Invoice Item Component', () => {
       () => {
         // expect(container.queryAllByTestId('created_by')[0].textContent).toContain('joe');
         expect(container.queryAllByTestId('invoice_amount')[0].textContent).toContain('$23,423,423');
-        expect(container.queryAllByTestId('invoice-generate-button')[0].textContent).toContain('Create Monthly Invoices');
       },
       { timeout: 200 }
     );

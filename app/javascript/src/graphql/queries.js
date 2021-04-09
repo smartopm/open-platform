@@ -351,6 +351,15 @@ export const UserLandParcel = gql`
   }
 `
 
+export const UserLandParcelWithPlan = gql`
+  query userLandParcelWithPlan($userId: ID!) {
+    userLandParcelWithPlan(userId: $userId) {
+      id
+      parcelNumber
+    }
+  }
+`
+
 export const lastUserTimeSheet = gql`
   query userLastShift($userId: ID!) {
     userLastShift(userId: $userId) {
@@ -1177,6 +1186,11 @@ export const TransactionQuery = gql`
           id
           name
         }
+        paymentPlan {
+          landParcel {
+            parcelNumber
+          }
+        }
       }
       pendingInvoices {
         amount
@@ -1186,6 +1200,7 @@ export const TransactionQuery = gql`
         balance
         createdAt
         id
+        parcelNumber
       }
     }
   }
@@ -1257,15 +1272,6 @@ export const PaymentsQuery = gql`
         }
       }
     }
-`
-
-export const InvoiceAutogenerationData = gql`
-  query invoiceAutogenerationData {
-    invoiceAutogenerationData {
-      numberOfInvoices
-      totalAmount
-    }
-  }
 `
 
 export const EmailTemplateVariables = gql`

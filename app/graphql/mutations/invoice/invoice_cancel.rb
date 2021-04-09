@@ -45,6 +45,7 @@ module Mutations
           status: 'settled',
           current_wallet_balance: user.wallet.balance,
           community_id: invoice.community_id,
+          payment_plan: invoice.payment_plan,
         )
       end
 
