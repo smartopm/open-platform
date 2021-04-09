@@ -18,8 +18,8 @@ export default function EmailDetailsDialog({ open, handleClose, handleSave, load
         <TextField
           label="Template Name"
           className="form-control"
-          aria-label="campaign_template_style"
-          inputProps={{ 'data-testid': 'campaign_template_style' }}
+          aria-label="template_name"
+          inputProps={{ 'data-testid': 'template_name' }}
           name="templateStyle"
           value={details.name}
           onChange={event =>
@@ -29,8 +29,8 @@ export default function EmailDetailsDialog({ open, handleClose, handleSave, load
         <TextField
           label="Template Subject"
           className="form-control"
-          aria-label="campaign_template_style"
-          inputProps={{ 'data-testid': 'campaign_template_style' }}
+          aria-label="template_subject"
+          inputProps={{ 'data-testid': 'template_subject' }}
           name="templateStyle"
           value={details.subject}
           onChange={event =>
@@ -48,6 +48,7 @@ export default function EmailDetailsDialog({ open, handleClose, handleSave, load
           color="primary"
           variant="contained"
           disabled={loading}
+          data-testid="action_btn"
         >
           {`${loading ? 'Saving Changes' : ' Save Changes'}`}
         </Button>
