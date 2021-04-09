@@ -482,3 +482,14 @@ const InitialConfig = MaterialConfig
     plotNumber: 'parcel_number',
     parcelAddress: 'address1',
   };
+
+  export const allUserTypes = [
+    'admin',
+    'client',
+    'security_guard',
+    'prospective_client',
+    'contractor',
+    'resident',
+    'visitor',
+    'custodian'
+  ]
