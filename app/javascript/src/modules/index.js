@@ -14,10 +14,12 @@ import LogBook from './LogBook';
 import Portal from './Portal'; // thebe portal
 import Properties from './Plots/Properties';
 import UserPayments from './Payments/UserPayments';
+import Search from './Search';
 
 // and exported back here
 export default [
   Dashboard,
+  Search,
   Plots,
   Communication,
   LogBook,
