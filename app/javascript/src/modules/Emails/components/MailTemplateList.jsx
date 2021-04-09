@@ -18,7 +18,7 @@ import Paginate from '../../../components/Paginate';
 const mailListHeader = [
   { title: 'Name', col: 2 },
   { title: 'Subject', col: 2 },
-  { title: 'Created At', col: 2 }
+  { title: 'Date Created', col: 2 }
 ];
 
 export default function MailTemplateList() {
@@ -146,7 +146,7 @@ export function renderEmailTemplate(email) {
         {email.subject}
       </Grid>
     ),
-    'Created At': (
+    'Date Created': (
       <Grid item xs={2} data-testid="createdat">
         {dateToString(email.createdAt)}
       </Grid>
