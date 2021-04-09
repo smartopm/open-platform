@@ -12,21 +12,39 @@ import { useMutation } from 'react-apollo';
 import EmailDetailsDialog from './EmailDetailsDialog';
 import MessageAlert from '../../../components/MessageAlert';
 import { formatError } from '../../../utils/helpers';
-import CreateEmailTemplateMutation from '../graphql/email_mutations';
+import CreateEmailTemplateMutation, { EmailUpdateMutation } from '../graphql/email_mutations';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function EmailBuilderDialog({ initialData, open, handleClose, type }) {
+export default function EmailBuilderDialog({ initialData, open, handleClose, emailId }) {
   const emailEditorRef = useRef(null);
   const [createEmailTemplate] = useMutation(CreateEmailTemplateMutation);
+  const [updateEmailTemplate] = useMutation(EmailUpdateMutation);
   const [detailsOpen, setOpenDetails] = useState(false);
   const [alertOpen, setAlertOpen] = useState(false);
   const [message, setMessage] = useState({ isError: false, detail: '' });
 
   function handleAlertClose() {
     setAlertOpen(false);
+  }
+
+  function updateTemplate(){
+    emailEditorRef.current.editor.exportHtml(data => {
+      updateEmailTemplate({
+        variables: { id: emailId, body: data.html, data }
+      })
+        .then(() => {
+          setMessage({ ...message, detail: 'Email Template successfully updated' });
+          setAlertOpen(true);
+          handleClose();
+        })
+        .catch(err => {
+          setMessage({ isError: true, detail: formatError(err.message) });
+          setAlertOpen(true);
+        });
+    });
   }
 
   function saveTemplate(details) {
@@ -39,7 +57,7 @@ export default function EmailBuilderDialog({ initialData, open, handleClose, typ
           setMessage({ ...message, detail: 'Email Template successfully saved' });
           setAlertOpen(true);
           handleClose();
-          handleCloseDetails();
+          handleDetailsDialog();
         })
         .catch(err => {
           setMessage({ isError: true, detail: formatError(err.message) });
@@ -50,7 +68,7 @@ export default function EmailBuilderDialog({ initialData, open, handleClose, typ
 
   function onLoad() {
     // avoid preloading previous state into the editor
-    if (type !== 'new') {
+    if (emailId) {
       if (emailEditorRef.current) {
         emailEditorRef.current.loadDesign(initialData.data.design);
       } else {
@@ -60,14 +78,14 @@ export default function EmailBuilderDialog({ initialData, open, handleClose, typ
     }
   }
 
-  function handleCloseDetails() {
-    setOpenDetails(false);
+  function handleDetailsDialog() {
+    setOpenDetails(!detailsOpen);
   }
   return (
     <>
       <EmailDetailsDialog
         open={detailsOpen}
-        handleClose={handleCloseDetails}
+        handleClose={handleDetailsDialog}
         handleSave={saveTemplate}
       />
       <MessageAlert
@@ -87,9 +105,9 @@ export default function EmailBuilderDialog({ initialData, open, handleClose, typ
               style={{ marginLeft: '85vw' }}
               autoFocus
               color="inherit"
-              onClick={() => setOpenDetails(true)}
+              onClick={emailId ?  updateTemplate : handleDetailsDialog}
             >
-              save
+              {`${emailId ? 'Update' : 'Save'}`}
             </Button>
           </Toolbar>
         </AppBar>
@@ -99,12 +117,13 @@ export default function EmailBuilderDialog({ initialData, open, handleClose, typ
   );
 }
 EmailBuilderDialog.defaultProps = {
-  initialData: {}
+  initialData: {},
+  emailId: ''
 };
 EmailBuilderDialog.propTypes = {
   open: PropTypes.bool.isRequired,
   handleClose: PropTypes.func.isRequired,
-  type: PropTypes.string.isRequired,
+  emailId: PropTypes.string,
   // eslint-disable-next-line react/forbid-prop-types
   initialData: PropTypes.object
 };

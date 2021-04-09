@@ -2,8 +2,8 @@
 import gql from 'graphql-tag'
 
 export const EmailTemplatesQuery = gql`
-  query emailTemplates {
-    emailTemplates {
+  query emailTemplates($offset: Int, $limit: Int) {
+    emailTemplates(offset: $offset, limit: $limit) {
       name
       id
       variableNames

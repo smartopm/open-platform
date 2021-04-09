@@ -48,7 +48,7 @@ export default function MailTemplateList() {
       setDialogOpen(true)
     }
 
-    if (called && !templateError) {
+    if (called && !templateError && emailId) {
       setCurrentEmail(templateData?.emailTemplate || {});
       setDialogOpen(true);
     }
@@ -64,7 +64,7 @@ export default function MailTemplateList() {
   }
   
   function handleClose(){
-    history.push(`/mail_templates`);
+    history.replace(`/mail_templates`);
     setDialogOpen(false)
   }
 
@@ -78,7 +78,7 @@ export default function MailTemplateList() {
         initialData={currentEmail}
         open={templateDialogOpen}
         handleClose={handleClose}
-        type={type || ''}
+        emailId={emailId}
       />
       {data?.emailTemplates.map(email => (
         <DataList
@@ -101,9 +101,7 @@ export default function MailTemplateList() {
           right: 57,
           color: 'white'
         }}
-        onClick={() => {
-          handleTemplateDialog();
-        }}
+        onClick={handleTemplateDialog}
       >
         <AddIcon /> 
         Create

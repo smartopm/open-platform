@@ -13,6 +13,8 @@ module Types::Queries::EmailTemplate
     # Get email templates
     field :email_templates, [Types::EmailTemplateType], null: true do
       description 'get all email templates'
+      argument :offset, Integer, required: false
+      argument :limit, Integer, required: false
     end
     # Get email template variable list
     field :email_template_variables, [GraphQL::Types::String], null: true do
@@ -30,10 +32,10 @@ module Types::Queries::EmailTemplate
     email
   end
 
-  def email_templates
+  def email_templates(offset: 0, limit: 50)
     raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user]&.admin?
 
-    context[:site_community].email_templates.order(created_at: :desc)
+    context[:site_community].email_templates.order(created_at: :desc).limit(limit).offset(offset)
   end
 
   def email_template_variables(id:)
