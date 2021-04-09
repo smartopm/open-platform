@@ -12,27 +12,38 @@ import { allUserTypes } from '../../utils/constants';
 const routes = [
   {
     routeProps: {
-      path: '/user/:id',
-      component: UserShow
+      path: '/user/:id/edit',
+      component: UserEdit,
+      exact: true,
     },
     accessibleBy: allUserTypes,
-    name: 'user_info'
+    name: 'user_edit'
   },
   {
     routeProps: {
       path: '/user/:id/logs',
-      component: UserLogs
+      component: UserLogs,
+      exact: true,
     },
     accessibleBy: ['admin'],
     name: 'user_logs'
   },
   {
     routeProps: {
-      path: '/user/:id/edit',
-      component: UserEdit
+      path: '/user/:id/otp',
+      component: OTPFeedbackScreen,
+      exact: true,
+    },
+    accessibleBy: ['admin'],
+    name: 'user_otp'
+  },
+  {
+    routeProps: {
+      path: '/user/:id/:tm?/:dg?',
+      component: UserShow
     },
     accessibleBy: allUserTypes,
-    name: 'user_edit'
+    name: 'user_info'
   },
   {
     routeProps: {
@@ -50,14 +61,7 @@ const routes = [
     accessibleBy: allUserTypes,
     name: 'user_message'
   },
-  {
-    routeProps: {
-      path: '/user/:id/otp',
-      component: OTPFeedbackScreen
-    },
-    accessibleBy: ['admin'],
-    name: 'user_otp'
-  },
+
 ];
 
 export default routes;
