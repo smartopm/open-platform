@@ -38,7 +38,7 @@ export default function EmailBuilderDialog({ initialData, open, handleClose, ema
         variables: { id: emailId, body: data.html, data }
       })
         .then(() => {
-          setMessage({ ...message, detail: 'Email Template successfully updated' });
+          setMessage({ ...message, isError: false, detail: 'Email Template successfully updated', loading: false});
           setAlertOpen(true);
           handleClose();
         })
@@ -112,7 +112,7 @@ export default function EmailBuilderDialog({ initialData, open, handleClose, ema
               onClick={emailId ?  updateTemplate : handleDetailsDialog}
               disabled={message.loading}
             >
-              {`${emailId ? 'Update' : emailId && message.loading ? 'Saving ...' : 'Save'}`}
+              {`${emailId && message.loading ? 'Saving...' : emailId ? 'Update' :  'Save'}`}
             </Button>
           </Toolbar>
         </AppBar>

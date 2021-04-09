@@ -34,7 +34,8 @@ export default function MailTemplateList() {
     EmailTemplateQuery,
     {
       variables: { id: emailId },
-      errorPolicy: 'all'
+      errorPolicy: 'all',
+      fetchPolicy: 'cache-and-network'
     }
   );
   const history = useHistory();
@@ -54,7 +55,6 @@ export default function MailTemplateList() {
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [emailId, type, called, templateData]);
-
 
   if (loading) return <Spinner />;
   if (error) return <CenteredContent>{formatError(error?.message)}</CenteredContent>
