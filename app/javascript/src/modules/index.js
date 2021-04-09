@@ -1,6 +1,6 @@
 // all modules should be imported in here
 import Payments from './Payments';
-import Users from './Users';
+import Users, { Logout, Profile } from './Users';
 import Dashboard from './Dashboard';
 import Community from './Community';
 import Forms from './Forms';
@@ -20,6 +20,7 @@ import Search from './Search';
 export default [
   Dashboard,
   Search,
+  Profile,
   Plots,
   Communication,
   LogBook,
@@ -34,4 +35,5 @@ export default [
   Portal,
   ActionFlows,
   TimeCard,
+  Logout
 ];
