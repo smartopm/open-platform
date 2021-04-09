@@ -13,6 +13,7 @@ import CenteredContent from '../../../components/CenteredContent';
 import { formatError, useParamsQuery } from '../../../utils/helpers';
 import { dateToString } from '../../../components/DateContainer';
 import DataList from '../../../shared/list/DataList';
+import Paginate from '../../../components/Paginate';
 
 const mailListHeader = [
   { title: 'Name', col: 2 },
@@ -26,9 +27,12 @@ export default function MailTemplateList() {
   const path = useParamsQuery();
   const emailId = path.get('email');
   const type = path.get('type');
+  const limit = 50;
+  const [offset, setOffset] = useState(0);
 
   const { loading, error, data } = useQuery(EmailTemplatesQuery, {
-    errorPolicy: 'all'
+    errorPolicy: 'all',
+    variables: { limit, offset }
   });
   const [loadTemplate, { error: templateError, data: templateData, called }] = useLazyQuery(
     EmailTemplateQuery,
@@ -40,32 +44,40 @@ export default function MailTemplateList() {
   );
   const history = useHistory();
 
-
   useEffect(() => {
     if (emailId) {
       loadTemplate();
     }
     if (type === 'new') {
-      setDialogOpen(true)
+      setDialogOpen(true);
     }
 
     if (called && !templateError && emailId) {
       setCurrentEmail(templateData?.emailTemplate || {});
       setDialogOpen(true);
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [emailId, type, called, templateData]);
 
   if (loading) return <Spinner />;
-  if (error) return <CenteredContent>{formatError(error?.message)}</CenteredContent>
+  if (error) return <CenteredContent>{formatError(error?.message)}</CenteredContent>;
+
+  function paginate(action) {
+    if (action === 'prev') {
+      if (offset < limit) return;
+      setOffset(offset - limit);
+    } else if (action === 'next') {
+      setOffset(offset + limit);
+    }
+  }
 
   function handleTemplateDialog() {
     history.push(`/mail_templates?type=new`);
   }
-  
-  function handleClose(){
+
+  function handleClose() {
     history.replace(`/mail_templates`);
-    setDialogOpen(false)
+    setDialogOpen(false);
   }
 
   function handleOpenEmailDialog(_event, emailData) {
@@ -91,6 +103,16 @@ export default function MailTemplateList() {
         />
       ))}
 
+      <CenteredContent>
+        <Paginate
+          offSet={offset}
+          limit={limit}
+          active={offset >= 1}
+          count={data?.emailTemplates.length}
+          handlePageChange={paginate}
+        />
+      </CenteredContent>
+
       <Fab
         variant="extended"
         data-testid="create"
@@ -103,7 +125,7 @@ export default function MailTemplateList() {
         }}
         onClick={handleTemplateDialog}
       >
-        <AddIcon /> 
+        <AddIcon />
         Create
       </Fab>
     </div>
