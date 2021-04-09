@@ -11,6 +11,7 @@ describe('Mail Templates Component', () => {
     const templateMock = {
       request: {
         query: EmailTemplatesQuery,
+        variables: { limit: 50, offset: 0}
       },
       result: {
           data: {
