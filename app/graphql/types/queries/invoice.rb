@@ -91,14 +91,15 @@ module Types::Queries::Invoice
         .order(created_at: :desc).limit(limit).offset(offset)
   end
 
-  def invoices_with_transactions(user_id:, _offset: 0, _limit: 100)
+  def invoices_with_transactions(user_id:, offset: 0, limit: 10)
     user = verified_user(user_id)
 
     {
-      invoices: user.invoices.eager_load(:land_parcel, :payments).reverse,
-      payments: user.payments,
+      invoices: user.invoices.eager_load(:land_parcel, :payments)
+                    .limit(limit).offset(offset).reverse,
+      payments: user.payments.limit(limit).offset(offset),
       payment_plans: user.payment_plans.includes(invoices: :payments)
-                         .where.not(pending_balance: 0),
+                         .where.not(pending_balance: 0).limit(limit).offset(offset),
     }
   end
 

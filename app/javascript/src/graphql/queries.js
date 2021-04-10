@@ -1104,8 +1104,8 @@ query substatusDistributionQuery {
 ${SubstatusDistributionReportFragment.publicFields}
 `
 export const AllTransactionQuery = gql`
-  query InvoicesWithTransactions($userId: ID!) {
-    invoicesWithTransactions(userId: $userId) {
+  query InvoicesWithTransactions($userId: ID!, $limit: Int, $offset: Int) {
+    invoicesWithTransactions(userId: $userId, limit: $limit, offset: $offset) {
       invoices {
         id
         amount
@@ -1173,8 +1173,8 @@ export const UserBalance = gql`
 `;
 
 export const TransactionQuery = gql`
-  query userTransactions($userId: ID!) {
-    userDeposits(userId: $userId) {
+  query userTransactions($userId: ID!, $limit: Int, $offset: Int) {
+    userDeposits(userId: $userId, limit: $limit, offset: $offset) {
       transactions {
         amount
         source

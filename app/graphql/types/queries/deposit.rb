@@ -13,6 +13,8 @@ module Types::Queries::Deposit
     field :user_deposits, Types::DepositType, null: false do
       description 'return deposits for a user'
       argument :user_id, GraphQL::Types::ID, required: true
+      argument :offset, Integer, required: false
+      argument :limit, Integer, required: false
     end
   end
 
@@ -24,7 +26,7 @@ module Types::Queries::Deposit
 
   # rubocop:disable Metrics/AbcSize
   # rubocop:disable Metrics/MethodLength
-  def user_deposits(user_id:)
+  def user_deposits(user_id:, offset: 0, limit: 10)
     raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user]&.admin? ||
                                                          user_id.eql?(context[:current_user]&.id)
 
@@ -32,10 +34,12 @@ module Types::Queries::Deposit
     raise GraphQL::ExecutionError, 'User not found' if user.blank?
 
     pending_invoices = add_balance_and_parcel_number(user.invoices.not_cancelled
-                                                    .where('pending_amount > ?', 0))
+                                                    .where('pending_amount > ?', 0)
+                                                    .limit(limit)
+                                                    .offset(offset))
     {
       transactions: user.wallet_transactions.includes(payment_plan: [:land_parcel])
-                        .eager_load(:payment_plan).reverse,
+                        .eager_load(:payment_plan).limit(limit).offset(offset).reverse,
       pending_invoices: pending_invoices,
     }
   end
