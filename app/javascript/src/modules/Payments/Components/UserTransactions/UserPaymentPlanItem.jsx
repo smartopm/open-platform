@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from "@material-ui/core/styles";
-import { Grid, Typography, Accordion, AccordionSummary, AccordionDetails } from '@material-ui/core';
+import { Grid, Typography, Accordion, AccordionSummary, AccordionDetails, Button, Menu, MenuItem } from '@material-ui/core';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import DataList from '../../../../shared/list/DataList';
 import { dateToString } from '../../../../components/DateContainer';
@@ -12,11 +12,14 @@ import { invoiceStatus } from '../../../../utils/constants';
 
 export default function UserPaymentPlanItem({ plans, currencyData }) {
   const classes = useStyles();
+  const validDays = [...Array(28).keys()]
+  
   const planHeader = [
     { title: 'Plot Number', col: 1 },
     { title: 'Balance', col: 2 },
     { title: 'Start Date', col: 2 },
-    { title: '% of total valuation', col: 1 }
+    { title: '% of total valuation', col: 1 },
+    { title: 'Menu', col: 1 },
   ];
 
   const invoiceHeader = [
@@ -28,8 +31,38 @@ export default function UserPaymentPlanItem({ plans, currencyData }) {
     { title: 'Status', col: 2}
   ];
 
+  const [anchorEl, setAnchorEl] = useState(null);
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+  function handleOpenDateMenu(event){
+    event.stopPropagation();
+    setAnchorEl(event.currentTarget);
+  }
+
+  function handleSetDay(day){
+      console.log(day)
+      handleClose()
+  }
+
   return (
     <>
+
+      <Menu
+        id="set-payment-date-menu"
+        anchorEl={anchorEl}
+        keepMounted
+        open={Boolean(anchorEl)}
+        onClose={handleClose}
+      >
+        {
+          validDays.map(day => (
+            <MenuItem key={day} onClick={() => handleSetDay(day + 1)}>{day + 1}</MenuItem>
+          ))
+        }
+      </Menu>
+
       {plans?.map(plan => (
         <Accordion key={plan.id}>
           <AccordionSummary
@@ -41,7 +74,7 @@ export default function UserPaymentPlanItem({ plans, currencyData }) {
           >
             <DataList
               keys={planHeader}
-              data={[renderPlan(plan, currencyData)]}
+              data={[renderPlan(plan, currencyData, handleOpenDateMenu)]}
               hasHeader={false}
               clickable={false}
             />
@@ -68,24 +101,33 @@ export default function UserPaymentPlanItem({ plans, currencyData }) {
   );
 }
 
-export function renderPlan(plan, currencyData) {
+export function renderPlan(plan, currencyData, handleOpenDateMenu) {
   return {
-    'Plot Number':
-  <Grid item xs={12} md={2} data-testid="plot-number">
-    {plan.landParcel.parcelNumber}
-  </Grid>,
-    Balance:
-  <Grid item xs={12} md={2} data-testid="balance">
-    {`-${formatMoney(currencyData, plan.pendingBalance)}`}
-  </Grid>,
-    'Start Date':
-  <Grid item xs={12} md={2} data-testid="start-date">
-    {dateToString(plan.startDate)}
-  </Grid>,
-    '% of total valuation':
-  <Grid item xs={12} md={2} data-testid="percentage">
-    {plan.percentage}
-  </Grid>,
+    'Plot Number': (
+      <Grid item xs={12} md={2} data-testid="plot-number">
+        {plan.landParcel.parcelNumber}
+      </Grid>
+    ),
+    Balance: (
+      <Grid item xs={12} md={2} data-testid="balance">
+        {`-${formatMoney(currencyData, plan.pendingBalance)}`}
+      </Grid>
+    ),
+    'Start Date': (
+      <Grid item xs={12} md={2} data-testid="start-date">
+        {dateToString(plan.startDate)}
+      </Grid>
+    ),
+    '% of total valuation': (
+      <Grid item xs={12} md={2} data-testid="percentage">
+        {plan.percentage}
+      </Grid>
+    ),
+    'Menu': (
+      <Button aria-controls="set-payment-date-menu" aria-haspopup="true" onClick={handleOpenDateMenu}>
+        set payment day
+      </Button>
+    )
   };
 }
 
