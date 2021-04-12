@@ -52,6 +52,19 @@ const invoiceHeaders = [
   { title: 'Status', col: 4 },
   { title: 'Menu', col: 4 }
 ];
+
+const csvHeaders = [
+  { label: "Plot Number", key: "landParcel.parcelNumber" },
+  { label: "Invoice Number", key: "invoiceNumber" },
+  { label: "Amount", key: "amount" },
+  { label: "Status", key: "status" },
+  { label: "Payment Date", key: "payments[0].createdAt" },
+  { label: "Created Date", key: "createdAt" },
+  { label: "Due Date", key: "dueDate" },
+  { label: "User Name", key: "user.name" },
+  { label: "Phone Number", key: "user.phoneNumber" },
+  { label: "Email", key: "user.email" }
+];
 export default function InvoiceList({ currencyData, userType }) {
   const menuList = [
     { content: 'Cancel Invoice', isAdmin: true, color: 'red', handleClick}
@@ -77,19 +90,6 @@ export default function InvoiceList({ currencyData, userType }) {
   const [cancelInvoice] = useMutation(InvoiceCancel)
   const [isSuccessAlert, setIsSuccessAlert] = useState(false)
   const [messageAlert, setMessageAlert] = useState('')
-
-  const csvHeaders = [
-    { label: "Plot Number", key: "landParcel.parcelNumber" },
-    { label: "Invoice Number", key: "invoiceNumber" },
-    { label: "Amount", key: "amount" },
-    { label: "Status", key: "status" },
-    { label: "Payment Date", key: "payments[0].createdAt" },
-    { label: "Created Date", key: "createdAt" },
-    { label: "Due Date", key: "dueDate" },
-    { label: "User Name", key: "user.name" },
-    { label: "Phone Number", key: "user.phoneNumber" },
-    { label: "email", key: "user.email" }
-  ];
 
   function handleOpenMenu(event) {
     event.stopPropagation()
@@ -252,14 +252,16 @@ export default function InvoiceList({ currencyData, userType }) {
         action='delete'
         user={name}
       />
-      {console.log(invoicesStatData)}
-      { (invoicesStatData?.invoicesStatDetails?.length > 0 || invoicesData?.invoices?.length > 0) && (
-        <CSVLink data={listType === 'graph' ? invoicesStatData?.invoicesStatDetails : invoicesData.invoices} headers={csvHeaders}>Download CSV</CSVLink>
+      {listType === 'graph' && invoicesStatData?.invoicesStatDetails?.length > 0 && (
+        <CSVLink data={invoicesStatData.invoicesStatDetails} headers={csvHeaders} filename="invoice-data.csv">Download CSV</CSVLink>
+      )}
+      {listType === 'nongraph' && invoicesData?.invoices.length > 0 && (
+        <CSVLink data={invoicesData.invoices} headers={csvHeaders} filename="invoice-data.csv">Download CSV</CSVLink>
       )}
       {loading ? (<Spinner />) : (
         <List>
           {
-          listType === 'graph' && invoicesStatData?.invoicesStatDetails?.length && invoicesStatData?.invoicesStatDetails?.length > 0 ?
+          listType === 'graph' && invoicesStatData?.invoicesStatDetails?.length > 0 ?
         (
           <div>
             {matches && <ListHeader headers={invoiceHeaders} />}
@@ -274,7 +276,7 @@ export default function InvoiceList({ currencyData, userType }) {
               ))
             }
           </div>
-        ) : listType === 'nongraph' && invoicesData?.invoices.length && invoicesData?.invoices.length > 0 ? (
+        ) : listType === 'nongraph' && invoicesData?.invoices.length > 0 ? (
           <div>
             {matches && <ListHeader headers={invoiceHeaders} />}
             {

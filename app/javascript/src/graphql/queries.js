@@ -1015,6 +1015,8 @@ export const InvoicesStatsDetails = gql`
         id
         name
         imageUrl
+        email
+        phoneNumber
       }
       landParcel {
         id
@@ -1029,12 +1031,16 @@ export const PaymentStatsDetails = gql`
     paymentStatDetails(query: $query) {
       id
       amount
+      status
       source
       createdAt
       user {
         id
         name
         imageUrl
+        email
+        phoneNumber
+        extRefId
       }
     }
   }
@@ -1263,6 +1269,9 @@ export const TransactionsQuery = gql`
         id
         name
         imageUrl
+        email
+        phoneNumber
+        extRefId
       }
     }
   }

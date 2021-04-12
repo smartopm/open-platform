@@ -1,5 +1,6 @@
 /* eslint-disable no-nested-ternary */
 import React, { useState } from 'react';
+import { CSVLink } from "react-csv";
 import { Grid, List } from '@material-ui/core';
 import Avatar from '@material-ui/core/Avatar';
 import PropTypes from 'prop-types';
@@ -36,6 +37,18 @@ const paymentHeaders = [
   { title: 'Amount', col: 2 }
 ];
 
+const csvHeaders = [
+  { label: "Amount", key: "amount" },
+  { label: "Status", key: "status" },
+  { label: "Created Date", key: "createdAt" },
+  { label: "User Name", key: "user.name" },
+  { label: "Phone Number", key: "user.phoneNumber" },
+  { label: "Email", key: "user.email" },
+  { label: "Transaction Type", key: "source" },
+  { label: "Transaction Number", key: "transactionNumber" },
+  { label: "External Id", key: "user.extRefId" }
+];
+
 export default function PaymentList({ currencyData }) {
   const limit = 50;
   const path = useParamsQuery();
@@ -57,10 +70,7 @@ export default function PaymentList({ currencyData }) {
     errorPolicy: 'all'
   });
 
-  let paymentList
-  if (data?.transactions) {
-    paymentList = data.transactions.filter((fil) => fil.destination === 'wallet' && fil.source !== 'invoice')
-  }
+  const  paymentList = data?.transactions?.filter((fil) => fil.destination === 'wallet' && fil.source !== 'invoice')
 
   function paginate(action) {
     if (action === 'prev') {
@@ -145,9 +155,15 @@ export default function PaymentList({ currencyData }) {
       <br />
       <br />
       <PaymentGraph handleClick={setGraphQuery} />
+      {listType === 'graph' && paymentStatData?.paymentStatDetails?.length > 0 && (
+        <CSVLink data={paymentStatData.paymentStatDetails} headers={csvHeaders} filename="payment-data.csv">Download CSV</CSVLink>
+      )}
+      {listType === 'nongraph' && paymentList?.length > 0 && (
+        <CSVLink data={paymentList} headers={csvHeaders} filename="payment-data.csv">Download CSV</CSVLink>
+      )}
       {loading ? (<Spinner />) : (
         <List>
-          {listType === 'graph' && paymentStatData?.paymentStatDetails?.length && paymentStatData?.paymentStatDetails?.length > 0 ? (
+          {listType === 'graph' && paymentStatData?.paymentStatDetails?.length > 0 ? (
             <div>
               {matches && <ListHeader headers={paymentHeaders} />}
               {
@@ -156,7 +172,7 @@ export default function PaymentList({ currencyData }) {
             ))
           }
             </div>
-      ) : paymentList?.length && paymentList?.length > 0 ? (
+      ) : paymentList?.length > 0 ? (
         <div>
           {matches && <ListHeader headers={paymentHeaders} />}
           {
