@@ -1,6 +1,7 @@
 /* eslint-disable react/forbid-prop-types */
 /* eslint-disable no-nested-ternary */
 import React, { useState } from 'react';
+import { CSVLink } from "react-csv";
 import Avatar from '@material-ui/core/Avatar';
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 import { useHistory } from 'react-router';
@@ -76,6 +77,19 @@ export default function InvoiceList({ currencyData, userType }) {
   const [cancelInvoice] = useMutation(InvoiceCancel)
   const [isSuccessAlert, setIsSuccessAlert] = useState(false)
   const [messageAlert, setMessageAlert] = useState('')
+
+  const csvHeaders = [
+    { label: "Plot Number", key: "landParcel.parcelNumber" },
+    { label: "Invoice Number", key: "invoiceNumber" },
+    { label: "Amount", key: "amount" },
+    { label: "Status", key: "status" },
+    { label: "Payment Date", key: "payments[0].createdAt" },
+    { label: "Created Date", key: "createdAt" },
+    { label: "Due Date", key: "dueDate" },
+    { label: "User Name", key: "user.name" },
+    { label: "Phone Number", key: "user.phoneNumber" },
+    { label: "email", key: "user.email" }
+  ];
 
   function handleOpenMenu(event) {
     event.stopPropagation()
@@ -238,6 +252,10 @@ export default function InvoiceList({ currencyData, userType }) {
         action='delete'
         user={name}
       />
+      {console.log(invoicesStatData)}
+      { (invoicesStatData?.invoicesStatDetails?.length > 0 || invoicesData?.invoices?.length > 0) && (
+        <CSVLink data={listType === 'graph' ? invoicesStatData?.invoicesStatDetails : invoicesData.invoices} headers={csvHeaders}>Download CSV</CSVLink>
+      )}
       {loading ? (<Spinner />) : (
         <List>
           {

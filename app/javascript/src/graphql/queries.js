@@ -946,6 +946,8 @@ export const InvoicesQuery = gql`
         id
         name
         imageUrl
+        email
+        phoneNumber
       }
       landParcel {
         id
