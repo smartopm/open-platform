@@ -27,7 +27,7 @@ describe('PaymentPlanForm Component', () => {
     const payment_plan_owner = container.queryByLabelText('payment_plan_owner');
     const status = container.queryByLabelText('status');
     const percentage = container.queryByLabelText('percentage');
-    const totalAmount = container.queryByLabelText('total-amount');
+    const monthlyAmount = container.queryByLabelText('monthly-amount');
     const duration = container.queryByLabelText('duration-in-month');
     const submit_btn = container.queryByTestId('submit_btn');
 
@@ -35,16 +35,19 @@ describe('PaymentPlanForm Component', () => {
     expect(payment_plan_owner.textContent).toContain('Choose Payment Plan User');
     expect(status.textContent).toContain('Status');
     expect(percentage.textContent).toContain('Percentage');
-    expect(totalAmount.textContent).toContain('Total Amount');
+    expect(monthlyAmount.textContent).toContain('Monthly Amount');
     expect(duration.textContent).toContain('Duration(in months)');
     expect(submit_btn.textContent).toContain('Save Plan');
     expect(container.queryByTestId('date-picker').textContent).toContain('Start Date');
+    expect(container.queryByTestId('total-amount-txt')).toBeNull()
 
-    fireEvent.change(percentage.querySelector('input'), { target: { value: '10%' } });
-    expect(percentage.querySelector('input').value).toBe('10%');
+    expect(status.querySelector('input').value).toBe('0');
 
-    fireEvent.change(totalAmount.querySelector('input'), { target: { value: '2000' } });
-    expect(totalAmount.querySelector('input').value).toBe('2000');
+    fireEvent.change(percentage.querySelector('input'), { target: { value: '10' } });
+    expect(percentage.querySelector('input').value).toBe('10');
+
+    fireEvent.change(monthlyAmount.querySelector('input'), { target: { value: '2000' } });
+    expect(monthlyAmount.querySelector('input').value).toBe('2000');
 
     fireEvent.change(duration.querySelector('input'), { target: { value: '12' } });
     expect(duration.querySelector('input').value).toBe('12');
@@ -57,6 +60,5 @@ describe('PaymentPlanForm Component', () => {
     // check for validation errors after attempting to save
     expect(percentage.textContent).toContain('Percentage is required');
     expect(payment_plan_owner.textContent).toContain('User is required');
-    expect(status.textContent).toContain('Status is required');
   });
 });

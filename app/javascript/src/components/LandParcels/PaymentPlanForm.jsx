@@ -1,9 +1,9 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { Button, MenuItem, TextField, InputAdornment } from '@material-ui/core';
+import { Button, MenuItem, TextField, InputAdornment, Typography } from '@material-ui/core';
 import { useMutation } from 'react-apollo';
 import DatePickerDialog from '../DatePickerDialog';
-import { paymentPlanStatus , currencies } from '../../utils/constants';
+import { paymentPlanStatus, currencies } from '../../utils/constants';
 import { LandPaymentPlanCreateMutation } from '../../graphql/mutations/land_parcel';
 import { Spinner } from '../../shared/Loading';
 import { formatError } from '../../utils/helpers';
@@ -11,12 +11,13 @@ import { formatError } from '../../utils/helpers';
 import { Context as AuthStateContext } from '../../containers/Provider/AuthStateProvider';
 
 const initialPlanState = {
-  status: '',
+  status: 0,
   planType: 'lease',
   percentage: '',
   startDate: new Date(),
   userId: '',
-  totalAmount: '',
+  monthlyAmount: '',
+  totalAmount: 0,
   durationInMonth: ''
 };
 export default function PaymentPlanForm({ landParcel, refetch }) {
@@ -30,6 +31,17 @@ export default function PaymentPlanForm({ landParcel, refetch }) {
   const [errorInfo, setErrorInfo] = useState({ isError: false, isSubmitting: false });
   const authState = useContext(AuthStateContext);
   const currency = currencies[authState.user?.community.currency] || '';
+
+  useEffect(() => {
+    const { percentage, monthlyAmount, durationInMonth } = paymentPlanState;
+
+    let totalAmount = 0;
+    if (Number(percentage) > 0 || Number(monthlyAmount) > 0 || Number(durationInMonth) > 0) {
+      totalAmount = (monthlyAmount * durationInMonth * 100) / percentage;
+    }
+
+    setPaymentPlanState({ ...paymentPlanState, totalAmount: Number(parseFloat(totalAmount).toFixed(2)) })
+  }, [paymentPlanState.percentage, paymentPlanState.monthlyAmount, paymentPlanState.durationInMonth]);
 
   function handleOnChange(event) {
     const { name, value } = event.target;
@@ -55,7 +67,7 @@ export default function PaymentPlanForm({ landParcel, refetch }) {
       variables: {
         ...paymentPlanState,
         landParcelId: landParcel.id,
-        totalAmount: parseFloat(paymentPlanState.totalAmount),
+        monthlyAmount: parseFloat(paymentPlanState.monthlyAmount),
         durationInMonth: parseInt(paymentPlanState.durationInMonth, 10)
       }
     })
@@ -71,6 +83,7 @@ export default function PaymentPlanForm({ landParcel, refetch }) {
         setMutationInfo({ isError: true, message: formatError(error.message), loading: false });
       });
   }
+
   return (
     <>
       <TextField
@@ -128,7 +141,7 @@ export default function PaymentPlanForm({ landParcel, refetch }) {
         required
         select
         error={errorInfo.isError && !Number.isInteger(paymentPlanState.status)}
-        helperText={errorInfo.isError && !paymentPlanState.status && 'Status is required'}
+        helperText={errorInfo.isError && paymentPlanState.status === '' && 'Status is required'}
       >
         {Object.entries(paymentPlanStatus).map(([key, val]) => (
           <MenuItem key={key} value={Number(key)}>
@@ -145,17 +158,24 @@ export default function PaymentPlanForm({ landParcel, refetch }) {
         onChange={handleOnChange}
         name="percentage"
         style={{ width: '100%' }}
+        type="number"
+        InputProps={{
+          inputProps: {
+            min: 1
+          },
+          startAdornment: <InputAdornment position="start">%</InputAdornment>
+        }}
         error={errorInfo.isError && !paymentPlanState.percentage}
         helperText={errorInfo.isError && !paymentPlanState.percentage && 'Percentage is required'}
       />
       <TextField
         margin="normal"
-        id="total-amount"
-        label="Total Amount"
-        aria-label="total-amount"
-        value={paymentPlanState.totalAmount}
+        id="monthly-amount"
+        label="Monthly Amount"
+        aria-label="monthly-amount"
+        value={paymentPlanState.monthlyAmount}
         onChange={handleOnChange}
-        name="totalAmount"
+        name="monthlyAmount"
         style={{ width: '100%' }}
         type="number"
         InputProps={{
@@ -164,9 +184,11 @@ export default function PaymentPlanForm({ landParcel, refetch }) {
           },
           startAdornment: <InputAdornment position="start">{currency}</InputAdornment>
         }}
-        error={errorInfo.isError && !paymentPlanState.totalAmount}
+        error={errorInfo.isError && !paymentPlanState.monthlyAmount}
         helperText={
-          errorInfo.isError && !paymentPlanState.totalAmount && 'Total amount is required'
+          errorInfo.isError &&
+          !paymentPlanState.monthlyAmount &&
+          'Monthly amount is required'
         }
       />
       <TextField
@@ -195,6 +217,16 @@ export default function PaymentPlanForm({ landParcel, refetch }) {
         label="Start Date"
         required
       />
+      {paymentPlanState.totalAmount > 0 && (
+        <Typography
+          variant="caption"
+          color="textSecondary"
+          component="p"
+          data-testid="total-amount-txt"
+        >
+          {`Approx. Total Property Valuation: ${currency} ${paymentPlanState.totalAmount}`}
+        </Typography>
+      )}
       {mutationInfo.loading ? (
         <Spinner />
       ) : (

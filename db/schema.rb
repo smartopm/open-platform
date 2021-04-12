@@ -487,7 +487,7 @@ ActiveRecord::Schema.define(version: 2021_04_09_120431) do
     t.string "plan_type"
     t.datetime "start_date"
     t.integer "status"
-    t.string "percentage"
+    t.decimal "percentage", precision: 11, scale: 2
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.boolean "generated", default: false
@@ -496,6 +496,7 @@ ActiveRecord::Schema.define(version: 2021_04_09_120431) do
     t.integer "duration_in_month"
     t.integer "payment_day", default: 1
     t.decimal "pending_balance", precision: 11, scale: 2, default: "0.0"
+    t.decimal "monthly_amount", precision: 11, scale: 2
     t.index ["land_parcel_id"], name: "index_payment_plans_on_land_parcel_id"
     t.index ["user_id", "land_parcel_id"], name: "index_payment_plans_on_user_id_and_land_parcel_id", unique: true
     t.index ["user_id"], name: "index_payment_plans_on_user_id"

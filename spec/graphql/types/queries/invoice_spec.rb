@@ -104,17 +104,6 @@ RSpec.describe Types::Queries::Invoice do
       GQL
     end
 
-    let(:invoice_autogeneration_data_query) do
-      <<~GQL
-        query invoiceAutogenerationData {
-          invoiceAutogenerationData {
-            numberOfInvoices
-            totalAmount
-          }
-        }
-      GQL
-    end
-
     it 'should retrieve list of invoices' do
       result = DoubleGdpSchema.execute(invoices_query, variables: { query: '' }, context: {
                                          current_user: user,
@@ -190,19 +179,6 @@ RSpec.describe Types::Queries::Invoice do
                                        }).as_json
       expect(result.dig('data', 'userInvoices')).to be_nil
       expect(result.dig('errors', 0, 'message')).to include 'Unauthorized'
-    end
-
-    it 'should  get invoice count per status' do
-      payment_plan.update(total_amount: 100)
-      result = DoubleGdpSchema.execute(invoice_autogeneration_data_query, context: {
-                                         current_user: user,
-                                         site_community: user.community,
-                                       }).as_json
-      expect(result.dig('errors', 0, 'message')).to be_nil
-      expect(result.dig('data', 'invoiceAutogenerationData', 'numberOfInvoices')).to eql 1
-      expect(
-        result.dig('data', 'invoiceAutogenerationData', 'totalAmount').floor,
-      ).to eql ((payment_plan.percentage.to_f * payment_plan.total_amount) / 1200).floor
     end
 
     it 'should retrieve invoices for a user with transactions' do

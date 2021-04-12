@@ -10,6 +10,7 @@ module Mutations
       argument :plan_type, String, required: true
       argument :percentage, String, required: true
       argument :start_date, String, required: true
+      argument :monthly_amount, Float, required: true
       argument :total_amount, Float, required: true
       argument :duration_in_month, Integer, required: true
 

@@ -140,31 +140,29 @@ export default function UserInformation({
             <UserDetail data={data} userType={userType} />
           </Grid>
           <Grid item xs={2}>
-            {['client', 'resident', 'admin'].includes(userType) && (
-              <>
-                <IconButton
-                  aria-label="more"
-                  aria-controls="long-menu"
-                  aria-haspopup="true"
-                  onClick={() => setDrawerOpen(true)}
-                  style={{
+            <>
+              <IconButton
+                aria-label="more"
+                aria-controls="long-menu"
+                aria-haspopup="true"
+                onClick={() => setDrawerOpen(true)}
+                style={{
                     float: 'right',
                     marginRight: -23
                   }}
-                >
-                  <DoubleArrowOutlinedIcon
+              >
+                <DoubleArrowOutlinedIcon
                     // this is hacky, it should be replaced with a proper icon
-                    style={{ transform: 'translate(-50%,-50%) rotate(180deg)' }}
-                  />
-                </IconButton>
-
-                <RightSideMenu
-                  authState={authState}
-                  handleDrawerToggle={() => setDrawerOpen(false)}
-                  drawerOpen={isDrawerOpen}
+                  style={{ transform: 'translate(-50%,-50%) rotate(180deg)' }}
                 />
-              </>
-            )}
+              </IconButton>
+
+              <RightSideMenu
+                authState={authState}
+                handleDrawerToggle={() => setDrawerOpen(false)}
+                drawerOpen={isDrawerOpen}
+              />
+            </>
           </Grid>
         </Grid>
 

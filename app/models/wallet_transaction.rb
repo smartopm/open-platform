@@ -113,7 +113,7 @@ class WalletTransaction < ApplicationRecord
 
   def create_new_payment(payment, payment_amount)
     inv = payment.invoices.first
-    transaction = user.wallet.create_transaction(payment_amount)
+    transaction = user.wallet.create_transaction(payment_amount, inv)
     payment = Payment.create(amount: payment_amount, payment_type: 'wallet',
                              payment_status: 'settled', user_id: user.id,
                              community_id: user.community_id)
