@@ -26,7 +26,7 @@ export default function TransactionsList({ userId, user, userData, paymentSubTab
   const history = useHistory()
   const path = useParamsQuery()
   const authState = useContext(AuthStateContext)
-  const limit = 15
+  const limit = 10
   const tab = path.get('invoices')
   const page = path.get('page')
   const [offset, setOffset] = useState(Number(page) || 0)
@@ -100,6 +100,7 @@ export default function TransactionsList({ userId, user, userData, paymentSubTab
   function handleChange(_event, newValue) {
     history.push(`/user/${userId}?tab=Payments&payment_sub_tab=${newValue}`)
     setTabValue(newValue)
+    setOffset(0)
   }
 
   function handleModalClose() {
@@ -116,10 +117,8 @@ export default function TransactionsList({ userId, user, userData, paymentSubTab
     if (action === 'prev') {
       if (offset < limit) return
       setOffset(offset - limit)
-      history.push(`/user/${userId}?tab=Payments&page=${offset - limit}`)
     } else if (action === 'next') {
       setOffset(offset + limit)
-      history.push(`/user/${userId}?tab=Payments&page=${offset + limit}`)
     }
   }
 

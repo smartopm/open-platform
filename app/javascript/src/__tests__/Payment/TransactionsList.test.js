@@ -15,7 +15,7 @@ describe('Transactions Component', () => {
     const transactionsMock = {
       request: {
         query: TransactionQuery,
-        variables: { userId, limit: 15, offset: 0 }
+        variables: { userId, limit: 10, offset: 0 }
       },
       result: {
         data: {
@@ -44,7 +44,7 @@ describe('Transactions Component', () => {
               dueDate: '2021-01-26',
               balance: 300,
               createdAt: '2021-01-26',
-              id: 'f280159d-ac71-4c22-997a-07fd07344c94' 
+              id: 'f280159d-ac71-4c22-997a-07fd07344c94'
             }]
           }
         }
@@ -53,7 +53,7 @@ describe('Transactions Component', () => {
     const pendingInvoicesMock = {
       request: {
         query: UserBalance,
-        variables: { userId, limit: 15, offset: 0 }
+        variables: { userId, limit: 10, offset: 0 }
       },
       result: {
         data: {
@@ -64,7 +64,7 @@ describe('Transactions Component', () => {
     const pendingDepositMock = {
       request: {
         query: AllTransactionQuery,
-        variables: { userId, limit: 15, offset: 0 }
+        variables: { userId, limit: 10, offset: 0 }
       },
       result: {
         data: {
