@@ -211,6 +211,7 @@ export default function TransactionsList({ userId, user, userData, paymentSubTab
           plans={invPayData?.invoicesWithTransactions?.paymentPlans}
           currencyData={currencyData}
           userId={userId}
+          refetch={depRefetch}
         />
       </TabPanel>
       <PaymentModal

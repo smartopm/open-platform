@@ -1145,6 +1145,7 @@ export const AllTransactionQuery = gql`
         plotBalance
         pendingBalance
         createdAt
+        paymentDay
         invoices {
           id
           amount

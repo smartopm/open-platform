@@ -28,7 +28,7 @@ import PaymentPlanUpdateMutation from '../../graphql/payment_plan_mutations';
 import { Spinner } from '../../../../shared/Loading';
 import MessageAlert from '../../../../components/MessageAlert';
 
-export default function UserPaymentPlanItem({ plans, currencyData, userId }) {
+export default function UserPaymentPlanItem({ plans, currencyData, userId, refetch }) {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = useState(null);
   const [details, setPlanDetails] = useState({
@@ -85,6 +85,7 @@ export default function UserPaymentPlanItem({ plans, currencyData, userId }) {
           isError: false,
           info: 'Payment Day successfully updated'
         });
+        refetch()
       })
       .catch(err => {
         setPlanDetails({
@@ -166,6 +167,7 @@ export default function UserPaymentPlanItem({ plans, currencyData, userId }) {
 }
 
 export function renderPlan(plan, currencyData, { handleMenu, loading }) {
+  console.log(plan);
   return {
     'Plot Number': (
       <Grid item xs={12} md={2} data-testid="plot-number">
@@ -190,7 +192,8 @@ export function renderPlan(plan, currencyData, { handleMenu, loading }) {
     'Payment Day': (
       <Grid item xs={12} md={2}>
         <Button aria-controls="set-payment-date-menu" aria-haspopup="true" data-testid="menu" onClick={handleMenu}>
-          {loading ? <Spinner /> : `set payment day`}
+          {loading && <Spinner /> }
+          { plan.paymentDay ? plan.paymentDay :  'set payment day'}
         </Button>
       </Grid>
     )
@@ -262,7 +265,8 @@ UserPaymentPlanItem.propTypes = {
     currency: PropTypes.string,
     locale: PropTypes.string
   }).isRequired,
-  userId: PropTypes.string.isRequired
+  userId: PropTypes.string.isRequired,
+  refetch: PropTypes.func.isRequired,
 };
 
 const useStyles = makeStyles(() => ({
