@@ -1033,6 +1033,7 @@ export const PaymentStatsDetails = gql`
       amount
       status
       source
+      receiptNumber
       createdAt
       user {
         id
@@ -1265,6 +1266,7 @@ export const TransactionsQuery = gql`
       bankName
       chequeNumber
       transactionNumber
+      receiptNumber
       user {
         id
         name

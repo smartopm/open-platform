@@ -46,7 +46,8 @@ const csvHeaders = [
   { label: "Email", key: "user.email" },
   { label: "Transaction Type", key: "source" },
   { label: "Transaction Number", key: "transactionNumber" },
-  { label: "External Id", key: "user.extRefId" }
+  { label: "External Id", key: "user.extRefId" },
+  { label: "Receipt Number", key: "receiptNumber" }
 ];
 
 export default function PaymentList({ currencyData }) {
