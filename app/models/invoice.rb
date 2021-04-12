@@ -4,11 +4,18 @@
 class Invoice < ApplicationRecord
   include SearchCop
 
+  default_scope { order(created_at: :desc) }
+
+  enum status: { in_progress: 0, paid: 1, late: 2, cancelled: 3 }
+
   belongs_to :land_parcel
   belongs_to :community
   belongs_to :user
   belongs_to :payment_plan, optional: true
   belongs_to :created_by, class_name: 'User', optional: true
+
+  has_many :payment_invoices, dependent: :destroy
+  has_many :payments, through: :payment_invoices
 
   validates :amount, numericality: { greater_than: 0 }
 
@@ -18,11 +25,9 @@ class Invoice < ApplicationRecord
   before_update :modify_status, if: proc { changed_attributes.keys.include?('pending_amount') }
   after_update -> { generate_event_log(:update) }
 
-  has_many :payment_invoices, dependent: :destroy
-  has_many :payments, through: :payment_invoices
-
-  enum status: { in_progress: 0, paid: 1, late: 2, cancelled: 3 }
-  default_scope { order(created_at: :desc) }
+  scope :pending_amount_gt_than, lambda { |amount|
+    where(Invoice.arel_table[:pending_amount].gt(amount))
+  }
 
   search_scope :search do
     attributes :status, :invoice_number, :pending_amount, :amount, :created_at, :due_date

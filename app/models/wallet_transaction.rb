@@ -4,12 +4,29 @@
 class WalletTransaction < ApplicationRecord
   include SearchCop
 
+  VALID_SOURCES = %w[cash cheque/cashier_cheque wallet mobile_money invoice
+                     bank_transfer/eft bank_transfer/cash_deposit pos
+                     unallocated_funds].freeze
+
+  enum status: { settled: 0, pending: 1, denied: 2, cancelled: 3 }
+
   belongs_to :user
   belongs_to :community
   belongs_to :depositor, class_name: 'User', optional: true
   belongs_to :email_template, optional: true
   belongs_to :payment_plan, optional: true
   has_one :payment_invoice, dependent: :destroy
+
+  validates :source, inclusion: { in: VALID_SOURCES, allow_nil: false }
+  validates :bank_name, :cheque_number, presence: true,
+                                        if: -> { source.eql?('cheque/cashier_cheque') }
+  validates :transaction_number, uniqueness: true, length: { maximum: 35, allow_blank: true },
+                                 if: -> { transaction_number.present? }
+
+  validates :amount, numericality: { greater_than: 0 }
+
+  before_update :update_wallet_balance, if: proc { changed_attributes.keys.include?('status') }
+  after_update :revert_payments, if: proc { saved_changes.key?('status') }
 
   has_paper_trail
 
@@ -19,22 +36,6 @@ class WalletTransaction < ApplicationRecord
     attributes phone_number: ['user.phone_number']
     attributes email: ['user.email']
   end
-
-  before_update :update_wallet_balance, if: proc { changed_attributes.keys.include?('status') }
-  after_update :revert_payments, if: proc { saved_changes.key?('status') }
-
-  VALID_SOURCES = ['cash', 'cheque/cashier_cheque', 'wallet', 'mobile_money', 'invoice',
-                   'bank_transfer/eft', 'bank_transfer/cash_deposit', 'pos'].freeze
-
-  validates :source, inclusion: { in: VALID_SOURCES, allow_nil: false }
-  validates :bank_name, :cheque_number, presence: true,
-                                        if: -> { source.eql?('cheque/cashier_cheque') }
-  validates :transaction_number, uniqueness: true, length: { maximum: 35, allow_blank: true },
-                                 if: -> { transaction_number.present? }
-
-  enum status: { settled: 0, pending: 1, denied: 2, cancelled: 3 }
-
-  validates :amount, numericality: { greater_than: 0 }
 
   # rubocop:disable Style/ParenthesesAroundCondition
   def update_wallet_balance

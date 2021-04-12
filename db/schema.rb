@@ -692,6 +692,7 @@ ActiveRecord::Schema.define(version: 2021_04_20_083520) do
     t.decimal "pending_balance", precision: 11, scale: 2
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.decimal "unallocated_funds", precision: 11, scale: 2, default: "0.0"
     t.index ["user_id"], name: "index_wallets_on_user_id"
   end
 
