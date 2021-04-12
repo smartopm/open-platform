@@ -15,17 +15,28 @@ import {
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import DataList from '../../../../shared/list/DataList';
 import { dateToString } from '../../../../components/DateContainer';
-import { formatMoney, InvoiceStatusColor, propAccessor } from '../../../../utils/helpers';
+import {
+  formatError,
+  formatMoney,
+  InvoiceStatusColor,
+  propAccessor
+} from '../../../../utils/helpers';
 import Text, { HiddenText } from '../../../../shared/Text';
 import Label from '../../../../shared/label/Label';
 import { invoiceStatus } from '../../../../utils/constants';
 import PaymentPlanUpdateMutation from '../../graphql/payment_plan_mutations';
 import { Spinner } from '../../../../shared/Loading';
+import MessageAlert from '../../../../components/MessageAlert';
 
 export default function UserPaymentPlanItem({ plans, currencyData, userId }) {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = useState(null);
-  const [details, setPlanDetails] = useState({ isLoading: false, planId: null, isError: false });
+  const [details, setPlanDetails] = useState({
+    isLoading: false,
+    planId: null,
+    isError: false,
+    info: ''
+  });
   const [updatePaymentPlan] = useMutation(PaymentPlanUpdateMutation);
   const validDays = [...Array(28).keys()];
 
@@ -68,17 +79,31 @@ export default function UserPaymentPlanItem({ plans, currencyData, userId }) {
       }
     })
       .then(() => {
-        
-        setPlanDetails({ ...details, isLoading: false, isError: false });
+        setPlanDetails({
+          ...details,
+          isLoading: false,
+          isError: false,
+          info: 'Payment Day successfully updated'
+        });
       })
       .catch(err => {
-        console.log(err);
-        setPlanDetails({ ...details, isLoading: false, isError: true });
+        setPlanDetails({
+          ...details,
+          isLoading: false,
+          isError: true,
+          info: formatError(err.message)
+        });
       });
   }
 
   return (
     <>
+      <MessageAlert
+        type={!details.isError ? 'success' : 'error'}
+        message={details.info}
+        open={!!details.info}
+        handleClose={() => setPlanDetails({ ...details, info: '' })}
+      />
       <Menu
         id="set-payment-date-menu"
         anchorEl={anchorEl}
