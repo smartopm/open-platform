@@ -5,40 +5,52 @@ import UserLogs from '../../containers/AllLogs/UserLogs';
 import IdPrintPage from '../../containers/IdPrint';
 import UserMessagePage from '../../containers/Messages/UserMessagePage';
 import OTPFeedbackScreen from '../../containers/OTPScreen';
+import { allUserTypes } from '../../utils/constants';
 
 // name in here is only used as key in routes, make sure it is unique
 
 const routes = [
   {
     routeProps: {
-      path: '/user/:id',
-      component: UserShow
+      path: '/user/:id/edit',
+      component: UserEdit,
+      exact: true,
     },
-    accessibleBy: ['admin', 'client', 'resident', 'security_guard', 'custodian', 'prospective_client', 'contractor',],
-    name: 'user_info'
+    accessibleBy: allUserTypes,
+    name: 'user_edit'
   },
   {
     routeProps: {
       path: '/user/:id/logs',
-      component: UserLogs
+      component: UserLogs,
+      exact: true,
     },
     accessibleBy: ['admin'],
     name: 'user_logs'
   },
   {
     routeProps: {
-      path: '/user/:id/edit',
-      component: UserEdit
+      path: '/user/:id/otp',
+      component: OTPFeedbackScreen,
+      exact: true,
     },
-    accessibleBy: ['admin', 'client', 'resident', 'prospective_client', 'custodian', 'contractor', 'security_guard'],
-    name: 'user_edit'
+    accessibleBy: ['admin'],
+    name: 'user_otp'
+  },
+  {
+    routeProps: {
+      path: '/user/:id/:tm?/:dg?',
+      component: UserShow
+    },
+    accessibleBy: allUserTypes,
+    name: 'user_info'
   },
   {
     routeProps: {
       path: '/print/:id/',
       component: IdPrintPage
     },
-    accessibleBy: ['admin', 'client', 'resident', 'prospective_client', 'custodian', 'contractor', 'security_guard'],
+    accessibleBy: allUserTypes,
     name: 'print_id'
   },
   {
@@ -46,17 +58,10 @@ const routes = [
       path: '/message/:id/',
       component: UserMessagePage
     },
-    accessibleBy: ['admin', 'client', 'resident', 'prospective_client', 'custodian', 'contractor', 'security_guard'],
+    accessibleBy: allUserTypes,
     name: 'user_message'
   },
-  {
-    routeProps: {
-      path: '/user/:id/otp',
-      component: OTPFeedbackScreen
-    },
-    accessibleBy: ['admin'],
-    name: 'user_otp'
-  },
+
 ];
 
 export default routes;

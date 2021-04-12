@@ -45,7 +45,8 @@ export default function TransactionsList({ userId, user, userData, paymentSubTab
     UserBalance,
     {
       variables: { userId, limit, offset },
-      errorPolicy: 'all'
+      errorPolicy: 'all',
+      fetchPolicy: 'cache-and-network'
     }
   )
 
@@ -175,6 +176,8 @@ export default function TransactionsList({ userId, user, userData, paymentSubTab
             key={trans.id}
             userData={userData}
             userType={authState.user?.userType}
+            walletRefetch={walletRefetch}
+            depRefetch={depRefetch}
           />
         ))}
         {transactionsData?.userDeposits.transactions.map((trans) => (
@@ -184,6 +187,8 @@ export default function TransactionsList({ userId, user, userData, paymentSubTab
             key={trans?.id}
             userData={userData}
             userType={authState.user?.userType}
+            walletRefetch={walletRefetch}
+            depRefetch={depRefetch}
           />
         ))}
       </TabPanel>

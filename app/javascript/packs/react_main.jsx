@@ -227,6 +227,11 @@ const App = () => {
                                   path="/mypayments"
                                   render={() => <Redirect to={`/user/${user.id}?tab=Payments`} />}
                                 />
+                                <Route
+                                  exact
+                                  path="/myprofile"
+                                  render={() => <Redirect to={`/user/${user.id}`} />}
+                                />
                                 {/* end of redirects */}
                                 {[...modules, ...UserRoutes].map(module => {
                                   if (module.subMenu) {
