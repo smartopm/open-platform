@@ -1,10 +1,11 @@
 import React from 'react';
-import { render, fireEvent } from '@testing-library/react';
+import { render, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { BrowserRouter } from 'react-router-dom';
 import { MockedProvider } from '@apollo/react-testing';
 import PaymentPlan, { renderPlan } from "../Components/UserTransactions/UserPaymentPlanItem";
 import currency from '../../../__mocks__/currency'
+import PaymentPlanUpdateMutation from '../graphql/payment_plan_mutations';
 
 describe('Render Payment Plan Item', () => {
   const plan = {
@@ -32,12 +33,24 @@ describe('Render Payment Plan Item', () => {
   }
 
   const plans = [plan];
+  const user = {
+    userId: "039490-sdfs9432-9432e-dsdf"
+  }
 
-  it('should render the payment plan item component', () => {
+  
+  
+  it('should render the payment plan item component', async () => {
+    const requestMock = {
+        request: {
+          query: PaymentPlanUpdateMutation,
+          variables: { id: plan.id, userId: user.userId, paymentDay: 2 },
+        },
+        result: { data: { paymentDayUpdate: { paymentPlan: { id: plan.id } } } },
+      }
     const container = render(
-      <MockedProvider>
+      <MockedProvider mocks={[requestMock]} addTypename={false}>
         <BrowserRouter>
-          <PaymentPlan plans={plans} currencyData={currency} userId="039490-sdfs9432-9432e-dsdf" />
+          <PaymentPlan plans={plans} currencyData={currency} userId={user.userId} />
         </BrowserRouter>
       </MockedProvider>
     );
@@ -56,6 +69,21 @@ describe('Render Payment Plan Item', () => {
     expect(container.getAllByTestId("status")[0]).toBeInTheDocument()
     expect(container.getAllByTestId("amount")[0]).toBeInTheDocument()
     expect(container.getAllByTestId("due-date")[0]).toBeInTheDocument()
+      
+    // find the menu and click it
+    fireEvent.click(container.queryAllByTestId('menu')[0])
+    // the menu should be showing now 
+    expect(container.getAllByTestId('menu-open')[0]).toBeInTheDocument()
+    expect(container.getAllByTestId('payment-day-1')[0]).toBeInTheDocument()
+
+    // click on a menu item like day one
+    fireEvent.click(container.queryAllByTestId('payment-day-1')[0])
+    // we should have called the mutation by now after a loader
+
+    expect(container.queryAllByTestId('loader')[0]).toBeInTheDocument()
+    await waitFor(() => {
+      expect(container.queryByText('Payment Day successfully updated')).toBeInTheDocument()
+    }, 50)
   })
 
   it('should check if renderPlan works as expected', () => {

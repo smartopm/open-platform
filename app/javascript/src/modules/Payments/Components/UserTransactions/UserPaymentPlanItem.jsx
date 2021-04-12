@@ -110,9 +110,10 @@ export default function UserPaymentPlanItem({ plans, currencyData, userId }) {
         keepMounted
         open={Boolean(anchorEl)}
         onClose={handleClose}
+        data-testid="menu-open"
       >
         {validDays.map(day => (
-          <MenuItem key={day} onClick={() => handleSetDay(day + 1)}>
+          <MenuItem key={day} data-testid={`payment-day-${day}`} onClick={() => handleSetDay(day + 1)}>
             {day + 1}
           </MenuItem>
         ))}
@@ -188,7 +189,7 @@ export function renderPlan(plan, currencyData, { handleMenu, loading }) {
     ),
     'Payment Day': (
       <Grid item xs={12} md={2}>
-        <Button aria-controls="set-payment-date-menu" aria-haspopup="true" onClick={handleMenu}>
+        <Button aria-controls="set-payment-date-menu" aria-haspopup="true" data-testid="menu" onClick={handleMenu}>
           {loading ? <Spinner /> : `set payment day`}
         </Button>
       </Grid>
