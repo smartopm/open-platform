@@ -22,6 +22,7 @@ import UserPaymentPlanItem from './UserPaymentPlanItem'
 import PaymentModal from './PaymentModal'
 import ListHeader from '../../../../shared/list/ListHeader';
 
+// TODO: redefine and remove redundant props, userId, user and userdata
 export default function TransactionsList({ userId, user, userData, paymentSubTabValue }) {
   const history = useHistory()
   const path = useParamsQuery()
@@ -210,6 +211,7 @@ export default function TransactionsList({ userId, user, userData, paymentSubTab
         <UserPaymentPlanItem
           plans={invPayData?.invoicesWithTransactions?.paymentPlans}
           currencyData={currencyData}
+          currentUser={user}
           userId={userId}
           refetch={depRefetch}
         />

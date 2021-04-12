@@ -12,6 +12,7 @@ import {
   Menu,
   MenuItem
 } from '@material-ui/core';
+import EditIcon from '@material-ui/icons/Edit';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import DataList from '../../../../shared/list/DataList';
 import { dateToString } from '../../../../components/DateContainer';
@@ -28,7 +29,7 @@ import PaymentPlanUpdateMutation from '../../graphql/payment_plan_mutations';
 import { Spinner } from '../../../../shared/Loading';
 import MessageAlert from '../../../../components/MessageAlert';
 
-export default function UserPaymentPlanItem({ plans, currencyData, userId, refetch }) {
+export default function UserPaymentPlanItem({ plans, currencyData, currentUser, userId, refetch }) {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = useState(null);
   const [details, setPlanDetails] = useState({
@@ -85,7 +86,7 @@ export default function UserPaymentPlanItem({ plans, currencyData, userId, refet
           isError: false,
           info: 'Payment Day successfully updated'
         });
-        refetch()
+        refetch();
       })
       .catch(err => {
         setPlanDetails({
@@ -114,7 +115,11 @@ export default function UserPaymentPlanItem({ plans, currencyData, userId, refet
         data-testid="menu-open"
       >
         {validDays.map(day => (
-          <MenuItem key={day} data-testid={`payment-day-${day}`} onClick={() => handleSetDay(day + 1)}>
+          <MenuItem
+            key={day}
+            data-testid={`payment-day-${day}`}
+            onClick={() => handleSetDay(day + 1)}
+          >
             {day + 1}
           </MenuItem>
         ))}
@@ -132,7 +137,7 @@ export default function UserPaymentPlanItem({ plans, currencyData, userId, refet
             <DataList
               keys={planHeader}
               data={[
-                renderPlan(plan, currencyData, {
+                renderPlan(plan, currencyData, currentUser.userType, {
                   handleMenu: event => handleOpenDateMenu(event, plan.id),
                   loading: details.isLoading
                 })
@@ -166,8 +171,7 @@ export default function UserPaymentPlanItem({ plans, currencyData, userId, refet
   );
 }
 
-export function renderPlan(plan, currencyData, { handleMenu, loading }) {
-  console.log(plan);
+export function renderPlan(plan, currencyData, userType, { handleMenu, loading }) {
   return {
     'Plot Number': (
       <Grid item xs={12} md={2} data-testid="plot-number">
@@ -191,9 +195,25 @@ export function renderPlan(plan, currencyData, { handleMenu, loading }) {
     ),
     'Payment Day': (
       <Grid item xs={12} md={2}>
-        <Button aria-controls="set-payment-date-menu" aria-haspopup="true" data-testid="menu" onClick={handleMenu}>
-          {loading && <Spinner /> }
-          { plan.paymentDay ? plan.paymentDay :  'set payment day'}
+        <Button
+          aria-controls="set-payment-date-menu"
+          variant={userType === 'admin' ? 'outlined' : 'text'}
+          aria-haspopup="true"
+          data-testid="menu"
+          disabled={userType !== 'admin'}
+          onClick={handleMenu}
+        >
+          {loading && <Spinner />}
+          
+          {
+          !loading && userType === 'admin' ?  (
+            <span>
+              <EditIcon fontSize="small" style={{marginBottom: -4}} />
+              {`   ${plan.paymentDay}`}
+            </span>
+          )
+           : plan.paymentDay
+          }
         </Button>
       </Grid>
     )
@@ -266,7 +286,10 @@ UserPaymentPlanItem.propTypes = {
     locale: PropTypes.string
   }).isRequired,
   userId: PropTypes.string.isRequired,
-  refetch: PropTypes.func.isRequired,
+  currentUser: PropTypes.shape({
+    userType: PropTypes.string
+  }).isRequired,
+  refetch: PropTypes.func.isRequired
 };
 
 const useStyles = makeStyles(() => ({
