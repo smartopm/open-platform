@@ -209,6 +209,7 @@ export default function TransactionsList({ userId, user, userData, paymentSubTab
         <UserPaymentPlanItem
           plans={invPayData?.invoicesWithTransactions?.paymentPlans}
           currencyData={currencyData}
+          userId={userId}
         />
       </TabPanel>
       <PaymentModal

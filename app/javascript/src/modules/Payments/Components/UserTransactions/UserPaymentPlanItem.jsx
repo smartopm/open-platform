@@ -1,7 +1,17 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { makeStyles } from "@material-ui/core/styles";
-import { Grid, Typography, Accordion, AccordionSummary, AccordionDetails, Button, Menu, MenuItem } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
+import { useMutation } from 'react-apollo';
+import {
+  Grid,
+  Typography,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
+  Button,
+  Menu,
+  MenuItem
+} from '@material-ui/core';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import DataList from '../../../../shared/list/DataList';
 import { dateToString } from '../../../../components/DateContainer';
@@ -9,17 +19,22 @@ import { formatMoney, InvoiceStatusColor, propAccessor } from '../../../../utils
 import Text, { HiddenText } from '../../../../shared/Text';
 import Label from '../../../../shared/label/Label';
 import { invoiceStatus } from '../../../../utils/constants';
+import PaymentPlanUpdateMutation from '../../graphql/payment_plan_mutations';
+import { Spinner } from '../../../../shared/Loading';
 
-export default function UserPaymentPlanItem({ plans, currencyData }) {
+export default function UserPaymentPlanItem({ plans, currencyData, userId }) {
   const classes = useStyles();
-  const validDays = [...Array(28).keys()]
-  
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [details, setPlanDetails] = useState({ isLoading: false, planId: null, isError: false });
+  const [updatePaymentPlan] = useMutation(PaymentPlanUpdateMutation);
+  const validDays = [...Array(28).keys()];
+
   const planHeader = [
     { title: 'Plot Number', col: 1 },
     { title: 'Balance', col: 2 },
     { title: 'Start Date', col: 2 },
     { title: '% of total valuation', col: 1 },
-    { title: 'Menu', col: 1 },
+    { title: 'Menu', col: 1 }
   ];
 
   const invoiceHeader = [
@@ -28,27 +43,42 @@ export default function UserPaymentPlanItem({ plans, currencyData }) {
     { title: 'Description', col: 2 },
     { title: 'Amount', col: 2 },
     { title: 'Payment Date', col: 2 },
-    { title: 'Status', col: 2}
+    { title: 'Status', col: 2 }
   ];
-
-  const [anchorEl, setAnchorEl] = useState(null);
 
   const handleClose = () => {
     setAnchorEl(null);
   };
-  function handleOpenDateMenu(event){
+  function handleOpenDateMenu(event, planId) {
+    // avoid collapsing that shows invoices
     event.stopPropagation();
+    setPlanDetails({ ...details, planId });
     setAnchorEl(event.currentTarget);
   }
 
-  function handleSetDay(day){
-      console.log(day)
-      handleClose()
+  function handleSetDay(paymentDay) {
+    // close the menu immediately to show mutation feedback
+    handleClose();
+    setPlanDetails({ ...details, isLoading: true });
+    updatePaymentPlan({
+      variables: {
+        id: details.planId,
+        userId,
+        paymentDay
+      }
+    })
+      .then(() => {
+        
+        setPlanDetails({ ...details, isLoading: false, isError: false });
+      })
+      .catch(err => {
+        console.log(err);
+        setPlanDetails({ ...details, isLoading: false, isError: true });
+      });
   }
 
   return (
     <>
-
       <Menu
         id="set-payment-date-menu"
         anchorEl={anchorEl}
@@ -56,11 +86,11 @@ export default function UserPaymentPlanItem({ plans, currencyData }) {
         open={Boolean(anchorEl)}
         onClose={handleClose}
       >
-        {
-          validDays.map(day => (
-            <MenuItem key={day} onClick={() => handleSetDay(day + 1)}>{day + 1}</MenuItem>
-          ))
-        }
+        {validDays.map(day => (
+          <MenuItem key={day} onClick={() => handleSetDay(day + 1)}>
+            {day + 1}
+          </MenuItem>
+        ))}
       </Menu>
 
       {plans?.map(plan => (
@@ -74,26 +104,34 @@ export default function UserPaymentPlanItem({ plans, currencyData }) {
           >
             <DataList
               keys={planHeader}
-              data={[renderPlan(plan, currencyData, handleOpenDateMenu)]}
+              data={[
+                renderPlan(plan, currencyData, {
+                  handleMenu: event => handleOpenDateMenu(event, plan.id),
+                  loading: details.isLoading
+                })
+              ]}
               hasHeader={false}
               clickable={false}
             />
           </AccordionSummary>
           <AccordionDetails classes={{ root: classes.content }}>
-            {plan.invoices && Boolean(plan.invoices?.length) &&
-              <Typography color='primary' style={{margin: '0 0 10px 50px'}}>Invoices</Typography>}
+            {plan.invoices && Boolean(plan.invoices?.length) && (
+              <Typography color="primary" style={{ margin: '0 0 10px 50px' }}>
+                Invoices
+              </Typography>
+            )}
             {plan.invoices
-                ?.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-                .map(inv => (
-                  <div key={inv.id} style={{margin: '0 50px'}}>
-                    <DataList
-                      keys={invoiceHeader}
-                      data={[renderInvoice(inv, currencyData)]}
-                      hasHeader={false}
-                      clickable={false}
-                    />
-                  </div>
-                ))}
+              ?.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+              .map(inv => (
+                <div key={inv.id} style={{ margin: '0 50px' }}>
+                  <DataList
+                    keys={invoiceHeader}
+                    data={[renderInvoice(inv, currencyData)]}
+                    hasHeader={false}
+                    clickable={false}
+                  />
+                </div>
+              ))}
           </AccordionDetails>
         </Accordion>
       ))}
@@ -101,7 +139,7 @@ export default function UserPaymentPlanItem({ plans, currencyData }) {
   );
 }
 
-export function renderPlan(plan, currencyData, handleOpenDateMenu) {
+export function renderPlan(plan, currencyData, { handleMenu, loading }) {
   return {
     'Plot Number': (
       <Grid item xs={12} md={2} data-testid="plot-number">
@@ -123,9 +161,9 @@ export function renderPlan(plan, currencyData, handleOpenDateMenu) {
         {plan.percentage}
       </Grid>
     ),
-    'Menu': (
-      <Button aria-controls="set-payment-date-menu" aria-haspopup="true" onClick={handleOpenDateMenu}>
-        set payment day
+    Menu: (
+      <Button aria-controls="set-payment-date-menu" aria-haspopup="true" onClick={handleMenu}>
+        {loading ? <Spinner /> : `set payment day`}
       </Button>
     )
   };
@@ -137,13 +175,15 @@ export function renderInvoice(inv, currencyData) {
       <Grid item xs={12} md={2} data-testid="issue-date">
         <HiddenText smDown title="Issue Date" />
         <Text content={dateToString(inv.createdAt)} />
-      </Grid>),
+      </Grid>
+    ),
     'Due Date': (
       <Grid item xs={12} md={2} data-testid="due-date">
         <HiddenText smDown title="Due Date" />
         <Text content={dateToString(inv.dueDate)} />
-      </Grid>),
-    'Description': (
+      </Grid>
+    ),
+    Description: (
       <Grid item xs={12} md={2} data-testid="description">
         <HiddenText smDown title="Description" />
         <Text content={`Invoice #${inv.invoiceNumber}`} />
@@ -158,25 +198,25 @@ export function renderInvoice(inv, currencyData) {
     'Payment Date': (
       <Grid item xs={12} md={2} data-testid="payment-date">
         <HiddenText smDown title="Payment Date" />
-        {inv.status === 'paid' && inv.payments?.length
-          ? <Text content={dateToString(inv.payments[0]?.createdAt)} /> : '-'}
+        {inv.status === 'paid' && inv.payments?.length ? (
+          <Text content={dateToString(inv.payments[0]?.createdAt)} />
+        ) : (
+          '-'
+        )}
       </Grid>
     ),
-    'Status': (
+    Status: (
       <Grid item xs={12} md={2} data-testid="status">
-        {new Date(inv.dueDate) < new Date().setHours(0,0,0,0) && inv.status === 'in_progress' ? (
-          <Label
-            title='Due'
-            color='#B63422'
-          />
+        {new Date(inv.dueDate) < new Date().setHours(0, 0, 0, 0) && inv.status === 'in_progress' ? (
+          <Label title="Due" color="#B63422" />
         ) : (
           <Label
             title={propAccessor(invoiceStatus, inv.status)}
             color={propAccessor(InvoiceStatusColor, inv.status)}
           />
-        ) }
+        )}
       </Grid>
-    ),
+    )
   };
 }
 
@@ -193,7 +233,8 @@ UserPaymentPlanItem.propTypes = {
   currencyData: PropTypes.shape({
     currency: PropTypes.string,
     locale: PropTypes.string
-  }).isRequired
+  }).isRequired,
+  userId: PropTypes.string.isRequired
 };
 
 const useStyles = makeStyles(() => ({
