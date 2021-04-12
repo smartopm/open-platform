@@ -28,6 +28,7 @@ import { invoiceStatus } from '../../../../utils/constants';
 import PaymentPlanUpdateMutation from '../../graphql/payment_plan_mutations';
 import { Spinner } from '../../../../shared/Loading';
 import MessageAlert from '../../../../components/MessageAlert';
+import { suffixedNumber } from '../../helpers';
 
 export default function UserPaymentPlanItem({ plans, currencyData, currentUser, userId, refetch }) {
   const classes = useStyles();
@@ -209,10 +210,10 @@ export function renderPlan(plan, currencyData, userType, { handleMenu, loading }
           !loading && userType === 'admin' ?  (
             <span>
               <EditIcon fontSize="small" style={{marginBottom: -4}} />
-              {`   ${plan.paymentDay}`}
+              {`   ${suffixedNumber(plan.paymentDay)}`}
             </span>
           )
-           : plan.paymentDay
+           : suffixedNumber(plan.paymentDay)
           }
         </Button>
       </Grid>
