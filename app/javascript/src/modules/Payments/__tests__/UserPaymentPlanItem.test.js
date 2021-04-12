@@ -69,7 +69,7 @@ describe('Render Payment Plan Item', () => {
       expect(results).toHaveProperty('Balance');
       expect(results).toHaveProperty('Start Date');
       expect(results).toHaveProperty('% of total valuation');
-      expect(results).toHaveProperty('Menu');
+      expect(results).toHaveProperty('Payment Day');
 
       const balanceContainer = render(results.Balance)
 

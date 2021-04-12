@@ -41,11 +41,11 @@ export default function UserPaymentPlanItem({ plans, currencyData, userId }) {
   const validDays = [...Array(28).keys()];
 
   const planHeader = [
-    { title: 'Plot Number', col: 1 },
+    { title: 'Plot Number', col: 2 },
     { title: 'Balance', col: 2 },
     { title: 'Start Date', col: 2 },
-    { title: '% of total valuation', col: 1 },
-    { title: 'Menu', col: 1 }
+    { title: '% of total valuation', col: 2 },
+    { title: 'Payment Day', col: 2 }
   ];
 
   const invoiceHeader = [
@@ -186,10 +186,12 @@ export function renderPlan(plan, currencyData, { handleMenu, loading }) {
         {plan.percentage}
       </Grid>
     ),
-    Menu: (
-      <Button aria-controls="set-payment-date-menu" aria-haspopup="true" onClick={handleMenu}>
-        {loading ? <Spinner /> : `set payment day`}
-      </Button>
+    'Payment Day': (
+      <Grid item xs={12} md={2}>
+        <Button aria-controls="set-payment-date-menu" aria-haspopup="true" onClick={handleMenu}>
+          {loading ? <Spinner /> : `set payment day`}
+        </Button>
+      </Grid>
     )
   };
 }
