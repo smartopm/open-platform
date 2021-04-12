@@ -31,58 +31,6 @@ class Wallet < ApplicationRecord
     transfer_remaining_funds_to_unallocated
   end
 
-  # Settles pending invoices using available plot balance.
-  #
-  # @return [void]
-  def settle_invoices_with_plot_balance
-    pending_invoices.each do |invoice|
-      balance = invoice.land_parcel.payment_plan&.plot_balance
-      next if balance.to_f.zero?
-
-      payment_amount = invoice.pending_amount > balance ? balance : invoice.pending_amount
-      settle_from_plot_balance(invoice, payment_amount)
-    end
-  end
-
-  # Settles invoice using associated plot balance.
-  #
-  # @param inv [Invoice]
-  # @param payment_amount [Float]
-  # @param prepaid [Boolean]
-  #
-  # @return [void]
-  #
-  # rubocop:disable Style/OptionalBooleanParameter
-  def settle_from_plot_balance(inv, payment_amount, user_transaction_id = nil, prepaid = true)
-    update_balance(payment_amount, 'debit') unless prepaid
-    plan = inv.land_parcel.payment_plan
-    plan.update(
-      plot_balance: plan.plot_balance - payment_amount,
-      pending_balance: plan.pending_balance - payment_amount,
-    )
-    make_payment(inv, payment_amount, user_transaction_id)
-  end
-  # rubocop:enable Style/OptionalBooleanParameter
-
-  # rubocop:disable Metrics/MethodLength
-  def settle_invoices(user_transaction_id)
-    settled_invoices = []
-    user.invoices.not_cancelled.where('pending_amount > ?', 0).reverse.each do |invoice|
-      next if invoice.land_parcel.payment_plan&.plot_balance.to_i.zero?
-
-      bal = invoice.land_parcel.payment_plan&.plot_balance
-      payment_amount = invoice.pending_amount > bal ? bal : invoice.pending_amount
-      settled_invoices << invoice_object(invoice, payment_amount)
-      settle_from_plot_balance(invoice, payment_amount, user_transaction_id, false)
-    end
-
-    transaction = WalletTransaction.find(user_transaction_id)
-    transaction.settled_invoices = settled_invoices
-    transaction.current_pending_plot_balance = transaction.payment_plan.pending_balance
-    transaction.save!
-  end
-  # rubocop:enable Metrics/MethodLength
-
   # rubocop:enable Metrics/AbcSize
   # Updates wallet balance (Debit/Credit).
   #
@@ -134,15 +82,6 @@ class Wallet < ApplicationRecord
 
   private
 
-  def invoice_object(invoice, payment_amount)
-    {
-      id: invoice.id,
-      invoice_number: invoice.invoice_number,
-      due_date: invoice.due_date,
-      amount_owed: invoice.pending_amount,
-      amount_paid: payment_amount,
-      amount_remaining: (invoice.pending_amount - payment_amount),
-    }
   # Deposits amount in wallet balance.
   #
   # @param amount [Float]
@@ -176,15 +115,20 @@ class Wallet < ApplicationRecord
   def settle_invoices_with_unallocated_funds(args)
     amount = args[:amount]
     transaction = args[:transaction]
+    settled_invoices = []
     return if amount > unallocated_funds
 
     pending_invoices.each do |invoice|
       break if amount.zero?
 
       payment_amount = invoice.pending_amount > amount ? amount : invoice.pending_amount
+      settled_invoices << invoice_object(invoice, payment_amount)
       amount -= payment_amount
       settle_from_unallocated_funds(invoice, payment_amount, transaction)
     end
+    transaction.settled_invoices = settled_invoices
+    transaction.current_pending_plot_balance = transaction.payment_plan.pending_balance
+    transaction.save!
   end
 
   # Settles pending invoices using available plot balance.
@@ -193,13 +137,30 @@ class Wallet < ApplicationRecord
   #
   # @return [void]
   def settle_invoices_with_plot_balance(transaction)
+    settled_invoices = []
     pending_invoices.each do |invoice|
       balance = invoice.land_parcel.payment_plan&.plot_balance
       next if balance.to_f.zero?
 
       payment_amount = invoice.pending_amount > balance ? balance : invoice.pending_amount
+      settled_invoices << invoice_object(invoice, payment_amount)
       settle_from_plot_balance(invoice, payment_amount, transaction)
     end
+
+    transaction.settled_invoices = settled_invoices
+    transaction.current_pending_plot_balance = transaction.payment_plan.pending_balance
+    transaction.save!
+  end
+
+  def invoice_object(invoice, payment_amount)
+    {
+      id: invoice.id,
+      invoice_number: invoice.invoice_number,
+      due_date: invoice.due_date,
+      amount_owed: invoice.pending_amount,
+      amount_paid: payment_amount,
+      amount_remaining: (invoice.pending_amount - payment_amount),
+    }
   end
 
   # Settles invoice using associated plot balance.
