@@ -2,8 +2,9 @@ import React from 'react';
 import { render, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { BrowserRouter } from 'react-router-dom';
-import PaymentPlan, { renderPlan } from "../../modules/Payments/Components/UserTransactions/UserPaymentPlanItem";
-import currency from '../../__mocks__/currency'
+import { MockedProvider } from '@apollo/react-testing';
+import PaymentPlan, { renderPlan } from "../Components/UserTransactions/UserPaymentPlanItem";
+import currency from '../../../__mocks__/currency'
 
 describe('Render Payment Plan Item', () => {
   const plan = {
@@ -34,9 +35,11 @@ describe('Render Payment Plan Item', () => {
 
   it('should render the payment plan item component', () => {
     const container = render(
-      <BrowserRouter>
-        <PaymentPlan plans={plans} currencyData={currency} />
-      </BrowserRouter>
+      <MockedProvider>
+        <BrowserRouter>
+          <PaymentPlan plans={plans} currencyData={currency} userId="039490-sdfs9432-9432e-dsdf" />
+        </BrowserRouter>
+      </MockedProvider>
     );
 
     expect(container.getAllByTestId("plot-number")[0]).toBeInTheDocument()
@@ -56,12 +59,17 @@ describe('Render Payment Plan Item', () => {
   })
 
   it('should check if renderPlan works as expected', () => {
-      const results = renderPlan(plan, currency)
+    const menuData = {
+      handleMenu: jest.fn(),
+      loading: false
+    }
+      const results = renderPlan(plan, currency, menuData)
       expect(results).toBeInstanceOf(Object);
       expect(results).toHaveProperty('Plot Number');
       expect(results).toHaveProperty('Balance');
       expect(results).toHaveProperty('Start Date');
       expect(results).toHaveProperty('% of total valuation');
+      expect(results).toHaveProperty('Menu');
 
       const balanceContainer = render(results.Balance)
 
