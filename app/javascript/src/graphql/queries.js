@@ -1082,15 +1082,6 @@ export const LandParcel = gql`
     }
   }
 `
-export const EmailTemplatesQuery = gql`
-  query emailTemplates {
-    emailTemplates {
-      name
-      id
-      variableNames
-    }
-  }
-`
 
 export const SubStatusQuery = gql`
 query subStatus {

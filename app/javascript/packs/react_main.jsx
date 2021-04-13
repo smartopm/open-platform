@@ -71,7 +71,6 @@ import UsersImport from '../src/containers/UsersImport';
 import FormBuilderPage from '../src/containers/Forms/FormBuilderPage';
 import CommentsPage from '../src/containers/Comments/CommentPage';
 import CommunitySettings from '../src/containers/Settings/CommunitySettings';
-import MailTemplates from '../src/containers/MailTemplates';
 import { MainMenu } from "../src/modules/Menu";
 import modules from '../src/modules';
 import UserRoutes from '../src/modules/Users/UserRoutes';
@@ -235,12 +234,19 @@ const App = () => {
                                 {/* end of redirects */}
                                 {[...modules, ...UserRoutes].map(module => {
                                   if (module.subMenu) {
-                                    return module.subMenu.map(sub => (
-                                      <Route {...sub.routeProps} key={sub.name} />
-                                      ));
-                                    }
-                                    if (module.accessibleBy.includes(user.userType)) {
-                                    return <Route exact {...module.routeProps} key={module.name} />;
+                                    return module.subMenu.map(sub => {
+                                      let routes = []
+                                      if (sub.subRoutes) {
+                                        routes = sub.subRoutes.map(subRoute => (
+                                          <Route {...subRoute.routeProps} key={subRoute.name} />
+                                        ))
+                                      } 
+                                      routes.push(<Route {...sub.routeProps} key={sub.name} />)
+                                      return routes
+                                    });
+                                  }
+                                  if (module.accessibleBy.includes(user.userType)) {
+                                  return <Route exact {...module.routeProps} key={module.name} />;
                                   }
                                 })}
                                 <Route exact path="/scan" component={Scan} />
@@ -320,7 +326,6 @@ const App = () => {
                                     <Route path="/new/user" exact component={UserEdit} />
                                     <Route path="/comments" exact component={CommentsPage} />
                                     <Route path="/community" component={CommunitySettings} />
-                                    <Route path="/mail_templates" component={MailTemplates} />
                                     <Route path="/visit_request" component={EntryRequest} />
                                   </Switch>
                                 </AdminRoutes>

@@ -4,7 +4,7 @@ import '@testing-library/jest-dom/extend-expect'
 import { BrowserRouter } from 'react-router-dom/'
 import { MockedProvider } from '@apollo/react-testing'
 import Campaign from '../components/CampaignForm'
-import { EmailTemplatesQuery } from '../graphql/queries'
+import { EmailTemplatesQuery } from '../modules/Emails/graphql/email_queries'
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn())
 describe('Campaign page', () => {

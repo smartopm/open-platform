@@ -229,6 +229,7 @@ ActiveRecord::Schema.define(version: 2021_04_08_095742) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.json "template_variables"
+    t.json "data"
     t.index ["community_id"], name: "index_email_templates_on_community_id"
     t.index ["name"], name: "index_email_templates_on_name", unique: true
   end

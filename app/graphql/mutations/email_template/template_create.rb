@@ -7,6 +7,7 @@ module Mutations
       argument :name, String, required: true
       argument :subject, String, required: true
       argument :body, String, required: true
+      argument :data, GraphQL::Types::JSON, required: true
 
       field :email_template, Types::EmailTemplateType, null: true
 
