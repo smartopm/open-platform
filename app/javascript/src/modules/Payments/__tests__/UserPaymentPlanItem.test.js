@@ -58,6 +58,7 @@ describe('Render Payment Plan Item', () => {
             userId={user.userId}
             currentUser={{ userType: 'admin' }}
             refetch={refetch}
+            walletRefetch={() => {}}
           />
         </BrowserRouter>
       </MockedProvider>

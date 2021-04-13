@@ -74,9 +74,9 @@ export default function UserInvoiceItem({ invoice, currencyData, refetch, wallet
       }
     })
       .then(() => {
-        setAnchorEl(null);
         setMessageAlert('Invoice successfully cancelled');
         setIsSuccessAlert(true);
+        setAnchorEl(null);
         setModalOpen(false);
         walletRefetch();
         refetch();

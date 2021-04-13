@@ -36,7 +36,7 @@ import PaymentPlanUpdateMutation from '../../graphql/payment_plan_mutations';
 import { Spinner } from '../../../../shared/Loading';
 import { suffixedNumber } from '../../helpers';
 
-export default function UserPaymentPlanItem({ plans, currencyData, userId, refetch, walletRefetch }) {
+export default function UserPaymentPlanItem({ plans, currencyData, currentUser, userId, refetch, walletRefetch }) {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = useState(null);
   const [details, setPlanDetails] = useState({
@@ -130,7 +130,7 @@ export default function UserPaymentPlanItem({ plans, currencyData, userId, refet
     setMenuAnchorEl(event.currentTarget);
   }
 
-  function handleClose(event) {
+  function handleMenuClose(event) {
     event.stopPropagation();
     setMenuAnchorEl(null);
   }
@@ -155,9 +155,9 @@ export default function UserPaymentPlanItem({ plans, currencyData, userId, refet
       }
     })
       .then(() => {
-        setMenuAnchorEl(null);
         setMessageAlert('Invoice successfully cancelled');
         setIsSuccessAlert(true);
+        setMenuAnchorEl(null);
         setModalOpen(false);
         walletRefetch();
         refetch();
@@ -171,10 +171,10 @@ export default function UserPaymentPlanItem({ plans, currencyData, userId, refet
   const menuData = {
     menuList,
     handleOpenMenu,
-    anchorEl: setMenuAnchorEl,
+    anchorEl: menuAnchorEl,
     menuOpen,
     userType,
-    handleClose
+    handleClose: handleMenuClose
   };
 
   return (
