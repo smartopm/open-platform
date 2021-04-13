@@ -14,51 +14,22 @@ class Wallet < ApplicationRecord
   # Settles invoices of user using plot balance or unallocated funds
   #
   # @param args [Hash]
-  # @option args [String] source type
+  # @option args [String] source
   # @option args [Float] amount
+  # @option args [WalletTransaction] transaction
   #
   # @return [void]
   def settle_invoices(args = {})
+    transaction = args[:transaction]
+    return if transaction.blank?
+
     if args[:source] == 'unallocated_funds'
-      settle_invoices_with_unallocated_funds(args[:amount])
+      settle_invoices_with_unallocated_funds(args)
     else
-      settle_invoices_with_plot_balance
+      settle_invoices_with_plot_balance(transaction)
     end
     transfer_remaining_funds_to_unallocated
   end
-
-  # Settles pending invoices using available plot balance.
-  #
-  # @return [void]
-  def settle_invoices_with_plot_balance
-    pending_invoices.each do |invoice|
-      balance = invoice.land_parcel.payment_plan&.plot_balance
-      next if balance.to_f.zero?
-
-      payment_amount = invoice.pending_amount > balance ? balance : invoice.pending_amount
-      settle_from_plot_balance(invoice, payment_amount)
-    end
-  end
-
-  # Settles invoice using associated plot balance.
-  #
-  # @param inv [Invoice]
-  # @param payment_amount [Float]
-  # @param prepaid [Boolean]
-  #
-  # @return [void]
-  #
-  # rubocop:disable Style/OptionalBooleanParameter
-  def settle_from_plot_balance(inv, payment_amount, user_transaction_id = nil, prepaid = true)
-    update_balance(payment_amount, 'debit') unless prepaid
-    plan = inv.land_parcel.payment_plan
-    plan.update(
-      plot_balance: plan.plot_balance - payment_amount,
-      pending_balance: plan.pending_balance - payment_amount,
-    )
-    make_payment(inv, payment_amount, user_transaction_id)
-  end
-  # rubocop:enable Style/OptionalBooleanParameter
 
   # Updates wallet balance (Debit/Credit).
   #
@@ -79,11 +50,10 @@ class Wallet < ApplicationRecord
   #
   # @param inv [Invoice]
   # @param payment_amount [Float]
+  # @param transaction [WalletTransaction]
   #
   # @return [void]
-  #
-  def make_payment(inv, payment_amount)
-    transaction = create_transaction(payment_amount, inv)
+  def make_payment(inv, payment_amount, transaction)
     payment = Payment.create(amount: payment_amount, payment_type: 'wallet',
                              user_id: user.id, community_id: user.community_id,
                              payment_status: 'settled')
@@ -109,6 +79,20 @@ class Wallet < ApplicationRecord
                                        community_id: user.community_id,
                                        payment_plan: inv.payment_plan,
                                      })
+  end
+
+  # Transfer remaining plot balance to Wallet's unallocated funds.
+  # * Updates payment plan's plot_balance to zero.
+  # * Adds remaining plot balance to Wallet#unallocated_funds.
+  #
+  # @return [void]
+  def transfer_remaining_funds_to_unallocated
+    payment_plans = user.payment_plans.where.not(plot_balance: 0)
+
+    payment_plans.each do |payment_plan|
+      update(unallocated_funds: unallocated_funds + payment_plan.plot_balance)
+      payment_plan.update(plot_balance: 0)
+    end
   end
 
   private
@@ -138,10 +122,14 @@ class Wallet < ApplicationRecord
 
   # Settles invoices using wallet unallocated funds.
   #
-  # @param amount [Float]
+  # @param args [Hash]
+  # @option args [Float] amount
+  # @option args [WalletTransaction] WalletTransaction
   #
   # @return [void]
-  def settle_invoices_with_unallocated_funds(amount)
+  def settle_invoices_with_unallocated_funds(args)
+    amount = args[:amount]
+    transaction = args[:transaction]
     return if amount > unallocated_funds
 
     pending_invoices.each do |invoice|
@@ -149,8 +137,42 @@ class Wallet < ApplicationRecord
 
       payment_amount = invoice.pending_amount > amount ? amount : invoice.pending_amount
       amount -= payment_amount
-      settle_from_unallocated_funds(invoice, payment_amount)
+      settle_from_unallocated_funds(invoice, payment_amount, transaction)
     end
+  end
+
+  # Settles pending invoices using available plot balance.
+  #
+  # @param transaction [WalletTransaction]
+  #
+  # @return [void]
+  def settle_invoices_with_plot_balance(transaction)
+    pending_invoices.each do |invoice|
+      balance = invoice.land_parcel.payment_plan&.plot_balance
+      next if balance.to_f.zero?
+
+      payment_amount = invoice.pending_amount > balance ? balance : invoice.pending_amount
+      settle_from_plot_balance(invoice, payment_amount, transaction)
+    end
+  end
+
+  # Settles invoice using associated plot balance.
+  #
+  # @param inv [Invoice]
+  # @param payment_amount [Float]
+  # @param transaction [WalletTransaction]
+  #
+  # @return [void]
+  #
+  def settle_from_plot_balance(inv, payment_amount, transaction)
+    update_balance(payment_amount, 'debit')
+    plan = inv.land_parcel.payment_plan
+    plan.update(
+      plot_balance: plan.plot_balance - payment_amount,
+      pending_balance: plan.pending_balance - payment_amount,
+    )
+    create_transaction(payment_amount, inv)
+    make_payment(inv, payment_amount, transaction)
   end
 
   # Returns pending invoices of user,
@@ -166,12 +188,14 @@ class Wallet < ApplicationRecord
   #
   # @param inv [Invoice]
   # @param payment_amount [Float]
+  # @param transaction [WalletTransaction]
   #
   # @return [void]
-  def settle_from_unallocated_funds(inv, payment_amount)
+  def settle_from_unallocated_funds(inv, payment_amount, transaction)
     update_balance(payment_amount, 'debit')
     update_unallocated_funds(payment_amount)
-    make_payment(inv, payment_amount)
+    create_transaction(payment_amount, inv)
+    make_payment(inv, payment_amount, transaction)
   end
 
   # Updates unallocated funds of wallet.
@@ -184,20 +208,6 @@ class Wallet < ApplicationRecord
       update(unallocated_funds: unallocated_funds - payment_amount)
     else
       update(unallocated_funds: 0)
-    end
-  end
-
-  # Transfer remaining plot balance to Wallet's unallocated funds.
-  # * Updates payment plan's plot_balance to zero.
-  # * Adds remaining plot balance to Wallet#unallocated_funds.
-  #
-  # @return [void]
-  def transfer_remaining_funds_to_unallocated
-    payment_plans = user.payment_plans.where.not(plot_balance: 0)
-
-    payment_plans.each do |payment_plan|
-      update(unallocated_funds: unallocated_funds + payment_plan.plot_balance)
-      payment_plan.update(plot_balance: 0)
     end
   end
 end

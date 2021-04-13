@@ -253,6 +253,7 @@ export default function InvoiceList({ currencyData, userType }) {
         title='Invoice'
         action='delete'
         user={name}
+        additionalNote='The refund amount will be added to unallocated funds.'
       />
       {listType === 'graph' && invoicesStatData?.invoicesStatDetails?.length > 0 && (
         <Fab color="primary" variant="extended" className={classes.download}>

@@ -83,17 +83,18 @@ module Mutations
       #
       # @return [void]
       def execute_transaction_callbacks(args)
-        context[:current_user].generate_events('deposit_create', context[:transaction])
+        transaction = context[:transaction]
+        context[:current_user].generate_events('deposit_create', transaction)
         if args[:source] != 'unallocated_funds'
           context[:payment_plan].update_plot_balance(args[:amount])
           update_wallet_balance(args[:amount])
         else
           raise_funds_not_sufficient_error(args)
         end
-        context[:wallet].settle_invoices(args)
+        context[:wallet].settle_invoices(args.merge(transaction: transaction))
       end
 
-      # Raises GraphQL execution error if unallocated_funds is less than payment amount
+      # Raises GraphQL execution error if unallocated_funds is less than payment amount.
       #
       # @param source [String]
       # @param amount [Float]
