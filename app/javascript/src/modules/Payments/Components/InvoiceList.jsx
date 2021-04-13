@@ -237,6 +237,7 @@ export default function InvoiceList({ currencyData, userType }) {
         title='Invoice'
         action='delete'
         user={name}
+        additionalNote='The refund amount will be added to unallocated funds.'
       />
       {loading ? (<Spinner />) : (
         <List>

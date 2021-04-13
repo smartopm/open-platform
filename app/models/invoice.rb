@@ -54,7 +54,8 @@ class Invoice < ApplicationRecord
         plot_balance: plan.plot_balance - cur_payment,
         pending_balance: plan.pending_balance + amount - cur_payment,
       )
-      user.wallet.make_payment(self, cur_payment)
+      transaction = user.wallet.create_transaction(cur_payment, self)
+      user.wallet.make_payment(self, cur_payment, transaction)
     end
   end
   # rubocop:enable Metrics/AbcSize

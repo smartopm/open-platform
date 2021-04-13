@@ -19,7 +19,8 @@ export default function DeleteDialogueBox({
   handleAction,
   title,
   action,
-  user
+  user,
+  additionalNote
 }) {
   const classes = useStyles();
   return (
@@ -39,6 +40,8 @@ export default function DeleteDialogueBox({
         </DialogTitle>
         <DialogContent style={{margin: '30px 0', fontSize: '13px', textAlign: 'center'}}>
           { `You are about to ${action} ${title} ${user ? `for ${user}` : null}` }
+          <br />
+          <b>{ additionalNote ? `Note:- ${additionalNote}` : null }</b>
         </DialogContent>
         <Divider />
         <DialogActions>
@@ -56,7 +59,8 @@ export default function DeleteDialogueBox({
 
 DeleteDialogueBox.defaultProps = {
   action: 'delete',
-  user: ''
+  user: '',
+  additionalNote: ''
 }
 
 DeleteDialogueBox.propTypes = {
@@ -65,7 +69,8 @@ DeleteDialogueBox.propTypes = {
   handleAction: PropTypes.func.isRequired,
   title: PropTypes.string.isRequired,
   action: PropTypes.string,
-  user: PropTypes.string
+  user: PropTypes.string,
+  additionalNote: PropTypes.string
 }
 
 const useStyles = makeStyles({
