@@ -202,6 +202,7 @@ export default function TransactionsList({ userId, user, userData, paymentSubTab
               invoice={inv}
               currencyData={currencyData}
               refetch={depRefetch}
+              walletRefetch={walletRefetch}
             />
           ))
         }
@@ -214,6 +215,7 @@ export default function TransactionsList({ userId, user, userData, paymentSubTab
           currentUser={user}
           userId={userId}
           refetch={depRefetch}
+          walletRefetch={walletRefetch}
         />
       </TabPanel>
       <PaymentModal

@@ -36,7 +36,7 @@ import PaymentPlanUpdateMutation from '../../graphql/payment_plan_mutations';
 import { Spinner } from '../../../../shared/Loading';
 import { suffixedNumber } from '../../helpers';
 
-export default function UserPaymentPlanItem({ plans, currencyData, userId, refetch }) {
+export default function UserPaymentPlanItem({ plans, currencyData, userId, refetch, walletRefetch }) {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = useState(null);
   const [details, setPlanDetails] = useState({
@@ -159,6 +159,7 @@ export default function UserPaymentPlanItem({ plans, currencyData, userId, refet
         setMessageAlert('Invoice successfully cancelled');
         setIsSuccessAlert(true);
         setModalOpen(false);
+        walletRefetch();
         refetch();
       })
       .catch(err => {
@@ -403,7 +404,8 @@ UserPaymentPlanItem.propTypes = {
   currentUser: PropTypes.shape({
     userType: PropTypes.string
   }).isRequired,
-  refetch: PropTypes.func.isRequired
+  refetch: PropTypes.func.isRequired,
+  walletRefetch: PropTypes.func.isRequired,
 };
 
 const useStyles = makeStyles(() => ({

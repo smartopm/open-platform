@@ -29,7 +29,7 @@ const invoiceHeader = [
   { title: 'Status', col: 4 },
   { title: 'Menu', col: 4 }
 ];
-export default function UserInvoiceItem({ invoice, currencyData, refetch }) {
+export default function UserInvoiceItem({ invoice, currencyData, refetch, walletRefetch }) {
   const [open, setOpen] = useState(false);
   const [invoiceId, setInvoiceId] = useState(false);
   const [name, setName] = useState('');
@@ -78,6 +78,7 @@ export default function UserInvoiceItem({ invoice, currencyData, refetch }) {
         setMessageAlert('Invoice successfully cancelled');
         setIsSuccessAlert(true);
         setModalOpen(false);
+        walletRefetch();
         refetch();
       })
       .catch(err => {
@@ -204,4 +205,5 @@ UserInvoiceItem.propTypes = {
     locale: PropTypes.string
   }).isRequired,
   refetch: PropTypes.func.isRequired,
+  walletRefetch: PropTypes.func.isRequired,
 };
