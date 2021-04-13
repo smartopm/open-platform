@@ -946,6 +946,8 @@ export const InvoicesQuery = gql`
         id
         name
         imageUrl
+        email
+        phoneNumber
       }
       landParcel {
         id
@@ -1013,6 +1015,8 @@ export const InvoicesStatsDetails = gql`
         id
         name
         imageUrl
+        email
+        phoneNumber
       }
       landParcel {
         id
@@ -1027,12 +1031,17 @@ export const PaymentStatsDetails = gql`
     paymentStatDetails(query: $query) {
       id
       amount
+      status
       source
+      receiptNumber
       createdAt
       user {
         id
         name
         imageUrl
+        email
+        phoneNumber
+        extRefId
       }
     }
   }
@@ -1145,6 +1154,7 @@ export const AllTransactionQuery = gql`
         plotBalance
         pendingBalance
         createdAt
+        paymentDay
         invoices {
           id
           amount
@@ -1257,10 +1267,14 @@ export const TransactionsQuery = gql`
       bankName
       chequeNumber
       transactionNumber
+      receiptNumber
       user {
         id
         name
         imageUrl
+        email
+        phoneNumber
+        extRefId
       }
     }
   }

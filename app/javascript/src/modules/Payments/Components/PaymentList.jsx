@@ -1,11 +1,13 @@
 /* eslint-disable no-nested-ternary */
 import React, { useState } from 'react';
+import { CSVLink } from "react-csv";
 import { Grid, List } from '@material-ui/core';
 import Avatar from '@material-ui/core/Avatar';
+import Fab from '@material-ui/core/Fab';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { useQuery, useLazyQuery } from 'react-apollo';
-import { useTheme } from '@material-ui/core/styles';
+import { useTheme, makeStyles } from '@material-ui/core/styles';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { useHistory } from 'react-router';
 import { TransactionsQuery, PaymentStatsDetails } from '../../../graphql/queries';
@@ -36,9 +38,23 @@ const paymentHeaders = [
   { title: 'Amount', col: 2 }
 ];
 
+const csvHeaders = [
+  { label: "Amount", key: "amount" },
+  { label: "Status", key: "status" },
+  { label: "Created Date", key: "createdAt" },
+  { label: "User Name", key: "user.name" },
+  { label: "Phone Number", key: "user.phoneNumber" },
+  { label: "Email", key: "user.email" },
+  { label: "Transaction Type", key: "source" },
+  { label: "Transaction Number", key: "transactionNumber" },
+  { label: "External Id", key: "user.extRefId" },
+  { label: "Receipt Number", key: "receiptNumber" }
+];
+
 export default function PaymentList({ currencyData }) {
   const limit = 50;
   const path = useParamsQuery();
+  const classes = useStyles();
   const page = path.get('page');
   const [searchValue, setSearchValue] = useState('');
   const debouncedValue = useDebounce(searchValue, 500);
@@ -57,10 +73,7 @@ export default function PaymentList({ currencyData }) {
     errorPolicy: 'all'
   });
 
-  let paymentList
-  if (data?.transactions) {
-    paymentList = data.transactions.filter((fil) => fil.destination === 'wallet' && fil.source !== 'invoice')
-  }
+  const  paymentList = data?.transactions?.filter((fil) => fil.destination === 'wallet' && fil.source !== 'invoice')
 
   function paginate(action) {
     if (action === 'prev') {
@@ -145,9 +158,19 @@ export default function PaymentList({ currencyData }) {
       <br />
       <br />
       <PaymentGraph handleClick={setGraphQuery} />
+      {listType === 'graph' && paymentStatData?.paymentStatDetails?.length > 0 && (
+        <Fab color="primary" variant="extended" className={classes.download}>
+          <CSVLink data={paymentStatData.paymentStatDetails} style={{color: 'white'}} headers={csvHeaders} filename="payment-data.csv">Download CSV</CSVLink>
+        </Fab>
+      )}
+      {listType === 'nongraph' && paymentList?.length > 0 && (
+        <Fab color="primary" variant="extended" className={classes.download}>
+          <CSVLink data={paymentList} style={{color: 'white'}} headers={csvHeaders} filename="payment-data.csv">Download CSV</CSVLink>
+        </Fab>
+      )}
       {loading ? (<Spinner />) : (
         <List>
-          {listType === 'graph' && paymentStatData?.paymentStatDetails?.length && paymentStatData?.paymentStatDetails?.length > 0 ? (
+          {listType === 'graph' && paymentStatData?.paymentStatDetails?.length > 0 ? (
             <div>
               {matches && <ListHeader headers={paymentHeaders} />}
               {
@@ -156,7 +179,7 @@ export default function PaymentList({ currencyData }) {
             ))
           }
             </div>
-      ) : paymentList?.length && paymentList?.length > 0 ? (
+      ) : paymentList?.length > 0 ? (
         <div>
           {matches && <ListHeader headers={paymentHeaders} />}
           {
@@ -245,6 +268,17 @@ export function TransactionItem({transaction, currencyData}){
     </div>
   )
 }
+
+const useStyles = makeStyles(() => ({
+  download: {
+    boxShadow: 'none',
+    position: 'fixed',
+    bottom: 30,
+    right: 57,
+    marginLeft: '30%',
+    zIndex: '1000'
+  }
+}));
 
 PaymentList.propTypes = {
   currencyData: PropTypes.shape({ ...currency }).isRequired

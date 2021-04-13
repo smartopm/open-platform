@@ -9,6 +9,9 @@ class PaymentPlan < ApplicationRecord
 
   after_create :generate_monthly_invoices
 
+  validates :payment_day,
+            numericality: { only_integer: true, greater_than: 0, less_than_or_equal_to: 28 }
+
   enum status: { active: 0, cancelled: 1, deleted: 2 }
 
   def update_plot_balance(amount, type = 'credit')
