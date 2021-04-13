@@ -67,7 +67,7 @@ module Mutations
 
           bal = invoice.land_parcel.payment_plan&.plot_balance
           payment_amount = invoice.pending_amount > bal ? bal : invoice.pending_amount
-          user.wallet.settle_from_plot_balance(invoice, payment_amount, true)
+          user.wallet.settle_from_plot_balance(invoice, payment_amount)
         end
       end
       # rubocop:enable Metrics/AbcSize

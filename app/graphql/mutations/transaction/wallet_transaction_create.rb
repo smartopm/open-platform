@@ -39,7 +39,10 @@ module Mutations
           )
           context[:current_user].generate_events('deposit_create', transaction)
           land_parcel.payment_plan&.update_plot_balance(vals[:amount])
-          update_wallet_balance(user, transaction, vals[:amount]) if transaction.settled?
+          if transaction.settled?
+            update_wallet_balance(user, transaction, vals[:amount])
+            user.wallet.settle_invoices(transaction.id)
+          end
           { wallet_transaction: transaction }
         end
       end

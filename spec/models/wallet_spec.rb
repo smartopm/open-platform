@@ -43,6 +43,7 @@ RSpec.describe Wallet, type: :model do
       expect(user.wallet.pending_balance).to eql invoice.amount
       user.payment_plans.update(plot_balance: invoice.amount)
       user.wallet.update_balance(invoice.amount)
+      user.wallet.settle_invoices
       expect(user.wallet.balance).to eql 0.0
       expect(invoice.land_parcel.payment_plan.reload.plot_balance).to eql 0.0
       expect(invoice.reload.status).to eql 'paid'
