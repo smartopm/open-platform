@@ -67,7 +67,7 @@ DeleteDialogueBox.defaultProps = {
   action: 'delete',
   user: '',
   loading: false,
-  additionalNote: ''
+  additionalNote: '',
 }
 
 DeleteDialogueBox.propTypes = {
@@ -77,7 +77,7 @@ DeleteDialogueBox.propTypes = {
   title: PropTypes.string.isRequired,
   action: PropTypes.string,
   user: PropTypes.string,
-  loading: PropTypes.bool
+  loading: PropTypes.bool,
   additionalNote: PropTypes.string
 }
 

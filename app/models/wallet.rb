@@ -31,7 +31,6 @@ class Wallet < ApplicationRecord
     transfer_remaining_funds_to_unallocated
   end
 
-  # rubocop:enable Metrics/AbcSize
   # Updates wallet balance (Debit/Credit).
   #
   # @param amount [Float]
@@ -181,6 +180,40 @@ class Wallet < ApplicationRecord
     make_payment(inv, payment_amount, transaction)
   end
 
+  # Settles pending invoices using available plot balance.
+  #
+  # @param transaction [WalletTransaction]
+  #
+  # @return [void]
+  def settle_invoices_with_plot_balance(transaction)
+    pending_invoices.each do |invoice|
+      balance = invoice.land_parcel.payment_plan&.plot_balance
+      next if balance.to_f.zero?
+
+      payment_amount = invoice.pending_amount > balance ? balance : invoice.pending_amount
+      settle_from_plot_balance(invoice, payment_amount, transaction)
+    end
+  end
+
+  # Settles invoice using associated plot balance.
+  #
+  # @param inv [Invoice]
+  # @param payment_amount [Float]
+  # @param transaction [WalletTransaction]
+  #
+  # @return [void]
+  #
+  def settle_from_plot_balance(inv, payment_amount, transaction)
+    update_balance(payment_amount, 'debit')
+    plan = inv.land_parcel.payment_plan
+    plan.update(
+      plot_balance: plan.plot_balance - payment_amount,
+      pending_balance: plan.pending_balance - payment_amount,
+    )
+    create_transaction(payment_amount, inv)
+    make_payment(inv, payment_amount, transaction)
+  end
+
   # Returns pending invoices of user,
   # * not cancelled
   # * pending amount greater than zero.
@@ -200,6 +233,7 @@ class Wallet < ApplicationRecord
   def settle_from_unallocated_funds(inv, payment_amount, transaction)
     update_balance(payment_amount, 'debit')
     update_unallocated_funds(payment_amount)
+    create_transaction(payment_amount, inv)
     make_payment(inv, payment_amount, transaction)
   end
 
