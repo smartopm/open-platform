@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import Cropper from 'react-easy-crop'
 import PropTypes from 'prop-types'
-import { getCroppedImg } from '../../utils/imageResizer'
+import { getCroppedImg } from '../../../utils/imageResizer'
 
 /* istanbul ignore next */
 export default function ImageCropper({ getBlob, inputImg, fileName }){

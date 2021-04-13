@@ -1,10 +1,10 @@
 import React, { useContext } from 'react'
 import {  useQuery } from 'react-apollo'
-import CommunitySettingsPage from '../../components/Community/CommunitySettings'
-import { Context as AuthStateContext } from '../Provider/AuthStateProvider'
-import { CommunityQuery } from '../../graphql/queries/community'
-import Loading from '../../shared/Loading'
-import ErrorPage from '../../components/Error'
+import CommunitySettingsPage from './Settings'
+import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider'
+import { CommunityQuery } from '../../../graphql/queries/community'
+import Loading from '../../../shared/Loading'
+import ErrorPage from '../../../components/Error'
 
 export default function CommunitySettings(){
   const authState = useContext(AuthStateContext)

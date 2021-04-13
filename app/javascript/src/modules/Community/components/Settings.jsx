@@ -8,13 +8,13 @@ import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
 import PropTypes from 'prop-types';
 
 import { useMutation, useApolloClient } from 'react-apollo';
-import { CommunityUpdateMutation } from '../../graphql/mutations/community';
+import { CommunityUpdateMutation } from '../graphql/community_mutations';
 import DynamicContactFields from './DynamicContactFields';
-import MessageAlert from '../MessageAlert';
-import { useFileUpload } from '../../graphql/useFileUpload';
+import MessageAlert from '../../../components/MessageAlert';
+import { useFileUpload } from '../../../graphql/useFileUpload';
 import ImageCropper from './ImageCropper';
-import { currencies, locales } from '../../utils/constants';
-import ImageAuth from '../../shared/ImageAuth';
+import { currencies, locales } from '../../../utils/constants';
+import ImageAuth from '../../../shared/ImageAuth';
 
 export default function CommunitySettings({ data, token, refetch }) {
   const numbers = {

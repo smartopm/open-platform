@@ -70,11 +70,11 @@ import UsersImport from '../src/containers/UsersImport';
 
 import FormBuilderPage from '../src/containers/Forms/FormBuilderPage';
 import CommentsPage from '../src/containers/Comments/CommentPage';
-import CommunitySettings from '../src/containers/Settings/CommunitySettings';
 import MailTemplates from '../src/containers/MailTemplates';
 import { MainMenu } from "../src/modules/Menu";
 import modules from '../src/modules';
 import UserRoutes from '../src/modules/Users/UserRoutes';
+import CommunitySettings from '../src/modules/Community/components/CommunitySettings';
 
 // The routes defined here are carefully arranged, be mindful when changing them
 

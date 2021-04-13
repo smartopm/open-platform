@@ -8,6 +8,22 @@ import Labels from '../Labels';
 import Campaigns from '../Campaigns';
 import PermitRequestForms from '../Forms/PermitRequestForms';
 import { allUserTypes } from '../../utils/constants';
+import CommunitySettings from './components/CommunitySettings';
+
+// will only be useful after merging email template MR
+const subRoutes = [
+  {
+    routeProps: {
+      path: '/community',
+      component: <CommunitySettings />
+    },
+    styleProps: {
+      icon: <GroupIcon />
+    },
+    name: 'Community Settings',
+    accessibleBy: ['admin'],
+  }
+]
 
 export default {
   routeProps: {
@@ -19,5 +35,6 @@ export default {
   },
   name: 'Community',
   accessibleBy: allUserTypes,
-  subMenu: [News, Message, Discussions, Campaigns , Labels, Business, PermitRequestForms]
+  subMenu: [News, Message, Discussions, Campaigns , Labels, Business, PermitRequestForms],
+  subRoutes
 };
