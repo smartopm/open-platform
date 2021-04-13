@@ -232,7 +232,7 @@ export default function InvoiceList({ currencyData, userType }) {
               position: 'absolute',
               zIndex: 1,
               marginTop: '-2px',
-              marginLeft: '-250px',
+              marginLeft: '-300px',
               display: displayBuilder
             }}
       >

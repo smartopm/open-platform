@@ -144,7 +144,7 @@ export default function PaymentList({ currencyData }) {
               position: 'absolute',
               zIndex: 1,
               marginTop: '-2px',
-              marginLeft: '-50px',
+              marginLeft: '-300px',
               display: displayBuilder
             }}
       >
