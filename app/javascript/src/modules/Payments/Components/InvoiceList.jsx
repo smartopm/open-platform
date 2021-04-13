@@ -3,13 +3,14 @@
 import React, { useState } from 'react';
 import { CSVLink } from "react-csv";
 import Avatar from '@material-ui/core/Avatar';
+import Fab from '@material-ui/core/Fab';
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 import { useHistory } from 'react-router';
 import { Grid, List, IconButton } from '@material-ui/core'
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { useQuery, useLazyQuery, useMutation } from 'react-apollo';
-import { useTheme } from '@material-ui/core/styles';
+import { useTheme, makeStyles } from '@material-ui/core/styles';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import CenteredContent from '../../../components/CenteredContent';
 import Paginate from '../../../components/Paginate';
@@ -66,6 +67,7 @@ const csvHeaders = [
   { label: "Email", key: "user.email" }
 ];
 export default function InvoiceList({ currencyData, userType }) {
+  const classes = useStyles();
   const menuList = [
     { content: 'Cancel Invoice', isAdmin: true, color: 'red', handleClick}
   ]
@@ -253,10 +255,14 @@ export default function InvoiceList({ currencyData, userType }) {
         user={name}
       />
       {listType === 'graph' && invoicesStatData?.invoicesStatDetails?.length > 0 && (
-        <CSVLink data={invoicesStatData.invoicesStatDetails} headers={csvHeaders} filename="invoice-data.csv">Download CSV</CSVLink>
+        <Fab color="primary" variant="extended" className={classes.download}>
+          <CSVLink data={invoicesStatData.invoicesStatDetails} style={{color: 'white'}} headers={csvHeaders} filename="invoice-data.csv">Download CSV</CSVLink>
+        </Fab>
       )}
       {listType === 'nongraph' && invoicesData?.invoices.length > 0 && (
-        <CSVLink data={invoicesData.invoices} headers={csvHeaders} filename="invoice-data.csv">Download CSV</CSVLink>
+        <Fab color="primary" variant="extended" className={classes.download}>
+          <CSVLink data={invoicesData.invoices} style={{color: 'white'}} headers={csvHeaders} filename="invoice-data.csv">Download CSV</CSVLink>
+        </Fab>
       )}
       {loading ? (<Spinner />) : (
         <List>
@@ -416,6 +422,17 @@ export function InvoiceItem({invoice, currencyData, menuData}){
     </div>
   )
 }
+
+const useStyles = makeStyles(() => ({
+  download: {
+    boxShadow: 'none',
+    position: 'fixed',
+    bottom: 20,
+    right: 57,
+    marginLeft: '30%',
+    zIndex: '1000'
+  }
+}));
 InvoiceList.propTypes = {
   currencyData: PropTypes.shape({ ...currencyTypes }).isRequired,
   userType: PropTypes.string.isRequired

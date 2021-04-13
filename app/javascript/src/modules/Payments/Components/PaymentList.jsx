@@ -3,10 +3,11 @@ import React, { useState } from 'react';
 import { CSVLink } from "react-csv";
 import { Grid, List } from '@material-ui/core';
 import Avatar from '@material-ui/core/Avatar';
+import Fab from '@material-ui/core/Fab';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { useQuery, useLazyQuery } from 'react-apollo';
-import { useTheme } from '@material-ui/core/styles';
+import { useTheme, makeStyles } from '@material-ui/core/styles';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { useHistory } from 'react-router';
 import { TransactionsQuery, PaymentStatsDetails } from '../../../graphql/queries';
@@ -53,6 +54,7 @@ const csvHeaders = [
 export default function PaymentList({ currencyData }) {
   const limit = 50;
   const path = useParamsQuery();
+  const classes = useStyles();
   const page = path.get('page');
   const [searchValue, setSearchValue] = useState('');
   const debouncedValue = useDebounce(searchValue, 500);
@@ -157,10 +159,14 @@ export default function PaymentList({ currencyData }) {
       <br />
       <PaymentGraph handleClick={setGraphQuery} />
       {listType === 'graph' && paymentStatData?.paymentStatDetails?.length > 0 && (
-        <CSVLink data={paymentStatData.paymentStatDetails} headers={csvHeaders} filename="payment-data.csv">Download CSV</CSVLink>
+        <Fab color="primary" variant="extended" className={classes.download}>
+          <CSVLink data={paymentStatData.paymentStatDetails} style={{color: 'white'}} headers={csvHeaders} filename="payment-data.csv">Download CSV</CSVLink>
+        </Fab>
       )}
       {listType === 'nongraph' && paymentList?.length > 0 && (
-        <CSVLink data={paymentList} headers={csvHeaders} filename="payment-data.csv">Download CSV</CSVLink>
+        <Fab color="primary" variant="extended" className={classes.download}>
+          <CSVLink data={paymentList} style={{color: 'white'}} headers={csvHeaders} filename="payment-data.csv">Download CSV</CSVLink>
+        </Fab>
       )}
       {loading ? (<Spinner />) : (
         <List>
@@ -262,6 +268,17 @@ export function TransactionItem({transaction, currencyData}){
     </div>
   )
 }
+
+const useStyles = makeStyles(() => ({
+  download: {
+    boxShadow: 'none',
+    position: 'fixed',
+    bottom: 30,
+    right: 57,
+    marginLeft: '30%',
+    zIndex: '1000'
+  }
+}));
 
 PaymentList.propTypes = {
   currencyData: PropTypes.shape({ ...currency }).isRequired
