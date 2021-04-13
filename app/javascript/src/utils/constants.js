@@ -281,6 +281,14 @@ export const plotStatusColorPallete = {
 }
 
 const InitialConfig = MaterialConfig
+export const dateWidget = {
+  ...InitialConfig.widgets,
+  date: {
+    ...InitialConfig.widgets.date,
+    dateFormat: "YYYY.MM.DD",
+    valueFormat: "YYYY-MM-DD",
+  }
+}
   export const invoiceQueryBuilderConfig = {
     ...InitialConfig,
     fields: {
@@ -319,7 +327,8 @@ const InitialConfig = MaterialConfig
         type: 'date',
         valueSources: ['value'],
       }
-    }
+    },
+    widgets: dateWidget
   }
 
   export const invoiceQueryBuilderInitialValue = {
@@ -394,14 +403,7 @@ const InitialConfig = MaterialConfig
         valueSources: ['value']
       }
     },
-    widgets: {
-      ...InitialConfig.widgets,
-      date: {
-        ...InitialConfig.widgets.date,
-        dateFormat: "YYYY.MM.DD",
-        valueFormat: "YYYY-MM-DD",
-      }
-    }
+    widgets: dateWidget
   }
 
   export const paymentQueryBuilderInitialValue = {
@@ -462,7 +464,8 @@ const InitialConfig = MaterialConfig
         type: 'text',
         valueSources: ['value']
       },
-    }
+    },
+    widgets: dateWidget
   };
 
   export const propertyQueryBuilderInitialValue = {
