@@ -1,22 +1,53 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { makeStyles } from "@material-ui/core/styles";
-import { Grid, Typography, Accordion, AccordionSummary, AccordionDetails } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
+import { useMutation } from 'react-apollo';
+import {
+  Grid,
+  Typography,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
+  Button,
+  Menu,
+  MenuItem
+} from '@material-ui/core';
+import EditIcon from '@material-ui/icons/Edit';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import DataList from '../../../../shared/list/DataList';
 import { dateToString } from '../../../../components/DateContainer';
-import { formatMoney, InvoiceStatusColor, propAccessor } from '../../../../utils/helpers';
+import {
+  formatError,
+  formatMoney,
+  InvoiceStatusColor,
+  propAccessor
+} from '../../../../utils/helpers';
 import Text, { HiddenText } from '../../../../shared/Text';
 import Label from '../../../../shared/label/Label';
 import { invoiceStatus } from '../../../../utils/constants';
+import PaymentPlanUpdateMutation from '../../graphql/payment_plan_mutations';
+import { Spinner } from '../../../../shared/Loading';
+import MessageAlert from '../../../../components/MessageAlert';
+import { suffixedNumber } from '../../helpers';
 
-export default function UserPaymentPlanItem({ plans, currencyData }) {
+export default function UserPaymentPlanItem({ plans, currencyData, currentUser, userId, refetch }) {
   const classes = useStyles();
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [details, setPlanDetails] = useState({
+    isLoading: false,
+    planId: null,
+    isError: false,
+    info: ''
+  });
+  const [updatePaymentPlan] = useMutation(PaymentPlanUpdateMutation);
+  const validDays = [...Array(28).keys()];
+
   const planHeader = [
-    { title: 'Plot Number', col: 1 },
+    { title: 'Plot Number', col: 2 },
     { title: 'Balance', col: 2 },
     { title: 'Start Date', col: 2 },
-    { title: '% of total valuation', col: 1 }
+    { title: '% of total valuation', col: 2 },
+    { title: 'Payment Day', col: 2 }
   ];
 
   const invoiceHeader = [
@@ -25,11 +56,76 @@ export default function UserPaymentPlanItem({ plans, currencyData }) {
     { title: 'Description', col: 2 },
     { title: 'Amount', col: 2 },
     { title: 'Payment Date', col: 2 },
-    { title: 'Status', col: 2}
+    { title: 'Status', col: 2 }
   ];
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+  function handleOpenDateMenu(event, planId) {
+    // avoid collapsing that shows invoices
+    event.stopPropagation();
+    setPlanDetails({ ...details, planId });
+    setAnchorEl(event.currentTarget);
+  }
+
+  function handleSetDay(paymentDay) {
+    // close the menu immediately to show mutation feedback
+    handleClose();
+    setPlanDetails({ ...details, isLoading: true });
+    updatePaymentPlan({
+      variables: {
+        id: details.planId,
+        userId,
+        paymentDay
+      }
+    })
+      .then(() => {
+        setPlanDetails({
+          ...details,
+          isLoading: false,
+          isError: false,
+          info: 'Payment Day successfully updated'
+        });
+        refetch();
+      })
+      .catch(err => {
+        setPlanDetails({
+          ...details,
+          isLoading: false,
+          isError: true,
+          info: formatError(err.message)
+        });
+      });
+  }
 
   return (
     <>
+      <MessageAlert
+        type={!details.isError ? 'success' : 'error'}
+        message={details.info}
+        open={!!details.info}
+        handleClose={() => setPlanDetails({ ...details, info: '' })}
+      />
+      <Menu
+        id="set-payment-date-menu"
+        anchorEl={anchorEl}
+        keepMounted
+        open={Boolean(anchorEl)}
+        onClose={handleClose}
+        data-testid="menu-open"
+      >
+        {validDays.map(day => (
+          <MenuItem
+            key={day}
+            data-testid={`payment-day-${day}`}
+            onClick={() => handleSetDay(day + 1)}
+          >
+            {day + 1}
+          </MenuItem>
+        ))}
+      </Menu>
+
       {plans?.map(plan => (
         <Accordion key={plan.id}>
           <AccordionSummary
@@ -41,26 +137,34 @@ export default function UserPaymentPlanItem({ plans, currencyData }) {
           >
             <DataList
               keys={planHeader}
-              data={[renderPlan(plan, currencyData)]}
+              data={[
+                renderPlan(plan, currencyData, currentUser.userType, {
+                  handleMenu: event => handleOpenDateMenu(event, plan.id),
+                  loading: details.isLoading
+                })
+              ]}
               hasHeader={false}
               clickable={false}
             />
           </AccordionSummary>
           <AccordionDetails classes={{ root: classes.content }}>
-            {plan.invoices && Boolean(plan.invoices?.length) &&
-              <Typography color='primary' style={{margin: '0 0 10px 50px'}}>Invoices</Typography>}
+            {plan.invoices && Boolean(plan.invoices?.length) && (
+              <Typography color="primary" style={{ margin: '0 0 10px 50px' }}>
+                Invoices
+              </Typography>
+            )}
             {plan.invoices
-                ?.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-                .map(inv => (
-                  <div key={inv.id} style={{margin: '0 50px'}}>
-                    <DataList
-                      keys={invoiceHeader}
-                      data={[renderInvoice(inv, currencyData)]}
-                      hasHeader={false}
-                      clickable={false}
-                    />
-                  </div>
-                ))}
+              ?.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+              .map(inv => (
+                <div key={inv.id} style={{ margin: '0 50px' }}>
+                  <DataList
+                    keys={invoiceHeader}
+                    data={[renderInvoice(inv, currencyData)]}
+                    hasHeader={false}
+                    clickable={false}
+                  />
+                </div>
+              ))}
           </AccordionDetails>
         </Accordion>
       ))}
@@ -68,24 +172,52 @@ export default function UserPaymentPlanItem({ plans, currencyData }) {
   );
 }
 
-export function renderPlan(plan, currencyData) {
+export function renderPlan(plan, currencyData, userType, { handleMenu, loading }) {
   return {
-    'Plot Number':
-  <Grid item xs={12} md={2} data-testid="plot-number">
-    {plan.landParcel.parcelNumber}
-  </Grid>,
-    Balance:
-  <Grid item xs={12} md={2} data-testid="balance">
-    {`-${formatMoney(currencyData, plan.pendingBalance)}`}
-  </Grid>,
-    'Start Date':
-  <Grid item xs={12} md={2} data-testid="start-date">
-    {dateToString(plan.startDate)}
-  </Grid>,
-    '% of total valuation':
-  <Grid item xs={12} md={2} data-testid="percentage">
-    {plan.percentage}
-  </Grid>,
+    'Plot Number': (
+      <Grid item xs={12} md={2} data-testid="plot-number">
+        {plan.landParcel.parcelNumber}
+      </Grid>
+    ),
+    Balance: (
+      <Grid item xs={12} md={2} data-testid="balance">
+        {`-${formatMoney(currencyData, plan.pendingBalance)}`}
+      </Grid>
+    ),
+    'Start Date': (
+      <Grid item xs={12} md={2} data-testid="start-date">
+        {dateToString(plan.startDate)}
+      </Grid>
+    ),
+    '% of total valuation': (
+      <Grid item xs={12} md={2} data-testid="percentage">
+        {plan.percentage}
+      </Grid>
+    ),
+    'Payment Day': (
+      <Grid item xs={12} md={2}>
+        <Button
+          aria-controls="set-payment-date-menu"
+          variant={userType === 'admin' ? 'outlined' : 'text'}
+          aria-haspopup="true"
+          data-testid="menu"
+          disabled={userType !== 'admin'}
+          onClick={handleMenu}
+        >
+          {loading && <Spinner />}
+          
+          {
+          !loading && userType === 'admin' ?  (
+            <span>
+              <EditIcon fontSize="small" style={{marginBottom: -4}} />
+              {`   ${suffixedNumber(plan.paymentDay)}`}
+            </span>
+          )
+           : suffixedNumber(plan.paymentDay)
+          }
+        </Button>
+      </Grid>
+    )
   };
 }
 
@@ -95,13 +227,15 @@ export function renderInvoice(inv, currencyData) {
       <Grid item xs={12} md={2} data-testid="issue-date">
         <HiddenText smDown title="Issue Date" />
         <Text content={dateToString(inv.createdAt)} />
-      </Grid>),
+      </Grid>
+    ),
     'Due Date': (
       <Grid item xs={12} md={2} data-testid="due-date">
         <HiddenText smDown title="Due Date" />
         <Text content={dateToString(inv.dueDate)} />
-      </Grid>),
-    'Description': (
+      </Grid>
+    ),
+    Description: (
       <Grid item xs={12} md={2} data-testid="description">
         <HiddenText smDown title="Description" />
         <Text content={`Invoice #${inv.invoiceNumber}`} />
@@ -116,25 +250,25 @@ export function renderInvoice(inv, currencyData) {
     'Payment Date': (
       <Grid item xs={12} md={2} data-testid="payment-date">
         <HiddenText smDown title="Payment Date" />
-        {inv.status === 'paid' && inv.payments?.length
-          ? <Text content={dateToString(inv.payments[0]?.createdAt)} /> : '-'}
+        {inv.status === 'paid' && inv.payments?.length ? (
+          <Text content={dateToString(inv.payments[0]?.createdAt)} />
+        ) : (
+          '-'
+        )}
       </Grid>
     ),
-    'Status': (
+    Status: (
       <Grid item xs={12} md={2} data-testid="status">
-        {new Date(inv.dueDate) < new Date().setHours(0,0,0,0) && inv.status === 'in_progress' ? (
-          <Label
-            title='Due'
-            color='#B63422'
-          />
+        {new Date(inv.dueDate) < new Date().setHours(0, 0, 0, 0) && inv.status === 'in_progress' ? (
+          <Label title="Due" color="#B63422" />
         ) : (
           <Label
             title={propAccessor(invoiceStatus, inv.status)}
             color={propAccessor(InvoiceStatusColor, inv.status)}
           />
-        ) }
+        )}
       </Grid>
-    ),
+    )
   };
 }
 
@@ -151,7 +285,12 @@ UserPaymentPlanItem.propTypes = {
   currencyData: PropTypes.shape({
     currency: PropTypes.string,
     locale: PropTypes.string
-  }).isRequired
+  }).isRequired,
+  userId: PropTypes.string.isRequired,
+  currentUser: PropTypes.shape({
+    userType: PropTypes.string
+  }).isRequired,
+  refetch: PropTypes.func.isRequired
 };
 
 const useStyles = makeStyles(() => ({

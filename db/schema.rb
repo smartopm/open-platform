@@ -496,6 +496,7 @@ ActiveRecord::Schema.define(version: 2021_04_08_095742) do
     t.integer "duration_in_month"
     t.decimal "pending_balance", precision: 11, scale: 2, default: "0.0"
     t.decimal "monthly_amount", precision: 11, scale: 2
+    t.integer "payment_day", default: 1
     t.index ["land_parcel_id"], name: "index_payment_plans_on_land_parcel_id"
     t.index ["user_id", "land_parcel_id"], name: "index_payment_plans_on_user_id_and_land_parcel_id", unique: true
     t.index ["user_id"], name: "index_payment_plans_on_user_id"

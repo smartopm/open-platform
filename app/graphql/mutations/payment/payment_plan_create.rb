@@ -13,6 +13,7 @@ module Mutations
       argument :monthly_amount, Float, required: true
       argument :total_amount, Float, required: true
       argument :duration_in_month, Integer, required: true
+      argument :payment_day, Integer, required: false
 
       field :payment_plan, Types::PaymentPlanType, null: true
 

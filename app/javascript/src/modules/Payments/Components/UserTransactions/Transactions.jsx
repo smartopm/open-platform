@@ -22,6 +22,7 @@ import UserPaymentPlanItem from './UserPaymentPlanItem'
 import PaymentModal from './PaymentModal'
 import ListHeader from '../../../../shared/list/ListHeader';
 
+// TODO: redefine and remove redundant props, userId, user and userdata
 export default function TransactionsList({ userId, user, userData, paymentSubTabValue }) {
   const history = useHistory()
   const path = useParamsQuery()
@@ -77,10 +78,11 @@ export default function TransactionsList({ userId, user, userData, paymentSubTab
   ];
 
   const paymentPlan = [
-    { title: 'Plot Number', col: 3 },
-    { title: 'Balance', col: 3 },
-    { title: 'Start Date', col: 3 },
-    { title: '% of total valuation', col: 3 },
+    { title: 'Plot Number', col: 2 },
+    { title: 'Balance', col: 2 },
+    { title: 'Start Date', col: 2 },
+    { title: '% of total valuation', col: 2 },
+    { title: 'Payment Day', col: 2 },
   ];
 
   const currency = currencies[user.community.currency] || ''
@@ -208,6 +210,9 @@ export default function TransactionsList({ userId, user, userData, paymentSubTab
         <UserPaymentPlanItem
           plans={invPayData?.invoicesWithTransactions?.paymentPlans}
           currencyData={currencyData}
+          currentUser={user}
+          userId={userId}
+          refetch={depRefetch}
         />
       </TabPanel>
       <PaymentModal
