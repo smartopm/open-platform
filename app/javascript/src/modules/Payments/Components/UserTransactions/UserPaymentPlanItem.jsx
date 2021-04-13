@@ -36,7 +36,14 @@ import PaymentPlanUpdateMutation from '../../graphql/payment_plan_mutations';
 import { Spinner } from '../../../../shared/Loading';
 import { suffixedNumber } from '../../helpers';
 
-export default function UserPaymentPlanItem({ plans, currencyData, currentUser, userId, refetch, walletRefetch }) {
+export default function UserPaymentPlanItem({
+  plans,
+  currencyData,
+  currentUser,
+  userId,
+  refetch,
+  walletRefetch
+}) {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = useState(null);
   const [details, setPlanDetails] = useState({
@@ -297,15 +304,14 @@ export function renderPlan(plan, currencyData, userType, { handleMenu, loading }
         >
           {loading && <Spinner />}
 
-          {
-          !loading && userType === 'admin' ?  (
+          {!loading && userType === 'admin' ? (
             <span>
-              <EditIcon fontSize="small" style={{marginBottom: -4}} />
+              <EditIcon fontSize="small" style={{ marginBottom: -4 }} />
               {`   ${suffixedNumber(plan.paymentDay)}`}
             </span>
-          )
-           : suffixedNumber(plan.paymentDay)
-          }
+          ) : (
+            suffixedNumber(plan.paymentDay)
+          )}
         </Button>
       </Grid>
     )
@@ -369,6 +375,7 @@ export function renderInvoice(inv, currencyData, menuData) {
             aria-haspopup="true"
             onClick={event => menuData.handleOpenMenu(event)}
             dataid={inv.id}
+            data-testid="action-menu"
             name={inv.user?.name}
           >
             <MoreHorizIcon />
@@ -405,7 +412,7 @@ UserPaymentPlanItem.propTypes = {
     userType: PropTypes.string
   }).isRequired,
   refetch: PropTypes.func.isRequired,
-  walletRefetch: PropTypes.func.isRequired,
+  walletRefetch: PropTypes.func.isRequired
 };
 
 const useStyles = makeStyles(() => ({

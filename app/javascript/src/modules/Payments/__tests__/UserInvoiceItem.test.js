@@ -3,9 +3,7 @@ import { render, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { MockedProvider } from '@apollo/react-testing';
 import { BrowserRouter } from 'react-router-dom';
-import UserInvoiceItem, {
-  renderInvoices
-} from '../Components/UserTransactions/UserInvoiceItem';
+import UserInvoiceItem, { renderInvoices } from '../Components/UserTransactions/UserInvoiceItem';
 import currency from '../../../__mocks__/currency';
 
 describe('Invoice Item Component', () => {
@@ -19,6 +17,9 @@ describe('Invoice Item Component', () => {
     createdAt: '2020-12-28T22:00:00Z',
     updatedAt: '2020-12-28T22:00:00Z',
     pendingAmount: 0,
+    user: {
+      name: 'joe'
+    },
     landParcel: {
       id: '233b1634-bf08-4ece-a213-b3f120a1e009',
       parcelNumber: 'Plot-1343'
@@ -58,7 +59,14 @@ describe('Invoice Item Component', () => {
 
     fireEvent.click(container.queryByTestId('description'));
     expect(container.queryByText('Invoice Details')).toBeInTheDocument();
-    fireEvent.click(container.queryByTestId('cancel'));
+
+    expect(container.queryByTestId('action-menu')).toBeInTheDocument();
+
+    fireEvent.click(container.queryByTestId('action-menu'));
+    expect(container.getByText(/Cancel Invoice/)).toBeInTheDocument();
+
+    fireEvent.click(container.getByText(/Cancel Invoice/));
+    expect(container.getByText(/You are about to delete Invoice for joe/)).toBeInTheDocument();
   });
 
   it('should render the invoice item component with no invoice', () => {

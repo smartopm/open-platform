@@ -176,6 +176,7 @@ export function renderInvoices(inv, currencyData, menuData) {
             aria-haspopup="true"
             onClick={event => menuData.handleOpenMenu(event)}
             dataid={inv.id}
+            data-testid="action-menu"
             name={inv.user?.name}
           >
             <MoreHorizIcon />
@@ -205,5 +206,5 @@ UserInvoiceItem.propTypes = {
     locale: PropTypes.string
   }).isRequired,
   refetch: PropTypes.func.isRequired,
-  walletRefetch: PropTypes.func.isRequired,
+  walletRefetch: PropTypes.func.isRequired
 };

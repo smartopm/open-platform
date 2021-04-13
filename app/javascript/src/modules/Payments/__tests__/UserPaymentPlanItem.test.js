@@ -25,7 +25,10 @@ describe('Render Payment Plan Item', () => {
         createdAt: '2021-03-01T09:55:05Z',
         dueDate: '2021-03-06T09:55:05Z',
         status: 'paid',
-        invoiceNumber: 123
+        invoiceNumber: 123,
+        user: {
+          name: 'Nurudeen'
+        }
       }
     ],
     landParcel: {
@@ -90,6 +93,14 @@ describe('Render Payment Plan Item', () => {
     // we should have called the mutation by now after a loader
 
     expect(container.queryAllByTestId('loader')[0]).toBeInTheDocument();
+    expect(container.queryByTestId('action-menu')).toBeInTheDocument();
+
+    fireEvent.click(container.queryByTestId('action-menu'));
+    expect(container.getByText(/Cancel Invoice/)).toBeInTheDocument();
+
+    fireEvent.click(container.getByText(/Cancel Invoice/));
+    expect(container.getByText(/You are about to delete Invoice for Nurudeen/)).toBeInTheDocument();
+
     await waitFor(() => {
       expect(container.queryByText('Payment Day successfully updated')).toBeInTheDocument();
       expect(refetch).toBeCalled();
