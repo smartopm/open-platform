@@ -1123,6 +1123,9 @@ export const AllTransactionQuery = gql`
         invoiceNumber
         dueDate
         updatedAt
+        user {
+          name
+        }
         landParcel {
           id
           parcelNumber
@@ -1165,6 +1168,9 @@ export const AllTransactionQuery = gql`
           payments {
             id
             createdAt
+          }
+          user {
+            name
           }
         }
         landParcel {

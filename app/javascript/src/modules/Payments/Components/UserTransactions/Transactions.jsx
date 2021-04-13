@@ -201,6 +201,7 @@ export default function TransactionsList({ userId, user, userData, paymentSubTab
               key={inv.id}
               invoice={inv}
               currencyData={currencyData}
+              refetch={depRefetch}
             />
           ))
         }
