@@ -393,6 +393,14 @@ const InitialConfig = MaterialConfig
         type: 'text',
         valueSources: ['value']
       }
+    },
+    widgets: {
+      ...InitialConfig.widgets,
+      date: {
+        ...InitialConfig.widgets.date,
+        dateFormat: "YYYY.MM.DD",
+        valueFormat: "YYYY-MM-DD",
+      }
     }
   }
 
