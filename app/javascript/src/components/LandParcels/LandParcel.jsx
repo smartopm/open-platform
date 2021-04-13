@@ -29,7 +29,7 @@ import {
 import ListHeader from '../../shared/list/ListHeader';
 
 const parcelHeaders = [
-  { title: 'Property Number/Property Type', col: 2 },
+  { title: 'Property Number/Type', col: 2 },
   { title: 'Address1/Address2', col: 3 },
   { title: 'Postal Code', col: 3 },
   { title: 'City', col: 3 },

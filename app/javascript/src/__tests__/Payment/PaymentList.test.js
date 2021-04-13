@@ -22,10 +22,14 @@ describe('Payment List Item Component', () => {
       bankName:'some bank',
       chequeNumber: '38473',
       transactionNumber: '293848239432',
+      receiptNumber: '293848239432',
       user: {
         id: '162f7517-7cc8-42f9-b2d0-a83a16d59569',
         name: 'joe m',
-        imageUrl: 'tolu.jpg'
+        imageUrl: 'tolu.jpg',
+        email: 'test@test.com',
+        phoneNumber: '1111111111',
+        extRefId: 'test23634'
       }
     },
     {
@@ -40,10 +44,14 @@ describe('Payment List Item Component', () => {
       bankName:'some bank',
       chequeNumber: '38473',
       transactionNumber: '293848239432',
+      receiptNumber: '293848239432',
       user: {
         id: 'a54d6184-b10e-4865-bee7-7957701d423d',
         name: 'Another somebodyy',
-        imageUrl: null
+        imageUrl: null,
+        email: 'test@test.com',
+        phoneNumber: '1111111111',
+        extRefId: 'test23634'
       },
     }
   ];

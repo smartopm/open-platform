@@ -31,7 +31,9 @@ describe('Invoice Item Component', () => {
       user: {
         id: '162f7517-7cc8-42f9-b2d0-a83a16d59569',
         name: 'joe',
-        imageUrl: 'image.jpg'
+        imageUrl: 'image.jpg',
+        email: 'test@test.com',
+        phoneNumber: '6987984'
       },
       landParcel: {
         id: '233b1634-bf08-4ece-a213-b3f120a1e009',
@@ -64,7 +66,9 @@ describe('Invoice Item Component', () => {
       user: {
         id: '162f7517-7cc8-42f9-b2d0-a83a16d59569',
         name: 'joe',
-        imageUrl: 'image.jpg'
+        imageUrl: 'image.jpg',
+        email: 'test@test.com',
+        phoneNumber: '6987984'
       },
       landParcel: {
         id: '50da896a-9217-43b9-a28f-03a13c7d401f',
