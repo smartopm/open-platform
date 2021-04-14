@@ -65,6 +65,7 @@ class Invoice < ApplicationRecord
           WHEN DATE_PART('day', CURRENT_TIMESTAMP - inv.due_date)>= 46
                 AND DATE_PART('day', CURRENT_TIMESTAMP - inv.due_date) <= 60 THEN '46-60'
           WHEN DATE_PART('day', CURRENT_TIMESTAMP - inv.due_date)>= 61 THEN '61+'
+          WHEN DATE_PART('day', CURRENT_TIMESTAMP - inv.due_date) < 0 THEN 'Future Invoices'
         END no_of_days, count(*) as no_of_invoices
         from invoices inv where inv.community_id='#{com}'
         AND inv.status !=1 group by no_of_days"),
