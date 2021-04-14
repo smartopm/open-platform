@@ -8,7 +8,7 @@ import Labels from '../Labels';
 import Campaigns from '../Campaigns';
 import PermitRequestForms from '../Forms/PermitRequestForms';
 import { allUserTypes } from '../../utils/constants';
-import CommunitySettings from './components/CommunitySettings';
+import CommunitySettings from './components/SettingsPage';
 
 // will only be useful after merging email template MR
 const subRoutes = [

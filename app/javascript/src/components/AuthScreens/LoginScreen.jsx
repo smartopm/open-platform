@@ -145,13 +145,8 @@ export default function LoginScreen() {
             {' '}
             App
           </h4>
-          <Typography color="textSecondary" variant="body2">
-            Hello! This is your all inclusive stop for 
-            {' '}
-            {communityName}
-            {' '}
-            news, payments,
-            client requests, gate access, and support.
+          <Typography color="textSecondary" variant="body2" data-testid="tagline">
+            {communityData?.currentCommunity?.tagline}
           </Typography>
 
           <br />

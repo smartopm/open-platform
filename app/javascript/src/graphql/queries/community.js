@@ -11,6 +11,7 @@ export const CommunityQuery = gql`
       supportWhatsapp
       currency
       locale
+      tagline
     }
   }
 `;
@@ -21,6 +22,7 @@ export const CurrentCommunityQuery = gql`
       imageUrl
       id
       name
+      tagline
       supportEmail
     }
   }

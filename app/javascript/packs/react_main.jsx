@@ -74,7 +74,7 @@ import MailTemplates from '../src/containers/MailTemplates';
 import { MainMenu } from "../src/modules/Menu";
 import modules from '../src/modules';
 import UserRoutes from '../src/modules/Users/UserRoutes';
-import CommunitySettings from '../src/modules/Community/components/CommunitySettings';
+import CommunitySettings from '../src/modules/Community/components/SettingsPage';
 
 // The routes defined here are carefully arranged, be mindful when changing them
 
