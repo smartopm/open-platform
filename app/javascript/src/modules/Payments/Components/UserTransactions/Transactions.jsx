@@ -125,7 +125,6 @@ export default function TransactionsList({ userId, user, userData, paymentSubTab
   }
 
   if (loading) return <Spinner />
-  if (walletLoading) return <Spinner />
   if (invPayDataLoading) return <Spinner />
   if (error && !transactionsData) return <CenteredContent>{formatError(error.message)}</CenteredContent>
   if (invPayDataError && !invPayData) return <CenteredContent>{formatError(invPayDataError.message)}</CenteredContent>
@@ -136,7 +135,9 @@ export default function TransactionsList({ userId, user, userData, paymentSubTab
       <div style={{display: 'flex', flexDirection: 'column', marginLeft: '20px'}}>
         <Typography variant='caption'>Total Balance</Typography>
         <div style={{display: 'flex', flexDirection: 'row' }}>
-          <Typography variant="h2" color='primary'>{formatMoney(currencyData, walletData.userBalance)}</Typography>
+          {
+            walletLoading ? <Spinner /> : <Typography variant="h2" color='primary'>{formatMoney(currencyData, walletData.userBalance)}</Typography>
+          }
         </div>
       </div>
       {
