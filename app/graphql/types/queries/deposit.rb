@@ -34,9 +34,7 @@ module Types::Queries::Deposit
     raise GraphQL::ExecutionError, 'User not found' if user.blank?
 
     pending_invoices = add_balance_and_parcel_number(user.invoices.not_cancelled
-                                                    .where('pending_amount > ?', 0)
-                                                    .limit(limit)
-                                                    .offset(offset))
+                                                    .where('pending_amount > ?', 0))
     {
       transactions: user.wallet_transactions.includes(payment_plan: [:land_parcel])
                         .eager_load(:payment_plan).limit(limit).offset(offset).reverse,
