@@ -16,8 +16,8 @@ import {
 import { saniteError, getJustLabels, delimitorFormator } from '../utils/helpers'
 import CampaignLabels from './CampaignLabels'
 import Toggler from './Campaign/ToggleButton'
-import TemplateList from './EmailTemplate/TemplateList'
-import EmailBuilderDialog from './EmailTemplate/EmailBuilderDialog'
+import TemplateList from '../modules/Emails/components/TemplateList'
+import EmailBuilderDialog from '../modules/Emails/components/EmailBuilderDialog'
 
 const initData = {
   id: '',

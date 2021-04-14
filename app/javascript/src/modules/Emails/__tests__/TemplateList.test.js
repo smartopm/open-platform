@@ -2,9 +2,9 @@ import React from 'react'
 import { render, waitFor } from '@testing-library/react'
 import '@testing-library/jest-dom/extend-expect'
 import { MockedProvider } from '@apollo/react-testing'
-import { EmailTemplatesQuery } from '../../graphql/queries'
-import TemplateList from '../../components/EmailTemplate/TemplateList'
-import { Spinner } from '../../shared/Loading'
+import { EmailTemplatesQuery } from '../graphql/email_queries'
+import TemplateList from '../components/TemplateList'
+import { Spinner } from '../../../shared/Loading'
 
 describe('Template List Component', () => {
     it('should return a list of all email templates', async () => {

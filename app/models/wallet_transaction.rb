@@ -63,7 +63,7 @@ class WalletTransaction < ApplicationRecord
      from wallet_transactions
      where destination = 'wallet' and source != 'invoice'
      and wallet_transactions.community_id='#{com.id}'
-     and wallet_transactions.created_at > (CURRENT_TIMESTAMP - interval '60 days')
+     and wallet_transactions.created_at > (CURRENT_TIMESTAMP - interval '365 days')
      group by trx_date order by trx_date",
     )
   end

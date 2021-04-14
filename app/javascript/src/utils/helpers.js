@@ -380,7 +380,7 @@ export function getHexColor (range) {
    const formatted = new Intl.NumberFormat(currencyData?.locale || 'en-ZM', {
     style: 'currency',
     currency: currencyData?.currency,
-  }).format(amount);
+  })?.format(amount);
   return formatted;
  }
 
@@ -393,7 +393,7 @@ export function getHexColor (range) {
    const parts = new Intl.NumberFormat(currencyData?.locale || 'en-ZM', {
      style: 'currency',
      currency: currencyData?.currency
-   }).formatToParts();
+   })?.formatToParts();
    return parts[0]?.value;
  }
 

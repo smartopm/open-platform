@@ -29,11 +29,12 @@ import {
   RuleFields,
   LabelsQuery,
   UsersLiteQuery,
-  EmailTemplatesQuery
 } from '../../graphql/queries';
+// from a different module
+import { EmailTemplatesQuery } from '../../modules/Emails/graphql/email_queries'
 import QueryBuilder from '../../components/QueryBuilder';
 import { titleize, capitalize, sentencizeAction } from '../../utils/helpers';
-import { NotesCategories } from '../../utils/constants';
+import { dateWidget, NotesCategories } from '../../utils/constants';
 
 const { primary, dew } = colors;
 const initialData = {
@@ -124,7 +125,8 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
   const InitialConfig = MaterialConfig;
   const queryBuilderConfig = {
     ...InitialConfig,
-    fields: ruleFieldsConfig
+    fields: ruleFieldsConfig,
+    widgets: dateWidget
   };
 
   function addQuerySelectMenu(field, options) {
