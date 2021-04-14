@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 import Avatar from '@material-ui/core/Avatar'
 import { useWindowDimensions } from '../utils/customHooks'
 import { Spinner } from './Loading'
-import { CurrentCommunityQuery } from '../graphql/queries/community'
+import { CurrentCommunityQuery } from '../modules/Community/graphql/community_query'
 
 // we might need to have some loading functionality or image placeholder(skeleton)
 export default function ImageAuth({ imageLink, token, className, type, alt }) {

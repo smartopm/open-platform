@@ -6,7 +6,7 @@ import { MockedProvider } from '@apollo/react-testing';
 import { mount } from 'enzyme'
 import LoginScreen from '../components/AuthScreens/LoginScreen'
 import { loginPhone } from '../graphql/mutations'
-import { CurrentCommunityQuery } from '../graphql/queries/community';
+import { CurrentCommunityQuery } from '../modules/Community/graphql/community_query';
 
 describe('Login screen', () => {
   const mocks = [

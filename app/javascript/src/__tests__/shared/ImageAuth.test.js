@@ -4,9 +4,9 @@ import React from 'react';
 import { act, render, waitFor } from '@testing-library/react';
 import { MockedProvider } from '@apollo/react-testing';
 import ImageAuth from '../../shared/ImageAuth';
-import { CurrentCommunityQuery } from '../../graphql/queries/community';
 import '@testing-library/jest-dom/extend-expect';
 import { Spinner } from '../../shared/Loading';
+import { CurrentCommunityQuery } from '../../modules/Community/graphql/community_query';
 
 describe('ImageAuth Component', () => {
   it('should render image or text', async () => {

@@ -8,7 +8,6 @@ import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
 import PropTypes from 'prop-types';
 
 import { useMutation, useApolloClient } from 'react-apollo';
-import { formatError } from 'graphql';
 import { CommunityUpdateMutation } from '../graphql/community_mutations';
 import DynamicContactFields from './DynamicContactFields';
 import MessageAlert from '../../../components/MessageAlert';
@@ -16,6 +15,8 @@ import { useFileUpload } from '../../../graphql/useFileUpload';
 import ImageCropper from './ImageCropper';
 import { currencies, locales } from '../../../utils/constants';
 import ImageAuth from '../../../shared/ImageAuth';
+import { formatError } from '../../../utils/helpers';
+import { Spinner } from '../../../shared/Loading';
 
 export default function CommunitySettings({ data, token, refetch }) {
   const numbers = {
@@ -41,7 +42,7 @@ export default function CommunitySettings({ data, token, refetch }) {
   const [inputImg, setInputImg] = useState('');
   const [fileName, setFileName] = useState('');
   const [currency, setCurrency] = useState('');
-  const [tagline, setTagline] = useState('');
+  const [tagline, setTagline] = useState(data?.tagline || '');
   const [locale, setLocale] = useState('en-ZM');
   const [showCropper, setShowCropper] = useState(false);
   const { onChange, signedBlobId } = useFileUpload({
@@ -352,7 +353,9 @@ export default function CommunitySettings({ data, token, refetch }) {
           onClick={updateCommunity}
           data-testid="update_community"
         >
-          UPDATE COMMUNITY SETTINGS
+          {
+            mutationLoading ? <Spinner /> : 'UPDATE COMMUNITY SETTINGS'
+          }
         </Button>
       </div>
     </Container>
@@ -367,7 +370,8 @@ CommunitySettings.propTypes = {
     supportWhatsapp: PropTypes.arrayOf(PropTypes.object),
     imageUrl: PropTypes.string,
     currency: PropTypes.string,
-    locale: PropTypes.string
+    locale: PropTypes.string,
+    tagline: PropTypes.string,
   }).isRequired,
   token: PropTypes.string.isRequired,
   refetch: PropTypes.func.isRequired

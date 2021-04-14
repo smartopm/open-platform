@@ -21,7 +21,7 @@ import { ModalDialog } from '../Dialog'
 import GoogleIcon from '../../../../assets/images/google_icon.svg'
 import { Context as ThemeContext } from '../../../Themes/Nkwashi/ThemeProvider'
 import { loginPhone } from '../../graphql/mutations'
-import { CurrentCommunityQuery } from '../../graphql/queries/community'
+import { CurrentCommunityQuery } from '../../modules/Community/graphql/community_query'
 
 export default function LoginScreen() {
   const { data: communityData } = useQuery(CurrentCommunityQuery)
