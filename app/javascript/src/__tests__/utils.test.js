@@ -200,6 +200,7 @@ describe('currency', () => {
     locale: 'en-US',
     currency: 'USD'
   }
+
   it('should return the correctly formatted amount', () => {
     expect(formatMoney(details, 100)).toBe('$100.00')
   })
