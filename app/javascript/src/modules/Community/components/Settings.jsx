@@ -295,7 +295,6 @@ export default function CommunitySettings({ data, token, refetch }) {
 
       </div>
       <div className={classes.information} style={{ marginTop: '40px' }}>
-        <Typography variant="h6">Community Tagline</Typography>
         <TextField
           label="Set Community Tagline"
           value={tagline}
