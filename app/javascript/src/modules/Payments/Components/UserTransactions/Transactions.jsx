@@ -48,7 +48,7 @@ export default function TransactionsList({ userId, user, userData, paymentSubTab
     {
       variables: { userId, limit, offset },
       errorPolicy: 'all',
-      fetchPolicy: 'cache-and-network'
+      fetchPolicy: 'no-cache'
     }
   )
 
@@ -125,8 +125,6 @@ export default function TransactionsList({ userId, user, userData, paymentSubTab
       setOffset(offset + limit)
     }
   }
-
-  if (loading || invPayDataLoading) return <Spinner />
   if (error && !transactionsData) return <CenteredContent>{formatError(error.message)}</CenteredContent>
   if (invPayDataError && !invPayData) return <CenteredContent>{formatError(invPayDataError.message)}</CenteredContent>
   if (walletError && !walletData) return <CenteredContent>{formatError(walletError.message)}</CenteredContent>
@@ -148,7 +146,7 @@ export default function TransactionsList({ userId, user, userData, paymentSubTab
                 <ButtonComponent color='primary' buttonText='Add an Invoice' handleClick={() => handleModalOpen()} />
               </div>
             )
-          }
+      }
       <div style={{marginLeft: '20px'}}>
         <StyledTabs
           value={tabValue}
@@ -172,7 +170,8 @@ export default function TransactionsList({ userId, user, userData, paymentSubTab
       />
       <TabPanel value={tabValue} index="Transactions">
         {matches && <ListHeader headers={transactionHeader} />}
-        {transactionsData?.userDeposits.pendingInvoices.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).map((trans) => (
+        {/* show a spinner here */}
+        {loading ? <Spinner /> : transactionsData?.userDeposits.pendingInvoices.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).map((trans) => (
           <UserTransactionsList
             transaction={trans || {}}
             currencyData={currencyData}
@@ -183,6 +182,7 @@ export default function TransactionsList({ userId, user, userData, paymentSubTab
             depRefetch={depRefetch}
           />
         ))}
+
         {transactionsData?.userDeposits.transactions.map((trans) => (
           <UserTransactionsList
             transaction={trans || {}}
@@ -197,8 +197,9 @@ export default function TransactionsList({ userId, user, userData, paymentSubTab
       </TabPanel>
       <TabPanel value={tabValue} index="Invoices">
         {matches && <ListHeader headers={invoiceHeader} />}
+        {/* show a spinner here */}
         {
-          invPayData?.invoicesWithTransactions.invoices.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).map((inv) => (
+          invPayDataLoading ? <Spinner /> : invPayData?.invoicesWithTransactions.invoices.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).map((inv) => (
             <UserInvoiceItem
               key={inv.id}
               invoice={inv}
