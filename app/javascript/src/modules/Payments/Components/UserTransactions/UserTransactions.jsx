@@ -37,6 +37,7 @@ export default function UserTransactionsList({ transaction, currencyData, userDa
   const [isSuccessAlert, setIsSuccessAlert] = useState(false)
   const [transactionId, setTransactionId] = useState(false)
   const [messageAlert, setMessageAlert] = useState('')
+  const [revertTransactionLoading, setRevertTransactionLoading] = useState(false)
   const [name, setName] = useState('')
   const [revertTransaction] = useMutation(WalletTransactionRevert)
   const anchorElOpen = Boolean(anchorEl)
@@ -60,6 +61,7 @@ export default function UserTransactionsList({ transaction, currencyData, userDa
 
   function handleRevertTransaction(event) {
     event.stopPropagation()
+    setRevertTransactionLoading(true)
     revertTransaction({
       variables: {
         transactionId
@@ -71,10 +73,12 @@ export default function UserTransactionsList({ transaction, currencyData, userDa
       depRefetch()
       setIsSuccessAlert(true)
       setRevertModalOpen(false)
+      setRevertTransactionLoading(false)
     })
     .catch((err) => {
       setMessageAlert(formatError(err.message))
       setIsSuccessAlert(false)
+      setRevertTransactionLoading(false)
     })
   }
 
@@ -90,6 +94,7 @@ export default function UserTransactionsList({ transaction, currencyData, userDa
   function handleRevertClose(event){
     event.stopPropagation()
     setRevertModalOpen(false)
+    setRevertTransactionLoading(false)
   }
 
   function handleTransactionMenu(event){
@@ -150,6 +155,7 @@ export default function UserTransactionsList({ transaction, currencyData, userDa
         title='Transaction'
         action='delete'
         user={name}
+        loading={revertTransactionLoading}
       />
       <DataList
         keys={transactionHeader}
