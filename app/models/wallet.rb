@@ -99,22 +99,6 @@ class Wallet < ApplicationRecord
     balance
   end
 
-  # Creates payment log(WalletTransaction/Payment) for respective invoice.
-  #
-  # @param inv [Invoice]
-  # @param payment_amount [Float]
-  # @param transaction [WalletTransaction]
-  #
-  # @return [void]
-  def make_payment(inv, payment_amount, transaction)
-    payment = Payment.create(amount: payment_amount, payment_type: 'wallet',
-                             user_id: user.id, community_id: user.community_id,
-                             payment_status: 'settled')
-    payment.payment_invoices.create(invoice_id: inv.id, wallet_transaction_id: transaction.id)
-    inv.update(pending_amount: inv.pending_amount - payment_amount)
-    inv.paid! if inv.pending_amount.zero?
-  end
-
   # Creates WalletTransaction for given invoice.
   #
   # @param payment_amount [Float]
@@ -233,7 +217,6 @@ class Wallet < ApplicationRecord
       plot_balance: plan.plot_balance - payment_amount,
       pending_balance: plan.pending_balance - payment_amount,
     )
-    create_transaction(payment_amount, inv)
     make_payment(inv, payment_amount, transaction)
   end
 
@@ -256,7 +239,6 @@ class Wallet < ApplicationRecord
   def settle_from_unallocated_funds(inv, payment_amount, transaction)
     update_balance(payment_amount, 'debit')
     update_unallocated_funds(payment_amount)
-    create_transaction(payment_amount, inv)
     make_payment(inv, payment_amount, transaction)
   end
 
@@ -271,6 +253,23 @@ class Wallet < ApplicationRecord
     else
       update(unallocated_funds: 0)
     end
+  end
+
+  # Creates payment log(WalletTransaction/Payment) for respective invoice.
+  #
+  # @param inv [Invoice]
+  # @param payment_amount [Float]
+  # @param transaction [WalletTransaction]
+  #
+  # @return [void]
+  def make_payment(inv, payment_amount, transaction)
+    create_transaction(payment_amount, inv)
+    payment = Payment.create(amount: payment_amount, payment_type: 'wallet',
+                             user_id: user.id, community_id: user.community_id,
+                             payment_status: 'settled')
+    payment.payment_invoices.create(invoice_id: inv.id, wallet_transaction_id: transaction.id)
+    inv.update(pending_amount: inv.pending_amount - payment_amount)
+    inv.paid! if inv.pending_amount.zero?
   end
 end
 # rubocop:enable Metrics/ClassLength

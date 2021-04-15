@@ -10,7 +10,7 @@ RSpec.describe Mutations::Invoice::InvoiceCreate do
     let!(:admin) { create(:admin_user, community_id: user.community_id) }
     let!(:land_parcel) { create(:land_parcel, community_id: user.community_id) }
     let!(:payment_plan) do
-      create(:payment_plan, land_parcel_id: land_parcel.id, user_id: user.id, plot_balance: 100)
+      create(:payment_plan, land_parcel_id: land_parcel.id, user_id: user.id, plot_balance: 0)
     end
 
     let(:query) do
@@ -29,7 +29,7 @@ RSpec.describe Mutations::Invoice::InvoiceCreate do
       GQL
     end
 
-    it 'creates a an invoice associated to land parcel' do
+    it 'creates an invoice associated to land parcel and updates pending_balance of wallet' do
       variables = {
         userId: user.id,
         landParcelId: land_parcel.id,
@@ -42,47 +42,17 @@ RSpec.describe Mutations::Invoice::InvoiceCreate do
                                                 current_user: admin,
                                                 site_community: user.community,
                                               }).as_json
-      expect(result.dig('data', 'invoiceCreate', 'invoice', 'id')).not_to be_nil
+      invoice_id = result.dig('data', 'invoiceCreate', 'invoice', 'id')
+      invoice = Invoice.find invoice_id
+      expect(invoice_id).not_to be_nil
       expect(
         result.dig('data', 'invoiceCreate', 'invoice', 'landParcel', 'id'),
       ).to eql land_parcel.id
       expect(
         result.dig('data', 'invoiceCreate', 'invoice', 'amount'),
       ).to eq user.wallet.pending_balance
-      expect(result['errors']).to be_nil
-    end
-
-    let(:invoice_create) do
-      <<~GQL
-        mutation invoiceCreate($landParcelId: ID!, $amount: Float!, $dueDate: String!, $status: String!, $userId: ID!) {
-          invoiceCreate(landParcelId: $landParcelId, amount: $amount, dueDate: $dueDate, status: $status, userId: $userId){
-            invoice {
-              id
-              status
-            }
-          }
-        }
-      GQL
-    end
-
-    it 'creates a an invoice, collects amount from wallet and changes status to paid' do
-      variables = {
-        userId: user_with_balance.id,
-        landParcelId: land_parcel.id,
-        amount: 100,
-        dueDate: (rand * 10).to_i.day.from_now.to_s,
-        status: %w[in_progress].sample,
-      }
-      result = DoubleGdpSchema.execute(invoice_create, variables: variables,
-                                                       context: {
-                                                         current_user: admin,
-                                                         site_community: user.community,
-                                                       }).as_json
-      expect(result.dig('data', 'invoiceCreate', 'invoice', 'id')).not_to be_nil
-      expect(result.dig('data', 'invoiceCreate', 'invoice', 'status')).to eql 'paid'
-      expect(user.wallet.balance).to eql 0.0
-      expect(user_with_balance.wallet_transactions.count).to eql 1
-      expect(user_with_balance.payments.count).to eql 1
+      expect(user.wallet.pending_balance).to eql invoice.amount
+      expect(payment_plan.reload.pending_balance).to eql invoice.amount
       expect(result['errors']).to be_nil
     end
   end
