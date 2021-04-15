@@ -229,6 +229,7 @@ ActiveRecord::Schema.define(version: 2021_04_09_120431) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.json "template_variables"
+    t.json "data"
     t.index ["community_id"], name: "index_email_templates_on_community_id"
     t.index ["name"], name: "index_email_templates_on_name", unique: true
   end
@@ -494,7 +495,6 @@ ActiveRecord::Schema.define(version: 2021_04_09_120431) do
     t.decimal "plot_balance", precision: 11, scale: 2, default: "0.0"
     t.decimal "total_amount", precision: 11, scale: 2
     t.integer "duration_in_month"
-    t.integer "payment_day", default: 1
     t.decimal "pending_balance", precision: 11, scale: 2, default: "0.0"
     t.decimal "monthly_amount", precision: 11, scale: 2
     t.integer "payment_day", default: 1
