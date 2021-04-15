@@ -21,6 +21,11 @@ module Types::Queries::Payment
       argument :limit, Integer, required: false
       argument :query, String, required: false
     end
+
+    field :payments_by_txn_id, [Types::PaymentType], null: false do
+      description 'return list of all payments by deposit id'
+      argument :txn_id, GraphQL::Types::ID, required: true
+    end
   end
 
   def payment(payment_id:)
@@ -49,5 +54,16 @@ module Types::Queries::Payment
 
     context[:site_community].payments.search(query).eager_load(:invoices, :user)
                             .limit(limit).offset(offset)
+  end
+
+  # Query to fetch payments by deposit id.
+  #
+  # @param txn_id [String] WalletTransaction#id
+  #
+  # @return [Hash]
+  def payments_by_txn_id(txn_id:)
+    raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user]&.admin?
+
+    ::PaymentInvoice.where(wallet_transaction_id: txn_id)&.map(&:payment)
   end
 end

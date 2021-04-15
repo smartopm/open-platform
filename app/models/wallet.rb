@@ -10,8 +10,6 @@ class Wallet < ApplicationRecord
     self.currency = DEFAULT_CURRENCY if currency.nil?
   end
 
-  after_update :settle_invoices, if: proc { saved_changes.key?('balance') }
-
   def update_balance(amount, type = 'credit')
     return credit_amount(amount) if type.eql?('credit')
 
@@ -35,37 +33,37 @@ class Wallet < ApplicationRecord
   end
 
   # rubocop:disable Metrics/AbcSize
-  def make_payment(inv, payment_amount)
-    transaction = create_transaction(payment_amount, inv)
+  def make_payment(inv, payment_amount, user_transaction_id = nil)
+    invoice_transaction_id = create_transaction(payment_amount, inv)&.id
+    transaction_id = user_transaction_id || invoice_transaction_id
+
     payment = Payment.create(amount: payment_amount, payment_type: 'wallet',
                              user_id: user.id, community_id: user.community_id,
                              payment_status: 'settled')
-    payment.payment_invoices.create(invoice_id: inv.id, wallet_transaction_id: transaction.id)
+    payment.payment_invoices.create(invoice_id: inv.id, wallet_transaction_id: transaction_id)
     inv.update(pending_amount: inv.pending_amount - payment_amount)
     inv.paid! if inv.pending_amount.zero?
   end
 
   # rubocop:disable Style/OptionalBooleanParameter
-  def settle_from_plot_balance(inv, payment_amount, prepaid = false)
+  def settle_from_plot_balance(inv, payment_amount, user_transaction_id = nil, prepaid = true)
     update_balance(payment_amount, 'debit') unless prepaid
     plan = inv.land_parcel.payment_plan
     plan.update(
       plot_balance: plan.plot_balance - payment_amount,
       pending_balance: plan.pending_balance - payment_amount,
     )
-    make_payment(inv, payment_amount)
+    make_payment(inv, payment_amount, user_transaction_id)
   end
   # rubocop:enable Style/OptionalBooleanParameter
 
-  def settle_invoices
-    return if (saved_changes['balance'].last - saved_changes['balance'].first).negative?
-
+  def settle_invoices(user_transaction_id)
     user.invoices.not_cancelled.where('pending_amount > ?', 0).reverse.each do |invoice|
       next if invoice.land_parcel.payment_plan&.plot_balance.to_i.zero?
 
       bal = invoice.land_parcel.payment_plan&.plot_balance
       payment_amount = invoice.pending_amount > bal ? bal : invoice.pending_amount
-      settle_from_plot_balance(invoice, payment_amount)
+      settle_from_plot_balance(invoice, payment_amount, user_transaction_id, false)
     end
   end
   # rubocop:enable Metrics/AbcSize

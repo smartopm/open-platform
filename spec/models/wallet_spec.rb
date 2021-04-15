@@ -12,6 +12,11 @@ RSpec.describe Wallet, type: :model do
     create(:invoice, community_id: user.community_id, land_parcel: land_parcel, user_id: user.id,
                      status: 'in_progress', invoice_number: '1234', amount: 100)
   end
+  let(:txn) do
+    create(:wallet_transaction, amount: 100, destination: 'wallet',
+                                user: user, community_id: user.community_id,
+                                payment_plan_id: payment_plan.id)
+  end
 
   describe 'schema' do
     it { is_expected.to have_db_column(:id).of_type(:uuid) }
@@ -43,6 +48,7 @@ RSpec.describe Wallet, type: :model do
       expect(user.wallet.pending_balance).to eql invoice.amount
       user.payment_plans.update(plot_balance: invoice.amount)
       user.wallet.update_balance(invoice.amount)
+      user.wallet.settle_invoices(txn.id)
       expect(user.wallet.balance).to eql 0.0
       expect(invoice.land_parcel.payment_plan.reload.plot_balance).to eql 0.0
       expect(invoice.reload.status).to eql 'paid'

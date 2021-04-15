@@ -94,7 +94,7 @@ class WalletTransaction < ApplicationRecord
         paid_amount = inv.amount - inv.pending_amount
         inv_revert_amount = paid_amount > revert_amount ? revert_amount : paid_amount
         inv.update(status: 'in_progress', pending_amount: inv.pending_amount + inv_revert_amount)
-        cancel_transaction(inv, payment)
+        cancel_transaction(inv.payment_plan_id, payment.amount)
         revert_amount -= inv_revert_amount
       end
     end
@@ -103,10 +103,11 @@ class WalletTransaction < ApplicationRecord
   # rubocop:enable Metrics/AbcSize
 
   # rubocop:disable Rails/SkipsModelValidations
-  def cancel_transaction(inv, payment)
-    txn_id = PaymentInvoice.find_by(invoice_id: inv.id, payment_id: payment.id)
-                           .wallet_transaction_id
-    user.wallet_transactions.find_by(id: txn_id)&.update_columns(status: 'cancelled')
+  def cancel_transaction(payment_plan_id, payment_amount)
+    transaction = community.wallet_transactions.not_cancelled
+                           .find_by(source: 'wallet', destination: 'invoice',
+                                    payment_plan_id: payment_plan_id, amount: payment_amount)
+    transaction&.update_columns(status: 'cancelled')
   end
   # rubocop:enable Rails/SkipsModelValidations
 
