@@ -494,6 +494,7 @@ ActiveRecord::Schema.define(version: 2021_04_09_120431) do
     t.decimal "plot_balance", precision: 11, scale: 2, default: "0.0"
     t.decimal "total_amount", precision: 11, scale: 2
     t.integer "duration_in_month"
+    t.integer "payment_day", default: 1
     t.decimal "pending_balance", precision: 11, scale: 2, default: "0.0"
     t.decimal "monthly_amount", precision: 11, scale: 2
     t.integer "payment_day", default: 1
