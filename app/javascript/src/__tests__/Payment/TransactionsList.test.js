@@ -111,6 +111,7 @@ describe('Transactions Component', () => {
                 id: 'a54d6184-b10e-4865-bee7-7957701d423d',
                 amount: 500,
                 createdAt: '2021-03-01T09:55:05Z',
+                dueDate: '2021-01-26',
                 status: 'paid',
                 invoiceNumber: 123
               }],
@@ -150,7 +151,7 @@ describe('Transactions Component', () => {
 
     await waitFor(
       () => {
-        expect(container.queryByText('Invoices')).toBeInTheDocument();
+        expect(container.queryAllByText('Invoices')[0]).toBeInTheDocument();
         expect(container.queryByText('Transactions')).toBeInTheDocument();
       },
       { timeout: 100 }
