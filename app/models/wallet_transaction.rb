@@ -70,10 +70,11 @@ class WalletTransaction < ApplicationRecord
 
   # rubocop:disable Metrics/AbcSize
   def revert_payments
-    update_plot_balance(amount)
+    plan = user.payment_plans.find_by(id: payment_plan_id)
+    amount_to_revert = plan.plot_balance.positive? ? amount - plan.plot_balance : amount
+    update_plot_balance(plan, amount)
     user.wallet.update_balance(amount, 'debit')
     payments = user.payments.order(created_at: :desc)
-    amount_to_revert = amount
     payments.not_cancelled.each do |payment|
       break unless amount_to_revert.positive?
 
@@ -120,8 +121,7 @@ class WalletTransaction < ApplicationRecord
     payment.payment_invoices.create(invoice_id: inv.id, wallet_transaction_id: transaction.id)
   end
 
-  def update_plot_balance(amount)
-    plan = user.payment_plans.find_by(id: payment_plan_id)
+  def update_plot_balance(plan, amount)
     return if plan.nil?
 
     plan.update_plot_balance(amount, 'debit')
