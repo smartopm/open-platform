@@ -69,12 +69,20 @@ class WalletTransaction < ApplicationRecord
     )
   end
 
+  private
+
   # rubocop:disable Metrics/AbcSize
+  # Reverts payments from wallet balance.
+  # * updates wallet and plot balance
+  # * cancels payments
+  # * update invoice pending amount
+  #
+  # @return [void]
   def revert_payments
-    plan = user.payment_plans.find_by(id: payment_plan_id)
-    amount_to_revert = plan.plot_balance.positive? ? amount - plan.plot_balance : amount
-    update_plot_balance(plan, amount)
-    user.wallet.update_balance(amount, 'debit')
+    wallet = user.wallet
+    amount_to_revert = wallet.balance.positive? ? amount - wallet.balance : amount
+    wallet.update_balance(amount, 'debit')
+    wallet.update_unallocated_funds(amount)
     payments = user.payments.order(created_at: :desc)
     payments.not_cancelled.each do |payment|
       break unless amount_to_revert.positive?
@@ -95,6 +103,7 @@ class WalletTransaction < ApplicationRecord
 
         paid_amount = inv.amount - inv.pending_amount
         inv_revert_amount = paid_amount > revert_amount ? revert_amount : paid_amount
+        update_plot_balance(inv_revert_amount)
         inv.update(status: 'in_progress', pending_amount: inv.pending_amount + inv_revert_amount)
         cancel_transaction(inv.payment_plan_id, payment.amount)
         revert_amount -= inv_revert_amount
@@ -103,15 +112,6 @@ class WalletTransaction < ApplicationRecord
   end
   # rubocop:enable Metrics/MethodLength
   # rubocop:enable Metrics/AbcSize
-
-  # rubocop:disable Rails/SkipsModelValidations
-  def cancel_transaction(payment_plan_id, payment_amount)
-    transaction = community.wallet_transactions.not_cancelled
-                           .find_by(source: 'wallet', destination: 'invoice',
-                                    payment_plan_id: payment_plan_id, amount: payment_amount)
-    transaction&.update_columns(status: 'cancelled')
-  end
-  # rubocop:enable Rails/SkipsModelValidations
 
   def create_new_payment(payment, payment_amount)
     inv = payment.invoices.first
@@ -127,4 +127,13 @@ class WalletTransaction < ApplicationRecord
 
     plan.update_plot_balance(amount, 'debit')
   end
+
+  # rubocop:disable Rails/SkipsModelValidations
+  def cancel_transaction(payment_plan_id, payment_amount)
+    transaction = community.wallet_transactions.not_cancelled
+                           .find_by(source: 'wallet', destination: 'invoice',
+                                    payment_plan_id: payment_plan_id, amount: payment_amount)
+    transaction&.update_columns(status: 'cancelled')
+  end
+  # rubocop:enable Rails/SkipsModelValidations
 end

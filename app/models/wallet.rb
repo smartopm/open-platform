@@ -79,6 +79,19 @@ class Wallet < ApplicationRecord
     end
   end
 
+  # Updates unallocated funds of wallet.
+  #
+  # @param payment_amount [Float]
+  #
+  # @return [void]
+  def update_unallocated_funds(payment_amount)
+    if unallocated_funds > payment_amount
+      update(unallocated_funds: unallocated_funds - payment_amount)
+    else
+      update(unallocated_funds: 0)
+    end
+  end
+
   private
 
   # Deposits amount in wallet balance.
@@ -235,19 +248,6 @@ class Wallet < ApplicationRecord
     update_unallocated_funds(payment_amount)
     create_transaction(payment_amount, inv)
     make_payment(inv, payment_amount, transaction)
-  end
-
-  # Updates unallocated funds of wallet.
-  #
-  # @param payment_amount [Float]
-  #
-  # @return [void]
-  def update_unallocated_funds(payment_amount)
-    if unallocated_funds > payment_amount
-      update(unallocated_funds: unallocated_funds - payment_amount)
-    else
-      update(unallocated_funds: 0)
-    end
   end
 
   # Creates payment log(WalletTransaction/Payment) for respective invoice.
