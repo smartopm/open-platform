@@ -70,6 +70,7 @@ module Mutations
         raise GraphQL::ExecutionError, 'Payment Plan does not exist for selected property'
       end
 
+      # rubocop:disable Metrics/AbcSize
       # Performs actions post wallet transaction creation.
       # * Generates event log for tag deposit create.
       # * Updates plot balance.
@@ -93,6 +94,7 @@ module Mutations
         end
         context[:wallet].settle_invoices(args.merge(transaction: transaction))
       end
+      # rubocop:enable Metrics/AbcSize
 
       # Raises GraphQL execution error if unallocated_funds is less than payment amount.
       #
