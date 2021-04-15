@@ -73,7 +73,7 @@ export default function PaymentList({ currencyData }) {
     errorPolicy: 'all'
   });
 
-  const  paymentList = data?.transactions?.filter((fil) => fil.destination === 'wallet' && fil.source !== 'invoice')
+  const  paymentList = data?.transactions;
 
   function paginate(action) {
     if (action === 'prev') {

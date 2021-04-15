@@ -60,7 +60,8 @@ module Types::Queries::Wallet
   def transactions(offset: 0, limit: 100, query: nil)
     raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user]&.admin?
 
-    context[:site_community].wallet_transactions.search(query).eager_load(:user)
+    context[:site_community].wallet_transactions.where(destination: 'wallet').search(query)
+                            .eager_load(:user)
                             .order(created_at: :desc)
                             .limit(limit).offset(offset)
   end
