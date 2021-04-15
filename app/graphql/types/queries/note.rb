@@ -162,7 +162,7 @@ module Types::Queries::Note
   def user_tasks(id:)
     raise GraphQL::ExecutionError, 'Unauthorized' unless current_user&.admin?
 
-    context[:site_community].notes.where(assigned_to: id, flagged: true)
+    context[:site_community].notes.where(user_id: id, flagged: true)
   end
 end
 # rubocop:enable Metrics/ModuleLength

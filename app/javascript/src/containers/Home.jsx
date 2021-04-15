@@ -4,6 +4,7 @@ import { Context as AuthStateContext } from './Provider/AuthStateProvider'
 import Loading from '../shared/Loading'
 import Homepage from '../components/HomePage'
 import NewsFeed from '../components/NewsPage/NewsFeed'
+import TaskReminderTask from '../modules/TaskReminder'
 
 export default function Home() {
   const authState = useContext(AuthStateContext)
@@ -14,6 +15,8 @@ export default function Home() {
       <br />
       <br />
       <NewsFeed />
+      <br />
+      <TaskReminderTask id={authState.user.id} />
       <br />
       <Homepage authState={authState} />
     </>
