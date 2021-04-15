@@ -101,7 +101,7 @@ module Mutations
       #
       # @return [GraphQL::ExecutionError]
       def raise_funds_not_sufficient_error(args)
-        return if context[:wallet].unallocated_funds > args[:amount]
+        return if context[:wallet].unallocated_funds >= args[:amount]
 
         raise GraphQL::ExecutionError,
               'Unallocated funds are not sufficient for the payment'
