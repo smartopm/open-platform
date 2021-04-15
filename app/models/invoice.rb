@@ -38,7 +38,6 @@ class Invoice < ApplicationRecord
     attributes phone_number: ['user.phone_number']
   end
 
-  # rubocop:disable Metrics/AbcSize
   # rubocop:disable Metrics/MethodLength
   # Adds invoice amount to pending_balance of Wallet and PaymentPlan.
   #
@@ -52,8 +51,6 @@ class Invoice < ApplicationRecord
       plan.update(pending_balance: plan.pending_balance + amount)
     end
   end
-
-  # rubocop:enable Metrics/AbcSize
 
   def self.invoice_stat(com)
     Invoice.connection.select_all(
