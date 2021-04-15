@@ -39,7 +39,8 @@ export default function TransactionsList({ userId, user, userData, paymentSubTab
     TransactionQuery,
     {
       variables: { userId, limit, offset },
-      errorPolicy: 'all'
+      errorPolicy: 'all',
+      fetchPolicy: 'cache-and-network'
     }
   )
   const { loading: walletLoading, data: walletData, error: walletError, refetch: walletRefetch } = useQuery(
@@ -55,7 +56,8 @@ export default function TransactionsList({ userId, user, userData, paymentSubTab
     AllTransactionQuery,
     {
       variables: { userId, limit, offset },
-      errorPolicy: 'all'
+      errorPolicy: 'all',
+      fetchPolicy: 'no-cache'
     }
   )
 
@@ -124,8 +126,7 @@ export default function TransactionsList({ userId, user, userData, paymentSubTab
     }
   }
 
-  if (loading) return <Spinner />
-  if (invPayDataLoading) return <Spinner />
+  if (loading || invPayDataLoading) return <Spinner />
   if (error && !transactionsData) return <CenteredContent>{formatError(error.message)}</CenteredContent>
   if (invPayDataError && !invPayData) return <CenteredContent>{formatError(invPayDataError.message)}</CenteredContent>
   if (walletError && !walletData) return <CenteredContent>{formatError(walletError.message)}</CenteredContent>
