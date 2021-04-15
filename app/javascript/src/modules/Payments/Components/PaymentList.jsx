@@ -193,19 +193,16 @@ export default function PaymentList({ currencyData }) {
       )}
         </List>
       )}
-      {
-          paymentList?.length >= limit && (
-            <CenteredContent>
-              <Paginate
-                offSet={pageNumber}
-                limit={limit}
-                active={pageNumber >= 1}
-                handlePageChange={paginate}
-                count={data?.transactions?.length}
-              />
-            </CenteredContent>
-          )
-        }
+      
+      <CenteredContent>
+        <Paginate
+          offSet={pageNumber}
+          limit={limit}
+          active={pageNumber >= 1}
+          handlePageChange={paginate}
+          count={data?.transactions?.length}
+        />
+      </CenteredContent>
     </div>
   );
 }
