@@ -78,11 +78,11 @@ module Mutations
         amount = context[:invoice].amount
         pending_balance = wallet.pending_balance
 
-        credited_amount = wallet.balance + amount
-        if amount > pending_balance
+        if amount >= pending_balance
+          credited_amount = wallet.balance + amount
           wallet.update(pending_balance: 0, balance: credited_amount - pending_balance)
         else
-          wallet.update(pending_balance: pending_balance - amount, balance: credited_amount)
+          wallet.update(pending_balance: pending_balance - amount)
         end
       end
 

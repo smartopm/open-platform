@@ -50,7 +50,7 @@ RSpec.describe Mutations::Invoice::InvoiceCreate do
       ).to eql land_parcel.id
       expect(
         result.dig('data', 'invoiceCreate', 'invoice', 'amount'),
-      ).to eq user.wallet.pending_balance
+      ).to eql user.wallet.pending_balance.to_f
       expect(user.wallet.pending_balance).to eql invoice.amount
       expect(payment_plan.reload.pending_balance).to eql invoice.amount
       expect(result['errors']).to be_nil
