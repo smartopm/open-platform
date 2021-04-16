@@ -11,7 +11,8 @@ import Emails from '../Emails';
 import { allUserTypes } from '../../utils/constants';
 import CommunitySettings from './components/SettingsPage';
 
-const Community =   {
+// we can discuss on changing this to preferences instead of settings
+const Settings =   {
   routeProps: {
     path: '/community',
     component: CommunitySettings
@@ -33,5 +34,5 @@ export default {
   },
   name: 'Community',
   accessibleBy: allUserTypes,
-  subMenu: [News, Message, Discussions, Campaigns , Labels, Business, PermitRequestForms, Emails, Community]
+  subMenu: [News, Message, Discussions, Campaigns , Labels, Business, PermitRequestForms, Emails, Settings]
 };
