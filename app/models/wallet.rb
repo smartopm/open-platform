@@ -79,12 +79,12 @@ class Wallet < ApplicationRecord
     end
   end
 
-  # Updates unallocated funds of wallet.
+  # Deducts unallocated funds from wallet.
   #
   # @param payment_amount [Float]
   #
   # @return [void]
-  def update_unallocated_funds(payment_amount)
+  def debit_unallocated_funds(payment_amount)
     if unallocated_funds > payment_amount
       update(unallocated_funds: unallocated_funds - payment_amount)
     else
@@ -245,8 +245,9 @@ class Wallet < ApplicationRecord
   # @return [void]
   def settle_from_unallocated_funds(inv, payment_amount, transaction)
     update_balance(payment_amount, 'debit')
-    update_unallocated_funds(payment_amount)
-    create_transaction(payment_amount, inv)
+    debit_unallocated_funds(payment_amount)
+    plan = inv.land_parcel.payment_plan
+    plan.update(pending_balance: plan.pending_balance - payment_amount)
     make_payment(inv, payment_amount, transaction)
   end
 

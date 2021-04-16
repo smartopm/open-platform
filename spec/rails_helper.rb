@@ -15,6 +15,7 @@ require 'rspec/rails'
 # Require our Factory Bot factories
 require File.expand_path('support/factory_bot.rb', __dir__)
 require File.expand_path('support/controller_spec_helper.rb', __dir__)
+require File.expand_path('support/model_spec_helper.rb', __dir__)
 
 require 'devise'
 
@@ -60,6 +61,7 @@ RSpec.configure do |config|
   config.include Shoulda::Callback::Matchers::ActiveModel
 
   config.include ControllerSpecHelper, type: :controller
+  config.include ModelSpecHelper
   config.include ActiveJob::TestHelper
   # If you're not using ActiveRecord, or you'd prefer not to run each of your
   # examples within a transaction, remove the following line or assign false

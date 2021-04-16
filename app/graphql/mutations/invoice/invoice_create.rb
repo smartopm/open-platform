@@ -20,9 +20,10 @@ module Mutations
       def resolve(vals)
         vals = vals.merge(created_by: context[:current_user])
         land_parcel = context[:site_community].land_parcels.find(vals[:land_parcel_id])
-        raise_plan_required_error if land_parcel.payment_plan.nil?
+        context[:payment_plan] = land_parcel.payment_plan
+        raise_plan_required_error
         invoice = context[:site_community].invoices.create(
-          vals.merge(payment_plan: land_parcel.payment_plan),
+          vals.merge(payment_plan: context[:payment_plan]),
         )
         return { invoice: invoice.reload } if invoice.persisted?
 
@@ -30,10 +31,16 @@ module Mutations
       end
       # rubocop:enable Metrics/AbcSize
 
+      # Raises GraphQL execution error if payment plan does not exists.
+      #
+      # @return [GraphQL::ExecutionError]
       def raise_plan_required_error
+        return if context[:payment_plan].present?
+
         raise GraphQL::ExecutionError, 'Payment Plan does not exist for selected property'
       end
 
+      # Verifies if current user is admin or not.
       def authorized?(_vals)
         return true if context[:current_user]&.admin?
 

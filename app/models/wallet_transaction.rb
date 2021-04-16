@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 # Record the transactions
+# rubocop:disable Metrics/ClassLength
 class WalletTransaction < ApplicationRecord
   include SearchCop
 
@@ -73,47 +74,68 @@ class WalletTransaction < ApplicationRecord
 
   # rubocop:disable Metrics/AbcSize
   # Reverts payments from wallet balance.
-  # * updates wallet and plot balance
-  # * cancels payments
-  # * update invoice pending amount
+  # * Updates wallet balance
+  # * Cancels payments
+  # * Updates invoice pending amount
+  # * Updates plot pending balance with invoice revert amount.
   #
   # @return [void]
   def revert_payments
     wallet = user.wallet
     amount_to_revert = wallet.balance.positive? ? amount - wallet.balance : amount
-    wallet.update_balance(amount, 'debit')
-    wallet.update_unallocated_funds(amount)
-    payments = user.payments.order(created_at: :desc)
-    payments.not_cancelled.each do |payment|
+    user_payments.each do |payment|
       break unless amount_to_revert.positive?
 
       cur_revert_amount = payment.amount < amount_to_revert ? payment.amount : amount_to_revert
       cancel_payment(payment, cur_revert_amount)
       amount_to_revert -= cur_revert_amount
     end
+    debit_wallet_balance(wallet, amount)
   end
 
+  # Returns payments of user which are not cancelled.
+  #
+  # @return [Array<Payment>]
+  def user_payments
+    user.payments.not_cancelled.order(created_at: :desc)
+  end
+
+  # Deducts amount from wallet balance.
+  #
+  # @param wallet [Wallet]
+  # @param amount [Float]
+  #
+  # @return [void]
+  def debit_wallet_balance(wallet, amount)
+    wallet.update_balance(amount, 'debit')
+    wallet.debit_unallocated_funds(amount)
+  end
+
+  # Cancels payment and revert paid amount of associated invoices.
+  #
+  # @param payment [Payment]
+  # @param payment_amount [Float]
+  #
+  # @return [void]
   def cancel_payment(payment, revert_amount)
     ActiveRecord::Base.transaction do
       payment.cancelled!
-      create_new_payment(payment, revert_amount) unless payment.amount.eql?(revert_amount)
-
-      payment.invoices.not_cancelled.each do |inv|
-        break unless revert_amount.positive?
-
-        paid_amount = inv.amount - inv.pending_amount
-        inv_revert_amount = paid_amount > revert_amount ? revert_amount : paid_amount
-        update_plot_balance(inv_revert_amount)
-        inv.update(status: 'in_progress', pending_amount: inv.pending_amount + inv_revert_amount)
-        cancel_transaction(inv.payment_plan_id, payment.amount)
-        revert_amount -= inv_revert_amount
-      end
+      create_new_payment(payment, revert_amount)
+      revert_payment_invoices(payment, revert_amount)
     end
   end
   # rubocop:enable Metrics/MethodLength
   # rubocop:enable Metrics/AbcSize
 
+  # Creates new payment log(WalletTransaction/Payment) for payment invoice.
+  #
+  # @param payment [Payment]
+  # @param payment_amount [Float]
+  #
+  # @return [void]
   def create_new_payment(payment, payment_amount)
+    return if payment.amount.eql? payment_amount
+
     inv = payment.invoices.first
     transaction = user.wallet.create_transaction(payment_amount, inv)
     payment = Payment.create(amount: payment_amount, payment_type: 'wallet',
@@ -122,13 +144,44 @@ class WalletTransaction < ApplicationRecord
     payment.payment_invoices.create(invoice_id: inv.id, wallet_transaction_id: transaction.id)
   end
 
-  def update_plot_balance(plan, amount)
+  # Reverts payment amount from paid invoices
+  #
+  # @param payment [Payment]
+  # @param payment_amount [Float]
+  #
+  # @return [void]
+  def revert_payment_invoices(payment, revert_amount)
+    payment.invoices.not_cancelled.each do |inv|
+      break unless revert_amount.positive?
+
+      paid_amount = inv.amount - inv.pending_amount
+      inv_revert_amount = paid_amount > revert_amount ? revert_amount : paid_amount
+      update_plot_balance(inv_revert_amount)
+      inv.update(status: 'in_progress', pending_amount: inv.pending_amount + inv_revert_amount)
+      cancel_transaction(inv.payment_plan_id, payment.amount)
+      revert_amount -= inv_revert_amount
+    end
+  end
+
+  # Debit balance from payment plan.
+  #
+  # @param amount [Float]
+  #
+  # @return [void]
+  def update_plot_balance(amount)
+    plan = user.payment_plans.find_by(id: payment_plan_id)
     return if plan.nil?
 
     plan.update_plot_balance(amount, 'debit')
   end
 
   # rubocop:disable Rails/SkipsModelValidations
+  # Cancels invoice transaction of payment amount associated to payment plan.
+  #
+  # @param payment_plan_id [String] PaymentPlan#id
+  # @param payment_amount [Float]
+  #
+  # @return [void]
   def cancel_transaction(payment_plan_id, payment_amount)
     transaction = community.wallet_transactions.not_cancelled
                            .find_by(source: 'wallet', destination: 'invoice',
@@ -137,3 +190,4 @@ class WalletTransaction < ApplicationRecord
   end
   # rubocop:enable Rails/SkipsModelValidations
 end
+# rubocop:enable Metrics/ClassLength
