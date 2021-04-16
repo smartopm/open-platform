@@ -31,28 +31,6 @@ describe('Payment List Item Component', () => {
         phoneNumber: '1111111111',
         extRefId: 'test23634'
       }
-    },
-    {
-      amount: 200,
-      status: 'settled',
-      createdAt: '2021-03-01T09:55:05Z',
-      updatedAt: '2021-03-01T09:55:05Z',
-      destination: 'invoice',
-      source: 'cash',
-      currentWalletBalance: 0,
-      id: '3b464fb7-bb2b-41cb-9245-9300b6d8a729',
-      bankName:'some bank',
-      chequeNumber: '38473',
-      transactionNumber: '293848239432',
-      receiptNumber: '293848239432',
-      user: {
-        id: 'a54d6184-b10e-4865-bee7-7957701d423d',
-        name: 'Another somebodyy',
-        imageUrl: null,
-        email: 'test@test.com',
-        phoneNumber: '1111111111',
-        extRefId: 'test23634'
-      },
     }
   ];
   it('should render the invoice item component', async () => {
