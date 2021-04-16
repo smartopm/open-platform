@@ -1,7 +1,7 @@
 import React from 'react'
 import { fireEvent, render } from '@testing-library/react'
 import '@testing-library/jest-dom/extend-expect'
-import DynamicContactFields from '../../components/Community/DynamicContactFields'
+import DynamicContactFields from '../components/DynamicContactFields'
 
 describe('Dynamic Fields ', () => {
   it('should have input field and a remove button', () => {

@@ -14,6 +14,7 @@ import { formatError, useParamsQuery } from '../../../utils/helpers';
 import { dateToString } from '../../../components/DateContainer';
 import DataList from '../../../shared/list/DataList';
 import Paginate from '../../../components/Paginate';
+import ListHeader from '../../../shared/list/ListHeader';
 
 const mailListHeader = [
   { title: 'Name', col: 2 },
@@ -93,6 +94,7 @@ export default function MailTemplateList() {
         emailId={emailId}
         refetchEmails={refetch}
       />
+      <ListHeader headers={mailListHeader} />
       {data?.emailTemplates.map(email => (
         <DataList
           key={email.id}

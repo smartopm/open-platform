@@ -3,7 +3,7 @@ import { render } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { BrowserRouter } from 'react-router-dom/';
 import { MockedProvider } from '@apollo/react-testing';
-import CommunitySettings from '../../containers/Settings/CommunitySettings';
+import CommunitySettings from '../components/SettingsPage';
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
 

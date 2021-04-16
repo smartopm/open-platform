@@ -70,7 +70,6 @@ import UsersImport from '../src/containers/UsersImport';
 
 import FormBuilderPage from '../src/containers/Forms/FormBuilderPage';
 import CommentsPage from '../src/containers/Comments/CommentPage';
-import CommunitySettings from '../src/containers/Settings/CommunitySettings';
 import { MainMenu } from "../src/modules/Menu";
 import modules from '../src/modules';
 import UserRoutes from '../src/modules/Users/UserRoutes';
@@ -325,7 +324,6 @@ const App = () => {
                                     <Route path="/event_logs" component={EventLogs} />
                                     <Route path="/new/user" exact component={UserEdit} />
                                     <Route path="/comments" exact component={CommentsPage} />
-                                    <Route path="/community" component={CommunitySettings} />
                                     <Route path="/visit_request" component={EntryRequest} />
                                   </Switch>
                                 </AdminRoutes>
