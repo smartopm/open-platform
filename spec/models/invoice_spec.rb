@@ -25,7 +25,9 @@ RSpec.describe Invoice, type: :model do
     let!(:user) { create(:user_with_community) }
     let!(:land_parcel) { create(:land_parcel, community_id: user.community_id) }
     let!(:valuation) { create(:valuation, land_parcel_id: land_parcel.id) }
-    let!(:payment_plan) { create(:payment_plan, land_parcel_id: land_parcel.id, user_id: user.id) }
+    let!(:payment_plan) do
+      create(:payment_plan, land_parcel_id: land_parcel.id, user_id: user.id, plot_balance: 0)
+    end
     let(:invoice) do
       create(:invoice, community_id: user.community_id, land_parcel: land_parcel,
                        user_id: user.id, status: 'in_progress', invoice_number: '1234',
@@ -44,6 +46,18 @@ RSpec.describe Invoice, type: :model do
 
     it 'should round the amount value to two decimal places' do
       expect(invoice.amount).to eql 10.33
+    end
+
+    describe '#after_create' do
+      describe '#update_pending_balance_of_wallet' do
+        it 'updates pending balance of wallet and plot' do
+          expect(user.wallet.pending_balance).to eql 0
+          expect(payment_plan.pending_balance).to eql 0
+          invoice
+          expect(user.wallet.pending_balance).to eql 10.33
+          expect(payment_plan.reload.pending_balance).to eql 10.33
+        end
+      end
     end
   end
 end
