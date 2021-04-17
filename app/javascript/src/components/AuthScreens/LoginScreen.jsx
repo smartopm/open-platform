@@ -21,10 +21,11 @@ import { ModalDialog } from '../Dialog'
 import GoogleIcon from '../../../../assets/images/google_icon.svg'
 import { Context as ThemeContext } from '../../../Themes/Nkwashi/ThemeProvider'
 import { loginPhone } from '../../graphql/mutations'
-import { CurrentCommunityQuery } from '../../graphql/queries/community'
+import { CurrentCommunityQuery } from '../../modules/Community/graphql/community_query'
+import { Spinner } from '../../shared/Loading'
 
 export default function LoginScreen() {
-  const { data: communityData } = useQuery(CurrentCommunityQuery)
+  const { data: communityData, loading } = useQuery(CurrentCommunityQuery)
   const [phoneNumber, setPhoneNumber] = useState('')
   const [loginPhoneStart] = useMutation(loginPhone)
   const [open, setOpen] = useState(false)
@@ -141,17 +142,12 @@ export default function LoginScreen() {
           <h4 className={css(styles.welcomeText)}>
             Welcome to 
             {' '}
-            {communityName}
+            {loading ? <Spinner /> : communityData?.currentCommunity?.name}
             {' '}
             App
           </h4>
-          <Typography color="textSecondary" variant="body2">
-            Hello! This is your all inclusive stop for 
-            {' '}
-            {communityName}
-            {' '}
-            news, payments,
-            client requests, gate access, and support.
+          <Typography color="textSecondary" variant="body2" data-testid="tagline">
+            {communityData?.currentCommunity?.tagline}
           </Typography>
 
           <br />

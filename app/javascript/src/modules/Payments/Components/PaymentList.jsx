@@ -73,7 +73,7 @@ export default function PaymentList({ currencyData }) {
     errorPolicy: 'all'
   });
 
-  const  paymentList = data?.transactions?.filter((fil) => fil.destination === 'wallet' && fil.source !== 'invoice')
+  const  paymentList = data?.transactions;
 
   function paginate(action) {
     if (action === 'prev') {
@@ -144,7 +144,7 @@ export default function PaymentList({ currencyData }) {
               position: 'absolute',
               zIndex: 1,
               marginTop: '-2px',
-              marginLeft: '-50px',
+              marginLeft: '-300px',
               display: displayBuilder
             }}
       >
@@ -193,19 +193,16 @@ export default function PaymentList({ currencyData }) {
       )}
         </List>
       )}
-      {
-          paymentList?.length >= limit && (
-            <CenteredContent>
-              <Paginate
-                offSet={pageNumber}
-                limit={limit}
-                active={pageNumber >= 1}
-                handlePageChange={paginate}
-                count={data?.transactions?.length}
-              />
-            </CenteredContent>
-          )
-        }
+      
+      <CenteredContent>
+        <Paginate
+          offSet={pageNumber}
+          limit={limit}
+          active={pageNumber >= 1}
+          handlePageChange={paginate}
+          count={data?.transactions?.length}
+        />
+      </CenteredContent>
     </div>
   );
 }

@@ -149,8 +149,8 @@ export default function InvoiceList({ currencyData, userType }) {
 
   function setGraphQuery(qu){
     setQuery(qu.noOfDays)
-    loadInvoiceDetail()
     setListType('graph')
+    loadInvoiceDetail()
   }
 
   function setsearch(event){
@@ -163,7 +163,7 @@ export default function InvoiceList({ currencyData, userType }) {
     setListType('nongraph')
   }
 
-  const [loadInvoiceDetail, {  error: statError, data: invoicesStatData } ] = useLazyQuery(InvoicesStatsDetails,{
+  const [loadInvoiceDetail, {  error: statError, loading: statLoading, data: invoicesStatData } ] = useLazyQuery(InvoicesStatsDetails,{
     variables: { query },
     errorPolicy: 'all',
     fetchPolicy: 'cache-and-network'
@@ -232,7 +232,7 @@ export default function InvoiceList({ currencyData, userType }) {
               position: 'absolute',
               zIndex: 1,
               marginTop: '-2px',
-              marginLeft: '-250px',
+              marginLeft: '-300px',
               display: displayBuilder
             }}
       >
@@ -265,7 +265,7 @@ export default function InvoiceList({ currencyData, userType }) {
           <CSVLink data={invoicesData.invoices} style={{color: 'white'}} headers={csvHeaders} filename="invoice-data.csv">Download CSV</CSVLink>
         </Fab>
       )}
-      {loading ? (<Spinner />) : (
+      {loading || statLoading ? (<Spinner />) : (
         <List>
           {
           listType === 'graph' && invoicesStatData?.invoicesStatDetails?.length > 0 ?

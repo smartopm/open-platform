@@ -1,5 +1,5 @@
 import React from 'react'
-import DynamicContactFields from '../app/javascript/src/components/Community/DynamicContactFields'
+import DynamicContactFields from '../app/javascript/src/modules/Community/components/DynamicContactFields'
 import FormOptionInput from '../app/javascript/src/components/Forms/FormOptionInput'
 
 export function MultiFields(){

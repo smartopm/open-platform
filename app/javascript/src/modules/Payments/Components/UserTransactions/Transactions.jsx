@@ -39,7 +39,8 @@ export default function TransactionsList({ userId, user, userData, paymentSubTab
     TransactionQuery,
     {
       variables: { userId, limit, offset },
-      errorPolicy: 'all'
+      errorPolicy: 'all',
+      fetchPolicy: 'cache-and-network'
     }
   )
   const { loading: walletLoading, data: walletData, error: walletError, refetch: walletRefetch } = useQuery(
@@ -47,7 +48,7 @@ export default function TransactionsList({ userId, user, userData, paymentSubTab
     {
       variables: { userId, limit, offset },
       errorPolicy: 'all',
-      fetchPolicy: 'cache-and-network'
+      fetchPolicy: 'no-cache'
     }
   )
 
@@ -55,7 +56,8 @@ export default function TransactionsList({ userId, user, userData, paymentSubTab
     AllTransactionQuery,
     {
       variables: { userId, limit, offset },
-      errorPolicy: 'all'
+      errorPolicy: 'all',
+      fetchPolicy: 'no-cache'
     }
   )
 
@@ -123,10 +125,6 @@ export default function TransactionsList({ userId, user, userData, paymentSubTab
       setOffset(offset + limit)
     }
   }
-
-  if (loading) return <Spinner />
-  if (walletLoading) return <Spinner />
-  if (invPayDataLoading) return <Spinner />
   if (error && !transactionsData) return <CenteredContent>{formatError(error.message)}</CenteredContent>
   if (invPayDataError && !invPayData) return <CenteredContent>{formatError(invPayDataError.message)}</CenteredContent>
   if (walletError && !walletData) return <CenteredContent>{formatError(walletError.message)}</CenteredContent>
@@ -136,7 +134,9 @@ export default function TransactionsList({ userId, user, userData, paymentSubTab
       <div style={{display: 'flex', flexDirection: 'column', marginLeft: '20px'}}>
         <Typography variant='caption'>Total Balance</Typography>
         <div style={{display: 'flex', flexDirection: 'row' }}>
-          <Typography variant="h2" color='primary'>{formatMoney(currencyData, walletData.userBalance)}</Typography>
+          {
+            walletLoading ? <Spinner /> : <Typography variant="h2" color='primary'>{formatMoney(currencyData, walletData.userBalance)}</Typography>
+          }
         </div>
       </div>
       {
@@ -146,7 +146,7 @@ export default function TransactionsList({ userId, user, userData, paymentSubTab
                 <ButtonComponent color='primary' buttonText='Add an Invoice' handleClick={() => handleModalOpen()} />
               </div>
             )
-          }
+      }
       <div style={{marginLeft: '20px'}}>
         <StyledTabs
           value={tabValue}
@@ -170,7 +170,8 @@ export default function TransactionsList({ userId, user, userData, paymentSubTab
       />
       <TabPanel value={tabValue} index="Transactions">
         {matches && <ListHeader headers={transactionHeader} />}
-        {transactionsData?.userDeposits.pendingInvoices.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).map((trans) => (
+        {/* show a spinner here */}
+        {loading ? <Spinner /> : transactionsData?.userDeposits.pendingInvoices.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).map((trans) => (
           <UserTransactionsList
             transaction={trans || {}}
             currencyData={currencyData}
@@ -181,6 +182,7 @@ export default function TransactionsList({ userId, user, userData, paymentSubTab
             depRefetch={depRefetch}
           />
         ))}
+
         {transactionsData?.userDeposits.transactions.map((trans) => (
           <UserTransactionsList
             transaction={trans || {}}
@@ -195,12 +197,15 @@ export default function TransactionsList({ userId, user, userData, paymentSubTab
       </TabPanel>
       <TabPanel value={tabValue} index="Invoices">
         {matches && <ListHeader headers={invoiceHeader} />}
+        {/* show a spinner here */}
         {
-          invPayData?.invoicesWithTransactions.invoices.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).map((inv) => (
+          invPayDataLoading ? <Spinner /> : invPayData?.invoicesWithTransactions.invoices.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).map((inv) => (
             <UserInvoiceItem
               key={inv.id}
               invoice={inv}
               currencyData={currencyData}
+              refetch={depRefetch}
+              walletRefetch={walletRefetch}
             />
           ))
         }
@@ -213,6 +218,7 @@ export default function TransactionsList({ userId, user, userData, paymentSubTab
           currentUser={user}
           userId={userId}
           refetch={depRefetch}
+          walletRefetch={walletRefetch}
         />
       </TabPanel>
       <PaymentModal

@@ -7,7 +7,22 @@ import Business from '../Business';
 import Labels from '../Labels';
 import Campaigns from '../Campaigns';
 import PermitRequestForms from '../Forms/PermitRequestForms';
+import Emails from '../Emails';
 import { allUserTypes } from '../../utils/constants';
+import CommunitySettings from './components/SettingsPage';
+
+// we can discuss on changing this to preferences instead of settings
+const Settings =   {
+  routeProps: {
+    path: '/community',
+    component: CommunitySettings
+  },
+  styleProps: {
+    icon: <GroupIcon />
+  },
+  name: 'Settings',
+  accessibleBy: ['admin'],
+}
 
 export default {
   routeProps: {
@@ -19,5 +34,5 @@ export default {
   },
   name: 'Community',
   accessibleBy: allUserTypes,
-  subMenu: [News, Message, Discussions, Campaigns , Labels, Business, PermitRequestForms]
+  subMenu: [News, Message, Discussions, Campaigns , Labels, Business, PermitRequestForms, Emails, Settings]
 };

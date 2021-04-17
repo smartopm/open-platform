@@ -12,6 +12,7 @@ import WarningIcon from '@material-ui/icons/Warning';
 import CloseIcon from '@material-ui/icons/Close';
 import PropTypes from 'prop-types'
 import { makeStyles } from '@material-ui/core/styles';
+import {Spinner} from '../../shared/Loading'
 
 export default function DeleteDialogueBox({
   open,
@@ -20,7 +21,8 @@ export default function DeleteDialogueBox({
   title,
   action,
   user,
-  additionalNote
+  additionalNote,
+  loading
 }) {
   const classes = useStyles();
   return (
@@ -45,12 +47,16 @@ export default function DeleteDialogueBox({
         </DialogContent>
         <Divider />
         <DialogActions>
-          <Button onClick={handleClose} color="secondary" variant='outlined'>
-            close
-          </Button>
-          <Button onClick={handleAction} variant='contained' className={classes.button} autoFocus data-testid="confirm_action">
-            {action}
-          </Button>
+          {loading ? (<Spinner />) : ( 
+            <>
+              <Button onClick={handleClose} color="secondary" variant='outlined'>
+                close
+              </Button>
+              <Button onClick={handleAction} variant='contained' className={classes.button} autoFocus data-testid="confirm_action">
+                {action}
+              </Button>
+            </>
+          )}
         </DialogActions>
       </Dialog>
     </>
@@ -60,7 +66,8 @@ export default function DeleteDialogueBox({
 DeleteDialogueBox.defaultProps = {
   action: 'delete',
   user: '',
-  additionalNote: ''
+  additionalNote: '',
+  loading: false
 }
 
 DeleteDialogueBox.propTypes = {
@@ -70,7 +77,8 @@ DeleteDialogueBox.propTypes = {
   title: PropTypes.string.isRequired,
   action: PropTypes.string,
   user: PropTypes.string,
-  additionalNote: PropTypes.string
+  additionalNote: PropTypes.string,
+  loading: PropTypes.bool
 }
 
 const useStyles = makeStyles({

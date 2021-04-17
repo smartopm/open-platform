@@ -123,11 +123,13 @@ module Types::Queries::Invoice
     invoices = context[:site_community].invoices.eager_load(:user, :land_parcel)
     case query
     when '00-30'
-      invoices.not_paid.where('due_date >= ?', 30.days.ago)
+      invoices.not_paid.where('due_date >= ? AND due_date <= ?', 30.days.ago, Time.zone.today)
     when '31-45'
       invoices.not_paid.where('due_date <= ? AND due_date >= ?', 31.days.ago, 45.days.ago)
     when '46-60'
       invoices.not_paid.where('due_date <= ? AND due_date >= ?', 46.days.ago, 60.days.ago)
+    when 'Future Invoices'
+      invoices.not_paid.where('due_date > ?', Time.zone.today)
     else
       invoices.not_paid.where('due_date <= ?', 61.days.ago)
     end

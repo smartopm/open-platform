@@ -1082,15 +1082,6 @@ export const LandParcel = gql`
     }
   }
 `
-export const EmailTemplatesQuery = gql`
-  query emailTemplates {
-    emailTemplates {
-      name
-      id
-      variableNames
-    }
-  }
-`
 
 export const SubStatusQuery = gql`
 query subStatus {
@@ -1123,6 +1114,10 @@ export const AllTransactionQuery = gql`
         invoiceNumber
         dueDate
         updatedAt
+        user {
+          id
+          name
+        }
         landParcel {
           id
           parcelNumber
@@ -1166,6 +1161,10 @@ export const AllTransactionQuery = gql`
             id
             createdAt
           }
+          user {
+            id
+            name
+          }
         }
         landParcel {
           id
@@ -1206,7 +1205,9 @@ export const TransactionQuery = gql`
           name
         }
         paymentPlan {
+          id
           landParcel {
+            id
             parcelNumber
           }
         }
@@ -1247,6 +1248,7 @@ export const PaidInvoicesByPlan = gql`
       status
       createdAt
       landParcel {
+        id
         parcelNumber
       }
     }

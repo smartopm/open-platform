@@ -9,8 +9,9 @@ import {
 } from '@material-ui/core'
 import PropTypes from 'prop-types'
 
-export default function EmailDetailsDialog({ open, handleClose, handleSave }) {
+export default function EmailDetailsDialog({ open, handleClose, handleSave, loading }) {
   const [details, setDetails] = useState({ name: '', subject: '' })
+  
   return (
     <Dialog open={open} onClose={handleClose}>
       <DialogTitle>Add Email Details</DialogTitle>
@@ -18,43 +19,49 @@ export default function EmailDetailsDialog({ open, handleClose, handleSave }) {
         <TextField
           label="Template Name"
           className="form-control"
-          aria-label="campaign_template_style"
-          inputProps={{ 'data-testid': 'campaign_template_style' }}
-          name="templateStyle"
+          aria-label="template_name"
+          inputProps={{ 'data-testid': 'template_name' }}
+          name="templateName"
           value={details.name}
           onChange={event =>
             setDetails({ ...details, name: event.target.value })}
+          required
         />
         <TextField
           label="Template Subject"
           className="form-control"
-          aria-label="campaign_template_style"
-          inputProps={{ 'data-testid': 'campaign_template_style' }}
-          name="templateStyle"
+          aria-label="template_subject"
+          inputProps={{ 'data-testid': 'template_subject' }}
+          name="templateSubject"
           value={details.subject}
           onChange={event =>
             setDetails({ ...details, subject: event.target.value })}
+          required
         />
       </DialogContent>
       <br />
       <DialogActions style={{ justifyContent: 'flex-start' }}>
-        <Button onClick={handleClose} color="secondary" variant="outlined">
+        <Button onClick={handleClose} color="secondary" variant="outlined" data-testid="cancel_btn">
           Cancel
         </Button>
         <Button
           onClick={() => handleSave(details)}
           color="primary"
           variant="contained"
+          disabled={loading}
+          data-testid="save_btn"
         >
-          Save Changes
+          {`${loading ? 'Saving Changes' : ' Save Changes'}`}
         </Button>
       </DialogActions>
     </Dialog>
   )
 }
 
+
 EmailDetailsDialog.propTypes = {
-  open: PropTypes.bool.isRequired,
   handleClose: PropTypes.func.isRequired,
-  handleSave: PropTypes.func.isRequired
+  open: PropTypes.bool.isRequired,
+  loading: PropTypes.bool.isRequired,
+  handleSave: PropTypes.func.isRequired,
 }
