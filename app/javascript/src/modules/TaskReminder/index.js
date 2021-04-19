@@ -1,4 +1,4 @@
-import TaskReminderCard from './component/TaskReminderCard'
+import TaskReminderCard from './Components/TaskReminderCard'
 
 
 export  default TaskReminderCard 

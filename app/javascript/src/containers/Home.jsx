@@ -16,7 +16,9 @@ export default function Home() {
       <br />
       <NewsFeed />
       <br />
-      <TaskReminderTask id={authState.user.id} />
+      {authState.user.userType === 'admin' && (
+        <TaskReminderTask id={authState.user.id} />
+      )}
       <br />
       <Homepage authState={authState} />
     </>
