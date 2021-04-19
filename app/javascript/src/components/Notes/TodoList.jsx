@@ -9,7 +9,11 @@ import {
   Divider,
   IconButton,
   Grid,
-  Button
+  Button,
+  Checkbox,
+  Typography,
+  Select,
+  MenuItem
 } from '@material-ui/core';
 import FilterListIcon from '@material-ui/icons/FilterList';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
@@ -81,7 +85,7 @@ export default function TodoList({
   const matches = useMediaQuery(theme.breakpoints.up('sm'));
   const [actionMenuOpen, setActionMenuOpen] = useState(null);
   const [isSuccessAlert, setIsSuccessAlert] = useState(false);
-
+  const [checkedOptions, setCheckOptions] = useState('none')
   const taskQuery = {
     completedTasks: 'completed: true',
     tasksDueIn10Days: `due_date <= '${futureDateAndTimeToString(10)}' AND completed: false`,
@@ -370,6 +374,14 @@ export default function TodoList({
     userName: 'user'
   };
 
+  function setSelectAllOption(){
+    setCheckOptions('all')
+  }
+
+  // function setCheckOptions(valu){
+  //   setCheckOptions()
+  // }
+
   if (tasksError) return <ErrorPage error={tasksError.message} />;
 
   return (
@@ -517,6 +529,34 @@ export default function TodoList({
                 filterTasks={handleTaskFilter}
                 currentTile={currentTile}
               />
+            </Grid>
+
+            <br />
+            <Grid item style={{ display: 'flex' }}>
+              <Grid>
+                <Checkbox
+                  checked={selectedTasks}
+                  onChange={setSelectAllOption}
+                  name="select_all"
+                  data-testid="select_all"
+                  color="primary"
+                  style={{ padding: '0px', marginRight: '15px' }}
+                />
+              </Grid>
+              <Typography> Select </Typography>
+              <Grid>
+                <Select
+                  labelId="user-action-select"
+                  id="user-action-select"
+                  value={checkedOptions}
+                  onChange={event => setCheckOptions(event.target.value)}
+                  style={{ height: '23px', marginLeft: '10px' }}
+                >
+                  <MenuItem value="all">All</MenuItem>
+                  <MenuItem value="all_on_the_page">All on this page</MenuItem>
+                  <MenuItem value="none">None</MenuItem>
+                </Select>
+              </Grid>
             </Grid>
             <br />
             {data?.flaggedNotes.length ? (
