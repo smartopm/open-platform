@@ -78,7 +78,6 @@ const useStyles = makeStyles((theme) => ({
     flexWrap: 'wrap',
     justifyContent: 'space-around',
     overflow: 'hidden',
-    marginLeft: '20px'
   },
   gridList: {
     flexWrap: 'nowrap'
