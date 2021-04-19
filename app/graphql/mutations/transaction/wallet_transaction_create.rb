@@ -43,7 +43,7 @@ module Mutations
             update_wallet_balance(user, transaction, vals[:amount])
             user.wallet.settle_invoices(transaction.id)
           end
-          { wallet_transaction: transaction }
+          { wallet_transaction: transaction.reload }
         end
       end
       # rubocop:enable Metrics/AbcSize

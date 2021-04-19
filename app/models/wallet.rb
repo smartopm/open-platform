@@ -58,13 +58,17 @@ class Wallet < ApplicationRecord
   # rubocop:enable Style/OptionalBooleanParameter
 
   def settle_invoices(user_transaction_id)
+    settled_invoices = []
     user.invoices.not_cancelled.where('pending_amount > ?', 0).reverse.each do |invoice|
       next if invoice.land_parcel.payment_plan&.plot_balance.to_i.zero?
 
       bal = invoice.land_parcel.payment_plan&.plot_balance
       payment_amount = invoice.pending_amount > bal ? bal : invoice.pending_amount
+      settled_invoices << invoice
       settle_from_plot_balance(invoice, payment_amount, user_transaction_id, false)
     end
+
+    WalletTransaction.find(user_transaction_id).update!(settled_invoices: settled_invoices)
   end
   # rubocop:enable Metrics/AbcSize
 

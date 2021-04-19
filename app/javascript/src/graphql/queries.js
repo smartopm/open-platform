@@ -1196,6 +1196,7 @@ export const TransactionQuery = gql`
         transactionNumber
         status
         id
+        settledInvoices
         user {
           id
           name
@@ -1211,13 +1212,6 @@ export const TransactionQuery = gql`
             id
             parcelNumber
           }
-        }
-        invoices {
-          id
-          invoiceNumber
-          dueDate
-          amount
-          pendingAmount
         }
       }
       pendingInvoices {

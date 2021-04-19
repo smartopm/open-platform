@@ -19,50 +19,38 @@ export default function PaymentReceipt({ paymentData, open, handleClose, userDat
   console.log('payData', paymentData);
   const signRef = useRef(null);
 
-  const invoices = paymentData?.invoices?.map(inv => {
+  const invoices = paymentData?.settledInvoices?.map(inv => {
     return {
       owed: inv.amount,
       paid: amountPaid(inv),
-      remaining: inv.pendingAmount,
+      remaining: inv.pending_amount,
       id: inv.id,
-      invoiceNumber: inv.invoiceNumber,
-      dueDate: inv.dueDate
+      invoiceNumber: inv.invoice_number,
+      dueDate: inv.due_date
     };
   });
 
   if (allAmountPaid() > paymentData.amount) {
     const settledBalance = allAmountPaid() - paymentData.amount;
     const settledIndex = invoices.findIndex(obj => obj.remaining === 0);
-    invoices[`${settledIndex}`].owed -= settledBalance;
-    invoices[`${settledIndex}`].paid -= settledBalance;
+    if (settledIndex >= 0) {
+      invoices[`${settledIndex}`].owed -= settledBalance;
+      invoices[`${settledIndex}`].paid -= settledBalance;
+    }
   }
 
   function unAllocatedFunds() {
-    // const totalAmountPaid = paymentData.amount
     const clearedInvoiceAmount = invoices?.reduce((sum, { paid }) => sum + paid, 0);
     return paymentData.amount - clearedInvoiceAmount;
   }
 
   function amountPaid(invoice) {
-    return invoice?.amount - invoice?.pendingAmount;
+    return invoice?.amount - invoice?.pending_amount;
   }
 
   function allAmountPaid() {
-    return paymentData?.invoices?.reduce((sum, inv) => sum + amountPaid(inv), 0);
+    return paymentData?.settledInvoices?.reduce((sum, inv) => sum + amountPaid(inv), 0);
   }
-
-  // function calculatedInvoice(inv) {
-  //   let invoice = {
-  //     owed: inv.amount,
-  //     paid: amountPaid(inv),
-  //     remaining: inv.pendingAmount
-  //   }
-  //   if (invoice.amount > amountPaidOnPending && invoice.pendingAmount == 0) {
-  //     invoice = {...invoice, owed: settledAmount, paid: settledAmount, remaining: 0}
-  //   }
-
-  //   return invoice
-  // }
 
   return (
     <>
@@ -176,7 +164,7 @@ export default function PaymentReceipt({ paymentData, open, handleClose, userDat
 
               {paymentData?.source === 'cheque/cashier_cheque' && (
                 <div style={{ marginTop: '60px' }}>
-                  <b style={{ fontSize: '30px' }}>Account Details</b> 
+                  <b style={{ fontSize: '30px' }}>Account Details</b>
                   {' '}
                   <br />
                   <Grid container spacing={1}>
@@ -259,7 +247,7 @@ PaymentReceipt.propTypes = {
         parcelNumber: PropTypes.string
       })
     }),
-    invoices: PropTypes.arrayOf(PropTypes.object),
+    settledInvoices: PropTypes.arrayOf(PropTypes.object),
   }),
   userData: PropTypes.shape({
     name: PropTypes.string
