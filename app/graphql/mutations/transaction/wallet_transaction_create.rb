@@ -33,7 +33,7 @@ module Mutations
           context[:wallet] = user.wallet
 
           raise_plan_required_error
-          transaction_attributes = vals.except(:user_id, :land_parcel_id)
+          transaction_attributes = vals.except(:land_parcel_id)
                                        .merge(
                                          destination: 'wallet',
                                          status: 'settled',
@@ -41,7 +41,6 @@ module Mutations
                                          depositor_id: context[:current_user].id,
                                          originally_created_at: user.current_time_in_timezone,
                                          payment_plan_id: context[:payment_plan].id,
-                                         user_id: user.id,
                                        )
 
           context[:transaction] = WalletTransaction.create!(transaction_attributes)
