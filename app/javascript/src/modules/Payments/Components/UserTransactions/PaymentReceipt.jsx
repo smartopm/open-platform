@@ -146,10 +146,10 @@ export default function PaymentReceipt({ paymentData, open, handleClose, userDat
 
               <Grid container spacing={1}>
                 <Grid item xs={2} style={{ color: '#9B9B9B' }}>
-                  Total Balance
+                  Plan Balance
                 </Grid>
                 <Grid item xs={2}>
-                  {formatMoney(currencyData, paymentData.paymentPlan?.plotBalance)}
+                  {formatMoney(currencyData, paymentData.paymentPlan?.pendingBalance)}
                 </Grid>
               </Grid>
 
@@ -242,7 +242,7 @@ PaymentReceipt.propTypes = {
       name: PropTypes.string
     }),
     paymentPlan: PropTypes.shape({
-      plotBalance: PropTypes.string,
+      pendingBalance: PropTypes.string,
       landParcel: PropTypes.shape({
         parcelNumber: PropTypes.string
       })

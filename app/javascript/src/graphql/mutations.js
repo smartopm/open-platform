@@ -837,7 +837,7 @@ export const PaymentCreate = gql`
           name
         }
         paymentPlan {
-          plotBalance
+          pendingBalance
           landParcel {
             parcelNumber
           }

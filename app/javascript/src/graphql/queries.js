@@ -1207,7 +1207,7 @@ export const TransactionQuery = gql`
         }
         paymentPlan {
           id
-          plotBalance
+          pendingBalance
           landParcel {
             id
             parcelNumber
