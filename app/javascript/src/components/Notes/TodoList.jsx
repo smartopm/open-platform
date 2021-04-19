@@ -149,7 +149,7 @@ export default function TodoList({
   });
   const [assignUserToNote] = useMutation(AssignUser);
   const [taskUpdate] = useMutation(UpdateNote)
-
+  const taskListIds = data?.flaggedNotes.map(task => task.id)
   function openModal() {
     setModalOpen(!open);
   }
@@ -376,11 +376,9 @@ export default function TodoList({
 
   function setSelectAllOption(){
     setCheckOptions('all')
+    setSelected(taskListIds)
   }
 
-  // function setCheckOptions(valu){
-  //   setCheckOptions()
-  // }
 
   if (tasksError) return <ErrorPage error={tasksError.message} />;
 
@@ -535,7 +533,7 @@ export default function TodoList({
             <Grid item style={{ display: 'flex' }}>
               <Grid>
                 <Checkbox
-                  checked={selectedTasks}
+                  checked={!!selectedTasks}
                   onChange={setSelectAllOption}
                   name="select_all"
                   data-testid="select_all"
