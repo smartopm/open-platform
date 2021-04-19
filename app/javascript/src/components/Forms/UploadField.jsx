@@ -15,7 +15,7 @@ export default function UploadField({ detail, upload, editable }) {
         >
           {detail.label}
         </FormHelperText>
-        <br/>
+        <br />
         <input
           type="file"
           name="image"
@@ -43,7 +43,8 @@ export default function UploadField({ detail, upload, editable }) {
 UploadField.propTypes = {
   detail: PropTypes.shape({
     status: PropTypes.string,
-    type: PropTypes.string
+    type: PropTypes.string,
+    label: PropTypes.string
   }).isRequired,
   upload: PropTypes.func.isRequired,
   editable: PropTypes.bool.isRequired,
