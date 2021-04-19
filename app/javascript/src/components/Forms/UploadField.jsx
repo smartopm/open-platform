@@ -1,13 +1,21 @@
 import React from 'react'
 import { AddCircleOutline } from '@material-ui/icons'
 import DoneIcon from '@material-ui/icons/Done'
-import { Button } from '@material-ui/core'
+import { Button, FormHelperText } from '@material-ui/core'
 import PropTypes from 'prop-types'
 
 export default function UploadField({ detail, upload, editable }) {
   return (
     <>
       <label htmlFor="button-file">
+        <FormHelperText
+          style={{
+            margin: '4px 4px 0 0',
+          }}
+        >
+          {detail.label}
+        </FormHelperText>
+        <br/>
         <input
           type="file"
           name="image"
