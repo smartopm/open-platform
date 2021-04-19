@@ -17,6 +17,7 @@ export const WalletTransactionUpdate = gql`
     $bankName: String
     $transactionNumber: String
     $chequeNumber: String
+    $createdAt: String
   ) {
     walletTransactionUpdate(
       id: $id
@@ -24,9 +25,11 @@ export const WalletTransactionUpdate = gql`
       bankName: $bankName
       chequeNumber: $chequeNumber
       transactionNumber: $transactionNumber
+      createdAt: $createdAt
     ) {
       walletTransaction {
         id
+        createdAt
       }
     }
   }
