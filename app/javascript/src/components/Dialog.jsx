@@ -16,6 +16,7 @@ import {
 import PropTypes from 'prop-types'
 import { makeStyles } from '@material-ui/core/styles'
 import { titleize } from '../utils/helpers'
+import {Spinner} from '../shared/Loading'
 
 export function ModalDialog({
   handleClose,
@@ -104,7 +105,8 @@ export function CustomizedDialogs({
   saveAction,
   disableActionBtn,
   cancelAction,
-  actionable
+  actionable,
+  actionLoading
 }) {
   const classes = useStyles()
   return (
@@ -126,18 +128,22 @@ export function CustomizedDialogs({
       {
         actionable && (
           <DialogActions>
-            <Button onClick={handleModal} variant="outlined" color="secondary" data-testid='dialog_cancel'>
-              {cancelAction}
-            </Button>
-            <Button
-              data-testid="custom-dialog-button"
-              onClick={handleBatchFilter}
-              color="primary"
-              variant="contained"
-              disabled={disableActionBtn}
-            >
-              {saveAction || 'Save'}
-            </Button>
+            {actionLoading ? (<Spinner />) : (
+              <>
+                <Button onClick={handleModal} variant="outlined" color="secondary" data-testid='dialog_cancel'>
+                  {cancelAction}
+                </Button>
+                <Button
+                  data-testid="custom-dialog-button"
+                  onClick={handleBatchFilter}
+                  color="primary"
+                  variant="contained"
+                  disabled={disableActionBtn}
+                >
+                  {saveAction || 'Save'}
+                </Button>
+              </>
+            )}
           </DialogActions>
         )
       }
@@ -344,7 +350,8 @@ CustomizedDialogs.defaultProps = {
   saveAction: 'Save',
   disableActionBtn: false,
   cancelAction: 'Cancel',
-  actionable: true
+  actionable: true,
+  actionLoading: false
 }
 
 CustomizedDialogs.propTypes = {
@@ -357,7 +364,8 @@ CustomizedDialogs.propTypes = {
   saveAction: PropTypes.string,
   cancelAction: PropTypes.string,
   disableActionBtn: PropTypes.bool,
-  actionable: PropTypes.bool
+  actionable: PropTypes.bool,
+  actionLoading: PropTypes.bool
 }
 
 ModalDialog.defaultProps = {
