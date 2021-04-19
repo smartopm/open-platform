@@ -1206,10 +1206,18 @@ export const TransactionQuery = gql`
         }
         paymentPlan {
           id
+          plotBalance
           landParcel {
             id
             parcelNumber
           }
+        }
+        invoices {
+          id
+          invoiceNumber
+          dueDate
+          amount
+          pendingAmount
         }
       }
       pendingInvoices {
