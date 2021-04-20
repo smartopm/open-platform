@@ -13,19 +13,22 @@ module Mutations
 
       def resolve(vals)
         task_list = vals[:ids].presence || task_ids_list(vals[:query])
-        tasks = context[:site_community].notes.where(id: task_list)
+        raise GraphQL::ExecutionError, 'No Task Found, Try a different query' unless task_list.present?
 
+        tasks = context[:site_community].notes.where(id: task_list)
         return { success: true } if tasks.update(vals.except(:ids, :query))
 
         raise GraphQL::ExecutionError, 'Something went wrong while updating selected tasks'
       end
 
       def task_ids_list(query)
+        return [] if query.blank?
+
         notes = context[:site_community].notes.where(flagged: true)
         tasks = if query.present? && query.include?('assignees')
                   notes.search_assignee(query)
                 elsif query.present? && query.include?('user')
-                  notes.search_assignee(query)
+                  notes.search_user(query)
                 else
                   notes.search(query)
                 end
