@@ -266,10 +266,7 @@ namespace :imports do
             end
 
             payment_plan.update_plot_balance(amount)
-            transaction.update(
-              current_wallet_balance: user.wallet.balance + amount,
-              current_plan_balance: payment_plan.pending_balance - amount,
-            )
+            transaction.update(current_wallet_balance: user.wallet.balance + amount)
             user.wallet.update_balance(amount)
             user.wallet.settle_invoices(transaction.id)
           else

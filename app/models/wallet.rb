@@ -57,6 +57,7 @@ class Wallet < ApplicationRecord
   end
   # rubocop:enable Style/OptionalBooleanParameter
 
+  # rubocop:disable Metrics/MethodLength
   def settle_invoices(user_transaction_id)
     settled_invoices = []
     user.invoices.not_cancelled.where('pending_amount > ?', 0).reverse.each do |invoice|
@@ -68,8 +69,13 @@ class Wallet < ApplicationRecord
       settle_from_plot_balance(invoice, payment_amount, user_transaction_id, false)
     end
 
-    WalletTransaction.find(user_transaction_id).update!(settled_invoices: settled_invoices)
+    transaction = WalletTransaction.find(user_transaction_id)
+    transaction.settled_invoices = settled_invoices
+    transaction.current_plan_balance = transaction.payment_plan.pending_balance
+    transaction.save!
   end
+  # rubocop:enable Metrics/MethodLength
+
   # rubocop:enable Metrics/AbcSize
 
   def create_transaction(payment_amount, inv)

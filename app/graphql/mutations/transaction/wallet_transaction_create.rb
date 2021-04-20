@@ -40,7 +40,7 @@ module Mutations
           context[:current_user].generate_events('deposit_create', transaction)
           land_parcel.payment_plan&.update_plot_balance(vals[:amount])
           if transaction.settled?
-            update_wallet_balance(user, transaction, vals[:amount], land_parcel.payment_plan)
+            update_wallet_balance(user, transaction, vals[:amount])
             user.wallet.settle_invoices(transaction.id)
           end
           { wallet_transaction: transaction.reload }
@@ -49,11 +49,8 @@ module Mutations
       # rubocop:enable Metrics/AbcSize
       # rubocop:enable Metrics/MethodLength
 
-      def update_wallet_balance(user, transaction, amount, plan)
-        transaction.update(
-          current_wallet_balance: user.wallet.balance + amount,
-          current_plan_balance: plan.pending_balance - amount,
-        )
+      def update_wallet_balance(user, transaction, amount)
+        transaction.update(current_wallet_balance: user.wallet.balance + amount)
         user.wallet.update_balance(amount)
       end
 

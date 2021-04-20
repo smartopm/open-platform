@@ -53,14 +53,14 @@ RSpec.describe Mutations::Transaction::WalletTransactionCreate do
                                                    current_user: admin,
                                                    site_community: user.community,
                                                  }).as_json
-      puts result
+
       expect(result.dig('data', 'walletTransactionCreate', 'walletTransaction', 'id')).not_to be_nil
       expect(result.dig(
                'data', 'walletTransactionCreate', 'walletTransaction', 'settledInvoices'
              )).to_not be_nil
       expect(result.dig(
                'data', 'walletTransactionCreate', 'walletTransaction', 'currentPlanBalance'
-             )).to eql(4900.0)
+             )).to eql(5000.0)
       expect(user.wallet.balance).to eql 100.0
       expect(result['errors']).to be_nil
     end
