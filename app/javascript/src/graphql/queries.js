@@ -1198,6 +1198,7 @@ export const TransactionQuery = gql`
         id
         settledInvoices
         community {
+          id
           name
           logoUrl
         }

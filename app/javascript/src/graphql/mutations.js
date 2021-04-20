@@ -843,6 +843,7 @@ export const PaymentCreate = gql`
           }
         }
         community {
+          id
           name
           logoUrl
         }
