@@ -42,10 +42,10 @@ export default function TaskReminderCard({ id }) {
       {loading ? <Spinner /> : (
         <div>
           <div style={{display: 'flex'}}>
-            <Typography variant='h5' style={{margin: '50px 0 26px 79px'}}>Task Reminders</Typography>
-            <TrendingFlatIcon style={{marginLeft: 'auto', order: 2, marginTop: '50px', marginRight: '80px'}} />
+            <Typography variant='h5' style={matches ? {margin: '20px 0 26px 20px', fontWeight: 'bold'} : {margin: '50px 0 26px 79px', fontWeight: 'bold'}}>Task Reminders</Typography>
+            <TrendingFlatIcon style={matches ? {marginLeft: 'auto', order: 2, marginTop: '20px', marginRight: '20px'} : {marginLeft: 'auto', order: 2, marginTop: '50px', marginRight: '80px'}} />
           </div>
-          <div className={classes.root}>
+          <div className={classes.root} style={matches ? {marginLeft: '20px'} : {marginLeft: '79px'}}>
             <GridList className={classes.gridList} cols={matches ? 1 : 3}>
               {data?.userTasks.map((tile) => (
                 <GridListTile key={tile.id}>
@@ -66,7 +66,6 @@ export default function TaskReminderCard({ id }) {
                         __html: sanitizeText(removeNewLines(tile.body))
                         }}
                       />
-                      {tile.body}
                     </Typography>
                   </div>
                 </GridListTile>
@@ -84,8 +83,7 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     flexWrap: 'wrap',
     justifyContent: 'space-around',
-    overflow: 'hidden',
-    marginLeft: '79px'
+    overflow: 'hidden'
   },
   gridList: {
     flexWrap: 'nowrap'
