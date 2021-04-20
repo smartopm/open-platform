@@ -43,7 +43,7 @@ export const CreateUserMutation = gql`
 
 /**
  * @deprecated this is no longer used in favor of this mutations/user.js and should be deleted
- */  
+ */
 export const UpdateUserMutation = gql`
   mutation UpdateUserMutation(
     $id: ID!
@@ -827,6 +827,8 @@ export const PaymentCreate = gql`
         transactionNumber
         currentWalletBalance
         createdAt
+        settledInvoices
+        currentPendingPlotBalance
         user {
           id
           name
@@ -834,6 +836,18 @@ export const PaymentCreate = gql`
         depositor {
           id
           name
+        }
+        paymentPlan {
+          id
+          landParcel {
+            id
+            parcelNumber
+          }
+        }
+        community {
+          id
+          name
+          logoUrl
         }
       }
     }
