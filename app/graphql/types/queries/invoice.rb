@@ -64,6 +64,10 @@ module Types::Queries::Invoice
       argument :query, GraphQL::Types::String, required: true
       description 'return list of all unpaid invoices'
     end
+
+    field :invoice_summary, Types::InvoiceSummaryType, null: false do
+      description 'return summary of all invoices'
+    end
   end
   # rubocop:enable Metrics/BlockLength
   def invoices(query: nil, offset: 0, limit: 100)
@@ -152,12 +156,12 @@ module Types::Queries::Invoice
     raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user]&.admin?
 
     invoices = context[:site_community].invoices
-    # {
-    #   late: invoices.late.count,
-    #   paid: invoices.paid.count,
-    #   in_progress: invoices.in_progress.count,
-    #   cancelled: invoices.cancelled.count,
-    # }
+    {
+      today: invoices.not_paid.where(due_date: Time.zone.now.beginning_of_day..Time.zone.now.end_of_day).count,
+      one_week: invoices.not_paid.where('due_date >= ? AND due_date <= ?', 7.days.ago, Time.zone.today).count,
+      one_month: invoices.not_paid.where('due_date >= ? AND due_date <= ?', 30.days.ago, Time.zone.today).count,
+      over_one_month: invoices.not_paid.where('due_date <= ?', 30.days.ago).count,
+    }
   end
 
   def invoice_accounting_stats
