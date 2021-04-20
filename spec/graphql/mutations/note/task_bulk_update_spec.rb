@@ -22,21 +22,21 @@ RSpec.describe Mutations::Note::NoteBulkUpdate do
         community_id: user.community_id,
         author_id: admin.id,
         flagged: true,
-        category: 'call'
+        category: 'call',
       )
     end
 
     let(:query) do
       <<~GQL
-      mutation update_bulk($ids: [ID!]!, $completed: Boolean, $query: String) {
-        noteBulkUpdate(
-          ids: $ids
-          completed: $completed
-          query: $query
-        ) {
-          success
+        mutation update_bulk($ids: [ID!]!, $completed: Boolean, $query: String) {
+          noteBulkUpdate(
+            ids: $ids
+            completed: $completed
+            query: $query
+          ) {
+            success
+          }
         }
-      }
       GQL
     end
 
@@ -44,7 +44,7 @@ RSpec.describe Mutations::Note::NoteBulkUpdate do
       variables = {
         ids: [note.id, another_note.id],
         completed: true,
-        query: ''
+        query: '',
       }
       result = DoubleGdpSchema.execute(query, variables: variables,
                                               context: {
@@ -59,7 +59,7 @@ RSpec.describe Mutations::Note::NoteBulkUpdate do
       variables = {
         ids: [],
         completed: true,
-        query: 'category:call'
+        query: 'category:call',
       }
       result = DoubleGdpSchema.execute(query, variables: variables,
                                               context: {
@@ -74,7 +74,7 @@ RSpec.describe Mutations::Note::NoteBulkUpdate do
       variables = {
         ids: [],
         completed: true,
-        query: 'user:Test'
+        query: 'user:Test',
       }
       result = DoubleGdpSchema.execute(query, variables: variables,
                                               context: {

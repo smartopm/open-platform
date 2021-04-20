@@ -13,7 +13,7 @@ module Mutations
 
       def resolve(vals)
         task_list = vals[:ids].presence || task_ids_list(vals[:query])
-        raise GraphQL::ExecutionError, 'No Task Found, Try a different query' unless task_list.present?
+        raise GraphQL::ExecutionError, 'No Task Found, Try a different query' if task_list.blank?
 
         tasks = context[:site_community].notes.where(id: task_list)
         return { success: true } if tasks.update(vals.except(:ids, :query))
