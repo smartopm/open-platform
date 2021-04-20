@@ -11,7 +11,7 @@ import GridListTile from '@material-ui/core/GridListTile';
 import { useHistory } from 'react-router-dom';
 import EventNoteIcon from '@material-ui/icons/EventNote';
 import Typography from '@material-ui/core/Typography';
-import { AssignedTaskQuery } from '../graphql/assignTaskQuery'
+import { AssignedTaskQuery } from '../graphql/assign_task_query'
 import { Spinner } from '../../../../shared/Loading';
 import { dateToString } from '../../../../utils/dateutil';
 import CenteredContent from '../../../../components/CenteredContent';
@@ -96,8 +96,10 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.background.paper,
     height: '175px',
     cursor: 'pointer',
+    overflow: 'hidden',
     boxShadow: '0 0 3px #ccc',
-    borderRadius: '8px'
+    borderRadius: '8px',
+    textOverflow: 'ellipsis'
   },
   date: {
     display: 'flex', 
