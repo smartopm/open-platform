@@ -21,14 +21,13 @@ module Mutations
       end
 
       def task_ids_list(query)
-        # three types of searches
-        # search => search_user => search_assignee
+        notes = context[:site_community].notes.where(flagged: true)
         tasks = if query.present? && query.include?('assignees')
-                  context[:site_community].notes.search_assignee(query).where(flagged: true)
+                  notes.search_assignee(query)
                 elsif query.present? && query.include?('user')
-                  context[:site_community].notes.search_assignee(query).where(flagged: true)
+                  notes.search_assignee(query)
                 else
-                  context[:site_community].notes.search(query).where(flagged: true)
+                  notes.search(query)
                 end
         tasks.pluck(:id).uniq
       end
