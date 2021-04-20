@@ -18,13 +18,13 @@ import CancelIcon from '@material-ui/icons/Cancel';
 import { Link, useHistory } from 'react-router-dom';
 
 import { useMutation } from 'react-apollo';
-import { Spinner } from '../../shared/Loading';
-import { UserChip } from '../UserChip';
-import DateContainer, { dateToString, dateTimeToString } from '../DateContainer';
-import { removeNewLines, sanitizeText } from '../../utils/helpers';
+import { Spinner } from '../../../shared/Loading';
+import { UserChip } from './UserChip';
+import DateContainer, { dateToString, dateTimeToString } from '../../../components/DateContainer';
+import { removeNewLines, sanitizeText } from '../../../utils/helpers';
 import RemindMeLaterMenu from './RemindMeLaterMenu';
-import { TaskReminder } from '../../graphql/mutations';
-import MessageAlert from '../MessageAlert';
+import { TaskReminder } from '../../../graphql/mutations';
+import MessageAlert from '../../../components/MessageAlert';
 
 export default function Task({
   note,

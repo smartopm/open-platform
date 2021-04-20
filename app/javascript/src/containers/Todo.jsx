@@ -2,7 +2,7 @@ import React, { useState, useContext } from 'react'
 import { useMutation } from 'react-apollo'
 import { useLocation } from 'react-router'
 import { UpdateNote } from '../graphql/mutations'
-import TodoList from '../components/Notes/TodoList'
+import TodoList from '../modules/Tasks/Components/TodoList'
 import { Context as AuthStateContext } from './Provider/AuthStateProvider'
 
 // eslint-disable-next-line react/prop-types

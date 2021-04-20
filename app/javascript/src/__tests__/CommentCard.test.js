@@ -2,7 +2,7 @@ import React from 'react'
 import { render, fireEvent } from '@testing-library/react'
 import { BrowserRouter } from 'react-router-dom/'
 import { MockedProvider } from '@apollo/react-testing'
-import CommentCard from '../components/Notes/CommentCard'
+import CommentCard from '../modules/Tasks/Components/CommentCard'
 import '@testing-library/jest-dom/extend-expect'
 
 describe('Comment Card Component', () => {

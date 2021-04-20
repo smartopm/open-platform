@@ -2,8 +2,8 @@ import React from 'react'
 import { Grid, Typography } from '@material-ui/core'
 import PropTypes from 'prop-types'
 import TaskStatCard from './TaskStatCard'
-import CenteredContent from '../CenteredContent'
-import { propAccessor } from '../../utils/helpers'
+import CenteredContent from '../../../components/CenteredContent'
+import { propAccessor } from '../../../utils/helpers'
 
 const tiles = {
   myOpenTasks: 'My Tasks',

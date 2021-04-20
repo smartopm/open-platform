@@ -11,15 +11,15 @@ import {
   InputLabel,
   FormControl,
 } from '@material-ui/core'
-import DatePickerDialog from '../DatePickerDialog'
 import { css } from 'aphrodite'
 import { useMutation } from 'react-apollo'
 import PropTypes from 'prop-types'
-import { CreateNote } from '../../graphql/mutations'
-import { discussStyles } from '../Discussion/Discuss'
-import { UserChip } from '../UserChip'
-import { NotesCategories } from '../../utils/constants'
-import UserSearch from '../User/UserSearch'
+import { CreateNote } from '../../../graphql/mutations'
+import DatePickerDialog from '../../../components/DatePickerDialog'
+import { discussStyles } from '../../../components/Discussion/Discuss'
+import { UserChip } from './UserChip'
+import { NotesCategories } from '../../../utils/constants'
+import UserSearch from '../../../components/User/UserSearch'
 
 const initialData = {
   user: '',

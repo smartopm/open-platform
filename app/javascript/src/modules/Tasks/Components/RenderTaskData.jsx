@@ -3,8 +3,8 @@ import { Checkbox, Grid, IconButton, Menu, MenuItem, Typography } from '@materia
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { removeNewLines, sanitizeText } from '../../utils/helpers';
-import DateContainer, { dateToString } from '../DateContainer';
+import { removeNewLines, sanitizeText } from '../../../utils/helpers';
+import DateContainer, { dateToString } from '../../../components/DateContainer';
 
 // TODO: Put in a more shareable directory
 export function LinkToUser({ userId, name }) {

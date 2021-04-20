@@ -20,7 +20,7 @@ import {
 } from '@material-ui/core';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import DatePickerDialog from '../../components/DatePickerDialog';
-import { UserChip } from '../../components/UserChip';
+import { UserChip } from '../../modules/Tasks/Components/UserChip';
 import colors from '../../themes/nkwashi/colors';
 import {
   Events,

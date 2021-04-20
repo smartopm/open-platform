@@ -8,7 +8,7 @@ import TextField from '@material-ui/core/TextField';
 import { useMutation } from 'react-apollo'
 import Button from '@material-ui/core/Button';
 import CommentCard from './CommentCard'
-import { TaskComment } from '../../graphql/mutations'
+import { TaskComment } from '../../../graphql/mutations'
 
 export default function CommentTextField({ data, refetch, authState, taskId }) {
   const classes = useStyles();

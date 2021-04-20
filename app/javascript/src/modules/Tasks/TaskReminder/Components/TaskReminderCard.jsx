@@ -12,10 +12,10 @@ import { useHistory } from 'react-router-dom';
 import EventNoteIcon from '@material-ui/icons/EventNote';
 import Typography from '@material-ui/core/Typography';
 import { AssignedTaskQuery } from '../graphql/assignTaskQuery'
-import { Spinner } from '../../../shared/Loading';
-import { dateToString } from '../../../utils/dateutil';
-import CenteredContent from '../../../components/CenteredContent';
-import { formatError } from '../../../utils/helpers';
+import { Spinner } from '../../../../shared/Loading';
+import { dateToString } from '../../../../utils/dateutil';
+import CenteredContent from '../../../../components/CenteredContent';
+import { formatError, removeNewLines, sanitizeText } from '../../../../utils/helpers';
 
 export default function TaskReminderCard({ id }) {
   const matches = useMediaQuery('(max-width:600px)')
@@ -42,8 +42,8 @@ export default function TaskReminderCard({ id }) {
       {loading ? <Spinner /> : (
         <div>
           <div style={{display: 'flex'}}>
-            <Typography variant='h5' style={{margin: '20px'}}>Task Reminders</Typography>
-            <TrendingFlatIcon style={{marginLeft: 'auto', order: 2, marginTop: '20px', marginRight: '20px'}} />
+            <Typography variant='h5' style={{margin: '50px 0 26px 79px'}}>Task Reminders</Typography>
+            <TrendingFlatIcon style={{marginLeft: 'auto', order: 2, marginTop: '50px', marginRight: '80px'}} />
           </div>
           <div className={classes.root}>
             <GridList className={classes.gridList} cols={matches ? 1 : 3}>
@@ -52,13 +52,20 @@ export default function TaskReminderCard({ id }) {
                   <div className={classes.gridTile} onClick={() => history.push('/my_tasks')}>
                     <div className={classes.date} style={checkDate(tile.dueDate) ? {color: 'red'} : null}>
                       <EventNoteIcon style={{marginRight: '10px'}} />
-                      <Typography>
+                      <Typography variant='body2'>
                         Due
                         {' '}
                         {dateToString(tile.dueDate)}
                       </Typography>
                     </div>
-                    <Typography align='justify' variant='body2' data-testid='body'>
+                    <Typography align='justify' variant='caption' data-testid='body'>
+                      <span
+                        style={{ whiteSpace: 'pre-line' }}
+                        // eslint-disable-next-line react/no-danger
+                        dangerouslySetInnerHTML={{
+                        __html: sanitizeText(removeNewLines(tile.body))
+                        }}
+                      />
                       {tile.body}
                     </Typography>
                   </div>
@@ -78,17 +85,19 @@ const useStyles = makeStyles((theme) => ({
     flexWrap: 'wrap',
     justifyContent: 'space-around',
     overflow: 'hidden',
+    marginLeft: '79px'
   },
   gridList: {
     flexWrap: 'nowrap'
   },
   gridTile: {
-    border: '2px solid #ECECEC',
-    padding: '10px',
+    border: '2px solid #EBEBEB',
+    padding: '20px',
     backgroundColor: theme.palette.background.paper,
-    height: '150px',
+    height: '175px',
     cursor: 'pointer',
-    boxShadow: '0 0 3px #ccc'
+    boxShadow: '0 0 3px #ccc',
+    borderRadius: '8px'
   },
   date: {
     display: 'flex', 

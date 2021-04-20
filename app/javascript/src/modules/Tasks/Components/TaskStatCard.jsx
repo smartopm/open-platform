@@ -1,7 +1,7 @@
 import React from 'react'
 import { Card, CardContent, Typography } from '@material-ui/core'
 import PropTypes from 'prop-types'
-import colors from '../../themes/nkwashi/colors'
+import colors from '../../../themes/nkwashi/colors'
 
 export default function AnalyticsCard({ count, title, filter, isCurrent }) {
   const { lightGray, jungleMist } = colors

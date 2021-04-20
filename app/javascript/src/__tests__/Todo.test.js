@@ -1,9 +1,8 @@
-/* eslint-disable */
 import React from 'react'
 import { MockedProvider } from '@apollo/react-testing'
 import { BrowserRouter } from 'react-router-dom/cjs/react-router-dom.min'
 import { render, fireEvent } from '@testing-library/react'
-import TodoList from '../components/Notes/TodoList'
+import TodoList from '../modules/Tasks/Components/TodoList'
 import { flaggedNotes, TaskStatsQuery } from '../graphql/queries'
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn())
@@ -69,7 +68,7 @@ describe('Test the Todo page', () => {
     const container = render(
       <MockedProvider mocks={mocks} addTypename={false}>
         <BrowserRouter>
-          <TodoList {...props}/>
+          <TodoList {...props} />
         </BrowserRouter>
       </MockedProvider>
     )
@@ -86,7 +85,7 @@ describe('Test the Todo page', () => {
     const container = render(
       <MockedProvider mocks={mocks} addTypename={false}>
         <BrowserRouter>
-          <TodoList {...props}/>
+          <TodoList {...props} />
         </BrowserRouter>
       </MockedProvider>
     )

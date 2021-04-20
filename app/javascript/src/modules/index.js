@@ -35,5 +35,5 @@ export default [
   Portal,
   ActionFlows,
   TimeCard,
-  Logout
+  Logout,
 ];

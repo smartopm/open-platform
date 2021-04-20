@@ -1,6 +1,6 @@
 import React from 'react'
 import { render } from '@testing-library/react'
-import TaskDashboard from '../components/Notes/TaskDashboard'
+import TaskDashboard from '../modules/Tasks/Components/TaskDashboard'
 import '@testing-library/jest-dom/extend-expect'
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn())

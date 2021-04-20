@@ -5,7 +5,7 @@ import { MockedProvider } from '@apollo/react-testing';
 import { BrowserRouter } from 'react-router-dom';
 import TaskReminderCard from '../Components/TaskReminderCard';
 import { AssignedTaskQuery } from '../graphql/assignTaskQuery';
-import { Spinner } from '../../../shared/Loading';
+import { Spinner } from '../../../../shared/Loading';
 
 describe('Task Reminder Component', () => {
   const mock = [{
