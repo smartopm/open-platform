@@ -99,6 +99,7 @@ export default function TodoList({
   };
 
   const [selectedTasks, setSelected] = useState([]);
+  const [isAllChecked, setIsAllChecked] = useState(false);
 
   function handleChange(selectedId) {
     let currentTasks = [];
@@ -375,10 +376,16 @@ export default function TodoList({
   };
 
   function setSelectAllOption(){
-    setCheckOptions('all')
-    setSelected(taskListIds)
+    if(taskListIds.length === selectedTasks.length){
+      setCheckOptions('none')
+      setSelected([])
+      setIsAllChecked(false)
+    } else {
+      setCheckOptions('all_on_the_page')
+      setSelected(taskListIds)
+      setIsAllChecked(true)
+    }
   }
-
 
   if (tasksError) return <ErrorPage error={tasksError.message} />;
 
@@ -535,7 +542,7 @@ export default function TodoList({
                 <Grid item style={{ display: 'flex' }}>
                   <Grid>
                     <Checkbox
-                      checked={!!selectedTasks}
+                      checked={isAllChecked}
                       onChange={setSelectAllOption}
                       name="select_all"
                       data-testid="select_all"
