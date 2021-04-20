@@ -109,7 +109,7 @@ export default function TodoList({
       setSelected([...selectedTasks, selectedId]);
     }
   }
-  console.log(selectedTasks)
+  
 
   function handleTaskDetails({ id, comment }) {
     history.push(`/tasks/${id}${comment ? '?comment=true' : ''}`);
@@ -134,6 +134,11 @@ export default function TodoList({
     : location === 'my_tasks'
     ? `assignees: '${currentUser.name}'`
     : '';
+  
+   const joinedTaskQuery =  `${qr} ${
+    // eslint-disable-next-line no-nested-ternary
+    filterQuery ? `AND ${filterQuery}` : searchInputQuery ? `AND ${searchInputQuery}` : ''
+  }`
   const [
     loadTasks,
     { loading: isLoading, error: tasksError, data, refetch, called }
@@ -141,10 +146,7 @@ export default function TodoList({
     variables: {
       offset,
       limit,
-      query: `${qr} ${
-        // eslint-disable-next-line no-nested-ternary
-        filterQuery ? `AND ${filterQuery}` : searchInputQuery ? `AND ${searchInputQuery}` : ''
-      }`
+      query: joinedTaskQuery
     },
     fetchPolicy: 'network-only'
   });
@@ -154,6 +156,8 @@ export default function TodoList({
   function openModal() {
     setModalOpen(!open);
   }
+
+  console.log(joinedTaskQuery)
 
   useEffect(() => {
     // only fetch admins when the  modal is opened or when the select is triggered
@@ -390,18 +394,12 @@ export default function TodoList({
     const option = event.target.value
     switch (option) {
       case 'all':
-        // fetch everything and mark checkbox as checked
-        setSelected([])
-        break;
+       return setSelected([])
       case 'all_on_the_page':
-        // mark checkbox as checked and everything on the page
-        setSelected(taskListIds)
-      break
+       return setSelected(taskListIds)
       default:
-        setSelected([])
-        break;
+        return setSelected([])
     }
-    setCheckOptions(option)
   }
 
   if (tasksError) return <ErrorPage error={tasksError.message} />;
