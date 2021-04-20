@@ -33,7 +33,7 @@ RSpec.describe Mutations::Transaction::WalletTransactionCreate do
             walletTransaction {
               id
               settledInvoices
-              currentPlanBalance
+              currentPendingPlotBalance
             }
           }
         }
@@ -59,7 +59,7 @@ RSpec.describe Mutations::Transaction::WalletTransactionCreate do
                'data', 'walletTransactionCreate', 'walletTransaction', 'settledInvoices'
              )).to_not be_nil
       expect(result.dig(
-               'data', 'walletTransactionCreate', 'walletTransaction', 'currentPlanBalance'
+               'data', 'walletTransactionCreate', 'walletTransaction', 'currentPendingPlotBalance'
              )).to eql(5000.0)
       expect(user.wallet.balance).to eql 100.0
       expect(result['errors']).to be_nil

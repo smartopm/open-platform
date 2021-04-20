@@ -828,7 +828,7 @@ export const PaymentCreate = gql`
         currentWalletBalance
         createdAt
         settledInvoices
-        currentPlanBalance
+        currentPendingPlotBalance
         user {
           id
           name

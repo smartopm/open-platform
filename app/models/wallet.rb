@@ -71,7 +71,7 @@ class Wallet < ApplicationRecord
 
     transaction = WalletTransaction.find(user_transaction_id)
     transaction.settled_invoices = settled_invoices
-    transaction.current_plan_balance = transaction.payment_plan.pending_balance
+    transaction.current_pending_plot_balance = transaction.payment_plan.pending_balance
     transaction.save!
   end
   # rubocop:enable Metrics/MethodLength

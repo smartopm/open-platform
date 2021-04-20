@@ -677,7 +677,7 @@ ActiveRecord::Schema.define(version: 2021_04_20_083520) do
     t.datetime "originally_created_at"
     t.uuid "payment_plan_id"
     t.json "settled_invoices"
-    t.decimal "current_plan_balance", precision: 11, scale: 2
+    t.decimal "current_pending_plot_balance", precision: 11, scale: 2
     t.index ["community_id"], name: "index_wallet_transactions_on_community_id"
     t.index ["depositor_id"], name: "index_wallet_transactions_on_depositor_id"
     t.index ["payment_plan_id"], name: "index_wallet_transactions_on_payment_plan_id"

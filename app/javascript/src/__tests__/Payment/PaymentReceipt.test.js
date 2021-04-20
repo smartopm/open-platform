@@ -12,7 +12,7 @@ describe('It should test the payment receipt modal component', () => {
     amount: 1000,
     source: 'cash',
     currentWalletBalance: 100,
-    currentPlanBalance: 9000,
+    currentPendingPlotBalance: 9000,
     settledInvoices: [
       {
         id: 'gey617',
