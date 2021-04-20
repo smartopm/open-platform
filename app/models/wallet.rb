@@ -64,7 +64,7 @@ class Wallet < ApplicationRecord
 
       bal = invoice.land_parcel.payment_plan&.plot_balance
       payment_amount = invoice.pending_amount > bal ? bal : invoice.pending_amount
-      settled_invoices << invoice
+      settled_invoices << invoice_object(invoice, payment_amount)
       settle_from_plot_balance(invoice, payment_amount, user_transaction_id, false)
     end
 
@@ -83,5 +83,17 @@ class Wallet < ApplicationRecord
                                        community_id: user.community_id,
                                        payment_plan: inv.payment_plan,
                                      })
+  end
+
+  private
+
+  def invoice_object(invoice, payment_amount)
+    {
+      id: invoice.id,
+      due_date: invoice.due_date,
+      amount_owed: invoice.pending_amount,
+      amount_paid: payment_amount,
+      amount_remaining: (invoice.pending_amount - payment_amount)
+    }
   end
 end

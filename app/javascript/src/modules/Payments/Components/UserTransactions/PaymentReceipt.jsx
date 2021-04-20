@@ -19,37 +19,12 @@ export default function PaymentReceipt({ paymentData, open, handleClose, userDat
   console.log('payData', paymentData);
   const signRef = useRef(null);
 
-  const invoices = paymentData?.settledInvoices?.map(inv => {
-    return {
-      owed: inv.amount,
-      paid: amountPaid(inv),
-      remaining: inv.pending_amount,
-      id: inv.id,
-      invoiceNumber: inv.invoice_number,
-      dueDate: inv.due_date
-    };
-  });
-
-  if (allAmountPaid() > paymentData.amount) {
-    const settledBalance = allAmountPaid() - paymentData.amount;
-    const settledIndex = invoices.findIndex(obj => obj.remaining === 0);
-    if (settledIndex >= 0) {
-      invoices[`${settledIndex}`].owed -= settledBalance;
-      invoices[`${settledIndex}`].paid -= settledBalance;
-    }
-  }
-
   function unAllocatedFunds() {
-    const clearedInvoiceAmount = invoices?.reduce((sum, { paid }) => sum + paid, 0);
+    const clearedInvoiceAmount = paymentData?.settledInvoices?.reduce(
+      (sum, inv) => sum + Number(inv.amount_paid),
+      0
+    );
     return paymentData.amount - clearedInvoiceAmount;
-  }
-
-  function amountPaid(invoice) {
-    return invoice?.amount - invoice?.pending_amount;
-  }
-
-  function allAmountPaid() {
-    return paymentData?.settledInvoices?.reduce((sum, inv) => sum + amountPaid(inv), 0);
   }
 
   return (
@@ -126,16 +101,20 @@ export default function PaymentReceipt({ paymentData, open, handleClose, userDat
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      {invoices?.map(inv => (
+                      {paymentData?.settledInvoices?.map(inv => (
                         <TableRow key={inv.id}>
                           <TableCell component="th" scope="row">
                             {inv.invoiceNumber}
                           </TableCell>
-                          <TableCell align="right">{dateToString(inv.dueDate)}</TableCell>
-                          <TableCell align="right">{formatMoney(currencyData, inv.owed)}</TableCell>
-                          <TableCell align="right">{formatMoney(currencyData, inv.paid)}</TableCell>
+                          <TableCell align="right">{dateToString(inv.due_date)}</TableCell>
                           <TableCell align="right">
-                            {formatMoney(currencyData, inv.remaining)}
+                            {formatMoney(currencyData, inv.amount_owed)}
+                          </TableCell>
+                          <TableCell align="right">
+                            {formatMoney(currencyData, inv.amount_paid)}
+                          </TableCell>
+                          <TableCell align="right">
+                            {formatMoney(currencyData, inv.amount_remaining)}
                           </TableCell>
                         </TableRow>
                       ))}
@@ -164,7 +143,7 @@ export default function PaymentReceipt({ paymentData, open, handleClose, userDat
 
               {paymentData?.source === 'cheque/cashier_cheque' && (
                 <div style={{ marginTop: '60px' }}>
-                  <b style={{ fontSize: '30px' }}>Account Details</b>
+                  <b style={{ fontSize: '16px' }}>Account Details</b> 
                   {' '}
                   <br />
                   <Grid container spacing={1}>
@@ -247,7 +226,7 @@ PaymentReceipt.propTypes = {
         parcelNumber: PropTypes.string
       })
     }),
-    settledInvoices: PropTypes.arrayOf(PropTypes.object),
+    settledInvoices: PropTypes.arrayOf(PropTypes.object)
   }),
   userData: PropTypes.shape({
     name: PropTypes.string
