@@ -104,7 +104,6 @@ export default function TodoList({
   const [bulkUpdating, setBulkUpdating] = useState(false)
 
   function handleChange(selectedId) {
-    // let currentTasks = [];
     if (selectedTasks.includes(selectedId)) {
       const currentTasks = selectedTasks.filter(id => id !== selectedId);
       setSelected([...currentTasks]);
@@ -419,6 +418,7 @@ export default function TodoList({
      })
     .catch(err => {
       setBulkUpdating(false)
+      // handle errors here
       console.log(err.message)
     })
   }
