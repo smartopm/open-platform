@@ -33,7 +33,7 @@ import Task from './Task';
 import TaskDashboard from './TaskDashboard';
 import { futureDateAndTimeToString } from '../DateContainer';
 import DatePickerDialog from '../DatePickerDialog';
-import Loading from '../../shared/Loading';
+import Loading, { Spinner } from '../../shared/Loading';
 import QueryBuilder from '../QueryBuilder';
 import { ModalDialog } from '../Dialog';
 import { formatError, pluralizeCount, propAccessor } from '../../utils/helpers';
@@ -101,6 +101,7 @@ export default function TodoList({
   };
 
   const [selectedTasks, setSelected] = useState([]);
+  const [bulkUpdating, setBulkUpdating] = useState(false)
 
   function handleChange(selectedId) {
     // let currentTasks = [];
@@ -405,6 +406,7 @@ export default function TodoList({
 
   function handleBulkUpdate(){
     // handle update here
+    setBulkUpdating(true)
     bulkUpdate({ variables: {
       ids: selectedTasks,
       completed: true,
@@ -413,8 +415,12 @@ export default function TodoList({
     .then(() => { 
       refetch()
       taskCountData.refetch()
+      setBulkUpdating(false)
      })
-    .catch(err => console.log(err.message))
+    .catch(err => {
+      setBulkUpdating(false)
+      console.log(err.message)
+    })
   }
 
   if (tasksError) return <ErrorPage error={tasksError.message} />;
@@ -601,14 +607,19 @@ export default function TodoList({
 
               {(checkedOptions !== 'none' || selectedTasks.length > 0) && (
               <Grid item style={{ marginLeft: '20px', marginTop: '-4px' }}>
-                <Button
-                  onClick={handleBulkUpdate}
-                  color="primary"
-                  startIcon={<CheckCircleIcon />}
-                  style={{ textTransform: 'none' }}
-                >
-                  Mark as Complete
-                </Button>
+                {
+                  bulkUpdating ? <Spinner /> : (
+                    <Button
+                      onClick={handleBulkUpdate}
+                      color="primary"
+                      startIcon={<CheckCircleIcon />}
+                      style={{ textTransform: 'none' }}
+                      disabled={bulkUpdating}
+                    >
+                      Mark as Complete
+                    </Button>
+                  )
+                }
               </Grid>
             )}
 
