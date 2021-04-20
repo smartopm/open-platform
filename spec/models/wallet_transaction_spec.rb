@@ -15,6 +15,7 @@ RSpec.describe WalletTransaction, type: :model do
     it { is_expected.to have_db_column(:destination).of_type(:string) }
     it { is_expected.to have_db_column(:bank_name).of_type(:string) }
     it { is_expected.to have_db_column(:cheque_number).of_type(:string) }
+    it { is_expected.to have_db_column(:settled_invoices).of_type(:json) }
   end
 
   describe 'validations' do

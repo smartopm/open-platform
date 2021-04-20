@@ -16,7 +16,6 @@ import Logo from '../../../../../../assets/images/logo.png';
 import { FullScreenDialog } from '../../../../components/Dialog';
 
 export default function PaymentReceipt({ paymentData, open, handleClose, userData, currencyData }) {
-  console.log('payData', paymentData);
   const signRef = useRef(null);
 
   function unAllocatedFunds() {
@@ -51,7 +50,7 @@ export default function PaymentReceipt({ paymentData, open, handleClose, userDat
                   <Grid item xs={2} style={{ color: '#9B9B9B' }}>
                     Client Name
                   </Grid>
-                  <Grid item xs={2}>
+                  <Grid item xs={2} data-testid="client-name">
                     {userData.name}
                   </Grid>
                 </Grid>
@@ -59,7 +58,7 @@ export default function PaymentReceipt({ paymentData, open, handleClose, userDat
                   <Grid item xs={2} style={{ color: '#9B9B9B' }}>
                     Total Amount Paid
                   </Grid>
-                  <Grid item xs={2}>
+                  <Grid item xs={2} data-testid="total-amount-paid">
                     {formatMoney(currencyData, paymentData.amount)}
                   </Grid>
                 </Grid>
@@ -67,7 +66,7 @@ export default function PaymentReceipt({ paymentData, open, handleClose, userDat
                   <Grid item xs={2} style={{ color: '#9B9B9B' }}>
                     Mode
                   </Grid>
-                  <Grid item xs={2}>
+                  <Grid item xs={2} data-testid="payment-mode">
                     {paymentData.source}
                   </Grid>
                 </Grid>
@@ -83,7 +82,7 @@ export default function PaymentReceipt({ paymentData, open, handleClose, userDat
                   <Grid item xs={2} style={{ color: '#9B9B9B' }}>
                     Plan Property
                   </Grid>
-                  <Grid item xs={2}>
+                  <Grid item xs={2} data-testid="plan-property">
                     {paymentData.paymentPlan?.landParcel?.parcelNumber}
                   </Grid>
                 </Grid>
@@ -103,17 +102,19 @@ export default function PaymentReceipt({ paymentData, open, handleClose, userDat
                     <TableBody>
                       {paymentData?.settledInvoices?.map(inv => (
                         <TableRow key={inv.id}>
-                          <TableCell component="th" scope="row">
-                            {inv.invoiceNumber}
+                          <TableCell component="th" scope="row" data-testid="invoice-number">
+                            {inv.invoice_number}
                           </TableCell>
-                          <TableCell align="right">{dateToString(inv.due_date)}</TableCell>
-                          <TableCell align="right">
+                          <TableCell align="right" data-testid="due-date">
+                            {dateToString(inv.due_date)}
+                          </TableCell>
+                          <TableCell align="right" data-testid="amount-owed">
                             {formatMoney(currencyData, inv.amount_owed)}
                           </TableCell>
-                          <TableCell align="right">
+                          <TableCell align="right" data-testid="amount-paid">
                             {formatMoney(currencyData, inv.amount_paid)}
                           </TableCell>
-                          <TableCell align="right">
+                          <TableCell align="right" data-testid="amount-remaining">
                             {formatMoney(currencyData, inv.amount_remaining)}
                           </TableCell>
                         </TableRow>
@@ -127,7 +128,7 @@ export default function PaymentReceipt({ paymentData, open, handleClose, userDat
                 <Grid item xs={2} style={{ color: '#9B9B9B' }}>
                   Plan Balance
                 </Grid>
-                <Grid item xs={2}>
+                <Grid item xs={2} data-testid="plan-balance">
                   {formatMoney(currencyData, paymentData.paymentPlan?.pendingBalance)}
                 </Grid>
               </Grid>
@@ -136,7 +137,7 @@ export default function PaymentReceipt({ paymentData, open, handleClose, userDat
                 <Grid item xs={2} style={{ color: '#9B9B9B' }}>
                   Unallocated Funds
                 </Grid>
-                <Grid item xs={2}>
+                <Grid item xs={2} data-testid="unallocated-funds">
                   {formatMoney(currencyData, unAllocatedFunds())}
                 </Grid>
               </Grid>
@@ -170,7 +171,7 @@ export default function PaymentReceipt({ paymentData, open, handleClose, userDat
                   <Grid item xs={2} style={{ color: '#9B9B9B' }}>
                     Cashier Name
                   </Grid>
-                  <Grid item xs={2}>
+                  <Grid item xs={2} data-testid="cashier-name">
                     {paymentData?.depositor?.name || '-'}
                   </Grid>
                 </Grid>

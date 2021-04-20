@@ -90,10 +90,11 @@ class Wallet < ApplicationRecord
   def invoice_object(invoice, payment_amount)
     {
       id: invoice.id,
+      invoice_number: invoice.invoice_number,
       due_date: invoice.due_date,
       amount_owed: invoice.pending_amount,
       amount_paid: payment_amount,
-      amount_remaining: (invoice.pending_amount - payment_amount)
+      amount_remaining: (invoice.pending_amount - payment_amount),
     }
   end
 end

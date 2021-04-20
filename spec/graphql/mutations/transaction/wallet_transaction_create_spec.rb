@@ -18,7 +18,7 @@ RSpec.describe Mutations::Transaction::WalletTransactionCreate do
           $userId: ID!,
           $amount: Float!,
           $source: String!,
-          $landParcelId: ID!    
+          $landParcelId: ID!
         ) {
           walletTransactionCreate(
             userId: $userId,
@@ -28,6 +28,7 @@ RSpec.describe Mutations::Transaction::WalletTransactionCreate do
           ){
             walletTransaction {
               id
+              settledInvoices
             }
           }
         }
@@ -47,7 +48,11 @@ RSpec.describe Mutations::Transaction::WalletTransactionCreate do
                                                    current_user: admin,
                                                    site_community: user.community,
                                                  }).as_json
+
       expect(result.dig('data', 'walletTransactionCreate', 'walletTransaction', 'id')).not_to be_nil
+      expect(result.dig(
+               'data', 'walletTransactionCreate', 'walletTransaction', 'settledInvoices'
+             )).to_not be_nil
       expect(user.wallet.balance).to eql 100.0
       expect(result['errors']).to be_nil
     end
