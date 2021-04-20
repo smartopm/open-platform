@@ -99,17 +99,17 @@ export default function TodoList({
   };
 
   const [selectedTasks, setSelected] = useState([]);
-  const [isAllChecked, setIsAllChecked] = useState(false);
 
   function handleChange(selectedId) {
-    let currentTasks = [];
+    // let currentTasks = [];
     if (selectedTasks.includes(selectedId)) {
-      currentTasks = selectedTasks.filter(id => id !== selectedId);
+      const currentTasks = selectedTasks.filter(id => id !== selectedId);
       setSelected([...currentTasks]);
     } else {
       setSelected([...selectedTasks, selectedId]);
     }
   }
+  console.log(selectedTasks)
 
   function handleTaskDetails({ id, comment }) {
     history.push(`/tasks/${id}${comment ? '?comment=true' : ''}`);
@@ -379,12 +379,29 @@ export default function TodoList({
     if(taskListIds.length === selectedTasks.length){
       setCheckOptions('none')
       setSelected([])
-      setIsAllChecked(false)
     } else {
       setCheckOptions('all_on_the_page')
       setSelected(taskListIds)
-      setIsAllChecked(true)
     }
+  }
+
+  function handleCheckOptions(event){
+    setCheckOptions(event.target.value)
+    const option = event.target.value
+    switch (option) {
+      case 'all':
+        // fetch everything and mark checkbox as checked
+        setSelected([])
+        break;
+      case 'all_on_the_page':
+        // mark checkbox as checked and everything on the page
+        setSelected(taskListIds)
+      break
+      default:
+        setSelected([])
+        break;
+    }
+    setCheckOptions(option)
   }
 
   if (tasksError) return <ErrorPage error={tasksError.message} />;
@@ -542,7 +559,7 @@ export default function TodoList({
                 <Grid item style={{ display: 'flex' }}>
                   <Grid>
                     <Checkbox
-                      checked={isAllChecked}
+                      checked={selectedTasks.length === taskListIds.length}
                       onChange={setSelectAllOption}
                       name="select_all"
                       data-testid="select_all"
@@ -556,7 +573,7 @@ export default function TodoList({
                       labelId="user-action-select"
                       id="user-action-select"
                       value={checkedOptions}
-                      onChange={event => setCheckOptions(event.target.value)}
+                      onChange={handleCheckOptions}
                       style={{ height: '23px', marginLeft: '10px' }}
                     >
                       <MenuItem value="all">All</MenuItem>
