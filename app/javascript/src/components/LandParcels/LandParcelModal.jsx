@@ -34,6 +34,7 @@ export default function LandParcelModal({
   landParcels,
   confirmMergeOpen,
   handleSubmitMerge,
+  propertyUpdateLoading,
 }) {
   const classes = useStyles();
   const [parcelNumber, setParcelNumber] = useState('');
@@ -338,6 +339,7 @@ export default function LandParcelModal({
         dialogHeader={modalType === 'new' ? 'New Property' : `Property ${landParcel.parcelNumber}`}
         handleBatchFilter={handleParcelSubmit}
         saveAction={saveActionText()}
+        actionLoading={propertyUpdateLoading}
       >
         <StyledTabs value={tabValue} onChange={handleChange} aria-label="land parcel tabs">
           <StyledTab label="Details" value="Details" />
@@ -686,6 +688,7 @@ LandParcelModal.defaultProps = {
   landParcels: [],
   confirmMergeOpen: false,
   handleSubmitMerge: () => {},
+  propertyUpdateLoading: false,
 };
 
 LandParcelModal.propTypes = {
@@ -709,4 +712,5 @@ LandParcelModal.propTypes = {
   })),
   confirmMergeOpen: PropTypes.bool,
   handleSubmitMerge: PropTypes.func,
+  propertyUpdateLoading: PropTypes.bool,
 };
