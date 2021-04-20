@@ -1197,6 +1197,7 @@ export const TransactionQuery = gql`
         status
         id
         settledInvoices
+        currentPlanBalance
         community {
           id
           name
@@ -1212,7 +1213,6 @@ export const TransactionQuery = gql`
         }
         paymentPlan {
           id
-          pendingBalance
           landParcel {
             id
             parcelNumber

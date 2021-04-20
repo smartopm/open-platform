@@ -828,6 +828,7 @@ export const PaymentCreate = gql`
         currentWalletBalance
         createdAt
         settledInvoices
+        currentPlanBalance
         user {
           id
           name
@@ -837,8 +838,9 @@ export const PaymentCreate = gql`
           name
         }
         paymentPlan {
-          pendingBalance
+          id
           landParcel {
+            id
             parcelNumber
           }
         }

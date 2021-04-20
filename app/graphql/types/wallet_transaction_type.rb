@@ -12,6 +12,7 @@ module Types
     field :cheque_number, String, null: true
     field :receipt_number, String, null: true
     field :transaction_number, String, null: true
+    field :current_plan_balance, Float, null: true
     field :current_wallet_balance, Float, null: true
     field :user, Types::UserType, null: false
     field :depositor, Types::UserType, null: true

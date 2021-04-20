@@ -12,6 +12,7 @@ describe('It should test the payment receipt modal component', () => {
     amount: 1000,
     source: 'cash',
     currentWalletBalance: 100,
+    currentPlanBalance: 9000,
     settledInvoices: [
       {
         id: 'gey617',
@@ -29,7 +30,6 @@ describe('It should test the payment receipt modal component', () => {
       name: 'some name'
     },
     paymentPlan: {
-      pendingBalance: 9000,
       landParcel: {
         parcelNumber: 'P4444'
       }

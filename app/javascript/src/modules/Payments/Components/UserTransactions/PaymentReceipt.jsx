@@ -133,7 +133,7 @@ export default function PaymentReceipt({ paymentData, open, handleClose, userDat
                   Plan Balance
                 </Grid>
                 <Grid item xs={2} data-testid="plan-balance">
-                  {formatMoney(currencyData, paymentData.paymentPlan?.pendingBalance)}
+                  {formatMoney(currencyData, paymentData.currentPlanBalance)}
                 </Grid>
               </Grid>
 
@@ -219,6 +219,7 @@ PaymentReceipt.propTypes = {
     chequeNumber: PropTypes.string,
     transactionNumber: PropTypes.string,
     createdAt: PropTypes.string,
+    currentPlanBalance: PropTypes.string,
     community: PropTypes.shape({
       name: PropTypes.string,
       logoUrl: PropTypes.string
