@@ -17,6 +17,7 @@ import {
 } from '@material-ui/core';
 import FilterListIcon from '@material-ui/icons/FilterList';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import MaterialConfig from 'react-awesome-query-builder/lib/config/material';
 import { StyleSheet, css } from 'aphrodite';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
@@ -41,6 +42,7 @@ import DataList from '../../shared/list/DataList';
 import ListHeaders from '../../shared/list/ListHeader';
 import renderTaskData from './RenderTaskData';
 import MessageAlert from '../MessageAlert';
+import { TaskBulkUpdateMutation } from '../../graphql/mutations/task_mutation';
 
 const taskHeader = [
   { title: 'Select', col: 1 },
@@ -152,12 +154,11 @@ export default function TodoList({
   });
   const [assignUserToNote] = useMutation(AssignUser);
   const [taskUpdate] = useMutation(UpdateNote)
+  const [bulkUpdate] = useMutation(TaskBulkUpdateMutation)
   const taskListIds = data?.flaggedNotes.map(task => task.id)
   function openModal() {
     setModalOpen(!open);
   }
-
-  console.log(joinedTaskQuery)
 
   useEffect(() => {
     // only fetch admins when the  modal is opened or when the select is triggered
@@ -402,6 +403,20 @@ export default function TodoList({
     }
   }
 
+  function handleBulkUpdate(){
+    // handle update here
+    bulkUpdate({ variables: {
+      ids: selectedTasks,
+      completed: true,
+      query: joinedTaskQuery
+    }})
+    .then(() => { 
+      refetch()
+      taskCountData.refetch()
+     })
+    .catch(err => console.log(err.message))
+  }
+
   if (tasksError) return <ErrorPage error={tasksError.message} />;
 
   return (
@@ -552,7 +567,8 @@ export default function TodoList({
             </Grid>
 
             <br />
-            {
+            <Grid container>
+              {
               currentTile && (
                 <Grid item style={{ display: 'flex' }}>
                   <Grid>
@@ -582,6 +598,21 @@ export default function TodoList({
                 </Grid>
               )
             }
+
+              {(checkedOptions !== 'none' || selectedTasks.length > 0) && (
+              <Grid item style={{ marginLeft: '20px', marginTop: '-4px' }}>
+                <Button
+                  onClick={handleBulkUpdate}
+                  color="primary"
+                  startIcon={<CheckCircleIcon />}
+                  style={{ textTransform: 'none' }}
+                >
+                  Mark as Complete
+                </Button>
+              </Grid>
+            )}
+
+            </Grid>
             <br />
             {data?.flaggedNotes.length ? (
               <div>
