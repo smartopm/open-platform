@@ -842,6 +842,10 @@ export const PaymentCreate = gql`
             parcelNumber
           }
         }
+        community {
+          name
+          logoUrl
+        }
       }
     }
   }

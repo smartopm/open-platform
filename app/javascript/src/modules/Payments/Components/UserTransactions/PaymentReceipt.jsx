@@ -12,7 +12,6 @@ import Paper from '@material-ui/core/Paper';
 import SignaturePad from '../../../../components/Forms/SignaturePad';
 import { formatMoney } from '../../../../utils/helpers';
 import { dateToString } from '../../../../components/DateContainer';
-import Logo from '../../../../../../assets/images/logo.png';
 import { FullScreenDialog } from '../../../../components/Dialog';
 
 export default function PaymentReceipt({ paymentData, open, handleClose, userData, currencyData }) {
@@ -37,13 +36,18 @@ export default function PaymentReceipt({ paymentData, open, handleClose, userDat
           handleSubmit={() => window.print()}
         >
           <Container>
-            <img
-              src={Logo}
-              alt="reciept-logo"
-              height="80"
-              width="150"
-              style={{ margin: '30px auto', display: 'block' }}
-            />
+            {
+              paymentData?.community?.logoUrl ? (
+                <img
+                  src={paymentData.community.logoUrl}
+                  alt="reciept-logo"
+                  height="80"
+                  width="150"
+                  style={{ margin: '30px auto', display: 'block' }}
+                />
+              ) :
+                <h3 style={{textAlign: 'center', marginTop: '15px'}}>{paymentData?.community?.name}</h3>
+            }
             <div style={{ width: '80%', margin: '60px auto' }}>
               <div className="payment-info">
                 <Grid container spacing={1}>
@@ -144,7 +148,7 @@ export default function PaymentReceipt({ paymentData, open, handleClose, userDat
 
               {paymentData?.source === 'cheque/cashier_cheque' && (
                 <div style={{ marginTop: '60px' }}>
-                  <b style={{ fontSize: '16px' }}>Account Details</b> 
+                  <b style={{ fontSize: '16px' }}>Account Details</b>
                   {' '}
                   <br />
                   <Grid container spacing={1}>
@@ -215,6 +219,10 @@ PaymentReceipt.propTypes = {
     chequeNumber: PropTypes.string,
     transactionNumber: PropTypes.string,
     createdAt: PropTypes.string,
+    community: PropTypes.shape({
+      name: PropTypes.string,
+      logoUrl: PropTypes.string
+    }),
     user: PropTypes.shape({
       name: PropTypes.string
     }),
