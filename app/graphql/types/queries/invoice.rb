@@ -148,6 +148,18 @@ module Types::Queries::Invoice
     }
   end
 
+  def invoice_summary
+    raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user]&.admin?
+
+    invoices = context[:site_community].invoices
+    # {
+    #   late: invoices.late.count,
+    #   paid: invoices.paid.count,
+    #   in_progress: invoices.in_progress.count,
+    #   cancelled: invoices.cancelled.count,
+    # }
+  end
+
   def invoice_accounting_stats
     Invoice.invoice_stat(context[:site_community].id)
   end

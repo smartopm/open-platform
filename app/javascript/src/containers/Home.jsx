@@ -5,13 +5,14 @@ import Loading from '../shared/Loading'
 import Homepage from '../components/HomePage'
 import NewsFeed from '../components/NewsPage/NewsFeed'
 import { TaskReminder } from '../modules/Tasks'
+import { PaymentSummary } from '../modules/Payments'
 
 export default function Home() {
   const authState = useContext(AuthStateContext)
 
   if (!authState.loggedIn) return <Loading />
   return (
-    <>
+    <div style={{backgroundColor: '#FFFFFF'}}>
       <br />
       <br />
       <NewsFeed />
@@ -19,8 +20,9 @@ export default function Home() {
       {authState.user.userType === 'admin' && (
         <TaskReminder id={authState.user.id} />
       )}
+      <PaymentSummary />
       <br />
       <Homepage authState={authState} />
-    </>
+    </div>
   )
 }
