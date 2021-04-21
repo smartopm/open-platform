@@ -44,7 +44,7 @@ export default function TaskReminderCard({ id }) {
         <div>
           <div style={{display: 'flex'}}>
             <Typography variant='h5' style={matches ? {margin: '20px 0 26px 20px', fontWeight: 'bold'} : {margin: '50px 0 26px 79px', fontWeight: 'bold'}}>Task Reminders</Typography>
-            <TrendingFlatIcon style={matches ? {marginLeft: 'auto', order: 2, marginTop: '20px', marginRight: '20px'} : {marginLeft: 'auto', order: 2, marginTop: '50px', marginRight: '80px'}} />
+            <TrendingFlatIcon style={matches ? {marginLeft: 'auto', order: 2, marginTop: '20px', marginRight: '20px'} : {marginLeft: 'auto', order: 2, marginTop: '50px', marginRight: '79px'}} />
           </div>
           {data?.userTasks.length > 0 ? (
             <div className={classes.root} style={matches ? {marginLeft: '20px'} : {marginLeft: '79px'}}>

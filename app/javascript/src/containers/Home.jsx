@@ -18,10 +18,12 @@ export default function Home() {
       <NewsFeed />
       <br />
       {authState.user.userType === 'admin' && (
-        <TaskReminder id={authState.user.id} />
+        <div>
+          <PaymentSummary />
+          <br />
+          <TaskReminder id={authState.user.id} />
+        </div>
       )}
-      <PaymentSummary />
-      <br />
       <Homepage authState={authState} />
     </div>
   )

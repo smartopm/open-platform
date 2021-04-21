@@ -15,16 +15,15 @@ export default function PaymentSummaryCard({ value, title, handleClick, }){
           cursor: isNotClickable ? 'not-allowed' : 'pointer'
         }}
       >
-        <CardContent>
+        <CardContent style={{textAlign: 'center'}}>
           <Typography
-            align="center"
-            color="textSecondary"
+            color="textPrimary"
             gutterBottom
-            variant="body1"
+            variant="h3"
           >
             {value}
           </Typography>
-          <Typography align="center" color="textPrimary" variant="h5" data-testid="task_count">
+          <Typography color="textSecondary" variant="caption" data-testid="summary-card">
             {title}
           </Typography>
         </CardContent>

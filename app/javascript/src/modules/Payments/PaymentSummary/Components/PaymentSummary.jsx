@@ -7,10 +7,10 @@ import PaymentSummaryCard from './PaymentSummaryCard'
 import { propAccessor } from '../../../../utils/helpers'
 
 const invoiceCardContent = {
-  today: 'Total invoices 1 day past due',
+  today: 'Total invoices  1  day past due',
   oneWeek: 'Total invoices 1 week past due',
   oneMonth: 'Total invoices 1 month past due',
-  overOneMonth: 'Total invoices over 1 month past due'
+  overOneMonth: 'Total invoices over 1 month past'
 }
 
 export default function PaymentSummary() {
@@ -22,7 +22,7 @@ export default function PaymentSummary() {
   return (
     <div>
       {loading ? <Spinner /> : (
-        <Grid container spacing={3}>
+        <Grid container spacing={2} style={{padding: '20px 57px 20px 79px', width: '99%'}}>
           {
             Object.entries(invoiceCardContent).map(([key, val]) => (
               <Grid item xs={6} sm={3} key={key}>
