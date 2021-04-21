@@ -18,6 +18,7 @@ import {
 import FilterListIcon from '@material-ui/icons/FilterList';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
 import MaterialConfig from 'react-awesome-query-builder/lib/config/material';
 import { StyleSheet, css } from 'aphrodite';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
@@ -70,7 +71,7 @@ export default function TodoList({
   const [filterOpen, setOpenFilter] = useState(false);
   const [isAssignTaskOpen, setAutoCompleteOpen] = useState(false);
   const [loadingMutation, setMutationLoading] = useState(false);
-  const [message, setErrorMessage] = useState('');
+  const [message, setMessage] = useState('');
   const [query, setQuery] = useState('');
   const [currentTile, setCurrentTile] = useState('');
   const [displayBuilder, setDisplayBuilder] = useState('none');
@@ -101,7 +102,6 @@ export default function TodoList({
   };
   const [selectedTasks, setSelected] = useState([]);
   const [bulkUpdating, setBulkUpdating] = useState(false)
-  const [bulkUpdateError, setBulkUpdateError] = useState(null)
 
   function handleChange(selectedId) {
     if (selectedTasks.includes(selectedId)) {
@@ -218,7 +218,7 @@ export default function TodoList({
         taskCountData.refetch();
         setLoadingAssignee(false);
       })
-      .catch(err => setErrorMessage(err.message));
+      .catch(err => setMessage(err.message));
   }
 
   function handleCompleteNote(noteId, completed) {
@@ -229,14 +229,14 @@ export default function TodoList({
       variables: { id: noteId, completed: !completed }
     })
       .then(() => {
-        setErrorMessage(`Task has been successfully marked as ${completed ? 'incomplete': 'complete'}`);
+        setMessage(`Task has been successfully marked as ${completed ? 'incomplete': 'complete'}`);
         setIsSuccessAlert(true);
         refetch()
         taskCountData.refetch()
         setMutationLoading(false)
       })
       .catch(err => {
-        setErrorMessage(formatError(err.message))
+        setMessage(formatError(err.message))
         setIsSuccessAlert(false);
         setMutationLoading(false)
       })
@@ -330,7 +330,7 @@ export default function TodoList({
     if (reason === 'clickaway') {
       return;
     }
-    setErrorMessage('');
+    setMessage('');
   }
 
   const InitialConfig = MaterialConfig;
@@ -407,17 +407,20 @@ export default function TodoList({
     setBulkUpdating(true)
     bulkUpdate({ variables: {
       ids: selectedTasks,
-      completed: true,
+      completed: currentTile !== 'completedTasks',
       query: joinedTaskQuery
     }})
     .then(() => { 
       handleRefetch()
       setBulkUpdating(false)
       setSelected([])
+      setIsSuccessAlert(true);
+      setMessage(`Selected Tasks have been successfully marked as ${currentTile === 'completedTasks' ? 'incomplete' : 'complete'}`);
      })
     .catch(err => {
       setBulkUpdating(false)
-      setBulkUpdateError(formatError(err.message))
+      setIsSuccessAlert(false);
+      setMessage(formatError(err.message))
     })
   }
 
@@ -610,19 +613,16 @@ export default function TodoList({
                     <Button
                       onClick={handleBulkUpdate}
                       color="primary"
-                      startIcon={<CheckCircleIcon />}
+                      startIcon={currentTile === 'completedTasks' ? <CheckCircleOutlineIcon /> : <CheckCircleIcon />}
                       style={{ textTransform: 'none' }}
                       disabled={bulkUpdating}
                     >
-                      Mark as Complete
+                      {`Mark as ${currentTile === 'completedTasks' ? 'Incomplete' : 'Complete'} `}
                     </Button>
                   )
                 }
               </Grid>
             )}
-              <Grid item>
-                {bulkUpdateError }
-              </Grid>
             </Grid>
             <br />
             {data?.flaggedNotes.length ? (
