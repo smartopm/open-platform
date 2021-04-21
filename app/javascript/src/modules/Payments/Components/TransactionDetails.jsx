@@ -5,6 +5,7 @@ import Typography from '@material-ui/core/Typography';
 import { useMutation, useQuery } from 'react-apollo';
 import { useLocation } from 'react-router-dom';
 import { MenuItem } from '@material-ui/core';
+import { subDays } from 'date-fns';
 import { CustomizedDialogs } from '../../../components/Dialog';
 import DetailsField from '../../../shared/DetailField';
 import { dateToString } from '../../../components/DateContainer';
@@ -17,11 +18,12 @@ import { Spinner } from '../../../shared/Loading';
 import CenteredContent from '../../../components/CenteredContent';
 import EventTimeLine from '../../../shared/TimeLine';
 import { paymentStatus } from '../../../utils/constants';
+import DatePickerDialog from '../../../components/DatePickerDialog';
 
-export default function TransactionDetails({ data, detailsOpen, handleClose, currencyData, isEditing }) {
+export default function TransactionDetails({ data, detailsOpen, handleClose, currencyData, isEditing, refetchTransactions }) {
   const initialValues = {
     PaymentType: data?.source === 'wallet' ? 'From-balance' : data?.source,
-    PaymentDate: '',
+    PaymentDate: data.createdAt,
     TransactionNumber: data.transactionNumber,
     Status: data.status === 'settled' ? 'Paid' : 'Cancelled',
     BankName: data.bankName,
@@ -60,12 +62,14 @@ export default function TransactionDetails({ data, detailsOpen, handleClose, cur
         status: inputValues.Status,
         bankName: inputValues.BankName,
         chequeNumber: inputValues.ChequeNumber,
-        transactionNumber: inputValues.TransactionNumber
+        transactionNumber: inputValues.TransactionNumber,
+        createdAt: inputValues.PaymentDate,
       }
     })
     .then(() => {
       setIsSubmitting(false)
       setResponse({ ...response, message: 'Successfully Updated Payment' })
+      refetchTransactions()
       handleClose()
     })
     .catch(err => {
@@ -165,11 +169,28 @@ export default function TransactionDetails({ data, detailsOpen, handleClose, cur
                 ]
               }}
             />
-            <DetailsField
-              editable={false}
-              title="Payment Date"
-              value={dateToString(data?.createdAt)}
-            />
+
+              {
+                isEditing
+                ? (
+                  <DatePickerDialog 
+                    selectedDate={inputValues.PaymentDate}
+                    label="Payment Date"
+                    handleDateChange={date => setInputValues({...inputValues, PaymentDate: date})}
+                    maxDate={subDays(new Date(), 1)}
+                    width="89%"
+                    styles={{ marginLeft: 23 }}
+                  />
+              )
+                  : (
+                    <DetailsField
+                      editable={false}
+                      title="Payment Date"
+                      value={dateToString(data?.createdAt)}
+                    />
+                )
+              }
+
             <DetailsField
               editable={isEditing}
               title="Status"
@@ -220,7 +241,8 @@ export default function TransactionDetails({ data, detailsOpen, handleClose, cur
   );
 }
 TransactionDetails.defaultProps = {
-  isEditing: false
+  isEditing: false,
+  refetchTransactions: () => {}
 }
 TransactionDetails.propTypes = {
   // eslint-disable-next-line react/forbid-prop-types
@@ -231,5 +253,6 @@ TransactionDetails.propTypes = {
   }).isRequired,
   detailsOpen: PropTypes.bool.isRequired,
   isEditing: PropTypes.bool,
-  handleClose: PropTypes.func.isRequired
+  handleClose: PropTypes.func.isRequired,
+  refetchTransactions: PropTypes.func,
 };

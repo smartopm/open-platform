@@ -4,7 +4,7 @@ import { BrowserRouter } from 'react-router-dom/'
 import { MockedProvider } from '@apollo/react-testing'
 import ReactTestUtils from "react-dom/test-utils";
 import '@testing-library/jest-dom/extend-expect'
-import TaskCommentEdit from '../components/Notes/TaskCommentEdit'
+import TaskCommentEdit from '../modules/Tasks/Components/TaskCommentEdit'
 import { TaskCommentUpdate } from '../graphql/mutations'
 
 describe('Comment Edit Field Component', () => {

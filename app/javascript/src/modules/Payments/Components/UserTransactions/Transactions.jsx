@@ -171,7 +171,7 @@ export default function TransactionsList({ userId, user, userData, paymentSubTab
       <TabPanel value={tabValue} index="Transactions">
         {matches && <ListHeader headers={transactionHeader} />}
         {/* show a spinner here */}
-        {loading ? <Spinner /> : transactionsData?.userDeposits.pendingInvoices.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).map((trans) => (
+        {loading ? <Spinner /> : transactionsData?.userDeposits?.pendingInvoices.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).map((trans) => (
           <UserTransactionsList
             transaction={trans || {}}
             currencyData={currencyData}
@@ -199,7 +199,7 @@ export default function TransactionsList({ userId, user, userData, paymentSubTab
         {matches && <ListHeader headers={invoiceHeader} />}
         {/* show a spinner here */}
         {
-          invPayDataLoading ? <Spinner /> : invPayData?.invoicesWithTransactions.invoices.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).map((inv) => (
+          invPayDataLoading ? <Spinner /> : invPayData?.invoicesWithTransactions?.invoices.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).map((inv) => (
             <UserInvoiceItem
               key={inv.id}
               invoice={inv}

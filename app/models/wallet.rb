@@ -57,15 +57,25 @@ class Wallet < ApplicationRecord
   end
   # rubocop:enable Style/OptionalBooleanParameter
 
+  # rubocop:disable Metrics/MethodLength
   def settle_invoices(user_transaction_id)
+    settled_invoices = []
     user.invoices.not_cancelled.where('pending_amount > ?', 0).reverse.each do |invoice|
       next if invoice.land_parcel.payment_plan&.plot_balance.to_i.zero?
 
       bal = invoice.land_parcel.payment_plan&.plot_balance
       payment_amount = invoice.pending_amount > bal ? bal : invoice.pending_amount
+      settled_invoices << invoice_object(invoice, payment_amount)
       settle_from_plot_balance(invoice, payment_amount, user_transaction_id, false)
     end
+
+    transaction = WalletTransaction.find(user_transaction_id)
+    transaction.settled_invoices = settled_invoices
+    transaction.current_pending_plot_balance = transaction.payment_plan.pending_balance
+    transaction.save!
   end
+  # rubocop:enable Metrics/MethodLength
+
   # rubocop:enable Metrics/AbcSize
 
   def create_transaction(payment_amount, inv)
@@ -79,5 +89,18 @@ class Wallet < ApplicationRecord
                                        community_id: user.community_id,
                                        payment_plan: inv.payment_plan,
                                      })
+  end
+
+  private
+
+  def invoice_object(invoice, payment_amount)
+    {
+      id: invoice.id,
+      invoice_number: invoice.invoice_number,
+      due_date: invoice.due_date,
+      amount_owed: invoice.pending_amount,
+      amount_paid: payment_amount,
+      amount_remaining: (invoice.pending_amount - payment_amount),
+    }
   end
 end

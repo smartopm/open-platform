@@ -171,6 +171,7 @@ export default function UserTransactionsList({ transaction, currencyData, userDa
         currencyData={currencyData}
         title={`${transaction.__typename === 'WalletTransaction'? 'Transaction' : 'Invoice'}`}
         isEditing={isEditing}
+        refetchTransactions={depRefetch}
       />
       <PaymentReceipt
         paymentData={transaction}

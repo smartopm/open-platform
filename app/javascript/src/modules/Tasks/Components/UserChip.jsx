@@ -2,7 +2,7 @@
 import React from 'react'
 import { Chip, Avatar } from '@material-ui/core'
 import { useHistory } from 'react-router-dom'
-import { forceLinkHttps } from '../utils/helpers'
+import { forceLinkHttps } from '../../../utils/helpers'
 
 /**
  * 

@@ -11,7 +11,7 @@ import CardActions from '@material-ui/core/CardActions';
 import Button from '@material-ui/core/Button';
 import TaskDelete from './TaskDelete'
 import EditField from './TaskCommentEdit'
-import DateContainer from '../DateContainer'
+import DateContainer from '../../../components/DateContainer'
 
 export default function CommentCard({ data, refetch }) {
   const classes = useStyles();

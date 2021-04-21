@@ -3,7 +3,7 @@ import { MockedProvider } from '@apollo/react-testing'
 import { fireEvent, render } from '@testing-library/react'
 import '@testing-library/jest-dom/extend-expect'
 import { BrowserRouter } from 'react-router-dom/'
-import RemindMeLaterMenu from '../components/Notes/RemindMeLaterMenu'
+import RemindMeLaterMenu from '../modules/Tasks/Components/RemindMeLaterMenu'
 
 describe('remind me later menu menu component', () => {
   it('show correct action menu', () => {

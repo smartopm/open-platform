@@ -9,7 +9,11 @@ RSpec.describe Mutations::Transaction::WalletTransactionCreate do
     let!(:user_wallet) { create(:wallet, user: user, balance: 0) }
     let!(:land_parcel) { create(:land_parcel, community_id: user.community_id) }
     let!(:payment_plan) do
-      create(:payment_plan, land_parcel_id: land_parcel.id, user_id: user.id, plot_balance: 100)
+      create(:payment_plan,
+             land_parcel_id: land_parcel.id,
+             user_id: user.id,
+             plot_balance: 100,
+             pending_balance: 5000)
     end
 
     let(:mutation) do
@@ -18,7 +22,7 @@ RSpec.describe Mutations::Transaction::WalletTransactionCreate do
           $userId: ID!,
           $amount: Float!,
           $source: String!,
-          $landParcelId: ID!    
+          $landParcelId: ID!
         ) {
           walletTransactionCreate(
             userId: $userId,
@@ -28,6 +32,8 @@ RSpec.describe Mutations::Transaction::WalletTransactionCreate do
           ){
             walletTransaction {
               id
+              settledInvoices
+              currentPendingPlotBalance
             }
           }
         }
@@ -47,7 +53,14 @@ RSpec.describe Mutations::Transaction::WalletTransactionCreate do
                                                    current_user: admin,
                                                    site_community: user.community,
                                                  }).as_json
+
       expect(result.dig('data', 'walletTransactionCreate', 'walletTransaction', 'id')).not_to be_nil
+      expect(result.dig(
+               'data', 'walletTransactionCreate', 'walletTransaction', 'settledInvoices'
+             )).to_not be_nil
+      expect(result.dig(
+               'data', 'walletTransactionCreate', 'walletTransaction', 'currentPendingPlotBalance'
+             )).to eql(5000.0)
       expect(user.wallet.balance).to eql 100.0
       expect(result['errors']).to be_nil
     end

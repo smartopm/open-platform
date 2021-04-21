@@ -43,6 +43,7 @@ export default function LandParcelList() {
   const [open, setDetailsModalOpen] = useState(false);
   const [messageAlert, setMessageAlert] = useState('');
   const [isSuccessAlert, setIsSuccessAlert] = useState(false);
+  const [propertyUpdateLoading, setPropertyUpdateLoading] = useState(false);
   const [selectedLandParcel, setSelectedLandParcel] = useState({});
   const [searchValue, setSearchValue] = useState('');
   const debouncedValue = useDebounce(searchValue, 500);
@@ -136,9 +137,11 @@ export default function LandParcelList() {
     history.push('/land_parcels');
     setDetailsModalOpen(false);
     setConfirmMergeOpen(false)
+    setPropertyUpdateLoading(false)
   }
 
   function handleSubmit(variables) {
+    setPropertyUpdateLoading(true)
     const variableUpdates = variables;
     variableUpdates.id = selectedLandParcel.id;
     updateProperty({ variables: variableUpdates })
@@ -158,6 +161,7 @@ export default function LandParcelList() {
         }
         setMessageAlert(formatError(err.message));
         setIsSuccessAlert(false);
+        setPropertyUpdateLoading(false)
       });
   }
 
@@ -226,6 +230,7 @@ export default function LandParcelList() {
         landParcels={conflictingParcelData?.fetchLandParcel}
         confirmMergeOpen={confirmMergeOpen}
         handleSubmitMerge={handleMergeLandParcel}
+        propertyUpdateLoading={propertyUpdateLoading}
       />
       <MessageAlert
         type={isSuccessAlert ? 'success' : 'error'}

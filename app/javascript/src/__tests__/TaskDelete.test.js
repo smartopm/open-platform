@@ -2,7 +2,7 @@ import React from 'react'
 import { render, fireEvent } from '@testing-library/react'
 import { BrowserRouter } from 'react-router-dom/'
 import { MockedProvider } from '@apollo/react-testing'
-import TaskDelete from '../components/Notes/TaskDelete'
+import TaskDelete from '../modules/Tasks/Components/TaskDelete'
 import '@testing-library/jest-dom/extend-expect'
 import { DeleteNoteComment } from '../graphql/mutations'
 

@@ -1196,6 +1196,13 @@ export const TransactionQuery = gql`
         transactionNumber
         status
         id
+        settledInvoices
+        currentPendingPlotBalance
+        community {
+          id
+          name
+          logoUrl
+        }
         user {
           id
           name

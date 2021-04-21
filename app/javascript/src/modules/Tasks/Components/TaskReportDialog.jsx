@@ -2,12 +2,12 @@ import React, { useEffect, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { List, Dialog, DialogTitle } from '@material-ui/core';
 import { useLazyQuery } from 'react-apollo';
-import { propAccessor, toCamelCase } from '../../utils/helpers';
-import { TaskStatsQuery } from '../../graphql/queries';
-import { Spinner } from '../../shared/Loading';
-import { useStyles } from '../Dialog';
-import { taskStatus } from '../../utils/constants';
-import StatusCount from '../../shared/Status';
+import { propAccessor, toCamelCase } from '../../../utils/helpers';
+import { TaskStatsQuery } from '../../../graphql/queries';
+import { Spinner } from '../../../shared/Loading';
+import { useStyles } from '../../../components/Dialog';
+import { taskStatus } from '../../../utils/constants';
+import StatusCount from '../../../shared/Status';
 
 export default function TaskReportDialog({ handleClose, open, handleFilter }) {
   const [getTaskStats, { loading, data, error }] = useLazyQuery(TaskStatsQuery);

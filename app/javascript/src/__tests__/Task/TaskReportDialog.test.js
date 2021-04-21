@@ -2,7 +2,7 @@ import React from 'react'
 import { render, waitFor } from '@testing-library/react'
 import { BrowserRouter } from 'react-router-dom/'
 import { MockedProvider } from '@apollo/react-testing'
-import TaskReportDialog from '../../components/Notes/TaskReportDialog'
+import TaskReportDialog from '../../modules/Tasks/Components/TaskReportDialog'
 import '@testing-library/jest-dom/extend-expect'
 import { TaskStatsQuery } from '../../graphql/queries';
 import { Spinner } from '../../shared/Loading';

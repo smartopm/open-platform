@@ -3,7 +3,7 @@ import { BrowserRouter } from 'react-router-dom/cjs/react-router-dom.min'
 import { act, render, fireEvent } from '@testing-library/react'
 import '@testing-library/jest-dom/extend-expect'
 import { MockedProvider } from '@apollo/react-testing'
-import TaskUpdateForm from '../components/Notes/TaskUpdateForm'
+import TaskUpdateForm from '../modules/Tasks/Components/TaskUpdateForm'
 
 const data = {
   id: '6v2y3etyu2g3eu2',

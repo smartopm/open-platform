@@ -10,6 +10,7 @@ import PermitRequestForms from '../Forms/PermitRequestForms';
 import Emails from '../Emails';
 import { allUserTypes } from '../../utils/constants';
 import CommunitySettings from './components/SettingsPage';
+import Tasks from '../Tasks'
 
 // we can discuss on changing this to preferences instead of settings
 const Settings =   {
@@ -34,5 +35,5 @@ export default {
   },
   name: 'Community',
   accessibleBy: allUserTypes,
-  subMenu: [News, Message, Discussions, Campaigns , Labels, Business, PermitRequestForms, Emails, Settings]
+  subMenu: [News, Message, Discussions, Campaigns , Labels, Tasks, Business, PermitRequestForms, Emails, Settings]
 };

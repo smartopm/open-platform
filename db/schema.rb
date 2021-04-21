@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_04_13_121559) do
+ActiveRecord::Schema.define(version: 2021_04_20_083520) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -676,6 +676,8 @@ ActiveRecord::Schema.define(version: 2021_04_13_121559) do
     t.string "receipt_number"
     t.datetime "originally_created_at"
     t.uuid "payment_plan_id"
+    t.json "settled_invoices"
+    t.decimal "current_pending_plot_balance", precision: 11, scale: 2
     t.index ["community_id"], name: "index_wallet_transactions_on_community_id"
     t.index ["depositor_id"], name: "index_wallet_transactions_on_depositor_id"
     t.index ["payment_plan_id"], name: "index_wallet_transactions_on_payment_plan_id"

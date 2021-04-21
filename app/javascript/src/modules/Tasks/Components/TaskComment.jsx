@@ -7,9 +7,9 @@ import {
 } from '@material-ui/core'
 import PropTypes from 'prop-types'
 import CommentTextField from './CommentField'
-import { CommentQuery } from '../../graphql/queries'
-import ErrorPage from "../Error"
-import { useParamsQuery } from '../../utils/helpers'
+import { CommentQuery } from '../../../graphql/queries'
+import ErrorPage from "../../../components/Error"
+import { useParamsQuery } from '../../../utils/helpers'
 
 export default function TaskComment({ authState, taskId }) {
   const { data: commentData, loading, error, refetch } = useQuery(CommentQuery, {

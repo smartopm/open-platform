@@ -215,7 +215,7 @@ function handleDeleteProperty(propId){
           }
           <Grid item xs={editMode ? 11 : 12}>
             <UploadField
-              detail={{ type: 'file', status }}
+              detail={{ type: 'file', status, label: formPropertiesData.fieldName }}
               upload={evt => onChange(evt.target.files[0])}
               editable={editable}
             />
