@@ -44,8 +44,6 @@ import ComingSoon from '../src/containers/showroom/ComingSoon';
 import VisitingClientForm from '../src/containers/showroom/CheckInForm';
 import { AUTH_TOKEN_KEY } from '../src/utils/apollo';
 import CheckInComplete from '../src/containers/showroom/CheckInComplete';
-import Todo from '../src/containers/Todo';
-import TaskUpdate from '../src/containers/Task/TaskUpdate';
 import Feedback from '../src/containers/Activity/Feedback';
 import FeedbackSuccess from '../src/containers/Activity/FeedbackSuccess';
 import AllNotes from '../src/containers/Activity/AllNotes';
@@ -196,7 +194,6 @@ const App = () => {
                                 {/* these are redirects for pages we don't have yet, they can only be placed here */}
                                 {/* build individual modules for these once we have pages that directly route there */}
                                 {/* beginning of redirects */}
-                                <Route path="/tasks/:taskId" exact component={TaskUpdate} />
                                 <Route
                                   exact
                                   path="/plots"
@@ -306,7 +303,6 @@ const App = () => {
                                     <Route path="/users/import" component={UsersImport} />
                                     <Route path="/showroom_logs" component={ShowroomLogs} />
                                     <Route path="/notes" component={AllNotes} />
-                                    <Route path="/tasks/:taskId" exact component={TaskUpdate} />
                                     <Route
                                       exact
                                       path="/todo/:taskId"
@@ -319,7 +315,6 @@ const App = () => {
                                       path="/todo"
                                       render={() => <Redirect to="/tasks" />}
                                     />
-                                    <Route path="/my_tasks" component={Todo} />
                                     <Route path="/feedbacks" component={FeedbackPage} />
                                     <Route path="/event_logs" component={EventLogs} />
                                     <Route path="/new/user" exact component={UserEdit} />

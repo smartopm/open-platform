@@ -23,7 +23,7 @@ import { UserChip } from './UserChip';
 import DateContainer, { dateToString, dateTimeToString } from '../../../components/DateContainer';
 import { removeNewLines, sanitizeText } from '../../../utils/helpers';
 import RemindMeLaterMenu from './RemindMeLaterMenu';
-import { TaskReminder } from '../../../graphql/mutations';
+import { TaskReminder } from '../graphql/tasks_mutation';
 import MessageAlert from '../../../components/MessageAlert';
 
 export default function Task({
