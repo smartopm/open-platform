@@ -12,7 +12,7 @@ import FlagOutlinedIcon from '@material-ui/icons/FlagOutlined';
 import PersonOutlinedIcon from '@material-ui/icons/PersonOutlined';
 import PeopleAltOutlinedIcon from '@material-ui/icons/PeopleAltOutlined';
 import TaskUpdateItem from './TaskUpdateItem'
-import { dateToString, dateFormatter } from "../DateContainer"
+import { dateToString, dateFormatter } from "../../../components/DateContainer"
 
 export default function TaskUpdateList({ data }) {
   const classes = useStyles();

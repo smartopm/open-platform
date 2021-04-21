@@ -6,7 +6,7 @@ import {
   MenuItem,
 } from '@material-ui/core'
 import { StyleSheet, css } from 'aphrodite'
-import colors from '../../themes/nkwashi/colors'
+import colors from '../../../themes/nkwashi/colors'
 
 const { clearDay } = colors
 export default function RemindMeLaterMenu({

@@ -6,7 +6,7 @@ import { TaskQuery, UsersLiteQuery, HistoryQuery } from '../../graphql/queries'
 import { Context as AuthStateContext } from '../Provider/AuthStateProvider'
 import Loading from '../../shared/Loading'
 import ErrorPage from '../../components/Error'
-import TaskUpdateForm from '../../components/Notes/TaskUpdateForm'
+import TaskUpdateForm from '../../modules/Tasks/Components/TaskUpdateForm'
 import { AssignUser } from '../../graphql/mutations'
 
 export default function TaskUpdate() {
