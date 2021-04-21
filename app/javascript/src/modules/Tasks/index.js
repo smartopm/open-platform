@@ -1,6 +1,6 @@
-import Tasks from '../../containers/Todo';
+import Tasks from './containers/Todo';
 import TaskReminder from './TaskReminder'
-import TaskUpdate from '../../containers/Task/TaskUpdate'
+import TaskUpdate from './containers/TaskUpdate'
 
 export default {
   routeProps: {

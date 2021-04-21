@@ -1,9 +1,9 @@
 import React, { useState, useContext } from 'react'
 import { useMutation } from 'react-apollo'
 import { useLocation } from 'react-router'
-import { UpdateNote } from '../graphql/mutations'
-import TodoList from '../modules/Tasks/Components/TodoList'
-import { Context as AuthStateContext } from './Provider/AuthStateProvider'
+import { UpdateNote } from '../../../graphql/mutations'
+import TodoList from '../Components/TodoList'
+import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider'
 
 // eslint-disable-next-line react/prop-types
 export default function Todo({ history }) {

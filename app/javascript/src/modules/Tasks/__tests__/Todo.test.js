@@ -4,10 +4,11 @@ import '@testing-library/jest-dom/extend-expect';
 import { BrowserRouter } from 'react-router-dom';
 import { ApolloProvider } from 'react-apollo';
 import { MockedProvider } from '@apollo/react-testing';
-import { Context } from '../../containers/Provider/AuthStateProvider';
-import { createClient } from '../../utils/apollo';
-import Todo from '../../containers/Todo';
-import { TaskStatsQuery } from '../../graphql/queries';
+import { Context } from '../../../containers/Provider/AuthStateProvider';
+import { createClient } from '../../../utils/apollo';
+import Todo from '../containers/Todo';
+// move to tasks module
+import { TaskStatsQuery } from '../../../graphql/queries';
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
 
