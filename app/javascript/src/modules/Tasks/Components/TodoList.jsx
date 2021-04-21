@@ -415,6 +415,7 @@ export default function TodoList({
       refetch()
       taskCountData.refetch()
       setBulkUpdating(false)
+      setSelected([])
      })
     .catch(err => {
       setBulkUpdating(false)
