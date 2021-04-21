@@ -14,24 +14,29 @@ include:
   - template: Security/SAST.gitlab-ci.yml
   - template: DAST.gitlab-ci.yml
 
-.base_minimal:
-  image: alpine:latest
-  cache: {}
+# .base_minimal:
+#   image: alpine:latest
+#   cache: {}
+cache:
+  key: ${CI_COMMIT_REF_SLUG}
+  paths:
+    - vendor/ruby
 
-.base:
-  image: "ruby:2.6"
-  cache:
-    key: gems_and_packages
-    paths:
-      - apt-cache/
-      - vendor
-    policy: pull
-  before_script:
-    - gem install bundler --no-document
-    - bundle install --jobs $(nproc) "${FLAGS[@]}" --path vendor
+# .base:
+#   image: "ruby:2.6"
+#   cache:
+#     untracked: true
+#     key: gems_and_packages
+#     paths:
+#       - apt-cache/
+#       - node_modules/
+#       - vendor/
+#       - public/
+#   before_script:
+#     - gem install bundler --no-document
+#     - bundle install --jobs $(nproc) "${FLAGS[@]}" --path=vendor
 
 .base_db:
-  extends: .base
   services:
     - postgres:latest
     - redis:latest
@@ -45,7 +50,7 @@ include:
     - ruby -v
     - which ruby
     - gem install bundler --no-document
-    - RAILS_ENV=test bundle install --jobs $(nproc) "${FLAGS[@]}"
+    - RAILS_ENV=test bundle install -j $(nproc) --path vendor/ruby
     - RAILS_ENV=test bundle exec rake db:create db:schema:load
     - curl -o- -L https://yarnpkg.com/install.sh | bash
     - export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
