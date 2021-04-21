@@ -16,6 +16,7 @@ import { Spinner } from '../../../../shared/Loading';
 import { dateToString } from '../../../../utils/dateutil';
 import CenteredContent from '../../../../components/CenteredContent';
 import { formatError, removeNewLines, sanitizeText } from '../../../../utils/helpers';
+import Empty from '../../../../shared/Empty'
 
 export default function TaskReminderCard({ id }) {
   const matches = useMediaQuery('(max-width:600px)')
@@ -39,39 +40,43 @@ export default function TaskReminderCard({ id }) {
   }
   return (
     <div>
-      {loading ? <Spinner /> : data?.userTasks.length > 0 && (
+      {loading ? <Spinner /> : (
         <div>
           <div style={{display: 'flex'}}>
             <Typography variant='h5' style={matches ? {margin: '20px 0 26px 20px', fontWeight: 'bold'} : {margin: '50px 0 26px 79px', fontWeight: 'bold'}}>Task Reminders</Typography>
             <TrendingFlatIcon style={matches ? {marginLeft: 'auto', order: 2, marginTop: '20px', marginRight: '20px'} : {marginLeft: 'auto', order: 2, marginTop: '50px', marginRight: '80px'}} />
           </div>
-          <div className={classes.root} style={matches ? {marginLeft: '20px'} : {marginLeft: '79px'}}>
-            <GridList className={classes.gridList} cols={matches ? 1 : 3}>
-              {data?.userTasks.map((tile) => (
-                <GridListTile key={tile.id}>
-                  <div className={classes.gridTile} onClick={() => history.push('/my_tasks')}>
-                    <div className={classes.date} style={checkDate(tile.dueDate) ? {color: 'red'} : null}>
-                      <EventNoteIcon style={{marginRight: '10px'}} />
-                      <Typography variant='body2'>
-                        Due
-                        {' '}
-                        {dateToString(tile.dueDate)}
-                      </Typography>
-                    </div>
-                    <Typography align='justify' variant='caption' data-testid='body'>
-                      <span
-                        style={{ whiteSpace: 'pre-line' }}
+          {data?.userTasks.length > 0 ? (
+            <div className={classes.root} style={matches ? {marginLeft: '20px'} : {marginLeft: '79px'}}>
+              <GridList className={classes.gridList} cols={matches ? 1 : 3}>
+                {data?.userTasks.map((tile) => (
+                  <GridListTile key={tile.id}>
+                    <div className={classes.gridTile} onClick={() => history.push('/my_tasks')}>
+                      <div className={classes.date} style={checkDate(tile.dueDate) ? {color: 'red'} : null}>
+                        <EventNoteIcon style={{marginRight: '10px'}} />
+                        <Typography variant='body2'>
+                          Due
+                          {' '}
+                          {dateToString(tile.dueDate)}
+                        </Typography>
+                      </div>
+                      <Typography align='justify' variant='caption' data-testid='body'>
+                        <span
+                          style={{ whiteSpace: 'pre-line' }}
                         // eslint-disable-next-line react/no-danger
-                        dangerouslySetInnerHTML={{
+                          dangerouslySetInnerHTML={{
                         __html: sanitizeText(removeNewLines(tile.body))
                         }}
-                      />
-                    </Typography>
-                  </div>
-                </GridListTile>
+                        />
+                      </Typography>
+                    </div>
+                  </GridListTile>
               ))}
-            </GridList>
-          </div>
+              </GridList>
+            </div>
+          ) : (
+            <Empty title='No pending tasks' subtitle='Your pending tasks will appear here' />
+          )}
         </div>
       )}
     </div>
