@@ -10,15 +10,9 @@ import {
   IconButton,
   Grid,
   Button,
-  Checkbox,
-  Typography,
-  Select,
-  MenuItem
 } from '@material-ui/core';
 import FilterListIcon from '@material-ui/icons/FilterList';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
-import CheckCircleIcon from '@material-ui/icons/CheckCircle';
-import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
 import MaterialConfig from 'react-awesome-query-builder/lib/config/material';
 import { StyleSheet, css } from 'aphrodite';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
@@ -34,7 +28,7 @@ import Task from './Task';
 import TaskDashboard from './TaskDashboard';
 import { futureDateAndTimeToString } from '../../../components/DateContainer';
 import DatePickerDialog from '../../../components/DatePickerDialog';
-import Loading, { Spinner } from '../../../shared/Loading';
+import Loading from '../../../shared/Loading';
 import QueryBuilder from '../../../components/QueryBuilder';
 import { ModalDialog } from '../../../components/Dialog';
 import { formatError, pluralizeCount, propAccessor } from '../../../utils/helpers';
@@ -44,6 +38,7 @@ import ListHeaders from '../../../shared/list/ListHeader';
 import renderTaskData from './RenderTaskData';
 import MessageAlert from '../../../components/MessageAlert';
 import { TaskBulkUpdateMutation } from '../graphql/tasks_mutation';
+import TaskActionMenu from './TaskActionMenu';
 
 const taskHeader = [
   { title: 'Select', col: 1 },
@@ -574,56 +569,18 @@ export default function TodoList({
             </Grid>
 
             <br />
-            <Grid container spacing={3}>
-              {
-              currentTile && (
-                <Grid item style={{ display: 'flex' }}>
-                  <Grid>
-                    <Checkbox
-                      checked={selectedTasks.length === taskListIds.length || checkedOptions === 'all'}
-                      onChange={setSelectAllOption}
-                      name="select_all"
-                      data-testid="select_all"
-                      color="primary"
-                      style={{ padding: '0px', marginRight: '15px' }}
-                    />
-                  </Grid>
-                  <Typography> Select </Typography>
-                  <Grid>
-                    <Select
-                      labelId="user-action-select"
-                      id="user-action-select"
-                      value={checkedOptions}
-                      onChange={handleCheckOptions}
-                      style={{ height: '23px', marginLeft: '10px' }}
-                    >
-                      <MenuItem value="all">All</MenuItem>
-                      <MenuItem value="all_on_the_page">All on this page</MenuItem>
-                      <MenuItem value="none">None</MenuItem>
-                    </Select>
-                  </Grid>
-                </Grid>
-              )
-            }
 
-              {(checkedOptions !== 'none' || selectedTasks.length > 0) && (
-              <Grid item style={{ marginLeft: '20px', marginTop: '-4px' }}>
-                {
-                  bulkUpdating ? <Spinner /> : (
-                    <Button
-                      onClick={handleBulkUpdate}
-                      color="primary"
-                      startIcon={currentTile === 'completedTasks' ? <CheckCircleOutlineIcon /> : <CheckCircleIcon />}
-                      style={{ textTransform: 'none' }}
-                      disabled={bulkUpdating}
-                    >
-                      {`Mark as ${currentTile === 'completedTasks' ? 'Incomplete' : 'Complete'} `}
-                    </Button>
-                  )
-                }
-              </Grid>
-            )}
-            </Grid>
+            { /* Use the action menu here */ }
+            <TaskActionMenu
+              currentTile={currentTile}
+              setSelectAllOption={setSelectAllOption}
+              selectedTasks={selectedTasks}
+              taskListIds={taskListIds}
+              checkedOptions={checkedOptions}
+              handleCheckOptions={handleCheckOptions}
+              bulkUpdating={bulkUpdating}
+              handleBulkUpdate={handleBulkUpdate}
+            />
             <br />
             {data?.flaggedNotes.length ? (
               <div>
