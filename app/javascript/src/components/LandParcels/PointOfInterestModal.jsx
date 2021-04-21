@@ -100,6 +100,7 @@ export default function PointOfInterestModal({
               value={iconUrl}
               onChange={event => setIconUrl(event.target.value)}
               label="icon-url"
+              data-testid="icon-url"
               required
             >
               {Object.values(pointOfInterestIconSet).map(({ icon, label}) => (

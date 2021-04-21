@@ -29,7 +29,7 @@ module Types
 
       object.images.map do |image|
         Rails.application.routes.url_helpers
-            .rails_blob_url(image)
+             .rails_blob_url(image)
       end
       # Rails.application.routes.url_helpers
       #      .rails_blob_url(object.image)
