@@ -18,7 +18,8 @@ import { StyleSheet, css } from 'aphrodite';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import { useMutation, useLazyQuery, useQuery } from 'react-apollo';
 import { useParams, useHistory } from 'react-router';
-import { UsersLiteQuery, flaggedNotes, TaskQuery, TaskStatsQuery } from '../../../graphql/queries';
+import { UsersLiteQuery, flaggedNotes, TaskQuery } from '../../../graphql/queries';
+import { TaskStatsQuery } from '../graphql/task_queries'
 import { AssignUser, UpdateNote } from '../../../graphql/mutations';
 import TaskForm from './TaskForm';
 import ErrorPage from '../../../components/Error';
@@ -37,7 +38,7 @@ import DataList from '../../../shared/list/DataList';
 import ListHeaders from '../../../shared/list/ListHeader';
 import renderTaskData from './RenderTaskData';
 import MessageAlert from '../../../components/MessageAlert';
-import { TaskBulkUpdateMutation } from '../graphql/tasks_mutation';
+import { TaskBulkUpdateMutation } from '../graphql/task_mutation';
 import TaskActionMenu from './TaskActionMenu';
 
 const taskHeader = [

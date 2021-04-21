@@ -2,8 +2,9 @@ import React from 'react'
 import { MockedProvider } from '@apollo/react-testing'
 import { BrowserRouter } from 'react-router-dom/cjs/react-router-dom.min'
 import { render, fireEvent } from '@testing-library/react'
-import TodoList from '../modules/Tasks/Components/TodoList'
-import { flaggedNotes, TaskStatsQuery } from '../graphql/queries'
+import TodoList from '../Components/TodoList'
+import { flaggedNotes } from '../../../graphql/queries'
+import { TaskStatsQuery } from '../graphql/task_queries'
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn())
 const mck = jest.fn()

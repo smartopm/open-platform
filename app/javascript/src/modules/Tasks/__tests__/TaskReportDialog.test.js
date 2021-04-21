@@ -4,7 +4,7 @@ import { BrowserRouter } from 'react-router-dom/'
 import { MockedProvider } from '@apollo/react-testing'
 import TaskReportDialog from '../Components/TaskReportDialog'
 import '@testing-library/jest-dom/extend-expect'
-import { TaskStatsQuery } from '../../../graphql/queries';
+import { TaskStatsQuery } from '../graphql/task_queries';
 import { Spinner } from '../../../shared/Loading';
 
 describe('Task Report Component', () => {
