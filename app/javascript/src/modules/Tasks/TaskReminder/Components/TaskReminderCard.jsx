@@ -39,7 +39,7 @@ export default function TaskReminderCard({ id }) {
   }
   return (
     <div>
-      {loading ? <Spinner /> : (
+      {loading ? <Spinner /> : data?.userTasks.length > 0 && (
         <div>
           <div style={{display: 'flex'}}>
             <Typography variant='h5' style={matches ? {margin: '20px 0 26px 20px', fontWeight: 'bold'} : {margin: '50px 0 26px 79px', fontWeight: 'bold'}}>Task Reminders</Typography>
@@ -55,7 +55,7 @@ export default function TaskReminderCard({ id }) {
                       <Typography variant='body2'>
                         Due
                         {' '}
-                        {dateToString(tile.dueDate)}
+                        {tile.dueDate ? dateToString(tile.dueDate) : 'not available'}
                       </Typography>
                     </div>
                     <Typography align='justify' variant='caption' data-testid='body'>
