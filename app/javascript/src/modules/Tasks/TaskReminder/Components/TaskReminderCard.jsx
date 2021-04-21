@@ -55,7 +55,7 @@ export default function TaskReminderCard({ id }) {
                       <Typography variant='body2'>
                         Due
                         {' '}
-                        {tile.dueDate ? dateToString(tile.dueDate) : 'not available'}
+                        {dateToString(tile.dueDate)}
                       </Typography>
                     </div>
                     <Typography align='justify' variant='caption' data-testid='body'>
