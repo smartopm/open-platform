@@ -29,6 +29,7 @@ export default function renderTaskData({
       data,
       handleChange,
       selectedTasks,
+      isSelected,
       handleTaskDetails,
       handleCompleteNote,
       actionMenu: { open, handleClose, handleOpen }
@@ -38,7 +39,7 @@ export default function renderTaskData({
       Select: (
         <Grid item xs={12} sm={2}>
           <Checkbox
-            checked={selectedTasks.includes(task.id)}
+            checked={selectedTasks.includes(task.id) || isSelected}
             onChange={() => handleChange(task.id)}
             inputProps={{ 'aria-label': 'primary checkbox' }}
           />

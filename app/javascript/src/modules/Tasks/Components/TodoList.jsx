@@ -99,9 +99,9 @@ export default function TodoList({
     totalCallsOpen: 'category: call AND completed: false',
     totalFormsOpen: 'category: form AND completed: false'
   };
-
   const [selectedTasks, setSelected] = useState([]);
   const [bulkUpdating, setBulkUpdating] = useState(false)
+  const [bulkUpdateError, setBulkUpdateError] = useState(null)
 
   function handleChange(selectedId) {
     if (selectedTasks.includes(selectedId)) {
@@ -111,7 +111,6 @@ export default function TodoList({
       setSelected([...selectedTasks, selectedId]);
     }
   }
-  
 
   function handleTaskDetails({ id, comment }) {
     history.push(`/tasks/${id}${comment ? '?comment=true' : ''}`);
@@ -412,15 +411,13 @@ export default function TodoList({
       query: joinedTaskQuery
     }})
     .then(() => { 
-      refetch()
-      taskCountData.refetch()
+      handleRefetch()
       setBulkUpdating(false)
       setSelected([])
      })
     .catch(err => {
       setBulkUpdating(false)
-      // handle errors here
-      console.log(err.message)
+      setBulkUpdateError(formatError(err.message))
     })
   }
 
@@ -574,13 +571,13 @@ export default function TodoList({
             </Grid>
 
             <br />
-            <Grid container>
+            <Grid container spacing={3}>
               {
               currentTile && (
                 <Grid item style={{ display: 'flex' }}>
                   <Grid>
                     <Checkbox
-                      checked={selectedTasks.length === taskListIds.length}
+                      checked={selectedTasks.length === taskListIds.length || checkedOptions === 'all'}
                       onChange={setSelectAllOption}
                       name="select_all"
                       data-testid="select_all"
@@ -623,7 +620,9 @@ export default function TodoList({
                 }
               </Grid>
             )}
-
+              <Grid item>
+                {bulkUpdateError }
+              </Grid>
             </Grid>
             <br />
             {data?.flaggedNotes.length ? (
@@ -635,6 +634,7 @@ export default function TodoList({
                     data: data?.flaggedNotes,
                     handleChange,
                     selectedTasks,
+                    isSelected: checkedOptions === 'all',
                     handleTaskDetails,
                     handleCompleteNote,
                     actionMenu: {
