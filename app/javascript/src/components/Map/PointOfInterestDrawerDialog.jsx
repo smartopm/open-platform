@@ -1,6 +1,6 @@
 import React, { useState, useContext } from 'react'
 import PropTypes from 'prop-types'
-import { Drawer, List, ListItem, ListItemText } from '@material-ui/core';
+import { Drawer, List, ListItem, ListItemText, GridList, GridListTile, ListSubheader } from '@material-ui/core';
 import { Context } from '../../containers/Provider/AuthStateProvider'
 import ImageAuth from '../../shared/ImageAuth'
 import { CustomizedDialogs } from '../Dialog'
@@ -22,12 +22,24 @@ export default function PointOfInterestDrawerDialog({ anchor, children, open, on
         handleBatchFilter={handleImageDialogClose}
         actionable={false}
       >
-        <ImageAuth 
-          imageLink={imageData.url || ''}
-          alt={imageData.loading ? 'Loading Image': 'No Image Found'}
-          token={authState.token}
-          className="img-responsive img-thumbnail"
-        /> 
+        <GridList cols={1}>
+          {(!imageData.urls?.length) && (
+            <GridListTile key="Subheader" cols={1}>
+              <ListSubheader component="div">No Photos</ListSubheader>
+            </GridListTile>
+          )}
+          {imageData.urls?.map((url) =>(
+            <GridListTile key={url} cols={1}>
+              <ImageAuth
+                key={url}
+                imageLink={url}
+                // alt={imageData.loading ? 'Loading Image': 'No Image Found'}
+                token={authState.token}
+                className="img-responsive img-thumbnail"
+              /> 
+            </GridListTile>
+          ))}
+        </GridList>
       </CustomizedDialogs>
       <div style={{ width: '300px' }}>
         <Drawer anchor={anchor} open={open} onClose={onClose}>
@@ -91,7 +103,7 @@ PointOfInterestDrawerDialog.propTypes = {
   anchor: PropTypes.string,
   children: PropTypes.node,
   imageData: PropTypes.shape({
-    url: PropTypes.string,
+    urls: PropTypes.string,
     loading: PropTypes.bool
   })
 }

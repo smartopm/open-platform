@@ -18,13 +18,13 @@ module Mutations
 
         attach_image(land_parcel, vals)
 
-        return { land_parcel: land_parcel } if land_parcel.image.attached?
+        return { land_parcel: land_parcel } if land_parcel.images.attached?
 
         raise GraphQL::ExecutionError, land_parcel.errors.full_messages
       end
 
       def attach_image(land_parcel, vals)
-        land_parcel.image.attach(vals[:image_blob_id]) if vals[:image_blob_id]
+        land_parcel.images.attach(vals[:image_blob_id]) if vals[:image_blob_id]
       end
 
       def authorized?(_vals)

@@ -197,7 +197,7 @@ export default function LandParcelMap({ handlePlotClick, geoData }){
         onClose={handleCloseDrawer}
         selectedPoi={selectedPoi}
         imageData={{
-            url: parcelData?.landParcel?.imageUrl,
+            urls: parcelData?.landParcel?.imageUrls,
             loading: parcelDataLoading,
           }}
       >

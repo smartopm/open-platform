@@ -3,18 +3,39 @@ import PropTypes from 'prop-types'
 import L from 'leaflet';
 import { Marker } from 'react-leaflet'
 import { css, StyleSheet } from 'aphrodite'
+import ConstructionCompletedIcon from '../../../../assets/images/construction-completed-icon.svg'
+import ConstructionInProgressIcon from '../../../../assets/images/construction-in-progress-icon.svg'
+import {pointOfInterestIconSet} from '../../utils/constants'
 
 export default function PointsOfInterestMarker({markerProps}) {
   const { poiName, geoLatY, geoLongX, iconUrl } = markerProps
 
+  function getCustomIcon({ url }){
+    const poiIcon = Object.values(pointOfInterestIconSet).find(({ icon }) => icon === url)
+
+    if(poiIcon?.icon === pointOfInterestIconSet.completedHome.icon){
+      return ConstructionCompletedIcon;
+    };
+
+    if(poiIcon?.icon === pointOfInterestIconSet.homeInConstruction.icon){
+      return ConstructionInProgressIcon;
+    };
+
+    if(poiIcon?.icon === pointOfInterestIconSet.sculpture.icon){
+      return pointOfInterestIconSet.sculpture.icon;
+    };
+
+    return url;
+  }
+
+  // reset the default icon size
+  // L.Icon.Default.prototype.options.iconSize = [12, 12];
+  L.Icon.Default.prototype.options.shadowSize = [0, 0];
+
   const customIcon = new L.Icon({
-    iconUrl,
-    iconRetinaUrl: iconUrl,
+    iconUrl: getCustomIcon({ iconUrl }),
+    iconRetinaUrl: getCustomIcon({ iconUrl }),
     iconAnchor: null,
-    popupAnchor:  [-3, -26],
-    shadowUrl: null,
-    shadowSize: null,
-    shadowAnchor: null,
     iconSize: [30, 40],
   });
 
