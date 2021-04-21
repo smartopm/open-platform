@@ -16,7 +16,7 @@ import { Spinner } from '../../../../shared/Loading';
 import { dateToString } from '../../../../utils/dateutil';
 import CenteredContent from '../../../../components/CenteredContent';
 import { formatError, removeNewLines, sanitizeText } from '../../../../utils/helpers';
-import Empty from '../../../../shared/Empty'
+import EmptyCard from '../../../../shared/EmptyCard'
 
 export default function TaskReminderCard({ id }) {
   const matches = useMediaQuery('(max-width:600px)')
@@ -75,7 +75,7 @@ export default function TaskReminderCard({ id }) {
               </GridList>
             </div>
           ) : (
-            <Empty title='No pending tasks' subtitle='Your pending tasks will appear here' />
+            <EmptyCard title='No pending tasks' subtitle='Your pending tasks will appear here' />
           )}
         </div>
       )}

@@ -7,7 +7,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Image from '../../../assets/images/empty-folder.svg'
 
-export default function Empty({ title, subtitle}) {
+export default function EmptyCard({ title, subtitle}) {
   const classes = useStyles();
   const matches = useMediaQuery('(max-width:600px)')
   return (
@@ -37,7 +37,7 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
-Empty.propTypes = {
+EmptyCard.propTypes = {
   title: PropTypes.string.isRequired,
   subtitle: PropTypes.string.isRequired
 };
