@@ -11,7 +11,7 @@ import GridListTile from '@material-ui/core/GridListTile';
 import { useHistory } from 'react-router-dom';
 import EventNoteIcon from '@material-ui/icons/EventNote';
 import Typography from '@material-ui/core/Typography';
-import { AssignedTaskQuery } from '../graphql/assign_task_query'
+import { AssignedTaskQuery } from '../graphql/task_reminder_query'
 import { Spinner } from '../../../../shared/Loading';
 import { dateToString } from '../../../../utils/dateutil';
 import CenteredContent from '../../../../components/CenteredContent';

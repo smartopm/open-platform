@@ -306,7 +306,6 @@ const App = () => {
                                     <Route path="/showroom_logs" component={ShowroomLogs} />
                                     <Route path="/notes" component={AllNotes} />
                                     <Route path="/tasks/:taskId" exact component={TaskUpdate} />
-                                    <Route path="/tasks" component={Todo} />
                                     <Route
                                       exact
                                       path="/todo/:taskId"

@@ -4,7 +4,7 @@ import '@testing-library/jest-dom/extend-expect';
 import { MockedProvider } from '@apollo/react-testing';
 import { BrowserRouter } from 'react-router-dom';
 import TaskReminderCard from '../Components/TaskReminderCard';
-import { AssignedTaskQuery } from '../graphql/assign_task_query';
+import { AssignedTaskQuery } from '../graphql/task_reminder_query';
 import { Spinner } from '../../../../shared/Loading';
 
 describe('Task Reminder Component', () => {
