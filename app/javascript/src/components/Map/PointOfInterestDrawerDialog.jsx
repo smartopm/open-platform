@@ -33,7 +33,6 @@ export default function PointOfInterestDrawerDialog({ anchor, children, open, on
               <ImageAuth
                 key={url}
                 imageLink={url}
-                // alt={imageData.loading ? 'Loading Image': 'No Image Found'}
                 token={authState.token}
                 className="img-responsive img-thumbnail"
               /> 
