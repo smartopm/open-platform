@@ -22,11 +22,10 @@ export default function PaymentSummary() {
   return (
     <div>
       {loading ? <Spinner /> : (
-        <div>
-          {console.log(data)}
+        <Grid container spacing={3}>
           {
             Object.entries(invoiceCardContent).map(([key, val]) => (
-              <Grid item xs={12} sm={6} md={4} lg={3} key={key}>
+              <Grid item xs={6} sm={3} key={key}>
                 <PaymentSummaryCard
                   title={val}
                   value={propAccessor(data?.invoiceSummary, key)}
@@ -34,8 +33,7 @@ export default function PaymentSummary() {
               </Grid>
             ))
           }
-          hello
-        </div>
+        </Grid>
       )}
     </div> 
   )
