@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe Wallet, type: :model do
+RSpec.describe Payments::Wallet, type: :model do
   let!(:user) { create(:user_with_community) }
   let(:community) { user.community }
   let!(:land_parcel) { create(:land_parcel, community_id: community.id) }
@@ -41,7 +41,7 @@ RSpec.describe Wallet, type: :model do
   end
 
   describe 'associations' do
-    it { is_expected.to belong_to(:user) }
+    it { is_expected.to belong_to(:user).class_name('Users::User') }
   end
 
   describe 'Instance Methods' do

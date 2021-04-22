@@ -1,5 +1,4 @@
 # frozen_string_literal: true
-
 require 'host_env'
 
 module Logs
