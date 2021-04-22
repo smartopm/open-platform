@@ -17,6 +17,7 @@ include:
 # .base_minimal:
 #   image: alpine:latest
 #   cache: {}
+
 cache:
   key: ${CI_COMMIT_REF_SLUG}
   paths:
@@ -25,13 +26,9 @@ cache:
 # .base:
 #   image: "ruby:2.6"
 #   cache:
-#     untracked: true
 #     key: gems_and_packages
 #     paths:
-#       - apt-cache/
-#       - node_modules/
 #       - vendor/
-#       - public/
 #   before_script:
 #     - gem install bundler --no-document
 #     - bundle install --jobs $(nproc) "${FLAGS[@]}" --path=vendor
