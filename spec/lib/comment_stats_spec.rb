@@ -3,7 +3,7 @@
 require 'rails_helper'
 require 'comment_alert'
 
-RSpec.describe User, type: :model do
+RSpec.describe Users::User, type: :model do
   let!(:community) do
     create(:community, name: 'Nkwashi', templates: {
              discussion_template_id: 'uuid123',

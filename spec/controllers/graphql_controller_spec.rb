@@ -13,7 +13,7 @@ RSpec.describe GraphqlController, type: :controller do
   describe 'POST execute' do
     it 'basic execution of a query' do
       post :execute, params: {
-        operationName: User,
+        operationName: 'Users::User',
         query: 'query User($id: ID!) {user(id: $id){id}}',
         variables: {
           id: @user.id,

@@ -9,7 +9,7 @@ module Mutations
       field :event_log, Types::EventLogType, null: true
 
       def resolve(ref_id:)
-        event_log = ::EventLog.find_by(ref_id: ref_id)
+        event_log = Logs::EventLog.find_by(ref_id: ref_id)
         raise_event_log_not_found_error(event_log)
 
         event_log.data['enrolled'] = true

@@ -10,7 +10,7 @@ module Mutations
       def resolve
         msg_notify = context[:current_user]
                      .notifications
-                     .where(notifable_type: 'Message')
+                     .where(notifable_type: 'Notifications::Message')
                                   &.update_all(seen_at: Time.zone.now)
 
         return { success: true } if msg_notify

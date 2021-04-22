@@ -27,7 +27,7 @@ module Mutations
 
       def log_feedback(feedback)
         user = context[:current_user]
-        ::EventLog.create(acting_user_id: context[:current_user].id,
+        Logs::EventLog.create(acting_user_id: context[:current_user].id,
                           community_id: user.community_id, subject: 'user_feedback',
                           ref_id: user.id,
                           ref_type: 'User',

@@ -9,7 +9,7 @@ module Mutations
 
       def resolve(vals)
         preferences = vals[:preferences]&.split(',') || []
-        default_preference = ::User::DEFAULT_PREFERENCE
+        default_preference = Users::User::DEFAULT_PREFERENCE
         if (preferences - default_preference).any?
           raise GraphQL::ExecutionError, I18n.t('errors.invalid_value')
         end

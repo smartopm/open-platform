@@ -9,7 +9,7 @@ module Mutations
       field :comment_delete, GraphQL::Types::Boolean, null: false
 
       def resolve(id:)
-        comment = NoteComment.find(id)
+        comment = Comments::NoteComment.find(id)
         raise_comment_not_found_error(comment)
 
         updates_hash = { status: [comment.status, 'deleted'] }

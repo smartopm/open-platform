@@ -27,7 +27,7 @@ describe('Transaction Details Component', () => {
           variables: {
             subject: ['payment_update'],
             refId: '5e246346-50d8-4c1f-9b90',
-            refType: 'WalletTransaction',
+            refType: 'Payments::WalletTransaction',
           }
         },
         result: {
@@ -36,7 +36,7 @@ describe('Transaction Details Component', () => {
               id: "385u9432n384ujdf",
               createdAt: '2021-03-03T12:40:38Z',
               refId: '5e246346-50d8-4c1f-9b90',
-              refType: 'WalletTransaction',
+              refType: 'Payments::WalletTransaction',
               subject: 'payment_update',
               sentence: 'Joe made changes to this payment',
               data: {},

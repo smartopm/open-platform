@@ -27,7 +27,7 @@ RSpec.describe Mutations::Temperature::TemperatureUpdate do
         refId: admin.id,
         temp: '38',
         refName: 'ojm',
-        refType: 'User',
+        refType: 'Users::User',
       }
       result = DoubleGdpSchema.execute(query, variables: variables,
                                               context: {

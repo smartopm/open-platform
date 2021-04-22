@@ -90,7 +90,9 @@ module Types
     def discussion_user(disucssion_id:)
       raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') if context[:current_user].blank?
 
-      DiscussionUser.find_by(user_id: context[:current_user].id, discussion_id: disucssion_id)
+      Discussions::DiscussionUser.find_by(
+        user_id: context[:current_user].id, discussion_id: disucssion_id,
+      )
     end
 
     # Verifies user

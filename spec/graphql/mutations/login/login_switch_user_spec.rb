@@ -23,7 +23,7 @@ RSpec.describe Mutations::Login::LoginSwitchUser do
       variables = {
         id: user.id,
       }
-      prev_log_count = EventLog.count
+      prev_log_count = Logs::EventLog.count
       result = DoubleGdpSchema.execute(query, variables: variables,
                                               context: {
                                                 current_user: admin_user,
@@ -32,7 +32,7 @@ RSpec.describe Mutations::Login::LoginSwitchUser do
 
       expect(result.dig('data', 'loginSwitchUser', 'authToken')).not_to be_nil
       expect(result['errors']).to be_nil
-      expect(EventLog.count).to eq(prev_log_count + 1)
+      expect(Logs::EventLog.count).to eq(prev_log_count + 1)
     end
   end
 end

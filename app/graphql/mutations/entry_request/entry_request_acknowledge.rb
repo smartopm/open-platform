@@ -9,7 +9,7 @@ module Mutations
       field :entry_request, Types::EntryRequestType, null: true
 
       def resolve(vals)
-        entry_request = ::EntryRequest.find(vals.delete(:id))
+        entry_request = Logs::EntryRequest.find(vals.delete(:id))
         raise_entry_request_not_found_error(entry_request)
 
         return { entry_request: entry_request } if entry_request.acknowledge!

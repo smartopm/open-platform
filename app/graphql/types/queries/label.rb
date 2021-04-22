@@ -28,7 +28,7 @@ module Types::Queries::Label
   def labels(offset: 0, limit: 50)
     raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') if context[:current_user].blank?
 
-    Label.with_users_count(context[:site_community].id, limit, offset)
+    Labels::Label.with_users_count(context[:site_community].id, limit, offset)
   end
 
   def user_labels(user_id:)

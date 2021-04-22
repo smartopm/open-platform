@@ -135,12 +135,12 @@ export function IndexComponent({
   const { t } = useTranslation(['logbook', 'common', 'dashboard'])
 
   function routeToAction(eventLog) {
-    if (eventLog.refType === 'EntryRequest') {
+    if (eventLog.refType === 'Logs::EntryRequest') {
       router.push({
         pathname: `/request/${eventLog.refId}`,
         state: { from: 'entry_logs', offset }
       })
-    } if (eventLog.refType === 'User') {
+    } if (eventLog.refType === 'Users::User') {
       router.push({
         pathname: `/user/${eventLog.refId}`,
         state: { from: 'entry_logs', offset }
