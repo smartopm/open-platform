@@ -179,13 +179,10 @@ module Logs
 
     private
 
-    # Validates acting user of event log,
     # * adds error if acting user is from different community
     #
     # @return [void]
     def validate_acting_user
-      return unless acting_user
-
       return if acting_user.community_id == community_id
 
       errors.add(:acting_user_id, :allowed_user_reporting_in_own_community)
