@@ -106,4 +106,5 @@ module Notifications
 
       Campaign.find(campaign_id).include_reply_link
     end
+  end
 end
