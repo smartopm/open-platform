@@ -40,7 +40,7 @@ export default function TransactionDetails({ data, detailsOpen, handleClose, cur
     variables: {
       subject: ['payment_update'],
       refId: data.id,
-      refType: 'WalletTransaction',
+      refType: 'Payments::WalletTransaction',
     },
     errorPolicy: 'all'
   })

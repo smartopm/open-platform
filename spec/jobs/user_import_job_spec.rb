@@ -22,12 +22,12 @@ RSpec.describe UserImportJob, type: :job do
     end
 
     it 'should create new users' do
-      prev_user_count = User.count
+      prev_user_count = Users::User.count
       ActiveJob::Base.queue_adapter.perform_enqueued_jobs = true
 
       UserImportJob.perform_later(csv_string, 'A File.csv', user)
 
-      expect(User.count).to eql(prev_user_count + 2)
+      expect(Users::User.count).to eql(prev_user_count + 2)
     end
   end
 end

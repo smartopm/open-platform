@@ -3,7 +3,7 @@
 require 'rails_helper'
 require 'comment_alert'
 
-RSpec.describe User, type: :model do
+RSpec.describe Users::User, type: :model do
   let!(:community) { create(:community, name: 'Nkwashi') }
   let!(:current_user) { create(:user_with_community, community_id: community.id) }
   let!(:another) { create(:user_with_community, community_id: community.id) }

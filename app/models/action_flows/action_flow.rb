@@ -1,46 +1,17 @@
 # frozen_string_literal: true
 
 module ActionFlows
-  # Class to run JSONLogic with passed rules and data
-  class ActionFlow
-    #  ActionFlows::ActionFlow
-    attr_accessor :description
-    attr_accessor :event_type, :event_condition, :event_action
+  # Table to save new flows
+  class ActionFlow < ApplicationRecord
+    VALID_EVENT_TYPES = ActionFlows::EventPop.event_list.map { |event| event::EVENT_TYPE }
 
-    def initialize(description, event_type, event_condition, event_action)
-      @event_type = event_type
-      @event_condition = event_condition
-      @event_action = event_action
-      @description = description
-    end
+    belongs_to :community
 
-    def action
-      "ActionFlows::Actions::#{action_type.camelize}".constantize
-    end
+    validates :title, :description, :event_type, :event_condition, :event_action, presence: true
+    validates :title, uniqueness: { case_sensitive: false }
+    validates :event_type, inclusion: { in: VALID_EVENT_TYPES, allow_nil: false }
+    # TODO: Find a good way to validate the content of event_action: Nurudeen
 
-    def action_type
-      return nil if @event_action.blank? && @event_action['action_name'].blank?
-
-      @event_action['action_name']
-    end
-
-    def action_fields
-      return nil if @event_action.blank? && @event_action['action_fields'].blank?
-
-      @event_action['action_fields']
-    end
-
-    def condition
-      @event_condition.presence || nil
-    end
-
-    def event_object
-      val = ActionFlows::EventPop.event_list.select do |evt|
-        evt.event_type == @event_type
-      end
-      return val[0] if val.present? && !val.empty?
-
-      nil
-    end
+    default_scope { where.not(status: 'deleted') }
   end
 end

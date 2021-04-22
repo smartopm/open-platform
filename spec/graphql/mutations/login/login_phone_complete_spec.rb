@@ -24,7 +24,7 @@ RSpec.describe Mutations::Login::LoginPhoneComplete do
         id: user.id,
         token: '5f7f275243hj3536',
       }
-      prev_log_count = EventLog.count
+      prev_log_count = Logs::EventLog.count
       result = DoubleGdpSchema.execute(query, variables: variables,
                                               context: {
                                                 site_community: user.community,
@@ -32,7 +32,7 @@ RSpec.describe Mutations::Login::LoginPhoneComplete do
 
       expect(result.dig('data', 'loginPhoneComplete', 'authToken')).not_to be_nil
       expect(result['errors']).to be_nil
-      expect(EventLog.count).to eq(prev_log_count + 1)
+      expect(Logs::EventLog.count).to eq(prev_log_count + 1)
     end
   end
 end

@@ -8,7 +8,7 @@ RSpec.describe Types::QueryType do
       @current_user = create(:security_guard)
       @user = create(:user, community: @current_user.community)
       3.times do
-        EventLog.create(
+        Logs::EventLog.create(
           community: @current_user.community,
           ref_id: @user.id,
           ref_type: 'User',
@@ -18,7 +18,7 @@ RSpec.describe Types::QueryType do
       end
       3.times do
         # Will automatically created entry logs
-        EntryRequest.create(name: 'Joe Visitor', user: @current_user)
+        Logs::EntryRequest.create(name: 'Joe Visitor', user: @current_user)
       end
 
       @query =
@@ -108,7 +108,7 @@ RSpec.describe Types::QueryType do
       @current_user = create(:security_guard)
       @user = create(:user, community: @current_user.community)
       3.times do
-        EventLog.create(
+        Logs::EventLog.create(
           community: @user.community,
           ref_id: @user.id,
           ref_type: 'User',
@@ -391,7 +391,7 @@ RSpec.describe Types::QueryType do
       expect(result.dig('data', 'flaggedNotes')).not_to be_nil
       expect(result.dig('data', 'flaggedNotes').length).to eql 1
 
-      filtered_note = Note.search_user("user: 'Henry'").first
+      filtered_note = Notes::Note.search_user("user: 'Henry'").first
       expect(filtered_note.user).to eq searchable_user
     end
 

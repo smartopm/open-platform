@@ -8,14 +8,15 @@ namespace :db do
     community = Community.find_by(name: 'Nkwashi')
 
     community.present? && community.users.each do |u|
-      existing_substatus_log = SubstatusLog.where(user_id: u[:id]).order(created_at: :desc)&.first
+      existing_substatus_log = Logs::SubstatusLog.where(user_id: u[:id])
+                                                 .order(created_at: :desc)&.first
 
       if existing_substatus_log.present?
         puts "skipped for user with id: #{u[:id]}. Substatus Log already exists"
         next
       end
 
-      new_substatus_log = SubstatusLog.create!(
+      new_substatus_log = Logs::SubstatusLog.create!(
         new_status: u[:sub_status],
         start_date: u[:updated_at].to_datetime.in_time_zone('Africa/Lusaka'),
         user_id: u[:id],

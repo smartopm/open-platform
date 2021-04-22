@@ -16,7 +16,7 @@ module Mutations
       field :form_property, Types::FormPropertiesType, null: true
 
       def resolve(vals)
-        form_property = ::FormProperty.find(vals[:id])
+        form_property = Forms::FormProperty.find(vals[:id])
         return { form_property: form_property } if form_property.update(vals.except(:id))
 
         raise GraphQL::ExecutionError, form_property.errors.full_messages

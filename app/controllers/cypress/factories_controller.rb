@@ -17,7 +17,7 @@ class Cypress::FactoriesController < ApplicationController
   end
 
   def fetch_user
-    user = User.find_by(phone_number: params[:phone])
+    user = Users::User.find_by(phone_number: params[:phone])
     render json: user
   end
 

@@ -45,7 +45,7 @@ module Mutations
       def message_notification(msg)
         context[:site_community]
           .notifications
-          .create(notifable_id: msg[:id], notifable_type: 'Message', user_id: msg[:user_id])
+          .create(notifable_id: msg[:id], notifable_type: msg.class.name, user_id: msg[:user_id])
       end
 
       # TODO: Better auth here

@@ -25,7 +25,7 @@ RSpec.describe PointsAutoAlertJob, type: :job do
     end
 
     it 'does not invoke EmailMsg if user does not have weekly_point_reminder_email' do
-      reminder_label = Label.find_by(short_desc: 'weekly_point_reminder_email')
+      reminder_label = Labels::Label.find_by(short_desc: 'weekly_point_reminder_email')
       user.user_labels.find_by(label_id: reminder_label.id).destroy
       expect(EmailMsg).not_to receive(:send_mail)
       perform_enqueued_jobs { described_class.perform_later }

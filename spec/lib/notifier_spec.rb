@@ -59,8 +59,8 @@ RSpec.describe Notifier do
 
     Notifier.send_in_app_notification('', data)
 
-    expect(Message.count).to eq 0
-    expect(Notification.count).to eq 0
+    expect(Notifications::Message.count).to eq 0
+    expect(Notifications::Notification.count).to eq 0
   end
 
   it 'should not send notification to user when community_id is nil' do
@@ -72,8 +72,8 @@ RSpec.describe Notifier do
 
     Notifier.send_in_app_notification(user[:id], data)
 
-    expect(Message.count).to eq 0
-    expect(Notification.count).to eq 0
+    expect(Notifications::Message.count).to eq 0
+    expect(Notifications::Notification.count).to eq 0
   end
 
   it 'should send notification to user' do
@@ -85,11 +85,11 @@ RSpec.describe Notifier do
 
     expect do
       Notifier.send_in_app_notification(user[:id], data)
-    end.to change { Message.count }.by(1)
+    end.to change { Notifications::Message.count }.by(1)
 
     expect do
       Notifier.send_in_app_notification(user[:id], data)
-    end.to change { Notification.count }.by(1)
+    end.to change { Notifications::Notification.count }.by(1)
   end
 
   it 'should not call #send_in_app_notification when label & user_id are blank' do
@@ -112,10 +112,10 @@ RSpec.describe Notifier do
     user.user_labels.create!(label_id: label.id)
     expect do
       Notifier.send_from_action('Message', data)
-    end.to change { Message.count }.by(1)
+    end.to change { Notifications::Message.count }.by(1)
 
     expect do
       Notifier.send_from_action('Message', data)
-    end.to change { Notification.count }.by(1)
+    end.to change { Notifications::Notification.count }.by(1)
   end
 end

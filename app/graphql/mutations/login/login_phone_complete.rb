@@ -21,7 +21,7 @@ module Mutations
       end
 
       def log(user)
-        EventLog.create(
+        Logs::EventLog.create(
           acting_user: user, community: user.community,
           subject: 'user_login',
           ref_id: nil, ref_type: nil

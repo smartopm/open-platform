@@ -30,7 +30,7 @@ module Types::Queries::Deposit
     raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user]&.admin? ||
                                                          user_id.eql?(context[:current_user]&.id)
 
-    user = User.allowed_users(context[:current_user]).find(user_id)
+    user = Users::User.allowed_users(context[:current_user]).find(user_id)
     raise GraphQL::ExecutionError, 'User not found' if user.blank?
 
     pending_invoices = add_balance_and_parcel_number(user.invoices.not_cancelled

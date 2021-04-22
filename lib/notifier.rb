@@ -42,8 +42,8 @@ class Notifier
   def self.label(short_desc)
     return nil if short_desc.blank?
 
-    Label.where(short_desc: short_desc)
-         .includes(:users, :community).first
+    Labels::Label.where(short_desc: short_desc)
+                 .includes(:users, :community).first
   end
 
   # rubocop:disable Metrics/CyclomaticComplexity
@@ -57,8 +57,8 @@ class Notifier
   def self.user(user_id)
     return nil if user_id.blank?
 
-    User.where(id: user_id)
-        .includes(:community).first
+    Users::User.where(id: user_id)
+               .includes(:community).first
   end
 
   # rubocop:disable Metrics/MethodLength
@@ -69,16 +69,16 @@ class Notifier
       # TODO: we might need to create a category for notifications instead of 'sms' - @Nicolas
       # TODO: we might also need a bot user account to serve as 'sender', whenever notifications
       # are sent from within the app - @Nicolas
-      new_message = Message.create!(
+      new_message = Notifications::Message.create!(
         user_id: user,
         message: data[:message_body] || '',
         category: 'sms',
         sender_id: user,
       )
 
-      Notification.create!(
+      Notifications::Notification.create!(
         notifable_id: new_message[:id],
-        notifable_type: 'Message',
+        notifable_type: 'Notifications::Message',
         user_id: user,
         description: data[:short_desc] || '',
         community_id: data[:community_id],

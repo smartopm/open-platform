@@ -26,9 +26,9 @@ module Mutations
       end
 
       def post_already_read?(user, post_id)
-        ::EventLog.post_read_by_acting_user(user)
-                  .where(ActiveRecord::Base.sanitize_sql("data ->> 'post_id' = '#{post_id}'"))
-                  .exists?
+        Logs::EventLog.post_read_by_acting_user(user)
+                      .where(ActiveRecord::Base.sanitize_sql("data ->> 'post_id' = '#{post_id}'"))
+                      .exists?
       end
 
       def authorized?(_vals)

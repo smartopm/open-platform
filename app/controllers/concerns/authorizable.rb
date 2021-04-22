@@ -72,7 +72,7 @@ module Authorizable
     cached = Rails.cache.read(cache_key)
     return if cached && Time.zone.at(cached) > Time.zone.now
 
-    EventLog.log_user_activity_daily(user)
+    Logs::EventLog.log_user_activity_daily(user)
     Rails.cache.write(cache_key, 8.hours.from_now.to_i, expires_in: 8.hours)
   end
 

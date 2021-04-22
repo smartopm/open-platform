@@ -159,7 +159,7 @@ module Types::Queries::Invoice
     raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user]&.id == user_id ||
                                                          context[:current_user].admin?
 
-    user = User.allowed_users(context[:current_user]).find(user_id)
+    user = Users::User.allowed_users(context[:current_user]).find(user_id)
     raise GraphQL::ExecutionError, 'User not found' if user.blank?
 
     user

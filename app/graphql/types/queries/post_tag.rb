@@ -18,6 +18,6 @@ module Types::Queries::PostTag
     tag = context[:site_community].post_tags.find_by(name: tag_name)
     raise GraphQL::ExecutionError, 'Tag not found' if tag.nil?
 
-    PostTagUser.find_by(user_id: context[:current_user].id, post_tag_id: tag.id)
+    PostTags::PostTagUser.find_by(user_id: context[:current_user].id, post_tag_id: tag.id)
   end
 end

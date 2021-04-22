@@ -363,7 +363,7 @@ export default function RequestUpdate({ id }) {
             <CaptureTemp
               refId={id}
               refName={formData.name}
-              refType="EntryRequest"
+              refType="Logs::EntryRequest"
             />
           )}
 
