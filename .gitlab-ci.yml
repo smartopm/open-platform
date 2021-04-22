@@ -140,8 +140,8 @@ dev:deploy:
     - echo 'deploying to DEV'
     - gem install dpl
     - dpl --provider=heroku --app=double-gdp-dev --api-key=$HEROKU_DEV_API_KEY
-    - heroku run bundle exec rake db:migrate --exit-code --app=double-gdp-dev
-    - echo 'deployed to DEV env'
+    - sh bundle exec rake db:migrate --exit-code --app=double-gdp-dev
+    - echo 'deployed to DEV'
   environment:
     name: development
     url: https://double-gdp-dev.herokuapp.com/
