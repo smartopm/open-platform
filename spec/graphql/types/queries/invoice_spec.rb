@@ -182,7 +182,7 @@ RSpec.describe Types::Queries::Invoice do
     end
 
     it 'should retrieve invoices for a user with transactions' do
-      PaymentInvoice.create!(
+      Payments::PaymentInvoice.create!(
         payment: payment,
         invoice: invoice_one,
         wallet_transaction_id: wallet_transaction.id,

@@ -419,7 +419,7 @@ RSpec.describe Types::Queries::User do
 
     it "creates a new empty user's activity point if there's no current one" do
       @activity_point.update!(created_at: 10.days.ago)
-      prev_activtity_point_count = ActivityPoint.count
+      prev_activtity_point_count = Users::ActivityPoint.count
       result = DoubleGdpSchema.execute(@query, context: {
                                          current_user: @user,
                                        }).as_json
@@ -431,7 +431,7 @@ RSpec.describe Types::Queries::User do
       expect(result.dig('data', 'userActivityPoint', 'comment')).to eq(0)
       expect(result.dig('data', 'userActivityPoint', 'login')).to eq(0)
       expect(result.dig('data', 'userActivityPoint', 'referral')).to eq(0)
-      expect(ActivityPoint.count).to eql(prev_activtity_point_count + 1)
+      expect(Users::ActivityPoint.count).to eql(prev_activtity_point_count + 1)
     end
   end
 

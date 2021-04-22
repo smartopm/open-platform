@@ -102,7 +102,7 @@ class EmailMsg
 
   # msg_id here === source_system_id
   def self.message_exists?(msg_id, id)
-    message = Message.find_by(source_system_id: msg_id, user_id: id)
+    message = Notifications::Message.find_by(source_system_id: msg_id, user_id: id)
     return true unless message.nil?
 
     false
@@ -116,7 +116,7 @@ class EmailMsg
 
   # attempt to synchronize
   def self.message_update?(email)
-    message = Message.find_by(source_system_id: email['msg_id'])
+    message = Notifications::Message.find_by(source_system_id: email['msg_id'])
     return if message.nil?
 
     # we could override the activerecord timestamp by setting updated_at to last_event_time
@@ -149,7 +149,7 @@ class EmailMsg
         next
       end
 
-      message = Message.new(
+      message = Notifications::Message.new(
         is_read: (email['opens_count']).positive?, sender_id: sender.id,
         read_at: (email['opens_count']).positive? ? email['last_event_time'] : nil,
         user_id: user.id,

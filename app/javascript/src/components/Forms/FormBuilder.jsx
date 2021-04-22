@@ -37,7 +37,7 @@ export default function FormBuilder({ formId }) {
   const formLogs = useQuery(AllEventLogsQuery, {
     variables: {
       refId: formId,
-      refType: 'Form',
+      refType: 'Forms::Form',
       subject: null
     }
   })

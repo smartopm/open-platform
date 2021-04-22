@@ -57,7 +57,7 @@ module Types::Queries::Form
       raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
     end
 
-    FormUser.find_by(form_id: form_id, user_id: user_id)
+    Forms::FormUser.find_by(form_id: form_id, user_id: user_id)
   end
 
   # rubocop:disable Metrics/AbcSize

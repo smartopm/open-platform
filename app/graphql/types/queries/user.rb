@@ -78,7 +78,7 @@ module Types::Queries::User
 
   def user(id:)
     authorized = context[:current_user].present? &&
-                 User.allowed_users(context[:current_user]).pluck(:id).include?(id)
+                 Users::User.allowed_users(context[:current_user]).pluck(:id).include?(id)
     raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') unless authorized
 
     find_community_user(id)
@@ -91,19 +91,19 @@ module Types::Queries::User
     raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') unless adm.present? && adm.admin?
 
     if query.present? && query.include?('date_filter')
-      User.allowed_users(context[:current_user]).includes(accounts: [:land_parcels])
-          .eager_load(:notes, :accounts, :labels, :contact_infos)
-          .heavy_search(query)
-          .order(name: :asc)
-          .limit(limit)
-          .offset(offset).with_attached_avatar
+      Users::User.allowed_users(context[:current_user]).includes(accounts: [:land_parcels])
+                 .eager_load(:notes, :accounts, :labels, :contact_infos)
+                 .heavy_search(query)
+                 .order(name: :asc)
+                 .limit(limit)
+                 .offset(offset).with_attached_avatar
     else
-      User.allowed_users(context[:current_user]).includes(accounts: [:land_parcels])
-          .eager_load(:notes, :accounts, :labels, :contact_infos)
-          .search(query)
-          .order(name: :asc)
-          .limit(limit)
-          .offset(offset).with_attached_avatar
+      Users::User.allowed_users(context[:current_user]).includes(accounts: [:land_parcels])
+                 .eager_load(:notes, :accounts, :labels, :contact_infos)
+                 .search(query)
+                 .order(name: :asc)
+                 .limit(limit)
+                 .offset(offset).with_attached_avatar
     end
   end
 
@@ -122,12 +122,12 @@ module Types::Queries::User
       query = query.split(' ').last
     end
 
-    User.allowed_users(context[:current_user]).includes(accounts: [:land_parcels])
-        .eager_load(:notes, :accounts, :labels, :contact_infos)
-        .send(search_method, query)
-        .order(name: :asc)
-        .limit(limit)
-        .offset(offset).with_attached_avatar
+    Users::User.allowed_users(context[:current_user]).includes(accounts: [:land_parcels])
+               .eager_load(:notes, :accounts, :labels, :contact_infos)
+               .send(search_method, query)
+               .order(name: :asc)
+               .limit(limit)
+               .offset(offset).with_attached_avatar
   end
   # rubocop:enable Metrics/MethodLength
   # rubocop:enable Metrics/AbcSize
@@ -150,27 +150,27 @@ module Types::Queries::User
   def security_guards
     raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') unless context[:current_user]
 
-    User.allowed_users(context[:current_user]).includes(accounts: [:land_parcels])
-        .eager_load(:notes, :accounts, :labels, :contact_infos)
-        .where(
-          community_id: context[:current_user].community_id,
-          user_type: 'security_guard',
-        ).order(name: :asc).with_attached_avatar
+    Users::User.allowed_users(context[:current_user]).includes(accounts: [:land_parcels])
+               .eager_load(:notes, :accounts, :labels, :contact_infos)
+               .where(
+                 community_id: context[:current_user].community_id,
+                 user_type: 'security_guard',
+               ).order(name: :asc).with_attached_avatar
   end
 
   def users_lite(offset: 0, limit: 100, query: nil)
     adm = context[:current_user]
     raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') unless adm.present? && adm.admin?
 
-    User.allowed_users(context[:current_user])
-        .search_lite(query)
-        .order(name: :asc)
-        .limit(limit)
-        .offset(offset).with_attached_avatar
+    Users::User.allowed_users(context[:current_user])
+               .search_lite(query)
+               .order(name: :asc)
+               .limit(limit)
+               .offset(offset).with_attached_avatar
   end
 
   def find_community_user(id)
-    user = User.allowed_users(context[:current_user]).find(id)
+    user = Users::User.allowed_users(context[:current_user]).find(id)
     return user if user.present?
 
     raise GraphQL::ExecutionError,
@@ -182,14 +182,14 @@ module Types::Queries::User
     raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') unless user
 
     activity_point = user.activity_point_for_current_week
-    activity_point || ActivityPoint.create!(user: user)
+    activity_point || Users::ActivityPoint.create!(user: user)
   end
 
   def users_count(query: nil)
     adm = context[:current_user]
     raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') unless adm.present? && adm.admin?
 
-    allowed_users = User.allowed_users(context[:current_user])
+    allowed_users = Users::User.allowed_users(context[:current_user])
     if query.present? && query.include?('date_filter')
       allowed_users.heavy_search(query).size
     else
@@ -211,7 +211,7 @@ module Types::Queries::User
       raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
     end
 
-    SubstatusLog.create_time_distribution_report
+    Logs::SubstatusLog.create_time_distribution_report
   end
 
   def user_active_plan

@@ -23,8 +23,8 @@ RSpec.describe TaskCreate do
     data[:author_id] = ''
 
     TaskCreate.new_from_action(data)
-    expect(Note.count).to eq 0
-    expect(AssigneeNote.count).to eq 0
+    expect(Notes::Note.count).to eq 0
+    expect(Notes::AssigneeNote.count).to eq 0
   end
 
   it '#new_from_action should not create new task when body is blank' do
@@ -33,8 +33,8 @@ RSpec.describe TaskCreate do
     data[:author_id] = user.id
 
     TaskCreate.new_from_action(data)
-    expect(Note.count).to eq 0
-    expect(AssigneeNote.count).to eq 0
+    expect(Notes::Note.count).to eq 0
+    expect(Notes::AssigneeNote.count).to eq 0
   end
 
   it '#new_from_action should not create task without community' do
@@ -43,8 +43,8 @@ RSpec.describe TaskCreate do
     data[:author_id] = '123'
 
     TaskCreate.new_from_action(data)
-    expect(Note.count).to eq 0
-    expect(AssigneeNote.count).to eq 0
+    expect(Notes::Note.count).to eq 0
+    expect(Notes::AssigneeNote.count).to eq 0
   end
 
   it '#new_from_action should create a new task' do
@@ -54,7 +54,7 @@ RSpec.describe TaskCreate do
 
     expect do
       TaskCreate.new_from_action(data)
-    end.to change { Note.count }.by(1)
+    end.to change { Notes::Note.count }.by(1)
   end
 
   it '#new_from_action should assign task to assignees' do
@@ -65,11 +65,11 @@ RSpec.describe TaskCreate do
 
     expect do
       TaskCreate.new_from_action(data)
-    end.to change { Note.count }.by(1)
+    end.to change { Notes::Note.count }.by(1)
 
     expect do
       TaskCreate.new_from_action(data)
-    end.to change { AssigneeNote.count }.by(1)
+    end.to change { Notes::AssigneeNote.count }.by(1)
 
     assigned_note = user.assignee_notes.map(&:note).select { |n| n[:body] = data[:body] }
 

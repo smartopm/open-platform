@@ -35,7 +35,7 @@ class CustomerJourneyReport
   # rubocop:enable  Metrics/MethodLength
 
   def self.execute_aggregate_time_distribution_query(sql)
-    User.connection.select_all(sql).rows
+    Users::User.connection.select_all(sql).rows
   end
 
   def self.aggregate_time_lapse_sql

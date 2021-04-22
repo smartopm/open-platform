@@ -10,7 +10,7 @@ module Mutations
       field :note_comment, Types::NoteCommentType, null: true
 
       def resolve(id:, body:)
-        comment = NoteComment.find(id)
+        comment = Comments::NoteComment.find(id)
         raise_comment_not_found_error(comment)
 
         return { note_comment: comment } if comment.body.eql?(body)

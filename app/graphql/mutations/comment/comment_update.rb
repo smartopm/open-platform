@@ -11,7 +11,7 @@ module Mutations
       field :success, String, null: false
 
       def resolve(comment_id:, discussion_id:, status:)
-        comment = ::Comment.find_by(id: comment_id, discussion_id: discussion_id)
+        comment = Comments::Comment.find_by(id: comment_id, discussion_id: discussion_id)
 
         raise GraphQL::ExecutionError, I18n.t('errors.not_found') unless comment
 

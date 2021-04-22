@@ -15,7 +15,7 @@ module Mutations
 
       def resolve(vals)
         vals[:event_condition] = '{"==":[1,1]}' if vals[:event_condition].blank?
-        action_flow = ::ActionFlow.new(
+        action_flow = ActionFlows::ActionFlow.new(
           vals.merge(status: 'active', community: context[:site_community]),
         )
         return { action_flow: action_flow } if action_flow.save
