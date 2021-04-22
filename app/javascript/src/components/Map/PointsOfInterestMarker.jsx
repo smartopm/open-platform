@@ -8,7 +8,11 @@ import ConstructionInProgressIcon from '../../../../assets/images/construction-i
 import {pointOfInterestIconSet} from '../../utils/constants'
 
 export default function PointsOfInterestMarker({markerProps}) {
-  const { poiName, geoLatY, geoLongX, iconUrl } = markerProps
+  const { poiName, geoLatY, geoLongX, iconUrl, geomType } = markerProps
+  const geomTypes = {
+    polygon: 'Polygon',
+    point: 'Point'
+  }
 
   function getCustomIcon({ url }){
     const poiIcon = Object.values(pointOfInterestIconSet).find(({ icon }) => icon === url)
@@ -29,13 +33,12 @@ export default function PointsOfInterestMarker({markerProps}) {
   }
 
   // reset the default icon size
-  // L.Icon.Default.prototype.options.iconSize = [12, 12];
   L.Icon.Default.prototype.options.shadowSize = [0, 0];
 
   const customIcon = new L.Icon({
-    iconUrl: getCustomIcon({ iconUrl }),
-    iconRetinaUrl: getCustomIcon({ iconUrl }),
-    iconAnchor: null,
+    iconUrl: getCustomIcon({ url: iconUrl }),
+    iconRetinaUrl: getCustomIcon({ url: iconUrl }),
+    iconAnchor: (geomType === geomTypes.polygon) ? null : [12, 60],
     iconSize: [30, 40],
   });
 
@@ -87,5 +90,6 @@ PointsOfInterestMarker.defaultProps = {
       geoLatY: PropTypes.number,
       iconUrl: PropTypes.string,
       poiName: PropTypes.string,
+      geomType: PropTypes.string,
     }),
 }
