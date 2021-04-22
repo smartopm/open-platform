@@ -20,7 +20,7 @@ RSpec.describe Mutations::Post::LogReadPost do
     end
 
     it 'creates a post_read log' do
-      prev_log_count = EventLog.count
+      prev_log_count = Logs::EventLog.count
       variables = {
         postId: '111',
       }
@@ -31,7 +31,7 @@ RSpec.describe Mutations::Post::LogReadPost do
       expect(result['errors']).to be_nil
       expect(result.dig('data', 'logReadPost', 'eventLog', 'id')).not_to be_nil
       expect(result.dig('data', 'logReadPost', 'eventLog', 'data', 'post_id')).to eql('111')
-      expect(EventLog.count).to eql(prev_log_count + 1)
+      expect(Logs::EventLog.count).to eql(prev_log_count + 1)
     end
 
     it 'ignores if a post has already been read by a user in the same community' do
@@ -40,7 +40,7 @@ RSpec.describe Mutations::Post::LogReadPost do
                          data: {
                            post_id: '112',
                          })
-      prev_log_count = EventLog.count
+      prev_log_count = Logs::EventLog.count
 
       variables = {
         postId: '112',
@@ -49,7 +49,7 @@ RSpec.describe Mutations::Post::LogReadPost do
                                      context: {
                                        current_user: user,
                                      }).as_json
-      expect(EventLog.count).to eql(prev_log_count)
+      expect(Logs::EventLog.count).to eql(prev_log_count)
     end
 
     it "raises 'Unauthorized' error if user is not logged in" do

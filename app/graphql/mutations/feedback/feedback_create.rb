@@ -10,7 +10,7 @@ module Mutations
       field :feedback, Types::FeedbackType, null: true
 
       def resolve(vals)
-        feedback = ::Feedback.new(
+        feedback = Users::Feedback.new(
           user_id: context[:current_user].id,
           created_at: DateTime.now,
           is_thumbs_up: vals[:is_thumbs_up],
@@ -24,16 +24,16 @@ module Mutations
       end
 
       def log_feedback(feedback)
-        user = ::User.find(context[:current_user].id)
-        ::EventLog.create(acting_user_id: context[:current_user].id,
-                          community_id: user.community_id, subject: 'user_feedback',
-                          ref_id: user.id,
-                          ref_type: 'User',
-                          data: {
-                            ref_name: user.name,
-                            note: feedback ? 'thumbs up' : 'thumbs down',
-                            type: user.user_type,
-                          })
+        user = Users::User.find(context[:current_user].id)
+        Logs::EventLog.create(acting_user_id: context[:current_user].id,
+                              community_id: user.community_id, subject: 'user_feedback',
+                              ref_id: user.id,
+                              ref_type: user.class.name,
+                              data: {
+                                ref_name: user.name,
+                                note: feedback ? 'thumbs up' : 'thumbs down',
+                                type: user.user_type,
+                              })
       end
 
       # TODO: Better auth here

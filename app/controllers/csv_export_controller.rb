@@ -30,8 +30,8 @@ class CsvExportController < ApplicationController
 
   def get_event_logs(_params)
     # TODO: use params to narrow it down later
-    events = EventLog.where(community_id: @user.community_id,
-                            created_at: 14.days.ago..Float::INFINITY)
+    events = Logs::EventLog.where(community_id: @user.community_id,
+                                  created_at: 14.days.ago..Float::INFINITY)
     event_logs_to_rows(events, @user.community.timezone)
   end
 
@@ -48,7 +48,7 @@ class CsvExportController < ApplicationController
 
   def get_visitor_details(event)
     if event.subject == 'visitor_entry'
-      entry_request = EntryRequest.find(event.ref_id)
+      entry_request = Logs::EntryRequest.find(event.ref_id)
       { name: entry_request.name, reason: entry_request.reason }
     else
       { name: nil, reason: nil }
@@ -56,7 +56,7 @@ class CsvExportController < ApplicationController
   end
 
   def ensure_admin
-    @user = User.find_via_auth_token(params[:token], @site_community)
+    @user = Users::User.find_via_auth_token(params[:token], @site_community)
     raise 'Unauthorized' unless @user && @user&.role?(%i[admin])
   end
 end

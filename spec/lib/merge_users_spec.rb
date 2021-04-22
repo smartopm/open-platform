@@ -4,15 +4,15 @@ require 'merge_users'
 
 RSpec.describe MergeUsers do
   before do
-    EntryRequest.skip_callback(:create, :after, :log_entry)
-    FormUser.skip_callback(:create, :after, :log_create_event)
-    NoteComment.skip_callback(:create, :after, :log_create_event)
+    Logs::EntryRequest.skip_callback(:create, :after, :log_entry)
+    Forms::FormUser.skip_callback(:create, :after, :log_create_event)
+    Comments::NoteComment.skip_callback(:create, :after, :log_create_event)
   end
 
   after do
-    EntryRequest.set_callback(:create, :after, :log_entry)
-    FormUser.set_callback(:create, :after, :log_create_event)
-    NoteComment.set_callback(:create, :after, :log_create_event)
+    Logs::EntryRequest.set_callback(:create, :after, :log_entry)
+    Forms::FormUser.set_callback(:create, :after, :log_create_event)
+    Comments::NoteComment.set_callback(:create, :after, :log_create_event)
   end
 
   let!(:user) { create(:user_with_community) }

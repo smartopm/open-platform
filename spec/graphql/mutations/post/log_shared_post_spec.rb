@@ -20,7 +20,7 @@ RSpec.describe Mutations::Post::LogSharedPost do
     end
 
     it 'creates a post_shared log' do
-      prev_log_count = EventLog.count
+      prev_log_count = Logs::EventLog.count
       variables = {
         postId: '111',
       }
@@ -31,7 +31,7 @@ RSpec.describe Mutations::Post::LogSharedPost do
       expect(result['errors']).to be_nil
       expect(result.dig('data', 'logSharedPost', 'eventLog', 'id')).not_to be_nil
       expect(result.dig('data', 'logSharedPost', 'eventLog', 'data', 'post_id')).to eql('111')
-      expect(EventLog.count).to eql(prev_log_count + 1)
+      expect(Logs::EventLog.count).to eql(prev_log_count + 1)
     end
 
     it "raises 'Unauthorized' error if user is not logged in" do

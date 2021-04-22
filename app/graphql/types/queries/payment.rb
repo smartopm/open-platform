@@ -40,10 +40,10 @@ module Types::Queries::Payment
     raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user]&.admin? ||
                                                          user_id.eql?(context[:current_user]&.id)
 
-    user = User.allowed_users(context[:current_user]).find(user_id)
+    user = Users::User.allowed_users(context[:current_user]).find(user_id)
     raise GraphQL::ExecutionError, 'User not found' if user.blank?
 
-    ::PaymentInvoice.where(invoice_id: user.invoices.eager_load(:payments)
+    Payments::PaymentInvoice.where(invoice_id: user.invoices.eager_load(:payments)
                                            .pluck(:id))&.map(&:payment)
   end
   # rubocop:enable Metrics/AbcSize
@@ -64,6 +64,6 @@ module Types::Queries::Payment
   def payments_by_txn_id(txn_id:)
     raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user]&.admin?
 
-    ::PaymentInvoice.where(wallet_transaction_id: txn_id)&.map(&:payment)
+    Payments::PaymentInvoice.where(wallet_transaction_id: txn_id)&.map(&:payment)
   end
 end

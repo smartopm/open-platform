@@ -45,9 +45,14 @@ RSpec.describe Campaign, type: :model do
 
   describe 'associations' do
     it { is_expected.to belong_to(:community) }
-    it { is_expected.to have_many(:labels) }
-    it { is_expected.to have_many(:campaign_labels) }
-    it { is_expected.to have_many(:messages) }
+    it { is_expected.to have_many(:labels).class_name('Labels::Label') }
+    it do
+      is_expected
+        .to have_many(:campaign_labels)
+        .class_name('Labels::CampaignLabel')
+        .dependent(:destroy)
+    end
+    it { is_expected.to have_many(:messages).class_name('Notifications::Message') }
   end
 
   describe 'validations' do
@@ -60,12 +65,12 @@ RSpec.describe Campaign, type: :model do
     let!(:campaign) { create(:campaign, community_id: user.community.id, campaign_type: 'sms') }
 
     it 'creates a new message' do
-      prev_message_count = Message.count
+      prev_message_count = Notifications::Message.count
       allow(Sms).to receive(:send).and_return(OpenStruct.new({ messages: [] }))
 
       campaign.send_messages(admin, user)
 
-      expect(Message.count).to eq(prev_message_count + 1)
+      expect(Notifications::Message.count).to eq(prev_message_count + 1)
     end
   end
 

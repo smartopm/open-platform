@@ -101,7 +101,7 @@ RSpec.describe Mutations::LandParcel do
                             address: 'owner address',
                             userId: current_user.id }],
       }
-      prev_valuation_count = Valuation.count
+      prev_valuation_count = Properties::Valuation.count
 
       result = DoubleGdpSchema.execute(propertyQuery, variables: variables,
                                                       context: {
@@ -113,7 +113,7 @@ RSpec.describe Mutations::LandParcel do
       expect(result.dig('data', 'PropertyCreate', 'landParcel', 'valuations', 0, 'amount')).to eq(
         200,
       )
-      expect(Valuation.count).to eq(prev_valuation_count + 1)
+      expect(Properties::Valuation.count).to eq(prev_valuation_count + 1)
       expect(result.dig('data', 'PropertyCreate', 'landParcel', 'accounts', 0, 'fullName')).to eq(
         'owner name',
       )
@@ -166,7 +166,7 @@ RSpec.describe Mutations::LandParcel do
         },
       ).as_json
 
-      parcel = LandParcel.find(user_parcel.id)
+      parcel = Properties::LandParcel.find(user_parcel.id)
       expect(parcel.parcel_number).to eq('#new123')
       expect(parcel.valuations.first.amount).to eq(200)
       expect(parcel.accounts.first.full_name).to eq('new name')
@@ -243,7 +243,7 @@ RSpec.describe Mutations::LandParcel do
         },
       ).as_json
 
-      parcel = LandParcel.find(user_parcel.id)
+      parcel = Properties::LandParcel.find(user_parcel.id)
       expect(parcel.parcel_number).to eq('BAD-PLOT')
       expect(result['errors']).to be_nil
     end
@@ -312,7 +312,7 @@ RSpec.describe Mutations::LandParcel do
         },
       ).as_json
 
-      parcel = LandParcel.find_by(long_x: variables[:longX], lat_y: variables[:latY])
+      parcel = Properties::LandParcel.find_by(long_x: variables[:longX], lat_y: variables[:latY])
       expect(parcel.parcel_number).to match(/poi-\w+/i)
       expect(parcel.parcel_type).to eq('poi')
       expect(parcel.geom).not_to be_nil
@@ -354,9 +354,9 @@ RSpec.describe Mutations::LandParcel do
         },
       ).as_json
 
-      expect(LandParcel.count).to eq(1)
+      expect(Properties::LandParcel.count).to eq(1)
 
-      parcel = LandParcel.find_by(long_x: variables[:longX], lat_y: variables[:latY])
+      parcel = Properties::LandParcel.find_by(long_x: variables[:longX], lat_y: variables[:latY])
       expect(parcel.parcel_number).to match(/poi-\w+/i)
       expect(parcel.parcel_type).to eq('poi')
       expect(parcel.geom).not_to be_nil
@@ -373,7 +373,7 @@ RSpec.describe Mutations::LandParcel do
 
       expect(delete_result['errors']).to be_nil
       expect(delete_result.dig('data', 'pointOfInterestDelete', 'success')).to be(true)
-      expect(LandParcel.count).to eq(0)
+      expect(Properties::LandParcel.count).to eq(0)
     end
 
     it 'raises an error if non-admin tries to delete a point of interest' do
@@ -392,9 +392,9 @@ RSpec.describe Mutations::LandParcel do
         },
       ).as_json
 
-      expect(LandParcel.count).to eq(1)
+      expect(Properties::LandParcel.count).to eq(1)
 
-      parcel = LandParcel.find_by(long_x: variables[:longX], lat_y: variables[:latY])
+      parcel = Properties::LandParcel.find_by(long_x: variables[:longX], lat_y: variables[:latY])
       delete_result = DoubleGdpSchema.execute(
         pointOfInterestDeleteQuery,
         variables: { id: parcel.id },

@@ -14,7 +14,7 @@ class ActivityPointsJob < ApplicationJob
 
   # rubocop:disable Metrics/MethodLength
   def perform(user_id, action)
-    user = User.find(user_id)
+    user = Users::User.find(user_id)
     return unless user
     return if action == 'user_login' && !user.first_login_today?
     return unless ACTIONS.keys.include?(action.to_sym)
@@ -26,7 +26,7 @@ class ActivityPointsJob < ApplicationJob
       current_week_activity_point.increment!(ACTIONS[action.to_sym], point)
       # rubocop:enable Rails/SkipsModelValidations
     else
-      ActivityPoint.create!(user: user, ACTIONS[action.to_sym] => point)
+      Users::ActivityPoint.create!(user: user, ACTIONS[action.to_sym] => point)
     end
   end
   # rubocop:enable Metrics/MethodLength

@@ -13,6 +13,6 @@ class CheckUnsubscribedUsersJob < ApplicationJob
     community = Community.find_by(name: community)
     unsubscribed_users = community.users.where(email: users.pluck('email'))
     label_id = community.labels.find_by(short_desc: 'com_news_email')&.id
-    UserLabel.where(label_id: label_id, user_id: unsubscribed_users.pluck(:id)).delete_all
+    Labels::UserLabel.where(label_id: label_id, user_id: unsubscribed_users.pluck(:id)).delete_all
   end
 end

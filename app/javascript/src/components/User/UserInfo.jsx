@@ -40,7 +40,7 @@ export default function UserInfo({ user, userType }) {
       <br />
       {userType === 'security_guard' && (
         <div className="container row d-flex justify-content-between">
-          <CaptureTemp refId={user.id} refName={user.name} refType="User" />
+          <CaptureTemp refId={user.id} refName={user.name} refType="Users::User" />
         </div>
       )}
     </div>

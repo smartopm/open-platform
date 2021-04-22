@@ -29,7 +29,7 @@ module Mutations
       # rubocop:enable Metrics/AbcSize
 
       def check_form_user(form_id)
-        form = ::FormUser.find_by(form_id: form_id)
+        form = Forms::FormUser.find_by(form_id: form_id)
         raise GraphQL::ExecutionError, 'You can not delete from a submitted form' if form.present?
       end
 

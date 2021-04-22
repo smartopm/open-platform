@@ -36,11 +36,11 @@ module Mutations
 
       def list_of_user_ids(query, limit)
         users = if query.present? && query.include?('date_filter')
-                  ::User.allowed_users(context[:current_user])
-                        .heavy_search(query)
+                  Users::User.allowed_users(context[:current_user])
+                             .heavy_search(query)
                 else
-                  ::User.allowed_users(context[:current_user])
-                        .search(query)
+                  Users::User.allowed_users(context[:current_user])
+                             .search(query)
                 end
 
         users.order(name: :asc).limit(limit).pluck(:id).uniq

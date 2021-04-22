@@ -48,8 +48,8 @@ module Types
     def users_feedback(offset: 0, limit: 50)
       raise GraphQL::ExecutionError, 'Unauthorized' unless current_user&.admin?
 
-      Feedback.all.order(created_at: :desc)
-              .limit(limit).offset(offset)
+      Users::Feedback.all.order(created_at: :desc)
+                     .limit(limit).offset(offset)
     end
 
     field :campaigns, [Types::CampaignType], null: true do
@@ -86,7 +86,9 @@ module Types
     def discussion_user(disucssion_id:)
       raise GraphQL::ExecutionError, 'Unauthorized' if context[:current_user].blank?
 
-      DiscussionUser.find_by(user_id: context[:current_user].id, discussion_id: disucssion_id)
+      Discussions::DiscussionUser.find_by(
+        user_id: context[:current_user].id, discussion_id: disucssion_id,
+      )
     end
   end
 end
