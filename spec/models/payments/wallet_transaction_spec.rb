@@ -34,19 +34,15 @@ RSpec.describe Payments::WalletTransaction, type: :model do
   end
 
   describe 'validations' do
-    it do
-      is_expected
-        .to validate_inclusion_of(:source)
-        .in_array(Payments::WalletTransaction::VALID_SOURCES)
-    end
+    it { is_expected.to validate_inclusion_of(:source).in_array(WalletTransaction::VALID_SOURCES) }
   end
 
   describe 'associations' do
-    it { is_expected.to belong_to(:user).class_name('Users::User') }
     it { is_expected.to belong_to(:community) }
-    it { is_expected.to belong_to(:depositor).class_name('Users::User').optional }
-    it { is_expected.to belong_to(:payment_plan).class_name('Properties::PaymentPlan').optional }
-    it { is_expected.to have_one(:payment_invoice).dependent(:destroy) }
+    it { is_expected.to belong_to(:user) }
+    it { is_expected.to belong_to(:payment_plan).optional }
+    it { is_expected.to belong_to(:depositor).optional }
+    it { is_expected.to have_one(:payment_invoice) }
   end
 
   describe 'callbacks' do
@@ -72,7 +68,7 @@ RSpec.describe Payments::WalletTransaction, type: :model do
             expect(payment_plan.reload.pending_balance).to eql 0
             expect(invoice.reload.pending_amount).to eql 0
             expect(invoice.status).to eql 'paid'
-            Payments::WalletTransaction.find_by(amount: 120, source: 'cash').cancelled!
+            WalletTransaction.find_by(amount: 120, source: 'cash').cancelled!
             expect(user.wallet.balance).to eql 30
             expect(user.wallet.unallocated_funds).to eql 30
             expect(user.wallet.pending_balance).to eql 0
@@ -97,7 +93,7 @@ RSpec.describe Payments::WalletTransaction, type: :model do
             expect(payment_plan.reload.pending_balance).to eql 0
             expect(invoice.reload.pending_amount).to eql 0
             expect(invoice.status).to eql 'paid'
-            Payments::WalletTransaction.find_by(amount: 100, source: 'cash').cancelled!
+            WalletTransaction.find_by(amount: 100, source: 'cash').cancelled!
             expect(user.wallet.balance).to eql 0
             expect(user.wallet.pending_balance).to eql 100
             expect(invoice.reload.pending_amount).to eql 100
@@ -124,7 +120,7 @@ RSpec.describe Payments::WalletTransaction, type: :model do
             expect(payment_plan.reload.pending_balance).to eql 20
             expect(invoice.reload.pending_amount).to eql 20
             expect(invoice.status).to eql 'in_progress'
-            Payments::WalletTransaction.find_by(amount: 50, source: 'cash').cancelled!
+            WalletTransaction.find_by(amount: 50, source: 'cash').cancelled!
             expect(user.wallet.balance).to eql 0
             expect(user.wallet.pending_balance).to eql 70
             expect(invoice.reload.pending_amount).to eql 70
