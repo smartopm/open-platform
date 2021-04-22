@@ -1,6 +1,6 @@
 /* eslint-disable react/forbid-prop-types */
 /* eslint-disable no-nested-ternary */
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { CSVLink } from "react-csv";
 import Avatar from '@material-ui/core/Avatar';
 import Fab from '@material-ui/core/Fab';
@@ -200,6 +200,15 @@ export default function InvoiceList({ currencyData, userType }) {
     setSearchQuery(handleQueryOnChange(selectedOptions, invoiceFilterFields))
     setListType('nongraph')
   }
+
+  useEffect(() => {
+    if (history.location?.state?.from === 'dashboard') {
+      setListType('graph')
+      setQuery(history.location?.state?.query)
+      loadInvoiceDetail()
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   if (error && !invoicesData) {
     return <CenteredContent>{formatError(error.message)}</CenteredContent>;

@@ -44,12 +44,12 @@ export default function TaskReminderCard({ id }) {
         <div>
           <div style={{display: 'flex'}}>
             <Typography variant='h5' style={matches ? {margin: '20px 0 26px 20px', fontWeight: 'bold'} : {margin: '50px 0 26px 79px', fontWeight: 'bold'}}>Task Reminders</Typography>
-            <TrendingFlatIcon style={matches ? {marginLeft: 'auto', order: 2, marginTop: '20px', marginRight: '20px'} : {marginLeft: 'auto', order: 2, marginTop: '50px', marginRight: '79px'}} />
+            <TrendingFlatIcon style={matches ? {marginLeft: 'auto', order: 2, marginTop: '20px', marginRight: '20px'} : {marginLeft: 'auto', order: 2, marginTop: '50px', marginRight: '80px'}} />
           </div>
           {data?.userTasks.length > 0 ? (
             <div className={classes.root} style={matches ? {marginLeft: '20px'} : {marginLeft: '79px'}}>
-              <GridList className={classes.gridList} cols={matches ? 1 : 3}>
-                {data?.userTasks.map((tile) => (
+              <GridList className={classes.gridList} cols={matches ? 1 : 3.5}>
+                {data.userTasks.map((tile) => (
                   <GridListTile key={tile.id}>
                     <div className={classes.gridTile} onClick={() => history.push('/my_tasks')}>
                       <div className={classes.date} style={checkDate(tile.dueDate) ? {color: 'red'} : null}>
@@ -63,15 +63,15 @@ export default function TaskReminderCard({ id }) {
                       <Typography align='justify' variant='caption' data-testid='body'>
                         <span
                           style={{ whiteSpace: 'pre-line' }}
-                        // eslint-disable-next-line react/no-danger
+                         // eslint-disable-next-line react/no-danger
                           dangerouslySetInnerHTML={{
-                        __html: sanitizeText(removeNewLines(tile.body))
-                        }}
+                         __html: sanitizeText(removeNewLines(tile.body))
+                         }}
                         />
                       </Typography>
                     </div>
                   </GridListTile>
-              ))}
+               ))}
               </GridList>
             </div>
           ) : (
@@ -91,7 +91,8 @@ const useStyles = makeStyles((theme) => ({
     overflow: 'hidden'
   },
   gridList: {
-    flexWrap: 'nowrap'
+    flexWrap: 'nowrap',
+    width: '100%'
   },
   gridTile: {
     border: '2px solid #EBEBEB',
@@ -99,10 +100,8 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.background.paper,
     height: '175px',
     cursor: 'pointer',
-    overflow: 'hidden',
     boxShadow: '0 0 3px #ccc',
     borderRadius: '8px',
-    textOverflow: 'ellipsis'
   },
   date: {
     display: 'flex', 

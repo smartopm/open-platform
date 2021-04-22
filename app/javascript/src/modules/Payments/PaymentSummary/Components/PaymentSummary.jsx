@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useQuery } from 'react-apollo';
-import { Link } from 'react-router-dom'
+import { Link, useHistory } from 'react-router-dom'
 import { Grid, Typography } from '@material-ui/core'
 import { InvoiceSummaryQuery, PaymentSummaryQuery } from '../graphql/payment_summary_query'
 import { Spinner } from '../../../../shared/Loading';
@@ -33,12 +33,29 @@ export default function PaymentSummary() {
     errorPolicy: 'all'
   });
 
+  const history = useHistory()
+
+  function handleClick(val) {
+    setQuery(val)
+    if (active === 'invoice') {
+      history.push({
+        pathname: '/payments/?tab=invoice',
+        state: { from: 'dashboard', query }
+      })
+    } else {
+      history.push({
+        pathname: '/payments/?tab=payment',
+        state: { from: 'dashboard' }
+      })
+    }
+  }
+
   const [active, setActive] = useState('payment')
+  const [query, setQuery] = useState('')
   return (
     <div>
       {loading || payLoading ? <Spinner /> : (
         <div>
-          {console.log(payData)}
           <div style={{display: 'flex', marginLeft: '79px', marginTop: '60px'}}>
             <Typography 
               variant='h6' 
@@ -57,14 +74,14 @@ export default function PaymentSummary() {
               Invoices
             </Typography>
             <Typography color='primary' style={{marginLeft: 'auto', marginRight: '81px', cursor: 'pointer'}}>
-              <Link to='/users'>{active === 'payment' ? 'Make New Payment' : 'Create New Invoice'}</Link>
+              <Link to='/users'>{active === 'payment' && 'Make New Payment'}</Link>
             </Typography>
           </div>
           {active === 'invoice' ? (
             <Grid container spacing={2} style={{padding: '20px 57px 20px 79px', width: '99%'}}>
               {
                 Object.entries(invoiceCardContent).map(([key, val]) => (
-                  <Grid item xs={6} sm={3} key={key}>
+                  <Grid item xs={6} sm={3} key={key} onClick={() => handleClick(key)}>
                     <PaymentSummaryCard
                       title={val}
                       value={propAccessor(data?.invoiceSummary, key)}
