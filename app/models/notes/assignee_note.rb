@@ -1,5 +1,4 @@
 # frozen_string_literal: true
-
 require 'email_msg'
 require 'host_env'
 

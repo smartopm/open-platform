@@ -91,7 +91,7 @@ RSpec.describe Types::Queries::TimeSheet do
     end
 
     it 'list contains all employees' do
-      expect(TimeSheet.all.length).to eql 3
+      expect(Users::TimeSheet.all.length).to eql 3
       result = DoubleGdpSchema.execute(query, context: {
                                          current_user: custodian,
                                          site_community: custodian.community,
