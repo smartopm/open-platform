@@ -41,7 +41,7 @@ RSpec.describe Payments::Wallet, type: :model do
   end
 
   describe 'associations' do
-    it { is_expected.to belong_to(:user) }
+    it { is_expected.to belong_to(:user).class_name('Users::User') }
   end
 
   describe 'Instance Methods' do
