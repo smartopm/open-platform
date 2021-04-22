@@ -43,6 +43,10 @@ module Types::Queries::Wallet
       description 'Get a receipt for a transaction'
       argument :transaction_id, GraphQL::Types::ID, required: true
     end
+
+    field :payment_summary, Types::PaymentSummaryType, null: false do
+      description 'return stats payment amount'
+    end
   end
   # rubocop:enable Metrics/BlockLength
 
@@ -92,9 +96,9 @@ module Types::Queries::Wallet
     payments = context[:site_community].wallet_transactions.where.not(source: 'invoice')
     {
       today: payments.where(created_at: Time.zone.now.beginning_of_day..Time.zone.now.end_of_day).sum(&:amount),
-      one_week: payments.where('created_at >= ? AND created_at <= ?', 7.days.ago, Time.zone.today).sum(&:amount),
+      one_week: payments.where('created_at >= ? AND created_at <= ?', 1.week.ago, Time.zone.today).sum(&:amount),
       one_month: payments.where('created_at >= ? AND created_at <= ?', 30.days.ago, Time.zone.today).sum(&:amount),
-      over_one_month: payments.where('created_at >= ? AND created_at <= ?', 30.days.ago).sum(&:amount),
+      over_one_month: payments.where('created_at >= ? AND created_at <= ?', 1.year.ago, Time.zone.today).sum(&:amount),
     }
   end
 

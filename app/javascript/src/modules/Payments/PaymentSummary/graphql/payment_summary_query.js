@@ -12,3 +12,14 @@ export const InvoiceSummaryQuery = gql`
     }
   }
 `;
+
+export const PaymentSummaryQuery = gql`
+  query PaymentSummaryQuery {
+    paymentSummary {
+      today
+      oneWeek
+      oneMonth
+      overOneMonth
+    }
+  }
+`;
