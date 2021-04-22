@@ -3,6 +3,12 @@
 require 'rails_helper'
 
 RSpec.describe Logs::EntryRequest, type: :model do
+  describe 'Associations' do
+    it { is_expected.to belong_to(:user).class_name('Users::User') }
+    it { is_expected.to belong_to(:community) }
+    it { is_expected.to belong_to(:grantor).class_name('Users::User').optional }
+  end
+
   describe 'callbacks' do
     it { is_expected.to callback(:log_entry).after(:create) }
   end

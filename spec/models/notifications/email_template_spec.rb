@@ -4,7 +4,6 @@ require 'rails_helper'
 
 RSpec.describe Notifications::EmailTemplate, type: :model do
   let!(:community) { create(:community) }
-  let!(:another_community) { create(:community, name: 'CM') }
 
   describe 'create email templates' do
     it 'should extract and store template variables' do
@@ -37,36 +36,8 @@ RSpec.describe Notifications::EmailTemplate, type: :model do
   end
 
   describe 'validations' do
-    let!(:template) { create(:email_template, name: 'Template 1', community_id: community.id) }
-
+    let!(:template) { create(:email_template, community: community) }
+    it { is_expected.to validate_uniqueness_of(:name) }
     it { is_expected.to validate_presence_of(:name) }
-    it {
-      is_expected.to validate_uniqueness_of(:name)
-        .scoped_to(:community_id)
-        .with_message(/Email template with name already exists for community/i)
-    }
-  end
-
-  describe 'scoped validations' do
-    it 'checks for uniqueness of template name per community' do
-      community.email_templates.create!(name: 'Template 1', subject: '', body: '')
-      community.email_templates.create!(name: 'Template 2', subject: '', body: '')
-      another_community.email_templates.create!(name: 'Template 1', subject: '', body: '')
-
-      expect(Notifications::EmailTemplate.count).to eq(3)
-
-      expect(community.email_templates.count).to eq(2)
-      expect(another_community.email_templates.count).to eq(1)
-
-      expect(community.email_templates.find_by(name: 'Template 1')).not_to be_nil
-      expect(another_community.email_templates.find_by(name: 'Template 1')).not_to be_nil
-
-      expect do
-        another_community.email_templates.create!(name: 'Template 1', subject: '', body: '')
-      end.to raise_error(
-        ActiveRecord::RecordInvalid,
-        'Validation failed: Name Email template with name already exists for community',
-      )
-    end
   end
 end

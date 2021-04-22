@@ -19,6 +19,11 @@ RSpec.describe Logs::EventLog, type: :model do
     it { is_expected.to belong_to(:acting_user).class_name('Users::User').optional }
   end
 
+  describe 'Associations' do
+    it { is_expected.to belong_to(:community) }
+    it { is_expected.to belong_to(:acting_user).class_name('Users::User').optional }
+  end
+
   it 'should log user login' do
   end
 
