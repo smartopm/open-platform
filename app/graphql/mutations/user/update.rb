@@ -58,13 +58,13 @@ module Mutations
       end
 
       def log_user_update(user)
-        ::EventLog.create(acting_user_id: context[:current_user].id,
-                          community_id: user.community_id, subject: 'user_update',
-                          ref_id: user.id,
-                          ref_type: 'User',
-                          data: {
-                            ref_name: user.name, note: '', type: user.user_type
-                          })
+        Logs::EventLog.create(acting_user_id: context[:current_user].id,
+                              community_id: user.community_id, subject: 'user_update',
+                              ref_id: user.id,
+                              ref_type: user.class.name,
+                              data: {
+                                ref_name: user.name, note: '', type: user.user_type
+                              })
       end
 
       def own_user?(vals)
@@ -83,7 +83,7 @@ module Mutations
 
       def authorized?(vals)
         check_params(Mutations::User::Create::ALLOWED_PARAMS_FOR_ROLES, vals)
-        user_record = ::User.find(vals[:id])
+        user_record = Users::User.find(vals[:id])
         current_user = context[:current_user]
         unless current_user.admin? || own_user?(vals)
           raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')

@@ -3,7 +3,7 @@
 require 'rails_helper'
 require 'email_msg'
 
-RSpec.describe User, type: :model do
+RSpec.describe Users::User, type: :model do
   let!(:community) { create(:community) }
   let!(:current_user) { create(:user_with_community, community_id: community.id) }
   let!(:another) { create(:user_with_community, community_id: community.id) }
@@ -91,13 +91,13 @@ RSpec.describe User, type: :model do
   end
 
   it 'shouldn\' have messages before syncing' do
-    message = Message.all.count
+    message = Notifications::Message.all.count
     expect(message).to eql 0
   end
 
   it 'should save emails as messages for users' do
     EmailMsg.save_sendgrid_messages(community.name, users_emails, admin.email)
-    messages = Message.all.count
+    messages = Notifications::Message.all.count
     expect(messages).to eql 2
     expect(current_user.messages.count).to eql 1
     expect(another.messages.count).to eql 1
@@ -105,7 +105,7 @@ RSpec.describe User, type: :model do
 
   it 'shouldn\'n save emails as messages for non users' do
     EmailMsg.save_sendgrid_messages(community.name, non_users_emails, admin.email)
-    messages = Message.all.count
+    messages = Notifications::Message.all.count
     expect(messages).to eql 0
     expect(current_user.messages.count).to eql 0
     expect(another.messages.count).to eql 0

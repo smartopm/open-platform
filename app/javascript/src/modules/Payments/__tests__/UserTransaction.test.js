@@ -49,7 +49,7 @@ describe('Render Transaction', () => {
           variables: {
             subject: ['payment_update'],
             refId: transaction.id,
-            refType: 'WalletTransaction',
+            refType: 'Payments::WalletTransaction',
           }
         },
         result: {
@@ -58,7 +58,7 @@ describe('Render Transaction', () => {
               id: "385u9432n384ujdf",
               createdAt: '2021-03-03T12:40:38Z',
               refId: transaction.id,
-              refType: 'WalletTransaction',
+              refType: 'Payments::WalletTransaction',
               subject: 'payment_update',
               sentence: 'Joe made changes to this payment',
               data: {},

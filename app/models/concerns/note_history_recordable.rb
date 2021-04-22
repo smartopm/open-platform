@@ -26,7 +26,7 @@ module NoteHistoryRecordable
   end
 
   def note_history(action, user)
-    NoteHistory.new(
+    Notes::NoteHistory.new(
       action: action,
       user: user,
       note_entity_type: self.class.name,

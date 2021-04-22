@@ -10,7 +10,7 @@ module Mutations
       field :url, GraphQL::Types::String, null: false
 
       def resolve(vals)
-        user = ::User.find(vals[:user_id])
+        user = Users::User.find(vals[:user_id])
         raise GraphQL::ExecutionError, I18n.t('errors.not_found') unless user
 
         url = user.send_one_time_login

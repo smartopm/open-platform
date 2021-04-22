@@ -8,8 +8,8 @@ class DoubleGdpSchema < GraphQL::Schema
   # use GraphQL::Guard.new(policy_object: GraphqlPolicy)
   use(GraphQL::Tracing::NewRelicTracing)
 
-  rescue_from(User::PhoneTokenResultInvalid,
-              User::PhoneTokenResultExpired) do |_err, _obj, _args, _ctx, _field|
+  rescue_from(Users::User::PhoneTokenResultInvalid,
+              Users::User::PhoneTokenResultExpired) do |_err, _obj, _args, _ctx, _field|
     # Raise a graphql-friendly error with a custom message
     raise GraphQL::ExecutionError, 'Invalid or expired phone token'
   end
