@@ -19,9 +19,13 @@ include:
 #   cache: {}
 
 cache:
-  key: ${CI_COMMIT_REF_SLUG}
+  key:
+    files:
+      - Gemfile.lock
+      - package.json
   paths:
     - vendor/ruby
+    - node_modules/
 
 # .base:
 #   image: "ruby:2.6"
