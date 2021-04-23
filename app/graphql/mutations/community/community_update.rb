@@ -12,6 +12,7 @@ module Mutations
       argument :currency, String, required: false
       argument :locale, String, required: false
       argument :tagline, String, required: false
+      argument :logo_url, String, required: false
 
       field :community, Types::CommunityType, null: true
 

@@ -43,6 +43,7 @@ export default function CommunitySettings({ data, token, refetch }) {
   const [fileName, setFileName] = useState('');
   const [currency, setCurrency] = useState('');
   const [tagline, setTagline] = useState(data?.tagline || '');
+  const [logoUrl, setLogoUrl] = useState(data?.logoUrl || '');
   const [locale, setLocale] = useState('en-ZM');
   const [showCropper, setShowCropper] = useState(false);
   const { onChange, signedBlobId } = useFileUpload({
@@ -166,7 +167,8 @@ export default function CommunitySettings({ data, token, refetch }) {
         imageBlobId: signedBlobId,
         currency,
         locale,
-        tagline
+        tagline,
+        logoUrl
       }
     })
       .then(() => {
@@ -302,6 +304,17 @@ export default function CommunitySettings({ data, token, refetch }) {
           name="tagline"
           margin="normal"
           inputProps={{ "data-testid": "tagline"}}
+        />
+          
+      </div>
+      <div className={classes.information} style={{ marginTop: '40px' }}>
+        <TextField
+          label="Set Community Logo Url"
+          value={logoUrl}
+          onChange={event => setLogoUrl(event.target.value)}
+          name="tagline"
+          margin="normal"
+          inputProps={{ "data-testid": "logo_url"}}
         />
           
       </div>

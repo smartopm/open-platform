@@ -6,6 +6,7 @@ export const CurrentCommunityQuery = gql`
     currentCommunity {
       name
       imageUrl
+      logoUrl
       id
       supportNumber
       supportEmail
