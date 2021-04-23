@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useQuery } from 'react-apollo';
 import { Link, useHistory } from 'react-router-dom'
 import { Grid, Typography } from '@material-ui/core'
@@ -23,6 +23,7 @@ const paymentCardContent = {
 
 export default function PaymentSummary() {
   // const classes = useStyles();
+  const [active, setActive] = useState('payment')
   const { loading, data, error } = useQuery(InvoiceSummaryQuery, {
     fetchPolicy: 'cache-and-network',
     errorPolicy: 'all'
@@ -35,8 +36,7 @@ export default function PaymentSummary() {
 
   const history = useHistory()
 
-  function handleClick(val) {
-    setQuery(val)
+  function handleClick(query) {
     if (active === 'invoice') {
       history.push({
         pathname: '/payments/?tab=invoice',
@@ -44,14 +44,11 @@ export default function PaymentSummary() {
       })
     } else {
       history.push({
-        pathname: '/payments/?tab=payment',
-        state: { from: 'dashboard' }
+        pathname: '/payments?tab=payment',
+        state: { from: 'home', query }
       })
     }
   }
-
-  const [active, setActive] = useState('payment')
-  const [query, setQuery] = useState('')
   return (
     <div>
       {loading || payLoading ? <Spinner /> : (
@@ -94,7 +91,7 @@ export default function PaymentSummary() {
             <Grid container spacing={2} style={{padding: '20px 57px 20px 79px', width: '99%'}}>
               {
                 Object.entries(paymentCardContent).map(([key, val]) => (
-                  <Grid item xs={6} sm={3} key={key}>
+                  <Grid item xs={6} sm={3} key={key} onClick={() => handleClick(key)}>
                     <PaymentSummaryCard
                       title={val}
                       value={propAccessor(payData?.paymentSummary, key)}

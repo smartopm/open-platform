@@ -139,7 +139,7 @@ module Types::Queries::Invoice
     when 'oneWeek'
       invoices.where('due_date >= ? AND due_date <= ?', 7.days.ago, Time.zone.today)
     when 'oneMonth'
-      invoices.where('due_date >= ? AND due_date <= ?', 30.days.ago, Time.zone.today))
+      invoices.where('due_date >= ? AND due_date <= ?', 30.days.ago, Time.zone.today)
     when 'overOneMonth'
       invoices.where('due_date <= ?', 30.days.ago)
     else
