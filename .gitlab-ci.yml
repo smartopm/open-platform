@@ -21,6 +21,7 @@ include:
         - Gemfile.lock
         - package.json
     paths:
+      - apt-cache/
       - vendor/ruby
       - node_modules/
     policy: pull
