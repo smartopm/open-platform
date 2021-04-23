@@ -50,7 +50,8 @@ describe('Community settings page ', () => {
           ],
           imageBlobId: null,
           locale: 'en-US',
-          tagline: ''
+          tagline: '',
+          logoUrl: ''
         }
       },
       result: {

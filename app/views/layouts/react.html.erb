@@ -15,9 +15,8 @@
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
-    <%# <link rel="manifest" href="/manifest.json"/> %>
-
-    <% if current_community.name.include? "Someth" %>
+    <%# We could use a different check her %>
+    <% if current_community.name.include? "Double" %>
       <link rel="manifest" href="/manifest.json" />
     <% else %>
       <link rel="manifest" href="/othermanifest.json" />
