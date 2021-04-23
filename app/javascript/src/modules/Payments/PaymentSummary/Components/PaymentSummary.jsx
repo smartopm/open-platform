@@ -36,18 +36,29 @@ export default function PaymentSummary() {
 
   const history = useHistory()
 
+  // TODO: @olivier ==> check which options you want to go with 
   function handleClick(query) {
-    if (active === 'invoice') {
-      history.push({
-        pathname: '/payments/?tab=invoice',
-        state: { from: 'dashboard', query }
-      })
-    } else {
-      history.push({
-        pathname: '/payments?tab=payment',
-        state: { from: 'home', query }
-      })
-    }
+    // Query here also seems to be something else so be sure to double check
+    console.log(query)
+    history.push({
+      pathname: '/payments',
+      state: { from: query === 'invoice' ? 'dashboard' : 'home', query },
+      search: `?tab=${query === 'invoice' ? 'invoice' : 'payment'}`
+    })
+
+    // if (active === 'invoice') {
+    //   history.push({
+    //     pathname: '/payments',
+    //     state: { from: 'dashboard', query },
+    //     search: '?tab=invoice'
+    //   })
+    // } else {
+    //   history.push({
+    //     pathname: '/payments',
+    //     state: { from: 'home', query },
+    //     search: '?tab=payment'
+    //   })
+    // }
   }
   return (
     <div>
