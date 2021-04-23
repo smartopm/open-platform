@@ -14,10 +14,6 @@ include:
   - template: Security/SAST.gitlab-ci.yml
   - template: DAST.gitlab-ci.yml
 
-# .base_minimal:
-#   image: alpine:latest
-#   cache: {}
-
 .default-cache: &default-cache
   cache:
     key:
@@ -27,17 +23,7 @@ include:
     paths:
       - vendor/ruby
       - node_modules/
-
-# .base:
-#   image: "ruby:2.6"
-#   cache:
-#     key: gems_and_packages
-#     paths:
-#       - vendor/
-#       - node_modules/
-#   before_script:
-#     - gem install bundler --no-document
-#     - bundle install --jobs $(nproc) "${FLAGS[@]}" --path=vendor
+    policy: pull
 
 .base_db:
   <<: *default-cache
@@ -90,6 +76,8 @@ test:rspec:
       - "coverage/"
     name: "Rails $CI_PIPELINE_ID Coverage Report"
     expire_in: 24 hours
+  cache:
+    policy: pull-push
 
 test:jest:
   extends: .base_db
