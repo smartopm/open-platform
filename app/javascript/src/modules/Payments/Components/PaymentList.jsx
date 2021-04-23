@@ -121,7 +121,7 @@ export default function PaymentList({ currencyData }) {
   }
 
   useEffect(() => {
-    if (history.location?.state?.from === 'home') {
+    if (history.location?.state?.from === 'dashboard') {
       setListType('graph')
       setQuery(history.location?.state?.query)
       loadPaymentDetail()

@@ -75,19 +75,19 @@ module Types::Queries::Wallet
   end
 
   def payment_stat_details(query:)
-    payments = context[:site_community].wallet_transactions.eager_load(:user).where.not(source: 'invoice')
+    payments = context[:site_community].wallet_transactions.where(destination: 'wallet').where.not(source: 'invoice').eager_load(:user)
     case query
     when 'today'
       payments.where(created_at: Time.zone.now.beginning_of_day..Time.zone.now.end_of_day)
     when 'oneWeek'
-      payments.where('created_at >= ? AND created_at <= ?', 1.week.ago, Time.zone.today)
+      payments.where(created_at: 1.week.ago..Time.zone.today)
     when 'oneMonth'
-      payments.where('created_at >= ? AND created_at <= ?', 30.days.ago, Time.zone.today)
+      payments.where(created_at: 30.days.ago..Time.zone.today)
     when 'overOneMonth'
-      payments.where('created_at >= ? AND created_at <= ?', 1.year.ago, Time.zone.today)
+      payments.where(created_at: 1.year.ago..Time.zone.today)
     else
       converted_date = Date.parse(query).in_time_zone(context[:site_community].timezone).all_day
-      payments.where(created_at: converted_date, destination: 'wallet')
+      payments.where(created_at: converted_date)
     end
   end
 

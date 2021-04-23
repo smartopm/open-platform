@@ -1,5 +1,6 @@
 /* eslint-disable no-use-before-define */
 import React, { useContext } from 'react'
+import Divider from '@material-ui/core/Divider';
 import { Context as AuthStateContext } from './Provider/AuthStateProvider'
 import Loading from '../shared/Loading'
 import Homepage from '../components/HomePage'
@@ -19,8 +20,9 @@ export default function Home() {
       <br />
       {authState.user.userType === 'admin' && (
         <div>
-          <PaymentSummary />
+          <PaymentSummary authState={authState} />
           <br />
+          <Divider />
           <TaskReminder id={authState.user.id} />
         </div>
       )}

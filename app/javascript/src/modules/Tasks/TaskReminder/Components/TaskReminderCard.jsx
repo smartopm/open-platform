@@ -43,8 +43,8 @@ export default function TaskReminderCard({ id }) {
       {loading ? <Spinner /> : (
         <div>
           <div style={{display: 'flex'}}>
-            <Typography variant='h5' style={matches ? {margin: '20px 0 26px 20px', fontWeight: 'bold'} : {margin: '50px 0 26px 79px', fontWeight: 'bold'}}>Task Reminders</Typography>
-            <TrendingFlatIcon style={matches ? {marginLeft: 'auto', order: 2, marginTop: '20px', marginRight: '20px'} : {marginLeft: 'auto', order: 2, marginTop: '50px', marginRight: '80px'}} />
+            <Typography variant='h6' style={matches ? {margin: '20px 0 26px 20px', fontWeight: 'bold'} : {margin: '50px 0 26px 79px', fontWeight: 'bold'}}>Task Reminders</Typography>
+            {matches ? null : <TrendingFlatIcon style={matches ? {marginLeft: 'auto', order: 2, marginTop: '20px', marginRight: '20px'} : {marginLeft: 'auto', order: 2, marginTop: '50px', marginRight: '80px'}} />}
           </div>
           {data?.userTasks.length > 0 ? (
             <div className={classes.root} style={matches ? {marginLeft: '20px'} : {marginLeft: '79px'}}>
@@ -98,14 +98,15 @@ const useStyles = makeStyles((theme) => ({
     border: '2px solid #EBEBEB',
     padding: '20px',
     backgroundColor: theme.palette.background.paper,
-    height: '175px',
+    height: '140px',
     cursor: 'pointer',
+    overflow: 'hidden',
     boxShadow: '0 0 3px #ccc',
     borderRadius: '8px',
   },
   date: {
     display: 'flex', 
-    marginBottom: '15px'
+    marginBottom: '-8px'
   }
 }));
 
