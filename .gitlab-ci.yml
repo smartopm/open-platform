@@ -31,7 +31,7 @@ include:
 # .base:
 #   image: "ruby:2.6"
 #   cache:
-#     key: gems-and-packages
+#     key: gems_and_packages
 #     paths:
 #       - vendor/
 #       - node_modules/
