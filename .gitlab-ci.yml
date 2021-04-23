@@ -138,9 +138,14 @@ dev:deploy:
   when: on_success
   script:
     - echo 'deploying to DEV'
+    - curl https://cli-assets.heroku.com/install-ubuntu.sh | sh
+    - apt-get update -qy
     - gem install dpl
     - dpl --provider=heroku --app=double-gdp-dev --api-key=$HEROKU_DEV_API_KEY
+    - echo 'running migration on DEV'
+    - HEROKU_API_KEY=$HEROKU_DEV_API_KEY heroku run rake db:migrate:status --exit-code --app double-gdp-dev
     - echo 'deployed to DEV'
+
   environment:
     name: development
     url: https://double-gdp-dev.herokuapp.com/
