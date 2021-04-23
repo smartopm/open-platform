@@ -5,6 +5,7 @@ Rails.application.configure do
     # map to assets implicitly
     match "/serviceworker.js"
     match "/manifest.json"
+    match "/othermanifest.json"
 
     # Examples
     #
