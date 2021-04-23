@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
-import { TextField } from '@material-ui/core';
+import { TextField, FormControl, Select, InputLabel, MenuItem } from '@material-ui/core';
 import { CustomizedDialogs } from '../Dialog';
+import {pointOfInterestIconSet} from '../../utils/constants'
 
 export default function PointOfInterestModal({
   open,
@@ -14,7 +15,6 @@ export default function PointOfInterestModal({
   const [longX, setLongX] = useState('');
   const [latY, setLatY] = useState('');
   const [iconUrl, setIconUrl] = useState('');
-  const defaultIconUrl = 'https://cdn4.iconfinder.com/data/icons/logistics-and-transport-1/24/icn-place-stop-512.png';
 
   function handlePointOfInterestSubmit(){
     const geom = getPoiPointFeature({ 
@@ -47,7 +47,7 @@ export default function PointOfInterestModal({
       poi_name: newPoiName,
       long_x: geoLongX,
       lat_y: geoLatY,
-      icon: poiIconUrl || defaultIconUrl,
+      icon: poiIconUrl,
     }
     return (JSON.stringify(feature))
   }
@@ -60,7 +60,7 @@ export default function PointOfInterestModal({
         dialogHeader='New Point of Interest'
         handleBatchFilter={handlePointOfInterestSubmit}
         saveAction="Save"
-        actionable={Boolean(poiName && longX && latY)}
+        actionable={Boolean(poiName && longX && latY && iconUrl)}
       >
         <div className={classes.parcelForm}>
           <TextField
@@ -90,16 +90,27 @@ export default function PointOfInterestModal({
             value={latY}
             onChange={e => setLatY(e.target.value)}
           />
-          <TextField
-            margin="dense"
-            id="iconUrl"
-            label="Icon URL"
-            inputProps={{ 'data-testid': 'icon-url' }}
-            type="text"
-            value={iconUrl}
-            onChange={e => setIconUrl(e.target.value)}
-          />
-          <br />
+          <FormControl>
+            <InputLabel id="demo-simple-select-outlined-label">
+              Choose an Icon Type
+            </InputLabel>
+            <Select
+              labelId="demo-simple-select-outlined-label"
+              id="demo-simple-select-outlined"
+              value={iconUrl}
+              onChange={event => setIconUrl(event.target.value)}
+              label="icon-url"
+              data-testid="icon-url"
+              required
+            >
+              {Object.values(pointOfInterestIconSet).map(({ icon, label}) => (
+                <MenuItem value={icon} key={icon}>
+                  {label}
+                </MenuItem>
+            ))}
+            </Select>
+            <br />
+          </FormControl>
         </div>
       </CustomizedDialogs>
     </>

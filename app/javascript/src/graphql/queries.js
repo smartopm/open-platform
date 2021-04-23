@@ -1063,7 +1063,7 @@ export const LandParcel = gql`
       longX
       geom
       plotSold
-      imageUrl
+      imageUrls
       createdAt
       valuations {
         id

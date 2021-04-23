@@ -10,7 +10,8 @@ describe('<PointsOfInterestMarker />', () => {
       poiName: 'University',
       iconUrl: '',
       geoLongX: 28.6530035716,
-      geoLatY: -15.5096758256
+      geoLatY: -15.5096758256,
+      geomType: 'Polygon'
     }
   
   it('should render marker correctly', async () => {

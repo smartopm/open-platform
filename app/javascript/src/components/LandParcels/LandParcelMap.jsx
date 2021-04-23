@@ -197,7 +197,7 @@ export default function LandParcelMap({ handlePlotClick, geoData }){
         onClose={handleCloseDrawer}
         selectedPoi={selectedPoi}
         imageData={{
-            url: parcelData?.landParcel?.imageUrl,
+            urls: parcelData?.landParcel?.imageUrls,
             loading: parcelDataLoading,
           }}
       >
@@ -323,6 +323,7 @@ export default function LandParcelMap({ handlePlotClick, geoData }){
                              geoLongX: feature.properties.long_x || 0,
                              iconUrl: feature.properties.icon || '',
                              poiName: feature.properties.poi_name || 'Point of Interest',
+                             geomType: feature.geometry.type || 'Polygon'
                         }
                         feature.properties.id = id
                         feature.properties.parcel_no = parcelNumber

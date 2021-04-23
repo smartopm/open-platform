@@ -22,13 +22,15 @@ module Types
     field :valuations, [Types::ValuationType], null: false
     field :accounts, [Types::AccountType], null: false
     field :plot_sold, Boolean, null: true
-    field :image_url, String, null: true
+    field :image_urls, [String], null: true
 
-    def image_url
-      return nil unless object.image.attached?
+    def image_urls
+      return nil unless object.images.attached?
 
-      Rails.application.routes.url_helpers
-           .rails_blob_url(object.image)
+      object.images.map do |image|
+        Rails.application.routes.url_helpers
+             .rails_blob_url(image)
+      end
     end
 
     def plot_sold

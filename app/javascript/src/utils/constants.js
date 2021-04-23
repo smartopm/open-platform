@@ -503,4 +503,19 @@ export const dateWidget = {
     'resident',
     'visitor',
     'custodian'
-  ]
+  ];
+
+  export const pointOfInterestIconSet = {
+    completedHome: {
+      label: 'Completed Home',
+      icon: 'completedHome',
+    },
+    homeInConstruction: {
+      label: 'Home In Construction',
+      icon: 'homeInConstruction',
+    },
+    sculpture: {
+      label: 'Sculpture',
+      icon: 'https://cdn4.iconfinder.com/data/icons/logistics-and-transport-1/24/icn-place-stop-512.png',
+    },
+  };
