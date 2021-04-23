@@ -68,33 +68,33 @@ pages:
     only:
       - master
 
-# test:rspec:
-#   extends: .base_db
-#   coverage: '/LOC\s\(\d+\.\d+%\)\scovered/'
-#   stage: test
-#   allow_failure: false
-#   script:
-#     - bundle exec rake lint
-#     - bundle exec rake
-#   artifacts:
-#     paths:
-#       - "coverage/"
-#     name: "Rails $CI_PIPELINE_ID Coverage Report"
-#     expire_in: 24 hours
+test:rspec:
+  extends: .base_db
+  coverage: '/LOC\s\(\d+\.\d+%\)\scovered/'
+  stage: test
+  allow_failure: false
+  script:
+    - bundle exec rake lint
+    - bundle exec rake
+  artifacts:
+    paths:
+      - "coverage/"
+    name: "Rails $CI_PIPELINE_ID Coverage Report"
+    expire_in: 24 hours
 
-# test:jest:
-#   extends: .base_db
-#   stage: test
-#   coverage: '/All\sfiles.*?\s+(\d+.\d+)/'
-#   allow_failure: false
-#   script:
-#     - yarn lint
-#     - yarn test --coverage --collectCoverageFrom=app/javascript/src/**/*.{js,jsx}
-#   artifacts:
-#     paths:
-#       - "coverage/"
-#     name: "Jest $CI_PIPELINE_ID Coverage Report"
-#     expire_in: 24 hours
+test:jest:
+  extends: .base_db
+  stage: test
+  coverage: '/All\sfiles.*?\s+(\d+.\d+)/'
+  allow_failure: false
+  script:
+    - yarn lint
+    - yarn test --coverage --collectCoverageFrom=app/javascript/src/**/*.{js,jsx}
+  artifacts:
+    paths:
+      - "coverage/"
+    name: "Jest $CI_PIPELINE_ID Coverage Report"
+    expire_in: 24 hours
 
 # cypress:
 #   image: docker:latest
@@ -138,14 +138,8 @@ dev:deploy:
   when: on_success
   script:
     - echo 'deploying to DEV'
-    - echo "deb https://cli-assets.heroku.com/branches/stable/apt ./" > /etc/apt/sources.list.d/heroku.list
-    - wget -O- https://cli-assets.heroku.com/apt/release.key | apt-key add -
-    - apt-get update
-    - apt-get install -y heroku
     - gem install dpl
     - dpl --provider=heroku --app=double-gdp-dev --api-key=$HEROKU_DEV_API_KEY
-    - echo 'running migration on DEV'
-    - heroku run rake db:migrate --exit-code --app double-gdp-dev
     - echo 'deployed to DEV'
   environment:
     name: development
