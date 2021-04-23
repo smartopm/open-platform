@@ -52,7 +52,6 @@ module Types::Queries::Note
 
     field :user_tasks, [Types::NoteType], null: false do
       description 'Returns Takes for a specific user'
-      argument :id, GraphQL::Types::ID, required: true
     end
   end
   # rubocop:enable Metrics/BlockLength
@@ -159,10 +158,12 @@ module Types::Queries::Note
     context[:current_user].tasks.by_completion(false).count
   end
 
-  def user_tasks(id:)
+  def user_tasks
     raise GraphQL::ExecutionError, 'Unauthorized' unless current_user&.admin?
 
-    context[:current_user].tasks.by_completion(false).where.not(due_date: nil).order(created_at: :desc).limit(5)
+    context[:current_user].tasks.by_completion(false).where.not(due_date: nil)
+                          .order(created_at: :desc)
+                          .limit(5)
   end
 end
 # rubocop:enable Metrics/ModuleLength

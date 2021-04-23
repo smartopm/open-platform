@@ -74,8 +74,12 @@ module Types::Queries::Wallet
     WalletTransaction.payment_stat(context[:site_community])
   end
 
+  # rubocop:disable Metrics/AbcSize
+  # rubocop:disable Metrics/MethodLength
   def payment_stat_details(query:)
-    payments = context[:site_community].wallet_transactions.where(destination: 'wallet').where.not(source: 'invoice').eager_load(:user)
+    payments = context[:site_community].wallet_transactions.where(destination: 'wallet')
+                                       .where.not(source: 'invoice')
+                                       .eager_load(:user)
     case query
     when 'today'
       payments.where(created_at: Time.zone.now.beginning_of_day..Time.zone.now.end_of_day)
@@ -90,6 +94,8 @@ module Types::Queries::Wallet
       payments.where(created_at: converted_date)
     end
   end
+  # rubocop:enable Metrics/AbcSize
+  # rubocop:enable Metrics/MethodLength
 
   def transaction_receipt(transaction_id:)
     raise GraphQL::ExecutionError, 'Unauthorized' if context[:current_user].blank?
@@ -99,17 +105,27 @@ module Types::Queries::Wallet
     # rubocop:enable Lint/SafeNavigationChain
   end
 
+  # rubocop:disable Metrics/AbcSize
+  # rubocop:disable Metrics/MethodLength:
   def payment_summary
     raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user]&.admin?
 
-    payments = context[:site_community].wallet_transactions.where(destination: 'wallet').where.not(source: 'invoice')
+    payments = context[:site_community].wallet_transactions.where(destination: 'wallet')
+                                       .where.not(source: 'invoice')
     {
-      today: payments.where(created_at: Time.zone.now.beginning_of_day..Time.zone.now.end_of_day).sum(&:amount),
-      one_week: payments.where('created_at >= ? AND created_at <= ?', 1.week.ago, Time.zone.today).sum(&:amount),
-      one_month: payments.where('created_at >= ? AND created_at <= ?', 30.days.ago, Time.zone.today).sum(&:amount),
-      over_one_month: payments.where('created_at >= ? AND created_at <= ?', 1.year.ago, Time.zone.today).sum(&:amount),
+      today: payments.where(created_at: Time.zone.now.beginning_of_day..Time.zone.now.end_of_day)
+                     .sum(&:amount),
+      one_week: payments.where('created_at >= ? AND created_at <= ?', 1.week.ago, Time.zone.today)
+                        .sum(&:amount),
+      one_month: payments.where('created_at >= ? AND created_at <= ?', 30.days.ago, Time.zone.today)
+                         .sum(&:amount),
+      over_one_month: payments
+        .where('created_at >= ? AND created_at <= ?', 1.year.ago, Time.zone.today)
+        .sum(&:amount),
     }
   end
+  # rubocop:enable Metrics/AbcSize
+  # rubocop:enable Metrics/MethodLength
 
   # It would be good to put this elsewhere to use it in other queries
   def verified_user(user_id)

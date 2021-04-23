@@ -3,7 +3,6 @@
 import React from 'react'
 import { makeStyles } from '@material-ui/core/styles';
 import { useQuery } from 'react-apollo';
-import PropTypes from 'prop-types';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import TrendingFlatIcon from '@material-ui/icons/TrendingFlat';
 import GridList from '@material-ui/core/GridList';
@@ -18,10 +17,9 @@ import CenteredContent from '../../../../components/CenteredContent';
 import { formatError, removeNewLines, sanitizeText } from '../../../../utils/helpers';
 import EmptyCard from '../../../../shared/EmptyCard'
 
-export default function TaskReminderCard({ id }) {
+export default function TaskReminderCard() {
   const matches = useMediaQuery('(max-width:600px)')
   const { loading, data, error } = useQuery(AssignedTaskQuery, {
-    variables: { id },
     fetchPolicy: 'cache-and-network',
     errorPolicy: 'all'
   });
@@ -109,7 +107,3 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: '-8px'
   }
 }));
-
-TaskReminderCard.propTypes = {
-  id: PropTypes.string.isRequired
-};

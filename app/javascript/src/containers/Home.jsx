@@ -23,7 +23,7 @@ export default function Home() {
           <PaymentSummary authState={authState} />
           <br />
           <Divider />
-          <TaskReminder id={authState.user.id} />
+          <TaskReminder />
         </div>
       )}
       <Homepage authState={authState} />
