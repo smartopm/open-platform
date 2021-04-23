@@ -1,15 +1,15 @@
-/* eslint-disable */
+/* eslint-disable react/prop-types */
+/* eslint-disable camelcase */
 import React, { useContext } from 'react'
 import { useQuery } from 'react-apollo'
 import { QRCode } from 'react-qr-svg'
-import Loading from '../shared/Loading.jsx'
-import DateUtil from '../utils/dateutil.js'
-import { UserQuery } from '../graphql/queries'
-import { Context } from './Provider/AuthStateProvider'
-import Nav from '../components/Nav.jsx'
-import ErrorPage from '../components/Error.jsx'
 import { Typography } from '@material-ui/core'
 import EmojiObjectsOutlinedIcon from '@material-ui/icons/EmojiObjectsOutlined'
+import Loading from '../shared/Loading'
+import DateUtil from '../utils/dateutil'
+import { UserQuery } from '../graphql/queries'
+import { Context } from './Provider/AuthStateProvider'
+import ErrorPage from '../components/Error'
 
 function qrCodeAddress(id_card_token) {
   const timestamp = Date.now()
@@ -28,10 +28,7 @@ export default function IdCardPage(){
     return <ErrorPage title={error.message} />
   }
   return (
-    <>
-     <Nav navName="Identity" menuButton="back" backTo="/" />
-      <UserIDDetail data={data} />
-    </>
+    <UserIDDetail data={data} />
   )
 }
 
@@ -54,7 +51,8 @@ export function UserIDDetail({ data }) {
           </div>
           <div className="d-flex justify-content-center">
             <div className="expires">
-              Expiration:{' '}
+              Expiration:
+              {' '}
               {DateUtil.isExpired(data.user.expiresAt) ? (
                 <span className="text-danger">Already Expired</span>
               ) : (
@@ -106,11 +104,26 @@ export function UserIDDetail({ data }) {
           {/* check the time and advise the user */}
           <div className="d-flex justify-content-center">
             <p>
-              <u>Please note the main gate visiting hours:</u> <br />
+              <u>Please note the main gate visiting hours:</u> 
+              {' '}
               <br />
-             <span data-testid="visiting_hours"> Monday - Friday: <b>8:00 - 16:00</b> <br />
-              Saturday: <b>8:00 - 12:00</b> <br />
-              Sunday: <b>Off</b> <br />
+              <br />
+              <span data-testid="visiting_hours">
+                {' '}
+                Monday - Friday:
+                <b>8:00 - 16:00</b> 
+                {' '}
+                <br />
+                Saturday: 
+                {' '}
+                <b>8:00 - 12:00</b> 
+                {' '}
+                <br />
+                Sunday: 
+                {' '}
+                <b>Off</b> 
+                {' '}
+                <br />
               </span>
             </p>
           </div>

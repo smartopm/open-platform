@@ -1,72 +1,89 @@
-import React, { useState } from 'react'
-import { useLocation } from 'react-router-dom'
-import { useForm } from 'react-hook-form'
-import IconButton from '@material-ui/core/IconButton'
-import Button from '@material-ui/core/Button'
-import MoreVertIcon from '@material-ui/icons/MoreVert'
-import PhoneIcon from '@material-ui/icons/Phone'
-import { Dialog, DialogTitle, DialogContent } from '@material-ui/core'
-import { css, StyleSheet } from 'aphrodite'
-import { useMutation } from 'react-apollo'
-import PropTypes from 'prop-types'
-import ReactGA from 'react-ga'
-import { CreateNote } from '../graphql/mutations'
-import { ponisoNumber } from '../utils/constants'
-import ShiftButtons from './TimeTracker/ShiftButtons'
-import Avatar from './Avatar'
-import UserPlotInfo from './UserPlotInfo'
-import UserMerge from './User/UserMerge'
-import CenteredContent from './CenteredContent'
-import UserActionMenu from './User/UserActionMenu'
-import UserNotes from './User/UserNote'
-import UserInfo from './User/UserInfo'
-import UserDetail from './User/UserDetail'
-import UserStyledTabs from './User/UserTabs'
-import { TabPanel } from './Tabs'
-import UserFilledForms from './User/UserFilledForms'
-import UserMessages from './Messaging/UserMessages'
-import Transactions from './Payments/UserTransactions/Transactions'
-import UserJourney from '../containers/User/UserJourney'
-import { propAccessor, useParamsQuery } from '../utils/helpers'
+import React, { useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
+import IconButton from '@material-ui/core/IconButton';
+import Button from '@material-ui/core/Button';
+import DoubleArrowOutlinedIcon from '@material-ui/icons/DoubleArrowOutlined';
+import PhoneIcon from '@material-ui/icons/Phone';
+import { Dialog, DialogTitle, DialogContent, Grid } from '@material-ui/core';
+import { css, StyleSheet } from 'aphrodite';
+import { useMutation } from 'react-apollo';
+import PropTypes from 'prop-types';
+import ReactGA from 'react-ga';
+import { CreateNote } from '../graphql/mutations';
+import { ponisoNumber } from '../utils/constants';
+import ShiftButtons from './TimeTracker/ShiftButtons';
+import Avatar from './Avatar';
+import UserPlotInfo from './User/UserPlotInfo';
+import UserMerge from './User/UserMerge';
+import CenteredContent from './CenteredContent';
+import UserNotes from './User/UserNote';
+import UserInfo from './User/UserInfo';
+import UserDetail from './User/UserDetail';
+import UserStyledTabs from './User/UserTabs';
+import { TabPanel } from './Tabs';
+import UserFilledForms from './User/UserFilledForms';
+import UserMessages from './Messaging/UserMessages';
+import Transactions from '../modules/Payments/Components/UserTransactions/Transactions';
+import UserJourney from './User/UserJourney';
+import { propAccessor, useParamsQuery } from '../utils/helpers';
+import RightSideMenu from '../modules/Menu/component/RightSideMenu';
 
 export default function UserInformation({
   data,
   onLogEntry,
   authState,
-  sendOneTimePasscode,
   refetch,
   userId,
   router,
   accountData,
   accountRefetch
 }) {
-  const CSMNumber = '260974624243'
-  const path = useParamsQuery()
-  const tab = path.get('tab')
-  const [tabValue, setValue] = useState(tab || 'Contacts')
-  const [anchorEl, setAnchorEl] = useState(null)
-  const [isDialogOpen, setDialogOpen] = useState(false)
+  const path = useParamsQuery();
+  const tab = path.get('tab');
+  const paymentSubTab = path.get('payment_sub_tab');
+  const [tabValue, setValue] = useState(tab || 'Contacts');
+  const [paymentSubTabValue, setPaymentSubTabValue] = useState(paymentSubTab || 'Invoices');
+  const [isDialogOpen, setDialogOpen] = useState(false);
+  const [isDrawerOpen, setDrawerOpen] = useState(false);
 
-  const [noteCreate, { loading: mutationLoading }] = useMutation(CreateNote)
-  const { handleSubmit, register } = useForm()
-  const location = useLocation()
+  const [noteCreate, { loading: mutationLoading }] = useMutation(CreateNote);
+  const { handleSubmit, register } = useForm();
+  const location = useLocation();
 
   const onSaveNote = ({ note }) => {
-    const form = document.getElementById('note-form')
+    const form = document.getElementById('note-form');
     noteCreate({
       variables: { userId, body: note, flagged: false }
     }).then(() => {
-      refetch()
-      form.reset()
-    })
-  }
+      refetch();
+      form.reset();
+    });
+  };
 
-  const open = Boolean(anchorEl)
-  const userType = authState.user.userType.toLowerCase()
+  useEffect(() => {
+    if (tab) {
+      setValue(tab);
+    } else {
+      setValue('Contacts');
+    }
+    if (paymentSubTab && tabValue === 'Payments') {
+      setPaymentSubTabValue(paymentSubTab);
+    } else {
+      setPaymentSubTabValue('Invoices');
+    }
+
+    // open merge modal
+    if (tabValue === 'MergeUser') {
+      setDialogOpen(true);
+    }
+  }, [path, tab, tabValue]);
+
+  const userType = authState.user.userType.toLowerCase();
 
   const handleChange = (_event, newValue) => {
-    router.push(`/user/${userId}?tab=${newValue}`)
-    setValue(newValue)
+    router.push(`/user/${userId}?tab=${newValue}`);
+    setValue(newValue);
     const pages = {
       Contacts: 'Contacts',
       Notes: 'Notes',
@@ -74,47 +91,22 @@ export default function UserInformation({
       Plots: 'Plots',
       Payments: 'Payments',
       Forms: 'Forms',
-      CustomerJourney: 'Customer Journey',
-    }
+      CustomerJourney: 'Customer Journey'
+    };
     if (location.pathname.includes('/user')) {
-      const [, rootURL, , userPage] = location.pathname.split('/')
-      const pageHit = `/${rootURL}/${userPage}/${propAccessor(pages, newValue)}`
-      ReactGA.pageview(pageHit)
+      const [, rootURL, , userPage] = location.pathname.split('/');
+      const pageHit = `/${rootURL}/${userPage}/${propAccessor(pages, newValue)}`;
+      ReactGA.pageview(pageHit);
     }
-  }
-  function handleOpenMenu(event) {
-    setAnchorEl(event.currentTarget)
-  }
-
-  function handleClose() {
-    setAnchorEl(null)
-  }
+  };
 
   function handleMergeDialog() {
-    // close the menu
-    setAnchorEl(null)
-    setDialogOpen(!isDialogOpen)
+    setDialogOpen(!isDialogOpen);
+    // invalidating the tabValue wont work unless params are changed, this is caused by the useEffect
+    setValue(null);
+    router.push(`/user/${userId}`);
   }
 
-  function sendOTP() {
-    sendOneTimePasscode({
-      variables: { userId }
-    })
-      .then(_data => {
-        router.push('/otp_sent', {
-          url: _data.data.oneTimeLogin.url,
-          user: data.user.name,
-          success: true
-        })
-      })
-      .catch(() => {
-        router.push('/otp_sent', {
-          url: 'The user has no Phone number added',
-          user: data.user.name,
-          success: false
-        })
-      })
-  }
   return (
     <div>
       <>
@@ -136,55 +128,50 @@ export default function UserInformation({
           </DialogContent>
         </Dialog>
 
-        <div className="container">
-          <div className="row d-flex justify-content-between">
-            <div className="col-4 ">
-              <Avatar
-                user={data.user}
-                // eslint-disable-next-line react/style-prop-object
-                style="small"
-              />
-            </div>
-
+        <Grid container direction="row" justify="space-between">
+          <Grid item xs={3}>
+            <Avatar
+              user={data.user}
+              // eslint-disable-next-line react/style-prop-object
+              style="medium"
+            />
+          </Grid>
+          <Grid item xs={6}>
             <UserDetail data={data} userType={userType} />
+          </Grid>
+          <Grid item xs={2}>
+            <>
+              <IconButton
+                aria-label="more"
+                aria-controls="long-menu"
+                aria-haspopup="true"
+                onClick={() => setDrawerOpen(true)}
+                style={{
+                    float: 'right',
+                    marginRight: -23
+                  }}
+              >
+                <DoubleArrowOutlinedIcon
+                    // this is hacky, it should be replaced with a proper icon
+                  style={{ transform: 'translate(-50%,-50%) rotate(180deg)' }}
+                />
+              </IconButton>
 
-            <div className="col-2 ml-auto">
-              {Boolean(authState.user.userType !== 'security_guard') && (
-                <IconButton
-                  aria-label="more"
-                  aria-controls="long-menu"
-                  aria-haspopup="true"
-                  onClick={handleOpenMenu}
-                >
-                  <MoreVertIcon />
-                </IconButton>
-              )}
-              {/* Menu */}
-              <UserActionMenu
-                data={data}
-                router={router}
-                anchorEl={anchorEl}
-                handleClose={handleClose}
-                userType={userType}
-                sendOTP={sendOTP}
-                CSMNumber={CSMNumber}
-                open={open}
-                OpenMergeDialog={handleMergeDialog}
-                linkStyles={css(styles.linkItem)}
+              <RightSideMenu
+                authState={authState}
+                handleDrawerToggle={() => setDrawerOpen(false)}
+                drawerOpen={isDrawerOpen}
               />
-            </div>
-          </div>
-          <br />
-          {authState.user.userType === 'custodian' &&
-            ['security_guard', 'contractor'].includes(data.user.userType) && (
-              <ShiftButtons userId={userId} />
-            )}
-        </div>
-        <UserStyledTabs
-          tabValue={tabValue}
-          handleChange={handleChange}
-          userType={userType}
-        />
+            </>
+          </Grid>
+        </Grid>
+
+        <br />
+        {authState.user.userType === 'custodian' &&
+          ['security_guard', 'contractor'].includes(data.user.userType) && (
+            <ShiftButtons userId={userId} />
+          )}
+        <UserStyledTabs tabValue={tabValue} handleChange={handleChange} userType={userType} />
 
         <TabPanel value={tabValue} index="Contacts">
           {/* userinfo */}
@@ -232,17 +219,14 @@ export default function UserInformation({
           <>
             <TabPanel value={tabValue} index="Plots">
               <UserPlotInfo
-                account={accountData?.user.accounts || []}
+                account={accountData?.user?.accounts || []}
                 userId={data.user.id}
                 refetch={accountRefetch}
                 userType={userType}
               />
             </TabPanel>
             <TabPanel value={tabValue} index="Forms">
-              <UserFilledForms
-                userFormsFilled={data.user.formUsers}
-                userId={data.user.id}
-              />
+              <UserFilledForms userFormsFilled={data.user.formUsers} userId={data.user.id} />
             </TabPanel>
           </>
         )}
@@ -251,17 +235,17 @@ export default function UserInformation({
             userId={userId}
             user={authState.user}
             userData={data.user}
+            paymentSubTabValue={paymentSubTabValue}
           />
         </TabPanel>
         {['admin'].includes(userType) && (
           <TabPanel value={tabValue} index="CustomerJourney">
-            <UserJourney data={data} />
+            <UserJourney data={data} refetch={refetch} />
           </TabPanel>
         )}
 
         <div className="container d-flex justify-content-between">
-          {data.user.state === 'valid' &&
-          authState.user.userType === 'security_guard' ? (
+          {data.user.state === 'valid' && authState.user.userType === 'security_guard' ? (
             <Button
               id="log-entry"
               className={`${css(styles.logButton)} log-entry-btn`}
@@ -278,13 +262,13 @@ export default function UserInformation({
               className={`${css(styles.callButton)}`}
               href={`tel:${ponisoNumber}`}
             >
-              Call Poniso
+              Call Manager
             </Button>
           ) : null}
         </div>
       </>
     </div>
-  )
+  );
 }
 
 const User = PropTypes.shape({
@@ -294,18 +278,17 @@ const User = PropTypes.shape({
   state: PropTypes.string,
   accounts: PropTypes.arrayOf(PropTypes.object),
   formUsers: PropTypes.arrayOf(PropTypes.object)
-})
+});
 UserInformation.propTypes = {
   data: PropTypes.shape({ user: User }).isRequired,
   onLogEntry: PropTypes.func.isRequired,
   authState: PropTypes.shape({ user: User }).isRequired,
-  sendOneTimePasscode: PropTypes.func.isRequired,
   refetch: PropTypes.func.isRequired,
   userId: PropTypes.string.isRequired,
   router: PropTypes.shape({ push: PropTypes.func.isRequired }).isRequired,
   accountData: PropTypes.shape({ user: User }).isRequired,
-  accountRefetch: PropTypes.func.isRequired,
-}
+  accountRefetch: PropTypes.func.isRequired
+};
 
 const styles = StyleSheet.create({
   linkItem: {
@@ -320,4 +303,4 @@ const styles = StyleSheet.create({
     backgroundColor: '#FF6347',
     color: '#FFF'
   }
-})
+});

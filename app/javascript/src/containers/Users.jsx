@@ -6,13 +6,11 @@ import { makeStyles } from '@material-ui/core/styles'
 import { Button, Divider, IconButton, InputBase, Grid } from '@material-ui/core'
 import FilterListIcon from '@material-ui/icons/FilterList'
 import MaterialConfig from 'react-awesome-query-builder/lib/config/material'
-import Nav from '../components/Nav'
 import Loading from '../shared/Loading'
 import ErrorPage from '../components/Error'
 import { UsersDetails, LabelsQuery, UsersCount } from '../graphql/queries'
 import {
   CreateNote,
-  SendOneTimePasscode,
   UserLabelCreate,
   CampaignCreateThroughUsers
 } from '../graphql/mutations'
@@ -45,7 +43,6 @@ export default function UsersList() {
   const [modalAction, setModalAction] = useState('')
   const [noteCreate, { loading: mutationLoading }] = useMutation(CreateNote)
   const authState = useContext(AuthStateContext)
-  const [sendOneTimePasscode] = useMutation(SendOneTimePasscode)
   const [labelError, setError] = useState('')
   const [campaignCreate] = useMutation(CampaignCreateThroughUsers)
   const [campaignCreateOption, setCampaignCreateOption] = useState('none')
@@ -112,7 +109,7 @@ export default function UsersList() {
         const query = availableConjugate
           .map(option => {
             let operator = Object.keys(option)[0]
-            // skipped nested object accessor here until fully tested 
+            // skipped nested object accessor here until fully tested
             // eslint-disable-next-line security/detect-object-injection
             const property = filterFields[option[operator][0].var]
             let value = propAccessor(option, operator)[1]
@@ -234,7 +231,7 @@ export default function UsersList() {
     if (option === 'none') {
       setSelectCheckBox(false)
       setSelectedUsers([])
-    }  
+    }
   }
 
   function setSelectAll() {
@@ -353,6 +350,14 @@ export default function UsersList() {
           })
         }
       }
+    },
+    widgets: {
+      ...InitialConfig.widgets,
+      date: {
+        ...InitialConfig.widgets.date,
+        dateFormat: "YYYY.MM.DD",
+        valueFormat: "YYYY-MM-DD",
+      }
     }
   }
 
@@ -384,7 +389,6 @@ export default function UsersList() {
 
   return (
     <>
-      <Nav navName="Users" menuButton="back" backTo="/" />
       <div className="container">
         <ActionDialog
           open={openCampaignWarning}
@@ -401,7 +405,7 @@ export default function UsersList() {
           {modalAction === 'Note' && (
             <div className="form-group">
               <h6>
-                Add note for 
+                Add note for
                 {' '}
                 <strong>{userName}</strong>
                 {' '}
@@ -422,7 +426,7 @@ export default function UsersList() {
           {modalAction === 'Answered' && (
             <div className="form-group">
               <h6>
-                Add Outgoing call answered for 
+                Add Outgoing call answered for
                 {' '}
                 <strong>{userName}</strong>
                 {' '}
@@ -443,7 +447,7 @@ export default function UsersList() {
           {modalAction === 'Missed' && (
             <div className="form-group">
               <h6>
-                Add Outgoing call not answered for 
+                Add Outgoing call not answered for
                 {' '}
                 <strong>{userName}</strong>
                 {' '}
@@ -565,7 +569,6 @@ export default function UsersList() {
               userData={data}
               handleNoteModal={handleNoteModal}
               currentUserType={authState.user.userType}
-              sendOneTimePasscode={sendOneTimePasscode}
               handleUserSelect={handleUserSelect}
               selectedUsers={selectedUsers}
               offset={offset}

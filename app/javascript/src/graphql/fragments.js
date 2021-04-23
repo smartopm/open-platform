@@ -59,6 +59,7 @@ export const UserFragment = {
       }
       substatusLogs{
         id
+        userId
         startDate
         stopDate
         newStatus

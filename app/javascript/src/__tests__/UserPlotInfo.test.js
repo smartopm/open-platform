@@ -2,7 +2,7 @@ import React from 'react'
 import { BrowserRouter } from 'react-router-dom'
 import { cleanup, render } from '@testing-library/react'
 import { MockedProvider } from '@apollo/react-testing'
-import UserPlotInfo from '../components/UserPlotInfo'
+import UserPlotInfo from '../components/User/UserPlotInfo'
 import '@testing-library/jest-dom/extend-expect'
 
 describe('User Plot Info Page', () => {
@@ -13,11 +13,13 @@ describe('User Plot Info Page', () => {
       landParcels: [
         {
           id: '6f1f-4200-8cqa',
-          parcelNumber: 'Standard434'
+          parcelNumber: 'Standard434',
+          updatedAt: '2020-05-10T17:09:37Z',
         },
         {
           id: '6f1f-4200-8cea',
-          parcelNumber: 'Basic-1'
+          parcelNumber: 'Basic-1',
+          updatedAt: '2020-05-11T17:09:37Z',
         }
       ]
     },
@@ -27,7 +29,8 @@ describe('User Plot Info Page', () => {
       landParcels: [
         {
           id: '6f1f-4200-8jfa',
-          parcelNumber: 'Basic-1'
+          parcelNumber: 'Basic-1',
+          updatedAt: '2020-05-12T17:09:37Z',
         }
       ]
     }
@@ -37,7 +40,7 @@ describe('User Plot Info Page', () => {
     userType:'admin',
     userId: 'bwekwjkewj'
   }
-  
+
   it('should include this type of a plot', () => {
     const container = render(
       <MockedProvider mock={[]}>

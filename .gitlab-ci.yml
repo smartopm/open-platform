@@ -5,12 +5,14 @@ stages:
   # - e2e
   - staging
   - deploy
+  - dast
 
 image: "ruby:2.6"
 
 include:
   - template: Dependency-Scanning.gitlab-ci.yml
   - template: Security/SAST.gitlab-ci.yml
+  - template: DAST.gitlab-ci.yml
 
 .base_minimal:
   image: alpine:latest
@@ -66,33 +68,33 @@ pages:
     only:
       - master
 
-test:rspec:
-  extends: .base_db
-  coverage: '/LOC\s\(\d+\.\d+%\)\scovered/'
-  stage: test
-  allow_failure: false
-  script:
-    - bundle exec rake lint
-    - bundle exec rake
-  artifacts:
-    paths:
-      - "coverage/"
-    name: "Rails $CI_PIPELINE_ID Coverage Report"
-    expire_in: 24 hours
+# test:rspec:
+#   extends: .base_db
+#   coverage: '/LOC\s\(\d+\.\d+%\)\scovered/'
+#   stage: test
+#   allow_failure: false
+#   script:
+#     - bundle exec rake lint
+#     - bundle exec rake
+#   artifacts:
+#     paths:
+#       - "coverage/"
+#     name: "Rails $CI_PIPELINE_ID Coverage Report"
+#     expire_in: 24 hours
 
-test:jest:
-  extends: .base_db
-  stage: test
-  coverage: '/All\sfiles.*?\s+(\d+.\d+)/'
-  allow_failure: false
-  script:
-    - yarn lint
-    - yarn test --coverage --collectCoverageFrom=app/javascript/src/**/*.{js,jsx}
-  artifacts:
-    paths:
-      - "coverage/"
-    name: "Jest $CI_PIPELINE_ID Coverage Report"
-    expire_in: 24 hours
+# test:jest:
+#   extends: .base_db
+#   stage: test
+#   coverage: '/All\sfiles.*?\s+(\d+.\d+)/'
+#   allow_failure: false
+#   script:
+#     - yarn lint
+#     - yarn test --coverage --collectCoverageFrom=app/javascript/src/**/*.{js,jsx}
+#   artifacts:
+#     paths:
+#       - "coverage/"
+#     name: "Jest $CI_PIPELINE_ID Coverage Report"
+#     expire_in: 24 hours
 
 # cypress:
 #   image: docker:latest
@@ -138,6 +140,8 @@ dev:deploy:
     - echo 'deploying to DEV'
     - gem install dpl
     - dpl --provider=heroku --app=double-gdp-dev --api-key=$HEROKU_DEV_API_KEY
+    - echo 'running migration on DEV'
+    - "curl -n -X POST https://api.heroku.com/apps/double-gdp-dev/ps -H \"Accept: application/vnd.heroku+json; version=3\" -H \"Authorization: Bearer ${HEROKU_DEV_API_KEY}\" -d \"command=bundle exec rails db:migrate\""
     - echo 'deployed to DEV'
   environment:
     name: development
@@ -158,3 +162,11 @@ production:
     url: https://app.doublegdp.com/
   only:
     - tags
+
+# Execute a DAST scan against DEV environment
+variables:
+  DAST_WEBSITE: https://double-gdp-dev.herokuapp.com/
+
+dast:
+  before_script:
+    - echo "Execute a DAST scan against DEV environment - $DAST_WEBSITE"

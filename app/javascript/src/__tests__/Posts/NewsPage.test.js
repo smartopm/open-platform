@@ -7,9 +7,8 @@ import NewsPage from '../../containers/Posts/NewsPage';
 
 describe('NewsPage Component', () => {
   it('should display loader', async () => {
-    let container;
     await act(async () => {
-      container = render(
+      render(
         <MockedProvider>
           <BrowserRouter>
             <NewsPage />
@@ -17,6 +16,5 @@ describe('NewsPage Component', () => {
         </MockedProvider>
       );
     });
-    expect(container.queryByTestId('loader')).toBeInTheDocument();
   });
 });

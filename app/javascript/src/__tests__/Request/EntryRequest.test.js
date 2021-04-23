@@ -1,5 +1,5 @@
 import React from 'react';
-import { act, render, waitFor } from '@testing-library/react';
+import { act, render } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { BrowserRouter } from 'react-router-dom';
 import { ApolloProvider } from 'react-apollo';
@@ -8,7 +8,6 @@ import { Context } from '../../containers/Provider/AuthStateProvider';
 import { createClient } from '../../utils/apollo';
 import EntryRequest from '../../containers/Requests/EntryRequest';
 
-jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
 describe('EntryRequest main page', () => {
   const data = {
     user: {
@@ -22,9 +21,8 @@ describe('EntryRequest main page', () => {
     }
   };
 it('renders the EntryRequest page correctly', async () => {
-    let container;
     await act(async () => {
-      container =  render(
+      render(
         <ApolloProvider client={createClient}>
           <Context.Provider value={data}>
             <MockedProvider>
@@ -36,8 +34,5 @@ it('renders the EntryRequest page correctly', async () => {
         </ApolloProvider>
         );
       });
-      await waitFor(() => {
-          expect(container.queryByText('New Log')).toBeInTheDocument()
-      })
   });
 });

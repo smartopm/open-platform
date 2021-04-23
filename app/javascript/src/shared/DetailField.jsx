@@ -31,11 +31,12 @@ DetailsField.defaultProps = {
     isSelect: false,
     children: null
   },
+  value: undefined
 }
 
 DetailsField.propTypes = {
   title: PropTypes.string.isRequired,
-  value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+  value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   handleChange: PropTypes.func,
   editable: PropTypes.bool,
   // eslint-disable-next-line react/forbid-prop-types

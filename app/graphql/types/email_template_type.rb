@@ -9,6 +9,8 @@ module Types
     field :description, String, null: false
     field :body, String, null: false
     field :community, Types::CommunityType, null: false
+    field :variable_names, GraphQL::Types::JSON, null: false
+    field :data, GraphQL::Types::JSON, null: true
     field :created_at, GraphQL::Types::ISO8601DateTime, null: false
     field :updated_at, GraphQL::Types::ISO8601DateTime, null: false
   end

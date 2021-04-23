@@ -5,6 +5,7 @@ import { useMutation } from "react-apollo";
 import { loginPhoneConfirmCode } from "../../graphql/mutations";
 import { Context as AuthStateContext } from "../../containers/Provider/AuthStateProvider";
 
+/* istanbul ignore next */
 export default function OneTimeLoginCode({ match }) {
   const { id, code } = match.params;
   const authState = useContext(AuthStateContext);

@@ -49,6 +49,11 @@ module Types::Queries::Note
       description 'return histories for one task'
       argument :task_id, GraphQL::Types::ID, required: true
     end
+
+    field :user_tasks, [Types::NoteType], null: false do
+      description 'Returns Takes for a specific user'
+      argument :id, GraphQL::Types::ID, required: true
+    end
   end
   # rubocop:enable Metrics/BlockLength
 
@@ -152,6 +157,12 @@ module Types::Queries::Note
 
   def my_task
     context[:current_user].tasks.by_completion(false).count
+  end
+
+  def user_tasks(id:)
+    raise GraphQL::ExecutionError, 'Unauthorized' unless current_user&.admin?
+
+    context[:site_community].notes.where.not(due_date: nil).where(user_id: id, flagged: true)
   end
 end
 # rubocop:enable Metrics/ModuleLength

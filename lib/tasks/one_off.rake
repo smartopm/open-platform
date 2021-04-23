@@ -239,3 +239,20 @@ namespace :import do
 end
 # rubocop:enable Metrics/BlockLength
 # rubocop:enable Layout/LineLength
+
+namespace :backfill do
+  desc 'Move valuation amount to payment plan'
+  task total_amount_on_payment_plan: :environment do
+    puts 'Starting...'
+    LandParcel.find_each do |lp|
+      latest_valuation = lp.valuations.latest
+      plan = lp.payment_plan
+
+      next if plan.nil?
+      next if plan.total_amount.present?
+
+      plan.update(total_amount: latest_valuation.amount) if latest_valuation.present?
+    end
+    puts 'Done.'
+  end
+end

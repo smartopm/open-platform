@@ -17,7 +17,6 @@ module Mutations
       argument :avatar_blob_id, String, required: false
       argument :document_blob_id, String, required: false
       argument :sub_status, String, required: false
-      argument :substatus_start_date, String, required: false
       argument :secondary_info, [GraphQL::Types::JSON], required: false
       argument :ext_ref_id, String, required: false
 
@@ -31,8 +30,8 @@ module Mutations
         log_user_update(user)
         update_secondary_info(user, vals.delete(:secondary_info))
 
-        if user.update(vals.except(*ATTACHMENTS.keys, :substatus_start_date))
-          update_substatus_date(user, vals[:substatus_start_date])
+        if user.update(vals.except(*ATTACHMENTS.keys))
+          update_substatus_date(user, vals[:sub_status])
           return { user: user }
         end
         raise GraphQL::ExecutionError, user.errors.full_messages
@@ -72,12 +71,14 @@ module Mutations
         context[:current_user].id == vals[:id]
       end
 
-      def update_substatus_date(user, start_date)
-        # maintains the time set in user model if no start_date provided
-        return if start_date.nil?
+      def update_substatus_date(user, substatus)
+        return if substatus.nil?
 
-        status = SubstatusLog.find_by(id: user.latest_substatus_id)
-        status&.update!(start_date: start_date)
+        user_logs = user.substatus_logs
+        return if user_logs.blank?
+
+        start_date = user.current_time_in_timezone
+        user_logs.previous_log(user_logs.first.created_at).update(stop_date: start_date)
       end
 
       def authorized?(vals)

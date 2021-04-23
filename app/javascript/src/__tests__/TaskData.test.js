@@ -2,7 +2,7 @@ import React from 'react';
 import { render } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { BrowserRouter } from 'react-router-dom';
-import renderTaskData, { LinkToUser } from '../components/Notes/RenderTaskData';
+import renderTaskData, { LinkToUser } from '../modules/Tasks/Components/RenderTaskData';
 
 describe('Task Data components ', () => {
   it('should render proper the link to user component', () => {
@@ -31,7 +31,14 @@ describe('Task Data components ', () => {
         assigneeNotes: []
       }
     ];
-    const results = renderTaskData(tasks, mock, [], mock);
+    const results = renderTaskData({
+      data: tasks,
+      handleChange: mock,
+      selectedTasks: [],
+      handleTaskDetails: mock,
+      handleCompleteNote: mock,
+      actionMenu: { open: false, handleClose: mock, handleOpen: mock }
+    });
     expect(results).toBeInstanceOf(Array);
     expect(results[0]).toHaveProperty('Select');
     expect(results[0]).toHaveProperty('Task');

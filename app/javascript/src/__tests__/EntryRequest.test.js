@@ -2,7 +2,6 @@ import React from 'react'
 import { render } from '@testing-library/react'
 import { RequestsList } from '../containers/Requests/EntryRequests'
 
-jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn())
 describe('entry request list', () => {
   it('should render correct data', () => {
     const data = {

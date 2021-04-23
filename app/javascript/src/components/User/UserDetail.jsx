@@ -10,7 +10,7 @@ import { userSubStatus } from '../../utils/constants'
 
 export default function UserDetail({ data, userType }) {
   return (
-    <div className="col-6">
+    <div>
       <h5>{data.user.name}</h5>
       <div className="expires">User Type: {titleize(data.user.userType)}</div>
       {data.user.subStatus && (

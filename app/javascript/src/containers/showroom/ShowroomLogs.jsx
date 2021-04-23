@@ -1,13 +1,6 @@
-/* eslint-disable */
 import React, { Fragment } from 'react'
-import Nav from '../../components/Nav'
 import { useQuery } from 'react-apollo'
 import { makeStyles, withStyles } from '@material-ui/core/styles'
-import { ShowroomEntriesQuery } from '../../graphql/queries'
-import Loading from '../../shared/Loading'
-import ErrorPage from '../../components/Error'
-import {dateTimeToString, dateToString} from '../../components/DateContainer'
-import TblPagination from '../../components/TblPagination'
 import {
     Table,
     TableBody,
@@ -15,6 +8,11 @@ import {
     TableHead,
     TableRow
 } from '@material-ui/core'
+import { ShowroomEntriesQuery } from '../../graphql/queries'
+import Loading from '../../shared/Loading'
+import ErrorPage from '../../components/Error'
+import TblPagination from '../../components/TblPagination'
+import {dateTimeToString, dateToString} from '../../components/DateContainer'
 
 const useStyles = makeStyles({
     table: {
@@ -55,7 +53,7 @@ export default function ShowroomLogs() {
     const classes = useStyles()
     const [offset, setOffset] = React.useState(0)
 
-    let limit = 30
+    const limit = 30
 
     function handleChangePage() {
         setOffset(limit + offset)
@@ -76,61 +74,59 @@ export default function ShowroomLogs() {
     if (loading) return <Loading />
     if (error) return <ErrorPage error={error.message} />
     return (
-        <div>
-            <div
-                style={{
-                    backgroundColor: "#69ABA4"
-                }}
-            >
-                <Nav menuButton="back" navName="Showroom Logs" boxShadow={"none"} backTo="/" />
-            </div>
-            <div className="row justify-content-center">
-                <div className="container">
+      <div>
+        <div className="row justify-content-center">
+          <div className="container">
 
-                    <Fragment>
+            <>
 
-                        <Table className={classes.table} aria-label="customized table">
+              <Table className={classes.table} aria-label="customized table">
 
-                            <TableHead>
-                                <TableRow>
-                                    <StyledTableCell>Name</StyledTableCell>
-                                    <StyledTableCell align="right">Phone Number</StyledTableCell>
-                                    <StyledTableCell align="right">Email</StyledTableCell>
-                                    <StyledTableCell align="right">NRC</StyledTableCell>
-                                    <StyledTableCell align="right">Home Address</StyledTableCell>
-                                    <StyledTableCell align="right">Reason</StyledTableCell>
-                                    <StyledTableCell align="right">Date</StyledTableCell>
-                                    <StyledTableCell align="right">Time</StyledTableCell>
-                                </TableRow>
-                            </TableHead>
+                <TableHead>
+                  <TableRow>
+                    <StyledTableCell>Name</StyledTableCell>
+                    <StyledTableCell align="right">Phone Number</StyledTableCell>
+                    <StyledTableCell align="right">Email</StyledTableCell>
+                    <StyledTableCell align="right">NRC</StyledTableCell>
+                    <StyledTableCell align="right">Home Address</StyledTableCell>
+                    <StyledTableCell align="right">Reason</StyledTableCell>
+                    <StyledTableCell align="right">Date</StyledTableCell>
+                    <StyledTableCell align="right">Time</StyledTableCell>
+                  </TableRow>
+                </TableHead>
 
-                            <TableBody>
+                <TableBody>
 
-                                {data.showroomEntries.map(entry => (
-                                    <StyledTableRow key={entry.id}>
+                  {data.showroomEntries.map(entry => (
+                    <StyledTableRow key={entry.id}>
 
-                                        <StyledTableCell component="th" scope="row">{entry.name}</StyledTableCell>
-                                        <StyledTableCell align="right">{entry.phoneNumber}</StyledTableCell>
-                                        <StyledTableCell align="right">{entry.email || "None"}</StyledTableCell>
-                                        <StyledTableCell align="right">{entry.nrc}</StyledTableCell>
-                                        <StyledTableCell align="right">{entry.homeAddress}</StyledTableCell>
-                                        <StyledTableCell align="right">{entry.reason}</StyledTableCell>
-                                        <StyledTableCell align="right">{dateToString(entry.createdAt)}</StyledTableCell>
-                                        <StyledTableCell align="right">{dateTimeToString(new Date(entry.createdAt))}</StyledTableCell>
+                      <StyledTableCell component="th" scope="row">{entry.name}</StyledTableCell>
+                      <StyledTableCell align="right">{entry.phoneNumber}</StyledTableCell>
+                      <StyledTableCell align="right">{entry.email || "None"}</StyledTableCell>
+                      <StyledTableCell align="right">{entry.nrc}</StyledTableCell>
+                      <StyledTableCell align="right">{entry.homeAddress}</StyledTableCell>
+                      <StyledTableCell align="right">{entry.reason}</StyledTableCell>
+                      <StyledTableCell align="right">{dateToString(entry.createdAt)}</StyledTableCell>
+                      <StyledTableCell align="right">{dateTimeToString(new Date(entry.createdAt))}</StyledTableCell>
 
-                                    </StyledTableRow>
+                    </StyledTableRow>
                                 ))}
 
-                            </TableBody>
-                        </Table>
+                </TableBody>
+              </Table>
 
-                        <TblPagination limit={limit} handleChangePage={handleChangePage} handlePreviousPage={handlePreviousPage}
-                            offset={offset} length={data.showroomEntries.length} />
+              <TblPagination
+                limit={limit}
+                handleChangePage={handleChangePage}
+                handlePreviousPage={handlePreviousPage}
+                offset={offset}
+                length={data.showroomEntries.length}
+              />
 
-                    </Fragment>
+            </>
 
-                </div>
-            </div>
+          </div>
         </div>
+      </div>
     )
 }

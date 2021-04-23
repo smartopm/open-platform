@@ -3,7 +3,7 @@ import { render, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { MockedProvider } from '@apollo/react-testing';
 import { BrowserRouter } from 'react-router-dom/';
-import TransactionDetails from '../../components/Payments/TransactionDetails';
+import TransactionDetails from '../../modules/Payments/Components/TransactionDetails';
 import { Spinner } from '../../shared/Loading';
 import currency from '../../__mocks__/currency';
 import { AllEventLogsQuery } from '../../graphql/queries';

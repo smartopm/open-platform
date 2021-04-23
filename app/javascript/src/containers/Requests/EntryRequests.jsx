@@ -1,7 +1,6 @@
 /* eslint-disable */
 import React from "react";
 import { useQuery } from "react-apollo";
-import Nav from "../../components/Nav";
 import Loading from "../../shared/Loading.jsx";
 import { AllEntryRequestsQuery } from "../../graphql/queries.js";
 import ErrorPage from "../../components/Error";
@@ -76,7 +75,6 @@ export function UserComponent({ data }) {
 
   return (
     <div>
-      <Nav menuButton="back" backTo="/"/>
       <div className="row justify-content-center">
         <div className="col-10 col-sm-10 col-md-6">
           <table className="table">

@@ -4,11 +4,10 @@ import QrReader from 'react-qr-reader'
 import { Redirect } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { FormControlLabel, Switch } from '@material-ui/core'
-import Nav from '../components/Nav'
 import { Footer } from '../components/Footer'
 import { Context } from './Provider/AuthStateProvider.js'
 
-
+/* istanbul ignore next */
 export default function QRScan() {
   const [scanned, setScanned] = useState(false)
   const [error, setError] = useState(null)
@@ -83,8 +82,6 @@ export default function QRScan() {
 
   return (
     <div>
-      <Nav navName="Scan" menuButton="back" backTo="/" />
-
       {scanned ? (
         <h1 className="text-center">Decoding...</h1>
       ) : (

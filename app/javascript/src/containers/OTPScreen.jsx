@@ -1,38 +1,70 @@
-/* eslint-disable */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+/* eslint-disable jsx-a11y/no-static-element-interactions */
 // One Time Passcode Screen
-import React, { Fragment, useState } from 'react'
-import Nav from '../components/Nav'
-import { StyleSheet, css } from 'aphrodite'
-import Tooltip from '@material-ui/core/Tooltip'
+import React, { Fragment, useEffect, useState } from 'react';
+import { StyleSheet, css } from 'aphrodite';
+import Tooltip from '@material-ui/core/Tooltip';
+import { useParams } from 'react-router';
+import { useMutation } from 'react-apollo';
+import { SendOneTimePasscode } from '../graphql/mutations';
+import { formatError } from '../utils/helpers';
+import { Spinner } from '../shared/Loading';
 
-export default function OTPFeedbackScreen({ location }) {
-  const [msg, setMessage] = useState('')
-  const userDetails = location.state
+// call the OTP function once this component renders
+// this is to be consistent with the rest of the menu
+export default function OTPFeedbackScreen() {
+  const [msg, setMessage] = useState('');
+  const [userDetails, setDetails] = useState({})
+  const [loading, setLoading] = useState(true);
+  const params = useParams()
+  const [sendOneTimePasscode] = useMutation(SendOneTimePasscode);
+
+  function sendOTP() {
+    sendOneTimePasscode({variables: { userId: params.id }})
+      .then(({data}) => {
+        setDetails({
+          success: data.oneTimeLogin.success,
+          url: data.oneTimeLogin.url
+        })
+        setLoading(false)
+      })
+      .catch(error => {
+        setMessage(formatError(error.message))
+        setLoading(false)
+      });
+  }
 
   function copyLink() {
-    if (userDetails.success) {
-      navigator.clipboard.writeText(userDetails.url)
-      setMessage('Successfully copied the link')
+    if (userDetails?.success) {
+      navigator.clipboard.writeText(userDetails?.url);
+      setMessage('Successfully copied the link');
     }
   }
 
+  useEffect(() => {
+    // call the mutation to send OTP
+    sendOTP()
+  }, [params.id]);
+
   return (
-    <Fragment>
-      <Nav navName={userDetails.success ? "One Time Pass code Sent" : 'Error Sending Code'} menuButton="back" backTo="/" />
+    <>
+      {
+        loading && <Spinner />
+      }
       <div className={css(styles.passcodeSection)} data-testid="feedback">
-        {
-          userDetails.success && <p>
-            The One Time Pass code was successfully sent to{' '}
-            <span className={css(styles.user)}>{userDetails.user}</span>
+        {userDetails?.success && (
+          <p>
+            The One Time Pass code was successfully sent
+            <span className={css(styles.user)}>{userDetails?.user}</span>
           </p>
-        }
+        )}
         <br />
-        <Tooltip title={userDetails.success ? "Click to copy" : ''}>
+        <Tooltip title={userDetails?.success ? 'Click to copy' : ''}>
           <div>
-            {userDetails.success && 'Url: '}
+            {userDetails?.success && 'Url: '}
             <span onClick={copyLink} className={css(styles.url)} data-testid="link_copier">
               {' '}
-              {userDetails.url}
+              {userDetails?.url}
             </span>
           </div>
         </Tooltip>
@@ -44,8 +76,8 @@ export default function OTPFeedbackScreen({ location }) {
           </div>
         )}
       </div>
-    </Fragment>
-  )
+    </>
+  );
 }
 
 const styles = StyleSheet.create({
@@ -67,4 +99,4 @@ const styles = StyleSheet.create({
     backgroundColor: '009688',
     color: '#343a40'
   }
-})
+});

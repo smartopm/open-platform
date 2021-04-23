@@ -7,15 +7,19 @@ import {
   Box,
   Avatar
 } from '@material-ui/core'
+import PropTypes from 'prop-types'
 import { makeStyles } from '@material-ui/styles'
 import AssignmentIcon from '@material-ui/icons/Assignment'
 import { Context as AuthStateContext } from '../../containers/Provider/AuthStateProvider'
 
 // this is for existing google forms
-export default function FormLinks() {
+export default function FormLinks({ community }) {
 const authState = useContext(AuthStateContext)
 // eslint-disable-next-line no-use-before-define
 const classes = useStyles()
+if (community !== "Nkwashi") {
+  return <span />
+}
   return (
     <>
       <ListItem
@@ -80,3 +84,7 @@ export const useStyles = makeStyles({
     marginLeft: 30
   },
 })
+
+FormLinks.propTypes = {
+  community: PropTypes.string.isRequired
+}

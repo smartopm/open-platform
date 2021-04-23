@@ -57,8 +57,6 @@ describe('Discussions Component', () => {
         </MockedProvider>
       );
     });
-
-    expect(container.getByText(/Discussion Topics/)).toBeInTheDocument();
     expect(container.getByText(/MY Discussion/)).toBeInTheDocument();
     expect(container.getByText(/Nurudeen/)).toBeInTheDocument();
     expect(container.getByText(/My Description/)).toBeInTheDocument();

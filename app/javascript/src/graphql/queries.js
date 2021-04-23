@@ -1,6 +1,6 @@
 /* eslint-disable */
 import gql from 'graphql-tag'
-import { UserFragment, EntryRequestFragment, NotesFragment, SubstatusDistributionReportFragment 
+import { UserFragment, EntryRequestFragment, NotesFragment, SubstatusDistributionReportFragment
 } from './fragments'
 
 export const UserQuery = gql`
@@ -26,6 +26,7 @@ export const UserAccountQuery = gql`
           longX
           latY
           geom
+          updatedAt
         }
       }
     }
@@ -350,6 +351,15 @@ export const UserLandParcel = gql`
   }
 `
 
+export const UserLandParcelWithPlan = gql`
+  query userLandParcelWithPlan($userId: ID!) {
+    userLandParcelWithPlan(userId: $userId) {
+      id
+      parcelNumber
+    }
+  }
+`
+
 export const lastUserTimeSheet = gql`
   query userLastShift($userId: ID!) {
     userLastShift(userId: $userId) {
@@ -492,6 +502,7 @@ export const ParcelsQuery = gql`
         address1
         user {
           id
+          name
         }
       }
     }
@@ -935,6 +946,8 @@ export const InvoicesQuery = gql`
         id
         name
         imageUrl
+        email
+        phoneNumber
       }
       landParcel {
         id
@@ -1001,6 +1014,9 @@ export const InvoicesStatsDetails = gql`
       user {
         id
         name
+        imageUrl
+        email
+        phoneNumber
       }
       landParcel {
         id
@@ -1015,12 +1031,17 @@ export const PaymentStatsDetails = gql`
     paymentStatDetails(query: $query) {
       id
       amount
+      status
       source
+      receiptNumber
       createdAt
       user {
         id
         name
         imageUrl
+        email
+        phoneNumber
+        extRefId
       }
     }
   }
@@ -1038,6 +1059,11 @@ export const LandParcel = gql`
       stateProvince
       country
       parcelType
+      latY
+      longX
+      geom
+      plotSold
+      imageUrl
       createdAt
       valuations {
         id
@@ -1053,14 +1079,6 @@ export const LandParcel = gql`
           id
         }
       }
-    }
-  }
-`
-export const EmailTemplatesQuery = gql`
-  query emailTemplates {
-    emailTemplates {
-      name
-      id
     }
   }
 `
@@ -1086,8 +1104,8 @@ query substatusDistributionQuery {
 ${SubstatusDistributionReportFragment.publicFields}
 `
 export const AllTransactionQuery = gql`
-  query InvoicesWithTransactions($userId: ID!) {
-    invoicesWithTransactions(userId: $userId) {
+  query InvoicesWithTransactions($userId: ID!, $limit: Int, $offset: Int) {
+    invoicesWithTransactions(userId: $userId, limit: $limit, offset: $offset) {
       invoices {
         id
         amount
@@ -1096,6 +1114,10 @@ export const AllTransactionQuery = gql`
         invoiceNumber
         dueDate
         updatedAt
+        user {
+          id
+          name
+        }
         landParcel {
           id
           parcelNumber
@@ -1118,6 +1140,37 @@ export const AllTransactionQuery = gql`
         paymentType
         createdAt
       }
+      paymentPlans {
+        id
+        startDate
+        planType
+        status
+        percentage
+        plotBalance
+        pendingBalance
+        createdAt
+        paymentDay
+        invoices {
+          id
+          amount
+          invoiceNumber
+          status
+          createdAt
+          dueDate
+          payments {
+            id
+            createdAt
+          }
+          user {
+            id
+            name
+          }
+        }
+        landParcel {
+          id
+          parcelNumber
+        }
+      }
     }
   }
 `;
@@ -1129,8 +1182,8 @@ export const UserBalance = gql`
 `;
 
 export const TransactionQuery = gql`
-  query userTransactions($userId: ID!) {
-    userDeposits(userId: $userId) {
+  query userTransactions($userId: ID!, $limit: Int, $offset: Int) {
+    userDeposits(userId: $userId, limit: $limit, offset: $offset) {
       transactions {
         amount
         source
@@ -1141,7 +1194,15 @@ export const TransactionQuery = gql`
         chequeNumber
         bankName
         transactionNumber
+        status
         id
+        settledInvoices
+        currentPendingPlotBalance
+        community {
+          id
+          name
+          logoUrl
+        }
         user {
           id
           name
@@ -1149,6 +1210,13 @@ export const TransactionQuery = gql`
         depositor {
           id
           name
+        }
+        paymentPlan {
+          id
+          landParcel {
+            id
+            parcelNumber
+          }
         }
       }
       pendingInvoices {
@@ -1159,6 +1227,7 @@ export const TransactionQuery = gql`
         balance
         createdAt
         id
+        parcelNumber
       }
     }
   }
@@ -1177,6 +1246,22 @@ export const PendingInvoicesQuery = gql`
   }
 `;
 
+// TODO: this should be moved out this file
+export const PaidInvoicesByPlan = gql`
+  query paidInvoicesByPlan($paymentPlanId: ID!) {
+    paidInvoicesByPlan(paymentPlanId: $paymentPlanId) {
+      id
+      amount
+      status
+      createdAt
+      landParcel {
+        id
+        parcelNumber
+      }
+    }
+  }
+`
+
 export const TransactionsQuery = gql`
   query allTransactions($limit: Int, $offset: Int, $query: String) {
     transactions(limit: $limit, offset: $offset, query: $query) {
@@ -1191,10 +1276,14 @@ export const TransactionsQuery = gql`
       bankName
       chequeNumber
       transactionNumber
+      receiptNumber
       user {
         id
         name
         imageUrl
+        email
+        phoneNumber
+        extRefId
       }
     }
   }
@@ -1217,11 +1306,8 @@ export const PaymentsQuery = gql`
     }
 `
 
-export const InvoiceAutogenerationData = gql`
-  query invoiceAutogenerationData {
-    invoiceAutogenerationData {
-      numberOfInvoices
-      totalAmount
-    }
+export const EmailTemplateVariables = gql`
+  query emailTemplateVariables($templateId: ID!) {
+    emailTemplateVariables(id: $templateId)
   }
-`
+`;

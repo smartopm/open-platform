@@ -2,6 +2,7 @@
 import React from 'react';
 import { fireEvent, render } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom/';
+import { MockedProvider } from '@apollo/react-testing';
 import Profile from '../../components/Business/BusinessProfile';
 
 describe('It tests the business profile page', () => {
@@ -23,9 +24,11 @@ describe('It tests the business profile page', () => {
   it('It should check all profile properties', () => {
     window.open = jest.fn();
     const container = render(
-      <BrowserRouter>
-        <Profile {...props} />
-      </BrowserRouter>
+      <MockedProvider>
+        <BrowserRouter>
+          <Profile {...props} />
+        </BrowserRouter>
+      </MockedProvider>
     );
     expect(container.queryByTestId('details-holder').children).toHaveLength(6);
     expect(container.queryByTestId('pf-number').textContent).toContain('23627378');
@@ -57,9 +60,11 @@ describe('It tests the business profile page', () => {
     }
     window.open = jest.fn();
     const container = render(
-      <BrowserRouter>
-        <Profile {...otherProps} />
-      </BrowserRouter>
+      <MockedProvider>
+        <BrowserRouter>
+          <Profile {...otherProps} />
+        </BrowserRouter>
+      </MockedProvider>
     );
     fireEvent.click(container.queryByTestId('home_url'));
     expect(window.open).toBeCalledWith('http://www.google.fr', '_blank');

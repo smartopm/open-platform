@@ -28,10 +28,10 @@ export default function DeleteDialogueBox({
           Are you sure you want to delete this campaign?
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose} color="secondary">
+          <Button onClick={handleClose} color="secondary" data-testid='no'>
             No
           </Button>
-          <Button onClick={handleDelete} color="primary" autoFocus>
+          <Button onClick={handleDelete} color="primary" data-testid='yes' autoFocus>
             Yes
           </Button>
         </DialogActions>

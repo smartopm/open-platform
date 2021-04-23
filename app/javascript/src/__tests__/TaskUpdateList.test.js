@@ -2,7 +2,7 @@ import React from 'react'
 import { render } from '@testing-library/react'
 import { BrowserRouter } from 'react-router-dom/'
 import { MockedProvider } from '@apollo/react-testing'
-import TaskUpdateList from '../components/Notes/TaskUpdateList'
+import TaskUpdateList from '../modules/Tasks/Components/TaskUpdateList'
 import '@testing-library/jest-dom/extend-expect'
 
 describe('Comment Card Component', () => {

@@ -1,12 +1,6 @@
-import React from 'react'
-import PostsList from '../../components/NewsPage/PostList'
-import Nav from '../../components/Nav'
+import React from 'react';
+import PostsList from '../../components/NewsPage/PostList';
 
 export default function Posts() {
-    return (
-      <>
-        <Nav navName="Nkwashi News" menuButton="back" backTo="/" />
-        <PostsList />
-      </>
-    )
+  return <PostsList />;
 }

@@ -60,7 +60,8 @@ module Types::Queries::Wallet
   def transactions(offset: 0, limit: 100, query: nil)
     raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user]&.admin?
 
-    context[:site_community].wallet_transactions.search(query).eager_load(:user)
+    context[:site_community].wallet_transactions.where(destination: 'wallet').search(query)
+                            .eager_load(:user)
                             .order(created_at: :desc)
                             .limit(limit).offset(offset)
   end
@@ -73,6 +74,7 @@ module Types::Queries::Wallet
     converted_date = Date.parse(query).in_time_zone(context[:site_community].timezone).all_day
     context[:site_community].wallet_transactions
                             .eager_load(:user)
+                            .where.not(source: 'invoice')
                             .where(created_at: converted_date, destination: 'wallet')
   end
 

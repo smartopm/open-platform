@@ -28,7 +28,6 @@ import { userSubStatus } from '../utils/constants'
 export default function UserItem({
   user,
   currentUserType,
-  sendOneTimePasscode,
   handleUserSelect,
   selectedUsers,
   offset,
@@ -38,6 +37,9 @@ export default function UserItem({
   const [anchorEl, setAnchorEl] = useState(null)
   const open = Boolean(anchorEl)
   const history = useHistory()
+  /**
+   * @deprecated prefer getting this contact from the community
+   */
   const CSMNumber = '260974624243'
   const [isDialogOpen, setDialogOpen] = useState(false)
 
@@ -48,26 +50,6 @@ export default function UserItem({
 
   function handleOpenMenu(event) {
     setAnchorEl(event.currentTarget)
-  }
-
-  function sendOTP() {
-    sendOneTimePasscode({
-      variables: { userId: user.id }
-    })
-      .then(_data => {
-        history.push('/otp_sent', {
-          url: _data.data.oneTimeLogin.url,
-          user: user.name,
-          success: true
-        })
-      })
-      .catch(() => {
-        history.push('/otp_sent', {
-          url: 'The user has no Phone number added',
-          user: user.name,
-          success: false
-        })
-      })
   }
 
   function showUserDetails(event) {
@@ -230,7 +212,6 @@ export default function UserItem({
             anchorEl={anchorEl}
             handleClose={handleClose}
             userType={currentUserType}
-            sendOTP={sendOTP}
             CSMNumber={CSMNumber}
             open={open}
             OpenMergeDialog={handleMergeDialog}
@@ -257,7 +238,6 @@ UserItem.propTypes = {
   currentUserType: PropTypes.string.isRequired,
   selectCheckBox: PropTypes.bool.isRequired,
   offset: PropTypes.number.isRequired,
-  sendOneTimePasscode: PropTypes.func.isRequired,
   handleUserSelect: PropTypes.func.isRequired,
   selectedUsers: PropTypes.arrayOf(PropTypes.string).isRequired
 }

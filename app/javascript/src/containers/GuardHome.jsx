@@ -3,7 +3,6 @@ import React, { useState, useContext } from 'react'
 import { Link, Redirect } from 'react-router-dom'
 import { StyleSheet, css } from 'aphrodite'
 import { useTranslation } from 'react-i18next'
-import Nav from '../components/Nav'
 import ScanIcon from '../../../assets/images/shape.svg'
 import LogIcon from '../../../assets/images/icon_contact_card_fill.svg'
 import QRIcon from '../../../assets/images/icon_qr_card_fill_copy.svg'
@@ -28,13 +27,10 @@ const BootstrapInput = withStyles(() => ({
   input: {
     borderRadius: 6,
     position: 'relative',
-    backgroundColor: 'transparent',
     border: '1px solid #fff',
     fontSize: 18,
-    fontWeight: 'bold',
     padding: '14px 26px 4px 16px',
     height: 30,
-    color: '#fff'
   }
 }))(InputBase)
 
@@ -83,7 +79,6 @@ export function HomeGuard({ translate }) {
   if (error) return <ErrorPage title={error.message} />
   return (
     <div>
-      <Nav>
         <div className={css(styles.inputGroup)}>
           <br />
           {hideGuardSwitching ? null : (
@@ -95,7 +90,7 @@ export function HomeGuard({ translate }) {
               </div>
               <div className="d-flex flex-row flex-wrap justify-content-center mb-3">
                 <FormControl
-                  variant="outlined"
+                  variant="filled"
                   style={{
                     minWidth: 120,
                     color: '#FFFFFF'
@@ -108,20 +103,21 @@ export function HomeGuard({ translate }) {
                     value={id}
                     onChange={handleChange}
                     style={{
-                      width: 180
+                      width: 180,
+                      backgroundColor: "#FFFFFF", color: "#000000"
                     }}
+                    variant="filled"
                     input={<BootstrapInput />}
                     IconComponent={() => (
                       <ArrowDropDownIcon
                         style={{
                           marginLeft: -34,
-                          color: '#FFFFFF'
                         }}
                       />
                     )}
                   >
                     {data.securityGuards.map(guard => (
-                      <MenuItem value={guard.id} key={guard.id} style={{}}>
+                      <MenuItem style={{ color: "#000000" }} value={guard.id} key={guard.id} style={{}}>
                         {guard.name}
                       </MenuItem>
                     ))}
@@ -146,7 +142,6 @@ export function HomeGuard({ translate }) {
             />
           </Link>
         </div>
-      </Nav>
       <div className="container">
         <div className="row justify-content-center">
           <div className="col-4-lg col-12-sm index-cards">
@@ -243,7 +238,7 @@ export function HomeGuard({ translate }) {
                         fontSize="large"
                       />
                     </h5>
-                    Call Poniso
+                    Call Manager
                   </div>
                 </a>
               </div>
@@ -292,7 +287,6 @@ const styles = StyleSheet.create({
   },
 
   link: {
-    color: '#FFFFFF',
     textDecoration: 'none',
     marginLeft: 25
   },

@@ -1,8 +1,8 @@
 import gql from 'graphql-tag';
 
 const WalletTransactionMutation = gql`
-mutation transaction($userId: ID!, $amount: Int!, $source: String!, $destination: String!, $bankName: String!) {
-    walletTransactionCreate(userId: $userId, amount:$amount, source: $source, destination:$destination){
+mutation transaction($userId: ID!, $amount: Int!, $source: String!, $destination: String!, $bankName: String!, $receiptNumber: String) {
+    walletTransactionCreate(userId: $userId, amount:$amount, source: $source, destination:$destination, receiptNumber: $receiptNumber){
       walletTransaction {
         id
       }
@@ -17,6 +17,7 @@ export const WalletTransactionUpdate = gql`
     $bankName: String
     $transactionNumber: String
     $chequeNumber: String
+    $createdAt: String
   ) {
     walletTransactionUpdate(
       id: $id
@@ -24,12 +25,29 @@ export const WalletTransactionUpdate = gql`
       bankName: $bankName
       chequeNumber: $chequeNumber
       transactionNumber: $transactionNumber
+      createdAt: $createdAt
     ) {
       walletTransaction {
         id
+        createdAt
       }
     }
   }
 `;
 
 export default WalletTransactionMutation;
+
+export const WalletTransactionRevert = gql`
+  mutation WalletTransactionRevert(
+    $transactionId: ID!
+  ) {
+    walletTransactionRevert(
+      id: $transactionId
+    ) {
+      walletTransaction {
+        id
+        status
+      }
+    }
+  }
+`

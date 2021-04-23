@@ -5,9 +5,10 @@ module Mutations
     # update an email template
     class TemplateUpdate < BaseMutation
       argument :id, ID, required: true
-      argument :name, String, required: true
-      argument :subject, String, required: true
+      argument :name, String, required: false
+      argument :subject, String, required: false
       argument :body, String, required: true
+      argument :data, GraphQL::Types::JSON, required: true
 
       field :email_template, Types::EmailTemplateType, null: true
 

@@ -4,7 +4,6 @@ import { useMutation } from 'react-apollo';
 import { StyleSheet, css } from 'aphrodite';
 import { useHistory } from 'react-router-dom';
 import { Button, Grid } from '@material-ui/core';
-import Nav from '../components/Nav';
 import { ImportCreate } from '../graphql/mutations';
 import CenteredContent from '../components/CenteredContent';
 import Loading from '../shared/Loading';
@@ -79,7 +78,6 @@ export default function UsersImport() {
         open={!!messageAlert}
         handleClose={handleMessageAlertClose}
       />
-      <Nav navName="Bulk Import" menuButton="back" backTo="/users" />
       <Grid container style={{ margin: '5px auto', width: '95%' }}>
         <Grid item md={6}>
           You can upload a .csv file with users. The following are the expected fields with

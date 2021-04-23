@@ -45,8 +45,7 @@ describe('business action menu component', () => {
     // after clicking deleting menu
     fireEvent.click(container.queryByTestId('delete_button'))
     // check the appearance of delete modal
-    expect(container.queryByText('Are you sure you want to delete this business ?')).toBeInTheDocument()
-    expect(container.queryByText('Delete Business')).toBeInTheDocument()
+    expect(container.queryByText('Are you sure you want to delete this business?')).toBeInTheDocument()
     
     // find delete button and click
     fireEvent.click(container.queryByTestId('confirm_action'))

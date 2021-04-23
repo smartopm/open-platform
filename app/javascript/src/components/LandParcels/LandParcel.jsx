@@ -1,26 +1,41 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useState, useEffect } from 'react';
 import { useQuery, useLazyQuery, useMutation } from 'react-apollo';
-import { Grid, Typography, Container, Link } from '@material-ui/core';
+import { Grid, Typography, Link } from '@material-ui/core';
 import { useHistory } from 'react-router-dom';
-import MaterialConfig from 'react-awesome-query-builder/lib/config/material';
-import { makeStyles } from '@material-ui/core/styles';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
+import { useTheme } from '@material-ui/core/styles';
 import RoomIcon from '@material-ui/icons/Room';
 import { ParcelsQuery, LandParcel, LandParcelGeoData } from '../../graphql/queries';
 import Loading, { Spinner } from '../../shared/Loading';
 import ErrorPage from '../Error';
 import ParcelItem from './LandParcelItem';
 import CreateLandParcel from './CreateLandParcel';
+import CreatePointOfInterest from './CreatePointOfInterest';
 import LandParcelModal from './LandParcelModal';
 import { UpdateProperty } from '../../graphql/mutations';
 import { MergeProperty } from '../../graphql/mutations/land_parcel';
 import MessageAlert from '../MessageAlert';
-import { formatError, propAccessor } from '../../utils/helpers';
+import { formatError, handleQueryOnChange, useParamsQuery } from '../../utils/helpers';
 import SearchInput from '../../shared/search/SearchInput';
 import Toggler from '../Campaign/ToggleButton'
 import LandParcelMap from './LandParcelMap'
 import useDebounce from '../../utils/useDebounce';
 import QueryBuilder from '../QueryBuilder';
+import {
+  propertyQueryBuilderConfig, 
+  propertyQueryBuilderInitialValue, 
+  propertyFilterFields } from '../../utils/constants';
+import ListHeader from '../../shared/list/ListHeader';
+
+const parcelHeaders = [
+  { title: 'Property Number/Type', col: 2 },
+  { title: 'Address1/Address2', col: 3 },
+  { title: 'Postal Code', col: 3 },
+  { title: 'City', col: 3 },
+  { title: 'State Province/Country', col: 4 },
+  { title: 'Menu', col: 1 }
+];
 
 export default function LandParcelList() {
   const limit = 20;
@@ -28,6 +43,7 @@ export default function LandParcelList() {
   const [open, setDetailsModalOpen] = useState(false);
   const [messageAlert, setMessageAlert] = useState('');
   const [isSuccessAlert, setIsSuccessAlert] = useState(false);
+  const [propertyUpdateLoading, setPropertyUpdateLoading] = useState(false);
   const [selectedLandParcel, setSelectedLandParcel] = useState({});
   const [searchValue, setSearchValue] = useState('');
   const debouncedValue = useDebounce(searchValue, 500);
@@ -37,9 +53,15 @@ export default function LandParcelList() {
   const [viewResultsOnMap, setViewResultsOnMap] = useState(false);
   const [confirmMergeOpen, setConfirmMergeOpen] = useState(false);
   const [conflictingParcelNumber, setConflictingParcelNumber] = useState('');
+  const [searchQuery, setSearchQuery] = useState('')
+  const theme = useTheme();
+  const matches = useMediaQuery(theme.breakpoints.up('sm'));
+
+  const path = useParamsQuery('')
+  const plot = path.get('plot');
 
   const { loading, error, data, refetch } = useQuery(ParcelsQuery, {
-    variables: { query: debouncedValue, limit, offset }
+    variables: { query: debouncedValue || searchQuery, limit, offset }
   });
 
   const { data: geoData } = useQuery(LandParcelGeoData, {
@@ -72,11 +94,8 @@ export default function LandParcelList() {
   }
 
   useEffect(() => {
-    const pathName = window.location.pathname;
-    const paths = pathName.match(/^\/land_parcels\/((?!new)\w+)/);
-    if (paths) {
-      const urlInfo = pathName.split('/');
-      loadParcel({ variables: { id: urlInfo[urlInfo.length - 1] } });
+    if (plot) {
+      loadParcel({ variables: { id: plot } });
       setSelectedLandParcel(parcelData?.landParcel || {});
       setDetailsModalOpen(true);
     }
@@ -99,7 +118,7 @@ export default function LandParcelList() {
 
   function onParcelClick(landParcel) {
     setSelectedLandParcel(landParcel);
-    history.push(`/land_parcels/${landParcel.id}`);
+    history.push(`/land_parcels?plot=${landParcel.id}`);
     setDetailsModalOpen(true);
   }
 
@@ -118,9 +137,11 @@ export default function LandParcelList() {
     history.push('/land_parcels');
     setDetailsModalOpen(false);
     setConfirmMergeOpen(false)
+    setPropertyUpdateLoading(false)
   }
 
   function handleSubmit(variables) {
+    setPropertyUpdateLoading(true)
     const variableUpdates = variables;
     variableUpdates.id = selectedLandParcel.id;
     updateProperty({ variables: variableUpdates })
@@ -140,6 +161,7 @@ export default function LandParcelList() {
         }
         setMessageAlert(formatError(err.message));
         setIsSuccessAlert(false);
+        setPropertyUpdateLoading(false)
       });
   }
 
@@ -164,90 +186,10 @@ export default function LandParcelList() {
     }
     setMessageAlert('');
   }
-  const filterFields = {
-    owner: 'owner',
-    ownerAddress: 'owner',
-    parcelType: 'parcel_type',
-    plotNumber: 'parcel_number',
-    parcelAddress: 'address1',
-  };
 
-  function handleQueryOnChange(selectedOptions) {
-    if (selectedOptions) {
-      const andConjugate = selectedOptions.logic?.and;
-      const orConjugate = selectedOptions.logic?.or;
-      const availableConjugate = andConjugate || orConjugate;
-
-      if (availableConjugate) {
-        const conjugate = andConjugate ? 'AND' : 'OR';
-        let property = '';
-        let value = null;
-        const queryText = availableConjugate
-          .map(option => {
-            const operator = Object.keys(option)[0];
-            const [inputFilterProperty, inputFilterValue] = propAccessor(option, operator);
-
-            property = filterFields[inputFilterProperty.var];
-            value = inputFilterValue;
-            return `${property}:'${value}'`;
-          })
-          .join(` ${conjugate} `);
-        setSearchValue(queryText);
-      }
-    }
+  function queryOnChange(selectedOptions) {
+    setSearchQuery(handleQueryOnChange(selectedOptions, propertyFilterFields))
   }
-
-  const InitialConfig = MaterialConfig;
-  const queryBuilderConfig = {
-    ...InitialConfig,
-    fields: {
-      owner: {
-        label: 'Owner\'s Name',
-        type: 'text',
-        valueSources: ['value'],
-        excludeOperators: ['not_equal']
-      },
-      ownerAddress: {
-        label: 'Owner\'s Address',
-        type: 'text',
-        valueSources: ['value'],
-        excludeOperators: ['not_equal']
-      },
-      parcelType: {
-        label: 'Property Type',
-        type: 'text',
-        valueSources: ['value']
-      },
-      plotNumber: {
-        label: 'Plot Number',
-        type: 'text',
-        valueSources: ['value']
-      },
-      parcelAddress: {
-        label: 'Property Address',
-        type: 'text',
-        valueSources: ['value']
-      },
-    }
-  };
-
-  const queryBuilderInitialValue = {
-    // Just any random UUID
-    id: '76a8a9ba-0123-3344-c56d-b16e532c8cd0',
-    type: 'group',
-    children1: {
-      '98a8a9ba-0123-4456-b89a-b16e721c8cd0': {
-        type: 'rule',
-        properties: {
-          field: 'owner',
-          operator: 'select_equals',
-          value: ['owner'],
-          valueSrc: ['value'],
-          valueType: ['text']
-        }
-      }
-    }
-  };
 
   if (parcelDataLoading) return <Loading />;
 
@@ -261,67 +203,76 @@ export default function LandParcelList() {
 
   return (
     <>
-      <Container>
-        <LandParcelModal
-          open={open}
-          handleClose={handleDetailsModalClose}
-          modalType="details"
-          landParcel={selectedLandParcel}
-          handleSubmit={handleSubmit}
-          landParcels={conflictingParcelData?.fetchLandParcel}
-          confirmMergeOpen={confirmMergeOpen}
-          handleSubmitMerge={handleMergeLandParcel}
-        />
-        <MessageAlert
-          type={isSuccessAlert ? 'success' : 'error'}
-          message={messageAlert}
-          open={!!messageAlert}
-          handleClose={handleMessageAlertClose}
-        />
-        <br />
-        <br />
-        <SearchInput 
-          title='Plot Properties' 
-          searchValue={searchValue} 
-          handleSearch={event => setSearchValue(event.target.value)} 
-          handleFilter={toggleFilter}
-          handleClear={() => setSearchValue('')}
-        />
-        {
-          showFilter && (
-            <Grid
-              container
-              justify="flex-end"
-              style={{
-                width: '100%',
-                position: 'absolute',
-                zIndex: 1,
-                marginTop: 4,
-                marginLeft: '-7.5%'
-              }}
-            >
-              <QueryBuilder
-                handleOnChange={handleQueryOnChange}
-                builderConfig={queryBuilderConfig}
-                initialQueryValue={queryBuilderInitialValue}
-                addRuleLabel="Add filter"
-              />
-            </Grid>
-          )
-        }
+      <Grid container style={{padding: '20px 0 20px 20px'}}>
+        <Grid item xs={12} sm={10}>
+          <SearchInput 
+            title='Plot Properties' 
+            searchValue={searchValue} 
+            handleSearch={event => setSearchValue(event.target.value)} 
+            handleFilter={toggleFilter}
+            handleClear={() => setSearchValue('')}
+          />
+        </Grid>
+        <Grid item xs={12} sm={2}>
+          {type === 'plots' ? (
+            <CreateLandParcel refetch={refetch} />
+          ) : (
+            <CreatePointOfInterest refetch={refetch} />
+          )}
+        </Grid>
+      </Grid>
+      <LandParcelModal
+        open={open}
+        handleClose={handleDetailsModalClose}
+        modalType="details"
+        landParcel={selectedLandParcel}
+        handleSubmit={handleSubmit}
+        landParcels={conflictingParcelData?.fetchLandParcel}
+        confirmMergeOpen={confirmMergeOpen}
+        handleSubmitMerge={handleMergeLandParcel}
+        propertyUpdateLoading={propertyUpdateLoading}
+      />
+      <MessageAlert
+        type={isSuccessAlert ? 'success' : 'error'}
+        message={messageAlert}
+        open={!!messageAlert}
+        handleClose={handleMessageAlertClose}
+      />
+      {
+        showFilter && (
+          <Grid
+            container
+            justify="flex-end"
+            style={{
+              width: '100%',
+              position: 'absolute',
+              zIndex: 1,
+              marginTop: '-2px',
+              marginLeft: '-7.5%'
+            }}
+          >
+            <QueryBuilder
+              handleOnChange={queryOnChange}
+              builderConfig={propertyQueryBuilderConfig}
+              initialQueryValue={propertyQueryBuilderInitialValue}
+              addRuleLabel="Add filter"
+            />
+          </Grid>
+        )
+      }
 
-        <br />
-        <br />
+      <Grid item xs={12} sm={12} style={{margin: '0 0 10px 20px'}}>
         <Toggler
           type={type}
           handleType={handleType}
           data={{
-          type: 'plots',
-          antiType: 'map'
-        }}
+            type: 'plots',
+            antiType: 'map'
+          }}
         />
+      </Grid>
 
-        {type === 'plots' ? 
+      {type === 'plots' ? 
         (
           <>
             <Grid container spacing={0}>
@@ -339,14 +290,15 @@ export default function LandParcelList() {
                   </Typography>
                 )}
               </Grid>
-              <Grid xs={6} item><CreateLandParcel refetch={refetch} /></Grid>
             </Grid>
-            <ParcelPageTitle />
-            <br />
             { loading && <Spinner /> }
-            {!loading && data?.fetchLandParcel.map(parcel => (
-              <ParcelItem key={parcel.id} parcel={parcel} onParcelClick={onParcelClick} />
-          ))}
+            <div style={{margin: '0 20px'}}>
+              {!loading && data.fetchLandParcel.length > 0 && matches && 
+                <ListHeader headers={parcelHeaders} />}
+              {!loading && data?.fetchLandParcel.map(parcel => (
+                <ParcelItem key={parcel.id} parcel={parcel} onParcelClick={onParcelClick} />
+              ))}
+            </div>
             <div className="d-flex justify-content-center">
               <nav aria-label="center Page navigation">
                 <ul className="pagination">
@@ -365,7 +317,7 @@ export default function LandParcelList() {
             </div>
           </>
         ):(
-          <>
+          <div style={{margin: '0 20px'}}>
             {viewResultsOnMap ? (
               <LandParcelMap
                 handlePlotClick={onParcelClick}
@@ -377,63 +329,8 @@ export default function LandParcelList() {
                 geoData={geoData?.landParcelGeoData}
               />
             )}
-          </>
+          </div>
         )}
-      </Container>
     </>
   );
 }
-
-export function ParcelPageTitle() {
-  const classes = useStyles();
-  return (
-    <Grid container spacing={0} className={classes.labelTitle}>
-      <Grid xs={2} item>
-        <Typography variant="subtitle2" data-testid="label-name" className={classes.label}>
-          Property Number
-        </Typography>
-      </Grid>
-      <Grid xs={2} item>
-        <Typography variant="subtitle2" data-testid="label-name" style={{ paddingLeft: '30px' }}>
-          Address1
-        </Typography>
-      </Grid>
-      <Grid xs={2} item>
-        <Typography variant="subtitle2" data-testid="label-name" style={{ paddingLeft: '30px' }}>
-          Address2
-        </Typography>
-      </Grid>
-      <Grid xs={2} item>
-        <Typography variant="subtitle2" data-testid="label-name" style={{ paddingLeft: '15px' }}>
-          city
-        </Typography>
-      </Grid>
-      <Grid xs={1} item>
-        <Typography variant="subtitle2" data-testid="label-name" style={{ paddingRight: '15px' }}>
-          Postal Code
-        </Typography>
-      </Grid>
-      <Grid xs={1} item>
-        <Typography variant="subtitle2" data-testid="label-name" style={{ paddingRight: '15px' }}>
-          State Province
-        </Typography>
-      </Grid>
-      <Grid xs={1} item>
-        <Typography variant="subtitle2" data-testid="label-name" style={{ paddingLeft: '10px' }}>
-          Country
-        </Typography>
-      </Grid>
-      <Grid xs={1} item>
-        <Typography variant="subtitle2" data-testid="label-name" style={{ paddingRight: '15px' }}>
-          Property Type
-        </Typography>
-      </Grid>
-    </Grid>
-  );
-}
-
-const useStyles = makeStyles(() => ({
-  labelTitle: {
-    marginTop: '5%'
-  }
-}));

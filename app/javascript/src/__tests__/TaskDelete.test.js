@@ -1,11 +1,21 @@
 import React from 'react'
-import { render } from '@testing-library/react'
+import { render, fireEvent } from '@testing-library/react'
 import { BrowserRouter } from 'react-router-dom/'
 import { MockedProvider } from '@apollo/react-testing'
-import TaskDelete from '../components/Notes/TaskDelete'
+import TaskDelete from '../modules/Tasks/Components/TaskDelete'
 import '@testing-library/jest-dom/extend-expect'
+import { DeleteNoteComment } from '../graphql/mutations'
 
 describe('Comment Delete Component', () => {
+  const mocks = [
+    {
+      request: {
+        query: DeleteNoteComment,
+        variables: { id: 'jwhekw' },
+      },
+      result: { data: { noteCommentDelete: { commentDelete: true } } },
+    },
+  ];
   const handleClose = jest.fn
   const open = jest.fn
   const data = {
@@ -14,27 +24,25 @@ describe('Comment Delete Component', () => {
     imageUrl: '',
     name: 'tolulope'
   }
-  const authState = {
-    user: {
-      avatarUrl: null
-    }
-  }
 
   it('render without error', () => {
-    render(
-      <MockedProvider>
+    const container = render(
+      <MockedProvider mocks={mocks} addTypename={false}>
         <BrowserRouter>
           <TaskDelete
-            authState={authState}
             id={data.id}
             body={data.body}
             imageUrl={data.imageUrl}
             name={data.name}
             open={open}
             handleClose={handleClose}
+            refetch={jest.fn}
           />
         </BrowserRouter>
       </MockedProvider>
     )
+
+    expect(container.queryByText('Are you sure you want to delete your comment?')).toBeInTheDocument()
+    fireEvent.click(container.queryByTestId('button'))
   })
 })

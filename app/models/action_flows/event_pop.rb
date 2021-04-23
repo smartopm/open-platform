@@ -3,6 +3,7 @@
 require_relative './events/'
 module ActionFlows
   # Class to check for JSON rules for events and fire relevant action
+  # rubocop:disable Metrics/ClassLength
   class EventPop
     OBJECT_DATA = {
       'User' => {
@@ -55,6 +56,8 @@ module ActionFlows
         'user_name' => '',
         'user_email' => '',
         'creator' => '',
+        'source' => '',
+        'destination' => '',
       },
     }.freeze
 
@@ -118,4 +121,5 @@ module ActionFlows
       @descendants || []
     end
   end
+  # rubocop:enable Metrics/ClassLength
 end

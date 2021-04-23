@@ -102,6 +102,9 @@ module Types
     field :PropertyCreate, mutation: Mutations::LandParcel::PropertyCreate
     field :property_update, mutation: Mutations::LandParcel::PropertyUpdate
     field :property_merge, mutation: Mutations::LandParcel::PropertyMerge
+    field :point_of_interest_create, mutation: Mutations::LandParcel::PointOfInterestCreate
+    field :point_of_interest_delete, mutation: Mutations::LandParcel::PointOfInterestDelete
+    field :poi_image_upload, mutation: Mutations::LandParcel::PointOfInterestImageCreate
 
     # action_flow
     field :action_flow_create, mutation: Mutations::ActionFlow::ActionFlowCreate
@@ -116,17 +119,22 @@ module Types
 
     # invoice
     field :invoice_create, mutation: Mutations::Invoice::InvoiceCreate
-    field :autogenerate_invoice, mutation: Mutations::Invoice::AutogenerateInvoice
+    field :invoice_cancel, mutation: Mutations::Invoice::InvoiceCancel
 
     # payments
     field :payment_plan_create, mutation: Mutations::Payment::PaymentPlanCreate
+    field :payment_day_update, mutation: Mutations::Payment::PaymentDayUpdate
 
     # transactions
     field :wallet_transaction_create, mutation: Mutations::Transaction::WalletTransactionCreate
     field :wallet_transaction_update, mutation: Mutations::Transaction::WalletTransactionUpdate
+    field :wallet_transaction_revert, mutation: Mutations::Transaction::WalletTransactionRevert
 
     # email_template
     field :email_template_create, mutation: Mutations::EmailTemplate::TemplateCreate
     field :email_template_update, mutation: Mutations::EmailTemplate::TemplateUpdate
+
+    # substatus_logs
+    field :substatus_log_update, mutation: Mutations::SubstatusLog::SubstatusLogUpdate
   end
 end

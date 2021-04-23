@@ -1,11 +1,10 @@
-/* eslint-disable */
-import React, { useState } from "react";
-import { useQuery } from "react-apollo";
-import Nav from "../../components/Nav";
-import Loading from "../../shared/Loading.jsx";
-import { AllEventLogsForUserQuery } from "../../graphql/queries.js";
-import ErrorPage from "../../components/Error";
-import UserLog from "../../components/UserLog"
+import React, { useState } from 'react';
+import { useQuery } from 'react-apollo';
+import Loading from '../../shared/Loading';
+import { AllEventLogsForUserQuery } from '../../graphql/queries';
+import ErrorPage from '../../components/Error';
+import UserLog from '../../components/UserLog';
+
 export default ({ history, match }) => {
   const subjects = null;
   return AllEventLogs(history, match, subjects);
@@ -18,7 +17,7 @@ const AllEventLogs = (history, match, subjects) => {
   const userId = match.params.id || null;
   const { loading, error, data } = useQuery(AllEventLogsForUserQuery, {
     variables: { subject: subjects, userId, offset, limit },
-    fetchPolicy: "cache-and-network"
+    fetchPolicy: 'cache-and-network'
   });
   if (loading) return <Loading />;
   if (error) return <ErrorPage title={error.message} />;
@@ -33,18 +32,13 @@ const AllEventLogs = (history, match, subjects) => {
     setOffset(offset - limit);
   }
   return (
-    <>
-     <Nav menuButton="back" navName="Logs" boxShadow={"none"}  backTo={`/user/${userId}`} />
     <UserLog
       data={data}
       previousPage={handlePreviousPage}
       offset={offset}
-      limit = {limit}
+      limit={limit}
       nextPage={handleNextPage}
       router={history}
     />
-    </>
   );
 };
-
-

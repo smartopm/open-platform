@@ -7,14 +7,12 @@ import Campaigns from '../../containers/Campaigns/Campaigns';
 
 describe('Campaigns Component', () => {
   it('renders Campaigns text', () => {
-    const container = render(
+    render(
       <MockedProvider>
         <BrowserRouter>
           <Campaigns />
         </BrowserRouter>
       </MockedProvider>
     );
-
-    expect(container.getByText(/Campaigns/)).toBeInTheDocument();
   });
 });

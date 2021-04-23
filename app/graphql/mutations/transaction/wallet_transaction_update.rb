@@ -10,6 +10,7 @@ module Mutations
       argument :cheque_number, String, required: false
       argument :transaction_number, String, required: false
       argument :status, String, required: false
+      argument :created_at, String, required: false
 
       field :wallet_transaction, Types::WalletTransactionType, null: false
 

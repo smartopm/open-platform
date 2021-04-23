@@ -41,6 +41,9 @@ export const CreateUserMutation = gql`
   `
   // ${UserFragment.publicFields}
 
+/**
+ * @deprecated this is no longer used in favor of this mutations/user.js and should be deleted
+ */
 export const UpdateUserMutation = gql`
   mutation UpdateUserMutation(
     $id: ID!
@@ -777,6 +780,20 @@ export const InvoiceCreate = gql`
   }
 `
 
+export const InvoiceCancel = gql`
+  mutation InvoiceCancel(
+    $invoiceId: ID!
+  ) {
+    invoiceCancel(
+      invoiceId: $invoiceId
+    ) {
+      invoice {
+        id
+      }
+    }
+  }
+`
+
 export const PaymentCreate = gql`
   mutation PaymentCreate(
     $userId: ID!
@@ -785,6 +802,9 @@ export const PaymentCreate = gql`
     $bankName: String
     $chequeNumber: String
     $transactionNumber: String
+    $landParcelId: ID!
+    $receiptNumber: String
+    $createdAt: String
   ) {
     walletTransactionCreate(
       userId: $userId
@@ -793,6 +813,9 @@ export const PaymentCreate = gql`
       bankName: $bankName
       chequeNumber: $chequeNumber
       transactionNumber: $transactionNumber
+      landParcelId: $landParcelId
+      receiptNumber: $receiptNumber
+      createdAt: $createdAt
     ) {
       walletTransaction {
         id
@@ -804,6 +827,8 @@ export const PaymentCreate = gql`
         transactionNumber
         currentWalletBalance
         createdAt
+        settledInvoices
+        currentPendingPlotBalance
         user {
           id
           name
@@ -811,6 +836,18 @@ export const PaymentCreate = gql`
         depositor {
           id
           name
+        }
+        paymentPlan {
+          id
+          landParcel {
+            id
+            parcelNumber
+          }
+        }
+        community {
+          id
+          name
+          logoUrl
         }
       }
     }
@@ -951,16 +988,6 @@ export const ImportCreate = gql`
   }
 `
 
-export const TaskReminder = gql`
-  mutation setNoteReminder($noteId: ID!, $hour: Int!) {
-    setNoteReminder(noteId: $noteId, hour: $hour) {
-      note {
-        id
-      }
-    }
-  }
-`
-
 export const DiscussionUpdateMutation = gql`
   mutation discussionUpdate($discussionId: ID!, $status: String!){
     discussionUpdate(discussionId: $discussionId, status: $status){
@@ -1002,16 +1029,6 @@ export const UpdateActionFlow = gql`
     actionFlowUpdate(id: $id, title: $title, description: $description, eventType: $eventType, eventCondition: $eventCondition, eventConditionQuery: $eventConditionQuery, eventAction: $eventAction){
       actionFlow {
         description
-      }
-    }
-  }
-`
-
-export const GenerateCurrentMonthInvoices = gql`
-  mutation autogenerateInvoice {
-    autogenerateInvoice {
-      invoices {
-        id
       }
     }
   }

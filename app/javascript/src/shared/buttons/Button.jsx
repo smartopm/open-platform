@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 export default function ButtonComponent({ variant, color, buttonText, handleClick}) {
   return (
     <>
-      <Button variant={variant} color={color} onClick={() => handleClick()}>
+      <Button variant={variant} color={color} role="button" onClick={() => handleClick()}>
         {buttonText}
       </Button>
     </>

@@ -44,16 +44,18 @@ module Types::Queries::ActionFlow
   def actions
     raise GraphQL::ExecutionError, 'Unauthorized' unless current_user&.admin?
 
-    ActionFlows::Actions.constants.select do |c|
+    actions = ActionFlows::Actions.constants.select do |c|
       ActionFlows::Actions.const_get(c).is_a?(Class)
-    end.map(&:to_s)
+    end
+
+    actions.map { |ac| ac.to_s.titleize }
   end
 
   def action_fields(action:)
     raise GraphQL::ExecutionError, 'Unauthorized' unless current_user&.admin?
 
     begin
-      fields = "ActionFlows::Actions::#{action.camelize}::ACTION_FIELDS".constantize
+      fields = "ActionFlows::Actions::#{action.gsub(' ', '_').camelize}::ACTION_FIELDS".constantize
       fields.map { |f| OpenStruct.new(f) }
     rescue StandardError
       raise GraphQL::ExecutionError, 'Invalid action name'

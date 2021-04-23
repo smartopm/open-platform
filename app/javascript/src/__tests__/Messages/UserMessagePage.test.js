@@ -7,14 +7,12 @@ import UserMessagePage from '../../containers/Messages/UserMessagePage';
 
 describe('AllMessages Component', () => {
   it('renders UserMessagePage text', () => {
-    const container = render(
+    render(
       <MockedProvider>
         <BrowserRouter>
           <UserMessagePage />
         </BrowserRouter>
       </MockedProvider>
     );
-
-    expect(container.getByText(/Messages/)).toBeInTheDocument();
   });
 });

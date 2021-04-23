@@ -10,12 +10,16 @@ module Types
     field :status, String, null: false
     field :bank_name, String, null: true
     field :cheque_number, String, null: true
+    field :receipt_number, String, null: true
     field :transaction_number, String, null: true
+    field :current_pending_plot_balance, Float, null: true
     field :current_wallet_balance, Float, null: true
     field :user, Types::UserType, null: false
     field :depositor, Types::UserType, null: true
     field :community, Types::CommunityType, null: false
+    field :payment_plan, Types::PaymentPlanType, null: true
     field :created_at, GraphQL::Types::ISO8601DateTime, null: false
     field :updated_at, GraphQL::Types::ISO8601DateTime, null: false
+    field :settled_invoices, GraphQL::Types::JSON, null: true
   end
 end

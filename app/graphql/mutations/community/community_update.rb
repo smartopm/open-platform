@@ -11,6 +11,7 @@ module Mutations
       argument :image_blob_id, String, required: false
       argument :currency, String, required: false
       argument :locale, String, required: false
+      argument :tagline, String, required: false
 
       field :community, Types::CommunityType, null: true
 

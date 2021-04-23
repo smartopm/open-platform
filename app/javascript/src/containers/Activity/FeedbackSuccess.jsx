@@ -1,6 +1,5 @@
-/* eslint-disable */
+/* eslint-disable react/prop-types */
 import React from 'react'
-import Nav from '../../components/Nav'
 import { StyleSheet, css } from 'aphrodite'
 import { withStyles } from "@material-ui/core/styles";
 import CheckIcon from '@material-ui/icons/Check';
@@ -30,20 +29,17 @@ export function FeedbackSuccess(props) {
         return <Redirect to="/" />;
     }
     return (
-        <div>
-            <Nav navName='Feedback' menuButton='cancel' backTo="/" />
-            <div className={`container ${css(style.feedbackPage)}`}>
-                <p className='text-center' data-testid='feedback-txt'>Thank you for your feedback</p>
-                <div className="row justify-content-around">
-                    <div className="">
-                        <IconButton className={classes.checkedIcon} aria-label="Check Icon">
-                            <CheckIcon className={classes.largeIcon} />
-                        </IconButton>
-                    </div>
-                </div>
-
-            </div>
+      <div className={`container ${css(style.feedbackPage)}`}>
+        <p className='text-center' data-testid='feedback-txt'>Thank you for your feedback</p>
+        <div className="row justify-content-around">
+          <div className="">
+            <IconButton className={classes.checkedIcon} aria-label="Check Icon">
+              <CheckIcon className={classes.largeIcon} />
+            </IconButton>
+          </div>
         </div>
+
+      </div>
     )
 }
 export default withStyles(styles)(FeedbackSuccess);

@@ -3,8 +3,6 @@ import { StyleSheet, css } from 'aphrodite'
 import { useMutation, useQuery } from 'react-apollo'
 import { useHistory } from 'react-router-dom'
 import { Button } from '@material-ui/core'
-import { useLocation } from 'react-router'
-import Nav from '../../components/Nav'
 import { CreateActionFlow, UpdateActionFlow } from '../../graphql/mutations'
 import MessageAlert from '../../components/MessageAlert'
 import ActionFlowModal from './ActionFlowModal'
@@ -14,7 +12,7 @@ import Loading from '../../shared/Loading'
 import ErrorPage from '../../components/Error'
 import CenteredContent from '../../components/CenteredContent'
 import Paginate from '../../components/Paginate'
-import { formatError } from '../../utils/helpers'
+import { formatError, useParamsQuery } from '../../utils/helpers'
 
 export default function ActionFlows() {
   const limit = 10
@@ -23,31 +21,33 @@ export default function ActionFlows() {
   const [isSuccessAlert, setIsSuccessAlert] = useState(false)
   const [selectedActionFlow, setSelectedActionFlow] = useState({})
   const [offset, setOffset] = useState(0)
-  const location = useLocation()
   const history = useHistory()
   const [createActionFlow] = useMutation(CreateActionFlow)
   const [updateActionFlow] = useMutation(UpdateActionFlow)
+
+  const pathQuery = useParamsQuery('')
+  const type = pathQuery.get('type');
+  const currentFlow = pathQuery.get('flow')
 
   const { data, error, loading, refetch } = useQuery(Flows, {
     variables: { limit, offset }
   })
 
   useEffect(() => {
-    const locationInfo = location.pathname.split('/')
-    if (locationInfo[locationInfo.length - 1] === 'new') {
+    if (type === 'new') {
       openModal()
     }
 
-    if (locationInfo[locationInfo.length - 1] === 'edit') {
-      openModal(locationInfo[locationInfo.length - 2])
+    if (type === 'edit') {
+      openModal(currentFlow)
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data])
 
   function openModal(flowId = null) {
-    let path = '/action_flows/new'
+    let path = '/action_flows?type=new'
     if (flowId) {
-      path = `/action_flows/${flowId}/edit`
+      path = `/action_flows?flow=${flowId}&&type=edit`
     }
 
     setSelectedActionFlow(getActionFlow(flowId))
@@ -163,7 +163,6 @@ export default function ActionFlows() {
 
   return (
     <>
-      <Nav navName="Workflow" menuButton="back" backTo="/" />
       <div className="container">
         <ActionFlowModal
           open={open}

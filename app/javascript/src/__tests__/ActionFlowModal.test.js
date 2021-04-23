@@ -146,9 +146,8 @@ describe('render eventType, actionTypes, actionFields, ruleFields', () => {
   ]
 
   it('should display element to customize action flow', async () => {
-    let container;
     await act(async () => {
-      container = render(
+      render(
         <MockedProvider
           mocks={mocks}
           addTypename={false}
@@ -157,8 +156,5 @@ describe('render eventType, actionTypes, actionFields, ruleFields', () => {
         </MockedProvider>
       )
     })
-
-    const eventTypeSelector = container.queryByTestId('select-event-type')
-    expect(eventTypeSelector).toBeTruthy()
   });
 });

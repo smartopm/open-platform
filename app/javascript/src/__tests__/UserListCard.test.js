@@ -1,4 +1,5 @@
 import React from 'react'
+import { MockedProvider } from '@apollo/react-testing'
 import { render } from '@testing-library/react'
 import { BrowserRouter } from 'react-router-dom/'
 import UserListCard from '../components/UserListCard'
@@ -29,55 +30,27 @@ describe('It displays the user list and interactions', () => {
     sendOneTimePasscode: jest.fn(),
     handleUserSelect: jest.fn(),
     currentUserType: 'Admin',
-    selectedUsers: ['uuid123-4']
+    selectedUsers: ['uuid123-4'],
+    offset: 0,
+    selectCheckBox: false
   }
   it('it mounts component without error', () => {
     const container = render(
-      <BrowserRouter>
-        <UserListCard {...props} />
-      </BrowserRouter>
+      <MockedProvider mocks={[]}>
+        <BrowserRouter>
+          <UserListCard {...props} />
+        </BrowserRouter>
+      </MockedProvider>
     )
     expect(container.queryByText(/Test Referral 2/).textContent).toContain(
       'Test Referral 2'
     )
-  })
-
-  it('it mounts component with role', () => {
-    const container = render(
-      <BrowserRouter>
-        <UserListCard {...props} />
-      </BrowserRouter>
-    )
     expect(container.queryByText(/Admin/).textContent).toContain('Admin')
-  })
-
-  it('it mounts component with PhoneNumber', () => {
-    const container = render(
-      <BrowserRouter>
-        <UserListCard {...props} />
-      </BrowserRouter>
-    )
     expect(container.queryByText(/0987654123/).textContent).toContain(
       '0987654123'
     )
-  })
-
-  it('it mounts component with email', () => {
-    const container = render(
-      <BrowserRouter>
-        <UserListCard {...props} />
-      </BrowserRouter>
-    )
     expect(container.queryByText(/domain@email.com/).textContent).toContain(
       'domain@email.com'
-    )
-  })
-
-  it('it mounts component with sub-status', () => {
-    const container = render(
-      <BrowserRouter>
-        <UserListCard {...props} />
-      </BrowserRouter>
     )
     expect(container.queryByTestId('user-substatus').textContent).toContain(
       'Building Permit Approved'

@@ -3,7 +3,7 @@ import { render, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { MockedProvider } from '@apollo/react-testing';
 import { BrowserRouter } from 'react-router-dom';
-import TransactionsList from '../../components/Payments/UserTransactions/Transactions';
+import TransactionsList from '../../modules/Payments/Components/UserTransactions/Transactions';
 import { TransactionQuery, UserBalance, AllTransactionQuery } from '../../graphql/queries';
 import { Spinner } from '../../shared/Loading';
 import { AuthStateProvider } from '../../containers/Provider/AuthStateProvider';
@@ -15,7 +15,7 @@ describe('Transactions Component', () => {
     const transactionsMock = {
       request: {
         query: TransactionQuery,
-        variables: { userId, limit: 15, offset: 0 }
+        variables: { userId, limit: 10, offset: 0 }
       },
       result: {
         data: {
@@ -44,7 +44,7 @@ describe('Transactions Component', () => {
               dueDate: '2021-01-26',
               balance: 300,
               createdAt: '2021-01-26',
-              id: 'f280159d-ac71-4c22-997a-07fd07344c94' 
+              id: 'f280159d-ac71-4c22-997a-07fd07344c94'
             }]
           }
         }
@@ -53,7 +53,7 @@ describe('Transactions Component', () => {
     const pendingInvoicesMock = {
       request: {
         query: UserBalance,
-        variables: { userId, limit: 15, offset: 0 }
+        variables: { userId, limit: 10, offset: 0 }
       },
       result: {
         data: {
@@ -64,7 +64,7 @@ describe('Transactions Component', () => {
     const pendingDepositMock = {
       request: {
         query: AllTransactionQuery,
-        variables: { userId, limit: 15, offset: 0 }
+        variables: { userId, limit: 10, offset: 0 }
       },
       result: {
         data: {
@@ -98,7 +98,28 @@ describe('Transactions Component', () => {
               paymentType: 'cash',
               createdAt: '2020-12-23',
               id: 'ec289778-8d32-4ec6-ba69-313058e61c19'
-              }]
+            }],
+            paymentPlans: [{
+              percentage: '50',
+              planType: 'lease',
+              createdAt: '2021-03-01T09:55:05Z',
+              plotBalance: 0,
+              startDate: '2021-03-01T09:55:05Z',
+              status: 'active',
+              id: '3b464fb7-bb2b-41cb-9245-9300b6d8a729',
+              invoices: [{
+                id: 'a54d6184-b10e-4865-bee7-7957701d423d',
+                amount: 500,
+                createdAt: '2021-03-01T09:55:05Z',
+                dueDate: '2021-01-26',
+                status: 'paid',
+                invoiceNumber: 123
+              }],
+              landParcel: {
+                id: '233b1634-bf08-4ece-a213-b3f120a1e009',
+                parcelNumber: 'Plot-1343'
+              }
+            }]
           }
         }
       }
@@ -130,7 +151,7 @@ describe('Transactions Component', () => {
 
     await waitFor(
       () => {
-        expect(container.queryByText('Invoices')).toBeInTheDocument();
+        expect(container.queryAllByText('Invoices')[0]).toBeInTheDocument();
         expect(container.queryByText('Transactions')).toBeInTheDocument();
       },
       { timeout: 100 }

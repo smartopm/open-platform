@@ -16,6 +16,7 @@ module Types
     field :image_url, String, null: true
     field :currency, String, null: true
     field :locale, String, null: true
+    field :tagline, String, null: true
 
     def image_url
       return nil unless object.image.attached?

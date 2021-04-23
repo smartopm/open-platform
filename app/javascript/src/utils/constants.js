@@ -1,4 +1,5 @@
 // values that can be reused across the codebase
+import MaterialConfig from 'react-awesome-query-builder/lib/config/material'
 
 export const filterUserByLoggedin = {
   log_from: 'login after',
@@ -81,7 +82,8 @@ export const paymentType = {
   mobile_money: 'Mobile Money',
   'bank_transfer/cash_deposit': 'Bank Transfer/Cash Deposit',
   'bank_transfer/eft': 'Bank Transfer/EFT',
-  pos: 'Point of Sale'
+  pos: 'Point of Sale',
+  cash: 'Cash'
 };
 
 export const paymentStatusColor = {
@@ -154,6 +156,9 @@ export const commentStatusAction = {
   validate: 'valid'
 };
 // Values from here should be managed at the community level
+/**
+ * @deprecated This will be remove eventually in favor of community support contacts and avoid direct names in the app
+ */
 export const ponisoNumber = '+260976064298';
 
 export const messageFilters = [
@@ -274,3 +279,228 @@ export const plotStatusColorPallete = {
     sold: '#DB4949',
     available: '#307404'
 }
+
+const InitialConfig = MaterialConfig
+export const dateWidget = {
+  ...InitialConfig.widgets,
+  date: {
+    ...InitialConfig.widgets.date,
+    dateFormat: "YYYY.MM.DD",
+    valueFormat: "YYYY-MM-DD",
+  }
+}
+  export const invoiceQueryBuilderConfig = {
+    ...InitialConfig,
+    fields: {
+      userName: {
+        label: 'User Name',
+        type: 'text',
+        valueSources: ['value'],
+      },
+      invoiceNumber: {
+        label: 'Invoice Number',
+        type: 'text',
+        valueSources: ['value']
+      },
+      phoneNumber: {
+        label: 'Phone Number',
+        type: 'number',
+        valueSources: ['value']
+      },
+      email: {
+        label: 'Email',
+        type: 'text',
+        valueSources: ['value']
+      },
+      plotNumber: {
+        label: 'Plot Number',
+        type: 'text',
+        valueSources: ['value']
+      },
+      issuedDate: {
+        label: 'Issued Date',
+        type: 'date',
+        valueSources: ['value'],
+      },
+      dueDate: {
+        label: 'Due Date',
+        type: 'date',
+        valueSources: ['value'],
+      }
+    },
+    widgets: dateWidget
+  }
+
+  export const invoiceQueryBuilderInitialValue = {
+    // Just any random UUID
+    id: '76a8a9ba-0123-3344-c56d-b16e532c8cd0',
+    type: 'group',
+    children1: {
+      '98a8a9ba-0123-4456-b89a-b16e721c8cd0': {
+        type: 'rule',
+        properties: {
+          field: 'userName',
+          operator: 'equal',
+          value: [''],
+          valueSrc: ['value'],
+          valueType: ['text']
+        }
+      }
+    }
+  }
+
+  export const invoiceFilterFields = {
+    userName: 'user',
+    invoiceNumber: 'invoice_number',
+    phoneNumber: 'phone_number',
+    email: 'email',
+    plotNumber: 'land_parcel',
+    issuedDate: 'created_at',
+    dueDate: 'due_date'
+  }
+
+  export const paymentQueryBuilderConfig = {
+    ...InitialConfig,
+    fields: {
+      clientName: {
+        label: 'Client Name',
+        type: 'text',
+        valueSources: ['value'],
+      },
+      paymentType: {
+        label: 'Payment Type',
+        type: 'select',
+        valueSources: ['value'],
+        fieldSettings: {
+          listValues: Object.entries(paymentType).map(([key, val]) => {
+            return { value: key, title: val }
+          })
+        }
+      },
+      phoneNumber: {
+        label: 'Phone Number',
+        type: 'number',
+        valueSources: ['value']
+      },
+      email: {
+        label: 'Email',
+        type: 'text',
+        valueSources: ['value']
+      },
+      transactionNumber: {
+        label: 'Transaction Number',
+        type: 'text',
+        valueSources: ['value']
+      },
+      createdDate: {
+        label: 'Created Date',
+        type: 'date',
+        valueSources: ['value']
+      },
+      chequeNumber: {
+        label: 'Cheque Number',
+        type: 'text',
+        valueSources: ['value']
+      }
+    },
+    widgets: dateWidget
+  }
+
+  export const paymentQueryBuilderInitialValue = {
+    // Just any random UUID
+    id: '76a8a9ba-0123-3344-c56d-b16e532c8cd0',
+    type: 'group',
+    children1: {
+      '98a8a9ba-0123-4456-b89a-b16e721c8cd0': {
+        type: 'rule',
+        properties: {
+          field: 'clientName',
+          operator: 'equal',
+          value: [''],
+          valueSrc: ['value'],
+          valueType: ['text']
+        }
+      }
+    }
+  }
+
+  export const paymentFilterFields = {
+    clientName: 'user',
+    phoneNumber: 'phone_number',
+    email: 'email',
+    createdDate: 'created_at',
+    paymentType: 'source',
+    transactionNumber: 'transaction_number',
+    chequeNumber: 'cheque_number'
+  }
+
+  export const propertyQueryBuilderConfig = {
+    ...InitialConfig,
+    fields: {
+      owner: {
+        label: 'Owner\'s Name',
+        type: 'text',
+        valueSources: ['value'],
+        excludeOperators: ['not_equal']
+      },
+      ownerAddress: {
+        label: 'Owner\'s Address',
+        type: 'text',
+        valueSources: ['value'],
+        excludeOperators: ['not_equal']
+      },
+      parcelType: {
+        label: 'Property Type',
+        type: 'text',
+        valueSources: ['value']
+      },
+      plotNumber: {
+        label: 'Plot Number',
+        type: 'text',
+        valueSources: ['value']
+      },
+      parcelAddress: {
+        label: 'Property Address',
+        type: 'text',
+        valueSources: ['value']
+      },
+    },
+    widgets: dateWidget
+  };
+
+  export const propertyQueryBuilderInitialValue = {
+    // Just any random UUID
+    id: '76a8a9ba-0123-3344-c56d-b16e532c8cd0',
+    type: 'group',
+    children1: {
+      '98a8a9ba-0123-4456-b89a-b16e721c8cd0': {
+        type: 'rule',
+        properties: {
+          field: 'owner',
+          operator: 'equal',
+          value: [''],
+          valueSrc: ['value'],
+          valueType: ['text']
+        }
+      }
+    }
+  };
+
+  export const propertyFilterFields = {
+    owner: 'owner',
+    ownerAddress: 'owner',
+    parcelType: 'parcel_type',
+    plotNumber: 'parcel_number',
+    parcelAddress: 'address1',
+  };
+
+  export const allUserTypes = [
+    'admin',
+    'client',
+    'security_guard',
+    'prospective_client',
+    'contractor',
+    'resident',
+    'visitor',
+    'custodian'
+  ]

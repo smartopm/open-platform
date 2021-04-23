@@ -1,15 +1,12 @@
-/* eslint-disable */
-import React, { Fragment, useState, useContext } from 'react'
+import React, { useState, useContext } from 'react'
 import { useMutation } from 'react-apollo'
-import { UpdateNote } from '../graphql/mutations'
-import TodoList from '../components/Notes/TodoList'
-import Nav from '../components/Nav'
-import { Context as AuthStateContext } from './Provider/AuthStateProvider.js'
 import { useLocation } from 'react-router'
+import { UpdateNote } from '../graphql/mutations'
+import TodoList from '../modules/Tasks/Components/TodoList'
+import { Context as AuthStateContext } from './Provider/AuthStateProvider'
 
+// eslint-disable-next-line react/prop-types
 export default function Todo({ history }) {
-  // /* eslint-disable */-next-line no-unused-vars
-  const [isLoading, setLoading] = useState(false)
   const authState = useContext(AuthStateContext)
 
   const [noteUpdate] = useMutation(UpdateNote)
@@ -18,20 +15,13 @@ export default function Todo({ history }) {
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const location = useLocation()
 
-  function todoAction(id, isCompleted) {
-    setLoading(true)
-    noteUpdate({ variables: { id, completed: !isCompleted } }).then(() => {
-      setLoading(false)
-    })
-  }
-
   function handleModal(Uid) {
     setUserId(Uid)
     setIsDialogOpen(!isDialogOpen)
   }
 
   function saveDate() {
-    let id = userId
+    const id = userId
     noteUpdate({ variables: { id, dueDate: selectedDate } }).then(() => {
       setIsDialogOpen(!isDialogOpen)
     })
@@ -40,29 +30,23 @@ export default function Todo({ history }) {
   const handleDateChange = date => {
     setSelectedDate(new Date(date).toISOString())
   }
+  // this will be handled at the higher level in the routes and in modules
   if (authState.user?.userType !== 'admin') {
     // re-route to home
+    // eslint-disable-next-line react/prop-types
     history.push('/')
   }
-
-  // remove the forward slash and do pattern match for routes and nav name
-  const path = {
-    tasks: 'Tasks',
-    my_tasks: 'My Tasks'
-  }
   return (
-    <Fragment>
-      <Nav navName={path[location.pathname.replace(/\//, '')]} menuButton="back" backTo="/" />
-        <TodoList
-          isDialogOpen={isDialogOpen}
-          handleModal={handleModal}
-          saveDate={saveDate}
-          selectedDate={selectedDate}
-          handleDateChange={handleDateChange}
-          todoAction={todoAction}
-          location={location.pathname.replace(/\//, '')}
-          currentUser={authState.user}
-        />
-    </Fragment>
+    <>
+      <TodoList
+        isDialogOpen={isDialogOpen}
+        handleModal={handleModal}
+        saveDate={saveDate}
+        selectedDate={selectedDate}
+        handleDateChange={handleDateChange}
+        location={location.pathname.replace(/\//, '')}
+        currentUser={authState.user}
+      />
+    </>
   )
 }

@@ -3,7 +3,7 @@ import { render } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { MockedProvider } from '@apollo/react-testing';
 import { BrowserRouter } from 'react-router-dom/';
-import ReceiptModal from '../../components/Payments/ReceiptModal';
+import ReceiptModal from '../../modules/Payments/Components/ReceiptModal';
 import currency from '../../__mocks__/currency';
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());

@@ -3,14 +3,16 @@ import React from 'react'
 import { Menu, MenuItem } from '@material-ui/core'
 import { Link } from 'react-router-dom'
 
-
+/**
+ * 
+ * @deprecated this will be completely removed with the new design, it currently only used on /users page
+ */
 export default function UserActionMenu({
     data,
     router,
     anchorEl,
     handleClose,
     userType,
-    sendOTP,
     CSMNumber,
     open,
     OpenMergeDialog,
@@ -108,11 +110,12 @@ export default function UserActionMenu({
                 </Link>
               </MenuItem>
               <MenuItem key={'send_code'}>
-                            <a onClick={sendOTP}
-                                className={linkStyles}
-                            >
-                  Send One Time Passcode
-                </a>
+                <Link
+                  to={`/user/${data.user.id}/otp`}
+                  className={linkStyles}
+                >
+                  Send OTP
+                </Link>
               </MenuItem>
             </>
           )}

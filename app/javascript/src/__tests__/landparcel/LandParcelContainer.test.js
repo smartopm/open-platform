@@ -15,14 +15,13 @@ jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
 jest.mock('leaflet-draw')
 describe('Land Property Page', () => {
   it('renders land parcel page', async () => {
-    const container = render(
+    render(
       <MockedProvider addTypename={false}>
         <BrowserRouter>
           <LandParcelPage />
         </BrowserRouter>
       </MockedProvider>
     );
-    expect(container.queryByText('Properties')).toBeInTheDocument();
   });
 
   it('should test for landparcel queries', async () => {

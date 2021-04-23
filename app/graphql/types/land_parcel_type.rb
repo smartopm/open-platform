@@ -17,10 +17,19 @@ module Types
     field :lat_y, Float, null: true
     field :geom, GraphQL::Types::JSON, null: true
     field :created_at, GraphQL::Types::ISO8601DateTime, null: false
+    field :updated_at, GraphQL::Types::ISO8601DateTime, null: false
     field :read_at, GraphQL::Types::ISO8601DateTime, null: true
     field :valuations, [Types::ValuationType], null: false
     field :accounts, [Types::AccountType], null: false
     field :plot_sold, Boolean, null: true
+    field :image_url, String, null: true
+
+    def image_url
+      return nil unless object.image.attached?
+
+      Rails.application.routes.url_helpers
+           .rails_blob_url(object.image)
+    end
 
     def plot_sold
       object.accounts.present?

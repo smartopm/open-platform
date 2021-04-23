@@ -9,6 +9,10 @@ export const LandPaymentPlanCreateMutation = gql`
     $status: Int!
     $planType: String!
     $percentage: String!
+    $monthlyAmount: Float!
+    $totalAmount: Float!
+    $durationInMonth: Int!
+
   ) {
     paymentPlanCreate(
       landParcelId: $landParcelId
@@ -17,6 +21,9 @@ export const LandPaymentPlanCreateMutation = gql`
       status: $status
       planType: $planType
       percentage: $percentage
+      monthlyAmount: $monthlyAmount
+      totalAmount: $totalAmount
+      durationInMonth: $durationInMonth
     ) {
       paymentPlan {
         id
@@ -43,6 +50,42 @@ mutation MergeProperty($id: ID!,
           fullName
           address1
         }
+    }
+  }
+}
+`;
+
+export const PointOfInterestCreate = gql`
+mutation PointOfInterestCreate($longX: Float!,
+  $latY: Float!,
+  $geom: String!) {
+    pointOfInterestCreate(longX: $longX,
+    latY: $latY,
+    geom: $geom) {
+      landParcel {
+        id
+        parcelType
+        parcelNumber
+    }
+  }
+}
+`;
+
+export const PointOfInterestDelete = gql`
+mutation PointOfInterestDelete($id: ID!) {
+  pointOfInterestDelete(id: $id) {
+    success
+  }
+}
+`;
+
+export const PointOfInterestImageCreate = gql`
+mutation poiImageUpload($id: ID!, $imageBlobId: String!) {
+  poiImageUpload(id: $id, imageBlobId: $imageBlobId) {
+    landParcel {
+      id
+      parcelType
+      parcelNumber
     }
   }
 }

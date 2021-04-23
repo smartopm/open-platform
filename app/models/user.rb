@@ -456,6 +456,24 @@ class User < ApplicationRecord
     community.users.find(payload['user_id'])
   end
 
+  # rubocop:disable Metrics/MethodLength
+  # rubocop:disable Metrics/AbcSize
+  def self.already_existing(email, phone_list, community)
+    email = email&.presence
+    phone_list = phone_list.reject(&:blank?)
+    (where.not(email: nil).where(community: community).where(
+      arel_table[:email].matches("#{email || ' '}%"),
+    ).or(where(phone_number: phone_list, community: community)) +
+      where(community: community).joins(:contact_infos).where(contact_infos:
+        { contact_type: 'email', info: email }).or(
+          where(community: community).joins(:contact_infos).where(contact_infos:
+          { contact_type: 'phone', info: phone_list }),
+        )
+    ).uniq
+  end
+  # rubocop:enable Metrics/MethodLength
+  # rubocop:enable Metrics/AbcSize
+
   def send_email_msg
     return if self[:email].nil?
 
@@ -502,12 +520,19 @@ class User < ApplicationRecord
     payment_plans.active.present? || wallet_transactions.present? || invoices.present?
   end
 
-  private
-
   def current_time_in_timezone
     # Should we get timezone from user's community instead?
     Time.now.in_time_zone('Africa/Lusaka')
   end
+
+  def regular_and_govt_plots(property_number, gov_property_number)
+    [
+      land_parcels.find_by(parcel_number: property_number),
+      land_parcels.find_by(parcel_number: gov_property_number),
+    ]
+  end
+
+  private
 
   def phone_number_valid?
     return if self[:phone_number].blank?
@@ -541,10 +566,6 @@ class User < ApplicationRecord
     previous_status = sub_status_changes.first
     new_status = sub_status_changes.last
     stop_date = nil
-
-    if previous_status.present? && new_status != previous_status
-      stop_date = current_time_in_timezone
-    end
 
     latest_substatus = create_sub_status_log(start_date, previous_status, new_status, stop_date)
 

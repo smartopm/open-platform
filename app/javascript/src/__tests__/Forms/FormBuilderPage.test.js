@@ -11,7 +11,7 @@ jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
 
 describe('FormBuilderPage Component', () => {
   it('renders FormBuilder text', () => {
-    const container = render(
+    render(
       <MockedProvider>
         <BrowserRouter>
           <FormBuilderPage />
@@ -19,6 +19,5 @@ describe('FormBuilderPage Component', () => {
       </MockedProvider>
     );
 
-    expect(container.getByText(/FormBuilder/)).toBeInTheDocument();
   });
 });

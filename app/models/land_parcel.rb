@@ -10,12 +10,14 @@ class LandParcel < ApplicationRecord
   has_many :valuations, -> { order(start_date: :asc) },
            dependent: :destroy, inverse_of: :land_parcel
   has_one :payment_plan, dependent: :destroy
+  has_one_attached :image
 
   validates :parcel_number, uniqueness: true
-  default_scope { order(created_at: :desc) }
+  default_scope { where.not(deleted_status: 1).order(created_at: :desc) }
 
   search_scope :search do
     attributes :parcel_number, :address1, :address2, :parcel_type
     attributes owner: ['accounts.full_name', 'accounts.address1', 'accounts.address2']
   end
+  enum deleted_status: { not_deleted: 0, deleted: 1 }
 end

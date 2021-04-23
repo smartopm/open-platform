@@ -29,7 +29,7 @@ describe('wait screen component', () => {
       </BrowserRouter>
     )
     expect(getByText('Denied')).toBeInTheDocument()
-    expect(getByText('Call Poniso')).toBeInTheDocument()
+    expect(getByText('Call Manager')).toBeInTheDocument()
     expect(getByText('Home')).toBeInTheDocument()
   })
 })

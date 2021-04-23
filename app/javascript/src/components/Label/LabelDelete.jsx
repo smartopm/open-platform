@@ -44,10 +44,10 @@ export default function TaskDelete({ open, handleClose, refetch, data }) {
         </DialogContent>
         <Divider />
         <DialogActions style={{ margin: '10px' }}>
-          <Button onClick={handleClose} variant="outlined" color="secondary">
+          <Button onClick={handleClose} variant="outlined" color="secondary" data-testid='cancel'>
             Cancel
           </Button>
-          <Button autoFocus onClick={() => handleDelete(data.id)} variant="contained" style={{ backgroundColor: '#dc402b', color: 'white' }}>
+          <Button autoFocus onClick={() => handleDelete(data.id)} variant="contained" style={{ backgroundColor: '#dc402b', color: 'white' }} data-testid='button'>
             Save changes
           </Button>
         </DialogActions>

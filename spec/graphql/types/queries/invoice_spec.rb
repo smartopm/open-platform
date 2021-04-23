@@ -9,6 +9,10 @@ RSpec.describe Types::Queries::Invoice do
     let!(:land_parcel) { create(:land_parcel, community_id: user.community_id) }
     let!(:wallet_transaction) { create(:wallet_transaction, user: user, community: user.community) }
     let!(:payment) { create(:payment, user: user, community_id: user.community.id) }
+    let!(:payment_plan) do
+      create(:payment_plan, land_parcel_id: land_parcel.id, user_id: user.id, plot_balance: 0)
+    end
+    let!(:valuation) { create(:valuation, land_parcel_id: land_parcel.id) }
     let!(:invoice_one) do
       create(:invoice, community_id: user.community_id, land_parcel: land_parcel, user_id: user.id,
                        status: 'in_progress', invoice_number: '1234', created_by: user, amount: 500)
@@ -17,8 +21,6 @@ RSpec.describe Types::Queries::Invoice do
       create(:invoice, community_id: user.community_id, land_parcel: land_parcel, user_id: user.id,
                        status: 'late', created_by: user, amount: 500)
     end
-    let!(:valuation) { create(:valuation, land_parcel_id: land_parcel.id) }
-    let!(:payment_plan) { create(:payment_plan, land_parcel_id: land_parcel.id, user_id: user.id) }
 
     let(:invoices_query) do
       <<~GQL
@@ -102,17 +104,6 @@ RSpec.describe Types::Queries::Invoice do
       GQL
     end
 
-    let(:invoice_autogeneration_data_query) do
-      <<~GQL
-        query invoiceAutogenerationData {
-          invoiceAutogenerationData {
-            numberOfInvoices
-            totalAmount
-          }
-        }
-      GQL
-    end
-
     it 'should retrieve list of invoices' do
       result = DoubleGdpSchema.execute(invoices_query, variables: { query: '' }, context: {
                                          current_user: user,
@@ -190,18 +181,6 @@ RSpec.describe Types::Queries::Invoice do
       expect(result.dig('errors', 0, 'message')).to include 'Unauthorized'
     end
 
-    it 'should  get invoice count per status' do
-      result = DoubleGdpSchema.execute(invoice_autogeneration_data_query, context: {
-                                         current_user: user,
-                                         site_community: user.community,
-                                       }).as_json
-      expect(result.dig('errors', 0, 'message')).to be_nil
-      expect(result.dig('data', 'invoiceAutogenerationData', 'numberOfInvoices')).to eql 1
-      expect(
-        result.dig('data', 'invoiceAutogenerationData', 'totalAmount').floor,
-      ).to eql ((payment_plan.percentage.to_i * valuation.amount) / 12).floor
-    end
-
     it 'should retrieve invoices for a user with transactions' do
       PaymentInvoice.create!(
         payment: payment,
@@ -215,7 +194,6 @@ RSpec.describe Types::Queries::Invoice do
                                          current_user: user,
                                          site_community: user.community,
                                        }).as_json
-
       expect(result.dig('data', 'invoicesWithTransactions', 'payments', 0, 'id')).to eql payment.id
       expect(result.dig('errors', 0, 'message')).to be_nil
     end

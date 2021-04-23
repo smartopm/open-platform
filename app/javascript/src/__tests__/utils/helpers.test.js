@@ -1,25 +1,26 @@
 import dompurify from 'dompurify';
+import { paymentFilterFields } from '../../utils/constants'
 
-import { sentencizeAction, titleize, pluralizeCount, 
+import { sentencizeAction, titleize, pluralizeCount,
 capitalize, validateEmail, invertArray,findLinkAndReplace,
 forceLinkHttps, titleCase, truncateString, removeNewLines, checkForHtmlTags, sanitizeText,
-getJustLabels, checkValidGeoJSON, getHexColor, getDrawPluginOptions,
+getJustLabels, checkValidGeoJSON, getHexColor, getDrawPluginOptions, handleQueryOnChange
 } from '../../utils/helpers'
 
 jest.mock('dompurify')
 describe('helper methods', () => {
     describe('#sentencizeAction', () => {
       it('should attach \'send\' to sendActions', () => {
-        
-        expect(sentencizeAction('email')).toMatch(/Send email/i);
-        expect(sentencizeAction('notification')).toMatch(/Send notification/i);
+
+        expect(sentencizeAction('Email')).toMatch(/Send Email/i);
+        expect(sentencizeAction('Notification')).toMatch(/Send Notification/i);
       });
       it('should attach \'create\' to createActions', () => {
-        expect(sentencizeAction('task')).toMatch(/Create task/i);
+        expect(sentencizeAction('Task')).toMatch(/Create Task/i);
       });
       it('should not attach \'create\' to sendActions', () => {
-        expect(sentencizeAction('email')).not.toMatch(/Create email/i);
-        expect(sentencizeAction('notification')).not.toMatch(/Create notification/i);
+        expect(sentencizeAction('Email')).not.toMatch(/Create Email/i);
+        expect(sentencizeAction('Notification')).not.toMatch(/Create Notification/i);
       });
     });
 
@@ -136,7 +137,7 @@ describe('helper methods', () => {
       it('should replace url in message with clickable links', () => {
         const result = findLinkAndReplace('Message with url - https://url.com')
         const anchorTagRegEx =  /<\/?[a-z][\s\S]*>/i
-        
+
         expect(anchorTagRegEx.test(result)).toBe(true);
         expect(result).toMatch(/<a href/i);
         expect(result).toMatch(/https:\/\/url.com/i);
@@ -145,7 +146,7 @@ describe('helper methods', () => {
       it('should replace email in message with clickable mailto', () => {
         const result = findLinkAndReplace('Message with email - email@email.com')
         const anchorTagRegEx =  /<\/?[a-z][\s\S]*>/i
-        
+
         expect(anchorTagRegEx.test(result)).toBe(true);
         expect(result).toMatch(/<a href/i);
         expect(result).toMatch(/mailto:/i);
@@ -179,4 +180,30 @@ describe('helper methods', () => {
         );
       });
     });
+});
+
+describe('handleQueryOnChange', () => {
+  const selectedOptions = {
+    data: {
+      clientName: null
+    },
+    errors: [],
+    logic: {
+      and: [
+        {
+          '==': [
+            {
+              var: 'clientName'
+            },
+            'name'
+          ]
+        }
+      ]
+    }
+  }
+  it('should return query for the filter', () => {
+    const result = handleQueryOnChange(selectedOptions, paymentFilterFields)
+
+    expect(result).toEqual("user = \"name\"");
+  });
 });
