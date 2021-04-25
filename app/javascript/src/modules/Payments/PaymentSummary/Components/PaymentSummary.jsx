@@ -48,12 +48,13 @@ export default function PaymentSummary({ authState }) {
 
   const history = useHistory()
 
-  function handleClick(query) {
+  function handleClick(query, value) {
+    if (value === 0) return;
     history.push({
       pathname: '/payments',
       state: { from: 'dashboard', query },
       search: `?tab=${active === 'invoice' ? 'invoice' : 'payment'}`
-    })
+    });
   }
 
   if (error || payError) {
@@ -106,10 +107,12 @@ export default function PaymentSummary({ authState }) {
             <Grid container spacing={2} style={matches ? {padding: '20px'} : {padding: '20px 57px 20px 79px', width: '99%'}}>
               {
                 Object.entries(invoiceCardContent).map(([key, val]) => (
-                  <Grid item xs={6} sm={3} key={key} onClick={() => handleClick(key)}>
+                  <Grid item xs={6} sm={3} key={key}>
                     <PaymentSummaryCard
                       title={val}
                       value={propAccessor(data?.invoiceSummary, key)}
+                      handleClick={handleClick}
+                      query={key}
                     />
                   </Grid>
                 ))
@@ -119,11 +122,13 @@ export default function PaymentSummary({ authState }) {
             <Grid container spacing={2} style={matches ? {padding: '20px'} : {padding: '20px 57px 20px 79px', width: '99%'}}>
               {
                 Object.entries(paymentCardContent).map(([key, val]) => (
-                  <Grid item xs={6} sm={3} key={key} onClick={() => handleClick(key)}>
+                  <Grid item xs={6} sm={3} key={key}>
                     <PaymentSummaryCard
                       title={val}
                       value={propAccessor(payData?.paymentSummary, key)}
                       currencyData={currencyData}
+                      handleClick={handleClick}
+                      query={key}
                     />
                   </Grid>
                 ))

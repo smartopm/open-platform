@@ -5,7 +5,7 @@ import useMediaQuery from '@material-ui/core/useMediaQuery';
 import colors from '../../../../themes/nkwashi/colors'
 import { formatMoney } from '../../../../utils/helpers';
 
-export default function PaymentSummaryCard({ value, title, handleClick, currencyData }){
+export default function PaymentSummaryCard({ value, title, handleClick, currencyData, query }){
   const { lightGray } = colors
   const isNotClickable = value === 0
   const backgroundColor = isNotClickable && lightGray
@@ -13,7 +13,7 @@ export default function PaymentSummaryCard({ value, title, handleClick, currency
   return (
     <div>
       <Card
-        onClick={handleClick}
+        onClick={() => handleClick(query, value)}
         style={{
           backgroundColor,
           cursor: isNotClickable ? 'not-allowed' : 'pointer'
@@ -47,5 +47,6 @@ PaymentSummaryCard.propTypes = {
   currencyData: PropTypes.shape({ currency: PropTypes.string, locale: PropTypes.string }),
   value: PropTypes.string.isRequired,
   title: PropTypes.string.isRequired,
-  handleClick: PropTypes.func.isRequired
+  handleClick: PropTypes.func.isRequired,
+  query: PropTypes.string.isRequired
 };

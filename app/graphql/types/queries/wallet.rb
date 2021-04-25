@@ -77,8 +77,9 @@ module Types::Queries::Wallet
   # rubocop:disable Metrics/AbcSize
   # rubocop:disable Metrics/MethodLength
   def payment_stat_details(query:)
-    payments = context[:site_community].wallet_transactions.where(destination: 'wallet')
-                                       .where.not(source: 'invoice')
+    payments = context[:site_community].wallet_transactions
+                                       .where(destination: 'wallet')
+                                       .not_cancelled
                                        .eager_load(:user)
     case query
     when 'today'
@@ -110,8 +111,7 @@ module Types::Queries::Wallet
   def payment_summary
     raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user]&.admin?
 
-    payments = context[:site_community].wallet_transactions.where(destination: 'wallet')
-                                       .where.not(source: 'invoice')
+    payments = context[:site_community].wallet_transactions.not_cancelled.where(destination: 'wallet')
     {
       today: payments.where(created_at: Time.zone.now.beginning_of_day..Time.zone.now.end_of_day)
                      .sum(&:amount),

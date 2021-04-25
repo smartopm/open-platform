@@ -14,19 +14,19 @@ export default function Home() {
   if (!authState.loggedIn) return <Loading />
   return (
     <div style={{backgroundColor: '#FFFFFF'}}>
-      <br />
-      <br />
-      <NewsFeed />
-      <br />
       {authState.user.userType === 'admin' && (
         <div>
           <PaymentSummary authState={authState} />
           <br />
           <Divider />
           <TaskReminder />
+          <Divider />
+          <NewsFeed />
         </div>
       )}
-      <Homepage authState={authState} />
+      {authState.user.userType !== 'admin' && (
+        <Homepage authState={authState} />
+      )}
     </div>
   )
 }
