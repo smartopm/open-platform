@@ -1,0 +1,19 @@
+import Community from ".."
+import { allUserTypes } from '../../../utils/constants';
+
+jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn())
+
+describe('Community', () => {
+  it('exports necessary info', () => {
+    expect(Community.routeProps.path).toBe('')
+    expect(Community.name).toBe('Community')
+    expect(Community.styleProps.icon).toBeDefined()
+    expect(Community.subMenu).toHaveLength(10)
+  });
+
+  allUserTypes.forEach((userType) => {
+    it(`contains ${userType}`, () => {
+      expect(Community.accessibleBy).toContain(userType);
+    });
+  })
+});
