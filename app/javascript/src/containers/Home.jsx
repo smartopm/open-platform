@@ -7,6 +7,7 @@ import Homepage from '../components/HomePage'
 import NewsFeed from '../components/NewsPage/NewsFeed'
 import { TaskReminder } from '../modules/Tasks'
 import { PaymentSummary } from '../modules/Payments'
+import UserDetail from '../modules/Users/Components/UserDetail'
 
 export default function Home() {
   const authState = useContext(AuthStateContext)
@@ -16,6 +17,7 @@ export default function Home() {
     <div style={{backgroundColor: '#FFFFFF'}}>
       {authState.user.userType === 'admin' && (
         <div>
+          <UserDetail user={authState.user} />
           <PaymentSummary authState={authState} />
           <br />
           <Divider />

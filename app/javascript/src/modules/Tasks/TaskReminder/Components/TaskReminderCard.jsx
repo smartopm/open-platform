@@ -44,37 +44,39 @@ export default function TaskReminderCard() {
             <Typography variant='h6' style={matches ? {margin: '20px 0 26px 20px', fontWeight: 'bold'} : {margin: '50px 0 26px 79px', fontWeight: 'bold'}}>Task Reminders</Typography>
             {matches ? null : <TrendingFlatIcon style={matches ? {marginLeft: 'auto', order: 2, marginTop: '20px', marginRight: '20px'} : {marginLeft: 'auto', order: 2, marginTop: '50px', marginRight: '80px'}} />}
           </div>
-          {data?.userTasks.length > 0 ? (
-            <div className={classes.root} style={matches ? {marginLeft: '20px'} : {marginLeft: '79px'}}>
-              <GridList className={classes.gridList} cols={matches ? 1 : 3.5}>
-                {data.userTasks.map((tile) => (
-                  <GridListTile key={tile.id}>
-                    <div className={classes.gridTile} onClick={() => history.push('/my_tasks')}>
-                      <div className={classes.date} style={checkDate(tile.dueDate) ? {color: 'red'} : null}>
-                        <EventNoteIcon style={{marginRight: '10px'}} />
-                        <Typography variant='body2'>
-                          Due
-                          {' '}
-                          {dateToString(tile.dueDate)}
+          <div>
+            {data?.userTasks.length > 0 ? (
+              <div className={classes.root} style={matches ? {marginLeft: '20px'} : {marginLeft: '79px'}}>
+                <GridList className={classes.gridList} cols={matches ? 1 : 3.5}>
+                  {data?.userTasks.map((tile) => (
+                    <GridListTile key={tile.id}>
+                      <div className={classes.gridTile} onClick={() => history.push('/my_tasks')}>
+                        <div className={classes.date} style={checkDate(tile.dueDate) ? {color: 'red'} : null}>
+                          <EventNoteIcon style={{marginRight: '10px', heigth: '15px', width: '15px'}} />
+                          <Typography variant='overline' style={{paddingBottom: '5px'}}>
+                            Due
+                            {' '}
+                            {dateToString(tile.dueDate)}
+                          </Typography>
+                        </div>
+                        <Typography align='justify' variant='caption' data-testid='body'>
+                          <span
+                            style={{ whiteSpace: 'pre-line' }}
+                          // eslint-disable-next-line react/no-danger
+                            dangerouslySetInnerHTML={{
+                          __html: sanitizeText(removeNewLines(tile.body))
+                          }}
+                          />
                         </Typography>
                       </div>
-                      <Typography align='justify' variant='caption' data-testid='body'>
-                        <span
-                          style={{ whiteSpace: 'pre-line' }}
-                         // eslint-disable-next-line react/no-danger
-                          dangerouslySetInnerHTML={{
-                         __html: sanitizeText(removeNewLines(tile.body))
-                         }}
-                        />
-                      </Typography>
-                    </div>
-                  </GridListTile>
-               ))}
-              </GridList>
-            </div>
-          ) : (
-            <EmptyCard title='No pending tasks' subtitle='Your pending tasks will appear here' />
-          )}
+                    </GridListTile>
+                ))}
+                </GridList>
+              </div>
+            ) : (
+              <EmptyCard title='No pending tasks' subtitle='Your pending tasks will appear here' />
+            )}
+          </div>
         </div>
       )}
     </div>
