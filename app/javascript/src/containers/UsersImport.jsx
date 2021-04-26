@@ -94,7 +94,7 @@ export default function UsersImport() {
             <li> Expiration date: i.e 25-09-2020, 25/09/2020, 2020-09-25, 2020/09/25 </li>
             <li> Notes on client: i.e Here&apos;s a new note </li>
           </ol>
-          You can click 
+          You can click
           {' '}
           <a href={`/csv_import_sample/download?token=${token}`}>here</a>
           {' '}
