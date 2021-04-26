@@ -22,7 +22,7 @@ export default function DeleteDialogueBox({
   action,
   user,
   loading,
-  additionalNote
+  additionalNote,
 }) {
   const classes = useStyles();
   return (
