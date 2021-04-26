@@ -74,5 +74,19 @@ describe('Contact page', () => {
     expect(payWithMoMo[0].textContent).toContain('Pay With Mobile Money')
   })
 
+  it('clicks privacy and terms of service', () => {
+    window.open = jest.fn()
+    const { getByTestId } = render(
+      <BrowserRouter>
+        <SupportCard
+          handleSendMessage={sendMessage}
+          user={authState.user}
+        />
+      </BrowserRouter>
+    )
+    const tos = getByTestId('tos')
+    expect(tos.textContent).toContain('Privacy and Terms of Service')
+  })
+
   afterEach(cleanup)
 })
