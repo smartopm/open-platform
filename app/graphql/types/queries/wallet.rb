@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 # wallet queries
+# rubocop:disable Metrics/ModuleLength
 module Types::Queries::Wallet
   extend ActiveSupport::Concern
   # rubocop:disable Metrics/BlockLength
@@ -111,14 +112,18 @@ module Types::Queries::Wallet
   def payment_summary
     raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user]&.admin?
 
-    payments = context[:site_community].wallet_transactions.not_cancelled.where(destination: 'wallet')
+    payments = context[:site_community].wallet_transactions.not_cancelled
+                                       .where(destination: 'wallet')
     {
-      today: payments.where(created_at: Time.zone.now.beginning_of_day..Time.zone.now.end_of_day)
-                     .sum(&:amount),
-      one_week: payments.where('created_at >= ? AND created_at <= ?', 1.week.ago, Time.zone.now.end_of_day)
-                        .sum(&:amount),
-      one_month: payments.where('created_at >= ? AND created_at <= ?', 30.days.ago, Time.zone.now.end_of_day)
-                         .sum(&:amount),
+      today: payments
+        .where(created_at: Time.zone.now.beginning_of_day..Time.zone.now.end_of_day)
+        .sum(&:amount),
+      one_week: payments
+        .where('created_at >= ? AND created_at <= ?', 1.week.ago, Time.zone.now.end_of_day)
+        .sum(&:amount),
+      one_month: payments
+        .where('created_at >= ? AND created_at <= ?', 30.days.ago, Time.zone.now.end_of_day)
+        .sum(&:amount),
       over_one_month: payments
         .where('created_at >= ? AND created_at <= ?', 1.year.ago, Time.zone.now.end_of_day)
         .sum(&:amount),
@@ -138,3 +143,4 @@ module Types::Queries::Wallet
     user
   end
 end
+# rubocop:enable Metrics/ModuleLength

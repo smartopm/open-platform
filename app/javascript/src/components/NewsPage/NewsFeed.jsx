@@ -18,8 +18,7 @@ const useStyles = makeStyles(theme => ({
     flexWrap: 'wrap',
     justifyContent: 'space-around',
     overflow: 'hidden',
-    backgroundColor: theme.palette.background.paper,
-    margin: '0 79px'
+    backgroundColor: theme.palette.background.paper
   },
   gridList: {
     flexWrap: 'nowrap'
@@ -47,11 +46,11 @@ export function PostItemGrid({ data }) {
         color="textPrimary"
         gutterBottom
         variant="h6"
-        style={{margin: '20px 0 20px 79px', fontWeight: 'bold'}}
+        style={matches ? {margin: '20px 0 20px 20px', fontWeight: 'bold'} : {margin: '20px 0 20px 79px', fontWeight: 'bold'}}
       >
         Recent News
       </Typography>
-      <div className={classes.root}>
+      <div className={classes.root} style={matches ? {margin: '0 20px'} : {margin: '0 79px'}}>
         <GridList
           className={classes.gridList}
           cols={matches ? 2 : 3.2}
