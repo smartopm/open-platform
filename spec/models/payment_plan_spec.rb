@@ -3,7 +3,6 @@
 require 'rails_helper'
 
 RSpec.describe PaymentPlan, type: :model do
-
   let(:user) { create(:user_with_community) }
   let(:land_parcel) { create(:land_parcel, community_id: user.community_id) }
 
@@ -47,7 +46,7 @@ RSpec.describe PaymentPlan, type: :model do
 
         it 'adds validation error for plan duration' do
           plan = user.payment_plans.build(
-            land_parcel_id: land_parcel.id, start_date: Time.zone.now
+            land_parcel_id: land_parcel.id, start_date: Time.zone.now,
           )
           plan.valid?
           expect(plan.errors.full_messages)
@@ -58,7 +57,7 @@ RSpec.describe PaymentPlan, type: :model do
       context 'when payment plan does not exist for a duration' do
         it 'does not add validation error for plan duration' do
           plan = user.payment_plans.build(
-            land_parcel_id: land_parcel.id, start_date: Time.zone.now
+            land_parcel_id: land_parcel.id, start_date: Time.zone.now,
           )
           plan.valid?
           expect(plan.errors.full_messages)
