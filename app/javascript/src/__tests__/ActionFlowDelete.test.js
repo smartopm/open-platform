@@ -78,7 +78,7 @@ describe('action flow delete component', () => {
       </MockedProvider>
     )
     fireEvent.click(container.queryByTestId('confirm_action'))
-    
+
     await waitFor(() => {
       expect(handleClose).toBeCalled()
       expect(refetch).not.toBeCalled()
