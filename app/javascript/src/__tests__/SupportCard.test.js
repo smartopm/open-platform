@@ -27,6 +27,8 @@ describe("Support card loads component", () => {
     expect(container.queryByText('Support Chat')).toBeInTheDocument()
     expect(container.queryByText('Pay With Mobile Money')).toBeInTheDocument()
     expect(container.queryByText('Pay With Mobile Money')).not.toBeDisabled()
+    expect(container.queryByText('Privacy and Terms of Service')).toBeInTheDocument()
+    expect(container.queryByText('Privacy and Terms of Service')).not.toBeDisabled()
   })
 
   it('should display no contacts message', () => {
