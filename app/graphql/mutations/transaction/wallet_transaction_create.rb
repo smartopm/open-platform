@@ -45,7 +45,7 @@ module Mutations
 
           context[:transaction] = WalletTransaction.create!(transaction_attributes)
           execute_transaction_callbacks(vals.slice(:source, :amount))
-          { wallet_transaction: context[:transaction] }
+          { wallet_transaction: context[:transaction].reload }
         end
       end
       # rubocop:enable Metrics/AbcSize

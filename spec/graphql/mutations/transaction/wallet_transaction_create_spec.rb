@@ -59,7 +59,7 @@ RSpec.describe Mutations::Transaction::WalletTransactionCreate do
         end
       end
 
-      context 'when payment plan is not present' do
+      context 'when payment plan is present' do
         before { payment_plan }
 
         context 'when source type is unallocated funds' do
@@ -121,11 +121,16 @@ RSpec.describe Mutations::Transaction::WalletTransactionCreate do
         end
 
         context 'when source type is other than unallocated funds' do
+          before do
+            payment_plan
+            invoice
+          end
+
           it 'creates transaction and updates wallet balance' do
             expect(user.wallet.balance).to eql 0
             variables = {
               userId: user.id,
-              amount: 100,
+              amount: 50,
               source: 'cash',
               landParcelId: land_parcel.id,
             }
@@ -134,10 +139,22 @@ RSpec.describe Mutations::Transaction::WalletTransactionCreate do
                                                          current_user: admin,
                                                          site_community: user.community,
                                                        }).as_json
+            invoices = result.dig(
+              'data', 'walletTransactionCreate', 'walletTransaction', 'settledInvoices', 0
+            )
             expect(result.dig('data', 'walletTransactionCreate', 'walletTransaction', 'id'))
               .not_to be_nil
+            expect(invoices['amount_owed']).to eql '100.0'
+            expect(invoices['amount_paid']).to eql '50.0'
+            expect(invoices['amount_remaining']).to eql '50.0'
+            expect(
+              result.dig(
+                'data', 'walletTransactionCreate', 'walletTransaction', 'currentPendingPlotBalance'
+              ),
+            ).to eql 50.0
             expect(result.dig('errors', 0, 'message')).to be_nil
-            expect(user.wallet.balance).to eql 100
+            expect(user.wallet.balance).to eql 0
+            expect(user.wallet.pending_balance).to eql 50
           end
         end
       end

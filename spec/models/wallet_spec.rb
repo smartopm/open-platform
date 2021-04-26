@@ -14,11 +14,21 @@ RSpec.describe Wallet, type: :model do
                      status: 'in_progress', invoice_number: '1234', amount: 100)
   end
   let(:wallet_transaction) do
-    community.wallet_transactions.create!(user: user, status: 1, amount: 100, source: 'cash')
+    community.wallet_transactions.create!(
+      user: user,
+      status: 1,
+      amount: 100,
+      source: 'cash',
+      payment_plan_id: payment_plan.id,
+    )
   end
   let(:uf_transaction) do
     community.wallet_transactions.create!(
-      user: user, status: 1, amount: 50, source: 'unallocated_funds',
+      user: user,
+      status: 1,
+      amount: 50,
+      source: 'unallocated_funds',
+      payment_plan_id: payment_plan.id,
     )
   end
 
