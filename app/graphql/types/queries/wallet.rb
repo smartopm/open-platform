@@ -48,6 +48,11 @@ module Types::Queries::Wallet
     field :payment_summary, Types::PaymentSummaryType, null: false do
       description 'return stats payment amount'
     end
+
+    field :payment_plan, Types::PaymentPlanType, null: false do
+      description 'return list payment plan that belongs to a user'
+      argument :user_id, GraphQL::Types::ID, required: true
+    end
   end
   # rubocop:enable Metrics/BlockLength
 
@@ -130,6 +135,14 @@ module Types::Queries::Wallet
         .where('created_at >= ? AND created_at <= ?', 1.year.ago, Time.zone.now.end_of_day)
         .sum(&:amount),
     }
+  end
+
+  def payment_plan(user_id:)
+    user = verified_user(user_id)
+    user.payment_plans.includes(invoices: :payments)
+                      .where.not(pending_balance: 0)
+                      .order(created_at: :desc)
+                      .limit(4)
   end
   # rubocop:enable Metrics/AbcSize
   # rubocop:enable Metrics/MethodLength

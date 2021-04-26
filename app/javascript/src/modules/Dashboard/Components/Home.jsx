@@ -30,7 +30,15 @@ export default function Home() {
           <NewsFeed wordpressEndpoint={authState.user?.community.wpLink} />
         </div>
       )}
-      {authState.user.userType !== 'admin' && (
+      {authState.user.userType === 'prospective_client' && (
+        (
+          <div>
+            <UserDetail user={authState.user} />
+            <NewsFeed />
+          </div>
+        )
+      )}
+      {authState.user.userType !== 'admin' && authState.user.userType !==  'prospective_client'  && (
         <div>
           <NewsFeed wordpressEndpoint={authState.user?.community.wpLink} />
           <Homepage authState={authState} />
