@@ -1,8 +1,11 @@
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
 import React, { useState } from 'react'
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import Collapse from '@material-ui/core/Collapse';
-// import PropTypes from 'prop-types';
+import { useHistory } from 'react-router-dom';
+import PropTypes from 'prop-types';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
@@ -15,6 +18,7 @@ import { QRCode } from 'react-qr-svg'
 
 export default function UserDetail({ user }) {
   const classes = useStyles();
+  const history = useHistory();
   const matches = useMediaQuery('(max-width:600px)')
   const [open, setOpen] = useState(false)
   return (
@@ -23,7 +27,7 @@ export default function UserDetail({ user }) {
         <Paper className={classes.paper}>
           <div style={{display: 'flex'}}>
             <div>
-              <Typography color="textPrimary" variant='h6' style={{fontWeight: 'bold'}} gutterBottom>
+              <Typography color="textPrimary" variant={matches ? 'body2' : 'h6'} style={{fontWeight: 'bold'}} data-testid='name' gutterBottom>
                 Hello 
                 {' '}
                 {user?.name}
@@ -33,45 +37,49 @@ export default function UserDetail({ user }) {
                 <Typography color="textPrimary" variant='caption' gutterBottom>
                   More details
                 </Typography>
-                {open ? (<KeyboardArrowDownIcon onClick={() => setOpen(!open)} />) : (
-                  <KeyboardArrowRightIcon onClick={() => setOpen(!open)} />
+                {open ? (<KeyboardArrowDownIcon style={{verticalAlign: 'middle'}} onClick={() => setOpen(!open)} />) : (
+                  <KeyboardArrowRightIcon style={{verticalAlign: 'middle'}} onClick={() => setOpen(!open)} data-testid='collapse' />
                 )}
-                
               </div>
               <Collapse
                 in={open}
                 timeout="auto"
                 unmountOnExit
               >
-                <div style={{display: 'flex'}}>
-                  <div className={classes.more}>
-                    <PersonIcon style={{heigth: '15px', width: '15px'}} />
-                    <Typography color="textPrimary" variant='caption' style={{}}>
-                      {user.userType}
+                <Grid container alignItems="center" className={classes.root}>
+                  <div style={matches ? {marginRight: '2px'} : {marginRight: '30px'}}>
+                    <PersonIcon style={{heigth: '15px', width: '15px', verticalAlign: 'middle', marginRight: '5px'}} />
+                    <Typography color="textPrimary" variant='caption' data-testid='user-type'>
+                      {user?.userType}
                     </Typography>
                   </div>
                   {user?.phoneNumber && (
-                    <div className={classes.more}>
-                      <PhoneIcon style={{heigth: '15px', width: '15px'}} />
-                      <Typography color="textPrimary" variant='caption'>
+                    <div style={matches ? {marginRight: '15px'} : {marginRight: '30px'}}>
+                      <PhoneIcon style={{heigth: '15px', width: '15px', verticalAlign: 'middle', marginRight: '5px'}} />
+                      <Typography color="textPrimary" variant='caption' data-testid='phone'>
                         {user.phoneNumber}
                       </Typography>
                     </div>
                   )}
                   {user?.email && (
                     <div>
-                      <EmailIcon style={{heigth: '15px', width: '15px'}} />
-                      <Typography color="textPrimary" variant='caption'>
+                      <EmailIcon style={{heigth: '15px', width: '15px', verticalAlign: 'middle', marginRight: '5px'}} />
+                      <Typography color="textPrimary" variant='caption' data-testid='email'>
                         {user.email}
                       </Typography>
                     </div>
                   )}
-                </div>
+                </Grid>
               </Collapse>
             </div>
-            <div style={{marginLeft: 'auto', padding: '10px 10px 10px 15px', backgroundColor: '#FFFFFF'}} className='qrcode'>
+            <div 
+              style={{marginLeft: 'auto', padding: '10px 10px 10px 15px', backgroundColor: '#FFFFFF', cursor: 'pointer'}} 
+              className='qrcode'
+              onClick={() => history.push(`/id/${user.id}`)}
+            >
               <QRCode
                 style={{ width: 66 }}
+                value={user.id}
               />
             </div>
           </div>
@@ -86,11 +94,18 @@ const useStyles = makeStyles(() => ({
     padding: '25px',
     width: '99%',
     backgroundColor: '#F9F9F9',
-    marginTop: '10px',
+    marginTop: '30px',
     borderRadius: '23px',
     height: '150px'
-  },
-  more: {
-    marginRight: '30px'
   }
 }));
+
+UserDetail.propTypes = {
+  user: PropTypes.shape({ 
+    name: PropTypes.string, 
+    userType: PropTypes.string,
+    phoneNumber: PropTypes.string,
+    email: PropTypes.string,
+    id: PropTypes.string,
+  }).isRequired
+};

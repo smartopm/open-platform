@@ -41,8 +41,8 @@ export default function TaskReminderCard() {
       {loading ? <Spinner /> : (
         <div>
           <div style={{display: 'flex'}}>
-            <Typography variant='h6' style={matches ? {margin: '20px 0 26px 20px', fontWeight: 'bold'} : {margin: '50px 0 26px 79px', fontWeight: 'bold'}}>Task Reminders</Typography>
-            {matches ? null : <TrendingFlatIcon style={matches ? {marginLeft: 'auto', order: 2, marginTop: '20px', marginRight: '20px'} : {marginLeft: 'auto', order: 2, marginTop: '50px', marginRight: '80px'}} />}
+            <Typography variant='h6' style={matches ? {margin: '20px 0 26px 20px', fontWeight: 'bold'} : {margin: '20px 0 26px 79px', fontWeight: 'bold'}}>Task Reminders</Typography>
+            {matches ? null : <TrendingFlatIcon style={matches ? {marginLeft: 'auto', order: 2, marginTop: '20px', marginRight: '20px'} : {marginLeft: 'auto', order: 2, marginTop: '20px', marginRight: '80px'}} />}
           </div>
           <div>
             {data?.userTasks.length > 0 ? (
@@ -50,9 +50,9 @@ export default function TaskReminderCard() {
                 <GridList className={classes.gridList} cols={matches ? 1 : 3.5}>
                   {data?.userTasks.map((tile) => (
                     <GridListTile key={tile.id}>
-                      <div className={classes.gridTile} onClick={() => history.push('/my_tasks')}>
+                      <div className={classes.gridTile} onClick={() => history.push(`/tasks/${tile.id}`)}>
                         <div className={classes.date} style={checkDate(tile.dueDate) ? {color: 'red'} : null}>
-                          <EventNoteIcon style={{marginRight: '10px', heigth: '15px', width: '15px'}} />
+                          <EventNoteIcon style={{marginRight: '10px', heigth: '15px', width: '15px', verticalAlign: 'middle'}} />
                           <Typography variant='overline' style={{paddingBottom: '5px'}}>
                             Due
                             {' '}

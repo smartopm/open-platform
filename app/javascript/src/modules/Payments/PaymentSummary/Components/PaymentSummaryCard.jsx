@@ -23,7 +23,7 @@ export default function PaymentSummaryCard({ value, title, handleClick, currency
           <Typography
             color="textPrimary"
             gutterBottom
-            variant={matches ? 'h5' : 'h4'}
+            variant={matches ? 'body1' : 'h6'}
             data-testid='card-value'
           >
             {currencyData?.currency ? formatMoney(currencyData, value) : value}

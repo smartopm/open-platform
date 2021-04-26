@@ -8,16 +8,18 @@ import NewsFeed from '../components/NewsPage/NewsFeed'
 import { TaskReminder } from '../modules/Tasks'
 import { PaymentSummary } from '../modules/Payments'
 import UserDetail from '../modules/Users/Components/UserDetail'
+import ViewCustomerJourney from '../modules/CustomerJourney/Components/ViewCustomerJourney'
 
 export default function Home() {
   const authState = useContext(AuthStateContext)
 
   if (!authState.loggedIn) return <Loading />
   return (
-    <div style={{backgroundColor: '#FFFFFF'}}>
+    <div style={{backgroundColor: '#FFFFFF', marginTop: '-30px'}}>
       {authState.user.userType === 'admin' && (
         <div>
           <UserDetail user={authState.user} />
+          <ViewCustomerJourney />
           <PaymentSummary authState={authState} />
           <br />
           <Divider />
@@ -27,7 +29,10 @@ export default function Home() {
         </div>
       )}
       {authState.user.userType !== 'admin' && (
-        <Homepage authState={authState} />
+        <div>
+          <NewsFeed />
+          <Homepage authState={authState} />
+        </div>
       )}
     </div>
   )

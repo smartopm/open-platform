@@ -85,11 +85,11 @@ module Types::Queries::Wallet
     when 'today'
       payments.where(created_at: Time.zone.now.beginning_of_day..Time.zone.now.end_of_day)
     when 'oneWeek'
-      payments.where(created_at: 1.week.ago..Time.zone.today)
+      payments.where(created_at: 1.week.ago..Time.zone.now.end_of_day)
     when 'oneMonth'
-      payments.where(created_at: 30.days.ago..Time.zone.today)
+      payments.where(created_at: 30.days.ago..Time.zone.now.end_of_day)
     when 'overOneMonth'
-      payments.where(created_at: 1.year.ago..Time.zone.today)
+      payments.where(created_at: 1.year.ago..Time.zone.now.end_of_day)
     else
       converted_date = Date.parse(query).in_time_zone(context[:site_community].timezone).all_day
       payments.where(created_at: converted_date)
@@ -115,12 +115,12 @@ module Types::Queries::Wallet
     {
       today: payments.where(created_at: Time.zone.now.beginning_of_day..Time.zone.now.end_of_day)
                      .sum(&:amount),
-      one_week: payments.where('created_at >= ? AND created_at <= ?', 1.week.ago, Time.zone.today)
+      one_week: payments.where('created_at >= ? AND created_at <= ?', 1.week.ago, Time.zone.now.end_of_day)
                         .sum(&:amount),
-      one_month: payments.where('created_at >= ? AND created_at <= ?', 30.days.ago, Time.zone.today)
+      one_month: payments.where('created_at >= ? AND created_at <= ?', 30.days.ago, Time.zone.now.end_of_day)
                          .sum(&:amount),
       over_one_month: payments
-        .where('created_at >= ? AND created_at <= ?', 1.year.ago, Time.zone.today)
+        .where('created_at >= ? AND created_at <= ?', 1.year.ago, Time.zone.now.end_of_day)
         .sum(&:amount),
     }
   end

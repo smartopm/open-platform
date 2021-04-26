@@ -47,7 +47,7 @@ export function PostItemGrid({ data }) {
         color="textPrimary"
         gutterBottom
         variant="h6"
-        style={{margin: '30px 0 20px 79px', fontWeight: 'bold'}}
+        style={{margin: '20px 0 20px 79px', fontWeight: 'bold'}}
       >
         Recent News
       </Typography>

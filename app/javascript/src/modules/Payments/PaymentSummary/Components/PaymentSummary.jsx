@@ -6,6 +6,7 @@ import { shape } from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import TrendingFlatIcon from '@material-ui/icons/TrendingFlat';
+import Divider from '@material-ui/core/Divider';
 import { Link, useHistory } from 'react-router-dom'
 import { Grid, Typography } from '@material-ui/core'
 import { InvoiceSummaryQuery, PaymentSummaryQuery } from '../graphql/payment_summary_query'
@@ -17,7 +18,7 @@ import { currencies } from '../../../../utils/constants';
 import authStateProps from '../../../../shared/types/authState';
 
 const invoiceCardContent = {
-  today: 'Total invoices  1  day past due',
+  today: 'Total invoices due today',
   oneWeek: 'Total invoices 1 week past due',
   oneMonth: 'Total invoices 1 month past due',
   overOneMonth: 'Total invoices over 1 month past'
@@ -81,26 +82,29 @@ export default function PaymentSummary({ authState }) {
               </div>
             </div>
           ) : (
-            <div style={{display: 'flex', marginLeft: '79px', marginTop: '60px'}}>
-              <Typography 
-                variant='h6' 
-                color={active === 'payment' ? 'textPrimary' : 'textSecondary'}
-                onClick={() => setActive('payment')}
-                style={active === 'payment' ? {fontWeight: 'bold', paddingRight: '20px', borderRight: '2px solid #E4E4E4', cursor: 'pointer'} : {fontWeight: 'none', paddingRight: '20px', borderRight: '2px solid #E4E4E4', cursor: 'pointer'}}
-              >
-                Payments
-              </Typography>
-              <Typography 
-                variant='h6'
-                color={active === 'invoice' ? 'textPrimary' : 'textSecondary'}
-                onClick={() => setActive('invoice')}
-                style={active === 'invoice' ? {fontWeight: 'bold', paddingLeft: '20px', cursor: 'pointer'} : {fontWeight: 'none', paddingLeft: '20px', cursor: 'pointer'}}
-              >
-                Invoices
-              </Typography>
-              <Typography color='primary' style={{marginLeft: 'auto', marginRight: '81px', cursor: 'pointer'}}>
-                <Link to='/users'>{active === 'payment' && 'Make New Payment'}</Link>
-              </Typography>
+            <div style={{marginLeft: '79px', marginTop: '20px'}}>
+              <Grid container alignItems="center" className={classes.root}>
+                <Typography 
+                  variant={active === 'payment' ? 'body1' : 'body2'} 
+                  color={active === 'payment' ? 'textPrimary' : 'textSecondary'}
+                  onClick={() => setActive('payment')}
+                  style={active === 'payment' ? {fontWeight: 'bold', marginRight: '10px', width: '70px', cursor: 'pointer'} : {fontWeight: 'none', marginRight: '10px', width: '70px', cursor: 'pointer'}}
+                >
+                  Payments
+                </Typography>
+                <Divider orientation="vertical" flexItem style={{height: '8px', marginTop: '8px'}} />
+                <Typography 
+                  variant={active === 'invoice' ? 'body1' : 'body2'}
+                  color={active === 'invoice' ? 'textPrimary' : 'textSecondary'}
+                  onClick={() => setActive('invoice')}
+                  style={active === 'invoice' ? {fontWeight: 'bold', marginLeft: '10px', width: '100px', cursor: 'pointer'} : {fontWeight: 'none', marginLeft: '10px', width: '100px', cursor: 'pointer'}}
+                >
+                  Invoices
+                </Typography>
+                <Typography color='primary' variant='caption' style={{marginLeft: 'auto', fontWeight: 'bold', marginRight: '81px', cursor: 'pointer'}}>
+                  <Link to='/users'>{active === 'payment' && 'Make New Payment'}</Link>
+                </Typography>
+              </Grid>
             </div>
           )}
           {active === 'invoice' ? (
