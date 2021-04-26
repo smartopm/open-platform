@@ -12,6 +12,8 @@ class PaymentPlan < ApplicationRecord
   validates :payment_day,
             numericality: { only_integer: true, greater_than: 0, less_than_or_equal_to: 28 }
 
+  validate :plan_uniqueness_per_duration
+
   enum status: { active: 0, cancelled: 1, deleted: 2 }
 
   def update_plot_balance(amount, type = 'credit')
@@ -26,6 +28,13 @@ class PaymentPlan < ApplicationRecord
     else
       update(plot_balance: plot_balance - amount)
     end
+  end
+
+  # Returns payment plan duration (start and end date of plan).
+  #
+  # @return [Range]
+  def duration
+    start_date..(start_date + (duration_in_month || 12).month)
   end
 
   private
@@ -49,5 +58,20 @@ class PaymentPlan < ApplicationRecord
                        due_date: date + 1.month,
                        user: user,
                      })
+  end
+
+  # Validates whether payment plan is unique per duration.
+  # * adds error if payment plan overlaps with other payment plan.
+  #
+  # @return [Array]
+  #
+  # Todo:- Change association between land parcel and payment to many-to-many.
+  # Todo:- Use 'land_parcel.payment_plans' once establish many-to-many association.
+  def plan_uniqueness_per_duration
+    plans = PaymentPlan.where(land_parcel_id: land_parcel_id)
+    is_overlapping = plans.any? { |plan| duration.overlaps?(plan.duration) }
+    return unless is_overlapping
+
+    errors.add(:start_date, 'Payment plan duration overlaps with other payment plans')
   end
 end
