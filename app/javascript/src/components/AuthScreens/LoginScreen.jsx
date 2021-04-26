@@ -14,6 +14,7 @@ import { StyleSheet, css } from 'aphrodite'
 import { Link, useHistory, useLocation } from 'react-router-dom'
 import { useMutation, useQuery } from 'react-apollo'
 import ReactGA from 'react-ga'
+import { useTranslation } from 'react-i18next'
 import FacebookIcon from '@material-ui/icons/Facebook'
 import PhoneInput from 'react-phone-input-2'
 import { getAuthToken } from '../../utils/apollo'
@@ -39,6 +40,7 @@ export default function LoginScreen() {
   const { state } = useLocation()
   const history = useHistory()
   const theme = useContext(ThemeContext)
+  const { t } = useTranslation()
 
   const communityName = communityData?.currentCommunity?.name || 'Double GDP'
   const communitySupportEmail = (communityData?.currentCommunity?.supportEmail
@@ -153,7 +155,9 @@ export default function LoginScreen() {
           <br />
           <br />
           <Typography color="textSecondary" variant="body2">
-            Please log in with your phone number here:
+            {/* Please log in with your phone number here: */}
+            {t('login.login_text')}
+            : 
           </Typography>
         </div>
         <div
@@ -191,7 +195,7 @@ export default function LoginScreen() {
             {isLoading ? (
               <CircularProgress size={25} color="inherit" />
             ) : (
-              <span>Next</span>
+              <span>{t('login.login_button_text')}</span>
               )}
           </Button>
         </div>
@@ -221,7 +225,7 @@ export default function LoginScreen() {
               startIcon={<img src={GoogleIcon} alt="google-icon" />}
               className="google-sign-in-btn"
             >
-              Sign In with Google
+              {t('login.login_google')}
             </Button>
           </div>
           <br />
@@ -237,7 +241,7 @@ export default function LoginScreen() {
                 color: '#3b5998'
               }}
             >
-              Sign In with Facebook
+              {t('login.login_facebook')}
             </Button>
           </div>
           <br />
