@@ -15,12 +15,7 @@
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
-    <%# We could use a different check her %>
-    <% if current_community.name.include? "Double" %>
-      <link rel="manifest" href="/manifest.json" />
-    <% else %>
-      <link rel="manifest" href="/othermanifest.json" />
-    <% end %>
+    <link rel="manifest" href="/manifest.json" />
 
     <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
     <meta name="theme-color" content=#69ABA4"/>
