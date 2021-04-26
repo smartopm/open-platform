@@ -225,7 +225,7 @@ export default function SupportCard({ handleSendMessage, user }) {
         ) : null}
         <Grid container direction="row" className={classes.root}>
           <Button
-            data-testid="pwmm"
+            data-testid="tos"
             variant="contained"
             color="primary"
             onClick={()=>window.open('https://docs.google.com/document/d/1u740OKrB8jpK5pMZt-dVS3Xh4iMc9paAAVhZNldi3CQ/edit?ts=5fdd2107','_blank')}
