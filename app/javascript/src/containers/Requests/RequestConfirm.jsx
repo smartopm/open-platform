@@ -235,7 +235,7 @@ export default function RequestConfirm({ match, history }) {
                 href={`tel:${formData.guard && formData.guard.phoneNumber}`}
                 className={` ${css(styles.callButton)}`}
               >
-                Call 
+                Call
                 {formData.guard && formData.guard.name}
               </a>
             </div>
