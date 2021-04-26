@@ -19,6 +19,7 @@
     "login_button_text": "Siguiente",
     "login_google": "Inicia sesión con Google",
     "login_facebook": "Inicia sesión con Facebook",
-    "request_account": "¿No tienes una cuenta?"
+    "request_account": "¿No tienes una cuenta?",
+    "request_login": "Para solicitar su información de inicio de sesión, envíe un correo electrónico: {{communityEmail}}"
   }
 }

@@ -1,0 +1,19 @@
+{
+  "form_fields": {
+    "full_name": "nombre completo",
+    "email": "Correo electrónico",
+    "phone_number": "Número de teléfono"
+  },
+  "form_placeholders": {
+    "phone_number": "Introduzca el número de teléfono",
+    "email": "Ingrese correo electrónico"
+  },
+  "form_actions": {
+    "send_email": "Enviar correo electrónico",
+    "cancel": "Cancelar",
+    "submit": "Enviar"
+  },
+  "misc": {
+    "or": "O"
+  }
+}

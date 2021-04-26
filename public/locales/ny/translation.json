@@ -19,6 +19,7 @@
     "login_button_text": "next",
     "login_google": "Sign in with Google",
     "login_facebook": "Sign in with Google",
-    "request_account": "Don't have an account?"
+    "request_account": "Don't have an account?",
+    "request_login": "To request your login information, email: {{communityEmail}}"
   }
 }
