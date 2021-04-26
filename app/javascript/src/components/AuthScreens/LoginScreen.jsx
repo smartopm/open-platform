@@ -142,11 +142,12 @@ export default function LoginScreen() {
           )}`}
         >
           <h4 className={css(styles.welcomeText)}>
-            Welcome to 
+            { loading ? <Spinner /> : t('login.welcome', { appName: communityData?.currentCommunity?.name  })}
+            {/* Welcome to 
             {' '}
             {loading ? <Spinner /> : communityData?.currentCommunity?.name}
-            {' '}
-            App
+            {' '} */}
+            {/* App */}
           </h4>
           <Typography color="textSecondary" variant="body2" data-testid="tagline">
             {communityData?.currentCommunity?.tagline}
