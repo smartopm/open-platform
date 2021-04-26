@@ -28,7 +28,7 @@ import AlarmIcon from '@material-ui/icons/Alarm'
 import DatePickerDialog from '../../../components/DatePickerDialog'
 import CenteredContent from '../../../components/CenteredContent'
 import { UpdateNote } from '../../../graphql/mutations'
-import { TaskReminder } from '../graphql/tasks_mutation'
+import { TaskReminderMutation } from '../graphql/task_reminder_mutation'
 import { UserChip } from './UserChip'
 import { NotesCategories } from '../../../utils/constants'
 import Toggler from '../../../components/Campaign/ToggleButton'
@@ -65,7 +65,7 @@ export default function TaskForm({
   const [taskUpdate] = useMutation(UpdateNote)
   const [updated, setUpdated] = useState(false)
   const [autoCompleteOpen, setOpen] = useState(false)
-  const [setReminder] = useMutation(TaskReminder)
+  const [setReminder] = useMutation(TaskReminderMutation)
   const [reminderTime, setReminderTime] = useState(null)
   const [mode, setMode] = useState('preview')
 

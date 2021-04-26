@@ -9,7 +9,7 @@ import {
   Divider,
   IconButton,
   Grid,
-  Button
+  Button,
 } from '@material-ui/core';
 import FilterListIcon from '@material-ui/icons/FilterList';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
@@ -18,7 +18,8 @@ import { StyleSheet, css } from 'aphrodite';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import { useMutation, useLazyQuery, useQuery } from 'react-apollo';
 import { useParams, useHistory } from 'react-router';
-import { UsersLiteQuery, flaggedNotes, TaskQuery, TaskStatsQuery } from '../../../graphql/queries';
+import { UsersLiteQuery, flaggedNotes, TaskQuery } from '../../../graphql/queries';
+import { TaskStatsQuery } from '../graphql/task_queries'
 import { AssignUser, UpdateNote } from '../../../graphql/mutations';
 import TaskForm from './TaskForm';
 import ErrorPage from '../../../components/Error';
@@ -37,6 +38,8 @@ import DataList from '../../../shared/list/DataList';
 import ListHeaders from '../../../shared/list/ListHeader';
 import renderTaskData from './RenderTaskData';
 import MessageAlert from '../../../components/MessageAlert';
+import { TaskBulkUpdateMutation } from '../graphql/task_mutation';
+import TaskActionMenu from './TaskActionMenu';
 
 const taskHeader = [
   { title: 'Select', col: 1 },
@@ -64,7 +67,7 @@ export default function TodoList({
   const [filterOpen, setOpenFilter] = useState(false);
   const [isAssignTaskOpen, setAutoCompleteOpen] = useState(false);
   const [loadingMutation, setMutationLoading] = useState(false);
-  const [message, setErrorMessage] = useState('');
+  const [message, setMessage] = useState('');
   const [query, setQuery] = useState('');
   const [currentTile, setCurrentTile] = useState('');
   const [displayBuilder, setDisplayBuilder] = useState('none');
@@ -81,7 +84,7 @@ export default function TodoList({
   const matches = useMediaQuery(theme.breakpoints.up('sm'));
   const [actionMenuOpen, setActionMenuOpen] = useState(null);
   const [isSuccessAlert, setIsSuccessAlert] = useState(false);
-
+  const [checkedOptions, setCheckOptions] = useState('none')
   const taskQuery = {
     completedTasks: 'completed: true',
     tasksDueIn10Days: `due_date <= '${futureDateAndTimeToString(10)}' AND completed: false`,
@@ -93,13 +96,12 @@ export default function TodoList({
     totalCallsOpen: 'category: call AND completed: false',
     totalFormsOpen: 'category: form AND completed: false'
   };
-
   const [selectedTasks, setSelected] = useState([]);
+  const [bulkUpdating, setBulkUpdating] = useState(false)
 
   function handleChange(selectedId) {
-    let currentTasks = [];
     if (selectedTasks.includes(selectedId)) {
-      currentTasks = selectedTasks.filter(id => id !== selectedId);
+      const currentTasks = selectedTasks.filter(id => id !== selectedId);
       setSelected([...currentTasks]);
     } else {
       setSelected([...selectedTasks, selectedId]);
@@ -129,6 +131,11 @@ export default function TodoList({
     : location === 'my_tasks'
     ? `assignees: '${currentUser.name}'`
     : '';
+  
+   const joinedTaskQuery =  `${qr} ${
+    // eslint-disable-next-line no-nested-ternary
+    filterQuery ? `AND ${filterQuery}` : searchInputQuery ? `AND ${searchInputQuery}` : ''
+  }`
   const [
     loadTasks,
     { loading: isLoading, error: tasksError, data, refetch, called }
@@ -136,16 +143,14 @@ export default function TodoList({
     variables: {
       offset,
       limit,
-      query: `${qr} ${
-        // eslint-disable-next-line no-nested-ternary
-        filterQuery ? `AND ${filterQuery}` : searchInputQuery ? `AND ${searchInputQuery}` : ''
-      }`
+      query: joinedTaskQuery
     },
     fetchPolicy: 'network-only'
   });
   const [assignUserToNote] = useMutation(AssignUser);
   const [taskUpdate] = useMutation(UpdateNote)
-
+  const [bulkUpdate] = useMutation(TaskBulkUpdateMutation)
+  const taskListIds = data?.flaggedNotes.map(task => task.id)
   function openModal() {
     setModalOpen(!open);
   }
@@ -209,7 +214,7 @@ export default function TodoList({
         taskCountData.refetch();
         setLoadingAssignee(false);
       })
-      .catch(err => setErrorMessage(err.message));
+      .catch(err => setMessage(err.message));
   }
 
   function handleCompleteNote(noteId, completed) {
@@ -220,14 +225,14 @@ export default function TodoList({
       variables: { id: noteId, completed: !completed }
     })
       .then(() => {
-        setErrorMessage(`Task has been successfully marked as ${completed ? 'incomplete': 'complete'}`);
+        setMessage(`Task has been successfully marked as ${completed ? 'incomplete': 'complete'}`);
         setIsSuccessAlert(true);
         refetch()
         taskCountData.refetch()
         setMutationLoading(false)
       })
       .catch(err => {
-        setErrorMessage(formatError(err.message))
+        setMessage(formatError(err.message))
         setIsSuccessAlert(false);
         setMutationLoading(false)
       })
@@ -321,7 +326,7 @@ export default function TodoList({
     if (reason === 'clickaway') {
       return;
     }
-    setErrorMessage('');
+    setMessage('');
   }
 
   const InitialConfig = MaterialConfig;
@@ -369,6 +374,51 @@ export default function TodoList({
     assignee: 'assignees',
     userName: 'user'
   };
+
+  function setSelectAllOption(){
+    if(taskListIds.length === selectedTasks.length){
+      setCheckOptions('none')
+      setSelected([])
+    } else {
+      setCheckOptions('all_on_the_page')
+      setSelected(taskListIds)
+    }
+  }
+
+  function handleCheckOptions(event){
+    setCheckOptions(event.target.value)
+    const option = event.target.value
+    switch (option) {
+      case 'all':
+       return setSelected([])
+      case 'all_on_the_page':
+       return setSelected(taskListIds)
+      default:
+        return setSelected([])
+    }
+  }
+
+  function handleBulkUpdate(){
+    // handle update here
+    setBulkUpdating(true)
+    bulkUpdate({ variables: {
+      ids: selectedTasks,
+      completed: currentTile !== 'completedTasks',
+      query: joinedTaskQuery
+    }})
+    .then(() => { 
+      handleRefetch()
+      setBulkUpdating(false)
+      setSelected([])
+      setIsSuccessAlert(true);
+      setMessage(`Selected Tasks have been successfully marked as ${currentTile === 'completedTasks' ? 'incomplete' : 'complete'}`);
+     })
+    .catch(err => {
+      setBulkUpdating(false)
+      setIsSuccessAlert(false);
+      setMessage(formatError(err.message))
+    })
+  }
 
   if (tasksError) return <ErrorPage error={tasksError.message} />;
 
@@ -518,6 +568,20 @@ export default function TodoList({
                 currentTile={currentTile}
               />
             </Grid>
+
+            <br />
+
+            { /* Use the action menu here */ }
+            <TaskActionMenu
+              currentTile={currentTile}
+              setSelectAllOption={setSelectAllOption}
+              selectedTasks={selectedTasks}
+              taskListIds={taskListIds}
+              checkedOptions={checkedOptions}
+              handleCheckOptions={handleCheckOptions}
+              bulkUpdating={bulkUpdating}
+              handleBulkUpdate={handleBulkUpdate}
+            />
             <br />
             {data?.flaggedNotes.length ? (
               <div>
@@ -528,6 +592,7 @@ export default function TodoList({
                     data: data?.flaggedNotes,
                     handleChange,
                     selectedTasks,
+                    isSelected: checkedOptions === 'all',
                     handleTaskDetails,
                     handleCompleteNote,
                     actionMenu: {

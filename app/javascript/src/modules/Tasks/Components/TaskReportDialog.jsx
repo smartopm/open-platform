@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { List, Dialog, DialogTitle } from '@material-ui/core';
 import { useLazyQuery } from 'react-apollo';
 import { propAccessor, toCamelCase } from '../../../utils/helpers';
-import { TaskStatsQuery } from '../../../graphql/queries';
+import { TaskStatsQuery } from '../graphql/task_queries';
 import { Spinner } from '../../../shared/Loading';
 import { useStyles } from '../../../components/Dialog';
 import { taskStatus } from '../../../utils/constants';

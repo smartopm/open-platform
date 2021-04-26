@@ -19,7 +19,6 @@ module Mutations
         note = context[:site_community].notes.find(id)
         raise GraphQL::ExecutionError, 'NotFound' unless note
 
-        # TODO: @olivier Find a way of adding an updated_at datetime
         updates_hash = record_attributes(attributes, note)
         raise GraphQL::ExecutionError, note.errors.full_messages unless note.update!(attributes)
 

@@ -102,6 +102,11 @@ You can rollback a release as follows:
 
 `docker-compose run --rm rails rake`
 
+To run an individual test
+
+`docker-compose run --rm rails bundle exec rspec test_file`
+
+test_file should be the relative path to the file being tested e.g: `spec/graphql/mutations/user_spec.rb`
 #### Run Rubocop for linting
 
 `docker-compose run --rm rails rake lint`

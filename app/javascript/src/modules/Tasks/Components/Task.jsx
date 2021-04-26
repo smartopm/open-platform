@@ -23,7 +23,7 @@ import { UserChip } from './UserChip';
 import DateContainer, { dateToString, dateTimeToString } from '../../../components/DateContainer';
 import { removeNewLines, sanitizeText } from '../../../utils/helpers';
 import RemindMeLaterMenu from './RemindMeLaterMenu';
-import { TaskReminder } from '../graphql/tasks_mutation';
+import { TaskReminderMutation } from '../graphql/task_reminder_mutation';
 import MessageAlert from '../../../components/MessageAlert';
 
 export default function Task({
@@ -46,7 +46,7 @@ export default function Task({
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
 
-  const [setReminder] = useMutation(TaskReminder);
+  const [setReminder] = useMutation(TaskReminderMutation);
   const [reminderTime, setReminderTime] = useState(null);
   const [isSuccessAlert, setIsSuccessAlert] = useState(false);
   const [messageAlert, setMessageAlert] = useState('');

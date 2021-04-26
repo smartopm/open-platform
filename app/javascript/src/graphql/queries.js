@@ -705,23 +705,6 @@ export const messageCountQuery = gql`
   }
 `
 
-export const TaskStatsQuery = gql`
-  {
-    taskStats {
-      completedTasks
-      tasksDueIn10Days
-      tasksDueIn30Days
-      tasksOpen
-      tasksOpenAndOverdue
-      overdueTasks
-      tasksWithNoDueDate
-      myOpenTasks
-      totalCallsOpen
-      totalFormsOpen
-    }
-  }
-`
-
 export const TaskQuery = gql`
   query taskDetail($taskId: ID!) {
     task(taskId: $taskId) {
