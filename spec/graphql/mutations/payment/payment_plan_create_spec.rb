@@ -70,7 +70,7 @@ RSpec.describe Mutations::Payment::PaymentPlanCreate do
                                                                   site_community: user.community,
                                                                 }).as_json
       expect(b_result.dig('errors', 0, 'message'))
-        .to eql 'Payment Plan for this landparcel already exist'
+        .to eql "[\"Start date Payment plan duration overlaps with other payment plans\"]"
     end
     it 'should validate given variables inputs' do
       variables = {

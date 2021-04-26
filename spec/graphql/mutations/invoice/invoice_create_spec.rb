@@ -48,7 +48,7 @@ RSpec.describe Mutations::Invoice::InvoiceCreate do
       ).to eql land_parcel.id
       expect(
         result.dig('data', 'invoiceCreate', 'invoice', 'amount'),
-      ).to eq user.wallet.pending_balance
+      ).to eq BigDecimal(user.wallet.pending_balance)
       expect(result['errors']).to be_nil
     end
 

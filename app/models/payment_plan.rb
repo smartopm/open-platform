@@ -68,7 +68,7 @@ class PaymentPlan < ApplicationRecord
   # Todo:- Change association between land parcel and payment to many-to-many.
   # Todo:- Use 'land_parcel.payment_plans' once establish many-to-many association.
   def plan_uniqueness_per_duration
-    plans = PaymentPlan.where(land_parcel_id: land_parcel_id)
+    plans = PaymentPlan.where(land_parcel_id: land_parcel_id).where.not(id: id)
     is_overlapping = plans.any? { |plan| duration.overlaps?(plan.duration) }
     return unless is_overlapping
 
