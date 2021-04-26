@@ -223,12 +223,13 @@ export default function SupportCard({ handleSendMessage, user }) {
             </Button>
           </Grid>
         ) : null}
-         <Grid container direction="row" className={classes.root}>
+        <Grid container direction="row" className={classes.root}>
           <Button
             data-testid="pwmm"
             variant="contained"
             color="primary"
-            onClick={()=>window.open('https://docs.google.com/document/d/1u740OKrB8jpK5pMZt-dVS3Xh4iMc9paAAVhZNldi3CQ/edit?ts=5fdd2107','_blank')}style={{ fontSize: 14 }}
+            onClick={()=>window.open('https://docs.google.com/document/d/1u740OKrB8jpK5pMZt-dVS3Xh4iMc9paAAVhZNldi3CQ/edit?ts=5fdd2107','_blank')}
+            style={{ fontSize: 14 }}
             className={classes.chatButton}
           >
             Privacy and Terms of Service
