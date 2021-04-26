@@ -23,7 +23,7 @@ import EventLogs from '../src/containers/AllLogs/EventLogs';
 import Search from '../src/containers/Search';
 import UserEdit from '../src/containers/UserEdit';
 import Loading from '../src/shared/Loading';
-import '../src/i18n';
+import '../src/modules/i18n';
 import Map from '../src/containers/Map';
 import LoginScreen from '../src/components/AuthScreens/LoginScreen';
 import ConfirmCodeScreen from '../src/components/AuthScreens/ConfirmCodeScreen';
