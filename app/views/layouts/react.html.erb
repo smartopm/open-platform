@@ -43,7 +43,7 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet-draw@1.0.4/dist/leaflet.draw.css" />
     <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"></script>
 
-    <%= favicon_link_tag current_community.logo_url, rel: 'icon' %>
+    <%= favicon_link_tag current_community.logo_url || asset_path('home_512.png'), rel: 'icon' %>
 
     <%= stylesheet_link_tag 'application', media: 'all' %>
     <%= render 'layouts/rollbar_js' if Rails.env.production? %>
