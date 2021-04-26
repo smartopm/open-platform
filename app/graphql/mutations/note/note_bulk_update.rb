@@ -6,7 +6,6 @@ module Mutations
     class NoteBulkUpdate < BaseMutation
       argument :ids, [ID], required: true
       argument :completed, Boolean, required: false
-      argument :due_date, String, required: false
       argument :query, String, required: false
 
       field :success, Boolean, null: true
