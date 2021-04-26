@@ -12,5 +12,13 @@
   },
   "scan": {
     "torch": "Yatsani Nyali"
+  },
+  "login": {
+    "welcome": "Welcome to {{appName}} app",
+    "login_text": "Please log in with your phone number here",
+    "login_button_text": "next",
+    "login_google": "Sign in with Google",
+    "login_facebook": "Sign in with Google",
+    "request_account": "Don't have an account?"
   }
 }
