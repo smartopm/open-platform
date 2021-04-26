@@ -11,6 +11,12 @@ RSpec.describe Mutations::Transaction::WalletTransactionRevert do
     let!(:payment_plan) do
       create(:payment_plan, land_parcel_id: land_parcel.id, user_id: user.id, plot_balance: 100)
     end
+    let!(:invoice) do
+      create(:invoice, community_id: user.community_id,
+                       land_parcel_id: land_parcel.id,
+                       user_id: user.id, status: 'in_progress',
+                       amount: 50)
+    end
     let!(:txn) do
       create(:wallet_transaction, amount: 100, destination: 'wallet',
                                   user: user, community_id: user.community_id,
@@ -33,19 +39,9 @@ RSpec.describe Mutations::Transaction::WalletTransactionRevert do
       GQL
     end
 
-    let(:invoice) do
-      create(:invoice, community_id: user.community_id,
-                       land_parcel_id: land_parcel.id,
-                       user_id: user.id, status: 'in_progress',
-                       amount: 50)
-    end
-
     it 'reverts a wallet transaction and associated payments' do
+      user_wallet.settle_invoices(transaction: txn)
       variables = { id: txn.id }
-      expect(user.wallet.balance).to eql 100.0
-      expect(user.payments.count).to eql 0
-      expect(user.wallet_transactions.count).to eql 1
-      invoice
       expect(user.wallet.balance).to eql 50.0
       expect(user.payments.count).to eql 1
       expect(user.wallet_transactions.count).to eql 2
@@ -58,8 +54,8 @@ RSpec.describe Mutations::Transaction::WalletTransactionRevert do
       expect(
         result.dig('data', 'walletTransactionRevert', 'walletTransaction', 'status'),
       ).to eql 'cancelled'
-      expect(user.wallet.balance).to eql 0.0
-      expect(user.wallet.pending_balance).to eql invoice.amount
+      expect(user.wallet.reload.balance).to eql 0.0
+      expect(user.wallet.pending_balance).to eql 100
       expect(user.payments.last.payment_status).to eql 'cancelled'
       expect(user.wallet_transactions.pluck(:status).uniq).to eql ['cancelled']
       expect(result['errors']).to be_nil

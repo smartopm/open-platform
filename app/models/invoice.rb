@@ -4,25 +4,30 @@
 class Invoice < ApplicationRecord
   include SearchCop
 
+  default_scope { order(created_at: :desc) }
+
+  enum status: { in_progress: 0, paid: 1, late: 2, cancelled: 3 }
+
   belongs_to :land_parcel
   belongs_to :community
   belongs_to :user
   belongs_to :payment_plan, optional: true
   belongs_to :created_by, class_name: 'User', optional: true
 
+  has_many :payment_invoices, dependent: :destroy
+  has_many :payments, through: :payment_invoices
+
   validates :amount, numericality: { greater_than: 0 }
 
   before_create :set_pending_amount
-  after_create :collect_payment_from_wallet, if: proc { persisted? }
+  after_create :update_pending_balance_of_wallet, if: proc { persisted? }
   after_create :generate_event_log, if: proc { persisted? }
   before_update :modify_status, if: proc { changed_attributes.keys.include?('pending_amount') }
   after_update -> { generate_event_log(:update) }
 
-  has_many :payment_invoices, dependent: :destroy
-  has_many :payments, through: :payment_invoices
-
-  enum status: { in_progress: 0, paid: 1, late: 2, cancelled: 3 }
-  default_scope { order(created_at: :desc) }
+  scope :pending_amount_gt_than, lambda { |amount|
+    where(Invoice.arel_table[:pending_amount].gt(amount))
+  }
 
   search_scope :search do
     attributes :status, :invoice_number, :pending_amount, :amount, :created_at, :due_date
@@ -33,26 +38,19 @@ class Invoice < ApplicationRecord
     attributes phone_number: ['user.phone_number']
   end
 
-  # rubocop:disable Metrics/AbcSize
   # rubocop:disable Metrics/MethodLength
-  def collect_payment_from_wallet
+  # Adds invoice amount to pending_balance of Wallet and PaymentPlan.
+  #
+  # @return [void]
+  def update_pending_balance_of_wallet
     ActiveRecord::Base.transaction do
-      cur_payment = settle_amount
-      user.wallet.update_balance(amount, 'debit')
       plan = land_parcel.payment_plan
-      if plan.plot_balance.nil? || cur_payment.zero?
-        plan.update(pending_balance: plan.pending_balance + amount)
-        return
-      end
+      wallet = user.wallet
 
-      plan.update(
-        plot_balance: plan.plot_balance - cur_payment,
-        pending_balance: plan.pending_balance + amount - cur_payment,
-      )
-      user.wallet.make_payment(self, cur_payment)
+      wallet.update(pending_balance: wallet.pending_balance + amount)
+      plan.update(pending_balance: plan.pending_balance + amount)
     end
   end
-  # rubocop:enable Metrics/AbcSize
 
   def self.invoice_stat(com)
     Invoice.connection.select_all(
@@ -72,14 +70,6 @@ class Invoice < ApplicationRecord
     )
   end
   # rubocop:enable Metrics/MethodLength
-
-  def settle_amount
-    pending_amount = amount - land_parcel.payment_plan&.plot_balance.to_f
-    return amount - pending_amount if pending_amount.positive?
-
-    paid!
-    amount
-  end
 
   def modify_status
     return if pending_amount.positive? || status.eql?('paid')

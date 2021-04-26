@@ -268,7 +268,7 @@ namespace :imports do
             payment_plan.update_plot_balance(amount)
             transaction.update(current_wallet_balance: user.wallet.balance + amount)
             user.wallet.update_balance(amount)
-            user.wallet.settle_invoices(transaction.id)
+            user.wallet.settle_invoices(transaction: transaction)
           else
             errors[row_num + 1] = 'Error: Payment plan not available.'
           end

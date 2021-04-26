@@ -84,7 +84,7 @@ gem "newrelic_rpm"
 
 # web scrapping and parsing html files
 gem 'nokogiri'
-
+gem 'yard', '~> 0.8.7.6'
 # Point to yanked v0.3.5
 # Temporary workaround for https://github.com/rails/rails/issues/41757 until fix is released
 gem 'mimemagic', github: 'mimemagicrb/mimemagic', ref: '01f92d86d15d85cfd0f20dabd025dcbd36a8a60f'
@@ -96,6 +96,7 @@ group :development, :test do
   gem "rubocop", "~> 0.77"
   gem "pronto", "~> 0.10.0"
   gem "rubocop-rails", "~> 2.3"
+  gem 'awesome_print'
 
   # RSpec
   # TODO: @mdp figure out why this needs bundle run twice
