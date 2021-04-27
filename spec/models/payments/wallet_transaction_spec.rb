@@ -3,7 +3,6 @@
 require 'rails_helper'
 
 RSpec.describe Payments::WalletTransaction, type: :model do
-
   let!(:user) { create(:user_with_community) }
   let(:community) { user.community }
   let!(:admin) { create(:admin_user, community_id: community.id) }
