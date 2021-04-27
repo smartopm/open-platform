@@ -30,6 +30,10 @@ module Payments
       where(Invoice.arel_table[:pending_amount].gt(amount))
     }
 
+    scope :pending_amount_gt_than, lambda { |amount|
+      where(Invoice.arel_table[:pending_amount].gt(amount))
+    }
+
     search_scope :search do
       attributes :status, :invoice_number, :pending_amount, :amount, :created_at, :due_date
       attributes user: ['user.name']

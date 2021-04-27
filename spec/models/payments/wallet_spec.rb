@@ -86,7 +86,7 @@ RSpec.describe Payments::Wallet, type: :model do
             expect(payment_plan.reload.pending_balance).to eql 50
             expect(user.wallet_transactions.count).to eql 2
             expect(
-              PaymentInvoice.where(wallet_transaction_id: uf_transaction.id).count,
+              Payments::PaymentInvoice.where(wallet_transaction_id: uf_transaction.id).count,
             ).to eql 1
           end
         end
@@ -108,7 +108,7 @@ RSpec.describe Payments::Wallet, type: :model do
             expect(payment_plan.reload.pending_balance).to eql 0
             expect(user.wallet_transactions.count).to eql 2
             expect(
-              PaymentInvoice.where(wallet_transaction_id: uf_transaction.id).count,
+              Payments::PaymentInvoice.where(wallet_transaction_id: uf_transaction.id).count,
             ).to eql 1
           end
         end
@@ -130,7 +130,7 @@ RSpec.describe Payments::Wallet, type: :model do
             expect(payment_plan.reload.pending_balance).to eql 0
             expect(user.wallet_transactions.count).to eql 2
             expect(
-              PaymentInvoice.where(wallet_transaction_id: uf_transaction.id).count,
+              Payments::PaymentInvoice.where(wallet_transaction_id: uf_transaction.id).count,
             ).to eql 1
           end
         end
@@ -153,7 +153,7 @@ RSpec.describe Payments::Wallet, type: :model do
           expect(payment_plan.reload.pending_balance).to eql 0
           expect(user.wallet_transactions.count).to eql 2
           expect(
-            PaymentInvoice.where(wallet_transaction_id: wallet_transaction.id).count,
+            Payments::PaymentInvoice.where(wallet_transaction_id: wallet_transaction.id).count,
           ).to eql 1
         end
       end
