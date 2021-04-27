@@ -125,7 +125,7 @@ module Types::Queries::Invoice
   def invoices_stat_details(query:)
     raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user].admin?
 
-    invoices = context[:site_community].invoices.not_paid.eager_load(:user, :land_parcel)
+    invoices = context[:site_community].invoices.not_paid.not_cancelled.eager_load(:user, :land_parcel)
     case query
     when '00-30'
       invoices.where('due_date >= ? AND due_date <= ?', 30.days.ago, Time.zone.today)
@@ -166,7 +166,7 @@ module Types::Queries::Invoice
   def invoice_summary
     raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user]&.admin?
 
-    invoices = context[:site_community].invoices.not_paid
+    invoices = context[:site_community].invoices.not_cancelled.not_paid
     {
       today: invoices
         .where(due_date: Time.zone.now.beginning_of_day..Time.zone.now.end_of_day)
