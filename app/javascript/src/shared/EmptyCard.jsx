@@ -33,7 +33,8 @@ const useStyles = makeStyles(() => ({
   paper: {
     textAlign: 'center',
     padding: '25px',
-    width: '99%'
+    width: '99%',
+    marginBottom: '20px'
   }
 }));
 

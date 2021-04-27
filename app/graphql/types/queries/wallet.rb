@@ -79,6 +79,7 @@ module Types::Queries::Wallet
   # rubocop:disable Metrics/MethodLength
   def payment_stat_details(query:)
     payments = context[:site_community].wallet_transactions
+                                       .where.not(source: 'invoice')
                                        .where(destination: 'wallet')
                                        .not_cancelled
                                        .eager_load(:user)
@@ -113,6 +114,7 @@ module Types::Queries::Wallet
     raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user]&.admin?
 
     payments = context[:site_community].wallet_transactions.not_cancelled
+                                       .where.not(source: 'invoice')
                                        .where(destination: 'wallet')
     {
       today: payments

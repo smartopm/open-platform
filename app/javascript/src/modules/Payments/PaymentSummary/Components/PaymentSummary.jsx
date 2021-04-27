@@ -101,7 +101,7 @@ export default function PaymentSummary({ authState }) {
                 >
                   Invoices
                 </Typography>
-                <Typography color='primary' variant='caption' style={{marginLeft: 'auto', fontWeight: 'bold', marginRight: '81px', cursor: 'pointer'}}>
+                <Typography color='primary' variant='caption' style={{marginLeft: 'auto', marginRight: '81px', cursor: 'pointer'}}>
                   <Link to='/users'>{active === 'payment' && 'Make New Payment'}</Link>
                 </Typography>
               </Grid>
