@@ -68,6 +68,11 @@ module Types::Queries::Invoice
     field :invoice_summary, Types::InvoiceSummaryType, null: false do
       description 'return summary of all invoices'
     end
+
+    field :payment_plan, [Types::PaymentPlanType], null: false do
+      description 'return list payment plan that belongs to a user'
+      argument :user_id, GraphQL::Types::ID, required: true
+    end
   end
   # rubocop:enable Metrics/BlockLength
   def invoices(query: nil, offset: 0, limit: 100)
@@ -185,6 +190,14 @@ module Types::Queries::Invoice
 
   def invoice_accounting_stats
     Invoice.invoice_stat(context[:site_community].id)
+  end
+
+  def payment_plan(user_id:)
+    user = verified_user(user_id)
+    user.payment_plans.includes(invoices: :payments)
+                      .where.not(pending_balance: 0)
+                      .order(created_at: :desc)
+                      .limit(4)
   end
 
   # It would be good to put this elsewhere to use it in other queries

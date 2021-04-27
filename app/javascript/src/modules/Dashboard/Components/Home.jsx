@@ -10,6 +10,7 @@ import UserDetail from '../../Users/Components/UserDetail'
 import ViewCustomerJourney from '../../CustomerJourney/Components/ViewCustomerJourney'
 import LanguageToggle from '../../i18n/Components/LanguageToggle';
 import NewsFeed from '../../News/Components/NewsFeed';
+import { PlotDetail } from '../../Plots'
 
 export default function Home() {
   const authState = useContext(AuthStateContext)
@@ -34,6 +35,7 @@ export default function Home() {
         (
           <div>
             <UserDetail user={authState.user} />
+            <PlotDetail userId={authState.user.id} />
             <NewsFeed />
           </div>
         )

@@ -4,22 +4,23 @@ import React from 'react'
 import { makeStyles } from '@material-ui/core/styles';
 import { useQuery } from 'react-apollo';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
-import TrendingFlatIcon from '@material-ui/icons/TrendingFlat';
 import GridList from '@material-ui/core/GridList';
 import GridListTile from '@material-ui/core/GridListTile';
-import { useHistory } from 'react-router-dom';
-import EventNoteIcon from '@material-ui/icons/EventNote';
 import Typography from '@material-ui/core/Typography';
-import { AssignedTaskQuery } from '../graphql/task_reminder_query'
+import { useHistory } from 'react-router-dom';
+import { PaymentPlan } from '../graphql/plot_detail_query'
 import { Spinner } from '../../../../shared/Loading';
 import { dateToString } from '../../../../utils/dateutil';
 import CenteredContent from '../../../../components/CenteredContent';
-import { formatError, removeNewLines, sanitizeText } from '../../../../utils/helpers';
+import { formatError } from '../../../../utils/helpers';
 import EmptyCard from '../../../../shared/EmptyCard'
 
-export default function PlotDetailCard() {
+export default function PlotDetailCard({ userId }) {
   const matches = useMediaQuery('(max-width:600px)')
-  const { loading, data, error } = useQuery(AssignedTaskQuery, {
+  const { loading, data, error } = useQuery(PaymentPlan, {
+    variables: {
+      userId
+    },
     fetchPolicy: 'cache-and-network',
     errorPolicy: 'all'
   });
@@ -40,38 +41,23 @@ export default function PlotDetailCard() {
     <div>
       {loading ? <Spinner /> : (
         <div>
-          <Typography variant='h6' style={matches ? {margin: '20px 0 26px 20px', fontWeight: 'bold'} : {margin: '20px 0 26px 79px', fontWeight: 'bold'}}>Task Reminders</Typography>
+          <Typography variant='h6' style={matches ? {margin: '20px 0 26px 20px', fontWeight: 'bold'} : {margin: '20px 0 26px 79px', fontWeight: 'bold'}}>Plot Details</Typography>
           <div>
-            {data?.userTasks.length > 0 ? (
+            {console.log(data?.paymentPlan)}
+            {data?.paymentPlan.length > 0 ? (
               <div className={classes.root} style={matches ? {marginLeft: '20px'} : {marginLeft: '79px'}}>
                 <GridList className={classes.gridList} cols={matches ? 1 : 3.5}>
-                  {data?.userTasks.map((tile) => (
+                  {data.paymentPlan.map((tile) => (
                     <GridListTile key={tile.id}>
                       <div className={classes.gridTile} onClick={() => history.push(`/tasks/${tile.id}`)}>
-                        <div className={classes.date} style={checkDate(tile.dueDate) ? {color: 'red'} : null}>
-                          <EventNoteIcon style={{marginRight: '10px', heigth: '15px', width: '15px', verticalAlign: 'middle'}} />
-                          <Typography variant='overline' style={{paddingBottom: '5px'}}>
-                            Due
-                            {' '}
-                            {dateToString(tile.dueDate)}
-                          </Typography>
-                        </div>
-                        <Typography align='justify' variant='caption' data-testid='body'>
-                          <span
-                            style={{ whiteSpace: 'pre-line' }}
-                          // eslint-disable-next-line react/no-danger
-                            dangerouslySetInnerHTML={{
-                          __html: sanitizeText(removeNewLines(tile.body))
-                          }}
-                          />
-                        </Typography>
+                        Hello
                       </div>
                     </GridListTile>
-                ))}
+                  ))}
                 </GridList>
               </div>
             ) : (
-              <EmptyCard title='No pending tasks' subtitle='Your pending tasks will appear here' />
+              <EmptyCard title='No Plot Available' subtitle='Your plots will appear here' />
             )}
           </div>
         </div>

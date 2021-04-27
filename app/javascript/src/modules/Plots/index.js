@@ -1,5 +1,6 @@
 import React from 'react'
 import MapIcon from '@material-ui/icons/Map';
+import PlotDetail from './PlotDetail'
 
 export default {
   routeProps: {
@@ -15,3 +16,5 @@ export default {
     'resident',
   ]
 };
+
+export { PlotDetail }
