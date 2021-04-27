@@ -71,7 +71,7 @@ describe('Email Builder Component', () => {
 
     render(<EmailEditor />)
     expect(container.queryByText('Update')).toBeInTheDocument();
-    
+
     fireEvent.click(container.queryByTestId('submit_btn'));
     expect(container.queryByTestId('submit_btn').textContent).toContain('Saving...')
 

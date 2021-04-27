@@ -7,6 +7,7 @@ import PaymentModal, { PaymentDetails } from '../../modules/Payments/Components/
 import currency from '../../__mocks__/currency'
 import { UserLandParcel } from '../../graphql/queries';
 import { Spinner } from '../../shared/Loading';
+import { PaymentCreate } from '../../graphql/mutations'
 
 describe('It should test the payment modal component', () => {
   const invoiceData =
@@ -37,20 +38,28 @@ describe('It should test the payment modal component', () => {
           userLandParcel
         }
       }
-    }];
+    },
+    {
+    request: {
+      query: PaymentCreate,
+      variables: {}
+    },
+    error: new Error('An error occurred'),
+  }
+];
     const container = render(
       <BrowserRouter>
         <MockedProvider mocks={mock}>
-          <PaymentModal 
-            open={open} 
-            invoiceData={invoiceData} 
+          <PaymentModal
+            open={open}
+            invoiceData={invoiceData}
             handleModalClose={handleModalClose}
             currencyData={currency}
           />
         </MockedProvider>
       </BrowserRouter>
     )
-    
+
     const loader = render(<Spinner />);
 
     expect(loader.queryAllByTestId('loader')[0]).toBeInTheDocument();
@@ -66,6 +75,8 @@ describe('It should test the payment modal component', () => {
     const transactionInput = container.queryByTestId('transaction-type')
     fireEvent.change(transactionInput, { target: { value: 'cash' } })
     expect(transactionInput).toHaveValue('cash')
+
+    fireEvent.click(container.getByTestId("custom-dialog-button"))
   });
 });
 
