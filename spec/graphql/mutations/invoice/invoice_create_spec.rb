@@ -43,7 +43,7 @@ RSpec.describe Mutations::Invoice::InvoiceCreate do
                                                 site_community: user.community,
                                               }).as_json
       invoice_id = result.dig('data', 'invoiceCreate', 'invoice', 'id')
-      invoice = Invoice.find invoice_id
+      invoice = Payments::Invoice.find invoice_id
       expect(invoice_id).not_to be_nil
       expect(
         result.dig('data', 'invoiceCreate', 'invoice', 'landParcel', 'id'),

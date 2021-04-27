@@ -157,7 +157,6 @@ module Payments
     # @param transaction [WalletTransaction]
     #
     # @return [void]
-
     def settle_from_unallocated_funds(inv, payment_amount, transaction)
       update_balance(payment_amount, 'debit')
       debit_unallocated_funds(payment_amount)
@@ -191,7 +190,7 @@ module Payments
 
     # Returns pending invoices of user,
     # * not cancelled
-    # * pending amount greater than zero.
+    # * pending amount greater than zero
     #
     # @return [Array<Invoice>]
     def pending_invoices
@@ -246,5 +245,5 @@ module Payments
     end
     # rubocop:enable Metrics/AbcSize
   end
-  # rubocop:enable Metrics/ClassLength
 end
+# rubocop:enable Metrics/ClassLength
