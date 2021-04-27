@@ -3,7 +3,6 @@
 require 'rails_helper'
 
 RSpec.describe Properties::PaymentPlan, type: :model do
-
   let(:user) { create(:user_with_community) }
   let(:land_parcel) { create(:land_parcel, community_id: user.community_id) }
 

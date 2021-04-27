@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 # Manages payments specific tasks.
+# rubocop:disable Metrics/ClassLength
 module Payments
   # Record the transactions
   class WalletTransaction < ApplicationRecord
@@ -191,5 +192,5 @@ module Payments
     end
     # rubocop:enable Rails/SkipsModelValidations
   end
-  # rubocop:enable Metrics/ClassLength
 end
+# rubocop:enable Metrics/ClassLength

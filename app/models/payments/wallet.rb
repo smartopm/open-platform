@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 # Manages payments specific tasks.
+# rubocop:disable Metrics/ClassLength
 module Payments
   # Stores user wallet balance and pending balance
   class Wallet < ApplicationRecord
@@ -154,7 +155,6 @@ module Payments
     # @param transaction [WalletTransaction]
     #
     # @return [void]
-
     def settle_from_unallocated_funds(inv, payment_amount, transaction)
       update_balance(payment_amount, 'debit')
       debit_unallocated_funds(payment_amount)
@@ -188,7 +188,7 @@ module Payments
 
     # Returns pending invoices of user,
     # * not cancelled
-    # * pending amount greater than zero.
+    # * pending amount greater than zero
     #
     # @return [Array<Invoice>]
     def pending_invoices
@@ -241,5 +241,5 @@ module Payments
       inv.paid! if inv.pending_amount.zero?
     end
   end
-  # rubocop:enable Metrics/ClassLength
 end
+# rubocop:enable Metrics/ClassLength

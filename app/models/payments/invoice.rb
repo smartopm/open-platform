@@ -27,6 +27,10 @@ module Payments
     has_many :payment_invoices, dependent: :destroy
     has_many :payments, through: :payment_invoices
 
+    scope :pending_amount_gt_than, lambda { |amount|
+      where(Invoice.arel_table[:pending_amount].gt(amount))
+    }
+
     search_scope :search do
       attributes :status, :invoice_number, :pending_amount, :amount, :created_at, :due_date
       attributes land_parcel: ['land_parcel.parcel_number']
@@ -36,7 +40,6 @@ module Payments
       attributes phone_number: ['user.phone_number']
     end
 
-    # rubocop:disable Metrics/AbcSize
     # rubocop:disable Metrics/MethodLength
     def update_pending_balance_of_wallet
       ActiveRecord::Base.transaction do
@@ -47,7 +50,6 @@ module Payments
         plan.update(pending_balance: plan.pending_balance + amount)
       end
     end
-    # rubocop:enable Metrics/AbcSize
 
     def self.invoice_stat(com)
       Invoice.connection.select_all(
