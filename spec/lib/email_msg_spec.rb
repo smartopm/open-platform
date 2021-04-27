@@ -23,4 +23,10 @@ RSpec.describe EmailMsg do
       EmailMsg.send_mail_from_db('gmail@gmail.com', OpenStruct.new(subject: 'My Mail'), [])
     end
   end
+
+  describe '.messages_from_sendgrid' do
+    it 'fetches nothinh from sendgrid since this is test' do
+      expect(EmailMsg.messages_from_sendgrid).to eq(nil)
+    end
+  end
 end
