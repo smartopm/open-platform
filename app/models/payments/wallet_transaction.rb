@@ -193,5 +193,5 @@ module Payments
     end
     # rubocop:enable Rails/SkipsModelValidations
   end
-  # rubocop:enable Metrics/ClassLength
 end
+# rubocop:enable Metrics/ClassLength
