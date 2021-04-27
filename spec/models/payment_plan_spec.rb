@@ -3,6 +3,9 @@
 require 'rails_helper'
 
 RSpec.describe PaymentPlan, type: :model do
+  let(:user) { create(:user_with_community) }
+  let(:land_parcel) { create(:land_parcel, community_id: user.community_id) }
+
   describe 'schema' do
     it { is_expected.to have_db_column(:id).of_type(:uuid) }
     it { is_expected.to have_db_column(:user_id).of_type(:uuid) }
@@ -33,6 +36,34 @@ RSpec.describe PaymentPlan, type: :model do
         .only_integer
         .is_greater_than(0)
         .is_less_than_or_equal_to(28)
+    end
+
+    describe '#plan_uniqueness_per_duration' do
+      context 'when payment plan already exist for a duration' do
+        before do
+          create(:payment_plan, land_parcel_id: land_parcel.id, user_id: user.id)
+        end
+
+        it 'adds validation error for plan duration' do
+          plan = user.payment_plans.build(
+            land_parcel_id: land_parcel.id, start_date: Time.zone.now,
+          )
+          plan.valid?
+          expect(plan.errors.full_messages)
+            .to include('Start date Payment plan duration overlaps with other payment plans')
+        end
+      end
+
+      context 'when payment plan does not exist for a duration' do
+        it 'does not add validation error for plan duration' do
+          plan = user.payment_plans.build(
+            land_parcel_id: land_parcel.id, start_date: Time.zone.now,
+          )
+          plan.valid?
+          expect(plan.errors.full_messages)
+            .to_not include('Start date Payment plan duration overlaps with other payment plans')
+        end
+      end
     end
   end
 
