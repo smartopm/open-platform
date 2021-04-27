@@ -4,14 +4,12 @@ import React from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import GridList from '@material-ui/core/GridList'
 import GridListTile from '@material-ui/core/GridListTile'
-import GridListTileBar from '@material-ui/core/GridListTileBar'
 import useMediaQuery from '@material-ui/core/useMediaQuery'
 import { Typography } from '@material-ui/core'
 import { useFetch } from '../../utils/customHooks'
 import { wordpressEndpoint } from '../../utils/constants'
 import { Spinner } from '../../shared/Loading'
 import CenteredContent from '../CenteredContent'
-import { sanitizeText } from '../../utils/helpers'
 
 const NUMBER_OF_POSTS_TO_DISPLAY = 5
 const useStyles = makeStyles(theme => ({
@@ -27,6 +25,11 @@ const useStyles = makeStyles(theme => ({
   },
   title: {
     color: theme.palette.primary.light
+  },
+  image: {
+    height: '131px',
+    width: '304px',
+    borderRadius: '8px'
   }
 }))
 
@@ -38,44 +41,42 @@ export function PostItemGrid({ data }) {
     window.location.href = `/news/post/${postId}`
   }
   return (
-    <div className={classes.root}>
+    <div>
       <Typography
-        align="center"
-        color="textSecondary"
+        color="textPrimary"
         gutterBottom
         variant="h6"
+        style={matches ? {margin: '20px 0 20px 20px', fontWeight: 'bold'} : {margin: '20px 0 20px 79px', fontWeight: 'bold'}}
       >
-        Latest News
+        Recent News
       </Typography>
-      <GridList
-        className={classes.gridList}
-        cols={matches ? 2 : 3}
-        spacing={15}
-      >
-        {data.length
-        && data.map((tile) => (
-          <GridListTile 
-            key={tile.ID} 
-            onClick={() => routeToPost(tile.ID)}
-            style={{ cursor: 'pointer' }}
-          >
-            <img data-testid="tile_image" src={tile.featured_image} alt={tile.title} />
-            <GridListTileBar
-              title={(
-                  // eslint-disable-next-line react/no-danger
-                <span dangerouslySetInnerHTML={{
-                  __html: sanitizeText(tile.title)
-                }}
-                />
-                  )}
-              classes={{
-                title: classes.title
-              }}
-            />
-          </GridListTile>
-        ))}
-      </GridList>
+      <div className={classes.root} style={matches ? {margin: '0 20px'} : {margin: '0 79px'}}>
+        <GridList
+          className={classes.gridList}
+          cols={matches ? 2 : 3.2}
+          spacing={5}
+        >
+          {data.length
+          && data.map((tile) => (
+            <GridListTile 
+              key={tile.ID} 
+              onClick={() => routeToPost(tile.ID)}
+              style={{ cursor: 'pointer' }}
+            >
+              <img data-testid="tile_image" src={tile.featured_image} alt={tile.title} className={classes.image} />
+              <Typography
+                color="textPrimary"
+                variant="caption"
+                style={{margin: '15px 0 3px 5px'}}
+              >
+                {tile.title}
+              </Typography>
+            </GridListTile>
+          ))}
+        </GridList>
+      </div>
     </div>
+    
   )
 }
 

@@ -1,5 +1,5 @@
 /* eslint-disable no-nested-ternary */
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { CSVLink } from "react-csv";
 import { Grid, List } from '@material-ui/core';
 import Avatar from '@material-ui/core/Avatar';
@@ -119,6 +119,15 @@ export default function PaymentList({ currencyData }) {
     setSearchQuery(handleQueryOnChange(selectedOptions, paymentFilterFields))
     setListType('nongraph')
   }
+
+  useEffect(() => {
+    if (history.location?.state?.from === 'dashboard') {
+      setListType('graph')
+      setQuery(history.location?.state?.query)
+      loadPaymentDetail()
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   if (error) {
     return <CenteredContent>{formatError(error.message)}</CenteredContent>;

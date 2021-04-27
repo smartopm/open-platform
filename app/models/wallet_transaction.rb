@@ -49,24 +49,26 @@ class WalletTransaction < ApplicationRecord
   # rubocop:disable Metrics/MethodLength
   def self.payment_stat(com)
     WalletTransaction.connection.select_all(
-      "select
-      date(wallet_transactions.created_at at time zone 'utc' at time zone '#{com.timezone}')
-      as trx_date,
-      sum(CASE WHEN wallet_transactions.source='cash'
-      THEN wallet_transactions.amount ELSE 0 END) as cash,
-      sum(CASE WHEN wallet_transactions.source='mobile_money'
-      THEN wallet_transactions.amount ELSE 0 END) as mobile_money,
-      sum(CASE WHEN wallet_transactions.source='pos'
-      THEN wallet_transactions.amount ELSE 0 END) as pos,
-      sum(CASE WHEN wallet_transactions.source='bank_transfer/cash_deposit'
-      THEN wallet_transactions.amount ELSE 0 END) as bank_transfer,
-      sum(CASE WHEN wallet_transactions.source='bank_transfer/eft'
-      THEN wallet_transactions.amount ELSE 0 END) as eft
-     from wallet_transactions
-     where destination = 'wallet' and source != 'invoice'
-     and wallet_transactions.community_id='#{com.id}'
-     and wallet_transactions.created_at > (CURRENT_TIMESTAMP - interval '365 days')
-     group by trx_date order by trx_date",
+      sanitize_sql(
+        "select
+        date(wallet_transactions.created_at at time zone 'utc' at time zone '#{com.timezone}')
+        as trx_date,
+        sum(CASE WHEN wallet_transactions.source='cash'
+        THEN wallet_transactions.amount ELSE 0 END) as cash,
+        sum(CASE WHEN wallet_transactions.source='mobile_money'
+        THEN wallet_transactions.amount ELSE 0 END) as mobile_money,
+        sum(CASE WHEN wallet_transactions.source='pos'
+        THEN wallet_transactions.amount ELSE 0 END) as pos,
+        sum(CASE WHEN wallet_transactions.source='bank_transfer/cash_deposit'
+        THEN wallet_transactions.amount ELSE 0 END) as bank_transfer,
+        sum(CASE WHEN wallet_transactions.source='bank_transfer/eft'
+        THEN wallet_transactions.amount ELSE 0 END) as eft
+      from wallet_transactions
+      where destination = 'wallet' and status != 3
+      and wallet_transactions.community_id='#{com.id}'
+      and wallet_transactions.created_at > (CURRENT_TIMESTAMP - interval '365 days')
+      group by trx_date order by trx_date",
+      ),
     )
   end
 

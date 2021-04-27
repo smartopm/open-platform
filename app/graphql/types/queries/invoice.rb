@@ -64,6 +64,10 @@ module Types::Queries::Invoice
       argument :query, GraphQL::Types::String, required: true
       description 'return list of all unpaid invoices'
     end
+
+    field :invoice_summary, Types::InvoiceSummaryType, null: false do
+      description 'return summary of all invoices'
+    end
   end
   # rubocop:enable Metrics/BlockLength
   def invoices(query: nil, offset: 0, limit: 100)
@@ -117,24 +121,34 @@ module Types::Queries::Invoice
   end
 
   # rubocop:disable Metrics/MethodLength
+  # rubocop:disable Metrics/CyclomaticComplexity
   def invoices_stat_details(query:)
     raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user].admin?
 
-    invoices = context[:site_community].invoices.eager_load(:user, :land_parcel)
+    invoices = context[:site_community].invoices.not_paid.eager_load(:user, :land_parcel)
     case query
     when '00-30'
-      invoices.not_paid.where('due_date >= ? AND due_date <= ?', 30.days.ago, Time.zone.today)
+      invoices.where('due_date >= ? AND due_date <= ?', 30.days.ago, Time.zone.today)
     when '31-45'
-      invoices.not_paid.where('due_date <= ? AND due_date >= ?', 31.days.ago, 45.days.ago)
+      invoices.where('due_date <= ? AND due_date >= ?', 31.days.ago, 45.days.ago)
     when '46-60'
-      invoices.not_paid.where('due_date <= ? AND due_date >= ?', 46.days.ago, 60.days.ago)
+      invoices.where('due_date <= ? AND due_date >= ?', 46.days.ago, 60.days.ago)
     when 'Future Invoices'
-      invoices.not_paid.where('due_date > ?', Time.zone.today)
+      invoices.where('due_date > ?', Time.zone.today)
+    when 'today'
+      invoices.where(due_date: Time.zone.now.beginning_of_day..Time.zone.now.end_of_day)
+    when 'oneWeek'
+      invoices.where('due_date >= ? AND due_date <= ?', 7.days.ago, Time.zone.today)
+    when 'oneMonth'
+      invoices.where('due_date >= ? AND due_date <= ?', 30.days.ago, Time.zone.today)
+    when 'overOneMonth'
+      invoices.where('due_date <= ?', 30.days.ago)
     else
-      invoices.not_paid.where('due_date <= ?', 61.days.ago)
+      invoices.where('due_date <= ?', 61.days.ago)
     end
   end
   # rubocop:enable Metrics/MethodLength
+  # rubocop:enable Metrics/CyclomaticComplexity
 
   def invoice_stats
     raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user]&.admin?
@@ -147,6 +161,26 @@ module Types::Queries::Invoice
       cancelled: invoices.cancelled.count,
     }
   end
+
+  # rubocop:disable Metrics/MethodLength
+  def invoice_summary
+    raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user]&.admin?
+
+    invoices = context[:site_community].invoices.not_paid
+    {
+      today: invoices
+        .where(due_date: Time.zone.now.beginning_of_day..Time.zone.now.end_of_day)
+        .count,
+      one_week: invoices
+        .where('due_date >= ? AND due_date <= ?', 7.days.ago, Time.zone.today)
+        .count,
+      one_month: invoices
+        .where('due_date >= ? AND due_date <= ?', 30.days.ago, Time.zone.today)
+        .count,
+      over_one_month: invoices.where('due_date <= ?', 30.days.ago).count,
+    }
+  end
+  # rubocop:enable Metrics/MethodLength
 
   def invoice_accounting_stats
     Invoice.invoice_stat(context[:site_community].id)

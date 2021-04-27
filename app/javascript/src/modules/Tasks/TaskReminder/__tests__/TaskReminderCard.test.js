@@ -10,8 +10,7 @@ import { Spinner } from '../../../../shared/Loading';
 describe('Task Reminder Component', () => {
   const mock = [{
     request: {
-      query: AssignedTaskQuery,
-      variables: { id: 't8y2euj2uihr23r' }
+      query: AssignedTaskQuery
     },
     result: {
       data: {

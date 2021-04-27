@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 # wallet queries
+# rubocop:disable Metrics/ModuleLength
 module Types::Queries::Wallet
   extend ActiveSupport::Concern
   # rubocop:disable Metrics/BlockLength
@@ -43,6 +44,10 @@ module Types::Queries::Wallet
       description 'Get a receipt for a transaction'
       argument :transaction_id, GraphQL::Types::ID, required: true
     end
+
+    field :payment_summary, Types::PaymentSummaryType, null: false do
+      description 'return stats payment amount'
+    end
   end
   # rubocop:enable Metrics/BlockLength
 
@@ -70,13 +75,29 @@ module Types::Queries::Wallet
     WalletTransaction.payment_stat(context[:site_community])
   end
 
+  # rubocop:disable Metrics/AbcSize
+  # rubocop:disable Metrics/MethodLength
   def payment_stat_details(query:)
-    converted_date = Date.parse(query).in_time_zone(context[:site_community].timezone).all_day
-    context[:site_community].wallet_transactions
-                            .eager_load(:user)
-                            .where.not(source: 'invoice')
-                            .where(created_at: converted_date, destination: 'wallet')
+    payments = context[:site_community].wallet_transactions
+                                       .where(destination: 'wallet')
+                                       .not_cancelled
+                                       .eager_load(:user)
+    case query
+    when 'today'
+      payments.where(created_at: Time.zone.now.beginning_of_day..Time.zone.now.end_of_day)
+    when 'oneWeek'
+      payments.where(created_at: 1.week.ago..Time.zone.now.end_of_day)
+    when 'oneMonth'
+      payments.where(created_at: 30.days.ago..Time.zone.now.end_of_day)
+    when 'overOneMonth'
+      payments.where(created_at: 1.year.ago..Time.zone.now.end_of_day)
+    else
+      converted_date = Date.parse(query).in_time_zone(context[:site_community].timezone).all_day
+      payments.where(created_at: converted_date)
+    end
   end
+  # rubocop:enable Metrics/AbcSize
+  # rubocop:enable Metrics/MethodLength
 
   def transaction_receipt(transaction_id:)
     raise GraphQL::ExecutionError, 'Unauthorized' if context[:current_user].blank?
@@ -85,6 +106,31 @@ module Types::Queries::Wallet
     context[:site_community].wallet_transactions.find(transaction_id)&.payment_invoice.payment
     # rubocop:enable Lint/SafeNavigationChain
   end
+
+  # rubocop:disable Metrics/AbcSize
+  # rubocop:disable Metrics/MethodLength:
+  def payment_summary
+    raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user]&.admin?
+
+    payments = context[:site_community].wallet_transactions.not_cancelled
+                                       .where(destination: 'wallet')
+    {
+      today: payments
+        .where(created_at: Time.zone.now.beginning_of_day..Time.zone.now.end_of_day)
+        .sum(&:amount),
+      one_week: payments
+        .where('created_at >= ? AND created_at <= ?', 1.week.ago, Time.zone.now.end_of_day)
+        .sum(&:amount),
+      one_month: payments
+        .where('created_at >= ? AND created_at <= ?', 30.days.ago, Time.zone.now.end_of_day)
+        .sum(&:amount),
+      over_one_month: payments
+        .where('created_at >= ? AND created_at <= ?', 1.year.ago, Time.zone.now.end_of_day)
+        .sum(&:amount),
+    }
+  end
+  # rubocop:enable Metrics/AbcSize
+  # rubocop:enable Metrics/MethodLength
 
   # It would be good to put this elsewhere to use it in other queries
   def verified_user(user_id)
@@ -97,3 +143,4 @@ module Types::Queries::Wallet
     user
   end
 end
+# rubocop:enable Metrics/ModuleLength

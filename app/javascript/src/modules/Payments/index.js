@@ -2,6 +2,7 @@ import React from 'react';
 import PaymentIcon from '@material-ui/icons/Payment';
 import Invoices from '../Invoices';
 import Transactions from '../Transactions';
+import PaymentSummary from './PaymentSummary'
 
 export default {
   routeProps: {
@@ -15,3 +16,5 @@ export default {
   accessibleBy: ['admin'],
   subMenu: [Invoices, Transactions]
 };
+
+export { PaymentSummary }

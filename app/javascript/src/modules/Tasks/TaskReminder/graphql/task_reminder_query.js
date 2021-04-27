@@ -2,8 +2,8 @@
 import gql from 'graphql-tag';
 
 export const AssignedTaskQuery = gql`
-  query assignedTaskQuery($id: ID!) {
-    userTasks(id: $id) {
+  query assignedTaskQuery {
+    userTasks {
       body
       id
       dueDate
