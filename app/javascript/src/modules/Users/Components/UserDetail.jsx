@@ -37,8 +37,8 @@ export default function UserDetail({ user }) {
                 <Typography color="textPrimary" variant='caption' gutterBottom>
                   More details
                 </Typography>
-                {open ? (<KeyboardArrowDownIcon style={{verticalAlign: 'middle'}} onClick={() => setOpen(!open)} />) : (
-                  <KeyboardArrowRightIcon style={{verticalAlign: 'middle'}} onClick={() => setOpen(!open)} data-testid='collapse' />
+                {open ? (<KeyboardArrowDownIcon style={{verticalAlign: 'middle', paddingBottom: '3px'}} onClick={() => setOpen(!open)} />) : (
+                  <KeyboardArrowRightIcon style={{verticalAlign: 'middle', paddingBottom: '3px'}} onClick={() => setOpen(!open)} data-testid='collapse' />
                 )}
               </div>
               <Collapse
