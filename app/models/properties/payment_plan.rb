@@ -3,7 +3,6 @@
 module Properties
   # PaymentPlan
   class PaymentPlan < ApplicationRecord
-
     enum status: { active: 0, cancelled: 1, deleted: 2 }
 
     belongs_to :user, class_name: 'Users::User'
