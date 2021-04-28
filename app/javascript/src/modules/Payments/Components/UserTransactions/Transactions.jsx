@@ -132,14 +132,14 @@ export default function TransactionsList({ userId, user, userData, paymentSubTab
   return (
     <div>
       <div style={{display: 'flex', flexDirection: 'row'}}>
-        <div style={{display: 'flex', flexDirection: 'column', marginLeft: '20px'}}>
-          <Typography variant='subtitle1'>Wallet Balance</Typography>
+        <div style={{display: 'flex', flexDirection: 'column', marginLeft: '30px'}}>
+          <Typography variant='subtitle1'>Unallocated Funds</Typography>
           {
             walletLoading ? <Spinner /> : <Typography variant="h5" color='primary'>{formatMoney(currencyData, walletData.userBalance?.balance)}</Typography>
           }
         </div>
         <div style={{display: 'flex', flexDirection: 'column', marginLeft: '40px'}}>
-          <Typography variant='subtitle1'>Pending Balance</Typography>
+          <Typography variant='subtitle1'>Balance</Typography>
           {
             walletLoading ? <Spinner /> : <Typography variant="h5" color='primary'>{formatMoney(currencyData, walletData.userBalance?.pendingBalance)}</Typography>
           }
