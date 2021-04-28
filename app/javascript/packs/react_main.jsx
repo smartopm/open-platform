@@ -68,7 +68,7 @@ import UsersImport from '../src/containers/UsersImport';
 
 import FormBuilderPage from '../src/containers/Forms/FormBuilderPage';
 import CommentsPage from '../src/containers/Comments/CommentPage';
-import { MainMenu } from "../src/modules/Menu";
+import { MainMenu } from '../src/modules/Menu';
 import modules from '../src/modules';
 import UserRoutes from '../src/modules/Users/UserRoutes';
 
@@ -114,7 +114,7 @@ const Logout = () => {
 ReactGA.initialize('UA-150647211-2');
 
 const Analytics = props => {
-  const {gtag} = window;
+  const { gtag } = window;
   const liveAnalytics = (host => {
     return PRIMARY_DOMAINS.includes(host);
   })(window.location.host);
@@ -123,7 +123,7 @@ const Analytics = props => {
   const history = useHistory();
 
   useEffect(() => {
-    const {user} = authState;
+    const { user } = authState;
 
     if (user) {
       if (liveAnalytics) {
@@ -202,9 +202,7 @@ const App = () => {
                                 <Route
                                   exact
                                   path="/communication"
-                                  render={() => (
-                                    <Redirect to={`/message/${user.id}`} />
-                                  )}
+                                  render={() => <Redirect to={`/message/${user.id}`} />}
                                 />
                                 <Route
                                   exact
@@ -232,18 +230,18 @@ const App = () => {
                                 {[...modules, ...UserRoutes].map(module => {
                                   if (module.subMenu) {
                                     return module.subMenu.map(sub => {
-                                      let routes = []
+                                      let routes = [];
                                       if (sub.subRoutes) {
                                         routes = sub.subRoutes.map(subRoute => (
                                           <Route {...subRoute.routeProps} key={subRoute.name} />
-                                        ))
-                                      } 
-                                      routes.push(<Route {...sub.routeProps} key={sub.name} />)
-                                      return routes
+                                        ));
+                                      }
+                                      routes.push(<Route {...sub.routeProps} key={sub.name} />);
+                                      return routes;
                                     });
                                   }
                                   if (module.accessibleBy.includes(user.userType)) {
-                                  return <Route exact {...module.routeProps} key={module.name} />;
+                                    return <Route exact {...module.routeProps} key={module.name} />;
                                   }
                                 })}
                                 <Route exact path="/scan" component={Scan} />
@@ -297,7 +295,7 @@ const App = () => {
                                   path="/user_form/:formId?/:userId?/:formName?/:type?"
                                   component={FormPage}
                                 />
-  
+
                                 <AdminRoutes>
                                   <Switch>
                                     <Route path="/users/import" component={UsersImport} />
@@ -322,18 +320,16 @@ const App = () => {
                                     <Route path="/visit_request" component={EntryRequest} />
                                   </Switch>
                                 </AdminRoutes>
-                                 {/* we will also need a not found page for non-logged in user */}
-                                 {/* if you are going to move this to another line carry it like an egg */}
-                                 <Route
+                                {/* we will also need a not found page for non-logged in user */}
+                                {/* if you are going to move this to another line carry it like an egg */}
+                                <Route
                                   render={() => (
                                     <ErrorPage title="Sorry!! We couldn't find this page" />
                                   )}
                                 />
-
                               </Switch>
                             )}
                           </Consumer>
-
                         </Switch>
                       </div>
                     </LoggedInOnly>
@@ -351,7 +347,13 @@ const App = () => {
 const useStyles = makeStyles(() => ({
   '@media (min-width: 768px)': {
     appContainer: {
-      marginLeft: '260px'
+      marginLeft: '260px',
+
+    }
+  },
+    appContainer: {
+    '@supports ( -moz-appearance:none )': {
+      paddingTop: '75px'
     }
   }
 }));
