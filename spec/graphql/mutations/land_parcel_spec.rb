@@ -123,23 +123,6 @@ RSpec.describe Mutations::LandParcel do
       expect(result['errors']).to be_nil
     end
 
-    it 'raises an error if valuation\'s start-date is in the past' do
-      variables = {
-        parcelNumber: '67890',
-        valuationFields: [{ amount: 200, startDate: 2.days.ago }],
-      }
-
-      result = DoubleGdpSchema.execute(propertyQuery, variables: variables,
-                                                      context: {
-                                                        current_user: current_user,
-                                                        site_community: current_user.community,
-                                                      }).as_json
-
-      expect(result.dig('errors', 0, 'message')).to eq(
-        'Validation failed: Start date can\'t be in the past',
-      )
-    end
-
     it 'updates a property' do
       variables = {
         id: user_parcel.id,
