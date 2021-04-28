@@ -29,6 +29,7 @@ const QUERY = gql`
       expiresAt
       imageUrl
       avatarUrl
+      subStatus
       community {
         id
         name

@@ -11,6 +11,7 @@ import ViewCustomerJourney from '../../CustomerJourney/Components/ViewCustomerJo
 import LanguageToggle from '../../i18n/Components/LanguageToggle';
 import NewsFeed from '../../News/Components/NewsFeed';
 import { PlotDetail } from '../../Plots'
+import CustomerJourneyStatus from '../../CustomerJourney/Components/CustomerJourneyStatus'
 
 export default function Home() {
   const authState = useContext(AuthStateContext)
@@ -31,16 +32,19 @@ export default function Home() {
           <NewsFeed wordpressEndpoint={authState.user?.community.wpLink} />
         </div>
       )}
-      {authState.user.userType === 'prospective_client' && (
+      {authState.user.userType === 'client' && (
         (
           <div>
             <UserDetail user={authState.user} />
-            <PlotDetail userId={authState.user.id} />
+            <CustomerJourneyStatus subStatus={authState.user.subStatus} />
+            <Divider />
+            <PlotDetail authState={authState.user} />
+            <Divider />
             <NewsFeed />
           </div>
         )
       )}
-      {authState.user.userType !== 'admin' && authState.user.userType !==  'prospective_client'  && (
+      {authState.user.userType !== 'admin' && authState.user.userType !==  'client'  && (
         <div>
           <NewsFeed wordpressEndpoint={authState.user?.community.wpLink} />
           <Homepage authState={authState} />

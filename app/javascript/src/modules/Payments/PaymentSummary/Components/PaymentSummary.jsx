@@ -83,7 +83,7 @@ export default function PaymentSummary({ authState }) {
             </div>
           ) : (
             <div style={{marginLeft: '79px', marginTop: '20px'}}>
-              <Grid container alignItems="center" className={classes.root}>
+              <Grid container alignItems="center">
                 <Typography 
                   variant={active === 'payment' ? 'body1' : 'body2'} 
                   color={active === 'payment' ? 'textPrimary' : 'textSecondary'}

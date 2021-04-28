@@ -24,17 +24,17 @@ export default function UserDetail({ user }) {
   return (
     <Grid container>
       <Grid item xs={12} style={matches ? {padding: '0 20px'} : {padding: '0 79px'}}>
-        <Paper className={classes.paper}>
+        <Paper className={classes.paper} elevation={0}>
           <div style={{display: 'flex'}}>
             <div>
-              <Typography color="textPrimary" variant={matches ? 'body2' : 'h6'} style={{fontWeight: 'bold'}} data-testid='name' gutterBottom>
+              <Typography color="textPrimary" className={classes.name} data-testid='name'>
                 Hello 
                 {' '}
                 {user?.name}
                 ,
               </Typography>
               <div style={{display: 'flex'}}>
-                <Typography color="textPrimary" variant='caption' gutterBottom>
+                <Typography color="textPrimary" className={classes.more}>
                   More details
                 </Typography>
                 {open ? (<KeyboardArrowDownIcon style={{verticalAlign: 'middle', paddingBottom: '3px'}} onClick={() => setOpen(!open)} />) : (
@@ -46,25 +46,25 @@ export default function UserDetail({ user }) {
                 timeout="auto"
                 unmountOnExit
               >
-                <Grid container alignItems="center" className={classes.root}>
+                <Grid container className={classes.option}>
                   <div style={matches ? {marginRight: '2px'} : {marginRight: '30px'}}>
-                    <PersonIcon style={{heigth: '15px', width: '15px', verticalAlign: 'middle', marginRight: '5px'}} />
-                    <Typography color="textPrimary" variant='caption' data-testid='user-type'>
+                    <PersonIcon style={{heigth: '5.6px', width: '13.6px', verticalAlign: 'middle', display: 'flex', marginRight: '14px'}} />
+                    <Typography data-testid='user-type'>
                       {user?.userType}
                     </Typography>
                   </div>
                   {user?.phoneNumber && (
                     <div style={matches ? {marginRight: '15px'} : {marginRight: '30px'}}>
-                      <PhoneIcon style={{heigth: '15px', width: '15px', verticalAlign: 'middle', marginRight: '5px'}} />
-                      <Typography color="textPrimary" variant='caption' data-testid='phone'>
+                      <PhoneIcon style={{heigth: '5.6px', width: '13.6px', verticalAlign: 'middle', marginRight: '14px'}} />
+                      <Typography data-testid='phone'>
                         {user.phoneNumber}
                       </Typography>
                     </div>
                   )}
                   {user?.email && (
                     <div>
-                      <EmailIcon style={{heigth: '15px', width: '15px', verticalAlign: 'middle', marginRight: '5px'}} />
-                      <Typography color="textPrimary" variant='caption' data-testid='email'>
+                      <EmailIcon style={{heigth: '5.6px', width: '13.6px', verticalAlign: 'middle', marginRight: '14px'}} />
+                      <Typography data-testid='email'>
                         {user.email}
                       </Typography>
                     </div>
@@ -91,12 +91,29 @@ export default function UserDetail({ user }) {
 
 const useStyles = makeStyles(() => ({
   paper: {
-    padding: '25px',
+    padding: '40px',
     width: '99%',
     backgroundColor: '#F9F9F9',
     marginTop: '30px',
     borderRadius: '23px',
-    height: '150px'
+    height: '200px'
+  },
+  name: {
+    fontWeight: 500,
+    fontSize: '28px',
+    color: '#141414',
+    marginBottom: '15px'
+  },
+  more: {
+    fontWeight: 600,
+    fontSize: '16px',
+    color: '#585858',
+    marginBottom: '24px'
+  },
+  option: {
+    fontWeight: 400,
+    fontSize: '14px',
+    color: '#141414'
   }
 }));
 
