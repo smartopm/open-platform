@@ -57,7 +57,10 @@ describe('Transactions Component', () => {
       },
       result: {
         data: {
-          userBalance: '2000'
+          userBalance: {
+            balance: '2000',
+            pendingBalance: '-12.0'
+          }
         }
       }
     };

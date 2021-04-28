@@ -1160,7 +1160,10 @@ export const AllTransactionQuery = gql`
 
 export const UserBalance = gql`
   query UserBalance($userId: ID!) {
-    userBalance(userId: $userId)
+    userBalance(userId: $userId) {
+      balance
+      pendingBalance
+    }
   }
 `;
 
