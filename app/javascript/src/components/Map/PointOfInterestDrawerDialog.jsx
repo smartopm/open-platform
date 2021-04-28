@@ -29,7 +29,7 @@ export default function PointOfInterestDrawerDialog({ anchor, children, open, on
             </GridListTile>
           )}
           {imageData.urls?.map((url) =>(
-            <GridListTile key={url} cols={1} style={{ display: 'flex', justifyContent: 'center' }}>
+            <GridListTile key={url} cols={1} style={{ height: 'auto'}}>
               <ImageAuth
                 key={url}
                 imageLink={url}
