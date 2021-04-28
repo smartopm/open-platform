@@ -34,7 +34,7 @@ class PaymentPlan < ApplicationRecord
   #
   # @return [Range]
   def duration
-    start_date..(start_date + (duration_in_month || 12).month)
+    start_date...(start_date + (duration_in_month || 12).month)
   end
 
   private
