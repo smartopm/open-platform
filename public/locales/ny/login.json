@@ -1,18 +1,4 @@
 {
-  "home": {
-    "request": "Zopempha",
-    "new_user": "Wosuta watsopano",
-    "finance": "Ndalama",
-    "explore": "Fufuzani",
-    "support": "Chithandizo",
-    "identity": "Identity",
-    "entry_logs": "Entry Logs",
-    "log_entry": "Kulowamo",
-    "scan": "Scan"
-  },
-  "scan": {
-    "torch": "Yatsani Nyali"
-  },
   "login": {
     "welcome": "Welcome to {{appName}} app",
     "login_text": "Please log in with your phone number here",

@@ -1,18 +1,4 @@
 {
-  "home": {
-    "request": "Peticiones",
-    "new_user": "Nuevo usuario",
-    "finance": "Finanzas",
-    "explore": "Explorar",
-    "support": "Apoyo",
-    "identity": "Identidad",
-    "entry_logs": "Registros de entrada",
-    "log_entry": "Entrada Manual",
-    "scan": "Escanear"
-  },
-  "scan": {
-    "torch": "Antorcha de palanca"
-  },
   "login": {
     "welcome": "Bienvenido a la aplicación {{appName}}",
     "login_text": "Inicie sesión con su número de teléfono aquí",
