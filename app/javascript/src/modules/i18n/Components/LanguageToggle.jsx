@@ -18,15 +18,14 @@ export default function LanguageToggle() {
   }
 
   return (
-    <div style={{ float: 'right' }}>
+    <div style={{ float: 'right', marginRight: '8.6%' }}>
       <br />
-      <GTranslateIcon style={{ marginTop: 12 }} />
-      <FormControl variant="filled">
+      <GTranslateIcon style={{ marginTop: 12, marginRight: -6 }} />
+      <FormControl variant="filled" style={{ fontSize: 15, fontWeight: 'medium', paddingLeft: 6 }}>
         <Select
           id="language_toggle"
           value={locale}
           onChange={saveLocale}
-          style={{ width: 150 }}
           variant="filled"
           input={<BootstrapInput />}
           IconComponent={() => <ArrowDropDownIcon style={{ marginLeft: -34 }} />}
