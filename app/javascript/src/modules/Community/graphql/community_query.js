@@ -14,6 +14,7 @@ export const CurrentCommunityQuery = gql`
       currency
       locale
       tagline
+      language
     }
   }
 `;

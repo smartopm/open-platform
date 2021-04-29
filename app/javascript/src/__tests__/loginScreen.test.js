@@ -40,7 +40,8 @@ describe('Login screen', () => {
             currency: 'kwacha',
             locale: 'en-ZM',
             tagline: 'This is a tagline for this community',
-            logoUrl: ''
+            logoUrl: '',
+            language: 'en-US'
           }
         }
       }
@@ -59,12 +60,14 @@ describe('Login screen', () => {
   })
   it('should have a welcome text', async () => {
     await waitFor(() => {
-      expect(loginWrapper.find('h4').text()).toContain('Welcome to Test Community')
+      // using the example give here https://github.com/i18next/react-i18next/blob/master/example/test-jest/src/UseTranslation.test.js#L9
+      // files are tested by placeholders of translations
+      expect(loginWrapper.find('h4').text()).toContain('login.welcome')
       expect(loginWrapper.text()).toContain('This is a tagline for this community')
-      expect(loginWrapper.text()).toContain('Please log in with your phone number here')
-      expect(loginWrapper.text()).toContain('Sign In with Facebook')
-      expect(loginWrapper.text()).toContain('Sign In with Google')
-      expect(loginWrapper.text()).toContain('Don\'t have an Account?')
+      expect(loginWrapper.text()).toContain('login.login_text')
+      expect(loginWrapper.text()).toContain('login.login_google')
+      expect(loginWrapper.text()).toContain('login.login_facebook')
+      expect(loginWrapper.text()).toContain('login.request_account')
     }, 100);
   })
   it('should contain a nav with an arrow icon', () => {
@@ -86,7 +89,7 @@ describe('Login screen', () => {
   })
 
   it('should show trouble logging in section', () => {
-    expect(loginWrapper.find('u').text()).toMatch(/don't have an account?/i)
+    expect(loginWrapper.find('u').text()).toMatch('login.request_account')
     expect(loginWrapper.find('#trouble-logging-div').exists()).toBe(true)
   })
 })

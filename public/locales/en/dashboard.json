@@ -1,5 +1,5 @@
 {
-  "home": {
+  "dashboard": {
     "request": "Requests",
     "new_user": "New User",
     "finance": "Finance",
@@ -9,8 +9,5 @@
     "entry_logs": "Entry Logs",
     "log_entry": "Manual",
     "scan": "Scan"
-  },
-  "scan": {
-    "torch": "Toggle Torch"
   }
 }
