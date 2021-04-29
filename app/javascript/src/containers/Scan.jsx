@@ -12,7 +12,7 @@ export default function QRScan() {
   const [scanned, setScanned] = useState(false)
   const [error, setError] = useState(null)
   const [isTorchOn, setToggleTorch] = useState(false)
-  const { t } = useTranslation()
+  const { t } = useTranslation(['scan', 'common'])
   const authState = useContext(Context)
 
 
@@ -55,7 +55,7 @@ export default function QRScan() {
            setError(
              isTorchOn && 'This browser does not support native flashlight'
            )
-          return  
+          return
           }
         }
       })

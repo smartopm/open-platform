@@ -1,18 +1,4 @@
 {
-  "home": {
-    "request": "Requests",
-    "new_user": "New User",
-    "finance": "Finance",
-    "explore": "Explore",
-    "support": "Support",
-    "identity": "Identity",
-    "entry_logs": "Entry Logs",
-    "log_entry": "Manual",
-    "scan": "Scan"
-  },
-  "scan": {
-    "torch": "Toggle Torch"
-  },
   "login": {
     "welcome": "Welcome to {{appName}} app",
     "login_text": "Please log in with your phone number here",

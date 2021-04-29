@@ -43,7 +43,8 @@ module Mutations
                                          payment_plan_id: context[:payment_plan].id,
                                        )
 
-          context[:transaction] = WalletTransaction.create!(transaction_attributes)
+          context[:transaction] = WalletTransaction.create(transaction_attributes)
+          raise_transaction_validation_error
           execute_transaction_callbacks(vals.slice(:source, :amount))
           { wallet_transaction: context[:transaction].reload }
         end
@@ -67,6 +68,15 @@ module Mutations
         return if context[:payment_plan].present?
 
         raise GraphQL::ExecutionError, 'Payment Plan does not exist for selected property'
+      end
+
+      # Raises GraphQL execution error if transaction is not saved.
+      #
+      # @return [GraphQL::ExecutionError]
+      def raise_transaction_validation_error
+        return if context[:transaction].persisted?
+
+        raise GraphQL::ExecutionError, context[:transaction].errors.full_messages&.join(', ')
       end
 
       # rubocop:disable Metrics/AbcSize

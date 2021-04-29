@@ -35,7 +35,7 @@ export const BootstrapInput = withStyles(() => ({
 }))(InputBase)
 
 export default function GuardHome() {
-  const { t } = useTranslation()
+  const { t } = useTranslation(['dashboard', 'common'])
   return <HomeGuard translate={t} />
 }
 
@@ -156,7 +156,7 @@ export function HomeGuard({ translate }) {
                     <h5 className="card-title">
                       <img src={QRIcon} alt="support icon" />
                     </h5>
-                    <p>{translate('home.scan')}</p>
+                    <p>{translate('dashboard.scan')}</p>
                   </div>
                 </Link>
               </div>
@@ -173,7 +173,7 @@ export function HomeGuard({ translate }) {
                         fontSize="large"
                       />
                     </h5>
-                    <p>{translate('home.identity')}</p>
+                    <p>{translate('dashboard.identity')}</p>
                   </div>
                 </Link>
               </div>
@@ -187,7 +187,7 @@ export function HomeGuard({ translate }) {
                     <h5 className="card-title">
                       <img src={LogIcon} alt="support icon" />
                     </h5>
-                    <p>{translate('home.log_entry')}</p>
+                    <p>{translate('dashboard.log_entry')}</p>
                   </div>
                 </Link>
               </div>
@@ -204,7 +204,7 @@ export function HomeGuard({ translate }) {
                         fontSize="large"
                       />
                     </h5>
-                    <p>{translate('home.entry_logs')}</p>
+                    <p>{translate('dashboard.entry_logs')}</p>
                   </div>
                 </Link>
               </div>

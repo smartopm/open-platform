@@ -224,7 +224,10 @@ export const locales = [
   'en-US',
   'en-ZM',
 ]
-
+export const languages = {
+  'English': 'en-US',
+  'Español': 'es-ES',
+}
 export const mapTiles = {
   attribution:
     '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery (c) <a href="https://www.mapbox.com/">Mapbox</a>',
