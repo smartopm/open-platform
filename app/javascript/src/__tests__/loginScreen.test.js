@@ -40,7 +40,8 @@ describe('Login screen', () => {
             currency: 'kwacha',
             locale: 'en-ZM',
             tagline: 'This is a tagline for this community',
-            logoUrl: ''
+            logoUrl: '',
+            language: 'en-US'
           }
         }
       }
