@@ -30,7 +30,7 @@ import ConfirmCodeScreen from '../src/components/AuthScreens/ConfirmCodeScreen';
 import OneTimeLoginCode from '../src/components/AuthScreens/OneTimeLoginCode';
 import Support from '../src/containers/Support';
 import MobileMoney from '../src/components/MobileMoney';
-import GuardHome from '../src/containers/GuardHome';
+import GuardHome from '../src/modules/Dashboard/Components/GuardHome';
 import EntryRequest from '../src/containers/Requests/EntryRequest';
 import RequestUpdate from '../src/containers/Requests/RequestUpdate';
 import RequestConfirm from '../src/containers/Requests/RequestConfirm';
