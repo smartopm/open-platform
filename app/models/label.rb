@@ -29,8 +29,9 @@ class Label < ApplicationRecord
   # @param offset [Integer]
   #
   # @return [Array]
+  # rubocop:disable Metrics/MethodLength
   def self.with_users_count(community_id, limit, offset)
-    sql = %q(
+    sql = "
       SELECT
         l.id,
         short_desc,
@@ -41,7 +42,8 @@ class Label < ApplicationRecord
       LEFT JOIN user_labels ul ON l.id = ul.label_id
       WHERE l.community_id = ? AND l.status <> 'deleted'
       GROUP BY l.id, l.short_desc, l.color, l.description LIMIT ? OFFSET ?
-    )
+    "
     Label.find_by_sql([sql, community_id, limit, offset])
   end
+  # rubocop:enable Metrics/MethodLength
 end
