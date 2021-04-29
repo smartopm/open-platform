@@ -6,14 +6,14 @@ import GTranslateIcon from '@material-ui/icons/GTranslate';
 import { BootstrapInput } from '../../Dashboard/Components/GuardHome';
 
 export default function LanguageToggle() {
-  const savedLang = localStorage.getItem('locale');
+  const savedLang = localStorage.getItem('default-language');
   const [locale, setLocale] = useState(savedLang || 'en-US');
   const { i18n } = useTranslation();
 
   function saveLocale(event) {
     const lang = event.target.value;
     setLocale(lang);
-    localStorage.setItem('locale', lang);
+    localStorage.setItem('default-language', lang);
    return i18n.changeLanguage(lang);
   }
 

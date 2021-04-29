@@ -72,6 +72,7 @@ import { MainMenu } from '../src/modules/Menu';
 import modules from '../src/modules';
 import UserRoutes from '../src/modules/Users/UserRoutes';
 import { useTranslation } from 'react-i18next';
+import I18Initializer from '../src/modules/i18n/Components/I18Initializer';
 
 // The routes defined here are carefully arranged, be mindful when changing them
 
@@ -160,14 +161,6 @@ const Analytics = props => {
 
 const App = () => {
   const classes = useStyles();
-  const { i18n } = useTranslation();
-  const savedLang = localStorage.getItem('locale');
-
-  useEffect(() => {
-    // we can also check from the db here for the default language
-    i18n.changeLanguage(savedLang);
-  }, [savedLang]);
-
   return (
     <Suspense
       fallback={() => {
@@ -181,6 +174,7 @@ const App = () => {
               <ThemeProvider>
                 <Analytics>
                   {/* onboarding */}
+                    <I18Initializer />
                   <Switch>
                     <Route path="/welcome" component={WelcomePage} />
                     <Route path="/login" component={LoginScreen} />
