@@ -14,6 +14,7 @@ import { StyleSheet, css } from 'aphrodite'
 import { Link, useHistory, useLocation } from 'react-router-dom'
 import { useMutation, useQuery } from 'react-apollo'
 import ReactGA from 'react-ga'
+import { useTranslation } from 'react-i18next'
 import FacebookIcon from '@material-ui/icons/Facebook'
 import PhoneInput from 'react-phone-input-2'
 import { getAuthToken } from '../../utils/apollo'
@@ -39,6 +40,7 @@ export default function LoginScreen() {
   const { state } = useLocation()
   const history = useHistory()
   const theme = useContext(ThemeContext)
+  const { t } = useTranslation(['translation', 'common'])
 
   const communityName = communityData?.currentCommunity?.name || 'Double GDP'
   const communitySupportEmail = (communityData?.currentCommunity?.supportEmail
@@ -140,11 +142,7 @@ export default function LoginScreen() {
           )}`}
         >
           <h4 className={css(styles.welcomeText)}>
-            Welcome to 
-            {' '}
-            {loading ? <Spinner /> : communityData?.currentCommunity?.name}
-            {' '}
-            App
+            { loading ? <Spinner /> : t('login.welcome', { appName: communityData?.currentCommunity?.name  })}
           </h4>
           <Typography color="textSecondary" variant="body2" data-testid="tagline">
             {communityData?.currentCommunity?.tagline}
@@ -153,7 +151,8 @@ export default function LoginScreen() {
           <br />
           <br />
           <Typography color="textSecondary" variant="body2">
-            Please log in with your phone number here:
+            {t('login.login_text')}
+            : 
           </Typography>
         </div>
         <div
@@ -170,7 +169,7 @@ export default function LoginScreen() {
             inputStyle={{ width: "100%", height: 51 }}
             country="zm"
             enableSearch
-            placeholder="Enter Number"
+            placeholder={t('common:form_placeholders.phone_number')}
             onChange={value => setPhoneNumber(value)}
           />
         </div>
@@ -191,7 +190,7 @@ export default function LoginScreen() {
             {isLoading ? (
               <CircularProgress size={25} color="inherit" />
             ) : (
-              <span>Next</span>
+              <span>{t('login.login_button_text')}</span>
               )}
           </Button>
         </div>
@@ -202,7 +201,7 @@ export default function LoginScreen() {
             style={{ width: '24%', height: 1, backgroundColor: 'grey' }}
           />
           {' '}
-          <p style={{ margin: 10 }}>OR</p>
+          <p style={{ margin: 10 }}>{t('common:misc:or')}</p>
           {' '}
           <Divider
             style={{ width: '24%', height: 1, backgroundColor: 'grey' }}
@@ -221,7 +220,7 @@ export default function LoginScreen() {
               startIcon={<img src={GoogleIcon} alt="google-icon" />}
               className="google-sign-in-btn"
             >
-              Sign In with Google
+              {t('login.login_google')}
             </Button>
           </div>
           <br />
@@ -237,7 +236,7 @@ export default function LoginScreen() {
                 color: '#3b5998'
               }}
             >
-              Sign In with Facebook
+              {t('login.login_facebook')}
             </Button>
           </div>
           <br />
@@ -252,7 +251,7 @@ export default function LoginScreen() {
         <p style={{ marginTop: '1%' }}>
           <Button size="medium" id="trigger-modal-dialog" onClick={handleModal} style={{ textTransform: 'none'}}>
             <u>
-              <strong>Don&apos;t have an Account?</strong>
+              <strong>{t('login.request_account')}</strong>
             </u>
           </Button>
         </p>
@@ -262,7 +261,7 @@ export default function LoginScreen() {
         open={open}
         handleClose={handleModal}
         handleConfirm={handleClick}
-        action="Send Email"
+        action={t('common:form_actions.send_email')}
       >
         <div className="container">
           <div className="d-flex row justify-content-center ">
@@ -272,7 +271,7 @@ export default function LoginScreen() {
               variant="contained"
               startIcon={<img src={GoogleIcon} alt="google-icon" />}
             >
-              Sign Up with Google
+              {t('login.login_google')}
             </Button>
             <Button
               href="/fb_oauth"
@@ -280,7 +279,7 @@ export default function LoginScreen() {
               startIcon={<FacebookIcon />}
               className={css(styles.signUpBtns)}
             >
-              Sign Up with Facebook
+              {t('login.login_facebook')}
             </Button>
           </div>
         </div>
@@ -290,7 +289,7 @@ export default function LoginScreen() {
           />
           {' '}
           <strong>
-            <p style={{ margin: 10 }}>OR</p>
+            <p style={{ margin: 10 }}>{t('common:misc:or')}</p>
           </strong>
           {' '}
           <Divider
@@ -300,10 +299,7 @@ export default function LoginScreen() {
 
         <br />
         <h6>
-          To request your login information, email:
-          {' '} 
-          {' '}
-          {communitySupportEmail}
+          {t('login.request_login', { communityEmail: communitySupportEmail })}
         </h6>
         <br />
         <TextField
@@ -311,7 +307,7 @@ export default function LoginScreen() {
           required
           fullWidth
           name="name"
-          label="Full name"
+          label={t('common:form_fields.full_name')}
           onChange={event => setUsername(event.target.value)}
         />
 
@@ -322,7 +318,7 @@ export default function LoginScreen() {
           required
           fullWidth
           name="email"
-          label="Email"
+          label={t('common:form_fields.email')}
           onChange={event => setEmail(event.target.value)}
         />
         <TextField
@@ -332,7 +328,7 @@ export default function LoginScreen() {
           required
           fullWidth
           name="number"
-          label="Phone number"
+          label={t('common:form_fields.phone_number')}
           onChange={event => setPhone(event.target.value)}
         />
         <FormControl className={css(styles.formControl)}>
