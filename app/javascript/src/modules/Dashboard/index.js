@@ -1,6 +1,6 @@
 import React from 'react';
 import HomeIcon from '@material-ui/icons/Home';
-import Home from '../../containers/Home';
+import Home from './Components/Home';
 
 export default {
   routeProps: {
@@ -12,7 +12,6 @@ export default {
     icon: <HomeIcon />
   },
   name: 'Home',
-  // TODO: we should find a way to simplify this if it is accessible by everyone, something like [] or ['*']
   accessibleBy: [
     'admin',
     'client',

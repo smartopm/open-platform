@@ -1,14 +1,14 @@
 /* eslint-disable no-use-before-define */
 import React, { useContext } from 'react'
 import Divider from '@material-ui/core/Divider';
-import { Context as AuthStateContext } from './Provider/AuthStateProvider'
-import Loading from '../shared/Loading'
-import Homepage from '../components/HomePage'
-import NewsFeed from '../components/NewsPage/NewsFeed'
-import { TaskReminder } from '../modules/Tasks'
-import { PaymentSummary } from '../modules/Payments'
-import UserDetail from '../modules/Users/Components/UserDetail'
-import ViewCustomerJourney from '../modules/CustomerJourney/Components/ViewCustomerJourney'
+import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider'
+import Loading from '../../../shared/Loading'
+import Homepage from '../../../components/HomePage'
+import NewsFeed from '../../../components/NewsPage/NewsFeed'
+import { TaskReminder } from '../../Tasks'
+import { PaymentSummary } from '../../Payments'
+import UserDetail from '../../Users/Components/UserDetail'
+import ViewCustomerJourney from '../../CustomerJourney/Components/ViewCustomerJourney'
 
 export default function Home() {
   const authState = useContext(AuthStateContext)
