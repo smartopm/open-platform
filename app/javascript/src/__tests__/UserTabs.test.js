@@ -43,7 +43,7 @@ describe('component that with styled tabs', () => {
       expect(container.queryByText('Plots')).toBeInTheDocument();
       // verify number of tabs in case they get changed
       expect(container.queryAllByTestId('tabs')).toHaveLength(7)
-    }, 100);
+    },10);
   });
 
   it('should not show communication and note tabs when user is not admin', async () => {
@@ -67,7 +67,7 @@ describe('component that with styled tabs', () => {
       expect(container.queryByText('Contact')).toBeInTheDocument();
       expect(container.queryByText('Payments')).toBeInTheDocument();
       expect(container.queryByText('Plots')).toBeInTheDocument();
-    }, 100);
+    },10);
   });
     it('should show error when something wrong happens', async () => {
       const erroredMock = [
@@ -94,7 +94,7 @@ describe('component that with styled tabs', () => {
       expect(loader.queryAllByTestId('loader')[0]).toBeInTheDocument();
       await waitFor(() => {
         expect(container.queryByText('An error occurred while fetching')).toBeInTheDocument()
-      }, 100);
+      },10);
     })
 
 });

@@ -1,7 +1,7 @@
 import React from 'react';
 import { render } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
-import { MobileMoney } from '../components/MobileMoney';
+import MobileMoney from '../components/MobileMoney';
 
 describe('Mobile Money Component', () => {
   it('should render  correctly', () => {

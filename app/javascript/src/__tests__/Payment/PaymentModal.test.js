@@ -69,7 +69,7 @@ describe('It should test the payment modal component', () => {
         expect(container.getByTestId("transaction-type")).toBeInTheDocument()
         expect(container.getAllByTestId("amount")[0]).toBeInTheDocument()
       },
-      { timeout: 200 }
+      { timeout: 10 }
     );
 
     const transactionInput = container.queryByTestId('transaction-type')

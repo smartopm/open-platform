@@ -41,7 +41,7 @@ describe('Template List Component', () => {
         await waitFor(() => {
             expect(container.queryByText('Select a template')).toBeInTheDocument()
             expect(container.queryByTestId('template_list')).toBeInTheDocument()
-        }, 100)
+        }, 10)
     
     })
 })

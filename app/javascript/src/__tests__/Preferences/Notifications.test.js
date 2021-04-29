@@ -80,6 +80,6 @@ describe('Notifications Component', () => {
 
     await waitFor(() => {
       expect(container.queryByTestId('toastr')).toBeInTheDocument();
-    }, 100);
+    }, 10);
   });
 });

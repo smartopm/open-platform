@@ -17,7 +17,7 @@ describe('UsersImport component', () => {
     )
     await waitFor(
       () => expect(container.queryByTestId('csv-input')).toBeInTheDocument(),
-      { timeout: 1000 }
+      { timeout: 10 }
     )
   })
 
@@ -38,7 +38,7 @@ describe('UsersImport component', () => {
     const inputEl = container.queryByTestId('csv-input')
     Object.defineProperty(inputEl, 'files', { value: [file] })
     fireEvent.drop(inputEl)
-    await waitFor(() => expect(FileReader).toHaveBeenCalled, { timeout: 1000 })
+    await waitFor(() => expect(FileReader).toHaveBeenCalled, { timeout: 10 })
   })
 
   it('should render upload description', () => {

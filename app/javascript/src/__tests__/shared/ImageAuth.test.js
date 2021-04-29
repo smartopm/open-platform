@@ -42,6 +42,6 @@ describe('ImageAuth Component', () => {
 
     await waitFor(() => {
       expect(wrapper.queryByTestId('community_name')).toBeInTheDocument();
-    }, 100);
+    }, 10);
   });
 });
