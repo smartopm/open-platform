@@ -7,11 +7,18 @@ module ActionFlows
     attr_accessor :description
     attr_accessor :event_type, :event_condition, :event_action
 
+    RECURSIVE_ACTIONS = ['task']
+
     def initialize(description, event_type, event_condition, event_action)
       @event_type = event_type
       @event_condition = event_condition
       @event_action = event_action
       @description = description
+    end
+
+    # Verifies if action type is recursive or not.
+    def recursive_action?
+      RECURSIVE_ACTIONS.include? action_type
     end
 
     def action
