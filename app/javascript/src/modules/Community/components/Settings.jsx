@@ -13,7 +13,7 @@ import DynamicContactFields from './DynamicContactFields';
 import MessageAlert from '../../../components/MessageAlert';
 import { useFileUpload } from '../../../graphql/useFileUpload';
 import ImageCropper from './ImageCropper';
-import { currencies, locales } from '../../../utils/constants';
+import { currencies, locales, languages } from '../../../utils/constants';
 import ImageAuth from '../../../shared/ImageAuth';
 import { formatError } from '../../../utils/helpers';
 import { Spinner } from '../../../shared/Loading';
@@ -45,6 +45,7 @@ export default function CommunitySettings({ data, token, refetch }) {
   const [tagline, setTagline] = useState(data?.tagline || '');
   const [logoUrl, setLogoUrl] = useState(data?.logoUrl || '');
   const [locale, setLocale] = useState('en-ZM');
+  const [language, setLanguage] = useState('en-US');
   const [showCropper, setShowCropper] = useState(false);
   const { onChange, signedBlobId } = useFileUpload({
     client: useApolloClient()
@@ -157,6 +158,10 @@ export default function CommunitySettings({ data, token, refetch }) {
     setShowCropper(true);
   }
 
+  function setLanguageInLocalStorage(selectedLanguage) {
+    localStorage.setItem('default-language', selectedLanguage);
+  }
+
   function updateCommunity() {
     setCallMutation(true);
     communityUpdate({
@@ -167,6 +172,7 @@ export default function CommunitySettings({ data, token, refetch }) {
         imageBlobId: signedBlobId,
         currency,
         locale,
+        language,
         tagline,
         logoUrl
       }
@@ -176,6 +182,7 @@ export default function CommunitySettings({ data, token, refetch }) {
           isError: false,
           detail: `Successfully updated the community`
         });
+        setLanguageInLocalStorage(language)
         setAlertOpen(true);
         setCallMutation(false);
         refetch();
@@ -192,6 +199,7 @@ export default function CommunitySettings({ data, token, refetch }) {
     setWhatsappOptions(data.supportWhatsapp || [whatsapps]);
     setCurrency(data.currency);
     setLocale(data.locale);
+    setLanguage(data.language);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);
 
@@ -305,7 +313,7 @@ export default function CommunitySettings({ data, token, refetch }) {
           margin="normal"
           inputProps={{ "data-testid": "tagline"}}
         />
-          
+
       </div>
       <div className={classes.information} style={{ marginTop: '40px' }}>
         <TextField
@@ -316,9 +324,9 @@ export default function CommunitySettings({ data, token, refetch }) {
           margin="normal"
           inputProps={{ "data-testid": "logo_url"}}
         />
-          
+
       </div>
-      
+
       <div style={{ marginTop: '40px' }}>
         <Typography variant="h6">Community Transactions</Typography>
         <TextField
@@ -356,6 +364,28 @@ export default function CommunitySettings({ data, token, refetch }) {
         </TextField>
       </div>
 
+      <div style={{ marginTop: '40px' }}>
+        <Typography variant="h6">Language Settings</Typography>
+        <TextField
+          style={{ width: '200px' }}
+          select
+          label="Set Language"
+          value={language || 'en-US'}
+          onChange={event => setLanguage(event.target.value)}
+          name="language"
+          margin="normal"
+          inputProps={{ "data-testid": "language"}}
+        >
+          {
+            Object.entries(languages).map(([key, val]) => (
+              <MenuItem key={val} value={val}>
+                {key}
+              </MenuItem>
+            ))
+}
+        </TextField>
+      </div>
+
       <div className={classes.button}>
         <Button
           disableElevation
@@ -383,6 +413,7 @@ CommunitySettings.propTypes = {
     imageUrl: PropTypes.string,
     currency: PropTypes.string,
     locale: PropTypes.string,
+    language: PropTypes.string,
     tagline: PropTypes.string,
   }).isRequired,
   token: PropTypes.string.isRequired,

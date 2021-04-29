@@ -7,8 +7,8 @@ i18n
   .use(Backend)
   .use(initReactI18next)
   .init({
-    lng: 'es',
-    fallbackLng: 'en',
+    lng: localStorage.getItem('default-language') || 'en-US',
+    fallbackLng: 'en-US',
     interpolation: {
       escapeValue: false
     }

@@ -12,6 +12,7 @@ export const CommunityUpdateMutation = gql`
     $locale: String
     $tagline: String
     $logoUrl: String
+    $language: String
   ) {
     communityUpdate(
       name: $name
@@ -21,6 +22,7 @@ export const CommunityUpdateMutation = gql`
       imageBlobId: $imageBlobId
       currency: $currency
       locale: $locale
+      language: $language
       tagline: $tagline
       logoUrl: $logoUrl
     ) {

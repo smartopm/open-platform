@@ -40,7 +40,7 @@ export default function LoginScreen() {
   const { state } = useLocation()
   const history = useHistory()
   const theme = useContext(ThemeContext)
-  const { t } = useTranslation(['translation', 'common'])
+  const { t } = useTranslation(['login', 'common'])
 
   const communityName = communityData?.currentCommunity?.name || 'Double GDP'
   const communitySupportEmail = (communityData?.currentCommunity?.supportEmail
@@ -152,7 +152,7 @@ export default function LoginScreen() {
           <br />
           <Typography color="textSecondary" variant="body2">
             {t('login.login_text')}
-            : 
+            :
           </Typography>
         </div>
         <div
