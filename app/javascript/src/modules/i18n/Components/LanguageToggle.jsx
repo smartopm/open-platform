@@ -8,7 +8,7 @@ import { BootstrapInput } from '../../Dashboard/Components/GuardHome';
 export default function LanguageToggle() {
   const savedLang = localStorage.getItem('locale');
   const [locale, setLocale] = useState(savedLang || 'en-US');
-  const { i18n, t } = useTranslation();
+  const { i18n } = useTranslation();
 
   function saveLocale(event) {
     const lang = event.target.value;
@@ -23,16 +23,17 @@ export default function LanguageToggle() {
       <GTranslateIcon style={{ marginTop: 12 }} />
       <FormControl variant="filled">
         <Select
-          id="demo-simple-select-outlined"
+          id="language_toggle"
           value={locale}
           onChange={saveLocale}
           style={{ width: 150 }}
           variant="filled"
           input={<BootstrapInput />}
           IconComponent={() => <ArrowDropDownIcon style={{ marginLeft: -34 }} />}
+          inputProps={{ "data-testid": "language_toggle" }}
         >
           <MenuItem value="en-US" key="en">
-            {t('login.login_text')}
+            English
           </MenuItem>
           <MenuItem value="es-ES" key="es">
             Spanish
