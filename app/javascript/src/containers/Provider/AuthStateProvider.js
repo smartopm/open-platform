@@ -47,7 +47,6 @@ const QUERY = gql`
 
 export default function AuthToken({ children }) {
   function reducer(state, action) {
-    console.log(state, action);
     switch (action.type) {
       case 'delete':
         localStorage.removeItem(AUTH_TOKEN_KEY);
