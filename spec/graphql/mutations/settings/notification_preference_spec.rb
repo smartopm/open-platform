@@ -27,9 +27,8 @@ RSpec.describe Mutations::Settings::NotificationPreference do
                                 site_community: user.community,
                               }).as_json
       expect(user.labels.count).to eql 3
-      expect(user.labels[0].short_desc).to eql 'com_news_sms'
-      expect(user.labels[1].short_desc).to eql 'com_news_email'
-      expect(user.labels[2].short_desc).to eql 'weekly_point_reminder_email'
+      expect(user.labels.pluck(:short_desc))
+        .to include('com_news_sms', 'com_news_email', 'weekly_point_reminder_email')
     end
 
     it 'should update relation between user and the preference label' do
