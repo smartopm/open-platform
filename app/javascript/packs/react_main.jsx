@@ -362,10 +362,6 @@ const useStyles = makeStyles(() => ({
 }));
 
 document.addEventListener('DOMContentLoaded', () => {
-  ReactDOM.render(
-    <Suspense fallback={() => <Loading />}>
-      <App />
-    </Suspense>,
-    document.getElementById('root')
+    ReactDOM.render(<App />, document.getElementById('root')
   );
 });
