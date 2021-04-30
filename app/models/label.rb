@@ -22,12 +22,28 @@ class Label < ApplicationRecord
 
   default_scope { where.not(status: 'deleted') }
 
-  def self.with_users(com, limit, offset)
-    Label.find_by_sql(["SELECT labels.id, labels.short_desc, labels.color, labels.description,
-    COUNT(*) AS user_count
-                FROM user_labels INNER JOIN labels ON user_labels.label_id = labels.id
-                WHERE labels.community_id=? AND labels.status <> 'deleted'
-                GROUP BY labels.id, labels.short_desc, labels.color,
-                labels.description LIMIT ? OFFSET ? "] + [com, limit, offset])
+  # Labels with associated users count.
+  #
+  # @param community_id [String]
+  # @param limit [Integer]
+  # @param offset [Integer]
+  #
+  # @return [Array]
+  # rubocop:disable Metrics/MethodLength
+  def self.with_users_count(community_id, limit, offset)
+    sql = "
+      SELECT
+        l.id,
+        short_desc,
+        color,
+        description,
+        COUNT(ul.id) AS user_count
+      FROM labels l
+      LEFT JOIN user_labels ul ON l.id = ul.label_id
+      WHERE l.community_id = ? AND l.status <> 'deleted'
+      GROUP BY l.id, l.short_desc, l.color, l.description LIMIT ? OFFSET ?
+    "
+    Label.find_by_sql([sql, community_id, limit, offset])
   end
+  # rubocop:enable Metrics/MethodLength
 end

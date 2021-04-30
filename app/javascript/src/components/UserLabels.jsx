@@ -53,7 +53,7 @@ export default function UserLabels({ userId }) {
 
   function handleLabelSelect(id) {
     userLabelCreate({
-      variables: { userId, labelId: id }
+      variables: { userList: userId, labelId: id }
     })
       .then(() => userLabelRefetch())
       .catch(error => <ErrorPage title={error.message} />); // do something useful with this error
