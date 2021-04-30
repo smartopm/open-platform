@@ -40,6 +40,7 @@ const QUERY = gql`
         imageUrl
         currency
         locale
+        language
       }
     }
   }

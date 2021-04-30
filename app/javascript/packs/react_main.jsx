@@ -174,7 +174,7 @@ const App = () => {
               <ThemeProvider>
                 <Analytics>
                   {/* onboarding */}
-                    <I18Initializer />
+                  <I18Initializer />
                   <Switch>
                     <Route path="/welcome" component={WelcomePage} />
                     <Route path="/login" component={LoginScreen} />

@@ -1,20 +1,26 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { FormControl, Select, MenuItem } from '@material-ui/core';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import { useTranslation } from 'react-i18next';
 import GTranslateIcon from '@material-ui/icons/GTranslate';
 import { BootstrapInput } from '../../Dashboard/Components/GuardHome';
+import { languages } from '../../../utils/constants';
+import { Context } from '../../../containers/Provider/AuthStateProvider';
 
 export default function LanguageToggle() {
   const savedLang = localStorage.getItem('default-language');
-  const [locale, setLocale] = useState(savedLang || 'en-US');
+  const authState = useContext(Context)
+  const defaultLanguage = authState.user?.community.language
+  // if the user has not set their language, then we initially show them the community default language 
+  // else we show them the fallback language
+  const [locale, setLocale] = useState(savedLang || defaultLanguage || 'en-US');
   const { i18n } = useTranslation();
 
   function saveLocale(event) {
     const lang = event.target.value;
     setLocale(lang);
     localStorage.setItem('default-language', lang);
-   return i18n.changeLanguage(lang);
+    return i18n.changeLanguage(lang);
   }
 
   return (
@@ -29,14 +35,13 @@ export default function LanguageToggle() {
           variant="filled"
           input={<BootstrapInput />}
           IconComponent={() => <ArrowDropDownIcon style={{ marginLeft: -34 }} />}
-          inputProps={{ "data-testid": "language_toggle" }}
+          inputProps={{ 'data-testid': 'language_toggle' }}
         >
-          <MenuItem value="en-US" key="en">
-            English
-          </MenuItem>
-          <MenuItem value="es-ES" key="es">
-            Spanish
-          </MenuItem>
+          {Object.entries(languages).map(([key, val]) => (
+            <MenuItem key={val} value={val}>
+              {key}
+            </MenuItem>
+          ))}
         </Select>
       </FormControl>
     </div>
