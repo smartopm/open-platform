@@ -72,6 +72,7 @@ export default function Notifications() {
             onClose={() => setOpenSnackBar(!snackBarOpen)}
             anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
             message={message}
+            data-testid="toastr"
           />
           <NotificationPage
             handleChange={handleChange}

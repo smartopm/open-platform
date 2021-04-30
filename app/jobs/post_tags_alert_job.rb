@@ -57,6 +57,8 @@ class PostTagsAlertJob < ApplicationJob
   end
 
   def published_today?(date)
+    return if date.nil?
+
     date > Time.zone.now.beginning_of_day
   end
 

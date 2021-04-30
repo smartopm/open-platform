@@ -68,7 +68,7 @@ describe('Login screen', () => {
       expect(loginWrapper.text()).toContain('login.login_google')
       expect(loginWrapper.text()).toContain('login.login_facebook')
       expect(loginWrapper.text()).toContain('login.request_account')
-    }, 100);
+    }, 10);
   })
   it('should contain a nav with an arrow icon', () => {
     expect(loginWrapper.find('nav')).toHaveLength(1)

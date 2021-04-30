@@ -22,11 +22,8 @@ const useStyles = makeStyles({
     marginTop: '10px'
   }
 });
-export default function MobileMoneyPage() {
-  return <MobileMoney />;
-}
 
-export function MobileMoney() {
+export default function MobileMoney() {
   const classes = useStyles();
   return (
     <>

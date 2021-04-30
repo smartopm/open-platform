@@ -52,7 +52,7 @@ describe('user journey dialog', () => {
     await waitFor(() => {
       expect(refetch).toBeCalled()
       expect(container.queryByText('Successfully updated')).toBeInTheDocument()
-    }, 100)
+    }, 10)
   })
 
   it('should display an error when the mutation fails', async () => {
@@ -90,6 +90,6 @@ describe('user journey dialog', () => {
       expect(handleClose).not.toBeCalled()
       expect(refetch).not.toBeCalled()
       expect(container.queryByText('An error occurred, the date is wrong')).toBeInTheDocument()
-    }, 100)
+    }, 10)
   })
 })

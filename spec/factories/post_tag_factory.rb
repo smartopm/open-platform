@@ -8,6 +8,5 @@ FactoryBot.define do
   factory :post_tag do
     name { generate(:tag_name) }
     community
-    user
   end
 end

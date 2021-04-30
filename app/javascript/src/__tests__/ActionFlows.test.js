@@ -47,7 +47,7 @@ describe('ActionFlows', () => {
 
     await waitFor(
       () => expect(container.queryByText('New Workflow')).toBeInTheDocument(),
-      { timeout: 1000 }
+      { timeout: 10 }
     )
 
     const newFlow = container.queryByText('New Workflow')
@@ -82,7 +82,7 @@ describe('ActionFlows', () => {
 
     await waitFor(
       () => expect(container.queryByText('No Workflow found')).toBeInTheDocument(),
-      { timeout: 1000 }
+      { timeout: 10 }
     )
   })
 })

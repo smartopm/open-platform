@@ -1,13 +1,15 @@
-import React from 'react'
-import { act, render } from '@testing-library/react'
-import { MockedProvider } from '@apollo/react-testing'
-import { BrowserRouter } from 'react-router-dom/cjs/react-router-dom.min'
-import ActionFlowModal from '../containers/ActionFlows/ActionFlowModal'
-import { Events, Actions, ActionFields, RuleFields } from '../graphql/queries'
+import React from 'react';
+import { act, render } from '@testing-library/react';
+import { MockedProvider } from '@apollo/react-testing';
+import { BrowserRouter } from 'react-router-dom/cjs/react-router-dom.min';
+import ActionFlowModal from '../containers/ActionFlows/ActionFlowModal';
+import { Events, Actions, ActionFields, RuleFields , UsersLiteQuery } from '../graphql/queries';
+import { EmailTemplatesQuery } from '../modules/Emails/graphql/email_queries';
 
-import '@testing-library/jest-dom/extend-expect'
 
-jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn())
+import '@testing-library/jest-dom/extend-expect';
+
+jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
 const props = {
   open: true,
   closeModal: jest.fn(),
@@ -22,58 +24,60 @@ const props = {
           type: 'string'
         }
       }
-    }
+    },
+    eventType: 'task_update',
+    actionType: 'notification'
   }
-}
+};
 describe('ActionFlowModal', () => {
   it('renders "Edit Workflow" and "Save Changes" and other necessary elements', async () => {
     let container;
-    await act(async () => { container = render(
-      <MockedProvider mocks={[]} addTypename={false}>
-        <BrowserRouter>
-          <ActionFlowModal {...props} />
-        </BrowserRouter>
-      </MockedProvider>
-    )})
+    await act(async () => {
+      container = render(
+        <MockedProvider mocks={[]} addTypename={false}>
+          <BrowserRouter>
+            <ActionFlowModal {...props} />
+          </BrowserRouter>
+        </MockedProvider>
+      );
+    });
 
-    expect(container.queryByText('Edit Workflow')).toBeInTheDocument()
-    expect(container.queryByText('Title')).toBeInTheDocument()
-    expect(container.queryByText('Description')).toBeInTheDocument()
-    expect(container.queryByText('Cancel')).toBeInTheDocument()
-    expect(container.queryByText('Save Changes')).toBeInTheDocument()
-    expect(container.queryByText('New Workflow')).toBeNull()
-    expect(container.queryByText('Save')).toBeNull()
-  })
+    expect(container.queryByText('Edit Workflow')).toBeInTheDocument();
+    expect(container.queryByText('Title')).toBeInTheDocument();
+    expect(container.queryByText('Description')).toBeInTheDocument();
+    expect(container.queryByText('Cancel')).toBeInTheDocument();
+    expect(container.queryByText('Save Changes')).toBeInTheDocument();
+    expect(container.queryByText('New Workflow')).toBeNull();
+    expect(container.queryByText('Save')).toBeNull();
+  });
 
   it('renders "New Workflow" and "Save" and other necessary elements', async () => {
     const updatedProps = {
       ...props,
       selectedActionFlow: {}
-    }
+    };
     let container;
-    await act(async () => {container = render(
-      <MockedProvider mocks={[]} addTypename={false}>
-        <BrowserRouter>
-          <ActionFlowModal {...updatedProps} />
-        </BrowserRouter>
-      </MockedProvider>
-    )})
+    await act(async () => {
+      container = render(
+        <MockedProvider mocks={[]} addTypename={false}>
+          <BrowserRouter>
+            <ActionFlowModal {...updatedProps} />
+          </BrowserRouter>
+        </MockedProvider>
+      );
+    });
 
-    expect(container.queryByText('Edit Workflow')).toBeNull()
-    expect(container.queryByText('Title')).toBeInTheDocument()
-    expect(container.queryByText('Description')).toBeInTheDocument()
-    expect(container.queryByText('Cancel')).toBeInTheDocument()
-    expect(container.queryByText('Save')).toBeInTheDocument()
-    expect(container.queryByText('Save Changes')).toBeNull()
-    expect(container.queryByText('New Workflow')).toBeInTheDocument()
-  })
-})
+    expect(container.queryByText('Edit Workflow')).toBeNull();
+    expect(container.queryByText('Title')).toBeInTheDocument();
+    expect(container.queryByText('Description')).toBeInTheDocument();
+    expect(container.queryByText('Cancel')).toBeInTheDocument();
+    expect(container.queryByText('Save')).toBeInTheDocument();
+    expect(container.queryByText('Save Changes')).toBeNull();
+    expect(container.queryByText('New Workflow')).toBeInTheDocument();
+  });
+});
 
 describe('render eventType, actionTypes, actionFields, ruleFields', () => {
-  const newProps = {
-    ...props,
-    selectedActionFlow: {}
-  }
   const mocks = [
     {
       request: {
@@ -83,14 +87,14 @@ describe('render eventType, actionTypes, actionFields, ruleFields', () => {
       result: {
         data: {
           events: [
-            "task_update",
-            "note_comment_create",
-            "form_update_submit",
-            "user_login",
-            "form_submit",
-            "note_comment_update",
-            "deposit_create",
-            "invoice_change"
+            'task_update',
+            'note_comment_create',
+            'form_update_submit',
+            'user_login',
+            'form_submit',
+            'note_comment_update',
+            'deposit_create',
+            'invoice_change'
           ]
         }
       }
@@ -116,9 +120,13 @@ describe('render eventType, actionTypes, actionFields, ruleFields', () => {
       result: {
         data: {
           actionFields: [
-            {name: "label", type: "select"},
-            {name: "user_id", type: "text"},
-            {name: "message", type: "text"}
+            { name: 'label', type: 'select' },
+            { name: 'category', type: 'select' },
+            { name: 'assignees', type: 'select' },
+            { name: 'template', type: 'select' },
+            { name: 'due_date', type: 'date' },
+            { name: 'user_id', type: 'text' },
+            { name: 'message', type: 'text' }
           ]
         }
       }
@@ -133,28 +141,70 @@ describe('render eventType, actionTypes, actionFields, ruleFields', () => {
       result: {
         data: {
           ruleFields: [
-            "note_id",
-            "note_user_id",
-            "note_author_id",
-            "note_body",
-            "note_assignees_emails",
-            "note_url"
+            'note_id',
+            'note_user_id',
+            'note_author_id',
+            'note_body',
+            'note_assignees_emails',
+            'note_url',
+            'deposit_status',
+            'invoice_current_status'
+          ]
+        }
+      }
+    },
+    {
+      request: {
+        query: EmailTemplatesQuery
+      },
+      result: {
+        data: {
+          emailTemplates: [
+            {
+              id: '1234',
+              name: 'My Template',
+              variableNames: ['url']
+            }
+          ]
+        }
+      }
+    },
+    {
+      request: {
+        query: UsersLiteQuery
+      },
+      result: {
+        data: {
+          usersLite: [
+            {
+              id: '1234',
+              name: 'A user name'
+            }
           ]
         }
       }
     }
-  ]
+  ];
 
   it('should display element to customize action flow', async () => {
     await act(async () => {
       render(
-        <MockedProvider
-          mocks={mocks}
-          addTypename={false}
-        >
+        <MockedProvider mocks={mocks} addTypename={false}>
+          <ActionFlowModal {...props} />
+        </MockedProvider>
+      );
+    });
+  });
+
+  it('should render email templates options', async () => {
+    const newProps = { ...props, actionType: 'custom_email' };
+
+    await act(async () => {
+      render(
+        <MockedProvider mocks={mocks} addTypename={false}>
           <ActionFlowModal {...newProps} />
         </MockedProvider>
-      )
-    })
+      );
+    });
   });
 });

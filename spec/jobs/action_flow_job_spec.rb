@@ -6,8 +6,17 @@ RSpec.describe ActionFlowJob, type: :job do
   let!(:user) { create(:user_with_community) }
   let!(:event_log) do
     create(:event_log, acting_user: user, community: user.community,
-                       subject: 'user_enrolled',
+                       subject: 'user_login',
                        data: {})
+  end
+
+  let!(:action_flow) do
+    create(:action_flow, event_action: {
+             action_name: 'Email', action_fields: {
+               email: { name: 'email', value: 'email@gmail.com', type: 'string' },
+             }
+           },
+                         community: user.community, event_type: 'user_login')
   end
 
   describe '#perform' do
@@ -21,6 +30,11 @@ RSpec.describe ActionFlowJob, type: :job do
       expect do
         described_class.perform_later(event_log)
       end.to have_enqueued_job
+    end
+
+    it 'initializes ActionFlows::ActionFlow' do
+      expect(ActionFlows::ActionFlow).to receive(:new)
+      perform_enqueued_jobs { described_class.perform_later(event_log) }
     end
   end
 end

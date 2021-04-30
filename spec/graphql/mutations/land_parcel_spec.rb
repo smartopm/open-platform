@@ -390,4 +390,75 @@ RSpec.describe Mutations::LandParcel do
       expect(delete_result.dig('errors', 0, 'message')).to include 'Unauthorized'
     end
   end
+
+  describe 'poi image upload' do
+    let!(:current_user) { create(:user_with_community, user_type: 'admin') }
+    let!(:user_parcel) do
+      create(:land_parcel, community_id: current_user.community_id, parcel_type: 'poi')
+    end
+    let!(:normal_user) { create(:user_with_community) }
+
+    let(:poiImageUpload) do
+      <<~GQL
+        mutation poiImageUpload($id: ID!,
+          $imageBlobId: String!) {
+            poiImageUpload(id: $id, imageBlobId: $imageBlobId) {
+              landParcel {
+                id
+                parcelNumber
+            }
+          }
+        }
+      GQL
+    end
+
+    it 'attach image and return the land parcel' do
+      file = fixture_file_upload(Rails.root.join('public/apple-touch-icon.png'), 'image/png')
+      image_blob = ActiveStorage::Blob.create_after_upload!(
+        io: file,
+        filename: 'test.jpg',
+        content_type: 'image/jpg',
+      )
+      variables = {
+        id: user_parcel.id,
+        imageBlobId: image_blob.signed_id,
+      }
+
+      result = DoubleGdpSchema.execute(
+        poiImageUpload,
+        variables: variables,
+        context: {
+          current_user: current_user,
+          site_community: current_user.community,
+        },
+      ).as_json
+
+      expect(result.dig('data', 'poiImageUpload', 'landParcel', 'id')).to eq(user_parcel.id)
+      expect(result['errors']).to be_nil
+    end
+
+    it 'raises an error if current-user is non-admin' do
+      file = fixture_file_upload(Rails.root.join('public/apple-touch-icon.png'), 'image/png')
+      image_blob = ActiveStorage::Blob.create_after_upload!(
+        io: file,
+        filename: 'test.jpg',
+        content_type: 'image/jpg',
+      )
+      variables = {
+        id: user_parcel.id,
+        imageBlobId: image_blob.signed_id,
+      }
+
+      result = DoubleGdpSchema.execute(
+        poiImageUpload,
+        variables: variables,
+        context: {
+          current_user: normal_user,
+          site_community: normal_user.community,
+        },
+      ).as_json
+
+      expect(result.dig('errors', 0, 'message')).to include 'Unauthorized'
+    end
+  end
 end

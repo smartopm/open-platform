@@ -53,6 +53,6 @@ describe('business action menu component', () => {
     await waitFor(() => {
       expect(handleClose).toBeCalled()
       expect(refetch).toBeCalled()
-    }, 100)
+    }, 10)
   })
 })

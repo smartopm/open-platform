@@ -44,7 +44,7 @@ describe('action flow delete component', () => {
       expect(handleClose).toBeCalled()
       expect(refetch).toBeCalled()
       expect(container.queryByText('Action Flow deleted successfully')).toBeInTheDocument()
-    }, 100)
+    }, 10)
   })
 
   it('should display an error when the mutation fails', async () => {
@@ -78,11 +78,11 @@ describe('action flow delete component', () => {
       </MockedProvider>
     )
     fireEvent.click(container.queryByTestId('confirm_action'))
-    
+
     await waitFor(() => {
       expect(handleClose).toBeCalled()
       expect(refetch).not.toBeCalled()
       expect(container.queryByText('An error occurred')).toBeInTheDocument()
-    }, 100)
+    }, 10)
   })
 })

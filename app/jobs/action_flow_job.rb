@@ -15,7 +15,7 @@ class ActionFlowJob < ApplicationJob
 
     return if action_flows.blank?
 
-    action_flows.each do |af|
+    action_flows.compact.each do |af|
       event = af.event_object.new
       event.preload_data(event_log)
       cond = event.event_condition

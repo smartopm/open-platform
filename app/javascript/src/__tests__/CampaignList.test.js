@@ -52,12 +52,12 @@ describe('Campaign List page', () => {
     const loader = render(<Loading />)
     expect(loader.queryAllByTestId('loader')[0]).toBeInTheDocument()
 
-    await waitFor(() => expect(container.queryByTestId('c_message')).toHaveTextContent('This is a campaign message'), { timeout: 1000 })
-    await waitFor(() => expect(container.queryByTestId('c_name')).toHaveTextContent('Important'), { timeout: 1000 })
+    await waitFor(() => expect(container.queryByTestId('c_message')).toHaveTextContent('This is a campaign message'), { timeout: 10 })
+    await waitFor(() => expect(container.queryByTestId('c_name')).toHaveTextContent('Important'), { timeout: 10 })
     await waitFor(() => {
       const btn = container.queryByTestId('more_details_btn')
       expect(btn).toHaveTextContent('More Details')
-    }, { timeout: 1000 }
+    }, { timeout: 10 }
     )
   })
   it('should render with an error', () => {

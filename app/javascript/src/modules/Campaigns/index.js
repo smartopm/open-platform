@@ -1,5 +1,3 @@
-import React from 'react'
-import ForumIcon from '@material-ui/icons/Forum';
 import Campaigns from '../../containers/Campaigns/Campaigns';
 
 export default {
@@ -7,9 +5,7 @@ export default {
     path: '/campaigns',
     component: Campaigns
   },
-  styleProps: {
-    icon: <ForumIcon />
-  },
+  styleProps: {},
   name: 'Campaigns',
   accessibleBy: ['admin']
 };
