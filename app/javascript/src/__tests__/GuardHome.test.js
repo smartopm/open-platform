@@ -7,7 +7,7 @@ import { MockedProvider } from '@apollo/react-testing';
 import { Context } from '../containers/Provider/AuthStateProvider';
 import { createClient } from '../utils/apollo';
 import { SecurityGuards } from '../graphql/queries';
-import { HomeGuard as GuardHome } from '../containers/GuardHome';
+import { HomeGuard as GuardHome } from '../modules/Dashboard/Components/GuardHome'
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
 
