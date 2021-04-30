@@ -7,7 +7,7 @@ module ActionFlows
     attr_accessor :description
     attr_accessor :event_type, :event_condition, :event_action
 
-    RECURSIVE_ACTIONS = ['task']
+    RECURSIVE_ACTIONS = ['task'].freeze
 
     def initialize(description, event_type, event_condition, event_action)
       @event_type = event_type
