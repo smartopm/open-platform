@@ -23,9 +23,11 @@ module Authorizable
   def current_community
     community_list = { 'app.doublegdp.com' => 'Nkwashi',
                        'double-gdp-staging.herokuapp.com' => 'Nkwashi',
-                       'demo.doublegdp.com' => 'Doublegdp',
-                       'demo-staging.doublegdp.com' => 'Doublegdp',
-                       'dev.dgdp.site' => 'Doublegdp',
+                       'demo.doublegdp.com' => 'DoubleGDP',
+                       'demo-staging.doublegdp.com' => 'DoubleGDP',
+                       'morazan-city.doublegdp.com' => 'Ciudad Morazán',
+                       'morazan-city-staging.doublegdp.com' => 'Ciudad Morazán',
+                       'dev.dgdp.site' => 'DoubleGDP',
                        'double-gdp-dev.herokuapp.com' => 'DAST' }
 
     if ['dgdp.site', 'rails'].include?(request.domain) && request.subdomain != 'dev'
