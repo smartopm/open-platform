@@ -6,7 +6,6 @@ import SwipeableDrawer from '@material-ui/core/SwipeableDrawer';
 import { Button, Typography } from '@material-ui/core';
 import PropTypes from 'prop-types'
 import { useLazyQuery, useMutation } from 'react-apollo';
-import { wordpressEndpoint } from '../../../utils/constants'
 import { useFetch } from '../../../utils/customHooks'
 import PostItem from './PostItem'
 import { dateToString } from '../../../components/DateContainer'
@@ -16,7 +15,8 @@ import { PostTagUser } from '../../../graphql/queries';
 import { Spinner } from '../../../shared/Loading'
 import { FollowPostTag } from '../../../graphql/mutations';
 
-export default function TagPosts({ open, handleClose, tagName }) {
+export default function TagPosts({ open, handleClose, tagName, wordpressEndpoint }) {
+  console.log(wordpressEndpoint)
   const classes = useStyles();
   const { response, error } = useFetch(`${wordpressEndpoint}/posts/?tag=${tagName}`)
   const [messageAlert, setMessageAlert] = useState('')
@@ -140,4 +140,5 @@ TagPosts.propTypes = {
   open: PropTypes.bool.isRequired,
   handleClose: PropTypes.func.isRequired,
   tagName: PropTypes.string,
+  wordpressEndpoint: PropTypes.string.isRequired
 }

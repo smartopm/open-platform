@@ -27,12 +27,12 @@ export default function Home() {
           <Divider />
           <TaskReminder />
           <Divider />
-          <NewsFeed />
+          <NewsFeed wordpressEndpoint={authState.user?.community.wpLink} />
         </div>
       )}
       {authState.user.userType !== 'admin' && (
         <div>
-          <NewsFeed />
+          <NewsFeed wordpressEndpoint={authState.user?.community.wpLink} />
           <Homepage authState={authState} />
         </div>
       )}

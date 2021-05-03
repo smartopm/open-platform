@@ -22,7 +22,7 @@ import { PostDiscussionQuery, PostCommentsQuery } from '../../../graphql/queries
 import Comments from '../../../components/Discussion/Comment'
 import { DiscussionMutation } from '../../../graphql/mutations'
 import CenteredContent from '../../../components/CenteredContent'
-import TagsComponent from './Tag'
+import TagsComponent from './Tags'
 import MessageAlert from "../../../components/MessageAlert"
 import { NewsNav } from "../../Menu"
 
@@ -96,6 +96,8 @@ export default function PostPage() {
     return <Redirect to="/welcome" />
   }
 
+  console.log(response)
+  console.log('we are here ')
   return (
     <>
       <MessageAlert
@@ -116,6 +118,7 @@ export default function PostPage() {
         />
         <TagsComponent 
           tags={response?.tags}
+          wordpressEndpoint={wordpressEndpoint}
         />
         <ShareButton
           url={currentUrl}

@@ -3,11 +3,11 @@ import React from 'react'
 import { Grid, Box } from '@material-ui/core'
 import { StyleSheet, css } from 'aphrodite'
 import { Link } from 'react-router-dom'
+import PropTypes from 'prop-types'
 import { useFetch } from '../../../utils/customHooks'
-import { wordpressEndpoint } from '../../../utils/constants'
 import { Spinner } from '../../../shared/Loading'
 
-export default function Categories() {
+export default function Categories({ wordpressEndpoint }) {
   const { response, error } = useFetch(`${wordpressEndpoint}/categories`)
   // TODO: @olivier ==> add better error page and loading component here
   if (error) {
@@ -50,6 +50,10 @@ export default function Categories() {
       </Grid>
     </Box>
   )
+}
+
+Categories.propTypes = {
+  wordpressEndpoint: PropTypes.string.isRequired
 }
 
 const styles = StyleSheet.create({

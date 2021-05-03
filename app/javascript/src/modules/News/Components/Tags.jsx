@@ -4,7 +4,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import TagPosts from './TagPosts'
 import Tag from './Tag'
 
-export default function TagsComponent({ tags }) {
+export default function TagsComponent({ tags, wordpressEndpoint }) {
   const [open, setOpen] = useState(false)
   const [tagName, setTagName] = useState(null)
   const classes = useStyles()
@@ -32,6 +32,7 @@ export default function TagsComponent({ tags }) {
         open={open}
         handleClose={() => handleTagClose()}
         tagName={tagName}
+        wordpressEndpoint={wordpressEndpoint}
       />
     </>
   )
@@ -49,5 +50,6 @@ TagsComponent.defaultProps = {
 }
 TagsComponent.propTypes = {
   // eslint-disable-next-line react/forbid-prop-types
-  tags: PropTypes.object
+  tags: PropTypes.object,
+  wordpressEndpoint: PropTypes.string.isRequired
 }

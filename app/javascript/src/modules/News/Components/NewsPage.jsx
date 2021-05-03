@@ -7,6 +7,7 @@ import { ShareButton } from '../../../components/ShareButton'
 import { Spinner } from '../../../shared/Loading'
 
 export default function NewsPage() {
+  // get link from here
     const { response, error } = useFetch(`${wordpressEndpoint}/posts/?category=news`)
     const location = window.location.href
     if (error) {
@@ -17,7 +18,7 @@ export default function NewsPage() {
     }
     return (
       <>
-        <Categories />
+        <Categories wordpressEndpoint={wordpressEndpoint} />
         <PostContent response={response.posts[0]} />
         <ShareButton url={location} />
       </>
