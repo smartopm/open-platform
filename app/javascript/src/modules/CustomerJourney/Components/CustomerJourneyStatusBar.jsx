@@ -1,17 +1,22 @@
+/* eslint-disable no-nested-ternary */
 import React from 'react'
+import PropTypes from 'prop-types';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { makeStyles } from '@material-ui/core/styles';
 
 export default function CustomerJourneyStatusBar({ coloured, indexValue, barCount }) {
   const classes = useStyles();
+  const matches = useMediaQuery('(max-width:600px)')
   return (
     <div
-      style={coloured ? 
-      {width: '146px', height: '28px', background: '#66A59A', marginRight: '1px'} : 
-      {width: '146px', height: '28px', background: '#EBEBEB', marginRight: '1px'}}
-      // eslint-disable-next-line no-nested-ternary
+      data-testid='bar'
+      style={matches && coloured ? {width: '53px', height: '6px', background: '#66A59A', marginRight: '1px'} : 
+      !matches && coloured ? 
+      {width: '170px', height: '28px', background: '#66A59A', marginRight: '1px'} : 
+      matches && !coloured ? {width: '53px', height: '6px', background: '#EBEBEB', marginRight: '1px'} : 
+      {width: '170px', height: '28px', background: '#EBEBEB', marginRight: '1px'}}
       className={coloured && indexValue === 0 ? classes.firstBar : !coloured && indexValue === barCount - 1 ? classes.lastBar :  null}
     >
-      {console.log(indexValue)}
       {' '}
     </div>
   )
@@ -25,3 +30,14 @@ const useStyles = makeStyles(() => ({
     borderRadius: '0 10px 10px 0'
   }
 }));
+
+CustomerJourneyStatusBar.defaultProps = {
+  coloured: false,
+  barCount: null
+}
+
+CustomerJourneyStatusBar.propTypes = {
+  coloured: PropTypes.string,
+  indexValue: PropTypes.number.isRequired,
+  barCount: PropTypes.number
+};

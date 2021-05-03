@@ -3,6 +3,7 @@
 import React from 'react'
 import { makeStyles } from '@material-ui/core/styles';
 import { useQuery } from 'react-apollo';
+import PropTypes from 'prop-types';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import GridList from '@material-ui/core/GridList';
 import GridListTile from '@material-ui/core/GridListTile';
@@ -18,8 +19,8 @@ import { currencies } from '../../../../utils/constants';
 
 export default function PlotDetailCard({ authState }) {
   const matches = useMediaQuery('(max-width:600px)')
-  const currency = currencies[authState?.community.currency] || '';
-  const currencyData = { currency, locale: authState?.community.locale }
+  const currency = currencies[authState?.community?.currency] || '';
+  const currencyData = { currency, locale: authState?.community?.locale }
   const { loading, data, error } = useQuery(PaymentPlan, {
     variables: {
       userId: authState.id
@@ -29,8 +30,6 @@ export default function PlotDetailCard({ authState }) {
   });
   const history = useHistory();
   const classes = useStyles();
-
-  // const spicedInvoiced = data?.paymentPlan.invoices.slice(0, 4)
 
   function checkDate(date){
     if (new Date(date) < new Date().setHours(0, 0, 0, 0)) {
@@ -46,16 +45,16 @@ export default function PlotDetailCard({ authState }) {
     <div>
       {loading ? <Spinner /> : (
         <div>
-          <Typography style={matches ? {margin: '20px 0 26px 20px', fontWeight: 'bold'} : {margin: '40px 0 20px 79px', fontWeight: 500, fontSize: '22px', color: '#141414'}}>Plot Details</Typography>
+          <Typography data-testid='plot' style={matches ? {margin: '20px 0 10px 20px', fontWeight: 500, fontSize: '14px', color: '#141414'} : {margin: '40px 0 20px 79px', fontWeight: 500, fontSize: '22px', color: '#141414'}}>Plot Details</Typography>
           <div>
             {data?.paymentPlan.length > 0 ? (
-              <div className={classes.root} style={matches ? {marginLeft: '20px'} : {marginLeft: '79px'}}>
+              <div className={classes.root} style={matches ? {marginLeft: '20px'} : {marginLeft: '79px', marginBottom: '40px'}}>
                 <GridList className={classes.gridList} cols={matches ? 1 : 3.5}>
                   {data.paymentPlan.map((tile) => (
                     <GridListTile key={tile.id}>
-                      <div className={classes.gridTile} onClick={() => history.push(`/tasks/${tile.id}`)}>
+                      <div className={matches? classes.gridTileMobile : classes.gridTile} onClick={() => history.push(`/tasks/${tile.id}`)}>
                         <div>
-                          <Typography className={classes.plot}>
+                          <Typography className={matches ? classes.plotMobile : classes.plot}>
                             Plot
                             {' '}
                             {tile.landParcel.parcelNumber}
@@ -73,8 +72,8 @@ export default function PlotDetailCard({ authState }) {
                           ))}
                         </div>
                         <div>
-                          <Typography className={classes.balance}>{formatMoney(currencyData, tile.plotBalance)}</Typography>
-                          <Typography className={classes.balanceText}>Balance</Typography>
+                          <Typography className={matches ? classes.balanceMobile : classes.balance}>{formatMoney(currencyData, tile.plotBalance)}</Typography>
+                          <Typography className={matches ? classes.balanceTextMobile : classes.balanceText}>Balance</Typography>
                         </div>
                       </div>
                     </GridListTile>
@@ -97,7 +96,6 @@ const useStyles = makeStyles((theme) => ({
     flexWrap: 'wrap',
     justifyContent: 'space-around',
     overflow: 'hidden',
-    marginBottom: '40px'
   },
   gridList: {
     flexWrap: 'nowrap',
@@ -143,5 +141,52 @@ const useStyles = makeStyles((theme) => ({
     fontSize: '12px',
     lineHeight: 1.375,
     color: '#838383'
+  },
+  gridTileMobile: {
+    display: 'flex',
+    border: '1px solid #EBEBEB',
+    padding: '10px',
+    backgroundColor: theme.palette.background.paper,
+    height: '140px',
+    width: '263px',
+    justifyContent: 'space-between',
+    cursor: 'pointer',
+    overflow: 'hidden',
+    borderRadius: '8px'
+  },
+  plotMobile: {
+    fontWeight: 700,
+    fontSize: '14px',
+    color: '#141414',
+    marginBottom: '7.5px'
+  },
+  invoiceMobile: {
+    marginBottom: '4px',
+    fontWeight: 500,
+    fontSize: '11px',
+    lineHeight: 1.5,
+    color: '#141414'
+  },
+  balanceMobile: {
+    fontWeight: 600,
+    fontSize: '18px',
+    color: '#141414',
+    marginBottom: '1.5px'
+  },
+  balanceTextMobile: {
+    fontWeight: 400,
+    fontSize: '11px',
+    lineHeight: 1.5,
+    color: '#838383'
   }
 }));
+
+PlotDetailCard.propTypes = {
+  authState: PropTypes.shape({ 
+    id: PropTypes.string,
+    community: PropTypes.shape({
+      currency: PropTypes.string, 
+      locale: PropTypes.string
+    }) 
+  }).isRequired
+};

@@ -18,6 +18,7 @@ export default function Home() {
 
   if (!authState.loggedIn) return <Loading />
   return (
+    // todo: tolu will refactor this to be more dynamic
     <div style={{backgroundColor: '#FFFFFF', marginTop: '-30px'}}>
       <LanguageToggle />
       {authState.user.userType === 'admin' && (
@@ -36,7 +37,9 @@ export default function Home() {
         (
           <div>
             <UserDetail user={authState.user} />
-            <CustomerJourneyStatus subStatus={authState.user.subStatus} />
+            {authState.user.subStatus && (
+              <CustomerJourneyStatus subStatus={authState.user.subStatus} />
+            )}
             <Divider />
             <PlotDetail authState={authState.user} />
             <Divider />

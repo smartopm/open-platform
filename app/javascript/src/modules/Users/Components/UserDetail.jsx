@@ -5,6 +5,7 @@ import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import Collapse from '@material-ui/core/Collapse';
 import { useHistory } from 'react-router-dom';
+import Divider from '@material-ui/core/Divider';
 import PropTypes from 'prop-types';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { makeStyles } from '@material-ui/core/styles';
@@ -24,17 +25,17 @@ export default function UserDetail({ user }) {
   return (
     <Grid container>
       <Grid item xs={12} style={matches ? {padding: '0 20px'} : {padding: '0 79px'}}>
-        <Paper className={classes.paper} elevation={0}>
+        <Paper className={matches ? classes.paperMobile : classes.paper} elevation={0}>
           <div style={{display: 'flex'}}>
             <div>
-              <Typography color="textPrimary" className={classes.name} data-testid='name'>
+              <Typography color="textPrimary" className={matches ? classes.nameMobile : classes.name} data-testid='name'>
                 Hello 
                 {' '}
                 {user?.name}
                 ,
               </Typography>
               <div style={{display: 'flex'}}>
-                <Typography color="textPrimary" className={classes.more}>
+                <Typography color="textPrimary" className={matches ? classes.moreMobile : classes.more}>
                   More details
                 </Typography>
                 {open ? (<KeyboardArrowDownIcon style={{verticalAlign: 'middle', paddingBottom: '3px'}} onClick={() => setOpen(!open)} />) : (
@@ -46,23 +47,29 @@ export default function UserDetail({ user }) {
                 timeout="auto"
                 unmountOnExit
               >
-                <Grid container className={classes.option}>
-                  <div style={matches ? {marginRight: '2px'} : {marginRight: '30px'}}>
+                <Grid container className={matches? classes.optionMobile : classes.option}>
+                  <div style={matches ? {marginRight: '2px'} : {marginRight: '20px'}} className={classes.optionCollapse}>
                     <PersonIcon style={{heigth: '5.6px', width: '13.6px', verticalAlign: 'middle', display: 'flex', marginRight: '14px'}} />
                     <Typography data-testid='user-type'>
                       {user?.userType}
                     </Typography>
                   </div>
+                  {!matches && user?.phoneNumber && (
+                    <Divider orientation="vertical" flexItem style={{height: '8px', marginTop: '8px'}} />
+                  )}
                   {user?.phoneNumber && (
-                    <div style={matches ? {marginRight: '15px'} : {marginRight: '30px'}}>
+                    <div style={matches ? {marginRight: '15px'} : {marginRight: '20px', marginLeft: '20px'}} className={classes.optionCollapse}>
                       <PhoneIcon style={{heigth: '5.6px', width: '13.6px', verticalAlign: 'middle', marginRight: '14px'}} />
                       <Typography data-testid='phone'>
                         {user.phoneNumber}
                       </Typography>
                     </div>
                   )}
+                  {!matches && user?.email && (
+                    <Divider orientation="vertical" flexItem style={{height: '8px', marginTop: '8px'}} />
+                  )}
                   {user?.email && (
-                    <div>
+                    <div className={classes.optionCollapse} style={!matches ? {marginLeft: '20px'} : null}>
                       <EmailIcon style={{heigth: '5.6px', width: '13.6px', verticalAlign: 'middle', marginRight: '14px'}} />
                       <Typography data-testid='email'>
                         {user.email}
@@ -73,12 +80,12 @@ export default function UserDetail({ user }) {
               </Collapse>
             </div>
             <div 
-              style={{marginLeft: 'auto', padding: '10px 10px 10px 15px', backgroundColor: '#FFFFFF', cursor: 'pointer'}} 
-              className='qrcode'
+              style={matches ? {padding: '8px 5px 5px 13px', marginLeft: 'auto'} : {marginLeft: 'auto', padding: '10px 10px 10px 15px', backgroundColor: '#FFFFFF', cursor: 'pointer'}} 
+              className={matches ? 'qrcodem' : 'qrcode'}
               onClick={() => history.push(`/id/${user.id}`)}
             >
               <QRCode
-                style={{ width: 66 }}
+                style={matches ? {width: 36, height: 33} : { width: 66 }}
                 value={user.id}
               />
             </div>
@@ -114,6 +121,30 @@ const useStyles = makeStyles(() => ({
     fontWeight: 400,
     fontSize: '14px',
     color: '#141414'
+  },
+  optionCollapse: {
+    display: 'flex'
+  },
+  nameMobile: {
+    fontSize: '18px',
+    fontWeight: 500,
+    color: '#141414',
+    marginBottom: '7px'
+  },
+  paperMobile: {
+    padding: '0px',
+    background: '#FFFFFF',
+    marginTop: '20px',
+    marginRight: '10px'
+  },
+  moreMobile: {
+    fontSize: '12px',
+    fontWeight: 600,
+    color: '#585858',
+    marginBottom: '12px'
+  },
+  optionMobile: {
+    flexDirection: 'column'
   }
 }));
 

@@ -44,7 +44,7 @@ export function PostItemGrid({ data }) {
     <div>
       <Typography
         color="textPrimary"
-        style={matches ? {margin: '20px 0 20px 20px', fontWeight: 'bold'} : {margin: '40px 0 20px 79px', fontWeight: 500, fontSize: '22px', color: '#141414'}}
+        style={matches ? {margin: '20px 0 20px 20px', fontSize: '14px', fontWeight: 500, color: '#141414'} : {margin: '40px 0 20px 79px', fontWeight: 500, fontSize: '22px', color: '#141414'}}
       >
         Recent News
       </Typography>
