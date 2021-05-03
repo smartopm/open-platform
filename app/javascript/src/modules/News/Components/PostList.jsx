@@ -1,9 +1,10 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
-import React, { useContext, useState } from 'react'
+import React, { useState } from 'react'
 import { Typography, Box, Divider, Grid } from '@material-ui/core'
 import { useParams } from 'react-router-dom'
 import { Pagination } from '@material-ui/lab'
+import PropTypes from 'prop-types'
 import PostItem from './PostItem'
 import { dateToString } from '../../../components/DateContainer'
 import { useFetch } from '../../../utils/customHooks'
@@ -12,14 +13,13 @@ import { ShareButton } from '../../../components/ShareButton'
 import { Spinner } from '../../../shared/Loading'
 import CenteredContent from '../../../components/CenteredContent'
 import { titleize } from '../../../utils/helpers'
-import { Context } from '../../../containers/Provider/AuthStateProvider'
 
-export default function PostsList() {
+export default function PostsList({ wordpressEndpoint }) {
     const { slug } = useParams()
     const [page, setPageNumber] = useState(1)
-    const authState = useContext(Context)
+    
     const limit = 20
-    const { response, error } = useFetch(`${authState.user?.community.wpLink}/posts/?number=${limit}&page=${page}&category=${slug || ''}`)
+    const { response, error } = useFetch(`${wordpressEndpoint}/posts/?number=${limit}&page=${page}&category=${slug || ''}`)
     const currentUrl = window.location.href
 
     function loadPostPage(postId) {
@@ -45,7 +45,7 @@ export default function PostsList() {
             {titleize(slug || "Posts")}
           </Typography>
         </Box>
-        <Categories wordpressEndpoint={authState.user?.community.wpLink} />
+        <Categories wordpressEndpoint={wordpressEndpoint} />
         <div>
           <br />
           <Divider light variant="middle" />
@@ -86,4 +86,8 @@ export default function PostsList() {
         <ShareButton url={currentUrl} />
       </>
     )
+}
+
+PostsList.propTypes = {
+  wordpressEndpoint: PropTypes.string.isRequired
 }

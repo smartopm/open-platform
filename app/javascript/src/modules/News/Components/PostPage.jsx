@@ -50,14 +50,15 @@ export default function PostPage() {
   const [isSuccessAlert, setIsSuccessAlert] = useState(false)
   const [messageAlert, setMessageAlert] = useState('')
   const [response, setData] = useState({});
+  const [error, setError] = useState(null)
 
   const fetchData = async (url) => {
     try {
       const result = await fetch(url);
       const json = await result.json();
       setData(json);
-    } catch (error) {
-      console.error(error);
+    } catch (err) {
+      setError(err);
     }
   };
 
@@ -132,6 +133,7 @@ export default function PostPage() {
           width={width}
           height={height}
         />
+        {error}
         <TagsComponent 
           tags={response?.tags}
           wordpressEndpoint={communityQuery.data?.currentCommunity.wpLink}

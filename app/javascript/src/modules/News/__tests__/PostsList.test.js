@@ -31,7 +31,7 @@ describe("Posts List Component ",() => {
      const container =  render(
        <MockedProvider mocks={[]}>
          <BrowserRouter>
-           <PostsList />
+           <PostsList wordpressEndpoint="https://public-api.wordpress.com/rest/v1.1/sites/doublegdp.wordpress.com" />
          </BrowserRouter>
        </MockedProvider>
      )
