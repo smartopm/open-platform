@@ -52,7 +52,7 @@ export default function PlotDetailCard({ authState }) {
                 <GridList className={classes.gridList} cols={matches ? 1 : 3.5}>
                   {data.paymentPlan.map((tile) => (
                     <GridListTile key={tile.id}>
-                      <div className={matches? classes.gridTileMobile : classes.gridTile} onClick={() => history.push(`/tasks/${tile.id}`)}>
+                      <div className={matches? classes.gridTileMobile : classes.gridTile} onClick={() => history.push(`/user/${authState.id}?tab=Payments&payment_sub_tab=Plans`)}>
                         <div>
                           <Typography className={matches ? classes.plotMobile : classes.plot}>
                             Plot

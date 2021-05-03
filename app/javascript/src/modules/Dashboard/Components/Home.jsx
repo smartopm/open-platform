@@ -19,7 +19,7 @@ export default function Home() {
   if (!authState.loggedIn) return <Loading />
   return (
     // todo: tolu will refactor this to be more dynamic
-    <div style={{backgroundColor: '#FFFFFF', marginTop: '-30px'}}>
+    <div style={{backgroundColor: '#FFFFFF', marginTop: '-30px', overflow: 'hidden'}}>
       <LanguageToggle />
       {authState.user.userType === 'admin' && (
         <div>
