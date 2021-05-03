@@ -3,9 +3,9 @@ import React from 'react'
 import { Grid, Box } from '@material-ui/core'
 import { StyleSheet, css } from 'aphrodite'
 import { Link } from 'react-router-dom'
-import { useFetch } from '../../utils/customHooks'
-import { wordpressEndpoint } from '../../utils/constants'
-import { Spinner } from '../../shared/Loading'
+import { useFetch } from '../../../utils/customHooks'
+import { wordpressEndpoint } from '../../../utils/constants'
+import { Spinner } from '../../../shared/Loading'
 
 export default function Categories() {
   const { response, error } = useFetch(`${wordpressEndpoint}/categories`)

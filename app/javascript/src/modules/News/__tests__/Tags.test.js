@@ -2,10 +2,10 @@ import React from 'react'
 import { MockedProvider } from '@apollo/react-testing'
 import { act, render, fireEvent } from '@testing-library/react'
 import '@testing-library/jest-dom/extend-expect'
-import Tag from '../components/NewsPage/Tag'
-import TagPosts from '../components/NewsPage/TagPosts'
-import { PostTagUser } from '../graphql/queries'
-import  { useFetch }  from '../utils/customHooks'
+import Tag from '../Components/Tag'
+import TagPosts from '../Components/TagPosts'
+import { PostTagUser } from '../../../graphql/queries'
+import  { useFetch }  from '../../../utils/customHooks'
 
 jest.mock('../utils/customHooks')
 const mck = jest.fn()

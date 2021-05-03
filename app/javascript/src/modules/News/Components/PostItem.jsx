@@ -12,7 +12,7 @@ import Typography from '@material-ui/core/Typography';
 import { red } from '@material-ui/core/colors';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import Box from '@material-ui/core/Box';
-import { sanitizeText, truncateString } from '../../utils/helpers'
+import { sanitizeText, truncateString } from '../../../utils/helpers'
 
 export default function PostItem({
   title, imageUrl, datePosted, subTitle

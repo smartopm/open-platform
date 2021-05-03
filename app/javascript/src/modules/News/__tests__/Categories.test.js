@@ -2,10 +2,10 @@
 import React from 'react'
 import { render } from '@testing-library/react'
 import '@testing-library/jest-dom/extend-expect'
-import Categories from '../components/NewsPage/Categories'
-import  { useFetch }  from '../utils/customHooks'
+import Categories from '../Components/Categories'
+import  { useFetch }  from '../../../utils/customHooks'
 
-jest.mock('../utils/customHooks')
+jest.mock('../../../utils/customHooks')
 
 describe("Categories Component ",() => {
   useFetch.mockReturnValue({

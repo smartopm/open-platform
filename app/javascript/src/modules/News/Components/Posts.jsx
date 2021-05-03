@@ -1,5 +1,5 @@
 import React from 'react';
-import PostsList from '../../components/NewsPage/PostList';
+import PostsList from './PostList';
 
 export default function Posts() {
   return <PostsList />;

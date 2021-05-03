@@ -3,8 +3,8 @@ import { act, render } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { BrowserRouter } from 'react-router-dom/';
 import { MockedProvider } from '@apollo/react-testing';
-import { PostDiscussionQuery } from '../../graphql/queries';
-import PostPage from '../../containers/Posts/PostPage';
+import { PostDiscussionQuery } from '../../../graphql/queries';
+import PostPage from '../Components/PostPage';
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
 

@@ -6,10 +6,10 @@ import GridList from '@material-ui/core/GridList'
 import GridListTile from '@material-ui/core/GridListTile'
 import useMediaQuery from '@material-ui/core/useMediaQuery'
 import { Typography } from '@material-ui/core'
-import { useFetch } from '../../utils/customHooks'
-import { wordpressEndpoint } from '../../utils/constants'
-import { Spinner } from '../../shared/Loading'
-import CenteredContent from '../CenteredContent'
+import { useFetch } from '../../../utils/customHooks'
+import { wordpressEndpoint } from '../../../utils/constants'
+import { Spinner } from '../../../shared/Loading'
+import CenteredContent from '../../../components/CenteredContent'
 
 const NUMBER_OF_POSTS_TO_DISPLAY = 5
 const useStyles = makeStyles(theme => ({

@@ -4,10 +4,10 @@ import { render } from '@testing-library/react'
 import '@testing-library/jest-dom/extend-expect'
 import { BrowserRouter } from 'react-router-dom'
 import { MockedProvider } from '@apollo/react-testing'
-import  { useFetch }  from '../utils/customHooks'
-import PostsList from '../components/NewsPage/PostList'
+import  { useFetch }  from '../../../utils/customHooks'
+import PostsList from '../Components/PostList'
 
-jest.mock('../utils/customHooks')
+jest.mock('../../../utils/customHooks')
 
 describe("Posts List Component ",() => {
   useFetch.mockReturnValue({

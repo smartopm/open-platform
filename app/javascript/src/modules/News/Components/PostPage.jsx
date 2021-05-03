@@ -12,19 +12,19 @@ import {
 } from '@material-ui/core'
 import { css } from 'aphrodite'
 import CloseIcon from '@material-ui/icons/Close';
-import { wordpressEndpoint } from '../../utils/constants'
-import { useFetch, useWindowDimensions } from '../../utils/customHooks'
-import { ShareButton, styles } from '../../components/ShareButton'
-import { Context as AuthStateContext } from "../Provider/AuthStateProvider"
-import { Spinner } from '../../shared/Loading'
-import IframeContainer from '../../components/IframeContainer'
-import { PostDiscussionQuery, PostCommentsQuery } from '../../graphql/queries'
-import Comments from '../../components/Discussion/Comment'
-import { DiscussionMutation } from '../../graphql/mutations'
-import CenteredContent from '../../components/CenteredContent'
-import TagsComponent from '../../components/NewsPage/Tags'
-import MessageAlert from "../../components/MessageAlert"
-import { NewsNav } from '../../modules/Menu'
+import { wordpressEndpoint } from '../../../utils/constants'
+import { useFetch, useWindowDimensions } from '../../../utils/customHooks'
+import { ShareButton, styles } from '../../../components/ShareButton'
+import { Context as AuthStateContext } from "../../../containers/Provider/AuthStateProvider"
+import { Spinner } from '../../../shared/Loading'
+import IframeContainer from '../../../components/IframeContainer'
+import { PostDiscussionQuery, PostCommentsQuery } from '../../../graphql/queries'
+import Comments from '../../../components/Discussion/Comment'
+import { DiscussionMutation } from '../../../graphql/mutations'
+import CenteredContent from '../../../components/CenteredContent'
+import TagsComponent from './Tag'
+import MessageAlert from "../../../components/MessageAlert"
+import { NewsNav } from "../../Menu"
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;

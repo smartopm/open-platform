@@ -1,10 +1,10 @@
 import React from 'react'
-import { wordpressEndpoint } from '../../utils/constants'
-import { useFetch } from '../../utils/customHooks'
-import Categories from '../../components/NewsPage/Categories'
-import PostContent from '../../components/NewsPage/PostContent'
-import { ShareButton } from '../../components/ShareButton'
-import { Spinner } from '../../shared/Loading'
+import { wordpressEndpoint } from '../../../utils/constants'
+import { useFetch } from '../../../utils/customHooks'
+import Categories from './Categories'
+import PostContent from './PostContent'
+import { ShareButton } from '../../../components/ShareButton'
+import { Spinner } from '../../../shared/Loading'
 
 export default function NewsPage() {
     const { response, error } = useFetch(`${wordpressEndpoint}/posts/?category=news`)
