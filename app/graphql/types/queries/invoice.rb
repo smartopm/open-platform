@@ -197,7 +197,6 @@ module Types::Queries::Invoice
     user.payment_plans.includes(invoices: :payments)
                       .where.not(pending_balance: 0)
                       .order(created_at: :desc)
-                      .limit(4)
   end
 
   # It would be good to put this elsewhere to use it in other queries
