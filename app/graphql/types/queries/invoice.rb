@@ -195,8 +195,8 @@ module Types::Queries::Invoice
   def payment_plan(user_id:)
     user = verified_user(user_id)
     user.payment_plans.includes(invoices: :payments)
-                      .where.not(pending_balance: 0)
-                      .order(created_at: :desc)
+        .where.not(pending_balance: 0)
+        .order(created_at: :desc)
   end
 
   # It would be good to put this elsewhere to use it in other queries
