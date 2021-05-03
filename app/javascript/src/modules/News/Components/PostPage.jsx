@@ -95,9 +95,6 @@ export default function PostPage() {
   if (response.categories?.Private && !authState.loggedIn) {
     return <Redirect to="/welcome" />
   }
-
-  console.log(response)
-  console.log('we are here ')
   return (
     <>
       <MessageAlert

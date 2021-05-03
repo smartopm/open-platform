@@ -16,7 +16,6 @@ import { Spinner } from '../../../shared/Loading'
 import { FollowPostTag } from '../../../graphql/mutations';
 
 export default function TagPosts({ open, handleClose, tagName, wordpressEndpoint }) {
-  console.log(wordpressEndpoint)
   const classes = useStyles();
   const { response, error } = useFetch(`${wordpressEndpoint}/posts/?tag=${tagName}`)
   const [messageAlert, setMessageAlert] = useState('')
