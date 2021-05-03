@@ -27,7 +27,7 @@ describe("Categories Component ",() => {
   });
 
   it('should render without error and have all Categories', async () => {
-     const container =  render(<Categories wordpressEndpoint="https://public-api.wordpress.com/rest/v1.1/sites/doublegdp.wordpress.com/categories/categories" />)
+     const container =  render(<Categories wordpressEndpoint="https://public-api.wordpress.com/rest/v1.1/sites/doublegdp.wordpress.com/categories" />)
      expect(useFetch).toBeCalledWith("https://public-api.wordpress.com/rest/v1.1/sites/doublegdp.wordpress.com/categories");
       expect(container).toMatchSnapshot();
   })
