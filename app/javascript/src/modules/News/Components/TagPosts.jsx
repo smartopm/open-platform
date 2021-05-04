@@ -6,6 +6,7 @@ import SwipeableDrawer from '@material-ui/core/SwipeableDrawer';
 import { Button, Typography } from '@material-ui/core';
 import PropTypes from 'prop-types'
 import { useLazyQuery, useMutation } from 'react-apollo';
+import { useTranslation } from 'react-i18next';
 import { useFetch } from '../../../utils/customHooks'
 import PostItem from './PostItem'
 import { dateToString } from '../../../components/DateContainer'
@@ -24,6 +25,7 @@ export default function TagPosts({ open, handleClose, tagName, wordpressEndpoint
   const [mutationLoading, setMutationLoading] = useState(false)
   const [loadUserTags, {  called, loading, data, error: lazyError, refetch } ] = useLazyQuery(PostTagUser)
   const [followTag] = useMutation(FollowPostTag)
+  const { t } = useTranslation('news')
 
   useEffect(() => {
       if (open && tagName) {
@@ -47,7 +49,7 @@ export default function TagPosts({ open, handleClose, tagName, wordpressEndpoint
     })
     .then(() => {
       setIsSuccessAlert(true)
-      setMessageAlert(`You are ${!data.userTags ? 'now' : 'no longer'} following ${tagName}`)
+      setMessageAlert(!data.userTags ? t('news.following', { tag: tagName }) : t('news.unfollowing', { tag: tagName }))
       setAlertOpen(true)
       setMutationLoading(false)
       refetch()
@@ -88,14 +90,14 @@ export default function TagPosts({ open, handleClose, tagName, wordpressEndpoint
         >
           <div className={classes.title}>
             <Typography variant='body1' color='textSecondary'>
-              Related Posts
+              {t('news.related_posts')}
             </Typography>
             <div>
               <Tag tag={tagName || ''} />
               <Button onClick={handleFollowTag} disabled={mutationLoading} color="primary" style={{ float: 'right' }}>
                 {
                   // eslint-disable-next-line no-nested-ternary
-                  called && loading ? <Spinner /> : called && data?.userTags !== null ? 'Unfollow Tag' : 'Follow Tag'
+                  called && loading ? <Spinner /> : called && data?.userTags !== null ? t('news.unfollow_tag') : t('news.follow_tag')
                 }
               </Button>
             </div>

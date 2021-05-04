@@ -1,0 +1,23 @@
+{
+    "news": {
+      "recent_news": "Noticias recientes",
+      "read_more": "Lee mas",
+      "no_post": "No se encontraron publicaciones en esta categoría",
+      "news": "Noticias",
+      "comments": "Comentarios",
+      "view_comments": "Ver comentarios ",
+      "post_discussion": "Publicar discusión",
+      "load_more_comments": "Cargar más comentarios",
+      "create_discussion": "Crear discusión",
+      "discussion_disabled": "Aún no se ha habilitado la discusión para esta publicación",
+      "following": "Ahora estás siguiendo {{tag}}",
+      "unfollowing": "ya no estás siguiendo {{tag}}",
+      "related_posts": "Artículos Relacionados",
+      "follow_tag": "Seguir etiqueta",
+      "unfollow_tag": "Dejar de seguir la etiqueta",
+      "filtered_categories": ["Private", "Uncategorized", "Noticias"],
+      "visit_news_page": "Hola, visita la página de {{communityName}}",
+      "posts": "Publicaciones"
+    }
+}
+  

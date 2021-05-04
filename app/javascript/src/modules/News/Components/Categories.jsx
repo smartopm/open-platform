@@ -4,11 +4,13 @@ import { Grid, Box } from '@material-ui/core'
 import { StyleSheet, css } from 'aphrodite'
 import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
+import { useTranslation } from 'react-i18next'
 import { useFetch } from '../../../utils/customHooks'
 import { Spinner } from '../../../shared/Loading'
 
 export default function Categories({ wordpressEndpoint }) {
   const { response, error } = useFetch(`${wordpressEndpoint}/categories`)
+  const { t } = useTranslation('news')
   // TODO: @olivier ==> add better error page and loading component here
   if (error) {
     return error.message
@@ -22,7 +24,7 @@ export default function Categories({ wordpressEndpoint }) {
       // eslint-disable-next-line react/no-this-in-sfc
       return this.indexOf(cat.name) < 0
     },
-    ['Private', 'Uncategorized', 'news', 'Nkwashi Digest']
+    t('news.filtered_categories', { returnObjects: true })
   )
   return (
     <Box

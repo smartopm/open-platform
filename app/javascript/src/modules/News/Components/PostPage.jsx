@@ -12,6 +12,7 @@ import {
 } from '@material-ui/core'
 import { css } from 'aphrodite'
 import CloseIcon from '@material-ui/icons/Close';
+import { useTranslation } from 'react-i18next'
 import { useWindowDimensions } from '../../../utils/customHooks'
 import { ShareButton, styles } from '../../../components/ShareButton'
 import { Context as AuthStateContext } from "../../../containers/Provider/AuthStateProvider"
@@ -51,6 +52,7 @@ export default function PostPage() {
   const [messageAlert, setMessageAlert] = useState('')
   const [response, setData] = useState({});
   const [error, setError] = useState(null)
+  const { t } = useTranslation('news')
 
   const fetchData = async (url) => {
     try {
@@ -67,6 +69,7 @@ export default function PostPage() {
       fetchData(`${communityQuery.data?.currentCommunity.wpLink}/posts/${id}`);
     }
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [communityQuery.loading])
 
   function createDiscussion(title, discId) {
@@ -125,7 +128,7 @@ export default function PostPage() {
       />
 
       <NewsNav history={history}>
-        <h4>News</h4>
+        <h4>{t('news.news')}</h4>
       </NewsNav>
       <div className="post_page">
         <IframeContainer
@@ -140,6 +143,7 @@ export default function PostPage() {
         />
         <ShareButton
           url={currentUrl}
+          communityName={communityQuery.data?.currentCommunity.name}
           styles={{
             position: 'fixed',
             bottom: 80,
@@ -153,7 +157,8 @@ export default function PostPage() {
           className={`btn ${css(styles.getStartedButton)} `}
           color="primary"
         >
-          View comments&nbsp;
+          {t('news.view_comments')}
+          {' '}
           <Avatar>{data ? data.postComments.length : 0}</Avatar>
 
         </Fab>
@@ -166,7 +171,7 @@ export default function PostPage() {
                 <CloseIcon />
               </IconButton>
               <Typography variant="h6">
-                Comments
+                {t('news.comments')}
               </Typography>
             </Toolbar>
           </AppBar>
@@ -179,7 +184,7 @@ export default function PostPage() {
                 <h4>
                   {queryResponse.data.postDiscussion.title}
                   {' '}
-                  Post Discussion
+                  {t('news.post_discussion')}
                 </h4>
               </CenteredContent>
               <Comments
@@ -195,7 +200,7 @@ export default function PostPage() {
                       color="primary"
                       onClick={fetchMoreComments}
                     >
-                      {isLoading ? <Spinner /> : 'Load more comments'}
+                      {isLoading ? <Spinner /> : t('news.load_more_comments')}
                     </Button>
                   </CenteredContent>
                 )
@@ -212,9 +217,9 @@ export default function PostPage() {
                       onClick={() => createDiscussion(response?.title, response?.ID)}
                       disabled={isLoading}
                     >
-                      Create Discussion
+                      {t('news.create_discussion')}
                     </Button>
-                  ) : 'Discussion has not yet been enabled for this post'
+                  ) : t('news.discussion_disabled')
                 }
           </CenteredContent>
         )}
