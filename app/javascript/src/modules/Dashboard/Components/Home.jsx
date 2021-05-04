@@ -43,7 +43,7 @@ export default function Home() {
             <Divider />
             <PlotDetail authState={authState.user} />
             <Divider />
-            <NewsFeed />
+            <NewsFeed wordpressEndpoint={authState.user?.community.wpLink} />
           </div>
         )
       )}
