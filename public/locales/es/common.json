@@ -38,7 +38,8 @@
     "mail_templates": "Plantillas de correo",
     "comm_settings": "Configuración de la comunidad",
     "users": "Usuarios",
-    "news": "Noticias"
+    "news": "Noticias",
+    "powered_by_dgdp": "Desarrollado por DoubleGDP"
   },
   "user_types": {
     "admin": "Administrador",

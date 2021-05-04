@@ -38,7 +38,8 @@
     "mail_templates": "Mail Templates",
     "comm_settings": "Community Settings",
     "users": "Users",
-    "news": "News"
+    "news": "News",
+    "powered_by_dgdp": "Powered by DoubleGDP"
   },
   "user_types": {
     "admin": "Admin",
