@@ -40,8 +40,21 @@ RSpec.describe TaskReminderJob, type: :job do
     end
 
     it 'invokes EmailMsg' do
-      expect(EmailMsg).to receive(:send_mail).with(
-        admin.email, 'fgcagv5r2yr67', "url": "#{ENV['HOST']}/tasks/#{note.id}"
+      template = EmailTemplate.system_emails
+                              .create!(
+                                name: 'task_reminder_template',
+                                community: admin.community,
+                              )
+      template_data = [
+        { key: '%logo_url%', value: admin.community&.logo_url.to_s },
+        { key: '%community%', value: admin.community&.name.to_s },
+        { key: '%url%', value: "#{ENV['HOST']}/tasks/#{note.id}" },
+      ]
+      # expect(EmailMsg).to receive(:send_mail).with(
+      #   admin.email, 'fgcagv5r2yr67', "url": "#{ENV['HOST']}/tasks/#{note.id}"
+      # )
+      expect(EmailMsg).to receive(:send_mail_from_db).with(
+        admin.email, template, template_data
       )
       perform_enqueued_jobs { described_class.perform_later(assignee_note) }
     end
