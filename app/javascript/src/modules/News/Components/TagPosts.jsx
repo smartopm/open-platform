@@ -94,7 +94,7 @@ export default function TagPosts({ open, handleClose, tagName, wordpressEndpoint
             </Typography>
             <div>
               <Tag tag={tagName || ''} />
-              <Button onClick={handleFollowTag} disabled={mutationLoading} color="primary" style={{ float: 'right' }}>
+              <Button onClick={handleFollowTag} disabled={mutationLoading} color="primary" style={{ float: 'right' }} data-testid="follow_btn">
                 {
                   // eslint-disable-next-line no-nested-ternary
                   called && loading ? <Spinner /> : called && data?.userTags !== null ? t('news.unfollow_tag') : t('news.follow_tag')
