@@ -25,8 +25,8 @@ module Authorizable
                        'double-gdp-staging.herokuapp.com' => 'Nkwashi',
                        'demo.doublegdp.com' => 'DoubleGDP',
                        'demo-staging.doublegdp.com' => 'DoubleGDP',
-                       'morazan-city.doublegdp.com' => 'Ciudad Morazán',
-                       'morazan-city-staging.doublegdp.com' => 'Ciudad Morazán',
+                       'morazancity.doublegdp.com' => 'Ciudad Morazán',
+                       'morazancity-staging.doublegdp.com' => 'Ciudad Morazán',
                        'dev.dgdp.site' => 'DoubleGDP',
                        'double-gdp-dev.herokuapp.com' => 'DAST' }
 
