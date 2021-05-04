@@ -24,7 +24,7 @@ describe('Template List Component', () => {
             }
         }
         const container = render(
-          <MockedProvider mocks={[templateMock]}>
+          <MockedProvider mocks={[templateMock]} addTypename={false}>
             <TemplateList 
               value={templateMock.result.data.emailTemplates[0].id} 
               handleValue={jest.fn()}

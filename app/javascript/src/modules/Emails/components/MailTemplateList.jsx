@@ -3,20 +3,17 @@
 import React, { useEffect, useState } from 'react';
 import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
-import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 import { useLazyQuery, useQuery, useMutation } from 'react-apollo';
 import { useHistory } from 'react-router';
-import { Grid, IconButton, Menu, MenuItem } from '@material-ui/core';
 import EmailBuilderDialog from './EmailBuilderDialog';
 import EmailDetailsDialog from './EmailDetailsDialog';
+import MailTemplateItem from './MailTemplateItem';
 import MessageAlert from '../../../components/MessageAlert';
 import { EmailTemplateQuery, EmailTemplatesQuery } from '../graphql/email_queries';
 import CreateEmailTemplateMutation from '../graphql/email_mutations';
 import { Spinner } from '../../../shared/Loading';
 import CenteredContent from '../../../components/CenteredContent';
 import { formatError, useParamsQuery } from '../../../utils/helpers';
-import { dateToString } from '../../../components/DateContainer';
-import DataList from '../../../shared/list/DataList';
 import Paginate from '../../../components/Paginate';
 import ListHeader from '../../../shared/list/ListHeader';
 
@@ -31,7 +28,6 @@ const mailListHeader = [
 export default function MailTemplateList() {
   const [templateDialogOpen, setDialogOpen] = useState(false);
   const [currentEmail, setCurrentEmail] = useState({});
-  const [actionMenuOpen, setActionMenuOpen] = useState(null);
   const [emailDetailsDialogOpen, setEmailDetailsDialogOpen] = useState(false);
   const [alertOpen, setAlertOpen] = useState(false);
   const [message, setMessage] = useState({ isError: false, detail: '', loading: false });
@@ -94,11 +90,10 @@ export default function MailTemplateList() {
   function handleClose() {
     history.replace(`/mail_templates`);
     setDialogOpen(false);
-    setActionMenuOpen(null);
     setEmailDetailsDialogOpen(false)
   }
 
-  function handleOpenEmailDialog(_event, emailData) {
+  function handleOpenEmailDialog(emailData) {
     history.push(`/mail_templates?email=${emailData.id}`);
   }
 
@@ -144,14 +139,6 @@ export default function MailTemplateList() {
       });
   }
 
-  function handleEmailActionMenuClose(){
-    setActionMenuOpen(null)
-  } 
-
-  function handleEmailActionMenuOpen(e){
-    setActionMenuOpen(e.currentTarget)
-  }
-
   return (
     <div className="container">
       <MessageAlert
@@ -180,22 +167,11 @@ export default function MailTemplateList() {
       />
       <ListHeader headers={mailListHeader} />
       {data?.emailTemplates.map(email => (
-        <DataList
+        <MailTemplateItem
           key={email.id}
-          keys={mailListHeader}
-          hasHeader={false}
-          data={[renderEmailTemplate({
-            email,
-            handleOpenEmailDialog,
-            handleDuplicateTemplate,
-            actionMenu: {
-              open: actionMenuOpen,
-              handleClose: handleEmailActionMenuClose,
-              handleOpen: handleEmailActionMenuOpen,
-            }
-          })]}
-          // handleClick={event => handleOpenEmailDialog(event, email)}
-          // clickable
+          email={email}
+          onTemplateClick={handleOpenEmailDialog}
+          onTemplateDuplicate={handleDuplicateTemplate}
         />
       ))}
 
@@ -226,56 +202,4 @@ export default function MailTemplateList() {
       </Fab>
     </div>
   );
-}
-
-// name, subject, createdAt
-export function renderEmailTemplate({
-  email,
-  handleOpenEmailDialog,
-  handleDuplicateTemplate,
-  actionMenu: { open, handleClose, handleOpen }
-}) {
-  return {
-    Name: (
-      <Grid item xs={2} data-testid="name">
-        {email.name}
-      </Grid>
-    ),
-    Subject: (
-      <Grid item xs={2} data-testid="subject">
-        {email.subject}
-      </Grid>
-    ),
-    'Date Created': (
-      <Grid item xs={2} data-testid="createdat">
-        {dateToString(email.createdAt)}
-      </Grid>
-    ),
-    Tag: (
-      <Grid item xs={2} data-testid="subject">
-        {email.tag}
-      </Grid>
-    ),
-    Menu: (
-      <Grid item xs={2} sm={1}>
-        <IconButton
-          aria-controls="simple-menu"
-          aria-haspopup="true"
-          onClick={handleOpen}
-        >
-          <MoreHorizIcon />
-        </IconButton>
-        <Menu
-          id="simple-menu"
-          anchorEl={open}
-          keepMounted
-          open={Boolean(open)}
-          onClose={handleClose}
-        >
-          <MenuItem onClick={event => handleOpenEmailDialog(event, email)}>Edit</MenuItem>
-          <MenuItem onClick={() => handleDuplicateTemplate(email)}>Duplicate</MenuItem>
-        </Menu>
-      </Grid>
-    )
-  };
 }

@@ -50,9 +50,7 @@ RSpec.describe TaskReminderJob, type: :job do
         { key: '%community%', value: admin.community&.name.to_s },
         { key: '%url%', value: "#{ENV['HOST']}/tasks/#{note.id}" },
       ]
-      # expect(EmailMsg).to receive(:send_mail).with(
-      #   admin.email, 'fgcagv5r2yr67', "url": "#{ENV['HOST']}/tasks/#{note.id}"
-      # )
+
       expect(EmailMsg).to receive(:send_mail_from_db).with(
         admin.email, template, template_data
       )
