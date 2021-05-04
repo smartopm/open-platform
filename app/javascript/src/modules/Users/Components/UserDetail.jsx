@@ -16,7 +16,7 @@ import PhoneIcon from '@material-ui/icons/Phone';
 import EmailIcon from '@material-ui/icons/Email';
 import { QRCode } from 'react-qr-svg'
 
-export default function UserDetail({ user }) {
+export default function UserDetail({ user, translate }) {
   const classes = useStyles();
   const history = useHistory();
   const matches = useMediaQuery('(max-width:600px)')
@@ -28,14 +28,14 @@ export default function UserDetail({ user }) {
           <div style={{display: 'flex'}}>
             <div>
               <Typography color="textPrimary" variant={matches ? 'body2' : 'h6'} style={{fontWeight: 'bold'}} data-testid='name' gutterBottom>
-                Hello 
+                {translate('common:misc.hello')}
                 {' '}
                 {user?.name}
                 ,
               </Typography>
               <div style={{display: 'flex'}}>
                 <Typography color="textPrimary" variant='caption' gutterBottom>
-                  More details
+                  {translate('common:misc.more_details')}
                 </Typography>
                 {open ? (<KeyboardArrowDownIcon style={{verticalAlign: 'middle', paddingBottom: '3px'}} onClick={() => setOpen(!open)} />) : (
                   <KeyboardArrowRightIcon style={{verticalAlign: 'middle', paddingBottom: '3px'}} onClick={() => setOpen(!open)} data-testid='collapse' />
@@ -50,7 +50,7 @@ export default function UserDetail({ user }) {
                   <div style={matches ? {marginRight: '2px'} : {marginRight: '30px'}}>
                     <PersonIcon style={{heigth: '15px', width: '15px', verticalAlign: 'middle', marginRight: '5px'}} />
                     <Typography color="textPrimary" variant='caption' data-testid='user-type'>
-                      {user?.userType}
+                      {translate(`common:user_types.${user?.userType}`)}
                     </Typography>
                   </div>
                   {user?.phoneNumber && (
@@ -72,8 +72,8 @@ export default function UserDetail({ user }) {
                 </Grid>
               </Collapse>
             </div>
-            <div 
-              style={{marginLeft: 'auto', padding: '10px 10px 10px 15px', backgroundColor: '#FFFFFF', cursor: 'pointer'}} 
+            <div
+              style={{marginLeft: 'auto', padding: '10px 10px 10px 15px', backgroundColor: '#FFFFFF', cursor: 'pointer'}}
               className='qrcode'
               onClick={() => history.push(`/id/${user.id}`)}
             >
@@ -101,11 +101,12 @@ const useStyles = makeStyles(() => ({
 }));
 
 UserDetail.propTypes = {
-  user: PropTypes.shape({ 
-    name: PropTypes.string, 
+  user: PropTypes.shape({
+    name: PropTypes.string,
     userType: PropTypes.string,
     phoneNumber: PropTypes.string,
     email: PropTypes.string,
     id: PropTypes.string,
-  }).isRequired
+  }).isRequired,
+  translate: PropTypes.func.isRequired
 };

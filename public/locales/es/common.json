@@ -14,6 +14,40 @@
     "submit": "Enviar"
   },
   "misc": {
-    "or": "O"
+    "or": "O",
+    "hello": "Hola",
+    "more_details": "Más detalles",
+    "payments": "Pagos",
+    "invoices": "Facturas",
+    "due_text": "Vencer",
+    "recent_news": "Noticias recientes",
+    "campaigns": "Campañas",
+    "tasks": "Tareas",
+    "notes": "Notas",
+    "request_forms": "Formularios de solicitud y permisos",
+    "time_card": "Tarjeta de tiempo",
+    "log_book": "Libro de registro",
+    "referrals": "Referencias",
+    "discussions": "Discusiones",
+    "business": "Negocio",
+    "support": "El apoyo",
+    "labels": "Etiquetas",
+    "comments": "Comentarios",
+    "action_flows": "Flujos de acción",
+    "properties": "Propiedades",
+    "mail_templates": "Plantillas de correo",
+    "comm_settings": "Configuración de la comunidad",
+    "users": "Usuarios",
+    "news": "Noticias"
+  },
+  "user_types": {
+    "admin": "Administrador",
+    "client": "Cliente",
+    "custodian": "Custodio",
+    "visitor": "Visitante",
+    "prospective_client": "Futuro cliente",
+    "security_guard": "Guardia de seguridad",
+    "resident": "Residente",
+    "contractor": "Contratista"
   }
 }

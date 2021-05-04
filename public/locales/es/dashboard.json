@@ -8,6 +8,29 @@
     "identity": "Identidad",
     "entry_logs": "Registros de entrada",
     "log_entry": "Entrada Manual",
-    "scan": "Escanear"
+    "scan": "Escanear",
+    "view_customer_journey": "Ver el recorrido del cliente",
+    "make_new_payment": "Realizar un nuevo pago",
+    "payment": {
+      "today": "Importe total en pago hoy",
+      "oneWeek": "Importe total en pago esta semana",
+      "oneMonth": "Monto total en pago este mes",
+      "overOneMonth": "Monto total en pago este año"
+    },
+    "invoice": {
+      "today": "Total de facturas vencidas hoy",
+      "oneWeek": "Total de facturas vencidas 1 semana",
+      "oneMonth": "Total de facturas vencidas 1 mes",
+      "overOneMonth": "Total de facturas vencidas con más de 1 mes"
+    },
+    "task_reminders": "Recordatorios de tareas",
+    "no_pending_tasks": "Sin tareas pendientes",
+    "pending_tasks_text": "Tus tareas pendientes aparecerán aquí",
+    "recent_news": "Noticias recientes",
+    "my_id_card": "Mi tarjeta de identificación",
+    "my_account": "Mi cuenta",
+    "my_messages": "Mis mensajes",
+    "my_thebe_portal": "Mi portal de Thebe",
+    "call_manager": "Gestor de llamadas"
   }
 }

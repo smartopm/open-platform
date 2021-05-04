@@ -14,6 +14,40 @@
     "submit": "Submit"
   },
   "misc": {
-    "or": "OR"
+    "or": "OR",
+    "hello": "Hello",
+    "more_details": "More details",
+    "payments": "Payments",
+    "invoices": "Invoices",
+    "due_text": "Due",
+    "recent_news": "Recent News",
+    "campaigns": "Campaigns",
+    "tasks": "Tasks",
+    "notes": "Notes",
+    "request_forms": "Permits and Request Forms",
+    "time_card": "Time Card",
+    "log_book": "Log Book",
+    "referrals": "Referrals",
+    "discussions": "Discussions",
+    "business": "Business",
+    "support": "Support",
+    "labels": "Labels",
+    "comments": "Comments",
+    "action_flows": "Action Flows",
+    "properties": "Properties",
+    "mail_templates": "Mail Templates",
+    "comm_settings": "Community Settings",
+    "users": "Users",
+    "news": "News"
+  },
+  "user_types": {
+    "admin": "Admin",
+    "client": "Client",
+    "custodian": "Custodian",
+    "visitor": "Visitor",
+    "prospective_client": "Prospective Client",
+    "security_guard": "Security Guard",
+    "resident": "Resident",
+    "contractor": "Contractor"
   }
 }

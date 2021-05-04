@@ -2,7 +2,7 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import React, { useState } from 'react'
 import { useQuery } from 'react-apollo';
-import { shape } from 'prop-types';
+import PropTypes, { shape } from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import TrendingFlatIcon from '@material-ui/icons/TrendingFlat';
@@ -16,6 +16,7 @@ import { propAccessor, formatError } from '../../../../utils/helpers'
 import CenteredContent from '../../../../components/CenteredContent';
 import { currencies } from '../../../../utils/constants';
 import authStateProps from '../../../../shared/types/authState';
+
 
 const invoiceCardContent = {
   today: 'Total invoices due today',
@@ -31,7 +32,7 @@ const paymentCardContent = {
   overOneMonth: 'Total amount in payment this year'
 }
 
-export default function PaymentSummary({ authState }) {
+export default function PaymentSummary({ authState, translate }) {
   const matches = useMediaQuery('(max-width:600px)')
   const classes = useStyles();
   const [active, setActive] = useState('payment')
@@ -68,9 +69,9 @@ export default function PaymentSummary({ authState }) {
           {matches ? (
             <div style={{margin: '0 20px', display: 'flex'}}>
               {active === 'payment' ? (
-                <Typography variant='h6' style={{fontWeight: 'bold'}} onClick={() => setActive('payment')}>Payments</Typography>
+                <Typography variant='h6' style={{fontWeight: 'bold'}} onClick={() => setActive('payment')}>{translate('common:misc.payments')}</Typography>
               ) : (
-                <Typography variant='h6' style={{fontWeight: 'bold'}} onClick={() => setActive('invoice')}>Invoices</Typography>
+                <Typography variant='h6' style={{fontWeight: 'bold'}} onClick={() => setActive('invoice')}>{translate('common:misc.invoices')}</Typography>
               )}
               <div style={{marginLeft: 'auto', display: 'flex', marginTop: '5px'}}>
                 <div style={active === 'payment' ? {background: '#141414'} : {background: 'transparent'}} className={classes.circle} onClick={() => setActive('payment')}>
@@ -84,25 +85,25 @@ export default function PaymentSummary({ authState }) {
           ) : (
             <div style={{marginLeft: '79px', marginTop: '20px'}}>
               <Grid container alignItems="center" className={classes.root}>
-                <Typography 
-                  variant={active === 'payment' ? 'body1' : 'body2'} 
+                <Typography
+                  variant={active === 'payment' ? 'body1' : 'body2'}
                   color={active === 'payment' ? 'textPrimary' : 'textSecondary'}
                   onClick={() => setActive('payment')}
                   style={active === 'payment' ? {fontWeight: 'bold', marginRight: '10px', width: '70px', cursor: 'pointer'} : {fontWeight: 'none', marginRight: '10px', width: '70px', cursor: 'pointer'}}
                 >
-                  Payments
+                  {translate('common:misc.payments')}
                 </Typography>
                 <Divider orientation="vertical" flexItem style={{height: '8px', marginTop: '8px'}} />
-                <Typography 
+                <Typography
                   variant={active === 'invoice' ? 'body1' : 'body2'}
                   color={active === 'invoice' ? 'textPrimary' : 'textSecondary'}
                   onClick={() => setActive('invoice')}
                   style={active === 'invoice' ? {fontWeight: 'bold', marginLeft: '10px', width: '100px', cursor: 'pointer'} : {fontWeight: 'none', marginLeft: '10px', width: '100px', cursor: 'pointer'}}
                 >
-                  Invoices
+                  {translate('common:misc.invoices')}
                 </Typography>
                 <Typography color='primary' variant='caption' style={{marginLeft: 'auto', marginRight: '81px', cursor: 'pointer'}}>
-                  <Link to='/users'>{active === 'payment' && 'Make New Payment'}</Link>
+                  <Link to='/users'>{active === 'payment' && translate('dashboard.make_new_payment')}</Link>
                 </Typography>
               </Grid>
             </div>
@@ -110,10 +111,11 @@ export default function PaymentSummary({ authState }) {
           {active === 'invoice' ? (
             <Grid container spacing={2} style={matches ? {padding: '20px'} : {padding: '20px 57px 20px 79px', width: '99%'}}>
               {
-                Object.entries(invoiceCardContent).map(([key, val]) => (
+                // eslint-disable-next-line no-unused-vars
+                Object.entries(invoiceCardContent).map(([key, _val]) => (
                   <Grid item xs={6} sm={3} key={key}>
                     <PaymentSummaryCard
-                      title={val}
+                      title={translate(`dashboard.invoice.${key}`)}
                       value={propAccessor(data?.invoiceSummary, key)}
                       handleClick={handleClick}
                       query={key}
@@ -125,10 +127,11 @@ export default function PaymentSummary({ authState }) {
           ) : (
             <Grid container spacing={2} style={matches ? {padding: '20px'} : {padding: '20px 57px 20px 79px', width: '99%'}}>
               {
-                Object.entries(paymentCardContent).map(([key, val]) => (
+                // eslint-disable-next-line no-unused-vars
+                Object.entries(paymentCardContent).map(([key, _val]) => (
                   <Grid item xs={6} sm={3} key={key}>
                     <PaymentSummaryCard
-                      title={val}
+                      title={translate(`dashboard.payment.${key}`)}
                       value={propAccessor(payData?.paymentSummary, key)}
                       currencyData={currencyData}
                       handleClick={handleClick}
@@ -142,33 +145,34 @@ export default function PaymentSummary({ authState }) {
           {matches && active === 'payment' && (
             <div style={{display: 'flex', marginLeft: '20px', cursor: 'pointer'}}>
               <Typography color='primary' style={{marginRight: '10px'}}>
-                <Link to='/users'>Make New Payment</Link>
+                <Link to='/users'>{translate('dashboard.make_new_payment')}</Link>
               </Typography>
               <TrendingFlatIcon style={{color: '#66A59A'}} />
             </div>
           )}
         </div>
       )}
-    </div> 
+    </div>
   )
 }
 
 const useStyles = makeStyles(() => ({
   circle: {
-    width: '10px', 
-    height: '10px', 
-    border: '1px solid black', 
+    width: '10px',
+    height: '10px',
+    border: '1px solid black',
     borderRadius: '50%'
   },
   circleTwo: {
-    width: '10px', 
-    height: '10px', 
-    marginLeft: '8px', 
-    border: '1px solid black', 
+    width: '10px',
+    height: '10px',
+    marginLeft: '8px',
+    border: '1px solid black',
     borderRadius: '50%'
   }
 }));
 
 PaymentSummary.propTypes = {
-  authState: shape({ ...authStateProps }).isRequired
+  authState: shape({ ...authStateProps }).isRequired,
+  translate: PropTypes.func.isRequired
 };

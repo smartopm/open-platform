@@ -8,6 +8,29 @@
     "identity": "Identity",
     "entry_logs": "Entry Logs",
     "log_entry": "Manual",
-    "scan": "Scan"
+    "scan": "Scan",
+    "view_customer_journey": "View Customer Journey",
+    "make_new_payment": "Make New Payment",
+    "payment": {
+      "today": "Total amount in payment today",
+      "oneWeek": "Total amount in payment this week",
+      "oneMonth": "Total amount in payment this month",
+      "overOneMonth": "Total amount in payment this year"
+    },
+    "invoice": {
+      "today": "Total invoices due today",
+      "oneWeek": "Total invoices 1 week past due",
+      "oneMonth": "Total invoices 1 month past due",
+      "overOneMonth": "Total invoices over 1 month past due"
+    },
+    "task_reminders": "Task Reminders",
+    "no_pending_tasks": "No pending tasks",
+    "pending_tasks_text": "Your pending tasks will appear here",
+    "recent_news": "Recent News",
+    "my_id_card": "My ID Card",
+    "my_account": "My Account",
+    "my_messages": "My Messages",
+    "my_thebe_portal": "My Thebe Portal",
+    "call_manager": "Call Manager"
   }
 }

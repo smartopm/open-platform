@@ -10,6 +10,7 @@ import GridListTile from '@material-ui/core/GridListTile';
 import { useHistory } from 'react-router-dom';
 import EventNoteIcon from '@material-ui/icons/EventNote';
 import Typography from '@material-ui/core/Typography';
+import PropTypes from 'prop-types';
 import { AssignedTaskQuery } from '../graphql/task_reminder_query'
 import { Spinner } from '../../../../shared/Loading';
 import { dateToString } from '../../../../utils/dateutil';
@@ -17,7 +18,7 @@ import CenteredContent from '../../../../components/CenteredContent';
 import { formatError, removeNewLines, sanitizeText } from '../../../../utils/helpers';
 import EmptyCard from '../../../../shared/EmptyCard'
 
-export default function TaskReminderCard() {
+export default function TaskReminderCard({ translate }) {
   const matches = useMediaQuery('(max-width:600px)')
   const { loading, data, error } = useQuery(AssignedTaskQuery, {
     fetchPolicy: 'cache-and-network',
@@ -41,7 +42,7 @@ export default function TaskReminderCard() {
       {loading ? <Spinner /> : (
         <div>
           <div style={{display: 'flex'}}>
-            <Typography variant='h6' style={matches ? {margin: '20px 0 26px 20px', fontWeight: 'bold'} : {margin: '20px 0 26px 79px', fontWeight: 'bold'}}>Task Reminders</Typography>
+            <Typography variant='h6' style={matches ? {margin: '20px 0 26px 20px', fontWeight: 'bold'} : {margin: '20px 0 26px 79px', fontWeight: 'bold'}}>{translate('dashboard.task_reminders')}</Typography>
             {matches ? null : <TrendingFlatIcon style={matches ? {marginLeft: 'auto', order: 2, marginTop: '20px', marginRight: '20px'} : {marginLeft: 'auto', order: 2, marginTop: '20px', marginRight: '80px'}} />}
           </div>
           <div>
@@ -54,7 +55,7 @@ export default function TaskReminderCard() {
                         <div className={classes.date} style={checkDate(tile.dueDate) ? {color: 'red'} : null}>
                           <EventNoteIcon style={{marginRight: '10px', heigth: '15px', width: '15px', verticalAlign: 'middle'}} />
                           <Typography variant='overline' style={{paddingBottom: '5px'}}>
-                            Due
+                            {translate('common:misc.due_text')}
                             {' '}
                             {dateToString(tile.dueDate)}
                           </Typography>
@@ -74,7 +75,7 @@ export default function TaskReminderCard() {
                 </GridList>
               </div>
             ) : (
-              <EmptyCard title='No pending tasks' subtitle='Your pending tasks will appear here' />
+              <EmptyCard title={translate('dashboard.no_pending_tasks')} subtitle={translate('dashboard.pending_tasks_text')} />
             )}
           </div>
         </div>
@@ -105,7 +106,11 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: '8px',
   },
   date: {
-    display: 'flex', 
+    display: 'flex',
     marginBottom: '-8px'
   }
 }));
+
+TaskReminderCard.propTypes = {
+  translate: PropTypes.func.isRequired
+};

@@ -5,14 +5,20 @@ import TimelineIcon from '@material-ui/icons/Timeline';
 import useMediaQuery from '@material-ui/core/useMediaQuery'
 import Typography from '@material-ui/core/Typography';
 import { useHistory } from 'react-router-dom';
+import PropTypes from 'prop-types';
 
-export default function ViewCustomerJourney() {
+export default function ViewCustomerJourney({ translate }) {
   const matches = useMediaQuery('(max-width:600px)')
   const history = useHistory();
+
   return (
     <div data-testid='customer' style={matches ? {display: 'flex', margin: '20px 0 0 20px', cursor: 'pointer'} :{display: 'flex', margin: '20px 0 0 79px', cursor: 'pointer'}} onClick={() => history.push('/users/stats')}>
       <TimelineIcon style={{color: '#66A59A', marginRight: '10px', verticalAlign: 'middle'}} />
-      <Typography color='primary' variant='caption' data-testid='view'>View Customer Journey</Typography>
+      <Typography color='primary' variant='caption' data-testid='view'>{translate('dashboard.view_customer_journey')}</Typography>
     </div>
   )
 }
+
+ViewCustomerJourney.propTypes = {
+  translate: PropTypes.func.isRequired
+};
