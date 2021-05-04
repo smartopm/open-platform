@@ -4,9 +4,9 @@ import '@testing-library/jest-dom/extend-expect';
 import { BrowserRouter } from 'react-router-dom';
 import { ApolloProvider } from 'react-apollo';
 import { MockedProvider } from '@apollo/react-testing';
-import Support from '../../containers/Support';
-import { Context } from '../../containers/Provider/AuthStateProvider';
-import { createClient } from '../../utils/apollo';
+import Support from '../Components/Support';
+import { Context } from '../../../containers/Provider/AuthStateProvider';
+import { createClient } from '../../../utils/apollo';
 
 describe('Support main page', () => {
   const data = {

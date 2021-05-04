@@ -1,7 +1,7 @@
 import React, { Fragment, useContext } from 'react'
 import { useHistory } from 'react-router-dom'
-import { Context as AuthStateContext } from './Provider/AuthStateProvider'
-import SupportCard from '../components/SupportCard'
+import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider'
+import SupportCard from './SupportCard'
 
 
 export default function Support() {

@@ -2,7 +2,7 @@ import React from 'react';
 import { render } from '@testing-library/react'
 import '@testing-library/jest-dom/extend-expect'
 import { BrowserRouter } from 'react-router-dom/'
-import Support, {  SupportContact } from '../components/SupportCard'
+import Support, {  SupportContact } from '../Components/SupportCard'
 
 describe("Support card loads component", () => {
   const user = {

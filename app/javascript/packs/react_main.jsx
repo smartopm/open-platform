@@ -28,7 +28,6 @@ import Map from '../src/containers/Map';
 import LoginScreen from '../src/components/AuthScreens/LoginScreen';
 import ConfirmCodeScreen from '../src/components/AuthScreens/ConfirmCodeScreen';
 import OneTimeLoginCode from '../src/components/AuthScreens/OneTimeLoginCode';
-import Support from '../src/containers/Support';
 import MobileMoney from '../src/components/MobileMoney';
 import GuardHome from '../src/modules/Dashboard/Components/GuardHome';
 import EntryRequest from '../src/containers/Requests/EntryRequest';
@@ -253,7 +252,6 @@ const App = () => {
                                 <Route path="/map" component={Map} />
                                 <Route path="/myplot" component={GeoMap} />
                                 <Route path="/mobile_money" component={MobileMoney} />
-                                <Route path="/contact" component={Support} />
                                 <Route path="/settings" component={Notifications} />
                                 {/* <Route path="/otp_sent" component={OTPFeedbackScreen} /> */}
                                 <Route path="/referral" component={UserEdit} />
