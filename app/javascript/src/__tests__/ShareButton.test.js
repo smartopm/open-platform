@@ -12,7 +12,8 @@ describe('share button', () => {
   it('should render with the proper props', () => {
     const props = {
       url: 'https://dev.dgdp.site/news',
-      doOnShare: jest.fn
+      doOnShare: jest.fn,
+      communityName: 'Demo'
     }
     window.open = jest.fn()
     const container = render(<ShareButton {...props} />)
