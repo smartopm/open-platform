@@ -215,7 +215,8 @@ export const formStatus = {
 };
 
 export const currencies = {
-  zambian_kwacha: 'ZMW'
+  zambian_kwacha: 'ZMW',
+  honduran_lempira: 'HNL'
 };
 export const locales = [
   'en-IN',
