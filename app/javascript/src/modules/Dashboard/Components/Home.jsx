@@ -4,12 +4,12 @@ import Divider from '@material-ui/core/Divider';
 import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider'
 import Loading from '../../../shared/Loading'
 import Homepage from '../../../components/HomePage'
-import NewsFeed from '../../../components/NewsPage/NewsFeed'
 import { TaskReminder } from '../../Tasks'
 import { PaymentSummary } from '../../Payments'
 import UserDetail from '../../Users/Components/UserDetail'
 import ViewCustomerJourney from '../../CustomerJourney/Components/ViewCustomerJourney'
 import LanguageToggle from '../../i18n/Components/LanguageToggle';
+import NewsFeed from '../../News/Components/NewsFeed';
 
 export default function Home() {
   const authState = useContext(AuthStateContext)
@@ -27,12 +27,12 @@ export default function Home() {
           <Divider />
           <TaskReminder />
           <Divider />
-          <NewsFeed />
+          <NewsFeed wordpressEndpoint={authState.user?.community.wpLink} />
         </div>
       )}
       {authState.user.userType !== 'admin' && (
         <div>
-          <NewsFeed />
+          <NewsFeed wordpressEndpoint={authState.user?.community.wpLink} />
           <Homepage authState={authState} />
         </div>
       )}

@@ -55,8 +55,6 @@ import CampaignCreate from '../src/containers/Campaigns/CampaignCreate';
 import Scan from '../src/containers/Scan';
 import WelcomePage from '../src/components/AuthScreens/WelcomePage';
 import CampaignUpdate from '../src/containers/Campaigns/CampaignUpdate';
-import Posts from '../src/containers/Posts/Posts';
-import PostPage from '../src/containers/Posts/PostPage';
 import ThemeProvider from '../Themes/Nkwashi/ThemeProvider';
 import DiscussonPage from '../src/containers/Discussions/DiscussionPage';
 import BusinessProfile from '../src/containers/Businesses/BusinessProfile';
@@ -71,8 +69,9 @@ import CommentsPage from '../src/containers/Comments/CommentPage';
 import { MainMenu } from '../src/modules/Menu';
 import modules from '../src/modules';
 import UserRoutes from '../src/modules/Users/UserRoutes';
-import { useTranslation } from 'react-i18next';
 import I18Initializer from '../src/modules/i18n/Components/I18Initializer';
+import PostPage from '../src/modules/News/Components/PostPage';
+import Posts from '../src/modules/News/Components/Posts';
 
 // The routes defined here are carefully arranged, be mindful when changing them
 

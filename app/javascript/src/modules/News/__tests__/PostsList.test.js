@@ -4,10 +4,10 @@ import { render } from '@testing-library/react'
 import '@testing-library/jest-dom/extend-expect'
 import { BrowserRouter } from 'react-router-dom'
 import { MockedProvider } from '@apollo/react-testing'
-import  { useFetch }  from '../utils/customHooks'
-import PostsList from '../components/NewsPage/PostList'
+import  { useFetch }  from '../../../utils/customHooks'
+import PostsList from '../Components/PostList'
 
-jest.mock('../utils/customHooks')
+jest.mock('../../../utils/customHooks')
 
 describe("Posts List Component ",() => {
   useFetch.mockReturnValue({
@@ -31,7 +31,7 @@ describe("Posts List Component ",() => {
      const container =  render(
        <MockedProvider mocks={[]}>
          <BrowserRouter>
-           <PostsList />
+           <PostsList wordpressEndpoint="https://public-api.wordpress.com/rest/v1.1/sites/doublegdp.wordpress.com" />
          </BrowserRouter>
        </MockedProvider>
      )

@@ -1,6 +1,6 @@
 import React from 'react';
 import { render } from '@testing-library/react';
-import PostItem from '../components/NewsPage/PostItem';
+import PostItem from '../Components/PostItem';
 
 describe('Testing the posts Card', () => {
   const data = {

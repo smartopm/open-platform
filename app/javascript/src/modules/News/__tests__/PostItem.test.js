@@ -1,7 +1,7 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import React from 'react'
 import { render } from '@testing-library/react'
-import PostItem from '../components/NewsPage/PostItem';
+import PostItem from '../Components/PostItem';
 import '@testing-library/jest-dom/extend-expect'
 
 describe('Details page for news post content', () => {

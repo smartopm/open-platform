@@ -6,10 +6,10 @@ import GridList from '@material-ui/core/GridList'
 import GridListTile from '@material-ui/core/GridListTile'
 import useMediaQuery from '@material-ui/core/useMediaQuery'
 import { Typography } from '@material-ui/core'
-import { useFetch } from '../../utils/customHooks'
-import { wordpressEndpoint } from '../../utils/constants'
-import { Spinner } from '../../shared/Loading'
-import CenteredContent from '../CenteredContent'
+import PropTypes from 'prop-types'
+import { useFetch } from '../../../utils/customHooks'
+import { Spinner } from '../../../shared/Loading'
+import CenteredContent from '../../../components/CenteredContent'
 
 const NUMBER_OF_POSTS_TO_DISPLAY = 5
 const useStyles = makeStyles(theme => ({
@@ -80,7 +80,7 @@ export function PostItemGrid({ data }) {
   )
 }
 
-export default function NewsFeed() {
+export default function NewsFeed({ wordpressEndpoint }) {
   const { response, error } = useFetch(`${wordpressEndpoint}/posts`)
   if (error) {
     return (
@@ -121,4 +121,9 @@ function postsToDisplay(posts) {
   }
 
   return data
+}
+
+
+NewsFeed.propTypes = {
+  wordpressEndpoint: PropTypes.string.isRequired,
 }

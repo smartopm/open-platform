@@ -15,6 +15,7 @@ export const CurrentCommunityQuery = gql`
       locale
       tagline
       language
+      wpLink
     }
   }
 `;

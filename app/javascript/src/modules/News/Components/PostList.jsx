@@ -4,19 +4,20 @@ import React, { useState } from 'react'
 import { Typography, Box, Divider, Grid } from '@material-ui/core'
 import { useParams } from 'react-router-dom'
 import { Pagination } from '@material-ui/lab'
+import PropTypes from 'prop-types'
 import PostItem from './PostItem'
-import { dateToString } from '../DateContainer'
-import { useFetch } from '../../utils/customHooks'
+import { dateToString } from '../../../components/DateContainer'
+import { useFetch } from '../../../utils/customHooks'
 import Categories from './Categories'
-import { wordpressEndpoint } from '../../utils/constants'
-import { ShareButton } from '../ShareButton'
-import { Spinner } from '../../shared/Loading'
-import CenteredContent from '../CenteredContent'
-import { titleize } from '../../utils/helpers'
+import { ShareButton } from '../../../components/ShareButton'
+import { Spinner } from '../../../shared/Loading'
+import CenteredContent from '../../../components/CenteredContent'
+import { titleize } from '../../../utils/helpers'
 
-export default function PostsList() {
+export default function PostsList({ wordpressEndpoint }) {
     const { slug } = useParams()
     const [page, setPageNumber] = useState(1)
+    
     const limit = 20
     const { response, error } = useFetch(`${wordpressEndpoint}/posts/?number=${limit}&page=${page}&category=${slug || ''}`)
     const currentUrl = window.location.href
@@ -44,7 +45,7 @@ export default function PostsList() {
             {titleize(slug || "Posts")}
           </Typography>
         </Box>
-        <Categories />
+        <Categories wordpressEndpoint={wordpressEndpoint} />
         <div>
           <br />
           <Divider light variant="middle" />
@@ -85,4 +86,8 @@ export default function PostsList() {
         <ShareButton url={currentUrl} />
       </>
     )
+}
+
+PostsList.propTypes = {
+  wordpressEndpoint: PropTypes.string.isRequired
 }

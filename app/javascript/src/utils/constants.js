@@ -7,8 +7,8 @@ export const filterUserByLoggedin = {
   log_on: 'logged in on'
 };
 
-export const wordpressEndpoint =
-  'https://public-api.wordpress.com/rest/v1.1/sites/doublegdp.wordpress.com';
+// export const wordpressEndpoint =
+//   'https://public-api.wordpress.com/rest/v1.1/sites/doublegdp.wordpress.com';
 export const reasons = ['Visiting', 'Residing', 'Working', 'Passing through', 'Other'];
 
 export const requiredFields = ['userType', 'phoneNumber', 'name', 'email'];

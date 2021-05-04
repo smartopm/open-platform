@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { useParams, Redirect, useHistory } from 'react-router-dom'
 import { useQuery, useMutation } from 'react-apollo'
 import {
@@ -12,19 +12,19 @@ import {
 } from '@material-ui/core'
 import { css } from 'aphrodite'
 import CloseIcon from '@material-ui/icons/Close';
-import { wordpressEndpoint } from '../../utils/constants'
-import { useFetch, useWindowDimensions } from '../../utils/customHooks'
-import { ShareButton, styles } from '../../components/ShareButton'
-import { Context as AuthStateContext } from "../Provider/AuthStateProvider"
-import { Spinner } from '../../shared/Loading'
-import IframeContainer from '../../components/IframeContainer'
-import { PostDiscussionQuery, PostCommentsQuery } from '../../graphql/queries'
-import Comments from '../../components/Discussion/Comment'
-import { DiscussionMutation } from '../../graphql/mutations'
-import CenteredContent from '../../components/CenteredContent'
-import TagsComponent from '../../components/NewsPage/Tags'
-import MessageAlert from "../../components/MessageAlert"
-import { NewsNav } from '../../modules/Menu'
+import { useWindowDimensions } from '../../../utils/customHooks'
+import { ShareButton, styles } from '../../../components/ShareButton'
+import { Context as AuthStateContext } from "../../../containers/Provider/AuthStateProvider"
+import { Spinner } from '../../../shared/Loading'
+import IframeContainer from '../../../components/IframeContainer'
+import { PostDiscussionQuery, PostCommentsQuery } from '../../../graphql/queries'
+import Comments from '../../../components/Discussion/Comment'
+import { DiscussionMutation } from '../../../graphql/mutations'
+import CenteredContent from '../../../components/CenteredContent'
+import TagsComponent from './Tags'
+import MessageAlert from "../../../components/MessageAlert"
+import { NewsNav } from "../../Menu"
+import { CurrentCommunityQuery } from '../../Community/graphql/community_query'
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -37,7 +37,7 @@ export default function PostPage() {
   const authState = useContext(AuthStateContext)
   const currentUrl = window.location.href
   const { width, height } = useWindowDimensions()
-  const { response } = useFetch(`${wordpressEndpoint}/posts/${id}`)
+  
   const [isLoading, setLoading] = useState(false);
   const queryResponse = useQuery(PostDiscussionQuery, {
     variables: { postId: id }
@@ -45,9 +45,29 @@ export default function PostPage() {
   const { loading, data, refetch, fetchMore } = useQuery(PostCommentsQuery, {
     variables: { postId: id, limit }
   })
+  const communityQuery = useQuery(CurrentCommunityQuery)
   const [discuss] = useMutation(DiscussionMutation)
   const [isSuccessAlert, setIsSuccessAlert] = useState(false)
   const [messageAlert, setMessageAlert] = useState('')
+  const [response, setData] = useState({});
+  const [error, setError] = useState(null)
+
+  const fetchData = async (url) => {
+    try {
+      const result = await fetch(url);
+      const json = await result.json();
+      setData(json);
+    } catch (err) {
+      setError(err);
+    }
+  };
+
+  useEffect(() => {
+    if (!communityQuery.loading && communityQuery.data.currentCommunity) {
+      fetchData(`${communityQuery.data?.currentCommunity.wpLink}/posts/${id}`);
+    }
+
+  }, [communityQuery.loading])
 
   function createDiscussion(title, discId) {
     setLoading(true)
@@ -88,14 +108,13 @@ export default function PostPage() {
     })
   }
 
-  if (!response || queryResponse.loading || loading) {
+  if (!response || queryResponse.loading || loading || communityQuery.loading) {
     return <Spinner />
   }
   // instead of redirecting, ask them to log in
   if (response.categories?.Private && !authState.loggedIn) {
     return <Redirect to="/welcome" />
   }
-
   return (
     <>
       <MessageAlert
@@ -114,8 +133,10 @@ export default function PostPage() {
           width={width}
           height={height}
         />
+        {error}
         <TagsComponent 
           tags={response?.tags}
+          wordpressEndpoint={communityQuery.data?.currentCommunity.wpLink}
         />
         <ShareButton
           url={currentUrl}

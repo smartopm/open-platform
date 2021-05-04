@@ -2,10 +2,10 @@
 import React from 'react'
 import { render } from '@testing-library/react'
 import '@testing-library/jest-dom/extend-expect'
-import Categories from '../components/NewsPage/Categories'
-import  { useFetch }  from '../utils/customHooks'
+import Categories from '../Components/Categories'
+import  { useFetch }  from '../../../utils/customHooks'
 
-jest.mock('../utils/customHooks')
+jest.mock('../../../utils/customHooks')
 
 describe("Categories Component ",() => {
   useFetch.mockReturnValue({
@@ -27,7 +27,7 @@ describe("Categories Component ",() => {
   });
 
   it('should render without error and have all Categories', async () => {
-     const container =  render(<Categories />)
+     const container =  render(<Categories wordpressEndpoint="https://public-api.wordpress.com/rest/v1.1/sites/doublegdp.wordpress.com" />)
      expect(useFetch).toBeCalledWith("https://public-api.wordpress.com/rest/v1.1/sites/doublegdp.wordpress.com/categories");
       expect(container).toMatchSnapshot();
   })

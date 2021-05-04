@@ -1,4 +1,4 @@
-import News from '../../containers/Posts/Posts'
+import News from './Components/Posts'
 import { allUserTypes } from '../../utils/constants';
 
 export default {

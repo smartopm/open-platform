@@ -41,6 +41,7 @@ const QUERY = gql`
         currency
         locale
         language
+        wpLink
       }
     }
   }
