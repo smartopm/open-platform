@@ -16,6 +16,14 @@
   "misc": {
     "or": "O",
     "share": "Cuota",
-    "copied": "Copiado al portapapeles!"
+    "copied": "Copiado al portapapeles!",
+    "first_to_comment": "Se el primero en comentar",
+    "comment": "Comentario",
+    "comment_plural": "Comentarios",
+    "type_comment": "Escriba un comentario aquí",
+    "send": "enviar"
+  },
+  "errors": {
+    "empty_text": "El mensaje debe contener algo de texto"
   }
 }

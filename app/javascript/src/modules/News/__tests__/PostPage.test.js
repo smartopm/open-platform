@@ -64,7 +64,7 @@ describe('NewsPage Component', () => {
     });
 
     await waitFor(() => {
-      expect(container.getByText(/news.view_comments/)).toBeInTheDocument();
+      expect(container.getByText(/common:misc.comment/)).toBeInTheDocument();
     }, 10)
   });
 });

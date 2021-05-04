@@ -52,7 +52,7 @@ export default function PostPage() {
   const [messageAlert, setMessageAlert] = useState('')
   const [response, setData] = useState({});
   const [error, setError] = useState(null)
-  const { t } = useTranslation('news')
+  const { t } = useTranslation(['news', 'common'])
 
   const fetchData = async (url) => {
     try {
@@ -157,7 +157,7 @@ export default function PostPage() {
           className={`btn ${css(styles.getStartedButton)} `}
           color="primary"
         >
-          {t('news.view_comments')}
+          {t('common:misc.comment', { count: 0 })}
           {' '}
           <Avatar>{data ? data.postComments.length : 0}</Avatar>
 
@@ -171,7 +171,7 @@ export default function PostPage() {
                 <CloseIcon />
               </IconButton>
               <Typography variant="h6">
-                {t('news.comments')}
+                {t('common:misc.comment', { count: 0 })}
               </Typography>
             </Toolbar>
           </AppBar>

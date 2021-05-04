@@ -16,6 +16,14 @@
   "misc": {
     "or": "OR",
     "share": "Share",
-    "copied": "Copied to Clipboard!"
+    "copied": "Copied to Clipboard!",
+    "first_to_comment": "Be the first to comment",
+    "comment": "Comment",
+    "comment_plural": "Comments",
+    "type_comment": "Type a comment here",
+    "send": "Send"
+  },
+  "errors": {
+    "empty_text": "The message must contain some text"
   }
 }
