@@ -224,6 +224,7 @@ export const locales = [
   'en-UK',
   'en-US',
   'en-ZM',
+  'es-HN',
 ]
 export const languages = {
   'English': 'en-US',
