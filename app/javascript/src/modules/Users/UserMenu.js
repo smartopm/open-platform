@@ -93,7 +93,7 @@ export default function formatUserMenu(translate) {
         path: '/user/:id?tab=Payments',
         component: <span />
       },
-      name: translate('common:menu:payments'),
+      name: translate('common:menu:payment', { count: 0}),
       accessibleBy: ['admin'],
       subMenu: formatPaymentMenu(translate)
     },

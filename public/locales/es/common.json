@@ -15,5 +15,30 @@
   },
   "misc": {
     "or": "O"
+  },
+  "menu": {
+    "invoice": "Factura",
+    "invoice_plural": "Facturas",
+    "transaction": "Transacción",
+    "transaction_plural": "Actas",
+    "plan": "Plan",
+    "plan_plural": "Planes",
+    "communication": "Comunicación",
+    "note": "Note",
+    "note_plural": "Notas",
+    "payment": "Pago",
+    "payment_plural": "Pagos",
+    "plot": "La Parcela",
+    "plot_plural": "Parcelas",
+    "form": "Formulario",
+    "form_plural": "Formularios",
+    "customer_journey": "Viaje del cliente",
+    "merge_user": "Fusionar usuario",
+    "user_logs": "Registros de usuario",
+    "user_edit": "Editar usuario",
+    "print_id": "Imprimir ID",
+    "message_support": "Soporte de mensajes",
+    "send_sms": "Enviar SMS",
+    "send_otp": "Enviar OTP"
   }
 }

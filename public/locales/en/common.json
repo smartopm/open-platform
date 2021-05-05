@@ -22,6 +22,23 @@
     "transaction": "Transaction",
     "transaction_plural": "Transactions",
     "plan": "Plan",
-    "plan_plural": "Plans"
+    "plan_plural": "Plans",
+    "communication": "Communication",
+    "note": "Note",
+    "note_plural": "Notes",
+    "payment": "Payment",
+    "payment_plural": "Payments",
+    "plot": "Plot",
+    "plot_plural": "Plots",
+    "form": "Form",
+    "form_plural": "Forms",
+    "customer_journey": "Customer Journey",
+    "merge_user": "Merge User",
+    "user_logs": "User Logs",
+    "user_edit": "User Edit",
+    "print_id": "Print ID",
+    "message_support": "Message Support",
+    "send_sms": "Send SMS",
+    "send_otp": "Send OTP"
   }
 }
