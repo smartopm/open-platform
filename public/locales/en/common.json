@@ -15,5 +15,13 @@
   },
   "misc": {
     "or": "OR"
+  },
+  "menu": {
+    "invoice": "Invoice",
+    "invoice_plural": "Invoices",
+    "transaction": "Transaction",
+    "transaction_plural": "Transactions",
+    "plan": "Plan",
+    "plan_plural": "Plans"
   }
 }
