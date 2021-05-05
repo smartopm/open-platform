@@ -35,7 +35,7 @@ export default function renderTaskData({
 return [
   {
   Select: (
-    <Grid item xs={12} sm={2}>
+    <Grid item xs={12} sm={2} data-testid="subject">
       <Checkbox
         checked={selectedTasks.includes(task.id) || isSelected}
         onChange={() => handleChange(task.id)}
@@ -44,7 +44,7 @@ return [
     </Grid>
   ),
   Task: (
-    <Grid item xs={12} sm={2}>
+    <Grid item xs={12} sm={2} data-testid="task">
       <Typography variant="caption" gutterBottom>
         <span
           style={{ whiteSpace: 'pre-line' }}
@@ -57,25 +57,25 @@ return [
     </Grid>
   ),
   'Created By': (
-    <Grid item xs={12} sm={2}>
+    <Grid item xs={12} sm={2} data-testid="createdby">
       <LinkToUser name={task.author.name} userId={task.author.id} />
       <DateContainer date={task.createdAt} />
     </Grid>
   ),
   Duedate: (
-    <Grid item xs={12} sm={2} style={{fontSize: '12px'}}>
+    <Grid item xs={12} sm={2} style={{fontSize: '12px'}} data-testid="duedate">
       {task.dueDate ? dateToString(task.dueDate) : ' Never '}
     </Grid>
   ),
   Assignees: (
-    <Grid item xs={12} sm={2}>
+    <Grid item xs={12} sm={2} data-testid="assignee">
       {task.assignees.map(user => (
         <LinkToUser key={user.id} name={user.name} userId={user.id} />
       ))}
     </Grid>
   ),
   Menu: (
-    <Grid item xs={12} sm={1}>
+    <Grid item xs={12} sm={1} data-testid="menu">
       <IconButton
         aria-controls="simple-menu"
         aria-haspopup="true"
