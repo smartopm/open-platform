@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { useLocation } from 'react-router';
-import UserForm from '../components/UserForm';
-import { Context } from './Provider/AuthStateProvider';
+import UserForm from '../../../components/UserForm';
+import { Context } from '../../../containers/Provider/AuthStateProvider';
 
 export default function FormContainer() {
   const { state, pathname } = useLocation();

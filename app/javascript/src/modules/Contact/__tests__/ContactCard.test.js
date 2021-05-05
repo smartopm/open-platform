@@ -1,6 +1,6 @@
 /* eslint-disable */
 import React from 'react'
-import SupportCard from '../components/SupportCard'
+import SupportCard from '../Components/SupportCard'
 import { cleanup, render } from '@testing-library/react'
 import { BrowserRouter } from 'react-router-dom/'
 import { MockedProvider } from '@apollo/react-testing'
