@@ -224,6 +224,11 @@ const App = () => {
                                 />
                                 <Route
                                   exact
+                                  path="/mymessages"
+                                  render={() => <Redirect to={`/message/${user.id}`} />}
+                                />
+                                <Route
+                                  exact
                                   path="/myprofile"
                                   render={() => <Redirect to={`/user/${user.id}`} />}
                                 />
