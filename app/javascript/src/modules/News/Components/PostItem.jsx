@@ -12,6 +12,7 @@ import Typography from '@material-ui/core/Typography';
 import { red } from '@material-ui/core/colors';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import Box from '@material-ui/core/Box';
+import { useTranslation } from 'react-i18next';
 import { sanitizeText, truncateString } from '../../../utils/helpers'
 
 export default function PostItem({
@@ -19,6 +20,7 @@ export default function PostItem({
 }) {
   // eslint-disable-next-line no-use-before-define
   const classes = useStyles();
+  const { t } = useTranslation('news')
   return (
     <Card className={classes.root}>
       <CardHeader
@@ -60,7 +62,7 @@ export default function PostItem({
           }}
         >
           <Typography color="textSecondary" component="p">
-            Read More
+            {t('news.read_more')}
           </Typography>
           <ChevronRightIcon />
         </Box>

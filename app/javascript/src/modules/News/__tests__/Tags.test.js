@@ -1,6 +1,6 @@
 import React from 'react'
 import { MockedProvider } from '@apollo/react-testing'
-import { act, render, fireEvent } from '@testing-library/react'
+import { act, render, fireEvent, waitFor } from '@testing-library/react'
 import '@testing-library/jest-dom/extend-expect'
 import Tag from '../Components/Tag'
 import TagPosts from '../Components/TagPosts'
@@ -85,8 +85,10 @@ describe('TagPosts', () => {
     })
 
     expect(useFetch).toBeCalledWith(`https://public-api.wordpress.com/rest/v1.1/sites/doublegdp.wordpress.com/posts/?tag=${props.tagName}`);
-    expect(container.queryByText(/related posts/i)).toBeTruthy()
-    expect(container.queryByText(/follow tag/i)).toBeTruthy()
-    expect(container.queryByText(/Post on Architecture/i)).toBeTruthy()
+    expect(container.queryByText(/news.related_posts/)).toBeInTheDocument()
+    await waitFor(() => {
+      expect(container.queryByTestId('follow_btn').textContent).toContain('news.unfollow_tag')
+      expect(container.queryByText(/Post on Architecture/i)).toBeInTheDocument()
+    }, 10)
   });
 });

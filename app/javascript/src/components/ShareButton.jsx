@@ -20,13 +20,15 @@ import {
     WhatsappIcon
 } from 'react-share'
 import PropTypes from 'prop-types'
+import { useTranslation } from 'react-i18next';
 import { StyleSheet } from 'aphrodite';
 import { copyText } from '../utils/helpers'
 
-export function ShareButton({ url, styles, doOnShare }) {
+export function ShareButton({ url, styles, doOnShare, communityName }) {
     const [openPopper, setOpenPopper] = useState(false)
     const [anchorEl, setAnchorEl] = useState(null);
     const [open, setOpen] = useState(false)
+    const { t } = useTranslation(['common', 'news'])
 
     function onShareClick(linkType) {
         doOnShare()
@@ -71,7 +73,7 @@ export function ShareButton({ url, styles, doOnShare }) {
             <WhatsappShareButton url={url} title={document.title} onClick={() => onShareClick('whatsApp')} data-testid="whatsapp">
               <WhatsappIcon size={50} round />
             </WhatsappShareButton>
-            <EmailShareButton url={url} subject={document.title} body={"Hi, vist Nkwashi's news page"} beforeOnClick={onEmailClick} data-testid="email">
+            <EmailShareButton url={url} subject={document.title} body={`Hi, visit ${communityName} news page`} beforeOnClick={onEmailClick} data-testid="email">
               <EmailIcon size={50} round />
             </EmailShareButton>
             <FacebookShareButton url={url} title={document.title} onClick={() => onShareClick('facebook')} data-testid="facebook">
@@ -92,7 +94,7 @@ export function ShareButton({ url, styles, doOnShare }) {
           <ShareIcon />
           {"  "}
           {' '}
-          Share
+          {t('common:misc.share')}
         </Fab>
         <div className="row container flex-row">
           <Snackbar
@@ -113,7 +115,7 @@ export function ShareButton({ url, styles, doOnShare }) {
                 <div className="row d-flex m-20">
                   <CheckCircleIconBase />
                   <span className="justify-content-center" id="client-snackbar">
-                    Copied to Clipboard!
+                    {t('common:misc.copied')}
                   </span>
                 </div>
                           )}
@@ -140,7 +142,8 @@ ShareButton.propTypes = {
         right: PropTypes.number,
     }),
     url: PropTypes.string.isRequired,
-    doOnShare: PropTypes.func
+    doOnShare: PropTypes.func,
+    communityName: PropTypes.string.isRequired
 }
 
 export const styles = StyleSheet.create({

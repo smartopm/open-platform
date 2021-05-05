@@ -291,7 +291,7 @@ const App = () => {
                                   exact
                                   component={ClientRequestForm}
                                 />
-                                <Route path="/news/:slug" exact component={Posts} />
+                                <Route path="/news/slug" exact component={Posts} />
                                 <Route path="/discussions/:id" exact component={DiscussonPage} />
                                 <Route path="/business/:id" exact component={BusinessProfile} />
                                 <Route path="/form/:formId?/:formName?" component={FormPage} />

@@ -4,6 +4,6 @@ import PostsList from './PostList';
 
 export default function Posts() {
   const authState = useContext(Context);
-  const wordpressEndpoint = authState.user?.community.wpLink;
-  return <PostsList wordpressEndpoint={wordpressEndpoint} />;
+  const { wpLink, name } = authState.user?.community;
+  return <PostsList wordpressEndpoint={wpLink} communityName={name} />;
 }

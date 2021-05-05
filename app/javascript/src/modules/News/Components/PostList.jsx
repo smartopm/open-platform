@@ -2,9 +2,10 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 import React, { useState } from 'react'
 import { Typography, Box, Divider, Grid } from '@material-ui/core'
-import { useParams } from 'react-router-dom'
+import { useLocation } from 'react-router-dom'
 import { Pagination } from '@material-ui/lab'
 import PropTypes from 'prop-types'
+import { useTranslation } from 'react-i18next'
 import PostItem from './PostItem'
 import { dateToString } from '../../../components/DateContainer'
 import { useFetch } from '../../../utils/customHooks'
@@ -14,11 +15,12 @@ import { Spinner } from '../../../shared/Loading'
 import CenteredContent from '../../../components/CenteredContent'
 import { titleize } from '../../../utils/helpers'
 
-export default function PostsList({ wordpressEndpoint }) {
-    const { slug } = useParams()
+export default function PostsList({ wordpressEndpoint, communityName }) {
+    const { pathname } = useLocation()
     const [page, setPageNumber] = useState(1)
-    
+    const { t } = useTranslation('news')
     const limit = 20
+    const slug = pathname.split('/')[2]
     const { response, error } = useFetch(`${wordpressEndpoint}/posts/?number=${limit}&page=${page}&category=${slug || ''}`)
     const currentUrl = window.location.href
 
@@ -42,7 +44,7 @@ export default function PostsList({ wordpressEndpoint }) {
       <>
         <Box style={{ display: 'flex', justifyContent: 'center', 'marginTop': '7px'}}>
           <Typography variant='h4' color='textSecondary'>
-            {titleize(slug || "Posts")}
+            {titleize(slug || t('news.posts'))}
           </Typography>
         </Box>
         <Categories wordpressEndpoint={wordpressEndpoint} />
@@ -68,7 +70,7 @@ export default function PostsList({ wordpressEndpoint }) {
                   </div>
                 </Box>
               </Grid>
-                    )) : <p>No Post Found in this category</p>}
+                    )) : <p>{t('news.no_post')}</p>}
           </Grid>
           {
             totalPosts > limit && (
@@ -83,11 +85,12 @@ export default function PostsList({ wordpressEndpoint }) {
             )
           }
         </div>
-        <ShareButton url={currentUrl} />
+        <ShareButton url={currentUrl} communityName={communityName} />
       </>
     )
 }
 
 PostsList.propTypes = {
-  wordpressEndpoint: PropTypes.string.isRequired
+  wordpressEndpoint: PropTypes.string.isRequired,
+  communityName: PropTypes.string.isRequired,
 }
