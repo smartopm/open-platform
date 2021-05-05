@@ -6,6 +6,7 @@ import Badge from '@material-ui/core/Badge'
 import ListItemText from '@material-ui/core/ListItemText'
 import { css, StyleSheet } from 'aphrodite'
 import { useHistory } from 'react-router'
+import { useTranslation } from 'react-i18next'
 import DateContainer from '../../../components/DateContainer'
 import colors from '../../../themes/nkwashi/colors'
 import CenteredContent from '../../../components/CenteredContent'
@@ -13,8 +14,9 @@ import CenteredContent from '../../../components/CenteredContent'
 const { gray } = colors
 export default function UserFilledForms({ userFormsFilled, userId }) {
   const history = useHistory()
+  const { t } = useTranslation('common')
   if(!userFormsFilled || !userFormsFilled.length){
-    return <CenteredContent>You have no forms </CenteredContent>
+    return <CenteredContent>{t('misc.no_forms')}</CenteredContent>
   }
 
   function handleViewForm(formId, formName) {
@@ -42,7 +44,8 @@ export default function UserFilledForms({ userFormsFilled, userId }) {
                   />
 
                   <span className={css(styles.timeStamp)}>
-                    Created:
+                    {t('misc.created_at')}
+                    :
                     {' '}
                     <DateContainer date={userForm.createdAt} />
                   </span>

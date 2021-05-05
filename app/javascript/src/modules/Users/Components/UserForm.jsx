@@ -8,6 +8,7 @@ import { useHistory, useParams } from 'react-router-dom'
 import { Button, Typography } from '@material-ui/core'
 import { useApolloClient, useLazyQuery, useMutation } from 'react-apollo'
 import PropTypes from 'prop-types'
+import { useTranslation } from 'react-i18next'
 import {
   reasons,
   requiredFields,
@@ -52,6 +53,7 @@ export function formatContactType(value, type) {
 export default function UserForm({ isEditing, isFromRef, isAdmin }) {
   const { id } = useParams()
   const history = useHistory()
+  const { t } = useTranslation('common')
   const authState = React.useContext(AuthStateContext)
   const [data, setData] = React.useState(initialValues)
   const [phoneNumbers, setPhoneNumbers] = React.useState([])
@@ -212,7 +214,7 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
       <form onSubmit={handleSubmit}>
         {!isFromRef && (
           <div className="form-group">
-            {status === 'DONE' ? (
+            {status === t('common:misc.done') ? (
               <img
                 src={url}
                 alt="uploaded file"
@@ -229,7 +231,7 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
                   className={`${css(styles.fileInput)}`}
                 />
                 <PhotoCameraIcon />
-                <label htmlFor="file">Take a photo</label>
+                <label htmlFor="file">{t('common:misc.take_photo')}</label>
               </div>
             )}
           </div>
@@ -237,7 +239,7 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
         {isFromRef && (
           <div className="form-group">
             <label className="bmd-label-static" htmlFor="firstName">
-              Client Name
+              {t('common:form_fields.client_name')}
             </label>
             <input
               className="form-control"
@@ -253,7 +255,7 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
         )}
         <div className="form-group">
           <label className="bmd-label-static" htmlFor="firstName">
-            Name
+            {t('common:form_fields.full_name')}
           </label>
           <input
             className="form-control"
@@ -267,7 +269,7 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
         </div>
         <div className="form-group">
           <label className="bmd-label-static" htmlFor="phoneNumber">
-            Primary Phone Number
+            {t('common:form_fields.primary_number')}
           </label>
           <input
             className="form-control"
@@ -282,7 +284,7 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
         </div>
         <div className="form-group">
           <label className="bmd-label-static" htmlFor="email">
-            Primary email address
+            {t('common:form_fields.primary_email')}
           </label>
           <input
             className="form-control"
@@ -299,7 +301,7 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
           <>
             <div className="form-group">
               <label className="bmd-label-static" htmlFor="extRefId">
-                External Reference ID
+                {t('common:form_fields.external_reference')}
               </label>
               <input
                 className="form-control"
@@ -326,20 +328,20 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
             ))
           }
             <FormOptionInput
-              label="Secondary Phone number"
+              label={t('common:form_fields.secondary_number')}
               options={phoneNumbers}
               setOptions={setPhoneNumbers}
             />
 
             <FormOptionInput
-              label="Secondary Email Address"
+              label={t('common:form_fields.secondary_email')}
               options={emails}
               setOptions={setEmails}
             />
 
             <div className="form-group">
               <label className="bmd-label-static" htmlFor="primaryAddress">
-                Primary Address
+                {t('common:form_fields.primary_address')}
               </label>
               <input
                 className="form-control"
@@ -352,7 +354,7 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
             </div>
 
             <FormOptionInput
-              label="Secondary Address"
+              label={t('common:form_fields.secondary_address')}
               options={address}
               setOptions={setAddress}
             />
@@ -363,7 +365,7 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
                     <TextField
                       id="reason"
                       select
-                      label="Reason"
+                      label={t('common:form_fields.reason')}
                       name="requestReason"
                       value={data.requestReason || ''}
                       onChange={handleInputChange}
@@ -384,7 +386,7 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
                     <TextField
                       id="userType"
                       select
-                      label="User Type"
+                      label={t('common:form_fields.user_type')}
                       value={data.userType || ''}
                       onChange={handleInputChange}
                       margin="normal"
@@ -407,7 +409,7 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
                     <TextField
                       id="state"
                       select
-                      label="State"
+                      label={t('common:form_fields.state')}
                       value={data.state || ''}
                       onChange={handleInputChange}
                       margin="normal"
@@ -428,7 +430,7 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
                     <TextField
                       id="sub-status"
                       select
-                      label="Customer Journey Stage"
+                      label={t('common:misc.customer_journey_stage')}
                       value={data.subStatus || ''}
                       onChange={handleInputChange}
                       margin="normal"
@@ -448,7 +450,7 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
                   <div>
                     <DatePickerDialog
                       selectedDate={selectedDate}
-                      label="Expiration Date"
+                      label={t('common:misc.expiration_date')}
                       handleDateChange={handleDateChange}
                     />
                   </div>
@@ -463,7 +465,7 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
                 disabled={submitting}
                 data-testid="submit_btn"
               >
-                {!submitting ? 'Submit' : 'Submitting ...'}
+                {!submitting ? t('common:form_actions.submit') : t('common:form_actions.submitting')}
               </Button>
             </CenteredContent>
           </>
@@ -486,10 +488,7 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
                 style={{ fontSize: 13 }}
                 data-testid="referralText"
               >
-                Nkwashi values its community and believes our community starts
-                with you! Referring your friends and family members to Nkwashi
-                gives you a chance to pick your future neighbors, so start
-                referring today.
+                {t('common:misc.referral_text', { communityName: authState.user?.community.name })}
               </Typography>
             </div>
             <Button
@@ -498,7 +497,7 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
               className={`btn ${css(styles.getStartedButton)} enz-lg-btn`}
               data-testid="referralBtn"
             >
-              <span>Refer</span>
+              <span>{t('common:misc.refer')}</span>
             </Button>
           </div>
         )}
@@ -507,7 +506,7 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
         // eslint-disable-next-line no-nested-ternary
         showResults && isFromRef ? (
           <div className="d-flex row justify-content-center">
-            <p>Thank you for your referral. We will reach out to them soon.</p>
+            <p>{t('common:misc.referral_thanks')}</p>
           </div>
         ) : isFromRef ? (
           Boolean(msg.length) && (

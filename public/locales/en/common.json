@@ -2,7 +2,17 @@
   "form_fields": {
     "full_name": "Full Name",
     "email": "Email",
-    "phone_number": "Phone Number"
+    "phone_number": "Phone Number",
+    "primary_number": "Primary Phone Number",
+    "secondary_number": "Secondary Phone number",
+    "primary_email": "Primary Email Address",
+    "secondary_email": "Secondary Email Address",
+    "primary_address": "Primary Address",
+    "secondary_address": "Secondary Address",
+    "external_reference": "External Reference ID",
+    "reason": "Reason",
+    "user_type": "User Type",
+    "state": "State"
   },
   "form_placeholders": {
     "phone_number": "Enter Phone Number",
@@ -11,10 +21,21 @@
   "form_actions": {
     "send_email": "Send Email",
     "cancel": "Cancel",
-    "submit": "Submit"
+    "submit": "Submit",
+    "submitting": "Submitting ..."
   },
   "misc": {
-    "or": "OR"
+    "or": "OR",
+    "created_at": "Created At",
+    "no_forms": "No Forms",
+    "done": "Done",
+    "take_photo": "Take Photo",
+    "client_name": "Client Name",
+    "customer_journey_stage": "Customer Journey Stage",
+    "expiration_date": "Expiration Date",
+    "refer": "Refer",
+    "referral_text": "{{communityName}} values its community and believes our community starts with you! Referring your friends and family members to {{communityName}} gives you a chance to pick your future neighbors, so start referring today.",
+    "referral_thanks": "Thank you for your referral. We will reach out to them soon."
   },
   "menu": {
     "invoice": "Invoice",
