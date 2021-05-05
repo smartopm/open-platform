@@ -14,9 +14,21 @@ describe('Task Data components ', () => {
     expect(container.queryByText('Joe doe')).toBeInTheDocument();
   });
 
+  const menuData = {
+    menuList: [
+      { content: 'Edit Task', isAdmin: true, handleClick: jest.fn() },
+      { content: 'Leave a Comment', isAdmin: true, handleClick: jest.fn() },
+      { content: 'Mark as Complete', isAdmin: true, handleClick: jest.fn() },
+    ],
+    handleTodoMenu: jest.fn(),
+    anchorEl: null,
+    open: true,
+    handleClose: jest.fn()
+  }
+
   it('should check if renderTaskData has correct property names', () => {
     const mock = jest.fn();
-    const tasks = [
+    const task = 
       {
         body: 'Task example',
         id: '23',
@@ -30,14 +42,13 @@ describe('Task Data components ', () => {
         assignees: [{ name: 'Tester', id: '93sd45435' }],
         assigneeNotes: []
       }
-    ];
+
     const results = renderTaskData({
-      data: tasks,
+      task,
       handleChange: mock,
       selectedTasks: [],
-      handleTaskDetails: mock,
-      handleCompleteNote: mock,
-      actionMenu: { open: false, handleClose: mock, handleOpen: mock }
+      isSelected: false,
+      menuData
     });
     expect(results).toBeInstanceOf(Array);
     expect(results[0]).toHaveProperty('Select');
