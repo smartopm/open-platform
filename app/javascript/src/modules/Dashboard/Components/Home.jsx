@@ -38,7 +38,7 @@ export default function Home() {
           <div>
             <UserDetail user={authState.user} />
             {authState.user.subStatus && (
-              <CustomerJourneyStatus subStatus={authState.user.subStatus} />
+              <CustomerJourneyStatus subStatus={authState.user.subStatus} communityName={authState.user.community.name} />
             )}
             <Divider />
             <PlotDetail authState={authState.user} />

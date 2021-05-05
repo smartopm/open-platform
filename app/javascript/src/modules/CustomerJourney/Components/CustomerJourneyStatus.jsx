@@ -12,7 +12,7 @@ import { customerJourneyBar, customerJourneyStatus, customerJourneyLink } from "
 import CustomerJourneyStatusBar from './CustomerJourneyStatusBar'
 import { propAccessor } from '../../../utils/helpers';
 
-export default function CustomerJourneyStatus({ subStatus }){
+export default function CustomerJourneyStatus({ subStatus, communityName }){
   const classes = useStyles();
   const matches = useMediaQuery('(max-width:600px)')
   const barCount = propAccessor(customerJourneyBar, subStatus)
@@ -45,15 +45,17 @@ export default function CustomerJourneyStatus({ subStatus }){
       </Grid>
       <div style={matches ? {margin: '5px 20px 20px 20px'} : {display: 'flex', margin: '20px 79px 40px 79px'}}>
         <Typography className={matches ? classes.statusMobile : classes.status}>{propAccessor(customerJourneyStatus, subStatus)}</Typography>
-        <div style={{display: 'flex', marginLeft: 'auto'}}>
-          <HeadsetMicIcon style={matches ? 
-            {color: '#66A59A', verticalAlign: 'middle', height: '15.4px', width: '11.9px', marginRight: '7px'} : 
-            {color: '#66A59A', verticalAlign: 'middle', height: '22.18px', width: '17.14px', marginRight: '17px'}} 
-          />
-          <Typography className={matches ? classes.helpMobile : classes.help}>
-            <Link to={propAccessor(customerJourneyLink, subStatus)}>I need help in moving to the next stage</Link>
-          </Typography>
-        </div>
+        {communityName === 'Nkwashi' && (
+          <div style={{display: 'flex', marginLeft: 'auto'}}>
+            <HeadsetMicIcon style={matches ? 
+              {color: '#66A59A', verticalAlign: 'middle', height: '15.4px', width: '11.9px', marginRight: '7px'} : 
+              {color: '#66A59A', verticalAlign: 'middle', height: '22.18px', width: '17.14px', marginRight: '17px'}} 
+            />
+            <Typography className={matches ? classes.helpMobile : classes.help}>
+              <Link to={propAccessor(customerJourneyLink, subStatus)}>I need help in moving to the next stage</Link>
+            </Typography>
+          </div>
+        )}
       </div>
     </div>
   )
@@ -115,4 +117,5 @@ const useStyles = makeStyles(() => ({
 
 CustomerJourneyStatus.propTypes = {
   subStatus: PropTypes.string.isRequired,
+  communityName: PropTypes.string.isRequired
 };
