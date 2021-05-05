@@ -1,6 +1,7 @@
 import React from 'react';
 import LinearScaleIcon from '@material-ui/icons/LinearScale';
-import StatsPage from '../../containers/User/StatsPage';
+// TODO: Move this to customer journey module
+import StatsPage from "../Users/Containers/StatsPage";
 
 export default {
   routeProps: {

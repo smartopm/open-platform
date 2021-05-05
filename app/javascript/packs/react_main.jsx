@@ -16,12 +16,12 @@ import AuthStateProvider, {
   Consumer,
   Context as AuthStateContext
 } from '../src/containers/Provider/AuthStateProvider';
-import UserShow from '../src/containers/UserShow';
+import UserShow from '../src/modules/Users/Containers/UserShow';
 import IDCard from '../src/containers/IdCard';
 import EntryLogs from '../src/containers/AllLogs/EntryLogs';
 import EventLogs from '../src/containers/AllLogs/EventLogs';
 import Search from '../src/containers/Search';
-import UserEdit from '../src/containers/UserEdit';
+import UserEdit from '../src/modules/Users/Containers/UserEdit'
 import Loading from '../src/shared/Loading';
 import '../src/modules/i18n';
 import Map from '../src/containers/Map';
@@ -62,7 +62,6 @@ import GeoMap from '../src/containers/GeoMap';
 import Notifications from '../src/containers/Preferences/Notifications';
 import { theme } from '../src/themes/nkwashi/theme';
 import FormPage from '../src/containers/Forms/FormPage';
-import UsersImport from '../src/containers/UsersImport';
 
 import FormBuilderPage from '../src/containers/Forms/FormBuilderPage';
 import CommentsPage from '../src/containers/Comments/CommentPage';
@@ -72,6 +71,7 @@ import UserRoutes from '../src/modules/Users/UserRoutes';
 import I18Initializer from '../src/modules/i18n/Components/I18Initializer';
 import PostPage from '../src/modules/News/Components/PostPage';
 import Posts from '../src/modules/News/Components/Posts';
+import UsersImport from '../src/modules/Users/Containers/UsersImport';
 
 // The routes defined here are carefully arranged, be mindful when changing them
 

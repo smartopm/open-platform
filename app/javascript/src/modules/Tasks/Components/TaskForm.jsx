@@ -19,7 +19,8 @@ import DatePickerDialog from '../../../components/DatePickerDialog'
 import { discussStyles } from '../../../components/Discussion/Discuss'
 import { UserChip } from './UserChip'
 import { NotesCategories } from '../../../utils/constants'
-import UserSearch from '../../../components/User/UserSearch'
+// TODO: This should be moved to the shared directory
+import UserSearch from '../../Users/Components/UserSearch'
 
 const initialData = {
   user: '',

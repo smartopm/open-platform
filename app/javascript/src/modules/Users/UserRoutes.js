@@ -1,6 +1,6 @@
 // These are exportable routes to clean up the route file
-import UserShow from '../../containers/UserShow';
-import UserEdit from '../../containers/UserEdit';
+import UserShow from './Containers/UserShow';
+import UserEdit from './Containers/UserEdit';
 import UserLogs from '../../containers/AllLogs/UserLogs';
 import IdPrintPage from '../../containers/IdPrint';
 import UserMessagePage from '../../containers/Messages/UserMessagePage';

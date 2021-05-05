@@ -3,7 +3,7 @@ import { render, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { MockedProvider } from '@apollo/react-testing';
 import { BrowserRouter } from 'react-router-dom';
-import UserDetail from '../Components/UserDetail';
+import UserDetail from '../Components/UserProfileDetail';
 
 describe('User Detail Component', () => {
   const user = {
