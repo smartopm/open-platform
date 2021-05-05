@@ -24,7 +24,7 @@ import { dateToString } from '../../../utils/dateutil'
 
 import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider'
 import { pluralizeCount, propAccessor } from '../../../utils/helpers'
-import SubStatusReportDialog from '../Components/SubStatusReport'
+import SubStatusReportDialog from '../../CustomerJourney/Components/SubStatusReport'
 
 const limit = 25
 const USERS_CAMPAIGN_WARNING_LIMIT = 2000
@@ -55,6 +55,8 @@ export default function UsersList() {
     setSubstatusReportOpen(!substatusReportOpen)
   }
 
+ 
+
   const { loading, error, data, refetch } = useQuery(UsersDetails, {
     variables: {
       query: searchQuery,
@@ -64,6 +66,8 @@ export default function UsersList() {
     fetchPolicy: 'cache-and-network'
   })
 
+  console.log(data)
+  
   let userList
   if (data) {
     userList = data.users.map(user => user.id)
@@ -565,7 +569,7 @@ export default function UsersList() {
               usersCountData={usersCountData}
               selectCheckBox={selectCheckBox}
             />
-            <UserListCard
+            {/* <UserListCard
               userData={data}
               handleNoteModal={handleNoteModal}
               currentUserType={authState.user.userType}
@@ -573,7 +577,7 @@ export default function UsersList() {
               selectedUsers={selectedUsers}
               offset={offset}
               selectCheckBox={selectCheckBox}
-            />
+            /> */}
             <Grid
               container
               direction="row"

@@ -1,5 +1,5 @@
 import React from 'react';
-import UserStats from '../Components/UserStats';
+import UserStats from '../../Users/Components/UserStats';
 
 export default function StatsPage() {
   return <UserStats />;

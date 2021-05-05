@@ -1,12 +1,11 @@
 import React from 'react';
 import LinearScaleIcon from '@material-ui/icons/LinearScale';
-// TODO: Move this to customer journey module
-import StatsPage from "../Users/Containers/StatsPage";
+import UserStats from './Components/UserStats';
 
 export default {
   routeProps: {
     path: '/users/stats',
-    component: StatsPage
+    component: UserStats
   },
   styleProps: {
     icon: <LinearScaleIcon />
