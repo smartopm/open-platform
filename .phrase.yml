@@ -2,11 +2,13 @@ phrase:
   project_id: 70611176c3b698bd2f886684ae3be9bf
   push:
     sources:
-    - file: ./public/locales/<locale_name>/<tag>.json
+    - file: ./public/locales/**/*.json
       params:
         file_format: i18next
+        locale_id: 09762e31899cf1e0edf4b8b15aa64e3f
+        update_translations: true
   pull:
     targets:
-    - file: ./public/locales/<locale_name>/<tag>.json
+    - file: ./public/locales/**/*.json
       params:
         file_format: i18next
