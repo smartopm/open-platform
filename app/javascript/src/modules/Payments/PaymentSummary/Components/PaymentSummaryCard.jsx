@@ -1,7 +1,7 @@
 import React from 'react'
 import { Card, CardContent, Typography } from '@material-ui/core'
+import { makeStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
 import colors from '../../../../themes/nkwashi/colors'
 import { formatMoney } from '../../../../utils/helpers';
 
@@ -9,26 +9,28 @@ export default function PaymentSummaryCard({ value, title, handleClick, currency
   const { lightGray } = colors
   const isNotClickable = value === 0
   const backgroundColor = isNotClickable && lightGray
-  const matches = useMediaQuery('(max-width:600px)')
+  const classes = useStyles();
   return (
     <div>
       <Card
+        elevation={0}
         onClick={() => handleClick(query, value)}
         style={{
           backgroundColor,
-          cursor: isNotClickable ? 'not-allowed' : 'pointer'
+          cursor: isNotClickable ? 'not-allowed' : 'pointer',
+          border: '1px solid #EBEBEB'
         }}
       >
-        <CardContent style={{textAlign: 'center', overflow: 'hidden', height: '140px', textOverflow: 'ellipsis'}}>
+        <CardContent style={{textAlign: 'center', display: 'flex', flexDirection: 'column', justifyContent: 'space-evenly', overflow: 'hidden', height: '140px', textOverflow: 'ellipsis'}}>
           <Typography
             color="textPrimary"
             gutterBottom
-            variant={matches ? 'body1' : 'h6'}
             data-testid='card-value'
+            className={classes.currency}
           >
             {currencyData?.currency ? formatMoney(currencyData, value) : value}
           </Typography>
-          <Typography data-testid='card-title' color="textSecondary" variant="caption">
+          <Typography data-testid='card-title' color="textSecondary" className={classes.title}>
             {title}
           </Typography>
         </CardContent>
@@ -36,6 +38,19 @@ export default function PaymentSummaryCard({ value, title, handleClick, currency
     </div>
   )
 }
+
+const useStyles = makeStyles(() => ({
+  currency: {
+    fontSize: '20px',
+    fontWeight: 600,
+    color: '#141414'
+  },
+  title: {
+    fontSize: '14px',
+    fontWeight: 400,
+    color: '#575757'
+  }
+}));
 
 PaymentSummaryCard.defaultProps = {
   currencyData: {

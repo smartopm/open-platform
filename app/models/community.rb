@@ -27,7 +27,7 @@ class Community < ApplicationRecord
   has_many :payments, dependent: :destroy
   has_many :import_logs, dependent: :destroy
 
-  VALID_CURRENCIES = %w[zambian_kwacha].freeze
+  VALID_CURRENCIES = %w[zambian_kwacha honduran_lempira].freeze
 
   validates :currency, inclusion: { in: VALID_CURRENCIES, allow_nil: false }
 

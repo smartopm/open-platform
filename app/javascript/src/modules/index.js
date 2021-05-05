@@ -14,6 +14,7 @@ import LogBook from './LogBook';
 import Portal from './Portal'; // thebe portal
 import Properties from './Plots/Properties';
 import UserPayments from './Payments/UserPayments';
+import MyMessages from './Messages/MyMessages'
 import Search from './Search';
 
 // and exported back here
@@ -21,6 +22,7 @@ export default [
   Dashboard,
   Search,
   Profile,
+  MyMessages,
   Plots,
   Communication,
   LogBook,

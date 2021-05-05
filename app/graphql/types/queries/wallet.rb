@@ -131,6 +131,7 @@ module Types::Queries::Wallet
         .sum(&:amount),
     }
   end
+
   # rubocop:enable Metrics/AbcSize
   # rubocop:enable Metrics/MethodLength
 
