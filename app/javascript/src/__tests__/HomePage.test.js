@@ -5,7 +5,9 @@ import { render } from '@testing-library/react'
 import '@testing-library/jest-dom/extend-expect'
 import { BrowserRouter } from 'react-router-dom/'
 import { MockedProvider } from '@apollo/react-testing'
+import { useTranslation } from 'react-i18next';
 
+const { t } = useTranslation(['dashboard', 'common']);
 describe("HomePage component ",() => {
     const adminAuthState = {
         loaded: true,
@@ -27,19 +29,21 @@ describe("HomePage component ",() => {
        const container =  render(
             <MockedProvider >
               <BrowserRouter>
-                <Homepage authState={adminAuthState}/>
+                <Homepage authState={adminAuthState} translate={t} />
             </BrowserRouter>
             </MockedProvider>
        )
-      expect(container.queryByText('My Messages')).toBeInTheDocument()
-      expect(container.queryByText('Users')).toBeInTheDocument()
-      expect(container.queryByText('Campaigns')).toBeInTheDocument()
-      expect(container.queryByText('Notes')).toBeInTheDocument()
-      expect(container.queryByText('Time Card')).toBeInTheDocument()
-      expect(container.queryByText('Tasks')).toBeInTheDocument()
-      expect(container.queryByText('Labels')).toBeInTheDocument()
+      //  expect(container.text()).toContain('dashboard.my_id_card')
+      // console.log(container.queryByText(''))
+      expect(container.queryByText('dashboard.my_id_card')).toBeInTheDocument()
+      // expect(container.queryByText('Users')).toBeInTheDocument()
+      // expect(container.queryByText('Campaigns')).toBeInTheDocument()
+      // expect(container.queryByText('Notes')).toBeInTheDocument()
+      // expect(container.queryByText('Time Card')).toBeInTheDocument()
+      // expect(container.queryByText('Tasks')).toBeInTheDocument()
+      // expect(container.queryByText('Labels')).toBeInTheDocument()
     })
-  
+
   it('should render without error and have all cards for custodian', () => {
     const custodianAuthState = {
       loaded: true,
@@ -60,7 +64,7 @@ describe("HomePage component ",() => {
     const container = render(
       <MockedProvider >
         <BrowserRouter>
-          <Homepage authState={custodianAuthState} />
+          <Homepage authState={custodianAuthState} translate={() => {}} />
         </BrowserRouter>
       </MockedProvider>
     )
@@ -94,7 +98,7 @@ describe("HomePage component ",() => {
     const container = render(
       <MockedProvider >
         <BrowserRouter>
-          <Homepage authState={clientAuthState} />
+          <Homepage authState={clientAuthState} translate={() => {}} />
         </BrowserRouter>
       </MockedProvider>
     )
@@ -109,7 +113,7 @@ describe("HomePage component ",() => {
     expect(container.queryByText('Referrals')).toBeInTheDocument()
     expect(container.queryByText('Labels')).not.toBeInTheDocument()
   })
-  
+
   it('should render without error and have all cards for prospective client', () => {
     const prospectAuthState = {
       loaded: true,
@@ -130,7 +134,7 @@ describe("HomePage component ",() => {
     const container = render(
       <MockedProvider >
         <BrowserRouter>
-          <Homepage authState={prospectAuthState} />
+          <Homepage authState={prospectAuthState} translate={() => {}} />
         </BrowserRouter>
       </MockedProvider>
     )
@@ -168,7 +172,7 @@ describe("HomePage component ",() => {
     const container = render(
       <MockedProvider >
         <BrowserRouter>
-          <Homepage authState={prospectAuthState} />
+          <Homepage authState={prospectAuthState} translate={() => {}} />
         </BrowserRouter>
       </MockedProvider>
     )
