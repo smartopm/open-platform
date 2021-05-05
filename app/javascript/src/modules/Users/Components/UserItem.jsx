@@ -20,7 +20,7 @@ import PropTypes from 'prop-types'
 import { makeStyles } from '@material-ui/core/styles'
 import { Link, useHistory } from 'react-router-dom'
 import Avatar from '../../../components/Avatar'
-import UserActionMenu from "./UsersActionMenu"
+import UserActionMenu from "./UserActionMenu"
 import UserMerge from './UserMerge'
 import CenteredContent from '../../../components/CenteredContent'
 import { userSubStatus } from '../../../utils/constants'

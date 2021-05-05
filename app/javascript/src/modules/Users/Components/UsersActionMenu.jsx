@@ -53,7 +53,6 @@ export default function UsersActionMenu({
     )
   }
 
-  console.log(selectedUsers)
   return (
     <Grid container>
       <CustomizedDialogs

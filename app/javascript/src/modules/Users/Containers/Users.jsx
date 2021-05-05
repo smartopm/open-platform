@@ -66,8 +66,6 @@ export default function UsersList() {
     fetchPolicy: 'cache-and-network'
   })
 
-  console.log(data)
-  
   let userList
   if (data) {
     userList = data.users.map(user => user.id)
@@ -569,7 +567,7 @@ export default function UsersList() {
               usersCountData={usersCountData}
               selectCheckBox={selectCheckBox}
             />
-            {/* <UserListCard
+            <UserListCard
               userData={data}
               handleNoteModal={handleNoteModal}
               currentUserType={authState.user.userType}
@@ -577,7 +575,7 @@ export default function UsersList() {
               selectedUsers={selectedUsers}
               offset={offset}
               selectCheckBox={selectCheckBox}
-            /> */}
+            />
             <Grid
               container
               direction="row"
