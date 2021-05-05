@@ -2,7 +2,7 @@ import React from 'react';
 import { render } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { BrowserRouter } from 'react-router-dom';
-import renderTaskData, { LinkToUser } from '../modules/Tasks/Components/RenderTaskData';
+import renderTaskData, { LinkToUser } from '../Components/RenderTaskData';
 
 describe('Task Data components ', () => {
   it('should render proper the link to user component', () => {
