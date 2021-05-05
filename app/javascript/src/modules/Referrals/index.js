@@ -1,4 +1,4 @@
-import Referral from '../../containers/UserEdit';
+import Referral from '../Users/Components/UserEdit';
 import { allUserTypes } from '../../utils/constants';
 
 export default {

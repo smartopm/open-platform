@@ -21,7 +21,7 @@ import IDCard from '../src/containers/IdCard';
 import EntryLogs from '../src/containers/AllLogs/EntryLogs';
 import EventLogs from '../src/containers/AllLogs/EventLogs';
 import Search from '../src/containers/Search';
-import UserEdit from '../src/containers/UserEdit';
+import UserEdit from '../src/modules/Users/Components/UserEdit';
 import Loading from '../src/shared/Loading';
 import '../src/modules/i18n';
 import Map from '../src/containers/Map';
