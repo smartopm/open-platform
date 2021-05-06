@@ -28,7 +28,6 @@ import Map from '../src/containers/Map';
 import LoginScreen from '../src/components/AuthScreens/LoginScreen';
 import ConfirmCodeScreen from '../src/components/AuthScreens/ConfirmCodeScreen';
 import OneTimeLoginCode from '../src/components/AuthScreens/OneTimeLoginCode';
-import Support from '../src/containers/Support';
 import MobileMoney from '../src/components/MobileMoney';
 import GuardHome from '../src/modules/Dashboard/Components/GuardHome';
 import EntryRequest from '../src/containers/Requests/EntryRequest';
@@ -225,6 +224,11 @@ const App = () => {
                                 />
                                 <Route
                                   exact
+                                  path="/mymessages"
+                                  render={() => <Redirect to={`/message/${user.id}`} />}
+                                />
+                                <Route
+                                  exact
                                   path="/myprofile"
                                   render={() => <Redirect to={`/user/${user.id}`} />}
                                 />
@@ -253,7 +257,6 @@ const App = () => {
                                 <Route path="/map" component={Map} />
                                 <Route path="/myplot" component={GeoMap} />
                                 <Route path="/mobile_money" component={MobileMoney} />
-                                <Route path="/contact" component={Support} />
                                 <Route path="/settings" component={Notifications} />
                                 {/* <Route path="/otp_sent" component={OTPFeedbackScreen} /> */}
                                 <Route path="/referral" component={UserEdit} />
@@ -288,7 +291,7 @@ const App = () => {
                                   exact
                                   component={ClientRequestForm}
                                 />
-                                <Route path="/news/:slug" exact component={Posts} />
+                                <Route path="/news/slug" exact component={Posts} />
                                 <Route path="/discussions/:id" exact component={DiscussonPage} />
                                 <Route path="/business/:id" exact component={BusinessProfile} />
                                 <Route path="/form/:formId?/:formName?" component={FormPage} />

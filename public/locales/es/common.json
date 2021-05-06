@@ -1,8 +1,6 @@
 {
   "form_fields": {
-    "full_name": "nombre completo",
     "email": "Correo electrónico",
-    "phone_number": "Número de teléfono",
     "primary_number": "Número de teléfono primario",
     "secondary_number": "Numero de telefono secundario",
     "primary_email": "Dirección de correo principal",
@@ -12,7 +10,9 @@
     "external_reference": "ID de referencia externa",
     "reason": "Razón",
     "user_type": "Tipo de usuario",
-    "state": "Expresar"
+    "state": "Expresar",
+    "full_name": "nombre completo",
+    "phone_number": "Número de teléfono"
   },
   "form_placeholders": {
     "phone_number": "Introduzca el número de teléfono",
@@ -35,7 +35,14 @@
     "expiration_date": "Fecha de caducidad",
     "refer": "Referir",
     "referral_text": "{{communityName}} valora su comunidad y cree que nuestra comunidad comienza contigo. Recomendar a sus amigos y familiares a {{communityName}} le da la oportunidad de elegir a sus futuros vecinos, así que comience a recomendar hoy mismo.",
-    "referral_thanks": "Gracias por tu recomendación. Pronto nos comunicaremos con ellos."
+    "referral_thanks": "Gracias por tu recomendación. Pronto nos comunicaremos con ellos.",
+    "share": "Cuota",
+    "copied": "Copiado al portapapeles!",
+    "first_to_comment": "Se el primero en comentar",
+    "comment": "Comentario",
+    "comment_plural": "Comentarios",
+    "type_comment": "Escriba un comentario aquí",
+    "send": "enviar"
   },
   "menu": {
     "invoice": "Factura",
@@ -60,6 +67,9 @@
     "print_id": "Imprimir ID",
     "message_support": "Soporte de mensajes",
     "send_sms": "Enviar SMS",
-    "send_otp": "Enviar OTP"
+    "send_otp": "Enviar OTP",
+    "errors": {
+      "empty_text": "El mensaje debe contener algo de texto"
+    }
   }
 }

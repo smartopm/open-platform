@@ -1,6 +1,6 @@
 {
   "form_fields": {
-    "full_name": "Full Name",
+    "full_name": "Full Names",
     "email": "Email",
     "phone_number": "Phone Number",
     "primary_number": "Primary Phone Number",
@@ -35,7 +35,14 @@
     "expiration_date": "Expiration Date",
     "refer": "Refer",
     "referral_text": "{{communityName}} values its community and believes our community starts with you! Referring your friends and family members to {{communityName}} gives you a chance to pick your future neighbors, so start referring today.",
-    "referral_thanks": "Thank you for your referral. We will reach out to them soon."
+    "referral_thanks": "Thank you for your referral. We will reach out to them soon.",
+    "share": "Share",
+    "copied": "Copied to Clipboard!",
+    "first_to_comment": "Be the first to comment",
+    "comment": "Comment",
+    "comment_plural": "Comments",
+    "type_comment": "Type a comment here",
+    "send": "Send"
   },
   "menu": {
     "invoice": "Invoice",
@@ -61,5 +68,8 @@
     "message_support": "Message Support",
     "send_sms": "Send SMS",
     "send_otp": "Send OTP"
+  },
+  "errors": {
+    "empty_text": "The message must contain some text"
   }
 }
