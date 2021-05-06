@@ -1,8 +1,7 @@
 import React from 'react'
 import { render } from '@testing-library/react'
 import '@testing-library/jest-dom/extend-expect'
-// TODO: move this file to the right module
-import SubStatusTimeDistributionReport from '../../Users/Components/SubStatusTimeDistributionReport'
+import SubStatusTimeDistributionReport from '../Components/SubStatusTimeDistributionReport'
 import { userSubStatus } from '../../../utils/constants';
 
 describe('<SubStatusTimeDistributionReport />', () => {

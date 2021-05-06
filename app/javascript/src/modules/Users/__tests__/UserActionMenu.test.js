@@ -2,7 +2,7 @@ import React from 'react'
 import { render } from '@testing-library/react'
 import '@testing-library/jest-dom/extend-expect'
 import { BrowserRouter } from 'react-router-dom'
-import UserActionMenu from '../Components/UsersActionMenu'
+import UserActionMenu from '../Components/UserActionMenu'
 
 describe('user action menu component', () => {
   it('show correct action menu', () => {
@@ -32,13 +32,11 @@ describe('user action menu component', () => {
         />
       </BrowserRouter>
     )
-    expect(container.queryByText('Edit')).toBeInTheDocument()
-    expect(container.queryByText('Merge User')).toBeInTheDocument()
-    expect(container.queryByText('Send SMS to User Name')).toBeInTheDocument()
-    expect(container.queryByText('Call User Name')).toBeInTheDocument()
-    expect(container.queryByText('User Logs')).toBeInTheDocument()
-    expect(container.queryByText('Message Support')).toBeInTheDocument()
-    expect(container.queryByText('Print')).toBeInTheDocument()
-    expect(container.queryByText('Send OTP')).toBeInTheDocument()
+    expect(container.queryByText('menu.user_edit')).toBeInTheDocument()
+    expect(container.queryByText('menu.merge_user')).toBeInTheDocument()
+    expect(container.queryByText('menu.user_logs')).toBeInTheDocument()
+    expect(container.queryByText('menu.message_support')).toBeInTheDocument()
+    expect(container.queryByText('menu.print_id')).toBeInTheDocument()
+    expect(container.queryByText('menu.send_otp')).toBeInTheDocument()
   })
 })

@@ -10,6 +10,7 @@ const props = {
   handleLabelSelect: jest.fn(),
   setSelectAllOption: jest.fn(),
   selectedUsers: [],
+  selectCheckBox: true,
   userList: [],
   usersCountData: {
     usersCount: 25
@@ -19,8 +20,8 @@ describe('UsersActionMenu component', () => {
   it('should render "Select" and hide "Create Campaign" link', () => {
     const container = render(<UsersActionMenu {...props} />)
 
-    expect(container.queryByText('Select')).toBeInTheDocument()
-    expect(container.queryByText('Create Campaign')).toBeNull()
+    expect(container.queryByText('common:misc.select')).toBeInTheDocument()
+    expect(container.queryByText('common:form_actions.create_campaign')).toBeNull()
   })
 
   it('should render both "Select" and bulk action links', () => {
@@ -30,9 +31,9 @@ describe('UsersActionMenu component', () => {
     }
     const container = render(<UsersActionMenu {...newProps} />)
 
-    expect(container.queryByText('Select')).toBeInTheDocument()
-    expect(container.queryByText('Create Campaign')).toBeInTheDocument()
-    expect(container.queryByText('Assign Label')).toBeInTheDocument()
+    expect(container.queryByText('common:misc.select')).toBeInTheDocument()
+    expect(container.queryByText('common:form_actions.create_campaign')).toBeInTheDocument()
+    expect(container.queryByText('common:form_actions.assign_label')).toBeInTheDocument()
   })
 
   it('should render bulk action links if some users have been selected', () => {
@@ -42,7 +43,7 @@ describe('UsersActionMenu component', () => {
     }
     const container = render(<UsersActionMenu {...newProps} />)
 
-    expect(container.queryByText('Create Campaign')).toBeInTheDocument()
-    expect(container.queryByText('Assign Label')).toBeInTheDocument()
+    expect(container.queryByText('common:form_actions.create_campaign')).toBeInTheDocument()
+    expect(container.queryByText('common:form_actions.assign_label')).toBeInTheDocument()
   })
 })
