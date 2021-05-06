@@ -6,7 +6,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 import { StyleSheet, css } from 'aphrodite';
 import { Button, Hidden, IconButton } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
-import CssBaseline from '@material-ui/core/CssBaseline';
+// import CssBaseline from '@material-ui/core/CssBaseline';
 import PropTypes from 'prop-types';
 import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider';
 import SideMenu from './SideMenu';
@@ -68,7 +68,6 @@ export function MainNav({ authState }) {
 
   return (
     <div className={classes.root}>
-      <CssBaseline />
       <AppBar position="fixed" className={classes.appBar}>
         <Toolbar>
           <IconButton
