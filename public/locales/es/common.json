@@ -18,7 +18,8 @@
     "hello": "Hola",
     "more_details": "Más detalles",
     "payments": "Pagos",
-    "invoices": "Facturas",
+    "invoice": "Factura",
+    "invoice_plural": "Facturas",
     "due_text": "Vencer",
     "recent_news": "Noticias recientes",
     "campaigns": "Campañas",
@@ -39,7 +40,17 @@
     "comm_settings": "Configuración de la comunidad",
     "users": "Usuarios",
     "news": "Noticias",
-    "powered_by_dgdp": "Desarrollado por DoubleGDP"
+    "powered_by_dgdp": "Desarrollado por DoubleGDP",
+    "share": "Cuota",
+    "copied": "Copiado al portapapeles!",
+    "first_to_comment": "Se el primero en comentar",
+    "comment": "Comentario",
+    "comment_plural": "Comentarios",
+    "type_comment": "Escriba un comentario aquí",
+    "send": "enviar",
+    "step": "Paso",
+    "step_plural": "Pasos",
+    "balance": "equilibrio"
   },
   "user_types": {
     "admin": "Administrador",
@@ -49,14 +60,7 @@
     "prospective_client": "Futuro cliente",
     "security_guard": "Guardia de seguridad",
     "resident": "Residente",
-    "contractor": "Contratista",
-    "share": "Cuota",
-    "copied": "Copiado al portapapeles!",
-    "first_to_comment": "Se el primero en comentar",
-    "comment": "Comentario",
-    "comment_plural": "Comentarios",
-    "type_comment": "Escriba un comentario aquí",
-    "send": "enviar"
+    "contractor": "Contratista"
   },
   "errors": {
     "empty_text": "El mensaje debe contener algo de texto"

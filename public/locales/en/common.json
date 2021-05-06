@@ -18,7 +18,8 @@
     "hello": "Hello",
     "more_details": "More details",
     "payments": "Payments",
-    "invoices": "Invoices",
+    "invoice": "Invoice",
+    "invoice_plural": "Invoices",
     "due_text": "Due",
     "recent_news": "Recent News",
     "campaigns": "Campaigns",
@@ -39,7 +40,17 @@
     "comm_settings": "Community Settings",
     "users": "Users",
     "news": "News",
-    "powered_by_dgdp": "Powered by DoubleGDP"
+    "powered_by_dgdp": "Powered by DoubleGDP",
+    "share": "Share",
+    "copied": "Copied to Clipboard!",
+    "first_to_comment": "Be the first to comment",
+    "comment": "Comment",
+    "comment_plural": "Comments",
+    "type_comment": "Type a comment here",
+    "send": "Send",
+    "step": "Step",
+    "step_plural": "Steps",
+    "balance": "Balance"
   },
   "user_types": {
     "admin": "Admin",
@@ -49,14 +60,7 @@
     "prospective_client": "Prospective Client",
     "security_guard": "Security Guard",
     "resident": "Resident",
-    "contractor": "Contractor",
-    "share": "Share",
-    "copied": "Copied to Clipboard!",
-    "first_to_comment": "Be the first to comment",
-    "comment": "Comment",
-    "comment_plural": "Comments",
-    "type_comment": "Type a comment here",
-    "send": "Send"
+    "contractor": "Contractor"
   },
   "errors": {
     "empty_text": "The message must contain some text"

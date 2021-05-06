@@ -10,6 +10,8 @@
     "log_entry": "Manual",
     "scan": "Scan",
     "view_customer_journey": "View Customer Journey",
+    "your_customer_journey": "Your Customer Journey",
+    "need_help_to_next_journey": "I need help in moving to the next stage",
     "make_new_payment": "Make New Payment",
     "payment": {
       "today": "Total amount in payment today",
@@ -31,6 +33,10 @@
     "my_account": "My Account",
     "my_messages": "My Messages",
     "my_thebe_portal": "My Thebe Portal",
-    "call_manager": "Call Manager"
+    "call_manager": "Call Manager",
+    "plot_detail": "Plot Detail",
+    "plot_detail_plural": "Plot Details",
+    "plot": "Plot",
+    "plot_plural": "Plots"
   }
 }

@@ -71,7 +71,7 @@ export default function PaymentSummary({ authState, translate }) {
               {active === 'payment' ? (
                 <Typography className={classes.mobile} onClick={() => setActive('payment')}>{translate('common:misc.payments')}</Typography>
               ) : (
-                <Typography className={classes.mobile} onClick={() => setActive('invoice')}>{translate('common:misc.invoices')}</Typography>
+                <Typography className={classes.mobile} onClick={() => setActive('invoice')}>{translate('common:misc.invoice', { count: 0 })}</Typography>
               )}
               <div style={{marginLeft: 'auto', display: 'flex', marginTop: '5px'}}>
                 <div style={active === 'payment' ? {background: '#141414'} : {background: 'transparent'}} className={classes.circle} onClick={() => setActive('payment')}>
@@ -98,7 +98,7 @@ export default function PaymentSummary({ authState, translate }) {
                   onClick={() => setActive('invoice')}
                   style={active === 'invoice' ? {marginLeft: '20px', width: '102px', cursor: 'pointer'} : {marginLeft: '20px', width: '102px', cursor: 'pointer'}}
                 >
-                  {translate('common:misc.invoices')}
+                  {translate('common:misc.invoice', { count: 0 })}
                 </Typography>
                 <Typography style={{marginLeft: 'auto', marginRight: '81px', cursor: 'pointer', fontSize: '16px', fontWeight: 500, color: '#66A59A'}}>
                   <Link to='/users'>{active === 'payment' && translate('dashboard.make_new_payment')}</Link>

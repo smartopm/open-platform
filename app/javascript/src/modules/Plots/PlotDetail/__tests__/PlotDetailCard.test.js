@@ -60,7 +60,7 @@ describe('Plot Detail Card', () => {
 
     await waitFor(
       () => {
-        expect(container.queryByTestId('plot')).toHaveTextContent('Plot Details')
+        expect(container.queryByTestId('plot')).toHaveTextContent('dashboard.plot_detail')
       },
       { timeout: 100 }
     );

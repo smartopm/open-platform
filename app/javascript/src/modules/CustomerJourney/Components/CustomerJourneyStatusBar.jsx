@@ -37,7 +37,7 @@ CustomerJourneyStatusBar.defaultProps = {
 }
 
 CustomerJourneyStatusBar.propTypes = {
-  coloured: PropTypes.string,
+  coloured: PropTypes.bool,
   indexValue: PropTypes.number.isRequired,
   barCount: PropTypes.number
 };
