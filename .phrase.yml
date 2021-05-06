@@ -2,41 +2,49 @@ phrase:
   project_id: 70611176c3b698bd2f886684ae3be9bf
   push:
     sources:
-    - file: ./public/locales/en/login.json
+    - file: ./public/locales/en/<locale_name>.json
       params:
         file_format: i18next
         locale_id: 09762e31899cf1e0edf4b8b15aa64e3f
-        update_translations: true
-    - file: ./public/locales/en/dashboard.json
+        update_translations: true,
+        tags: common
+    - file: ./public/locales/en/<locale_name>.json
       params:
         file_format: i18next
         locale_id: 09762e31899cf1e0edf4b8b15aa64e3f
-        update_translations: true
-    - file: ./public/locales/en/scan.json
+        update_translations: true,
+        tags: dashboard
+    - file: ./public/locales/en/<locale_name>.json
       params:
         file_format: i18next
         locale_id: 09762e31899cf1e0edf4b8b15aa64e3f
-        update_translations: true
-    - file: ./public/locales/en/common.json
+        update_translations: true,
+        tags: login
+    - file: ./public/locales/en/<locale_name>.json
       params:
         file_format: i18next
         locale_id: 09762e31899cf1e0edf4b8b15aa64e3f
-        update_translations: true
+        update_translations: true,
+        tags: scan
   pull:
     targets:
-    - file: ./public/locales/es/login.json
+    - file: ./public/locales/es/<locale_name>.json
       params:
         file_format: i18next
-        locale_id: 90fddec457b725c82b47d6eb04920abe
-    - file: ./public/locales/es/dashboard.json
+        locale_id: 90fddec457b725c82b47d6eb04920abe,
+        tags: common
+    - file: ./public/locales/es/<locale_name>.json
       params:
         file_format: i18next
-        locale_id: 90fddec457b725c82b47d6eb04920abe
-    - file: ./public/locales/es/scan.json
+        locale_id: 90fddec457b725c82b47d6eb04920abe,
+        tags: dashboard
+    - file: ./public/locales/es/<locale_name>.json
       params:
         file_format: i18next
-        locale_id: 90fddec457b725c82b47d6eb04920abe
-    - file: ./public/locales/es/common.json
+        locale_id: 90fddec457b725c82b47d6eb04920abe,
+        tags: login
+    - file: ./public/locales/es/<locale_name>.json
       params:
         file_format: i18next
-        locale_id: 90fddec457b725c82b47d6eb04920abe
+        locale_id: 90fddec457b725c82b47d6eb04920abe,
+        tags: scan
