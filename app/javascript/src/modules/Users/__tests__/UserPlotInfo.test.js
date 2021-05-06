@@ -2,7 +2,7 @@ import React from 'react'
 import { BrowserRouter } from 'react-router-dom'
 import { cleanup, render } from '@testing-library/react'
 import { MockedProvider } from '@apollo/react-testing'
-import UserPlotInfo from '../components/User/UserPlotInfo'
+import UserPlotInfo from '../Components/UserPlotInfo'
 import '@testing-library/jest-dom/extend-expect'
 
 describe('User Plot Info Page', () => {

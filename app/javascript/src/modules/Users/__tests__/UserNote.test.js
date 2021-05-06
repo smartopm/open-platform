@@ -1,7 +1,7 @@
 import React from 'react'
 import { render } from '@testing-library/react'
 import '@testing-library/jest-dom/extend-expect'
-import { UserNote } from '../components/User/UserNote'
+import { UserNote } from '../Components/UserNote'
 
 describe('user note component', () => {
   it('should render correct note details', () => {

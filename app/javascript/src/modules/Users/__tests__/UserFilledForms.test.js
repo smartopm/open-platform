@@ -1,6 +1,6 @@
 import React from 'react'
 import { render } from '@testing-library/react'
-import UserFilledForms from '../components/User/UserFilledForms'
+import UserFilledForms from '../Components/UserFilledForms'
 import '@testing-library/jest-dom/extend-expect'
 
 describe('UserFilledForms component', () =>  {
@@ -27,7 +27,7 @@ describe('UserFilledForms component', () =>  {
     const rendered = render(
       <UserFilledForms userFormsFilled={[]} userId="3954jefsdfs" />
     )
-    expect(rendered.queryByText('You have no forms')).toBeInTheDocument()
+    expect(rendered.queryByText('misc.no_forms')).toBeInTheDocument()
     expect(rendered.queryByTestId('form_item')).not.toBeInTheDocument()
   })
 })
