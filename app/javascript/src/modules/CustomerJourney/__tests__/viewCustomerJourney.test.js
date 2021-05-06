@@ -7,15 +7,16 @@ import ViewCustomerJourney from '../Components/ViewCustomerJourney';
 
 describe('User Detail Component', () => {
   it('should render the user detail component', () => {
+    const translate = jest.fn();
     const container = render(
       <MockedProvider>
         <BrowserRouter>
-          <ViewCustomerJourney />
+          <ViewCustomerJourney translate={translate} />
         </BrowserRouter>
       </MockedProvider>
     );
     
-    expect(container.queryByTestId('view')).toHaveTextContent('View Customer Journey')
+    expect(container.queryByTestId('view')).toBeInTheDocument()
     fireEvent.click(container.queryByTestId('customer'))
   });
 });

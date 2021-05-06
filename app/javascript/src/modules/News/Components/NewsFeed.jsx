@@ -33,7 +33,7 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-export function PostItemGrid({ data }) {
+export function PostItemGrid({ data, translate }) {
   const classes = useStyles()
   const matches = useMediaQuery('(max-width:600px)')
 
@@ -44,9 +44,10 @@ export function PostItemGrid({ data }) {
     <div>
       <Typography
         color="textPrimary"
+        data-testid="recent_news"
         style={matches ? {margin: '20px 0 20px 20px', fontSize: '14px', fontWeight: 500, color: '#141414'} : {margin: '40px 0 20px 79px', fontWeight: 500, fontSize: '22px', color: '#141414'}}
       >
-        Recent News
+        {translate('common:misc.recent_news')}
       </Typography>
       <div className={classes.root} style={matches ? {margin: '0 20px'} : {margin: '0 79px'}}>
         <GridList
@@ -56,8 +57,8 @@ export function PostItemGrid({ data }) {
         >
           {data.length
           && data.map((tile) => (
-            <GridListTile 
-              key={tile.ID} 
+            <GridListTile
+              key={tile.ID}
               onClick={() => routeToPost(tile.ID)}
               style={{ cursor: 'pointer' }}
             >
@@ -74,11 +75,11 @@ export function PostItemGrid({ data }) {
         </GridList>
       </div>
     </div>
-    
+
   )
 }
 
-export default function NewsFeed({ wordpressEndpoint }) {
+export default function NewsFeed({ wordpressEndpoint, translate }) {
   const { response, error } = useFetch(`${wordpressEndpoint}/posts`)
   if (error) {
     return (
@@ -102,7 +103,7 @@ export default function NewsFeed({ wordpressEndpoint }) {
       )
   }
 
-  return <PostItemGrid data={postsToDisplay(response.posts)} />
+  return <PostItemGrid data={postsToDisplay(response.posts)} translate={translate} />
 }
 
 function postsToDisplay(posts) {

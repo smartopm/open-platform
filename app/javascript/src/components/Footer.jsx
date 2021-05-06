@@ -1,7 +1,9 @@
 /* eslint-disable */
 import React from 'react'
+import { useTranslation } from 'react-i18next';
 
 export function Footer({ position }) {
+  const { t } = useTranslation(['common']);
   return (
     <p
       style={{
@@ -11,7 +13,7 @@ export function Footer({ position }) {
       }}
       className="text-center"
     >
-      Powered by DoubleGDP{' '}
+      {t('common:misc.powered_by_dgdp')} {' '}
     </p>
   )
 }

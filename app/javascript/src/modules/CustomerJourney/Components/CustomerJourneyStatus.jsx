@@ -6,6 +6,7 @@ import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { Link } from 'react-router-dom'
+import { useTranslation } from 'react-i18next';
 import Typography from '@material-ui/core/Typography';
 import HeadsetMicIcon from '@material-ui/icons/HeadsetMic';
 import { customerJourneyBar, customerJourneyStatus, customerJourneyLink } from "../../../utils/constants"
@@ -15,16 +16,19 @@ import { propAccessor } from '../../../utils/helpers';
 export default function CustomerJourneyStatus({ subStatus, communityName }){
   const classes = useStyles();
   const matches = useMediaQuery('(max-width:600px)')
+  const { t } = useTranslation(['dashboard', 'common'])
   const barCount = propAccessor(customerJourneyBar, subStatus)
   const coloredBarArray = Array.apply(null, Array(barCount))
   const nonColoredBarArray = Array.apply(null, Array(6 - barCount))
   return (
     <div>
       <div style={matches ? {display: 'flex', margin: '40px 30px 5px 20px'} : {display: 'flex', margin: '40px 79px 20px 79px'}}>
-        <Typography className={matches ? classes.titleMobile : classes.title} data-testid='customer'>Your Customer Journey</Typography>
+        <Typography className={matches ? classes.titleMobile : classes.title} data-testid='customer'>{t('dashboard.your_customer_journey')}</Typography>
         <Typography className={matches ? classes.countMobile : classes.count}>
           {barCount}
-          /6 Steps
+          /6 
+          {' '}
+          {t('common:misc.step', { count: 0 })}
         </Typography>
       </div>
       <Grid container style={matches ? {margin: '5px 30px 5px 20px'} : {margin: '20px 79px 20px 79px'}}>
@@ -52,7 +56,7 @@ export default function CustomerJourneyStatus({ subStatus, communityName }){
               {color: '#66A59A', verticalAlign: 'middle', height: '22.18px', width: '17.14px', marginRight: '17px'}} 
             />
             <Typography className={matches ? classes.helpMobile : classes.help}>
-              <Link to={propAccessor(customerJourneyLink, subStatus)}>I need help in moving to the next stage</Link>
+              <Link to={propAccessor(customerJourneyLink, subStatus)}>{t('dashboard.need_help_to_next_journey')}</Link>
             </Typography>
           </div>
         )}
