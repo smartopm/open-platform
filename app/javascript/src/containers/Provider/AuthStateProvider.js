@@ -29,6 +29,7 @@ const QUERY = gql`
       expiresAt
       imageUrl
       avatarUrl
+      subStatus
       community {
         id
         name
@@ -41,6 +42,7 @@ const QUERY = gql`
         currency
         locale
         language
+        wpLink
       }
     }
   }

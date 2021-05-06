@@ -21,14 +21,13 @@ import IDCard from '../src/containers/IdCard';
 import EntryLogs from '../src/containers/AllLogs/EntryLogs';
 import EventLogs from '../src/containers/AllLogs/EventLogs';
 import Search from '../src/containers/Search';
-import UserEdit from '../src/containers/UserEdit';
+import UserEdit from '../src/modules/Users/Components/UserEdit';
 import Loading from '../src/shared/Loading';
 import '../src/modules/i18n';
 import Map from '../src/containers/Map';
 import LoginScreen from '../src/components/AuthScreens/LoginScreen';
 import ConfirmCodeScreen from '../src/components/AuthScreens/ConfirmCodeScreen';
 import OneTimeLoginCode from '../src/components/AuthScreens/OneTimeLoginCode';
-import Support from '../src/containers/Support';
 import MobileMoney from '../src/components/MobileMoney';
 import GuardHome from '../src/modules/Dashboard/Components/GuardHome';
 import EntryRequest from '../src/containers/Requests/EntryRequest';
@@ -55,8 +54,6 @@ import CampaignCreate from '../src/containers/Campaigns/CampaignCreate';
 import Scan from '../src/containers/Scan';
 import WelcomePage from '../src/components/AuthScreens/WelcomePage';
 import CampaignUpdate from '../src/containers/Campaigns/CampaignUpdate';
-import Posts from '../src/containers/Posts/Posts';
-import PostPage from '../src/containers/Posts/PostPage';
 import ThemeProvider from '../Themes/Nkwashi/ThemeProvider';
 import DiscussonPage from '../src/containers/Discussions/DiscussionPage';
 import BusinessProfile from '../src/containers/Businesses/BusinessProfile';
@@ -71,8 +68,9 @@ import CommentsPage from '../src/containers/Comments/CommentPage';
 import { MainMenu } from '../src/modules/Menu';
 import modules from '../src/modules';
 import UserRoutes from '../src/modules/Users/UserRoutes';
-import { useTranslation } from 'react-i18next';
 import I18Initializer from '../src/modules/i18n/Components/I18Initializer';
+import PostPage from '../src/modules/News/Components/PostPage';
+import Posts from '../src/modules/News/Components/Posts';
 
 // The routes defined here are carefully arranged, be mindful when changing them
 
@@ -226,6 +224,11 @@ const App = () => {
                                 />
                                 <Route
                                   exact
+                                  path="/mymessages"
+                                  render={() => <Redirect to={`/message/${user.id}`} />}
+                                />
+                                <Route
+                                  exact
                                   path="/myprofile"
                                   render={() => <Redirect to={`/user/${user.id}`} />}
                                 />
@@ -254,7 +257,6 @@ const App = () => {
                                 <Route path="/map" component={Map} />
                                 <Route path="/myplot" component={GeoMap} />
                                 <Route path="/mobile_money" component={MobileMoney} />
-                                <Route path="/contact" component={Support} />
                                 <Route path="/settings" component={Notifications} />
                                 {/* <Route path="/otp_sent" component={OTPFeedbackScreen} /> */}
                                 <Route path="/referral" component={UserEdit} />
@@ -289,7 +291,7 @@ const App = () => {
                                   exact
                                   component={ClientRequestForm}
                                 />
-                                <Route path="/news/:slug" exact component={Posts} />
+                                <Route path="/news/slug" exact component={Posts} />
                                 <Route path="/discussions/:id" exact component={DiscussonPage} />
                                 <Route path="/business/:id" exact component={BusinessProfile} />
                                 <Route path="/form/:formId?/:formName?" component={FormPage} />

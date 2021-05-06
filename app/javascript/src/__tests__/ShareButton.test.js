@@ -6,17 +6,18 @@ import '@testing-library/jest-dom/extend-expect'
 describe('share button', () => {
   it('should always render', () => {
     const container = render(<ShareButton />)
-    expect(container.queryByText('Share')).toBeInTheDocument()
+    expect(container.queryByText('common:misc.share')).toBeInTheDocument()
   })
 
   it('should render with the proper props', () => {
     const props = {
       url: 'https://dev.dgdp.site/news',
-      doOnShare: jest.fn
+      doOnShare: jest.fn,
+      communityName: 'Demo'
     }
     window.open = jest.fn()
     const container = render(<ShareButton {...props} />)
-    const button = container.queryByText('Share')
+    const button = container.queryByText('common:misc.share')
     expect(button).toBeTruthy()
 
     fireEvent.click(button)

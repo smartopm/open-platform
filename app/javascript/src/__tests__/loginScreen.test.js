@@ -41,7 +41,8 @@ describe('Login screen', () => {
             locale: 'en-ZM',
             tagline: 'This is a tagline for this community',
             logoUrl: '',
-            language: 'en-US'
+            language: 'en-US',
+            wpLink: ''
           }
         }
       }

@@ -4,19 +4,22 @@ import Divider from '@material-ui/core/Divider';
 import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider'
 import Loading from '../../../shared/Loading'
 import Homepage from '../../../components/HomePage'
-import NewsFeed from '../../../components/NewsPage/NewsFeed'
 import { TaskReminder } from '../../Tasks'
 import { PaymentSummary } from '../../Payments'
 import UserDetail from '../../Users/Components/UserDetail'
 import ViewCustomerJourney from '../../CustomerJourney/Components/ViewCustomerJourney'
 import LanguageToggle from '../../i18n/Components/LanguageToggle';
+import NewsFeed from '../../News/Components/NewsFeed';
+import { PlotDetail } from '../../Plots'
+import CustomerJourneyStatus from '../../CustomerJourney/Components/CustomerJourneyStatus'
 
 export default function Home() {
   const authState = useContext(AuthStateContext)
 
   if (!authState.loggedIn) return <Loading />
   return (
-    <div style={{backgroundColor: '#FFFFFF', marginTop: '-30px'}}>
+    // todo: tolu will refactor this to be more dynamic
+    <div style={{backgroundColor: '#FFFFFF', marginTop: '-30px', overflow: 'hidden'}}>
       <LanguageToggle />
       {authState.user.userType === 'admin' && (
         <div>
@@ -27,12 +30,26 @@ export default function Home() {
           <Divider />
           <TaskReminder />
           <Divider />
-          <NewsFeed />
+          <NewsFeed wordpressEndpoint={authState.user?.community.wpLink} />
         </div>
       )}
-      {authState.user.userType !== 'admin' && (
+      {authState.user.userType === 'client' && (
+        (
+          <div>
+            <UserDetail user={authState.user} />
+            {authState.user.subStatus && (
+              <CustomerJourneyStatus subStatus={authState.user.subStatus} communityName={authState.user.community.name} />
+            )}
+            <Divider />
+            <PlotDetail authState={authState.user} />
+            <Divider />
+            <NewsFeed wordpressEndpoint={authState.user?.community.wpLink} />
+          </div>
+        )
+      )}
+      {authState.user.userType !== 'admin' && authState.user.userType !==  'client'  && (
         <div>
-          <NewsFeed />
+          <NewsFeed wordpressEndpoint={authState.user?.community.wpLink} />
           <Homepage authState={authState} />
         </div>
       )}

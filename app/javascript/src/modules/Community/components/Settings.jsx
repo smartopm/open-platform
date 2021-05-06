@@ -44,6 +44,7 @@ export default function CommunitySettings({ data, token, refetch }) {
   const [currency, setCurrency] = useState('');
   const [tagline, setTagline] = useState(data?.tagline || '');
   const [logoUrl, setLogoUrl] = useState(data?.logoUrl || '');
+  const [wpLink, setWpLink] = useState(data?.wpLink || '');
   const [locale, setLocale] = useState('en-ZM');
   const [language, setLanguage] = useState('en-US');
   const [showCropper, setShowCropper] = useState(false);
@@ -174,8 +175,9 @@ export default function CommunitySettings({ data, token, refetch }) {
         locale,
         language,
         tagline,
-        logoUrl
-      }
+        logoUrl,
+        wpLink
+      },
     })
       .then(() => {
         setMessage({
@@ -313,9 +315,6 @@ export default function CommunitySettings({ data, token, refetch }) {
           margin="normal"
           inputProps={{ "data-testid": "tagline"}}
         />
-
-      </div>
-      <div className={classes.information} style={{ marginTop: '40px' }}>
         <TextField
           label="Set Community Logo Url"
           value={logoUrl}
@@ -323,6 +322,14 @@ export default function CommunitySettings({ data, token, refetch }) {
           name="tagline"
           margin="normal"
           inputProps={{ "data-testid": "logo_url"}}
+        />
+        <TextField
+          label="Set Wordpress Url"
+          value={wpLink}
+          onChange={event => setWpLink(event.target.value)}
+          name="wp_link"
+          margin="normal"
+          inputProps={{ "data-testid": "wp_link"}}
         />
 
       </div>
@@ -415,6 +422,7 @@ CommunitySettings.propTypes = {
     locale: PropTypes.string,
     language: PropTypes.string,
     tagline: PropTypes.string,
+    wpLink: PropTypes.string,
   }).isRequired,
   token: PropTypes.string.isRequired,
   refetch: PropTypes.func.isRequired

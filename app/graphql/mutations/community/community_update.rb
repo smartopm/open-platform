@@ -14,6 +14,7 @@ module Mutations
       argument :tagline, String, required: false
       argument :logo_url, String, required: false
       argument :language, String, required: false
+      argument :wp_link, String, required: false
 
       field :community, Types::CommunityType, null: true
 

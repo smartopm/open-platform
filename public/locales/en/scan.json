@@ -1,5 +1,6 @@
 {
   "scan": {
-    "torch": "Toggle Torch"
+    "torch": "Toggle Torch",
+    "button_key": "Button Key"
   }
 }

@@ -34,12 +34,11 @@ import QueryBuilder from '../../../components/QueryBuilder';
 import { ModalDialog } from '../../../components/Dialog';
 import { formatError, pluralizeCount, propAccessor } from '../../../utils/helpers';
 import useDebounce from '../../../utils/useDebounce';
-import DataList from '../../../shared/list/DataList';
 import ListHeaders from '../../../shared/list/ListHeader';
-import renderTaskData from './RenderTaskData';
 import MessageAlert from '../../../components/MessageAlert';
 import { TaskBulkUpdateMutation } from '../graphql/task_mutation';
 import TaskActionMenu from './TaskActionMenu';
+import TodoItem from './TodoItem';
 
 const taskHeader = [
   { title: 'Select', col: 1 },
@@ -82,7 +81,6 @@ export default function TodoList({
   const debouncedFilterInputText = useDebounce(userNameSearchTerm, 500);
   const theme = useTheme();
   const matches = useMediaQuery(theme.breakpoints.up('sm'));
-  const [actionMenuOpen, setActionMenuOpen] = useState(null);
   const [isSuccessAlert, setIsSuccessAlert] = useState(false);
   const [checkedOptions, setCheckOptions] = useState('none')
   const taskQuery = {
@@ -218,7 +216,6 @@ export default function TodoList({
   }
 
   function handleCompleteNote(noteId, completed) {
-    handleTaskActionMenuClose()
     setMutationLoading(true);
 
     taskUpdate({
@@ -312,14 +309,6 @@ export default function TodoList({
         }
       }
     }
-  }
-
-  function handleTaskActionMenuClose(){
-    setActionMenuOpen(null)
-  } 
-
-  function handleTaskActionMenuOpen(e){
-    setActionMenuOpen(e.currentTarget)
   }
 
   function handleMessageAlertClose(_event, reason) {
@@ -586,24 +575,17 @@ export default function TodoList({
             {data?.flaggedNotes.length ? (
               <div>
                 {matches && <ListHeaders headers={taskHeader} />}
-                <DataList
-                  keys={taskHeader}
-                  data={renderTaskData({
-                    data: data?.flaggedNotes,
-                    handleChange,
-                    selectedTasks,
-                    isSelected: checkedOptions === 'all',
-                    handleTaskDetails,
-                    handleCompleteNote,
-                    actionMenu: {
-                      open: actionMenuOpen,
-                      handleClose: handleTaskActionMenuClose,
-                      handleOpen: handleTaskActionMenuOpen,
-                    }
-                  }
-                  )}
-                  hasHeader={false}
-                />
+                {data?.flaggedNotes.map(task => (
+                  <TodoItem
+                    key={task.id}
+                    task={task}
+                    handleChange={handleChange}
+                    selectedTasks={selectedTasks}
+                    isSelected={checkedOptions === 'all'}
+                    handleTaskDetails={handleTaskDetails}
+                    handleCompleteNote={handleCompleteNote}
+                  />
+                ))}
               </div>
             ) : (
               <CenteredContent>Click a card above to filter</CenteredContent>
