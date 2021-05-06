@@ -64,6 +64,7 @@ export const subStatus = {
   6: 'Construction in Progress (Self Build)'
 };
 
+// TODO: Find a way to get these translated
 export const customerJourneyStatus = {
   plots_fully_purchased: 'Your plot is currently awaiting eligibility to start construction!',
   eligible_to_start_construction: 'Your plot is currently eligible to purchase floor plan!',

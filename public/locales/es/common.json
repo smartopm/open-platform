@@ -41,6 +41,32 @@
     "refer": "Referir",
     "referral_text": "{{communityName}} valora su comunidad y cree que nuestra comunidad comienza contigo. Recomendar a sus amigos y familiares a {{communityName}} le da la oportunidad de elegir a sus futuros vecinos, así que comience a recomendar hoy mismo.",
     "referral_thanks": "Gracias por tu recomendación. Pronto nos comunicaremos con ellos.",
+    "hello": "Hola",
+    "more_details": "Más detalles",
+    "payments": "Pagos",
+    "invoice": "Factura",
+    "invoice_plural": "Facturas",
+    "due_text": "Vencer",
+    "recent_news": "Noticias recientes",
+    "campaigns": "Campañas",
+    "tasks": "Tareas",
+    "notes": "Notas",
+    "request_forms": "Formularios de solicitud y permisos",
+    "time_card": "Tarjeta de tiempo",
+    "log_book": "Libro de registro",
+    "referrals": "Referencias",
+    "discussions": "Discusiones",
+    "business": "Negocio",
+    "support": "El apoyo",
+    "labels": "Etiquetas",
+    "comments": "Comentarios",
+    "action_flows": "Flujos de acción",
+    "properties": "Propiedades",
+    "mail_templates": "Plantillas de correo",
+    "comm_settings": "Configuración de la comunidad",
+    "users": "Usuarios",
+    "news": "Noticias",
+    "powered_by_dgdp": "Desarrollado por DoubleGDP",
     "share": "Cuota",
     "copied": "Copiado al portapapeles!",
     "first_to_comment": "Se el primero en comentar",
@@ -53,7 +79,20 @@
     "select": "Seleccione",
     "all": "Todas",
     "all_this_page": "Todo en esta pagina",
-    "none": "Ninguno"
+    "none": "Ninguno",
+    "step": "Paso",
+    "step_plural": "Pasos",
+    "balance": "equilibrio"
+  },
+  "user_types": {
+    "admin": "Administrador",
+    "client": "Cliente",
+    "custodian": "Custodio",
+    "visitor": "Visitante",
+    "prospective_client": "Futuro cliente",
+    "security_guard": "Guardia de seguridad",
+    "resident": "Residente",
+    "contractor": "Contratista"
   },
   "menu": {
     "invoice": "Factura",
@@ -80,9 +119,9 @@
     "send_sms": "Enviar SMS",
     "send_sms_to": "Enviar SMS a ",
     "send_otp": "Enviar OTP",
-    "call": "Call",
-    "errors": {
-      "empty_text": "El mensaje debe contener algo de texto"
-    }
+    "call": "Call"
+  },
+  "errors": {
+    "empty_text": "El mensaje debe contener algo de texto"
   }
 }

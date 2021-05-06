@@ -4,7 +4,6 @@
 import React from 'react'
 import { Redirect } from 'react-router-dom'
 import { StyleSheet, css } from 'aphrodite'
-import { useTranslation } from 'react-i18next'
 import PlaylistAddCheckIcon from '@material-ui/icons/PlaylistAddCheck'
 import HelpIcon from '@material-ui/icons/Help'
 import PersonIcon from '@material-ui/icons/Person'
@@ -26,6 +25,7 @@ import TelegramIcon from '@material-ui/icons/Telegram'
 import LandscapeIcon from '@material-ui/icons/Landscape';
 import PaymentIcon from '@material-ui/icons/Payment';
 import MailOutline from '@material-ui/icons/MailOutline';
+import { useTranslation } from 'react-i18next'
 import Card, { SVGIcon } from './Card'
 
 import SocialMediaLinks from './SocialMediaLinks'
@@ -37,7 +37,7 @@ import NewsIcon from '../../../assets/images/iconfinder.svg'
 import ActionFlowIcon from './ActionFlows/ActionFlowIcon'
 
 export default function Homepage({ authState }) {
-  const { t } = useTranslation()
+  const { t } = useTranslation('dashboard')
   if (authState.user.userType === 'security_guard') {
     return <Redirect push to="/guard_home" />
   }
@@ -45,7 +45,7 @@ export default function Homepage({ authState }) {
   const cards = [
     {
       card_id: 1,
-      title: t('home.scan'),
+      title: t('dashboard.scan'),
       path: '/scan',
       titleStyle: css(styles.CardtextImg),
       icon: <SVGIcon image={QRIcon} alt="support icon" />,
@@ -53,7 +53,7 @@ export default function Homepage({ authState }) {
     },
     {
       card_id: 2,
-      title: t('My ID Card'),
+      title: t('dashboard.my_id_card'),
       path: `/id/${authState.user.id}`,
 
       icon: <PersonIcon fontSize="large" />,
@@ -70,7 +70,7 @@ export default function Homepage({ authState }) {
     },
     {
       card_id: 3,
-      title: 'My Account',
+      title: t('dashboard.my_account'),
       path: `/myaccount/${authState.user.id}`,
       from: 'acc',
       icon: <AccountCircleIcon fontSize="large" />,
@@ -78,7 +78,7 @@ export default function Homepage({ authState }) {
     },
     {
       card_id: 4,
-      title: 'Users',
+      title: t('common:misc.users'),
       path: '/users',
 
       icon: <RecentActorsIcon fontSize="large" />,
@@ -86,7 +86,7 @@ export default function Homepage({ authState }) {
     },
     {
       card_id: 18,
-      title: `${authState.user.community.name} News`,
+      title: `${authState.user.community.name} ${t('common:misc.news')}`,
       path: '/news',
       titleStyle: css(styles.CardtextImg),
       icon: <SVGIcon image={NewsIcon} alt=" news icons" />,
@@ -102,7 +102,7 @@ export default function Homepage({ authState }) {
     },
     {
       card_id: 6,
-      title: 'My Messages',
+      title: t('dashboard.my_messages'),
       path:
         authState.user.userType === 'admin'
           ? '/messages'
@@ -123,7 +123,7 @@ export default function Homepage({ authState }) {
     },
     {
       card_id: 7,
-      title: 'Campaigns',
+      title: t('common:misc.campaigns'),
       path: '/campaigns',
 
       icon: <TelegramIcon fontSize="large" />,
@@ -131,7 +131,7 @@ export default function Homepage({ authState }) {
     },
     {
       card_id: 8,
-      title: 'Tasks',
+      title: t('common:misc.tasks'),
       path: '/tasks',
 
       icon: <PlaylistAddCheckIcon fontSize="large" />,
@@ -139,7 +139,7 @@ export default function Homepage({ authState }) {
     },
     {
       card_id: 9,
-      title: 'Notes',
+      title: t('common:misc.notes'),
       path: '/notes',
 
       icon: <NotesIcon fontSize="large" />,
@@ -147,7 +147,7 @@ export default function Homepage({ authState }) {
     },
     {
       card_id: 10,
-      title: 'My Thebe Portal',
+      title: t('dashboard.my_thebe_portal'),
       path: '/account',
       titleStyle: css(styles.CardtextImg),
       clientName: authState.user.name,
@@ -157,7 +157,7 @@ export default function Homepage({ authState }) {
     },
     {
       card_id: 11,
-      title: 'Permits and Request Forms',
+      title: t('common:misc.request_forms'),
       path: '/forms',
       id: 'crfl',
       icon: <ListAltIcon fontSize="large" />,
@@ -165,7 +165,7 @@ export default function Homepage({ authState }) {
     },
     {
       card_id: 12,
-      title: 'Time Card',
+      title: t('common:misc.time_card'),
       path: '/timesheet',
 
       icon: <HourglassEmptyIcon fontSize="large" />,
@@ -173,7 +173,7 @@ export default function Homepage({ authState }) {
     },
     {
       card_id: 13,
-      title: 'Log Book',
+      title: t('common:misc.log_book'),
       path: '/entry_logs',
 
       icon: <LogIcon fontSize="large" />,
@@ -181,7 +181,7 @@ export default function Homepage({ authState }) {
     },
     {
       card_id: 14,
-      title: 'Referrals',
+      title: t('common:misc.referrals'),
       path: '/referral',
       from: 'ref',
       icon: <PeopleIcon fontSize="large" />,
@@ -189,7 +189,7 @@ export default function Homepage({ authState }) {
     },
     {
       card_id: 16,
-      title: 'Time Card',
+      title: t('common:misc.time_card'),
       path: `/timesheet/${authState.user.id}`,
 
       icon: <PlaylistAddCheckIcon fontSize="large" />,
@@ -203,14 +203,14 @@ export default function Homepage({ authState }) {
             <h5 className="card-title">
               <CallIcon fontSize="large" />
             </h5>
-            <p className={css(styles.CardtextIcon)}>Call Manager</p>
+            <p className={css(styles.CardtextIcon)}>{t('dashboard.call_manager')}</p>
           </div>
         </a>
       ),
       access: ['contractor']
     },
     {
-      title: 'Discussions',
+      title: t('common:misc.discussions'),
       path: '/discussions',
       titleStyle: css(styles.CardtextImg),
       icon: <MessageIcon fontSize="large" />,
@@ -227,14 +227,14 @@ export default function Homepage({ authState }) {
 
     {
       card_id: 19,
-      title: 'Business',
+      title: t('common:misc.business'),
       path: '/business',
       titleStyle: css(styles.CardtextImg),
       icon: <LocalMallIcon fontSize="large" />,
       access: ['admin', 'client', 'prospective_client', 'resident', 'visitor']
     },
     {
-      title: `${authState.user.community.name} Support`,
+      title: `${authState.user.community.name} ${t('common:misc.support')}`,
       path: '/contact',
 
       icon: <HelpIcon fontSize="large" />,
@@ -249,43 +249,43 @@ export default function Homepage({ authState }) {
       ]
     },
     {
-      title: 'Labels',
+      title: t('common:misc.labels'),
       path: `/labels`,
       icon: <LabelIcon fontSize="large" />,
       access: ['admin']
     },
     {
-      title: 'Comments',
+      title: t('common:misc.comments'),
       path: '/comments',
       icon: <CommentIcon fontSize="large" />,
       access: ['admin']
     },
     {
-      title: 'Action Flows',
+      title: t('common:misc.action_flows'),
       path: '/action_flows',
       icon: <ActionFlowIcon />,
       access: ['admin']
     },
     {
-      title: 'Properties',
+      title: t('common:misc.properties'),
       path: '/land_parcels',
       icon: <LandscapeIcon fontSize="large" />,
       access: ['admin']
     },
     {
-      title: 'Payments',
+      title: t('common:misc.payments'),
       path: '/payments',
       icon: <PaymentIcon fontSize="large" />,
       access: ['admin']
     },
     {
-      title: 'Mail Templates',
+      title: t('common:misc.mail_templates'),
       path: '/mail_templates',
       icon: <MailOutline fontSize="large" />,
       access: ['admin']
     },
     {
-      title: 'Community Settings',
+      title: t('common:misc.comm_settings'),
       path: '/community',
       icon: <SettingsIcon fontSize="large" />,
       access: ['admin']
