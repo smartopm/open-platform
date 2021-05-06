@@ -6,7 +6,6 @@ import MenuIcon from '@material-ui/icons/Menu';
 import { StyleSheet, css } from 'aphrodite';
 import { Button, Hidden, IconButton } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
-// import CssBaseline from '@material-ui/core/CssBaseline';
 import PropTypes from 'prop-types';
 import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider';
 import SideMenu from './SideMenu';
@@ -15,6 +14,7 @@ import modules from '../..';
 import CommunityName from '../../../shared/CommunityName';
 import CenteredContent from '../../../components/CenteredContent';
 import userProps from '../../../shared/types/user';
+import UserAvatar from '../../Users/Components/UserAvatar'
 
 const drawerWidth = 260;
 
@@ -80,7 +80,10 @@ export function MainNav({ authState }) {
           >
             <MenuIcon />
           </IconButton>
-          <NotificationBell user={authState.user} />
+          <div style={{display: 'flex'}}>
+            <NotificationBell user={authState.user} />
+            <UserAvatar imageUrl={authState.user.imageUrl} />
+          </div>
           <CenteredContent>
             <CommunityName authState={authState} />
           </CenteredContent>
