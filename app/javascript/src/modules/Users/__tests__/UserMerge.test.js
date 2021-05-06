@@ -1,9 +1,8 @@
-/* eslint-disable */
 import React from 'react'
 import { render, fireEvent } from '@testing-library/react'
 import '@testing-library/jest-dom/extend-expect'
-import UserMerge from '../components/User/UserMerge'
 import { MockedProvider } from '@apollo/react-testing'
+import UserMerge from '../Components/UserMerge'
 
 describe('user merge component', () => {
   it('should should include callable buttons', () => {

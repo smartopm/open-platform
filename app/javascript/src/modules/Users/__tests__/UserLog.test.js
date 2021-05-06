@@ -1,10 +1,9 @@
-/* eslint-disable */
 import React from 'react'
-import UserLog from '../components/UserLog'
 import { render } from '@testing-library/react'
 import '@testing-library/jest-dom/extend-expect'
 import { BrowserRouter } from 'react-router-dom/'
 import { MockedProvider } from '@apollo/react-testing'
+import UserLog from '../Components/UserLog'
 
 describe('User infromation component loads', () => {
   const data = {
