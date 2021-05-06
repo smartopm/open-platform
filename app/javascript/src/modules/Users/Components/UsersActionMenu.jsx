@@ -9,6 +9,7 @@ import {
 } from '@material-ui/core'
 import PropTypes from 'prop-types'
 import LabelIcon from '@material-ui/icons/Label'
+import { useTranslation } from 'react-i18next'
 import { CustomizedDialogs, ActionDialog } from '../../../components/Dialog'
 import CreateLabel from '../../../components/CreateLabel'
 import CampaignIcon from '../../../components/Campaign/CampaignIcon'
@@ -29,6 +30,7 @@ export default function UsersActionMenu({
   const [labelSelectModalOpen, setLabelSelectModalOpen] = useState(false)
   const [labelAssignWarningOpen, setLabelAssignWarningOpen] = useState(false)
   const [selectedLabels, setSelectedLabels] = useState([])
+  const { t } = useTranslation(['users', 'common'])
 
   function openLabelSelectModal() {
     setLabelSelectModalOpen(true)
@@ -60,7 +62,7 @@ export default function UsersActionMenu({
         handleModal={() => setLabelSelectModalOpen(false)}
         dialogHeader=""
         handleBatchFilter={handleAssignLabel}
-        saveAction="Assign"
+        saveAction={t('common:form_actions.assign')}
         disableActionBtn={selectedLabels.length === 0}
       >
         <CreateLabel handleLabelSelect={labels => setSelectedLabels(labels)} />
@@ -69,8 +71,7 @@ export default function UsersActionMenu({
         open={labelAssignWarningOpen}
         handleClose={() => setLabelAssignWarningOpen(false)}
         handleOnSave={() => handleLabelSelect(selectedLabels)}
-        message={`You are about to assign labels to 2000+ users. We recommend using
-          a smaller list. Do you still want to proceed?`}
+        message={t('users.label_message')}
       />
       <Grid item style={{ display: 'flex' }}>
         <Grid>
@@ -83,7 +84,11 @@ export default function UsersActionMenu({
             style={{ padding: '0px', marginRight: '15px' }}
           />
         </Grid>
-        <Typography> Select </Typography>
+        <Typography> 
+          {' '}
+          {t('common:misc.select')}
+          {' '}
+        </Typography>
         <Grid>
           <Select
             labelId="user-action-select"
@@ -92,9 +97,9 @@ export default function UsersActionMenu({
             onChange={event => setCampaignCreateOption(event.target.value)}
             style={{ height: '23px', marginLeft: '10px' }}
           >
-            <MenuItem value="all">All</MenuItem>
-            <MenuItem value="all_on_the_page">All on this page</MenuItem>
-            <MenuItem value="none">None</MenuItem>
+            <MenuItem value="all">{t('common:misc.all')}</MenuItem>
+            <MenuItem value="all_on_the_page">{t('common:misc.all_this_page')}</MenuItem>
+            <MenuItem value="none">{t('common:misc.none')}</MenuItem>
           </Select>
         </Grid>
       </Grid>
@@ -106,7 +111,7 @@ export default function UsersActionMenu({
             startIcon={<LabelIcon fontSize="large" />}
             style={{ textTransform: 'none' }}
           >
-            Assign Label
+            {t('common:form_actions.assign_label')}
           </Button>
           <Button
             onClick={handleCampaignCreate}
@@ -114,7 +119,7 @@ export default function UsersActionMenu({
             startIcon={<CampaignIcon />}
             style={{ textTransform: 'none' }}
           >
-            Create Campaign
+            {t('common:form_actions.create_campaign')}
           </Button>
         </Grid>
       )}

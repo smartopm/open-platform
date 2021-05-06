@@ -4,6 +4,7 @@ import { useQuery, useMutation, useLazyQuery } from 'react-apollo'
 import { Redirect, Link , useLocation, useHistory} from 'react-router-dom'
 import { makeStyles } from '@material-ui/core/styles'
 import { Button, Divider, IconButton, InputBase, Grid } from '@material-ui/core'
+import { useTranslation } from 'react-i18next'
 import FilterListIcon from '@material-ui/icons/FilterList'
 import MaterialConfig from 'react-awesome-query-builder/lib/config/material'
 import Loading from '../../../shared/Loading'
@@ -51,6 +52,8 @@ export default function UsersList() {
   const [selectCheckBox, setSelectCheckBox] = useState(false)
   const [substatusReportOpen, setSubstatusReportOpen] = useState(false)
   const history = useHistory()
+  const { t } = useTranslation(['users', 'common'])
+
   function handleReportDialog(){
     setSubstatusReportOpen(!substatusReportOpen)
   }
@@ -396,8 +399,7 @@ export default function UsersList() {
           open={openCampaignWarning}
           handleClose={() => setOpenCampaignWarning(false)}
           handleOnSave={createCampaign}
-          message={`You are going to create a campaign for 2000+ users. We recommend using
-          a smaller list. Do you still want to proceed?`}
+          message={t('users.message_campaign')}
         />
         <ModalDialog
           handleClose={handleNoteModal}
@@ -407,7 +409,7 @@ export default function UsersList() {
           {modalAction === 'Note' && (
             <div className="form-group">
               <h6>
-                Add note for
+                {t('users.add_note')}
                 {' '}
                 <strong>{userName}</strong>
                 {' '}
@@ -418,17 +420,17 @@ export default function UsersList() {
                 value={note}
                 onChange={event => setNote(event.target.value)}
                 name="note"
-                placeholder="Type action note here"
+                placeholder={t('common:form_placeholders.action_note')}
               />
               {mutationLoading && (
-                <p className="text-center">Saving note ...</p>
+                <p className="text-center">{t('users.save_note')}</p>
               )}
             </div>
           )}
           {modalAction === 'Answered' && (
             <div className="form-group">
               <h6>
-                Add Outgoing call answered for
+                {t('users.add_outgoing_calls_answered')}
                 {' '}
                 <strong>{userName}</strong>
                 {' '}
@@ -439,17 +441,17 @@ export default function UsersList() {
                 value={note}
                 onChange={event => setNote(event.target.value)}
                 name="note"
-                placeholder="Type action note here"
+                placeholder={t('common:form_placeholders.action_note')}
               />
               {mutationLoading && (
-                <p className="text-center">Saving note ...</p>
+                <p className="text-center">{t('users.save_note')}</p>
               )}
             </div>
           )}
           {modalAction === 'Missed' && (
             <div className="form-group">
               <h6>
-                Add Outgoing call not answered for
+                {t('users.add_outgoing_calls_answered')}
                 {' '}
                 <strong>{userName}</strong>
                 {' '}
@@ -460,10 +462,10 @@ export default function UsersList() {
                 value={note}
                 onChange={event => setNote(event.target.value)}
                 name="note"
-                placeholder="Type action note here"
+                placeholder={t('common:form_placeholders.action_note')}
               />
               {mutationLoading && (
-                <p className="text-center">Saving note ...</p>
+              <p className="text-center">{t('users.save_note')}</p>
               )}
             </div>
           )}
@@ -478,7 +480,7 @@ export default function UsersList() {
             <InputBase
               className={classes.input}
               type="text"
-              placeholder="Search User"
+              placeholder={t('common:form_placeholders.search_user')}
               onFocus={inputToSearch}
               inputProps={{ 'aria-label': 'search User' }}
             />
@@ -494,12 +496,12 @@ export default function UsersList() {
             <div style={{ margin: '10px 19px 10px 0' }}>
               {filterCount
                 ? `${filterCount} ${pluralizeCount(filterCount, 'Filter')}`
-                : 'Filter'}
+                : t('common:misc.filter')}
             </div>
             <div className={classes.searchButton}>
               <Link to="/users/import" style={{ textDecoration: 'none' }}>
                 <Button variant="outlined">
-                  UPLOAD
+                  {t('users.upload')}
                 </Button>
               </Link>
               <Button
@@ -507,14 +509,14 @@ export default function UsersList() {
                 className={classes.reportBtn}
                 onClick={handleReportDialog}
               >
-                Create Report
+                {t('users.create_report')}
               </Button>
               <Button
                 variant="outlined"
                 className={classes.reportBtn}
                 onClick={() => history.push('/users/stats')}
               >
-                User Stats
+                {t('users.user_stats')}
               </Button>
             </div>
           </>
@@ -547,7 +549,7 @@ export default function UsersList() {
               handleOnChange={handleQueryOnChange}
               builderConfig={queryBuilderConfig}
               initialQueryValue={queryBuilderInitialValue}
-              addRuleLabel="Add filter"
+              addRuleLabel={t('common:misc.add_filter')}
             />
           </Grid>
         </div>

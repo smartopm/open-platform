@@ -2,6 +2,7 @@
 import React from 'react'
 import { Menu, MenuItem } from '@material-ui/core'
 import { Link } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 
 /**
  * 
@@ -18,6 +19,7 @@ export default function UserActionMenu({
     OpenMergeDialog,
     linkStyles
   }) {
+    const { t } = useTranslation('common')
 
     return (
       <Menu
@@ -39,7 +41,7 @@ export default function UserActionMenu({
                 key={'merge'}
                 onClick={OpenMergeDialog}
               >
-                Merge User
+                {t('menu.merge_user')}
               </MenuItem>
               <MenuItem key={'send_sms'}>
                 <Link
@@ -53,7 +55,7 @@ export default function UserActionMenu({
                   }}
                   className={linkStyles}
                 >
-                  Send SMS to {data.user.name}
+                  {t('menu.send_sms_to')} {data.user.name}
                 </Link>
               </MenuItem>
 
@@ -63,7 +65,7 @@ export default function UserActionMenu({
                     className={linkStyles}
                     href={`tel:+${data.user.phoneNumber}`}
                   >
-                    Call {data.user.name}
+                    {t('menu.call')} {data.user.name}
                   </a>
                 </MenuItem>
               ) : null}
@@ -72,7 +74,7 @@ export default function UserActionMenu({
                   to={`/user/${data.user.id}/logs`}
                   className={linkStyles}
                 >
-                  User Logs
+                  {t('menu.user_logs')}
                 </Link>
               </MenuItem>
             </>
@@ -84,7 +86,7 @@ export default function UserActionMenu({
                 key={'edit_user'}
                 onClick={() => router.push(`/user/${data.user.id}/edit`)}
               >
-                Edit
+                {t('menu.user_edit')}
               </MenuItem>
               <MenuItem key={'message_support'}>
                 <Link
@@ -98,7 +100,7 @@ export default function UserActionMenu({
                   }}
                   className={linkStyles}
                 >
-                  Message Support
+                 {t('menu.message_support')}
                 </Link>
               </MenuItem>
               <MenuItem key={'print'}>
@@ -106,7 +108,7 @@ export default function UserActionMenu({
                   to={`/print/${data.user.id}`}
                   className={linkStyles}
                 >
-                  Print
+                  {t('menu.print_id')}
                 </Link>
               </MenuItem>
               <MenuItem key={'send_code'}>
@@ -114,7 +116,7 @@ export default function UserActionMenu({
                   to={`/user/${data.user.id}/otp`}
                   className={linkStyles}
                 >
-                  Send OTP
+                  {t('menu.send_otp')}
                 </Link>
               </MenuItem>
             </>

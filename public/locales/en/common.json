@@ -16,13 +16,18 @@
   },
   "form_placeholders": {
     "phone_number": "Enter Phone Number",
-    "email": "Enter Email"
+    "email": "Enter Email",
+    "action_note": "Type action note here",
+    "search_user": "Search User"
   },
   "form_actions": {
     "send_email": "Send Email",
     "cancel": "Cancel",
     "submit": "Submit",
-    "submitting": "Submitting ..."
+    "submitting": "Submitting ...",
+    "assign_label": "Assign Label",
+    "create_campaign": "Create Campaign",
+    "assign": "Assign"
   },
   "misc": {
     "or": "OR",
@@ -42,7 +47,13 @@
     "comment": "Comment",
     "comment_plural": "Comments",
     "type_comment": "Type a comment here",
-    "send": "Send"
+    "send": "Send",
+    "filter": "Filter",
+    "add_filter": "Add Filter",
+    "select": "Select",
+    "all": "All",
+    "all_this_page": "All on this page",
+    "none": "None"
   },
   "menu": {
     "invoice": "Invoice",

@@ -16,13 +16,18 @@
   },
   "form_placeholders": {
     "phone_number": "Introduzca el número de teléfono",
-    "email": "Ingrese correo electrónico"
+    "email": "Ingrese correo electrónico",
+    "action_note": "Escriba la nota de acción aquí",
+    "search_user": "Buscar usuario"
   },
   "form_actions": {
     "send_email": "Enviar correo electrónico",
     "cancel": "Cancelar",
     "submit": "Enviar",
-    "submitting": "Sumisión ..."
+    "submitting": "Sumisión ...",
+    "assign_label": "Asignar etiqueta",
+    "create_campaign": "Crear campaña",
+    "assign": "Asignar"
   },
   "misc": {
     "or": "O",
@@ -42,7 +47,13 @@
     "comment": "Comentario",
     "comment_plural": "Comentarios",
     "type_comment": "Escriba un comentario aquí",
-    "send": "enviar"
+    "send": "enviar",
+    "filter": "Filtrar",
+    "add_filter": "Añadir filtro",
+    "select": "Seleccione",
+    "all": "Todas",
+    "all_this_page": "Todo en esta pagina",
+    "none": "Ninguno"
   },
   "menu": {
     "invoice": "Factura",
@@ -67,7 +78,9 @@
     "print_id": "Imprimir ID",
     "message_support": "Soporte de mensajes",
     "send_sms": "Enviar SMS",
+    "send_sms_to": "Enviar SMS a ",
     "send_otp": "Enviar OTP",
+    "call": "Call",
     "errors": {
       "empty_text": "El mensaje debe contener algo de texto"
     }
