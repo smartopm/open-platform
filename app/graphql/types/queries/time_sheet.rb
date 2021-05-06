@@ -30,7 +30,7 @@ module Types::Queries::TimeSheet
 
   # rubocop:disable Metrics/MethodLength
   def time_sheet_logs(offset: 0, limit: 100)
-    raise GraphQL::ExecutionError, 'Unauthorized' unless admin_or_custodian
+    raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') unless admin_or_custodian
 
     com_id = context[:current_user].community_id
     query = ''
@@ -53,8 +53,9 @@ module Types::Queries::TimeSheet
 
   # rubocop:disable Metrics/AbcSize
   def user_time_sheet_logs(user_id:, offset: 0, limit: 300, date_to: nil, date_from: nil)
-    raise GraphQL::ExecutionError, 'Unauthorized' unless admin_or_custodian ||
-                                                         context[:current_user]&.id.eql?(user_id)
+    unless admin_or_custodian || context[:current_user]&.id.eql?(user_id)
+      raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
+    end
 
     date_from = date_from.blank? ? Time.current.beginning_of_month : DateTime.parse(date_from)
     u = get_allow_user(user_id)
@@ -66,7 +67,7 @@ module Types::Queries::TimeSheet
   # rubocop:enable Metrics/AbcSize
 
   def user_last_shift(user_id:)
-    raise GraphQL::ExecutionError, 'Unauthorized' unless admin_or_custodian
+    raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') unless admin_or_custodian
 
     context[:site_community].users.find(user_id).time_sheets.first
   end

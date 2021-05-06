@@ -26,7 +26,7 @@ module Types::Queries::Business
   end
 
   def businesses(offset: 0, limit: 100)
-    raise GraphQL::ExecutionError, 'Unauthorized' if context[:current_user].blank?
+    raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') if context[:current_user].blank?
 
     # Find out if we can use User.allowed...
     context[:site_community].businesses
@@ -36,13 +36,13 @@ module Types::Queries::Business
   end
 
   def business(id:)
-    raise GraphQL::ExecutionError, 'Unauthorized' if context[:current_user].blank?
+    raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') if context[:current_user].blank?
 
     context[:site_community].businesses.find(id)
   end
 
   def user_business(user_id:)
-    raise GraphQL::ExecutionError, 'Unauthorized' if context[:current_user].blank?
+    raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') if context[:current_user].blank?
 
     context[:site_community].users.find(user_id)&.businesses&.all
   end

@@ -24,22 +24,28 @@ module Types::Queries::EmailTemplate
   end
 
   def email_template(id:)
-    raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user]&.admin?
+    unless context[:current_user]&.admin?
+      raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
+    end
 
     email = context[:site_community].email_templates.find(id)
-    raise GraphQL::ExecutionError, 'email template not found' if email.nil?
+    return email if email.present?
 
-    email
+    raise GraphQL::ExecutionError, I18n.t('errors.email_template.not_found')
   end
 
   def email_templates(offset: 0, limit: 50)
-    raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user]&.admin?
+    unless context[:current_user]&.admin?
+      raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
+    end
 
     context[:site_community].email_templates.order(created_at: :desc).limit(limit).offset(offset)
   end
 
   def email_template_variables(id:)
-    raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user]&.admin?
+    unless context[:current_user]&.admin?
+      raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
+    end
 
     vars = []
     template = context[:site_community].email_templates.find(id)

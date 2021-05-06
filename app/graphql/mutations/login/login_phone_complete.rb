@@ -17,7 +17,7 @@ module Mutations
 
         return { auth_token: auth_token } if auth_token
 
-        raise GraphQL::ExecutionError, 'Unauthorized'
+        raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
       end
 
       def log(user)

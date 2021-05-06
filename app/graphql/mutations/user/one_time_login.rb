@@ -11,7 +11,7 @@ module Mutations
 
       def resolve(vals)
         user = ::User.find(vals[:user_id])
-        raise GraphQL::ExecutionError, 'NotFound' unless user
+        raise GraphQL::ExecutionError, I18n.t('errors.not_found') unless user
 
         url = user.send_one_time_login
         {
@@ -21,11 +21,9 @@ module Mutations
       end
 
       def authorized?(_vals)
-        current_user = context[:current_user]
-        raise GraphQL::ExecutionError, 'Unauthorized' unless current_user.role?(%i[admin
-                                                                                   client resident])
+        return true if context[:current_user].role?(%i[admin client resident])
 
-        true
+        raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
       end
     end
   end

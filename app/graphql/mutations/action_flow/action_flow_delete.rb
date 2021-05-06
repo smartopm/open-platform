@@ -9,16 +9,29 @@ module Mutations
       field :success, GraphQL::Types::Boolean, null: false
 
       def resolve(id:)
-        flow_delete = context[:site_community].action_flows.find_by(id: id)
-        raise GraphQL::ExecutionError, 'Action Flow not found' if flow_delete.nil?
+        flow = context[:site_community].action_flows.find_by(id: id)
+        raise_af_not_found_error(flow)
 
-        return { success: true } if flow_delete.update(status: 'deleted')
+        return { success: true } if flow.update(status: 'deleted')
       end
 
+      # Verifies if current user is admin or not.
       def authorized?(_vals)
         return true if context[:current_user]&.admin?
 
-        raise GraphQL::ExecutionError, 'Unauthorized'
+        raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
+      end
+
+      private
+
+      # Raises GraphQL execution error if Action flow not found.
+      #
+      # @return [GraphQL::ExecutionError]
+      def raise_af_not_found_error(flow)
+        return unless flow.nil?
+
+        raise GraphQL::ExecutionError,
+              I18n.t('errors.action_flow.not_found')
       end
     end
   end

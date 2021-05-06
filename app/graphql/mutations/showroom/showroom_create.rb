@@ -24,10 +24,9 @@ module Mutations
 
       # TODO: Better auth here
       def authorized?(_vals)
-        current_user = context[:current_user]
-        raise GraphQL::ExecutionError, 'Unauthorized' unless current_user
+        return true if context[:current_user].present?
 
-        true
+        raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
       end
     end
   end

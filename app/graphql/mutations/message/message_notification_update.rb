@@ -19,11 +19,11 @@ module Mutations
       end
       # rubocop:enable Rails/SkipsModelValidations
 
+      # Verifies if current user is present or not.
       def authorized?
-        current_user = context[:current_user]
-        raise GraphQL::ExecutionError, 'Unauthorized' unless current_user
+        return true if context[:current_user]
 
-        true
+        raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
       end
     end
   end

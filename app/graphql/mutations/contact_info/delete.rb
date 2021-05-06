@@ -23,7 +23,7 @@ module Mutations
         return true if context[:current_user]&.admin? ||
                        context[:current_user]&.id.eql?(vals[:user_id])
 
-        raise GraphQL::ExecutionError, 'Unauthorized'
+        raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
       end
     end
   end

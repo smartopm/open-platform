@@ -13,23 +13,24 @@ module Mutations
       def resolve(comment_id:, discussion_id:, status:)
         comment = ::Comment.find_by(id: comment_id, discussion_id: discussion_id)
 
-        raise GraphQL::ExecutionError, 'NotFound' unless comment
+        raise GraphQL::ExecutionError, I18n.t('errors.not_found') unless comment
 
         response = comment.update!(status: status)
 
-        return { success: 'updated' } if response
+        return { success: I18n.t('response.updated') } if response
 
         raise GraphQL::ExecutionError, comment.errors.full_messages
       end
 
+      # Verifies if current user is admin or not.
       def authorized?(vals)
         disc = context[:site_community].discussions.find(vals[:discussion_id])
         current_user = context[:current_user]
         # make sure the discussion is in same community as the admin updating it
         check_community = disc.community_id == current_user.community_id
-        raise GraphQL::ExecutionError, 'Unauthorized' unless check_community && current_user&.admin?
+        return true if check_community && current_user&.admin?
 
-        true
+        raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
       end
     end
   end

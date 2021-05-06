@@ -10,11 +10,11 @@ module Mutations
       field :success, GraphQL::Types::Boolean, null: false
 
       def resolve(label_id:, merge_label_id:)
-        raise GraphQL::ExecutionError, 'label ids cannot be the same' if label_id == merge_label_id
+        raise_ids_can_not_be_same_error(label_id, merge_label_id)
 
         label = label_id_check(label_id)
         merge_label = label_id_check(merge_label_id)
-        raise GraphQL::ExecutionError, 'Label not found' if label.nil? || merge_label.nil?
+        raise_label_not_found_error(label, merge_label)
 
         label.user_labels.each do |lab|
           merge_label.user_labels.create(user_id: lab[:user_id], label_id: lab[:label_id])
@@ -29,11 +29,31 @@ module Mutations
         context[:site_community].labels.find_by(id: id)
       end
 
+      # Verifies if current user is admin or not.
       def authorized?(_vals)
-        current_user = context[:current_user]
-        raise GraphQL::ExecutionError, 'Unauthorized' unless current_user&.admin?
+        return true if context[:current_user]&.admin?
 
-        true
+        raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
+      end
+
+      private
+
+      # Raises GraphQL execution error if label and merge label are same.
+      #
+      # @return [GraphQL::ExecutionError]
+      def raise_ids_can_not_be_same_error(label_id, merge_label_id)
+        return if label_id != merge_label_id
+
+        raise GraphQL::ExecutionError, I18n.t('errors.label.ids_can_not_be_same')
+      end
+
+      # Raises GraphQL execution error if label or merge label does not exist.
+      #
+      # @return [GraphQL::ExecutionError]
+      def raise_label_not_found_error(label, merge_label)
+        return if label || merge_label
+
+        raise GraphQL::ExecutionError, I18n.t('errors.label.not_found')
       end
     end
   end

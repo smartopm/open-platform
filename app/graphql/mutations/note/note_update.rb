@@ -17,7 +17,7 @@ module Mutations
 
       def resolve(id:, **attributes)
         note = context[:site_community].notes.find(id)
-        raise GraphQL::ExecutionError, 'NotFound' unless note
+        raise_note_not_found_error(note)
 
         updates_hash = record_attributes(attributes, note)
         raise GraphQL::ExecutionError, note.errors.full_messages unless note.update!(attributes)
@@ -40,11 +40,22 @@ module Mutations
       end
 
       # TODO: Better auth here
+      # Verifies if current user is admin or not.
       def authorized?(_vals)
-        current_user = context[:current_user]
-        raise GraphQL::ExecutionError, 'Unauthorized' unless current_user&.admin?
+        return true if context[:current_user]&.admin?
 
-        true
+        raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
+      end
+
+      private
+
+      # Raises GraphQL execution error if note does not exist.
+      #
+      # @return [GraphQL::ExecutionError]
+      def raise_note_not_found_error(note)
+        return if note
+
+        raise GraphQL::ExecutionError, I18n.t('errors.not_found')
       end
     end
   end

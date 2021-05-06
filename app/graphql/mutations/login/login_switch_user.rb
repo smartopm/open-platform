@@ -13,7 +13,7 @@ module Mutations
         user = context[:site_community].users.find(vals[:id])
 
         unless context[:current_user].can_become?(user)
-          raise GraphQL::ExecutionError, 'Unauthorized'
+          raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
         end
 
         log(context[:current_user], user)

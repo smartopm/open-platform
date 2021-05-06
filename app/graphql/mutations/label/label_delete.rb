@@ -9,26 +9,37 @@ module Mutations
       field :label_delete, GraphQL::Types::Boolean, null: false
 
       def resolve(id:)
-        label_delete = check_label(id)
-        raise GraphQL::ExecutionError, 'Label not found' if label_delete.nil?
+        label = check_label(id)
+        raise_label_not_found_error(label)
 
-        label_delete.user_labels.where(label_id: id).delete_all
-        label_delete.campaign_labels.where(label_id: id).delete_all
+        label.user_labels.where(label_id: id).delete_all
+        label.campaign_labels.where(label_id: id).delete_all
 
-        return { label_delete: label_delete } if label_delete.update(status: 'deleted')
+        return { label_delete: label } if label.update(status: 'deleted')
 
-        raise GraphQL::ExecutionError, label_delete.errors.full_message
+        raise GraphQL::ExecutionError, label.errors.full_message
       end
 
       def check_label(id)
         context[:site_community].labels.find_by(id: id)
       end
 
+      # Verifies if current user is admin or not.
       def authorized?(_vals)
-        current_user = context[:current_user]
-        raise GraphQL::ExecutionError, 'Unauthorized' unless current_user&.admin?
+        return true if context[:current_user]&.admin?
 
-        true
+        raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
+      end
+
+      private
+
+      # Raises GraphQL execution error if label does not exist.
+      #
+      # @return [GraphQL::ExecutionError]
+      def raise_label_not_found_error(label)
+        return if label
+
+        raise GraphQL::ExecutionError, I18n.t('errors.label.not_found')
       end
     end
   end

@@ -71,7 +71,9 @@ module Types::Queries::Invoice
   end
   # rubocop:enable Metrics/BlockLength
   def invoices(query: nil, offset: 0, limit: 100)
-    raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user]&.admin?
+    unless context[:current_user]&.admin?
+      raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
+    end
 
     context[:site_community].invoices
                             .search(query)
@@ -82,7 +84,7 @@ module Types::Queries::Invoice
   end
 
   def invoice(id:)
-    raise GraphQL::ExecutionError, 'Unauthorized' if context[:current_user].nil?
+    raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') if context[:current_user].nil?
 
     context[:site_community].invoices.find(id)
   end
@@ -114,7 +116,9 @@ module Types::Queries::Invoice
   end
 
   def paid_invoices_by_plan(payment_plan_id:)
-    raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user]&.admin?
+    unless context[:current_user]&.admin?
+      raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
+    end
 
     plan = ::PaymentPlan.find(payment_plan_id)
     plan.invoices.paid
@@ -123,7 +127,9 @@ module Types::Queries::Invoice
   # rubocop:disable Metrics/MethodLength
   # rubocop:disable Metrics/CyclomaticComplexity
   def invoices_stat_details(query:)
-    raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user].admin?
+    unless context[:current_user].admin?
+      raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
+    end
 
     invoices = context[:site_community].invoices.not_paid.not_cancelled
                                        .eager_load(:user, :land_parcel)
@@ -152,7 +158,9 @@ module Types::Queries::Invoice
   # rubocop:enable Metrics/CyclomaticComplexity
 
   def invoice_stats
-    raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user]&.admin?
+    unless context[:current_user]&.admin?
+      raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
+    end
 
     invoices = context[:site_community].invoices
     {
@@ -165,7 +173,9 @@ module Types::Queries::Invoice
 
   # rubocop:disable Metrics/MethodLength
   def invoice_summary
-    raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user]&.admin?
+    unless context[:current_user]&.admin?
+      raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
+    end
 
     invoices = context[:site_community].invoices.not_cancelled.not_paid
     {
@@ -190,14 +200,15 @@ module Types::Queries::Invoice
   # It would be good to put this elsewhere to use it in other queries
 
   def verified_user(user_id)
-    raise GraphQL::ExecutionError, 'Unauthorized' if context[:current_user].nil?
-    raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user]&.id == user_id ||
-                                                         context[:current_user].admin?
+    raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') if context[:current_user].nil?
+    unless context[:current_user]&.id == user_id || context[:current_user].admin?
+      raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
+    end
 
     user = User.allowed_users(context[:current_user]).find(user_id)
-    raise GraphQL::ExecutionError, 'User not found' if user.blank?
+    return user if user.present?
 
-    user
+    raise GraphQL::ExecutionError, I18n.t('errors.user.not_found')
   end
 
   def cumulate_pending_balance(invoices)

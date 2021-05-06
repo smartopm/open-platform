@@ -19,20 +19,40 @@ module Mutations
 
       def resolve(vals)
         user = context[:site_community].users.find(vals[:user_id])
-        raise GraphQL::ExecutionError, 'User not found' if user.nil?
+        raise_user_not_found_error(user)
 
         payment_plan = user.payment_plans.create(vals.except(:user_id))
         return { payment_plan: payment_plan } if payment_plan.persisted?
 
         raise GraphQL::ExecutionError, payment_plan.errors.full_messages
       rescue ActiveRecord::RecordNotUnique
-        raise GraphQL::ExecutionError, 'Payment Plan for this landparcel already exist'
+        raise_payment_plan_not_found_error
       end
 
+      # Verifies if current user is admin or not.
       def authorized?(_vals)
-        raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user].admin?
+        return true if context[:current_user]&.admin?
 
-        true
+        raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
+      end
+
+      private
+
+      # Raises GraphQL execution error if user does not exist.
+      #
+      # @return [GraphQL::ExecutionError]
+      def raise_user_not_found_error(user)
+        return if user
+
+        raise GraphQL::ExecutionError, I18n.t('errors.user.not_found')
+      end
+
+      # Raises GraphQL execution payment plan already exist for land parcel error.
+      #
+      # @return [GraphQL::ExecutionError]
+      def raise_payment_plan_not_found_error
+        raise GraphQL::ExecutionError,
+              I18n.t('errors.payment_plan.plan_already_exist')
       end
     end
   end

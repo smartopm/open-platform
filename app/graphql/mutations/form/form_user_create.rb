@@ -25,10 +25,9 @@ module Mutations
       field :form_user, Types::FormUsersType, null: true
       field :error, String, null: true
 
-      # rubocop:disable Metrics/AbcSize
       def resolve(vals)
         form = context[:site_community].forms.find_by(id: vals[:form_id])
-        raise GraphQL::ExecutionError, 'Form not found' if form.nil?
+        raise_form_not_found_error(form)
 
         vals = vals.merge(status_updated_by: context[:current_user])
         u_form = create_form_user(form, vals)
@@ -36,7 +35,6 @@ module Mutations
         u_form[:form_user].create_form_task(context[:site_hostname]) if u_form[:form_user].present?
         u_form
       end
-      # rubocop:enable Metrics/AbcSize
 
       def create_form_user(form, vals)
         form_user = form.form_users.new(vals.except(:form_id, :prop_values)
@@ -46,7 +44,7 @@ module Mutations
 
           raise GraphQL::ExecutionError, form_user.errors.full_messages
         rescue ActiveRecord::RecordNotUnique
-          { error: I18n.t('error.form_user.duplicate_submission') }
+          { error: I18n.t('errors.duplicate.submission') }
         end
       end
 
@@ -64,7 +62,19 @@ module Mutations
         return true if context[:current_user]&.admin? ||
                        context[:current_user]&.id.eql?(vals[:user_id])
 
-        raise GraphQL::ExecutionError, 'Unauthorized'
+        raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
+      end
+
+      private
+
+      # Raises GraphQL execution error if form does not exists.
+      #
+      # @return [GraphQL::ExecutionError]
+      def raise_form_not_found_error(form)
+        return if form
+
+        raise GraphQL::ExecutionError,
+              I18n.t('errors.form.not_found')
       end
     end
   end

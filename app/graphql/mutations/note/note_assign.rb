@@ -25,18 +25,20 @@ module Mutations
       def record_history(init_user_names, note)
         updated_user_names = note.reload.assignee_notes.includes(:user).pluck(:name).join(', ')
         updates_hash = { assign: [init_user_names, updated_user_names] }
-        return { assignee_note: 'failed' } if updated_user_names.eql?(init_user_names)
+        if updated_user_names.eql?(init_user_names)
+          return { assignee_note: I18n.t('response.failed') }
+        end
 
         note.record_note_history(context[:current_user], updates_hash)
-        { assignee_note: 'success' }
+        { assignee_note: I18n.t('response.success') }
       end
 
       # TODO: Better auth here
+      # Verifies if current user is admin or not.
       def authorized?(_vals)
-        current_user = context[:current_user]
-        raise GraphQL::ExecutionError, 'Unauthorized' unless current_user&.admin?
+        return true if context[:current_user]&.admin?
 
-        true
+        raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
       end
     end
   end

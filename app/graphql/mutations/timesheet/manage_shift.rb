@@ -13,15 +13,15 @@ module Mutations
         time_sheet = context[:current_user].manage_shift(user_id, event_tag)
         return { time_sheet: time_sheet } if time_sheet.present?
       rescue ActiveRecord::RecordNotFound
-        raise GraphQL::ExecutionError, "Could not find User #{user_id}"
+        raise GraphQL::ExecutionError, I18n.t('errors.user.not_found_with_id', user_id: user_id)
       rescue StandardError => e
         Rails.logger.warn e.full_message
-        raise GraphQL::ExecutionError, "For some reason, I can't process your request"
+        raise GraphQL::ExecutionError, I18n.t('errors.can_not_process_request')
       end
 
       def authorized?(_vals)
         current_user = context[:current_user]
-        raise GraphQL::ExecutionError, 'Unauthorized' unless current_user&.custodian?
+        raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') unless current_user&.custodian?
 
         true
       end

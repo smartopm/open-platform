@@ -42,10 +42,11 @@ module Mutations
       # rubocop:enable Metrics/MethodLength
       # rubocop:enable Metrics/AbcSize
 
+      # Verifies if current user is admin or not.
       def authorized?(_vals)
-        raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user].admin?
+        return true if context[:current_user]&.admin?
 
-        true
+        raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
       end
     end
   end

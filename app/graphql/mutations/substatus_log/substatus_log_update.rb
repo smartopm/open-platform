@@ -13,10 +13,10 @@ module Mutations
       # rubocop:disable Metrics/AbcSize
       def resolve(vals)
         user = context[:site_community].users.find_by(id: vals[:user_id])
-        raise GraphQL::ExecutionError, 'User not found' if user.nil?
+        raise GraphQL::ExecutionError, I18n.t('errors.user.not_found') if user.nil?
 
         user_log = user.substatus_logs.find_by(id: vals[:id])
-        raise GraphQL::ExecutionError, 'Substatus log not found' if user_log.nil?
+        raise GraphQL::ExecutionError, I18n.t('errors.substatus_log.not_found') if user_log.nil?
 
         if user_log.update(vals)
           update_previous(user_log, user, vals[:start_date])
@@ -32,7 +32,7 @@ module Mutations
         return if prev_log.blank?
 
         sd = start_date < prev_log.first.start_date
-        raise GraphQL::ExecutionError, 'Date can\'t be less than previous log\'s start date' if sd
+        raise GraphQL::ExecutionError, I18n.t('errors.substatus_log.date_must_be_greater') if sd
 
         prev_log.update(stop_date: start_date)
       end
@@ -40,7 +40,7 @@ module Mutations
       def authorized?(_vals)
         return true if context[:current_user]&.admin?
 
-        raise GraphQL::ExecutionError, 'Unauthorized'
+        raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
       end
     end
   end

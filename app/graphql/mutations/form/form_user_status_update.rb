@@ -13,7 +13,7 @@ module Mutations
       def resolve(vals)
         user = context[:current_user]
         form_user = user.user_form(vals[:form_id], vals[:user_id])
-        raise GraphQL::ExecutionError, 'Record not found' if form_user.nil?
+        raise_form_user_not_found_error(form_user)
 
         return { form_user: form_user } if form_user.update(status: vals[:status],
                                                             status_updated_by: user)
@@ -21,11 +21,22 @@ module Mutations
         raise GraphQL::ExecutionError, form_user.errors.full_messages
       end
 
+      # Verifies if current user is admin or not.
       def authorized?(_vals)
-        current_user = context[:current_user]
-        raise GraphQL::ExecutionError, 'Unauthorized' unless current_user&.admin?
+        return true if context[:current_user]&.admin?
 
-        true
+        raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
+      end
+
+      private
+
+      # Raises GraphQL execution error if form user does not exists.
+      #
+      # @return [GraphQL::ExecutionError]
+      def raise_form_user_not_found_error(form_user)
+        return if form_user
+
+        raise GraphQL::ExecutionError, I18n.t('errors.record_not_found')
       end
     end
   end

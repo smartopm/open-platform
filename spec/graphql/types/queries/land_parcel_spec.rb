@@ -81,7 +81,7 @@ RSpec.describe Types::Queries::LandParcel do
                                          current_user: admin_user,
                                          site_community: admin_user.community,
                                        }).as_json
-      expect(result.dig('errors', 0, 'message')).to eql 'LandParcel not found'
+      expect(result.dig('errors', 0, 'message')).to eql 'Land parcel not found'
     end
 
     it 'should not query the payment plan for a landparcel when not admin' do

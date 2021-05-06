@@ -16,10 +16,9 @@ module Mutations
 
       field :form_property, Types::FormPropertiesType, null: true
 
-      # rubocop:disable Metrics/AbcSize
       def resolve(vals)
         form = context[:site_community].forms.find(vals[:form_id])
-        raise GraphQL::ExecutionError, 'Form not found' if form.nil?
+        raise_form_not_found_error(form)
 
         form_property = form.form_properties.new(vals)
         data = { action: 'added', field_name: vals[:field_name] }
@@ -32,13 +31,24 @@ module Mutations
 
         raise GraphQL::ExecutionError, form_property.errors.full_messages
       end
-      # rubocop:enable Metrics/AbcSize
 
+      # Verifies if current user is admin or not.
       def authorized?(_vals)
-        current_user = context[:current_user]
-        raise GraphQL::ExecutionError, 'Unauthorized' unless current_user&.admin?
+        return true if context[:current_user]&.admin?
 
-        true
+        raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
+      end
+
+      private
+
+      # Raises GraphQL execution error if form does not exists.
+      #
+      # @return [GraphQL::ExecutionError]
+      def raise_form_not_found_error(form)
+        return if form
+
+        raise GraphQL::ExecutionError,
+              I18n.t('errors.form.not_found')
       end
     end
   end

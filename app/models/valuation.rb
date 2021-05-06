@@ -15,6 +15,6 @@ class Valuation < ApplicationRecord
   def amount_limit
     return if amount.present? && amount < 1_000_000_000
 
-    errors.add(:amount, 'is too large')
+    errors.add(:amount, :too_large)
   end
 end

@@ -17,7 +17,7 @@ module Types::Queries::Community
   end
 
   def community(id:)
-    raise GraphQL::ExecutionError, 'Unauthorized' unless current_user&.admin?
+    raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') unless current_user&.admin?
 
     Community.find(id)
   end

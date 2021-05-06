@@ -177,12 +177,16 @@ class EventLog < ApplicationRecord
 
   private
 
+  # Validates acting user of event log,
+  # * adds error if acting user is from different community
+  #
+  # @return [void]
   def validate_acting_user
     return unless acting_user
 
     return if acting_user.community_id == community_id
 
-    errors.add(:acting_user, 'Can only report users in your own community')
+    errors.add(:acting_user_id, :allowed_user_reporting_in_own_community)
   end
 
   def validate_log
@@ -194,16 +198,26 @@ class EventLog < ApplicationRecord
     end
   end
 
+  # Validates visitor entry,
+  # * Adds error if vistor name is not present.
+  # * Adds error if acting user is not present.
+  #
+  # @return [void]
   def validate_visitor_entry
-    errors.add(:data, 'Visitor name required') unless data['ref_name']
+    errors.add(:data, :visitor_name_required) unless data['ref_name']
     return if acting_user
 
-    errors.add(:acting_user_id, 'Must be associated with a reporting user')
+    errors.add(:acting_user_id, :reporting_user_required)
   end
 
+  # Validates user entry,
+  # * Adds error if reference is not present.
+  # * Adds error if acting user is not present.
+  #
+  # @return [void]
   def validate_user_entry
-    errors.add(:ref_id, 'Must be associated with a user') unless ref_id
-    errors.add(:acting_user, 'Must be associated with a reporting user') unless acting_user
+    errors.add(:ref_id, :ref_required) unless ref_id
+    errors.add(:acting_user_id, :reporting_user_required) unless acting_user
   end
 
   def notify_slack

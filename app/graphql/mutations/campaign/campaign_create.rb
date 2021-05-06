@@ -47,16 +47,17 @@ module Mutations
         %w[name campaign_type message user_id_list batch_time status
            email_templates_id].each do |attr|
           if vals[attr.to_sym].blank?
-            raise GraphQL::ExecutionError, "Missing Parameter: Please Supply #{attr} parameter"
+            raise GraphQL::ExecutionError,
+                  I18n.t('errors.campaign.missing_parameter', attribute: attr)
           end
         end
       end
 
+      # Verifies if current user is admin or not.
       def authorized?(_vals)
-        current_user = context[:current_user]
-        raise GraphQL::ExecutionError, 'Unauthorized' unless current_user&.admin?
+        return true if context[:current_user]&.admin?
 
-        true
+        raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
       end
     end
   end

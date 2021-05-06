@@ -36,13 +36,13 @@ module Types::Queries::ActionFlow
   end
 
   def events
-    raise GraphQL::ExecutionError, 'Unauthorized' unless current_user&.admin?
+    raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') unless current_user&.admin?
 
     ActionFlows::EventPop.event_list.map { |event| event::EVENT_TYPE }
   end
 
   def actions
-    raise GraphQL::ExecutionError, 'Unauthorized' unless current_user&.admin?
+    raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') unless current_user&.admin?
 
     actions = ActionFlows::Actions.constants.select do |c|
       ActionFlows::Actions.const_get(c).is_a?(Class)
@@ -52,18 +52,18 @@ module Types::Queries::ActionFlow
   end
 
   def action_fields(action:)
-    raise GraphQL::ExecutionError, 'Unauthorized' unless current_user&.admin?
+    raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') unless current_user&.admin?
 
     begin
       fields = "ActionFlows::Actions::#{action.gsub(' ', '_').camelize}::ACTION_FIELDS".constantize
       fields.map { |f| OpenStruct.new(f) }
     rescue StandardError
-      raise GraphQL::ExecutionError, 'Invalid action name'
+      raise GraphQL::ExecutionError, I18n.t('errors.action_flow.invalid_action_name')
     end
   end
 
   def rule_fields(event_type:)
-    raise GraphQL::ExecutionError, 'Unauthorized' unless current_user&.admin?
+    raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') unless current_user&.admin?
 
     begin
       event_class = "ActionFlows::Events::#{event_type.camelize}Event".constantize
@@ -72,12 +72,12 @@ module Types::Queries::ActionFlow
 
       metadata.values.first.keys.map { |f| "#{prefix}_#{f}" }
     rescue StandardError
-      raise GraphQL::ExecutionError, 'Invalid event type'
+      raise GraphQL::ExecutionError, I18n.t('errors.action_flow.invalid_event_type')
     end
   end
 
   def action_flows(offset: 0, limit: 10)
-    raise GraphQL::ExecutionError, 'Unauthorized' unless current_user&.admin?
+    raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') unless current_user&.admin?
 
     context[:site_community].action_flows.order(created_at: :desc).limit(limit).offset(offset)
   end

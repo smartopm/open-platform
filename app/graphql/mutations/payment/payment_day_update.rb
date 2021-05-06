@@ -21,14 +21,14 @@ module Mutations
         raise GraphQL::ExecutionError, payment_plan.errors.full_messages&.join(', ')
       rescue ActiveRecord::RecordNotFound
         # error if user or payment plan not found.
-        raise GraphQL::ExecutionError, 'Record not found'
+        raise GraphQL::ExecutionError, I18n.t('errors.record_not_found')
       end
 
-      # Verifies if user is authorized to update plot's payment day.
+      # Verifies if current user is admin or not.
       def authorized?(_vals)
-        raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user]&.admin?
+        return true if context[:current_user]&.admin?
 
-        true
+        raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
       end
     end
   end

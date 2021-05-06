@@ -24,7 +24,7 @@ module Mutations
       # rubocop:disable Metrics/AbcSize
       def resolve(vals)
         user = context[:site_community].users.find(vals.delete(:id))
-        raise GraphQL::ExecutionError, 'NotFound' unless user
+        raise GraphQL::ExecutionError, I18n.t('errors.user.not_found') unless user
 
         attach_avatars(user, vals)
         log_user_update(user)
@@ -85,9 +85,12 @@ module Mutations
         check_params(Mutations::User::Create::ALLOWED_PARAMS_FOR_ROLES, vals)
         user_record = ::User.find(vals[:id])
         current_user = context[:current_user]
-        raise GraphQL::ExecutionError, 'Unauthorized' unless current_user.admin? || own_user?(vals)
-        raise GraphQL::ExecutionError, 'Unauthorized' unless user_record.community_id ==
-                                                             current_user.community_id
+        unless current_user.admin? || own_user?(vals)
+          raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
+        end
+        unless user_record.community_id == current_user.community_id
+          raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
+        end
 
         true
       end

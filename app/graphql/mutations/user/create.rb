@@ -34,29 +34,29 @@ module Mutations
 
       def resolve(vals)
         user = nil
-        raise GraphQL::ExecutionError, 'Duplicate phone' if number_exists?(vals[:phone_number])
+        raise_duplicate_number_error(vals[:phone_number])
 
         begin
           user = context[:current_user].enroll_user(vals)
           return { user: user } if user.present? && user.errors.blank?
         rescue ActiveRecord::RecordNotUnique
-          raise GraphQL::ExecutionError, 'Duplicate email'
+          raise GraphQL::ExecutionError, I18n.t('errors.duplicate.email')
         end
 
         raise GraphQL::ExecutionError, user.errors.full_messages
       end
 
-      def number_exists?(phone_number)
+      def raise_duplicate_number_error(phone_number)
         user = context[:current_user].find_via_phone_number(phone_number)
-        return false if user.nil?
+        return if user.nil?
 
-        true
+        raise GraphQL::ExecutionError, I18n.t('errors.duplicate.phone')
       end
 
       def authorized?(_vals)
         # allowing all users to create clients
         current_user = context[:current_user]
-        raise GraphQL::ExecutionError, 'Unauthorized' unless current_user
+        raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') unless current_user
 
         true
       end
