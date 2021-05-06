@@ -44,6 +44,7 @@ export function PostItemGrid({ data, translate }) {
     <div>
       <Typography
         color="textPrimary"
+        data-testid="recent_news"
         style={matches ? {margin: '20px 0 20px 20px', fontSize: '14px', fontWeight: 500, color: '#141414'} : {margin: '40px 0 20px 79px', fontWeight: 500, fontSize: '22px', color: '#141414'}}
       >
         {translate('common:misc.recent_news')}
