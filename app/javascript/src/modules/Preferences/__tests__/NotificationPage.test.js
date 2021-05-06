@@ -1,7 +1,7 @@
 /* eslint-disable */
 import React from 'react'
 import { render } from '@testing-library/react'
-import NotificationPage from '../components/NotificationPage'
+import NotificationPage from '../Components/NotificationPage'
 import '@testing-library/jest-dom/extend-expect'
 
 describe('Preference page for the user settings', () => {

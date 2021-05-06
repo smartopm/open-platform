@@ -919,13 +919,6 @@ export const AssignUser = gql`
   }
 `
 
-export const NotificationPreference = gql`
-  mutation notificationPreference($preferences: String){
-    notificationPreference(preferences: $preferences){
-        __typename
-  }
-}
-`
 export const CampaignCreateThroughUsers = gql `
   mutation campaignCreateThroughUsers($query: String, $limit: Int, $userList: String){
     campaignCreateThroughUsers(query: $query, limit: $limit, userList: $userList){

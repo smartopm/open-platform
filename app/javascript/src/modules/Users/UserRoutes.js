@@ -69,6 +69,14 @@ const routes = [
     },
     accessibleBy: allUserTypes,
     name: 'user_actions'
+  },
+  {
+    routeProps: {
+      path: '/settings',
+      component: UserActions
+    },
+    accessibleBy: allUserTypes,
+    name: 'Preferences'
   }
 ];
 
