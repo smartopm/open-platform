@@ -238,7 +238,7 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
         )}
         {isFromRef && (
           <div className="form-group">
-            <label className="bmd-label-static" htmlFor="firstName">
+            <label className="bmd-label-static" htmlFor="firstName" data-testid="client_name">
               {t('common:form_fields.client_name')}
             </label>
             <input
@@ -254,7 +254,7 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
           </div>
         )}
         <div className="form-group">
-          <label className="bmd-label-static" htmlFor="firstName">
+          <label className="bmd-label-static" htmlFor="firstName" data-testid="full_name">
             {t('common:form_fields.full_name')}
           </label>
           <input
@@ -268,7 +268,7 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
           />
         </div>
         <div className="form-group">
-          <label className="bmd-label-static" htmlFor="phoneNumber">
+          <label className="bmd-label-static" htmlFor="phoneNumber" data-testid="primary_number">
             {t('common:form_fields.primary_number')}
           </label>
           <input
@@ -283,7 +283,7 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
           />
         </div>
         <div className="form-group">
-          <label className="bmd-label-static" htmlFor="email">
+          <label className="bmd-label-static" htmlFor="email" data-testid="primary_email">
             {t('common:form_fields.primary_email')}
           </label>
           <input
