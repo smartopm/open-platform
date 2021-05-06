@@ -1,0 +1,21 @@
+{
+    "news": {
+      "recent_news": "Recent News",
+      "read_more": "Read More",
+      "no_post": "No Post Found in this category",
+      "news": "News",
+      "post_discussion": "Post Discussion",
+      "load_more_comments": "Load More Comments",
+      "create_discussion": "Create Discussion",
+      "discussion_disabled": "Discussion has not yet been enabled for this post",
+      "following": "You are now following {{tag}}",
+      "unfollowing": "You are no longer following {{tag}}",
+      "related_posts": "Related Posts",
+      "follow_tag": "Follow Tag",
+      "unfollow_tag": "Unfollow Tag",
+      "filtered_categories": ["Private", "Uncategorized", "news", "Nkwashi Digest"],
+      "visit_news_page": "Hi, visit {{communityName}} news page",
+      "posts": "Posts"
+    }
+}
+  

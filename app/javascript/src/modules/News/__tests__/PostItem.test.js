@@ -24,6 +24,6 @@ describe('Details page for news post content', () => {
     });
     it('it should  have a read more text ', () => {
         const container = render(<PostItem {...props} />)
-        expect(container.queryByText('Read More')).toBeInTheDocument()
+        expect(container.queryByText('news.read_more')).toBeInTheDocument()
     });
 });

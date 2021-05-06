@@ -10,7 +10,20 @@
     "phone_number": "Número de teléfono"
   },
   "form_placeholders": {
-    "email": "Ingrese correo electrónico",
-    "phone_number": "Introduzca el número de teléfono"
+    "phone_number": "Introduzca el número de teléfono",
+    "email": "Ingrese correo electrónico"
+  },
+  "misc": {
+    "or": "O",
+    "share": "Cuota",
+    "copied": "Copiado al portapapeles!",
+    "first_to_comment": "Se el primero en comentar",
+    "comment": "Comentario",
+    "comment_plural": "Comentarios",
+    "type_comment": "Escriba un comentario aquí",
+    "send": "enviar"
+  },
+  "errors": {
+    "empty_text": "El mensaje debe contener algo de texto"
   }
 }

@@ -64,6 +64,36 @@ export const subStatus = {
   6: 'Construction in Progress (Self Build)'
 };
 
+export const customerJourneyStatus = {
+  plots_fully_purchased: 'Your plot is currently awaiting eligibility to start construction!',
+  eligible_to_start_construction: 'Your plot is currently eligible to purchase floor plan!',
+  floor_plan_purchased: 'Your plot is currently awaiting building permit approval!',
+  building_permit_approved: 'Your plot is currently awaiting construction!',
+  construction_in_progress: 'Your plot is currently awaiting construction completed!',
+  construction_in_progress_self_build: 'Your plot is currently awaiting construction completed!',
+  construction_completed: 'Your plot is currently completed',
+};
+
+export const customerJourneyBar = {
+  plots_fully_purchased: 1,
+  eligible_to_start_construction: 2,
+  floor_plan_purchased: 3,
+  building_permit_approved: 4,
+  construction_in_progress: 5,
+  construction_in_progress_self_build: 5,
+  construction_completed: 6,
+};
+
+export const customerJourneyLink = {
+  plots_fully_purchased: '/news/post/864',
+  eligible_to_start_construction: '/news/post/864',
+  floor_plan_purchased: '/news/post/2198',
+  building_permit_approved: '/news/post/2491',
+  construction_in_progress: '/news/post/2158',
+  construction_in_progress_self_build: '/news/post/2158',
+  construction_completed: '/news/post/2158',
+};
+
 export const userSubStatusDurationLookup = {
   between0to10Days: 'number of users between 0 - 10 days',
   between11to30Days: 'number of users between 11 - 30 days',
@@ -215,7 +245,8 @@ export const formStatus = {
 };
 
 export const currencies = {
-  zambian_kwacha: 'ZMW'
+  zambian_kwacha: 'ZMW',
+  honduran_lempira: 'HNL'
 };
 export const locales = [
   'en-IN',
@@ -223,6 +254,7 @@ export const locales = [
   'en-UK',
   'en-US',
   'en-ZM',
+  'es-HN',
 ]
 export const languages = {
   'English': 'en-US',

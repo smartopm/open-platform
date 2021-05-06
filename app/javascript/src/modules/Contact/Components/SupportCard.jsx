@@ -6,7 +6,7 @@ import WhatsAppIcon from '@material-ui/icons/WhatsApp'
 import PhoneIcon from '@material-ui/icons/Phone'
 import { useHistory } from 'react-router-dom'
 import PropTypes from 'prop-types'
-import { propAccessor } from '../utils/helpers'
+import { propAccessor } from '../../../utils/helpers'
 
 const icons = {
   mail: <MailOutlineIcon />,
