@@ -18,6 +18,7 @@ module Types
     field :locale, String, null: true
     field :tagline, String, null: true
     field :language, String, null: true
+    field :wp_link, String, null: true
 
     def image_url
       return nil unless object.image.attached?

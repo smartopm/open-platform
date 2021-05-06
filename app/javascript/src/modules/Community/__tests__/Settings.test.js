@@ -51,7 +51,8 @@ describe('Community settings page ', () => {
           imageBlobId: null,
           locale: 'en-US',
           tagline: '',
-          logoUrl: ''
+          logoUrl: '',
+          wpLink: ''
         }
       },
       result: {
@@ -106,6 +107,16 @@ describe('Community settings page ', () => {
 
     fireEvent.click(container.queryByTestId('whatsapp_click'));
     expect(container.queryAllByLabelText('WhatsApp')).toHaveLength(2);
+
+
+    fireEvent.change(container.queryByTestId('logo_url'), { target: { value: 'https://something.com' } });
+    expect(container.queryByTestId('logo_url').value).toBe('https://something.com')
+
+    fireEvent.change(container.queryByTestId('tagline'), { target: { value: 'This is our tagline' } });
+    expect(container.queryByTestId('tagline').value).toBe('This is our tagline')
+
+    fireEvent.change(container.queryByTestId('wp_link'), { target: { value: 'https://wordpress.com' } });
+    expect(container.queryByTestId('wp_link').value).toBe('https://wordpress.com')
 
     // fire the mutation update_community
     expect(container.queryByTestId('update_community')).not.toBeDisabled();

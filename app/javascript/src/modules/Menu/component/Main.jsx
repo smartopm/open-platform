@@ -164,7 +164,8 @@ MainNav.propTypes = {
 
 NewsNav.propTypes = {
   children: PropTypes.node.isRequired,
-  history: PropTypes.func.isRequired
+  // eslint-disable-next-line react/forbid-prop-types
+  history: PropTypes.object.isRequired
 };
 
 const styles = StyleSheet.create({

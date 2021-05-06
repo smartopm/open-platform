@@ -67,11 +67,11 @@ export default function PaymentSummary({ authState, translate }) {
       {loading || payLoading ? <Spinner /> : (
         <div>
           {matches ? (
-            <div style={{margin: '0 20px', display: 'flex'}}>
+            <div style={{margin: '20px 20px 0 20px', display: 'flex'}}>
               {active === 'payment' ? (
-                <Typography variant='h6' style={{fontWeight: 'bold'}} onClick={() => setActive('payment')}>{translate('common:misc.payments')}</Typography>
+                <Typography className={classes.mobile} onClick={() => setActive('payment')}>{translate('common:misc.payments')}</Typography>
               ) : (
-                <Typography variant='h6' style={{fontWeight: 'bold'}} onClick={() => setActive('invoice')}>{translate('common:misc.invoices')}</Typography>
+                <Typography className={classes.mobile} onClick={() => setActive('invoice')}>{translate('common:misc.invoices')}</Typography>
               )}
               <div style={{marginLeft: 'auto', display: 'flex', marginTop: '5px'}}>
                 <div style={active === 'payment' ? {background: '#141414'} : {background: 'transparent'}} className={classes.circle} onClick={() => setActive('payment')}>
@@ -84,25 +84,23 @@ export default function PaymentSummary({ authState, translate }) {
             </div>
           ) : (
             <div style={{marginLeft: '79px', marginTop: '20px'}}>
-              <Grid container alignItems="center" className={classes.root}>
-                <Typography
-                  variant={active === 'payment' ? 'body1' : 'body2'}
-                  color={active === 'payment' ? 'textPrimary' : 'textSecondary'}
+              <Grid container alignItems="center">
+                <Typography 
+                  className={active === 'payment' ? classes.bold : classes.notBold}
                   onClick={() => setActive('payment')}
-                  style={active === 'payment' ? {fontWeight: 'bold', marginRight: '10px', width: '70px', cursor: 'pointer'} : {fontWeight: 'none', marginRight: '10px', width: '70px', cursor: 'pointer'}}
+                  style={active === 'payment' ? {marginRight: '20px', width: '102px', cursor: 'pointer'} : {width: '70px', cursor: 'pointer'}}
                 >
                   {translate('common:misc.payments')}
                 </Typography>
-                <Divider orientation="vertical" flexItem style={{height: '8px', marginTop: '8px'}} />
-                <Typography
-                  variant={active === 'invoice' ? 'body1' : 'body2'}
-                  color={active === 'invoice' ? 'textPrimary' : 'textSecondary'}
+                <Divider className={active === 'invoice' ? classes.divider : null} orientation="vertical" flexItem style={{height: '8px', marginTop: '12px', verticalAlign: 'middle'}} />
+                <Typography 
+                  className={active === 'invoice' ? classes.bold : classes.notBold}
                   onClick={() => setActive('invoice')}
-                  style={active === 'invoice' ? {fontWeight: 'bold', marginLeft: '10px', width: '100px', cursor: 'pointer'} : {fontWeight: 'none', marginLeft: '10px', width: '100px', cursor: 'pointer'}}
+                  style={active === 'invoice' ? {marginLeft: '20px', width: '102px', cursor: 'pointer'} : {marginLeft: '20px', width: '102px', cursor: 'pointer'}}
                 >
                   {translate('common:misc.invoices')}
                 </Typography>
-                <Typography color='primary' variant='caption' style={{marginLeft: 'auto', marginRight: '81px', cursor: 'pointer'}}>
+                <Typography style={{marginLeft: 'auto', marginRight: '81px', cursor: 'pointer', fontSize: '16px', fontWeight: 500, color: '#66A59A'}}>
                   <Link to='/users'>{active === 'payment' && translate('dashboard.make_new_payment')}</Link>
                 </Typography>
               </Grid>
@@ -143,8 +141,8 @@ export default function PaymentSummary({ authState, translate }) {
             </Grid>
           )}
           {matches && active === 'payment' && (
-            <div style={{display: 'flex', marginLeft: '20px', cursor: 'pointer'}}>
-              <Typography color='primary' style={{marginRight: '10px'}}>
+            <div style={{display: 'flex', marginLeft: '20px', cursor: 'pointer', fontSize: '14px', fontWeight: 500, color: '#66A59A'}}>
+              <Typography color='primary' style={{marginRight: '10px', fontWeight: 500}}>
                 <Link to='/users'>{translate('dashboard.make_new_payment')}</Link>
               </Typography>
               <TrendingFlatIcon style={{color: '#66A59A'}} />
@@ -169,6 +167,24 @@ const useStyles = makeStyles(() => ({
     marginLeft: '8px',
     border: '1px solid black',
     borderRadius: '50%'
+  },
+  bold: {
+    fontSize: '22px',
+    fontWeight: 500,
+    color: '#141414'
+  },
+  notBold: {
+    fontSize: '18px',
+    fontWeight: 500,
+    color: '#959595'
+  },
+  mobile: {
+    fontSize: '14px',
+    fontWeight: 500,
+    color: '#141414'
+  },
+  divider: {
+    marginLeft: '40px'
   }
 }));
 

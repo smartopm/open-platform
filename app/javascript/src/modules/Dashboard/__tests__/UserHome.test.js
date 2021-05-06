@@ -24,7 +24,6 @@ describe('Home main page', () => {
     }
   };
   it('renders the home main correctly', async () => {
-
     await act(async () => {
       render(
         <ApolloProvider client={createClient}>

@@ -1,11 +1,12 @@
 {
   "login": {
-    "welcome": "Bienvenido a la aplicación {{appName}}",
-    "login_text": "Inicie sesión con su número de teléfono aquí",
     "login_button_text": "Siguiente",
-    "login_google": "Inicia sesión con Google",
     "login_facebook": "Inicia sesión con Facebook",
+    "login_google": "Inicia sesión con Google",
+    "login_text": "Inicie sesión con su número de teléfono aquí",
     "request_account": "¿No tienes una cuenta?",
-    "request_login": "Para solicitar su información de inicio de sesión, envíe un correo electrónico: {{communityEmail}}"
+    "request_login": "Para solicitar su información de inicio de sesión, envíe un correo electrónico: {{communityEmail}}",
+    "test_key": "Logine",
+    "welcome": "Bienvenido a la aplicación {{appName}}"
   }
 }

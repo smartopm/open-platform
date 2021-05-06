@@ -9,6 +9,7 @@ import PropTypes from 'prop-types'
 import { StyleSheet, css } from 'aphrodite'
 import { Link } from 'react-router-dom'
 import DeleteIcon from '@material-ui/icons/Delete'
+import { useTranslation } from 'react-i18next'
 import AddPhotoAlternateIcon from '@material-ui/icons/AddPhotoAlternate';
 import { Context } from '../../containers/Provider/AuthStateProvider'
 import { CommentMutation, UpdateCommentMutation } from '../../graphql/mutations'
@@ -34,6 +35,7 @@ export default function Comments({ comments, refetch, discussionId }) {
   const [error, setError] = useState(null)
   const [createComment] = useMutation(CommentMutation)
   const [updateComment] = useMutation(UpdateCommentMutation)
+  const { t } = useTranslation('common')
 
   function handleDeleteClick(cid = commentId) {
     setOpenModal(!openModal)
@@ -64,7 +66,7 @@ export default function Comments({ comments, refetch, discussionId }) {
   function sendComment() {
     setData({ ..._data, isLoading: true })
     if (!_data.message.length) {
-      setData({ ..._data, error: 'The message must contain some text' })
+      setData({ ..._data, error: t('common:errors.empty_text') })
       return
     }
     createComment({
@@ -112,13 +114,13 @@ export default function Comments({ comments, refetch, discussionId }) {
               }}
               handleDeleteComment={() => handleDeleteClick(comment.id)}
             />
-          )) : <p className="text-center">Be the first to comment on this post</p>
+          )) : <p className="text-center">{t('common:misc.first_to_comment')}</p>
         }
       <DeleteDialogueBox
         open={openModal}
         handleClose={handleDeleteClick}
         handleAction={handleDeleteComment}
-        title="comment"
+        title={t('common:misc.comment', { count: 1 })}
       />
     </List>
   )
@@ -190,6 +192,7 @@ export function CommentBox({
 }) {
   // in the future instead of using location, pass a prop called isUpload and show upload icon or don't
   const location = useLocation()
+  const { t } = useTranslation('common')
   return (
     <>
       <ListItem alignItems="flex-start">
@@ -199,7 +202,7 @@ export function CommentBox({
         <TextField
           id="standard-full-width"
           style={{ width: '95vw', margin: 15, marginTop: 7 }}
-          placeholder="Type a comment here"
+          placeholder={t('common:misc.type_comment')}
           value={data.message}
           onChange={handleCommentChange}
           multiline
@@ -252,7 +255,7 @@ export function CommentBox({
             data-testid="comment_button"
             disabled={data.isLoading}
           >
-            {location.pathname.includes('message') ? 'Send' : 'Comment'}
+            {location.pathname.includes('message') ? t('common:misc.send') : t('common:misc.comment', { count: 1 })}
           </Button>
         </Grid>
       </Grid>

@@ -1,0 +1,42 @@
+phrase:
+  project_id: 70611176c3b698bd2f886684ae3be9bf
+  push:
+    sources:
+    - file: ./public/locales/en/login.json
+      params:
+        file_format: i18next
+        locale_id: 09762e31899cf1e0edf4b8b15aa64e3f
+        update_translations: true
+    - file: ./public/locales/en/dashboard.json
+      params:
+        file_format: i18next
+        locale_id: 09762e31899cf1e0edf4b8b15aa64e3f
+        update_translations: true
+    - file: ./public/locales/en/scan.json
+      params:
+        file_format: i18next
+        locale_id: 09762e31899cf1e0edf4b8b15aa64e3f
+        update_translations: true
+    - file: ./public/locales/en/common.json
+      params:
+        file_format: i18next
+        locale_id: 09762e31899cf1e0edf4b8b15aa64e3f
+        update_translations: true
+  pull:
+    targets:
+    - file: ./public/locales/es/login.json
+      params:
+        file_format: i18next
+        locale_id: 90fddec457b725c82b47d6eb04920abe
+    - file: ./public/locales/es/dashboard.json
+      params:
+        file_format: i18next
+        locale_id: 90fddec457b725c82b47d6eb04920abe
+    - file: ./public/locales/es/scan.json
+      params:
+        file_format: i18next
+        locale_id: 90fddec457b725c82b47d6eb04920abe
+    - file: ./public/locales/es/common.json
+      params:
+        file_format: i18next
+        locale_id: 90fddec457b725c82b47d6eb04920abe

@@ -1,6 +1,6 @@
 {
   "form_fields": {
-    "full_name": "Full Name",
+    "full_name": "Full Names",
     "email": "Email",
     "phone_number": "Phone Number"
   },
@@ -49,6 +49,16 @@
     "prospective_client": "Prospective Client",
     "security_guard": "Security Guard",
     "resident": "Resident",
-    "contractor": "Contractor"
+    "contractor": "Contractor",
+    "share": "Share",
+    "copied": "Copied to Clipboard!",
+    "first_to_comment": "Be the first to comment",
+    "comment": "Comment",
+    "comment_plural": "Comments",
+    "type_comment": "Type a comment here",
+    "send": "Send"
+  },
+  "errors": {
+    "empty_text": "The message must contain some text"
   }
 }

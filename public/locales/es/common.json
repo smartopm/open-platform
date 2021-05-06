@@ -1,17 +1,17 @@
 {
+  "form_actions": {
+    "cancel": "Cancelar",
+    "send_email": "Enviar correo electrónico",
+    "submit": "Enviar"
+  },
   "form_fields": {
-    "full_name": "nombre completo",
     "email": "Correo electrónico",
+    "full_name": "nombre completo",
     "phone_number": "Número de teléfono"
   },
   "form_placeholders": {
     "phone_number": "Introduzca el número de teléfono",
     "email": "Ingrese correo electrónico"
-  },
-  "form_actions": {
-    "send_email": "Enviar correo electrónico",
-    "cancel": "Cancelar",
-    "submit": "Enviar"
   },
   "misc": {
     "or": "O",
@@ -49,6 +49,16 @@
     "prospective_client": "Futuro cliente",
     "security_guard": "Guardia de seguridad",
     "resident": "Residente",
-    "contractor": "Contratista"
+    "contractor": "Contratista",
+    "share": "Cuota",
+    "copied": "Copiado al portapapeles!",
+    "first_to_comment": "Se el primero en comentar",
+    "comment": "Comentario",
+    "comment_plural": "Comentarios",
+    "type_comment": "Escriba un comentario aquí",
+    "send": "enviar"
+  },
+  "errors": {
+    "empty_text": "El mensaje debe contener algo de texto"
   }
 }

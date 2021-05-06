@@ -42,7 +42,7 @@ export default function TaskReminderCard({ translate }) {
       {loading ? <Spinner /> : (
         <div>
           <div style={{display: 'flex'}}>
-            <Typography variant='h6' style={matches ? {margin: '20px 0 26px 20px', fontWeight: 'bold'} : {margin: '20px 0 26px 79px', fontWeight: 'bold'}}>{translate('dashboard.task_reminders')}</Typography>
+            <Typography className={matches ? classes.reminderMobile : classes.reminder}>{translate('dashboard.task_reminders')}</Typography>
             {matches ? null : <TrendingFlatIcon style={matches ? {marginLeft: 'auto', order: 2, marginTop: '20px', marginRight: '20px'} : {marginLeft: 'auto', order: 2, marginTop: '20px', marginRight: '80px'}} />}
           </div>
           <div>
@@ -53,14 +53,14 @@ export default function TaskReminderCard({ translate }) {
                     <GridListTile key={tile.id}>
                       <div className={classes.gridTile} onClick={() => history.push(`/tasks/${tile.id}`)}>
                         <div className={classes.date} style={checkDate(tile.dueDate) ? {color: 'red'} : null}>
-                          <EventNoteIcon style={{marginRight: '10px', heigth: '15px', width: '15px', verticalAlign: 'middle'}} />
-                          <Typography variant='overline' style={{paddingBottom: '5px'}}>
+                          <EventNoteIcon style={{marginRight: '10px', heigth: '11.68px', width: '16.3px', verticalAlign: 'middle'}} />
+                          <Typography className={classes.due} style={{paddingBottom: '5px'}}>
                             {translate('common:misc.due_text')}
                             {' '}
                             {dateToString(tile.dueDate)}
                           </Typography>
                         </div>
-                        <Typography align='justify' variant='caption' data-testid='body'>
+                        <Typography align='justify' className={classes.content} data-testid='body'>
                           <span
                             style={{ whiteSpace: 'pre-line' }}
                           // eslint-disable-next-line react/no-danger
@@ -96,18 +96,39 @@ const useStyles = makeStyles((theme) => ({
     width: '100%'
   },
   gridTile: {
-    border: '2px solid #EBEBEB',
+    border: '1px solid #EBEBEB',
     padding: '20px',
     backgroundColor: theme.palette.background.paper,
     height: '140px',
     cursor: 'pointer',
     overflow: 'hidden',
-    boxShadow: '0 0 3px #ccc',
-    borderRadius: '8px',
+    borderRadius: '8px'
   },
   date: {
-    display: 'flex',
-    marginBottom: '-8px'
+    display: 'flex', 
+    marginBottom: '8px'
+  },
+  content: {
+    fontSize: '12px',
+    fontWeight: 400,
+    color: '#141414'
+  },
+  due: {
+    fontSize: '12px',
+    fontWeight: 400,
+    marginTop: '3px'
+  },
+  reminder: {
+    margin: '20px 0 20px 79px',
+    fontSize: '22px',
+    fontWeight: 500,
+    color: '#141414'
+  },
+  reminderMobile: {
+    margin: '20px',
+    fontSize: '14px',
+    fontWeight: 500,
+    color: '#141414'
   }
 }));
 
