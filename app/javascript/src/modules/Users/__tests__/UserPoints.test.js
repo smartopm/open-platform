@@ -1,6 +1,6 @@
 import React from 'react'
 import { render } from '@testing-library/react'
-import UserPoints from '../components/UserPoints'
+import UserPoints from '../Components/UserPoints'
 import '@testing-library/jest-dom/extend-expect'
 
 describe('UserPoints component', () => {
