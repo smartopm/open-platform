@@ -45,7 +45,6 @@ describe('It displays the user list and interactions', () => {
     expect(container.queryByText(/Test Referral 2/).textContent).toContain(
       'Test Referral 2'
     )
-    expect(container.queryByText(/Admin/).textContent).toContain('Admin')
     expect(container.queryByText(/0987654123/).textContent).toContain(
       '0987654123'
     )
