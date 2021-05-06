@@ -18,6 +18,7 @@ import MoreHorizIcon from '@material-ui/icons/MoreHoriz'
 import AssignmentIcon from '@material-ui/icons/Assignment'
 import PropTypes from 'prop-types'
 import { makeStyles } from '@material-ui/core/styles'
+import { useTranslation } from 'react-i18next'
 import { Link, useHistory } from 'react-router-dom'
 import Avatar from '../../../components/Avatar'
 import UserActionMenu from "./UserActionMenu"
@@ -37,6 +38,7 @@ export default function UserItem({
   const [anchorEl, setAnchorEl] = useState(null)
   const open = Boolean(anchorEl)
   const history = useHistory()
+  const { t } = useTranslation('common')
   /**
    * @deprecated prefer getting this contact from the community
    */
@@ -78,7 +80,7 @@ export default function UserItem({
       >
         <DialogTitle id="user_merge">
           <CenteredContent>
-            <span>Merge Users</span>
+            <span>{t('common:menu.merge_user', { count: 0 })}</span>
           </CenteredContent>
         </DialogTitle>
         <DialogContent>
@@ -172,7 +174,7 @@ export default function UserItem({
 
           <Grid className={classes.userTypeRow}>
             <Typography variant="subtitle1" data-testid="label-users">
-              {user.roleName}
+              {t(`common:user_types.${user?.userType}`)}
             </Typography>
           </Grid>
           <Grid container className={classes.labelsRow}>
@@ -229,7 +231,7 @@ UserItem.propTypes = {
     name: PropTypes.string,
     email: PropTypes.string,
     phoneNumber: PropTypes.string,
-    roleName: PropTypes.string,
+    userType: PropTypes.string,
     imageUrl: PropTypes.string,
     subStatus: PropTypes.string,
     notes: PropTypes.arrayOf(PropTypes.object),

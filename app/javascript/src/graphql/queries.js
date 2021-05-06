@@ -193,6 +193,7 @@ export const UsersDetails = gql`
       name
       phoneNumber
       roleName
+      userType
       id
       email
       avatarUrl
