@@ -1,4 +1,3 @@
-/* eslint-disable */
 import React from 'react'
 import { render } from '@testing-library/react'
 import '@testing-library/jest-dom/extend-expect'
@@ -17,18 +16,19 @@ describe('Details page for news post content', () => {
       ID: 24
     }
   ]
+  const translate = jest.fn()
 
   it('it should include the post details ', () => {
-    const container = render(<PostItemGrid data={response} />)
+    const container = render(<PostItemGrid data={response} translate={translate} />)
     expect(container.queryByText('Test title')).toBeInTheDocument()
-    expect(container.queryByText('Recent News')).toBeInTheDocument()
+    expect(container.queryByTestId('recent_news')).toBeInTheDocument()
     expect(container.queryByText('Test Another title')).toBeInTheDocument()
     expect(container.queryAllByTestId('tile_image')[0]).toHaveAttribute('src', 'https://placeholder.com')
     expect(container.queryAllByTestId('tile_image')[1]).toHaveAttribute('src', 'https://placeholder.com/2342')
   })
     
   it('it should not display anything when no data is available ', () => {
-    const container = render(<PostItemGrid data={[]} />)
+    const container = render(<PostItemGrid data={[]} translate={translate} />)
     expect(container.queryByText('Test title')).not.toBeInTheDocument()
     expect(container.queryByText('Test Another title')).not.toBeInTheDocument()
   })

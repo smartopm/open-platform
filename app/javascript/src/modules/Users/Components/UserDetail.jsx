@@ -15,11 +15,13 @@ import PersonIcon from '@material-ui/icons/Person';
 import PhoneIcon from '@material-ui/icons/Phone';
 import EmailIcon from '@material-ui/icons/Email';
 import { QRCode } from 'react-qr-svg'
+import { useTranslation } from 'react-i18next';
 
-export default function UserDetail({ user, translate }) {
+export default function UserDetail({ user }) {
   const classes = useStyles();
   const history = useHistory();
   const matches = useMediaQuery('(max-width:600px)')
+  const { t } = useTranslation('dashboard')
   const [open, setOpen] = useState(false)
   return (
     <Grid container>
@@ -28,14 +30,14 @@ export default function UserDetail({ user, translate }) {
           <div style={{display: 'flex'}}>
             <div>
               <Typography color="textPrimary" variant={matches ? 'body2' : 'h6'} style={{fontWeight: 'bold'}} data-testid='name' gutterBottom>
-                {translate('common:misc.hello')}
+                {t('common:misc.hello')}
                 {' '}
                 {user?.name}
                 ,
               </Typography>
               <div style={{display: 'flex'}}>
                 <Typography color="textPrimary" variant='caption' gutterBottom>
-                  {translate('common:misc.more_details')}
+                  {t('common:misc.more_details')}
                 </Typography>
                 {open ? (<KeyboardArrowDownIcon style={{verticalAlign: 'middle', paddingBottom: '3px'}} onClick={() => setOpen(!open)} />) : (
                   <KeyboardArrowRightIcon style={{verticalAlign: 'middle', paddingBottom: '3px'}} onClick={() => setOpen(!open)} data-testid='collapse' />
@@ -50,7 +52,7 @@ export default function UserDetail({ user, translate }) {
                   <div style={matches ? {marginRight: '2px'} : {marginRight: '30px'}}>
                     <PersonIcon style={{heigth: '15px', width: '15px', verticalAlign: 'middle', marginRight: '5px'}} />
                     <Typography color="textPrimary" variant='caption' data-testid='user-type'>
-                      {translate(`common:user_types.${user?.userType}`)}
+                      {t(`common:user_types.${user?.userType}`)}
                     </Typography>
                   </div>
                   {user?.phoneNumber && (
@@ -108,5 +110,4 @@ UserDetail.propTypes = {
     email: PropTypes.string,
     id: PropTypes.string,
   }).isRequired,
-  translate: PropTypes.func.isRequired
 };

@@ -22,7 +22,7 @@ export default function Home() {
       <LanguageToggle />
       {authState.user.userType === 'admin' && (
         <div>
-          <UserDetail user={authState.user} translate={t} />
+          <UserDetail user={authState.user} />
           <ViewCustomerJourney translate={t} />
           <PaymentSummary authState={authState} translate={t} />
           <br />

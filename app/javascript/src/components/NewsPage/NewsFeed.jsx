@@ -47,6 +47,7 @@ export function PostItemGrid({ data, translate }) {
         gutterBottom
         variant="h6"
         style={matches ? {margin: '20px 0 20px 20px', fontWeight: 'bold'} : {margin: '20px 0 20px 79px', fontWeight: 'bold'}}
+        data-testid="recent_news"
       >
         {translate('common:misc.recent_news')}
       </Typography>

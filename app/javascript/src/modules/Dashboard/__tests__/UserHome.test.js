@@ -25,9 +25,8 @@ describe('Home main page', () => {
   };
   it('renders the home main correctly', async () => {
 
-    let container;
     await act(async () => {
-      container = render(
+      render(
         <ApolloProvider client={createClient}>
           <Context.Provider value={data}>
             <MockedProvider mocks={[]} addTypename={false}>
@@ -39,7 +38,5 @@ describe('Home main page', () => {
         </ApolloProvider>
       );
     });
-
-    expect(container.queryByText('My ID Card')).toBeInTheDocument()
   });
 });

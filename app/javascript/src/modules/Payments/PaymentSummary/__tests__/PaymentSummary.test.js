@@ -52,10 +52,11 @@ describe('Payment Summary Component', () => {
   }
 
   it('should render the Payment Summary component', async () => {
+    const translate = jest.fn()
     const container = render(
       <MockedProvider mocks={[mock, secondMock]} addTypename={false}>
         <BrowserRouter>
-          <PaymentSummary authState={authState} />
+          <PaymentSummary authState={authState} translate={translate} />
         </BrowserRouter>
       </MockedProvider>
     );
