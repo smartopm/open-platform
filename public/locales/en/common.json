@@ -18,7 +18,8 @@
     "phone_number": "Enter Phone Number",
     "email": "Enter Email",
     "action_note": "Type action note here",
-    "search_user": "Search User"
+    "search_user": "Search User",
+    "search": "Search"
   },
   "form_actions": {
     "send_email": "Send Email",

@@ -4,17 +4,19 @@ import { Link, Redirect } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import { useLazyQuery } from 'react-apollo'
 import { StyleSheet, css } from 'aphrodite'
+import { useTranslation } from 'react-i18next'
 import { Button } from '@material-ui/core'
-import Loading from '../shared/Loading'
-import StatusBadge from '../components/StatusBadge'
-import Avatar from '../components/Avatar'
-import ScanIcon from '../../../assets/images/shape.svg'
-import ErrorPage from '../components/Error'
-import { Context } from './Provider/AuthStateProvider'
-import CenteredContent from '../components/CenteredContent'
-import { UserSearchQuery } from '../graphql/queries'
+import Loading from '../../../shared/Loading'
+import StatusBadge from '../../../components/StatusBadge'
+import Avatar from '../../../components/Avatar'
+import ScanIcon from '../../../../../assets/images/shape.svg'
+import ErrorPage from '../../../components/Error'
+import { Context } from '../../../containers/Provider/AuthStateProvider'
+import CenteredContent from '../../../components/CenteredContent'
+import { UserSearchQuery } from '../../../graphql/queries'
 
 export function NewRequestButton() {
+  const { t } = useTranslation('search')
   return (
     <CenteredContent>
       <Link className={css(styles.requestLink)} to="/new/user">
@@ -22,7 +24,8 @@ export function NewRequestButton() {
           variant="contained"
           className={`btn ${css(styles.requestButton)}`}
         >
-          Create a new request
+          {/* This should be renamed to Create a user */}
+          {t('search.create_request')}
         </Button>
       </Link>
     </CenteredContent>
@@ -30,6 +33,7 @@ export function NewRequestButton() {
 }
 
 export function Results({ data, loading, called, authState }) {
+  const { t } = useTranslation(['search', 'common'])
   function memberList(users) {
     return (
       <>
@@ -47,7 +51,7 @@ export function Results({ data, loading, called, authState }) {
                 <h6 className={css(styles.title)}>{user.name}</h6>
                 <small className={css(styles.small)}>
                   {' '}
-                  {user.roleName}
+                  {t(`common:user_types.${user?.userType}`)}
                   {' '}
                 </small>
               </div>
@@ -72,7 +76,7 @@ export function Results({ data, loading, called, authState }) {
           memberList(data.userSearch)
         ) : (
           <div className={`${css(styles.noResults)}`}>
-            <h4>No results found!</h4>
+            <h4>{t('search.no_results')}</h4>
           </div>
         )}
 
@@ -87,6 +91,7 @@ export function Results({ data, loading, called, authState }) {
 export default function SearchContainer({ location }) {
   const [offset, setOffset] = useState(0)
   const [name, setName] = useState('')
+  const { t } = useTranslation(['search', 'common'])
   const limit = 50
 
   function updateSearch(e) {
@@ -137,7 +142,7 @@ export default function SearchContainer({ location }) {
           className={`form-control ${css(styles.input)} user-search-input`}
           onChange={updateSearch}
           type="text"
-          placeholder="Search"
+          placeholder={t('common:form_placeholders.search')}
           value={name}
           // eslint-disable-next-line jsx-a11y/no-autofocus
           autoFocus
@@ -166,7 +171,7 @@ export default function SearchContainer({ location }) {
                 onClick={loadMoreResults}
                 disabled={false}
               >
-                Load more
+                {t('search.load_more')}
               </Button>
             )}
           </>
