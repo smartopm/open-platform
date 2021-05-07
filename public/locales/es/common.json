@@ -119,7 +119,22 @@
     "send_sms": "Enviar SMS",
     "send_sms_to": "Enviar SMS a ",
     "send_otp": "Enviar OTP",
-    "call": "Call"
+    "call": "Llamada",
+    "dashboard": "Carga más",
+    "settings": "Ajustes",
+    "community": "Comunidad",
+    "contact": "Contacto",
+    "email_templates": "Plantillas de correo electrónico",
+    "request_forms":"Formularios de solicitud y permisos",
+    "message": "Mensaje",
+    "message_plural": "Mensajes",
+    "my_messages": "Mis mensajes",
+    "my_payments": "Mis pagos",
+    "my_thebe_portal": "Mi Portal de Thebe",
+    "search": "Buscar",
+    "my_profile": "Mi Perfil",
+    "logout": "Cerrar sesión",
+    "user_journey_stats": "Estadísticas de viaje del usuario"
   },
   "errors": {
     "empty_text": "El mensaje debe contener algo de texto"

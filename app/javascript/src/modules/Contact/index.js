@@ -7,5 +7,5 @@ export default {
     component: Contact
   },
   accessibleBy: allUserTypes,
-  name: 'Contact'
+  name: t => t('menu.contact')
 };

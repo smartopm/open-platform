@@ -5,7 +5,7 @@ export default {
     path: '/business',
     component: Businesses
   },
-  name: 'Business',
+  name: t => t('misc.business'),
   accessibleBy: [
     'admin',
     'client',

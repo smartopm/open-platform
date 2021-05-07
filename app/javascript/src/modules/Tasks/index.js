@@ -8,7 +8,7 @@ export default {
     exact: true,
     component: Tasks
   },
-  name: 'Tasks',
+  name: t => t('misc.tasks'),
   accessibleBy: ['admin'],
   subRoutes: [
     {

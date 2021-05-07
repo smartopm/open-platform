@@ -11,6 +11,6 @@ export default {
   styleProps: {
     icon: <ForumIcon />
   },
-  name: 'Communication',
+  name: t => t('menu.communication'),
   accessibleBy: ['']
 };

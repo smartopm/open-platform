@@ -7,6 +7,6 @@ export default {
     exact: true,
     component: MailTemplateList
   },
-  name: 'Email Templates',
+  name: t => t('menu.email_templates'),
   accessibleBy: ['admin'],
 };

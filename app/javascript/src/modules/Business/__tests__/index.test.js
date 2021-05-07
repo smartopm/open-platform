@@ -1,9 +1,10 @@
 import Business from ".."
+import t from "../../__mocks__/t";
 
 describe('Business', () => {
   it('exports necessary info', () => {
     expect(Business.routeProps.path).toBe('/business')
-    expect(Business.name).toBe('Business')
+    expect(Business.name(t)).toBe('misc.business')
     expect(Business.accessibleBy).toHaveLength(5)
   });
 

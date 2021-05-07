@@ -6,5 +6,5 @@ export default {
     component: Payments
   },
   accessibleBy: ['admin'],
-  name: 'Invoices'
+  name: t => t('misc.invoice', { count: 0 })
 };

@@ -10,5 +10,5 @@ export default {
     icon: <PaymentIcon />
   },
   accessibleBy: ['client', 'resident'],
-  name: 'My Payments'
+  name: t => t('menu.my_payments')
 };

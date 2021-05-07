@@ -108,7 +108,22 @@
     "send_otp": "Send OTP",
     "step": "Step",
     "step_plural": "Steps",
-    "balance": "Balance"
+    "balance": "Balance",
+    "dashboard": "Dashboard",
+    "settings": "Settings",
+    "community": "Community",
+    "contact": "Contact",
+    "email_templates": "Email Templates",
+    "request_forms":"Permits and Request Forms",
+    "message": "Message",
+    "message_plural": "Messages",
+    "my_messages": "My Messages",
+    "my_payments": "My Payments",
+    "my_thebe_portal": "My Thebe Portal",
+    "search": "Search",
+    "my_profile": "My Profile",
+    "logout": "Logout",
+    "user_journey_stats": "User Journey Stats"
   },
   "user_types": {
     "admin": "Admin",

@@ -10,6 +10,6 @@ export default {
   styleProps: {
     icon: <LinearScaleIcon />
   },
-  name: 'User Journey Stats',
+  name: t => t('menu.user_journey_stats'),
   accessibleBy: ['admin']
 };

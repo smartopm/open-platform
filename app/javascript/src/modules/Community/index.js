@@ -23,7 +23,7 @@ const Settings =   {
   styleProps: {
     icon: <GroupIcon />
   },
-  name: 'Settings',
+  name: t => t('menu.settings'),
   accessibleBy: ['admin'],
 }
 
@@ -35,7 +35,7 @@ export default {
   styleProps: {
     icon: <GroupIcon />
   },
-  name: 'Community',
+  name: t => t('menu.community'),
   accessibleBy: allUserTypes,
   subMenu: [News, Message, Discussions, Campaigns , Labels, Tasks, Business, PermitRequestForms, Emails, Settings, Contact, Referral]
 };

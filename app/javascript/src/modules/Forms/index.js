@@ -12,7 +12,7 @@ export default {
   styleProps: {
     icon: <DescriptionIcon />
   },
-  name: 'Forms',
+  name: t => t('menu.forms'),
   accessibleBy: [
     'client',
     'prospective_client',
