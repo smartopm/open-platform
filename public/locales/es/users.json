@@ -1,0 +1,13 @@
+{
+    "users": {
+      "message_campaign": "Vas a crear una campaña para más de 2000 usuarios. Recomendamos utilizar una lista más pequeña. ¿Aún quieres continuar?",
+      "label_message": "Está a punto de asignar etiquetas a más de 2000 usuarios. Recomendamos utilizar una lista más pequeña. ¿Aún quieres continuar?",
+      "add_note": "Agrega una nota",
+      "save_note": "Guardando nota ...",
+      "add_outgoing_calls_answered": "Agregar llamada saliente respondida para",
+      "add_outgoing_calls_not_answered": "Agregar llamada saliente no respondida para",
+      "upload": "Subir",
+      "create_report": "Crear reporte",
+      "user_stats": "Estadísticas de usuario"
+    }
+  }

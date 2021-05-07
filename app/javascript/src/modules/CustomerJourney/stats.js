@@ -1,11 +1,11 @@
 import React from 'react';
 import LinearScaleIcon from '@material-ui/icons/LinearScale';
-import StatsPage from '../../containers/User/StatsPage';
+import UserStats from './Components/UserStats';
 
 export default {
   routeProps: {
     path: '/users/stats',
-    component: StatsPage
+    component: UserStats
   },
   styleProps: {
     icon: <LinearScaleIcon />

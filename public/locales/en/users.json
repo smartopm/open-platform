@@ -1,0 +1,13 @@
+{
+  "users": {
+    "message_campaign": "You are going to create a campaign for 2000+ users. We recommend using a smaller list. Do you still want to proceed?",
+    "label_message": "You are about to assign labels to 2000+ users. We recommend using a smaller list. Do you still want to proceed?",
+    "add_note": "Add a note",
+    "save_note": "Saving note ...",
+    "add_outgoing_calls_answered": "Add Outgoing call answered for",
+    "add_outgoing_calls_not_answered": "Add Outgoing call not answered for",
+    "upload": "Upload",
+    "create_report": "Create Report",
+    "user_stats": "User Stats"
+  }
+}

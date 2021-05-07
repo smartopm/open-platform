@@ -16,41 +16,44 @@
 import React from 'react';
 import { allUserTypes } from '../../utils/constants';
 
-const paymentSubMenus = [
-  {
-    routeProps: {
-      path: '/user/:id?tab=Payments&payment_sub_tab=Invoices',
-      component: <span />
+function formatPaymentMenu(translate) {
+  return [
+    {
+      routeProps: {
+        path: '/user/:id?tab=Payments&payment_sub_tab=Invoices',
+        component: <span />
+      },
+      name: translate('common:menu:invoice', { count: 0 }),
+      accessibleBy: ['admin']
     },
-    name: 'Invoices',
-    accessibleBy: ['admin']
-  },
-  {
-    routeProps: {
-      path: '/user/:id?tab=Payments&payment_sub_tab=Transactions',
-      exact: true,
-      component: <span />
+    {
+      routeProps: {
+        path: '/user/:id?tab=Payments&payment_sub_tab=Transactions',
+        exact: true,
+        component: <span />
+      },
+      name: translate('common:menu:transaction', { count: 0 }),
+      accessibleBy: ['admin']
     },
-    name: 'Transactions',
-    accessibleBy: ['admin']
-  },
-  {
-    routeProps: {
-      path: '/user/:id?tab=Payments&payment_sub_tab=Plans',
-      component: <span />
-    },
-    name: 'Plans',
-    accessibleBy: ['admin']
-  }
-];
+    {
+      routeProps: {
+        path: '/user/:id?tab=Payments&payment_sub_tab=Plans',
+        component: <span />
+      },
+      name: translate('common:menu:plan', { count: 0 }),
+      accessibleBy: ['admin']
+    }
+  ];
+}
 
-const UserMenus = [
+export default function formatUserMenu(translate) {
+  return [
     {
       routeProps: {
         path: '/user/:id?tab=Communication',
         component: <span />
       },
-      name: 'Communication',
+      name: translate('common:menu:communication'),
       accessibleBy: ['admin']
     },
     {
@@ -58,7 +61,7 @@ const UserMenus = [
         path: '/user/:id?tab=Notes',
         component: <span />
       },
-      name: 'Notes',
+      name: translate('common:menu:note', { count: 0 }),
       accessibleBy: ['admin']
     },
     {
@@ -66,7 +69,7 @@ const UserMenus = [
         path: '/user/:id?tab=Plots',
         component: <span />
       },
-      name: 'Plots',
+      name: translate('common:menu:plot', { count: 0 }),
       accessibleBy: ['admin']
     },
     {
@@ -74,7 +77,7 @@ const UserMenus = [
         path: '/user/:id?tab=Forms',
         component: <span />
       },
-      name: 'Forms',
+      name: translate('common:menu:form', { count: 0 }),
       accessibleBy: ['admin']
     },
     {
@@ -82,7 +85,7 @@ const UserMenus = [
         path: '/user/:id?tab=CustomerJourney',
         component: <span />
       },
-      name: 'Customer Journey',
+      name: translate('common:menu:customer_journey'),
       accessibleBy: ['admin']
     },
     {
@@ -90,66 +93,65 @@ const UserMenus = [
         path: '/user/:id?tab=Payments',
         component: <span />
       },
-      name: 'Payments',
+      name: translate('common:menu:payment', { count: 0 }),
       accessibleBy: ['admin'],
-      subMenu: paymentSubMenus
+      subMenu: formatPaymentMenu(translate)
     },
     {
       routeProps: {
         path: '/user/:id?tab=MergeUser',
         component: <span />
       },
-      name: 'Merge User',
+      name: translate('common:menu:merge_user'),
       accessibleBy: ['admin']
     },
-  {
-    routeProps: {
-      path: '/user/:id/logs',
-      component: <span />
+    {
+      routeProps: {
+        path: '/user/:id/logs',
+        component: <span />
+      },
+      name: translate('common:menu:user_logs'),
+      accessibleBy: ['admin', 'security_guard']
     },
-    name: 'User Logs',
-    accessibleBy: ['admin', 'security_guard']
-  },
-  {
-    routeProps: {
-      path: '/user/:id/edit',
-      component: <span />
+    {
+      routeProps: {
+        path: '/user/:id/edit',
+        component: <span />
+      },
+      name: translate('common:menu:user_edit'),
+      accessibleBy: allUserTypes
     },
-    name: 'Edit',
-    accessibleBy: allUserTypes
-  },
-  {
-    routeProps: {
-      path: '/print/:id/',
-      component: <span />
+    {
+      routeProps: {
+        path: '/print/:id/',
+        component: <span />
+      },
+      name: translate('common:menu:print_id'),
+      accessibleBy: allUserTypes
     },
-    name: 'Print ID',
-    accessibleBy: allUserTypes
-  },
-  {
-    routeProps: {
-      path: '/message/:id/',
-      component: <span />
+    {
+      routeProps: {
+        path: '/message/:id/',
+        component: <span />
+      },
+      name: translate('common:menu:message_support'),
+      accessibleBy: allUserTypes
     },
-    name: 'Message Support',
-    accessibleBy: allUserTypes
-  },
-  {
-    routeProps: {
-      path: '/message/:id/',
-      component: <span />
+    {
+      routeProps: {
+        path: '/message/:id/',
+        component: <span />
+      },
+      name: translate('common:menu:send_sms'),
+      accessibleBy: ['admin']
     },
-    name: 'Send SMS',
-    accessibleBy: ['admin',]
-  },
-  {
-    routeProps: {
-      path: '/user/:id/otp',
-      component: <span />
-    },
-    name: 'Send OTP',
-    accessibleBy: ['admin']
-  }
-];
-
-export default UserMenus;
+    {
+      routeProps: {
+        path: '/user/:id/otp',
+        component: <span />
+      },
+      name: translate('common:menu:send_otp'),
+      accessibleBy: ['admin']
+    }
+  ];
+}

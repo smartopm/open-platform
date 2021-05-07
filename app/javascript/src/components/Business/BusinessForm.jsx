@@ -11,7 +11,7 @@ import PropTypes from 'prop-types';
 import CenteredContent from '../CenteredContent';
 import { discussStyles } from '../Discussion/Discuss';
 import { BusinessCreateMutation } from '../../graphql/mutations';
-import UserSearch from '../User/UserSearch';
+import UserSearch from '../../modules/Users/Components/UserSearch';
 import { businessCategories, businessStatus } from '../../utils/constants';
 
 const initialData = {
