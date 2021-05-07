@@ -247,6 +247,7 @@ const App = () => {
                                     });
                                   }
                                   if (module.accessibleBy.includes(user.userType)) {
+                                    console.log(module.routeProps.component)
                                     return <Route exact {...module.routeProps} key={module.name} />;
                                   }
                                 })}

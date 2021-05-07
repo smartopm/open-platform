@@ -10,6 +10,6 @@ export default {
   styleProps: {
     icon: <ForumIcon />
   },
-  name: 'Labels',
+  name: t => t('misc.labels'),
   accessibleBy: ['admin']
 };

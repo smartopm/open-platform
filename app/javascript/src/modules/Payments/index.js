@@ -12,7 +12,7 @@ export default {
   styleProps: {
     icon: <PaymentIcon />
   },
-  name: 'Payments',
+  name: t => t('menu.payment', { count: 0 }),
   accessibleBy: ['admin'],
   subMenu: [Invoices, Transactions]
 };

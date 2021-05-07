@@ -11,7 +11,7 @@ export default {
   styleProps: {
     icon: <HomeIcon />
   },
-  name: 'Home',
+  name: t => t('menu.dashboard'),
   accessibleBy: [
     'admin',
     'client',

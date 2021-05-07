@@ -21,7 +21,7 @@ export default {
   styleProps: {
     icon: <PersonIcon />
   },
-  name: 'Users',
+  name: t => t('misc.users'),
   accessibleBy: ['admin']
 };
 
@@ -35,7 +35,7 @@ export const Profile = {
   styleProps: {
     icon: <AccountCircleIcon />
   },
-  name: 'My Profile',
+  name: t => t('menu.my_profile'),
   accessibleBy: allUserTypes
 }
 
@@ -47,6 +47,6 @@ export const Logout = {
   styleProps: {
     icon: <ExitToAppIcon />
   },
-  name: 'Logout',
+  name: t => t('menu.logout'),
   accessibleBy: allUserTypes
 }

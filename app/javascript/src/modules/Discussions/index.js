@@ -6,7 +6,7 @@ export default {
     exact: true,
     component: Discussions
   },
-  name: 'Discussions',
+  name: t => t('menu.discussions'),
   accessibleBy: [
     'admin',
     'client',

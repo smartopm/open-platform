@@ -10,6 +10,6 @@ export default {
   styleProps: {
     icon: <HourglassFullIcon />
   },
-  name: 'Time Card',
+  name: t => t('misc.time_card'),
   accessibleBy: ['admin', 'custodian']
 };

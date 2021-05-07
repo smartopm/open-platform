@@ -13,6 +13,6 @@ export default {
   styleProps: {
     icon: <DescriptionIcon />
   },
-  name: 'Permits & Request Forms',
+  name: t => t('menu.request_forms'),
   accessibleBy: ['admin', 'client', 'resident']
 };

@@ -13,6 +13,6 @@ export default {
   styleProps: {
     icon: <LinearScaleIcon />
   },
-  name: 'Customer Journey',
+  name: t => t('menu.customer_journey'),
   accessibleBy: ['']
 };

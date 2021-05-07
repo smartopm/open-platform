@@ -10,7 +10,7 @@ export default {
   styleProps: {
     icon: <ComputerIcon />
   },
-  name: 'My Thebe Portal',
+  name: t => t('menu.my_thebe_portal'),
   accessibleBy: [
     'admin',
     'client',

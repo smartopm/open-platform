@@ -10,6 +10,6 @@ export default {
   styleProps: {
     icon: <MenuBookIcon />
   },
-  name: 'Log Book',
+  name: t => t('misc.log_book'),
   accessibleBy: ['admin', 'security_guard', 'custodian']
 };

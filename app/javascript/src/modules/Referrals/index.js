@@ -7,5 +7,5 @@ export default {
     component: Referral
   },
   accessibleBy: allUserTypes,
-  name: 'Referral'
+  name: t => t('misc.referrals')
 };

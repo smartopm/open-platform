@@ -6,6 +6,6 @@ export default {
     component: Campaigns
   },
   styleProps: {},
-  name: 'Campaigns',
+  name: t => t('misc.campaigns'),
   accessibleBy: ['admin']
 };
