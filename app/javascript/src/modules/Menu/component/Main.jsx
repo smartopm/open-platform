@@ -81,7 +81,7 @@ export function MainNav({ authState }) {
           >
             <MenuIcon />
           </IconButton>
-          <UserAvatar imageUrl={authState.user.imageUrl} />
+          <UserAvatar imageUrl={authState?.user?.imageUrl} />
           <UserActionOptions />
           <NotificationBell user={authState.user} />
           <CenteredContent>

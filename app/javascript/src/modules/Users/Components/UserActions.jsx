@@ -20,8 +20,8 @@ export default function UserAction() {
   const history = useHistory()
   return (
     <div className={classes.body}>
-      <Avatar alt="user_image" src={authState.user.imageUrl} className={classes.avatar} />
-      <Typography className={classes.name}>{authState.user.name}</Typography>
+      <Avatar alt="user_image" data-testid='avatar' src={authState?.user?.imageUrl} className={classes.avatar} />
+      <Typography data-testid='text' className={classes.name}>{authState?.user?.name}</Typography>
       <UserOptions 
         icon={<AccountCircleIcon style={{height: '36px', width: '36px'}} />} 
         primaryText='Edit personal details' 
@@ -56,7 +56,7 @@ export default function UserAction() {
 export function UserOptions({ icon, primaryText, secondaryText, handleClick}){
   const classes = useStyles();
   return (
-    <div className={classes.options} onClick={handleClick}>
+    <div className={classes.options} data-testid="options" onClick={handleClick}>
       <IconButton
         aria-label="icons"
         edge="start"
@@ -66,8 +66,8 @@ export function UserOptions({ icon, primaryText, secondaryText, handleClick}){
         {icon}
       </IconButton>
       <div>
-        <Typography className={classes.primaryText}>{primaryText}</Typography>
-        <Typography className={classes.secondaryText}>{secondaryText}</Typography>
+        <Typography data-testid="title" className={classes.primaryText}>{primaryText}</Typography>
+        <Typography data-testid="caption" className={classes.secondaryText}>{secondaryText}</Typography>
       </div>
     </div>
   )

@@ -10,7 +10,7 @@ export default function UserAvatar({ imageUrl }) {
   return (
     <div>
       <div className={classes.avatar}>
-        <Avatar onClick={() => history.push({pathname: '/user_actions', state: { imageUrl }})} alt="user_image" src={imageUrl} />
+        <Avatar data-testid='avatar' onClick={() => history.push({pathname: '/user_actions', state: { imageUrl }})} alt="user_image" src={imageUrl} />
       </div>
     </div>
   )
