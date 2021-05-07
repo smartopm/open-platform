@@ -6,7 +6,6 @@ Rails.application.configure do
     match "/serviceworker.js"
     match "/nkwashimanifest.json"
     match "/ciudadmorazanmanifest.json"
-    match "/othermanifest.json"
     match "/manifest.json"
 
     # Examples
