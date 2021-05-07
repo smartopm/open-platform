@@ -41,7 +41,7 @@ export default function Home() {
             {authState.user.subStatus && (
               <CustomerJourneyStatus subStatus={authState.user.subStatus} communityName={authState.user.community.name} />
             )}
-            <Divider />
+            <Divider style={{marginTop: '30px'}} />
             <PlotDetail authState={authState.user} />
             <Divider />
             <NewsFeed wordpressEndpoint={authState.user?.community.wpLink} translate={t} />
