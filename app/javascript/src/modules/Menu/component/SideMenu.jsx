@@ -56,7 +56,7 @@ const SideMenu = ({ toggleDrawer, menuItems, userType, mobileOpen, direction }) 
       <List>
         {menuItems.map(menuItem =>
           menuItem.accessibleBy.includes(userType) ? (
-            <Fragment key={menuItem.name(t)}>
+            <Fragment key={typeof menuItem.name === 'function' && menuItem.name(t)}>
               <ListItem
                 button
                 onClick={event => routeTo(event, menuItem)}
@@ -67,6 +67,7 @@ const SideMenu = ({ toggleDrawer, menuItems, userType, mobileOpen, direction }) 
                     {menuItem.styleProps.icon}
                   </ListItemIcon>
                 )}
+                {console.log(menuItem.name)}
                 <ListItemText primary={menuItem.name(t)} />
                 {currentMenu.name === menuItem.name(t) && currentMenu.isOpen ? (
                   <ExpandLess />

@@ -23,27 +23,24 @@ describe('Side Nav component', () => {
     );
     expect(container.queryAllByTestId('sidenav-container')[0]).toBeInTheDocument();
     expect(container.queryAllByTestId('sidenav-container')).toHaveLength(1);
-    expect(container.queryByText('Home')).toBeInTheDocument()
-    expect(container.queryByText('Communication')).not.toBeInTheDocument()
-    expect(container.queryByText('Log Book')).toBeInTheDocument()
-    expect(container.queryByText('Payments')).toBeInTheDocument()
-    expect(container.queryByText('Users')).toBeInTheDocument()
-    expect(container.queryByText('Properties')).toBeInTheDocument()
-    expect(container.queryByText('Action Flows')).toBeInTheDocument()
-    expect(container.queryByText('Time Card')).toBeInTheDocument()
-    expect(container.queryByText('Community')).toBeInTheDocument()
-    expect(container.queryByText('News')).not.toBeInTheDocument() // should not be initially visible 
+
+    expect(container.queryByText('misc.users')).toBeInTheDocument();
+    expect(container.queryByText('misc.log_book')).toBeInTheDocument();
+    expect(container.queryByText('misc.time_card')).toBeInTheDocument();
+    expect(container.queryByText('misc.action_flows')).toBeInTheDocument();
+    expect(container.queryByText('menu.community')).toBeInTheDocument();
+    expect(container.queryByText('misc.properties')).toBeInTheDocument();
+    expect(container.queryByText('menu.dashboard')).toBeInTheDocument();
+
+    expect(container.queryByText('misc.news')).not.toBeInTheDocument() // should not be initially visible 
 
 
     // toggle the menu and make sure new menus will show
-    fireEvent.click(container.queryByText('Community'));
-    expect(container.queryByText('News')).toBeInTheDocument()
-    expect(container.queryByText('Discussions')).toBeInTheDocument()
-    expect(container.queryByText('Messages')).toBeInTheDocument()
-    expect(container.queryByText('Campaigns')).toBeInTheDocument()
-    expect(container.queryByText('Labels')).toBeInTheDocument()
-    expect(container.queryByText('Business')).toBeInTheDocument()
-    expect(container.queryByText('Permits & Request Forms')).toBeInTheDocument()
-    expect(container.queryByText('Business')).toBeInTheDocument()
+    fireEvent.click(container.queryByText('menu.community'));
+    expect(container.queryByText('misc.campaigns')).toBeInTheDocument();
+    expect(container.queryByText('misc.business')).toBeInTheDocument();
+    expect(container.queryByText('misc.news')).toBeInTheDocument();
+    expect(container.queryByText('misc.labels')).toBeInTheDocument();
+    expect(container.queryByText('misc.discussions')).toBeInTheDocument();
   });
 });
