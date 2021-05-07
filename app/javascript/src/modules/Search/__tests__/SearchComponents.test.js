@@ -12,8 +12,8 @@ describe('new request button', () => {
         <NewRequestButton />
       </BrowserRouter>
     );
-    expect(container.queryByText('Create a new request')).not.toBeNull();
-    expect(container.queryByText('Create a new request')).toBeInTheDocument();
+    expect(container.queryByText('search.create_request')).not.toBeNull();
+    expect(container.queryByText('search.create_request')).toBeInTheDocument();
   });
 });
 
@@ -36,8 +36,8 @@ describe('search result component', () => {
         <Results {...props} />
       </BrowserRouter>
     );
-    expect(container.queryByText('No results found!')).not.toBeNull();
-    expect(container.queryByText('No results found!')).toBeInTheDocument();
+    expect(container.queryByText('search.no_results')).not.toBeNull();
+    expect(container.queryByText('search.no_results')).toBeInTheDocument();
   });
   it('should return create request button when admin is logged in', () => {
     const props = {
@@ -57,7 +57,7 @@ describe('search result component', () => {
         <Results {...props} />
       </BrowserRouter>
     );
-    expect(container.queryByText('Create a new request')).toBeInTheDocument();
+    expect(container.queryByText('search.create_request')).toBeInTheDocument();
   });
 
   it('should display the returned results', () => {
