@@ -18,7 +18,8 @@
     "phone_number": "Introduzca el número de teléfono",
     "email": "Ingrese correo electrónico",
     "action_note": "Escriba la nota de acción aquí",
-    "search_user": "Buscar usuario"
+    "search_user": "Buscar usuario",
+    "search": "Buscar"
   },
   "form_actions": {
     "send_email": "Enviar correo electrónico",

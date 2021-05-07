@@ -1,10 +1,9 @@
-/* eslint-disable */
 import React from 'react';
-import SearchContainer, { NewRequestButton, Results } from '../containers/Search';
 import { render } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { BrowserRouter } from 'react-router-dom';
 import { MockedProvider } from '@apollo/react-testing';
+import SearchContainer, { NewRequestButton, Results } from '../Components/Search';
 
 describe('new request button', () => {
   it('should render the correct button', () => {

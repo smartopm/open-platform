@@ -20,7 +20,6 @@ import UserShow from '../src/modules/Users/Containers/UserShow';
 import IDCard from '../src/containers/IdCard';
 import EntryLogs from '../src/containers/AllLogs/EntryLogs';
 import EventLogs from '../src/containers/AllLogs/EventLogs';
-import Search from '../src/containers/Search';
 import UserEdit from '../src/modules/Users/Containers/UserEdit'
 import Loading from '../src/shared/Loading';
 import '../src/modules/i18n';
@@ -251,7 +250,6 @@ const App = () => {
                                   }
                                 })}
                                 <Route exact path="/scan" component={Scan} />
-                                <Route exact path="/search" component={Search} />
                                 <Route path="/id/:id" component={IDCard} />
                                 <Route path="/entry_logs/:userId" component={EntryLogs} />
                                 <Route path="/map" component={Map} />

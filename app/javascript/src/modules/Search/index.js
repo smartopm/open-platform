@@ -1,6 +1,6 @@
 import React from 'react'
 import { SearchOutlined } from '@material-ui/icons';
-import SearchContainer from '../../containers/Search';
+import SearchContainer from './Components/Search';
 
 export default {
   routeProps: {
