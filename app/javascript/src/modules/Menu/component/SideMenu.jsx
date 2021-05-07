@@ -67,7 +67,6 @@ const SideMenu = ({ toggleDrawer, menuItems, userType, mobileOpen, direction }) 
                     {menuItem.styleProps.icon}
                   </ListItemIcon>
                 )}
-                {console.log(menuItem.name)}
                 <ListItemText primary={menuItem.name(t)} />
                 {currentMenu.name === menuItem.name(t) && currentMenu.isOpen ? (
                   <ExpandLess />
