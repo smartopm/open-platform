@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState,useEffect } from 'react'
 import {
   Button,
   Dialog,
@@ -9,12 +9,18 @@ import {
 } from '@material-ui/core'
 import PropTypes from 'prop-types'
 
-export default function EmailDetailsDialog({ open, handleClose, handleSave, loading }) {
+export default function EmailDetailsDialog({ open, handleClose, handleSave, loading, dialogHeader, initialData }) {
   const [details, setDetails] = useState({ name: '', subject: '' })
+
+  useEffect(() => {
+    if(initialData.name && initialData.subject){
+      setDetails(initialData)
+    }
+  }, [initialData])
   
   return (
     <Dialog open={open} onClose={handleClose}>
-      <DialogTitle>Add Email Details</DialogTitle>
+      <DialogTitle>{dialogHeader}</DialogTitle>
       <DialogContent>
         <TextField
           label="Template Name"
@@ -22,7 +28,7 @@ export default function EmailDetailsDialog({ open, handleClose, handleSave, load
           aria-label="template_name"
           inputProps={{ 'data-testid': 'template_name' }}
           name="templateName"
-          value={details.name}
+          value={details.name || initialData.name}
           onChange={event =>
             setDetails({ ...details, name: event.target.value })}
           required
@@ -33,7 +39,7 @@ export default function EmailDetailsDialog({ open, handleClose, handleSave, load
           aria-label="template_subject"
           inputProps={{ 'data-testid': 'template_subject' }}
           name="templateSubject"
-          value={details.subject}
+          value={details.subject || initialData.subject}
           onChange={event =>
             setDetails({ ...details, subject: event.target.value })}
           required
@@ -58,10 +64,20 @@ export default function EmailDetailsDialog({ open, handleClose, handleSave, load
   )
 }
 
+EmailDetailsDialog.defaultProps = {
+  dialogHeader: 'Add Email Details',
+  initialData: {
+    name: '',
+    subject: '',
+  },
+}
 
 EmailDetailsDialog.propTypes = {
   handleClose: PropTypes.func.isRequired,
   open: PropTypes.bool.isRequired,
   loading: PropTypes.bool.isRequired,
   handleSave: PropTypes.func.isRequired,
+    // eslint-disable-next-line react/forbid-prop-types
+  initialData: PropTypes.object,
+  dialogHeader: PropTypes.string
 }
