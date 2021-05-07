@@ -24,4 +24,15 @@ RSpec.describe ApplicationHelper, type: :helper do
       expect(result).to eq({})
     end
   end
+
+  describe 'manifest file' do
+    it 'returns correct manifest file for community' do
+      community = create(:community, name: 'Ciudad Morazán')
+      expect(multi_tenancy_manifest_file(community.name)).to eq('/ciudadmorazanmanifest.json')
+    end
+    it 'returns correct manifest file for community' do
+      community = create(:community, name: 'Nkwashi')
+      expect(multi_tenancy_manifest_file(community.name)).to eq('/nkwashimanifest.json')
+    end
+  end
 end

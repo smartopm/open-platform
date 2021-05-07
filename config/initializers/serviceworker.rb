@@ -4,8 +4,10 @@ Rails.application.configure do
   config.serviceworker.routes.draw do
     # map to assets implicitly
     match "/serviceworker.js"
-    match "/manifest.json"
+    match "/nkwashimanifest.json"
+    match "/ciudadmorazanmanifest.json"
     match "/othermanifest.json"
+    match "/manifest.json"
 
     # Examples
     #
