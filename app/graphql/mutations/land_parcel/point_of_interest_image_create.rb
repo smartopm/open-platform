@@ -14,7 +14,7 @@ module Mutations
                       .land_parcels
                       .where(parcel_type: 'poi')
                       .find_by(id: vals[:id])
-        raise GraphQL::ExecutionError, 'Land Parcel not found' unless land_parcel
+        raise_land_parcel_not_found_error(land_parcel)
 
         attach_image(land_parcel, vals)
 
@@ -27,10 +27,22 @@ module Mutations
         land_parcel.images.attach(vals[:image_blob_id]) if vals[:image_blob_id]
       end
 
+      # Verifies if current user is admin or not.
       def authorized?(_vals)
-        raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user].admin?
+        return true if context[:current_user]&.admin?
 
-        true
+        raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
+      end
+
+      private
+
+      # Raises GraphQL execution error if land parcel does not exist.
+      #
+      # @return [GraphQL::ExecutionError]
+      def raise_land_parcel_not_found_error(land_parcel)
+        return if land_parcel
+
+        raise GraphQL::ExecutionError, I18n.t('errors.land_parcel.not_found')
       end
     end
   end

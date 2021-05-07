@@ -538,13 +538,13 @@ class User < ApplicationRecord
     return if self[:phone_number].blank?
 
     unless self[:phone_number].match(/\A[0-9+\s\-]+\z/)
-      errors.add(:phone_number, "can only contain 0-9, '-', '+' and space")
+      errors.add(:phone_number, :invalid_phone_number)
     end
 
     # All phone numbers with country codes are between 8-15 characters long
-    errors.add(:phone_number, 'must be a valid length') unless self[:phone_number]
-                                                               .gsub(/[^0-9]/, '')
-                                                               .length.between?(8, 15)
+    errors.add(:phone_number, :invalid_length) unless self[:phone_number]
+                                                      .gsub(/[^0-9]/, '')
+                                                      .length.between?(8, 15)
   end
 
   def add_notification_preference

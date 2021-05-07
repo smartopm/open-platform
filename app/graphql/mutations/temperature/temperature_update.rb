@@ -21,7 +21,7 @@ module Mutations
           return { event_log: event_log } if event_log.present?
         rescue StandardError => e
           Rails.logger.warn e.full_message
-          raise GraphQL::ExecutionError, "For some reason, I can't process your request"
+          raise GraphQL::ExecutionError, I18n.t('errors.can_not_process_request')
         end
       end
 
@@ -43,7 +43,9 @@ module Mutations
       def authorized?(_vals)
         a_roles = Set['admin', 'security_guard']
         c_user = context[:current_user]
-        raise GraphQL::ExecutionError, 'Unauthorized' unless a_roles.include? c_user.user_type
+        unless a_roles.include? c_user.user_type
+          raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
+        end
 
         true
       end

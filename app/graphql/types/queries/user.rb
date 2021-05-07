@@ -79,7 +79,7 @@ module Types::Queries::User
   def user(id:)
     authorized = context[:current_user].present? &&
                  User.allowed_users(context[:current_user]).pluck(:id).include?(id)
-    raise GraphQL::ExecutionError, 'Unauthorized' unless authorized
+    raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') unless authorized
 
     find_community_user(id)
   end
@@ -88,7 +88,7 @@ module Types::Queries::User
   # rubocop:disable Metrics/AbcSize
   def users(offset: 0, limit: 50, query: nil)
     adm = context[:current_user]
-    raise GraphQL::ExecutionError, 'Unauthorized' unless adm.present? && adm.admin?
+    raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') unless adm.present? && adm.admin?
 
     if query.present? && query.include?('date_filter')
       User.allowed_users(context[:current_user]).includes(accounts: [:land_parcels])
@@ -108,7 +108,7 @@ module Types::Queries::User
   end
 
   def user_search(query: '', offset: 0, limit: 50)
-    raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user]
+    raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') unless context[:current_user]
 
     search_method = 'search'
 
@@ -139,7 +139,7 @@ module Types::Queries::User
   end
 
   def pending_users
-    raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user]
+    raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') unless context[:current_user]
 
     User.allowed_users(context[:current_user]).includes(accounts: [:land_parcels])
         .eager_load(:notes, :accounts, :labels, :contact_infos)
@@ -148,7 +148,7 @@ module Types::Queries::User
   end
 
   def security_guards
-    raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user]
+    raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') unless context[:current_user]
 
     User.allowed_users(context[:current_user]).includes(accounts: [:land_parcels])
         .eager_load(:notes, :accounts, :labels, :contact_infos)
@@ -160,7 +160,7 @@ module Types::Queries::User
 
   def users_lite(offset: 0, limit: 100, query: nil)
     adm = context[:current_user]
-    raise GraphQL::ExecutionError, 'Unauthorized' unless adm.present? && adm.admin?
+    raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') unless adm.present? && adm.admin?
 
     User.allowed_users(context[:current_user])
         .search_lite(query)
@@ -173,12 +173,13 @@ module Types::Queries::User
     user = User.allowed_users(context[:current_user]).find(id)
     return user if user.present?
 
-    raise GraphQL::ExecutionError, 'User not found'
+    raise GraphQL::ExecutionError,
+          I18n.t('errors.user.not_found')
   end
 
   def user_activity_point
     user = context[:current_user]
-    raise GraphQL::ExecutionError, 'Unauthorized' unless user
+    raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') unless user
 
     activity_point = user.activity_point_for_current_week
     activity_point || ActivityPoint.create!(user: user)
@@ -186,7 +187,7 @@ module Types::Queries::User
 
   def users_count(query: nil)
     adm = context[:current_user]
-    raise GraphQL::ExecutionError, 'Unauthorized' unless adm.present? && adm.admin?
+    raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') unless adm.present? && adm.admin?
 
     allowed_users = User.allowed_users(context[:current_user])
     if query.present? && query.include?('date_filter')
@@ -197,20 +198,24 @@ module Types::Queries::User
   end
 
   def substatus_query
-    raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user]&.admin?
+    unless context[:current_user]&.admin?
+      raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
+    end
 
     users = context[:site_community].users
     users.group(:sub_status).count
   end
 
   def substatus_distribution_query
-    raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user]&.admin?
+    unless context[:current_user]&.admin?
+      raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
+    end
 
     SubstatusLog.create_time_distribution_report
   end
 
   def user_active_plan
-    raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user]
+    raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') unless context[:current_user]
 
     context[:current_user].active_payment_plan?
   end

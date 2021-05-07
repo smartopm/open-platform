@@ -57,7 +57,7 @@ module Types::Queries::Note
   # rubocop:enable Metrics/BlockLength
 
   def all_notes(offset: 0, limit: 50)
-    raise GraphQL::ExecutionError, 'Unauthorized' unless current_user&.admin?
+    raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') unless current_user&.admin?
 
     context[:site_community].notes.where(flagged: false)
                             .includes(:user, :note_comments)
@@ -65,7 +65,7 @@ module Types::Queries::Note
   end
 
   def user_notes(id:)
-    raise GraphQL::ExecutionError, 'Unauthorized' unless current_user&.admin?
+    raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') unless current_user&.admin?
 
     context[:site_community].notes.where(user_id: id, flagged: false)
   end
@@ -73,7 +73,7 @@ module Types::Queries::Note
   # rubocop:disable Metrics/MethodLength
   # rubocop:disable Metrics/AbcSize
   def flagged_notes(offset: 0, limit: 50, query: nil)
-    raise GraphQL::ExecutionError, 'Unauthorized' unless current_user&.admin?
+    raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') unless current_user&.admin?
 
     if query.present? && query.include?('assignees')
       context[:site_community].notes.search_assignee(query)
@@ -102,7 +102,7 @@ module Types::Queries::Note
   # rubocop:enable Metrics/AbcSize
 
   def task(task_id:)
-    raise GraphQL::ExecutionError, 'Unauthorized' unless current_user&.admin?
+    raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') unless current_user&.admin?
 
     context[:site_community].notes.includes(:assignees, :author, :user)
                             .eager_load(:assignee_notes, :assignees, :user)
@@ -111,13 +111,13 @@ module Types::Queries::Note
   end
 
   def task_comments(task_id:)
-    raise GraphQL::ExecutionError, 'Unauthorized' unless current_user&.admin?
+    raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') unless current_user&.admin?
 
     context[:site_community].notes.find(task_id).note_comments.eager_load(:user)
   end
 
   def task_histories(task_id:)
-    raise GraphQL::ExecutionError, 'Unauthorized' unless current_user&.admin?
+    raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') unless current_user&.admin?
 
     context[:site_community].notes.find(task_id)
                             .note_histories
@@ -126,7 +126,7 @@ module Types::Queries::Note
   end
 
   def my_tasks_count
-    raise GraphQL::ExecutionError, 'Unauthorized' unless current_user&.admin?
+    raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') unless current_user&.admin?
 
     my_task
   end
@@ -134,7 +134,7 @@ module Types::Queries::Note
   # rubocop:disable Metrics/AbcSize
   # rubocop:disable Metrics/MethodLength
   def task_stats
-    raise GraphQL::ExecutionError, 'Unauthorized' unless current_user&.admin?
+    raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') unless current_user&.admin?
 
     tasks = context[:site_community].notes.where(flagged: true)
 
@@ -159,7 +159,7 @@ module Types::Queries::Note
   end
 
   def user_tasks
-    raise GraphQL::ExecutionError, 'Unauthorized' unless current_user&.admin?
+    raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') unless current_user&.admin?
 
     context[:current_user].tasks.by_completion(false).where.not(due_date: nil)
                           .order(created_at: :desc)

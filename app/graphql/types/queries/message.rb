@@ -30,11 +30,15 @@ module Types::Queries::Message
   end
 
   # rubocop:disable Metrics/AbcSize
+  # rubocop:disable Metrics/MethodLength
   def messages(query: '', offset: 0, limit: 100, filter: nil)
-    raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user]&.admin?
+    unless context[:current_user]&.admin?
+      raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
+    end
 
-    raise GraphQL::ExecutionError, 'Invalid Argument Value' if filter.present? &&
-                                                               VALID_FILTERS.exclude?(filter)
+    if filter.present? && VALID_FILTERS.exclude?(filter)
+      raise GraphQL::ExecutionError, I18n.t('errors.invalid_argument_value')
+    end
 
     com_id = context[:current_user].community_id
     checked_filters = check_filter(filter.to_s)
@@ -46,7 +50,7 @@ module Types::Queries::Message
   end
 
   def user_messages(id:, offset: 0, limit: 50)
-    raise GraphQL::ExecutionError, 'Unauthorized' unless admin_or_self(id)
+    raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') unless admin_or_self(id)
 
     com_id = context[:current_user].community_id
     messages =
@@ -59,6 +63,7 @@ module Types::Queries::Message
     messages
   end
   # rubocop:enable Metrics/AbcSize
+  # rubocop:enable Metrics/MethodLength
 
   def check_filter(params)
     category, flt = params.split('/')
@@ -69,7 +74,7 @@ module Types::Queries::Message
   end
 
   def msg_notification_count
-    raise GraphQL::ExecutionError, 'Unauthorized' if context[:current_user].blank?
+    raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') if context[:current_user].blank?
 
     context[:current_user].notifications.where(notifable_type: 'Message', seen_at: nil).count
   end

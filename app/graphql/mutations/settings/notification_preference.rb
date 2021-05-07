@@ -10,7 +10,9 @@ module Mutations
       def resolve(vals)
         preferences = vals[:preferences]&.split(',') || []
         default_preference = ::User::DEFAULT_PREFERENCE
-        raise GraphQL::ExecutionError, 'Invalid Value' if (preferences - default_preference).any?
+        if (preferences - default_preference).any?
+          raise GraphQL::ExecutionError, I18n.t('errors.invalid_value')
+        end
 
         unselected_values = context[:current_user].labels
                                                   .where(short_desc: default_preference)
@@ -27,7 +29,7 @@ module Mutations
           next if preference_exists?(label) ||
                   context[:current_user].user_labels.create!(label_id: label.id)
 
-          raise GraphQL::ExecutionError, 'Preference Update Failed'
+          raise GraphQL::ExecutionError, I18n.t('errors.notification.preference_update_failed')
         end
         { success: true }
       end
@@ -51,7 +53,7 @@ module Mutations
       def authorized?(_vals)
         return true if context[:current_user].present?
 
-        raise GraphQL::ExecutionError, 'Unauthorized'
+        raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
       end
     end
   end

@@ -12,8 +12,7 @@ module Mutations
       # rubocop:disable Metrics/AbcSize
       def resolve(vals)
         form = context[:site_community].forms.find(vals[:form_id])
-
-        raise GraphQL::ExecutionError, 'Form not found' if form.nil?
+        raise_form_not_found_error(form)
 
         check_form_user(vals[:form_id])
         form_property = form.form_properties.find(vals[:form_property_id])
@@ -30,14 +29,29 @@ module Mutations
 
       def check_form_user(form_id)
         form = ::FormUser.find_by(form_id: form_id)
-        raise GraphQL::ExecutionError, 'You can not delete from a submitted form' if form.present?
+        return if form.blank?
+
+        raise GraphQL::ExecutionError,
+              I18n.t('errors.form_user.submitted_form_can_not_be_deleted')
       end
 
+      # Verifies if current user is admin or not.
       def authorized?(_vals)
-        current_user = context[:current_user]
-        raise GraphQL::ExecutionError, 'Unauthorized' unless current_user&.admin?
+        return true if context[:current_user]&.admin?
 
-        true
+        raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
+      end
+
+      private
+
+      # Raises GraphQL execution error if form does not exists.
+      #
+      # @return [GraphQL::ExecutionError]
+      def raise_form_not_found_error(form)
+        return if form
+
+        raise GraphQL::ExecutionError,
+              I18n.t('errors.form.not_found')
       end
     end
   end

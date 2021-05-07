@@ -42,7 +42,9 @@ module Types::Queries::LandParcel
   end
 
   def fetch_land_parcel(query: nil, offset: 0, limit: 100)
-    raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user]&.admin?
+    unless context[:current_user]&.admin?
+      raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
+    end
 
     context[:site_community].land_parcels
                             .search(query)
@@ -53,20 +55,22 @@ module Types::Queries::LandParcel
   end
 
   def user_land_parcel(user_id:)
-    raise GraphQL::ExecutionError, 'Unauthorized' if context[:current_user].blank?
+    raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') if context[:current_user].blank?
 
     context[:site_community].users.find_by(id: user_id)&.land_parcels
   end
 
   def user_land_parcel_with_plan(user_id:)
-    raise GraphQL::ExecutionError, 'Unauthorized' if context[:current_user].blank?
+    raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') if context[:current_user].blank?
 
     context[:site_community].users.find_by(id: user_id)&.land_parcels
                                                        &.joins(:payment_plan)
   end
 
   def land_parcel(id:)
-    raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user].admin?
+    unless context[:current_user].admin?
+      raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
+    end
 
     parcel = context[:site_community].land_parcels
                                      .eager_load(:valuations, :accounts)
@@ -78,7 +82,7 @@ module Types::Queries::LandParcel
   end
 
   def land_parcel_geo_data
-    raise GraphQL::ExecutionError, 'Unauthorized' if context[:current_user].blank?
+    raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') if context[:current_user].blank?
 
     context[:site_community].land_parcels.where.not(geom: nil)
                             .eager_load(:valuations, :accounts)
@@ -87,12 +91,14 @@ module Types::Queries::LandParcel
   end
 
   def land_parcel_payment_plan(land_parcel_id:)
-    raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user].admin?
+    unless context[:current_user].admin?
+      raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
+    end
 
     parcel = context[:site_community].land_parcels.find_by(id: land_parcel_id)
-    raise GraphQL::ExecutionError, 'LandParcel not found' if parcel.nil?
+    return parcel.payment_plan if parcel.present?
 
-    parcel.payment_plan
+    raise GraphQL::ExecutionError, I18n.t('errors.land_parcel.not_found')
   end
 
   def geo_data(parcel)

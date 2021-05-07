@@ -13,16 +13,29 @@ module Mutations
 
       def resolve(vals)
         label = context[:site_community].labels.find_by(id: vals[:id])
-        raise GraphQL::ExecutionError, 'Label not found' if label.nil?
+        raise_label_not_found_error(label)
+
         return { label: label } if label.update(vals)
 
         raise GraphQL::ExecutionError, label.errors.full_messages
       end
 
+      # Verifies if current user is admin or not.
       def authorized?(_vals)
-        raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user].admin?
+        return true if context[:current_user]&.admin?
 
-        true
+        raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
+      end
+
+      private
+
+      # Raises GraphQL execution error if label does not exist.
+      #
+      # @return [GraphQL::ExecutionError]
+      def raise_label_not_found_error(label)
+        return if label
+
+        raise GraphQL::ExecutionError, I18n.t('errors.label.not_found')
       end
     end
   end

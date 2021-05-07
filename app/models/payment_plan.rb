@@ -72,6 +72,6 @@ class PaymentPlan < ApplicationRecord
     is_overlapping = plans.any? { |plan| duration.overlaps?(plan.duration) }
     return unless is_overlapping
 
-    errors.add(:start_date, 'Payment plan duration overlaps with other payment plans')
+    errors.add(:start_date, :plan_overlaps_with_other_plan)
   end
 end

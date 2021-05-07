@@ -35,34 +35,36 @@ module Types::Queries::Form
   end
 
   def forms
-    raise GraphQL::ExecutionError, 'Unauthorized' if context[:current_user].blank?
+    raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') if context[:current_user].blank?
 
     context[:site_community].forms.by_user_type(context[:current_user]).order(created_at: :desc)
   end
 
   def form(id:)
-    raise GraphQL::ExecutionError, 'Unauthorized' if context[:current_user].blank?
+    raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') if context[:current_user].blank?
 
     context[:site_community].forms.find(id)
   end
 
   def form_properties(form_id:)
-    raise GraphQL::ExecutionError, 'Unauthorized' if context[:current_user].blank?
+    raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') if context[:current_user].blank?
 
     context[:site_community].forms.find(form_id).form_properties
   end
 
   def form_user(form_id:, user_id:)
-    raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user]&.admin? ||
-                                                         context[:current_user]&.id.eql?(user_id)
+    unless context[:current_user]&.admin? || context[:current_user]&.id.eql?(user_id)
+      raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
+    end
 
     FormUser.find_by(form_id: form_id, user_id: user_id)
   end
 
   # rubocop:disable Metrics/AbcSize
   def form_user_properties(form_id:, user_id:)
-    raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user]&.admin? ||
-                                                         context[:current_user]&.id.eql?(user_id)
+    unless context[:current_user]&.admin? || context[:current_user]&.id.eql?(user_id)
+      raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
+    end
 
     context[:site_community].forms.find(form_id).form_users.find_by(user_id: user_id)
                             .user_form_properties.eager_load(:form_property).with_attached_image

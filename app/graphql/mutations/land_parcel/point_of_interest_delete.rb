@@ -10,15 +10,28 @@ module Mutations
 
       def resolve(id:)
         poi_to_delete = context[:site_community].land_parcels.find_by(id: id)
-        raise GraphQL::ExecutionError, 'Poi Record not found' if poi_to_delete.nil?
+        raise_land_parcel_not_found_error(poi_to_delete)
 
         return { success: true } if poi_to_delete.update(deleted_status: 1)
       end
 
+      # Verifies if current user is admin or not.
       def authorized?(_vals)
-        raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user].admin?
+        return true if context[:current_user]&.admin?
 
-        true
+        raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
+      end
+
+      private
+
+      # Raises GraphQL execution error if land parcel does not exist.
+      #
+      # @return [GraphQL::ExecutionError]
+      def raise_land_parcel_not_found_error(poi_to_delete)
+        return if poi_to_delete
+
+        raise GraphQL::ExecutionError,
+              I18n.t('errors.land_parcel.poi_record_not_found')
       end
     end
   end

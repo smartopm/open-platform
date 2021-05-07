@@ -15,7 +15,7 @@ module Mutations
 
       def resolve(user_id:, note: nil, timestamp: nil, digital: nil, subject: 'user_entry')
         user = ::User.find(user_id)
-        raise GraphQL::ExecutionError, 'User not found' unless user
+        raise_user_not_found_error(user)
 
         event_log = instantiate_event_log(user, note, timestamp, digital, subject)
 
@@ -37,17 +37,26 @@ module Mutations
         return if number.nil?
 
         # disabled rubocop to keep the structure of the message
-        # rubocop:disable Layout/LineLength
-        Sms.send(number, "Thank you for using our app, kindly use this link to give us feedback #{feedback_link}")
-        # rubocop:enable Layout/LineLength
+        Sms.send(number, I18n.t('general.thanks_for_using_our_app', feedback_link: feedback_link))
       end
 
       # TODO: Better auth here
+      # Verifies if current user is present or not.
       def authorized?(_vals)
-        current_user = context[:current_user]
-        raise GraphQL::ExecutionError, 'Unauthorized' unless current_user
+        return true if context[:current_user]
 
-        true
+        raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
+      end
+
+      private
+
+      # Raises GraphQL execution error if user does not exists.
+      #
+      # @return [GraphQL::ExecutionError]
+      def raise_user_not_found_error(user)
+        return if user
+
+        raise GraphQL::ExecutionError, I18n.t('errors.user.not_found')
       end
     end
   end

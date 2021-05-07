@@ -63,7 +63,9 @@ module Types::Queries::Wallet
   end
 
   def transactions(offset: 0, limit: 100, query: nil)
-    raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user]&.admin?
+    unless context[:current_user]&.admin?
+      raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
+    end
 
     context[:site_community].wallet_transactions.where(destination: 'wallet').search(query)
                             .eager_load(:user)
@@ -101,7 +103,7 @@ module Types::Queries::Wallet
   # rubocop:enable Metrics/MethodLength
 
   def transaction_receipt(transaction_id:)
-    raise GraphQL::ExecutionError, 'Unauthorized' if context[:current_user].blank?
+    raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') if context[:current_user].blank?
 
     # rubocop:disable Lint/SafeNavigationChain
     context[:site_community].wallet_transactions.find(transaction_id)&.payment_invoice.payment
@@ -111,7 +113,9 @@ module Types::Queries::Wallet
   # rubocop:disable Metrics/AbcSize
   # rubocop:disable Metrics/MethodLength:
   def payment_summary
-    raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user]&.admin?
+    unless context[:current_user]&.admin?
+      raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
+    end
 
     payments = context[:site_community].wallet_transactions.not_cancelled
                                        .where.not(source: 'invoice')
@@ -137,13 +141,14 @@ module Types::Queries::Wallet
 
   # It would be good to put this elsewhere to use it in other queries
   def verified_user(user_id)
-    raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user]&.id == user_id ||
-                                                         context[:current_user]&.admin?
+    unless context[:current_user]&.id == user_id || context[:current_user]&.admin?
+      raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
+    end
 
-    user = User.allowed_users(context[:current_user]).find(user_id)
-    raise GraphQL::ExecutionError, 'User not found' if user.blank?
+    user = User.allowed_users(context[:current_user]).find_by(id: user_id)
+    return user if user.present?
 
-    user
+    raise GraphQL::ExecutionError, I18n.t('errors.user.not_found')
   end
 end
 # rubocop:enable Metrics/ModuleLength

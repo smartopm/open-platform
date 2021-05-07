@@ -33,7 +33,7 @@ module Mutations
       def authorized?(_vals)
         return true if context[:current_user]&.admin?
 
-        raise GraphQL::ExecutionError, 'Unauthorized'
+        raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
       end
 
       private
@@ -44,7 +44,8 @@ module Mutations
       def raise_invoice_can_not_cancelled
         return unless context[:invoice].nil? || context[:invoice].cancelled?
 
-        raise GraphQL::ExecutionError, 'Invoice can not be cancelled'
+        raise GraphQL::ExecutionError,
+              I18n.t('errors.invoice.can_not_be_cancelled')
       end
 
       # Refunds invoice amount to plot balance.

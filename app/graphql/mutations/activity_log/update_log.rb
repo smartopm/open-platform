@@ -10,7 +10,7 @@ module Mutations
 
       def resolve(ref_id:)
         event_log = ::EventLog.find_by(ref_id: ref_id)
-        raise GraphQL::ExecutionError, 'Event Log not found' unless event_log
+        raise_event_log_not_found_error(event_log)
 
         event_log.data['enrolled'] = true
         event_log.save
@@ -19,11 +19,22 @@ module Mutations
         raise GraphQL::ExecutionError, event_log.errors.full_messages
       end
 
+      # Verifies if current user is admin or not.
       def authorized?(_vals)
-        current_user = context[:current_user]
-        raise GraphQL::ExecutionError, 'Unauthorized' unless current_user&.admin?
+        return true if context[:current_user]&.admin?
 
-        true
+        raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
+      end
+
+      private
+
+      # Raises GraphQL execution error if event log does not exists.
+      #
+      # @return [GraphQL::ExecutionError]
+      def raise_event_log_not_found_error(event_log)
+        return if event_log
+
+        raise GraphQL::ExecutionError, I18n.t('errors.event_log.not_found')
       end
     end
   end

@@ -37,14 +37,14 @@ module Mutations
       def raise_plan_required_error
         return if context[:payment_plan].present?
 
-        raise GraphQL::ExecutionError, 'Payment Plan does not exist for selected property'
+        raise GraphQL::ExecutionError, I18n.t('errors.invoice.plan_required')
       end
 
       # Verifies if current user is admin or not.
       def authorized?(_vals)
         return true if context[:current_user]&.admin?
 
-        raise GraphQL::ExecutionError, 'Unauthorized'
+        raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
       end
     end
   end

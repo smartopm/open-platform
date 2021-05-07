@@ -11,13 +11,13 @@ module Mutations
 
       def resolve(id:, duplicate_id:)
         user = context[:site_community].users.find(id)
-        raise GraphQL::ExecutionError, 'NotFound' unless user
+        raise GraphQL::ExecutionError, I18n.t('errors.not_found') unless user
 
         begin
           user.merge_user(duplicate_id)
           { success: true }
         rescue StandardError
-          raise GraphQL::ExecutionError, 'Merge Failed'
+          raise GraphQL::ExecutionError, I18n.t('errors.user.merge_failed')
         end
       end
 
@@ -25,7 +25,9 @@ module Mutations
         user_record = context[:site_community].users.find_by(id: vals[:id])
         current_user = context[:current_user]
         comm_user = user_record&.community_id == current_user.community_id
-        raise GraphQL::ExecutionError, 'Unauthorized' unless comm_user && current_user&.admin?
+        unless comm_user && current_user&.admin?
+          raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
+        end
 
         true
       end

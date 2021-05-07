@@ -10,7 +10,7 @@ module Mutations
 
       def resolve(vals)
         entry_request = ::EntryRequest.find(vals.delete(:id))
-        raise GraphQL::ExecutionError, 'NotFound' unless entry_request
+        raise_entry_request_not_found_error(entry_request)
 
         return { entry_request: entry_request } if entry_request.acknowledge!
 
@@ -18,11 +18,22 @@ module Mutations
       end
 
       # TODO: Better auth here
+      # Verifies if current user is present or not.
       def authorized?(_vals)
-        current_user = context[:current_user]
-        raise GraphQL::ExecutionError, 'Unauthorized' unless current_user
+        return true if context[:current_user]
 
-        true
+        raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
+      end
+
+      private
+
+      # Raises GraphQL execution error if entry request does not exists.
+      #
+      # @return [GraphQL::ExecutionError]
+      def raise_entry_request_not_found_error(entry_request)
+        return if entry_request
+
+        raise GraphQL::ExecutionError, I18n.t('errors.not_found')
       end
     end
   end

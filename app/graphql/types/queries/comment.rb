@@ -51,7 +51,7 @@ module Types::Queries::Comment
   # rubocop:enable Metrics/BlockLength
 
   def post_comments(post_id:, offset: 0, limit: 100)
-    raise GraphQL::ExecutionError, 'Unauthorized' if context[:current_user].blank?
+    raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') if context[:current_user].blank?
 
     discs = community_discussions(post_id, 'post')
     return [] if discs.nil?
@@ -60,7 +60,7 @@ module Types::Queries::Comment
   end
 
   def discuss_comments(id:, offset: 0, limit: 100)
-    raise GraphQL::ExecutionError, 'Unauthorized' if context[:current_user].blank?
+    raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') if context[:current_user].blank?
 
     discs = community_discussions(id, 'discuss')
     return [] if discs.nil?
@@ -69,20 +69,20 @@ module Types::Queries::Comment
   end
 
   def discussions(offset: 0, limit: 100)
-    raise GraphQL::ExecutionError, 'Unauthorized' if context[:current_user].blank?
+    raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') if context[:current_user].blank?
 
     context[:site_community].discussions.where(post_id: nil)
                             .limit(limit).offset(offset)
   end
 
   def discussion(id:)
-    raise GraphQL::ExecutionError, 'Unauthorized' if context[:current_user].blank?
+    raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') if context[:current_user].blank?
 
     community_discussions(id, 'discuss')
   end
 
   def post_discussion(post_id:)
-    raise GraphQL::ExecutionError, 'Unauthorized' if context[:current_user].blank?
+    raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') if context[:current_user].blank?
 
     community_discussions(post_id, 'post')
   end
@@ -94,7 +94,9 @@ module Types::Queries::Comment
   end
 
   def fetch_comments(offset: 0, limit: 20)
-    raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user].admin?
+    unless context[:current_user].admin?
+      raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
+    end
 
     context[:site_community].comments.by_not_deleted.eager_load(:user, :discussion)
                             .limit(limit).offset(offset)

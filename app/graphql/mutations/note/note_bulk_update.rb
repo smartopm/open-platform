@@ -12,12 +12,13 @@ module Mutations
 
       def resolve(vals)
         task_list = vals[:ids].presence || task_ids_list(vals[:query])
-        raise GraphQL::ExecutionError, 'No Task Found, Try a different query' if task_list.blank?
+        raise GraphQL::ExecutionError, I18n.t('errors.note.task_not_found') if task_list.blank?
 
         tasks = context[:site_community].notes.where(id: task_list)
         return { success: true } if tasks.update(vals.except(:ids, :query))
 
-        raise GraphQL::ExecutionError, 'Something went wrong while updating selected tasks'
+        raise GraphQL::ExecutionError,
+              I18n.t('errors.note.unable_to_update_tasks')
       end
 
       def task_ids_list(query)
@@ -34,11 +35,11 @@ module Mutations
         tasks.pluck(:id).uniq
       end
 
+      # Verifies if current user is admin or not.
       def authorized?(_vals)
-        current_user = context[:current_user]
-        raise GraphQL::ExecutionError, 'Unauthorized' unless current_user&.admin?
+        return true if context[:current_user]&.admin?
 
-        true
+        raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
       end
     end
   end

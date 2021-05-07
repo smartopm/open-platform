@@ -11,7 +11,8 @@ module Mutations
 
       def resolve(id:, body:)
         comment = NoteComment.find(id)
-        raise GraphQL::ExecutionError, 'Comment Not Found' unless comment
+        raise_comment_not_found_error(comment)
+
         return { note_comment: comment } if comment.body.eql?(body)
 
         updates_hash = { body: [comment.body, body] }
@@ -23,10 +24,22 @@ module Mutations
         raise GraphQL::ExecutionError, comment.errors.full_messages
       end
 
+      # Verifies if current user is present or not.
       def authorized?(_vals)
         return true if context[:current_user].present?
 
-        raise GraphQL::ExecutionError, 'Unauthorized'
+        raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
+      end
+
+      private
+
+      # Raises GraphQL execution error if comment does not exist.
+      #
+      # @return [GraphQL::ExecutionError]
+      def raise_comment_not_found_error(comment)
+        return if comment
+
+        raise GraphQL::ExecutionError, I18n.t('errors.comment.not_found')
       end
     end
   end

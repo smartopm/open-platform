@@ -15,7 +15,7 @@ module Mutations
       # TODO: Move campaign create process to a background job
       def resolve(query:, limit:, user_list:)
         campaign = campaign_object
-        campaign.name = I18n.t('campaign.default_name')
+        campaign.name = I18n.t('campaign.default.name')
         campaign.user_id_list = user_list.presence || list_of_user_ids(query, limit).join(',')
         raise GraphQL::ExecutionError, campaign.errors.full_message unless campaign.save!
 
@@ -26,7 +26,7 @@ module Mutations
         campaign = context[:current_user].community.campaigns.new
         campaign.campaign_type = 'sms'
         campaign.status = 'draft'
-        campaign.message = I18n.t('campaign.default_message')
+        campaign.message = I18n.t('campaign.default.message')
         campaign.batch_time = 10.years.from_now
         campaign
       end
@@ -45,11 +45,11 @@ module Mutations
         users.order(name: :asc).limit(limit).pluck(:id).uniq
       end
 
+      # Verifies if current user is admin or not.
       def authorized?(_vals)
-        current_user = context[:current_user]
-        raise GraphQL::ExecutionError, 'Unauthorized' unless current_user&.admin?
+        return true if context[:current_user]&.admin?
 
-        true
+        raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
       end
     end
   end

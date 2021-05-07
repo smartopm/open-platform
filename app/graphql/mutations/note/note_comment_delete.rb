@@ -10,7 +10,7 @@ module Mutations
 
       def resolve(id:)
         comment = NoteComment.find(id)
-        raise GraphQL::ExecutionError, 'Comment Not Found' unless comment
+        raise_comment_not_found_error(comment)
 
         updates_hash = { status: [comment.status, 'deleted'] }
         if comment.update(status: 'deleted')
@@ -21,11 +21,22 @@ module Mutations
         raise GraphQL::ExecutionError, comment.errors.full_messages
       end
 
+      # Verifies if current user is admin or not.
       def authorized?(_vals)
-        current_user = context[:current_user]
-        raise GraphQL::ExecutionError, 'Unauthorized' unless current_user&.admin?
+        return true if context[:current_user]&.admin?
 
-        true
+        raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
+      end
+
+      private
+
+      # Raises GraphQL execution error if comment does not exist.
+      #
+      # @return [GraphQL::ExecutionError]
+      def raise_comment_not_found_error(comment)
+        return if comment
+
+        raise GraphQL::ExecutionError, I18n.t('errors.comment.not_found')
       end
     end
   end

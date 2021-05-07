@@ -16,7 +16,6 @@ module Mutations
 
       def resolve(vals)
         transaction = context[:site_community].wallet_transactions.find_by(id: vals[:id])
-        raise GraphQL::ExecutionError, 'Payment not found' if transaction.nil?
 
         if transaction.update(vals)
           context[:current_user].generate_events('payment_update', transaction)
@@ -28,7 +27,13 @@ module Mutations
       def authorized?(_vals)
         return true if context[:current_user]&.admin?
 
-        raise GraphQL::ExecutionError, 'Unauthorized'
+        raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
+      end
+
+      def raise_transaction_not_found_error(transaction)
+        return if transaction
+
+        raise GraphQL::ExecutionError, I18n.t('errors.wallet_transaction.payment_not_found')
       end
     end
   end

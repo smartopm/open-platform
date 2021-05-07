@@ -33,7 +33,7 @@ module Types
     end
 
     def entry_search(name:)
-      raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user]
+      raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') unless context[:current_user]
 
       context[:site_community].entry_requests.where('name ILIKE ?', "%#{name}%").limit(20)
     end
@@ -46,7 +46,7 @@ module Types
     end
 
     def users_feedback(offset: 0, limit: 50)
-      raise GraphQL::ExecutionError, 'Unauthorized' unless current_user&.admin?
+      raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') unless current_user&.admin?
 
       Feedback.all.order(created_at: :desc)
               .limit(limit).offset(offset)
@@ -59,7 +59,7 @@ module Types
     end
 
     def campaigns(offset: 0, limit: 50)
-      raise GraphQL::ExecutionError, 'Unauthorized' unless current_user&.admin?
+      raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') unless current_user&.admin?
 
       context[:site_community].campaigns.existing.offset(offset).limit(limit)
     end
@@ -70,7 +70,7 @@ module Types
     end
 
     def campaign(id:)
-      raise GraphQL::ExecutionError, 'Unauthorized' unless current_user&.admin?
+      raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') unless current_user&.admin?
 
       context[:site_community].campaigns.find_by(id: id)
     end
@@ -84,7 +84,7 @@ module Types
       argument :disucssion_id, String, required: true
     end
     def discussion_user(disucssion_id:)
-      raise GraphQL::ExecutionError, 'Unauthorized' if context[:current_user].blank?
+      raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') if context[:current_user].blank?
 
       DiscussionUser.find_by(user_id: context[:current_user].id, discussion_id: disucssion_id)
     end

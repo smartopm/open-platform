@@ -13,19 +13,31 @@ module Mutations
       field :email_template, Types::EmailTemplateType, null: true
 
       def resolve(vals)
-        email = context[:site_community].email_templates.find(vals[:id])
-        raise GraphQL::ExecutionError, 'Template not found' if email.nil?
+        template = context[:site_community].email_templates.find(vals[:id])
+        raise_template_not_found_error(template)
 
-        return { email_template: email } if email.update(vals)
+        return { email_template: template } if template.update(vals)
 
-        raise GraphQL::ExecutionError, email.errors.full_messages
+        raise GraphQL::ExecutionError, template.errors.full_messages
       end
 
+      # Verifies if current user is admin or not.
       def authorized?(_vals)
-        current_user = context[:current_user]
-        raise GraphQL::ExecutionError, 'Unauthorized' unless current_user&.admin?
+        return true if context[:current_user]&.admin?
 
-        true
+        raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
+      end
+
+      private
+
+      # Raises GraphQL execution error if template does not exists.
+      #
+      # @return [GraphQL::ExecutionError]
+      def raise_template_not_found_error(template)
+        return if template
+
+        raise GraphQL::ExecutionError,
+              I18n.t('errors.email_template.not_found')
       end
     end
   end

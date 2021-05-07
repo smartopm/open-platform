@@ -56,7 +56,7 @@ module Mutations
       def authorized?(_vals)
         return true if context[:current_user]&.admin?
 
-        raise GraphQL::ExecutionError, 'Unauthorized'
+        raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
       end
 
       private
@@ -67,7 +67,7 @@ module Mutations
       def raise_plan_required_error
         return if context[:payment_plan].present?
 
-        raise GraphQL::ExecutionError, 'Payment Plan does not exist for selected property'
+        raise GraphQL::ExecutionError, I18n.t('errors.payment_plan.does_not_exist_for_property')
       end
 
       # Raises GraphQL execution error if transaction is not saved.
@@ -114,8 +114,7 @@ module Mutations
       def raise_funds_not_sufficient_error(args)
         return if context[:wallet].unallocated_funds >= args[:amount]
 
-        raise GraphQL::ExecutionError,
-              'Unallocated funds are not sufficient for the payment'
+        raise GraphQL::ExecutionError, I18n.t('errors.wallet.funds_not_sufficient')
       end
 
       # Updates wallet and WalletTransaction balance,

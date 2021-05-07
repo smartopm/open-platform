@@ -16,7 +16,7 @@ module Mutations
         assigned_note = user.assignee_notes.find_by(note: note_id)
 
         # Reason: Admin is not an assignee
-        raise GraphQL::ExecutionError, 'Unauthorized' unless assigned_note
+        raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') unless assigned_note
 
         time = hour.send(:hour)
 
@@ -38,10 +38,11 @@ module Mutations
       # rubocop:enable Metrics/AbcSize
       # rubocop:enable Metrics/MethodLength
 
+      # Verifies if current user is admin or not.
       def authorized?(_vals)
         return true if context[:current_user]&.admin?
 
-        raise GraphQL::ExecutionError, 'Unauthorized'
+        raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
       end
     end
   end

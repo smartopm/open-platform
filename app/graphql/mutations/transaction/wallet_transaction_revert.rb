@@ -21,7 +21,7 @@ module Mutations
       def authorized?(_vals)
         return true if context[:current_user]&.admin?
 
-        raise GraphQL::ExecutionError, 'Unauthorized'
+        raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
       end
 
       private
@@ -30,7 +30,7 @@ module Mutations
       def raise_error_transaction_can_not_be_reverted(transaction)
         return if transaction.present? && transaction.payment_plan.present?
 
-        raise GraphQL::ExecutionError, 'Transaction Can not be reverted'
+        raise GraphQL::ExecutionError, I18n.t('errors.wallet_transaction.can_not_revert')
       end
     end
   end

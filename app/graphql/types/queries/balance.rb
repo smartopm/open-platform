@@ -20,12 +20,17 @@ module Types::Queries::Balance
   #
   # @return [Wallet]
   def user_balance(user_id:)
-    raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user]&.admin? ||
-                                                         user_id.eql?(context[:current_user]&.id)
+    raise_unauthorized_error(user_id)
 
     user = context[:site_community].users.find(user_id)
-    raise GraphQL::ExecutionError, 'User not found' if user.blank?
+    return user.wallet if user.present?
 
-    user.wallet
+    raise GraphQL::ExecutionError, I18n.t('errors.user.not_found')
+  end
+
+  def raise_unauthorized_error(user_id)
+    return if context[:current_user]&.admin? || user_id.eql?(context[:current_user]&.id)
+
+    raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
   end
 end

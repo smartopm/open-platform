@@ -27,7 +27,7 @@ module Types::Queries::EventLog
 
   def all_event_logs(subject:, ref_id:, ref_type:, offset: 0, limit: 100, name: nil)
     authorized = context[:current_user]&.role?(%i[security_guard admin custodian])
-    raise GraphQL::ExecutionError, 'Unauthorized' unless authorized
+    raise GraphQL::ExecutionError, I18n.t('errors.errors.unauthorized') unless authorized
 
     query_all_logs(name, subject, ref_id, ref_type, limit, offset)
   end
@@ -43,10 +43,12 @@ module Types::Queries::EventLog
   def all_event_logs_for_user(subject:, user_id:, offset: 0, limit: 100)
     current_user = context[:current_user]
     authorized = current_user&.role?(%i[security_guard admin custodian])
-    raise GraphQL::ExecutionError, 'Unauthorized' unless authorized
+    raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') unless authorized
 
     user = context[:site_community].users.find(user_id)
-    raise GraphQL::ExecutionError, 'Unauthorized' if current_user.community_id != user.community_id
+    if current_user.community_id != user.community_id
+      raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
+    end
 
     query_user_logs(user, subject, limit, offset)
   end

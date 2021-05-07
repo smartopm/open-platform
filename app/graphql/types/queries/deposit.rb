@@ -19,7 +19,9 @@ module Types::Queries::Deposit
   end
 
   def deposit(deposit_id:)
-    raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user]&.admin?
+    unless context[:current_user]&.admin?
+      raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
+    end
 
     context[:site_community].wallet_transactions.find(deposit_id)
   end
@@ -27,11 +29,12 @@ module Types::Queries::Deposit
   # rubocop:disable Metrics/AbcSize
   # rubocop:disable Metrics/MethodLength
   def user_deposits(user_id:, offset: 0, limit: 10)
-    raise GraphQL::ExecutionError, 'Unauthorized' unless context[:current_user]&.admin? ||
-                                                         user_id.eql?(context[:current_user]&.id)
+    unless context[:current_user]&.admin? || user_id.eql?(context[:current_user]&.id)
+      raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
+    end
 
     user = User.allowed_users(context[:current_user]).find(user_id)
-    raise GraphQL::ExecutionError, 'User not found' if user.blank?
+    raise GraphQL::ExecutionError, I18n.t('errors.user.not_found') if user.blank?
 
     pending_invoices = add_balance_and_parcel_number(user.invoices.not_cancelled
                                                     .where('pending_amount > ?', 0))
