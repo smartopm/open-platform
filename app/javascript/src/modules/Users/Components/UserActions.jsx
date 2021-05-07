@@ -6,6 +6,7 @@ import Avatar from '@material-ui/core/Avatar';
 import { useHistory } from 'react-router';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
+import PropTypes from 'prop-types';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import Divider from '@material-ui/core/Divider';
 import SettingsIcon from '@material-ui/icons/Settings';
@@ -106,3 +107,10 @@ const useStyles = makeStyles(() => ({
     color: '#141414'
   }
 }));
+
+UserOptions.propTypes = {
+  icon: PropTypes.node.isRequired,
+  primaryText: PropTypes.string.isRequired,
+  secondaryText: PropTypes.string.isRequired,
+  handleClick: PropTypes.func.isRequired
+};

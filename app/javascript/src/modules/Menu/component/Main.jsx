@@ -15,6 +15,7 @@ import CommunityName from '../../../shared/CommunityName';
 import CenteredContent from '../../../components/CenteredContent';
 import userProps from '../../../shared/types/user';
 import UserAvatar from '../../Users/Components/UserAvatar'
+import UserActionOptions from '../../Users/Components/UserActionOptions'
 
 const drawerWidth = 260;
 
@@ -80,10 +81,9 @@ export function MainNav({ authState }) {
           >
             <MenuIcon />
           </IconButton>
-          <div style={{display: 'flex'}}>
-            <NotificationBell user={authState.user} />
-            <UserAvatar imageUrl={authState.user.imageUrl} />
-          </div>
+          <UserAvatar imageUrl={authState.user.imageUrl} />
+          <UserActionOptions />
+          <NotificationBell user={authState.user} />
           <CenteredContent>
             <CommunityName authState={authState} />
           </CenteredContent>
