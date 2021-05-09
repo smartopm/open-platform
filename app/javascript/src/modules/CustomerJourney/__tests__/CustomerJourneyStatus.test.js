@@ -10,11 +10,11 @@ describe('Customer Journey Status Component', () => {
     const container = render(
       <MockedProvider>
         <BrowserRouter>
-          <CustomerJourneyStatus subStatus='plots_fully_purchased' />
+          <CustomerJourneyStatus subStatus='plots_fully_purchased' communityName="Demo" />
         </BrowserRouter>
       </MockedProvider>
     );
     
-    expect(container.queryByTestId('customer')).toHaveTextContent('Your Customer Journey')
+    expect(container.queryByTestId('customer')).toHaveTextContent('dashboard.your_customer_journey')
   });
 });

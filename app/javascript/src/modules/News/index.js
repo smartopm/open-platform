@@ -6,6 +6,6 @@ export default {
     path: '/news',
     component: News
   },
-  name: 'News',
+  name: t => t('misc.news'),
   accessibleBy: allUserTypes
 };

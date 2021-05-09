@@ -10,6 +10,7 @@ export const EmailTemplatesQuery = gql`
       createdAt
       subject
       data
+      tag
     }
   }
 `
@@ -24,6 +25,7 @@ query emailTemplate($id: ID!) {
     createdAt
     subject
     data
+    tag
   }
 }
 `

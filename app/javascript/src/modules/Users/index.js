@@ -2,8 +2,8 @@ import React from 'react';
 import PersonIcon from '@material-ui/icons/Person';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
-import Users from '../../containers/Users';
-import UserShow from '../../containers/UserShow';
+import Users from './Containers/Users';
+import UserShow from './Containers/UserShow';
 import { allUserTypes } from '../../utils/constants';
 
 // for nested links, I think these will likely be on the user
@@ -21,7 +21,7 @@ export default {
   styleProps: {
     icon: <PersonIcon />
   },
-  name: 'Users',
+  name: t => t('misc.users'),
   accessibleBy: ['admin']
 };
 
@@ -35,7 +35,7 @@ export const Profile = {
   styleProps: {
     icon: <AccountCircleIcon />
   },
-  name: 'My Profile',
+  name: t => t('menu.my_profile'),
   accessibleBy: allUserTypes
 }
 
@@ -47,6 +47,6 @@ export const Logout = {
   styleProps: {
     icon: <ExitToAppIcon />
   },
-  name: 'Logout',
+  name: t => t('menu.logout'),
   accessibleBy: allUserTypes
 }

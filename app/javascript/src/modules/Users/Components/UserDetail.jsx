@@ -16,11 +16,13 @@ import PersonIcon from '@material-ui/icons/Person';
 import PhoneIcon from '@material-ui/icons/Phone';
 import EmailIcon from '@material-ui/icons/Email';
 import { QRCode } from 'react-qr-svg'
+import { useTranslation } from 'react-i18next';
 
 export default function UserDetail({ user }) {
   const classes = useStyles();
   const history = useHistory();
   const matches = useMediaQuery('(max-width:600px)')
+  const { t } = useTranslation('dashboard')
   const [open, setOpen] = useState(false)
   return (
     <Grid container>
@@ -29,14 +31,14 @@ export default function UserDetail({ user }) {
           <div style={{display: 'flex'}}>
             <div>
               <Typography color="textPrimary" className={matches ? classes.nameMobile : classes.name} data-testid='name'>
-                Hello 
+                {t('common:misc.hello')}
                 {' '}
                 {user?.name}
                 ,
               </Typography>
               <div style={{display: 'flex'}}>
                 <Typography color="textPrimary" className={matches ? classes.moreMobile : classes.more}>
-                  More details
+                  {t('common:misc.more_details')}
                 </Typography>
                 {open ? (<KeyboardArrowDownIcon style={{verticalAlign: 'middle', paddingBottom: '3px'}} onClick={() => setOpen(!open)} />) : (
                   <KeyboardArrowRightIcon style={{verticalAlign: 'middle', paddingBottom: '3px'}} onClick={() => setOpen(!open)} data-testid='collapse' />
@@ -51,7 +53,7 @@ export default function UserDetail({ user }) {
                   <div style={matches ? {marginRight: '2px'} : {marginRight: '20px'}} className={classes.optionCollapse}>
                     <PersonIcon style={{heigth: '5.6px', width: '13.6px', verticalAlign: 'middle', display: 'flex', marginRight: '14px'}} />
                     <Typography data-testid='user-type'>
-                      {user?.userType}
+                      {t(`common:user_types.${user?.userType}`)}
                     </Typography>
                   </div>
                   {!matches && user?.phoneNumber && (
@@ -149,11 +151,11 @@ const useStyles = makeStyles(() => ({
 }));
 
 UserDetail.propTypes = {
-  user: PropTypes.shape({ 
-    name: PropTypes.string, 
+  user: PropTypes.shape({
+    name: PropTypes.string,
     userType: PropTypes.string,
     phoneNumber: PropTypes.string,
     email: PropTypes.string,
     id: PropTypes.string,
-  }).isRequired
+  }).isRequired,
 };

@@ -10,11 +10,13 @@ import { useHistory, useLocation, useParams } from 'react-router-dom';
 import { Collapse } from '@material-ui/core';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
+import { useTranslation } from 'react-i18next';
 
 const SideMenu = ({ toggleDrawer, menuItems, userType, mobileOpen, direction }) => {
   const history = useHistory();
   const { pathname } = useLocation();
   const params = useParams();
+  const { t } = useTranslation('common')
   const [currentMenu, setCurrentMenu] = useState({ isOpen: false, name: '' });
 
   /**
@@ -27,7 +29,7 @@ const SideMenu = ({ toggleDrawer, menuItems, userType, mobileOpen, direction }) 
    */
   function routeTo(event, item) {
     if (item.subMenu) {
-      setCurrentMenu({ isOpen: !currentMenu.isOpen, name: item.name });
+      setCurrentMenu({ isOpen: !currentMenu.isOpen, name: item.name(t) });
       return;
     }
     // close the menu and route  only when it is open and it is on small screens
@@ -54,7 +56,7 @@ const SideMenu = ({ toggleDrawer, menuItems, userType, mobileOpen, direction }) 
       <List>
         {menuItems.map(menuItem =>
           menuItem.accessibleBy.includes(userType) ? (
-            <Fragment key={menuItem.name}>
+            <Fragment key={typeof menuItem.name === 'function' && menuItem.name(t)}>
               <ListItem
                 button
                 onClick={event => routeTo(event, menuItem)}
@@ -65,8 +67,8 @@ const SideMenu = ({ toggleDrawer, menuItems, userType, mobileOpen, direction }) 
                     {menuItem.styleProps.icon}
                   </ListItemIcon>
                 )}
-                <ListItemText primary={menuItem.name} />
-                {currentMenu.name === menuItem.name && currentMenu.isOpen ? (
+                <ListItemText primary={menuItem.name(t)} />
+                {currentMenu.name === menuItem.name(t) && currentMenu.isOpen ? (
                   <ExpandLess />
                 ) : // Avoid showing toggle icon on menus with no submenus
                 menuItem.subMenu ? (
@@ -75,7 +77,7 @@ const SideMenu = ({ toggleDrawer, menuItems, userType, mobileOpen, direction }) 
               </ListItem>
 
               <Collapse
-                in={currentMenu.name === menuItem.name && currentMenu.isOpen}
+                in={currentMenu.name === menuItem.name(t) && currentMenu.isOpen}
                 timeout="auto"
                 unmountOnExit
               >
@@ -85,24 +87,24 @@ const SideMenu = ({ toggleDrawer, menuItems, userType, mobileOpen, direction }) 
                       item.accessibleBy.includes(userType) ? (
                         <ListItem
                           button
-                          key={item.name}
+                          key={item.name(t)}
                           onClick={event => routeTo(event, item)}
                           selected={pathname === item.routeProps.path}
                         >
                           <ListItemText
-                            primary={item.name}
+                            primary={item.name(t)}
                             style={{ marginLeft: `${menuItem.styleProps?.icon ? '55px' : '17px'}` }}
                           />
                         </ListItem>
                       ) : (
-                        <span key={item.name} />
+                        <span key={item.name(t)} />
                       )
                     )}
                 </List>
               </Collapse>
             </Fragment>
           ) : (
-            <span key={menuItem.name} />
+            <span key={menuItem.name(t)} />
           )
         )}
       </List>
@@ -111,7 +113,7 @@ const SideMenu = ({ toggleDrawer, menuItems, userType, mobileOpen, direction }) 
 };
 
 const menuItemProps = PropTypes.shape({
-  name: PropTypes.string.isRequired,
+  name: PropTypes.func.isRequired,
   routeProps: PropTypes.shape({
     path: PropTypes.string.isRequired
   }).isRequired,
@@ -121,7 +123,7 @@ const menuItemProps = PropTypes.shape({
   accessibleBy: PropTypes.arrayOf(PropTypes.string).isRequired,
   subMenu: PropTypes.arrayOf(
     PropTypes.shape({
-      name: PropTypes.string.isRequired,
+      name: PropTypes.func.isRequired,
       routeProps: PropTypes.shape({
         path: PropTypes.string.isRequired
       })

@@ -11,7 +11,7 @@ describe('Payment Summary card Component', () => {
     const container = render(
       <MockedProvider>
         <BrowserRouter>
-          <PaymentSummaryCard value='value' title='title' handleClick={jest.fn} currencyData={currency} />
+          <PaymentSummaryCard value='value' title='title' handleClick={jest.fn} currencyData={currency} query="somequery" />
         </BrowserRouter>
       </MockedProvider>
     );

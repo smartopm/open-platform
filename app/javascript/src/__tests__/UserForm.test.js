@@ -3,7 +3,7 @@ import { act, fireEvent, render } from '@testing-library/react'
 import '@testing-library/jest-dom/extend-expect'
 import { MockedProvider } from '@apollo/react-testing'
 import { BrowserRouter } from 'react-router-dom'
-import UserForm, { formatContactType } from '../components/UserForm'
+import UserForm, { formatContactType } from '../modules/Users/Components/UserForm'
 import { AuthStateProvider } from '../containers/Provider/AuthStateProvider'
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn())
@@ -17,18 +17,18 @@ describe('UserForm Component', () => {
         </BrowserRouter>
       </MockedProvider>
     )
-    expect(container.queryByLabelText('Take a photo')).toBeInTheDocument()
-    expect(container.queryByText('Name')).toBeInTheDocument()
-    expect(container.queryByText('Primary Phone Number')).toBeInTheDocument()
-    expect(container.queryByText('Primary email address')).toBeInTheDocument()
-    expect(container.queryByText('External Reference ID')).toBeInTheDocument()
-    expect(container.queryByText('Primary Address')).toBeInTheDocument()
-    expect(container.queryByLabelText('User Type')).toBeInTheDocument()
-    expect(container.queryByLabelText('requestReason')).toBeInTheDocument()
-    expect(container.queryByLabelText('state')).toBeInTheDocument()
-    expect(container.queryByLabelText('subStatus')).toBeInTheDocument()
+    expect(container.queryByLabelText('common:misc.take_photo')).toBeInTheDocument()
+    expect(container.queryByText('common:form_fields.full_name')).toBeInTheDocument()
+    expect(container.queryByText('common:form_fields.primary_number')).toBeInTheDocument()
+    expect(container.queryByText('common:form_fields.primary_email')).toBeInTheDocument()
+    expect(container.queryByText('common:form_fields.external_reference')).toBeInTheDocument()
+    expect(container.queryByText('common:form_fields.primary_address')).toBeInTheDocument()
+    expect(container.queryByText('common:form_fields.user_type')).toBeInTheDocument()
+    expect(container.queryByLabelText('common:form_fields.reason')).toBeInTheDocument()
+    expect(container.queryByLabelText('common:form_fields.state')).toBeInTheDocument()
+    expect(container.queryByLabelText('common:misc.customer_journey_stage')).toBeInTheDocument()
     expect(container.queryByTestId('submit_btn')).not.toBeDisabled()
-    expect(container.queryByTestId('submit_btn')).toHaveTextContent('Submit')
+    expect(container.queryByTestId('submit_btn')).toHaveTextContent('common:form_actions.submit')
 
     // when we hit submit button, it should get disabled
     fireEvent.click(container.queryByTestId('submit_btn'))
@@ -74,14 +74,14 @@ describe('UserForm Component', () => {
         </AuthStateProvider>
       </MockedProvider>
     )
-    expect(container.queryByLabelText('Take a photo')).toBeNull()
-    expect(container.queryByText('Client Name')).toBeInTheDocument()
+    expect(container.queryByLabelText('common:misc.take_photo')).toBeNull()
+    expect(container.queryByTestId('client_name')).toBeInTheDocument()
     expect(container.queryByTestId('clientName')).toBeInTheDocument()
     expect(container.queryByTestId('clientName')).toBeDisabled()
-    expect(container.queryByText('Name')).toBeInTheDocument()
-    expect(container.queryByText('Primary Phone Number')).toBeInTheDocument()
-    expect(container.queryByTestId('phoneNumber')).not.toBeDisabled()
-    expect(container.queryByTestId('email')).not.toBeDisabled()
+    expect(container.queryByTestId('full_name').textContent).toContain('common:form_fields.full_name')
+    expect(container.queryByTestId('primary_number').textContent).toContain('common:form_fields.primary_number')
+    expect(container.queryByTestId('phoneNumber')).not.toBeNull()
+    expect(container.queryByTestId('email')).not.toBeNull()
 
     await act(async () => {
       fireEvent.change(container.queryByTestId('username'), {
@@ -99,9 +99,9 @@ describe('UserForm Component', () => {
     expect(container.queryByTestId('phoneNumber').value).toContain(
     '090909090909'
     )
-    expect(container.queryByTestId('referralText')).toHaveTextContent('Nkwashi values its community and believes')
+    expect(container.queryByTestId('referralText')).toHaveTextContent('common:misc.referral_text')
     expect(container.queryByTestId('referralBtn')).not.toBeDisabled()
-    expect(container.queryByTestId('referralBtn')).toHaveTextContent('Refer')
+    expect(container.queryByTestId('referralBtn')).toHaveTextContent('common:misc.refer')
     expect(formatContactType('0233082', 'phone')).toMatchObject({ contactType: 'phone', info: '0233082' })
   })
 })

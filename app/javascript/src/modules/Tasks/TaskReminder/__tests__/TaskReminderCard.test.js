@@ -26,11 +26,13 @@ describe('Task Reminder Component', () => {
   }]
 
   it('should render the TaskReminderCard', async () => {
+    const translate = jest.fn()
     const container = render(
       <MockedProvider mocks={mock} addTypename={false}>
         <BrowserRouter>
           <TaskReminderCard
             id='t8y2euj2uihr23r'
+            translate={translate}
           />
         </BrowserRouter>
       </MockedProvider>

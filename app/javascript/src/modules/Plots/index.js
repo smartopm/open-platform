@@ -10,7 +10,7 @@ export default {
   styleProps: {
     icon: <MapIcon />
   },
-  name: 'Plots',
+  name: t => t('menu.plot', { count: 0 }),
   accessibleBy: [
     'client',
     'resident',

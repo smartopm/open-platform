@@ -3,7 +3,7 @@ import { useQuery } from 'react-apollo';
 import Loading from '../../shared/Loading';
 import { AllEventLogsForUserQuery } from '../../graphql/queries';
 import ErrorPage from '../../components/Error';
-import UserLog from '../../components/UserLog';
+import UserLog from '../../modules/Users/Components/UserLog'
 
 export default ({ history, match }) => {
   const subjects = null;

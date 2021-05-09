@@ -16,13 +16,13 @@
 import React from 'react';
 import { allUserTypes } from '../../utils/constants';
 
-const paymentSubMenus = [
+const paymentMenu = [
   {
     routeProps: {
       path: '/user/:id?tab=Payments&payment_sub_tab=Invoices',
       component: <span />
     },
-    name: 'Invoices',
+    name: t => t('menu.invoice', { count: 0 }),
     accessibleBy: ['admin']
   },
   {
@@ -31,7 +31,7 @@ const paymentSubMenus = [
       exact: true,
       component: <span />
     },
-    name: 'Transactions',
+    name: t => t('menu.transaction', { count: 0 }),
     accessibleBy: ['admin']
   },
   {
@@ -39,75 +39,75 @@ const paymentSubMenus = [
       path: '/user/:id?tab=Payments&payment_sub_tab=Plans',
       component: <span />
     },
-    name: 'Plans',
+    name: t => t('menu.plan', { count: 0 }),
     accessibleBy: ['admin']
   }
 ];
 
-const UserMenus = [
-    {
-      routeProps: {
-        path: '/user/:id?tab=Communication',
-        component: <span />
-      },
-      name: 'Communication',
-      accessibleBy: ['admin']
+const userMenus = [
+  {
+    routeProps: {
+      path: '/user/:id?tab=Communication',
+      component: <span />
     },
-    {
-      routeProps: {
-        path: '/user/:id?tab=Notes',
-        component: <span />
-      },
-      name: 'Notes',
-      accessibleBy: ['admin']
+    name: t => t('menu.communication'),
+    accessibleBy: ['admin']
+  },
+  {
+    routeProps: {
+      path: '/user/:id?tab=Notes',
+      component: <span />
     },
-    {
-      routeProps: {
-        path: '/user/:id?tab=Plots',
-        component: <span />
-      },
-      name: 'Plots',
-      accessibleBy: ['admin']
+    name: t => t('menu.note', { count: 0 }),
+    accessibleBy: ['admin']
+  },
+  {
+    routeProps: {
+      path: '/user/:id?tab=Plots',
+      component: <span />
     },
-    {
-      routeProps: {
-        path: '/user/:id?tab=Forms',
-        component: <span />
-      },
-      name: 'Forms',
-      accessibleBy: ['admin']
+    name: t => t('menu.plot', { count: 0 }),
+    accessibleBy: ['admin']
+  },
+  {
+    routeProps: {
+      path: '/user/:id?tab=Forms',
+      component: <span />
     },
-    {
-      routeProps: {
-        path: '/user/:id?tab=CustomerJourney',
-        component: <span />
-      },
-      name: 'Customer Journey',
-      accessibleBy: ['admin']
+    name: t => t('menu.form', { count: 0 }),
+    accessibleBy: ['admin']
+  },
+  {
+    routeProps: {
+      path: '/user/:id?tab=CustomerJourney',
+      component: <span />
     },
-    {
-      routeProps: {
-        path: '/user/:id?tab=Payments',
-        component: <span />
-      },
-      name: 'Payments',
-      accessibleBy: ['admin'],
-      subMenu: paymentSubMenus
+    name: t => t('menu.customer_journey'),
+    accessibleBy: ['admin']
+  },
+  {
+    routeProps: {
+      path: '/user/:id?tab=Payments',
+      component: <span />
     },
-    {
-      routeProps: {
-        path: '/user/:id?tab=MergeUser',
-        component: <span />
-      },
-      name: 'Merge User',
-      accessibleBy: ['admin']
+    name: t => t('menu.payment', { count: 0 }),
+    accessibleBy: ['admin'],
+    subMenu: paymentMenu
+  },
+  {
+    routeProps: {
+      path: '/user/:id?tab=MergeUser',
+      component: <span />
     },
+    name: t => t('menu.merge_user'),
+    accessibleBy: ['admin']
+  },
   {
     routeProps: {
       path: '/user/:id/logs',
       component: <span />
     },
-    name: 'User Logs',
+    name: t => t('menu.user_logs'),
     accessibleBy: ['admin', 'security_guard']
   },
   {
@@ -115,7 +115,7 @@ const UserMenus = [
       path: '/user/:id/edit',
       component: <span />
     },
-    name: 'Edit',
+    name: t => t('menu.user_edit'),
     accessibleBy: allUserTypes
   },
   {
@@ -123,7 +123,7 @@ const UserMenus = [
       path: '/print/:id/',
       component: <span />
     },
-    name: 'Print ID',
+    name: t => t('menu.print_id'),
     accessibleBy: allUserTypes
   },
   {
@@ -131,7 +131,7 @@ const UserMenus = [
       path: '/message/:id/',
       component: <span />
     },
-    name: 'Message Support',
+    name: t => t('menu.message_support'),
     accessibleBy: allUserTypes
   },
   {
@@ -139,17 +139,17 @@ const UserMenus = [
       path: '/message/:id/',
       component: <span />
     },
-    name: 'Send SMS',
-    accessibleBy: ['admin',]
+    name: t => t('menu.send_sms'),
+    accessibleBy: ['admin']
   },
   {
     routeProps: {
       path: '/user/:id/otp',
       component: <span />
     },
-    name: 'Send OTP',
+    name: t => t('menu.send_otp'),
     accessibleBy: ['admin']
   }
 ];
 
-export default UserMenus;
+export default userMenus

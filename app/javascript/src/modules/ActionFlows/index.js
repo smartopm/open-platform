@@ -10,6 +10,6 @@ export default {
   styleProps: {
     icon: <ForumIcon />
   },
-  name: 'Action Flows',
+  name: t => t('misc.action_flows'),
   accessibleBy: ['admin']
 };

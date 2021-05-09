@@ -5,9 +5,38 @@
     "finance": "Finanzas",
     "identity": "Identidad",
     "log_entry": "Entrada Manual",
+    "scan": "Escanear",
+    "view_customer_journey": "Ver el recorrido del cliente",
+    "your_customer_journey": "Su trayectoria como cliente",
+    "need_help_to_next_journey": "Necesito ayuda para pasar a la siguiente etapa.",
+    "make_new_payment": "Realizar un nuevo pago",
+    "payment": {
+      "today": "Importe total en pago hoy",
+      "oneWeek": "Importe total en pago esta semana",
+      "oneMonth": "Monto total en pago este mes",
+      "overOneMonth": "Monto total en pago este año"
+    },
+    "invoice": {
+      "today": "Total de facturas vencidas hoy",
+      "oneWeek": "Total de facturas vencidas 1 semana",
+      "oneMonth": "Total de facturas vencidas 1 mes",
+      "overOneMonth": "Total de facturas vencidas con más de 1 mes"
+    },
+    "task_reminders": "Recordatorios de tareas",
+    "no_pending_tasks": "Sin tareas pendientes",
+    "pending_tasks_text": "Tus tareas pendientes aparecerán aquí",
+    "recent_news": "Noticias recientes",
+    "my_id_card": "Mi tarjeta de identificación",
+    "my_account": "Mi cuenta",
+    "my_messages": "Mis mensajes",
+    "my_thebe_portal": "Mi portal de Thebe",
+    "call_manager": "Gestor de llamadas",
     "new_user": "Nuevo usuario",
     "request": "Peticiones",
-    "scan": "Escanear",
-    "support": "Apoyo"
+    "support": "Apoyo",
+    "plot_detail": "Detalle de la trama",
+    "plot_detail_plural": "Detalle de la tramas",
+    "plot": "Gráfico",
+    "plot_plural": "Parcelas"
   }
 }

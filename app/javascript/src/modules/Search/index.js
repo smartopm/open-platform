@@ -10,6 +10,6 @@ export default {
   styleProps: {
     icon: <SearchOutlined />
   },
-  name: 'Search',
+  name: t => t('menu.search'),
   accessibleBy: ['admin', 'custodian', 'security_guard']
 };

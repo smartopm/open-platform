@@ -75,7 +75,7 @@ export default function EmailBuilderDialog({ initialData, open, handleClose, ema
     // avoid preloading previous state into the editor
     if (emailId) {
       if (emailEditorRef.current) {
-        emailEditorRef.current.loadDesign(initialData.data.design);
+        emailEditorRef.current.loadDesign(initialData.data?.design);
       } else {
         // wait for the editor to initialize
         setTimeout(() => emailEditorRef.current.loadDesign(initialData.data?.design), 3000);

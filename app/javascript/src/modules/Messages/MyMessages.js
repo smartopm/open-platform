@@ -5,11 +5,12 @@ import { allUserTypes } from '../../utils/constants';
 export default {
   routeProps: {
     path: '/mymessages',
-    component: <span />
+    // eslint-disable-next-line react/display-name
+    component: () => <span />
   },
   styleProps: {
     icon: <MessageIcon />
   },
   accessibleBy: allUserTypes,
-  name: 'My Messages'
+  name: t => t('menu.my_messages')
 };

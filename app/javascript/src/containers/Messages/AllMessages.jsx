@@ -8,7 +8,7 @@ import InputAdornment from '@material-ui/core/InputAdornment'
 import { MenuItem, FormControl, Select, InputLabel } from '@material-ui/core';
 import useDebounce from '../../utils/useDebounce'
 import { useWindowDimensions } from '../../utils/customHooks'
-import { useStyles } from '../Users';
+import { useStyles } from '../../modules/Users/Containers/Users';
 import { messageFilters } from '../../utils/constants';
 import { MessagesQuery } from '../../graphql/queries'
 import CenteredContent from '../../components/CenteredContent'

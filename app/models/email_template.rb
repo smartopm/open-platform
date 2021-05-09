@@ -2,6 +2,8 @@
 
 # email templates
 class EmailTemplate < ApplicationRecord
+  scope :system_emails, -> { where(tag: 'system') }
+
   belongs_to :community
 
   validates :name, presence: true, uniqueness: true

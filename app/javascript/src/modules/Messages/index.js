@@ -5,6 +5,6 @@ export default {
     path: '/messages',
     component: AllMessages
   },
-  name: 'Messages',
+  name: t => t('menu.message', { count: 0 }),
   accessibleBy: ['admin']
 };
