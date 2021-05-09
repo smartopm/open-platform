@@ -8,25 +8,25 @@ phrase:
         file_format: i18next
         locale_id: 91f7811d137f2a51adfbcc55753b04aa
         tags: login
-        update_translations: true
+        update_translations: false
     - file: ./public/locales/en/dashboard.json
       params:
         file_format: i18next
         locale_id: 91f7811d137f2a51adfbcc55753b04aa
         tags: dashboard
-        update_translations: true
+        update_translations: false
     - file: ./public/locales/en/scan.json
       params:
         file_format: i18next
         locale_id: 91f7811d137f2a51adfbcc55753b04aa
         tags: scan
-        update_translations: true
+        update_translations: false
     - file: ./public/locales/en/common.json
       params:
         file_format: i18next
         locale_id: 91f7811d137f2a51adfbcc55753b04aa
         tags: common
-        update_translations: true
+        update_translations: false
   pull:
     targets:
     - file: ./public/locales/es/login.json
