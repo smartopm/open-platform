@@ -1,6 +1,7 @@
 import React, { useContext, useState } from 'react';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 import Drawer from '@material-ui/core/Drawer';
 import MenuIcon from '@material-ui/icons/Menu';
 import { StyleSheet, css } from 'aphrodite';
@@ -60,6 +61,7 @@ export default function Main() {
 }
 
 export function MainNav({ authState }) {
+  const matches = useMediaQuery('(max-width:600px)')
   const classes = useStyles();
   const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -84,9 +86,15 @@ export function MainNav({ authState }) {
           <UserAvatar imageUrl={authState?.user?.imageUrl} />
           <UserActionOptions />
           <NotificationBell user={authState.user} />
-          <CenteredContent>
-            <CommunityName authState={authState} />
-          </CenteredContent>
+          {matches ? (
+            <div style={{marginLeft: '100px'}}>
+              <CommunityName authState={authState} />
+            </div>
+          ) : (
+            <CenteredContent>
+              <CommunityName authState={authState} />
+            </CenteredContent>
+          )}
         </Toolbar>
       </AppBar>
       {authState.loggedIn && (

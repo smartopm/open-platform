@@ -2,6 +2,7 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import React, { useContext } from 'react'
 import { makeStyles } from '@material-ui/core/styles';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 import Avatar from '@material-ui/core/Avatar';
 import { useHistory } from 'react-router';
 import Typography from '@material-ui/core/Typography';
@@ -16,33 +17,34 @@ import { Context as AuthStateContext } from '../../../containers/Provider/AuthSt
 
 export default function UserAction() {
   const authState = useContext(AuthStateContext)
+  const matches = useMediaQuery('(max-width:600px)')
   const classes = useStyles();
   const history = useHistory()
   return (
-    <div className={classes.body}>
-      <Avatar alt="user_image" data-testid='avatar' src={authState?.user?.imageUrl} className={classes.avatar} />
-      <Typography data-testid='text' className={classes.name}>{authState?.user?.name}</Typography>
+    <div className={matches ? classes.bodyMobile : classes.body}>
+      <Avatar alt="user_image" data-testid='avatar' src={authState?.user?.imageUrl} className={matches ? classes.avatarMobile : classes.avatar} />
+      <Typography data-testid='text' className={matches ? classes.nameMobile : classes.name}>{authState?.user?.name}</Typography>
       <UserOptions 
         icon={<AccountCircleIcon style={{height: '36px', width: '36px'}} />} 
         primaryText='Edit personal details' 
         secondaryText='Make changes to your account details'
         handleClick={() => history.push(`user/${authState.user.id}/edit`)} 
       />
-      <Divider style={{marginLeft: '81px', marginBottom: '13px', height: '1px', color: '#ECECEC'}} />
+      <Divider className={matches ? classes.dividerMobile : classes.divider} />
       <UserOptions 
         icon={<SettingsIcon style={{height: '36px', width: '36px',}} />} 
         primaryText='Preferences' 
         secondaryText='Set notification preferences'
         handleClick={() => history.push('/settings')} 
       />
-      <Divider style={{marginLeft: '81px', marginBottom: '13px', height: '1px', color: '#ECECEC'}} />
+      <Divider className={matches ? classes.dividerMobile : classes.divider} />
       <UserOptions 
         icon={<HeadsetMicIcon style={{height: '36px', width: '36px'}} />} 
         primaryText='Nkwashi support' 
         secondaryText='Have issues? Reach out to customer care'
         handleClick={() => history.push('/contact')} 
       />
-      <Divider style={{marginLeft: '81px', marginBottom: '13px', height: '1px', color: '#ECECEC'}} />
+      <Divider className={matches ? classes.dividerMobile : classes.divider} />
       <UserOptions 
         icon={<ExitToAppIcon style={{height: '36px', width: '36px'}} />} 
         primaryText='Log out' 
@@ -55,8 +57,9 @@ export default function UserAction() {
 
 export function UserOptions({ icon, primaryText, secondaryText, handleClick}){
   const classes = useStyles();
+  const matches = useMediaQuery('(max-width:600px)')
   return (
-    <div className={classes.options} data-testid="options" onClick={handleClick}>
+    <div className={matches ? classes.optionsMobile : classes.options} data-testid="options" onClick={handleClick}>
       <IconButton
         aria-label="icons"
         edge="start"
@@ -77,12 +80,18 @@ const useStyles = makeStyles(() => ({
   body: {
     margin: '0 224px',
     background: '#FCFCFC',
-    padding: '81px 0'
+    padding: '81px 0',
+    marginTop: '-40px'
   },
   avatar: {
     width: '145px',
     height: '145px',
     marginLeft: '297px'
+  },
+  avatarMobile: {
+    height: '71px',
+    width: '71px',
+    marginLeft: '135px'
   },
   name: {
     padding: '29px 0 64px 0',
@@ -91,9 +100,21 @@ const useStyles = makeStyles(() => ({
     fontWeight: 500,
     color: '#141414'
   },
+  nameMobile: {
+    padding: '14px 0 25px 0',
+    textAlign: 'center',
+    fontSize: '24px',
+    fontWeight: 500,
+    color: '#141414'
+  },
   options: {
     display: 'flex',
     marginLeft: '116px',
+    cursor: 'pointer'
+  },
+  optionsMobile: {
+    display: 'flex',
+    marginLeft: '20px',
     cursor: 'pointer'
   },
   primaryText: {
@@ -105,6 +126,21 @@ const useStyles = makeStyles(() => ({
     fontSize: '14px',
     fontWeight: 400,
     color: '#141414'
+  },
+  bodyMobile: {
+    margin: '0 20px'
+  },
+  divider: {
+    marginLeft: '81px', 
+    marginBottom: '13px', 
+    height: '1px', 
+    color: '#ECECEC'
+  },
+  dividerMobile: {
+    marginLeft: '20px', 
+    marginBottom: '13px', 
+    height: '1px', 
+    color: '#ECECEC'
   }
 }));
 
