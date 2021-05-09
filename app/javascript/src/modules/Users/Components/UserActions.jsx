@@ -3,6 +3,7 @@
 import React, { useContext } from 'react'
 import { makeStyles } from '@material-ui/core/styles';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
+import { useTranslation } from 'react-i18next'
 import Avatar from '@material-ui/core/Avatar';
 import { useHistory } from 'react-router';
 import Typography from '@material-ui/core/Typography';
@@ -20,35 +21,36 @@ export default function UserAction() {
   const matches = useMediaQuery('(max-width:600px)')
   const classes = useStyles();
   const history = useHistory()
+  const { t } = useTranslation()
   return (
     <div className={matches ? classes.bodyMobile : classes.body}>
       <Avatar alt="user_image" data-testid='avatar' src={authState?.user?.imageUrl} className={matches ? classes.avatarMobile : classes.avatar} />
       <Typography data-testid='text' className={matches ? classes.nameMobile : classes.name}>{authState?.user?.name}</Typography>
       <UserOptions 
         icon={<AccountCircleIcon style={{height: '36px', width: '36px'}} />} 
-        primaryText='Edit personal details' 
-        secondaryText='Make changes to your account details'
+        primaryText={t('users.personal_details')} 
+        secondaryText={t('users.personal_details_subtext')}
         handleClick={() => history.push(`user/${authState.user.id}/edit`)} 
       />
       <Divider className={matches ? classes.dividerMobile : classes.divider} />
       <UserOptions 
         icon={<SettingsIcon style={{height: '36px', width: '36px',}} />} 
-        primaryText='Preferences' 
-        secondaryText='Set notification preferences'
+        primaryText={t('users.preferences')} 
+        secondaryText={t('users.preferences_subtext')}
         handleClick={() => history.push('/settings')} 
       />
       <Divider className={matches ? classes.dividerMobile : classes.divider} />
       <UserOptions 
         icon={<HeadsetMicIcon style={{height: '36px', width: '36px'}} />} 
-        primaryText='Nkwashi support' 
-        secondaryText='Have issues? Reach out to customer care'
+        primaryText={t('users.support')}  
+        secondaryText={t('users.support_subtext')}
         handleClick={() => history.push('/contact')} 
       />
       <Divider className={matches ? classes.dividerMobile : classes.divider} />
       <UserOptions 
         icon={<ExitToAppIcon style={{height: '36px', width: '36px'}} />} 
-        primaryText='Log out' 
-        secondaryText='Sign out of your DoubleGDP account'
+        primaryText={t('users.log_out')} 
+        secondaryText={t('users.logout_subtext')}
         handleClick={() => history.push('/logout')} 
       />
     </div>

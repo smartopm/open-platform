@@ -135,7 +135,8 @@
     "search": "Buscar",
     "my_profile": "Mi Perfil",
     "logout": "Cerrar sesión",
-    "user_journey_stats": "Estadísticas de viaje del usuario"
+    "user_journey_stats": "Estadísticas de viaje del usuario",
+    "Preferences": "Preferencias"
   },
   "errors": {
     "empty_text": "El mensaje debe contener algo de texto"

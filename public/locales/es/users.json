@@ -8,6 +8,14 @@
       "add_outgoing_calls_not_answered": "Agregar llamada saliente no respondida para",
       "upload": "Subir",
       "create_report": "Crear reporte",
-      "user_stats": "Estadísticas de usuario"
+      "user_stats": "Estadísticas de usuario",
+      "personal_details": "Editar datos personales",
+      "personal_details_subtext": "Realice cambios en los detalles de su cuenta",
+      "preferences": "Preferencias",
+      "preferences_subtext": "Establecer preferencias de notificación",
+      "support": "Nkwashi support",
+      "support_subtext": "¿Tiene problemas? Comuníquese con el servicio de atención al cliente",
+      "log_out": "Cerrar sesión",
+      "logout_subtext": "Cierre sesión en su cuenta de DoubleGDP"
     }
   }
