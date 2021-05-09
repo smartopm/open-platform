@@ -21,7 +21,6 @@ phrase:
         locale_id: 91f7811d137f2a51adfbcc55753b04aa
         tags: scan
         update_translations: true
-        tags: login
     - file: ./public/locales/en/common.json
       params:
         file_format: i18next
