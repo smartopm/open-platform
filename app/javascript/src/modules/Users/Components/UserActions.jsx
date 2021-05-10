@@ -21,7 +21,7 @@ export default function UserAction() {
   const matches = useMediaQuery('(max-width:600px)')
   const classes = useStyles();
   const history = useHistory()
-  const { t } = useTranslation()
+  const { t } = useTranslation('users')
   return (
     <div className={matches ? classes.bodyMobile : classes.body}>
       <Avatar alt="user_image" data-testid='avatar' src={authState?.user?.imageUrl} className={matches ? classes.avatarMobile : classes.avatar} />
@@ -42,7 +42,7 @@ export default function UserAction() {
       <Divider className={matches ? classes.dividerMobile : classes.divider} />
       <UserOptions 
         icon={<HeadsetMicIcon style={{height: '36px', width: '36px'}} />} 
-        primaryText={t('users.support')}  
+        primaryText={t('users.main')}  
         secondaryText={t('users.support_subtext')}
         handleClick={() => history.push('/contact')} 
       />
