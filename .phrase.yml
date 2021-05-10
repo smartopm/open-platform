@@ -1,70 +1,70 @@
 phrase:
-  project_id: 70611176c3b698bd2f886684ae3be9bf
+  project_id: c6cc13fd16dfbacd426574fa4401d762
   push:
     sources:
     - file: ./public/locales/en/login.json
       params:
         file_format: i18next
-        locale_id: 09762e31899cf1e0edf4b8b15aa64e3f
+        locale_id: 5c6c3e050e8493da0e428087555a7b00
         tags: login
         update_translations: true
     - file: ./public/locales/en/dashboard.json
       params:
         file_format: i18next
-        locale_id: 09762e31899cf1e0edf4b8b15aa64e3f
+        locale_id: 5c6c3e050e8493da0e428087555a7b00
         tags: dashboard
         update_translations: true
     - file: ./public/locales/en/scan.json
       params:
         file_format: i18next
-        locale_id: 09762e31899cf1e0edf4b8b15aa64e3f
+        locale_id: 5c6c3e050e8493da0e428087555a7b00
         tags: scan
         update_translations: true
     - file: ./public/locales/en/common.json
       params:
         file_format: i18next
-        locale_id: 09762e31899cf1e0edf4b8b15aa64e3f
+        locale_id: 5c6c3e050e8493da0e428087555a7b00
         tags: common
         update_translations: true
     - file: ./public/locales/es/login.json
       params:
         file_format: i18next
-        locale_id: 90fddec457b725c82b47d6eb04920abe
+        locale_id: fa26b7d00b593c4578f0e9749221cace
         tags: login
     - file: ./public/locales/es/dashboard.json
       params:
         file_format: i18next
-        locale_id: 90fddec457b725c82b47d6eb04920abe
+        locale_id: fa26b7d00b593c4578f0e9749221cace
         tags: dashboard
     - file: ./public/locales/es/scan.json
       params:
         file_format: i18next
-        locale_id: 90fddec457b725c82b47d6eb04920abe
+        locale_id: fa26b7d00b593c4578f0e9749221cace
         tags: scan
     - file: ./public/locales/es/common.json
       params:
         file_format: i18next
-        locale_id: 90fddec457b725c82b47d6eb04920abe
+        locale_id: fa26b7d00b593c4578f0e9749221cace
         tags: common
   pull:
     targets:
     - file: ./public/locales/es/login.json
       params:
         file_format: i18next
-        locale_id: 90fddec457b725c82b47d6eb04920abe
+        locale_id: fa26b7d00b593c4578f0e9749221cace
         tags: login
     - file: ./public/locales/es/dashboard.json
       params:
         file_format: i18next
-        locale_id: 90fddec457b725c82b47d6eb04920abe
+        locale_id: fa26b7d00b593c4578f0e9749221cace
         tags: dashboard
     - file: ./public/locales/es/scan.json
       params:
         file_format: i18next
-        locale_id: 90fddec457b725c82b47d6eb04920abe
+        locale_id: fa26b7d00b593c4578f0e9749221cace
         tags: scan
     - file: ./public/locales/es/common.json
       params:
         file_format: i18next
-        locale_id: 90fddec457b725c82b47d6eb04920abe
+        locale_id: fa26b7d00b593c4578f0e9749221cace
         tags: common
