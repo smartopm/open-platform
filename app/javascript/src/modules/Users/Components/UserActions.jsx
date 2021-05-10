@@ -42,13 +42,14 @@ export default function UserAction() {
       <Divider className={matches ? classes.dividerMobile : classes.divider} />
       <UserOptions 
         icon={<HeadsetMicIcon style={{height: '36px', width: '36px'}} />} 
-        primaryText={t('users.main')}  
+        primaryText={t('users.support', { communityName: authState.user.community.name })}  
         secondaryText={t('users.support_subtext')}
         handleClick={() => history.push('/contact')} 
       />
       <Divider className={matches ? classes.dividerMobile : classes.divider} />
       <UserOptions 
         icon={<ExitToAppIcon style={{height: '36px', width: '36px'}} />} 
+        // TODO: @tolulope this is already in common.menu, we can use that instead of duplicating keys, reason why we put commonly used things in common.json
         primaryText={t('users.log_out')} 
         secondaryText={t('users.logout_subtext')}
         handleClick={() => history.push('/logout')} 
