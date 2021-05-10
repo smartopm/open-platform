@@ -12,7 +12,10 @@
     "external_reference": "External Reference ID",
     "reason": "Reason",
     "user_type": "User Type",
-    "state": "State"
+    "state": "State",
+    "add_phone_number": "Add New Phone Number",
+    "add_email_address": "Add New Email Address",
+    "add_whatsapp_number": "Add New Whatsapp Number"
   },
   "form_placeholders": {
     "phone_number": "Enter Phone Number",
@@ -80,7 +83,8 @@
     "select": "Select",
     "all": "All",
     "all_this_page": "All on this page",
-    "none": "None"
+    "none": "None",
+    "choose_file": "Choose File"
   },
   "menu": {
     "invoice": "Invoice",

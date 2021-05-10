@@ -12,7 +12,10 @@
     "user_type": "Tipo de usuario",
     "state": "Expresar",
     "full_name": "nombre completo",
-    "phone_number": "Número de teléfono"
+    "phone_number": "Número de teléfono",
+    "add_phone_number": "Agregar nuevo número de teléfono",
+    "add_email_address": "Agregar nueva dirección de correo electrónico",
+    "add_whatsapp_number": "Agregar nuevo número de Whatsapp"
   },
   "form_placeholders": {
     "phone_number": "Introduzca el número de teléfono",
@@ -83,7 +86,8 @@
     "none": "Ninguno",
     "step": "Paso",
     "step_plural": "Pasos",
-    "balance": "equilibrio"
+    "balance": "equilibrio",
+    "choose_file": "Elija el archivo"
   },
   "user_types": {
     "admin": "Administrador",

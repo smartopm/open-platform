@@ -1,0 +1,18 @@
+{
+  "community": {
+    "community_logo": "Logotipo de la comunidad",
+    "change_community_logo": "Puedes cambiar el logo de tu comunidad aquí",
+    "upload_logo": "Subir nuevo logo",
+    "support_contact": "Información de contacto de soporte",
+    "make_changes_support_contact": "Realice cambios en su información de contacto aquí.",
+    "community_tagline": "Establecer el lema de la comunidad",
+    "community_logo_url": "Establecer la URL del logotipo de la comunidad",
+    "wordpress_url": "Establecer la URL de Wordpress de la comunidad",
+    "community_transactions": "Transacciones de la comunidad",
+    "set_currency": "Establecer moneda",
+    "set_locale": "Establecer configuración regional",
+    "language_settings": "Establecer configuración de idioma",
+    "set_language": "Elegir lenguaje",
+    "update_community": "Actualizar la configuración de la comunidad"
+  }
+}
