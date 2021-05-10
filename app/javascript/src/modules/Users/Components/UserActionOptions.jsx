@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { useHistory } from 'react-router';
+import { useTranslation } from 'react-i18next'
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import IconButton from '@material-ui/core/IconButton';
 import { makeStyles } from '@material-ui/core/styles';
@@ -9,6 +10,7 @@ import Typography from '@material-ui/core/Typography';
 export default function UserActionOptions(){
   const [open, setOpen] = useState(false)
   const classes = useStyles();
+  const { t } = useTranslation('users')
   const [anchorEl, setAnchorEl] = useState(null);
   const history = useHistory();
 
@@ -32,7 +34,7 @@ export default function UserActionOptions(){
       </IconButton>
       <Popover open={open} anchorEl={anchorEl} onClose={handleClose} className={classes.popOver}>
         <Typography data-testid='text' align="center" className={classes.logOut} onClick={() => history.push('/logout')}>
-          Log out
+          {t('common:menu.logout')}
         </Typography>
       </Popover>
     </div>
