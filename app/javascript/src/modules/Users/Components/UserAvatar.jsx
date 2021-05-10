@@ -12,7 +12,7 @@ export default function UserAvatar({ imageUrl }) {
   return (
     <div>
       <div className={matches ? classes.avatarMobile : classes.avatar}>
-        <Avatar data-testid='avatar' onClick={() => history.push({pathname: '/user_actions', state: { imageUrl }})} alt="user_image" src={imageUrl} />
+        <Avatar data-testid='avatar' onClick={() => history.push({pathname: '/user/settings'})} alt="user_image" src={imageUrl} />
       </div>
     </div>
   )

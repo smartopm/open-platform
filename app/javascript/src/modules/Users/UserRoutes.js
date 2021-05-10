@@ -6,6 +6,7 @@ import IdPrintPage from '../../containers/IdPrint';
 import UserMessagePage from '../../containers/Messages/UserMessagePage';
 import OTPFeedbackScreen from '../../containers/OTPScreen';
 import UserActions from './Components/UserActions'
+import Preferences from '../Preferences/Components/Notifications'
 import { allUserTypes } from '../../utils/constants';
 
 // name in here is only used as key in routes, make sure it is unique
@@ -40,6 +41,15 @@ const routes = [
   },
   {
     routeProps: {
+      path: '/user/settings',
+      component: UserActions,
+      exact: true
+    },
+    accessibleBy: allUserTypes,
+    name: 'user_actions'
+  },
+  {
+    routeProps: {
       path: '/user/:id/:tm?/:dg?',
       component: UserShow
     },
@@ -64,16 +74,9 @@ const routes = [
   },
   {
     routeProps: {
-      path: '/user_actions',
-      component: UserActions
-    },
-    accessibleBy: allUserTypes,
-    name: 'user_actions'
-  },
-  {
-    routeProps: {
       path: '/settings',
-      component: UserActions
+      component: Preferences,
+      exact: true
     },
     accessibleBy: allUserTypes,
     name: 'Preferences'

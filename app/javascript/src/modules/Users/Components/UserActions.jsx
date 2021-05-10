@@ -30,7 +30,7 @@ export default function UserAction() {
         icon={<AccountCircleIcon style={{height: '36px', width: '36px'}} />} 
         primaryText={t('users.personal_details')} 
         secondaryText={t('users.personal_details_subtext')}
-        handleClick={() => history.push(`user/${authState.user.id}/edit`)} 
+        handleClick={() => history.push(`/user/${authState.user.id}/edit`)} 
       />
       <Divider className={matches ? classes.dividerMobile : classes.divider} />
       <UserOptions 
