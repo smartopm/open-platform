@@ -151,16 +151,35 @@
     "menu": "Menu",
     "name": "Nombre",
     "subject": "Titulo",
-    "tag": "Etiqueta"
+    "tag": "Etiqueta",
+    "step_plural": "Pasos",
+    "balance": "equilibrio",
+    "user_type": "Tipo de usuario",
+    "expiration": "Vencimiento",
+    "last_accessed": "Último accedido",
+    "contact": "Contacto",
+    "communication": "Comunicación",
+    "plots": "Parcelas",
+    "forms": "Formularios",
+    "customer_journey": "Viaje del cliente"
   },
   "user_types": {
     "admin": "Administrador",
     "client": "Cliente",
-    "contractor": "Contratista",
     "custodian": "Custodio",
     "prospective_client": "Futuro cliente",
     "resident": "Residente",
     "security_guard": "Guardia de seguridad",
-    "visitor": "Visitante"
+    "visitor": "Visitante",
+    "contractor": "Contratista"
+  },
+  "sub_status": {
+    "plots_fully_purchased": "Parcelas compradas íntegramente",
+    "eligible_to_start_construction": "Elegible para comenzar la construcción",
+    "floor_plan_purchased": "Plano de planta adquirido",
+    "building_permit_approved": "Permiso de construcción aprobado",
+    "construction_in_progress": "Construcción en progreso",
+    "construction_completed": "Construcción completada",
+    "construction_in_progress_self_build": "Construcción en progreso (autoconstrucción)"
   }
 }

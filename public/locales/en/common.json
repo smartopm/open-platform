@@ -92,7 +92,14 @@
     "choose_file": "Choose File",
     "select_category": "Select Category",
     "sales": "Sales",
-    "customer_care": "Customer Care"
+    "customer_care": "Customer Care",
+    "user_type": "User Type",
+    "expiration": "Expiration",
+    "last_accessed": "Last Accessed",
+    "contact": "Contact",
+    "communication": "Communication",
+    "plots": "Plots",
+    "forms": "Forms"
   },
   "menu": {
     "invoice": "Invoice",
@@ -158,6 +165,15 @@
     "tag": "Tag",
     "menu": "Menu",
     "name": "Name"
+  },
+  "sub_status": {
+    "plots_fully_purchased": "Plots Fully Purchased",
+    "eligible_to_start_construction": "Eligible to start Construction",
+    "floor_plan_purchased": "Floor Plan Purchased",
+    "building_permit_approved": "Building Permit Approved",
+    "construction_in_progress": "Construction in Progress",
+    "construction_completed": "Construction Completed",
+    "construction_in_progress_self_build": "Construction in Progress (Self Build)"
   },
   "errors": {
     "empty_text": "The message must contain some text"
