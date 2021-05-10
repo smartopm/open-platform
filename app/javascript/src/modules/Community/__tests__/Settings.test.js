@@ -69,20 +69,20 @@ describe('Community settings page ', () => {
         <CommunitySettings data={data} refetch={mockRefetch} />
       </MockedProvider>
     );
-    expect(container.queryByText('Community Logo')).toBeInTheDocument();
-    expect(container.queryByText('You can change your community logo here')).toBeInTheDocument();
-    expect(container.queryByText('Upload new logo')).toBeInTheDocument();
-    expect(container.queryByText('Support Contact Information')).toBeInTheDocument();
+    expect(container.queryByText('community.community_logo')).toBeInTheDocument();
+    expect(container.queryByText('community.change_community_logo')).toBeInTheDocument();
+    expect(container.queryByText('community.upload_logo')).toBeInTheDocument();
+    expect(container.queryByText('community.support_contact')).toBeInTheDocument();
     expect(
-      container.queryByText('Make changes to your contact information here.')
+      container.queryByText('community.make_changes_support_contact')
     ).toBeInTheDocument();
-    expect(container.queryByText('Add New Phone Number')).toBeInTheDocument();
-    expect(container.queryByText('Add New Email Address')).toBeInTheDocument();
-    expect(container.queryByText('Add New WhatsApp Number')).toBeInTheDocument();
-    expect(container.queryByText('UPDATE COMMUNITY SETTINGS')).toBeInTheDocument();
-    expect(container.queryByText('UPDATE COMMUNITY SETTINGS')).not.toBeDisabled();
-    expect(container.queryAllByLabelText('Email')).toHaveLength(2);
-    expect(container.queryByLabelText('Phone Number')).toBeInTheDocument();
+    expect(container.queryByText('common:form_fields.add_phone_number')).toBeInTheDocument();
+    expect(container.queryByText('common:form_fields.add_email_address')).toBeInTheDocument();
+    expect(container.queryByText('common:form_fields.add_whatsapp_number')).toBeInTheDocument();
+    expect(container.queryByText('community.update_community')).toBeInTheDocument();
+    expect(container.queryByText('community.update_community')).not.toBeDisabled();
+    expect(container.queryAllByLabelText('common:form_fields.email')).toHaveLength(2);
+    expect(container.queryByLabelText('common:form_fields.phone_number')).toBeInTheDocument();
     expect(container.queryByLabelText('WhatsApp')).toBeInTheDocument();
 
     expect(container.queryAllByLabelText('remove')).toHaveLength(4);
@@ -103,7 +103,7 @@ describe('Community settings page ', () => {
     expect(container.queryByTestId('currency').value).toBe('ZMW');
 
     fireEvent.click(container.queryByTestId('email_click'));
-    expect(container.queryAllByLabelText('Email')).toHaveLength(3);
+    expect(container.queryAllByLabelText('common:form_fields.email')).toHaveLength(3);
 
     fireEvent.click(container.queryByTestId('whatsapp_click'));
     expect(container.queryAllByLabelText('WhatsApp')).toHaveLength(2);
@@ -128,7 +128,7 @@ describe('Community settings page ', () => {
     await waitFor(() => {
       // check if mutation was called
       expect(mockRefetch).toBeCalled();
-      expect(container.queryByText('Successfully updated the community')).toBeInTheDocument();
+      expect(container.queryByText('community.community_updated')).toBeInTheDocument();
     });
   });
 });

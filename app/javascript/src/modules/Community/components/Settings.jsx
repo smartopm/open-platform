@@ -152,7 +152,7 @@ export default function CommunitySettings({ data, token, refetch }) {
   function uploadLogo(img) {
     onChange(img);
     setShowCropper(false);
-    setMessage({ isError: false, detail: `Logo uploaded successfully` });
+    setMessage({ isError: false, detail: t('community.logo_updated') });
     setAlertOpen(true);
   }
 
@@ -184,7 +184,7 @@ export default function CommunitySettings({ data, token, refetch }) {
       .then(() => {
         setMessage({
           isError: false,
-          detail: `Successfully updated the community`
+          detail: t('community.community_updated') 
         });
         setLanguageInLocalStorage(language)
         setAlertOpen(true);

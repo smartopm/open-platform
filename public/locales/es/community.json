@@ -13,6 +13,8 @@
     "set_locale": "Establecer configuración regional",
     "language_settings": "Establecer configuración de idioma",
     "set_language": "Elegir lenguaje",
-    "update_community": "Actualizar la configuración de la comunidad"
+    "update_community": "Actualizar la configuración de la comunidad",
+    "logo_updated": "Logotipo subido correctamente",
+    "community_updated": "Comunidad actualizada correctamente"
   }
 }
