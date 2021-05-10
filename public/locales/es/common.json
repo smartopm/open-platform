@@ -87,7 +87,10 @@
     "step": "Paso",
     "step_plural": "Pasos",
     "balance": "equilibrio",
-    "choose_file": "Elija el archivo"
+    "choose_file": "Elija el archivo",
+    "select_category": "Selecciona una Categoría",
+    "sales": "Ventas",
+    "customer_care": "Ventas al cliente"
   },
   "user_types": {
     "admin": "Administrador",

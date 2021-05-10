@@ -259,7 +259,7 @@ export default function CommunitySettings({ data, token, refetch }) {
           options={numberOptions}
           handleChange={handleNumberChange}
           handleRemoveRow={handleNumberRemove}
-          data={{ label: 'Phone Number', name: 'phone_number' }}
+          data={{ label: t('common:form_fields.phone_number'), name: 'phone_number' }}
         />
         <div
           className={classes.addIcon}
@@ -296,7 +296,7 @@ export default function CommunitySettings({ data, token, refetch }) {
           options={emailOptions}
           handleChange={handleEmailChange}
           handleRemoveRow={handleEmailRemoveRow}
-          data={{ label: 'Email', name: 'email' }}
+          data={{ label: t('common:form_fields.email'), name: 'email' }}
         />
         <div className={classes.addIcon} role="button" onClick={handleAddEmailOption} data-testid='email_click'>
           <AddCircleOutlineIcon />

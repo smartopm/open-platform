@@ -84,7 +84,10 @@
     "all": "All",
     "all_this_page": "All on this page",
     "none": "None",
-    "choose_file": "Choose File"
+    "choose_file": "Choose File",
+    "select_category": "Select Category",
+    "sales": "Sales",
+    "customer_care": "Customer Care"
   },
   "menu": {
     "invoice": "Invoice",

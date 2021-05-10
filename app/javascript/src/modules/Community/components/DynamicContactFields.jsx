@@ -2,6 +2,7 @@ import React from 'react'
 import { IconButton, MenuItem, TextField } from '@material-ui/core'
 import { DeleteOutline } from '@material-ui/icons'
 import PropTypes from 'prop-types'
+import { useTranslation } from 'react-i18next'
 import { makeStyles } from '@material-ui/styles'
 import { propAccessor } from '../../../utils/helpers'
 
@@ -12,6 +13,8 @@ export default function DynamicContactFields({
   data
 }) {
   const classes = useStyles()
+  const { t } = useTranslation('common')
+
   return options.map((val, i) => (
     <div
       className={classes.textField}
@@ -31,13 +34,13 @@ export default function DynamicContactFields({
         id={`${i}-select-category`}
         style={{ width: '200px', marginLeft: '40px' }}
         select
-        label="Select Category"
+        label={t('misc.select_category')}
         value={val.category}
         onChange={event => handleChange(event, i)}
         name="category"
       >
-        <MenuItem value="sales">Sales</MenuItem>
-        <MenuItem value="customer_care">Customer Care</MenuItem>
+        <MenuItem value="sales">{t('misc.sales')}</MenuItem>
+        <MenuItem value="customer_care">{t('misc.customer_care')}</MenuItem>
       </TextField>
       <IconButton
         style={{ marginTop: 13 }}
