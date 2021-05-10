@@ -156,6 +156,7 @@
     "balance": "equilibrio",
     "user_type": "Tipo de usuario",
     "expiration": "Vencimiento",
+    "already_expired": "Ya caducado",
     "last_accessed": "Último accedido",
     "contact": "Contacto",
     "communication": "Comunicación",

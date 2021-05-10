@@ -6,8 +6,6 @@ import PropTypes from 'prop-types'
 import dateutil from '../../../utils/dateutil'
 import UserLabels from './UserLabels'
 import StatusBadge from '../../../components/StatusBadge'
-import { titleize } from '../../../utils/helpers'
-import { userSubStatus } from '../../../utils/constants'
 
 export default function UserDetail({ data, userType }) {
   const { t } = useTranslation('users')
@@ -29,16 +27,18 @@ export default function UserDetail({ data, userType }) {
         </div>
       )}
       <div className="expires">
-        Expiration:
+        {t("common:misc.expiration")}
+        :
         {' '}
         {dateutil.isExpired(data.user.expiresAt) ? (
-          <span className="text-danger">Already Expired</span>
+          <span className="text-danger">{t("common:misc.already_expired")}</span>
         ) : (
           dateutil.formatDate(data.user.expiresAt)
         )}
       </div>
       <div className="expires">
-        Last accessed: 
+        {t("common:misc.last_accessed")}
+        : 
         {' '}
         {dateutil.formatDate(data.user.lastActivityAt)}
       </div>

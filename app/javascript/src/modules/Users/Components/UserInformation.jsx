@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { useForm } from 'react-hook-form';
 import IconButton from '@material-ui/core/IconButton';
 import Button from '@material-ui/core/Button';
@@ -41,6 +42,7 @@ export default function UserInformation({
 }) {
   const path = useParamsQuery();
   const tab = path.get('tab');
+  const { t } = useTranslation('users')
   const paymentSubTab = path.get('payment_sub_tab');
   const [tabValue, setValue] = useState(tab || 'Contacts');
   const [paymentSubTabValue, setPaymentSubTabValue] = useState(paymentSubTab || 'Invoices');

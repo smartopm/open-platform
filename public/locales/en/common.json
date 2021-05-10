@@ -95,6 +95,7 @@
     "customer_care": "Customer Care",
     "user_type": "User Type",
     "expiration": "Expiration",
+    "already_expired": "Already Expired",
     "last_accessed": "Last Accessed",
     "contact": "Contact",
     "communication": "Communication",
