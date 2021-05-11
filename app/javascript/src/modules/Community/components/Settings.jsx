@@ -6,6 +6,7 @@ import { Button, TextField, MenuItem, Container } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
 import PropTypes from 'prop-types';
+import { useTranslation } from 'react-i18next';
 
 import { useMutation, useApolloClient } from 'react-apollo';
 import { CommunityUpdateMutation } from '../graphql/community_mutations';
@@ -48,6 +49,7 @@ export default function CommunitySettings({ data, token, refetch }) {
   const [locale, setLocale] = useState('en-ZM');
   const [language, setLanguage] = useState('en-US');
   const [showCropper, setShowCropper] = useState(false);
+  const { t } = useTranslation(['community', 'common'])
   const { onChange, signedBlobId } = useFileUpload({
     client: useApolloClient()
   });
@@ -150,7 +152,7 @@ export default function CommunitySettings({ data, token, refetch }) {
   function uploadLogo(img) {
     onChange(img);
     setShowCropper(false);
-    setMessage({ isError: false, detail: `Logo uploaded successfully` });
+    setMessage({ isError: false, detail: t('community.logo_updated') });
     setAlertOpen(true);
   }
 
@@ -182,7 +184,7 @@ export default function CommunitySettings({ data, token, refetch }) {
       .then(() => {
         setMessage({
           isError: false,
-          detail: `Successfully updated the community`
+          detail: t('community.community_updated') 
         });
         setLanguageInLocalStorage(language)
         setAlertOpen(true);
@@ -213,8 +215,8 @@ export default function CommunitySettings({ data, token, refetch }) {
         open={alertOpen}
         handleClose={() => setAlertOpen(false)}
       />
-      <Typography variant="h6">Community Logo</Typography>
-      <Typography variant="caption">You can change your community logo here</Typography>
+      <Typography variant="h6">{t('community.community_logo')}</Typography>
+      <Typography variant="caption">{t('community.change_community_logo')}</Typography>
       <div className={classes.avatar}>
         <ImageAuth
           imageLink={data.imageUrl}
@@ -224,11 +226,11 @@ export default function CommunitySettings({ data, token, refetch }) {
         />
         <div className={classes.upload}>
           <Typography variant="caption" style={{ fontWeight: 'bold', marginLeft: '10px' }}>
-            Upload new logo
+            {t('community.upload_logo')}
           </Typography>
           <div>
             <Button variant="contained" component="label">
-              Choose File
+              {t('common:misc.choose_file')}
               <input
                 type="file"
                 hidden
@@ -250,14 +252,14 @@ export default function CommunitySettings({ data, token, refetch }) {
         </Button>
       )}
       <div className={classes.information} style={{ marginTop: '40px' }}>
-        <Typography variant="h6">Support Contact Information</Typography>
-        <Typography variant="caption">Make changes to your contact information here.</Typography>
+        <Typography variant="h6">{t('community.support_contact')}</Typography>
+        <Typography variant="caption">{t('community.make_changes_support_contact')}</Typography>
 
         <DynamicContactFields
           options={numberOptions}
           handleChange={handleNumberChange}
           handleRemoveRow={handleNumberRemove}
-          data={{ label: 'Phone Number', name: 'phone_number' }}
+          data={{ label: t('common:form_fields.phone_number'), name: 'phone_number' }}
         />
         <div
           className={classes.addIcon}
@@ -268,7 +270,7 @@ export default function CommunitySettings({ data, token, refetch }) {
           <AddCircleOutlineIcon />
           <div style={{ marginLeft: '10px', color: 'secondary' }}>
             <Typography align="center" variant="caption">
-              Add New Phone Number
+              {t('common:form_fields.add_phone_number')}
             </Typography>
           </div>
         </div>
@@ -284,7 +286,7 @@ export default function CommunitySettings({ data, token, refetch }) {
           <AddCircleOutlineIcon />
           <div style={{ marginLeft: '10px', color: 'secondary' }}>
             <Typography align="center" variant="caption">
-              Add New WhatsApp Number
+              {t('common:form_fields.add_whatsapp_number')}
             </Typography>
           </div>
         </div>
@@ -294,13 +296,13 @@ export default function CommunitySettings({ data, token, refetch }) {
           options={emailOptions}
           handleChange={handleEmailChange}
           handleRemoveRow={handleEmailRemoveRow}
-          data={{ label: 'Email', name: 'email' }}
+          data={{ label: t('common:form_fields.email'), name: 'email' }}
         />
         <div className={classes.addIcon} role="button" onClick={handleAddEmailOption} data-testid='email_click'>
           <AddCircleOutlineIcon />
           <div style={{ marginLeft: '10px', color: 'secondary' }}>
             <Typography align="center" variant="caption">
-              Add New Email Address
+              {t('common:form_fields.add_email_address')}
             </Typography>
           </div>
         </div>
@@ -308,7 +310,7 @@ export default function CommunitySettings({ data, token, refetch }) {
       </div>
       <div className={classes.information} style={{ marginTop: '40px' }}>
         <TextField
-          label="Set Community Tagline"
+          label={t('community.community_tagline')}
           value={tagline}
           onChange={event => setTagline(event.target.value)}
           name="tagline"
@@ -316,7 +318,7 @@ export default function CommunitySettings({ data, token, refetch }) {
           inputProps={{ "data-testid": "tagline"}}
         />
         <TextField
-          label="Set Community Logo Url"
+          label={t('community.community_logo_url')}
           value={logoUrl}
           onChange={event => setLogoUrl(event.target.value)}
           name="tagline"
@@ -324,7 +326,7 @@ export default function CommunitySettings({ data, token, refetch }) {
           inputProps={{ "data-testid": "logo_url"}}
         />
         <TextField
-          label="Set Wordpress Url"
+          label={t('community.wordpress_url')}
           value={wpLink}
           onChange={event => setWpLink(event.target.value)}
           name="wp_link"
@@ -335,11 +337,11 @@ export default function CommunitySettings({ data, token, refetch }) {
       </div>
 
       <div style={{ marginTop: '40px' }}>
-        <Typography variant="h6">Community Transactions</Typography>
+        <Typography variant="h6">{t('community.community_transactions')}</Typography>
         <TextField
           style={{ width: '200px' }}
           select
-          label="Set Currency"
+          label={t('community.set_currency')}
           value={currency}
           onChange={event => setCurrency(event.target.value)}
           name="currency"
@@ -356,7 +358,7 @@ export default function CommunitySettings({ data, token, refetch }) {
         <TextField
           style={{ width: '200px' }}
           select
-          label="Set Locale"
+          label={t('community.set_locale')}
           value={locale}
           onChange={event => setLocale(event.target.value)}
           name="locale"
@@ -372,11 +374,11 @@ export default function CommunitySettings({ data, token, refetch }) {
       </div>
 
       <div style={{ marginTop: '40px' }}>
-        <Typography variant="h6">Language Settings</Typography>
+        <Typography variant="h6">{t('community.language_settings')}</Typography>
         <TextField
           style={{ width: '200px' }}
           select
-          label="Set Language"
+          label={t('community.set_language')}
           value={language || 'en-US'}
           onChange={event => setLanguage(event.target.value)}
           name="language"
@@ -389,7 +391,7 @@ export default function CommunitySettings({ data, token, refetch }) {
                 {key}
               </MenuItem>
             ))
-}
+          }
         </TextField>
       </div>
 
@@ -403,7 +405,7 @@ export default function CommunitySettings({ data, token, refetch }) {
           data-testid="update_community"
         >
           {
-            mutationLoading ? <Spinner /> : 'UPDATE COMMUNITY SETTINGS'
+            mutationLoading ? <Spinner /> : t('community.update_community')
           }
         </Button>
       </div>

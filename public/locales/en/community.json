@@ -1,0 +1,20 @@
+{
+    "community": {
+      "community_logo": "Community Logo",
+      "change_community_logo": "You can change your community logo here",
+      "upload_logo": "Upload new logo",
+      "support_contact": "Support Contact Information",
+      "make_changes_support_contact": "Make changes to your contact information here.",
+      "community_tagline": "Set Community Tagline",
+      "community_logo_url": "Set Community Logo Url",
+      "wordpress_url": "Set Community Wordpress Url",
+      "community_transactions": "Community Transactions",
+      "set_currency": "Set Currency",
+      "set_locale": "Set Locale",
+      "language_settings": "Set Language Settings",
+      "set_language": "Set Language",
+      "update_community": "Update Community Settings",
+      "logo_updated": "Logo uploaded successfully",
+      "community_updated": "Community Updated successfully"
+    }
+}

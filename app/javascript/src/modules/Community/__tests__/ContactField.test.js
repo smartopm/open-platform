@@ -27,7 +27,7 @@ describe('Dynamic Fields ', () => {
     )
     expect(container.queryByLabelText('remove')).not.toBeDisabled()
     expect(container.queryByLabelText('Phone Number')).toBeInTheDocument()
-    expect(container.queryByLabelText(/Select Category/)).toBeInTheDocument()
+    expect(container.queryByLabelText('misc.select_category')).toBeInTheDocument()
     expect(container.queryAllByLabelText('remove')).toHaveLength(1)
 
     fireEvent.click(container.queryByLabelText('remove'))
