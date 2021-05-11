@@ -1,11 +1,11 @@
 import React, { useState, useContext, useEffect } from 'react'
 import { useMutation, useQuery } from 'react-apollo'
 import { Snackbar } from '@material-ui/core'
-import NotificationPage from '../../components/NotificationPage'
-import { NotificationPreference } from '../../graphql/mutations'
-import { UserLabelsQuery } from '../../graphql/queries'
-import { Context as AuthStateContext } from '../Provider/AuthStateProvider'
-import Loading from '../../shared/Loading'
+import NotificationPage from './NotificationPage'
+import { NotificationPreference } from '../graphql/preferences_mutation'
+import { UserLabelsQuery } from '../graphql/preferences_query'
+import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider'
+import Loading from '../../../shared/Loading'
 
 export default function Notifications() {
     const authState = useContext(AuthStateContext)

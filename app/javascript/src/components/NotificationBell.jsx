@@ -73,6 +73,7 @@ const styles = StyleSheet.create({
     bottom: 30,
     right: 25,
     height: 20,
+    marginRight: '85px',
     ':hover': {
       cursor: 'pointer'
     }
@@ -80,6 +81,7 @@ const styles = StyleSheet.create({
   rightSideIconGuard: {
     position: 'absolute',
     right: 5,
+    marginRight: '85px',
     ':hover': {
       cursor: 'pointer'
     }

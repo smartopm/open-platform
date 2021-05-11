@@ -47,7 +47,7 @@ export default function CustomerJourneyStatus({ subStatus, communityName }){
           ))
         )}
       </Grid>
-      <div style={matches ? {margin: '5px 20px 20px 20px'} : {display: 'flex', margin: '20px 79px 40px 79px'}}>
+      <div style={matches ? {margin: '5px 20px 0 20px'} : {display: 'flex', margin: '20px 79px 0 79px'}}>
         <Typography className={matches ? classes.statusMobile : classes.status}>{propAccessor(customerJourneyStatus, subStatus)}</Typography>
         {communityName === 'Nkwashi' && (
           <div style={{display: 'flex', marginLeft: 'auto'}}>

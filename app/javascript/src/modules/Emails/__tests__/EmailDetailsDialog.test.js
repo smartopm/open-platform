@@ -13,11 +13,11 @@ describe('Email Details Dialog', () => {
   it('should render properly', () => {
     const container = render(<EmailDetailsDialog {...props} />);
     expect(container.queryByText('Add Email Details')).toBeInTheDocument();
-    expect(container.queryByText('Template Name')).toBeInTheDocument();
-    expect(container.queryByText('Template Subject')).toBeInTheDocument();
-    expect(container.queryByText('Cancel')).toBeInTheDocument();
-    expect(container.queryByText('Save Changes')).toBeInTheDocument();
-    expect(container.queryByText('Save Changes')).not.toBeDisabled();
+    expect(container.queryByText('form_fields.template_name')).toBeInTheDocument();
+    expect(container.queryByText('form_fields.template_subject')).toBeInTheDocument();
+    expect(container.queryByText('form_actions.cancel')).toBeInTheDocument();
+    expect(container.queryByText('form_actions.save')).toBeInTheDocument();
+    expect(container.queryByText('form_actions.save')).not.toBeDisabled();
 
     fireEvent.click(container.queryByTestId('save_btn'));
     expect(props.handleSave).toBeCalled();

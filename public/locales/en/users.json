@@ -8,6 +8,13 @@
     "add_outgoing_calls_not_answered": "Add Outgoing call not answered for",
     "upload": "Upload",
     "create_report": "Create Report",
-    "user_stats": "User Stats"
+    "user_stats": "User Stats",
+    "personal_details": "Edit personal details",
+    "personal_details_subtext": "Make changes to your account details",
+    "preferences": "Preferences",
+    "preferences_subtext": "Set notification preferences",
+    "support": "{{communityName}} Support",
+    "support_subtext": "Have issues? Reach out to customer care",
+    "logout_subtext": "Sign out of your DoubleGDP account"
   }
 }

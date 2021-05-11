@@ -1,12 +1,12 @@
 import React, { useContext, useState } from 'react';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 import Drawer from '@material-ui/core/Drawer';
 import MenuIcon from '@material-ui/icons/Menu';
 import { StyleSheet, css } from 'aphrodite';
 import { Button, Hidden, IconButton } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
-import CssBaseline from '@material-ui/core/CssBaseline';
 import PropTypes from 'prop-types';
 import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider';
 import SideMenu from './SideMenu';
@@ -15,6 +15,8 @@ import modules from '../..';
 import CommunityName from '../../../shared/CommunityName';
 import CenteredContent from '../../../components/CenteredContent';
 import userProps from '../../../shared/types/user';
+import UserAvatar from '../../Users/Components/UserAvatar'
+import UserActionOptions from '../../Users/Components/UserActionOptions'
 
 const drawerWidth = 260;
 
@@ -59,6 +61,7 @@ export default function Main() {
 }
 
 export function MainNav({ authState }) {
+  const matches = useMediaQuery('(max-width:600px)')
   const classes = useStyles();
   const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -68,7 +71,6 @@ export function MainNav({ authState }) {
 
   return (
     <div className={classes.root}>
-      <CssBaseline />
       <AppBar position="fixed" className={classes.appBar}>
         <Toolbar>
           <IconButton
@@ -81,10 +83,18 @@ export function MainNav({ authState }) {
           >
             <MenuIcon />
           </IconButton>
+          <UserAvatar imageUrl={authState?.user?.imageUrl} />
+          <UserActionOptions />
           <NotificationBell user={authState.user} />
-          <CenteredContent>
-            <CommunityName authState={authState} />
-          </CenteredContent>
+          {matches ? (
+            <div style={{marginLeft: '100px'}}>
+              <CommunityName authState={authState} />
+            </div>
+          ) : (
+            <CenteredContent>
+              <CommunityName authState={authState} />
+            </CenteredContent>
+          )}
         </Toolbar>
       </AppBar>
       {authState.loggedIn && (

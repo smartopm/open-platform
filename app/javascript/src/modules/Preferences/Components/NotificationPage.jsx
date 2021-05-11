@@ -11,7 +11,7 @@ import {
   FormControlLabel
 } from '@material-ui/core'
 import PropTypes from 'prop-types'
-import CenteredContent from './CenteredContent'
+import CenteredContent from '../../../components/CenteredContent'
 
 export default function NotificationPage({
   handleChange,

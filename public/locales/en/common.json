@@ -139,7 +139,8 @@
     "user_journey_stats": "User Journey Stats",
     "edit": "Edit",
     "duplicate": "Duplicate",
-    "create": "Create"
+    "create": "Create",
+    "preferences": "Preferences"
   },
   "user_types": {
     "admin": "Admin",
