@@ -1,25 +1,21 @@
 import React, { useState } from 'react'
 import { Grid, IconButton } from '@material-ui/core'
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
+import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types'
 import DataList from '../../../shared/list/DataList';
 import MenuList from '../../../shared/MenuList'
 import { dateToString } from '../../../components/DateContainer';
 
-const mailListHeader = [
-  { title: 'Name', col: 2 },
-  { title: 'Subject', col: 5 },
-  { title: 'Date Created', col: 1 },
-  { title: 'Tag', col: 1 },
-  { title: 'Menu', col: 1 }
-];
+
 
 export default function MailTemplateItem({email, onTemplateClick, onTemplateDuplicate}) {
   const [anchorEl, setAnchorEl] = useState(null)
   const anchorElOpen = Boolean(anchorEl)
+  const { t } = useTranslation('common')
   const menuList = [
-    { content: 'Edit', isAdmin: true, handleClick: () => onTemplateClick(email) },
-    { content: 'Duplicate', isAdmin: true, handleClick: () => onTemplateDuplicate(email) },
+    { content: t('menu.edit'), isAdmin: true, handleClick: () => onTemplateClick(email) },
+    { content: t('menu.duplicate'), isAdmin: true, handleClick: () => onTemplateDuplicate(email) },
   ];
   const menuData = {
     menuList,
@@ -28,6 +24,23 @@ export default function MailTemplateItem({email, onTemplateClick, onTemplateDupl
     open: anchorElOpen,
     handleClose,
   }
+
+    /*
+    we will the list header to this once we change the datalist component
+    { title: t('table_headers.name'), col: 2 },
+    { title: t('table_headers.subject'), col: 5 },
+    { title: t('table_headers.date_created'), col: 1 },
+    { title: t('table_headers.tag'), col: 1 },
+    { title: t('table_headers.menu'), col: 1 }
+  */
+
+  const mailListHeader = [
+    { title: 'Name', col: 2 },
+    { title: 'Subject', col: 5 },
+    { title: 'Date Created', col: 1 },
+    { title: 'Tag', col: 1 },
+    { title: 'Menu', col: 1 }
+  ];
 
   function handleTemplateMenu(event){
     event.stopPropagation()

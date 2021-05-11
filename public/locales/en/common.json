@@ -15,7 +15,9 @@
     "state": "State",
     "add_phone_number": "Add New Phone Number",
     "add_email_address": "Add New Email Address",
-    "add_whatsapp_number": "Add New Whatsapp Number"
+    "add_whatsapp_number": "Add New Whatsapp Number",
+    "template_name": "Template Name",
+    "template_subject": "Template Subject"
   },
   "form_placeholders": {
     "phone_number": "Enter Phone Number",
@@ -134,7 +136,10 @@
     "search": "Search",
     "my_profile": "My Profile",
     "logout": "Logout",
-    "user_journey_stats": "User Journey Stats"
+    "user_journey_stats": "User Journey Stats",
+    "edit": "Edit",
+    "duplicate": "Duplicate",
+    "create": "Create"
   },
   "user_types": {
     "admin": "Admin",
@@ -145,6 +150,13 @@
     "security_guard": "Security Guard",
     "resident": "Resident",
     "contractor": "Contractor"
+  },
+  "table_headers": {
+    "date_created": "Date Created",
+    "subject": "Subject",
+    "tag": "Tag",
+    "menu": "Menu",
+    "name": "Name"
   },
   "errors": {
     "empty_text": "The message must contain some text"

@@ -5,6 +5,7 @@ import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
 import { useLazyQuery, useQuery, useMutation } from 'react-apollo';
 import { useHistory } from 'react-router';
+import { useTranslation } from 'react-i18next';
 import EmailBuilderDialog from './EmailBuilderDialog';
 import EmailDetailsDialog from './EmailDetailsDialog';
 import MailTemplateItem from './MailTemplateItem';
@@ -37,6 +38,7 @@ export default function MailTemplateList() {
   const type = path.get('type');
   const limit = 50;
   const [offset, setOffset] = useState(0);
+  const { t } = useTranslation(['email', 'common'])
 
   const { loading, error, data, refetch } = useQuery(EmailTemplatesQuery, {
     errorPolicy: 'all',
@@ -128,7 +130,7 @@ export default function MailTemplateList() {
       variables: { ...updatedDetails, body: html, data: editorData }
     })
       .then(() => {
-        setMessage({ ...message, detail: 'Email Template successfully duplicated', loading: false});
+        setMessage({ ...message, detail: t('email.email.duplicated'), loading: false});
         setAlertOpen(true);
         handleClose();
         refetch();
@@ -152,7 +154,7 @@ export default function MailTemplateList() {
         handleClose={handleClose}
         handleSave={handleDuplicateAndSaveTemplate}
         loading={message.loading}
-        dialogHeader="Duplicate Email Template"
+        dialogHeader={t('email.duplicate_email')}
         initialData={{
           name: currentEmail.name || '',
           subject: currentEmail.subject || '' 
@@ -198,7 +200,7 @@ export default function MailTemplateList() {
         onClick={handleTemplateDialog}
       >
         <AddIcon />
-        Create
+        {t('common:misc.create')}
       </Fab>
     </div>
   );

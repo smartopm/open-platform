@@ -8,9 +8,11 @@ import {
   TextField
 } from '@material-ui/core'
 import PropTypes from 'prop-types'
+import { useTranslation } from 'react-i18next'
 
 export default function EmailDetailsDialog({ open, handleClose, handleSave, loading, dialogHeader, initialData }) {
   const [details, setDetails] = useState({ name: '', subject: '' })
+  const { t } = useTranslation('common')
 
   useEffect(() => {
     if(initialData.name && initialData.subject){
@@ -23,7 +25,7 @@ export default function EmailDetailsDialog({ open, handleClose, handleSave, load
       <DialogTitle>{dialogHeader}</DialogTitle>
       <DialogContent>
         <TextField
-          label="Template Name"
+          label={t('form_fields.template_name')}
           className="form-control"
           aria-label="template_name"
           inputProps={{ 'data-testid': 'template_name' }}
@@ -34,7 +36,7 @@ export default function EmailDetailsDialog({ open, handleClose, handleSave, load
           required
         />
         <TextField
-          label="Template Subject"
+          label={t('form_fields.template_subject')}
           className="form-control"
           aria-label="template_subject"
           inputProps={{ 'data-testid': 'template_subject' }}
@@ -48,7 +50,7 @@ export default function EmailDetailsDialog({ open, handleClose, handleSave, load
       <br />
       <DialogActions style={{ justifyContent: 'flex-start' }}>
         <Button onClick={handleClose} color="secondary" variant="outlined" data-testid="cancel_btn">
-          Cancel
+          {t('form_actions.cancel')}
         </Button>
         <Button
           onClick={() => handleSave(details)}
@@ -57,7 +59,7 @@ export default function EmailDetailsDialog({ open, handleClose, handleSave, load
           disabled={loading}
           data-testid="save_btn"
         >
-          {`${loading ? 'Saving Changes' : ' Save Changes'}`}
+          {`${loading ? t('form_actions.saving') : t('form_actions.save')}`}
         </Button>
       </DialogActions>
     </Dialog>
