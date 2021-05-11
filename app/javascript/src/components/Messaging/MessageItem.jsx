@@ -1,13 +1,15 @@
-/* eslint-disable */
+/* eslint-disable react/require-default-props */
+/* eslint-disable react/no-unused-prop-types */
 import React from 'react'
 import PropTypes from 'prop-types'
 import ListItem from '@material-ui/core/ListItem'
+import { useTranslation } from 'react-i18next';
 import Badge from "@material-ui/core/Badge";
 import ListItemText from '@material-ui/core/ListItemText'
 import ListItemAvatar from '@material-ui/core/ListItemAvatar'
-import Avatar from '../Avatar'
 import { useHistory, useLocation } from 'react-router-dom'
 import { css, StyleSheet } from 'aphrodite'
+import Avatar from '../Avatar'
 import DateContainer from '../DateContainer'
 import { truncateString, findLinkAndReplace, sanitizeText } from '../../utils/helpers'
 import { userType } from '../../utils/constants'
@@ -26,10 +28,9 @@ export default function UserMessageItem({
   isAdmin,
   count
 }) {
-  let history = useHistory()
+  const history = useHistory()
   const location = useLocation()
-
-
+  const { t } = useTranslation('users')
 
   function handleReadMessages() {
     if (!isTruncate) return // we will be on user messages page
@@ -49,16 +50,26 @@ export default function UserMessageItem({
         <Avatar user={user} />
       </ListItemAvatar>
       <ListItemText
-        primary={
-          <React.Fragment>
+        primary={(
+          <>
             <span className="nz_msg_owner">
-
               {name}
               {
-                check_route(location.pathname) !== 'is_post' && (
-                  <Badge className="nz_msg_tag"
+                checkRoute(location.pathname) !== 'is_post' && (
+                  <Badge
+                    className="nz_msg_tag"
                     color={category === 'email' ? 'secondary' : 'error'}
-                    badgeContent={category && category === 'email' ? <span>{' '} Email</span> : <span>{' '}SMS</span>}
+                    badgeContent={category && category === 'email' ? (
+                      <span> 
+                        {' '}
+                        {t("common:form_fields.email")}
+                      </span>
+                      ) : (
+                        <span>
+                          {' '}
+                          SMS
+                        </span>
+                      )}
                     style={{ marginLeft: 25 }}
                   />
                 )
@@ -71,41 +82,46 @@ export default function UserMessageItem({
               )}
 
               <span className={css(styles.timeStamp)}>
-                Sent: <DateContainer date={dateMessageCreated} />
+                Sent: 
+                {' '}
+                <DateContainer date={dateMessageCreated} />
               </span>
             </span>
-          </React.Fragment>
-        }
-        secondary={
-          <React.Fragment>
+          </>
+        )}
+        secondary={(
+          <>
             <span className="nz_msg">
               {isTruncate ? (
                 truncateString(message, count)
               ) : (
-                  <span
-                    style={{
+                <span
+                  style={{
                        whiteSpace: 'pre-line'
                      }}
-                    dangerouslySetInnerHTML={{
+                  // eslint-disable-next-line react/no-danger
+                  dangerouslySetInnerHTML={{
                       __html: sanitizeText(findLinkAndReplace(message))
                     }}
-                  />
+                />
                 )}
             </span>
 
-            {isAdmin && check_route(location.pathname) !== 'is_post' && (
+            {isAdmin && checkRoute(location.pathname) !== 'is_post' && (
               <span className={`nz_read ${css(styles.timeStamp)}`}>
                 {isRead && readAt ? (
-                  <React.Fragment>
-                    Read: <DateContainer date={readAt} />
-                  </React.Fragment>
+                  <>
+                    Read: 
+                    {' '}
+                    <DateContainer date={readAt} />
+                  </>
                 ) : (
                     'Not Read'
                   )}
               </span>
             )}
-          </React.Fragment>
-        }
+          </>
+        )}
       />
     </ListItem>
   )
@@ -116,7 +132,7 @@ export default function UserMessageItem({
 // /user/blahblah ==> user profile
 // /messages ==> messages
 // /message/blah
-export function check_route(location) {
+export function checkRoute(location) {
   const routes = {
     news: 'is_post',
     user: 'is_profile',
@@ -124,11 +140,14 @@ export function check_route(location) {
     messages: 'is_message'
   }
   if(!location.length) return
+  // eslint-disable-next-line consistent-return
   return routes[location.split('/')[1]]
 }
 
 UserMessageItem.propTypes = {
+  id: PropTypes.string.isRequired, 
   name: PropTypes.string.isRequired,
+  // eslint-disable-next-line react/forbid-prop-types
   user: PropTypes.object,
   imageUrl: PropTypes.string,
   message: PropTypes.string,

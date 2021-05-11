@@ -166,7 +166,8 @@
     "communication": "Comunicación",
     "plots": "Parcelas",
     "forms": "Formularios",
-    "customer_journey": "Viaje del cliente"
+    "customer_journey": "Viaje del cliente",
+    "no_message": "Aún no hay mensajes para este usuario"
   },
   "user_types": {
     "admin": "Administrador",

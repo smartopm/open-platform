@@ -103,7 +103,8 @@
     "contact": "Contact",
     "communication": "Communication",
     "plots": "Plots",
-    "forms": "Forms"
+    "forms": "Forms",
+    "no_message": "There are no messages yet for this user"
   },
   "menu": {
     "invoice": "Invoice",
