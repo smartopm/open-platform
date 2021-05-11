@@ -70,10 +70,10 @@ describe('Email Builder Component', () => {
     );
 
     render(<EmailEditor />)
-    expect(container.queryByText('Update')).toBeInTheDocument();
+    expect(container.queryByText('common:form_actions.update')).toBeInTheDocument();
 
     fireEvent.click(container.queryByTestId('submit_btn'));
-    expect(container.queryByTestId('submit_btn').textContent).toContain('Saving...')
+    expect(container.queryByTestId('submit_btn').textContent).toContain('common:form_actions.saving')
 
     fireEvent.click(container.queryByTestId('close_btn'))
     expect(props.handleClose).toBeCalled()
