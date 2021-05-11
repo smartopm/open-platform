@@ -19,6 +19,10 @@ Rails.application.routes.draw do
     get 'fb_oauth', :to => 'users/omniauth_callbacks#fblogin'
   end
 
+  get "/service-worker.js", to: "service_worker#service_worker"
+  get "/manifest.json", to: "service_worker#manifest"
+  get "/offline.html", to: "service_worker#offline"
+
   get 'qr_code', to: 'home#qr_code'
   get 'hold', to: 'home#hold'
   get '*path', to: 'home#react', constraints: lambda { |req|

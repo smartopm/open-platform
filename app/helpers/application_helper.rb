@@ -36,13 +36,6 @@ module ApplicationHelper # rubocop:disable Style/Documentation
   end
   # rubocop:enable Rails/HelperInstanceVariable
 
-  def multi_tenancy_manifest_file(community_name)
-    # handle spanish special characters without translation or enconding
-    return '/ciudadmorazanmanifest.json' if community_name.eql?('Ciudad Morazán')
-
-    "/#{community_name.downcase}manifest.json"
-  end
-
   private
 
   # rubocop:disable Layout/LineLength:
