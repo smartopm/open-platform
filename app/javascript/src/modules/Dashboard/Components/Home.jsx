@@ -49,8 +49,8 @@ export default function Home() {
         )
       )}
       {authState.user.userType !== 'admin' && authState.user.userType !==  'client'  && (
-        <div>
-          <NewsFeed wordpressEndpoint={authState.user?.community.wpLink} translate={t} />
+        <div style={{paddingTop: '50px'}}>
+          <NewsFeed wordpressEndpoint={authState.user?.community.wpLink} />
           <Homepage authState={authState} />
         </div>
       )}
