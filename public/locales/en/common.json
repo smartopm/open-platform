@@ -27,7 +27,8 @@
     "search_user": "Search User",
     "search": "Search",
     "add_note": "Add your notes here",
-    "flag": "Flag as a todo"
+    "flag": "Flag as a todo",
+    "message": "Type message here"
   },
   "form_actions": {
     "send_email": "Send Email",
@@ -104,7 +105,13 @@
     "communication": "Communication",
     "plots": "Plots",
     "forms": "Forms",
-    "no_message": "There are no messages yet for this user"
+    "no_message": "There are no messages yet for this user",
+    "sent": "Sent",
+    "read": "Read",
+    "not_read": "Not Read",
+    "count": "Character Count: {{numb}}",
+    "more_message": "Load more messages",
+    "no_plot": "No plots information available"
   },
   "menu": {
     "invoice": "Invoice",

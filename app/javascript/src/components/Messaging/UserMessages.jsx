@@ -99,7 +99,7 @@ export default function UserMessages() {
                   {data?.userMessages.length >= limit && (
                   <CenteredContent>
                     <Button variant="outlined" onClick={fetchMoreMessages}>
-                      {isLoading ? <Spinner /> : 'Load more messages'}
+                      {isLoading ? <Spinner /> : t('common:misc.more_message')}
                     </Button>
                   </CenteredContent>
                           )}
@@ -125,10 +125,10 @@ export default function UserMessages() {
           id="standard-full-width"
           // label="Type message here"
           style={{ width: '95vw', margin: 26, marginTop: 7 }}
-          placeholder="Type message here"
+          placeholder={t("common:form_placeholders.message")}
           value={message}
           onChange={event => setMessage(event.target.value)}
-          helperText={`Character count: ${message.length}`}
+          helperText={t('common:misc.count', { numb: message.length })}
           multiline
           rows={3}
           margin="normal"
@@ -144,7 +144,7 @@ export default function UserMessages() {
         disabled={isMsgLoading}
         style={{ marginTop: -37, marginRight: 34, float: 'right' }}
       >
-        Send
+        {t('common:misc.send')}
       </Button>
       {errmsg && <p className="text-center text-danger">{errmsg}</p>}
     </>

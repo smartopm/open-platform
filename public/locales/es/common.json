@@ -89,7 +89,8 @@
     "search_user": "Buscar usuario",
     "search": "Buscar",
     "add_note": "Agrega tus notas aquí",
-    "flag": "Marcar como tarea"
+    "flag": "Marcar como tarea",
+    "message": "Escriba el mensaje aquí"
   },
   "misc": {
     "action_flows": "Flujos de acción",
@@ -167,7 +168,13 @@
     "plots": "Parcelas",
     "forms": "Formularios",
     "customer_journey": "Viaje del cliente",
-    "no_message": "Aún no hay mensajes para este usuario"
+    "no_message": "Aún no hay mensajes para este usuario",
+    "sent": "Enviada",
+    "read": "Leer",
+    "not_read": "No leer",
+    "count": "Número de letras: {{numb}}",
+    "more_message": "Cargar más mensajes",
+    "no_plot": "No hay información de parcelas disponible"
   },
   "user_types": {
     "admin": "Administrador",

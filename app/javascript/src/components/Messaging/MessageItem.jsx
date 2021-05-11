@@ -1,5 +1,4 @@
 /* eslint-disable react/require-default-props */
-/* eslint-disable react/no-unused-prop-types */
 import React from 'react'
 import PropTypes from 'prop-types'
 import ListItem from '@material-ui/core/ListItem'
@@ -82,7 +81,8 @@ export default function UserMessageItem({
               )}
 
               <span className={css(styles.timeStamp)}>
-                Sent: 
+                {t("common:misc.sent")}
+                : 
                 {' '}
                 <DateContainer date={dateMessageCreated} />
               </span>
@@ -111,12 +111,13 @@ export default function UserMessageItem({
               <span className={`nz_read ${css(styles.timeStamp)}`}>
                 {isRead && readAt ? (
                   <>
-                    Read: 
+                    {t("common:misc.read")}
+                    : 
                     {' '}
                     <DateContainer date={readAt} />
                   </>
                 ) : (
-                    'Not Read'
+                  t("common:misc.not_read")
                   )}
               </span>
             )}
@@ -149,7 +150,6 @@ UserMessageItem.propTypes = {
   name: PropTypes.string.isRequired,
   // eslint-disable-next-line react/forbid-prop-types
   user: PropTypes.object,
-  imageUrl: PropTypes.string,
   message: PropTypes.string,
   clientNumber: PropTypes.string,
   category: PropTypes.string,

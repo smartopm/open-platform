@@ -111,7 +111,7 @@ export default function UserInformation({
   }
 
   return (
-    <div>
+    <div style={{overflow: 'hidden'}}>
       <>
         <Dialog
           open={isDialogOpen}
