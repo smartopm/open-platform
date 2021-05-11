@@ -1,5 +1,5 @@
 /* eslint-disable no-nested-ternary */
-import React, { useRef, useState } from 'react';
+import React, { useContext, useRef, useState } from 'react';
 import Dialog from '@material-ui/core/Dialog';
 import EmailEditor from 'react-email-editor';
 import AppBar from '@material-ui/core/AppBar';
@@ -15,6 +15,7 @@ import EmailDetailsDialog from './EmailDetailsDialog';
 import MessageAlert from '../../../components/MessageAlert';
 import { formatError } from '../../../utils/helpers';
 import CreateEmailTemplateMutation, { EmailUpdateMutation } from '../graphql/email_mutations';
+import { Context } from '../../../containers/Provider/AuthStateProvider';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -28,6 +29,8 @@ export default function EmailBuilderDialog({ initialData, open, handleClose, ema
   const [alertOpen, setAlertOpen] = useState(false);
   const [message, setMessage] = useState({ isError: false, detail: '', loading: false });
   const { t } = useTranslation(['email' ,'common'])
+  const defaultLanguage = localStorage.getItem('default-language');
+  const authState = useContext(Context)
 
   function handleAlertClose() {
     setAlertOpen(false);
@@ -121,7 +124,7 @@ export default function EmailBuilderDialog({ initialData, open, handleClose, ema
             </Button>
           </Toolbar>
         </AppBar>
-        <EmailEditor ref={emailEditorRef} onLoad={onLoad} />
+        <EmailEditor ref={emailEditorRef} onLoad={onLoad} options={{ locale: defaultLanguage || authState.user?.community.locale }} />
       </Dialog>
     </>
   );
