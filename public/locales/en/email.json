@@ -1,0 +1,8 @@
+{
+  "email": {
+    "email_updated": "Email Template successfully updated",
+    "email_saved": "Email Template successfully saved",
+    "email_duplicated": "Email Template successfully duplicated",
+    "duplicate_email": "Duplicate Email Template"
+  }
+}
