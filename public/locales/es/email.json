@@ -1,0 +1,8 @@
+{
+  "email": {
+    "duplicate_email": "Plantilla de correo electrónico duplicada",
+    "email_duplicated": "Plantilla de correo electrónico duplicada correctamente",
+    "email_saved": "Plantilla de correo electrónico guardada correctamente",
+    "email_updated": "Plantilla de correo electrónico actualizada correctamente"
+  }
+}
