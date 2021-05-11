@@ -1,5 +1,5 @@
 #### Summary
-(Summarize the bug encountered concisely)
+<!-- Summarize the bug encountered concisely) -->
 
 
 #### Steps to reproduce
