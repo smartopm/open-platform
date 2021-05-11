@@ -52,7 +52,8 @@ class Wallet < ApplicationRecord
   # @param inv [Invoice]
   #
   # @return [void]
-  def create_transaction(payment_amount, inv)
+  # rubocop:disable Metrics/MethodLength
+  def create_transaction(payment_amount, inv, created_at = Time.zone.now)
     user.wallet_transactions.create!({
                                        source: 'wallet',
                                        destination: 'invoice',
@@ -62,9 +63,11 @@ class Wallet < ApplicationRecord
                                        current_wallet_balance: balance,
                                        community_id: user.community_id,
                                        payment_plan: inv.payment_plan,
+                                       created_at: created_at,
                                      })
   end
 
+  # rubocop:enable Metrics/MethodLength
   # Transfer remaining plot balance to Wallet's unallocated funds.
   # * Updates payment plan's plot_balance to zero.
   # * Adds remaining plot balance to Wallet#unallocated_funds.
@@ -230,14 +233,16 @@ class Wallet < ApplicationRecord
   # @param transaction [WalletTransaction]
   #
   # @return [void]
+  # rubocop:disable Metrics/AbcSize
   def make_payment(inv, payment_amount, transaction)
-    create_transaction(payment_amount, inv)
+    create_transaction(payment_amount, inv, transaction.created_at)
     payment = Payment.create(amount: payment_amount, payment_type: 'wallet',
                              user_id: user.id, community_id: user.community_id,
-                             payment_status: 'settled')
+                             payment_status: 'settled', created_at: transaction.created_at)
     payment.payment_invoices.create(invoice_id: inv.id, wallet_transaction_id: transaction.id)
     inv.update(pending_amount: inv.pending_amount - payment_amount)
     inv.paid! if inv.pending_amount.zero?
   end
+  # rubocop:enable Metrics/AbcSize
 end
 # rubocop:enable Metrics/ClassLength

@@ -39,6 +39,33 @@ RSpec.describe Mutations::Transaction::WalletTransactionCreate do
       GQL
     end
 
+    let(:past_payment_mutation) do
+      <<~GQL
+        mutation walletTransactionCreate (
+          $userId: ID!,
+          $amount: Float!,
+          $source: String!,
+          $landParcelId: ID!,
+          $createdAt: String
+        ) {
+          walletTransactionCreate(
+            userId: $userId,
+            amount: $amount,
+            source: $source,
+            landParcelId: $landParcelId,
+            createdAt: $createdAt
+          ){
+            walletTransaction {
+              id
+              settledInvoices
+              currentPendingPlotBalance
+              createdAt
+            }
+          }
+        }
+      GQL
+    end
+
     describe '#resolve' do
       context 'when payment plan is not present' do
         it 'raises plan required error' do
@@ -157,6 +184,33 @@ RSpec.describe Mutations::Transaction::WalletTransactionCreate do
             expect(user.wallet.pending_balance).to eql 50
           end
         end
+      end
+    end
+
+    context 'when payment is of past date' do
+      before do
+        payment_plan
+        invoice
+      end
+
+      it 'creates transaction and updates wallet balance' do
+        expect(user.wallet.balance).to eql 0
+        variables = {
+          userId: user.id,
+          amount: 10,
+          source: 'cash',
+          landParcelId: land_parcel.id,
+          createdAt: 10.days.ago.to_s,
+        }
+        DoubleGdpSchema.execute(past_payment_mutation, variables: variables,
+                                                       context: {
+                                                         current_user: admin,
+                                                         site_community: user.community,
+                                                       }).as_json
+        past_date = 10.days.ago.to_date
+        expect(user.wallet_transactions.count).to eql 2
+        expect(user.wallet_transactions.pluck(:created_at).uniq.last.to_date).to eql past_date
+        expect(user.payments.last.created_at.to_date).to eql past_date
       end
     end
 
