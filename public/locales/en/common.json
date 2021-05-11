@@ -17,14 +17,17 @@
     "add_email_address": "Add New Email Address",
     "add_whatsapp_number": "Add New Whatsapp Number",
     "template_name": "Template Name",
-    "template_subject": "Template Subject"
+    "template_subject": "Template Subject",
+    "accounts": "Accounts"
   },
   "form_placeholders": {
     "phone_number": "Enter Phone Number",
     "email": "Enter Email",
     "action_note": "Type action note here",
     "search_user": "Search User",
-    "search": "Search"
+    "search": "Search",
+    "add_note": "Add your notes here",
+    "flag": "Flag as a todo"
   },
   "form_actions": {
     "send_email": "Send Email",

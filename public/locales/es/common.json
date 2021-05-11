@@ -32,7 +32,8 @@
     "state": "Ciudad",
     "template_name": "Nombre de plantilla",
     "template_subject": "Asunto de la plantilla",
-    "user_type": "Tipo de usuario"
+    "user_type": "Tipo de usuario",
+    "accounts": "Cuentas"
   },
   "form_placeholders": {
     "action_note": "Escriba que sea hacer aquí",
@@ -62,7 +63,6 @@
     "preferences": "Preferencias",
     "print_id": "Imprimir ID",
     "request_forms": "Formularios de solicitud y permisos",
-    "search": "Buscar",
     "send_otp": "Enviar OTP",
     "send_sms": "Enviar SMS",
     "send_sms_to": "Enviar SMS a ",
@@ -85,7 +85,11 @@
     "plot": "La Parcela",
     "plot_plural": "Parcelas",
     "transaction": "Transacción",
-    "transaction_plural": "Actas"
+    "transaction_plural": "Actas",
+    "search_user": "Buscar usuario",
+    "search": "Buscar",
+    "add_note": "Agrega tus notas aquí",
+    "flag": "Marcar como tarea"
   },
   "misc": {
     "action_flows": "Flujos de acción",

@@ -186,11 +186,11 @@ export default function UserInformation({
               <div className="container">
                 <form id="note-form">
                   <div className="form-group">
-                    Notes
+                    {t("common:misc.notes")}
                     <br />
                     <textarea
                       className="form-control"
-                      placeholder="Add your notes here"
+                      placeholder={t("common:form_placeholders.add_note")}
                       id="notes"
                       rows="4"
                       ref={register({ required: true })}
@@ -204,7 +204,7 @@ export default function UserInformation({
                     onClick={handleSubmit(onSaveNote)}
                     disabled={mutationLoading}
                   >
-                    {mutationLoading ? 'Saving ...' : 'Save'}
+                    {mutationLoading ? t("common:form_actions.saving") : t("common:form_actions.save")}
                   </button>
                 </form>
                 <br />
