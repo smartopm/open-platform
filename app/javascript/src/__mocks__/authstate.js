@@ -7,7 +7,7 @@ const authState = {
       email: 'user@community.co',
       expiresAt: null,
       id: '11cdad78',
-      imageUrl: null,
+      imageUrl: 'image.jpg',
       name: 'John Doctor',
       phoneNumber: '260971500000',
       userType: 'admin'

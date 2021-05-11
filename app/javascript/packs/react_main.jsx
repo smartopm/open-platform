@@ -57,7 +57,7 @@ import ThemeProvider from '../Themes/Nkwashi/ThemeProvider';
 import DiscussonPage from '../src/containers/Discussions/DiscussionPage';
 import BusinessProfile from '../src/containers/Businesses/BusinessProfile';
 import GeoMap from '../src/containers/GeoMap';
-import Notifications from '../src/containers/Preferences/Notifications';
+import Notifications from '../src/modules/Preferences/Components/Notifications';
 import { theme } from '../src/themes/nkwashi/theme';
 import FormPage from '../src/containers/Forms/FormPage';
 
@@ -257,7 +257,6 @@ const App = () => {
                                 <Route path="/mobile_money" component={MobileMoney} />
                                 <Route path="/settings" component={Notifications} />
                                 {/* <Route path="/otp_sent" component={OTPFeedbackScreen} /> */}
-                                <Route path="/referral" component={UserEdit} />
                                 <Route path="/myaccount/:id" component={UserShow} />
                                 {/* requests */}
                                 {/* Guard home is somehow kinda special leaving it now */}

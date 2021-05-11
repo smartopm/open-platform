@@ -245,6 +245,10 @@
   overflow-y: hidden;
 }
 
+body {
+  background-color: #FFFFFF;
+}
+
 .qrcode {
   width: 98px;
   height: 90px;

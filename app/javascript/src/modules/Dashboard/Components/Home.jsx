@@ -20,8 +20,7 @@ export default function Home() {
 
   if (!authState.loggedIn) return <Loading />;
   return (
-    // todo: tolu will refactor this to be more dynamic
-    <div style={{backgroundColor: '#FFFFFF', marginTop: '-30px', overflow: 'hidden'}}>
+    <div style={{marginTop: '-30px'}}>
       <LanguageToggle />
       {authState.user.userType === 'admin' && (
         <div>
@@ -42,7 +41,7 @@ export default function Home() {
             {authState.user.subStatus && (
               <CustomerJourneyStatus subStatus={authState.user.subStatus} communityName={authState.user.community.name} />
             )}
-            <Divider />
+            <Divider style={{marginTop: '30px'}} />
             <PlotDetail authState={authState.user} />
             <Divider />
             <NewsFeed wordpressEndpoint={authState.user?.community.wpLink} translate={t} />

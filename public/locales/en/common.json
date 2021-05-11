@@ -131,7 +131,8 @@
     "search": "Search",
     "my_profile": "My Profile",
     "logout": "Logout",
-    "user_journey_stats": "User Journey Stats"
+    "user_journey_stats": "User Journey Stats",
+    "preferences": "Preferences"
   },
   "user_types": {
     "admin": "Admin",
