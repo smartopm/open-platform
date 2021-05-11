@@ -10,6 +10,7 @@ import Slide from '@material-ui/core/Slide';
 import Button from '@material-ui/core/Button';
 import PropTypes from 'prop-types';
 import { useMutation } from 'react-apollo';
+import { useTranslation } from 'react-i18next';
 import EmailDetailsDialog from './EmailDetailsDialog';
 import MessageAlert from '../../../components/MessageAlert';
 import { formatError } from '../../../utils/helpers';
@@ -26,6 +27,7 @@ export default function EmailBuilderDialog({ initialData, open, handleClose, ema
   const [detailsOpen, setOpenDetails] = useState(false);
   const [alertOpen, setAlertOpen] = useState(false);
   const [message, setMessage] = useState({ isError: false, detail: '', loading: false });
+  const { t } = useTranslation(['email' ,'common'])
 
   function handleAlertClose() {
     setAlertOpen(false);
@@ -38,7 +40,7 @@ export default function EmailBuilderDialog({ initialData, open, handleClose, ema
         variables: { id: emailId, body: data.html, data }
       })
         .then(() => {
-          setMessage({ ...message, isError: false, detail: 'Email Template successfully updated', loading: false});
+          setMessage({ ...message, isError: false, detail: t('email.email_updated'), loading: false});
           setAlertOpen(true);
           handleClose();
           refetchEmails()
@@ -58,7 +60,7 @@ export default function EmailBuilderDialog({ initialData, open, handleClose, ema
         variables: { ...details, body: html, data }
       })
         .then(() => {
-          setMessage({ ...message, detail: 'Email Template successfully saved', loading: false});
+          setMessage({ ...message, detail: t('email.email_saved'), loading: false});
           setAlertOpen(true);
           handleClose();
           handleDetailsDialog();
@@ -115,7 +117,7 @@ export default function EmailBuilderDialog({ initialData, open, handleClose, ema
               disabled={message.loading}
               data-testid="submit_btn"
             >
-              {`${emailId && message.loading ? 'Saving...' : emailId ? 'Update' :  'Save'}`}
+              {`${emailId && message.loading ? t('common:form_actions.saving') : emailId ? t('common:form_actions.update') :  t('common:form_actions.save')}`}
             </Button>
           </Toolbar>
         </AppBar>

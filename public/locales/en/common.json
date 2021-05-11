@@ -31,7 +31,10 @@
     "submitting": "Submitting ...",
     "assign_label": "Assign Label",
     "create_campaign": "Create Campaign",
-    "assign": "Assign"
+    "assign": "Assign",
+    "save": "Save",
+    "saving": "Saving ...",
+    "update": "Update"
   },
   "misc": {
     "or": "OR",
