@@ -111,7 +111,10 @@
     "not_read": "Not Read",
     "count": "Character Count: {{numb}}",
     "more_message": "Load more messages",
-    "no_plot": "No plots information available"
+    "no_plot": "No plots information available",
+    "plot_message": "Plots associated with this account",
+    "plot_details": "This data was updated on {{date}}. If Something seems incorrect, contact our",
+    "support_team": "Support Team."
   },
   "menu": {
     "invoice": "Invoice",

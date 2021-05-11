@@ -43,7 +43,10 @@ export default function UserPlotInfo({ account }) {
             <div>
               <div style={{ display: 'flex' }}>
                 <Typography variant="body1">
-                  <b>Plots associated with this account:</b>
+                  <b>
+                    {t("common:misc.plot_message")}
+                    :
+                  </b>
                 </Typography>
               </div>
               {parcels().map((plot, index) => (
@@ -53,13 +56,11 @@ export default function UserPlotInfo({ account }) {
                 </div>
               ))}
               <Typography variant="body2">
-                {`This data was updated on ${dateToString(
-                  parcels()[parcels().length - 1]?.updatedAt
-                )}. If Something seems incorrect, contact our`}
+                {t('common:misc.plot_details', { date: dateToString(parcels()[parcels().length - 1]?.updatedAt) })}
                 <span className={css(styles.supportLink)}>
                   &nbsp;
                   <Link data-testid="support_link" to="/contact" className={css(styles.routeLink)}>
-                    Support Team.
+                    {t("common:misc.support_team")}
                   </Link>
                 </span>
               </Typography>

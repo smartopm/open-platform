@@ -174,7 +174,10 @@
     "not_read": "No leer",
     "count": "Número de letras: {{numb}}",
     "more_message": "Cargar más mensajes",
-    "no_plot": "No hay información de parcelas disponible"
+    "no_plot": "No hay información de parcelas disponible",
+    "plot_message": "Parcelas asociadas a esta cuenta",
+    "plot_details": "Estos datos se actualizaron el {{date}}. Si algo parece incorrecto, comuníquese con nuestro",
+    "support_team": "Equipo de apoyo."
   },
   "user_types": {
     "admin": "Administrador",
