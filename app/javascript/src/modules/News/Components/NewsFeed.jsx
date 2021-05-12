@@ -6,6 +6,7 @@ import GridList from '@material-ui/core/GridList'
 import GridListTile from '@material-ui/core/GridListTile'
 import useMediaQuery from '@material-ui/core/useMediaQuery'
 import { Typography } from '@material-ui/core'
+import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types'
 import { useFetch } from '../../../utils/customHooks'
 import { Spinner } from '../../../shared/Loading'
@@ -33,8 +34,9 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-export function PostItemGrid({ data, translate }) {
+export function PostItemGrid({ data }) {
   const classes = useStyles()
+  const { t } = useTranslation('common')
   const matches = useMediaQuery('(max-width:600px)')
 
   function routeToPost(postId) {
@@ -47,7 +49,7 @@ export function PostItemGrid({ data, translate }) {
         data-testid="recent_news"
         style={matches ? {margin: '20px 0 20px 20px', fontSize: '14px', fontWeight: 500, color: '#141414'} : {margin: '40px 0 20px 79px', fontWeight: 500, fontSize: '22px', color: '#141414'}}
       >
-        {translate('common:misc.recent_news')}
+        {t("common:misc.recent_news")}
       </Typography>
       <div className={classes.root} style={matches ? {margin: '0 20px'} : {margin: '0 79px'}}>
         <GridList
@@ -79,7 +81,7 @@ export function PostItemGrid({ data, translate }) {
   )
 }
 
-export default function NewsFeed({ wordpressEndpoint, translate }) {
+export default function NewsFeed({ wordpressEndpoint }) {
   const { response, error } = useFetch(`${wordpressEndpoint}/posts`)
   if (error) {
     return (
@@ -103,7 +105,7 @@ export default function NewsFeed({ wordpressEndpoint, translate }) {
       )
   }
 
-  return <PostItemGrid data={postsToDisplay(response.posts)} translate={translate} />
+  return <PostItemGrid data={postsToDisplay(response.posts)} />
 }
 
 function postsToDisplay(posts) {
