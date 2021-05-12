@@ -100,7 +100,6 @@ export default function MailTemplateList() {
   }
 
   function handleDuplicateTemplate(emailData){
-    console.log('to duplicate', emailData)
     const emailTemplate = getDuplicateEmailDetails(emailData)
     setCurrentEmail(emailTemplate);
     history.push(`/mail_templates?type=duplicate`);
