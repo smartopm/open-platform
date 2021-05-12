@@ -61,6 +61,7 @@ export default function UserJourneyDialog({ open, handleModalClose, refetch, log
         handleModal={handleModalClose}
         dialogHeader={t("users.user_step")}
         handleBatchFilter={handleSubmit}
+        cancelAction={t("common:form_actions.cancel")}
         saveAction={state.isLoading ? t("common:form_actions.saving") : t("common:form_actions.save")}
       >
         <DatePickerDialog
