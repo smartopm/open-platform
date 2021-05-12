@@ -100,6 +100,7 @@ export default function MailTemplateList() {
   }
 
   function handleDuplicateTemplate(emailData){
+    console.log('to duplicate', emailData)
     const emailTemplate = getDuplicateEmailDetails(emailData)
     setCurrentEmail(emailTemplate);
     history.push(`/mail_templates?type=duplicate`);
@@ -156,8 +157,8 @@ export default function MailTemplateList() {
         loading={message.loading}
         dialogHeader={t('email.duplicate_email')}
         initialData={{
-          name: currentEmail.name || '',
-          subject: currentEmail.subject || '' 
+          name: currentEmail?.name || '',
+          subject: currentEmail?.subject || '' 
         }}
       />
       <EmailBuilderDialog
