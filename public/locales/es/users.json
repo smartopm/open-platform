@@ -15,6 +15,16 @@
       "preferences_subtext": "Establecer preferencias de notificación",
       "support": "{{communityName}} Apoyo",
       "support_subtext": "¿Tiene problemas? Comuníquese con el servicio de atención al cliente",
-      "logout_subtext": "Cierre sesión en su cuenta de DoubleGDP"
+      "logout_subtext": "Cierre sesión en su cuenta de DoubleGDP",
+      "user_journey_message": "No hay registros de recorrido del cliente para este usuario.",
+      "user_journey_status": "cambio de estado de",
+      "to": "a",
+      "between": "Entre",
+      "from": "de",
+      "and": "y {{date}}",
+      "change": "estado cambiado",
+      "user_success": "Actualizado exitosamente",
+      "user_step": "Editar inicio para este paso",
+      "journey_start": "Fecha de inicio del viaje del cliente"
     }
   }
