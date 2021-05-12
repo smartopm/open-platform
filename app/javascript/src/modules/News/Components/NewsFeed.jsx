@@ -34,7 +34,7 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-export function PostItemGrid({ data, translate }) {
+export function PostItemGrid({ data }) {
   const classes = useStyles()
   const { t } = useTranslation('common')
   const matches = useMediaQuery('(max-width:600px)')
@@ -81,7 +81,7 @@ export function PostItemGrid({ data, translate }) {
   )
 }
 
-export default function NewsFeed({ wordpressEndpoint, translate }) {
+export default function NewsFeed({ wordpressEndpoint }) {
   const { response, error } = useFetch(`${wordpressEndpoint}/posts`)
   if (error) {
     return (
@@ -105,7 +105,7 @@ export default function NewsFeed({ wordpressEndpoint, translate }) {
       )
   }
 
-  return <PostItemGrid data={postsToDisplay(response.posts)} translate={translate} />
+  return <PostItemGrid data={postsToDisplay(response.posts)} />
 }
 
 function postsToDisplay(posts) {

@@ -16,10 +16,9 @@ describe('Details page for news post content', () => {
       ID: 24
     }
   ]
-  const translate = jest.fn()
 
   it('it should include the post details ', () => {
-    const container = render(<PostItemGrid data={response} translate={translate} />)
+    const container = render(<PostItemGrid data={response} />)
     expect(container.queryByText('Test title')).toBeInTheDocument()
     expect(container.queryByTestId('recent_news')).toBeInTheDocument()
     expect(container.queryByText('Test Another title')).toBeInTheDocument()
@@ -28,7 +27,7 @@ describe('Details page for news post content', () => {
   })
     
   it('it should not display anything when no data is available ', () => {
-    const container = render(<PostItemGrid data={[]} translate={translate} />)
+    const container = render(<PostItemGrid data={[]} />)
     expect(container.queryByText('Test title')).not.toBeInTheDocument()
     expect(container.queryByText('Test Another title')).not.toBeInTheDocument()
   })
