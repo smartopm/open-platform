@@ -2,6 +2,7 @@
 import React, { useContext, useState, useEffect } from 'react'
 import { useQuery } from 'react-apollo'
 import { Typography } from '@material-ui/core'
+import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types'
 import { useHistory } from 'react-router'
 import { useTheme } from '@material-ui/core/styles';
@@ -34,6 +35,7 @@ export default function TransactionsList({ userId, user, userData, paymentSubTab
   const [open, setOpen] = useState(!!tab)
   const [payOpen, setPayOpen] = useState(false)
   const theme = useTheme();
+  const { t } = useTranslation('users')
   const matches = useMediaQuery(theme.breakpoints.up('sm'));
   const { loading, data: transactionsData, error, refetch } = useQuery(
     TransactionQuery,
@@ -138,13 +140,13 @@ export default function TransactionsList({ userId, user, userData, paymentSubTab
             {
               walletData.userBalance?.balance > 0 && (
                 <div style={{display: 'flex', flexDirection: 'column', marginLeft: '30px'}}>
-                  <Typography variant='subtitle1'>Unallocated Funds</Typography>
+                  <Typography variant='subtitle1'>{t("users.unallocated_funds")}</Typography>
                   <Typography variant="h5" color='primary'>{formatMoney(currencyData, walletData.userBalance?.balance)}</Typography>
                 </div>
               )
             }
             <div style={{display: 'flex', flexDirection: 'column', marginLeft: '40px'}}>
-              <Typography variant='subtitle1'>Balance</Typography>
+              <Typography variant='subtitle1'>{t("users.balance")}</Typography>
               <Typography variant="h5" color='primary'>{formatMoney(currencyData, walletData.userBalance?.pendingBalance)}</Typography>
             </div>
           </div>
@@ -153,8 +155,8 @@ export default function TransactionsList({ userId, user, userData, paymentSubTab
       {
             authState.user?.userType === 'admin' && (
               <div style={{marginLeft: '20px'}}>
-                <ButtonComponent color='primary' buttonText='Make a Payment' handleClick={() => setPayOpen(true)} />
-                <ButtonComponent color='primary' buttonText='Add an Invoice' handleClick={() => handleModalOpen()} />
+                <ButtonComponent color='primary' buttonText={t("users.make_payment")} handleClick={() => setPayOpen(true)} />
+                <ButtonComponent color='primary' buttonText={t("users.add_invoice")} handleClick={() => handleModalOpen()} />
               </div>
             )
       }
@@ -164,9 +166,9 @@ export default function TransactionsList({ userId, user, userData, paymentSubTab
           onChange={handleChange}
           aria-label="Transactions tabs"
         >
-          <StyledTab label="Invoices" value="Invoices" />
-          <StyledTab label="Transactions" value="Transactions" />
-          <StyledTab label="Plans" value="Plans" />
+          <StyledTab label={t("common:menu.invoice_plural")} value="Invoices" />
+          <StyledTab label={t("common:menu.transaction_plural")} value="Transactions" />
+          <StyledTab label={t("common:menu.plan_plural")} value="Plans" />
         </StyledTabs>
       </div>
       <InvoiceModal

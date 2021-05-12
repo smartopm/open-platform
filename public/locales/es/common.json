@@ -89,8 +89,7 @@
     "search_user": "Buscar usuario",
     "search": "Buscar",
     "add_note": "Agrega tus notas aquí",
-    "flag": "Marcar como tarea",
-    "message": "Escriba el mensaje aquí"
+    "flag": "Marcar como tarea"
   },
   "misc": {
     "action_flows": "Flujos de acción",

@@ -114,7 +114,10 @@
     "no_plot": "No plots information available",
     "plot_message": "Plots associated with this account",
     "plot_details": "This data was updated on {{date}}. If Something seems incorrect, contact our",
-    "support_team": "Support Team."
+    "support_team": "Support Team.",
+    "reversal": "Reversal",
+    "deposit": "Deposit",
+    "invoice_detail": "Invoice {{inv}}"
   },
   "menu": {
     "invoice": "Invoice",
@@ -179,7 +182,23 @@
     "subject": "Subject",
     "tag": "Tag",
     "menu": "Menu",
-    "name": "Name"
+    "name": "Name",
+    "deposit_date": "Deposit/Issue date",
+    "parcel_number": "Parcel Number",
+    "description": "Description",
+    "amount": "Amount",
+    "status": "Status",
+    "issue_date": "Issue Date",
+    "payment_date": "Payment Date",
+    "plot_number": "Plot Number",
+    "start_date": "Start Date",
+    "valuation": "% of total valuation",
+    "pay_day": "Payment Day",
+    "due_date": "Due Date"
+  },
+  "table_content": {
+    "invoice_number": "Invoice Number {{numb}}",
+    "plot_number": "Plot Number {{numb}}"
   },
   "sub_status": {
     "plots_fully_purchased": "Plots Fully Purchased",
@@ -189,6 +208,17 @@
     "construction_in_progress": "Construction in Progress",
     "construction_completed": "Construction Completed",
     "construction_in_progress_self_build": "Construction in Progress (Self Build)"
+  },
+  "invoice_status": {
+    "in_progress": "In-Progress",
+    "paid": "Paid",
+    "late": "Late",
+    "cancelled": "Cancelled",
+    "settled": "Settled",
+    "pending": "Pending",
+    "due": "Due",
+    "progress": "In-Progress",
+    "unpaid": "Unpaid"
   },
   "errors": {
     "empty_text": "The message must contain some text"
