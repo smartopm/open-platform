@@ -125,38 +125,31 @@ export default function TransactionsList({ userId, user, userData, paymentSubTab
       setOffset(offset + limit)
     }
   }
-  // Displays unallocated funds of user if exists.
-  function displayUnallocatedFunds() {
-    let fundDetails;
-    if (walletLoading) {
-      fundDetails = <Spinner />;
-    } else {
-      fundDetails = <Typography variant="h5" color='primary'>{formatMoney(currencyData, walletData.userBalance?.balance)}</Typography>;
-    }
-    if (!walletLoading && walletData.userBalance?.balance <= 0) return false;
 
-    return (
-      <div style={{display: 'flex', flexDirection: 'column', marginLeft: '30px'}}>
-        <Typography variant='subtitle1'>Unallocated Funds</Typography>
-        {fundDetails}
-      </div>
-    );
-  }
   if (error && !transactionsData) return <CenteredContent>{formatError(error.message)}</CenteredContent>
   if (invPayDataError && !invPayData) return <CenteredContent>{formatError(invPayDataError.message)}</CenteredContent>
   if (walletError && !walletData) return <CenteredContent>{formatError(walletError.message)}</CenteredContent>
 
   return (
     <div>
-      <div style={{display: 'flex', flexDirection: 'row'}}>
-        {displayUnallocatedFunds()}
-        <div style={{display: 'flex', flexDirection: 'column', marginLeft: '40px'}}>
-          <Typography variant='subtitle1'>Balance</Typography>
-          {
-            walletLoading ? <Spinner /> : <Typography variant="h5" color='primary'>{formatMoney(currencyData, walletData.userBalance?.pendingBalance)}</Typography>
-          }
-        </div>
-      </div>
+      {
+        walletLoading ? <Spinner /> : (
+          <div style={{display: 'flex', flexDirection: 'row'}}>
+            {
+              walletData.userBalance?.balance > 0 && (
+                <div style={{display: 'flex', flexDirection: 'column', marginLeft: '30px'}}>
+                  <Typography variant='subtitle1'>Unallocated Funds</Typography>
+                  <Typography variant="h5" color='primary'>{formatMoney(currencyData, walletData.userBalance?.balance)}</Typography>
+                </div>
+              )
+            }
+            <div style={{display: 'flex', flexDirection: 'column', marginLeft: '40px'}}>
+              <Typography variant='subtitle1'>Balance</Typography>
+              <Typography variant="h5" color='primary'>{formatMoney(currencyData, walletData.userBalance?.pendingBalance)}</Typography>
+            </div>
+          </div>
+        )
+      }
       {
             authState.user?.userType === 'admin' && (
               <div style={{marginLeft: '20px'}}>
