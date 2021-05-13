@@ -85,7 +85,7 @@ export default function UserPaymentPlanItem({
     { title: 'Menu', col: 1 }
   ];
 
-  const menuList = [{ content: 'Cancel Invoice', isAdmin: true, color: 'red', handleClick }];
+  const menuList = [{ content: t("common:menu.cancel_invoice"), isAdmin: true, color: 'red', handleClick }];
 
   const handleClose = () => {
     setAnchorEl(null);

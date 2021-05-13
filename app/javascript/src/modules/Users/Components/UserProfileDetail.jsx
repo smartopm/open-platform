@@ -43,11 +43,15 @@ export default function UserDetail({ data, userType }) {
         {dateutil.formatDate(data.user.lastActivityAt)}
       </div>
       {['admin'].includes(userType) && (
-        <Link to={`/entry_logs/${data.user.id}`}>Entry Logs &gt;</Link>
+        <Link to={`/entry_logs/${data.user.id}`}>
+          {t("common:misc.entry_logs")}
+          {' '}
+          &gt;
+        </Link>
       )}
       <br />
       {dateutil.isExpired(data.user.expiresAt) ? (
-        <p className={css(styles.badge, styles.statusBadgeBanned)}>Expired</p>
+        <p className={css(styles.badge, styles.statusBadgeBanned)}>{t("common:misc.expired")}</p>
       ) : (
         ['admin'].includes(userType) && <StatusBadge label={data.user.state} />
       )}

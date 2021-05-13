@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import AddIcon from '@material-ui/icons/Add';
 import CloseIcon from '@material-ui/icons/Close';
 import { useQuery, useMutation } from 'react-apollo';
+import { useTranslation } from 'react-i18next';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import { TextField, IconButton, Chip } from '@material-ui/core';
 import { UserLabelsQuery, LabelsQuery } from '../../../graphql/queries';
@@ -22,6 +23,7 @@ export default function UserLabels({ userId }) {
   const [userLabelUpdate] = useMutation(UserLabelUpdate);
   const [messageAlert, setMessageAlert] = useState('');
   const [isSuccessAlert, setIsSuccessAlert] = useState(false);
+  const { t } = useTranslation('common')
 
   useEffect(() => {
     setLabel(newUserLabel);
@@ -139,8 +141,8 @@ export default function UserLabels({ userId }) {
               <TextField
                 {...params}
                 variant="outlined"
-                label="User Label"
-                placeholder="Add Label"
+                label={t("common:misc.user_label")}
+                placeholder={t("common:misc.add_label")}
                 onKeyDown={createLabel}
                 onChange={e => setLabel(e.target.value)}
               />

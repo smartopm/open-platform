@@ -18,7 +18,12 @@
     "add_whatsapp_number": "Add New Whatsapp Number",
     "template_name": "Template Name",
     "template_subject": "Template Subject",
-    "accounts": "Accounts"
+    "accounts": "Accounts",
+    "invoice_details": "Invoice Details",
+    "invoice_number": "Invoice Number",
+    "wallet_balance": "Current Wallet Balance",
+    "pending_amount": "Pending Amount",
+    "payment_Type": "Payment Type"
   },
   "form_placeholders": {
     "phone_number": "Enter Phone Number",
@@ -117,7 +122,13 @@
     "support_team": "Support Team.",
     "reversal": "Reversal",
     "deposit": "Deposit",
-    "invoice_detail": "Invoice {{inv}}"
+    "invoice_detail": "Invoice {{inv}}",
+    "details": "Details",
+    "edit_log": "Edit Log",
+    "expired": "Expired",
+    "entry_logs": "Entry Logs",
+    "user_label": "User Label",
+    "add_label": "Add Label"
   },
   "menu": {
     "invoice": "Invoice",
@@ -193,16 +204,23 @@
     "amount": "Amount",
     "status": "Status",
     "issue_date": "Issue Date",
+    "issue_dated": "Issued Date",
     "payment_date": "Payment Date",
     "plot_number": "Plot Number",
     "start_date": "Start Date",
     "valuation": "% of total valuation",
     "pay_day": "Payment Day",
-    "due_date": "Due Date"
+    "due_date": "Due Date",
+    "transaction_number": "Transaction Number",
+    "bank_name": "Bank Name",
+    "cheque_number": "Cheque Number",
+    "payment_made": "Payment Made By"
   },
   "table_content": {
     "invoice_number": "Invoice Number {{numb}}",
-    "plot_number": "Plot Number {{numb}}"
+    "plot_number": "Plot Number {{numb}}",
+    "paid_on": "Paid on {{date}}",
+    "pay_date": "Paid: {{date}}"
   },
   "sub_status": {
     "plots_fully_purchased": "Plots Fully Purchased",
@@ -225,6 +243,7 @@
     "unpaid": "Unpaid"
   },
   "errors": {
-    "empty_text": "The message must contain some text"
+    "empty_text": "The message must contain some text",
+    "no_changes": "No Changes Made"
   }
 }
