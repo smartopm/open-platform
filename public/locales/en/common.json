@@ -165,7 +165,11 @@
     "edit": "Edit",
     "duplicate": "Duplicate",
     "create": "Create",
-    "preferences": "Preferences"
+    "preferences": "Preferences",
+    "cancel_invoice": "Cancel Invoice",
+    "view_receipt": "View Receipt",
+    "edit_payment": "Edit Payment",
+    "revert_transaction": "Revert Transaction"
   },
   "user_types": {
     "admin": "Admin",

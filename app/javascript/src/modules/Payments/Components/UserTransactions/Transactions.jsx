@@ -78,7 +78,8 @@ export default function TransactionsList({ userId, user, userData, paymentSubTab
     { title: 'Description', col: 4 },
     { title: 'Amount', col: 3 },
     { title: 'Payment Date', col: 3 },
-    { title: 'Status', col: 4 }
+    { title: 'Status', col: 4 },
+    { title: 'Menu', col: 4 }
   ];
 
   const paymentPlan = [
