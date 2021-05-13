@@ -10,11 +10,11 @@ import React, {
 import { useQuery } from 'react-apollo'
 import { useLocation } from 'react-router-dom'
 import { StyleSheet, css } from 'aphrodite'
+import { useTranslation } from 'react-i18next'
 import Loading from '../../../shared/Loading'
 import { AllEventLogsQuery } from '../../../graphql/queries'
 import ErrorPage from '../../../components/Error'
 import { Footer } from '../../../components/Footer'
-import { userType } from '../../../utils/constants'
 import useDebounce from '../../../utils/useDebounce'
 import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider'
 import {
@@ -131,6 +131,7 @@ export function IndexComponent({
   handleTabValue
 }) {
   const authState = useContext(AuthStateContext)
+  const { t } = useTranslation(['logbook', 'common', 'dashboard'])
 
   function routeToAction(eventLog) {
     if (eventLog.refType === 'EntryRequest') {
@@ -155,23 +156,24 @@ export function IndexComponent({
 
   function logs(eventLogs) {
     if (!eventLogs) {
-      return 'No Entry logs yet'
+      return t('logbook.no_entry')
     }
 
     return eventLogs.map((event) => {
       // Todo: To be followed up
       const source = event.subject === 'user_entry'
-        ? 'Scan'
+        ? t('dashboard:dashboard.scan')
         : event.subject === 'showroom'
-          ? 'Showroom'
-          : 'Manual'
-      const isDigital = source === 'Scan' ? event.data.digital : null
+          ? t('logbook.showroom')
+          : t('dashboard:dashboard.log_entry')
+          
+      const isDigital = event.subject === 'user_entry' ? event.data.digital : null
       const reason = event.entryRequest ? event.entryRequest.reason : ''
 
       const accessStatus = event.entryRequest && event.entryRequest.grantedState === 1
-        ? 'Granted Access: '
+        ? `${t('logbook.granted_access')}: `
         : event.entryRequest && event.entryRequest.grantedState === 2
-          ? 'Denied Access: '
+          ? `${t('logbook.denied_access')}: `
           : ''
 
       const enrolled = event.data.enrolled || false
@@ -218,11 +220,11 @@ export function IndexComponent({
                 <span className={css(styles.subTitle)}>
                   {' '}
                   { /* eslint-disable-next-line no-useless-concat */}
-                  {event.subject === 'user_temp' ? 'Temperature Recorded |' + ' ' : ''}
+                  {event.subject === 'user_temp' ? `${t('logbook.temperature_recorded')} |` : ''}
                 </span>
 
                 <span className={css(styles.subTitle)}>
-                  {source !== 'Scan' && authState.user.userType === 'admin' && !enrolled ? (
+                  {event.subject === 'visitor_entry' && authState.user.userType === 'admin' && !enrolled ? (
                     <>
                       <span
                         style={{
@@ -231,15 +233,15 @@ export function IndexComponent({
                         }}
                         onClick={() => enrollUser(event.refId)}
                       >
-                        Enroll user
+                        {t('logbook.enroll_user')}
                         {' '}
                       </span>
                       |
                       {' '}
                       {source}
                     </>
-                  ) : source === 'Scan' && isDigital !== null ? (
-                    `${isDigital ? 'Digital' : 'Print'} Scan`
+                  ) : event.subject === 'user_entry' && isDigital !== null ? (
+                    isDigital ? t('logbook.digital_scan') : t('logbook.print_scan')
                   ) : (
                     source
                   )}
@@ -255,7 +257,7 @@ export function IndexComponent({
                       routeToAction(event)
                     }}
                   >
-                    More Details
+                    {t('common:misc.more_details')}
                   </span>
                 </span>
               </div>
@@ -276,13 +278,6 @@ export function IndexComponent({
     })
   return (
     <div>
-      {/* <div
-        style={{
-          backgroundColor: '#69ABA4'
-        }}
-      >
-        <Nav menuButton="back" navName="Log Book" boxShadow="none" backTo="/" />
-      </div> */}
       <div className="container">
         <div className="form-group">
           <input
@@ -290,7 +285,7 @@ export function IndexComponent({
             value={searchTerm}
             onChange={handleSearch}
             className="form-control"
-            placeholder="Filter Entries"
+            placeholder={t('logbook.filter_entries')}
           />
         </div>
       </div>
@@ -301,9 +296,9 @@ export function IndexComponent({
           aria-label="simple tabs example"
           centered
         >
-          <StyledTab label="All Visits" {...a11yProps(0)} />
-          <StyledTab label="New Visits" {...a11yProps(1)} />
-          <StyledTab label="Upcoming Visits" />
+          <StyledTab label={t('logbook.all_visits')} {...a11yProps(0)} />
+          <StyledTab label={t('logbook.new_visits')} {...a11yProps(1)} />
+          <StyledTab label={t('logbook.upcoming_visits')} {...a11yProps(2)} />
         </StyledTabs>
         <TabPanel value={tabValue} index={0}>
           <>{logs(filteredEvents)}</>
@@ -319,7 +314,7 @@ export function IndexComponent({
           // only admins should be able to schedule a visit request
           authState.user.userType === 'admin' && (
             <FloatButton
-              title="New Visit Request"
+              title={t('logbook.new_visit_request')}
               handleClick={() => router.push('/visit_request')}
             />
           )
@@ -332,7 +327,7 @@ export function IndexComponent({
             <li className={`page-item ${offset < limit && 'disabled'}`}>
               {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
               <a className="page-link" onClick={previousPage} href="#">
-                Previous
+                {t('common:misc.previous')}
               </a>
             </li>
             <li
@@ -341,7 +336,7 @@ export function IndexComponent({
             >
               {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
               <a className="page-link" onClick={nextPage} href="#">
-                Next
+                {t('common:misc.next')}
               </a>
             </li>
           </ul>
@@ -353,6 +348,7 @@ export function IndexComponent({
 }
 
 export function LogView({ user }){
+  const { t } = useTranslation('common')
   return (
     <>
       <div className="container">
@@ -369,7 +365,9 @@ export function LogView({ user }){
         <br />
         <div className="row justify-content-between">
           <div className="col-xs-8">
-            <span className={css(styles.subTitle)}>{userType[user.data.type || '']}</span>
+            <span className={css(styles.subTitle)}>
+              {t(`common:user_types.${user.data?.type}`)}
+            </span>
           </div>
           <div className="col-xs-4">
             <span className={css(styles.subTitle)}>

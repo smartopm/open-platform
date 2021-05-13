@@ -66,7 +66,7 @@ describe('Should Render Events Component', () => {
         id: '1',
         subject: 'visit_request',
         sentence: '',
-        createdAt: new Date(),
+        createdAt: '2021-05-13',
         data: {
           ref_name: 'Some User',
           type: 'client'
@@ -74,6 +74,7 @@ describe('Should Render Events Component', () => {
       }
     const { getByText } = render(<LogView user={log} /> )
     expect(getByText('Some User')).toBeInTheDocument()
-    expect(getByText('Client')).toBeInTheDocument()
+    expect(getByText('common.user_types.client')).toBeInTheDocument()
+    expect(getByText('2021-05-13')).toBeInTheDocument()
   })
 })

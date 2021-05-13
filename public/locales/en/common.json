@@ -92,7 +92,9 @@
     "choose_file": "Choose File",
     "select_category": "Select Category",
     "sales": "Sales",
-    "customer_care": "Customer Care"
+    "customer_care": "Customer Care",
+    "previous": "Previous",
+    "next": "Next"
   },
   "menu": {
     "invoice": "Invoice",
