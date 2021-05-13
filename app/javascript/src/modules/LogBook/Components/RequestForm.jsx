@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react'
 import { useMutation } from 'react-apollo'
 import { StyleSheet, css } from 'aphrodite'
+import { useTranslation } from 'react-i18next'
 import { Button, TextField, MenuItem } from '@material-ui/core'
 import { useHistory } from 'react-router'
 import PropTypes from 'prop-types'
@@ -26,11 +27,12 @@ export default function RequestForm({ path }) {
   const [startTime, setVisitTime] = useState(new Date())
   const [endTime, setEndTime] = useState(new Date())
   const [inputValidationMsg, setInputValidationMsg] = useState({})
+  const { t } = useTranslation(['common', 'logbook'])
 
   function handleSubmit() {
     const errors = {}
     if (!name.value) {
-      errors.name = 'Name cannot be empty'
+      errors.name = t('errors.empty_name')
       setInputValidationMsg(errors)
       return
     }
@@ -87,7 +89,7 @@ export default function RequestForm({ path }) {
         <form>
           <div className="form-group">
             <label className="bmd-label-static" htmlFor="_name">
-              NAME
+              {t('form_fields.full_name')}
             </label>
             <TextField
               className="form-control"
@@ -101,7 +103,7 @@ export default function RequestForm({ path }) {
           </div>
           <div className="form-group">
             <label className="bmd-label-static" htmlFor="phoneNumber">
-              Phone N&#176;
+              {t('form_fields.phone_number')}
             </label>
             <input
               className="form-control"
@@ -116,7 +118,7 @@ export default function RequestForm({ path }) {
             <>
               <div className="form-group">
                 <label className="bmd-label-static" htmlFor="nrc">
-                  NRC
+                  {t('form_fields.nrc')}
                 </label>
                 <TextField
                   className="form-control"
@@ -127,7 +129,7 @@ export default function RequestForm({ path }) {
               </div>
               <div className="form-group">
                 <label className="bmd-label-static" htmlFor="vehicle">
-                  VEHICLE PLATE N&#176;
+                  {t('form_fields.vehicle_plate_number')}
                 </label>
                 <input
                   className="form-control"
@@ -143,7 +145,7 @@ export default function RequestForm({ path }) {
             <TextField
               id="reason"
               select
-              label="Reason for visit"
+              label={t('logbook:logbook.visiting_reason')}
               name="reason"
               {...business}
               className={`${css(styles.selectInput)}`}
@@ -160,18 +162,18 @@ export default function RequestForm({ path }) {
               <DatePickerDialog
                 selectedDate={visitationDate}
                 handleDateChange={date => setVisitDate(date)}
-                label="Date of Visit"
+                label={t('logbook:logbook.date_of_visit')}
               />
               <ThemedTimePicker
                 time={startTime}
                 handleTimeChange={date => setVisitTime(date)}
-                label="Start Time"
+                label={t('misc.start_time')}
               />
               <span style={{ marginLeft: 20 }}>
                 <ThemedTimePicker
                   time={endTime}
                   handleTimeChange={date => setEndTime(date)}
-                  label="End Time"
+                  label={t('misc.end_time')}
                 />
               </span>
             </>
@@ -186,7 +188,7 @@ export default function RequestForm({ path }) {
               disabled={isSubmitted}
               data-testid="submit_button"
             >
-              {isSubmitted ? 'Submitting ...' : ' Submit'}
+              {isSubmitted ? ` ${t('form_actions.submitting')} ...` : ` ${t('form_actions.submit')} `}
             </Button>
           </div>
         </form>

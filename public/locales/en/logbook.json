@@ -14,7 +14,21 @@
     "upcoming_visits": "Upcoming Visits",
     "new_visit_request": "New Visit Request",
     "filter_entries": "Filter Entries",
-    "entry_request": "Entry Request"
+    "entry_request": "Entry Request",
+    "data_time_submitted": "Date and time submitted",
+    "visiting_reason": "Reason for visit",
+    "date_of_visit": "Date of visit",
+    "user_enrolled": "User was successfully enrolled",
+    "beyond_time": "The current time is outside of normal visiting hours. Are you sure you wish proceed?",
+    "today_is": "Today is {{date}} at {{time}}",
+    "enroll": "Enroll User",
+    "enrolling": "Enrolling",
+    "grant": "Grant",
+    "granting": "Granting",
+    "deny": "Deny",
+    "call_manager": "Call Manager",
+    "grant_deny_access": "Are you sure you want to {{action}} access to {{name}} ?",
+    "log": "Log"
   },
   "log_title": {
     "visitor": "Visitor",
@@ -29,5 +43,9 @@
     "scan_type": "Scan Type",
     "qr_timestamp": "QR Timestamp",
     "user_type": "User Type"
+  },
+  "access_actions": {
+    "grant": "Grant",
+    "deny": "Deny"
   }
 }

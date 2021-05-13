@@ -4,6 +4,7 @@ import React, { Fragment, useState } from 'react';
 import { useQuery, useMutation } from 'react-apollo';
 import { TextField, MenuItem, Button } from '@material-ui/core';
 import { StyleSheet, css } from 'aphrodite';
+import { useTranslation } from 'react-i18next';
 import { EntryRequestQuery } from '../../../graphql/queries';
 import { AcknowledgeRequest, CreateNote } from '../../../graphql/mutations';
 import Loading from '../../../shared/Loading';
@@ -29,6 +30,7 @@ export default function RequestConfirm({ match, history }) {
     reason: '',
     loaded: false
   });
+  const { t } = useTranslation(['common', 'logbook'])
 
   if (loading) {
     return <Loading />;
@@ -102,9 +104,9 @@ export default function RequestConfirm({ match, history }) {
               value={note}
               onChange={handleNoteChange}
               name="note"
-              placeholder="Type action note here"
+              placeholder={t('form_placeholders.action_note')}
             />
-            {mutationLoading && <p className="text-center">Saving note ...</p>}
+            {mutationLoading && <p className="text-center">{t('form_actions.saving')}</p>}
           </div>
         )}
       </ModalDialog>
@@ -112,7 +114,7 @@ export default function RequestConfirm({ match, history }) {
         <form>
           <div className="form-group">
             <label className="bmd-label-static" htmlFor="date">
-              Date and time submitted
+              {t('logbook:logbook.date_time_submitted')}
             </label>
             <input
               className="form-control"
@@ -131,7 +133,7 @@ export default function RequestConfirm({ match, history }) {
 
           <div className="form-group">
             <label className="bmd-label-static" htmlFor="_name">
-              Guard
+              {t('logbook:logbook.guard')}
             </label>
             <input
               className="form-control"
@@ -144,7 +146,7 @@ export default function RequestConfirm({ match, history }) {
 
           <div className="form-group">
             <label className="bmd-label-static" htmlFor="_name">
-              NAME
+              {t('common.form_fields.full_name')}
             </label>
 
             <input
@@ -158,7 +160,7 @@ export default function RequestConfirm({ match, history }) {
           </div>
           <div className="form-group">
             <label className="bmd-label-static" htmlFor="nrc">
-              NRC
+              {t('common.form_fields.nrc')}
             </label>
             <input
               className="form-control"
@@ -171,7 +173,7 @@ export default function RequestConfirm({ match, history }) {
           </div>
           <div className="form-group">
             <label className="bmd-label-static" htmlFor="phoneNumber">
-              Phone N&#176;
+              {t('common.form_fields.phone_number')}
             </label>
             <input
               className="form-control"
@@ -185,6 +187,7 @@ export default function RequestConfirm({ match, history }) {
           <div className="form-group">
             <label className="bmd-label-static" htmlFor="vehicle">
               VEHICLE PLATE N&#176;
+              {t('common.form_fields.vehicle_plate_number')}
             </label>
             <input
               className="form-control"
@@ -199,7 +202,7 @@ export default function RequestConfirm({ match, history }) {
             <TextField
               id="reason"
               select
-              label="Reason for visit"
+              label={t('common.form_fields.reason')}
               name="reason"
               value={formData.reason || ''}
               onChange={handleInputChange}
@@ -217,7 +220,7 @@ export default function RequestConfirm({ match, history }) {
                 className={`btn ${css(styles.grantButton)}`}
                 disabled={isLoading}
               >
-                {isLoading ? 'Loading ...' : 'Acknowledge'}
+                {isLoading ? t('common.misc.loading') : t('common.misc.acknowledge')}
               </Button>
             </div>
             <div className="col">
@@ -227,7 +230,7 @@ export default function RequestConfirm({ match, history }) {
                 className={`btn  ${css(styles.denyButton)}`}
                 disabled={isLoading}
               >
-                Flag
+                { t('common.misc.flag')}
               </Button>
             </div>
             <div className="col">
@@ -235,7 +238,7 @@ export default function RequestConfirm({ match, history }) {
                 href={`tel:${formData.guard && formData.guard.phoneNumber}`}
                 className={` ${css(styles.callButton)}`}
               >
-                Call
+                {t('common.misc.call')}
                 {formData.guard && formData.guard.name}
               </a>
             </div>

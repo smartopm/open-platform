@@ -13,6 +13,8 @@
     "reason": "Reason",
     "user_type": "User Type",
     "state": "State",
+    "nrc": "NRC",
+    "vehicle_plate_number": "Vehicle Plate Number",
     "add_phone_number": "Add New Phone Number",
     "add_email_address": "Add New Email Address",
     "add_whatsapp_number": "Add New Whatsapp Number",
@@ -95,7 +97,13 @@
     "customer_care": "Customer Care",
     "previous": "Previous",
     "next": "Next",
-    "download": "Download"
+    "download": "Download",
+    "loading" : "Loading",
+    "acknowledge": "Acknowledge",
+    "call": "Call",
+    "flag": "Flag",
+    "start_time": "Start Time",
+    "end_time": "End Time"
   },
   "menu": {
     "invoice": "Invoice",
@@ -163,6 +171,9 @@
     "name": "Name"
   },
   "errors": {
-    "empty_text": "The message must contain some text"
+    "empty_text": "The message must contain some text",
+    "empty_name": "Name cannot be empty",
+    "date_error": "Date must be of this format YYYY-MM-DD",
+    "empty_input": "Input cannot be empty"
   }
 }
