@@ -74,7 +74,7 @@ describe('Should Render Events Component', () => {
       }
     const { getByText } = render(<LogView user={log} /> )
     expect(getByText('Some User')).toBeInTheDocument()
-    expect(getByText('common.user_types.client')).toBeInTheDocument()
+    expect(getByText('common:user_types.client')).toBeInTheDocument()
     expect(getByText('2021-05-13')).toBeInTheDocument()
   })
 })
