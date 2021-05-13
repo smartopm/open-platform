@@ -36,11 +36,11 @@ describe('Should Render Events Component', () => {
         <Events data={data} />
       </BrowserRouter>
     )
-    expect(getByText('Subject')).toBeInTheDocument()
-    expect(getByText('Description')).toBeInTheDocument()
+    expect(getByText('log_title.subject')).toBeInTheDocument()
+    expect(getByText('log_title.description')).toBeInTheDocument()
     expect(getByText('user_entry')).toBeInTheDocument()
     expect(getByText('user_active')).toBeInTheDocument()
-    expect(getByText('Print Scan')).toBeInTheDocument()
+    expect(getByText('logbook.print_scan')).toBeInTheDocument()
     expect(getByText('User john doe was recorded leaving')).toBeInTheDocument()
     expect(getByText('User john doe was active')).toBeInTheDocument()
   })
@@ -54,7 +54,7 @@ describe('Should Render Events Component', () => {
     )
     expect(container.queryByText('user_entry')).toBeNull()
     expect(container.queryByText('user_active')).toBeNull()
-    expect(container.queryByText('Print Scan')).toBeNull()
+    expect(container.queryByText('logbook.print_scan')).toBeNull()
     expect(
       container.queryByText('User john doe was recorded leaving')
     ).toBeNull()

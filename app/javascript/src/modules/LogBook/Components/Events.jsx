@@ -31,7 +31,7 @@ export default function Events({
           </td>
           <td>{dateToString(entry.createdAt)}</td>
           <td>{dateTimeToString(new Date(entry.createdAt))}</td>
-          <td>{entry.subject === 'user_entry' && entry.data.digital !== null ? `${entry.data.digital ? t('logbook.digital_scan') : t('logbook.digital_scan')} ` : 'N/A'}</td>
+          <td>{entry.subject === 'user_entry' && entry.data.digital !== null ? `${entry.data.digital ? t('logbook.digital_scan') : t('logbook.print_scan')} ` : 'N/A'}</td>
           <td>
             {entry.subject === 'user_entry' && entry.data.timestamp
             ? `${entry.data.timestamp && `${dateToString(new Date(Number(entry.data.timestamp)))} 

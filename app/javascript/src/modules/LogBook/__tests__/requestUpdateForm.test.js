@@ -49,7 +49,7 @@ describe("RequestUpdate Component ",() => {
     expect(loader.queryAllByTestId('loader')[0]).toBeInTheDocument()
 
     await waitFor(() => {
-        expect(container.queryByText('NAME')).toBeInTheDocument()
+        expect(container.queryByText('form_fields.full_name')).toBeInTheDocument()
       },
       { timeout: 500 }
     )
@@ -66,11 +66,11 @@ describe("RequestUpdate Component ",() => {
   
       fireEvent.change(container.queryByTestId('entry_user_vehicle'), { target: { value: 'ABT' } })
       expect(container.queryByTestId('entry_user_vehicle').value).toBe('ABT')
-      expect(container.queryByTestId('entry_user_grant').textContent).toContain('Grant')
+      expect(container.queryByTestId('entry_user_grant').textContent).toContain('logbook:logbook.grant')
       expect(container.queryByTestId('entry_user_grant')).not.toBeDisabled()
-      expect(container.queryByTestId('entry_user_deny').textContent).toContain('Deny')
+      expect(container.queryByTestId('entry_user_deny').textContent).toContain('logbook:logbook.deny')
       expect(container.queryByTestId('entry_user_deny')).not.toBeDisabled()
-      expect(container.queryByTestId('entry_user_call_mgr').textContent).toContain('Call Manager')
+      expect(container.queryByTestId('entry_user_call_mgr').textContent).toContain('logbook:logbook.call_manager')
 
         },
         { timeout: 500 }

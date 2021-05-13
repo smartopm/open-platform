@@ -29,9 +29,9 @@ describe('Request Form Component', () => {
         fireEvent.change(vehicle, { target: { value: 'ABT412' } })
         expect(vehicle).toHaveValue('ABT412')
 
-        expect(container.queryByTestId('submit_button')).toHaveTextContent('Submit')
-        expect(container.queryByText('NRC')).toBeInTheDocument()
-        expect(container.queryByText('Phone N°')).toBeInTheDocument()
-        expect(container.queryByText('VEHICLE PLATE N°')).toBeInTheDocument()
+        expect(container.queryByTestId('submit_button')).toHaveTextContent('form_actions.submit')
+        expect(container.queryByText('form_fields.nrc')).toBeInTheDocument()
+        expect(container.queryByText('form_fields.phone_number')).toBeInTheDocument()
+        expect(container.queryByText('form_fields.vehicle_plate_number')).toBeInTheDocument()
     })
 })
