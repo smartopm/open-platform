@@ -60,7 +60,7 @@ RSpec.describe MergeUsers do
   let!(:substatus_log) { create(:payment, user: user, community: user.community) }
   let!(:timesheet) { create(:time_sheet, user: user) }
   let!(:wallet) { create(:wallet, user: user) }
-  let!(:wallet_transaction) { create(:wallet, user: user) }
+  let!(:wallet_transaction) { create(:wallet_transaction, user: user, community: user.community) }
   let!(:showroom) { create(:showroom, userId: user.id) }
   let!(:user_label) { create(:user_label, user: user) }
   let!(:activity_log) do
@@ -75,6 +75,18 @@ RSpec.describe MergeUsers do
                      status: 'in_progress', invoice_number: '1234')
   end
   let!(:payment_plan) { create(:payment_plan, user: user, land_parcel: land_parcel) }
+  let(:duplicate_wallet) { create(:wallet, user: duplicate_user) }
+
+  shared_examples 'merges_wallet_details_and_destroy_duplicate_user' do |pending_balance, balance|
+    before { MergeUsers.merge(user.id, duplicate_user.id) }
+
+    it "merges user's duplicate wallet details" do
+      expect(duplicate_wallet.reload.pending_balance).to eql pending_balance
+      expect(duplicate_wallet.balance).to eql balance
+      expect(duplicate_wallet.unallocated_funds).to eql balance
+      expect(duplicate_user.wallets.count).to eql 1
+    end
+  end
 
   it 'updates user_id on neccessary tables' do
     MergeUsers.merge(user.id, duplicate_user.id)
@@ -95,13 +107,67 @@ RSpec.describe MergeUsers do
     expect(payment.reload.user_id).to eq(duplicate_user.id)
     expect(substatus_log.reload.user_id).to eq(duplicate_user.id)
     expect(timesheet.reload.user_id).to eq(duplicate_user.id)
-    expect(wallet.reload.user_id).to eq(duplicate_user.id)
     expect(wallet_transaction.reload.user_id).to eq(duplicate_user.id)
     expect(user_label.reload.user_id).to eq(duplicate_user.id)
     expect(invoice.reload.user_id).to eq(duplicate_user.id)
     expect(payment_plan.reload.user_id).to eq(duplicate_user.id)
-
     expect(showroom.reload.userId).to eq(duplicate_user.id)
     expect(activity_log.reload.reporting_user_id).to eq(duplicate_user.id)
   end
+
+  # rubocop:disable Rails/SkipsModelValidations
+  context 'when balance and pending balance is positive in both wallets' do
+    before do
+      wallet.update_columns(pending_balance: 100, balance: 250, unallocated_funds: 250)
+      duplicate_wallet.update_columns(pending_balance: 50, balance: 20, unallocated_funds: 20)
+    end
+
+    it_behaves_like 'merges_wallet_details_and_destroy_duplicate_user', 150, 270
+  end
+
+  context 'when balance and pending balance is zero in both wallets' do
+    before do
+      wallet.update_columns(pending_balance: 0, balance: 0, unallocated_funds: 0)
+      duplicate_wallet.update_columns(pending_balance: 0, balance: 0, unallocated_funds: 0)
+    end
+
+    it_behaves_like 'merges_wallet_details_and_destroy_duplicate_user', 0, 0
+  end
+
+  context 'when balance is zero and pending balance is positive in both wallets' do
+    before do
+      wallet.update_columns(pending_balance: 100, balance: 0, unallocated_funds: 0)
+      duplicate_wallet.update_columns(pending_balance: 50, balance: 0, unallocated_funds: 0)
+    end
+
+    it_behaves_like 'merges_wallet_details_and_destroy_duplicate_user', 150, 0
+  end
+
+  context 'when balance is positive and pending balance is zero in both wallets' do
+    before do
+      wallet.update_columns(pending_balance: 0, balance: 110, unallocated_funds: 110)
+      duplicate_wallet.update_columns(pending_balance: 0, balance: 110, unallocated_funds: 110)
+    end
+
+    it_behaves_like 'merges_wallet_details_and_destroy_duplicate_user', 0, 220
+  end
+
+  context 'when balance is positive in one wallet and zero in other wallet' do
+    before do
+      wallet.update_columns(pending_balance: 100, balance: 110, unallocated_funds: 110)
+      duplicate_wallet.update_columns(pending_balance: 70, balance: 0, unallocated_funds: 0)
+    end
+
+    it_behaves_like 'merges_wallet_details_and_destroy_duplicate_user', 170, 110
+  end
+
+  context 'when pending balance is zero in one wallet and positive in other wallet' do
+    before do
+      wallet.update_columns(pending_balance: 0, balance: 110, unallocated_funds: 110)
+      duplicate_wallet.update_columns(pending_balance: 0, balance: 10, unallocated_funds: 10)
+    end
+
+    it_behaves_like 'merges_wallet_details_and_destroy_duplicate_user', 0, 120
+  end
+  # rubocop:enable Rails/SkipsModelValidations
 end

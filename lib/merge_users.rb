@@ -23,6 +23,8 @@ class MergeUsers
 
       raise StandardError, 'Update Failed' if table_name.constantize.where(user_id: user_id).any?
     end
+    # Merges wallet details of users.
+    merge_user_wallets(user_id, duplicate_id)
 
     # Update showroom User
     showrooms = Showroom.where(userId: user_id)
@@ -100,6 +102,23 @@ class MergeUsers
       table.classify.constantize.column_names.include?('user_id')
     rescue StandardError
       nil
-    end.compact.map(&:classify) - %w[UserLabel ActivityLog]
+    end.compact.map(&:classify) - %w[UserLabel ActivityLog Wallet]
+  end
+
+  # Merges wallet details of users.
+  #
+  # @param user_id [String]
+  # @param duplicate_user_id [String]
+  #
+  # @return [void]
+  def self.merge_user_wallets(user_id, duplicate_user_id)
+    wallet = User.find_by(id: user_id)&.wallet
+    duplicate_wallet = User.find_by(id: duplicate_user_id)&.wallet
+
+    duplicate_wallet.balance += wallet.balance
+    duplicate_wallet.pending_balance += wallet.pending_balance
+    duplicate_wallet.unallocated_funds += wallet.unallocated_funds
+    duplicate_wallet.save!
+    wallet.destroy!
   end
 end
