@@ -1716,6 +1716,11 @@
     prop-types "^15.6.1"
     react-lifecycles-compat "^3.0.4"
 
+"@sagi.io/globalthis@^0.0.2":
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/@sagi.io/globalthis/-/globalthis-0.0.2.tgz#2777ab71721ecaab1b0dd8aa75abbe0f3ae1ba58"
+  integrity sha512-sazB1BcX8IK5UxDgEEd0J1bPB0rwH0k725nYva6ofBhvNX8lMytuRf3mlkTkytNHKTi4EGxBOY+YAD3PkeEtlA==
+
 "@sinonjs/commons@^1.7.0":
   version "1.8.2"
   resolved "https://registry.yarnpkg.com/@sinonjs/commons/-/commons-1.8.2.tgz#858f5c4b48d80778fde4b9d541f27edc0d56488b"
@@ -7947,6 +7952,13 @@ hyphenate-style-name@^1.0.2, hyphenate-style-name@^1.0.3:
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/hyphenate-style-name/-/hyphenate-style-name-1.0.4.tgz#691879af8e220aea5750e8827db4ef62a54e361d"
   integrity sha512-ygGZLjmXfPHj+ZWh6LwbC37l43MhfztxetbFCoYTM2VjkIUpeHgSNn7QIyVFj7YQ1Wl9Cbw5sholVJPzWvC2MQ==
+
+i18next-phrase-in-context-editor-post-processor@^1.2.1:
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/i18next-phrase-in-context-editor-post-processor/-/i18next-phrase-in-context-editor-post-processor-1.2.1.tgz#7ce89ee75bf776607346d19f8f25845ab3b05eea"
+  integrity sha512-KnTSHzpJ9NCjuSemUCWSCK/j0d6Np5G2fxfNRz+pb4nZdBjlTXAyMHIh9NtLohodC21761dpEAVJgRUVxSs8tg==
+  dependencies:
+    "@sagi.io/globalthis" "^0.0.2"
 
 i18next-xhr-backend@^3.2.1:
   version "3.2.2"
