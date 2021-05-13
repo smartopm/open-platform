@@ -7,20 +7,20 @@ import { useQuery, useMutation } from 'react-apollo';
 import { TextField, MenuItem, Button } from '@material-ui/core';
 import { StyleSheet, css } from 'aphrodite';
 import { useHistory, useLocation, useParams } from 'react-router';
-import { EntryRequestQuery } from '../../graphql/queries';
+import { EntryRequestQuery } from '../../../graphql/queries';
 import {
   EntryRequestUpdate,
   EntryRequestGrant,
   EntryRequestDeny,
   CreateUserMutation,
   UpdateLogMutation
-} from '../../graphql/mutations';
-import Loading from "../../shared/Loading";
-import { isTimeValid, getWeekDay } from '../../utils/dateutil';
-import { ponisoNumber, userState, userType } from '../../utils/constants'
-import { ModalDialog } from "../Dialog"
-import CaptureTemp from "../CaptureTemp";
-import { dateToString, dateTimeToString } from "../DateContainer";
+} from '../../../graphql/mutations';
+import Loading from "../../../shared/Loading";
+import { isTimeValid, getWeekDay } from '../../../utils/dateutil';
+import { ponisoNumber, userState, userType } from '../../../utils/constants'
+import { ModalDialog } from "../../../components/Dialog"
+import CaptureTemp from "../../../components/CaptureTemp";
+import { dateToString, dateTimeToString } from "../../../components/DateContainer";
 
 export default function RequestUpdate({ id }) {
     const { state } = useLocation()

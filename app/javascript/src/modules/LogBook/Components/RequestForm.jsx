@@ -5,11 +5,11 @@ import { StyleSheet, css } from 'aphrodite'
 import { Button, TextField, MenuItem } from '@material-ui/core'
 import { useHistory } from 'react-router'
 import PropTypes from 'prop-types'
-import { entryReason } from '../../utils/constants'
-import { EntryRequestCreate } from '../../graphql/mutations'
-import { ReasonInputModal } from '../Dialog'
-import { Footer } from '../Footer'
-import DatePickerDialog, { ThemedTimePicker } from '../DatePickerDialog'
+import { entryReason } from '../../../utils/constants'
+import { EntryRequestCreate } from '../../../graphql/mutations'
+import { ReasonInputModal } from '../../../components/Dialog'
+import { Footer } from '../../../components/Footer'
+import DatePickerDialog, { ThemedTimePicker } from '../../../components/DatePickerDialog'
 
 export default function RequestForm({ path }) {
   const history = useHistory()

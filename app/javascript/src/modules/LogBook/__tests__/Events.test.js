@@ -2,8 +2,8 @@ import React from 'react'
 import { render } from '@testing-library/react'
 import '@testing-library/jest-dom/extend-expect'
 import { BrowserRouter } from 'react-router-dom/'
-import Events from '../components/Events'
-import { LogView } from '../containers/AllLogs/EntryLogs'
+import Events from '../Components/Events'
+import { LogView } from '../Components/EntryLogs'
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn())
 

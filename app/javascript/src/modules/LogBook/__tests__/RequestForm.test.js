@@ -2,7 +2,7 @@ import React from 'react'
 import { fireEvent, render } from '@testing-library/react'
 import '@testing-library/jest-dom/extend-expect'
 import { MockedProvider } from '@apollo/react-testing'
-import RequestForm from '../components/Request/RequestForm'
+import RequestForm from '../Components/RequestForm'
 
 
 describe('Request Form Component', () => {

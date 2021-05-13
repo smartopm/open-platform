@@ -4,11 +4,11 @@ import React, { Fragment, useState } from 'react';
 import { useQuery, useMutation } from 'react-apollo';
 import { TextField, MenuItem, Button } from '@material-ui/core';
 import { StyleSheet, css } from 'aphrodite';
-import { EntryRequestQuery } from '../../graphql/queries';
-import { AcknowledgeRequest, CreateNote } from '../../graphql/mutations';
-import Loading from '../../shared/Loading';
-import { ModalDialog } from '../../components/Dialog';
-import { dateTimeToString, dateToString } from '../../components/DateContainer';
+import { EntryRequestQuery } from '../../../graphql/queries';
+import { AcknowledgeRequest, CreateNote } from '../../../graphql/mutations';
+import Loading from '../../../shared/Loading';
+import { ModalDialog } from '../../../components/Dialog';
+import { dateTimeToString, dateToString } from '../../../components/DateContainer';
 
 export default function RequestConfirm({ match, history }) {
   const { loading, data } = useQuery(EntryRequestQuery, {

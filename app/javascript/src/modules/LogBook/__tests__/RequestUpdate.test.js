@@ -4,11 +4,12 @@ import '@testing-library/jest-dom/extend-expect';
 import { BrowserRouter } from 'react-router-dom';
 import { ApolloProvider } from 'react-apollo';
 import { MockedProvider } from '@apollo/react-testing';
-import { Context } from '../../containers/Provider/AuthStateProvider';
-import { createClient } from '../../utils/apollo';
-import EntryRequest from '../../containers/Requests/EntryRequest';
+import { Context } from '../../../containers/Provider/AuthStateProvider';
+import { createClient } from '../../../utils/apollo';
+import RequestUpdate from '../Components/RequestUpdate';
 
-describe('EntryRequest main page', () => {
+jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
+describe('RequestUpdate main page', () => {
   const data = {
     user: {
       id: 'a54d6184-b10e-4865-bee7-7957701d423d',
@@ -20,14 +21,14 @@ describe('EntryRequest main page', () => {
       }
     }
   };
-it('renders the EntryRequest page correctly', async () => {
+it('renders the RequestUpdate page correctly', async () => {
     await act(async () => {
       render(
         <ApolloProvider client={createClient}>
           <Context.Provider value={data}>
             <MockedProvider>
               <BrowserRouter>
-                <EntryRequest />
+                <RequestUpdate />
               </BrowserRouter>
             </MockedProvider>
           </Context.Provider>

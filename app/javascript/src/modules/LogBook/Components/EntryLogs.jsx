@@ -10,23 +10,22 @@ import React, {
 import { useQuery } from 'react-apollo'
 import { useLocation } from 'react-router-dom'
 import { StyleSheet, css } from 'aphrodite'
-// import Nav from '../../components/Nav'
-import Loading from '../../shared/Loading'
-import { AllEventLogsQuery } from '../../graphql/queries'
-import ErrorPage from '../../components/Error'
-import { Footer } from '../../components/Footer'
-import { userType } from '../../utils/constants'
-import useDebounce from '../../utils/useDebounce'
-import { Context as AuthStateContext } from '../Provider/AuthStateProvider'
+import Loading from '../../../shared/Loading'
+import { AllEventLogsQuery } from '../../../graphql/queries'
+import ErrorPage from '../../../components/Error'
+import { Footer } from '../../../components/Footer'
+import { userType } from '../../../utils/constants'
+import useDebounce from '../../../utils/useDebounce'
+import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider'
 import {
   StyledTabs,
   StyledTab,
   TabPanel,
   a11yProps
-} from '../../components/Tabs'
-import { dateTimeToString, dateToString } from '../../components/DateContainer'
-import FloatButton from '../../components/FloatButton'
-import { propAccessor } from '../../utils/helpers'
+} from '../../../components/Tabs'
+import { dateTimeToString, dateToString } from '../../../components/DateContainer'
+import FloatButton from '../../../components/FloatButton'
+import { propAccessor } from '../../../utils/helpers'
 
 export default ({ history, match }) => AllEventLogs(history, match)
 

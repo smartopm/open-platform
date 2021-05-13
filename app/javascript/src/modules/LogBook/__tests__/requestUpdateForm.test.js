@@ -3,9 +3,9 @@ import { fireEvent, render, waitFor } from '@testing-library/react'
 import '@testing-library/jest-dom/extend-expect'
 import { BrowserRouter } from 'react-router-dom/'
 import { MockedProvider } from '@apollo/react-testing'
-import { EntryRequestQuery } from '../graphql/queries'
-import Loading from '../shared/Loading'
-import RequestUpdate from '../components/Request/RequestUpdate'
+import { EntryRequestQuery } from '../../../graphql/queries'
+import Loading from '../../../shared/Loading'
+import RequestUpdate from '../Components/RequestUpdate'
 
 describe("RequestUpdate Component ",() => {
   const mocks = {

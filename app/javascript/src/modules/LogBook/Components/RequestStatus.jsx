@@ -4,7 +4,7 @@
 import React from 'react';
 import { css, StyleSheet } from 'aphrodite';
 import { Link } from 'react-router-dom';
-import { ponisoNumber } from '../utils/constants';
+import { ponisoNumber } from '../../../utils/constants';
 
 export default function RequestStatus(props) {
   return (

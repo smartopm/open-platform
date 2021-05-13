@@ -1,6 +1,6 @@
 // Run this example by adding <%= javascript_pack_tag 'hello_react' %> to the head of your layout file,
 // like app/views/layouts/application.html.erb. All it does is render <div>Hello React</div> at the bottom
-// of the page.
+// of the page. 
 /* eslint-disable */
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
@@ -18,8 +18,8 @@ import AuthStateProvider, {
 } from '../src/containers/Provider/AuthStateProvider';
 import UserShow from '../src/modules/Users/Containers/UserShow';
 import IDCard from '../src/containers/IdCard';
-import EntryLogs from '../src/containers/AllLogs/EntryLogs';
-import EventLogs from '../src/containers/AllLogs/EventLogs';
+import EntryLogs from '../src/modules/LogBook/Components/EntryLogs';
+import EventLogs from '../src/modules/LogBook/Components/EventLogs';
 import UserEdit from '../src/modules/Users/Containers/UserEdit'
 import Loading from '../src/shared/Loading';
 import '../src/modules/i18n';
@@ -29,11 +29,11 @@ import ConfirmCodeScreen from '../src/components/AuthScreens/ConfirmCodeScreen';
 import OneTimeLoginCode from '../src/components/AuthScreens/OneTimeLoginCode';
 import MobileMoney from '../src/components/MobileMoney';
 import GuardHome from '../src/modules/Dashboard/Components/GuardHome';
-import EntryRequest from '../src/containers/Requests/EntryRequest';
-import RequestUpdate from '../src/containers/Requests/RequestUpdate';
-import RequestConfirm from '../src/containers/Requests/RequestConfirm';
-import WaitScreen from '../src/containers/Requests/WaitingScreen';
-import RequestApproval from '../src/containers/Requests/RequestApproval';
+import EntryRequest from '../src/modules/LogBook/Components/EntryRequest';
+import RequestUpdate from '../src/modules/LogBook/Components/RequestUpdatePage';
+import RequestConfirm from '../src/modules/LogBook/Components/RequestConfirm';
+import WaitScreen from '../src/modules/LogBook/Components/WaitingScreen';
+import RequestApproval from '../src/modules/LogBook/Components/RequestApproval';
 import ErrorPage from '../src/components/Error';
 import MainAuthCallback from '../src/components/AuthScreens/MainAuthCallback';
 import ShowRoom from '../src/containers/showroom/Home';

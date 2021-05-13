@@ -1,8 +1,10 @@
-/* eslint-disable */
+/* eslint-disable jsx-a11y/anchor-is-valid */
+/* eslint-disable consistent-return */
+/* eslint-disable react/prop-types */
 import React from "react";
 import GetAppIcon from '@material-ui/icons/GetApp';
 import Fab from "@material-ui/core/Fab";
-import { dateToString, dateTimeToString } from "./DateContainer.jsx";
+import { dateToString, dateTimeToString } from "../../../components/DateContainer";
 
 
 export default function Events({
@@ -28,9 +30,11 @@ export default function Events({
           <td>{dateToString(entry.createdAt)}</td>
           <td>{dateTimeToString(new Date(entry.createdAt))}</td>
           <td>{entry.subject === 'user_entry' && entry.data.digital !== null ? `${entry.data.digital ? 'Digital' : 'Print'} Scan` : 'N/A'}</td>
-          <td>{entry.subject === 'user_entry' && entry.data.timestamp
+          <td>
+            {entry.subject === 'user_entry' && entry.data.timestamp
             ? `${entry.data.timestamp && `${dateToString(new Date(Number(entry.data.timestamp)))} 
-              ${dateTimeToString(new Date(Number(entry.data.timestamp)))}`} ` : 'N/A'}</td>
+              ${dateTimeToString(new Date(Number(entry.data.timestamp)))}`} ` : 'N/A'}
+          </td>
           <td>{entry.data ? entry.data.type : 'Entry Request'}</td>
         </tr>
       ));
@@ -41,8 +45,7 @@ export default function Events({
           style={{
             backgroundColor: "#69ABA4"
           }}
-        >
-        </div>
+        />
         <div className="row justify-content-center">
           <div className="col-11 col-sm-11 table-responsive">
             <table className="table">
@@ -90,9 +93,10 @@ export default function Events({
             href={`/csv_export/event_logs?token=${userToken}`}
           >
             <GetAppIcon />
-            {' '}Download
-        </Fab>
+            {' '}
+            Download
+          </Fab>
         </div>
-      </div >
+      </div>
     );
   }

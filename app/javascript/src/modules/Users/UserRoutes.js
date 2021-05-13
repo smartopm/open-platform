@@ -1,7 +1,7 @@
 // These are exportable routes to clean up the route file
 import UserShow from './Containers/UserShow';
 import UserEdit from './Containers/UserEdit';
-import UserLogs from '../../containers/AllLogs/UserLogs';
+import UserLogs from './Containers/UserLogs';
 import IdPrintPage from '../../containers/IdPrint';
 import UserMessagePage from '../../containers/Messages/UserMessagePage';
 import OTPFeedbackScreen from '../../containers/OTPScreen';
