@@ -94,7 +94,8 @@
     "sales": "Sales",
     "customer_care": "Customer Care",
     "previous": "Previous",
-    "next": "Next"
+    "next": "Next",
+    "download": "Download"
   },
   "menu": {
     "invoice": "Invoice",

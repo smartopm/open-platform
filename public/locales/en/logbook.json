@@ -1,18 +1,33 @@
 {
-    "logbook": {
-        "showromm": "Showroom",
-        "manual": "Manual",
-        "no_entry": "No Entry logs yet",
-        "granted_access": "Granted Access",
-        "denied_access": "Denied Access",
-        "enroll_user": "Enroll User",
-        "temperature_recorded": "Temperature Recorded",
-        "print_scan": "Print Scan",
-        "digital_scan": "Digital Scan",
-        "all_visits": "All Visits",
-        "new_visits": "New Visits",
-        "upcoming_visits": "Upcoming Visits",
-        "new_visit_request": "New Visit Request",
-        "filter_entries": "Filter Entries"
-    }
+  "logbook": {
+    "showromm": "Showroom",
+    "manual": "Manual",
+    "no_entry": "No Entry logs yet",
+    "granted_access": "Granted Access",
+    "denied_access": "Denied Access",
+    "enroll_user": "Enroll User",
+    "temperature_recorded": "Temperature Recorded",
+    "print_scan": "Print Scan",
+    "digital_scan": "Digital Scan",
+    "all_visits": "All Visits",
+    "new_visits": "New Visits",
+    "upcoming_visits": "Upcoming Visits",
+    "new_visit_request": "New Visit Request",
+    "filter_entries": "Filter Entries",
+    "entry_request": "Entry Request"
+  },
+  "log_title": {
+    "visitor": "Visitor",
+    "guard": "Guard",
+    "nrc": "NRC",
+    "vehicle": "Vehicle",
+    "reason": "Reason",
+    "subject": "Subject",
+    "description": "Description",
+    "date": "Date",
+    "time": "Time",
+    "scan_type": "Scan Type",
+    "qr_timestamp": "QR Timestamp",
+    "user_type": "User Type"
+  }
 }
