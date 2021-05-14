@@ -19,7 +19,7 @@ export default function QRScan() {
   useEffect(() => {
     const video = document.querySelector('video')
     if (!navigator.mediaDevices || !navigator.mediaDevices.enumerateDevices) {
-      setError("This browser does not support camera API")
+      setError(t('common:errors.camera'))
       return
     }
     navigator.mediaDevices
@@ -52,9 +52,7 @@ export default function QRScan() {
                 return
               })
           } else {
-           setError(
-             isTorchOn && 'This browser does not support native flashlight'
-           )
+           setError(isTorchOn && t('common:errors.camera'))
           return
           }
         }

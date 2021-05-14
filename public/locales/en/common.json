@@ -160,6 +160,8 @@
     "name": "Name"
   },
   "errors": {
-    "empty_text": "The message must contain some text"
+    "empty_text": "The message must contain some text",
+    "flashlight_not_supported": "This browser does not support native flashlight",
+    "camera_not_supported": "This browser does not support camera API"
   }
 }
