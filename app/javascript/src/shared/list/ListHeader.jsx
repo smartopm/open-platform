@@ -4,6 +4,8 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 
+
+// If headers has just title then we render the title if not then we render something else.
 export default function ListHeader({ headers }) {
   const classes = useStyles();
   return (
@@ -18,7 +20,7 @@ export default function ListHeader({ headers }) {
         <Grid item xs={header.col || true} md={header.title === 'Menu' ? 1 : 2} key={header.title}>
           <b>
             <Typography variant='body2' className={classes.typography}>
-              {['Select', 'Menu'].includes(header.title) ? null : header.title}
+              {['Select', 'Menu'].includes(header.value || header.title) ? null : header.value || header.title}
             </Typography>
           </b>
         </Grid>
