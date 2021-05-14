@@ -7,6 +7,7 @@ import { MockedProvider } from '@apollo/react-testing';
 import { Context } from '../../../containers/Provider/AuthStateProvider';
 import { createClient } from '../../../utils/apollo';
 import RequestUpdate from '../Components/RequestUpdate';
+import RequestUpdatePage from '../Components/RequestUpdatePage';
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
 describe('RequestUpdate main page', () => {
@@ -28,7 +29,22 @@ it('renders the RequestUpdate page correctly', async () => {
           <Context.Provider value={data}>
             <MockedProvider>
               <BrowserRouter>
-                <RequestUpdate />
+                <RequestUpdate id="23942342dsd" />
+              </BrowserRouter>
+            </MockedProvider>
+          </Context.Provider>
+        </ApolloProvider>
+        );
+      });
+  });
+  it('renders the RequestUpdate page correctly', async () => {
+    await act(async () => {
+      render(
+        <ApolloProvider client={createClient}>
+          <Context.Provider value={data}>
+            <MockedProvider>
+              <BrowserRouter>
+                <RequestUpdatePage />
               </BrowserRouter>
             </MockedProvider>
           </Context.Provider>
