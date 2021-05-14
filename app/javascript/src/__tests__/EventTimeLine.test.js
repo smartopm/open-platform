@@ -31,6 +31,6 @@ describe('Event Timeline component', () => {
   })
   it('shouldnt break when there is no data provided', () => {
     const { getByText } = render(<EventTimeLine data={[]} />)
-    expect(getByText('No Changes Made')).toBeInTheDocument()
+    expect(getByText('common:errors.no_changes')).toBeInTheDocument()
   })
 })

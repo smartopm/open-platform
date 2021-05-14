@@ -36,11 +36,11 @@ describe('component that with styled tabs', () => {
     expect(loader.queryAllByTestId('loader')[0]).toBeInTheDocument();
 
     await waitFor(() => {
-      expect(container.queryByText('Communication')).toBeInTheDocument();
-      expect(container.queryByText('Notes')).toBeInTheDocument();
-      expect(container.queryByText('Contact')).toBeInTheDocument();
-      expect(container.queryByText('Payments')).toBeInTheDocument();
-      expect(container.queryByText('Plots')).toBeInTheDocument();
+      expect(container.queryByText('common:misc.communication')).toBeInTheDocument();
+      expect(container.queryByText('common:misc.notes')).toBeInTheDocument();
+      expect(container.queryByText('common:misc.contact')).toBeInTheDocument();
+      expect(container.queryByText('common:misc.payments')).toBeInTheDocument();
+      expect(container.queryByText('common:misc.plots')).toBeInTheDocument();
       // verify number of tabs in case they get changed
       expect(container.queryAllByTestId('tabs')).toHaveLength(7)
     },10);
@@ -62,11 +62,11 @@ describe('component that with styled tabs', () => {
     expect(loader.queryAllByTestId('loader')[0]).toBeInTheDocument();
 
     await waitFor(() => {
-      expect(container.queryByText('Communication')).not.toBeInTheDocument();
-      expect(container.queryByText('Notes')).not.toBeInTheDocument();
-      expect(container.queryByText('Contact')).toBeInTheDocument();
-      expect(container.queryByText('Payments')).toBeInTheDocument();
-      expect(container.queryByText('Plots')).toBeInTheDocument();
+      expect(container.queryByText('common:misc.communication')).not.toBeInTheDocument();
+      expect(container.queryByText('common:misc.notes')).not.toBeInTheDocument();
+      expect(container.queryByText('common:misc.contact')).toBeInTheDocument();
+      expect(container.queryByText('common:misc.payments')).toBeInTheDocument();
+      expect(container.queryByText('common:misc.plots')).toBeInTheDocument();
     },10);
   });
     it('should show error when something wrong happens', async () => {

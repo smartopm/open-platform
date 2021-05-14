@@ -154,8 +154,8 @@ describe('Transactions Component', () => {
 
     await waitFor(
       () => {
-        expect(container.queryAllByText('Invoices')[0]).toBeInTheDocument();
-        expect(container.queryByText('Transactions')).toBeInTheDocument();
+        expect(container.queryAllByText('common:menu.invoice_plural')[0]).toBeInTheDocument();
+        expect(container.queryByText('common:menu.transaction_plural')).toBeInTheDocument();
       },
       { timeout: 100 }
     );

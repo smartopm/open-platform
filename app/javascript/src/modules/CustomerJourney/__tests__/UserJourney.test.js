@@ -37,7 +37,7 @@ describe('<UserJourney />', () => {
     );
 
     expect(container.queryByText('Eligible to start Construction')).toBeInTheDocument();
-    expect(container.queryAllByTestId('user_journey_content')[0].textContent).toContain('User Name changed status from Plots Fully Purchased to Eligible to start Construction between 2020-03-01 and 2020-03-03')
+    expect(container.queryAllByTestId('user_journey_content')[0].textContent).toContain('User Name users.user_journey_status Plots Fully Purchased users.to Eligible to start Construction users.between 2020-03-01 users.and')
     expect(container.queryAllByTestId('edit_journey')[0]).toBeInTheDocument()
     expect(container.queryAllByTestId('edit_journey')).toHaveLength(2)
   });
@@ -55,14 +55,14 @@ describe('<UserJourney />', () => {
         <UserJourney data={props} refetch={refetch} />
       </MockedProvider>
     );
-    expect(container.queryByText('There are no customer journey logs for this user')).toBeInTheDocument();
+    expect(container.queryByText('users.user_journey_message')).toBeInTheDocument();
   })
 });
 
 describe('user journey utils', () => {
   it('should check the substatus content formatter', () => {
     const subWrapper = render(getSubStatusChangeContent({ ...log }))
-    expect(subWrapper.queryByTestId('log_content').textContent).toContain(' changed status from Plots Fully Purchased to Eligible to start Construction between 2020-03-01 and 2020-03-03')
+    expect(subWrapper.queryByTestId('log_content').textContent).toContain(' users.user_journey_status Plots Fully Purchased users.to Eligible to start Construction users.between 2020-03-01 users.and')
   })
   
   it('should render for first or last items that dont have stopDate', () => {
@@ -73,7 +73,7 @@ describe('user journey utils', () => {
       newStatus: 'eligible_to_start_construction'
     }
     const subWrapper = render(getInitialSubStatusContent({ ...anotherLog }))
-    expect(subWrapper.queryByTestId('initial_log_content').textContent).toContain(' changed status from Plots Fully Purchased to Eligible to start Construction 2020-03-01')
+    expect(subWrapper.queryByTestId('initial_log_content').textContent).toContain(' users.change users.from Plots Fully Purchased users.to Eligible to start Construction 2020-03-01')
   })
   it('should format the substatus', () => {
     const logs = [

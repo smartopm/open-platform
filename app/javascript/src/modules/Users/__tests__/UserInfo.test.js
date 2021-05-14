@@ -29,10 +29,10 @@ describe('user info component', () => {
     }
     const container = render(<UserInfo user={props.user} userType={props.userType} />)
     
-    expect(container.queryByLabelText('Name')).toBeInTheDocument()
-    expect(container.queryByLabelText('Accounts')).toBeInTheDocument()
-    expect(container.queryByLabelText('Primary email')).toBeInTheDocument()
-    expect(container.queryByLabelText('Primary phone number')).toBeInTheDocument()
+    expect(container.queryByLabelText('common:form_fields.full_name')).toBeInTheDocument()
+    expect(container.queryByLabelText('common:form_fields.accounts')).toBeInTheDocument()
+    expect(container.queryByLabelText('common:form_fields.primary_email')).toBeInTheDocument()
+    expect(container.queryByLabelText('common:form_fields.primary_number')).toBeInTheDocument()
     expect(container.queryByLabelText('Secondary phone number')).toBeInTheDocument()
     expect(container.queryByLabelText('Secondary email address')).toBeInTheDocument()
 

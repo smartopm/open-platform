@@ -71,7 +71,7 @@ describe('User Plot Info Page', () => {
         </BrowserRouter>
       </MockedProvider>
     )
-    expect(container.queryByText('No plots information available')).toBeInTheDocument()
+    expect(container.queryByText('common:misc.no_plot')).toBeInTheDocument()
   })
 
   it('should include support team link', () => {
@@ -82,7 +82,7 @@ describe('User Plot Info Page', () => {
         </BrowserRouter>
       </MockedProvider>
     )
-    expect(getByTestId('support_link').textContent).toContain('Support Team')
+    expect(getByTestId('support_link').textContent).toContain('common:misc.support_team')
   })
 
   afterEach(cleanup)

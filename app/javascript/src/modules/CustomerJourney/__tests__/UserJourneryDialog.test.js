@@ -44,14 +44,14 @@ describe('user journey dialog', () => {
       </MockedProvider>
     )
 
-    expect(container.queryByText('Edit Start for this step')).toBeInTheDocument()
+    expect(container.queryByText('users.user_step')).toBeInTheDocument()
 
-    expect(container.queryByTestId('custom-dialog-button').textContent).toContain('Save')
+    expect(container.queryByTestId('custom-dialog-button').textContent).toContain('common:form_actions.save')
     fireEvent.click(container.queryByTestId('custom-dialog-button'))
 
     await waitFor(() => {
       expect(refetch).toBeCalled()
-      expect(container.queryByText('Successfully updated')).toBeInTheDocument()
+      expect(container.queryByText('users.user_success')).toBeInTheDocument()
     }, 10)
   })
 
