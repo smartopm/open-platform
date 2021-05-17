@@ -56,6 +56,6 @@ describe('user info component', () => {
         <UserInfo {...props} />
       </MockedProvider>
     )
-    expect(container.queryByText('log')).toBeInTheDocument()
+    expect(container.queryByText('common:misc.log')).toBeInTheDocument()
   })
 })
