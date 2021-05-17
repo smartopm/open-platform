@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import Typography from '@material-ui/core/Typography';
+import { useTranslation } from 'react-i18next';
 import { useMutation, useQuery } from 'react-apollo';
 import { useLocation } from 'react-router-dom';
 import { MenuItem } from '@material-ui/core';
@@ -36,6 +37,7 @@ export default function TransactionDetails({ data, detailsOpen, handleClose, cur
   const [updateTransaction] = useMutation(WalletTransactionUpdate)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [response, setResponse] = useState({ isError: false, message: '' })
+  const { t } = useTranslation('common')
   const changeLogs = useQuery(AllEventLogsQuery, {
     variables: {
       subject: ['payment_update'],
@@ -109,16 +111,16 @@ export default function TransactionDetails({ data, detailsOpen, handleClose, cur
       <CustomizedDialogs
         handleModal={handleClose}
         open={detailsOpen}
-        dialogHeader={data.__typename === 'WalletTransaction' ? 'Transaction' : 'Invoice'}
+        dialogHeader={data.__typename === 'WalletTransaction' ? t("common:menu.transaction") : t("common:menu.invoice")}
         handleBatchFilter={handleSubmit}
         actionable={isEditing}
-        saveAction={isSubmitting ? 'Saving ...' : 'Save'}
+        saveAction={isSubmitting ? t("common:form_actions.saving") : t("common:form_actions.save")}
       >
         <StyledTabs value={tabValue} onChange={handleTabChange} aria-label="land parcel tabs">
-          <StyledTab label="Details" value="Details" />
+          <StyledTab label={t("common:misc.details")} value="Details" />
           {
             data.destination === 'wallet' && (
-              <StyledTab label="Edit Log" value="Log" />
+              <StyledTab label={t("common:misc.edit_log")} value="Log" />
             )
           }
         </StyledTabs>
@@ -126,35 +128,35 @@ export default function TransactionDetails({ data, detailsOpen, handleClose, cur
         <TabPanel value={tabValue} index="Details">
           {pathname !== '/payments' && (
           <div style={{ marginLeft: '20px' }}>
-            <Typography variant="caption">Current Wallet Balance</Typography>
+            <Typography variant="caption">{t("common:form_fields.wallet_balance")}</Typography>
             <Typography color="primary" variant="h5">
               {formatMoney(currencyData, balance)}
             </Typography>
           </div>
         )}
-          <DetailsField editable={false} title="Amount" value={formatMoney(currencyData, data?.amount)} />
+          <DetailsField editable={false} title={t("common:table_headers.amount")} value={formatMoney(currencyData, data?.amount)} />
           {data.balance && (
           <div>
             <DetailsField
-              title="Pending Amount"
+              title={t("common:form_fields.pending_amount")}
               value={formatMoney(currencyData, data?.pendingAmount)}
               editable={false}
             />
-            <DetailsField editable={false} title="Invoice Number" value={data?.invoiceNumber} />
-            <DetailsField editable={false} title="Status" value="Unpaid" />
+            <DetailsField editable={false} title={t("common:form_fields.invoice_number")} value={data?.invoiceNumber} />
+            <DetailsField editable={false} title={t("common:table_headers.status")} value="Unpaid" />
             <DetailsField
               editable={false}
-              title="Issued Date"
+              title={t("common:table_headers.issue_dated")}
               value={dateToString(data?.createdAt)}
             />
-            <DetailsField editable={false} title="Due Date" value={dateToString(data?.dueDate)} />
+            <DetailsField editable={false} title={t("common:table_headers.due_date")} value={dateToString(data?.dueDate)} />
           </div>
         )}
           {data.__typename === 'WalletTransaction' && (
           <div>
             <DetailsField
               editable={isEditing}
-              title="Payment Type"
+              title={t("common:form_fields.payment_Type")}
               value={inputValues.PaymentType}
               handleChange={handleChange}
               options={{
@@ -185,7 +187,7 @@ export default function TransactionDetails({ data, detailsOpen, handleClose, cur
                   : (
                     <DetailsField
                       editable={false}
-                      title="Payment Date"
+                      title={t("common:table_headers.payment_date")}
                       value={dateToString(data?.createdAt)}
                     />
                 )
@@ -193,7 +195,7 @@ export default function TransactionDetails({ data, detailsOpen, handleClose, cur
 
             <DetailsField
               editable={isEditing}
-              title="Status"
+              title={t("common:table_headers.status")}
               value={!isEditing ? inputValues.Status : 'settled'}
               handleChange={handleChange}
               options={{
@@ -207,7 +209,7 @@ export default function TransactionDetails({ data, detailsOpen, handleClose, cur
             />
             <DetailsField
               editable={isEditing}
-              title="Transaction Number"
+              title={t("common:table_headers.transaction_number")}
               value={inputValues.TransactionNumber}
               handleChange={handleChange}
             />
@@ -216,20 +218,20 @@ export default function TransactionDetails({ data, detailsOpen, handleClose, cur
                 <>
                   <DetailsField
                     editable={isEditing}
-                    title="Bank Name"
+                    title={t("common:table_headers.bank_name")}
                     value={inputValues.BankName}
                     handleChange={handleChange}
                   />
                   <DetailsField
                     editable={isEditing}
-                    title="Cheque Number"
+                    title={t("common:table_headers.cheque_number")}
                     value={inputValues.ChequeNumber}
                     handleChange={handleChange}
                   />
                 </>
               )
             }
-            <DetailsField editable={false} title="Payment Made By" value={data?.depositor?.name} />
+            <DetailsField editable={false} title={t("common:table_headers.payment_made")} value={data?.depositor?.name} />
           </div>
         )}
         </TabPanel>

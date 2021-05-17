@@ -2,6 +2,7 @@
 import React, { useContext, useState, useEffect } from 'react'
 import { useQuery } from 'react-apollo'
 import { Typography } from '@material-ui/core'
+import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types'
 import { useHistory } from 'react-router'
 import { useTheme } from '@material-ui/core/styles';
@@ -34,6 +35,7 @@ export default function TransactionsList({ userId, user, userData, paymentSubTab
   const [open, setOpen] = useState(!!tab)
   const [payOpen, setPayOpen] = useState(false)
   const theme = useTheme();
+  const { t } = useTranslation('users')
   const matches = useMediaQuery(theme.breakpoints.up('sm'));
   const { loading, data: transactionsData, error, refetch } = useQuery(
     TransactionQuery,
@@ -62,29 +64,30 @@ export default function TransactionsList({ userId, user, userData, paymentSubTab
   )
 
   const transactionHeader = [
-    { title: 'Deposit/Issue date', col: 1 },
-    { title: 'Parcel Number', col: 1 },
-    { title: 'Description', col: 2 },
-    { title: 'Amount', col: 1 },
-    { title: 'Balance', col: 1 },
-    { title: 'Status', col: 2 },
-    { title: 'Menu', col: 1 }
+    { title: 'Deposit/Issue date', value: t('common:table_headers.deposit_date'), col: 1 },
+    { title: 'Parcel Number', value: t('common:table_headers.parcel_number'), col: 1 },
+    { title: 'Description', value: t('common:table_headers.description'), col: 2 },
+    { title: 'Amount', value: t('common:table_headers.amount'), col: 1 },
+    { title: 'Balance', value: t('common:menu.balance'), col: 1 },
+    { title: 'Status', value: t('common:table_headers.status'), col: 2 },
+    { title: 'Menu', value: t('common:table_headers.menu'), col: 1 }
   ];
 
   const invoiceHeader = [
-    { title: 'Issue Date', col: 4 },
-    { title: 'Description', col: 4 },
-    { title: 'Amount', col: 3 },
-    { title: 'Payment Date', col: 3 },
-    { title: 'Status', col: 4 }
+    { title: 'Issue Date', value: t('common:table_headers.issue_date'), col: 4 },
+    { title: 'Description', value: t('common:table_headers.description'), col: 4 },
+    { title: 'Amount', value: t('common:table_headers.amount'), col: 3 },
+    { title: 'Payment Date', value: t('common:table_headers.payment_date'), col: 3 },
+    { title: 'Status', value: t('common:table_headers.status'), col: 4 },
+    { title: 'Menu', value: t('common:table_headers.menu'), col: 4 }
   ];
 
   const paymentPlan = [
-    { title: 'Plot Number', col: 2 },
-    { title: 'Balance', col: 2 },
-    { title: 'Start Date', col: 2 },
-    { title: '% of total valuation', col: 2 },
-    { title: 'Payment Day', col: 2 },
+    { title: 'Plot Number', value: t('common:table_headers.plot_number'), col: 2 },
+    { title: 'Balance', value: t('common:menu.balance'), col: 2 },
+    { title: 'Start Date', value: t('common:table_headers.start_date'), col: 2 },
+    { title: '% of total valuation', value: t('common:table_headers.valuation'), col: 2 },
+    { title: 'Payment Day', value: t('common:table_headers.pay_day'), col: 2 },
   ];
 
   const currency = currencies[user.community.currency] || ''
@@ -138,13 +141,13 @@ export default function TransactionsList({ userId, user, userData, paymentSubTab
             {
               walletData.userBalance?.balance > 0 && (
                 <div style={{display: 'flex', flexDirection: 'column', marginLeft: '30px'}}>
-                  <Typography variant='subtitle1'>Unallocated Funds</Typography>
+                  <Typography variant='subtitle1'>{t("users.unallocated_funds")}</Typography>
                   <Typography variant="h5" color='primary'>{formatMoney(currencyData, walletData.userBalance?.balance)}</Typography>
                 </div>
               )
             }
             <div style={{display: 'flex', flexDirection: 'column', marginLeft: '40px'}}>
-              <Typography variant='subtitle1'>Balance</Typography>
+              <Typography variant='subtitle1'>{t("users.balance")}</Typography>
               <Typography variant="h5" color='primary'>{formatMoney(currencyData, walletData.userBalance?.pendingBalance)}</Typography>
             </div>
           </div>
@@ -153,8 +156,8 @@ export default function TransactionsList({ userId, user, userData, paymentSubTab
       {
             authState.user?.userType === 'admin' && (
               <div style={{marginLeft: '20px'}}>
-                <ButtonComponent color='primary' buttonText='Make a Payment' handleClick={() => setPayOpen(true)} />
-                <ButtonComponent color='primary' buttonText='Add an Invoice' handleClick={() => handleModalOpen()} />
+                <ButtonComponent color='primary' buttonText={t("users.make_payment")} handleClick={() => setPayOpen(true)} />
+                <ButtonComponent color='primary' buttonText={t("users.add_invoice")} handleClick={() => handleModalOpen()} />
               </div>
             )
       }
@@ -164,9 +167,9 @@ export default function TransactionsList({ userId, user, userData, paymentSubTab
           onChange={handleChange}
           aria-label="Transactions tabs"
         >
-          <StyledTab label="Invoices" value="Invoices" />
-          <StyledTab label="Transactions" value="Transactions" />
-          <StyledTab label="Plans" value="Plans" />
+          <StyledTab label={t("common:menu.invoice_plural")} value="Invoices" />
+          <StyledTab label={t("common:menu.transaction_plural")} value="Transactions" />
+          <StyledTab label={t("common:menu.plan_plural")} value="Plans" />
         </StyledTabs>
       </div>
       <InvoiceModal

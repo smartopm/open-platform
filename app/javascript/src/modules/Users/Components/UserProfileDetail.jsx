@@ -1,48 +1,57 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { css, StyleSheet } from 'aphrodite'
+import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types'
 import dateutil from '../../../utils/dateutil'
 import UserLabels from './UserLabels'
 import StatusBadge from '../../../components/StatusBadge'
-import { titleize } from '../../../utils/helpers'
-import { userSubStatus } from '../../../utils/constants'
 
 export default function UserDetail({ data, userType }) {
+  const { t } = useTranslation('users')
   return (
     <div>
       <h5>{data.user.name}</h5>
       <div className="expires">
-        User Type:
-        {titleize(data.user.userType)}
+        {t("common:misc.user_type")}
+        :
+        {' '}
+        {t(`common:user_types.${data.user.userType}`)}
       </div>
       {data.user.subStatus && (
         <div data-testid="user-sub-status">
-          Customer Journey Stage: 
+          {t("common:misc.customer_journey_stage")}
+          : 
           {' '}
-          <span>{userSubStatus[data.user.subStatus]}</span>
+          <span>{t(`common:sub_status.${data.user.subStatus}`)}</span>
         </div>
       )}
       <div className="expires">
-        Expiration:
+        {t("common:misc.expiration")}
+        :
         {' '}
         {dateutil.isExpired(data.user.expiresAt) ? (
-          <span className="text-danger">Already Expired</span>
+          <span className="text-danger">{t("common:misc.already_expired")}</span>
         ) : (
           dateutil.formatDate(data.user.expiresAt)
         )}
       </div>
       <div className="expires">
-        Last accessed: 
+        {t("common:misc.last_accessed")}
+        : 
         {' '}
         {dateutil.formatDate(data.user.lastActivityAt)}
       </div>
       {['admin'].includes(userType) && (
-        <Link to={`/entry_logs/${data.user.id}`}>Entry Logs &gt;</Link>
+        <Link to={`/entry_logs/${data.user.id}`}>
+          {t("common:misc.entry_logs")}
+          {' '}
+          &gt;
+        </Link>
       )}
       <br />
       {dateutil.isExpired(data.user.expiresAt) ? (
-        <p className={css(styles.badge, styles.statusBadgeBanned)}>Expired</p>
+        <p className={css(styles.badge, styles.statusBadgeBanned)}>{t("common:misc.expired")}</p>
       ) : (
         ['admin'].includes(userType) && <StatusBadge label={data.user.state} />
       )}

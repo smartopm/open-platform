@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import EditIcon from '@material-ui/icons/Edit';
+import { useTranslation } from 'react-i18next';
 import Grid from '@material-ui/core/Grid';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
@@ -10,16 +11,18 @@ import UserJourneyDialog from './UserJourneyDialog';
 import CenteredContent from '../../../components/CenteredContent';
 
 export function getInitialSubStatusContent({ date, newStatus, previousStatus }) {
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const { t } = useTranslation('users')
   return (
     <span data-testid="initial_log_content">
       {' '}
-      changed status 
+      {t("users.change")} 
       {' '}
-      {previousStatus ? 'from' : 'to'} 
+      {previousStatus ? t("users.from") : t("users.to")} 
       {' '}
       <b>{userSubStatus[String(previousStatus)]}</b>
       {' '}
-      {previousStatus && 'to'} 
+      {previousStatus && t("users.to")} 
       {' '}
       <b>{userSubStatus[String(newStatus)]}</b> 
       {' '}
@@ -30,22 +33,24 @@ export function getInitialSubStatusContent({ date, newStatus, previousStatus }) 
 
 
 export function getSubStatusChangeContent({ startDate, stopDate, previousStatus, newStatus }) {
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const { t } = useTranslation('users')
   return (
     <span data-testid="log_content">
       {' '}
-      changed status from 
+      {t("users.user_journey_status")} 
       {' '}
       <b>{userSubStatus[String(previousStatus)]}</b>
       {' '}
-      to
+      {t("users.to")}
       {' '}
       <b>{userSubStatus[String(newStatus)]}</b>
       {' '}
-      between
+      {t("users.between")}
       {' '}
       {startDate} 
       {' '}
-      {`and ${stopDate}`}
+      {t("users.and", {date: stopDate})}
     </span>
   );
 }
@@ -91,6 +96,7 @@ export function subsStatusLogsFormatter(subStatusLogs) {
   });
 }
 export default function UserJourney({ data, refetch }) {
+  const { t } = useTranslation('users')
   const [isEditOpen, setIsEditing] = useState(false);
   const [selectedJourneyLog, setCurrentLog] = useState({});
 
@@ -109,7 +115,7 @@ export default function UserJourney({ data, refetch }) {
       />
       {
         !formattedSubStatusLogs.length && (
-          <CenteredContent>There are no customer journey logs for this user</CenteredContent>
+          <CenteredContent>{t("users.user_journey_message")}</CenteredContent>
         )
       }
       {formattedSubStatusLogs.map(log => (

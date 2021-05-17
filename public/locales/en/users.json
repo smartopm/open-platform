@@ -15,6 +15,20 @@
     "preferences_subtext": "Set notification preferences",
     "support": "{{communityName}} Support",
     "support_subtext": "Have issues? Reach out to customer care",
-    "logout_subtext": "Sign out of your DoubleGDP account"
+    "logout_subtext": "Sign out of your DoubleGDP account",
+    "user_journey_message": "There are no customer journey logs for this user",
+    "user_journey_status": "changed status from",
+    "to": "to",
+    "between": "between",
+    "from": "from",
+    "and": "and {{date}}",
+    "change": "changed status",
+    "user_success": "Successfully updated",
+    "user_step": "Edit Start for this step",
+    "journey_start": "Customer Journey Start Date",
+    "balance": "Balance",
+    "unallocated_funds": "Unallocated Funds",
+    "make_payment": "Make a Payment",
+    "add_invoice": "Add an Invoice"
   }
 }
