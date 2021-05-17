@@ -9,6 +9,8 @@ RSpec.describe Community, type: :model do
     it { is_expected.to have_many(:campaigns) }
     it { is_expected.to have_many(:discussions) }
     it { is_expected.to have_many(:labels) }
+    it { is_expected.to have_many(:transactions) }
+    it { is_expected.to have_many(:plan_payments) }
   end
 
   it 'should be associated with users' do
