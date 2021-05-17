@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
+import { useTranslation } from 'react-i18next';
 import { useMutation } from 'react-apollo';
 import { CustomizedDialogs } from '../../../components/Dialog';
 import MessageAlert from '../../../components/MessageAlert';
@@ -8,6 +9,7 @@ import { UserJourneyUpdateMutation } from '../../../graphql/mutations/user_journ
 import { formatError } from '../../../utils/helpers';
 
 export default function UserJourneyDialog({ open, handleModalClose, refetch, log }) {
+  const { t } = useTranslation('users')
   const [state, setState] = useState({
     isError: false,
     message: '',
@@ -33,7 +35,7 @@ export default function UserJourneyDialog({ open, handleModalClose, refetch, log
       }
     })
       .then(() => {
-        setState({ ...state, isLoading: false, message: 'Successfully updated', isOpen: true });
+        setState({ ...state, isLoading: false, message: t("users.user_success"), isOpen: true });
         refetch();
       })
       .catch(error => {
@@ -57,14 +59,15 @@ export default function UserJourneyDialog({ open, handleModalClose, refetch, log
       <CustomizedDialogs
         open={open}
         handleModal={handleModalClose}
-        dialogHeader="Edit Start for this step"
+        dialogHeader={t("users.user_step")}
         handleBatchFilter={handleSubmit}
-        saveAction={state.isLoading ? 'Saving ...' : 'Save'}
+        cancelAction={t("common:form_actions.cancel")}
+        saveAction={state.isLoading ? t("common:form_actions.saving") : t("common:form_actions.save")}
       >
         <DatePickerDialog
           key="start_date"
           selectedDate={startDate}
-          label="Customer Journey Start Date"
+          label={t("users.journey_start")}
           handleDateChange={date => setDates(date)}
           maxDate={log.stopDate || undefined}
         />

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { useForm } from 'react-hook-form';
 import IconButton from '@material-ui/core/IconButton';
 import Button from '@material-ui/core/Button';
@@ -41,6 +42,7 @@ export default function UserInformation({
 }) {
   const path = useParamsQuery();
   const tab = path.get('tab');
+  const { t } = useTranslation('users')
   const paymentSubTab = path.get('payment_sub_tab');
   const [tabValue, setValue] = useState(tab || 'Contacts');
   const [paymentSubTabValue, setPaymentSubTabValue] = useState(paymentSubTab || 'Invoices');
@@ -109,7 +111,7 @@ export default function UserInformation({
   }
 
   return (
-    <div>
+    <div style={{overflow: 'hidden'}}>
       <>
         <Dialog
           open={isDialogOpen}
@@ -184,11 +186,11 @@ export default function UserInformation({
               <div className="container">
                 <form id="note-form">
                   <div className="form-group">
-                    Notes
+                    {t("common:misc.notes")}
                     <br />
                     <textarea
                       className="form-control"
-                      placeholder="Add your notes here"
+                      placeholder={t("common:form_placeholders.add_note")}
                       id="notes"
                       rows="4"
                       ref={register({ required: true })}
@@ -202,7 +204,7 @@ export default function UserInformation({
                     onClick={handleSubmit(onSaveNote)}
                     disabled={mutationLoading}
                   >
-                    {mutationLoading ? 'Saving ...' : 'Save'}
+                    {mutationLoading ? t("common:form_actions.saving") : t("common:form_actions.save")}
                   </button>
                 </form>
                 <br />
@@ -252,7 +254,7 @@ export default function UserInformation({
               className={`${css(styles.logButton)} log-entry-btn`}
               onClick={onLogEntry}
             >
-              Log This Entry
+              {t("common:misc.log_entry")}
             </Button>
           ) : null}
 
@@ -263,7 +265,7 @@ export default function UserInformation({
               className={`${css(styles.callButton)}`}
               href={`tel:${ponisoNumber}`}
             >
-              Call Manager
+              {t("common:misc.call_manager")}
             </Button>
           ) : null}
         </div>

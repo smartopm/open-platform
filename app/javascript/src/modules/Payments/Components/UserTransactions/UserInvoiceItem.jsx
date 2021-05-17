@@ -1,6 +1,7 @@
 import React, { useState, useContext } from 'react';
 import PropTypes from 'prop-types';
 import { useMutation } from 'react-apollo';
+import { useTranslation } from 'react-i18next';
 import { Grid, IconButton } from '@material-ui/core';
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 import DataList from '../../../../shared/list/DataList';
@@ -41,8 +42,9 @@ export default function UserInvoiceItem({ invoice, currencyData, refetch, wallet
   const [isSuccessAlert, setIsSuccessAlert] = useState(false);
   const [messageAlert, setMessageAlert] = useState('');
   const [cancelInvoice] = useMutation(InvoiceCancel);
+  const { t } = useTranslation('users')
 
-  const menuList = [{ content: 'Cancel Invoice', isAdmin: true, color: 'red', handleClick }];
+  const menuList = [{ content: t("common:menu.cancel_invoice"), isAdmin: true, color: 'red', handleClick }];
 
   function handleClick(event, invId, userName) {
     event.stopPropagation();
@@ -168,7 +170,7 @@ export function renderInvoices(inv, currencyData, menuData) {
       </Grid>
     ),
     Menu: (
-      <Grid item xs={12} md={2} data-testid="menu">
+      <Grid item xs={12} md={1} data-testid="menu">
         {inv.status !== 'cancelled' && (
           <IconButton
             aria-label="more-verticon"

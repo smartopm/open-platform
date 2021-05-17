@@ -1,6 +1,7 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React from 'react'
 import PropTypes from 'prop-types'
+import { useTranslation } from 'react-i18next';
 import CaptureTemp from '../../../components/CaptureTemp'
 
 const type = {
@@ -20,12 +21,13 @@ export function sortByType(prev, next){
   return 0
 }
 export default function UserInfo({ user, userType }) {
+  const { t } = useTranslation('users')
   return (
     <div className="container">
-      <Contact value={user.name} label="Name" />
-      <Contact value={user.name} label="Accounts" />
-      <Contact value={user.phoneNumber} label="Primary phone number" />
-      <Contact value={user.email} label="Primary email" />
+      <Contact value={user.name} label={t("common:form_fields.full_name")} />
+      <Contact value={user.name} label={t("common:form_fields.accounts")} />
+      <Contact value={user.phoneNumber} label={t("common:form_fields.primary_number")} />
+      <Contact value={user.email} label={t("common:form_fields.primary_email")} />
 
       {user.contactInfos?.sort(sortByType).map(contact => (
         <Contact
@@ -35,7 +37,7 @@ export default function UserInfo({ user, userType }) {
         />
         ))}
       <br />
-      <Contact value={user.address} label="Primary Address" />
+      <Contact value={user.address} label={t("common:form_fields.primary_address")} />
       <span>Social: </span>
       <br />
       {userType === 'security_guard' && (

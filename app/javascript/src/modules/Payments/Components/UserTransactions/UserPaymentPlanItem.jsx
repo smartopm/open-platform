@@ -2,6 +2,7 @@ import React, { useState, useContext } from 'react';
 import PropTypes from 'prop-types';
 import { useMutation } from 'react-apollo';
 import { makeStyles } from '@material-ui/core/styles';
+import { useTranslation } from 'react-i18next';
 import {
   Grid,
   Typography,
@@ -64,6 +65,7 @@ export default function UserPaymentPlanItem({
   const [messageAlert, setMessageAlert] = useState('');
   const [invoiceId, setInvoiceId] = useState(false);
   const [cancelInvoice] = useMutation(InvoiceCancel);
+  const { t } = useTranslation('common')
 
   const planHeader = [
     { title: 'Plot Number', col: 2 },
@@ -83,7 +85,7 @@ export default function UserPaymentPlanItem({
     { title: 'Menu', col: 1 }
   ];
 
-  const menuList = [{ content: 'Cancel Invoice', isAdmin: true, color: 'red', handleClick }];
+  const menuList = [{ content: t("common:menu.cancel_invoice"), isAdmin: true, color: 'red', handleClick }];
 
   const handleClose = () => {
     setAnchorEl(null);
@@ -248,7 +250,7 @@ export default function UserPaymentPlanItem({
           <AccordionDetails classes={{ root: classes.content }}>
             {plan.invoices && Boolean(plan.invoices?.length) && (
               <Typography color="primary" style={{ margin: '0 0 10px 50px' }}>
-                Invoices
+                {t("common:menu.invoice_plural")}
               </Typography>
             )}
             {plan.invoices

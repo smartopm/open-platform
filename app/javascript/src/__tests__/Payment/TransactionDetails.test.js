@@ -77,7 +77,7 @@ describe('Transaction Details Component', () => {
         expect(container.queryAllByTestId('text-field')[3].value).toContain('Unpaid');
         expect(container.queryAllByTestId('text-field')[4].value).toContain('2020-12-28');
         expect(container.queryAllByTestId('text-field')[5].value).toContain('2020-12-28');
-        expect(container.queryByText('Invoice')).toBeInTheDocument();
+        expect(container.queryByText('common:menu.invoice')).toBeInTheDocument();
       },
       { timeout: 100 }
     );

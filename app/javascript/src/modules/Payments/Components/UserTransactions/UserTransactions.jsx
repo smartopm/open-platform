@@ -2,6 +2,7 @@
 /* eslint-disable no-underscore-dangle */
 import React, { useEffect, useState } from 'react';
 import { useMutation } from 'react-apollo';
+import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import { Grid, IconButton, Tooltip } from '@material-ui/core';
 import { MoreHorizOutlined } from '@material-ui/icons';
@@ -41,11 +42,12 @@ export default function UserTransactionsList({ transaction, currencyData, userDa
   const [name, setName] = useState('')
   const [revertTransaction] = useMutation(WalletTransactionRevert)
   const anchorElOpen = Boolean(anchorEl)
+  const { t } = useTranslation('common')
 
   const menuList = [
-    { content: 'View Receipt', isAdmin: true, color: '', handleClick: handleOpenReceipt},
-    { content: 'Edit Payment', isAdmin: true, color: '', handleClick: handleOpenEdit},
-    { content: 'Revert Transaction', isAdmin: true, color: 'red', handleClick: (event) => handleClick(event, transaction, userData)},
+    { content: t("common:menu.view_receipt"), isAdmin: true, color: '', handleClick: handleOpenReceipt},
+    { content: t("common:menu.edit_payment"), isAdmin: true, color: '', handleClick: handleOpenEdit},
+    { content: t("common:menu.revert_transaction"), isAdmin: true, color: 'red', handleClick: (event) => handleClick(event, transaction, userData)},
   ]
 
   useEffect(() => {

@@ -2,8 +2,7 @@ import React from 'react';
 import { mount } from 'enzyme';
 import { BrowserRouter } from 'react-router-dom';
 import { MockedProvider } from '@apollo/react-testing';
-// eslint-disable-next-line camelcase
-import UserMessageItem, { check_route } from '../components/Messaging/MessageItem';
+import UserMessageItem, { checkRoute } from '../components/Messaging/MessageItem';
 
 describe('user message item component', () => {
   const message = `Please share your feedback with this 30 seconds survey: https://app.doublegdp.com/news/posts/survey/ 
@@ -66,7 +65,7 @@ describe('user message item component', () => {
     ).toContain('<a href="mailto:test@testdotcom.com">test@testdotcom.com</a>');
   });
   it('displayes not seen if message not seen yet by the user', () => {
-    expect(messageItem.find('.nz_read').text()).toBe('Not Read');
+    expect(messageItem.find('.nz_read').text()).toBe('common:misc.not_read');
   });
   it('It should display SMS tag ', () => {
     expect(
@@ -109,7 +108,7 @@ describe('user message item component', () => {
   });
 
   it('shows admin the time when message was read at', () => {
-    expect(truncateMessageItem.find('.nz_read').text()).toContain('Read');
+    expect(truncateMessageItem.find('.nz_read').text()).toContain('common:misc.read');
   });
 
   it('shows admin the user type of the message owner', () => {
@@ -124,15 +123,15 @@ describe('check route', () => {
   const location3 = '/news/348534';
 
   it('should know when it is being used on messages', () => {
-    expect(check_route(location1)).toBe('is_message');
+    expect(checkRoute(location1)).toBe('is_message');
   });
   it('should know when it is being used on user profile', () => {
-    expect(check_route(location2)).toBe('is_profile');
+    expect(checkRoute(location2)).toBe('is_profile');
   });
   it('should know when it is being used on nkwashi news posts', () => {
-    expect(check_route(location3)).toBe('is_post');
+    expect(checkRoute(location3)).toBe('is_post');
   });
   it('should know when it is being used on nkwashi news posts', () => {
-    expect(check_route(location4)).toBe('is_message');
+    expect(checkRoute(location4)).toBe('is_message');
   });
 });

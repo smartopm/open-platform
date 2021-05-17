@@ -32,7 +32,8 @@
     "state": "Ciudad",
     "template_name": "Nombre de plantilla",
     "template_subject": "Asunto de la plantilla",
-    "user_type": "Tipo de usuario"
+    "user_type": "Tipo de usuario",
+    "accounts": "Cuentas"
   },
   "form_placeholders": {
     "action_note": "Escriba que sea hacer aquí",
@@ -62,7 +63,6 @@
     "preferences": "Preferencias",
     "print_id": "Imprimir ID",
     "request_forms": "Formularios de solicitud y permisos",
-    "search": "Buscar",
     "send_otp": "Enviar OTP",
     "send_sms": "Enviar SMS",
     "send_sms_to": "Enviar SMS a ",
@@ -85,7 +85,11 @@
     "plot": "La Parcela",
     "plot_plural": "Parcelas",
     "transaction": "Transacción",
-    "transaction_plural": "Actas"
+    "transaction_plural": "Actas",
+    "search_user": "Buscar usuario",
+    "search": "Buscar",
+    "add_note": "Agrega tus notas aquí",
+    "flag": "Marcar como tarea"
   },
   "misc": {
     "action_flows": "Flujos de acción",
@@ -151,16 +155,46 @@
     "menu": "Menu",
     "name": "Nombre",
     "subject": "Titulo",
-    "tag": "Etiqueta"
+    "tag": "Etiqueta",
+    "step_plural": "Pasos",
+    "balance": "equilibrio",
+    "user_type": "Tipo de usuario",
+    "expiration": "Vencimiento",
+    "already_expired": "Ya caducado",
+    "last_accessed": "Último accedido",
+    "contact": "Contacto",
+    "communication": "Comunicación",
+    "plots": "Parcelas",
+    "forms": "Formularios",
+    "customer_journey": "Viaje del cliente",
+    "no_message": "Aún no hay mensajes para este usuario",
+    "sent": "Enviada",
+    "read": "Leer",
+    "not_read": "No leer",
+    "count": "Número de letras: {{numb}}",
+    "more_message": "Cargar más mensajes",
+    "no_plot": "No hay información de parcelas disponible",
+    "plot_message": "Parcelas asociadas a esta cuenta",
+    "plot_details": "Estos datos se actualizaron el {{date}}. Si algo parece incorrecto, comuníquese con nuestro",
+    "support_team": "Equipo de apoyo."
   },
   "user_types": {
     "admin": "Administrador",
     "client": "Cliente",
-    "contractor": "Contratista",
     "custodian": "Custodio",
     "prospective_client": "Futuro cliente",
     "resident": "Residente",
     "security_guard": "Guardia de seguridad",
-    "visitor": "Visitante"
+    "visitor": "Visitante",
+    "contractor": "Contratista"
+  },
+  "sub_status": {
+    "plots_fully_purchased": "Parcelas compradas íntegramente",
+    "eligible_to_start_construction": "Elegible para comenzar la construcción",
+    "floor_plan_purchased": "Plano de planta adquirido",
+    "building_permit_approved": "Permiso de construcción aprobado",
+    "construction_in_progress": "Construcción en progreso",
+    "construction_completed": "Construcción completada",
+    "construction_in_progress_self_build": "Construcción en progreso (autoconstrucción)"
   }
 }

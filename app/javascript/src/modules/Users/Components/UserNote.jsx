@@ -2,6 +2,7 @@
 import React, { Fragment, useEffect, useState } from 'react'
 import { useLazyQuery, useMutation } from 'react-apollo'
 import AddBoxIcon from '@material-ui/icons/AddBox'
+import { useTranslation } from 'react-i18next';
 import Tooltip from '@material-ui/core/Tooltip'
 import { css, StyleSheet } from 'aphrodite'
 import PropTypes from 'prop-types'
@@ -12,17 +13,19 @@ import { UserNotesQuery } from '../../../graphql/queries'
 import { Spinner } from '../../../shared/Loading'
 
 export function UserNote({ note, handleFlagNote }) {
+  const { t } = useTranslation('users')
   return (
     <Fragment key={note.id}>
       <div className={css(styles.commentBox)}>
         <p className="comment">{note.body}</p>
         <i>
-          created at:
+          {t("common:misc.created_at")}
+          :
           {dateutil.formatDate(note.createdAt)}
         </i>
       </div>
 
-      <Tooltip title="Flag as a todo ">
+      <Tooltip title={t("common:form_placeholders.flag")}>
         <IconButton 
           aria-label="Flag as a todo" 
           onClick={() => handleFlagNote(note.id)}
