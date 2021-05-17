@@ -254,7 +254,7 @@ export default function UserInformation({
               className={`${css(styles.logButton)} log-entry-btn`}
               onClick={onLogEntry}
             >
-              Log This Entry
+              {t("common:misc.log_entry")}
             </Button>
           ) : null}
 
@@ -265,7 +265,7 @@ export default function UserInformation({
               className={`${css(styles.callButton)}`}
               href={`tel:${ponisoNumber}`}
             >
-              Call Manager
+              {t("common:misc.call_manager")}
             </Button>
           ) : null}
         </div>

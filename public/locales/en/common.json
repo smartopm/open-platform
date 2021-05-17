@@ -128,7 +128,11 @@
     "expired": "Expired",
     "entry_logs": "Entry Logs",
     "user_label": "User Label",
-    "add_label": "Add Label"
+    "add_label": "Add Label",
+    "log_entry": "Log This Entry",
+    "call_manager": "Call Manager",
+    "log": "Log",
+    "temp_record": "Temperature recorded"
   },
   "menu": {
     "invoice": "Invoice",

@@ -64,30 +64,30 @@ export default function TransactionsList({ userId, user, userData, paymentSubTab
   )
 
   const transactionHeader = [
-    { title: 'Deposit/Issue date', col: 1 },
-    { title: 'Parcel Number', col: 1 },
-    { title: 'Description', col: 2 },
-    { title: 'Amount', col: 1 },
-    { title: 'Balance', col: 1 },
-    { title: 'Status', col: 2 },
-    { title: 'Menu', col: 1 }
+    { title: 'Deposit/Issue date', value: t('common:table_headers.deposit_date'), col: 1 },
+    { title: 'Parcel Number', value: t('common:table_headers.parcel_number'), col: 1 },
+    { title: 'Description', value: t('common:table_headers.description'), col: 2 },
+    { title: 'Amount', value: t('common:table_headers.amount'), col: 1 },
+    { title: 'Balance', value: t('common:menu.balance'), col: 1 },
+    { title: 'Status', value: t('common:table_headers.status'), col: 2 },
+    { title: 'Menu', value: t('common:table_headers.menu'), col: 1 }
   ];
 
   const invoiceHeader = [
-    { title: 'Issue Date', col: 4 },
-    { title: 'Description', col: 4 },
-    { title: 'Amount', col: 3 },
-    { title: 'Payment Date', col: 3 },
-    { title: 'Status', col: 4 },
-    { title: 'Menu', col: 4 }
+    { title: 'Issue Date', value: t('common:table_headers.issue_date'), col: 4 },
+    { title: 'Description', value: t('common:table_headers.description'), col: 4 },
+    { title: 'Amount', value: t('common:table_headers.amount'), col: 3 },
+    { title: 'Payment Date', value: t('common:table_headers.payment_date'), col: 3 },
+    { title: 'Status', value: t('common:table_headers.status'), col: 4 },
+    { title: 'Menu', value: t('common:table_headers.menu'), col: 4 }
   ];
 
   const paymentPlan = [
-    { title: 'Plot Number', col: 2 },
-    { title: 'Balance', col: 2 },
-    { title: 'Start Date', col: 2 },
-    { title: '% of total valuation', col: 2 },
-    { title: 'Payment Day', col: 2 },
+    { title: 'Plot Number', value: t('common:table_headers.plot_number'), col: 2 },
+    { title: 'Balance', value: t('common:menu.balance'), col: 2 },
+    { title: 'Start Date', value: t('common:table_headers.start_date'), col: 2 },
+    { title: '% of total valuation', value: t('common:table_headers.valuation'), col: 2 },
+    { title: 'Payment Day', value: t('common:table_headers.pay_day'), col: 2 },
   ];
 
   const currency = currencies[user.community.currency] || ''
