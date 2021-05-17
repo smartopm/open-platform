@@ -9,10 +9,11 @@ import { dateToString } from '../../../components/DateContainer';
 
 
 
-export default function MailTemplateItem({email, onTemplateClick, onTemplateDuplicate}) {
+export default function MailTemplateItem({email, onTemplateClick, onTemplateDuplicate, headers}) {
   const [anchorEl, setAnchorEl] = useState(null)
   const anchorElOpen = Boolean(anchorEl)
   const { t } = useTranslation('common')
+
   const menuList = [
     { content: t('menu.edit'), isAdmin: true, handleClick: () => onTemplateClick(email) },
     { content: t('menu.duplicate'), isAdmin: true, handleClick: () => onTemplateDuplicate(email) },
@@ -24,23 +25,6 @@ export default function MailTemplateItem({email, onTemplateClick, onTemplateDupl
     open: anchorElOpen,
     handleClose,
   }
-
-    /*
-    we will the list header to this once we change the datalist component
-    { title: t('table_headers.name'), col: 2 },
-    { title: t('table_headers.subject'), col: 5 },
-    { title: t('table_headers.date_created'), col: 1 },
-    { title: t('table_headers.tag'), col: 1 },
-    { title: t('table_headers.menu'), col: 1 }
-  */
-
-  const mailListHeader = [
-    { title: 'Name', col: 2 },
-    { title: 'Subject', col: 5 },
-    { title: 'Date Created', col: 1 },
-    { title: 'Tag', col: 1 },
-    { title: 'Menu', col: 1 }
-  ];
 
   function handleTemplateMenu(event){
     event.stopPropagation()
@@ -55,7 +39,7 @@ export default function MailTemplateItem({email, onTemplateClick, onTemplateDupl
   return(
     <DataList
       key={email.id}
-      keys={mailListHeader}
+      keys={headers}
       hasHeader={false}
       data={renderEmailTemplate(email, menuData)}
     />
@@ -122,5 +106,6 @@ MailTemplateItem.propTypes = {
       tag: PropTypes.string,
   }).isRequired,
   onTemplateClick: PropTypes.func.isRequired,
-  onTemplateDuplicate: PropTypes.func.isRequired
+  onTemplateDuplicate: PropTypes.func.isRequired,
+  headers: PropTypes.arrayOf(PropTypes.object).isRequired
 }

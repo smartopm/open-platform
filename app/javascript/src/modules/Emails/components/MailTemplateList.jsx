@@ -18,14 +18,6 @@ import { formatError, useParamsQuery } from '../../../utils/helpers';
 import Paginate from '../../../components/Paginate';
 import ListHeader from '../../../shared/list/ListHeader';
 
-const mailListHeader = [
-  { title: 'Name', col: 2 },
-  { title: 'Subject', col: 5 },
-  { title: 'Date Created', col: 1 },
-  { title: 'Tag', col: 1 },
-  { title: 'Menu', col: 1 }
-];
-
 export default function MailTemplateList() {
   const [templateDialogOpen, setDialogOpen] = useState(false);
   const [currentEmail, setCurrentEmail] = useState({});
@@ -39,6 +31,14 @@ export default function MailTemplateList() {
   const limit = 50;
   const [offset, setOffset] = useState(0);
   const { t } = useTranslation(['email', 'common'])
+
+  const mailListHeader = [
+    { title: 'Name', value: t('common:table_headers.name'), col: 2 },
+    { title: 'Subject', value: t('common:table_headers.subject'), col: 5 },
+    { title: 'Date Created', value: t('common:table_headers.date_created'), col: 1 },
+    { title: 'Tag', value: t('common:table_headers.tag'), col: 1 },
+    { title: 'Menu', value: t('common:table_headers.menu'), col: 1 }
+  ];
 
   const { loading, error, data, refetch } = useQuery(EmailTemplatesQuery, {
     errorPolicy: 'all',
@@ -174,6 +174,7 @@ export default function MailTemplateList() {
           email={email}
           onTemplateClick={handleOpenEmailDialog}
           onTemplateDuplicate={handleDuplicateTemplate}
+          headers={mailListHeader}
         />
       ))}
 
@@ -200,7 +201,7 @@ export default function MailTemplateList() {
         onClick={handleTemplateDialog}
       >
         <AddIcon />
-        {t('common:misc.create')}
+        {t('common:menu.create')}
       </Fab>
     </div>
   );
