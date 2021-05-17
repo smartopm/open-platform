@@ -1,12 +1,12 @@
 {
   "dashboard": {
     "call_manager": "Gestor de llamadas",
-    "entry_logs": "Registros de entrada",
+    "entry_logs": "Registro de ingresos",
     "explore": "Explorar",
     "finance": "Finanzas",
-    "identity": "Identidad",
+    "identity": "Identificacion",
     "invoice": {
-      "oneMonth": "Total de facturas vencidas 1 mes",
+      "oneMonth": "Total de facturas con vencimiento mayor a 30 días",
       "oneWeek": "Total de facturas vencidas 1 semana",
       "overOneMonth": "Total de facturas vencidas con más de 1 mes",
       "today": "Total de facturas vencidas hoy"
@@ -21,17 +21,17 @@
     "new_user": "Nuevo usuario",
     "no_pending_tasks": "Sin tareas pendientes",
     "payment": {
-      "oneMonth": "Monto total en pago este mes",
-      "oneWeek": "Importe total en pago esta semana",
-      "overOneMonth": "Monto total en pago este año",
-      "today": "Importe total en pago hoy"
+      "oneMonth": "Monto total de pago mensual",
+      "oneWeek": "Importe total de pago semanal",
+      "overOneMonth": "Total Pago Anual",
+      "today": "Importe total pagado hoy"
     },
     "pending_tasks_text": "Tus tareas pendientes aparecerán aquí",
-    "recent_news": "Noticias recientes",
+    "recent_news": "Ultimas Novedades",
     "request": "Peticiones",
     "scan": "Escanear",
-    "support": "Apoyo",
-    "task_reminders": "Recordatorios de tareas",
+    "support": "Ayuda",
+    "task_reminders": "Recordatorio de tareas",
     "view_customer_journey": "Ver el recorrido del cliente",
     "your_customer_journey": "Su trayectoria como cliente",
     "plot": "Gráfico",

@@ -1,12 +1,12 @@
 /* eslint-disable react/jsx-props-no-multi-spaces */
 import React, {useState} from 'react';
+import { useTranslation } from 'react-i18next';
 import {useMutation} from "react-apollo"
 import { Button, TextField , Snackbar, SnackbarContent } from '@material-ui/core'
 import PropTypes from 'prop-types'
 import CheckCircleIconBase from "@material-ui/icons/CheckCircle";
-import { useTranslation } from 'react-i18next';
-import { TemperateRecord } from '../graphql/mutations'
 import Loading from "../shared/Loading";
+import { TemperateRecord } from '../graphql/mutations'
 
 export default function CaptureTemp({ refId, refName, refType }) {
     const [recordTemp, { loading: mutationLoading }] = useMutation(TemperateRecord)
@@ -15,7 +15,6 @@ export default function CaptureTemp({ refId, refName, refType }) {
     const [disabled, setDisabled] = useState('')
     const [tempErrorMessage, setTempErrorMessage] = useState('')
     const { t } = useTranslation(['logbook', 'common'])
-
 
     function handleClick() {
         if (!tempValue.trim().length) {
@@ -46,12 +45,12 @@ export default function CaptureTemp({ refId, refName, refType }) {
               InputLabelProps={{
                         shrink: true,
                     }}
-              onChange={(event) => setTempValue(event.target.value)}
+              onChange={(event)=>setTempValue(event.target.value)}
               error={!!tempErrorMessage}
               helperText={tempErrorMessage}
             />
 
-            <Button className="button" variant="contained" color="inherit" onClick={handleClick}>log</Button>
+            <Button className="button" variant="contained" color="inherit" onClick={handleClick}>{t("common:misc.log")}</Button>
 
             <div className="col-2 justify-content-center" />
 

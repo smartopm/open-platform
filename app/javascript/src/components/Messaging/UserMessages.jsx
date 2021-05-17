@@ -2,6 +2,7 @@
 /* eslint-disable no-nested-ternary */
 import React, { useContext, useState } from 'react'
 import { useParams, useLocation } from 'react-router-dom'
+import { useTranslation } from 'react-i18next';
 import { useQuery, useMutation } from 'react-apollo'
 import TextField from '@material-ui/core/TextField'
 import { Button } from '@material-ui/core'
@@ -20,6 +21,7 @@ import CenteredContent from '../CenteredContent'
 
 export default function UserMessages() {
   const { id } = useParams()
+  const { t } = useTranslation('users')
   const limit = 50
   const { loading, error, data, refetch, fetchMore } = useQuery(UserMessageQuery, {
     variables: { id, limit }
@@ -36,7 +38,7 @@ export default function UserMessages() {
     setLoading(true)
     const receiver = (state && state.clientNumber) || ''
     if (!message.length) {
-      setError('The message must contain some text')
+      setError(t("common:errors.empty_text"))
       return
     }
     messageCreate({ variables: { receiver, message, userId: id } }).then(() => {
@@ -97,7 +99,7 @@ export default function UserMessages() {
                   {data?.userMessages.length >= limit && (
                   <CenteredContent>
                     <Button variant="outlined" onClick={fetchMoreMessages}>
-                      {isLoading ? <Spinner /> : 'Load more messages'}
+                      {isLoading ? <Spinner /> : t('common:misc.more_message')}
                     </Button>
                   </CenteredContent>
                           )}
@@ -107,7 +109,7 @@ export default function UserMessages() {
                       <span>
                         {state && state.from === 'contact'
                           ? 'Send Message to Support, You should receive an answer soon'
-                            : `There are no messages yet for ${state && state.clientName ? state.clientName : 'this user  '}`}
+                            : state && state.clientName ? `There are no messages yet for ${state.clientName}` : t("common:misc.no_message")}
                       </span>
                     </p>
                   )}
@@ -123,10 +125,10 @@ export default function UserMessages() {
           id="standard-full-width"
           // label="Type message here"
           style={{ width: '95vw', margin: 26, marginTop: 7 }}
-          placeholder="Type message here"
+          placeholder={t("common:form_placeholders.message")}
           value={message}
           onChange={event => setMessage(event.target.value)}
-          helperText={`Character count: ${message.length}`}
+          helperText={t('common:misc.count', { numb: message.length })}
           multiline
           rows={3}
           margin="normal"
@@ -142,7 +144,7 @@ export default function UserMessages() {
         disabled={isMsgLoading}
         style={{ marginTop: -37, marginRight: 34, float: 'right' }}
       >
-        Send
+        {t('common:misc.send')}
       </Button>
       {errmsg && <p className="text-center text-danger">{errmsg}</p>}
     </>

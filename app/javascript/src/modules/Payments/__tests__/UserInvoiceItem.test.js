@@ -58,14 +58,14 @@ describe('Invoice Item Component', () => {
     expect(container.queryByTestId('status')).toBeInTheDocument();
 
     fireEvent.click(container.queryByTestId('description'));
-    expect(container.queryByText('Invoice Details')).toBeInTheDocument();
+    expect(container.queryAllByText('common:form_fields.invoice_details')[0]).toBeInTheDocument();
 
     expect(container.queryByTestId('action-menu')).toBeInTheDocument();
 
     fireEvent.click(container.queryByTestId('action-menu'));
-    expect(container.getByText(/Cancel Invoice/)).toBeInTheDocument();
+    expect(container.getByText(/common:menu.cancel_invoice/)).toBeInTheDocument();
 
-    fireEvent.click(container.getByText(/Cancel Invoice/));
+    fireEvent.click(container.getByText(/common:menu.cancel_invoice/));
     expect(container.getByText(/You are about to delete Invoice for joe/)).toBeInTheDocument();
   });
 

@@ -5,6 +5,7 @@ import '@testing-library/jest-dom/extend-expect'
 import { MockedProvider } from '@apollo/react-testing'
 import { BrowserRouter } from 'react-router-dom/'
 import MailTemplateItem, { renderEmailTemplate } from '../components/MailTemplateItem'
+import t from '../../__mocks__/t'
 
 describe('It should test component', () => {
   const data = {
@@ -29,10 +30,17 @@ describe('It should test component', () => {
   }
 
   it('should check if MailTemplateItem renders with no error', () => {
+    const mailListHeader = [
+      { title: 'Name', value: t('common:table_headers.name'), col: 2 },
+      { title: 'Subject', value: t('common:table_headers.subject'), col: 5 },
+      { title: 'Date Created', value: t('common:table_headers.date_created'), col: 1 },
+      { title: 'Tag', value: t('common:table_headers.tag'), col: 1 },
+      { title: 'Menu', value: t('common:table_headers.menu'), col: 1 }
+    ];
     const container = render(
       <BrowserRouter>
         <MockedProvider>
-          <MailTemplateItem email={data} onTemplateClick={() => {}} onTemplateDuplicate={() => {}} />
+          <MailTemplateItem email={data} onTemplateClick={() => {}} onTemplateDuplicate={() => {}} headers={mailListHeader} />
         </MockedProvider>
       </BrowserRouter>
     )

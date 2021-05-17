@@ -1,4 +1,5 @@
 import React from 'react'
+import { useTranslation } from 'react-i18next';
 import Timeline from '@material-ui/lab/Timeline'
 import TimelineItem from '@material-ui/lab/TimelineItem'
 import TimelineSeparator from '@material-ui/lab/TimelineSeparator'
@@ -11,8 +12,9 @@ import PropTypes from 'prop-types'
 import { dateFormatter } from '../components/DateContainer'
 
 export default function EventTimeLine({ data }) {
+  const { t } = useTranslation('common')
   if (!data || !data.length) {
-    return <span>No Changes Made</span>
+    return <span>{t("common:errors.no_changes")}</span>
   }
   return (
     <Timeline style={{ marginLeft: '-95%' }}>

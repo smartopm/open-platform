@@ -102,10 +102,10 @@ describe("User information component loads",()=>{
 
       await waitFor(
         () => {
-          expect(getAllByText('Plots')[0]).toBeInTheDocument();
-          expect(getAllByText('Communication')[0]).toBeInTheDocument();
-          expect(getAllByText('Payments')[0]).toBeInTheDocument();
-          expect(getAllByText('Contact')[0]).toBeInTheDocument();
+          expect(getAllByText('common:misc.plots')[0]).toBeInTheDocument();
+          expect(getAllByText('common:misc.communication')[0]).toBeInTheDocument();
+          expect(getAllByText('common:misc.payments')[0]).toBeInTheDocument();
+          expect(getAllByText('common:misc.contact')[0]).toBeInTheDocument();
         },
         { timeout: 50 }
       );

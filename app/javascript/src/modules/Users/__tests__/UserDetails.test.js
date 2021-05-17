@@ -29,8 +29,8 @@ describe('user detail component', () => {
       </MockedProvider>
     )
     expect(container.queryByText('User Name')).toBeInTheDocument()
-    expect(container.queryByText('Entry Logs >')).toBeInTheDocument()
-    expect(container.queryByText('Already Expired')).toBeInTheDocument()
-    expect(container.queryByTestId('user-sub-status').textContent).toContain('Customer Journey Stage: Building Permit Approved')
+    expect(container.queryByText('common:misc.entry_logs >')).toBeInTheDocument()
+    expect(container.queryByText('common:misc.expired')).toBeInTheDocument()
+    expect(container.queryByTestId('user-sub-status').textContent).toContain('common:misc.customer_journey_stage: common:sub_status.building_permit_approved')
   })
 })

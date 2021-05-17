@@ -19,14 +19,23 @@
     "add_email_address": "Add New Email Address",
     "add_whatsapp_number": "Add New Whatsapp Number",
     "template_name": "Template Name",
-    "template_subject": "Template Subject"
+    "template_subject": "Template Subject",
+    "accounts": "Accounts",
+    "invoice_details": "Invoice Details",
+    "invoice_number": "Invoice Number",
+    "wallet_balance": "Current Wallet Balance",
+    "pending_amount": "Pending Amount",
+    "payment_Type": "Payment Type"
   },
   "form_placeholders": {
     "phone_number": "Enter Phone Number",
     "email": "Enter Email",
     "action_note": "Type action note here",
     "search_user": "Search User",
-    "search": "Search"
+    "search": "Search",
+    "add_note": "Add your notes here",
+    "flag": "Flag as a todo",
+    "message": "Type message here"
   },
   "form_actions": {
     "send_email": "Send Email",
@@ -103,7 +112,38 @@
     "call": "Call",
     "flag": "Flag",
     "start_time": "Start Time",
-    "end_time": "End Time"
+    "end_time": "End Time",
+    "user_type": "User Type",
+    "expiration": "Expiration",
+    "already_expired": "Already Expired",
+    "last_accessed": "Last Accessed",
+    "contact": "Contact",
+    "communication": "Communication",
+    "plots": "Plots",
+    "forms": "Forms",
+    "no_message": "There are no messages yet for this user",
+    "sent": "Sent",
+    "read": "Read",
+    "not_read": "Not Read",
+    "count": "Character Count: {{numb}}",
+    "more_message": "Load more messages",
+    "no_plot": "No plots information available",
+    "plot_message": "Plots associated with this account",
+    "plot_details": "This data was updated on {{date}}. If Something seems incorrect, contact our",
+    "support_team": "Support Team.",
+    "reversal": "Reversal",
+    "deposit": "Deposit",
+    "invoice_detail": "Invoice {{inv}}",
+    "details": "Details",
+    "edit_log": "Edit Log",
+    "expired": "Expired",
+    "entry_logs": "Entry Logs",
+    "user_label": "User Label",
+    "add_label": "Add Label",
+    "log_entry": "Log This Entry",
+    "call_manager": "Call Manager",
+    "log": "Log",
+    "temp_record": "Temperature recorded"
   },
   "menu": {
     "invoice": "Invoice",
@@ -151,7 +191,11 @@
     "edit": "Edit",
     "duplicate": "Duplicate",
     "create": "Create",
-    "preferences": "Preferences"
+    "preferences": "Preferences",
+    "cancel_invoice": "Cancel Invoice",
+    "view_receipt": "View Receipt",
+    "edit_payment": "Edit Payment",
+    "revert_transaction": "Revert Transaction"
   },
   "user_types": {
     "admin": "Admin",
@@ -168,12 +212,56 @@
     "subject": "Subject",
     "tag": "Tag",
     "menu": "Menu",
-    "name": "Name"
+    "name": "Name",
+    "deposit_date": "Deposit/Issue date",
+    "parcel_number": "Parcel Number",
+    "description": "Description",
+    "amount": "Amount",
+    "status": "Status",
+    "issue_date": "Issue Date",
+    "issue_dated": "Issued Date",
+    "payment_date": "Payment Date",
+    "plot_number": "Plot Number",
+    "start_date": "Start Date",
+    "valuation": "% of total valuation",
+    "pay_day": "Payment Day",
+    "due_date": "Due Date",
+    "transaction_number": "Transaction Number",
+    "bank_name": "Bank Name",
+    "cheque_number": "Cheque Number",
+    "payment_made": "Payment Made By"
+  },
+  "table_content": {
+    "invoice_number": "Invoice Number {{numb}}",
+    "plot_number": "Plot Number {{numb}}",
+    "paid_on": "Paid on {{date}}",
+    "pay_date": "Paid: {{date}}"
+  },
+  "sub_status": {
+    "plots_fully_purchased": "Plots Fully Purchased",
+    "eligible_to_start_construction": "Eligible to start Construction",
+    "floor_plan_purchased": "Floor Plan Purchased",
+    "building_permit_approved": "Building Permit Approved",
+    "construction_in_progress": "Construction in Progress",
+    "construction_completed": "Construction Completed",
+    "construction_in_progress_self_build": "Construction in Progress (Self Build)"
+  },
+  "invoice_status": {
+    "in_progress": "In-Progress",
+    "paid": "Paid",
+    "late": "Late",
+    "cancelled": "Cancelled",
+    "settled": "Settled",
+    "pending": "Pending",
+    "due": "Due",
+    "progress": "In-Progress",
+    "unpaid": "Unpaid"
   },
   "errors": {
     "empty_text": "The message must contain some text",
     "empty_name": "Name cannot be empty",
     "date_error": "Date must be of this format YYYY-MM-DD",
-    "empty_input": "Input cannot be empty"
+    "empty_input": "Input cannot be empty",
+    "no_changes": "No Changes Made"
   }
 }

@@ -84,8 +84,8 @@ describe('Render Transaction', () => {
     expect(container.queryByTestId('status')).toBeInTheDocument();
 
     fireEvent.click(container.queryByTestId('receipt-menu'))
-    expect(container.queryByText('View Receipt')).toBeInTheDocument();
-    expect(container.queryByText('Edit Payment')).toBeInTheDocument();
+    expect(container.queryByText("common:menu.view_receipt")).toBeInTheDocument();
+    expect(container.queryByText('common:menu.edit_payment')).toBeInTheDocument();
   });
 
   it('should render the Transaction item component without transactions', async () => {

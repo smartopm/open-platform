@@ -96,9 +96,9 @@ describe('Render Payment Plan Item', () => {
     expect(container.queryByTestId('action-menu')).toBeInTheDocument();
 
     fireEvent.click(container.queryByTestId('action-menu'));
-    expect(container.getByText(/Cancel Invoice/)).toBeInTheDocument();
+    expect(container.getByText(/common:menu.cancel_invoice/)).toBeInTheDocument();
 
-    fireEvent.click(container.getByText(/Cancel Invoice/));
+    fireEvent.click(container.getByText(/common:menu.cancel_invoice/));
     expect(container.getByText(/You are about to delete Invoice for Nurudeen/)).toBeInTheDocument();
 
     await waitFor(() => {
