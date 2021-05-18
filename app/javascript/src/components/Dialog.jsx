@@ -15,6 +15,7 @@ import {
 } from '@material-ui/core'
 import PropTypes from 'prop-types'
 import { makeStyles } from '@material-ui/core/styles'
+import { useTranslation } from 'react-i18next';
 import { titleize } from '../utils/helpers'
 import {Spinner} from '../shared/Loading'
 
@@ -26,6 +27,7 @@ export function ModalDialog({
   name,
   children
 }) {
+  const { t } = useTranslation(['logbook', 'common'])
   return (
     <Dialog
       onClose={handleClose}
@@ -35,15 +37,7 @@ export function ModalDialog({
       <DialogContent>
         {Boolean(name.length) && (
           <p className="deny-msg">
-            Are you sure you want to 
-            {' '}
-            {action}
-            {' '}
-            access to 
-            {' '}
-            <strong>{name}</strong>
-            {' '}
-            ?
+            {t('logbook.grant_deny_access', { action, name })}
           </p>
         )}
         <div>{children}</div>
@@ -62,7 +56,7 @@ export function ModalDialog({
           {action}
         </Button>
         <Button className="btn-close" onClick={handleClose}>
-          Cancel
+          {t('common:form_actions.cancel')}
         </Button>
       </DialogActions>
     </Dialog>

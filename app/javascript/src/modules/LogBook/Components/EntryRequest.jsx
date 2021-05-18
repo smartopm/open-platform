@@ -1,6 +1,6 @@
 import React from 'react';
 import { useLocation } from 'react-router';
-import RequestForm from '../../components/Request/RequestForm';
+import RequestForm from './RequestForm';
 
 export default function EntryRequest() {
   const location = useLocation();

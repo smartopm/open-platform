@@ -1,6 +1,6 @@
 import React from 'react'
 import { render } from '@testing-library/react'
-import { RequestsList } from '../containers/Requests/EntryRequests'
+import { RequestsList } from '../Components/EntryRequests'
 
 describe('entry request list', () => {
   it('should render correct data', () => {

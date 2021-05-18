@@ -7,20 +7,21 @@ import { useQuery, useMutation } from 'react-apollo';
 import { TextField, MenuItem, Button } from '@material-ui/core';
 import { StyleSheet, css } from 'aphrodite';
 import { useHistory, useLocation, useParams } from 'react-router';
-import { EntryRequestQuery } from '../../graphql/queries';
+import { useTranslation } from 'react-i18next';
+import { EntryRequestQuery } from '../../../graphql/queries';
 import {
   EntryRequestUpdate,
   EntryRequestGrant,
   EntryRequestDeny,
   CreateUserMutation,
   UpdateLogMutation
-} from '../../graphql/mutations';
-import Loading from "../../shared/Loading";
-import { isTimeValid, getWeekDay } from '../../utils/dateutil';
-import { ponisoNumber, userState, userType } from '../../utils/constants'
-import { ModalDialog } from "../Dialog"
-import CaptureTemp from "../CaptureTemp";
-import { dateToString, dateTimeToString } from "../DateContainer";
+} from '../../../graphql/mutations';
+import Loading from "../../../shared/Loading";
+import { isTimeValid, getWeekDay } from '../../../utils/dateutil';
+import { ponisoNumber, userState, userType } from '../../../utils/constants'
+import { ModalDialog } from "../../../components/Dialog"
+import CaptureTemp from "../../../components/CaptureTemp";
+import { dateToString, dateTimeToString } from "../../../components/DateContainer";
 
 export default function RequestUpdate({ id }) {
     const { state } = useLocation()
@@ -40,7 +41,7 @@ export default function RequestUpdate({ id }) {
   const [isLoading, setLoading] = useState(false)
   const [message, setMessage] = useState('')
   const [isModalOpen, setModal] = useState(false)
-  const [modalAction, setModalAction] = useState('grant')
+  const [modalAction, setModalAction] = useState('')
   const [date, setDate] = useState(new Date());
   const [isClicked, setIsClicked] = useState(false)
   const [formData, setFormData] = useState({
@@ -55,6 +56,8 @@ export default function RequestUpdate({ id }) {
     email: '',
     loaded: false
   });
+
+  const { t } = useTranslation(['common', 'logbook'])
 
   useEffect(() => {
     const timerID = setInterval(() => tick(), 1000);
@@ -134,7 +137,7 @@ export default function RequestUpdate({ id }) {
           }
         }).then(() => {
           setLoading(false)
-          setMessage('User was successfully enrolled')
+          setMessage(t('logbook:logbook.user_enrolled'))
           history.push(`/user/${userData.result.user.id}`)
         })
       })
@@ -164,27 +167,16 @@ export default function RequestUpdate({ id }) {
         handleClose={handleModal}
         handleConfirm={handleGrantRequest}
         open={isModalOpen}
-        action={modalAction}
+        action={t(`logbook:access_actions.${modalAction}`)}
         name={formData.name}
       >
         {modalAction === 'grant' && !isTimeValid(date) && (
           <div>
             <p>
-              Today is
-              {' '}
-              {`${getWeekDay(date)}`}
-              {' '}
-              at
-              {' '}
-              <b>
-                {' '}
-                {dateTimeToString(new Date(date))}
-                {' '}
-              </b>
+              {t('logbook:logbook.today_is', { day: getWeekDay(date), time: dateTimeToString(new Date(date)) })}
             </p>
             <p>
-              The current time is outside of normal visiting hours. Are you sure
-              you wish proceed?
+              {t('logbook:logbook.beyond_time')}
             </p>
           </div>
         )}
@@ -195,7 +187,7 @@ export default function RequestUpdate({ id }) {
           {isFromLogs && (
             <div className="form-group">
               <label className="bmd-label-static" htmlFor="date" data-testid="submitted_date">
-                Date and time submitted
+                {t('logbook:logbook.date_time_submitted')}
               </label>
               <input
                 className="form-control"
@@ -215,7 +207,7 @@ export default function RequestUpdate({ id }) {
           )}
           <div className="form-group">
             <label className="bmd-label-static" htmlFor="_name">
-              Guard
+              {t('logbook:log_title.guard')}
             </label>
             <input
               className="form-control"
@@ -228,7 +220,7 @@ export default function RequestUpdate({ id }) {
           </div>
           <div className="form-group">
             <label className="bmd-label-static" htmlFor="_name">
-              NAME
+              {t('form_fields.full_name')}
             </label>
             <input
               className="form-control"
@@ -243,7 +235,7 @@ export default function RequestUpdate({ id }) {
 
           <div className="form-group">
             <label className="bmd-label-static" htmlFor="nrc">
-              NRC
+              {t('form_fields.nrc')}
             </label>
             <input
               className="form-control"
@@ -257,7 +249,7 @@ export default function RequestUpdate({ id }) {
           </div>
           <div className="form-group">
             <label className="bmd-label-static" htmlFor="phoneNumber">
-              Phone N&#176;
+              {t('form_fields.phone_number')}
             </label>
             <input
               className="form-control"
@@ -275,7 +267,7 @@ export default function RequestUpdate({ id }) {
                 <TextField
                   id="userType"
                   select
-                  label="User Type"
+                  label={t('form_fields.user_type')}
                   value={formData.userType || ''}
                   onChange={handleInputChange}
                   margin="normal"
@@ -293,7 +285,7 @@ export default function RequestUpdate({ id }) {
                 <TextField
                   id="state"
                   select
-                  label="State"
+                  label={t('form_fields.state')}
                   value={formData.state || ''}
                   onChange={handleInputChange}
                   margin="normal"
@@ -311,7 +303,7 @@ export default function RequestUpdate({ id }) {
               <div className="form-group">
                 <div className="form-group">
                   <label className="bmd-label-static" htmlFor="expiresAt">
-                    Expiration Date
+                    {t('misc.expiration_date')}
                   </label>
                   <input
                     className="form-control"
@@ -321,7 +313,7 @@ export default function RequestUpdate({ id }) {
                     placeholder="YYYYY-MM-DD"
                     defaultValue={formData.expiresAt || 'YYYYY-MM-DD'}
                     onChange={handleInputChange}
-                    title="Date must be of this format YYYY-MM-DD"
+                    title={t('errors.date_error')}
                   />
                 </div>
               </div>
@@ -330,7 +322,7 @@ export default function RequestUpdate({ id }) {
 
           <div className="form-group">
             <label className="bmd-label-static" htmlFor="vehicle">
-              VEHICLE PLATE N&#176;
+              {t('form_fields.vehicle_plate_number')}
             </label>
             <input
               className="form-control"
@@ -345,7 +337,7 @@ export default function RequestUpdate({ id }) {
             <TextField
               id="reason"
               select
-              label="Reason for visit"
+              label={t('logbook:logbook.visiting_reason')}
               name="reason"
               value={formData.reason || ''}
               onChange={handleInputChange}
@@ -378,7 +370,7 @@ export default function RequestUpdate({ id }) {
                   className={`btn ${css(styles.grantButton)}`}
                   disabled={isLoading}
                 >
-                  {isLoading ? 'Enrolling ...' : ' Enroll User'}
+                  {isLoading ? `${t('logbook:logbook.enrolling')} ...` : ` ${t('logbook:logbook.enroll')}` }
                 </Button>
               </div>
               <div className="row justify-content-center align-items-center">
@@ -401,7 +393,7 @@ export default function RequestUpdate({ id }) {
                   disabled={isLoading}
                   data-testid="entry_user_grant"
                 >
-                  {isLoading ? 'Granting ...' : 'Grant'}
+                  {isLoading  && modalAction === 'grant' ? `${t('logbook:logbook.granting')} ...` : `${t('logbook:logbook.grant')}`}
                 </Button>
               </div>
               <div className="col">
@@ -412,7 +404,7 @@ export default function RequestUpdate({ id }) {
                   disabled={isLoading}
                   data-testid="entry_user_deny"
                 >
-                  Deny
+                  {t('logbook:logbook.deny')}
                 </Button>
               </div>
               <div className="col">
@@ -421,7 +413,7 @@ export default function RequestUpdate({ id }) {
                   className={` ${css(styles.callButton)}`}
                   data-testid="entry_user_call_mgr"
                 >
-                  Call Manager
+                  {t('logbook:logbook.call_manager')}
                 </a>
               </div>
             </div>

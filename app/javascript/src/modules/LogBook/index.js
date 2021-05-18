@@ -1,6 +1,6 @@
 import React from 'react'
 import MenuBookIcon from '@material-ui/icons/MenuBook';
-import EntryLogs from '../../containers/AllLogs/EntryLogs';
+import EntryLogs from './Components/EntryLogs';
 
 export default {
   routeProps: {

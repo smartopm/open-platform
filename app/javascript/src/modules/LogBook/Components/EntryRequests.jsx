@@ -1,10 +1,11 @@
-/* eslint-disable */
+/* eslint-disable react/prop-types */
+
 import React from "react";
 import { useQuery } from "react-apollo";
-import Loading from "../../shared/Loading.jsx";
-import { AllEntryRequestsQuery } from "../../graphql/queries.js";
-import ErrorPage from "../../components/Error";
-import { dateToString, dateTimeToString } from "../../components/DateContainer";
+import Loading from "../../../shared/Loading";
+import { AllEntryRequestsQuery } from "../../../graphql/queries";
+import ErrorPage from "../../../components/Error";
+import { dateToString, dateTimeToString } from "../../../components/DateContainer";
 
 
 export function AllEntryRequests(){
