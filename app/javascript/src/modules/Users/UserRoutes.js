@@ -19,7 +19,8 @@ const routes = [
       exact: true,
     },
     accessibleBy: allUserTypes,
-    name: 'user_edit'
+    name: 'user_edit',
+    enabled: enabled => !!enabled,
   },
   {
     routeProps: {
@@ -28,7 +29,8 @@ const routes = [
       exact: true,
     },
     accessibleBy: ['admin'],
-    name: 'user_logs'
+    name: 'user_logs',
+    enabled: enabled => !!enabled,
   },
   {
     routeProps: {
@@ -37,7 +39,8 @@ const routes = [
       exact: true,
     },
     accessibleBy: ['admin'],
-    name: 'user_otp'
+    name: 'user_otp',
+    enabled: enabled => !!enabled,
   },
   {
     routeProps: {
@@ -46,7 +49,8 @@ const routes = [
       exact: true
     },
     accessibleBy: allUserTypes,
-    name: 'user_actions'
+    name: 'user_actions',
+    enabled: enabled => !!enabled,
   },
   {
     routeProps: {
@@ -54,7 +58,8 @@ const routes = [
       component: UserShow
     },
     accessibleBy: allUserTypes,
-    name: 'user_info'
+    name: 'user_info',
+    enabled: enabled => !!enabled,
   },
   {
     routeProps: {
@@ -62,7 +67,8 @@ const routes = [
       component: IdPrintPage
     },
     accessibleBy: allUserTypes,
-    name: 'print_id'
+    name: 'print_id',
+    enabled: enabled => !!enabled,
   },
   {
     routeProps: {
@@ -70,7 +76,8 @@ const routes = [
       component: UserMessagePage
     },
     accessibleBy: allUserTypes,
-    name: 'user_message'
+    name: 'user_message',
+    enabled: enabled => !!enabled,
   },
   {
     routeProps: {
@@ -79,7 +86,8 @@ const routes = [
       exact: true
     },
     accessibleBy: allUserTypes,
-    name: 'Preferences'
+    name: 'Preferences',
+    enabled: enabled => !!enabled,
   }
 ];
 

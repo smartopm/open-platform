@@ -11,6 +11,7 @@ export default {
     icon: <ComputerIcon />
   },
   name: t => t('menu.my_thebe_portal'),
+  enabled: enabled => !!enabled,
   accessibleBy: [
     'admin',
     'client',

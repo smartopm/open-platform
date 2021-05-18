@@ -12,5 +12,6 @@ export default {
     icon: <ForumIcon />
   },
   name: t => t('menu.communication'),
+  enabled: enabled => !!enabled,
   accessibleBy: ['']
 };

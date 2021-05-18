@@ -55,54 +55,54 @@ const SideMenu = ({ toggleDrawer, menuItems, userType, mobileOpen, direction }) 
     >
       <List>
         {menuItems.map(menuItem =>
-          menuItem.accessibleBy.includes(userType) ? (
-            <Fragment key={typeof menuItem.name === 'function' && menuItem.name(t)}>
-              <ListItem
-                button
-                onClick={event => routeTo(event, menuItem)}
-                selected={pathname === menuItem.routeProps.path}
-              >
-                {menuItem.styleProps?.icon && (
-                  <ListItemIcon className={`${css(styles.listItemIcon)}`}>
-                    {menuItem.styleProps.icon}
-                  </ListItemIcon>
+         (menuItem.enabled(true)) && menuItem.accessibleBy.includes(userType) ? (
+           <Fragment key={typeof menuItem.name === 'function' && menuItem.name(t)}>
+             <ListItem
+               button
+               onClick={event => routeTo(event, menuItem)}
+               selected={pathname === menuItem.routeProps.path}
+             >
+               {menuItem.styleProps?.icon && (
+               <ListItemIcon className={`${css(styles.listItemIcon)}`}>
+                 {menuItem.styleProps.icon}
+               </ListItemIcon>
                 )}
-                <ListItemText primary={menuItem.name(t)} />
-                {currentMenu.name === menuItem.name(t) && currentMenu.isOpen ? (
-                  <ExpandLess />
+               <ListItemText primary={menuItem.name(t)} />
+               {currentMenu.name === menuItem.name(t) && currentMenu.isOpen ? (
+                 <ExpandLess />
                 ) : // Avoid showing toggle icon on menus with no submenus
                 menuItem.subMenu ? (
                   <ExpandMore />
                 ) : null}
-              </ListItem>
+             </ListItem>
 
-              <Collapse
-                in={currentMenu.name === menuItem.name(t) && currentMenu.isOpen}
-                timeout="auto"
-                unmountOnExit
-              >
-                <List component="div" disablePadding>
-                  {menuItem.subMenu &&
+             <Collapse
+               in={currentMenu.name === menuItem.name(t) && currentMenu.isOpen}
+               timeout="auto"
+               unmountOnExit
+             >
+               <List component="div" disablePadding>
+                 { menuItem.subMenu &&
                     menuItem.subMenu.map(item =>
-                      item.accessibleBy.includes(userType) ? (
-                        <ListItem
-                          button
-                          key={item.name(t)}
-                          onClick={event => routeTo(event, item)}
-                          selected={pathname === item.routeProps.path}
-                        >
-                          <ListItemText
-                            primary={item.name(t)}
-                            style={{ marginLeft: `${menuItem.styleProps?.icon ? '55px' : '17px'}` }}
-                          />
-                        </ListItem>
+                     (item.enabled(true)) && item.accessibleBy.includes(userType) ? (
+                       <ListItem
+                         button
+                         key={item.name(t)}
+                         onClick={event => routeTo(event, item)}
+                         selected={pathname === item.routeProps.path}
+                       >
+                         <ListItemText
+                           primary={item.name(t)}
+                           style={{ marginLeft: `${menuItem.styleProps?.icon ? '55px' : '17px'}` }}
+                         />
+                       </ListItem>
                       ) : (
                         <span key={item.name(t)} />
                       )
                     )}
-                </List>
-              </Collapse>
-            </Fragment>
+               </List>
+             </Collapse>
+           </Fragment>
           ) : (
             <span key={menuItem.name(t)} />
           )

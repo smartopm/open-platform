@@ -8,5 +8,6 @@ export default {
     component: MailTemplateList
   },
   name: t => t('menu.email_templates'),
+  enabled: enabled => !!enabled,
   accessibleBy: ['admin'],
 };

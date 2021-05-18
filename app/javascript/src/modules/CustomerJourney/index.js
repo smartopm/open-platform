@@ -14,5 +14,6 @@ export default {
     icon: <LinearScaleIcon />
   },
   name: t => t('menu.customer_journey'),
+  enabled: enabled => !!enabled,
   accessibleBy: ['']
 };

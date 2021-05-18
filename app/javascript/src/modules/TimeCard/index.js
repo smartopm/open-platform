@@ -11,5 +11,6 @@ export default {
     icon: <HourglassFullIcon />
   },
   name: t => t('misc.time_card'),
+  enabled: enabled => !!enabled,
   accessibleBy: ['admin', 'custodian']
 };

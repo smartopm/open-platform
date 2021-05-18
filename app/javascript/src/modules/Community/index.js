@@ -24,6 +24,7 @@ const Settings =   {
     icon: <GroupIcon />
   },
   name: t => t('menu.settings'),
+  enabled: enabled => !!enabled,
   accessibleBy: ['admin'],
 }
 
@@ -36,6 +37,7 @@ export default {
     icon: <GroupIcon />
   },
   name: t => t('menu.community'),
+  enabled: enabled => !!enabled,
   accessibleBy: allUserTypes,
   subMenu: [News, Message, Discussions, Campaigns , Labels, Tasks, Business, PermitRequestForms, Emails, Settings, Contact, Referral]
 };

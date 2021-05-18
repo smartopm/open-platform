@@ -22,6 +22,7 @@ export default {
     icon: <PersonIcon />
   },
   name: t => t('misc.users'),
+  enabled: enabled => !!enabled,
   accessibleBy: ['admin']
 };
 
@@ -36,6 +37,7 @@ export const Profile = {
     icon: <AccountCircleIcon />
   },
   name: t => t('menu.my_profile'),
+  enabled: enabled => !!enabled,
   accessibleBy: allUserTypes
 }
 
@@ -48,5 +50,6 @@ export const Logout = {
     icon: <ExitToAppIcon />
   },
   name: t => t('menu.logout'),
+  enabled: enabled => !!enabled,
   accessibleBy: allUserTypes
 }
