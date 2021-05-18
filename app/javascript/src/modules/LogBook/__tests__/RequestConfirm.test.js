@@ -2,8 +2,8 @@ import React from 'react';
 import { render, act } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { MockedProvider } from '@apollo/react-testing';
-import RequestConfirm from '../../containers/Requests/RequestConfirm';
-import { EntryRequestQuery } from '../../graphql/queries';
+import RequestConfirm from '../Components/RequestConfirm';
+import { EntryRequestQuery } from '../../../graphql/queries';
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
 describe('RequestConfirm main page', () => {

@@ -2,8 +2,8 @@ import React from 'react'
 import { render } from '@testing-library/react'
 import '@testing-library/jest-dom/extend-expect'
 import { BrowserRouter } from 'react-router-dom/'
-import Events from '../components/Events'
-import { LogView } from '../containers/AllLogs/EntryLogs'
+import Events from '../Components/Events'
+import { LogView } from '../Components/EntryLogs'
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn())
 
@@ -36,11 +36,11 @@ describe('Should Render Events Component', () => {
         <Events data={data} />
       </BrowserRouter>
     )
-    expect(getByText('Subject')).toBeInTheDocument()
-    expect(getByText('Description')).toBeInTheDocument()
+    expect(getByText('log_title.subject')).toBeInTheDocument()
+    expect(getByText('log_title.description')).toBeInTheDocument()
     expect(getByText('user_entry')).toBeInTheDocument()
     expect(getByText('user_active')).toBeInTheDocument()
-    expect(getByText('Print Scan')).toBeInTheDocument()
+    expect(getByText('logbook.print_scan')).toBeInTheDocument()
     expect(getByText('User john doe was recorded leaving')).toBeInTheDocument()
     expect(getByText('User john doe was active')).toBeInTheDocument()
   })
@@ -54,7 +54,7 @@ describe('Should Render Events Component', () => {
     )
     expect(container.queryByText('user_entry')).toBeNull()
     expect(container.queryByText('user_active')).toBeNull()
-    expect(container.queryByText('Print Scan')).toBeNull()
+    expect(container.queryByText('logbook.print_scan')).toBeNull()
     expect(
       container.queryByText('User john doe was recorded leaving')
     ).toBeNull()
@@ -66,7 +66,7 @@ describe('Should Render Events Component', () => {
         id: '1',
         subject: 'visit_request',
         sentence: '',
-        createdAt: new Date(),
+        createdAt: '2021-05-13',
         data: {
           ref_name: 'Some User',
           type: 'client'
@@ -74,6 +74,7 @@ describe('Should Render Events Component', () => {
       }
     const { getByText } = render(<LogView user={log} /> )
     expect(getByText('Some User')).toBeInTheDocument()
-    expect(getByText('Client')).toBeInTheDocument()
+    expect(getByText('common:user_types.client')).toBeInTheDocument()
+    expect(getByText('2021-05-13')).toBeInTheDocument()
   })
 })

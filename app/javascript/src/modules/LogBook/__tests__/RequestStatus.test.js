@@ -2,7 +2,7 @@ import React from 'react';
 import { render } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { BrowserRouter } from 'react-router-dom';
-import RequestStatus from '../../components/RequestStatus';
+import RequestStatus from '../Components/RequestStatus';
 
 describe('RequestStatus Component', () => {
   it('should render the given props correctly', () => {

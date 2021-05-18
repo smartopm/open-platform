@@ -1,10 +1,10 @@
 import React, { useState, useContext } from "react";
 import { useQuery } from "react-apollo";
-import { Context as AuthStateContext } from "../Provider/AuthStateProvider";
-import Loading from "../../shared/Loading";
-import { AllEventLogsQuery } from "../../graphql/queries";
-import ErrorPage from "../../components/Error";
-import Events from "../../components/Events"
+import { Context as AuthStateContext } from "../../../containers/Provider/AuthStateProvider";
+import Loading from "../../../shared/Loading";
+import { AllEventLogsQuery } from "../../../graphql/queries";
+import ErrorPage from "../../../components/Error";
+import Events from "./Events"
 
 export default ({ history }) => {
   const authState = useContext(AuthStateContext);

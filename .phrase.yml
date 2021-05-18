@@ -32,6 +32,13 @@ phrase:
         locale_id: 5c6c3e050e8493da0e428087555a7b00
         tags: email
         update_translations: true
+    - file: ./public/locales/en/logbook.json
+      params:
+        file_format: i18next
+        locale_id: 5c6c3e050e8493da0e428087555a7b00
+        tags: logbook
+        update_translations: true
+    # upload spanish existing translations too 
     - file: ./public/locales/es/login.json
       params:
         file_format: i18next
@@ -57,6 +64,11 @@ phrase:
         file_format: i18next
         locale_id: fa26b7d00b593c4578f0e9749221cace
         tags: email
+    - file: ./public/locales/es/logbook.json
+      params:
+        file_format: i18next
+        locale_id: fa26b7d00b593c4578f0e9749221cace
+        tags: logbook
   pull:
     targets:
     - file: ./public/locales/es/login.json
@@ -84,3 +96,8 @@ phrase:
         file_format: i18next
         locale_id: fa26b7d00b593c4578f0e9749221cace
         tags: email
+    - file: ./public/locales/es/logbook.json
+      params:
+        file_format: i18next
+        locale_id: fa26b7d00b593c4578f0e9749221cace
+        tags: logbook

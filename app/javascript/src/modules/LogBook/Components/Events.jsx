@@ -1,8 +1,11 @@
-/* eslint-disable */
+/* eslint-disable jsx-a11y/anchor-is-valid */
+/* eslint-disable consistent-return */
+/* eslint-disable react/prop-types */
 import React from "react";
 import GetAppIcon from '@material-ui/icons/GetApp';
 import Fab from "@material-ui/core/Fab";
-import { dateToString, dateTimeToString } from "./DateContainer.jsx";
+import { useTranslation } from "react-i18next";
+import { dateToString, dateTimeToString } from "../../../components/DateContainer";
 
 
 export default function Events({
@@ -13,6 +16,7 @@ export default function Events({
     userToken
   }) {
     const limit = 30;
+    const { t } = useTranslation(['logbook', 'common'])
     function logs(eventLogs) {
       if (!eventLogs) {
         return;
@@ -27,11 +31,13 @@ export default function Events({
           </td>
           <td>{dateToString(entry.createdAt)}</td>
           <td>{dateTimeToString(new Date(entry.createdAt))}</td>
-          <td>{entry.subject === 'user_entry' && entry.data.digital !== null ? `${entry.data.digital ? 'Digital' : 'Print'} Scan` : 'N/A'}</td>
-          <td>{entry.subject === 'user_entry' && entry.data.timestamp
+          <td>{entry.subject === 'user_entry' && entry.data.digital !== null ? `${entry.data.digital ? t('logbook.digital_scan') : t('logbook.print_scan')} ` : 'N/A'}</td>
+          <td>
+            {entry.subject === 'user_entry' && entry.data.timestamp
             ? `${entry.data.timestamp && `${dateToString(new Date(Number(entry.data.timestamp)))} 
-              ${dateTimeToString(new Date(Number(entry.data.timestamp)))}`} ` : 'N/A'}</td>
-          <td>{entry.data ? entry.data.type : 'Entry Request'}</td>
+              ${dateTimeToString(new Date(Number(entry.data.timestamp)))}`} ` : 'N/A'}
+          </td>
+          <td>{entry.data?.type ? t(`common:user_types.${entry.data?.type}`) : t('logbook.entry_request')}</td>
         </tr>
       ));
     }
@@ -41,20 +47,19 @@ export default function Events({
           style={{
             backgroundColor: "#69ABA4"
           }}
-        >
-        </div>
+        />
         <div className="row justify-content-center">
           <div className="col-11 col-sm-11 table-responsive">
             <table className="table">
               <thead>
                 <tr>
-                  <th scope="col">Subject</th>
-                  <th scope="col">Description</th>
-                  <th scope="col">Date</th>
-                  <th scope="col">Time</th>
-                  <th scope="col">Scan Type</th>
-                  <th scope="col">QR Timestamp</th>
-                  <th scope="col">User Type</th>
+                  <th scope="col">{t('log_title.subject')}</th>
+                  <th scope="col">{t('log_title.description')}</th>
+                  <th scope="col">{t('log_title.date')}</th>
+                  <th scope="col">{t('log_title.time')}</th>
+                  <th scope="col">{t('log_title.scan_type')}</th>
+                  <th scope="col">{t('log_title.qr_timestamp')}</th>
+                  <th scope="col">{t('common:form_fields.user_type')}</th>
                 </tr>
               </thead>
               <tbody>{logs(data.result)}</tbody>
@@ -63,7 +68,7 @@ export default function Events({
               <ul className="pagination">
                 <li className={`page-item ${offset < limit && "disabled"}`}>
                   <a className="page-link" onClick={previousPage} href="#">
-                    Previous
+                    {t('common:misc.previous')}
                   </a>
                 </li>
                 <li
@@ -71,7 +76,7 @@ export default function Events({
                     "disabled"}`}
                 >
                   <a className="page-link" onClick={nextPage} href="#">
-                    Next
+                    {t('common:misc.next')}
                   </a>
                 </li>
               </ul>
@@ -90,9 +95,10 @@ export default function Events({
             href={`/csv_export/event_logs?token=${userToken}`}
           >
             <GetAppIcon />
-            {' '}Download
-        </Fab>
+            {' '}
+            {t('common:misc.download')}
+          </Fab>
         </div>
-      </div >
+      </div>
     );
   }

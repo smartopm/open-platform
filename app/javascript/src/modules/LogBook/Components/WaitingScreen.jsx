@@ -2,8 +2,8 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { css, StyleSheet } from "aphrodite";
-import { ponisoNumber } from "../../utils/constants";
-import CenteredContent from "../../components/CenteredContent";
+import { ponisoNumber } from "../../../utils/constants";
+import CenteredContent from "../../../components/CenteredContent";
 
 /**
  * 

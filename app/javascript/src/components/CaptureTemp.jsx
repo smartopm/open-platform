@@ -14,12 +14,11 @@ export default function CaptureTemp({ refId, refName, refType }) {
     const [tempValue, setTempValue] = useState('')
     const [disabled, setDisabled] = useState('')
     const [tempErrorMessage, setTempErrorMessage] = useState('')
-    const { t } = useTranslation('common')
-
+    const { t } = useTranslation(['logbook', 'common'])
 
     function handleClick() {
         if (!tempValue.trim().length) {
-            setTempErrorMessage('Input cannot be empty')
+            setTempErrorMessage(t('common:errors.empty_input'))
             return
         }
         setTempErrorMessage('')
@@ -77,10 +76,10 @@ export default function CaptureTemp({ refId, refName, refType }) {
                     {' '}
                     <CheckCircleIconBase /> 
                     {' '}
-                    <span className="justify-content-center" id="client-snackbar">{t("common:misc.temp_record")}</span>
+                    <span className="justify-content-center" id="client-snackbar">{t('logbook:logbook.temperature_recorded')}</span>
                     {' '}
                   </div>
-)}
+                )}
               />
             </Snackbar>
           </div>

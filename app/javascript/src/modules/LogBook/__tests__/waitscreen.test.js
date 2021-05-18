@@ -1,12 +1,11 @@
-/* eslint-disable */
 import React from 'react'
 import { render } from '@testing-library/react'
+import { BrowserRouter } from 'react-router-dom'
 import {
   GrantedScreen,
   DeniedScreen,
-} from '../containers/Requests/WaitingScreen'
+} from '../Components/WaitingScreen'
 import '@testing-library/jest-dom/extend-expect'
-import { BrowserRouter } from 'react-router-dom'
 
 // const wait = ms => new Promise(resolve => setTimeout(resolve, ms))
 describe('wait screen component', () => {
