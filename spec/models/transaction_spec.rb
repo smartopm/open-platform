@@ -19,8 +19,8 @@ RSpec.describe Transaction, type: :model do
 
   describe 'enums' do
     it do
-      is_expected.to define_enum_for(:status).
-        with_values(accepted: 0, pending: 1, denied: 2, cancelled: 3)
+      is_expected.to define_enum_for(:status)
+        .with_values(accepted: 0, pending: 1, denied: 2, cancelled: 3)
     end
   end
 

@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# Manages deposits record of user.
 class Transaction < ApplicationRecord
   VALID_SOURCES = %w[cash cheque/cashier_cheque wallet mobile_money invoice
                      bank_transfer/eft bank_transfer/cash_deposit pos
@@ -10,7 +11,7 @@ class Transaction < ApplicationRecord
   belongs_to :community
   belongs_to :user
   belongs_to :depositor, class_name: 'User', optional: true
-  has_many :plan_payments
+  has_many :plan_payments, inverse_of: :user_transaction, dependent: :destroy
 
   validates :source, inclusion: { in: VALID_SOURCES, allow_nil: false }
   validates :bank_name, :cheque_number, presence: true,
