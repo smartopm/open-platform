@@ -19,6 +19,7 @@ module Types
     field :tagline, String, null: true
     field :language, String, null: true
     field :wp_link, String, null: true
+    field :features, GraphQL::Types::JSON, null: true
 
     def image_url
       return nil unless object.image.attached?
