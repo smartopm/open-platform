@@ -236,7 +236,7 @@ const App = () => {
                                   if (module.subMenu) {
                                     return module.subMenu.map(sub => {
                                       let routes = [];
-    
+                                      
                                       if (sub.subRoutes && user.community.features.includes(sub.featureName)) {
                                         routes = sub.subRoutes.map(subRoute => (
                                           <Route {...subRoute.routeProps} key={subRoute.name} />

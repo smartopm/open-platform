@@ -13,8 +13,7 @@ export default {
     icon: <PaymentIcon />
   },
   name: t => t('menu.payment', { count: 0 }),
-  
-  featureName: 'Payment',
+  featureName: 'Payments',
   accessibleBy: ['admin'],
   subMenu: [Invoices, Transactions]
 };

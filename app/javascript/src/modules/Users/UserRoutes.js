@@ -20,7 +20,7 @@ const routes = [
     },
     accessibleBy: allUserTypes,
     name: 'user_edit',
-    
+    featureName: 'Users'
   },
   {
     routeProps: {
@@ -30,7 +30,7 @@ const routes = [
     },
     accessibleBy: ['admin'],
     name: 'user_logs',
-    
+    featureName: 'Users'
   },
   {
     routeProps: {
@@ -40,7 +40,7 @@ const routes = [
     },
     accessibleBy: ['admin'],
     name: 'user_otp',
-    
+    featureName: 'Users'
   },
   {
     routeProps: {
@@ -50,7 +50,7 @@ const routes = [
     },
     accessibleBy: allUserTypes,
     name: 'user_actions',
-    
+    featureName: 'Users'
   },
   {
     routeProps: {
@@ -59,7 +59,7 @@ const routes = [
     },
     accessibleBy: allUserTypes,
     name: 'user_info',
-    
+    featureName: 'Users'
   },
   {
     routeProps: {
@@ -68,7 +68,7 @@ const routes = [
     },
     accessibleBy: allUserTypes,
     name: 'print_id',
-    
+    featureName: 'Users'
   },
   {
     routeProps: {
@@ -77,7 +77,7 @@ const routes = [
     },
     accessibleBy: allUserTypes,
     name: 'user_message',
-    
+    featureName: 'Messages'
   },
   {
     routeProps: {
@@ -87,7 +87,7 @@ const routes = [
     },
     accessibleBy: allUserTypes,
     name: 'Preferences',
-    
+    featureName: 'Preferences'
   }
 ];
 
