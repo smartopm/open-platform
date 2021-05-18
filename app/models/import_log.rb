@@ -14,6 +14,8 @@ class ImportLog < ApplicationRecord
   # rubocop:disable Metrics/MethodLength
   def send_import_status_email
     template = community.email_templates.find_by(name: 'user_import')
+    return unless template
+
     message = if failed
                 import_error_message(import_errors)
               else
