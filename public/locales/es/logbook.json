@@ -1,0 +1,51 @@
+{
+  "access_actions": {
+    "deny": "Denegar",
+    "grant": "Autorizar"
+  },
+  "log_title": {
+    "date": "Fecha",
+    "description": "Descripción",
+    "guard": "Guardia de seguridad",
+    "nrc": "Tarjeta de Identidad",
+    "qr_timestamp": "Codigo QR",
+    "reason": "Motivo",
+    "scan_type": "Tipo de scaneado",
+    "subject": "Titulo",
+    "time": "Hora",
+    "user_type": "Tipo de usuario",
+    "vehicle": "Vehiculo",
+    "visitor": "Visita"
+  },
+  "logbook": {
+    "all_visits": "Todas las visitas",
+    "beyond_time": "La hora actual está fuera de las horas normales de visita. ¿Estás seguro de que deseas continuar?",
+    "call_manager": "Llamar Supervisor",
+    "data_time_submitted": "Fecha y Hora Ingresada",
+    "date_of_visit": "Fecha de visita",
+    "denied_access": "Acceso Denegado",
+    "deny": "Denegado",
+    "digital_scan": "Escaneo Digital",
+    "enroll": "Registrar Usuario",
+    "enroll_user": "Registrar Usuario",
+    "enrolling": "Inscripcion",
+    "entry_request": "Pedido de Ingreso",
+    "filter_entries": "Filtrar Ingresos",
+    "grant": "Conceder",
+    "grant_deny_access": "¿Estás segur de que quieres {{action}} acceder a {{name}}?",
+    "granted_access": "Acceso concedido",
+    "granting": "Concesión",
+    "log": "Registro",
+    "manual": "Manual",
+    "new_visit_request": "Solicitud de nueva visita",
+    "new_visits": "Nueva Visita",
+    "no_entry": "No hay registros de ingresos previos",
+    "print_scan": "Imprimir Scan",
+    "showromm": "Sala de Exposicion",
+    "temperature_recorded": "Control de Temperatura",
+    "today_is": "Hoy es {{date}}, {{time}}",
+    "upcoming_visits": "Próximas visitas",
+    "user_enrolled": "El usuario no pudo registrarse",
+    "visiting_reason": "Motivo de la visita"
+  }
+}
