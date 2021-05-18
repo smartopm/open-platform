@@ -11,6 +11,8 @@ RSpec.describe User, type: :model do
     it { is_expected.to have_many(:activity_points) }
     it { is_expected.to have_many(:land_parcels) }
     it { is_expected.to have_many(:substatus_logs) }
+    it { is_expected.to have_many(:transactions) }
+    it { is_expected.to have_many(:plan_payments) }
   end
 
   describe 'validations' do

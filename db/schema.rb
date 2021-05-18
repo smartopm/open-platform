@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_05_04_100123) do
+ActiveRecord::Schema.define(version: 2021_05_17_162814) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -523,6 +523,21 @@ ActiveRecord::Schema.define(version: 2021_05_04_100123) do
     t.index ["user_id"], name: "index_payments_on_user_id"
   end
 
+  create_table "plan_payments", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.decimal "amount"
+    t.integer "status"
+    t.uuid "transaction_id", null: false
+    t.uuid "user_id", null: false
+    t.uuid "community_id", null: false
+    t.uuid "payment_plan_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["community_id"], name: "index_plan_payments_on_community_id"
+    t.index ["payment_plan_id"], name: "index_plan_payments_on_payment_plan_id"
+    t.index ["transaction_id"], name: "index_plan_payments_on_transaction_id"
+    t.index ["user_id"], name: "index_plan_payments_on_user_id"
+  end
+
   create_table "post_tag_users", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "user_id", null: false
     t.uuid "post_tag_id", null: false
@@ -580,6 +595,26 @@ ActiveRecord::Schema.define(version: 2021_05_04_100123) do
     t.index ["shift_end_event_log_id"], name: "index_time_sheets_on_shift_end_event_log_id"
     t.index ["shift_start_event_log_id"], name: "index_time_sheets_on_shift_start_event_log_id"
     t.index ["user_id"], name: "index_time_sheets_on_user_id"
+  end
+
+  create_table "transactions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "source"
+    t.integer "status"
+    t.decimal "amount"
+    t.string "receipt_number"
+    t.datetime "originally_created_at"
+    t.string "transaction_number"
+    t.string "cheque_number"
+    t.string "bank_name"
+    t.uuid "depositor_id"
+    t.uuid "community_id", null: false
+    t.uuid "user_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["community_id"], name: "index_transactions_on_community_id"
+    t.index ["depositor_id"], name: "index_transactions_on_depositor_id"
+    t.index ["transaction_number"], name: "index_transactions_on_transaction_number", unique: true
+    t.index ["user_id"], name: "index_transactions_on_user_id"
   end
 
   create_table "user_form_properties", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -748,11 +783,17 @@ ActiveRecord::Schema.define(version: 2021_05_04_100123) do
   add_foreign_key "payments", "communities"
   add_foreign_key "payments", "invoices"
   add_foreign_key "payments", "users"
+  add_foreign_key "plan_payments", "communities"
+  add_foreign_key "plan_payments", "payment_plans"
+  add_foreign_key "plan_payments", "transactions"
+  add_foreign_key "plan_payments", "users"
   add_foreign_key "post_tag_users", "post_tags"
   add_foreign_key "post_tag_users", "users"
   add_foreign_key "post_tags", "communities"
   add_foreign_key "substatus_logs", "communities"
   add_foreign_key "substatus_logs", "users"
+  add_foreign_key "transactions", "communities"
+  add_foreign_key "transactions", "users"
   add_foreign_key "user_form_properties", "form_properties"
   add_foreign_key "user_form_properties", "form_users"
   add_foreign_key "user_form_properties", "users"
