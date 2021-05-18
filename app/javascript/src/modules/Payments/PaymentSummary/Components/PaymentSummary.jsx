@@ -60,7 +60,7 @@ export default function PaymentSummary({ authState, translate }) {
   }
 
   if (error || payError) {
-    return <CenteredContent>{formatError(error.message)}</CenteredContent>;
+    return <CenteredContent>{formatError(error?.message || payError?.message)}</CenteredContent>;
   }
   return (
     <div>

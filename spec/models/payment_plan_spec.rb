@@ -26,6 +26,7 @@ RSpec.describe PaymentPlan, type: :model do
 
   describe 'associations' do
     it { is_expected.to have_many(:invoices) }
+    it { is_expected.to have_many(:plan_payments) }
     it { is_expected.to belong_to(:user) }
     it { is_expected.to belong_to(:land_parcel) }
   end

@@ -92,6 +92,9 @@ class User < ApplicationRecord
   has_many :payment_plans, dependent: :destroy
   has_many :substatus_logs, dependent: :destroy
   has_many :import_logs, dependent: :destroy
+  has_many :transactions, dependent: :destroy
+  has_many :plan_payments, dependent: :destroy
+
   has_one_attached :avatar
   has_one_attached :document
 
