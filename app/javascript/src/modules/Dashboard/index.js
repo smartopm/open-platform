@@ -13,6 +13,7 @@ export default {
   },
   name: t => t('menu.dashboard'),
   enabled: enabled => !!enabled,
+  featureName: 'Dashboard',
   accessibleBy: [
     'admin',
     'client',

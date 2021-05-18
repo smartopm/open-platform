@@ -8,5 +8,6 @@ export default {
   },
   name: t => t('misc.news'),
   enabled: enabled => !!enabled,
+  featureName: 'News',
   accessibleBy: allUserTypes
 };

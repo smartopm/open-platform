@@ -12,5 +12,6 @@ export default {
   },
   name: t => t('misc.time_card'),
   enabled: enabled => !!enabled,
+  featureName: 'Time Card',
   accessibleBy: ['admin', 'custodian']
 };

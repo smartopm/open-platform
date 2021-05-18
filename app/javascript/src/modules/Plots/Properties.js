@@ -14,5 +14,6 @@ export default {
   },
   name: t => t('misc.properties'),
   enabled: enabled => !!enabled,
+  featureName: 'Properties',
   accessibleBy: ['admin']
 };

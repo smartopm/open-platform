@@ -12,6 +12,7 @@ export default {
   },
   name: t => t('menu.my_thebe_portal'),
   enabled: enabled => !!enabled,
+  featureName: 'My Thebe Portal',
   accessibleBy: [
     'admin',
     'client',

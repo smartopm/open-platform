@@ -45,6 +45,7 @@ const SideMenu = ({ toggleDrawer, menuItems, userType, mobileOpen, direction }) 
     }
     history.push(item.routeProps.path);
   }
+  console.log(...menuItems)
   return (
     <div
       role="button"

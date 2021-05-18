@@ -8,4 +8,5 @@ export default {
   accessibleBy: ['admin'],
   name: t => t('misc.invoice', { count: 0 }),
   enabled: enabled => !!enabled,
+  featureName: 'Invoices',
 };

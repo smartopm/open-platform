@@ -9,5 +9,6 @@ export default {
   },
   name: t => t('menu.email_templates'),
   enabled: enabled => !!enabled,
+  featureName: 'Email Templates',
   accessibleBy: ['admin'],
 };

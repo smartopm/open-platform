@@ -9,4 +9,5 @@ export default {
   accessibleBy: allUserTypes,
   name: t => t('menu.contact'),
   enabled: enabled => !!enabled,
+  featureName: 'Contact',
 };

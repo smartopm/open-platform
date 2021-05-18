@@ -12,5 +12,6 @@ export default {
   },
   name: t => t('menu.user_journey_stats'),
   enabled: enabled => !!enabled,
+  featureName: 'UserStats',
   accessibleBy: ['admin']
 };

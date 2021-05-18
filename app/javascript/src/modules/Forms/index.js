@@ -14,6 +14,7 @@ export default {
   },
   name: t => t('menu.forms'),
   enabled: enabled => !!enabled,
+  featureName: 'Forms',
   accessibleBy: [
     'client',
     'prospective_client',

@@ -8,6 +8,7 @@ export default {
   },
   name: t => t('misc.discussions'),
   enabled: enabled => !!enabled,
+  featureName: 'Discussions',
   accessibleBy: [
     'admin',
     'client',

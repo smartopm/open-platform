@@ -7,6 +7,7 @@ export default {
   },
   name: t => t('misc.business'),
   enabled: enabled => !!enabled,
+  featureName: 'Business',
   accessibleBy: [
     'admin',
     'client',

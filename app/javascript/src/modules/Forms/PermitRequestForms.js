@@ -15,5 +15,6 @@ export default {
   },
   name: t => t('menu.request_forms'),
   enabled: enabled => !!enabled,
+  featureName: 'Forms',
   accessibleBy: ['admin', 'client', 'resident']
 };

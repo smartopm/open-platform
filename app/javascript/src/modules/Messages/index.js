@@ -7,5 +7,6 @@ export default {
   },
   name: t => t('menu.message', { count: 0 }),
   enabled: enabled => !!enabled,
+  featureName: 'Message',
   accessibleBy: ['admin']
 };

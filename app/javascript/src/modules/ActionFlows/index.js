@@ -12,5 +12,6 @@ export default {
   },
   name: t => t('misc.action_flows'),
   enabled: enabled => !!enabled,
+  featureName: 'Action Flows',
   accessibleBy: ['admin']
 };

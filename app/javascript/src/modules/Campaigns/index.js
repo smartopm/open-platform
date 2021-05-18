@@ -8,5 +8,6 @@ export default {
   styleProps: {},
   name: t => t('misc.campaigns'),
   enabled: enabled => !!enabled,
+  featureName: 'Campaigns',
   accessibleBy: ['admin']
 };

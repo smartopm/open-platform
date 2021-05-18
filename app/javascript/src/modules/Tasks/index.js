@@ -10,6 +10,7 @@ export default {
   },
   name: t => t('misc.tasks'),
   enabled: enabled => !!enabled,
+  featureName: 'Tasks',
   accessibleBy: ['admin'],
   subRoutes: [
     {
@@ -19,6 +20,7 @@ export default {
         component: TaskUpdate
       },
       name: 'Task Update',
+      enabled: enabled => !!enabled,
       accessibleBy: ['admin']
     },
     {
@@ -28,6 +30,7 @@ export default {
         component: Tasks
       },
       name: 'My Tasks',
+      enabled: enabled => !!enabled,
       accessibleBy: ['admin']
     }
   ]

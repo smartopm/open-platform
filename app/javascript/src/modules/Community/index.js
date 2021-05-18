@@ -25,6 +25,7 @@ const Settings =   {
   },
   name: t => t('menu.settings'),
   enabled: enabled => !!enabled,
+  featureName: 'Community',
   accessibleBy: ['admin'],
 }
 
@@ -38,6 +39,7 @@ export default {
   },
   name: t => t('menu.community'),
   enabled: enabled => !!enabled,
+  featureName: 'Community',
   accessibleBy: allUserTypes,
   subMenu: [News, Message, Discussions, Campaigns , Labels, Tasks, Business, PermitRequestForms, Emails, Settings, Contact, Referral]
 };

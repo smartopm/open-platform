@@ -12,6 +12,7 @@ export default {
   },
   name: t => t('menu.plot', { count: 0 }),
   enabled: enabled => !!enabled,
+  featureName: 'Properties',
   accessibleBy: [
     'client',
     'resident',

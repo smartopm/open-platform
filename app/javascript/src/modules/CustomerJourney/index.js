@@ -15,5 +15,6 @@ export default {
   },
   name: t => t('menu.customer_journey'),
   enabled: enabled => !!enabled,
+  featureName: 'Customer Journey',
   accessibleBy: ['']
 };

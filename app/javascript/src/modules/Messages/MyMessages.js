@@ -13,5 +13,6 @@ export default {
   },
   name: t => t('menu.my_messages'),
   enabled: enabled => !!enabled,
+  featureName: 'Messages',
   accessibleBy: allUserTypes
 };
