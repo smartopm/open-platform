@@ -79,7 +79,11 @@ RSpec.describe Campaign, type: :model do
     end
 
     it 'invokes send_mail_from_db on EmailMsg' do
-      template_data = [{ key: '%community%', value: user.community.name }]
+      template_data = [
+        { key: '%community%', value: user.community.name },
+        { key: '%logo_url%', value: "" },
+        { key: '%message%', value: campaign.message },
+      ]
 
       expect(EmailMsg).to receive(:send_mail_from_db).with(
         'nurudeen@gmail.com',
