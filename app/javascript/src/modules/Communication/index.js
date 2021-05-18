@@ -13,6 +13,6 @@ export default {
   },
   name: t => t('menu.communication'),
   featureName: 'Communication',
-  enabled: enabled => !!enabled,
+  
   accessibleBy: ['']
 };

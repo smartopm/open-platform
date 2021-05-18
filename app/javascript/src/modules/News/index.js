@@ -7,7 +7,7 @@ export default {
     component: News
   },
   name: t => t('misc.news'),
-  enabled: enabled => !!enabled,
+  
   featureName: 'News',
   accessibleBy: allUserTypes
 };

@@ -10,7 +10,6 @@ export default {
     icon: <PaymentIcon />
   },
   name: t => t('menu.my_payments'),
-  enabled: enabled => !!enabled,
   featureName: 'User Payment',
-  accessibleBy: ['client', 'resident'],
+  accessibleBy: ['client', 'resident']
 };

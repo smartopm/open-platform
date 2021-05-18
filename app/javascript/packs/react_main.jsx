@@ -237,16 +237,16 @@ const App = () => {
                                     return module.subMenu.map(sub => {
                                       let routes = [];
     
-                                      if (sub.subRoutes && sub.enabled(true)) {
+                                      if (sub.subRoutes && user.community.features.includes(sub.featureName)) {
                                         routes = sub.subRoutes.map(subRoute => (
                                           <Route {...subRoute.routeProps} key={subRoute.name} />
                                         ));
                                       }
-                                      sub.enabled(true) && routes.push(<Route {...sub.routeProps} key={sub.name} />);
+                                      user.community.features.includes(sub.featureName) && routes.push(<Route {...sub.routeProps} key={sub.name} />);
                                       return routes;
                                     });
                                   }
-                                  if (module.enabled(true) && module.accessibleBy.includes(user.userType)) {
+                                  if (user.community.features.includes(module.featureName) && module.accessibleBy.includes(user.userType)) {
                                     return <Route exact {...module.routeProps} key={module.name} />;
                                   }
                                 })}

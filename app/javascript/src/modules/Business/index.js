@@ -6,7 +6,7 @@ export default {
     component: Businesses
   },
   name: t => t('misc.business'),
-  enabled: enabled => !!enabled,
+  
   featureName: 'Business',
   accessibleBy: [
     'admin',

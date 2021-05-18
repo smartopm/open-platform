@@ -8,7 +8,7 @@ export default {
     component: MailTemplateList
   },
   name: t => t('menu.email_templates'),
-  enabled: enabled => !!enabled,
+  
   featureName: 'Email Templates',
   accessibleBy: ['admin'],
 };

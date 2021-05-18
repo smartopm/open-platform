@@ -1,5 +1,5 @@
 /* eslint-disable no-nested-ternary */
-import React, { useState, Fragment } from 'react';
+import React, { useState, Fragment, useContext } from 'react';
 import PropTypes from 'prop-types';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -11,6 +11,7 @@ import { Collapse } from '@material-ui/core';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 import { useTranslation } from 'react-i18next';
+import { Context } from '../../../containers/Provider/AuthStateProvider';
 
 const SideMenu = ({ toggleDrawer, menuItems, userType, mobileOpen, direction }) => {
   const history = useHistory();
@@ -45,7 +46,10 @@ const SideMenu = ({ toggleDrawer, menuItems, userType, mobileOpen, direction }) 
     }
     history.push(item.routeProps.path);
   }
-  console.log(...menuItems)
+  // console.log(...menuItems)
+  const authState = useContext(Context)
+  const { features } = authState.user.community
+
   return (
     <div
       role="button"
@@ -56,7 +60,7 @@ const SideMenu = ({ toggleDrawer, menuItems, userType, mobileOpen, direction }) 
     >
       <List>
         {menuItems.map(menuItem =>
-         (menuItem.enabled(true)) && menuItem.accessibleBy.includes(userType) ? (
+         features.includes(menuItem.featureName) && menuItem.accessibleBy.includes(userType) ? (
            <Fragment key={typeof menuItem.name === 'function' && menuItem.name(t)}>
              <ListItem
                button
@@ -85,18 +89,18 @@ const SideMenu = ({ toggleDrawer, menuItems, userType, mobileOpen, direction }) 
                <List component="div" disablePadding>
                  { menuItem.subMenu &&
                     menuItem.subMenu.map(item =>
-                     (item.enabled(true)) && item.accessibleBy.includes(userType) ? (
-                       <ListItem
-                         button
-                         key={item.name(t)}
-                         onClick={event => routeTo(event, item)}
-                         selected={pathname === item.routeProps.path}
-                       >
-                         <ListItemText
-                           primary={item.name(t)}
-                           style={{ marginLeft: `${menuItem.styleProps?.icon ? '55px' : '17px'}` }}
-                         />
-                       </ListItem>
+                      features.includes(item.featureName) && item.accessibleBy.includes(userType) ? (
+                        <ListItem
+                          button
+                          key={item.name(t)}
+                          onClick={event => routeTo(event, item)}
+                          selected={pathname === item.routeProps.path}
+                        >
+                          <ListItemText
+                            primary={item.name(t)}
+                            style={{ marginLeft: `${menuItem.styleProps?.icon ? '55px' : '17px'}` }}
+                          />
+                        </ListItem>
                       ) : (
                         <span key={item.name(t)} />
                       )

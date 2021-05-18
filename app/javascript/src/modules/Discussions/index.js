@@ -7,7 +7,7 @@ export default {
     component: Discussions
   },
   name: t => t('misc.discussions'),
-  enabled: enabled => !!enabled,
+  
   featureName: 'Discussions',
   accessibleBy: [
     'admin',

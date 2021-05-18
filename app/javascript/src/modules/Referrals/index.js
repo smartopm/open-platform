@@ -8,6 +8,6 @@ export default {
   },
   accessibleBy: allUserTypes,
   name: t => t('misc.referrals'),
-  enabled: enabled => !!enabled,
+  
   featureName: 'Referral',
 };

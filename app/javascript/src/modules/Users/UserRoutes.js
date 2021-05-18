@@ -20,7 +20,7 @@ const routes = [
     },
     accessibleBy: allUserTypes,
     name: 'user_edit',
-    enabled: enabled => !!enabled,
+    
   },
   {
     routeProps: {
@@ -30,7 +30,7 @@ const routes = [
     },
     accessibleBy: ['admin'],
     name: 'user_logs',
-    enabled: enabled => !!enabled,
+    
   },
   {
     routeProps: {
@@ -40,7 +40,7 @@ const routes = [
     },
     accessibleBy: ['admin'],
     name: 'user_otp',
-    enabled: enabled => !!enabled,
+    
   },
   {
     routeProps: {
@@ -50,7 +50,7 @@ const routes = [
     },
     accessibleBy: allUserTypes,
     name: 'user_actions',
-    enabled: enabled => !!enabled,
+    
   },
   {
     routeProps: {
@@ -59,7 +59,7 @@ const routes = [
     },
     accessibleBy: allUserTypes,
     name: 'user_info',
-    enabled: enabled => !!enabled,
+    
   },
   {
     routeProps: {
@@ -68,7 +68,7 @@ const routes = [
     },
     accessibleBy: allUserTypes,
     name: 'print_id',
-    enabled: enabled => !!enabled,
+    
   },
   {
     routeProps: {
@@ -77,7 +77,7 @@ const routes = [
     },
     accessibleBy: allUserTypes,
     name: 'user_message',
-    enabled: enabled => !!enabled,
+    
   },
   {
     routeProps: {
@@ -87,7 +87,7 @@ const routes = [
     },
     accessibleBy: allUserTypes,
     name: 'Preferences',
-    enabled: enabled => !!enabled,
+    
   }
 ];
 

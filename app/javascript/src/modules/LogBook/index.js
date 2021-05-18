@@ -11,7 +11,7 @@ export default {
     icon: <MenuBookIcon />
   },
   name: t => t('misc.log_book'),
-  enabled: enabled => !!enabled,
+  
   featureName: 'LogBook',
   accessibleBy: ['admin', 'security_guard', 'custodian']
 };

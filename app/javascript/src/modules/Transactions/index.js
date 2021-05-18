@@ -7,6 +7,6 @@ export default {
   },
   accessibleBy: ['admin'],
   name: t => t('menu.transaction', { count: 0 }),
-  enabled: enabled => !!enabled,
+  
   featureName: 'Transactions',
 };
