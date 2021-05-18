@@ -11,4 +11,6 @@ class PlanPayment < ApplicationRecord
   belongs_to :payment_plan
 
   validates :amount, numericality: { greater_than: 0 }
+
+  has_paper_trail
 end

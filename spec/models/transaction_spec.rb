@@ -9,7 +9,7 @@ RSpec.describe Transaction, type: :model do
     it { is_expected.to have_db_column(:depositor_id).of_type(:uuid) }
     it { is_expected.to have_db_column(:community_id).of_type(:uuid) }
     it { is_expected.to have_db_column(:amount).of_type(:decimal) }
-    it { is_expected.to have_db_column(:unused_amount).of_type(:decimal) }
+    it { is_expected.to have_db_column(:receipt_number).of_type(:string) }
     it { is_expected.to have_db_column(:status).of_type(:integer) }
     it { is_expected.to have_db_column(:source).of_type(:string) }
     it { is_expected.to have_db_column(:bank_name).of_type(:string) }

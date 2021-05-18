@@ -4,7 +4,7 @@ class CreateTransactions < ActiveRecord::Migration[6.0]
       t.string :source
       t.integer :status
       t.decimal :amount
-      t.decimal :unused_amount
+      t.string :receipt_number
       t.datetime :originally_created_at
       t.string :transaction_number
       t.string :cheque_number

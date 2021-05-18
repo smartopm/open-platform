@@ -19,4 +19,6 @@ class Transaction < ApplicationRecord
   validates :transaction_number, uniqueness: true, length: { maximum: 35, allow_blank: true },
                                  if: -> { transaction_number.present? }
   validates :amount, numericality: { greater_than: 0 }
+
+  has_paper_trail
 end
