@@ -30,7 +30,8 @@ describe('NewsPage Component', () => {
               tagline: 'This is a tagline for this community',
               logoUrl: '',
               language: 'en-US',
-              wpLink: 'http://wp.com'
+              wpLink: 'http://wp.com',
+              features: []
             }
           }
         }

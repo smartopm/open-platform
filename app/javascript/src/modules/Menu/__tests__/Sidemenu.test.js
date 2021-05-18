@@ -10,6 +10,26 @@ jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
 describe('Side Nav component', () => {
   it('should render proper the sidenav menu', () => {
     const handleDrawerToggle = jest.fn();
+    const features = [
+      "Search",
+      "Referral",
+      "Payments",
+      "Time Card",
+      "Logout",
+      "Community",
+      "Messages",
+      "Dashboard",
+      "Properties",
+      "Users",
+      "LogBook",
+      "Action Flows",
+      "Time Card",
+      "Campaigns",
+      "Business",
+      "Discussions",
+      "Labels",
+      "News"
+    ]
 
     const container = render(
       <BrowserRouter>
@@ -17,7 +37,9 @@ describe('Side Nav component', () => {
           toggleDrawer={handleDrawerToggle}
           menuItems={modules}
           userType={authState.user.userType}
+          communityFeatures={features}
           mobileOpen={false}
+          direction="left"
         />
       </BrowserRouter>
     );
