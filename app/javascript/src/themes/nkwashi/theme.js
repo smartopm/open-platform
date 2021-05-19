@@ -1,34 +1,32 @@
 import { createMuiTheme } from '@material-ui/core'
-import colors from './colors'
+// import colors from './colors'
 
 // eslint-disable-next-line import/prefer-default-export
-export const theme = createMuiTheme({
+export const theme = themeColor =>  createMuiTheme({
   palette: {
     primary: {
-      main: colors.primary,
-      contrastText: colors.textColor,
-      dew: colors.dew
+      main: themeColor.primaryColor,
+      dew: themeColor.secondaryColor
     },
     secondary: {
-      main: colors.secondary,
-      contrastText: colors.textColor,
+      main: themeColor.secondaryColor,
     },
   },
   overrides: {
     MuiPickersToolbar: {
       toolbar: {
-        backgroundColor: colors.primary
+        backgroundColor: themeColor.primaryColor
       }
     },
     MuiPickersDay: {
       day: {
-        color: colors.primary
+        color: themeColor.primaryColor
       },
       daySelected: {
-        backgroundColor: colors.primary
+        backgroundColor: themeColor.primaryColor
       },
       current: {
-        color: colors.primary
+        color: themeColor.primaryColor
       }
     }
   }

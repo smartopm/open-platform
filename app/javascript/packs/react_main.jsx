@@ -187,7 +187,7 @@ const App = () => {
                   <Switch>
                     <Consumer>
                       {({ user }) => (
-                        <MuiThemeProvider theme={theme}>
+                        <MuiThemeProvider theme={theme(user.community.themeColors)}>
                           <MainMenu />
                           <div className={classes.appContainer}>
                             <Switch>
