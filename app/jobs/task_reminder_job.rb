@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'email_msg'
+
 # Send a task reminder by Email after wait time
 class TaskReminderJob < ApplicationJob
   queue_as :default

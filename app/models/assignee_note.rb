@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'email_msg'
+
 # AssigneeNote
 class AssigneeNote < ApplicationRecord
   belongs_to :user
@@ -8,20 +10,29 @@ class AssigneeNote < ApplicationRecord
   after_create :notify_user
   after_update :notify_user, if: proc { saved_change_to_user_id? }
 
-  def community_template
-    templates = user.community.templates
-    return {} if templates.nil?
-
-    templates['notification_template_id']
-  end
-
   private
 
   def notify_user
-    EmailMsg.send_mail(user.email, community_template, mail_data)
+    send_email_from_db
   end
 
-  def mail_data
-    { "url": "#{ENV['HOST']}/tasks/#{note.id}" }
+  # rubocop:disable Metrics/AbcSize
+  # rubocop:disable Metrics/MethodLength
+  def send_email_from_db
+    template = user.community
+                   .email_templates
+                  &.system_emails
+                  &.find_by(name: 'notification_template')
+
+    return unless template
+
+    template_data = [
+      { key: '%logo_url%', value: user.community&.logo_url.to_s },
+      { key: '%community%', value: user.community&.name.to_s },
+      { key: '%url%', value: "#{ENV['HOST']}/tasks/#{note.id}" },
+    ]
+    EmailMsg.send_mail_from_db(user.email, community_template, template_data)
   end
+  # rubocop:enable Metrics/AbcSize
+  # rubocop:enable Metrics/MethodLength
 end

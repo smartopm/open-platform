@@ -20,7 +20,7 @@ RSpec.describe PostTagsAlertJob, type: :job do
     it 'does not invoke EmailMsg when no user follows any tag' do
       user.post_tags << post_tag
       allow(URI).to receive(:open).and_return('<html />')
-      expect(EmailMsg).not_to receive(:send_mail)
+      expect(EmailMsg).not_to receive(:send_mail_from_db)
       perform_enqueued_jobs { described_class.perform_later(community.name) }
     end
   end
