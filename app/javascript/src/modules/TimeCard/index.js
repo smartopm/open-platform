@@ -11,7 +11,6 @@ export default {
     icon: <HourglassFullIcon />
   },
   name: t => t('misc.time_card'),
-  
   featureName: 'Time Card',
   accessibleBy: ['admin', 'custodian']
 };

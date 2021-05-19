@@ -11,7 +11,6 @@ export default {
     icon: <LinearScaleIcon />
   },
   name: t => t('menu.user_journey_stats'),
-  
   featureName: 'UserStats',
   accessibleBy: ['admin']
 };

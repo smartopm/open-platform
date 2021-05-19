@@ -11,7 +11,6 @@ export default {
     icon: <SearchOutlined />
   },
   name: t => t('menu.search'),
-  
   featureName: 'Search',
   accessibleBy: ['admin', 'custodian', 'security_guard']
 };

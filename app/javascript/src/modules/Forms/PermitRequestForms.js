@@ -14,7 +14,6 @@ export default {
     icon: <DescriptionIcon />
   },
   name: t => t('menu.request_forms'),
-  
   featureName: 'Forms',
   accessibleBy: ['admin', 'client', 'resident']
 };

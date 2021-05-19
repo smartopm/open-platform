@@ -38,7 +38,6 @@ export const Profile = {
     icon: <AccountCircleIcon />
   },
   name: t => t('menu.my_profile'),
-  
   featureName: 'Profile',
   accessibleBy: allUserTypes
 }
@@ -52,7 +51,6 @@ export const Logout = {
     icon: <ExitToAppIcon />
   },
   name: t => t('menu.logout'),
-  
   featureName: 'Logout',
   accessibleBy: allUserTypes
 }

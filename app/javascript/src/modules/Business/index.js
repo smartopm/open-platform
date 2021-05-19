@@ -6,7 +6,6 @@ export default {
     component: Businesses
   },
   name: t => t('misc.business'),
-  
   featureName: 'Business',
   accessibleBy: [
     'admin',

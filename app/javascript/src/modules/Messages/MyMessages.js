@@ -12,7 +12,6 @@ export default {
     icon: <MessageIcon />
   },
   name: t => t('menu.my_messages'),
-  
   featureName: 'Messages',
   accessibleBy: allUserTypes
 };

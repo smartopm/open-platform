@@ -8,6 +8,5 @@ export default {
   },
   accessibleBy: allUserTypes,
   name: t => t('misc.referrals'),
-  
   featureName: 'Referral',
 };

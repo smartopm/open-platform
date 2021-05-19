@@ -13,7 +13,6 @@ export default {
     icon: <HomeWorkIcon />
   },
   name: t => t('misc.properties'),
-  
   featureName: 'Properties',
   accessibleBy: ['admin']
 };

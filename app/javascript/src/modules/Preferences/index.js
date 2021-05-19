@@ -7,7 +7,6 @@ export default {
     component: Preferences
   },
   accessibleBy: allUserTypes,
-  
   name: t => t('menu.preferences'), 
   featureName: 'Preferences',
 };

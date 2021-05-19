@@ -11,7 +11,6 @@ export default {
     icon: <ForumIcon />
   },
   name: t => t('misc.action_flows'),
-  
   featureName: 'Action Flows',
   accessibleBy: ['admin']
 };

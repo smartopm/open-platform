@@ -13,6 +13,5 @@ export default {
   },
   name: t => t('menu.communication'),
   featureName: 'Communication',
-  
   accessibleBy: ['']
 };

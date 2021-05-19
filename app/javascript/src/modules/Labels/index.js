@@ -11,7 +11,6 @@ export default {
     icon: <ForumIcon />
   },
   name: t => t('misc.labels'),
-  
   featureName: 'Labels',
   accessibleBy: ['admin']
 };

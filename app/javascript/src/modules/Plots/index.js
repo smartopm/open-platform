@@ -11,7 +11,6 @@ export default {
     icon: <MapIcon />
   },
   name: t => t('menu.plot', { count: 0 }),
-  
   featureName: 'Properties',
   accessibleBy: [
     'client',

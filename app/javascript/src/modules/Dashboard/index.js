@@ -12,7 +12,6 @@ export default {
     icon: <HomeIcon />
   },
   name: t => t('menu.dashboard'),
-  
   featureName: 'Dashboard',
   accessibleBy: [
     'admin',
