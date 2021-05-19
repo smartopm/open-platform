@@ -475,6 +475,5 @@ export function handleQueryOnChange(selectedOptions, filterFields) {
  */
 export function checkAllowedCommunityFeatures(features, module){
   if(!features || !features.length || !module) return false
-  console.log(module)
   return new Set(features).has(module)
 }
