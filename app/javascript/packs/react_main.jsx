@@ -237,16 +237,16 @@ const App = () => {
                                     return module.subMenu.map(sub => {
                                       let routes = [];
                                       
-                                      if (sub.subRoutes && user.community.features.includes(sub.featureName)) {
+                                      if (sub.subRoutes && new Set(user.community.features).has(sub.featureName)) {
                                         routes = sub.subRoutes.map(subRoute => (
                                           <Route {...subRoute.routeProps} key={subRoute.name} />
                                         ));
                                       }
-                                      user.community.features.includes(sub.featureName) && routes.push(<Route {...sub.routeProps} key={sub.name} />);
+                                      new Set(user.community.features).has(sub.featureName) && routes.push(<Route {...sub.routeProps} key={sub.name} />);
                                       return routes;
                                     });
                                   }
-                                  if (user.community.features.includes(module.featureName) && module.accessibleBy.includes(user.userType)) {
+                                  if (new Set(user.community.features).has(module.featureName) && module.accessibleBy.includes(user.userType)) {
                                     return <Route exact {...module.routeProps} key={module.name} />;
                                   }
                                 })}
