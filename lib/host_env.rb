@@ -4,20 +4,20 @@
 class HostEnv
   # Method to return respective hostnames for creating links in email, sms and image url
   # Needs to be updated and made more generic as more communities start to come in
+  # rubocop:disable Metrics/MethodLength
   def self.base_url(community)
-    prod_url(community.name) if ENV['APP_ENV'].eql?('production')
+    if ENV['APP_ENV'].eql?('production')
+      case community.name
+      when 'DoubleGDP'
+        return 'demo.doublegdp.com'
+      when 'Ciudad Morazán'
+        return 'morazancity.doublegdp.com'
+      else
+        return ENV['HOST']
+      end
+    end
 
     community.hostname
   end
-
-  def prod_url(community_name)
-    case community_name
-    when 'DoubleGDP'
-      'demo.doublegdp.com'
-    when 'Ciudad Morazán'
-      'morazancity.doublegdp.com'
-    else
-      ENV['HOST']
-    end
-  end
+  # rubocop:enable Metrics/MethodLength
 end
