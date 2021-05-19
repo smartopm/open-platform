@@ -4,6 +4,7 @@ require 'nokogiri'
 require 'json'
 require 'net/http'
 require 'email_msg'
+require 'host_env'
 
 # alert user if there is new posts related to the the tag a user is subscribed to
 class PostTagsAlertJob < ApplicationJob
@@ -68,7 +69,7 @@ class PostTagsAlertJob < ApplicationJob
     template_data = [
       { key: '%logo_url%', value: community&.logo_url.to_s },
       { key: '%community%', value: community&.name.to_s },
-      { key: '%post_url%', value: "https://app.doublegdp.com/news/post/#{post_id}" },
+      { key: '%post_url%', value: "https://#{HostEnv.base_url(community)}/news/post/#{post_id}" },
     ]
     EmailMsg.send_mail_from_db(email, template, template_data)
   end
