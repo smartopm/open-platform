@@ -47,6 +47,7 @@ module Mutations
 
       private
 
+      # rubocop:disable Metrics/AbcSize
       # Creates deposits made by user.
       #
       # @param values [Hash]
@@ -64,6 +65,7 @@ module Mutations
                                        )
         context[:transaction] = ::Transaction.create(transaction_attributes)
       end
+      # rubocop:enable Metrics/AbcSize
 
       # Raises GraphQL execution error if transaction is not saved.
       #
