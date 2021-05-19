@@ -15,7 +15,8 @@ import {
   propAccessor,
   toCamelCase,
   formatMoney,
-  extractCurrency
+  extractCurrency,
+  checkAllowedCommunityFeatures
 } from '../utils/helpers'
 
 const message =
@@ -164,6 +165,15 @@ describe('array methods', () => {
     expect(propAccessor({a: 4}, 'b')).toBeUndefined()
     // the object should only be of type object 
     expect(propAccessor([], 'b')).toBeUndefined()
+  })
+  
+  it('should check if x belongs to array', () => {
+    const features = ['a', 'b']
+    expect(checkAllowedCommunityFeatures(features, 'b')).toBe(true)
+    expect(checkAllowedCommunityFeatures(features, 'x')).toBe(false)
+    expect(checkAllowedCommunityFeatures(features, 'a')).toBe(true)
+    expect(checkAllowedCommunityFeatures([], 'a')).toBe(false)
+    expect(checkAllowedCommunityFeatures()).toBe(false)
   })
 })
 

@@ -5,14 +5,14 @@ task update_community_features: :environment do
   puts 'updating community ....'
   all_features = [
     'Dashboard', 'Search', 'Profile', 'Messages', 'Communication', 'LogBook', 'Payments',
-    'Invoices', 'Transactions', 'User Payment', 'Forms', 'Customer Journey', 'UserStats',
-    'Users', 'Properties', 'News', 'Message', 'Discussions', 'Campaigns', 'Labels',
+    'Invoices', 'Transactions', 'Forms', 'Customer Journey', 'UserStats',
+    'Users', 'Properties', 'News', 'Discussions', 'Campaigns', 'Labels',
     'Tasks', 'Business', 'Forms', 'Email Templates', 'Community', 'Contact', 'Referral',
     'My Thebe Portal', 'Action Flows', 'Time Card', 'Logout'
   ]
   mc_features = [
     'Dashboard', 'Search', 'Profile', 'Messages', 'Communication', 'LogBook', 'Forms',
-    'Customer Journey', 'Users', 'News', 'Message', 'Discussions', 'Campaigns',
+    'Customer Journey', 'Users', 'News', 'Discussions', 'Campaigns',
     'Tasks', 'Business', 'Forms', 'Email Templates', 'Community', 'Contact', 'Referral',
     'Logout', 'Labels'
   ]

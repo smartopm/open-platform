@@ -60,7 +60,7 @@ PaymentSummaryCard.defaultProps = {
 
 PaymentSummaryCard.propTypes = {
   currencyData: PropTypes.shape({ currency: PropTypes.string, locale: PropTypes.string }),
-  value: PropTypes.string.isRequired,
+  value: PropTypes.number.isRequired,
   title: PropTypes.string.isRequired,
   handleClick: PropTypes.func.isRequired,
   query: PropTypes.string.isRequired

@@ -70,6 +70,7 @@ import I18Initializer from '../src/modules/i18n/Components/I18Initializer';
 import PostPage from '../src/modules/News/Components/PostPage';
 import Posts from '../src/modules/News/Components/Posts';
 import UsersImport from '../src/modules/Users/Containers/UsersImport';
+import { checkAllowedCommunityFeatures } from '../src/utils/helpers';
 
 // The routes defined here are carefully arranged, be mindful when changing them
 
@@ -237,16 +238,16 @@ const App = () => {
                                     return module.subMenu.map(sub => {
                                       let routes = [];
                                       
-                                      if (sub.subRoutes && new Set(user.community.features).has(sub.featureName)) {
+                                      if (sub.subRoutes && checkAllowedCommunityFeatures(user.community.features, sub.featureName)) {
                                         routes = sub.subRoutes.map(subRoute => (
                                           <Route {...subRoute.routeProps} key={subRoute.name} />
                                         ));
                                       }
-                                      new Set(user.community.features).has(sub.featureName) && routes.push(<Route {...sub.routeProps} key={sub.name} />);
+                                      checkAllowedCommunityFeatures(user.community.features, sub.featureName) && routes.push(<Route {...sub.routeProps} key={sub.name} />);
                                       return routes;
                                     });
                                   }
-                                  if (new Set(user.community.features).has(module.featureName) && module.accessibleBy.includes(user.userType)) {
+                                  if (checkAllowedCommunityFeatures(user.community.features, module.featureName) && module.accessibleBy.includes(user.userType)) {
                                     return <Route exact {...module.routeProps} key={module.name} />;
                                   }
                                 })}

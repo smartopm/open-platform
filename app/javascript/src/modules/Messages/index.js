@@ -6,6 +6,6 @@ export default {
     component: AllMessages
   },
   name: t => t('menu.message', { count: 0 }),
-  featureName: 'Message',
+  featureName: 'Messages',
   accessibleBy: ['admin']
 };
