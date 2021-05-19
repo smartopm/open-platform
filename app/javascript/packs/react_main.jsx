@@ -165,182 +165,179 @@ const App = () => {
       }}
     >
       <ApolloProvider>
-        <MuiThemeProvider theme={theme}>
-          <Router history={history}>
-            <AuthStateProvider>
-              <ThemeProvider>
-                <Analytics>
-                  {/* onboarding */}
-                  <I18Initializer />
+        <Router history={history}>
+          <AuthStateProvider>
+            {/* <ThemeProvider> */}
+            <Analytics>
+              {/* onboarding */}
+              <I18Initializer />
+              <Switch>
+                <Route path="/welcome" component={WelcomePage} />
+                <Route path="/login" component={LoginScreen} />
+                <Route path="/code/:id" component={ConfirmCodeScreen} />
+                <Route path="/l/:id/:code" component={OneTimeLoginCode} />
+                <Route path="/logout" component={Logout} />
+                <Route path="/google/:token" component={MainAuthCallback} />
+                <Route path="/facebook/:token" component={MainAuthCallback} />
+
+                {/* Spike page */}
+                <Route path="/news/post/:id" exact component={PostPage} />
+
+                <LoggedInOnly>
                   <Switch>
-                    <Route path="/welcome" component={WelcomePage} />
-                    <Route path="/login" component={LoginScreen} />
-                    <Route path="/code/:id" component={ConfirmCodeScreen} />
-                    <Route path="/l/:id/:code" component={OneTimeLoginCode} />
-                    <Route path="/logout" component={Logout} />
-                    <Route path="/google/:token" component={MainAuthCallback} />
-                    <Route path="/facebook/:token" component={MainAuthCallback} />
+                    <Consumer>
+                      {({ user }) => (
+                        <MuiThemeProvider theme={theme}>
+                          <MainMenu />
+                          <div className={classes.appContainer}>
+                            <Switch>
+                              {/* these are redirects for pages we don't have yet, they can only be placed here */}
+                              {/* build individual modules for these once we have pages that directly route there */}
+                              {/* beginning of redirects */}
+                              <Route
+                                exact
+                                path="/plots"
+                                render={() => <Redirect to={`/user/${user.id}?tab=Plots`} />}
+                              />
+                              <Route
+                                exact
+                                path="/communication"
+                                render={() => <Redirect to={`/message/${user.id}`} />}
+                              />
+                              <Route
+                                exact
+                                path="/user_journey"
+                                render={() => (
+                                  <Redirect to={`/user/${user.id}?tab=CustomerJourney`} />
+                                )}
+                              />
+                              <Route
+                                exact
+                                path="/myforms"
+                                render={() => <Redirect to={`/user/${user.id}?tab=Forms`} />}
+                              />
+                              <Route
+                                exact
+                                path="/mypayments"
+                                render={() => <Redirect to={`/user/${user.id}?tab=Payments`} />}
+                              />
+                              <Route
+                                exact
+                                path="/mymessages"
+                                render={() => <Redirect to={`/message/${user.id}`} />}
+                              />
+                              <Route
+                                exact
+                                path="/myprofile"
+                                render={() => <Redirect to={`/user/${user.id}`} />}
+                              />
+                              {/* end of redirects */}
+                              {[...modules, ...UserRoutes].map(module => {
+                                if (module.subMenu) {
+                                  return module.subMenu.map(sub => {
+                                    let routes = [];
+                                    if (sub.subRoutes) {
+                                      routes = sub.subRoutes.map(subRoute => (
+                                        <Route {...subRoute.routeProps} key={subRoute.name} />
+                                      ));
+                                    }
+                                    routes.push(<Route {...sub.routeProps} key={sub.name} />);
+                                    return routes;
+                                  });
+                                }
+                                if (module.accessibleBy.includes(user.userType)) {
+                                  return <Route exact {...module.routeProps} key={module.name} />;
+                                }
+                              })}
+                              <Route exact path="/scan" component={Scan} />
+                              <Route path="/id/:id" component={IDCard} />
+                              <Route path="/entry_logs/:userId" component={EntryLogs} />
+                              <Route path="/map" component={Map} />
+                              <Route path="/myplot" component={GeoMap} />
+                              <Route path="/mobile_money" component={MobileMoney} />
+                              <Route path="/settings" component={Notifications} />
+                              {/* <Route path="/otp_sent" component={OTPFeedbackScreen} /> */}
+                              <Route path="/myaccount/:id" component={UserShow} />
+                              {/* requests */}
+                              {/* Guard home is somehow kinda special leaving it now */}
+                              <Route path="/guard_home" component={GuardHome} />
+                              {/* Guard home ends */}
+                              <Route path="/entry_request" component={EntryRequest} />
+                              <Route path="/request/:id/:logs?" component={RequestUpdate} />
+                              <Route path="/request_hos/:id/" component={RequestConfirm} />
+                              <Route path="/request_wait/:id" component={WaitScreen} />
+                              <Route path="/request_status/:id/edit" component={RequestApproval} />
+                              <Route path="/request_status/:id" component={RequestApproval} />
+                              {/* Showroom kiosk routes */}
+                              <Route path="/showroom_kiosk" component={ShowRoom} />
+                              <Route path="/sh_reason" component={VisitingReasonScreen} />
+                              <Route path="/sh_entry" component={VisitingClientForm} />
+                              <Route path="/sh_complete" component={CheckInComplete} />
+                              <Route path="/sh_soon" component={ComingSoon} />
+                              {/* activity */}
+                              <Route path="/feedback" component={Feedback} />
+                              <Route path="/feedback_success" component={FeedbackSuccess} />
+                              <Route path="/campaign-create" component={CampaignCreate} />
+                              <Route path="/campaign/:id" component={CampaignUpdate} />
+                              <Route path="/timesheet/:id" exact component={EmployeeLogs} />
+                              <Route
+                                path="/client_request_from"
+                                exact
+                                component={ClientRequestForm}
+                              />
+                              <Route path="/news/slug" exact component={Posts} />
+                              <Route path="/discussions/:id" exact component={DiscussonPage} />
+                              <Route path="/business/:id" exact component={BusinessProfile} />
+                              <Route path="/form/:formId?/:formName?" component={FormPage} />
+                              <Route path="/edit_form/:formId" component={FormBuilderPage} />
+                              <Route
+                                path="/user_form/:formId?/:userId?/:formName?/:type?"
+                                component={FormPage}
+                              />
 
-                    {/* Spike page */}
-                    <Route path="/news/post/:id" exact component={PostPage} />
-
-                    <LoggedInOnly>
-                      <MainMenu />
-                      <div className={classes.appContainer}>
-                        <Switch>
-                          <Consumer>
-                            {({ user }) => (
-                              <Switch>
-                                {/* these are redirects for pages we don't have yet, they can only be placed here */}
-                                {/* build individual modules for these once we have pages that directly route there */}
-                                {/* beginning of redirects */}
-                                <Route
-                                  exact
-                                  path="/plots"
-                                  render={() => <Redirect to={`/user/${user.id}?tab=Plots`} />}
-                                />
-                                <Route
-                                  exact
-                                  path="/communication"
-                                  render={() => <Redirect to={`/message/${user.id}`} />}
-                                />
-                                <Route
-                                  exact
-                                  path="/user_journey"
-                                  render={() => (
-                                    <Redirect to={`/user/${user.id}?tab=CustomerJourney`} />
-                                  )}
-                                />
-                                <Route
-                                  exact
-                                  path="/myforms"
-                                  render={() => <Redirect to={`/user/${user.id}?tab=Forms`} />}
-                                />
-                                <Route
-                                  exact
-                                  path="/mypayments"
-                                  render={() => <Redirect to={`/user/${user.id}?tab=Payments`} />}
-                                />
-                                <Route
-                                  exact
-                                  path="/mymessages"
-                                  render={() => <Redirect to={`/message/${user.id}`} />}
-                                />
-                                <Route
-                                  exact
-                                  path="/myprofile"
-                                  render={() => <Redirect to={`/user/${user.id}`} />}
-                                />
-                                {/* end of redirects */}
-                                {[...modules, ...UserRoutes].map(module => {
-                                  if (module.subMenu) {
-                                    return module.subMenu.map(sub => {
-                                      let routes = [];
-                                      if (sub.subRoutes) {
-                                        routes = sub.subRoutes.map(subRoute => (
-                                          <Route {...subRoute.routeProps} key={subRoute.name} />
-                                        ));
-                                      }
-                                      routes.push(<Route {...sub.routeProps} key={sub.name} />);
-                                      return routes;
-                                    });
-                                  }
-                                  if (module.accessibleBy.includes(user.userType)) {
-                                    return <Route exact {...module.routeProps} key={module.name} />;
-                                  }
-                                })}
-                                <Route exact path="/scan" component={Scan} />
-                                <Route path="/id/:id" component={IDCard} />
-                                <Route path="/entry_logs/:userId" component={EntryLogs} />
-                                <Route path="/map" component={Map} />
-                                <Route path="/myplot" component={GeoMap} />
-                                <Route path="/mobile_money" component={MobileMoney} />
-                                <Route path="/settings" component={Notifications} />
-                                {/* <Route path="/otp_sent" component={OTPFeedbackScreen} /> */}
-                                <Route path="/myaccount/:id" component={UserShow} />
-                                {/* requests */}
-                                {/* Guard home is somehow kinda special leaving it now */}
-                                <Route path="/guard_home" component={GuardHome} />
-                                {/* Guard home ends */}
-                                <Route path="/entry_request" component={EntryRequest} />
-                                <Route path="/request/:id/:logs?" component={RequestUpdate} />
-                                <Route path="/request_hos/:id/" component={RequestConfirm} />
-                                <Route path="/request_wait/:id" component={WaitScreen} />
-                                <Route
-                                  path="/request_status/:id/edit"
-                                  component={RequestApproval}
-                                />
-                                <Route path="/request_status/:id" component={RequestApproval} />
-                                {/* Showroom kiosk routes */}
-                                <Route path="/showroom_kiosk" component={ShowRoom} />
-                                <Route path="/sh_reason" component={VisitingReasonScreen} />
-                                <Route path="/sh_entry" component={VisitingClientForm} />
-                                <Route path="/sh_complete" component={CheckInComplete} />
-                                <Route path="/sh_soon" component={ComingSoon} />
-                                {/* activity */}
-                                <Route path="/feedback" component={Feedback} />
-                                <Route path="/feedback_success" component={FeedbackSuccess} />
-                                <Route path="/campaign-create" component={CampaignCreate} />
-                                <Route path="/campaign/:id" component={CampaignUpdate} />
-                                <Route path="/timesheet/:id" exact component={EmployeeLogs} />
-                                <Route
-                                  path="/client_request_from"
-                                  exact
-                                  component={ClientRequestForm}
-                                />
-                                <Route path="/news/slug" exact component={Posts} />
-                                <Route path="/discussions/:id" exact component={DiscussonPage} />
-                                <Route path="/business/:id" exact component={BusinessProfile} />
-                                <Route path="/form/:formId?/:formName?" component={FormPage} />
-                                <Route path="/edit_form/:formId" component={FormBuilderPage} />
-                                <Route
-                                  path="/user_form/:formId?/:userId?/:formName?/:type?"
-                                  component={FormPage}
-                                />
-
-                                <AdminRoutes>
-                                  <Switch>
-                                    <Route path="/users/import" component={UsersImport} />
-                                    <Route path="/showroom_logs" component={ShowroomLogs} />
-                                    <Route path="/notes" component={AllNotes} />
-                                    <Route
-                                      exact
-                                      path="/todo/:taskId"
-                                      render={({ match }) => (
-                                        <Redirect to={`/tasks/${match.params.taskId}`} />
-                                      )}
-                                    />
-                                    <Route
-                                      exact
-                                      path="/todo"
-                                      render={() => <Redirect to="/tasks" />}
-                                    />
-                                    <Route path="/feedbacks" component={FeedbackPage} />
-                                    <Route path="/event_logs" component={EventLogs} />
-                                    <Route path="/new/user" exact component={UserEdit} />
-                                    <Route path="/comments" exact component={CommentsPage} />
-                                    <Route path="/visit_request" component={EntryRequest} />
-                                  </Switch>
-                                </AdminRoutes>
-                                {/* we will also need a not found page for non-logged in user */}
-                                {/* if you are going to move this to another line carry it like an egg */}
-                                <Route
-                                  render={() => (
-                                    <ErrorPage title="Sorry!! We couldn't find this page" />
-                                  )}
-                                />
-                              </Switch>
-                            )}
-                          </Consumer>
-                        </Switch>
-                      </div>
-                    </LoggedInOnly>
+                              <AdminRoutes>
+                                <Switch>
+                                  <Route path="/users/import" component={UsersImport} />
+                                  <Route path="/showroom_logs" component={ShowroomLogs} />
+                                  <Route path="/notes" component={AllNotes} />
+                                  <Route
+                                    exact
+                                    path="/todo/:taskId"
+                                    render={({ match }) => (
+                                      <Redirect to={`/tasks/${match.params.taskId}`} />
+                                    )}
+                                  />
+                                  <Route
+                                    exact
+                                    path="/todo"
+                                    render={() => <Redirect to="/tasks" />}
+                                  />
+                                  <Route path="/feedbacks" component={FeedbackPage} />
+                                  <Route path="/event_logs" component={EventLogs} />
+                                  <Route path="/new/user" exact component={UserEdit} />
+                                  <Route path="/comments" exact component={CommentsPage} />
+                                  <Route path="/visit_request" component={EntryRequest} />
+                                </Switch>
+                              </AdminRoutes>
+                              {/* we will also need a not found page for non-logged in user */}
+                              {/* if you are going to move this to another line carry it like an egg */}
+                              <Route
+                                render={() => (
+                                  <ErrorPage title="Sorry!! We couldn't find this page" />
+                                )}
+                              />
+                            </Switch>
+                          </div>
+                        </MuiThemeProvider>
+                      )}
+                    </Consumer>
                   </Switch>
-                </Analytics>
-              </ThemeProvider>
-            </AuthStateProvider>
-          </Router>
-        </MuiThemeProvider>
+                </LoggedInOnly>
+              </Switch>
+            </Analytics>
+            {/* </ThemeProvider> */}
+          </AuthStateProvider>
+        </Router>
       </ApolloProvider>
     </Suspense>
   );
