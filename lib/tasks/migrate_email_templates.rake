@@ -55,12 +55,13 @@ namespace :import do
         community.email_templates.create!(
           name: t[:name],
           subject: t[:subject],
+          body: '',
           tag: 'system',
         )
       end
     end
 
-    puts 'Done Successfully.'
+    puts "Done Successfully. #{system_email_templates.size} migrated"
   end
 end
 # rubocop:enable Metrics/BlockLength
