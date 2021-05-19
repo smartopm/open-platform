@@ -17,7 +17,6 @@ module Mutations
       field :transaction, Types::TransactionType, null: true
 
       # rubocop:disable Metrics/AbcSize
-      # rubocop:disable Metrics/MethodLength
       # Creates new Transaction(Deposit).
       # * Creates user's deposit entry.
       # * Creates payment entries against payment plan
@@ -34,12 +33,11 @@ module Mutations
           create_user_transaction(values)
           raise_transaction_validation_error
           context[:transaction].execute_transaction_callbacks(context[:payment_plan])
-          { transaction: context[:transaction] }
+          { transaction: context[:transaction].reload }
         end
       end
-      # rubocop:enable Metrics/AbcSize
-      # rubocop:enable Metrics/MethodLength
 
+      # rubocop:enable Metrics/AbcSize
       # Verifies if current user is admin or not.
       def authorized?(_vals)
         return true if context[:current_user]&.admin?
@@ -64,7 +62,7 @@ module Mutations
                                          depositor_id: context[:current_user].id,
                                          originally_created_at: user.current_time_in_timezone,
                                        )
-        context[:transaction] = Transaction.create(transaction_attributes)
+        context[:transaction] = ::Transaction.create(transaction_attributes)
       end
 
       # Raises GraphQL execution error if transaction is not saved.

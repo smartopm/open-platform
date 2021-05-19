@@ -43,13 +43,13 @@ class Transaction < ApplicationRecord
   #
   # @return [void]
   def create_plan_payment(payment_plan)
-    plan_payments.create!(
-                          user_id: user_id,
-                          community_id: community_id,
-                          amount: payment_plan.allocated_amount(amount),
-                          status: 'paid',
-                          payment_plan_id: payment_plan.id,
-                          created_at: created_at,
-                          )
+    plan_payments.create(
+      user_id: user_id,
+      community_id: community_id,
+      amount: payment_plan.allocated_amount(amount),
+      status: 'paid',
+      payment_plan_id: payment_plan.id,
+      created_at: created_at,
+    )
   end
 end
