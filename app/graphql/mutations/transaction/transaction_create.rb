@@ -18,40 +18,54 @@ module Mutations
 
       # rubocop:disable Metrics/AbcSize
       # rubocop:disable Metrics/MethodLength
-      # Graphql Resolver to create new Transaction.
-      # Creates Transaction, updates selected PaymentPlan's pending balance,
-      # create PlanPayment entries
+      # Creates new Transaction(Deposit).
+      # * Creates user's deposit entry.
+      # * Creates payment entries against payment plan
+      # * Updates PaymentPlan's pending balance,
       #
       # @param values [Hash]
       #
-      # @return Transaction
+      # @return [Hash]
       def resolve(values)
         ActiveRecord::Base.transaction do
-          context[:user] = context[:site_community].users.find_by(id: values[:user_id])
           land_parcel = context[:site_community].land_parcels.find_by(id: values[:land_parcel_id])
           context[:payment_plan] = land_parcel.payment_plan
-          transaction_attributes = values.except(:land_parcel_id, :user_id)
-                                         .merge(
-                                           status: 'accepted',
-                                           community_id: context[:site_community]&.id,
-                                           depositor_id: context[:current_user].id,
-                                           originally_created_at: context[:user].current_time_in_timezone,
-                                         )
-          context[:transaction] = context[:user].transactions.create!(transaction_attributes)
+
+          create_user_transaction(values)
           raise_transaction_validation_error
-          pending_balance = context[:payment_plan].pending_balance
-          payable_amount = pending_balance > values[:amount] ? values[:amount] : pending_balance
-          context[:transaction].execute_transaction_callbacks(
-            payment_plan: context[:payment_plan],
-            payable_amount: payable_amount,
-          )
-          { transaction: context[:transaction].reload }
+          context[:transaction].execute_transaction_callbacks(context[:payment_plan])
+          { transaction: context[:transaction] }
         end
       end
       # rubocop:enable Metrics/AbcSize
       # rubocop:enable Metrics/MethodLength
 
+      # Verifies if current user is admin or not.
+      def authorized?(_vals)
+        return true if context[:current_user]&.admin?
+
+        raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
+      end
+
       private
+
+      # Creates deposits made by user.
+      #
+      # @param values [Hash]
+      #
+      # @return [void]
+      def create_user_transaction(values)
+        user = context[:site_community].users.find_by(id: values[:user_id])
+
+        transaction_attributes = values.except(:land_parcel_id)
+                                       .merge(
+                                         status: 'accepted',
+                                         community_id: context[:site_community]&.id,
+                                         depositor_id: context[:current_user].id,
+                                         originally_created_at: user.current_time_in_timezone,
+                                       )
+        context[:transaction] = Transaction.create(transaction_attributes)
+      end
 
       # Raises GraphQL execution error if transaction is not saved.
       #

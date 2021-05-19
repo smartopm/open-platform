@@ -22,38 +22,34 @@ class Transaction < ApplicationRecord
 
   has_paper_trail
 
+  # Performs actions post transaction creation.
+  # * Creates payment entry against payment plan
+  # * Updates payment plan's pending balance
+  #
+  # @param [payment_plan] PaymentPlan
+  #
+  # @return [void]
+  def execute_transaction_callbacks(payment_plan)
+    create_plan_payment(payment_plan)
+    payment_plan.update_pending_balance(amount)
+  end
+
+  private
+
   # Creates payment entry against transaction and payment plan
   #
   # @param [String] PaymentPlan#uuid
   # @param [Float] payable_amount
   #
   # @return [void]
-  def create_plan_payment(payment_plan_id, payable_amount)
+  def create_plan_payment(payment_plan)
     plan_payments.create!(
-                          user_id: user.id,
-                          community_id: community.id,
-                          amount: payable_amount,
+                          user_id: user_id,
+                          community_id: community_id,
+                          amount: payment_plan.allocated_amount(amount),
                           status: 'paid',
-                          payment_plan_id: payment_plan_id,
+                          payment_plan_id: payment_plan.id,
                           created_at: created_at,
                           )
-  
-  end
-
-  
-
-  # Performs actions post transaction creation.
-  # * Creates payment entry against payment plan
-  # * Updates payment plan's pending balance
-  #
-  # @param [Hash] args
-  # @option args [payment_plan] PaymentPlan
-  # @option args [amount] Float
-  #
-  # @return [void]
-  def execute_transaction_callbacks(args = {})
-    create_plan_payment(args[:payment_plan].id, args[:payable_amount])
-    args[:payment_plan].pending_balance -= args[:payable_amount]
-    args[:payment_plan].save!
   end
 end

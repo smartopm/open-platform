@@ -165,15 +165,15 @@ class User < ApplicationRecord
   def self.from_omniauth(auth, site_community)
     # Either create a User record or update it based on the provider (Google) and the UID
     find_or_initialize_from_oauth(auth, site_community)
-    # OAUTH_FIELDS_MAP.each_key do |param|
-    #   user[param] = OAUTH_FIELDS_MAP[param][auth]
-    # end
-    # user.assign_default_community(site_community)
-    # user.save!
+    OAUTH_FIELDS_MAP.each_key do |param|
+      user[param] = OAUTH_FIELDS_MAP[param][auth]
+    end
+    user.assign_default_community(site_community)
+    user.save!
   end
 
   def self.find_or_initialize_from_oauth(_auth, site_community)
-    by_email = site_community.users.find_by(email: 'saurabhshinde@doublegdp.com')
+    by_email = site_community.users.find_by(email: auth.info.email)
     return by_email if by_email
 
     site_community.users.new
