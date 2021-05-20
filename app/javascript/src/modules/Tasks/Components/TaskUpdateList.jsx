@@ -46,7 +46,6 @@ export default function TaskUpdateList({ data }) {
                   initialValue: history.initialValue || 'empty value',
                   updatedValue: history.updatedValue || 'empty value'
                 })}
-                // content={`change description from ${history.initialValue || 'empty value'} to ${history.updatedValue || 'empty value'}`}
                 date={dateFormatter(history.createdAt)}
               />
             )}
@@ -59,7 +58,6 @@ export default function TaskUpdateList({ data }) {
                   initialValue: history.initialValue  !== null ? dateToString(history.initialValue) : 'empty value',
                   updatedValue: history.updatedValue || 'empty value'
                 })}
-                // content={`change due date from ${history.initialValue !== null ? dateToString(history.initialValue) : 'empty value'} to ${history.updatedValue !== null ? dateToString(history.updatedValue) : 'empty value'}`}
                 date={dateFormatter(history.createdAt)}
               />
             )}
@@ -72,7 +70,6 @@ export default function TaskUpdateList({ data }) {
                   initialValue: history.initialValue === 't' ? 'true' : 'false' || 'empty value',
                   updatedValue: history.updatedValue === 't' ? 'true' : 'false' || 'empty value'
                 })}
-                // content={`change complete status from ${history.initialValue === 't' ? 'true' : 'false' || 'empty value'} to ${history.updatedValue === 't' ? 'true' : 'false' || 'empty value'}`}
                 date={dateFormatter(history.createdAt)}
               />
             )}
@@ -88,7 +85,6 @@ export default function TaskUpdateList({ data }) {
               <TaskUpdateItem
                 user={history.user.name} 
                 icon={<ClassOutlinedIcon className={classes.icon} />} 
-                // content={`change category from ${history.initialValue || 'empty value'} to ${history.updatedValue || 'empty value'}`}
                 content={t('task.history_update_attribute', { 
                   attribute: 'category',
                   initialValue: history.initialValue || 'empty value',
@@ -101,7 +97,6 @@ export default function TaskUpdateList({ data }) {
               <TaskUpdateItem
                 user={history.user.name} 
                 icon={<FlagOutlinedIcon className={classes.icon} />} 
-                // content={`change flagged status from ${history.initialValue === 't' ? 'true' : 'false' || 'empty value'} to ${history.updatedValue === 't' ? 'true' : 'false' || 'empty value'}`}
                 content={t('task.history_update_attribute', { 
                   attribute: 'flagged status',
                   initialValue: history.initialValue === 't' ? 'true' : 'false' || 'empty value',
@@ -114,7 +109,6 @@ export default function TaskUpdateList({ data }) {
               <TaskUpdateItem
                 user={history.user.name} 
                 icon={<PersonOutlinedIcon className={classes.icon} />} 
-                // content={`changed the author of the task from ${history.initialValue || 'empty value'} to ${history.updatedValue || 'empty value'}`}
                 content={t('task.history_update_attribute', { 
                   attribute: 'the author',
                   initialValue: history.initialValue || 'empty value',
@@ -127,7 +121,6 @@ export default function TaskUpdateList({ data }) {
               <TaskUpdateItem
                 user={history.user.name} 
                 icon={<PeopleAltOutlinedIcon className={classes.icon} />} 
-                // content={`changed assignees from ${history.initialValue || 'empty value'} to ${history.updatedValue || 'empty value'}`}
                 content={t('task.history_update_attribute', { 
                   attribute: 'assignees',
                   initialValue: history.initialValue || 'empty value',

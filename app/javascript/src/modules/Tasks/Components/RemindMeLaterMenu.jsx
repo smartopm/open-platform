@@ -58,7 +58,7 @@ export default function RemindMeLaterMenu({
               setTaskReminder(72)}
             className={css(styles.menuItem)}
           >
-            {t('task.task_reminder_in_24_hr')}
+            {t('task.task_reminder_in_72_hr')}
           </MenuItem>
         </>
       </div>
