@@ -38,6 +38,24 @@ class PaymentPlan < ApplicationRecord
     start_date...(start_date + (duration_in_month || 12).month)
   end
 
+  # Reduces plan's pending balance with allocated amount.
+  #
+  # @param [Float] amount
+  #
+  # @return [Float]
+  def update_pending_balance(amount)
+    update(pending_balance: pending_balance - allocated_amount(amount))
+  end
+
+  # Returns maximum amount that can be allocated to plan.
+  #
+  # @param [Float] amount
+  #
+  # @return [Float]
+  def allocated_amount(amount)
+    amount > pending_balance ? pending_balance : amount
+  end
+
   private
 
   def generate_monthly_invoices
