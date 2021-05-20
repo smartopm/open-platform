@@ -17,6 +17,8 @@ class PaymentPlan < ApplicationRecord
 
   enum status: { active: 0, cancelled: 1, deleted: 2 }
 
+  has_paper_trail
+
   def update_plot_balance(amount, type = 'credit')
     return if amount.zero?
 
@@ -42,9 +44,9 @@ class PaymentPlan < ApplicationRecord
   #
   # @param [Float] amount
   #
-  # @return [Float]
+  # @return [Boolean]
   def update_pending_balance(amount)
-    update(pending_balance: pending_balance - allocated_amount(amount))
+    update!(pending_balance: pending_balance - allocated_amount(amount))
   end
 
   # Returns maximum amount that can be allocated to plan.

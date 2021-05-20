@@ -209,20 +209,6 @@ module Types::Queries::Invoice
         .order(created_at: :desc)
   end
 
-  # It would be good to put this elsewhere to use it in other queries
-
-  def verified_user(user_id)
-    raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') if context[:current_user].nil?
-    unless context[:current_user]&.id == user_id || context[:current_user].admin?
-      raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
-    end
-
-    user = User.allowed_users(context[:current_user]).find(user_id)
-    return user if user.present?
-
-    raise GraphQL::ExecutionError, I18n.t('errors.user.not_found')
-  end
-
   def cumulate_pending_balance(invoices)
     balance = 0
     pending_invoices = []

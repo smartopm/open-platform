@@ -10,7 +10,6 @@ module Mutations
       argument :bank_name, String, required: false
       argument :cheque_number, String, required: false
       argument :transaction_number, String, required: false
-      argument :status, String, required: false
       argument :land_parcel_id, ID, required: true
       argument :created_at, String, required: false
 
