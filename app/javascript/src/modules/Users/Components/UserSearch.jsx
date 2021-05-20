@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import {
   TextField,
   FormControlLabel,
@@ -10,10 +10,12 @@ import {
 } from '@material-ui/core';
 import { useLazyQuery } from 'react-apollo';
 import PropTypes from 'prop-types';
+import { useTranslation } from 'react-i18next';
 import { UsersLiteQuery } from '../../../graphql/queries';
 import { Spinner } from '../../../shared/Loading';
 
 export default function UserSearch({ userData, update }) {
+  const { t } = useTranslation('common')
   const [loadUsers, { loading: isLoading, error: queryErrors, data }] = useLazyQuery(
     UsersLiteQuery
   );
@@ -37,8 +39,8 @@ export default function UserSearch({ userData, update }) {
         <>
           <TextField
             name="task user"
-            label="Find a User"
-            placeholder="Type the user name here"
+            label={t('form_fields.user_name_search')}
+            placeholder={t('form_placeholders.user_name_search')}
             style={{ width: '100%' }}
             onChange={handleSearchUser}
             value={userData.user}
@@ -52,8 +54,7 @@ export default function UserSearch({ userData, update }) {
             }}
           />
           <Typography variant="subtitle2" color="textSecondary">
-            The account selected will be deleted from the system and merged into the profile you are
-            currently on
+            {t('misc.user_name_search_warning_text')}
           </Typography>
         </>
       ) : (
@@ -62,7 +63,7 @@ export default function UserSearch({ userData, update }) {
       {/* associated user */}
       {!isLoading && data?.usersLite.length ? (
         <FormControl component="fieldset">
-          <FormLabel component="legend">Choose a user</FormLabel>
+          <FormLabel component="legend">{t('form_placeholders.user_name_search_choose_from_options')}</FormLabel>
           <RadioGroup
             aria-label="user"
             name="task_user"
@@ -83,7 +84,7 @@ export default function UserSearch({ userData, update }) {
         Boolean(userData.user.length) &&
         Boolean(data?.usersLite.length) &&
         !isLoading &&
-        `${userData.user} not found in users`
+       `${t('errors.user_name_search_not_found', { username: userData.user})}`
       )}
       {// separate radios from checkbox only after search
       data?.usersLite.length && <hr />

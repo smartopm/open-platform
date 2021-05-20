@@ -2,9 +2,9 @@ import React from 'react'
 import { render, fireEvent } from '@testing-library/react'
 import { BrowserRouter } from 'react-router-dom/'
 import { MockedProvider } from '@apollo/react-testing'
-import TaskComment from '../modules/Tasks/Components/TaskComment'
+import TaskComment from '../Components/TaskComment'
 import '@testing-library/jest-dom/extend-expect'
-import { CommentQuery } from '../graphql/queries';
+import { CommentQuery } from '../../../graphql/queries';
 
 describe('Task Comment Component', () => {
   const taskComments = [

@@ -6,6 +6,7 @@ import {
   Typography
 } from '@material-ui/core'
 import PropTypes from 'prop-types'
+import { useTranslation } from 'react-i18next';
 import CommentTextField from './CommentField'
 import { CommentQuery } from '../../../graphql/queries'
 import ErrorPage from "../../../components/Error"
@@ -20,6 +21,7 @@ export default function TaskComment({ authState, taskId }) {
   const path = useParamsQuery();
   const commentTabOpen = path.get('comment');
   const [commentOpen, setCommentOpen] = useState(false)
+  const { t } = useTranslation('common')
 
   useEffect(() => {
     if(!loading && commentTabOpen){
@@ -36,7 +38,7 @@ export default function TaskComment({ authState, taskId }) {
     <>
       {!commentData  && (
         <div>
-          <p>Data not available</p>
+          <p>{t('misc.data_not_available')}</p>
         </div>
       )}
       <div style={{ display: 'flex', marginBottom: "10px", color: '#69ABA4' }}>
@@ -45,11 +47,11 @@ export default function TaskComment({ authState, taskId }) {
           <Typography variant="caption" data-testid='comment' style={{ color: '#69ABA4', marginRight: "15px", cursor: 'pointer' }} onClick={handleCommentOpen} gutterBottom>
             {commentData?.taskComments.length}
             {' '}
-            Comments
+            {t('misc.comment_plural')}
           </Typography>
         ) : (
           <Typography variant="caption" data-testid='hide_comment' style={{ color: '#69ABA4', marginRight: "15px", cursor: 'pointer' }} onClick={() => setCommentOpen(false)} gutterBottom>
-            Collapse Comments
+            {t('misc.collapse_comment')}
           </Typography>
         )}
       </div>

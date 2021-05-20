@@ -3,7 +3,7 @@ import { MockedProvider } from '@apollo/react-testing'
 import { fireEvent, render } from '@testing-library/react'
 import '@testing-library/jest-dom/extend-expect'
 import { BrowserRouter } from 'react-router-dom/'
-import RemindMeLaterMenu from '../modules/Tasks/Components/RemindMeLaterMenu'
+import RemindMeLaterMenu from '../Components/RemindMeLaterMenu'
 
 describe('remind me later menu menu component', () => {
   it('show correct action menu', () => {
@@ -21,9 +21,9 @@ describe('remind me later menu menu component', () => {
         </BrowserRouter>
       </MockedProvider>
     )
-    const oneHour = container.queryByText('In 1 hour')
-    const midHour = container.queryByText('In 24 hours')
-    const moreHour = container.queryByText('In 72 hours')
+    const oneHour = container.queryByText('task.task_reminder_in_1_hr')
+    const midHour = container.queryByText('task.task_reminder_in_24_hr')
+    const moreHour = container.queryByText('task.task_reminder_in_72_hr')
     expect(oneHour).toBeInTheDocument()
     expect(midHour).toBeInTheDocument()
     expect(moreHour).toBeInTheDocument()

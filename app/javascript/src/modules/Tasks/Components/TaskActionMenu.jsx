@@ -5,6 +5,7 @@ import { Grid, Select, MenuItem, Typography, Button, Checkbox } from '@material-
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
 import PropTypes from 'prop-types';
+import { useTranslation } from 'react-i18next'
 import { Spinner } from '../../../shared/Loading';
 
 export default function TaskActionMenu({
@@ -17,6 +18,8 @@ export default function TaskActionMenu({
   bulkUpdating,
   handleBulkUpdate
 }) {
+  const { t } = useTranslation('common')
+
   return (
     <Grid container spacing={3}>
       {currentTile && (
@@ -31,7 +34,11 @@ export default function TaskActionMenu({
               style={{ padding: '0px', marginRight: '15px' }}
             />
           </Grid>
-          <Typography> Select </Typography>
+          <Typography>  
+            {' '}
+            {t('misc.select')}
+            {' '}
+          </Typography>
           <Grid>
             <Select
               labelId="task-action-select"
@@ -41,9 +48,9 @@ export default function TaskActionMenu({
               data-testid="select_option"
               style={{ height: '23px', marginLeft: '10px' }}
             >
-              <MenuItem value="all">All</MenuItem>
-              <MenuItem value="all_on_the_page">All on this page</MenuItem>
-              <MenuItem value="none">None</MenuItem>
+              <MenuItem value="all">{t('misc.all')}</MenuItem>
+              <MenuItem value="all_on_the_page">{t('misc.all_this_page')}</MenuItem>
+              <MenuItem value="none">{t('misc.none')}</MenuItem>
             </Select>
           </Grid>
         </Grid>
@@ -64,7 +71,7 @@ export default function TaskActionMenu({
               disabled={bulkUpdating}
               data-testid="bulk_update"
             >
-              {`Mark as ${currentTile === 'completedTasks' ? 'Incomplete' : 'Complete'} `}
+              {`${currentTile === 'completedTasks' ? t('form_actions.note_incomplete') : t('form_actions.note_complete')} `}
             </Button>
           )}
         </Grid>

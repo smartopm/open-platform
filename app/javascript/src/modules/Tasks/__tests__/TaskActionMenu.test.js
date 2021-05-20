@@ -18,8 +18,8 @@ describe('Task Action Menu', () => {
     const wrapper = render(<TaskActionMenu {...props} />);
     expect(wrapper.queryByTestId('select_all')).toBeInTheDocument();
     expect(wrapper.queryByTestId('select_all')).not.toBeDisabled()
-    expect(wrapper.queryByText('Select')).toBeInTheDocument()
-    expect(wrapper.queryByText('Mark as Complete')).toBeInTheDocument()
+    expect(wrapper.queryByText('misc.select')).toBeInTheDocument()
+    expect(wrapper.queryByText('form_actions.note_complete')).toBeInTheDocument()
     expect(wrapper.queryByTestId('bulk_update')).toBeInTheDocument();
     expect(wrapper.queryByTestId('bulk_update')).not.toBeDisabled();
 

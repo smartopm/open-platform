@@ -6,6 +6,7 @@ import {
   MenuItem,
 } from '@material-ui/core'
 import { StyleSheet, css } from 'aphrodite'
+import { useTranslation } from 'react-i18next';
 import colors from '../../../themes/nkwashi/colors'
 
 const { clearDay } = colors
@@ -16,7 +17,7 @@ export default function RemindMeLaterMenu({
   taskId,
   setTaskReminder
 }) {
-
+  const { t } = useTranslation(['task'])
   return (
     <Menu
       id={`task-reminder-menu-${taskId}`}
@@ -39,7 +40,7 @@ export default function RemindMeLaterMenu({
               setTaskReminder(1)}
             className={css(styles.menuItem)}
           >
-            In 1 hour
+            {t('task.task_reminder_in_1_hr')}
           </MenuItem>
           <MenuItem
             id="in_twenty_four_hours"
@@ -48,7 +49,7 @@ export default function RemindMeLaterMenu({
               setTaskReminder(24)}
             className={css(styles.menuItem)}
           >
-            In 24 hours
+            {t('task.task_reminder_in_24_hr')}
           </MenuItem>
           <MenuItem
             id="in_seventy_two_hours"
@@ -57,7 +58,7 @@ export default function RemindMeLaterMenu({
               setTaskReminder(72)}
             className={css(styles.menuItem)}
           >
-            In 72 hours
+            {t('task.task_reminder_in_72_hr')}
           </MenuItem>
         </>
       </div>

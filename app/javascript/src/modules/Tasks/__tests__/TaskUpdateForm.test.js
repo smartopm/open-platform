@@ -3,7 +3,7 @@ import { BrowserRouter } from 'react-router-dom/cjs/react-router-dom.min'
 import { act, render, fireEvent } from '@testing-library/react'
 import '@testing-library/jest-dom/extend-expect'
 import { MockedProvider } from '@apollo/react-testing'
-import TaskUpdateForm from '../modules/Tasks/Components/TaskUpdateForm'
+import TaskUpdateForm from '../Components/TaskUpdateForm'
 
 const data = {
   id: '6v2y3etyu2g3eu2',
@@ -44,7 +44,7 @@ describe('task form component', () => {
       )
     })
 
-    expect(container.queryByText('Update Task')).toBeInTheDocument()
+    expect(container.queryByText('common:form_actions.update_task')).toBeInTheDocument()
 
     const description = container.queryByLabelText('task_description')
     const submitBtn = container.queryByLabelText('task_submit')
@@ -56,15 +56,15 @@ describe('task form component', () => {
     })
     expect(description.value).toBe('This is a description of the task')
 
-    expect(container.queryByText(/Mark task as complete/i)).toBeInTheDocument()
-    expect(container.queryByText(/Mark task as complete/i)).not.toBeDisabled()
+    expect(container.queryByText('common:form_actions.note_complete')).toBeInTheDocument()
+    expect(container.queryByText('common:form_actions.note_complete')).not.toBeDisabled()
     expect(container.queryByText('tolulope O.')).toBeInTheDocument()
     expect(container.queryByText('another_user')).toBeInTheDocument()
-    expect(container.queryByText('Task user')).toBeInTheDocument()
+    expect(container.queryByText('task.task_user_label')).toBeInTheDocument()
     expect(container.queryAllByTestId('user_chip').length).toBe(3)
     expect(container.queryByTestId('mark_task_complete_checkbox')).toBeInTheDocument()
-    expect(container.queryByText(/Task Body/i)).toBeInTheDocument() // for the toggler
-    expect(submitBtn.textContent).toContain('Update Task')
+    expect(container.queryByText('task.task_body_label')).toBeInTheDocument() // for the toggler
+    expect(submitBtn.textContent).toContain('common:form_actions.update_task')
     expect(taskBtn).not.toBeNull()
     expect(updatesBtn).not.toBeNull()
     expect(submitBtn).not.toBeDisabled()
@@ -86,14 +86,14 @@ describe('task form component', () => {
       )
     })
     
-    const reminderBtn = container.queryByText(/Remind me later/i)
+    const reminderBtn = container.queryByText('task.reminder_text')
     expect(reminderBtn).toBeInTheDocument()
 
     fireEvent.click(reminderBtn)
 
-    expect(container.queryByText('In 1 hour')).toBeInTheDocument()
-    expect(container.queryByText('In 24 hours')).toBeInTheDocument()
-    expect(container.queryByText('In 72 hours')).toBeInTheDocument()
+    expect(container.queryByText('task.task_reminder_in_1_hr')).toBeInTheDocument()
+    expect(container.queryByText('task.task_reminder_in_24_hr')).toBeInTheDocument()
+    expect(container.queryByText('task.task_reminder_in_72_hr')).toBeInTheDocument()
   })
 
   it('should render task comments section', async () => {
