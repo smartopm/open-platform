@@ -23,6 +23,7 @@ const paymentMenu = [
       component: <span />
     },
     name: t => t('menu.invoice', { count: 0 }),
+    featureName: 'Payments',
     accessibleBy: ['admin']
   },
   {
@@ -32,6 +33,7 @@ const paymentMenu = [
       component: <span />
     },
     name: t => t('menu.transaction', { count: 0 }),
+    featureName: 'Payments',
     accessibleBy: ['admin']
   },
   {
@@ -40,6 +42,7 @@ const paymentMenu = [
       component: <span />
     },
     name: t => t('menu.plan', { count: 0 }),
+    featureName: 'Payments',
     accessibleBy: ['admin']
   }
 ];
@@ -51,6 +54,7 @@ const userMenus = [
       component: <span />
     },
     name: t => t('menu.communication'),
+    featureName: 'Users',
     accessibleBy: ['admin']
   },
   {
@@ -59,6 +63,7 @@ const userMenus = [
       component: <span />
     },
     name: t => t('menu.note', { count: 0 }),
+    featureName: 'Users',
     accessibleBy: ['admin']
   },
   {
@@ -67,6 +72,7 @@ const userMenus = [
       component: <span />
     },
     name: t => t('menu.plot', { count: 0 }),
+    featureName: 'Users',
     accessibleBy: ['admin']
   },
   {
@@ -75,6 +81,7 @@ const userMenus = [
       component: <span />
     },
     name: t => t('menu.form', { count: 0 }),
+    featureName: 'Users',
     accessibleBy: ['admin']
   },
   {
@@ -83,6 +90,7 @@ const userMenus = [
       component: <span />
     },
     name: t => t('menu.customer_journey'),
+    featureName: 'Users',
     accessibleBy: ['admin']
   },
   {
@@ -91,6 +99,7 @@ const userMenus = [
       component: <span />
     },
     name: t => t('menu.payment', { count: 0 }),
+    featureName: 'Payments',
     accessibleBy: ['admin'],
     subMenu: paymentMenu
   },
@@ -100,6 +109,7 @@ const userMenus = [
       component: <span />
     },
     name: t => t('menu.merge_user'),
+    featureName: 'Users',
     accessibleBy: ['admin']
   },
   {
@@ -108,6 +118,7 @@ const userMenus = [
       component: <span />
     },
     name: t => t('menu.user_logs'),
+    featureName: 'Users',
     accessibleBy: ['admin', 'security_guard']
   },
   {
@@ -116,6 +127,7 @@ const userMenus = [
       component: <span />
     },
     name: t => t('menu.user_edit'),
+    featureName: 'Users',
     accessibleBy: allUserTypes
   },
   {
@@ -124,6 +136,7 @@ const userMenus = [
       component: <span />
     },
     name: t => t('menu.print_id'),
+    featureName: 'Users',
     accessibleBy: allUserTypes
   },
   {
@@ -132,6 +145,7 @@ const userMenus = [
       component: <span />
     },
     name: t => t('menu.message_support'),
+    featureName: 'Messages',
     accessibleBy: allUserTypes
   },
   {
@@ -140,6 +154,7 @@ const userMenus = [
       component: <span />
     },
     name: t => t('menu.send_sms'),
+    featureName: 'Messages',
     accessibleBy: ['admin']
   },
   {
@@ -148,6 +163,7 @@ const userMenus = [
       component: <span />
     },
     name: t => t('menu.send_otp'),
+    featureName: 'Users',
     accessibleBy: ['admin']
   }
 ];

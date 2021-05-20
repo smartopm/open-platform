@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_05_17_162814) do
+ActiveRecord::Schema.define(version: 2021_05_18_095404) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -188,6 +188,7 @@ ActiveRecord::Schema.define(version: 2021_05_17_162814) do
     t.string "tagline"
     t.string "language"
     t.string "wp_link"
+    t.json "features"
     t.index ["slug"], name: "index_communities_on_slug", unique: true
   end
 

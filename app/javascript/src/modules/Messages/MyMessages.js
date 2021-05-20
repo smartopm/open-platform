@@ -11,6 +11,7 @@ export default {
   styleProps: {
     icon: <MessageIcon />
   },
-  accessibleBy: allUserTypes,
-  name: t => t('menu.my_messages')
+  name: t => t('menu.my_messages'),
+  featureName: 'Messages',
+  accessibleBy: allUserTypes
 };

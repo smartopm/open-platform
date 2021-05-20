@@ -9,6 +9,7 @@ export default {
   styleProps: {
     icon: <PaymentIcon />
   },
-  accessibleBy: ['client', 'resident'],
-  name: t => t('menu.my_payments')
+  name: t => t('menu.my_payments'),
+  featureName: 'User Payment',
+  accessibleBy: ['client', 'resident']
 };

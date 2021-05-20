@@ -21,7 +21,7 @@ export function sanitizeText(text) {
  * @returns a string without the Graphql part
  * @description receives an error message and returns a a message without the graphql part
  */
-export function formatError(errMsg) {
+export function formatError(errMsg="") {
   return errMsg.split(":").pop()
 }
 
@@ -464,4 +464,16 @@ export function handleQueryOnChange(selectedOptions, filterFields) {
       return queryy
     }
   }
+}
+
+/**
+ * 
+ * @param {[String]} features 
+ * @param {String} module 
+ * @returns Boolean
+ * @description checks if a module is in accepted features of a community
+ */
+export function checkAllowedCommunityFeatures(features, module){
+  if(!features || !features.length || !module) return false
+  return new Set(features).has(module)
 }

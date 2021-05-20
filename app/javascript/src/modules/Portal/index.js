@@ -11,6 +11,7 @@ export default {
     icon: <ComputerIcon />
   },
   name: t => t('menu.my_thebe_portal'),
+  featureName: 'My Thebe Portal',
   accessibleBy: [
     'admin',
     'client',

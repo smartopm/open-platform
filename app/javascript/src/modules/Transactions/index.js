@@ -6,5 +6,6 @@ export default {
     component: Payments
   },
   accessibleBy: ['admin'],
-  name: t => t('menu.transaction', { count: 0 })
+  name: t => t('menu.transaction', { count: 0 }),
+  featureName: 'Transactions',
 };
