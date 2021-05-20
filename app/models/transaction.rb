@@ -43,7 +43,7 @@ class Transaction < ApplicationRecord
   #
   # @return [void]
   def create_plan_payment(payment_plan)
-    plan_payments.create(
+    plan_payments.create!(
       user_id: user_id,
       community_id: community_id,
       amount: payment_plan.allocated_amount(amount),

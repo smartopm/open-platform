@@ -24,6 +24,7 @@ module Types
     include Types::Queries::Payment
     include Types::Queries::Wallet
     include Types::Queries::Balance
+    include Types::Queries::Transaction
     # Add root-level fields here.
     # They will be entry points for queries on your schema.
 
@@ -87,6 +88,23 @@ module Types
       raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') if context[:current_user].blank?
 
       DiscussionUser.find_by(user_id: context[:current_user].id, discussion_id: disucssion_id)
+    end
+
+    # Verifies user
+    #
+    # @param user_id [String]
+    #
+    # @return [User] if user is valid
+    # @return [GraphQL::ExecutionError]
+    def verified_user(user_id)
+      unless context[:current_user]&.id == user_id || context[:current_user]&.admin?
+        raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
+      end
+
+      user = User.allowed_users(context[:current_user]).find_by(id: user_id)
+      return user if user.present?
+
+      raise GraphQL::ExecutionError, I18n.t('errors.user.not_found')
     end
   end
 end

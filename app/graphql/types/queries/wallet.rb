@@ -138,17 +138,5 @@ module Types::Queries::Wallet
 
   # rubocop:enable Metrics/AbcSize
   # rubocop:enable Metrics/MethodLength
-
-  # It would be good to put this elsewhere to use it in other queries
-  def verified_user(user_id)
-    unless context[:current_user]&.id == user_id || context[:current_user]&.admin?
-      raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
-    end
-
-    user = User.allowed_users(context[:current_user]).find_by(id: user_id)
-    return user if user.present?
-
-    raise GraphQL::ExecutionError, I18n.t('errors.user.not_found')
-  end
+  # rubocop:enable Metrics/ModuleLength
 end
-# rubocop:enable Metrics/ModuleLength

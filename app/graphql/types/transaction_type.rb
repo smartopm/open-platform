@@ -18,5 +18,21 @@ module Types
     field :created_at, GraphQL::Types::ISO8601DateTime, null: false
     field :updated_at, GraphQL::Types::ISO8601DateTime, null: false
     field :originally_created_at, GraphQL::Types::ISO8601DateTime, null: false
+    field :allocated_amount, Float, null: false
+    field :unallocated_amount, Float, null: false
+
+    # Returns allocated amount for the payment plan
+    #
+    # @return [Float] unallocated_amount
+    def unallocated_amount
+      object.amount - allocated_amount
+    end
+
+    # Returns the unallocated amount after payment is made for payment plan
+    #
+    # @return [Float] allocated_amount
+    def allocated_amount
+      object.plan_payments.pluck(:amount).sum
+    end
   end
 end
