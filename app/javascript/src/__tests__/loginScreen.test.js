@@ -42,7 +42,11 @@ describe('Login screen', () => {
             tagline: 'This is a tagline for this community',
             logoUrl: '',
             language: 'en-US',
-            wpLink: ''
+            wpLink: '',
+            themeColors: {
+              primaryColor: "#FFFFFF",
+              secondaryColor: "#FFFFFF"
+            }
           }
         }
       }

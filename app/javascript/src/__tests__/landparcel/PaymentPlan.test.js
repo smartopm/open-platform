@@ -7,7 +7,7 @@ import { theme } from '../../themes/nkwashi/theme';
 describe('PaymentPlan Component', () => {
   it('should render the given text', () => {
     const container = render(
-      <ThemeProvider theme={theme}>
+      <ThemeProvider theme={theme("#000000")}>
         <PaymentPlan type="lease" percentage="100%" />
       </ThemeProvider>
     );

@@ -34,8 +34,8 @@ export default function CommunitySettings({ data, token, refetch }) {
     category: ''
   };
   const theme = {
-    primaryColor: data.themeColors.primaryColor,
-    secondaryColor: data.themeColors.secondaryColor
+    primaryColor: data.themeColors?.primaryColor,
+    secondaryColor: data.themeColors?.secondaryColor
   }
 
   const [communityUpdate] = useMutation(CommunityUpdateMutation);
