@@ -29,6 +29,7 @@ export default function ComingSoon({ history }) {
           className={`btn ${css(styles.getStartedButton)}`}
           onClick={() => history.push("/sh_reason")}
           data-testid="go_back_btn"
+          color="primary"
         >
           Go Back
         </Button>
@@ -52,8 +53,6 @@ const styles = StyleSheet.create({
     margingTop: 70
   },
   getStartedButton: {
-    backgroundColor: "#69ABA4",
-    color: "#FFF",
     width: "75%",
     height: 51,
     boxShadow: "none",

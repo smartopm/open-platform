@@ -34,8 +34,8 @@ export default function CommunitySettings({ data, token, refetch }) {
     category: ''
   };
   const theme = {
-    primaryColor: '#69ABA4',
-    secondaryColor: '#f07030'
+    primaryColor: data.themeColors.primaryColor,
+    secondaryColor: data.themeColors.secondaryColor
   }
 
   const [communityUpdate] = useMutation(CommunityUpdateMutation);
@@ -450,12 +450,16 @@ CommunitySettings.propTypes = {
     language: PropTypes.string,
     tagline: PropTypes.string,
     wpLink: PropTypes.string,
+    themeColors: PropTypes.shape({
+      primaryColor: PropTypes.string,
+      secondaryColor: PropTypes.string,
+    }),
   }).isRequired,
   token: PropTypes.string.isRequired,
   refetch: PropTypes.func.isRequired
 };
 
-const useStyles = makeStyles({
+const useStyles = makeStyles(theme => ({
   avatar: {
     display: 'flex',
     flexDirection: 'row',
@@ -476,12 +480,12 @@ const useStyles = makeStyles({
     margin: '10px 0'
   },
   addIcon: {
+    color: theme.palette.primary.main,
     display: 'flex',
     marginTop: '20px',
-    color: '#6CAA9F',
     cursor: 'pointer'
   },
   button: {
     marginTop: '15px'
   }
-});
+}));

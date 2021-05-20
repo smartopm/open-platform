@@ -188,7 +188,7 @@ export default function LoginScreen() {
             disabled={isLoading}
           >
             {isLoading ? (
-              <CircularProgress size={25} color="inherit" />
+              <CircularProgress size={25} color="primary" />
             ) : (
               <span>{t('login.login_button_text')}</span>
               )}

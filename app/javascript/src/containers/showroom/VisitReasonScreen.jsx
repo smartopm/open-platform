@@ -1,4 +1,4 @@
-/* eslint-disable */
+/* eslint-disable react/prop-types */
 import React from "react";
 import { css, StyleSheet } from "aphrodite";
 import { Button } from "@material-ui/core";
@@ -25,6 +25,7 @@ export default function VisitingReason({ history }) {
           className={`btn col-sm-12 ${css(styles.getStartedButton)}`}
           onClick={() => history.push("/sh_entry")}
           data-testid="visit_btn"
+          color="primary"
         >
           Visiting the Nkwashi Showroom
         </Button>
@@ -34,6 +35,7 @@ export default function VisitingReason({ history }) {
           className={`btn col-sm-12 ${css(styles.getStartedButton)}`}
           onClick={() => history.push("/sh_soon")}
           data-testid="payment_btn"
+          color="primary"
         >
           Payments & Account Management
         </Button>
@@ -43,11 +45,12 @@ export default function VisitingReason({ history }) {
           className={`btn col-sm-12 ${css(styles.getStartedButton)}`}
           onClick={() => history.push("/sh_soon")}
           data-testid="other"
+          color="primary"
         >
           Other
         </Button>
       </div>
-      <Footer position={"5vh"} />
+      <Footer position="5vh" />
     </div>
   );
 }
@@ -65,14 +68,9 @@ const styles = StyleSheet.create({
     marginLeft: "15vw"
   },
   getStartedButton: {
-    backgroundColor: "#69ABA4",
-    color: "#FFF",
-    // width: "80%",
     height: 51,
     boxShadow: "none",
     marginBottom: 30
-    // paddingLeft: 60,
-    // paddingRight: 60
   },
   buttonSection: {
     marginTop: "35%"

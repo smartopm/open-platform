@@ -42,7 +42,7 @@ export default function CommentTextField({ data, refetch, authState, taskId }) {
             onChange={e => setBody(e.target.value)}
             inputProps={{ 'data-testid': 'body_input' }}
           />
-          <Button variant="contained" color="inherit" type="submit" disabled={!body.length} data-testid='share'>SHARE</Button>
+          <Button variant="contained" color="primary" type="submit" disabled={!body.length} data-testid='share'>SHARE</Button>
         </div>
       </form>
       <CommentCard data={data} refetch={refetch} />

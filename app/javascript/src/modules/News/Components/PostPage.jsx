@@ -167,7 +167,7 @@ export default function PostPage() {
         <Dialog fullScreen open={open} onClose={handleCommentsView} TransitionComponent={Transition}>
           <AppBar className={css(styles.appBar)}>
             <Toolbar>
-              <IconButton edge="start" color="inherit" onClick={handleCommentsView} aria-label="close">
+              <IconButton edge="start" color="primary" onClick={handleCommentsView} aria-label="close">
                 <CloseIcon />
               </IconButton>
               <Typography variant="h6">

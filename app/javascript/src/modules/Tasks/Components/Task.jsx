@@ -224,7 +224,7 @@ export default function Task({
                 margin: '5px 4px 0 0',
                 fontSize: 18
               }}
-              color="inherit"
+              color="primary"
               onClick={() => handleModal(note.id)}
             />
             <Typography variant="subtitle1" gutterBottom>

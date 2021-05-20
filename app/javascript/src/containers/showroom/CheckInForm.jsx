@@ -1,17 +1,18 @@
-/* eslint-disable */
-import React, { useState, Fragment } from "react";
-import { useForm } from "react-hook-form";
-import { Button, TextField, MenuItem } from "@material-ui/core";
-import { css, StyleSheet } from "aphrodite";
-import { useMutation } from "react-apollo";
-import { infoSource } from "../../utils/constants";
-import { Footer } from "../../components/Footer";
-import { createShowroomEntry, EntryRequestCreate } from "../../graphql/mutations.js";
+/* eslint-disable jsx-a11y/label-has-associated-control */
+/* eslint-disable react/prop-types */
+import React, { useState, Fragment } from 'react';
+import { useForm } from 'react-hook-form';
+import { Button, TextField, MenuItem } from '@material-ui/core';
+import { css, StyleSheet } from 'aphrodite';
+import { useMutation } from 'react-apollo';
+import { infoSource } from '../../utils/constants';
+import { Footer } from '../../components/Footer';
+import { createShowroomEntry, EntryRequestCreate } from '../../graphql/mutations';
 
 export default function ClientForm({ history }) {
   const { register, handleSubmit, errors } = useForm();
   const [isSubmitted] = useState(false);
-  const [selectedSource, setReason] = useState("");
+  const [selectedSource, setReason] = useState('');
   const [createEntryShowroom] = useMutation(createShowroomEntry);
   const [createEntryRequest] = useMutation(EntryRequestCreate);
   const onSubmit = data => {
@@ -25,27 +26,28 @@ export default function ClientForm({ history }) {
       source: 'showroom'
     };
 
-    createEntryShowroom({ variables: user }).then(() => {
-      return createEntryRequest({ variables: user })
-    })
+    createEntryShowroom({ variables: user })
       .then(() => {
-        history.push("/sh_complete/");
+        return createEntryRequest({ variables: user });
       })
+      .then(() => {
+        history.push('/sh_complete/');
+      });
   };
 
   const handleSourceChange = event => {
     setReason(event.target.value);
   };
   return (
-    <Fragment>
+    <>
       <div className="container">
         <div className="row justify-content-center align-items-center">
           <h3>Nkwashi Showroom Check-In</h3>
 
           <p className={css(styles.infoText)}>
-            Please enter your contact information below so that we can follow-up
-            with you after today’s meeting and to more quickly set you up for
-            access at the gate when you visit Nkwashi in-person
+            Please enter your contact information below so that we can follow-up with you after
+            today’s meeting and to more quickly set you up for access at the gate when you visit
+            Nkwashi in-person
           </p>
         </div>
         <form onSubmit={handleSubmit(onSubmit)}>
@@ -92,13 +94,7 @@ export default function ClientForm({ history }) {
             <label className="bmd-label-static" htmlFor="nrc">
               NRC
             </label>
-            <input
-              className="form-control"
-              type="text"
-              ref={register}
-              name="nrc"
-              defaultValue=""
-            />
+            <input className="form-control" type="text" ref={register} name="nrc" defaultValue="" />
           </div>
           <div className="form-group">
             <label className="bmd-label-static" htmlFor="phone_number">
@@ -160,39 +156,36 @@ export default function ClientForm({ history }) {
               className={`btn ${css(styles.logButton)}`}
               type="submit"
               disabled={isSubmitted}
+              color="primary"
             >
-              {isSubmitted ? "Submitting ..." : " Check In"}
+              {isSubmitted ? 'Submitting ...' : ' Check In'}
             </Button>
           </div>
         </form>
-        <Footer position={"5vh"} />
+        <Footer position="5vh" />
       </div>
-    </Fragment>
+    </>
   );
 }
 const styles = StyleSheet.create({
   welcomePage: {
-    position: " absolute",
-    left: " 50%",
-    top: " 50%",
-    "-webkit-transform": " translate(-50%, -50%)",
-    transform: " translate(-50%, -50%)"
+    position: ' absolute',
+    left: ' 50%',
+    top: ' 50%',
+    '-webkit-transform': ' translate(-50%, -50%)',
+    transform: ' translate(-50%, -50%)'
   },
   logButton: {
-    backgroundColor: "#69ABA4",
-    color: "#FFF",
-    width: "75%",
-    boxShadow: "none",
+    width: '75%',
+    boxShadow: 'none',
     marginTop: 60,
     height: 50
   },
   selectInput: {
-    width: "100%"
+    width: '100%'
   },
   infoText: {
-    // marginBottom: 40,
-    // marginTop: 50,
-    color: "#818188",
+    color: '#818188',
     margin: 40
   }
 });

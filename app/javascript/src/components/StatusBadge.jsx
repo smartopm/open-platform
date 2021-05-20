@@ -3,6 +3,11 @@ import React from 'react'
 import { StyleSheet, css } from 'aphrodite'
 
 // TODO: refactor this
+/**
+ * 
+ * @returns 
+ * @deprecated This should be replaced with label
+ */
 export default function StatusBadge({ label }) {
   switch (label.toLowerCase()) {
     case 'pending':

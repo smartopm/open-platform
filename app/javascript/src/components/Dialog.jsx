@@ -190,7 +190,7 @@ export function FullScreenDialog({ handleClose, open, children, actionText, hand
           <div className={classes.print}>
             {' '}
           </div>
-          <Button autoFocus color="inherit" onClick={handleSubmit} style={{background: 'none'}} className={classes.print}>
+          <Button autoFocus color="primary" onClick={handleSubmit} style={{background: 'none'}} className={classes.print}>
             {actionText}
           </Button>
         </Toolbar>
@@ -255,7 +255,7 @@ export function ActionDialog({ handleClose, open, handleOnSave, message, type}) 
   )
 }
 
-export const useStyles = makeStyles({
+export const useStyles = makeStyles(theme => ({
   title: {
     borderBottom: '1px #b8d4d0 solid'
   },
@@ -265,8 +265,8 @@ export const useStyles = makeStyles({
     borderBottom: '1px #f1a3a2 solid'
   },
   confirmDialogTitle: {
-    color: '#69ABA4',
-    borderBottom: '1px #69ABA4 solid'
+    color: theme.palette.primary.main,
+    borderBottom: `1px ${theme.palette.primary.main} solid`
   },
   detailTitle: {
     background: '#FAFEFE',
@@ -289,7 +289,7 @@ export const useStyles = makeStyles({
   drawer: {
     width: '300px',
   },
-})
+}))
 
 ActionDialog.defaultProps = {
   type: 'warning'

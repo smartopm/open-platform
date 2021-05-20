@@ -30,6 +30,7 @@ export default function ShowRoom({ history }) {
           className={`btn ${css(styles.getStartedButton)}`}
           onClick={() => history.push("/sh_reason")}
           data-testid="checkin_btn"
+          color="primary"
         >
           Press Here to Check-In
         </Button>
@@ -52,8 +53,6 @@ const styles = StyleSheet.create({
     marginLeft: "9vw"
   },
   getStartedButton: {
-    backgroundColor: "#69ABA4",
-    color: "#FFF",
     width: "75%",
     height: 51,
     boxShadow: "none",

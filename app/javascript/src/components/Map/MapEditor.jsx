@@ -126,7 +126,7 @@ export default function MapEditor({ handleSaveMapEdit }){
     <>
       <Button
         autoFocus
-        color="inherit"
+        color="primary"
         onClick={handleSave}
         style={{background: 'none'}}
       >

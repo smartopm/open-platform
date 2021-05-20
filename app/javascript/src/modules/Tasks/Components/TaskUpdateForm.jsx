@@ -276,7 +276,7 @@ export default function TaskForm({
                   margin: '5px 6px 0 0',
                   fontSize: 17
                 }}
-                  color="inherit"
+                  color="primary"
                   onClick={() => setMode('edit')}
                 />
               </Tooltip>

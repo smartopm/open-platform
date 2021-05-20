@@ -108,14 +108,14 @@ export default function EmailBuilderDialog({ initialData, open, handleClose, ema
       <Dialog fullScreen open={open} onClose={handleClose} TransitionComponent={Transition}>
         <AppBar position="relative">
           <Toolbar>
-            <IconButton edge="start" color="inherit" data-testid="close_btn" onClick={handleClose} aria-label="close">
+            <IconButton edge="start" color="primary" data-testid="close_btn" onClick={handleClose} aria-label="close">
               <CloseIcon />
             </IconButton>
 
             <Button
               style={{ marginLeft: '85vw' }}
               autoFocus
-              color="inherit"
+              color="primary"
               onClick={emailId ?  updateTemplate : handleDetailsDialog}
               disabled={message.loading}
               data-testid="submit_btn"

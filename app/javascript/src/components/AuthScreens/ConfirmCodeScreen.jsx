@@ -1,4 +1,4 @@
-/* eslint-disable */
+/* eslint-disable react/prop-types */
 import React, {
   useState,
   useContext,
@@ -6,10 +6,9 @@ import React, {
   useEffect,
   createRef
 } from 'react'
-import { Redirect } from 'react-router-dom'
 import { Button, CircularProgress } from '@material-ui/core'
 import { StyleSheet, css } from 'aphrodite'
-import { Link, useLocation } from 'react-router-dom'
+import { Link, useLocation, Redirect } from 'react-router-dom'
 import { useMutation } from 'react-apollo'
 import { loginPhoneConfirmCode, loginPhone } from '../../graphql/mutations'
 import { Context as AuthStateContext } from '../../containers/Provider/AuthStateProvider'
@@ -30,6 +29,7 @@ export default function ConfirmCodeScreen({ match }) {
   const timer = useTimer(10, 1000)
 
   // generate refs to use later
+  // eslint-disable-next-line prefer-const
   let elementsRef = useRef(randomCodeData.map(() => createRef()))
   const submitRef = useRef(null)
 
@@ -50,8 +50,8 @@ export default function ConfirmCodeScreen({ match }) {
         setIsLoading(false)
         setMsg(`We have resent the code to +${state.phoneNumber}`)
       })
-      .catch(error => {
-        setError(error.message)
+      .catch(err => {
+        setError(err.message)
         setIsLoading(false)
       })
   }
@@ -75,29 +75,28 @@ export default function ConfirmCodeScreen({ match }) {
       errorPolicy: 'all'
     })
       .then(({ data }) => {
-        console.log(data)
         authState.setToken({
           type: 'update',
           token: data.loginPhoneComplete.authToken
         })
         setIsLoading(false)
       })
-      .catch(error => {
-        setError(error.message)
+      .catch(_error => {
+        setError(_error.message)
         setIsLoading(false)
       })
   }
 
   // Redirect once our authState.setToken does it's job
   if (authState.loggedIn) {
-    return <Redirect to={state ? state.from : '/'} /> //state.from
+    return <Redirect to={state ? state.from : '/'} /> // state.from
   }
 
   return (
     <div style={{ height: '100vh' }}>
       <nav className={`${css(styles.navBar)} navbar`}>
-        <Link to={'/login'}>
-          <i className={`material-icons`}>arrow_back</i>
+        <Link to="/login">
+          <i className="material-icons">arrow_back</i>
         </Link>
       </nav>
       <div className="container ">
@@ -117,14 +116,15 @@ export default function ConfirmCodeScreen({ match }) {
               name={`code${item}`}
               maxLength="1"
               type="tel"
+              // eslint-disable-next-line jsx-a11y/no-autofocus
               autoFocus
+              // eslint-disable-next-line security/detect-object-injection
               ref={elementsRef.current[item]}
               className={`${css(styles.newInput)} code-input-${index}`}
               onChange={() =>
                 item < 6
                   ? elementsRef.current[item + 1].current.focus()
-                  : submitRef.current.click()
-              }
+                  : submitRef.current.click()}
               // hide the seventh input for the next ref to work [6]
               hidden={item === 7 && true}
               data-testid="code-input"
@@ -148,9 +148,10 @@ export default function ConfirmCodeScreen({ match }) {
             onClick={handleConfirmCode}
             ref={submitRef}
             disabled={isLoading}
+            color="primary"
           >
             {isLoading ? (
-              <CircularProgress size={25} color="inherit" />
+              <CircularProgress size={25} color="primary" />
             ) : (
               <span>Next</span>
             )}
@@ -176,8 +177,6 @@ export default function ConfirmCodeScreen({ match }) {
 
 const styles = StyleSheet.create({
   getStartedButton: {
-    backgroundColor: '#69ABA4',
-    color: '#FFF',
     width: '55%',
     height: 51,
     boxShadow: 'none',
@@ -221,7 +220,7 @@ const styles = StyleSheet.create({
     height: 60,
     fontSize: 27,
     textAlign: 'center',
-    border: '2px solid #69ABA4',
+    border: '2px solid',
     borderRadius: 2,
     borderTop: 'none',
     borderRight: 'none',

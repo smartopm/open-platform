@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button, AppBar, Toolbar, Typography, Grid, Divider } from '@material-ui/core'
+import { Button, AppBar, Toolbar, Typography, Grid, Divider, Link } from '@material-ui/core'
 import { StyleSheet, css } from 'aphrodite'
 import ReactGA from 'react-ga';
 import { useHistory } from 'react-router';
@@ -60,6 +60,7 @@ export default function WelcomePage() {
             className={`btn ${css(styles.getStartedButton)}`}
             onClick={() => history.push("/login")}
             data-testid="login_btn"
+            color="primary"
           >
             Login
           </Button>
@@ -72,23 +73,23 @@ export default function WelcomePage() {
           <br />
           <Grid container spacing={3}>
             <Grid item xs={12} md={4} sm={6}>
-              <LocationOnIcon className={css(styles.icon)} />
-              <p className={css(styles.mainText)} data-testid="locationtext">11 Nalikwanda Road, Lusaka, Zambia</p>
+              <LocationOnIcon color="primary" />
+              <Typography component="p" color="primary" data-testid="locationtext">
+                11 Nalikwanda Road, Lusaka, Zambia
+              </Typography>
             </Grid>
             <Grid item xs={12} md={4} sm={6}>
-              <CallIcon className={css(styles.icon)} />
-              <p className={css(styles.mainText)}>
-                <a href="tel:+260966194383" data-testid="contact">+260 966 194383</a>
-                ,
-                {' '}
-                <a href="tel:+260760635024">+260 760 635024</a>
-              </p>
+              <CallIcon color="primary" />
+              <Link href="tel:+260966194383">+260 966 194383</Link>
+              ,
+              {' '}
+              <Link href="tel:+260760635024">+260 760 635024</Link>
             </Grid>
             <Grid item xs={12} md={4} sm={12}>
-              <MailIcon className={css(styles.icon)} />
-              <p className={css(styles.mainText)} data-testid="contact-email">
-                hello@thebe-im.com
-              </p>
+              <MailIcon color="primary" />
+              <Typography component="p" data-testid="locationtext">
+                <Link href="mailto:hello@thebe-im.com">hello@thebe-im.com</Link>
+              </Typography>
             </Grid>
           </Grid>
           <Divider variant="middle" style={{ color: '#767676' }} />
@@ -170,19 +171,14 @@ const styles = StyleSheet.create({
         marginTop: 10
     },
     mainText: {
-        color: '#767676',
+        // color: '#767676',
         margin: 30,
         marginTop: 10
     },
     getStartedButton: {
-        backgroundColor: "#69ABA4",
-        color: "#FFF",
         width: "35%",
         height: 51,
         boxShadow: "none"
-    },
-    icon: {
-        color: '#69ABA4'
     },
     footerText: {
         color: '#767676',
