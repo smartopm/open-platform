@@ -10,7 +10,7 @@ import { propAccessor } from '../../utils/helpers';
 import ListHeader from './ListHeader';
 import CenteredContent from '../../components/CenteredContent';
 
-export default function DataList({ keys, data, hasHeader, clickable, handleClick }) {
+export default function DataList({ keys, data, hasHeader, clickable, handleClick, color }) {
   const classes = useStyles();
   const theme = useTheme();
   const matches = useMediaQuery(theme.breakpoints.down('sm'));
@@ -61,6 +61,7 @@ export default function DataList({ keys, data, hasHeader, clickable, handleClick
                 onClick={clickable ? () => handleClick(item) : null}
                 key={item.id || index}
                 spacing={1}
+                style={color ? {backgroundColor: '#FDFDFD'} : {marginBottom: '7px'}}
               >
                 <CellData propNames={keys} dataObj={item} />
               </Grid>
@@ -103,7 +104,8 @@ export function MobileCellData({ propNames, dataObj, singlePropName }) {
 DataList.defaultProps = {
   hasHeader: true,
   clickable: false,
-  handleClick: () => {}
+  handleClick: () => {},
+  color: ''
 };
 
 DataList.propTypes = {
@@ -128,7 +130,8 @@ DataList.propTypes = {
    * it also includes the onClick function when the card is being clicked
    */
   clickable: PropTypes.bool,
-  handleClick: PropTypes.func
+  handleClick: PropTypes.func,
+  color: PropTypes.string
 };
 
 CellData.propTypes = {
@@ -152,13 +155,15 @@ const useStyles = makeStyles(() => ({
     backgroundColor: '#FFFFFF',
     padding: '10px 0',
     border: '1px solid #ECECEC',
-    marginBottom: '10px'
+    width: '100%',
+    marginLeft: '0.5px'
   },
   clickable: {
     backgroundColor: '#FFFFFF',
     padding: '10px 0',
     border: '1px solid #ECECEC',
     cursor: 'pointer',
-    marginBottom: '7px'
+    width: '100%',
+    marginLeft: '0.5px'
   }
 }));

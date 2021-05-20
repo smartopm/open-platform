@@ -260,7 +260,12 @@
     "payment_made": "Payment Made By",
     "labels": "Labels",
     "labels_total_no_of_users": "Total Number of users",
-    "labels_description": "Description"
+    "labels_description": "Description",
+    "date": "Date",
+    "recorded_by": "Recorded by",
+    "payment_type": "Payment Type",
+    "payment_id": "Payment/Receipt ID",
+    "amount_paid": "Amount Paid"
   },
   "table_content": {
     "invoice_number": "Invoice Number {{numb}}",
