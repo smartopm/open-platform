@@ -29,7 +29,7 @@
     "chip_add_assignee_placeholder": "Name of assignee",
     "history_create_new_note_comment": "added a new comment",
     "history_update_body": "updated the body of the task",
-    "history_update_attribute": "changed {{attribute}} from {{initialValue} to {{updatedValue}}",
+    "history_update_attribute": "changed {{attribute}} from {{initialValue}} to {{updatedValue}}",
     "history_update_no_data": "No update available",
     "update_successful": "Task updated successfully"
   }

@@ -71,7 +71,6 @@ export default function TaskActionMenu({
               disabled={bulkUpdating}
               data-testid="bulk_update"
             >
-              {/* {`Mark as ${currentTile === 'completedTasks' ? 'Incomplete' : 'Complete'} `} */}
               {`${currentTile === 'completedTasks' ? t('form_actions.note_incomplete') : t('form_actions.note_complete')} `}
             </Button>
           )}
