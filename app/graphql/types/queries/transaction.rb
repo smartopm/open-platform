@@ -23,7 +23,8 @@ module Types::Queries::Transaction
       user = verified_user(user_id)
 
       user.transactions.not_cancelled.includes(:plan_payments,
-                                               :depositor).limit(limit).offset(offset)
+                                               :depositor).order(created_at:
+                                              :desc).limit(limit).offset(offset)
     end
 
     # Verifies user
