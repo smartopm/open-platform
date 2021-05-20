@@ -55,10 +55,13 @@
     "note_incomplete": "Mark as Incomplete",
     "create_task": "Create Task",
     "creating_task": "Creating a task ...",
+    "update_task": "Update Task",
+    "updating_task": "Updating Task ...",
     "assign": "Assign",
     "save": "Save",
     "saving": "Saving ...",
-    "update": "Update"
+    "update": "Update",
+    "save_changes": "Save changes"
   },
   "misc": {
     "or": "OR",
@@ -105,6 +108,7 @@
     "comment": "Comment",
     "comment_plural": "Comments",
     "type_comment": "Type a comment here",
+    "collapse_comment": "Collapse Comments",
     "send": "Send",
     "filter": "Filter",
     "add_filter": "Add Filter",
@@ -134,6 +138,7 @@
     "plots": "Plots",
     "forms": "Forms",
     "no_message": "There are no messages yet for this user",
+    "data_not_available": "Data not available",
     "sent": "Sent",
     "read": "Read",
     "not_read": "Not Read",
@@ -202,6 +207,7 @@
     "logout": "Logout",
     "user_journey_stats": "User Journey Stats",
     "edit": "Edit",
+    "delete": "delete",
     "duplicate": "Duplicate",
     "create": "Create",
     "preferences": "Preferences",

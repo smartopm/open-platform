@@ -3,6 +3,7 @@
 import React, { useState } from 'react'
 import Avatar from '@material-ui/core/Avatar';
 import PropTypes from 'prop-types'
+import { useTranslation } from 'react-i18next';
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import { useMutation } from 'react-apollo'
@@ -15,6 +16,7 @@ export default function CommentTextField({ data, refetch, authState, taskId }) {
   const [commentCreate] = useMutation(TaskComment)
   const [body, setBody] = useState('')
   const [error, setErrorMessage] = useState('')
+  const { t } = useTranslation('common')
 
   function handleSubmit(event) {
     event.preventDefault();
@@ -42,7 +44,7 @@ export default function CommentTextField({ data, refetch, authState, taskId }) {
             onChange={e => setBody(e.target.value)}
             inputProps={{ 'data-testid': 'body_input' }}
           />
-          <Button variant="contained" color="inherit" type="submit" disabled={!body.length} data-testid='share'>SHARE</Button>
+          <Button variant="contained" color="inherit" type="submit" disabled={!body.length} data-testid='share'>{t('misc.share')}</Button>
         </div>
       </form>
       <CommentCard data={data} refetch={refetch} />

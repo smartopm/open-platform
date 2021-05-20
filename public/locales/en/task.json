@@ -15,6 +15,22 @@
     "task_body_label": "Task Body",
     "task_description_label": "Task Description",
     "task_type_label": "Task Type",
-    "task_assignee_label": "Assign this task to users"
+    "task_assignee_label": "Assign this task to users",
+    "task_user_label": "Task user",
+    "task_reminder_in_1_hr": "In 1 hour",
+    "task_reminder_in_24_hr": "In 24 hours",
+    "task_reminder_in_72_hr": "In 72 hours",
+    "reminder_text": "Remind me later",
+    "change_reminder_text": "Change reminder",
+    "toggle_preview_tooltip": "Toggle Preview",
+    "toggle_edit_tooltip": "Toggle Edit",
+    "chip_close": "Close",
+    "chip_add_assignee": "Add Assignee",
+    "chip_add_assignee_placeholder": "Name of assignee",
+    "history_create_new_note_comment": "added a new comment",
+    "history_update_body": "updated the body of the task",
+    "history_update_attribute": "changed {{attribute}} from {{initialValue} to {{updatedValue}}",
+    "history_update_no_data": "No update available",
+    "update_successful": "Task updated successfully"
   }
 }

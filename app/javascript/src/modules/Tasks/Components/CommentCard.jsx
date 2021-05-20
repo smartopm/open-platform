@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import Card from '@material-ui/core/Card';
 import Avatar from '@material-ui/core/Avatar';
 import PropTypes from 'prop-types'
+import { useTranslation } from 'react-i18next';
 import CardContent from '@material-ui/core/CardContent';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
@@ -22,6 +23,8 @@ export default function CommentCard({ data, refetch }) {
   const [imageUrl, setImageUrl] = useState(null)
   const [name, setName] = useState(null)
   const [body, setBody] = useState(null)
+  const { t } = useTranslation('common')
+
   function handleClose() {
     setEdit(false)
     setEditId(null)
@@ -67,7 +70,7 @@ export default function CommentCard({ data, refetch }) {
                 onClick={() => setEditId(com.id)}
                 data-testid='edit'
               >
-                Edit
+                {t('menu.edit')}
               </Button>
               {' '}
               |
@@ -81,7 +84,7 @@ export default function CommentCard({ data, refetch }) {
                 onClick={(event) => deleteClick(event)}
                 data-testid='deleteButton'
               >
-                Delete
+                {t('menu.delete')}
               </Button>
             </CardActions>
             )}
