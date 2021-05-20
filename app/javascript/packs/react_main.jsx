@@ -167,7 +167,6 @@ const App = () => {
       <ApolloProvider>
         <Router history={history}>
           <AuthStateProvider>
-            {/* <ThemeProvider> */}
             <Analytics>
               {/* onboarding */}
               <I18Initializer />
@@ -335,7 +334,6 @@ const App = () => {
                 </LoggedInOnly>
               </Switch>
             </Analytics>
-            {/* </ThemeProvider> */}
           </AuthStateProvider>
         </Router>
       </ApolloProvider>

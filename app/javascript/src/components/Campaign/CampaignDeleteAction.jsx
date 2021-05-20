@@ -32,7 +32,7 @@ export default function CampaignDelete({
         aria-haspopup="true"
         onClick={handleDeleteClick}
       >
-        <DeleteIcon data-testid="deleteIcon" style={{ color: '#009688' }} />
+        <DeleteIcon data-testid="deleteIcon" color="primary" />
       </IconButton>
       {openModal && (
       <CampaignDeleteDialogue handleClose={handleDeleteClick} handleDelete={handleDelete} open={openModal} /> 

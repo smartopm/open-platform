@@ -1,12 +1,12 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable no-use-before-define */
 import React, { useState, useEffect } from 'react'
-import { StyleSheet, css } from 'aphrodite'
 import { Redirect, useParams } from 'react-router-dom'
 import { useMutation } from 'react-apollo'
 import {
   Button, TextField, Chip, Snackbar, MenuItem, FormControlLabel, Checkbox
 } from '@material-ui/core'
+import { makeStyles } from '@material-ui/styles'
 import { DateAndTimePickers } from './DatePickerDialog'
 import {
   CampaignCreate,
@@ -49,6 +49,7 @@ export default function CampaignForm({
   const [formData, setFormData] = useState(initData)
   const [campaignType, setCampaignType] = useState('draft')
 
+  const classes = useStyles();
   const handleCampaignType = (_event, newCampaignType) => {
     setCampaignType(newCampaignType);
   };
@@ -285,7 +286,7 @@ function handleTemplateDialog(status){
             type="submit"
             disabled={mutationLoading}
             aria-label="campaign_submit"
-            className={`btn ${css(styles.getStartedButton)} enz-lg-btn`}
+            className={`btn ${classes.getStartedButton} enz-lg-btn`}
           >
             <span>{id ? 'Update Campaign' : 'Create Campaign'}</span>
           </Button>
@@ -302,9 +303,10 @@ function handleTemplateDialog(status){
     </div>
   )
 }
-const styles = StyleSheet.create({
+
+const useStyles = makeStyles(theme => ({
   getStartedButton: {
-    backgroundColor: '#69ABA4',
+    backgroundColor: theme.palette.primary.main,
     color: '#FFF',
     width: '30%',
     height: 51,
@@ -312,4 +314,4 @@ const styles = StyleSheet.create({
     marginTop: 50,
     alignItems: 'center'
   }
-})
+}));
