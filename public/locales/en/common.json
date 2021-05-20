@@ -25,17 +25,24 @@
     "invoice_number": "Invoice Number",
     "wallet_balance": "Current Wallet Balance",
     "pending_amount": "Pending Amount",
-    "payment_Type": "Payment Type"
+    "payment_Type": "Payment Type",
+    "user_name_search": "Find a User"
   },
   "form_placeholders": {
     "phone_number": "Enter Phone Number",
     "email": "Enter Email",
     "action_note": "Type action note here",
     "search_user": "Search User",
+    "search_tasks": "Search Tasks",
     "search": "Search",
     "add_note": "Add your notes here",
+    "note_due_date": "Pick a due date for this todo",
+    "note_body": "Add task body here",
+    "note_description": "Describe the task here",
     "flag": "Flag as a todo",
-    "message": "Type message here"
+    "message": "Type message here",
+    "user_name_search": "Type the user name here",
+    "user_name_search_choose_from_options": "Choose a user"
   },
   "form_actions": {
     "send_email": "Send Email",
@@ -44,6 +51,10 @@
     "submitting": "Submitting ...",
     "assign_label": "Assign Label",
     "create_campaign": "Create Campaign",
+    "note_complete": "Mark as Complete",
+    "note_incomplete": "Mark as Incomplete",
+    "create_task": "Create Task",
+    "creating_task": "Creating a task ...",
     "assign": "Assign",
     "save": "Save",
     "saving": "Saving ...",
@@ -53,6 +64,7 @@
     "or": "OR",
     "created_at": "Created At",
     "no_forms": "No Forms",
+    "no_task": "No Task found",
     "done": "Done",
     "take_photo": "Take Photo",
     "client_name": "Client Name",
@@ -143,7 +155,8 @@
     "log_entry": "Log This Entry",
     "call_manager": "Call Manager",
     "log": "Log",
-    "temp_record": "Temperature recorded"
+    "temp_record": "Temperature recorded",
+    "user_name_search_warning_text": "The account selected will be deleted from the system and merged into the profile you are currently on"
   },
   "menu": {
     "invoice": "Invoice",
@@ -195,7 +208,11 @@
     "cancel_invoice": "Cancel Invoice",
     "view_receipt": "View Receipt",
     "edit_payment": "Edit Payment",
-    "revert_transaction": "Revert Transaction"
+    "revert_transaction": "Revert Transaction",
+    "edit_task": "Edit Task",
+    "leave_a_comment": "Leave a comment",
+    "mark_complete": "Mark as Complete",
+    "mark_incomplete": "Mark as Incomplete"
   },
   "user_types": {
     "admin": "Admin",
@@ -213,6 +230,9 @@
     "tag": "Tag",
     "menu": "Menu",
     "name": "Name",
+    "task": "Task",
+    "created_by": "Created By",
+    "assignees": "Assignees",
     "deposit_date": "Deposit/Issue date",
     "parcel_number": "Parcel Number",
     "description": "Description",
@@ -264,6 +284,7 @@
     "empty_name": "Name cannot be empty",
     "date_error": "Date must be of this format YYYY-MM-DD",
     "empty_input": "Input cannot be empty",
-    "no_changes": "No Changes Made"
+    "no_changes": "No Changes Made",
+    "user_name_search_not_found": "{{username}} not found in users"
   }
 }

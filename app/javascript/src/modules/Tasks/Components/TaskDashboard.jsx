@@ -1,23 +1,26 @@
 import React from 'react'
 import { Grid, Typography } from '@material-ui/core'
 import PropTypes from 'prop-types'
+import { useTranslation } from 'react-i18next';
 import TaskStatCard from './TaskStatCard'
 import CenteredContent from '../../../components/CenteredContent'
 import { propAccessor } from '../../../utils/helpers'
 
-const tiles = {
-  myOpenTasks: 'My Tasks',
-  tasksDueIn10Days: 'Tasks due in 10 days',
-  tasksDueIn30Days: 'Tasks due in 30 days',
-  tasksOpenAndOverdue: 'Overdue Tasks',
-  tasksWithNoDueDate: 'Tasks with no due date',
-  totalCallsOpen: 'Total Calls Open',
-  totalFormsOpen: 'Total Forms Open',
-  tasksOpen: 'Tasks Open',
-  completedTasks: 'Tasks Completed'
-}
-
 export default function TaskDashboard({ taskData, filterTasks, currentTile }) {
+  const { t } = useTranslation('task')
+
+  const tiles = Object.freeze({
+    myOpenTasks: t('task.my_tasks'),
+    tasksDueIn10Days: t('task.tasks_due_in_10_days'),
+    tasksDueIn30Days: t('task.tasks_due_in_30_days'),
+    tasksOpenAndOverdue: t('task.overdue_tasks'),
+    tasksWithNoDueDate: t('task.tasks_with_no_due_date'),
+    totalCallsOpen: t('task.total_calls_open'),
+    totalFormsOpen: t('task.total_forms_open'),
+    tasksOpen: t('task.tasks_open'),
+    completedTasks: t('task.tasks_completed')
+  });
+
   if (taskData.loading || taskData.error) {
     return (
       <CenteredContent>

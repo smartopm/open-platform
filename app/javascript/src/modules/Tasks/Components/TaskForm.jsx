@@ -3,8 +3,6 @@ import React, { useState } from 'react'
 import TextField from '@material-ui/core/TextField'
 import {
   Button,
-  FormControlLabel,
-  Checkbox,
   FormHelperText,
   MenuItem,
   Select,
@@ -14,6 +12,7 @@ import {
 import { css } from 'aphrodite'
 import { useMutation } from 'react-apollo'
 import PropTypes from 'prop-types'
+import { useTranslation } from 'react-i18next';
 import { CreateNote } from '../../../graphql/mutations'
 import DatePickerDialog from '../../../components/DatePickerDialog'
 import { discussStyles } from '../../../components/Discussion/Discuss'
@@ -37,6 +36,7 @@ export default function TaskForm({ close, refetch, users, assignUser}) {
   const [loading, setLoadingStatus] = useState(false)
   const [createTask] = useMutation(CreateNote)
   const [userData, setData] = useState(initialData)
+  const { t } = useTranslation(['task', 'common'])
 
   function handleSubmit(event) {
     event.preventDefault()
@@ -65,8 +65,8 @@ export default function TaskForm({ close, refetch, users, assignUser}) {
     <form onSubmit={handleSubmit}>
       <TextField
         name="task_body"
-        label="Task Body"
-        placeholder="Add task body here"
+        label={t('task.task_body_label')}
+        placeholder={t('common:form_placeholders.note_body')}
         style={{ width: '100%' }}
         onChange={e => setTitle(e.target.value)}
         value={title}
@@ -84,8 +84,8 @@ export default function TaskForm({ close, refetch, users, assignUser}) {
       />
       <TextField
         name="task_description"
-        label="Task Description"
-        placeholder="Describe the task here"
+        label={t('task.task_description_label')}
+        placeholder={t('common:form_placeholders.note_description')}
         style={{ width: '100%' }}
         onChange={e => setDescription(e.target.value)}
         value={description}
@@ -102,7 +102,7 @@ export default function TaskForm({ close, refetch, users, assignUser}) {
       />
       <br/>
       <FormControl fullWidth >
-        <InputLabel id="taskType">Task Type</InputLabel>
+        <InputLabel id="taskType">{t('task.task_type_label')}</InputLabel>
         <Select
             id="taskType"
             value={taskType}
@@ -119,7 +119,7 @@ export default function TaskForm({ close, refetch, users, assignUser}) {
       </FormControl>
       <br />
       <FormControl fullWidth >
-        <InputLabel id="assignees">Assign this task to users</InputLabel>
+        <InputLabel id="assignees">{t('task.task_assignee_label')}</InputLabel>
         <Select
             id="assignees"
             value={assignees}
@@ -150,7 +150,7 @@ export default function TaskForm({ close, refetch, users, assignUser}) {
           handleDateChange={date => setDate(date)}
           selectedDate={selectedDate}
         />
-        <FormHelperText>Pick a due date</FormHelperText>
+        <FormHelperText>{t('common:form_placeholders.note_due_date')}</FormHelperText>
       </div>
 
       <br />
@@ -162,7 +162,7 @@ export default function TaskForm({ close, refetch, users, assignUser}) {
           onClick={close}
           className={`btn ${css(discussStyles.cancelBtn)}`}
         >
-          Cancel
+          {t('common:form_actions.cancel')}
         </Button>
         <Button
           variant="contained"
@@ -172,7 +172,7 @@ export default function TaskForm({ close, refetch, users, assignUser}) {
           aria-label="task_submit"
           className={`btn ${css(discussStyles.submitBtn)}`}
         >
-          {loading ? 'Creating a task ...' : 'Create Task'}
+          {loading ? t('common:form_actions.creating_task') : t('common:form_actions.create_task')}
         </Button>
       </div>
       <p className="text-center">

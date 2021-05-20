@@ -31,7 +31,7 @@ class AssigneeNote < ApplicationRecord
       { key: '%community%', value: user.community&.name.to_s },
       { key: '%url%', value: "#{ENV['HOST']}/tasks/#{note.id}" },
     ]
-    EmailMsg.send_mail_from_db(user.email, community_template, template_data)
+    EmailMsg.send_mail_from_db(user.email, template, template_data)
   end
   # rubocop:enable Metrics/AbcSize
   # rubocop:enable Metrics/MethodLength
