@@ -61,7 +61,8 @@
     "save": "Save",
     "saving": "Saving ...",
     "update": "Update",
-    "save_changes": "Save changes"
+    "save_changes": "Save changes",
+    "merge": "Merge"
   },
   "misc": {
     "or": "OR",
@@ -210,6 +211,7 @@
     "delete": "delete",
     "duplicate": "Duplicate",
     "create": "Create",
+    "merge": "Merge",
     "preferences": "Preferences",
     "cancel_invoice": "Cancel Invoice",
     "view_receipt": "View Receipt",
@@ -255,7 +257,10 @@
     "transaction_number": "Transaction Number",
     "bank_name": "Bank Name",
     "cheque_number": "Cheque Number",
-    "payment_made": "Payment Made By"
+    "payment_made": "Payment Made By",
+    "labels": "Labels",
+    "labels_total_no_of_users": "Total Number of users",
+    "labels_description": "Description"
   },
   "table_content": {
     "invoice_number": "Invoice Number {{numb}}",
