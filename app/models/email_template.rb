@@ -6,7 +6,10 @@ class EmailTemplate < ApplicationRecord
 
   belongs_to :community
 
-  validates :name, presence: true
+  validates :name, presence: true, uniqueness: {
+    scope: :community_id,
+    message: 'Email template with name already exists for community',
+  }
 
   before_save :set_template_variables
 

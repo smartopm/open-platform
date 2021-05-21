@@ -236,7 +236,7 @@ ActiveRecord::Schema.define(version: 2021_05_21_142938) do
     t.json "data"
     t.string "tag"
     t.index ["community_id"], name: "index_email_templates_on_community_id"
-    t.index ["name"], name: "index_email_templates_on_name"
+    t.index ["name", "community_id"], name: "index_email_templates_on_name_and_community_id", unique: true
   end
 
   create_table "entry_requests", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
