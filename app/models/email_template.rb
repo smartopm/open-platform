@@ -6,7 +6,7 @@ class EmailTemplate < ApplicationRecord
 
   belongs_to :community
 
-  validates :name, presence: true, uniqueness: true
+  validates :name, presence: true
 
   before_save :set_template_variables
 
