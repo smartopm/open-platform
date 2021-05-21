@@ -48,7 +48,7 @@ phrase:
       params:
         file_format: i18next
         locale_id: 5c6c3e050e8493da0e428087555a7b00
-        tags: task
+        tags: label
         update_translations: true
     # upload spanish existing translations too 
     - file: ./public/locales/es/login.json

@@ -46,10 +46,10 @@ describe('Label action menu component', () => {
 
     fireEvent.click(container.queryByText('menu.delete'))
     fireEvent.click(container.queryByTestId('cancel'))
-    expect(container.queryByText('Are you sure you want to delete this business?')).not.toBeInTheDocument()
+    expect(container.queryByText('label.delete_dialog_title')).toBeInTheDocument()
 
     fireEvent.click(container.queryByText('menu.merge'))
-    expect(container.queryByText('Merging this label will move all users from this label into the selected label')).toBeInTheDocument()
+    expect(container.queryByText('label.merge_dialog_title')).toBeInTheDocument()
     fireEvent.click(container.queryByTestId('dialog_cancel'))
     expect(container.queryByTestId('dialog_cancel')).toBeInTheDocument()
     fireEvent.click(container.queryByText('menu.edit'))
