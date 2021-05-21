@@ -22,7 +22,7 @@ export default function Paginate({
       <Button
         data-testid="next-btn"
         onClick={() => handlePageChange('next')}
-        disabled={!active && count < limit}
+        disabled={active && count < limit}
       >
         Next
       </Button>

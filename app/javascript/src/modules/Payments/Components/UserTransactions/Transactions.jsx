@@ -1,3 +1,4 @@
+/* eslint-disable no-nested-ternary */
 /* eslint-disable no-unused-vars */
 import React, { useContext, useState, useEffect } from 'react'
 import { useQuery } from 'react-apollo'
@@ -121,7 +122,7 @@ export default function TransactionsList({ userId, user, userData, paymentSubTab
             )
       }
       {transLoading ? <Spinner /> : (
-        data?.userTransactions.length > 0 && (
+        data?.userTransactions.length > 0 ? (
           <div className={classes.paymentList}>
             <div>
               <Typography className={classes.payment}>Payments</Typography>
@@ -140,6 +141,8 @@ export default function TransactionsList({ userId, user, userData, paymentSubTab
               ))
             }
           </div>
+        ) : (
+          <CenteredContent>No Payments Available</CenteredContent>
         )
       )}
       <PaymentModal
@@ -151,7 +154,6 @@ export default function TransactionsList({ userId, user, userData, paymentSubTab
         walletRefetch={walletRefetch}
         userData={userData}
       />
-
       <CenteredContent>
         <Paginate
           offSet={offset}
