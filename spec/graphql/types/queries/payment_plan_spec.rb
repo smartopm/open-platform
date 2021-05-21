@@ -73,7 +73,6 @@ RSpec.describe Types::Queries::Payment do
       GQL
     end
 
-
     describe '#user_payment_plans' do
       context 'when current user is not an admin and user is not same as current user' do
         it 'raises unauthorized error' do
@@ -133,7 +132,6 @@ RSpec.describe Types::Queries::Payment do
       end
 
       context 'when current user is an admin' do
-
         context 'when land parcel is not present' do
           it 'raises land parcel not found error' do
             variables = { landParcelId: '1234' }
