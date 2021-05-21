@@ -3,7 +3,6 @@
 require 'rails_helper'
 
 RSpec.describe Types::Queries::PaymentPlan do
-
   describe '#payment_plan_statement' do
     let!(:admin) { create(:user_with_community, user_type: 'admin') }
     let(:non_admin) { create(:user, user_type: 'client', community: admin.community) }
@@ -14,7 +13,7 @@ RSpec.describe Types::Queries::PaymentPlan do
         land_parcel_id: land_parcel.id,
         user_id: non_admin.id,
         monthly_amount: 100,
-        pending_balance: 1200
+        pending_balance: 1200,
       )
     end
     let!(:user_transaction) do
@@ -61,36 +60,34 @@ RSpec.describe Types::Queries::PaymentPlan do
       it 'raises unauthorized error' do
         variables = { landParcelId: land_parcel.id }
         result = DoubleGdpSchema.execute(
-                                          payment_plan_statement,
-                                          variables: variables,
-                                          context: {
-                                            current_user: non_admin,
-                                            site_community: non_admin.community,
-                                          }
-                                        ).as_json
+          payment_plan_statement,
+          variables: variables,
+          context: {
+            current_user: non_admin,
+            site_community: non_admin.community,
+          },
+        ).as_json
         expect(result.dig('errors', 0, 'message')).to eql 'Unauthorized'
       end
     end
 
     context 'when current user is an admin' do
-
       context 'when land parcel is not present' do
         it 'raises land parcel not found error' do
           variables = { landParcelId: '1234' }
           result = DoubleGdpSchema.execute(
-                                            payment_plan_statement,
-                                            variables: variables,
-                                            context: {
-                                              current_user: admin,
-                                              site_community: admin.community,
-                                            }
-                                          ).as_json
+            payment_plan_statement,
+            variables: variables,
+            context: {
+              current_user: admin,
+              site_community: admin.community,
+            },
+          ).as_json
           expect(result.dig('errors', 0, 'message')).to eql 'Land parcel not found'
         end
       end
 
       context 'when land parcel is present' do
-
         context 'when partial payment is allocated to monthly installments' do
           before do
             create_list(
@@ -100,7 +97,7 @@ RSpec.describe Types::Queries::PaymentPlan do
               transaction_id: user_transaction.id,
               user_id: non_admin.id,
               payment_plan_id: payment_plan.id,
-              community: admin.community
+              community: admin.community,
             )
             payment_plan.update(pending_balance: 1200 - 400)
           end
@@ -108,16 +105,16 @@ RSpec.describe Types::Queries::PaymentPlan do
           it 'returns statements of payment plan' do
             variables = { landParcelId: land_parcel.id }
             result = DoubleGdpSchema.execute(
-                                              payment_plan_statement,
-                                              variables: variables,
-                                              context: {
-                                                current_user: admin,
-                                                site_community: admin.community,
-                                              }
-                                            ).as_json
+              payment_plan_statement,
+              variables: variables,
+              context: {
+                current_user: admin,
+                site_community: admin.community,
+              },
+            ).as_json
             payment_plan = result.dig('data', 'paymentPlanStatement', 'paymentPlan')
             statements = result.dig('data', 'paymentPlanStatement', 'statements')
-            details = statements.map { |statement| statement.slice('amountPaid', 'balance', 'status') }
+            details = statements.map { |stmnt| stmnt.slice('amountPaid', 'balance', 'status') }
             expect(payment_plan['pendingBalance']).to eql 800.0
             expect(payment_plan['user']['name']).to eql 'Mark Test'
             expect(details).to include(
@@ -146,7 +143,7 @@ RSpec.describe Types::Queries::PaymentPlan do
               transaction_id: user_transaction.id,
               user_id: non_admin.id,
               payment_plan_id: payment_plan.id,
-              community: admin.community
+              community: admin.community,
             )
             payment_plan.update(pending_balance: 1200 - 420)
           end
@@ -154,16 +151,16 @@ RSpec.describe Types::Queries::PaymentPlan do
           it 'returns statements of payment plan' do
             variables = { landParcelId: land_parcel.id }
             result = DoubleGdpSchema.execute(
-                                              payment_plan_statement,
-                                              variables: variables,
-                                              context: {
-                                                current_user: admin,
-                                                site_community: admin.community,
-                                              }
-                                            ).as_json
+              payment_plan_statement,
+              variables: variables,
+              context: {
+                current_user: admin,
+                site_community: admin.community,
+              },
+            ).as_json
             payment_plan = result.dig('data', 'paymentPlanStatement', 'paymentPlan')
             statements = result.dig('data', 'paymentPlanStatement', 'statements')
-            details = statements.map { |statement| statement.slice('amountPaid', 'balance', 'status') }
+            details = statements.map { |stmnt| stmnt.slice('amountPaid', 'balance', 'status') }
             expect(payment_plan['pendingBalance']).to eql 780.0
             expect(payment_plan['user']['name']).to eql 'Mark Test'
             expect(details).to include(
