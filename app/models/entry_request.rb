@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require 'host_env'
 # rubocop:disable Metrics/ClassLength
 # Record of visitor entries to a community
 class EntryRequest < ApplicationRecord
