@@ -63,8 +63,8 @@ module Types::Queries::LandParcel
   def user_land_parcel_with_plan(user_id:)
     raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') if context[:current_user].blank?
 
-    context[:site_community].users.find_by(id: user_id)&.land_parcels
-                                                       &.joins(:payment_plan)
+    user = context[:site_community].users.find_by(id: user_id)
+    user.land_parcels&.joins(:payment_plan).where.not(payment_plans: {pending_balance: 0})
   end
 
   def land_parcel(id:)
