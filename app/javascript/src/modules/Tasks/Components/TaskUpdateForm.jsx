@@ -19,6 +19,7 @@ import {
 } from '@material-ui/core'
 import { useMutation } from 'react-apollo'
 import PropTypes from 'prop-types'
+import { useTranslation } from 'react-i18next';
 import AddCircleIcon from '@material-ui/icons/AddCircle'
 import EditIcon from '@material-ui/icons/Edit'
 import Visibility from '@material-ui/icons/Visibility';
@@ -68,6 +69,7 @@ export default function TaskForm({
   const [setReminder] = useMutation(TaskReminderMutation)
   const [reminderTime, setReminderTime] = useState(null)
   const [mode, setMode] = useState('preview')
+  const { t } = useTranslation(['task', 'common'])
 
   const [type, setType] = useState('task')
   const handleType = (_event, value) => {
@@ -210,7 +212,7 @@ export default function TaskForm({
             }}
             onClick={handleOpenMenu}
           >
-            {currentActiveReminder() ? 'Change reminder' : 'Remind me later'}
+            {currentActiveReminder() ? t('task.change_reminder_text') : t('task.reminder_text')}
           </Button>
         )}
         {isCurrentUserAnAssignee() && currentActiveReminder() && (
@@ -230,7 +232,7 @@ export default function TaskForm({
           onClose={() => setUpdated(!updated)}
           color="primary"
           anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-          message="Task updated successfully"
+          message={t('task.update_successful')}
         />
 
         <Toggler
@@ -255,9 +257,9 @@ export default function TaskForm({
                 margin: '4px 4px 0 0',
               }}
               >
-                Task Body*
+                {t('task.task_body_label')}
               </FormHelperText>
-              <Tooltip title="Toggle Preview">
+              <Tooltip title={t('task.toggle_preview_tooltip')}>
                 <Visibility 
                   data-testid="preview_task_body_btn"
                   style={{
@@ -268,7 +270,7 @@ export default function TaskForm({
                   onClick={() => setMode('preview')}
                 />
               </Tooltip>
-              <Tooltip title="Toggle Edit">
+              <Tooltip title={t('task.toggle_edit_tooltip')}>
                 <EditIcon
                   data-testid="edit_task_body_btn"
                   style={{
@@ -294,7 +296,7 @@ export default function TaskForm({
             {mode === 'edit' && (
             <TextField
               name="task_body"
-              placeholder="Add task body here"
+              placeholder={t('common:form_placeholders.note_body')}
               style={{ width: '100%' }}
               onChange={e => setTitle(e.target.value)}
               value={title}
@@ -314,8 +316,8 @@ export default function TaskForm({
 
             <TextField
               name="task_description"
-              label="Task Description"
-              placeholder="Describe the task here"
+              label={t('task.task_description_label')}
+              placeholder={t('common:form_placeholders.note_description')}
               style={{ width: '100%' }}
               onChange={e => setDescription(e.target.value)}
               value={description || ''}
@@ -332,7 +334,7 @@ export default function TaskForm({
             />
             <br />
             <FormControl fullWidth>
-              <InputLabel id="taskType">Task Type</InputLabel>
+              <InputLabel id="taskType">{t('task.task_type_label')}</InputLabel>
               <Select
                 id="taskType"
                 value={taskType}
@@ -348,7 +350,7 @@ export default function TaskForm({
               </Select>
             </FormControl>
             <br />
-            <FormHelperText>Task user</FormHelperText>
+            <FormHelperText>{t('task.task_user_label')}</FormHelperText>
             <UserChip
               user={{
                 name: userData.user,
@@ -358,7 +360,7 @@ export default function TaskForm({
             />
             <br />
             <div>
-              <FormHelperText>Pick a due date</FormHelperText>
+              <FormHelperText>{t('common:form_placeholders.note_due_date')}</FormHelperText>
               <DatePickerDialog
                 handleDateChange={date => setDate(date)}
                 selectedDate={selectedDate}
@@ -378,7 +380,7 @@ export default function TaskForm({
                 <Chip
                   key={data.id}
                   variant="outlined"
-                  label={autoCompleteOpen ? 'Close' : 'Add Assignee'}
+                  label={autoCompleteOpen ? t('task.chip_close') : t('task.chip_add_assignee')}
                   size="medium"
                   icon={autoCompleteOpen ? <CancelIcon /> : <AddCircleIcon />}
                   onClick={event => handleOpenAutoComplete(event, data.id)}
@@ -402,7 +404,7 @@ export default function TaskForm({
                   assignUser(data.id, value.id)
                 }}
                   renderInput={params => (
-                    <TextField {...params} placeholder="Name of assignee" />
+                    <TextField {...params} placeholder={t('task.chip_add_assignee_placeholder')} />
                 )}
                 />
             )}
@@ -421,7 +423,7 @@ export default function TaskForm({
                   data-testid="mark_task_complete_checkbox"
                 />
           )}
-              label={!taskStatus ? 'Mark Task as complete' : 'Mark Task as incomplete'}
+              label={!taskStatus ? t('common:form_actions.note_complete') : t('common:form_actions.note_incomplete')}
             />
             <br />
             <CenteredContent>
@@ -433,7 +435,7 @@ export default function TaskForm({
                 aria-label="task_submit"
                 disableElevation
               >
-                {loading ? 'Updating a task ...' : 'Update Task'}
+                {loading ? t('common:form_actions.updating_task') : t('common:form_actions.update_task')}
               </Button>
             </CenteredContent>
             <p className="text-center">{Boolean(error.length) && error}</p>

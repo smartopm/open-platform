@@ -17,6 +17,7 @@ export const CurrentCommunityQuery = gql`
       language
       wpLink
       themeColors
+      features
     }
   }
 `;

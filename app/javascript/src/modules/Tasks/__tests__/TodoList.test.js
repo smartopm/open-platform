@@ -73,8 +73,8 @@ describe('Test the Todo page', () => {
         </BrowserRouter>
       </MockedProvider>
     )
-    expect(container.queryByText(/Click a card above to filter/)).toBeTruthy()
-    expect(container.queryByText(/Create Task/i)).toBeTruthy()
+    expect(container.queryByText('task.click_a_card_to_filter')).toBeTruthy()
+    expect(container.queryByText('common:form_actions.create_task')).toBeTruthy()
     expect(container.queryByTestId('todo-container')).toBeTruthy()
     expect(container.queryByTestId('search_input')).toBeTruthy()
     expect(container.queryByTestId('toggle_filter_btn')).toBeTruthy()
@@ -91,12 +91,12 @@ describe('Test the Todo page', () => {
       </MockedProvider>
     )
 
-    const createTaskBtn = container.queryByText(/Create Task/i)
+    const createTaskBtn = container.queryByText('common:form_actions.create_task')
     fireEvent.click(createTaskBtn)
     
-    expect(container.queryByText(/Task Body/i)).toBeTruthy()
-    expect(container.queryByText(/Task Description/i)).toBeTruthy()
-    expect(container.queryByText(/Task Type/i)).toBeTruthy()
-    expect(container.queryByText(/due date/i)).toBeTruthy()
+    expect(container.queryByText('task.task_body_label')).toBeTruthy()
+    expect(container.queryByText('task.task_description_label')).toBeTruthy()
+    expect(container.queryByText('task.task_type_label')).toBeTruthy()
+    expect(container.queryByText('common:form_placeholders.note_due_date')).toBeTruthy()
   });
 })

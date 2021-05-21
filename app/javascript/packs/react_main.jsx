@@ -70,6 +70,7 @@ import I18Initializer from '../src/modules/i18n/Components/I18Initializer';
 import PostPage from '../src/modules/News/Components/PostPage';
 import Posts from '../src/modules/News/Components/Posts';
 import UsersImport from '../src/modules/Users/Containers/UsersImport';
+import { checkAllowedCommunityFeatures } from '../src/utils/helpers';
 
 // The routes defined here are carefully arranged, be mindful when changing them
 
@@ -232,22 +233,24 @@ const App = () => {
                               />
                               {/* end of redirects */}
                               {[...modules, ...UserRoutes].map(module => {
-                                if (module.subMenu) {
-                                  return module.subMenu.map(sub => {
-                                    let routes = [];
-                                    if (sub.subRoutes) {
-                                      routes = sub.subRoutes.map(subRoute => (
-                                        <Route {...subRoute.routeProps} key={subRoute.name} />
-                                      ));
-                                    }
-                                    routes.push(<Route {...sub.routeProps} key={sub.name} />);
-                                    return routes;
-                                  });
-                                }
-                                if (module.accessibleBy.includes(user.userType)) {
-                                  return <Route exact {...module.routeProps} key={module.name} />;
-                                }
-                              })}
+                                  if (module.subMenu) {
+                                    return module.subMenu.map(sub => {
+                                      let routes = [];
+                                      
+                                      if (sub.subRoutes && checkAllowedCommunityFeatures(user.community.features, sub.featureName)) {
+                                        routes = sub.subRoutes.map(subRoute => (
+                                          <Route {...subRoute.routeProps} key={subRoute.name} />
+                                        ));
+                                      }
+                                      checkAllowedCommunityFeatures(user.community.features, sub.featureName) && routes.push(<Route {...sub.routeProps} key={sub.name} />);
+                                      return routes;
+                                    });
+                                  }
+                                  if (checkAllowedCommunityFeatures(user.community.features, module.featureName) && module.accessibleBy.includes(user.userType)) {
+                                    return <Route exact {...module.routeProps} key={module.name} />;
+                                  }
+                                })}
+
                               <Route exact path="/scan" component={Scan} />
                               <Route path="/id/:id" component={IDCard} />
                               <Route path="/entry_logs/:userId" component={EntryLogs} />

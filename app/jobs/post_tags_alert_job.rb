@@ -4,26 +4,24 @@ require 'nokogiri'
 require 'json'
 require 'net/http'
 require 'email_msg'
+require 'host_env'
 
 # alert user if there is new posts related to the the tag a user is subscribed to
 class PostTagsAlertJob < ApplicationJob
   queue_as :default
-  # rubocop:disable  Metrics/AbcSize
   def perform(comm_name)
     return unless Rails.env.production?
 
     comm = Community.find_by(name: comm_name)
-    temp_id = comm.templates['post_alert_template_id']
     comm.users.find_each do |user|
       # check if there is a new post for this post
       user.post_tags.each do |tag|
         post_ids = scrape(tag.slug)
         pub_date = post_published_date(post_ids[0])
-        next send_email(user.email, post_ids[0], comm_name, temp_id) if published_today?(pub_date)
+        next send_email_from_db(user.email, post_ids[0], comm) if published_today?(pub_date)
       end
     end
   end
-  # rubocop:enable  Metrics/AbcSize
 
   private
 
@@ -62,14 +60,17 @@ class PostTagsAlertJob < ApplicationJob
     date > Time.zone.now.beginning_of_day
   end
 
-  def send_email(email, post_id, community_name, template)
-    EmailMsg.send_mail(email, template, mail_data(post_id, community_name))
-  end
+  def send_email_from_db(email, post_id, community)
+    template = community.email_templates
+                    &.system_emails
+                    &.find_by(name: 'post_alert_template')
+    return unless template
 
-  def mail_data(post_id, community_name)
-    {
-      "post_id": post_id,
-      "community_name": community_name,
-    }
+    template_data = [
+      { key: '%logo_url%', value: community&.logo_url.to_s },
+      { key: '%community%', value: community&.name.to_s },
+      { key: '%post_url%', value: "https://#{HostEnv.base_url(community)}/news/post/#{post_id}" },
+    ]
+    EmailMsg.send_mail_from_db(email, template, template_data)
   end
 end

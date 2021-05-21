@@ -46,7 +46,8 @@ describe('Login screen', () => {
             themeColors: {
               primaryColor: "#FFFFFF",
               secondaryColor: "#FFFFFF"
-            }
+            },
+            features: []
           }
         }
       }

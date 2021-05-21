@@ -29,8 +29,9 @@ export default function UserActionOptions(){
       <IconButton
         aria-label="icons"
         edge="start"
+        onClick={(e) => handleOpen(e)}
       >
-        <KeyboardArrowDownIcon data-testid="icons" onClick={(e) => handleOpen(e)} />
+        <KeyboardArrowDownIcon data-testid="icons"  />
       </IconButton>
       <Popover open={open} anchorEl={anchorEl} onClose={handleClose} className={classes.popOver}>
         <Typography data-testid='text' align="center" className={classes.logOut} onClick={() => history.push('/logout')}>

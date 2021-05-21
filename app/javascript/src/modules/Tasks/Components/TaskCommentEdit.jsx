@@ -2,6 +2,7 @@
 import React, {useState, useEffect} from 'react';
 import { useMutation } from 'react-apollo'
 import PropTypes from 'prop-types'
+import { useTranslation } from 'react-i18next';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core/styles';
@@ -14,6 +15,8 @@ export default function EditField({ handleClose, data, refetch }) {
   const [body, setBody] = useState('')
   const [commentUpdate] = useMutation(TaskCommentUpdate)
   const [error, setErrorMessage] = useState('')
+  const { t } = useTranslation('common')
+
   function handleSubmit(event) {
     event.preventDefault();
     commentUpdate({ variables: {
@@ -52,10 +55,10 @@ export default function EditField({ handleClose, data, refetch }) {
             />
             <div style={{ display: 'flex', flexDirection: 'row', marginTop: '5px' }}>
               <Button autoFocus variant="contained" data-testid='button' type="submit" color="primary" style={{ marginRight: '5px' }}>
-                Save changes
+                {t('form_actions.save_changes')}
               </Button>
               <Button onClick={handleClose} variant="outlined" color="secondary" data-testid='cancel'>
-                Cancel
+                {t('form_actions.cancel')}
               </Button>
             </div>
           </div>

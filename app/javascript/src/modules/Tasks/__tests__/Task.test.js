@@ -3,8 +3,8 @@ import { ApolloProvider } from 'react-apollo'
 import { render, fireEvent, screen } from '@testing-library/react'
 import '@testing-library/jest-dom/extend-expect'
 import { BrowserRouter, Route } from 'react-router-dom/'
-import { createClient } from '../utils/apollo'
-import Task from '../modules/Tasks/Components/Task'
+import { createClient } from '../../../utils/apollo'
+import Task from '../Components/Task'
 
 // find elements that are available when DOM mounts then check the visual contents
 const mck = jest.fn()

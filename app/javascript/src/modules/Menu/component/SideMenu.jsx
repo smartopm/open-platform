@@ -12,7 +12,7 @@ import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 import { useTranslation } from 'react-i18next';
 
-const SideMenu = ({ toggleDrawer, menuItems, userType, mobileOpen, direction }) => {
+const SideMenu = ({ toggleDrawer, menuItems, userType, mobileOpen, direction, communityFeatures }) => {
   const history = useHistory();
   const { pathname } = useLocation();
   const params = useParams();
@@ -45,6 +45,7 @@ const SideMenu = ({ toggleDrawer, menuItems, userType, mobileOpen, direction }) 
     }
     history.push(item.routeProps.path);
   }
+
   return (
     <div
       role="button"
@@ -55,36 +56,36 @@ const SideMenu = ({ toggleDrawer, menuItems, userType, mobileOpen, direction }) 
     >
       <List>
         {menuItems.map(menuItem =>
-          menuItem.accessibleBy.includes(userType) ? (
-            <Fragment key={typeof menuItem.name === 'function' && menuItem.name(t)}>
-              <ListItem
-                button
-                onClick={event => routeTo(event, menuItem)}
-                selected={pathname === menuItem.routeProps.path}
-              >
-                {menuItem.styleProps?.icon && (
-                  <ListItemIcon className={`${css(styles.listItemIcon)}`}>
-                    {menuItem.styleProps.icon}
-                  </ListItemIcon>
+         communityFeatures.includes(menuItem.featureName) && menuItem.accessibleBy.includes(userType) ? (
+           <Fragment key={typeof menuItem.name === 'function' && menuItem.name(t)}>
+             <ListItem
+               button
+               onClick={event => routeTo(event, menuItem)}
+               selected={pathname === menuItem.routeProps.path}
+             >
+               {menuItem.styleProps?.icon && (
+               <ListItemIcon className={`${css(styles.listItemIcon)}`}>
+                 {menuItem.styleProps.icon}
+               </ListItemIcon>
                 )}
-                <ListItemText primary={menuItem.name(t)} />
-                {currentMenu.name === menuItem.name(t) && currentMenu.isOpen ? (
-                  <ExpandLess />
+               <ListItemText primary={menuItem.name(t)} />
+               {currentMenu.name === menuItem.name(t) && currentMenu.isOpen ? (
+                 <ExpandLess />
                 ) : // Avoid showing toggle icon on menus with no submenus
                 menuItem.subMenu ? (
                   <ExpandMore />
                 ) : null}
-              </ListItem>
+             </ListItem>
 
-              <Collapse
-                in={currentMenu.name === menuItem.name(t) && currentMenu.isOpen}
-                timeout="auto"
-                unmountOnExit
-              >
-                <List component="div" disablePadding>
-                  {menuItem.subMenu &&
+             <Collapse
+               in={currentMenu.name === menuItem.name(t) && currentMenu.isOpen}
+               timeout="auto"
+               unmountOnExit
+             >
+               <List component="div" disablePadding>
+                 { menuItem.subMenu &&
                     menuItem.subMenu.map(item =>
-                      item.accessibleBy.includes(userType) ? (
+                      communityFeatures.includes(item.featureName) && item.accessibleBy.includes(userType) ? (
                         <ListItem
                           button
                           key={item.name(t)}
@@ -100,9 +101,9 @@ const SideMenu = ({ toggleDrawer, menuItems, userType, mobileOpen, direction }) 
                         <span key={item.name(t)} />
                       )
                     )}
-                </List>
-              </Collapse>
-            </Fragment>
+               </List>
+             </Collapse>
+           </Fragment>
           ) : (
             <span key={menuItem.name(t)} />
           )
@@ -128,7 +129,7 @@ const menuItemProps = PropTypes.shape({
         path: PropTypes.string.isRequired
       })
     })
-  )
+  ),
 });
 
 SideMenu.propTypes = {
@@ -136,7 +137,9 @@ SideMenu.propTypes = {
   menuItems: PropTypes.arrayOf(menuItemProps).isRequired,
   userType: PropTypes.string.isRequired,
   mobileOpen: PropTypes.bool.isRequired,
-  direction: PropTypes.oneOf(['left', 'right']).isRequired
+  direction: PropTypes.oneOf(['left', 'right']).isRequired,
+  communityFeatures: PropTypes.arrayOf(PropTypes.string).isRequired
+
 };
 
 const styles = StyleSheet.create({

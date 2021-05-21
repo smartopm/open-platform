@@ -115,6 +115,7 @@ export function MainNav({ authState }) {
                 menuItems={modules}
                 userType={authState.user.userType}
                 direction="left"
+                communityFeatures={authState.user?.community.features || []}
                 mobileOpen
               />
             </Drawer>
@@ -130,6 +131,7 @@ export function MainNav({ authState }) {
                 menuItems={modules}
                 userType={authState.user.userType}
                 direction="left"
+                communityFeatures={authState.user?.community.features || []}
                 mobileOpen={false}
               />
             </Drawer>

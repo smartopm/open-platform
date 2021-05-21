@@ -22,6 +22,7 @@ export default function RightSideMenu({ authState, handleDrawerToggle, drawerOpe
           userType={authState.user.userType}
           direction="right"
           mobileOpen={drawerOpen}
+          communityFeatures={authState.user?.community.features || []}
         />
       </Drawer>
     </nav>

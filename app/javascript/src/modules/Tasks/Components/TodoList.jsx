@@ -18,6 +18,7 @@ import { StyleSheet, css } from 'aphrodite';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import { useMutation, useLazyQuery, useQuery } from 'react-apollo';
 import { useParams, useHistory } from 'react-router';
+import { useTranslation } from 'react-i18next';
 import { UsersLiteQuery, flaggedNotes, TaskQuery } from '../../../graphql/queries';
 import { TaskStatsQuery } from '../graphql/task_queries'
 import { AssignUser, UpdateNote } from '../../../graphql/mutations';
@@ -40,14 +41,6 @@ import { TaskBulkUpdateMutation } from '../graphql/task_mutation';
 import TaskActionMenu from './TaskActionMenu';
 import TodoItem from './TodoItem';
 
-const taskHeader = [
-  { title: 'Select', col: 1 },
-  { title: 'Task', col: 4 },
-  { title: 'Created By', col: 3 },
-  { title: 'Duedate', col: 1 },
-  { title: 'Assignees', col: 2 },
-  { title: 'Menu', col: 1 }
-];
 // component needs a redesign both implementation and UI
 export default function TodoList({
   isDialogOpen,
@@ -96,6 +89,16 @@ export default function TodoList({
   };
   const [selectedTasks, setSelected] = useState([]);
   const [bulkUpdating, setBulkUpdating] = useState(false)
+  const { t } = useTranslation(['task', 'common'])
+
+  const taskHeader = [
+    { title: 'Select', col: 1 },
+    { title: 'Task', value: t('common:table_headers.task'), col: 4 },
+    { title: 'Created By', value: t('common:table_headers.created_by'), col: 3 },
+    { title: 'Duedate', value: t('common:table_headers.due_date'), col: 1 },
+    { title: 'Assignees',value: t('common:table_headers.assignees'), col: 2 },
+    { title: 'Menu', value: t('common:table_headers.menu'), col: 1 }
+  ];
 
   function handleChange(selectedId) {
     if (selectedTasks.includes(selectedId)) {
@@ -429,7 +432,7 @@ export default function TodoList({
           <DatePickerDialog
             selectedDate={selectedDate}
             handleDateChange={handleDateChange}
-            label="Pick due date for this todo"
+            label={t('common:form_placeholders.note_due_date')}
           />
         </ModalDialog>
 
@@ -444,7 +447,7 @@ export default function TodoList({
           {/* show task details when on task page load */}
           <DialogTitle id="task_modal">
             <CenteredContent>
-              <span>{taskId ? 'Task Detail Page' : 'Create a task'}</span>
+              <span>{taskId ? t('task.task_modal_detail_text') : t('task.task_modal_create_text')}</span>
             </CenteredContent>
           </DialogTitle>
           <DialogContent>
@@ -458,7 +461,7 @@ export default function TodoList({
               />
             ) : // eslint-disable-next-line no-nested-ternary
             !taskData ? (
-              'No Task found'
+              t('common:misc.no_task')
             ) : (
               <>
                 <Task
@@ -499,7 +502,7 @@ export default function TodoList({
               data-testid="search_input"
               className={classes.input}
               type="text"
-              placeholder="Search Tasks"
+              placeholder={t('common:form_placeholders.search_tasks')}
               onChange={inputToSearch}
               value={searchText}
               inputProps={{ 'aria-label': 'search tasks' }}
@@ -515,7 +518,7 @@ export default function TodoList({
               <FilterListIcon />
             </IconButton>
             <div style={{ margin: '10px 19px 10px 0' }}>
-              {filterCount ? `${filterCount} ${pluralizeCount(filterCount, 'Filter')}` : 'Filter'}
+              {filterCount ? `${filterCount} ${pluralizeCount(filterCount, 'Filter')}` : t('common:misc.filter')}
             </div>
           </>
         </div>
@@ -584,11 +587,12 @@ export default function TodoList({
                     isSelected={checkedOptions === 'all'}
                     handleTaskDetails={handleTaskDetails}
                     handleCompleteNote={handleCompleteNote}
+                    headers={taskHeader}
                   />
                 ))}
               </div>
             ) : (
-              <CenteredContent>Click a card above to filter</CenteredContent>
+              <CenteredContent>{t('task.click_a_card_to_filter')}</CenteredContent>
             )}
             <br />
             <CenteredContent>
@@ -600,7 +604,7 @@ export default function TodoList({
               color="primary"
               className={`${css(styles.taskButton)} `}
             >
-              Create task
+              {t('common:form_actions.create_task')}
             </Fab>
           </>
         )}

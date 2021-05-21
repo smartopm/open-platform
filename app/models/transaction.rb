@@ -21,4 +21,35 @@ class Transaction < ApplicationRecord
   validates :amount, numericality: { greater_than: 0 }
 
   has_paper_trail
+
+  # Performs actions post transaction creation.
+  # * Creates payment entry against payment plan
+  # * Updates payment plan's pending balance
+  #
+  # @param [payment_plan] PaymentPlan
+  #
+  # @return [void]
+  def execute_transaction_callbacks(payment_plan)
+    create_plan_payment(payment_plan)
+    payment_plan.update_pending_balance(amount)
+  end
+
+  private
+
+  # Creates payment entry against transaction and payment plan
+  #
+  # @param [String] PaymentPlan#uuid
+  # @param [Float] payable_amount
+  #
+  # @return [void]
+  def create_plan_payment(payment_plan)
+    plan_payments.create!(
+      user_id: user_id,
+      community_id: community_id,
+      amount: payment_plan.allocated_amount(amount),
+      status: 'paid',
+      payment_plan_id: payment_plan.id,
+      created_at: created_at,
+    )
+  end
 end

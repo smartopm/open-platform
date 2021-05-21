@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'email_msg'
+
 # its a campaign class
 class Campaign < ApplicationRecord
   belongs_to :community
@@ -67,8 +69,14 @@ class Campaign < ApplicationRecord
 
   def send_email(user_email)
     template = community.email_templates.find(email_templates_id)
+    return unless template
+
     # we will add more data here when needed
-    template_data = [{ key: '%community%', value: community.name }]
+    template_data = [
+      { key: '%community%', value: community.name.to_s },
+      { key: '%logo_url%', value: community.logo_url.to_s },
+      { key: '%message%', value: message },
+    ]
     EmailMsg.send_mail_from_db(user_email, template, template_data)
   end
 

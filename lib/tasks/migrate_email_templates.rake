@@ -12,11 +12,35 @@ namespace :import do
     system_email_templates = [
       {
         name: 'welcome_template',
-        subject: 'Welcome Template',
+        subject: "Welcome To #{community.name}",
       },
       {
         name: 'task_reminder_template',
         subject: 'Task Reminder',
+      },
+      {
+        name: 'post_alert_template',
+        subject: 'The Tag you follow has a new post',
+      },
+      {
+        name: 'notification_template',
+        subject: 'Notification',
+      },
+      {
+        name: 'campaign_template',
+        subject: "Greetings from #{community.name}!!!",
+      },
+      {
+        name: 'user_import',
+        subject: 'Your Import Status',
+      },
+      {
+        name: 'form_submit_template',
+        subject: 'A new form submission has been done',
+      },
+      {
+        name: 'form_update_submit_template',
+        subject: 'A form submission has been updated',
       },
     ]
 
@@ -29,13 +53,15 @@ namespace :import do
         end
 
         community.email_templates.create!(
-          community: community,
-          tag: 'system',
           name: t[:name],
           subject: t[:subject],
+          body: '',
+          tag: 'system',
         )
       end
     end
+
+    puts "Done Successfully. #{system_email_templates.size} migrated"
   end
 end
 # rubocop:enable Metrics/BlockLength

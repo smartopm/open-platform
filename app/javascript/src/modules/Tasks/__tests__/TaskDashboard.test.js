@@ -1,6 +1,6 @@
 import React from 'react'
 import { render } from '@testing-library/react'
-import TaskDashboard from '../modules/Tasks/Components/TaskDashboard'
+import TaskDashboard from '../Components/TaskDashboard'
 import '@testing-library/jest-dom/extend-expect'
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn())
@@ -45,12 +45,11 @@ describe('Test the Todo page', () => {
         taskData={data}
       />
     )
-    expect(container.queryByText('Tasks Completed')).toBeInTheDocument()
-    expect(container.queryByText('Tasks Open')).toBeInTheDocument()
-    expect(container.queryByText('Total Calls Open')).toBeInTheDocument()
-    expect(container.queryByText('Tasks with no due date')).toBeInTheDocument()
-    expect(container.queryByText('Overdue Tasks')).toBeInTheDocument()
-    expect(container.queryByText('Tasks due in 30 days')).toBeInTheDocument()
-    expect(container.queryByText('Tasks due in 10 days')).toBeInTheDocument()
+    expect(container.queryByText('task.tasks_completed')).toBeInTheDocument()
+    expect(container.queryByText('task.tasks_open')).toBeInTheDocument()
+    expect(container.queryByText('task.tasks_with_no_due_date')).toBeInTheDocument()
+    expect(container.queryByText('task.overdue_tasks')).toBeInTheDocument()
+    expect(container.queryByText('task.tasks_due_in_10_days')).toBeInTheDocument()
+    expect(container.queryByText('task.tasks_due_in_30_days')).toBeInTheDocument()
   })
 })

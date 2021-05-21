@@ -7,5 +7,6 @@ export default {
     component: Contact
   },
   accessibleBy: allUserTypes,
-  name: t => t('menu.contact')
+  name: t => t('menu.contact'),
+  featureName: 'Contact',
 };

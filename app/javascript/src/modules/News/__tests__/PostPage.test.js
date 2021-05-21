@@ -32,7 +32,8 @@ describe('NewsPage Component', () => {
               logoUrl: '',
               language: 'en-US',
               wpLink: 'http://wp.com',
-              themeColors: {}
+              themeColors: {},
+              features: []
             }
           }
         }

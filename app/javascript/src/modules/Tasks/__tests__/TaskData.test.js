@@ -6,6 +6,7 @@ import { BrowserRouter } from 'react-router-dom';
 import renderTaskData, { LinkToUser } from '../Components/RenderTaskData';
 import TodoItem from '../Components/TodoItem'
 import MockedThemeProvider from '../../__mocks__/mock_theme'
+import t from '../../__mocks__/t'
 
 describe('Task Data components ', () => {
   it('should render proper the link to user component', () => {
@@ -21,9 +22,9 @@ describe('Task Data components ', () => {
 
   const menuData = {
     menuList: [
-      { content: 'Edit Task', isAdmin: true, handleClick: jest.fn() },
-      { content: 'Leave a Comment', isAdmin: true, handleClick: jest.fn() },
-      { content: 'Mark as Complete', isAdmin: true, handleClick: jest.fn() },
+      { content: t('menu.edit_task'), isAdmin: true, handleClick: jest.fn() },
+      { content: t('menu.leave_a_comment'), isAdmin: true, handleClick: jest.fn() },
+      { content: t('menu.mark_complete'), isAdmin: true, handleClick: jest.fn() },
     ],
     handleTodoMenu: jest.fn(),
     anchorEl: null,
@@ -49,6 +50,15 @@ describe('Task Data components ', () => {
 
 
   it('should check if TodoItem renders with no error', () => {
+  const taskHeader = [
+    { title: 'Select', col: 1 },
+    { title: 'Task', value: t('common:table_headers.task'), col: 4 },
+    { title: 'Created By', value: t('common:table_headers.created_by'), col: 3 },
+    { title: 'Duedate', value: t('common:table_headers.due_date'), col: 1 },
+    { title: 'Assignees',value: t('common:table_headers.assignees'), col: 2 },
+    { title: 'Menu', col: 1 }
+  ];
+
     const container = render(
       <BrowserRouter>
         <MockedProvider>
@@ -60,6 +70,7 @@ describe('Task Data components ', () => {
               isSelected={false}
               handleTaskDetails={() => {}}
               handleCompleteNote={() => {}}
+              headers={taskHeader}
             />
           </MockedThemeProvider>
         </MockedProvider>

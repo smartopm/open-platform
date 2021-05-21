@@ -13,6 +13,7 @@ export default {
     icon: <DescriptionIcon />
   },
   name: t => t('menu.forms'),
+  featureName: 'Forms',
   accessibleBy: [
     'client',
     'prospective_client',

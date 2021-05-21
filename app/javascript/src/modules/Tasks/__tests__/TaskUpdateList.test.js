@@ -2,7 +2,7 @@ import React from 'react'
 import { render } from '@testing-library/react'
 import { BrowserRouter } from 'react-router-dom/'
 import { MockedProvider } from '@apollo/react-testing'
-import TaskUpdateList from '../modules/Tasks/Components/TaskUpdateList'
+import TaskUpdateList from '../Components/TaskUpdateList'
 import '@testing-library/jest-dom/extend-expect'
 
 describe('Comment Card Component', () => {
@@ -40,6 +40,6 @@ describe('Comment Card Component', () => {
       </MockedProvider>
     )
 
-    expect(container.queryByText(/no update/i)).toBeTruthy();
+    expect(container.queryByText('task.history_update_no_data')).toBeTruthy();
   });
 })

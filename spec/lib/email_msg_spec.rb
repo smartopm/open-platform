@@ -22,6 +22,16 @@ RSpec.describe EmailMsg do
       )
       EmailMsg.send_mail_from_db('gmail@gmail.com', OpenStruct.new(subject: 'My Mail'), [])
     end
+    it 'raises error when email is nil' do
+      expect do
+        EmailMsg.send_mail_from_db(nil, OpenStruct.new(subject: 'My Mail'), [])
+      end.to raise_error(StandardError)
+    end
+    it 'raises error when template is nil' do
+      expect do
+        EmailMsg.send_mail_from_db('gmail@gmail.com', nil, [])
+      end.to raise_error(StandardError)
+    end
   end
 
   describe '.messages_from_sendgrid' do

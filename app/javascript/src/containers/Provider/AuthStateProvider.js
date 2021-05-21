@@ -44,6 +44,7 @@ const QUERY = gql`
         language
         wpLink
         themeColors
+        features
       }
     }
   }

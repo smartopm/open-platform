@@ -26,7 +26,7 @@
     "user_success": "Successfully updated",
     "user_step": "Edit Start for this step",
     "journey_start": "Customer Journey Start Date",
-    "balance": "Balance",
+    "total_balance": "Total Balance",
     "unallocated_funds": "Unallocated Funds",
     "make_payment": "Make a Payment",
     "add_invoice": "Add an Invoice"
