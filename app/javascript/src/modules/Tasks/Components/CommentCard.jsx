@@ -60,7 +60,7 @@ export default function CommentCard({ data, refetch }) {
             </CardContent>
             )}
             {(!edit && editId !== com.id) && (
-            <CardActions style={{ color: '#69ABA4'  }}>
+            <CardActions color="primary">
               <Button
                 size="small"
                 color="primary"
@@ -73,7 +73,7 @@ export default function CommentCard({ data, refetch }) {
               |
               <Button
                 size="small"
-                color="primary"
+                color="secondary"
                 id={com.id}
                 name={com.user.name}
                 image={com.user.imageUrl} 

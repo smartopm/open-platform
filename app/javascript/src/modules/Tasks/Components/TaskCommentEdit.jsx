@@ -40,7 +40,7 @@ export default function EditField({ handleClose, data, refetch }) {
           <Typography className={classes.title} gutterBottom>
             {data.user.name}
           </Typography>
-          <div style={{ display: 'flex', flexDirection: 'column', color: '#69ABA4' }}>
+          <div style={{ display: 'flex', flexDirection: 'column' }}>
             <TextField
               multiline
               value={body}

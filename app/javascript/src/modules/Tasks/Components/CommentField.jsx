@@ -32,7 +32,7 @@ export default function CommentTextField({ data, refetch, authState, taskId }) {
     <>
       <form style={{ display: 'flex' }} onSubmit={handleSubmit}>
         <Avatar style={{ marginTop: '7px' }} src={authState.user.imageUrl} alt="avatar-image" />
-        <div className={classes.root} style={{ display: 'flex', flexDirection: 'column', color: '#69ABA4' }}>
+        <div className={classes.root} style={{ display: 'flex', flexDirection: 'column' }}>
           <TextField
             value={body}
             multiline
@@ -65,11 +65,9 @@ const useStyles = makeStyles((theme) => ({
     '& .MuiButton-contained': {
       width: 100,
       marginLeft: '8px',
-      backgroundColor: '#69ABA4',
       color: "white"
     },
     '& .Mui-disabled': {
-      backgroundColor: '#f8f8f9',
       color: 'white',
       border: '2px white solid'
     }
