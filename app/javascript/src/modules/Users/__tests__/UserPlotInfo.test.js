@@ -4,6 +4,7 @@ import { cleanup, render } from '@testing-library/react'
 import { MockedProvider } from '@apollo/react-testing'
 import UserPlotInfo from '../Components/UserPlotInfo'
 import '@testing-library/jest-dom/extend-expect'
+import MockedThemeProvider from '../../__mocks__/mock_theme'
 
 describe('User Plot Info Page', () => {
   const account = [
@@ -45,7 +46,9 @@ describe('User Plot Info Page', () => {
     const container = render(
       <MockedProvider mock={[]}>
         <BrowserRouter>
-          <UserPlotInfo account={account} userId={userMock.userId} userType={userMock.userType} />
+          <MockedThemeProvider>
+            <UserPlotInfo account={account} userId={userMock.userId} userType={userMock.userType} />
+          </MockedThemeProvider>
         </BrowserRouter>
       </MockedProvider>
     )
@@ -56,7 +59,9 @@ describe('User Plot Info Page', () => {
     const container = render(
       <MockedProvider mock={[]}>
         <BrowserRouter>
-          <UserPlotInfo account={account} userId={userMock.userId} userType={userMock.userType} />
+          <MockedThemeProvider>
+            <UserPlotInfo account={account} userId={userMock.userId} userType={userMock.userType} />
+          </MockedThemeProvider>
         </BrowserRouter>
       </MockedProvider>
     )
@@ -67,7 +72,9 @@ describe('User Plot Info Page', () => {
     const container = render(
       <MockedProvider mock={[]}>
         <BrowserRouter>
-          <UserPlotInfo account={[]} userId={userMock.userId} userType={userMock.userType} />
+          <MockedThemeProvider>
+            <UserPlotInfo account={[]} userId={userMock.userId} userType={userMock.userType} />
+          </MockedThemeProvider>
         </BrowserRouter>
       </MockedProvider>
     )
@@ -78,7 +85,9 @@ describe('User Plot Info Page', () => {
     const { getByTestId } = render(
       <MockedProvider mock={[]}>
         <BrowserRouter>
-          <UserPlotInfo account={account} userId={userMock.userId} userType={userMock.userType} />
+          <MockedThemeProvider>
+            <UserPlotInfo account={account} userId={userMock.userId} userType={userMock.userType} />
+          </MockedThemeProvider>
         </BrowserRouter>
       </MockedProvider>
     )

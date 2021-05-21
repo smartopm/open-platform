@@ -80,14 +80,14 @@ export default function WelcomePage() {
             </Grid>
             <Grid item xs={12} md={4} sm={6}>
               <CallIcon color="primary" />
-              <Link href="tel:+260966194383">+260 966 194383</Link>
+              <Link href="tel:+260966194383" data-testid="contact">+260 966 194383</Link>
               ,
               {' '}
               <Link href="tel:+260760635024">+260 760 635024</Link>
             </Grid>
             <Grid item xs={12} md={4} sm={12}>
               <MailIcon color="primary" />
-              <Typography component="p" data-testid="locationtext">
+              <Typography component="p" data-testid="contact-email">
                 <Link href="mailto:hello@thebe-im.com">hello@thebe-im.com</Link>
               </Typography>
             </Grid>

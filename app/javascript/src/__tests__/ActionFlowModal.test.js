@@ -8,6 +8,7 @@ import { EmailTemplatesQuery } from '../modules/Emails/graphql/email_queries';
 
 
 import '@testing-library/jest-dom/extend-expect';
+import MockedThemeProvider from '../modules/__mocks__/mock_theme';
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
 const props = {
@@ -36,7 +37,9 @@ describe('ActionFlowModal', () => {
       container = render(
         <MockedProvider mocks={[]} addTypename={false}>
           <BrowserRouter>
-            <ActionFlowModal {...props} />
+            <MockedThemeProvider>
+              <ActionFlowModal {...props} />
+            </MockedThemeProvider>
           </BrowserRouter>
         </MockedProvider>
       );
@@ -61,7 +64,9 @@ describe('ActionFlowModal', () => {
       container = render(
         <MockedProvider mocks={[]} addTypename={false}>
           <BrowserRouter>
-            <ActionFlowModal {...updatedProps} />
+            <MockedThemeProvider>
+              <ActionFlowModal {...updatedProps} />
+            </MockedThemeProvider>
           </BrowserRouter>
         </MockedProvider>
       );
@@ -190,7 +195,9 @@ describe('render eventType, actionTypes, actionFields, ruleFields', () => {
     await act(async () => {
       render(
         <MockedProvider mocks={mocks} addTypename={false}>
-          <ActionFlowModal {...props} />
+          <MockedThemeProvider>
+            <ActionFlowModal {...props} />
+          </MockedThemeProvider>
         </MockedProvider>
       );
     });
@@ -202,7 +209,9 @@ describe('render eventType, actionTypes, actionFields, ruleFields', () => {
     await act(async () => {
       render(
         <MockedProvider mocks={mocks} addTypename={false}>
-          <ActionFlowModal {...newProps} />
+          <MockedThemeProvider>
+            <ActionFlowModal {...newProps} />
+          </MockedThemeProvider>
         </MockedProvider>
       );
     });

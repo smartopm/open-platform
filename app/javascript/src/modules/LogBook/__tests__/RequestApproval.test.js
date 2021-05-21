@@ -7,6 +7,7 @@ import { MockedProvider } from '@apollo/react-testing';
 import { Context } from '../../../containers/Provider/AuthStateProvider';
 import { createClient } from '../../../utils/apollo';
 import RequestApproval from '../Components/RequestApproval';
+import MockedThemeProvider from '../../__mocks__/mock_theme';
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
 describe('EntryRequest main page', () => {
@@ -29,7 +30,9 @@ it('renders the EntryRequest page correctly', async () => {
           <Context.Provider value={data}>
             <MockedProvider>
               <BrowserRouter>
-                <RequestApproval />
+                <MockedThemeProvider>
+                  <RequestApproval />
+                </MockedThemeProvider>
               </BrowserRouter>
             </MockedProvider>
           </Context.Provider>

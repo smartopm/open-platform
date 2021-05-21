@@ -111,7 +111,6 @@ export default function RequestForm({ path }) {
               {...phoneNumber}
               name="phoneNumber"
               type="number"
-              data-testid="phone_number"
               inputProps={{ 'data-testid': 'phone_number' }}
             />
 

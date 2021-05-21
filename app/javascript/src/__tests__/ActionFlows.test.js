@@ -6,6 +6,7 @@ import ActionFlows from '../containers/ActionFlows/ActionFlows'
 import { Flows } from '../graphql/queries'
 import Loading from '../shared/Loading'
 import '@testing-library/jest-dom/extend-expect'
+import MockedThemeProvider from '../modules/__mocks__/mock_theme'
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn())
 const mocks = {
@@ -37,7 +38,9 @@ describe('ActionFlows', () => {
     const container = render(
       <MockedProvider mocks={[mocks]} addTypename={false}>
         <BrowserRouter>
-          <ActionFlows />
+          <MockedThemeProvider>
+            <ActionFlows />
+          </MockedThemeProvider>
         </BrowserRouter>
       </MockedProvider>
     )
@@ -75,7 +78,9 @@ describe('ActionFlows', () => {
     const container = render(
       <MockedProvider mocks={[newMocks]} addTypename={false}>
         <BrowserRouter>
-          <ActionFlows />
+          <MockedThemeProvider>
+            <ActionFlows />
+          </MockedThemeProvider>
         </BrowserRouter>
       </MockedProvider>
     )

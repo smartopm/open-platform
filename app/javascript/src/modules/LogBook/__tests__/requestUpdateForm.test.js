@@ -6,6 +6,7 @@ import { MockedProvider } from '@apollo/react-testing'
 import { EntryRequestQuery } from '../../../graphql/queries'
 import Loading from '../../../shared/Loading'
 import RequestUpdate from '../Components/RequestUpdate'
+import MockedThemeProvider from '../../__mocks__/mock_theme'
 
 describe("RequestUpdate Component ",() => {
   const mocks = {
@@ -40,7 +41,9 @@ describe("RequestUpdate Component ",() => {
      const container =  render(
        <MockedProvider mocks={[mocks]} addTypename={false}>
          <BrowserRouter>
-           <RequestUpdate id="3c2f8ee2-598b-437c-b217-3e4c0f86c761" />
+           <MockedThemeProvider>
+             <RequestUpdate id="3c2f8ee2-598b-437c-b217-3e4c0f86c761" />
+           </MockedThemeProvider>
          </BrowserRouter>
        </MockedProvider>
      )

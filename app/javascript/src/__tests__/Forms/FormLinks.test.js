@@ -6,6 +6,7 @@ import { MockedProvider } from '@apollo/react-testing';
 import { ThemeProvider } from '@material-ui/core';
 import FormLinks from '../../containers/Forms/FormLinks';
 import { theme } from '../../themes/nkwashi/theme';
+import MockedThemeProvider from '../../modules/__mocks__/mock_theme';
 
 describe('FormLinks Component', () => {
   it('renders FormLinks text', () => {
@@ -13,7 +14,9 @@ describe('FormLinks Component', () => {
       <MockedProvider>
         <ThemeProvider theme={theme}>
           <BrowserRouter>
-            <FormLinks />
+            <MockedThemeProvider>
+              <FormLinks />
+            </MockedThemeProvider>
           </BrowserRouter>
         </ThemeProvider>
       </MockedProvider>

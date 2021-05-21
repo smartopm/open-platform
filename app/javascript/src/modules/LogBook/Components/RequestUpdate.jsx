@@ -234,7 +234,7 @@ export default function RequestUpdate({ id }) {
               value={formData.name}
               onChange={handleInputChange}
               name="name"
-              inputProps={{ "data-testid ":"entry_user_name" }}
+              inputProps={{ "data-testid":"entry_user_name" }}
               required
             />
           </div>
@@ -249,7 +249,7 @@ export default function RequestUpdate({ id }) {
               value={formData.nrc || ''}
               onChange={handleInputChange}
               name="nrc"
-              inputProps={{ "data-testid ":"entry_user_nrc" }}
+              inputProps={{ "data-testid":"entry_user_nrc" }}
               required
             />
           </div>
@@ -263,7 +263,7 @@ export default function RequestUpdate({ id }) {
               value={formData.phoneNumber || ''}
               onChange={handleInputChange}
               name="phoneNumber"
-              inputProps={{ "data-testid ":"entry_user_phone" }}
+              inputProps={{ "data-testid":"entry_user_phone" }}
               required={previousRoute === 'enroll'}
             />
           </div>
@@ -337,7 +337,7 @@ export default function RequestUpdate({ id }) {
               onChange={handleInputChange}
               value={formData.vehiclePlate || ''}
               name="vehiclePlate"
-              inputProps={{ "data-testid ":"entry_user_vehicle" }}
+              inputProps={{ "data-testid":"entry_user_vehicle" }}
             />
           </div>
           <div className="form-group">
@@ -349,7 +349,7 @@ export default function RequestUpdate({ id }) {
               value={formData.reason || ''}
               onChange={handleInputChange}
               className={`${css(styles.selectInput)}`}
-              inputProps={{ "data-testid ":"entry_user_visit" }}
+              inputProps={{ "data-testid":"entry_user_visit" }}
             >
               <MenuItem value={formData.reason}>{formData.reason}</MenuItem>
             </TextField>

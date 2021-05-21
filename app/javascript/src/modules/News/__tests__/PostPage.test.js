@@ -6,6 +6,7 @@ import { MockedProvider } from '@apollo/react-testing';
 import { PostDiscussionQuery } from '../../../graphql/queries';
 import PostPage from '../Components/PostPage';
 import { CurrentCommunityQuery } from '../../Community/graphql/community_query';
+import MockedThemeProvider from '../../__mocks__/mock_theme';
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
 
@@ -30,7 +31,8 @@ describe('NewsPage Component', () => {
               tagline: 'This is a tagline for this community',
               logoUrl: '',
               language: 'en-US',
-              wpLink: 'http://wp.com'
+              wpLink: 'http://wp.com',
+              themeColors: {}
             }
           }
         }
@@ -57,7 +59,9 @@ describe('NewsPage Component', () => {
       container = render(
         <MockedProvider mocks={mocks} addTypename={false}>
           <BrowserRouter>
-            <PostPage />
+            <MockedThemeProvider>
+              <PostPage />
+            </MockedThemeProvider>
           </BrowserRouter>
         </MockedProvider>
       );

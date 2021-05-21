@@ -4,6 +4,7 @@ import '@testing-library/jest-dom/extend-expect';
 import { MockedProvider } from '@apollo/react-testing';
 import CommunitySettings from '../components/Settings';
 import { CommunityUpdateMutation } from '../graphql/community_mutations';
+import MockedThemeProvider from '../../__mocks__/mock_theme';
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
 describe('Community settings page ', () => {
@@ -52,7 +53,8 @@ describe('Community settings page ', () => {
           locale: 'en-US',
           tagline: '',
           logoUrl: '',
-          wpLink: ''
+          wpLink: '',
+          themeColors: {}
         }
       },
       result: {
@@ -66,7 +68,9 @@ describe('Community settings page ', () => {
     const mockRefetch = jest.fn();
     const container = render(
       <MockedProvider mocks={[communityMutatioMock]}>
-        <CommunitySettings data={data} refetch={mockRefetch} />
+        <MockedThemeProvider>
+          <CommunitySettings data={data} refetch={mockRefetch} />
+        </MockedThemeProvider>
       </MockedProvider>
     );
     expect(container.queryByText('community.community_logo')).toBeInTheDocument();

@@ -4,6 +4,7 @@ import '@testing-library/jest-dom/extend-expect'
 import { BrowserRouter } from 'react-router-dom/'
 import Events from '../Components/Events'
 import { LogView } from '../Components/EntryLogs'
+import MockedThemeProvider from '../../__mocks__/mock_theme'
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn())
 
@@ -33,7 +34,9 @@ describe('Should Render Events Component', () => {
   it('should render proper data', () => {
     const { getByText } = render(
       <BrowserRouter>
-        <Events data={data} />
+        <MockedThemeProvider>
+          <Events data={data} />
+        </MockedThemeProvider>
       </BrowserRouter>
     )
     expect(getByText('log_title.subject')).toBeInTheDocument()
@@ -49,7 +52,9 @@ describe('Should Render Events Component', () => {
     const emptyData = { result: [] }
     const container = render(
       <BrowserRouter>
-        <Events data={emptyData} />
+        <MockedThemeProvider>
+          <Events data={emptyData} />
+        </MockedThemeProvider>
       </BrowserRouter>
     )
     expect(container.queryByText('user_entry')).toBeNull()
