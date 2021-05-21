@@ -241,14 +241,14 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
             <label className="bmd-label-static" htmlFor="firstName" data-testid="client_name">
               {t('common:form_fields.client_name')}
             </label>
-            <input
+            <TextField
               className="form-control"
               type="text"
               onChange={handleInputChange}
               value={authState.user?.name || ''}
               disabled
               name="name"
-              data-testid="clientName"
+              inputProps={{ 'data-testid': 'clientName' }}
               required
             />
           </div>
@@ -257,13 +257,13 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
           <label className="bmd-label-static" htmlFor="firstName" data-testid="full_name">
             {t('common:form_fields.full_name')}
           </label>
-          <input
+          <TextField
             className="form-control"
             type="text"
             onChange={handleInputChange}
             value={data.name || ''}
             name="name"
-            data-testid="username"
+            inputProps={{ 'data-testid': 'username' }}
             required
           />
         </div>
@@ -271,13 +271,13 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
           <label className="bmd-label-static" htmlFor="phoneNumber" data-testid="primary_number">
             {t('common:form_fields.primary_number')}
           </label>
-          <input
+          <TextField
             className="form-control"
             type="text"
             onChange={handleInputChange}
             defaultValue={data.phoneNumber || ''}
             name="phoneNumber"
-            data-testid="phoneNumber"
+            inputProps={{ 'data-testid': 'phoneNumber' }}
             disabled={!isFromRef && !isAdmin}
             required
           />
@@ -286,13 +286,13 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
           <label className="bmd-label-static" htmlFor="email" data-testid="primary_email">
             {t('common:form_fields.primary_email')}
           </label>
-          <input
+          <TextField
             className="form-control"
             name="email"
             type="email"
             onChange={handleInputChange}
             value={data.email || ''}
-            data-testid="email"
+            inputProps={{ 'data-testid': 'email' }}
             disabled={!isFromRef && !isAdmin}
           />
         </div>
@@ -303,13 +303,13 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
               <label className="bmd-label-static" htmlFor="extRefId">
                 {t('common:form_fields.external_reference')}
               </label>
-              <input
+              <TextField
                 className="form-control"
                 name="extRefId"
                 type="text"
                 onChange={handleInputChange}
                 value={data.extRefId || ''}
-                data-testid="ext-ref-id"
+                inputProps={{ 'data-testid': 'ext-ref-id' }}
               />
             </div>
             {
@@ -343,13 +343,13 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
               <label className="bmd-label-static" htmlFor="primaryAddress">
                 {t('common:form_fields.primary_address')}
               </label>
-              <input
+              <TextField
                 className="form-control"
                 name="primaryAddress"
                 type="text"
                 onChange={handleInputChange}
                 value={data.primaryAddress || ''}
-                data-testid="address"
+                inputProps={{ 'data-testid': 'address' }}
               />
             </div>
 
@@ -461,9 +461,10 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
               <Button
                 variant="contained"
                 type="submit"
-                className={`btn ${css(styles.getStartedButton)} enz-lg-btn`}
+                className={`${css(styles.getStartedButton)} enz-lg-btn`}
                 disabled={submitting}
                 data-testid="submit_btn"
+                color="primary"
               >
                 {!submitting ? t('common:form_actions.submit') : t('common:form_actions.submitting')}
               </Button>
@@ -494,8 +495,9 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
             <Button
               variant="contained"
               type="submit"
-              className={`btn ${css(styles.getStartedButton)} enz-lg-btn`}
+              className={`${css(styles.getStartedButton)} enz-lg-btn`}
               data-testid="referralBtn"
+              color="primary"
             >
               <span>{t('common:misc.refer')}</span>
             </Button>
@@ -522,8 +524,6 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
 
 const styles = StyleSheet.create({
   getStartedButton: {
-    backgroundColor: '#69ABA4',
-    color: '#FFF',
     width: '30%',
     height: 51,
     boxShadow: 'none',

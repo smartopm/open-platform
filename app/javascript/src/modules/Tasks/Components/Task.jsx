@@ -26,6 +26,12 @@ import RemindMeLaterMenu from './RemindMeLaterMenu';
 import { TaskReminderMutation } from '../graphql/task_reminder_mutation';
 import MessageAlert from '../../../components/MessageAlert';
 
+/**
+ * 
+ * @param {any} param0 
+ * @returns ReactNode
+ * @deprecated should be removed, it looks like it is no longer used
+ */
 export default function Task({
   note,
   message,
@@ -236,7 +242,6 @@ export default function Task({
                 data-testid="more_details_btn"
                 style={{
                   cursor: 'pointer',
-                  color: '#69ABA4',
                   marginLeft: '5px'
                 }}
                 onClick={event => routeToAction(event, note.id)}

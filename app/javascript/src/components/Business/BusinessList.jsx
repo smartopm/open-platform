@@ -132,7 +132,7 @@ export default function BusinessList({ businessData, userType, refetch }) {
           onClick={openModal}
           color="primary"
           // eslint-disable-next-line no-use-before-define
-          className={`btn ${css(styles.taskButton)} `}
+          className={`${css(styles.taskButton)} `}
         >
           Create a Business
         </Fab>

@@ -183,7 +183,7 @@ export default function LoginScreen() {
           <Button
             variant="contained"
             color="primary"
-            className={`btn ${css(styles.getStartedButton)} enz-lg-btn next-btn`}
+            className={`${css(styles.getStartedButton)} enz-lg-btn next-btn`}
             onClick={event => loginWithPhone(event, 'btnClick')}
             disabled={isLoading}
           >

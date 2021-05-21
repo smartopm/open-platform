@@ -144,7 +144,7 @@ export default function ConfirmCodeScreen({ match }) {
         >
           <Button
             variant="contained"
-            className={`btn ${css(styles.getStartedButton)}`}
+            className={`${css(styles.getStartedButton)}`}
             onClick={handleConfirmCode}
             ref={submitRef}
             disabled={isLoading}

@@ -1,4 +1,4 @@
-/* eslint-disable */
+/* eslint-disable react/prop-types */
 import React from 'react';
 import { withStyles, Box, Tabs, Tab, Typography } from '@material-ui/core';
 
@@ -19,21 +19,19 @@ export function TabPanel(props) {
   );
 }
 
-export const StyledTabs = withStyles({
+export const StyledTabs = withStyles(theme => ({
   indicator: {
-    backgroundColor: 'rgb(37, 192, 176)',
+    backgroundColor: theme.palette.primary.main,
     '& > div': {
       maxWidth: 40,
       width: '100%',
-      backgroundColor: 'rgb(37, 192, 176)'
     }
   }
-})(props => <Tabs {...props} TabIndicatorProps={{ children: <div /> }} />);
+}))(props => <Tabs {...props} TabIndicatorProps={{ children: <div /> }} />);
 
 export const StyledTab = withStyles({
   root: {
     textTransform: 'none',
-    color: '#rgb(37, 192, 176)',
     display: 'flex',
     justifyContent: 'center'
   }

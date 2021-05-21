@@ -246,7 +246,7 @@ export function ActionDialog({ handleClose, open, handleOnSave, message, type}) 
           autoFocus
           onClick={handleOnSave}
           variant="contained"
-          style={{ backgroundColor: type === 'warning' ? '#dc402b' : '#69ABA4', color: 'white' }}
+          color="primary"
         >
           Proceed
         </Button>

@@ -185,7 +185,7 @@ export default function RequestForm({ path }) {
           <div className="row justify-content-center align-items-center ">
             <Button
               variant="contained"
-              className={`btn ${css(styles.logButton)}`}
+              className={`${css(styles.logButton)}`}
               onClick={handleSubmit}
               disabled={isSubmitted}
               color="primary"

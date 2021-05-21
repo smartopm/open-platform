@@ -6,7 +6,7 @@ import Avatar from '@material-ui/core/Avatar';
 import Fab from '@material-ui/core/Fab';
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 import { useHistory } from 'react-router';
-import { Grid, List, IconButton } from '@material-ui/core'
+import { Grid, List, IconButton, Typography } from '@material-ui/core'
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { useQuery, useLazyQuery, useMutation } from 'react-apollo';
@@ -347,7 +347,7 @@ export function renderInvoice(invoice, currencyData, menuData) {
           <Link to={`/user/${invoice.user.id}?tab=Payments`} style={{ textDecoration: 'none'}}>
             <div style={{ display: 'flex', marginTop: '10px'}}>
               <Avatar src={invoice.user?.imageUrl} alt="avatar-image" />
-              <span style={{ margin: '7px', fontSize: '12px' }}>{invoice.user?.name}</span>
+              <Typography color="primary" style={{ margin: '7px', fontSize: '12px' }}>{invoice.user?.name}</Typography>
             </div>
           </Link>
           <br />

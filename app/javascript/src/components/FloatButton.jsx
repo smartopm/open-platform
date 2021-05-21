@@ -11,7 +11,7 @@ export default function FloatButton({ title, handleClick, extraStyles }) {
       color="primary"
       style={extraStyles}
       // eslint-disable-next-line no-use-before-define
-      className={`btn ${css(styles.formButton)} `}
+      className={`${css(styles.formButton)} `}
     >
       {title}
     </Fab>

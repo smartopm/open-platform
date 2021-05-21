@@ -16,7 +16,6 @@ const useStyles = makeStyles(theme => ({
   planStyles: {
     color: theme.palette.primary.main,
     border: `1px ${theme.palette.primary.main} solid`,
-    backgroundColor: theme.palette.primary.dew,
     height: 39,
     padding: 6,
     marginTop: 20

@@ -89,7 +89,7 @@ export default function Discuss({ update }) {
             aria-label="discussion_cancel"
             color="secondary"
             onClick={update}
-            className={`btn ${css(discussStyles.cancelBtn)}`}
+            className={`${css(discussStyles.cancelBtn)}`}
           >
             Cancel
           </Button>
@@ -99,7 +99,7 @@ export default function Discuss({ update }) {
             color="primary"
             disabled={loading}
             aria-label="discussion_submit"
-            className={`btn ${css(discussStyles.submitBtn)}`}
+            className={`${css(discussStyles.submitBtn)}`}
             data-testid='button'
           >
             {loading ? 'Submitting ...' : 'Submit'}

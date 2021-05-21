@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { css, StyleSheet } from 'aphrodite';
 import PropTypes from 'prop-types';
+import { makeStyles } from '@material-ui/styles';
 import Typography from '@material-ui/core/Typography';
 import { dateToString } from '../../../components/DateContainer';
 import UserPlotMap from './UserPlotMap';
@@ -10,6 +10,7 @@ import UserPlotMap from './UserPlotMap';
 export default function UserPlotInfo({ account }) {
   const [plotNumber, setPlotNumber] = useState([]);
   const { t } = useTranslation('users')
+  const classes = useStyles();
 
   function setData() {
     if (account[0]?.landParcels[0]) {
@@ -39,7 +40,7 @@ export default function UserPlotInfo({ account }) {
     <>
       {parcels().length > 0 ? (
         <div className="container">
-          <div className={css(styles.body)}>
+          <div className={classes.body}>
             <div>
               <div style={{ display: 'flex' }}>
                 <Typography variant="body1">
@@ -52,20 +53,20 @@ export default function UserPlotInfo({ account }) {
               {parcels().map((plot, index) => (
                 // eslint-disable-next-line react/no-array-index-key
                 <div style={{ display: 'flex' }} key={index}>
-                  <li className={css(styles.plotNumber)}>{plot.parcelNumber}</li>
+                  <li className={classes.plotNumber}>{plot.parcelNumber}</li>
                 </div>
               ))}
               <Typography variant="body2">
                 {t('common:misc.plot_details', { date: dateToString(parcels()[parcels().length - 1]?.updatedAt) })}
-                <span className={css(styles.supportLink)}>
+                <span className={classes.supportLink}>
                   &nbsp;
-                  <Link data-testid="support_link" to="/contact" className={css(styles.routeLink)}>
+                  <Link data-testid="support_link" to="/contact" className={classes.routeLink}>
                     {t("common:misc.support_team")}
                   </Link>
                 </span>
               </Typography>
             </div>
-            <div className={css(styles.mapContainer)}>
+            <div className={classes.mapContainer}>
               <UserPlotMap plotData={account} />
             </div>
           </div>
@@ -79,7 +80,7 @@ export default function UserPlotInfo({ account }) {
   );
 }
 
-const styles = StyleSheet.create({
+const useStyles = makeStyles(theme => ({
   supportLink: {
     fontWeight: 'bold',
     cursor: 'pointer'
@@ -91,8 +92,8 @@ const styles = StyleSheet.create({
     width: '30%',
     margin: '10px',
     textAlign: 'center',
-    border: '2px solid #69aba4',
-    color: '#69aba4'
+    border: `2px solid ${theme.palette.primary.main}`,
+    color: 'theme.palette.primary.main'
   },
   body: {
     display: 'flex',
@@ -103,20 +104,12 @@ const styles = StyleSheet.create({
     textDecoration: 'underline',
     color: 'black'
   },
-  chatButton: {
-    backgroundColor: '#69ABA4',
-    color: '#FFF',
-    width: '100%',
-    height: 51,
-    boxShadow: 'none',
-    marginTop: 50
-  },
   mapContainer: {
     borderStyle: 'solid',
     borderWidth: '1px',
     width: '100%'
   }
-});
+}))
 
 UserPlotInfo.defaultProps = {
   account: []

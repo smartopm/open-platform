@@ -4,6 +4,7 @@ import dateutil from '../../utils/dateutil'
 import { useHistory } from 'react-router'
 import { StyleSheet, css } from 'aphrodite'
 import { dateToString } from '../DateContainer'
+import { Typography } from '@material-ui/core'
 
 export default function CustodianTimeSheetLog({ data }) {
   const history = useHistory()
@@ -50,10 +51,11 @@ export default function CustodianTimeSheetLog({ data }) {
               </div>
             </div>
             <div className="d-flex flex-row-reverse">
-              <span
+              <Typography
+                component="span"
+                color="primary"
                 style={{
                   cursor: 'pointer',
-                  color: '#009688'
                 }}
                 onClick={() =>
                   routeToEmployee({
@@ -63,7 +65,7 @@ export default function CustodianTimeSheetLog({ data }) {
                 }
               >
                 More Details
-              </span>
+              </Typography>
             </div>
             <div className="border-top my-3" />
           </React.Fragment>

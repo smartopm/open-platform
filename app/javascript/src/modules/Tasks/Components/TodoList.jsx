@@ -598,7 +598,7 @@ export default function TodoList({
               variant="extended"
               onClick={openModal}
               color="primary"
-              className={`btn ${css(styles.taskButton)} `}
+              className={`${css(styles.taskButton)} `}
             >
               Create task
             </Fab>

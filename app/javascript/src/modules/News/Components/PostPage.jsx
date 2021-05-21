@@ -154,7 +154,7 @@ export default function PostPage() {
         <Fab
           variant="extended"
           onClick={handleCommentsView}
-          className={`btn ${css(styles.getStartedButton)} `}
+          className={`${css(styles.getStartedButton)} `}
           color="primary"
         >
           {t('common:misc.comment', { count: 0 })}

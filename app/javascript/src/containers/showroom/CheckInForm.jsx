@@ -9,6 +9,13 @@ import { infoSource } from '../../utils/constants';
 import { Footer } from '../../components/Footer';
 import { createShowroomEntry, EntryRequestCreate } from '../../graphql/mutations';
 
+/**
+ * 
+ * @param {Object} history 
+ * @returns ReactNode
+ * @deprecated we need to confirm whether the showroom feature is used and if not we remove it
+ * No changes have been made to it since the first launch of the feature, logs are here https://x.doublegdp.com/showroom_logs 
+ */
 export default function ClientForm({ history }) {
   const { register, handleSubmit, errors } = useForm();
   const [isSubmitted] = useState(false);
@@ -153,7 +160,7 @@ export default function ClientForm({ history }) {
           <div className="row justify-content-center align-items-center ">
             <Button
               variant="contained"
-              className={`btn ${css(styles.logButton)}`}
+              className={`${css(styles.logButton)}`}
               type="submit"
               disabled={isSubmitted}
               color="primary"

@@ -3,7 +3,7 @@
 import React, { useState } from 'react'
 import { useQuery } from 'react-apollo';
 import PropTypes, { shape } from 'prop-types';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles, useTheme } from '@material-ui/core/styles';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import TrendingFlatIcon from '@material-ui/icons/TrendingFlat';
 import Divider from '@material-ui/core/Divider';
@@ -35,6 +35,7 @@ const paymentCardContent = {
 export default function PaymentSummary({ authState, translate }) {
   const matches = useMediaQuery('(max-width:600px)')
   const classes = useStyles();
+  const theme = useTheme()
   const [active, setActive] = useState('payment')
   const { loading, data, error } = useQuery(InvoiceSummaryQuery, {
     fetchPolicy: 'cache-and-network',
@@ -100,8 +101,8 @@ export default function PaymentSummary({ authState, translate }) {
                 >
                   {translate('common:misc.invoice', { count: 0 })}
                 </Typography>
-                <Typography style={{marginLeft: 'auto', marginRight: '81px', cursor: 'pointer', fontSize: '16px', fontWeight: 500, color: '#66A59A'}}>
-                  <Link to='/users'>{active === 'payment' && translate('dashboard.make_new_payment')}</Link>
+                <Typography style={{marginLeft: 'auto', marginRight: '81px', cursor: 'pointer', fontSize: '16px', fontWeight: 500}}>
+                  <Link to='/users' style={{ color: theme.palette.primary.main }}>{active === 'payment' && translate('dashboard.make_new_payment')}</Link>
                 </Typography>
               </Grid>
             </div>
@@ -141,11 +142,11 @@ export default function PaymentSummary({ authState, translate }) {
             </Grid>
           )}
           {matches && active === 'payment' && (
-            <div style={{display: 'flex', marginLeft: '20px', cursor: 'pointer', fontSize: '14px', fontWeight: 500, color: '#66A59A'}}>
+            <div style={{display: 'flex', marginLeft: '20px', cursor: 'pointer', fontSize: '14px', fontWeight: 500}}>
               <Typography color='primary' style={{marginRight: '10px', fontWeight: 500}}>
                 <Link to='/users'>{translate('dashboard.make_new_payment')}</Link>
               </Typography>
-              <TrendingFlatIcon style={{color: '#66A59A'}} />
+              <TrendingFlatIcon color="primary" />
             </div>
           )}
         </div>

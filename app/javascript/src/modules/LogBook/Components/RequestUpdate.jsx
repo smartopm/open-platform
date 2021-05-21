@@ -23,6 +23,12 @@ import { ModalDialog } from "../../../components/Dialog"
 import CaptureTemp from "../../../components/CaptureTemp";
 import { dateToString, dateTimeToString } from "../../../components/DateContainer";
 
+/**
+ * 
+ * @deprecated This should be looked into, as it might be a duplicate of another similar component
+ * basically we should find a way to re-use
+ * Refer: RequestForm, RequestConfirm
+ */
 export default function RequestUpdate({ id }) {
     const { state } = useLocation()
     const { logs, } = useParams()
@@ -130,7 +136,7 @@ export default function RequestUpdate({ id }) {
         vehicle: formData.vehiclePlate
       }
     })
-      .then(({ userData }) => {
+      .then((response) => {
         updateLog({
           variables: {
             refId: id
@@ -138,7 +144,7 @@ export default function RequestUpdate({ id }) {
         }).then(() => {
           setLoading(false)
           setMessage(t('logbook:logbook.user_enrolled'))
-          history.push(`/user/${userData.result.user.id}`)
+          history.push(`/user/${response.data.result.user.id}`)
         })
       })
       .catch((err) => {
@@ -189,7 +195,7 @@ export default function RequestUpdate({ id }) {
               <label className="bmd-label-static" htmlFor="date" data-testid="submitted_date">
                 {t('logbook:logbook.date_time_submitted')}
               </label>
-              <input
+              <TextField
                 className="form-control"
                 type="text"
                 value={
@@ -209,7 +215,7 @@ export default function RequestUpdate({ id }) {
             <label className="bmd-label-static" htmlFor="_name">
               {t('logbook:log_title.guard')}
             </label>
-            <input
+            <TextField
               className="form-control"
               type="text"
               value={formData.guard ? formData.guard.name : ''}
@@ -222,13 +228,13 @@ export default function RequestUpdate({ id }) {
             <label className="bmd-label-static" htmlFor="_name">
               {t('form_fields.full_name')}
             </label>
-            <input
+            <TextField
               className="form-control"
               type="text"
               value={formData.name}
               onChange={handleInputChange}
               name="name"
-              data-testid="entry_user_name"
+              inputProps={{ "data-testid ":"entry_user_name" }}
               required
             />
           </div>
@@ -237,13 +243,13 @@ export default function RequestUpdate({ id }) {
             <label className="bmd-label-static" htmlFor="nrc">
               {t('form_fields.nrc')}
             </label>
-            <input
+            <TextField
               className="form-control"
               type="text"
               value={formData.nrc || ''}
               onChange={handleInputChange}
               name="nrc"
-              data-testid="entry_user_nrc"
+              inputProps={{ "data-testid ":"entry_user_nrc" }}
               required
             />
           </div>
@@ -251,13 +257,13 @@ export default function RequestUpdate({ id }) {
             <label className="bmd-label-static" htmlFor="phoneNumber">
               {t('form_fields.phone_number')}
             </label>
-            <input
+            <TextField
               className="form-control"
               type="text"
               value={formData.phoneNumber || ''}
               onChange={handleInputChange}
               name="phoneNumber"
-              data-testid="entry_user_phone"
+              inputProps={{ "data-testid ":"entry_user_phone" }}
               required={previousRoute === 'enroll'}
             />
           </div>
@@ -305,6 +311,7 @@ export default function RequestUpdate({ id }) {
                   <label className="bmd-label-static" htmlFor="expiresAt">
                     {t('misc.expiration_date')}
                   </label>
+                  {/* Todo: This should be replaced by a date picker */}
                   <input
                     className="form-control"
                     name="expiresAt"
@@ -324,13 +331,13 @@ export default function RequestUpdate({ id }) {
             <label className="bmd-label-static" htmlFor="vehicle">
               {t('form_fields.vehicle_plate_number')}
             </label>
-            <input
+            <TextField
               className="form-control"
               type="text"
               onChange={handleInputChange}
               value={formData.vehiclePlate || ''}
               name="vehiclePlate"
-              data-testid="entry_user_vehicle"
+              inputProps={{ "data-testid ":"entry_user_vehicle" }}
             />
           </div>
           <div className="form-group">
@@ -342,7 +349,7 @@ export default function RequestUpdate({ id }) {
               value={formData.reason || ''}
               onChange={handleInputChange}
               className={`${css(styles.selectInput)}`}
-              data-testid="entry_user_visit"
+              inputProps={{ "data-testid ":"entry_user_visit" }}
             >
               <MenuItem value={formData.reason}>{formData.reason}</MenuItem>
             </TextField>
@@ -367,7 +374,7 @@ export default function RequestUpdate({ id }) {
                 <Button
                   variant="contained"
                   onClick={handleEnrollUser}
-                  className={`btn ${css(styles.grantButton)}`}
+                  className={css(styles.grantButton)}
                   color="primary"
                   disabled={isLoading}
                 >
@@ -390,7 +397,7 @@ export default function RequestUpdate({ id }) {
                 <Button
                   variant="contained"
                   onClick={(event) => handleModal(event, 'grant')}
-                  className={`btn ${css(styles.grantButton)}`}
+                  className={css(styles.grantButton)}
                   color="primary"
                   disabled={isLoading}
                   data-testid="entry_user_grant"
@@ -402,7 +409,7 @@ export default function RequestUpdate({ id }) {
                 <Button
                   variant="contained"
                   onClick={handleDenyRequest}
-                  className={`btn  ${css(styles.denyButton)}`}
+                  className={css(styles.denyButton)}
                   color="secondary"
                   disabled={isLoading}
                   data-testid="entry_user_deny"

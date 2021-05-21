@@ -57,7 +57,7 @@ export default function WelcomePage() {
           </p>
           <Button
             variant="contained"
-            className={`btn ${css(styles.getStartedButton)}`}
+            className={`${css(styles.getStartedButton)}`}
             onClick={() => history.push("/login")}
             data-testid="login_btn"
             color="primary"

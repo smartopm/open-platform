@@ -160,7 +160,7 @@ export default function TaskForm({ close, refetch, users, assignUser}) {
           aria-label="task_cancel"
           color="secondary"
           onClick={close}
-          className={`btn ${css(discussStyles.cancelBtn)}`}
+          className={`${css(discussStyles.cancelBtn)}`}
         >
           Cancel
         </Button>
@@ -170,7 +170,7 @@ export default function TaskForm({ close, refetch, users, assignUser}) {
           color="primary"
           disabled={loading}
           aria-label="task_submit"
-          className={`btn ${css(discussStyles.submitBtn)}`}
+          className={`${css(discussStyles.submitBtn)}`}
         >
           {loading ? 'Creating a task ...' : 'Create Task'}
         </Button>

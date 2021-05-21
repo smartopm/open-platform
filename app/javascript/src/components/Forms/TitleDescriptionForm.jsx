@@ -73,7 +73,7 @@ export default function TitleDescriptionForm({ save, type, close, data, children
             aria-label={`${type}_cancel`}
             color="secondary"
             onClick={close}
-            className={`btn ${css(discussStyles.cancelBtn)}`}
+            className={`${css(discussStyles.cancelBtn)}`}
           >
             Cancel
           </Button>
@@ -83,7 +83,7 @@ export default function TitleDescriptionForm({ save, type, close, data, children
             color="primary"
             disabled={data.loading}
             aria-label={`${type}_submit`}
-            className={`btn ${css(discussStyles.submitBtn)}`}
+            className={`${css(discussStyles.submitBtn)}`}
           >
             {data.loading ? 'Submitting ...' : 'Submit'}
           </Button>

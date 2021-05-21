@@ -286,7 +286,8 @@ function handleTemplateDialog(status){
             type="submit"
             disabled={mutationLoading}
             aria-label="campaign_submit"
-            className={`btn ${classes.getStartedButton} enz-lg-btn`}
+            className={`${classes.getStartedButton} enz-lg-btn`}
+            color="primary"
           >
             <span>{id ? 'Update Campaign' : 'Create Campaign'}</span>
           </Button>
@@ -304,13 +305,11 @@ function handleTemplateDialog(status){
   )
 }
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles(({
   getStartedButton: {
-    backgroundColor: theme.palette.primary.main,
-    color: '#FFF',
     width: '30%',
     height: 51,
-    boxShadow: 'none',
+    // boxShadow: 'none',
     marginTop: 50,
     alignItems: 'center'
   }

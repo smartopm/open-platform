@@ -1,6 +1,6 @@
-/* eslint-disable */
 import React from 'react'
 import { StyleSheet, css } from 'aphrodite'
+import PropTypes from 'prop-types'
 
 // TODO: refactor this
 /**
@@ -28,7 +28,7 @@ export default function StatusBadge({ label }) {
     case 'banned':
       return (
         <p className={css(styles.badge, styles.statusBadgeBanned)}>
-          {'Not Allowed'}
+          Not Allowed
         </p>
       )
     case 'verified': 
@@ -45,6 +45,10 @@ export default function StatusBadge({ label }) {
     default:
       return <p className={css(styles.statusBadgePending)}>{label}</p>
   }
+}
+
+StatusBadge.propTypes = {
+  label: PropTypes.string.isRequired,
 }
 
 const styles = StyleSheet.create({
