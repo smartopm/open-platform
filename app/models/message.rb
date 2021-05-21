@@ -54,9 +54,11 @@ class Message < ApplicationRecord
     Sms.send(receiver, new_message)
   end
 
+  # rubocop:disable Metrics/MethodLength
   def create_message_task(body = nil)
     msg_obj = {
-      body: "Reply to <a href=\"https://#{HostEnv.base_url(user.community)}/message/#{user.id}\">message</a>
+      body: "Reply to
+      <a href=\"https://#{HostEnv.base_url(user.community)}/message/#{user.id}\">message</a>
       from: #{user.name} \n #{body}",
       category: 'message',
       flagged: true,
@@ -66,6 +68,7 @@ class Message < ApplicationRecord
     note_id = user.generate_note(msg_obj).id
     assign_message_task(note_id)
   end
+  # rubocop:enable Metrics/MethodLength
 
   def assign_message_task(note_id)
     assign = user.community.notes.find(note_id)
