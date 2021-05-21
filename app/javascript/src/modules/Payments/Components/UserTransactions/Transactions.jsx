@@ -18,6 +18,7 @@ import UserTransactionsList from './UserTransactions'
 import ButtonComponent from '../../../../shared/buttons/Button'
 import DepositQuery from '../../graphql/payment_query'
 import ListHeader from '../../../../shared/list/ListHeader';
+import PaymentModal from './PaymentModal'
 
 // TODO: redefine and remove redundant props, userId, user and userdata
 export default function TransactionsList({ userId, user, userData, paymentSubTabValue }) {
@@ -107,6 +108,12 @@ export default function TransactionsList({ userId, user, userData, paymentSubTab
     }
   }
 
+  function handlePaymentOpen() {
+    history.push(`/user/${userId}?tab=Payments&payments=new`)
+    setPayOpen(true)
+  }
+
+
   if (error && !transactionsData) return <CenteredContent>{formatError(error.message)}</CenteredContent>
   if (walletError && !walletData) return <CenteredContent>{formatError(walletError.message)}</CenteredContent>
   if (transError && !data) return <CenteredContent>{formatError(transError.message)}</CenteredContent>
@@ -165,6 +172,16 @@ export default function TransactionsList({ userId, user, userData, paymentSubTab
           </div>
         )
       )}
+      <PaymentModal
+        open={payOpen}
+        handleModalClose={() => setPayOpen(false)}
+        userId={userId}
+        currencyData={currencyData}
+        refetch={refetch}
+        walletRefetch={walletRefetch}
+        userData={userData}
+      />
+
       <CenteredContent>
         <Paginate
           offSet={offset}
