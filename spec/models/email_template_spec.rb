@@ -37,7 +37,6 @@ RSpec.describe EmailTemplate, type: :model do
 
   describe 'validations' do
     let!(:template) { create(:email_template, community: community) }
-    it { is_expected.to validate_uniqueness_of(:name) }
     it { is_expected.to validate_presence_of(:name) }
   end
 end
