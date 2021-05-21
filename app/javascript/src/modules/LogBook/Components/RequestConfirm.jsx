@@ -2,7 +2,7 @@
 /* eslint-disable react/prop-types */
 import React, { Fragment, useState } from 'react';
 import { useQuery, useMutation } from 'react-apollo';
-import { TextField, MenuItem, Button } from '@material-ui/core';
+import { TextField, MenuItem, Button, Link } from '@material-ui/core';
 import { StyleSheet, css } from 'aphrodite';
 import { useTranslation } from 'react-i18next';
 import { EntryRequestQuery } from '../../../graphql/queries';
@@ -218,6 +218,7 @@ export default function RequestConfirm({ match, history }) {
                 variant="contained"
                 onClick={handleAcknowledgeRequest}
                 className={`btn ${css(styles.grantButton)}`}
+                color="primary"
                 disabled={isLoading}
               >
                 {isLoading ? t('common.misc.loading') : t('common.misc.acknowledge')}
@@ -227,20 +228,20 @@ export default function RequestConfirm({ match, history }) {
               <Button
                 variant="contained"
                 onClick={handleModal}
-                className={`btn  ${css(styles.denyButton)}`}
+                color="secondary"
                 disabled={isLoading}
               >
                 { t('common.misc.flag')}
               </Button>
             </div>
             <div className="col">
-              <a
+              <Link
                 href={`tel:${formData.guard && formData.guard.phoneNumber}`}
                 className={` ${css(styles.callButton)}`}
               >
                 {t('common.misc.call')}
                 {formData.guard && formData.guard.name}
-              </a>
+              </Link>
             </div>
           </div>
         </form>
@@ -252,29 +253,13 @@ export default function RequestConfirm({ match, history }) {
 }
 
 const styles = StyleSheet.create({
-  logButton: {
-    backgroundColor: '#69ABA4',
-    color: '#FFF',
-    width: '75%',
-    boxShadow: 'none'
-  },
   selectInput: {
     width: '100%'
   },
   grantButton: {
-    backgroundColor: '#69ABA4',
-    color: '#FFF',
     marginRight: 60
-    // width: "35%"
-  },
-  denyButton: {
-    // backgroundColor: "rgb(230, 63, 69)",
-    backgroundColor: 'rgb(38, 38, 38)',
-    color: '#FFF'
-    // width: "35%"
   },
   callButton: {
-    color: 'rgb(230, 63, 69)',
     textTransform: 'unset',
     textDecoration: 'none'
   }

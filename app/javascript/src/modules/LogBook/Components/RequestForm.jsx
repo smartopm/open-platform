@@ -75,7 +75,7 @@ export default function RequestForm({ path }) {
         open={isModalOpen}
       >
         <div className="form-group">
-          <input
+          <TextField
             className="form-control"
             type="text"
             {...reason}
@@ -105,12 +105,14 @@ export default function RequestForm({ path }) {
             <label className="bmd-label-static" htmlFor="phoneNumber">
               {t('form_fields.phone_number')}
             </label>
-            <input
+
+            <TextField
               className="form-control"
               {...phoneNumber}
               name="phoneNumber"
               type="number"
               data-testid="phone_number"
+              inputProps={{ 'data-testid': 'phone_number' }}
             />
 
           </div>
@@ -131,12 +133,12 @@ export default function RequestForm({ path }) {
                 <label className="bmd-label-static" htmlFor="vehicle">
                   {t('form_fields.vehicle_plate_number')}
                 </label>
-                <input
+                <TextField
                   className="form-control"
                   type="text"
                   {...vehicle}
                   name="vehicle"
-                  data-testid="vehicle"
+                  inputProps={{ 'data-testid': 'vehicle' }}
                 />
               </div>
             </>
@@ -186,6 +188,7 @@ export default function RequestForm({ path }) {
               className={`btn ${css(styles.logButton)}`}
               onClick={handleSubmit}
               disabled={isSubmitted}
+              color="primary"
               data-testid="submit_button"
             >
               {isSubmitted ? ` ${t('form_actions.submitting')} ...` : ` ${t('form_actions.submit')} `}
@@ -212,8 +215,6 @@ RequestForm.propTypes = {
 
 const styles = StyleSheet.create({
   logButton: {
-    backgroundColor: '#69ABA4',
-    color: '#FFF',
     width: '75%',
     boxShadow: 'none',
     marginTop: 60,

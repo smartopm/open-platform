@@ -423,7 +423,7 @@ export default function CommunitySettings({ data, token, refetch }) {
       <div className={classes.button}>
         <Button
           disableElevation
-          variant="contained"
+          variant="outlined"
           color="primary"
           disabled={mutationLoading}
           onClick={updateCommunity}

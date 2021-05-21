@@ -159,15 +159,12 @@ ShareButton.propTypes = {
 
 export const styles = StyleSheet.create({
   appBar: {
-    backgroundColor: '#69ABA4',
     minHeight: '50px'
   },
   getStartedButton: {
-    color: '#FFF',
     height: 51,
     boxShadow: 'none',
     position: 'fixed',
-    backgroundColor: '#69ABA4',
     bottom: 20,
     right: 57,
     marginLeft: '30%'

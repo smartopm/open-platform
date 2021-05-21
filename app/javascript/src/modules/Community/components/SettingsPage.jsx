@@ -9,7 +9,7 @@ import { CurrentCommunityQuery } from '../graphql/community_query'
 export default function CommunitySettings(){
   const authState = useContext(AuthStateContext)
   const { data, error, loading, refetch } = useQuery(CurrentCommunityQuery, {
-    fetchPolicy: 'cache-and-network',
+    fetchPolicy: 'network-only',
     errorPolicy: 'all'
   })
 

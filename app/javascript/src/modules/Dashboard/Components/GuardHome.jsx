@@ -169,7 +169,7 @@ export function HomeGuard({ translate }) {
                   <div className="card-body">
                     <h5 className="card-title">
                       <PersonIcon
-                        className={css(styles.homeIconColor)}
+                        color="primary"
                         fontSize="large"
                       />
                     </h5>
@@ -200,7 +200,7 @@ export function HomeGuard({ translate }) {
                   <div className="card-body">
                     <h5 className="card-title">
                       <LogEntryIcon
-                        className={css(styles.homeIconColor)}
+                        color="primary"
                         fontSize="large"
                       />
                     </h5>
@@ -218,7 +218,7 @@ export function HomeGuard({ translate }) {
                         <h5 className="card-title">
                           <LogEntryIcon
                             fontSize="large"
-                            className={css(styles.homeIconColor)}
+                            color="primary"
                           />
                         </h5>
                         <p>Time Card</p>
@@ -234,7 +234,7 @@ export function HomeGuard({ translate }) {
                   <div className="card-body">
                     <h5 className="card-title">
                       <CallIcon
-                        className={css(styles.homeIconColor)}
+                        color="primary"
                         fontSize="large"
                       />
                     </h5>
@@ -282,10 +282,6 @@ const styles = StyleSheet.create({
     width: 20,
     bottom: 12
   },
-  homeIconColor: {
-    color: '#69ABA4'
-  },
-
   link: {
     textDecoration: 'none',
     marginLeft: 25
