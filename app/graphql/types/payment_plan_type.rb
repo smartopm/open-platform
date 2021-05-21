@@ -11,6 +11,7 @@ module Types
     field :pending_balance, Float, null: true
     field :land_parcel, Types::LandParcelType, null: false
     field :invoices, [Types::InvoiceType], null: false
+    field :user, Types::UserType, null: false
     field :start_date, GraphQL::Types::ISO8601DateTime, null: true
     field :created_at, GraphQL::Types::ISO8601DateTime, null: false
     field :updated_at, GraphQL::Types::ISO8601DateTime, null: false
