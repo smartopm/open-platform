@@ -64,7 +64,6 @@ export default function TransactionsList({ userId, user, userData, paymentSubTab
     { title: 'Date', value: t('common:table_headers.date'), col: 1 },
     { title: 'Recorded by', value: t('common:table_headers.recorded_by'), col: 1 },
     { title: 'Payment Type', value: t('common:table_headers.payment_type'), col: 2 },
-    { title: 'Payment/Receipt ID', value: t('common:table_headers.payment_id'), col: 1 },
     { title: 'Amount Paid', value: t('common:table_headers.amount_paid'), col: 1 }
   ];
 
@@ -129,14 +128,18 @@ export default function TransactionsList({ userId, user, userData, paymentSubTab
                 </div>
               )
             }
+            <div style={{display: 'flex', flexDirection: 'column', marginLeft: '5px'}}>
+              <Typography variant='subtitle1'>{t("users.balance")}</Typography>
+              <Typography variant="h5" color='primary'>{formatMoney(currencyData, walletData.userBalance?.pendingBalance)}</Typography>
+            </div>
           </div>
         )
       }
       {
             authState.user?.userType === 'admin' && (
-              <div style={{marginLeft: '20px'}}>
+              <div>
                 <ButtonComponent color='primary' buttonText={t("users.make_payment")} handleClick={() => setPayOpen(true)} />
-                <ButtonComponent color='primary' buttonText={t("users.add_invoice")} handleClick={() => handleModalOpen()} />
+                {/* <ButtonComponent color='primary' buttonText={t("users.add_invoice")} handleClick={() => handleModalOpen()} /> */}
               </div>
             )
       }
@@ -184,7 +187,10 @@ const useStyles = makeStyles({
   },
   paymentList: {
     backgroundColor: '#FDFDFD',
-    padding: '20px'
+    padding: '20px',
+    borderRadius: '4px',
+    border: '1px solid #EEEEEE',
+    marginTop: '20px'
   }
 });
 

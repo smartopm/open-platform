@@ -2,6 +2,7 @@
 /* eslint-disable no-underscore-dangle */
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import Grid from '@material-ui/core/Grid';
 import PropTypes from 'prop-types';
 import DataList from '../../../../shared/list/DataList';
 import Text, { GridText } from '../../../../shared/Text';
@@ -103,17 +104,12 @@ export function renderTransactions(transaction, currencyData) {
         content={transaction.source}
       />
     ),
-    "Payment/Receipt ID": (
-      <GridText
-        data-testid="description"
-        content={transaction.transactionNumber}
-      />
-    ),
     "Amount Paid": (
-      <GridText
-        data-testid="description"
-        content={formatMoney(currencyData, transaction.amount)}
-      />
+      <Grid item xs={12} md={2} data-testid="description">
+        <Text content={formatMoney(currencyData, transaction.allocatedAmount)} />
+        <br />
+        <Text color="primary" content={`unallocated ${formatMoney(currencyData, transaction.unallocatedAmount)}`} />
+      </Grid>
     )
   };
 }
