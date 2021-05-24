@@ -7,12 +7,14 @@ import AllMessages from '../../containers/Messages/AllMessages';
 
 describe('AllMessages Component', () => {
   it('renders loader when loading form', () => {
-    render(
+    const container = render(
       <MockedProvider>
         <BrowserRouter>
           <AllMessages />
         </BrowserRouter>
       </MockedProvider>
     );
+
+    expect(container.queryByText('common:misc.filter_message_by_category')).toBeInTheDocument()
   });
 });
