@@ -24,7 +24,7 @@ export default function CheckInComplete({ history }) {
       >
         <Button
           variant="contained"
-          className={`btn ${css(styles.getStartedButton)}`}
+          className={`${css(styles.getStartedButton)}`}
           onClick={() => history.push("/sh_reason")}
           data-testid="another_checkin_btn"
           color="primary"

@@ -190,7 +190,7 @@ export function FullScreenDialog({ handleClose, open, children, actionText, hand
           <div className={classes.print}>
             {' '}
           </div>
-          <Button autoFocus color="primary" onClick={handleSubmit} style={{background: 'none'}} className={classes.print}>
+          <Button autoFocus onClick={handleSubmit} style={{background: 'none'}} className={classes.print}>
             {actionText}
           </Button>
         </Toolbar>
@@ -269,8 +269,7 @@ export const useStyles = makeStyles(theme => ({
     borderBottom: `1px ${theme.palette.primary.main} solid`
   },
   detailTitle: {
-    background: '#FAFEFE',
-    color: '#81B7AD'
+    color: theme.palette.primary.main
   },
   close: {
     float: 'right',
@@ -280,6 +279,7 @@ export const useStyles = makeStyles(theme => ({
   },
   appBar: {
     position: 'relative',
+    color: '#FFFFFF',
   },
   print: {
     marginLeft: '500px',

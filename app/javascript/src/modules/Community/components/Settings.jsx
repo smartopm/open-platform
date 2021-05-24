@@ -20,7 +20,7 @@ import { formatError } from '../../../utils/helpers';
 import { Spinner } from '../../../shared/Loading';
 import ColorPicker from './ColorPicker';
 
-export default function CommunitySettings({ data, token, refetch }) {
+export default function CommunitySettings({ data, token }) {
   const numbers = {
     phone_number: '',
     category: ''
@@ -197,7 +197,9 @@ export default function CommunitySettings({ data, token, refetch }) {
         setLanguageInLocalStorage(language)
         setAlertOpen(true);
         setCallMutation(false);
-        refetch();
+        // Not a good practice but here we are reloading the page to allow the them to populate on all pages
+        // This is also helps with the logo update as well
+        window.location.reload()
       })
       .catch(error => {
         setMessage({ isError: true, detail: formatError(error.message) });
@@ -456,7 +458,6 @@ CommunitySettings.propTypes = {
     }),
   }).isRequired,
   token: PropTypes.string.isRequired,
-  refetch: PropTypes.func.isRequired
 };
 
 const useStyles = makeStyles(theme => ({

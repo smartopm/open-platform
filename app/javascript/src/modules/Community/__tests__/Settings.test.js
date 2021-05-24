@@ -65,11 +65,10 @@ describe('Community settings page ', () => {
         }
       }
     };
-    const mockRefetch = jest.fn();
     const container = render(
       <MockedProvider mocks={[communityMutatioMock]}>
         <MockedThemeProvider>
-          <CommunitySettings data={data} refetch={mockRefetch} />
+          <CommunitySettings data={data} token="374857uwehfsdf232" />
         </MockedThemeProvider>
       </MockedProvider>
     );
@@ -130,8 +129,6 @@ describe('Community settings page ', () => {
     expect(container.queryByTestId('update_community')).toBeDisabled();
 
     await waitFor(() => {
-      // check if mutation was called
-      expect(mockRefetch).toBeCalled();
       expect(container.queryByText('community.community_updated')).toBeInTheDocument();
     });
   });

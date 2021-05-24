@@ -8,7 +8,7 @@ import { CurrentCommunityQuery } from '../graphql/community_query'
 
 export default function CommunitySettings(){
   const authState = useContext(AuthStateContext)
-  const { data, error, loading, refetch } = useQuery(CurrentCommunityQuery, {
+  const { data, error, loading } = useQuery(CurrentCommunityQuery, {
     fetchPolicy: 'network-only',
     errorPolicy: 'all'
   })
@@ -18,7 +18,7 @@ export default function CommunitySettings(){
   return (
     <>
       <div className="container">
-        <CommunitySettingsPage data={data.currentCommunity} refetch={refetch} token={authState.token} />
+        <CommunitySettingsPage data={data.currentCommunity} token={authState.token} />
       </div>
     </>
   )

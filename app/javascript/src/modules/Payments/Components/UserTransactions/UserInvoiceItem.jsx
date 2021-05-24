@@ -146,7 +146,7 @@ export function renderInvoices(inv, currencyData, menuData) {
     'Issue Date': <GridText content={dateToString(inv.createdAt)} col={12} />,
     Description: (
       <Grid item xs={12} md={2} data-testid="description">
-        <Text color="primary" content={`Invoice Number #${inv.invoiceNumber}`} />
+        <Text content={`Invoice Number #${inv.invoiceNumber}`} />
         <br />
         <Text color="primary" content={`Plot Number #${inv.landParcel.parcelNumber}`} />
       </Grid>
