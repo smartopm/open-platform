@@ -12,6 +12,6 @@ export default {
     icon: <ForumIcon />
   },
   name: t => t('menu.communication'),
-  featureName: 'Communication',
+  featureName: 'Messages',
   accessibleBy: ['']
 };

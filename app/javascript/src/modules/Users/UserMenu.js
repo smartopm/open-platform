@@ -23,7 +23,7 @@ const userMenus = [
       component: <span />
     },
     name: t => t('menu.communication'),
-    featureName: 'Users',
+    featureName: 'Messages',
     accessibleBy: ['admin']
   },
   {
@@ -32,7 +32,7 @@ const userMenus = [
       component: <span />
     },
     name: t => t('menu.note', { count: 0 }),
-    featureName: 'Users',
+    featureName: 'Tasks',
     accessibleBy: ['admin']
   },
   {
@@ -41,7 +41,7 @@ const userMenus = [
       component: <span />
     },
     name: t => t('menu.plot', { count: 0 }),
-    featureName: 'Users',
+    featureName: 'Properties',
     accessibleBy: ['admin']
   },
   {
@@ -50,7 +50,7 @@ const userMenus = [
       component: <span />
     },
     name: t => t('menu.form', { count: 0 }),
-    featureName: 'Users',
+    featureName: 'Forms',
     accessibleBy: ['admin']
   },
   {
@@ -59,7 +59,7 @@ const userMenus = [
       component: <span />
     },
     name: t => t('menu.customer_journey'),
-    featureName: 'Users',
+    featureName: 'Customer Journey',
     accessibleBy: ['admin']
   },
   {
@@ -86,7 +86,7 @@ const userMenus = [
       component: <span />
     },
     name: t => t('menu.user_logs'),
-    featureName: 'Users',
+    featureName: 'LogBook',
     accessibleBy: ['admin', 'security_guard']
   },
   {

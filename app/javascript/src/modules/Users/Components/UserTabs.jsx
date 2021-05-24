@@ -7,7 +7,7 @@ import { StyledTabs } from "../../../components/Tabs"
 import { UserActivePlanQuery } from '../../../graphql/queries/user'
 import { Spinner } from '../../../shared/Loading'
 import CenteredContent from '../../../components/CenteredContent'
-import { formatError } from '../../../utils/helpers'
+import { checkAllowedCommunityFeatures, formatError } from '../../../utils/helpers'
 
 export const StyledTab = withStyles({
   root: {
@@ -16,7 +16,8 @@ export const StyledTab = withStyles({
   }
 })(props => <Tab {...props} />)
 
-export default function UserStyledTabs({ tabValue, handleChange, userType }) {
+// Unfortunately we couldn't use the FeatureCheck here because the Tab expects specific children otherwise it doesn't properly forward props to underlying component
+export default function UserStyledTabs({ tabValue, handleChange, user }) {
   // Make sure other tabs can show while the query is fetching unless there is an error
   const { data, loading, error } = useQuery(UserActivePlanQuery)
   const { t } = useTranslation('users')
@@ -29,28 +30,28 @@ export default function UserStyledTabs({ tabValue, handleChange, userType }) {
       centered
     >
       <StyledTab label={t("common:misc.contact")} value="Contacts" data-testid="tabs" />
-      {['admin'].includes(userType) && (
+      {['admin'].includes(user.userType) && checkAllowedCommunityFeatures(user.community.features, "Tasks") && (
         <StyledTab label={t("common:misc.notes")} value="Notes" data-testid="tabs" />
-      )}
-      {['admin'].includes(userType) && (
+          )}
+      {['admin'].includes(user.userType) && checkAllowedCommunityFeatures(user.community.features, "Messages") && (
         <StyledTab label={t("common:misc.communication")} value="Communication" data-testid="tabs" />
       )}
       {
-        !['security_guard', 'custodian'].includes(userType) &&
+        !['security_guard', 'custodian'].includes(user.userType) && checkAllowedCommunityFeatures(user.community.features, "Properties") &&
         <StyledTab label={t("common:misc.plots")} value="Plots" data-testid="tabs" />
       }
       {
-        !['security_guard', 'custodian'].includes(userType) &&
+        !['security_guard', 'custodian'].includes(user.userType) && checkAllowedCommunityFeatures(user.community.features, "Forms") &&
         <StyledTab label={t("common:misc.forms")} value="Forms" data-testid="tabs" />
       }
 
       {loading ? <Spinner /> : null}
       {
-        !loading && userType === 'admin' || data?.userActivePlan 
+        (!loading && user.userType === 'admin' || data?.userActivePlan ) && checkAllowedCommunityFeatures(user.community.features, "Payments")
         ? <StyledTab label={t("common:misc.payments")} value="Payments" data-testid="tabs" />
         : null        
       }
-      {['admin'].includes(userType) && (
+      {['admin'].includes(user.userType) && checkAllowedCommunityFeatures(user.community.features, "Customer Journey") && (
       <StyledTab label={t("common:menu.customer_journey")} value="CustomerJourney" data-testid="tabs" />
       )}
     </StyledTabs>
@@ -60,5 +61,6 @@ export default function UserStyledTabs({ tabValue, handleChange, userType }) {
 UserStyledTabs.propTypes = {
   tabValue: PropTypes.string.isRequired,
   handleChange: PropTypes.func.isRequired, 
-  userType: PropTypes.string.isRequired
+  // eslint-disable-next-line react/forbid-prop-types
+  user: PropTypes.object.isRequired,
 }

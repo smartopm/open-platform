@@ -10,9 +10,10 @@ import { PaymentSummary } from '../../Payments';
 import UserDetail from '../../Users/Components/UserDetail';
 import ViewCustomerJourney from '../../CustomerJourney/Components/ViewCustomerJourney';
 import LanguageToggle from '../../i18n/Components/LanguageToggle';
-import { PlotDetail } from '../../Plots'
-import CustomerJourneyStatus from '../../CustomerJourney/Components/CustomerJourneyStatus'
+import { PlotDetail } from '../../Plots';
+import CustomerJourneyStatus from '../../CustomerJourney/Components/CustomerJourneyStatus';
 import NewsFeed from '../../News/Components/NewsFeed';
+import FeatureCheck from '../../Features';
 
 export default function Home() {
   const authState = useContext(AuthStateContext);
@@ -20,37 +21,54 @@ export default function Home() {
 
   if (!authState.loggedIn) return <Loading />;
   return (
-    <div style={{marginTop: '-30px'}}>
+    <div style={{ marginTop: '-30px' }}>
       <LanguageToggle />
       {authState.user.userType === 'admin' && (
         <div>
           <UserDetail user={authState.user} />
-          <ViewCustomerJourney translate={t} />
-          <PaymentSummary authState={authState} translate={t} />
+          <FeatureCheck features={authState.user.community.features} name="Customer Journey">
+            <ViewCustomerJourney translate={t} />
+          </FeatureCheck>
+          <FeatureCheck features={authState.user.community.features} name="Payments">
+            <PaymentSummary authState={authState} translate={t} />
+          </FeatureCheck>
           <br />
           <Divider />
-          <TaskReminder translate={t} />
+          <FeatureCheck features={authState.user.community.features} name="Tasks">
+            <TaskReminder translate={t} />
+          </FeatureCheck>
           <Divider />
-          <NewsFeed wordpressEndpoint={authState.user?.community.wpLink} translate={t} />
+          <FeatureCheck features={authState.user.community.features} name="News">
+            <NewsFeed wordpressEndpoint={authState.user?.community.wpLink} translate={t} />
+          </FeatureCheck>
         </div>
       )}
       {authState.user.userType === 'client' && (
-        (
-          <div>
-            <UserDetail user={authState.user} />
-            {authState.user.subStatus && (
-              <CustomerJourneyStatus subStatus={authState.user.subStatus} communityName={authState.user.community.name} />
-            )}
-            <Divider style={{marginTop: '30px'}} />
+        <div>
+          <UserDetail user={authState.user} />
+          {authState.user.subStatus && (
+            <FeatureCheck features={authState.user.community.features} name="Customer Journey">
+              <CustomerJourneyStatus
+                subStatus={authState.user.subStatus}
+                communityName={authState.user.community.name}
+              />
+            </FeatureCheck>
+          )}
+          <Divider style={{ marginTop: '30px' }} />
+          <FeatureCheck features={authState.user.community.features} name="Properties">
             <PlotDetail authState={authState.user} />
-            <Divider />
+          </FeatureCheck>
+          <Divider />
+          <FeatureCheck features={authState.user.community.features} name="News">
             <NewsFeed wordpressEndpoint={authState.user?.community.wpLink} translate={t} />
-          </div>
-        )
+          </FeatureCheck>
+        </div>
       )}
-      {authState.user.userType !== 'admin' && authState.user.userType !==  'client'  && (
-        <div style={{paddingTop: '50px'}}>
-          <NewsFeed wordpressEndpoint={authState.user?.community.wpLink} />
+      {authState.user.userType !== 'admin' && authState.user.userType !== 'client' && (
+        <div style={{ paddingTop: '50px' }}>
+          <FeatureCheck features={authState.user.community.features} name="News">
+            <NewsFeed wordpressEndpoint={authState.user?.community.wpLink} />
+          </FeatureCheck>
           <Homepage authState={authState} />
         </div>
       )}
