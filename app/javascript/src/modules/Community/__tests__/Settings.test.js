@@ -54,7 +54,7 @@ describe('Community settings page ', () => {
           tagline: '',
           logoUrl: '',
           wpLink: '',
-          themeColors: {}
+          themeColors: { primaryColor: '#69ABA4', secondaryColor: '#cf5628' },
         }
       },
       result: {
@@ -65,10 +65,11 @@ describe('Community settings page ', () => {
         }
       }
     };
+    const refetchMock = jest.fn();
     const container = render(
       <MockedProvider mocks={[communityMutatioMock]}>
         <MockedThemeProvider>
-          <CommunitySettings data={data} token="374857uwehfsdf232" />
+          <CommunitySettings data={data} token="374857uwehfsdf232" refetch={refetchMock} />
         </MockedThemeProvider>
       </MockedProvider>
     );
@@ -76,9 +77,7 @@ describe('Community settings page ', () => {
     expect(container.queryByText('community.change_community_logo')).toBeInTheDocument();
     expect(container.queryByText('community.upload_logo')).toBeInTheDocument();
     expect(container.queryByText('community.support_contact')).toBeInTheDocument();
-    expect(
-      container.queryByText('community.make_changes_support_contact')
-    ).toBeInTheDocument();
+    expect(container.queryByText('community.make_changes_support_contact')).toBeInTheDocument();
     expect(container.queryByText('common:form_fields.add_phone_number')).toBeInTheDocument();
     expect(container.queryByText('common:form_fields.add_email_address')).toBeInTheDocument();
     expect(container.queryByText('common:form_fields.add_whatsapp_number')).toBeInTheDocument();
@@ -111,15 +110,20 @@ describe('Community settings page ', () => {
     fireEvent.click(container.queryByTestId('whatsapp_click'));
     expect(container.queryAllByLabelText('WhatsApp')).toHaveLength(2);
 
+    fireEvent.change(container.queryByTestId('logo_url'), {
+      target: { value: 'https://something.com' }
+    });
+    expect(container.queryByTestId('logo_url').value).toBe('https://something.com');
 
-    fireEvent.change(container.queryByTestId('logo_url'), { target: { value: 'https://something.com' } });
-    expect(container.queryByTestId('logo_url').value).toBe('https://something.com')
+    fireEvent.change(container.queryByTestId('tagline'), {
+      target: { value: 'This is our tagline' }
+    });
+    expect(container.queryByTestId('tagline').value).toBe('This is our tagline');
 
-    fireEvent.change(container.queryByTestId('tagline'), { target: { value: 'This is our tagline' } });
-    expect(container.queryByTestId('tagline').value).toBe('This is our tagline')
-
-    fireEvent.change(container.queryByTestId('wp_link'), { target: { value: 'https://wordpress.com' } });
-    expect(container.queryByTestId('wp_link').value).toBe('https://wordpress.com')
+    fireEvent.change(container.queryByTestId('wp_link'), {
+      target: { value: 'https://wordpress.com' }
+    });
+    expect(container.queryByTestId('wp_link').value).toBe('https://wordpress.com');
 
     // fire the mutation update_community
     expect(container.queryByTestId('update_community')).not.toBeDisabled();
@@ -129,7 +133,8 @@ describe('Community settings page ', () => {
     expect(container.queryByTestId('update_community')).toBeDisabled();
 
     await waitFor(() => {
+      expect(refetchMock).toBeCalled();
       expect(container.queryByText('community.community_updated')).toBeInTheDocument();
-    });
+    }, 10);
   });
 });

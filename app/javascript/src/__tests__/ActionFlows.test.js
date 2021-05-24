@@ -80,15 +80,13 @@ describe('ActionFlows', () => {
       }
     }
     const container = render(
-      <Context.Provider values={userMock}>
-        <MockedProvider mocks={[newMocks]} addTypename={false}>
-          <BrowserRouter>
-            <MockedThemeProvider>
-              <ActionFlows />
-            </MockedThemeProvider>
-          </BrowserRouter>
-        </MockedProvider>
-      </Context.Provider>
+      <MockedProvider mocks={[newMocks]} addTypename={false}>
+        <BrowserRouter>
+          <MockedThemeProvider>
+            <ActionFlows />
+          </MockedThemeProvider>
+        </BrowserRouter>
+      </MockedProvider>
     )
 
     await waitFor(
