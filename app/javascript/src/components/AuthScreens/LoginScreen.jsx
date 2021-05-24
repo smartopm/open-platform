@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react'
+import React, { useState, useEffect } from 'react'
 import {
   Button,
   TextField,
@@ -11,7 +11,7 @@ import {
   InputLabel
 } from '@material-ui/core'
 import { StyleSheet, css } from 'aphrodite'
-import { Link, useHistory, useLocation } from 'react-router-dom'
+import { useHistory, useLocation } from 'react-router-dom'
 import { useMutation, useQuery } from 'react-apollo'
 import ReactGA from 'react-ga'
 import { useTranslation } from 'react-i18next'
@@ -20,7 +20,7 @@ import PhoneInput from 'react-phone-input-2'
 import { getAuthToken } from '../../utils/apollo'
 import { ModalDialog } from '../Dialog'
 import GoogleIcon from '../../../../assets/images/google_icon.svg'
-import { Context as ThemeContext } from '../../../Themes/Nkwashi/ThemeProvider'
+// import { Context as ThemeContext } from '../../../Themes/Nkwashi/ThemeProvider'
 import { loginPhone } from '../../graphql/mutations'
 import { CurrentCommunityQuery } from '../../modules/Community/graphql/community_query'
 import { Spinner } from '../../shared/Loading'
@@ -39,7 +39,7 @@ export default function LoginScreen() {
   const [isLoading, setIsLoading] = useState(false)
   const { state } = useLocation()
   const history = useHistory()
-  const theme = useContext(ThemeContext)
+  // const theme = useContext(ThemeContext)
   const { t } = useTranslation(['login', 'common'])
 
   const communityName = communityData?.currentCommunity?.name || 'Double GDP'
@@ -130,11 +130,11 @@ export default function LoginScreen() {
 
   return (
     <div style={{ overflow: 'hidden' }}>
-      <nav className={`${css(styles.navBar)} navbar`}>
+      {/* <nav className={`${css(styles.navBar)} navbar`}>
         <Link to="/welcome" style={{ color: theme.primaryColor }}>
           <i className="material-icons">arrow_back</i>
         </Link>
-      </nav>
+      </nav> */}
       <div className="container ">
         <div
           className={`justify-content-center align-items-center ${css(
