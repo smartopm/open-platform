@@ -30,6 +30,7 @@ import UserJourney from './UserJourney';
 import { propAccessor, useParamsQuery } from '../../../utils/helpers';
 import RightSideMenu from '../../Menu/component/RightSideMenu'
 import FeatureCheck from '../../Features';
+import PaymentPlans from '../../Payments/Components/UserTransactions/Plans'
 
 export default function UserInformation({
   data,
@@ -247,7 +248,7 @@ export default function UserInformation({
             />
           </TabPanel>
           <TabPanel value={tabValue} index="Plans">
-            <div>Hello Plan</div>
+            <PaymentPlans />
           </TabPanel>
         </FeatureCheck>
         {['admin'].includes(userType) && (
