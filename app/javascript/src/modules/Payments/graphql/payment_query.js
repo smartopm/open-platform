@@ -11,6 +11,7 @@ export const UserTransactions = gql`
       allocatedAmount
       unallocatedAmount
       user {
+        id
         name
       }
     }

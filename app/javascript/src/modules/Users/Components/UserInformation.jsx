@@ -42,10 +42,8 @@ export default function UserInformation({
 }) {
   const path = useParamsQuery();
   const tab = path.get('tab');
-  const { t } = useTranslation('users')
-  const paymentSubTab = path.get('payment_sub_tab');
+  const { t } = useTranslation('users');
   const [tabValue, setValue] = useState(tab || 'Contacts');
-  const [paymentSubTabValue, setPaymentSubTabValue] = useState(paymentSubTab || 'Invoices');
   const [isDialogOpen, setDialogOpen] = useState(false);
   const [isDrawerOpen, setDrawerOpen] = useState(false);
 
@@ -68,11 +66,6 @@ export default function UserInformation({
       setValue(tab);
     } else {
       setValue('Contacts');
-    }
-    if (paymentSubTab && tabValue === 'Payments') {
-      setPaymentSubTabValue(paymentSubTab);
-    } else {
-      setPaymentSubTabValue('Invoices');
     }
 
     // open merge modal
@@ -238,7 +231,6 @@ export default function UserInformation({
             userId={userId}
             user={authState.user}
             userData={data.user}
-            paymentSubTabValue={paymentSubTabValue}
           />
         </TabPanel>
         {['admin'].includes(userType) && (

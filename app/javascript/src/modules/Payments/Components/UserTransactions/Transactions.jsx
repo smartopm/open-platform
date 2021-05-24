@@ -22,15 +22,12 @@ import ListHeader from '../../../../shared/list/ListHeader';
 import PaymentModal from './PaymentModal'
 
 // TODO: redefine and remove redundant props, userId, user and userdata
-export default function TransactionsList({ userId, user, userData, paymentSubTabValue }) {
-  const history = useHistory()
+export default function TransactionsList({ userId, user, userData }) {
   const path = useParamsQuery()
   const authState = useContext(AuthStateContext)
   const limit = 10
-  const tab = path.get('invoices')
   const page = path.get('page')
   const [offset, setOffset] = useState(Number(page) || 0)
-  const [open, setOpen] = useState(!!tab)
   const [payOpen, setPayOpen] = useState(false)
   const theme = useTheme();
   const { t } = useTranslation('common')
@@ -40,7 +37,7 @@ export default function TransactionsList({ userId, user, userData, paymentSubTab
   const { loading: walletLoading, data: walletData, error: walletError, refetch: walletRefetch } = useQuery(
     UserBalance,
     {
-      variables: { userId, limit, offset },
+      variables: { userId },
       errorPolicy: 'all',
       fetchPolicy: 'no-cache'
     }
@@ -65,16 +62,6 @@ export default function TransactionsList({ userId, user, userData, paymentSubTab
   const currency = currencies[user.community.currency] || ''
   const { locale } = user.community
   const currencyData = { currency, locale }
-  const [tabValue, setTabValue] = useState(paymentSubTabValue)
-
-  useEffect(() => {
-    setTabValue(paymentSubTabValue)
-  }, [paymentSubTabValue])
-
-  function handleModalOpen() {
-    history.push(`/user/${userId}?tab=Payments&invoices=new`)
-    setOpen(true)
-  }
 
   function paginate(action) {
     if (action === 'prev') {
@@ -83,11 +70,6 @@ export default function TransactionsList({ userId, user, userData, paymentSubTab
     } else if (action === 'next') {
       setOffset(offset + limit)
     }
-  }
-
-  function handlePaymentOpen() {
-    history.push(`/user/${userId}?tab=Payments&payments=new`)
-    setPayOpen(true)
   }
 
   if (walletError && !walletData) return <CenteredContent>{formatError(walletError.message)}</CenteredContent>
@@ -114,12 +96,12 @@ export default function TransactionsList({ userId, user, userData, paymentSubTab
         )
       }
       {
-            authState.user?.userType === 'admin' && (
-              <div>
-                <ButtonComponent color='primary' buttonText={t("common:misc.make_payment")} handleClick={() => setPayOpen(true)} />
-                {/* <ButtonComponent color='primary' buttonText={t("users.add_invoice")} handleClick={() => handleModalOpen()} /> */}
-              </div>
-            )
+        authState.user?.userType === 'admin' && (
+          <div>
+            <ButtonComponent color='primary' buttonText={t("common:misc.make_payment")} handleClick={() => setPayOpen(true)} />
+            {/* <ButtonComponent color='primary' buttonText={t("users.add_invoice")} handleClick={() => handleModalOpen()} /> */}
+          </div>
+        )
       }
       {transLoading ? <Spinner /> : (
         data?.userTransactions.length > 0 ? (
@@ -129,15 +111,15 @@ export default function TransactionsList({ userId, user, userData, paymentSubTab
               {matches && <ListHeader headers={transactionHeader} color />}
             </div>
             {
-               data.userTransactions.map((trans) => (
-                 <div key={trans.id}>
-                   <UserTransactionsList 
-                     transaction={trans} 
-                     currencyData={currencyData}
-                     userData={userData}
-                     userType={user.userType}
-                   />
-                 </div>
+              data.userTransactions.map((trans) => (
+                <div key={trans.id}>
+                  <UserTransactionsList 
+                    transaction={trans} 
+                    currencyData={currencyData}
+                    userData={userData}
+                    userType={user.userType}
+                  />
+                </div>
               ))
             }
           </div>
@@ -191,7 +173,6 @@ TransactionsList.propTypes = {
   userId: PropTypes.string.isRequired,
   // eslint-disable-next-line react/forbid-prop-types
   userData: PropTypes.object,
-  paymentSubTabValue: PropTypes.string.isRequired,
   user: PropTypes.shape({
     id: PropTypes.string,
     userType: PropTypes.string,

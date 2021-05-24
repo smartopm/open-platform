@@ -105,7 +105,7 @@ DataList.defaultProps = {
   hasHeader: true,
   clickable: false,
   handleClick: () => {},
-  color: ''
+  color: false
 };
 
 DataList.propTypes = {
@@ -131,7 +131,7 @@ DataList.propTypes = {
    */
   clickable: PropTypes.bool,
   handleClick: PropTypes.func,
-  color: PropTypes.string
+  color: PropTypes.bool
 };
 
 CellData.propTypes = {
