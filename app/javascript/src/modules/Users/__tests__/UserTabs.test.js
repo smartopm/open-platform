@@ -23,7 +23,12 @@ describe('component that with styled tabs', () => {
     const props = {
       tabValue: 'note',
       handleChange: jest.fn(),
-      userType: 'admin'
+      user: {
+        userType: 'admin',
+        community: {
+          features: ["Tasks", "Messages", "Payments", "Properties"]
+        }
+      }
     };
     const container = render(
       <MockedProvider mocks={mock}>
@@ -42,7 +47,7 @@ describe('component that with styled tabs', () => {
       expect(container.queryByText('common:misc.payments')).toBeInTheDocument();
       expect(container.queryByText('common:misc.plots')).toBeInTheDocument();
       // verify number of tabs in case they get changed
-      expect(container.queryAllByTestId('tabs')).toHaveLength(7)
+      expect(container.queryAllByTestId('tabs')).toHaveLength(5) // we've only enabled 4 and one default
     },10);
   });
 
@@ -50,7 +55,12 @@ describe('component that with styled tabs', () => {
     const props = {
       tabValue: 'note',
       handleChange: jest.fn(),
-      userType: 'resident'
+      user: {
+        userType: 'client',
+        community: {
+          features: ["Tasks", "Messages", "Payments", "Properties"]
+        }
+      }
     };
     const container = render(
       <MockedProvider mocks={mock}>
@@ -81,7 +91,12 @@ describe('component that with styled tabs', () => {
       const props = {
         tabValue: 'note',
         handleChange: jest.fn(),
-        userType: 'admin'
+        user: {
+          userType: 'admin',
+          community: {
+            features: ["Tasks", "Messages", "Payments", "Properties"]
+          }
+        }
       };
       const container = render(
         <MockedProvider mocks={erroredMock}>
