@@ -248,16 +248,13 @@ export default function UserInformation({
             />
           </TabPanel>
           <TabPanel value={tabValue} index="Plans">
-            <PaymentPlans />
+            <PaymentPlans
+              userId={userId}
+              user={authState.user}
+              userData={data.user}
+            />
           </TabPanel>
         </FeatureCheck>
-        {['admin'].includes(userType) && (
-          <FeatureCheck features={authState.user.community.features} name="Customer Journey">
-            <TabPanel value={tabValue} index="CustomerJourney">
-              <UserJourney data={data} refetch={refetch} />
-            </TabPanel>
-          </FeatureCheck>
-        )}
         {['admin'].includes(userType) && (
           <FeatureCheck features={authState.user.community.features} name="Customer Journey">
             <TabPanel value={tabValue} index="CustomerJourney">
