@@ -198,14 +198,13 @@ export default function CommunitySettings({ data, token, refetch }) {
         setLanguageInLocalStorage(language)
         setAlertOpen(true);
         setCallMutation(false);
-        refetch()
         // only reload if the primary color has changed
         if(themeColors.primaryColor !== data.themeColors?.primaryColor) {
           window.location.reload()
         }
+        refetch()
       })
       .catch(error => {
-        console.log(error)
         setMessage({ isError: true, detail: formatError(error.message) });
         setAlertOpen(true);
         setCallMutation(false);
