@@ -33,9 +33,10 @@ export default function CommunitySettings({ data, token }) {
     whatsapp: '',
     category: ''
   };
+
   const theme = {
-    primaryColor: data.themeColors?.primaryColor,
-    secondaryColor: data.themeColors?.secondaryColor
+    primaryColor: data.themeColors?.primaryColor || '#69ABA4',
+    secondaryColor: data.themeColors?.secondaryColor || '#cf5628'
   }
 
   const [communityUpdate] = useMutation(CommunityUpdateMutation);
