@@ -141,12 +141,13 @@ export default function CampaignList() {
                 <Grid item container direction="row">
                   <Typography
                     variant="body1"
-                    style={{ cursor: 'pointer', color: '#009688', marginTop: "11px" }}
+                    color="primary"
+                    style={{ cursor: 'pointer', marginTop: "11px" }}
                   >
                     <Link
                       data-testid="more_details_btn"
                       href="#"
-                      style={{ cursor: 'pointer', color: '#69ABA4' }}
+                      style={{ cursor: 'pointer'}}
                       onClick={event => routeToAction(event, camp.id)}
                     >
                       More Details

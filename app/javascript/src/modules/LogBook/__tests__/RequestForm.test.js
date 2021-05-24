@@ -3,13 +3,16 @@ import { fireEvent, render } from '@testing-library/react'
 import '@testing-library/jest-dom/extend-expect'
 import { MockedProvider } from '@apollo/react-testing'
 import RequestForm from '../Components/RequestForm'
+import MockedThemeProvider from '../../__mocks__/mock_theme'
 
 
 describe('Request Form Component', () => {
     it('should render the form correctly', () => {
         const container = render(
           <MockedProvider mocks={[]}>
-            <RequestForm path="/entry_request" />
+            <MockedThemeProvider>
+              <RequestForm path="/entry_request" />
+            </MockedThemeProvider>
           </MockedProvider>
         )
 

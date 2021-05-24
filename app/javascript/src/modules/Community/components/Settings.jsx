@@ -2,7 +2,7 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import React, { useEffect, useState } from 'react';
 import Typography from '@material-ui/core/Typography';
-import { Button, TextField, MenuItem, Container } from '@material-ui/core';
+import { Button, TextField, MenuItem, Container, Grid } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
 import PropTypes from 'prop-types';
@@ -18,6 +18,7 @@ import { currencies, locales, languages } from '../../../utils/constants';
 import ImageAuth from '../../../shared/ImageAuth';
 import { formatError } from '../../../utils/helpers';
 import { Spinner } from '../../../shared/Loading';
+import ColorPicker from './ColorPicker';
 
 export default function CommunitySettings({ data, token, refetch }) {
   const numbers = {
@@ -32,10 +33,17 @@ export default function CommunitySettings({ data, token, refetch }) {
     whatsapp: '',
     category: ''
   };
+
+  const theme = {
+    primaryColor: data.themeColors?.primaryColor || '#69ABA4',
+    secondaryColor: data.themeColors?.secondaryColor || '#cf5628'
+  }
+
   const [communityUpdate] = useMutation(CommunityUpdateMutation);
   const [numberOptions, setNumberOptions] = useState([numbers]);
   const [emailOptions, setEmailOptions] = useState([emails]);
   const [whatsappOptions, setWhatsappOptions] = useState([whatsapps]);
+  const [themeColors, setThemeColor] = useState(theme);
   const [message, setMessage] = useState({ isError: false, detail: '' });
   const [alertOpen, setAlertOpen] = useState(false);
   const [mutationLoading, setCallMutation] = useState(false);
@@ -178,7 +186,8 @@ export default function CommunitySettings({ data, token, refetch }) {
         language,
         tagline,
         logoUrl,
-        wpLink
+        wpLink,
+        themeColors
       },
     })
       .then(() => {
@@ -189,7 +198,11 @@ export default function CommunitySettings({ data, token, refetch }) {
         setLanguageInLocalStorage(language)
         setAlertOpen(true);
         setCallMutation(false);
-        refetch();
+        // only reload if the primary color has changed
+        if(themeColors.primaryColor !== data.themeColors?.primaryColor) {
+          window.location.reload()
+        }
+        refetch()
       })
       .catch(error => {
         setMessage({ isError: true, detail: formatError(error.message) });
@@ -306,8 +319,25 @@ export default function CommunitySettings({ data, token, refetch }) {
             </Typography>
           </div>
         </div>
-
       </div>
+
+      <br />
+
+      <Grid container spacing={3}>
+        <Grid item xs={12} sm={3}>
+          Primary Color
+        </Grid>
+        <Grid item xs={12} sm={9}>
+          <ColorPicker color={themeColors.primaryColor} handleColor={color => setThemeColor({ ...themeColors, primaryColor: color })} />
+        </Grid>
+        <Grid item xs={12} sm={3}>
+          Secondary Color
+        </Grid>
+        <Grid item xs={12} sm={9}>
+          <ColorPicker color={themeColors.secondaryColor} handleColor={color => setThemeColor({ ...themeColors, secondaryColor: color })} />
+        </Grid>
+      </Grid>
+
       <div className={classes.information} style={{ marginTop: '40px' }}>
         <TextField
           label={t('community.community_tagline')}
@@ -398,7 +428,7 @@ export default function CommunitySettings({ data, token, refetch }) {
       <div className={classes.button}>
         <Button
           disableElevation
-          variant="contained"
+          variant="outlined"
           color="primary"
           disabled={mutationLoading}
           onClick={updateCommunity}
@@ -425,12 +455,16 @@ CommunitySettings.propTypes = {
     language: PropTypes.string,
     tagline: PropTypes.string,
     wpLink: PropTypes.string,
+    themeColors: PropTypes.shape({
+      primaryColor: PropTypes.string,
+      secondaryColor: PropTypes.string,
+    }),
   }).isRequired,
   token: PropTypes.string.isRequired,
-  refetch: PropTypes.func.isRequired
+  refetch: PropTypes.func.isRequired,
 };
 
-const useStyles = makeStyles({
+const useStyles = makeStyles(theme => ({
   avatar: {
     display: 'flex',
     flexDirection: 'row',
@@ -451,12 +485,12 @@ const useStyles = makeStyles({
     margin: '10px 0'
   },
   addIcon: {
+    color: theme.palette.primary.main,
     display: 'flex',
     marginTop: '20px',
-    color: '#6CAA9F',
     cursor: 'pointer'
   },
   button: {
     marginTop: '15px'
   }
-});
+}));

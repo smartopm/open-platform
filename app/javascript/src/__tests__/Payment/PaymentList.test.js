@@ -7,6 +7,8 @@ import { AllEventLogsQuery, TransactionsQuery } from '../../graphql/queries';
 import { Spinner } from '../../shared/Loading';
 import PaymentList, { renderPayment } from '../../modules/Payments/Components/PaymentList';
 import currency from '../../__mocks__/currency';
+import { Context } from '../../containers/Provider/AuthStateProvider';
+import userMock from '../../__mocks__/userMock';
 
 describe('Payment List Item Component', () => {
   const transactions = [
@@ -75,11 +77,13 @@ describe('Payment List Item Component', () => {
     };
 
     const container = render(
-      <MockedProvider mocks={[mock, anotherMock]} addTypename={false}>
-        <BrowserRouter>
-          <PaymentList currencyData={currency} />
-        </BrowserRouter>
-      </MockedProvider>
+      <Context.Provider value={userMock}>
+        <MockedProvider mocks={[mock, anotherMock]} addTypename={false}>
+          <BrowserRouter>
+            <PaymentList currencyData={currency} />
+          </BrowserRouter>
+        </MockedProvider>
+      </Context.Provider>
     );
 
     const loader = render(<Spinner />);

@@ -34,7 +34,7 @@ export default function CommentTextField({ data, refetch, authState, taskId }) {
     <>
       <form style={{ display: 'flex' }} onSubmit={handleSubmit}>
         <Avatar style={{ marginTop: '7px' }} src={authState.user.imageUrl} alt="avatar-image" />
-        <div className={classes.root} style={{ display: 'flex', flexDirection: 'column', color: '#69ABA4' }}>
+        <div className={classes.root} style={{ display: 'flex', flexDirection: 'column' }}>
           <TextField
             value={body}
             multiline
@@ -44,7 +44,7 @@ export default function CommentTextField({ data, refetch, authState, taskId }) {
             onChange={e => setBody(e.target.value)}
             inputProps={{ 'data-testid': 'body_input' }}
           />
-          <Button variant="contained" color="inherit" type="submit" disabled={!body.length} data-testid='share'>{t('misc.share')}</Button>
+          <Button variant="contained" color="primary" type="submit" disabled={!body.length} data-testid='share'>{t('misc.share')}</Button>
         </div>
       </form>
       <CommentCard data={data} refetch={refetch} />
@@ -67,11 +67,9 @@ const useStyles = makeStyles((theme) => ({
     '& .MuiButton-contained': {
       width: 100,
       marginLeft: '8px',
-      backgroundColor: '#69ABA4',
       color: "white"
     },
     '& .Mui-disabled': {
-      backgroundColor: '#f8f8f9',
       color: 'white',
       border: '2px white solid'
     }

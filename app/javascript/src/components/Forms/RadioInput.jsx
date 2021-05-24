@@ -30,7 +30,7 @@ export default function RadioInput({ handleValue, properties, value }) {
               <FormControlLabel
                 key={parsedValue.label}
                 value={parsedValue.checked}
-                control={<Radio />}
+                control={<Radio color="primary" />}
                 label={parsedValue.checked}
               />
             )
@@ -39,7 +39,7 @@ export default function RadioInput({ handleValue, properties, value }) {
             <FormControlLabel
               key={field.label}
               value={field.value}
-              control={<Radio />}
+              control={<Radio color="primary" />}
               label={field.label}
             />
           )
@@ -52,7 +52,7 @@ export default function RadioInput({ handleValue, properties, value }) {
             <FormControlLabel
               key={val.label}
               value={val.value}
-              control={<Radio required={properties.required} />}
+              control={<Radio color="primary" required={properties.required} />}
               label={val.label}
             />
           ))}

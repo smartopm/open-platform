@@ -4,6 +4,7 @@ import '@testing-library/jest-dom/extend-expect'
 import { MockedProvider } from '@apollo/react-testing'
 import { BrowserRouter } from 'react-router-dom'
 import UserDetail from '../Components/UserProfileDetail'
+import MockedThemeProvider from '../../__mocks__/mock_theme'
 
 describe('user detail component', () => {
   it('show correct user details', () => {
@@ -24,7 +25,9 @@ describe('user detail component', () => {
     const container = render(
       <MockedProvider mocks={[]}>
         <BrowserRouter>
-          <UserDetail {...props} />
+          <MockedThemeProvider>
+            <UserDetail {...props} />
+          </MockedThemeProvider>
         </BrowserRouter>
       </MockedProvider>
     )

@@ -63,10 +63,10 @@ export default function CommentCard({ data, refetch }) {
             </CardContent>
             )}
             {(!edit && editId !== com.id) && (
-            <CardActions style={{ color: '#69ABA4'  }}>
+            <CardActions color="primary">
               <Button
                 size="small"
-                color="inherit"
+                color="primary"
                 onClick={() => setEditId(com.id)}
                 data-testid='edit'
               >
@@ -76,7 +76,7 @@ export default function CommentCard({ data, refetch }) {
               |
               <Button
                 size="small"
-                color="inherit"
+                color="secondary"
                 id={com.id}
                 name={com.user.name}
                 image={com.user.imageUrl} 

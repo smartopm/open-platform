@@ -1,8 +1,9 @@
 /* eslint-disable react/forbid-prop-types */
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { Query, Builder, Utils as QbUtils } from 'react-awesome-query-builder'
 import PropTypes from 'prop-types'
 import { theme } from '../themes/nkwashi/theme'
+import { Context } from '../containers/Provider/AuthStateProvider'
 
 export default function QueryBuilder({
   builderConfig,
@@ -10,6 +11,7 @@ export default function QueryBuilder({
   handleOnChange,
   addRuleLabel
 }) {
+  const authState = useContext(Context)
   const config = {
     ...builderConfig,
     settings: {
@@ -19,7 +21,7 @@ export default function QueryBuilder({
       groupActionsPosition: 'bottomLeft',
       canReorder: false,
       theme: {
-        material: theme
+        material: theme(authState.user?.community?.themeColors)
       }
     },
     operators: {

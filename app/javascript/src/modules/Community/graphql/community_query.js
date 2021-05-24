@@ -16,6 +16,7 @@ export const CurrentCommunityQuery = gql`
       tagline
       language
       wpLink
+      themeColors
       features
     }
   }

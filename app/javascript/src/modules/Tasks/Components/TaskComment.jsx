@@ -41,16 +41,16 @@ export default function TaskComment({ authState, taskId }) {
           <p>{t('misc.data_not_available')}</p>
         </div>
       )}
-      <div style={{ display: 'flex', marginBottom: "10px", color: '#69ABA4' }}>
+      <div style={{ display: 'flex', marginBottom: "10px"}}>
         {/* Todo: refactor code below */}
         {!commentOpen ? (
-          <Typography variant="caption" data-testid='comment' style={{ color: '#69ABA4', marginRight: "15px", cursor: 'pointer' }} onClick={handleCommentOpen} gutterBottom>
+          <Typography variant="caption" color="primary" data-testid='comment' style={{ marginRight: "15px", cursor: 'pointer' }} onClick={handleCommentOpen} gutterBottom>
             {commentData?.taskComments.length}
             {' '}
             {t('misc.comment_plural')}
           </Typography>
         ) : (
-          <Typography variant="caption" data-testid='hide_comment' style={{ color: '#69ABA4', marginRight: "15px", cursor: 'pointer' }} onClick={() => setCommentOpen(false)} gutterBottom>
+          <Typography variant="caption" color="primary" data-testid='hide_comment' style={{ marginRight: "15px", cursor: 'pointer' }} onClick={() => setCommentOpen(false)} gutterBottom>
             {t('misc.collapse_comment')}
           </Typography>
         )}

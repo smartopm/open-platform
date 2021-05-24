@@ -6,7 +6,7 @@ import IconButton from '@material-ui/core/IconButton';
 import Button from '@material-ui/core/Button';
 import DoubleArrowOutlinedIcon from '@material-ui/icons/DoubleArrowOutlined';
 import PhoneIcon from '@material-ui/icons/Phone';
-import { Dialog, DialogTitle, DialogContent, Grid } from '@material-ui/core';
+import { Dialog, DialogTitle, DialogContent, Grid, TextField } from '@material-ui/core';
 import { css, StyleSheet } from 'aphrodite';
 import { useMutation } from 'react-apollo';
 import PropTypes from 'prop-types';
@@ -183,24 +183,27 @@ export default function UserInformation({
                     <div className="form-group">
                       {t("common:misc.notes")}
                       <br />
-                      <textarea
+                      <TextField
                         className="form-control"
                         placeholder={t("common:form_placeholders.add_note")}
                         id="notes"
                         rows="4"
-                        ref={register({ required: true })}
+                        inputRef={register({ required: true })}
                         name="note"
+                        multiline
+                        required
                       />
                     </div>
-                    <button
+                    <Button
                       type="button"
                       style={{ float: 'right' }}
-                      className="btn btn-outline-primary "
                       onClick={handleSubmit(onSaveNote)}
                       disabled={mutationLoading}
+                      color="primary"
+                      variant="outlined"
                     >
                       {mutationLoading ? t("common:form_actions.saving") : t("common:form_actions.save")}
-                    </button>
+                    </Button>
                   </form>
                   <br />
                   <br />
@@ -256,7 +259,8 @@ export default function UserInformation({
           {data.user.state === 'valid' && authState.user.userType === 'security_guard' ? (
             <Button
               id="log-entry"
-              className={`${css(styles.logButton)} log-entry-btn`}
+              className="log-entry-btn"
+              color="primary"
               onClick={onLogEntry}
             >
               {t("common:misc.log_entry")}
@@ -269,6 +273,7 @@ export default function UserInformation({
               startIcon={<PhoneIcon />}
               className={`${css(styles.callButton)}`}
               href={`tel:${ponisoNumber}`}
+              color="primary"
             >
               {t("common:misc.call_manager")}
             </Button>
@@ -306,12 +311,4 @@ const styles = StyleSheet.create({
     color: '#000000',
     textDecoration: 'none'
   },
-  logButton: {
-    backgroundColor: '#69ABA4',
-    color: '#FFF'
-  },
-  callButton: {
-    backgroundColor: '#FF6347',
-    color: '#FFF'
-  }
 });

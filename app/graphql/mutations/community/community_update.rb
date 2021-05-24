@@ -15,6 +15,7 @@ module Mutations
       argument :logo_url, String, required: false
       argument :language, String, required: false
       argument :wp_link, String, required: false
+      argument :theme_colors, GraphQL::Types::JSON, required: false
 
       field :community, Types::CommunityType, null: true
 

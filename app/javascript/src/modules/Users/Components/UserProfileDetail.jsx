@@ -2,6 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import { css, StyleSheet } from 'aphrodite'
 import { useTranslation } from 'react-i18next';
+import { useTheme } from '@material-ui/styles';
 import PropTypes from 'prop-types'
 import dateutil from '../../../utils/dateutil'
 import UserLabels from './UserLabels'
@@ -9,6 +10,7 @@ import StatusBadge from '../../../components/StatusBadge'
 
 export default function UserDetail({ data, userType }) {
   const { t } = useTranslation('users')
+  const theme = useTheme()
   return (
     <div>
       <h5>{data.user.name}</h5>
@@ -43,7 +45,7 @@ export default function UserDetail({ data, userType }) {
         {dateutil.formatDate(data.user.lastActivityAt)}
       </div>
       {['admin'].includes(userType) && (
-        <Link to={`/entry_logs/${data.user.id}`}>
+        <Link to={`/entry_logs/${data.user.id}`} style={{ color: theme.palette.primary.main }}>
           {t("common:misc.entry_logs")}
           {' '}
           &gt;

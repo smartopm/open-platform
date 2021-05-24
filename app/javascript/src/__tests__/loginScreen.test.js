@@ -43,6 +43,10 @@ describe('Login screen', () => {
             logoUrl: '',
             language: 'en-US',
             wpLink: '',
+            themeColors: {
+              primaryColor: "#FFFFFF",
+              secondaryColor: "#FFFFFF"
+            },
             features: []
           }
         }

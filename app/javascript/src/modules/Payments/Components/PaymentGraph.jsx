@@ -22,13 +22,13 @@ export default function PaymentGraph({ handleClick }){
   }
   return (
     <>
-      <div style={matches ? {width: '80%', margin: '30px 150px', border: '1px solid #E7E7E7'} : {width: '100%', margin: '10px 0', border: '1px solid #E7E7E7'}}>
+      <div style={matches ? {width: '80%', margin: '30px 150px', border: `1px solid ${theme.palette.primary.light}` } : {width: '100%', margin: '10px 0', border: `1px solid ${theme.palette.primary.light}` }}>
         {data?.paymentAccountingStats && data?.paymentAccountingStats?.length && (
           <div>
-            <div style={{background: '#FAFEFE', borderBottom: '1px solid #C3DCD8', padding: '25px'}}>
+            <div style={{borderBottom: `1px solid ${theme.palette.primary.main}`, padding: '25px'}}>
               <Typography variant='body1' color='primary'>Total Amount Paid By Date</Typography>
             </div>
-            <div style={{padding: '30px', background: '#FFF'}}>
+            <div style={{padding: '30px'}}>
               <ResponsiveContainer width="100%" height={300}>
                 <BarChart
                   width={1000}
@@ -46,11 +46,11 @@ export default function PaymentGraph({ handleClick }){
                   <YAxis />
                   <Tooltip />
                   <Legend />
-                  <Bar cursor="pointer" stackId="a" dataKey="cash" fill="#8884d8" onClick={handleClick} />
-                  <Bar cursor="pointer" stackId="a" dataKey="mobileMoney" fill="#82ca9d" onClick={handleClick} />
-                  <Bar cursor="pointer" stackId="a" dataKey="bankTransfer" fill="#E79040" onClick={handleClick} />
-                  <Bar cursor="pointer" stackId="a" dataKey="eft" fill="#3493FB" onClick={handleClick} />
-                  <Bar cursor="pointer" stackId="a" dataKey="pos" fill="#744db8" onClick={handleClick} />
+                  <Bar cursor="pointer" stackId="a" dataKey="cash" fill={theme.palette.primary.main} onClick={handleClick} />
+                  <Bar cursor="pointer" stackId="a" dataKey="mobileMoney" fill={theme.palette.success.main} onClick={handleClick} />
+                  <Bar cursor="pointer" stackId="a" dataKey="bankTransfer" fill={theme.palette.info.main} onClick={handleClick} />
+                  <Bar cursor="pointer" stackId="a" dataKey="eft" fill={theme.palette.secondary.main} onClick={handleClick} />
+                  <Bar cursor="pointer" stackId="a" dataKey="pos" fill={theme.palette.warning.light} onClick={handleClick} />
                 </BarChart>
               </ResponsiveContainer>
             </div>

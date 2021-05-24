@@ -42,9 +42,8 @@ const useStyles = makeStyles(theme => ({
     margin: '6%'
   },
   titleSection: {
-    color: theme.palette.primary,
     borderBottom: `1px ${theme.palette.primary.main} solid`,
-    backgroundColor: theme.palette.primary.dew,
+    backgroundColor: theme.palette.primary.light,
     height: 50
   },
   title: {

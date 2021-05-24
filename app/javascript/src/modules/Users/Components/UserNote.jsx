@@ -30,6 +30,7 @@ export function UserNote({ note, handleFlagNote }) {
           aria-label="Flag as a todo" 
           onClick={() => handleFlagNote(note.id)}
           className={css(styles.actionIcon)}
+          color="primary"
         >
           <AddBoxIcon />
         </IconButton>
@@ -92,16 +93,12 @@ UserNotes.propTypes = {
 
 const styles = StyleSheet.create({
   commentBox: {
-    borderLeft: '2px solid #69ABA4',
+    borderLeft: '2px solid',
     padding: '0.5%',
-    color: 'gray'
   },
   actionIcon: {
     float: 'right',
     cursor: 'pointer',
-    ':hover': {
-      color: '#69ABA4'
-    },
     marginRight: 12
   }
 })

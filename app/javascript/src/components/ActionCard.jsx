@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { makeStyles } from '@material-ui/core/styles'
+import { makeStyles, useTheme } from '@material-ui/core/styles'
 import PropTypes from 'prop-types'
 import {
   Typography,
@@ -13,7 +13,7 @@ import ActionFlowIcon from './ActionFlows/ActionFlowIcon'
 import ActionCardMenu from './ActionCardMenu'
 import { titleize } from '../utils/helpers'
 
-const useStyles = makeStyles({
+const useStyles = makeStyles(theme => ({
   root: {
     width: 355,
     display: 'flex',
@@ -33,7 +33,7 @@ const useStyles = makeStyles({
     height: '70px',
     width: '70px',
     textAlign: 'center',
-    backgroundColor: '#F0FFFC'
+    backgroundColor: theme.palette.primary.main
   },
   title: {
     fontSize: 18,
@@ -52,13 +52,14 @@ const useStyles = makeStyles({
     marginTop: 12,
     textAlign: 'center'
   }
-})
+}))
 
 export default function ActionCard({ actionFlow, openFlowModal, refetch }) {
   const classes = useStyles()
   const date = new Date(actionFlow.createdAt)
   const [anchorEl, setAnchorEl] = useState(null)
   const open = Boolean(anchorEl)
+  const theme = useTheme()
 
   function isActive() {
     // Currently defaulting to Active, will be changed
@@ -98,7 +99,7 @@ export default function ActionCard({ actionFlow, openFlowModal, refetch }) {
         <MoreHorizIcon />
       </IconButton>
       <Avatar className={classes.avatar}>
-        <ActionFlowIcon />
+        <ActionFlowIcon primaryColor={theme.palette.primary.main} />
       </Avatar>
       <CardContent>
         <Typography
@@ -124,7 +125,7 @@ export default function ActionCard({ actionFlow, openFlowModal, refetch }) {
         </Typography>
         <Typography
           className={classes.status}
-          style={{ color: isActive() ? '#66A59A' : '#ADADAD' }}
+          color="primary"
         >
           {isActive() ? 'Active' : 'Inactive'}
         </Typography>

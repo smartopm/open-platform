@@ -1,7 +1,7 @@
 /* eslint-disable no-nested-ternary */
 import React, { useState, useEffect } from 'react';
 import { CSVLink } from "react-csv";
-import { Grid, List } from '@material-ui/core';
+import { Grid, List, Typography } from '@material-ui/core';
 import Avatar from '@material-ui/core/Avatar';
 import Fab from '@material-ui/core/Fab';
 import PropTypes from 'prop-types';
@@ -223,7 +223,7 @@ export function renderPayment(payment, currencyData) {
           <Link to={`/user/${payment.user.id}?tab=Payments`} style={{ textDecoration: 'none'}}>
             <div style={{display: 'flex'}}>
               <Avatar src={payment.user.imageUrl} alt="avatar-image" />
-              <span style={{margin: '7px', fontSize: '12px'}}>{payment.user.name}</span>
+              <Typography color="primary" style={{margin: '7px', fontSize: '12px'}}>{payment.user.name}</Typography>
             </div>
           </Link>
         </Grid>

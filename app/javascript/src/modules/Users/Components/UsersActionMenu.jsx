@@ -10,6 +10,7 @@ import {
 import PropTypes from 'prop-types'
 import LabelIcon from '@material-ui/icons/Label'
 import { useTranslation } from 'react-i18next'
+import { useTheme } from '@material-ui/styles'
 import { CustomizedDialogs, ActionDialog } from '../../../components/Dialog'
 import CreateLabel from '../../../components/CreateLabel'
 import CampaignIcon from '../../../components/Campaign/CampaignIcon'
@@ -31,6 +32,7 @@ export default function UsersActionMenu({
   const [labelAssignWarningOpen, setLabelAssignWarningOpen] = useState(false)
   const [selectedLabels, setSelectedLabels] = useState([])
   const { t } = useTranslation(['users', 'common'])
+  const theme = useTheme()
 
   function openLabelSelectModal() {
     setLabelSelectModalOpen(true)
@@ -116,7 +118,7 @@ export default function UsersActionMenu({
           <Button
             onClick={handleCampaignCreate}
             color="primary"
-            startIcon={<CampaignIcon />}
+            startIcon={<CampaignIcon primaryColor={theme.palette.primary.main} />}
             style={{ textTransform: 'none' }}
           >
             {t('common:form_actions.create_campaign')}

@@ -22,7 +22,7 @@ export function NewRequestButton() {
       <Link className={css(styles.requestLink)} to="/new/user">
         <Button
           variant="contained"
-          className={`btn ${css(styles.requestButton)}`}
+          color="primary"
         >
           {/* This should be renamed to Create a user */}
           {t('search.create_request')}
@@ -212,11 +212,6 @@ const styles = StyleSheet.create({
     'border-radius': '50%',
     width: '50px'
   },
-  statusBadgePending: {
-    border: '1px dashed #69ABA4',
-    color: '#69ABA4',
-    borderRadius: '10px'
-  },
   inputGroup: {
     border: '1px solid #AAA',
     'border-radius': '5px',
@@ -253,10 +248,6 @@ const styles = StyleSheet.create({
   noResults: {
     margin: '4em 0',
     textAlign: 'center'
-  },
-  requestButton: {
-    backgroundColor: '#69ABA4',
-    color: '#FFF'
   },
   requestLink: {
     textDecorationLine: 'none'

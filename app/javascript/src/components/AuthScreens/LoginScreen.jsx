@@ -183,12 +183,12 @@ export default function LoginScreen() {
           <Button
             variant="contained"
             color="primary"
-            className={`btn ${css(styles.getStartedButton)} enz-lg-btn next-btn`}
+            className={`${css(styles.getStartedButton)} enz-lg-btn next-btn`}
             onClick={event => loginWithPhone(event, 'btnClick')}
             disabled={isLoading}
           >
             {isLoading ? (
-              <CircularProgress size={25} color="inherit" />
+              <CircularProgress size={25} color="primary" />
             ) : (
               <span>{t('login.login_button_text')}</span>
               )}

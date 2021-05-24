@@ -11,6 +11,7 @@ import { useQuery } from 'react-apollo'
 import { useLocation } from 'react-router-dom'
 import { StyleSheet, css } from 'aphrodite'
 import { useTranslation } from 'react-i18next'
+import { TextField, Typography } from '@material-ui/core'
 import Loading from '../../../shared/Loading'
 import { AllEventLogsQuery } from '../../../graphql/queries'
 import ErrorPage from '../../../components/Error'
@@ -226,16 +227,15 @@ export function IndexComponent({
                 <span className={css(styles.subTitle)}>
                   {event.subject === 'visitor_entry' && authState.user.userType === 'admin' && !enrolled ? (
                     <>
-                      <span
-                        style={{
-                          cursor: 'pointer',
-                          color: '#009688'
-                        }}
+                      <Typography
+                        component="span"
+                        color="primary"
+                        style={{cursor: 'pointer'}}
                         onClick={() => enrollUser(event.refId)}
                       >
                         {t('logbook.enroll_user')}
                         {' '}
-                      </span>
+                      </Typography>
                       |
                       {' '}
                       {source}
@@ -248,17 +248,16 @@ export function IndexComponent({
                   {' '}
                   |
                   {' '}
-                  <span
-                    style={{
-                      cursor: 'pointer',
-                      color: '#009688'
-                    }}
+                  <Typography
+                    component="span"
+                    color="primary"
+                    style={{cursor: 'pointer'}}
                     onClick={() => {
                       routeToAction(event)
                     }}
                   >
                     {t('common:misc.more_details')}
-                  </span>
+                  </Typography>
                 </span>
               </div>
             </div>
@@ -280,7 +279,7 @@ export function IndexComponent({
     <div>
       <div className="container">
         <div className="form-group">
-          <input
+          <TextField
             type="text"
             value={searchTerm}
             onChange={handleSearch}

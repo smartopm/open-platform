@@ -5,12 +5,14 @@ import { StyleSheet, css } from 'aphrodite'
 import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import { useTranslation } from 'react-i18next'
+import { useTheme } from '@material-ui/styles'
 import { useFetch } from '../../../utils/customHooks'
 import { Spinner } from '../../../shared/Loading'
 
 export default function Categories({ wordpressEndpoint }) {
   const { response, error } = useFetch(`${wordpressEndpoint}/categories`)
   const { t } = useTranslation('news')
+  const theme = useTheme()
   // TODO: @olivier ==> add better error page and loading component here
   if (error) {
     return error.message
@@ -44,6 +46,7 @@ export default function Categories({ wordpressEndpoint }) {
               to={`/news/${category.slug}`}
               className={`${css(styles.categoryLink)}`}
               key={category.ID}
+              style={{ color: theme.palette.primary.main, marginLeft: 15 }}
             >
               {category.name}
             </Link>
@@ -60,16 +63,9 @@ Categories.propTypes = {
 
 const styles = StyleSheet.create({
   categoryLink: {
-    marginLeft: '15px',
-    ':focus': {
-      textDecoration: 'none',
-      backgroundColor: '#69ABA4',
-      padding: '10px',
-      borderRadius: '5px',
-      color: 'rgba(0, 0, 0, 0.54)'
-    },
     ':hover': {
-      textDecoration: 'none'
+      textDecoration: 'none',
+      fontWeight: 'bold'
     }
   }
 })

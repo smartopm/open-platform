@@ -24,9 +24,10 @@ export default function CheckInComplete({ history }) {
       >
         <Button
           variant="contained"
-          className={`btn ${css(styles.getStartedButton)}`}
+          className={`${css(styles.getStartedButton)}`}
           onClick={() => history.push("/sh_reason")}
           data-testid="another_checkin_btn"
+          color="primary"
         >
           Check-In Another Visitor
         </Button>
@@ -49,8 +50,6 @@ const styles = StyleSheet.create({
     marginLeft: "9vw"
   },
   getStartedButton: {
-    backgroundColor: "#69ABA4",
-    color: "#FFF",
     width: "85%",
     height: 51,
     boxShadow: "none",

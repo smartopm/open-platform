@@ -4,14 +4,22 @@
 import React from 'react';
 import { css, StyleSheet } from 'aphrodite';
 import { Link } from 'react-router-dom';
+import { useTheme } from '@material-ui/styles';
 import { ponisoNumber } from '../../../utils/constants';
 
+/**
+ * 
+ * @param {any} props 
+ * @returns ReactNode
+ * @deprecated
+ */
 export default function RequestStatus(props) {
+  const theme = useTheme()
   return (
     <div
       className={`row justify-content-center align-items-center ${css(styles.waitPage)}`}
       style={{
-        backgroundColor: props.isDenied ? '#ed5757' : '#69ABA4'
+        backgroundColor: props.isDenied ? theme.palette.secondary.main : theme.palette.primary.main
       }}
     >
       <h1 className={css(styles.title)} data-testid="status">{props.isDenied ? 'Denied' : 'Approved'}</h1>
@@ -21,7 +29,7 @@ export default function RequestStatus(props) {
           to="/guard_home"
           className={`btn btn-lg btn-block ${css(styles.okButton)}`}
           style={{
-            backgroundColor: props.isDenied ? '#ed5757' : '#69ABA4'
+            backgroundColor: props.isDenied ? theme.palette.secondary.main : theme.palette.primary.main
           }}
         >
           Ok

@@ -1,7 +1,7 @@
 /* eslint-disable no-use-before-define */
 import React, { useContext, useState } from 'react'
 import {
-  ListItem, ListItemAvatar, ListItemText, Button, TextField, List, Grid, IconButton
+  ListItem, ListItemAvatar, ListItemText, Button, TextField, List, Grid, IconButton, Typography
 } from '@material-ui/core'
 import { useMutation, useApolloClient } from 'react-apollo'
 import { useParams, useLocation } from 'react-router'
@@ -134,57 +134,54 @@ export function CommentSection({ data, handleDeleteComment }) {
       </ListItemAvatar>
       <ListItemText
         primary={(
-          <>
-            <span>
-              <Link
-                style={{ cursor: 'pointer', textDecoration: 'none' }}
-                to={data.isAdmin ? `/user/${data.user.id}` : '#'}
-              >
-                {data.user.name}
-              </Link>
-            </span>
-          </>
-                  )}
+          <Link
+            style={{ cursor: 'pointer', textDecoration: 'none' }}
+            to={data.isAdmin ? `/user/${data.user.id}` : '#'}
+          >
+            <Typography component="span" color="primary">
+              {data.user.name}
+            </Typography>
+          </Link>
+        )}
         secondary={(
           <>
             <span data-testid="comment">
               <span
-                  // eslint-disable-next-line react/no-danger
+                // eslint-disable-next-line react/no-danger
                 dangerouslySetInnerHTML={{
                   __html: sanitizeText(findLinkAndReplace(data.comment))
                 }}
               />
               <br />
-              {
-
-                // eslint-disable-next-line react/prop-types
+              {// eslint-disable-next-line react/prop-types
               data.imageUrl && (
-                <ImageAuth 
-                  imageLink={data.imageUrl} 
-                  token={data.token} 
+                <ImageAuth
+                  imageLink={data.imageUrl}
+                  token={data.token}
                   className="img-responsive img-thumbnail"
                 />
               )
-              }
+}
             </span>
-            <span
-              data-testid="delete_icon"
-              className={css(styles.itemAction)}
-            >
+            <span data-testid="delete_icon" className={css(styles.itemAction)}>
               <DateContainer date={data.createdAt} />
-              {
-                 data.isAdmin && (
-                 <IconButton onClick={handleDeleteComment} edge="end" aria-label="delete" className={css(styles.deleteBtn)}>
-                   <DeleteIcon />
-                 </IconButton>
-                 )
-               }
+              {data.isAdmin && (
+                <IconButton
+                  onClick={handleDeleteComment}
+                  edge="end"
+                  aria-label="delete"
+                  className={css(styles.deleteBtn)}
+                  color="primary"
+                >
+                  <DeleteIcon />
+                </IconButton>
+              )}
             </span>
           </>
-            )}
+        )}
       />
     </ListItem>
-  )
+  );
 }
 
 export function CommentBox({

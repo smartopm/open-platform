@@ -3,15 +3,17 @@ import { Checkbox, Grid, IconButton, Typography } from '@material-ui/core';
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import { useTheme } from '@material-ui/styles';
 import { removeNewLines, sanitizeText } from '../../../utils/helpers';
 import DateContainer, { dateToString } from '../../../components/DateContainer';
 import MenuList from '../../../shared/MenuList'
 
 // TODO: Put in a more shareable directory
 export function LinkToUser({ userId, name }) {
+  const theme = useTheme()
   return (
     <Typography gutterBottom>
-      <Link style={{ textDecoration: 'none', fontSize: '12px' }} to={`/user/${userId}`}>
+      <Link style={{ textDecoration: 'none', fontSize: '12px', color: theme.palette.primary.main }} to={`/user/${userId}`}>
         {name}
       </Link>
     </Typography>
@@ -40,6 +42,7 @@ return [
         checked={selectedTasks.includes(task.id) || isSelected}
         onChange={() => handleChange(task.id)}
         inputProps={{ 'aria-label': 'primary checkbox' }}
+        color="primary"
       />
     </Grid>
   ),

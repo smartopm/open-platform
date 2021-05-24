@@ -19,7 +19,11 @@ describe('Todo list main page', () => {
       userType: 'client',
       expiresAt: null,
       community: {
-        supportName: 'Support Officer'
+        supportName: 'Support Officer',
+        themeColors: {
+          primaryColor: "#nnn",
+          secondaryColor: "#nnn"
+        }
       }
     }
   };

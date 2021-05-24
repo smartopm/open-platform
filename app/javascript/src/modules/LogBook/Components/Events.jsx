@@ -5,6 +5,8 @@ import React from "react";
 import GetAppIcon from '@material-ui/icons/GetApp';
 import Fab from "@material-ui/core/Fab";
 import { useTranslation } from "react-i18next";
+import { Link } from "@material-ui/core";
+import { useTheme } from "@material-ui/styles";
 import { dateToString, dateTimeToString } from "../../../components/DateContainer";
 
 
@@ -17,6 +19,7 @@ export default function Events({
   }) {
     const limit = 30;
     const { t } = useTranslation(['logbook', 'common'])
+    const theme = useTheme()
     function logs(eventLogs) {
       if (!eventLogs) {
         return;
@@ -45,7 +48,7 @@ export default function Events({
       <div>
         <div
           style={{
-            backgroundColor: "#69ABA4"
+            backgroundColor: theme.palette.primary.main
           }}
         />
         <div className="row justify-content-center">
@@ -67,17 +70,17 @@ export default function Events({
             <nav aria-label="Page navigation">
               <ul className="pagination">
                 <li className={`page-item ${offset < limit && "disabled"}`}>
-                  <a className="page-link" onClick={previousPage} href="#">
+                  <Link className="page-link" onClick={previousPage} href="#">
                     {t('common:misc.previous')}
-                  </a>
+                  </Link>
                 </li>
                 <li
                   className={`page-item ${data.result.length < limit &&
                     "disabled"}`}
                 >
-                  <a className="page-link" onClick={nextPage} href="#">
+                  <Link className="page-link" href="#" onClick={nextPage}>
                     {t('common:misc.next')}
-                  </a>
+                  </Link>
                 </li>
               </ul>
             </nav>
@@ -85,12 +88,11 @@ export default function Events({
           </div>
           <Fab
             variant="extended"
+            color="primary"
             style={{
               position: 'fixed',
               bottom: 24,
               right: 57,
-              backgroundColor: 'rgb(37, 192, 176)',
-              color: '#FFFFFF'
             }}
             href={`/csv_export/event_logs?token=${userToken}`}
           >

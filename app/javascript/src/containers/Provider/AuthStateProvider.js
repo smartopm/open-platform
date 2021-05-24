@@ -43,6 +43,7 @@ const QUERY = gql`
         locale
         language
         wpLink
+        themeColors
         features
       }
     }

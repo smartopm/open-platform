@@ -188,6 +188,7 @@ ActiveRecord::Schema.define(version: 2021_05_21_142938) do
     t.string "tagline"
     t.string "language"
     t.string "wp_link"
+    t.json "theme_colors"
     t.json "features"
     t.index ["slug"], name: "index_communities_on_slug", unique: true
   end

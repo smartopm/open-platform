@@ -15,7 +15,7 @@ export default function ViewCustomerJourney({ translate }) {
 
   return (
     <div data-testid='customer' className={matches ? classes.viewMobile : classes.view} onClick={() => history.push('/users/stats')}>
-      <TimelineIcon style={{color: '#66A59A', marginRight: '10px', verticalAlign: 'middle'}} />
+      <TimelineIcon color="primary" style={{ marginRight: '10px', verticalAlign: 'middle'}} />
       <Typography color='primary' style={{fontWeight: 600}} data-testid='view'>{translate('dashboard.view_customer_journey')}</Typography>
     </div>
   )
@@ -31,7 +31,6 @@ const useStyles = makeStyles(() => ({
     cursor: 'pointer',
     fontSize: '16px',
     fontWeight: 600,
-    color: '#66A59A'
   },
   viewMobile: {
     display: 'flex', 

@@ -602,7 +602,7 @@ export default function TodoList({
               variant="extended"
               onClick={openModal}
               color="primary"
-              className={`btn ${css(styles.taskButton)} `}
+              className={`${css(styles.taskButton)} `}
             >
               {t('common:form_actions.create_task')}
             </Fab>

@@ -190,7 +190,7 @@ export function FullScreenDialog({ handleClose, open, children, actionText, hand
           <div className={classes.print}>
             {' '}
           </div>
-          <Button autoFocus color="inherit" onClick={handleSubmit} style={{background: 'none'}} className={classes.print}>
+          <Button autoFocus onClick={handleSubmit} style={{background: 'none'}} className={classes.print}>
             {actionText}
           </Button>
         </Toolbar>
@@ -246,7 +246,7 @@ export function ActionDialog({ handleClose, open, handleOnSave, message, type}) 
           autoFocus
           onClick={handleOnSave}
           variant="contained"
-          style={{ backgroundColor: type === 'warning' ? '#dc402b' : '#69ABA4', color: 'white' }}
+          color="primary"
         >
           Proceed
         </Button>
@@ -255,7 +255,7 @@ export function ActionDialog({ handleClose, open, handleOnSave, message, type}) 
   )
 }
 
-export const useStyles = makeStyles({
+export const useStyles = makeStyles(theme => ({
   title: {
     borderBottom: '1px #b8d4d0 solid'
   },
@@ -265,12 +265,11 @@ export const useStyles = makeStyles({
     borderBottom: '1px #f1a3a2 solid'
   },
   confirmDialogTitle: {
-    color: '#69ABA4',
-    borderBottom: '1px #69ABA4 solid'
+    color: theme.palette.primary.main,
+    borderBottom: `1px ${theme.palette.primary.main} solid`
   },
   detailTitle: {
-    background: '#FAFEFE',
-    color: '#81B7AD'
+    color: theme.palette.primary.main
   },
   close: {
     float: 'right',
@@ -280,6 +279,7 @@ export const useStyles = makeStyles({
   },
   appBar: {
     position: 'relative',
+    color: '#FFFFFF',
   },
   print: {
     marginLeft: '500px',
@@ -289,7 +289,7 @@ export const useStyles = makeStyles({
   drawer: {
     width: '300px',
   },
-})
+}))
 
 ActionDialog.defaultProps = {
   type: 'warning'

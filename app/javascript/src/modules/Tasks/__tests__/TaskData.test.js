@@ -5,13 +5,16 @@ import '@testing-library/jest-dom/extend-expect';
 import { BrowserRouter } from 'react-router-dom';
 import renderTaskData, { LinkToUser } from '../Components/RenderTaskData';
 import TodoItem from '../Components/TodoItem'
+import MockedThemeProvider from '../../__mocks__/mock_theme'
 import t from '../../__mocks__/t'
 
 describe('Task Data components ', () => {
   it('should render proper the link to user component', () => {
     const container = render(
       <BrowserRouter>
-        <LinkToUser userId="sdfsdf" name="Joe doe" />
+        <MockedThemeProvider>
+          <LinkToUser userId="sdfsdf" name="Joe doe" />
+        </MockedThemeProvider>
       </BrowserRouter>
     );
     expect(container.queryByText('Joe doe')).toBeInTheDocument();
@@ -59,15 +62,17 @@ describe('Task Data components ', () => {
     const container = render(
       <BrowserRouter>
         <MockedProvider>
-          <TodoItem
-            task={task}
-            handleChange={() => {}}
-            selectedTasks={[]}
-            isSelected={false}
-            handleTaskDetails={() => {}}
-            handleCompleteNote={() => {}}
-            headers={taskHeader}
-          />
+          <MockedThemeProvider>
+            <TodoItem
+              task={task}
+              handleChange={() => {}}
+              selectedTasks={[]}
+              isSelected={false}
+              handleTaskDetails={() => {}}
+              handleCompleteNote={() => {}}
+              headers={taskHeader}
+            />
+          </MockedThemeProvider>
         </MockedProvider>
       </BrowserRouter>
     )

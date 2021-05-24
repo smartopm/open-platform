@@ -5,6 +5,7 @@ import { BrowserRouter } from 'react-router-dom/'
 import { MockedProvider } from '@apollo/react-testing'
 import UserInformation from '../Components/UserInformation'
 import { UserActivePlanQuery } from '../../../graphql/queries/user'
+import MockedThemeProvider from '../../__mocks__/mock_theme'
 
 describe("User information component loads",()=>{
     const data = {
@@ -56,18 +57,20 @@ describe("User information component loads",()=>{
         const {getByText} = render(
           <MockedProvider mock={data}>
             <BrowserRouter>
-              <UserInformation
-                data={data}
-                authState={authstate}
-                accountData={accountData}
-                parcelData={parcelData}
-                onLogEntry={mock}
-                sendOneTimePasscode={mock}
-                refetch={mock}
-                userId={data.user.id}
-                router={routeMock}
-                accountRefetch={mock}
-              />
+              <MockedThemeProvider>
+                <UserInformation
+                  data={data}
+                  authState={authstate}
+                  accountData={accountData}
+                  parcelData={parcelData}
+                  onLogEntry={mock}
+                  sendOneTimePasscode={mock}
+                  refetch={mock}
+                  userId={data.user.id}
+                  router={routeMock}
+                  accountRefetch={mock}
+                />
+              </MockedThemeProvider>
             </BrowserRouter>
           </MockedProvider>
         )
@@ -91,12 +94,14 @@ describe("User information component loads",()=>{
       const { getAllByText } = render(
         <MockedProvider mocks={[anotherMock]}>
           <BrowserRouter>
-            <UserInformation
-              data={data}
-              authState={authstate}
-              accountData={accountData}
-              parcelData={parcelData}
-            />
+            <MockedThemeProvider>
+              <UserInformation
+                data={data}
+                authState={authstate}
+                accountData={accountData}
+                parcelData={parcelData}
+              />
+            </MockedThemeProvider>
           </BrowserRouter>
         </MockedProvider>
       );

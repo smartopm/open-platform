@@ -6,6 +6,9 @@ import ActionFlows from '../containers/ActionFlows/ActionFlows'
 import { Flows } from '../graphql/queries'
 import Loading from '../shared/Loading'
 import '@testing-library/jest-dom/extend-expect'
+import MockedThemeProvider from '../modules/__mocks__/mock_theme'
+import { Context } from '../containers/Provider/AuthStateProvider'
+import userMock from '../__mocks__/userMock'
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn())
 const mocks = {
@@ -35,11 +38,15 @@ const mocks = {
 describe('ActionFlows', () => {
   it('renders necessary elements', async () => {
     const container = render(
-      <MockedProvider mocks={[mocks]} addTypename={false}>
-        <BrowserRouter>
-          <ActionFlows />
-        </BrowserRouter>
-      </MockedProvider>
+      <Context.Provider value={userMock}>
+        <MockedProvider mocks={[mocks]} addTypename={false}>
+          <BrowserRouter>
+            <MockedThemeProvider>
+              <ActionFlows />
+            </MockedThemeProvider>
+          </BrowserRouter>
+        </MockedProvider>
+      </Context.Provider>
     )
 
     const loader = render(<Loading />)
@@ -75,7 +82,9 @@ describe('ActionFlows', () => {
     const container = render(
       <MockedProvider mocks={[newMocks]} addTypename={false}>
         <BrowserRouter>
-          <ActionFlows />
+          <MockedThemeProvider>
+            <ActionFlows />
+          </MockedThemeProvider>
         </BrowserRouter>
       </MockedProvider>
     )

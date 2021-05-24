@@ -19,9 +19,9 @@ import {
   FormHelperText
 } from '@material-ui/core';
 import Autocomplete from '@material-ui/lab/Autocomplete';
+import { useTheme } from '@material-ui/styles';
 import DatePickerDialog from '../../components/DatePickerDialog';
 import { UserChip } from '../../modules/Tasks/Components/UserChip';
-import colors from '../../themes/nkwashi/colors';
 import {
   Events,
   Actions,
@@ -36,7 +36,7 @@ import QueryBuilder from '../../components/QueryBuilder';
 import { titleize, capitalize, sentencizeAction } from '../../utils/helpers';
 import { dateWidget, NotesCategories } from '../../utils/constants';
 
-const { primary, dew } = colors;
+// const { primary, dew } = colors;
 const initialData = {
   title: '',
   description: '',
@@ -50,6 +50,7 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
   const [metaData, setMetaData] = useState({});
   const [selectedDate, setDate] = useState(new Date());
   const [assignees, setAssignees] = useState([]);
+  const theme = useTheme()
 
   const [loadLabelsLite, { data: labelsLiteData }] = useLazyQuery(LabelsQuery, {
     fetchPolicy: 'cache-and-network'
@@ -239,9 +240,8 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
       <DialogTitle
         id="workflow-dialog-title"
         style={{
-          borderBottom: `1px solid ${primary}`,
-          background: dew,
-          color: primary
+          borderBottom: `1px solid ${theme.palette.primary.main}`,
+          color: theme.palette.primary.main
         }}
       >
         {isEdit() ? 'Edit Workflow' : 'New Workflow'}

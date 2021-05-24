@@ -4,6 +4,7 @@ import { useWindowDimensions } from '../utils/customHooks';
 import IframeContainer from '../components/IframeContainer';
 import { useLocation } from 'react-router-dom';
 import { ModalDialog } from '../components/Dialog';
+import { TextField } from '@material-ui/core';
 
 export default function NkwashiAccountManagement() {
   const { width, height } = useWindowDimensions();
@@ -43,7 +44,7 @@ export default function NkwashiAccountManagement() {
             <a>arrears.nkwashi@thebe-im.com</a>
           </h6>
           <br />
-          <input
+          <TextField
             className="form-control"
             type="text"
             onChange={event => setLoginId(event.target.value)}

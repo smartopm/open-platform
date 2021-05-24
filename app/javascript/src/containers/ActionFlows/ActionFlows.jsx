@@ -181,7 +181,7 @@ export default function ActionFlows() {
             variant="contained"
             onClick={() => openModal()}
             color="primary"
-            className={`btn ${css(styles.addFlow)} `}
+            className={`${css(styles.addFlow)} `}
             data-testid="new-flow-btn"
           >
             New Workflow

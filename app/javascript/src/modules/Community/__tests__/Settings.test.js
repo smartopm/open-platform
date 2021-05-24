@@ -4,6 +4,7 @@ import '@testing-library/jest-dom/extend-expect';
 import { MockedProvider } from '@apollo/react-testing';
 import CommunitySettings from '../components/Settings';
 import { CommunityUpdateMutation } from '../graphql/community_mutations';
+import MockedThemeProvider from '../../__mocks__/mock_theme';
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
 describe('Community settings page ', () => {
@@ -52,7 +53,8 @@ describe('Community settings page ', () => {
           locale: 'en-US',
           tagline: '',
           logoUrl: '',
-          wpLink: ''
+          wpLink: '',
+          themeColors: { primaryColor: '#69ABA4', secondaryColor: '#cf5628' },
         }
       },
       result: {
@@ -63,19 +65,19 @@ describe('Community settings page ', () => {
         }
       }
     };
-    const mockRefetch = jest.fn();
+    const refetchMock = jest.fn();
     const container = render(
       <MockedProvider mocks={[communityMutatioMock]}>
-        <CommunitySettings data={data} refetch={mockRefetch} />
+        <MockedThemeProvider>
+          <CommunitySettings data={data} token="374857uwehfsdf232" refetch={refetchMock} />
+        </MockedThemeProvider>
       </MockedProvider>
     );
     expect(container.queryByText('community.community_logo')).toBeInTheDocument();
     expect(container.queryByText('community.change_community_logo')).toBeInTheDocument();
     expect(container.queryByText('community.upload_logo')).toBeInTheDocument();
     expect(container.queryByText('community.support_contact')).toBeInTheDocument();
-    expect(
-      container.queryByText('community.make_changes_support_contact')
-    ).toBeInTheDocument();
+    expect(container.queryByText('community.make_changes_support_contact')).toBeInTheDocument();
     expect(container.queryByText('common:form_fields.add_phone_number')).toBeInTheDocument();
     expect(container.queryByText('common:form_fields.add_email_address')).toBeInTheDocument();
     expect(container.queryByText('common:form_fields.add_whatsapp_number')).toBeInTheDocument();
@@ -108,15 +110,20 @@ describe('Community settings page ', () => {
     fireEvent.click(container.queryByTestId('whatsapp_click'));
     expect(container.queryAllByLabelText('WhatsApp')).toHaveLength(2);
 
+    fireEvent.change(container.queryByTestId('logo_url'), {
+      target: { value: 'https://something.com' }
+    });
+    expect(container.queryByTestId('logo_url').value).toBe('https://something.com');
 
-    fireEvent.change(container.queryByTestId('logo_url'), { target: { value: 'https://something.com' } });
-    expect(container.queryByTestId('logo_url').value).toBe('https://something.com')
+    fireEvent.change(container.queryByTestId('tagline'), {
+      target: { value: 'This is our tagline' }
+    });
+    expect(container.queryByTestId('tagline').value).toBe('This is our tagline');
 
-    fireEvent.change(container.queryByTestId('tagline'), { target: { value: 'This is our tagline' } });
-    expect(container.queryByTestId('tagline').value).toBe('This is our tagline')
-
-    fireEvent.change(container.queryByTestId('wp_link'), { target: { value: 'https://wordpress.com' } });
-    expect(container.queryByTestId('wp_link').value).toBe('https://wordpress.com')
+    fireEvent.change(container.queryByTestId('wp_link'), {
+      target: { value: 'https://wordpress.com' }
+    });
+    expect(container.queryByTestId('wp_link').value).toBe('https://wordpress.com');
 
     // fire the mutation update_community
     expect(container.queryByTestId('update_community')).not.toBeDisabled();
@@ -126,9 +133,8 @@ describe('Community settings page ', () => {
     expect(container.queryByTestId('update_community')).toBeDisabled();
 
     await waitFor(() => {
-      // check if mutation was called
-      expect(mockRefetch).toBeCalled();
+      expect(refetchMock).toBeCalled();
       expect(container.queryByText('community.community_updated')).toBeInTheDocument();
-    });
+    }, 10);
   });
 });

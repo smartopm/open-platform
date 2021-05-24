@@ -2,7 +2,7 @@
 /* eslint-disable react/prop-types */
 import React, { Fragment, useState } from 'react';
 import { useQuery, useMutation } from 'react-apollo';
-import { TextField, MenuItem, Button } from '@material-ui/core';
+import { TextField, MenuItem, Button, Link } from '@material-ui/core';
 import { StyleSheet, css } from 'aphrodite';
 import { useTranslation } from 'react-i18next';
 import { EntryRequestQuery } from '../../../graphql/queries';
@@ -11,6 +11,13 @@ import Loading from '../../../shared/Loading';
 import { ModalDialog } from '../../../components/Dialog';
 import { dateTimeToString, dateToString } from '../../../components/DateContainer';
 
+
+/**
+ * 
+ * @deprecated This should be looked into, as it might be a duplicate of another similar component
+ * basically we should find a way to re-use
+ * Refer: RequestForm, RequestUpdate
+ */
 export default function RequestConfirm({ match, history }) {
   const { loading, data } = useQuery(EntryRequestQuery, {
     variables: { id: match.params.id }
@@ -98,7 +105,7 @@ export default function RequestConfirm({ match, history }) {
       >
         {modalAction === 'flag' && (
           <div className="form-group">
-            <input
+            <TextField
               className="form-control"
               type="text"
               value={note}
@@ -116,7 +123,7 @@ export default function RequestConfirm({ match, history }) {
             <label className="bmd-label-static" htmlFor="date">
               {t('logbook:logbook.date_time_submitted')}
             </label>
-            <input
+            <TextField
               className="form-control"
               type="text"
               value={
@@ -135,7 +142,7 @@ export default function RequestConfirm({ match, history }) {
             <label className="bmd-label-static" htmlFor="_name">
               {t('logbook:logbook.guard')}
             </label>
-            <input
+            <TextField
               className="form-control"
               type="text"
               value={formData.guard ? formData.guard.name : ''}
@@ -149,7 +156,7 @@ export default function RequestConfirm({ match, history }) {
               {t('common.form_fields.full_name')}
             </label>
 
-            <input
+            <TextField
               className="form-control"
               type="text"
               value={formData.name}
@@ -162,7 +169,7 @@ export default function RequestConfirm({ match, history }) {
             <label className="bmd-label-static" htmlFor="nrc">
               {t('common.form_fields.nrc')}
             </label>
-            <input
+            <TextField
               className="form-control"
               type="text"
               value={formData.nrc || ''}
@@ -175,7 +182,7 @@ export default function RequestConfirm({ match, history }) {
             <label className="bmd-label-static" htmlFor="phoneNumber">
               {t('common.form_fields.phone_number')}
             </label>
-            <input
+            <TextField
               className="form-control"
               type="text"
               value={formData.phoneNumber || ''}
@@ -189,7 +196,7 @@ export default function RequestConfirm({ match, history }) {
               VEHICLE PLATE N&#176;
               {t('common.form_fields.vehicle_plate_number')}
             </label>
-            <input
+            <TextField
               className="form-control"
               type="text"
               onChange={handleInputChange}
@@ -217,7 +224,8 @@ export default function RequestConfirm({ match, history }) {
               <Button
                 variant="contained"
                 onClick={handleAcknowledgeRequest}
-                className={`btn ${css(styles.grantButton)}`}
+                className={`${css(styles.grantButton)}`}
+                color="primary"
                 disabled={isLoading}
               >
                 {isLoading ? t('common.misc.loading') : t('common.misc.acknowledge')}
@@ -227,20 +235,20 @@ export default function RequestConfirm({ match, history }) {
               <Button
                 variant="contained"
                 onClick={handleModal}
-                className={`btn  ${css(styles.denyButton)}`}
+                color="secondary"
                 disabled={isLoading}
               >
                 { t('common.misc.flag')}
               </Button>
             </div>
             <div className="col">
-              <a
+              <Link
                 href={`tel:${formData.guard && formData.guard.phoneNumber}`}
                 className={` ${css(styles.callButton)}`}
               >
                 {t('common.misc.call')}
                 {formData.guard && formData.guard.name}
-              </a>
+              </Link>
             </div>
           </div>
         </form>
@@ -252,29 +260,13 @@ export default function RequestConfirm({ match, history }) {
 }
 
 const styles = StyleSheet.create({
-  logButton: {
-    backgroundColor: '#69ABA4',
-    color: '#FFF',
-    width: '75%',
-    boxShadow: 'none'
-  },
   selectInput: {
     width: '100%'
   },
   grantButton: {
-    backgroundColor: '#69ABA4',
-    color: '#FFF',
     marginRight: 60
-    // width: "35%"
-  },
-  denyButton: {
-    // backgroundColor: "rgb(230, 63, 69)",
-    backgroundColor: 'rgb(38, 38, 38)',
-    color: '#FFF'
-    // width: "35%"
   },
   callButton: {
-    color: 'rgb(230, 63, 69)',
     textTransform: 'unset',
     textDecoration: 'none'
   }

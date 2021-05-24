@@ -1,35 +1,41 @@
-import { createMuiTheme } from '@material-ui/core'
-import colors from './colors'
+import { createMuiTheme } from '@material-ui/core';
 
 // eslint-disable-next-line import/prefer-default-export
-export const theme = createMuiTheme({
-  palette: {
-    primary: {
-      main: colors.primary,
-      contrastText: colors.textColor,
-      dew: colors.dew
-    },
-    secondary: {
-      main: colors.secondary,
-      contrastText: colors.textColor,
-    },
-  },
-  overrides: {
-    MuiPickersToolbar: {
-      toolbar: {
-        backgroundColor: colors.primary
+export function theme(communityThemeColor) {
+  const defaultColors = {
+    primaryColor: '#69ABA4',
+    secondaryColor: '#cf5628'
+  };
+
+  const themeColor = communityThemeColor || defaultColors;
+
+  return createMuiTheme({
+    palette: {
+      primary: {
+        main: themeColor.primaryColor,
+        dew: themeColor.secondaryColor
+      },
+      secondary: {
+        main: themeColor.secondaryColor
       }
     },
-    MuiPickersDay: {
-      day: {
-        color: colors.primary
+    overrides: {
+      MuiPickersToolbar: {
+        toolbar: {
+          backgroundColor: themeColor.primaryColor
+        }
       },
-      daySelected: {
-        backgroundColor: colors.primary
-      },
-      current: {
-        color: colors.primary
+      MuiPickersDay: {
+        day: {
+          color: themeColor.primaryColor
+        },
+        daySelected: {
+          backgroundColor: themeColor.primaryColor
+        },
+        current: {
+          color: themeColor.primaryColor
+        }
       }
     }
-  }
-})
+  });
+}

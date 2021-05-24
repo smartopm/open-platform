@@ -1,7 +1,7 @@
 import React from 'react'
-import colors from '../../themes/nkwashi/colors'
+import PropTypes from 'prop-types'
 
-export default function ActionFlowIcon() {
+export default function ActionFlowIcon({ primaryColor }) {
   return (
     <svg
       width="50px"
@@ -25,7 +25,7 @@ export default function ActionFlowIcon() {
           <g id="Group-Copy-3" transform="translate(650.000000, 469.000000)">
             <circle
               id="Oval-Copy-6"
-              fill={colors.faintGreen}
+              fill="#FFFFFF"
               cx="71"
               cy="71"
               r="71"
@@ -33,7 +33,7 @@ export default function ActionFlowIcon() {
             <g
               id="workflow-copy"
               transform="translate(37.000000, 37.000000)"
-              fill={colors.primary}
+              fill={primaryColor}
               fillRule="nonzero"
             >
               <polygon
@@ -74,4 +74,8 @@ export default function ActionFlowIcon() {
       </g>
     </svg>
   )
+}
+
+ActionFlowIcon.propTypes = {
+  primaryColor: PropTypes.string.isRequired
 }

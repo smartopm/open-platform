@@ -23,10 +23,10 @@ export default function InvoiceGraph({ handleClick }){
   }
   return (
     <>
-      <div style={matches ? {width: '80%', margin: '30px 150px', border: '1px solid #E7E7E7'} : {width: '100%', margin: '10px 0', border: '1px solid #E7E7E7'}}>
+      <div style={matches ? {width: '80%', margin: '30px 150px', border: `1px solid ${theme.palette.primary.light}` } : {width: '100%', margin: '10px 0', border: `1px solid ${theme.palette.primary.light}` }}>
         {data?.invoiceAccountingStats && data?.invoiceAccountingStats?.length > 0 && (
           <div>
-            <div style={{background: '#FAFEFE', borderBottom: '1px solid #C3DCD8', padding: '25px'}}>
+            <div style={{borderBottom: `1px solid ${theme.palette.primary.main}`, padding: '25px'}}>
               <Typography variant='body1' color='primary'>Number of Outstanding Invoices by Number of days</Typography>
             </div>
             <div style={{padding: '30px', background: '#FFF'}}>
@@ -46,7 +46,7 @@ export default function InvoiceGraph({ handleClick }){
                   <XAxis dataKey="noOfDays" />
                   <YAxis />
                   <Tooltip />
-                  <Bar cursor="pointer" dataKey="noOfInvoices" fill="#66A79B" onClick={handleClick} />
+                  <Bar cursor="pointer" dataKey="noOfInvoices" fill={theme.palette.primary.main} onClick={handleClick} />
                 </BarChart>
               </ResponsiveContainer>
             </div>
