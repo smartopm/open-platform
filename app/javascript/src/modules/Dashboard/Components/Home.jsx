@@ -10,8 +10,8 @@ import { PaymentSummary } from '../../Payments';
 import UserDetail from '../../Users/Components/UserDetail';
 import ViewCustomerJourney from '../../CustomerJourney/Components/ViewCustomerJourney';
 import LanguageToggle from '../../i18n/Components/LanguageToggle';
-import { PlotDetail } from '../../Plots'
-import CustomerJourneyStatus from '../../CustomerJourney/Components/CustomerJourneyStatus'
+import { PlotDetail } from '../../Plots';
+import CustomerJourneyStatus from '../../CustomerJourney/Components/CustomerJourneyStatus';
 import NewsFeed from '../../News/Components/NewsFeed';
 import FeatureCheck from '../../Features';
 
@@ -21,7 +21,7 @@ export default function Home() {
 
   if (!authState.loggedIn) return <Loading />;
   return (
-    <div style={{marginTop: '-30px'}}>
+    <div style={{ marginTop: '-30px' }}>
       <LanguageToggle />
       {authState.user.userType === 'admin' && (
         <div>
@@ -44,27 +44,28 @@ export default function Home() {
         </div>
       )}
       {authState.user.userType === 'client' && (
-        (
-          <div>
-            <UserDetail user={authState.user} />
-            {authState.user.subStatus && (
-              <FeatureCheck features={authState.user.community.features} name="Customer Journey">
-                <CustomerJourneyStatus subStatus={authState.user.subStatus} communityName={authState.user.community.name} />
-              </FeatureCheck>
-            )}
-            <Divider style={{marginTop: '30px'}} />
-            <FeatureCheck features={authState.user.community.features} name="Properties">
-              <PlotDetail authState={authState.user} />
+        <div>
+          <UserDetail user={authState.user} />
+          {authState.user.subStatus && (
+            <FeatureCheck features={authState.user.community.features} name="Customer Journey">
+              <CustomerJourneyStatus
+                subStatus={authState.user.subStatus}
+                communityName={authState.user.community.name}
+              />
             </FeatureCheck>
-            <Divider />
-            <FeatureCheck features={authState.user.community.features} name="News">
-              <NewsFeed wordpressEndpoint={authState.user?.community.wpLink} translate={t} />
-            </FeatureCheck>
-          </div>
-        )
+          )}
+          <Divider style={{ marginTop: '30px' }} />
+          <FeatureCheck features={authState.user.community.features} name="Properties">
+            <PlotDetail authState={authState.user} />
+          </FeatureCheck>
+          <Divider />
+          <FeatureCheck features={authState.user.community.features} name="News">
+            <NewsFeed wordpressEndpoint={authState.user?.community.wpLink} translate={t} />
+          </FeatureCheck>
+        </div>
       )}
-      {authState.user.userType !== 'admin' && authState.user.userType !==  'client'  && (
-        <div style={{paddingTop: '50px'}}>
+      {authState.user.userType !== 'admin' && authState.user.userType !== 'client' && (
+        <div style={{ paddingTop: '50px' }}>
           <FeatureCheck features={authState.user.community.features} name="News">
             <NewsFeed wordpressEndpoint={authState.user?.community.wpLink} />
           </FeatureCheck>
