@@ -40,19 +40,19 @@ describe('Label action menu component', () => {
         </BrowserRouter>
       </MockedProvider>
     )
-    expect(container.queryByText('Delete')).toBeInTheDocument()
-    expect(container.queryByText('Merge')).toBeInTheDocument()
-    expect(container.queryByText('Edit')).toBeInTheDocument()
+    expect(container.queryByText('menu.delete')).toBeInTheDocument()
+    expect(container.queryByText('menu.merge')).toBeInTheDocument()
+    expect(container.queryByText('menu.edit')).toBeInTheDocument()
 
-    fireEvent.click(container.queryByText('Delete'))
+    fireEvent.click(container.queryByText('menu.delete'))
     fireEvent.click(container.queryByTestId('cancel'))
-    expect(container.queryByText('Are you sure you want to delete this business?')).not.toBeInTheDocument()
+    expect(container.queryByText('label.delete_dialog_title')).toBeInTheDocument()
 
-    fireEvent.click(container.queryByText('Merge'))
-    expect(container.queryByText('Merging this label will move all users from this label into the selected label')).toBeInTheDocument()
+    fireEvent.click(container.queryByText('menu.merge'))
+    expect(container.queryByText('label.merge_dialog_title')).toBeInTheDocument()
     fireEvent.click(container.queryByTestId('dialog_cancel'))
     expect(container.queryByTestId('dialog_cancel')).toBeInTheDocument()
-    fireEvent.click(container.queryByText('Edit'))
+    fireEvent.click(container.queryByText('menu.edit'))
     fireEvent.click(container.queryByTestId('cancel_button'))
     expect(container.queryByTestId('cancel_button')).toBeInTheDocument()
   })

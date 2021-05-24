@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types'
 import { Menu, MenuItem } from '@material-ui/core';
+import { useTranslation } from 'react-i18next';
 import EditModal from './EditModal'
 import DeleteModal from './LabelDelete'
 import MergeLabel from './MergeLabel'
@@ -15,6 +16,7 @@ export default function LabelActionMenu({
   const [openEdit, setOpenEdit] = useState(false);
   const [openDelete, setOpenDelete] = useState(false)
   const [openMerge, setOpenMerge] = useState(false)
+  const { t } = useTranslation('common')
 
   return (
     <Menu
@@ -36,14 +38,14 @@ export default function LabelActionMenu({
             key="edit_user"
             onClick={() => setOpenEdit(true)}
           >
-            Edit
+            {t('menu.edit')}
           </MenuItem>
           <MenuItem
             id="merge_button"
             key="merge_user"
             onClick={() => setOpenMerge(true)}
           >
-            Merge
+            {t('menu.merge')}
           </MenuItem>
           <MenuItem
             id="delete_button"
@@ -51,7 +53,7 @@ export default function LabelActionMenu({
             style={{ color: 'red' }}
             onClick={() => setOpenDelete(true)}
           >
-            Delete
+            {t('menu.delete')}
           </MenuItem>
           <EditModal open={openEdit} handleClose={() => setOpenEdit(false)} refetch={refetch} data={data} />
           <DeleteModal open={openDelete} handleClose={() => setOpenDelete(false)} refetch={refetch} data={data} />
