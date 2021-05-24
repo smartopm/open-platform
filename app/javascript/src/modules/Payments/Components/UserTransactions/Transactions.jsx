@@ -99,7 +99,6 @@ export default function TransactionsList({ userId, user, userData }) {
         authState.user?.userType === 'admin' && (
           <div>
             <ButtonComponent color='primary' buttonText={t("common:misc.make_payment")} handleClick={() => setPayOpen(true)} />
-            {/* <ButtonComponent color='primary' buttonText={t("users.add_invoice")} handleClick={() => handleModalOpen()} /> */}
           </div>
         )
       }
