@@ -4,6 +4,7 @@ import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
 import PropTypes from 'prop-types'
+import { useTranslation } from 'react-i18next';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
@@ -18,6 +19,8 @@ export default function EditModal({ open, handleClose, data, refetch }) {
   const [error, setErrorMessage] = useState('')
   const [shortDesc, setShortDesc] = useState('')
   const [description, setDescription] = useState('')
+  const { t } = useTranslation(['label', 'common'])
+
   function handleEdit() {
     editLabel({
       variables: { id: data.id, shortDesc, description, color }
@@ -41,13 +44,13 @@ export default function EditModal({ open, handleClose, data, refetch }) {
   return (
     <div>
       <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
-        <DialogTitle id="form-dialog-title">Edit Label</DialogTitle>
+        <DialogTitle id="form-dialog-title">{t('label.edit_dialog_title')}</DialogTitle>
         <DialogContent>
           <TextField
             autoFocus
             margin="dense"
             id="title"
-            label="Title"
+            label={t('label.title_field_label')}
             type="text"
             fullWidth
             value={shortDesc}
@@ -59,7 +62,7 @@ export default function EditModal({ open, handleClose, data, refetch }) {
           <TextField
             margin="dense"
             id="description"
-            label="Description"
+            label={t('label.description_field_label')}
             type="text"
             fullWidth
             multiline
@@ -77,7 +80,7 @@ export default function EditModal({ open, handleClose, data, refetch }) {
             <TextField
               margin="dense"
               id="color"
-              label="Background color"
+              label={t('label.background_color_field_label')}
               type="text"
               fullWidth
               value={color}
@@ -102,10 +105,10 @@ export default function EditModal({ open, handleClose, data, refetch }) {
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose} color="secondary" variant="outlined" data-testid='cancel_button'>
-            CANCEL
+            {t('common:form_actions.cancel')}
           </Button>
           <Button onClick={handleEdit} color="primary" variant="contained" data-testid='button'>
-            SAVE CHANGES
+            {t('common:form_actions.save_changes')}
           </Button>
         </DialogActions>
       </Dialog>

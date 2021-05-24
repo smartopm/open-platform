@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
+import { useTranslation } from 'react-i18next';
 import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
 import { useQuery, useMutation } from 'react-apollo'
@@ -14,6 +15,7 @@ export default function MergeLabel({ open, handleClose, mergeData, refetch }) {
   const [err, setErr] = useState(null)
   const { error, data } = useQuery(LabelsQuery)
   const [mergeLabel] = useMutation(LabelMerge)
+  const { t } = useTranslation(['label', 'common'])
 
   const textFieldOnChange = event => {
     setLabelValue(event.target.value)
@@ -36,18 +38,19 @@ export default function MergeLabel({ open, handleClose, mergeData, refetch }) {
   return (
     <>
       {!data && (
-        <p>Data not available</p>
+        <p>{t('common:misc.data_not_available')}</p>
       )}
       <CustomizedDialogs 
         open={open} 
         handleModal={handleClose}
-        dialogHeader='Merging this label will move all users from this  label into the selected label'
-        saveAction='merge'
+        dialogHeader={t('label.merge_dialog_title')}
+        saveAction={t('common:form_actions.merge')}
+        cancelAction={t('common:form_actions.cancel')}
         handleBatchFilter={handleSubmit}
       >
         <div style={{margin: '10px 30px', display: 'flex'}}>
           <Typography variant="body2" style={{margin: '20px 10px'}}>
-            Merge this label into:
+            {t('label.merge_text')}
           </Typography>
           <TextField
             style={{width: '60%'}}

@@ -3,6 +3,7 @@ import { useQuery } from 'react-apollo';
 import { Grid, Typography, Container } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
+import { useTranslation } from 'react-i18next';
 import { LabelsQuery } from '../../graphql/queries';
 import ErrorPage from '../Error';
 import Loading from '../../shared/Loading';
@@ -53,21 +54,23 @@ export default function LabelList({ userType }) {
 function LabelPageTitle() {
   // eslint-disable-next-line no-use-before-define
   const classes = useStyles();
+  const { t } = useTranslation('common')
+
   return (
     <Grid container spacing={6} className={classes.labelTitle}>
       <Grid item xs={3}>
         <Typography variant="subtitle2" data-testid="label-name" className={classes.label}>
-          Labels
+          {t('table_headers.labels')}
         </Typography>
       </Grid>
       <Grid item xs={3}>
         <Typography variant="subtitle2" data-testid="label-name">
-          Total Number of users
+          {t('table_headers.labels_total_no_of_users')}
         </Typography>
       </Grid>
       <Grid item xs={3}>
         <Typography variant="subtitle2" data-testid="label-name">
-          Description
+          {t('table_headers.labels_description')}
         </Typography>
       </Grid>
     </Grid>

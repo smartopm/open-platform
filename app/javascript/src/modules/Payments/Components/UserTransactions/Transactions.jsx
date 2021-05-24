@@ -1,3 +1,4 @@
+/* eslint-disable no-nested-ternary */
 /* eslint-disable no-unused-vars */
 import React, { useContext, useState, useEffect } from 'react'
 import { useQuery } from 'react-apollo'
@@ -5,57 +6,45 @@ import { Typography } from '@material-ui/core'
 import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types'
 import { useHistory } from 'react-router'
-import { useTheme } from '@material-ui/core/styles';
+import { useTheme, makeStyles } from '@material-ui/core/styles';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
-import InvoiceModal from './invoiceModal'
 import { formatError, formatMoney, useParamsQuery } from '../../../../utils/helpers'
-import { TransactionQuery, AllTransactionQuery, UserBalance } from '../../../../graphql/queries'
+import { UserBalance } from '../../../../graphql/queries'
 import { Spinner } from '../../../../shared/Loading'
 import CenteredContent from '../../../../components/CenteredContent'
 import Paginate from '../../../../components/Paginate'
 import { Context as AuthStateContext } from '../../../../containers/Provider/AuthStateProvider'
 import { currencies } from '../../../../utils/constants'
 import UserTransactionsList from './UserTransactions'
-import { StyledTabs, StyledTab, TabPanel } from '../../../../components/Tabs'
-import UserInvoiceItem from './UserInvoiceItem'
 import ButtonComponent from '../../../../shared/buttons/Button'
-import UserPaymentPlanItem from './UserPaymentPlanItem'
-import PaymentModal from './PaymentModal'
+import DepositQuery from '../../graphql/payment_query'
 import ListHeader from '../../../../shared/list/ListHeader';
+import PaymentModal from './PaymentModal'
 
 // TODO: redefine and remove redundant props, userId, user and userdata
-export default function TransactionsList({ userId, user, userData, paymentSubTabValue }) {
-  const history = useHistory()
+export default function TransactionsList({ userId, user, userData }) {
   const path = useParamsQuery()
   const authState = useContext(AuthStateContext)
   const limit = 10
-  const tab = path.get('invoices')
   const page = path.get('page')
   const [offset, setOffset] = useState(Number(page) || 0)
-  const [open, setOpen] = useState(!!tab)
   const [payOpen, setPayOpen] = useState(false)
   const theme = useTheme();
-  const { t } = useTranslation('users')
+  const { t } = useTranslation('common')
   const matches = useMediaQuery(theme.breakpoints.up('sm'));
-  const { loading, data: transactionsData, error, refetch } = useQuery(
-    TransactionQuery,
-    {
-      variables: { userId, limit, offset },
-      errorPolicy: 'all',
-      fetchPolicy: 'cache-and-network'
-    }
-  )
+  const classes = useStyles();
+  
   const { loading: walletLoading, data: walletData, error: walletError, refetch: walletRefetch } = useQuery(
     UserBalance,
     {
-      variables: { userId, limit, offset },
+      variables: { userId },
       errorPolicy: 'all',
       fetchPolicy: 'no-cache'
     }
   )
 
-  const { loading: invPayDataLoading, data: invPayData, error: invPayDataError,  refetch: depRefetch } = useQuery(
-    AllTransactionQuery,
+  const { loading: transLoading, data, error: transError, refetch: transRefetch } = useQuery(
+    DepositQuery,
     {
       variables: { userId, limit, offset },
       errorPolicy: 'all',
@@ -64,61 +53,15 @@ export default function TransactionsList({ userId, user, userData, paymentSubTab
   )
 
   const transactionHeader = [
-    { title: 'Deposit/Issue date', value: t('common:table_headers.deposit_date'), col: 1 },
-    { title: 'Parcel Number', value: t('common:table_headers.parcel_number'), col: 1 },
-    { title: 'Description', value: t('common:table_headers.description'), col: 2 },
-    { title: 'Amount', value: t('common:table_headers.amount'), col: 1 },
-    { title: 'Balance', value: t('common:menu.balance'), col: 1 },
-    { title: 'Status', value: t('common:table_headers.status'), col: 2 },
-    { title: 'Menu', value: t('common:table_headers.menu'), col: 1 }
-  ];
-
-  const invoiceHeader = [
-    { title: 'Issue Date', value: t('common:table_headers.issue_date'), col: 4 },
-    { title: 'Description', value: t('common:table_headers.description'), col: 4 },
-    { title: 'Amount', value: t('common:table_headers.amount'), col: 3 },
-    { title: 'Payment Date', value: t('common:table_headers.payment_date'), col: 3 },
-    { title: 'Status', value: t('common:table_headers.status'), col: 4 },
-    { title: 'Menu', value: t('common:table_headers.menu'), col: 4 }
-  ];
-
-  const paymentPlan = [
-    { title: 'Plot Number', value: t('common:table_headers.plot_number'), col: 2 },
-    { title: 'Balance', value: t('common:menu.balance'), col: 2 },
-    { title: 'Start Date', value: t('common:table_headers.start_date'), col: 2 },
-    { title: '% of total valuation', value: t('common:table_headers.valuation'), col: 2 },
-    { title: 'Payment Day', value: t('common:table_headers.pay_day'), col: 2 },
+    { title: 'Date', value: t('common:table_headers.date'), col: 1 },
+    { title: 'Recorded by', value: t('common:table_headers.recorded_by'), col: 1 },
+    { title: 'Payment Type', value: t('common:table_headers.payment_type'), col: 2 },
+    { title: 'Amount Paid', value: t('common:table_headers.amount_paid'), col: 1 }
   ];
 
   const currency = currencies[user.community.currency] || ''
   const { locale } = user.community
   const currencyData = { currency, locale }
-  const [tabValue, setTabValue] = useState(paymentSubTabValue)
-
-  useEffect(() => {
-    setTabValue(paymentSubTabValue)
-  }, [paymentSubTabValue])
-
-  function handleModalOpen() {
-    history.push(`/user/${userId}?tab=Payments&invoices=new`)
-    setOpen(true)
-  }
-
-  function handleChange(_event, newValue) {
-    history.push(`/user/${userId}?tab=Payments&payment_sub_tab=${newValue}`)
-    setTabValue(newValue)
-    setOffset(0)
-  }
-
-  function handleModalClose() {
-    history.push(`/user/${userId}?tab=Payments`)
-    setOpen(false)
-  }
-
-  function handlePaymentOpen() {
-    history.push(`/user/${userId}?tab=Payments&payments=new`)
-    setPayOpen(true)
-  }
 
   function paginate(action) {
     if (action === 'prev') {
@@ -129,23 +72,22 @@ export default function TransactionsList({ userId, user, userData, paymentSubTab
     }
   }
 
-  if (error && !transactionsData) return <CenteredContent>{formatError(error.message)}</CenteredContent>
-  if (invPayDataError && !invPayData) return <CenteredContent>{formatError(invPayDataError.message)}</CenteredContent>
   if (walletError && !walletData) return <CenteredContent>{formatError(walletError.message)}</CenteredContent>
+  if (transError && !data) return <CenteredContent>{formatError(transError.message)}</CenteredContent>
 
   return (
     <div>
       {
         walletLoading ? <Spinner /> : (
           <div style={{display: 'flex', flexDirection: 'row'}}>
-            <div style={{display: 'flex', flexDirection: 'column', marginLeft: '40px'}}>
-              <Typography variant='subtitle1'>{t("users.total_balance")}</Typography>
+            <div style={{display: 'flex', flexDirection: 'column', marginLeft: '10px'}}>
+              <Typography variant='subtitle1'>{t("common:misc.total_balance")}</Typography>
               <Typography variant="h5" color='primary'>{formatMoney(currencyData, walletData.userBalance?.pendingBalance)}</Typography>
             </div>
             {
               walletData.userBalance?.balance > 0 && (
                 <div style={{display: 'flex', flexDirection: 'column', marginLeft: '30px'}}>
-                  <Typography variant='subtitle1'>{t("users.unallocated_funds")}</Typography>
+                  <Typography variant='subtitle1'>{t("common:misc.unallocated_funds")}</Typography>
                   <Typography variant="h5" color='primary'>{formatMoney(currencyData, walletData.userBalance?.balance)}</Typography>
                 </div>
               )
@@ -154,94 +96,42 @@ export default function TransactionsList({ userId, user, userData, paymentSubTab
         )
       }
       {
-            authState.user?.userType === 'admin' && (
-              <div style={{marginLeft: '20px'}}>
-                <ButtonComponent color='primary' buttonText={t("users.make_payment")} handleClick={() => setPayOpen(true)} />
-                <ButtonComponent color='primary' buttonText={t("users.add_invoice")} handleClick={() => handleModalOpen()} />
-              </div>
-            )
+        authState.user?.userType === 'admin' && (
+          <div>
+            <ButtonComponent color='primary' buttonText={t("common:misc.make_payment")} handleClick={() => setPayOpen(true)} />
+          </div>
+        )
       }
-      <div style={{marginLeft: '20px'}}>
-        <StyledTabs
-          value={tabValue}
-          onChange={handleChange}
-          aria-label="Transactions tabs"
-        >
-          <StyledTab label={t("common:menu.invoice_plural")} value="Invoices" />
-          <StyledTab label={t("common:menu.transaction_plural")} value="Transactions" />
-          <StyledTab label={t("common:menu.plan_plural")} value="Plans" />
-        </StyledTabs>
-      </div>
-      <InvoiceModal
-        open={open}
-        handleModalClose={handleModalClose}
-        userId={userId}
-        creatorId={user.id}
-        refetch={refetch}
-        depRefetch={depRefetch}
-        currencyData={currencyData}
-        walletRefetch={walletRefetch}
-      />
-      <TabPanel value={tabValue} index="Transactions">
-        {matches && <ListHeader headers={transactionHeader} />}
-        {/* show a spinner here */}
-        {loading ? <Spinner /> : transactionsData?.userDeposits?.pendingInvoices.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).map((trans) => (
-          <UserTransactionsList
-            transaction={trans || {}}
-            currencyData={currencyData}
-            key={trans.id}
-            userData={userData}
-            userType={authState.user?.userType}
-            walletRefetch={walletRefetch}
-            depRefetch={depRefetch}
-          />
-        ))}
-
-        {transactionsData?.userDeposits.transactions.map((trans) => (
-          <UserTransactionsList
-            transaction={trans || {}}
-            currencyData={currencyData}
-            key={trans?.id}
-            userData={userData}
-            userType={authState.user?.userType}
-            walletRefetch={walletRefetch}
-            depRefetch={depRefetch}
-          />
-        ))}
-      </TabPanel>
-      <TabPanel value={tabValue} index="Invoices">
-        {matches && <ListHeader headers={invoiceHeader} />}
-        {/* show a spinner here */}
-        {
-          invPayDataLoading ? <Spinner /> : invPayData?.invoicesWithTransactions?.invoices.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).map((inv) => (
-            <UserInvoiceItem
-              key={inv.id}
-              invoice={inv}
-              currencyData={currencyData}
-              refetch={depRefetch}
-              walletRefetch={walletRefetch}
-            />
-          ))
-        }
-      </TabPanel>
-      <TabPanel value={tabValue} index="Plans">
-        {matches && <ListHeader headers={paymentPlan} />}
-        <UserPaymentPlanItem
-          plans={invPayData?.invoicesWithTransactions?.paymentPlans}
-          currencyData={currencyData}
-          currentUser={user}
-          userId={userId}
-          refetch={depRefetch}
-          walletRefetch={walletRefetch}
-        />
-      </TabPanel>
+      {transLoading ? <Spinner /> : (
+        data?.userTransactions.length > 0 ? (
+          <div className={classes.paymentList}>
+            <div>
+              <Typography className={classes.payment}>Transactions</Typography>
+              {matches && <ListHeader headers={transactionHeader} color />}
+            </div>
+            {
+              data.userTransactions.map((trans) => (
+                <div key={trans.id}>
+                  <UserTransactionsList 
+                    transaction={trans} 
+                    currencyData={currencyData}
+                    userData={userData}
+                    userType={user.userType}
+                  />
+                </div>
+              ))
+            }
+          </div>
+        ) : (
+          <CenteredContent>No Transaction Available</CenteredContent>
+        )
+      )}
       <PaymentModal
         open={payOpen}
         handleModalClose={() => setPayOpen(false)}
         userId={userId}
         currencyData={currencyData}
-        refetch={refetch}
-        depRefetch={depRefetch}
+        refetch={transRefetch}
         walletRefetch={walletRefetch}
         userData={userData}
       />
@@ -251,12 +141,29 @@ export default function TransactionsList({ userId, user, userData, paymentSubTab
           limit={limit}
           active={offset >= 1}
           handlePageChange={paginate}
-          count={transactionsData?.userDeposits.transactions.length}
+          count={data?.userTransactions.length}
         />
       </CenteredContent>
     </div>
   )
 }
+
+const useStyles = makeStyles({
+  payment: {
+    fontWeight: 500,
+    fontSize: '20px',
+    color: '#313131',
+    marginBottom: '30px'
+  },
+  paymentList: {
+    backgroundColor: '#FDFDFD',
+    padding: '20px',
+    borderRadius: '4px',
+    border: '1px solid #EEEEEE',
+    marginTop: '20px'
+  }
+});
+
 TransactionsList.defaultProps = {
   userData: {}
 }
@@ -265,7 +172,6 @@ TransactionsList.propTypes = {
   userId: PropTypes.string.isRequired,
   // eslint-disable-next-line react/forbid-prop-types
   userData: PropTypes.object,
-  paymentSubTabValue: PropTypes.string.isRequired,
   user: PropTypes.shape({
     id: PropTypes.string,
     userType: PropTypes.string,

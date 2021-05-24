@@ -39,7 +39,7 @@ describe('Merge Label Component', () => {
       </MockedProvider>
     )
 
-    expect(container.queryByText('Merging this label will move all users from this label into the selected label')).toBeInTheDocument()
-    expect(container.queryByText('Merge this label into:')).toBeInTheDocument()
+    expect(container.queryByText('label.merge_dialog_title')).toBeInTheDocument()
+    expect(container.queryByText('label.merge_text')).toBeInTheDocument()
   })
 })

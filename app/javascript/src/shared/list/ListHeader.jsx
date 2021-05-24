@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 
 
 // If headers has just title then we render the title if not then we render something else.
-export default function ListHeader({ headers }) {
+export default function ListHeader({ headers, color }) {
   const classes = useStyles();
   return (
     <Grid
@@ -15,6 +15,7 @@ export default function ListHeader({ headers }) {
       justify="space-around"
       alignItems="center"
       className={classes.heading}
+      style={color ? {backgroundColor: '#FDFDFD'} : null}
     >
       {headers.map(header => (
         <Grid item xs={header.col || true} md={header.title === 'Menu' ? 1 : 2} key={header.title}>
@@ -29,20 +30,27 @@ export default function ListHeader({ headers }) {
   );
 }
 
+ListHeader.defaultProps = {
+  color: ''
+}
+
 ListHeader.propTypes = {
   headers: PropTypes.arrayOf(
     PropTypes.shape({
       title: PropTypes.string.isRequired,
       col: PropTypes.number.isRequired
     })
-  ).isRequired
+  ).isRequired,
+  color: PropTypes.string
 };
 
 const useStyles = makeStyles(() => ({
   heading: {
     backgroundColor: '#FFFFFF',
     padding: '15px 0',
-    border: '1px solid #ECECEC'
+    border: '1px solid #ECECEC',
+    width: '100%',
+    marginLeft: '1px'
   },
   typography: {
     fontWeight: 'bold'

@@ -16,37 +16,6 @@
 import React from 'react';
 import { allUserTypes } from '../../utils/constants';
 
-const paymentMenu = [
-  {
-    routeProps: {
-      path: '/user/:id?tab=Payments&payment_sub_tab=Invoices',
-      component: <span />
-    },
-    name: t => t('menu.invoice', { count: 0 }),
-    featureName: 'Payments',
-    accessibleBy: ['admin']
-  },
-  {
-    routeProps: {
-      path: '/user/:id?tab=Payments&payment_sub_tab=Transactions',
-      exact: true,
-      component: <span />
-    },
-    name: t => t('menu.transaction', { count: 0 }),
-    featureName: 'Payments',
-    accessibleBy: ['admin']
-  },
-  {
-    routeProps: {
-      path: '/user/:id?tab=Payments&payment_sub_tab=Plans',
-      component: <span />
-    },
-    name: t => t('menu.plan', { count: 0 }),
-    featureName: 'Payments',
-    accessibleBy: ['admin']
-  }
-];
-
 const userMenus = [
   {
     routeProps: {
@@ -100,8 +69,7 @@ const userMenus = [
     },
     name: t => t('menu.payment', { count: 0 }),
     featureName: 'Payments',
-    accessibleBy: ['admin'],
-    subMenu: paymentMenu
+    accessibleBy: ['admin']
   },
   {
     routeProps: {

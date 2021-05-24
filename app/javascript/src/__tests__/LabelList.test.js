@@ -46,9 +46,9 @@ describe('Label List Component', () => {
     expect(loader.queryAllByTestId('loader')[0]).toBeInTheDocument();
     await waitFor(
       () => {
-        expect(container.queryByText('Labels')).toBeInTheDocument();
-        expect(container.queryByText('Description')).toBeInTheDocument();
-        expect(container.queryByText('Total Number of users')).toBeInTheDocument();
+        expect(container.queryByText('table_headers.labels')).toBeInTheDocument();
+        expect(container.queryByText('table_headers.labels_description')).toBeInTheDocument();
+        expect(container.queryByText('table_headers.labels_total_no_of_users')).toBeInTheDocument();
         expect(container.queryByText('com_news_sms')).toBeInTheDocument();
         expect(container.queryByText('com_news_email')).toBeInTheDocument();
         expect(container.queryAllByTestId('label-title')).toHaveLength(2);

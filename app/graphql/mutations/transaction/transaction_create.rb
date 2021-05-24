@@ -11,6 +11,7 @@ module Mutations
       argument :cheque_number, String, required: false
       argument :transaction_number, String, required: false
       argument :land_parcel_id, ID, required: true
+      argument :receipt_number, String, required: false
       argument :created_at, String, required: false
 
       field :transaction, Types::TransactionType, null: true
