@@ -51,6 +51,11 @@ export default function UserStyledTabs({ tabValue, handleChange, user }) {
         ? <StyledTab label={t("common:misc.payments")} value="Payments" data-testid="tabs" />
         : null        
       }
+      {
+        (!loading && user.userType === 'admin' || data?.userActivePlan ) && checkAllowedCommunityFeatures(user.community.features, "Payments")
+        ? <StyledTab label={t("common:misc.plans")} value="Plans" data-testid="tabs" />
+        : null        
+      }
       {['admin'].includes(user.userType) && checkAllowedCommunityFeatures(user.community.features, "Customer Journey") && (
       <StyledTab label={t("common:menu.customer_journey")} value="CustomerJourney" data-testid="tabs" />
       )}

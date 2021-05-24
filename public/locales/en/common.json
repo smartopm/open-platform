@@ -80,6 +80,7 @@
     "hello": "Hello",
     "more_details": "More details",
     "payments": "Payments",
+    "plans": "Plans",
     "invoice": "Invoice",
     "invoice_plural": "Invoices",
     "due_text": "Due",
