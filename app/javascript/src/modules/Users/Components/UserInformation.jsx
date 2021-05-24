@@ -29,6 +29,7 @@ import Transactions from '../../Payments/Components/UserTransactions/Transaction
 import UserJourney from './UserJourney';
 import { propAccessor, useParamsQuery } from '../../../utils/helpers';
 import RightSideMenu from '../../Menu/component/RightSideMenu'
+import FeatureCheck from '../../Features';
 
 export default function UserInformation({
   data,
@@ -42,10 +43,8 @@ export default function UserInformation({
 }) {
   const path = useParamsQuery();
   const tab = path.get('tab');
-  const { t } = useTranslation('users')
-  const paymentSubTab = path.get('payment_sub_tab');
+  const { t } = useTranslation('users');
   const [tabValue, setValue] = useState(tab || 'Contacts');
-  const [paymentSubTabValue, setPaymentSubTabValue] = useState(paymentSubTab || 'Invoices');
   const [isDialogOpen, setDialogOpen] = useState(false);
   const [isDrawerOpen, setDrawerOpen] = useState(false);
 
@@ -68,11 +67,6 @@ export default function UserInformation({
       setValue(tab);
     } else {
       setValue('Contacts');
-    }
-    if (paymentSubTab && tabValue === 'Payments') {
-      setPaymentSubTabValue(paymentSubTab);
-    } else {
-      setPaymentSubTabValue('Invoices');
     }
 
     // open merge modal
@@ -174,7 +168,7 @@ export default function UserInformation({
           ['security_guard', 'contractor'].includes(data.user.userType) && (
             <ShiftButtons userId={userId} />
           )}
-        <UserStyledTabs tabValue={tabValue} handleChange={handleChange} userType={userType} />
+        <UserStyledTabs tabValue={tabValue} handleChange={handleChange} user={authState.user} />
 
         <TabPanel value={tabValue} index="Contacts">
           {/* userinfo */}
@@ -182,48 +176,52 @@ export default function UserInformation({
         </TabPanel>
         {['admin'].includes(userType) && (
           <>
-            <TabPanel value={tabValue} index="Notes">
-              <div className="container">
-                <form id="note-form">
-                  <div className="form-group">
-                    {t("common:misc.notes")}
-                    <br />
-                    <TextField
-                      className="form-control"
-                      placeholder={t("common:form_placeholders.add_note")}
-                      id="notes"
-                      rows="4"
-                      inputRef={register({ required: true })}
-                      name="note"
-                      multiline
-                      required
-                    />
-                  </div>
-                  <Button
-                    type="button"
-                    style={{ float: 'right' }}
-                    onClick={handleSubmit(onSaveNote)}
-                    disabled={mutationLoading}
-                    color="primary"
-                    variant="outlined"
+            <FeatureCheck features={authState.user.community.features} name="Tasks">
+              <TabPanel value={tabValue} index="Notes">
+                <div className="container">
+                  <form id="note-form">
+                    <div className="form-group">
+                      {t("common:misc.notes")}
+                      <br />
+                      <TextField
+                        className="form-control"
+                        placeholder={t("common:form_placeholders.add_note")}
+                        id="notes"
+                        rows="4"
+                        inputRef={register({ required: true })}
+                        name="note"
+                        multiline
+                        required
+                      />
+                    </div>
+                    <Button
+                      type="button"
+                      style={{ float: 'right' }}
+                      onClick={handleSubmit(onSaveNote)}
+                      disabled={mutationLoading}
+                      color="primary"
+                      variant="outlined"
+                    >
+                      {mutationLoading ? t("common:form_actions.saving") : t("common:form_actions.save")}
+                    </Button>
+                  </form>
+                  <br />
+                  <br />
+                  <UserNotes tabValue={tabValue} userId={data.user.id} />
+                </div>
+              </TabPanel>
 
-                  >
-                    {mutationLoading ? t("common:form_actions.saving") : t("common:form_actions.save")}
-                  </Button>
-                </form>
-                <br />
-                <br />
-                <UserNotes tabValue={tabValue} userId={data.user.id} />
-              </div>
-            </TabPanel>
-
-            <TabPanel value={tabValue} index="Communication">
-              <UserMessages />
-            </TabPanel>
+            </FeatureCheck>
+            <FeatureCheck features={authState.user.community.features} name="Messages">
+              <TabPanel value={tabValue} index="Communication">
+                <UserMessages />
+              </TabPanel>
+            </FeatureCheck>
           </>
         )}
         {!['security_guard', 'custodian'].includes(userType) && (
-          <>
+        <>
+          <FeatureCheck features={authState.user.community.features} name="Properties">
             <TabPanel value={tabValue} index="Plots">
               <UserPlotInfo
                 account={accountData?.user?.accounts || []}
@@ -232,23 +230,29 @@ export default function UserInformation({
                 userType={userType}
               />
             </TabPanel>
+          </FeatureCheck>
+          <FeatureCheck features={authState.user.community.features} name="Forms">
             <TabPanel value={tabValue} index="Forms">
               <UserFilledForms userFormsFilled={data.user.formUsers} userId={data.user.id} />
             </TabPanel>
-          </>
+          </FeatureCheck>
+        </>
         )}
-        <TabPanel value={tabValue} index="Payments">
-          <Transactions
-            userId={userId}
-            user={authState.user}
-            userData={data.user}
-            paymentSubTabValue={paymentSubTabValue}
-          />
-        </TabPanel>
-        {['admin'].includes(userType) && (
-          <TabPanel value={tabValue} index="CustomerJourney">
-            <UserJourney data={data} refetch={refetch} />
+        <FeatureCheck features={authState.user.community.features} name="Payments">
+          <TabPanel value={tabValue} index="Payments">
+            <Transactions
+              userId={userId}
+              user={authState.user}
+              userData={data.user}
+            />
           </TabPanel>
+        </FeatureCheck>
+        {['admin'].includes(userType) && (
+          <FeatureCheck features={authState.user.community.features} name="Customer Journey">
+            <TabPanel value={tabValue} index="CustomerJourney">
+              <UserJourney data={data} refetch={refetch} />
+            </TabPanel>
+          </FeatureCheck>
         )}
 
         <div className="container d-flex justify-content-between">
@@ -286,7 +290,10 @@ const User = PropTypes.shape({
   userType: PropTypes.string,
   state: PropTypes.string,
   accounts: PropTypes.arrayOf(PropTypes.object),
-  formUsers: PropTypes.arrayOf(PropTypes.object)
+  formUsers: PropTypes.arrayOf(PropTypes.object),
+  community: PropTypes.shape({
+    features: PropTypes.arrayOf(PropTypes.string)
+  })
 });
 UserInformation.propTypes = {
   data: PropTypes.shape({ user: User }).isRequired,

@@ -27,7 +27,7 @@ describe('Label Item Component', () => {
     expect(container.queryByTestId('label-title')).toHaveTextContent('com_news_sms');
 
     fireEvent.click(container.queryByTestId('label_icon'))
-    expect(container.queryByText('Delete')).toBeInTheDocument();
+    expect(container.queryByText('menu.delete')).toBeInTheDocument();
     fireEvent.click(container.queryByTestId('label-title'))
   });
 });

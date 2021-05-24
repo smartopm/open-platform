@@ -76,10 +76,10 @@ describe('Login screen', () => {
       expect(loginWrapper.text()).toContain('login.request_account')
     }, 10);
   })
-  it('should contain a nav with an arrow icon', () => {
-    expect(loginWrapper.find('nav')).toHaveLength(1)
-    expect(loginWrapper.find('nav').text()).toContain('arrow_back')
-  })
+  // it('should contain a nav with an arrow icon', () => {
+  //   expect(loginWrapper.find('nav')).toHaveLength(1)
+  //   expect(loginWrapper.find('nav').text()).toContain('arrow_back')
+  // })
   it('should have an input field that accepts numbers', () => {
     expect(loginWrapper.find('input')).toHaveLength(1)
     loginWrapper.find('input').simulate('change', {

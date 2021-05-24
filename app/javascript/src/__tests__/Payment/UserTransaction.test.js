@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, fireEvent } from '@testing-library/react';
+import { render } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { MockedProvider } from '@apollo/react-testing';
 import { BrowserRouter } from 'react-router-dom';
@@ -79,13 +79,9 @@ describe('Render Transaction', () => {
       </MockedProvider>
     );
     
-    expect(container.queryByTestId('menu')).toBeInTheDocument();
-    expect(container.queryByTestId('amount')).toBeInTheDocument();
-    expect(container.queryByTestId('status')).toBeInTheDocument();
-
-    fireEvent.click(container.queryByTestId('receipt-menu'))
-    expect(container.queryByText("common:menu.view_receipt")).toBeInTheDocument();
-    expect(container.queryByText('common:menu.edit_payment')).toBeInTheDocument();
+    expect(container.queryByTestId('date')).toBeInTheDocument();
+    expect(container.queryByTestId('recorded')).toBeInTheDocument();
+    expect(container.queryByTestId('description')).toBeInTheDocument();
   });
 
   it('should render the Transaction item component without transactions', async () => {
@@ -103,22 +99,12 @@ describe('Render Transaction', () => {
   it('should check if renderTransaction works as expected', () => {
       const results = renderTransactions(transaction, currency, menuData)
       expect(results).toBeInstanceOf(Object);
-      expect(results).toHaveProperty('Date Created');
-      expect(results).toHaveProperty('Description');
-      expect(results).toHaveProperty('Amount');
-      expect(results).toHaveProperty('Balance');
-      expect(results).toHaveProperty('Status');
-      expect(results).toHaveProperty('Menu');
+      expect(results).toHaveProperty('Date');
+      expect(results).toHaveProperty('Recorded by');
+      expect(results).toHaveProperty('Payment Type');
+      expect(results).toHaveProperty('Amount Paid');
 
-      const statusContainer = render(results.Status)
-      const amountContainer = render(results.Amount)
-      const balanceContainer = render(results.Balance)
-      const descContainer = render(results.Description)
-      const menuContainer = render(results.Menu)
-      expect(statusContainer.queryByTestId('status').textContent).toContain('Paid')
-      expect(amountContainer.queryByTestId('amount').textContent).toContain('$200.00')
-      expect(balanceContainer.queryByTestId('balance').textContent).toContain('$100.00')
-      expect(descContainer.queryByTestId('description').textContent).toContain('Invoice')
-      expect(menuContainer.queryByTestId('receipt-menu')).toBeTruthy()
+      const statusContainer = render(results.Date)
+      expect(statusContainer.queryByTestId('date').textContent).toContain('2021-03-01')
   });
 });

@@ -38,7 +38,7 @@ export default function PostPage() {
   const authState = useContext(AuthStateContext)
   const currentUrl = window.location.href
   const { width, height } = useWindowDimensions()
-  
+
   const [isLoading, setLoading] = useState(false);
   const queryResponse = useQuery(PostDiscussionQuery, {
     variables: { postId: id }
@@ -116,7 +116,7 @@ export default function PostPage() {
   }
   // instead of redirecting, ask them to log in
   if (response.categories?.Private && !authState.loggedIn) {
-    return <Redirect to="/welcome" />
+    return <Redirect to="/login" />
   }
   return (
     <>
@@ -137,7 +137,7 @@ export default function PostPage() {
           height={height}
         />
         {error}
-        <TagsComponent 
+        <TagsComponent
           tags={response?.tags}
           wordpressEndpoint={communityQuery.data?.currentCommunity.wpLink}
         />

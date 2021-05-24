@@ -16,37 +16,6 @@
 import React from 'react';
 import { allUserTypes } from '../../utils/constants';
 
-const paymentMenu = [
-  {
-    routeProps: {
-      path: '/user/:id?tab=Payments&payment_sub_tab=Invoices',
-      component: <span />
-    },
-    name: t => t('menu.invoice', { count: 0 }),
-    featureName: 'Payments',
-    accessibleBy: ['admin']
-  },
-  {
-    routeProps: {
-      path: '/user/:id?tab=Payments&payment_sub_tab=Transactions',
-      exact: true,
-      component: <span />
-    },
-    name: t => t('menu.transaction', { count: 0 }),
-    featureName: 'Payments',
-    accessibleBy: ['admin']
-  },
-  {
-    routeProps: {
-      path: '/user/:id?tab=Payments&payment_sub_tab=Plans',
-      component: <span />
-    },
-    name: t => t('menu.plan', { count: 0 }),
-    featureName: 'Payments',
-    accessibleBy: ['admin']
-  }
-];
-
 const userMenus = [
   {
     routeProps: {
@@ -54,7 +23,7 @@ const userMenus = [
       component: <span />
     },
     name: t => t('menu.communication'),
-    featureName: 'Users',
+    featureName: 'Messages',
     accessibleBy: ['admin']
   },
   {
@@ -63,7 +32,7 @@ const userMenus = [
       component: <span />
     },
     name: t => t('menu.note', { count: 0 }),
-    featureName: 'Users',
+    featureName: 'Tasks',
     accessibleBy: ['admin']
   },
   {
@@ -72,7 +41,7 @@ const userMenus = [
       component: <span />
     },
     name: t => t('menu.plot', { count: 0 }),
-    featureName: 'Users',
+    featureName: 'Properties',
     accessibleBy: ['admin']
   },
   {
@@ -81,7 +50,7 @@ const userMenus = [
       component: <span />
     },
     name: t => t('menu.form', { count: 0 }),
-    featureName: 'Users',
+    featureName: 'Forms',
     accessibleBy: ['admin']
   },
   {
@@ -90,7 +59,7 @@ const userMenus = [
       component: <span />
     },
     name: t => t('menu.customer_journey'),
-    featureName: 'Users',
+    featureName: 'Customer Journey',
     accessibleBy: ['admin']
   },
   {
@@ -100,8 +69,7 @@ const userMenus = [
     },
     name: t => t('menu.payment', { count: 0 }),
     featureName: 'Payments',
-    accessibleBy: ['admin'],
-    subMenu: paymentMenu
+    accessibleBy: ['admin']
   },
   {
     routeProps: {
@@ -118,7 +86,7 @@ const userMenus = [
       component: <span />
     },
     name: t => t('menu.user_logs'),
-    featureName: 'Users',
+    featureName: 'LogBook',
     accessibleBy: ['admin', 'security_guard']
   },
   {

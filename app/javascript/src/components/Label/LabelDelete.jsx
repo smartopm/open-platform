@@ -3,6 +3,7 @@
 import React, { useState } from 'react'
 import Dialog from '@material-ui/core/Dialog';
 import PropTypes from 'prop-types'
+import { useTranslation } from 'react-i18next';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
@@ -16,6 +17,7 @@ export default function TaskDelete({ open, handleClose, refetch, data }) {
   const classes = useStyles();
   const [labelDelete] = useMutation(DeleteLabel)
   const [error, setErrorMessage] = useState('')
+  const { t } = useTranslation(['label', 'common'])
 
   function handleDelete(comId) {
     labelDelete({ variables: {
@@ -33,22 +35,18 @@ export default function TaskDelete({ open, handleClose, refetch, data }) {
     <>
       <Dialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={open}>
         <DialogTitle id="customized-dialog-title" onClose={handleClose} className={classes.title}>
-          Are you sure you want to delete this label?
+          {t('label.delete_dialog_title')}
         </DialogTitle>
         <DialogContent style={{ margin: '15px', textAlign: "center" }}>
-          You are about to delete the
-          {' '}
-          <b>{data.shortDesc}</b>
-          {' '}
-          label
+          {t('label.delete_warning_text', { shortDesc: data.shortDesc })}
         </DialogContent>
         <Divider />
         <DialogActions style={{ margin: '10px' }}>
           <Button onClick={handleClose} variant="outlined" color="secondary" data-testid='cancel'>
-            Cancel
+            {t('common:form_actions.cancel')}
           </Button>
           <Button autoFocus onClick={() => handleDelete(data.id)} variant="contained" style={{ backgroundColor: '#dc402b', color: 'white' }} data-testid='button'>
-            Save changes
+            {t('common:form_actions.save_changes')}
           </Button>
         </DialogActions>
       </Dialog>

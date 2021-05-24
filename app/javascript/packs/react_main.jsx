@@ -1,6 +1,6 @@
 // Run this example by adding <%= javascript_pack_tag 'hello_react' %> to the head of your layout file,
 // like app/views/layouts/application.html.erb. All it does is render <div>Hello React</div> at the bottom
-// of the page. 
+// of the page.
 /* eslint-disable */
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
@@ -51,7 +51,7 @@ import EmployeeLogs from '../src/containers/TimeSheet/EmployeeLogs';
 import ClientRequestForm from '../src/containers/ClientRequestForm';
 import CampaignCreate from '../src/containers/Campaigns/CampaignCreate';
 import Scan from '../src/containers/Scan';
-import WelcomePage from '../src/components/AuthScreens/WelcomePage';
+// import WelcomePage from '../src/components/AuthScreens/WelcomePage';
 import CampaignUpdate from '../src/containers/Campaigns/CampaignUpdate';
 import ThemeProvider from '../Themes/Nkwashi/ThemeProvider';
 import DiscussonPage from '../src/containers/Discussions/DiscussionPage';
@@ -172,7 +172,7 @@ const App = () => {
               {/* onboarding */}
               <I18Initializer />
               <Switch>
-                <Route path="/welcome" component={WelcomePage} />
+                {/* <Route path="/welcome" component={WelcomePage} /> */}
                 <Route path="/login" component={LoginScreen} />
                 <Route path="/code/:id" component={ConfirmCodeScreen} />
                 <Route path="/l/:id/:code" component={OneTimeLoginCode} />
@@ -236,7 +236,7 @@ const App = () => {
                                   if (module.subMenu) {
                                     return module.subMenu.map(sub => {
                                       let routes = [];
-                                      
+
                                       if (sub.subRoutes && checkAllowedCommunityFeatures(user.community.features, sub.featureName)) {
                                         routes = sub.subRoutes.map(subRoute => (
                                           <Route {...subRoute.routeProps} key={subRoute.name} />
