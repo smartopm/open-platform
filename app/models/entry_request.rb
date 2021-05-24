@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require 'host_env'
 # rubocop:disable Metrics/ClassLength
 # Record of visitor entries to a community
 class EntryRequest < ApplicationRecord
@@ -39,7 +40,8 @@ class EntryRequest < ApplicationRecord
   def create_entry_task
     task_obj = {
       body: "New prospective client
-      <a href=\"https://#{ENV['HOST']}/request/#{self[:id]}/logs\">#{self[:name]}</a>
+      <a href=\"https://#{HostEnv.base_url(user.community)}/request/#{self[:id]}/logs\">
+      #{self[:name]}</a>
       visited Nkwashi site. Please enroll them in system and setup a follow-up call",
       category: 'to_do',
       flagged: true,
