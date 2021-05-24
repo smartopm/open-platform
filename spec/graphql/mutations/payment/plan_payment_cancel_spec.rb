@@ -25,10 +25,10 @@ RSpec.describe Mutations::Transaction::TransactionCreate do
     let(:plan_payment_cancel) do
       <<~GQL
         mutation PlanPaymentCancel(
-          $planPaymentId: ID!
+          $id: ID!
         ){
           planPaymentCancel(
-            planPaymentId: $planPaymentId
+            id: $id
           ){
             cancelledPlanPayment{
               status
@@ -42,10 +42,10 @@ RSpec.describe Mutations::Transaction::TransactionCreate do
     end
 
     describe '#resolve' do
-      context 'when plan payment id in invalid' do
+      context 'when payment id in invalid' do
         it 'raises not found error' do
           variables = {
-            planPaymentId: '123',
+            id: '123',
           }
           result = DoubleGdpSchema.execute(plan_payment_cancel,
                                            variables: variables,
@@ -57,13 +57,13 @@ RSpec.describe Mutations::Transaction::TransactionCreate do
         end
       end
 
-      context 'when plan payment id is valid' do
+      context 'when payment id is valid' do
         before do
           payment_plan.update_pending_balance(plan_payment.amount, :settle)
         end
         it 'cancels the payment and update the plan pending balance' do
           variables = {
-            planPaymentId: plan_payment.id,
+            id: plan_payment.id,
           }
           result = DoubleGdpSchema.execute(plan_payment_cancel,
                                            variables: variables,
@@ -83,7 +83,7 @@ RSpec.describe Mutations::Transaction::TransactionCreate do
       context 'when current user is not admin' do
         it 'raises unauthorized error' do
           variables = {
-            planPaymentId: plan_payment.id,
+            id: plan_payment.id,
           }
           result = DoubleGdpSchema.execute(plan_payment_cancel,
                                            variables: variables,
