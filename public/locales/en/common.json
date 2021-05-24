@@ -162,7 +162,11 @@
     "call_manager": "Call Manager",
     "log": "Log",
     "temp_record": "Temperature recorded",
-    "user_name_search_warning_text": "The account selected will be deleted from the system and merged into the profile you are currently on"
+    "user_name_search_warning_text": "The account selected will be deleted from the system and merged into the profile you are currently on",
+    "total_balance": "Total Balance",
+    "unallocated_funds": "Unallocated Funds",
+    "make_payment": "Make a Payment",
+    "add_invoice": "Add an Invoice"
   },
   "menu": {
     "invoice": "Invoice",
@@ -260,7 +264,12 @@
     "payment_made": "Payment Made By",
     "labels": "Labels",
     "labels_total_no_of_users": "Total Number of users",
-    "labels_description": "Description"
+    "labels_description": "Description",
+    "date": "Date",
+    "recorded_by": "Recorded by",
+    "payment_type": "Payment Type",
+    "payment_id": "Payment/Receipt ID",
+    "amount_paid": "Amount Paid"
   },
   "table_content": {
     "invoice_number": "Invoice Number {{numb}}",

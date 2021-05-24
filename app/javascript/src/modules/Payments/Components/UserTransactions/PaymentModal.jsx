@@ -10,7 +10,7 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import { CustomizedDialogs } from '../../../../components/Dialog'
-import { PaymentCreate } from '../../../../graphql/mutations'
+import PaymentCreate from '../../graphql/payment_mutations'
 import { UserLandParcelWithPlan } from '../../../../graphql/queries'
 import MessageAlert from "../../../../components/MessageAlert"
 import { extractCurrency, formatError, formatMoney } from '../../../../utils/helpers'
@@ -102,7 +102,7 @@ export default function PaymentModal({ open, handleModalClose, userId, currencyD
         refetch();
         depRefetch();
         walletRefetch();
-        setPaymentData(res.data.walletTransactionCreate.walletTransaction);
+        setPaymentData(res.data.transactionCreate.transaction);
         setInputValue(initialValues);
         setPromptOpen(true);
         setIsConfirm(false);

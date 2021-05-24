@@ -40,6 +40,7 @@ describe('paginate component', () => {
         offSet: 0,
         count: 5,
         limit: 10,
+        active: 'true',
         handlePageChange: jest.mock('')
       }
       const { getByTestId } = render(<Paginate {...prevProps} />)
