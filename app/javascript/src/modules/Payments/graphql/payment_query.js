@@ -22,14 +22,24 @@ export const UserPlans = gql`
   query UserPlan($userId: ID!, $limit: Int, $offset: Int,) {
     userPlansWithPayments(userId: $userId, limit: $limit, offset: $offset) {
       id
-      source
-      createdAt
-      transactionNumber
-      allocatedAmount
-      unallocatedAmount
-      user {
+      planType
+      startDate
+      monthlyAmount
+      paymentDay
+      plotBalance
+      landParcel {
         id
-        name
+        parcelNumber
+      }
+      planPayments {
+        id
+        createdAt
+        amount
+        status
+        userTransaction {
+          id
+          source
+        }
       }
     }
   }
