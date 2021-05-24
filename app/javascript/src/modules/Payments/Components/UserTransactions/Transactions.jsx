@@ -107,7 +107,7 @@ export default function TransactionsList({ userId, user, userData }) {
         data?.userTransactions.length > 0 ? (
           <div className={classes.paymentList}>
             <div>
-              <Typography className={classes.payment}>Payments</Typography>
+              <Typography className={classes.payment}>Transactions</Typography>
               {matches && <ListHeader headers={transactionHeader} color />}
             </div>
             {
@@ -124,7 +124,7 @@ export default function TransactionsList({ userId, user, userData }) {
             }
           </div>
         ) : (
-          <CenteredContent>No Payments Available</CenteredContent>
+          <CenteredContent>No Transaction Available</CenteredContent>
         )
       )}
       <PaymentModal
