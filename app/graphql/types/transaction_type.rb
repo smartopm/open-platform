@@ -32,7 +32,7 @@ module Types
     #
     # @return [Float] allocated_amount
     def allocated_amount
-      object.plan_payments.pluck(:amount).sum
+      object.plan_payments.not_cancelled.pluck(:amount).sum
     end
   end
 end
