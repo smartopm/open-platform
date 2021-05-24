@@ -9,6 +9,8 @@ import { EmailTemplatesQuery } from '../modules/Emails/graphql/email_queries';
 
 import '@testing-library/jest-dom/extend-expect';
 import MockedThemeProvider from '../modules/__mocks__/mock_theme';
+import { Context } from '../containers/Provider/AuthStateProvider';
+import userMock from '../__mocks__/userMock';
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
 const props = {
@@ -35,13 +37,15 @@ describe('ActionFlowModal', () => {
     let container;
     await act(async () => {
       container = render(
-        <MockedProvider mocks={[]} addTypename={false}>
-          <BrowserRouter>
-            <MockedThemeProvider>
-              <ActionFlowModal {...props} />
-            </MockedThemeProvider>
-          </BrowserRouter>
-        </MockedProvider>
+        <Context.Provider value={userMock}>
+          <MockedProvider mocks={[]} addTypename={false}>
+            <BrowserRouter>
+              <MockedThemeProvider>
+                <ActionFlowModal {...props} />
+              </MockedThemeProvider>
+            </BrowserRouter>
+          </MockedProvider>
+        </Context.Provider>
       );
     });
 
@@ -62,13 +66,15 @@ describe('ActionFlowModal', () => {
     let container;
     await act(async () => {
       container = render(
-        <MockedProvider mocks={[]} addTypename={false}>
-          <BrowserRouter>
-            <MockedThemeProvider>
-              <ActionFlowModal {...updatedProps} />
-            </MockedThemeProvider>
-          </BrowserRouter>
-        </MockedProvider>
+        <Context.Provider value={userMock}>
+          <MockedProvider mocks={[]} addTypename={false}>
+            <BrowserRouter>
+              <MockedThemeProvider>
+                <ActionFlowModal {...updatedProps} />
+              </MockedThemeProvider>
+            </BrowserRouter>
+          </MockedProvider>
+        </Context.Provider>
       );
     });
 
@@ -194,11 +200,13 @@ describe('render eventType, actionTypes, actionFields, ruleFields', () => {
   it('should display element to customize action flow', async () => {
     await act(async () => {
       render(
-        <MockedProvider mocks={mocks} addTypename={false}>
-          <MockedThemeProvider>
-            <ActionFlowModal {...props} />
-          </MockedThemeProvider>
-        </MockedProvider>
+        <Context.Provider value={userMock}>
+          <MockedProvider mocks={mocks} addTypename={false}>
+            <MockedThemeProvider>
+              <ActionFlowModal {...props} />
+            </MockedThemeProvider>
+          </MockedProvider>
+        </Context.Provider>
       );
     });
   });
@@ -208,11 +216,13 @@ describe('render eventType, actionTypes, actionFields, ruleFields', () => {
 
     await act(async () => {
       render(
-        <MockedProvider mocks={mocks} addTypename={false}>
-          <MockedThemeProvider>
-            <ActionFlowModal {...newProps} />
-          </MockedThemeProvider>
-        </MockedProvider>
+        <Context.Provider value={userMock}>
+          <MockedProvider mocks={mocks} addTypename={false}>
+            <MockedThemeProvider>
+              <ActionFlowModal {...newProps} />
+            </MockedThemeProvider>
+          </MockedProvider>
+        </Context.Provider>
       );
     });
   });

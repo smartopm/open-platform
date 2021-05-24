@@ -5,6 +5,7 @@ import { render, fireEvent } from '@testing-library/react'
 import TodoList from '../Components/TodoList'
 import { flaggedNotes } from '../../../graphql/queries'
 import { TaskStatsQuery } from '../graphql/task_queries'
+import { Context } from '../../../containers/Provider/AuthStateProvider'
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn())
 const mck = jest.fn()
@@ -15,6 +16,18 @@ const props = {
   selectedDate: new Date(Date.now()).toISOString(),
   handleDateChange: mck,
   location: 'tasks'
+}
+
+// this should be moved to a an outside mock
+const user = {
+  user: {
+    community: {
+      themeColors: {
+        primaryColor: "#nnn",
+        secondaryColor: "#nnn"
+      }
+    }
+  }
 }
 
 const mocks = [
@@ -67,11 +80,13 @@ const mocks = [
 describe('Test the Todo page', () => {
   it('Mount the Todo component', () => {
     const container = render(
-      <MockedProvider mocks={mocks} addTypename={false}>
-        <BrowserRouter>
-          <TodoList {...props} />
-        </BrowserRouter>
-      </MockedProvider>
+      <Context.Provider value={user}>
+        <MockedProvider mocks={mocks} addTypename={false}>
+          <BrowserRouter>
+            <TodoList {...props} />
+          </BrowserRouter>
+        </MockedProvider>
+      </Context.Provider>
     )
     expect(container.queryByText('task.click_a_card_to_filter')).toBeTruthy()
     expect(container.queryByText('common:form_actions.create_task')).toBeTruthy()
@@ -84,11 +99,13 @@ describe('Test the Todo page', () => {
 
   it('renders task form modal', () => {
     const container = render(
-      <MockedProvider mocks={mocks} addTypename={false}>
-        <BrowserRouter>
-          <TodoList {...props} />
-        </BrowserRouter>
-      </MockedProvider>
+      <Context.Provider value={user}>
+        <MockedProvider mocks={mocks} addTypename={false}>
+          <BrowserRouter>
+            <TodoList {...props} />
+          </BrowserRouter>
+        </MockedProvider>
+      </Context.Provider>
     )
 
     const createTaskBtn = container.queryByText('common:form_actions.create_task')

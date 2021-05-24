@@ -3,6 +3,8 @@ import { render } from '@testing-library/react'
 import '@testing-library/jest-dom/extend-expect'
 import MaterialConfig from 'react-awesome-query-builder/lib/config/material'
 import QueryBuilder from '../components/QueryBuilder'
+import { Context } from '../containers/Provider/AuthStateProvider'
+import userMock from '../__mocks__/userMock'
 
 const InitialConfig = MaterialConfig
 const queryBuilderConfig = {
@@ -44,7 +46,11 @@ describe('QueryBuilder component', () => {
       handleOnChange: jest.fn
     }
 
-    const rendered = render(<QueryBuilder {...props} />)
+    const rendered = render(
+      <Context.Provider value={userMock}>
+        <QueryBuilder {...props} />
+      </Context.Provider>
+    )
     expect(rendered.queryByText('Role')).toBeInTheDocument()
   })
 })

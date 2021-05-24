@@ -7,6 +7,8 @@ import { InvoicesQuery } from '../../graphql/queries';
 import { Spinner } from '../../shared/Loading';
 import InvoiceList, { renderInvoice } from '../../modules/Payments/Components/InvoiceList';
 import currency from '../../__mocks__/currency';
+import { Context } from '../../containers/Provider/AuthStateProvider';
+import userMock from '../../__mocks__/userMock';
 
 describe('Invoice Item Component', () => {
   const menuData = {
@@ -105,11 +107,13 @@ describe('Invoice Item Component', () => {
     ];
 
     const container = render(
-      <MockedProvider mocks={invoiceMock} addTypename={false}>
-        <BrowserRouter>
-          <InvoiceList currencyData={currency} userType='admin' />
-        </BrowserRouter>
-      </MockedProvider>
+      <Context.Provider value={userMock}>
+        <MockedProvider mocks={invoiceMock} addTypename={false}>
+          <BrowserRouter>
+            <InvoiceList currencyData={currency} userType='admin' />
+          </BrowserRouter>
+        </MockedProvider>
+      </Context.Provider>
     );
 
     const loader = render(<Spinner />);
