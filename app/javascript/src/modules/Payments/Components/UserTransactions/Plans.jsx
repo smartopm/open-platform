@@ -36,7 +36,7 @@ export default function PaymentPlans({ userId, user, userData }) {
     {
       variables: { userId, limit, offset },
       errorPolicy: 'all',
-      fetchPolicy: 'no-cache'
+      fetchPolicy: 'cache-and-network'
     }
   )
 

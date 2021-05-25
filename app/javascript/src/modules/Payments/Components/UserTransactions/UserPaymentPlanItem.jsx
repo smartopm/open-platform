@@ -194,7 +194,7 @@ export function renderPlan(plan, currencyData, userType, { handleMenu, loading }
       </Grid>
     ),
     'Payment Plan': (
-      <Grid item xs={12} md={2} data-testid="balance">
+      <Grid item xs={12} md={2} data-testid="payment-plan">
         {plan.planType}
       </Grid>
     ),
@@ -209,7 +209,7 @@ export function renderPlan(plan, currencyData, userType, { handleMenu, loading }
       </Grid>
     ),
     'Monthly Amount': (
-      <Grid item xs={12} md={2} data-testid="percentage">
+      <Grid item xs={12} md={2} data-testid="monthly-amount">
         {formatMoney(currencyData, plan.monthlyAmount)}
       </Grid>
     ),
@@ -242,12 +242,12 @@ export function renderPlan(plan, currencyData, userType, { handleMenu, loading }
 export function renderPayments(pay, currencyData) {
   return {
     'Payment Date': (
-      <Grid item xs={12} md={2} data-testid="issue-date">
+      <Grid item xs={12} md={2} data-testid="payment-date">
         <Text content={dateToString(pay.createdAt)} />
       </Grid>
     ),
     'Payment Type': (
-      <Grid item xs={12} md={2} data-testid="due-date">
+      <Grid item xs={12} md={2} data-testid="payment-type">
         <Text content={pay.userTransaction.source} />
       </Grid>
     ),

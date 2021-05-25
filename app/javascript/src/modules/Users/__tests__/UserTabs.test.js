@@ -47,7 +47,7 @@ describe('component that with styled tabs', () => {
       expect(container.queryByText('common:misc.payments')).toBeInTheDocument();
       expect(container.queryByText('common:misc.plots')).toBeInTheDocument();
       // verify number of tabs in case they get changed
-      expect(container.queryAllByTestId('tabs')).toHaveLength(5) // we've only enabled 4 and one default
+      expect(container.queryAllByTestId('tabs')).toHaveLength(8)
     },10);
   });
 

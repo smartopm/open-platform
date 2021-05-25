@@ -32,7 +32,7 @@ export default function TransactionsList({ userId, user, userData }) {
     {
       variables: { userId, limit, offset },
       errorPolicy: 'all',
-      fetchPolicy: 'no-cache'
+      fetchPolicy: 'cache-and-network'
     }
   )
 
