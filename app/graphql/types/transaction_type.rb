@@ -31,14 +31,7 @@ module Types
     #
     # @return [Float] allocated_amount
     def allocated_amount
-      plan_payments.pluck(:amount).sum
-    end
-
-    # Returns paid payment entries of deposit.
-    #
-    # @return [Array] PlanPayment
-    def plan_payments
-      object.plan_payments.not_cancelled
+      object.plan_payments.not_cancelled.pluck(:amount).sum
     end
   end
 end

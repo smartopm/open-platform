@@ -80,8 +80,8 @@ RSpec.describe Types::Queries::Payment do
                                            })
 
           transaction_result = result.dig('data', 'userTransactions', 0)
-          expect(transaction_result['amount']).to eql 500.0
-          expect(transaction_result['unallocatedAmount']).to eql 0.0
+          expect(transaction_result['amount']).to eql 1500.0
+          expect(transaction_result['unallocatedAmount']).to eql 1000.0
           expect(transaction_result['depositor']['name']).to eql user.name
           expect(transaction_result['source']).to eql 'cash'
         end
@@ -118,7 +118,7 @@ RSpec.describe Types::Queries::Payment do
           expect(receipt_details['user']['name']).to eql 'Mark Test'
 
           payment_details = receipt_details['planPayments'][0]
-          expect(payment_details['amount']).to eql 1000.0
+          expect(payment_details['amount']).to eql 500.0
           expect(payment_details['receiptNumber']).to eql '12345'
           expect(payment_details['currentPlotPendingBalance']).to eql 1200.0
         end

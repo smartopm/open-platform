@@ -13,7 +13,7 @@ module Types::Queries::Transaction
       argument :limit, Integer, required: false
     end
 
-    field :transaction_receipt, Types::TransactionType, null: true do
+    field :transaction_receipt, Types::TransactionReceiptType, null: true do
       description 'Fetches transaction receipt details'
       argument :id, GraphQL::Types::ID, required: true
     end
