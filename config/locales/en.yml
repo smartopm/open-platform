@@ -279,6 +279,8 @@ en:
     substatus_log:
       date_must_be_greater: Date can't be less than previous log's start date
       not_found: Substatus log Not found
+    transaction:
+      not_found: Transaction not found
     unauthorized: Unauthorized
     user:
       merge_failed: Merge Failed

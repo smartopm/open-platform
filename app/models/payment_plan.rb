@@ -40,7 +40,7 @@ class PaymentPlan < ApplicationRecord
     start_date...(start_date + (duration_in_month || 12).month)
   end
 
-  # Updates plan's pending balance
+  # Updates plan's pending balance.
   #
   # @param [Float] amount
   # @param [String] settle/revert
