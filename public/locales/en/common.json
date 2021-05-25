@@ -42,7 +42,8 @@
     "flag": "Flag as a todo",
     "message": "Type message here",
     "user_name_search": "Type the user name here",
-    "user_name_search_choose_from_options": "Choose a user"
+    "user_name_search_choose_from_options": "Choose a user",
+    "message_search": "search message content, user name and phone number"
   },
   "form_actions": {
     "send_email": "Send Email",
@@ -113,6 +114,7 @@
     "send": "Send",
     "filter": "Filter",
     "add_filter": "Add Filter",
+    "filter_message_by_category": "Filter by: Category",
     "select": "Select",
     "all": "All",
     "all_this_page": "All on this page",
@@ -139,6 +141,7 @@
     "plots": "Plots",
     "forms": "Forms",
     "no_message": "There are no messages yet for this user",
+    "no_messages_in_community": "No messages",
     "data_not_available": "Data not available",
     "sent": "Sent",
     "read": "Read",

@@ -1,6 +1,7 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useState, useEffect } from 'react'
 import { useQuery } from 'react-apollo'
+import { useTranslation } from 'react-i18next';
 import IconButton from '@material-ui/core/IconButton';
 import OutlinedInput from '@material-ui/core/OutlinedInput'
 import SearchIcon from '@material-ui/icons/Search'
@@ -25,6 +26,7 @@ export default function AllMessages() {
     const [searchTermCurrent, setSearchTermCurrent] = useState('')
     const dbcSearchTerm = useDebounce(searchTermCurrent, 500);
     const [category, setCategory] = useState("")
+    const { t } = useTranslation(['message', 'common'])
 
     useEffect(
         () => {
@@ -89,12 +91,12 @@ export default function AllMessages() {
             inputProps={{ 'aria-label': 'search'}}
             fullWidth
             labelWidth={0}
-            placeholder="search message content, user name and phone number"
+            placeholder={t('common:form_placeholders.message_search')}
           />
         </div>
         <CenteredContent>
           <FormControl className={classes.formControl}>
-            <InputLabel id="category-filter">Filter by: Category</InputLabel>
+            <InputLabel id="category-filter">{t('common:misc.filter_message_by_category')}</InputLabel>
             <Select
               labelId="category-filter"
               id="demo-controlled-open-select"

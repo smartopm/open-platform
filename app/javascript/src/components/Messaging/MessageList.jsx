@@ -1,12 +1,14 @@
 /* eslint-disable */
 import React from 'react'
 import PropTypes from 'prop-types'
+import { useTranslation } from 'react-i18next';
 import MaterialList from '@material-ui/core/List'
 import UserMessageItem from './MessageItem'
 import { useWindowDimensions } from '../../utils/customHooks'
 
 export default function MessageList({ messages }) {
   const { width } = useWindowDimensions()
+  const { t } = useTranslation('common')
 
   return (
     <div className={width > 1000 ? 'container' : 'container-fluid'}>
@@ -32,7 +34,7 @@ export default function MessageList({ messages }) {
           <div>
             <p className="text-center nz_no_msg">
               {
-                'No messages'
+                t('common:misc.no_messages_in_community')
               }
             </p>
           </div>
