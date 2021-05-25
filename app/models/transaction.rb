@@ -20,6 +20,8 @@ class Transaction < ApplicationRecord
                                  if: -> { transaction_number.present? }
   validates :amount, numericality: { greater_than: 0 }
 
+  after_update :revert_payments, if: -> { saved_changes.key?('status') && cancelled? }
+
   has_paper_trail
 
   # Performs actions post transaction creation.
@@ -35,6 +37,25 @@ class Transaction < ApplicationRecord
   end
 
   private
+
+  # Reverts user transaction.
+  # * Cancels all associated payment entries
+  # * Revert the PaymentPlan balance with sum of payments amount.
+  #
+  # @return [void]
+  # rubocop:disable Rails/SkipsModelValidations
+  def revert_payments
+    payment_plans = user.payment_plans
+                        .joins(:plan_payments)
+                        .where(plan_payments: { status: 'paid', transaction_id: id })
+                        .distinct
+    payment_plans.each do |plan|
+      plan_payments = plan.plan_payments.not_cancelled.where(transaction_id: id)
+      plan.update_pending_balance(plan_payments.sum(:amount), :revert)
+      plan_payments.update_all(status: :cancelled)
+    end
+  end
+  # rubocop:enable Rails/SkipsModelValidations
 
   # Creates payment entry against transaction and payment plan
   #
