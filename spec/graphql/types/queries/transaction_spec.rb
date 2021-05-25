@@ -14,12 +14,12 @@ RSpec.describe Types::Queries::Payment do
     end
     let!(:transaction) do
       create(:transaction, user_id: user.id, community_id: community.id, depositor_id: user.id,
-                           amount: 1500)
+                           amount: 500)
     end
     let!(:plan_payment) do
       create(:plan_payment, user_id: user.id, community_id: community.id,
                             transaction_id: transaction.id, payment_plan_id: payment_plan.id,
-                            amount: 1000)
+                            amount: 500)
     end
     let(:user_transactions_query) do
       <<~GQL
@@ -30,7 +30,6 @@ RSpec.describe Types::Queries::Payment do
             createdAt
             source
             amount
-            allocatedAmount
             unallocatedAmount
             receiptNumber
             depositor{
@@ -43,6 +42,9 @@ RSpec.describe Types::Queries::Payment do
 
     describe '#user_transactions' do
       context 'when user id is provided' do
+        before do
+          payment_plan.update_pending_balance(plan_payment.amount)
+        end
         it "returns list of all user's transactions" do
           variables = {
             userId: user.id,
@@ -55,9 +57,8 @@ RSpec.describe Types::Queries::Payment do
                                            })
 
           transaction_result = result.dig('data', 'userTransactions', 0)
-          expect(transaction_result['amount']).to eql 1500.0
-          expect(transaction_result['allocatedAmount']).to eql 1000.0
-          expect(transaction_result['unallocatedAmount']).to eql 500.0
+          expect(transaction_result['amount']).to eql 500.0
+          expect(transaction_result['unallocatedAmount']).to eql 0.0
           expect(transaction_result['depositor']['name']).to eql user.name
           expect(transaction_result['source']).to eql 'cash'
         end
