@@ -1,6 +1,10 @@
+/* eslint-disable no-nested-ternary */
 import React, { useState } from 'react'
 import { useQuery } from 'react-apollo'
 import PropTypes from 'prop-types'
+import { useTheme, makeStyles } from '@material-ui/core/styles';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
+import { Typography } from '@material-ui/core'
 import UserPaymentPlanItem from './UserPaymentPlanItem'
 import UserBalance from './UserBalance'
 import { UserPlans } from '../../graphql/payment_query'
@@ -9,11 +13,23 @@ import { formatError, useParamsQuery } from '../../../../utils/helpers'
 import { currencies } from '../../../../utils/constants'
 import CenteredContent from '../../../../components/CenteredContent'
 import Paginate from '../../../../components/Paginate'
+import ListHeader from '../../../../shared/list/ListHeader';
 
 export default function PaymentPlans({ userId, user, userData }) {
+  const planHeader = [
+    { title: 'Plot Number', col: 2 },
+    { title: 'Payment Plan', col: 2 },
+    { title: 'Start Date', col: 2 },
+    { title: 'Balance', col: 2 },
+    { title: 'Monthly Amount', col: 2 },
+    { title: 'Payment Day', col: 2 }
+  ];
   const path = useParamsQuery()
+  const classes = useStyles();
   const limit = 10
   const page = path.get('page')
+  const theme = useTheme();
+  const matches = useMediaQuery(theme.breakpoints.up('sm'));
   const [offset, setOffset] = useState(Number(page) || 0)
   const { loading, data, error, refetch } = useQuery(
     UserPlans,
@@ -48,16 +64,27 @@ export default function PaymentPlans({ userId, user, userData }) {
         refetch={refetch}
       />
       {loading ? <Spinner /> : (
-        data.userPlansWithPayments.map((plan) => (
-          <div key={plan.id}>
-            <UserPaymentPlanItem 
-              plan={plan} 
-              currencyData={currencyData}
-              userData={userData}
-              userType={user.userType}
-            />
+        data?.userPlansWithPayments.length > 0 ? (
+          <div className={classes.planList}>
+            <div>
+              <Typography className={classes.plan}>Plans</Typography>
+              {matches && <ListHeader headers={planHeader} color />}
+            </div>
+            <div>
+              <UserPaymentPlanItem 
+                plans={data.userPlansWithPayments} 
+                currencyData={currencyData}
+                userData={userData}
+                currentUser={user}
+                userId={userId}
+                refetch={refetch}
+              />
+            </div>
           </div>
-        ))
+        ) : 
+        (
+          <CenteredContent>No Plan Available</CenteredContent>
+        )
       )}
 
       <CenteredContent>
@@ -66,7 +93,7 @@ export default function PaymentPlans({ userId, user, userData }) {
           limit={limit}
           active={offset >= 1}
           handlePageChange={paginate}
-          count={data?.userTransactions.length}
+          count={data?.userPlansWithPayments.length}
         />
       </CenteredContent>
     </div>
@@ -92,3 +119,19 @@ PaymentPlans.propTypes = {
     }).isRequired
   }).isRequired
 }
+
+const useStyles = makeStyles({
+  plan: {
+    fontWeight: 500,
+    fontSize: '20px',
+    color: '#313131',
+    marginBottom: '30px'
+  },
+  planList: {
+    backgroundColor: '#FDFDFD',
+    padding: '20px',
+    borderRadius: '4px',
+    border: '1px solid #EEEEEE',
+    marginTop: '20px'
+  }
+});

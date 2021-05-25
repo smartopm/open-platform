@@ -1,8 +1,8 @@
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { useMutation } from 'react-apollo';
-import { makeStyles } from '@material-ui/core/styles';
-import { useTranslation } from 'react-i18next';
+import { makeStyles, useTheme } from '@material-ui/core/styles';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 import {
   Grid,
   Typography,
@@ -11,11 +11,9 @@ import {
   AccordionDetails,
   Button,
   Menu,
-  MenuItem,
-  IconButton
+  MenuItem
 } from '@material-ui/core';
 import EditIcon from '@material-ui/icons/Edit';
-import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import DataList from '../../../../shared/list/DataList';
 import { dateToString } from '../../../../components/DateContainer';
@@ -25,25 +23,21 @@ import {
   InvoiceStatusColor,
   propAccessor
 } from '../../../../utils/helpers';
-import Text, { HiddenText } from '../../../../shared/Text';
+import Text from '../../../../shared/Text';
 import Label from '../../../../shared/label/Label';
 import { invoiceStatus } from '../../../../utils/constants';
-import { Context as AuthStateContext } from '../../../../containers/Provider/AuthStateProvider';
 import MessageAlert from '../../../../components/MessageAlert';
-import MenuList from '../../../../shared/MenuList';
-import DeleteDialogueBox from '../../../../components/Business/DeleteDialogue';
-import { InvoiceCancel } from '../../../../graphql/mutations';
 import PaymentPlanUpdateMutation from '../../graphql/payment_plan_mutations';
 import { Spinner } from '../../../../shared/Loading';
 import { suffixedNumber } from '../../helpers';
+import ListHeader from '../../../../shared/list/ListHeader';
 
 export default function UserPaymentPlanItem({
   plans,
   currencyData,
   currentUser,
   userId,
-  refetch,
-  walletRefetch
+  refetch
 }) {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = useState(null);
@@ -55,37 +49,24 @@ export default function UserPaymentPlanItem({
   });
   const [updatePaymentPlan] = useMutation(PaymentPlanUpdateMutation);
   const validDays = [...Array(28).keys()];
-  const [menuAnchorEl, setMenuAnchorEl] = useState(null);
-  const menuOpen = Boolean(menuAnchorEl);
-  const authState = useContext(AuthStateContext);
-  const userType = authState?.user?.userType;
-  const [modalOpen, setModalOpen] = useState(false);
-  const [name, setName] = useState('');
-  const [isSuccessAlert, setIsSuccessAlert] = useState(false);
-  const [messageAlert, setMessageAlert] = useState('');
-  const [invoiceId, setInvoiceId] = useState(false);
-  const [cancelInvoice] = useMutation(InvoiceCancel);
-  const { t } = useTranslation('common')
+  const theme = useTheme();
+  const matches = useMediaQuery(theme.breakpoints.up('sm'));
 
   const planHeader = [
     { title: 'Plot Number', col: 2 },
-    { title: 'Balance', col: 2 },
+    { title: 'Payment Plan', col: 2 },
     { title: 'Start Date', col: 2 },
-    { title: '% of total valuation', col: 2 },
+    { title: 'Balance', col: 2 },
+    { title: 'Monthly Amount', col: 2 },
     { title: 'Payment Day', col: 2 }
   ];
 
-  const invoiceHeader = [
-    { title: 'Issue Date', col: 2 },
-    { title: 'Due Date', col: 2 },
-    { title: 'Description', col: 2 },
-    { title: 'Amount', col: 1 },
+  const paymentHeader = [
     { title: 'Payment Date', col: 2 },
-    { title: 'Status', col: 2 },
-    { title: 'Menu', col: 1 }
+    { title: 'Payment Type', col: 2 },
+    { title: 'Amount', col: 2 },
+    { title: 'Status', col: 2 }
   ];
-
-  const menuList = [{ content: t("common:menu.cancel_invoice"), isAdmin: true, color: 'red', handleClick }];
 
   const handleClose = () => {
     setAnchorEl(null);
@@ -127,65 +108,6 @@ export default function UserPaymentPlanItem({
       });
   }
 
-  function handleClick(event, invId, userName) {
-    event.stopPropagation();
-    setInvoiceId(invId);
-    setName(userName);
-    setModalOpen(true);
-  }
-
-  function handleOpenMenu(event) {
-    event.stopPropagation();
-    setMenuAnchorEl(event.currentTarget);
-  }
-
-  function handleMenuClose(event) {
-    event.stopPropagation();
-    setMenuAnchorEl(null);
-  }
-
-  function handleDeleteClose(event) {
-    event.stopPropagation();
-    setModalOpen(false);
-  }
-
-  function handleMessageAlertClose(_event, reason) {
-    if (reason === 'clickaway') {
-      return;
-    }
-    setMessageAlert('');
-  }
-
-  function handleOnClick(event) {
-    event.stopPropagation();
-    cancelInvoice({
-      variables: {
-        invoiceId
-      }
-    })
-      .then(() => {
-        setMessageAlert('Invoice successfully cancelled');
-        setIsSuccessAlert(true);
-        setMenuAnchorEl(null);
-        setModalOpen(false);
-        walletRefetch();
-        refetch();
-      })
-      .catch(err => {
-        setMessageAlert(formatError(err.message));
-        setIsSuccessAlert(false);
-      });
-  }
-
-  const menuData = {
-    menuList,
-    handleOpenMenu,
-    anchorEl: menuAnchorEl,
-    menuOpen,
-    userType,
-    handleClose: handleMenuClose
-  };
-
   return (
     <>
       <MessageAlert
@@ -212,28 +134,15 @@ export default function UserPaymentPlanItem({
           </MenuItem>
         ))}
       </Menu>
-      <MessageAlert
-        type={isSuccessAlert ? 'success' : 'error'}
-        message={messageAlert}
-        open={!!messageAlert}
-        handleClose={handleMessageAlertClose}
-      />
-      <DeleteDialogueBox
-        open={modalOpen}
-        handleClose={event => handleDeleteClose(event)}
-        handleAction={event => handleOnClick(event)}
-        title="Invoice"
-        action="delete"
-        user={name}
-      />
       {plans?.map(plan => (
-        <Accordion key={plan.id}>
+        <Accordion key={plan.id} style={{backgroundColor: '#FDFDFD'}}>
           <AccordionSummary
             expandIcon={<ExpandMoreIcon />}
             aria-label="Expand"
             id="additional-actions3-header"
             classes={{ content: classes.content }}
             data-testid="summary"
+            className={classes.accordion}
           >
             <DataList
               keys={planHeader}
@@ -245,23 +154,28 @@ export default function UserPaymentPlanItem({
               ]}
               hasHeader={false}
               clickable={false}
+              color
             />
           </AccordionSummary>
           <AccordionDetails classes={{ root: classes.content }}>
-            {plan.invoices && Boolean(plan.invoices?.length) && (
-              <Typography color="primary" style={{ margin: '0 0 10px 50px' }}>
-                {t("common:menu.invoice_plural")}
+            {plan.planPayments && Boolean(plan.planPayments?.length) && (
+              <Typography color="primary" className={classes.payment}>
+                Payments
               </Typography>
             )}
-            {plan.invoices
+            <div className={classes.paymentList}>
+              {matches && <ListHeader headers={paymentHeader} color />}
+            </div>
+            {plan.planPayments
               ?.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-              .map(inv => (
-                <div key={inv.id} style={{ margin: '0 50px' }}>
+              .map(pay => (
+                <div key={pay.id} className={classes.paymentList}>
                   <DataList
-                    keys={invoiceHeader}
-                    data={[renderInvoice(inv, currencyData, menuData)]}
+                    keys={paymentHeader}
+                    data={[renderPayments(pay, currencyData)]}
                     hasHeader={false}
                     clickable={false}
+                    color
                   />
                 </div>
               ))}
@@ -279,9 +193,9 @@ export function renderPlan(plan, currencyData, userType, { handleMenu, loading }
         {plan.landParcel.parcelNumber}
       </Grid>
     ),
-    Balance: (
+    'Payment Plan': (
       <Grid item xs={12} md={2} data-testid="balance">
-        {`-${formatMoney(currencyData, plan.pendingBalance)}`}
+        {plan.planType}
       </Grid>
     ),
     'Start Date': (
@@ -289,9 +203,14 @@ export function renderPlan(plan, currencyData, userType, { handleMenu, loading }
         {dateToString(plan.startDate)}
       </Grid>
     ),
-    '% of total valuation': (
+    'Balance': (
       <Grid item xs={12} md={2} data-testid="percentage">
-        {plan.percentage}
+        {formatMoney(currencyData, plan.plotBalance)}
+      </Grid>
+    ),
+    'Monthly Amount': (
+      <Grid item xs={12} md={2} data-testid="percentage">
+        {formatMoney(currencyData, plan.monthlyAmount)}
       </Grid>
     ),
     'Payment Day': (
@@ -320,75 +239,28 @@ export function renderPlan(plan, currencyData, userType, { handleMenu, loading }
   };
 }
 
-export function renderInvoice(inv, currencyData, menuData) {
+export function renderPayments(pay, currencyData) {
   return {
-    'Issue Date': (
+    'Payment Date': (
       <Grid item xs={12} md={2} data-testid="issue-date">
-        <HiddenText smDown title="Issue Date" />
-        <Text content={dateToString(inv.createdAt)} />
+        <Text content={dateToString(pay.createdAt)} />
       </Grid>
     ),
-    'Due Date': (
+    'Payment Type': (
       <Grid item xs={12} md={2} data-testid="due-date">
-        <HiddenText smDown title="Due Date" />
-        <Text content={dateToString(inv.dueDate)} />
-      </Grid>
-    ),
-    Description: (
-      <Grid item xs={12} md={2} data-testid="description">
-        <HiddenText smDown title="Description" />
-        <Text content={`Invoice #${inv.invoiceNumber}`} />
+        <Text content={pay.userTransaction.source} />
       </Grid>
     ),
     Amount: (
-      <Grid item xs={12} md={1} data-testid="amount">
-        <HiddenText smDown title="Amount" />
-        <Text content={formatMoney(currencyData, inv.amount)} />
-      </Grid>
-    ),
-    'Payment Date': (
-      <Grid item xs={12} md={2} data-testid="payment-date">
-        <HiddenText smDown title="Payment Date" />
-        {inv.status === 'paid' && inv.payments?.length ? (
-          <Text content={dateToString(inv.payments[0]?.createdAt)} />
-        ) : (
-          '-'
-        )}
+      <Grid item xs={12} md={2} data-testid="amount">
+        <Text content={formatMoney(currencyData, pay.amount)} />
       </Grid>
     ),
     Status: (
       <Grid item xs={12} md={2} data-testid="status">
-        {new Date(inv.dueDate) < new Date().setHours(0, 0, 0, 0) && inv.status === 'in_progress' ? (
-          <Label title="Due" color="#B63422" />
-        ) : (
-          <Label
-            title={propAccessor(invoiceStatus, inv.status)}
-            color={propAccessor(InvoiceStatusColor, inv.status)}
-          />
-        )}
-      </Grid>
-    ),
-    Menu: (
-      <Grid item xs={12} md={1} data-testid="menu">
-        {inv.status !== 'cancelled' && (
-          <IconButton
-            aria-label="more-verticon"
-            aria-controls="long-menu"
-            aria-haspopup="true"
-            onClick={event => menuData.handleOpenMenu(event)}
-            dataid={inv.id}
-            data-testid="action-menu"
-            name={inv.user?.name}
-          >
-            <MoreHorizIcon />
-          </IconButton>
-        )}
-        <MenuList
-          open={menuData.menuOpen && menuData.anchorEl?.getAttribute('dataid') === inv.id}
-          anchorEl={menuData.anchorEl}
-          userType={menuData.userType}
-          handleClose={menuData.handleClose}
-          list={menuData.menuList}
+        <Label
+          title={propAccessor(invoiceStatus, pay.status)}
+          color={propAccessor(InvoiceStatusColor, pay.status)}
         />
       </Grid>
     )
@@ -413,12 +285,24 @@ UserPaymentPlanItem.propTypes = {
   currentUser: PropTypes.shape({
     userType: PropTypes.string
   }).isRequired,
-  refetch: PropTypes.func.isRequired,
-  walletRefetch: PropTypes.func.isRequired
+  refetch: PropTypes.func.isRequired
 };
 
 const useStyles = makeStyles(() => ({
   content: {
-    display: 'inline'
+    display: 'inline',
+    backgroundColor: '#FDFDFD'
+  },
+  accordion: {
+    backgroundColor: '#FDFDFD'
+  },
+  payment: {
+    padding: '0 0 20px 50px',
+    fontWeight: 400,
+    backgroundColor: '#FDFDFD'
+  },
+  paymentList: {
+    padding: '0 50px',
+    backgroundColor: '#FDFDFD'
   }
 }));
