@@ -5,7 +5,6 @@ import { MockedProvider } from '@apollo/react-testing';
 import { BrowserRouter } from 'react-router-dom';
 import Balance from '../Components/UserTransactions/UserBalance';
 import { UserBalance } from '../../../graphql/queries';
-import DepositQuery from '../graphql/payment_query'
 import { Spinner } from '../../../shared/Loading';
 import { AuthStateProvider } from '../../../containers/Provider/AuthStateProvider';
 import { generateId } from '../../../utils/helpers';
