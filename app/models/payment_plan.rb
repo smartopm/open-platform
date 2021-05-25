@@ -40,13 +40,18 @@ class PaymentPlan < ApplicationRecord
     start_date...(start_date + (duration_in_month || 12).month)
   end
 
-  # Reduces plan's pending balance with allocated amount.
+  # Updates plan's pending balance.
   #
   # @param [Float] amount
+  # @param [String] settle/revert
   #
   # @return [Boolean]
-  def update_pending_balance(amount)
-    update!(pending_balance: pending_balance - allocated_amount(amount))
+  def update_pending_balance(amount, action = :settle)
+    if action.eql?(:settle)
+      update!(pending_balance: pending_balance - allocated_amount(amount))
+    else
+      update!(pending_balance: pending_balance + amount)
+    end
   end
 
   # Returns maximum amount that can be allocated to plan.

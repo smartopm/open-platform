@@ -131,6 +131,7 @@ module Types
     field :wallet_transaction_update, mutation: Mutations::Transaction::WalletTransactionUpdate
     field :wallet_transaction_revert, mutation: Mutations::Transaction::WalletTransactionRevert
     field :transaction_create, mutation: Mutations::Transaction::TransactionCreate
+    field :transaction_revert, mutation: Mutations::Transaction::TransactionRevert
 
     # email_template
     field :email_template_create, mutation: Mutations::EmailTemplate::TemplateCreate
