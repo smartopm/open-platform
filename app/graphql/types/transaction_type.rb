@@ -9,7 +9,6 @@ module Types
     field :status, String, null: false
     field :bank_name, String, null: true
     field :cheque_number, String, null: true
-    field :receipt_number, String, null: true
     field :transaction_number, String, null: true
     field :user, Types::UserType, null: false
     field :depositor, Types::UserType, null: true
@@ -32,7 +31,14 @@ module Types
     #
     # @return [Float] allocated_amount
     def allocated_amount
-      object.plan_payments.not_cancelled.pluck(:amount).sum
+      plan_payments.pluck(:amount).sum
+    end
+
+    # Returns paid payment entries of deposit.
+    #
+    # @return [Array] PlanPayment
+    def plan_payments
+      object.plan_payments.not_cancelled
     end
   end
 end

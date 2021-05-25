@@ -10,11 +10,11 @@ RSpec.describe Types::Queries::Payment do
     let!(:land_parcel) { create(:land_parcel, community_id: community.id) }
     let!(:payment_plan) do
       create(:payment_plan, land_parcel_id: land_parcel.id, user_id: user.id, plot_balance: 0,
-                            pending_balance: 1000)
+                            pending_balance: 1200)
     end
     let!(:transaction) do
       create(:transaction, user_id: user.id, community_id: community.id, depositor_id: user.id,
-                           amount: 500)
+                           amount: 1500, receipt_number: '12345')
     end
     let!(:plan_payment) do
       create(:plan_payment, user_id: user.id, community_id: community.id,
@@ -31,9 +31,32 @@ RSpec.describe Types::Queries::Payment do
             source
             amount
             unallocatedAmount
-            receiptNumber
             depositor{
               name
+            }
+          }
+        }
+      GQL
+    end
+
+    let(:transaction_receipt) do
+      <<~GQL
+        query transactionReceipt($id: ID!) {
+          transactionReceipt(id: $id) {
+            amount
+            source
+            createdAt
+            user {
+              name
+            }
+            planPayments {
+              amount
+              receiptNumber
+              createdAt
+              currentPlotPendingBalance
+            }
+            community {
+              currency
             }
           }
         }
@@ -61,6 +84,43 @@ RSpec.describe Types::Queries::Payment do
           expect(transaction_result['unallocatedAmount']).to eql 0.0
           expect(transaction_result['depositor']['name']).to eql user.name
           expect(transaction_result['source']).to eql 'cash'
+        end
+      end
+    end
+
+    describe '#transaction_receipt' do
+      context 'when transaction id is invalid' do
+        it 'raises transaction not found error' do
+          variables = { id: '1234' }
+          result = DoubleGdpSchema.execute(transaction_receipt,
+                                           variables: variables,
+                                           context: {
+                                             current_user: admin,
+                                             site_community: community,
+                                           })
+          expect(result.dig('errors', 0, 'message')).to eql 'Transaction not found'
+        end
+      end
+
+      context 'when current_user is verified' do
+        it 'return transaction receipt details' do
+          variables = { id: transaction.id }
+          result = DoubleGdpSchema.execute(transaction_receipt,
+                                           variables: variables,
+                                           context: {
+                                             current_user: admin,
+                                             site_community: community,
+                                           })
+          receipt_details = result.dig('data', 'transactionReceipt')
+          expect(receipt_details['amount']).to eql 1500.0
+          expect(receipt_details['source']).to eql 'cash'
+          expect(receipt_details['user']['name']).to eql 'Mark Test'
+          expect(receipt_details['user']['name']).to eql 'Mark Test'
+
+          payment_details = receipt_details['planPayments'][0]
+          expect(payment_details['amount']).to eql 1000.0
+          expect(payment_details['receiptNumber']).to eql '12345'
+          expect(payment_details['currentPlotPendingBalance']).to eql 1200.0
         end
       end
     end
