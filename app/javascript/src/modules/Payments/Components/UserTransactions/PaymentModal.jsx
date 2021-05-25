@@ -126,7 +126,6 @@ export default function PaymentModal({ open, handleModalClose, userId, currencyD
 
   function handlePromptClose() {
     setPromptOpen(false);
-    history.push(`/user/${userId}?tab=Payments`);
   }
   
   if (loading) return <Spinner />

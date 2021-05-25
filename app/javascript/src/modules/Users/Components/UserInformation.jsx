@@ -30,6 +30,7 @@ import UserJourney from './UserJourney';
 import { propAccessor, useParamsQuery } from '../../../utils/helpers';
 import RightSideMenu from '../../Menu/component/RightSideMenu'
 import FeatureCheck from '../../Features';
+import PaymentPlans from '../../Payments/Components/UserTransactions/Plans'
 
 export default function UserInformation({
   data,
@@ -241,6 +242,13 @@ export default function UserInformation({
         <FeatureCheck features={authState.user.community.features} name="Payments">
           <TabPanel value={tabValue} index="Payments">
             <Transactions
+              userId={userId}
+              user={authState.user}
+              userData={data.user}
+            />
+          </TabPanel>
+          <TabPanel value={tabValue} index="Plans">
+            <PaymentPlans
               userId={userId}
               user={authState.user}
               userData={data.user}

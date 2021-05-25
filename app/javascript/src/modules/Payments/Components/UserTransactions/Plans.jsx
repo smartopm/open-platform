@@ -1,47 +1,44 @@
 /* eslint-disable no-nested-ternary */
-/* eslint-disable no-unused-vars */
 import React, { useState } from 'react'
 import { useQuery } from 'react-apollo'
-import { Typography } from '@material-ui/core'
-import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types'
 import { useTheme, makeStyles } from '@material-ui/core/styles';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
-import { formatError, useParamsQuery } from '../../../../utils/helpers'
+import { Typography } from '@material-ui/core'
+import UserPaymentPlanItem from './UserPaymentPlanItem'
+import UserBalance from './UserBalance'
+import { UserPlans } from '../../graphql/payment_query'
 import { Spinner } from '../../../../shared/Loading'
+import { formatError, useParamsQuery } from '../../../../utils/helpers'
+import { currencies } from '../../../../utils/constants'
 import CenteredContent from '../../../../components/CenteredContent'
 import Paginate from '../../../../components/Paginate'
-import { currencies } from '../../../../utils/constants'
-import UserTransactionsList from './UserTransactions'
-import DepositQuery from '../../graphql/payment_query'
 import ListHeader from '../../../../shared/list/ListHeader';
-import UserBalance from './UserBalance'
 
-export default function TransactionsList({ userId, user, userData }) {
+export default function PaymentPlans({ userId, user, userData }) {
+  const planHeader = [
+    { title: 'Plot Number', col: 2 },
+    { title: 'Payment Plan', col: 2 },
+    { title: 'Start Date', col: 2 },
+    { title: 'Balance', col: 2 },
+    { title: 'Monthly Amount', col: 2 },
+    { title: 'Payment Day', col: 2 }
+  ];
   const path = useParamsQuery()
+  const classes = useStyles();
   const limit = 10
   const page = path.get('page')
-  const [offset, setOffset] = useState(Number(page) || 0)
   const theme = useTheme();
-  const { t } = useTranslation('common')
   const matches = useMediaQuery(theme.breakpoints.up('sm'));
-  const classes = useStyles();
-
+  const [offset, setOffset] = useState(Number(page) || 0)
   const { loading, data, error, refetch } = useQuery(
-    DepositQuery,
+    UserPlans,
     {
       variables: { userId, limit, offset },
       errorPolicy: 'all',
       fetchPolicy: 'cache-and-network'
     }
   )
-
-  const transactionHeader = [
-    { title: 'Date', value: t('common:table_headers.date'), col: 1 },
-    { title: 'Recorded by', value: t('common:table_headers.recorded_by'), col: 1 },
-    { title: 'Payment Type', value: t('common:table_headers.payment_type'), col: 2 },
-    { title: 'Amount Paid', value: t('common:table_headers.amount_paid'), col: 1 }
-  ];
 
   const currency = currencies[user.community.currency] || ''
   const { locale } = user.community
@@ -67,63 +64,47 @@ export default function TransactionsList({ userId, user, userData }) {
         refetch={refetch}
       />
       {loading ? <Spinner /> : (
-        data?.userTransactions.length > 0 ? (
-          <div className={classes.paymentList}>
+        data?.userPlansWithPayments.length > 0 ? (
+          <div className={classes.planList}>
             <div>
-              <Typography className={classes.payment}>Transactions</Typography>
-              {matches && <ListHeader headers={transactionHeader} color />}
+              <Typography className={classes.plan}>Plans</Typography>
+              {matches && <ListHeader headers={planHeader} color />}
             </div>
-            {
-              data.userTransactions.map((trans) => (
-                <div key={trans.id}>
-                  <UserTransactionsList 
-                    transaction={trans} 
-                    currencyData={currencyData}
-                    userData={userData}
-                    userType={user.userType}
-                  />
-                </div>
-              ))
-            }
+            <div>
+              <UserPaymentPlanItem 
+                plans={data.userPlansWithPayments} 
+                currencyData={currencyData}
+                userData={userData}
+                currentUser={user}
+                userId={userId}
+                refetch={refetch}
+              />
+            </div>
           </div>
-        ) : (
-          <CenteredContent>No Transaction Available</CenteredContent>
+        ) : 
+        (
+          <CenteredContent>No Plan Available</CenteredContent>
         )
       )}
+
       <CenteredContent>
         <Paginate
           offSet={offset}
           limit={limit}
           active={offset >= 1}
           handlePageChange={paginate}
-          count={data?.userTransactions.length}
+          count={data?.userPlansWithPayments.length}
         />
       </CenteredContent>
     </div>
   )
 }
 
-const useStyles = makeStyles({
-  payment: {
-    fontWeight: 500,
-    fontSize: '20px',
-    color: '#313131',
-    marginBottom: '30px'
-  },
-  paymentList: {
-    backgroundColor: '#FDFDFD',
-    padding: '20px',
-    borderRadius: '4px',
-    border: '1px solid #EEEEEE',
-    marginTop: '20px'
-  }
-});
-
-TransactionsList.defaultProps = {
+PaymentPlans.defaultProps = {
   userData: {}
 }
 
-TransactionsList.propTypes = {
+PaymentPlans.propTypes = {
   userId: PropTypes.string.isRequired,
   // eslint-disable-next-line react/forbid-prop-types
   userData: PropTypes.object,
@@ -138,3 +119,19 @@ TransactionsList.propTypes = {
     }).isRequired
   }).isRequired
 }
+
+const useStyles = makeStyles({
+  plan: {
+    fontWeight: 500,
+    fontSize: '20px',
+    color: '#313131',
+    marginBottom: '30px'
+  },
+  planList: {
+    backgroundColor: '#FDFDFD',
+    padding: '20px',
+    borderRadius: '4px',
+    border: '1px solid #EEEEEE',
+    marginTop: '20px'
+  }
+});
