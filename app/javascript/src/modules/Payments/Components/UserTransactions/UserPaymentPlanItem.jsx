@@ -159,13 +159,15 @@ export default function UserPaymentPlanItem({
           </AccordionSummary>
           <AccordionDetails classes={{ root: classes.content }}>
             {plan.planPayments && Boolean(plan.planPayments?.length) && (
-              <Typography color="primary" className={classes.payment}>
-                Payments
-              </Typography>
+              <div>
+                <Typography color="primary" className={classes.payment}>
+                  Payments
+                </Typography>
+                <div className={classes.paymentList}>
+                  {matches && <ListHeader headers={paymentHeader} color />}
+                </div>
+              </div>
             )}
-            <div className={classes.paymentList}>
-              {matches && <ListHeader headers={paymentHeader} color />}
-            </div>
             {plan.planPayments
               ?.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
               .map(pay => (
