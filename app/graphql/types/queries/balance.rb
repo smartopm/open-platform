@@ -33,6 +33,9 @@ module Types::Queries::Balance
     }
   end
 
+  # Raises GraphQL execution error if user is unauthorized.
+  #
+  # @return [GraphQL::ExecutionError]
   def raise_unauthorized_user_error(user_id)
     return if context[:current_user]&.admin? || user_id.eql?(context[:current_user]&.id)
 
