@@ -30,8 +30,10 @@ class Transaction < ApplicationRecord
   #
   # @return [void]
   def execute_transaction_callbacks(payment_plan)
-    create_plan_payment(payment_plan)
+    amount_paid = payment_plan.allocated_amount(amount)
+
     payment_plan.update_pending_balance(amount)
+    create_plan_payment(payment_plan, amount_paid)
   end
 
   private
@@ -39,14 +41,14 @@ class Transaction < ApplicationRecord
   # Creates payment entry against transaction and payment plan
   #
   # @param [String] PaymentPlan#uuid
-  # @param [Float] payable_amount
+  # @param [Float] allocated_amount
   #
   # @return [void]
-  def create_plan_payment(payment_plan)
+  def create_plan_payment(payment_plan, amount_paid)
     plan_payments.create!(
       user_id: user_id,
       community_id: community_id,
-      amount: payment_plan.allocated_amount(amount),
+      amount: amount_paid,
       status: 'paid',
       payment_plan_id: payment_plan.id,
       created_at: created_at,

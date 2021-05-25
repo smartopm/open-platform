@@ -12,5 +12,7 @@ module Types
     field :payment_plan, Types::PaymentPlanType, null: true
     field :created_at, GraphQL::Types::ISO8601DateTime, null: false
     field :updated_at, GraphQL::Types::ISO8601DateTime, null: false
+    field :current_plot_pending_balance, Float, null: true
+    field :receipt_number, String, null: true
   end
 end
