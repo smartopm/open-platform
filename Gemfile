@@ -84,7 +84,7 @@ gem "newrelic_rpm"
 
 # web scrapping and parsing html files
 gem 'nokogiri'
-gem 'yard', '~> 0.8.7.6'
+gem 'yard', '~> 0.9.26'
 gem 'awesome_print'
 # Point to yanked v0.3.5
 # Temporary workaround for https://github.com/rails/rails/issues/41757 until fix is released
