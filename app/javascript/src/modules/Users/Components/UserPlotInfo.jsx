@@ -57,7 +57,7 @@ export default function UserPlotInfo({ account }) {
                 </div>
               ))}
               <Typography variant="body2">
-                {t('common:misc.plot_details', { date: dateToString(parcels()[parcels().length - 1]?.updatedAt) })}
+                {t('common:misc.plot_details', { date: dateToString(parcels()[Number(parcels().length - 1)]?.updatedAt) })}
                 <span className={classes.supportLink}>
                   &nbsp;
                   <Link data-testid="support_link" to="/contact" className={classes.routeLink}>
