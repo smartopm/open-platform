@@ -73,6 +73,15 @@ const userMenus = [
   },
   {
     routeProps: {
+      path: '/user/:id?tab=Plans',
+      component: <span />
+    },
+    name: t => t('menu.plan', { count: 0 }),
+    featureName: 'Payments',
+    accessibleBy: ['admin']
+  },
+  {
+    routeProps: {
       path: '/user/:id?tab=MergeUser',
       component: <span />
     },
