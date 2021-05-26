@@ -31,7 +31,8 @@ export default function TransactionsList({ userId, user, userData }) {
     loadtransactions,
     { loading, error, data, refetch }
   ] = useLazyQuery(DepositQuery, {
-    fetchPolicy: 'cache-and-network',
+    variables: { userId, limit, offset },
+    fetchPolicy: 'no-cache',
     errorPolicy: 'all'
   });
 
@@ -66,6 +67,7 @@ export default function TransactionsList({ userId, user, userData }) {
   }
 
   useEffect(() => {
+    console.log('hello')
     loadtransactions()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
