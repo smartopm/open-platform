@@ -25,17 +25,19 @@ import TelegramIcon from '@material-ui/icons/Telegram'
 import LandscapeIcon from '@material-ui/icons/Landscape';
 import PaymentIcon from '@material-ui/icons/Payment';
 import MailOutline from '@material-ui/icons/MailOutline';
+import SelectAll from '@material-ui/icons/SelectAll'
+import HomeWorkIcon from '@material-ui/icons/HomeWork';
+import LibraryBooksIcon from '@material-ui/icons/LibraryBooks';
 import { useTranslation } from 'react-i18next'
-import Card, { SVGIcon } from './Card'
+import Card from './Card'
 
 import SocialMediaLinks from './SocialMediaLinks'
 import { ponisoNumber } from '../utils/constants'
-import QRIcon from '../../../assets/images/icon_qr_card_fill_copy.svg'
 import { Footer } from './Footer'
-import AccountManagement from '../../../assets/images/account_management.svg'
-import NewsIcon from '../../../assets/images/iconfinder.svg'
 import ActionFlowIcon from './ActionFlows/ActionFlowIcon'
 
+
+// This should be deprecated in favour of the new dashboard
 export default function Homepage({ authState }) {
   const { t } = useTranslation('dashboard')
   if (authState.user.userType === 'security_guard') {
@@ -48,7 +50,7 @@ export default function Homepage({ authState }) {
       title: t('dashboard.scan'),
       path: '/scan',
       titleStyle: css(styles.CardtextImg),
-      icon: <SVGIcon image={QRIcon} alt="support icon" />,
+      icon: <SelectAll color="primary" fontSize="large" />,
       access: ['custodian']
     },
     {
@@ -56,7 +58,7 @@ export default function Homepage({ authState }) {
       title: t('dashboard.my_id_card'),
       path: `/id/${authState.user.id}`,
 
-      icon: <PersonIcon fontSize="large" />,
+      icon: <PersonIcon color="primary" fontSize="large" />,
       access: [
         'admin',
         'client',
@@ -73,7 +75,7 @@ export default function Homepage({ authState }) {
       title: t('dashboard.my_account'),
       path: `/myaccount/${authState.user.id}`,
       from: 'acc',
-      icon: <AccountCircleIcon fontSize="large" />,
+      icon: <AccountCircleIcon color="primary" fontSize="large" />,
       access: ['resident', 'client']
     },
     {
@@ -81,7 +83,7 @@ export default function Homepage({ authState }) {
       title: t('common:misc.users'),
       path: '/users',
 
-      icon: <RecentActorsIcon fontSize="large" />,
+      icon: <RecentActorsIcon color="primary" fontSize="large" />,
       access: ['admin']
     },
     {
@@ -89,7 +91,7 @@ export default function Homepage({ authState }) {
       title: `${authState.user.community.name} ${t('common:misc.news')}`,
       path: '/news',
       titleStyle: css(styles.CardtextImg),
-      icon: <SVGIcon image={NewsIcon} alt=" news icons" />,
+      icon: <LibraryBooksIcon color="primary" fontSize="large" />,
       access: [
         'admin',
         'client',
@@ -110,7 +112,7 @@ export default function Homepage({ authState }) {
       clientName: authState.user.name,
       clientNumber: authState.user.phoneNumber,
       from: 'home',
-      icon: <ForumIcon fontSize="large" />,
+      icon: <ForumIcon color="primary" fontSize="large" />,
       access: [
         'admin',
         'client',
@@ -126,7 +128,7 @@ export default function Homepage({ authState }) {
       title: t('common:misc.campaigns'),
       path: '/campaigns',
 
-      icon: <TelegramIcon fontSize="large" />,
+      icon: <TelegramIcon color="primary" fontSize="large" />,
       access: ['admin']
     },
     {
@@ -134,7 +136,7 @@ export default function Homepage({ authState }) {
       title: t('common:misc.tasks'),
       path: '/tasks',
 
-      icon: <PlaylistAddCheckIcon fontSize="large" />,
+      icon: <PlaylistAddCheckIcon color="primary" fontSize="large" />,
       access: ['admin']
     },
     {
@@ -142,7 +144,7 @@ export default function Homepage({ authState }) {
       title: t('common:misc.notes'),
       path: '/notes',
 
-      icon: <NotesIcon fontSize="large" />,
+      icon: <NotesIcon color="primary" fontSize="large" />,
       access: ['admin']
     },
     {
@@ -152,7 +154,7 @@ export default function Homepage({ authState }) {
       titleStyle: css(styles.CardtextImg),
       clientName: authState.user.name,
       from: 'home',
-      icon: <SVGIcon image={AccountManagement} alt="account management icon" />,
+      icon: <HomeWorkIcon color="primary" fontSize="large" />,
       access: ['admin', 'resident', 'client']
     },
     {
@@ -160,7 +162,7 @@ export default function Homepage({ authState }) {
       title: t('common:misc.request_forms'),
       path: '/forms',
       id: 'crfl',
-      icon: <ListAltIcon fontSize="large" />,
+      icon: <ListAltIcon color="primary" fontSize="large" />,
       access: ['admin', 'resident', 'client']
     },
     {
@@ -168,7 +170,7 @@ export default function Homepage({ authState }) {
       title: t('common:misc.time_card'),
       path: '/timesheet',
 
-      icon: <HourglassEmptyIcon fontSize="large" />,
+      icon: <HourglassEmptyIcon color="primary" fontSize="large" />,
       access: ['admin', 'custodian']
     },
     {
@@ -176,7 +178,7 @@ export default function Homepage({ authState }) {
       title: t('common:misc.log_book'),
       path: '/entry_logs',
 
-      icon: <LogIcon fontSize="large" />,
+      icon: <LogIcon color="primary" fontSize="large" />,
       access: ['security_guard', 'admin']
     },
     {
@@ -184,7 +186,7 @@ export default function Homepage({ authState }) {
       title: t('common:misc.referrals'),
       path: '/referral',
       from: 'ref',
-      icon: <PeopleIcon fontSize="large" />,
+      icon: <PeopleIcon color="primary" fontSize="large" />,
       access: ['admin', 'resident', 'client']
     },
     {
@@ -192,7 +194,7 @@ export default function Homepage({ authState }) {
       title: t('common:misc.time_card'),
       path: `/timesheet/${authState.user.id}`,
 
-      icon: <PlaylistAddCheckIcon fontSize="large" />,
+      icon: <PlaylistAddCheckIcon color="primary" fontSize="large" />,
       access: ['contractor']
     },
     {
@@ -201,7 +203,7 @@ export default function Homepage({ authState }) {
         <a href={`tel:${ponisoNumber}`}>
           <div className="card-body">
             <h5 className="card-title">
-              <CallIcon fontSize="large" />
+              <CallIcon color="primary" fontSize="large" />
             </h5>
             <p className={css(styles.CardtextIcon)}>{t('dashboard.call_manager')}</p>
           </div>
@@ -213,7 +215,7 @@ export default function Homepage({ authState }) {
       title: t('common:misc.discussions'),
       path: '/discussions',
       titleStyle: css(styles.CardtextImg),
-      icon: <MessageIcon fontSize="large" />,
+      icon: <MessageIcon color="primary" fontSize="large" />,
       access: [
         'admin',
         'client',
@@ -230,14 +232,14 @@ export default function Homepage({ authState }) {
       title: t('common:misc.business'),
       path: '/business',
       titleStyle: css(styles.CardtextImg),
-      icon: <LocalMallIcon fontSize="large" />,
+      icon: <LocalMallIcon color="primary" fontSize="large" />,
       access: ['admin', 'client', 'prospective_client', 'resident', 'visitor']
     },
     {
       title: `${authState.user.community.name} ${t('common:misc.support')}`,
       path: '/contact',
 
-      icon: <HelpIcon fontSize="large" />,
+      icon: <HelpIcon color="primary" fontSize="large" />,
       access: [
         'admin',
         'client',
@@ -251,13 +253,13 @@ export default function Homepage({ authState }) {
     {
       title: t('common:misc.labels'),
       path: `/labels`,
-      icon: <LabelIcon fontSize="large" />,
+      icon: <LabelIcon color="primary" fontSize="large" />,
       access: ['admin']
     },
     {
       title: t('common:misc.comments'),
       path: '/comments',
-      icon: <CommentIcon fontSize="large" />,
+      icon: <CommentIcon color="primary" fontSize="large" />,
       access: ['admin']
     },
     {
@@ -269,25 +271,25 @@ export default function Homepage({ authState }) {
     {
       title: t('common:misc.properties'),
       path: '/land_parcels',
-      icon: <LandscapeIcon fontSize="large" />,
+      icon: <LandscapeIcon color="primary" fontSize="large" />,
       access: ['admin']
     },
     {
       title: t('common:misc.payments'),
       path: '/payments',
-      icon: <PaymentIcon fontSize="large" />,
+      icon: <PaymentIcon color="primary" fontSize="large" />,
       access: ['admin']
     },
     {
       title: t('common:misc.mail_templates'),
       path: '/mail_templates',
-      icon: <MailOutline fontSize="large" />,
+      icon: <MailOutline color="primary" fontSize="large" />,
       access: ['admin']
     },
     {
       title: t('common:misc.comm_settings'),
       path: '/community',
-      icon: <SettingsIcon fontSize="large" />,
+      icon: <SettingsIcon color="primary" fontSize="large" />,
       access: ['admin']
     }
   ]
