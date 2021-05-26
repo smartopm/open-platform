@@ -1,25 +1,104 @@
 /* eslint-disable no-nested-ternary */
 /* eslint-disable no-underscore-dangle */
-import React from 'react';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import Grid from '@material-ui/core/Grid';
+import { useMutation } from 'react-apollo';
 import PropTypes from 'prop-types';
+import { MoreHorizOutlined } from '@material-ui/icons';
+import IconButton from '@material-ui/core/IconButton';
 import DataList from '../../../../shared/list/DataList';
 import Text, { GridText } from '../../../../shared/Text';
 import { dateToString } from '../../../../components/DateContainer';
 import CenteredContent from '../../../../components/CenteredContent';
-import { formatMoney } from '../../../../utils/helpers';
+import { formatMoney, formatError } from '../../../../utils/helpers';
+import MessageAlert from "../../../../components/MessageAlert"
+import DeleteDialogueBox from '../../../../components/Business/DeleteDialogue'
+import MenuList from '../../../../shared/MenuList'
+import { TransactionRevert } from '../../graphql/payment_mutations';
 
-export default function UserTransactionsList({transaction, currencyData }) {
+export default function UserTransactionsList({transaction, currencyData, userType, userData }) {
   const { t } = useTranslation('common')
+  const [transactionId, setTransactionId] = useState(false)
+  const [name, setName] = useState('')
+  const [revertModalOpen, setRevertModalOpen] = useState(false)
+  const [revertTransactionLoading, setRevertTransactionLoading] = useState(false)
+  const [anchorEl, setAnchorEl] = useState(null)
+  const [messageAlert, setMessageAlert] = useState('')
+  const anchorElOpen = Boolean(anchorEl)
+  const [isSuccessAlert, setIsSuccessAlert] = useState(false)
+  const [revertTransaction] = useMutation(TransactionRevert)
 
   const transactionHeader = [
     { title: 'Date', value: t('common:table_headers.date'), col: 1 },
     { title: 'Recorded by', value: t('common:table_headers.recorded_by'), col: 1 },
     { title: 'Payment Type', value: t('common:table_headers.payment_type'), col: 2 },
-    { title: 'Payment/Receipt ID', value: t('common:table_headers.payment_id'), col: 1 },
-    { title: 'Amount Paid', value: t('common:table_headers.amount_paid'), col: 1 }
+    { title: 'Amount Paid', value: t('common:table_headers.amount_paid'), col: 1 },
+    { title: 'Menu', value: t('common:table_headers.menu'), col: 1 }
   ];
+
+  function handleClick(event, txn, user){
+    const txnId = txn.id
+    const userName = user.name
+    event.stopPropagation()
+    setTransactionId(txnId)
+    setName(userName)
+    setRevertModalOpen(true)
+  }
+
+  function handleRevertClose(event){
+    event.stopPropagation()
+    setRevertModalOpen(false)
+    setRevertTransactionLoading(false)
+  }
+
+  function handleTransactionMenu(event){
+    event.stopPropagation()
+    setAnchorEl(event.currentTarget)
+  }
+
+  function handleRevertTransaction(event) {
+    event.stopPropagation()
+    setRevertTransactionLoading(true)
+    revertTransaction({
+      variables: {
+        id: transactionId
+      }
+    }).then(() => {
+      setAnchorEl(null)
+      setMessageAlert('Transaction reverted')
+      // walletRefetch()
+      // depRefetch()
+      setIsSuccessAlert(true)
+      setRevertModalOpen(false)
+      setRevertTransactionLoading(false)
+    })
+    .catch((err) => {
+      setMessageAlert(formatError(err.message))
+      setIsSuccessAlert(false)
+      setRevertTransactionLoading(false)
+    })
+  }
+
+  const menuList = [
+    { content: t("common:menu.revert_transaction"), isAdmin: true, color: 'red', handleClick: (event) => handleClick(event, transaction, userData)},
+  ]
+
+  function handleMessageAlertClose(_event, reason) {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setMessageAlert('');
+  }
+
+  const menuData = {
+    menuList,
+    handleTransactionMenu,
+    anchorEl,
+    open: anchorElOpen,
+    userType,
+    handleClose: () => setAnchorEl(null)
+  }
 
   if (!Object.keys(transaction).length || Object.keys(transaction).length === 0) {
     return <CenteredContent><Text content="No Transactions Yet" align="justify" /></CenteredContent>
@@ -27,9 +106,24 @@ export default function UserTransactionsList({transaction, currencyData }) {
 
   return (
     <div>
+      <MessageAlert
+        type={isSuccessAlert ? 'success' : 'error'}
+        message={messageAlert}
+        open={!!messageAlert}
+        handleClose={handleMessageAlertClose}
+      />
+      <DeleteDialogueBox
+        open={revertModalOpen}
+        handleClose={(event) => handleRevertClose(event)}
+        handleAction={(event) => handleRevertTransaction(event)}
+        title='Transaction'
+        action='delete'
+        user={name}
+        loading={revertTransactionLoading}
+      />
       <DataList
         keys={transactionHeader}
-        data={[renderTransactions(transaction, currencyData)]}
+        data={[renderTransactions(transaction, currencyData, menuData)]}
         hasHeader={false}
         color
       />
@@ -37,7 +131,7 @@ export default function UserTransactionsList({transaction, currencyData }) {
   )
 }
 
-export function renderTransactions(transaction, currencyData) {
+export function renderTransactions(transaction, currencyData, menuData) {
   return {
     'Date': (
       <GridText
@@ -63,6 +157,30 @@ export function renderTransactions(transaction, currencyData) {
         <br />
         <Text color="primary" content={`unallocated ${formatMoney(currencyData, transaction.unallocatedAmount)}`} />
       </Grid>
+    ),
+    Menu: (
+      <Grid item xs={12} md={1} data-testid="menu">
+        {
+          transaction.status !== 'cancelled' &&
+          (
+            <IconButton
+              aria-controls="simple-menu"
+              aria-haspopup="true"
+              data-testid="receipt-menu"
+              onClick={(event) => menuData.handleTransactionMenu(event)}
+            >
+              <MoreHorizOutlined />
+            </IconButton>
+          )
+        }
+        <MenuList
+          open={menuData.open}
+          anchorEl={menuData.anchorEl}
+          userType={menuData.userType}
+          handleClose={menuData.handleClose}
+          list={menuData.menuList}
+        />
+      </Grid>
     )
   };
 }
@@ -76,5 +194,6 @@ UserTransactionsList.propTypes = {
   }).isRequired,
   userData: PropTypes.shape({
     name: PropTypes.string.isRequired
-  }).isRequired
+  }).isRequired,
+  userType: PropTypes.string.isRequired
 };

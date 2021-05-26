@@ -50,4 +50,19 @@ mutation PaymentCreate(
 }
 `
 
+export const TransactionRevert = gql`
+  mutation TransactionRevert(
+    $id: ID!
+  ) {
+    transactionRevert(
+      id: $id
+    ) {
+      transaction {
+        id
+        status
+      }
+    }
+  }
+`
+
 export default PaymentCreate;

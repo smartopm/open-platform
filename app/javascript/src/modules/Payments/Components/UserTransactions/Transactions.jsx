@@ -40,7 +40,8 @@ export default function TransactionsList({ userId, user, userData }) {
     { title: 'Date', value: t('common:table_headers.date'), col: 1 },
     { title: 'Recorded by', value: t('common:table_headers.recorded_by'), col: 1 },
     { title: 'Payment Type', value: t('common:table_headers.payment_type'), col: 2 },
-    { title: 'Amount Paid', value: t('common:table_headers.amount_paid'), col: 1 }
+    { title: 'Amount Paid', value: t('common:table_headers.amount_paid'), col: 1 },
+    { title: 'Menu', value: t('common:table_headers.menu'), col: 1 }
   ];
 
   const currency = currencies[user.community.currency] || ''
