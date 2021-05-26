@@ -114,5 +114,19 @@ namespace :land_parcels do
     puts 'Records successfully imported' if errors.empty?
     User.set_callback(:create, :after, :send_email_msg)
   end
+
+  desc 'Reset payment plans'
+  task :reset_plot_plans, [:community_name] => :environment do |_t, args|
+    community = Community.find_by(name: args.community_name)
+
+    ActiveRecord::Base.transaction do
+      land_parcels = community.land_parcels.joins(:payment_plan)
+      land_parcels.each do |parcel|
+        plan = parcel.payment_plan
+        plan.update!(pending_balance: plan.monthly_amount * plan.duration_in_month)
+        puts "Processed: Reset payment plan of #{parcel.parcel_number}"
+      end
+    end
+  end
 end
 # rubocop:enable Metrics/BlockLength

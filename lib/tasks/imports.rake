@@ -232,15 +232,6 @@ namespace :imports do
         if existing_parcel.present?
           payment_plan = existing_parcel.payment_plan
           if payment_plan.present?
-            if community.wallet_transactions.find_by(
-              created_at: date,
-              payment_plan_id: payment_plan.id,
-              user_id: user.id,
-            ).present?
-              warnings[row_num + 1] = 'Warning: Transaction already exists.'
-              next
-            end
-
             modes = {
               'CASH' => 'cash',
               'POS' => 'pos',
@@ -248,15 +239,24 @@ namespace :imports do
               'MTN Mobile Money' => 'mobile_money',
             }
 
-            transaction = user.wallet_transactions.create(
+            transaction = community.transactions.find_by(
+              amount: amount,
+              created_at: date,
+              source: modes[payment_mode],
+              user_id: user.id,
+            )
+            if transaction.present?
+              warnings[row_num + 1] = 'Warning: Transaction already exists.'
+              next
+            end
+
+            transaction = user.transactions.create(
               source: modes[payment_mode],
               created_at: date,
-              status: 'settled',
-              destination: 'wallet',
+              status: 'accepted',
               community_id: community.id,
               depositor_id: current_user.id,
               originally_created_at: current_user.current_time_in_timezone,
-              payment_plan_id: payment_plan.id,
               amount: amount,
             )
 
@@ -265,10 +265,7 @@ namespace :imports do
               next
             end
 
-            payment_plan.update_plot_balance(amount)
-            transaction.update(current_wallet_balance: user.wallet.balance + amount)
-            user.wallet.update_balance(amount)
-            user.wallet.settle_invoices(transaction: transaction)
+            transaction.execute_transaction_callbacks(payment_plan)
           else
             errors[row_num + 1] = 'Error: Payment plan not available.'
           end
