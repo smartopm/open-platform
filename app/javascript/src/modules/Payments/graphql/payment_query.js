@@ -26,7 +26,7 @@ export const UserPlans = gql`
       startDate
       monthlyAmount
       paymentDay
-      plotBalance
+      pendingBalance
       landParcel {
         id
         parcelNumber

@@ -207,7 +207,7 @@ export function renderPlan(plan, currencyData, userType, { handleMenu, loading }
     ),
     'Balance': (
       <Grid item xs={12} md={2} data-testid="percentage">
-        {formatMoney(currencyData, plan.plotBalance)}
+        {formatMoney(currencyData, plan.pendingBalance)}
       </Grid>
     ),
     'Monthly Amount': (
