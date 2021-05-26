@@ -60,7 +60,7 @@ describe('User balance Component', () => {
       () => {
         expect(container.queryByText('common:misc.total_balance')).toBeInTheDocument();
       },
-      { timeout: 100 }
+      { timeout: 300 }
     );
   });
 });
