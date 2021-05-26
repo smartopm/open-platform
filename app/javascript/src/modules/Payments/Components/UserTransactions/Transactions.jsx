@@ -21,6 +21,7 @@ export default function TransactionsList({ userId, user, userData }) {
   const path = useParamsQuery()
   const limit = 10
   const page = path.get('page')
+  const tab = path.get('tab')
   const [offset, setOffset] = useState(Number(page) || 0)
   const theme = useTheme();
   const { t } = useTranslation('common')
@@ -28,22 +29,13 @@ export default function TransactionsList({ userId, user, userData }) {
   const classes = useStyles();
 
   const [
-    loadtransactions,
+    loadTransactions,
     { loading, error, data, refetch }
   ] = useLazyQuery(DepositQuery, {
     variables: { userId, limit, offset },
     fetchPolicy: 'no-cache',
     errorPolicy: 'all'
   });
-
-  // const { loading, data, error, refetch } = useQuery(
-  //   DepositQuery,
-  //   {
-  //     variables: { userId, limit, offset },
-  //     errorPolicy: 'all',
-  //     fetchPolicy: 'cache-and-network'
-  //   }
-  // )
 
   const transactionHeader = [
     { title: 'Date', value: t('common:table_headers.date'), col: 1 },
@@ -67,10 +59,11 @@ export default function TransactionsList({ userId, user, userData }) {
   }
 
   useEffect(() => {
-    console.log('hello')
-    loadtransactions()
+    if (tab === 'Payments') {
+      loadTransactions()
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [tab]);
 
   if (error && !data) return <CenteredContent>{formatError(error.message)}</CenteredContent>
 
