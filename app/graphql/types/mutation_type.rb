@@ -125,6 +125,7 @@ module Types
     # payments
     field :payment_plan_create, mutation: Mutations::Payment::PaymentPlanCreate
     field :payment_day_update, mutation: Mutations::Payment::PaymentDayUpdate
+    field :plan_payment_create, mutation: Mutations::Payment::PlanPaymentCreate
 
     # transactions
     field :wallet_transaction_create, mutation: Mutations::Transaction::WalletTransactionCreate

@@ -34,6 +34,13 @@ class Transaction < ApplicationRecord
     payment_plan.update_pending_balance(amount)
   end
 
+  # Returns unallocated amount for the transaction
+  #
+  # @return [Float]
+  def unallocated_amount
+    amount - plan_payments.not_cancelled.pluck(:amount).sum
+  end
+
   private
 
   # Creates payment entry against transaction and payment plan

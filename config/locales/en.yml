@@ -226,15 +226,15 @@ en:
               invalid_length: must be a valid length
   campaign:
     default:
-      message: "Default Campaign Message"
-      name: "Default Campaign Name"
+      message: 'Default Campaign Message'
+      name: 'Default Campaign Name'
   errors:
     action_flow:
       invalid_action_name: Invalid action name
       invalid_event_type: Invalid event type
       not_found: Action flow not found
     campaign:
-      missing_parameter: "Missing Parameter: Please Supply %{attribute} parameter"
+      missing_parameter: 'Missing Parameter: Please Supply %{attribute} parameter'
     can_not_process_request: For some reason, I can't process your request
     comment:
       not_found: Comment not found
@@ -277,21 +277,24 @@ en:
     substatus_log:
       date_must_be_greater: Date can't be less than previous log's start date
       not_found: Substatus log Not found
+    transaction:
+      not_found: Transaction not found
+      amount_not_sufficient: Unallocated amount is not sufficient for the payment
     unauthorized: Unauthorized
     user:
       merge_failed: Merge Failed
-      not_found_with_id: "Could not find User %{user_id}"
+      not_found_with_id: 'Could not find User %{user_id}'
       not_found: User not found
     user_form_property:
       not_found: User form property not found
-    visibility: "You do not have permission to access %{field}"
+    visibility: 'You do not have permission to access %{field}'
     wallet:
       funds_not_sufficient: Unallocated funds are not sufficient for the payment
     wallet_transaction:
       can_not_revert: Transaction Can not be reverted
       payment_not_found: Payment not found
   general:
-    thanks_for_using_our_app: "Thank you for using our app, kindly use this link to give us feedback %{feedback_link}"
+    thanks_for_using_our_app: 'Thank you for using our app, kindly use this link to give us feedback %{feedback_link}'
   response:
     failed: failed
     success: success
