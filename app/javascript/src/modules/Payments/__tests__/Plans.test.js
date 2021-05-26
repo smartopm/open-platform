@@ -25,7 +25,7 @@ describe('Plan List Component', () => {
             startDate: '2021-01-26',
             monthlyAmount: '200',
             paymentDay: 1,
-            plotBalance: 200,
+            pendingBalance: 200,
             id: 'f280159d-ac71-4c22-997a-07fd07344c94',
             landParcel: {
               id: 'f280159d-ac71-4c22-997a-07fd07344c94',
