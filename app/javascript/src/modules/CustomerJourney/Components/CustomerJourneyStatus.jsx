@@ -24,7 +24,7 @@ export default function CustomerJourneyStatus({ subStatus, communityName }){
     <div>
       <div style={matches ? {display: 'flex', margin: '40px 30px 5px 20px'} : {display: 'flex', margin: '40px 79px 20px 79px'}}>
         <Typography className={matches ? classes.titleMobile : classes.title} data-testid='customer'>{t('dashboard.your_customer_journey')}</Typography>
-        <Typography className={matches ? classes.countMobile : classes.count}>
+        <Typography className={matches ? classes.countMobile : classes.count} data-testid='customer_steps'>
           {barCount}
           /6 
           {' '}
