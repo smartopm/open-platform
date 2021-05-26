@@ -40,7 +40,11 @@ export default function Balance({ user, userId, userData, refetch }) {
               data?.userBalance?.pendingBalance && (
                 <div style={{display: 'flex', flexDirection: 'column', marginLeft: '10px'}}>
                   <Typography variant='subtitle1'>{t("common:misc.total_balance")}</Typography>
-                  <Typography variant="h5" color='primary'>{formatMoney(currencyData, data?.userBalance?.pendingBalance)}</Typography>
+                  <Typography variant="h5" color='primary'>
+                    {data?.userBalance?.pendingBalance === 0 ? 
+                    formatMoney(currencyData, data?.userBalance?.pendingBalance) :
+                    `- ${formatMoney(currencyData, data?.userBalance?.pendingBalance)}`}
+                  </Typography>
                 </div>
               )
             }
