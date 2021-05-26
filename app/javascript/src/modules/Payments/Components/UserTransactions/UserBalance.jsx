@@ -38,7 +38,7 @@ export default function Balance({ user, userId, userData, refetch }) {
           <div style={{display: 'flex', flexDirection: 'row'}}>
             <div style={{display: 'flex', flexDirection: 'column', marginLeft: '10px'}}>
               <Typography variant='subtitle1'>{t("common:misc.total_balance")}</Typography>
-              <Typography variant="h5" color='primary'>{formatMoney(currencyData, data?.userBalance?.pendingBalance)}</Typography>
+              <Typography variant="h5" color='primary'>{formatMoney(currencyData, data?.userBalance.pendingBalance)}</Typography>
             </div>
             {
               data?.userBalance?.pendingBalance && (
@@ -56,7 +56,7 @@ export default function Balance({ user, userId, userData, refetch }) {
               data?.userBalance?.balance > 0 && (
                 <div style={{display: 'flex', flexDirection: 'column', marginLeft: '30px'}}>
                   <Typography variant='subtitle1'>{t("common:misc.unallocated_funds")}</Typography>
-                  <Typography variant="h5" color='primary'>{formatMoney(currencyData, data?.userBalance?.balance)}</Typography>
+                  <Typography variant="h5" color='primary'>{formatMoney(currencyData, data?.userBalance.balance)}</Typography>
                 </div>
               )
             }
