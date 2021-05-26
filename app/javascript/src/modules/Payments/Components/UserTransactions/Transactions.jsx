@@ -1,7 +1,7 @@
 /* eslint-disable no-nested-ternary */
 /* eslint-disable no-unused-vars */
-import React, { useState } from 'react'
-import { useQuery } from 'react-apollo'
+import React, { useState, useEffect } from 'react'
+import { useLazyQuery } from 'react-apollo'
 import { Typography } from '@material-ui/core'
 import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types'
@@ -27,14 +27,22 @@ export default function TransactionsList({ userId, user, userData }) {
   const matches = useMediaQuery(theme.breakpoints.up('sm'));
   const classes = useStyles();
 
-  const { loading, data, error, refetch } = useQuery(
-    DepositQuery,
-    {
-      variables: { userId, limit, offset },
-      errorPolicy: 'all',
-      fetchPolicy: 'cache-and-network'
-    }
-  )
+  const [
+    loadtransactions,
+    { loading, error, data, refetch }
+  ] = useLazyQuery(DepositQuery, {
+    fetchPolicy: 'cache-and-network',
+    errorPolicy: 'all'
+  });
+
+  // const { loading, data, error, refetch } = useQuery(
+  //   DepositQuery,
+  //   {
+  //     variables: { userId, limit, offset },
+  //     errorPolicy: 'all',
+  //     fetchPolicy: 'cache-and-network'
+  //   }
+  // )
 
   const transactionHeader = [
     { title: 'Date', value: t('common:table_headers.date'), col: 1 },
@@ -56,6 +64,11 @@ export default function TransactionsList({ userId, user, userData }) {
       setOffset(offset + limit)
     }
   }
+
+  useEffect(() => {
+    loadtransactions()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   if (error && !data) return <CenteredContent>{formatError(error.message)}</CenteredContent>
 
