@@ -17,8 +17,6 @@ task update_community_features: :environment do
     'Logout', 'Labels'
   ]
 
-  ["Dashboard", "Search", "Profile", "Messages", "Communication", "LogBook", "Forms", "Users", "News", "Discussions", "Campaigns", "Tasks", "Business", "Forms", "Email Templates", "Community", "Contact", "Referral", "Logout", "Labels"]
-
   Community.all.each do |comm|
     if comm.name == 'Ciudad Morazán'
       comm.update!(features: mc_features)
