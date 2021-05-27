@@ -1,6 +1,6 @@
 /* eslint-disable no-nested-ternary */
 import React, { useState, useEffect } from 'react'
-import { useLazyQuery } from 'react-apollo'
+import { useQuery } from 'react-apollo'
 import PropTypes from 'prop-types'
 import { useTheme, makeStyles } from '@material-ui/core/styles';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
@@ -32,7 +32,7 @@ export default function PaymentPlans({ userId, user, userData }) {
   const theme = useTheme();
   const matches = useMediaQuery(theme.breakpoints.up('sm'));
   const [offset, setOffset] = useState(Number(page) || 0)
-  const { loading, error, data, refetch } = useLazyQuery(UserPlans, {
+  const { loading, error, data, refetch } = useQuery(UserPlans, {
     variables: { userId, limit, offset },
     fetchPolicy: 'no-cache',
     errorPolicy: 'all'
