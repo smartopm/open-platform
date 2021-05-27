@@ -41,7 +41,7 @@ ListHeader.propTypes = {
       col: PropTypes.number.isRequired
     })
   ).isRequired,
-  color: PropTypes.string
+  color: PropTypes.bool
 };
 
 const useStyles = makeStyles(() => ({

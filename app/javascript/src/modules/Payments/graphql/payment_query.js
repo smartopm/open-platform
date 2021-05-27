@@ -10,7 +10,7 @@ export const UserTransactions = gql`
       transactionNumber
       allocatedAmount
       unallocatedAmount
-      user {
+      depositor {
         id
         name
       }

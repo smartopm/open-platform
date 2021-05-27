@@ -20,7 +20,7 @@ describe('Render Transaction', () => {
     bankName: null,
     transactionNumber: null,
     id: '3b464fb7-bb2b-41cb-9245-9300b6d8a729',
-    user: {
+    depositor: {
       id: 'a54d6184-b10e-4865-bee7-7957701d423d',
       name: 'Another somebodyy'
     },

@@ -64,7 +64,7 @@ export default function PaymentPlans({ userId, user, userData }) {
         refetch={refetch}
       />
       {loading ? <Spinner /> : (
-        data?.userPlansWithPayments.length > 0 ? (
+        data?.userPlansWithPayments?.length > 0 ? (
           <div className={classes.planList}>
             <div>
               <Typography className={classes.plan}>Plans</Typography>
@@ -93,7 +93,7 @@ export default function PaymentPlans({ userId, user, userData }) {
           limit={limit}
           active={offset >= 1}
           handlePageChange={paginate}
-          count={data?.userPlansWithPayments.length}
+          count={data?.userPlansWithPayments?.length}
         />
       </CenteredContent>
     </div>

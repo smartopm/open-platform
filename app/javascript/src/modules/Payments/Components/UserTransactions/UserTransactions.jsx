@@ -48,7 +48,7 @@ export function renderTransactions(transaction, currencyData) {
     'Recorded by': (
       <GridText
         data-testid="recorded"
-        content={transaction.user.name}
+        content={transaction.depositor.name}
       />
     ),
     "Payment Type": (
