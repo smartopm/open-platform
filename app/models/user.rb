@@ -126,6 +126,7 @@ class User < ApplicationRecord
   validate :phone_number_valid?
   after_create :add_notification_preference
   before_update :log_sub_status_change, if: :sub_status_changed?
+  after_update :update_associated_accounts_details, if: -> { saved_changes.key?('name') }
 
   devise :omniauthable, omniauth_providers: %i[google_oauth2 facebook]
 
@@ -533,6 +534,13 @@ class User < ApplicationRecord
       land_parcels.find_by(parcel_number: property_number),
       land_parcels.find_by(parcel_number: gov_property_number),
     ]
+  end
+
+  # Update accounts details to their associated user's details
+  #
+  # @return [Boolean]
+  def update_associated_accounts_details
+    accounts.where.not(accounts: { full_name: name }).update(full_name: name)
   end
 
   private
