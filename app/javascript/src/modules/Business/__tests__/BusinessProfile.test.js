@@ -3,7 +3,7 @@ import React from 'react';
 import { fireEvent, render } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom/';
 import { MockedProvider } from '@apollo/react-testing';
-import Profile from '../../components/Business/BusinessProfile';
+import Profile from '../Components/BusinessProfile';
 
 describe('It tests the business profile page', () => {
   const props = {

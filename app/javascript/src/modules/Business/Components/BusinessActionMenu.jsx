@@ -3,8 +3,8 @@ import React, { useState } from 'react';
 import { Menu, MenuItem } from '@material-ui/core';
 import { useMutation } from 'react-apollo';
 import { Link } from 'react-router-dom';
-import { DeleteBusiness } from '../../graphql/mutations';
-import BusinessDeleteDialogue from './DeleteDialogue';
+import BusinessDeleteDialogue from '../../../shared/dialogs/DeleteDialogue';
+import { DeleteBusiness } from '../graphql/business_mutations';
 
 export default function BusinessActionMenu({
   data,

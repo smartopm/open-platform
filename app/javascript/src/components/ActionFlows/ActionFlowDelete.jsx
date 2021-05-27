@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { useMutation } from 'react-apollo';
 import PropTypes from 'prop-types'
-import DeleteDialogueBox from '../Business/DeleteDialogue'
+import DeleteDialogueBox from '../../shared/dialogs/DeleteDialogue'
 import { DeleteActionFlow } from '../../graphql/mutations'
 import MessageAlert from '../MessageAlert'
 import { formatError } from '../../utils/helpers'

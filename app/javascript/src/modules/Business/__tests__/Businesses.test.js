@@ -1,9 +1,8 @@
-/* eslint-disable react/jsx-props-no-spreading */
 import React from 'react'
 import { render, act, fireEvent } from '@testing-library/react'
 import { BrowserRouter } from 'react-router-dom/'
 import { MockedProvider } from '@apollo/react-testing'
-import Business from '../../components/Business/BusinessList';
+import Business from '../Components/BusinessList';
 import '@testing-library/jest-dom/extend-expect'
 
 describe('It tests the business directory list', () => {

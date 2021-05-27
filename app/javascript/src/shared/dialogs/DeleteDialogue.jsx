@@ -12,7 +12,7 @@ import WarningIcon from '@material-ui/icons/Warning';
 import CloseIcon from '@material-ui/icons/Close';
 import PropTypes from 'prop-types'
 import { makeStyles } from '@material-ui/core/styles';
-import {Spinner} from '../../shared/Loading'
+import {Spinner} from '../Loading'
 
 export default function DeleteDialogueBox({
   open,

@@ -1,4 +1,4 @@
-import Businesses from '../../containers/Businesses/Businesses';
+import Businesses from './Components/Businesses';
 
 export default {
   routeProps: {

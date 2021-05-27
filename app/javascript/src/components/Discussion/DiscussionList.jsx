@@ -17,7 +17,7 @@ import { useMutation } from 'react-apollo'
 import { truncateString } from '../../utils/helpers'
 import Avatar from '../Avatar'
 import { DiscussionUpdateMutation } from '../../graphql/mutations'
-import DeleteDialogueBox from '../Business/DeleteDialogue'
+import DeleteDialogueBox from '../../shared/dialogs/DeleteDialogue'
 import CenteredContent from '../CenteredContent'
 
 export default function DiscussionList({ data, refetch, isAdmin }) {

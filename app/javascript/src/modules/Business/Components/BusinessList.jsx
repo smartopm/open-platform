@@ -16,10 +16,10 @@ import {
   DialogContent
 } from '@material-ui/core'
 import MoreVertIcon from '@material-ui/icons/MoreVert'
-import Avatar from '../Avatar'
+import Avatar from '../../../components/Avatar'
 import BusinessActionMenu from './BusinessActionMenu'
-import { businessCategories } from '../../utils/constants'
-import CenteredContent from '../CenteredContent'
+import { businessCategories } from '../../../utils/constants'
+import CenteredContent from '../../../components/CenteredContent'
 import BusinessForm from './BusinessForm'
 
 export default function BusinessList({ businessData, userType, refetch }) {

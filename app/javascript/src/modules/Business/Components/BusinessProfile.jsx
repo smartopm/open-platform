@@ -6,10 +6,10 @@ import { useHistory } from 'react-router-dom'
 import {
   Typography, withStyles, Tab, Button, Box, ListItem, List
 } from '@material-ui/core'
-import { StyledTabs, TabPanel } from '../Tabs'
-import Status from '../StatusBadge'
-import { Context as AuthStateContext } from '../../containers/Provider/AuthStateProvider'
-import Avatar from '../Avatar'
+import { StyledTabs, TabPanel } from '../../../components/Tabs'
+import Status from '../../../components/StatusBadge'
+import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider'
+import Avatar from '../../../components/Avatar'
 
 export const StyledTab = withStyles({
   root: {

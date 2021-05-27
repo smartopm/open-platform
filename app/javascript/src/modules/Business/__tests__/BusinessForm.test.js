@@ -1,7 +1,7 @@
 import React from 'react'
 import { render, fireEvent, act } from '@testing-library/react'
 import { MockedProvider } from '@apollo/react-testing'
-import BusinessForm from '../../components/Business/BusinessForm'
+import BusinessForm from '../Components/BusinessForm'
 import '@testing-library/jest-dom/extend-expect'
 
 describe('Business  form', () => {

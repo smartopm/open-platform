@@ -1,8 +1,8 @@
 import React from 'react'
 import { render } from '@testing-library/react'
 import '@testing-library/jest-dom/extend-expect'
-import DeleteDialogue from '../components/Business/DeleteDialogue'
-import { Spinner } from '../shared/Loading';
+import DeleteDialogue from '../../../shared/dialogs/DeleteDialogue'
+import { Spinner } from '../../../shared/Loading';
 
 describe('It should render the dialog box for delete', () => {
     it('It should render with dialog', () => {

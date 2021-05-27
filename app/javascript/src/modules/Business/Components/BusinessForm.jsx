@@ -8,11 +8,11 @@ import {
 import { css } from 'aphrodite';
 import { useMutation } from 'react-apollo';
 import PropTypes from 'prop-types';
-import CenteredContent from '../CenteredContent';
-import { discussStyles } from '../Discussion/Discuss';
-import { BusinessCreateMutation } from '../../graphql/mutations';
-import UserSearch from '../../modules/Users/Components/UserSearch';
-import { businessCategories, businessStatus } from '../../utils/constants';
+import CenteredContent from '../../../components/CenteredContent';
+import { discussStyles } from '../../../components/Discussion/Discuss';
+import { BusinessCreateMutation } from '../graphql/business_mutations';
+import UserSearch from '../../Users/Components/UserSearch';
+import { businessCategories, businessStatus } from '../../../utils/constants';
 
 const initialData = {
   name: '',
