@@ -50,10 +50,10 @@ describe('Business  form', () => {
       fireEvent.change(businessDesc, { target: { value: 'described as following bring change to startups' } })
       expect(businessDesc.value).toBe('described as following bring change to startups')
 
-      const submit = container.queryByText('Create a Business')
-      const cancel = container.queryByText('Cancel')
+      const submit = container.queryByText('form_actions.create_business')
+      const cancel = container.queryByText('form_actions.cancel')
       expect(submit).toBeInTheDocument()
-      expect(container.queryByText('Cancel')).toBeInTheDocument()
+      expect(container.queryByText('form_actions.cancel')).toBeInTheDocument()
 
       fireEvent.click(cancel)
       expect(handleClose).toHaveBeenCalled()

@@ -16,7 +16,7 @@ describe('It should render the dialog box for delete', () => {
           loading={false}
         />
       )
-      expect(container.queryByText('Are you sure you want to delete this business?')).toBeInTheDocument()
+      expect(container.queryByTestId('delete_dialog')).toBeInTheDocument()
       expect(container.queryByTestId('confirm_action')).toBeInTheDocument()
     });
     it('It should render loader when confirm action is clicked', () => {
@@ -30,7 +30,7 @@ describe('It should render the dialog box for delete', () => {
           loading
         />
       )
-      expect(container.queryByText('Are you sure you want to delete this business?')).toBeInTheDocument()
+      expect(container.queryByTestId('delete_dialog')).toBeInTheDocument()
       expect(container.queryByTestId('confirm_action')).toBeNull()
       const loader = render(<Spinner />);
       expect(loader.queryAllByTestId('loader')[0]).toBeInTheDocument();

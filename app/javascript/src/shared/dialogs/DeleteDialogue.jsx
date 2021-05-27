@@ -12,6 +12,7 @@ import WarningIcon from '@material-ui/icons/Warning';
 import CloseIcon from '@material-ui/icons/Close';
 import PropTypes from 'prop-types'
 import { makeStyles } from '@material-ui/core/styles';
+import { useTranslation } from 'react-i18next';
 import {Spinner} from '../Loading'
 
 export default function DeleteDialogueBox({
@@ -25,6 +26,8 @@ export default function DeleteDialogueBox({
   additionalNote,
 }) {
   const classes = useStyles();
+  const { t } = useTranslation('common')
+
   return (
     <>
       <Dialog
@@ -33,15 +36,16 @@ export default function DeleteDialogueBox({
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
-        <DialogTitle id="alert-dialog-title" className={classes.title}>
+        <DialogTitle id="alert-dialog-title" className={classes.title} data-testid="delete_dialog">
           <WarningIcon style={{paddingTop: '10px'}} />
-          <span style={{fontSize: '14px', margin: '0 30px 0 7px'}}>{ `Are you sure you want to ${action} this ${title}?` }</span>
+          <span style={{fontSize: '14px', margin: '0 30px 0 7px'}}>{t('dialogs.dialog_action', { action, title })}</span>
           <IconButton style={{paddingTop: '5px', color: '#dc402b'}} onClick={handleClose}>
             <CloseIcon />
           </IconButton>
         </DialogTitle>
         <DialogContent style={{margin: '30px 0', fontSize: '13px', textAlign: 'center'}}>
-          { `You are about to ${action} ${title} ${user ? `for ${user}` : null}` }
+          {/* TODO: this needs refinement, action - title - user - null does not make sense */}
+          { `${t('dialogs.dialog_content', { action, title })} ${user ? `for ${user}` : ''}` }
           <br />
           <b>{ additionalNote ? `Note:- ${additionalNote}` : null }</b>
         </DialogContent>
@@ -50,7 +54,7 @@ export default function DeleteDialogueBox({
           {loading ? (<Spinner />) : ( 
             <>
               <Button onClick={handleClose} color="secondary" variant='outlined'>
-                close
+                {t('form_actions.cancel')}
               </Button>
               <Button onClick={handleAction} variant='contained' className={classes.button} autoFocus data-testid="confirm_action">
                 {action}
