@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect } from 'react'
-import { useLazyQuery } from 'react-apollo'
+import { useQuery } from 'react-apollo'
 import PropTypes from 'prop-types'
 import { Typography } from '@material-ui/core'
 import { useTranslation } from 'react-i18next';
@@ -18,10 +18,7 @@ export default function Balance({ user, userId, userData, refetch }) {
   const tab = path.get('tab')
   const { t } = useTranslation('common');
   const [payOpen, setPayOpen] = useState(false);
-  const [
-    loadBalance,
-    { loading, error, data, refetch: planRefetch }
-  ] = useLazyQuery(UserBalance, {
+  const { loading, error, data, refetch: planRefetch } = useQuery(UserBalance, {
     variables: { userId },
     fetchPolicy: 'no-cache',
     errorPolicy: 'all'
@@ -33,7 +30,7 @@ export default function Balance({ user, userId, userData, refetch }) {
 
   useEffect(() => {
     if (tab === 'Plans' || tab === 'Payments') {
-      loadBalance()
+      planRefetch()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tab]);
