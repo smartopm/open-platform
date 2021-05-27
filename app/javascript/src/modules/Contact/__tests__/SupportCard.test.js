@@ -8,6 +8,7 @@ describe("Support card loads component", () => {
   const user = {
     userType: "client",
     community: {
+      name: 'Nkwashi',
       supportNumber: [{phone_number: '+260 966 194383', category: 'sales'}],
       supportEmail: [{email: 'support@doublegdp.com', category: 'customer_care'}],
       supportWhatsapp: [{whatsapp: '+2347065834175', category: 'customer_care'}],
@@ -19,6 +20,7 @@ describe("Support card loads component", () => {
         <Support handleSendMessage={jest.fn()} user={user} />
       </BrowserRouter>
     )
+    expect(container.queryByText(/Nkwashi/i)).toBeInTheDocument()
     expect(container.queryByText('support@doublegdp.com')).toBeInTheDocument()
     expect(container.queryByText('Sales Support')).toBeInTheDocument()
     expect(container.queryByText('Customer Care')).toBeInTheDocument()
@@ -29,6 +31,18 @@ describe("Support card loads component", () => {
     expect(container.queryByText('Pay With Mobile Money')).not.toBeDisabled()
     expect(container.queryByText('Privacy and Terms of Service')).toBeInTheDocument()
     expect(container.queryByText('Privacy and Terms of Service')).not.toBeDisabled()
+  })
+
+  it('should render not render Pay with Mobile Money for CM community', () => {
+    user.community.name = 'Ciudad Morazán'
+
+    const container = render(
+      <BrowserRouter>
+        <Support handleSendMessage={jest.fn()} user={user} />
+      </BrowserRouter>
+    )
+    expect(container.queryByText(/Ciudad Morazán/i)).toBeInTheDocument()
+    expect(container.queryByText('Pay With Mobile Money')).not.toBeInTheDocument()
   })
 
   it('should display no contacts message', () => {
