@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { Menu, MenuItem } from '@material-ui/core';
 import { useMutation } from 'react-apollo';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import BusinessDeleteDialogue from '../../../shared/dialogs/DeleteDialogue';
 import { DeleteBusiness } from '../graphql/business_mutations';
 
@@ -17,6 +18,8 @@ export default function BusinessActionMenu({
 }) {
   const [openModal, setOpenModal] = useState(false);
   const [deleteBusiness] = useMutation(DeleteBusiness);
+  const { t } = useTranslation('common')
+
   function handleDeleteClick() {
     setOpenModal(!openModal);
   }
@@ -50,14 +53,14 @@ export default function BusinessActionMenu({
               onClick={() => handleDeleteClick()}
               data-testid="delete_button"
             >
-              Delete
+              {t('menu.delete')}
             </MenuItem>
             <MenuItem>
               <Link
                 to={`/business/${data.id}`}
                 className={linkStyles}
               >
-                View Details
+                {t('menu.view_details')}
               </Link>
             </MenuItem>
 

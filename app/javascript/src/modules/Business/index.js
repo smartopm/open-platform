@@ -2,7 +2,7 @@ import Businesses from './Components/Businesses';
 
 export default {
   routeProps: {
-    path: '/business',
+    path: '/businesses',
     component: Businesses
   },
   name: t => t('misc.business'),

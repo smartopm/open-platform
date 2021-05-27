@@ -8,6 +8,7 @@ import {
 import { css } from 'aphrodite';
 import { useMutation } from 'react-apollo';
 import PropTypes from 'prop-types';
+import { useTranslation } from 'react-i18next';
 import CenteredContent from '../../../components/CenteredContent';
 import { discussStyles } from '../../../components/Discussion/Discuss';
 import { BusinessCreateMutation } from '../graphql/business_mutations';
@@ -36,6 +37,7 @@ export default function BusinessForm({ close }) {
   const [data, setData] = useState(initialData);
   const [userData, setUserData] = useState(initialUserData);
   const [error, setError] = useState(null);
+  const { t } = useTranslation(['common'])
 
   const [createBusiness] = useMutation(BusinessCreateMutation);
 
@@ -64,7 +66,7 @@ export default function BusinessForm({ close }) {
     <Container maxWidth="md">
       <form onSubmit={handleCreateBusiness}>
         <TextField
-          label="Name"
+          label={t('form_fields.full_name')}
           name="name"
           className="form-control"
           value={data.name}
@@ -80,7 +82,7 @@ export default function BusinessForm({ close }) {
         <br />
 
         <TextField
-          label="Email"
+          label={t('form_fields.email')}
           name="email"
           className="form-control"
           value={data.email}
@@ -91,7 +93,7 @@ export default function BusinessForm({ close }) {
           required
         />
         <TextField
-          label="Phone Number"
+          label={t('form_fields.phone_number')}
           name="phoneNumber"
           className="form-control"
           value={data.phoneNumber}
@@ -101,7 +103,7 @@ export default function BusinessForm({ close }) {
           required
         />
         <TextField
-          label="Link (Home Url)"
+          label={t('form_fields.home_url')}
           name="homeUrl"
           className="form-control"
           value={data.homeUrl}
@@ -112,7 +114,7 @@ export default function BusinessForm({ close }) {
         />
 
         <TextField
-          label="Logo Url"
+          label={t('form_fields.logo_url')}
           name="imageUrl"
           className="form-control"
           value={data.imageUrl}
@@ -122,7 +124,7 @@ export default function BusinessForm({ close }) {
           margin="normal"
         />
         <TextField
-          label="Description"
+          label={t('table_headers.description')}
           name="description"
           className="form-control"
           value={data.description}
@@ -134,7 +136,7 @@ export default function BusinessForm({ close }) {
           margin="normal"
         />
         <TextField
-          label="Address"
+          label={t('form_fields.primary_address')}
           name="address"
           className="form-control"
           value={data.address}
@@ -145,7 +147,7 @@ export default function BusinessForm({ close }) {
         />
 
         <FormControl fullWidth>
-          <InputLabel id="type">Status</InputLabel>
+          <InputLabel id="type">{t('table_headers.status')}</InputLabel>
           <Select
             id="type"
             value={data.status}
@@ -164,7 +166,7 @@ export default function BusinessForm({ close }) {
         </FormControl>
 
         <FormControl fullWidth>
-          <InputLabel id="type">Category</InputLabel>
+          <InputLabel id="type">{t('misc.select_category')}</InputLabel>
           <Select
             id="type"
             value={data.category}
@@ -182,7 +184,7 @@ export default function BusinessForm({ close }) {
         </FormControl>
 
         <TextField
-          label="Operating Hours"
+          label={t('form_fields.operating_hours')}
           name="operatingHours"
           className="form-control"
           value={data.operatingHours}
@@ -211,7 +213,7 @@ export default function BusinessForm({ close }) {
             className={`${css(discussStyles.cancelBtn)}`}
             onClick={close}
           >
-            Cancel
+            {t('form_actions.cancel')}
           </Button>
           <Button
             variant="contained"
@@ -221,7 +223,7 @@ export default function BusinessForm({ close }) {
             className={`${css(discussStyles.submitBtn)}`}
             data-testid='create_business'
           >
-            Create a Business
+            {t('form_actions.create_business')}
           </Button>
         </CenteredContent>
       </form>

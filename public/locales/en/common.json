@@ -26,7 +26,10 @@
     "wallet_balance": "Current Wallet Balance",
     "pending_amount": "Pending Amount",
     "payment_Type": "Payment Type",
-    "user_name_search": "Find a User"
+    "user_name_search": "Find a User",
+    "operating_hours": "Operating Hours",
+    "logo_url": "Logo Url",
+    "home_url": "Home Url"
   },
   "form_placeholders": {
     "phone_number": "Enter Phone Number",
@@ -63,7 +66,8 @@
     "saving": "Saving ...",
     "update": "Update",
     "save_changes": "Save changes",
-    "merge": "Merge"
+    "merge": "Merge",
+    "create_business": "Create a Business"
   },
   "misc": {
     "or": "OR",
@@ -170,7 +174,11 @@
     "total_balance": "Total Balance",
     "unallocated_funds": "Unallocated Funds",
     "make_payment": "Make a Payment",
-    "add_invoice": "Add an Invoice"
+    "add_invoice": "Add an Invoice",
+    "no_description": "No Description",
+    "profile": "Profile",
+    "relevant_posts": "Relevant Posts",
+    "links": "Links"
   },
   "menu": {
     "invoice": "Invoice",
@@ -216,7 +224,7 @@
     "logout": "Logout",
     "user_journey_stats": "User Journey Stats",
     "edit": "Edit",
-    "delete": "delete",
+    "delete": "Delete",
     "duplicate": "Duplicate",
     "create": "Create",
     "merge": "Merge",
@@ -228,7 +236,8 @@
     "edit_task": "Edit Task",
     "leave_a_comment": "Leave a comment",
     "mark_complete": "Mark as Complete",
-    "mark_incomplete": "Mark as Incomplete"
+    "mark_incomplete": "Mark as Incomplete",
+    "view_details": "View Details"
   },
   "user_types": {
     "admin": "Admin",
