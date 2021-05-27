@@ -170,7 +170,9 @@
     "total_balance": "Total Balance",
     "unallocated_funds": "Unallocated Funds",
     "make_payment": "Make a Payment",
-    "add_invoice": "Add an Invoice"
+    "add_invoice": "Add an Invoice",
+    "step": "Step",
+    "step_plural": "Steps"
   },
   "menu": {
     "invoice": "Invoice",
@@ -197,8 +199,6 @@
     "message_support": "Message Support",
     "send_sms": "Send SMS",
     "send_otp": "Send OTP",
-    "step": "Step",
-    "step_plural": "Steps",
     "balance": "Balance",
     "dashboard": "Dashboard",
     "settings": "Settings",
