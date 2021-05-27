@@ -154,6 +154,7 @@ namespace :imports do
         date          = row['DATE']&.strip&.presence
         amount        = row['AMOUNT PAID']&.strip&.presence
         ext_ref_id    = row['NRC']&.strip&.presence
+        receipt_number = row['REC. NUMBER']&.presence
 
         puts "processing row: #{row_num + 1}, NRC: #{ext_ref_id}"
 
@@ -258,6 +259,7 @@ namespace :imports do
               depositor_id: current_user.id,
               originally_created_at: current_user.current_time_in_timezone,
               amount: amount,
+              receipt_number: receipt_number,
             )
 
             unless transaction.persisted?
