@@ -90,6 +90,7 @@ export default function TransactionsList({ userId, user, userData }) {
                     currencyData={currencyData}
                     userData={userData}
                     userType={user.userType}
+                    refetch={refetch}
                   />
                 </div>
               ))

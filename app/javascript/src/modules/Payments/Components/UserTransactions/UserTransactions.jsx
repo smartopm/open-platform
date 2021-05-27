@@ -17,7 +17,7 @@ import DeleteDialogueBox from '../../../../components/Business/DeleteDialogue'
 import MenuList from '../../../../shared/MenuList'
 import { TransactionRevert } from '../../graphql/payment_mutations';
 
-export default function UserTransactionsList({transaction, currencyData, userType, userData }) {
+export default function UserTransactionsList({transaction, currencyData, userType, userData, refetch }) {
   const { t } = useTranslation('common')
   const [transactionId, setTransactionId] = useState(false)
   const [name, setName] = useState('')
@@ -67,8 +67,7 @@ export default function UserTransactionsList({transaction, currencyData, userTyp
     }).then(() => {
       setAnchorEl(null)
       setMessageAlert('Transaction reverted')
-      // walletRefetch()
-      // depRefetch()
+      refetch()
       setIsSuccessAlert(true)
       setRevertModalOpen(false)
       setRevertTransactionLoading(false)
@@ -166,7 +165,7 @@ export function renderTransactions(transaction, currencyData, menuData) {
             <IconButton
               aria-controls="simple-menu"
               aria-haspopup="true"
-              data-testid="receipt-menu"
+              data-testid="menu"
               onClick={(event) => menuData.handleTransactionMenu(event)}
             >
               <MoreHorizOutlined />
@@ -195,5 +194,6 @@ UserTransactionsList.propTypes = {
   userData: PropTypes.shape({
     name: PropTypes.string.isRequired
   }).isRequired,
-  userType: PropTypes.string.isRequired
+  userType: PropTypes.string.isRequired,
+  refetch: PropTypes.func.isRequired
 };

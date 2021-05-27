@@ -1,11 +1,12 @@
 import React from 'react';
-import { render } from '@testing-library/react';
+import { render, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { MockedProvider } from '@apollo/react-testing';
 import { BrowserRouter } from 'react-router-dom';
-import currency from '../../__mocks__/currency'
-import UserTransactionsList, { renderTransactions } from "../../modules/Payments/Components/UserTransactions/UserTransactions";
-import { AllEventLogsQuery } from '../../graphql/queries';
+import currency from '../../../__mocks__/currency'
+import UserTransactionsList, { renderTransactions } from "../Components/UserTransactions/UserTransactions";
+import { AllEventLogsQuery } from '../../../graphql/queries';
+import { TransactionRevert } from '../graphql/payment_mutations';
 
 describe('Render Transaction', () => {
   const transaction = {
@@ -69,10 +70,28 @@ describe('Render Transaction', () => {
             }
           }
         }
+      },
+      {
+        request: {
+          query: TransactionRevert,
+          variables: {
+            id: transaction.id,
+          }
+        },
+        result: {
+          data: {
+            transactionRevert: {
+              transaction: {
+                id: "385u9432n384ujdf",
+                status: 'paid'
+              }
+            }
+          }
+        }
       }
     ];
     const container = render(
-      <MockedProvider mocks={mock}>
+      <MockedProvider mocks={mock} addTypename={false}>
         <BrowserRouter>
           <UserTransactionsList transaction={transaction} currencyData={currency} userType='admin' userData={userData} />
         </BrowserRouter>
@@ -82,6 +101,14 @@ describe('Render Transaction', () => {
     expect(container.queryByTestId('date')).toBeInTheDocument();
     expect(container.queryByTestId('recorded')).toBeInTheDocument();
     expect(container.queryByTestId('description')).toBeInTheDocument();
+
+    fireEvent.click(container.queryAllByTestId('menu')[0])
+    expect(container.queryByText("common:menu.revert_transaction")).toBeInTheDocument();
+
+    fireEvent.click(container.queryByText("common:menu.revert_transaction"))
+    expect(container.queryByText("Are you sure you want to delete this Transaction?")).toBeInTheDocument();
+
+    fireEvent.click(container.queryByTestId("confirm_action"))
   });
 
   it('should render the Transaction item component without transactions', async () => {
