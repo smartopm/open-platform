@@ -14,6 +14,7 @@ describe('It should render the dialog box for delete', () => {
           title="business"
           handleAction={jest.fn}
           loading={false}
+          action="Delete"
         />
       )
       expect(container.queryByTestId('delete_dialog')).toBeInTheDocument()
@@ -28,6 +29,7 @@ describe('It should render the dialog box for delete', () => {
           title="business"
           handleAction={jest.fn}
           loading
+          action="Delete"
         />
       )
       expect(container.queryByTestId('delete_dialog')).toBeInTheDocument()

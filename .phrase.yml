@@ -50,6 +50,12 @@ phrase:
         locale_id: 5c6c3e050e8493da0e428087555a7b00
         tags: label
         update_translations: true
+   - file: ./public/locales/en/business.json
+      params:
+        file_format: i18next
+        locale_id: 5c6c3e050e8493da0e428087555a7b00
+        tags: business
+        update_translations: true
     # upload spanish existing translations too 
     - file: ./public/locales/es/login.json
       params:
@@ -113,3 +119,8 @@ phrase:
         file_format: i18next
         locale_id: fa26b7d00b593c4578f0e9749221cace
         tags: logbook
+    - file: ./public/locales/es/business.json
+      params:
+        file_format: i18next
+        locale_id: fa26b7d00b593c4578f0e9749221cace
+        tags: business
