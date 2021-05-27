@@ -32,10 +32,7 @@ export default function PaymentPlans({ userId, user, userData }) {
   const theme = useTheme();
   const matches = useMediaQuery(theme.breakpoints.up('sm'));
   const [offset, setOffset] = useState(Number(page) || 0)
-  const [
-    loadPlans,
-    { loading, error, data, refetch }
-  ] = useLazyQuery(UserPlans, {
+  const { loading, error, data, refetch } = useLazyQuery(UserPlans, {
     variables: { userId, limit, offset },
     fetchPolicy: 'no-cache',
     errorPolicy: 'all'
@@ -56,7 +53,7 @@ export default function PaymentPlans({ userId, user, userData }) {
 
   useEffect(() => {
     if (tab === 'Plans') {
-      loadPlans()
+      refetch()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tab]);

@@ -28,10 +28,7 @@ export default function TransactionsList({ userId, user, userData }) {
   const matches = useMediaQuery(theme.breakpoints.up('sm'));
   const classes = useStyles();
 
-  const [
-    loadTransactions,
-    { loading, error, data, refetch }
-  ] = useLazyQuery(DepositQuery, {
+  const { loading, error, data, refetch } = useLazyQuery(DepositQuery, {
     variables: { userId, limit, offset },
     fetchPolicy: 'no-cache',
     errorPolicy: 'all'
@@ -60,7 +57,7 @@ export default function TransactionsList({ userId, user, userData }) {
 
   useEffect(() => {
     if (tab === 'Payments') {
-      loadTransactions()
+      refetch()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tab]);
