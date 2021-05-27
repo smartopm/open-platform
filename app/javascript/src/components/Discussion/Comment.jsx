@@ -17,7 +17,7 @@ import { useFileUpload } from '../../graphql/useFileUpload'
 import { findLinkAndReplace, sanitizeText } from '../../utils/helpers'
 import Avatar from '../Avatar'
 import DateContainer from '../DateContainer'
-import DeleteDialogueBox from '../Business/DeleteDialogue'
+import DeleteDialogueBox from '../../shared/dialogs/DeleteDialogue'
 import { commentStatusAction } from '../../utils/constants'
 import ImageAuth from '../../shared/ImageAuth'
 

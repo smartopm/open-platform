@@ -18,7 +18,7 @@ import {
 } from '../../../../utils/helpers';
 import MenuList from '../../../../shared/MenuList';
 import { Context as AuthStateContext } from '../../../../containers/Provider/AuthStateProvider';
-import DeleteDialogueBox from '../../../../components/Business/DeleteDialogue';
+import DeleteDialogueBox from '../../../../shared/dialogs/DeleteDialogue';
 import MessageAlert from '../../../../components/MessageAlert';
 import { InvoiceCancel } from '../../../../graphql/mutations';
 

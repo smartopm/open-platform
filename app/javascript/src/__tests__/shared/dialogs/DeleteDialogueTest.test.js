@@ -1,8 +1,8 @@
 import React from 'react'
 import { render } from '@testing-library/react'
 import '@testing-library/jest-dom/extend-expect'
-import DeleteDialogue from '../components/Business/DeleteDialogue'
-import { Spinner } from '../shared/Loading';
+import DeleteDialogue from '../../../shared/dialogs/DeleteDialogue'
+import { Spinner } from '../../../shared/Loading';
 
 describe('It should render the dialog box for delete', () => {
     it('It should render with dialog', () => {
@@ -14,9 +14,10 @@ describe('It should render the dialog box for delete', () => {
           title="business"
           handleAction={jest.fn}
           loading={false}
+          action="Delete"
         />
       )
-      expect(container.queryByText('Are you sure you want to delete this business?')).toBeInTheDocument()
+      expect(container.queryByTestId('delete_dialog')).toBeInTheDocument()
       expect(container.queryByTestId('confirm_action')).toBeInTheDocument()
     });
     it('It should render loader when confirm action is clicked', () => {
@@ -28,9 +29,10 @@ describe('It should render the dialog box for delete', () => {
           title="business"
           handleAction={jest.fn}
           loading
+          action="Delete"
         />
       )
-      expect(container.queryByText('Are you sure you want to delete this business?')).toBeInTheDocument()
+      expect(container.queryByTestId('delete_dialog')).toBeInTheDocument()
       expect(container.queryByTestId('confirm_action')).toBeNull()
       const loader = render(<Spinner />);
       expect(loader.queryAllByTestId('loader')[0]).toBeInTheDocument();

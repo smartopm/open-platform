@@ -1,10 +1,10 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
 import { useQuery } from 'react-apollo';
-import { BusinessByIdQuery } from '../../graphql/queries';
-import Loading from '../../shared/Loading';
-import ErrorPage from '../../components/Error';
-import Profile from '../../components/Business/BusinessProfile';
+import { BusinessByIdQuery } from '../graphql/business_queries';
+import Loading from '../../../shared/Loading';
+import ErrorPage from '../../../components/Error';
+import Profile from './BusinessProfile';
 
 export default function BusinessProfile() {
   const { id } = useParams();

@@ -16,15 +16,17 @@ import {
   DialogContent
 } from '@material-ui/core'
 import MoreVertIcon from '@material-ui/icons/MoreVert'
-import Avatar from '../Avatar'
+import { useTranslation } from 'react-i18next'
+import Avatar from '../../../components/Avatar'
 import BusinessActionMenu from './BusinessActionMenu'
-import { businessCategories } from '../../utils/constants'
-import CenteredContent from '../CenteredContent'
+import { businessCategories } from '../../../utils/constants'
+import CenteredContent from '../../../components/CenteredContent'
 import BusinessForm from './BusinessForm'
 
 export default function BusinessList({ businessData, userType, refetch }) {
   const [anchorEl, setAnchorEl] = useState(null)
   const [modalOpen, setModalOpen] = useState(false)
+  const { t } = useTranslation('common')
 
   const open = Boolean(anchorEl)
 
@@ -55,7 +57,7 @@ export default function BusinessList({ businessData, userType, refetch }) {
       >
         <DialogTitle id="task_modal">
           <CenteredContent>
-            <span>Create a Business</span>
+            <span>{t('form_actions.create_business')}</span>
           </CenteredContent>
         </DialogTitle>
         <DialogContent>
@@ -134,7 +136,7 @@ export default function BusinessList({ businessData, userType, refetch }) {
           // eslint-disable-next-line no-use-before-define
           className={`${css(styles.taskButton)} `}
         >
-          Create a Business
+          {t('form_actions.create_business')}
         </Fab>
       )}
     </div>

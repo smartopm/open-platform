@@ -1,9 +1,8 @@
-/* eslint-disable react/jsx-props-no-spreading */
 import React from 'react'
 import { render, act, fireEvent } from '@testing-library/react'
 import { BrowserRouter } from 'react-router-dom/'
 import { MockedProvider } from '@apollo/react-testing'
-import Business from '../../components/Business/BusinessList';
+import Business from '../Components/BusinessList';
 import '@testing-library/jest-dom/extend-expect'
 
 describe('It tests the business directory list', () => {
@@ -23,7 +22,8 @@ describe('It tests the business directory list', () => {
                 }
             ]
         },
-        userType: 'admin'
+        userType: 'admin',
+        refetch: jest.fn()
     }
     it('It should render business category', async () => {
         const container = render(
@@ -34,15 +34,15 @@ describe('It tests the business directory list', () => {
           </BrowserRouter>)
         expect(container.queryByTestId('business-category').textContent).toContain('Health Service')
         expect(container.queryByTestId('business-name').textContent).toContain('Artist')
-        expect(container.queryByText('Create a Business')).toBeInTheDocument()
+        expect(container.queryByText('form_actions.create_business')).toBeInTheDocument()
 
         await act(async () => {
           fireEvent.click(container.queryByTestId('open_menu'))
-          expect(container.queryByText('Delete')).toBeInTheDocument()
-          expect(container.queryByText('View Details')).toBeInTheDocument()
+          expect(container.queryByText('menu.delete')).toBeInTheDocument()
+          expect(container.queryByText('menu.view_details')).toBeInTheDocument()
           fireEvent.click(document)
-          fireEvent.click(container.queryByText('Create a Business'))
-          expect(container.queryAllByText('Create a Business')[0]).toBeInTheDocument()
+          fireEvent.click(container.queryByText('form_actions.create_business'))
+          expect(container.queryAllByText('form_actions.create_business')[0]).toBeInTheDocument()
         })
     });
 });

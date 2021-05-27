@@ -1,7 +1,7 @@
 import React from 'react'
 import { render, fireEvent, act } from '@testing-library/react'
 import { MockedProvider } from '@apollo/react-testing'
-import BusinessForm from '../../components/Business/BusinessForm'
+import BusinessForm from '../Components/BusinessForm'
 import '@testing-library/jest-dom/extend-expect'
 
 describe('Business  form', () => {
@@ -50,10 +50,10 @@ describe('Business  form', () => {
       fireEvent.change(businessDesc, { target: { value: 'described as following bring change to startups' } })
       expect(businessDesc.value).toBe('described as following bring change to startups')
 
-      const submit = container.queryByText('Create a Business')
-      const cancel = container.queryByText('Cancel')
+      const submit = container.queryByText('form_actions.create_business')
+      const cancel = container.queryByText('form_actions.cancel')
       expect(submit).toBeInTheDocument()
-      expect(container.queryByText('Cancel')).toBeInTheDocument()
+      expect(container.queryByText('form_actions.cancel')).toBeInTheDocument()
 
       fireEvent.click(cancel)
       expect(handleClose).toHaveBeenCalled()

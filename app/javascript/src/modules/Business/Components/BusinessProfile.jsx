@@ -6,10 +6,11 @@ import { useHistory } from 'react-router-dom'
 import {
   Typography, withStyles, Tab, Button, Box, ListItem, List
 } from '@material-ui/core'
-import { StyledTabs, TabPanel } from '../Tabs'
-import Status from '../StatusBadge'
-import { Context as AuthStateContext } from '../../containers/Provider/AuthStateProvider'
-import Avatar from '../Avatar'
+import { useTranslation } from 'react-i18next'
+import { StyledTabs, TabPanel } from '../../../components/Tabs'
+import Status from '../../../components/StatusBadge'
+import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider'
+import Avatar from '../../../components/Avatar'
 
 export const StyledTab = withStyles({
   root: {
@@ -22,14 +23,14 @@ export default function BusinessProfile({ profileData }) {
   const [tabValue, setValue] = useState('Profile')
   const history = useHistory()
   const authState = useContext(AuthStateContext)
-  const CSMNumber = '260974624243'
+  const { t } = useTranslation(['common', 'business'])
 
   function handleButtonClick() {
     history.push({
       pathname: `/message/${authState.user.id}`,
       state: {
         clientName: authState.user.name,
-        clientNumber: CSMNumber,
+        clientNumber: authState.user.community.supportNumber[0].phone_number,
         from: 'Business Directory'
       }
     })
@@ -87,15 +88,15 @@ export default function BusinessProfile({ profileData }) {
           data-testid="business_tabs"
           centered
         >
-          <StyledTab label="Profile" value="Profile" />
-          <StyledTab label="Operating Hours" value="Operating Hours" />
-          <StyledTab label="Relevant Posts" value="Relevant Posts" />
+          <StyledTab label={t('misc.profile')} value="Profile" />
+          <StyledTab label={t('form_fields.operating_hours')} value="Operating Hours" />
+          <StyledTab label={t('misc.relevant_posts')} value="Relevant Posts" />
         </StyledTabs>
         <TabPanel value={tabValue} index="Profile">
 
-          <Typography variant="h6">Description</Typography>
+          <Typography variant="h6">{t('table_headers.description')}</Typography>
           <Typography variant="body1" data-testid="pf-description">
-            {profileData.description || 'No Description'}
+            {profileData.description || t('misc.no_description')}
           </Typography>
 
         </TabPanel>
@@ -103,7 +104,7 @@ export default function BusinessProfile({ profileData }) {
           <div className="d-flex  justify-content-center">
             <div>
               <Typography variant="h6" data-testid="operating_hrs">
-                Operating Hours
+                {t('form_fields.operating_hours')} 
               </Typography>
               <br />
               <p>
@@ -114,7 +115,10 @@ export default function BusinessProfile({ profileData }) {
         </TabPanel>
         <TabPanel value={tabValue} index="Relevant Posts">
           <div>
-            <Typography variant="h6">Links</Typography>
+            <Typography variant="h6">
+              {t('misc.links')}
+              {' '}
+            </Typography>
             {/* TODO: refactor this */}
             <List>
               {profileData?.links ? (Object.entries(profileData.links).map((k, v) => (
@@ -129,7 +133,10 @@ export default function BusinessProfile({ profileData }) {
         </TabPanel>
 
         <div className="container d-flex justify-content-center">
-          <Button onClick={handleButtonClick} color="primary" data-testid="inquire_btn">Ask about business</Button>
+          <Button onClick={handleButtonClick} color="primary" data-testid="inquire_btn">
+            {t('business:business.ask_about_business')}
+            {' '}
+          </Button>
         </div>
       </div>
     </div>

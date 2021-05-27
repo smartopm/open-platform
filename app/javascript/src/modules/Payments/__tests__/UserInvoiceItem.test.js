@@ -66,7 +66,7 @@ describe('Invoice Item Component', () => {
     expect(container.getByText(/common:menu.cancel_invoice/)).toBeInTheDocument();
 
     fireEvent.click(container.getByText(/common:menu.cancel_invoice/));
-    expect(container.getByText(/You are about to delete Invoice for joe/)).toBeInTheDocument();
+    expect(container.getByTestId('delete_dialog')).toBeInTheDocument();
   });
 
   it('should render the invoice item component with no invoice', () => {

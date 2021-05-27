@@ -3,8 +3,8 @@ import { fireEvent, render, waitFor } from '@testing-library/react'
 import '@testing-library/jest-dom/extend-expect'
 import { BrowserRouter } from 'react-router-dom'
 import { MockedProvider } from '@apollo/react-testing'
-import BusinessActionMenu from '../../components/Business/BusinessActionMenu'
-import { DeleteBusiness } from '../../graphql/mutations'
+import BusinessActionMenu from '../Components/BusinessActionMenu'
+import { DeleteBusiness } from '../graphql/business_mutations'
 
 describe('business action menu component', () => {
   it('show correct action menu', async () => {
@@ -40,12 +40,12 @@ describe('business action menu component', () => {
         </BrowserRouter>
       </MockedProvider>
     )
-    expect(container.queryByText('Delete')).toBeInTheDocument()
-    expect(container.queryByText('View Details')).toBeInTheDocument()
+    expect(container.queryByText('menu.delete')).toBeInTheDocument()
+    expect(container.queryByText('menu.view_details')).toBeInTheDocument()
     // after clicking deleting menu
     fireEvent.click(container.queryByTestId('delete_button'))
     // check the appearance of delete modal
-    expect(container.queryByText('Are you sure you want to delete this business?')).toBeInTheDocument()
+    expect(container.queryByText('dialogs.dialog_action')).toBeInTheDocument()
     
     // find delete button and click
     fireEvent.click(container.queryByTestId('confirm_action'))

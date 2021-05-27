@@ -55,7 +55,6 @@ import Scan from '../src/containers/Scan';
 import CampaignUpdate from '../src/containers/Campaigns/CampaignUpdate';
 import ThemeProvider from '../Themes/Nkwashi/ThemeProvider';
 import DiscussonPage from '../src/containers/Discussions/DiscussionPage';
-import BusinessProfile from '../src/containers/Businesses/BusinessProfile';
 import GeoMap from '../src/containers/GeoMap';
 import Notifications from '../src/modules/Preferences/Components/Notifications';
 import { theme } from '../src/themes/nkwashi/theme';
@@ -71,6 +70,7 @@ import PostPage from '../src/modules/News/Components/PostPage';
 import Posts from '../src/modules/News/Components/Posts';
 import UsersImport from '../src/modules/Users/Containers/UsersImport';
 import { checkAllowedCommunityFeatures } from '../src/utils/helpers';
+import BusinessProfile from '../src/modules/Business/Components/BusinessProfilePage';
 
 // The routes defined here are carefully arranged, be mindful when changing them
 

@@ -42,7 +42,7 @@ import QueryBuilder from '../../../components/QueryBuilder'
 import MenuList from '../../../shared/MenuList';
 import { InvoiceCancel } from '../../../graphql/mutations'
 import MessageAlert from "../../../components/MessageAlert"
-import DeleteDialogueBox from '../../../components/Business/DeleteDialogue'
+import DeleteDialogueBox from '../../../shared/dialogs/DeleteDialogue'
 import { Spinner } from '../../../shared/Loading';
 
 const invoiceHeaders = [

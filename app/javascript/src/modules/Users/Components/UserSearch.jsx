@@ -14,6 +14,7 @@ import { useTranslation } from 'react-i18next';
 import { UsersLiteQuery } from '../../../graphql/queries';
 import { Spinner } from '../../../shared/Loading';
 
+// TODO: should be moved to shared directory
 export default function UserSearch({ userData, update }) {
   const { t } = useTranslation('common')
   const [loadUsers, { loading: isLoading, error: queryErrors, data }] = useLazyQuery(
