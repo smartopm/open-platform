@@ -16,7 +16,7 @@ module Types
     field :created_at, GraphQL::Types::ISO8601DateTime, null: false
     field :updated_at, GraphQL::Types::ISO8601DateTime, null: false
     field :payment_day, Integer, null: false
-    field :monthly_amount, Float, null: false
+    field :monthly_amount, Float, null: true
     field :plan_payments, [Types::PlanPaymentType], null: true
   end
 end

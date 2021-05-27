@@ -178,7 +178,9 @@
     "no_description": "No Description",
     "profile": "Profile",
     "relevant_posts": "Relevant Posts",
-    "links": "Links"
+    "links": "Links",
+    "step": "Step",
+    "step_plural": "Steps"
   },
   "menu": {
     "invoice": "Invoice",
@@ -205,8 +207,6 @@
     "message_support": "Message Support",
     "send_sms": "Send SMS",
     "send_otp": "Send OTP",
-    "step": "Step",
-    "step_plural": "Steps",
     "balance": "Balance",
     "dashboard": "Dashboard",
     "settings": "Settings",

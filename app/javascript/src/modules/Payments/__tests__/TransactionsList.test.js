@@ -27,7 +27,7 @@ describe('Transactions Component', () => {
             transactionNumber: 12345,
             createdAt: '2021-01-26',
             id: 'f280159d-ac71-4c22-997a-07fd07344c94',
-            user: {
+            depositor: {
               id: 'f280159d-ac71-4c22-997a-07fd07344c94',
               name: 'some name'
             }

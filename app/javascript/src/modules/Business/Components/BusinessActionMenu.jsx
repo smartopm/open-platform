@@ -69,6 +69,7 @@ export default function BusinessActionMenu({
               handleClose={handleDeleteClick}
               handleAction={handleDelete}
               title="business"
+              action={t('menu.delete')}
             />
           </>
         )}

@@ -67,7 +67,7 @@ export default function TransactionsList({ userId, user, userData }) {
         refetch={refetch}
       />
       {loading ? <Spinner /> : (
-        data?.userTransactions.length > 0 ? (
+        data?.userTransactions?.length > 0 ? (
           <div className={classes.paymentList}>
             <div>
               <Typography className={classes.payment}>Transactions</Typography>
@@ -96,7 +96,7 @@ export default function TransactionsList({ userId, user, userData }) {
           limit={limit}
           active={offset >= 1}
           handlePageChange={paginate}
-          count={data?.userTransactions.length}
+          count={data?.userTransactions?.length}
         />
       </CenteredContent>
     </div>
