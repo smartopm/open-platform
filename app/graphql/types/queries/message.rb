@@ -52,7 +52,7 @@ module Types::Queries::Message
   def user_messages(id:, offset: 0, limit: 50)
     raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') unless admin_or_self(id)
 
-    messages = Message.includes(:sender).unscope(:order).where(user_id: id)
+    messages = Message.includes(:sender).unscope(:order).where('user_id = ? or sender_id = ?', id, id)
                       .order(created_at: :desc).limit(limit).offset(offset)
     messages.collect(&:mark_as_read) unless context[:current_user].admin?
     messages
