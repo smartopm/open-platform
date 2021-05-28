@@ -5,14 +5,14 @@ import Grid from '@material-ui/core/Grid'
 import { StyleSheet, css } from 'aphrodite'
 import { useMutation, useQuery } from 'react-apollo'
 import { PropTypes } from 'prop-types'
-import { ManageShiftMutation } from '../../graphql/mutations'
-import { lastUserTimeSheet } from '../../graphql/queries'
+import { ManageShiftMutation } from '../../../graphql/mutations'
+import { lastUserTimeSheet } from '../../../graphql/queries'
 import  Typography from '@material-ui/core/Typography'
-import { Spinner } from '../../shared/Loading'
-import { useWindowDimensions } from '../../utils/customHooks'
+import { Spinner } from '../../../shared/Loading'
+import { useWindowDimensions } from '../../../utils/customHooks'
 import PlayArrowIcon from '@material-ui/icons/PlayArrow';
 import StopIcon from '@material-ui/icons/Stop';
-import { lastDayOfTheMonth } from '../../utils/dateutil'
+import { lastDayOfTheMonth } from '../../../utils/dateutil'
 
 
 export default function ShiftButtons({ userId }) {

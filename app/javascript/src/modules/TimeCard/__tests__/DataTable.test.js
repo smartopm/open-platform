@@ -1,7 +1,6 @@
-/* eslint-disable */
 import React from 'react'
 import { mount } from 'enzyme'
-import DataTable from '../components/TimeTracker/DataTable'
+import DataTable from '../Components/DataTable'
 
 describe('test the datatabe', () => {
 

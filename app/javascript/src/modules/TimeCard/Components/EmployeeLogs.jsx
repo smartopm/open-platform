@@ -1,14 +1,13 @@
-/* eslint-disable */
-import React, { Fragment, useState } from 'react'
-import EmployeeTimeSheetLogs from '../../components/TimeTracker/EmployeeTimeSheetLog'
-import { UserTimeSheetQuery } from '../../graphql/queries'
-import Spinner  from '../../shared/Loading'
+import React, { useState } from 'react'
+import Grid from '@material-ui/core/Grid'
 import { useQuery } from 'react-apollo'
 import { useParams } from 'react-router'
-import ErrorPage from '../../components/Error'
-import Paginate from '../../components/Paginate'
-import Grid from '@material-ui/core/Grid'
-import dateutil from '../../utils/dateutil'
+import EmployeeTimeSheetLogs from './EmployeeTimeSheetLog'
+import { UserTimeSheetQuery } from '../../../graphql/queries'
+import Loading  from '../../../shared/Loading'
+import ErrorPage from '../../../components/Error'
+import Paginate from '../../../components/Paginate'
+import { dateToString } from '../../../utils/dateutil'
 
 
 export default function EmployeeLogs() {
@@ -35,11 +34,11 @@ export default function EmployeeLogs() {
     }
   }
 
-  if (loading) return <Spinner />
+  if (loading) return <Loading />
   if (error) return <ErrorPage title={error.message} />
 
   return (
-    <Fragment>
+    <>
       <br />
       <EmployeeTimeSheetLogs
         data={data}
@@ -47,17 +46,17 @@ export default function EmployeeLogs() {
           Boolean(data.userTimeSheetLogs.length) &&
           data.userTimeSheetLogs[0].user.name
         }
-        lastDay={dateutil.dateToString(lastDay)}
-        firstDay={dateutil.dateToString(firstDay)}
+        lastDay={dateToString(lastDay)}
+        firstDay={dateToString(firstDay)}
       />
 
       <Grid container direction="row" justify="center" alignItems="center">
         <Paginate
           count={data.userTimeSheetLogs.length}
-          active={true}
+          active
           handlePageChange={paginate}
         />
       </Grid>
-    </Fragment>
+    </>
   )
 }

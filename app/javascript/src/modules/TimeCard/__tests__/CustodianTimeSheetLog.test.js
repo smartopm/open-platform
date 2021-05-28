@@ -1,9 +1,8 @@
-/* eslint-disable */
 import React from 'react'
-import CustodianLogs from '../components/TimeTracker/CustodianTimeSheetLog'
 import { BrowserRouter } from 'react-router-dom/'
 import { act } from 'react-dom/test-utils'
 import { mount } from 'enzyme/'
+import CustodianLogs from '../Components/CustodianTimeSheetLog'
 
 describe('time sheet logs component', () => {
   const data = {

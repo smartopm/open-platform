@@ -1,9 +1,8 @@
-/* eslint-disable */
 import React from 'react'
-import EmployeeLogs from '../components/TimeTracker/EmployeeTimeSheetLog'
 import { BrowserRouter } from 'react-router-dom/'
 import { render,} from '@testing-library/react'
 import '@testing-library/jest-dom/extend-expect'
+import EmployeeLogs from '../Components/EmployeeTimeSheetLog'
 
 describe('time sheet logs component', () => {
   const userData = {
@@ -36,7 +35,7 @@ describe('time sheet logs component', () => {
   it('should render with given data', () => {
   const { getByText, getByTestId } = render(
     <BrowserRouter>
-      <EmployeeLogs data={userData} name={'Joen'} />
+      <EmployeeLogs data={userData} name="Joen" />
     </BrowserRouter>
   )
     expect(getByText('2 hrs')).toBeInTheDocument()
