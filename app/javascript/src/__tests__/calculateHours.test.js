@@ -1,5 +1,4 @@
-/* eslint-disable */
-import { calculateHoursAndDays } from '../components/TimeTracker/EmployeeTimeSheetLog'
+import { calculateHoursAndDays } from "../modules/TimeCard/Components/EmployeeTimeSheetLog"
 
 // / multiple short shifts in day
 const shiftMock = [
@@ -59,7 +58,7 @@ describe('calculate total number of hours and days', () => {
   })
   it('should get correct total number of hours worked on multiple shifts in a day', () => {
     const { hours } = calculateHoursAndDays(shiftMock)
-    expect(parseInt(hours)).toBeGreaterThanOrEqual(2)
+    expect(parseInt(hours, 10)).toBeGreaterThanOrEqual(2)
   })
 
   it('should get correct total number of days worked when shifts take long', () => {
@@ -68,6 +67,6 @@ describe('calculate total number of hours and days', () => {
   })
   it('should get correct total number of hours worked when shifts are longer', () => {
     const { hours } = calculateHoursAndDays(moreShifts)
-    expect(parseInt(hours)).toBeGreaterThanOrEqual(32)
+    expect(parseInt(hours, 10)).toBeGreaterThanOrEqual(32)
   })
 })
