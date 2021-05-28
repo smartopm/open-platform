@@ -52,9 +52,9 @@ describe('Label List Component', () => {
         expect(container.queryByText('com_news_sms')).toBeInTheDocument();
         expect(container.queryByText('com_news_email')).toBeInTheDocument();
         expect(container.queryAllByTestId('label-title')).toHaveLength(2);
-        expect(container.queryByTestId('prev-btn')).toHaveTextContent('Previous');
+        expect(container.queryByTestId('prev-btn')).toHaveTextContent('misc.previous');
         expect(container.queryByTestId('prev-btn')).toBeDisabled();
-        expect(container.queryByTestId('next-btn')).toHaveTextContent('Next');
+        expect(container.queryByTestId('next-btn')).toHaveTextContent('misc.next');
       },
       { timeout: 100 }
     );

@@ -51,7 +51,7 @@ describe('time sheet logs component', () => {
         </BrowserRouter>
       )
      expect(getByTestId('prog')).toBeInTheDocument()  
-     expect(getByTestId('prog')).toHaveTextContent('In-Progress')  
+     expect(getByTestId('prog')).toHaveTextContent('timecard.shift_in_progress')  
   })
   it('should have summary in the document', () => {
     const container = render(
@@ -59,7 +59,7 @@ describe('time sheet logs component', () => {
         <EmployeeLogs data={userData} />
       </BrowserRouter>
     )
-    expect(container.queryByTestId('summary').textContent).toContain('Worked 1 days')
+    expect(container.queryByTestId('summary').textContent).toContain('worked_time_stats')
   })
   it('should have summary in the document when there is shift in progress', () => {
     const container = render(
@@ -67,6 +67,6 @@ describe('time sheet logs component', () => {
         <EmployeeLogs data={userDataProgress} />
       </BrowserRouter>
     )
-    expect(container.queryByTestId('summary').textContent).toContain('Worked ')
+    expect(container.queryByTestId('summary').textContent).toContain('timecard.worked_time_stats')
   })
 })

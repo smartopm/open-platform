@@ -20,8 +20,8 @@ describe('paginate component', () => {
   it('should have correct buttons names', () => {
     const newProps = {}
       const { getByTestId } = render(<Paginate {...newProps} />)
-      expect(getByTestId('prev-btn').textContent).toContain('Previous')
-      expect(getByTestId('next-btn').textContent).toContain('Next')
+      expect(getByTestId('prev-btn').textContent).toContain('misc.previous')
+      expect(getByTestId('next-btn').textContent).toContain('misc.next')
   })
 
   it('previous button should be disabled when offset is less than limit', () => {

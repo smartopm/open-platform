@@ -65,12 +65,12 @@ export default function EmployeeTimeSheetLog({ data, name, firstDay, lastDay }) 
                 <StyledTableCell>{formatDate(shift.startedAt)}</StyledTableCell>
                 <StyledTableCell>{formatTime(shift.startedAt)}</StyledTableCell>
                 <StyledTableCell>
-                  {shift.endedAt ? formatTime(shift.endedAt) : 'In-Progress'}
+                  {shift.endedAt ? formatTime(shift.endedAt) : t('timecard.shift_in_progress')}
                 </StyledTableCell>
                 <StyledTableCell data-testid="prog">
                   {shift.endedAt
                     ? differenceInHours(shift.startedAt, shift.endedAt)
-                    : 'In-Progress'}
+                    : t('timecard.shift_in_progress')}
                 </StyledTableCell>
               </StyledTableRow>
             ))}
