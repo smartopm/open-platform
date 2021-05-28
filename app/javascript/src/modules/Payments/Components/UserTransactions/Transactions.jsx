@@ -1,7 +1,7 @@
 /* eslint-disable no-nested-ternary */
 /* eslint-disable no-unused-vars */
-import React, { useState } from 'react'
-import { useQuery } from 'react-apollo'
+import React, { useState, useEffect } from 'react'
+import { useLazyQuery } from 'react-apollo'
 import { Typography } from '@material-ui/core'
 import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types'
@@ -21,26 +21,25 @@ export default function TransactionsList({ userId, user, userData }) {
   const path = useParamsQuery()
   const limit = 10
   const page = path.get('page')
+  const tab = path.get('tab')
   const [offset, setOffset] = useState(Number(page) || 0)
   const theme = useTheme();
   const { t } = useTranslation('common')
   const matches = useMediaQuery(theme.breakpoints.up('sm'));
   const classes = useStyles();
 
-  const { loading, data, error, refetch } = useQuery(
-    DepositQuery,
-    {
-      variables: { userId, limit, offset },
-      errorPolicy: 'all',
-      fetchPolicy: 'cache-and-network'
-    }
-  )
+  const [loadTransactions, { loading, error, data, refetch }] = useLazyQuery(DepositQuery, {
+    variables: { userId, limit, offset },
+    fetchPolicy: 'no-cache',
+    errorPolicy: 'all'
+  });
 
   const transactionHeader = [
     { title: 'Date', value: t('common:table_headers.date'), col: 1 },
     { title: 'Recorded by', value: t('common:table_headers.recorded_by'), col: 1 },
     { title: 'Payment Type', value: t('common:table_headers.payment_type'), col: 2 },
-    { title: 'Amount Paid', value: t('common:table_headers.amount_paid'), col: 1 }
+    { title: 'Amount Paid', value: t('common:table_headers.amount_paid'), col: 1 },
+    { title: 'Menu', value: t('common:table_headers.menu'), col: 1 }
   ];
 
   const currency = currencies[user.community.currency] || ''
@@ -55,6 +54,13 @@ export default function TransactionsList({ userId, user, userData }) {
       setOffset(offset + limit)
     }
   }
+
+  useEffect(() => {
+    if (tab === 'Payments') {
+      loadTransactions()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tab]);
 
   if (error && !data) return <CenteredContent>{formatError(error.message)}</CenteredContent>
 
@@ -81,6 +87,7 @@ export default function TransactionsList({ userId, user, userData }) {
                     currencyData={currencyData}
                     userData={userData}
                     userType={user.userType}
+                    refetch={refetch}
                   />
                 </div>
               ))

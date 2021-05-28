@@ -1,6 +1,6 @@
 /* eslint-disable no-nested-ternary */
-import React, { useState } from 'react'
-import { useQuery } from 'react-apollo'
+import React, { useState, useEffect } from 'react'
+import { useLazyQuery } from 'react-apollo'
 import PropTypes from 'prop-types'
 import { useTheme, makeStyles } from '@material-ui/core/styles';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
@@ -25,20 +25,18 @@ export default function PaymentPlans({ userId, user, userData }) {
     { title: 'Payment Day', col: 2 }
   ];
   const path = useParamsQuery()
+  const tab = path.get('tab')
   const classes = useStyles();
   const limit = 10
   const page = path.get('page')
   const theme = useTheme();
   const matches = useMediaQuery(theme.breakpoints.up('sm'));
   const [offset, setOffset] = useState(Number(page) || 0)
-  const { loading, data, error, refetch } = useQuery(
-    UserPlans,
-    {
-      variables: { userId, limit, offset },
-      errorPolicy: 'all',
-      fetchPolicy: 'cache-and-network'
-    }
-  )
+  const [loadPlans, { loading, error, data, refetch }] = useLazyQuery(UserPlans, {
+    variables: { userId, limit, offset },
+    fetchPolicy: 'no-cache',
+    errorPolicy: 'all'
+  });
 
   const currency = currencies[user.community.currency] || ''
   const { locale } = user.community
@@ -52,6 +50,13 @@ export default function PaymentPlans({ userId, user, userData }) {
       setOffset(offset + limit)
     }
   }
+
+  useEffect(() => {
+    if (tab === 'Plans') {
+      loadPlans()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tab]);
 
   if (error && !data) return <CenteredContent>{formatError(error.message)}</CenteredContent>
 
