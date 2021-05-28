@@ -13,9 +13,9 @@ import { dateToString } from '../../../../components/DateContainer';
 import CenteredContent from '../../../../components/CenteredContent';
 import { formatMoney, formatError } from '../../../../utils/helpers';
 import MessageAlert from "../../../../components/MessageAlert"
-import DeleteDialogueBox from '../../../../components/Business/DeleteDialogue'
 import MenuList from '../../../../shared/MenuList'
 import { TransactionRevert } from '../../graphql/payment_mutations';
+import DeleteDialogueBox from '../../../../shared/dialogs/DeleteDialogue';
 
 export default function UserTransactionsList({transaction, currencyData, userType, userData, refetch }) {
   const { t } = useTranslation('common')
