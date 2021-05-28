@@ -10,22 +10,27 @@ namespace :migrate_deposits do
     community = Community.find_by(name: args.community_name)
 
     ActiveRecord::Base.transaction do
-      community.land_parcels.each do |parcel|
+      community.land_parcels.joins(:payment_plan).each do |parcel|
         plan = parcel.payment_plan
-        next if plan.blank?
-
-        if plan.monthly_amount.nil? || plan.duration_in_month.nil?
-          warning["payment_plan_#{plan.id}"] = "Can not update plot balance or migrate deposit for plan #{plan.id} because either monthly amount or duration_in_month is not present."
-          next
-        end
-
-        plan_balance = plan.pending_balance
-        plan.update!(pending_balance: plan.monthly_amount * plan.duration_in_month)
-        puts "Reset payment plan of land parcel #{parcel.parcel_number}"
-
         wallet_transactions = plan.wallet_transactions
                                   .not_cancelled
                                   .where.not('source = ? OR destination = ?', 'invoice', 'invoice')
+
+        if plan.monthly_amount.nil? || plan.duration_in_month.nil?
+          warning["payment_plan_#{plan.id}"] = "Unable to migrate deposit for user '#{plan.user.name}'. Because either monthly amount or duration_in_month is not present."
+          next
+        end
+
+        total_pending_balance = plan.monthly_amount * plan.duration_in_month
+
+        if plan.pending_balance != (total_pending_balance - wallet_transactions.sum(:amount))
+          warning["payment_plan_#{plan.id}"] = "Unable to migrate deposit for user '#{plan.user.name}'. Have to handle it manually because there is a data inconsistency with the payment plan."
+          next
+        end
+
+        plan.update!(pending_balance: total_pending_balance)
+        puts "Reset payment plan of land parcel #{parcel.parcel_number}"
+
         wallet_transactions.each do |wallet_transaction|
           user = wallet_transaction.user
           status = wallet_transaction.status == 'settled' ? 'accepted' : wallet_transaction.status
@@ -60,9 +65,6 @@ namespace :migrate_deposits do
             status: 'paid',
             user_id: transaction.user_id,
           )
-        end
-        if plan_balance != plan.reload.pending_balance
-          errors["payment_plan_#{plan.id}"] = "Something went wrong for payment plan #{plan.id}. Payment plan pending balance is updated incorrectly as it was in its initial stage."
         end
       end
 
