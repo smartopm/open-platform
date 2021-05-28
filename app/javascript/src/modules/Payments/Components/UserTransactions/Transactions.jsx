@@ -1,7 +1,7 @@
 /* eslint-disable no-nested-ternary */
 /* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from 'react'
-import { useQuery } from 'react-apollo'
+import { useLazyQuery } from 'react-apollo'
 import { Typography } from '@material-ui/core'
 import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types'
@@ -28,7 +28,7 @@ export default function TransactionsList({ userId, user, userData }) {
   const matches = useMediaQuery(theme.breakpoints.up('sm'));
   const classes = useStyles();
 
-  const { loading, error, data, refetch } = useQuery(DepositQuery, {
+  const [loadTransactions, { loading, error, data, refetch }] = useLazyQuery(DepositQuery, {
     variables: { userId, limit, offset },
     fetchPolicy: 'no-cache',
     errorPolicy: 'all'
@@ -57,7 +57,7 @@ export default function TransactionsList({ userId, user, userData }) {
 
   useEffect(() => {
     if (tab === 'Payments') {
-      refetch()
+      loadTransactions()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tab]);
