@@ -7,6 +7,7 @@ import { PropTypes } from 'prop-types'
 import  Typography from '@material-ui/core/Typography'
 import PlayArrowIcon from '@material-ui/icons/PlayArrow';
 import StopIcon from '@material-ui/icons/Stop';
+import { useTranslation } from 'react-i18next'
 import { Spinner } from '../../../shared/Loading'
 import { useWindowDimensions } from '../../../utils/customHooks'
 import { lastDayOfTheMonth } from '../../../utils/dateutil'
@@ -26,6 +27,7 @@ export default function ShiftButtons({ userId }) {
   const [message, setMessage] = useState("")
   const [isInProgress, setInProgress] = useState(false)
   const { width } = useWindowDimensions() // 767
+  const { t } = useTranslation('timecard')
 
   useEffect(() => {
       if (!loading && data && data.userLastShift) {
@@ -54,7 +56,7 @@ export default function ShiftButtons({ userId }) {
 
   function handleEndShift() {
     if (!isInProgress) {
-      setMessage('You can\'t end shift that is not in progress')
+      setMessage(t('timecard.shift_end_error'))
       return
     }
     setMessage("")
@@ -87,13 +89,13 @@ export default function ShiftButtons({ userId }) {
             // eslint-disable-next-line no-nested-ternary
             (width <= 767 && !isInProgress)
               ? <PlayArrowIcon /> : (width <= 767 && isInProgress)
-                ? <Spinner /> : !isInProgress && 'Start Shift' || 'Shift In-Progress'
+                ? <Spinner /> : !isInProgress && t('timecard.start_shift') || t('timecard.shift_in_progress')
           }
         </Button>
       </Grid>
       <Grid item xs={6}>
         <Button onClick={handleEndShift} className={`${css(styles.endBtn)} end-shift-btn`}>
-          {width <= 767 ?  <StopIcon /> : 'End Shift'}
+          {width <= 767 ?  <StopIcon /> : t('timecard.end_shift')}
         </Button>
         {
             Boolean(message.length) && <Typography color="secondary">{message}</Typography>

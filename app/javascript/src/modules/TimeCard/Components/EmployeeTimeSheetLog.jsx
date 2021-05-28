@@ -4,12 +4,14 @@ import { useLocation } from 'react-router';
 import Typography from '@material-ui/core/Typography';
 import { PropTypes } from 'prop-types';
 import Grid from '@material-ui/core/Grid';
+import { useTranslation } from 'react-i18next';
 import { differenceInHours } from '../../../utils/dateutil';
 import DataTable, { StyledTableCell, StyledTableRow } from './DataTable';
 // import { dateTimeToString, dateToString } from '../DateContainer';
 
 export default function EmployeeTimeSheetLog({ data, name, firstDay, lastDay }) {
   const { state } = useLocation();
+  const { t } = useTranslation(['timecard', 'common']);
   const shifts = data.userTimeSheetLogs;
   const columns = ['Day', 'Date', 'Start Time', 'Stop Time', 'Total Hours'];
   const timezone = 'Africa/Lusaka';
@@ -39,7 +41,8 @@ export default function EmployeeTimeSheetLog({ data, name, firstDay, lastDay }) 
         <div className="container " style={{ marginRight: 10 }}>
           <Typography variant="body1" style={{ marginLeft: 10 }}>
             <strong data-testid="emp_name">
-              Name:
+              {t('common:table_headers.name')}
+              :
               {(state && state.name) || name}
             </strong>
           </Typography>
@@ -48,21 +51,7 @@ export default function EmployeeTimeSheetLog({ data, name, firstDay, lastDay }) 
           <Grid container justify="flex-start">
             <Grid item xs={10}>
               <strong data-testid="summary">
-                Worked 
-                {' '}
-                {days}
-                {' '}
-                days for a total of 
-                {' '}
-                {hours}
-                {' '}
-                hrs between 
-                {' '}
-                {firstDay}
-                {' '}
-                - 
-                {' '}
-                {lastDay}
+                {t('timecard.worked_time_stats', { dayCount: days, hourCount: hours, firstDay, lastDay })}
               </strong>
             </Grid>
           </Grid>

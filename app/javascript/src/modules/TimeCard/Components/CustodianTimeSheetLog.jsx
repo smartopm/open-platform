@@ -3,11 +3,13 @@ import React from 'react';
 import { useHistory } from 'react-router';
 import { StyleSheet, css } from 'aphrodite';
 import { Typography } from '@material-ui/core';
+import { useTranslation } from 'react-i18next';
 import { dateToString } from '../../../components/DateContainer';
 import { differenceInHours } from '../../../utils/dateutil';
 
 export default function CustodianTimeSheetLog({ data }) {
   const history = useHistory();
+  const { t } = useTranslation(['common', 'timecard'])
 
   function routeToEmployee({ userId, name }) {
     history.push({
@@ -31,7 +33,8 @@ export default function CustodianTimeSheetLog({ data }) {
               </div>
               <div className="col-xs-4">
                 <span className={css(styles.subTitle)}>
-                  Last shift worked: 
+                  {t('timecard:timecard.last_shift_worked')}
+                  : 
                   {' '}
                   {dateToString(shift.startedAt)}
                 </span>
@@ -41,7 +44,8 @@ export default function CustodianTimeSheetLog({ data }) {
               <div className="col-xs-8" />
               <div className="col-xs-4 nz_endshift">
                 <span className={css(styles.subTitle)}>
-                  Numbers of shifts hours worked:
+                  {t('timecard:timecard.shift_worked_count')}
+                  :
                   {' '}
                   {shift.endedAt
                     ? `${differenceInHours(shift.startedAt, shift.endedAt)}`
@@ -62,7 +66,7 @@ export default function CustodianTimeSheetLog({ data }) {
                     name: shift.user.name
                   })}
               >
-                More Details
+                {t('misc.more_details')}
               </Typography>
             </div>
             <div className="border-top my-3" />
