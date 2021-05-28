@@ -1,13 +1,13 @@
 import React, { useContext, useState } from 'react'
 import { useQuery } from 'react-apollo'
 import { useHistory } from 'react-router/'
-import { TimeSheetLogsQuery } from '../../../graphql/queries'
 import CustodianTimeSheetLogs from './CustodianTimeSheetLog'
 import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider'
 import Loading from '../../../shared/Loading'
 import ErrorPage from '../../../components/Error'
 import Paginate from '../../../components/Paginate'
 import CenteredContent from '../../../components/CenteredContent'
+import { TimeSheetLogsQuery } from '../graphql/timecard_queries'
 
 const limit = 20
 export default function CustodianLogs() {

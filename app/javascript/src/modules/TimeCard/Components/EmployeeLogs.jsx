@@ -3,11 +3,11 @@ import Grid from '@material-ui/core/Grid'
 import { useQuery } from 'react-apollo'
 import { useParams } from 'react-router'
 import EmployeeTimeSheetLogs from './EmployeeTimeSheetLog'
-import { UserTimeSheetQuery } from '../../../graphql/queries'
 import Loading  from '../../../shared/Loading'
 import ErrorPage from '../../../components/Error'
 import Paginate from '../../../components/Paginate'
 import { dateToString } from '../../../utils/dateutil'
+import { UserTimeSheetQuery } from '../graphql/timecard_queries'
 
 
 export default function EmployeeLogs() {
