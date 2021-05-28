@@ -93,7 +93,7 @@ group :development, :test do
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
 
   gem "rubocop", "~> 0.77"
-  gem "pronto", "~> 0.10.0"
+  gem "pronto", "~> 0.11.0"
   gem "rubocop-rails", "~> 2.3"
 
   # RSpec
