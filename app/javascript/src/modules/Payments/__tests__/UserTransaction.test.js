@@ -106,7 +106,7 @@ describe('Render Transaction', () => {
     expect(container.queryByText("common:menu.revert_transaction")).toBeInTheDocument();
 
     fireEvent.click(container.queryByText("common:menu.revert_transaction"))
-    expect(container.queryByText("Are you sure you want to delete this Transaction?")).toBeInTheDocument();
+    expect(container.queryByText("dialogs.dialog_action")).toBeInTheDocument();
 
     fireEvent.click(container.queryByTestId("confirm_action"))
   });

@@ -230,7 +230,7 @@ export default function Homepage({ authState }) {
     {
       card_id: 19,
       title: t('common:misc.business'),
-      path: '/business',
+      path: '/businesses',
       titleStyle: css(styles.CardtextImg),
       icon: <LocalMallIcon color="primary" fontSize="large" />,
       access: ['admin', 'client', 'prospective_client', 'resident', 'visitor']
