@@ -276,6 +276,8 @@ en:
     post_tag:
       not_found: Tag not found
     record_not_found: Record not found
+    receipt_number:
+      already_exists: Receipt number already exists
     substatus_log:
       date_must_be_greater: Date can't be less than previous log's start date
       not_found: Substatus log Not found

@@ -31,11 +31,11 @@ class Transaction < ApplicationRecord
   # @param [payment_plan] PaymentPlan
   #
   # @return [void]
-  def execute_transaction_callbacks(payment_plan)
+  def execute_transaction_callbacks(payment_plan, receipt_number)
     amount_paid = payment_plan.allocated_amount(amount)
 
     payment_plan.update_pending_balance(amount)
-    create_plan_payment(payment_plan, amount_paid)
+    create_plan_payment(payment_plan, amount_paid, receipt_number)
   end
 
   private
@@ -65,7 +65,9 @@ class Transaction < ApplicationRecord
   # @param [Float] allocated_amount
   #
   # @return [void]
-  def create_plan_payment(payment_plan, amount_paid)
+  def create_plan_payment(payment_plan, amount_paid, receipt_number)
+    ap receipt_number
+    puts "RCPT"
     plan_payments.create!(
       user_id: user_id,
       community_id: community_id,
@@ -73,6 +75,7 @@ class Transaction < ApplicationRecord
       status: 'paid',
       payment_plan_id: payment_plan.id,
       created_at: created_at,
+      manual_receipt_number: receipt_number
     )
   end
 end
