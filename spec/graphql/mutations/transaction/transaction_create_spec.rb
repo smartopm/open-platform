@@ -93,10 +93,9 @@ RSpec.describe Mutations::Transaction::TransactionCreate do
             expect(transaction_result['status']).to eql 'accepted'
             plan_payment = transaction_result['planPayments'][0]
             expect(plan_payment['createdAt']).to eql transaction_result['createdAt']
-            expect(plan_payment['receiptNumber']).to eql "MI1001"
+            expect(plan_payment['receiptNumber']).to eql 'MI1001'
             expect(plan_payment['currentPlotPendingBalance']).to eql 0.0
             expect(plan_payment['paymentPlan']['pendingBalance']).to eql 0.0
-            
           end
         end
 
@@ -122,7 +121,7 @@ RSpec.describe Mutations::Transaction::TransactionCreate do
 
             plan_payment = transaction_result['planPayments'][0]
             expect(plan_payment['createdAt']).to eql transaction_result['createdAt']
-            expect(plan_payment['receiptNumber']).to eql "MI1001"
+            expect(plan_payment['receiptNumber']).to eql 'MI1001'
             expect(plan_payment['currentPlotPendingBalance']).to eql 900.0
             expect(plan_payment['paymentPlan']['pendingBalance']).to eql 900.0
           end

@@ -66,8 +66,6 @@ class Transaction < ApplicationRecord
   #
   # @return [void]
   def create_plan_payment(payment_plan, amount_paid, receipt_number)
-    ap receipt_number
-    puts "RCPT"
     plan_payments.create!(
       user_id: user_id,
       community_id: community_id,
@@ -75,7 +73,7 @@ class Transaction < ApplicationRecord
       status: 'paid',
       payment_plan_id: payment_plan.id,
       created_at: created_at,
-      manual_receipt_number: receipt_number
+      manual_receipt_number: receipt_number,
     )
   end
 end

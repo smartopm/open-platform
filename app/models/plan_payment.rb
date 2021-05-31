@@ -21,8 +21,6 @@ class PlanPayment < ApplicationRecord
   #
   # @return [String]
   def receipt_number
-    puts "In method..........."
-    ap self
     manual_receipt_number.present? ? "MI#{manual_receipt_number}" : "SI#{automated_receipt_number}"
   end
 
