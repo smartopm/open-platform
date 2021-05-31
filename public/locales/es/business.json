@@ -1,0 +1,9 @@
+{
+  "business_status": {
+    "pending": "Pendiente",
+    "verified": "Verificado"
+  },
+  "business": {
+    "ask_about_business": "Preguntas sobre negocios"
+  }
+}
