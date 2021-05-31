@@ -28,11 +28,11 @@ export default function IdCardPage(){
     return <ErrorPage title={error.message} />
   }
   return (
-    <UserIDDetail data={data} />
+    <UserIDDetail data={data} communityName={authState.user.community.name} />
   )
 }
 
-export function UserIDDetail({ data }) {
+export function UserIDDetail({ data, communityName }) {
   return (
     <div>
      
@@ -93,7 +93,9 @@ export function UserIDDetail({ data }) {
                 variant="body2"
                 style={{ fontSize: 13 }}
               >
-                This &quot;QR Code&quot; is a unique identifier for you Nkwashi
+                This &quot;QR Code&quot; is a unique identifier for your 
+                {' '}
+                {`${communityName} `}
                 account and can be used at the main gate instead of writing your
                 contact information manually. Our goal is to provide fast, easy
                 and secure access.
@@ -102,31 +104,35 @@ export function UserIDDetail({ data }) {
           </div>
 
           {/* check the time and advise the user */}
-          <div className="d-flex justify-content-center">
-            <p>
-              <u>Please note the main gate visiting hours:</u> 
-              {' '}
-              <br />
-              <br />
-              <span data-testid="visiting_hours">
-                {' '}
-                Monday - Friday:
-                <b>8:00 - 16:00</b> 
+          {communityName && communityName !== 'Ciudad Morazán' ? (
+            <div className="d-flex justify-content-center">
+              <p>
+                <u>Please note the main gate visiting hours:</u> 
                 {' '}
                 <br />
-                Saturday: 
-                {' '}
-                <b>8:00 - 12:00</b> 
-                {' '}
                 <br />
-                Sunday: 
-                {' '}
-                <b>Off</b> 
-                {' '}
-                <br />
-              </span>
-            </p>
-          </div>
+                <span data-testid="visiting_hours">
+                  {' '}
+                  Monday - Friday:
+                  {' '}
+                  <b>8:00 - 16:00</b> 
+                  {' '}
+                  <br />
+                  Saturday: 
+                  {' '}
+                  <b>8:00 - 12:00</b> 
+                  {' '}
+                  <br />
+                  Sunday: 
+                  {' '}
+                  <b>Off</b> 
+                  {' '}
+                  <br />
+                </span>
+              </p>
+            </div>
+          )
+            : null}
         </div>
       </div>
     </div>
