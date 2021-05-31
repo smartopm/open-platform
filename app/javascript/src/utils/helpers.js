@@ -453,7 +453,7 @@ export function handleQueryOnChange(selectedOptions, filterFields) {
           const property = filterFields[option[operator][0].var]
           let value = propAccessor(option, operator)[1]
 
-          if (operator === '==') operator = '='
+          if (operator === '==') operator = ':'
           if (property === 'created_at' || property === 'due_date') {
             value = utilDate(value)
           }
