@@ -52,8 +52,13 @@ module Mutations
       def raise_receipt_number_validation_error(receipt_number)
         return if receipt_number.nil?
 
-        payment_exists = PlanPayment.exists?(manual_receipt_number: receipt_number)
-        raise GraphQL::ExecutionError, I18n.t('errors.receipt_number.already_exists') if payment_exists
+        payment_exists = PlanPayment.exists?(
+          manual_receipt_number: receipt_number,
+          community_id: context[:site_community].id
+        )
+        return unless payment_exists
+
+        raise GraphQL::ExecutionError, I18n.t('errors.receipt_number.already_exists')
       end
 
       # rubocop:disable Metrics/AbcSize

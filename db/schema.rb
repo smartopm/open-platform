@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_05_25_094713) do
+ActiveRecord::Schema.define(version: 2021_05_31_105115) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -535,6 +535,8 @@ ActiveRecord::Schema.define(version: 2021_05_25_094713) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.decimal "current_plot_pending_balance", precision: 11, scale: 2
+    t.string "manual_receipt_number"
+    t.integer "automated_receipt_number", default: -> { "nextval('automated_receipt_numbers_seq'::regclass)" }
     t.index ["community_id"], name: "index_plan_payments_on_community_id"
     t.index ["payment_plan_id"], name: "index_plan_payments_on_payment_plan_id"
     t.index ["transaction_id"], name: "index_plan_payments_on_transaction_id"
