@@ -1,15 +1,13 @@
-/* eslint-disable */
-import React, { Fragment, useContext, useState } from 'react'
-// import Nav from '../../components/Nav'
+import React, { useContext, useState } from 'react'
 import { useQuery } from 'react-apollo'
-import { TimeSheetLogsQuery } from '../../graphql/queries'
-import Spinner from '../../shared/Loading'
-import CustodianTimeSheetLogs from '../../components/TimeTracker/CustodianTimeSheetLog'
-import { Context as AuthStateContext } from '../Provider/AuthStateProvider.js'
 import { useHistory } from 'react-router/'
-import ErrorPage from '../../components/Error'
-import Paginate from '../../components/Paginate'
-import CenteredContent from '../../components/CenteredContent'
+import CustodianTimeSheetLogs from './CustodianTimeSheetLog'
+import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider'
+import Loading from '../../../shared/Loading'
+import ErrorPage from '../../../components/Error'
+import Paginate from '../../../components/Paginate'
+import CenteredContent from '../../../components/CenteredContent'
+import { TimeSheetLogsQuery } from '../graphql/timecard_queries'
 
 const limit = 20
 export default function CustodianLogs() {
@@ -34,12 +32,11 @@ export default function CustodianLogs() {
   if (!['admin', 'custodian'].includes(authState.user?.userType)) {
     history.push('/')
   }
-  if (loading) return <Spinner />
+  if (loading) return <Loading />
  if (error) return <ErrorPage title={error.message} />
 
   return (
-    <Fragment>
-      {/* <Nav navName="Time Cards" menuButton="back" backTo="/" /> */}
+    <>
       <br />
       <CustodianTimeSheetLogs data={data} />
       <CenteredContent>
@@ -50,6 +47,6 @@ export default function CustodianLogs() {
           handlePageChange={paginate}
         />
       </CenteredContent>
-    </Fragment>
+    </>
   )
 }

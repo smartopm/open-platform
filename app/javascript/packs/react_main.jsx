@@ -47,7 +47,6 @@ import FeedbackSuccess from '../src/containers/Activity/FeedbackSuccess';
 import AllNotes from '../src/containers/Activity/AllNotes';
 import FeedbackPage from '../src/containers/Activity/AllFeedback';
 import ShowroomLogs from '../src/containers/showroom/ShowroomLogs';
-import EmployeeLogs from '../src/containers/TimeSheet/EmployeeLogs';
 import ClientRequestForm from '../src/containers/ClientRequestForm';
 import CampaignCreate from '../src/containers/Campaigns/CampaignCreate';
 import Scan from '../src/containers/Scan';
@@ -71,6 +70,7 @@ import Posts from '../src/modules/News/Components/Posts';
 import UsersImport from '../src/modules/Users/Containers/UsersImport';
 import { checkAllowedCommunityFeatures } from '../src/utils/helpers';
 import BusinessProfile from '../src/modules/Business/Components/BusinessProfilePage';
+import EmployeeTimeSheetLog from '../src/modules/TimeCard/Components/EmployeeLogs';
 
 // The routes defined here are carefully arranged, be mindful when changing them
 
@@ -281,7 +281,7 @@ const App = () => {
                               <Route path="/feedback_success" component={FeedbackSuccess} />
                               <Route path="/campaign-create" component={CampaignCreate} />
                               <Route path="/campaign/:id" component={CampaignUpdate} />
-                              <Route path="/timesheet/:id" exact component={EmployeeLogs} />
+                              <Route path="/timesheet/:id" exact component={EmployeeTimeSheetLog} />
                               <Route
                                 path="/client_request_from"
                                 exact

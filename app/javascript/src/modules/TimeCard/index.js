@@ -1,6 +1,6 @@
 import React from 'react'
 import HourglassFullIcon from '@material-ui/icons/HourglassFull';
-import CustodianLogs from '../../containers/TimeSheet/CustodianLogs';
+import CustodianLogs from './Components/CustodianLogs';
 
 export default {
   routeProps: {

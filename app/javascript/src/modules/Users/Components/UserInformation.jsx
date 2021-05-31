@@ -13,7 +13,6 @@ import PropTypes from 'prop-types';
 import ReactGA from 'react-ga';
 import { CreateNote } from '../../../graphql/mutations';
 import { ponisoNumber } from '../../../utils/constants';
-import ShiftButtons from '../../../components/TimeTracker/ShiftButtons'
 import Avatar from '../../../components/Avatar';
 import UserPlotInfo from './UserPlotInfo';
 import UserMerge from './UserMerge';
@@ -31,6 +30,7 @@ import { propAccessor, useParamsQuery } from '../../../utils/helpers';
 import RightSideMenu from '../../Menu/component/RightSideMenu'
 import FeatureCheck from '../../Features';
 import PaymentPlans from '../../Payments/Components/UserTransactions/Plans'
+import ShiftButtons from '../../TimeCard/Components/ShiftButtons';
 
 export default function UserInformation({
   data,

@@ -3,7 +3,7 @@ import { render } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { BrowserRouter } from 'react-router-dom/';
 import { MockedProvider } from '@apollo/react-testing';
-import EmployeeLogs from '../../containers/TimeSheet/EmployeeLogs';
+import EmployeeLogs from '../Components/EmployeeLogs';
 
 describe('EmployeeLogs Component', () => {
   it('renders loader when loading records', () => {

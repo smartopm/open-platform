@@ -1,9 +1,8 @@
-/* eslint-disable */
 import React from 'react'
-import EmployeeLogs from '../components/TimeTracker/EmployeeTimeSheetLog'
 import { BrowserRouter } from 'react-router-dom/'
 import { render,} from '@testing-library/react'
 import '@testing-library/jest-dom/extend-expect'
+import EmployeeLogs from '../Components/EmployeeTimeSheetLog'
 
 describe('time sheet logs component', () => {
   const userData = {
@@ -36,7 +35,7 @@ describe('time sheet logs component', () => {
   it('should render with given data', () => {
   const { getByText, getByTestId } = render(
     <BrowserRouter>
-      <EmployeeLogs data={userData} name={'Joen'} />
+      <EmployeeLogs data={userData} name="Joen" />
     </BrowserRouter>
   )
     expect(getByText('2 hrs')).toBeInTheDocument()
@@ -52,7 +51,7 @@ describe('time sheet logs component', () => {
         </BrowserRouter>
       )
      expect(getByTestId('prog')).toBeInTheDocument()  
-     expect(getByTestId('prog')).toHaveTextContent('In-Progress')  
+     expect(getByTestId('prog')).toHaveTextContent('timecard.shift_in_progress')  
   })
   it('should have summary in the document', () => {
     const container = render(
@@ -60,7 +59,7 @@ describe('time sheet logs component', () => {
         <EmployeeLogs data={userData} />
       </BrowserRouter>
     )
-    expect(container.queryByTestId('summary').textContent).toContain('Worked 1 days')
+    expect(container.queryByTestId('summary').textContent).toContain('worked_time_stats')
   })
   it('should have summary in the document when there is shift in progress', () => {
     const container = render(
@@ -68,6 +67,6 @@ describe('time sheet logs component', () => {
         <EmployeeLogs data={userDataProgress} />
       </BrowserRouter>
     )
-    expect(container.queryByTestId('summary').textContent).toContain('Worked ')
+    expect(container.queryByTestId('summary').textContent).toContain('timecard.worked_time_stats')
   })
 })
