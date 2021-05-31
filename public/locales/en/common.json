@@ -318,7 +318,8 @@
     "date_error": "Date must be of this format YYYY-MM-DD",
     "empty_input": "Input cannot be empty",
     "no_changes": "No Changes Made",
-    "user_name_search_not_found": "{{username}} not found in users"
+    "user_name_search_not_found": "{{username}} not found in users",
+    "invalid_color_code": "The theme color code is invalid"
   },
   "dialogs": {
     "dialog_action": "Are you sure you want to {{action}} this {{title}}?",

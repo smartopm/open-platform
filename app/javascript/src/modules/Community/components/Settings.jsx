@@ -19,6 +19,7 @@ import ImageAuth from '../../../shared/ImageAuth';
 import { formatError } from '../../../utils/helpers';
 import { Spinner } from '../../../shared/Loading';
 import ColorPicker from './ColorPicker';
+import { validateThemeColor } from '../helpers';
 
 export default function CommunitySettings({ data, token, refetch }) {
   const numbers = {
@@ -174,6 +175,14 @@ export default function CommunitySettings({ data, token, refetch }) {
   }
 
   function updateCommunity() {
+    if(!validateThemeColor(themeColors)){
+      setAlertOpen(true);
+      setMessage({
+        isError: true,
+        detail: t('common:errors.invalid_color_code') 
+      });
+      return
+    }
     setCallMutation(true);
     communityUpdate({
       variables: {
