@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { colorPallete } from '../../../utils/constants';
 
 export default function ColorPicker({ color, handleColor }) {
-  const isValidColor = color.includes('#');
+  const isValidColor = /^#[0-9A-F]{6}$/i.test(color);
   return (
     <>
       <div style={{ display: 'flex' }}>
@@ -23,7 +23,7 @@ export default function ColorPicker({ color, handleColor }) {
           inputProps={{
             'data-testid': 'color'
           }}
-          helperText={!isValidColor && 'Color code should start with #, e.g: #000000'}
+          helperText={!isValidColor && 'Color code should be hexadecimal and start with #e.g: #AABB0F'}
           error={!isValidColor}
         />
       </div>
