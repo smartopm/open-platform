@@ -7,8 +7,5 @@
  * @returns Boolean
  */
 export function validateThemeColor({ primaryColor, secondaryColor }){ 
-    if (!primaryColor.includes('#') || !secondaryColor.includes('#') ) {
-        return false;
-    }
-    return true
+    return  /^#[0-9A-F]{6}$/i.test(primaryColor && secondaryColor)
 }
