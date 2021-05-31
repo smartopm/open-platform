@@ -1,0 +1,11 @@
+{
+    "timecard": {
+        "last_shift_worked": "Last Shift Worked",
+        "shift_worked_count": "Numbers of shifts hours worked",
+        "worked_time_stats": "Worked {{dayCount}} days for a total of {{hourCount}} hrs between {{firstDay}} - {{lastDay}}",
+        "start_shift": "Start Shift",
+        "end_shift": "End Shift",
+        "shift_in_progress": "Shift in Progress",
+        "shift_end_error": "You can't end shift that is not in progress"
+    }
+}

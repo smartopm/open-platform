@@ -1,6 +1,7 @@
-/* eslint-disable */
+/* eslint-disable react/prop-types */
 import React from 'react'
 import { Button } from '@material-ui/core'
+import { useTranslation } from 'react-i18next'
 
 export default function Paginate({
   count,
@@ -9,6 +10,7 @@ export default function Paginate({
   active,
   offset
 }) {
+  const { t } = useTranslation('common')
   return (
     <>
       <Button
@@ -16,7 +18,7 @@ export default function Paginate({
         onClick={() => handlePageChange('prev')}
         disabled={!active && offset < 1}
       >
-        Previous
+        {t('misc.previous')}
       </Button>
 
       <Button
@@ -24,12 +26,13 @@ export default function Paginate({
         onClick={() => handlePageChange('next')}
         disabled={active && count < limit}
       >
-        Next
+        {t('misc.next')}
       </Button>
     </>
   )
 }
 
+// TODO: Fix this.
 Paginate.defaultProps = {
   active: false,
   offset: 0,

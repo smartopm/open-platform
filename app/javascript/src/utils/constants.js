@@ -270,7 +270,8 @@ export const mapTiles = {
     'https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/{z}/{x}/{y}?access_token=',
   openStreetMap: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
   centerPoint: {
-    nkwashi: [-15.5106850854, 28.6493892334]
+    nkwashi: [-15.5106850854, 28.6493892334],
+    'ciudad morazán': [15.620704379778179, -87.92644124884137],
   }
 };
 

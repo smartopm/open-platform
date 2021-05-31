@@ -1,5 +1,5 @@
 import React from 'react';
-import { render } from '@testing-library/react';
+import { act, render, waitFor  } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { BrowserRouter } from 'react-router-dom';
 import { ApolloProvider } from 'react-apollo';
@@ -16,22 +16,30 @@ describe('Support main page', () => {
       userType: 'client',
       expiresAt: null,
       community: {
+        name: 'Nkwashi',
         supportName: "Support Officer"
       }
     }
   };
-it('renders the support page correctly', () => {
-    const container = render(
-      <ApolloProvider client={createClient}>
-        <Context.Provider value={data.user}>
-          <MockedProvider>
-            <BrowserRouter>
-              <Support />
-            </BrowserRouter>
-          </MockedProvider>
-        </Context.Provider>
-      </ApolloProvider>
-    );
-    expect(container.queryByText('Sales Support')).toBeInTheDocument()
+
+  it('should enders the support page correctly', async () => {
+    let container;
+    await(act(async () => {
+      container = render(
+        <ApolloProvider client={createClient}>
+          <Context.Provider value={data}>
+            <MockedProvider>
+              <BrowserRouter>
+                <Support />
+              </BrowserRouter>
+            </MockedProvider>
+          </Context.Provider>
+        </ApolloProvider>
+      )
+    }))
+
+    await waitFor(() => {
+      expect(container.queryByText('Sales Support')).toBeInTheDocument()
+    }, 50);
   });
 });

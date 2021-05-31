@@ -94,7 +94,9 @@ export default function SupportCard({ handleSendMessage, user }) {
     <>
       <div className="justify-content-center align-items-center container">
         <Typography paragraph variant="body1" color="textSecondary">
-          Nkwashi partners with DoubleGDP on this mobile app to better connect
+          {`${user?.community?.name}`}
+          {' '}
+          partners with DoubleGDP on this mobile app to better connect
           with clients and residents, and to deliver efficient and responsive
           public services. Today we have digital IDs to make gate access faster,
           easier, and more secure than paper logs. We also have registration
@@ -184,17 +186,22 @@ export default function SupportCard({ handleSendMessage, user }) {
           </Button>
         </Grid>
 
-        <Grid container direction="row" className={classes.root}>
-          <Button
-            data-testid="pwmm"
-            variant="contained"
-            color="primary"
-            onClick={() => history.push('/mobile_money')}
-            className={classes.chatButton}
-          >
-            Pay With Mobile Money
-          </Button>
-        </Grid>
+        {user.community &&
+       user.community.name &&
+       user.community.name !== 'Ciudad Morazán' &&
+       (
+       <Grid container direction="row" className={classes.root}>
+         <Button
+           data-testid="pwmm"
+           variant="contained"
+           color="primary"
+           onClick={() => history.push('/mobile_money')}
+           className={classes.chatButton}
+         >
+           Pay With Mobile Money
+         </Button>
+       </Grid>
+)}
         {Boolean(user?.userType !== 'custodian') && (
           <Grid container direction="row" className={classes.root}>
             <Button

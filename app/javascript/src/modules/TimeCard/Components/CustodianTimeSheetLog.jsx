@@ -1,21 +1,23 @@
-/* eslint-disable */
-import React from 'react'
-import dateutil from '../../utils/dateutil'
-import { useHistory } from 'react-router'
-import { StyleSheet, css } from 'aphrodite'
-import { dateToString } from '../DateContainer'
-import { Typography } from '@material-ui/core'
+/* eslint-disable react/prop-types */
+import React from 'react';
+import { useHistory } from 'react-router';
+import { StyleSheet, css } from 'aphrodite';
+import { Typography } from '@material-ui/core';
+import { useTranslation } from 'react-i18next';
+import { dateToString } from '../../../components/DateContainer';
+import { differenceInHours } from '../../../utils/dateutil';
 
 export default function CustodianTimeSheetLog({ data }) {
-  const history = useHistory()
+  const history = useHistory();
+  const { t } = useTranslation(['common', 'timecard'])
 
-  function routeToEmployee({userId, name}){
+  function routeToEmployee({ userId, name }) {
     history.push({
       pathname: `/timesheet/${userId}`,
       state: {
         name
       }
-    })
+    });
   }
 
   return (
@@ -31,21 +33,22 @@ export default function CustodianTimeSheetLog({ data }) {
               </div>
               <div className="col-xs-4">
                 <span className={css(styles.subTitle)}>
-                  Last shift worked:{' '}
+                  {t('timecard:timecard.last_shift_worked')}
+                  : 
+                  {' '}
                   {dateToString(shift.startedAt)}
                 </span>
               </div>
             </div>
             <div className="row justify-content-between">
-              <div className="col-xs-8"></div>
+              <div className="col-xs-8" />
               <div className="col-xs-4 nz_endshift">
                 <span className={css(styles.subTitle)}>
-                  Numbers of shifts hours worked:{' '}
+                  {t('timecard:timecard.shift_worked_count')}
+                  :
+                  {' '}
                   {shift.endedAt
-                    ? `${dateutil.differenceInHours(
-                        shift.startedAt,
-                        shift.endedAt
-                      )}`
+                    ? `${differenceInHours(shift.startedAt, shift.endedAt)}`
                     : 'In-Progress'}
                 </span>
               </div>
@@ -55,16 +58,15 @@ export default function CustodianTimeSheetLog({ data }) {
                 component="span"
                 color="primary"
                 style={{
-                  cursor: 'pointer',
+                  cursor: 'pointer'
                 }}
                 onClick={() =>
                   routeToEmployee({
                     userId: shift.userId,
                     name: shift.user.name
-                  })
-                }
+                  })}
               >
-                More Details
+                {t('misc.more_details')}
               </Typography>
             </div>
             <div className="border-top my-3" />
@@ -72,9 +74,8 @@ export default function CustodianTimeSheetLog({ data }) {
         ))}
       </div>
     </div>
-  )
+  );
 }
-
 
 const styles = StyleSheet.create({
   logTitle: {
@@ -88,4 +89,4 @@ const styles = StyleSheet.create({
     letterSpacing: 0.17,
     fontWeight: 400
   }
-})
+});

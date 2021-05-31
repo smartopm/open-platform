@@ -3,7 +3,7 @@ import { render } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { BrowserRouter } from 'react-router-dom/';
 import { MockedProvider } from '@apollo/react-testing';
-import CustodianLogs from '../../containers/TimeSheet/CustodianLogs';
+import CustodianLogs from '../Components/CustodianLogs';
 
 describe('CustodianLogs Component', () => {
   it('renders loader when loading feedback', () => {

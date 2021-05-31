@@ -1,23 +1,22 @@
-/* eslint-disable */
 import React, { useState, useEffect } from 'react'
 import Button from '@material-ui/core/Button'
 import Grid from '@material-ui/core/Grid'
 import { StyleSheet, css } from 'aphrodite'
 import { useMutation, useQuery } from 'react-apollo'
 import { PropTypes } from 'prop-types'
-import { ManageShiftMutation } from '../../graphql/mutations'
-import { lastUserTimeSheet } from '../../graphql/queries'
 import  Typography from '@material-ui/core/Typography'
-import { Spinner } from '../../shared/Loading'
-import { useWindowDimensions } from '../../utils/customHooks'
 import PlayArrowIcon from '@material-ui/icons/PlayArrow';
 import StopIcon from '@material-ui/icons/Stop';
-import { lastDayOfTheMonth } from '../../utils/dateutil'
-
+import { useTranslation } from 'react-i18next'
+import { Spinner } from '../../../shared/Loading'
+import { useWindowDimensions } from '../../../utils/customHooks'
+import { lastDayOfTheMonth } from '../../../utils/dateutil'
+import { LastUserTimeSheetQuery } from '../graphql/timecard_queries'
+import { ManageShiftMutation } from '../graphql/timecard_mutations'
 
 export default function ShiftButtons({ userId }) {
   const [manageShift] = useMutation(ManageShiftMutation)
-  const { loading, data, error } = useQuery(lastUserTimeSheet, {
+  const { loading, data, error } = useQuery(LastUserTimeSheetQuery, {
     variables: {
       userId,
       dateTo: lastDayOfTheMonth.toUTCString()
@@ -28,6 +27,7 @@ export default function ShiftButtons({ userId }) {
   const [message, setMessage] = useState("")
   const [isInProgress, setInProgress] = useState(false)
   const { width } = useWindowDimensions() // 767
+  const { t } = useTranslation('timecard')
 
   useEffect(() => {
       if (!loading && data && data.userLastShift) {
@@ -40,6 +40,7 @@ export default function ShiftButtons({ userId }) {
       }
   }, [loading, data])
 
+
   function handleStartShift() {
     setInProgress(true)
     setMessage("")
@@ -49,13 +50,13 @@ export default function ShiftButtons({ userId }) {
         eventTag: 'shift_start'
       }
     })
-      .then(data => data)
-      .catch(err => console.log(err.message))
+      .then(() => {})
+      .catch(err => setMessage(err.message))
   }
 
   function handleEndShift() {
     if (!isInProgress) {
-      setMessage('You can\'t end shift that is not in progress')
+      setMessage(t('timecard.shift_end_error'))
       return
     }
     setMessage("")
@@ -66,7 +67,7 @@ export default function ShiftButtons({ userId }) {
         eventTag: 'shift_end'
       }
     })
-      .then(data => data)
+      .then(() => {})
       .catch(err => setMessage(err.message))
   }
   if (loading) return <Spinner />
@@ -85,18 +86,19 @@ export default function ShiftButtons({ userId }) {
       <Grid item xs={6} container justify="flex-end">
         <Button onClick={handleStartShift} className={`${css(styles.startBtn)} start-shift-btn`} disabled={isInProgress}>
           {
+            // eslint-disable-next-line no-nested-ternary
             (width <= 767 && !isInProgress)
               ? <PlayArrowIcon /> : (width <= 767 && isInProgress)
-                ? <Spinner/> : !isInProgress && 'Start Shift' || 'Shift In-Progress'
+                ? <Spinner /> : !isInProgress && t('timecard.start_shift') || t('timecard.shift_in_progress')
           }
         </Button>
       </Grid>
-      <Grid item xs={6} >
+      <Grid item xs={6}>
         <Button onClick={handleEndShift} className={`${css(styles.endBtn)} end-shift-btn`}>
-          {width <= 767 ?  <StopIcon /> : 'End Shift'}
+          {width <= 767 ?  <StopIcon /> : t('timecard.end_shift')}
         </Button>
-          {
-            Boolean(message.length) && <Typography color={'secondary'}>{message}</Typography>
+        {
+            Boolean(message.length) && <Typography color="secondary">{message}</Typography>
           }
       </Grid>
     </Grid>
@@ -117,6 +119,6 @@ const styles = StyleSheet.create({
 })
 
 
-ShiftButtons.prototype = {
+ShiftButtons.propTypes = {
   userId: PropTypes.string.isRequired
 }
