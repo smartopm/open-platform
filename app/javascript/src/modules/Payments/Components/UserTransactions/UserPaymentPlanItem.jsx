@@ -37,7 +37,8 @@ export default function UserPaymentPlanItem({
   currencyData,
   currentUser,
   userId,
-  refetch
+  refetch,
+  balanceRefetch
 }) {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = useState(null);
@@ -97,6 +98,7 @@ export default function UserPaymentPlanItem({
           info: 'Payment Day successfully updated'
         });
         refetch();
+        balanceRefetch()
       })
       .catch(err => {
         setPlanDetails({
@@ -287,7 +289,8 @@ UserPaymentPlanItem.propTypes = {
   currentUser: PropTypes.shape({
     userType: PropTypes.string
   }).isRequired,
-  refetch: PropTypes.func.isRequired
+  refetch: PropTypes.func.isRequired,
+  balanceRefetch: PropTypes.func.isRequired
 };
 
 const useStyles = makeStyles(() => ({

@@ -15,7 +15,8 @@ import { currencies } from '../../../../utils/constants'
 import UserTransactionsList from './UserTransactions'
 import DepositQuery from '../../graphql/payment_query'
 import ListHeader from '../../../../shared/list/ListHeader';
-import UserBalance from './UserBalance'
+import Balance from './UserBalance'
+import { UserBalance } from '../../../../graphql/queries'
 
 export default function TransactionsList({ userId, user, userData }) {
   const path = useParamsQuery()
@@ -30,6 +31,12 @@ export default function TransactionsList({ userId, user, userData }) {
 
   const [loadTransactions, { loading, error, data, refetch }] = useLazyQuery(DepositQuery, {
     variables: { userId, limit, offset },
+    fetchPolicy: 'no-cache',
+    errorPolicy: 'all'
+  });
+
+  const [ loadBalance, { loading: balanceLoad, error: balanceError, data: balanceData, refetch: balanceRefetch }] = useLazyQuery(UserBalance, {
+    variables: { userId },
     fetchPolicy: 'no-cache',
     errorPolicy: 'all'
   });
@@ -58,20 +65,26 @@ export default function TransactionsList({ userId, user, userData }) {
   useEffect(() => {
     if (tab === 'Payments') {
       loadTransactions()
+      loadBalance()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tab]);
 
   if (error && !data) return <CenteredContent>{formatError(error.message)}</CenteredContent>
+  if (balanceError && !balanceData) return <CenteredContent>{formatError(balanceError.message)}</CenteredContent>
 
   return (
     <div>
-      <UserBalance 
-        user={user}
-        userId={userId}
-        userData={userData}
-        refetch={refetch}
-      />
+      {balanceLoad ? <Spinner /> : (
+        <Balance 
+          user={user}
+          userId={userId}
+          userData={userData}
+          refetch={refetch}
+          balanceData={balanceData?.userBalance}
+          balanceRefetch={balanceRefetch}
+        />
+      )}
       {loading ? <Spinner /> : (
         data?.userTransactions?.length > 0 ? (
           <div className={classes.paymentList}>
@@ -88,6 +101,7 @@ export default function TransactionsList({ userId, user, userData }) {
                     userData={userData}
                     userType={user.userType}
                     refetch={refetch}
+                    balanceRefetch={balanceRefetch}
                   />
                 </div>
               ))

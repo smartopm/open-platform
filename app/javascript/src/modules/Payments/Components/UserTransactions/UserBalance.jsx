@@ -1,70 +1,46 @@
-import React, { useContext, useState, useEffect } from 'react'
-import { useQuery } from 'react-apollo'
+import React, { useContext, useState } from 'react'
 import PropTypes from 'prop-types'
 import { Typography } from '@material-ui/core'
 import { useTranslation } from 'react-i18next';
-import { UserBalance } from '../../../../graphql/queries'
-import { Spinner } from '../../../../shared/Loading'
-import { formatError, formatMoney, useParamsQuery } from '../../../../utils/helpers'
+import { formatMoney } from '../../../../utils/helpers'
 import { currencies } from '../../../../utils/constants'
 import { Context as AuthStateContext } from '../../../../containers/Provider/AuthStateProvider'
-import CenteredContent from '../../../../components/CenteredContent'
 import ButtonComponent from '../../../../shared/buttons/Button'
 import PaymentModal from './PaymentModal'
 
-export default function Balance({ user, userId, userData, refetch }) {
+export default function Balance({ user, userId, userData, refetch, balanceData, balanceRefetch }) {
   const authState = useContext(AuthStateContext);
-  const path = useParamsQuery()
-  const tab = path.get('tab')
   const { t } = useTranslation('common');
   const [payOpen, setPayOpen] = useState(false);
-  const { loading, error, data, refetch: planRefetch } = useQuery(UserBalance, {
-    variables: { userId },
-    fetchPolicy: 'no-cache',
-    errorPolicy: 'all'
-  });
 
   const currency = currencies[user.community.currency] || ''
   const { locale } = user.community
   const currencyData = { currency, locale }
 
-  useEffect(() => {
-    if (tab === 'Plans' || tab === 'Payments') {
-      planRefetch()
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [tab]);
-
-  if (error && !data) return <CenteredContent>{formatError(error.message)}</CenteredContent>
-
   return (
     <div>
-      {
-        loading ? <Spinner /> :  (
-          <div style={{display: 'flex', flexDirection: 'row'}}>
-            {
-              data?.userBalance?.pendingBalance && (
-                <div style={{display: 'flex', flexDirection: 'column', marginLeft: '10px'}}>
-                  <Typography variant='subtitle1'>{t("common:misc.total_balance")}</Typography>
-                  <Typography variant="h5" color='primary'>
-                    {data?.userBalance?.pendingBalance === 0 ? 
-                    formatMoney(currencyData, data?.userBalance?.pendingBalance) :
-                    `- ${formatMoney(currencyData, data?.userBalance?.pendingBalance)}`}
-                  </Typography>
-                </div>
-              )
-            }
-            {
-              data?.userBalance?.balance > 0 && (
-                <div style={{display: 'flex', flexDirection: 'column', marginLeft: '30px'}}>
-                  <Typography variant='subtitle1'>{t("common:misc.unallocated_funds")}</Typography>
-                  <Typography variant="h5" color='primary'>{formatMoney(currencyData, data?.userBalance.balance)}</Typography>
-                </div>
-              )
-            }
-          </div>
-        )
-      }
+      <div style={{display: 'flex', flexDirection: 'row'}}>
+        {
+          balanceData?.pendingBalance && (
+            <div style={{display: 'flex', flexDirection: 'column', marginLeft: '10px'}}>
+              <Typography variant='subtitle1'>{t("common:misc.total_balance")}</Typography>
+              <Typography variant="h5" color='primary'>
+                {balanceData?.pendingBalance === 0 ? 
+                formatMoney(currencyData, balanceData?.pendingBalance) :
+                `- ${formatMoney(currencyData, balanceData?.pendingBalance)}`}
+              </Typography>
+            </div>
+          )
+        }
+        {
+          balanceData?.balance > 0 && (
+            <div style={{display: 'flex', flexDirection: 'column', marginLeft: '30px'}}>
+              <Typography variant='subtitle1'>{t("common:misc.unallocated_funds")}</Typography>
+              <Typography variant="h5" color='primary'>{formatMoney(currencyData, balanceData?.balance)}</Typography>
+            </div>
+          )
+        }
+      </div>
       {
         authState.user?.userType === 'admin' && (
           <div>
@@ -77,7 +53,7 @@ export default function Balance({ user, userId, userData, refetch }) {
         handleModalClose={() => setPayOpen(false)}
         userId={userId}
         currencyData={currencyData}
-        refetch={planRefetch}
+        refetch={balanceRefetch}
         walletRefetch={refetch}
         userData={userData}
       />
@@ -103,5 +79,11 @@ Balance.propTypes = {
       locale: PropTypes.string
     }).isRequired
   }).isRequired,
-  refetch: PropTypes.func.isRequired
+  balanceData: PropTypes.shape({
+    id: PropTypes.string,
+    pendingBalance: PropTypes.string,
+    balance: PropTypes.string
+  }).isRequired,
+  refetch: PropTypes.func.isRequired,
+  balanceRefetch: PropTypes.func.isRequired
 }
