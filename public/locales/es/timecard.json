@@ -1,0 +1,11 @@
+{
+  "timecard": {
+    "end_shift": "Finalizar turno",
+    "last_shift_worked": "Último turno trabajado",
+    "shift_end_error": "No puedes terminar un turno que no está en progreso",
+    "shift_in_progress": "Turno en Progreso",
+    "shift_worked_count": "Número de turnos horas trabajadas",
+    "start_shift": "Comenzar Turno",
+    "worked_time_stats": "Trabajo {{dayCount}} dias por un total de {{hourCount}} entre {{firstDay}} - {{lastDay}}"
+  }
+}
