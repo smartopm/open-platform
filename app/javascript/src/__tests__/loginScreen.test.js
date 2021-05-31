@@ -91,11 +91,11 @@ describe('Login screen', () => {
     )
   })
   it('should have a button', () => {
-    expect(loginWrapper.find('button').exists()).toBe(true)
+    expect(loginWrapper.find('button')).toBeTruthy()
   })
 
   it('should show trouble logging in section', () => {
     expect(loginWrapper.find('u').text()).toMatch('login.request_account')
-    expect(loginWrapper.find('#trouble-logging-div').exists()).toBe(true)
+    expect(loginWrapper.find('#trouble-logging-div')).toBeTruthy()
   })
 })

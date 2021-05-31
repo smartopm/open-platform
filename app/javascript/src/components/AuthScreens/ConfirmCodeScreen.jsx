@@ -123,7 +123,7 @@ export default function ConfirmCodeScreen({ match }) {
               className={`${css(styles.newInput)} code-input-${index}`}
               onChange={() =>
                 item < 6
-                  ? elementsRef.current[item + 1].current.focus()
+                  ? elementsRef.current[Number(item + 1)].current.focus()
                   : submitRef.current.click()}
               // hide the seventh input for the next ref to work [6]
               hidden={item === 7 && true}

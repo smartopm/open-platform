@@ -33,7 +33,7 @@ export function formatError(errMsg="") {
  */
 export function findLinkAndReplace(msg) {
   if (!msg) return
-  const urlRegex = new RegExp(/(https?:\/\/[^\s]+)|([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9_-]+)/g)
+  const urlRegex = /(https?:\/\/[^\s]+)|([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9_-]+)/g
   const emailRegex = /([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9_-]+)/g
   return msg.replace(urlRegex, function (url) {
     if (emailRegex.test(url)) {
@@ -432,7 +432,7 @@ export function getDrawPluginOptions (featureGroup) {
 }
 
 /**
- * 
+ *
  * @param {object} Onchange function on filter
  * @return {object} Query
  * @description Handles the onchange for filter
@@ -448,7 +448,7 @@ export function handleQueryOnChange(selectedOptions, filterFields) {
       const queryy = availableConjugate
         .map(option => {
           let operator = Object.keys(option)[0]
-          // skipped nested object accessor here until fully tested 
+          // skipped nested object accessor here until fully tested
           // eslint-disable-next-line security/detect-object-injection
           const property = filterFields[option[operator][0].var]
           let value = propAccessor(option, operator)[1]
@@ -467,9 +467,9 @@ export function handleQueryOnChange(selectedOptions, filterFields) {
 }
 
 /**
- * 
- * @param {[String]} features 
- * @param {String} module 
+ *
+ * @param {[String]} features
+ * @param {String} module
  * @returns Boolean
  * @description checks if a module is in accepted features of a community
  */

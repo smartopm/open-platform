@@ -34,7 +34,7 @@ describe('Comment Card Component', () => {
     expect(container.queryByText(/some_user/i)).toBeInTheDocument()
     expect(container.queryByText(/added new comment/i)).toBeInTheDocument()
 
-    const re = new RegExp(/a-z/, 'g')
+    const re = /a-z/g
     const updateItemWithDate = container.getAllByText(''.replace(re, date))
     expect(updateItemWithDate.length).not.toBe(0)
   })
