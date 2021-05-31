@@ -29,10 +29,12 @@ module Mutations
         ActiveRecord::Base.transaction do
           land_parcel = context[:site_community].land_parcels.find_by(id: values[:land_parcel_id])
           context[:payment_plan] = land_parcel.payment_plan
+          raise_receipt_number_validation_error(values[:receipt_number])
 
           create_user_transaction(values)
           raise_transaction_validation_error
-          context[:transaction].execute_transaction_callbacks(context[:payment_plan])
+          context[:transaction].execute_transaction_callbacks(context[:payment_plan],
+                                                              values[:receipt_number])
           { transaction: context[:transaction].reload }
         end
       end
@@ -47,6 +49,13 @@ module Mutations
 
       private
 
+      def raise_receipt_number_validation_error(receipt_number)
+        return if receipt_number.nil?
+
+        payment_exists = PlanPayment.exists?(manual_receipt_number: receipt_number)
+        raise GraphQL::ExecutionError, I18n.t('errors.receipt_number.already_exists') if payment_exists
+      end
+
       # rubocop:disable Metrics/AbcSize
       # Creates deposits made by user.
       #
@@ -56,7 +65,7 @@ module Mutations
       def create_user_transaction(values)
         user = context[:site_community].users.find_by(id: values[:user_id])
 
-        transaction_attributes = values.except(:land_parcel_id)
+        transaction_attributes = values.except(:land_parcel_id, :receipt_number)
                                        .merge(
                                          status: 'accepted',
                                          community_id: context[:site_community]&.id,

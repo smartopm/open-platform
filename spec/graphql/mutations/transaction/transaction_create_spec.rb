@@ -19,7 +19,8 @@ RSpec.describe Mutations::Transaction::TransactionCreate do
           $amount: Float!,
           $source: String!,
           $landParcelId: ID!,
-          $transactionNumber: String
+          $transactionNumber: String,
+          $receiptNumber: String
         ){
           transactionCreate(
             userId: $userId,
@@ -27,6 +28,7 @@ RSpec.describe Mutations::Transaction::TransactionCreate do
             source: $source,
             landParcelId: $landParcelId,
             transactionNumber: $transactionNumber
+            receiptNumber: $receiptNumber
           ){ 
             transaction{
               source
@@ -36,6 +38,7 @@ RSpec.describe Mutations::Transaction::TransactionCreate do
               createdAt
               planPayments{
                 createdAt
+                receiptNumber
                 currentPlotPendingBalance
                 paymentPlan{
                   pendingBalance
@@ -76,6 +79,7 @@ RSpec.describe Mutations::Transaction::TransactionCreate do
               amount: 2000,
               source: 'cash',
               landParcelId: land_parcel.id,
+              receiptNumber: '1001',
             }
             result = DoubleGdpSchema.execute(transaction_create_mutation,
                                              variables: variables,
@@ -87,11 +91,12 @@ RSpec.describe Mutations::Transaction::TransactionCreate do
             expect(transaction_result['source']).to eql 'cash'
             expect(transaction_result['amount']).to eql 2000.0
             expect(transaction_result['status']).to eql 'accepted'
-
             plan_payment = transaction_result['planPayments'][0]
             expect(plan_payment['createdAt']).to eql transaction_result['createdAt']
+            expect(plan_payment['receiptNumber']).to eql "MI1001"
             expect(plan_payment['currentPlotPendingBalance']).to eql 0.0
             expect(plan_payment['paymentPlan']['pendingBalance']).to eql 0.0
+            
           end
         end
 
@@ -102,6 +107,7 @@ RSpec.describe Mutations::Transaction::TransactionCreate do
               amount: 100,
               source: 'cash',
               landParcelId: land_parcel.id,
+              receiptNumber: '1001',
             }
             result = DoubleGdpSchema.execute(transaction_create_mutation,
                                              variables: variables,
@@ -116,6 +122,7 @@ RSpec.describe Mutations::Transaction::TransactionCreate do
 
             plan_payment = transaction_result['planPayments'][0]
             expect(plan_payment['createdAt']).to eql transaction_result['createdAt']
+            expect(plan_payment['receiptNumber']).to eql "MI1001"
             expect(plan_payment['currentPlotPendingBalance']).to eql 900.0
             expect(plan_payment['paymentPlan']['pendingBalance']).to eql 900.0
           end

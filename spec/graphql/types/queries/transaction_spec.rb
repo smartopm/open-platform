@@ -19,7 +19,7 @@ RSpec.describe Types::Queries::Payment do
     let!(:plan_payment) do
       create(:plan_payment, user_id: user.id, community_id: community.id,
                             transaction_id: transaction.id, payment_plan_id: payment_plan.id,
-                            amount: 500)
+                            amount: 500, manual_receipt_number: '12345')
     end
     let(:user_transactions_query) do
       <<~GQL
@@ -119,7 +119,7 @@ RSpec.describe Types::Queries::Payment do
 
           payment_details = receipt_details['planPayments'][0]
           expect(payment_details['amount']).to eql 500.0
-          expect(payment_details['receiptNumber']).to eql '12345'
+          expect(payment_details['receiptNumber']).to eql 'MI12345'
           expect(payment_details['currentPlotPendingBalance']).to eql 1200.0
         end
       end

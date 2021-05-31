@@ -11,12 +11,20 @@ class PlanPayment < ApplicationRecord
   belongs_to :payment_plan
 
   validates :amount, numericality: { greater_than: 0 }
+  validates :manual_receipt_number, uniqueness: { allow_nil: true, scope: :community_id }
 
   has_paper_trail
 
   before_create :assign_current_plot_balance
 
-  delegate :receipt_number, to: :user_transaction
+  # Returns receipt number
+  #
+  # @return [String]
+  def receipt_number
+    puts "In method..........."
+    ap self
+    manual_receipt_number.present? ? "MI#{manual_receipt_number}" : "SI#{automated_receipt_number}"
+  end
 
   private
 
