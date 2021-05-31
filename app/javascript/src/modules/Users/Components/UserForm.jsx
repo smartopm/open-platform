@@ -272,12 +272,13 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
             {t('common:form_fields.primary_number')}
           </label>
           <TextField
+            id="phoneNumber"
             className="form-control"
+            name="phoneNumber"
             type="text"
             onChange={handleInputChange}
-            defaultValue={data.phoneNumber || ''}
-            name="phoneNumber"
-            inputProps={{ 'data-testid': 'phoneNumber' }}
+            value={data.phoneNumber || ''}
+            inputProps={{ 'data-testid': 'primary_phone' }}
             disabled={!isFromRef && !isAdmin}
             required
           />
@@ -296,6 +297,7 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
             disabled={!isFromRef && !isAdmin}
           />
         </div>
+
 
         {!isFromRef && (
           <>

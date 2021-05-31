@@ -35,14 +35,14 @@ describe('UserForm Component', () => {
     expect(container.queryByTestId('submit_btn')).toBeDisabled()
 
     await act(async () => {
-      fireEvent.change(container.queryByTestId('phoneNumber'), {
+      fireEvent.change(container.queryByTestId('primary_phone'), {
         target: { value: '090909090909' }
       })
     })
 
-    expect(container.queryByTestId('phoneNumber').value).toContain(
+    expect(container.queryByTestId('primary_phone').value).toContain(
       '090909090909'
-    )
+    ) 
 
     await act(async () => {
       fireEvent.change(container.queryByTestId('email'), {
