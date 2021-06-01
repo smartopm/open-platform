@@ -536,8 +536,9 @@ ActiveRecord::Schema.define(version: 2021_05_31_105115) do
     t.datetime "updated_at", precision: 6, null: false
     t.decimal "current_plot_pending_balance", precision: 11, scale: 2
     t.string "manual_receipt_number"
-    t.integer "automated_receipt_number", default: -> { "nextval('automated_receipt_numbers_seq'::regclass)" }
+    t.integer "automated_receipt_number"
     t.index ["community_id"], name: "index_plan_payments_on_community_id"
+    t.index ["manual_receipt_number", "community_id"], name: "index_plan_payments_on_manual_receipt_number_and_community_id", unique: true
     t.index ["payment_plan_id"], name: "index_plan_payments_on_payment_plan_id"
     t.index ["transaction_id"], name: "index_plan_payments_on_transaction_id"
     t.index ["user_id"], name: "index_plan_payments_on_user_id"

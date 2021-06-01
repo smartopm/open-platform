@@ -54,7 +54,7 @@ module Mutations
 
         payment_exists = PlanPayment.exists?(
           manual_receipt_number: receipt_number,
-          community_id: context[:site_community].id
+          community_id: context[:site_community].id,
         )
         return unless payment_exists
 
