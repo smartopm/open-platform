@@ -10,7 +10,7 @@ RSpec.describe Types::Queries::Payment do
     let!(:land_parcel) { create(:land_parcel, community_id: community.id) }
     let!(:payment_plan) do
       create(:payment_plan, land_parcel_id: land_parcel.id, user_id: user.id, plot_balance: 0,
-                            pending_balance: 1200)
+                            pending_balance: 1200, monthly_amount: 100)
     end
     let!(:transaction) do
       create(:transaction, user_id: user.id, community_id: community.id, depositor_id: user.id,
@@ -103,6 +103,8 @@ RSpec.describe Types::Queries::Payment do
       end
 
       context 'when current_user is verified' do
+        before { payment_plan.update(pending_balance: 1200) }
+
         it 'return transaction receipt details' do
           variables = { id: transaction.id }
           result = DoubleGdpSchema.execute(transaction_receipt,
@@ -120,7 +122,7 @@ RSpec.describe Types::Queries::Payment do
           payment_details = receipt_details['planPayments'][0]
           expect(payment_details['amount']).to eql 500.0
           expect(payment_details['receiptNumber']).to eql 'MI12345'
-          expect(payment_details['currentPlotPendingBalance']).to eql 1200.0
+          expect(payment_details['currentPlotPendingBalance']).to eql 700.0
         end
       end
     end

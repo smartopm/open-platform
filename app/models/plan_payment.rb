@@ -15,22 +15,14 @@ class PlanPayment < ApplicationRecord
 
   has_paper_trail
 
-  before_create :assign_current_plot_balance
+  scope :created_at_lteq, lambda { |created_at|
+    where(PlanPayment.arel_table[:created_at].lteq(created_at))
+  }
 
   # Returns receipt number
   #
   # @return [String]
   def receipt_number
     manual_receipt_number.present? ? "MI#{manual_receipt_number}" : "SI#{automated_receipt_number}"
-  end
-
-  private
-
-  # Assigns payment plan pending balance to payment entry.
-  #
-  # @return [void]
-  # @note attribute +current_plot_pending_balance+ will used to track plot's pending balace.
-  def assign_current_plot_balance
-    self.current_plot_pending_balance = payment_plan.pending_balance
   end
 end
