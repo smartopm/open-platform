@@ -24,7 +24,6 @@ export default function TransactionsList({ userId, user, userData, tab }) {
   const path = useParamsQuery()
   const limit = 10
   const page = path.get('page')
-  // const tab = path.get('tab')
   const [offset, setOffset] = useState(Number(page) || 0)
   const theme = useTheme();
   const { t } = useTranslation('common')
