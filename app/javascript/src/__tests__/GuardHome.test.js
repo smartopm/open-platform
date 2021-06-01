@@ -4,10 +4,11 @@ import '@testing-library/jest-dom/extend-expect';
 import { BrowserRouter } from 'react-router-dom';
 import { ApolloProvider } from 'react-apollo';
 import { MockedProvider } from '@apollo/react-testing';
-import { Context } from '../containers/Provider/AuthStateProvider';
 import { createClient } from '../utils/apollo';
 import { SecurityGuards } from '../graphql/queries';
 import { HomeGuard as GuardHome } from '../modules/Dashboard/Components/GuardHome'
+import { Context } from '../containers/Provider/AuthStateProvider';
+import userMock from '../__mocks__/userMock';
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
 
@@ -47,7 +48,7 @@ describe('Home Guard page', () => {
     await act(async () => {
       render(
         <ApolloProvider client={createClient}>
-          <Context.Provider value={data.user}>
+          <Context.Provider value={userMock}>
             <MockedProvider mocks={mocks} addTypename={false}>
               <BrowserRouter>
                 <GuardHome translate={tMock} />

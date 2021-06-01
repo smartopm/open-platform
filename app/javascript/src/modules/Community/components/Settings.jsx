@@ -341,6 +341,7 @@ export default function CommunitySettings({ data, token, refetch }) {
         margin="normal"
         inputProps={{ "data-testid": "securityManager"}}
         style={{ width: '100%'}}
+        required
       />
 
       <br />
