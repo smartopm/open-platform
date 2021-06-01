@@ -5,6 +5,7 @@
 
 require 'email_msg'
 require 'merge_users'
+require 'host_env'
 # User should encompass all users of the system
 # Citizens
 # City Administrators
@@ -416,7 +417,7 @@ class User < ApplicationRecord
     raise UserError, 'No phone number to send one time code to' unless self[:phone_number]
 
     token = create_new_phone_token
-    url = "https://#{ENV['HOST']}/l/#{self[:id]}/#{token}"
+    url = "https://#{HostEnv.base_url(community)}/l/#{self[:id]}/#{token}"
     msg = "Your login link for #{community.name} is #{url}"
     Rails.logger.info "Sending '#{msg}' to #{self[:phone_number]}"
     Sms.send(self[:phone_number], msg)
@@ -484,7 +485,7 @@ class User < ApplicationRecord
     template = community.email_templates.find_by(name: 'welcome')
     return unless template
 
-    template_data = [{ key: '%login_url%', value: ENV['HOST'] || '' }]
+    template_data = [{ key: '%login_url%', value: HostEnv.base_url(community) || '' }]
     EmailMsg.send_mail_from_db(self[:email], template, template_data)
   end
 

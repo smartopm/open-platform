@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'email_msg'
+require 'host_env'
 
 # Send a task reminder by Email after wait time
 class TaskReminderJob < ApplicationJob
@@ -22,7 +23,7 @@ class TaskReminderJob < ApplicationJob
     template_data = [
       { key: '%logo_url%', value: user.community&.logo_url.to_s },
       { key: '%community%', value: user.community&.name.to_s },
-      { key: '%url%', value: "#{ENV['HOST']}/tasks/#{note_id}" },
+      { key: '%url%', value: "#{HostEnv.base_url(user.community)}/tasks/#{note_id}" },
     ]
     EmailMsg.send_mail_from_db(user.email, template, template_data)
   end

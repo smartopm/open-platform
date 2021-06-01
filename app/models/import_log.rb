@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'host_env'
+
 # User Import Log
 class ImportLog < ApplicationRecord
   belongs_to :community
@@ -24,7 +26,7 @@ class ImportLog < ApplicationRecord
 
     template_data = [
       { key: '%message%', value: message },
-      { key: '%app_url%', value: "#{ENV['HOST']}/" },
+      { key: '%app_url%', value: "#{HostEnv.base_url(community)}/" },
     ]
     EmailMsg.send_mail_from_db(user.email, template, template_data)
   end
