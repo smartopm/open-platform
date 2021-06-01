@@ -245,6 +245,7 @@ export default function UserInformation({
               userId={userId}
               user={authState.user}
               userData={data.user}
+              tab={tab}
             />
           </TabPanel>
           <TabPanel value={tabValue} index="Plans">
@@ -252,6 +253,7 @@ export default function UserInformation({
               userId={userId}
               user={authState.user}
               userData={data.user}
+              tab={tab}
             />
           </TabPanel>
         </FeatureCheck>

@@ -16,7 +16,7 @@ import CenteredContent from '../../../../components/CenteredContent'
 import Paginate from '../../../../components/Paginate'
 import ListHeader from '../../../../shared/list/ListHeader';
 
-export default function PaymentPlans({ userId, user, userData }) {
+export default function PaymentPlans({ userId, user, userData, tab }) {
   const planHeader = [
     { title: 'Plot Number', col: 2 },
     { title: 'Payment Plan', col: 2 },
@@ -26,7 +26,6 @@ export default function PaymentPlans({ userId, user, userData }) {
     { title: 'Payment Day', col: 2 }
   ];
   const path = useParamsQuery()
-  const tab = path.get('tab')
   const classes = useStyles();
   const limit = 10
   const page = path.get('page')
@@ -125,6 +124,7 @@ PaymentPlans.defaultProps = {
 
 PaymentPlans.propTypes = {
   userId: PropTypes.string.isRequired,
+  tab: PropTypes.string.isRequired,
   // eslint-disable-next-line react/forbid-prop-types
   userData: PropTypes.object,
   user: PropTypes.shape({

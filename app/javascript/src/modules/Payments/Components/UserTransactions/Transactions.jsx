@@ -20,11 +20,11 @@ import ListHeader from '../../../../shared/list/ListHeader';
 import Balance from './UserBalance'
 import { UserBalance } from '../../../../graphql/queries'
 
-export default function TransactionsList({ userId, user, userData }) {
+export default function TransactionsList({ userId, user, userData, tab }) {
   const path = useParamsQuery()
   const limit = 10
   const page = path.get('page')
-  const tab = path.get('tab')
+  // const tab = path.get('tab')
   const [offset, setOffset] = useState(Number(page) || 0)
   const theme = useTheme();
   const { t } = useTranslation('common')
@@ -44,7 +44,7 @@ export default function TransactionsList({ userId, user, userData }) {
   });
 
   const [loadCsvData, { loading: csvLoad, error: csvError, data: csvData, refetch: csvRefetch }] = useLazyQuery(DepositQuery, {
-    variables: { userId, limit: null, offset: null },
+    variables: { userId },
     fetchPolicy: 'no-cache',
     errorPolicy: 'all'
   });
@@ -74,11 +74,6 @@ export default function TransactionsList({ userId, user, userData }) {
   const currency = currencies[user.community.currency] || ''
   const { locale } = user.community
   const currencyData = { currency, locale }
-
-  async function handleCsv(done) {
-    await csvRefetch()
-    done()
-  } 
 
   function paginate(action) {
     if (action === 'prev') {
@@ -129,7 +124,7 @@ export default function TransactionsList({ userId, user, userData }) {
               </CSVLink>
             </Fab>
             <div>
-              <Typography className={classes.payment}>Transactions</Typography>
+              <Typography className={classes.payment} data-testid='header'>Transactions</Typography>
               {matches && <ListHeader headers={transactionHeader} color />}
             </div>
             {
@@ -194,6 +189,7 @@ TransactionsList.defaultProps = {
 
 TransactionsList.propTypes = {
   userId: PropTypes.string.isRequired,
+  tab: PropTypes.string.isRequired,
   // eslint-disable-next-line react/forbid-prop-types
   userData: PropTypes.object,
   user: PropTypes.shape({
