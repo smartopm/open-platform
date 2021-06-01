@@ -1,6 +1,7 @@
 const userMock = {
     user: {
       id: 'a54d6184-b10e-4865-bee7-7957701d423d',
+      token: 'a54d6184-b10e-4865-bee7',
       name: 'Another somebodyy',
       userType: 'client',
       expiresAt: null,
@@ -9,7 +10,8 @@ const userMock = {
         themeColors: {
           primaryColor: "#nnn",
           secondaryColor: "#nnn"
-        }
+        },
+        imageUrl: 'http://image.jpg'
       }
     }
   };

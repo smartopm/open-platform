@@ -1,50 +1,34 @@
-/* eslint-disable */
-import React from 'react'
+/* eslint-disable react/prop-types */
+import React, { useContext } from 'react'
 import { useQuery } from 'react-apollo'
-import Loading from '../shared/Loading.jsx'
-import Logo from '../../../assets/images/nkwashi_logo_black_transparent.png'
-
-import html2canvas from 'html2canvas'
-
-import DateUtil from '../utils/dateutil.js'
+import { QRCode } from 'react-qr-svg'
+import Loading from '../shared/Loading'
+import DateUtil from '../utils/dateutil'
 
 import { UserQuery } from '../graphql/queries'
-import ErrorPage from '../components/Error.jsx'
-import { QRCode } from 'react-qr-svg'
+import ErrorPage from '../components/Error'
+import CommunityName from '../shared/CommunityName'
+import { Context } from './Provider/AuthStateProvider'
 
 function expiresAtStr(datetime) {
   if (datetime) {
     const date = DateUtil.fromISO8601(datetime)
     return (
-      date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate()
+      `${date.getFullYear()  }-${  date.getMonth() + 1  }-${  date.getDate()}`
     )
   }
   return 'Never'
 }
 
-function qrCodeAddress(id_card_token) {
+function qrCodeAddress(userId) {
   const timestamp = Date.now()
-  const linkUrl = `${window.location.protocol}//${window.location.hostname}/user/${id_card_token}/${timestamp}`
+  const linkUrl = `${window.location.protocol}//${window.location.hostname}/user/${userId}/${timestamp}`
   return linkUrl
 }
 
-/* istanbul ignore next */
-function openImageInNewTab() {
-  html2canvas(document.getElementById('idCard'), { allowTaint: true }).then(
-    function (canvas) {
-      let d = canvas.toDataURL('image/png')
-      let w = window.open('about:blank')
-      let image = new Image()
-      image.src = d
-      setTimeout(function () {
-        w.document.write(image.outerHTML)
-      }, 0)
-    }
-  )
-}
 
 export default function IdPrintPage({ match }){
-  let id = match.params.id
+  const {id} = match.params
   const { loading, error, data } = useQuery(UserQuery, { variables: { id } })
 
   if (loading) return <Loading />
@@ -59,32 +43,8 @@ function toTitleCase(str) {
   })
 }
 
-/* istanbul ignore next */
-function downloadBtn() {
-  html2canvas(document.getElementById('idCard'), { allowTaint: true }).then(
-    function (canvas) {
-      let dt = canvas.toDataURL('image/png')
-      /* Change MIME type to trick the browser to downlaod the file instead of displaying it */
-      let dlDt = dt.replace(
-        /^data:image\/[^;]*/,
-        'data:application/octet-stream'
-      )
-
-      /* In addition to <a>'s "download" attribute, you can define HTTP-style headers */
-      dlDt = dlDt.replace(
-        /^data:application\/octet-stream/,
-        'data:application/octet-stream;headers=Content-Disposition%3A%20attachment%3B%20filename=Canvas.png'
-      )
-      const a = document.createElement('a')
-      a.setAttribute('download', 'Canvas.png')
-      a.setAttribute('href', dlDt)
-      a.innerHTML = 'Download'
-      document.body.appendChild(a)
-    }
-  )
-}
-
 export function UserPrintDetail({ data }) {
+  const authState = useContext(Context)
   return (
     <div>
       <div className="row justify-content-center">
@@ -92,13 +52,12 @@ export function UserPrintDetail({ data }) {
           id="idCard"
           className="card id_card_box"
           style={{ width: '325px' }}
-          onClick={openImageInNewTab}
         >
           <div
             className="d-flex justify-content-center"
             style={{ marginTop: '1.75em' }}
           >
-            <img src={Logo} style={{ width: '200px' }} onLoad={downloadBtn} alt="printed QR code" />
+            <CommunityName authState={authState} />
           </div>
           <div
             className="d-flex justify-content-center"
@@ -111,7 +70,9 @@ export function UserPrintDetail({ data }) {
           </div>
           <div className="d-flex justify-content-center">
             <div className="expires">
-              Exp: {expiresAtStr(data.user.expiresAt)}
+              Exp: 
+              {' '}
+              {expiresAtStr(data.user.expiresAt)}
             </div>
           </div>
 
