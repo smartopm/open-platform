@@ -8,6 +8,7 @@ class TaskReminderJob < ApplicationJob
   queue_as :default
 
   # rubocop:disable Metrics/MethodLength
+  # rubocop:disable Metrics/AbcSize
   def perform(assigned_note)
     return unless assigned_note
 
@@ -27,5 +28,6 @@ class TaskReminderJob < ApplicationJob
     ]
     EmailMsg.send_mail_from_db(user.email, template, template_data)
   end
+  # rubocop:enable Metrics/AbcSize
   # rubocop:enable Metrics/MethodLength
 end
