@@ -64,7 +64,9 @@ export default function Balance({ user, userId, userData, refetch, balanceData, 
 
 Balance.defaultProps = {
   userData: {},
-  csvRefetch: () => {}
+  csvRefetch: () => {},
+  refetch: () => {},
+  balanceRefetch: () => {}
 }
 
 Balance.propTypes = {
@@ -83,10 +85,10 @@ Balance.propTypes = {
   }).isRequired,
   balanceData: PropTypes.shape({
     id: PropTypes.string,
-    pendingBalance: PropTypes.string,
-    balance: PropTypes.string
+    pendingBalance: PropTypes.number,
+    balance: PropTypes.number
   }).isRequired,
-  refetch: PropTypes.func.isRequired,
+  refetch: PropTypes.func,
   csvRefetch: PropTypes.func,
-  balanceRefetch: PropTypes.func.isRequired
+  balanceRefetch: PropTypes.func
 }
