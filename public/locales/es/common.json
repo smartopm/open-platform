@@ -10,6 +10,7 @@
     "empty_name": "Ingrese Nombre ",
     "empty_text": "El mensaje debe contener algo de texto",
     "flashlight_not_supported": "Este navegador no es compatible con la linterna ",
+    "invalid_color_code": "El código de color del tema no es válido",
     "no_changes": "No se realizaron cambios",
     "user_name_search_not_found": "{{username}} usuario no encontrado"
   },
