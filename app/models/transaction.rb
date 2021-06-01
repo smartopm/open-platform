@@ -28,7 +28,8 @@ class Transaction < ApplicationRecord
   # * Creates payment entry against payment plan
   # * Updates payment plan's pending balance
   #
-  # @param [payment_plan] PaymentPlan
+  # @param [PaymentPlan] PaymentPlan
+  # @param [String] receipt_number
   #
   # @return [void]
   def execute_transaction_callbacks(payment_plan, receipt_number)
@@ -63,6 +64,7 @@ class Transaction < ApplicationRecord
   #
   # @param [String] PaymentPlan#uuid
   # @param [Float] allocated_amount
+  # @param [String] Receipt Number
   #
   # @return [void]
   def create_plan_payment(payment_plan, amount_paid, receipt_number)
