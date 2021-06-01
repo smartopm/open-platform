@@ -2,7 +2,7 @@
 import gql from 'graphql-tag';
 
 export const UserTransactions = gql`
-  query UserTransaction($userId: ID!, $limit: Int, $offset: Int,) {
+  query UserTransaction($userId: ID!, $limit: Int, $offset: Int) {
     userTransactions(userId: $userId, limit: $limit, offset: $offset) {
       id
       source
@@ -10,9 +10,18 @@ export const UserTransactions = gql`
       transactionNumber
       allocatedAmount
       unallocatedAmount
+      status
+      transactionNumber
       depositor {
         id
         name
+      }
+      user {
+        id
+        name
+        email
+        phoneNumber
+        extRefId
       }
     }
   }

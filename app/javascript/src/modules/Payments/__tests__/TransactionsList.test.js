@@ -81,7 +81,7 @@ describe('Transactions Component', () => {
 
     await waitFor(
       () => {
-        expect(container.queryByText('common:misc.total_balance')).toBeInTheDocument();
+        expect(container.queryByText('Transactions')).toBeInTheDocument();
       },
       { timeout: 100 }
     );

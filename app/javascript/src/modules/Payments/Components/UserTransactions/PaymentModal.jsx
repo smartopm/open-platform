@@ -30,7 +30,7 @@ const initialValues = {
   paidDate: subDays(new Date(), 1),
   receiptNumber: ''
 }
-export default function PaymentModal({ open, handleModalClose, userId, currencyData, refetch, depRefetch, walletRefetch, userData}){
+export default function PaymentModal({ open, handleModalClose, userId, currencyData, refetch, walletRefetch, userData, csvRefetch}){
   const classes = useStyles();
   const history = useHistory();
   const [inputValue, setInputValue] = useState(initialValues);
@@ -100,8 +100,8 @@ export default function PaymentModal({ open, handleModalClose, userId, currencyD
         setIsSuccessAlert(true);
         handleModalClose();
         refetch();
-        depRefetch();
         walletRefetch();
+        csvRefetch();
         setPaymentData(res.data.transactionCreate.transaction);
         setInputValue(initialValues);
         setPromptOpen(true);
@@ -369,7 +369,7 @@ PaymentDetails.propTypes = {
 };
 
 PaymentModal.defaultProps = {
-  depRefetch: () => {},
+  csvRefetch: () => {},
   walletRefetch: () => {},
   userData: {}
 };
@@ -382,7 +382,7 @@ PaymentModal.propTypes = {
     transactionNumber: PropTypes.number
   }),
   refetch: PropTypes.func.isRequired,
-  depRefetch: PropTypes.func,
+  csvRefetch: PropTypes.func,
   walletRefetch: PropTypes.func,
   currencyData: PropTypes.shape({
     currency: PropTypes.string,

@@ -2,6 +2,8 @@
 /* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from 'react'
 import { useLazyQuery } from 'react-apollo'
+import { CSVLink } from "react-csv";
+import Fab from '@material-ui/core/Fab';
 import { Typography } from '@material-ui/core'
 import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types'
@@ -41,6 +43,12 @@ export default function TransactionsList({ userId, user, userData }) {
     errorPolicy: 'all'
   });
 
+  const [loadCsvData, { loading: csvLoad, error: csvError, data: csvData, refetch: csvRefetch }] = useLazyQuery(DepositQuery, {
+    variables: { userId, limit: null, offset: null },
+    fetchPolicy: 'no-cache',
+    errorPolicy: 'all'
+  });
+
   const transactionHeader = [
     { title: 'Date', value: t('common:table_headers.date'), col: 1 },
     { title: 'Recorded by', value: t('common:table_headers.recorded_by'), col: 1 },
@@ -49,9 +57,28 @@ export default function TransactionsList({ userId, user, userData }) {
     { title: 'Menu', value: t('common:table_headers.menu'), col: 1 }
   ];
 
+  const csvHeaders = [
+    { label: "Created Date", key: "createdAt" },
+    { label: "Recorded By", key: "depositor.name" },
+    { label: "Payment Type", key: "source" },
+    { label: "Amount", key: "allocatedAmount" },
+    { label: "Unallocated Amount", key: "unallocatedAmount" },
+    { label: "Status", key: "status" },
+    { label: "User Name", key: "user.name" },
+    { label: "Email", key: "user.email" },
+    { label: "Phone Number", key: "user.phoneNumber" },
+    { label: "Transaction Number", key: "transactionNumber" },
+    { label: "External Id", key: "user.extRefId" }
+  ];
+
   const currency = currencies[user.community.currency] || ''
   const { locale } = user.community
   const currencyData = { currency, locale }
+
+  async function handleCsv(done) {
+    await csvRefetch()
+    done()
+  } 
 
   function paginate(action) {
     if (action === 'prev') {
@@ -66,12 +93,14 @@ export default function TransactionsList({ userId, user, userData }) {
     if (tab === 'Payments') {
       loadTransactions()
       loadBalance()
+      loadCsvData()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tab]);
 
   if (error && !data) return <CenteredContent>{formatError(error.message)}</CenteredContent>
   if (balanceError && !balanceData) return <CenteredContent>{formatError(balanceError.message)}</CenteredContent>
+  if (csvError && !csvData) return <CenteredContent>{formatError(csvError.message)}</CenteredContent>
 
   return (
     <div>
@@ -83,11 +112,22 @@ export default function TransactionsList({ userId, user, userData }) {
           refetch={refetch}
           balanceData={balanceData?.userBalance}
           balanceRefetch={balanceRefetch}
+          csvRefetch={csvRefetch}
         />
       )}
-      {loading ? <Spinner /> : (
+      {loading || csvLoad ? <Spinner /> : (
         data?.userTransactions?.length > 0 ? (
           <div className={classes.paymentList}>
+            <Fab color="primary" variant="extended" className={classes.download}>
+              <CSVLink 
+                data={csvData?.userTransactions} 
+                style={{color: 'white'}} 
+                headers={csvHeaders} 
+                filename="transaction-data.csv" 
+              >
+                Download CSV
+              </CSVLink>
+            </Fab>
             <div>
               <Typography className={classes.payment}>Transactions</Typography>
               {matches && <ListHeader headers={transactionHeader} color />}
@@ -137,6 +177,14 @@ const useStyles = makeStyles({
     borderRadius: '4px',
     border: '1px solid #EEEEEE',
     marginTop: '20px'
+  },
+  download: {
+    boxShadow: 'none',
+    position: 'fixed',
+    bottom: 20,
+    right: 57,
+    marginLeft: '30%',
+    zIndex: '1000'
   }
 });
 

@@ -26,7 +26,7 @@ module Types::Queries::Transaction
   # @param limit [Integer]
   #
   # @return [Array<TransactionType>]
-  def user_transactions(user_id: nil, offset: 0, limit: 10)
+  def user_transactions(user_id: nil, offset: 0, limit:)
     user = verified_user(user_id)
 
     user.transactions.not_cancelled.includes(:plan_payments,

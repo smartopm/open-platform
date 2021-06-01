@@ -8,7 +8,7 @@ import { Context as AuthStateContext } from '../../../../containers/Provider/Aut
 import ButtonComponent from '../../../../shared/buttons/Button'
 import PaymentModal from './PaymentModal'
 
-export default function Balance({ user, userId, userData, refetch, balanceData, balanceRefetch }) {
+export default function Balance({ user, userId, userData, refetch, balanceData, balanceRefetch, csvRefetch }) {
   const authState = useContext(AuthStateContext);
   const { t } = useTranslation('common');
   const [payOpen, setPayOpen] = useState(false);
@@ -56,13 +56,15 @@ export default function Balance({ user, userId, userData, refetch, balanceData, 
         refetch={balanceRefetch}
         walletRefetch={refetch}
         userData={userData}
+        csvRefetch={csvRefetch}
       />
     </div>
   )
 }
 
 Balance.defaultProps = {
-  userData: {}
+  userData: {},
+  csvRefetch: () => {}
 }
 
 Balance.propTypes = {
@@ -85,5 +87,6 @@ Balance.propTypes = {
     balance: PropTypes.string
   }).isRequired,
   refetch: PropTypes.func.isRequired,
+  csvRefetch: PropTypes.func,
   balanceRefetch: PropTypes.func.isRequired
 }
