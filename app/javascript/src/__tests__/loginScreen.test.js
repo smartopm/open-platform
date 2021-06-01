@@ -47,7 +47,8 @@ describe('Login screen', () => {
               primaryColor: "#FFFFFF",
               secondaryColor: "#FFFFFF"
             },
-            features: []
+            features: [],
+            securityManager: '000000',
           }
         }
       }

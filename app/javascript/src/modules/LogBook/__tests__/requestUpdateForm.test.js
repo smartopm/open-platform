@@ -7,6 +7,8 @@ import { EntryRequestQuery } from '../../../graphql/queries'
 import Loading from '../../../shared/Loading'
 import RequestUpdate from '../Components/RequestUpdate'
 import MockedThemeProvider from '../../__mocks__/mock_theme'
+import userMock from '../../../__mocks__/userMock'
+import { Context } from '../../../containers/Provider/AuthStateProvider'
 
 describe("RequestUpdate Component ",() => {
   const mocks = {
@@ -42,7 +44,9 @@ describe("RequestUpdate Component ",() => {
        <MockedProvider mocks={[mocks]} addTypename={false}>
          <BrowserRouter>
            <MockedThemeProvider>
-             <RequestUpdate id="3c2f8ee2-598b-437c-b217-3e4c0f86c761" />
+             <Context.Provider value={userMock}>
+               <RequestUpdate id="3c2f8ee2-598b-437c-b217-3e4c0f86c761" />
+             </Context.Provider>
            </MockedThemeProvider>
          </BrowserRouter>
        </MockedProvider>
@@ -54,7 +58,7 @@ describe("RequestUpdate Component ",() => {
     await waitFor(() => {
         expect(container.queryByText('form_fields.full_name')).toBeInTheDocument()
       },
-      { timeout: 500 }
+      { timeout: 50 }
     )
     await waitFor(() => {
       const entryName = container.queryByTestId('entry_user_name')
@@ -76,7 +80,7 @@ describe("RequestUpdate Component ",() => {
       expect(container.queryByTestId('entry_user_call_mgr').textContent).toContain('logbook:logbook.call_manager')
 
         },
-        { timeout: 500 }
+        { timeout: 50 }
       )
 
   })

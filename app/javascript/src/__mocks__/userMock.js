@@ -9,7 +9,8 @@ const userMock = {
         themeColors: {
           primaryColor: "#nnn",
           secondaryColor: "#nnn"
-        }
+        },
+        name: 'Another Comm',
       }
     }
   };

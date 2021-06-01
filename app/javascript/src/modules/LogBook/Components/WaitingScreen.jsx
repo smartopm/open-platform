@@ -1,9 +1,9 @@
 
-import React from "react";
+import React, { useContext } from "react";
 import { Link } from "react-router-dom";
 import { css, StyleSheet } from "aphrodite";
-import { ponisoNumber } from "../../../utils/constants";
 import CenteredContent from "../../../components/CenteredContent";
+import { Context } from "../../../containers/Provider/AuthStateProvider";
 
 /**
  * 
@@ -38,6 +38,7 @@ export function GrantedScreen() {
 }
 
 export function DeniedScreen() {
+  const authState = useContext(Context)
   return (
     <div
       className={`row justify-content-center align-items-center ${css(
@@ -48,7 +49,7 @@ export function DeniedScreen() {
       <br />
       <div className="col-10 col-sm-10">
         <a
-          href={`tel:${ponisoNumber}`}
+          href={`tel:${authState.user.community.securityManager}`}
           className={`btn btn-lg btn-block ${css(styles.callButton)}`}
         >
           Call Manager

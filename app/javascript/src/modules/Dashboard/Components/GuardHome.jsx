@@ -13,7 +13,6 @@ import PersonIcon from '@material-ui/icons/Person';
 import { useQuery, useMutation } from 'react-apollo';
 import { withStyles } from '@material-ui/core/styles';
 import ScanIcon from '../../../../../assets/images/shape.svg';
-import { ponisoNumber } from '../../../utils/constants';
 import Avatar from '../../../components/Avatar';
 import { Context } from '../../../containers/Provider/AuthStateProvider';
 import { SecurityGuards } from '../../../graphql/queries';
@@ -204,7 +203,7 @@ export function HomeGuard({ translate }) {
                 </Link>
               </div>
               <div className={`${css(styles.cardSize)} card align-self-center text-center`}>
-                <a href={`tel:${ponisoNumber}`}>
+                <a href={`tel:${authState.user.community.securityManager}`}>
                   <div className="card-body">
                     <h5 className="card-title">
                       <CallIcon color="primary" fontSize="large" />

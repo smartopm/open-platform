@@ -54,6 +54,7 @@ describe('Community settings page ', () => {
           tagline: '',
           logoUrl: '',
           wpLink: '',
+          securityManager: '',
           themeColors: { primaryColor: '#69ABA4', secondaryColor: '#cf5628' },
         }
       },
