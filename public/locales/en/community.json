@@ -15,6 +15,7 @@
       "set_language": "Set Language",
       "update_community": "Update Community Settings",
       "logo_updated": "Logo uploaded successfully",
-      "community_updated": "Community Updated successfully"
+      "community_updated": "Community Updated successfully",
+      "set_security_manager": "Set Security Manager Phone Number"
     }
 }

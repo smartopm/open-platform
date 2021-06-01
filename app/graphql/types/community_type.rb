@@ -21,6 +21,7 @@ module Types
     field :theme_colors, GraphQL::Types::JSON, null: true
     field :wp_link, String, null: true
     field :features, GraphQL::Types::JSON, null: true
+    field :security_manager, String, null: true
 
     def image_url
       return nil unless object.image.attached?
