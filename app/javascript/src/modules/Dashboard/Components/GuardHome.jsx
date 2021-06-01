@@ -22,6 +22,7 @@ import ErrorPage from '../../../components/Error';
 import { AUTH_TOKEN_KEY } from '../../../utils/apollo';
 import { switchGuards } from '../../../graphql/mutations';
 import { Footer } from '../../../components/Footer';
+import FeatureCheck from '../../Features';
 
 export const BootstrapInput = withStyles(() => ({
   input: {
@@ -193,16 +194,18 @@ export function HomeGuard({ translate }) {
                   </div>
                 </Link>
               </div>
-              <div className={`${css(styles.cardSize)} card align-self-center text-center`}>
-                <Link to={`/timesheet/${authState.user?.id}`} className="card-link">
-                  <div className="card-body">
-                    <h5 className="card-title">
-                      <LogEntryIcon fontSize="large" color="primary" />
-                    </h5>
-                    <p>Time Card</p>
-                  </div>
-                </Link>
-              </div>
+              <FeatureCheck features={authState.user.community.features} name="Time Card">
+                <div className={`${css(styles.cardSize)} card align-self-center text-center`}>
+                  <Link to={`/timesheet/${authState.user?.id}`} className="card-link">
+                    <div className="card-body">
+                      <h5 className="card-title">
+                        <LogEntryIcon fontSize="large" color="primary" />
+                      </h5>
+                      <p>Time Card</p>
+                    </div>
+                  </Link>
+                </div>
+              </FeatureCheck>
               <div className={`${css(styles.cardSize)} card align-self-center text-center`}>
                 <a href={`tel:${ponisoNumber}`}>
                   <div className="card-body">

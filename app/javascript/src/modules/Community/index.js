@@ -12,7 +12,7 @@ import { allUserTypes } from '../../utils/constants';
 import CommunitySettings from './components/SettingsPage';
 import Tasks from '../Tasks'
 import Contact from '../Contact'
-import Referral from '../Referrals'
+// import Referral from '../Referrals'
 
 // we can discuss on changing this to preferences instead of settings
 const Settings =   {
@@ -39,5 +39,5 @@ export default {
   name: t => t('menu.community'),
   featureName: 'Community',
   accessibleBy: allUserTypes,
-  subMenu: [News, Message, Discussions, Campaigns , Labels, Tasks, Business, PermitRequestForms, Emails, Settings, Contact, Referral]
+  subMenu: [News, Message, Discussions, Campaigns , Labels, Tasks, Business, PermitRequestForms, Emails, Settings, Contact]
 };
