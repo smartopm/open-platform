@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'host_env'
+
 module Mutations
   module ActivityLog
     # Add an activity log for a user
@@ -19,7 +21,7 @@ module Mutations
 
         event_log = instantiate_event_log(user, note, timestamp, digital, subject)
 
-        send_notifications(user.phone_number)
+        send_notifications(user)
         return { event_log: event_log, user: user } if event_log.save
 
         raise GraphQL::ExecutionError, event_log.errors.full_messages
@@ -32,8 +34,9 @@ module Mutations
                                                               digital: digital)
       end
 
-      def send_notifications(number)
-        feedback_link = "https://#{ENV['HOST']}/feedback"
+      def send_notifications(user)
+        number = user.phone_number
+        feedback_link = "https://#{HostEnv.base_url(user.community)}/feedback"
         return if number.nil?
 
         # disabled rubocop to keep the structure of the message

@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'host_env'
+
 module ActionFlows
   module Events
     # Form Submit Event to handle related action
@@ -37,14 +39,14 @@ module ActionFlows
           'user_name' => form_user.user.name,
           'user_email' => form_user.user.email,
           'reviewers_email' => reviewers_email,
-          'url' => url_format(form_user.id),
+          'url' => url_format(eventlog.community),
           'has_status_changed' => false,
         )
       end
       # rubocop:enable Metrics/MethodLength
 
-      def url_format(_id)
-        "https://#{ENV['HOST']}/forms"
+      def url_format(community)
+        "https://#{HostEnv.base_url(community)}/forms"
       end
     end
   end

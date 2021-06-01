@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'email_msg'
+require 'host_env'
 
 # AssigneeNote
 class AssigneeNote < ApplicationRecord
@@ -29,7 +30,7 @@ class AssigneeNote < ApplicationRecord
     template_data = [
       { key: '%logo_url%', value: user.community&.logo_url.to_s },
       { key: '%community%', value: user.community&.name.to_s },
-      { key: '%url%', value: "#{ENV['HOST']}/tasks/#{note.id}" },
+      { key: '%url%', value: "#{HostEnv.base_url(user.community)}/tasks/#{note.id}" },
     ]
     EmailMsg.send_mail_from_db(user.email, template, template_data)
   end
