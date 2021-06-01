@@ -58,8 +58,6 @@ export default function UsersList() {
     setSubstatusReportOpen(!substatusReportOpen)
   }
 
- 
-
   const { loading, error, data, refetch } = useQuery(UsersDetails, {
     variables: {
       query: searchQuery,
@@ -119,7 +117,7 @@ export default function UsersList() {
             const property = filterFields[option[operator][0].var]
             let value = propAccessor(option, operator)[1]
 
-            if (operator === '==') operator = '='
+            if (operator === '==') operator = ':'
             if (property === 'date_filter') {
               operator = '>'
               value = dateToString(value)

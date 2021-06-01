@@ -204,6 +204,6 @@ describe('handleQueryOnChange', () => {
   it('should return query for the filter', () => {
     const result = handleQueryOnChange(selectedOptions, paymentFilterFields)
 
-    expect(result).toEqual("user = \"name\"");
+    expect(result).toEqual("user : \"name\"");
   });
 });

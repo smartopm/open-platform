@@ -31,11 +31,11 @@ class Invoice < ApplicationRecord
 
   search_scope :search do
     attributes :status, :invoice_number, :pending_amount, :amount, :created_at, :due_date
-    attributes land_parcel: ['land_parcel.parcel_number']
-    attributes created_by: ['created_by.name', 'created_by.email', 'created_by.phone_number']
     attributes user: ['user.name']
     attributes email: ['user.email']
     attributes phone_number: ['user.phone_number']
+    attributes land_parcel: ['land_parcel.parcel_number']
+    attributes created_by: ['created_by.name', 'created_by.email', 'created_by.phone_number']
   end
 
   # rubocop:disable Metrics/MethodLength
