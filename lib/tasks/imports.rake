@@ -259,7 +259,6 @@ namespace :imports do
               depositor_id: current_user.id,
               originally_created_at: current_user.current_time_in_timezone,
               amount: amount,
-              receipt_number: receipt_number,
             )
 
             unless transaction.persisted?
@@ -267,7 +266,7 @@ namespace :imports do
               next
             end
 
-            transaction.execute_transaction_callbacks(payment_plan)
+            transaction.execute_transaction_callbacks(payment_plan, receipt_number)
           else
             errors[row_num + 1] = 'Error: Payment plan not available.'
           end
