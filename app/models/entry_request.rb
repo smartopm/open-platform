@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'host_env'
+
 # rubocop:disable Metrics/ClassLength
 # Record of visitor entries to a community
 class EntryRequest < ApplicationRecord
@@ -84,7 +85,7 @@ class EntryRequest < ApplicationRecord
   def notify_admin(granted)
     return unless ENV['REQUEST_NOTIFICATION_NUMBER']
 
-    link = "https://#{ENV['HOST']}/request_hos/#{id}/edit"
+    link = "https://#{HostEnv.base_url(user.community)}/request_hos/#{id}/edit"
     Rails.logger.info "Sending entry request approval notification for #{link}"
 
     Sms.send(ENV['REQUEST_NOTIFICATION_NUMBER'],
@@ -94,7 +95,7 @@ class EntryRequest < ApplicationRecord
   end
 
   def send_feedback_link(number)
-    feedback_link = "https://#{ENV['HOST']}/feedback"
+    feedback_link = "https://#{HostEnv.base_url(user.community)}/feedback"
     Rails.logger.info "Phone number to send #{number}"
     # disabled rubocop to keep the structure of the message
     # rubocop:disable Layout/LineLength
@@ -103,7 +104,7 @@ class EntryRequest < ApplicationRecord
   end
 
   def notify_client(number)
-    SMS.send(number, "https://#{ENV['HOST']}/feedback")
+    SMS.send(number, "https://#{HostEnv.base_url(user.community)}/feedback")
   end
 
   def last_event_log

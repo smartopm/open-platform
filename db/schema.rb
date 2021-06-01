@@ -535,7 +535,6 @@ ActiveRecord::Schema.define(version: 2021_06_01_125354) do
     t.uuid "payment_plan_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.decimal "current_plot_pending_balance", precision: 11, scale: 2
     t.string "manual_receipt_number"
     t.integer "automated_receipt_number"
     t.index ["community_id"], name: "index_plan_payments_on_community_id"

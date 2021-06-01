@@ -3,7 +3,10 @@ import { render } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { BrowserRouter } from 'react-router-dom';
 import { MockedProvider } from '@apollo/react-testing';
+import { act } from 'react-dom/test-utils';
 import IdPrintPage, { UserPrintDetail } from '../../containers/IdPrint';
+import { Context } from '../../containers/Provider/AuthStateProvider';
+import userMock from '../../__mocks__/userMock';
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
 describe('UserPrint Detail component', () => {
@@ -16,7 +19,20 @@ describe('UserPrint Detail component', () => {
     }
   };
   it('should render correctly', () => {
-    const container = render(<UserPrintDetail data={data} />);
+    let container;
+    
+    act(() => {
+      container = render(
+        <Context.Provider value={userMock}>
+          <MockedProvider>
+            <BrowserRouter>
+              <UserPrintDetail data={data} />
+            </BrowserRouter>
+          </MockedProvider>
+        </Context.Provider>
+      );
+    })
+
     expect(container.queryByText('Another somebodyy')).toBeInTheDocument();
     expect(container.queryByText('Client')).toBeInTheDocument();
     expect(container.queryByText('Exp: Never')).toBeInTheDocument();

@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'host_env'
+
 # Alert clients to get more points
 class PointsAutoAlertJob < ApplicationJob
   queue_as :default
@@ -11,7 +13,7 @@ class PointsAutoAlertJob < ApplicationJob
       next unless template_id
 
       c.users.by_labels('weekly_point_reminder_email').where(user_type: 'client').find_each do |u|
-        EmailMsg.send_mail(u.email, template_id, 'url': ENV['HOST'])
+        EmailMsg.send_mail(u.email, template_id, 'url': HostEnv.base_url(c))
       rescue StandardError
         next
       end

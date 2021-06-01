@@ -10,7 +10,7 @@ RSpec.describe Mutations::Transaction::TransactionCreate do
     let!(:land_parcel) { create(:land_parcel, community_id: community.id) }
     let!(:payment_plan) do
       create(:payment_plan, land_parcel_id: land_parcel.id, user_id: user.id, plot_balance: 0,
-                            pending_balance: 1000)
+                            pending_balance: 1200, monthly_amount: 100)
     end
     let(:transaction_create_mutation) do
       <<~GQL
@@ -73,6 +73,8 @@ RSpec.describe Mutations::Transaction::TransactionCreate do
     describe '#resolve' do
       context 'when all required details are provided' do
         context "when amount is more than the payment plan's pending balance" do
+          before { payment_plan.update(pending_balance: 1200) }
+
           it "creates transaction, plan payment and updates payment plan's pending balance to 0" do
             variables = {
               userId: user.id,
@@ -100,6 +102,8 @@ RSpec.describe Mutations::Transaction::TransactionCreate do
         end
 
         context "when amount is less than or equal to payment plan's pending balance" do
+          before { payment_plan.update(pending_balance: 1200) }
+
           it "creates transaction, plan payment and updates payment plan's pending balance" do
             variables = {
               userId: user.id,
@@ -122,8 +126,8 @@ RSpec.describe Mutations::Transaction::TransactionCreate do
             plan_payment = transaction_result['planPayments'][0]
             expect(plan_payment['createdAt']).to eql transaction_result['createdAt']
             expect(plan_payment['receiptNumber']).to eql 'MI1001'
-            expect(plan_payment['currentPlotPendingBalance']).to eql 900.0
-            expect(plan_payment['paymentPlan']['pendingBalance']).to eql 900.0
+            expect(plan_payment['currentPlotPendingBalance']).to eql 1100.0
+            expect(plan_payment['paymentPlan']['pendingBalance']).to eql 1100.0
           end
         end
       end
