@@ -61,7 +61,7 @@ class Campaign < ApplicationRecord
                                             user_id: acc.id, category: 'sms',
                                             campaign_id: id)
     smess.save
-    result = smess.send_sms(add_prefix: false)
+    result = smess.reload.send_sms(add_prefix: false)
     return false if result.messages.select { |mm| success_codes.include?(mm.status.to_i) }.blank?
 
     true
