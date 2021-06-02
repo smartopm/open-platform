@@ -9,9 +9,11 @@ export default function ReceiptModal({ open, handleClose, paymentData, userData,
   const classes = useStyles();
   const [paymentReceipt, setPaymentReceipt] = useState(false)
 
-  function handleReceiptClose() {
-    setPaymentReceipt(false)
+  function handlePaymentReceipt() {
+    setPaymentReceipt(true)
+    handleClose()
   }
+
   return(
     <>
       <DetailsDialog
@@ -21,6 +23,15 @@ export default function ReceiptModal({ open, handleClose, paymentData, userData,
         noActionButton
       >
         <div className={classes.buttons}>
+          <Button
+            variant='contained'
+            color='primary'
+            style={{marginRight: '15px'}}
+            onClick={() => handlePaymentReceipt()}
+            data-testid='print'
+          >
+            Print Receipt
+          </Button>
           <Button
             variant='outlined'
             color='secondary'
@@ -35,7 +46,7 @@ export default function ReceiptModal({ open, handleClose, paymentData, userData,
       <PaymentReceipt
         paymentData={paymentData}
         open={paymentReceipt}
-        handleClose={() => handleReceiptClose()}
+        handleClose={() => setPaymentReceipt(false)}
         userData={userData}
         currencyData={currencyData}
       />
