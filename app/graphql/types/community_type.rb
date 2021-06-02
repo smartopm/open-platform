@@ -13,6 +13,7 @@ module Types
     field :support_number, GraphQL::Types::JSON, null: true
     field :support_email, GraphQL::Types::JSON, null: true
     field :support_whatsapp, GraphQL::Types::JSON, null: true
+    field :social_links, GraphQL::Types::JSON, null: true
     field :image_url, String, null: true
     field :currency, String, null: true
     field :locale, String, null: true
