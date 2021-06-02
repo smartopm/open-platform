@@ -283,6 +283,7 @@ en:
       not_found: Substatus log Not found
     transaction:
       not_found: Transaction not found
+      amount_not_sufficient: Unallocated amount is not sufficient for the payment
     unauthorized: Unauthorized
     user:
       merge_failed: Merge Failed

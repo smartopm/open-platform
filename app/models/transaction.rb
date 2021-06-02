@@ -39,6 +39,13 @@ class Transaction < ApplicationRecord
     create_plan_payment(payment_plan, amount_paid, receipt_number)
   end
 
+  # Returns unallocated amount for the transaction
+  #
+  # @return [Float]
+  def unallocated_amount
+    amount - plan_payments.not_cancelled.pluck(:amount).sum
+  end
+
   private
 
   # Reverts user transaction.
