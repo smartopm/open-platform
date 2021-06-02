@@ -94,10 +94,12 @@ export default function TransactionsList({ userId, user, userData, tab }) {
 
   if (error && !data) return <CenteredContent>{formatError(error.message)}</CenteredContent>
   if (balanceError && !balanceData) return <CenteredContent>{formatError(balanceError.message)}</CenteredContent>
-  if (csvError && !csvData) return <CenteredContent>{formatError(csvError.message)}</CenteredContent>
 
   return (
     <div>
+      {csvError && !csvData && (
+        <CenteredContent>{formatError(csvError.message)}</CenteredContent>
+      )}
       {balanceLoad ? <Spinner /> : (
         <Balance 
           user={user}
