@@ -39,7 +39,7 @@ RSpec.describe MergeUsers do
   let!(:contact_info) { create(:contact_info, user: user) }
   let!(:discussion_user) { create(:discussion_user, user: user, discussion: discussion) }
   let!(:entry_request) { create(:pending_entry_request, user: user, community: user.community) }
-  let!(:feedback) { create(:feedback, user: user) }
+  let!(:feedback) { create(:feedback, user: user, community: user.community) }
   let!(:form) { create(:form, community: user.community) }
   let!(:form_user) { create(:form_user, form: form, user: user) }
   let!(:message) { create(:message, user: user) }
