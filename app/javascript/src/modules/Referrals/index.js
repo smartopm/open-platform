@@ -1,5 +1,4 @@
 import Referral from '../Users/Components/UserEdit';
-// import { allUserTypes } from '../../utils/constants';
 
 export default {
   routeProps: {
