@@ -194,7 +194,7 @@ export function HomeGuard({ translate }) {
                   </div>
                 </Link>
               </div>
-              <FeatureCheck features={authState.user.community.features} name="Time Card">
+              <FeatureCheck features={authState.user?.community.features} name="Time Card">
                 <div className={`${css(styles.cardSize)} card align-self-center text-center`}>
                   <Link to={`/timesheet/${authState.user?.id}`} className="card-link">
                     <div className="card-body">
