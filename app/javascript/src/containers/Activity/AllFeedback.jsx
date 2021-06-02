@@ -8,6 +8,8 @@ import { allFeedback } from '../../graphql/queries'
 import Loading from '../../shared/Loading'
 import ErrorPage from '../../components/Error'
 
+// TODO: move to its own module and use the global theme and possibly reuse this
+
 const limit = 20
 export default function FeedbackPage() {
   const [offset, setOffset] = useState(0)

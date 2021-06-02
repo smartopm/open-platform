@@ -6,6 +6,7 @@ import Loading from '../../shared/Loading'
 import ErrorPage from '../../components/Error'
 import DateContainer from '../../components/DateContainer'
 
+// TODO: move to its own module and use the global theme
 const limit = 20
 export default function Notes() {
   const [offset, setOffset] = useState(0)
