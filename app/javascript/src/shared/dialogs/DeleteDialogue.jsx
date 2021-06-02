@@ -43,7 +43,7 @@ export default function DeleteDialogueBox({
             <CloseIcon />
           </IconButton>
         </DialogTitle>
-        <DialogContent style={{margin: '30px 0', fontSize: '13px', textAlign: 'center'}}>
+        <DialogContent style={{margin: '30px 0', fontSize: '13px', textAlign: 'center'}} data-testid='delete-title'>
           {/* TODO: this needs refinement, action - title - user - null does not make sense */}
           { `${t('dialogs.dialog_content', { action, title })} ${user ? `for ${user}` : ''}` }
           <br />

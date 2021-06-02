@@ -6,7 +6,8 @@ import { useTheme, makeStyles } from '@material-ui/core/styles';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { Typography } from '@material-ui/core'
 import UserPaymentPlanItem from './UserPaymentPlanItem'
-import UserBalance from './UserBalance'
+import Balance from './UserBalance'
+import { UserBalance } from '../../../../graphql/queries'
 import { UserPlans } from '../../graphql/payment_query'
 import { Spinner } from '../../../../shared/Loading'
 import { formatError, useParamsQuery } from '../../../../utils/helpers'
@@ -15,7 +16,7 @@ import CenteredContent from '../../../../components/CenteredContent'
 import Paginate from '../../../../components/Paginate'
 import ListHeader from '../../../../shared/list/ListHeader';
 
-export default function PaymentPlans({ userId, user, userData }) {
+export default function PaymentPlans({ userId, user, userData, tab }) {
   const planHeader = [
     { title: 'Plot Number', col: 2 },
     { title: 'Payment Plan', col: 2 },
@@ -25,7 +26,6 @@ export default function PaymentPlans({ userId, user, userData }) {
     { title: 'Payment Day', col: 2 }
   ];
   const path = useParamsQuery()
-  const tab = path.get('tab')
   const classes = useStyles();
   const limit = 10
   const page = path.get('page')
@@ -42,6 +42,12 @@ export default function PaymentPlans({ userId, user, userData }) {
   const { locale } = user.community
   const currencyData = { currency, locale }
 
+  const [ loadBalance, { loading: balanceLoad, error: balanceError, data: balanceData, refetch: balanceRefetch }] = useLazyQuery(UserBalance, {
+    variables: { userId },
+    fetchPolicy: 'no-cache',
+    errorPolicy: 'all'
+  });
+
   function paginate(action) {
     if (action === 'prev') {
       if (offset < limit) return
@@ -54,20 +60,26 @@ export default function PaymentPlans({ userId, user, userData }) {
   useEffect(() => {
     if (tab === 'Plans') {
       loadPlans()
+      loadBalance()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tab]);
 
   if (error && !data) return <CenteredContent>{formatError(error.message)}</CenteredContent>
+  if (balanceError && !balanceData) return <CenteredContent>{formatError(balanceError.message)}</CenteredContent>
 
   return (
     <div>
-      <UserBalance 
-        user={user}
-        userId={userId}
-        userData={userData}
-        refetch={refetch}
-      />
+      {balanceLoad ? <Spinner /> : (
+        <Balance 
+          user={user}
+          userId={userId}
+          userData={userData}
+          refetch={refetch}
+          balanceData={balanceData?.userBalance}
+          balanceRefetch={balanceRefetch}
+        />
+      )}
       {loading ? <Spinner /> : (
         data?.userPlansWithPayments?.length > 0 ? (
           <div className={classes.planList}>
@@ -83,6 +95,7 @@ export default function PaymentPlans({ userId, user, userData }) {
                 currentUser={user}
                 userId={userId}
                 refetch={refetch}
+                balanceRefetch={balanceRefetch}
               />
             </div>
           </div>
@@ -111,6 +124,7 @@ PaymentPlans.defaultProps = {
 
 PaymentPlans.propTypes = {
   userId: PropTypes.string.isRequired,
+  tab: PropTypes.string.isRequired,
   // eslint-disable-next-line react/forbid-prop-types
   userData: PropTypes.object,
   user: PropTypes.shape({

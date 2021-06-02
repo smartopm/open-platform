@@ -17,7 +17,7 @@ import MenuList from '../../../../shared/MenuList'
 import { TransactionRevert } from '../../graphql/payment_mutations';
 import DeleteDialogueBox from '../../../../shared/dialogs/DeleteDialogue';
 
-export default function UserTransactionsList({transaction, currencyData, userType, userData, refetch }) {
+export default function UserTransactionsList({transaction, currencyData, userType, userData, refetch, balanceRefetch }) {
   const { t } = useTranslation('common')
   const [transactionId, setTransactionId] = useState(false)
   const [name, setName] = useState('')
@@ -67,6 +67,7 @@ export default function UserTransactionsList({transaction, currencyData, userTyp
     }).then(() => {
       setAnchorEl(null)
       setMessageAlert('Transaction reverted')
+      balanceRefetch()
       refetch()
       setIsSuccessAlert(true)
       setRevertModalOpen(false)
@@ -195,5 +196,6 @@ UserTransactionsList.propTypes = {
     name: PropTypes.string.isRequired
   }).isRequired,
   userType: PropTypes.string.isRequired,
-  refetch: PropTypes.func.isRequired
+  refetch: PropTypes.func.isRequired,
+  balanceRefetch: PropTypes.func.isRequired
 };

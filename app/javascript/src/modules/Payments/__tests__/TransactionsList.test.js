@@ -27,9 +27,17 @@ describe('Transactions Component', () => {
             transactionNumber: 12345,
             createdAt: '2021-01-26',
             id: 'f280159d-ac71-4c22-997a-07fd07344c94',
+            status: 'paid',
             depositor: {
               id: 'f280159d-ac71-4c22-997a-07fd07344c94',
               name: 'some name'
+            },
+            user: {
+              id: 'f280159d-ac71-4c22-997a-07fd07344c94',
+              name: 'some name',
+              email: 'email@email.com',
+              phoneNumber: '123456',
+              extRefId: '25734'
             }
           }]
         }
@@ -50,8 +58,40 @@ describe('Transactions Component', () => {
       }
     };
 
+    const csvDataMock = {
+      request: {
+        query: DepositQuery,
+        variables: { userId }
+      },
+      result: {
+        data: {
+          userTransactions: [{
+            allocatedAmount: 200,
+            unallocatedAmount: 200,
+            source: 'cash',
+            transactionNumber: 12345,
+            createdAt: '2021-01-26',
+            id: 'f280159d-ac71-4c22-997a-07fd07344c94',
+            status: 'paid',
+            depositor: {
+              id: 'f280159d-ac71-4c22-997a-07fd07344c94',
+              name: 'some name'
+            },
+            user: {
+              id: 'f280159d-ac71-4c22-997a-07fd07344c94',
+              name: 'some name',
+              email: 'email@email.com',
+              phoneNumber: '123456',
+              extRefId: '25734'
+            }
+          }]
+        }
+      }
+    };
+
     const user = {
       id: '939453bef34-f3',
+      userType: 'admin',
       community: {
         currency: 'zambian_kwacha',
         locale: 'en-ZM'
@@ -64,12 +104,12 @@ describe('Transactions Component', () => {
 
     const container = render(
       <MockedProvider
-        mocks={[depositMock, balanceMock]}
+        mocks={[depositMock, balanceMock, csvDataMock]}
         addTypename={false}
       >
         <AuthStateProvider>
           <BrowserRouter>
-            <TransactionsList userId={userId} user={user} userData={userData} />
+            <TransactionsList userId={userId} user={user} userData={userData} tab='Payments' />
           </BrowserRouter>
         </AuthStateProvider>
       </MockedProvider>
@@ -81,7 +121,7 @@ describe('Transactions Component', () => {
 
     await waitFor(
       () => {
-        expect(container.queryByText('common:misc.total_balance')).toBeInTheDocument();
+        expect(container.queryByText('Transactions')).toBeInTheDocument();
       },
       { timeout: 100 }
     );

@@ -79,7 +79,7 @@ describe('Plan List Component', () => {
       >
         <AuthStateProvider>
           <BrowserRouter>
-            <UserPlan userId={userId} user={user} userData={userData} />
+            <UserPlan userId={userId} user={user} userData={userData} tab='Plans' />
           </BrowserRouter>
         </AuthStateProvider>
       </MockedProvider>
