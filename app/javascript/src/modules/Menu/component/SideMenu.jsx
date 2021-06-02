@@ -1,5 +1,5 @@
 /* eslint-disable no-nested-ternary */
-import React, { useState, Fragment } from 'react';
+import React, { useContext, useState, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -11,8 +11,10 @@ import { Collapse } from '@material-ui/core';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 import { useTranslation } from 'react-i18next';
+import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider';
 
 const SideMenu = ({ toggleDrawer, menuItems, userType, mobileOpen, direction, communityFeatures }) => {
+  const authState = useContext(AuthStateContext);
   const history = useHistory();
   const { pathname } = useLocation();
   const params = useParams();
@@ -46,6 +48,43 @@ const SideMenu = ({ toggleDrawer, menuItems, userType, mobileOpen, direction, co
     history.push(item.routeProps.path);
   }
 
+   /**
+   * @param {string} type
+   * @description dynamically create necessary context to determine menu accessibility based on Feature type.
+   * Context will be injected into the accessibility logic check handler on demand
+   * @returns {object} object || undefined
+   */
+  function createMenuContext(type){
+    // context for User feature
+    if(type === 'Users'){
+      return {
+        userId: params.id,
+        userType,
+        loggedInUserId: authState.user.id,
+      }
+    }
+
+    // context for LogBook feature
+    if(type === 'LogBook'){
+      return {
+        userId: params.id,
+        userType,
+        loggedInUserId: authState.user.id,
+      }
+    }
+
+    return undefined;
+  }
+
+  function checkMenuAccessibility(menuItem){
+    if(typeof menuItem.accessibleBy === 'function'){
+      const ctx = createMenuContext(menuItem.featureName)
+      return menuItem.accessibleBy(ctx).includes(userType)
+    }
+
+    return menuItem.accessibleBy.includes(userType)
+  }
+
   return (
     <div
       role="button"
@@ -56,7 +95,7 @@ const SideMenu = ({ toggleDrawer, menuItems, userType, mobileOpen, direction, co
     >
       <List>
         {menuItems.map(menuItem =>
-         communityFeatures.includes(menuItem.featureName) && menuItem.accessibleBy.includes(userType) ? (
+         communityFeatures.includes(menuItem.featureName) && checkMenuAccessibility(menuItem) ? (
            <Fragment key={typeof menuItem.name === 'function' && menuItem.name(t)}>
              <ListItem
                button
