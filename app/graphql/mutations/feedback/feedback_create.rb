@@ -9,6 +9,7 @@ module Mutations
 
       field :feedback, Types::FeedbackType, null: true
 
+      # rubocop:disable Metrics/AbcSize
       def resolve(vals)
         feedback = context[:site_community].feedbacks.new(
           user_id: context[:current_user].id,
@@ -22,9 +23,10 @@ module Mutations
 
         raise GraphQL::ExecutionError, feedback.errors.full_messages
       end
+      # rubocop:enable Metrics/AbcSize
 
       def log_feedback(feedback)
-        user = ::User.find(context[:current_user].id)
+        user = context[:current_user]
         ::EventLog.create(acting_user_id: context[:current_user].id,
                           community_id: user.community_id, subject: 'user_feedback',
                           ref_id: user.id,
