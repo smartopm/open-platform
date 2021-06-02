@@ -30,6 +30,10 @@ module Mutations
         security_guard: { except: %i[state user_type] },
         client: { except: %i[state user_type phone_number email] },
         resident: { except: %i[state user_type phone_number email] },
+        contractor: { except: %i[state user_type phone_number email] },
+        custodian: { except: %i[state user_type phone_number email] },
+        prospective_client: { except: %i[state user_type phone_number email] },
+        visitor: { except: %i[state user_type phone_number email] },
       }.freeze
 
       def resolve(vals)
