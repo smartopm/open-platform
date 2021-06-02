@@ -32,9 +32,14 @@ mutation PaymentCreate(
       chequeNumber
       transactionNumber
       createdAt
+      planPayments {
+        id
+        receiptNumber
+      }
       user {
         id
         name
+        extRefId
       }
       depositor {
         id

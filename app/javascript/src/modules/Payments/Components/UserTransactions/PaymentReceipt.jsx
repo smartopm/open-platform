@@ -1,7 +1,8 @@
 import React, { useRef } from 'react';
 import Grid from '@material-ui/core/Grid';
 import PropTypes from 'prop-types';
-import { Container } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -16,6 +17,7 @@ import { FullScreenDialog } from '../../../../components/Dialog';
 
 export default function PaymentReceipt({ paymentData, open, handleClose, userData, currencyData }) {
   const signRef = useRef(null);
+  const classes = useStyles();
 
   function unAllocatedFunds() {
     const clearedInvoiceAmount = paymentData?.settledInvoices?.reduce(
@@ -35,7 +37,7 @@ export default function PaymentReceipt({ paymentData, open, handleClose, userDat
           actionText="Print"
           handleSubmit={() => window.print()}
         >
-          <Container>
+          <div className={classes.container}>
             {paymentData?.community?.logoUrl ? (
               <img
                 src={paymentData.community.logoUrl}
@@ -49,48 +51,88 @@ export default function PaymentReceipt({ paymentData, open, handleClose, userDat
                 {paymentData?.community?.name}
               </h3>
             )}
-            <div style={{ width: '80%', margin: '60px auto' }}>
-              <div className="payment-info">
-                <Grid container spacing={1}>
-                  <Grid item xs={2} style={{ color: '#9B9B9B' }}>
-                    Client Name
+            {
+              paymentData?.planPayments?.map((pay) => (
+                <div key={pay.id}>
+                  <Typography className={classes.receiptNumber}>
+                    Receipt #
+                    {pay.receiptNumber}
+                  </Typography>
+                </div>
+              ))
+            }
+            <div> 
+              <div className={classes.details}>
+                <div className={classes.paymentInfo}>
+                  <Grid container spacing={1}>
+                    <Grid item xs={2} className={classes.title}>
+                      Name
+                    </Grid>
+                    <Grid item xs={10} data-testid="client-name" className={classes.name}>
+                      {paymentData?.user?.name}
+                    </Grid>
                   </Grid>
-                  <Grid item xs={2} data-testid="client-name">
-                    {userData.name}
+                  <Grid container spacing={1}>
+                    <Grid item xs={2} className={classes.title}>
+                      NRC
+                    </Grid>
+                    <Grid item xs={10} data-testid="total-amount-paid" className={classes.title}>
+                      {paymentData?.user?.extRefId || '-'} 
+                    </Grid>
                   </Grid>
-                </Grid>
-                <Grid container spacing={1}>
-                  <Grid item xs={2} style={{ color: '#9B9B9B' }}>
-                    Total Amount Paid
+                  <Grid container spacing={1}>
+                    <Grid item xs={2} className={classes.title}>
+                      Date
+                    </Grid>
+                    <Grid item xs={10} className={classes.title}>
+                      {paymentData.createdAt && dateToString(paymentData.createdAt)}
+                    </Grid>
                   </Grid>
-                  <Grid item xs={2} data-testid="total-amount-paid">
-                    {formatMoney(currencyData, paymentData.amount)}
-                  </Grid>
-                </Grid>
-                <Grid container spacing={1}>
-                  <Grid item xs={2} style={{ color: '#9B9B9B' }}>
-                    Mode
-                  </Grid>
-                  <Grid item xs={2} data-testid="payment-mode">
-                    {paymentData.source}
-                  </Grid>
-                </Grid>
-                <Grid container spacing={1}>
-                  <Grid item xs={2} style={{ color: '#9B9B9B' }}>
-                    Date
-                  </Grid>
-                  <Grid item xs={2}>
-                    {paymentData.createdAt && dateToString(paymentData.createdAt)}
-                  </Grid>
-                </Grid>
-                <Grid container spacing={1}>
-                  <Grid item xs={2} style={{ color: '#9B9B9B' }}>
-                    Plan Property
-                  </Grid>
-                  <Grid item xs={2} data-testid="plan-property">
-                    {paymentData.paymentPlan?.landParcel?.parcelNumber}
-                  </Grid>
-                </Grid>
+                </div>
+                {paymentData?.community?.name === 'Nkwashi' && (
+                  <div style={{width: '400px', textAlign: 'right'}}>
+                    <Grid container spacing={1}>
+                      <Grid item xs={12} className={classes.title}>
+                        Thebe Investment Management Limited
+                      </Grid>
+                    </Grid>
+                    <Grid container spacing={1}>
+                      <Grid item xs={12} className={classes.title}>
+                        TPIN: 1002940437
+                      </Grid>
+                    </Grid>
+                    <Grid container spacing={1}>
+                      <Grid item xs={12} className={classes.title}>
+                        No. 11 Nalikwanda road
+                      </Grid>
+                    </Grid>
+                    <Grid container spacing={1}>
+                      <Grid item xs={12} className={classes.title}>
+                        Woodlands, Lusaka
+                      </Grid>
+                    </Grid>
+                    <Grid container spacing={1}>
+                      <Grid item xs={12} className={classes.title}>
+                        Zambia
+                      </Grid>
+                    </Grid>
+                    <Grid container spacing={1}>
+                      <Grid item xs={12} className={classes.title}>
+                        email: hello@thebe-in.com
+                      </Grid>
+                    </Grid>
+                    <Grid container spacing={1}>
+                      <Grid item xs={12} className={classes.title}>
+                        web: www.nkwashi.com
+                      </Grid>
+                    </Grid>
+                    <Grid container spacing={1}>
+                      <Grid item xs={12} className={classes.title}>
+                        phone: +260-972-577234
+                      </Grid>
+                    </Grid>
+                  </div>
+                )}
               </div>
               <div className="invoice-header" style={{ margin: '60px 0' }}>
                 <TableContainer component={Paper}>
@@ -199,12 +241,41 @@ export default function PaymentReceipt({ paymentData, open, handleClose, userDat
                 </Grid>
               </div>
             </div>
-          </Container>
+          </div>
         </FullScreenDialog>
       </div>
     </>
   );
 }
+
+const useStyles = makeStyles({
+  container: {
+    margin: '80px 284px'
+  },
+  receiptNumber: {
+    color: '#2D2D2D',
+    fontSize: '20px',
+    fontWeight: 700,
+    margin: '69px 0 45px 0'
+  },
+  title: {
+    fontWeight: 400,
+    fontSize: '16px',
+    color: '#656565'
+  },
+  name: {
+    fontWeight: 700,
+    fontSize: '16px',
+    color: '#2D2D2D'
+  },
+  details: {
+    display: 'flex',
+    justifyContent: 'spaceBetween'
+  },
+  paymentInfo: {
+    width: '500px'
+  }
+});
 
 PaymentReceipt.defaultProps = {
   paymentData: {},
