@@ -31,6 +31,7 @@ RSpec.describe Mutations::Note do
       result = DoubleGdpSchema.execute(query, variables: variables,
                                               context: {
                                                 current_user: user,
+                                                site_community: user.community,
                                               }).as_json
       expect(result.dig('data', 'feedbackCreate', 'feedback', 'id')).not_to be_nil
       expect(result.dig('data', 'feedbackCreate', 'feedback', 'isThumbsUp')).to eql true

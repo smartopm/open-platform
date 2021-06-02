@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_06_01_125354) do
+ActiveRecord::Schema.define(version: 2021_06_02_110225) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -281,6 +281,8 @@ ActiveRecord::Schema.define(version: 2021_06_01_125354) do
     t.string "review"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.uuid "community_id"
+    t.index ["community_id"], name: "index_feedbacks_on_community_id"
   end
 
   create_table "form_properties", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -759,6 +761,7 @@ ActiveRecord::Schema.define(version: 2021_06_01_125354) do
   add_foreign_key "discussions", "communities"
   add_foreign_key "discussions", "users"
   add_foreign_key "email_templates", "communities"
+  add_foreign_key "feedbacks", "communities"
   add_foreign_key "form_properties", "forms"
   add_foreign_key "form_users", "forms"
   add_foreign_key "form_users", "users"

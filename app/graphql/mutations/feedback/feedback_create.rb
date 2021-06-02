@@ -10,7 +10,7 @@ module Mutations
       field :feedback, Types::FeedbackType, null: true
 
       def resolve(vals)
-        feedback = ::Feedback.new(
+        feedback = context[:site_community].feedbacks.new(
           user_id: context[:current_user].id,
           created_at: DateTime.now,
           is_thumbs_up: vals[:is_thumbs_up],
