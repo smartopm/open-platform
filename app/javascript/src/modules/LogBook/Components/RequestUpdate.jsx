@@ -2,7 +2,7 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 /* eslint-disable no-nested-ternary */
 /* eslint-disable no-use-before-define */
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useQuery, useMutation } from 'react-apollo';
 import { TextField, MenuItem, Button } from '@material-ui/core';
 import { StyleSheet, css } from 'aphrodite';
@@ -18,10 +18,11 @@ import {
 } from '../../../graphql/mutations';
 import Loading from "../../../shared/Loading";
 import { isTimeValid, getWeekDay } from '../../../utils/dateutil';
-import { ponisoNumber, userState, userType } from '../../../utils/constants'
+import { userState, userType } from '../../../utils/constants'
 import { ModalDialog } from "../../../components/Dialog"
 import CaptureTemp from "../../../components/CaptureTemp";
 import { dateToString, dateTimeToString } from "../../../components/DateContainer";
+import { Context } from '../../../containers/Provider/AuthStateProvider';
 
 /**
  * 
@@ -33,6 +34,7 @@ export default function RequestUpdate({ id }) {
     const { state } = useLocation()
     const { logs, } = useParams()
     const history = useHistory()
+    const authState = useContext(Context)
     const previousRoute = state?.from || logs
     const isFromLogs = previousRoute === 'logs' ||  false
 
@@ -419,7 +421,7 @@ export default function RequestUpdate({ id }) {
               </div>
               <div className="col">
                 <a
-                  href={`tel:${ponisoNumber}`}
+                  href={`tel:${authState.user.community.securityManager}`}
                   className={` ${css(styles.callButton)}`}
                   data-testid="entry_user_call_mgr"
                 >

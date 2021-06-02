@@ -45,6 +45,7 @@ const QUERY = gql`
         wpLink
         themeColors
         features
+        securityManager
       }
     }
   }

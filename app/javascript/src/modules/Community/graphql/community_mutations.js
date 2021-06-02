@@ -15,6 +15,7 @@ export const CommunityUpdateMutation = gql`
     $language: String
     $wpLink: String
     $themeColors: JSON
+    $securityManager: String
   ) {
     communityUpdate(
       name: $name
@@ -29,6 +30,7 @@ export const CommunityUpdateMutation = gql`
       logoUrl: $logoUrl
       wpLink: $wpLink
       themeColors: $themeColors
+      securityManager: $securityManager
     ) {
       community {
         id

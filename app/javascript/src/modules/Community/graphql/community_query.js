@@ -18,6 +18,7 @@ export const CurrentCommunityQuery = gql`
       wpLink
       themeColors
       features
+      securityManager
     }
   }
 `;

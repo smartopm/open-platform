@@ -32,10 +32,7 @@ import { useTranslation } from 'react-i18next'
 import Card from './Card'
 
 import SocialMediaLinks from './SocialMediaLinks'
-import { ponisoNumber } from '../utils/constants'
 import { Footer } from './Footer'
-import ActionFlowIcon from './ActionFlows/ActionFlowIcon'
-
 
 // This should be deprecated in favour of the new dashboard
 export default function Homepage({ authState }) {
@@ -200,7 +197,7 @@ export default function Homepage({ authState }) {
     {
       card_id: 17,
       children: (
-        <a href={`tel:${ponisoNumber}`}>
+        <a href={`tel:${authState.user.community.securityManager}`}>
           <div className="card-body">
             <h5 className="card-title">
               <CallIcon color="primary" fontSize="large" />
@@ -260,12 +257,6 @@ export default function Homepage({ authState }) {
       title: t('common:misc.comments'),
       path: '/comments',
       icon: <CommentIcon color="primary" fontSize="large" />,
-      access: ['admin']
-    },
-    {
-      title: t('common:misc.action_flows'),
-      path: '/action_flows',
-      icon: <ActionFlowIcon />,
       access: ['admin']
     },
     {

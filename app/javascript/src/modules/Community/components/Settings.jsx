@@ -39,7 +39,7 @@ export default function CommunitySettings({ data, token, refetch }) {
     primaryColor: data.themeColors?.primaryColor || '#69ABA4',
     secondaryColor: data.themeColors?.secondaryColor || '#cf5628'
   }
-
+ 
   const [communityUpdate] = useMutation(CommunityUpdateMutation);
   const [numberOptions, setNumberOptions] = useState([numbers]);
   const [emailOptions, setEmailOptions] = useState([emails]);
@@ -55,6 +55,7 @@ export default function CommunitySettings({ data, token, refetch }) {
   const [tagline, setTagline] = useState(data?.tagline || '');
   const [logoUrl, setLogoUrl] = useState(data?.logoUrl || '');
   const [wpLink, setWpLink] = useState(data?.wpLink || '');
+  const [securityManager, setSecurityManager] = useState(data?.securityManager || '');
   const [locale, setLocale] = useState('en-ZM');
   const [language, setLanguage] = useState('en-US');
   const [showCropper, setShowCropper] = useState(false);
@@ -196,6 +197,7 @@ export default function CommunitySettings({ data, token, refetch }) {
         tagline,
         logoUrl,
         wpLink,
+        securityManager,
         themeColors
       },
     })
@@ -330,6 +332,19 @@ export default function CommunitySettings({ data, token, refetch }) {
         </div>
       </div>
 
+  
+      <TextField
+        label={t('community.set_security_manager')}
+        value={securityManager}
+        onChange={event => setSecurityManager(event.target.value)}
+        name="securityManager"
+        margin="normal"
+        inputProps={{ "data-testid": "securityManager"}}
+        style={{ width: '100%'}}
+        required
+      />
+
+      <br />
       <br />
 
       <Grid container spacing={3}>
@@ -464,6 +479,7 @@ CommunitySettings.propTypes = {
     language: PropTypes.string,
     tagline: PropTypes.string,
     wpLink: PropTypes.string,
+    securityManager: PropTypes.string,
     themeColors: PropTypes.shape({
       primaryColor: PropTypes.string,
       secondaryColor: PropTypes.string,

@@ -11,6 +11,7 @@ const userMock = {
           primaryColor: "#nnn",
           secondaryColor: "#nnn"
         },
+        name: 'Another Comm',
         imageUrl: 'http://image.jpg'
       }
     }

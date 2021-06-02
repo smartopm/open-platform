@@ -12,7 +12,6 @@ import { useMutation } from 'react-apollo';
 import PropTypes from 'prop-types';
 import ReactGA from 'react-ga';
 import { CreateNote } from '../../../graphql/mutations';
-import { ponisoNumber } from '../../../utils/constants';
 import Avatar from '../../../components/Avatar';
 import UserPlotInfo from './UserPlotInfo';
 import UserMerge from './UserMerge';
@@ -280,7 +279,7 @@ export default function UserInformation({
               id="call_poniso"
               startIcon={<PhoneIcon />}
               className={`${css(styles.callButton)}`}
-              href={`tel:${ponisoNumber}`}
+              href={`tel:${authState.user.community.securityManager}`}
               color="primary"
             >
               {t("common:misc.call_manager")}
@@ -300,7 +299,8 @@ const User = PropTypes.shape({
   accounts: PropTypes.arrayOf(PropTypes.object),
   formUsers: PropTypes.arrayOf(PropTypes.object),
   community: PropTypes.shape({
-    features: PropTypes.arrayOf(PropTypes.string)
+    features: PropTypes.arrayOf(PropTypes.string),
+    securityManager: PropTypes.string
   })
 });
 UserInformation.propTypes = {

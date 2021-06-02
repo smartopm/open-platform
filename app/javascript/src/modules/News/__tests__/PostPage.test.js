@@ -33,7 +33,8 @@ describe('NewsPage Component', () => {
               language: 'en-US',
               wpLink: 'http://wp.com',
               themeColors: {},
-              features: []
+              features: [],
+              securityManager: ""
             }
           }
         }

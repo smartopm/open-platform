@@ -1,11 +1,11 @@
 /* eslint-disable react/destructuring-assignment */
 /* eslint-disable react/prop-types */
 
-import React from 'react';
+import React, { useContext } from 'react';
 import { css, StyleSheet } from 'aphrodite';
 import { Link } from 'react-router-dom';
 import { useTheme } from '@material-ui/styles';
-import { ponisoNumber } from '../../../utils/constants';
+import { Context } from '../../../containers/Provider/AuthStateProvider';
 
 /**
  * 
@@ -15,6 +15,7 @@ import { ponisoNumber } from '../../../utils/constants';
  */
 export default function RequestStatus(props) {
   const theme = useTheme()
+  const authState = useContext(Context)
   return (
     <div
       className={`row justify-content-center align-items-center ${css(styles.waitPage)}`}
@@ -38,7 +39,7 @@ export default function RequestStatus(props) {
       {props.isDenied ? (
         <div className="col-10 col-sm-10 col-md-6">
           <a
-            href={`tel:${ponisoNumber}`}
+            href={`tel:${authState.user.community.securityManager}`}
             className={`btn btn-lg btn-block ${css(styles.callButton)}`}
             data-testid="action"
           >
