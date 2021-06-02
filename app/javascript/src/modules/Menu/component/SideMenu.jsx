@@ -55,17 +55,8 @@ const SideMenu = ({ toggleDrawer, menuItems, userType, mobileOpen, direction, co
    * @returns {object} object || undefined
    */
   function createMenuContext(type){
-    // context for User feature
-    if(type === 'Users'){
-      return {
-        userId: params.id,
-        userType,
-        loggedInUserId: authState.user.id,
-      }
-    }
-
-    // context for LogBook feature
-    if(type === 'LogBook'){
+    // context for LogBook and User Feature
+    if(['LogBook', 'Users'].includes(type)){
       return {
         userId: params.id,
         userType,
