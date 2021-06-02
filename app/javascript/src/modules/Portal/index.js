@@ -16,8 +16,6 @@ export default {
     'admin',
     'client',
     'prospective_client',
-    'contractor',
     'resident',
-    'visitor'
   ]
 };
