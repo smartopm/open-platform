@@ -164,10 +164,13 @@ export default function UserInformation({
         </Grid>
 
         <br />
-        {authState.user.userType === 'custodian' &&
-          ['security_guard', 'contractor'].includes(data.user.userType) && (
-            <ShiftButtons userId={userId} />
+        <FeatureCheck features={authState.user.community.features} name="Time Card">
+          {authState.user.userType === 'custodian' &&
+            ['security_guard', 'contractor'].includes(data.user.userType) && (
+              <ShiftButtons userId={userId} />
           )}
+        </FeatureCheck>
+
         <UserStyledTabs tabValue={tabValue} handleChange={handleChange} user={authState.user} />
 
         <TabPanel value={tabValue} index="Contacts">
