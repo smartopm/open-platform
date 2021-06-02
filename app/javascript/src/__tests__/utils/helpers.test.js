@@ -4,7 +4,7 @@ import { paymentFilterFields } from '../../utils/constants'
 import { sentencizeAction, titleize, pluralizeCount,
 capitalize, validateEmail, invertArray,findLinkAndReplace,
 forceLinkHttps, titleCase, truncateString, removeNewLines, checkForHtmlTags, sanitizeText,
-getJustLabels, checkValidGeoJSON, getHexColor, getDrawPluginOptions, handleQueryOnChange
+getJustLabels, checkValidGeoJSON, getHexColor, getDrawPluginOptions, handleQueryOnChange, checkAccessibilityForUserType
 } from '../../utils/helpers'
 
 jest.mock('dompurify')
@@ -178,6 +178,37 @@ describe('helper methods', () => {
           'draw',
           'edit',
         );
+      });
+    });
+
+    describe('#checkAccessibilityForUserType', () => {
+      const userTypes = ['admin', 'security_guard'];
+      it('should return original accessibility when no ctx', () => {
+        expect(checkAccessibilityForUserType({ userTypes, ctx: undefined })).toEqual(userTypes);
+      });
+      it('should allow accessibility when userType attempts to access its profile', () => {
+        const ctx = {
+          userId: 'bgd-123-gbw',
+          userType: 'security_guard',
+          loggedInUserId: 'bgd-123-gbw',
+        };
+        expect(checkAccessibilityForUserType({ userTypes, ctx })).toEqual(userTypes);
+      });
+      it('should allow accessibility when logged in userType is admin', () => {
+        const ctx = {
+          userId: 'bgd-123-gbw',
+          userType: 'admin',
+          loggedInUserId: 'edf-ugh-87r',
+        };
+        expect(checkAccessibilityForUserType({ userTypes, ctx })).toEqual(userTypes);
+      });
+      it('should deny accessibility for user type when not allowed to see menu item', () => {
+        const ctx = {
+          userId: 'bgd-123-gbw',
+          userType: 'security_guard',
+          loggedInUserId: 'edf-ugh-87r',
+        };
+        expect(checkAccessibilityForUserType({ userTypes, ctx })).toEqual(['admin']);
       });
     });
 });
