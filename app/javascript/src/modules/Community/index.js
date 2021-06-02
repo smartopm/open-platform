@@ -12,7 +12,6 @@ import { allUserTypes } from '../../utils/constants';
 import CommunitySettings from './components/SettingsPage';
 import Tasks from '../Tasks'
 import Contact from '../Contact'
-// import Referral from '../Referrals'
 
 // we can discuss on changing this to preferences instead of settings
 const Settings =   {
