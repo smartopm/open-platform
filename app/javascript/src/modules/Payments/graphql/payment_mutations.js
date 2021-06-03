@@ -38,6 +38,7 @@ mutation PaymentCreate(
         currentPlotPendingBalance
         paymentPlan {
           id
+          monthlyAmount
           landParcel {
             id 
             parcelNumber

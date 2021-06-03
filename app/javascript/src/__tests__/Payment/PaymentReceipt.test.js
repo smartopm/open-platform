@@ -9,36 +9,40 @@ import currency from '../../__mocks__/currency';
 jest.mock('react-signature-canvas');
 describe('It should test the payment receipt modal component', () => {
   const paymentData = {
+    id: 'yy893rhkj3hiujhf4u3hr43u',
     amount: 1000,
-    source: 'cash',
-    currentWalletBalance: 100,
-    currentPendingPlotBalance: 9000,
-    settledInvoices: [
-      {
-        id: 'gey617',
-        invoice_number: '1011',
-        due_date: '2021-04-19',
-        amount_owed: 1000,
-        amount_paid: 1000,
-        amount_remaining: 0
+    status: 'paid',
+    bankName: 'bank name',
+    chequeNumber: '111123',
+    transactionNumber: '257439',
+    createdAt: '2020-12-28',
+    planPayments: [{
+      id: '27397iy2gr',
+      receiptNumber: 't1234',
+      currentPlotPendingBalance: 2000,
+      paymentPlan: {
+        id: 'y738o48r093',
+        landParcel: {
+          id: '3iu73u4ri3h',
+          parcelNumber: 'P4444'
+        }
       }
-    ],
+    }],
     user: {
-      name: 'some name'
+      id: 'ui3iiui3',
+      name: 'some name',
+      extRefId: '234'
     },
     depositor: {
+      id: 'ui3iiui3',
       name: 'some name'
     },
-    paymentPlan: {
-      landParcel: {
-        parcelNumber: 'P4444'
-      }
+    community: {
+      id: 'ui3iiui3',
+      name: 'some name',
+      logoUrl: 'img.jpg',
+      currency: 'zambian_kwacha'
     }
-  };
-
-  const userData = {
-    name: 'some name 2',
-    transactionNumber: 1234
   };
 
   const open = true;
@@ -52,7 +56,6 @@ describe('It should test the payment receipt modal component', () => {
           <PaymentReceipt
             open={open}
             paymentData={paymentData}
-            userData={userData}
             handleClose={handleModalClose}
             currencyData={currency}
           />
@@ -60,29 +63,18 @@ describe('It should test the payment receipt modal component', () => {
       </BrowserRouter>
     );
 
-    expect(container.queryByText('Invoice Number')).toBeInTheDocument();
-    expect(container.queryByText('Due Date')).toBeInTheDocument();
-    expect(container.queryByText('Amount Owed')).toBeInTheDocument();
-    expect(container.queryByText('Amount Paid')).toBeInTheDocument();
-    expect(container.queryByText('Amount Remaining')).toBeInTheDocument();
-    expect(container.queryByText('Signature')).toBeInTheDocument();
+    expect(container.queryByText('Name')).toBeInTheDocument();
+    expect(container.queryByText('NRC')).toBeInTheDocument();
+    expect(container.queryByText('Date')).toBeInTheDocument();
 
-    expect(container.queryByTestId('client-name')).toHaveTextContent('some name 2');
-    expect(container.queryByTestId('total-amount-paid')).toHaveTextContent('$1,000.00');
-    expect(container.queryByTestId('payment-mode')).toHaveTextContent('cash');
-    expect(container.queryByTestId('plan-property')).toHaveTextContent('P4444');
+    expect(container.queryByTestId('client-name')).toHaveTextContent('some name');
+    expect(container.queryByTestId('nrc')).toHaveTextContent('234');
 
-    expect(container.queryByTestId('invoice-number')).toHaveTextContent('1011');
-    expect(container.queryByTestId('due-date')).toHaveTextContent('2021-04-19');
-    expect(container.queryByTestId('amount-owed')).toHaveTextContent('$1,000.00');
-    expect(container.queryByTestId('amount-paid')).toHaveTextContent('$1,000.00');
-    expect(container.queryByTestId('amount-remaining')).toHaveTextContent('$0.00');
+    expect(container.queryByTestId('plot-no')).toHaveTextContent('Plot/Plan No.');
+    expect(container.queryByTestId('pay-type')).toHaveTextContent('Payment Type');
+    expect(container.queryByTestId('amount')).toHaveTextContent('Amount Paid');
 
-    expect(container.queryByTestId('plan-balance')).toHaveTextContent('$9,000.00');
-    expect(container.queryByTestId('unallocated-funds')).toHaveTextContent('$0.00');
-    expect(container.queryByTestId('cashier-name')).toHaveTextContent('some name');
-
-    expect(container.queryByText('Account Details')).toBeNull();
+    expect(container.queryByText('Banking Details')).toBeNull();
     expect(container.queryByText('Bank Name')).toBeNull();
     expect(container.queryByText('Cheque Number')).toBeNull();
   });
@@ -99,7 +91,6 @@ describe('It should test the payment receipt modal component', () => {
           <PaymentReceipt
             open={open}
             paymentData={newPaymentData}
-            userData={userData}
             handleClose={handleModalClose}
             currencyData={currency}
           />
@@ -107,7 +98,7 @@ describe('It should test the payment receipt modal component', () => {
       </BrowserRouter>
     );
 
-    expect(container.queryByText('Account Details')).toBeInTheDocument();
+    expect(container.queryByText('Banking Details')).toBeInTheDocument();
     expect(container.queryByText('Bank Name')).toBeInTheDocument();
     expect(container.queryByText('Cheque Number')).toBeInTheDocument();
   });

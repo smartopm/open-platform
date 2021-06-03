@@ -62,7 +62,7 @@ export default function PaymentReceipt({ paymentData, open, handleClose, currenc
                     <Grid item xs={2} className={classes.title}>
                       NRC
                     </Grid>
-                    <Grid item xs={10} data-testid="total-amount-paid" className={classes.title}>
+                    <Grid item xs={10} data-testid="nrc" className={classes.title}>
                       {paymentData?.user?.extRefId || '-'} 
                     </Grid>
                   </Grid>
@@ -122,13 +122,13 @@ export default function PaymentReceipt({ paymentData, open, handleClose, currenc
               </div>
               <div className="invoice-header" style={{ margin: '60px 0' }}>
                 <Grid container spacing={1}>
-                  <Grid item xs={4} className={classes.title}>
+                  <Grid item xs={4} className={classes.title} data-testid="plot-no">
                     Plot/Plan No.
                   </Grid>
-                  <Grid item xs={4} className={classes.title} style={{textAlign: 'center'}}>
+                  <Grid item xs={4} className={classes.title} style={{textAlign: 'center'}} data-testid="pay-type">
                     Payment Type
                   </Grid>
-                  <Grid item xs={4} className={classes.title} style={{textAlign: 'right'}}>
+                  <Grid item xs={4} className={classes.title} style={{textAlign: 'right'}} data-testid="amount">
                     Amount Paid
                   </Grid>
                 </Grid>
@@ -183,9 +183,13 @@ export default function PaymentReceipt({ paymentData, open, handleClose, currenc
                     <Grid item xs={8} className={classes.title}>
                       Expected Monthly Payment
                     </Grid>
-                    <Grid item xs={4} data-testid="client-name" className={classes.name} style={{textAlign: 'right'}}>
-                      -
-                    </Grid>
+                    {
+                      paymentData?.planPayments?.map((pay) => (
+                        <Grid item xs={4} key={pay.id} className={classes.title} style={{textAlign: 'right'}}>
+                          {formatMoney(currencyData, pay.paymentPlan?.monthlyAmount)}
+                        </Grid>
+                      ))
+                    }
                   </Grid>
                   <Grid container spacing={1}>
                     <Grid item xs={8} className={classes.title}>
