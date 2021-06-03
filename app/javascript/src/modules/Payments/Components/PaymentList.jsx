@@ -36,13 +36,12 @@ const paymentHeaders = [
   { title: 'Client name', col: 1 },
   { title: 'Payment Date', col: 1},
   { title: 'Payment Amount', col: 1},
-  { title: 'Plot Type', col: 1},
-  { title: 'Plot Number', col: 1},
-  // { title: 'Payment Type', col: 1 },
-  // { title: 'Receipt Number', col: 2 },
-  { title: 'Payment Status', col: 2 }
+  { title: 'Plot Info', col: 1},
+  // { title: 'Plot Number', col: 1},
+  { title: 'Payment Type', col: 1 },
+  { title: 'PaymentStatus/ReceiptNumber', col: 2 }
+  // { title: 'ReceiptNumber', col: 1 },
 ];
-
 const csvHeaders = [
   { label: "Amount", key: "amount" },
   { label: "Status", key: "status" },
@@ -264,36 +263,36 @@ export function renderPayment(payment, currencyData) {
           <Text content={formatMoney(currencyData, payment.amount)} />
         </Grid>
       ),
-      'Plot Type': (
+      'Plot Info': (
         <Grid item xs={12} md={2}>
-          <Text content={payment.planPayments[0].paymentPlan?.landParcel.parcelType} />
+          <Text content={`${payment.planPayments[0].paymentPlan?.landParcel.parcelType} - ${payment.planPayments[0].paymentPlan?.landParcel.parcelNumber}`} />
         </Grid>
       ),
-      'Plot Number': (
-        <Grid item xs={12} md={2}>
-          <Text content={payment.planPayments[0].paymentPlan?.landParcel.parcelNumber} />
-        </Grid>
-      ),
-      // 'Payment Type': (
-      //   <Grid item xs={12} md={1} data-testid="payment_type">
-      //     <Text content={
-      //       ['cash'].includes(payment.source)
-      //       ? 'Cash Deposit'
-      //       :  paymentType[payment.source]
-      //       }
-      //     />
-      //   </Grid>
-      // ),
-      // 'Receipt Number': (
+      // 'Plot Number': (
       //   <Grid item xs={12} md={2}>
-      //     <Text content={payment.planPayments[0].receiptNumber} />
+      //     <Text content={payment.planPayments[0].paymentPlan?.landParcel.parcelNumber} />
       //   </Grid>
       // ),
-      'Payment Status': (
-        <Grid item xs={12} md={2} data-testid="payment_amount">
-          <Text content={payment.status} />
+      'Payment Type': (
+        <Grid item xs={12} md={2} data-testid="payment_type">
+          <Text content={
+            ['cash'].includes(payment.source)
+            ? 'Cash Deposit'
+            :  paymentType[payment.source]
+            }
+          />
         </Grid>
-      )
+      ),
+      'PaymentStatus/ReceiptNumber': (
+        <Grid item xs={12} md={2}>
+          <Text content={`${payment.status === 'accepted' ? 'Paid' :  payment.status} - ${payment.planPayments[0].receiptNumber}`} />
+        </Grid>
+      ),
+      // 'Payment Status': (
+      //   <Grid item xs={12} md={2} data-testid="payment_amount">
+      //     <Text content={payment.status} />
+      //   </Grid>
+      // )
     }]
 }
 
