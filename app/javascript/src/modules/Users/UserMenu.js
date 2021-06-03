@@ -15,6 +15,7 @@
  */
 import React from 'react';
 import { allUserTypes } from '../../utils/constants';
+import { checkAccessibilityForUserType as handler } from '../../utils/helpers'
 
 const userMenus = [
   {
@@ -96,7 +97,7 @@ const userMenus = [
     },
     name: t => t('menu.user_logs'),
     featureName: 'LogBook',
-    accessibleBy: ['admin', 'security_guard']
+    accessibleBy: ctx => handler({ userTypes: ['admin', 'security_guard'], ctx }),
   },
   {
     routeProps: {
@@ -105,7 +106,7 @@ const userMenus = [
     },
     name: t => t('menu.user_edit'),
     featureName: 'Users',
-    accessibleBy: allUserTypes
+    accessibleBy: ctx => handler({ userTypes: allUserTypes, ctx })
   },
   {
     routeProps: {

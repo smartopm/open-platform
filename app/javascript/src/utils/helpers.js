@@ -477,3 +477,30 @@ export function checkAllowedCommunityFeatures(features, module){
   if(!features || !features.length || !module) return false
   return new Set(features).has(module)
 }
+
+/**
+ *
+ * @param {object} { userTypes, ctx: context }
+ * @returns {array} list of permitted user types
+ * @description include or exclude user type from menu accessibility list
+ * @default {array} original user types when context is undefined
+ */
+ export function checkAccessibilityForUserType({ userTypes, ctx }){
+   // prefer original accessibility when no ctx
+   if(!ctx){
+    return userTypes;
+   }
+
+  // allow accessibility for self
+  if(ctx.userId && ctx.loggedInUserId && ctx.userId === ctx.loggedInUserId) {
+    return userTypes;
+  }
+
+  // allow accessibility for admin
+  if(ctx.userType && ctx.userType.includes('admin')){
+    return userTypes;
+  }
+
+  // deny accessibility for user type
+  return (userTypes.filter(t => t !== ctx.userType));
+}

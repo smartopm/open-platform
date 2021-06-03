@@ -15,10 +15,7 @@ export default {
   accessibleBy: [
     'admin',
     'client',
-    'security_guard',
     'prospective_client',
-    'contractor',
     'resident',
-    'visitor'
   ]
 };
