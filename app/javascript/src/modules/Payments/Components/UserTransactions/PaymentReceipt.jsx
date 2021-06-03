@@ -9,7 +9,7 @@ import { formatMoney } from '../../../../utils/helpers';
 import { dateToString } from '../../../../components/DateContainer';
 import { FullScreenDialog } from '../../../../components/Dialog';
 
-export default function PaymentReceipt({ paymentData, open, handleClose, userData, currencyData }) {
+export default function PaymentReceipt({ paymentData, open, handleClose, currencyData }) {
   const signRef = useRef(null);
   const classes = useStyles();
 
@@ -134,14 +134,18 @@ export default function PaymentReceipt({ paymentData, open, handleClose, userDat
                 </Grid>
                 <Divider className={classes.divider} />
                 <Grid container spacing={1}>
-                  <Grid item xs={4} className={classes.title}>
-                    Plot/Plan No.
-                  </Grid>
+                  {
+                    paymentData?.planPayments?.map((pay) => (
+                      <Grid item xs={4} key={pay.id} className={classes.title}>
+                        {pay.paymentPlan?.landParcel?.parcelNumber}
+                      </Grid>
+                    ))
+                  }
                   <Grid item xs={4} className={classes.title} style={{textAlign: 'center'}}>
-                    Payment Type
+                    {paymentData.source}
                   </Grid>
                   <Grid item xs={4} className={classes.title} style={{textAlign: 'right'}}>
-                    Amount Paid
+                    {formatMoney(currencyData, paymentData?.amount)}
                   </Grid>
                 </Grid>
               </div>
@@ -278,40 +282,43 @@ const useStyles = makeStyles({
 });
 
 PaymentReceipt.defaultProps = {
-  paymentData: {},
-  userData: {}
+  paymentData: {}
 };
 PaymentReceipt.propTypes = {
   paymentData: PropTypes.shape({
     id: PropTypes.string,
     source: PropTypes.string,
     amount: PropTypes.number,
-    currentWalletBalance: PropTypes.number,
     bankName: PropTypes.string,
     chequeNumber: PropTypes.string,
-    transactionNumber: PropTypes.string,
     createdAt: PropTypes.string,
-    currentPendingPlotBalance: PropTypes.string,
     community: PropTypes.shape({
+      id: PropTypes.string,
       name: PropTypes.string,
-      logoUrl: PropTypes.string
+      logoUrl: PropTypes.string,
+      currency: PropTypes.string
     }),
     user: PropTypes.shape({
-      name: PropTypes.string
+      id: PropTypes.string,
+      name: PropTypes.string,
+      extRefId: PropTypes.string
     }),
     depositor: PropTypes.shape({
+      id: PropTypes.string,
       name: PropTypes.string
     }),
-    paymentPlan: PropTypes.shape({
-      pendingBalance: PropTypes.string,
-      landParcel: PropTypes.shape({
-        parcelNumber: PropTypes.string
+    planPayments: PropTypes.arrayOf(PropTypes.shape({
+      id: PropTypes.string,
+      receiptNumber: PropTypes.string,
+      currentPlotPendingBalance: PropTypes.number,
+      paymentPlan: PropTypes.shape({
+        id: PropTypes.string,
+        landParcel: PropTypes.shape({
+          id: PropTypes.string,
+          parcelNumber: PropTypes.string
+        })
       })
-    }),
-    settledInvoices: PropTypes.arrayOf(PropTypes.object)
-  }),
-  userData: PropTypes.shape({
-    name: PropTypes.string
+    }))
   }),
   open: PropTypes.bool.isRequired,
   handleClose: PropTypes.func.isRequired,

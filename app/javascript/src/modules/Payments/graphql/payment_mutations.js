@@ -36,6 +36,13 @@ mutation PaymentCreate(
         id
         receiptNumber
         currentPlotPendingBalance
+        paymentPlan {
+          id
+          landParcel {
+            id 
+            parcelNumber
+          }
+        }
       }
       user {
         id
