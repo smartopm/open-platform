@@ -8,7 +8,7 @@ class PaymentPlan < ApplicationRecord
   has_many :wallet_transactions, dependent: :nullify
   has_many :plan_payments, dependent: :nullify
 
-  after_create :generate_monthly_invoices
+  before_create :set_pending_balance
 
   validates :payment_day,
             numericality: { only_integer: true, greater_than: 0, less_than_or_equal_to: 28 }
@@ -65,13 +65,8 @@ class PaymentPlan < ApplicationRecord
 
   private
 
-  def generate_monthly_invoices
-    return if monthly_amount.nil? || monthly_amount.zero?
-
-    no_of_invoices = duration_in_month || 12
-    no_of_invoices.times do |index|
-      create_invoice_for_month(monthly_amount, start_date + index.month)
-    end
+  def set_pending_balance
+    self.pending_balance = monthly_amount * duration_in_month
   end
 
   def create_invoice_for_month(amount, date)
