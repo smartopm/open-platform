@@ -35,6 +35,7 @@ mutation PaymentCreate(
       planPayments {
         id
         receiptNumber
+        currentPlotPendingBalance
       }
       user {
         id
@@ -49,6 +50,7 @@ mutation PaymentCreate(
         id
         name
         logoUrl
+        currency
       }
     }
   }

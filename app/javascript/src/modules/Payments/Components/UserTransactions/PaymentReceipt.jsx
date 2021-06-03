@@ -3,13 +3,7 @@ import Grid from '@material-ui/core/Grid';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import Paper from '@material-ui/core/Paper';
+import Divider from '@material-ui/core/Divider';
 import SignaturePad from '../../../../components/Forms/SignaturePad';
 import { formatMoney } from '../../../../utils/helpers';
 import { dateToString } from '../../../../components/DateContainer';
@@ -18,14 +12,6 @@ import { FullScreenDialog } from '../../../../components/Dialog';
 export default function PaymentReceipt({ paymentData, open, handleClose, userData, currencyData }) {
   const signRef = useRef(null);
   const classes = useStyles();
-
-  function unAllocatedFunds() {
-    const clearedInvoiceAmount = paymentData?.settledInvoices?.reduce(
-      (sum, inv) => sum + Number(inv.amount_paid),
-      0
-    );
-    return paymentData.amount - clearedInvoiceAmount;
-  }
 
   return (
     <>
@@ -135,111 +121,122 @@ export default function PaymentReceipt({ paymentData, open, handleClose, userDat
                 )}
               </div>
               <div className="invoice-header" style={{ margin: '60px 0' }}>
-                <TableContainer component={Paper}>
-                  <Table className="classes.table" aria-label="simple table">
-                    <TableHead>
-                      <TableRow>
-                        <TableCell>Invoice Number</TableCell>
-                        <TableCell align="right">Due Date</TableCell>
-                        <TableCell align="right">Amount Owed</TableCell>
-                        <TableCell align="right">Amount Paid</TableCell>
-                        <TableCell align="right">Amount Remaining</TableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {paymentData?.settledInvoices?.map(inv => (
-                        <TableRow key={inv.id}>
-                          <TableCell component="th" scope="row" data-testid="invoice-number">
-                            {inv.invoice_number}
-                          </TableCell>
-                          <TableCell align="right" data-testid="due-date">
-                            {dateToString(inv.due_date)}
-                          </TableCell>
-                          <TableCell align="right" data-testid="amount-owed">
-                            {formatMoney(currencyData, inv.amount_owed)}
-                          </TableCell>
-                          <TableCell align="right" data-testid="amount-paid">
-                            {formatMoney(currencyData, inv.amount_paid)}
-                          </TableCell>
-                          <TableCell align="right" data-testid="amount-remaining">
-                            {formatMoney(currencyData, inv.amount_remaining)}
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </TableContainer>
+                <Grid container spacing={1}>
+                  <Grid item xs={4} className={classes.title}>
+                    Plot/Plan No.
+                  </Grid>
+                  <Grid item xs={4} className={classes.title} style={{textAlign: 'center'}}>
+                    Payment Type
+                  </Grid>
+                  <Grid item xs={4} className={classes.title} style={{textAlign: 'right'}}>
+                    Amount Paid
+                  </Grid>
+                </Grid>
+                <Divider className={classes.divider} />
+                <Grid container spacing={1}>
+                  <Grid item xs={4} className={classes.title}>
+                    Plot/Plan No.
+                  </Grid>
+                  <Grid item xs={4} className={classes.title} style={{textAlign: 'center'}}>
+                    Payment Type
+                  </Grid>
+                  <Grid item xs={4} className={classes.title} style={{textAlign: 'right'}}>
+                    Amount Paid
+                  </Grid>
+                </Grid>
               </div>
 
-              <Grid container spacing={1}>
-                <Grid item xs={2} style={{ color: '#9B9B9B' }}>
-                  Plan Balance
-                </Grid>
-                <Grid item xs={2} data-testid="plan-balance">
-                  {formatMoney(currencyData, paymentData.currentPendingPlotBalance)}
-                </Grid>
-              </Grid>
+              <div className={classes.details} style={{ marginTop: '60px' }}>
+                <div style={{width: '500px'}}>
+                  <Grid container spacing={1}>
+                    <Grid item xs={3} style={{ color: '#9B9B9B' }}>
+                      Cashier Name
+                    </Grid>
+                    <Grid item xs={9} data-testid="cashier-name" style={{fontWeight: 700}}>
+                      {paymentData?.depositor?.name || '-'}
+                    </Grid>
+                  </Grid>
 
-              <Grid container spacing={1}>
-                <Grid item xs={2} style={{ color: '#9B9B9B' }}>
-                  Unallocated Funds
-                </Grid>
-                <Grid item xs={2} data-testid="unallocated-funds">
-                  {formatMoney(currencyData, unAllocatedFunds())}
-                </Grid>
-              </Grid>
+                  <Grid container spacing={1}>
+                    <Grid item xs={12} style={{ color: '#9B9B9B' }}>
+                      Signature
+                    </Grid>
+                    <Grid item xs={11}>
+                      <div style={{ borderStyle: 'solid', borderColor: '#ccc', height: '110px' }}>
+                        <SignaturePad
+                          key={paymentData.id}
+                          detail={{ type: 'signature', status: '' }}
+                          signRef={signRef}
+                          onEnd={() => {}}
+                          label=""
+                        />
+                      </div>
+                    </Grid>
+                  </Grid>
+                </div>
+                <div style={{width: '400px'}}>
+                  <Grid container spacing={1}>
+                    <Grid item xs={8} className={classes.title}>
+                      Expected Monthly Payment
+                    </Grid>
+                    <Grid item xs={4} data-testid="client-name" className={classes.name} style={{textAlign: 'right'}}>
+                      -
+                    </Grid>
+                  </Grid>
+                  <Grid container spacing={1}>
+                    <Grid item xs={8} className={classes.title}>
+                      Total Amount Paid
+                    </Grid>
+                    <Grid item xs={4} data-testid="total-amount-paid" className={classes.title} style={{textAlign: 'right'}}>
+                      {formatMoney(currencyData, paymentData?.amount)} 
+                    </Grid>
+                  </Grid>
+                  <Grid container spacing={1}>
+                    <Grid item xs={8} className={classes.title}>
+                      Total Balance Remaining
+                    </Grid>
+                    {
+                      paymentData?.planPayments?.map((pay) => (
+                        <Grid item xs={4} key={pay.id} className={classes.title} style={{textAlign: 'right'}}>
+                          {formatMoney(currencyData, pay.currentPlotPendingBalance)}
+                        </Grid>
+                      ))
+                    }
+                  </Grid>
+                  <Grid container spacing={1}>
+                    <Grid item xs={8} className={classes.title}>
+                      Currency
+                    </Grid>
+                    <Grid item xs={4} className={classes.title} style={{textAlign: 'right'}}>
+                      {paymentData?.community?.currency === 'zambian_kwacha' ? 'ZMW (K)' : paymentData?.community?.currency}
+                    </Grid>
+                  </Grid>
+                </div>
+              </div>
 
               {paymentData?.source === 'cheque/cashier_cheque' && (
                 <div style={{ marginTop: '60px' }}>
-                  <b style={{ fontSize: '16px' }}>Account Details</b> 
+                  <b style={{ fontSize: '16px' }}>Banking Details</b> 
                   {' '}
                   <br />
                   <Grid container spacing={1}>
-                    <Grid item xs={2}>
+                    <Grid item xs={2} className={classes.title}>
                       Bank Name
                     </Grid>
-                    <Grid item xs={2}>
+                    <Grid item xs={2} className={classes.title}>
                       {paymentData?.bankName}
                     </Grid>
                   </Grid>
                   <Grid container spacing={1}>
-                    <Grid item xs={2}>
+                    <Grid item xs={2} className={classes.title}>
                       Cheque Number
                     </Grid>
-                    <Grid item xs={2}>
+                    <Grid item xs={2} className={classes.title}>
                       {paymentData?.chequeNumber}
                     </Grid>
                   </Grid>
                 </div>
               )}
-
-              <div className="signature-area" style={{ marginTop: '60px' }}>
-                <Grid container spacing={1}>
-                  <Grid item xs={2} style={{ color: '#9B9B9B' }}>
-                    Cashier Name
-                  </Grid>
-                  <Grid item xs={2} data-testid="cashier-name">
-                    {paymentData?.depositor?.name || '-'}
-                  </Grid>
-                </Grid>
-
-                <Grid container spacing={1}>
-                  <Grid item xs={2} style={{ color: '#9B9B9B' }}>
-                    Signature
-                  </Grid>
-                  <Grid item xs={8}>
-                    <div style={{ borderStyle: 'solid', borderColor: '#ccc', height: '110px' }}>
-                      <SignaturePad
-                        key={paymentData.id}
-                        detail={{ type: 'signature', status: '' }}
-                        signRef={signRef}
-                        onEnd={() => {}}
-                        label=""
-                      />
-                    </div>
-                  </Grid>
-                </Grid>
-              </div>
             </div>
           </div>
         </FullScreenDialog>
@@ -274,6 +271,9 @@ const useStyles = makeStyles({
   },
   paymentInfo: {
     width: '500px'
+  },
+  divider: {
+    margin: '19px 0 27px 0'
   }
 });
 
