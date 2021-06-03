@@ -56,6 +56,11 @@ module Types::Queries::PaymentPlan
     }
   end
 
+  def payment_plans
+    raise_unauthorized_error
+    
+  end
+
   private
 
   # Raises GraphQL execution error if user is unauthorized.

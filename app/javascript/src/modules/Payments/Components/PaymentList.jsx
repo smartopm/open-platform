@@ -33,10 +33,14 @@ import QueryBuilder from '../../../components/QueryBuilder'
 import { TransactionsQuery } from '../graphql/payment_query';
 
 const paymentHeaders = [
-  { title: 'User', col: 2 },
-  { title: 'Deposit Date', col: 1},
+  { title: 'Client name', col: 1 },
+  { title: 'Payment Date', col: 1},
+  { title: 'Payment Amount', col: 1},
+  { title: 'Plot Type', col: 1},
+  { title: 'Plot Number', col: 1},
   { title: 'Payment Type', col: 1 },
-  { title: 'Amount', col: 2 }
+  { title: 'Receipt Number', col: 2 },
+  { title: 'Payment Status', col: 2 }
 ];
 
 const csvHeaders = [
@@ -139,9 +143,10 @@ export default function PaymentList({ currencyData }) {
     return <CenteredContent>{formatError(statError.message)}</CenteredContent>;
   }
 
+  // console.log(data)
   return (
     <div>
-      {console.log(data)}
+      
       <SearchInput
         title='Payments'
         searchValue={searchValue}
@@ -213,17 +218,35 @@ export default function PaymentList({ currencyData }) {
           limit={limit}
           active={pageNumber >= 1}
           handlePageChange={paginate}
-          count={data?.transactions?.length}
+          count={data?.transactionsList?.length}
         />
       </CenteredContent>
     </div>
   );
 }
 
+// "chequeNumber": null,
+// "transactionNumber": null,
+// "planPayments": [
+//   {
+//     "receiptNumber": "SI1002",
+//     "paymentPlan": {
+//       "planType": "lease",
+//       "plotBalance": 0,
+//       "landParcel": {
+//         "parcelType": "232"
+//       }
+//     }
+//   }
+// ],
+
+
+// Client name, Payment Date, Payment Amount, Plot Type, Plot Number Number, Payment Type,  Receipt Number, Payment Status
 export function renderPayment(payment, currencyData) {
+  // console.log(payment)
     return [{
-      'User': (
-        <Grid item xs={12} md={2} data-testid="created_by">
+      'Client name': (
+        <Grid item xs={12} md={1} data-testid="created_by">
           <Link to={`/user/${payment.user.id}?tab=Payments`} style={{ textDecoration: 'none'}}>
             <div style={{display: 'flex'}}>
               <Avatar src={payment.user.imageUrl} alt="avatar-image" />
@@ -232,13 +255,28 @@ export function renderPayment(payment, currencyData) {
           </Link>
         </Grid>
       ),
-      'Deposit Date': (
-        <Grid item xs={12} md={2}>
+      'Payment Date': (
+        <Grid item xs={12} md={1}>
           <Text content={dateToString(payment.createdAt)} />
         </Grid>
       ),
+      'Payment Amount': (
+        <Grid item xs={12} md={1}>
+          <Text content={formatMoney(currencyData, payment.amount)} />
+        </Grid>
+      ),
+      'Plot Type': (
+        <Grid item xs={12} md={1}>
+          <Text content={payment.planPayments[0].paymentPlan?.landParcel.parcelType} />
+        </Grid>
+      ),
+      'Plot Number': (
+        <Grid item xs={12} md={1}>
+          <Text content={payment.planPayments[0].paymentPlan?.landParcel.parcelNumber} />
+        </Grid>
+      ),
       'Payment Type': (
-        <Grid item xs={12} md={2} data-testid="payment_type">
+        <Grid item xs={12} md={1} data-testid="payment_type">
           <Text content={
             ['cash'].includes(payment.source)
             ? 'Cash Deposit'
@@ -247,9 +285,14 @@ export function renderPayment(payment, currencyData) {
           />
         </Grid>
       ),
-      Amount: (
+      'Receipt Number': (
+        <Grid item xs={12} md={2}>
+          <Text content={payment.planPayments[0].receiptNumber} />
+        </Grid>
+      ),
+      'Payment Status': (
         <Grid item xs={12} md={2} data-testid="payment_amount">
-          <span style={{fontSize: '12px'}}>{formatMoney(currencyData, payment.amount)}</span>
+          <Text content={payment.status} />
         </Grid>
       )
     }]
