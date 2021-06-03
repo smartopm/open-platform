@@ -38,8 +38,8 @@ const paymentHeaders = [
   { title: 'Payment Amount', col: 1},
   { title: 'Plot Type', col: 1},
   { title: 'Plot Number', col: 1},
-  { title: 'Payment Type', col: 1 },
-  { title: 'Receipt Number', col: 2 },
+  // { title: 'Payment Type', col: 1 },
+  // { title: 'Receipt Number', col: 2 },
   { title: 'Payment Status', col: 2 }
 ];
 
@@ -78,7 +78,6 @@ export default function PaymentList({ currencyData }) {
     errorPolicy: 'all'
   });
 
-  // @olivier there is no need to initialize this
   const  paymentList = data?.transactionsList;
 
   function paginate(action) {
@@ -246,7 +245,7 @@ export function renderPayment(payment, currencyData) {
   // console.log(payment)
     return [{
       'Client name': (
-        <Grid item xs={12} md={1} data-testid="created_by">
+        <Grid item xs={12} md={2} data-testid="created_by">
           <Link to={`/user/${payment.user.id}?tab=Payments`} style={{ textDecoration: 'none'}}>
             <div style={{display: 'flex'}}>
               <Avatar src={payment.user.imageUrl} alt="avatar-image" />
@@ -256,40 +255,40 @@ export function renderPayment(payment, currencyData) {
         </Grid>
       ),
       'Payment Date': (
-        <Grid item xs={12} md={1}>
+        <Grid item xs={12} md={2}>
           <Text content={dateToString(payment.createdAt)} />
         </Grid>
       ),
       'Payment Amount': (
-        <Grid item xs={12} md={1}>
+        <Grid item xs={12} md={2}>
           <Text content={formatMoney(currencyData, payment.amount)} />
         </Grid>
       ),
       'Plot Type': (
-        <Grid item xs={12} md={1}>
+        <Grid item xs={12} md={2}>
           <Text content={payment.planPayments[0].paymentPlan?.landParcel.parcelType} />
         </Grid>
       ),
       'Plot Number': (
-        <Grid item xs={12} md={1}>
+        <Grid item xs={12} md={2}>
           <Text content={payment.planPayments[0].paymentPlan?.landParcel.parcelNumber} />
         </Grid>
       ),
-      'Payment Type': (
-        <Grid item xs={12} md={1} data-testid="payment_type">
-          <Text content={
-            ['cash'].includes(payment.source)
-            ? 'Cash Deposit'
-            :  paymentType[payment.source]
-            }
-          />
-        </Grid>
-      ),
-      'Receipt Number': (
-        <Grid item xs={12} md={2}>
-          <Text content={payment.planPayments[0].receiptNumber} />
-        </Grid>
-      ),
+      // 'Payment Type': (
+      //   <Grid item xs={12} md={1} data-testid="payment_type">
+      //     <Text content={
+      //       ['cash'].includes(payment.source)
+      //       ? 'Cash Deposit'
+      //       :  paymentType[payment.source]
+      //       }
+      //     />
+      //   </Grid>
+      // ),
+      // 'Receipt Number': (
+      //   <Grid item xs={12} md={2}>
+      //     <Text content={payment.planPayments[0].receiptNumber} />
+      //   </Grid>
+      // ),
       'Payment Status': (
         <Grid item xs={12} md={2} data-testid="payment_amount">
           <Text content={payment.status} />
