@@ -2,6 +2,8 @@
 
 # Manages deposits record of user.
 class Transaction < ApplicationRecord
+  include SearchCop
+  
   VALID_SOURCES = %w[cash cheque/cashier_cheque wallet mobile_money invoice
                      bank_transfer/eft bank_transfer/cash_deposit pos
                      unallocated_funds].freeze
@@ -23,6 +25,13 @@ class Transaction < ApplicationRecord
   after_update :revert_payments, if: -> { saved_changes.key?('status') && cancelled? }
 
   has_paper_trail
+
+  search_scope :search do
+    attributes :source, :created_at, :transaction_number, :cheque_number
+    attributes user: ['user.name']
+    attributes phone_number: ['user.phone_number']
+    attributes email: ['user.email']
+  end
 
   # Performs actions post transaction creation.
   # * Creates payment entry against payment plan

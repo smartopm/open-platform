@@ -17,6 +17,14 @@ module Types::Queries::Transaction
       description 'Fetches transaction receipt details'
       argument :id, GraphQL::Types::ID, required: true
     end
+
+    # Get transactions list
+    field :transactions_list, [Types::TransactionType], null: true do
+      description 'Get list of all transactions'
+      argument :offset, Integer, required: false
+      argument :limit, Integer, required: false
+      argument :query, String, required: false
+    end
   end
 
   # Returns list of user's all transactions
@@ -44,6 +52,17 @@ module Types::Queries::Transaction
     raise_deposit_not_found_error(transaction)
 
     transaction
+  end
+
+  def transactions_list(offset: 0, limit: 100, query: nil)
+    unless context[:current_user]&.admin?
+      raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
+    end
+
+    context[:site_community].transactions.search(query)
+                            .eager_load(:user)
+                            .order(created_at: :desc)
+                            .limit(limit).offset(offset)
   end
 
   private

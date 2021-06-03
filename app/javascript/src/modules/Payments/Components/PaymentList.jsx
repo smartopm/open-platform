@@ -10,7 +10,7 @@ import { useQuery, useLazyQuery } from 'react-apollo';
 import { useTheme, makeStyles } from '@material-ui/core/styles';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { useHistory } from 'react-router';
-import { TransactionsQuery, PaymentStatsDetails } from '../../../graphql/queries';
+import { PaymentStatsDetails } from '../../../graphql/queries';
 import DataList from '../../../shared/list/DataList';
 import { formatError, formatMoney, useParamsQuery, handleQueryOnChange } from '../../../utils/helpers';
 import CenteredContent from '../../../components/CenteredContent';
@@ -30,6 +30,7 @@ import Text from '../../../shared/Text';
 import PaymentGraph from './PaymentGraph'
 import { Spinner } from '../../../shared/Loading';
 import QueryBuilder from '../../../components/QueryBuilder'
+import { TransactionsQuery } from '../graphql/payment_query';
 
 const paymentHeaders = [
   { title: 'User', col: 2 },
@@ -48,7 +49,7 @@ const csvHeaders = [
   { label: "Transaction Type", key: "source" },
   { label: "Transaction Number", key: "transactionNumber" },
   { label: "External Id", key: "user.extRefId" },
-  { label: "Receipt Number", key: "receiptNumber" }
+  // { label: "Receipt Number", key: "receiptNumber" }
 ];
 
 export default function PaymentList({ currencyData }) {
@@ -136,6 +137,7 @@ export default function PaymentList({ currencyData }) {
   if (statError) {
     return <CenteredContent>{formatError(statError.message)}</CenteredContent>;
   }
+
   return (
     <div>
       <SearchInput

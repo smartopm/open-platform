@@ -54,4 +54,33 @@ export const UserPlans = gql`
   }
 `
 
+
+export const TransactionsQuery = gql`
+  query allTransactions($limit: Int, $offset: Int, $query: String) {
+    transactionsList(limit: $limit, offset: $offset, query: $query) {
+      amount
+      status
+      createdAt
+      updatedAt
+      source
+      id
+      bankName
+      chequeNumber
+      transactionNumber
+      planPayments {
+        receiptNumber
+        # currentPlotPendingBalance
+      }
+      user {
+        id
+        name
+        imageUrl
+        email
+        phoneNumber
+        extRefId
+      }
+    }
+  }
+`
+
 export default UserTransactions;
