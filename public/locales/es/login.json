@@ -7,6 +7,7 @@
     "request_account": "¿No tienes una cuenta?",
     "request_login": "Para solicitar su información de inicio de sesión, envíe un correo electrónico: {{communityEmail}}",
     "test_key": "Testeo",
-    "welcome": "Bienvenido a la aplicación {{appName}}"
+    "welcome": "Bienvenido a la aplicación {{appName}}",
+    "resend_code": "Vuelva a enviar el código"
   }
 }
