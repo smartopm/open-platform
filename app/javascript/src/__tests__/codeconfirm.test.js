@@ -1,10 +1,8 @@
-/* eslint-disable */
 import React from 'react'
 import { mount } from 'enzyme'
-import CodeScreen from '../components/AuthScreens/ConfirmCodeScreen'
-import { createClient } from '../utils/apollo'
-import { ApolloProvider } from 'react-apollo'
 import { MemoryRouter } from 'react-router-dom'
+import { MockedProvider } from '@apollo/react-testing'
+import CodeScreen from '../components/AuthScreens/ConfirmCodeScreen'
 
 describe('Code Confirmation Screen', () => {
   const params = {
@@ -14,9 +12,9 @@ describe('Code Confirmation Screen', () => {
   }
   const wrapper = mount(
     <MemoryRouter>
-      <ApolloProvider client={createClient}>
+      <MockedProvider>
         <CodeScreen match={params} />
-      </ApolloProvider>
+      </MockedProvider>
     </MemoryRouter>
   )
   it('renders and has a paragraph element ', () => {
@@ -24,7 +22,7 @@ describe('Code Confirmation Screen', () => {
   })
   it('contains a button', () => {
     expect(wrapper.find('button')).toHaveLength(1)
-    expect(wrapper.find('button').text()).toContain('Next')
+    expect(wrapper.find('button').text()).toContain('login.login_button_text')
   })
   it('contains 7 input fields for each code', () => {
     expect(wrapper.find('input')).toHaveLength(7)

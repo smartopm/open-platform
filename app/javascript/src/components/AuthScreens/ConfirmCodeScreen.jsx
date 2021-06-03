@@ -9,10 +9,13 @@ import React, {
 import { Button, CircularProgress } from '@material-ui/core'
 import { StyleSheet, css } from 'aphrodite'
 import { Link, useLocation, Redirect } from 'react-router-dom'
-import { useMutation } from 'react-apollo'
+import { useMutation, useQuery } from 'react-apollo'
+import { useTranslation } from 'react-i18next'
 import { loginPhoneConfirmCode, loginPhone } from '../../graphql/mutations'
 import { Context as AuthStateContext } from '../../containers/Provider/AuthStateProvider'
 import useTimer from '../../utils/customHooks'
+import { CurrentCommunityQuery } from '../../modules/Community/graphql/community_query'
+import { Spinner } from '../../shared/Loading'
 
 const randomCodeData = [1, 2, 3, 4, 5, 6, 7]
 
@@ -22,11 +25,13 @@ export default function ConfirmCodeScreen({ match }) {
   const { id } = match.params
   const [loginPhoneComplete] = useMutation(loginPhoneConfirmCode)
   const [resendCodeToPhone] = useMutation(loginPhone)
+  const { data: communityData, loading } = useQuery(CurrentCommunityQuery)
   const [error, setError] = useState(null)
   const [msg, setMsg] = useState(null)
   const [isLoading, setIsLoading] = useState(false)
   const { state } = useLocation()
   const timer = useTimer(10, 1000)
+  const { t } = useTranslation(['login'])
 
   // generate refs to use later
   // eslint-disable-next-line prefer-const
@@ -105,7 +110,9 @@ export default function ConfirmCodeScreen({ match }) {
             styles.welcomeContainer
           )}`}
         >
-          <p data-testid="welcome" className={css(styles.welcomeText)}>Welcome to Nkwashi App</p>
+          <p data-testid="welcome" className={css(styles.welcomeText)}>
+            { loading ? <Spinner /> : t('login.welcome', { appName: communityData?.currentCommunity?.name  })}
+          </p>
         </div>
         <br />
         <br />
@@ -153,7 +160,7 @@ export default function ConfirmCodeScreen({ match }) {
             {isLoading ? (
               <CircularProgress size={25} color="primary" />
             ) : (
-              <span>Next</span>
+              <span>{t('login.login_button_text')}</span>
             )}
           </Button>
         </div>
@@ -166,7 +173,7 @@ export default function ConfirmCodeScreen({ match }) {
             )}`}
           >
             <Button onClick={resendCode} disabled={isLoading}>
-              {isLoading ? 'loading ...' : 'Re-send the code'}
+              {isLoading ? `${t('common:misc.loading')} ...` : t('login.resend_code')  }
             </Button>
           </div>
         )}
