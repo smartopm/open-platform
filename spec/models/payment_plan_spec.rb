@@ -73,9 +73,8 @@ RSpec.describe PaymentPlan, type: :model do
     let!(:land_parcel) { create(:land_parcel, community_id: user.community_id) }
     let!(:valuation) { create(:valuation, land_parcel_id: land_parcel.id) }
 
-    it 'should generate monthly invoices for the year' do
-      expect(Invoice.count).to eql 0
-      PaymentPlan.create(
+    it 'creates pending-balance on create' do
+      plan = PaymentPlan.create(
         percentage: 50,
         status: 'active',
         plan_type: 'lease',
@@ -87,7 +86,7 @@ RSpec.describe PaymentPlan, type: :model do
         duration_in_month: 5,
         monthly_amount: 10,
       )
-      expect(land_parcel.payment_plan.invoices.count).to eql 5
+      expect(plan.pending_balance).to eql 50
     end
   end
 end

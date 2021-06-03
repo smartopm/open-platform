@@ -143,7 +143,7 @@ RSpec.describe Types::Queries::LandParcel do
       let!(:land_parcel_2) { create(:land_parcel, community_id: current_user.community_id) }
       let!(:payment_plan) do
         create(:payment_plan, land_parcel_id: land_parcel.id,
-                              user_id: current_user.id, pending_balance: 10)
+                              user_id: current_user.id, monthly_amount: 10, duration_in_month: 1)
       end
 
       let(:user_land_parcel_query) do

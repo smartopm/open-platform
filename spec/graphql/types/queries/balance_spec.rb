@@ -11,7 +11,7 @@ RSpec.describe Types::Queries::Balance do
     let!(:land_parcel) { create(:land_parcel, community_id: community.id) }
     let!(:payment_plan) do
       create(:payment_plan, land_parcel_id: land_parcel.id, user_id: user.id, plot_balance: 0,
-                            pending_balance: 2000)
+                            monthly_amount: 200, duration_in_month: 10)
     end
     let!(:transaction) do
       create(:transaction, user_id: user.id, community_id: community.id, depositor_id: user.id,
