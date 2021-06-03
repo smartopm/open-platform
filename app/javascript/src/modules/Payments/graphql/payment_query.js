@@ -69,7 +69,7 @@ export const TransactionsQuery = gql`
       transactionNumber
       planPayments {
         receiptNumber
-        # currentPlotPendingBalance
+        currentPlotPendingBalance
       }
       user {
         id

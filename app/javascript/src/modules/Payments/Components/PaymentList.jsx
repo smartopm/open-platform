@@ -74,7 +74,8 @@ export default function PaymentList({ currencyData }) {
     errorPolicy: 'all'
   });
 
-  const  paymentList = data?.transactions;
+  // @olivier there is no need to initialize this
+  const  paymentList = data?.transactionsList;
 
   function paginate(action) {
     if (action === 'prev') {
@@ -140,6 +141,7 @@ export default function PaymentList({ currencyData }) {
 
   return (
     <div>
+      {console.log(data)}
       <SearchInput
         title='Payments'
         searchValue={searchValue}
