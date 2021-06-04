@@ -55,26 +55,17 @@ export const UserPlans = gql`
 `
 
 
-export const TransactionsQuery = gql`
-  query allTransactions($limit: Int, $offset: Int, $query: String) {
-    transactionsList(limit: $limit, offset: $offset, query: $query) {
-      amount
+export const PlansPaymentsQuery = gql`
+  query allPayments($limit: Int, $offset: Int, $query: String) {
+    paymentsList(limit: $limit, offset: $offset, query: $query) {
+      receiptNumber
       status
       createdAt
-      updatedAt
-      source
       id
-      bankName
-      chequeNumber
-      transactionNumber
-      planPayments {
-        receiptNumber
-        paymentPlan {
-          landParcel {
-            parcelType
-            parcelNumber
-          }
-        }
+      userTransaction {
+        source
+        amount
+        id
       }
       user {
         id
@@ -83,6 +74,12 @@ export const TransactionsQuery = gql`
         email
         phoneNumber
         extRefId
+      }
+      paymentPlan {
+        landParcel {
+          parcelType
+          parcelNumber
+        }
       }
     }
   }

@@ -2,6 +2,8 @@
 
 # Manages amount allocated to Plan.
 class PlanPayment < ApplicationRecord
+  include SearchCop
+
   enum status: { paid: 0, cancelled: 1 }
 
   belongs_to :user_transaction, class_name: 'Transaction', foreign_key: :transaction_id,
@@ -14,6 +16,13 @@ class PlanPayment < ApplicationRecord
   validates :manual_receipt_number, uniqueness: { allow_nil: true, scope: :community_id }
 
   has_paper_trail
+
+  search_scope :search do
+    attributes :created_at, :automated_receipt_number, :manual_receipt_number
+    attributes user: ['user.name']
+    attributes phone_number: ['user.phone_number']
+    attributes email: ['user.email']
+  end
 
   scope :created_at_lteq, lambda { |created_at|
     where(PlanPayment.arel_table[:created_at].lteq(created_at))

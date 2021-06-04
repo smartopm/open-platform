@@ -30,7 +30,7 @@ export default function TransactionDetails({ data, detailsOpen, handleClose, cur
     BankName: data.bankName,
     ChequeNumber: data.chequeNumber,
   }
-  const balance = data.__typename === 'WalletTransaction' ? data.currentWalletBalance : data.balance;
+  const balance = data.__typename === 'Transaction' ? data.currentWalletBalance : data.balance;
   const { pathname } = useLocation();
   const [inputValues, setInputValues] = useState({ ...initialValues })
   const [tabValue, setTabValue] = useState('Details');
@@ -42,7 +42,7 @@ export default function TransactionDetails({ data, detailsOpen, handleClose, cur
     variables: {
       subject: ['payment_update'],
       refId: data.id,
-      refType: 'WalletTransaction',
+      refType: 'Transaction',
     },
     errorPolicy: 'all'
   })

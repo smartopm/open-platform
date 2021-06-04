@@ -16,7 +16,8 @@ import {
   formatError,
   formatMoney,
   useParamsQuery,
-  handleQueryOnChange
+  handleQueryOnChange,
+  titleize
 } from '../../../utils/helpers';
 import CenteredContent from '../../../components/CenteredContent';
 import { dateToString } from '../../../utils/dateutil';
@@ -30,22 +31,20 @@ import {
   paymentQueryBuilderInitialValue,
   paymentFilterFields
 } from '../../../utils/constants';
-import TransactionDetails from './TransactionDetails';
 import currency from '../../../shared/types/currency';
 import Text from '../../../shared/Text';
 import PaymentGraph from './PaymentGraph';
 import { Spinner } from '../../../shared/Loading';
 import QueryBuilder from '../../../components/QueryBuilder';
-import { TransactionsQuery } from '../graphql/payment_query';
+import { PlansPaymentsQuery } from '../graphql/payment_query';
 
 const paymentHeaders = [
-  { title: 'Client name', col: 1 },
+  { title: 'Client Name', col: 1 },
   { title: 'Payment Date', col: 1 },
   { title: 'Payment Amount', col: 1 },
   { title: 'Plot Info', col: 1 },
   { title: 'Payment Type', col: 1 },
   { title: 'PaymentStatus/ReceiptNumber', col: 2 }
-  // { title: 'ReceiptNumber', col: 1 },
 ];
 const csvHeaders = [
   { label: 'Amount', key: 'amount' },
@@ -76,13 +75,13 @@ export default function PaymentList({ currencyData }) {
   const [searchQuery, setSearchQuery] = useState('');
 
   const pageNumber = Number(page);
-  const { loading, data, error } = useQuery(TransactionsQuery, {
+  const { loading, data, error } = useQuery(PlansPaymentsQuery, {
     variables: { limit, offset: pageNumber, query: debouncedValue || searchQuery },
     fetchPolicy: 'cache-and-network',
     errorPolicy: 'all'
   });
 
-  const paymentList = data?.transactionsList;
+  const paymentList = data?.paymentsList;
 
   function paginate(action) {
     if (action === 'prev') {
@@ -149,7 +148,6 @@ export default function PaymentList({ currencyData }) {
     return <CenteredContent>{formatError(statError.message)}</CenteredContent>;
   }
 
-  // console.log(data)
   return (
     <div>
       <SearchInput
@@ -244,20 +242,17 @@ export default function PaymentList({ currencyData }) {
           limit={limit}
           active={pageNumber >= 1}
           handlePageChange={paginate}
-          count={data?.transactionsList?.length}
+          count={data?.paymentsList?.length}
         />
       </CenteredContent>
     </div>
   );
 }
 
-
-// Client name, Payment Date, Payment Amount, Plot Type, Plot Number Number, Payment Type,  Receipt Number, Payment Status
 export function renderPayment(payment, currencyData) {
-  // console.log(payment)
   return [
     {
-      'Client name': (
+      'Client Name': (
         <Grid item xs={12} md={2} data-testid="created_by">
           <Link to={`/user/${payment.user.id}?tab=Payments`} style={{ textDecoration: 'none' }}>
             <div style={{ display: 'flex' }}>
@@ -276,13 +271,13 @@ export function renderPayment(payment, currencyData) {
       ),
       'Payment Amount': (
         <Grid item xs={12} md={2}>
-          <Text content={formatMoney(currencyData, payment.amount)} />
+          <Text content={formatMoney(currencyData, payment.userTransaction.amount)} />
         </Grid>
       ),
       'Plot Info': (
         <Grid item xs={12} md={2}>
           <Text
-            content={`${payment.planPayments[0].paymentPlan?.landParcel.parcelType} - ${payment.planPayments[0].paymentPlan?.landParcel.parcelNumber}`}
+            content={`${payment.paymentPlan?.landParcel.parcelType} - ${payment.paymentPlan?.landParcel.parcelNumber}`}
           />
         </Grid>
       ),
@@ -290,7 +285,7 @@ export function renderPayment(payment, currencyData) {
         <Grid item xs={12} md={2} data-testid="payment_type">
           <Text
             content={
-              ['cash'].includes(payment.source) ? 'Cash Deposit' : paymentType[payment.source]
+              ['cash'].includes(payment.userTransaction.source) ? 'Cash Deposit' : paymentType[payment.userTransaction.source]
             }
           />
         </Grid>
@@ -298,41 +293,23 @@ export function renderPayment(payment, currencyData) {
       'PaymentStatus/ReceiptNumber': (
         <Grid item xs={12} md={2}>
           <Text
-            content={`${payment.status === 'accepted' ? 'Paid' : payment.status} - ${
-              payment.planPayments[0].receiptNumber
+            content={`${titleize(payment.status)} - ${
+              payment.receiptNumber
             }`}
           />
         </Grid>
       )
-      // 'Payment Status': (
-      //   <Grid item xs={12} md={2} data-testid="payment_amount">
-      //     <Text content={payment.status} />
-      //   </Grid>
-      // )
     }
   ];
 }
 
 export function TransactionItem({ transaction, currencyData }) {
-  const [detailsOpen, setDetailsOpen] = useState(false);
   return (
-    <div>
-      <TransactionDetails
-        detailsOpen={detailsOpen}
-        handleClose={() => setDetailsOpen(false)}
-        data={transaction}
-        currencyData={currencyData}
-        // eslint-disable-next-line no-underscore-dangle
-        title={`${transaction.__typename === 'WalletTransaction' ? 'Transaction' : 'Invoice'}`}
-      />
-      <DataList
-        keys={paymentHeaders}
-        data={renderPayment(transaction, currencyData)}
-        hasHeader={false}
-        clickable
-        handleClick={() => setDetailsOpen(true)}
-      />
-    </div>
+    <DataList
+      keys={paymentHeaders}
+      data={renderPayment(transaction, currencyData)}
+      hasHeader={false}
+    />
   );
 }
 
