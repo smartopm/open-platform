@@ -86,10 +86,10 @@ export default function PaymentList({ currencyData }) {
   function paginate(action) {
     if (action === 'prev') {
       if (pageNumber < limit) return;
-      history.push(`/payments?tab=payment&page=${pageNumber - limit}`);
-    } else if (action === 'next') {
-      if (data?.transactions.length < limit) return;
-      history.push(`/payments?tab=payment&page=${pageNumber + limit}`);
+      history.push(`/payments?page=${pageNumber - limit}`);
+    } else if (action === 'next' && paymentList.length) {
+      if (paymentList.length < limit) return;
+      history.push(`/payments?page=${pageNumber + limit}`);
     }
   }
 
