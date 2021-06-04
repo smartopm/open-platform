@@ -18,5 +18,30 @@ module Types
     field :payment_day, Integer, null: false
     field :monthly_amount, Float, null: true
     field :plan_payments, [Types::PlanPaymentType], null: true
+    field :statement_pending_balance, Float, null: false
+    field :plan_value, Float, null: false
+    field :statement_paid_amount, Float, null: false
+
+    # Returns pending balance for plan statement
+    #
+    # @return [Float]
+    def statement_pending_balance
+      plan_value - statement_paid_amount
+    end
+
+    # Returns plan's total value
+    #
+    # @return [Float]
+    def plan_value
+      object.monthly_amount * object.duration_in_month
+    end
+
+    # Returns total amount paid for plan statement
+    #
+    # @return [Float]
+    def statement_paid_amount
+      payment_amount = object.plan_payments.not_cancelled.sum(:amount)
+      (payment_amount / object.monthly_amount).floor * object.monthly_amount
+    end
   end
 end
