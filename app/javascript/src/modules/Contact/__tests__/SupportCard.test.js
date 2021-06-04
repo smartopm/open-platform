@@ -21,6 +21,7 @@ describe("Support card loads component", () => {
       </BrowserRouter>
     )
     expect(container.queryByText(/Nkwashi/i)).toBeInTheDocument()
+    expect(container.queryByText(/registration kiosk at the showroom/i)).toBeInTheDocument()
     expect(container.queryByText('support@doublegdp.com')).toBeInTheDocument()
     expect(container.queryByText('Sales Support')).toBeInTheDocument()
     expect(container.queryByText('Customer Care')).toBeInTheDocument()
