@@ -96,7 +96,11 @@ export default function SupportCard({ handleSendMessage, user }) {
       ? 'registration kiosk at the showroom'
       : 'incident management'
   } and support desk functionality to ensure your
-          queries are answered to your satisfaction, and are continually adding new features based on your requests.`}
+          queries are answered to your satisfaction${
+            user?.community?.name === 'Nkwashi'
+              ? ''
+              : ', and are continually adding new features based on your requests'
+          }.`}
         </Typography>
 
         <Typography variant="body1" color="textSecondary" component="p" align="center">
