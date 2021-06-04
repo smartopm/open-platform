@@ -81,7 +81,7 @@ export default function PaymentSummary({ authState, translate }) {
                   <Grid item xs={6} sm={3} key={key}>
                     <PaymentSummaryCard
                       title={translate(`dashboard.payment.${key}`)}
-                      value={propAccessor(payData?.paymentSummary, key)}
+                      value={propAccessor(payData?.transactionSummary, key)}
                       currencyData={currencyData}
                       handleClick={handleClick}
                       query={key}

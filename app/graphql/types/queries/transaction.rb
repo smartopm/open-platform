@@ -17,12 +17,7 @@ module Types::Queries::Transaction
       description 'return stats of all transactions'
     end
 
-    field :payment_stat_details, [Types::PlanPaymentType], null: true do
-      description 'Get list of all transactions in a particular day'
-      argument :query, String, required: false
-    end
-
-    field :payment_summary, Types::PaymentSummaryType, null: false do
+    field :transaction_summary, Types::PaymentSummaryType, null: false do
       description 'return stats payment amount'
     end
   end
@@ -48,26 +43,7 @@ module Types::Queries::Transaction
 
   # rubocop:disable Metrics/AbcSize
   # rubocop:disable Metrics/MethodLength
-  def payment_stat_details(query:)
-    payments = context[:site_community].plan_payments
-                                       .not_cancelled
-                                       .eager_load(:user)
-    case query
-    when 'today'
-      payments.where(created_at: Time.zone.now.beginning_of_day..Time.zone.now.end_of_day)
-    when 'oneWeek'
-      payments.where(created_at: 1.week.ago..Time.zone.now.end_of_day)
-    when 'oneMonth'
-      payments.where(created_at: 30.days.ago..Time.zone.now.end_of_day)
-    when 'overOneMonth'
-      payments.where(created_at: 1.year.ago..Time.zone.now.end_of_day)
-    else
-      converted_date = Date.parse(query).in_time_zone(context[:site_community].timezone).all_day
-      payments.where(created_at: converted_date)
-    end
-  end
-
-  def payment_summary
+  def transaction_summary
     unless context[:current_user]&.admin?
       raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
     end

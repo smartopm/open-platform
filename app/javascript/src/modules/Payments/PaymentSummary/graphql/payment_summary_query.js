@@ -15,7 +15,7 @@ export const InvoiceSummaryQuery = gql`
 
 export const PaymentSummaryQuery = gql`
   query PaymentSummaryQuery {
-    paymentSummary {
+    transactionSummary {
       today
       oneWeek
       oneMonth
