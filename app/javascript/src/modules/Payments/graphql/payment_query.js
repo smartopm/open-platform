@@ -85,27 +85,41 @@ export const PlansPaymentsQuery = gql`
   }
 `
 
-export const PaymentReceipt = gql`
-  query PaymentReceipt($userId: ID!) {
-    userPlansWithPayments(userId: $userId, limit: $limit, offset: $offset) {
+export const ReceiptPayment = gql`
+  query PaymentReceipt($id: ID!) {
+    paymentReceipt(id: $id) {
       id
-      planType
-      startDate
-      monthlyAmount
-      paymentDay
-      pendingBalance
-      landParcel {
+      amount
+      receiptNumber
+      createdAt
+      currentPlotPendingBalance
+      community {
         id
-        parcelNumber
+        name
+        logoUrl
+        currency
       }
-      planPayments {
+      user {
         id
-        createdAt
-        amount
-        status
-        userTransaction {
+        name
+        extRefId
+      }
+      userTransaction {
+        id
+        source
+        bankName
+        chequeNumber
+        depositor {
           id
-          source
+          name
+        }
+      }
+      paymentPlan {
+        id
+        monthlyAmount
+        landParcel {
+          id 
+          parcelNumber
         }
       }
     }

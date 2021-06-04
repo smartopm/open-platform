@@ -34,6 +34,9 @@ import { Spinner } from '../../../../shared/Loading';
 import { suffixedNumber } from '../../helpers';
 import ListHeader from '../../../../shared/list/ListHeader';
 import MenuList from '../../../../shared/MenuList'
+import { ReceiptPayment } from '../../graphql/payment_query'
+import PaymentReceipt from './PaymentReceipt'
+import CenteredContent from '../../../../components/CenteredContent'
 
 export default function UserPaymentPlanItem({
   plans,
@@ -59,7 +62,7 @@ export default function UserPaymentPlanItem({
   const theme = useTheme();
   const matches = useMediaQuery(theme.breakpoints.up('sm'));
   const anchorElOpen = Boolean(anchor)
-  const [loadReceiptDetails, { loading, error, data }] = useLazyQuery(UserPlans, {
+  const [loadReceiptDetails, { loading, error, data }] = useLazyQuery(ReceiptPayment, {
     variables: { id: transactionId },
     fetchPolicy: 'no-cache',
     errorPolicy: 'all'
@@ -82,7 +85,7 @@ export default function UserPaymentPlanItem({
     { title: 'Menu', col: 2 }
   ];
   const menuList = [
-    { content: 'View Receipt', isAdmin: true, color: 'red', handleClick: (event) => handleClick(event)},
+    { content: 'View Receipt', isAdmin: true, handleClick: (event) => handleClick(event)},
   ]
 
   const handleClose = () => {
@@ -97,6 +100,7 @@ export default function UserPaymentPlanItem({
 
   function handleClick(event){
     event.stopPropagation()
+    loadReceiptDetails()
     setReceiptOpen(true)
   }
 
@@ -146,8 +150,24 @@ export default function UserPaymentPlanItem({
       handleClose: () => setAnchor(null)
     }
 
+    function handleReceiptClose() {
+      setReceiptOpen(false)
+      setAnchor(null);
+    }
+
   return (
     <>
+      {error && (
+        <CenteredContent>{error.message}</CenteredContent>
+      )}
+      {loading ? <Spinner /> : (
+        <PaymentReceipt
+          paymentData={data?.paymentReceipt}
+          open={receiptOpen}
+          handleClose={() => handleReceiptClose()}
+          currencyData={currencyData}
+        />
+      )}
       <MessageAlert
         type={!details.isError ? 'success' : 'error'}
         message={details.info}

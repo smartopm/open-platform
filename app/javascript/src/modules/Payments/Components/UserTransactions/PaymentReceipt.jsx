@@ -38,14 +38,21 @@ export default function PaymentReceipt({ paymentData, open, handleClose, currenc
               </h3>
             )}
             {
-              paymentData?.planPayments?.map((pay) => (
-                <div key={pay.id}>
-                  <Typography className={classes.receiptNumber}>
-                    Receipt #
-                    {pay.receiptNumber}
-                  </Typography>
-                </div>
-              ))
+              paymentData?.planPayments ? (
+                paymentData?.planPayments?.map((pay) => (
+                  <div key={pay.id}>
+                    <Typography className={classes.receiptNumber}>
+                      Receipt #
+                      {pay.receiptNumber}
+                    </Typography>
+                  </div>
+                ))
+              ) : (
+                <Typography className={classes.receiptNumber}>
+                  Receipt #
+                  {paymentData.receiptNumber}
+                </Typography>
+              )
             }
             <div> 
               <div className={classes.details}>
@@ -135,14 +142,20 @@ export default function PaymentReceipt({ paymentData, open, handleClose, currenc
                 <Divider className={classes.divider} />
                 <Grid container spacing={1}>
                   {
-                    paymentData?.planPayments?.map((pay) => (
-                      <Grid item xs={4} key={pay.id} className={classes.title}>
-                        {pay.paymentPlan?.landParcel?.parcelNumber}
+                    paymentData?.planPayments ? (
+                      paymentData?.planPayments?.map((pay) => (
+                        <Grid item xs={4} key={pay.id} className={classes.title}>
+                          {pay.paymentPlan?.landParcel?.parcelNumber}
+                        </Grid>
+                      ))
+                    ) : (
+                      <Grid item xs={4} className={classes.title}>
+                        {paymentData?.paymentPlan?.landParcel?.parcelNumber}
                       </Grid>
-                    ))
+                      )
                   }
                   <Grid item xs={4} className={classes.title} style={{textAlign: 'center'}}>
-                    {paymentData.source}
+                    {paymentData.source || paymentData?.userTransaction?.source}
                   </Grid>
                   <Grid item xs={4} className={classes.title} style={{textAlign: 'right'}}>
                     {formatMoney(currencyData, paymentData?.amount)}
@@ -157,7 +170,7 @@ export default function PaymentReceipt({ paymentData, open, handleClose, currenc
                       Cashier Name
                     </Grid>
                     <Grid item xs={9} data-testid="cashier-name" style={{fontWeight: 700}}>
-                      {paymentData?.depositor?.name || '-'}
+                      {paymentData?.depositor?.name || paymentData?.userTransaction?.depositor?.name || '-'}
                     </Grid>
                   </Grid>
 
@@ -184,11 +197,17 @@ export default function PaymentReceipt({ paymentData, open, handleClose, currenc
                       Expected Monthly Payment
                     </Grid>
                     {
-                      paymentData?.planPayments?.map((pay) => (
-                        <Grid item xs={4} key={pay.id} className={classes.title} style={{textAlign: 'right'}}>
-                          {formatMoney(currencyData, pay.paymentPlan?.monthlyAmount)}
+                      paymentData?.planPayments ? (
+                        paymentData?.planPayments?.map((pay) => (
+                          <Grid item xs={4} key={pay.id} className={classes.title} style={{textAlign: 'right'}}>
+                            {formatMoney(currencyData, pay.paymentPlan?.monthlyAmount)}
+                          </Grid>
+                        ))
+                      ) : (
+                        <Grid item xs={4} className={classes.title} style={{textAlign: 'right'}}>
+                          {formatMoney(currencyData, paymentData?.paymentPlan?.monthlyAmount)}
                         </Grid>
-                      ))
+                      )
                     }
                   </Grid>
                   <Grid container spacing={1}>
@@ -204,11 +223,17 @@ export default function PaymentReceipt({ paymentData, open, handleClose, currenc
                       Total Balance Remaining
                     </Grid>
                     {
-                      paymentData?.planPayments?.map((pay) => (
-                        <Grid item xs={4} key={pay.id} className={classes.title} style={{textAlign: 'right'}}>
-                          {formatMoney(currencyData, pay.currentPlotPendingBalance)}
+                      paymentData?.planPayments ? (
+                        paymentData?.planPayments?.map((pay) => (
+                          <Grid item xs={4} key={pay.id} className={classes.title} style={{textAlign: 'right'}}>
+                            {formatMoney(currencyData, pay.currentPlotPendingBalance)}
+                          </Grid>
+                        ))
+                      ) : (
+                        <Grid item xs={4} className={classes.title} style={{textAlign: 'right'}}>
+                          {formatMoney(currencyData, paymentData.currentPlotPendingBalance)}
                         </Grid>
-                      ))
+                      )
                     }
                   </Grid>
                   <Grid container spacing={1}>
@@ -222,7 +247,7 @@ export default function PaymentReceipt({ paymentData, open, handleClose, currenc
                 </div>
               </div>
 
-              {paymentData?.source === 'cheque/cashier_cheque' && (
+              {paymentData?.source === 'cheque/cashier_cheque' || paymentData?.userTransaction?.source === 'cheque/cashier_cheque'  && (
                 <div style={{ marginTop: '60px' }}>
                   <b style={{ fontSize: '16px' }}>Banking Details</b> 
                   {' '}
@@ -232,7 +257,7 @@ export default function PaymentReceipt({ paymentData, open, handleClose, currenc
                       Bank Name
                     </Grid>
                     <Grid item xs={2} className={classes.title}>
-                      {paymentData?.bankName}
+                      {paymentData?.bankName || paymentData?.userTransaction?.bankName}
                     </Grid>
                   </Grid>
                   <Grid container spacing={1}>
@@ -240,7 +265,7 @@ export default function PaymentReceipt({ paymentData, open, handleClose, currenc
                       Cheque Number
                     </Grid>
                     <Grid item xs={2} className={classes.title}>
-                      {paymentData?.chequeNumber}
+                      {paymentData?.chequeNumber || paymentData?.userTransaction.chequeNumber}
                     </Grid>
                   </Grid>
                 </div>
@@ -296,6 +321,17 @@ PaymentReceipt.propTypes = {
     bankName: PropTypes.string,
     chequeNumber: PropTypes.string,
     createdAt: PropTypes.string,
+    currentPlotPendingBalance: PropTypes.string,
+    userTransaction: PropTypes.shape({
+      id: PropTypes.string,
+      source: PropTypes.string,
+      bankName: PropTypes.string,
+      chequeNumber: PropTypes.string,
+      depositor: PropTypes.shape({
+        id: PropTypes.string,
+        name: PropTypes.string
+      })
+    }),
     community: PropTypes.shape({
       id: PropTypes.string,
       name: PropTypes.string,
@@ -311,6 +347,15 @@ PaymentReceipt.propTypes = {
       id: PropTypes.string,
       name: PropTypes.string
     }),
+    paymentPlan: PropTypes.shape({
+      id: PropTypes.string,
+      monthlyAmount: PropTypes.number,
+      landParcel: PropTypes.shape({
+        id: PropTypes.string,
+        parcelNumber: PropTypes.string
+      })
+    }),
+    receiptNumber: PropTypes.string,
     planPayments: PropTypes.arrayOf(PropTypes.shape({
       id: PropTypes.string,
       receiptNumber: PropTypes.string,
