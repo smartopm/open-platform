@@ -6,8 +6,8 @@
     "login_text": "Inicie sesión con su número de teléfono aquí",
     "request_account": "¿No tienes una cuenta?",
     "request_login": "Para solicitar su información de inicio de sesión, envíe un correo electrónico: {{communityEmail}}",
+    "resend_code": "Vuelva a enviar el código",
     "test_key": "Testeo",
-    "welcome": "Bienvenido a la aplicación {{appName}}",
-    "resend_code": "Vuelva a enviar el código"
+    "welcome": "Bienvenido a la aplicación {{appName}}"
   }
 }

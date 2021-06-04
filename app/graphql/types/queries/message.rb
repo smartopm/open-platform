@@ -52,13 +52,9 @@ module Types::Queries::Message
   def user_messages(id:, offset: 0, limit: 50)
     raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') unless admin_or_self(id)
 
-    com_id = context[:current_user].community_id
-    messages =
-      Message.joins(:user, :sender).includes(:user, :sender)
-             .unscope(:order).where('(user_id=? OR sender_id=?)', id, id)
-             .where('(users.community_id=? AND senders_messages.community_id=?)', com_id, com_id)
-             .order('messages.created_at ASC').limit(limit).offset(offset)
-
+    messages = Message.includes(:sender).unscope(:order)
+                      .where('user_id = ? or sender_id = ?', id, id)
+                      .order(created_at: :desc).limit(limit).offset(offset)
     messages.collect(&:mark_as_read) unless context[:current_user].admin?
     messages
   end

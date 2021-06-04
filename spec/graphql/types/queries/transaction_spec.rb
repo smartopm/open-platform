@@ -2,8 +2,8 @@
 
 require 'rails_helper'
 
-RSpec.describe Types::Queries::Payment do
-  describe 'Payment queries' do
+RSpec.describe Types::Queries::Transaction do
+  describe 'Transaction queries' do
     let!(:user) { create(:user_with_community) }
     let!(:community) { user.community }
     let!(:admin) { create(:admin_user, community_id: community.id) }
@@ -39,30 +39,6 @@ RSpec.describe Types::Queries::Payment do
       GQL
     end
 
-    let(:transaction_receipt) do
-      <<~GQL
-        query transactionReceipt($id: ID!) {
-          transactionReceipt(id: $id) {
-            amount
-            source
-            createdAt
-            user {
-              name
-            }
-            planPayments {
-              amount
-              receiptNumber
-              createdAt
-              currentPlotPendingBalance
-            }
-            community {
-              currency
-            }
-          }
-        }
-      GQL
-    end
-
     describe '#user_transactions' do
       context 'when user id is provided' do
         before do
@@ -84,45 +60,6 @@ RSpec.describe Types::Queries::Payment do
           expect(transaction_result['unallocatedAmount']).to eql 1000.0
           expect(transaction_result['depositor']['name']).to eql user.name
           expect(transaction_result['source']).to eql 'cash'
-        end
-      end
-    end
-
-    describe '#transaction_receipt' do
-      context 'when transaction id is invalid' do
-        it 'raises transaction not found error' do
-          variables = { id: '1234' }
-          result = DoubleGdpSchema.execute(transaction_receipt,
-                                           variables: variables,
-                                           context: {
-                                             current_user: admin,
-                                             site_community: community,
-                                           })
-          expect(result.dig('errors', 0, 'message')).to eql 'Transaction not found'
-        end
-      end
-
-      context 'when current_user is verified' do
-        before { payment_plan.update(pending_balance: 1200) }
-
-        it 'return transaction receipt details' do
-          variables = { id: transaction.id }
-          result = DoubleGdpSchema.execute(transaction_receipt,
-                                           variables: variables,
-                                           context: {
-                                             current_user: admin,
-                                             site_community: community,
-                                           })
-          receipt_details = result.dig('data', 'transactionReceipt')
-          expect(receipt_details['amount']).to eql 1500.0
-          expect(receipt_details['source']).to eql 'cash'
-          expect(receipt_details['user']['name']).to eql 'Mark Test'
-          expect(receipt_details['user']['name']).to eql 'Mark Test'
-
-          payment_details = receipt_details['planPayments'][0]
-          expect(payment_details['amount']).to eql 500.0
-          expect(payment_details['receiptNumber']).to eql 'MI12345'
-          expect(payment_details['currentPlotPendingBalance']).to eql 700.0
         end
       end
     end

@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 # Payment queries
-# rubocop:disable Metrics/ModuleLength
 module Types::Queries::PaymentPlan
   extend ActiveSupport::Concern
 
@@ -52,7 +51,7 @@ module Types::Queries::PaymentPlan
     payment_plan = parcel.payment_plan
     {
       payment_plan: payment_plan,
-      statements: statement_details(payment_plan),
+      statements: statements(payment_plan),
     }
   end
 
@@ -77,95 +76,45 @@ module Types::Queries::PaymentPlan
   end
 
   # Statement details of payment plan.
-  # * Combines paid and unpaid statement details.
   #
   # @param [PaymentPlan] plan
   #
   # @return [Array]
-  def statement_details(plan)
-    paid_statement_details(plan) + unpaid_statement_details(plan)
-  end
-
-  # Paid Statement details of payment plan.
-  #
-  # @param [PaymentPlan] plan
-  #
-  # @return [Array]
-  # rubocop:disable Metrics/AbcSize
-  # rubocop:disable Metrics/MethodLength
-  def paid_statement_details(plan)
-    payment_details = plan_payment_details(plan.plan_payments)
-
-    remaining_amount = 0
-    monthly_amount = plan.monthly_amount
+  def statements(plan)
+    payments = plan.plan_payments.not_cancelled.order(:created_at)
     statement_details = []
-    payment_details.each_with_index do |details, index|
-      paid_monthly_amount = details[:amount] + remaining_amount
-      paid_installments = (paid_monthly_amount / monthly_amount).floor
-      remaining_amount = paid_monthly_amount - (monthly_amount * paid_installments)
-      paid_installments.times do |_installment|
-        statement_details.push(
-          {
-            transaction_number: details[:transaction_number],
-            payment_date: details[:created_at],
-            amount_paid: monthly_amount,
-            balance: 0,
-            status: 'paid',
-          },
-        )
-      end
-      next if index != (payment_details.size - 1) || remaining_amount.zero?
+    unallocated_amount = 0
 
-      statement_details.push(
-        {
-          transaction_number: details[:transaction_number],
-          payment_date: details[:created_at],
-          amount_paid: remaining_amount,
-          balance: monthly_amount - remaining_amount,
-          status: 'paid',
-        },
-      )
+    payments.each do |payment|
+      installment = installment_detail(payment, unallocated_amount)
+      statement_details << installment
+      unallocated_amount = installment[:unallocated_amount]
     end
     statement_details
   end
-  # rubocop:enable Metrics/AbcSize
-  # rubocop:enable Metrics/MethodLength
 
-  # Unpaid Statement details of payment plan.
-  #
-  # @param [PaymentPlan] plan
-  #
-  # @return [Array]
   # rubocop:disable Metrics/MethodLength
-  def unpaid_statement_details(plan)
-    unpaid_installments = (plan.pending_balance / plan.monthly_amount).floor
-    due_date = plan.start_date + (plan.duration_in_month - unpaid_installments).month
-    statement_details = []
-    unpaid_installments.times do |_installment|
-      statement_details.push(
-        {
-          due_date: due_date,
-          amount_paid: 0,
-          balance: plan.monthly_amount,
-          status: 'unpaid',
-        },
-      )
-      due_date += 1.month
-    end
-    statement_details
+  # Return installment details
+  #
+  # @param payment [PlanPayment]
+  # @param unallocated_amount [Float]
+  #
+  # @return [Hash]
+  def installment_detail(payment, unallocated_amount)
+    monthly_amount = payment.payment_plan.monthly_amount
+    available_amount = payment.amount + unallocated_amount
+    settled_installments = (available_amount / monthly_amount).floor
+    debit_amount = monthly_amount * settled_installments
+
+    {
+      receipt_number: payment.receipt_number,
+      payment_date: payment.created_at,
+      amount_paid: payment.amount,
+      installment_amount: monthly_amount,
+      settled_installments: settled_installments,
+      debit_amount: debit_amount,
+      unallocated_amount: available_amount - debit_amount,
+    }
   end
   # rubocop:enable Metrics/MethodLength
-
-  # Details of payment made against PaymentPlan
-  #
-  # @param [Array] Collection of PlanPayment
-  #
-  # @return [Array]
-  def plan_payment_details(plan_payments)
-    plan_payments.not_cancelled
-                 .joins(:user_transaction)
-                 .order(:created_at)
-                 .select(:amount, :created_at, 'transactions.transaction_number')
-  end
 end
-# rubocop:enable Metrics/ModuleLength

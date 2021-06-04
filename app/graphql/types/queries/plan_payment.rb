@@ -12,6 +12,10 @@ module Types::Queries::PlanPayment
       argument :limit, Integer, required: false
       argument :query, String, required: false
     end
+    field :payment_receipt, Types::PlanPaymentType, null: true do
+      description 'Fetches payment receipt details'
+      argument :id, GraphQL::Types::ID, required: true
+    end
   end
 
   # Returns list of all payments
@@ -30,5 +34,28 @@ module Types::Queries::PlanPayment
                             .eager_load(:user, :payment_plan)
                             .order(created_at: :desc)
                             .limit(limit).offset(offset)
+  end
+
+  # Payment's receipt details.
+  #
+  # @param id [String]
+  #
+  # @return [PlanPayment]
+  def payment_receipt(id:)
+    payment = context[:site_community].plan_payments.find_by(id: id)
+    raise_payment_not_found_error(payment)
+
+    payment
+  end
+
+  private
+
+  # Raises GraphQL execution error if payment does not exist.
+  #
+  # @return [GraphQL::ExecutionError]
+  def raise_payment_not_found_error(payment)
+    return if payment
+
+    raise GraphQL::ExecutionError, I18n.t('errors.plan_payment.not_found')
   end
 end
