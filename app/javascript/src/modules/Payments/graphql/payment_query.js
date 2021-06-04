@@ -85,4 +85,31 @@ export const PlansPaymentsQuery = gql`
   }
 `
 
+export const PaymentReceipt = gql`
+  query PaymentReceipt($userId: ID!) {
+    userPlansWithPayments(userId: $userId, limit: $limit, offset: $offset) {
+      id
+      planType
+      startDate
+      monthlyAmount
+      paymentDay
+      pendingBalance
+      landParcel {
+        id
+        parcelNumber
+      }
+      planPayments {
+        id
+        createdAt
+        amount
+        status
+        userTransaction {
+          id
+          source
+        }
+      }
+    }
+  }
+`
+
 export default UserTransactions;
