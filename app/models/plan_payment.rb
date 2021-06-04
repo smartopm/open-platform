@@ -22,6 +22,8 @@ class PlanPayment < ApplicationRecord
     attributes user: ['user.name']
     attributes phone_number: ['user.phone_number']
     attributes email: ['user.email']
+    attributes amount: ['user_transaction.amount']
+    attributes source: ['user_transaction.source']
   end
 
   scope :created_at_lteq, lambda { |created_at|
