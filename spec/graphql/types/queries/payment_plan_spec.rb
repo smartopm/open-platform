@@ -15,12 +15,12 @@ RSpec.describe Types::Queries::Payment do
     end
     let!(:transaction) do
       create(:transaction, user_id: user.id, community_id: community.id, depositor_id: user.id,
-                           amount: 500)
+                           amount: 500, receipt_number: '12300')
     end
     let!(:plan_payment) do
       create(:plan_payment, user_id: user.id, community_id: community.id,
                             transaction_id: transaction.id, payment_plan_id: payment_plan.id,
-                            amount: 500)
+                            amount: 500, manual_receipt_number: '12300')
     end
     let(:user_plans_with_payments) do
       <<~GQL
@@ -49,7 +49,9 @@ RSpec.describe Types::Queries::Payment do
             paymentPlan {
               id
               startDate
-              pendingBalance
+              planValue
+              statementPaidAmount
+              statementPendingBalance
               user {
                 name
                 phoneNumber
@@ -61,12 +63,13 @@ RSpec.describe Types::Queries::Payment do
               }
             }
             statements {
-              transactionNumber
+              receiptNumber
               paymentDate
-              dueDate
               amountPaid
-              balance
-              status
+              installmentAmount
+              settledInstallments
+              debitAmount
+              unallocatedAmount
             }
           }
         }
@@ -148,19 +151,8 @@ RSpec.describe Types::Queries::Payment do
         end
 
         context 'when land parcel is present' do
-          context 'when partial payment is allocated to monthly installments' do
-            before do
-              create_list(
-                :plan_payment,
-                2,
-                amount: 200,
-                transaction_id: transaction.id,
-                user_id: non_admin.id,
-                payment_plan_id: payment_plan.id,
-                community: admin.community,
-              )
-              payment_plan.update(pending_balance: 1200 - 400)
-            end
+          context 'when payment amount is a multiple of monthly amount' do
+            before { payment_plan.update(pending_balance: 1200 - 500) }
 
             it 'returns statements of payment plan' do
               variables = { landParcelId: land_parcel.id }
@@ -173,41 +165,26 @@ RSpec.describe Types::Queries::Payment do
                 },
               ).as_json
               payment_plan = result.dig('data', 'paymentPlanStatement', 'paymentPlan')
-              statements = result.dig('data', 'paymentPlanStatement', 'statements')
-              details = statements.map do |statement|
-                statement.slice('amountPaid', 'balance', 'status')
-              end
-              expect(payment_plan['pendingBalance']).to eql 800.0
+              statement = result.dig('data', 'paymentPlanStatement', 'statements', 0)
+              expect(payment_plan['statementPaidAmount']).to eql 500.0
+              expect(payment_plan['statementPendingBalance']).to eql 700.0
+              expect(payment_plan['planValue']).to eql 1200.0
               expect(payment_plan['user']['name']).to eql 'Mark Test'
-              expect(details).to include(
-                { 'amountPaid' => 100.0, 'balance' => 0, 'status' => 'paid' },
-                { 'amountPaid' => 100.0, 'balance' => 0, 'status' => 'paid' },
-                { 'amountPaid' => 100.0, 'balance' => 0, 'status' => 'paid' },
-                { 'amountPaid' => 100.0, 'balance' => 0, 'status' => 'paid' },
-                { 'amountPaid' => 0, 'balance' => 100.0, 'status' => 'unpaid' },
-                { 'amountPaid' => 0, 'balance' => 100.0, 'status' => 'unpaid' },
-                { 'amountPaid' => 0, 'balance' => 100.0, 'status' => 'unpaid' },
-                { 'amountPaid' => 0, 'balance' => 100.0, 'status' => 'unpaid' },
-                { 'amountPaid' => 0, 'balance' => 100.0, 'status' => 'unpaid' },
-                { 'amountPaid' => 0, 'balance' => 100.0, 'status' => 'unpaid' },
-                { 'amountPaid' => 0, 'balance' => 100.0, 'status' => 'unpaid' },
-                { 'amountPaid' => 0, 'balance' => 100.0, 'status' => 'unpaid' },
-              )
+              expect(statement['receiptNumber']).to eql 'MI12300'
+              expect(statement['paymentDate'].to_date).to eql plan_payment.created_at.to_date
+              expect(statement['amountPaid']).to eql 500.0
+              expect(statement['installmentAmount']).to eql 100.0
+              expect(statement['settledInstallments']).to eql 5
+              expect(statement['debitAmount']).to eql 500.0
+              expect(statement['unallocatedAmount']).to eql 0.0
             end
           end
 
-          context 'when full payment is allocated to monthly installments' do
+          context 'when payment amount is not a multiple of monthly amount' do
             before do
-              create_list(
-                :plan_payment,
-                2,
-                amount: 210,
-                transaction_id: transaction.id,
-                user_id: non_admin.id,
-                payment_plan_id: payment_plan.id,
-                community: admin.community,
-              )
-              payment_plan.update(pending_balance: 1200 - 420)
+              transaction.update(amount: 450)
+              plan_payment.update(amount: 450)
+              payment_plan.update(pending_balance: 1200 - 450)
             end
 
             it 'returns statements of payment plan' do
@@ -221,26 +198,18 @@ RSpec.describe Types::Queries::Payment do
                 },
               ).as_json
               payment_plan = result.dig('data', 'paymentPlanStatement', 'paymentPlan')
-              statements = result.dig('data', 'paymentPlanStatement', 'statements')
-              details = statements.map do |statement|
-                statement.slice('amountPaid', 'balance', 'status')
-              end
-              expect(payment_plan['pendingBalance']).to eql 780.0
+              statement = result.dig('data', 'paymentPlanStatement', 'statements', 0)
+              expect(payment_plan['statementPaidAmount']).to eql 400.0
+              expect(payment_plan['statementPendingBalance']).to eql 800.0
+              expect(payment_plan['planValue']).to eql 1200.0
               expect(payment_plan['user']['name']).to eql 'Mark Test'
-              expect(details).to include(
-                { 'amountPaid' => 100.0, 'balance' => 0, 'status' => 'paid' },
-                { 'amountPaid' => 100.0, 'balance' => 0, 'status' => 'paid' },
-                { 'amountPaid' => 100.0, 'balance' => 0, 'status' => 'paid' },
-                { 'amountPaid' => 100.0, 'balance' => 0, 'status' => 'paid' },
-                { 'amountPaid' => 20, 'balance' => 80.0, 'status' => 'paid' },
-                { 'amountPaid' => 0, 'balance' => 100.0, 'status' => 'unpaid' },
-                { 'amountPaid' => 0, 'balance' => 100.0, 'status' => 'unpaid' },
-                { 'amountPaid' => 0, 'balance' => 100.0, 'status' => 'unpaid' },
-                { 'amountPaid' => 0, 'balance' => 100.0, 'status' => 'unpaid' },
-                { 'amountPaid' => 0, 'balance' => 100.0, 'status' => 'unpaid' },
-                { 'amountPaid' => 0, 'balance' => 100.0, 'status' => 'unpaid' },
-                { 'amountPaid' => 0, 'balance' => 100.0, 'status' => 'unpaid' },
-              )
+              expect(statement['receiptNumber']).to eql 'MI12300'
+              expect(statement['paymentDate'].to_date).to eql plan_payment.created_at.to_date
+              expect(statement['amountPaid']).to eql 450.0
+              expect(statement['installmentAmount']).to eql 100.0
+              expect(statement['settledInstallments']).to eql 4
+              expect(statement['debitAmount']).to eql 400.0
+              expect(statement['unallocatedAmount']).to eql 50.0
             end
           end
         end
