@@ -156,15 +156,15 @@ RSpec.describe Types::Queries::Message do
     it 'when user retrieves msg list' do
       result = DoubleGdpSchema.execute(cuser_msgs, context: { current_user: current_user }).as_json
       expect(result.dig('data', 'userMessages').length).to eql 2
-      expect(result.dig('data', 'userMessages', 1, 'id')).to eql cuser_adm_msg.id
-      expect(result.dig('data', 'userMessages', 1, 'sender', 'id')).to eql current_user.id
-      expect(result.dig('data', 'userMessages', 1, 'user', 'id')).to eql current_user.id
+      expect(result.dig('data', 'userMessages', 0, 'id')).to eql cuser_adm_msg.id
+      expect(result.dig('data', 'userMessages', 0, 'sender', 'id')).to eql current_user.id
+      expect(result.dig('data', 'userMessages', 0, 'user', 'id')).to eql current_user.id
 
       result = DoubleGdpSchema.execute(auser_msgs, context: { current_user: another_user }).as_json
       expect(result.dig('data', 'userMessages').length).to eql 2
-      expect(result.dig('data', 'userMessages', 1, 'id')).to eql auser_adm_msg.id
-      expect(result.dig('data', 'userMessages', 1, 'sender', 'id')).to eql another_user.id
-      expect(result.dig('data', 'userMessages', 1, 'user', 'id')).to eql another_user.id
+      expect(result.dig('data', 'userMessages', 0, 'id')).to eql auser_adm_msg.id
+      expect(result.dig('data', 'userMessages', 0, 'sender', 'id')).to eql another_user.id
+      expect(result.dig('data', 'userMessages', 0, 'user', 'id')).to eql another_user.id
     end
 
     it 'should update messages with is_read status when non-admin user retrieves them' do
