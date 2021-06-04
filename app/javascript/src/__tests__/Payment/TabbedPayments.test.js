@@ -9,8 +9,9 @@ import { Context } from '../../containers/Provider/AuthStateProvider';
 
 describe('Tabbed Payment Component', () => {
   it('renders Tabbed Payment Templates', async () => {
+    // No tabs anymore, just check if this renders without crashing
     await act(async () => {
-    const container = render(
+    render(
       <Context.Provider value={userMock}>
         <MockedProvider>
           <BrowserRouter>
@@ -19,9 +20,6 @@ describe('Tabbed Payment Component', () => {
         </MockedProvider>
       </Context.Provider>
     );
-
-    expect(container.queryByText('Invoices')).toBeInTheDocument();
-    expect(container.queryByText('Payments')).toBeInTheDocument();
     })
   });
 });

@@ -40,7 +40,6 @@ export default function PaymentSummary({ authState, translate }) {
   const history = useHistory()
 
   function handleClick(query, value) {
-    console.log(query, value)
     if (value === 0) return;
     history.push({
       pathname: '/payments',

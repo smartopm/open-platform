@@ -19,6 +19,6 @@ describe('Payments Component', () => {
       </Context.Provider>
     );
 
-    expect(container.getAllByText(/Invoices/)[0]).toBeInTheDocument();
+    expect(container.getAllByText(/Payments/)[0]).toBeInTheDocument();
   });
 });

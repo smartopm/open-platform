@@ -270,12 +270,12 @@ export function renderPayment(payment, currencyData) {
         </Grid>
       ),
       'Payment Amount': (
-        <Grid item xs={12} md={2}>
+        <Grid item xs={12} md={2} data-testid="payment_amount">
           <Text content={formatMoney(currencyData, payment.userTransaction.amount)} />
         </Grid>
       ),
       'Plot Info': (
-        <Grid item xs={12} md={2}>
+        <Grid item xs={12} md={2} data-testid="plot_info">
           <Text
             content={`${payment.paymentPlan?.landParcel.parcelType} - ${payment.paymentPlan?.landParcel.parcelNumber}`}
           />
@@ -291,7 +291,7 @@ export function renderPayment(payment, currencyData) {
         </Grid>
       ),
       'PaymentStatus/ReceiptNumber': (
-        <Grid item xs={12} md={2}>
+        <Grid item xs={12} md={2} data-testid="receipt_number">
           <Text
             content={`${titleize(payment.status)} - ${
               payment.receiptNumber
