@@ -3,7 +3,7 @@
 # Manages deposits record of user.
 class Transaction < ApplicationRecord
   include SearchCop
-  
+
   VALID_SOURCES = %w[cash cheque/cashier_cheque wallet mobile_money invoice
                      bank_transfer/eft bank_transfer/cash_deposit pos
                      unallocated_funds].freeze
@@ -55,6 +55,7 @@ class Transaction < ApplicationRecord
     amount - plan_payments.not_cancelled.pluck(:amount).sum
   end
 
+  # rubocop:disable Metrics/MethodLength
   def self.payment_stat(com)
     Transaction.connection.select_all(
       sanitize_sql(
@@ -78,6 +79,7 @@ class Transaction < ApplicationRecord
       ),
     )
   end
+  # rubocop:enable Metrics/MethodLength
 
   private
 

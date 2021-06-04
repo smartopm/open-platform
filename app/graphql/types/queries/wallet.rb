@@ -1,10 +1,8 @@
 # frozen_string_literal: true
 
 # wallet queries
-# rubocop:disable Metrics/ModuleLength
 module Types::Queries::Wallet
   extend ActiveSupport::Concern
-  # rubocop:disable Metrics/BlockLength
   included do
     # Get wallets
     field :user_wallets, [Types::WalletType], null: true do
@@ -36,8 +34,6 @@ module Types::Queries::Wallet
       argument :transaction_id, GraphQL::Types::ID, required: true
     end
   end
-  # rubocop:enable Metrics/BlockLength
-
   def user_wallets(user_id: nil, offset: 0, limit: 100)
     user = verified_user(user_id)
 
@@ -67,5 +63,4 @@ module Types::Queries::Wallet
     context[:site_community].wallet_transactions.find(transaction_id)&.payment_invoice.payment
     # rubocop:enable Lint/SafeNavigationChain
   end
-  # rubocop:enable Metrics/ModuleLength
 end
