@@ -23,7 +23,7 @@ export default function PaymentReceipt({ paymentData, open, handleClose, currenc
           actionText="Print"
           handleSubmit={() => window.print()}
         >
-          <div className={classes.container}>
+          <div className='print' style={{margin: '80px 284px'}}>
             {paymentData?.community?.logoUrl ? (
               <img
                 src={paymentData.community.logoUrl}
@@ -163,7 +163,7 @@ export default function PaymentReceipt({ paymentData, open, handleClose, currenc
                 </Grid>
               </div>
 
-              <div className={classes.details} style={{ marginTop: '60px' }}>
+              <div className={classes.details} style={{ marginTop: '60px 0' }}>
                 <div style={{width: '500px'}}>
                   <Grid container spacing={1}>
                     <Grid item xs={3} style={{ color: '#9B9B9B' }}>
@@ -247,7 +247,7 @@ export default function PaymentReceipt({ paymentData, open, handleClose, currenc
                 </div>
               </div>
 
-              {paymentData?.source === 'cheque/cashier_cheque' || paymentData?.userTransaction?.source === 'cheque/cashier_cheque'  && (
+              {(paymentData?.source === 'cheque/cashier_cheque' || paymentData?.userTransaction?.source === 'cheque/cashier_cheque')  && (
                 <div style={{ marginTop: '60px' }}>
                   <b style={{ fontSize: '16px' }}>Banking Details</b> 
                   {' '}

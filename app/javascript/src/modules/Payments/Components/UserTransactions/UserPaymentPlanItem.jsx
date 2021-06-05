@@ -102,6 +102,7 @@ export default function UserPaymentPlanItem({
     event.stopPropagation()
     loadReceiptDetails()
     setReceiptOpen(true)
+    setAnchor(null)
   }
 
   function handleTransactionMenu(event, payId){
@@ -332,7 +333,7 @@ export function renderPayments(pay, currencyData, menuData) {
             <IconButton
               aria-controls="simple-menu"
               aria-haspopup="true"
-              data-testid="menu"
+              data-testid="pay-menu"
               dataid={pay.id}
               onClick={(event) => menuData.handleTransactionMenu(event, pay.id)}
             >

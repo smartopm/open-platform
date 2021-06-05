@@ -3,8 +3,8 @@ import { render } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { MockedProvider } from '@apollo/react-testing';
 import { BrowserRouter } from 'react-router-dom/';
-import PaymentReceipt from '../../modules/Payments/Components/UserTransactions/PaymentReceipt';
-import currency from '../../__mocks__/currency';
+import PaymentReceipt from '../Components/UserTransactions/PaymentReceipt';
+import currency from '../../../__mocks__/currency';
 
 jest.mock('react-signature-canvas');
 describe('It should test the payment receipt modal component', () => {

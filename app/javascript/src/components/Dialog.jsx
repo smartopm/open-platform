@@ -283,7 +283,8 @@ export const useStyles = makeStyles(theme => ({
   print: {
     marginLeft: '500px',
     width: '30px',
-    flex: 1
+    flex: 1,
+    color: '#FFFFFF'
   },
   drawer: {
     width: '300px',
