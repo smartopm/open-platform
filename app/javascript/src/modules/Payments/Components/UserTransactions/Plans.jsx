@@ -21,9 +21,9 @@ export default function PaymentPlans({ userId, user, userData, tab }) {
     { title: 'Plot Number', col: 2 },
     { title: 'Payment Plan', col: 2 },
     { title: 'Start Date', col: 2 },
-    { title: 'Balance', col: 2 },
-    { title: 'Monthly Amount', col: 2 },
-    { title: 'Payment Day', col: 2 }
+    { title: 'Balance/Monthly Amount', col: 2 },
+    { title: 'Payment Day', col: 2 },
+    { title: 'Menu', col: 2 }
   ];
   const path = useParamsQuery()
   const classes = useStyles();
