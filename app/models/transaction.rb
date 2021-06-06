@@ -2,6 +2,8 @@
 
 # Manages deposits record of user.
 class Transaction < ApplicationRecord
+  include SearchCop
+
   VALID_SOURCES = %w[cash cheque/cashier_cheque wallet mobile_money invoice
                      bank_transfer/eft bank_transfer/cash_deposit pos
                      unallocated_funds].freeze
@@ -24,6 +26,13 @@ class Transaction < ApplicationRecord
 
   has_paper_trail
 
+  search_scope :search do
+    attributes :source, :created_at, :transaction_number, :cheque_number
+    attributes user: ['user.name']
+    attributes phone_number: ['user.phone_number']
+    attributes email: ['user.email']
+  end
+
   # Performs actions post transaction creation.
   # * Creates payment entry against payment plan
   # * Updates payment plan's pending balance
@@ -45,6 +54,32 @@ class Transaction < ApplicationRecord
   def unallocated_amount
     amount - plan_payments.not_cancelled.pluck(:amount).sum
   end
+
+  # rubocop:disable Metrics/MethodLength
+  def self.payment_stat(com)
+    Transaction.connection.select_all(
+      sanitize_sql(
+        "select
+        date(transactions.created_at at time zone 'utc' at time zone '#{com.timezone}')
+        as trx_date,
+        sum(CASE WHEN transactions.source='cash'
+        THEN transactions.amount ELSE 0 END) as cash,
+        sum(CASE WHEN transactions.source='mobile_money'
+        THEN transactions.amount ELSE 0 END) as mobile_money,
+        sum(CASE WHEN transactions.source='pos'
+        THEN transactions.amount ELSE 0 END) as pos,
+        sum(CASE WHEN transactions.source='bank_transfer/cash_deposit'
+        THEN transactions.amount ELSE 0 END) as bank_transfer,
+        sum(CASE WHEN transactions.source='bank_transfer/eft'
+        THEN transactions.amount ELSE 0 END) as eft
+      from transactions
+      where transactions.community_id='#{com.id}'
+      and transactions.created_at > (CURRENT_TIMESTAMP - interval '365 days')
+      group by trx_date order by trx_date",
+      ),
+    )
+  end
+  # rubocop:enable Metrics/MethodLength
 
   private
 

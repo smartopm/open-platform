@@ -40,7 +40,7 @@ describe('Payment Summary Component', () => {
     },
     result: {
       data: {
-        paymentSummary:
+        transactionSummary:
           {
             today: 100,
             oneWeek: 100,

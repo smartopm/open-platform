@@ -419,8 +419,13 @@ export const dateWidget = {
         type: 'text',
         valueSources: ['value']
       },
-      transactionNumber: {
-        label: 'Transaction Number',
+      receiptNumber: {
+        label: 'Receipt Number',
+        type: 'text',
+        valueSources: ['value']
+      },
+      manualReceiptNumber: {
+        label: 'Manual Receipt Number',
         type: 'text',
         valueSources: ['value']
       },
@@ -429,8 +434,8 @@ export const dateWidget = {
         type: 'date',
         valueSources: ['value']
       },
-      chequeNumber: {
-        label: 'Cheque Number',
+      amount: {
+        label: 'Payment Amount',
         type: 'text',
         valueSources: ['value']
       }
@@ -456,14 +461,15 @@ export const dateWidget = {
     }
   }
 
-  export const paymentFilterFields = {
+export const paymentFilterFields = {
     clientName: 'user',
     phoneNumber: 'phone_number',
     email: 'email',
     createdDate: 'created_at',
     paymentType: 'source',
-    transactionNumber: 'transaction_number',
-    chequeNumber: 'cheque_number'
+    receiptNumber: 'automated_receipt_number',
+    manualReceiptNumber: 'manual_receipt_number',
+    amount: 'amount'
   }
 
   export const propertyQueryBuilderConfig = {

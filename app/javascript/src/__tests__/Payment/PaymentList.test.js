@@ -3,82 +3,57 @@ import { render, waitFor, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { MockedProvider } from '@apollo/react-testing';
 import { BrowserRouter } from 'react-router-dom';
-import { AllEventLogsQuery, TransactionsQuery } from '../../graphql/queries';
 import { Spinner } from '../../shared/Loading';
 import PaymentList, { renderPayment } from '../../modules/Payments/Components/PaymentList';
 import currency from '../../__mocks__/currency';
 import { Context } from '../../containers/Provider/AuthStateProvider';
 import userMock from '../../__mocks__/userMock';
+import { PlansPaymentsQuery } from '../../modules/Payments/graphql/payment_query';
 
 describe('Payment List Item Component', () => {
   const transactions = [
     {
-      amount: 100,
-      status: 'settled',
-      createdAt: '2021-01-26T20:26:39Z',
-      updatedAt: '2021-01-26T20:26:39Z',
-      destination: 'wallet',
-      source: 'cash',
-      currentWalletBalance: 0,
-      id: '162f751-83a1-6d59569',
-      bankName:'some bank',
-      chequeNumber: '38473',
-      transactionNumber: '293848239432',
-      receiptNumber: '293848239432',
+      receiptNumber: 'SI1008',
+      status: 'paid',
+      createdAt: '2021-06-04T08:50:45Z',
+      id: '5d0d8051-2510-42ed-886a-48bbfa9f6414',
+      userTransaction: {
+        source: 'cash',
+        amount: 1000,
+        id: 'dd7bcc9d-c063-4aad-8110-d784d535f3e3'
+      },
       user: {
-        id: '162f7517-7cc8-42f9-b2d0-a83a16d59569',
-        name: 'joe m',
-        imageUrl: 'tolu.jpg',
-        email: 'test@test.com',
-        phoneNumber: '1111111111',
-        extRefId: 'test23634'
+        id: '9c617681-b6b3-4ebf-b5aa-c7a606c2f2f4',
+        name: 'JM',
+        imageUrl: null,
+        email: 'hello_again@gmail.com',
+        phoneNumber: '26097150001748',
+        extRefId: null
+      },
+      paymentPlan: {
+        landParcel: {
+          parcelType: '232',
+          parcelNumber: 'Plot 664354'
+        }
       }
     }
   ];
   it('should render the invoice item component', async () => {
     const mock = {
       request: {
-        query: TransactionsQuery,
+        query: PlansPaymentsQuery,
         variables: { limit: 50, offset: 0, query: '' }
       },
       result: {
         data: {
-          transactions
-        }
-      }
-    };
-    const anotherMock = {
-      request: {
-        query: AllEventLogsQuery,
-        variables: {
-          subject: ['payment_update'],
-          refId: '162f751-83a1-6d59569',
-          refType: 'WalletTransaction'
-        }
-      },
-      result: {
-        data: {
-          result: {
-            id: '385u9432n384ujdf',
-            createdAt: '2021-03-03T12:40:38Z',
-            refId: '162f751-83a1-6d59569',
-            refType: 'WalletTransaction',
-            subject: 'payment_update',
-            sentence: 'Joe made changes to this payment',
-            data: {},
-            actingUser: {
-              name: 'Joe',
-              id: '162f7517-7cc8-42f9-b2d0-a83a16d59569'
-            },
-            entryRequest: null
-          }
+          paymentsList: transactions
         }
       }
     };
 
     const container = render(
       <Context.Provider value={userMock}>
-        <MockedProvider mocks={[mock, anotherMock]} addTypename={false}>
+        <MockedProvider mocks={[mock]} addTypename={false}>
           <BrowserRouter>
             <PaymentList currencyData={currency} />
           </BrowserRouter>
@@ -92,28 +67,32 @@ describe('Payment List Item Component', () => {
 
     await waitFor(
       () => {
-        expect(container.queryAllByTestId('created_by')[0].textContent).toContain('joe');
-        expect(container.queryAllByTestId('payment_type')[0].textContent).toContain('Cash');
-        expect(container.queryAllByTestId('payment_type')).toHaveLength(1)
-        expect(container.queryAllByTestId('payment_amount')).toHaveLength(1)
+        expect(container.queryAllByTestId('created_by')[0].textContent).toContain('JM');
+        expect(container.queryAllByTestId('payment_type')[0].textContent).toContain('Cash Deposit');
+        expect(container.queryAllByTestId('payment_type')).toHaveLength(1);
+        expect(container.queryAllByTestId('payment_amount')).toHaveLength(1);
+        expect(container.queryAllByTestId('plot_info')).toHaveLength(1);
+        expect(container.queryAllByTestId('receipt_number')).toHaveLength(1);
       },
       { timeout: 100 }
     );
 
-    const filterClick = container.getByTestId("filter")
-    fireEvent.click(filterClick)
-    expect(container.queryByText('Client Name')).toBeInTheDocument()
+    const filterClick = container.getByTestId('filter');
+    fireEvent.click(filterClick);
+    expect(container.queryByText('Client Name')).toBeInTheDocument();
 
-    const searchInput = container.queryByTestId('search')
-    fireEvent.change(searchInput, { target: { value: 'text' } })
-    expect(searchInput.value).toBe('text')
+    const searchInput = container.queryByTestId('search');
+    fireEvent.change(searchInput, { target: { value: 'text' } });
+    expect(searchInput.value).toBe('text');
   });
   it('should check if renderPayment works as expected', () => {
     const results = renderPayment(transactions[0], currency);
     expect(results).toBeInstanceOf(Array);
-    expect(results[0]).toHaveProperty('User');
-    expect(results[0]).toHaveProperty('Deposit Date');
+    expect(results[0]).toHaveProperty('Client Name');
+    expect(results[0]).toHaveProperty('Payment Date');
     expect(results[0]).toHaveProperty('Payment Type');
-    expect(results[0]).toHaveProperty('Amount');
+    expect(results[0]).toHaveProperty('Payment Amount');
+    expect(results[0]).toHaveProperty('PaymentStatus/ReceiptNumber');
+    expect(results[0]).toHaveProperty('Plot Info');
   });
 });

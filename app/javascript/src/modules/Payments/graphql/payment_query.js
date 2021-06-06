@@ -54,4 +54,35 @@ export const UserPlans = gql`
   }
 `
 
+
+export const PlansPaymentsQuery = gql`
+  query allPayments($limit: Int, $offset: Int, $query: String) {
+    paymentsList(limit: $limit, offset: $offset, query: $query) {
+      receiptNumber
+      status
+      createdAt
+      id
+      userTransaction {
+        source
+        amount
+        id
+      }
+      user {
+        id
+        name
+        imageUrl
+        email
+        phoneNumber
+        extRefId
+      }
+      paymentPlan {
+        landParcel {
+          parcelType
+          parcelNumber
+        }
+      }
+    }
+  }
+`
+
 export default UserTransactions;

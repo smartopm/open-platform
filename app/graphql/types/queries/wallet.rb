@@ -1,10 +1,8 @@
 # frozen_string_literal: true
 
 # wallet queries
-# rubocop:disable Metrics/ModuleLength
 module Types::Queries::Wallet
   extend ActiveSupport::Concern
-  # rubocop:disable Metrics/BlockLength
   included do
     # Get wallets
     field :user_wallets, [Types::WalletType], null: true do
@@ -30,27 +28,12 @@ module Types::Queries::Wallet
       argument :query, String, required: false
     end
 
-    field :payment_stat_details, [Types::WalletTransactionType], null: true do
-      description 'Get list of all transactions in a particular day'
-      argument :query, String, required: false
-    end
-
-    field :payment_accounting_stats, [Types::PaymentAccountingStatType], null: false do
-      description 'return stats of all unpaid invoices'
-    end
-
     # Get transaction's receipt
     field :transaction_receipt, Types::PaymentType, null: true do
       description 'Get a receipt for a transaction'
       argument :transaction_id, GraphQL::Types::ID, required: true
     end
-
-    field :payment_summary, Types::PaymentSummaryType, null: false do
-      description 'return stats payment amount'
-    end
   end
-  # rubocop:enable Metrics/BlockLength
-
   def user_wallets(user_id: nil, offset: 0, limit: 100)
     user = verified_user(user_id)
 
@@ -73,35 +56,6 @@ module Types::Queries::Wallet
                             .limit(limit).offset(offset)
   end
 
-  def payment_accounting_stats
-    WalletTransaction.payment_stat(context[:site_community])
-  end
-
-  # rubocop:disable Metrics/AbcSize
-  # rubocop:disable Metrics/MethodLength
-  def payment_stat_details(query:)
-    payments = context[:site_community].wallet_transactions
-                                       .where.not(source: 'invoice')
-                                       .where(destination: 'wallet')
-                                       .not_cancelled
-                                       .eager_load(:user)
-    case query
-    when 'today'
-      payments.where(created_at: Time.zone.now.beginning_of_day..Time.zone.now.end_of_day)
-    when 'oneWeek'
-      payments.where(created_at: 1.week.ago..Time.zone.now.end_of_day)
-    when 'oneMonth'
-      payments.where(created_at: 30.days.ago..Time.zone.now.end_of_day)
-    when 'overOneMonth'
-      payments.where(created_at: 1.year.ago..Time.zone.now.end_of_day)
-    else
-      converted_date = Date.parse(query).in_time_zone(context[:site_community].timezone).all_day
-      payments.where(created_at: converted_date)
-    end
-  end
-  # rubocop:enable Metrics/AbcSize
-  # rubocop:enable Metrics/MethodLength
-
   def transaction_receipt(transaction_id:)
     raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') if context[:current_user].blank?
 
@@ -109,34 +63,4 @@ module Types::Queries::Wallet
     context[:site_community].wallet_transactions.find(transaction_id)&.payment_invoice.payment
     # rubocop:enable Lint/SafeNavigationChain
   end
-
-  # rubocop:disable Metrics/AbcSize
-  # rubocop:disable Metrics/MethodLength:
-  def payment_summary
-    unless context[:current_user]&.admin?
-      raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
-    end
-
-    payments = context[:site_community].wallet_transactions.not_cancelled
-                                       .where.not(source: 'invoice')
-                                       .where(destination: 'wallet')
-    {
-      today: payments
-        .where(created_at: Time.zone.now.beginning_of_day..Time.zone.now.end_of_day)
-        .sum(&:amount),
-      one_week: payments
-        .where('created_at >= ? AND created_at <= ?', 1.week.ago, Time.zone.now.end_of_day)
-        .sum(&:amount),
-      one_month: payments
-        .where('created_at >= ? AND created_at <= ?', 30.days.ago, Time.zone.now.end_of_day)
-        .sum(&:amount),
-      over_one_month: payments
-        .where('created_at >= ? AND created_at <= ?', 1.year.ago, Time.zone.now.end_of_day)
-        .sum(&:amount),
-    }
-  end
-
-  # rubocop:enable Metrics/AbcSize
-  # rubocop:enable Metrics/MethodLength
-  # rubocop:enable Metrics/ModuleLength
 end

@@ -959,16 +959,19 @@ export const InvoicesStatsDetails = gql`
     }
   }
 `
-
+// TODO: move to its rightful module
 export const PaymentStatsDetails = gql`
   query PaymentStatsDetails($query: String!) {
     paymentStatDetails(query: $query) {
-      id
-      amount
-      status
-      source
       receiptNumber
+      status
       createdAt
+      id
+      userTransaction {
+        source
+        amount
+        id
+      }
       user {
         id
         name
@@ -977,9 +980,15 @@ export const PaymentStatsDetails = gql`
         phoneNumber
         extRefId
       }
+      paymentPlan {
+        landParcel {
+          parcelType
+          parcelNumber
+        }
+      }
     }
   }
-`
+  `
 
 export const LandParcel = gql`
   query landParcel($id: ID!) {

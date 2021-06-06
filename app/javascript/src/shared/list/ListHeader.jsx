@@ -31,7 +31,7 @@ export default function ListHeader({ headers, color }) {
 }
 
 ListHeader.defaultProps = {
-  color: ''
+  color: false
 }
 
 ListHeader.propTypes = {

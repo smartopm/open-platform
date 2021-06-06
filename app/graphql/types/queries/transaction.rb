@@ -12,6 +12,14 @@ module Types::Queries::Transaction
       argument :offset, Integer, required: false
       argument :limit, Integer, required: false
     end
+
+    field :payment_accounting_stats, [Types::PaymentAccountingStatType], null: false do
+      description 'return stats of all transactions'
+    end
+
+    field :transaction_summary, Types::PaymentSummaryType, null: false do
+      description 'return stats payment amount'
+    end
   end
 
   # Returns list of user's all transactions
@@ -28,6 +36,36 @@ module Types::Queries::Transaction
                                              :depositor).order(created_at:
                                             :desc).limit(limit).offset(offset)
   end
+
+  def payment_accounting_stats
+    Transaction.payment_stat(context[:site_community])
+  end
+
+  # rubocop:disable Metrics/AbcSize
+  # rubocop:disable Metrics/MethodLength
+  def transaction_summary
+    unless context[:current_user]&.admin?
+      raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
+    end
+
+    payments = context[:site_community].transactions.not_cancelled
+    {
+      today: payments
+        .where(created_at: Time.zone.now.beginning_of_day..Time.zone.now.end_of_day)
+        .sum(&:amount),
+      one_week: payments
+        .where('created_at >= ? AND created_at <= ?', 1.week.ago, Time.zone.now.end_of_day)
+        .sum(&:amount),
+      one_month: payments
+        .where('created_at >= ? AND created_at <= ?', 30.days.ago, Time.zone.now.end_of_day)
+        .sum(&:amount),
+      over_one_month: payments
+        .where('created_at >= ? AND created_at <= ?', 1.year.ago, Time.zone.now.end_of_day)
+        .sum(&:amount),
+    }
+  end
+  # rubocop:enable Metrics/AbcSize
+  # rubocop:enable Metrics/MethodLength
 
   private
 
