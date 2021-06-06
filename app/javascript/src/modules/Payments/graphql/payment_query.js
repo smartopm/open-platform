@@ -94,7 +94,6 @@ export const ReceiptPayment = gql`
       createdAt
       currentPlotPendingBalance
       community {
-        id
         name
         logoUrl
         currency
@@ -105,7 +104,6 @@ export const ReceiptPayment = gql`
         extRefId
       }
       userTransaction {
-        id
         source
         bankName
         chequeNumber
@@ -115,10 +113,8 @@ export const ReceiptPayment = gql`
         }
       }
       paymentPlan {
-        id
         monthlyAmount
         landParcel {
-          id 
           parcelNumber
         }
       }

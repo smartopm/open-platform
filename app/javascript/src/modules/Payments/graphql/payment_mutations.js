@@ -37,10 +37,8 @@ mutation PaymentCreate(
         receiptNumber
         currentPlotPendingBalance
         paymentPlan {
-          id
           monthlyAmount
           landParcel {
-            id 
             parcelNumber
           }
         }
@@ -55,7 +53,6 @@ mutation PaymentCreate(
         name
       }
       community {
-        id
         name
         logoUrl
         currency
