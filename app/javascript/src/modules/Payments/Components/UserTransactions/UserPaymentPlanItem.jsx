@@ -33,9 +33,10 @@ import { Spinner } from '../../../../shared/Loading';
 import { suffixedNumber } from '../../helpers';
 import ListHeader from '../../../../shared/list/ListHeader';
 import MenuList from '../../../../shared/MenuList'
-import { ReceiptPayment } from '../../graphql/payment_query'
+import { ReceiptPayment, PlanStatement } from '../../graphql/payment_query'
 import PaymentReceipt from './PaymentReceipt'
 import CenteredContent from '../../../../components/CenteredContent'
+import StatementPlan from './PlanStatement'
 
 export default function UserPaymentPlanItem({
   plans,
@@ -50,8 +51,9 @@ export default function UserPaymentPlanItem({
   const [anchor, setAnchor] = useState(null);
   const [planAnchor, setPlanAnchor] = useState(null);
   const [transactionId, setTransactionId] = useState('');
-  const [plannId, setPlannId] = useState('');
+  const [landParcelId, setLandParcelId] = useState('');
   const [receiptOpen, setReceiptOpen] = useState(false);
+  const [statementOpen, setStatementOpen] = useState(false);
   const [details, setPlanDetails] = useState({
     isLoading: false,
     planId: null,
@@ -66,6 +68,12 @@ export default function UserPaymentPlanItem({
   const planAnchorElOpen = Boolean(planAnchor)
   const [loadReceiptDetails, { loading, error, data }] = useLazyQuery(ReceiptPayment, {
     variables: { id: transactionId },
+    fetchPolicy: 'no-cache',
+    errorPolicy: 'all'
+  });
+
+  const [loadStatement, { loading: statementLoad, error: statementError, data: statementData }] = useLazyQuery(PlanStatement, {
+    variables: { landParcelId },
     fetchPolicy: 'no-cache',
     errorPolicy: 'all'
   });
@@ -113,9 +121,9 @@ export default function UserPaymentPlanItem({
 
   function handlePlanClick(event){
     event.stopPropagation()
-    // loadReceiptDetails()
-    // setReceiptOpen(true)
-    // setPlanAnchor(null)
+    loadStatement()
+    setStatementOpen(true)
+    setPlanAnchor(null)
   }
 
   function handleTransactionMenu(event, payId){
@@ -124,10 +132,10 @@ export default function UserPaymentPlanItem({
     setTransactionId(payId)
   }
 
-  function handlePlanMenu(event, planId){
+  function handlePlanMenu(event, parcelId){
     event.stopPropagation()
     setPlanAnchor(event.currentTarget)
-    setPlannId(planId)
+    setLandParcelId(parcelId)
   }
 
   function handlePlanListClose(event) {
@@ -194,11 +202,22 @@ export default function UserPaymentPlanItem({
       {error && (
         <CenteredContent>{error.message}</CenteredContent>
       )}
+      {statementError && (
+        <CenteredContent>{statementError.message}</CenteredContent>
+      )}
       {loading ? <Spinner /> : (
         <PaymentReceipt
           paymentData={data?.paymentReceipt}
           open={receiptOpen}
           handleClose={() => handleReceiptClose()}
+          currencyData={currencyData}
+        />
+      )}
+      {statementLoad ? <Spinner /> : (
+        <StatementPlan 
+          open={statementOpen}
+          handleClose={() => setStatementOpen(false)}
+          data={statementData?.paymentPlanStatement}
           currencyData={currencyData}
         />
       )}
@@ -332,8 +351,7 @@ export function renderPlan(plan, currencyData, userType, { handleMenu, loading }
           aria-controls="simple-menu"
           aria-haspopup="true"
           data-testid="pay-menu"
-          dataid={plan.id}
-          onClick={(event) => menuData.handlePlanMenu(event, plan.id)}
+          onClick={(event) => menuData.handlePlanMenu(event, plan?.landParcel?.id)}
         >
           <MoreHorizOutlined />
         </IconButton>

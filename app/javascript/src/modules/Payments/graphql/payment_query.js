@@ -122,4 +122,17 @@ export const ReceiptPayment = gql`
   }
 `
 
+export const PlanStatement = gql`
+  query PlanStatement($landParcelId: ID!) {
+    paymentPlanStatement(landParcelId: $landParcelId) {
+      paymentPlan {
+        id
+      }
+      statements {
+        receiptNumber
+      }
+    }
+  }
+`
+
 export default UserTransactions;
