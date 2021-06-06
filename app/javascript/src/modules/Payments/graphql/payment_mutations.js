@@ -32,18 +32,30 @@ mutation PaymentCreate(
       chequeNumber
       transactionNumber
       createdAt
+      planPayments {
+        id
+        receiptNumber
+        currentPlotPendingBalance
+        paymentPlan {
+          monthlyAmount
+          landParcel {
+            parcelNumber
+          }
+        }
+      }
       user {
         id
         name
+        extRefId
       }
       depositor {
         id
         name
       }
       community {
-        id
         name
         logoUrl
+        currency
       }
     }
   }

@@ -3,8 +3,8 @@ import { render } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { MockedProvider } from '@apollo/react-testing';
 import { BrowserRouter } from 'react-router-dom/';
-import ReceiptModal from '../../modules/Payments/Components/ReceiptModal';
-import currency from '../../__mocks__/currency';
+import ReceiptModal from '../Components/UserTransactions/ReceiptModal';
+import currency from '../../../__mocks__/currency';
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
 describe('It should test the payment receipt modal component', () => {
@@ -40,7 +40,7 @@ describe('It should test the payment receipt modal component', () => {
         </MockedProvider>
       </BrowserRouter>
     );
-
+    expect(container.getByTestId('print')).toBeInTheDocument();
     expect(container.getByTestId('continue')).toBeInTheDocument();
   });
 });

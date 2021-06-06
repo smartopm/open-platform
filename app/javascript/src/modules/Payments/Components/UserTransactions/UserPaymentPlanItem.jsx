@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { useMutation } from 'react-apollo';
+import { useMutation, useLazyQuery } from 'react-apollo';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import {
@@ -11,8 +11,10 @@ import {
   AccordionDetails,
   Button,
   Menu,
-  MenuItem
+  MenuItem,
+  IconButton
 } from '@material-ui/core';
+import { MoreHorizOutlined } from '@material-ui/icons';
 import EditIcon from '@material-ui/icons/Edit';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import DataList from '../../../../shared/list/DataList';
@@ -31,6 +33,10 @@ import PaymentPlanUpdateMutation from '../../graphql/payment_plan_mutations';
 import { Spinner } from '../../../../shared/Loading';
 import { suffixedNumber } from '../../helpers';
 import ListHeader from '../../../../shared/list/ListHeader';
+import MenuList from '../../../../shared/MenuList'
+import { ReceiptPayment } from '../../graphql/payment_query'
+import PaymentReceipt from './PaymentReceipt'
+import CenteredContent from '../../../../components/CenteredContent'
 
 export default function UserPaymentPlanItem({
   plans,
@@ -42,6 +48,9 @@ export default function UserPaymentPlanItem({
 }) {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = useState(null);
+  const [anchor, setAnchor] = useState(null)
+  const [transactionId, setTransactionId] = useState('')
+  const [receiptOpen, setReceiptOpen] = useState(false)
   const [details, setPlanDetails] = useState({
     isLoading: false,
     planId: null,
@@ -52,6 +61,12 @@ export default function UserPaymentPlanItem({
   const validDays = [...Array(28).keys()];
   const theme = useTheme();
   const matches = useMediaQuery(theme.breakpoints.up('sm'));
+  const anchorElOpen = Boolean(anchor)
+  const [loadReceiptDetails, { loading, error, data }] = useLazyQuery(ReceiptPayment, {
+    variables: { id: transactionId },
+    fetchPolicy: 'no-cache',
+    errorPolicy: 'all'
+  });
 
   const planHeader = [
     { title: 'Plot Number', col: 2 },
@@ -66,8 +81,12 @@ export default function UserPaymentPlanItem({
     { title: 'Payment Date', col: 2 },
     { title: 'Payment Type', col: 2 },
     { title: 'Amount', col: 2 },
-    { title: 'Status', col: 2 }
+    { title: 'Status', col: 2 },
+    { title: 'Menu', col: 2 }
   ];
+  const menuList = [
+    { content: 'View Receipt', isAdmin: true, handleClick: (event) => handleClick(event)},
+  ]
 
   const handleClose = () => {
     setAnchorEl(null);
@@ -77,6 +96,19 @@ export default function UserPaymentPlanItem({
     event.stopPropagation();
     setPlanDetails({ ...details, planId });
     setAnchorEl(event.currentTarget);
+  }
+
+  function handleClick(event){
+    event.stopPropagation()
+    loadReceiptDetails()
+    setReceiptOpen(true)
+    setAnchor(null)
+  }
+
+  function handleTransactionMenu(event, payId){
+    event.stopPropagation()
+    setAnchor(event.currentTarget)
+    setTransactionId(payId)
   }
 
   function handleSetDay(paymentDay) {
@@ -108,10 +140,35 @@ export default function UserPaymentPlanItem({
           info: formatError(err.message)
         });
       });
-  }
+    }
+
+    const menuData = {
+      menuList,
+      handleTransactionMenu,
+      anchorEl: anchor,
+      open: anchorElOpen,
+      userType: currentUser.userType,
+      handleClose: () => setAnchor(null)
+    }
+
+    function handleReceiptClose() {
+      setReceiptOpen(false)
+      setAnchor(null);
+    }
 
   return (
     <>
+      {error && (
+        <CenteredContent>{error.message}</CenteredContent>
+      )}
+      {loading ? <Spinner /> : (
+        <PaymentReceipt
+          paymentData={data?.paymentReceipt}
+          open={receiptOpen}
+          handleClose={() => handleReceiptClose()}
+          currencyData={currencyData}
+        />
+      )}
       <MessageAlert
         type={!details.isError ? 'success' : 'error'}
         message={details.info}
@@ -176,7 +233,7 @@ export default function UserPaymentPlanItem({
                 <div key={pay.id} className={classes.paymentList}>
                   <DataList
                     keys={paymentHeader}
-                    data={[renderPayments(pay, currencyData)]}
+                    data={[renderPayments(pay, currencyData, menuData)]}
                     hasHeader={false}
                     clickable={false}
                     color
@@ -243,7 +300,7 @@ export function renderPlan(plan, currencyData, userType, { handleMenu, loading }
   };
 }
 
-export function renderPayments(pay, currencyData) {
+export function renderPayments(pay, currencyData, menuData) {
   return {
     'Payment Date': (
       <Grid item xs={12} md={2} data-testid="payment-date">
@@ -265,6 +322,31 @@ export function renderPayments(pay, currencyData) {
         <Label
           title={propAccessor(invoiceStatus, pay.status)}
           color={propAccessor(InvoiceStatusColor, pay.status)}
+        />
+      </Grid>
+    ),
+    Menu: (
+      <Grid item xs={12} md={1} data-testid="menu">
+        {
+          pay.status !== 'cancelled' &&
+          (
+            <IconButton
+              aria-controls="simple-menu"
+              aria-haspopup="true"
+              data-testid="pay-menu"
+              dataid={pay.id}
+              onClick={(event) => menuData.handleTransactionMenu(event, pay.id)}
+            >
+              <MoreHorizOutlined />
+            </IconButton>
+          )
+        }
+        <MenuList
+          open={menuData.open && menuData?.anchorEl?.getAttribute('dataid') === pay.id}
+          anchorEl={menuData.anchorEl}
+          userType={menuData.userType}
+          handleClose={menuData.handleClose}
+          list={menuData.menuList}
         />
       </Grid>
     )

@@ -81,6 +81,10 @@ describe('Render Payment Plan Item', () => {
     expect(container.getAllByTestId('menu-open')[0]).toBeInTheDocument();
     expect(container.getAllByTestId('payment-day-1')[0]).toBeInTheDocument();
 
+    expect(container.getAllByTestId('pay-menu')[0]).toBeInTheDocument();
+    fireEvent.click(container.getAllByTestId('pay-menu')[0]);
+    expect(container.getByText('View Receipt')).toBeInTheDocument();
+
     // click on a menu item like day one
     fireEvent.click(container.queryAllByTestId('payment-day-1')[0]);
     // we should have called the mutation by now after a loader

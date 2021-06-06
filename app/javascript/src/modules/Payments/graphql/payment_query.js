@@ -85,4 +85,41 @@ export const PlansPaymentsQuery = gql`
   }
 `
 
+export const ReceiptPayment = gql`
+  query PaymentReceipt($id: ID!) {
+    paymentReceipt(id: $id) {
+      id
+      amount
+      receiptNumber
+      createdAt
+      currentPlotPendingBalance
+      community {
+        name
+        logoUrl
+        currency
+      }
+      user {
+        id
+        name
+        extRefId
+      }
+      userTransaction {
+        source
+        bankName
+        chequeNumber
+        depositor {
+          id
+          name
+        }
+      }
+      paymentPlan {
+        monthlyAmount
+        landParcel {
+          parcelNumber
+        }
+      }
+    }
+  }
+`
+
 export default UserTransactions;
