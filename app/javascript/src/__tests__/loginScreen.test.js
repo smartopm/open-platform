@@ -70,7 +70,7 @@ describe('Login screen', () => {
       // using the example give here https://github.com/i18next/react-i18next/blob/master/example/test-jest/src/UseTranslation.test.js#L9
       // files are tested by placeholders of translations
       expect(loginWrapper.find('h4').text()).toContain('login.welcome')
-      expect(loginWrapper.text()).toContain('This is a tagline for this community')
+      expect(loginWrapper.find('#tagline')).toBeTruthy()
       expect(loginWrapper.text()).toContain('login.login_text')
       expect(loginWrapper.text()).toContain('login.login_google')
       expect(loginWrapper.text()).toContain('login.login_facebook')

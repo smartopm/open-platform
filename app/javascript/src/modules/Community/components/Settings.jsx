@@ -35,6 +35,11 @@ export default function CommunitySettings({ data, token, refetch }) {
     category: ''
   };
 
+  const socialLinks = {
+    social_link: '',
+    category: ''
+  };
+
   const theme = {
     primaryColor: data.themeColors?.primaryColor || '#69ABA4',
     secondaryColor: data.themeColors?.secondaryColor || '#cf5628'
@@ -44,6 +49,7 @@ export default function CommunitySettings({ data, token, refetch }) {
   const [numberOptions, setNumberOptions] = useState([numbers]);
   const [emailOptions, setEmailOptions] = useState([emails]);
   const [whatsappOptions, setWhatsappOptions] = useState([whatsapps]);
+  const [socialLinkOptions, setSocialLinkOptions] = useState([socialLinks]);
   const [themeColors, setThemeColor] = useState(theme);
   const [message, setMessage] = useState({ isError: false, detail: '' });
   const [alertOpen, setAlertOpen] = useState(false);
@@ -82,12 +88,19 @@ export default function CommunitySettings({ data, token, refetch }) {
     setWhatsappOptions([...whatsappOptions, whatsapps]);
   }
 
+  function handleAddSocialLinkOption() {
+    setSocialLinkOptions([...socialLinkOptions, socialLinks]);
+  }
+
   function updateOptions(index, newValue, options, type) {
     if (type === 'email') {
       handleSetOptions(setEmailOptions, index, newValue, options);
     } else if (type === 'whatsapp') {
       handleSetOptions(setWhatsappOptions, index, newValue, options);
-    } else {
+    } else if (type === 'social_link') {
+      handleSetOptions(setSocialLinkOptions, index, newValue, options);
+    }
+    else {
       handleSetOptions(setNumberOptions, index, newValue, options);
     }
   }
@@ -106,6 +119,15 @@ export default function CommunitySettings({ data, token, refetch }) {
 
   function handleWhatsappChange(event, index) {
     updateOptions(index, { [event.target.name]: event.target.value }, whatsappOptions, 'whatsapp');
+  }
+
+  function handleSocialLinkChange(event, index) {
+    updateOptions(
+      index,
+      { [event.target.name]: event.target.value },
+      socialLinkOptions,
+      'social_link'
+      );
   }
 
   function handleNumberRemove(id) {
@@ -130,6 +152,14 @@ export default function CommunitySettings({ data, token, refetch }) {
       values.splice(id, 1);
     }
     setWhatsappOptions([...values]);
+  }
+
+  function handleSocialLinkRemoveRow(id) {
+    const values = socialLinkOptions;
+    if (values.length !== 1) {
+      values.splice(id, 1);
+    }
+    setSocialLinkOptions([...values]);
   }
 
   function onInputChange(file) {
@@ -190,6 +220,7 @@ export default function CommunitySettings({ data, token, refetch }) {
         supportNumber: numberOptions,
         supportEmail: emailOptions,
         supportWhatsapp: whatsappOptions,
+        socialLinks: socialLinkOptions,
         imageBlobId: signedBlobId,
         currency,
         locale,
@@ -225,6 +256,7 @@ export default function CommunitySettings({ data, token, refetch }) {
     setEmailOptions(data.supportEmail || [emails]);
     setNumberOptions(data.supportNumber || [numbers]);
     setWhatsappOptions(data.supportWhatsapp || [whatsapps]);
+    setSocialLinkOptions(data.socialLinks || [socialLinks]);
     setCurrency(data.currency);
     setLocale(data.locale);
     setLanguage(data.language);
@@ -327,6 +359,23 @@ export default function CommunitySettings({ data, token, refetch }) {
           <div style={{ marginLeft: '10px', color: 'secondary' }}>
             <Typography align="center" variant="caption">
               {t('common:form_fields.add_email_address')}
+            </Typography>
+          </div>
+        </div>
+      </div>
+      <div className={classes.information} style={{ marginTop: '40px' }}>
+        <DynamicContactFields
+          options={socialLinkOptions}
+          handleChange={handleSocialLinkChange}
+          handleRemoveRow={handleSocialLinkRemoveRow}
+          data={{ label: t('common:form_fields.social_link'), name: 'social_link' }}
+          hasSocialLink
+        />
+        <div className={classes.addIcon} role="button" onClick={handleAddSocialLinkOption} data-testid='social_link_click'>
+          <AddCircleOutlineIcon />
+          <div style={{ marginLeft: '10px', color: 'secondary' }}>
+            <Typography align="center" variant="caption">
+              {t('common:form_fields.add_social_link')}
             </Typography>
           </div>
         </div>
@@ -473,6 +522,7 @@ CommunitySettings.propTypes = {
     supportNumber: PropTypes.arrayOf(PropTypes.object),
     supportEmail: PropTypes.arrayOf(PropTypes.object),
     supportWhatsapp: PropTypes.arrayOf(PropTypes.object),
+    socialLinks: PropTypes.arrayOf(PropTypes.object),
     imageUrl: PropTypes.string,
     currency: PropTypes.string,
     locale: PropTypes.string,

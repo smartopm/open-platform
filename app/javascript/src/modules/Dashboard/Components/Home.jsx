@@ -14,6 +14,7 @@ import { PlotDetail } from '../../Plots';
 import CustomerJourneyStatus from '../../CustomerJourney/Components/CustomerJourneyStatus';
 import NewsFeed from '../../News/Components/NewsFeed';
 import FeatureCheck from '../../Features';
+import SocialMediaLinks from '../../../components/SocialMediaLinks';
 
 export default function Home() {
   const authState = useContext(AuthStateContext);
@@ -72,6 +73,7 @@ export default function Home() {
           <Homepage authState={authState} />
         </div>
       )}
+      <SocialMediaLinks data={authState.user.community.socialLinks} communityName={authState.user.community.name} />
     </div>
   );
 }

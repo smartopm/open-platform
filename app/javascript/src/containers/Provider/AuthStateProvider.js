@@ -38,6 +38,7 @@ const QUERY = gql`
         supportNumber
         supportEmail
         supportWhatsapp
+        socialLinks
         imageUrl
         currency
         locale

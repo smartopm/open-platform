@@ -65,7 +65,7 @@ export default function PostPage() {
   };
 
   useEffect(() => {
-    if (!communityQuery.loading && communityQuery.data.currentCommunity) {
+    if (!communityQuery.loading && communityQuery.data?.currentCommunity) {
       fetchData(`${communityQuery.data?.currentCommunity.wpLink}/posts/${id}`);
     }
 

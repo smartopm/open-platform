@@ -10,7 +10,8 @@ export default function DynamicContactFields({
   options,
   handleChange,
   handleRemoveRow,
-  data
+  data,
+  hasSocialLink,
 }) {
   const classes = useStyles()
   const { t } = useTranslation('common')
@@ -30,18 +31,34 @@ export default function DynamicContactFields({
         name={data.name}
         data-testid='text_field'
       />
-      <TextField
-        id={`${i}-select-category`}
-        style={{ width: '200px', marginLeft: '40px' }}
-        select
-        label={t('misc.select_category')}
-        value={val.category}
-        onChange={event => handleChange(event, i)}
-        name="category"
-      >
-        <MenuItem value="sales">{t('misc.sales')}</MenuItem>
-        <MenuItem value="customer_care">{t('misc.customer_care')}</MenuItem>
-      </TextField>
+      {hasSocialLink ? (
+        <TextField
+          id={`${i}-select-category`}
+          style={{ width: '200px', marginLeft: '40px' }}
+          select
+          label={t('misc.select_category')}
+          value={val.category}
+          onChange={event => handleChange(event, i)}
+          name="category"
+        >
+          <MenuItem value="facebook">{t('misc.facebook')}</MenuItem>
+          <MenuItem value="twitter">{t('misc.twitter')}</MenuItem>
+          <MenuItem value="website">{t('misc.website')}</MenuItem>
+        </TextField>
+        ) : (
+          <TextField
+            id={`${i}-select-category`}
+            style={{ width: '200px', marginLeft: '40px' }}
+            select
+            label={t('misc.select_category')}
+            value={val.category}
+            onChange={event => handleChange(event, i)}
+            name="category"
+          >
+            <MenuItem value="sales">{t('misc.sales')}</MenuItem>
+            <MenuItem value="customer_care">{t('misc.customer_care')}</MenuItem>
+          </TextField>
+      )}
       <IconButton
         style={{ marginTop: 13 }}
         onClick={() => handleRemoveRow(i)}
@@ -53,6 +70,10 @@ export default function DynamicContactFields({
   ))
 }
 
+DynamicContactFields.defaultProps ={
+  hasSocialLink: false,
+}
+
 DynamicContactFields.propTypes = {
   options: PropTypes.arrayOf(PropTypes.object).isRequired,
   handleChange: PropTypes.func.isRequired,
@@ -60,7 +81,8 @@ DynamicContactFields.propTypes = {
   data: PropTypes.shape({
     label: PropTypes.string,
     name: PropTypes.string
-  })
+  }),
+  hasSocialLink: PropTypes.bool,
 }
 
 const useStyles = makeStyles({

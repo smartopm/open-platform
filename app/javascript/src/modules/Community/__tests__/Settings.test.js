@@ -32,10 +32,13 @@ describe('Community settings page ', () => {
           category: 'sales'
         }
       ],
+      socialLinks: [
+        { social_link: 'www.facebook.com', category: 'facebook' },
+      ],
       logoUrl: null
     };
 
-    const communityMutatioMock = {
+    const communityMutationMock = {
       request: {
         query: CommunityUpdateMutation,
         variables: {
@@ -48,6 +51,10 @@ describe('Community settings page ', () => {
           supportWhatsapp: [
             { whatsapp: '260920000748', category: 'sales' },
             { whatsapp: '', category: '' }
+          ],
+          socialLinks: [
+            { social_link: 'www.facebook.com', category: 'facebook' },
+            { social_link: '', category: '' },
           ],
           imageBlobId: null,
           locale: 'en-US',
@@ -68,7 +75,7 @@ describe('Community settings page ', () => {
     };
     const refetchMock = jest.fn();
     const container = render(
-      <MockedProvider mocks={[communityMutatioMock]}>
+      <MockedProvider mocks={[communityMutationMock]}>
         <MockedThemeProvider>
           <CommunitySettings data={data} token="374857uwehfsdf232" refetch={refetchMock} />
         </MockedThemeProvider>
@@ -82,19 +89,20 @@ describe('Community settings page ', () => {
     expect(container.queryByText('common:form_fields.add_phone_number')).toBeInTheDocument();
     expect(container.queryByText('common:form_fields.add_email_address')).toBeInTheDocument();
     expect(container.queryByText('common:form_fields.add_whatsapp_number')).toBeInTheDocument();
+    expect(container.queryByText('common:form_fields.add_social_link')).toBeInTheDocument();
     expect(container.queryByText('community.update_community')).toBeInTheDocument();
     expect(container.queryByText('community.update_community')).not.toBeDisabled();
     expect(container.queryAllByLabelText('common:form_fields.email')).toHaveLength(2);
     expect(container.queryByLabelText('common:form_fields.phone_number')).toBeInTheDocument();
     expect(container.queryByLabelText('WhatsApp')).toBeInTheDocument();
 
-    expect(container.queryAllByLabelText('remove')).toHaveLength(4);
+    expect(container.queryAllByLabelText('remove')).toHaveLength(5);
 
     fireEvent.click(container.queryAllByTestId('add_number')[0]);
 
-    expect(container.queryAllByLabelText('remove')).toHaveLength(5);
+    expect(container.queryAllByLabelText('remove')).toHaveLength(6);
     fireEvent.click(container.queryAllByLabelText('remove')[0]);
-    expect(container.queryAllByLabelText('remove')).toHaveLength(4);
+    expect(container.queryAllByLabelText('remove')).toHaveLength(5);
 
     expect(container.queryByTestId('locale')).toBeInTheDocument();
     expect(container.queryByTestId('currency')).toBeInTheDocument();
@@ -110,6 +118,9 @@ describe('Community settings page ', () => {
 
     fireEvent.click(container.queryByTestId('whatsapp_click'));
     expect(container.queryAllByLabelText('WhatsApp')).toHaveLength(2);
+
+    fireEvent.click(container.queryByTestId('social_link_click'));
+    expect(container.queryAllByLabelText('common:form_fields.social_link')).toHaveLength(2);
 
     fireEvent.change(container.queryByTestId('logo_url'), {
       target: { value: 'https://something.com' }

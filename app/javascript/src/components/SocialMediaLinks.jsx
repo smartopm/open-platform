@@ -7,26 +7,51 @@ import { Typography, IconButton } from '@material-ui/core'
 import { StyleSheet, css } from 'aphrodite'
 
 
-export default function SocialMediaLinks() {
+export default function SocialMediaLinks({ communityName, data }) {
+    function checkIsValid(data){
+        if(!Array.isArray(data)) {
+            return false;
+        }
+
+        if (!data.length > 0) {
+            return false;
+        }
+
+        if (!data.some(d => d.social_link || d.category)){
+            return false;
+        }
+
+        return true;
+    }
 
     return (
         <Fragment>
-            <div id="div" className="row justify-content-center" >
-
-                <Typography id="connect" className={css(styles.textLink)}>
-                    Connect with Nkwashi
-                </Typography>
-                <IconButton id="facebook" aria-label="facebook" onClick={()=> window.open('https://www.facebook.com/nkwashi.soar/','_blank')}>
-                    <FacebookIcon className={css(styles.socialIcons)} />
-                </IconButton>
-                <IconButton id="twitter" aria-label="twitter" onClick={(()=> window.open('https://twitter.com/Nkwashi_','_blank'))}>
-                    <TwitterIcon className={css(styles.socialIcons)} />
-                </IconButton>
-                <IconButton id="website" aria-label="website" onClick={(()=> window.open('http://nkwashi.com/','_blank'))}>
-                    <LanguageIcon className={css(styles.socialIcons)} />
-                </IconButton>
-
-            </div>
+            {checkIsValid(data) && (
+                <div id="div" className="row justify-content-center" >
+                    <Typography id="connect" className={css(styles.textLink)}>
+                        Connect with {communityName}
+                    </Typography>
+                    {data.map(link => (
+                        <Fragment key={link.category}>
+                            {link && link.category && link.category === 'facebook' && (
+                                <IconButton id="facebook" aria-label="facebook" onClick={()=> window.open(`${link.social_link}`,'_blank')}>
+                                    <FacebookIcon className={css(styles.socialIcons)} />
+                                </IconButton>
+                            )}
+                            {link && link.category && link.category === 'twitter' && (
+                                <IconButton id="twitter" aria-label="twitter" onClick={(()=> window.open(`${link.social_link}`,'_blank'))}>
+                                    <TwitterIcon className={css(styles.socialIcons)} />
+                                </IconButton>
+                            )}
+                            {link && link.category && link.category === 'website' && (
+                                <IconButton id="website" aria-label="website" onClick={(()=> window.open(`${link.social_link}`,'_blank'))}>
+                                    <LanguageIcon className={css(styles.socialIcons)} />
+                                </IconButton>
+                            )}
+                        </Fragment>
+                    ))}
+                 </div>
+            )}
         </Fragment>
     );
 
