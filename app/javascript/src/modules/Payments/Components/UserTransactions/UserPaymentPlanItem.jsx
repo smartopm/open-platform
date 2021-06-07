@@ -16,7 +16,6 @@ import {
 } from '@material-ui/core';
 import { MoreHorizOutlined } from '@material-ui/icons';
 import EditIcon from '@material-ui/icons/Edit';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import DataList from '../../../../shared/list/DataList';
 import { dateToString } from '../../../../components/DateContainer';
 import {
@@ -34,9 +33,10 @@ import { Spinner } from '../../../../shared/Loading';
 import { suffixedNumber } from '../../helpers';
 import ListHeader from '../../../../shared/list/ListHeader';
 import MenuList from '../../../../shared/MenuList'
-import { ReceiptPayment } from '../../graphql/payment_query'
+import { ReceiptPayment, PlanStatement } from '../../graphql/payment_query'
 import PaymentReceipt from './PaymentReceipt'
 import CenteredContent from '../../../../components/CenteredContent'
+import StatementPlan from './PlanStatement'
 
 export default function UserPaymentPlanItem({
   plans,
@@ -48,9 +48,12 @@ export default function UserPaymentPlanItem({
 }) {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = useState(null);
-  const [anchor, setAnchor] = useState(null)
-  const [transactionId, setTransactionId] = useState('')
-  const [receiptOpen, setReceiptOpen] = useState(false)
+  const [anchor, setAnchor] = useState(null);
+  const [planAnchor, setPlanAnchor] = useState(null);
+  const [transactionId, setTransactionId] = useState('');
+  const [landParcelId, setLandParcelId] = useState('');
+  const [receiptOpen, setReceiptOpen] = useState(false);
+  const [statementOpen, setStatementOpen] = useState(false);
   const [details, setPlanDetails] = useState({
     isLoading: false,
     planId: null,
@@ -62,8 +65,15 @@ export default function UserPaymentPlanItem({
   const theme = useTheme();
   const matches = useMediaQuery(theme.breakpoints.up('sm'));
   const anchorElOpen = Boolean(anchor)
+  const planAnchorElOpen = Boolean(planAnchor)
   const [loadReceiptDetails, { loading, error, data }] = useLazyQuery(ReceiptPayment, {
     variables: { id: transactionId },
+    fetchPolicy: 'no-cache',
+    errorPolicy: 'all'
+  });
+
+  const [loadStatement, { loading: statementLoad, error: statementError, data: statementData }] = useLazyQuery(PlanStatement, {
+    variables: { landParcelId },
     fetchPolicy: 'no-cache',
     errorPolicy: 'all'
   });
@@ -72,9 +82,9 @@ export default function UserPaymentPlanItem({
     { title: 'Plot Number', col: 2 },
     { title: 'Payment Plan', col: 2 },
     { title: 'Start Date', col: 2 },
-    { title: 'Balance', col: 2 },
-    { title: 'Monthly Amount', col: 2 },
-    { title: 'Payment Day', col: 2 }
+    { title: 'Balance/Monthly Amount', col: 2 },
+    { title: 'Payment Day', col: 2 },
+    { title: 'Menu', col: 2 }
   ];
 
   const paymentHeader = [
@@ -86,6 +96,10 @@ export default function UserPaymentPlanItem({
   ];
   const menuList = [
     { content: 'View Receipt', isAdmin: true, handleClick: (event) => handleClick(event)},
+  ]
+
+  const planMenuList = [
+    { content: 'View Statement', isAdmin: true, handleClick: (event) => handlePlanClick(event)},
   ]
 
   const handleClose = () => {
@@ -105,10 +119,28 @@ export default function UserPaymentPlanItem({
     setAnchor(null)
   }
 
+  function handlePlanClick(event){
+    event.stopPropagation()
+    loadStatement()
+    setStatementOpen(true)
+    setPlanAnchor(null)
+  }
+
   function handleTransactionMenu(event, payId){
     event.stopPropagation()
     setAnchor(event.currentTarget)
     setTransactionId(payId)
+  }
+
+  function handlePlanMenu(event, parcelId){
+    event.stopPropagation()
+    setPlanAnchor(event.currentTarget)
+    setLandParcelId(parcelId)
+  }
+
+  function handlePlanListClose(event) {
+    event.stopPropagation()
+    setPlanAnchor(null)
   }
 
   function handleSetDay(paymentDay) {
@@ -151,6 +183,15 @@ export default function UserPaymentPlanItem({
       handleClose: () => setAnchor(null)
     }
 
+    const planMenuData = {
+      menuList: planMenuList,
+      handlePlanMenu,
+      anchorEl: planAnchor,
+      open: planAnchorElOpen,
+      userType: currentUser.userType,
+      handleClose: (event) => handlePlanListClose(event)
+    }
+
     function handleReceiptClose() {
       setReceiptOpen(false)
       setAnchor(null);
@@ -161,11 +202,22 @@ export default function UserPaymentPlanItem({
       {error && (
         <CenteredContent>{error.message}</CenteredContent>
       )}
+      {statementError && (
+        <CenteredContent>{statementError.message}</CenteredContent>
+      )}
       {loading ? <Spinner /> : (
         <PaymentReceipt
           paymentData={data?.paymentReceipt}
           open={receiptOpen}
           handleClose={() => handleReceiptClose()}
+          currencyData={currencyData}
+        />
+      )}
+      {statementLoad ? <Spinner /> : (
+        <StatementPlan 
+          open={statementOpen}
+          handleClose={() => setStatementOpen(false)}
+          data={statementData?.paymentPlanStatement}
           currencyData={currencyData}
         />
       )}
@@ -196,7 +248,6 @@ export default function UserPaymentPlanItem({
       {plans?.map(plan => (
         <Accordion key={plan.id} style={{backgroundColor: '#FDFDFD'}}>
           <AccordionSummary
-            expandIcon={<ExpandMoreIcon />}
             aria-label="Expand"
             id="additional-actions3-header"
             classes={{ content: classes.content }}
@@ -209,7 +260,7 @@ export default function UserPaymentPlanItem({
                 renderPlan(plan, currencyData, currentUser.userType, {
                   handleMenu: event => handleOpenDateMenu(event, plan.id),
                   loading: details.isLoading
-                })
+                }, planMenuData)
               ]}
               hasHeader={false}
               clickable={false}
@@ -247,7 +298,7 @@ export default function UserPaymentPlanItem({
   );
 }
 
-export function renderPlan(plan, currencyData, userType, { handleMenu, loading }) {
+export function renderPlan(plan, currencyData, userType, { handleMenu, loading }, menuData) {
   return {
     'Plot Number': (
       <Grid item xs={12} md={2} data-testid="plot-number">
@@ -264,14 +315,11 @@ export function renderPlan(plan, currencyData, userType, { handleMenu, loading }
         {dateToString(plan.startDate)}
       </Grid>
     ),
-    'Balance': (
-      <Grid item xs={12} md={2} data-testid="percentage">
-        {formatMoney(currencyData, plan.pendingBalance)}
-      </Grid>
-    ),
-    'Monthly Amount': (
-      <Grid item xs={12} md={2} data-testid="monthly-amount">
-        {formatMoney(currencyData, plan.monthlyAmount)}
+    'Balance/Monthly Amount': (
+      <Grid item xs={12} md={2} data-testid="balance">
+        <Text content={formatMoney(currencyData, plan.pendingBalance)} />
+        <br />
+        <Text color="primary" content={`Monthly Amount ${formatMoney(currencyData, plan.monthlyAmount)}`} />
       </Grid>
     ),
     'Payment Day': (
@@ -295,6 +343,25 @@ export function renderPlan(plan, currencyData, userType, { handleMenu, loading }
             suffixedNumber(plan.paymentDay)
           )}
         </Button>
+      </Grid>
+    ),
+    Menu: (
+      <Grid item xs={12} md={1} data-testid="menu">
+        <IconButton
+          aria-controls="simple-menu"
+          aria-haspopup="true"
+          data-testid="plan-menu"
+          onClick={(event) => menuData.handlePlanMenu(event, plan?.landParcel?.id)}
+        >
+          <MoreHorizOutlined />
+        </IconButton>
+        <MenuList
+          open={menuData?.open}
+          anchorEl={menuData?.anchorEl}
+          userType={menuData?.userType}
+          handleClose={menuData?.handleClose}
+          list={menuData?.menuList}
+        />
       </Grid>
     )
   };

@@ -72,8 +72,7 @@ describe('Render Payment Plan Item', () => {
     expect(container.getAllByTestId('plot-number')[0]).toBeInTheDocument();
     expect(container.getAllByTestId('payment-plan')[0]).toBeInTheDocument();
     expect(container.getAllByTestId('start-date')[0]).toBeInTheDocument();
-    expect(container.getAllByTestId('percentage')[0]).toBeInTheDocument();
-    expect(container.getAllByTestId('monthly-amount')[0]).toBeInTheDocument();
+    expect(container.getAllByTestId('balance')[0]).toBeInTheDocument();
 
     // find the menu and click it
     fireEvent.click(container.queryAllByTestId('menu')[0]);
@@ -96,6 +95,11 @@ describe('Render Payment Plan Item', () => {
       expect(container.queryByText('Payment Day successfully updated')).toBeInTheDocument();
       expect(refetch).toBeCalled();
     }, 50);
+
+    expect(container.getAllByTestId('plan-menu')[0]).toBeInTheDocument();
+    fireEvent.click(container.getAllByTestId('plan-menu')[0]);
+    expect(container.getByText('View Statement')).toBeInTheDocument();
+    fireEvent.click(container.getByText('View Statement'));
   });
 
   it('should check if renderPlan works as expected', () => {
@@ -108,7 +112,6 @@ describe('Render Payment Plan Item', () => {
     expect(results).toHaveProperty('Plot Number');
     expect(results).toHaveProperty('Payment Plan');
     expect(results).toHaveProperty('Start Date');
-    expect(results).toHaveProperty('Balance');
-    expect(results).toHaveProperty('Monthly Amount');
+    expect(results).toHaveProperty('Balance/Monthly Amount');
   });
 });
