@@ -127,9 +127,32 @@ export const PlanStatement = gql`
     paymentPlanStatement(landParcelId: $landParcelId) {
       paymentPlan {
         id
+        startDate
+        planType
+        planValue
+        statementPaidAmount
+        statementPendingBalance
+        user {
+          name
+          phoneNumber
+          extRefId
+        }
+        landParcel {
+          parcelNumber
+          community {
+            name
+            logoUrl
+          }
+        }
       }
       statements {
         receiptNumber
+        paymentDate
+        amountPaid
+        installmentAmount
+        settledInstallments
+        debitAmount
+        unallocatedAmount
       }
     }
   }

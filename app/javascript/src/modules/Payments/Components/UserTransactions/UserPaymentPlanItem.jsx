@@ -350,17 +350,17 @@ export function renderPlan(plan, currencyData, userType, { handleMenu, loading }
         <IconButton
           aria-controls="simple-menu"
           aria-haspopup="true"
-          data-testid="pay-menu"
+          data-testid="plan-menu"
           onClick={(event) => menuData.handlePlanMenu(event, plan?.landParcel?.id)}
         >
           <MoreHorizOutlined />
         </IconButton>
         <MenuList
-          open={menuData.open}
-          anchorEl={menuData.anchorEl}
-          userType={menuData.userType}
-          handleClose={menuData.handleClose}
-          list={menuData.menuList}
+          open={menuData?.open}
+          anchorEl={menuData?.anchorEl}
+          userType={menuData?.userType}
+          handleClose={menuData?.handleClose}
+          list={menuData?.menuList}
         />
       </Grid>
     )
