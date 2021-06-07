@@ -47,16 +47,15 @@ const paymentHeaders = [
   { title: 'PaymentStatus/ReceiptNumber', col: 2 }
 ];
 const csvHeaders = [
-  { label: 'Amount', key: 'amount' },
-  { label: 'Status', key: 'status' },
-  { label: 'Created Date', key: 'createdAt' },
-  { label: 'User Name', key: 'user.name' },
+  { label: 'Client Name', key: 'user.name' },
   { label: 'Phone Number', key: 'user.phoneNumber' },
   { label: 'Email', key: 'user.email' },
-  { label: 'Transaction Type', key: 'source' },
-  { label: 'Transaction Number', key: 'transactionNumber' },
-  { label: 'External Id', key: 'user.extRefId' }
-  // { label: "Receipt Number", key: "receiptNumber" }
+  { label: 'Payment Date', key: 'createdAt' },
+  { label: 'Payment Amount', key: 'userTransaction.amount' },
+  { label: "Receipt Number", key: "receiptNumber" },
+  { label: 'Payment Status', key: 'status' },
+  { label: 'Payment Type', key: 'userTransaction.source' },
+  { label: 'Plot Number', key: 'paymentPlan.landParcel.parcelNumber' },
 ];
 
 export default function PaymentList({ currencyData }) {
@@ -182,10 +181,10 @@ export default function PaymentList({ currencyData }) {
       {listType === 'graph' && paymentStatData?.paymentStatDetails?.length > 0 && (
         <Fab color="primary" variant="extended" className={classes.download}>
           <CSVLink
-            data={paymentStatData.paymentStatDetails}
+            data={paymentStatData?.paymentStatDetails}
             style={{ color: 'white' }}
             headers={csvHeaders}
-            filename="payment-data.csv"
+            filename={`payment-data-${dateToString(new Date())}.csv`}
           >
             Download CSV
           </CSVLink>
@@ -197,7 +196,7 @@ export default function PaymentList({ currencyData }) {
             data={paymentList}
             style={{ color: 'white' }}
             headers={csvHeaders}
-            filename="payment-data.csv"
+            filename={`payment-data-${dateToString(new Date())}.csv`}
           >
             Download CSV
           </CSVLink>
