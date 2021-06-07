@@ -8,6 +8,7 @@ import SignaturePad from '../../../../components/Forms/SignaturePad';
 import { formatMoney } from '../../../../utils/helpers';
 import { dateToString } from '../../../../components/DateContainer';
 import { FullScreenDialog } from '../../../../components/Dialog';
+import { paymentType } from '../../../../utils/constants'
 
 export default function PaymentReceipt({ paymentData, open, handleClose, currencyData }) {
   const signRef = useRef(null);
@@ -55,8 +56,8 @@ export default function PaymentReceipt({ paymentData, open, handleClose, currenc
               )
             }
             <div> 
-              <div className={classes.details}>
-                <div className={classes.paymentInfo}>
+              <Grid container>
+                <Grid item xs={6} className={classes.paymentInfo}>
                   <Grid container spacing={1}>
                     <Grid item xs={2} className={classes.title}>
                       Name
@@ -81,9 +82,9 @@ export default function PaymentReceipt({ paymentData, open, handleClose, currenc
                       {paymentData.createdAt && dateToString(paymentData.createdAt)}
                     </Grid>
                   </Grid>
-                </div>
+                </Grid>
                 {paymentData?.community?.name === 'Nkwashi' && (
-                  <div style={{width: '400px', textAlign: 'right'}}>
+                  <Grid item xs={6} style={{width: '400px', textAlign: 'right'}}>
                     <Grid container spacing={1}>
                       <Grid item xs={12} className={classes.title}>
                         Thebe Investment Management Limited
@@ -124,9 +125,9 @@ export default function PaymentReceipt({ paymentData, open, handleClose, currenc
                         phone: +260-972-577234
                       </Grid>
                     </Grid>
-                  </div>
+                  </Grid>
                 )}
-              </div>
+              </Grid>
               <div className="invoice-header" style={{ margin: '60px 0' }}>
                 <Grid container spacing={1}>
                   <Grid item xs={4} className={classes.title} data-testid="plot-no">
@@ -155,7 +156,7 @@ export default function PaymentReceipt({ paymentData, open, handleClose, currenc
                       )
                   }
                   <Grid item xs={4} className={classes.title} style={{textAlign: 'center'}}>
-                    {paymentData.source || paymentData?.userTransaction?.source}
+                    {paymentType[paymentData.source] || paymentType[paymentData?.userTransaction?.source]}
                   </Grid>
                   <Grid item xs={4} className={classes.title} style={{textAlign: 'right'}}>
                     {formatMoney(currencyData, paymentData?.amount)}
@@ -163,8 +164,8 @@ export default function PaymentReceipt({ paymentData, open, handleClose, currenc
                 </Grid>
               </div>
 
-              <div className={classes.details} style={{ marginTop: '60px 0' }}>
-                <div style={{width: '500px'}}>
+              <Grid container className={classes.details} style={{ marginTop: '60px 0' }}>
+                <Grid item xs={7}>
                   <Grid container spacing={1}>
                     <Grid item xs={3} style={{ color: '#9B9B9B' }}>
                       Cashier Name
@@ -190,8 +191,8 @@ export default function PaymentReceipt({ paymentData, open, handleClose, currenc
                       </div>
                     </Grid>
                   </Grid>
-                </div>
-                <div style={{width: '400px'}}>
+                </Grid>
+                <Grid item xs={5}>
                   <Grid container spacing={1}>
                     <Grid item xs={8} className={classes.title}>
                       Expected Monthly Payment
@@ -244,8 +245,8 @@ export default function PaymentReceipt({ paymentData, open, handleClose, currenc
                       {paymentData?.community?.currency === 'zambian_kwacha' ? 'ZMW (K)' : paymentData?.community?.currency}
                     </Grid>
                   </Grid>
-                </div>
-              </div>
+                </Grid>
+              </Grid>
 
               {(paymentData?.source === 'cheque/cashier_cheque' || paymentData?.userTransaction?.source === 'cheque/cashier_cheque')  && (
                 <div style={{ marginTop: '60px' }}>
@@ -298,10 +299,9 @@ const useStyles = makeStyles({
     fontSize: '16px',
     color: '#2D2D2D'
   },
-  details: {
-    display: 'flex',
-    justifyContent: 'spaceBetween'
-  },
+  // details: {
+  //   justifyContent: 'spaceBetween'
+  // },
   paymentInfo: {
     width: '500px'
   },

@@ -36,9 +36,9 @@ export default function PaymentReceipt({ data, open, handleClose, currencyData }
               </h3>
             )}
             <div style={{marginTop: '97px'}}> 
-              <div className={classes.details}>
+              <Grid container>
                 {data?.paymentPlan?.landParcel?.community?.name === 'Nkwashi' && (
-                <div style={{width: '700px'}}>
+                <Grid item xs={6}>
                   <Grid container spacing={1}>
                     <Grid item xs={12} className={classes.title} style={{fontWeight: 700, color: '#2D2D2D'}}>
                       Nkwashi Project,
@@ -59,10 +59,10 @@ export default function PaymentReceipt({ data, open, handleClose, currencyData }
                       Zambia
                     </Grid>
                   </Grid>
-                </div>
+                </Grid>
                 )}
                 {data?.paymentPlan?.landParcel?.community?.name === 'Nkwashi' && (
-                  <div style={{width: '400px', textAlign: 'right'}}>
+                  <Grid item xs={6} style={{textAlign: 'right'}}>
                     <Grid container spacing={1}>
                       <Grid item xs={8} className={classes.title}>
                         Telephone
@@ -87,9 +87,9 @@ export default function PaymentReceipt({ data, open, handleClose, currencyData }
                         {data?.paymentPlan?.startDate && dateToString(data?.paymentPlan?.startDate)}
                       </Grid>
                     </Grid>
-                  </div>
+                  </Grid>
                 )}
-              </div>
+              </Grid>
               <div style={{width: '400px', marginTop: '40px'}}>
                 <Grid container spacing={1}>
                   <Grid item xs={4} className={classes.title}>
@@ -189,11 +189,11 @@ export default function PaymentReceipt({ data, open, handleClose, currencyData }
                   )
                 }
               </div>
-              <div style={{display: 'flex'}}>
-                <div style={{width: '700px'}}>
+              <Grid container>
+                <Grid item xs={6}>
                   {' '}
-                </div>
-                <div style={{width: '400px'}}>
+                </Grid>
+                <Grid item xs={6}>
                   <Grid container spacing={1}>
                     <Grid item xs={8} className={classes.title} style={{textAlign: 'right'}}>
                       Total Paid
@@ -210,8 +210,8 @@ export default function PaymentReceipt({ data, open, handleClose, currencyData }
                       {formatMoney(currencyData, data?.paymentPlan?.statementPendingBalance)}
                     </Grid>
                   </Grid>
-                </div>
-              </div>
+                </Grid>
+              </Grid>
             </div>
           </div>
         </FullScreenDialog>
