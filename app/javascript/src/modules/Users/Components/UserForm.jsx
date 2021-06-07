@@ -30,6 +30,7 @@ import { saniteError } from '../../../utils/helpers'
 import { ModalDialog } from '../../../components/Dialog'
 import CenteredContent from '../../../components/CenteredContent'
 import { UpdateUserMutation } from '../../../graphql/mutations/user'
+import ImageAuth from '../../../shared/ImageAuth'
 
 const initialValues = {
   name: '',
@@ -43,7 +44,8 @@ const initialValues = {
   subStatus: '',
   primaryAddress: '',
   contactInfos: [],
-  extRefId: ''
+  extRefId: '',
+  avatarUrl: '',
 }
 
 export function formatContactType(value, type) {
@@ -74,6 +76,11 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
   const { onChange, status, url, signedBlobId } = useFileUpload({
     client: useApolloClient()
   })
+  const [userImage, setUserImage] = React.useState(null)
+
+  function uploadUserImage(){
+    onChange(userImage)
+  }
 
   function handleSubmit(event) {
     event.preventDefault()
@@ -201,25 +208,38 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
     data.userType = 'prospective_client'
   }
 
+  console.log(data)
+  console.log(url)
   return (
     <div className="container">
       <ModalDialog
         handleClose={handleModal}
         handleConfirm={handleModalConfirm}
         open={isModalOpen}
-        imageURL={result.avatarUrl}
+        imageURL={result.avatarUrl} // TODO: this should be removed
         action={modalAction}
         name={data.name}
+      />
+      <img
+        src={url}
+        alt="uploaded file"
+        className={`${css(styles.uploadedImage)}`}
       />
       <form onSubmit={handleSubmit}>
         {!isFromRef && (
           <div className="form-group">
-            {status === t('common:misc.done') ? (
-              <img
-                src={url}
-                alt="uploaded file"
-                className={`${css(styles.uploadedImage)}`}
-              />
+            <div style={{width: 200, height: 'auto'}}>
+              {
+                status === 'INIT' &&  data.dataLoaded && <ImageAuth imageLink={data.avatarUrl} token={authState.token} />
+              }
+            </div>
+            {status === 'Done' ? (
+              <ImageAuth imageLink={url} token={authState.token} className={`${css(styles.uploadedImage)}`} />
+              // <img
+              //   src="https://dev.dgdp.site/rails/active_storage/disk/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaDdDRG9JYTJWNVNTSWhiamx4YkRGamVqbDFPR0U0ZFhveWFXOTFabW8xY1dScmFtUjNlQVk2QmtWVU9oQmthWE53YjNOcGRHbHZia2tpUTJsdWJHbHVaVHNnWm1sc1pXNWhiV1U5SWs5c2FYWnBaWEl4TG1wd1p5STdJR1pwYkdWdVlXMWxLajFWVkVZdE9DY25UMnhwZG1sbGNqRXVhbkJuQmpzR1ZEb1JZMjl1ZEdWdWRGOTBlWEJsU1NJUGFXMWhaMlV2YW5CbFp3WTdCbFE9IiwiZXhwIjoiMjAyMS0wNi0wN1QxNDo0NjoxOC4wMDhaIiwicHVyIjoiYmxvYl9rZXkifX0=--7d6712337891f0469162c8d9d5f368281b518bb7/Olivier1.jpg?content_type=image%2Fjpeg&disposition=inline%3B+filename%3D%22Olivier1.jpg%22%3B+filename%2A%3DUTF-8%27%27Olivier1.jpg"
+              //   alt="uploaded file"
+              //   className={`${css(styles.uploadedImage)}`}
+              // />
             ) : (
               <div className={`${css(styles.photoUpload)}`}>
                 <input
@@ -227,7 +247,7 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
                   accepts="image/*"
                   capture
                   id="file"
-                  onChange={event => onChange(event.target.files[0])}
+                  onChange={event => setUserImage(event.target.files[0])}
                   className={`${css(styles.fileInput)}`}
                 />
                 <PhotoCameraIcon />
@@ -236,6 +256,7 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
             )}
           </div>
         )}
+
         {isFromRef && (
           <div className="form-group">
             <label className="bmd-label-static" htmlFor="firstName" data-testid="client_name">

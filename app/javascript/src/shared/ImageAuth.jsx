@@ -36,8 +36,8 @@ export default function ImageAuth({ imageLink, token, className, type, alt }) {
     fetchData()
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
-  if(isLoading || loading) return <Spinner />
-  if(!loading && !error && !imageLink || isError) return <span data-testid="community_name">{data?.currentCommunity.name}</span>
+  if(isLoading) return <Spinner />
+  if(!imageLink || isError) return <span />
   if (type === 'image') {
     return <img data-testid="authenticated_image" src={response.url} className={className} alt={alt} />
   }

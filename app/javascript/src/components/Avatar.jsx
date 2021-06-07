@@ -7,8 +7,8 @@ import ImageAuth from '../shared/ImageAuth';
 import { Context } from '../containers/Provider/AuthStateProvider';
 
 export function safeAvatarLink({ imageUrl, user }) {
-  if (user?.imageUrl || user?.avatarUrl) {
-    return forceLinkHttps(user.imageUrl || user.avatarUrl);
+  if ( user?.avatarUrl || user?.imageUrl) {
+    return forceLinkHttps(user.avatarUrl || user.imageUrl);
   }
   return forceLinkHttps(imageUrl);
 }
@@ -22,7 +22,15 @@ export default function Avatar({ imageUrl, user, style }) {
   };
   // we have imageUrl and avatarUrl on User and we don't need to re-authenticate these
   // user.imageUrl contains links from Auth Providers ==> Google and Facebook
-  if (user && user.imageUrl) {
+  if (user && user.avatarUrl) {
+    return (
+      <ImageAuth
+        imageLink={safeAvatarLink({ imageUrl, user })}
+        token={token}
+        className={css(propAccessor(imageStyles, style))}
+      />
+      );
+  }
     return (
       <img
         src={safeAvatarLink({ user, imageUrl })}
@@ -30,14 +38,6 @@ export default function Avatar({ imageUrl, user, style }) {
         alt="avatar for the user"
       />
     );
-  }
-  return (
-    <ImageAuth
-      imageLink={safeAvatarLink({ imageUrl, user })}
-      token={token}
-      className={css(propAccessor(imageStyles, style))}
-    />
-  );
 }
 
 Avatar.defaultProps = {
