@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/interactive-supports-focus */
 /* eslint-disable no-nested-ternary */
 import React, { useState, useEffect } from 'react';
 import { CSVLink } from 'react-csv';
@@ -46,17 +47,20 @@ const paymentHeaders = [
   { title: 'Payment Type', col: 1 },
   { title: 'PaymentStatus/ReceiptNumber', col: 2 }
 ];
+
 const csvHeaders = [
-  { label: 'Amount', key: 'amount' },
-  { label: 'Status', key: 'status' },
-  { label: 'Created Date', key: 'createdAt' },
-  { label: 'User Name', key: 'user.name' },
+  { label: "Receipt Number", key: "receiptNumber" },
+  { label: 'Payment Status', key: 'status' },
+  { label: 'Payment Amount', key: 'userTransaction.amount' },
+  { label: 'Payment Date', key: 'createdAt' },
+  { label: 'Payment Type', key: 'userTransaction.source' },
+  { label: 'Transaction Number', key: 'userTransaction.transactionNumber' },
+  { label: 'Plot Type', key: 'paymentPlan.landParcel.parcelType' },
+  { label: 'Plot Number', key: 'paymentPlan.landParcel.parcelNumber' },
+  { label: 'Client Name', key: 'user.name' },
   { label: 'Phone Number', key: 'user.phoneNumber' },
   { label: 'Email', key: 'user.email' },
-  { label: 'Transaction Type', key: 'source' },
-  { label: 'Transaction Number', key: 'transactionNumber' },
-  { label: 'External Id', key: 'user.extRefId' }
-  // { label: "Receipt Number", key: "receiptNumber" }
+  { label: "External Id", key: "user.extRefId" }
 ];
 
 export default function PaymentList({ currencyData }) {
@@ -78,6 +82,11 @@ export default function PaymentList({ currencyData }) {
   const { loading, data, error } = useQuery(PlansPaymentsQuery, {
     variables: { limit, offset: pageNumber, query: debouncedValue || searchQuery },
     fetchPolicy: 'cache-and-network',
+    errorPolicy: 'all'
+  });
+  const [loadAllPayments, { loading: plansLoading, data: plansData, called }] = useLazyQuery(PlansPaymentsQuery, {
+    // TODO: have a separate query with no limits
+    variables: {limit: 2000, query: debouncedValue || searchQuery },
     errorPolicy: 'all'
   });
 
@@ -140,6 +149,10 @@ export default function PaymentList({ currencyData }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+   function handleDownloadCSV(){
+    loadAllPayments()
+  }
+
   if (error) {
     return <CenteredContent>{formatError(error.message)}</CenteredContent>;
   }
@@ -182,10 +195,10 @@ export default function PaymentList({ currencyData }) {
       {listType === 'graph' && paymentStatData?.paymentStatDetails?.length > 0 && (
         <Fab color="primary" variant="extended" className={classes.download}>
           <CSVLink
-            data={paymentStatData.paymentStatDetails}
+            data={paymentStatData?.paymentStatDetails}
             style={{ color: 'white' }}
             headers={csvHeaders}
-            filename="payment-data.csv"
+            filename={`payment-data-${dateToString(new Date())}.csv`}
           >
             Download CSV
           </CSVLink>
@@ -193,14 +206,25 @@ export default function PaymentList({ currencyData }) {
       )}
       {listType === 'nongraph' && paymentList?.length > 0 && (
         <Fab color="primary" variant="extended" className={classes.download}>
-          <CSVLink
-            data={paymentList}
-            style={{ color: 'white' }}
-            headers={csvHeaders}
-            filename="payment-data.csv"
-          >
-            Download CSV
-          </CSVLink>
+          {
+            !called ? (
+              // eslint-disable-next-line jsx-a11y/click-events-have-key-events
+              <span style={{ color: theme.palette.primary.contrastText }} role="button" aria-label="download csv" color="textPrimary" onClick={handleDownloadCSV}>
+                {plansLoading ? <Spinner /> : 'Export Data'}
+              </span>
+            )
+            : (
+              <CSVLink
+                data={plansData?.paymentsList || []}
+                style={{ color: 'white' }}
+                headers={csvHeaders}
+                filename={`payment-data-${dateToString(new Date())}.csv`}
+              >
+                {plansLoading ? <Spinner /> : 'Save CSV'}
+              </CSVLink>
+
+            )
+          }
         </Fab>
       )}
 
