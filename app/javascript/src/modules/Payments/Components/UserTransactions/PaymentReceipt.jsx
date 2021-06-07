@@ -299,9 +299,6 @@ const useStyles = makeStyles({
     fontSize: '16px',
     color: '#2D2D2D'
   },
-  // details: {
-  //   justifyContent: 'spaceBetween'
-  // },
   paymentInfo: {
     width: '500px'
   },
