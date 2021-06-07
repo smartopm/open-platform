@@ -51,7 +51,7 @@ export default function PaymentReceipt({ data, open, handleClose, currencyData }
                   </Grid>
                   <Grid container spacing={1}>
                     <Grid item xs={12} className={classes.title}>
-                      Luskaka,
+                      Lusaka,
                     </Grid>
                   </Grid>
                   <Grid container spacing={1}>
