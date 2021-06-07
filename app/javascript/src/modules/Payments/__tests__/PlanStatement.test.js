@@ -59,7 +59,7 @@ describe('It should test the plan statement modal component', () => {
 
     expect(container.queryByText('Nkwashi Project,')).toBeInTheDocument();
     expect(container.queryByText('11, Nalikwanda Rd,')).toBeInTheDocument();
-    expect(container.queryByText('Luskaka,')).toBeInTheDocument();
+    expect(container.queryByText('Lusaka,')).toBeInTheDocument();
 
     expect(container.queryByTestId('client-name')).toHaveTextContent('some name');
     expect(container.queryByTestId('nrc')).toHaveTextContent('672hb');
