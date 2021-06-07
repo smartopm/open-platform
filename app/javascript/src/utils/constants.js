@@ -267,6 +267,7 @@ export const mapTiles = {
   centerPoint: {
     nkwashi: [-15.5106850854, 28.6493892334],
     'ciudad morazán': [15.620704379778179, -87.92644124884137],
+    doublegdp: [-15.5106850854, 28.6493892334],
   }
 };
 
