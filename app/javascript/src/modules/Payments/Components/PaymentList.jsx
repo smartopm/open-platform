@@ -85,7 +85,8 @@ export default function PaymentList({ currencyData }) {
     errorPolicy: 'all'
   });
   const [loadAllPayments, { loading: plansLoading, data: plansData, called }] = useLazyQuery(PlansPaymentsQuery, {
-    variables: {query: debouncedValue || searchQuery },
+    // TODO: have a separate query with no limits
+    variables: {limit: 2000, query: debouncedValue || searchQuery },
     errorPolicy: 'all'
   });
 
@@ -209,7 +210,7 @@ export default function PaymentList({ currencyData }) {
             !called ? (
               // eslint-disable-next-line jsx-a11y/click-events-have-key-events
               <span style={{ color: theme.palette.primary.contrastText }} role="button" aria-label="download csv" color="textPrimary" onClick={handleDownloadCSV}>
-                {plansLoading ? <Spinner /> : 'Download All Payments'}
+                {plansLoading ? <Spinner /> : 'Export Data'}
               </span>
             )
             : (
@@ -219,7 +220,7 @@ export default function PaymentList({ currencyData }) {
                 headers={csvHeaders}
                 filename={`payment-data-${dateToString(new Date())}.csv`}
               >
-                {plansLoading ? <Spinner /> : 'Download CSV'}
+                {plansLoading ? <Spinner /> : 'Save CSV'}
               </CSVLink>
 
             )
