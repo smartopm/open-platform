@@ -128,7 +128,7 @@ export default function PaymentReceipt({ data, open, handleClose, currencyData }
                     Plot Value
                   </Grid>
                   <Grid item xs={8} className={classes.title}>
-                    {data?.paymentPlan?.planValue}
+                    {formatMoney(currencyData, data?.paymentPlan?.planValue)}
                   </Grid>
                 </Grid>
               </div>
