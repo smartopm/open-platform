@@ -84,7 +84,7 @@ export default function PaymentReceipt({ paymentData, open, handleClose, currenc
                   </Grid>
                 </Grid>
                 {paymentData?.community?.name === 'Nkwashi' && (
-                  <Grid item xs={6} style={{width: '400px', textAlign: 'right'}}>
+                  <Grid item xs={6} style={{textAlign: 'right'}}>
                     <Grid container spacing={1}>
                       <Grid item xs={12} className={classes.title}>
                         Thebe Investment Management Limited
