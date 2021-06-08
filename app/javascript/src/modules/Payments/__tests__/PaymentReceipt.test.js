@@ -39,7 +39,7 @@ describe('It should test the payment receipt modal component', () => {
     },
     community: {
       id: 'ui3iiui3',
-      name: 'some name',
+      name: 'Nkwashi',
       logoUrl: 'img.jpg',
       currency: 'zambian_kwacha'
     }
@@ -74,32 +74,12 @@ describe('It should test the payment receipt modal component', () => {
     expect(container.queryByTestId('pay-type')).toHaveTextContent('Payment Type');
     expect(container.queryByTestId('amount')).toHaveTextContent('Amount Paid');
 
-    expect(container.queryByText('Banking Details')).toBeNull();
-    expect(container.queryByText('Bank Name')).toBeNull();
-    expect(container.queryByText('Cheque Number')).toBeNull();
-  });
-
-  it('it should render account details if source is cheque', () => {
-    const newPaymentData = {
-      ...paymentData,
-      source: 'cheque/cashier_cheque'
-    };
-
-    const container = render(
-      <BrowserRouter>
-        <MockedProvider>
-          <PaymentReceipt
-            open={open}
-            paymentData={newPaymentData}
-            handleClose={handleModalClose}
-            currencyData={currency}
-          />
-        </MockedProvider>
-      </BrowserRouter>
-    );
-
     expect(container.queryByText('Banking Details')).toBeInTheDocument();
-    expect(container.queryByText('Bank Name')).toBeInTheDocument();
-    expect(container.queryByText('Cheque Number')).toBeInTheDocument();
+    expect(container.queryByText('Bank')).toBeInTheDocument();
+    expect(container.queryByText('Account Name')).toBeInTheDocument();
+    expect(container.queryByText('Account Number')).toBeInTheDocument();
+    expect(container.queryByText('Branch')).toBeInTheDocument();
+    expect(container.queryByText('Swift Code')).toBeInTheDocument();
+    expect(container.queryByText('Sort Code')).toBeInTheDocument();
   });
 });

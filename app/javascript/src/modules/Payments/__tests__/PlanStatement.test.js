@@ -67,5 +67,13 @@ describe('It should test the plan statement modal component', () => {
     expect(container.queryByTestId('receipt-no')).toHaveTextContent('26289');
     expect(container.queryByTestId('pay-date')).toHaveTextContent('2020-12-28');
     expect(container.queryByTestId('amount')).toHaveTextContent('300');
+
+    expect(container.queryByText('Banking Details')).toBeInTheDocument();
+    expect(container.queryByText('Bank')).toBeInTheDocument();
+    expect(container.queryByText('Account Name')).toBeInTheDocument();
+    expect(container.queryByText('Account Number')).toBeInTheDocument();
+    expect(container.queryByText('Branch')).toBeInTheDocument();
+    expect(container.queryByText('Swift Code')).toBeInTheDocument();
+    expect(container.queryByText('Sort Code')).toBeInTheDocument();
   });
 });
