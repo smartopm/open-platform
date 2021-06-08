@@ -9,7 +9,7 @@ describe('Community', () => {
     expect(Community.routeProps.path).toBe('')
     expect(Community.name(t)).toBe('menu.community')
     expect(Community.styleProps.icon).toBeDefined()
-    expect(Community.subMenu).toHaveLength(12)
+    expect(Community.subMenu).toHaveLength(13)
   });
 
   allUserTypes.forEach((userType) => {

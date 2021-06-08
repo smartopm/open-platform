@@ -36,12 +36,7 @@ import WaitScreen from '../src/modules/LogBook/Components/WaitingScreen';
 import RequestApproval from '../src/modules/LogBook/Components/RequestApproval';
 import ErrorPage from '../src/components/Error';
 import MainAuthCallback from '../src/components/AuthScreens/MainAuthCallback';
-import ShowRoom from '../src/containers/showroom/Home';
-import VisitingReasonScreen from '../src/containers/showroom/VisitReasonScreen';
-import ComingSoon from '../src/containers/showroom/ComingSoon';
-import VisitingClientForm from '../src/containers/showroom/CheckInForm';
 import { AUTH_TOKEN_KEY } from '../src/utils/apollo';
-import CheckInComplete from '../src/containers/showroom/CheckInComplete';
 import Feedback from '../src/containers/Activity/Feedback';
 import FeedbackSuccess from '../src/containers/Activity/FeedbackSuccess';
 import AllNotes from '../src/containers/Activity/AllNotes';
@@ -270,12 +265,6 @@ const App = () => {
                               <Route path="/request_wait/:id" component={WaitScreen} />
                               <Route path="/request_status/:id/edit" component={RequestApproval} />
                               <Route path="/request_status/:id" component={RequestApproval} />
-                              {/* Showroom kiosk routes */}
-                              <Route path="/showroom_kiosk" component={ShowRoom} />
-                              <Route path="/sh_reason" component={VisitingReasonScreen} />
-                              <Route path="/sh_entry" component={VisitingClientForm} />
-                              <Route path="/sh_complete" component={CheckInComplete} />
-                              <Route path="/sh_soon" component={ComingSoon} />
                               {/* activity */}
                               <Route path="/feedback" component={Feedback} />
                               <Route path="/feedback_success" component={FeedbackSuccess} />
