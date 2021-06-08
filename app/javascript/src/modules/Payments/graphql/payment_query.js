@@ -66,6 +66,7 @@ export const PlansPaymentsQuery = gql`
         source
         amount
         id
+        transactionNumber
       }
       user {
         id

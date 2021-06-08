@@ -91,7 +91,6 @@ export default function PaymentList({ currencyData }) {
   });
 
   const paymentList = data?.paymentsList;
-
   function paginate(action) {
     if (action === 'prev') {
       if (pageNumber < limit) return;
