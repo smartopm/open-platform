@@ -1,18 +1,22 @@
-import React from 'react'
-import Avatar from '@material-ui/core/Avatar';
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+import React, { useContext } from 'react'
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import { useHistory } from 'react-router';
+import Avatar from '../../../components/Avatar';
+import { Context } from '../../../containers/Provider/AuthStateProvider';
 
 export default function UserAvatar({ imageUrl }) {
   const classes = useStyles();
   const history = useHistory()
   const matches = useMediaQuery('(max-width:600px)')
+  const authState = useContext(Context)
   return (
     <div>
-      <div className={matches ? classes.avatarMobile : classes.avatar}>
-        <Avatar data-testid='avatar' onClick={() => history.push({pathname: '/user/settings'})} alt="user_image" src={imageUrl} />
+      <div className={matches ? classes.avatarMobile : classes.avatar} onClick={() => history.push({pathname: '/user/settings'})}>
+        <Avatar data-testid='avatar' alt="user_image" imageUrl={imageUrl} user={authState.user} />
       </div>
     </div>
   )
@@ -22,7 +26,7 @@ const useStyles = makeStyles(() => ({
   avatar: {
     cursor: 'pointer',
     position: 'absolute',
-    bottom: 30,
+    bottom: 27,
     marginBottom: '10px',
     marginRight: '30px',
     right: 20,
@@ -31,7 +35,7 @@ const useStyles = makeStyles(() => ({
   avatarMobile: {
     cursor: 'pointer',
     position: 'absolute',
-    bottom: 30,
+    bottom: 27,
     marginRight: '30px',
     right: 20,
     height: 20,
