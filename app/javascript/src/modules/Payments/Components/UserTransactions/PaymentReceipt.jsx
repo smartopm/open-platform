@@ -248,25 +248,57 @@ export default function PaymentReceipt({ paymentData, open, handleClose, currenc
                 </Grid>
               </Grid>
 
-              {(paymentData?.source === 'cheque/cashier_cheque' || paymentData?.userTransaction?.source === 'cheque/cashier_cheque')  && (
+              {paymentData?.community?.name === 'Nkwashi'  && (
                 <div style={{ marginTop: '60px' }}>
                   <b style={{ fontSize: '16px' }}>Banking Details</b> 
                   {' '}
                   <br />
                   <Grid container spacing={1}>
                     <Grid item xs={2} className={classes.title}>
-                      Bank Name
+                      Bank
                     </Grid>
                     <Grid item xs={2} className={classes.title}>
-                      {paymentData?.bankName || paymentData?.userTransaction?.bankName}
+                      Stanbic Bank
                     </Grid>
                   </Grid>
                   <Grid container spacing={1}>
                     <Grid item xs={2} className={classes.title}>
-                      Cheque Number
+                      Account Name
+                    </Grid>
+                    <Grid item xs={4} className={classes.title}>
+                      Thebe Investments Management
+                    </Grid>
+                  </Grid>
+                  <Grid container spacing={1}>
+                    <Grid item xs={2} className={classes.title}>
+                      Account Number
                     </Grid>
                     <Grid item xs={2} className={classes.title}>
-                      {paymentData?.chequeNumber || paymentData?.userTransaction.chequeNumber}
+                      0140075824201
+                    </Grid>
+                  </Grid>
+                  <Grid container spacing={1}>
+                    <Grid item xs={2} className={classes.title}>
+                      Branch
+                    </Grid>
+                    <Grid item xs={2} className={classes.title}>
+                      Mulungushi
+                    </Grid>
+                  </Grid>
+                  <Grid container spacing={1}>
+                    <Grid item xs={2} className={classes.title}>
+                      Swift Code
+                    </Grid>
+                    <Grid item xs={2} className={classes.title}>
+                      SBICZMLX
+                    </Grid>
+                  </Grid>
+                  <Grid container spacing={1}>
+                    <Grid item xs={2} className={classes.title}>
+                      Sort Code
+                    </Grid>
+                    <Grid item xs={2} className={classes.title}>
+                      040015
                     </Grid>
                   </Grid>
                 </div>

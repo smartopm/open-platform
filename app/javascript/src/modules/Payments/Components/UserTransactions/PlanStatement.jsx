@@ -191,7 +191,61 @@ export default function PaymentReceipt({ data, open, handleClose, currencyData }
               </div>
               <Grid container>
                 <Grid item xs={6}>
-                  {' '}
+                  {data?.paymentPlan?.landParcel?.community?.name === 'Nkwashi'  ? (
+                    <div>
+                      <b style={{ fontSize: '16px' }}>Banking Details</b> 
+                      {' '}
+                      <br />
+                      <Grid container spacing={1}>
+                        <Grid item xs={3} className={classes.title}>
+                          Bank
+                        </Grid>
+                        <Grid item xs={3} className={classes.title}>
+                          Stanbic Bank
+                        </Grid>
+                      </Grid>
+                      <Grid container spacing={1}>
+                        <Grid item xs={3} className={classes.title}>
+                          Account Name
+                        </Grid>
+                        <Grid item xs={6} className={classes.title}>
+                          Thebe Investments Management
+                        </Grid>
+                      </Grid>
+                      <Grid container spacing={1}>
+                        <Grid item xs={3} className={classes.title}>
+                          Account Number
+                        </Grid>
+                        <Grid item xs={3} className={classes.title}>
+                          0140075824201
+                        </Grid>
+                      </Grid>
+                      <Grid container spacing={1}>
+                        <Grid item xs={3} className={classes.title}>
+                          Branch
+                        </Grid>
+                        <Grid item xs={3} className={classes.title}>
+                          Mulungushi
+                        </Grid>
+                      </Grid>
+                      <Grid container spacing={1}>
+                        <Grid item xs={3} className={classes.title}>
+                          Swift Code
+                        </Grid>
+                        <Grid item xs={3} className={classes.title}>
+                          SBICZMLX
+                        </Grid>
+                      </Grid>
+                      <Grid container spacing={1}>
+                        <Grid item xs={3} className={classes.title}>
+                          Sort Code
+                        </Grid>
+                        <Grid item xs={3} className={classes.title}>
+                          040015
+                        </Grid>
+                      </Grid>
+                    </div>
+                ) : (' ')}
                 </Grid>
                 <Grid item xs={6}>
                   <Grid container spacing={1}>
