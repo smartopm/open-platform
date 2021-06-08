@@ -20,7 +20,8 @@ describe('Payment List Item Component', () => {
       userTransaction: {
         source: 'cash',
         amount: 1000,
-        id: 'dd7bcc9d-c063-4aad-8110-d784d535f3e3'
+        id: 'dd7bcc9d-c063-4aad-8110-d784d535f3e3',
+        transactionNumber: "9234832423" 
       },
       user: {
         id: '9c617681-b6b3-4ebf-b5aa-c7a606c2f2f4',
