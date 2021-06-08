@@ -75,7 +75,8 @@
     "no_forms": "No Forms",
     "no_task": "No Task found",
     "done": "Done",
-    "take_photo": "Take Photo",
+    "uploaded": "Uploaded Successfully",
+    "take_photo": "Upload Profile Photo",
     "client_name": "Client Name",
     "customer_journey_stage": "Customer Journey Stage",
     "expiration_date": "Expiration Date",
@@ -324,5 +325,14 @@
   "dialogs": {
     "dialog_action": "Are you sure you want to {{action}} this {{title}}?",
     "dialog_content": "You are about to {{action}} {{title}}"
+  },
+  "upload_state": {
+    "INIT": "Initiating the upload",
+    "FILE_RESIZE": "Verifying the file info ...",
+    "FILE_CHECKSUM": "Verifying the file info ...",
+    "FILE_META_UPLOAD": "Verifying the file info ...",
+    "FILE_UPLOAD": "Uploading to the server ...",
+    "DONE": "Picture Successfully Uploaded ",
+    "ERROR": "An error happened while uploading, try again"
   }
 }
