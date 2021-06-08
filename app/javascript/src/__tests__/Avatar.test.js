@@ -1,20 +1,23 @@
 import React from 'react'
-import { shallow } from 'enzyme'
+import { render } from '@testing-library/react';
 import Avatar, { safeAvatarLink } from '../components/Avatar'
+import { Context } from '../containers/Provider/AuthStateProvider'
+import userMock from '../__mocks__/userMock'
+import '@testing-library/jest-dom/extend-expect';
 
-// rewrite this test
 describe('Avatar component', () => {
   it('should render a users custom avatar if available', () => {
     const customAvatar = 'http://host.com/image.jpg'
-    const googleAvatar = 'https://google.com/avatar.png'
     const userData = {
-      imageUrl: googleAvatar, 
-      avatarUrl: customAvatar
+      imageUrl: customAvatar,
     }
     
-    const rendered = shallow(<Avatar user={userData} imageUrl={customAvatar} />)
-    expect(rendered.find('img').length).toBe(1)
-    expect(rendered.find('img').props().src).toEqual(googleAvatar)
+    const rendered = render(
+      <Context.Provider value={userMock}>
+        <Avatar user={userData} imageUrl={customAvatar} />
+      </Context.Provider>
+    )
+    expect(rendered.queryByTestId('user_avatar')).toBeInTheDocument()
     expect(safeAvatarLink({ user: userData, imageUrl: customAvatar })).toContain('https')
     expect(safeAvatarLink({ imageUrl: customAvatar, user: {} })).toContain('https')
   })

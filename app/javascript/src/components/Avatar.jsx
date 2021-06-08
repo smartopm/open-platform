@@ -28,6 +28,7 @@ export default function Avatar({ imageUrl, user, style }) {
         imageLink={safeAvatarLink({ imageUrl, user })}
         token={token}
         className={css(propAccessor(imageStyles, style))}
+        alt="avatar for the user"
       />
       );
   }
@@ -36,6 +37,7 @@ export default function Avatar({ imageUrl, user, style }) {
         src={safeAvatarLink({ user, imageUrl })}
         className={css(propAccessor(imageStyles, style))}
         alt="avatar for the user"
+        data-testid="user_avatar"
       />
     );
 }
