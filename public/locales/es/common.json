@@ -135,6 +135,7 @@
     "send_sms": "Enviar SMS",
     "send_sms_to": "Enviar SMS a ",
     "settings": "Ajustes",
+    "showroom": "Sala de exposición",
     "user_edit": "Editar usuario",
     "user_journey_stats": "Estadísticas de viaje del usuario",
     "user_logs": "Registro de usuarios",
@@ -262,6 +263,7 @@
     "twitter": "Twitter",
     "type_comment": "Escriba un comentario aquí",
     "unallocated_funds": "Fondos no asignados",
+    "uploaded": "Subido con éxito",
     "user_label": "Etiqueta de usuario",
     "user_name_search_warning_text": "La cuenta seleccionada se eliminará del sistema y se fusionará con el perfil en el que se encuentra actualmente.",
     "user_type": "Tipo de usuario",
@@ -343,6 +345,15 @@
     "transaction_number": "Numero de Transacción",
     "user_type": "Tipo de usuario",
     "valuation": "% de valuacion total"
+  },
+  "upload_state": {
+    "DONE": "Imagen cargada correctamente",
+    "ERROR": "Se produjo un error durante la carga. Vuelve a intentarlo.",
+    "FILE_CHECKSUM": "Verificando la información del archivo ...",
+    "FILE_META_UPLOAD": "Verificando la información del archivo ...",
+    "FILE_RESIZE": "Verificando la información del archivo ...",
+    "FILE_UPLOAD": "Subiendo al servidor ...",
+    "INIT": "Iniciando la carga"
   },
   "user_types": {
     "admin": "Administrador",
