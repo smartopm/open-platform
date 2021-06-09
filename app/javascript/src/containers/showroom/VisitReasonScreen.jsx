@@ -29,26 +29,6 @@ export default function VisitingReason({ history }) {
         >
           Visiting the Nkwashi Showroom
         </Button>
-        <br />
-        <Button
-          variant="contained"
-          className={`btn col-sm-12 ${css(styles.getStartedButton)}`}
-          onClick={() => history.push("/sh_soon")}
-          data-testid="payment_btn"
-          color="primary"
-        >
-          Payments & Account Management
-        </Button>
-        <br />
-        <Button
-          variant="contained"
-          className={`btn col-sm-12 ${css(styles.getStartedButton)}`}
-          onClick={() => history.push("/sh_soon")}
-          data-testid="other"
-          color="primary"
-        >
-          Other
-        </Button>
       </div>
       <Footer position="5vh" />
     </div>
