@@ -5,7 +5,6 @@ import React, { useContext } from 'react'
 import { makeStyles } from '@material-ui/core/styles';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { useTranslation } from 'react-i18next'
-// import Avatar from '@material-ui/core/Avatar';
 import { useHistory } from 'react-router';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
