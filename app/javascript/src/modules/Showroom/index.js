@@ -2,7 +2,6 @@ import ShowRoom from '../../containers/showroom/Home';
 import VisitingReasonScreen from '../../containers/showroom/VisitReasonScreen';
 import VisitingClientFormScreen from '../../containers/showroom/CheckInForm';
 import CheckInCompleteScreen from '../../containers/showroom/CheckInComplete';
-import ComingSoonScreen from '../../containers/showroom/ComingSoon';
 
 export default {
   routeProps: {
@@ -40,15 +39,6 @@ export default {
         component: CheckInCompleteScreen
       },
       name:'Check-In Another Visitor',
-      accessibleBy: [],
-    },
-    {
-      routeProps: {
-        path: '/sh_soon',
-        exact: true,
-        component: ComingSoonScreen
-      },
-      name:'Coming Soon',
       accessibleBy: [],
     },
   ]

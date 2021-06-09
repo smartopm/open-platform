@@ -13,20 +13,10 @@ describe('CheckInComplete Component', () => {
       </BrowserRouter>
     );
 
-    expect(container.getByText(/Why are you here today/)).toBeInTheDocument();
-    expect(container.getByText(/Visiting the Nkwashi Showroom/)).toBeInTheDocument();
     expect(container.getByText(/Why are you here today?/)).toBeInTheDocument();
-    expect(container.queryByTestId('payment_btn').textContent).toContain(
-      'Payments & Account Management'
-    );
-    expect(container.queryByTestId('other').textContent).toContain('Other');
-    expect(container.queryByTestId('payment_btn')).not.toBeDisabled()
-    fireEvent.click(container.queryByTestId('payment_btn'))
-    expect(historyMock.push).toBeCalled()
-    fireEvent.click(container.queryByTestId('other'))
-    expect(historyMock.push).toBeCalled()
+    expect(container.getByText(/Visiting the Nkwashi Showroom/)).toBeInTheDocument();
     fireEvent.click(container.queryByTestId('visit_btn'))
     expect(historyMock.push).toBeCalled()
-    expect(historyMock.push).toHaveBeenCalledTimes(3)
+    expect(historyMock.push).toHaveBeenCalledTimes(1)
   });
 });
