@@ -7,8 +7,8 @@ import ImageAuth from '../shared/ImageAuth';
 import { Context } from '../containers/Provider/AuthStateProvider';
 
 export function safeAvatarLink({ imageUrl, user }) {
-  if (user?.imageUrl || user?.avatarUrl) {
-    return forceLinkHttps(user.imageUrl || user.avatarUrl);
+  if (user?.avatarUrl || user?.imageUrl) {
+    return forceLinkHttps(user.avatarUrl || user.imageUrl);
   }
   return forceLinkHttps(imageUrl);
 }
@@ -22,20 +22,22 @@ export default function Avatar({ imageUrl, user, style }) {
   };
   // we have imageUrl and avatarUrl on User and we don't need to re-authenticate these
   // user.imageUrl contains links from Auth Providers ==> Google and Facebook
-  if (user && user.imageUrl) {
+  if (user && user.avatarUrl) {
     return (
-      <img
-        src={safeAvatarLink({ user, imageUrl })}
+      <ImageAuth
+        imageLink={safeAvatarLink({ imageUrl, user })}
+        token={token}
         className={css(propAccessor(imageStyles, style))}
         alt="avatar for the user"
       />
     );
   }
   return (
-    <ImageAuth
-      imageLink={safeAvatarLink({ imageUrl, user })}
-      token={token}
+    <img
+      src={safeAvatarLink({ user, imageUrl })}
       className={css(propAccessor(imageStyles, style))}
+      alt="avatar for the user"
+      data-testid="user_avatar"
     />
   );
 }
@@ -60,18 +62,30 @@ Avatar.propTypes = {
 
 const styles = StyleSheet.create({
   avatarSmall: {
-    width: '50px',
-    height: '50px',
-    borderRadius: '8px'
+    width: '40px',
+    height: '40px',
+    borderRadius: '20px'
   },
   avatarMedium: {
     width: '80px',
     height: '80px',
-    borderRadius: '13px'
+    borderRadius: '40px'
   },
   avatarBig: {
     maxWidth: '200px',
     maxHeight: '200px',
-    borderRadius: '8px'
+    borderRadius: '100px',
+    '@media (max-width: 420px)': {
+      marginLeft: '21%'
+    },
+    '@media (min-width: 620px)': {
+      marginLeft: '33%'
+    },
+    '@media (min-width: 1320px)': {
+      marginLeft: '37%'
+    },
+    '@media (min-width: 1620px)': {
+      marginLeft: '40%'
+    },
   }
 });

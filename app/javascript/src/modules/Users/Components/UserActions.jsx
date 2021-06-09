@@ -1,10 +1,10 @@
+/* eslint-disable react/style-prop-object */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import React, { useContext } from 'react'
 import { makeStyles } from '@material-ui/core/styles';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { useTranslation } from 'react-i18next'
-import Avatar from '@material-ui/core/Avatar';
 import { useHistory } from 'react-router';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
@@ -15,6 +15,7 @@ import SettingsIcon from '@material-ui/icons/Settings';
 import HeadsetMicIcon from '@material-ui/icons/HeadsetMic';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider'
+import Avatar from '../../../components/Avatar';
 
 export default function UserAction() {
   const authState = useContext(AuthStateContext)
@@ -24,7 +25,7 @@ export default function UserAction() {
   const { t } = useTranslation(['users', 'common'])
   return (
     <div className={matches ? classes.bodyMobile : classes.body}>
-      <Avatar alt="user_image" data-testid='avatar' src={authState?.user?.imageUrl} className={matches ? classes.avatarMobile : classes.avatar} />
+      <Avatar imageUrl={authState?.user?.imageUrl} user={authState.user} style="big" />
       <Typography data-testid='text' className={matches ? classes.nameMobile : classes.name}>{authState?.user?.name}</Typography>
       <UserOptions 
         icon={<AccountCircleIcon style={{height: '36px', width: '36px'}} />} 

@@ -152,7 +152,6 @@ describe('Form Component', () => {
           expect(
             container.queryAllByTestId('date-picker')[0]
             ).toHaveTextContent('Dead Line')
-        expect(container.queryByTestId('community_name')).toBeInTheDocument()
         expect(container.queryByText('Attachments')).toBeInTheDocument()
         expect(container.queryByLabelText('Yes')).toBeInTheDocument()
         expect(container.queryByLabelText('No')).toBeInTheDocument()

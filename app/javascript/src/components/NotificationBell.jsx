@@ -70,10 +70,10 @@ export default function NotificationBell({ user }) {
 const styles = StyleSheet.create({
   rightSideIconAdmin: {
     position: 'absolute',
-    bottom: 30,
+    bottom: 24,
     right: 25,
     height: 20,
-    marginRight: '85px',
+    marginRight: 90,
     ':hover': {
       cursor: 'pointer'
     }
@@ -81,7 +81,7 @@ const styles = StyleSheet.create({
   rightSideIconGuard: {
     position: 'absolute',
     right: 5,
-    marginRight: '85px',
+    marginRight: 90,
     ':hover': {
       cursor: 'pointer'
     }

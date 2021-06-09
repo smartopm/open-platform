@@ -16,7 +16,7 @@ describe('User Actions Component', () => {
       </MockedProvider>
     );
     
-    expect(container.queryByTestId('avatar')).toBeInTheDocument()
+    expect(container.queryByTestId('user_avatar')).toBeInTheDocument()
     expect(container.queryByTestId('text')).toBeInTheDocument()
   });
 
