@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'host_env'
+
 module Types
   # UserType
   class UserType < Types::BaseObject
@@ -50,15 +52,19 @@ module Types
     def avatar_url
       return nil unless object.avatar.attached?
 
-      Rails.application.routes.url_helpers
-           .rails_blob_url(object.avatar)
+      host_url(object.avatar)
     end
 
     def document_url
       return nil unless object.document.attached?
 
-      Rails.application.routes.url_helpers
-           .rails_blob_url(object.document)
+      host_url(object.document)
+    end
+
+    def host_url(type)
+      base_url = HostEnv.base_url(object.community)
+      path = Rails.application.routes.url_helpers.rails_blob_path(type)
+      "https://#{base_url}#{path}"
     end
   end
 end
