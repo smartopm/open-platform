@@ -136,6 +136,17 @@ Rubocop, ESLint, and the tests pass.
 
 `bin/all.sh`
 
+#### Enable / Disable Community Feature
+
+To ENABLE a feature for a community run:
+```
+docker-compose run --rm rails bundle exec rake enable_community_feature['CommunityName','Feature'] # NB: whitespace not allowed between arguments
+```
+To DISABLE a feature for a community run:
+```
+docker-compose run --rm rails bundle exec rake disable_community_feature['CommunityName','Feature'] # NB: whitespace not allowed between arguments
+```
+
 # Reporting a security issue
 
 Please report to us any issues you find to security@doublegdp.com. Your email will be acknowledged
