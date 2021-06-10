@@ -29,7 +29,6 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
   end
 
   # facebook callback
-  # rubocop:disable Metrics/AbcSize
   def facebook
     @user = User.from_omniauth(request.env['omniauth.auth'], @site_community)
     if @user.persisted?
@@ -39,5 +38,4 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
       session['devise.facebook_data'] = request.env['omniauth.auth']
     end
   end
-  # rubocop:enable Metrics/AbcSize
 end
