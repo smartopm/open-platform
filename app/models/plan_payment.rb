@@ -26,7 +26,7 @@ class PlanPayment < ApplicationRecord
     attributes amount: ['user_transaction.amount']
     attributes source: ['user_transaction.source']
     attributes parcel_number: ['land_parcel.parcel_number']
-    attributes parcel_number: ['land_parcel.parcel_type']
+    attributes parcel_type: ['land_parcel.parcel_type']
   end
 
   scope :created_at_lteq, lambda { |created_at|
