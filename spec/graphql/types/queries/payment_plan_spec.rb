@@ -51,7 +51,7 @@ RSpec.describe Types::Queries::Payment do
               startDate
               planValue
               statementPaidAmount
-              statementPendingBalance
+              pendingBalance
               user {
                 name
                 phoneNumber
@@ -167,7 +167,7 @@ RSpec.describe Types::Queries::Payment do
               payment_plan = result.dig('data', 'paymentPlanStatement', 'paymentPlan')
               statement = result.dig('data', 'paymentPlanStatement', 'statements', 0)
               expect(payment_plan['statementPaidAmount']).to eql 500.0
-              expect(payment_plan['statementPendingBalance']).to eql 700.0
+              expect(payment_plan['pendingBalance']).to eql 700.0
               expect(payment_plan['planValue']).to eql 1200.0
               expect(payment_plan['user']['name']).to eql 'Mark Test'
               expect(statement['receiptNumber']).to eql 'MI12300'
@@ -200,7 +200,7 @@ RSpec.describe Types::Queries::Payment do
               payment_plan = result.dig('data', 'paymentPlanStatement', 'paymentPlan')
               statement = result.dig('data', 'paymentPlanStatement', 'statements', 0)
               expect(payment_plan['statementPaidAmount']).to eql 400.0
-              expect(payment_plan['statementPendingBalance']).to eql 800.0
+              expect(payment_plan['pendingBalance']).to eql 750.0
               expect(payment_plan['planValue']).to eql 1200.0
               expect(payment_plan['user']['name']).to eql 'Mark Test'
               expect(statement['receiptNumber']).to eql 'MI12300'
