@@ -34,7 +34,7 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
     @user = User.from_omniauth(request.env['omniauth.auth'], @site_community)
     if @user.persisted?
       @user.generate_events('user_login', @user)
-      redirect_to redirect_to URI.parse(url_for("/facebook/#{@user.auth_token}")).path
+      redirect_to URI.parse(url_for("/facebook/#{@user.auth_token}")).path
     else
       session['devise.facebook_data'] = request.env['omniauth.auth']
     end
