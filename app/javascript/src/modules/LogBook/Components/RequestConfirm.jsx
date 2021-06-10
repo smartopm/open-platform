@@ -225,7 +225,6 @@ export default function RequestConfirm({ match, history }) {
                 variant="contained"
                 onClick={handleAcknowledgeRequest}
                 className={`${css(styles.grantButton)}`}
-                color="primary"
                 disabled={isLoading}
               >
                 {isLoading ? t('common.misc.loading') : t('common.misc.acknowledge')}
@@ -235,7 +234,6 @@ export default function RequestConfirm({ match, history }) {
               <Button
                 variant="contained"
                 onClick={handleModal}
-                color="secondary"
                 disabled={isLoading}
               >
                 { t('common.misc.flag')}
@@ -264,7 +262,8 @@ const styles = StyleSheet.create({
     width: '100%'
   },
   grantButton: {
-    marginRight: 60
+    marginRight: 60,
+    backgroundColor: "#4caf50"
   },
   callButton: {
     textTransform: 'unset',
