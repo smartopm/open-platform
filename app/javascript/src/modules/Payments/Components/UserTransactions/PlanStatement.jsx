@@ -77,12 +77,12 @@ export default function PaymentReceipt({ data, open, handleClose, currencyData }
                   </Grid>
                   <Grid container spacing={1}>
                     <Grid item xs={4} className={classes.title}>
-                      Plan Value (months)
+                      Plan Value(months)
                     </Grid>
                     <Grid item xs={8} className={classes.title}>
                       {formatMoney(currencyData, data?.paymentPlan?.planValue)}
                       (
-                        {data?.paymentPlan?.durationInMonth}
+                      {data?.paymentPlan?.durationInMonth}
                       )
                     </Grid>
                   </Grid>
@@ -329,6 +329,7 @@ PaymentReceipt.propTypes = {
       statementPendingBalance: PropTypes.string,
       pendingBalance: PropTypes.string,
       unallocatedAmount: PropTypes.string,
+      durationInMonth: PropTypes.string,
       user: PropTypes.shape({
         name: PropTypes.string,
         extRefId: PropTypes.string
