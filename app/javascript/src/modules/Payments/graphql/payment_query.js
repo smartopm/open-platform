@@ -133,6 +133,9 @@ export const PlanStatement = gql`
         planValue
         statementPaidAmount
         statementPendingBalance
+        pendingBalance
+        unallocatedAmount
+        durationInMonth
         user {
           name
           phoneNumber

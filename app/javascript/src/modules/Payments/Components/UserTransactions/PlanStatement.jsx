@@ -2,6 +2,7 @@ import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 import { formatMoney } from '../../../../utils/helpers';
 import { dateToString } from '../../../../components/DateContainer';
@@ -35,28 +36,54 @@ export default function PaymentReceipt({ data, open, handleClose, currencyData }
                 {data?.paymentPlan?.landParcel?.community?.name}
               </h3>
             )}
-            <div style={{marginTop: '97px'}}> 
+            <Typography className={classes.planTitle}>
+              Statement for Plan
+            </Typography>
+            <div style={{marginTop: '50px'}}> 
               <Grid container>
                 {data?.paymentPlan?.landParcel?.community?.name === 'Nkwashi' && (
                 <Grid item xs={6}>
                   <Grid container spacing={1}>
-                    <Grid item xs={12} className={classes.title} style={{fontWeight: 700, color: '#2D2D2D'}}>
-                      Nkwashi Project,
+                    <Grid item xs={4} className={classes.title}>
+                      Client Name
+                    </Grid>
+                    <Grid item xs={8} data-testid="client-name" className={classes.title}>
+                      {data?.paymentPlan?.user?.name} 
                     </Grid>
                   </Grid>
                   <Grid container spacing={1}>
-                    <Grid item xs={12} className={classes.title}>
-                      11, Nalikwanda Rd,
+                    <Grid item xs={4} className={classes.title}>
+                      NRC
+                    </Grid>
+                    <Grid item xs={8} className={classes.title} data-testid="nrc">
+                      {data?.paymentPlan?.user?.extRefId || '-'}
                     </Grid>
                   </Grid>
                   <Grid container spacing={1}>
-                    <Grid item xs={12} className={classes.title}>
-                      Lusaka,
+                    <Grid item xs={4} className={classes.title}>
+                      Plot Number
+                    </Grid>
+                    <Grid item xs={8} className={classes.title}>
+                      {data?.paymentPlan?.landParcel?.parcelNumber}
                     </Grid>
                   </Grid>
                   <Grid container spacing={1}>
-                    <Grid item xs={12} className={classes.title}>
-                      Zambia
+                    <Grid item xs={4} className={classes.title}>
+                      Payment Plan
+                    </Grid>
+                    <Grid item xs={8} className={classes.title}>
+                      {data?.paymentPlan?.planType}
+                    </Grid>
+                  </Grid>
+                  <Grid container spacing={1}>
+                    <Grid item xs={4} className={classes.title}>
+                      Plan Value (months)
+                    </Grid>
+                    <Grid item xs={8} className={classes.title}>
+                      {formatMoney(currencyData, data?.paymentPlan?.planValue)}
+                      (
+                        {data?.paymentPlan?.durationInMonth}
+                      )
                     </Grid>
                   </Grid>
                 </Grid>
@@ -64,74 +91,48 @@ export default function PaymentReceipt({ data, open, handleClose, currencyData }
                 {data?.paymentPlan?.landParcel?.community?.name === 'Nkwashi' && (
                   <Grid item xs={6} style={{textAlign: 'right'}}>
                     <Grid container spacing={1}>
-                      <Grid item xs={8} className={classes.title}>
-                        Telephone
-                      </Grid>
-                      <Grid item xs={4} data-testid="total-amount-paid" className={classes.title} style={{textAlign: 'right'}}>
-                        +260 211268890 
+                      <Grid item xs={12} className={classes.title}>
+                        Thebe Investment Management Limited
                       </Grid>
                     </Grid>
                     <Grid container spacing={1}>
-                      <Grid item xs={8} className={classes.title}>
-                        Fax
-                      </Grid>
-                      <Grid item xs={4} data-testid="total-amount-paid" className={classes.title} style={{textAlign: 'right'}}>
-                        - 
+                      <Grid item xs={12} className={classes.title}>
+                        TPIN: 1002940437
                       </Grid>
                     </Grid>
                     <Grid container spacing={1}>
-                      <Grid item xs={8} className={classes.title}>
-                        Date
+                      <Grid item xs={12} className={classes.title}>
+                        No. 11 Nalikwanda road
                       </Grid>
-                      <Grid item xs={4} data-testid="total-amount-paid" className={classes.title} style={{textAlign: 'right'}}>
-                        {data?.paymentPlan?.startDate && dateToString(data?.paymentPlan?.startDate)}
+                    </Grid>
+                    <Grid container spacing={1}>
+                      <Grid item xs={12} className={classes.title}>
+                        Woodlands, Lusaka
+                      </Grid>
+                    </Grid>
+                    <Grid container spacing={1}>
+                      <Grid item xs={12} className={classes.title}>
+                        Zambia
+                      </Grid>
+                    </Grid>
+                    <Grid container spacing={1}>
+                      <Grid item xs={12} className={classes.title}>
+                        email: hello@thebe-in.com
+                      </Grid>
+                    </Grid>
+                    <Grid container spacing={1}>
+                      <Grid item xs={12} className={classes.title}>
+                        web: www.nkwashi.com
+                      </Grid>
+                    </Grid>
+                    <Grid container spacing={1}>
+                      <Grid item xs={12} className={classes.title}>
+                        phone: +260-972-577234
                       </Grid>
                     </Grid>
                   </Grid>
                 )}
               </Grid>
-              <div style={{width: '400px', marginTop: '40px'}}>
-                <Grid container spacing={1}>
-                  <Grid item xs={4} className={classes.title}>
-                    Client Name
-                  </Grid>
-                  <Grid item xs={8} data-testid="client-name" className={classes.title}>
-                    {data?.paymentPlan?.user?.name} 
-                  </Grid>
-                </Grid>
-                <Grid container spacing={1}>
-                  <Grid item xs={4} className={classes.title}>
-                    NRC
-                  </Grid>
-                  <Grid item xs={8} className={classes.title} data-testid="nrc">
-                    {data?.paymentPlan?.user?.extRefId || '-'}
-                  </Grid>
-                </Grid>
-                <Grid container spacing={1}>
-                  <Grid item xs={4} className={classes.title}>
-                    Plot Number
-                  </Grid>
-                  <Grid item xs={8} className={classes.title}>
-                    {data?.paymentPlan?.landParcel?.parcelNumber}
-                  </Grid>
-                </Grid>
-                <Grid container spacing={1}>
-                  <Grid item xs={4} className={classes.title}>
-                    Payment Plan
-                  </Grid>
-                  <Grid item xs={8} className={classes.title}>
-                    {data?.paymentPlan?.planType}
-                  </Grid>
-                </Grid>
-                <Grid container spacing={1}>
-                  <Grid item xs={4} className={classes.title}>
-                    Plot Value
-                  </Grid>
-                  <Grid item xs={8} className={classes.title}>
-                    {formatMoney(currencyData, data?.paymentPlan?.planValue)}
-                  </Grid>
-                </Grid>
-              </div>
               <div className="plan-header" style={{ margin: '60px 0' }}>
                 <Grid container spacing={1}>
                   <Grid item xs={2} className={classes.title} style={{fontWeight: 700, color: '#2D2D2D'}}>
@@ -153,7 +154,7 @@ export default function PaymentReceipt({ data, open, handleClose, currencyData }
                     Debit
                   </Grid>
                   <Grid item xs={1} className={classes.title} style={{fontWeight: 700, color: '#2D2D2D'}}>
-                    Unallocated
+                    Unallocated Balance
                   </Grid>
                 </Grid>
                 <Divider className={classes.divider} />
@@ -250,7 +251,7 @@ export default function PaymentReceipt({ data, open, handleClose, currencyData }
                 <Grid item xs={6}>
                   <Grid container spacing={1}>
                     <Grid item xs={8} className={classes.title} style={{textAlign: 'right'}}>
-                      Total Paid
+                      Total Paid Installments
                     </Grid>
                     <Grid item xs={4} data-testid="total-paid" className={classes.title} style={{textAlign: 'right'}}>
                       {formatMoney(currencyData, data?.paymentPlan?.statementPaidAmount)} 
@@ -258,10 +259,18 @@ export default function PaymentReceipt({ data, open, handleClose, currencyData }
                   </Grid>
                   <Grid container spacing={1}>
                     <Grid item xs={8} className={classes.title} style={{textAlign: 'right'}}>
+                      Total Unallocated
+                    </Grid>
+                    <Grid item xs={4} className={classes.title} style={{textAlign: 'right'}}>
+                      {formatMoney(currencyData, data?.paymentPlan?.unallocatedAmount)}
+                    </Grid>
+                  </Grid>
+                  <Grid container spacing={1}>
+                    <Grid item xs={8} className={classes.title} style={{textAlign: 'right'}}>
                       Balance Due
                     </Grid>
                     <Grid item xs={4} className={classes.title} style={{textAlign: 'right'}}>
-                      {formatMoney(currencyData, data?.paymentPlan?.statementPendingBalance)}
+                      {formatMoney(currencyData, data?.paymentPlan?.pendingBalance)}
                     </Grid>
                   </Grid>
                 </Grid>
@@ -277,12 +286,6 @@ export default function PaymentReceipt({ data, open, handleClose, currencyData }
 const useStyles = makeStyles({
   container: {
     margin: '80px 284px'
-  },
-  receiptNumber: {
-    color: '#2D2D2D',
-    fontSize: '20px',
-    fontWeight: 700,
-    margin: '69px 0 45px 0'
   },
   title: {
     fontWeight: 400,
@@ -303,7 +306,13 @@ const useStyles = makeStyles({
   },
   divider: {
     margin: '19px 0 27px 0'
-  }
+  },
+  planTitle: {
+    color: '#2D2D2D',
+    fontSize: '20px',
+    fontWeight: 700,
+    marginTop: '69px'
+  },
 });
 
 PaymentReceipt.defaultProps = {
@@ -318,6 +327,8 @@ PaymentReceipt.propTypes = {
       planValue: PropTypes.string,
       statementPaidAmount: PropTypes.string,
       statementPendingBalance: PropTypes.string,
+      pendingBalance: PropTypes.string,
+      unallocatedAmount: PropTypes.string,
       user: PropTypes.shape({
         name: PropTypes.string,
         extRefId: PropTypes.string

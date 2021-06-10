@@ -12,7 +12,8 @@ import { checkAllowedCommunityFeatures, formatError } from '../../../utils/helpe
 export const StyledTab = withStyles({
   root: {
     textTransform: 'none',
-    color: 'inherit'
+    color: 'inherit',
+    width: '5%'
   }
 })(props => <Tab {...props} />)
 

@@ -170,7 +170,6 @@ export default function UserInformation({
               <ShiftButtons userId={userId} />
           )}
         </FeatureCheck>
-
         <UserStyledTabs tabValue={tabValue} handleChange={handleChange} user={authState.user} />
 
         <TabPanel value={tabValue} index="Contacts">
