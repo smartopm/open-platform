@@ -21,7 +21,6 @@ import {
   titleize
 } from '../../../utils/helpers';
 import CenteredContent from '../../../components/CenteredContent';
-import { dateToString } from '../../../utils/dateutil';
 import SearchInput from '../../../shared/search/SearchInput';
 import useDebounce from '../../../utils/useDebounce';
 import Paginate from '../../../components/Paginate';
@@ -38,6 +37,7 @@ import PaymentGraph from './PaymentGraph';
 import { Spinner } from '../../../shared/Loading';
 import QueryBuilder from '../../../components/QueryBuilder';
 import { PlansPaymentsQuery } from '../graphql/payment_query';
+import { dateToString } from '../../../components/DateContainer';
 
 const paymentHeaders = [
   { title: 'Client Name', col: 1 },
@@ -290,6 +290,7 @@ export function renderPayment(payment, currencyData) {
       'Payment Date': (
         <Grid item xs={12} md={2}>
           <Text content={dateToString(payment.createdAt)} />
+
         </Grid>
       ),
       'Payment Amount': (
