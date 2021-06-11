@@ -190,8 +190,8 @@ ActiveRecord::Schema.define(version: 2021_06_10_172854) do
     t.string "wp_link"
     t.json "features"
     t.json "theme_colors"
-    t.json "social_links"
     t.string "security_manager"
+    t.json "social_links"
     t.json "banking_details"
     t.index ["slug"], name: "index_communities_on_slug", unique: true
   end
