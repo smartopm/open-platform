@@ -26,6 +26,6 @@
       "address": "Address",
       "city": "City",
       "country": "Country",
-      "tax_id_no": "Tax Identification Number (Tax Payment Identification Number)",
+      "tax_id_no": "Tax Payer Identification Number"
     }
 }
