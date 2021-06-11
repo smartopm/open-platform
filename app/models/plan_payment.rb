@@ -11,6 +11,7 @@ class PlanPayment < ApplicationRecord
   belongs_to :user
   belongs_to :community
   belongs_to :payment_plan
+  has_one :land_parcel, through: :payment_plan
 
   validates :amount, numericality: { greater_than: 0 }
   validates :manual_receipt_number, uniqueness: { allow_nil: true, scope: :community_id }
@@ -24,6 +25,8 @@ class PlanPayment < ApplicationRecord
     attributes email: ['user.email']
     attributes amount: ['user_transaction.amount']
     attributes source: ['user_transaction.source']
+    attributes parcel_number: ['land_parcel.parcel_number']
+    attributes parcel_type: ['land_parcel.parcel_type']
   end
 
   scope :created_at_lteq, lambda { |created_at|
