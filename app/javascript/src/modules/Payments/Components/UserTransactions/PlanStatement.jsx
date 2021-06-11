@@ -119,7 +119,8 @@ export default function PaymentReceipt({ data, open, handleClose, currencyData }
                       email: 
                       {' '}
                       {data?.paymentPlan?.landParcel?.community?.supportEmail
-                        ?.find(email => email.category === 'bank')?.email || 'N/A'}
+                      // eslint-disable-next-line react/prop-types
+                        ?.find(({ category }) => category === 'bank')?.email || 'N/A'}
                     </Grid>
                   </Grid>
                   <Grid container spacing={1}>
@@ -127,7 +128,8 @@ export default function PaymentReceipt({ data, open, handleClose, currencyData }
                       web: 
                       {' '}
                       {data?.paymentPlan?.landParcel?.community?.socialLinks
-                        ?.find(link => link.category === 'website')?.social_link || 'N/A'}
+                      // eslint-disable-next-line react/prop-types
+                        ?.find(({ category }) => category === 'website')?.social_link || 'N/A'}
                     </Grid>
                   </Grid>
                   <Grid container spacing={1}>
@@ -135,7 +137,8 @@ export default function PaymentReceipt({ data, open, handleClose, currencyData }
                       phone: 
                       {' '}
                       {data?.paymentPlan?.landParcel?.community?.supportNumber
-                        ?.find(phone => phone.category === 'bank')?.phone_number || 'N/A'}
+                      // eslint-disable-next-line react/prop-types
+                        ?.find(({ category }) => category === 'bank')?.phone_number || 'N/A'}
                     </Grid>
                   </Grid>
                 </Grid>

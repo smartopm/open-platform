@@ -116,7 +116,8 @@ export default function PaymentReceipt({ paymentData, open, handleClose, currenc
                       email: 
                       {' '}
                       {paymentData?.community?.supportEmail
-                        ?.find(email => email.category === 'bank')?.email || 'N/A'}
+                      // eslint-disable-next-line react/prop-types
+                        ?.find(({ category }) => category === 'bank')?.email || 'N/A'}
                     </Grid>
                   </Grid>
                   <Grid container spacing={1}>
@@ -124,7 +125,8 @@ export default function PaymentReceipt({ paymentData, open, handleClose, currenc
                       web: 
                       {' '}
                       {paymentData?.community?.socialLinks
-                        ?.find(link => link.category === 'website')?.social_link || 'N/A'}
+                       // eslint-disable-next-line react/prop-types
+                        ?.find(({ category }) => category === 'website')?.social_link || 'N/A'}
                     </Grid>
                   </Grid>
                   <Grid container spacing={1}>
@@ -132,7 +134,8 @@ export default function PaymentReceipt({ paymentData, open, handleClose, currenc
                       phone: 
                       {' '}
                       {paymentData?.community?.supportNumber
-                        ?.find(phone => phone.category === 'bank')?.phone_number || 'N/A'}
+                      // eslint-disable-next-line react/prop-types
+                        ?.find(({ category }) => category === 'bank')?.phone_number || 'N/A'}
                     </Grid>
                   </Grid>
                 </Grid>
