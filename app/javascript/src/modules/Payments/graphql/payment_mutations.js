@@ -57,6 +57,9 @@ mutation PaymentCreate(
         logoUrl
         currency
         bankingDetails
+        socialLinks
+        supportNumber
+        supportEmail
       }
     }
   }

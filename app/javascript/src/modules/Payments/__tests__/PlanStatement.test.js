@@ -33,8 +33,12 @@ describe('It should test the plan statement modal component', () => {
             sortCode: '456',
             address: '11, Nalikwanda Rd,',
             city: 'Lusaka',
-            country: '',
-          }
+            country: 'Zambia',
+            taxIdNo: 'tax1234'
+          },
+          socialLinks: [{ category: 'website', social_link: 'www.web.com'}],
+          supportEmail: [{ category: 'bank', email: 'payment@support.com'}],
+          supportNumber: [{ category: 'bank', phone_number: '+260 1234'}],
         }
       }
     },
@@ -68,12 +72,21 @@ describe('It should test the plan statement modal component', () => {
       </BrowserRouter>
     );
 
-    expect(container.queryByText('Nkwashi Project')).toBeInTheDocument();
+    expect(container.queryByText('Statement for Plan')).toBeInTheDocument();
     expect(container.queryByText('11, Nalikwanda Rd,')).toBeInTheDocument();
     expect(container.queryByText('Lusaka')).toBeInTheDocument();
 
     expect(container.queryByTestId('client-name')).toHaveTextContent('some name');
     expect(container.queryByTestId('nrc')).toHaveTextContent('672hb');
+
+    expect(container.queryByTestId('account-name')).toHaveTextContent('Thebe');
+    expect(container.queryByTestId('tax-id-no')).toHaveTextContent('tax1234');
+    expect(container.queryByTestId('address')).toHaveTextContent('11, Nalikwanda Rd,');
+    expect(container.queryByTestId('city')).toHaveTextContent('Lusaka');
+    expect(container.queryByTestId('country')).toHaveTextContent('Zambia');
+    expect(container.queryByTestId('support-email')).toHaveTextContent('payment@support.com');
+    expect(container.queryByTestId('website')).toHaveTextContent('www.web.com');
+    expect(container.queryByTestId('support-phone-no')).toHaveTextContent('+260 1234');
 
     expect(container.queryByTestId('receipt-no')).toHaveTextContent('26289');
     expect(container.queryByTestId('pay-date')).toHaveTextContent('2020-12-28');

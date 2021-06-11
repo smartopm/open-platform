@@ -57,6 +57,7 @@ export default function DynamicContactFields({
           >
             <MenuItem value="sales">{t('misc.sales')}</MenuItem>
             <MenuItem value="customer_care">{t('misc.customer_care')}</MenuItem>
+            <MenuItem value="bank">{t('misc.bank')}</MenuItem>
           </TextField>
       )}
       <IconButton

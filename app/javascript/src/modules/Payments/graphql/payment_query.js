@@ -99,6 +99,9 @@ export const ReceiptPayment = gql`
         logoUrl
         currency
         bankingDetails
+        socialLinks
+        supportNumber
+        supportEmail
       }
       user {
         id
@@ -147,6 +150,9 @@ export const PlanStatement = gql`
             name
             logoUrl
             bankingDetails
+            socialLinks
+            supportNumber
+            supportEmail
           }
         }
       }

@@ -83,52 +83,59 @@ export default function PaymentReceipt({ paymentData, open, handleClose, currenc
                     </Grid>
                   </Grid>
                 </Grid>
-                {/* {paymentData?.community?.name === 'Nkwashi' && ( */}
                 <Grid item xs={6} style={{textAlign: 'right'}}>
                   <Grid container spacing={1}>
-                    <Grid item xs={12} className={classes.title}>
+                    <Grid item xs={12} className={classes.title} data-testid="account-name">
                       {paymentData?.community?.bankingDetails.accountName || 'N/A'}
                     </Grid>
                   </Grid>
                   <Grid container spacing={1}>
-                    <Grid item xs={12} className={classes.title}>
+                    <Grid item xs={12} className={classes.title} data-testid="tax-id-no">
                       TPIN:  
                       {' '}
                       {paymentData?.community?.bankingDetails.taxIdNo || 'N/A'}
                     </Grid>
                   </Grid>
                   <Grid container spacing={1}>
-                    <Grid item xs={12} className={classes.title}>
+                    <Grid item xs={12} className={classes.title} data-testid="address">
                       {paymentData?.community?.bankingDetails.address || 'N/A'}
                     </Grid>
                   </Grid>
                   <Grid container spacing={1}>
-                    <Grid item xs={12} className={classes.title}>
+                    <Grid item xs={12} className={classes.title} data-testid="city">
                       {paymentData?.community?.bankingDetails.city || 'N/A'}
                     </Grid>
                   </Grid>
                   <Grid container spacing={1}>
-                    <Grid item xs={12} className={classes.title}>
+                    <Grid item xs={12} className={classes.title} data-testid="country">
                       {paymentData?.community?.bankingDetails.country || 'N/A'}
                     </Grid>
                   </Grid>
                   <Grid container spacing={1}>
-                    <Grid item xs={12} className={classes.title}>
-                      email: hello@thebe-in.com
+                    <Grid item xs={12} className={classes.title} data-testid="support-email">
+                      email: 
+                      {' '}
+                      {paymentData?.community?.supportEmail
+                        ?.find(email => email.category === 'bank')?.email || 'N/A'}
                     </Grid>
                   </Grid>
                   <Grid container spacing={1}>
-                    <Grid item xs={12} className={classes.title}>
-                      web: www.nkwashi.com
+                    <Grid item xs={12} className={classes.title} data-testid="website">
+                      web: 
+                      {' '}
+                      {paymentData?.community?.socialLinks
+                        ?.find(link => link.category === 'website')?.social_link || 'N/A'}
                     </Grid>
                   </Grid>
                   <Grid container spacing={1}>
-                    <Grid item xs={12} className={classes.title}>
-                      phone: +260-972-577234
+                    <Grid item xs={12} className={classes.title} data-testid="support-phone-no">
+                      phone: 
+                      {' '}
+                      {paymentData?.community?.supportNumber
+                        ?.find(phone => phone.category === 'bank')?.phone_number || 'N/A'}
                     </Grid>
                   </Grid>
                 </Grid>
-                {/* )} */}
               </Grid>
               <div className="invoice-header" style={{ margin: '60px 0' }}>
                 <Grid container spacing={1}>
@@ -377,7 +384,19 @@ PaymentReceipt.propTypes = {
         city: PropTypes.string,
         country: PropTypes.string,
         taxIdNo: PropTypes.string,
-      })
+      }),
+      socialLinks: PropTypes.shape({
+        category: PropTypes.string,
+        social_link: PropTypes.string
+      }),
+      supportEmail: PropTypes.shape({
+        category: PropTypes.string,
+        email: PropTypes.string
+      }),
+      supportNumber: PropTypes.shape({
+        category: PropTypes.string,
+        phone_no: PropTypes.string
+      }),
     }),
     user: PropTypes.shape({
       id: PropTypes.string,
