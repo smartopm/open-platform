@@ -35,7 +35,19 @@ describe('Community settings page ', () => {
       socialLinks: [
         { social_link: 'www.facebook.com', category: 'facebook' },
       ],
-      logoUrl: null
+      logoUrl: null,
+      bankingDetails: {
+        bankName: 'Test bank name',
+        accountName: 'Thebe',
+        accountNo: '1234',
+        branch: 'Test branch',
+        swiftCode: '032',
+        sortCode: '456',
+        address: '11, Nalikwanda Rd,',
+        city: 'Lusaka',
+        country: '',
+        taxIdNo: '',
+      },
     };
 
     const communityMutationMock = {
@@ -138,7 +150,7 @@ describe('Community settings page ', () => {
 
     fireEvent.select(container.queryByTestId('accountName'), { target: { value: 'Thebe' } });
     expect(container.queryByTestId('accountName').value).toBe('Thebe');
-    
+
     fireEvent.select(container.queryByTestId('accountNo'), { target: { value: '1234' } });
     expect(container.queryByTestId('accountNo').value).toBe('1234');
 
