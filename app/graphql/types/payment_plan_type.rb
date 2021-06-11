@@ -20,6 +20,8 @@ module Types
     field :plan_payments, [Types::PlanPaymentType], null: true
     field :plan_value, Float, null: false
     field :statement_paid_amount, Float, null: false
+    field :unallocated_amount, Float, null: false
+    field :duration_in_month, Integer, null: false
 
     # Returns plan's total value
     #
@@ -34,6 +36,13 @@ module Types
     def statement_paid_amount
       payment_amount = object.plan_payments.not_cancelled.sum(:amount)
       (payment_amount / object.monthly_amount).floor * object.monthly_amount
+    end
+
+    # Returns unallocated amount for plan statement
+    #
+    # @return [Float]
+    def unallocated_amount
+      object.plan_payments.not_cancelled.sum(:amount) - statement_paid_amount
     end
   end
 end
