@@ -20,6 +20,7 @@ export const CurrentCommunityQuery = gql`
       themeColors
       features
       securityManager
+      bankingDetails
     }
   }
 `;

@@ -18,7 +18,7 @@ export default function PaymentReceipt({ data, open, handleClose, currencyData }
         <FullScreenDialog
           open={open}
           handleClose={handleClose}
-          title="Plan Statememt"
+          title="Plan Statement"
           actionText="Print"
           handleSubmit={() => window.print()}
         >
@@ -41,97 +41,54 @@ export default function PaymentReceipt({ data, open, handleClose, currencyData }
             </Typography>
             <div style={{marginTop: '50px'}}> 
               <Grid container>
-                {data?.paymentPlan?.landParcel?.community?.name === 'Nkwashi' && (
                 <Grid item xs={6}>
                   <Grid container spacing={1}>
-                    <Grid item xs={4} className={classes.title}>
-                      Client Name
-                    </Grid>
-                    <Grid item xs={8} data-testid="client-name" className={classes.title}>
-                      {data?.paymentPlan?.user?.name} 
+                    <Grid item xs={12} className={classes.title} style={{fontWeight: 700, color: '#2D2D2D'}}>
+                      {`${data?.paymentPlan?.landParcel?.community?.name} Project`}
                     </Grid>
                   </Grid>
                   <Grid container spacing={1}>
-                    <Grid item xs={4} className={classes.title}>
-                      NRC
-                    </Grid>
-                    <Grid item xs={8} className={classes.title} data-testid="nrc">
-                      {data?.paymentPlan?.user?.extRefId || '-'}
+                    <Grid item xs={12} className={classes.title}>
+                      {data?.paymentPlan?.landParcel?.community?.bankingDetails.address || 'N/A'}
                     </Grid>
                   </Grid>
                   <Grid container spacing={1}>
-                    <Grid item xs={4} className={classes.title}>
-                      Plot Number
-                    </Grid>
-                    <Grid item xs={8} className={classes.title}>
-                      {data?.paymentPlan?.landParcel?.parcelNumber}
+                    <Grid item xs={12} className={classes.title}>
+                      {data?.paymentPlan?.landParcel?.community?.bankingDetails.city || 'N/A'}
                     </Grid>
                   </Grid>
                   <Grid container spacing={1}>
-                    <Grid item xs={4} className={classes.title}>
-                      Payment Plan
-                    </Grid>
-                    <Grid item xs={8} className={classes.title}>
-                      {data?.paymentPlan?.planType}
-                    </Grid>
-                  </Grid>
-                  <Grid container spacing={1}>
-                    <Grid item xs={4} className={classes.title}>
-                      Plan Value(months)
-                    </Grid>
-                    <Grid item xs={8} className={classes.title}>
-                      {formatMoney(currencyData, data?.paymentPlan?.planValue)}
-                      (
-                      {data?.paymentPlan?.durationInMonth}
-                      )
+                    <Grid item xs={12} className={classes.title}>
+                      {data?.paymentPlan?.landParcel?.community?.bankingDetails.country || 'N/A'}
                     </Grid>
                   </Grid>
                 </Grid>
-                )}
-                {data?.paymentPlan?.landParcel?.community?.name === 'Nkwashi' && (
-                  <Grid item xs={6} style={{textAlign: 'right'}}>
-                    <Grid container spacing={1}>
-                      <Grid item xs={12} className={classes.title}>
-                        Thebe Investment Management Limited
-                      </Grid>
+                <Grid item xs={6} style={{textAlign: 'right'}}>
+                  <Grid container spacing={1}>
+                    <Grid item xs={8} className={classes.title}>
+                      Telephone
                     </Grid>
-                    <Grid container spacing={1}>
-                      <Grid item xs={12} className={classes.title}>
-                        TPIN: 1002940437
-                      </Grid>
-                    </Grid>
-                    <Grid container spacing={1}>
-                      <Grid item xs={12} className={classes.title}>
-                        No. 11 Nalikwanda road
-                      </Grid>
-                    </Grid>
-                    <Grid container spacing={1}>
-                      <Grid item xs={12} className={classes.title}>
-                        Woodlands, Lusaka
-                      </Grid>
-                    </Grid>
-                    <Grid container spacing={1}>
-                      <Grid item xs={12} className={classes.title}>
-                        Zambia
-                      </Grid>
-                    </Grid>
-                    <Grid container spacing={1}>
-                      <Grid item xs={12} className={classes.title}>
-                        email: hello@thebe-in.com
-                      </Grid>
-                    </Grid>
-                    <Grid container spacing={1}>
-                      <Grid item xs={12} className={classes.title}>
-                        web: www.nkwashi.com
-                      </Grid>
-                    </Grid>
-                    <Grid container spacing={1}>
-                      <Grid item xs={12} className={classes.title}>
-                        phone: +260-972-577234
-                      </Grid>
+                    <Grid item xs={4} data-testid="total-amount-paid" className={classes.title} style={{textAlign: 'right'}}>
+                      +260 211268890 
                     </Grid>
                   </Grid>
-                )}
+                  <Grid container spacing={1}>
+                    <Grid item xs={8} className={classes.title}>
+                      Fax
+                    </Grid>
+                    <Grid item xs={4} data-testid="total-amount-paid" className={classes.title} style={{textAlign: 'right'}}>
+                      - 
+                    </Grid>
+                  </Grid>
+                  <Grid container spacing={1}>
+                    <Grid item xs={8} className={classes.title}>
+                      Date
+                    </Grid>
+                    <Grid item xs={4} data-testid="total-amount-paid" className={classes.title} style={{textAlign: 'right'}}>
+                      {data?.paymentPlan?.startDate && dateToString(data?.paymentPlan?.startDate)}
+                    </Grid>
+                  </Grid>
+                </Grid>
               </Grid>
               <div className="plan-header" style={{ margin: '60px 0' }}>
                 <Grid container spacing={1}>
@@ -192,61 +149,59 @@ export default function PaymentReceipt({ data, open, handleClose, currencyData }
               </div>
               <Grid container>
                 <Grid item xs={6}>
-                  {data?.paymentPlan?.landParcel?.community?.name === 'Nkwashi'  ? (
-                    <div>
-                      <b style={{ fontSize: '16px' }}>Banking Details</b> 
-                      {' '}
-                      <br />
-                      <Grid container spacing={1}>
-                        <Grid item xs={3} className={classes.title}>
-                          Bank
-                        </Grid>
-                        <Grid item xs={3} className={classes.title}>
-                          Stanbic Bank
-                        </Grid>
+                  <div>
+                    <b style={{ fontSize: '16px' }}>Banking Details</b> 
+                    {' '}
+                    <br />
+                    <Grid container spacing={1}>
+                      <Grid item xs={3} className={classes.title}>
+                        Bank
                       </Grid>
-                      <Grid container spacing={1}>
-                        <Grid item xs={3} className={classes.title}>
-                          Account Name
-                        </Grid>
-                        <Grid item xs={6} className={classes.title}>
-                          Thebe Investments Management
-                        </Grid>
+                      <Grid item xs={3} className={classes.title}>
+                        {data?.paymentPlan?.landParcel?.community?.bankingDetails.bankName || 'N/A'}
                       </Grid>
-                      <Grid container spacing={1}>
-                        <Grid item xs={3} className={classes.title}>
-                          Account Number
-                        </Grid>
-                        <Grid item xs={3} className={classes.title}>
-                          0140075824201
-                        </Grid>
+                    </Grid>
+                    <Grid container spacing={1}>
+                      <Grid item xs={3} className={classes.title}>
+                        Account Name
                       </Grid>
-                      <Grid container spacing={1}>
-                        <Grid item xs={3} className={classes.title}>
-                          Branch
-                        </Grid>
-                        <Grid item xs={3} className={classes.title}>
-                          Mulungushi
-                        </Grid>
+                      <Grid item xs={6} className={classes.title}>
+                        {data?.paymentPlan?.landParcel?.community?.bankingDetails.accountName || 'N/A'}
                       </Grid>
-                      <Grid container spacing={1}>
-                        <Grid item xs={3} className={classes.title}>
-                          Swift Code
-                        </Grid>
-                        <Grid item xs={3} className={classes.title}>
-                          SBICZMLX
-                        </Grid>
+                    </Grid>
+                    <Grid container spacing={1}>
+                      <Grid item xs={3} className={classes.title}>
+                        Account Number
                       </Grid>
-                      <Grid container spacing={1}>
-                        <Grid item xs={3} className={classes.title}>
-                          Sort Code
-                        </Grid>
-                        <Grid item xs={3} className={classes.title}>
-                          040015
-                        </Grid>
+                      <Grid item xs={3} className={classes.title}>
+                        {data?.paymentPlan?.landParcel?.community?.bankingDetails.accountNo || 'N/A'}
                       </Grid>
-                    </div>
-                ) : (' ')}
+                    </Grid>
+                    <Grid container spacing={1}>
+                      <Grid item xs={3} className={classes.title}>
+                        Branch
+                      </Grid>
+                      <Grid item xs={3} className={classes.title}>
+                        {data?.paymentPlan?.landParcel?.community?.bankingDetails.branch || 'N/A'}
+                      </Grid>
+                    </Grid>
+                    <Grid container spacing={1}>
+                      <Grid item xs={3} className={classes.title}>
+                        Swift Code
+                      </Grid>
+                      <Grid item xs={3} className={classes.title}>
+                        {data?.paymentPlan?.landParcel?.community?.bankingDetails.swiftCode || 'N/A'}
+                      </Grid>
+                    </Grid>
+                    <Grid container spacing={1}>
+                      <Grid item xs={3} className={classes.title}>
+                        Sort Code
+                      </Grid>
+                      <Grid item xs={3} className={classes.title}>
+                        {data?.paymentPlan?.landParcel?.community?.bankingDetails.sortCode || 'N/A'}
+                      </Grid>
+                    </Grid>
+                  </div>
                 </Grid>
                 <Grid item xs={6}>
                   <Grid container spacing={1}>
@@ -339,7 +294,19 @@ PaymentReceipt.propTypes = {
         parcelNumber: PropTypes.string,
         community: PropTypes.shape({
           name: PropTypes.string,
-          logoUrl: PropTypes.string
+          logoUrl: PropTypes.string,
+          bankingDetails: PropTypes.shape({
+            bankName: PropTypes.string,
+            accountName: PropTypes.string,
+            accountNo: PropTypes.string,
+            branch: PropTypes.string,
+            swiftCode: PropTypes.string,
+            sortCode: PropTypes.string,
+            address:PropTypes.string,
+            city: PropTypes.string,
+            country: PropTypes.string,
+            taxIdNo: PropTypes.string,
+          })
         })
       })
     }),

@@ -98,6 +98,7 @@ export const ReceiptPayment = gql`
         name
         logoUrl
         currency
+        bankingDetails
       }
       user {
         id
@@ -146,6 +147,7 @@ export const PlanStatement = gql`
           community {
             name
             logoUrl
+            bankingDetails
           }
         }
       }

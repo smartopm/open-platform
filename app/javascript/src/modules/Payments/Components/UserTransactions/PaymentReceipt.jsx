@@ -83,50 +83,52 @@ export default function PaymentReceipt({ paymentData, open, handleClose, currenc
                     </Grid>
                   </Grid>
                 </Grid>
-                {paymentData?.community?.name === 'Nkwashi' && (
-                  <Grid item xs={6} style={{textAlign: 'right'}}>
-                    <Grid container spacing={1}>
-                      <Grid item xs={12} className={classes.title}>
-                        Thebe Investment Management Limited
-                      </Grid>
-                    </Grid>
-                    <Grid container spacing={1}>
-                      <Grid item xs={12} className={classes.title}>
-                        TPIN: 1002940437
-                      </Grid>
-                    </Grid>
-                    <Grid container spacing={1}>
-                      <Grid item xs={12} className={classes.title}>
-                        No. 11 Nalikwanda road
-                      </Grid>
-                    </Grid>
-                    <Grid container spacing={1}>
-                      <Grid item xs={12} className={classes.title}>
-                        Woodlands, Lusaka
-                      </Grid>
-                    </Grid>
-                    <Grid container spacing={1}>
-                      <Grid item xs={12} className={classes.title}>
-                        Zambia
-                      </Grid>
-                    </Grid>
-                    <Grid container spacing={1}>
-                      <Grid item xs={12} className={classes.title}>
-                        email: hello@thebe-in.com
-                      </Grid>
-                    </Grid>
-                    <Grid container spacing={1}>
-                      <Grid item xs={12} className={classes.title}>
-                        web: www.nkwashi.com
-                      </Grid>
-                    </Grid>
-                    <Grid container spacing={1}>
-                      <Grid item xs={12} className={classes.title}>
-                        phone: +260-972-577234
-                      </Grid>
+                {/* {paymentData?.community?.name === 'Nkwashi' && ( */}
+                <Grid item xs={6} style={{textAlign: 'right'}}>
+                  <Grid container spacing={1}>
+                    <Grid item xs={12} className={classes.title}>
+                      {paymentData?.community?.bankingDetails.accountName || 'N/A'}
                     </Grid>
                   </Grid>
-                )}
+                  <Grid container spacing={1}>
+                    <Grid item xs={12} className={classes.title}>
+                      TPIN:  
+                      {' '}
+                      {paymentData?.community?.bankingDetails.taxIdNo || 'N/A'}
+                    </Grid>
+                  </Grid>
+                  <Grid container spacing={1}>
+                    <Grid item xs={12} className={classes.title}>
+                      {paymentData?.community?.bankingDetails.address || 'N/A'}
+                    </Grid>
+                  </Grid>
+                  <Grid container spacing={1}>
+                    <Grid item xs={12} className={classes.title}>
+                      {paymentData?.community?.bankingDetails.city || 'N/A'}
+                    </Grid>
+                  </Grid>
+                  <Grid container spacing={1}>
+                    <Grid item xs={12} className={classes.title}>
+                      {paymentData?.community?.bankingDetails.country || 'N/A'}
+                    </Grid>
+                  </Grid>
+                  <Grid container spacing={1}>
+                    <Grid item xs={12} className={classes.title}>
+                      email: hello@thebe-in.com
+                    </Grid>
+                  </Grid>
+                  <Grid container spacing={1}>
+                    <Grid item xs={12} className={classes.title}>
+                      web: www.nkwashi.com
+                    </Grid>
+                  </Grid>
+                  <Grid container spacing={1}>
+                    <Grid item xs={12} className={classes.title}>
+                      phone: +260-972-577234
+                    </Grid>
+                  </Grid>
+                </Grid>
+                {/* )} */}
               </Grid>
               <div className="invoice-header" style={{ margin: '60px 0' }}>
                 <Grid container spacing={1}>
@@ -248,61 +250,59 @@ export default function PaymentReceipt({ paymentData, open, handleClose, currenc
                 </Grid>
               </Grid>
 
-              {paymentData?.community?.name === 'Nkwashi'  && (
-                <div style={{ marginTop: '60px' }}>
-                  <b style={{ fontSize: '16px' }}>Banking Details</b> 
-                  {' '}
-                  <br />
-                  <Grid container spacing={1}>
-                    <Grid item xs={2} className={classes.title}>
-                      Bank
-                    </Grid>
-                    <Grid item xs={2} className={classes.title}>
-                      Stanbic Bank
-                    </Grid>
+              <div style={{ marginTop: '60px' }}>
+                <b style={{ fontSize: '16px' }}>Banking Details</b> 
+                {' '}
+                <br />
+                <Grid container spacing={1}>
+                  <Grid item xs={2} className={classes.title}>
+                    Bank
                   </Grid>
-                  <Grid container spacing={1}>
-                    <Grid item xs={2} className={classes.title}>
-                      Account Name
-                    </Grid>
-                    <Grid item xs={4} className={classes.title}>
-                      Thebe Investments Management
-                    </Grid>
+                  <Grid item xs={2} className={classes.title}>
+                    {paymentData?.community?.bankingDetails.bankName || 'N/A'}
                   </Grid>
-                  <Grid container spacing={1}>
-                    <Grid item xs={2} className={classes.title}>
-                      Account Number
-                    </Grid>
-                    <Grid item xs={2} className={classes.title}>
-                      0140075824201
-                    </Grid>
+                </Grid>
+                <Grid container spacing={1}>
+                  <Grid item xs={2} className={classes.title}>
+                    Account Name
                   </Grid>
-                  <Grid container spacing={1}>
-                    <Grid item xs={2} className={classes.title}>
-                      Branch
-                    </Grid>
-                    <Grid item xs={2} className={classes.title}>
-                      Mulungushi
-                    </Grid>
+                  <Grid item xs={4} className={classes.title}>
+                    {paymentData?.community?.bankingDetails.accountName || 'N/A'}
                   </Grid>
-                  <Grid container spacing={1}>
-                    <Grid item xs={2} className={classes.title}>
-                      Swift Code
-                    </Grid>
-                    <Grid item xs={2} className={classes.title}>
-                      SBICZMLX
-                    </Grid>
+                </Grid>
+                <Grid container spacing={1}>
+                  <Grid item xs={2} className={classes.title}>
+                    Account Number
                   </Grid>
-                  <Grid container spacing={1}>
-                    <Grid item xs={2} className={classes.title}>
-                      Sort Code
-                    </Grid>
-                    <Grid item xs={2} className={classes.title}>
-                      040015
-                    </Grid>
+                  <Grid item xs={2} className={classes.title}>
+                    {paymentData?.community?.bankingDetails.accountNo || 'N/A'}
                   </Grid>
-                </div>
-              )}
+                </Grid>
+                <Grid container spacing={1}>
+                  <Grid item xs={2} className={classes.title}>
+                    Branch
+                  </Grid>
+                  <Grid item xs={2} className={classes.title}>
+                    {paymentData?.community?.bankingDetails.branch || 'N/A'}
+                  </Grid>
+                </Grid>
+                <Grid container spacing={1}>
+                  <Grid item xs={2} className={classes.title}>
+                    Swift Code
+                  </Grid>
+                  <Grid item xs={2} className={classes.title}>
+                    {paymentData?.community?.bankingDetails.swiftCode || 'N/A'}
+                  </Grid>
+                </Grid>
+                <Grid container spacing={1}>
+                  <Grid item xs={2} className={classes.title}>
+                    Sort Code
+                  </Grid>
+                  <Grid item xs={2} className={classes.title}>
+                    {paymentData?.community?.bankingDetails.sortCode || 'N/A'}
+                  </Grid>
+                </Grid>
+              </div>
             </div>
           </div>
         </FullScreenDialog>
@@ -365,7 +365,19 @@ PaymentReceipt.propTypes = {
       id: PropTypes.string,
       name: PropTypes.string,
       logoUrl: PropTypes.string,
-      currency: PropTypes.string
+      currency: PropTypes.string,
+      bankingDetails: PropTypes.shape({
+        bankName: PropTypes.string,
+        accountName: PropTypes.string,
+        accountNo: PropTypes.string,
+        branch: PropTypes.string,
+        swiftCode: PropTypes.string,
+        sortCode: PropTypes.string,
+        address:PropTypes.string,
+        city: PropTypes.string,
+        country: PropTypes.string,
+        taxIdNo: PropTypes.string,
+      })
     }),
     user: PropTypes.shape({
       id: PropTypes.string,

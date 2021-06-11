@@ -23,7 +23,18 @@ describe('It should test the plan statement modal component', () => {
         parcelNumber: '58i792',
         community: {
           name: 'Nkwashi',
-          logoUrl: 'logo.jpg'
+          logoUrl: 'logo.jpg',
+          bankingDetails: {
+            bankName: 'Test bank name',
+            accountName: 'Thebe',
+            accountNo: '1234',
+            branch: 'Test branch',
+            swiftCode: '032',
+            sortCode: '456',
+            address: '11, Nalikwanda Rd,',
+            city: 'Lusaka',
+            country: '',
+          }
         }
       }
     },
@@ -56,6 +67,10 @@ describe('It should test the plan statement modal component', () => {
         </MockedProvider>
       </BrowserRouter>
     );
+
+    expect(container.queryByText('Nkwashi Project')).toBeInTheDocument();
+    expect(container.queryByText('11, Nalikwanda Rd,')).toBeInTheDocument();
+    expect(container.queryByText('Lusaka')).toBeInTheDocument();
 
     expect(container.queryByTestId('client-name')).toHaveTextContent('some name');
     expect(container.queryByTestId('nrc')).toHaveTextContent('672hb');

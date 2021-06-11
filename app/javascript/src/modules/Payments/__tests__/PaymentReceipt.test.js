@@ -41,7 +41,18 @@ describe('It should test the payment receipt modal component', () => {
       id: 'ui3iiui3',
       name: 'Nkwashi',
       logoUrl: 'img.jpg',
-      currency: 'zambian_kwacha'
+      currency: 'zambian_kwacha',
+      bankingDetails: {
+        bankName: 'Test bank name',
+        accountName: 'Thebe',
+        accountNo: '1234',
+        branch: 'Test branch',
+        swiftCode: '032',
+        sortCode: '456',
+        address: '11, Nalikwanda Rd,',
+        city: 'Lusaka',
+        country: '',
+      }
     }
   };
 

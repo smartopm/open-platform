@@ -18,6 +18,7 @@ module Mutations
       argument :wp_link, String, required: false
       argument :security_manager, String, required: false
       argument :theme_colors, GraphQL::Types::JSON, required: false
+      argument :banking_details, GraphQL::Types::JSON, required: false
 
       field :community, Types::CommunityType, null: true
 

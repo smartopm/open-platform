@@ -16,6 +16,16 @@
       "update_community": "Update Community Settings",
       "logo_updated": "Logo uploaded successfully",
       "community_updated": "Community Updated successfully",
-      "set_security_manager": "Set Security Manager Phone Number"
+      "set_security_manager": "Set Security Manager Phone Number",
+      "account_name": "Account Name",
+      "account_no": "Account Number",
+      "bank": "Bank",
+      "branch": "Branch",
+      "swift_code": "Swift Code",
+      "sort_code": "Sort Code",
+      "address": "Address",
+      "city": "City",
+      "country": "Country",
+      "tax_id_no": "Tax Identification Number (Tax Payment Identification Number)",
     }
 }

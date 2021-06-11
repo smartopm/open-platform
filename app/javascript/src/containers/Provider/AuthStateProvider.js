@@ -47,6 +47,7 @@ const QUERY = gql`
         themeColors
         features
         securityManager
+        bankingDetails
       }
     }
   }
