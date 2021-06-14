@@ -52,7 +52,7 @@ module Mutations
       def raise_receipt_number_validation_error(receipt_number)
         return if receipt_number.nil?
 
-        payment_exists = PlanPayment.exists?(
+        payment_exists = Payments::PlanPayment.exists?(
           manual_receipt_number: receipt_number,
           community_id: context[:site_community].id,
         )
@@ -77,7 +77,7 @@ module Mutations
                                          depositor_id: context[:current_user].id,
                                          originally_created_at: user.current_time_in_timezone,
                                        )
-        context[:transaction] = ::Transaction.create(transaction_attributes)
+        context[:transaction] = Payments::Transaction.create(transaction_attributes)
       end
       # rubocop:enable Metrics/AbcSize
 

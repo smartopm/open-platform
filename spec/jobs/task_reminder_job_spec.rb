@@ -40,11 +40,11 @@ RSpec.describe TaskReminderJob, type: :job do
     end
 
     it 'invokes EmailMsg' do
-      template = EmailTemplate.system_emails
-                              .create!(
-                                name: 'task_reminder_template',
-                                community: admin.community,
-                              )
+      template = Notifications::EmailTemplate.system_emails
+                                             .create!(
+                                               name: 'task_reminder_template',
+                                               community: admin.community,
+                                             )
       template_data = [
         { key: '%logo_url%', value: admin.community&.logo_url.to_s },
         { key: '%community%', value: admin.community&.name.to_s },

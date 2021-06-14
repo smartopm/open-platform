@@ -145,8 +145,16 @@ RSpec.describe Users::User, type: :model do
         .dependent(:destroy)
     end
     it { is_expected.to have_many(:import_logs).class_name('Logs::ImportLog').dependent(:destroy) }
-    it { is_expected.to have_many(:transactions) }
-    it { is_expected.to have_many(:plan_payments) }
+    it do
+      is_expected.to have_many(:transactions)
+        .class_name('Payments::Transaction')
+        .dependent(:destroy)
+    end
+    it do
+      is_expected.to have_many(:plan_payments)
+        .class_name('Payments::PlanPayment')
+        .dependent(:destroy)
+    end
     it { is_expected.to have_one(:avatar_attachment) }
     it { is_expected.to have_one(:document_attachment) }
   end

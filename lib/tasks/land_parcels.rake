@@ -11,7 +11,7 @@ namespace :land_parcels do
     community     = Community.find_by(name: args.community_name)
     current_user  = community.users.find_by(email: 'mutale@doublegdp.com')
 
-    User.skip_callback(:create, :after, :send_email_msg)
+    Users::User.skip_callback(:create, :after, :send_email_msg)
     row_num = 0
     ActiveRecord::Base.transaction do
       CSV.parse(URI.open(args.csv_path).read, headers: true) do |row|
@@ -34,7 +34,7 @@ namespace :land_parcels do
 
         clients = []
         others = []
-        User.already_existing(email, [phone_number], community).each do |u|
+        Users::User.already_existing(email, [phone_number], community).each do |u|
           if u.user_type == 'client'
             clients << u
           else
@@ -112,7 +112,7 @@ namespace :land_parcels do
     puts "Errors: #{errors}"
     puts "Warnings: #{warnings}"
     puts 'Records successfully imported' if errors.empty?
-    User.set_callback(:create, :after, :send_email_msg)
+    Users::User.set_callback(:create, :after, :send_email_msg)
   end
 end
 # rubocop:enable Metrics/BlockLength

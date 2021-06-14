@@ -16,7 +16,7 @@ module PostTags
       tag = PostTagUser.find_by(user_id: user_id, post_tag_id: self[:id])
       return tag.delete if tag.present?
 
-      PostTags::PostTagUser.create!(user_id: user_id, post_tag_id: self[:id])
+      PostTagUser.create!(user_id: user_id, post_tag_id: self[:id])
     end
   end
 end

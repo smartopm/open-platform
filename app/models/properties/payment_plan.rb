@@ -7,7 +7,9 @@ module Properties
     belongs_to :land_parcel
     has_many :invoices, class_name: 'Payments::Invoice', dependent: :nullify
     has_many :wallet_transactions, class_name: 'Payments::WalletTransaction', dependent: :nullify
-    has_many :plan_payments, dependent: :nullify
+    has_many :plan_payments, class_name: 'Payments::PlanPayment', dependent: :nullify
+
+    before_create :set_pending_balance
 
     validates :payment_day,
               numericality: { only_integer: true, greater_than: 0, less_than_or_equal_to: 28 }

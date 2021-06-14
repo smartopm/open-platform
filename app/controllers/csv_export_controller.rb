@@ -55,7 +55,8 @@ class CsvExportController < ApplicationController
     end
   end
 
-   def ensure_admin
-    @user = User.find_via_auth_token(params[:token], @site_community)
+  def ensure_admin
+    @user = Users::User.find_via_auth_token(params[:token], @site_community)
     raise I18n.t('errors.unauthorized') unless @user && @user&.role?(%i[admin])
+  end
 end

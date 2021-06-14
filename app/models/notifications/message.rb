@@ -74,7 +74,7 @@ module Notifications
 
     def assign_message_task(note_id)
       assign = user.community.notes.find(note_id)
-                  .assign_or_unassign_user(user.community.default_community_users[0].id)
+                   .assign_or_unassign_user(user.community.default_community_users[0].id)
       return assign unless assign.nil?
     end
 
@@ -92,7 +92,7 @@ module Notifications
     end
 
     def update_campaign_message_count
-      count = Notifications::Message.where(campaign_id: campaign_id).count
+      count = Message.where(campaign_id: campaign_id).count
       return if Campaign.find(campaign_id)&.update(message_count: count)
 
       raise StandardError, 'Campaign message count update failed'

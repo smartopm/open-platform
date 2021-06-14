@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Payments  
+module Payments
   # Invoice Record
   class Invoice < ApplicationRecord
     include SearchCop
@@ -25,10 +25,6 @@ module Payments
     after_create :generate_event_log, if: proc { persisted? }
     before_update :modify_status, if: proc { changed_attributes.keys.include?('pending_amount') }
     after_update -> { generate_event_log(:update) }
-
-    scope :pending_amount_gt_than, lambda { |amount|
-      where(Invoice.arel_table[:pending_amount].gt(amount))
-    }
 
     scope :pending_amount_gt_than, lambda { |amount|
       where(Invoice.arel_table[:pending_amount].gt(amount))
