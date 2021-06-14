@@ -35,7 +35,7 @@ const SideMenu = ({ toggleDrawer, menuItems, userType, direction, communityFeatu
       return;
     }
     // close the menu and route  only when it is open and it is on small screens
-    if (direction === 'right') {
+    if (direction === 'right' || window.screen.width <= 768) {
       toggleDrawer(event);
     }
     // check the direct and route differently

@@ -58,13 +58,16 @@ export default function Main() {
 export function MainNav({ authState }) {
   const matches = useMediaQuery('(max-width:600px)');
   const classes = useStyles();
-  const [mobileOpen, setMobileOpen] = useState(false);
+  const [drawerOpen, setDrawerOpen] = useState(false);
 
   const handleDrawerToggle = () => {
-    setMobileOpen(!mobileOpen);
-    // A hack to dynamically change app-container's margin-left
-    // There's a react-way of doing it but it re-renders the whole <App /> component
-    document.getElementById('app-container').style.marginLeft = mobileOpen ? 0 : `${drawerWidth}px`;
+    setDrawerOpen(!drawerOpen);
+
+    if (window.screen.width > 768) {
+      // A hack to dynamically change app-container's margin-left
+      // There's a react-way of doing it but it re-renders the whole <App /> component
+      document.getElementById('app-container').style.marginLeft = drawerOpen ? 0 : `${drawerWidth}px`;
+    }
   };
 
   return (
@@ -72,9 +75,6 @@ export function MainNav({ authState }) {
       <AppBar
         position="fixed"
         className={classes.appBar}
-        style={
-          mobileOpen ? { marginLeft: drawerWidth, width: `calc(100% - ${drawerWidth}px)` } : {}
-        }
       >
         <Toolbar>
           <IconButton
@@ -83,10 +83,10 @@ export function MainNav({ authState }) {
             edge="start"
             onClick={handleDrawerToggle}
             className={classes.menuButton}
-            style={{ paddingTop: mobileOpen ? '20px' : '0px' }}
+            style={{ paddingTop: drawerOpen ? '20px' : '0px' }}
             data-testid="drawer"
           >
-            {mobileOpen ? (
+            {drawerOpen ? (
               <DoubleArrowOutlinedIcon
                 style={{ transform: 'translate(-50%,-50%) rotate(180deg)' }}
               />
@@ -111,9 +111,9 @@ export function MainNav({ authState }) {
       {authState.loggedIn && (
         <nav className={classes.drawer} aria-label="mailbox folders" data-testid="nav-container">
           <Drawer
-            variant="persistent"
+            variant={window.screen.width <= 768 ? 'temporary' : 'persistent'}
             anchor="left"
-            open={mobileOpen}
+            open={drawerOpen}
             onClose={handleDrawerToggle}
             classes={{ paper: classes.drawerPaper }}
             ModalProps={{
@@ -126,7 +126,7 @@ export function MainNav({ authState }) {
               userType={authState.user.userType}
               direction="left"
               communityFeatures={authState.user?.community.features || []}
-              mobileOpen={mobileOpen}
+              drawerOpen={drawerOpen}
             />
           </Drawer>
         </nav>
