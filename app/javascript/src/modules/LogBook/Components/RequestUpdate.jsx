@@ -377,7 +377,6 @@ export default function RequestUpdate({ id }) {
                   variant="contained"
                   onClick={handleEnrollUser}
                   className={css(styles.grantButton)}
-                  color="primary"
                   disabled={isLoading}
                 >
                   {isLoading ? `${t('logbook:logbook.enrolling')} ...` : ` ${t('logbook:logbook.enroll')}` }
@@ -400,7 +399,6 @@ export default function RequestUpdate({ id }) {
                   variant="contained"
                   onClick={(event) => handleModal(event, 'grant')}
                   className={css(styles.grantButton)}
-                  color="primary"
                   disabled={isLoading}
                   data-testid="entry_user_grant"
                 >
@@ -412,7 +410,6 @@ export default function RequestUpdate({ id }) {
                   variant="contained"
                   onClick={handleDenyRequest}
                   className={css(styles.denyButton)}
-                  color="secondary"
                   disabled={isLoading}
                   data-testid="entry_user_deny"
                 >
@@ -444,6 +441,12 @@ const styles = StyleSheet.create({
   },
   grantButton: {
     marginRight: 60,
+    backgroundColor: "#4caf50",
+    color: "#FFFFFF"
+  },
+  denyButton: {
+    backgroundColor: "#d32f2f",
+    color: "#FFFFFF"
   },
   callButton: {
     color: 'rgb(230, 63, 69)',
