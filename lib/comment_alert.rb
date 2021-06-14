@@ -38,9 +38,10 @@ class CommentsAlert
     data = updated_discussions(community_name)
     template_id = data[:templates]['discussion_template_id']
     discussion_ids = data[:discussion_ids]
-    users = Discussion.by_subscribers(discussion_ids)
+    users = Discussions::Discussion.by_subscribers(discussion_ids)
     users.each do |user|
-      count = Comment.by_not_deleted.created_today.by_discussion(discussion_ids, user).count
+      count = Comments::Comment.by_not_deleted.created_today
+                               .by_discussion(discussion_ids, user).count
       discussions = user.discussions.where(id: discussion_ids)
       data = {
         count: count,

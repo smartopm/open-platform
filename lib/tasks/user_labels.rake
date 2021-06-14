@@ -8,7 +8,7 @@ namespace :user_labels do
     label = community.labels.find_by(short_desc: args.label_name).presence ||
             community.labels.create!(short_desc: args.label_name)
 
-    User.find_each do |user|
+    Users::User.find_each do |user|
       user.user_labels.create!(label_id: label.id)
     rescue ActiveRecord::RecordNotUnique
       next

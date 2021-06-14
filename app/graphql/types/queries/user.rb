@@ -141,10 +141,10 @@ module Types::Queries::User
   def pending_users
     raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') unless context[:current_user]
 
-    User.allowed_users(context[:current_user]).includes(accounts: [:land_parcels])
-        .eager_load(:notes, :accounts, :labels, :contact_infos)
-        .where(state: 'pending',
-               community_id: context[:current_user].community_id).with_attached_avatar
+    Users::User.allowed_users(context[:current_user]).includes(accounts: [:land_parcels])
+               .eager_load(:notes, :accounts, :labels, :contact_infos)
+               .where(state: 'pending',
+                      community_id: context[:current_user].community_id).with_attached_avatar
   end
 
   def security_guards

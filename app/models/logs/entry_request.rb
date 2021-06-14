@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'host_env'
 
 module Logs
@@ -89,7 +90,7 @@ module Logs
       Rails.logger.info "Sending entry request approval notification for #{link}"
 
       Sms.send(ENV['REQUEST_NOTIFICATION_NUMBER'],
-              "FYI #{name} -
+               "FYI #{name} -
         has been #{granted ? 'granted' : 'denied'} entry by #{user.name},
         for details click #{link}")
     end
@@ -134,7 +135,7 @@ module Logs
       Logs::EventLog.create(
         acting_user: user, community: user.community,
         subject: self[:visitation_date].nil? ? 'visitor_entry' : 'visit_request',
-        ref_id: self[:id], ref_type: 'EntryRequest',
+        ref_id: self[:id], ref_type: 'Logs::EntryRequest',
         data: {
           action: self[:visitation_date].nil? ? 'started' : 'requested',
           ref_name: self[:name],
@@ -147,7 +148,7 @@ module Logs
       Logs::EventLog.create(
         acting_user: user, community: user.community,
         subject: 'showroom_entry',
-        ref_id: self[:id], ref_type: 'EntryRequest',
+        ref_id: self[:id], ref_type: 'Logs::EntryRequest',
         data: {
           action: 'created',
           ref_name: self[:name],

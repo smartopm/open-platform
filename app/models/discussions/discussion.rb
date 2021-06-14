@@ -7,11 +7,12 @@ module Discussions
     belongs_to :community
     has_many :comments, class_name: 'Comments::Comment', dependent: :destroy
     has_many :discussion_users, dependent: :destroy
-    has_many :users, through: :discussion_users
+    has_many :users, class_name: 'Users::User', through: :discussion_users
     default_scope { order(created_at: :desc).where.not(status: 'deleted') }
 
     scope :by_subscribers, lambda { |disc_ids|
-      User.joins(:discussion_users).where(discussion_users: { discussion_id: disc_ids }).distinct
+      Users::User.joins(:discussion_users).where(discussion_users: { discussion_id: disc_ids })
+                 .distinct
     }
     scope :by_commented_today, lambda {
       joins(:comments).where(['comments.created_at >= ?', Time.zone.now.beginning_of_day])

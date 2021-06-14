@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe PlanPayment, type: :model do
+RSpec.describe Payments::PlanPayment, type: :model do
   describe 'schema' do
     it { is_expected.to have_db_column(:id).of_type(:uuid) }
     it { is_expected.to have_db_column(:amount).of_type(:decimal) }
@@ -27,8 +27,8 @@ RSpec.describe PlanPayment, type: :model do
 
   describe 'associations' do
     it { is_expected.to belong_to(:user_transaction) }
-    it { is_expected.to belong_to(:user) }
+    it { is_expected.to belong_to(:user).class_name('Users::User') }
     it { is_expected.to belong_to(:community) }
-    it { is_expected.to belong_to(:payment_plan) }
+    it { is_expected.to belong_to(:payment_plan).class_name('Properties::PaymentPlan') }
   end
 end

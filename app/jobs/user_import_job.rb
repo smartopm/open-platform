@@ -33,7 +33,7 @@ class UserImportJob < ApplicationJob
             new_or_existing_label = dup_user.community.labels.find_or_create_by(short_desc: lab)
             next if dup_user.labels.find_by(id: new_or_existing_label.id)
 
-            UserLabel.create(user: dup_user, label: new_or_existing_label)
+            Labels::UserLabel.create(user: dup_user, label: new_or_existing_label)
           end
 
           next

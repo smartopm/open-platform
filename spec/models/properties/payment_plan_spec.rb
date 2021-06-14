@@ -25,12 +25,19 @@ RSpec.describe Properties::PaymentPlan, type: :model do
   end
 
   describe 'associations' do
-    it { is_expected.to have_many(:invoices) }
     it { is_expected.to have_many(:plan_payments) }
     it { is_expected.to belong_to(:user).class_name('Users::User') }
     it { is_expected.to belong_to(:land_parcel) }
     it { is_expected.to have_many(:invoices).class_name('Payments::Invoice').dependent(:nullify) }
-    it { is_expected.to have_many(:wallet_transactions).dependent(:nullify) }
+    it do
+      is_expected.to have_many(:wallet_transactions)
+        .class_name('Payments::WalletTransaction')
+        .dependent(:nullify)
+    end
+    it do
+      is_expected.to have_many(:plan_payments)
+        .class_name('Payments::PlanPayment')
+    end
   end
 
   describe 'validations' do
@@ -76,7 +83,7 @@ RSpec.describe Properties::PaymentPlan, type: :model do
     let!(:valuation) { create(:valuation, land_parcel_id: land_parcel.id) }
 
     it 'creates pending-balance on create' do
-      plan = PaymentPlan.create(
+      plan = Properties::PaymentPlan.create(
         percentage: 50,
         status: 'active',
         plan_type: 'lease',

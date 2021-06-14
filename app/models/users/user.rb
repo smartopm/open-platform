@@ -61,8 +61,8 @@ module Users
                       }
 
     belongs_to :community, dependent: :destroy
-    has_many :entry_requests, dependent: :destroy
-    has_many :granted_entry_requests, class_name: 'EntryRequest', foreign_key: :grantor_id,
+    has_many :entry_requests, class_name: 'Logs::EntryRequest', dependent: :destroy
+    has_many :granted_entry_requests, class_name: 'Logs::EntryRequest', foreign_key: :grantor_id,
                                       dependent: :destroy, inverse_of: :user
 
     has_many :payments, class_name: 'Payments::Payment', dependent: :destroy
@@ -95,8 +95,8 @@ module Users
     has_many :payment_plans, class_name: 'Properties::PaymentPlan', dependent: :destroy
     has_many :substatus_logs, class_name: 'Logs::SubstatusLog', dependent: :destroy
     has_many :import_logs, class_name: 'Logs::ImportLog', dependent: :destroy
-    has_many :transactions, dependent: :destroy
-    has_many :plan_payments, dependent: :destroy
+    has_many :transactions, class_name: 'Payments::Transaction', dependent: :destroy
+    has_many :plan_payments, class_name: 'Payments::PlanPayment', dependent: :destroy
     has_one_attached :avatar
     has_one_attached :document
 
@@ -200,7 +200,7 @@ module Users
     # rubocop:disable Metrics/AbcSize
     # rubocop:disable Metrics/MethodLength
     def enroll_user(vals)
-      enrolled_user = Users::User.new(vals.except(*ATTACHMENTS.keys).except(:secondary_info))
+      enrolled_user = User.new(vals.except(*ATTACHMENTS.keys).except(:secondary_info))
       enrolled_user.community_id = community_id
       enrolled_user.expires_at = Time.zone.now + 1.day if vals[:user_type] == 'prospective_client'
       ATTACHMENTS.each_pair do |key, attr|
@@ -262,10 +262,10 @@ module Users
 
     def generate_events(event_tag, target_obj, data = {})
       Logs::EventLog.create(acting_user_id: id,
-                        community_id: community_id, subject: event_tag,
-                        ref_id: target_obj.id,
-                        ref_type: target_obj.class.to_s,
-                        data: data)
+                            community_id: community_id, subject: event_tag,
+                            ref_id: target_obj.id,
+                            ref_type: target_obj.class.to_s,
+                            data: data)
     end
 
     # rubocop:disable Metrics/MethodLength
@@ -335,7 +335,7 @@ module Users
 
     def find_label_users(ids)
       query = ids.split(',')
-      Users::User.allowed_users(self)
+      User.allowed_users(self)
           .includes(:user_labels)
           .where(user_labels: { label_id: query }, community_id: community_id)
     end
@@ -382,7 +382,7 @@ module Users
     def create_new_phone_token
       token = (Array.new(PHONE_TOKEN_LEN) { SecureRandom.random_number(10) }).join('')
       update(phone_token: token,
-            phone_token_expires_at: PHONE_TOKEN_EXPIRATION_MINUTES.minutes.from_now)
+             phone_token_expires_at: PHONE_TOKEN_EXPIRATION_MINUTES.minutes.from_now)
       token
     end
 
@@ -400,8 +400,8 @@ module Users
         update(community_id: site_community.id, user_type: 'admin')
       else
         update(community_id: site_community.id,
-              user_type: 'visitor',
-              expires_at: Time.current)
+               user_type: 'visitor',
+               expires_at: Time.current)
       end
     end
 
@@ -455,9 +455,9 @@ module Users
 
     def self.find_via_auth_token(auth_token, community)
       decoded_token = JWT.decode auth_token,
-                                Rails.application.credentials.secret_key_base,
-                                true,
-                                algorithm: 'HS256'
+                                 Rails.application.credentials.secret_key_base,
+                                 true,
+                                 algorithm: 'HS256'
       payload = decoded_token[0]
       community.users.find(payload['user_id'])
     end

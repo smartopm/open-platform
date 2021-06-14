@@ -14,10 +14,10 @@ export default function UserLog({
     limit
   }) {
     function routeToAction(eventLog) {
-      if (eventLog.refType === "EntryRequest") {
+      if (eventLog.refType === "Logs::EntryRequest") {
         return router.push(`/request/${eventLog.refId}`);
       // eslint-disable-next-line no-else-return
-      } else if (eventLog.refType === "User") {
+      } else if (eventLog.refType === "Users::User") {
         return router.push(`/user/${eventLog.refId}`);
       }
     }

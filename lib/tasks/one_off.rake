@@ -229,7 +229,7 @@ namespace :import do
       </html>
     }
 
-    EmailTemplate.create!(
+    Notifications::EmailTemplate.create!(
       name: 'user_import',
       subject: 'Your Import Status',
       body: user_import_template,
@@ -244,7 +244,7 @@ namespace :backfill do
   desc 'Move valuation amount to payment plan'
   task total_amount_on_payment_plan: :environment do
     puts 'Starting...'
-    LandParcel.find_each do |lp|
+    Properties::LandParcel.find_each do |lp|
       latest_valuation = lp.valuations.latest
       plan = lp.payment_plan
 

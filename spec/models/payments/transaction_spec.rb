@@ -2,11 +2,7 @@
 
 require 'rails_helper'
 
-<<<<<<< HEAD:spec/models/transaction_spec.rb
-RSpec.describe Transaction, type: :model do
-=======
-RSpec.describe Payments::WalletTransaction, type: :model do
->>>>>>> Modularization of rails models:spec/models/payments/wallet_transaction_spec.rb
+RSpec.describe Payments::Transaction, type: :model do
   describe 'schema' do
     it { is_expected.to have_db_column(:id).of_type(:uuid) }
     it { is_expected.to have_db_column(:user_id).of_type(:uuid) }
@@ -29,33 +25,16 @@ RSpec.describe Payments::WalletTransaction, type: :model do
   end
 
   describe 'validations' do
-<<<<<<< HEAD:spec/models/transaction_spec.rb
-    it { is_expected.to validate_inclusion_of(:source).in_array(Transaction::VALID_SOURCES) }
-=======
     it do
-      is_expected
-        .to validate_inclusion_of(:source)
-        .in_array(Payments::WalletTransaction::VALID_SOURCES)
+      is_expected.to validate_inclusion_of(:source)
+        .in_array(Payments::Transaction::VALID_SOURCES)
     end
->>>>>>> Modularization of rails models:spec/models/payments/wallet_transaction_spec.rb
   end
 
   describe 'associations' do
     it { is_expected.to belong_to(:user).class_name('Users::User') }
     it { is_expected.to belong_to(:community) }
-<<<<<<< HEAD:spec/models/transaction_spec.rb
-    it { is_expected.to belong_to(:user) }
-    it { is_expected.to belong_to(:depositor).optional }
-    it { is_expected.to have_many(:plan_payments) }
-=======
     it { is_expected.to belong_to(:depositor).class_name('Users::User').optional }
-    it { is_expected.to belong_to(:payment_plan).class_name('Properties::PaymentPlan').optional }
-    it { is_expected.to have_one(:payment_invoice).dependent(:destroy) }
-  end
-
-  describe 'callbacks' do
-    it { is_expected.to callback(:revert_payments).after(:update) }
-    it { is_expected.to callback(:update_wallet_balance).before(:update) }
->>>>>>> Modularization of rails models:spec/models/payments/wallet_transaction_spec.rb
+    it { is_expected.to have_many(:plan_payments) }
   end
 end

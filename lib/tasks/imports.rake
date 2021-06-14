@@ -29,7 +29,7 @@ namespace :imports do
 
         clients = []
         others = []
-        User.already_existing(email, [phone_number], community).each do |u|
+        Users::User.already_existing(email, [phone_number], community).each do |u|
           if u.user_type == 'client'
             clients << u
           else
@@ -108,7 +108,7 @@ namespace :imports do
 
             plan = user.payment_plans.create(
               land_parcel: existing_parcel,
-              status: PaymentPlan.statuses[:active],
+              status: Properties::PaymentPlan.statuses[:active],
               start_date: start_date,
               plan_type: 'lease',
               percentage: 2.75,
@@ -174,7 +174,7 @@ namespace :imports do
 
         clients = []
         others = []
-        User.already_existing(email, [phone_number], community).each do |u|
+        Users::User.already_existing(email, [phone_number], community).each do |u|
           if u.user_type == 'client'
             clients << u
           else
