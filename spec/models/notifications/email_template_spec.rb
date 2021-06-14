@@ -4,6 +4,7 @@ require 'rails_helper'
 
 RSpec.describe Notifications::EmailTemplate, type: :model do
   let!(:community) { create(:community) }
+  let!(:another_community) { create(:community, name: 'CM') }
 
   describe 'create email templates' do
     it 'should extract and store template variables' do
@@ -36,8 +37,8 @@ RSpec.describe Notifications::EmailTemplate, type: :model do
   end
 
   describe 'validations' do
-    let!(:template) { create(:email_template, community: community) }
-    it { is_expected.to validate_uniqueness_of(:name) }
+    let!(:template) { create(:email_template, name: 'Template 1', community_id: community.id) }
+
     it { is_expected.to validate_presence_of(:name) }
     it {
       is_expected.to validate_uniqueness_of(:name)
@@ -52,7 +53,7 @@ RSpec.describe Notifications::EmailTemplate, type: :model do
       community.email_templates.create!(name: 'Template 2', subject: '', body: '')
       another_community.email_templates.create!(name: 'Template 1', subject: '', body: '')
 
-      expect(NotificationsEmailTemplate.count).to eq(3)
+      expect(Notifications::EmailTemplate.count).to eq(3)
 
       expect(community.email_templates.count).to eq(2)
       expect(another_community.email_templates.count).to eq(1)
