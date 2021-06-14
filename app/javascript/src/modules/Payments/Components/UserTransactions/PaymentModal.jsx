@@ -2,7 +2,6 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useLazyQuery, useMutation } from 'react-apollo';
-// import { useHistory } from 'react-router-dom';
 import subDays from 'date-fns/subDays';
 import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -50,7 +49,6 @@ export default function PaymentModal({
   csvRefetch
 }) {
   const classes = useStyles();
-  // const history = useHistory();
   const [inputValue, setInputValue] = useState(initialValues);
   const [createPayment] = useMutation(PaymentCreate);
   const [isSuccessAlert, setIsSuccessAlert] = useState(false);
@@ -150,7 +148,7 @@ export default function PaymentModal({
         csvRefetch();
         setPaymentData(res.data.transactionCreate.transaction);
         setInputValue(initialValues);
-        setPromptOpen(true);
+        setPromptOpen(!!userId);
         setIsConfirm(false);
         setMutationStatus(false);
       })
@@ -231,7 +229,6 @@ export default function PaymentModal({
                   <Autocomplete
                     style={{ width: '100%' }}
                     id="payment-user-input"
-                    inputProps={{ 'data-testid': 'payment_user'}}
                     options={data?.usersLite || []}
                     getOptionLabel={option => option?.name}
                     getOptionSelected={(option, value) => option.name === value.name}
@@ -270,7 +267,8 @@ export default function PaymentModal({
                 error={isError && submitting && !inputValue.landParcelId}
                 helperText={isError && !inputValue.landParcelId && 'Land Parcel is required'}
                 required
-                select
+                // disable the MUI errors in the console and test environment when landParcels are empty
+                select={Boolean(landParcels?.userLandParcelWithPlan.length)}
               >
                 {landParcels?.userLandParcelWithPlan?.map(land => (
                   <MenuItem value={land.id} key={land.id}>
@@ -285,8 +283,7 @@ export default function PaymentModal({
                 inputProps={{ 'data-testid': 'transaction-type' }}
                 label="Transaction Type"
                 value={inputValue.transactionType}
-                onChange={event =>
-                  setInputValue({ ...inputValue, transactionType: event.target.value })}
+                onChange={event => setInputValue({ ...inputValue, transactionType: event.target.value })}
                 required
                 select
                 error={isError && submitting && !inputValue.transactionType}
@@ -305,8 +302,7 @@ export default function PaymentModal({
                 name="pastPayment"
                 label="Is this a past payment?"
                 value={inputValue.pastPayment}
-                handleChange={event =>
-                  setInputValue({ ...inputValue, pastPayment: event.target.checked })}
+                handleChange={event => setInputValue({ ...inputValue, pastPayment: event.target.checked })}
                 labelPlacement="end"
               />
               {inputValue.pastPayment && (
@@ -317,8 +313,7 @@ export default function PaymentModal({
                     label="Receipt Number"
                     type="string"
                     value={inputValue.receiptNumber}
-                    onChange={event =>
-                      setInputValue({ ...inputValue, receiptNumber: event.target.value })}
+                    onChange={event => setInputValue({ ...inputValue, receiptNumber: event.target.value })}
                     required={inputValue.pastPayment}
                     error={isError && submitting && !inputValue.receiptNumber}
                     helperText={
@@ -341,8 +336,7 @@ export default function PaymentModal({
                 label="Transaction Number"
                 type="string"
                 value={inputValue.transactionNumber}
-                onChange={event =>
-                  setInputValue({ ...inputValue, transactionNumber: event.target.value })}
+                onChange={event => setInputValue({ ...inputValue, transactionNumber: event.target.value })}
               />
               {inputValue.transactionType === 'cheque/cashier_cheque' && (
                 <>
@@ -353,8 +347,7 @@ export default function PaymentModal({
                     label="Bank Name"
                     type="string"
                     value={inputValue.bankName}
-                    onChange={event =>
-                      setInputValue({ ...inputValue, bankName: event.target.value })}
+                    onChange={event => setInputValue({ ...inputValue, bankName: event.target.value })}
                   />
                   <TextField
                     autoFocus
@@ -363,8 +356,7 @@ export default function PaymentModal({
                     label="Cheque Number"
                     type="string"
                     value={inputValue.chequeNumber}
-                    onChange={event =>
-                      setInputValue({ ...inputValue, chequeNumber: event.target.value })}
+                    onChange={event => setInputValue({ ...inputValue, chequeNumber: event.target.value })}
                   />
                 </>
               )}
