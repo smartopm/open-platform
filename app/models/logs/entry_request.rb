@@ -114,8 +114,11 @@ module Logs
 
     private
 
+    # Assigns community id of user.
+    #
+    # @return [String]
     def attach_community
-      self[:community_id] = user.community_id
+      self[:community_id] = user&.community_id
     end
 
     def check_reason?
