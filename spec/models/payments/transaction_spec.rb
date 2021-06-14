@@ -25,7 +25,6 @@ RSpec.describe Payments::Transaction, type: :model do
   end
 
   describe 'validations' do
-
     it do
       is_expected.to validate_inclusion_of(:source)
         .in_array(Payments::Transaction::VALID_SOURCES)
@@ -35,8 +34,7 @@ RSpec.describe Payments::Transaction, type: :model do
   describe 'associations' do
     it { is_expected.to belong_to(:user).class_name('Users::User') }
     it { is_expected.to belong_to(:community) }
-    it { is_expected.to belong_to(:user) }
-    it { is_expected.to belong_to(:depositor).optional }
+    it { is_expected.to belong_to(:depositor).class_name('Users::User').optional }
     it { is_expected.to have_many(:plan_payments) }
   end
 end

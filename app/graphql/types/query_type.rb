@@ -96,7 +96,7 @@ module Types
     end
 
     # Verifies user
-    
+
     #
     # @param user_id [String]
     #
