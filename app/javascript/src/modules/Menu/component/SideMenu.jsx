@@ -13,7 +13,7 @@ import ExpandMore from '@material-ui/icons/ExpandMore';
 import { useTranslation } from 'react-i18next';
 import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider';
 
-const SideMenu = ({ toggleDrawer, menuItems, userType, mobileOpen, direction, communityFeatures }) => {
+const SideMenu = ({ toggleDrawer, menuItems, userType, direction, communityFeatures }) => {
   const authState = useContext(AuthStateContext);
   const history = useHistory();
   const { pathname } = useLocation();
@@ -35,7 +35,7 @@ const SideMenu = ({ toggleDrawer, menuItems, userType, mobileOpen, direction, co
       return;
     }
     // close the menu and route  only when it is open and it is on small screens
-    if (mobileOpen) {
+    if (direction === 'right' || window.screen.width <= 768) {
       toggleDrawer(event);
     }
     // check the direct and route differently
@@ -166,7 +166,6 @@ SideMenu.propTypes = {
   toggleDrawer: PropTypes.func.isRequired,
   menuItems: PropTypes.arrayOf(menuItemProps).isRequired,
   userType: PropTypes.string.isRequired,
-  mobileOpen: PropTypes.bool.isRequired,
   direction: PropTypes.oneOf(['left', 'right']).isRequired,
   communityFeatures: PropTypes.arrayOf(PropTypes.string).isRequired
 

@@ -184,7 +184,7 @@ const App = () => {
                       {({ user }) => (
                         <MuiThemeProvider theme={theme(user.community.themeColors)}>
                           <MainMenu />
-                          <div className={classes.appContainer}>
+                          <div className={classes.appContainer} id="app-container">
                             <Switch>
                               {/* these are redirects for pages we don't have yet, they can only be placed here */}
                               {/* build individual modules for these once we have pages that directly route there */}
@@ -334,12 +334,6 @@ const App = () => {
 };
 
 const useStyles = makeStyles(() => ({
-  '@media (min-width: 768px)': {
-    appContainer: {
-      marginLeft: '260px',
-
-    }
-  },
     appContainer: {
     '@supports ( -moz-appearance:none )': {
       paddingTop: '75px'
