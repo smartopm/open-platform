@@ -132,7 +132,7 @@ export const PlanStatement = gql`
         planType
         planValue
         statementPaidAmount
-        statementPendingBalance
+        # statementPendingBalance
         pendingBalance
         unallocatedAmount
         durationInMonth
