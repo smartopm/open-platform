@@ -14,7 +14,7 @@ module ActionFlows
       def self.execute_action(data, field_config)
         emails = ActionFieldsFetchable.process_vars('email', data, field_config) || ''
         template = ActionFieldsFetchable.process_vars('template', data, field_config)
-        template_obj = EmailTemplate.find(template)
+        template_obj = Notifications::EmailTemplate.find(template)
         emails.split(',').each do |user_email|
           vars = template_data(data, field_config, template_obj)
           EmailMsg.send_mail_from_db(user_email, template_obj, vars)

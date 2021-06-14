@@ -11,7 +11,7 @@ RSpec.describe Types::QueryType do
         Logs::EventLog.create(
           community: @current_user.community,
           ref_id: @user.id,
-          ref_type: 'User',
+          ref_type: 'Users::User',
           subject: 'user_entry',
           acting_user: @current_user,
         )
@@ -73,7 +73,7 @@ RSpec.describe Types::QueryType do
           site_community: @current_user.community,
         },
         variables: {
-          subject: nil, refId: nil, refType: 'User'
+          subject: nil, refId: nil, refType: 'Users::User'
         },
       ).as_json
       expect(result.dig('data', 'result').length).to eql 3
@@ -111,7 +111,7 @@ RSpec.describe Types::QueryType do
         Logs::EventLog.create(
           community: @user.community,
           ref_id: @user.id,
-          ref_type: 'User',
+          ref_type: 'Users::User',
           subject: 'user_login',
           acting_user: @user,
         )

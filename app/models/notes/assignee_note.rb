@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'email_msg'
 require 'host_env'
 
@@ -21,7 +22,7 @@ module Notes
     # rubocop:disable Metrics/MethodLength
     def send_email_from_db
       template = user.community
-                    .email_templates
+                     .email_templates
                     &.system_emails
                     &.find_by(name: 'notification_template')
 

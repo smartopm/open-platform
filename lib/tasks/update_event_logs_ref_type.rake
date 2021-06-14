@@ -10,7 +10,8 @@ task update_event_logs_ref_type: :environment do
   log_models = %w[ActivityLog EntryRequest ImportLog SubstatusLog]
   note_models = %w[AssigneeNote Note NoteHistory]
   notification_models = %w[EmailTemplate Message Notification]
-  payment_models = %w[Invoice Payment PaymentInvoice Wallet WalletTransaction]
+  payment_models = %w[Invoice Payment PaymentInvoice Wallet WalletTransaction
+                      Transaction PlanPayment]
   post_tag_models = %w[PostTag PostTagUser]
   property_models = %w[Account LandParcel LandParcelAccount PaymentPlan Valuation]
   user_models = %w[ActivityPoint ContactInfo Feedback TimeSheet User]

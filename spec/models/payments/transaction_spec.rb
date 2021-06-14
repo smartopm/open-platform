@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe Transaction, type: :model do
+RSpec.describe Payments::Transaction, type: :model do
   describe 'schema' do
     it { is_expected.to have_db_column(:id).of_type(:uuid) }
     it { is_expected.to have_db_column(:user_id).of_type(:uuid) }
@@ -25,7 +25,10 @@ RSpec.describe Transaction, type: :model do
   end
 
   describe 'validations' do
-    it { is_expected.to validate_inclusion_of(:source).in_array(Transaction::VALID_SOURCES) }
+    it do
+      is_expected.to validate_inclusion_of(:source)
+        .in_array(Payments::Transaction::VALID_SOURCES)
+    end
   end
 
   describe 'associations' do

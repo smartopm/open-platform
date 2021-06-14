@@ -62,6 +62,17 @@ RSpec.describe Community, type: :model do
     end
     it { is_expected.to have_many(:payments).class_name('Payments::Payment').dependent(:destroy) }
     it { is_expected.to have_many(:import_logs).class_name('Logs::ImportLog').dependent(:destroy) }
+    it do
+      is_expected.to have_many(:transactions)
+        .class_name('Payments::Transaction')
+        .dependent(:destroy)
+    end
+    it do
+      is_expected.to have_many(:plan_payments)
+        .class_name('Payments::PlanPayment')
+        .dependent(:destroy)
+    end
+    it { is_expected.to have_many(:feedbacks).class_name('Users::Feedback').dependent(:destroy) }
   end
 
   it 'should be associated with users' do

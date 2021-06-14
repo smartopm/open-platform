@@ -6,7 +6,7 @@ RSpec.describe ActionFlows::Actions::Task do
   let!(:user) { create(:user_with_community) }
   let!(:acting_user) { create(:user_with_community, community: user.community) }
   let!(:event_log) do
-    create(:event_log, subject: 'user_login', ref_type: 'User', ref_id: user.id,
+    create(:event_log, subject: 'user_login', ref_type: 'Users::User', ref_id: user.id,
                        acting_user: acting_user, community: user.community)
   end
   let!(:template) { create(:email_template, community: user.community) }
@@ -23,8 +23,8 @@ RSpec.describe ActionFlows::Actions::Task do
   end
 
   it 'executes action' do
-    flow = ActionFlows::ActionFlow.new(action_flow.description, action_flow.event_type,
-                                       action_flow.event_condition, action_flow.event_action)
+    flow = ActionFlows::WebFlow.new(action_flow.description, action_flow.event_type,
+                                    action_flow.event_condition, action_flow.event_action)
 
     event = flow.event_object.new
     event.preload_data(event_log)

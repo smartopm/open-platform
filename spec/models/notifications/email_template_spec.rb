@@ -53,7 +53,7 @@ RSpec.describe Notifications::EmailTemplate, type: :model do
       community.email_templates.create!(name: 'Template 2', subject: '', body: '')
       another_community.email_templates.create!(name: 'Template 1', subject: '', body: '')
 
-      expect(EmailTemplate.count).to eq(3)
+      expect(Notifications::EmailTemplate.count).to eq(3)
 
       expect(community.email_templates.count).to eq(2)
       expect(another_community.email_templates.count).to eq(1)

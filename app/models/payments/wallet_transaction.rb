@@ -7,8 +7,8 @@ module Payments
     include SearchCop
 
     VALID_SOURCES = %w[cash cheque/cashier_cheque wallet mobile_money invoice
-                      bank_transfer/eft bank_transfer/cash_deposit pos
-                      unallocated_funds].freeze
+                       bank_transfer/eft bank_transfer/cash_deposit pos
+                       unallocated_funds].freeze
 
     enum status: { settled: 0, pending: 1, denied: 2, cancelled: 3 }
 
@@ -23,7 +23,7 @@ module Payments
     validates :bank_name, :cheque_number, presence: true,
                                           if: -> { source.eql?('cheque/cashier_cheque') }
     validates :transaction_number, uniqueness: true, length: { maximum: 35, allow_blank: true },
-                                  if: -> { transaction_number.present? }
+                                   if: -> { transaction_number.present? }
 
     validates :amount, numericality: { greater_than: 0 }
 
@@ -142,8 +142,8 @@ module Payments
       inv = payment.invoices.first
       transaction = user.wallet.create_transaction(payment_amount, inv)
       payment = Payment.create(amount: payment_amount, payment_type: 'wallet',
-                              payment_status: 'settled', user_id: user.id,
-                              community_id: user.community_id)
+                               payment_status: 'settled', user_id: user.id,
+                               community_id: user.community_id)
       payment.payment_invoices.create(invoice_id: inv.id, wallet_transaction_id: transaction.id)
     end
 
@@ -187,7 +187,7 @@ module Payments
     # @return [void]
     def cancel_transaction(payment_plan_id, payment_amount)
       transaction = community.wallet_transactions.not_cancelled
-                            .find_by(source: 'wallet', destination: 'invoice',
+                             .find_by(source: 'wallet', destination: 'invoice',
                                       payment_plan_id: payment_plan_id, amount: payment_amount)
       transaction&.update_columns(status: 'cancelled')
     end

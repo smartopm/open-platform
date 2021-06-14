@@ -80,11 +80,13 @@ module Logs
       "User #{acting_user_name} was active"
     end
 
+    # rubocop:disable Layout/LineLength
     def user_feedback_to_sentence
       # send a message of the newest feedback
       feedback = Users::Feedback.last
       "User #{acting_user_name} gave thumbs #{feedback.is_thumbs_up == true ? 'up' : 'down'} feedback"
     end
+    # rubocop:enable Layout/LineLength
 
     def showroom_entry_to_sentence
       user = EntryRequest.last

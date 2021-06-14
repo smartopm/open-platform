@@ -2,6 +2,7 @@
 
 require 'roo'
 
+# rubocop:disable Metrics/ClassLength
 # Script to read from spreadsheet and merge duplicate users
 class MergeUsers
   def self.batch_merge_from_file(path)
@@ -103,7 +104,8 @@ class MergeUsers
   # @return [Array] Model name (with/without namespace).
   def self.models_with_user_id
     model_names = []
-    payment_models = %w[Invoice PaymentInvoice Payment Wallet WalletTransaction]
+    payment_models = %w[Invoice PaymentInvoice Payment Wallet WalletTransaction
+                        Transaction PlanPayment]
     property_models = %w[Account LandParcel LandParcelAccount PaymentPlan Valuation]
     note_models = %w[Note NoteHistory AssigneeNote]
     form_models = %w[Form FormUser]
@@ -140,8 +142,8 @@ class MergeUsers
   #
   # @return [void]
   def self.merge_user_wallets(user_id, duplicate_user_id)
-    wallet = User.find_by(id: user_id)&.wallet
-    duplicate_wallet = User.find_by(id: duplicate_user_id)&.wallet
+    wallet = Users::User.find_by(id: user_id)&.wallet
+    duplicate_wallet = Users::User.find_by(id: duplicate_user_id)&.wallet
 
     duplicate_wallet.balance += wallet.balance
     duplicate_wallet.pending_balance += wallet.pending_balance
@@ -154,3 +156,4 @@ class MergeUsers
   # rubocop:enable Metrics/MethodLength
   # rubocop:enable Metrics/PerceivedComplexity
 end
+# rubocop:enable Metrics/ClassLength
