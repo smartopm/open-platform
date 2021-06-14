@@ -1,8 +1,8 @@
 /* eslint-disable no-nested-ternary */
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { useLazyQuery, useMutation, useQuery } from 'react-apollo';
-import { useHistory } from 'react-router-dom';
+import { useLazyQuery, useMutation } from 'react-apollo';
+// import { useHistory } from 'react-router-dom';
 import subDays from 'date-fns/subDays';
 import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -50,7 +50,7 @@ export default function PaymentModal({
   csvRefetch
 }) {
   const classes = useStyles();
-  const history = useHistory();
+  // const history = useHistory();
   const [inputValue, setInputValue] = useState(initialValues);
   const [createPayment] = useMutation(PaymentCreate);
   const [isSuccessAlert, setIsSuccessAlert] = useState(false);
@@ -78,10 +78,8 @@ export default function PaymentModal({
     setIsConfirm(true);
   }
 
-  // make this a lazy query to only load when the userId is available
-  const { loading, data: landParcels } = useQuery(UserLandParcelWithPlan, {
-    variables: { paymentUserId },
-    fetchPolicy: 'cache-and-network',
+  const [loadLandParcel, { loading, data: landParcels }] = useLazyQuery(UserLandParcelWithPlan, {
+    variables: { userId: paymentUserId },
     errorPolicy: 'all'
   });
 
@@ -103,6 +101,20 @@ export default function PaymentModal({
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [inputValue.transactionType, inputValue.pastPayment]);
+
+
+  useEffect(() => {
+    if (userId){
+      loadLandParcel()
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userId])
+
+
+  function handleSearchPlot(user) {
+    setPaymentUserId(user.id)
+    loadLandParcel()
+  }
 
   function cancelPayment() {
     if (isConfirm) {
@@ -147,7 +159,6 @@ export default function PaymentModal({
         setMessageAlert(formatError(err.message));
         setIsSuccessAlert(false);
         setMutationStatus(false);
-        history.push(`/user/${userId}?tab=Payments`);
       });
   }
 
@@ -161,9 +172,6 @@ export default function PaymentModal({
   function handlePromptClose() {
     setPromptOpen(false);
   }
-
-  if (loading) return <Spinner />;
-
   return (
     <>
       <MessageAlert
@@ -199,7 +207,7 @@ export default function PaymentModal({
             <div className={classes.invoiceForm}>
               <TextField
                 autoFocus
-                margin="dense"
+                margin="normal"
                 id="amount"
                 label="Amount"
                 type="number"
@@ -218,40 +226,51 @@ export default function PaymentModal({
                 error={isError && submitting && !inputValue.amount}
                 helperText={isError && !inputValue.amount && 'amount is required'}
               />
-
-              <Autocomplete
-                style={{ width: '100%' }}
-                id="payment-user-input"
-                inputProps={{ 'data-testid': 'payment_user'}}
-                options={data?.usersLite || []}
-                getOptionLabel={option => option?.name}
-                getOptionSelected={(option, value) => option.name === value.name}
-                // value={ownershipFields[Number(index)]}
-                onChange={(_event, user) => setPaymentUserId(user.id)}
-                renderInput={params => (
-                  <TextField
-                    {...params}
-                    label="Input User Name"
+              {
+                !userId && (
+                  <Autocomplete
                     style={{ width: '100%' }}
-                    name="name"
-                    onChange={event => setSearchUser(event.target.value)}
-                    onKeyDown={() => searchUser()}
+                    id="payment-user-input"
+                    inputProps={{ 'data-testid': 'payment_user'}}
+                    options={data?.usersLite || []}
+                    getOptionLabel={option => option?.name}
+                    getOptionSelected={(option, value) => option.name === value.name}
+                    onChange={(_event, user) => handleSearchPlot(user)}
+                    renderInput={params => (
+                      <TextField
+                        {...params}
+                        label="Input User Name"
+                        style={{ width: '100%' }}
+                        name="name"
+                        onChange={event => setSearchUser(event.target.value)}
+                        onKeyDown={() => searchUser()}
+                      />
+                    )}
                   />
-                )}
-              />
+                )
+              }
+              {
+                 searchedUser && !landParcels?.userLandParcelWithPlan.length && (
+                 <Typography color="secondary">
+                   Selected user has no plots
+                 </Typography>
+                  )
+              }
+
+              {loading && <Spinner />}
+
               <TextField
                 autoFocus
-                margin="dense"
+                margin="normal"
                 id="parcel-number"
                 inputProps={{ 'data-testid': 'parcel-number' }}
                 label="Plot No"
                 value={inputValue.landParcelId}
-                onChange={event =>
-                  setInputValue({ ...inputValue, landParcelId: event.target.value })}
-                required
-                select
+                onChange={event => setInputValue({ ...inputValue, landParcelId: event.target.value })}
                 error={isError && submitting && !inputValue.landParcelId}
                 helperText={isError && !inputValue.landParcelId && 'Land Parcel is required'}
+                required
+                select
               >
                 {landParcels?.userLandParcelWithPlan?.map(land => (
                   <MenuItem value={land.id} key={land.id}>
@@ -259,8 +278,9 @@ export default function PaymentModal({
                   </MenuItem>
                 ))}
               </TextField>
+
               <TextField
-                margin="dense"
+                margin="normal"
                 id="transaction-type"
                 inputProps={{ 'data-testid': 'transaction-type' }}
                 label="Transaction Type"
@@ -292,7 +312,7 @@ export default function PaymentModal({
               {inputValue.pastPayment && (
                 <>
                   <TextField
-                    margin="dense"
+                    margin="normal"
                     id="receipt-number"
                     label="Receipt Number"
                     type="string"
@@ -316,7 +336,7 @@ export default function PaymentModal({
                 </>
               )}
               <TextField
-                margin="dense"
+                margin="normal"
                 id="transaction-number"
                 label="Transaction Number"
                 type="string"
@@ -328,7 +348,7 @@ export default function PaymentModal({
                 <>
                   <TextField
                     autoFocus
-                    margin="dense"
+                    margin="normal"
                     id="bank-name"
                     label="Bank Name"
                     type="string"
@@ -338,7 +358,7 @@ export default function PaymentModal({
                   />
                   <TextField
                     autoFocus
-                    margin="dense"
+                    margin="normal"
                     id="cheque-number"
                     label="Cheque Number"
                     type="string"
@@ -436,7 +456,7 @@ PaymentModal.defaultProps = {
   csvRefetch: () => {},
   walletRefetch: () => {},
   userData: {},
-  userId: ""
+  userId: null
 };
 PaymentModal.propTypes = {
   open: PropTypes.bool.isRequired,
