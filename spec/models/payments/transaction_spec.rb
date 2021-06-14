@@ -2,7 +2,6 @@
 
 require 'rails_helper'
 
-
 RSpec.describe Payments::Transaction, type: :model do
   describe 'schema' do
     it { is_expected.to have_db_column(:id).of_type(:uuid) }
