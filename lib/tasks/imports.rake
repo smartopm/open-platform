@@ -238,13 +238,15 @@ namespace :imports do
               'POS' => 'pos',
               'EFT' => 'bank_transfer/eft',
               'MTN Mobile Money' => 'mobile_money',
+              'Cash Deposit' => 'bank_transfer/cash_deposit',
             }
 
-            transaction = community.transactions.find_by(
+            transaction = community.transactions.joins(:plan_payments).find_by(
               amount: amount,
               created_at: date,
               source: modes[payment_mode],
               user_id: user.id,
+              plan_payments: { manual_receipt_number: receipt_number }
             )
             if transaction.present?
               warnings[row_num + 1] = 'Warning: Transaction already exists.'
