@@ -5,9 +5,10 @@ import useMediaQuery from '@material-ui/core/useMediaQuery';
 import Drawer from '@material-ui/core/Drawer';
 import MenuIcon from '@material-ui/icons/Menu';
 import { StyleSheet, css } from 'aphrodite';
-import { Button, Hidden, IconButton } from '@material-ui/core';
+import { Button, IconButton } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
 import PropTypes from 'prop-types';
+import DoubleArrowOutlinedIcon from '@material-ui/icons/DoubleArrowOutlined';
 import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider';
 import SideMenu from './SideMenu';
 import NotificationBell from '../../../components/NotificationBell';
@@ -15,8 +16,8 @@ import modules from '../..';
 import CommunityName from '../../../shared/CommunityName';
 import CenteredContent from '../../../components/CenteredContent';
 import userProps from '../../../shared/types/user';
-import UserAvatar from '../../Users/Components/UserAvatar'
-import UserActionOptions from '../../Users/Components/UserActionOptions'
+import UserAvatar from '../../Users/Components/UserAvatar';
+import UserActionOptions from '../../Users/Components/UserActionOptions';
 
 const drawerWidth = 260;
 
@@ -31,23 +32,17 @@ const useStyles = makeStyles(theme => ({
     }
   },
   appBar: {
-    [theme.breakpoints.up('sm')]: {
-      width: `calc(100% - ${drawerWidth}px)`,
-      marginLeft: drawerWidth
-    },
     height: 50,
     backgroundColor: '#FFFFFF' // get this color from the theme
   },
   menuButton: {
-    marginRight: theme.spacing(2),
-    [theme.breakpoints.up('sm')]: {
-      display: 'none'
-    }
+    marginRight: theme.spacing(2)
   },
   // necessary for content to be below app bar
   toolbar: theme.mixins.toolbar,
   drawerPaper: {
-    width: drawerWidth
+    width: drawerWidth,
+    marginTop: '51px'
   },
   content: {
     flexGrow: 1,
@@ -57,21 +52,30 @@ const useStyles = makeStyles(theme => ({
 
 export default function Main() {
   const authState = useContext(AuthStateContext);
-  return <MainNav {... { authState }} />;
+  return <MainNav {...{ authState }} />;
 }
 
 export function MainNav({ authState }) {
-  const matches = useMediaQuery('(max-width:600px)')
+  const matches = useMediaQuery('(max-width:600px)');
   const classes = useStyles();
   const [mobileOpen, setMobileOpen] = useState(false);
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
+    // A hack to dynamically change app-container's margin-left
+    // There's a react-way of doing it but it re-renders the whole <App /> component
+    document.getElementById('app-container').style.marginLeft = mobileOpen ? 0 : `${drawerWidth}px`;
   };
 
   return (
     <div className={classes.root}>
-      <AppBar position="fixed" className={classes.appBar}>
+      <AppBar
+        position="fixed"
+        className={classes.appBar}
+        style={
+          mobileOpen ? { marginLeft: drawerWidth, width: `calc(100% - ${drawerWidth}px)` } : {}
+        }
+      >
         <Toolbar>
           <IconButton
             color="primary"
@@ -79,15 +83,22 @@ export function MainNav({ authState }) {
             edge="start"
             onClick={handleDrawerToggle}
             className={classes.menuButton}
+            style={{ paddingTop: mobileOpen ? '20px' : '0px' }}
             data-testid="drawer"
           >
-            <MenuIcon />
+            {mobileOpen ? (
+              <DoubleArrowOutlinedIcon
+                style={{ transform: 'translate(-50%,-50%) rotate(180deg)' }}
+              />
+            ) : (
+              <MenuIcon />
+            )}
           </IconButton>
           <UserAvatar imageUrl={authState?.user?.imageUrl} />
           <UserActionOptions />
           <NotificationBell user={authState.user} />
           {matches ? (
-            <div style={{marginLeft: '100px'}}>
+            <div style={{ marginLeft: '100px' }}>
               <CommunityName authState={authState} />
             </div>
           ) : (
@@ -99,43 +110,25 @@ export function MainNav({ authState }) {
       </AppBar>
       {authState.loggedIn && (
         <nav className={classes.drawer} aria-label="mailbox folders" data-testid="nav-container">
-          <Hidden smUp implementation="css">
-            <Drawer
-              variant="temporary"
-              anchor="left"
-              open={mobileOpen}
-              onClose={handleDrawerToggle}
-              classes={{ paper: classes.drawerPaper }}
-              ModalProps={{
-                keepMounted: true
-              }}
-            >
-              <SideMenu
-                toggleDrawer={handleDrawerToggle}
-                menuItems={modules}
-                userType={authState.user.userType}
-                direction="left"
-                communityFeatures={authState.user?.community.features || []}
-                mobileOpen
-              />
-            </Drawer>
-          </Hidden>
-          <Hidden xsDown implementation="css">
-            <Drawer
-              classes={{ paper: classes.drawerPaper}}
-              variant="permanent"
-              open
-            >
-              <SideMenu
-                toggleDrawer={handleDrawerToggle}
-                menuItems={modules}
-                userType={authState.user.userType}
-                direction="left"
-                communityFeatures={authState.user?.community.features || []}
-                mobileOpen={false}
-              />
-            </Drawer>
-          </Hidden>
+          <Drawer
+            variant="persistent"
+            anchor="left"
+            open={mobileOpen}
+            onClose={handleDrawerToggle}
+            classes={{ paper: classes.drawerPaper }}
+            ModalProps={{
+              keepMounted: true
+            }}
+          >
+            <SideMenu
+              toggleDrawer={handleDrawerToggle}
+              menuItems={modules}
+              userType={authState.user.userType}
+              direction="left"
+              communityFeatures={authState.user?.community.features || []}
+              mobileOpen={mobileOpen}
+            />
+          </Drawer>
         </nav>
       )}
       <br />
@@ -148,10 +141,7 @@ export function MainNav({ authState }) {
 
 export function NewsNav({ children, history }) {
   return (
-    <nav
-      className={css(styles.topNav)}
-      style={{ minHeight: '50px' }}
-    >
+    <nav className={css(styles.topNav)} style={{ minHeight: '50px' }}>
       <div className={css(styles.topNav)}>
         <Button onClick={() => history.push('/')}>
           <i className={`material-icons ${css(styles.icon)}`}>arrow_back</i>
@@ -192,7 +182,7 @@ const styles = StyleSheet.create({
   },
   navTitle: {
     top: '8px',
-    color: '#000000',
+    color: '#000000'
   },
   buttonLeft: {
     cursor: 'pointer'
@@ -201,6 +191,5 @@ const styles = StyleSheet.create({
     lineHeight: '1.7em',
     color: '#000000',
     'font-size': '1.5em'
-  },
+  }
 });
-
