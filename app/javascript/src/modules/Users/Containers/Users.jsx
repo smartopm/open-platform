@@ -3,7 +3,7 @@ import React, { useState, useEffect, useContext } from 'react'
 import { useQuery, useMutation, useLazyQuery } from 'react-apollo'
 import { Redirect, Link , useLocation, useHistory} from 'react-router-dom'
 import { makeStyles } from '@material-ui/core/styles'
-import { Button, Divider, IconButton, InputBase, Grid } from '@material-ui/core'
+import { Button, Divider, IconButton, InputBase, Grid, Typography } from '@material-ui/core'
 import { useTranslation } from 'react-i18next'
 import FilterListIcon from '@material-ui/icons/FilterList'
 import MaterialConfig from 'react-awesome-query-builder/lib/config/material'
@@ -556,6 +556,13 @@ export default function UsersList() {
           <Loading />
         ) : (
           <>
+            {// eslint-disable-next-line no-nested-ternary
+            filterCount ? userList.length
+              ? (<Typography variant="h6">{`Showing ${userList.length} ${pluralizeCount(userList.length, 'Result')}`}</Typography>)
+              : (<Typography variant="h6">No Result</Typography>)
+            : <span />
+}
+            <br />
             <UsersActionMenu
               campaignCreateOption={campaignCreateOption}
               setCampaignCreateOption={setCampaignOption}
