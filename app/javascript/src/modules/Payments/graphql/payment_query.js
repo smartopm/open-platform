@@ -98,6 +98,10 @@ export const ReceiptPayment = gql`
         name
         logoUrl
         currency
+        bankingDetails
+        socialLinks
+        supportNumber
+        supportEmail
       }
       user {
         id
@@ -132,7 +136,6 @@ export const PlanStatement = gql`
         planType
         planValue
         statementPaidAmount
-        # statementPendingBalance
         pendingBalance
         unallocatedAmount
         durationInMonth
@@ -146,6 +149,10 @@ export const PlanStatement = gql`
           community {
             name
             logoUrl
+            bankingDetails
+            socialLinks
+            supportNumber
+            supportEmail
           }
         }
       }

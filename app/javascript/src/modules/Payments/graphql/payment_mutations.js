@@ -56,6 +56,10 @@ mutation PaymentCreate(
         name
         logoUrl
         currency
+        bankingDetails
+        socialLinks
+        supportNumber
+        supportEmail
       }
     }
   }

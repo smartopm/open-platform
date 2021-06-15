@@ -35,7 +35,19 @@ describe('Community settings page ', () => {
       socialLinks: [
         { social_link: 'www.facebook.com', category: 'facebook' },
       ],
-      logoUrl: null
+      logoUrl: null,
+      bankingDetails: {
+        bankName: 'Test bank name',
+        accountName: 'Thebe',
+        accountNo: '1234',
+        branch: 'Test branch',
+        swiftCode: '032',
+        sortCode: '456',
+        address: '11, Nalikwanda Rd,',
+        city: 'Lusaka',
+        country: '',
+        taxIdNo: '',
+      },
     };
 
     const communityMutationMock = {
@@ -63,6 +75,18 @@ describe('Community settings page ', () => {
           wpLink: '',
           securityManager: '',
           themeColors: { primaryColor: '#69ABA4', secondaryColor: '#cf5628' },
+          bankingDetails: {
+            bankName: 'Test bank name',
+            accountName: 'Thebe',
+            accountNo: '1234',
+            branch: 'Test branch',
+            swiftCode: '032',
+            sortCode: '456',
+            address: '11, Nalikwanda Rd,',
+            city: 'Lusaka',
+            country: '',
+            taxIdNo: '',
+          },
         }
       },
       result: {
@@ -107,11 +131,52 @@ describe('Community settings page ', () => {
     expect(container.queryByTestId('locale')).toBeInTheDocument();
     expect(container.queryByTestId('currency')).toBeInTheDocument();
 
+    expect(container.queryByTestId('accountName')).toBeInTheDocument();
+    expect(container.queryByTestId('accountNo')).toBeInTheDocument();
+    expect(container.queryByTestId('bankName')).toBeInTheDocument();
+    expect(container.queryByTestId('branch')).toBeInTheDocument();
+    expect(container.queryByTestId('swiftCode')).toBeInTheDocument();
+    expect(container.queryByTestId('sortCode')).toBeInTheDocument();
+    expect(container.queryByTestId('address')).toBeInTheDocument();
+    expect(container.queryByTestId('city')).toBeInTheDocument();
+    expect(container.queryByTestId('country')).toBeInTheDocument();
+    expect(container.queryByTestId('taxIdNo')).toBeInTheDocument();
+    
     fireEvent.select(container.queryByTestId('locale'), { target: { value: 'en-US' } });
     expect(container.queryByTestId('locale').value).toBe('en-US');
 
     fireEvent.select(container.queryByTestId('currency'), { target: { value: 'ZMW' } });
     expect(container.queryByTestId('currency').value).toBe('ZMW');
+
+    fireEvent.select(container.queryByTestId('accountName'), { target: { value: 'Thebe' } });
+    expect(container.queryByTestId('accountName').value).toBe('Thebe');
+
+    fireEvent.select(container.queryByTestId('accountNo'), { target: { value: '1234' } });
+    expect(container.queryByTestId('accountNo').value).toBe('1234');
+
+    fireEvent.select(container.queryByTestId('bankName'), { target: { value: 'UBA' } });
+    expect(container.queryByTestId('bankName').value).toBe('UBA');
+
+    fireEvent.select(container.queryByTestId('branch'), { target: { value: 'LU' } });
+    expect(container.queryByTestId('branch').value).toBe('LU');
+
+    fireEvent.select(container.queryByTestId('swiftCode'), { target: { value: 'xyz' } });
+    expect(container.queryByTestId('swiftCode').value).toBe('xyz');
+
+    fireEvent.select(container.queryByTestId('sortCode'), { target: { value: '067' } });
+    expect(container.queryByTestId('sortCode').value).toBe('067');
+
+    fireEvent.select(container.queryByTestId('address'), { target: { value: '11 Sub' } });
+    expect(container.queryByTestId('address').value).toBe('11 Sub');
+
+    fireEvent.select(container.queryByTestId('city'), { target: { value: 'woodlands' } });
+    expect(container.queryByTestId('city').value).toBe('woodlands');
+
+    fireEvent.select(container.queryByTestId('country'), { target: { value: 'zambia' } });
+    expect(container.queryByTestId('country').value).toBe('zambia');
+
+    fireEvent.select(container.queryByTestId('taxIdNo'), { target: { value: '432' } });
+    expect(container.queryByTestId('taxIdNo').value).toBe('432');
 
     fireEvent.click(container.queryByTestId('email_click'));
     expect(container.queryAllByLabelText('common:form_fields.email')).toHaveLength(3);

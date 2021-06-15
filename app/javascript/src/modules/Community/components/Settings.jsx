@@ -44,6 +44,19 @@ export default function CommunitySettings({ data, token, refetch }) {
     primaryColor: data.themeColors?.primaryColor || '#69ABA4',
     secondaryColor: data.themeColors?.secondaryColor || '#cf5628'
   }
+
+  const banking = {
+    bankName: data.bankingDetails?.bankName || '',
+    accountName: data.bankingDetails?.accountName || '',
+    accountNo: data.bankingDetails?.accountNo || '',
+    branch: data.bankingDetails?.branch || '',
+    swiftCode: data.bankingDetails?.swiftCode || '',
+    sortCode: data.bankingDetails?.sortCode || '',
+    address: data.bankingDetails?.address || '',
+    city: data.bankingDetails?.city || '',
+    country: data.bankingDetails?.country || '',
+    taxIdNo: data.bankingDetails?.taxIdNo || '',
+  }
  
   const [communityUpdate] = useMutation(CommunityUpdateMutation);
   const [numberOptions, setNumberOptions] = useState([numbers]);
@@ -51,6 +64,7 @@ export default function CommunitySettings({ data, token, refetch }) {
   const [whatsappOptions, setWhatsappOptions] = useState([whatsapps]);
   const [socialLinkOptions, setSocialLinkOptions] = useState([socialLinks]);
   const [themeColors, setThemeColor] = useState(theme);
+  const [bankingDetails, setBankingDetails] = useState(banking);
   const [message, setMessage] = useState({ isError: false, detail: '' });
   const [alertOpen, setAlertOpen] = useState(false);
   const [mutationLoading, setCallMutation] = useState(false);
@@ -229,7 +243,8 @@ export default function CommunitySettings({ data, token, refetch }) {
         logoUrl,
         wpLink,
         securityManager,
-        themeColors
+        themeColors,
+        bankingDetails,
       },
     })
       .then(() => {
@@ -474,6 +489,99 @@ export default function CommunitySettings({ data, token, refetch }) {
             </MenuItem>
           ))}
         </TextField>
+        <br />
+        <br />
+        <Typography variant="h6">Banking Details</Typography>
+        <TextField
+          label={t('community.account_name')}
+          value={bankingDetails.accountName}
+          onChange={event => setBankingDetails({ ...bankingDetails, accountName: event.target.value })}
+          name="accountName"
+          margin="normal"
+          inputProps={{ "data-testid": "accountName"}}
+          style={{ width: '100%'}}
+        />
+        <TextField
+          label={t('community.account_no')}
+          value={bankingDetails.accountNo}
+          onChange={event => setBankingDetails({ ...bankingDetails, accountNo: event.target.value })}
+          name="accountNo"
+          margin="normal"
+          inputProps={{ "data-testid": "accountNo"}}
+          style={{ width: '100%'}}
+        />
+        <TextField
+          label={t('community.bank')}
+          value={bankingDetails.bankName}
+          onChange={event => setBankingDetails({ ...bankingDetails, bankName: event.target.value })}
+          name="bankName"
+          margin="normal"
+          inputProps={{ "data-testid": "bankName"}}
+          style={{ width: '100%'}}
+        />
+        <TextField
+          label={t('community.branch')}
+          value={bankingDetails.branch}
+          onChange={event => setBankingDetails({ ...bankingDetails, branch: event.target.value })}
+          name="branch"
+          margin="normal"
+          inputProps={{ "data-testid": "branch"}}
+          style={{ width: '100%'}}
+        />
+        <TextField
+          label={t('community.swift_code')}
+          value={bankingDetails.swiftCode}
+          onChange={event => setBankingDetails({ ...bankingDetails, swiftCode: event.target.value })}
+          name="swiftCode"
+          margin="normal"
+          inputProps={{ "data-testid": "swiftCode"}}
+          style={{ width: '100%'}}
+        />
+        <TextField
+          label={t('community.sort_code')}
+          value={bankingDetails.sortCode}
+          onChange={event => setBankingDetails({ ...bankingDetails, sortCode: event.target.value })}
+          name="sortCode"
+          margin="normal"
+          inputProps={{ "data-testid": "sortCode"}}
+          style={{ width: '100%'}}
+        />
+        <TextField
+          label={t('community.address')}
+          value={bankingDetails.address}
+          onChange={event => setBankingDetails({ ...bankingDetails, address: event.target.value })}
+          name="address"
+          margin="normal"
+          inputProps={{ "data-testid": "address"}}
+          style={{ width: '100%'}}
+        />
+        <TextField
+          label={t('community.city')}
+          value={bankingDetails.city}
+          onChange={event => setBankingDetails({ ...bankingDetails, city: event.target.value })}
+          name="city"
+          margin="normal"
+          inputProps={{ "data-testid": "city"}}
+          style={{ width: '100%'}}
+        />
+        <TextField
+          label={t('community.country')}
+          value={bankingDetails.country}
+          onChange={event => setBankingDetails({ ...bankingDetails, country: event.target.value })}
+          name="country"
+          margin="normal"
+          inputProps={{ "data-testid": "country"}}
+          style={{ width: '100%'}}
+        />
+        <TextField
+          label={t('community.tax_id_no')}
+          value={bankingDetails.taxIdNo}
+          onChange={event => setBankingDetails({ ...bankingDetails, taxIdNo: event.target.value })}
+          name="taxIdNo"
+          margin="normal"
+          inputProps={{ "data-testid": "taxIdNo"}}
+          style={{ width: '100%'}}
+        />
       </div>
 
       <div style={{ marginTop: '40px' }}>
@@ -533,6 +641,18 @@ CommunitySettings.propTypes = {
     themeColors: PropTypes.shape({
       primaryColor: PropTypes.string,
       secondaryColor: PropTypes.string,
+    }),
+    bankingDetails: PropTypes.shape({
+      bankName: PropTypes.string,
+      accountName: PropTypes.string,
+      accountNo: PropTypes.string,
+      branch: PropTypes.string,
+      swiftCode: PropTypes.string,
+      sortCode: PropTypes.string,
+      address:PropTypes.string,
+      city: PropTypes.string,
+      country: PropTypes.string,
+      taxIdNo: PropTypes.string,
     }),
   }).isRequired,
   token: PropTypes.string.isRequired,
