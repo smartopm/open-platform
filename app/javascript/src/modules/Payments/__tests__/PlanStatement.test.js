@@ -14,7 +14,6 @@ describe('It should test the plan statement modal component', () => {
       planType: 'BASIC',
       planValue: 1000,
       statementPaidAmount: 200,
-      statementPendingBalance: 500,
       user: {
         name: 'some name',
         phoneNumber: '27798',

@@ -324,11 +324,12 @@ PaymentReceipt.propTypes = {
       id: PropTypes.string,
       planType: PropTypes.string,
       startDate: PropTypes.string,
-      planValue: PropTypes.number,
-      statementPaidAmount: PropTypes.number,
-      statementPendingBalance: PropTypes.number,
-      pendingBalance: PropTypes.number,
-      unallocatedAmount: PropTypes.number,
+      planValue: PropTypes.string,
+      statementPaidAmount: PropTypes.string,
+      // TODO: @tolulope verify if this should be here or not
+      // statementPendingBalance: PropTypes.string,
+      pendingBalance: PropTypes.string,
+      unallocatedAmount: PropTypes.string,
       durationInMonth: PropTypes.string,
       user: PropTypes.shape({
         name: PropTypes.string,

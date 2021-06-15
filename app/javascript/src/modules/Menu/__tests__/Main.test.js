@@ -26,7 +26,7 @@ describe('Main Nav component', () => {
     fireEvent.click(container.queryByTestId('drawer'));
 
     expect(container.queryAllByTestId('sidenav-container')[0]).toBeInTheDocument();
-    expect(container.queryAllByTestId('sidenav-container')).toHaveLength(2);
+    expect(container.queryAllByTestId('sidenav-container')).toHaveLength(1);
   });
   it('should render the main', () => {
     render(
