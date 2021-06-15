@@ -8,11 +8,17 @@ import SignaturePad from '../../../../components/Forms/SignaturePad';
 import { formatMoney } from '../../../../utils/helpers';
 import { dateToString } from '../../../../components/DateContainer';
 import { FullScreenDialog } from '../../../../components/Dialog';
-import { paymentType } from '../../../../utils/constants'
+import { paymentType } from '../../../../utils/constants';
 
 export default function PaymentReceipt({ paymentData, open, handleClose, currencyData }) {
   const signRef = useRef(null);
   const classes = useStyles();
+
+  function printReceipt() {
+    document.title = `${paymentData?.user?.name}-${paymentData?.planPayments[0]?.receiptNumber ||
+      paymentData.receiptNumber}-${dateToString(paymentData.createdAt)}`;
+    window.print();
+  }
 
   return (
     <>
@@ -22,9 +28,9 @@ export default function PaymentReceipt({ paymentData, open, handleClose, currenc
           handleClose={handleClose}
           title="Payment Receipt"
           actionText="Print"
-          handleSubmit={() => window.print()}
+          handleSubmit={printReceipt}
         >
-          <div className='print' style={{margin: '80px 284px'}}>
+          <div className="print" style={{ margin: '80px 284px' }}>
             {paymentData?.community?.logoUrl ? (
               <img
                 src={paymentData.community.logoUrl}
@@ -38,24 +44,22 @@ export default function PaymentReceipt({ paymentData, open, handleClose, currenc
                 {paymentData?.community?.name}
               </h3>
             )}
-            {
-              paymentData?.planPayments ? (
-                paymentData?.planPayments?.map((pay) => (
-                  <div key={pay.id}>
-                    <Typography className={classes.receiptNumber}>
-                      Receipt #
-                      {pay.receiptNumber}
-                    </Typography>
-                  </div>
-                ))
-              ) : (
-                <Typography className={classes.receiptNumber}>
-                  Receipt #
-                  {paymentData.receiptNumber}
-                </Typography>
-              )
-            }
-            <div> 
+            {paymentData?.planPayments ? (
+              paymentData?.planPayments?.map(pay => (
+                <div key={pay.id}>
+                  <Typography className={classes.receiptNumber}>
+                    Receipt #
+                    {pay.receiptNumber}
+                  </Typography>
+                </div>
+              ))
+            ) : (
+              <Typography className={classes.receiptNumber}>
+                Receipt #
+                {paymentData.receiptNumber}
+              </Typography>
+            )}
+            <div>
               <Grid container>
                 <Grid item xs={6} className={classes.paymentInfo}>
                   <Grid container spacing={1}>
@@ -71,7 +75,7 @@ export default function PaymentReceipt({ paymentData, open, handleClose, currenc
                       NRC
                     </Grid>
                     <Grid item xs={10} data-testid="nrc" className={classes.title}>
-                      {paymentData?.user?.extRefId || '-'} 
+                      {paymentData?.user?.extRefId || '-'}
                     </Grid>
                   </Grid>
                   <Grid container spacing={1}>
@@ -91,7 +95,7 @@ export default function PaymentReceipt({ paymentData, open, handleClose, currenc
                   </Grid>
                   <Grid container spacing={1}>
                     <Grid item xs={12} className={classes.title} data-testid="tax-id-no">
-                      TPIN:  
+                      TPIN:
                       {' '}
                       {paymentData?.community?.bankingDetails.taxIdNo || 'N/A'}
                     </Grid>
@@ -113,7 +117,7 @@ export default function PaymentReceipt({ paymentData, open, handleClose, currenc
                   </Grid>
                   <Grid container spacing={1}>
                     <Grid item xs={12} className={classes.title} data-testid="support-email">
-                      email: 
+                      email:
                       {' '}
                       {paymentData?.community?.supportEmail
                       // eslint-disable-next-line react/prop-types
@@ -122,7 +126,7 @@ export default function PaymentReceipt({ paymentData, open, handleClose, currenc
                   </Grid>
                   <Grid container spacing={1}>
                     <Grid item xs={12} className={classes.title} data-testid="website">
-                      web: 
+                      web:
                       {' '}
                       {paymentData?.community?.socialLinks
                        // eslint-disable-next-line react/prop-types
@@ -131,7 +135,7 @@ export default function PaymentReceipt({ paymentData, open, handleClose, currenc
                   </Grid>
                   <Grid container spacing={1}>
                     <Grid item xs={12} className={classes.title} data-testid="support-phone-no">
-                      phone: 
+                      phone:
                       {' '}
                       {paymentData?.community?.supportNumber
                       // eslint-disable-next-line react/prop-types
@@ -145,32 +149,43 @@ export default function PaymentReceipt({ paymentData, open, handleClose, currenc
                   <Grid item xs={4} className={classes.title} data-testid="plot-no">
                     Plot/Plan No.
                   </Grid>
-                  <Grid item xs={4} className={classes.title} style={{textAlign: 'center'}} data-testid="pay-type">
+                  <Grid
+                    item
+                    xs={4}
+                    className={classes.title}
+                    style={{ textAlign: 'center' }}
+                    data-testid="pay-type"
+                  >
                     Payment Type
                   </Grid>
-                  <Grid item xs={4} className={classes.title} style={{textAlign: 'right'}} data-testid="amount">
+                  <Grid
+                    item
+                    xs={4}
+                    className={classes.title}
+                    style={{ textAlign: 'right' }}
+                    data-testid="amount"
+                  >
                     Amount Paid
                   </Grid>
                 </Grid>
                 <Divider className={classes.divider} />
                 <Grid container spacing={1}>
-                  {
-                    paymentData?.planPayments ? (
-                      paymentData?.planPayments?.map((pay) => (
-                        <Grid item xs={4} key={pay.id} className={classes.title}>
-                          {pay.paymentPlan?.landParcel?.parcelNumber}
-                        </Grid>
-                      ))
-                    ) : (
-                      <Grid item xs={4} className={classes.title}>
-                        {paymentData?.paymentPlan?.landParcel?.parcelNumber}
+                  {paymentData?.planPayments ? (
+                    paymentData?.planPayments?.map(pay => (
+                      <Grid item xs={4} key={pay.id} className={classes.title}>
+                        {pay.paymentPlan?.landParcel?.parcelNumber}
                       </Grid>
-                      )
-                  }
-                  <Grid item xs={4} className={classes.title} style={{textAlign: 'center'}}>
-                    {paymentType[paymentData.source] || paymentType[paymentData?.userTransaction?.source]}
+                    ))
+                  ) : (
+                    <Grid item xs={4} className={classes.title}>
+                      {paymentData?.paymentPlan?.landParcel?.parcelNumber}
+                    </Grid>
+                  )}
+                  <Grid item xs={4} className={classes.title} style={{ textAlign: 'center' }}>
+                    {paymentType[paymentData.source] ||
+                      paymentType[paymentData?.userTransaction?.source]}
                   </Grid>
-                  <Grid item xs={4} className={classes.title} style={{textAlign: 'right'}}>
+                  <Grid item xs={4} className={classes.title} style={{ textAlign: 'right' }}>
                     {formatMoney(currencyData, paymentData?.amount)}
                   </Grid>
                 </Grid>
@@ -182,8 +197,10 @@ export default function PaymentReceipt({ paymentData, open, handleClose, currenc
                     <Grid item xs={3} style={{ color: '#9B9B9B' }}>
                       Cashier Name
                     </Grid>
-                    <Grid item xs={9} data-testid="cashier-name" style={{fontWeight: 700}}>
-                      {paymentData?.depositor?.name || paymentData?.userTransaction?.depositor?.name || '-'}
+                    <Grid item xs={9} data-testid="cashier-name" style={{ fontWeight: 700 }}>
+                      {paymentData?.depositor?.name ||
+                        paymentData?.userTransaction?.depositor?.name ||
+                        '-'}
                     </Grid>
                   </Grid>
 
@@ -209,59 +226,75 @@ export default function PaymentReceipt({ paymentData, open, handleClose, currenc
                     <Grid item xs={8} className={classes.title}>
                       Expected Monthly Payment
                     </Grid>
-                    {
-                      paymentData?.planPayments ? (
-                        paymentData?.planPayments?.map((pay) => (
-                          <Grid item xs={4} key={pay.id} className={classes.title} style={{textAlign: 'right'}}>
-                            {formatMoney(currencyData, pay.paymentPlan?.monthlyAmount)}
-                          </Grid>
-                        ))
-                      ) : (
-                        <Grid item xs={4} className={classes.title} style={{textAlign: 'right'}}>
-                          {formatMoney(currencyData, paymentData?.paymentPlan?.monthlyAmount)}
+                    {paymentData?.planPayments ? (
+                      paymentData?.planPayments?.map(pay => (
+                        <Grid
+                          item
+                          xs={4}
+                          key={pay.id}
+                          className={classes.title}
+                          style={{ textAlign: 'right' }}
+                        >
+                          {formatMoney(currencyData, pay.paymentPlan?.monthlyAmount)}
                         </Grid>
-                      )
-                    }
+                      ))
+                    ) : (
+                      <Grid item xs={4} className={classes.title} style={{ textAlign: 'right' }}>
+                        {formatMoney(currencyData, paymentData?.paymentPlan?.monthlyAmount)}
+                      </Grid>
+                    )}
                   </Grid>
                   <Grid container spacing={1}>
                     <Grid item xs={8} className={classes.title}>
                       Total Amount Paid
                     </Grid>
-                    <Grid item xs={4} data-testid="total-amount-paid" className={classes.title} style={{textAlign: 'right'}}>
-                      {formatMoney(currencyData, paymentData?.amount)} 
+                    <Grid
+                      item
+                      xs={4}
+                      data-testid="total-amount-paid"
+                      className={classes.title}
+                      style={{ textAlign: 'right' }}
+                    >
+                      {formatMoney(currencyData, paymentData?.amount)}
                     </Grid>
                   </Grid>
                   <Grid container spacing={1}>
                     <Grid item xs={8} className={classes.title}>
                       Total Balance Remaining
                     </Grid>
-                    {
-                      paymentData?.planPayments ? (
-                        paymentData?.planPayments?.map((pay) => (
-                          <Grid item xs={4} key={pay.id} className={classes.title} style={{textAlign: 'right'}}>
-                            {formatMoney(currencyData, pay.currentPlotPendingBalance)}
-                          </Grid>
-                        ))
-                      ) : (
-                        <Grid item xs={4} className={classes.title} style={{textAlign: 'right'}}>
-                          {formatMoney(currencyData, paymentData.currentPlotPendingBalance)}
+                    {paymentData?.planPayments ? (
+                      paymentData?.planPayments?.map(pay => (
+                        <Grid
+                          item
+                          xs={4}
+                          key={pay.id}
+                          className={classes.title}
+                          style={{ textAlign: 'right' }}
+                        >
+                          {formatMoney(currencyData, pay.currentPlotPendingBalance)}
                         </Grid>
-                      )
-                    }
+                      ))
+                    ) : (
+                      <Grid item xs={4} className={classes.title} style={{ textAlign: 'right' }}>
+                        {formatMoney(currencyData, paymentData.currentPlotPendingBalance)}
+                      </Grid>
+                    )}
                   </Grid>
                   <Grid container spacing={1}>
                     <Grid item xs={8} className={classes.title}>
                       Currency
                     </Grid>
-                    <Grid item xs={4} className={classes.title} style={{textAlign: 'right'}}>
-                      {paymentData?.community?.currency === 'zambian_kwacha' ? 'ZMW (K)' : paymentData?.community?.currency}
+                    <Grid item xs={4} className={classes.title} style={{ textAlign: 'right' }}>
+                      {paymentData?.community?.currency === 'zambian_kwacha'
+                        ? 'ZMW (K)'
+                        : paymentData?.community?.currency}
                     </Grid>
                   </Grid>
                 </Grid>
               </Grid>
 
               <div style={{ marginTop: '60px' }}>
-                <b style={{ fontSize: '16px' }}>Banking Details</b> 
+                <b style={{ fontSize: '16px' }}>Banking Details</b>
                 {' '}
                 <br />
                 <Grid container spacing={1}>
@@ -419,18 +452,20 @@ PaymentReceipt.propTypes = {
       })
     }),
     receiptNumber: PropTypes.string,
-    planPayments: PropTypes.arrayOf(PropTypes.shape({
-      id: PropTypes.string,
-      receiptNumber: PropTypes.string,
-      currentPlotPendingBalance: PropTypes.number,
-      paymentPlan: PropTypes.shape({
+    planPayments: PropTypes.arrayOf(
+      PropTypes.shape({
         id: PropTypes.string,
-        landParcel: PropTypes.shape({
+        receiptNumber: PropTypes.string,
+        currentPlotPendingBalance: PropTypes.number,
+        paymentPlan: PropTypes.shape({
           id: PropTypes.string,
-          parcelNumber: PropTypes.string
+          landParcel: PropTypes.shape({
+            id: PropTypes.string,
+            parcelNumber: PropTypes.string
+          })
         })
       })
-    }))
+    )
   }),
   open: PropTypes.bool.isRequired,
   handleClose: PropTypes.func.isRequired,
