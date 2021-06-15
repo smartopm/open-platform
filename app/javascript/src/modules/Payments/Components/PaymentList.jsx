@@ -177,9 +177,6 @@ export default function PaymentList({ currencyData }) {
         handleModalClose={() => setPaymentModalOpen(false)}
         currencyData={currencyData}
         refetch={refetch}
-        // walletRefetch={refetch}
-        // userData={userData}
-        // csvRefetch={csvRefetch}
       />
 
       <SearchInput
