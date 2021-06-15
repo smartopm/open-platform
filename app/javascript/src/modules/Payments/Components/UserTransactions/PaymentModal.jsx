@@ -300,7 +300,7 @@ export default function PaymentModal({
               <br />
               <SwitchInput
                 name="pastPayment"
-                label="Is this a past payment?"
+                label="Is this a manual payment?"
                 value={inputValue.pastPayment}
                 handleChange={event => setInputValue({ ...inputValue, pastPayment: event.target.checked })}
                 labelPlacement="end"
@@ -314,19 +314,11 @@ export default function PaymentModal({
                     type="string"
                     value={inputValue.receiptNumber}
                     onChange={event => setInputValue({ ...inputValue, receiptNumber: event.target.value })}
-                    required={inputValue.pastPayment}
-                    error={isError && submitting && !inputValue.receiptNumber}
-                    helperText={
-                      isError &&
-                      !inputValue.receiptNumber &&
-                      'ReceiptNumber is required for past payments'
-                    }
                   />
                   <DatePickerDialog
                     selectedDate={inputValue.paidDate}
                     label="Paid Date"
                     handleDateChange={date => setInputValue({ ...inputValue, paidDate: date })}
-                    maxDate={subDays(new Date(), 1)}
                   />
                 </>
               )}
@@ -372,7 +364,7 @@ export function PaymentDetails({ inputValue, currencyData }) {
   return (
     <div>
       <Typography variant="subtitle1" data-testid="amount" align="center" key="amount">
-        Amount: 
+        Amount:
         {' '}
         <b>{formatMoney(currencyData, inputValue.amount)}</b>
       </Typography>
