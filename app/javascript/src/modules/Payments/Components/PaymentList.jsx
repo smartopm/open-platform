@@ -37,6 +37,7 @@ import PaymentGraph from './PaymentGraph';
 import { Spinner } from '../../../shared/Loading';
 import QueryBuilder from '../../../components/QueryBuilder';
 import { PlansPaymentsQuery } from '../graphql/payment_query';
+import PaymentModal from './UserTransactions/PaymentModal';
 import { dateToString } from '../../../components/DateContainer';
 
 const paymentHeaders = [
@@ -68,6 +69,7 @@ export default function PaymentList({ currencyData }) {
   const path = useParamsQuery();
   const classes = useStyles();
   const page = path.get('page');
+  const type = path.get('type');
   const [searchValue, setSearchValue] = useState('');
   const debouncedValue = useDebounce(searchValue, 500);
   const [listType, setListType] = useState('nongraph');
@@ -77,9 +79,10 @@ export default function PaymentList({ currencyData }) {
   const matches = useMediaQuery(theme.breakpoints.up('sm'));
   const [displayBuilder, setDisplayBuilder] = useState('none');
   const [searchQuery, setSearchQuery] = useState('');
+  const [paymentModalOpen, setPaymentModalOpen] = useState(false)
 
   const pageNumber = Number(page);
-  const { loading, data, error } = useQuery(PlansPaymentsQuery, {
+  const { loading, data, error, refetch } = useQuery(PlansPaymentsQuery, {
     variables: { limit, offset: pageNumber, query: debouncedValue || searchQuery },
     fetchPolicy: 'cache-and-network',
     errorPolicy: 'all'
@@ -148,6 +151,12 @@ export default function PaymentList({ currencyData }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  useEffect(() => {
+    if (type === 'new') {
+      setPaymentModalOpen(true)
+    }
+  }, [type])
+
    function handleDownloadCSV(){
     loadAllPayments()
   }
@@ -162,6 +171,14 @@ export default function PaymentList({ currencyData }) {
 
   return (
     <div>
+
+      <PaymentModal
+        open={paymentModalOpen}
+        handleModalClose={() => setPaymentModalOpen(false)}
+        currencyData={currencyData}
+        refetch={refetch}
+      />
+
       <SearchInput
         title="Payments"
         searchValue={searchValue}

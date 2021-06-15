@@ -1,3 +1,4 @@
+// TODO: @victor these files should be moved to the showroom module
 import ShowRoom from '../../containers/showroom/Home';
 import VisitingReasonScreen from '../../containers/showroom/VisitReasonScreen';
 import VisitingClientFormScreen from '../../containers/showroom/CheckInForm';

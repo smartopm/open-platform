@@ -68,7 +68,7 @@ export default function PaymentSummary({ authState, translate }) {
                   {translate('common:misc.payments')}
                 </Typography>
                 <Typography style={{marginLeft: 'auto', marginRight: '81px', cursor: 'pointer', fontSize: '16px', fontWeight: 500}}>
-                  <Link to='/users' style={{ color: theme.palette.primary.main }}>{translate('dashboard.make_new_payment')}</Link>
+                  <Link to='/payments?type=new' style={{ color: theme.palette.primary.main }}>{translate('dashboard.make_new_payment')}</Link>
                 </Typography>
               </Grid>
             </div>
@@ -93,7 +93,7 @@ export default function PaymentSummary({ authState, translate }) {
           {matches && (
             <div style={{display: 'flex', marginLeft: '20px', cursor: 'pointer', fontSize: '14px', fontWeight: 500}}>
               <Typography color='primary' style={{marginRight: '10px', fontWeight: 500}}>
-                <Link to='/users'>{translate('dashboard.make_new_payment')}</Link>
+                <Link to='/payments?type=new'>{translate('dashboard.make_new_payment')}</Link>
               </Typography>
               <TrendingFlatIcon color="primary" />
             </div>

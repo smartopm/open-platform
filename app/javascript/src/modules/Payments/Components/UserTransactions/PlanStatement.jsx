@@ -135,25 +135,25 @@ export default function PaymentReceipt({ data, open, handleClose, currencyData }
               </Grid>
               <div className="plan-header" style={{ margin: '60px 0' }}>
                 <Grid container spacing={1}>
-                  <Grid item xs={2} className={classes.title} style={{fontWeight: 700, color: '#2D2D2D'}}>
+                  <Grid item xs={2} className={classes.title} key="receipt_number" style={{fontWeight: 700, color: '#2D2D2D'}}>
                     Receipt Number
                   </Grid>
-                  <Grid item xs={2} className={classes.title} style={{fontWeight: 700, color: '#2D2D2D'}}>
+                  <Grid item xs={2} className={classes.title} key="payment_date" style={{fontWeight: 700, color: '#2D2D2D'}}>
                     Payment Date
                   </Grid>
-                  <Grid item xs={2} className={classes.title} style={{fontWeight: 700, color: '#2D2D2D'}}>
+                  <Grid item xs={2} className={classes.title} key="amount_paid" style={{fontWeight: 700, color: '#2D2D2D'}}>
                     Amount Paid
                   </Grid>
-                  <Grid item xs={2} className={classes.title} style={{fontWeight: 700, color: '#2D2D2D'}}>
+                  <Grid item xs={2} className={classes.title} key="installment_amount" style={{fontWeight: 700, color: '#2D2D2D'}}>
                     Installment Amount
                   </Grid>
-                  <Grid item xs={2} className={classes.title} style={{fontWeight: 700, color: '#2D2D2D'}}>
+                  <Grid item xs={2} className={classes.title} key="number_of_installements" style={{fontWeight: 700, color: '#2D2D2D'}}>
                     No. of Installments
                   </Grid>
-                  <Grid item xs={1} className={classes.title} style={{fontWeight: 700, color: '#2D2D2D'}}>
+                  <Grid item xs={1} className={classes.title} key="debit" style={{fontWeight: 700, color: '#2D2D2D'}}>
                     Debit
                   </Grid>
-                  <Grid item xs={1} className={classes.title} style={{fontWeight: 700, color: '#2D2D2D'}}>
+                  <Grid item xs={1} className={classes.title} key="balance" style={{fontWeight: 700, color: '#2D2D2D'}}>
                     Unallocated Balance
                   </Grid>
                 </Grid>

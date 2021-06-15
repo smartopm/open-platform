@@ -34,7 +34,8 @@ describe('It should test the plan statement modal component', () => {
       installmentAmount: 400,
       settledInstallments: 2,
       debitAmount: 4000,
-      unallocatedAmount: 300
+      unallocatedAmount: 300,
+      id: "385u943-ujdf"
     }]
   };
 
@@ -61,7 +62,7 @@ describe('It should test the plan statement modal component', () => {
 
     expect(container.queryByTestId('receipt-no')).toHaveTextContent('26289');
     expect(container.queryByTestId('pay-date')).toHaveTextContent('2020-12-28');
-    expect(container.queryByTestId('amount')).toHaveTextContent('300');
+    expect(container.queryByTestId('amount')).toBeInTheDocument();
 
     expect(container.queryByText('Banking Details')).toBeInTheDocument();
     expect(container.queryByText('Bank')).toBeInTheDocument();

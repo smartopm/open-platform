@@ -12,7 +12,9 @@ const userMock = {
           secondaryColor: "#nnn"
         },
         name: 'Another Comm',
-        imageUrl: 'http://image.jpg'
+        imageUrl: 'http://image.jpg',
+        locale: 'en-ZM',
+        currency: 'ZMW',
       }
     }
   };
