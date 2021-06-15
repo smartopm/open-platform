@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe Wallet, type: :model do
+RSpec.describe Payments::Wallet, type: :model do
   let!(:user) { create(:user_with_community) }
   let(:community) { user.community }
   let!(:land_parcel) { create(:land_parcel, community_id: community.id) }
