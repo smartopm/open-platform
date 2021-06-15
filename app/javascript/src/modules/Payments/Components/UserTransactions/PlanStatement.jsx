@@ -334,7 +334,6 @@ PaymentReceipt.propTypes = {
       startDate: PropTypes.string,
       planValue: PropTypes.string,
       statementPaidAmount: PropTypes.string,
-      statementPendingBalance: PropTypes.string,
       pendingBalance: PropTypes.string,
       unallocatedAmount: PropTypes.string,
       durationInMonth: PropTypes.string,
