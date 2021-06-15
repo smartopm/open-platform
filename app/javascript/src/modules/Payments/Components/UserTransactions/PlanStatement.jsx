@@ -83,8 +83,10 @@ export default function PaymentReceipt({ data, open, handleClose, currencyData }
                         Plan Value(months)
                       </Grid>
                       <Grid item xs={8} className={classes.title}>
-                        {formatMoney(currencyData, data?.paymentPlan?.planValue)}(
-                        {data?.paymentPlan?.durationInMonth})
+                        {formatMoney(currencyData, data?.paymentPlan?.planValue)}
+                        (
+                        {data?.paymentPlan?.durationInMonth}
+                        )
                       </Grid>
                     </Grid>
                   </Grid>
@@ -92,34 +94,36 @@ export default function PaymentReceipt({ data, open, handleClose, currencyData }
                 <Grid item xs={6} style={{ textAlign: 'right' }}>
                   <Grid container spacing={1}>
                     <Grid item xs={12} className={classes.title} data-testid="account-name">
-                      {data?.paymentPlan?.landParcel?.community?.bankingDetails.accountName ||
+                      {data?.paymentPlan?.landParcel?.community?.bankingDetails?.accountName ||
                         'N/A'}
                     </Grid>
                   </Grid>
                   <Grid container spacing={1}>
                     <Grid item xs={12} className={classes.title} data-testid="tax-id-no">
-                      TPIN:{' '}
-                      {data?.paymentPlan?.landParcel?.community?.bankingDetails.taxIdNo || 'N/A'}
+                      TPIN:
+                      {' '}
+                      {data?.paymentPlan?.landParcel?.community?.bankingDetails?.taxIdNo || 'N/A'}
                     </Grid>
                   </Grid>
                   <Grid container spacing={1}>
                     <Grid item xs={12} className={classes.title} data-testid="address">
-                      {data?.paymentPlan?.landParcel?.community?.bankingDetails.address || 'N/A'}
+                      {data?.paymentPlan?.landParcel?.community?.bankingDetails?.address || 'N/A'}
                     </Grid>
                   </Grid>
                   <Grid container spacing={1}>
                     <Grid item xs={12} className={classes.title} data-testid="city">
-                      {data?.paymentPlan?.landParcel?.community?.bankingDetails.city || 'N/A'}
+                      {data?.paymentPlan?.landParcel?.community?.bankingDetails?.city || 'N/A'}
                     </Grid>
                   </Grid>
                   <Grid container spacing={1}>
                     <Grid item xs={12} className={classes.title} data-testid="country">
-                      {data?.paymentPlan?.landParcel?.community?.bankingDetails.country || 'N/A'}
+                      {data?.paymentPlan?.landParcel?.community?.bankingDetails?.country || 'N/A'}
                     </Grid>
                   </Grid>
                   <Grid container spacing={1}>
                     <Grid item xs={12} className={classes.title} data-testid="support-email">
-                      email:{' '}
+                      email:
+                      {' '}
                       {data?.paymentPlan?.landParcel?.community?.supportEmail
                         // eslint-disable-next-line react/prop-types
                         ?.find(({ category }) => category === 'bank')?.email || 'N/A'}
@@ -127,7 +131,8 @@ export default function PaymentReceipt({ data, open, handleClose, currencyData }
                   </Grid>
                   <Grid container spacing={1}>
                     <Grid item xs={12} className={classes.title} data-testid="website">
-                      web:{' '}
+                      web:
+                      {' '}
                       {data?.paymentPlan?.landParcel?.community?.socialLinks
                         // eslint-disable-next-line react/prop-types
                         ?.find(({ category }) => category === 'website')?.social_link || 'N/A'}
@@ -135,7 +140,8 @@ export default function PaymentReceipt({ data, open, handleClose, currencyData }
                   </Grid>
                   <Grid container spacing={1}>
                     <Grid item xs={12} className={classes.title} data-testid="support-phone-no">
-                      phone:{' '}
+                      phone:
+                      {' '}
                       {data?.paymentPlan?.landParcel?.community?.supportNumber
                         // eslint-disable-next-line react/prop-types
                         ?.find(({ category }) => category === 'bank')?.phone_number || 'N/A'}
@@ -243,13 +249,15 @@ export default function PaymentReceipt({ data, open, handleClose, currencyData }
               <Grid container>
                 <Grid item xs={6}>
                   <div>
-                    <b style={{ fontSize: '16px' }}>Banking Details</b> <br />
+                    <b style={{ fontSize: '16px' }}>Banking Details</b> 
+                    {' '}
+                    <br />
                     <Grid container spacing={1}>
                       <Grid item xs={3} className={classes.title}>
                         Bank
                       </Grid>
                       <Grid item xs={3} className={classes.title}>
-                        {data?.paymentPlan?.landParcel?.community?.bankingDetails.bankName || 'N/A'}
+                        {data?.paymentPlan?.landParcel?.community?.bankingDetails?.bankName || 'N/A'}
                       </Grid>
                     </Grid>
                     <Grid container spacing={1}>
@@ -257,7 +265,7 @@ export default function PaymentReceipt({ data, open, handleClose, currencyData }
                         Account Name
                       </Grid>
                       <Grid item xs={6} className={classes.title}>
-                        {data?.paymentPlan?.landParcel?.community?.bankingDetails.accountName ||
+                        {data?.paymentPlan?.landParcel?.community?.bankingDetails?.accountName ||
                           'N/A'}
                       </Grid>
                     </Grid>
@@ -266,7 +274,7 @@ export default function PaymentReceipt({ data, open, handleClose, currencyData }
                         Account Number
                       </Grid>
                       <Grid item xs={3} className={classes.title}>
-                        {data?.paymentPlan?.landParcel?.community?.bankingDetails.accountNo ||
+                        {data?.paymentPlan?.landParcel?.community?.bankingDetails?.accountNo ||
                           'N/A'}
                       </Grid>
                     </Grid>
@@ -275,7 +283,7 @@ export default function PaymentReceipt({ data, open, handleClose, currencyData }
                         Branch
                       </Grid>
                       <Grid item xs={3} className={classes.title}>
-                        {data?.paymentPlan?.landParcel?.community?.bankingDetails.branch || 'N/A'}
+                        {data?.paymentPlan?.landParcel?.community?.bankingDetails?.branch || 'N/A'}
                       </Grid>
                     </Grid>
                     <Grid container spacing={1}>
@@ -283,7 +291,7 @@ export default function PaymentReceipt({ data, open, handleClose, currencyData }
                         Swift Code
                       </Grid>
                       <Grid item xs={3} className={classes.title}>
-                        {data?.paymentPlan?.landParcel?.community?.bankingDetails.swiftCode ||
+                        {data?.paymentPlan?.landParcel?.community?.bankingDetails?.swiftCode ||
                           'N/A'}
                       </Grid>
                     </Grid>
@@ -292,7 +300,7 @@ export default function PaymentReceipt({ data, open, handleClose, currencyData }
                         Sort Code
                       </Grid>
                       <Grid item xs={3} className={classes.title}>
-                        {data?.paymentPlan?.landParcel?.community?.bankingDetails.sortCode || 'N/A'}
+                        {data?.paymentPlan?.landParcel?.community?.bankingDetails?.sortCode || 'N/A'}
                       </Grid>
                     </Grid>
                   </div>

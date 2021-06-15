@@ -90,29 +90,29 @@ export default function PaymentReceipt({ paymentData, open, handleClose, currenc
                 <Grid item xs={6} style={{textAlign: 'right'}}>
                   <Grid container spacing={1}>
                     <Grid item xs={12} className={classes.title} data-testid="account-name">
-                      {paymentData?.community?.bankingDetails.accountName || 'N/A'}
+                      {paymentData?.community?.bankingDetails?.accountName || 'N/A'}
                     </Grid>
                   </Grid>
                   <Grid container spacing={1}>
                     <Grid item xs={12} className={classes.title} data-testid="tax-id-no">
                       TPIN:
                       {' '}
-                      {paymentData?.community?.bankingDetails.taxIdNo || 'N/A'}
+                      {paymentData?.community?.bankingDetails?.taxIdNo || 'N/A'}
                     </Grid>
                   </Grid>
                   <Grid container spacing={1}>
                     <Grid item xs={12} className={classes.title} data-testid="address">
-                      {paymentData?.community?.bankingDetails.address || 'N/A'}
+                      {paymentData?.community?.bankingDetails?.address || 'N/A'}
                     </Grid>
                   </Grid>
                   <Grid container spacing={1}>
                     <Grid item xs={12} className={classes.title} data-testid="city">
-                      {paymentData?.community?.bankingDetails.city || 'N/A'}
+                      {paymentData?.community?.bankingDetails?.city || 'N/A'}
                     </Grid>
                   </Grid>
                   <Grid container spacing={1}>
                     <Grid item xs={12} className={classes.title} data-testid="country">
-                      {paymentData?.community?.bankingDetails.country || 'N/A'}
+                      {paymentData?.community?.bankingDetails?.country || 'N/A'}
                     </Grid>
                   </Grid>
                   <Grid container spacing={1}>
@@ -302,7 +302,7 @@ export default function PaymentReceipt({ paymentData, open, handleClose, currenc
                     Bank
                   </Grid>
                   <Grid item xs={2} className={classes.title}>
-                    {paymentData?.community?.bankingDetails.bankName || 'N/A'}
+                    {paymentData?.community?.bankingDetails?.bankName || 'N/A'}
                   </Grid>
                 </Grid>
                 <Grid container spacing={1}>
@@ -310,7 +310,7 @@ export default function PaymentReceipt({ paymentData, open, handleClose, currenc
                     Account Name
                   </Grid>
                   <Grid item xs={4} className={classes.title}>
-                    {paymentData?.community?.bankingDetails.accountName || 'N/A'}
+                    {paymentData?.community?.bankingDetails?.accountName || 'N/A'}
                   </Grid>
                 </Grid>
                 <Grid container spacing={1}>
@@ -318,7 +318,7 @@ export default function PaymentReceipt({ paymentData, open, handleClose, currenc
                     Account Number
                   </Grid>
                   <Grid item xs={2} className={classes.title}>
-                    {paymentData?.community?.bankingDetails.accountNo || 'N/A'}
+                    {paymentData?.community?.bankingDetails?.accountNo || 'N/A'}
                   </Grid>
                 </Grid>
                 <Grid container spacing={1}>
@@ -326,7 +326,7 @@ export default function PaymentReceipt({ paymentData, open, handleClose, currenc
                     Branch
                   </Grid>
                   <Grid item xs={2} className={classes.title}>
-                    {paymentData?.community?.bankingDetails.branch || 'N/A'}
+                    {paymentData?.community?.bankingDetails?.branch || 'N/A'}
                   </Grid>
                 </Grid>
                 <Grid container spacing={1}>
@@ -334,7 +334,7 @@ export default function PaymentReceipt({ paymentData, open, handleClose, currenc
                     Swift Code
                   </Grid>
                   <Grid item xs={2} className={classes.title}>
-                    {paymentData?.community?.bankingDetails.swiftCode || 'N/A'}
+                    {paymentData?.community?.bankingDetails?.swiftCode || 'N/A'}
                   </Grid>
                 </Grid>
                 <Grid container spacing={1}>
@@ -342,7 +342,7 @@ export default function PaymentReceipt({ paymentData, open, handleClose, currenc
                     Sort Code
                   </Grid>
                   <Grid item xs={2} className={classes.title}>
-                    {paymentData?.community?.bankingDetails.sortCode || 'N/A'}
+                    {paymentData?.community?.bankingDetails?.sortCode || 'N/A'}
                   </Grid>
                 </Grid>
               </div>
