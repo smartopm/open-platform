@@ -82,6 +82,7 @@ export default function UsersList() {
   useEffect(() => {
     if (filterCount !== 0) {
       setOffset(0)
+      fetchUsersCount()
     } else {
       const offsetParams = querry.get('offset')
       setOffset(Number(offsetParams))
@@ -98,7 +99,7 @@ export default function UsersList() {
     data: labelsData
   } = useQuery(LabelsQuery)
 
-  const [fetchUsersCount, { data: usersCountData }] = useLazyQuery(UsersCount, {
+  const [fetchUsersCount, { data: usersCountData, loading: fetchingUsersCount }] = useLazyQuery(UsersCount, {
     variables: { query: searchQuery }
   })
 
@@ -291,6 +292,14 @@ export default function UsersList() {
       return
     }
     createCampaign()
+  }
+
+  function viewFilteredUserCount(){
+    return (
+      filterCount !== 0 ||
+      campaignCreateOption === 'all' ||
+      campaignCreateOption === 'all_on_the_page'
+    );
   }
 
   if (labelsLoading) return <Loading />
@@ -552,15 +561,16 @@ export default function UsersList() {
           </Grid>
         </div>
         <br />
-        {loading || labelsLoading ? (
+        {loading || labelsLoading || fetchingUsersCount ? (
           <Loading />
         ) : (
           <>
             {// eslint-disable-next-line no-nested-ternary
-            filterCount ? userList.length
-              ? (<Typography variant="h6">{`Showing ${userList.length} ${pluralizeCount(userList.length, 'Result')}`}</Typography>)
-              : (<Typography variant="h6">No Result</Typography>)
-            : <span />
+            viewFilteredUserCount() && (
+              <Typography variant="h6">
+                {`Showing ${usersCountData?.usersCount} ${pluralizeCount(usersCountData?.usersCount, 'Result')}`}
+              </Typography>
+              )
 }
             <br />
             <UsersActionMenu
