@@ -185,12 +185,13 @@ const useStyles = makeStyles({
 });
 
 TransactionsList.defaultProps = {
-  userData: {}
+  userData: {},
+  tab: "Contacts",
 }
 
 TransactionsList.propTypes = {
   userId: PropTypes.string.isRequired,
-  tab: PropTypes.string.isRequired,
+  tab: PropTypes.string,
   // eslint-disable-next-line react/forbid-prop-types
   userData: PropTypes.object,
   user: PropTypes.shape({
