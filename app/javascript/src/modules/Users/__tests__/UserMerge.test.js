@@ -16,8 +16,8 @@ describe('user merge component', () => {
         <UserMerge {...props} />
       </MockedProvider>
     )
-    const mergeBtn = container.queryByText('Merge Users')
-    const cancelBtn = container.queryByText('Cancel')
+    const mergeBtn = container.queryByText('users:users.merge_user')
+    const cancelBtn = container.queryByText('form_actions.cancel')
     expect(mergeBtn).toBeInTheDocument()
     expect(cancelBtn).toBeInTheDocument()
 
@@ -26,7 +26,7 @@ describe('user merge component', () => {
     fireEvent.click(mergeBtn)
     // since no user will be selected expect an error
     expect(
-      container.queryByText('You have to select a user')
+      container.queryByText('errors.no_user_selected')
     ).toBeInTheDocument()
   })
 })
