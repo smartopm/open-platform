@@ -35,7 +35,10 @@ module Types::Queries::PlanPayment
       raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
     end
 
-    context[:site_community].plan_payments.search(query)
+    search_method = 'search'
+    search_method = 'search_by_numbers' if query&.exclude?(':') && query.to_i.positive?
+
+    context[:site_community].plan_payments.send(search_method, query)
                             .eager_load(:user, :payment_plan)
                             .order(created_at: :desc)
                             .limit(limit).offset(offset)
