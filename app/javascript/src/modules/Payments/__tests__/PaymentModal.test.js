@@ -3,21 +3,13 @@ import { render, fireEvent, waitFor } from '@testing-library/react'
 import '@testing-library/jest-dom/extend-expect'
 import { MockedProvider } from '@apollo/react-testing'
 import { BrowserRouter } from 'react-router-dom/'
-import PaymentModal, { PaymentDetails } from '../../modules/Payments/Components/UserTransactions/PaymentModal'
-import currency from '../../__mocks__/currency'
-import { UserLandParcel } from '../../graphql/queries';
-import { Spinner } from '../../shared/Loading';
-import { PaymentCreate } from '../../graphql/mutations'
+import PaymentModal, { PaymentDetails } from '../Components/UserTransactions/PaymentModal'
+import currency from '../../../__mocks__/currency'
+import { UserLandParcel } from '../../../graphql/queries';
+import { Spinner } from '../../../shared/Loading';
+import { PaymentCreate } from '../../../graphql/mutations'
 
 describe('It should test the payment modal component', () => {
-  const invoiceData =
-      {
-        amount: '1000',
-        landParcel: {
-          parcelNumber: 'ho2ij3'
-        }
-      }
-
   const open = true
 
   const handleModalClose = jest.fn
@@ -52,7 +44,6 @@ describe('It should test the payment modal component', () => {
         <MockedProvider mocks={mock}>
           <PaymentModal
             open={open}
-            invoiceData={invoiceData}
             handleModalClose={handleModalClose}
             currencyData={currency}
           />
@@ -68,6 +59,7 @@ describe('It should test the payment modal component', () => {
       () => {
         expect(container.getByTestId("transaction-type")).toBeInTheDocument()
         expect(container.getAllByTestId("amount")[0]).toBeInTheDocument()
+        expect(container.getAllByTestId("add-plot")[0]).toBeInTheDocument()
       },
       { timeout: 10 }
     );
