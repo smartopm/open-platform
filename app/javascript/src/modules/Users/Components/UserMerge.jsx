@@ -3,6 +3,7 @@ import { Button, Grid, Typography, TextField } from '@material-ui/core';
 import { useLazyQuery, useMutation } from 'react-apollo';
 import PropTypes from 'prop-types';
 import Autocomplete from '@material-ui/lab/Autocomplete';
+import { useTranslation } from 'react-i18next';
 import { MergeUsersMutation } from '../../../graphql/mutations';
 import { ModalDialog } from '../../../components/Dialog';
 import useDebounce from '../../../utils/useDebounce';
@@ -18,6 +19,7 @@ export default function UserMerge({ userId, close }) {
   const [duplicateUserId, setDuplicateUserId] = useState(null)
   const debouncedValue = useDebounce(searchedUser, 500);
   const [isSuccessAlert, setIsSuccessAlert] = useState(false);
+  const { t } = useTranslation(['common', 'users'])
 
   const [searchUser, { data }] = useLazyQuery(UsersLiteQuery, {
     variables: { query: debouncedValue, limit: 10 },
@@ -34,7 +36,7 @@ export default function UserMerge({ userId, close }) {
       .then(() => {
           setLoading(false);
       setIsSuccessAlert(true)
-      setMessage('Successfully merged users');
+      setMessage(t('users:users.user_merged'));
       // delay the closing of the modal to allow the success message to show
       setTimeout(() => close(), 1000)
       })
@@ -54,7 +56,7 @@ export default function UserMerge({ userId, close }) {
 
   function handleConfirmMerge() {
     if (!duplicateUserId) {
-      setMessage('You have to select a user');
+      setMessage(t('errors.no_user_selected'));
       return;
     }
     setConfirmOpen(!open);
@@ -74,8 +76,7 @@ export default function UserMerge({ userId, close }) {
         action="proceed"
       >
         <Typography variant="body1">
-          Merging this user will keep this account and merge data from the selected account into
-          this account. The account being merged will no longer exist. Do you want to proceed?
+          {t('misc.user_merge_warning_text')}
         </Typography>
       </ModalDialog>
 
@@ -89,12 +90,13 @@ export default function UserMerge({ userId, close }) {
         renderInput={params => (
           <TextField
             {...params}
-            label="Input User Name"
+            label={t('form_fields.user_name_search')}
             style={{ width: '100%' }}
             name="name"
             onChange={event => setSearchUser(event.target.value)}
             onKeyDown={() => searchUser()}
-            helperText="The account selected will be deleted from the system and merged into the profile you are currently on"
+            placeholder={t('form_fields.user_name_merge')}
+            helperText={t('misc.user_name_search_warning_text')}
           />
         )}
       />
@@ -104,7 +106,7 @@ export default function UserMerge({ userId, close }) {
 
       <Grid container direction="row-reverse" justify="space-around" alignItems="center">
         <Button variant="contained" aria-label="merge_cancel" color="secondary" onClick={close}>
-          Cancel
+          {t('form_actions.cancel')}
         </Button>
         <Button
           variant="contained"
@@ -113,7 +115,7 @@ export default function UserMerge({ userId, close }) {
           onClick={handleConfirmMerge}
           aria-label="merge_btn"
         >
-          {loading ? 'Merging ...' : ' Merge Users'}
+          {loading ? t('users:users.merging') : t('users:users.merge_user')}
         </Button>
       </Grid>
       <br />
