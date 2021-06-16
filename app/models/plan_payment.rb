@@ -23,11 +23,16 @@ class PlanPayment < ApplicationRecord
     attributes user: ['user.name']
     attributes phone_number: ['user.phone_number']
     attributes email: ['user.email']
-    attributes ext_ref_id: ['user.ext_ref_id']
     attributes amount: ['user_transaction.amount']
     attributes source: ['user_transaction.source']
     attributes parcel_number: ['land_parcel.parcel_number']
     attributes parcel_type: ['land_parcel.parcel_type']
+  end
+
+  search_scope :search_by_numbers do
+    attributes :automated_receipt_number, :manual_receipt_number
+    attributes ext_ref_id: ['user.ext_ref_id']
+    attributes parcel_number: ['land_parcel.parcel_number']
   end
 
   scope :created_at_lteq, lambda { |created_at|
