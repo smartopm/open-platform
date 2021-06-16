@@ -105,9 +105,7 @@ export default function UserInformation({
 
   function handleMergeDialog() {
     setDialogOpen(false);
-    // invalidating the tabValue wont work unless params are changed, this is caused by the useEffect
-    setValue(null);
-    router.push(`/user/${userId}`);
+    router.push(`/user/${userId}?tab=${tabValue}`);
   }
 
   return (
