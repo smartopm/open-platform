@@ -271,7 +271,7 @@ export default function PaymentModal({
                 error={isError && submitting && !inputValue.landParcelId}
                 helperText={isError && !inputValue.landParcelId && 'Land Parcel is required'}
                 required
-                disabled={Boolean(landParcels?.userLandParcelWithPlan?.length === 0)}
+                disabled={landParcels?.userLandParcelWithPlan?.length === 0 || Boolean(!landParcels)}
                 select
               >
                 {landParcels?.userLandParcelWithPlan?.map(land => (
