@@ -43,6 +43,7 @@ export default function UserInformation({
 }) {
   const path = useParamsQuery();
   const tab = path.get('tab');
+  const type = path.get('type');
   const { t } = useTranslation('users');
   const [tabValue, setValue] = useState(tab || 'Contacts');
   const [isDialogOpen, setDialogOpen] = useState(false);
@@ -68,13 +69,18 @@ export default function UserInformation({
     } else {
       setValue('Contacts');
     }
-
-    // open merge modal
-    if (tabValue === 'MergeUser') {
-      setDialogOpen(true);
-    }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [path, tab, tabValue]);
+  }, [path, tab]);
+
+
+  useEffect(() => {
+    // open merge modal
+    if (type === 'MergeUser') {
+      setDialogOpen(true);
+    } else {
+      setDialogOpen(false);
+    }
+  }, [type]);
 
   const userType = authState.user.userType.toLowerCase();
 
@@ -98,7 +104,7 @@ export default function UserInformation({
   };
 
   function handleMergeDialog() {
-    setDialogOpen(!isDialogOpen);
+    setDialogOpen(false);
     // invalidating the tabValue wont work unless params are changed, this is caused by the useEffect
     setValue(null);
     router.push(`/user/${userId}`);

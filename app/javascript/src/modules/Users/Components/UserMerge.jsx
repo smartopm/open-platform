@@ -1,46 +1,48 @@
-import React, { useState } from 'react'
-import { Button, Grid, Typography } from '@material-ui/core'
-import { useMutation } from 'react-apollo'
-import PropTypes from 'prop-types'
-import UserSearch from './UserSearch'
-import { MergeUsersMutation } from '../../../graphql/mutations'
-import { ModalDialog } from '../../../components/Dialog'
-import CenteredContent from '../../../components/CenteredContent'
+import React, { useState } from 'react';
+import { Button, Grid, Typography } from '@material-ui/core';
+import { useMutation } from 'react-apollo';
+import PropTypes from 'prop-types';
+import UserSearch from './UserSearch';
+import { MergeUsersMutation } from '../../../graphql/mutations';
+import { ModalDialog } from '../../../components/Dialog';
+import CenteredContent from '../../../components/CenteredContent';
 
 // find a user a call the mutation to merge them
 const initialData = {
   user: '',
   userId: ''
-}
+};
 export default function UserMerge({ userId, close }) {
-  const [data, setData] = useState(initialData)
-  const [merge] = useMutation(MergeUsersMutation)
-  const [loading, setLoading] = useState(false)
-  const [open, setConfirmOpen] = useState(false)
-  const [message, setMessage] = useState(null)
+  const [data, setData] = useState(initialData);
+  const [merge] = useMutation(MergeUsersMutation);
+  const [loading, setLoading] = useState(false);
+  const [open, setConfirmOpen] = useState(false);
+  const [message, setMessage] = useState(null);
 
   function handleMerge() {
-    setLoading(true)
-    setConfirmOpen(false)
+    setLoading(true);
+    setConfirmOpen(false);
     merge({
       variables: { id: userId, duplicateId: data.userId }
     })
-      // eslint-disable-next-line no-sequences
-      .then(() => (close(), setLoading(false)))
-      .catch(err => {
-        setMessage(err.message)
-        setLoading(false)
+      .then(() => {
+        close();
+        setLoading(false);
       })
+      .catch(err => {
+        setMessage(err.message);
+        setLoading(false);
+      });
   }
 
   function handleConfirmMerge() {
     if (!data.userId.length) {
-      setMessage('You have to select a user')
-      return
+      setMessage('You have to select a user');
+      return;
     }
-    setConfirmOpen(!open)
+    setConfirmOpen(!open);
   }
-  
+
   return (
     <>
       <ModalDialog
@@ -50,9 +52,8 @@ export default function UserMerge({ userId, close }) {
         action="proceed"
       >
         <Typography variant="body1">
-          Merging this user will keep this account and merge data from the
-          selected account into this account. The account being merged will no
-          longer exist. Do you want to proceed?
+          Merging this user will keep this account and merge data from the selected account into
+          this account. The account being merged will no longer exist. Do you want to proceed?
         </Typography>
       </ModalDialog>
 
@@ -67,18 +68,8 @@ export default function UserMerge({ userId, close }) {
         </CenteredContent>
       )}
 
-      <Grid
-        container
-        direction="row-reverse"
-        justify="space-around"
-        alignItems="center"
-      >
-        <Button
-          variant="contained"
-          aria-label="merge_cancel"
-          color="secondary"
-          onClick={close}
-        >
+      <Grid container direction="row-reverse" justify="space-around" alignItems="center">
+        <Button variant="contained" aria-label="merge_cancel" color="secondary" onClick={close}>
           Cancel
         </Button>
         <Button
@@ -93,9 +84,9 @@ export default function UserMerge({ userId, close }) {
       </Grid>
       <br />
     </>
-  )
+  );
 }
 UserMerge.propTypes = {
- userId: PropTypes.string.isRequired,
- close: PropTypes.func.isRequired
-}
+  userId: PropTypes.string.isRequired,
+  close: PropTypes.func.isRequired
+};
