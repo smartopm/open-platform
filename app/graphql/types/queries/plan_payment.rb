@@ -36,9 +36,7 @@ module Types::Queries::PlanPayment
     end
 
     search_method = 'search'
-    if query && !query.include?(':') && query.to_i > 0
-      search_method = 'search_by_numbers'
-    end
+    search_method = 'search_by_numbers' if query&.exclude?(':') && query.to_i.positive?
 
     context[:site_community].plan_payments.send(search_method, query)
                             .eager_load(:user, :payment_plan)
