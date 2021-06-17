@@ -19,5 +19,5 @@ class LandParcel < ApplicationRecord
     attributes :parcel_number, :address1, :address2, :parcel_type
     attributes owner: ['accounts.full_name', 'accounts.address1', 'accounts.address2']
   end
-  enum deleted_status: { not_deleted: 0, deleted: 1 }
+  enum deleted_status: { active: 0, deleted: 1 }
 end
