@@ -52,6 +52,7 @@ export default function UsersList() {
   const [selectCheckBox, setSelectCheckBox] = useState(false)
   const [substatusReportOpen, setSubstatusReportOpen] = useState(false)
   const history = useHistory()
+  const location = useLocation()
   const { t } = useTranslation(['users', 'common'])
 
   function handleReportDialog(){
@@ -88,6 +89,13 @@ export default function UsersList() {
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filterCount])
+
+  useEffect(() => {
+    if (location?.state?.query) {
+      setSearchQuery(`sub_status = "${location?.state?.query}" OR user_type = "resident"`)
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
 
   // TODO: @dennis, add pop up for notes
@@ -133,7 +141,7 @@ export default function UsersList() {
   }
 
   function handleFilterUserBySubstatus(index){
-    setSearchQuery(`sub_status = "${index}"`)
+    setSearchQuery(`sub_status = "${index}" OR user_type = "resident"`)
     handleReportDialog()
   }
   function handleSaveNote() {
