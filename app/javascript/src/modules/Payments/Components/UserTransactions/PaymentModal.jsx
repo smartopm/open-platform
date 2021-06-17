@@ -236,9 +236,7 @@ export default function PaymentModal({
                     getOptionLabel={option => option?.name}
                     getOptionSelected={(option, value) => option.name === value.name}
                     onChange={(_event, user) => handleSearchPlot(user)}
-                    renderOption={(option) => {
-                      console.log('option', option)
-                      return (
+                    renderOption={(option) => (
                         <>
                           <Grid item sm={2} className={classes.gridItem}>
                             <UserAvatar imageUrl={option.imageUrl} customStyle={classes.userAvatar} />
@@ -253,7 +251,7 @@ export default function PaymentModal({
                             {option.extRefId || '-'}
                           </Grid>
                         </>
-                    )}}
+                    )}
                     renderInput={params => (
                       <TextField
                         {...params}
