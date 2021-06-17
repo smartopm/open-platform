@@ -4,10 +4,10 @@ import DoneIcon from '@material-ui/icons/Done'
 import { Button, FormHelperText } from '@material-ui/core'
 import PropTypes from 'prop-types'
 
-export default function UploadField({ detail, upload, editable }) {
+export default function UploadField({ detail, upload, editable, uploaded }) {
   return (
     <>
-      <label htmlFor="button-file">
+      <label htmlFor={`button-${detail.label}`}>
         <FormHelperText
           style={{
             margin: '4px 4px 0 0',
@@ -18,9 +18,9 @@ export default function UploadField({ detail, upload, editable }) {
         <br />
         <input
           type="file"
-          name="image"
-          id="button-file"
-          aria-label="upload_field"
+          name={`image-${detail.label}`}
+          id={`button-${detail.label}`}
+          aria-label={`upload_field_${detail.label}`}
           capture
           onChange={upload}
           readOnly={editable}
@@ -29,11 +29,11 @@ export default function UploadField({ detail, upload, editable }) {
         <Button
           variant="text"
           component="span"
-          aria-label="upload_button"
+          aria-label={`upload_button_${detail.label}`}
           disabled={editable}
-          startIcon={detail.type === 'file' && detail.status === 'DONE' ? <DoneIcon /> : <AddCircleOutline />}
+          startIcon={detail.type === 'file' && uploaded ? <DoneIcon /> : <AddCircleOutline />}
         >
-          {detail.status === 'DONE' ? 'File Uploaded' : 'Upload File'}
+          {uploaded ? 'File Uploaded' : 'Upload File'}
         </Button>
       </label>
     </>
@@ -42,10 +42,10 @@ export default function UploadField({ detail, upload, editable }) {
 
 UploadField.propTypes = {
   detail: PropTypes.shape({
-    status: PropTypes.string,
     type: PropTypes.string,
     label: PropTypes.string
   }).isRequired,
   upload: PropTypes.func.isRequired,
   editable: PropTypes.bool.isRequired,
+  uploaded: PropTypes.bool.isRequired
 }
