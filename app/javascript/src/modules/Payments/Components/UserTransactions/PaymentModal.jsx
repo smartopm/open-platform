@@ -239,7 +239,7 @@ export default function PaymentModal({
                     renderOption={(option) => (
                       <>
                         <Grid item sm={2} className={classes.gridItem}>
-                          <UserAvatar imageUrl={option.imageUrl} customStyle={classes.userAvatar} />
+                          <UserAvatar imageUrl={option.imageUrl || option.avatarUrl} customStyle={classes.userAvatar} />
                         </Grid>
                         <Grid item sm={4} className={classes.gridItem}>
                           {option.name}
