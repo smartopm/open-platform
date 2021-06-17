@@ -23,6 +23,11 @@ class MergeUsers
 
       raise StandardError, 'Update Failed' if table_name.constantize.where(user_id: user_id).any?
     end
+
+    # Updates accounts details to their associated user's details
+    user = User.find_by(id: duplicate_id)
+    user.update_associated_accounts_details
+
     # Merges wallet details of users.
     merge_user_wallets(user_id, duplicate_id)
 

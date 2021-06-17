@@ -16,7 +16,7 @@ RSpec.describe MergeUsers do
   end
 
   let!(:user) { create(:user_with_community) }
-  let!(:duplicate_user) { create(:user_with_community) }
+  let!(:duplicate_user) { create(:user_with_community, name: 'John Doe') }
 
   let!(:activity_point) { create(:activity_point, user: user, article_read: 2, referral: 10) }
 
@@ -31,7 +31,10 @@ RSpec.describe MergeUsers do
                       status: 'verified')
   end
 
-  let!(:account) { create(:account, user: user, community_id: user.community_id) }
+  let!(:account) do
+    create(:account, user: user, community_id: user.community_id,
+                     full_name: user.name)
+  end
   let!(:discussion) { create(:discussion, user: user, community_id: user.community_id) }
   let!(:comment) do
     create(:comment, user: user, community_id: user.community_id, discussion: discussion)
@@ -94,6 +97,7 @@ RSpec.describe MergeUsers do
     expect(activity_point.reload.user_id).to eq(duplicate_user.id)
     expect(assignee_note.reload.user_id).to eq(duplicate_user.id)
     expect(account.reload.user_id).to eq(duplicate_user.id)
+    expect(account.full_name).to eq(duplicate_user.name)
     expect(comment.reload.user_id).to eq(duplicate_user.id)
     expect(contact_info.reload.user_id).to eq(duplicate_user.id)
     expect(discussion.reload.user_id).to eq(duplicate_user.id)
