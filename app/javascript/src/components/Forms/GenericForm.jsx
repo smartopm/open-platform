@@ -1,5 +1,5 @@
 /* eslint-disable no-use-before-define */
-import React, { Fragment, useContext, useRef, useState } from 'react'
+import React, { Fragment, useContext, useRef, useState, useEffect } from 'react'
 import { Button, Container, Grid, IconButton, Snackbar } from '@material-ui/core'
 import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
 import { useApolloClient, useMutation } from 'react-apollo'
@@ -35,18 +35,25 @@ export default function GenericForm({ formId, pathname, formData, refetch, editM
   const [isSubmitting, setSubmitting] = useState(false)
   const [alertOpen, setAlertOpen] = useState(false)
   const [currentPropId, setCurrentPropertyId] = useState("")
+  const [uploadedImages, setUploadedImages] = useState([])
   const signRef = useRef(null)
   const authState = useContext(AuthStateContext)
   // create form user
   const [createFormUser] = useMutation(FormUserCreateMutation)
   const [deleteProperty] = useMutation(FormPropertyDeleteMutation)
   // separate function for file upload
-  const { onChange, status, url, signedBlobId } = useFileUpload({
+  const { onChange, status, signedBlobId } = useFileUpload({
     client: useApolloClient()
   })
   const { onChange: uploadSignature, status: signatureStatus, signedBlobId: signatureBlobId } = useFileUpload({
     client: useApolloClient()
   })
+
+  useEffect(() => {
+    if (status === 'DONE' && currentPropId && !uploadedImages.find((im) => im.propertyId === currentPropId)) {
+      setUploadedImages([...uploadedImages, { blobId: signedBlobId, propertyId: currentPropId}])
+    }
+  }, [status])
 
   function handleAlertClose(){
     setAlertOpen(false)
@@ -65,33 +72,38 @@ export default function GenericForm({ formId, pathname, formData, refetch, editM
       date: { value: date,  form_property_id: id}
     })
   }
-  
+
   function handleRadioValueChange(event, propId, fieldName){
     const { name, value } = event.target
     setProperties({
       ...properties,
       [fieldName]: { value: { checked: value, label: name },  form_property_id: propId}
-  })
-}
+    })
+  }
 
-function handleDeleteProperty(propId){
-  setDeleteLoading(true)
-  setCurrentPropertyId(propId)
-  deleteProperty({ 
-      variables: { formId, formPropertyId: propId }
+  function onImageSelect(event, currentProperty) {
+    setCurrentPropertyId(currentProperty)
+    onChange(event.target.files[0])
+  }
+
+  function handleDeleteProperty(propId){
+    setDeleteLoading(true)
+    setCurrentPropertyId(propId)
+    deleteProperty({
+        variables: { formId, formPropertyId: propId }
+      })
+      .then(() => {
+        setDeleteLoading(false)
+        setMessage({ ...message, err: false, info: 'Deleted form property' })
+        setAlertOpen(true)
+        refetch()
+      })
+      .catch(err => {
+        setMessage({ ...message, err: true, info: err.message })
+        setAlertOpen(true)
+        setDeleteLoading(false)
     })
-    .then(() => {
-      setDeleteLoading(false)
-      setMessage({ ...message, err: false, info: 'Deleted form property' })
-      setAlertOpen(true)
-      refetch()
-    })
-    .catch(err => {
-      setMessage({ ...message, err: true, info: err.message })
-      setAlertOpen(true)
-      setDeleteLoading(false)
-    })
-}
+  }
 
   async function handleSignatureUpload(){
     setMessage({ ...message, signed: true})
@@ -100,14 +112,13 @@ function handleDeleteProperty(propId){
     const signature = await convertBase64ToFile(url64)
     await uploadSignature(signature)
   }
-  
+
    function saveFormData(event){
     event.preventDefault()
     setSubmitting(true)
-    const fileUploadType = formData.formProperties.filter(item => item.fieldType === 'image')[0]
     const fileSignType = formData.formProperties.filter(item => item.fieldType === 'signature')[0]
-    
-    
+
+
     // get values from properties state
     const formattedProperties = Object.entries(properties).map(([, value]) => value)
     const filledInProperties = formattedProperties.filter(item => item.value && item.value?.checked !== null && item.form_property_id !== null)
@@ -118,10 +129,11 @@ function handleDeleteProperty(propId){
       filledInProperties.push(newValue)
     }
     // check if we uploaded then attach the blob id to the newValue
-    if (signedBlobId && url) {
-      const newValue = { value: signedBlobId, form_property_id: fileUploadType.id, image_blob_id: signedBlobId }
+    uploadedImages.forEach((item) => {
+      const newValue = { value: item.blobId, form_property_id: item.propertyId, image_blob_id: item.blobId }
       filledInProperties.push(newValue)
-    }
+    })
+
     // update all form values
      formData.formProperties.map(prop => addPropWithValue(filledInProperties, prop.id))
     const cleanFormData = JSON.stringify({user_form_properties: filledInProperties})
@@ -165,7 +177,7 @@ function handleDeleteProperty(propId){
             editMode && (
               <Grid item xs={1}>
                 <IconButton style={{ float: 'left', marginTop: 10 }} onClick={() => handleDeleteProperty(formPropertiesData.id)}>
-                  { isDeletingProperty  && currentPropId === formPropertiesData.id ? <Spinner /> : <DeleteOutlineIcon /> } 
+                  { isDeletingProperty  && currentPropId === formPropertiesData.id ? <Spinner /> : <DeleteOutlineIcon /> }
                 </IconButton>
               </Grid>
             )
@@ -187,7 +199,7 @@ function handleDeleteProperty(propId){
             editMode && (
               <Grid item xs={1}>
                 <IconButton style={{ float: 'left', marginTop: 10 }} onClick={() => handleDeleteProperty(formPropertiesData.id)}>
-                  { isDeletingProperty  && currentPropId === formPropertiesData.id ? <Spinner /> : <DeleteOutlineIcon /> } 
+                  { isDeletingProperty  && currentPropId === formPropertiesData.id ? <Spinner /> : <DeleteOutlineIcon /> }
                 </IconButton>
               </Grid>
             )
@@ -208,16 +220,17 @@ function handleDeleteProperty(propId){
             editMode && (
               <Grid item xs={1}>
                 <IconButton style={{ float: 'left', marginTop: 10 }} onClick={() => handleDeleteProperty(formPropertiesData.id)}>
-                  { isDeletingProperty  && currentPropId === formPropertiesData.id ? <Spinner /> : <DeleteOutlineIcon /> } 
+                  { isDeletingProperty  && currentPropId === formPropertiesData.id ? <Spinner /> : <DeleteOutlineIcon /> }
                 </IconButton>
               </Grid>
             )
           }
           <Grid item xs={editMode ? 11 : 12}>
             <UploadField
-              detail={{ type: 'file', status, label: formPropertiesData.fieldName }}
-              upload={evt => onChange(evt.target.files[0])}
+              detail={{ type: 'file', label: formPropertiesData.fieldName }}
+              upload={evt => onImageSelect(evt, formPropertiesData.id)}
               editable={editable}
+              uploaded={uploadedImages.find((im) => im.propertyId === formPropertiesData.id)}
             />
           </Grid>
         </Grid>
@@ -228,7 +241,7 @@ function handleDeleteProperty(propId){
             editMode && (
               <Grid item xs={1}>
                 <IconButton style={{ float: 'left', marginTop: 10 }} onClick={() => handleDeleteProperty(formPropertiesData.id)}>
-                  { isDeletingProperty  && currentPropId === formPropertiesData.id ? <Spinner /> : <DeleteOutlineIcon /> } 
+                  { isDeletingProperty  && currentPropId === formPropertiesData.id ? <Spinner /> : <DeleteOutlineIcon /> }
                 </IconButton>
               </Grid>
             )
@@ -249,7 +262,7 @@ function handleDeleteProperty(propId){
             editMode && (
               <Grid item xs={1}>
                 <IconButton style={{ float: 'left', marginTop: 10 }} onClick={() => handleDeleteProperty(formPropertiesData.id)}>
-                  { isDeletingProperty  && currentPropId === formPropertiesData.id ? <Spinner /> : <DeleteOutlineIcon /> } 
+                  { isDeletingProperty  && currentPropId === formPropertiesData.id ? <Spinner /> : <DeleteOutlineIcon /> }
                 </IconButton>
               </Grid>
             )
@@ -257,7 +270,7 @@ function handleDeleteProperty(propId){
           <Grid item xs={editMode ? 11 : 12}>
             <Fragment key={formPropertiesData.id}>
               <br />
-              <RadioInput 
+              <RadioInput
                 properties={formPropertiesData}
                 value={null}
                 handleValue={event => handleRadioValueChange(event, formPropertiesData.id, formPropertiesData.fieldName)}
@@ -295,7 +308,7 @@ function handleDeleteProperty(propId){
               </Button>
             </CenteredContent>
 
-            ) 
+            )
           }
         </form>
       </Container>
