@@ -8,14 +8,14 @@ import { useHistory } from 'react-router';
 import Avatar from '../../../components/Avatar';
 import { Context } from '../../../containers/Provider/AuthStateProvider';
 
-export default function UserAvatar({ imageUrl }) {
+export default function UserAvatar({ imageUrl, customStyle }) {
   const classes = useStyles();
   const history = useHistory()
   const matches = useMediaQuery('(max-width:600px)')
   const authState = useContext(Context)
   return (
     <div>
-      <div className={matches ? classes.avatarMobile : classes.avatar} onClick={() => history.push({pathname: '/user/settings'})}>
+      <div className={matches ? classes.avatarMobile : (customStyle || classes.avatar)} onClick={() => history.push({pathname: '/user/settings'})}>
         <Avatar data-testid='avatar' alt="user_image" imageUrl={imageUrl} user={authState.user} />
       </div>
     </div>
@@ -42,6 +42,11 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
+UserAvatar.defaultProps = {
+  customStyle: null,
+};
 UserAvatar.propTypes = {
-  imageUrl: PropTypes.string.isRequired
+  imageUrl: PropTypes.string.isRequired,
+  // eslint-disable-next-line react/forbid-prop-types
+  customStyle: PropTypes.object,
 };
