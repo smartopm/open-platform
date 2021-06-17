@@ -122,6 +122,7 @@ export default function UsersList() {
               operator = '>'
               value = dateToString(value)
             }
+            if(property === 'user_type' && value === 'client') operator = '='
 
             return `${property} ${operator} "${value}"`
           })
