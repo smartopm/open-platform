@@ -237,20 +237,20 @@ export default function PaymentModal({
                     getOptionSelected={(option, value) => option.name === value.name}
                     onChange={(_event, user) => handleSearchPlot(user)}
                     renderOption={(option) => (
-                        <>
-                          <Grid item sm={2} className={classes.gridItem}>
-                            <UserAvatar imageUrl={option.imageUrl} customStyle={classes.userAvatar} />
-                          </Grid>
-                          <Grid item sm={4} className={classes.gridItem}>
-                            {option.name}
-                          </Grid>
-                          <Grid item sm={3} className={classes.gridItem}>
-                            {titleize(option.userType)}
-                          </Grid>
-                          <Grid item sm={3} className={classes.gridItem}>
-                            {option.extRefId || '-'}
-                          </Grid>
-                        </>
+                      <>
+                        <Grid item sm={2} className={classes.gridItem}>
+                          <UserAvatar imageUrl={option.imageUrl} customStyle={classes.userAvatar} />
+                        </Grid>
+                        <Grid item sm={4} className={classes.gridItem}>
+                          {option.name}
+                        </Grid>
+                        <Grid item sm={3} className={classes.gridItem}>
+                          {titleize(option.userType)}
+                        </Grid>
+                        <Grid item sm={3} className={classes.gridItem}>
+                          {option.extRefId || '-'}
+                        </Grid>
+                      </>
                     )}
                     renderInput={params => (
                       <TextField
