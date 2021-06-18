@@ -117,12 +117,12 @@ export default function UsersList() {
             const property = filterFields[option[operator][0].var]
             let value = propAccessor(option, operator)[1]
 
-            if (operator === '==') operator = ':'
+            if (operator === '==') operator = '=' // make = the default operator
             if (property === 'date_filter') {
               operator = '>'
               value = dateToString(value)
             }
-            if(property === 'user_type' && value === 'client') operator = '='
+            if(property === 'phone_number') operator = ':'
 
             return `${property} ${operator} "${value}"`
           })
@@ -134,6 +134,7 @@ export default function UsersList() {
   }
 
   function handleFilterUserBySubstatus(index){
+    console.log('index', index)
     setSearchQuery(`sub_status = "${index}"`)
     handleReportDialog()
   }
