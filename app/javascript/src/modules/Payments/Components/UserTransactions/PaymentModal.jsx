@@ -1,6 +1,9 @@
 /* eslint-disable no-nested-ternary */
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
+import Button from '@material-ui/core/Button';
+import { useHistory } from 'react-router-dom';
+import AddIcon from '@material-ui/icons/Add';
 import { useLazyQuery, useMutation } from 'react-apollo';
 import subDays from 'date-fns/subDays';
 import TextField from '@material-ui/core/TextField';
@@ -49,6 +52,7 @@ export default function PaymentModal({
   csvRefetch
 }) {
   const classes = useStyles();
+  const history = useHistory();
   const [inputValue, setInputValue] = useState(initialValues);
   const [createPayment] = useMutation(PaymentCreate);
   const [isSuccessAlert, setIsSuccessAlert] = useState(false);
@@ -267,8 +271,8 @@ export default function PaymentModal({
                 error={isError && submitting && !inputValue.landParcelId}
                 helperText={isError && !inputValue.landParcelId && 'Land Parcel is required'}
                 required
-                // disable the MUI errors in the console and test environment when landParcels are empty
-                select={Boolean(landParcels?.userLandParcelWithPlan.length)}
+                disabled={landParcels?.userLandParcelWithPlan?.length === 0 || Boolean(!landParcels)}
+                select
               >
                 {landParcels?.userLandParcelWithPlan?.map(land => (
                   <MenuItem value={land.id} key={land.id}>
@@ -276,7 +280,10 @@ export default function PaymentModal({
                   </MenuItem>
                 ))}
               </TextField>
-
+              <Button style={{width: '20%'}} onClick={() => history.push('/land_parcels')} data-testid='add-plot'>
+                <AddIcon />
+                <Typography variant='caption'>add plot</Typography>
+              </Button>
               <TextField
                 margin="normal"
                 id="transaction-type"

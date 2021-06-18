@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'host_env'
+
 module Types
   # CommentType
   class CommentType < Types::BaseObject
@@ -16,8 +18,13 @@ module Types
     def image_url
       return nil unless object.image.attached?
 
-      Rails.application.routes.url_helpers
-           .rails_blob_url(object.image)
+      host_url(object.image)
+    end
+
+    def host_url(type)
+      base_url = HostEnv.base_url(object.user.community)
+      path = Rails.application.routes.url_helpers.rails_blob_path(type)
+      "https://#{base_url}#{path}"
     end
   end
 end

@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'host_env'
+
 module Types
   # UserFormPropertiesType
   class UserFormPropertiesType < Types::BaseObject
@@ -16,8 +18,7 @@ module Types
     def image_url
       return nil unless object.image.attached?
 
-      Rails.application.routes.url_helpers
-           .rails_blob_url(object.image)
+      host_url(object.image)
     end
 
     def file_type
@@ -26,6 +27,12 @@ module Types
       file = ActiveStorage::Attachment.where(record_id: object.id,
                                              record_type: 'UserFormProperty').first.blob
       file.content_type
+    end
+
+    def host_url(type)
+      base_url = HostEnv.base_url(object.user.community)
+      path = Rails.application.routes.url_helpers.rails_blob_path(type)
+      "https://#{base_url}#{path}"
     end
   end
 end

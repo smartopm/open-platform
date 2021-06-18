@@ -9,11 +9,12 @@ describe('Upload component', () => {
     const props = {
         upload: handler,
         detail: { status: '', type: 'file', label: 'Image Label' },
-        editable: false
+        editable: false,
+        uploaded: false
     }
     const container = render(<Upload {...props} />)
-    const uploadBtn = container.queryByLabelText('upload_button')
-    const uploadField = container.queryByLabelText('upload_field')
+    const uploadBtn = container.queryByLabelText('upload_button_Image Label')
+    const uploadField = container.queryByLabelText('upload_field_Image Label')
     expect(uploadBtn).not.toBeDisabled()
     fireEvent.change(uploadField)
     expect(handler).toHaveBeenCalled()
