@@ -12,7 +12,7 @@ export default function SubStatusReportDialog({ handleClose, open, handleFilter 
   const [getSubstatusReport, { loading, data, error }] = useLazyQuery(SubStatusQuery);
   const classes = useStyles();
 
-  const subStatus = {...userSubStatus, residents_count: 'Residents'}
+  const subStatus = {residents_count: 'Residents', ...userSubStatus}
 
   useEffect(() => {
     if (open) {

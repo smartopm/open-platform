@@ -91,8 +91,12 @@ export default function UsersList() {
   }, [filterCount])
 
   useEffect(() => {
-    if (location?.state?.query) {
-      setSearchQuery(`sub_status = "${location?.state?.query}" OR user_type = "resident"`)
+    if (location?.state) {
+      if (location?.state?.query === 0) {
+        setSearchQuery(`user_type = "resident"`)
+      } else {
+        setSearchQuery(`sub_status = "${location?.state?.query - 1}"`)
+      }
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
@@ -141,7 +145,11 @@ export default function UsersList() {
   }
 
   function handleFilterUserBySubstatus(index){
-    setSearchQuery(`sub_status = "${index}" OR user_type = "resident"`)
+    if (index === 0) {
+      setSearchQuery(`user_type = "resident"`)
+    } else {
+      setSearchQuery(`sub_status = "${index - 1}"`)
+    }
     handleReportDialog()
   }
   function handleSaveNote() {

@@ -14,7 +14,7 @@ export default function UserStats() {
   const history = useHistory();
   const { loading, data, error } = useQuery(SubStatusQuery);
   const { data: subStatusDistributionData } = useQuery(SubStatusDistributionReportQuery);
-  const subStatus = {...userSubStatus, residents_count: 'Residents'};
+  const subStatus = {residents_count: 'Residents', ...userSubStatus};
 
   function handleFilter(query) {
     history.push({pathname: '/users', state: { query }})
