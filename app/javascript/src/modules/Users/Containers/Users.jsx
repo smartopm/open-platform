@@ -134,7 +134,6 @@ export default function UsersList() {
   }
 
   function handleFilterUserBySubstatus(index){
-    console.log('index', index)
     setSearchQuery(`sub_status = "${index}"`)
     handleReportDialog()
   }
