@@ -64,8 +64,11 @@ export default function UserStyledTabs({ tabValue, handleChange, user }) {
   )
 }
 
+UserStyledTabs.defaultProps = {
+  tabValue: "Contacts"
+}
 UserStyledTabs.propTypes = {
-  tabValue: PropTypes.string.isRequired,
+  tabValue: PropTypes.string,
   handleChange: PropTypes.func.isRequired, 
   // eslint-disable-next-line react/forbid-prop-types
   user: PropTypes.object.isRequired,
