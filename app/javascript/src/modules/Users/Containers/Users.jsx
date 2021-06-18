@@ -118,11 +118,12 @@ export default function UsersList() {
             const property = filterFields[option[operator][0].var]
             let value = propAccessor(option, operator)[1]
 
-            if (operator === '==') operator = ':'
+            if (operator === '==') operator = '=' // make = the default operator
             if (property === 'date_filter') {
               operator = '>'
               value = dateToString(value)
             }
+            if(property === 'phone_number') operator = ':'
 
             return `${property} ${operator} "${value}"`
           })
