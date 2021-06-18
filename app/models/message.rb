@@ -42,8 +42,10 @@ class Message < ApplicationRecord
     update(is_read: true, read_at: DateTime.now) unless is_read
   end
 
+  # rubocop:disable Metrics/AbcSize
   def send_sms(add_prefix: true)
-    return if receiver.nil?
+    receiver_phone_number = user.phone_number
+    return if receiver_phone_number.nil?
 
     new_message = ''
     text = 'Click this link to reply to this message in our app '
@@ -51,8 +53,9 @@ class Message < ApplicationRecord
     new_message = "#{sender[:name]} from #{user.community.name} said: \n" if add_prefix
     new_message += message
     new_message += "\n\n#{text} \n#{link}" if include_reply_link?
-    Sms.send(receiver, new_message)
+    Sms.send(receiver_phone_number, new_message)
   end
+  # rubocop:enable Metrics/AbcSize:
 
   # rubocop:disable Metrics/MethodLength
   def create_message_task(body = nil)
