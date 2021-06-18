@@ -6,7 +6,6 @@ import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import Typography from '@material-ui/core/Typography';
-import Button from '@material-ui/core/Button';
 import { dateToString } from '../../../components/DateContainer';
 import UserPlotMap from './UserPlotMap';
 
@@ -60,9 +59,9 @@ export default function UserPlotInfo({ account, userId }) {
               </div>
               {parcels().map((plot, index) => (
                 // eslint-disable-next-line react/no-array-index-key
-                <Button style={{ display: 'flex', cursor: 'pointer' }} onClick={() => handlePlotClick(plot.id)} key={index} data-testid='plot'>
+                <div style={{ display: 'flex', cursor: 'pointer' }} onClick={() => handlePlotClick(plot.id)} key={index} data-testid='plot'>
                   <li className={classes.plotNumber}>{plot.parcelNumber}</li>
-                </Button>
+                </div>
               ))}
               <Typography variant="body2">
                 {t('common:misc.plot_details', { date: dateToString(parcels()[Number(parcels().length - 1)]?.updatedAt) })}
