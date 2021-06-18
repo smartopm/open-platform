@@ -1034,9 +1034,11 @@ query subStatus {
     plotsFullyPurchased
     eligibleToStartConstruction
     floorPlanPurchased
-    constructionApproved
+    buildingPermitApproved
     constructionInProgress
     constructionCompleted
+    constructionInProgressSelfBuild
+    residentsCount
   }
 }
 `

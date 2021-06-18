@@ -203,7 +203,8 @@ module Types::Queries::User
     end
 
     users = context[:site_community].users
-    users.group(:sub_status).count
+    residents_count = users.where(user_type: :resident).count
+    users.group(:sub_status).count.merge(residents_count: residents_count)
   end
 
   def substatus_distribution_query

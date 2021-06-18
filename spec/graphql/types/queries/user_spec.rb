@@ -439,7 +439,14 @@ RSpec.describe Types::Queries::User do
     let!(:admin_user) { create(:admin_user) }
     let!(:client_user) do
       create(:user_with_community, user_type: 'client',
-                                   community: admin_user.community)
+                                   community: admin_user.community,
+                                   sub_status: :building_permit_approved)
+    end
+    let!(:resident) do
+      create(:user_with_community,
+             user_type: 'resident',
+             community_id: admin_user.community_id,
+             sub_status: :construction_completed)
     end
     let(:query) do
       %(query usersCount($query: String) {
@@ -451,8 +458,14 @@ RSpec.describe Types::Queries::User do
       %(
           query subs {
             substatusQuery {
+              residentsCount
               plotsFullyPurchased
               eligibleToStartConstruction
+              floorPlanPurchased
+              buildingPermitApproved
+              constructionInProgress
+              constructionCompleted
+              constructionInProgressSelfBuild
             }
           })
     end
@@ -499,8 +512,15 @@ RSpec.describe Types::Queries::User do
                                        }).as_json
       expect(result['errors']).to be_nil
       # returned result for non existing substatus is nil instead of 0
-      expect(result.dig('data', 'substatusQuery', 'plotsFullyPurchased')).to be_nil
-      expect(result.dig('data', 'substatusQuery', 'eligibleToStartConstruction')).to be_nil
+      substatus_query_data = result.dig('data', 'substatusQuery')
+      expect(substatus_query_data['residentsCount']).to eql 1
+      expect(substatus_query_data['plotsFullyPurchased']).to be_nil
+      expect(substatus_query_data['eligibleToStartConstruction']).to be_nil
+      expect(substatus_query_data['floorPlanPurchased']).to be_nil
+      expect(substatus_query_data['buildingPermitApproved']).to eql 1
+      expect(substatus_query_data['constructionInProgress']).to be_nil
+      expect(substatus_query_data['constructionCompleted']).to eql 1
+      expect(substatus_query_data['constructionInProgressSelfBuild']).to be_nil
     end
 
     it 'should not query the substatus report when user is not admin' do

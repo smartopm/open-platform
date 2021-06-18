@@ -2,6 +2,7 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core';
 import { useQuery } from 'react-apollo';
+import { useHistory } from 'react-router-dom';
 import { SubStatusQuery, SubStatusDistributionReportQuery } from '../../../graphql/queries';
 import { Spinner } from '../../../shared/Loading';
 import { StatusList } from '../../../shared/Status';
@@ -10,8 +11,14 @@ import SubStatusTimeDistributionReport from './SubStatusTimeDistributionReport';
 
 export default function UserStats() {
   const classes = useStyles();
+  const history = useHistory();
   const { loading, data, error } = useQuery(SubStatusQuery);
   const { data: subStatusDistributionData } = useQuery(SubStatusDistributionReportQuery);
+  const subStatus = {residents_count: 'Residents', ...userSubStatus};
+
+  function handleFilter(query) {
+    history.push({pathname: '/users', state: { query }})
+  }
 
   return (
     <>
@@ -23,7 +30,11 @@ export default function UserStats() {
         {loading ? (
           <Spinner />
         ) : (
-          <StatusList data={data?.substatusQuery} statuses={userSubStatus} />
+          <StatusList 
+            data={data?.substatusQuery} 
+            statuses={subStatus}
+            handleFilter={handleFilter} 
+          />
         )}
       </div>
       {subStatusDistributionData && (
