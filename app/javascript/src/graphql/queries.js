@@ -217,6 +217,8 @@ export const UsersLiteQuery = gql`
       name
       imageUrl
       avatarUrl
+      userType
+      extRefId
       address
       accounts {
         id

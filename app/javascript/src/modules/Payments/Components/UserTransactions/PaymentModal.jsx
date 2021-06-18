@@ -12,16 +12,18 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import Autocomplete from '@material-ui/lab/Autocomplete';
+import Grid from '@material-ui/core/Grid';
 import { CustomizedDialogs } from '../../../../components/Dialog';
 import PaymentCreate from '../../graphql/payment_mutations';
 import { UserLandParcelWithPlan, UsersLiteQuery } from '../../../../graphql/queries';
 import MessageAlert from '../../../../components/MessageAlert';
-import { extractCurrency, formatError, formatMoney } from '../../../../utils/helpers';
+import { extractCurrency, formatError, formatMoney, titleize } from '../../../../utils/helpers';
 import ReceiptModal from './ReceiptModal';
 import { Spinner } from '../../../../shared/Loading';
 import SwitchInput from '../../../../components/Forms/SwitchInput';
 import DatePickerDialog from '../../../../components/DatePickerDialog';
 import useDebounce from '../../../../utils/useDebounce';
+import UserAvatar from '../../../Users/Components/UserAvatar';
 
 const initialValues = {
   amount: '',
@@ -230,6 +232,7 @@ export default function PaymentModal({
               />
               {
                 !userId && (
+                <Grid container>
                   <Autocomplete
                     style={{ width: '100%' }}
                     id="payment-user-input"
@@ -237,6 +240,22 @@ export default function PaymentModal({
                     getOptionLabel={option => option?.name}
                     getOptionSelected={(option, value) => option.name === value.name}
                     onChange={(_event, user) => handleSearchPlot(user)}
+                    renderOption={(option) => (
+                      <>
+                        <Grid item sm={2} className={classes.gridItem}>
+                          <UserAvatar imageUrl={option.imageUrl || option.avatarUrl} customStyle={classes.userAvatar} />
+                        </Grid>
+                        <Grid item sm={4} className={classes.gridItem}>
+                          {option.name}
+                        </Grid>
+                        <Grid item sm={3} className={classes.gridItem}>
+                          {titleize(option.userType)}
+                        </Grid>
+                        <Grid item sm={3} className={classes.gridItem}>
+                          {option.extRefId || '-'}
+                        </Grid>
+                      </>
+                    )}
                     renderInput={params => (
                       <TextField
                         {...params}
@@ -248,6 +267,7 @@ export default function PaymentModal({
                       />
                     )}
                   />
+                </Grid>
                 )
               }
               {
@@ -423,7 +443,16 @@ const useStyles = makeStyles({
     display: 'flex',
     flexDirection: 'column',
     width: '500px'
-  }
+  },
+  userAvatar: {
+    cursor: 'pointer',
+    height: 20,
+    width: 20,
+  },
+  gridItem: {
+    height: 40,
+    fontSize: '14px',
+  },
 });
 
 PaymentDetails.propTypes = {
