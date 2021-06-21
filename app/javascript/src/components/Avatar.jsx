@@ -7,6 +7,11 @@ import ImageAuth from '../shared/ImageAuth';
 import { Context } from '../containers/Provider/AuthStateProvider';
 
 export function safeAvatarLink({ imageUrl, user }) {
+  // return imageUrl to display in user search
+  if(imageUrl && imageUrl !== '/images/default_avatar.svg'){
+    return forceLinkHttps(imageUrl);
+  }
+
   if (user?.avatarUrl || user?.imageUrl) {
     return forceLinkHttps(user.avatarUrl || user.imageUrl);
   }
