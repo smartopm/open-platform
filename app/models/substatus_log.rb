@@ -13,7 +13,7 @@ class SubstatusLog < ApplicationRecord
     where(arel_table[:created_at].lt(created_at)).order(created_at: :asc).limit(1)
   }
 
-  def self.create_time_distribution_report
-    CustomerJourneyReport.generate_substatus_time_distribution
+  def self.create_time_distribution_report(community_id)
+    CustomerJourneyReport.generate_substatus_time_distribution(community_id)
   end
 end

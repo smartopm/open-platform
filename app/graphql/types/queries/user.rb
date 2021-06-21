@@ -211,7 +211,7 @@ module Types::Queries::User
       raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
     end
 
-    SubstatusLog.create_time_distribution_report
+    SubstatusLog.create_time_distribution_report(context[:site_community].id)
   end
 
   def user_active_plan
