@@ -2,7 +2,7 @@ stages:
   - build
   - test
   - report
-  # - e2e
+  - e2e
   - staging
   - deploy
   - dast
@@ -94,26 +94,26 @@ test:jest:
     name: "Jest $CI_PIPELINE_ID Coverage Report"
     expire_in: 24 hours
 
-# cypress:
-#   image: docker:latest
-#   services:
-#     - docker:dind
-#   stage: e2e
-#   before_script:
-#     - apk --update add nodejs
-#     - apk add yarn
-#     - export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
-#     - yarn install
-#     - apk add --no-cache docker-compose
-#   script:
-#     - sh ./bin/integration_tests.sh 'ci'
-#   artifacts:
-#     paths:
-#       - "tmp/cypress/"
-#     name: "Cypress $CI_PIPELINE_ID Visual Report"
-#     expire_in: 24 hours
-#   only:
-#     - master
+cypress:
+  image: docker:latest
+  services:
+    - docker:dind
+  stage: e2e
+  before_script:
+    - apk --update add nodejs
+    - apk add yarn
+    - export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
+    - yarn install
+    - apk add --no-cache docker-compose
+  script:
+    - sh ./bin/integration_tests.sh 'ci'
+  artifacts:
+    paths:
+      - "tmp/cypress/"
+    name: "Cypress $CI_PIPELINE_ID Visual Report"
+    expire_in: 24 hours
+  # only:
+  #   - master
 
 staging:appdeploy:
   stage: staging
