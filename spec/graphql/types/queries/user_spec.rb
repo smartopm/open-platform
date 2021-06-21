@@ -556,11 +556,11 @@ RSpec.describe Types::Queries::User do
         expect(substatus_query_data['residentsCount']).to eql 1
         expect(substatus_query_data['plotsFullyPurchased']).to be_nil
         expect(substatus_query_data['eligibleToStartConstruction']).to be_nil
-        expect(substatus_query_data['floorPlanPurchased']).to be_nil
-        expect(substatus_query_data['buildingPermitApproved']).to eql 1
+        expect(substatus_query_data['floorPlanPurchased']).to eql 1
+        expect(substatus_query_data['buildingPermitApproved']).to be_nil
         expect(substatus_query_data['constructionInProgress']).to be_nil
         expect(substatus_query_data['constructionCompleted']).to eql 1
-        expect(substatus_query_data['constructionInProgressSelfBuild']).to be_nil
+        expect(substatus_query_data['constructionInProgressSelfBuild']).to eql 1
       end
 
       it 'returns the substatus distribution report' do
