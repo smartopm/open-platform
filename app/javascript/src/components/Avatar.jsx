@@ -7,18 +7,13 @@ import ImageAuth from '../shared/ImageAuth';
 import { Context } from '../containers/Provider/AuthStateProvider';
 
 export function safeAvatarLink({ imageUrl, user }) {
-  // return imageUrl to display in user search
-  if(imageUrl && imageUrl !== '/images/default_avatar.svg'){
-    return forceLinkHttps(imageUrl);
-  }
-
   if (user?.avatarUrl || user?.imageUrl) {
     return forceLinkHttps(user.avatarUrl || user.imageUrl);
   }
   return forceLinkHttps(imageUrl);
 }
 
-export default function Avatar({ imageUrl, user, style }) {
+export default function Avatar({ imageUrl, user, style, searchedUser }) {
   const { token } = useContext(Context);
   const imageStyles = {
     small: styles.avatarSmall,
@@ -27,6 +22,42 @@ export default function Avatar({ imageUrl, user, style }) {
   };
   // we have imageUrl and avatarUrl on User and we don't need to re-authenticate these
   // user.imageUrl contains links from Auth Providers ==> Google and Facebook
+  if(searchedUser && searchedUser.imageUrl){
+    // Auth provider user - Google & Facebook
+    return (
+      <img
+        src={safeAvatarLink({ imageUrl: searchedUser.imageUrl  })}
+        className={css(propAccessor(imageStyles, style))}
+        alt="avatar for the user"
+        data-testid="searched_auth_user_avatar"
+      />
+    );
+  }
+
+  if(searchedUser && searchedUser.avatarUrl){
+    // non Auth provider user, but has attached image
+    return (
+      <img
+        src={safeAvatarLink({ imageUrl: searchedUser.avatarUrl  })}
+        className={css(propAccessor(imageStyles, style))}
+        alt="avatar for the user"
+        data-testid="searched_non_auth_user_avatar"
+      />
+    );
+  }
+
+  if(searchedUser && !(searchedUser.imageUrl || searchedUser.avatarUrl)){
+    // Non Auth provider user, no Image attached. Uses default
+    return (
+      <img
+        src={safeAvatarLink({ imageUrl: '/images/default_avatar.svg' })}
+        className={css(propAccessor(imageStyles, style))}
+        alt="avatar for the user"
+        data-testid="searched_default_user_avatar"
+      />
+    );
+  }
+
   if (user && user.avatarUrl) {
     return (
       <ImageAuth
@@ -53,7 +84,8 @@ Avatar.defaultProps = {
     imageUrl: '/images/default_avatar.svg'
   },
   imageUrl: '/images/default_avatar.svg',
-  style: 'small'
+  style: 'small',
+  searchedUser: null,
 };
 
 Avatar.propTypes = {
@@ -62,7 +94,11 @@ Avatar.propTypes = {
     imageUrl: PropTypes.string,
     avatarUrl: PropTypes.string
   }),
-  style: PropTypes.string
+  style: PropTypes.string,
+  searchedUser: PropTypes.shape({
+    imageUrl: PropTypes.string,
+    avatarUrl: PropTypes.string
+  }),
 };
 
 const styles = StyleSheet.create({
