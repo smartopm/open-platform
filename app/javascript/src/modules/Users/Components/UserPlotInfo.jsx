@@ -10,7 +10,7 @@ import Typography from '@material-ui/core/Typography';
 import { dateToString } from '../../../components/DateContainer';
 import UserPlotMap from './UserPlotMap';
 
-export default function UserPlotInfo({ account, userId }) {
+export default function UserPlotInfo({ account, userId, userName }) {
   const [plotNumber, setPlotNumber] = useState([]);
   const { t } = useTranslation('users')
   const classes = useStyles();
@@ -26,6 +26,10 @@ export default function UserPlotInfo({ account, userId }) {
 
   function handlePlotClick(id) {
     history.push({pathname: `/land_parcels`, search: `?plot=${id}`, state: { from: 'users', userId }})
+  }
+
+  function handlePlotCreteClick() {
+    history.push({pathname: `/land_parcels`, search: `?type=new`, state: { from: 'users', user: { userName, userId }}})
   }
 
   useEffect(() => {
@@ -46,6 +50,9 @@ export default function UserPlotInfo({ account, userId }) {
 
   return (
     <>
+      <Fab color="primary" variant="extended" className={classes.plot} onClick={() => handlePlotCreteClick()} data-testid='add-plot'>
+        {t("common:misc.new_property")}
+      </Fab>
       {parcels().length > 0 ? (
         <div className="container">
           <div className={classes.body}>
@@ -74,9 +81,6 @@ export default function UserPlotInfo({ account, userId }) {
                 </span>
               </Typography>
             </div>
-            <Fab color="primary" variant="extended" className={classes.plot}>
-              NEW PROPERTY
-            </Fab>
             <div className={classes.mapContainer}>
               <UserPlotMap plotData={account} />
             </div>
@@ -147,5 +151,6 @@ UserPlotInfo.propTypes = {
       updatedAt: PropTypes.string
     })
   ),
-  userId: PropTypes.string.isRequired
+  userId: PropTypes.string.isRequired,
+  userName: PropTypes.string.isRequired
 };

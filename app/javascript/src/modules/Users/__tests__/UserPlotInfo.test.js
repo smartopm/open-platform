@@ -81,6 +81,9 @@ describe('User Plot Info Page', () => {
       </MockedProvider>
     )
     expect(container.queryByText('common:misc.no_plot')).toBeInTheDocument()
+
+    expect(container.queryByTestId('add-plot')).toBeInTheDocument()
+    fireEvent.click(container.queryByTestId('add-plot'))
   })
 
   it('should include support team link', () => {
