@@ -1,6 +1,6 @@
 import React from 'react'
 import { BrowserRouter } from 'react-router-dom'
-import { cleanup, render } from '@testing-library/react'
+import { cleanup, render, fireEvent } from '@testing-library/react'
 import { MockedProvider } from '@apollo/react-testing'
 import UserPlotInfo from '../Components/UserPlotInfo'
 import '@testing-library/jest-dom/extend-expect'
@@ -53,6 +53,8 @@ describe('User Plot Info Page', () => {
       </MockedProvider>
     )
     expect(container.queryByText('Standard434')).toBeInTheDocument()
+    expect(container.queryAllByTestId('plot')[0]).toBeInTheDocument()
+    fireEvent.click(container.queryAllByTestId('plot')[0])
   })
 
   it('should contain a map display', () => {
