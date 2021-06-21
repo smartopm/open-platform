@@ -2,8 +2,8 @@
 
 # Customer Journey Report
 class CustomerJourneyReport
-  def self.generate_substatus_time_distribution
-    rows = execute_aggregate_time_distribution_query(aggregate_time_lapse_sql)
+  def self.generate_substatus_time_distribution(community_id)
+    rows = execute_aggregate_time_distribution_query(aggregate_time_lapse_sql(community_id))
 
     create_distribution_report(rows)
   end
@@ -38,7 +38,7 @@ class CustomerJourneyReport
     User.connection.select_all(sql).rows
   end
 
-  def self.aggregate_time_lapse_sql
+  def self.aggregate_time_lapse_sql(community_id)
     time_lapse_range = {
       from0to10: 'between0to10Days',
       from11to30: 'between11to30Days',
@@ -63,7 +63,7 @@ class CustomerJourneyReport
       COUNT(*)
       FROM substatus_logs ssl
       INNER JOIN users ON ssl.id = users.latest_substatus_id
-      WHERE ssl.new_status IS NOT NULL AND ssl.community_id = users.community_id
+      WHERE ssl.new_status IS NOT NULL AND ssl.community_id = '#{community_id}'
       GROUP BY ssl.new_status, bucket
     QUERY
   end
