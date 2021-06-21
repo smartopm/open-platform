@@ -585,7 +585,7 @@ export default function UsersList() {
             {// eslint-disable-next-line no-nested-ternary
             viewFilteredUserCount() && (
               <Typography variant="h6">
-                {`Showing ${usersCountData?.usersCount} ${pluralizeCount(usersCountData?.usersCount, 'Result')}`}
+                {`Showing ${usersCountData?.usersCount || userList.length} ${pluralizeCount((usersCountData?.usersCount || userList.length), 'Result')}`}
               </Typography>
               )
 }
