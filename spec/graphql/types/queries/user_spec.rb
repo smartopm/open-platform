@@ -439,15 +439,15 @@ RSpec.describe Types::Queries::User do
     let!(:admin_user) { create(:admin_user) }
     let!(:client_user) do
       create(:user_with_community, user_type: 'client',
-                                   community: admin_user.community,
-                                   sub_status: :building_permit_approved)
+                                   community: admin_user.community)
     end
     let!(:resident) do
-      create(:user_with_community,
-             user_type: 'resident',
-             community_id: admin_user.community_id,
-             sub_status: :construction_completed)
+      create(:user_with_community, user_type: 'resident',
+                                   community: admin_user.community)
     end
+    let!(:second_community) { create(:community) }
+    let!(:second_community_user) { create(:user_with_community, community: second_community) }
+
     let(:query) do
       %(query usersCount($query: String) {
         usersCount(query: $query)
@@ -481,76 +481,102 @@ RSpec.describe Types::Queries::User do
                 between51to150Days
                 over151Days
               }
+              floorPlanPurchased{
+                between0to10Days
+              }
+              constructionInProgressSelfBuild{
+                between0to10Days
+              }
+              constructionCompleted{
+                between0to10Days
+              }
+              buildingPermitApproved{
+                between0to10Days
+              }
             }
           })
     end
 
-    it 'returns users count based on the query' do
-      result = DoubleGdpSchema.execute(query, context: {
-                                         current_user: admin_user,
-                                       },
-                                              variables: { query: 'user_type = "client"' }).as_json
+    context 'when current user is not an admin' do
+      it 'throws unauthorized error' do
+        result = DoubleGdpSchema.execute(query, context: {
+                                           current_user: client_user,
+                                         }, variables: { query: 'user_type = "client"' })
+                                .as_json
 
-      expect(result.dig('data', 'usersCount')).to eq(1)
-      expect(result['errors']).to be_nil
+        expect(result['errors']).to_not be_nil
+        expect(result['errors'][0]['message']).to eql 'Unauthorized'
+      end
+
+      it 'throws unauthorized error' do
+        result = DoubleGdpSchema.execute(substatus_query, context: {
+                                           current_user: client_user,
+                                           site_community: client_user.community,
+                                         }).as_json
+        expect(result['errors']).to_not be_nil
+        expect(result['errors'][0]['message']).to eql 'Unauthorized'
+      end
+
+      it 'throws unauthorized error' do
+        result = DoubleGdpSchema.execute(substatus_distribution_query, context: {
+                                           current_user: client_user,
+                                           site_community: client_user.community,
+                                         }).as_json
+        expect(result['errors']).to_not be_nil
+        expect(result['errors'][0]['message']).to eql 'Unauthorized'
+      end
     end
 
-    it 'throws unauthorized error if current-user is not an admin' do
-      result = DoubleGdpSchema.execute(query, context: {
-                                         current_user: client_user,
-                                       },
-                                              variables: { query: 'user_type = "client"' }).as_json
+    context 'when current user is admin' do
+      before do
+        admin_user.update(sub_status: :floor_plan_purchased)
+        client_user.update(sub_status: :construction_in_progress_self_build)
+        resident.update(sub_status: :construction_completed)
+        second_community_user.update(sub_status: :building_permit_approved)
+      end
 
-      expect(result['errors']).to_not be_nil
-      expect(result['errors'][0]['message']).to eql 'Unauthorized'
-    end
+      it 'returns users count based on the query' do
+        result = DoubleGdpSchema.execute(query, context: {
+                                           current_user: admin_user,
+                                         }, variables: { query: 'user_type = "client"' })
+                                .as_json
 
-    it 'should query the substatus report' do
-      result = DoubleGdpSchema.execute(substatus_query, context: {
-                                         current_user: admin_user,
-                                         site_community: admin_user.community,
-                                       }).as_json
-      expect(result['errors']).to be_nil
-      # returned result for non existing substatus is nil instead of 0
-      substatus_query_data = result.dig('data', 'substatusQuery')
-      expect(substatus_query_data['residentsCount']).to eql 1
-      expect(substatus_query_data['plotsFullyPurchased']).to be_nil
-      expect(substatus_query_data['eligibleToStartConstruction']).to be_nil
-      expect(substatus_query_data['floorPlanPurchased']).to be_nil
-      expect(substatus_query_data['buildingPermitApproved']).to eql 1
-      expect(substatus_query_data['constructionInProgress']).to be_nil
-      expect(substatus_query_data['constructionCompleted']).to eql 1
-      expect(substatus_query_data['constructionInProgressSelfBuild']).to be_nil
-    end
+        expect(result.dig('data', 'usersCount')).to eq(1)
+        expect(result['errors']).to be_nil
+      end
 
-    it 'should not query the substatus report when user is not admin' do
-      result = DoubleGdpSchema.execute(substatus_query, context: {
-                                         current_user: client_user,
-                                         site_community: client_user.community,
-                                       }).as_json
-      expect(result['errors']).to_not be_nil
-      expect(result['errors'][0]['message']).to eql 'Unauthorized'
-    end
+      it 'returns the substatus report' do
+        result = DoubleGdpSchema.execute(substatus_query, context: {
+                                           current_user: admin_user,
+                                           site_community: admin_user.community,
+                                         }).as_json
+        expect(result['errors']).to be_nil
+        # returned result for non existing substatus is nil instead of 0
+        substatus_query_data = result.dig('data', 'substatusQuery')
+        expect(substatus_query_data['residentsCount']).to eql 1
+        expect(substatus_query_data['plotsFullyPurchased']).to be_nil
+        expect(substatus_query_data['eligibleToStartConstruction']).to be_nil
+        expect(substatus_query_data['floorPlanPurchased']).to eql 1
+        expect(substatus_query_data['buildingPermitApproved']).to be_nil
+        expect(substatus_query_data['constructionInProgress']).to be_nil
+        expect(substatus_query_data['constructionCompleted']).to eql 1
+        expect(substatus_query_data['constructionInProgressSelfBuild']).to eql 1
+      end
 
-    it 'should query the substatus distribution report' do
-      result = DoubleGdpSchema.execute(substatus_distribution_query, context: {
-                                         current_user: admin_user,
-                                         site_community: admin_user.community,
-                                       }).as_json
-      expect(result['errors']).to be_nil
-      expect(result.dig('data', 'substatusDistributionQuery', 'plotsFullyPurchased')).not_to be_nil
-      expect(
-        result.dig('data', 'substatusDistributionQuery', 'plotsFullyPurchased', 'between0to10Days'),
-      ).to eq 0
-    end
-
-    it 'should not query the substatus distribution report when user is not admin' do
-      result = DoubleGdpSchema.execute(substatus_distribution_query, context: {
-                                         current_user: client_user,
-                                         site_community: client_user.community,
-                                       }).as_json
-      expect(result['errors']).to_not be_nil
-      expect(result['errors'][0]['message']).to eql 'Unauthorized'
+      it 'returns the substatus distribution report' do
+        result = DoubleGdpSchema.execute(substatus_distribution_query, context: {
+                                           current_user: admin_user,
+                                           site_community: admin_user.community,
+                                         }).as_json
+        expect(result['errors']).to be_nil
+        distrubution_data = result.dig('data', 'substatusDistributionQuery')
+        expect(distrubution_data['plotsFullyPurchased']).not_to be_nil
+        expect(distrubution_data['plotsFullyPurchased']['between0to10Days']).to eq 0
+        expect(distrubution_data['floorPlanPurchased']['between0to10Days']).to eq 1
+        expect(distrubution_data['constructionInProgressSelfBuild']['between0to10Days']).to eq 1
+        expect(distrubution_data['constructionCompleted']['between0to10Days']).to eq 1
+        expect(distrubution_data['buildingPermitApproved']['between0to10Days']).to eq 0
+      end
     end
   end
 end
