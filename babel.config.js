@@ -17,12 +17,14 @@ module.exports = function(api) {
 
   return {
     presets: [
+      '@babel/preset-react',
       isTestEnv && [
         '@babel/preset-env',
         {
           targets: {
-            node: 'current'
-          }
+            node: 'current',
+          },
+          loose: true
         }
       ],
       (isProductionEnv || isDevelopmentEnv) && [
@@ -32,7 +34,8 @@ module.exports = function(api) {
           useBuiltIns: 'entry',
           corejs: 3,
           modules: false,
-          exclude: ['transform-typeof-symbol']
+          exclude: ['transform-typeof-symbol'],
+          loose: true
         }
       ]
     ].filter(Boolean),

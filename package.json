@@ -77,6 +77,9 @@
   "version": "0.1.0",
   "devDependencies": {
     "@babel/core": "^7.12.3",
+    "@babel/plugin-syntax-dynamic-import": "^7.8.3",
+    "@babel/plugin-transform-regenerator": "^7.14.5",
+    "@babel/plugin-transform-runtime": "^7.14.5",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.4.3",
     "@storybook/addon-actions": "6.2.9",
     "@storybook/addon-essentials": "6.2.9",
