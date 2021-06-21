@@ -2,6 +2,7 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import React, { useEffect, useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
+import Fab from '@material-ui/core/Fab';
 import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
@@ -73,6 +74,9 @@ export default function UserPlotInfo({ account, userId }) {
                 </span>
               </Typography>
             </div>
+            <Fab color="primary" variant="extended" className={classes.plot}>
+              NEW PROPERTY
+            </Fab>
             <div className={classes.mapContainer}>
               <UserPlotMap plotData={account} />
             </div>
@@ -115,6 +119,14 @@ const useStyles = makeStyles(theme => ({
     borderStyle: 'solid',
     borderWidth: '1px',
     width: '100%'
+  },
+  plot: {
+    boxShadow: 'none',
+    position: 'fixed',
+    bottom: 20,
+    right: 57,
+    marginLeft: '30%',
+    zIndex: '1000'
   }
 }))
 
