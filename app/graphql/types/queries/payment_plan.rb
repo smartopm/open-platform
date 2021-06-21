@@ -27,7 +27,7 @@ module Types::Queries::PaymentPlan
   # @return [Array<PaymentPlan>]
   def user_plans_with_payments(user_id: nil, offset: 0, limit: 10)
     user = verified_user(user_id)
-    payment_plans = user.payment_plans.includes(:plan_payments).where.not(pending_balance: 0)
+    payment_plans = user.payment_plans.includes(:plan_payments)
 
     if context[:current_user].admin?
       payment_plans.order(created_at: :desc).offset(offset).limit(limit)
