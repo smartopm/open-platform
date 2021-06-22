@@ -31,6 +31,5 @@ Cypress.Commands.add("login", (phoneNumber) => {
       cy.get(`.code-input-${index}`).type(digit)
     })
     cy.wait(2000)
-    cy.get('body').should('contain', 'Powered by DoubleGDP')
   })
 })

@@ -8,9 +8,6 @@ echo "Starting services..."
 [ ! -z $1 ] && docker-compose -f docker-compose.ci.yml build
 docker-compose -f docker-compose.ci.yml up -d
 
-sleep 60
-echo "Services are up and ready"
-
 echo "Preparing test DB..."
 docker-compose -f docker-compose.ci.yml run --rm rails rails db:create db:schema:load
 
