@@ -5,16 +5,16 @@ import { BrowserRouter } from 'react-router-dom/'
 import Support, {  SupportContact } from '../Components/SupportCard'
 
 describe("Support card loads component", () => {
-  const user = {
-    userType: "client",
-    community: {
-      name: 'Nkwashi',
-      supportNumber: [{phone_number: '+260 966 194383', category: 'sales'}],
-      supportEmail: [{email: 'support@doublegdp.com', category: 'customer_care'}],
-      supportWhatsapp: [{whatsapp: '+2347065834175', category: 'customer_care'}],
-    }
-  }
   it('should render support card', () => {
+    const user = {
+      userType: "client",
+      community: {
+        name: 'Nkwashi',
+        supportNumber: [{phone_number: '+260 966 194383', category: 'sales'}],
+        supportEmail: [{email: 'support@doublegdp.com', category: 'customer_care'}],
+        supportWhatsapp: [{whatsapp: '+2347065834175', category: 'customer_care'}],
+      }
+    }
     const container = render(
       <BrowserRouter>
         <Support handleSendMessage={jest.fn()} user={user} />
@@ -35,11 +35,15 @@ describe("Support card loads component", () => {
   })
 
   it('should render not render Pay with Mobile Money for CM community', () => {
-    user.community.name = 'Ciudad Morazán'
-
+    const anotherUser = {
+      userType: "client",
+      community: {
+        name: 'Ciudad Morazán',
+      }
+    }
     const container = render(
       <BrowserRouter>
-        <Support handleSendMessage={jest.fn()} user={user} />
+        <Support handleSendMessage={jest.fn()} user={anotherUser} />
       </BrowserRouter>
     )
     expect(container.queryByText(/Ciudad Morazán/i)).toBeInTheDocument()
