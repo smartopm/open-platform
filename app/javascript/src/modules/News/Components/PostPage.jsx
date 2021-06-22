@@ -27,8 +27,6 @@ import MessageAlert from "../../../components/MessageAlert"
 import { NewsNav } from "../../Menu"
 import { CurrentCommunityQuery } from '../../Community/graphql/community_query'
 
-// TODO: this should be reused
-// eslint-disable-next-line prefer-arrow-callback
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
   });
