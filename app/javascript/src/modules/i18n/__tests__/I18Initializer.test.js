@@ -6,12 +6,14 @@ import { CurrentCommunityQuery } from '../../Community/graphql/community_query';
 
 
 jest.mock('react-i18next', () => ({
-  useTranslation: () => ({
+  useTranslation: () => {
+    return {
       t: str => str,
       i18n: {
         changeLanguage: () => new Promise(() => {})
       }
-    })
+    };
+  }
 }));
 
 describe('I18n Initializer component', () => {
