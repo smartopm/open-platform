@@ -271,6 +271,7 @@ en:
     payment_plan:
       plan_already_exist: Payment Plan for this landparcel already exist
       does_not_exist_for_property: Payment Plan does not exist for selected property
+      have_zero_pending_balance: Pending balance is 0 for payment plan of selected property
     plan_payment:
       not_found: Payment not found
     post_tag:
