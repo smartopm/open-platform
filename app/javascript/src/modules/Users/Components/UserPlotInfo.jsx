@@ -12,7 +12,7 @@ import UserPlotMap from './UserPlotMap';
 
 export default function UserPlotInfo({ account, userId, userName }) {
   const [plotNumber, setPlotNumber] = useState([]);
-  const { t } = useTranslation('users')
+  const { t } = useTranslation(['users', 'common'])
   const classes = useStyles();
   const history = useHistory();
 
