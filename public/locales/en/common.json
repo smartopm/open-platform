@@ -189,7 +189,8 @@
     "relevant_posts": "Relevant Posts",
     "links": "Links",
     "step": "Step",
-    "step_plural": "Steps"
+    "step_plural": "Steps",
+    "new_property": "New Property"
   },
   "menu": {
     "invoice": "Invoice",

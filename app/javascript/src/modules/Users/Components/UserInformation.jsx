@@ -38,8 +38,7 @@ export default function UserInformation({
   refetch,
   userId,
   router,
-  accountData,
-  accountRefetch
+  accountData
 }) {
   const path = useParamsQuery();
   const tab = path.get('tab');
@@ -83,6 +82,7 @@ export default function UserInformation({
   }, [type]);
 
   const userType = authState.user.userType.toLowerCase();
+  const userName = authState.user.name
 
   const handleChange = (_event, newValue) => {
     router.push(`/user/${userId}?tab=${newValue}`);
@@ -232,8 +232,7 @@ export default function UserInformation({
               <UserPlotInfo
                 account={accountData?.user?.accounts || []}
                 userId={data.user.id}
-                refetch={accountRefetch}
-                userType={userType}
+                userName={userName}
               />
             </TabPanel>
           </FeatureCheck>
@@ -318,8 +317,7 @@ UserInformation.propTypes = {
   refetch: PropTypes.func.isRequired,
   userId: PropTypes.string.isRequired,
   router: PropTypes.shape({ push: PropTypes.func.isRequired }).isRequired,
-  accountData: PropTypes.shape({ user: User }).isRequired,
-  accountRefetch: PropTypes.func.isRequired
+  accountData: PropTypes.shape({ user: User }).isRequired
 };
 
 const styles = StyleSheet.create({

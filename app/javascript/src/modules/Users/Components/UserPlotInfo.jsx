@@ -2,6 +2,7 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import React, { useEffect, useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
+import Fab from '@material-ui/core/Fab';
 import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
@@ -9,9 +10,9 @@ import Typography from '@material-ui/core/Typography';
 import { dateToString } from '../../../components/DateContainer';
 import UserPlotMap from './UserPlotMap';
 
-export default function UserPlotInfo({ account, userId }) {
+export default function UserPlotInfo({ account, userId, userName }) {
   const [plotNumber, setPlotNumber] = useState([]);
-  const { t } = useTranslation('users')
+  const { t } = useTranslation(['users', 'common'])
   const classes = useStyles();
   const history = useHistory();
 
@@ -25,6 +26,10 @@ export default function UserPlotInfo({ account, userId }) {
 
   function handlePlotClick(id) {
     history.push({pathname: `/land_parcels`, search: `?plot=${id}`, state: { from: 'users', userId }})
+  }
+
+  function handlePlotCreteClick() {
+    history.push({pathname: `/land_parcels`, search: `?type=new`, state: { from: 'users', user: { userName, userId }}})
   }
 
   useEffect(() => {
@@ -45,6 +50,9 @@ export default function UserPlotInfo({ account, userId }) {
 
   return (
     <>
+      <Fab color="primary" variant="extended" className={classes.plot} onClick={() => handlePlotCreteClick()} data-testid='add-plot'>
+        {t("common:misc.new_property")}
+      </Fab>
       {parcels().length > 0 ? (
         <div className="container">
           <div className={classes.body}>
@@ -115,6 +123,14 @@ const useStyles = makeStyles(theme => ({
     borderStyle: 'solid',
     borderWidth: '1px',
     width: '100%'
+  },
+  plot: {
+    boxShadow: 'none',
+    position: 'fixed',
+    bottom: 20,
+    right: 57,
+    marginLeft: '30%',
+    zIndex: '1000'
   }
 }))
 
@@ -135,5 +151,6 @@ UserPlotInfo.propTypes = {
       updatedAt: PropTypes.string
     })
   ),
-  userId: PropTypes.string.isRequired
+  userId: PropTypes.string.isRequired,
+  userName: PropTypes.string.isRequired
 };

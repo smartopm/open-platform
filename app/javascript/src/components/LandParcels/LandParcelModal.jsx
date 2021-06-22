@@ -1,6 +1,7 @@
 import React, { useContext, useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
+import { useLocation } from 'react-router-dom'
 import { useLazyQuery } from 'react-apollo';
 import {
   TextField,
@@ -37,6 +38,7 @@ export default function LandParcelModal({
   propertyUpdateLoading,
 }) {
   const classes = useStyles();
+  const location = useLocation();
   const [parcelNumber, setParcelNumber] = useState('');
   const [address1, setAddress1] = useState('');
   const [address2, setAddress2] = useState('');
@@ -66,6 +68,9 @@ export default function LandParcelModal({
     setDetailsFields(landParcel);
     if (open) {
       fetchPaymentPlan()
+    }
+    if (modalType === 'new' && location?.state?.from === 'users') {
+      setOwnershipFields([{name: location?.state?.user?.userName, userId: location?.state?.user?.userId}])
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open]);

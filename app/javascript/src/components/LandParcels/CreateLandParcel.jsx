@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import Button from '@material-ui/core/Button';
 import PropTypes from 'prop-types'
 import { useMutation } from 'react-apollo';
-import { useHistory } from 'react-router-dom'
+import { useHistory, useLocation } from 'react-router-dom'
 import { makeStyles } from "@material-ui/core/styles"
 import { AddNewProperty } from '../../graphql/mutations'
 import MessageAlert from "../MessageAlert"
@@ -11,6 +11,7 @@ import { formatError, useParamsQuery } from '../../utils/helpers'
 
 export default function CreateLandParcel({ refetch }) {
   const classes = useStyles()
+  const location = useLocation()
   const [open, setOpen] = useState(false)
   const [isSuccessAlert, setIsSuccessAlert] = useState(false)
   const [messageAlert, setMessageAlert] = useState('')
@@ -37,6 +38,9 @@ export default function CreateLandParcel({ refetch }) {
       setMessageAlert('Property added successfully')
       setIsSuccessAlert(true)
       setOpen(false);
+      if(location?.state?.from === 'users') {
+        history.push(`user/${location?.state?.user?.userId}?tab=Plots`);
+      }
       refetch();
     }).catch((err) => {
       setMessageAlert(formatError(err.message))
