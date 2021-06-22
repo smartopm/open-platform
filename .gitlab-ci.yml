@@ -97,7 +97,7 @@ cypress:
   image: docker:latest
   services:
     - docker:dind
-  stage: test
+  stage: staging
   before_script:
     - apk --update add nodejs
     - apk add yarn
@@ -111,8 +111,8 @@ cypress:
       - "tmp/cypress/"
     name: "Cypress $CI_PIPELINE_ID Visual Report"
     expire_in: 24 hours
-  # only:
-  #   - master
+  only:
+    - master
 
 staging:appdeploy:
   stage: staging
