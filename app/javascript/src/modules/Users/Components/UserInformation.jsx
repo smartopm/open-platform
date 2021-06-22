@@ -82,7 +82,6 @@ export default function UserInformation({
   }, [type]);
 
   const userType = authState.user.userType.toLowerCase();
-  const userName = authState.user.name
 
   const handleChange = (_event, newValue) => {
     router.push(`/user/${userId}?tab=${newValue}`);
@@ -232,7 +231,7 @@ export default function UserInformation({
               <UserPlotInfo
                 account={accountData?.user?.accounts || []}
                 userId={data.user.id}
-                userName={userName}
+                userName={data.user.name}
               />
             </TabPanel>
           </FeatureCheck>
