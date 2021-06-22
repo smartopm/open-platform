@@ -322,7 +322,6 @@ export default function PaymentModal({
                 <MenuItem value="bank_transfer/cash_deposit">Bank Transfer/Cash Deposit</MenuItem>
                 <MenuItem value="bank_transfer/eft">Bank Transfer/EFT</MenuItem>
                 <MenuItem value="pos">Point of Sale</MenuItem>
-                <MenuItem value="unallocated_funds">Unallocated Funds</MenuItem>
               </TextField>
               <br />
               <SwitchInput

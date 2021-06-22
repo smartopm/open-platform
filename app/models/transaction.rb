@@ -5,8 +5,7 @@ class Transaction < ApplicationRecord
   include SearchCop
 
   VALID_SOURCES = %w[cash cheque/cashier_cheque wallet mobile_money invoice
-                     bank_transfer/eft bank_transfer/cash_deposit pos
-                     unallocated_funds].freeze
+                     bank_transfer/eft bank_transfer/cash_deposit pos].freeze
 
   enum status: { accepted: 0, pending: 1, denied: 2, cancelled: 3 }
 
