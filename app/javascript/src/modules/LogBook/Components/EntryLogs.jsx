@@ -361,7 +361,7 @@ export function LogView({ user, refetch }) {
     setLoading(true);
     grantEntry({ variables: { id: user.refId, subject: "visitor_entry" } })
       .then(() => {
-        setMessage({isError: false, detail: "Successfully granted access"});
+        setMessage({isError: false, detail: t("logbook:logbook.success_message")});
         setLoading(false);
         setTimeout(() => refetch(), 1500)
       })
