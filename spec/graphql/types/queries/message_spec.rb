@@ -144,9 +144,9 @@ RSpec.describe Types::Queries::Message do
 
     it 'when admin retrieves mesg list it should have 2 entries' do
       result = DoubleGdpSchema.execute(adm_msgs, context: {
-        current_user: admin,
-        site_community: admin.community
-      }).as_json
+                                         current_user: admin,
+                                         site_community: admin.community,
+                                       }).as_json
       expect(result.dig('data', 'messages').length).to eql 2
       expect(result.dig('data', 'messages', 0, 'id')).to eql auser_adm_msg.id
       expect(result.dig('data', 'messages', 1, 'id')).to eql cuser_adm_msg.id
@@ -158,17 +158,18 @@ RSpec.describe Types::Queries::Message do
 
     it 'when user retrieves msg list' do
       result = DoubleGdpSchema.execute(cuser_msgs, context: {
-        current_user: current_user, site_community: current_user.community
-      }).as_json
+                                         current_user: current_user,
+                                         site_community: current_user.community,
+                                       }).as_json
       expect(result.dig('data', 'userMessages').length).to eql 2
       expect(result.dig('data', 'userMessages', 0, 'id')).to eql cuser_adm_msg.id
       expect(result.dig('data', 'userMessages', 0, 'sender', 'id')).to eql current_user.id
       expect(result.dig('data', 'userMessages', 0, 'user', 'id')).to eql current_user.id
 
       result = DoubleGdpSchema.execute(auser_msgs, context: {
-        current_user: another_user,
-        site_community: another_user.community
-      }).as_json
+                                         current_user: another_user,
+                                         site_community: another_user.community,
+                                       }).as_json
       expect(result.dig('data', 'userMessages').length).to eql 2
       expect(result.dig('data', 'userMessages', 0, 'id')).to eql auser_adm_msg.id
       expect(result.dig('data', 'userMessages', 0, 'sender', 'id')).to eql another_user.id
@@ -177,33 +178,33 @@ RSpec.describe Types::Queries::Message do
 
     it 'should update messages with is_read status when non-admin user retrieves them' do
       result = DoubleGdpSchema.execute(auser_msgs, context: {
-        current_user: another_user,
-        site_community: another_user.community
-      }).as_json
+                                         current_user: another_user,
+                                         site_community: another_user.community,
+                                       }).as_json
       expect(result.dig('data', 'userMessages', 0, 'isRead')).to eql true
       expect(result.dig('data', 'userMessages', 0, 'readAt')).to be_truthy
     end
     it 'is_read status is not updated when admin queries messages' do
       result = DoubleGdpSchema.execute(auser_msgs, context: {
-        current_user: admin,
-        site_community: admin.community
-      }).as_json
+                                         current_user: admin,
+                                         site_community: admin.community,
+                                       }).as_json
       expect(result.dig('data', 'userMessages', 0, 'isRead')).to be_nil
       expect(result.dig('data', 'userMessages', 0, 'readAt')).to be_nil
     end
     it 'returns default value of category in message' do
       result = DoubleGdpSchema.execute(auser_msgs, context: {
-        current_user: admin,
-        site_community: admin.community
-      }).as_json
+                                         current_user: admin,
+                                         site_community: admin.community,
+                                       }).as_json
       expect(result.dig('data', 'userMessages', 0, 'category')).to eql 'sms'
     end
 
     it 'when admin retrieves msgs with non campaign filter, it should have 2 entries' do
       result = DoubleGdpSchema.execute(non_campaign_msgs, context: {
-        current_user: admin,
-        site_community: admin.community
-      }).as_json
+                                         current_user: admin,
+                                         site_community: admin.community,
+                                       }).as_json
       expect(result.dig('data', 'messages').length).to eql 2
       expect(result.dig('data', 'messages', 0, 'id')).to eql auser_adm_msg.id
       expect(result.dig('data', 'messages', 1, 'id')).to eql cuser_adm_msg.id
@@ -215,9 +216,9 @@ RSpec.describe Types::Queries::Message do
 
     it 'when admin retrieves msgs with campaign filter, it should have 1 entries' do
       result = DoubleGdpSchema.execute(campaign_msgs, context: {
-        current_user: admin,
-        site_community: admin.community
-      }).as_json
+                                         current_user: admin,
+                                         site_community: admin.community,
+                                       }).as_json
       expect(result.dig('data', 'messages').length).to eql 1
       expect(result.dig('data', 'messages', 0, 'id')).to eql campaign_msg.id
       expect(result.dig('data', 'messages', 0, 'user', 'id')).to eql another_user.id
@@ -225,26 +226,26 @@ RSpec.describe Types::Queries::Message do
 
     it 'when admin retrieves sms msgs it should have 2 entries' do
       result = DoubleGdpSchema.execute(sms_msgs, context: {
-        current_user: admin,
-        site_community: admin.community
-      }).as_json
+                                         current_user: admin,
+                                         site_community: admin.community,
+                                       }).as_json
       expect(result.dig('data', 'messages').length).to eql 2
       expect(result.dig('data', 'messages', 0, 'message')).to include 'Hello test'
     end
 
     it 'when admin retrieves email msgs it should have 2 entries' do
       result = DoubleGdpSchema.execute(email_msgs, context: {
-        current_user: admin,
-        site_community: admin.community
-      }).as_json
+                                         current_user: admin,
+                                         site_community: admin.community,
+                                       }).as_json
       expect(result.dig('data', 'messages').length).to eql 0
       expect(result.dig('data', 'messages', 0, 'message')).to be_nil
     end
     it 'when admin retrieves sms and campaigns msgs, it should have 2 entries' do
       result = DoubleGdpSchema.execute(sms_campaign_msgs, context: {
-        current_user: admin,
-        site_community: admin.community
-      }).as_json
+                                         current_user: admin,
+                                         site_community: admin.community,
+                                       }).as_json
       expect(result.dig('data', 'messages').length).to eql 1
       expect(result.dig('data', 'messages', 0, 'message')).to include 'Hello test'
     end

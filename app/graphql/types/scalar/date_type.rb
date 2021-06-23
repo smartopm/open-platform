@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-# Custom date type
 module Types
   module Scalar
+    # Custom date type
     class DateType < BaseScalar
       description 'Handle date/time in community timezone'
 
