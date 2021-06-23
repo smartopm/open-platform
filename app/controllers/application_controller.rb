@@ -4,6 +4,7 @@
 class ApplicationController < ActionController::Base
   include Authorizable
 
+  around_action :set_time_zone, if: :current_community
   before_action :set_locale
 
   private
@@ -24,4 +25,10 @@ class ApplicationController < ActionController::Base
 
     current_community.language[/.*(?=-)|.*/]
   end
+
+  # rubocop:disable Naming/AccessorMethodName
+  def set_time_zone(&block)
+    Time.use_zone(current_community.timezone, &block)
+  end
+  # rubocop:enable Naming/AccessorMethodName
 end

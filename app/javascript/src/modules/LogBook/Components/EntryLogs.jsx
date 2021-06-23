@@ -204,7 +204,7 @@ export function IndexComponent({
               </div>
               <div className="col-xs-4">
                 <span className={css(styles.subTitle)}>
-                  {dateTimeToString(new Date(event.createdAt))}
+                  {dateTimeToString(event.createdAt)}
                 </span>
               </div>
             </div>
@@ -387,7 +387,7 @@ export function LogView({ user, refetch, tab }) {
             <span className={css(styles.logTitle)}>{user.data.ref_name}</span>
           </div>
           <div className="col-xs-4">
-            <span className={css(styles.subTitle)}>{`${dateToString(user.createdAt)} at ${dateTimeToString(new Date(user.createdAt))}`}</span>
+            <span className={css(styles.subTitle)}>{`${dateToString(user.createdAt)} at ${dateTimeToString(user.createdAt)}`}</span>
           </div>
         </div>
         <br />
