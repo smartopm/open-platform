@@ -34,7 +34,6 @@ export default function renderTaskData({
   isSelected,
   menuData,
 }) {
-  console.log('taaa', task)
 return [
   {
   Select: (

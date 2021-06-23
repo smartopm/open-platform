@@ -15,8 +15,8 @@ module Types
     field :description, String, null: true
     field :flagged, Boolean, null: true
     field :completed, Boolean, null: true
-    field :created_at, Types::Scalar::DateType, null: false
-    field :updated_at, Types::Scalar::DateType, null: false
-    field :due_date, Types::Scalar::DateType, null: true
+    field :created_at, GraphQL::Types::ISO8601DateTime, null: false
+    field :updated_at, GraphQL::Types::ISO8601DateTime, null: false
+    field :due_date, GraphQL::Types::ISO8601DateTime, null: true
   end
 end

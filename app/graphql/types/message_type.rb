@@ -13,7 +13,7 @@ module Types
     field :category, String, null: true
     field :message, String, null: true
     field :is_read, Boolean, null: true
-    field :created_at, Types::Scalar::DateType, null: false
-    field :read_at, Types::Scalar::DateType, null: true
+    field :created_at, GraphQL::Types::ISO8601DateTime, null: false
+    field :read_at, GraphQL::Types::ISO8601DateTime, null: true
   end
 end

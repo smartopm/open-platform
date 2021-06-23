@@ -8,6 +8,6 @@ module Types
     field :user_id, ID, null: false
     field :is_thumbs_up, Boolean, null: false
     field :review, String, null: true
-    field :created_at, Types::Scalar::DateType, null: false
+    field :created_at, GraphQL::Types::ISO8601DateTime, null: false
   end
 end

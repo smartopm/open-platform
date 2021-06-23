@@ -7,13 +7,10 @@ import moment from "moment";
 // returns a stringified date
 export function dateTimeToString(date) {
   return moment.parseZone(date).format("HH:mm")
-  // return date.toLocaleTimeString([], { hour12: false, hour: '2-digit', minute: '2-digit', timeZone: null })
 }
 export function dateToString(date) {
-  // const lDate = date.toLocaleString("en-GB", { timeZone: 'Australia/Adelaide' })
   // eslint-disable-next-line import/no-named-as-default-member
   return moment.parseZone(date).format("YYYY-MM-DD")
-  // return dateutil.dateToString(new Date(lDate))
 }
 
 /**
