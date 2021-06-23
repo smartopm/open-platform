@@ -5,12 +5,12 @@
 /* eslint-disable no-nested-ternary */
 /* eslint-disable no-use-before-define */
 import React, { useState, Fragment, useContext, useEffect } from 'react';
-import { useQuery } from 'react-apollo';
+import { useMutation, useQuery } from 'react-apollo';
 import { useLocation } from 'react-router-dom';
 import { StyleSheet, css } from 'aphrodite';
 import { useTranslation } from 'react-i18next';
 import { TextField, Typography } from '@material-ui/core';
-import Loading from '../../../shared/Loading';
+import Loading, { Spinner } from '../../../shared/Loading';
 import { AllEventLogsQuery } from '../../../graphql/queries';
 import ErrorPage from '../../../components/Error';
 import { Footer } from '../../../components/Footer';
@@ -20,6 +20,7 @@ import { StyledTabs, StyledTab, TabPanel, a11yProps } from '../../../components/
 import { dateTimeToString, dateToString } from '../../../components/DateContainer';
 import FloatButton from '../../../components/FloatButton';
 import { propAccessor } from '../../../utils/helpers';
+import { EntryRequestGrant } from '../../../graphql/mutations';
 
 export default ({ history, match }) => AllEventLogs(history, match);
 
@@ -106,6 +107,7 @@ const AllEventLogs = (history, match) => {
       handleTabValue={handleChange}
       tabValue={value}
       loading={loading}
+      refetch={refetch}
     />
   );
 };
@@ -121,7 +123,8 @@ export function IndexComponent({
   handleSearch,
   tabValue,
   handleTabValue,
-  loading
+  loading,
+  refetch
 }) {
   const authState = useContext(AuthStateContext);
   const { t } = useTranslation(['logbook', 'common', 'dashboard']);
@@ -185,7 +188,10 @@ export function IndexComponent({
               </div>
               <div className="col-xs-4">
                 <span className={css(styles.access)}>
-                  <strong>{accessStatus} </strong>
+                  <strong>
+                    {accessStatus}
+                    {' '}
+                  </strong>
                 </span>
                 <span className={css(styles.subTitle)}>{dateToString(event.createdAt)}</span>
               </div>
@@ -226,9 +232,12 @@ export function IndexComponent({
                         style={{ cursor: 'pointer' }}
                         onClick={() => enrollUser(event.refId)}
                       >
-                        {t('logbook.enroll_user')}{' '}
+                        {t('logbook.enroll_user')}
+                        {' '}
                       </Typography>
-                      | {source}
+                      | 
+                      {' '}
+                      {source}
                     </>
                   ) : event.subject === 'user_entry' && isDigital !== null ? (
                     isDigital ? (
@@ -238,8 +247,10 @@ export function IndexComponent({
                     )
                   ) : (
                     source
-                  )}{' '}
-                  |{' '}
+                  )}
+                  {' '}
+                  |
+                  {' '}
                   <Typography
                     component="span"
                     color="primary"
@@ -299,11 +310,11 @@ export function IndexComponent({
         <TabPanel value={tabValue} index={1}>
           {/* Todo: Handle the listing of enrolled users here */}
           {loading && <Loading />}
-          {data && data.result.map(user => <LogView key={user.id} user={user} />)}
+          {data && data.result.map(user => <LogView key={user.id} user={user} refetch={refetch} />)}
         </TabPanel>
         <TabPanel value={tabValue} index={2}>
           {loading && <Loading />}
-          {data && data.result.map(log => <LogView key={log.id} user={log} />)}
+          {data && data.result.map(log => <LogView key={log.id} user={log} refetch={refetch} />)}
         </TabPanel>
         {// only admins should be able to schedule a visit request
         authState.user.userType === 'admin' && (
@@ -311,7 +322,8 @@ export function IndexComponent({
             title={t('logbook.new_visit_request')}
             handleClick={() => router.push('/visit_request')}
           />
-        )}
+        )
+}
       </div>
 
       <div className="d-flex justify-content-center">
@@ -339,8 +351,29 @@ export function IndexComponent({
   );
 }
 
-export function LogView({ user }) {
-  const { t } = useTranslation('common');
+// user here should be called eventlog
+export function LogView({ user, refetch }) {
+  const { t } = useTranslation(['common', 'logbook']);
+  const [grantEntry] = useMutation(EntryRequestGrant);
+  const [loading, setLoading] = useState(false)
+  
+  // grant access right here
+  function handleGrantAccess() {
+    setLoading(true);
+    console.log(user.refId);
+    grantEntry({ variables: { id: user.refId } })
+      .then(() => {
+        // history.push('/entry_logs', { tab: 1 });
+        console.log('granted access');
+        setLoading(false);
+        refetch()
+      })
+      .catch(error => {
+        console.log(error.message);
+        setLoading(false);
+      });
+  }
+  
   return (
     <>
       <div className="container">
@@ -349,7 +382,7 @@ export function LogView({ user }) {
             <span className={css(styles.logTitle)}>{user.data.ref_name}</span>
           </div>
           <div className="col-xs-4">
-            <span className={css(styles.subTitle)}>{dateToString(user.createdAt)}</span>
+            <span className={css(styles.subTitle)}>{`${dateToString(user.createdAt)} at ${dateTimeToString(new Date(user.createdAt))}`}</span>
           </div>
         </div>
         <br />
@@ -361,7 +394,16 @@ export function LogView({ user }) {
           </div>
           <div className="col-xs-4">
             <span className={css(styles.subTitle)}>
-              {dateTimeToString(new Date(user.createdAt))}
+              <Typography
+                component="span"
+                color="primary"
+                style={{ cursor: 'pointer' }}
+                onClick={handleGrantAccess}
+              >
+                {
+                  loading ? <Spinner /> : t('logbook:access_actions.grant_access')
+                }
+              </Typography>
             </span>
           </div>
         </div>

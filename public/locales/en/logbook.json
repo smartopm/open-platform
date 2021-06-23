@@ -46,6 +46,7 @@
   },
   "access_actions": {
     "grant": "Grant",
-    "deny": "Deny"
+    "deny": "Deny",
+    "grant_access": "Grant Access"
   }
 }
