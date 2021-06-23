@@ -360,11 +360,8 @@ export function LogView({ user, refetch }) {
   // grant access right here
   function handleGrantAccess() {
     setLoading(true);
-    console.log(user.refId);
-    grantEntry({ variables: { id: user.refId } })
+    grantEntry({ variables: { id: user.refId, subject: "user_entry" } })
       .then(() => {
-        // history.push('/entry_logs', { tab: 1 });
-        console.log('granted access');
         setLoading(false);
         refetch()
       })
