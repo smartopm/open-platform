@@ -303,27 +303,25 @@ export function IndexComponent({
           <StyledTab label={t('logbook.new_visits')} {...a11yProps(1)} />
           <StyledTab label={t('logbook.upcoming_visits')} {...a11yProps(2)} />
         </StyledTabs>
+        {loading && <Loading />}
         <TabPanel value={tabValue} index={0}>
-          {loading && <Loading />}
           <>{data && logs(filteredEvents)}</>
         </TabPanel>
         <TabPanel value={tabValue} index={1}>
           {/* Todo: Handle the listing of enrolled users here */}
-          {loading && <Loading />}
           {data && data.result.map(user => <LogView key={user.id} user={user} refetch={refetch} />)}
         </TabPanel>
         <TabPanel value={tabValue} index={2}>
-          {loading && <Loading />}
           {data && data.result.map(log => <LogView key={log.id} user={log} refetch={refetch} />)}
         </TabPanel>
         {// only admins should be able to schedule a visit request
-        authState.user.userType === 'admin' && (
-          <FloatButton
-            title={t('logbook.new_visit_request')}
-            handleClick={() => router.push('/visit_request')}
-          />
-        )
-}
+            authState.user.userType === 'admin' && (
+              <FloatButton
+                title={t('logbook.new_visit_request')}
+                handleClick={() => router.push('/visit_request')}
+              />
+            )
+         }
       </div>
 
       <div className="d-flex justify-content-center">
