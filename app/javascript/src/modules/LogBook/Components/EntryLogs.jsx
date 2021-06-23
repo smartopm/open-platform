@@ -402,6 +402,7 @@ export function LogView({ user, refetch }) {
                 color="primary"
                 style={{ cursor: 'pointer' }}
                 onClick={handleGrantAccess}
+                data-testid="grant_access_btn"
               >
                 {
                   loading ? <Spinner /> : t('logbook:access_actions.grant_access')

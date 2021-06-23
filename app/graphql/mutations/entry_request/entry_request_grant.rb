@@ -9,8 +9,11 @@ module Mutations
 
       field :entry_request, Types::EntryRequestType, null: true
 
+      # rubocop:disable Metrics/AbcSize
       def resolve(vals)
         event = context[:site_community].event_logs.find_by(ref_id: vals[:id])
+        raise GraphQL::ExecutionError, I18n.t('errors.event_log.not_found') unless event
+
         entry_request = context[:current_user].grant!(vals[:id], event.id)
         send_notifications(entry_request)
         if entry_request.present?
@@ -20,6 +23,7 @@ module Mutations
         end
         raise GraphQL::ExecutionError, entry_request.errors.full_messages
       end
+      # rubocop:enable Metrics/AbcSize
 
       # TODO: Better auth here
       # Verifies if current user is present or not.
