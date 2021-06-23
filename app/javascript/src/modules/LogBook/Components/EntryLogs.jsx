@@ -9,6 +9,7 @@ import { useMutation, useQuery } from 'react-apollo';
 import { useLocation } from 'react-router-dom';
 import { StyleSheet, css } from 'aphrodite';
 import { useTranslation } from 'react-i18next';
+import PropTypes from 'prop-types';
 import { TextField, Typography } from '@material-ui/core';
 import Loading, { Spinner } from '../../../shared/Loading';
 import { AllEventLogsQuery } from '../../../graphql/queries';
@@ -310,10 +311,10 @@ export function IndexComponent({
         </TabPanel>
         <TabPanel value={tabValue} index={1}>
           {/* Todo: Handle the listing of enrolled users here */}
-          {data && data.result.map(user => <LogView key={user.id} user={user} refetch={refetch} />)}
+          {data && data.result.map(user => <LogView key={user.id} user={user} refetch={refetch} tab={tabValue} />)}
         </TabPanel>
         <TabPanel value={tabValue} index={2}>
-          {data && data.result.map(log => <LogView key={log.id} user={log} refetch={refetch} />)}
+          {data && data.result.map(log => <LogView key={log.id} user={log} refetch={refetch} tab={tabValue} />)}
         </TabPanel>
         {// only admins should be able to schedule a visit request
             authState.user.userType === 'admin' && (
@@ -351,7 +352,7 @@ export function IndexComponent({
 }
 
 // user here should be called eventlog
-export function LogView({ user, refetch }) {
+export function LogView({ user, refetch, tab }) {
   const { t } = useTranslation(['common', 'logbook']);
   const [grantEntry] = useMutation(EntryRequestGrant);
   const [loading, setLoading] = useState(false)
@@ -396,27 +397,43 @@ export function LogView({ user, refetch }) {
               {t(`common:user_types.${user.data?.type}`)}
             </span>
           </div>
-          <div className="col-xs-4">
-            <span className={css(styles.subTitle)}>
-              <Typography
-                component="span"
-                color="primary"
-                style={{ cursor: 'pointer' }}
-                onClick={handleGrantAccess}
-                data-testid="grant_access_btn"
-              >
-                {
+          {
+          tab === 2 && (
+            <div className="col-xs-4">
+              <span className={css(styles.subTitle)}>
+                <Typography
+                  component="span"
+                  color="primary"
+                  style={{ cursor: 'pointer' }}
+                  onClick={handleGrantAccess}
+                  data-testid="grant_access_btn"
+                >
+                  {
                   loading ? <Spinner /> : t('logbook:access_actions.grant_access')
                 }
-              </Typography>
-            </span>
-          </div>
+                </Typography>
+              </span>
+            </div>
+          ) 
+        }
         </div>
         <br />
         <div className="border-top my-3" />
       </div>
     </>
   );
+}
+
+
+LogView.propTypes = {
+  tab: PropTypes.number.isRequired,
+  refetch: PropTypes.func.isRequired,
+  user: PropTypes.shape({
+    refId: PropTypes.string,
+    createdAt: PropTypes.string,
+    // eslint-disable-next-line react/forbid-prop-types
+    data: PropTypes.object
+  }).isRequired
 }
 
 const styles = StyleSheet.create({
