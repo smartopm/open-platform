@@ -8,7 +8,7 @@ module Types
     field :form, Types::FormType, null: true
     field :status, String, null: true
     field :status_updated_by, Types::UserType, null: true
-    field :created_at, GraphQL::Types::ISO8601DateTime, null: false
-    field :updated_at, GraphQL::Types::ISO8601DateTime, null: false
+    field :created_at, Types::Scalar::DateType, null: false
+    field :updated_at, Types::Scalar::DateType, null: false
   end
 end

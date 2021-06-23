@@ -18,8 +18,8 @@ module Types
     field :depositor, Types::UserType, null: true
     field :community, Types::CommunityType, null: false
     field :payment_plan, Types::PaymentPlanType, null: true
-    field :created_at, GraphQL::Types::ISO8601DateTime, null: false
-    field :updated_at, GraphQL::Types::ISO8601DateTime, null: false
+    field :created_at, Types::Scalar::DateType, null: false
+    field :updated_at, Types::Scalar::DateType, null: false
     field :settled_invoices, GraphQL::Types::JSON, null: true
   end
 end
