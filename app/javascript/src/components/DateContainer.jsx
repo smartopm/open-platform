@@ -1,18 +1,16 @@
 import React from 'react'
 import { isYesterday, isToday } from 'date-fns'
 import PropTypes from 'prop-types'
-import dateutil from '../utils/dateutil'
-
-const timeZone = 'Africa/Lusaka'
+// eslint-disable-next-line import/no-extraneous-dependencies
+import moment from "moment";
 
 // returns a stringified date
 export function dateTimeToString(date) {
-  return date.toLocaleTimeString([], { hour12: false, hour: '2-digit', minute: '2-digit', timeZone })
+  return moment.parseZone(date).format("HH:mm")
 }
 export function dateToString(date) {
-  const lDate = date.toLocaleString("en-GB", { timeZone })
   // eslint-disable-next-line import/no-named-as-default-member
-  return dateutil.dateToString(new Date(lDate))
+  return moment.parseZone(date).format("YYYY-MM-DD")
 }
 
 /**
@@ -27,12 +25,12 @@ export function futureDateAndTimeToString(days) {
   const currDate = new Date(dueIn10).getDate()
   const currMonth = new Date(dueIn10).getMonth() + 1
   const currYear = new Date(dueIn10).getFullYear()
-  return `${currYear}-${currMonth}-${currDate} ${dateTimeToString(new Date(date))}`
+  return `${currYear}-${currMonth}-${currDate} ${dateTimeToString(date.toString())}`
 }
 
 /**
- * 
- * @param {Date} objDate 
+ *
+ * @param {Date} objDate
  * @description works similary to DateContainer but returns a string instead
  * @returns {String}
  */
@@ -40,9 +38,9 @@ export function dateFormatter(objDate){
   if(!objDate) return null
   // eslint-disable-next-line no-nested-ternary
   return isToday(new Date(objDate))
-  ? `Today at ${dateTimeToString(new Date(objDate))}`
+  ? `Today at ${dateTimeToString(objDate)}`
   : isYesterday(new Date(objDate))
-  ? `Yesterday at ${dateTimeToString(new Date(objDate))}`
+  ? `Yesterday at ${dateTimeToString(objDate)}`
   : dateToString(objDate)
 }
 

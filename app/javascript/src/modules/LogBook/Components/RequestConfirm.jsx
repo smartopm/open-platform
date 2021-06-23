@@ -13,7 +13,7 @@ import { dateTimeToString, dateToString } from '../../../components/DateContaine
 
 
 /**
- * 
+ *
  * @deprecated This should be looked into, as it might be a duplicate of another similar component
  * basically we should find a way to re-use
  * Refer: RequestForm, RequestUpdate
@@ -129,7 +129,7 @@ export default function RequestConfirm({ match, history }) {
               value={
                 formData.guard
                   ? `${dateToString(formData.createdAt)} at ${dateTimeToString(
-                      new Date(formData.createdAt)
+                      formData.createdAt
                     )}`
                   : ''
               }
