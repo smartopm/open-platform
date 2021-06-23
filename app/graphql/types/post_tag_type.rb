@@ -7,6 +7,6 @@ module Types
     field :community_id, ID, null: false
     field :name, String, null: false
     field :slug, String, null: false
-    field :created_at, Types::Scalar::DateType, null: false
+    field :created_at, GraphQL::Types::ISO8601DateTime, null: false
   end
 end

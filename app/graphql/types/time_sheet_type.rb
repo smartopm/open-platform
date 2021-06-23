@@ -6,8 +6,8 @@ module Types
     field :id, ID, null: false
     field :user, Types::UserType, null: false
     field :user_id, ID, null: false
-    field :created_at, Types::Scalar::DateType, null: false
-    field :started_at, Types::Scalar::DateType, null: true
-    field :ended_at, Types::Scalar::DateType, null: true
+    field :created_at, GraphQL::Types::ISO8601DateTime, null: false
+    field :started_at, GraphQL::Types::ISO8601DateTime, null: true
+    field :ended_at, GraphQL::Types::ISO8601DateTime, null: true
   end
 end

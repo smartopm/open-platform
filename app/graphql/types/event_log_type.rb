@@ -10,7 +10,7 @@ module Types
     field :ref_type, String, null: true
     field :entry_request, Types::EntryRequestType, null: true
     field :community, Types::CommunityType, null: false
-    field :created_at, Types::Scalar::DateType, null: false
+    field :created_at, GraphQL::Types::ISO8601DateTime, null: false
     field :subject, String, null: true
     field :data, GraphQL::Types::JSON, null: true
     field :sentence, String, null: true
