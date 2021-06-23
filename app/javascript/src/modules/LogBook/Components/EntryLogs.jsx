@@ -21,6 +21,7 @@ import { dateTimeToString, dateToString } from '../../../components/DateContaine
 import FloatButton from '../../../components/FloatButton';
 import { propAccessor } from '../../../utils/helpers';
 import { EntryRequestGrant } from '../../../graphql/mutations';
+import MessageAlert from '../../../components/MessageAlert';
 
 export default ({ history, match }) => AllEventLogs(history, match);
 
@@ -356,23 +357,31 @@ export function LogView({ user, refetch }) {
   const { t } = useTranslation(['common', 'logbook']);
   const [grantEntry] = useMutation(EntryRequestGrant);
   const [loading, setLoading] = useState(false)
+  const [message, setMessage] = useState({ isError: false, detail: ""})
   
   // grant access right here
   function handleGrantAccess() {
     setLoading(true);
-    grantEntry({ variables: { id: user.refId, subject: "user_entry" } })
+    grantEntry({ variables: { id: user.refId, subject: "visitor_entry" } })
       .then(() => {
+        setMessage({isError: false, detail: "Successfully granted access"});
         setLoading(false);
-        refetch()
+        setTimeout(() => refetch(), 1500)
       })
       .catch(error => {
-        console.log(error.message);
+        setMessage({isError: true, detail: error.message});
         setLoading(false);
       });
   }
-  
+
   return (
     <>
+      <MessageAlert
+        type={message.isError ? 'error' : 'success'}
+        message={message.detail}
+        open={!!message.detail}
+        handleClose={() => setMessage({...message, detail: ""})}
+      />
       <div className="container">
         <div className="row justify-content-between">
           <div className="col-xs-8">
