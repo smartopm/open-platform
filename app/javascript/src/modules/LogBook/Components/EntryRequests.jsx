@@ -26,7 +26,7 @@ export function RequestsList({ data }) {
         <td data-testid="entry_name">{entry.name}</td>
         <td data-testid="entry_guard">{entry.guard.name}</td>
         <td>{dateToString(entry.createdAt)}</td>
-        <td>{dateTimeToString(new Date(entry.createdAt))}</td>
+        <td>{dateTimeToString(entry.createdAt)}</td>
         <td data-testid="entry_phone">{entry.phoneNumber}</td>
         <td data-testid="entry_nrc">{entry.nrc}</td>
         <td>{entry.vehiclePlate}</td>
@@ -68,7 +68,7 @@ export function UserComponent({ data }) {
     return entries?.map(entry => (
       <tr key={entry.id}>
         <td>{dateToString(entry.createdAt)}</td>
-        <td>{dateTimeToString(new Date(entry.createdAt))}</td>
+        <td>{dateTimeToString(entry.createdAt)}</td>
         <td>{entry.reportingUser.name}</td>
       </tr>
     ));

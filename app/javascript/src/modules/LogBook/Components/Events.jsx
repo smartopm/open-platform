@@ -33,12 +33,12 @@ export default function Events({
             }
           </td>
           <td>{dateToString(entry.createdAt)}</td>
-          <td>{dateTimeToString(new Date(entry.createdAt))}</td>
+          <td>{dateTimeToString(entry.createdAt)}</td>
           <td>{entry.subject === 'user_entry' && entry.data.digital !== null ? `${entry.data.digital ? t('logbook.digital_scan') : t('logbook.print_scan')} ` : 'N/A'}</td>
           <td>
             {entry.subject === 'user_entry' && entry.data.timestamp
-            ? `${entry.data.timestamp && `${dateToString(new Date(Number(entry.data.timestamp)))} 
-              ${dateTimeToString(new Date(Number(entry.data.timestamp)))}`} ` : 'N/A'}
+            ? `${entry.data.timestamp && `${dateToString(new Date(Number(entry.data.timestamp)))}
+              ${dateTimeToString(Number(entry.data.timestamp))}`} ` : 'N/A'}
           </td>
           <td>{entry.data?.type ? t(`common:user_types.${entry.data?.type}`) : t('logbook.entry_request')}</td>
         </tr>
@@ -84,7 +84,7 @@ export default function Events({
                 </li>
               </ul>
             </nav>
-  
+
           </div>
           <Fab
             variant="extended"

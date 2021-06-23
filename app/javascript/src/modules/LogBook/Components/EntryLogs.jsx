@@ -167,7 +167,7 @@ export function IndexComponent({
         : event.subject === 'showroom'
           ? t('logbook.showroom')
           : t('dashboard:dashboard.log_entry')
-          
+
       const isDigital = event.subject === 'user_entry' ? event.data.digital : null
       const reason = event.entryRequest ? event.entryRequest.reason : ''
 
@@ -204,7 +204,7 @@ export function IndexComponent({
               </div>
               <div className="col-xs-4">
                 <span className={css(styles.subTitle)}>
-                  {dateTimeToString(new Date(event.createdAt))}
+                  {dateTimeToString(event.createdAt)}
                 </span>
               </div>
             </div>
@@ -370,7 +370,7 @@ export function LogView({ user }){
           </div>
           <div className="col-xs-4">
             <span className={css(styles.subTitle)}>
-              {dateTimeToString(new Date(user.createdAt))}
+              {dateTimeToString(user.createdAt)}
             </span>
           </div>
         </div>
