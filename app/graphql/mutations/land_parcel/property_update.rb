@@ -18,6 +18,7 @@ module Mutations
       argument :geom, GraphQL::Types::JSON, required: false
       argument :valuation_fields, GraphQL::Types::JSON, required: false
       argument :ownership_fields, GraphQL::Types::JSON, required: false
+      argument :payment_plan_fields, GraphQL::Types::JSON, required: false
 
       field :land_parcel, Types::LandParcelType, null: true
 
@@ -29,7 +30,7 @@ module Mutations
 
         ActiveRecord::Base.transaction do
           land_parcel.update!(
-            vals.except(:valuation_fields, :ownership_fields),
+            vals.except(:valuation_fields, :ownership_fields, :payment_plan_fields),
           )
 
           land_parcel.valuations.delete_all
@@ -45,6 +46,8 @@ module Mutations
                                          address1: v['address'],
                                          community_id: context[:site_community].id)
           end
+
+          create_payment_plan(vals[:payment_plan_fields]) if vals[:payment_plan_fields].present?
           { land_parcel: land_parcel }
         end
       rescue ActiveRecord::RecordInvalid => e
@@ -62,6 +65,30 @@ module Mutations
 
       private
 
+      def create_payment_plan(params)
+        vals = payment_plan_values(params)
+
+        user = context[:site_community].users.find(vals[:user_id])
+        raise_user_not_found_error(user)
+
+        payment_plan = user.payment_plans.create(vals.except(:user_id))
+        return if payment_plan.persisted?
+
+        raise GraphQL::ExecutionError, payment_plan.errors.full_messages
+      rescue ActiveRecord::RecordNotUnique
+        raise_payment_plan_not_found_error
+      end
+
+      def payment_plan_values(vals)
+        hash = {}
+        vals.each do |key, val|
+          new_key = key.underscore.to_sym
+          hash[new_key] = val
+        end
+
+        hash
+      end
+
       # Raises GraphQL execution error if land parcel does not exist.
       #
       # @return [GraphQL::ExecutionError]
@@ -69,6 +96,23 @@ module Mutations
         return if land_parcel
 
         raise GraphQL::ExecutionError, I18n.t('errors.land_parcel.not_found')
+      end
+
+      # Raises GraphQL execution error if user does not exist.
+      #
+      # @return [GraphQL::ExecutionError]
+      def raise_user_not_found_error(user)
+        return if user
+
+        raise GraphQL::ExecutionError, I18n.t('errors.user.not_found')
+      end
+
+      # Raises GraphQL execution payment plan already exist for land parcel error.
+      #
+      # @return [GraphQL::ExecutionError]
+      def raise_payment_plan_not_found_error
+        raise GraphQL::ExecutionError,
+              I18n.t('errors.payment_plan.plan_already_exist')
       end
     end
   end

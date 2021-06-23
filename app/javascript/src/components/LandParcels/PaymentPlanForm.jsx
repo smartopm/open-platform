@@ -1,89 +1,15 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
-import { Button, MenuItem, TextField, InputAdornment, Typography } from '@material-ui/core';
-import { useMutation } from 'react-apollo';
+import { MenuItem, TextField, InputAdornment, Typography } from '@material-ui/core';
 import DatePickerDialog from '../DatePickerDialog';
-import { paymentPlanStatus, currencies } from '../../utils/constants';
-import { LandPaymentPlanCreateMutation } from '../../graphql/mutations/land_parcel';
-import { Spinner } from '../../shared/Loading';
-import { formatError } from '../../utils/helpers';
+import { paymentPlanStatus } from '../../utils/constants';
 
-import { Context as AuthStateContext } from '../../containers/Provider/AuthStateProvider';
-
-const initialPlanState = {
-  status: 0,
-  planType: 'lease',
-  percentage: '',
-  startDate: new Date(),
-  userId: '',
-  monthlyAmount: '',
-  totalAmount: 0,
-  durationInMonth: ''
-};
-export default function PaymentPlanForm({ landParcel, refetch }) {
-  const [paymentPlanState, setPaymentPlanState] = useState(initialPlanState);
-  const [createPaymentPlan] = useMutation(LandPaymentPlanCreateMutation);
-  const [mutationInfo, setMutationInfo] = useState({
-    loading: false,
-    isError: false,
-    message: null
-  });
-  const [errorInfo, setErrorInfo] = useState({ isError: false, isSubmitting: false });
-  const authState = useContext(AuthStateContext);
-  const currency = currencies[authState.user?.community.currency] || '';
-
-  useEffect(() => {
-    const { percentage, monthlyAmount, durationInMonth } = paymentPlanState;
-
-    let totalAmount = 0;
-    if (Number(percentage) > 0 || Number(monthlyAmount) > 0 || Number(durationInMonth) > 0) {
-      totalAmount = (monthlyAmount * durationInMonth * 100) / percentage;
-    }
-
-    setPaymentPlanState({ ...paymentPlanState, totalAmount: Number(parseFloat(totalAmount).toFixed(2)) })
-  }, [paymentPlanState.percentage, paymentPlanState.monthlyAmount, paymentPlanState.durationInMonth]);
-
-  function handleOnChange(event) {
-    const { name, value } = event.target;
-    setPaymentPlanState({ ...paymentPlanState, [name]: value });
-  }
-
-  function handleSubmit() {
-    const values = Object.values(paymentPlanState);
-
-    function isNotValid(element) {
-      if (Number.isInteger(element) || element instanceof Date) {
-        return false;
-      }
-      return !element;
-    }
-    const isAnyInValid = values.some(isNotValid);
-    if (isAnyInValid) {
-      setErrorInfo({ isError: true, isSubmitting: true });
-      return;
-    }
-    setMutationInfo({ ...mutationInfo, loading: true });
-    createPaymentPlan({
-      variables: {
-        ...paymentPlanState,
-        landParcelId: landParcel.id,
-        monthlyAmount: parseFloat(paymentPlanState.monthlyAmount),
-        durationInMonth: parseInt(paymentPlanState.durationInMonth, 10)
-      }
-    })
-      .then(() => {
-        setMutationInfo({
-          ...mutationInfo,
-          message: 'Payment plan created successfully',
-          loading: false
-        });
-        refetch();
-      })
-      .catch(error => {
-        setMutationInfo({ isError: true, message: formatError(error.message), loading: false });
-      });
-  }
-
+export default function PaymentPlanForm({
+  landParcel,
+  handleChange,
+  paymentPlanState,
+  paymentCurrency,
+}) {
   return (
     <>
       <TextField
@@ -93,7 +19,7 @@ export default function PaymentPlanForm({ landParcel, refetch }) {
         aria-label="purchase_plan"
         label="Purchase Plan"
         value={paymentPlanState.planType}
-        onChange={handleOnChange}
+        onChange={handleChange}
         name="planType"
         style={{ width: '100%' }}
         required
@@ -114,13 +40,11 @@ export default function PaymentPlanForm({ landParcel, refetch }) {
         aria-label="payment_plan_owner"
         label="Choose Payment Plan User"
         value={paymentPlanState.userId}
-        onChange={handleOnChange}
+        onChange={handleChange}
         name="userId"
         style={{ width: '100%' }}
         required
         select
-        error={errorInfo.isError && !paymentPlanState.userId}
-        helperText={errorInfo.isError && !paymentPlanState.userId && 'User is required'}
       >
         {landParcel.accounts.map(account => (
           <MenuItem key={account.user.id} value={account.user.id}>
@@ -135,13 +59,11 @@ export default function PaymentPlanForm({ landParcel, refetch }) {
         aria-label="status"
         label="Status"
         value={paymentPlanState.status}
-        onChange={handleOnChange}
+        onChange={handleChange}
         name="status"
         style={{ width: '100%' }}
         required
         select
-        error={errorInfo.isError && !Number.isInteger(paymentPlanState.status)}
-        helperText={errorInfo.isError && paymentPlanState.status === '' && 'Status is required'}
       >
         {Object.entries(paymentPlanStatus).map(([key, val]) => (
           <MenuItem key={key} value={Number(key)}>
@@ -155,7 +77,7 @@ export default function PaymentPlanForm({ landParcel, refetch }) {
         label="Percentage"
         aria-label="percentage"
         value={paymentPlanState.percentage}
-        onChange={handleOnChange}
+        onChange={handleChange}
         name="percentage"
         style={{ width: '100%' }}
         type="number"
@@ -165,8 +87,6 @@ export default function PaymentPlanForm({ landParcel, refetch }) {
           },
           startAdornment: <InputAdornment position="start">%</InputAdornment>
         }}
-        error={errorInfo.isError && !paymentPlanState.percentage}
-        helperText={errorInfo.isError && !paymentPlanState.percentage && 'Percentage is required'}
       />
       <TextField
         margin="normal"
@@ -174,7 +94,7 @@ export default function PaymentPlanForm({ landParcel, refetch }) {
         label="Monthly Amount"
         aria-label="monthly-amount"
         value={paymentPlanState.monthlyAmount}
-        onChange={handleOnChange}
+        onChange={handleChange}
         name="monthlyAmount"
         style={{ width: '100%' }}
         type="number"
@@ -182,14 +102,8 @@ export default function PaymentPlanForm({ landParcel, refetch }) {
           inputProps: {
             min: 1
           },
-          startAdornment: <InputAdornment position="start">{currency}</InputAdornment>
+          startAdornment: <InputAdornment position="start">{paymentCurrency}</InputAdornment>
         }}
-        error={errorInfo.isError && !paymentPlanState.monthlyAmount}
-        helperText={
-          errorInfo.isError &&
-          !paymentPlanState.monthlyAmount &&
-          'Monthly amount is required'
-        }
       />
       <TextField
         margin="normal"
@@ -197,7 +111,7 @@ export default function PaymentPlanForm({ landParcel, refetch }) {
         label="Duration(in months)"
         aria-label="duration-in-month"
         value={paymentPlanState.durationInMonth}
-        onChange={handleOnChange}
+        onChange={handleChange}
         name="durationInMonth"
         style={{ width: '100%' }}
         type="number"
@@ -206,14 +120,10 @@ export default function PaymentPlanForm({ landParcel, refetch }) {
             min: 1
           }
         }}
-        error={errorInfo.isError && !paymentPlanState.durationInMonth}
-        helperText={
-          errorInfo.isError && !paymentPlanState.durationInMonth && 'Duration is required'
-        }
       />
       <DatePickerDialog
         selectedDate={paymentPlanState.startDate}
-        handleDateChange={date => setPaymentPlanState({ ...paymentPlanState, startDate: date })}
+        handleDateChange={date => handleChange({ target: { name: 'startDate', value: date }})}
         label="Start Date"
         required
       />
@@ -224,18 +134,9 @@ export default function PaymentPlanForm({ landParcel, refetch }) {
           component="p"
           data-testid="total-amount-txt"
         >
-          {`Approx. Total Property Valuation: ${currency} ${paymentPlanState.totalAmount}`}
+          {`Approx. Total Property Valuation: ${paymentCurrency} ${paymentPlanState.totalAmount}`}
         </Typography>
       )}
-      {mutationInfo.loading ? (
-        <Spinner />
-      ) : (
-        <Button variant="text" color="primary" onClick={handleSubmit} data-testid="submit_btn">
-          Save Plan
-        </Button>
-      )}
-      <br />
-      {mutationInfo.message}
     </>
   );
 }
@@ -243,5 +144,16 @@ export default function PaymentPlanForm({ landParcel, refetch }) {
 PaymentPlanForm.propTypes = {
   // eslint-disable-next-line react/forbid-prop-types
   landParcel: PropTypes.object.isRequired,
-  refetch: PropTypes.func.isRequired
+  paymentPlanState: PropTypes.shape({
+    status: PropTypes.number,
+    planType: PropTypes.string,
+    percentage: PropTypes.string,
+    startDate:  PropTypes.instanceOf(Date),
+    userId:  PropTypes.string,
+    monthlyAmount:  PropTypes.string,
+    totalAmount:  PropTypes.number,
+    durationInMonth:  PropTypes.string,
+  }).isRequired,
+  handleChange: PropTypes.func.isRequired,
+  paymentCurrency:  PropTypes.string.isRequired,
 };
