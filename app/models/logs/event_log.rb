@@ -184,7 +184,7 @@ module Logs
 
       return if acting_user.community_id == community_id
 
-      errors.add(:acting_user, 'Can only report users in your own community')
+      errors.add(:acting_user_id, :allowed_user_reporting_in_own_community)
     end
 
     def validate_log

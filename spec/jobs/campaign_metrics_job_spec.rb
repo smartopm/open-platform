@@ -22,7 +22,7 @@ RSpec.describe CampaignMetricsJob, type: :job do
     end
 
     it 'performs enqueued job' do
-      expect(EventLog).to receive_message_chain(
+      expect(Logs::EventLog).to receive_message_chain(
         :since_date,
         :by_user_activity,
         :with_acting_user_id,

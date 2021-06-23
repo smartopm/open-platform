@@ -26,7 +26,7 @@ class MergeUsers
     end
 
     # Updates accounts details to their associated user's details
-    user = User.find_by(id: duplicate_id)
+    user = Users::User.find_by(id: duplicate_id)
     user.update_associated_accounts_details
 
     # Merges wallet details of users.

@@ -3,9 +3,14 @@
 module Notifications
   # email templates
   class EmailTemplate < ApplicationRecord
+    scope :system_emails, -> { where(tag: 'system') }
+
     belongs_to :community
 
-    validates :name, presence: true, uniqueness: true
+    validates :name, presence: true, uniqueness: {
+      scope: :community_id,
+      message: 'Email template with name already exists for community',
+    }
 
     before_save :set_template_variables
 
