@@ -5,14 +5,19 @@ module Mutations
     # Grant an entry request
     class EntryRequestGrant < BaseMutation
       argument :id, ID, required: true
+      argument :subject, String, required: false
 
       field :entry_request, Types::EntryRequestType, null: true
 
       def resolve(vals)
-        entry_request = context[:current_user].grant!(vals[:id])
+        event = context[:site_community].event_logs.find_by(ref_id: vals[:id])
+        entry_request = context[:current_user].grant!(vals[:id], event.id)
         send_notifications(entry_request)
-        return { entry_request: entry_request } if entry_request.present?
-
+        if entry_request.present?
+          # update the subject only if it has been passed
+          event.update!(subject: vals[:subject]) if vals[:subject]
+          return { entry_request: entry_request }
+        end
         raise GraphQL::ExecutionError, entry_request.errors.full_messages
       end
 
