@@ -92,14 +92,20 @@ RSpec.describe Types::Queries::TimeSheet do
 
     it 'list contains all employees' do
       expect(TimeSheet.all.length).to eql 3
-      result = DoubleGdpSchema.execute(query, context: { current_user: custodian }).as_json
+      result = DoubleGdpSchema.execute(query, context: {
+                                         current_user: custodian,
+                                         site_community: custodian.community,
+                                       }).as_json
       expect(result.dig('data', 'timeSheetLogs').length).to eql 2
       expect(result.dig('data', 'timeSheetLogs', 0, 'userId')).to eql time_log2_user1.user_id
       expect(result.dig('data', 'timeSheetLogs', 0, 'id')).to eql time_log2_user1.id
     end
 
     it 'list contains one row per employee' do
-      result = DoubleGdpSchema.execute(query, context: { current_user: custodian }).as_json
+      result = DoubleGdpSchema.execute(query, context: {
+                                         current_user: custodian,
+                                         site_community: custodian.community,
+                                       }).as_json
       expect(result.dig('data', 'timeSheetLogs', 0, 'userId')).to eql time_log2_user1.user_id
       expect(result.dig('data', 'timeSheetLogs', 1, 'userId')).to eql time_log1_user2.user_id
     end

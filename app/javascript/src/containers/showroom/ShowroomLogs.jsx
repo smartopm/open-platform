@@ -107,7 +107,7 @@ export default function ShowroomLogs() {
                       <StyledTableCell align="right">{entry.homeAddress}</StyledTableCell>
                       <StyledTableCell align="right">{entry.reason}</StyledTableCell>
                       <StyledTableCell align="right">{dateToString(entry.createdAt)}</StyledTableCell>
-                      <StyledTableCell align="right">{dateTimeToString(new Date(entry.createdAt))}</StyledTableCell>
+                      <StyledTableCell align="right">{dateTimeToString(entry.createdAt)}</StyledTableCell>
 
                     </StyledTableRow>
                                 ))}

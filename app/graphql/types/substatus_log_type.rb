@@ -5,10 +5,10 @@ module Types
   class SubstatusLogType < Types::BaseObject
     field :id, ID, null: true
     field :user_id, ID, null: false
-    field :start_date, GraphQL::Types::ISO8601DateTime, null: true
-    field :stop_date, GraphQL::Types::ISO8601DateTime, null: true
+    field :start_date, Types::Scalar::DateType, null: true
+    field :stop_date, Types::Scalar::DateType, null: true
     field :new_status, String, null: true
     field :previous_status, String, null: true
-    field :created_at, GraphQL::Types::ISO8601DateTime, null: true
+    field :created_at, Types::Scalar::DateType, null: true
   end
 end

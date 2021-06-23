@@ -6,7 +6,7 @@ module Types
     field :id, ID, null: false
     field :label_id, ID, null: false
     field :user_id, ID, null: false
-    field :created_at, GraphQL::Types::ISO8601DateTime, null: false
-    field :updated_at, GraphQL::Types::ISO8601DateTime, null: false
+    field :created_at, Types::Scalar::DateType, null: false
+    field :updated_at, Types::Scalar::DateType, null: false
   end
 end

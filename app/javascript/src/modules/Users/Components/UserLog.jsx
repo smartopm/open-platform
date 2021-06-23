@@ -35,13 +35,13 @@ export default function UserLog({
             }}
           >
             <td>{dateToString(event.createdAt)}</td>
-            <td>{dateTimeToString(new Date(event.createdAt))}</td>
+            <td>{dateTimeToString(event.createdAt)}</td>
             <td>{event.sentence}</td>
           </tr>
         );
       });
     }
-   
+
     return (
       <div className="row justify-content-center">
         <div className="col-10 col-sm-10 col-md-6 table-responsive">

@@ -14,7 +14,7 @@ module Types
     field :state_province, String, null: true
     field :country, String, null: true
     field :land_parcels, [Types::LandParcelType], null: true
-    field :created_at, GraphQL::Types::ISO8601DateTime, null: false
-    field :updated_at, GraphQL::Types::ISO8601DateTime, null: false
+    field :created_at, Types::Scalar::DateType, null: false
+    field :updated_at, Types::Scalar::DateType, null: false
   end
 end

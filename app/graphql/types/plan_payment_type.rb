@@ -10,8 +10,8 @@ module Types
     field :user, Types::UserType, null: false
     field :community, Types::CommunityType, null: false
     field :payment_plan, Types::PaymentPlanType, null: true
-    field :created_at, GraphQL::Types::ISO8601DateTime, null: false
-    field :updated_at, GraphQL::Types::ISO8601DateTime, null: false
+    field :created_at, Types::Scalar::DateType, null: false
+    field :updated_at, Types::Scalar::DateType, null: false
     field :receipt_number, String, null: true
     field :current_plot_pending_balance, Float, null: true
 

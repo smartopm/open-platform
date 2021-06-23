@@ -22,16 +22,16 @@ module Types
                                                      user: :id }
     field :state, String, null: true
     field :sub_status, String, null: true
-    field :expires_at, GraphQL::Types::ISO8601DateTime, null: true
-    field :created_at, GraphQL::Types::ISO8601DateTime, null: false
-    field :updated_at, GraphQL::Types::ISO8601DateTime, null: false
-    field :last_activity_at, GraphQL::Types::ISO8601DateTime, null: true
+    field :expires_at, Types::Scalar::DateType, null: true
+    field :created_at, Types::Scalar::DateType, null: false
+    field :updated_at, Types::Scalar::DateType, null: false
+    field :last_activity_at, Types::Scalar::DateType, null: true
     field :avatar_url, String, null: true
     field :document_url, String, null: true
     field :source, String, null: true, visible: { roles: %i[admin security_guard], user: :id }
     field :stage, String, null: true, visible: { roles: %i[admin security_guard], user: :id }
     field :owner_id, ID, null: true, visible: { roles: %i[admin security_guard], user: :id }
-    field :followup_at, GraphQL::Types::ISO8601DateTime, null: true
+    field :followup_at, Types::Scalar::DateType, null: true
     field :notes, [Types::NoteType], null: true, visible: { roles: %i[admin], user: :id }
     field :tasks, [Types::NoteType], null: true, visible: { roles: %i[admin], user: :id }
     field :accounts, [Types::AccountType], null: true, visible: { roles: %i[admin], user: :id }

@@ -9,7 +9,7 @@ module Types
     field :title, String, null: true
     field :description, String, null: true
     field :user, Types::UserType, null: false
-    field :created_at, GraphQL::Types::ISO8601DateTime, null: false
-    field :updated_at, GraphQL::Types::ISO8601DateTime, null: false
+    field :created_at, Types::Scalar::DateType, null: false
+    field :updated_at, Types::Scalar::DateType, null: false
   end
 end
