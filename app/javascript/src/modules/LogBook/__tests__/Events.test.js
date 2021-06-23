@@ -82,7 +82,7 @@ describe('Should Render Events Component', () => {
       }
     const { getByText, getByTestId } = render(
       <MockedProvider>
-        <LogView user={log} refetch={jest.fn()} /> 
+        <LogView user={log} refetch={jest.fn()} tab={2} /> 
       </MockedProvider>
       )
     expect(getByText('Some User')).toBeInTheDocument()
