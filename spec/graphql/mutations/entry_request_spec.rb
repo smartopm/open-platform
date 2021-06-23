@@ -97,7 +97,7 @@ RSpec.describe Mutations::EntryRequest do
       result = DoubleGdpSchema.execute(query, variables: variables,
                                               context: {
                                                 current_user: admin,
-                                                site_community: admin.community
+                                                site_community: admin.community,
                                               }).as_json
       expect(result.dig('data', 'result', 'entryRequest', 'id')).not_to be_nil
       expect(result.dig('data', 'result', 'entryRequest', 'grantedState')).to eql 1
