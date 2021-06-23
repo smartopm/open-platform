@@ -8,7 +8,7 @@ module Types
     field :currency, String, null: false
     field :balance, Float, null: false
     field :pending_balance, Float, null: true
-    field :created_at, Types::Scalar::DateType, null: false
-    field :updated_at, Types::Scalar::DateType, null: false
+    field :created_at, GraphQL::Types::ISO8601DateTime, null: false
+    field :updated_at, GraphQL::Types::ISO8601DateTime, null: false
   end
 end

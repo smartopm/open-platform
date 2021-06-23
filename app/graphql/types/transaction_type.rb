@@ -14,9 +14,9 @@ module Types
     field :depositor, Types::UserType, null: true
     field :community, Types::CommunityType, null: false
     field :plan_payments, [Types::PlanPaymentType], null: true
-    field :created_at, Types::Scalar::DateType, null: false
-    field :updated_at, Types::Scalar::DateType, null: false
-    field :originally_created_at, Types::Scalar::DateType, null: false
+    field :created_at, GraphQL::Types::ISO8601DateTime, null: false
+    field :updated_at, GraphQL::Types::ISO8601DateTime, null: false
+    field :originally_created_at, GraphQL::Types::ISO8601DateTime, null: false
     field :allocated_amount, Float, null: false
     field :unallocated_amount, Float, null: false
 

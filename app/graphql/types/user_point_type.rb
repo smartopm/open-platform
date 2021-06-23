@@ -11,7 +11,7 @@ module Types
     field :referral, Integer, null: false
     field :login, Integer, null: false
     field :total, Integer, null: false
-    field :created_at, Types::Scalar::DateType, null: false
-    field :updated_at, Types::Scalar::DateType, null: false
+    field :created_at, GraphQL::Types::ISO8601DateTime, null: false
+    field :updated_at, GraphQL::Types::ISO8601DateTime, null: false
   end
 end

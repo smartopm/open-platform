@@ -47,7 +47,7 @@ export default function CampaignList() {
   if (error) return <ErrorPage />
   return (
     <div className="container">
-      {data.campaigns.map(camp => (
+      {data.campaigns.map(camp => ( 
         <Fragment key={camp.id}>
           <div>
             <Grid container spacing={2}>
@@ -94,37 +94,37 @@ export default function CampaignList() {
                     {dateToString(camp.batchTime)}
                     {' '}
                     <strong>Scheduled Time: </strong>
-                    {dateTimeToString(camp.batchTime)}
+                    {dateTimeToString(new Date(camp.batchTime))}
                   </Typography>
                     )}
-
+                    
                 </Grid>
                 <Grid item>
                   <Grid item container direction="row" spacing={2}>
                     <Grid item>
                       <Typography className={css(style.subTitle)}>
-                        Total Scheduled:
+                        Total Scheduled: 
                         {' '}
                         {camp.campaignMetrics.totalScheduled}
                       </Typography>
                     </Grid>
                     <Grid item>
                       <Typography className={css(style.subTitle)}>
-                        Total Sent:
+                        Total Sent: 
                         {' '}
                         {camp.campaignMetrics.totalSent}
                       </Typography>
                     </Grid>
                     <Grid item>
                       <Typography className={css(style.subTitle)}>
-                        Total Clicked:
+                        Total Clicked: 
                         {' '}
                         {camp.campaignMetrics.totalClicked}
                       </Typography>
                     </Grid>
                     <Grid item>
                       <Typography className={css(style.subTitle)}>
-                        Success:
+                        Success: 
                         {' '}
                         {String(parseInt(
                         (100 * camp.campaignMetrics.totalClicked) /
@@ -160,7 +160,7 @@ export default function CampaignList() {
               </Grid>
             </Grid>
           </div>
-
+          
           <div className="border-top my-3" />
         </Fragment>
       ))}

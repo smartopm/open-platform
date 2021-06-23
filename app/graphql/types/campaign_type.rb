@@ -13,12 +13,12 @@ module Types
     field :include_reply_link, Boolean, null: false
     field :email_templates_id, ID, null: true
     field :labels, [Types::LabelType], null: true
-    field :start_time, Types::Scalar::DateType, null: true
-    field :end_time, Types::Scalar::DateType, null: true
-    field :batch_time, Types::Scalar::DateType, null: true
-    field :created_at, Types::Scalar::DateType, null: true
-    field :updated_at, Types::Scalar::DateType, null: true
-    field :created_at, Types::Scalar::DateType, null: true
+    field :start_time, GraphQL::Types::ISO8601DateTime, null: true
+    field :end_time, GraphQL::Types::ISO8601DateTime, null: true
+    field :batch_time, GraphQL::Types::ISO8601DateTime, null: true
+    field :created_at, GraphQL::Types::ISO8601DateTime, null: true
+    field :updated_at, GraphQL::Types::ISO8601DateTime, null: true
+    field :created_at, GraphQL::Types::ISO8601DateTime, null: true
     field :campaign_metrics, Types::CampaignMetricsType, null: true
   end
 end

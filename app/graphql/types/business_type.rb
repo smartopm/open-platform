@@ -17,6 +17,6 @@ module Types
     field :description, String, null: true
     field :links, GraphQL::Types::JSON, null: true
     field :user, Types::UserType, null: false
-    field :created_at, Types::Scalar::DateType, null: true
+    field :created_at, GraphQL::Types::ISO8601DateTime, null: true
   end
 end

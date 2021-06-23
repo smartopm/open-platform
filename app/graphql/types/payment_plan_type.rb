@@ -12,9 +12,9 @@ module Types
     field :land_parcel, Types::LandParcelType, null: false
     field :invoices, [Types::InvoiceType], null: false
     field :user, Types::UserType, null: false
-    field :start_date, Types::Scalar::DateType, null: true
-    field :created_at, Types::Scalar::DateType, null: false
-    field :updated_at, Types::Scalar::DateType, null: false
+    field :start_date, GraphQL::Types::ISO8601DateTime, null: true
+    field :created_at, GraphQL::Types::ISO8601DateTime, null: false
+    field :updated_at, GraphQL::Types::ISO8601DateTime, null: false
     field :payment_day, Integer, null: false
     field :monthly_amount, Float, null: true
     field :plan_payments, [Types::PlanPaymentType], null: true

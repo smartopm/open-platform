@@ -7,7 +7,7 @@ describe('date container component', () => {
   it('renders a span element and has correct time', () => {
     // get today's date
     const date = new Date()
-    const time = dateTimeToString(date.toString())
+    const time = dateTimeToString(date)
     const component = mount(<DateContainer date={date} />)
     expect(component.find('span')).toHaveLength(1)
     expect(component.find('span').text()).toContain(`Today at ${time}`)

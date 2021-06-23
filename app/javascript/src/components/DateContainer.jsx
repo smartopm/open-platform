@@ -1,19 +1,18 @@
 import React from 'react'
 import { isYesterday, isToday } from 'date-fns'
 import PropTypes from 'prop-types'
-// eslint-disable-next-line import/no-extraneous-dependencies
-import moment from "moment";
+import dateutil from '../utils/dateutil'
+
+const timeZone = 'Africa/Lusaka'
 
 // returns a stringified date
 export function dateTimeToString(date) {
-  return moment.parseZone(date).format("HH:mm")
-  // return date.toLocaleTimeString([], { hour12: false, hour: '2-digit', minute: '2-digit', timeZone: null })
+  return date.toLocaleTimeString([], { hour12: false, hour: '2-digit', minute: '2-digit', timeZone })
 }
 export function dateToString(date) {
-  // const lDate = date.toLocaleString("en-GB", { timeZone: 'Australia/Adelaide' })
+  const lDate = date.toLocaleString("en-GB", { timeZone })
   // eslint-disable-next-line import/no-named-as-default-member
-  return moment.parseZone(date).format("YYYY-MM-DD")
-  // return dateutil.dateToString(new Date(lDate))
+  return dateutil.dateToString(new Date(lDate))
 }
 
 /**
@@ -28,12 +27,12 @@ export function futureDateAndTimeToString(days) {
   const currDate = new Date(dueIn10).getDate()
   const currMonth = new Date(dueIn10).getMonth() + 1
   const currYear = new Date(dueIn10).getFullYear()
-  return `${currYear}-${currMonth}-${currDate} ${dateTimeToString(date.toString())}`
+  return `${currYear}-${currMonth}-${currDate} ${dateTimeToString(new Date(date))}`
 }
 
 /**
- *
- * @param {Date} objDate
+ * 
+ * @param {Date} objDate 
  * @description works similary to DateContainer but returns a string instead
  * @returns {String}
  */
@@ -41,9 +40,9 @@ export function dateFormatter(objDate){
   if(!objDate) return null
   // eslint-disable-next-line no-nested-ternary
   return isToday(new Date(objDate))
-  ? `Today at ${dateTimeToString(objDate)}`
+  ? `Today at ${dateTimeToString(new Date(objDate))}`
   : isYesterday(new Date(objDate))
-  ? `Yesterday at ${dateTimeToString(objDate)}`
+  ? `Yesterday at ${dateTimeToString(new Date(objDate))}`
   : dateToString(objDate)
 }
 

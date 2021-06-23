@@ -15,12 +15,12 @@ module Types
     field :subject, String, null: true
     field :concern_flag, GraphQL::Types::Boolean, null: true
     field :granted_state, Integer, null: true
-    field :created_at, Types::Scalar::DateType, null: false
-    field :updated_at, Types::Scalar::DateType, null: false
-    field :granted_at, Types::Scalar::DateType, null: true
+    field :created_at, GraphQL::Types::ISO8601DateTime, null: false
+    field :updated_at, GraphQL::Types::ISO8601DateTime, null: false
+    field :granted_at, GraphQL::Types::ISO8601DateTime, null: true
     field :source, String, null: true
     field :acknowledged, Boolean, null: true
-    field :visitation_date, Types::Scalar::DateType, null: true
+    field :visitation_date, GraphQL::Types::ISO8601DateTime, null: true
     field :start_time, String, null: true
     field :end_time, String, null: true
   end
