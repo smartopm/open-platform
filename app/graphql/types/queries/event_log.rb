@@ -36,7 +36,8 @@ module Types::Queries::EventLog
     query = build_event_log_query(context[:current_user], subject, ref_id, ref_type)
     return query_logs_with_name(query, name, limit, offset) if name.present?
 
-    context[:site_community].event_logs.where(query).limit(limit).offset(offset)
+    context[:site_community].event_logs.eager_load(:acting_user).where(query)
+                            .limit(limit).offset(offset)
   end
   # rubocop:enable Metrics/ParameterLists
 
@@ -74,11 +75,12 @@ module Types::Queries::EventLog
 
   def query_user_logs(user, subject, limit, offset)
     query = build_event_log_user_query(user, subject)
-    context[:site_community].event_logs.where(query).limit(limit).offset(offset)
+    context[:site_community].event_logs.eager_load(:acting_user).where(query)
+                            .limit(limit).offset(offset)
   end
 
   def query_logs_with_name(query, name, limit, offset)
-    context[:site_community].event_logs.where(query)
+    context[:site_community].event_logs.eager_load(:acting_user).where(query)
                             .where("data->>'ref_name' ILIKE ?", "%#{name}%")
                             .limit(limit).offset(offset)
   end
