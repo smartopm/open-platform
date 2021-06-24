@@ -263,6 +263,9 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
           <div className="form-group">
             <label className="bmd-label-static" htmlFor="firstName" data-testid="client_name">
               {t('common:form_fields.client_name')}
+              <span className="MuiFormLabel-asterisk MuiInputLabel-asterisk" aria-hidden="true">
+                &nbsp;*
+              </span>
             </label>
             <TextField
               className="form-control"
@@ -279,6 +282,9 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
         <div className="form-group">
           <label className="bmd-label-static" htmlFor="firstName" data-testid="full_name">
             {t('common:form_fields.full_name')}
+            <span className="MuiFormLabel-asterisk MuiInputLabel-asterisk" aria-hidden="true">
+              &nbsp;*
+            </span>
           </label>
           <TextField
             className="form-control"
@@ -293,6 +299,9 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
         <div className="form-group">
           <label className="bmd-label-static" htmlFor="phoneNumber" data-testid="primary_number">
             {t('common:form_fields.primary_number')}
+            <span className="MuiFormLabel-asterisk MuiInputLabel-asterisk" aria-hidden="true">
+              &nbsp;*
+            </span>
           </label>
           <TextField
             id="phoneNumber"
