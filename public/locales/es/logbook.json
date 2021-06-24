@@ -47,5 +47,6 @@
     "upcoming_visits": "Próximas visitas",
     "user_enrolled": "El usuario no pudo registrarse",
     "visiting_reason": "Motivo de la visita"
-  }
+  },
+  "entry_reason": ["Cliente", "Futuro cliente", "Trabajando", "Persona de ventas", "Que pasa a través", "Otro"]
 }
