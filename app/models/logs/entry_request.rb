@@ -21,7 +21,7 @@ module Logs
 
     GRANT_STATE = %w[Pending Granted Denied].freeze
 
-    def grant!(grantor, event_id = last_event_log.id))
+    def grant!(grantor, event_id = last_event_log.id)
       update(
         grantor_id: grantor.id,
         granted_state: 1,
