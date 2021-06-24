@@ -4,6 +4,17 @@ import { fireEvent, render } from '@testing-library/react';
 import { MockedProvider } from '@apollo/react-testing';
 import PaymentPlanForm from '../../components/LandParcels/PaymentPlanForm';
 
+const initialPlanState = {
+  status: 0,
+  planType: 'lease',
+  percentage: '',
+  startDate: new Date(),
+  userId: '',
+  monthlyAmount: '',
+  totalAmount: 0,
+  durationInMonth: ''
+};
+
 describe('PaymentPlanForm Component', () => {
   const landParcel = {
     id: '342bbccf-4899-47eb-922c-962484d0c41d',
@@ -19,7 +30,13 @@ describe('PaymentPlanForm Component', () => {
     const refetch = jest.fn();
     const container = render(
       <MockedProvider mocks={[]}>
-        <PaymentPlanForm landParcel={landParcel} refetch={refetch} />
+        <PaymentPlanForm
+          landParcel={landParcel}
+          refetch={refetch}
+          paymentCurrency="ZMW"
+          paymentPlanState={initialPlanState}
+          handleChange={jest.fn()}
+        />
       </MockedProvider>
     );
     // check if it renders as expected
@@ -29,7 +46,6 @@ describe('PaymentPlanForm Component', () => {
     const percentage = container.queryByLabelText('percentage');
     const monthlyAmount = container.queryByLabelText('monthly-amount');
     const duration = container.queryByLabelText('duration-in-month');
-    const submit_btn = container.queryByTestId('submit_btn');
 
     expect(purchase_plan.textContent).toContain('Purchase Plan');
     expect(payment_plan_owner.textContent).toContain('Choose Payment Plan User');
@@ -37,7 +53,6 @@ describe('PaymentPlanForm Component', () => {
     expect(percentage.textContent).toContain('Percentage');
     expect(monthlyAmount.textContent).toContain('Monthly Amount');
     expect(duration.textContent).toContain('Duration(in months)');
-    expect(submit_btn.textContent).toContain('Save Plan');
     expect(container.queryByTestId('date-picker').textContent).toContain('Start Date');
     expect(container.queryByTestId('total-amount-txt')).toBeNull()
 
@@ -56,9 +71,5 @@ describe('PaymentPlanForm Component', () => {
     expect(purchase_plan.querySelector('input').value).toBe('lease');
     // we shouldn't have validation errors before attempting to submit
     expect(percentage.textContent).not.toContain('Percentage is required');
-    fireEvent.click(submit_btn);
-    // check for validation errors after attempting to save
-    expect(percentage.textContent).toContain('Percentage is required');
-    expect(payment_plan_owner.textContent).toContain('User is required');
   });
 });
