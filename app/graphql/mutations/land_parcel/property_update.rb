@@ -76,7 +76,8 @@ module Mutations
 
         raise GraphQL::ExecutionError, payment_plan.errors.full_messages
       rescue ActiveRecord::RecordNotUnique
-        raise_payment_plan_not_found_error
+        raise GraphQL::ExecutionError,
+              I18n.t('errors.payment_plan.plan_already_exist')
       end
 
       def payment_plan_values(vals)
@@ -105,14 +106,6 @@ module Mutations
         return if user
 
         raise GraphQL::ExecutionError, I18n.t('errors.user.not_found')
-      end
-
-      # Raises GraphQL execution payment plan already exist for land parcel error.
-      #
-      # @return [GraphQL::ExecutionError]
-      def raise_payment_plan_not_found_error
-        raise GraphQL::ExecutionError,
-              I18n.t('errors.payment_plan.plan_already_exist')
       end
     end
   end
