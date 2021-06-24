@@ -67,6 +67,9 @@ export default function RequestForm({ path }) {
    /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [business.value])
 
+  // This is to allow tests to pass
+  const entryReason = t('logbook:entry_reason', { returnObjects: true })
+  const reasons = Array.isArray(entryReason) ? entryReason : [] 
   return (
     <>
       <ReasonInputModal
@@ -150,7 +153,7 @@ export default function RequestForm({ path }) {
               {...business}
               className={`${css(styles.selectInput)}`}
             >
-              {t('logbook:entry_reason', { returnObjects: true })?.map(_reason => (
+              {reasons.map(_reason => (
                 <MenuItem key={_reason} value={_reason}>
                   {_reason}
                 </MenuItem>
