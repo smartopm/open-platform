@@ -415,7 +415,8 @@ mutation UpdateProperty($id: ID!,
   $latY: Float,
   $geom: JSON,
   $valuationFields: JSON
-  $ownershipFields: JSON) {
+  $ownershipFields: JSON
+  $paymentPlanFields: JSON) {
     propertyUpdate(id: $id,
     parcelNumber: $parcelNumber,
     address1: $address1,
@@ -429,7 +430,8 @@ mutation UpdateProperty($id: ID!,
     latY: $latY,
     geom: $geom,
     valuationFields: $valuationFields,
-    ownershipFields: $ownershipFields) {
+    ownershipFields: $ownershipFields,
+    paymentPlanFields: $paymentPlanFields) {
       landParcel {
         id
         valuations {

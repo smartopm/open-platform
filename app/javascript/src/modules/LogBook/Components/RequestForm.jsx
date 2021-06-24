@@ -6,7 +6,6 @@ import { useTranslation } from 'react-i18next'
 import { Button, TextField, MenuItem } from '@material-ui/core'
 import { useHistory } from 'react-router'
 import PropTypes from 'prop-types'
-import { entryReason } from '../../../utils/constants'
 import { EntryRequestCreate } from '../../../graphql/mutations'
 import { ReasonInputModal } from '../../../components/Dialog'
 import { Footer } from '../../../components/Footer'
@@ -68,6 +67,9 @@ export default function RequestForm({ path }) {
    /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [business.value])
 
+  // This is to allow tests to pass
+  const entryReason = t('logbook:entry_reason', { returnObjects: true })
+  const reasons = Array.isArray(entryReason) ? entryReason : [] 
   return (
     <>
       <ReasonInputModal
@@ -151,7 +153,7 @@ export default function RequestForm({ path }) {
               {...business}
               className={`${css(styles.selectInput)}`}
             >
-              {entryReason.map(_reason => (
+              {reasons.map(_reason => (
                 <MenuItem key={_reason} value={_reason}>
                   {_reason}
                 </MenuItem>

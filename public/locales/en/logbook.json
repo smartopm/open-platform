@@ -49,5 +49,6 @@
     "grant": "Grant",
     "deny": "Deny",
     "grant_access": "Grant Access"
-  }
+  },
+  "entry_reason": ["Client", "Prospective Client", "Working", "Sales", "Passing through", "Other"]
 }
