@@ -58,8 +58,8 @@ RSpec.describe Mutations::Message do
                         'message')).to eql variables[:message]
       expect(result.dig('data', 'messageCreate', 'message', 'category')).to eql 'sms'
       expect(result['errors']).to be_nil
-      message_in_db = Message.first
-      expect(Message.all.count).to eql 1
+      message_in_db = Notifications::Message.first
+      expect(Notifications::Message.all.count).to eql 1
       expect(message_in_db[:receiver]).to eql '260971500748'
       expect(message_in_db[:message]).to eql 'Hello You, hope you are well'
       expect(message_in_db[:user_id]).to eql non_admin.id
@@ -81,8 +81,8 @@ RSpec.describe Mutations::Message do
       expect(result.dig('data', 'messageCreate', 'message',
                         'message')).to eql variables[:message]
       expect(result['errors']).to be_nil
-      message_in_db = Message.first
-      expect(Message.all.count).to eql 1
+      message_in_db = Notifications::Message.first
+      expect(Notifications::Message.all.count).to eql 1
       expect(message_in_db[:receiver]).to eql '260971500748'
       expect(message_in_db[:message]).to eql 'Hello You, hope you are well'
       expect(message_in_db[:user_id]).to eql admin.id
@@ -102,9 +102,9 @@ RSpec.describe Mutations::Message do
                                                           current_user: non_admin,
                                                         }).as_json
       expect(result.dig('data', 'messageCreate', 'message', 'id')).not_to be_nil
-      expect(NoteHistory.count).to eql 1
-      expect(NoteHistory.last.note_id).to eql note.id
-      expect(NoteHistory.last.user_id).to eql non_admin.id
+      expect(Notes::NoteHistory.count).to eql 1
+      expect(Notes::NoteHistory.last.note_id).to eql note.id
+      expect(Notes::NoteHistory.last.user_id).to eql non_admin.id
       expect(result['errors']).to be_nil
     end
   end

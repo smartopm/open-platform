@@ -19,7 +19,7 @@ module Types::Queries::PostTag
     tag = context[:site_community].post_tags.find_by(name: tag_name)
     raise GraphQL::ExecutionError, I18n.t('errors.post_tag.not_found') if tag.nil?
 
-    PostTagUser.find_by(user_id: context[:current_user].id, post_tag_id: tag.id)
+    PostTags::PostTagUser.find_by(user_id: context[:current_user].id, post_tag_id: tag.id)
   end
   # rubocop:enable Metrics/AbcSize
 end

@@ -5,9 +5,9 @@ require 'email_msg'
 # its a campaign class
 class Campaign < ApplicationRecord
   belongs_to :community
-  has_many :messages, dependent: :restrict_with_exception
-  has_many :campaign_labels, dependent: :destroy
-  has_many :labels, through: :campaign_labels
+  has_many :messages, class_name: 'Notifications::Message', dependent: :restrict_with_exception
+  has_many :campaign_labels, class_name: 'Labels::CampaignLabel', dependent: :destroy
+  has_many :labels, through: :campaign_labels, class_name: 'Labels::Label'
 
   EXPIRATION_DAYS = 7
   enum status: { draft: 0, scheduled: 1, in_progress: 2, deleted: 3, done: 4 }
@@ -29,7 +29,7 @@ class Campaign < ApplicationRecord
   end
 
   def campaign_admin_user
-    User.find_by(name: 'Mutale Chibwe', state: 'valid')
+    Users::User.find_by(name: 'Mutale Chibwe', state: 'valid')
   end
 
   def target_list

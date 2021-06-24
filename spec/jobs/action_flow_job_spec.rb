@@ -32,8 +32,8 @@ RSpec.describe ActionFlowJob, type: :job do
       end.to have_enqueued_job
     end
 
-    it 'initializes ActionFlows::ActionFlow' do
-      expect(ActionFlows::ActionFlow).to receive(:new)
+    it 'initializes ActionFlows::WebFlow' do
+      expect(ActionFlows::WebFlow).to receive(:new)
       perform_enqueued_jobs { described_class.perform_later(event_log) }
     end
   end

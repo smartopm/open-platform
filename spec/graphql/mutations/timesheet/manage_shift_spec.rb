@@ -31,7 +31,7 @@ RSpec.describe Mutations::Timesheet::ManageShift do
                                               }).as_json
 
       expect(result.dig('data', 'manageShift', 'timeSheet', 'id')).not_to be_nil
-      ts = TimeSheet.find(result.dig('data', 'manageShift', 'timeSheet', 'id'))
+      ts = Users::TimeSheet.find(result.dig('data', 'manageShift', 'timeSheet', 'id'))
 
       expect(ts.user_id).to eql user.id
       expect(ts.shift_start_event_log.acting_user_id).to eql custodian.id
@@ -49,7 +49,7 @@ RSpec.describe Mutations::Timesheet::ManageShift do
                                               }).as_json
 
       expect(result.dig('data', 'manageShift', 'timeSheet', 'id')).not_to be_nil
-      ts = TimeSheet.find(result.dig('data', 'manageShift', 'timeSheet', 'id'))
+      ts = Users::TimeSheet.find(result.dig('data', 'manageShift', 'timeSheet', 'id'))
 
       expect(ts.user_id).to eql user.id
       expect(ts.shift_start_event_log.acting_user_id).to eql custodian.id

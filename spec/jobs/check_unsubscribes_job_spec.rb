@@ -21,13 +21,14 @@ RSpec.describe CheckUnsubscribedUsersJob, type: :job do
     end
 
     it 'removes com_news_email label from unsubscribed users' do
-      prev_user_labels_count = UserLabel.count
-      allow(EmailMsg).to receive(:fetch_unsubscribes_list).and_return(User.where(id: user.id))
+      prev_user_labels_count = Labels::UserLabel.count
+      allow(EmailMsg).to receive(:fetch_unsubscribes_list)
+        .and_return(Users::User.where(id: user.id))
       expect(EmailMsg).to receive(:fetch_unsubscribes_list).with(
         Time.zone.now.beginning_of_week.to_i,
       )
       perform_enqueued_jobs { described_class.perform_later(user.community.name) }
-      expect(UserLabel.count).to eq(prev_user_labels_count - 1)
+      expect(Labels::UserLabel.count).to eq(prev_user_labels_count - 1)
     end
   end
 end

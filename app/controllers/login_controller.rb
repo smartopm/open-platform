@@ -21,10 +21,10 @@ class LoginController < ApplicationController
     @user.verify_phone_token!(params[:token])
     sign_in(@user)
     redirect_to root_path
-  rescue User::PhoneTokenResultInvalid
+  rescue Users::User::PhoneTokenResultInvalid
     flash[:error] = 'Invalid code'
     redirect_to login_sms_path
-  rescue User::PhoneTokenResultExpired
+  rescue Users::User::PhoneTokenResultExpired
     flash[:error] = 'This code has expired, please try again'
     redirect_to login_sms_path
   end
@@ -35,10 +35,10 @@ class LoginController < ApplicationController
     @user.verify_phone_token!(params[:token])
     sign_in(@user)
     redirect_to root_path
-  rescue User::PhoneTokenResultInvalid
+  rescue Users::User::PhoneTokenResultInvalid
     flash[:error] = 'Invalid code'
     redirect_to login_sms_path
-  rescue User::PhoneTokenResultExpired
+  rescue Users::User::PhoneTokenResultExpired
     flash[:error] = 'This code has expired, please try again'
     redirect_to login_sms_path
   end

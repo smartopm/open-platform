@@ -34,7 +34,7 @@ module Types::Queries::TimeSheet
 
     com_id = context[:current_user].community_id
     query = ''
-    TimeSheet.find_by_sql(["SELECT time_sheets.* FROM time_sheets
+    Users::TimeSheet.find_by_sql(["SELECT time_sheets.* FROM time_sheets
         INNER JOIN ( SELECT user_id, max(time_sheets.created_at) as max_date FROM time_sheets
         INNER JOIN users ON users.id = time_sheets.user_id
         WHERE (users.community_id=?) AND (users.name ILIKE ? OR users.phone_number ILIKE ?)

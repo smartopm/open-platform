@@ -7,6 +7,6 @@ task update_community_comments: :environment do
   puts "Found #{comm.name}, updating notes with this community_id #{comm.id}"
 
   # rubocop:disable Rails/SkipsModelValidations
-  Comment.update_all(community_id: comm.id)
+  Comments::Comment.update_all(community_id: comm.id)
   # rubocop:enable Rails/SkipsModelValidations
 end

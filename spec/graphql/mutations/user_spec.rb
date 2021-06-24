@@ -252,7 +252,7 @@ RSpec.describe Mutations::User do
                                               }).as_json
       expect(result['errors']).to be_nil
       expect(result.dig('data', 'userUpdate', 'user')).not_to be_nil
-      status = ::SubstatusLog.find_by(user_id: current_user.id)
+      status = Logs::SubstatusLog.find_by(user_id: current_user.id)
       expect(status.start_date).not_to be_nil
       expect(status.new_status).to eql 'floor_plan_purchased'
     end

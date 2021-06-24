@@ -31,7 +31,7 @@ RSpec.describe TaskReminderUpdateJob, type: :job do
 
       TaskReminderUpdateJob.perform_later(assignee_note, new_job_id)
 
-      updated_assignee_note = AssigneeNote.find(assignee_note.id)
+      updated_assignee_note = Notes::AssigneeNote.find(assignee_note.id)
       expect(updated_assignee_note.reminder_job_id).to eq(new_job_id)
     end
   end

@@ -16,7 +16,7 @@ task sync_substatus_logs_with_users_substatus: :environment do
   #
   # @return [SubstatusLog]
   def create_sub_status_log(user, start_date, previous_status = nil)
-    SubstatusLog.create!(
+    Logs::SubstatusLog.create!(
       new_status: user.sub_status,
       start_date: start_date,
       user_id: user.id,
@@ -27,8 +27,8 @@ task sync_substatus_logs_with_users_substatus: :environment do
   end
 
   puts 'Creating substatus logs for users with substatus and no associated substatus logs ...'
-  users = User.left_joins(:substatus_logs).where(User.arel_table[:sub_status].not_eq(nil)
-                                        .and(SubstatusLog.arel_table[:id].eq(nil)))
+  users = User.left_joins(:substatus_logs).where(Users::User.arel_table[:sub_status].not_eq(nil)
+                                        .and(Logs::SubstatusLog.arel_table[:id].eq(nil)))
 
   users.each do |user|
     start_date = get_date(user)
@@ -41,9 +41,9 @@ task sync_substatus_logs_with_users_substatus: :environment do
   end
 
   puts 'Creating substatus logs for users with updated substatus ...'
-  users = User.joins(:substatus_logs).uniq
+  users = Users::User.joins(:substatus_logs).uniq
   users.each do |user|
-    substatus_log = SubstatusLog.find_by(id: user.latest_substatus_id)
+    substatus_log = Logs::SubstatusLog.find_by(id: user.latest_substatus_id)
     next if substatus_log.new_status.eql?(user.sub_status)
 
     start_date = get_date(user)

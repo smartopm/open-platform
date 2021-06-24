@@ -125,7 +125,7 @@ module Types::Queries::Invoice
       raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
     end
 
-    plan = ::PaymentPlan.find(payment_plan_id)
+    plan = Properties::PaymentPlan.find(payment_plan_id)
     plan.invoices.paid
   end
 
@@ -199,7 +199,7 @@ module Types::Queries::Invoice
   # rubocop:enable Metrics/MethodLength
 
   def invoice_accounting_stats
-    Invoice.invoice_stat(context[:site_community].id)
+    Payments::Invoice.invoice_stat(context[:site_community].id)
   end
 
   def payment_plan(user_id:)

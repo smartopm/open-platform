@@ -4,31 +4,32 @@
 class Community < ApplicationRecord
   has_one_attached :image
 
-  has_many :users, dependent: :destroy
+  has_many :users, class_name: 'Users::User', dependent: :destroy
+  # TODO: roles model is not defined, remove this if not required.
   has_many :roles, dependent: :destroy
-  has_many :event_logs, dependent: :destroy
+  has_many :event_logs, class_name: 'Logs::EventLog', dependent: :destroy
   has_many :campaigns, dependent: :destroy
-  has_many :discussions, dependent: :destroy
-  has_many :labels, dependent: :destroy
+  has_many :discussions, class_name: 'Discussions::Discussion', dependent: :destroy
+  has_many :labels, class_name: 'Labels::Label', dependent: :destroy
   has_many :businesses, dependent: :destroy
-  has_many :entry_requests, dependent: :destroy
-  has_many :notes, dependent: :destroy
-  has_many :forms, dependent: :destroy
-  has_many :land_parcels, dependent: :destroy
-  has_many :accounts, dependent: :destroy
-  has_many :notifications, dependent: :destroy
-  has_many :action_flows, dependent: :destroy
-  has_many :comments, dependent: :destroy
-  has_many :post_tags, dependent: :destroy
-  has_many :invoices, dependent: :destroy
-  has_many :email_templates, dependent: :destroy
-  has_many :substatus_logs, dependent: :destroy
-  has_many :wallet_transactions, dependent: :destroy
-  has_many :payments, dependent: :destroy
-  has_many :import_logs, dependent: :destroy
-  has_many :transactions, dependent: :destroy
-  has_many :plan_payments, dependent: :destroy
-  has_many :feedbacks, dependent: :destroy
+  has_many :entry_requests, class_name: 'Logs::EntryRequest', dependent: :destroy
+  has_many :notes, class_name: 'Notes::Note', dependent: :destroy
+  has_many :forms, class_name: 'Forms::Form', dependent: :destroy
+  has_many :land_parcels, class_name: 'Properties::LandParcel', dependent: :destroy
+  has_many :accounts, class_name: 'Properties::Account', dependent: :destroy
+  has_many :notifications, class_name: 'Notifications::Notification', dependent: :destroy
+  has_many :action_flows, class_name: 'ActionFlows::ActionFlow', dependent: :destroy
+  has_many :comments, class_name: 'Comments::Comment', dependent: :destroy
+  has_many :post_tags, class_name: 'PostTags::PostTag', dependent: :destroy
+  has_many :invoices, class_name: 'Payments::Invoice', dependent: :destroy
+  has_many :email_templates, class_name: 'Notifications::EmailTemplate', dependent: :destroy
+  has_many :substatus_logs, class_name: 'Logs::SubstatusLog', dependent: :destroy
+  has_many :wallet_transactions, class_name: 'Payments::WalletTransaction', dependent: :destroy
+  has_many :payments, class_name: 'Payments::Payment', dependent: :destroy
+  has_many :import_logs, class_name: 'Logs::ImportLog', dependent: :destroy
+  has_many :transactions, class_name: 'Payments::Transaction', dependent: :destroy
+  has_many :plan_payments, class_name: 'Payments::PlanPayment', dependent: :destroy
+  has_many :feedbacks, class_name: 'Users::Feedback', dependent: :destroy
 
   VALID_CURRENCIES = %w[zambian_kwacha honduran_lempira].freeze
 

@@ -1,55 +1,57 @@
 en:
   activerecord:
     models:
-      account: &account Account
-      action_flow: &action_flow Action flow
-      activity_log: Activity log
-      activity_point: Activity point
-      assignee_note: Assignee note
+      properties/account: &account Account
+      action_flows/action_flow: &action_flow Action flow
+      logs/activity_log: Activity log
+      users/activity_point: Activity Point
+      notes/assignee_note: Assignee note
       business: Business
       campaign: Campaign
-      campaign_label: Campaign label
-      comment: Comment
+      labels/campaign_label: Campaign label
+      comments/comment: Comment
       community: &community Community
-      contact_info: Contact info
-      discussion: &discussion Discussion
-      discussion_user: Discussion user
-      email_template: Email template
-      entry_request: Entry request
-      event_log: Event log
-      feedback: Feedback
-      form: &form Form
-      form_property: &form_property Form property
-      form_user: &form_user Form user
-      import_log: Import log
-      invoice: &invoice Invoice
-      label: &label Label
-      land_parcel: &land_parcel Land parcel
-      land_parcel_account: Land parcel account
-      message: Message
-      note: &note Note
-      note_comment: Note comment
-      note_history: Note history
-      notification: Notification
-      payment: &payment Payment
-      payment_invoice: Payment invoice
-      payment_plan: &payment_plan Payment plan
-      post_tag: &post_tag Post tag
-      post_tag_user: Post tag user
+      users/contact_info: Contact info
+      discussions/discussion: &discussion Discussion
+      discussions/discussion_user: Discussion user
+      notifications/email_template: Email template
+      logs/entry_request: Entry request
+      logs/event_log: Event log
+      users/feedback: Feedback
+      forms/form: &form Form
+      forms/form_property: &form_property Form property
+      forms/form_user: &form_user Form user
+      logs/import_log: Import log
+      payments/invoice: &invoice Invoice
+      labels/label: &label Label
+      properties/land_parcel: &land_parcel Land parcel
+      properties/land_parcel_account: Land parcel account
+      notifications/message: Message
+      notes/note: &note Note
+      comments/note_comment: Note comment
+      notes/note_history: Note history
+      notifications/notification: Notification
+      payments/payment: &payment Payment
+      payments/payment_invoice: Payment invoice
+      properties/payment_plan: &payment_plan Payment plan
+      payments/plan_payment: Plan payment
+      post_tags/post_tag: &post_tag Post tag
+      post_tags/post_tag_user: Post tag user
       showroom: Showroom
-      substatus_log: Substatus log
-      time_sheet: TimeSheet
-      user: &user User
-      user_form_property: User form property
-      user_label: User label
-      valuation: Valuation
-      wallet: Wallet
-      wallet_transaction: Wallet transaction
+      logs/substatus_log: Substatus log
+      users/time_sheet: TimeSheet
+      payments/transaction: Transaction
+      users/user: &user User
+      forms/user_form_property: User form property
+      labels/user_label: User label
+      properties/valuation: Valuation
+      payments/wallet: Wallet
+      payments/wallet_transaction: Wallet transaction
     attributes:
-      account:
+      properties/account:
         community: *community
         user: *user
-      action_flow:
+      action_flows/action_flow:
         community: *community
         description: &description Description
         event_condition: Event condition
@@ -57,11 +59,11 @@ en:
         event_type: Event type
         status: &status status
         title: Title
-      activity_log:
+      logs/activity_log:
         community: *community
-      activity_point:
+      users/activity_point:
         user: *user
-      assignee_note:
+      notes/assignee_note:
         note: *note
         user: *user
       business:
@@ -70,131 +72,144 @@ en:
       campaign:
         campaign_type: Campaign type
         community: *community
-      campaign_label:
+      labels/campaign_label:
         community: *community
         label: *label
-      comment:
+      comments/comment:
         user: *user
         discussion: *discussion
       community:
         currency: Currency
-      contact_info:
+      users/contact_info:
         contact_type: Contact type
         info: Info
         user: *user
-      discussion:
+      discussions/discussion:
         community: *community
         user: *user
-      discussion_user:
+      discussions/discussion_user:
         discussion: *discussion
         user: *user
-      email_template:
+      notifications/email_template:
         community: *community
         name: *name
-      entry_request:
+      logs/entry_request:
         community: *community
         grantor: Grantor
         name: *name
         user: *user
-      event_log:
+      logs/event_log:
         community: *community
         acting_user: Acting user
         subject: Subject
-      feedback:
+      users/feedback:
         user: *user
-      form:
+      forms/form:
         community: *community
         expires_at: Expires at
         name: *name
-      form_property:
+      forms/form_property:
         form: *form
-      form_user:
+      forms/form_user:
         form: *form
         status_updated_by: Status updated by
         user: *user
-      import_log:
+      logs/import_log:
         community: *community
         file_name: File name
         user: *user
-      invoice:
+      payments/invoice:
         amount: &amount Amount
         created_by: Created by
         community: *community
         land_parcel: *land_parcel
         payment_plan: *payment_plan
         user: *user
-      label:
+      labels/label:
         community: *community
-      land_parcel:
+      properties/land_parcel:
         community: *community
         parcel_number: Parcel number
-      land_parcel_account:
+      properties/land_parcel_account:
         account: *account
         land_parcel: *land_parcel
-      message:
+      notifications/message:
         category: &category Category
         note: *note
         note_entity: &note_entity Note entity
         sender: Sender
         user: *user
-      note:
+      notes/note:
         author: Author
         category: *category
         community: *community
         form_user: *form_user
         user: *user
-      note_comment:
+      comments/note_comment:
         note: *note
         user: *user
         note_entity: *note_entity
-      note_history:
+      notes/note_history:
         note: *note
         user: *user
-      notification:
+      notifications/notification:
         notifable: Notifiable
-      payment:
+      payments/payment:
         community: *community
         payment_type: Payment type
         user: *user
-      payment_invoice:
+      payments/payment_invoice:
         invoice: *invoice
         payment: *payment
-      payment_plan:
+      properties/payment_plan:
         land_parcel: *land_parcel
         payment_day: Payment day
         user: *user
-      post_tag:
+      payments/plan_payment:
+        amount: Amount
+        community: *community
+        manual_receipt_number: Receipt number
+        payment_plan: *payment_plan
+        user: *user
+      post_tags/post_tag:
         community: *community
         name: *name
         user: *user
-      post_tag_user:
+      post_tags/post_tag_user:
         post_tag: *post_tag
         user: *user
-      substatus_log:
+      logs/substatus_log:
         community: *community
         user: *user
-      time_sheet:
+      users/time_sheet:
         user: *user
-      user:
+      payments/transaction:
+        amount: Amount
+        bank_name: Bank name
+        community: *community
+        source: Source
+        transaction_number: Transaction number
+        user: *user
+      users/user:
         community: *community
         name: *name
         state: State
         sub_status: Sub status
         user_type: User type
-      user_form_property:
+      forms/user_form_property:
         form_property: *form_property
         form_user: *form_user
         user: *user
-      user_label:
+      labels/user_label:
         label: *label
         user: *user
-      valuation:
+      properties/valuation:
         land_parcel: *land_parcel
         amount: *amount
         start_date: Start date
-      wallet:
+      payments/wallet:
         user: *user
-      wallet_transaction:
+      payments/wallet_transaction:
         community: *community
         source: Source
         bank_name: Bank name
@@ -206,7 +221,7 @@ en:
       messages:
         too_large: is too large
       models:
-        event_log:
+        logs/event_log:
           attributes:
             acting_user_id:
               reporting_user_required: Must be associated with a reporting user
@@ -215,11 +230,11 @@ en:
               visitor_name_required: Visitor name required
             ref_id:
               ref_required: Must be associated with a user
-        payment_plan:
+        properties/payment_plan:
           attributes:
             start_date:
               plan_overlaps_with_other_plan: Payment plan duration overlaps with other payment plans
-        user:
+        users/user:
           attributes:
             phone_number:
               invalid_phone_number: can only contain 0-9, '-', '+' and space

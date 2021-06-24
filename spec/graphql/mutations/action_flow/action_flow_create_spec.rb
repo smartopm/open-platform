@@ -45,7 +45,7 @@ RSpec.describe Mutations::ActionFlow::ActionFlowCreate do
     end
 
     it 'creates an action flow' do
-      previous_flow_count = ActionFlow.count
+      previous_flow_count = ActionFlows::ActionFlow.count
       result = DoubleGdpSchema.execute(mutation, variables: variables,
                                                  context: {
                                                    current_user: admin,
@@ -54,7 +54,7 @@ RSpec.describe Mutations::ActionFlow::ActionFlowCreate do
 
       expect(result.dig('data', 'actionFlowCreate', 'actionFlow', 'description')).to eq('Just a flow')
       expect(result['errors']).to be_nil
-      expect(ActionFlow.count).to eq(previous_flow_count + 1)
+      expect(ActionFlows::ActionFlow.count).to eq(previous_flow_count + 1)
     end
 
     it 'throws unauthorized error when user is not admin' do

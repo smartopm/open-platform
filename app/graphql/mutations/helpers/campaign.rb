@@ -5,7 +5,7 @@ module Mutations
     # Helper methods for campaign mutations
     module Campaign
       def create_campaign_label(campaign, label)
-        existing_label = ::Label.find_by(short_desc: label)
+        existing_label = Labels::Label.find_by(short_desc: label)
         return map_campaign_to_label(campaign, existing_label) if existing_label.present?
 
         label = context[:site_community].labels.new(short_desc: label)
@@ -15,7 +15,7 @@ module Mutations
       end
 
       def map_campaign_to_label(campaign, existing_label)
-        CampaignLabel.create!(campaign_id: campaign.id, label_id: existing_label.id)
+        Labels::CampaignLabel.create!(campaign_id: campaign.id, label_id: existing_label.id)
       end
     end
   end

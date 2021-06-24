@@ -27,7 +27,7 @@ RSpec.describe Mutations::Temperature::TemperatureUpdate do
         refId: admin.id,
         temp: '38',
         refName: 'ojm',
-        refType: 'User',
+        refType: 'Users::User',
       }
       result = DoubleGdpSchema.execute(query, variables: variables,
                                               context: {
@@ -45,7 +45,7 @@ RSpec.describe Mutations::Temperature::TemperatureUpdate do
         refId: user.id,
         temp: '40',
         refName: 'oljm',
-        refType: 'User',
+        refType: 'Users::User',
       }
       result = DoubleGdpSchema.execute(query, variables: variables,
                                               context: {
@@ -63,7 +63,7 @@ RSpec.describe Mutations::Temperature::TemperatureUpdate do
         refId: entry_request.id,
         temp: '40',
         refName: 'oljm',
-        refType: 'EntryRequest',
+        refType: 'Logs::EntryRequest',
       }
       result = DoubleGdpSchema.execute(query, variables: variables,
                                               context: {
@@ -83,7 +83,7 @@ RSpec.describe Mutations::Temperature::TemperatureUpdate do
         refId: SecureRandom.uuid,
         temp: '40',
         refName: 'oljm',
-        refType: 'EntryRequest',
+        refType: 'Logs::EntryRequest',
       }
       result = DoubleGdpSchema.execute(query, variables: variables,
                                               context: {
