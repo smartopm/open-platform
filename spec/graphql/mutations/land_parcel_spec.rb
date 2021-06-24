@@ -206,6 +206,93 @@ RSpec.describe Mutations::LandParcel do
       expect(result['errors']).to be_nil
     end
 
+    it 'validates given variables for payment plan' do
+      variables = {
+        id: user_parcel.id,
+        parcelNumber: '#new123',
+        address1: 'this is address1',
+        address2: 'this is address2',
+        city: 'this is city',
+        postalCode: 'this is postal code',
+        stateProvince: 'this is state province',
+        parcelType: 'this is parcel type',
+        country: 'this is a country',
+        valuationFields: [{ amount: 200, startDate: 2.days.from_now }],
+        ownershipFields: [{ name: 'new name',
+                            address: 'new address',
+                            userId: current_user.id }],
+        paymentPlanFields: {
+          landParcelId: user_parcel.id,
+          userId: current_user.id,
+          startDate: '2021-02-13',
+          status: '1',
+          planType: 'lease',
+          percentage: '50%',
+          durationInMonth: (rand * 10).ceil,
+          monthlyAmount: 0,
+          totalAmount: 0,
+          paymentDay: 2,
+        },
+      }
+
+      expect do
+        DoubleGdpSchema.execute(propertyUpdateQuery, variables: variables,
+                                                     context: {
+                                                       current_user: current_user,
+                                                       site_community: current_user.community,
+                                                     }).as_json
+      end.to raise_error ArgumentError
+    end
+
+    it 'creates a payment plan for one landparcel' do
+      variables = {
+        id: user_parcel.id,
+        parcelNumber: '#new123',
+        address1: 'this is address1',
+        address2: 'this is address2',
+        city: 'this is city',
+        postalCode: 'this is postal code',
+        stateProvince: 'this is state province',
+        parcelType: 'this is parcel type',
+        country: 'this is a country',
+        valuationFields: [{ amount: 200, startDate: 2.days.from_now }],
+        ownershipFields: [{ name: 'new name',
+                            address: 'new address',
+                            userId: current_user.id }],
+        paymentPlanFields: {
+          landParcelId: user_parcel.id,
+          userId: current_user.id,
+          startDate: '2021-02-13',
+          status: 1,
+          planType: 'lease',
+          percentage: '50%',
+          durationInMonth: (rand * 10).ceil,
+          monthlyAmount: 0,
+          totalAmount: 0,
+          paymentDay: 2,
+        },
+      }
+
+      result = DoubleGdpSchema.execute(propertyUpdateQuery,
+                                       variables: variables,
+                                       context: {
+                                         current_user: current_user,
+                                         site_community: current_user.community,
+                                       }).as_json
+
+      expect(result.dig('data', 'propertyUpdate', 'landParcel', 'id')).to eq(user_parcel.id)
+
+      b_result = DoubleGdpSchema.execute(propertyUpdateQuery,
+                                         variables: variables,
+                                         context: {
+                                           current_user: current_user,
+                                           site_community: current_user.community,
+                                         }).as_json
+
+      expect(b_result.dig('errors', 0, 'message'))
+        .to include 'Start date Payment plan duration overlaps with other payment plans'
+    end
+
     it 'raises an error if non-admin tries to update a property' do
       variables = {
         id: user_parcel.id,

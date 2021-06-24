@@ -9,6 +9,7 @@ export default function PaymentPlanForm({
   handleChange,
   paymentPlanState,
   paymentCurrency,
+  errorInfo,
 }) {
   return (
     <>
@@ -45,6 +46,8 @@ export default function PaymentPlanForm({
         style={{ width: '100%' }}
         required
         select
+        error={errorInfo.isError && !paymentPlanState.userId}
+        helperText={errorInfo.isError && !paymentPlanState.userId && 'User is required'}
       >
         {landParcel.accounts.map(account => (
           <MenuItem key={account.user.id} value={account.user.id}>
@@ -64,6 +67,8 @@ export default function PaymentPlanForm({
         style={{ width: '100%' }}
         required
         select
+        error={errorInfo.isError && !Number.isInteger(paymentPlanState.status)}
+        helperText={errorInfo.isError && paymentPlanState.status === '' && 'Status is required'}
       >
         {Object.entries(paymentPlanStatus).map(([key, val]) => (
           <MenuItem key={key} value={Number(key)}>
@@ -87,6 +92,8 @@ export default function PaymentPlanForm({
           },
           startAdornment: <InputAdornment position="start">%</InputAdornment>
         }}
+        error={errorInfo.isError && !paymentPlanState.percentage}
+        helperText={errorInfo.isError && !paymentPlanState.percentage && 'Percentage is required'}
       />
       <TextField
         margin="normal"
@@ -104,6 +111,12 @@ export default function PaymentPlanForm({
           },
           startAdornment: <InputAdornment position="start">{paymentCurrency}</InputAdornment>
         }}
+        error={errorInfo.isError && !paymentPlanState.monthlyAmount}
+        helperText={
+          errorInfo.isError &&
+          !paymentPlanState.monthlyAmount &&
+          'Monthly amount is required'
+        }
       />
       <TextField
         margin="normal"
@@ -120,6 +133,10 @@ export default function PaymentPlanForm({
             min: 1
           }
         }}
+        error={errorInfo.isError && !paymentPlanState.durationInMonth}
+        helperText={
+          errorInfo.isError && !paymentPlanState.durationInMonth && 'Duration is required'
+        }
       />
       <DatePickerDialog
         selectedDate={paymentPlanState.startDate}
@@ -141,6 +158,13 @@ export default function PaymentPlanForm({
   );
 }
 
+PaymentPlanForm.defaultProps = {
+  errorInfo: {
+    isError: false,
+    isSubmitting: false 
+  }
+}
+
 PaymentPlanForm.propTypes = {
   // eslint-disable-next-line react/forbid-prop-types
   landParcel: PropTypes.object.isRequired,
@@ -156,4 +180,8 @@ PaymentPlanForm.propTypes = {
   }).isRequired,
   handleChange: PropTypes.func.isRequired,
   paymentCurrency:  PropTypes.string.isRequired,
+  errorInfo: PropTypes.shape({
+    isError: PropTypes.bool,
+    isSubmitting: PropTypes.bool
+  }),
 };

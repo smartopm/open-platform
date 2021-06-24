@@ -71,7 +71,7 @@ module Mutations
         user = context[:site_community].users.find(vals[:user_id])
         raise_user_not_found_error(user)
 
-        payment_plan = user.payment_plans.create(vals.except(:user_id))
+        payment_plan = user.payment_plans.create!(vals.except(:user_id))
         return if payment_plan.persisted?
 
         raise GraphQL::ExecutionError, payment_plan.errors.full_messages

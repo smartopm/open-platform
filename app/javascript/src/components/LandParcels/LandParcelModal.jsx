@@ -72,6 +72,7 @@ export default function LandParcelModal({
   const [editCoordinates, setEditCoordinates] = useState(false)
   const [mergeModalOpen, setMergeModalOpen] = useState(false)
   const [mergeData, setMergeData] = useState(null)
+  const [errorInfo, setErrorInfo] = useState({ isError: false, isSubmitting: false });
 
   useEffect(() => {
     setDetailsFields(landParcel);
@@ -116,7 +117,6 @@ export default function LandParcelModal({
     const fields = { ...paymentPlanFields }
     fields[String(name)] = value
     setPaymentPlanFields(fields);
-    // setPaymentPlanFields({ ...paymentPlanFields, [name]: value });
   }
 
   function updateOwnershipField(name, value, index) {
@@ -166,6 +166,7 @@ export default function LandParcelModal({
     setShowPaymentPlan(false);
     setMergeModalOpen(false)
     setPaymentPlanFields(initialPlanState)
+    setErrorInfo({ isError: false, isSubmitting: false });
     handleClose()
   }
 
@@ -182,6 +183,19 @@ export default function LandParcelModal({
     return(values.every(isValid))
   }
 
+  function checkPaymentPlanHasInvalidField(formData){
+    const values = Object.values(formData);
+
+    function isNotValid(element) {
+      if (Number.isInteger(element) || element instanceof Date) {
+        return false;
+      }
+      return !element;
+    }
+
+    return(values.some(isNotValid))
+  }
+
   function handleParcelSubmit() {
     if (modalType === 'details' && !isEditing) {
       setIsEditing(true);
@@ -194,8 +208,14 @@ export default function LandParcelModal({
     /* 1. User Toggles option to Add Purchase Plan
     /* 2. There is no existing payment plan for Land Parcel
     /* 3. All payment plan fields are valid
-    /* otherwise do not create payment plan. Forfeit form based validations
     */
+    const isAnyInvalid = checkPaymentPlanHasInvalidField(paymentPlanFields)
+    if(showPaymentPlan && isAnyInvalid){
+      setErrorInfo({ isError: true, isSubmitting: true });
+      setTabValue('Ownership')
+      return;
+    }
+
     const paymentPlanIsValid = checkPaymentPlanIsValid(paymentPlanFields)
     if(showPaymentPlan && !paymentPlanData?.landParcelPaymentPlan && paymentPlanIsValid){
       const newPaymentPlan = {
@@ -636,6 +656,7 @@ export default function LandParcelModal({
               paymentPlanState={paymentPlanFields}
               handleChange={e => onChangePaymentPlanFields(e)}
               landParcel={landParcel}
+              errorInfo={errorInfo}
             />
           </>
           )}
