@@ -196,7 +196,7 @@ RSpec.describe Mutations::LandParcel do
         },
       ).as_json
 
-      parcel = LandParcel.find(user_parcel.id)
+      parcel = Properties::LandParcel.find(user_parcel.id)
       expect(parcel.parcel_number).to eq('#new123')
       expect(parcel.valuations.first.amount).to eq(200)
       expect(parcel.accounts.first.full_name).to eq('new name')
