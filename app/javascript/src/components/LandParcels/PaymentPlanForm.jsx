@@ -151,12 +151,12 @@ export default function PaymentPlanForm({ landParcel, refetch }) {
       </TextField>
       <TextField
         margin="normal"
-        id="percentage"
-        label="Percentage"
-        aria-label="percentage"
+        id="Percentage-of-premium-paid"
+        label="Percentage of premium paid"
+        aria-label="Percentage-of-premium-paid"
         value={paymentPlanState.percentage}
         onChange={handleOnChange}
-        name="percentage"
+        name="PercentageOfPremiumPaid"
         style={{ width: '100%' }}
         type="number"
         InputProps={{
