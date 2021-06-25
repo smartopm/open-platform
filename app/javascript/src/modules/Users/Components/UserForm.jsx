@@ -261,14 +261,9 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
 
         {isFromRef && (
           <div className="form-group">
-            <label className="bmd-label-static" htmlFor="firstName" data-testid="client_name">
-              {t('common:form_fields.client_name')}
-              <span className="MuiFormLabel-asterisk MuiInputLabel-asterisk" aria-hidden="true">
-                &nbsp;*
-              </span>
-            </label>
             <TextField
               className="form-control"
+              label={t('common:form_fields.client_name')}
               type="text"
               onChange={handleInputChange}
               value={authState.user?.name || ''}
@@ -280,14 +275,9 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
           </div>
         )}
         <div className="form-group">
-          <label className="bmd-label-static" htmlFor="firstName" data-testid="full_name">
-            {t('common:form_fields.full_name')}
-            <span className="MuiFormLabel-asterisk MuiInputLabel-asterisk" aria-hidden="true">
-              &nbsp;*
-            </span>
-          </label>
           <TextField
             className="form-control"
+            label={t('common:form_fields.full_name')}
             type="text"
             onChange={handleInputChange}
             value={data.name || ''}
@@ -297,15 +287,10 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
           />
         </div>
         <div className="form-group">
-          <label className="bmd-label-static" htmlFor="phoneNumber" data-testid="primary_number">
-            {t('common:form_fields.primary_number')}
-            <span className="MuiFormLabel-asterisk MuiInputLabel-asterisk" aria-hidden="true">
-              &nbsp;*
-            </span>
-          </label>
           <TextField
             id="phoneNumber"
             className="form-control"
+            label={t('common:form_fields.primary_number')}
             name="phoneNumber"
             type="text"
             onChange={handleInputChange}
@@ -316,11 +301,9 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
           />
         </div>
         <div className="form-group">
-          <label className="bmd-label-static" htmlFor="email" data-testid="primary_email">
-            {t('common:form_fields.primary_email')}
-          </label>
           <TextField
             className="form-control"
+            label={t('common:form_fields.primary_email')}
             name="email"
             type="email"
             onChange={handleInputChange}
@@ -333,11 +316,9 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
         {!isFromRef && (
           <>
             <div className="form-group">
-              <label className="bmd-label-static" htmlFor="extRefId">
-                {t('common:form_fields.external_reference')}
-              </label>
               <TextField
                 className="form-control"
+                label={t('common:form_fields.external_reference')}
                 name="extRefId"
                 type="text"
                 onChange={handleInputChange}
@@ -370,11 +351,9 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
             />
 
             <div className="form-group">
-              <label className="bmd-label-static" htmlFor="primaryAddress">
-                {t('common:form_fields.primary_address')}
-              </label>
               <TextField
                 className="form-control"
+                label={t('common:form_fields.primary_address')}
                 name="primaryAddress"
                 type="text"
                 onChange={handleInputChange}
