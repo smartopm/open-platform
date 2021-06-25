@@ -228,7 +228,7 @@ export const UsersLiteQuery = gql`
 `
 
 export const UserSearchQuery = gql`
-  query UserSearch($query: String!, $limit: Int, $offset: Int) {
+  query UserSearch($query: String, $limit: Int, $offset: Int) {
     userSearch(query: $query, limit: $limit, offset: $offset) {
       id
       userType
