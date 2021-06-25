@@ -70,15 +70,9 @@ describe('UserForm Component', () => {
       </MockedProvider>
     );
     expect(container.queryByLabelText('common:misc.take_photo')).toBeNull();
-    expect(container.queryByTestId('client_name')).toBeInTheDocument();
     expect(container.queryByTestId('clientName')).toBeInTheDocument();
     expect(container.queryByTestId('clientName')).toBeDisabled();
-    expect(container.queryByTestId('full_name').textContent).toContain(
-      'common:form_fields.full_name'
-    );
-    expect(container.queryByTestId('primary_number').textContent).toContain(
-      'common:form_fields.primary_number'
-    );
+    expect(container.queryByTestId('username')).toBeInTheDocument();
     expect(container.queryByTestId('primary_phone')).not.toBeNull();
     expect(container.queryByTestId('email')).not.toBeNull();
 
