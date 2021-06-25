@@ -29,6 +29,7 @@
     "pending_amount": "Pending Amount",
     "payment_Type": "Payment Type",
     "user_name_search": "Find a User",
+    "user_name_merge": "Find a user to merge",
     "operating_hours": "Operating Hours",
     "logo_url": "Logo Url",
     "home_url": "Home Url"
@@ -178,6 +179,7 @@
     "log": "Log",
     "temp_record": "Temperature recorded",
     "user_name_search_warning_text": "The account selected will be deleted from the system and merged into the profile you are currently on",
+    "user_merge_warning_text": "Merging this user will keep this account and merge data from the selected account into this account. The account being merged will no longer exist. Do you want to proceed?",
     "total_balance": "Total Balance",
     "unallocated_funds": "Unallocated Funds",
     "make_payment": "Record New Payment",
@@ -187,7 +189,8 @@
     "relevant_posts": "Relevant Posts",
     "links": "Links",
     "step": "Step",
-    "step_plural": "Steps"
+    "step_plural": "Steps",
+    "new_property": "New Property"
   },
   "menu": {
     "invoice": "Invoice",
@@ -327,7 +330,8 @@
     "empty_input": "Input cannot be empty",
     "no_changes": "No Changes Made",
     "user_name_search_not_found": "{{username}} not found in users",
-    "invalid_color_code": "The theme color code is invalid"
+    "invalid_color_code": "The theme color code is invalid",
+    "no_user_selected": "You have to select a user"
   },
   "dialogs": {
     "dialog_action": "Are you sure you want to {{action}} this {{title}}?",

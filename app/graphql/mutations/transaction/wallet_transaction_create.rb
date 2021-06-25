@@ -43,7 +43,7 @@ module Mutations
                                          payment_plan_id: context[:payment_plan].id,
                                        )
 
-          context[:transaction] = WalletTransaction.create(transaction_attributes)
+          context[:transaction] = Payments::WalletTransaction.create(transaction_attributes)
           raise_transaction_validation_error
           execute_transaction_callbacks(vals.slice(:source, :amount))
           { wallet_transaction: context[:transaction].reload }

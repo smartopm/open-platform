@@ -38,7 +38,7 @@ module Types::Queries::Transaction
   end
 
   def payment_accounting_stats
-    Transaction.payment_stat(context[:site_community])
+    Payments::Transaction.payment_stat(context[:site_community])
   end
 
   # rubocop:disable Metrics/AbcSize

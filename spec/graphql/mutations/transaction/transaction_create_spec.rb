@@ -12,6 +12,8 @@ RSpec.describe Mutations::Transaction::TransactionCreate do
       create(:payment_plan, land_parcel_id: land_parcel.id, user_id: user.id, plot_balance: 0,
                             pending_balance: 1200, monthly_amount: 100)
     end
+    let!(:second_land_parcel) { create(:land_parcel, community_id: community.id) }
+
     let(:transaction_create_mutation) do
       <<~GQL
         mutation TransactionCreate(
@@ -72,6 +74,48 @@ RSpec.describe Mutations::Transaction::TransactionCreate do
 
     describe '#resolve' do
       context 'when all required details are provided' do
+        context 'when payment plan is not present for the land parcel' do
+          it 'raises payment plan does not exist error' do
+            variables = {
+              userId: user.id,
+              amount: 2000,
+              source: 'cash',
+              landParcelId: second_land_parcel.id,
+              receiptNumber: '1001',
+            }
+            result = DoubleGdpSchema.execute(transaction_create_mutation,
+                                             variables: variables,
+                                             context: {
+                                               current_user: admin,
+                                               site_community: community,
+                                             })
+            expect(result.dig('errors', 0, 'message'))
+              .to eql 'Payment Plan does not exist for selected property'
+          end
+        end
+
+        context 'when payment plan is not present for the land parcel' do
+          before { payment_plan.update(pending_balance: 0) }
+
+          it 'raises pending balance is 0 for this property error' do
+            variables = {
+              userId: user.id,
+              amount: 2000,
+              source: 'cash',
+              landParcelId: land_parcel.id,
+              receiptNumber: '1001',
+            }
+            result = DoubleGdpSchema.execute(transaction_create_mutation,
+                                             variables: variables,
+                                             context: {
+                                               current_user: admin,
+                                               site_community: community,
+                                             })
+            expect(result.dig('errors', 0, 'message'))
+              .to eql 'Pending balance is 0 for payment plan of selected property'
+          end
+        end
+
         context "when amount is more than the payment plan's pending balance" do
           before { payment_plan.update(pending_balance: 1200) }
 

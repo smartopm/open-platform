@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { useQuery, useLazyQuery, useMutation } from 'react-apollo';
 import { Grid, Typography, Link } from '@material-ui/core';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { useTheme } from '@material-ui/core/styles';
 import RoomIcon from '@material-ui/icons/Room';
@@ -56,6 +56,7 @@ export default function LandParcelList() {
   const [searchQuery, setSearchQuery] = useState('')
   const theme = useTheme();
   const matches = useMediaQuery(theme.breakpoints.up('sm'));
+  const location = useLocation()
 
   const path = useParamsQuery('')
   const plot = path.get('plot');
@@ -149,6 +150,9 @@ export default function LandParcelList() {
         setMessageAlert('Property updated successfully');
         setIsSuccessAlert(true);
         handleDetailsModalClose();
+        if(location?.state?.from === 'users') {
+          history.push(`user/${location?.state?.userId}?tab=Plots`);
+        }
         refetch();
       })
       .catch(err => {

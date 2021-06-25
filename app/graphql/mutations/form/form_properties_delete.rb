@@ -28,7 +28,7 @@ module Mutations
       # rubocop:enable Metrics/AbcSize
 
       def check_form_user(form_id)
-        form = ::FormUser.find_by(form_id: form_id)
+        form = Forms::FormUser.find_by(form_id: form_id)
         return if form.blank?
 
         raise GraphQL::ExecutionError,

@@ -119,12 +119,13 @@ export default function PaymentPlans({ userId, user, userData, tab }) {
 }
 
 PaymentPlans.defaultProps = {
-  userData: {}
+  userData: {},
+  tab: "Contacts"
 }
 
 PaymentPlans.propTypes = {
   userId: PropTypes.string.isRequired,
-  tab: PropTypes.string.isRequired,
+  tab: PropTypes.string,
   // eslint-disable-next-line react/forbid-prop-types
   userData: PropTypes.object,
   user: PropTypes.shape({

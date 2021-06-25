@@ -59,7 +59,8 @@ RSpec.describe Mutations::LandParcel do
           $parcelType: String,
           $country: String,
           $valuationFields: JSON
-          $ownershipFields: JSON) {
+          $ownershipFields: JSON
+          $paymentPlanFields: JSON) {
             propertyUpdate(id: $id,
             parcelNumber: $parcelNumber,
             address1: $address1,
@@ -70,7 +71,8 @@ RSpec.describe Mutations::LandParcel do
             parcelType: $parcelType,
             country: $country,
             valuationFields: $valuationFields
-            ownershipFields: $ownershipFields) {
+            ownershipFields: $ownershipFields,
+            paymentPlanFields: $paymentPlanFields) {
               landParcel {
                 id
                 valuations {
@@ -101,7 +103,7 @@ RSpec.describe Mutations::LandParcel do
                             address: 'owner address',
                             userId: current_user.id }],
       }
-      prev_valuation_count = Valuation.count
+      prev_valuation_count = Properties::Valuation.count
 
       result = DoubleGdpSchema.execute(propertyQuery, variables: variables,
                                                       context: {
@@ -113,7 +115,7 @@ RSpec.describe Mutations::LandParcel do
       expect(result.dig('data', 'PropertyCreate', 'landParcel', 'valuations', 0, 'amount')).to eq(
         200,
       )
-      expect(Valuation.count).to eq(prev_valuation_count + 1)
+      expect(Properties::Valuation.count).to eq(prev_valuation_count + 1)
       expect(result.dig('data', 'PropertyCreate', 'landParcel', 'accounts', 0, 'fullName')).to eq(
         'owner name',
       )
@@ -149,11 +151,146 @@ RSpec.describe Mutations::LandParcel do
         },
       ).as_json
 
-      parcel = LandParcel.find(user_parcel.id)
+      parcel = Properties::LandParcel.find(user_parcel.id)
       expect(parcel.parcel_number).to eq('#new123')
       expect(parcel.valuations.first.amount).to eq(200)
       expect(parcel.accounts.first.full_name).to eq('new name')
       expect(result['errors']).to be_nil
+    end
+
+    it 'creates associated payment plan when details are present' do
+      variables = {
+        id: user_parcel.id,
+        parcelNumber: '#new123',
+        address1: 'this is address1',
+        address2: 'this is address2',
+        city: 'this is city',
+        postalCode: 'this is postal code',
+        stateProvince: 'this is state province',
+        parcelType: 'this is parcel type',
+        country: 'this is a country',
+        valuationFields: [{ amount: 200, startDate: 2.days.from_now }],
+        ownershipFields: [{ name: 'new name',
+                            address: 'new address',
+                            userId: current_user.id }],
+        paymentPlanFields: {
+          landParcelId: user_parcel.id,
+          userId: current_user.id,
+          startDate: '2021-02-13',
+          status: 1,
+          planType: 'lease',
+          percentage: '50%',
+          durationInMonth: (rand * 10).ceil,
+          monthlyAmount: 0,
+          totalAmount: 0,
+          paymentDay: 2,
+        },
+      }
+
+      result = DoubleGdpSchema.execute(
+        propertyUpdateQuery,
+        variables: variables,
+        context: {
+          current_user: current_user,
+          site_community: current_user.community,
+        },
+      ).as_json
+
+      parcel = Properties::LandParcel.find(user_parcel.id)
+      expect(parcel.parcel_number).to eq('#new123')
+      expect(parcel.valuations.first.amount).to eq(200)
+      expect(parcel.accounts.first.full_name).to eq('new name')
+      expect(parcel.payment_plan.percentage.to_f.to_s).to eq('50.0')
+      expect(parcel.payment_plan.plan_type).to eq('lease')
+      expect(parcel.payment_plan.status).to eq('cancelled')
+      expect(result['errors']).to be_nil
+    end
+
+    it 'validates given variables for payment plan' do
+      variables = {
+        id: user_parcel.id,
+        parcelNumber: '#new123',
+        address1: 'this is address1',
+        address2: 'this is address2',
+        city: 'this is city',
+        postalCode: 'this is postal code',
+        stateProvince: 'this is state province',
+        parcelType: 'this is parcel type',
+        country: 'this is a country',
+        valuationFields: [{ amount: 200, startDate: 2.days.from_now }],
+        ownershipFields: [{ name: 'new name',
+                            address: 'new address',
+                            userId: current_user.id }],
+        paymentPlanFields: {
+          landParcelId: user_parcel.id,
+          userId: current_user.id,
+          startDate: '2021-02-13',
+          status: '1',
+          planType: 'lease',
+          percentage: '50%',
+          durationInMonth: (rand * 10).ceil,
+          monthlyAmount: 0,
+          totalAmount: 0,
+          paymentDay: 2,
+        },
+      }
+
+      expect do
+        DoubleGdpSchema.execute(propertyUpdateQuery, variables: variables,
+                                                     context: {
+                                                       current_user: current_user,
+                                                       site_community: current_user.community,
+                                                     }).as_json
+      end.to raise_error ArgumentError
+    end
+
+    it 'creates a payment plan for one landparcel' do
+      variables = {
+        id: user_parcel.id,
+        parcelNumber: '#new123',
+        address1: 'this is address1',
+        address2: 'this is address2',
+        city: 'this is city',
+        postalCode: 'this is postal code',
+        stateProvince: 'this is state province',
+        parcelType: 'this is parcel type',
+        country: 'this is a country',
+        valuationFields: [{ amount: 200, startDate: 2.days.from_now }],
+        ownershipFields: [{ name: 'new name',
+                            address: 'new address',
+                            userId: current_user.id }],
+        paymentPlanFields: {
+          landParcelId: user_parcel.id,
+          userId: current_user.id,
+          startDate: '2021-02-13',
+          status: 1,
+          planType: 'lease',
+          percentage: '50%',
+          durationInMonth: (rand * 10).ceil,
+          monthlyAmount: 0,
+          totalAmount: 0,
+          paymentDay: 2,
+        },
+      }
+
+      result = DoubleGdpSchema.execute(propertyUpdateQuery,
+                                       variables: variables,
+                                       context: {
+                                         current_user: current_user,
+                                         site_community: current_user.community,
+                                       }).as_json
+
+      expect(result.dig('data', 'propertyUpdate', 'landParcel', 'id')).to eq(user_parcel.id)
+
+      b_result = DoubleGdpSchema.execute(propertyUpdateQuery,
+                                         variables: variables,
+                                         context: {
+                                           current_user: current_user,
+                                           site_community: current_user.community,
+                                         }).as_json
+
+      expect(b_result.dig('errors', 0, 'message'))
+        .to include 'Start date Payment plan duration overlaps with other payment plans'
     end
 
     it 'raises an error if non-admin tries to update a property' do
@@ -226,7 +363,7 @@ RSpec.describe Mutations::LandParcel do
         },
       ).as_json
 
-      parcel = LandParcel.find(user_parcel.id)
+      parcel = Properties::LandParcel.find(user_parcel.id)
       expect(parcel.parcel_number).to eq('BAD-PLOT')
       expect(result['errors']).to be_nil
     end
@@ -295,7 +432,7 @@ RSpec.describe Mutations::LandParcel do
         },
       ).as_json
 
-      parcel = LandParcel.find_by(long_x: variables[:longX], lat_y: variables[:latY])
+      parcel = Properties::LandParcel.find_by(long_x: variables[:longX], lat_y: variables[:latY])
       expect(parcel.parcel_number).to match(/poi-\w+/i)
       expect(parcel.parcel_type).to eq('poi')
       expect(parcel.geom).not_to be_nil
@@ -337,9 +474,9 @@ RSpec.describe Mutations::LandParcel do
         },
       ).as_json
 
-      expect(LandParcel.count).to eq(1)
+      expect(Properties::LandParcel.count).to eq(1)
 
-      parcel = LandParcel.find_by(long_x: variables[:longX], lat_y: variables[:latY])
+      parcel = Properties::LandParcel.find_by(long_x: variables[:longX], lat_y: variables[:latY])
       expect(parcel.parcel_number).to match(/poi-\w+/i)
       expect(parcel.parcel_type).to eq('poi')
       expect(parcel.geom).not_to be_nil
@@ -356,7 +493,7 @@ RSpec.describe Mutations::LandParcel do
 
       expect(delete_result['errors']).to be_nil
       expect(delete_result.dig('data', 'pointOfInterestDelete', 'success')).to be(true)
-      expect(LandParcel.count).to eq(0)
+      expect(Properties::LandParcel.count).to eq(0)
     end
 
     it 'raises an error if non-admin tries to delete a point of interest' do
@@ -375,9 +512,9 @@ RSpec.describe Mutations::LandParcel do
         },
       ).as_json
 
-      expect(LandParcel.count).to eq(1)
+      expect(Properties::LandParcel.count).to eq(1)
 
-      parcel = LandParcel.find_by(long_x: variables[:longX], lat_y: variables[:latY])
+      parcel = Properties::LandParcel.find_by(long_x: variables[:longX], lat_y: variables[:latY])
       delete_result = DoubleGdpSchema.execute(
         pointOfInterestDeleteQuery,
         variables: { id: parcel.id },

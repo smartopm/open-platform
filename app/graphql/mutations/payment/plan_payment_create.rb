@@ -20,7 +20,7 @@ module Mutations
       #
       # @return [Hash]
       def resolve(values)
-        context[:transaction] = ::Transaction.find_by(id: values[:transaction_id])
+        context[:transaction] = Payments::Transaction.find_by(id: values[:transaction_id])
         raise_transaction_not_found_error
 
         land_parcel = context[:site_community].land_parcels.find_by(id: values[:land_parcel_id])
@@ -59,7 +59,7 @@ module Mutations
                                      payment_plan_id: context[:payment_plan].id,
                                      amount: allocated_amount,
                                    )
-        context[:payment] = PlanPayment.create(payment_attributes)
+        context[:payment] = Payments::PlanPayment.create(payment_attributes)
         raise_payment_validation_error
 
         context[:payment].payment_plan.update_pending_balance(allocated_amount)

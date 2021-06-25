@@ -56,7 +56,7 @@ class TaskCreate
   end
 
   def self.community(user_id)
-    user = User.where(id: user_id).includes(:community).first
+    user = Users::User.where(id: user_id).includes(:community).first
 
     return user.community if user
 

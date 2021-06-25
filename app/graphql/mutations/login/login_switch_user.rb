@@ -22,10 +22,10 @@ module Mutations
       end
 
       def log(from_user, to_user)
-        EventLog.create(
+        Logs::EventLog.create(
           acting_user: from_user, community: from_user.community,
           subject: 'user_switch',
-          ref_id: to_user.id, ref_type: 'User'
+          ref_id: to_user.id, ref_type: to_user.class.name
         )
       end
     end

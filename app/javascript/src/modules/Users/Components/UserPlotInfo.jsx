@@ -1,5 +1,8 @@
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
+import Fab from '@material-ui/core/Fab';
 import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
@@ -7,10 +10,11 @@ import Typography from '@material-ui/core/Typography';
 import { dateToString } from '../../../components/DateContainer';
 import UserPlotMap from './UserPlotMap';
 
-export default function UserPlotInfo({ account }) {
+export default function UserPlotInfo({ account, userId, userName }) {
   const [plotNumber, setPlotNumber] = useState([]);
-  const { t } = useTranslation('users')
+  const { t } = useTranslation(['users', 'common'])
   const classes = useStyles();
+  const history = useHistory();
 
   function setData() {
     if (account[0]?.landParcels[0]) {
@@ -18,6 +22,14 @@ export default function UserPlotInfo({ account }) {
         setPlotNumber(...plotNumber, ...plot.parcelNumber);
       });
     }
+  }
+
+  function handlePlotClick(id) {
+    history.push({pathname: `/land_parcels`, search: `?plot=${id}`, state: { from: 'users', userId }})
+  }
+
+  function handlePlotCreteClick() {
+    history.push({pathname: `/land_parcels`, search: `?type=new`, state: { from: 'users', user: { userName, userId }}})
   }
 
   useEffect(() => {
@@ -38,6 +50,9 @@ export default function UserPlotInfo({ account }) {
 
   return (
     <>
+      <Fab color="primary" variant="extended" className={classes.plot} onClick={() => handlePlotCreteClick()} data-testid='add-plot'>
+        {t("common:misc.new_property")}
+      </Fab>
       {parcels().length > 0 ? (
         <div className="container">
           <div className={classes.body}>
@@ -52,7 +67,7 @@ export default function UserPlotInfo({ account }) {
               </div>
               {parcels().map((plot, index) => (
                 // eslint-disable-next-line react/no-array-index-key
-                <div style={{ display: 'flex' }} key={index}>
+                <div style={{ display: 'flex', cursor: 'pointer' }} onClick={() => handlePlotClick(plot.id)} key={index} data-testid='plot'>
                   <li className={classes.plotNumber}>{plot.parcelNumber}</li>
                 </div>
               ))}
@@ -108,6 +123,14 @@ const useStyles = makeStyles(theme => ({
     borderStyle: 'solid',
     borderWidth: '1px',
     width: '100%'
+  },
+  plot: {
+    boxShadow: 'none',
+    position: 'fixed',
+    bottom: 20,
+    right: 57,
+    marginLeft: '30%',
+    zIndex: '1000'
   }
 }))
 
@@ -127,5 +150,7 @@ UserPlotInfo.propTypes = {
       ),
       updatedAt: PropTypes.string
     })
-  )
+  ),
+  userId: PropTypes.string.isRequired,
+  userName: PropTypes.string.isRequired
 };

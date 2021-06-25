@@ -16,7 +16,7 @@ module Mutations
       field :event_log, Types::EventLogType, null: true
 
       def resolve(user_id:, note: nil, timestamp: nil, digital: nil, subject: 'user_entry')
-        user = ::User.find(user_id)
+        user = Users::User.find(user_id)
         raise_user_not_found_error(user)
 
         event_log = instantiate_event_log(user, note, timestamp, digital, subject)

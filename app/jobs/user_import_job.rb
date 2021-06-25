@@ -33,7 +33,7 @@ class UserImportJob < ApplicationJob
             new_or_existing_label = dup_user.community.labels.find_or_create_by(short_desc: lab)
             next if dup_user.labels.find_by(id: new_or_existing_label.id)
 
-            UserLabel.create(user: dup_user, label: new_or_existing_label)
+            Labels::UserLabel.create(user: dup_user, label: new_or_existing_label)
           end
 
           next
@@ -81,13 +81,13 @@ class UserImportJob < ApplicationJob
 
   # rubocop:disable Metrics/AbcSize
   def duplicate_user(email, phone_list, community)
-    users = User.arel_table
-    ::User.where.not(email: nil).where(community: community).where(
+    users = Users::User.arel_table
+    Users::User.where.not(email: nil).where(community: community).where(
       users[:email].matches("#{email}%"),
-    ).or(::User.where(phone_number: phone_list, community: community)).first ||
-      ::User.where(community: community).joins(:contact_infos).where(contact_infos:
+    ).or(Users::User.where(phone_number: phone_list, community: community)).first ||
+      Users::User.where(community: community).joins(:contact_infos).where(contact_infos:
         { contact_type: 'email', info: email }).or(
-          ::User.where(community: community).joins(:contact_infos).where(contact_infos:
+          Users::User.where(community: community).joins(:contact_infos).where(contact_infos:
           { contact_type: 'phone', info: phone_list }),
         ).first
   end

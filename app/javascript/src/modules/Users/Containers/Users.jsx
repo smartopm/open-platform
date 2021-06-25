@@ -3,7 +3,7 @@ import React, { useState, useEffect, useContext } from 'react'
 import { useQuery, useMutation, useLazyQuery } from 'react-apollo'
 import { Redirect, Link , useLocation, useHistory} from 'react-router-dom'
 import { makeStyles } from '@material-ui/core/styles'
-import { Button, Divider, IconButton, InputBase, Grid } from '@material-ui/core'
+import { Button, Divider, IconButton, InputBase, Grid, Typography } from '@material-ui/core'
 import { useTranslation } from 'react-i18next'
 import FilterListIcon from '@material-ui/icons/FilterList'
 import MaterialConfig from 'react-awesome-query-builder/lib/config/material'
@@ -52,6 +52,7 @@ export default function UsersList() {
   const [selectCheckBox, setSelectCheckBox] = useState(false)
   const [substatusReportOpen, setSubstatusReportOpen] = useState(false)
   const history = useHistory()
+  const location = useLocation()
   const { t } = useTranslation(['users', 'common'])
 
   function handleReportDialog(){
@@ -82,12 +83,24 @@ export default function UsersList() {
   useEffect(() => {
     if (filterCount !== 0) {
       setOffset(0)
+      fetchUsersCount()
     } else {
       const offsetParams = querry.get('offset')
       setOffset(Number(offsetParams))
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filterCount])
+
+  useEffect(() => {
+    if (location?.state) {
+      if (location?.state?.query === 0) {
+        setSearchQuery(`user_type = "resident"`)
+      } else {
+        setSearchQuery(`sub_status = "${location?.state?.query - 1}"`)
+      }
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
 
   // TODO: @dennis, add pop up for notes
@@ -98,7 +111,7 @@ export default function UsersList() {
     data: labelsData
   } = useQuery(LabelsQuery)
 
-  const [fetchUsersCount, { data: usersCountData }] = useLazyQuery(UsersCount, {
+  const [fetchUsersCount, { data: usersCountData, loading: fetchingUsersCount }] = useLazyQuery(UsersCount, {
     variables: { query: searchQuery }
   })
 
@@ -117,11 +130,12 @@ export default function UsersList() {
             const property = filterFields[option[operator][0].var]
             let value = propAccessor(option, operator)[1]
 
-            if (operator === '==') operator = ':'
+            if (operator === '==') operator = '=' // make = the default operator
             if (property === 'date_filter') {
               operator = '>'
               value = dateToString(value)
             }
+            if(property === 'phone_number') operator = ':'
 
             return `${property} ${operator} "${value}"`
           })
@@ -133,7 +147,11 @@ export default function UsersList() {
   }
 
   function handleFilterUserBySubstatus(index){
-    setSearchQuery(`sub_status = "${index}"`)
+    if (index === 0) {
+      setSearchQuery(`user_type = "resident"`)
+    } else {
+      setSearchQuery(`sub_status = "${index - 1}"`)
+    }
     handleReportDialog()
   }
   function handleSaveNote() {
@@ -291,6 +309,14 @@ export default function UsersList() {
       return
     }
     createCampaign()
+  }
+
+  function viewFilteredUserCount(){
+    return (
+      filterCount !== 0 ||
+      campaignCreateOption === 'all' ||
+      campaignCreateOption === 'all_on_the_page'
+    );
   }
 
   if (labelsLoading) return <Loading />
@@ -552,10 +578,18 @@ export default function UsersList() {
           </Grid>
         </div>
         <br />
-        {loading || labelsLoading ? (
+        {loading || labelsLoading || fetchingUsersCount ? (
           <Loading />
         ) : (
           <>
+            {// eslint-disable-next-line no-nested-ternary
+            viewFilteredUserCount() && (
+              <Typography variant="h6">
+                {`Showing ${usersCountData?.usersCount || userList.length} ${pluralizeCount((usersCountData?.usersCount || userList.length), 'Result')}`}
+              </Typography>
+              )
+}
+            <br />
             <UsersActionMenu
               campaignCreateOption={campaignCreateOption}
               setCampaignCreateOption={setCampaignOption}

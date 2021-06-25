@@ -142,7 +142,7 @@ export default function TaskForm({
   }
 
   function timeFormat(time) {
-    return `${dateToString(time)}, ${dateTimeToString(new Date(time))}`
+    return `${dateToString(time)}, ${dateTimeToString(time)}`
   }
 
   function setTaskReminder(hour) {
@@ -162,7 +162,7 @@ export default function TaskForm({
   function currentActiveReminder() {
     const assignedNote = data.assigneeNotes
       .find(assigneeNote => assigneeNote.userId === currentUser.id)
-    
+
     const timeScheduled = reminderTime || assignedNote?.reminderTime
     let formattedTime = null
     if (
@@ -260,7 +260,7 @@ export default function TaskForm({
                 {t('task.task_body_label')}
               </FormHelperText>
               <Tooltip title={t('task.toggle_preview_tooltip')}>
-                <Visibility 
+                <Visibility
                   data-testid="preview_task_body_btn"
                   style={{
                   cursor: 'pointer',

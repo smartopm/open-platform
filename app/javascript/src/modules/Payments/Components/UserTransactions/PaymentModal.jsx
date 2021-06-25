@@ -243,7 +243,7 @@ export default function PaymentModal({
                     renderOption={(option) => (
                       <>
                         <Grid item sm={2} className={classes.gridItem}>
-                          <UserAvatar imageUrl={option.imageUrl || option.avatarUrl} customStyle={classes.userAvatar} />
+                          <UserAvatar searchedUser={option} imageUrl={option.imageUrl || option.avatarUrl} customStyle={classes.userAvatar} />
                         </Grid>
                         <Grid item sm={4} className={classes.gridItem}>
                           {option.name}
@@ -322,7 +322,6 @@ export default function PaymentModal({
                 <MenuItem value="bank_transfer/cash_deposit">Bank Transfer/Cash Deposit</MenuItem>
                 <MenuItem value="bank_transfer/eft">Bank Transfer/EFT</MenuItem>
                 <MenuItem value="pos">Point of Sale</MenuItem>
-                <MenuItem value="unallocated_funds">Unallocated Funds</MenuItem>
               </TextField>
               <br />
               <SwitchInput

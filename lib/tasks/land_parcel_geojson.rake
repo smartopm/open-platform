@@ -43,7 +43,7 @@ namespace :db do
             end
 
             parcel_no = ParcelIndexer.generate_parcel_no(parcel_type: 'basic')
-            land_parcel = LandParcel.find_by(parcel_number: parcel_no)
+            land_parcel = Properties::LandParcel.find_by(parcel_number: parcel_no)
 
             if land_parcel.present?
               attempts += 1
@@ -58,20 +58,20 @@ namespace :db do
 
           # check if the same land parcel has been migrated for this community
           # 2 polygons will not have the same center point(x,y) unless the are duplicates
-          duplicate_parcel = LandParcel.find_by(community_id: community_id,
-                                                long_x: long_x, lat_y: lat_y)
+          duplicate_parcel = Properties::LandParcel.find_by(community_id: community_id,
+                                                            long_x: long_x, lat_y: lat_y)
           if duplicate_parcel.present?
             abort("Aborted: Land Parcel already exists. Have you migrated before?
               at Parcel No: #{duplicate_parcel.parcel_number}, long_x: #{duplicate_parcel[:long_x]},
               lat_y: #{duplicate_parcel[:lat_y]}")
           end
 
-          LandParcel.create!(community_id: community_id,
-                             parcel_number: parcel_no,
-                             parcel_type: 'basic',
-                             geom: f.to_json,
-                             long_x: long_x,
-                             lat_y: lat_y)
+          Properties::LandParcel.create!(community_id: community_id,
+                                         parcel_number: parcel_no,
+                                         parcel_type: 'basic',
+                                         geom: f.to_json,
+                                         long_x: long_x,
+                                         lat_y: lat_y)
         end
         # rubocop:enable Metrics/BlockLength
       end

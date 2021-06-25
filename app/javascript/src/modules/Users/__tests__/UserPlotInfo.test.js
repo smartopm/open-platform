@@ -1,6 +1,6 @@
 import React from 'react'
 import { BrowserRouter } from 'react-router-dom'
-import { cleanup, render } from '@testing-library/react'
+import { cleanup, render, fireEvent } from '@testing-library/react'
 import { MockedProvider } from '@apollo/react-testing'
 import UserPlotInfo from '../Components/UserPlotInfo'
 import '@testing-library/jest-dom/extend-expect'
@@ -38,7 +38,7 @@ describe('User Plot Info Page', () => {
   ]
 
   const userMock = {
-    userType:'admin',
+    userName:'some name',
     userId: 'bwekwjkewj'
   }
 
@@ -47,12 +47,14 @@ describe('User Plot Info Page', () => {
       <MockedProvider mock={[]}>
         <BrowserRouter>
           <MockedThemeProvider>
-            <UserPlotInfo account={account} userId={userMock.userId} userType={userMock.userType} />
+            <UserPlotInfo account={account} userId={userMock.userId} userName={userMock.userName} />
           </MockedThemeProvider>
         </BrowserRouter>
       </MockedProvider>
     )
     expect(container.queryByText('Standard434')).toBeInTheDocument()
+    expect(container.queryAllByTestId('plot')[0]).toBeInTheDocument()
+    fireEvent.click(container.queryAllByTestId('plot')[0])
   })
 
   it('should contain a map display', () => {
@@ -60,7 +62,7 @@ describe('User Plot Info Page', () => {
       <MockedProvider mock={[]}>
         <BrowserRouter>
           <MockedThemeProvider>
-            <UserPlotInfo account={account} userId={userMock.userId} userType={userMock.userType} />
+            <UserPlotInfo account={account} userId={userMock.userId} userName={userMock.userName} />
           </MockedThemeProvider>
         </BrowserRouter>
       </MockedProvider>
@@ -73,12 +75,15 @@ describe('User Plot Info Page', () => {
       <MockedProvider mock={[]}>
         <BrowserRouter>
           <MockedThemeProvider>
-            <UserPlotInfo account={[]} userId={userMock.userId} userType={userMock.userType} />
+            <UserPlotInfo account={[]} userId={userMock.userId} userName={userMock.userName} />
           </MockedThemeProvider>
         </BrowserRouter>
       </MockedProvider>
     )
     expect(container.queryByText('common:misc.no_plot')).toBeInTheDocument()
+
+    expect(container.queryByTestId('add-plot')).toBeInTheDocument()
+    fireEvent.click(container.queryByTestId('add-plot'))
   })
 
   it('should include support team link', () => {
@@ -86,7 +91,7 @@ describe('User Plot Info Page', () => {
       <MockedProvider mock={[]}>
         <BrowserRouter>
           <MockedThemeProvider>
-            <UserPlotInfo account={account} userId={userMock.userId} userType={userMock.userType} />
+            <UserPlotInfo account={account} userId={userMock.userId} userName={userMock.userName} />
           </MockedThemeProvider>
         </BrowserRouter>
       </MockedProvider>

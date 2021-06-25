@@ -30,7 +30,7 @@ RSpec.describe CommunityPostTagsJob, type: :job do
       ActiveJob::Base.queue_adapter.perform_enqueued_jobs = true
 
       CommunityPostTagsJob.perform_later('')
-      expect(PostTag.count).to eq 0
+      expect(PostTags::PostTag.count).to eq 0
     end
 
     it 'should create post tag' do

@@ -26,13 +26,13 @@ module Mutations
       end
 
       def retrieve_obj(ref_id, ref_type)
-        if ref_type == 'User'
+        if ref_type == 'Users::User'
           a_user = context[:current_user].find_a_user(ref_id)
           return unless a_user
 
           a_user
         else
-          entry = ::EntryRequest.find(ref_id)
+          entry = Logs::EntryRequest.find(ref_id)
           return unless entry
 
           entry

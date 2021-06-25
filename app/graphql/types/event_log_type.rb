@@ -23,7 +23,7 @@ module Types
     def entry_request
       return nil unless object.subject == 'visitor_entry'
 
-      EntryRequest.find(object.ref_id)
+      Logs::EntryRequest.find(object.ref_id)
     end
   end
 end

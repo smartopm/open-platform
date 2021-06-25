@@ -151,7 +151,8 @@ const menuItemProps = PropTypes.shape({
   styleProps: PropTypes.shape({
     icon: PropTypes.element
   }),
-  accessibleBy: PropTypes.arrayOf(PropTypes.string).isRequired,
+  // due to backward compatibility, accessibleBy can be an array or a function
+  accessibleBy: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.string), PropTypes.func]).isRequired,
   subMenu: PropTypes.arrayOf(
     PropTypes.shape({
       name: PropTypes.func.isRequired,

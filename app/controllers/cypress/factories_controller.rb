@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 unless Rails.env.production?
-  require Rails.root.join('spec/factories/community_factory.rb')
-  require Rails.root.join('spec/factories/user_factory.rb')
+  require Rails.root.join('spec/factories/community.rb')
+  require Rails.root.join('spec/factories/users/user.rb')
 end
 
 # Cypress support to seed data
@@ -17,7 +17,7 @@ class Cypress::FactoriesController < ApplicationController
   end
 
   def fetch_user
-    user = User.find_by(phone_number: params[:phone])
+    user = Users::User.find_by(phone_number: params[:phone])
     render json: user
   end
 

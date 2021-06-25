@@ -12,6 +12,7 @@
     "flashlight_not_supported": "Este navegador no es compatible con la linterna ",
     "invalid_color_code": "El código de color del tema no es válido",
     "no_changes": "No se realizaron cambios",
+    "no_user_selected": "Tienes que seleccionar un usuario",
     "user_name_search_not_found": "{{username}} usuario no encontrado"
   },
   "form_actions": {
@@ -64,6 +65,7 @@
     "state": "Ciudad",
     "template_name": "Nombre de plantilla",
     "template_subject": "Asunto de la plantilla",
+    "user_name_merge": "Busca un usuario para unir",
     "user_name_search": "Buscar un usuario",
     "user_type": "Tipo de usuario",
     "vehicle_plate_number": "Numero de Placa Vehicular",
@@ -217,6 +219,7 @@
     "make_payment": "Realizar un pago",
     "more_details": "Más detalles",
     "more_message": "Agregar mas mensajes",
+    "new_property": "Nueva Propiedad",
     "news": "Noticias",
     "next": "Siguiente",
     "no_description": "Sin Descripción",
@@ -266,6 +269,7 @@
     "unallocated_funds": "Fondos no asignados",
     "uploaded": "Subido con éxito",
     "user_label": "Etiqueta de usuario",
+    "user_merge_warning_text": "La unión de este usuario mantendrá esta cuenta y consolidará los datos de la cuenta seleccionada en esta cuenta. La cuenta que se fusiona dejará de existir. Quieres proceder?",
     "user_name_search_warning_text": "La cuenta seleccionada se eliminará del sistema y se fusionará con el perfil en el que se encuentra actualmente.",
     "user_type": "Tipo de usuario",
     "users": "Usuarios",

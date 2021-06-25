@@ -24,11 +24,16 @@
     "and": "and {{date}}",
     "change": "changed status",
     "user_success": "Successfully updated",
+    "user_merged": "Successfully merged users",
     "user_step": "Edit Start for this step",
     "journey_start": "Customer Journey Start Date",
     "total_balance": "Total Balance",
     "unallocated_funds": "Unallocated Funds",
+    "merging": "Merging ...",
+    "merge_user": "Merge Users",
     "make_payment": "Record New Payment",
-    "add_invoice": "Add an Invoice"
+    "add_invoice": "Add an Invoice",
+    "merging": "Merging ...",
+    "merge_user": "Merge Users"
   }
 }

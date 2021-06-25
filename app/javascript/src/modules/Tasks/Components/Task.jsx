@@ -27,8 +27,8 @@ import { TaskReminderMutation } from '../graphql/task_reminder_mutation';
 import MessageAlert from '../../../components/MessageAlert';
 
 /**
- * 
- * @param {any} param0 
+ *
+ * @param {any} param0
  * @returns ReactNode
  * @deprecated should be removed, it looks like it is no longer used
  */
@@ -77,7 +77,7 @@ export default function Task({
   }
 
   function timeFormat(time) {
-    return `${dateToString(time)}, ${dateTimeToString(new Date(time))}`;
+    return `${dateToString(time)}, ${dateTimeToString(time)}`;
   }
 
   function handleMessageAlertClose(_event, reason) {
@@ -234,7 +234,7 @@ export default function Task({
               onClick={() => handleModal(note.id)}
             />
             <Typography variant="subtitle1" gutterBottom>
-              Due at: 
+              Due at:
               {' '}
               {note.dueDate ? `  ${dateToString(note.dueDate)} ` : ' Never '}
               <MuiLink

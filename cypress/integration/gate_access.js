@@ -27,11 +27,17 @@ describe('Gate Access', () => {
     cy.wait(2000)
     cy.get('.user-search-result').click()
     cy.wait(1000)
+
+    // Refresh the page with current timestamp in the url to immitate scanning
+    cy.fetchUser('2348167740149').then((response) => {
+      cy.visit(`/user/${response.body.id}/${Date.now()}/dg`)
+      cy.wait(1000)
+    })
+
     cy.get('#closeBtn').click()
     cy.get('.log-entry-btn').click()
     cy.wait(1000)
-    cy.get('.guard-menu-icon').click()
-    cy.get('.logout-link').click()
+    cy.visit('/logout')
 
     // Login: Admin
     cy.login('2348167740149')

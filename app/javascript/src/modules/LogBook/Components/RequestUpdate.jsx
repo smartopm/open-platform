@@ -25,7 +25,7 @@ import { dateToString, dateTimeToString } from "../../../components/DateContaine
 import { Context } from '../../../containers/Provider/AuthStateProvider';
 
 /**
- * 
+ *
  * @deprecated This should be looked into, as it might be a duplicate of another similar component
  * basically we should find a way to re-use
  * Refer: RequestForm, RequestConfirm
@@ -181,7 +181,7 @@ export default function RequestUpdate({ id }) {
         {modalAction === 'grant' && !isTimeValid(date) && (
           <div>
             <p>
-              {t('logbook:logbook.today_is', { day: getWeekDay(date), time: dateTimeToString(new Date(date)) })}
+              {t('logbook:logbook.today_is', { day: getWeekDay(date), time: dateTimeToString(date) })}
             </p>
             <p>
               {t('logbook:logbook.beyond_time')}
@@ -203,7 +203,7 @@ export default function RequestUpdate({ id }) {
                 value={
                   formData.guard
                     ? `${dateToString(formData.createdAt)} at ${dateTimeToString(
-                      new Date(formData.createdAt)
+                      formData.createdAt
                     )}`
                     : ''
                 }
@@ -364,7 +364,7 @@ export default function RequestUpdate({ id }) {
             <CaptureTemp
               refId={id}
               refName={formData.name}
-              refType="EntryRequest"
+              refType="Logs::EntryRequest"
             />
           )}
 

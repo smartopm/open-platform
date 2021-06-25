@@ -90,10 +90,13 @@ module Types
     def discussion_user(disucssion_id:)
       raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') if context[:current_user].blank?
 
-      DiscussionUser.find_by(user_id: context[:current_user].id, discussion_id: disucssion_id)
+      Discussions::DiscussionUser.find_by(
+        user_id: context[:current_user].id, discussion_id: disucssion_id,
+      )
     end
 
     # Verifies user
+
     #
     # @param user_id [String]
     #
@@ -104,7 +107,7 @@ module Types
         raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
       end
 
-      user = User.allowed_users(context[:current_user]).find_by(id: user_id)
+      user = Users::User.allowed_users(context[:current_user]).find_by(id: user_id)
       return user if user.present?
 
       raise GraphQL::ExecutionError, I18n.t('errors.user.not_found')

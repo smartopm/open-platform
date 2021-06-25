@@ -3,7 +3,7 @@
 require 'rails_helper'
 require 'comment_alert'
 
-RSpec.describe User, type: :model do
+RSpec.describe Users::User, type: :model do
   let!(:community) do
     create(:community, name: 'Nkwashi', templates: {
              discussion_template_id: 'uuid123',
@@ -38,7 +38,7 @@ RSpec.describe User, type: :model do
       admin.email, 'uuid123', {
         community: 'Nkwashi',
         count: 0,
-        discussions: Discussion.where(id: user_discussion.id),
+        discussions: Discussions::Discussion.where(id: user_discussion.id),
         name: admin.name,
       }
     )

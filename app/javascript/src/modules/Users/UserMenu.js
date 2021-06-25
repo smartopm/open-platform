@@ -83,7 +83,7 @@ const userMenus = [
   },
   {
     routeProps: {
-      path: '/user/:id?tab=MergeUser',
+      path: '/user/:id?type=MergeUser', // changed to remove console and jest errors 
       component: <span />
     },
     name: t => t('menu.merge_user'),
