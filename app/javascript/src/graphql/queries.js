@@ -237,6 +237,7 @@ export const UserSearchQuery = gql`
       roleName
       imageUrl
       avatarUrl
+      extRefId
     }
   }
 `

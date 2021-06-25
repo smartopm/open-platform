@@ -7,14 +7,13 @@ import { StyleSheet, css } from 'aphrodite';
 import { useTranslation } from 'react-i18next';
 import { Button } from '@material-ui/core';
 import Loading from '../../../shared/Loading';
-import StatusBadge from '../../../components/StatusBadge';
-import Avatar from '../../../components/Avatar';
 import ScanIcon from '../../../../../assets/images/shape.svg';
 import ErrorPage from '../../../components/Error';
 import { Context } from '../../../containers/Provider/AuthStateProvider';
 import CenteredContent from '../../../components/CenteredContent';
 import { UserSearchQuery } from '../../../graphql/queries';
 import useDebounce from '../../../utils/useDebounce';
+import UserAutoResult from '../../../shared/UserAutoResult';
 
 export function NewRequestButton() {
   const { t } = useTranslation('search');
@@ -42,21 +41,7 @@ export function Results({ data, loading, called, authState }) {
             data-testid="link_search_user"
             className={`${css(styles.linkStyles)} user-search-result`}
           >
-            <div className="d-flex flex-row align-items-center py-2">
-              {/* eslint-disable-next-line react/style-prop-object */}
-              <Avatar user={user} style="small" />
-              <div className="px-3 w-100">
-                <h6 className={css(styles.title)}>{user.name}</h6>
-                <small className={css(styles.small)}>
-                  {' '}
-                  {t(`common:user_types.${user?.userType}`)}
-                  {' '}
-                </small>
-              </div>
-              <div className="px-2 align-items-center">
-                <StatusBadge label={user.state} />
-              </div>
-            </div>
+            <UserAutoResult user={user} />
           </Link>
         ))}
         <br />
