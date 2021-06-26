@@ -58,6 +58,7 @@ export default function RequestUpdate({ id }) {
     nrc: '',
     vehiclePlate: '',
     reason: '',
+    otherReason: '',
     state: '',
     userType: '',
     expiresAt: '',
@@ -353,7 +354,13 @@ export default function RequestUpdate({ id }) {
               className={`${css(styles.selectInput)}`}
               inputProps={{ "data-testid":"entry_user_visit" }}
             >
-              <MenuItem value={formData.reason}>{formData.reason}</MenuItem>
+              <MenuItem value={formData.reason}>
+                {
+                  (formData.reason && formData.reason === 'other')
+                  ? formData.otherReason
+                  : t(`logbook.business_reasons.${formData.reason}`)
+                }
+              </MenuItem>
             </TextField>
           </div>
 

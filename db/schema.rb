@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_06_10_172854) do
+ActiveRecord::Schema.define(version: 2021_06_25_124828) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -193,6 +193,7 @@ ActiveRecord::Schema.define(version: 2021_06_10_172854) do
     t.string "security_manager"
     t.json "social_links"
     t.json "banking_details"
+    t.json "community_required_fields"
     t.index ["slug"], name: "index_communities_on_slug", unique: true
   end
 
@@ -263,6 +264,7 @@ ActiveRecord::Schema.define(version: 2021_06_10_172854) do
     t.datetime "visitation_date"
     t.string "start_time"
     t.string "end_time"
+    t.string "company_name"
   end
 
   create_table "event_logs", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|

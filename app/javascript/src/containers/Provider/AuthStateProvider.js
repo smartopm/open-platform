@@ -48,6 +48,7 @@ const QUERY = gql`
         features
         securityManager
         bankingDetails
+        communityRequiredFields
       }
     }
   }

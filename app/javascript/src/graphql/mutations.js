@@ -233,6 +233,7 @@ export const EntryRequestCreate = gql`
     $visitationDate: String
     $startTime: String
     $endTime: String
+    $companyName: String
   ) {
     result: entryRequestCreate(
       name: $name
@@ -245,6 +246,7 @@ export const EntryRequestCreate = gql`
       visitationDate: $visitationDate
       startTime: $startTime
       endTime: $endTime
+      companyName: $companyName
     ) {
       entryRequest {
         ...EntryRequestFields
