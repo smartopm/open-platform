@@ -97,9 +97,6 @@ export default function RequestForm({ path }) {
    /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [userData.business])
 
-  // This is to allow tests to pass
-  // const entryReason = t('logbook:entry_reason', { returnObjects: true })
-  // const reasons = Array.isArray(entryReason) ? entryReason : [] 
   return (
     <>
       <ReasonInputModal
