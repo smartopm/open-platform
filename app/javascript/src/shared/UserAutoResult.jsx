@@ -47,7 +47,9 @@ const useStyles = makeStyles(() => ({
     paddingTop: '7px'
   },
   avatarContainer: {
-    marginBottom: '10px'
+    padding: '6px',
+    border: '1px solid rgba(0, 0, 0, 0.12)',
+    borderRadius: '3px'
   },
   verticalDivider: {
     height: '25px',

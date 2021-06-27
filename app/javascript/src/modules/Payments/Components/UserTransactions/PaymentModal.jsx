@@ -240,6 +240,7 @@ export default function PaymentModal({
                     getOptionLabel={option => option?.name}
                     getOptionSelected={(option, value) => option.name === value.name}
                     onChange={(_event, user) => handleSearchPlot(user)}
+                    classes={{ option: classes.AutocompleteOption, listbox: classes.AutocompleteOption }}
                     renderOption={(option) => (
                       <UserAutoResult user={option} />
                     )}
@@ -430,6 +431,9 @@ const useStyles = makeStyles({
     flexDirection: 'column',
     width: '500px'
   },
+  AutocompleteOption: {
+    padding: '0px'
+  }
 });
 
 PaymentDetails.propTypes = {
