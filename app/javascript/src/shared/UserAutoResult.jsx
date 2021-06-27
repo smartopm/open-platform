@@ -3,11 +3,12 @@ import Grid from '@material-ui/core/Grid';
 import Divider from '@material-ui/core/Divider';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
+import { useTranslation } from 'react-i18next'
 import UserAvatar from '../modules/Users/Components/UserAvatar';
-import { titleize } from '../utils/helpers';
 
 export default function UserAutoResult({ user }) {
   const classes = useStyles();
+  const { t } = useTranslation(['search', 'common'])
 
   return (
     <Grid container className={classes.avatarContainer}>
@@ -23,7 +24,7 @@ export default function UserAutoResult({ user }) {
         <Divider orientation="vertical" flexItem className={classes.verticalDivider} />
       </Grid>
       <Grid item sm className={classes.gridItem}>
-        {titleize(user.userType)}
+        {t(`common:user_types.${user?.userType}`)}
       </Grid>
       <Grid item sm={1}>
         <Divider orientation="vertical" flexItem className={classes.verticalDivider} />
