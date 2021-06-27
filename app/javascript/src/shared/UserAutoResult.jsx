@@ -50,7 +50,10 @@ const useStyles = makeStyles(() => ({
   avatarContainer: {
     padding: '6px',
     border: '1px solid rgba(0, 0, 0, 0.12)',
-    borderRadius: '3px'
+    borderRadius: '3px',
+    '&:hover': {
+      backgroundColor:'rgba(0, 0, 0, 0.08)'
+    }
   },
   verticalDivider: {
     height: '25px',
