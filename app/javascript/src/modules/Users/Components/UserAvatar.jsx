@@ -14,10 +14,8 @@ export default function UserAvatar({ imageUrl, customStyle, searchedUser }) {
   const matches = useMediaQuery('(max-width:600px)')
   const authState = useContext(Context)
   return (
-    <div>
-      <div className={matches ? classes.avatarMobile : (customStyle || classes.avatar)} onClick={() => history.push({pathname: '/user/settings'})}>
-        <Avatar data-testid='avatar' alt="user_image" imageUrl={imageUrl} user={authState.user} searchedUser={searchedUser} />
-      </div>
+    <div className={matches ? classes.avatarMobile : (customStyle || classes.avatar)} onClick={() => history.push({pathname: '/user/settings'})}>
+      <Avatar data-testid='avatar' alt="user_image" imageUrl={imageUrl} user={authState.user} searchedUser={searchedUser} />
     </div>
   )
 }

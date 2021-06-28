@@ -1,39 +1,36 @@
 /* eslint-disable react/forbid-prop-types */
-import React, { useState, useContext } from 'react'
-import { Link, Redirect } from 'react-router-dom'
-import PropTypes from 'prop-types'
-import { useLazyQuery } from 'react-apollo'
-import { StyleSheet, css } from 'aphrodite'
-import { useTranslation } from 'react-i18next'
-import { Button } from '@material-ui/core'
-import Loading from '../../../shared/Loading'
-import StatusBadge from '../../../components/StatusBadge'
-import Avatar from '../../../components/Avatar'
-import ScanIcon from '../../../../../assets/images/shape.svg'
-import ErrorPage from '../../../components/Error'
-import { Context } from '../../../containers/Provider/AuthStateProvider'
-import CenteredContent from '../../../components/CenteredContent'
-import { UserSearchQuery } from '../../../graphql/queries'
+import React, { useState, useContext } from 'react';
+import { Link, Redirect } from 'react-router-dom';
+import PropTypes from 'prop-types';
+import { useQuery } from 'react-apollo';
+import { StyleSheet, css } from 'aphrodite';
+import { useTranslation } from 'react-i18next';
+import { Button } from '@material-ui/core';
+import Loading from '../../../shared/Loading';
+import ScanIcon from '../../../../../assets/images/shape.svg';
+import ErrorPage from '../../../components/Error';
+import { Context } from '../../../containers/Provider/AuthStateProvider';
+import CenteredContent from '../../../components/CenteredContent';
+import { UserSearchQuery } from '../../../graphql/queries';
+import useDebounce from '../../../utils/useDebounce';
+import UserAutoResult from '../../../shared/UserAutoResult';
 
 export function NewRequestButton() {
-  const { t } = useTranslation('search')
+  const { t } = useTranslation('search');
   return (
     <CenteredContent>
       <Link className={css(styles.requestLink)} to="/new/user">
-        <Button
-          variant="contained"
-          color="primary"
-        >
+        <Button variant="contained" color="primary">
           {/* This should be renamed to Create a user */}
           {t('search.create_request')}
         </Button>
       </Link>
     </CenteredContent>
-  )
+  );
 }
 
 export function Results({ data, loading, called, authState }) {
-  const { t } = useTranslation(['search', 'common'])
+  const { t } = useTranslation(['search', 'common']);
   function memberList(users) {
     return (
       <>
@@ -44,29 +41,15 @@ export function Results({ data, loading, called, authState }) {
             data-testid="link_search_user"
             className={`${css(styles.linkStyles)} user-search-result`}
           >
-            <div className="d-flex flex-row align-items-center py-2">
-              {/* eslint-disable-next-line react/style-prop-object */}
-              <Avatar user={user} style="small" />
-              <div className="px-3 w-100">
-                <h6 className={css(styles.title)}>{user.name}</h6>
-                <small className={css(styles.small)}>
-                  {' '}
-                  {t(`common:user_types.${user?.userType}`)}
-                  {' '}
-                </small>
-              </div>
-              <div className="px-2 align-items-center">
-                <StatusBadge label={user.state} />
-              </div>
-            </div>
+            <UserAutoResult user={user} />
           </Link>
         ))}
         <br />
       </>
-    )
+    );
   }
   if (called && loading) {
-    return <Loading />
+    return <Loading />;
   }
 
   if (called && data) {
@@ -83,56 +66,46 @@ export function Results({ data, loading, called, authState }) {
         {/* only show this when the user is admin */}
         {authState.user?.userType === 'admin' && <NewRequestButton />}
       </div>
-    )
+    );
   }
-  return false
+  return false;
 }
 
 export default function SearchContainer({ location }) {
-  const [offset, setOffset] = useState(0)
-  const [name, setName] = useState('')
-  const { t } = useTranslation(['search', 'common'])
-  const limit = 50
+  const [offset, setOffset] = useState(0);
+  const [name, setName] = useState('');
+  const debouncedValue = useDebounce(name, 500);
+  const { t } = useTranslation(['search', 'common']);
+  const limit = 50;
 
   function updateSearch(e) {
-    const { value } = e.target
-    setName(value)
+    const { value } = e.target;
+    setName(value);
   }
 
-  function handleSearch(event){
-    if(event.keyCode === 13 && name.trim().length > 0){
-      loadGQL({
-        variables: { query: name, limit, offset },
-        errorPolicy: 'all'
-      })
-    }
-  }
-  const [loadGQL, { called, loading, error, data, fetchMore }] = useLazyQuery(
-    UserSearchQuery
-  )
-  const authState = useContext(Context)
+  const { called, loading, error, data, fetchMore } = useQuery(UserSearchQuery, {
+    variables: { query: debouncedValue, limit, offset },
+    errorPolicy: 'all'
+  });
+  const authState = useContext(Context);
 
   function loadMoreResults() {
     fetchMore({
       variables: { query: name, offset: data.userSearch.length },
       updateQuery: (prev, { fetchMoreResult }) => {
-        if (!fetchMoreResult) return prev
-        return { ...prev, userSearch: [...prev.userSearch, ...fetchMoreResult.userSearch]}
+        if (!fetchMoreResult) return prev;
+        return { ...prev, userSearch: [...prev.userSearch, ...fetchMoreResult.userSearch] };
       }
-    })
+    });
     // Allow next search to go through all records
-    setOffset(0)
+    setOffset(0);
   }
 
-  if (
-    !['security_guard', 'admin', 'custodian'].includes(
-      authState.user?.userType.toLowerCase()
-    )
-  ) {
-    return <Redirect to="/" />
+  if (!['security_guard', 'admin', 'custodian'].includes(authState.user?.userType.toLowerCase())) {
+    return <Redirect to="/" />;
   }
   if (error && !error.message.includes('permission')) {
-    return <ErrorPage title={error.message} />
+    return <ErrorPage title={error.message} />;
   }
 
   return (
@@ -146,31 +119,19 @@ export default function SearchContainer({ location }) {
           value={name}
           // eslint-disable-next-line jsx-a11y/no-autofocus
           autoFocus
-          onKeyDown={handleSearch}
         />
-        <Link
-          to={(location.state && location.state.from) || '/'}
-          className={css(styles.cancelBtn)}
-        >
+        <Link to={(location.state && location.state.from) || '/'} className={css(styles.cancelBtn)}>
           <i className="material-icons">arrow_back</i>
         </Link>
         <Link to="/scan">
-          <img
-            src={ScanIcon}
-            alt="scan icon"
-            className={` ${css(styles.scanIcon)}`}
-          />
+          <img src={ScanIcon} alt="scan icon" className={` ${css(styles.scanIcon)}`} />
         </Link>
 
         {name.length > 0 && (
           <>
             <Results {...{ data, loading, called, authState }} />
             {Boolean(called && data && data.userSearch.length) && (
-              <Button
-                data-testid="prev-btn"
-                onClick={loadMoreResults}
-                disabled={false}
-              >
+              <Button data-testid="prev-btn" onClick={loadMoreResults} disabled={false}>
                 {t('search.load_more')}
               </Button>
             )}
@@ -178,7 +139,7 @@ export default function SearchContainer({ location }) {
         )}
       </div>
     </div>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
@@ -252,22 +213,22 @@ const styles = StyleSheet.create({
   requestLink: {
     textDecorationLine: 'none'
   }
-})
+});
 
 Results.defaultProps = {
   data: {},
   authState: {}
- }
- Results.propTypes = {
-   data: PropTypes.object,
-   called: PropTypes.bool.isRequired,
-   loading: PropTypes.bool.isRequired,
-   authState: PropTypes.object
- }
+};
+Results.propTypes = {
+  data: PropTypes.object,
+  called: PropTypes.bool.isRequired,
+  loading: PropTypes.bool.isRequired,
+  authState: PropTypes.object
+};
 
- SearchContainer.defaultProps = {
+SearchContainer.defaultProps = {
   location: {}
- }
- SearchContainer.propTypes = {
-   location: PropTypes.object
- }
+};
+SearchContainer.propTypes = {
+  location: PropTypes.object
+};

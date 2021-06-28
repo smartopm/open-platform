@@ -69,14 +69,14 @@ describe('search result component', () => {
             id: 'ee6df98a-8016',
             phoneNumber: null,
             roleName: 'Admin',
-            state: 'valid'
+            extRefId: '2020/1/230'
           },
           {
             name: 'Mocked John',
             id: '685019cc-05f3',
             phoneNumber: '2609715',
             roleName: '',
-            state: 'pending'
+            extRefId: '2019/19/190'
           }
         ]
       },
@@ -97,7 +97,8 @@ describe('search result component', () => {
     );
     expect(container.queryByText('Mocked John')).toBeInTheDocument();
     expect(container.queryByText('Mocked Jane D')).toBeInTheDocument();
-    expect(container.queryByText('pending')).toBeInTheDocument();
+    expect(container.queryByText('2020/1/230')).toBeInTheDocument();
+    expect(container.queryByText('2019/19/190')).toBeInTheDocument();
     expect(container.getAllByTestId('link_search_user')).toHaveLength(2);
   });
   it('should render properly', () => {

@@ -17,13 +17,13 @@ import { CustomizedDialogs } from '../../../../components/Dialog';
 import PaymentCreate from '../../graphql/payment_mutations';
 import { UserLandParcelWithPlan, UsersLiteQuery } from '../../../../graphql/queries';
 import MessageAlert from '../../../../components/MessageAlert';
-import { extractCurrency, formatError, formatMoney, titleize } from '../../../../utils/helpers';
+import { extractCurrency, formatError, formatMoney } from '../../../../utils/helpers';
 import ReceiptModal from './ReceiptModal';
 import { Spinner } from '../../../../shared/Loading';
 import SwitchInput from '../../../../components/Forms/SwitchInput';
 import DatePickerDialog from '../../../../components/DatePickerDialog';
 import useDebounce from '../../../../utils/useDebounce';
-import UserAvatar from '../../../Users/Components/UserAvatar';
+import UserAutoResult from '../../../../shared/UserAutoResult';
 
 const initialValues = {
   amount: '',
@@ -240,21 +240,9 @@ export default function PaymentModal({
                     getOptionLabel={option => option?.name}
                     getOptionSelected={(option, value) => option.name === value.name}
                     onChange={(_event, user) => handleSearchPlot(user)}
+                    classes={{ option: classes.AutocompleteOption, listbox: classes.AutocompleteOption }}
                     renderOption={(option) => (
-                      <>
-                        <Grid item sm={2} className={classes.gridItem}>
-                          <UserAvatar searchedUser={option} imageUrl={option.imageUrl || option.avatarUrl} customStyle={classes.userAvatar} />
-                        </Grid>
-                        <Grid item sm={4} className={classes.gridItem}>
-                          {option.name}
-                        </Grid>
-                        <Grid item sm={3} className={classes.gridItem}>
-                          {titleize(option.userType)}
-                        </Grid>
-                        <Grid item sm={3} className={classes.gridItem}>
-                          {option.extRefId || '-'}
-                        </Grid>
-                      </>
+                      <UserAutoResult user={option} />
                     )}
                     renderInput={params => (
                       <TextField
@@ -443,15 +431,9 @@ const useStyles = makeStyles({
     flexDirection: 'column',
     width: '500px'
   },
-  userAvatar: {
-    cursor: 'pointer',
-    height: 20,
-    width: 20,
-  },
-  gridItem: {
-    height: 40,
-    fontSize: '14px',
-  },
+  AutocompleteOption: {
+    padding: '0px'
+  }
 });
 
 PaymentDetails.propTypes = {
