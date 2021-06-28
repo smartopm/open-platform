@@ -18,7 +18,7 @@ import {
 } from '../../../graphql/mutations';
 import Loading from "../../../shared/Loading";
 import { isTimeValid, getWeekDay } from '../../../utils/dateutil';
-import { userState, userType } from '../../../utils/constants'
+import { userState, userType, communityVisitingHours } from '../../../utils/constants'
 import { ModalDialog } from "../../../components/Dialog"
 import CaptureTemp from "../../../components/CaptureTemp";
 import { dateToString, dateTimeToString } from "../../../components/DateContainer";
@@ -169,6 +169,13 @@ export default function RequestUpdate({ id }) {
     }
   }
 
+  function checkTimeIsValid(){
+    const communityName = authState.user.community.name
+    const visitingHours = communityVisitingHours[String(communityName.toLowerCase())];
+
+    return isTimeValid({ date, visitingHours })
+  }
+
   return (
     <>
       <ModalDialog
@@ -178,7 +185,7 @@ export default function RequestUpdate({ id }) {
         action={t(`logbook:access_actions.${modalAction}`)}
         name={formData.name}
       >
-        {modalAction === 'grant' && !isTimeValid(date) && (
+        {modalAction === 'grant' && !checkTimeIsValid() && (
           <div>
             <p>
               {t('logbook:logbook.today_is', { day: getWeekDay(date), time: dateTimeToString(date) })}
