@@ -48,7 +48,6 @@
     "grant": "Grant",
     "deny": "Deny"
   },
-  "entry_reason": ["Client", "Prospective Client", "Working", "Sales", "Passing through", "Other"],
   "business_reasons": {
     "client": "Client",
     "prospective_client": "Prospective Client",
