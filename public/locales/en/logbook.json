@@ -28,7 +28,8 @@
     "deny": "Deny",
     "call_manager": "Call Manager",
     "grant_deny_access": "Are you sure you want to {{action}} access to {{name}} ?",
-    "log": "Log"
+    "log": "Log",
+    "success_message": "Successfully granted access"
   },
   "log_title": {
     "visitor": "Visitor",
@@ -46,7 +47,8 @@
   },
   "access_actions": {
     "grant": "Grant",
-    "deny": "Deny"
+    "deny": "Deny",
+    "grant_access": "Grant Access"
   },
   "entry_reason": ["Client", "Prospective Client", "Working", "Sales", "Passing through", "Other"]
 }

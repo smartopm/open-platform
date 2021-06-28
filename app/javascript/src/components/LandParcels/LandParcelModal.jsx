@@ -353,15 +353,11 @@ export default function LandParcelModal({
   }
 
   function landParcelValuations(parcel) {
-    return parcel.valuations.map(val => {
-      return { amount: val.amount, startDate: val.startDate };
-    });
+    return parcel.valuations.map(val => ({ amount: val.amount, startDate: val.startDate }));
   }
 
   function landParcelOwners(parcel) {
-    return parcel.accounts.map(owner => {
-      return { name: owner.fullName, address: owner.address1, userId: owner.user.id };
-    });
+    return parcel.accounts.map(owner => ({ name: owner.fullName, address: owner.address1, userId: owner.user.id }));
   }
 
   function handleChange(_event, newValue) {

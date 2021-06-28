@@ -1,7 +1,8 @@
 import React from 'react'
 import { render } from '@testing-library/react'
 import '@testing-library/jest-dom/extend-expect'
-import { BrowserRouter } from 'react-router-dom/'
+import { BrowserRouter } from 'react-router-dom'
+import { MockedProvider } from '@apollo/react-testing'
 import Events from '../Components/Events'
 import { LogView } from '../Components/EntryLogs'
 import MockedThemeProvider from '../../__mocks__/mock_theme'
@@ -33,11 +34,13 @@ describe('Should Render Events Component', () => {
   }
   it('should render proper data', () => {
     const { getByText } = render(
-      <BrowserRouter>
-        <MockedThemeProvider>
-          <Events data={data} />
-        </MockedThemeProvider>
-      </BrowserRouter>
+      <MockedProvider>
+        <BrowserRouter>
+          <MockedThemeProvider>
+            <Events data={data} />
+          </MockedThemeProvider>
+        </BrowserRouter>
+      </MockedProvider>
     )
     expect(getByText('log_title.subject')).toBeInTheDocument()
     expect(getByText('log_title.description')).toBeInTheDocument()
@@ -77,9 +80,15 @@ describe('Should Render Events Component', () => {
           type: 'client'
         }
       }
-    const { getByText } = render(<LogView user={log} /> )
+    const { getByText, getByTestId } = render(
+      <MockedProvider>
+        <LogView user={log} refetch={jest.fn()} tab={2} /> 
+      </MockedProvider>
+      )
     expect(getByText('Some User')).toBeInTheDocument()
     expect(getByText('common:user_types.client')).toBeInTheDocument()
-    expect(getByText('2021-05-13')).toBeInTheDocument()
+    expect(getByText(/2021-05-13/g)).toBeInTheDocument()
+    expect(getByTestId('grant_access_btn')).toBeInTheDocument()
+    expect(getByTestId('grant_access_btn').textContent).toContain("logbook:access_actions.grant_access")
   })
 })

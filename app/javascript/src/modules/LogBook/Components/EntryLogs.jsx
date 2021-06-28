@@ -4,71 +4,64 @@
 /* eslint-disable react/jsx-props-no-spreading */
 /* eslint-disable no-nested-ternary */
 /* eslint-disable no-use-before-define */
-import React, {
-  useState, Fragment, useContext, useEffect
-} from 'react'
-import { useQuery } from 'react-apollo'
-import { useLocation } from 'react-router-dom'
-import { StyleSheet, css } from 'aphrodite'
-import { useTranslation } from 'react-i18next'
-import { TextField, Typography } from '@material-ui/core'
-import Loading from '../../../shared/Loading'
-import { AllEventLogsQuery } from '../../../graphql/queries'
-import ErrorPage from '../../../components/Error'
-import { Footer } from '../../../components/Footer'
-import useDebounce from '../../../utils/useDebounce'
-import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider'
-import {
-  StyledTabs,
-  StyledTab,
-  TabPanel,
-  a11yProps
-} from '../../../components/Tabs'
-import { dateTimeToString, dateToString } from '../../../components/DateContainer'
-import FloatButton from '../../../components/FloatButton'
-import { propAccessor } from '../../../utils/helpers'
+import React, { useState, Fragment, useContext, useEffect } from 'react';
+import { useMutation, useQuery } from 'react-apollo';
+import { useLocation } from 'react-router-dom';
+import { StyleSheet, css } from 'aphrodite';
+import { useTranslation } from 'react-i18next';
+import PropTypes from 'prop-types';
+import { TextField, Typography } from '@material-ui/core';
+import Loading, { Spinner } from '../../../shared/Loading';
+import { AllEventLogsQuery } from '../../../graphql/queries';
+import ErrorPage from '../../../components/Error';
+import { Footer } from '../../../components/Footer';
+import useDebounce from '../../../utils/useDebounce';
+import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider';
+import { StyledTabs, StyledTab, TabPanel, a11yProps } from '../../../components/Tabs';
+import { dateTimeToString, dateToString } from '../../../components/DateContainer';
+import FloatButton from '../../../components/FloatButton';
+import { propAccessor } from '../../../utils/helpers';
+import { EntryRequestGrant } from '../../../graphql/mutations';
+import MessageAlert from '../../../components/MessageAlert';
 
-export default ({ history, match }) => AllEventLogs(history, match)
+export default ({ history, match }) => AllEventLogs(history, match);
 
 // Todo: Find the total number of allEventLogs
-const initialLimit = 50
+const initialLimit = 50;
 const AllEventLogs = (history, match) => {
-  const subjects = ['user_entry', 'visitor_entry', 'showroom', 'user_temp']
-  const [offset, setOffset] = useState(0)
-  const [limit, setLimit] = useState(initialLimit)
-  const [searchTerm, setSearchTerm] = useState('')
-  const [value, setvalue] = useState(0)
+  const subjects = ['user_entry', 'visitor_entry', 'showroom', 'user_temp'];
+  const [offset, setOffset] = useState(0);
+  const [limit, setLimit] = useState(initialLimit);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [value, setvalue] = useState(0);
   const dbcSearchTerm = useDebounce(searchTerm, 500);
 
-  const refId = match.params.userId || null
+  const refId = match.params.userId || null;
 
-  useEffect(
-    () => {
-      setSearchTerm(dbcSearchTerm)
-    },
-    [dbcSearchTerm]
-  );
+  useEffect(() => {
+    setSearchTerm(dbcSearchTerm);
+  }, [dbcSearchTerm]);
 
   function getQuery() {
     // eslint-disable-next-line react-hooks/rules-of-hooks
     return new URLSearchParams(useLocation().search);
   }
 
-  const query = getQuery()
+  const query = getQuery();
 
   useEffect(() => {
-    const offsetParams = query.get('offset')
-    setOffset(Number(offsetParams))
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+    const offsetParams = query.get('offset');
+    setOffset(Number(offsetParams));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const logsQuery = {
     0: subjects,
     1: 'user_enrolled',
     2: 'visit_request'
-  }
+  };
 
-  const { loading, error, data } = useQuery(AllEventLogsQuery, {
+  const { loading, error, data, refetch } = useQuery(AllEventLogsQuery, {
     variables: {
       subject: propAccessor(logsQuery, value),
       refId,
@@ -78,29 +71,29 @@ const AllEventLogs = (history, match) => {
       name: dbcSearchTerm
     },
     fetchPolicy: 'cache-and-network'
-  })
+  });
 
-  if (loading) return <Loading />
-  if (error) return <ErrorPage title={error.message} />
+  if (error) return <ErrorPage title={error.message} />;
 
   function handleNextPage() {
-    setOffset(offset + limit)
+    setOffset(offset + limit);
   }
   function handlePreviousPage() {
     if (offset < limit) {
-      return
+      return;
     }
-    setOffset(offset - limit)
+    setOffset(offset - limit);
   }
   function handleLimit() {
-    setLimit(1000)
+    setLimit(1000);
   }
   function handleSearch(event) {
-    setSearchTerm(event.target.value)
+    setSearchTerm(event.target.value);
   }
 
   function handleChange(_event, newValue) {
-    setvalue(newValue)
+    setvalue(newValue);
+    refetch()
   }
   return (
     <IndexComponent
@@ -115,9 +108,11 @@ const AllEventLogs = (history, match) => {
       handleSearch={handleSearch}
       handleTabValue={handleChange}
       tabValue={value}
+      loading={loading}
+      refetch={refetch}
     />
-  )
-}
+  );
+};
 
 export function IndexComponent({
   data,
@@ -129,22 +124,24 @@ export function IndexComponent({
   searchTerm,
   handleSearch,
   tabValue,
-  handleTabValue
+  handleTabValue,
+  loading,
+  refetch
 }) {
-  const authState = useContext(AuthStateContext)
-  const { t } = useTranslation(['logbook', 'common', 'dashboard'])
+  const authState = useContext(AuthStateContext);
+  const { t } = useTranslation(['logbook', 'common', 'dashboard']);
 
   function routeToAction(eventLog) {
     if (eventLog.refType === 'Logs::EntryRequest') {
       router.push({
         pathname: `/request/${eventLog.refId}`,
         state: { from: 'entry_logs', offset }
-      })
+      });
     } if (eventLog.refType === 'Users::User') {
       router.push({
         pathname: `/user/${eventLog.refId}`,
         state: { from: 'entry_logs', offset }
-      })
+      });
     }
   }
 
@@ -152,39 +149,43 @@ export function IndexComponent({
     return router.push({
       pathname: `/request/${id}`,
       state: { from: 'enroll', offset }
-    })
+    });
   }
 
   function logs(eventLogs) {
     if (!eventLogs) {
-      return t('logbook.no_entry')
+      return t('logbook.no_entry');
     }
 
-    return eventLogs.map((event) => {
+    return eventLogs.map(event => {
       // Todo: To be followed up
-      const source = event.subject === 'user_entry'
-        ? t('dashboard:dashboard.scan')
-        : event.subject === 'showroom'
+      const source =
+        event.subject === 'user_entry'
+          ? t('dashboard:dashboard.scan')
+          : event.subject === 'showroom'
           ? t('logbook.showroom')
-          : t('dashboard:dashboard.log_entry')
+          : t('dashboard:dashboard.log_entry');
 
-      const isDigital = event.subject === 'user_entry' ? event.data.digital : null
-      const reason = event.entryRequest ? event.entryRequest.reason : ''
+      const isDigital = event.subject === 'user_entry' ? event.data.digital : null;
+      const reason = event.entryRequest ? event.entryRequest.reason : '';
 
-      const accessStatus = event.entryRequest && event.entryRequest.grantedState === 1
-        ? `${t('logbook.granted_access')}: `
-        : event.entryRequest && event.entryRequest.grantedState === 2
+      const accessStatus =
+        event.entryRequest && event.entryRequest.grantedState === 1
+          ? `${t('logbook.granted_access')}: `
+          : event.entryRequest && event.entryRequest.grantedState === 2
           ? `${t('logbook.denied_access')}: `
-          : ''
+          : '';
 
-      const enrolled = event.data.enrolled || false
-      const visitorName = event.data.ref_name || event.data.visitor_name || event.data.name
+      const enrolled = event.data.enrolled || false;
+      const visitorName = event.data.ref_name || event.data.visitor_name || event.data.name;
       return (
         <Fragment key={event.id}>
           <div className="container">
             <div className="row justify-content-between">
               <div className="col-xs-8">
-                <span className={`${css(styles.logTitle)} entry-log-visitor-name`}>{visitorName}</span>
+                <span className={`${css(styles.logTitle)} entry-log-visitor-name`}>
+                  {visitorName}
+                </span>
               </div>
               <div className="col-xs-4">
                 <span className={css(styles.access)}>
@@ -193,9 +194,7 @@ export function IndexComponent({
                     {' '}
                   </strong>
                 </span>
-                <span className={css(styles.subTitle)}>
-                  {dateToString(event.createdAt)}
-                </span>
+                <span className={css(styles.subTitle)}>{dateToString(event.createdAt)}</span>
               </div>
             </div>
             <div className="row justify-content-between">
@@ -216,32 +215,37 @@ export function IndexComponent({
                 </span>
               </div>
               <div className="col-xs-4">
-
                 {/* Temperature status placeholder */}
                 <span className={css(styles.subTitle)}>
                   {' '}
-                  { /* eslint-disable-next-line no-useless-concat */}
+                  {/* eslint-disable-next-line no-useless-concat */}
                   {event.subject === 'user_temp' ? `${t('logbook.temperature_recorded')} |` : ''}
                 </span>
 
                 <span className={css(styles.subTitle)}>
-                  {event.subject === 'visitor_entry' && authState.user.userType === 'admin' && !enrolled ? (
+                  {event.subject === 'visitor_entry' &&
+                  authState.user.userType === 'admin' &&
+                  !enrolled ? (
                     <>
                       <Typography
                         component="span"
                         color="primary"
-                        style={{cursor: 'pointer'}}
+                        style={{ cursor: 'pointer' }}
                         onClick={() => enrollUser(event.refId)}
                       >
                         {t('logbook.enroll_user')}
                         {' '}
                       </Typography>
-                      |
+                      | 
                       {' '}
                       {source}
                     </>
                   ) : event.subject === 'user_entry' && isDigital !== null ? (
-                    isDigital ? t('logbook.digital_scan') : t('logbook.print_scan')
+                    isDigital ? (
+                      t('logbook.digital_scan')
+                    ) : (
+                      t('logbook.print_scan')
+                    )
                   ) : (
                     source
                   )}
@@ -251,9 +255,9 @@ export function IndexComponent({
                   <Typography
                     component="span"
                     color="primary"
-                    style={{cursor: 'pointer'}}
+                    style={{ cursor: 'pointer' }}
                     onClick={() => {
-                      routeToAction(event)
+                      routeToAction(event);
                     }}
                   >
                     {t('common:misc.more_details')}
@@ -266,15 +270,16 @@ export function IndexComponent({
 
           <div className="border-top my-3" />
         </Fragment>
-      )
-    })
+      );
+    });
   }
 
-  const filteredEvents = data.result
-    && data.result.filter((log) => {
-      const visitorName = log.data.ref_name || log.data.visitor_name || log.data.name || ''
-      return visitorName.toLowerCase().includes(searchTerm.toLowerCase())
-    })
+  const filteredEvents =
+    data?.result &&
+    data.result.filter(log => {
+      const visitorName = log.data.ref_name || log.data.visitor_name || log.data.name || '';
+      return visitorName.toLowerCase().includes(searchTerm.toLowerCase());
+    });
   return (
     <div>
       <div className="container">
@@ -299,25 +304,25 @@ export function IndexComponent({
           <StyledTab label={t('logbook.new_visits')} {...a11yProps(1)} />
           <StyledTab label={t('logbook.upcoming_visits')} {...a11yProps(2)} />
         </StyledTabs>
+        {loading && <Loading />}
         <TabPanel value={tabValue} index={0}>
-          <>{logs(filteredEvents)}</>
+          <>{data && logs(filteredEvents)}</>
         </TabPanel>
         <TabPanel value={tabValue} index={1}>
           {/* Todo: Handle the listing of enrolled users here */}
-          {data.result.map((user) => <LogView key={user.id} user={user} /> )}
+          {data && data.result.map(user => <LogView key={user.id} user={user} refetch={refetch} tab={tabValue} />)}
         </TabPanel>
         <TabPanel value={tabValue} index={2}>
-          {data.result.map((log) => <LogView key={log.id} user={log} /> )}
+          {data && data.result.map(log => <LogView key={log.id} user={log} refetch={refetch} tab={tabValue} />)}
         </TabPanel>
-        {
-          // only admins should be able to schedule a visit request
-          authState.user.userType === 'admin' && (
-            <FloatButton
-              title={t('logbook.new_visit_request')}
-              handleClick={() => router.push('/visit_request')}
-            />
-          )
-        }
+        {// only admins should be able to schedule a visit request
+            authState.user.userType === 'admin' && (
+              <FloatButton
+                title={t('logbook.new_visit_request')}
+                handleClick={() => router.push('/visit_request')}
+              />
+            )
+         }
       </div>
 
       <div className="d-flex justify-content-center">
@@ -330,8 +335,7 @@ export function IndexComponent({
               </a>
             </li>
             <li
-              className={`page-item ${filteredEvents.length < limit
-                && 'disabled'}`}
+              className={`page-item ${data?.result && filteredEvents.length < limit && 'disabled'}`}
             >
               {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
               <a className="page-link" onClick={nextPage} href="#">
@@ -343,22 +347,46 @@ export function IndexComponent({
       </div>
       <Footer position="3vh" />
     </div>
-  )
+  );
 }
 
-export function LogView({ user }){
-  const { t } = useTranslation('common')
+// user here should be called eventlog
+export function LogView({ user, refetch, tab }) {
+  const { t } = useTranslation(['common', 'logbook']);
+  const [grantEntry] = useMutation(EntryRequestGrant);
+  const [loading, setLoading] = useState(false)
+  const [message, setMessage] = useState({ isError: false, detail: ""})
+  
+  // grant access right here
+  function handleGrantAccess() {
+    setLoading(true);
+    grantEntry({ variables: { id: user.refId, subject: "visitor_entry" } })
+      .then(() => {
+        setMessage({isError: false, detail: t("logbook:logbook.success_message")});
+        setLoading(false);
+        setTimeout(() => refetch(), 1500)
+      })
+      .catch(error => {
+        setMessage({isError: true, detail: error.message});
+        setLoading(false);
+      });
+  }
+
   return (
     <>
+      <MessageAlert
+        type={message.isError ? 'error' : 'success'}
+        message={message.detail}
+        open={!!message.detail}
+        handleClose={() => setMessage({...message, detail: ""})}
+      />
       <div className="container">
         <div className="row justify-content-between">
           <div className="col-xs-8">
             <span className={css(styles.logTitle)}>{user.data.ref_name}</span>
           </div>
           <div className="col-xs-4">
-            <span className={css(styles.subTitle)}>
-              {dateToString(user.createdAt)}
-            </span>
+            <span className={css(styles.subTitle)}>{`${dateToString(user.createdAt)} at ${dateTimeToString(user.createdAt)}`}</span>
           </div>
         </div>
         <br />
@@ -368,19 +396,44 @@ export function LogView({ user }){
               {t(`common:user_types.${user.data?.type}`)}
             </span>
           </div>
-          <div className="col-xs-4">
-            <span className={css(styles.subTitle)}>
-              {dateTimeToString(user.createdAt)}
-            </span>
-          </div>
+          {
+          tab === 2 && (
+            <div className="col-xs-4">
+              <span className={css(styles.subTitle)}>
+                <Typography
+                  component="span"
+                  color="primary"
+                  style={{ cursor: 'pointer' }}
+                  onClick={handleGrantAccess}
+                  data-testid="grant_access_btn"
+                >
+                  {
+                  loading ? <Spinner /> : t('logbook:access_actions.grant_access')
+                }
+                </Typography>
+              </span>
+            </div>
+          ) 
+        }
         </div>
         <br />
         <div className="border-top my-3" />
       </div>
     </>
-  )
+  );
 }
 
+
+LogView.propTypes = {
+  tab: PropTypes.number.isRequired,
+  refetch: PropTypes.func.isRequired,
+  user: PropTypes.shape({
+    refId: PropTypes.string,
+    createdAt: PropTypes.string,
+    // eslint-disable-next-line react/forbid-prop-types
+    data: PropTypes.object
+  }).isRequired
+}
 
 const styles = StyleSheet.create({
   logTitle: {
@@ -400,4 +453,4 @@ const styles = StyleSheet.create({
     letterSpacing: 0.17,
     fontWeight: 400
   }
-})
+});

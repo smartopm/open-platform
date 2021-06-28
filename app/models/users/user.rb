@@ -244,11 +244,11 @@ module Users
       )
     end
 
-    def grant!(entry_request_id)
+    def grant!(entry_request_id, event_id)
       entry = entry_requests.find(entry_request_id)
       return nil if entry.blank?
 
-      entry.grant!(self)
+      entry.grant!(self, event_id)
       entry
     end
 

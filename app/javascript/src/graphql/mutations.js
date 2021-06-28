@@ -282,8 +282,8 @@ export const EntryRequestUpdate = gql`
 `
 
 export const EntryRequestGrant = gql`
-  mutation EntryRequestGrantMutation($id: ID!) {
-    result: entryRequestGrant(id: $id) {
+  mutation EntryRequestGrantMutation($id: ID!, $subject: String) {
+    result: entryRequestGrant(id: $id, subject: $subject) {
       entryRequest {
         ...EntryRequestFields
       }
