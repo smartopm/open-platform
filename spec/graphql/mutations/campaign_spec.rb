@@ -4,6 +4,7 @@ require 'rails_helper'
 RSpec.describe Mutations::Campaign do
   describe 'creating a Campaign' do
     let!(:current_user) { create(:user_with_community, user_type: 'admin') }
+    let!(:community) { current_user.community }
     let(:query) do
       <<~GQL
         mutation campaignCreate(
@@ -38,61 +39,96 @@ RSpec.describe Mutations::Campaign do
       GQL
     end
 
-    it 'returns a created Campaign' do
-      variables = {
-        name: 'This is a Campaign',
-        message: 'Visiting',
-        campaignType: %w[sms email].sample,
-        status: %w[draft scheduled].sample,
-        batchTime: '17/06/2020 03:49',
-        userIdList: '23fsafsafa1147,2609adf61sfsdfs871fd147,2saf60afsfdad9618af7114sfda7',
-        labels: 'label 1,label 2',
-        emailTemplatesId: '2609adf61swesdfs871fd147',
-      }
-
-      result = DoubleGdpSchema.execute(query, variables: variables,
-                                              context: {
-                                                current_user: current_user,
-                                                site_community: current_user.community,
-                                              }).as_json
-      expect(result['errors']).to be_nil
-      expect(result.dig('data', 'campaignCreate', 'campaign', 'name')).not_to be_nil
-      expect(result.dig('data', 'campaignCreate', 'campaign', 'labels', 0)).not_to be_nil
-      expect(result.dig('data', 'campaignCreate', 'campaign', 'labels', 0, 'shortDesc'))
-        .not_to be_nil
+    shared_examples 'creates campaign' do |status, campaign_type|
+      it 'creates a campaign' do
+        variables = {
+          name: 'This is a Campaign',
+          message: 'Visiting',
+          campaignType: campaign_type,
+          status: status,
+          batchTime: '17/06/2020 03:49',
+          userIdList: '23fsafsafa1147,2609adf61sfsdfs871fd147,2saf60afsfdad9618af7114sfda7',
+          labels: 'label 1,label 2',
+          emailTemplatesId: email_template_id,
+        }
+        result = DoubleGdpSchema.execute(query, variables: variables,
+                                                context: {
+                                                  current_user: current_user,
+                                                  site_community: current_user.community,
+                                                }).as_json
+        expect(result['errors']).to be_nil
+        expect(result.dig('data', 'campaignCreate', 'campaign', 'name')).not_to be_nil
+        expect(result.dig('data', 'campaignCreate', 'campaign', 'labels', 0)).not_to be_nil
+        expect(result.dig('data', 'campaignCreate', 'campaign', 'labels', 0, 'shortDesc'))
+          .not_to be_nil
+      end
     end
 
-    it 'fails to create campaign without campaign type' do
-      variables = {
-        name: 'This is a Campaign',
-        message: 'Visiting',
-        batchTime: '17/06/2020 03:49',
-        userIdList: '23fsafsafa1147,2609adf61sfsdfs871fd147,2saf60afsfdad9618af7114sfda7',
-        labels: 'label 1,label 2',
-      }
+    context 'when status is scheduled' do
+      context 'when campaign type is email' do
+        include_examples 'creates campaign', 'scheduled', 'email' do
+          let!(:email_template) { create(:email_template, community_id: community.id) }
+          let!(:email_template_id) { email_template.id }
+        end
+      end
 
-      result = DoubleGdpSchema.execute(query, variables: variables,
-                                              context: {
-                                                current_user: current_user,
-                                                site_community: current_user.community,
-                                              }).as_json
-      expect(result.dig('data', 'campaignCreate', 'campaign', 'id')).to be_nil
+      context 'when campaign type is sms' do
+        include_examples 'creates campaign', 'scheduled', 'sms' do
+          let!(:email_template_id) { nil }
+        end
+      end
     end
 
-    it 'fails to create campaign with incomplete field' do
-      variables = {
-        name: 'This is a Campaign',
-        message: 'Visiting',
-        status: 'scheduled',
-        labels: 'label 1,label 2',
-      }
+    context 'when status is draft' do
+      context 'when campaign type is email' do
+        include_examples 'creates campaign', 'draft', 'email' do
+          let!(:email_template) { create(:email_template, community_id: community.id) }
+          let!(:email_template_id) { email_template.id }
+        end
+      end
 
-      result = DoubleGdpSchema.execute(query, variables: variables,
-                                              context: {
-                                                current_user: current_user,
-                                                site_community: current_user.community,
-                                              }).as_json
-      expect(result.dig('data', 'campaignCreate', 'campaign', 'id')).to be_nil
+      context 'when campaign type is sms' do
+        include_examples 'creates campaign', 'draft', 'sms' do
+          let!(:email_template_id) { nil }
+        end
+      end
+    end
+
+    context 'when campaign type is not present' do
+      it 'fails to create campaign' do
+        variables = {
+          name: 'This is a Campaign',
+          message: 'Visiting',
+          batchTime: '17/06/2020 03:49',
+          userIdList: '23fsafsafa1147,2609adf61sfsdfs871fd147,2saf60afsfdad9618af7114sfda7',
+          labels: 'label 1,label 2',
+        }
+
+        result = DoubleGdpSchema.execute(query, variables: variables,
+                                                context: {
+                                                  current_user: current_user,
+                                                  site_community: current_user.community,
+                                                }).as_json
+        expect(result.dig('data', 'campaignCreate', 'campaign', 'id')).to be_nil
+      end
+    end
+
+    context 'when all required field are not present' do
+      it 'fails to create campaign' do
+        variables = {
+          name: 'This is a Campaign',
+          message: 'Visiting',
+          status: 'scheduled',
+          labels: 'label 1,label 2',
+        }
+
+        result = DoubleGdpSchema.execute(query, variables: variables,
+                                                context: {
+                                                  current_user: current_user,
+                                                  site_community: current_user.community,
+                                                }).as_json
+        expect(result.dig('data', 'campaignCreate', 'campaign', 'id')).to be_nil
+      end
     end
   end
 
