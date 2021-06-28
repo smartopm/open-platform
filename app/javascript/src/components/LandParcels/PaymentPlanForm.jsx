@@ -78,9 +78,9 @@ export default function PaymentPlanForm({
       </TextField>
       <TextField
         margin="normal"
-        id="percentage"
-        label="Percentage"
-        aria-label="percentage"
+        id="percentage-of-total-valuation"
+        label="Percentage of total valuation"
+        aria-label="percentage-of-total-valuation"
         value={paymentPlanState.percentage}
         onChange={handleChange}
         name="percentage"
