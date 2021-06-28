@@ -10,7 +10,7 @@ import { EntryRequestCreate } from '../../../graphql/mutations'
 import { ReasonInputModal } from '../../../components/Dialog'
 import { Footer } from '../../../components/Footer'
 import DatePickerDialog, { ThemedTimePicker } from '../../../components/DatePickerDialog'
-import { businessReasons, defaultBusinessReasons } from '../../../utils/constants'
+import { defaultBusinessReasons } from '../../../utils/constants'
 import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider'
 
 export default function RequestForm({ path }) {
@@ -253,7 +253,7 @@ export default function RequestForm({ path }) {
                 !userData.reason &&
                 'Other Reason is Required'}
             >
-              {businessReasons.map(_reason => (
+              {Object.keys(defaultBusinessReasons).map(_reason => (
                 <MenuItem key={_reason} value={_reason}>
                   {t(`logbook:business_reasons.${_reason}`) || defaultBusinessReasons[String(_reason)]}
                 </MenuItem>
