@@ -43,14 +43,14 @@ describe('PaymentPlanForm Component', () => {
     const purchase_plan = container.queryByLabelText('purchase_plan');
     const payment_plan_owner = container.queryByLabelText('payment_plan_owner');
     const status = container.queryByLabelText('status');
-    const percentage = container.queryByLabelText('Percentage-of-premium-paid');
+    const percentage = container.queryByLabelText('percentage-of-total-valuation');
     const monthlyAmount = container.queryByLabelText('monthly-amount');
     const duration = container.queryByLabelText('duration-in-month');
 
     expect(purchase_plan.textContent).toContain('Purchase Plan');
     expect(payment_plan_owner.textContent).toContain('Choose Payment Plan User');
     expect(status.textContent).toContain('Status');
-    expect(percentage.textContent).toContain('Percentage of premium paid');
+    expect(percentage.textContent).toContain('Percentage of total valuation');
     expect(monthlyAmount.textContent).toContain('Monthly Amount');
     expect(duration.textContent).toContain('Duration(in months)');
     expect(container.queryByTestId('date-picker').textContent).toContain('Start Date');
