@@ -163,6 +163,7 @@ module Types::Queries::User
     raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') unless adm.present? && adm.admin?
 
     Users::User.allowed_users(context[:current_user])
+               .includes(:accounts)
                .search_lite(query)
                .order(name: :asc)
                .limit(limit)
