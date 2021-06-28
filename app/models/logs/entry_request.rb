@@ -12,7 +12,6 @@ module Logs
 
     before_validation :attach_community
     after_create :log_entry
-    after_create :create_entry_task, if: :check_reason?
     validates :name, presence: true
 
     default_scope { order(created_at: :asc) }
@@ -39,6 +38,7 @@ module Logs
       log_decision('denied', last_event_log.id)
     end
 
+    # Leaving this here for now in case it is needed
     def create_entry_task
       task_obj = {
         body: "New prospective client
@@ -119,10 +119,6 @@ module Logs
     # @return [String]
     def attach_community
       self[:community_id] = user&.community_id
-    end
-
-    def check_reason?
-      self[:reason] == 'Prospective Client'
     end
 
     def log_entry
