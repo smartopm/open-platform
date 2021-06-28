@@ -164,6 +164,7 @@ export default function LoginScreen() {
             enableSearch
             placeholder={t('common:form_placeholders.phone_number')}
             onChange={value => setPhoneNumber(value)}
+            preferredCountries={['hn', 'zm', 'ng', 'in', 'us']}
           />
         </div>
 
