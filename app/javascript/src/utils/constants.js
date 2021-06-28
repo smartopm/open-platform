@@ -9,6 +9,8 @@ export const filterUserByLoggedin = {
 
 // export const wordpressEndpoint =
 //   'https://public-api.wordpress.com/rest/v1.1/sites/doublegdp.wordpress.com';
+export const reasons = ['Visiting', 'Residing', 'Working', 'Passing through', 'Other'];
+
 export const businessReasons = ['client', 'prospective_client', 'working', 'sales', 'passing_through', 'other'];
 export const defaultBusinessReasons = {
   client: 'Client',
