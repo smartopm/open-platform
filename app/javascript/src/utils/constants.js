@@ -558,3 +558,18 @@ export const paymentFilterFields = {
       icon: 'https://cdn4.iconfinder.com/data/icons/logistics-and-transport-1/24/icn-place-stop-512.png',
     },
   };
+
+  export const communityVisitingHours = {
+    nkwashi: {
+      weekday: { min: 8, max: 16 },
+      saturday: { min: 8, max: 12 }
+    },
+    'ciudad morazán': {
+      weekday: { min: 6, max: 18 },
+      saturday: { min: 6, max: 18 }
+    },
+    doublegdp: {
+      weekday: { min: 8, max: 16 },
+      saturday: { min: 8, max: 12 }
+    },
+  };

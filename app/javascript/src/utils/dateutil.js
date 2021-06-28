@@ -51,14 +51,14 @@ function formatDate(datetime) {
 
 /**
  * 
- * @param {Date} date 
- * @description returns either true or false is the time is valid for Nkwashi entrace, this depends on which day of the week it is. 
+ * @param {object} {object} 
+ * @description returns either true or false is the time is valid based on permitted visiting hours, this depends on which day of the week it is. 
  * @returns {Boolean}
  */
-export function isTimeValid(date) {
+ export function isTimeValid({ date, visitingHours }) {
   const currentHour = date.getHours()
-  if (!isWeekend(date)) return (currentHour > 8 && currentHour < 16)
-  if (isSaturday(date)) return (currentHour > 8 && currentHour < 12)
+  if (!isWeekend(date)) return (currentHour > visitingHours.weekday.min && currentHour < visitingHours.weekday.max)
+  if (isSaturday(date)) return (currentHour > visitingHours.saturday.min && visitingHours.saturday.max)
   return true
 }
 
