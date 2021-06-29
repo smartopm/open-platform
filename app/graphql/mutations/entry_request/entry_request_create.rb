@@ -22,7 +22,10 @@ module Mutations
       def resolve(vals)
         entry_request = context[:current_user].entry_requests.create(vals)
 
-        return { entry_request: entry_request } if entry_request.persisted?
+        if entry_request.persisted?
+          context[:current_user].generate_events('visit_request', entry_request)
+          return { entry_request: entry_request }
+        end
 
         raise GraphQL::ExecutionError, entry_request.errors.full_messages
       end
