@@ -329,6 +329,12 @@ export const dateWidget = {
     ...InitialConfig.widgets.date,
     dateFormat: "YYYY.MM.DD",
     valueFormat: "YYYY-MM-DD",
+  },
+  datetime: {
+    ...InitialConfig.widgets.datetime,
+    timeFormat: "HH:mm",
+    dateFormat: "YYYY.MM.DD",
+    valueFormat: "YYYY-MM-DD HH:mm",
   }
 }
   export const invoiceQueryBuilderConfig = {

@@ -59,6 +59,12 @@ module ActionFlows
         'source' => '',
         'destination' => '',
       },
+      'VisitRequest' => {
+        'reason' => '',
+        'start_time' => '',
+        'end_time' => '',
+        'visitor' => '',
+      },
     }.freeze
 
     attr_accessor :data_set
