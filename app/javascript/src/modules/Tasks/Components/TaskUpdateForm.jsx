@@ -395,7 +395,7 @@ export default function TaskForm({
                   clearOnBlur
                   open={autoCompleteOpen}
                   onClose={() => setOpen(!autoCompleteOpen)}
-                  classes={{ option: classes.AutocompleteOption, listbox: classes.AutocompleteOption }}
+                  classes={{ option: classes.autocompleteOption, listbox: classes.autocompleteOption }}
                   loading={loading}
                   id={data.id}
                   options={users}
@@ -457,7 +457,7 @@ export default function TaskForm({
 }
 
 const useStyles = makeStyles(() => ({
-  AutocompleteOption: {
+  autocompleteOption: {
     padding: '0px'
   }
 }));

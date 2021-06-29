@@ -30,7 +30,7 @@ export default function UserSearch({ userData, update }) {
         getOptionLabel={option => option?.name}
         getOptionSelected={(option, value) => option.name === value.name}
         onChange={(_event, newValue) => update({ ...userData, userId: newValue.id })}
-        classes={{ option: classes.AutocompleteOption, listbox: classes.AutocompleteOption }}
+        classes={{ option: classes.autocompleteOption, listbox: classes.autocompleteOption }}
         renderOption={(option) => (
           <UserAutoResult user={option} />
         )}
@@ -51,7 +51,7 @@ export default function UserSearch({ userData, update }) {
 }
 
 const useStyles = makeStyles(() => ({
-  AutocompleteOption: {
+  autocompleteOption: {
     padding: '0px'
   }
 }));
