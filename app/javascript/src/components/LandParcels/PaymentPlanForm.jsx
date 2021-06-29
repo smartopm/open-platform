@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { MenuItem, TextField, InputAdornment, Typography } from '@material-ui/core';
 import DatePickerDialog from '../DatePickerDialog';
 import { paymentPlanStatus } from '../../utils/constants';
+import UserAutoResult from '../../shared/UserAutoResult';
 
 export default function PaymentPlanForm({
   landParcel,
@@ -51,7 +52,7 @@ export default function PaymentPlanForm({
       >
         {landParcel.accounts.map(account => (
           <MenuItem key={account.user.id} value={account.user.id}>
-            {account.fullName}
+            <UserAutoResult user={account.user} />
           </MenuItem>
         ))}
       </TextField>

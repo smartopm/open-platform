@@ -35,6 +35,7 @@ import { EmailTemplatesQuery } from '../../modules/Emails/graphql/email_queries'
 import QueryBuilder from '../../components/QueryBuilder';
 import { titleize, capitalize, sentencizeAction } from '../../utils/helpers';
 import { dateWidget, NotesCategories } from '../../utils/constants';
+import UserAutoResult from '../../shared/UserAutoResult';
 
 // const { primary, dew } = colors;
 const initialData = {
@@ -385,6 +386,7 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
                     onChange={handleChooseAssignees}
                     fullWidth
                     multiple
+                    MenuProps={{ MenuListProps: { disablePadding: true } }}
                     renderValue={selected => (
                       <div>
                         {selected.map((value, i) => (
@@ -394,8 +396,8 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
                     )}
                   >
                     {assigneesLiteData?.usersLite.map(user => (
-                      <MenuItem key={user.id} value={user}>
-                        {user.name}
+                      <MenuItem key={user.id} value={user} style={{padding: 0}}>
+                        <UserAutoResult user={user} />
                       </MenuItem>
                     ))}
                   </Select>

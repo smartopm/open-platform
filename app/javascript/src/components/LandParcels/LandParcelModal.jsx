@@ -25,6 +25,7 @@ import PaymentPlan from './PaymentPlan';
 import LandParcelEditCoordinate from './LandParcelEditCoordinate';
 import LandParcelMergeModal from './LandParcelMergeModal';
 import useDebounce from '../../utils/useDebounce';
+import UserAutoResult from '../../shared/UserAutoResult';
 
 const initialPlanState = {
   status: 0,
@@ -598,6 +599,10 @@ export default function LandParcelModal({
                   getOptionSelected={(option, value) => option.name === value.name}
                   value={ownershipFields[Number(index)]}
                   onChange={(_event, newValue) => handleOwnershipChange(newValue, index)}
+                  classes={{ option: classes.autocompleteOption, listbox: classes.autocompleteOption }}
+                  renderOption={(option) => (
+                    <UserAutoResult user={option} />
+                  )}
                   renderInput={params => (
                     <TextField
                       {...params}
@@ -785,6 +790,9 @@ const useStyles = makeStyles(() => ({
   },
   textField: {
     width: '450px'
+  },
+  autocompleteOption: {
+    padding: '0px'
   }
 }));
 
