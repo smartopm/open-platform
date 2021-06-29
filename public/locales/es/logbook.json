@@ -4,6 +4,14 @@
     "grant": "Autorizar",
     "grant_access": "Permitir Acceso"
   },
+  "business_reasons": {
+    "client": "Cliente",
+    "other": "Otro",
+    "passing_through": "Pase temporario",
+    "prospective_client": "Futuro cliente",
+    "sales": "Persona de ventas",
+    "working": "Trabajando"
+  },
   "entry_reason": [
     "Cliente",
     "Futuro cliente",
@@ -57,13 +65,5 @@
     "upcoming_visits": "Próximas visitas",
     "user_enrolled": "El usuario fue registrado con exito",
     "visiting_reason": "Motivo de la visita"
-  },
-  "business_reasons": {
-    "client": "Cliente",
-    "prospective_client": "Futuro cliente",
-    "working": "Trabajando",
-    "sales": "Persona de ventas",
-    "passing_through": "Pase temporario",
-    "other": "Otro"
   }
 }
