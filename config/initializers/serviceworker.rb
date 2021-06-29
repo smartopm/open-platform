@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 Rails.application.configure do
-  config.serviceworker.routes.draw do
+  # config.serviceworker.routes.draw do
     # map to assets implicitly
     # Examples
     #
@@ -21,5 +21,5 @@ Rails.application.configure do
     #
     # anonymous glob exposes `paths` variable for interpolation
     # match "/*/serviceworker.js" => "%{paths}/serviceworker.js"
-  end
+  # end
 end
