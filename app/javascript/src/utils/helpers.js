@@ -508,3 +508,14 @@ export function checkAllowedCommunityFeatures(features, module){
   // deny accessibility for user type
   return (userTypes.filter(t => t !== ctx.userType));
 }
+
+/**
+ * extract country abreviation from community locale
+ * @param {String} locale of format en-Uk
+ * @returns small letter country abreviation like uk, us, ng
+ */
+export function extractCountry(locale){
+  // if the locale is wrongly formatted then return the default locale
+  if(!locale || !locale.includes('-')) return 'zm'
+  return locale.split('-')[1].toLowerCase()
+}
