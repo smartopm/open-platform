@@ -562,14 +562,17 @@ export const paymentFilterFields = {
   export const communityVisitingHours = {
     nkwashi: {
       weekday: { min: 8, max: 16 },
-      saturday: { min: 8, max: 12 }
+      saturday: { min: 8, max: 12 },
+      sunday: { isNotOff: false },
     },
     'ciudad morazán': {
-      weekday: { min: 6, max: 18 },
-      saturday: { min: 6, max: 18 }
+      weekday: { min: 0, max: 24 },
+      saturday: { min: 0, max: 24 },
+      sunday: { isNotOff: true },
     },
     doublegdp: {
       weekday: { min: 8, max: 16 },
-      saturday: { min: 8, max: 12 }
+      saturday: { min: 8, max: 12 },
+      sunday: { isNotOff: false },
     },
   };

@@ -1,5 +1,5 @@
 /* eslint-disable */
-import { isWeekend, isSaturday } from 'date-fns'
+import { isWeekend, isSaturday, isSunday } from 'date-fns'
 
 const date = new Date()
 export const lastDayOfTheMonth = new Date(date.getFullYear(), date.getMonth(), 26)
@@ -58,7 +58,8 @@ function formatDate(datetime) {
  export function isTimeValid({ date, visitingHours }) {
   const currentHour = date.getHours()
   if (!isWeekend(date)) return (currentHour > visitingHours.weekday.min && currentHour < visitingHours.weekday.max)
-  if (isSaturday(date)) return (currentHour > visitingHours.saturday.min && visitingHours.saturday.max)
+  if (isSaturday(date)) return (currentHour > visitingHours.saturday.min && currentHour < visitingHours.saturday.max)
+  if (isSunday(date)) return (visitingHours.sunday.isNotOff)
   return true
 }
 
