@@ -365,7 +365,7 @@ export default function RequestUpdate({ id }) {
                 {
                   (formData.reason && formData.reason === 'other')
                   ? formData.otherReason
-                  : t(`logbook.business_reasons.${formData.reason}`)
+                  : t(`logbook:business_reasons.${formData.reason}`)
                 }
               </MenuItem>
             </TextField>

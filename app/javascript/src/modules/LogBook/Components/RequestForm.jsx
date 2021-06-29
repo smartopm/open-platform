@@ -55,7 +55,7 @@ export default function RequestForm({ path }) {
     }
 
     const isAnyInvalid = checkInValidRequiredFields(variables)
-    if(isAnyInvalid){
+    if(path.includes('entry_request') && isAnyInvalid){
       setInputValidationMsg({ isError: true })
       return
     }
