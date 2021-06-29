@@ -57,5 +57,13 @@
     "upcoming_visits": "Próximas visitas",
     "user_enrolled": "El usuario fue registrado con exito",
     "visiting_reason": "Motivo de la visita"
+  },
+  "business_reasons": {
+    "client": "Cliente",
+    "prospective_client": "Futuro cliente",
+    "working": "Trabajando",
+    "sales": "Persona de ventas",
+    "passing_through": "Pase temporario",
+    "other": "Otro"
   }
 }

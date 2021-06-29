@@ -11,6 +11,15 @@ export const filterUserByLoggedin = {
 //   'https://public-api.wordpress.com/rest/v1.1/sites/doublegdp.wordpress.com';
 export const reasons = ['Visiting', 'Residing', 'Working', 'Passing through', 'Other'];
 
+export const defaultBusinessReasons = {
+  client: 'Client',
+  prospective_client: 'Prospective Client',
+  sales: 'Sales',
+  working: 'Working',
+  passing_through: 'Passing Through',
+  other: 'Other',
+};
+
 export const requiredFields = ['userType', 'phoneNumber', 'name', 'email'];
 
 export const userType = {

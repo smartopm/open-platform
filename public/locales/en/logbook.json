@@ -50,5 +50,12 @@
     "deny": "Deny",
     "grant_access": "Grant Access"
   },
-  "entry_reason": ["Client", "Prospective Client", "Working", "Sales", "Passing through", "Other"]
+  "business_reasons": {
+    "client": "Client",
+    "prospective_client": "Prospective Client",
+    "working": "Working",
+    "sales": "Sales",
+    "passing_through": "Passing Through",
+    "other": "Other"
+  }
 }

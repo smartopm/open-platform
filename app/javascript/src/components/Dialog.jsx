@@ -62,7 +62,7 @@ export function ModalDialog({
   )
 }
 
-export function ReasonInputModal({ handleClose, open, children }) {
+export function ReasonInputModal({ handleAddReason, handleClose, open, children }) {
   return (
     <Dialog
       onClose={handleClose}
@@ -77,7 +77,7 @@ export function ReasonInputModal({ handleClose, open, children }) {
         {children}
       </DialogContent>
       <DialogActions>
-        <Button autoFocus onClick={handleClose} color="primary">
+        <Button autoFocus onClick={handleAddReason} color="primary">
           Save
         </Button>
         <Button className="btn-close" onClick={handleClose}>
@@ -371,7 +371,8 @@ ModalDialog.defaultProps = {
 ReasonInputModal.propTypes = {
   handleClose: PropTypes.func.isRequired,
   open: PropTypes.bool.isRequired,
-  children: PropTypes.node.isRequired
+  children: PropTypes.node.isRequired,
+  handleAddReason: PropTypes.func.isRequired,
 }
 
 MapEditorFullScreenDialog.propTypes = {
