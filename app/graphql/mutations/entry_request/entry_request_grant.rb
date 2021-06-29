@@ -29,7 +29,7 @@ module Mutations
       # TODO: Better auth here
       # Verifies if current user is present or not.
       def authorized?(_vals)
-        return true if context[:current_user]&.role?(%i[security_guard admin custodian])
+        return true if context[:current_user]&.role?(%i[security_guard admin])
 
         raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
       end

@@ -26,7 +26,7 @@ module Types::Queries::EventLog
   # rubocop:disable Metrics/ParameterLists
 
   def all_event_logs(subject:, ref_id:, ref_type:, offset: 0, limit: 100, name: nil)
-    authorized = context[:current_user]&.role?(%i[security_guard admin custodian])
+    authorized = context[:current_user]&.role?(%i[security_guard admin])
     raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') unless authorized
 
     query_all_logs(name, subject, ref_id, ref_type, limit, offset)

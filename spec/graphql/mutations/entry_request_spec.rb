@@ -71,40 +71,6 @@ RSpec.describe Mutations::EntryRequest do
     end
   end
 
-  describe 'granting an entry request' do
-    let!(:user) { create(:user_with_community) }
-    let!(:admin) { create(:admin_user, community_id: user.community_id) }
-    let!(:entry_request) { admin.entry_requests.create(name: 'Mark Percival', reason: 'Visiting') }
-
-    let(:query) do
-      <<~GQL
-        mutation UpdateEntryRequest($id: ID!) {
-          result: entryRequestGrant(id: $id) {
-            entryRequest {
-              id
-              name
-              grantedState
-            }
-          }
-        }
-      GQL
-    end
-
-    it 'returns a granted entry request' do
-      variables = {
-        id: entry_request.id,
-      }
-      result = DoubleGdpSchema.execute(query, variables: variables,
-                                              context: {
-                                                current_user: admin,
-                                                site_community: admin.community,
-                                              }).as_json
-      expect(result.dig('data', 'result', 'entryRequest', 'id')).not_to be_nil
-      expect(result.dig('data', 'result', 'entryRequest', 'grantedState')).to eql 1
-      expect(result['errors']).to be_nil
-    end
-  end
-
   describe 'denying an entry request' do
     let!(:user) { create(:user_with_community) }
     let!(:admin) { create(:admin_user, community_id: user.community_id) }
