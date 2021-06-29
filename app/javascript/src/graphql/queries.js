@@ -1022,7 +1022,12 @@ export const LandParcel = gql`
         fullName
         address1
         user {
+          name
           id
+          userType
+          extRefId
+          imageUrl
+          avatarUrl
         }
       }
     }
