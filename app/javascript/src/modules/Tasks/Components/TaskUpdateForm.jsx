@@ -38,6 +38,7 @@ import RemindMeLaterMenu from './RemindMeLaterMenu'
 import TaskUpdateList from './TaskUpdateList'
 import TaskComment from './TaskComment'
 import { dateToString, dateTimeToString } from '../../../components/DateContainer'
+import UserAutoResult from '../../../shared/UserAutoResult';
 
 const initialData = {
   user: '',
@@ -376,7 +377,7 @@ export default function TaskForm({
                     size="medium"
                     onDelete={() => assignUser(data.id, user.id)}
                   />
-            ))}
+                ))}
                 <Chip
                   key={data.id}
                   variant="outlined"
@@ -396,13 +397,16 @@ export default function TaskForm({
                   id={data.id}
                   options={users}
                   getOptionLabel={option => option.name}
-                  style={{ width: 300 }}
+                  style={{ width: 500 }}
                   onChange={(_evt, value) => {
                   if (!value) {
-                    return
-                  }
-                  assignUser(data.id, value.id)
-                }}
+                      return
+                    }
+                    assignUser(data.id, value.id)
+                  }}
+                  renderOption={(option) => (
+                    <UserAutoResult user={option} />
+                  )}
                   renderInput={params => (
                     <TextField {...params} placeholder={t('task.chip_add_assignee_placeholder')} />
                 )}

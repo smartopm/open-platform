@@ -188,7 +188,9 @@ TaskForm.defaultProps = {
 }
 
 TaskForm.propTypes = {
-  users: PropTypes.array.isRequired,
-  close: PropTypes.func,
-  refetch: PropTypes.func,
+  // eslint-disable-next-line react/forbid-prop-types
+  users: PropTypes.array,
+  close: PropTypes.func.isRequired,
+  refetch: PropTypes.func.isRequired,
+  assignUser: PropTypes.func.isRequired
 }
