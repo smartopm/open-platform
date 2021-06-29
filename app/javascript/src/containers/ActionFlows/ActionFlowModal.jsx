@@ -386,6 +386,7 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
                     onChange={handleChooseAssignees}
                     fullWidth
                     multiple
+                    MenuProps={{ MenuListProps: { disablePadding: true } }}
                     renderValue={selected => (
                       <div>
                         {selected.map((value, i) => (
@@ -395,7 +396,7 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
                     )}
                   >
                     {assigneesLiteData?.usersLite.map(user => (
-                      <MenuItem key={user.id} value={user}>
+                      <MenuItem key={user.id} value={user} style={{padding: 0}}>
                         <UserAutoResult user={user} />
                       </MenuItem>
                     ))}

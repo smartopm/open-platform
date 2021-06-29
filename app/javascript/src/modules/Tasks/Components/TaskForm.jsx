@@ -127,6 +127,7 @@ export default function TaskForm({ close, refetch, users, assignUser}) {
           name="assignees"
           fullWidth
           multiple
+          MenuProps={{ MenuListProps: { disablePadding: true } }}
           renderValue={selected => (
             <div>
               {selected.map((value, i) => (
@@ -137,7 +138,7 @@ export default function TaskForm({ close, refetch, users, assignUser}) {
             )}
         >
           {Boolean(users.length) && users.map((user) => (
-            <MenuItem key={user.id} value={user}>
+            <MenuItem key={user.id} value={user} style={{padding: 0}}>
               <UserAutoResult user={user} />
             </MenuItem>
               ))}

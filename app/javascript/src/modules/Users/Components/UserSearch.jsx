@@ -1,5 +1,6 @@
 import React from 'react';
 import Autocomplete from '@material-ui/lab/Autocomplete'
+import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import { useLazyQuery } from 'react-apollo';
 import PropTypes from 'prop-types';
@@ -10,6 +11,7 @@ import useDebounce from '../../../utils/useDebounce';
 // TODO: should be moved to shared directory
 export default function UserSearch({ userData, update }) {
   const debouncedValue = useDebounce(userData.user, 500);
+  const classes = useStyles();
   const [searchUser, { data }] = useLazyQuery(UsersLiteQuery, {
     variables: { query: debouncedValue, limit: 10 },
     errorPolicy: 'all',
@@ -28,6 +30,7 @@ export default function UserSearch({ userData, update }) {
         getOptionLabel={option => option?.name}
         getOptionSelected={(option, value) => option.name === value.name}
         onChange={(_event, newValue) => update({ ...userData, userId: newValue.id })}
+        classes={{ option: classes.AutocompleteOption, listbox: classes.AutocompleteOption }}
         renderOption={(option) => (
           <UserAutoResult user={option} />
         )}
@@ -46,6 +49,12 @@ export default function UserSearch({ userData, update }) {
     </>
   );
 }
+
+const useStyles = makeStyles(() => ({
+  AutocompleteOption: {
+    padding: '0px'
+  }
+}));
 
 UserSearch.propTypes = {
   update: PropTypes.func.isRequired,

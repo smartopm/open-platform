@@ -603,6 +603,7 @@ export default function LandParcelModal({
                   getOptionSelected={(option, value) => option.name === value.name}
                   value={ownershipFields[Number(index)]}
                   onChange={(_event, newValue) => handleOwnershipChange(newValue, index)}
+                  classes={{ option: classes.AutocompleteOption, listbox: classes.AutocompleteOption }}
                   renderOption={(option) => (
                     <UserAutoResult user={option} />
                   )}
@@ -793,6 +794,9 @@ const useStyles = makeStyles(() => ({
   },
   textField: {
     width: '450px'
+  },
+  AutocompleteOption: {
+    padding: '0px'
   }
 }));
 

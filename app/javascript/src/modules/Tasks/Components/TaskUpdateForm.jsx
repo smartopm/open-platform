@@ -17,6 +17,7 @@ import {
   Checkbox,
   Tooltip,
 } from '@material-ui/core'
+import { makeStyles } from '@material-ui/core/styles';
 import { useMutation } from 'react-apollo'
 import PropTypes from 'prop-types'
 import { useTranslation } from 'react-i18next';
@@ -56,6 +57,7 @@ export default function TaskForm({
   authState,
   taskId,
 }) {
+  const classes = useStyles();
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
   const [error, setErrorMessage] = useState('')
@@ -393,6 +395,7 @@ export default function TaskForm({
                   clearOnBlur
                   open={autoCompleteOpen}
                   onClose={() => setOpen(!autoCompleteOpen)}
+                  classes={{ option: classes.AutocompleteOption, listbox: classes.AutocompleteOption }}
                   loading={loading}
                   id={data.id}
                   options={users}
@@ -452,6 +455,12 @@ export default function TaskForm({
     </>
   )
 }
+
+const useStyles = makeStyles(() => ({
+  AutocompleteOption: {
+    padding: '0px'
+  }
+}));
 
 TaskForm.defaultProps = {
   users: [],
