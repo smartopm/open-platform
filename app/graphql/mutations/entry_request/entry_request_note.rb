@@ -11,13 +11,13 @@ module Mutations
 
       # rubocop:disable Metrics/AbcSize
       def resolve(vals)
-        entry_request = context[:site_community].entry_requests.find_by(id: vals[:id])
-        raise GraphQL::ExecutionError, I18n.t('errors.entry_request.not_found') unless entry_request
+        request = context[:site_community].entry_requests.find_by(id: vals[:id])
+        raise GraphQL::ExecutionError, I18n.t('errors.entry_request.not_found') unless request
 
         # Add an id to make it easy to identify observations
-        data = [{ id: SecureRandom.uuid, time: DateTime.now, note: vals[:note] }]
+        data = [{ id: SecureRandom.uuid, time: Time.zone.now, note: vals[:note] }]
 
-        event = context[:current_user].generate_events('observation_log', entry_request, notes: data)
+        event = context[:current_user].generate_events('observation_log', request, notes: data)
         raise GraphQL::ExecutionError, event.errors.full_messages if event.blank?
 
         { event: event }
