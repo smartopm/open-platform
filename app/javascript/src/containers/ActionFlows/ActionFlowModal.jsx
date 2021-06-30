@@ -1,6 +1,8 @@
 /* eslint-disable security/detect-object-injection */
 /* eslint-disable react/no-array-index-key */
 /* eslint-disable no-use-before-define */
+/* eslint-disable no-return-assign */
+/* eslint-disable no-sequences */
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useQuery, useLazyQuery } from 'react-apollo';
@@ -28,13 +30,13 @@ import {
   ActionFields,
   RuleFields,
   LabelsQuery,
-  UsersLiteQuery,
+  UsersLiteQuery
 } from '../../graphql/queries';
 // from a different module
-import { EmailTemplatesQuery } from '../../modules/Emails/graphql/email_queries'
+import { EmailTemplatesQuery } from '../../modules/Emails/graphql/email_queries';
 import QueryBuilder from '../../components/QueryBuilder';
 import { titleize, capitalize, sentencizeAction } from '../../utils/helpers';
-import { dateWidget, NotesCategories } from '../../utils/constants';
+import { dateWidget, NotesCategories, entryReason } from '../../utils/constants';
 import UserAutoResult from '../../shared/UserAutoResult';
 
 // const { primary, dew } = colors;
@@ -51,7 +53,7 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
   const [metaData, setMetaData] = useState({});
   const [selectedDate, setDate] = useState(new Date());
   const [assignees, setAssignees] = useState([]);
-  const theme = useTheme()
+  const theme = useTheme();
 
   const [loadLabelsLite, { data: labelsLiteData }] = useLazyQuery(LabelsQuery, {
     fetchPolicy: 'cache-and-network'
@@ -114,6 +116,13 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
           cancelled: 'Cancelled',
           '': 'Null'
         });
+      } else if (['visit_request_start_time', 'visit_request_end_time'].includes(field)) {
+        addQueryDateInput(field);
+      } else if (field === 'visit_request_reason') {
+        addQuerySelectMenu(
+          field,
+          entryReason.reduce((acc, curr) => ((acc[curr] = curr), acc), {})
+        );
       } else {
         ruleFieldsConfig[field] = {
           label: titleize(field),
@@ -141,6 +150,14 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
           return { value: key, title: val };
         })
       }
+    };
+  }
+
+  function addQueryDateInput(field) {
+    ruleFieldsConfig[field] = {
+      label: titleize(field),
+      type: 'datetime',
+      valueSources: ['value']
     };
   }
 
@@ -180,8 +197,6 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
       ...data,
       [name]: value
     });
-    // console.log(data, 'data');
-    // console.log(metaData, 'meta');
   }
 
   function handleDateChange(params) {
@@ -316,7 +331,7 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
               >
                 {actionData.data.actions.map((action, index) => (
                   // eslint-disable-next-line react/no-array-index-key
-                  <MenuItem key={index} value={action.toLowerCase().replace(/ /g, "_")}>
+                  <MenuItem key={index} value={action.toLowerCase().replace(/ /g, '_')}>
                     {sentencizeAction(action)}
                   </MenuItem>
                 ))}

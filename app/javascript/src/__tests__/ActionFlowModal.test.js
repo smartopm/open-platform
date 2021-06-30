@@ -105,7 +105,8 @@ describe('render eventType, actionTypes, actionFields, ruleFields', () => {
             'form_submit',
             'note_comment_update',
             'deposit_create',
-            'invoice_change'
+            'invoice_change',
+            'visit_request'
           ]
         }
       }
@@ -159,7 +160,9 @@ describe('render eventType, actionTypes, actionFields, ruleFields', () => {
             'note_assignees_emails',
             'note_url',
             'deposit_status',
-            'invoice_current_status'
+            'invoice_current_status',
+            'visit_request_start_time',
+            'visit_request_reason',
           ]
         }
       }
