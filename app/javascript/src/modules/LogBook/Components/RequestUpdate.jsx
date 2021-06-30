@@ -115,7 +115,6 @@ export default function RequestUpdate({ id }) {
         setLoading(false)
         setMessage(error.message)
       });
-    setIsObservationOpen(true)
   }
 
   function handleDenyRequest() {

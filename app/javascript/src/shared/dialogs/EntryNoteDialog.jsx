@@ -15,13 +15,13 @@ export default function EntryNoteDialog({ open, handleDialogStatus, observationH
     <>
       <Dialog fullWidth open={open} onClose={handleDialogStatus} aria-labelledby="entry-dialog-title">
         <DialogTitle id="entry-dialog-title" className={classes.title}>
-          {t('logbook.observation_title')}
+          {t('observations.observation_title')}
         </DialogTitle>
         <DialogContent>
           <DialogContentText />
           <TextField
             id="outlined-multiline-static"
-            label={t('logbook.add_your_observation')}
+            label={t('observations.add_your_observation')}
             rows={5}
             variant="outlined"
             value={observationHandler.value}
