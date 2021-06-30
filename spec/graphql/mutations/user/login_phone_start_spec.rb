@@ -9,7 +9,7 @@ RSpec.describe Mutations::User do
 
     let(:query) do
       <<~GQL
-        mutation loginPhoneStart($phoneNumber: String!) {
+        mutation loginPhoneStart($phoneNumber: String) {
           loginPhoneStart(phoneNumber: $phoneNumber) {
             user {
               id
@@ -19,6 +19,21 @@ RSpec.describe Mutations::User do
       GQL
     end
 
+    context 'when phone number is blank' do
+      it 'raises phone number cannot be blank error' do
+        variables = {
+          phoneNumber: '',
+        }
+        result = DoubleGdpSchema.execute(query, variables: variables,
+                                                context: {
+                                                  site_community: user.community,
+                                                }).as_json
+
+        expect(
+          result.dig('errors', 0, 'message'),
+        ).to eql 'Phone number cannot be blank'
+      end
+    end
     it 'checks the existence of the phone number' do
       variables = {
         phoneNumber: '123456789',
@@ -41,7 +56,10 @@ RSpec.describe Mutations::User do
                                                 site_community: user.community,
                                               }).as_json
       expect(result.dig('data', 'loginPhoneStart', 'user', 'id')).to be_nil
-      expect(result.dig('errors', 0, 'message')).to include 'User not found'
+      expect(
+        result.dig('errors', 0, 'message'),
+      ).to eql 'This account does not exist. Submit a request to create an account' \
+               ' or use the correct account information to log in'
     end
 
     it 'checks the existence of the phone number in a community' do
