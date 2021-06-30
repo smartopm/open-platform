@@ -150,14 +150,6 @@ export const invoiceStatus = {
   pending: 'Pending'
 };
 
-export const entryReason = [
-  'Client',
-  'Prospective Client',
-  'Working',
-  'Sales',
-  'Passing through',
-  'Other'
-];
 // This is for the showRoom
 export const infoSource = [
   'Family / Friend / Acquaintance',

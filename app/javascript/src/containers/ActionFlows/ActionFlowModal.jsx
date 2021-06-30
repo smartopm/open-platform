@@ -36,7 +36,7 @@ import {
 import { EmailTemplatesQuery } from '../../modules/Emails/graphql/email_queries';
 import QueryBuilder from '../../components/QueryBuilder';
 import { titleize, capitalize, sentencizeAction } from '../../utils/helpers';
-import { dateWidget, NotesCategories, entryReason } from '../../utils/constants';
+import { dateWidget, NotesCategories, defaultBusinessReasons } from '../../utils/constants';
 import UserAutoResult from '../../shared/UserAutoResult';
 
 // const { primary, dew } = colors;
@@ -119,10 +119,7 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
       } else if (['visit_request_start_time', 'visit_request_end_time'].includes(field)) {
         addQueryDateInput(field);
       } else if (field === 'visit_request_reason') {
-        addQuerySelectMenu(
-          field,
-          entryReason.reduce((acc, curr) => ((acc[curr] = curr), acc), {})
-        );
+        addQuerySelectMenu(field, defaultBusinessReasons);
       } else {
         ruleFieldsConfig[field] = {
           label: titleize(field),
@@ -411,7 +408,7 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
                     )}
                   >
                     {assigneesLiteData?.usersLite.map(user => (
-                      <MenuItem key={user.id} value={user} style={{padding: 0}}>
+                      <MenuItem key={user.id} value={user} style={{ padding: 0 }}>
                         <UserAutoResult user={user} />
                       </MenuItem>
                     ))}
