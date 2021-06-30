@@ -4,12 +4,14 @@ module Mutations
   module Login
     # Start a phone login
     class LoginPhoneStart < BaseMutation
-      argument :phone_number, String, required: true
+      argument :phone_number, String, required: false
 
       field :user, Types::UserType, null: true
       field :errors, String, null: false
 
       def resolve(vals)
+        raise_phone_number_blank_error(vals[:phone_number])
+
         user = context[:site_community].users.find_any_via_phone_number(vals[:phone_number])
         raise_user_not_found_error(user)
 
@@ -19,6 +21,17 @@ module Mutations
       end
 
       private
+
+      # Raises GraphQL execution error if phone number is blank
+      #
+      # @param phone_number [String]
+      #
+      # @return [GraphQL::ExecutionError]
+      def raise_phone_number_blank_error(phone_number)
+        return if phone_number.present?
+
+        raise GraphQL::ExecutionError, I18n.t('errors.phone_number.found_blank')
+      end
 
       # Raises GraphQL execution error if user does not exist.
       #

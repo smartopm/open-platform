@@ -91,7 +91,7 @@ export default function LoginScreen() {
           })
         })
         .catch(err => {
-          setError(err.message)
+          setError(err.message.replace(/GraphQL error:/, ""))
           setIsLoading(false)
         })
     }

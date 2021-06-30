@@ -306,7 +306,7 @@ export const EntryRequestDeny = gql`
 `
 
 export const loginPhone = gql`
-  mutation loginPhoneStart($phoneNumber: String!) {
+  mutation loginPhoneStart($phoneNumber: String) {
     loginPhoneStart(phoneNumber: $phoneNumber) {
       user {
         id
