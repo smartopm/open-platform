@@ -200,6 +200,7 @@ export default function RequestUpdate({ id }) {
       {/* Observation note goes here */}
       <EntryNoteDialog
         open={isObservationOpen}
+        handleDialogStatus={() => setIsObservationOpen(!isObservationOpen)}
         observationHandler={{
           value: observationNote,
           handleChange: value => setObservationNote(value)

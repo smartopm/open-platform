@@ -9,14 +9,14 @@ import PropTypes from 'prop-types'
 import useDialogStyles from './dialogStyles';
 import CenteredContent from '../../components/CenteredContent';
 
-export default function EntryNoteDialog({ open, observationHandler }) {
+export default function EntryNoteDialog({ open, handleDialogStatus, observationHandler }) {
   const classes = useDialogStyles();
 
   function handleNoteDialog() {}
 
   return (
     <>
-      <Dialog fullWidth open={open} onClose={handleNoteDialog} aria-labelledby="entry-dialog-title">
+      <Dialog fullWidth open={open} onClose={handleDialogStatus} aria-labelledby="entry-dialog-title">
         <DialogTitle id="entry-dialog-title" className={classes.title}>
           Observations
         </DialogTitle>
@@ -25,23 +25,26 @@ export default function EntryNoteDialog({ open, observationHandler }) {
           <TextField
             id="outlined-multiline-static"
             label="Add your observation here"
-            multiline
             rows={5}
             variant="outlined"
             value={observationHandler.value}
             onChange={event => observationHandler.handleChange(event.target.value)}
+            multiline
             fullWidth
           />
+          <br />
           <CenteredContent>
+            {/* should go to /scan */}
             <Button onClick={handleNoteDialog}>
               Skip & Scan Next Entry
             </Button>
-
+            {/* should go to /entry_request */}
             <Button onClick={handleNoteDialog}>
               Skip & Manually record Entry
             </Button>
+            {/* should save and go back to dashboard */}
             <Button onClick={handleNoteDialog} variant="outlined" color="primary">
-              Close & Go to dashboard
+              Save & Go to dashboard
             </Button>
             <br />
           </CenteredContent>
@@ -56,5 +59,6 @@ EntryNoteDialog.propTypes = {
   observationHandler: PropTypes.shape({
     value: PropTypes.string,
     handleChange: PropTypes.func
-  }).isRequired
+  }).isRequired,
+  handleDialogStatus: PropTypes.func.isRequired
 }
