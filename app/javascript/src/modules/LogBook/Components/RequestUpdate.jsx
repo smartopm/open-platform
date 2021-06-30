@@ -23,13 +23,8 @@ import { ModalDialog } from "../../../components/Dialog"
 import CaptureTemp from "../../../components/CaptureTemp";
 import { dateToString, dateTimeToString } from "../../../components/DateContainer";
 import { Context } from '../../../containers/Provider/AuthStateProvider';
+import EntryNoteDialog from '../../../shared/dialogs/EntryNoteDialog';
 
-/**
- *
- * @deprecated This should be looked into, as it might be a duplicate of another similar component
- * basically we should find a way to re-use
- * Refer: RequestForm, RequestConfirm
- */
 export default function RequestUpdate({ id }) {
     const { state } = useLocation()
     const { logs, } = useParams()
@@ -52,6 +47,8 @@ export default function RequestUpdate({ id }) {
   const [modalAction, setModalAction] = useState('')
   const [date, setDate] = useState(new Date());
   const [isClicked, setIsClicked] = useState(false)
+  const [isObservationOpen, setIsObservationOpen] = useState(false)
+  const [observationNote, setObservationNote] = useState("")
   const [formData, setFormData] = useState({
     name: '',
     phoneNumber: '',
@@ -105,7 +102,8 @@ export default function RequestUpdate({ id }) {
     handleUpdateRecord()
       .then(grantEntry({ variables: { id } }))
       .then(() => {
-        history.push('/entry_logs', { tab: 1 });
+        // history.push('/entry_logs', { tab: 1 });
+        setIsObservationOpen(true)
         setLoading(false)
       })
       .catch((error) => {
@@ -189,14 +187,24 @@ export default function RequestUpdate({ id }) {
         {modalAction === 'grant' && !checkTimeIsValid() && (
           <div>
             <p>
-              {t('logbook:logbook.today_is', { day: getWeekDay(date), time: dateTimeToString(date) })}
+              {t('logbook:logbook.today_is', {
+                day: getWeekDay(date),
+                time: dateTimeToString(date)
+              })}
             </p>
-            <p>
-              {t('logbook:logbook.beyond_time')}
-            </p>
+            <p>{t('logbook:logbook.beyond_time')}</p>
           </div>
         )}
       </ModalDialog>
+
+      {/* Observation note goes here */}
+      <EntryNoteDialog
+        open={isObservationOpen}
+        observationHandler={{
+          value: observationNote,
+          handleChange: value => setObservationNote(value)
+        }}
+      />
 
       <div className="container">
         <form>
@@ -211,8 +219,8 @@ export default function RequestUpdate({ id }) {
                 value={
                   formData.guard
                     ? `${dateToString(formData.createdAt)} at ${dateTimeToString(
-                      formData.createdAt
-                    )}`
+                        formData.createdAt
+                      )}`
                     : ''
                 }
                 disabled
@@ -244,7 +252,7 @@ export default function RequestUpdate({ id }) {
               value={formData.name}
               onChange={handleInputChange}
               name="name"
-              inputProps={{ "data-testid":"entry_user_name" }}
+              inputProps={{ 'data-testid': 'entry_user_name' }}
               required
             />
           </div>
@@ -259,7 +267,7 @@ export default function RequestUpdate({ id }) {
               value={formData.nrc || ''}
               onChange={handleInputChange}
               name="nrc"
-              inputProps={{ "data-testid":"entry_user_nrc" }}
+              inputProps={{ 'data-testid': 'entry_user_nrc' }}
               required
             />
           </div>
@@ -273,7 +281,7 @@ export default function RequestUpdate({ id }) {
               value={formData.phoneNumber || ''}
               onChange={handleInputChange}
               name="phoneNumber"
-              inputProps={{ "data-testid":"entry_user_phone" }}
+              inputProps={{ 'data-testid': 'entry_user_phone' }}
               required={previousRoute === 'enroll'}
             />
           </div>
@@ -347,7 +355,7 @@ export default function RequestUpdate({ id }) {
               onChange={handleInputChange}
               value={formData.vehiclePlate || ''}
               name="vehiclePlate"
-              inputProps={{ "data-testid":"entry_user_vehicle" }}
+              inputProps={{ 'data-testid': 'entry_user_vehicle' }}
             />
           </div>
           <div className="form-group">
@@ -359,14 +367,12 @@ export default function RequestUpdate({ id }) {
               value={formData.reason || ''}
               onChange={handleInputChange}
               className={`${css(styles.selectInput)}`}
-              inputProps={{ "data-testid":"entry_user_visit" }}
+              inputProps={{ 'data-testid': 'entry_user_visit' }}
             >
               <MenuItem value={formData.reason}>
-                {
-                  (formData.reason && formData.reason === 'other')
+                {formData.reason && formData.reason === 'other'
                   ? formData.otherReason
-                  : t(`logbook:business_reasons.${formData.reason}`)
-                }
+                  : t(`logbook:business_reasons.${formData.reason}`)}
               </MenuItem>
             </TextField>
           </div>
@@ -375,11 +381,7 @@ export default function RequestUpdate({ id }) {
           {/* {Temproal component for temperature} */}
 
           {previousRoute !== 'enroll' && (
-            <CaptureTemp
-              refId={id}
-              refName={formData.name}
-              refType="Logs::EntryRequest"
-            />
+            <CaptureTemp refId={id} refName={formData.name} refType="Logs::EntryRequest" />
           )}
 
           <br />
@@ -393,7 +395,9 @@ export default function RequestUpdate({ id }) {
                   className={css(styles.grantButton)}
                   disabled={isLoading}
                 >
-                  {isLoading ? `${t('logbook:logbook.enrolling')} ...` : ` ${t('logbook:logbook.enroll')}` }
+                  {isLoading
+                    ? `${t('logbook:logbook.enrolling')} ...`
+                    : ` ${t('logbook:logbook.enroll')}`}
                 </Button>
               </div>
               <div className="row justify-content-center align-items-center">
@@ -411,12 +415,14 @@ export default function RequestUpdate({ id }) {
               <div className="col">
                 <Button
                   variant="contained"
-                  onClick={(event) => handleModal(event, 'grant')}
+                  onClick={event => handleModal(event, 'grant')}
                   className={css(styles.grantButton)}
                   disabled={isLoading}
                   data-testid="entry_user_grant"
                 >
-                  {isLoading  && modalAction === 'grant' ? `${t('logbook:logbook.granting')} ...` : `${t('logbook:logbook.grant')}`}
+                  {isLoading && modalAction === 'grant'
+                    ? `${t('logbook:logbook.granting')} ...`
+                    : `${t('logbook:logbook.grant')}`}
                 </Button>
               </div>
               <div className="col">
@@ -446,7 +452,7 @@ export default function RequestUpdate({ id }) {
         </form>
       </div>
     </>
-  )
+  );
 }
 
 const styles = StyleSheet.create({

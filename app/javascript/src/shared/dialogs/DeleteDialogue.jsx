@@ -51,7 +51,7 @@ export default function DeleteDialogueBox({
         </DialogContent>
         <Divider />
         <DialogActions>
-          {loading ? (<Spinner />) : ( 
+          {loading ? (<Spinner />) : (
             <>
               <Button onClick={handleClose} color="secondary" variant='outlined'>
                 {t('form_actions.cancel')}
@@ -92,7 +92,7 @@ const useStyles = makeStyles({
     borderBottom: '1px #f1a3a2 solid'
   },
   button: {
-    backgroundColor: '#dc402b', 
+    backgroundColor: '#dc402b',
     color: 'white'
   }
 });
