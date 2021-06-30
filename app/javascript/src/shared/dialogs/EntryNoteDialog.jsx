@@ -1,5 +1,4 @@
 import React from 'react';
-import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -7,12 +6,9 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import PropTypes from 'prop-types'
 import useDialogStyles from './dialogStyles';
-import CenteredContent from '../../components/CenteredContent';
 
-export default function EntryNoteDialog({ open, handleDialogStatus, observationHandler }) {
+export default function EntryNoteDialog({ open, handleDialogStatus, observationHandler, children }) {
   const classes = useDialogStyles();
-
-  function handleNoteDialog() {}
 
   return (
     <>
@@ -33,21 +29,7 @@ export default function EntryNoteDialog({ open, handleDialogStatus, observationH
             fullWidth
           />
           <br />
-          <CenteredContent>
-            {/* should go to /scan */}
-            <Button onClick={handleNoteDialog}>
-              Skip & Scan Next Entry
-            </Button>
-            {/* should go to /entry_request */}
-            <Button onClick={handleNoteDialog}>
-              Skip & Manually record Entry
-            </Button>
-            {/* should save and go back to dashboard */}
-            <Button onClick={handleNoteDialog} variant="outlined" color="primary">
-              Save & Go to dashboard
-            </Button>
-            <br />
-          </CenteredContent>
+          {children}
         </DialogContent>
       </Dialog>
     </>
@@ -60,5 +42,6 @@ EntryNoteDialog.propTypes = {
     value: PropTypes.string,
     handleChange: PropTypes.func
   }).isRequired,
-  handleDialogStatus: PropTypes.func.isRequired
+  handleDialogStatus: PropTypes.func.isRequired,
+  children: PropTypes.node.isRequired,
 }

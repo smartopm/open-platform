@@ -57,5 +57,11 @@
     "sales": "Sales",
     "passing_through": "Passing Through",
     "other": "Other"
+  },
+  "observations": {
+    "close_go_dashboard": "Close & Go Dashboard",
+    "skip_record_manual_entry": "{{action}} & Manually record Entry",
+    "skip_scan_next_entry": "{{action}} & Scan Next Entry",
+    "created_observation": "Observation note successfully added"
   }
 }

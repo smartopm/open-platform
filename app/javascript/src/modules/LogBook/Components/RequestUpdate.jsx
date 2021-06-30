@@ -16,7 +16,7 @@ import {
   CreateUserMutation,
   UpdateLogMutation
 } from '../../../graphql/mutations';
-import Loading from "../../../shared/Loading";
+import Loading, { Spinner } from "../../../shared/Loading";
 import { isTimeValid, getWeekDay } from '../../../utils/dateutil';
 import { userState, userType, communityVisitingHours } from '../../../utils/constants'
 import { ModalDialog } from "../../../components/Dialog"
@@ -24,6 +24,9 @@ import CaptureTemp from "../../../components/CaptureTemp";
 import { dateToString, dateTimeToString } from "../../../components/DateContainer";
 import { Context } from '../../../containers/Provider/AuthStateProvider';
 import EntryNoteDialog from '../../../shared/dialogs/EntryNoteDialog';
+import CenteredContent from '../../../components/CenteredContent';
+import AddObservationNoteMutation from '../graphql/logbook_mutations';
+import MessageAlert from '../../../components/MessageAlert'
 
 export default function RequestUpdate({ id }) {
     const { state } = useLocation()
@@ -41,6 +44,7 @@ export default function RequestUpdate({ id }) {
   const [denyEntry] = useMutation(EntryRequestDeny);
   const [createUser] = useMutation(CreateUserMutation)
   const [updateLog] = useMutation(UpdateLogMutation)
+  const [addObservationNote] = useMutation(AddObservationNoteMutation)
   const [isLoading, setLoading] = useState(false)
   const [message, setMessage] = useState('')
   const [isModalOpen, setModal] = useState(false)
@@ -49,6 +53,7 @@ export default function RequestUpdate({ id }) {
   const [isClicked, setIsClicked] = useState(false)
   const [isObservationOpen, setIsObservationOpen] = useState(false)
   const [observationNote, setObservationNote] = useState("")
+  const [observationDetails, setObservationDetails] = useState({ isError: false, message: null, loading: false })
   const [formData, setFormData] = useState({
     name: '',
     phoneNumber: '',
@@ -99,10 +104,10 @@ export default function RequestUpdate({ id }) {
 
   function handleGrantRequest() {
     setLoading(true)
+    // TODO: Find out why are updating before granting access
     handleUpdateRecord()
       .then(grantEntry({ variables: { id } }))
       .then(() => {
-        // history.push('/entry_logs', { tab: 1 });
         setIsObservationOpen(true)
         setLoading(false)
       })
@@ -110,6 +115,7 @@ export default function RequestUpdate({ id }) {
         setLoading(false)
         setMessage(error.message)
       });
+    setIsObservationOpen(true)
   }
 
   function handleDenyRequest() {
@@ -168,6 +174,21 @@ export default function RequestUpdate({ id }) {
     }
   }
 
+  function handleSaveObservation(to){
+    // we are skipping the observation notes
+    if(!observationNote) {
+      history.push(to)
+    }
+    setObservationDetails({ ...observationDetails, loading: true })
+    addObservationNote({ variables: { id, note: observationNote} })
+      .then(() => {
+        setObservationDetails({ ...observationDetails, loading: false, isError: false, message: t('logbook:observation.created_observation') })
+        history.push(to)
+      })
+      .catch(error => {
+        setObservationDetails({ ...observationDetails, loading: false, isError: true, message: error.message })
+      })
+  }
   function checkTimeIsValid(){
     const communityName = authState.user.community.name
     const visitingHours = communityVisitingHours[String(communityName.toLowerCase())];
@@ -175,8 +196,15 @@ export default function RequestUpdate({ id }) {
     return isTimeValid({ date, visitingHours })
   }
 
+  const observationAction = observationNote ? 'Save' : 'Skip'
   return (
     <>
+      <MessageAlert
+        type={!observationDetails.isError ? 'success' : 'error'}
+        message={observationDetails.message}
+        open={!!observationDetails.message}
+        handleClose={() => setObservationDetails({ ...observationDetails, message: null })}
+      />
       <ModalDialog
         handleClose={handleModal}
         handleConfirm={handleGrantRequest}
@@ -205,7 +233,28 @@ export default function RequestUpdate({ id }) {
           value: observationNote,
           handleChange: value => setObservationNote(value)
         }}
-      />
+      >
+        {
+          observationDetails.loading
+          ? <Spinner />
+          : (
+            <CenteredContent>
+              <Button onClick={() => handleSaveObservation('/scan')} variant="outlined" className={css(styles.observationButton)}>
+                {t('logbook:observations.skip_scan_next_entry', { action: observationAction })}
+              </Button>
+              <br />
+              <Button onClick={() => handleSaveObservation('/entry_request')} variant="outlined" className={css(styles.observationButton)}>
+                {t('logbook:observations.skip_record_manual_entry', { action: observationAction })}
+              </Button>
+              <br />
+              <Button onClick={() => history.push('/')} variant="contained" color="primary" className={css(styles.observationButton)}>
+                {t('logbook:observations.close_go_dashboard')}
+              </Button>
+              <br />
+            </CenteredContent>
+          )
+        }
+      </EntryNoteDialog>
 
       <div className="container">
         <form>
@@ -473,5 +522,8 @@ const styles = StyleSheet.create({
     color: 'rgb(230, 63, 69)',
     textTransform: 'unset',
     textDecoration: 'none'
+  },
+  observationButton: {
+    margin: 5
   }
 });
