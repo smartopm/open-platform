@@ -15,7 +15,7 @@ module Mutations
         raise GraphQL::ExecutionError, I18n.t('errors.entry_request.not_found') unless entry_request
 
         # Add an id to make it easy to identify observations
-        data = { id: SecureRandom.uuid, time: DateTime.now, note: vals[:note] }
+        data = [{ id: SecureRandom.uuid, time: DateTime.now, note: vals[:note] }]
 
         event = context[:current_user].generate_events('observation_log', entry_request, data)
         raise GraphQL::ExecutionError, event.errors.full_messages if event.blank?

@@ -149,6 +149,10 @@ module Logs
       "#{acting_user_name} #{data['action']} the form"
     end
 
+    def observation_log_to_sentence
+      "#{acting_user_name} added an observation log to an entry request"
+    end
+
     def user_enrolled_to_sentence
       new_user = Users::User.order('created_at').last
       "#{new_user[:name]} was enrolled"
