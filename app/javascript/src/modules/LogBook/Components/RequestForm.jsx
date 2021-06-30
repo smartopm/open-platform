@@ -61,7 +61,7 @@ export default function RequestForm({ path }) {
     }
 
     setInputValidationMsg({ isSubmitting: true })
-    
+
     delete variables.business
     createEntryRequest({ variables }).then(({ data }) => {
       // Send them to the wait page if it is an entry request
@@ -113,7 +113,7 @@ export default function RequestForm({ path }) {
             onChange={handleChange}
             placeholder="Other"
             error={inputValidationMsg.isError &&
-              requiredFields.includes('reason') && 
+              requiredFields.includes('reason') &&
               userData.business === 'other' &&
               !userData.reason}
             helperText={inputValidationMsg.isError &&

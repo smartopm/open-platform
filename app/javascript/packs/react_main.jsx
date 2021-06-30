@@ -31,9 +31,6 @@ import MobileMoney from '../src/components/MobileMoney';
 import GuardHome from '../src/modules/Dashboard/Components/GuardHome';
 import EntryRequest from '../src/modules/LogBook/Components/EntryRequest';
 import RequestUpdate from '../src/modules/LogBook/Components/RequestUpdatePage';
-import RequestConfirm from '../src/modules/LogBook/Components/RequestConfirm';
-import WaitScreen from '../src/modules/LogBook/Components/WaitingScreen';
-import RequestApproval from '../src/modules/LogBook/Components/RequestApproval';
 import ErrorPage from '../src/components/Error';
 import MainAuthCallback from '../src/components/AuthScreens/MainAuthCallback';
 import { AUTH_TOKEN_KEY } from '../src/utils/apollo';
@@ -47,7 +44,6 @@ import CampaignCreate from '../src/containers/Campaigns/CampaignCreate';
 import Scan from '../src/containers/Scan';
 // import WelcomePage from '../src/components/AuthScreens/WelcomePage';
 import CampaignUpdate from '../src/containers/Campaigns/CampaignUpdate';
-import ThemeProvider from '../Themes/Nkwashi/ThemeProvider';
 import DiscussonPage from '../src/containers/Discussions/DiscussionPage';
 import GeoMap from '../src/containers/GeoMap';
 import Notifications from '../src/modules/Preferences/Components/Notifications';
@@ -253,7 +249,6 @@ const App = () => {
                               <Route path="/myplot" component={GeoMap} />
                               <Route path="/mobile_money" component={MobileMoney} />
                               <Route path="/settings" component={Notifications} />
-                              {/* <Route path="/otp_sent" component={OTPFeedbackScreen} /> */}
                               <Route path="/myaccount/:id" component={UserShow} />
                               {/* requests */}
                               {/* Guard home is somehow kinda special leaving it now */}
@@ -261,11 +256,6 @@ const App = () => {
                               {/* Guard home ends */}
                               <Route path="/entry_request" component={EntryRequest} />
                               <Route path="/request/:id/:logs?" component={RequestUpdate} />
-                              <Route path="/request_hos/:id/" component={RequestConfirm} />
-                              <Route path="/request_wait/:id" component={WaitScreen} />
-                              <Route path="/request_status/:id/edit" component={RequestApproval} />
-                              <Route path="/request_status/:id" component={RequestApproval} />
-                              {/* activity */}
                               <Route path="/feedback" component={Feedback} />
                               <Route path="/feedback_success" component={FeedbackSuccess} />
                               <Route path="/campaign-create" component={CampaignCreate} />
