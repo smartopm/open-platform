@@ -19,7 +19,7 @@ import CenteredContent from '../../../components/CenteredContent';
 import UserNotes from './UserNote';
 import UserInfo from './UserInfo';
 import UserDetail from './UserProfileDetail';
-import UserStyledTabs from './UserTabs';
+// import UserStyledTabs from './UserTabs';
 import { TabPanel } from '../../../components/Tabs';
 import UserFilledForms from './UserFilledForms';
 import UserMessages from '../../../components/Messaging/UserMessages'
@@ -83,24 +83,24 @@ export default function UserInformation({
 
   const userType = authState.user.userType.toLowerCase();
 
-  const handleChange = (_event, newValue) => {
-    router.push(`/user/${userId}?tab=${newValue}`);
-    setValue(newValue);
-    const pages = {
-      Contacts: 'Contacts',
-      Notes: 'Notes',
-      Communication: 'Communication',
-      Plots: 'Plots',
-      Payments: 'Payments',
-      Forms: 'Forms',
-      CustomerJourney: 'Customer Journey'
-    };
-    if (location.pathname.includes('/user')) {
-      const [, rootURL, , userPage] = location.pathname.split('/');
-      const pageHit = `/${rootURL}/${userPage}/${propAccessor(pages, newValue)}`;
-      ReactGA.pageview(pageHit);
-    }
-  };
+  // const handleChange = (_event, newValue) => {
+  //   router.push(`/user/${userId}?tab=${newValue}`);
+  //   setValue(newValue);
+  //   const pages = {
+  //     Contacts: 'Contacts',
+  //     Notes: 'Notes',
+  //     Communication: 'Communication',
+  //     Plots: 'Plots',
+  //     Payments: 'Payments',
+  //     Forms: 'Forms',
+  //     CustomerJourney: 'Customer Journey'
+  //   };
+  //   if (location.pathname.includes('/user')) {
+  //     const [, rootURL, , userPage] = location.pathname.split('/');
+  //     const pageHit = `/${rootURL}/${userPage}/${propAccessor(pages, newValue)}`;
+  //     ReactGA.pageview(pageHit);
+  //   }
+  // };
 
   function handleMergeDialog() {
     setDialogOpen(false);
@@ -128,18 +128,16 @@ export default function UserInformation({
           </DialogContent>
         </Dialog>
 
-        <Grid container direction="row" justify="space-between">
-          <Grid item xs={3}>
+        <Grid container>
+          <Grid item xs={6} style={{textAlign: 'right'}}>
             <Avatar
               user={data.user}
-              // eslint-disable-next-line react/style-prop-object
-              style="medium"
+                // eslint-disable-next-line react/style-prop-object
+              style="big"
             />
           </Grid>
+
           <Grid item xs={6}>
-            <UserDetail data={data} userType={userType} />
-          </Grid>
-          <Grid item xs={2}>
             <>
               <IconButton
                 aria-label="more"
@@ -166,6 +164,12 @@ export default function UserInformation({
           </Grid>
         </Grid>
 
+        <Grid container>
+          <Grid item xs={11} style={{textAlign: 'center', marginTop: '30px'}}>
+            <UserDetail data={data} userType={userType} />
+          </Grid>
+        </Grid>
+
         <br />
         <FeatureCheck features={authState.user.community.features} name="Time Card">
           {authState.user.userType === 'custodian' &&
@@ -173,7 +177,7 @@ export default function UserInformation({
               <ShiftButtons userId={userId} />
           )}
         </FeatureCheck>
-        <UserStyledTabs tabValue={tabValue} handleChange={handleChange} user={authState.user} />
+        {/* <UserStyledTabs tabValue={tabValue} handleChange={handleChange} user={authState.user} /> */}
 
         <TabPanel value={tabValue} index="Contacts">
           {/* userinfo */}
