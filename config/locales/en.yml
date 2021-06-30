@@ -261,6 +261,8 @@ en:
       not_found: Template not found
     event_log:
       not_found: Event log not found
+    entry_request:
+      not_found: Entry request not found
     form:
       not_found: Form not found
     form_user:
