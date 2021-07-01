@@ -1,13 +1,14 @@
-/* eslint-disable react/prop-types */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 /* eslint-disable no-nested-ternary */
 /* eslint-disable no-use-before-define */
 import React, { useState, useEffect, useContext } from 'react';
 import { useQuery, useMutation } from 'react-apollo';
-import { TextField, MenuItem, Button } from '@material-ui/core';
+import { TextField, MenuItem, Button , Grid } from '@material-ui/core';
 import { StyleSheet, css } from 'aphrodite';
 import { useHistory, useLocation, useParams } from 'react-router';
 import { useTranslation } from 'react-i18next';
+import PropTypes from 'prop-types'
+import CallIcon from '@material-ui/icons/Call';
 import { EntryRequestQuery } from '../../../graphql/queries';
 import {
   EntryRequestUpdate,
@@ -16,20 +17,19 @@ import {
   CreateUserMutation,
   UpdateLogMutation
 } from '../../../graphql/mutations';
-import Loading from "../../../shared/Loading";
+import Loading, { Spinner } from "../../../shared/Loading";
 import { isTimeValid, getWeekDay } from '../../../utils/dateutil';
 import { userState, userType, communityVisitingHours } from '../../../utils/constants'
 import { ModalDialog } from "../../../components/Dialog"
 import CaptureTemp from "../../../components/CaptureTemp";
 import { dateToString, dateTimeToString } from "../../../components/DateContainer";
 import { Context } from '../../../containers/Provider/AuthStateProvider';
+import EntryNoteDialog from '../../../shared/dialogs/EntryNoteDialog';
+import CenteredContent from '../../../components/CenteredContent';
+import AddObservationNoteMutation from '../graphql/logbook_mutations';
+import MessageAlert from '../../../components/MessageAlert'
 
-/**
- *
- * @deprecated This should be looked into, as it might be a duplicate of another similar component
- * basically we should find a way to re-use
- * Refer: RequestForm, RequestConfirm
- */
+
 export default function RequestUpdate({ id }) {
     const { state } = useLocation()
     const { logs, } = useParams()
@@ -46,12 +46,16 @@ export default function RequestUpdate({ id }) {
   const [denyEntry] = useMutation(EntryRequestDeny);
   const [createUser] = useMutation(CreateUserMutation)
   const [updateLog] = useMutation(UpdateLogMutation)
+  const [addObservationNote] = useMutation(AddObservationNoteMutation)
   const [isLoading, setLoading] = useState(false)
   const [message, setMessage] = useState('')
   const [isModalOpen, setModal] = useState(false)
   const [modalAction, setModalAction] = useState('')
   const [date, setDate] = useState(new Date());
   const [isClicked, setIsClicked] = useState(false)
+  const [isObservationOpen, setIsObservationOpen] = useState(false)
+  const [observationNote, setObservationNote] = useState("")
+  const [observationDetails, setDetails] = useState({ isError: false, message: '', loading: false })
   const [formData, setFormData] = useState({
     name: '',
     phoneNumber: '',
@@ -102,15 +106,17 @@ export default function RequestUpdate({ id }) {
 
   function handleGrantRequest() {
     setLoading(true)
+    // TODO: Find out why are updating before granting access
     handleUpdateRecord()
       .then(grantEntry({ variables: { id } }))
       .then(() => {
-        history.push('/entry_logs', { tab: 1 });
+        setDetails({ ...observationDetails, message: t('logbook:logbook.success_message', { action: t('logbook:logbook.granted') }) })
+        setIsObservationOpen(true)
         setLoading(false)
       })
       .catch((error) => {
         setLoading(false)
-        setMessage(error.message)
+        setDetails({ ...observationDetails, message: error.message })
       });
   }
 
@@ -120,8 +126,13 @@ export default function RequestUpdate({ id }) {
     handleUpdateRecord()
       .then(denyEntry({ variables: { id } }))
       .then(() => {
-        history.push('/entry_logs', { tab: 1 });
+        setDetails({ ...observationDetails, message: t('logbook:logbook.success_message', { action: t('logbook:logbook.denied')}) })
+        setIsObservationOpen(true)
         setLoading(false)
+      })
+      .catch((error) => {
+        setLoading(false)
+        setDetails({ ...observationDetails, message: error.message })
       });
   }
 
@@ -170,6 +181,21 @@ export default function RequestUpdate({ id }) {
     }
   }
 
+  function handleSaveObservation(to){
+    // we are skipping the observation notes
+    if(!observationNote) {
+      history.push(to)
+    }
+    setDetails({ ...observationDetails, loading: true })
+    addObservationNote({ variables: { id, note: observationNote, refType: 'Logs::EntryRequest'} })
+      .then(() => {
+        setDetails({ ...observationDetails, loading: false, isError: false, message: t('logbook:observation.created_observation') })
+        history.push(to)
+      })
+      .catch(error => {
+        setDetails({ ...observationDetails, loading: false, isError: true, message: error.message })
+      })
+  }
   function checkTimeIsValid(){
     const communityName = authState.user.community.name
     const visitingHours = communityVisitingHours[String(communityName.toLowerCase())];
@@ -177,8 +203,15 @@ export default function RequestUpdate({ id }) {
     return isTimeValid({ date, visitingHours })
   }
 
+  const observationAction = observationNote ? 'Save' : 'Skip'
   return (
     <>
+      <MessageAlert
+        type={!observationDetails.isError ? 'success' : 'error'}
+        message={observationDetails.message}
+        open={!!observationDetails.message}
+        handleClose={() => setDetails({ ...observationDetails, message: '' })}
+      />
       <ModalDialog
         handleClose={handleModal}
         handleConfirm={handleGrantRequest}
@@ -189,14 +222,59 @@ export default function RequestUpdate({ id }) {
         {modalAction === 'grant' && !checkTimeIsValid() && (
           <div>
             <p>
-              {t('logbook:logbook.today_is', { day: getWeekDay(date), time: dateTimeToString(date) })}
+              {t('logbook:logbook.today_is', {
+                day: getWeekDay(date),
+                time: dateTimeToString(date)
+              })}
             </p>
-            <p>
-              {t('logbook:logbook.beyond_time')}
-            </p>
+            <p>{t('logbook:logbook.beyond_time')}</p>
           </div>
         )}
       </ModalDialog>
+
+      {/* Observation note goes here */}
+      <EntryNoteDialog
+        open={isObservationOpen}
+        handleDialogStatus={() => setIsObservationOpen(!isObservationOpen)}
+        observationHandler={{
+          value: observationNote,
+          handleChange: value => setObservationNote(value)
+        }}
+      >
+        {observationDetails.loading ? (
+          <Spinner />
+        ) : (
+          <CenteredContent>
+            <Button
+              onClick={() => handleSaveObservation('/scan')}
+              variant="outlined"
+              className={css(styles.observationButton)}
+              color="primary"
+              fullWidth
+            >
+              {t('logbook:observations.skip_scan_next_entry', { action: observationAction })}
+            </Button>
+            <Button
+              onClick={() => handleSaveObservation('/entry_request')}
+              variant="outlined"
+              className={css(styles.observationButton)}
+              color="primary"
+              fullWidth
+            >
+              {t('logbook:observations.skip_record_manual_entry', { action: observationAction })}
+            </Button>
+            <Button
+              onClick={() => history.push('/')}
+              variant="contained"
+              className={css(styles.observationButton)}
+              color="primary"
+              fullWidth
+            >
+              {t('logbook:observations.close_go_dashboard')}
+            </Button>
+          </CenteredContent>
+        )}
+      </EntryNoteDialog>
 
       <div className="container">
         <form>
@@ -211,8 +289,8 @@ export default function RequestUpdate({ id }) {
                 value={
                   formData.guard
                     ? `${dateToString(formData.createdAt)} at ${dateTimeToString(
-                      formData.createdAt
-                    )}`
+                        formData.createdAt
+                      )}`
                     : ''
                 }
                 disabled
@@ -244,7 +322,7 @@ export default function RequestUpdate({ id }) {
               value={formData.name}
               onChange={handleInputChange}
               name="name"
-              inputProps={{ "data-testid":"entry_user_name" }}
+              inputProps={{ 'data-testid': 'entry_user_name' }}
               required
             />
           </div>
@@ -259,7 +337,7 @@ export default function RequestUpdate({ id }) {
               value={formData.nrc || ''}
               onChange={handleInputChange}
               name="nrc"
-              inputProps={{ "data-testid":"entry_user_nrc" }}
+              inputProps={{ 'data-testid': 'entry_user_nrc' }}
               required
             />
           </div>
@@ -273,7 +351,7 @@ export default function RequestUpdate({ id }) {
               value={formData.phoneNumber || ''}
               onChange={handleInputChange}
               name="phoneNumber"
-              inputProps={{ "data-testid":"entry_user_phone" }}
+              inputProps={{ 'data-testid': 'entry_user_phone' }}
               required={previousRoute === 'enroll'}
             />
           </div>
@@ -347,7 +425,7 @@ export default function RequestUpdate({ id }) {
               onChange={handleInputChange}
               value={formData.vehiclePlate || ''}
               name="vehiclePlate"
-              inputProps={{ "data-testid":"entry_user_vehicle" }}
+              inputProps={{ 'data-testid': 'entry_user_vehicle' }}
             />
           </div>
           <div className="form-group">
@@ -359,14 +437,12 @@ export default function RequestUpdate({ id }) {
               value={formData.reason || ''}
               onChange={handleInputChange}
               className={`${css(styles.selectInput)}`}
-              inputProps={{ "data-testid":"entry_user_visit" }}
+              inputProps={{ 'data-testid': 'entry_user_visit' }}
             >
               <MenuItem value={formData.reason}>
-                {
-                  (formData.reason && formData.reason === 'other')
+                {formData.reason && formData.reason === 'other'
                   ? formData.otherReason
-                  : t(`logbook:business_reasons.${formData.reason}`)
-                }
+                  : t(`logbook:business_reasons.${formData.reason}`)}
               </MenuItem>
             </TextField>
           </div>
@@ -375,11 +451,7 @@ export default function RequestUpdate({ id }) {
           {/* {Temproal component for temperature} */}
 
           {previousRoute !== 'enroll' && (
-            <CaptureTemp
-              refId={id}
-              refName={formData.name}
-              refType="Logs::EntryRequest"
-            />
+            <CaptureTemp refId={id} refName={formData.name} refType="Logs::EntryRequest" />
           )}
 
           <br />
@@ -393,7 +465,9 @@ export default function RequestUpdate({ id }) {
                   className={css(styles.grantButton)}
                   disabled={isLoading}
                 >
-                  {isLoading ? `${t('logbook:logbook.enrolling')} ...` : ` ${t('logbook:logbook.enroll')}` }
+                  {isLoading
+                    ? `${t('logbook:logbook.enrolling')} ...`
+                    : ` ${t('logbook:logbook.enroll')}`}
                 </Button>
               </div>
               <div className="row justify-content-center align-items-center">
@@ -407,64 +481,80 @@ export default function RequestUpdate({ id }) {
               </div>
             </>
           ) : !/logs|enroll/.test(previousRoute) ? (
-            <div className="row justify-content-center align-items-center">
-              <div className="col">
-                <Button
-                  variant="contained"
-                  onClick={(event) => handleModal(event, 'grant')}
-                  className={css(styles.grantButton)}
-                  disabled={isLoading}
-                  data-testid="entry_user_grant"
-                >
-                  {isLoading  && modalAction === 'grant' ? `${t('logbook:logbook.granting')} ...` : `${t('logbook:logbook.grant')}`}
-                </Button>
-              </div>
-              <div className="col">
-                <Button
-                  variant="contained"
-                  onClick={handleDenyRequest}
-                  className={css(styles.denyButton)}
-                  disabled={isLoading}
-                  data-testid="entry_user_deny"
-                >
-                  {t('logbook:logbook.deny')}
-                </Button>
-              </div>
-              <div className="col">
-                <a
-                  href={`tel:${authState.user.community.securityManager}`}
-                  className={` ${css(styles.callButton)}`}
-                  data-testid="entry_user_call_mgr"
-                >
-                  {t('logbook:logbook.call_manager')}
-                </a>
-              </div>
-            </div>
+            <>
+              <Grid container direction="row" justify="flex-start" spacing={2}>
+                <Grid item>
+                  <Button
+                    variant="contained"
+                    onClick={event => handleModal(event, 'grant')}
+                    className={css(styles.grantButton)}
+                    disabled={isLoading}
+                    data-testid="entry_user_grant"
+                  >
+                    {isLoading && modalAction === 'grant'
+                      ? `${t('logbook:logbook.granting')} ...`
+                      : `${t('logbook:logbook.grant')}`}
+                  </Button>
+                </Grid>
+                <Grid item>
+                  <Button
+                    variant="contained"
+                    onClick={handleDenyRequest}
+                    className={css(styles.denyButton)}
+                    disabled={isLoading}
+                    data-testid="entry_user_deny"
+                  >
+                    {t('logbook:logbook.deny')}
+                  </Button>
+                </Grid>
+              </Grid>
+              <br />
+              <Grid container direction="row" justify="flex-start">
+                <Grid item>
+                  <a
+                    href={`tel:${authState.user.community.securityManager}`}
+                    className={` ${css(styles.callButton)}`}
+                    data-testid="entry_user_call_mgr"
+                  >
+                    <CallIcon />
+                    {' '}
+                    <p style={{ margin: '-28px 30px' }}>{t('logbook:logbook.call_manager')}</p>
+                  </a>
+                </Grid>
+              </Grid>
+            </>
           ) : (
             <span />
           )}
         </form>
       </div>
     </>
-  )
+  );
 }
+
+RequestUpdate.propTypes = {
+  id: PropTypes.string.isRequired
+}
+
 
 const styles = StyleSheet.create({
   selectInput: {
     width: '100%'
   },
   grantButton: {
-    marginRight: 60,
-    backgroundColor: "#4caf50",
+    backgroundColor: "#66A59A",
     color: "#FFFFFF"
   },
   denyButton: {
-    backgroundColor: "#d32f2f",
+    backgroundColor: "#C31515",
     color: "#FFFFFF"
   },
   callButton: {
-    color: 'rgb(230, 63, 69)',
+    color: '#66A59A',
     textTransform: 'unset',
     textDecoration: 'none'
+  },
+  observationButton: {
+    margin: 5,
   }
 });
