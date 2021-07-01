@@ -7,7 +7,7 @@ module Mutations
       argument :id, ID, required: true
       argument :note, String, required: false
 
-      field :entry, Types::EventLogType, null: true
+      field :event, Types::EventLogType, null: true
 
       def resolve(vals)
         request = context[:site_community].entry_requests.find_by(id: vals[:id])
