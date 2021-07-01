@@ -161,8 +161,6 @@ module Logs
       return false if event.blank?
 
       event.data['action'] = decision
-      # This will be the actual time when an entry was granted or denied access
-      event.data['log_updated_at'] = Time.zone.now
       event.save
     end
   end
