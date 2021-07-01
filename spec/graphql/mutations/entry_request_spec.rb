@@ -144,10 +144,12 @@ RSpec.describe Mutations::EntryRequest do
 
     let(:query) do
       <<~GQL
-        mutation addObservationNote($id: ID!, $note: String) {
-          entryRequestNote(id: $id, note: $note) {
+        mutation addObservationNote($id: ID!, $note: String, $refType: String!) {
+          entryRequestNote(id: $id, note: $note, refType: $refType) {
             event {
               id
+              data
+              refType
             }
           }
         }
@@ -158,6 +160,7 @@ RSpec.describe Mutations::EntryRequest do
       variables = {
         id: entry_request.id,
         note: 'The vehicle was too noisy',
+        refType: 'Logs::EntryRequest',
       }
       result = DoubleGdpSchema.execute(query, variables: variables,
                                               context: {
@@ -168,10 +171,28 @@ RSpec.describe Mutations::EntryRequest do
       expect(result.dig('data', 'entryRequestNote', 'event', 'id')).not_to be_nil
     end
 
+    it 'adds a note to an user entry' do
+      variables = {
+        id: contractor.id,
+        note: 'The user',
+        refType: 'Users::User',
+      }
+      result = DoubleGdpSchema.execute(query, variables: variables,
+                                              context: {
+                                                current_user: guard,
+                                                site_community: guard.community,
+                                              }).as_json
+      expect(result['errors']).to be_nil
+      expect(result.dig('data', 'entryRequestNote', 'event', 'id')).not_to be_nil
+      expect(result.dig('data', 'entryRequestNote', 'event', 'refType')).to eql 'Users::User'
+      expect(result.dig('data', 'entryRequestNote', 'event', 'data', 'note')).to include 'The user'
+    end
+
     it 'returns an error when entry does not exist' do
       variables = {
         id: SecureRandom.uuid,
         note: 'The vehicle was too noisy',
+        refType: 'Logs::EntryRequest',
       }
       result = DoubleGdpSchema.execute(query, variables: variables,
                                               context: {
@@ -180,13 +201,14 @@ RSpec.describe Mutations::EntryRequest do
                                               }).as_json
       expect(result['errors']).not_to be_nil
       expect(result.dig('data', 'entryRequestNote', 'event', 'id')).to be_nil
-      expect(result.dig('errors', 0, 'message')).to include 'Entry request not found'
+      expect(result.dig('errors', 0, 'message')).to include 'Not found'
     end
 
     it 'returns an error when fields are not valid' do
       variables = {
         ids: entry_request.id,
         note: 'The vehicle was too noisy',
+        refType: 'Logs::EntryRequest',
       }
       result = DoubleGdpSchema.execute(query, variables: variables,
                                               context: {
@@ -202,6 +224,7 @@ RSpec.describe Mutations::EntryRequest do
       variables = {
         id: entry_request.id,
         note: 'The vehicle was too noisy',
+        refType: 'Logs::EntryRequest',
       }
       result = DoubleGdpSchema.execute(query, variables: variables,
                                               context: {
