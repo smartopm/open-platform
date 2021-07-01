@@ -4,10 +4,11 @@
 /* eslint-disable no-use-before-define */
 import React, { useState, useEffect, useContext } from 'react';
 import { useQuery, useMutation } from 'react-apollo';
-import { TextField, MenuItem, Button } from '@material-ui/core';
+import { TextField, MenuItem, Button , Grid } from '@material-ui/core';
 import { StyleSheet, css } from 'aphrodite';
 import { useHistory, useLocation, useParams } from 'react-router';
 import { useTranslation } from 'react-i18next';
+import CallIcon from '@material-ui/icons/Call';
 import { EntryRequestQuery } from '../../../graphql/queries';
 import {
   EntryRequestUpdate,
@@ -27,6 +28,7 @@ import EntryNoteDialog from '../../../shared/dialogs/EntryNoteDialog';
 import CenteredContent from '../../../components/CenteredContent';
 import AddObservationNoteMutation from '../graphql/logbook_mutations';
 import MessageAlert from '../../../components/MessageAlert'
+
 
 export default function RequestUpdate({ id }) {
     const { state } = useLocation()
@@ -466,41 +468,58 @@ export default function RequestUpdate({ id }) {
               </div>
             </>
           ) : !/logs|enroll/.test(previousRoute) ? (
-            <div className="row justify-content-center align-items-center">
-              <div className="col">
-                <Button
-                  variant="contained"
-                  onClick={event => handleModal(event, 'grant')}
-                  className={css(styles.grantButton)}
-                  disabled={isLoading}
-                  data-testid="entry_user_grant"
-                >
-                  {isLoading && modalAction === 'grant'
+            <>
+              <Grid
+                container
+                direction="row"
+                justify="flex-start"
+                spacing={2}
+              >
+                <Grid item>
+                  <Button
+                    variant="contained"
+                    onClick={event => handleModal(event, 'grant')}
+                    className={css(styles.grantButton)}
+                    disabled={isLoading}
+                    data-testid="entry_user_grant"
+                  >
+                    {isLoading && modalAction === 'grant'
                     ? `${t('logbook:logbook.granting')} ...`
                     : `${t('logbook:logbook.grant')}`}
-                </Button>
-              </div>
-              <div className="col">
-                <Button
-                  variant="contained"
-                  onClick={handleDenyRequest}
-                  className={css(styles.denyButton)}
-                  disabled={isLoading}
-                  data-testid="entry_user_deny"
-                >
-                  {t('logbook:logbook.deny')}
-                </Button>
-              </div>
-              <div className="col">
-                <a
-                  href={`tel:${authState.user.community.securityManager}`}
-                  className={` ${css(styles.callButton)}`}
-                  data-testid="entry_user_call_mgr"
-                >
-                  {t('logbook:logbook.call_manager')}
-                </a>
-              </div>
-            </div>
+                  </Button>
+                </Grid>
+                <Grid item>
+                  <Button
+                    variant="contained"
+                    onClick={handleDenyRequest}
+                    className={css(styles.denyButton)}
+                    disabled={isLoading}
+                    data-testid="entry_user_deny"
+                  >
+                    {t('logbook:logbook.deny')}
+                  </Button>
+                </Grid>
+              </Grid>
+              <br />
+              <Grid
+                container
+                direction="row"
+                justify="flex-start"
+              >
+                <Grid item>
+                  <a
+                    href={`tel:${authState.user.community.securityManager}`}
+                    className={` ${css(styles.callButton)}`}
+                    data-testid="entry_user_call_mgr"
+                  >
+                    <CallIcon />
+                    {' '}
+                    {" "}
+                    <p style={{ margin: "-28px 30px" }}>{t('logbook:logbook.call_manager')}</p>
+                  </a>
+                </Grid>
+              </Grid>
+            </>
           ) : (
             <span />
           )}
@@ -515,16 +534,15 @@ const styles = StyleSheet.create({
     width: '100%'
   },
   grantButton: {
-    marginRight: 60,
-    backgroundColor: "#4caf50",
+    backgroundColor: "#66A59A",
     color: "#FFFFFF"
   },
   denyButton: {
-    backgroundColor: "#d32f2f",
+    backgroundColor: "#C31515",
     color: "#FFFFFF"
   },
   callButton: {
-    color: 'rgb(230, 63, 69)',
+    color: '#66A59A',
     textTransform: 'unset',
     textDecoration: 'none'
   },
