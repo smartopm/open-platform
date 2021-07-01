@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 /* eslint-disable no-nested-ternary */
 /* eslint-disable no-use-before-define */
@@ -8,6 +7,7 @@ import { TextField, MenuItem, Button , Grid } from '@material-ui/core';
 import { StyleSheet, css } from 'aphrodite';
 import { useHistory, useLocation, useParams } from 'react-router';
 import { useTranslation } from 'react-i18next';
+import PropTypes from 'prop-types'
 import CallIcon from '@material-ui/icons/Call';
 import { EntryRequestQuery } from '../../../graphql/queries';
 import {
@@ -55,7 +55,7 @@ export default function RequestUpdate({ id }) {
   const [isClicked, setIsClicked] = useState(false)
   const [isObservationOpen, setIsObservationOpen] = useState(false)
   const [observationNote, setObservationNote] = useState("")
-  const [observationDetails, setDetails] = useState({ isError: false, message: null, loading: false })
+  const [observationDetails, setDetails] = useState({ isError: false, message: '', loading: false })
   const [formData, setFormData] = useState({
     name: '',
     phoneNumber: '',
@@ -210,7 +210,7 @@ export default function RequestUpdate({ id }) {
         type={!observationDetails.isError ? 'success' : 'error'}
         message={observationDetails.message}
         open={!!observationDetails.message}
-        handleClose={() => setDetails({ ...observationDetails, message: null })}
+        handleClose={() => setDetails({ ...observationDetails, message: '' })}
       />
       <ModalDialog
         handleClose={handleModal}
@@ -266,8 +266,8 @@ export default function RequestUpdate({ id }) {
             <Button
               onClick={() => history.push('/')}
               variant="contained"
-              color="primary"
               className={css(styles.observationButton)}
+              color="primary"
               fullWidth
             >
               {t('logbook:observations.close_go_dashboard')}
@@ -531,6 +531,11 @@ export default function RequestUpdate({ id }) {
     </>
   );
 }
+
+RequestUpdate.propTypes = {
+  id: PropTypes.string.isRequired
+}
+
 
 const styles = StyleSheet.create({
   selectInput: {
