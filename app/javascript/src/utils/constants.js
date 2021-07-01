@@ -446,6 +446,11 @@ export const dateWidget = {
         label: 'Payment Amount',
         type: 'text',
         valueSources: ['value']
+      },
+      nrc: {
+        label: 'NRC',
+        type: 'text',
+        valueSources: ['value']
       }
     },
     widgets: dateWidget
@@ -477,7 +482,8 @@ export const paymentFilterFields = {
     paymentType: 'source',
     receiptNumber: 'automated_receipt_number',
     manualReceiptNumber: 'manual_receipt_number',
-    amount: 'amount'
+    amount: 'amount',
+    nrc: 'ext_ref_id'
   }
 
   export const propertyQueryBuilderConfig = {
