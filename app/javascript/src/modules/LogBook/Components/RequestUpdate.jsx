@@ -187,7 +187,7 @@ export default function RequestUpdate({ id }) {
       history.push(to)
     }
     setDetails({ ...observationDetails, loading: true })
-    addObservationNote({ variables: { id, note: observationNote} })
+    addObservationNote({ variables: { id, note: observationNote, refType: 'Logs::EntryRequest'} })
       .then(() => {
         setDetails({ ...observationDetails, loading: false, isError: false, message: t('logbook:observation.created_observation') })
         history.push(to)
