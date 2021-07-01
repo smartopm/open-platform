@@ -66,6 +66,6 @@
     "skip_record_manual_entry": "{{action}} & Manually Record Next Entry",
     "skip_scan_next_entry": "{{action}} & Scan Next Entry",
     "created_observation": "Observation note successfully added",
-    "add_your_observation": "Add your observation here"
+    "add_your_observation": "Do you have any observations you'd like to add?"
   }
 }

@@ -241,26 +241,39 @@ export default function RequestUpdate({ id }) {
           handleChange: value => setObservationNote(value)
         }}
       >
-        {
-          observationDetails.loading
-          ? <Spinner />
-          : (
-            <CenteredContent>
-              <Button onClick={() => handleSaveObservation('/scan')} variant="outlined" className={css(styles.observationButton)}>
-                {t('logbook:observations.skip_scan_next_entry', { action: observationAction })}
-              </Button>
-              <br />
-              <Button onClick={() => handleSaveObservation('/entry_request')} variant="outlined" className={css(styles.observationButton)}>
-                {t('logbook:observations.skip_record_manual_entry', { action: observationAction })}
-              </Button>
-              <br />
-              <Button onClick={() => history.push('/')} variant="contained" color="primary" className={css(styles.observationButton)}>
-                {t('logbook:observations.close_go_dashboard')}
-              </Button>
-              <br />
-            </CenteredContent>
-          )
-        }
+        {observationDetails.loading ? (
+          <Spinner />
+        ) : (
+          <CenteredContent>
+            <Button
+              onClick={() => handleSaveObservation('/scan')}
+              variant="outlined"
+              className={css(styles.observationButton)}
+              color="primary"
+              fullWidth
+            >
+              {t('logbook:observations.skip_scan_next_entry', { action: observationAction })}
+            </Button>
+            <Button
+              onClick={() => handleSaveObservation('/entry_request')}
+              variant="outlined"
+              className={css(styles.observationButton)}
+              color="primary"
+              fullWidth
+            >
+              {t('logbook:observations.skip_record_manual_entry', { action: observationAction })}
+            </Button>
+            <Button
+              onClick={() => history.push('/')}
+              variant="contained"
+              color="primary"
+              className={css(styles.observationButton)}
+              fullWidth
+            >
+              {t('logbook:observations.close_go_dashboard')}
+            </Button>
+          </CenteredContent>
+        )}
       </EntryNoteDialog>
 
       <div className="container">
@@ -469,12 +482,7 @@ export default function RequestUpdate({ id }) {
             </>
           ) : !/logs|enroll/.test(previousRoute) ? (
             <>
-              <Grid
-                container
-                direction="row"
-                justify="flex-start"
-                spacing={2}
-              >
+              <Grid container direction="row" justify="flex-start" spacing={2}>
                 <Grid item>
                   <Button
                     variant="contained"
@@ -484,8 +492,8 @@ export default function RequestUpdate({ id }) {
                     data-testid="entry_user_grant"
                   >
                     {isLoading && modalAction === 'grant'
-                    ? `${t('logbook:logbook.granting')} ...`
-                    : `${t('logbook:logbook.grant')}`}
+                      ? `${t('logbook:logbook.granting')} ...`
+                      : `${t('logbook:logbook.grant')}`}
                   </Button>
                 </Grid>
                 <Grid item>
@@ -501,11 +509,7 @@ export default function RequestUpdate({ id }) {
                 </Grid>
               </Grid>
               <br />
-              <Grid
-                container
-                direction="row"
-                justify="flex-start"
-              >
+              <Grid container direction="row" justify="flex-start">
                 <Grid item>
                   <a
                     href={`tel:${authState.user.community.securityManager}`}
@@ -514,8 +518,7 @@ export default function RequestUpdate({ id }) {
                   >
                     <CallIcon />
                     {' '}
-                    {" "}
-                    <p style={{ margin: "-28px 30px" }}>{t('logbook:logbook.call_manager')}</p>
+                    <p style={{ margin: '-28px 30px' }}>{t('logbook:logbook.call_manager')}</p>
                   </a>
                 </Grid>
               </Grid>
@@ -547,6 +550,6 @@ const styles = StyleSheet.create({
     textDecoration: 'none'
   },
   observationButton: {
-    margin: 5
+    margin: 5,
   }
 });
