@@ -519,13 +519,3 @@ export function extractCountry(locale){
   if(!locale || !locale.includes('-')) return 'zm'
   return locale.split('-')[1].toLowerCase()
 }
-
-/**
- * generate random colors
- * @returns random strings of color
- */
- export function generateRandomColor(){
-  const randomColor = '#'+Math.floor(Math.random()*16777215).toString(16);
-  console.log(randomColor)
-  return randomColor;
-}

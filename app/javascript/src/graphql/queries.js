@@ -631,6 +631,7 @@ export const UserLabelsQuery = gql`
     userLabels(userId: $userId) {
       id
       shortDesc
+      color
     }
   }
 `

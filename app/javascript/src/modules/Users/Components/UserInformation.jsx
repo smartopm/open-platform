@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useForm } from 'react-hook-form';
 import IconButton from '@material-ui/core/IconButton';
@@ -10,22 +9,19 @@ import { Dialog, DialogTitle, DialogContent, Grid, TextField } from '@material-u
 import { css, StyleSheet } from 'aphrodite';
 import { useMutation } from 'react-apollo';
 import PropTypes from 'prop-types';
-import ReactGA from 'react-ga';
 import { CreateNote } from '../../../graphql/mutations';
 import Avatar from '../../../components/Avatar';
 import UserPlotInfo from './UserPlotInfo';
 import UserMerge from './UserMerge';
 import CenteredContent from '../../../components/CenteredContent';
 import UserNotes from './UserNote';
-import UserInfo from './UserInfo';
 import UserDetail from './UserProfileDetail';
-// import UserStyledTabs from './UserTabs';
 import { TabPanel } from '../../../components/Tabs';
 import UserFilledForms from './UserFilledForms';
 import UserMessages from '../../../components/Messaging/UserMessages'
 import Transactions from '../../Payments/Components/UserTransactions/Transactions'
 import UserJourney from './UserJourney';
-import { propAccessor, useParamsQuery } from '../../../utils/helpers';
+import { useParamsQuery } from '../../../utils/helpers';
 import RightSideMenu from '../../Menu/component/RightSideMenu'
 import FeatureCheck from '../../Features';
 import PaymentPlans from '../../Payments/Components/UserTransactions/Plans'
@@ -50,7 +46,6 @@ export default function UserInformation({
 
   const [noteCreate, { loading: mutationLoading }] = useMutation(CreateNote);
   const { handleSubmit, register } = useForm();
-  const location = useLocation();
 
   const onSaveNote = ({ note }) => {
     const form = document.getElementById('note-form');
@@ -162,9 +157,6 @@ export default function UserInformation({
           )}
         </FeatureCheck>
 
-        {/* <TabPanel value={tabValue} index="Contacts">
-          <UserInfo user={data.user} userType={authState.user.userType} />
-        </TabPanel> */}
         {['admin'].includes(userType) && (
           <>
             <FeatureCheck features={authState.user.community.features} name="Tasks">

@@ -1,22 +1,18 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
 import { css, StyleSheet } from 'aphrodite'
 import { useTranslation } from 'react-i18next';
-import { useTheme } from '@material-ui/styles';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 import PropTypes from 'prop-types'
-import Grid from '@material-ui/core/Grid';
 import LocationOnIcon from '@material-ui/icons/LocationOn';
 import PhoneIcon from '@material-ui/icons/Phone';
 import EmailIcon from '@material-ui/icons/Email';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
-import dateutil from '../../../utils/dateutil'
 import UserLabels from './UserLabels'
-import StatusBadge from '../../../components/StatusBadge'
 
 export default function UserDetail({ data, userType }) {
   const { t } = useTranslation('users')
-  const theme = useTheme()
+  const matches = useMediaQuery('(max-width:600px)');
   return (
     <>
       <div>
@@ -24,7 +20,7 @@ export default function UserDetail({ data, userType }) {
         <div className={css(styles.userType)}>
           {t(`common:user_types.${data?.user?.userType}`)}
         </div>
-        <div style={{display: 'flex', justifyContent: 'center'}}>
+        <div style={matches ? null : {display: 'flex', justifyContent: 'center'}}>
           {data?.user?.phoneNumber && (
           <div style={{display: 'flex'}}>
             <PhoneIcon style={{heigth: '5.6px', width: '13.6px', verticalAlign: 'middle', marginRight: '14px'}} />
@@ -33,7 +29,7 @@ export default function UserDetail({ data, userType }) {
             </Typography>
           </div>
           )}
-          {data?.user?.email && (
+          {!matches && data?.user?.email && (
             <Divider orientation="vertical" flexItem style={{height: '8px', margin: '8px 10px 0 10px'}} />
           )}
           {data?.user?.email && (
@@ -44,7 +40,7 @@ export default function UserDetail({ data, userType }) {
             </Typography>
           </div>
           )}
-          {data?.user?.address && (
+          {!matches && data?.user?.address && (
             <Divider orientation="vertical" flexItem style={{height: '8px', margin: '8px 10px 0 10px'}} />
           )}
           {data?.user?.address && (
