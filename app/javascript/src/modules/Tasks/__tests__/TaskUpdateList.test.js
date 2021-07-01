@@ -10,7 +10,7 @@ describe('Comment Card Component', () => {
     {
       id: 'jkfer',
       action: 'create',
-      noteEntityType: 'NoteComment',
+      noteEntityType: 'Comments::NoteComment',
       user: { name: 'John' },
       createdAt: new Date()
     }

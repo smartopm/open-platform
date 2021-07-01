@@ -24,7 +24,7 @@ class ActiveStorage::BlobsController < ActiveStorage::BaseController
     file = ActiveStorage::Attachment.find_by(blob_id: @blob.id)
     return false if file.nil?
 
-    return true if file.record_type != 'UserFormProperty'
+    return true if file.record_type != 'Forms::UserFormProperty'
 
     user_id = Forms::UserFormProperty.find_by(id: file.record_id)&.user_id
     auth_user.admin? || user_id.eql?(auth_user.id)

@@ -25,7 +25,7 @@ const props = {
   refetch: jest.fn(),
   users: [],
   currentUser: { name: 'tester', id: '6523gvhvg' },
-  historyData: [{ action: 'create', noteEntityType: 'NoteComment', user: {name: 'name'}}],
+  historyData: [{ action: 'create', noteEntityType: 'Comments::NoteComment', user: {name: 'name'}}],
   historyRefetch: jest.fn(),
   authState: {},
   taskId: ''
