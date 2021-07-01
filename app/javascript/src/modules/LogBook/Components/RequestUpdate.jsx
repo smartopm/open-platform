@@ -123,7 +123,7 @@ export default function RequestUpdate({ id }) {
     handleUpdateRecord()
       .then(denyEntry({ variables: { id } }))
       .then(() => {
-        history.push('/entry_logs', { tab: 1 });
+        setIsObservationOpen(true)
         setLoading(false)
       });
   }
