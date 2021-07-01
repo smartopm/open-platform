@@ -18,7 +18,7 @@ module Types::Queries::PlanPayment
     end
 
     field :payment_stat_details, [Types::PlanPaymentType], null: true do
-      description 'Get list of all transactions in a particular day'
+      description 'Get list of all payments in a particular day'
       argument :query, String, required: false
     end
   end
@@ -37,7 +37,6 @@ module Types::Queries::PlanPayment
 
     search_method = 'search'
     search_method = 'search_by_numbers' if query&.exclude?(':') && query.to_i.positive?
-
     context[:site_community].plan_payments.send(search_method, query)
                             .eager_load(:user, :payment_plan)
                             .order(created_at: :desc)
