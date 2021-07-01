@@ -135,4 +135,36 @@ RSpec.describe Mutations::EntryRequest do
       expect(result['errors']).to be_nil
     end
   end
+
+  describe 'adding an observation note to an entry request' do
+    let!(:user) { create(:user_with_community) }
+    let!(:guard) { create(:security_guard, community_id: user.community_id) }
+    let!(:entry_request) { guard.entry_requests.create(name: 'Mark Percival', reason: 'Visiting') }
+
+    let(:query) do
+      <<~GQL
+        mutation addObservationNote($id: ID!, $note: String) {
+          entryRequestNote(id: $id, note: $note) {
+            event {
+              id
+            }
+          }
+        }
+      GQL
+    end
+
+    it 'returns an acknowledged entry request' do
+      variables = {
+        id: entry_request.id,
+        note: 'The vehicle was too noisy',
+      }
+      result = DoubleGdpSchema.execute(query, variables: variables,
+                                              context: {
+                                                current_user: guard,
+                                                site_community: guard.community,
+                                              }).as_json
+      expect(result['errors']).to be_nil
+      expect(result.dig('data', 'entryRequestNote', 'event', 'id')).not_to be_nil
+    end
+  end
 end
