@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { useTheme } from '@material-ui/styles';
 import PropTypes from 'prop-types'
 import Grid from '@material-ui/core/Grid';
-import PersonIcon from '@material-ui/icons/Person';
+import LocationOnIcon from '@material-ui/icons/LocationOn';
 import PhoneIcon from '@material-ui/icons/Phone';
 import EmailIcon from '@material-ui/icons/Email';
 import Typography from '@material-ui/core/Typography';
@@ -18,34 +18,47 @@ export default function UserDetail({ data, userType }) {
   const { t } = useTranslation('users')
   const theme = useTheme()
   return (
-    <div>
-      {console.log(data)}
-      <div className={css(styles.name)}>{data.user.name}</div>
-      <div className={css(styles.userType)}>
-        {t(`common:user_types.${data?.user?.userType}`)}
-      </div>
-      <div style={{textAlign: 'center', display: 'flex'}}>
-        {data?.user?.phoneNumber && (
-          <div>
+    <>
+      <div>
+        <div className={css(styles.name)}>{data.user.name}</div>
+        <div className={css(styles.userType)}>
+          {t(`common:user_types.${data?.user?.userType}`)}
+        </div>
+        <div style={{display: 'flex', justifyContent: 'center'}}>
+          {data?.user?.phoneNumber && (
+          <div style={{display: 'flex'}}>
             <PhoneIcon style={{heigth: '5.6px', width: '13.6px', verticalAlign: 'middle', marginRight: '14px'}} />
-            <Typography data-testid='phone'>
+            <Typography data-testid='phone' className={css(styles.info)}>
               {data.user.phoneNumber}
             </Typography>
           </div>
-        )}
-        {data?.user?.email && (
-          <Divider orientation="vertical" flexItem style={{height: '8px', marginTop: '8px'}} />
-        )}
-        {data?.user?.email && (
-        <div>
-          <EmailIcon style={{heigth: '5.6px', width: '13.6px', verticalAlign: 'middle', marginRight: '14px'}} />
-          <Typography data-testid='email'>
-            {data?.user.email}
-          </Typography>
+          )}
+          {data?.user?.email && (
+            <Divider orientation="vertical" flexItem style={{height: '8px', margin: '8px 10px 0 10px'}} />
+          )}
+          {data?.user?.email && (
+          <div style={{display: 'flex'}}>
+            <EmailIcon style={{heigth: '5.6px', width: '13.6px', verticalAlign: 'middle', marginRight: '14px'}} />
+            <Typography data-testid='email' className={css(styles.info)}>
+              {data?.user.email}
+            </Typography>
+          </div>
+          )}
+          {data?.user?.address && (
+            <Divider orientation="vertical" flexItem style={{height: '8px', margin: '8px 10px 0 10px'}} />
+          )}
+          {data?.user?.address && (
+          <div style={{display: 'flex'}}>
+            <LocationOnIcon style={{heigth: '5.6px', width: '13.6px', verticalAlign: 'middle', marginRight: '14px'}} />
+            <Typography data-testid='address' className={css(styles.info)}>
+              {data?.user.address}
+            </Typography>
+          </div>
+          )}
         </div>
-                  )}
+        {['admin'].includes(userType) && <UserLabels userId={data.user.id} />}
       </div>
-    </div>
+    </>
   )
 }
 
@@ -77,5 +90,10 @@ const styles = StyleSheet.create({
     fontSize: '16px',
     fontWeight: 400,
     color: '#212121'
+  },
+  info: {
+    fontSize: '16px',
+    fontWeight: 400,
+    color: '#141414'
   }
 })

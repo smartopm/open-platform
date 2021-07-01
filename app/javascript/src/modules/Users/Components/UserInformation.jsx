@@ -83,25 +83,6 @@ export default function UserInformation({
 
   const userType = authState.user.userType.toLowerCase();
 
-  // const handleChange = (_event, newValue) => {
-  //   router.push(`/user/${userId}?tab=${newValue}`);
-  //   setValue(newValue);
-  //   const pages = {
-  //     Contacts: 'Contacts',
-  //     Notes: 'Notes',
-  //     Communication: 'Communication',
-  //     Plots: 'Plots',
-  //     Payments: 'Payments',
-  //     Forms: 'Forms',
-  //     CustomerJourney: 'Customer Journey'
-  //   };
-  //   if (location.pathname.includes('/user')) {
-  //     const [, rootURL, , userPage] = location.pathname.split('/');
-  //     const pageHit = `/${rootURL}/${userPage}/${propAccessor(pages, newValue)}`;
-  //     ReactGA.pageview(pageHit);
-  //   }
-  // };
-
   function handleMergeDialog() {
     setDialogOpen(false);
     router.push(`/user/${userId}?tab=${tabValue}`);
@@ -129,7 +110,8 @@ export default function UserInformation({
         </Dialog>
 
         <Grid container>
-          <Grid item xs={6} style={{textAlign: 'right'}}>
+          <Grid item xs={3}>{' '}</Grid>
+          <Grid item xs={6} style={{textAlign: 'center'}}>
             <Avatar
               user={data.user}
                 // eslint-disable-next-line react/style-prop-object
@@ -137,7 +119,7 @@ export default function UserInformation({
             />
           </Grid>
 
-          <Grid item xs={6}>
+          <Grid item xs={3}>
             <>
               <IconButton
                 aria-label="more"
@@ -165,9 +147,11 @@ export default function UserInformation({
         </Grid>
 
         <Grid container>
-          <Grid item xs={11} style={{textAlign: 'center', marginTop: '30px'}}>
+          <Grid item xs={3}>{' '}</Grid>
+          <Grid item xs={6} style={{textAlign: 'center', marginTop: '30px'}}>
             <UserDetail data={data} userType={userType} />
           </Grid>
+          <Grid item xs={3}>{' '}</Grid>
         </Grid>
 
         <br />
@@ -177,12 +161,10 @@ export default function UserInformation({
               <ShiftButtons userId={userId} />
           )}
         </FeatureCheck>
-        {/* <UserStyledTabs tabValue={tabValue} handleChange={handleChange} user={authState.user} /> */}
 
-        <TabPanel value={tabValue} index="Contacts">
-          {/* userinfo */}
+        {/* <TabPanel value={tabValue} index="Contacts">
           <UserInfo user={data.user} userType={authState.user.userType} />
-        </TabPanel>
+        </TabPanel> */}
         {['admin'].includes(userType) && (
           <>
             <FeatureCheck features={authState.user.community.features} name="Tasks">

@@ -10,7 +10,7 @@ import { UserLabelsQuery, LabelsQuery } from '../../../graphql/queries';
 import { LabelCreate, UserLabelCreate, UserLabelUpdate } from '../../../graphql/mutations';
 import useDebounce from '../../../utils/useDebounce';
 import Loading from '../../../shared/Loading';
-import { formatError } from '../../../utils/helpers';
+import { formatError, generateRandomColor } from '../../../utils/helpers';
 import MessageAlert from '../../../components/MessageAlert';
 import ErrorPage from '../../../components/Error';
 
@@ -98,6 +98,7 @@ export default function UserLabels({ userId }) {
               size="medium"
               label={lab.shortDesc}
               onDelete={() => handleDelete(lab.id)}
+              style={{marginRight: '24px', backgroundColor: generateRandomColor() }}
             />
             ))
           : null}
