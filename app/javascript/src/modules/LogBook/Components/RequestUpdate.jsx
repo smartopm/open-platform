@@ -53,7 +53,7 @@ export default function RequestUpdate({ id }) {
   const [isClicked, setIsClicked] = useState(false)
   const [isObservationOpen, setIsObservationOpen] = useState(false)
   const [observationNote, setObservationNote] = useState("")
-  const [observationDetails, setObservationDetails] = useState({ isError: false, message: null, loading: false })
+  const [observationDetails, setDetails] = useState({ isError: false, message: null, loading: false })
   const [formData, setFormData] = useState({
     name: '',
     phoneNumber: '',
@@ -108,12 +108,13 @@ export default function RequestUpdate({ id }) {
     handleUpdateRecord()
       .then(grantEntry({ variables: { id } }))
       .then(() => {
+        setDetails({ ...observationDetails, message: t('logbook:logbook.success_message', { action: t('logbook:logbook.granted') }) })
         setIsObservationOpen(true)
         setLoading(false)
       })
       .catch((error) => {
         setLoading(false)
-        setMessage(error.message)
+        setDetails({ ...observationDetails, message: error.message })
       });
   }
 
@@ -123,8 +124,13 @@ export default function RequestUpdate({ id }) {
     handleUpdateRecord()
       .then(denyEntry({ variables: { id } }))
       .then(() => {
+        setDetails({ ...observationDetails, message: t('logbook:logbook.success_message', { action: t('logbook:logbook.denied')}) })
         setIsObservationOpen(true)
         setLoading(false)
+      })
+      .catch((error) => {
+        setLoading(false)
+        setDetails({ ...observationDetails, message: error.message })
       });
   }
 
@@ -178,14 +184,14 @@ export default function RequestUpdate({ id }) {
     if(!observationNote) {
       history.push(to)
     }
-    setObservationDetails({ ...observationDetails, loading: true })
+    setDetails({ ...observationDetails, loading: true })
     addObservationNote({ variables: { id, note: observationNote} })
       .then(() => {
-        setObservationDetails({ ...observationDetails, loading: false, isError: false, message: t('logbook:observation.created_observation') })
+        setDetails({ ...observationDetails, loading: false, isError: false, message: t('logbook:observation.created_observation') })
         history.push(to)
       })
       .catch(error => {
-        setObservationDetails({ ...observationDetails, loading: false, isError: true, message: error.message })
+        setDetails({ ...observationDetails, loading: false, isError: true, message: error.message })
       })
   }
   function checkTimeIsValid(){
@@ -202,7 +208,7 @@ export default function RequestUpdate({ id }) {
         type={!observationDetails.isError ? 'success' : 'error'}
         message={observationDetails.message}
         open={!!observationDetails.message}
-        handleClose={() => setObservationDetails({ ...observationDetails, message: null })}
+        handleClose={() => setDetails({ ...observationDetails, message: null })}
       />
       <ModalDialog
         handleClose={handleModal}

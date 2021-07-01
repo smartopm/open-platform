@@ -29,7 +29,9 @@
     "call_manager": "Call Manager",
     "grant_deny_access": "Are you sure you want to {{action}} access to {{name}} ?",
     "log": "Log",
-    "success_message": "Successfully granted access"
+    "success_message": "Success: Access {{action}} successfully",
+    "granted": "granted",
+    "denied": "denied"
   },
   "log_title": {
     "visitor": "Visitor",

@@ -236,7 +236,7 @@ export function IndexComponent({
                         {t('logbook.enroll_user')}
                         {' '}
                       </Typography>
-                      | 
+                      |
                       {' '}
                       {source}
                     </>
@@ -356,13 +356,13 @@ export function LogView({ user, refetch, tab }) {
   const [grantEntry] = useMutation(EntryRequestGrant);
   const [loading, setLoading] = useState(false)
   const [message, setMessage] = useState({ isError: false, detail: ""})
-  
+
   // grant access right here
   function handleGrantAccess() {
     setLoading(true);
     grantEntry({ variables: { id: user.refId, subject: "visitor_entry" } })
       .then(() => {
-        setMessage({isError: false, detail: t("logbook:logbook.success_message")});
+        setMessage({isError: false, detail: t("logbook:logbook.success_message", { action: t('logbook:logbook.granted') })});
         setLoading(false);
         setTimeout(() => refetch(), 1500)
       })
@@ -413,7 +413,7 @@ export function LogView({ user, refetch, tab }) {
                 </Typography>
               </span>
             </div>
-          ) 
+          )
         }
         </div>
         <br />
