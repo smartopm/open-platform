@@ -91,7 +91,7 @@ export default function PaymentPlans({ userId, user, userData, tab }) {
                 <Typography className={classes.plan}>Plans</Typography>
                 {
                   authState.user?.userType === 'admin' && (
-                      <ButtonComponent color='primary' buttonText="View all Transactions" handleClick={() => {}} />
+                  <ButtonComponent color='primary' buttonText="View all Transactions" handleClick={() => {}} />
                   )
                 }
               </div>
