@@ -30,7 +30,7 @@ const QUERY = gql`
       imageUrl
       avatarUrl
       subStatus
-      hasPaymentPlan
+      paymentPlan
       community {
         id
         name

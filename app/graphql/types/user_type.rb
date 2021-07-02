@@ -48,7 +48,7 @@ module Types
     field :substatus_logs, [Types::SubstatusLogType], null: true, visible: { roles: %i[admin],
                                                                              user: :id }
     field :ext_ref_id, String, null: true, visible: { roles: %i[admin], user: :id }
-    field :has_payment_plan, Boolean, null: false
+    field :payment_plan, Boolean, null: false
 
     def avatar_url
       return nil unless object.avatar.attached?
@@ -68,8 +68,8 @@ module Types
       "https://#{base_url}#{path}"
     end
 
-    def has_payment_plan
-      object.payment_plans.active.present? || object.wallet_transactions.present?
+    def payment_plan
+      object.payment_plans.active.present? || object.plan_payments.present?
     end
   end
 end
