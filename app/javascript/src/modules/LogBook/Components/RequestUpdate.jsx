@@ -72,11 +72,8 @@ export default function RequestUpdate({ id }) {
   const [reqId, setRequestId] = useState(id)
   const [observationDetails, setDetails] = useState({ isError: false, message: '', loading: false })
   const [inputValidationMsg, setInputValidationMsg] = useState({ isError: false, isSubmitting: false })
-
   const [formData, setFormData] = useState(initialState);
-
   const requiredFields = authState?.user?.community?.communityRequiredFields?.manualEntryRequestForm || defaultRequiredFields
-
   const { t } = useTranslation(['common', 'logbook'])
 
   useEffect(() => {
@@ -214,11 +211,12 @@ export default function RequestUpdate({ id }) {
     // we are skipping the observation notes
     if(!observationNote) {
       resetForm(to)
+      return
     }
     setDetails({ ...observationDetails, loading: true })
     addObservationNote({ variables: { id: reqId, note: observationNote, refType: 'Logs::EntryRequest'} })
       .then(() => {
-        setDetails({ ...observationDetails, loading: false, isError: false, message: t('logbook:observation.created_observation') })
+        setDetails({ ...observationDetails, loading: false, isError: false, message: t('logbook:observations.created_observation') })
         resetForm(to)
       })
       .catch(error => {
@@ -570,9 +568,10 @@ export default function RequestUpdate({ id }) {
                     disabled={isLoading}
                     data-testid="entry_user_grant"
                   >
-                    {isLoading && modalAction === 'grant'
-                      ? `${t('logbook:logbook.granting')} ...`
-                      : `${t('logbook:logbook.grant')}`}
+
+                    {
+                      isLoading ? <Spinner /> : t('logbook:logbook.grant')
+                    }
                   </Button>
                 </Grid>
                 <Grid item>
@@ -583,7 +582,9 @@ export default function RequestUpdate({ id }) {
                     disabled={isLoading}
                     data-testid="entry_user_deny"
                   >
-                    {t('logbook:logbook.deny')}
+                    {
+                      isLoading ? <Spinner /> : t('logbook:logbook.deny')
+                    }
                   </Button>
                 </Grid>
               </Grid>
@@ -611,8 +612,12 @@ export default function RequestUpdate({ id }) {
   );
 }
 
+RequestUpdate.defaultProps = {
+  id: null
+}
+
 RequestUpdate.propTypes = {
-  id: PropTypes.string.isRequired
+  id: PropTypes.string
 }
 
 
