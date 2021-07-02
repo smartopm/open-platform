@@ -13,4 +13,4 @@ export function checkInValidRequiredFields(formData, requiredFields) {
   return values.some(isNotValid);
 }
 
-export const defaultRequiredFields= ['name', 'phoneNumber', 'nrc', 'vehiclePlate', 'reason', 'business']
+export const defaultRequiredFields= ['name', 'phoneNumber', 'nrc', 'vehiclePlate', 'reason']

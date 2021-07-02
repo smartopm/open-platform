@@ -197,11 +197,6 @@ export default function RequestUpdate({ id }) {
       setModalAction('deny')
     }
     setModal(!isModalOpen)
-    if (!isModalOpen) {
-      setIsClicked(!isClicked)
-    } else {
-      setIsClicked(isClicked)
-    }
   }
 
   function handleSaveObservation(to){
@@ -215,6 +210,7 @@ export default function RequestUpdate({ id }) {
         setDetails({ ...observationDetails, loading: false, isError: false, message: t('logbook:observation.created_observation') })
         setFormData(initialState)
         setObservationNote("")
+        setRequestId("")
         setIsObservationOpen(false)
         setModal(false)
         history.push(to)
@@ -509,12 +505,12 @@ export default function RequestUpdate({ id }) {
               className={`${css(styles.selectInput)}`}
               inputProps={{ 'data-testid': 'entry_user_visit' }}
               error={inputValidationMsg.isError &&
-                requiredFields.includes('business') &&
-                (!formData.business) || (formData.business === 'other' &&
+                requiredFields.includes('reason') &&
+                (!formData.reason) || (formData.reason === 'other' &&
                 !formData.reason)}
               helperText={inputValidationMsg.isError &&
-                requiredFields.includes('business') &&
-                !formData.business &&
+                requiredFields.includes('reason') &&
+                !formData.reason &&
                 'Reason is Required'}
             >
               {Object.keys(defaultBusinessReasons).map(_reason => (
