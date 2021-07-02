@@ -4,6 +4,7 @@
 /* eslint-disable react/jsx-props-no-spreading */
 /* eslint-disable no-nested-ternary */
 /* eslint-disable no-use-before-define */
+/* eslint-disable security/detect-object-injection */
 import React, { useState, Fragment, useContext, useEffect } from 'react';
 import { useMutation, useQuery } from 'react-apollo';
 import { useLocation } from 'react-router-dom';
@@ -23,6 +24,8 @@ import FloatButton from '../../../components/FloatButton';
 import { propAccessor } from '../../../utils/helpers';
 import { EntryRequestGrant } from '../../../graphql/mutations';
 import MessageAlert from '../../../components/MessageAlert';
+import GroupedObservations from './GroupedObservations';
+import AddMoreButton from '../../../shared/buttons/AddMoreButton';
 
 export default ({ history, match }) => AllEventLogs(history, match);
 
@@ -58,7 +61,8 @@ const AllEventLogs = (history, match) => {
   const logsQuery = {
     0: subjects,
     1: 'user_enrolled',
-    2: 'visit_request'
+    2: 'visit_request',
+    3: 'visitor_entry'
   };
 
   const { loading, error, data, refetch } = useQuery(AllEventLogsQuery, {
@@ -280,6 +284,56 @@ export function IndexComponent({
       const visitorName = log.data.ref_name || log.data.visitor_name || log.data.name || '';
       return visitorName.toLowerCase().includes(searchTerm.toLowerCase());
     });
+
+  const observationLogs = {
+    "2021/05/05": [
+        {
+          refId: '123',
+          actingUser: {
+            name: 'Nurudeen Ibrahim'
+          },
+          note: 'Car used on entry was extremly rough and the xhaust of the vehicle was bad and made a lot of noise',
+          createdAt: new Date(),
+          entryRequest: {
+            id: '123',
+            name: 'Gbemisola',
+            startTime: new Date(),
+            reason: 'Prospective Client'
+          }
+        },
+        {
+          refId: '123',
+          actingUser: {
+            name: 'Nurudeen Ibrahim'
+          },
+          note: 'Car used on entry was extremly rough and the xhaust of the vehicle',
+          createdAt: new Date(),
+          entryRequest: {
+            id: '123',
+            name: 'Gbemisola',
+            startTime: new Date(),
+            reason: 'Prospective Client'
+          }
+        }
+      ],
+    "2021/07/01": [
+        {
+          refId: '124',
+          actingUser: {
+            name: 'Olivier JM'
+          },
+          note: 'Car used on entry was extremly rough and the xhaust of the vehicle was bad and made a lot of noise',
+          createdAt: new Date(),
+          entryRequest: {
+            id: '124',
+            name: 'Muraina',
+            startTime: new Date(),
+            reason: 'Prospective Client'
+          }
+        }
+      ]
+  }
+
   return (
     <div>
       <div className="container">
@@ -303,6 +357,7 @@ export function IndexComponent({
           <StyledTab label={t('logbook.all_visits')} {...a11yProps(0)} />
           <StyledTab label={t('logbook.new_visits')} {...a11yProps(1)} />
           <StyledTab label={t('logbook.upcoming_visits')} {...a11yProps(2)} />
+          <StyledTab label={t('logbook.observations')} {...a11yProps(3)} />
         </StyledTabs>
         {loading && <Loading />}
         <TabPanel value={tabValue} index={0}>
@@ -314,6 +369,20 @@ export function IndexComponent({
         </TabPanel>
         <TabPanel value={tabValue} index={2}>
           {data && data.result.map(log => <LogView key={log.id} user={log} refetch={refetch} tab={tabValue} />)}
+        </TabPanel>
+        <TabPanel value={tabValue} index={3}>
+          <>
+            <AddMoreButton title="Add Observation" handleAdd={() => {}} />
+            {
+            Object.keys(observationLogs).map((groupedDate) => (
+              <GroupedObservations
+                key={groupedDate}
+                groupedDate={groupedDate}
+                eventLogs={observationLogs[groupedDate]}
+              />
+            ))
+          }
+          </>
         </TabPanel>
         {// only admins should be able to schedule a visit request
             authState.user.userType === 'admin' && (
