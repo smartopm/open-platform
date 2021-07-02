@@ -103,7 +103,9 @@ RSpec.describe Types::Queries::Transaction do
                                              site_community: community,
                                            })
           payment_stats = result.dig('data', 'paymentAccountingStats', 0)
-          expect(payment_stats['trxDate'].to_date).to eql transaction.created_at.to_date
+          expect(payment_stats['trxDate'].to_date).to eql(
+            transaction.created_at.in_time_zone('Africa/Lusaka').to_date,
+          )
           expect(payment_stats['cash']).to eql 500
           expect(payment_stats['mobileMoney']).to eql 0
           expect(payment_stats['bankTransfer']).to eql 0
