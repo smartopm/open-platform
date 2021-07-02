@@ -4,23 +4,25 @@ import Divider from '@material-ui/core/Divider';
 import { IconButton, Typography } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
-// import { useTranslation } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
+import { isToday } from 'date-fns';
 import DividerWithText from '../../../shared/DividerWithText';
 import { dateTimeToString, dateToString } from '../../../components/DateContainer';
+import { titleize } from '../../../utils/helpers';
 
-export default function GroupedObservations({ groupedDate, eventLogs }) {
+export default function GroupedObservations({ groupedDate, eventLogs, routeToEntry }) {
   const classes = useStyles();
   const [collapsed, setCollapsed] = useState(false);
-  // const { t } = useTranslation(['search', 'common']);
+  const { t } = useTranslation(['logbook', 'common']);
 
   return (
     <div style={{ fontSize: '14px' }}>
       <DividerWithText>
         <IconButton onClick={() => setCollapsed(!collapsed)} style={{ color: '#4B4B4B' }}>
-          <Typography style={{ fontWeight: 700 }}>
-            {groupedDate}
+          <Typography style={{ fontWeight: 700, marginRight: '7px', whiteSpace: 'nowrap' }}>
+            {isToday(new Date(groupedDate)) ? 'Today' : dateToString(groupedDate)}
             {' '}
           </Typography>
           {collapsed ? <ChevronRightIcon /> : <ExpandMoreIcon />}
@@ -34,25 +36,40 @@ export default function GroupedObservations({ groupedDate, eventLogs }) {
               justify="flex-start"
               direction="row"
               spacing={2}
-              style={{ paddingTop: '30px' }}
+              style={{ paddingTop: '30px', cursor: 'pointer' }}
+              onClick={() => routeToEntry(eventLog)}
             >
               <Grid item className={classes.gridItem} style={{ fontWeight: 500 }}>
-                {eventLog.entryRequest.name}
+                {eventLog.refType === 'Users::User'
+                  ? eventLog.user?.name
+                  : eventLog.entryRequest?.name}
               </Grid>
               <Grid item style={{ maxWidth: '2px' }}>
                 <Divider orientation="vertical" flexItem className={classes.verticalDivider} />
               </Grid>
               <Grid item className={classes.gridItem}>
-                {eventLog.entryRequest.reason}
+                {titleize(
+                  eventLog.refType === 'Users::User'
+                    ? eventLog.user?.userType
+                    : eventLog.entryRequest?.reason
+                )}
               </Grid>
-              <Grid item style={{ maxWidth: '2px' }}>
-                <Divider orientation="vertical" flexItem className={classes.verticalDivider} />
-              </Grid>
-              <Grid item className={classes.gridItem}>
-                Granted access by 
-                {' '}
-                {eventLog.actingUser.name}
-              </Grid>
+              {eventLog.refType === 'Logs::EntryRequest' && !!eventLog.entryRequest?.grantedState && (
+                <>
+                  <Grid item style={{ maxWidth: '2px' }}>
+                    <Divider orientation="vertical" flexItem className={classes.verticalDivider} />
+                  </Grid>
+                  <Grid item className={classes.gridItem}>
+                    {eventLog.entryRequest?.grantedState === 1
+                      ? `${t('logbook.granted_access')} `
+                      : `${t('logbook.denied_access')} `}
+                    {' '}
+                    by 
+                    {' '}
+                    {eventLog.actingUser.name}
+                  </Grid>
+                </>
+              )}
               <Grid item style={{ maxWidth: '2px' }}>
                 <Divider orientation="vertical" flexItem className={classes.verticalDivider} />
               </Grid>
@@ -73,7 +90,7 @@ export default function GroupedObservations({ groupedDate, eventLogs }) {
               style={{ marginBottom: '20px' }}
             >
               <Grid item sm={8}>
-                {eventLog.note}
+                {eventLog.data.note}
               </Grid>
 
               <Grid item container direction="row" sm={4} justify="flex-end">
@@ -105,7 +122,8 @@ GroupedObservations.propTypes = {
   eventLogs: PropTypes.arrayOf(
     PropTypes.shape({
       note: PropTypes.string,
-      createdAt: PropTypes.string,
+      createdAt: PropTypes.string
     })
-  ).isRequired
+  ).isRequired,
+  routeToEntry: PropTypes.func.isRequired
 };

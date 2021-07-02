@@ -62,7 +62,7 @@ const AllEventLogs = (history, match) => {
     0: subjects,
     1: 'user_enrolled',
     2: 'visit_request',
-    3: 'visitor_entry'
+    3: 'observation_log'
   };
 
   const { loading, error, data, refetch } = useQuery(AllEventLogsQuery, {
@@ -285,53 +285,17 @@ export function IndexComponent({
       return visitorName.toLowerCase().includes(searchTerm.toLowerCase());
     });
 
-  const observationLogs = {
-    "2021/05/05": [
-        {
-          refId: '123',
-          actingUser: {
-            name: 'Nurudeen Ibrahim'
-          },
-          note: 'Car used on entry was extremly rough and the xhaust of the vehicle was bad and made a lot of noise',
-          createdAt: new Date(),
-          entryRequest: {
-            id: '123',
-            name: 'Gbemisola',
-            startTime: new Date(),
-            reason: 'Prospective Client'
-          }
-        },
-        {
-          refId: '123',
-          actingUser: {
-            name: 'Nurudeen Ibrahim'
-          },
-          note: 'Car used on entry was extremly rough and the xhaust of the vehicle',
-          createdAt: new Date(),
-          entryRequest: {
-            id: '123',
-            name: 'Gbemisola',
-            startTime: new Date(),
-            reason: 'Prospective Client'
-          }
-        }
-      ],
-    "2021/07/01": [
-        {
-          refId: '124',
-          actingUser: {
-            name: 'Olivier JM'
-          },
-          note: 'Car used on entry was extremly rough and the xhaust of the vehicle was bad and made a lot of noise',
-          createdAt: new Date(),
-          entryRequest: {
-            id: '124',
-            name: 'Muraina',
-            startTime: new Date(),
-            reason: 'Prospective Client'
-          }
-        }
-      ]
+  let observationLogs;
+  if (tabValue === 3) {
+    observationLogs = data?.result?.reduce((groups, log) => {
+      const date = log.createdAt.split('T')[0];
+      if (!groups[date]) {
+        // eslint-disable-next-line no-param-reassign
+        groups[date] = [];
+      }
+      groups[date].push(log);
+      return groups;
+    }, {});
   }
 
   return (
@@ -374,11 +338,12 @@ export function IndexComponent({
           <>
             <AddMoreButton title="Add Observation" handleAdd={() => {}} />
             {
-            Object.keys(observationLogs).map((groupedDate) => (
+            observationLogs && Object.keys(observationLogs).map((groupedDate) => (
               <GroupedObservations
                 key={groupedDate}
                 groupedDate={groupedDate}
                 eventLogs={observationLogs[groupedDate]}
+                routeToEntry={routeToAction}
               />
             ))
           }
