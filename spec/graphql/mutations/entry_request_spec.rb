@@ -144,7 +144,7 @@ RSpec.describe Mutations::EntryRequest do
 
     let(:query) do
       <<~GQL
-        mutation addObservationNote($id: ID!, $note: String, $refType: String!) {
+        mutation addObservationNote($id: ID, $note: String, $refType: String) {
           entryRequestNote(id: $id, note: $note, refType: $refType) {
             event {
               id
@@ -188,27 +188,29 @@ RSpec.describe Mutations::EntryRequest do
       expect(result.dig('data', 'entryRequestNote', 'event', 'data', 'note')).to include 'The user'
     end
 
-    it 'returns an error when entry does not exist' do
+    it 'adds a note without any entry' do
       variables = {
-        id: SecureRandom.uuid,
-        note: 'The vehicle was too noisy',
-        refType: 'Logs::EntryRequest',
+        id: nil,
+        note: 'An ordinary note',
+        refType: nil,
       }
       result = DoubleGdpSchema.execute(query, variables: variables,
                                               context: {
                                                 current_user: guard,
                                                 site_community: guard.community,
                                               }).as_json
-      expect(result['errors']).not_to be_nil
-      expect(result.dig('data', 'entryRequestNote', 'event', 'id')).to be_nil
-      expect(result.dig('errors', 0, 'message')).to include 'Not found'
+      expect(result['errors']).to be_nil
+      expect(result.dig('data', 'entryRequestNote', 'event', 'refType')).to be_nil
+      expect(result.dig('data', 'entryRequestNote', 'event', 'data', 'note')).to include(
+        'An ordinary note',
+      )
     end
 
-    it 'returns an error when fields are not valid' do
+    it 'returns an error when note is empty' do
       variables = {
-        ids: entry_request.id,
-        note: 'The vehicle was too noisy',
-        refType: 'Logs::EntryRequest',
+        id: contractor.id,
+        note: '',
+        refType: 'Users::User',
       }
       result = DoubleGdpSchema.execute(query, variables: variables,
                                               context: {
@@ -217,7 +219,7 @@ RSpec.describe Mutations::EntryRequest do
                                               }).as_json
       expect(result['errors']).not_to be_nil
       expect(result.dig('data', 'entryRequestNote', 'event', 'id')).to be_nil
-      expect(result.dig('errors', 0, 'message')).to include 'type ID! was provided invalid value'
+      expect(result.dig('errors', 0, 'message')).to include 'cannot be empty'
     end
 
     it 'returns Unauthorized for non admin and security_guard' do

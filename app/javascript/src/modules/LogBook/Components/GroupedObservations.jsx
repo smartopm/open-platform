@@ -48,7 +48,7 @@ export default function GroupedObservations({ groupedDate, eventLogs, routeToEnt
                 <Grid item style={{ maxWidth: '2px' }}>
                   <Divider orientation="vertical" flexItem className={classes.verticalDivider} />
                 </Grid>
-                <Grid item className={classes.gridItem}>
+                <Grid item className={classes.gridItem} data-testid="reason-or-user-type">
                   {titleize(
                     eventLog.refType === 'Users::User'
                       ? eventLog.user?.userType
@@ -70,7 +70,7 @@ export default function GroupedObservations({ groupedDate, eventLogs, routeToEnt
                           ? `${t('logbook.granted_access')} `
                           : `${t('logbook.denied_access')} `}
                         {' '}
-                        by 
+                        by
                         {' '}
                         {eventLog.actingUser.name}
                       </Grid>
@@ -80,7 +80,7 @@ export default function GroupedObservations({ groupedDate, eventLogs, routeToEnt
                   <Divider orientation="vertical" flexItem className={classes.verticalDivider} />
                 </Grid>
                 <Grid item className={classes.gridItem}>
-                  Time of access: 
+                  Time of access:
                   {' '}
                   {dateToString(eventLog.createdAt)}
                   {' '}
