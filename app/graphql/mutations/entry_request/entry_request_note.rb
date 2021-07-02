@@ -10,12 +10,15 @@ module Mutations
 
       field :event, Types::EventLogType, null: true
 
+      # rubocop:disable Metrics/AbcSize
       def resolve(vals)
-        raise GraphQL::ExecutionError, I18n.t('errors.entry_request.empty_note') if vals[:note].blank?
+        if vals[:note].blank?
+          raise GraphQL::ExecutionError, I18n.t('errors.entry_request.empty_note')
+        end
 
         log = vals[:ref_type]&.constantize&.find_by(
           id: vals[:id],
-          community_id: context[:site_community].id
+          community_id: context[:site_community].id,
         )
 
         evt = context[:current_user].generate_events('observation_log', log, note: vals[:note])
@@ -23,6 +26,7 @@ module Mutations
 
         { event: evt }
       end
+      # rubocop:enable Metrics/AbcSize
 
       # Verifies if current user is present or not.
       def authorized?(_vals)
