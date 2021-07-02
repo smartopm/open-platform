@@ -4,7 +4,6 @@ import '@testing-library/jest-dom/extend-expect'
 import { BrowserRouter } from 'react-router-dom/'
 import { MockedProvider } from '@apollo/react-testing'
 import UserInformation from '../Components/UserInformation'
-import { UserActivePlanQuery } from '../../../graphql/queries/user'
 import MockedThemeProvider from '../../__mocks__/mock_theme'
 
 describe("User information component loads",()=>{
@@ -76,44 +75,8 @@ describe("User information component loads",()=>{
         )
         await waitFor(
           () => { expect(getByText('Yoram')).toBeInTheDocument()
-                  expect(getByText('Valid')).toBeInTheDocument() },
+                  expect(getByText('common:user_types.admin')).toBeInTheDocument() },
           { timeout: 50 }
         )
     })
-    it('should render tab elemets', async () => {
-      const anotherMock = {
-        request: {
-          query: UserActivePlanQuery
-        },
-        result: {
-          data: {
-            userActivePlan: true
-          }
-        }
-      };
-      const { getAllByText } = render(
-        <MockedProvider mocks={[anotherMock]}>
-          <BrowserRouter>
-            <MockedThemeProvider>
-              <UserInformation
-                data={data}
-                authState={authstate}
-                accountData={accountData}
-                parcelData={parcelData}
-              />
-            </MockedThemeProvider>
-          </BrowserRouter>
-        </MockedProvider>
-      );
-
-      await waitFor(
-        () => {
-          expect(getAllByText('common:misc.plots')[0]).toBeInTheDocument();
-          expect(getAllByText('common:misc.communication')[0]).toBeInTheDocument();
-          expect(getAllByText('common:misc.payments')[0]).toBeInTheDocument();
-          expect(getAllByText('common:misc.contact')[0]).toBeInTheDocument();
-        },
-        { timeout: 50 }
-      );
-    });
 })

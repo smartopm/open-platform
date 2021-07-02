@@ -116,17 +116,5 @@ const styles = StyleSheet.create({
     maxWidth: '200px',
     maxHeight: '200px',
     borderRadius: '100px',
-    '@media (max-width: 420px)': {
-      marginLeft: '21%'
-    },
-    '@media (min-width: 620px)': {
-      marginLeft: '33%'
-    },
-    '@media (min-width: 1320px)': {
-      marginLeft: '37%'
-    },
-    '@media (min-width: 1620px)': {
-      marginLeft: '40%'
-    },
   }
 });

@@ -43,7 +43,7 @@ const userMenus = [
     },
     name: t => t('menu.plot', { count: 0 }),
     featureName: 'Properties',
-    accessibleBy: ['admin']
+    accessibleBy: ctx => handler({ userTypes: ['admin', 'client', 'resident'], ctx }),
   },
   {
     routeProps: {
@@ -52,7 +52,7 @@ const userMenus = [
     },
     name: t => t('menu.form', { count: 0 }),
     featureName: 'Forms',
-    accessibleBy: ['admin']
+    accessibleBy: ctx => handler({ userTypes: ['admin', 'client', 'resident'], ctx }),
   },
   {
     routeProps: {
@@ -70,7 +70,7 @@ const userMenus = [
     },
     name: t => t('menu.payment', { count: 0 }),
     featureName: 'Payments',
-    accessibleBy: ['admin']
+    accessibleBy: ctx => handler({ userTypes: ['admin', 'client', 'resident'], ctx }),
   },
   {
     routeProps: {
@@ -79,7 +79,7 @@ const userMenus = [
     },
     name: t => t('menu.plan', { count: 0 }),
     featureName: 'Payments',
-    accessibleBy: ['admin']
+    accessibleBy: ctx => handler({ userTypes: ['admin', 'client', 'resident'], ctx }),
   },
   {
     routeProps: {
