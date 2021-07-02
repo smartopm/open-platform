@@ -30,57 +30,64 @@ export default function GroupedObservations({ groupedDate, eventLogs, routeToEnt
       </DividerWithText>
       {!collapsed &&
         eventLogs.map(eventLog => (
-          <>
-            <Grid
-              container
-              justify="flex-start"
-              direction="row"
-              spacing={2}
-              style={{ paddingTop: '30px', cursor: 'pointer' }}
-              onClick={() => routeToEntry(eventLog)}
-            >
-              <Grid item className={classes.gridItem} style={{ fontWeight: 500 }}>
-                {eventLog.refType === 'Users::User'
-                  ? eventLog.user?.name
-                  : eventLog.entryRequest?.name}
+          <div key={eventLog.id}>
+            {!!eventLog.refType && (
+              <Grid
+                container
+                justify="flex-start"
+                direction="row"
+                spacing={2}
+                style={{ paddingTop: '30px', cursor: 'pointer' }}
+                onClick={() => routeToEntry(eventLog)}
+              >
+                <Grid item className={classes.gridItem} style={{ fontWeight: 500 }}>
+                  {eventLog.refType === 'Users::User'
+                    ? eventLog.user?.name
+                    : eventLog.entryRequest?.name}
+                </Grid>
+                <Grid item style={{ maxWidth: '2px' }}>
+                  <Divider orientation="vertical" flexItem className={classes.verticalDivider} />
+                </Grid>
+                <Grid item className={classes.gridItem}>
+                  {titleize(
+                    eventLog.refType === 'Users::User'
+                      ? eventLog.user?.userType
+                      : eventLog.entryRequest?.reason
+                  )}
+                </Grid>
+                {eventLog.refType === 'Logs::EntryRequest' &&
+                  !!eventLog.entryRequest?.grantedState && (
+                    <>
+                      <Grid item style={{ maxWidth: '2px' }}>
+                        <Divider
+                          orientation="vertical"
+                          flexItem
+                          className={classes.verticalDivider}
+                        />
+                      </Grid>
+                      <Grid item className={classes.gridItem}>
+                        {eventLog.entryRequest?.grantedState === 1
+                          ? `${t('logbook.granted_access')} `
+                          : `${t('logbook.denied_access')} `}
+                        {' '}
+                        by 
+                        {' '}
+                        {eventLog.actingUser.name}
+                      </Grid>
+                    </>
+                  )}
+                <Grid item style={{ maxWidth: '2px' }}>
+                  <Divider orientation="vertical" flexItem className={classes.verticalDivider} />
+                </Grid>
+                <Grid item className={classes.gridItem}>
+                  Time of access: 
+                  {' '}
+                  {dateToString(eventLog.createdAt)}
+                  {' '}
+                  {dateTimeToString(eventLog.createdAt)}
+                </Grid>
               </Grid>
-              <Grid item style={{ maxWidth: '2px' }}>
-                <Divider orientation="vertical" flexItem className={classes.verticalDivider} />
-              </Grid>
-              <Grid item className={classes.gridItem}>
-                {titleize(
-                  eventLog.refType === 'Users::User'
-                    ? eventLog.user?.userType
-                    : eventLog.entryRequest?.reason
-                )}
-              </Grid>
-              {eventLog.refType === 'Logs::EntryRequest' && !!eventLog.entryRequest?.grantedState && (
-                <>
-                  <Grid item style={{ maxWidth: '2px' }}>
-                    <Divider orientation="vertical" flexItem className={classes.verticalDivider} />
-                  </Grid>
-                  <Grid item className={classes.gridItem}>
-                    {eventLog.entryRequest?.grantedState === 1
-                      ? `${t('logbook.granted_access')} `
-                      : `${t('logbook.denied_access')} `}
-                    {' '}
-                    by 
-                    {' '}
-                    {eventLog.actingUser.name}
-                  </Grid>
-                </>
-              )}
-              <Grid item style={{ maxWidth: '2px' }}>
-                <Divider orientation="vertical" flexItem className={classes.verticalDivider} />
-              </Grid>
-              <Grid item className={classes.gridItem}>
-                Time of access: 
-                {' '}
-                {dateToString(eventLog.createdAt)}
-                {' '}
-                {dateTimeToString(eventLog.createdAt)}
-              </Grid>
-            </Grid>
+            )}
 
             <Grid
               container
@@ -101,7 +108,7 @@ export default function GroupedObservations({ groupedDate, eventLogs, routeToEnt
                 <Grid item>{dateTimeToString(eventLog.createdAt)}</Grid>
               </Grid>
             </Grid>
-          </>
+          </div>
         ))}
     </div>
   );

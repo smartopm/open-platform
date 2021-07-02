@@ -4,18 +4,17 @@ module Mutations
   module EntryRequest
     # Add an observation note to an entry request
     class EntryRequestNote < BaseMutation
-      argument :id, ID, required: true
-      argument :ref_type, String, required: true
+      argument :id, ID, required: false
+      argument :ref_type, String, required: false
       argument :note, String, required: false
 
       field :event, Types::EventLogType, null: true
 
       def resolve(vals)
-        log = vals[:ref_type].constantize.find_by(
+        log = vals[:ref_type]&.constantize&.find_by(
           id: vals[:id],
           community_id: context[:site_community].id
         )
-        raise GraphQL::ExecutionError, I18n.t('errors.not_found') unless log
 
         evt = context[:current_user].generate_events('observation_log', log, note: vals[:note])
         raise GraphQL::ExecutionError, evt.errors.full_messages if evt.blank?

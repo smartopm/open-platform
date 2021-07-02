@@ -11,7 +11,7 @@ import { useLocation } from 'react-router-dom';
 import { StyleSheet, css } from 'aphrodite';
 import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
-import { TextField, Typography } from '@material-ui/core';
+import { TextField, Typography, Button } from '@material-ui/core';
 import Loading, { Spinner } from '../../../shared/Loading';
 import { AllEventLogsQuery } from '../../../graphql/queries';
 import ErrorPage from '../../../components/Error';
@@ -26,6 +26,8 @@ import { EntryRequestGrant } from '../../../graphql/mutations';
 import MessageAlert from '../../../components/MessageAlert';
 import GroupedObservations from './GroupedObservations';
 import AddMoreButton from '../../../shared/buttons/AddMoreButton';
+import EntryNoteDialog from '../../../shared/dialogs/EntryNoteDialog';
+import AddObservationNoteMutation from '../graphql/logbook_mutations';
 
 export default ({ history, match }) => AllEventLogs(history, match);
 
@@ -134,6 +136,10 @@ export function IndexComponent({
 }) {
   const authState = useContext(AuthStateContext);
   const { t } = useTranslation(['logbook', 'common', 'dashboard']);
+  const [isObservationOpen, setIsObservationOpen] = useState(false)
+  const [observationNote, setObservationNote] = useState("")
+  const [observationDetails, setDetails] = useState({ isError: false, message: '', loading: false })
+  const [addObservationNote] = useMutation(AddObservationNoteMutation)
 
   function routeToAction(eventLog) {
     if (eventLog.refType === 'Logs::EntryRequest') {
@@ -154,6 +160,19 @@ export function IndexComponent({
       pathname: `/request/${id}`,
       state: { from: 'enroll', offset }
     });
+  }
+
+  function handleSaveObservation() {
+    setDetails({ ...observationDetails, loading: true })
+    addObservationNote({ variables: { note: observationNote } })
+      .then(() => {
+        setDetails({ ...observationDetails, loading: false, isError: false, message: t('logbook:observation.created_observation') })
+        refetch()
+        setIsObservationOpen(false)
+      })
+      .catch(error => {
+        setDetails({ ...observationDetails, loading: false, isError: true, message: error.message })
+      })
   }
 
   function logs(eventLogs) {
@@ -300,6 +319,33 @@ export function IndexComponent({
 
   return (
     <div>
+      <MessageAlert
+        type={!observationDetails.isError ? 'success' : 'error'}
+        message={observationDetails.message}
+        open={!!observationDetails.message}
+        handleClose={() => setDetails({ ...observationDetails, message: '' })}
+      />
+      <EntryNoteDialog
+        open={isObservationOpen}
+        handleDialogStatus={() => setIsObservationOpen(!isObservationOpen)}
+        observationHandler={{
+          value: observationNote,
+          handleChange: value => setObservationNote(value)
+        }}
+      >
+        {observationDetails.loading ? (
+          <Spinner />
+        ) : (
+          <>
+            <Button onClick={() => setIsObservationOpen(false)} color="secondary" variant="outlined" data-testid='cancel'>
+              {t('common:form_actions.cancel')}
+            </Button>
+            <Button onClick={handleSaveObservation} color="primary" variant="contained" data-testid='save' style={{color: 'white'}} autoFocus>
+              {t('common:form_actions.save')}
+            </Button>
+          </>
+        )}
+      </EntryNoteDialog>
       <div className="container">
         <div className="form-group">
           <TextField
@@ -336,7 +382,7 @@ export function IndexComponent({
         </TabPanel>
         <TabPanel value={tabValue} index={3}>
           <>
-            <AddMoreButton title="Add Observation" handleAdd={() => {}} />
+            <AddMoreButton title="Add Observation" handleAdd={() => setIsObservationOpen(true)} />
             {
             observationLogs && Object.keys(observationLogs).map((groupedDate) => (
               <GroupedObservations
