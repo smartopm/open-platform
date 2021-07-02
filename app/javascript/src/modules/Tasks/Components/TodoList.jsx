@@ -596,7 +596,7 @@ export default function TodoList({
             )}
             <br />
             <CenteredContent>
-              <Paginate offSet={offset} limit={limit} active handlePageChange={paginate} />
+              <Paginate offSet={offset} limit={limit} active={offset >= 1} handlePageChange={paginate} />
             </CenteredContent>
             <Fab
               variant="extended"

@@ -618,7 +618,7 @@ export default function UsersList() {
             >
               <Paginate
                 count={data.users.length}
-                active={false}
+                active={offset >= 1}
                 offset={offset}
                 handlePageChange={paginate}
                 limit={limit}
