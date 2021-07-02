@@ -48,6 +48,7 @@ module Types
     field :substatus_logs, [Types::SubstatusLogType], null: true, visible: { roles: %i[admin],
                                                                              user: :id }
     field :ext_ref_id, String, null: true, visible: { roles: %i[admin], user: :id }
+    field :has_payment_plan, Boolean, null: false
 
     def avatar_url
       return nil unless object.avatar.attached?
@@ -65,6 +66,10 @@ module Types
       base_url = HostEnv.base_url(object.community)
       path = Rails.application.routes.url_helpers.rails_blob_path(type)
       "https://#{base_url}#{path}"
+    end
+
+    def has_payment_plan
+      object.payment_plans.active.present? || object.wallet_transactions.present?
     end
   end
 end

@@ -9,6 +9,7 @@ import EmailIcon from '@material-ui/icons/Email';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 import UserLabels from './UserLabels'
+import CaptureTemp from '../../../components/CaptureTemp'
 
 export default function UserDetail({ data, userType }) {
   const { t } = useTranslation('users')
@@ -52,6 +53,11 @@ export default function UserDetail({ data, userType }) {
           </div>
           )}
         </div>
+        {userType === 'security_guard' && (
+          <div className="container row d-flex justify-content-between" style={matches ? {} : {marginLeft: '80px' }}>
+            <CaptureTemp refId={data?.user.id} refName={data?.user.name} refType="Users::User" />
+          </div>
+        )}
         {['admin'].includes(userType) && <UserLabels userId={data.user.id} />}
       </div>
     </>
