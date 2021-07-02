@@ -41,6 +41,7 @@ const initialState = {
     userType: '',
     expiresAt: '',
     email: '',
+    companyName: '',
     loaded: false
 }
 export default function RequestUpdate({ id }) {
@@ -120,6 +121,7 @@ export default function RequestUpdate({ id }) {
 
   function handleGrantRequest() {
     setLoading(true)
+    setModal(false)
     handleCreateRequest()
       .then(requestId => grantEntry({ variables: { id: requestId } }))
       .then(() => {
@@ -199,21 +201,25 @@ export default function RequestUpdate({ id }) {
     setModal(!isModalOpen)
   }
 
+  function resetForm(to){
+    setFormData(initialState)
+    setObservationNote("")
+    setRequestId("")
+    setIsObservationOpen(false)
+    setModal(false)
+    history.push(to)
+  }
+
   function handleSaveObservation(to){
     // we are skipping the observation notes
     if(!observationNote) {
-      history.push(to)
+      resetForm(to)
     }
     setDetails({ ...observationDetails, loading: true })
     addObservationNote({ variables: { id: reqId, note: observationNote, refType: 'Logs::EntryRequest'} })
       .then(() => {
         setDetails({ ...observationDetails, loading: false, isError: false, message: t('logbook:observation.created_observation') })
-        setFormData(initialState)
-        setObservationNote("")
-        setRequestId("")
-        setIsObservationOpen(false)
-        setModal(false)
-        history.push(to)
+        resetForm(to)
       })
       .catch(error => {
         setDetails({ ...observationDetails, loading: false, isError: true, message: error.message })
@@ -330,7 +336,7 @@ export default function RequestUpdate({ id }) {
               className="form-control"
               type="text"
               value={formData.guard?.name || authState.user.name}
-              // disabled
+              disabled
               name="name"
               required
             />
