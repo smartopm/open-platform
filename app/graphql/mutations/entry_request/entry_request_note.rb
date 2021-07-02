@@ -11,6 +11,8 @@ module Mutations
       field :event, Types::EventLogType, null: true
 
       def resolve(vals)
+        raise GraphQL::ExecutionError, I18n.t('errors.entry_request.empty_note') if vals[:note].blank?
+
         log = vals[:ref_type]&.constantize&.find_by(
           id: vals[:id],
           community_id: context[:site_community].id

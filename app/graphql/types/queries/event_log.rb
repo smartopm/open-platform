@@ -77,8 +77,9 @@ module Types::Queries::EventLog
   end
 
   def query_logs_with_name(query, name, limit, offset)
+    # TODO: Move this search to serchcop
     context[:site_community].event_logs.eager_load(:acting_user).where(query)
-                            .where("data->>'ref_name' ILIKE ?", "%#{name}%")
+                            .where("data->>'ref_name' ILIKE ? OR data->>'note' ILIKE ?", "%#{name}%", "%#{name}%")
                             .limit(limit).offset(offset)
   end
 end
