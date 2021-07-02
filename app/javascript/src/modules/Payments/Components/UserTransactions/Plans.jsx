@@ -1,10 +1,11 @@
 /* eslint-disable no-nested-ternary */
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import { useLazyQuery } from 'react-apollo'
 import PropTypes from 'prop-types'
 import { useTheme, makeStyles } from '@material-ui/core/styles';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { Typography } from '@material-ui/core'
+import { Context as AuthStateContext } from '../../../../containers/Provider/AuthStateProvider'
 import UserPaymentPlanItem from './UserPaymentPlanItem'
 import Balance from './UserBalance'
 import { UserBalance } from '../../../../graphql/queries'
@@ -15,6 +16,7 @@ import { currencies } from '../../../../utils/constants'
 import CenteredContent from '../../../../components/CenteredContent'
 import Paginate from '../../../../components/Paginate'
 import ListHeader from '../../../../shared/list/ListHeader';
+import ButtonComponent from '../../../../shared/buttons/Button'
 
 export default function PaymentPlans({ userId, user, userData, tab }) {
   const planHeader = [
@@ -25,6 +27,7 @@ export default function PaymentPlans({ userId, user, userData, tab }) {
     { title: 'Payment Day', col: 2 },
     { title: 'Menu', col: 2 }
   ];
+  const authState = useContext(AuthStateContext);
   const path = useParamsQuery()
   const classes = useStyles();
   const limit = 10
@@ -84,7 +87,14 @@ export default function PaymentPlans({ userId, user, userData, tab }) {
         data?.userPlansWithPayments?.length > 0 ? (
           <div className={classes.planList}>
             <div>
-              <Typography className={classes.plan}>Plans</Typography>
+              <div style={{ display: 'flex', width: '100%', justifyContent: 'space-between' }}>
+                <Typography className={classes.plan}>Plans</Typography>
+                {
+                  authState.user?.userType === 'admin' && (
+                      <ButtonComponent color='primary' buttonText="View all Transactions" handleClick={() => {}} />
+                  )
+                }
+              </div>
               {matches && <ListHeader headers={planHeader} color />}
             </div>
             <div>
