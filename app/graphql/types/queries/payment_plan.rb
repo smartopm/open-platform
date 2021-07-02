@@ -6,7 +6,7 @@ module Types::Queries::PaymentPlan
 
   included do
     field :user_plans_with_payments, [Types::PaymentPlanType], null: true do
-      description 'return payment plans for user'
+      description 'return payment plans with payments for user'
       argument :user_id, GraphQL::Types::ID, required: true
       argument :offset, Integer, required: false
       argument :limit, Integer, required: false
@@ -16,9 +16,16 @@ module Types::Queries::PaymentPlan
       description 'Fetch statements of payment plan'
       argument :land_parcel_id, GraphQL::Types::ID, required: true
     end
+
+    field :user_payment_plans, [Types::PaymentPlanType], null: true do
+      description 'returns payment plans for user'
+      argument :user_id, GraphQL::Types::ID, required: true
+      argument :offset, Integer, required: false
+      argument :limit, Integer, required: false
+    end
   end
 
-  # Returns list of user's all payment plans
+  # Returns list of user's all payment plans with payments
   #
   # @param user_id [String]
   # @param offset [Integer]
@@ -53,6 +60,20 @@ module Types::Queries::PaymentPlan
       payment_plan: payment_plan,
       statements: statements(payment_plan),
     }
+  end
+
+  # Returns list of user's all payment plans
+  #
+  # @param user_id [String]
+  # @param offset [Integer]
+  # @param limit [Integer]
+  #
+  # @return [Array<PaymentPlan>]
+  def user_payment_plans(user_id: nil, offset: 0, limit: 10)
+    raise_unauthorized_error
+
+    user = context[:site_community].users.find_by(id: user_id)
+    user.payment_plans.includes(:land_parcel).limit(limit).offset(offset)
   end
 
   private
