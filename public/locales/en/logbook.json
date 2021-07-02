@@ -32,7 +32,12 @@
     "log": "Log",
     "success_message": "Success: Access {{action}} successfully",
     "granted": "granted",
-    "denied": "denied"
+    "denied": "denied",
+    "add_observation": "Add Observation",
+    "granted_access_by": "Granted access by",
+    "denied_access_by": "Denied access by",
+    "time_of_access": "Time of access",
+    "today": "Today"
   },
   "log_title": {
     "visitor": "Visitor",

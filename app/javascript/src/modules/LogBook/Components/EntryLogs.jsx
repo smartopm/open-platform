@@ -382,7 +382,7 @@ export function IndexComponent({
         </TabPanel>
         <TabPanel value={tabValue} index={3}>
           <>
-            <AddMoreButton title="Add Observation" handleAdd={() => setIsObservationOpen(true)} />
+            <AddMoreButton title={t('logbook.add_observation')} handleAdd={() => setIsObservationOpen(true)} />
             {
             observationLogs && Object.keys(observationLogs).map((groupedDate) => (
               <GroupedObservations

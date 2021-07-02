@@ -22,7 +22,7 @@ export default function GroupedObservations({ groupedDate, eventLogs, routeToEnt
       <DividerWithText>
         <IconButton onClick={() => setCollapsed(!collapsed)} style={{ color: '#4B4B4B' }}>
           <Typography style={{ fontWeight: 700, marginRight: '7px', whiteSpace: 'nowrap' }}>
-            {isToday(new Date(groupedDate)) ? 'Today' : dateToString(groupedDate)}
+            {isToday(new Date(groupedDate)) ? t('logbook.today') : dateToString(groupedDate)}
             {' '}
           </Typography>
           {collapsed ? <ChevronRightIcon /> : <ExpandMoreIcon />}
@@ -67,10 +67,8 @@ export default function GroupedObservations({ groupedDate, eventLogs, routeToEnt
                       </Grid>
                       <Grid item className={classes.gridItem}>
                         {eventLog.entryRequest?.grantedState === 1
-                          ? `${t('logbook.granted_access')} `
-                          : `${t('logbook.denied_access')} `}
-                        {' '}
-                        by
+                          ? `${t('logbook.granted_access_by')} `
+                          : `${t('logbook.denied_access_by')} `}
                         {' '}
                         {eventLog.actingUser.name}
                       </Grid>
@@ -80,7 +78,7 @@ export default function GroupedObservations({ groupedDate, eventLogs, routeToEnt
                   <Divider orientation="vertical" flexItem className={classes.verticalDivider} />
                 </Grid>
                 <Grid item className={classes.gridItem}>
-                  Time of access:
+                  {`${t('logbook.time_of_access')}: `}
                   {' '}
                   {dateToString(eventLog.createdAt)}
                   {' '}
