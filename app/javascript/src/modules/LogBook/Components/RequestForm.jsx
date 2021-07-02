@@ -12,7 +12,11 @@ import { Footer } from '../../../components/Footer'
 import DatePickerDialog, { ThemedTimePicker } from '../../../components/DatePickerDialog'
 import { defaultBusinessReasons } from '../../../utils/constants'
 import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider'
+import { checkInValidRequiredFields, defaultRequiredFields } from '../utils'
 
+// TODO: As of now this is only serving the visit_reuest, we can still migrate to reuse the 2 forms
+// - RequestUpdate
+// - RequestForm
 export default function RequestForm({ path }) {
   const initialState = {
     name: '',
@@ -35,17 +39,7 @@ export default function RequestForm({ path }) {
   const [inputValidationMsg, setInputValidationMsg] = useState({ isError: false, isSubmitting: false })
   const { t } = useTranslation(['common', 'logbook'])
 
-  const defaultRequiredFields= ['name', 'phoneNumber', 'nrc', 'vehiclePlate', 'reason', 'business']
   const requiredFields = authState?.user?.community?.communityRequiredFields?.manualEntryRequestForm || defaultRequiredFields
-  function checkInValidRequiredFields(formData){
-    const values = requiredFields.map(field => formData[String(field)])
-
-    function isNotValid(element){
-      return !element
-    }
-
-    return (values.some(isNotValid))
-  }
 
   function handleSubmit() {
     const variables = {
@@ -54,8 +48,8 @@ export default function RequestForm({ path }) {
       reason: userData.business
     }
 
-    const isAnyInvalid = checkInValidRequiredFields(variables)
-    if(path.includes('entry_request') && isAnyInvalid){
+    const isAnyInvalid = checkInValidRequiredFields(variables, requiredFields)
+    if(isAnyInvalid){
       setInputValidationMsg({ isError: true })
       return
     }
