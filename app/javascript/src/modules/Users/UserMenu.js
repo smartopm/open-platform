@@ -65,15 +65,6 @@ const userMenus = [
   },
   {
     routeProps: {
-      path: '/user/:id?tab=Payments',
-      component: <span />
-    },
-    name: t => t('menu.payment', { count: 0 }),
-    featureName: 'Payments',
-    accessibleBy: ctx => handler({ userTypes: ['admin', 'client', 'resident'], ctx }),
-  },
-  {
-    routeProps: {
       path: '/user/:id?tab=Plans',
       component: <span />
     },

@@ -38,6 +38,7 @@ export default function UserInformation({
 }) {
   const path = useParamsQuery();
   const tab = path.get('tab');
+  const subTab = path.get('subtab');
   const type = path.get('type');
   const { t } = useTranslation('users');
   const [tabValue, setValue] = useState(tab || 'Contacts');
@@ -221,14 +222,14 @@ export default function UserInformation({
         </>
         )}
         <FeatureCheck features={authState.user.community.features} name="Payments">
-          <TabPanel value={tabValue} index="Payments">
+          {subTab === 'transactions' && (
             <Transactions
               userId={userId}
               user={authState.user}
               userData={data.user}
               tab={tab}
             />
-          </TabPanel>
+          )}
           <TabPanel value={tabValue} index="Plans">
             <PaymentPlans
               userId={userId}
