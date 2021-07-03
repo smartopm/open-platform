@@ -302,6 +302,20 @@ export function IndexComponent({
                   >
                     Add Observation
                   </Typography>
+                  {' '}
+                  |
+                  {' '}
+                  {
+                    !event.data.note && (
+                      <Typography
+                        component="span"
+                        color="primary"
+                        style={{ cursor: 'pointer',  }}
+                      >
+                        Log Exit
+                      </Typography>
+                    )
+                  }
                 </span>
               </div>
             </div>
