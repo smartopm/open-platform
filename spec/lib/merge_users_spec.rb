@@ -55,7 +55,7 @@ RSpec.describe MergeUsers do
       initial_value: 'initial',
       updated_value: 'updated',
       action: %w[create update].sample,
-      note_entity_type: 'Note',
+      note_entity_type: 'Notes::Note',
       note_entity_id: note.id,
     )
   end

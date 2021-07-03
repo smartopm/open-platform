@@ -11,6 +11,15 @@ export const filterUserByLoggedin = {
 //   'https://public-api.wordpress.com/rest/v1.1/sites/doublegdp.wordpress.com';
 export const reasons = ['Visiting', 'Residing', 'Working', 'Passing through', 'Other'];
 
+export const defaultBusinessReasons = {
+  client: 'Client',
+  prospective_client: 'Prospective Client',
+  sales: 'Sales',
+  working: 'Working',
+  passing_through: 'Passing Through',
+  other: 'Other',
+};
+
 export const requiredFields = ['userType', 'phoneNumber', 'name', 'email'];
 
 export const userType = {
@@ -141,14 +150,6 @@ export const invoiceStatus = {
   pending: 'Pending'
 };
 
-export const entryReason = [
-  'Client',
-  'Prospective Client',
-  'Working',
-  'Sales',
-  'Passing through',
-  'Other'
-];
 // This is for the showRoom
 export const infoSource = [
   'Family / Friend / Acquaintance',
@@ -320,6 +321,12 @@ export const dateWidget = {
     ...InitialConfig.widgets.date,
     dateFormat: "YYYY.MM.DD",
     valueFormat: "YYYY-MM-DD",
+  },
+  datetime: {
+    ...InitialConfig.widgets.datetime,
+    timeFormat: "HH:mm",
+    dateFormat: "YYYY.MM.DD",
+    valueFormat: "YYYY-MM-DD HH:mm",
   }
 }
   export const invoiceQueryBuilderConfig = {
@@ -405,9 +412,7 @@ export const dateWidget = {
         type: 'select',
         valueSources: ['value'],
         fieldSettings: {
-          listValues: Object.entries(paymentType).map(([key, val]) => {
-            return { value: key, title: val }
-          })
+          listValues: Object.entries(paymentType).map(([key, val]) => ({ value: key, title: val }))
         }
       },
       phoneNumber: {
@@ -437,6 +442,11 @@ export const dateWidget = {
       },
       amount: {
         label: 'Payment Amount',
+        type: 'text',
+        valueSources: ['value']
+      },
+      nrc: {
+        label: 'NRC',
         type: 'text',
         valueSources: ['value']
       }
@@ -470,7 +480,8 @@ export const paymentFilterFields = {
     paymentType: 'source',
     receiptNumber: 'automated_receipt_number',
     manualReceiptNumber: 'manual_receipt_number',
-    amount: 'amount'
+    amount: 'amount',
+    nrc: 'ext_ref_id'
   }
 
   export const propertyQueryBuilderConfig = {
@@ -556,5 +567,23 @@ export const paymentFilterFields = {
     sculpture: {
       label: 'Sculpture',
       icon: 'https://cdn4.iconfinder.com/data/icons/logistics-and-transport-1/24/icn-place-stop-512.png',
+    },
+  };
+
+  export const communityVisitingHours = {
+    nkwashi: {
+      weekday: { min: 8, max: 16 },
+      saturday: { min: 8, max: 12 },
+      sunday: { isNotOff: false },
+    },
+    'ciudad morazán': {
+      weekday: { min: 0, max: 24 },
+      saturday: { min: 0, max: 24 },
+      sunday: { isNotOff: true },
+    },
+    doublegdp: {
+      weekday: { min: 8, max: 16 },
+      saturday: { min: 8, max: 12 },
+      sunday: { isNotOff: false },
     },
   };

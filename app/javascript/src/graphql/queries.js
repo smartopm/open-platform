@@ -228,7 +228,7 @@ export const UsersLiteQuery = gql`
 `
 
 export const UserSearchQuery = gql`
-  query UserSearch($query: String!, $limit: Int, $offset: Int) {
+  query UserSearch($query: String, $limit: Int, $offset: Int) {
     userSearch(query: $query, limit: $limit, offset: $offset) {
       id
       userType
@@ -237,6 +237,7 @@ export const UserSearchQuery = gql`
       roleName
       imageUrl
       avatarUrl
+      extRefId
     }
   }
 `
@@ -630,6 +631,7 @@ export const UserLabelsQuery = gql`
     userLabels(userId: $userId) {
       id
       shortDesc
+      color
     }
   }
 `
@@ -1021,7 +1023,12 @@ export const LandParcel = gql`
         fullName
         address1
         user {
+          name
           id
+          userType
+          extRefId
+          imageUrl
+          avatarUrl
         }
       }
     }

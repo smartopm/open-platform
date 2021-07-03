@@ -28,7 +28,10 @@
     "deny": "Deny",
     "call_manager": "Call Manager",
     "grant_deny_access": "Are you sure you want to {{action}} access to {{name}} ?",
-    "log": "Log"
+    "log": "Log",
+    "success_message": "Success: Access {{action}} successfully",
+    "granted": "granted",
+    "denied": "denied"
   },
   "log_title": {
     "visitor": "Visitor",
@@ -46,7 +49,23 @@
   },
   "access_actions": {
     "grant": "Grant",
-    "deny": "Deny"
+    "deny": "Deny",
+    "grant_access": "Grant Access"
   },
-  "entry_reason": ["Client", "Prospective Client", "Working", "Sales", "Passing through", "Other"]
+  "business_reasons": {
+    "client": "Client",
+    "prospective_client": "Prospective Client",
+    "working": "Working",
+    "sales": "Sales",
+    "passing_through": "Passing Through",
+    "other": "Other"
+  },
+  "observations": {
+    "observation_title": "Observations",
+    "close_go_dashboard": "Close & Go To Dashboard",
+    "skip_record_manual_entry": "{{action}} & Manually Record Next Entry",
+    "skip_scan_next_entry": "{{action}} & Scan Next Entry",
+    "created_observation": "Observation note successfully added",
+    "add_your_observation": "Do you have any observations you'd like to add?"
+  }
 }

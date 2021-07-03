@@ -28,6 +28,7 @@ module Payments
       attributes source: ['user_transaction.source']
       attributes parcel_number: ['land_parcel.parcel_number']
       attributes parcel_type: ['land_parcel.parcel_type']
+      attributes ext_ref_id: ['user.ext_ref_id']
     end
 
     search_scope :search_by_numbers do

@@ -25,7 +25,8 @@ module Logs
                         shift_start shift_end user_referred post_read post_shared
                         task_create task_update note_comment_create note_comment_update
                         form_create form_update form_publish form_submit form_update_submit
-                        visit_request invoice_change deposit_create payment_update].freeze
+                        visit_request invoice_change deposit_create payment_update
+                        observation_log].freeze
     validates :subject, inclusion: { in: VALID_SUBJECTS, allow_nil: false }
 
     # Only log user activity if we haven't seen them
@@ -146,6 +147,10 @@ module Logs
     def form_publish_to_sentence
       # published or deleted
       "#{acting_user_name} #{data['action']} the form"
+    end
+
+    def observation_log_to_sentence
+      "#{acting_user_name} added an observation log to an entry request"
     end
 
     def user_enrolled_to_sentence

@@ -233,6 +233,7 @@ export const EntryRequestCreate = gql`
     $visitationDate: String
     $startTime: String
     $endTime: String
+    $companyName: String
   ) {
     result: entryRequestCreate(
       name: $name
@@ -245,6 +246,7 @@ export const EntryRequestCreate = gql`
       visitationDate: $visitationDate
       startTime: $startTime
       endTime: $endTime
+      companyName: $companyName
     ) {
       entryRequest {
         ...EntryRequestFields
@@ -282,8 +284,8 @@ export const EntryRequestUpdate = gql`
 `
 
 export const EntryRequestGrant = gql`
-  mutation EntryRequestGrantMutation($id: ID!) {
-    result: entryRequestGrant(id: $id) {
+  mutation EntryRequestGrantMutation($id: ID!, $subject: String) {
+    result: entryRequestGrant(id: $id, subject: $subject) {
       entryRequest {
         ...EntryRequestFields
       }
@@ -304,7 +306,7 @@ export const EntryRequestDeny = gql`
 `
 
 export const loginPhone = gql`
-  mutation loginPhoneStart($phoneNumber: String!) {
+  mutation loginPhoneStart($phoneNumber: String) {
     loginPhoneStart(phoneNumber: $phoneNumber) {
       user {
         id

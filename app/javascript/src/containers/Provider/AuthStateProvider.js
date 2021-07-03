@@ -30,6 +30,7 @@ const QUERY = gql`
       imageUrl
       avatarUrl
       subStatus
+      paymentPlan
       community {
         id
         name
@@ -48,6 +49,7 @@ const QUERY = gql`
         features
         securityManager
         bankingDetails
+        communityRequiredFields
       }
     }
   }

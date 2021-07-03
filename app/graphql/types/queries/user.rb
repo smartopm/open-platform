@@ -23,7 +23,7 @@ module Types::Queries::User
     # Get a member's information
     field :user_search, [Types::UserType], null: true do
       description 'Find a user by name, phone number or user type'
-      argument :query, String, required: true
+      argument :query, String, required: false
       argument :offset, Integer, required: false
       argument :limit, Integer, required: false
     end
@@ -112,12 +112,12 @@ module Types::Queries::User
 
     search_method = 'search'
 
-    if query.include?('date_filter')
+    if query&.include?('date_filter')
       search_method = 'heavy_search'
-    elsif query.include?('plot_no')
+    elsif query&.include?('plot_no')
       search_method = 'plot_number'
       query = query.split(' ').last
-    elsif query.include?('contact_info')
+    elsif query&.include?('contact_info')
       search_method = 'search_by_contact_info'
       query = query.split(' ').last
     end
@@ -163,6 +163,7 @@ module Types::Queries::User
     raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') unless adm.present? && adm.admin?
 
     Users::User.allowed_users(context[:current_user])
+               .includes(:accounts)
                .search_lite(query)
                .order(name: :asc)
                .limit(limit)

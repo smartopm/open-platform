@@ -1,7 +1,16 @@
 {
   "access_actions": {
     "deny": "Denegar",
-    "grant": "Autorizar"
+    "grant": "Autorizar",
+    "grant_access": "Permitir Acceso"
+  },
+  "business_reasons": {
+    "client": "Cliente",
+    "other": "Otro",
+    "passing_through": "Pase temporario",
+    "prospective_client": "Futuro cliente",
+    "sales": "Persona de ventas",
+    "working": "Trabajando"
   },
   "entry_reason": [
     "Cliente",
@@ -50,6 +59,7 @@
     "no_entry": "No hay registros de ingresos previos",
     "print_scan": "Imprimir Scan",
     "showromm": "Sala de Exposicion",
+    "success_message": "El permiso de acceso se ha aprobado.",
     "temperature_recorded": "Control de Temperatura",
     "today_is": "Hoy es {{date}}, {{time}}",
     "upcoming_visits": "Próximas visitas",

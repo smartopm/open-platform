@@ -1,98 +1,60 @@
 import React from 'react';
-import {
-  TextField,
-  FormControlLabel,
-  Radio,
-  FormLabel,
-  FormControl,
-  RadioGroup,
-  Typography
-} from '@material-ui/core';
+import Autocomplete from '@material-ui/lab/Autocomplete'
+import { makeStyles } from '@material-ui/core/styles';
+import TextField from '@material-ui/core/TextField';
 import { useLazyQuery } from 'react-apollo';
 import PropTypes from 'prop-types';
-import { useTranslation } from 'react-i18next';
 import { UsersLiteQuery } from '../../../graphql/queries';
-import { Spinner } from '../../../shared/Loading';
+import UserAutoResult from '../../../shared/UserAutoResult';
+import useDebounce from '../../../utils/useDebounce';
 
 // TODO: should be moved to shared directory
 export default function UserSearch({ userData, update }) {
-  const { t } = useTranslation('common')
-  const [loadUsers, { loading: isLoading, error: queryErrors, data }] = useLazyQuery(
-    UsersLiteQuery
-  );
+  const debouncedValue = useDebounce(userData.user, 500);
+  const classes = useStyles();
+  const [searchUser, { data }] = useLazyQuery(UsersLiteQuery, {
+    variables: { query: debouncedValue, limit: 10 },
+    errorPolicy: 'all',
+    fetchPolicy: 'no-cache'
+  });
 
-  function handleSearchUser(event) {
-    update({ ...userData, user: event.target.value });
-
-    setTimeout(() => {
-      loadUsers({
-        variables: {
-          query: userData.user,
-          errorPolicy: 'all',
-          fetchPolicy: 'cache-and-network'
-        }
-      });
-    }, 1000);
-  }
   return (
     <>
-      {!isLoading && !queryErrors ? (
-        <>
+      <Autocomplete
+        style={{ width: "100%" }}
+        id="user-input"
+        inputProps={{
+          'data-testid': 'search-user'
+        }}
+        options={data?.usersLite || []}
+        getOptionLabel={option => option?.name}
+        getOptionSelected={(option, value) => option.name === value.name}
+        onChange={(_event, newValue) => update({ ...userData, userId: newValue.id })}
+        classes={{ option: classes.autocompleteOption, listbox: classes.autocompleteOption }}
+        renderOption={(option) => (
+          <UserAutoResult user={option} />
+        )}
+        renderInput={params => (
           <TextField
-            name="task user"
-            label={t('form_fields.user_name_search')}
-            placeholder={t('form_placeholders.user_name_search')}
-            style={{ width: '100%' }}
-            onChange={handleSearchUser}
-            value={userData.user}
-            fullWidth
-            margin="normal"
-            inputProps={{
-              'aria-label': 'user'
-            }}
-            InputLabelProps={{
-              shrink: true
-            }}
+            {...params}
+            label="Type user name here"
+            style={{ width: "100%" }}
+            name="name"
+            onChange={event => update({ ...userData, user: event.target.value })}
+                        // eslint-disable-next-line no-unused-vars
+            onKeyDown={(_e) => searchUser()}
           />
-          <Typography variant="subtitle2" color="textSecondary">
-            {t('misc.user_name_search_warning_text')}
-          </Typography>
-        </>
-      ) : (
-        <Spinner />
-      )}
-      {/* associated user */}
-      {!isLoading && data?.usersLite.length ? (
-        <FormControl component="fieldset">
-          <FormLabel component="legend">{t('form_placeholders.user_name_search_choose_from_options')}</FormLabel>
-          <RadioGroup
-            aria-label="user"
-            name="task_user"
-            value={userData.userId}
-            onChange={e => update({ ...userData, userId: e.target.value })}
-          >
-            {data?.usersLite.map(user => (
-              <FormControlLabel
-                key={user.id}
-                value={user.id}
-                control={<Radio color="primary" />}
-                label={user.name}
-              />
-            ))}
-          </RadioGroup>
-        </FormControl>
-      ) : (
-        Boolean(userData.user.length) &&
-        Boolean(data?.usersLite.length) &&
-        !isLoading &&
-       `${t('errors.user_name_search_not_found', { username: userData.user})}`
-      )}
-      {// separate radios from checkbox only after search
-      data?.usersLite.length && <hr />
-}
+        )}
+      />
     </>
   );
 }
+
+const useStyles = makeStyles(() => ({
+  autocompleteOption: {
+    padding: '0px'
+  }
+}));
 
 UserSearch.propTypes = {
   update: PropTypes.func.isRequired,

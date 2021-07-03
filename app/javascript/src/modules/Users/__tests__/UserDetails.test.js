@@ -32,8 +32,7 @@ describe('user detail component', () => {
       </MockedProvider>
     )
     expect(container.queryByText('User Name')).toBeInTheDocument()
-    expect(container.queryByText('common:misc.entry_logs >')).toBeInTheDocument()
-    expect(container.queryByText('common:misc.expired')).toBeInTheDocument()
-    expect(container.queryByTestId('user-sub-status').textContent).toContain('common:misc.customer_journey_stage: common:sub_status.building_permit_approved')
+    expect(container.queryByText('user@dgdp.com')).toBeInTheDocument()
+    expect(container.queryByText('34342')).toBeInTheDocument()
   })
 })

@@ -20,10 +20,10 @@ import PhoneInput from 'react-phone-input-2'
 import { getAuthToken } from '../../utils/apollo'
 import { ModalDialog } from '../Dialog'
 import GoogleIcon from '../../../../assets/images/google_icon.svg'
-// import { Context as ThemeContext } from '../../../Themes/Nkwashi/ThemeProvider'
 import { loginPhone } from '../../graphql/mutations'
 import { CurrentCommunityQuery } from '../../modules/Community/graphql/community_query'
 import { Spinner } from '../../shared/Loading'
+import { extractCountry } from '../../utils/helpers'
 
 export default function LoginScreen() {
   const { data: communityData, loading } = useQuery(CurrentCommunityQuery)
@@ -39,7 +39,6 @@ export default function LoginScreen() {
   const [isLoading, setIsLoading] = useState(false)
   const { state } = useLocation()
   const history = useHistory()
-  // const theme = useContext(ThemeContext)
   const { t } = useTranslation(['login', 'common'])
 
   const communityName = communityData?.currentCommunity?.name || 'Double GDP'
@@ -92,7 +91,7 @@ export default function LoginScreen() {
           })
         })
         .catch(err => {
-          setError(err.message)
+          setError(err.message.replace(/GraphQL error:/, ""))
           setIsLoading(false)
         })
     }
@@ -130,11 +129,6 @@ export default function LoginScreen() {
 
   return (
     <div style={{ overflow: 'hidden' }}>
-      {/* <nav className={`${css(styles.navBar)} navbar`}>
-        <Link to="/welcome" style={{ color: theme.primaryColor }}>
-          <i className="material-icons">arrow_back</i>
-        </Link>
-      </nav> */}
       <div className="container ">
         <div
           className={`justify-content-center align-items-center ${css(
@@ -163,14 +157,14 @@ export default function LoginScreen() {
 
           <PhoneInput
             value={phoneNumber}
-            containerClass="a css class"
             containerStyle={{ width: "55%" }}
             inputClass="phone-login-input"
             inputStyle={{ width: "100%", height: 51 }}
-            country="zm"
+            country={extractCountry(communityData?.currentCommunity?.locale)}
             enableSearch
             placeholder={t('common:form_placeholders.phone_number')}
             onChange={value => setPhoneNumber(value)}
+            preferredCountries={['hn', 'zm', 'ng', 'in', 'us']}
           />
         </div>
 

@@ -462,7 +462,7 @@ RSpec.describe Types::QueryType do
         initial_value: 'initial description',
         updated_value: 'updated description',
         action: 'update',
-        note_entity_type: 'Note',
+        note_entity_type: 'Notes::Note',
         note_entity_id: notes.id,
       )
 
@@ -477,7 +477,7 @@ RSpec.describe Types::QueryType do
       expect(history_data.length).not_to eq 0
 
       update_history = history_data.select do |h|
-        h['initialValue'] == 'initial description' && h['noteEntityType'] == 'Note'
+        h['initialValue'] == 'initial description' && h['noteEntityType'] == 'Notes::Note'
       end
 
       expect(update_history.length).not_to eq 0

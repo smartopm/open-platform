@@ -15,6 +15,7 @@ module Mutations
       argument :visitation_date, String, required: false
       argument :start_time, String, required: false
       argument :end_time, String, required: false
+      argument :company_name, String, required: false
 
       field :entry_request, Types::EntryRequestType, null: true
 

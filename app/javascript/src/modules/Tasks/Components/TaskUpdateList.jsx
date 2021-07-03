@@ -29,7 +29,7 @@ export default function TaskUpdateList({ data }) {
       ) : (
         data.map(history => (
           <div key={history.id}>
-            {history.action === 'create' && history.noteEntityType === 'NoteComment' && (
+            {history.action === 'create' && history.noteEntityType === 'Comments::NoteComment' && (
               <TaskUpdateItem
                 user={history.user.name} 
                 icon={<AddBoxOutlinedIcon className={classes.icon} />} 

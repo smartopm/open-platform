@@ -16,6 +16,7 @@ import {
   toCamelCase,
   formatMoney,
   extractCurrency,
+  extractCountry,
   checkAllowedCommunityFeatures
 } from '../utils/helpers'
 
@@ -205,7 +206,7 @@ describe('titleize', () => {
   })
 })
 
-describe('currency', () => {
+describe('locales', () => {
   const details = {
     locale: 'en-US',
     currency: 'USD'
@@ -218,5 +219,10 @@ describe('currency', () => {
   })
   it('should get the currency from the given locale', () => {
     expect(extractCurrency(details)).toBeUndefined()
+  })
+  it('should extract locale and format it', () => {
+    expect(extractCountry(details.locale)).toBe("us")
+    expect(extractCountry()).toBe("zm")
+    expect(extractCountry("someesdfs")).toBe("zm")
   })
 })

@@ -261,6 +261,8 @@ en:
       not_found: Template not found
     event_log:
       not_found: Event log not found
+    entry_request:
+      not_found: Entry request not found
     form:
       not_found: Form not found
     form_user:
@@ -287,6 +289,8 @@ en:
       plan_already_exist: Payment Plan for this landparcel already exist
       does_not_exist_for_property: Payment Plan does not exist for selected property
       have_zero_pending_balance: Pending balance is 0 for payment plan of selected property
+    phone_number:
+        found_blank: Phone number cannot be blank
     plan_payment:
       not_found: Payment not found
     post_tag:
@@ -304,7 +308,7 @@ en:
     user:
       merge_failed: Merge Failed
       not_found_with_id: 'Could not find User %{user_id}'
-      not_found: User not found
+      not_found: This account does not exist. Submit a request to create an account or use the correct account information to log in
     user_form_property:
       not_found: User form property not found
     visibility: 'You do not have permission to access %{field}'

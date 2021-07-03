@@ -1,4 +1,3 @@
-/* eslint-disable */
 import React, { useState } from 'react'
 import TextField from '@material-ui/core/TextField'
 import {
@@ -13,6 +12,7 @@ import { css } from 'aphrodite'
 import { useMutation } from 'react-apollo'
 import PropTypes from 'prop-types'
 import { useTranslation } from 'react-i18next';
+import UserAutoResult from '../../../shared/UserAutoResult';
 import { CreateNote } from '../../../graphql/mutations'
 import DatePickerDialog from '../../../components/DatePickerDialog'
 import { discussStyles } from '../../../components/Discussion/Discuss'
@@ -45,7 +45,7 @@ export default function TaskForm({ close, refetch, users, assignUser}) {
     createTask({
       variables: {
         body: title,
-        description: description,
+        description,
         due: selectedDate ? selectedDate.toISOString() : null,
         category: taskType,
         flagged: true,
@@ -100,50 +100,52 @@ export default function TaskForm({ close, refetch, users, assignUser}) {
           shrink: true
         }}
       />
-      <br/>
-      <FormControl fullWidth >
+      <br />
+      <FormControl fullWidth>
         <InputLabel id="taskType">{t('task.task_type_label')}</InputLabel>
         <Select
-            id="taskType"
-            value={taskType}
-            onChange={event => setTaskType(event.target.value)}
-            name="taskType"
-            fullWidth
+          id="taskType"
+          value={taskType}
+          onChange={event => setTaskType(event.target.value)}
+          name="taskType"
+          fullWidth
         >
-            {Object.entries(NotesCategories).map(([key, val]) => (
-              <MenuItem key={key} value={key}>
-                {val}
-              </MenuItem>
+          {Object.entries(NotesCategories).map(([key, val]) => (
+            <MenuItem key={key} value={key}>
+              {val}
+            </MenuItem>
             ))}
         </Select>
       </FormControl>
       <br />
-      <FormControl fullWidth >
+      <FormControl fullWidth>
         <InputLabel id="assignees">{t('task.task_assignee_label')}</InputLabel>
         <Select
-            id="assignees"
-            value={assignees}
-            onChange={event => setAssignees(event.target.value)}
-            name="assignees"
-            fullWidth
-            multiple
-            renderValue={selected => (
-              <div>
-                {selected.map((value, i) => (
-                  <UserChip user={value} key={i} label={value.name} />
+          id="assignees"
+          value={assignees}
+          onChange={event => setAssignees(event.target.value)}
+          name="assignees"
+          fullWidth
+          multiple
+          MenuProps={{ MenuListProps: { disablePadding: true } }}
+          renderValue={selected => (
+            <div>
+              {selected.map((value, i) => (
+                // eslint-disable-next-line react/no-array-index-key
+                <UserChip user={value} key={i} label={value.name} />
                 ))}
-              </div>
+            </div>
             )}
         >
-              {Boolean(users.length) && users.map((user) => (
-                <MenuItem key={user.id} value={user}>
-                  {user.name}
-                </MenuItem>
+          {Boolean(users.length) && users.map((user) => (
+            <MenuItem key={user.id} value={user} style={{padding: 0}}>
+              <UserAutoResult user={user} />
+            </MenuItem>
               ))}
         </Select>
       </FormControl>
       <br />
-        <UserSearch userData={userData} update={setData}/> 
+      <UserSearch userData={userData} update={setData} /> 
       <br />
       <div>
         <DatePickerDialog
@@ -176,7 +178,7 @@ export default function TaskForm({ close, refetch, users, assignUser}) {
         </Button>
       </div>
       <p className="text-center">
-          {Boolean(error.length) && error}
+        {Boolean(error.length) && error}
       </p>
     </form>
   )
@@ -187,7 +189,9 @@ TaskForm.defaultProps = {
 }
 
 TaskForm.propTypes = {
-  users: PropTypes.array.isRequired,
-  close: PropTypes.func,
-  refetch: PropTypes.func,
+  // eslint-disable-next-line react/forbid-prop-types
+  users: PropTypes.array,
+  close: PropTypes.func.isRequired,
+  refetch: PropTypes.func.isRequired,
+  assignUser: PropTypes.func.isRequired
 }

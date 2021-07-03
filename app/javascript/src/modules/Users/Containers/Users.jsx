@@ -343,9 +343,7 @@ export default function UsersList() {
         type: 'select',
         valueSources: ['value'],
         fieldSettings: {
-          listValues: Object.entries(userType).map(([key, val]) => {
-            return { value: key, title: val }
-          })
+          listValues: Object.entries(userType).map(([key, val]) => ({ value: key, title: val }))
         }
       },
       label: {
@@ -353,9 +351,7 @@ export default function UsersList() {
         type: 'select',
         valueSources: ['value'],
         fieldSettings: {
-          listValues: labelsData.labels.map(label => {
-            return { value: label.shortDesc, title: label.shortDesc }
-          })
+          listValues: labelsData.labels.map(label => ({ value: label.shortDesc, title: label.shortDesc }))
         }
       },
       phoneNumber: {
@@ -374,9 +370,7 @@ export default function UsersList() {
         type: 'select',
         valueSources: ['value'],
         fieldSettings: {
-          listValues: Object.entries(subStatus).map(([key, val]) => {
-            return { value: key, title: val }
-          })
+          listValues: Object.entries(subStatus).map(([key, val]) => ({ value: key, title: val }))
         }
       }
     },
@@ -618,7 +612,7 @@ export default function UsersList() {
             >
               <Paginate
                 count={data.users.length}
-                active={false}
+                active={offset >= 1}
                 offset={offset}
                 handlePageChange={paginate}
                 limit={limit}

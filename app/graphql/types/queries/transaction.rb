@@ -48,18 +48,18 @@ module Types::Queries::Transaction
       raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
     end
 
-    payments = context[:site_community].transactions.not_cancelled
+    transactions = context[:site_community].transactions.not_cancelled
     {
-      today: payments
+      today: transactions
         .where(created_at: Time.zone.now.beginning_of_day..Time.zone.now.end_of_day)
         .sum(&:amount),
-      one_week: payments
+      one_week: transactions
         .where('created_at >= ? AND created_at <= ?', 1.week.ago, Time.zone.now.end_of_day)
         .sum(&:amount),
-      one_month: payments
+      one_month: transactions
         .where('created_at >= ? AND created_at <= ?', 30.days.ago, Time.zone.now.end_of_day)
         .sum(&:amount),
-      over_one_month: payments
+      over_one_month: transactions
         .where('created_at >= ? AND created_at <= ?', 1.year.ago, Time.zone.now.end_of_day)
         .sum(&:amount),
     }

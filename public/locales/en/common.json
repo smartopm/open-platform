@@ -1,6 +1,6 @@
 {
   "form_fields": {
-    "full_name": "Full Names",
+    "full_name": "Full Name",
     "email": "Email",
     "phone_number": "Phone Number",
     "primary_number": "Primary Phone Number",
@@ -15,6 +15,7 @@
     "state": "State",
     "nrc": "NRC",
     "vehicle_plate_number": "Vehicle Plate Number",
+    "company_name": "Company Name",
     "add_phone_number": "Add New Phone Number",
     "add_email_address": "Add New Email Address",
     "add_whatsapp_number": "Add New Whatsapp Number",

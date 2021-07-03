@@ -56,7 +56,6 @@ gem 'rqrcode'
 gem 'sidekiq'
 gem "sidekiq-scheduler", "~> 3.0"
 
-gem 'serviceworker-rails'
 
 # GraphQL
 gem 'graphql', "1.11.6"
@@ -129,4 +128,3 @@ end
 
 
 gem "request_store", "~> 1.4"
-

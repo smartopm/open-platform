@@ -44,12 +44,13 @@ module Mutations
       end
 
       def check_missing_args(vals)
-        %w[name campaign_type message user_id_list batch_time status
-           email_templates_id].each do |attr|
-          if vals[attr.to_sym].blank?
-            raise GraphQL::ExecutionError,
-                  I18n.t('errors.campaign.missing_parameter', attribute: attr)
-          end
+        attributes = %w[name campaign_type message user_id_list batch_time status]
+        attributes.push('email_templates_id') if vals[:campaign_type].eql?('email')
+        attributes.each do |attr|
+          next if vals[attr.to_sym].present?
+
+          raise GraphQL::ExecutionError,
+                I18n.t('errors.campaign.missing_parameter', attribute: attr)
         end
       end
 

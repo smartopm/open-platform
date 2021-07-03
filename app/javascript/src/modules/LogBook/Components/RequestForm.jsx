@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import { useMutation } from 'react-apollo'
 import { StyleSheet, css } from 'aphrodite'
 import { useTranslation } from 'react-i18next'
@@ -10,45 +10,60 @@ import { EntryRequestCreate } from '../../../graphql/mutations'
 import { ReasonInputModal } from '../../../components/Dialog'
 import { Footer } from '../../../components/Footer'
 import DatePickerDialog, { ThemedTimePicker } from '../../../components/DatePickerDialog'
+import { defaultBusinessReasons } from '../../../utils/constants'
+import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider'
 
 export default function RequestForm({ path }) {
+  const initialState = {
+    name: '',
+    nrc: '',
+    phoneNumber: '',
+    vehiclePlate: '',
+    companyName: '',
+    business: '',
+    reason: '',
+    visitationDate: null,
+    startTime: new Date(),
+    endTime: new Date(),
+  }
+
   const history = useHistory()
-  const name = useFormInput('')
-  const nrc = useFormInput('')
-  const phoneNumber = useFormInput('')
-  const vehicle = useFormInput('')
-  const business = useFormInput('')
-  const reason = useFormInput('')
+  const authState = useContext(AuthStateContext)
+  const [userData, setUserData] = useState(initialState)
   const [createEntryRequest] = useMutation(EntryRequestCreate)
-  const [isSubmitted, setSubmitted] = useState(false)
   const [isModalOpen, setModal] = useState(false)
-  const [visitationDate, setVisitDate] = useState(null)
-  const [startTime, setVisitTime] = useState(new Date())
-  const [endTime, setEndTime] = useState(new Date())
-  const [inputValidationMsg, setInputValidationMsg] = useState({})
+  const [inputValidationMsg, setInputValidationMsg] = useState({ isError: false, isSubmitting: false })
   const { t } = useTranslation(['common', 'logbook'])
 
+  const defaultRequiredFields= ['name', 'phoneNumber', 'nrc', 'vehiclePlate', 'reason', 'business']
+  const requiredFields = authState?.user?.community?.communityRequiredFields?.manualEntryRequestForm || defaultRequiredFields
+  function checkInValidRequiredFields(formData){
+    const values = requiredFields.map(field => formData[String(field)])
+
+    function isNotValid(element){
+      return !element
+    }
+
+    return (values.some(isNotValid))
+  }
+
   function handleSubmit() {
-    const errors = {}
-    if (!name.value) {
-      errors.name = t('errors.empty_name')
-      setInputValidationMsg(errors)
+    const variables = {
+      ...userData,
+      otherReason: userData.business === 'other' ? userData.reason : '',
+      reason: userData.business
+    }
+
+    const isAnyInvalid = checkInValidRequiredFields(variables)
+    if(path.includes('entry_request') && isAnyInvalid){
+      setInputValidationMsg({ isError: true })
       return
     }
 
-    setSubmitted(!isSubmitted)
-    const userData = {
-      name: name.value,
-      vehiclePlate: vehicle.value,
-      phoneNumber: phoneNumber.value,
-      nrc: nrc.value,
-      reason: business.value === 'Other' ? reason.value : business.value,
-      visitationDate,
-      startTime,
-      endTime
-    }
+    setInputValidationMsg({ isSubmitting: true })
 
-    createEntryRequest({ variables: userData }).then(({ data }) => {
+    delete variables.business
+    createEntryRequest({ variables }).then(({ data }) => {
       // Send them to the wait page if it is an entry request
       if(path.includes('entry_request')){
         history.push(`/request/${data.result.entryRequest.id}`, {
@@ -60,19 +75,32 @@ export default function RequestForm({ path }) {
     })
   }
 
+  function handleChange(event){
+    const { name, value } = event.target;
+    const fields = { ...userData }
+    fields[String(name)] = value
+    setUserData(fields)
+  }
+
+  function handleAddOtherReason(){
+    if (!userData.reason) {
+      setInputValidationMsg({ isError: true })
+      return
+    }
+    setModal(!isModalOpen)
+  }
+
   useEffect(() => {
-    if (business.value === 'Other') {
+    if (userData.business === 'other') {
       setModal(!isModalOpen)
     }
    /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [business.value])
+  }, [userData.business])
 
-  // This is to allow tests to pass
-  const entryReason = t('logbook:entry_reason', { returnObjects: true })
-  const reasons = Array.isArray(entryReason) ? entryReason : [] 
   return (
     <>
       <ReasonInputModal
+        handleAddReason={handleAddOtherReason}
         handleClose={() => setModal(!isModalOpen)}
         open={isModalOpen}
       >
@@ -80,27 +108,40 @@ export default function RequestForm({ path }) {
           <TextField
             className="form-control"
             type="text"
-            {...reason}
             name="reason"
+            value={userData.reason}
+            onChange={handleChange}
             placeholder="Other"
-            required
+            error={inputValidationMsg.isError &&
+              requiredFields.includes('reason') &&
+              userData.business === 'other' &&
+              !userData.reason}
+            helperText={inputValidationMsg.isError &&
+              requiredFields.includes('reason') &&
+              userData.business === 'other' &&
+              !userData.reason &&
+              'Other Reason is Required'}
           />
         </div>
       </ReasonInputModal>
       <div className="container">
         <form>
           <div className="form-group">
-            <label className="bmd-label-static" htmlFor="_name">
+            <label className="bmd-label-static" htmlFor="name">
               {t('form_fields.full_name')}
             </label>
             <TextField
               className="form-control"
-              error={!!inputValidationMsg.name}
-              {...name}
-              name="_name"
+              name="name"
+              value={userData.name}
+              onChange={handleChange}
               autoCapitalize="words"
               inputProps={{ 'data-testid': 'name' }}
-              helperText={inputValidationMsg.name}
+              error={inputValidationMsg.isError && requiredFields.includes('name') && !userData.name}
+              helperText={inputValidationMsg.isError &&
+                requiredFields.includes('name') &&
+                !userData.name &&
+                'Name is Required'}
             />
           </div>
           <div className="form-group">
@@ -110,10 +151,18 @@ export default function RequestForm({ path }) {
 
             <TextField
               className="form-control"
-              {...phoneNumber}
               name="phoneNumber"
+              value={userData.phoneNumber}
+              onChange={handleChange}
               type="number"
               inputProps={{ 'data-testid': 'phone_number' }}
+              error={inputValidationMsg.isError &&
+                requiredFields.includes('phoneNumber') &&
+                !userData.phoneNumber}
+              helperText={inputValidationMsg.isError &&
+                requiredFields.includes('phoneNumber') &&
+                !userData.phoneNumber &&
+                'Phone Number is Required'}
             />
 
           </div>
@@ -125,21 +174,57 @@ export default function RequestForm({ path }) {
                 </label>
                 <TextField
                   className="form-control"
-                  {...nrc}
                   name="nrc"
+                  value={userData.nrc}
+                  onChange={handleChange}
                   inputProps={{ 'data-testid': 'nrc' }}
+                  error={inputValidationMsg.isError &&
+                    requiredFields.includes('nrc') &&
+                    !userData.nrc}
+                  helperText={inputValidationMsg.isError &&
+                    requiredFields.includes('nrc') &&
+                    !userData.nrc &&
+                    'ID is Required'}
                 />
               </div>
               <div className="form-group">
-                <label className="bmd-label-static" htmlFor="vehicle">
+                <label className="bmd-label-static" htmlFor="vehiclePlate">
                   {t('form_fields.vehicle_plate_number')}
                 </label>
                 <TextField
                   className="form-control"
                   type="text"
-                  {...vehicle}
-                  name="vehicle"
+                  name="vehiclePlate"
+                  value={userData.vehiclePlate}
+                  onChange={handleChange}
                   inputProps={{ 'data-testid': 'vehicle' }}
+                  error={inputValidationMsg.isError &&
+                    requiredFields.includes('vehiclePlate') &&
+                    !userData.vehiclePlate}
+                  helperText={inputValidationMsg.isError &&
+                    requiredFields.includes('vehiclePlate') &&
+                    !userData.vehiclePlate &&
+                    'Vehicle Plate Number is Required'}
+                />
+              </div>
+              <div className="form-group">
+                <label className="bmd-label-static" htmlFor="companyName">
+                  {t('form_fields.company_name')}
+                </label>
+                <TextField
+                  className="form-control"
+                  type="text"
+                  name="companyName"
+                  value={userData.companyName}
+                  onChange={handleChange}
+                  inputProps={{ 'data-testid': 'companyName' }}
+                  error={inputValidationMsg.isError &&
+                    requiredFields.includes('companyName') &&
+                    !userData.companyName}
+                  helperText={inputValidationMsg.isError &&
+                    requiredFields.includes('companyName') &&
+                    !userData.companyName &&
+                    'Company Name is Required'}
                 />
               </div>
             </>
@@ -149,13 +234,28 @@ export default function RequestForm({ path }) {
               id="reason"
               select
               label={t('logbook:logbook.visiting_reason')}
-              name="reason"
-              {...business}
+              name="business"
+              value={userData.business}
+              onChange={handleChange}
               className={`${css(styles.selectInput)}`}
+              error={inputValidationMsg.isError &&
+                requiredFields.includes('business') &&
+                (!userData.business) || (userData.business === 'other' &&
+                !userData.reason)}
+              helperText={inputValidationMsg.isError &&
+                requiredFields.includes('business') &&
+                !userData.business &&
+                'Reason is Required'}
+                // eslint-disable-next-line react/jsx-no-duplicate-props
+              helperText={inputValidationMsg.isError &&
+                requiredFields.includes('business') &&
+                userData.business === 'other' &&
+                !userData.reason &&
+                'Other Reason is Required'}
             >
-              {reasons.map(_reason => (
+              {Object.keys(defaultBusinessReasons).map(_reason => (
                 <MenuItem key={_reason} value={_reason}>
-                  {_reason}
+                  {t(`logbook:business_reasons.${_reason}`) || defaultBusinessReasons[String(_reason)]}
                 </MenuItem>
               ))}
             </TextField>
@@ -163,19 +263,19 @@ export default function RequestForm({ path }) {
           {path.includes('visit_request') && (
             <>
               <DatePickerDialog
-                selectedDate={visitationDate}
-                handleDateChange={date => setVisitDate(date)}
+                selectedDate={userData.visitationDate}
+                handleDateChange={date => handleChange({ target: { name: 'visitationDate', value: date }})}
                 label={t('logbook:logbook.date_of_visit')}
               />
               <ThemedTimePicker
-                time={startTime}
-                handleTimeChange={date => setVisitTime(date)}
+                time={userData.startTime}
+                handleTimeChange={date => handleChange({ target: { name: 'startTime', value: date }})}
                 label={t('misc.start_time')}
               />
               <span style={{ marginLeft: 20 }}>
                 <ThemedTimePicker
-                  time={endTime}
-                  handleTimeChange={date => setEndTime(date)}
+                  time={userData.endTime}
+                  handleTimeChange={date => handleChange({ target: { name: 'endTime', value: date }})}
                   label={t('misc.end_time')}
                 />
               </span>
@@ -188,11 +288,11 @@ export default function RequestForm({ path }) {
               variant="contained"
               className={`${css(styles.logButton)}`}
               onClick={handleSubmit}
-              disabled={isSubmitted}
+              disabled={inputValidationMsg.isSubmitting}
               color="primary"
               data-testid="submit_button"
             >
-              {isSubmitted ? ` ${t('form_actions.submitting')} ...` : ` ${t('form_actions.submit')} `}
+              {inputValidationMsg.isSubmitting ? ` ${t('form_actions.submitting')} ...` : ` ${t('form_actions.submit')} `}
             </Button>
           </div>
         </form>
@@ -200,14 +300,6 @@ export default function RequestForm({ path }) {
       </div>
     </>
   )
-}
-// Todo: refactor the above form to just use one state object
-function useFormInput(initialValue) {
-  const [value, setValue] = useState(initialValue)
-  const handleChange = event => {
-    setValue(event.target.value)
-  }
-  return { value, onChange: handleChange }
 }
 
 RequestForm.propTypes = {

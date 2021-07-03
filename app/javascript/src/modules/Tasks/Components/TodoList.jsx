@@ -330,9 +330,7 @@ export default function TodoList({
         type: 'select',
         valueSources: ['value'],
         fieldSettings: {
-          listValues: liteData?.usersLite.map(u => {
-            return { value: u.name, title: u.name };
-          })
+          listValues: liteData?.usersLite.map(u => ({ value: u.name, title: u.name }))
         }
       },
       userName: {
@@ -596,7 +594,7 @@ export default function TodoList({
             )}
             <br />
             <CenteredContent>
-              <Paginate offSet={offset} limit={limit} active handlePageChange={paginate} />
+              <Paginate offSet={offset} limit={limit} active={offset >= 1} handlePageChange={paginate} />
             </CenteredContent>
             <Fab
               variant="extended"

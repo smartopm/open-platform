@@ -5,6 +5,6 @@ FactoryBot.define do
     user
     source { 'cash' }
     status { 'settled' }
-    amount { (rand * 1000).floor }
+    amount { (rand * 1000).ceil }
   end
 end
