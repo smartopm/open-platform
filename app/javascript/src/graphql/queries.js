@@ -91,6 +91,12 @@ export const AllEventLogsQuery = gql`
         reason
         id
         grantedState
+        name
+      }
+      user {
+        id
+        name
+        userType
       }
     }
   }
@@ -631,6 +637,7 @@ export const UserLabelsQuery = gql`
     userLabels(userId: $userId) {
       id
       shortDesc
+      color
     }
   }
 `

@@ -44,6 +44,7 @@ export default function CustodianLogs() {
           count={data.timeSheetLogs.length}
           offSet={offset}
           limit={limit}
+          active={offset >= 1}
           handlePageChange={paginate}
         />
       </CenteredContent>

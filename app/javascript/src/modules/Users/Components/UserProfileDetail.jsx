@@ -1,64 +1,66 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
 import { css, StyleSheet } from 'aphrodite'
 import { useTranslation } from 'react-i18next';
-import { useTheme } from '@material-ui/styles';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 import PropTypes from 'prop-types'
-import dateutil from '../../../utils/dateutil'
+import LocationOnIcon from '@material-ui/icons/LocationOn';
+import PhoneIcon from '@material-ui/icons/Phone';
+import EmailIcon from '@material-ui/icons/Email';
+import Typography from '@material-ui/core/Typography';
+import Divider from '@material-ui/core/Divider';
 import UserLabels from './UserLabels'
-import StatusBadge from '../../../components/StatusBadge'
+import CaptureTemp from '../../../components/CaptureTemp'
 
 export default function UserDetail({ data, userType }) {
   const { t } = useTranslation('users')
-  const theme = useTheme()
+  const matches = useMediaQuery('(max-width:600px)');
   return (
-    <div>
-      <h5>{data.user.name}</h5>
-      <div className="expires">
-        {t("common:misc.user_type")}
-        :
-        {' '}
-        {t(`common:user_types.${data.user.userType}`)}
-      </div>
-      {data.user.subStatus && (
-        <div data-testid="user-sub-status">
-          {t("common:misc.customer_journey_stage")}
-          : 
-          {' '}
-          <span>{t(`common:sub_status.${data.user.subStatus}`)}</span>
+    <>
+      <div>
+        <div className={css(styles.name)}>{data.user.name}</div>
+        <div className={css(styles.userType)}>
+          {t(`common:user_types.${data?.user?.userType}`)}
         </div>
-      )}
-      <div className="expires">
-        {t("common:misc.expiration")}
-        :
-        {' '}
-        {dateutil.isExpired(data.user.expiresAt) ? (
-          <span className="text-danger">{t("common:misc.already_expired")}</span>
-        ) : (
-          dateutil.formatDate(data.user.expiresAt)
+        <div style={matches ? null : {display: 'flex', justifyContent: 'center'}}>
+          {data?.user?.phoneNumber && (
+          <div style={{display: 'flex'}}>
+            <PhoneIcon style={{heigth: '5.6px', width: '13.6px', verticalAlign: 'middle', marginRight: '14px'}} />
+            <Typography data-testid='phone' className={css(styles.info)}>
+              {data.user.phoneNumber}
+            </Typography>
+          </div>
+          )}
+          {!matches && data?.user?.email && (
+            <Divider orientation="vertical" flexItem style={{height: '8px', margin: '8px 10px 0 10px'}} />
+          )}
+          {data?.user?.email && (
+          <div style={{display: 'flex'}}>
+            <EmailIcon style={{heigth: '5.6px', width: '13.6px', verticalAlign: 'middle', marginRight: '14px'}} />
+            <Typography data-testid='email' className={css(styles.info)}>
+              {data?.user.email}
+            </Typography>
+          </div>
+          )}
+          {!matches && data?.user?.address && (
+            <Divider orientation="vertical" flexItem style={{height: '8px', margin: '8px 10px 0 10px'}} />
+          )}
+          {data?.user?.address && (
+          <div style={{display: 'flex'}}>
+            <LocationOnIcon style={{heigth: '5.6px', width: '13.6px', verticalAlign: 'middle', marginRight: '14px'}} />
+            <Typography data-testid='address' className={css(styles.info)}>
+              {data?.user.address}
+            </Typography>
+          </div>
+          )}
+        </div>
+        {userType === 'security_guard' && (
+          <div className="container row d-flex justify-content-between" style={matches ? {} : {marginLeft: '80px' }}>
+            <CaptureTemp refId={data?.user.id} refName={data?.user.name} refType="Users::User" />
+          </div>
         )}
+        {['admin'].includes(userType) && <UserLabels userId={data.user.id} />}
       </div>
-      <div className="expires">
-        {t("common:misc.last_accessed")}
-        : 
-        {' '}
-        {dateutil.formatDate(data.user.lastActivityAt)}
-      </div>
-      {['admin'].includes(userType) && (
-        <Link to={`/entry_logs/${data.user.id}`} style={{ color: theme.palette.primary.main }}>
-          {t("common:misc.entry_logs")}
-          {' '}
-          &gt;
-        </Link>
-      )}
-      <br />
-      {dateutil.isExpired(data.user.expiresAt) ? (
-        <p className={css(styles.badge, styles.statusBadgeBanned)}>{t("common:misc.expired")}</p>
-      ) : (
-        ['admin'].includes(userType) && <StatusBadge label={data.user.state} />
-      )}
-      {['admin'].includes(userType) && <UserLabels userId={data.user.id} />}
-    </div>
+    </>
   )
 }
 
@@ -80,5 +82,20 @@ const styles = StyleSheet.create({
     border: '1px solid #ed5757',
     color: '#fff',
     backgroundColor: '#ed5757'
+  },
+  name: {
+    fontWeight: 500,
+    fontSize: '20px',
+    color: '#141414'
+  },
+  userType: {
+    fontSize: '16px',
+    fontWeight: 400,
+    color: '#212121'
+  },
+  info: {
+    fontSize: '16px',
+    fontWeight: 400,
+    color: '#141414'
   }
 })

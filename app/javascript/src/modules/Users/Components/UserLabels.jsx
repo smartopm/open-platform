@@ -98,6 +98,7 @@ export default function UserLabels({ userId }) {
               size="medium"
               label={lab.shortDesc}
               onDelete={() => handleDelete(lab.id)}
+              style={{marginRight: '24px', backgroundColor: lab.color }}
             />
             ))
           : null}

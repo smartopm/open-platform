@@ -9,6 +9,7 @@ module Types
     field :ref_id, ID, null: true
     field :ref_type, String, null: true
     field :entry_request, Types::EntryRequestType, null: true
+    field :user, Types::UserType, null: true
     field :community, Types::CommunityType, null: false
     field :created_at, GraphQL::Types::ISO8601DateTime, null: false
     field :subject, String, null: true
@@ -21,9 +22,15 @@ module Types
     end
 
     def entry_request
-      return nil unless object.subject == 'visitor_entry'
+      return nil if object.ref_type != 'Logs::EntryRequest'
 
-      Logs::EntryRequest.find(object.ref_id)
+      Logs::EntryRequest.find_by(id: object.ref_id)
+    end
+
+    def user
+      return nil if object.ref_type != 'Users::User'
+
+      Users::User.find_by(id: object.ref_id)
     end
   end
 end
