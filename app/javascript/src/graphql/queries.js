@@ -91,6 +91,12 @@ export const AllEventLogsQuery = gql`
         reason
         id
         grantedState
+        name
+      }
+      user {
+        id
+        name
+        userType
       }
     }
   }

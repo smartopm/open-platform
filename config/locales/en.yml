@@ -263,6 +263,7 @@ en:
       not_found: Event log not found
     entry_request:
       not_found: Entry request not found
+      empty_note: Note cannot be empty
     form:
       not_found: Form not found
     form_user:

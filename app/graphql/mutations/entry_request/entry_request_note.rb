@@ -4,29 +4,29 @@ module Mutations
   module EntryRequest
     # Add an observation note to an entry request
     class EntryRequestNote < BaseMutation
-      argument :id, ID, required: true
-      argument :ref_type, String, required: true
+      argument :id, ID, required: false
+      argument :ref_type, String, required: false
       argument :note, String, required: false
 
       field :event, Types::EventLogType, null: true
 
+      # rubocop:disable Metrics/AbcSize
       def resolve(vals)
-        log = user_or_request(vals)
-        raise GraphQL::ExecutionError, I18n.t('errors.not_found') unless log
+        if vals[:note].blank?
+          raise GraphQL::ExecutionError, I18n.t('errors.entry_request.empty_note')
+        end
+
+        log = vals[:ref_type]&.constantize&.find_by(
+          id: vals[:id],
+          community_id: context[:site_community].id,
+        )
 
         evt = context[:current_user].generate_events('observation_log', log, note: vals[:note])
         raise GraphQL::ExecutionError, evt.errors.full_messages if evt.blank?
 
         { event: evt }
       end
-
-      def user_or_request(args)
-        if args[:ref_type] == 'Logs::EntryRequest'
-          context[:site_community].entry_requests.find_by(id: args[:id])
-        else
-          context[:site_community].users.find_by(id: args[:id])
-        end
-      end
+      # rubocop:enable Metrics/AbcSize
 
       # Verifies if current user is present or not.
       def authorized?(_vals)

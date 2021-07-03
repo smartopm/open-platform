@@ -4,13 +4,14 @@
 /* eslint-disable react/jsx-props-no-spreading */
 /* eslint-disable no-nested-ternary */
 /* eslint-disable no-use-before-define */
+/* eslint-disable security/detect-object-injection */
 import React, { useState, Fragment, useContext, useEffect } from 'react';
 import { useMutation, useQuery } from 'react-apollo';
 import { useLocation } from 'react-router-dom';
 import { StyleSheet, css } from 'aphrodite';
 import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
-import { TextField, Typography } from '@material-ui/core';
+import { TextField, Typography, Button } from '@material-ui/core';
 import Loading, { Spinner } from '../../../shared/Loading';
 import { AllEventLogsQuery } from '../../../graphql/queries';
 import ErrorPage from '../../../components/Error';
@@ -23,6 +24,10 @@ import FloatButton from '../../../components/FloatButton';
 import { propAccessor } from '../../../utils/helpers';
 import { EntryRequestGrant } from '../../../graphql/mutations';
 import MessageAlert from '../../../components/MessageAlert';
+import GroupedObservations from './GroupedObservations';
+import AddMoreButton from '../../../shared/buttons/AddMoreButton';
+import EntryNoteDialog from '../../../shared/dialogs/EntryNoteDialog';
+import AddObservationNoteMutation from '../graphql/logbook_mutations';
 
 export default ({ history, match }) => AllEventLogs(history, match);
 
@@ -58,7 +63,8 @@ const AllEventLogs = (history, match) => {
   const logsQuery = {
     0: subjects,
     1: 'user_enrolled',
-    2: 'visit_request'
+    2: 'visit_request',
+    3: 'observation_log'
   };
 
   const { loading, error, data, refetch } = useQuery(AllEventLogsQuery, {
@@ -130,6 +136,10 @@ export function IndexComponent({
 }) {
   const authState = useContext(AuthStateContext);
   const { t } = useTranslation(['logbook', 'common', 'dashboard']);
+  const [isObservationOpen, setIsObservationOpen] = useState(false)
+  const [observationNote, setObservationNote] = useState("")
+  const [observationDetails, setDetails] = useState({ isError: false, message: '', loading: false })
+  const [addObservationNote] = useMutation(AddObservationNoteMutation)
 
   function routeToAction(eventLog) {
     if (eventLog.refType === 'Logs::EntryRequest') {
@@ -150,6 +160,19 @@ export function IndexComponent({
       pathname: `/request/${id}`,
       state: { from: 'enroll', offset }
     });
+  }
+
+  function handleSaveObservation() {
+    setDetails({ ...observationDetails, loading: true })
+    addObservationNote({ variables: { note: observationNote } })
+      .then(() => {
+        setDetails({ ...observationDetails, loading: false, isError: false, message: t('logbook:observation.created_observation') })
+        refetch()
+        setIsObservationOpen(false)
+      })
+      .catch(error => {
+        setDetails({ ...observationDetails, loading: false, isError: true, message: error.message })
+      })
   }
 
   function logs(eventLogs) {
@@ -280,8 +303,49 @@ export function IndexComponent({
       const visitorName = log.data.ref_name || log.data.visitor_name || log.data.name || '';
       return visitorName.toLowerCase().includes(searchTerm.toLowerCase());
     });
+
+  let observationLogs;
+  if (tabValue === 3) {
+    observationLogs = data?.result?.reduce((groups, log) => {
+      const date = log.createdAt.split('T')[0];
+      if (!groups[date]) {
+        // eslint-disable-next-line no-param-reassign
+        groups[date] = [];
+      }
+      groups[date].push(log);
+      return groups;
+    }, {});
+  }
+
   return (
     <div>
+      <MessageAlert
+        type={!observationDetails.isError ? 'success' : 'error'}
+        message={observationDetails.message}
+        open={!!observationDetails.message}
+        handleClose={() => setDetails({ ...observationDetails, message: '' })}
+      />
+      <EntryNoteDialog
+        open={isObservationOpen}
+        handleDialogStatus={() => setIsObservationOpen(!isObservationOpen)}
+        observationHandler={{
+          value: observationNote,
+          handleChange: value => setObservationNote(value)
+        }}
+      >
+        {observationDetails.loading ? (
+          <Spinner />
+        ) : (
+          <>
+            <Button onClick={() => setIsObservationOpen(false)} color="secondary" variant="outlined" data-testid='cancel'>
+              {t('common:form_actions.cancel')}
+            </Button>
+            <Button onClick={handleSaveObservation} color="primary" variant="contained" data-testid='save' style={{color: 'white'}} autoFocus>
+              {t('common:form_actions.save')}
+            </Button>
+          </>
+        )}
+      </EntryNoteDialog>
       <div className="container">
         <div className="form-group">
           <TextField
@@ -303,6 +367,7 @@ export function IndexComponent({
           <StyledTab label={t('logbook.all_visits')} {...a11yProps(0)} />
           <StyledTab label={t('logbook.new_visits')} {...a11yProps(1)} />
           <StyledTab label={t('logbook.upcoming_visits')} {...a11yProps(2)} />
+          <StyledTab label={t('logbook.observations')} {...a11yProps(3)} />
         </StyledTabs>
         {loading && <Loading />}
         <TabPanel value={tabValue} index={0}>
@@ -314,6 +379,21 @@ export function IndexComponent({
         </TabPanel>
         <TabPanel value={tabValue} index={2}>
           {data && data.result.map(log => <LogView key={log.id} user={log} refetch={refetch} tab={tabValue} />)}
+        </TabPanel>
+        <TabPanel value={tabValue} index={3}>
+          <>
+            <AddMoreButton title={t('logbook.add_observation')} handleAdd={() => setIsObservationOpen(true)} />
+            {
+            observationLogs && Object.keys(observationLogs).map((groupedDate) => (
+              <GroupedObservations
+                key={groupedDate}
+                groupedDate={groupedDate}
+                eventLogs={observationLogs[groupedDate]}
+                routeToEntry={routeToAction}
+              />
+            ))
+          }
+          </>
         </TabPanel>
         {// only admins should be able to schedule a visit request
             authState.user.userType === 'admin' && (
