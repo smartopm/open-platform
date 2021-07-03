@@ -282,7 +282,7 @@ export const EntryRequestUpdate = gql`
   }
   ${EntryRequestFragment.publicFields}
 `
-
+// Reduce the returned response load
 export const EntryRequestGrant = gql`
   mutation EntryRequestGrantMutation($id: ID!, $subject: String) {
     result: entryRequestGrant(id: $id, subject: $subject) {

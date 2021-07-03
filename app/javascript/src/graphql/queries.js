@@ -91,6 +91,7 @@ export const AllEventLogsQuery = gql`
         reason
         id
         grantedState
+        grantedAt
         name
       }
       user {

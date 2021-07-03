@@ -217,7 +217,12 @@ export function IndexComponent({
                     {' '}
                   </strong>
                 </span>
-                <span className={css(styles.subTitle)}>{dateToString(event.createdAt)}</span>
+                <span className={css(styles.subTitle)}>
+                  {/* if an event is entry_request then it should show when it was granted or denied instead of when it was created */}
+                  {
+                    event.refType === 'Logs::EntryRequest' ? dateToString(event.entryRequest.grantedAt) : dateToString(event.createdAt)
+                  }
+                  </span>
               </div>
             </div>
             <div className="row justify-content-between">
@@ -226,7 +231,9 @@ export function IndexComponent({
               </div>
               <div className="col-xs-4">
                 <span className={css(styles.subTitle)}>
-                  {dateTimeToString(event.createdAt)}
+                  {
+                    event.refType === 'Logs::EntryRequest' ? dateTimeToString(event.entryRequest.grantedAt) : dateTimeToString(event.createdAt)
+                  }
                 </span>
               </div>
             </div>
@@ -284,6 +291,16 @@ export function IndexComponent({
                     }}
                   >
                     {t('common:misc.more_details')}
+                  </Typography>
+                  {' '}
+                  |
+                  {' '}
+                   <Typography
+                    component="span"
+                    color="primary"
+                    style={{ cursor: 'pointer',  }}
+                  >
+                    Add Observation
                   </Typography>
                 </span>
               </div>
