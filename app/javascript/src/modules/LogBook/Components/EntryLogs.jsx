@@ -242,15 +242,15 @@ export function IndexComponent({
           <div className="container">
             <div className="row justify-content-between">
               <div className="col-xs-8">
-                <span className={`${css(styles.logTitle)} entry-log-visitor-name`}>
+                <span className={`${css(styles.logTitle)} entry-log-visitor-name`} data-testid="visitor_name" >
                   {visitorName}
                 </span>
               </div>
               <div className="col-xs-4">
-                <span className={css(styles.access)}>
+                <span className={css(styles.access)} data-testid="access_status">
                   <strong>{accessStatus} </strong>
                 </span>
-                <span className={css(styles.subTitle)}>
+                <span className={css(styles.subTitle)} data-testid="entry_date">
                   {/* if an event is entry_request then it should show when it was granted or denied instead of when it was created */}
                   {event.refType === 'Logs::EntryRequest'
                     ? dateToString(event.entryRequest.grantedAt)
@@ -260,10 +260,10 @@ export function IndexComponent({
             </div>
             <div className="row justify-content-between">
               <div className="col-xs-8">
-                <span className={css(styles.subTitle)}>{reason}</span>
+                <span className={css(styles.subTitle)} data-testid="entry_reason">{reason}</span>
               </div>
               <div className="col-xs-4">
-                <span className={css(styles.subTitle)}>
+                <span className={css(styles.subTitle)} data-testid="entry_time">
                   {event.refType === 'Logs::EntryRequest'
                     ? dateTimeToString(event.entryRequest.grantedAt)
                     : dateTimeToString(event.createdAt)}
@@ -273,7 +273,7 @@ export function IndexComponent({
             <br />
             <div className="row justify-content-between">
               <div className="col-xs-8">
-                <span className={css(styles.subTitle)}>
+                <span className={css(styles.subTitle)} data-testid="acting_user">
                   {event.actingUser && event.actingUser.name}
                 </span>
               </div>
@@ -336,6 +336,7 @@ export function IndexComponent({
                       color="primary"
                       style={{ cursor: 'pointer' }}
                       onClick={() => handleExitEvent(event, 'exit')}
+                      data-testid="log_exit"
                     >
                       {clickedEvent.refId === event.refId && observationDetails.loading ? (
                         <Spinner />
