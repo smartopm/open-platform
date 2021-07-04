@@ -37,7 +37,9 @@
     "granted_access_by": "Granted access by",
     "denied_access_by": "Denied access by",
     "time_of_access": "Time of access",
-    "today": "Today"
+    "today": "Today",
+    "log_exit": "Log Exit",
+    "exited": "Exited"
   },
   "log_title": {
     "visitor": "Visitor",
