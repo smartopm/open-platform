@@ -37,7 +37,9 @@
     "granted_access_by": "Granted access by",
     "denied_access_by": "Denied access by",
     "time_of_access": "Time of access",
-    "today": "Today"
+    "today": "Today",
+    "log_exit": "Log Exit",
+    "exited": "Exited"
   },
   "log_title": {
     "visitor": "Visitor",
@@ -72,6 +74,7 @@
     "skip_record_manual_entry": "{{action}} & Manually Record Next Entry",
     "skip_scan_next_entry": "{{action}} & Scan Next Entry",
     "created_observation": "Observation note successfully added",
-    "add_your_observation": "Do you have any observations you'd like to add?"
+    "add_your_observation": "Do you have any observations you'd like to add?",
+    "created_observation_exit": "Observation exit has been logged successfully"
   }
 }

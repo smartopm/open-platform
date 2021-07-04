@@ -28,13 +28,13 @@ describe('Request Form Component', () => {
         fireEvent.change(nrc, { target: { value: '1000/10/1' } })
         expect(nrc.value).toBe('1000/10/1')
 
-        const vehicle = container.queryByTestId('vehicle')
+        const vehicle = container.queryByTestId('companyName')
         fireEvent.change(vehicle, { target: { value: 'ABT412' } })
         expect(vehicle).toHaveValue('ABT412')
 
         expect(container.queryByTestId('submit_button')).toHaveTextContent('form_actions.submit')
         expect(container.queryByText('form_fields.nrc')).toBeInTheDocument()
         expect(container.queryByText('form_fields.phone_number')).toBeInTheDocument()
-        expect(container.queryByText('form_fields.vehicle_plate_number')).toBeInTheDocument()
+        expect(container.queryByText('form_fields.company_name')).toBeInTheDocument()
     })
 })

@@ -95,7 +95,7 @@ export default function GroupedObservations({ groupedDate, eventLogs, routeToEnt
               style={{ marginBottom: '20px' }}
             >
               <Grid item sm={8}>
-                {eventLog.data.note}
+                {eventLog.data.note === 'Exited' ? t('logbook.exited') : eventLog.data.note}
               </Grid>
 
               <Grid item container direction="row" sm={4} justify="flex-end">

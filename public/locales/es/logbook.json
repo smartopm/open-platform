@@ -64,6 +64,7 @@
     "today_is": "Hoy es {{date}}, {{time}}",
     "upcoming_visits": "Próximas visitas",
     "user_enrolled": "El usuario fue registrado con exito",
-    "visiting_reason": "Motivo de la visita"
+    "visiting_reason": "Motivo de la visita",
+    "exited": "Salido"
   }
 }

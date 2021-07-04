@@ -255,7 +255,7 @@ const App = () => {
                               <Route path="/guard_home" component={GuardHome} />
                               {/* Guard home ends */}
                               <Route path="/entry_request" component={EntryRequest} />
-                              <Route path="/request/:id/:logs?" component={RequestUpdate} />
+                              <Route path="/request/:id?/:logs?" component={RequestUpdate} />
                               <Route path="/feedback" component={Feedback} />
                               <Route path="/feedback_success" component={FeedbackSuccess} />
                               <Route path="/campaign-create" component={CampaignCreate} />

@@ -5,6 +5,7 @@
 /* eslint-disable no-nested-ternary */
 /* eslint-disable no-use-before-define */
 /* eslint-disable security/detect-object-injection */
+/* eslint-disable react/jsx-one-expression-per-line */
 import React, { useState, Fragment, useContext, useEffect } from 'react';
 import { useMutation, useQuery } from 'react-apollo';
 import { useLocation } from 'react-router-dom';
@@ -34,7 +35,7 @@ export default ({ history, match }) => AllEventLogs(history, match);
 // Todo: Find the total number of allEventLogs
 const initialLimit = 50;
 const AllEventLogs = (history, match) => {
-  const subjects = ['user_entry', 'visitor_entry', 'showroom', 'user_temp'];
+  const subjects = ['user_entry', 'visitor_entry', 'user_temp'];
   const [offset, setOffset] = useState(0);
   const [limit, setLimit] = useState(initialLimit);
   const [searchTerm, setSearchTerm] = useState('');
@@ -99,7 +100,7 @@ const AllEventLogs = (history, match) => {
 
   function handleChange(_event, newValue) {
     setvalue(newValue);
-    refetch()
+    refetch();
   }
   return (
     <IndexComponent
@@ -136,10 +137,15 @@ export function IndexComponent({
 }) {
   const authState = useContext(AuthStateContext);
   const { t } = useTranslation(['logbook', 'common', 'dashboard']);
-  const [isObservationOpen, setIsObservationOpen] = useState(false)
-  const [observationNote, setObservationNote] = useState("")
-  const [observationDetails, setDetails] = useState({ isError: false, message: '', loading: false })
-  const [addObservationNote] = useMutation(AddObservationNoteMutation)
+  const [isObservationOpen, setIsObservationOpen] = useState(false);
+  const [observationNote, setObservationNote] = useState('');
+  const [clickedEvent, setClickedEvent] = useState({ refId: '', refType: '' });
+  const [observationDetails, setDetails] = useState({
+    isError: false,
+    message: '',
+    loading: false
+  });
+  const [addObservationNote] = useMutation(AddObservationNoteMutation);
 
   function routeToAction(eventLog) {
     if (eventLog.refType === 'Logs::EntryRequest') {
@@ -147,7 +153,8 @@ export function IndexComponent({
         pathname: `/request/${eventLog.refId}`,
         state: { from: 'entry_logs', offset }
       });
-    } if (eventLog.refType === 'Users::User') {
+    }
+    if (eventLog.refType === 'Users::User') {
       router.push({
         pathname: `/user/${eventLog.refId}`,
         state: { from: 'entry_logs', offset }
@@ -162,17 +169,48 @@ export function IndexComponent({
     });
   }
 
-  function handleSaveObservation() {
-    setDetails({ ...observationDetails, loading: true })
-    addObservationNote({ variables: { note: observationNote } })
+  function handleExitEvent(eventLog, logType) {
+    setClickedEvent(eventLog);
+    handleSaveObservation(eventLog, logType);
+  }
+
+  function handleAddObservation(log) {
+    setClickedEvent({ refId: log.refId, refType: log.refType });
+    setIsObservationOpen(true);
+  }
+
+  function handleSaveObservation(log = clickedEvent, type) {
+    setDetails({ ...observationDetails, loading: true });
+    const exitNote = 'Exited';
+    addObservationNote({
+      variables: { note: observationNote || exitNote, id: log.refId, refType: log.refType }
+    })
       .then(() => {
-        setDetails({ ...observationDetails, loading: false, isError: false, message: t('logbook:observation.created_observation') })
-        refetch()
-        setIsObservationOpen(false)
+        setDetails({
+          ...observationDetails,
+          loading: false,
+          isError: false,
+          message:
+            type === 'exit'
+              ? t('logbook:observations.created_observation_exit')
+              : t('logbook:observations.created_observation')
+        });
+        setObservationNote('');
+        setClickedEvent({ refId: '', refType: '' });
+        refetch();
+        setIsObservationOpen(false);
       })
       .catch(error => {
-        setDetails({ ...observationDetails, loading: false, isError: true, message: error.message })
-      })
+        setDetails({
+          ...observationDetails,
+          loading: false,
+          isError: true,
+          message: error.message
+        });
+        // reset state in case it errs and user chooses a different log
+        setObservationNote('');
+        setClickedEvent({ refId: '', refType: '' });
+      });
   }
 
   function logs(eventLogs) {
@@ -185,8 +223,6 @@ export function IndexComponent({
       const source =
         event.subject === 'user_entry'
           ? t('dashboard:dashboard.scan')
-          : event.subject === 'showroom'
-          ? t('logbook.showroom')
           : t('dashboard:dashboard.log_entry');
 
       const isDigital = event.subject === 'user_entry' ? event.data.digital : null;
@@ -206,34 +242,43 @@ export function IndexComponent({
           <div className="container">
             <div className="row justify-content-between">
               <div className="col-xs-8">
-                <span className={`${css(styles.logTitle)} entry-log-visitor-name`}>
+                <span
+                  className={`${css(styles.logTitle)} entry-log-visitor-name`}
+                  data-testid="visitor_name"
+                >
                   {visitorName}
                 </span>
               </div>
               <div className="col-xs-4">
-                <span className={css(styles.access)}>
-                  <strong>
-                    {accessStatus}
-                    {' '}
-                  </strong>
+                <span className={css(styles.access)} data-testid="access_status">
+                  <strong>{accessStatus} </strong>
                 </span>
-                <span className={css(styles.subTitle)}>{dateToString(event.createdAt)}</span>
+                <span className={css(styles.subTitle)} data-testid="entry_date">
+                  {/* if an event is entry_request then it should show when it was granted or denied instead of when it was created */}
+                  {event.refType === 'Logs::EntryRequest'
+                    ? dateToString(event.entryRequest.grantedAt)
+                    : dateToString(event.createdAt)}
+                </span>
               </div>
             </div>
             <div className="row justify-content-between">
               <div className="col-xs-8">
-                <span className={css(styles.subTitle)}>{reason}</span>
+                <span className={css(styles.subTitle)} data-testid="entry_reason">
+                  {reason}
+                </span>
               </div>
               <div className="col-xs-4">
-                <span className={css(styles.subTitle)}>
-                  {dateTimeToString(event.createdAt)}
+                <span className={css(styles.subTitle)} data-testid="entry_time">
+                  {event.refType === 'Logs::EntryRequest'
+                    ? dateTimeToString(event.entryRequest.grantedAt)
+                    : dateTimeToString(event.createdAt)}
                 </span>
               </div>
             </div>
             <br />
             <div className="row justify-content-between">
               <div className="col-xs-8">
-                <span className={css(styles.subTitle)}>
+                <span className={css(styles.subTitle)} data-testid="acting_user">
                   {event.actingUser && event.actingUser.name}
                 </span>
               </div>
@@ -256,12 +301,9 @@ export function IndexComponent({
                         style={{ cursor: 'pointer' }}
                         onClick={() => enrollUser(event.refId)}
                       >
-                        {t('logbook.enroll_user')}
-                        {' '}
+                        {t('logbook.enroll_user')}{' '}
                       </Typography>
-                      |
-                      {' '}
-                      {source}
+                      | {source}
                     </>
                   ) : event.subject === 'user_entry' && isDigital !== null ? (
                     isDigital ? (
@@ -271,10 +313,8 @@ export function IndexComponent({
                     )
                   ) : (
                     source
-                  )}
-                  {' '}
-                  |
-                  {' '}
+                  )}{' '}
+                  |{' '}
                   <Typography
                     component="span"
                     color="primary"
@@ -284,7 +324,34 @@ export function IndexComponent({
                     }}
                   >
                     {t('common:misc.more_details')}
-                  </Typography>
+                  </Typography>{' '}
+                  |{' '}
+                  <Typography
+                    component="span"
+                    color="primary"
+                    style={{ cursor: 'pointer' }}
+                    onClick={() => handleAddObservation(event)}
+                  >
+                    {t('logbook.add_observation')}
+                  </Typography>{' '}
+                  |{' '}
+                  {!event.hasExited && (
+                    <Typography
+                      component="span"
+                      color="primary"
+                      style={{ cursor: 'pointer' }}
+                      onClick={() => handleExitEvent(event, 'exit')}
+                      data-testid="log_exit"
+                    >
+                      {
+                      clickedEvent.refId === event.refId && observationDetails.loading ? (
+                        <Spinner />
+                      ) : (
+                        event.subject !== 'user_temp' && t('logbook.log_exit')
+                      )
+                      }
+                    </Typography>
+                  )}
                 </span>
               </div>
             </div>
@@ -337,10 +404,22 @@ export function IndexComponent({
           <Spinner />
         ) : (
           <>
-            <Button onClick={() => setIsObservationOpen(false)} color="secondary" variant="outlined" data-testid='cancel'>
+            <Button
+              onClick={() => setIsObservationOpen(false)}
+              color="secondary"
+              variant="outlined"
+              data-testid="cancel"
+            >
               {t('common:form_actions.cancel')}
             </Button>
-            <Button onClick={handleSaveObservation} color="primary" variant="contained" data-testid='save' style={{color: 'white'}} autoFocus>
+            <Button
+              onClick={() => handleSaveObservation()}
+              color="primary"
+              variant="contained"
+              data-testid="save"
+              style={{ color: 'white' }}
+              autoFocus
+            >
               {t('common:form_actions.save')}
             </Button>
           </>
@@ -375,34 +454,42 @@ export function IndexComponent({
         </TabPanel>
         <TabPanel value={tabValue} index={1}>
           {/* Todo: Handle the listing of enrolled users here */}
-          {data && data.result.map(user => <LogView key={user.id} user={user} refetch={refetch} tab={tabValue} />)}
+          {data &&
+            data.result.map(user => (
+              <LogView key={user.id} user={user} refetch={refetch} tab={tabValue} />
+            ))}
         </TabPanel>
         <TabPanel value={tabValue} index={2}>
-          {data && data.result.map(log => <LogView key={log.id} user={log} refetch={refetch} tab={tabValue} />)}
+          {data &&
+            data.result.map(log => (
+              <LogView key={log.id} user={log} refetch={refetch} tab={tabValue} />
+            ))}
         </TabPanel>
         <TabPanel value={tabValue} index={3}>
           <>
-            <AddMoreButton title={t('logbook.add_observation')} handleAdd={() => setIsObservationOpen(true)} />
-            {
-            observationLogs && Object.keys(observationLogs).map((groupedDate) => (
-              <GroupedObservations
-                key={groupedDate}
-                groupedDate={groupedDate}
-                eventLogs={observationLogs[groupedDate]}
-                routeToEntry={routeToAction}
-              />
-            ))
-          }
+            <AddMoreButton
+              title={t('logbook.add_observation')}
+              handleAdd={() => setIsObservationOpen(true)}
+            />
+            {observationLogs &&
+              Object.keys(observationLogs).map(groupedDate => (
+                <GroupedObservations
+                  key={groupedDate}
+                  groupedDate={groupedDate}
+                  eventLogs={observationLogs[groupedDate]}
+                  routeToEntry={routeToAction}
+                />
+              ))}
           </>
         </TabPanel>
         {// only admins should be able to schedule a visit request
-            authState.user.userType === 'admin' && (
-              <FloatButton
-                title={t('logbook.new_visit_request')}
-                handleClick={() => router.push('/visit_request')}
-              />
-            )
-         }
+        authState.user.userType === 'admin' && (
+          <FloatButton
+            title={t('logbook.new_visit_request')}
+            handleClick={() => router.push('/visit_request')}
+          />
+        )
+        }
       </div>
 
       <div className="d-flex justify-content-center">
@@ -434,20 +521,23 @@ export function IndexComponent({
 export function LogView({ user, refetch, tab }) {
   const { t } = useTranslation(['common', 'logbook']);
   const [grantEntry] = useMutation(EntryRequestGrant);
-  const [loading, setLoading] = useState(false)
-  const [message, setMessage] = useState({ isError: false, detail: ""})
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState({ isError: false, detail: '' });
 
   // grant access right here
   function handleGrantAccess() {
     setLoading(true);
-    grantEntry({ variables: { id: user.refId, subject: "visitor_entry" } })
+    grantEntry({ variables: { id: user.refId, subject: 'visitor_entry' } })
       .then(() => {
-        setMessage({isError: false, detail: t("logbook:logbook.success_message", { action: t('logbook:logbook.granted') })});
+        setMessage({
+          isError: false,
+          detail: t('logbook:logbook.success_message', { action: t('logbook:logbook.granted') })
+        });
         setLoading(false);
-        setTimeout(() => refetch(), 1500)
+        setTimeout(() => refetch(), 1500);
       })
       .catch(error => {
-        setMessage({isError: true, detail: error.message});
+        setMessage({ isError: true, detail: error.message });
         setLoading(false);
       });
   }
@@ -458,7 +548,7 @@ export function LogView({ user, refetch, tab }) {
         type={message.isError ? 'error' : 'success'}
         message={message.detail}
         open={!!message.detail}
-        handleClose={() => setMessage({...message, detail: ""})}
+        handleClose={() => setMessage({ ...message, detail: '' })}
       />
       <div className="container">
         <div className="row justify-content-between">
@@ -466,7 +556,9 @@ export function LogView({ user, refetch, tab }) {
             <span className={css(styles.logTitle)}>{user.data.ref_name}</span>
           </div>
           <div className="col-xs-4">
-            <span className={css(styles.subTitle)}>{`${dateToString(user.createdAt)} at ${dateTimeToString(user.createdAt)}`}</span>
+            <span className={css(styles.subTitle)}>
+              {`${dateToString(user.createdAt)} at ${dateTimeToString(user.createdAt)}`}
+            </span>
           </div>
         </div>
         <br />
@@ -476,8 +568,7 @@ export function LogView({ user, refetch, tab }) {
               {t(`common:user_types.${user.data?.type}`)}
             </span>
           </div>
-          {
-          tab === 2 && (
+          {tab === 2 && (
             <div className="col-xs-4">
               <span className={css(styles.subTitle)}>
                 <Typography
@@ -487,14 +578,11 @@ export function LogView({ user, refetch, tab }) {
                   onClick={handleGrantAccess}
                   data-testid="grant_access_btn"
                 >
-                  {
-                  loading ? <Spinner /> : t('logbook:access_actions.grant_access')
-                }
+                  {loading ? <Spinner /> : t('logbook:access_actions.grant_access')}
                 </Typography>
               </span>
             </div>
-          )
-        }
+          )}
         </div>
         <br />
         <div className="border-top my-3" />
@@ -502,7 +590,6 @@ export function LogView({ user, refetch, tab }) {
     </>
   );
 }
-
 
 LogView.propTypes = {
   tab: PropTypes.number.isRequired,
@@ -513,7 +600,7 @@ LogView.propTypes = {
     // eslint-disable-next-line react/forbid-prop-types
     data: PropTypes.object
   }).isRequired
-}
+};
 
 const styles = StyleSheet.create({
   logTitle: {
