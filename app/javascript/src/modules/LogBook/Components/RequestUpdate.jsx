@@ -2,7 +2,7 @@
 /* eslint-disable no-nested-ternary */
 /* eslint-disable no-use-before-define */
 import React, { useState, useEffect, useContext } from 'react';
-import { useQuery, useMutation } from 'react-apollo';
+import { useMutation, useLazyQuery } from 'react-apollo';
 import { TextField, MenuItem, Button , Grid } from '@material-ui/core';
 import { StyleSheet, css } from 'aphrodite';
 import { useHistory, useLocation, useParams } from 'react-router';
@@ -17,7 +17,7 @@ import {
   UpdateLogMutation,
   EntryRequestCreate
 } from '../../../graphql/mutations';
-import Loading, { Spinner } from "../../../shared/Loading";
+import { Spinner } from "../../../shared/Loading";
 import { isTimeValid, getWeekDay } from '../../../utils/dateutil';
 import { userState, userType, communityVisitingHours, defaultBusinessReasons } from '../../../utils/constants'
 import { ModalDialog } from "../../../components/Dialog"
@@ -53,7 +53,7 @@ export default function RequestUpdate({ id }) {
     const previousRoute = state?.from || logs
     const isFromLogs = previousRoute === 'logs' ||  false
 
-  const { loading, data } = useQuery(EntryRequestQuery, {
+  const [loadRequest, { data }] = useLazyQuery(EntryRequestQuery, {
     variables: { id }
   });
   const [createEntryRequest] = useMutation(EntryRequestCreate)
@@ -85,12 +85,15 @@ export default function RequestUpdate({ id }) {
     };
   });
 
+  useEffect(() => {
+    if (id) {
+      loadRequest({ variables: { id } })
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id])
+
   function tick() {
     setDate(new Date());
-  }
-
-  if (loading) {
-    return <Loading />;
   }
 
   // Data is loaded, so set the initialState, but only once
