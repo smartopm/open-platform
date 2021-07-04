@@ -54,7 +54,7 @@ RSpec.describe Mutations::EntryRequest do
       variables = {
         name: 'Mark Percival',
         reason: 'Visiting',
-        temperature: '30'
+        temperature: '30',
       }
       result = DoubleGdpSchema.execute(query, variables: variables,
                                               context: {
@@ -123,7 +123,7 @@ RSpec.describe Mutations::EntryRequest do
       GQL
     end
 
-    it 'returns a granted entry request' do
+    it 'returns a denied entry request' do
       variables = {
         id: entry_request.id,
       }
@@ -135,41 +135,84 @@ RSpec.describe Mutations::EntryRequest do
       expect(result.dig('data', 'result', 'entryRequest', 'grantedState')).to eql 2
       expect(result['errors']).to be_nil
     end
+
+    it 'returns not found when a request does not exist' do
+      variables = {
+        id: SecureRandom.uuid,
+      }
+      result = DoubleGdpSchema.execute(query, variables: variables,
+                                              context: {
+                                                current_user: admin,
+                                              }).as_json
+      expect(result['errors']).not_to be_nil
+      expect(result.dig('errors', 0, 'message')).to include 'Logs::EntryRequest'
+    end
   end
 
-#   describe 'granting an entry request' do
-#     let!(:user) { create(:user_with_community) }
-#     let!(:admin) { create(:admin_user, community_id: user.community_id) }
-#     let!(:entry_request) { admin.entry_requests.create(name: 'Mark Percival', reason: 'Visiting') }
-#     let!(:contractor) { create(:contractor, community_id: user.community_id) }
+  describe 'granting an entry request' do
+    let!(:user) { create(:user_with_community) }
+    let!(:another_user) { create(:user, community_id: user.community_id) }
+    let!(:admin) { create(:admin_user, community_id: user.community_id) }
+    let!(:entry_request) { admin.entry_requests.create(name: 'Mark Percival', reason: 'Visiting') }
+    let!(:event) do
+      user.generate_events('visitor_entry', entry_request)
+    end
+    let!(:contractor) { create(:contractor, community_id: user.community_id) }
 
-#     let(:query) do
-#       <<~GQL
-#         mutation UpdateEntryRequest($id: ID!) {
-#           result: entryRequestGrant(id: $id) {
-#             entryRequest {
-#               id
-#               name
-#               grantedState
-#             }
-#           }
-#         }
-#       GQL
-#     end
+    let(:query) do
+      <<~GQL
+        mutation UpdateEntryRequest($id: ID!) {
+          result: entryRequestGrant(id: $id) {
+            entryRequest {
+              id
+              name
+              grantedState
+            }
+          }
+        }
+      GQL
+    end
 
-#     it 'returns a granted entry request' do
-#       variables = {
-#         id: entry_request.id,
-#       }
-#       result = DoubleGdpSchema.execute(query, variables: variables,
-#                                               context: {
-#                                                 current_user: admin,
-#                                               }).as_json
-#       expect(result.dig('data', 'result', 'entryRequest', 'id')).not_to be_nil
-#       expect(result.dig('data', 'result', 'entryRequest', 'grantedState')).to eql 1
-#       expect(result['errors']).to be_nil
-#     end
-# end
+    it 'returns a granted entry request' do
+      variables = {
+        id: event.ref_id,
+      }
+      result = DoubleGdpSchema.execute(query, variables: variables,
+                                              context: {
+                                                current_user: admin,
+                                                site_community: user.community,
+                                              }).as_json
+      expect(result.dig('data', 'result', 'entryRequest', 'id')).not_to be_nil
+      expect(result.dig('data', 'result', 'entryRequest', 'grantedState')).to eql 1
+      expect(result['errors']).to be_nil
+    end
+
+    it 'returns Unauthorized for non Unauthorized users' do
+      variables = {
+        id: event.ref_id,
+      }
+      result = DoubleGdpSchema.execute(query, variables: variables,
+                                              context: {
+                                                current_user: contractor,
+                                                site_community: user.community,
+                                              }).as_json
+      expect(result['errors']).not_to be_nil
+      expect(result.dig('errors', 0, 'message')).to include 'Unauthorized'
+    end
+
+    it 'returns not found for wrong events' do
+      variables = {
+        id: SecureRandom.uuid,
+      }
+      result = DoubleGdpSchema.execute(query, variables: variables,
+                                              context: {
+                                                current_user: admin,
+                                                site_community: user.community,
+                                              }).as_json
+      expect(result['errors']).not_to be_nil
+      expect(result.dig('errors', 0, 'message')).to include 'Event log not found'
+    end
+  end
 
   describe 'acknowledging an entry request' do
     let!(:user) { create(:user_with_community) }
