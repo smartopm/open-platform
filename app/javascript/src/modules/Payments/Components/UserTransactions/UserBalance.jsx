@@ -1,15 +1,17 @@
 import React, { useContext, useState } from 'react'
+import { makeStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types'
-import { Typography } from '@material-ui/core'
+import { Typography, Fab } from '@material-ui/core'
 import { useTranslation } from 'react-i18next';
 import { formatMoney } from '../../../../utils/helpers'
 import { currencies } from '../../../../utils/constants'
 import { Context as AuthStateContext } from '../../../../containers/Provider/AuthStateProvider'
-import ButtonComponent from '../../../../shared/buttons/Button'
+// import ButtonComponent from '../../../../shared/buttons/Button'
 import PaymentModal from './PaymentModal'
 
-export default function Balance({ user, userId, userData, refetch, balanceData, balanceRefetch, csvRefetch }) {
+export default function Balance({ user, userId, userData, refetch, balanceData, balanceRefetch, transRefetch }) {
   const authState = useContext(AuthStateContext);
+  const classes = useStyles();
   const { t } = useTranslation('common');
   const [payOpen, setPayOpen] = useState(false);
 
@@ -44,7 +46,16 @@ export default function Balance({ user, userId, userData, refetch, balanceData, 
       {
         authState.user?.userType === 'admin' && (
           <div>
-            <ButtonComponent color='primary' buttonText={t("common:misc.make_payment")} handleClick={() => setPayOpen(true)} />
+            <Fab
+              color="primary"
+              variant="extended" 
+              onClick={() => setPayOpen(true)}
+              data-testid='add-payment'
+              className={classes.addPayment}
+            >
+              {t("common:misc.make_payment")}
+            </Fab>
+            {/* <ButtonComponent color='primary' buttonText={t("common:misc.make_payment")} handleClick={() => setPayOpen(true)} /> */}
           </div>
         )
       }
@@ -56,15 +67,26 @@ export default function Balance({ user, userId, userData, refetch, balanceData, 
         refetch={balanceRefetch}
         walletRefetch={refetch}
         userData={userData}
-        csvRefetch={csvRefetch}
+        transRefetch={transRefetch}
       />
     </div>
   )
 }
 
+const useStyles = makeStyles(() => ({ 
+  addPayment: {
+    boxShadow: 'none',
+    position: 'fixed',
+    bottom: 20,
+    right: 57,
+    marginLeft: '30%',
+    zIndex: '1000'
+  }
+}))
+
 Balance.defaultProps = {
   userData: {},
-  csvRefetch: () => {},
+  transRefetch: () => {},
   refetch: () => {},
   balanceRefetch: () => {}
 }
@@ -89,6 +111,6 @@ Balance.propTypes = {
     balance: PropTypes.number
   }).isRequired,
   refetch: PropTypes.func,
-  csvRefetch: PropTypes.func,
+  transRefetch: PropTypes.func,
   balanceRefetch: PropTypes.func
 }

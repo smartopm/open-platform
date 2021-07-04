@@ -19,7 +19,6 @@ import UserDetail from './UserProfileDetail';
 import { TabPanel } from '../../../components/Tabs';
 import UserFilledForms from './UserFilledForms';
 import UserMessages from '../../../components/Messaging/UserMessages'
-import Transactions from '../../Payments/Components/UserTransactions/Transactions'
 import UserJourney from './UserJourney';
 import { useParamsQuery } from '../../../utils/helpers';
 import RightSideMenu from '../../Menu/component/RightSideMenu'
@@ -38,7 +37,7 @@ export default function UserInformation({
 }) {
   const path = useParamsQuery();
   const tab = path.get('tab');
-  const subTab = path.get('subtab');
+  const subtab = path.get('subtab');
   const type = path.get('type');
   const { t } = useTranslation('users');
   const [tabValue, setValue] = useState(tab || 'Contacts');
@@ -222,20 +221,12 @@ export default function UserInformation({
         </>
         )}
         <FeatureCheck features={authState.user.community.features} name="Payments">
-          {subTab === 'transactions' && (
-            <Transactions
-              userId={userId}
-              user={authState.user}
-              userData={data.user}
-              tab={tab}
-            />
-          )}
           <TabPanel value={tabValue} index="Plans">
             <PaymentPlans
               userId={userId}
               user={authState.user}
               userData={data.user}
-              tab={tab}
+              subtab={subtab}
             />
           </TabPanel>
         </FeatureCheck>
