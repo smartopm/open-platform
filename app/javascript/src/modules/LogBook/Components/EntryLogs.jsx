@@ -34,7 +34,7 @@ export default ({ history, match }) => AllEventLogs(history, match);
 // Todo: Find the total number of allEventLogs
 const initialLimit = 50;
 const AllEventLogs = (history, match) => {
-  const subjects = ['user_entry', 'visitor_entry', 'showroom', 'user_temp'];
+  const subjects = ['user_entry', 'visitor_entry', 'user_temp'];
   const [offset, setOffset] = useState(0);
   const [limit, setLimit] = useState(initialLimit);
   const [searchTerm, setSearchTerm] = useState('');
@@ -193,8 +193,6 @@ export function IndexComponent({
       const source =
         event.subject === 'user_entry'
           ? t('dashboard:dashboard.scan')
-          : event.subject === 'showroom'
-          ? t('logbook.showroom')
           : t('dashboard:dashboard.log_entry');
 
       const isDigital = event.subject === 'user_entry' ? event.data.digital : null;
