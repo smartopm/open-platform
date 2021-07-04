@@ -6,11 +6,12 @@ RSpec.describe Mutations::EntryRequest do
   describe 'creating an entry request' do
     let!(:user) { create(:user_with_community) }
     let!(:admin) { create(:admin_user, community_id: user.community_id) }
+    let!(:contractor) { create(:contractor, community_id: user.community_id) }
 
     let(:query) do
       <<~GQL
-        mutation CreateEntryRequest($name: String!, $reason: String!) {
-          result: entryRequestCreate(name: $name, reason: $reason) {
+        mutation CreateEntryRequest($name: String!, $reason: String!, $temperature: String) {
+          result: entryRequestCreate(name: $name, reason: $reason, temperature: $temperature) {
             entryRequest {
               id
               name
@@ -33,6 +34,38 @@ RSpec.describe Mutations::EntryRequest do
                                                 current_user: user,
                                               }).as_json
       expect(result.dig('data', 'result', 'entryRequest', 'id')).not_to be_nil
+      expect(result['errors']).to be_nil
+    end
+
+    it 'returns Unauthorized for non Unauthorized users' do
+      variables = {
+        name: 'Mark Percival',
+        reason: 'Visiting',
+      }
+      result = DoubleGdpSchema.execute(query, variables: variables,
+                                              context: {
+                                                current_user: nil,
+                                              }).as_json
+      expect(result['errors']).not_to be_nil
+      expect(result.dig('errors', 0, 'message')).to include 'Unauthorized'
+    end
+
+    it 'if temperature is provided it should create a user_temp event' do
+      variables = {
+        name: 'Mark Percival',
+        reason: 'Visiting',
+        temperature: '30'
+      }
+      result = DoubleGdpSchema.execute(query, variables: variables,
+                                              context: {
+                                                current_user: user,
+                                              }).as_json
+      expect(result.dig('data', 'result', 'entryRequest', 'id')).not_to be_nil
+      ref_id = result.dig('data', 'result', 'entryRequest', 'id')
+      log = Logs::EventLog.find_by(ref_id: ref_id)
+      expect(log.ref_type).to eql 'Logs::EntryRequest'
+      expect(log.data['note']).to eql '30'
+      expect(log.subject).to eql 'user_temp'
       expect(result['errors']).to be_nil
     end
   end
