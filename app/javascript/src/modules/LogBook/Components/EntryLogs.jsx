@@ -138,7 +138,7 @@ export function IndexComponent({
   const { t } = useTranslation(['logbook', 'common', 'dashboard']);
   const [isObservationOpen, setIsObservationOpen] = useState(false)
   const [observationNote, setObservationNote] = useState("")
-  const [clickedEvent, setClickedEvent] = useState("")
+  const [clickedEvent, setClickedEvent] = useState({refId: '', refType: '' })
   const [observationDetails, setDetails] = useState({ isError: false, message: '', loading: false })
   const [addObservationNote] = useMutation(AddObservationNoteMutation)
 
@@ -165,23 +165,31 @@ export function IndexComponent({
   }
 
   function handleExitEvent(eventLog, logType){
-    setClickedEvent(eventLog.refId)
+    setClickedEvent(eventLog)
     handleSaveObservation(eventLog, logType)
   }
 
-  const logDetail = {refId: '', refType: '' }
-  function handleSaveObservation(log=logDetail, type) {
+  function handleAddObservation(log){
+    setClickedEvent({refId: log.refId, refType: log.refType })
+    setIsObservationOpen(true)
+  }
+
+  function handleSaveObservation(log=clickedEvent, type) {
     setDetails({ ...observationDetails, loading: true })
     const exitNote = 'Exited'
     addObservationNote({ variables: { note: observationNote || exitNote, id: log.refId, refType: log.refType } })
       .then(() => {
         setDetails({ ...observationDetails, loading: false, isError: false, message: type === 'exit' ? t('logbook:observations.created_observation_exit') :  t('logbook:observations.created_observation')})
         setObservationNote('')
+        setClickedEvent({refId: '', refType: '' })
         refetch()
         setIsObservationOpen(false)
       })
       .catch(error => {
         setDetails({ ...observationDetails, loading: false, isError: true, message: error.message })
+        // reset state in case it errs and user chooses a different log
+        setObservationNote('')
+        setClickedEvent({refId: '', refType: '' })
       })
   }
 
@@ -307,6 +315,7 @@ export function IndexComponent({
                     component="span"
                     color="primary"
                     style={{ cursor: 'pointer',  }}
+                    onClick={() => handleAddObservation(event)}
                   >
                     Add Observation
                   </Typography>
@@ -322,7 +331,7 @@ export function IndexComponent({
                         onClick={() => handleExitEvent(event, 'exit')}
                       >
                         {
-                          clickedEvent === event.refId && observationDetails.loading ? <Spinner /> : "Log Exit"
+                          clickedEvent.refId === event.refId && observationDetails.loading ? <Spinner /> : "Log Exit"
                         }
                       </Typography>
                     )
