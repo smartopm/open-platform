@@ -138,6 +138,7 @@ export function IndexComponent({
   const { t } = useTranslation(['logbook', 'common', 'dashboard']);
   const [isObservationOpen, setIsObservationOpen] = useState(false)
   const [observationNote, setObservationNote] = useState("")
+  const [clickedEvent, setClickedEvent] = useState("")
   const [observationDetails, setDetails] = useState({ isError: false, message: '', loading: false })
   const [addObservationNote] = useMutation(AddObservationNoteMutation)
 
@@ -163,17 +164,18 @@ export function IndexComponent({
     });
   }
 
-  function handleExitEvent(eventLog){
-    handleSaveObservation(eventLog)
+  function handleExitEvent(eventLog, logType){
+    setClickedEvent(eventLog.refId)
+    handleSaveObservation(eventLog, logType)
   }
 
   const logDetail = {refId: '', refType: '' }
-  function handleSaveObservation(log=logDetail) {
+  function handleSaveObservation(log=logDetail, type) {
     setDetails({ ...observationDetails, loading: true })
-    const exitNote = "Exited"
+    const exitNote = 'Exited'
     addObservationNote({ variables: { note: observationNote || exitNote, id: log.refId, refType: log.refType } })
       .then(() => {
-        setDetails({ ...observationDetails, loading: false, isError: false, message: t('logbook:observation.created_observation') })
+        setDetails({ ...observationDetails, loading: false, isError: false, message: type === 'exit' ? t('logbook:observations.created_observation_exit') :  t('logbook:observations.created_observation')})
         setObservationNote('')
         refetch()
         setIsObservationOpen(false)
@@ -317,10 +319,10 @@ export function IndexComponent({
                         component="span"
                         color="primary"
                         style={{ cursor: 'pointer',  }}
-                        onClick={() => handleExitEvent(event)}
+                        onClick={() => handleExitEvent(event, 'exit')}
                       >
                         {
-                          logDetail.refId && observationDetails.loading ? <Spinner /> : "Log Exit"
+                          clickedEvent === event.refId && observationDetails.loading ? <Spinner /> : "Log Exit"
                         }
                       </Typography>
                     )
