@@ -480,7 +480,8 @@ export function IndexComponent({
             title={t('logbook.new_visit_request')}
             handleClick={() => router.push('/visit_request')}
           />
-        )}
+        )
+        }
       </div>
 
       <div className="d-flex justify-content-center">
@@ -547,9 +548,9 @@ export function LogView({ user, refetch, tab }) {
             <span className={css(styles.logTitle)}>{user.data.ref_name}</span>
           </div>
           <div className="col-xs-4">
-            <span className={css(styles.subTitle)}>{`${dateToString(
-              user.createdAt
-            )} at ${dateTimeToString(user.createdAt)}`}</span>
+            <span className={css(styles.subTitle)}>
+              {`${dateToString(user.createdAt)} at ${dateTimeToString(user.createdAt)}`}
+            </span>
           </div>
         </div>
         <br />
