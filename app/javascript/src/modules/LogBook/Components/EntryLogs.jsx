@@ -5,6 +5,7 @@
 /* eslint-disable no-nested-ternary */
 /* eslint-disable no-use-before-define */
 /* eslint-disable security/detect-object-injection */
+/* eslint-disable react/jsx-one-expression-per-line */
 import React, { useState, Fragment, useContext, useEffect } from 'react';
 import { useMutation, useQuery } from 'react-apollo';
 import { useLocation } from 'react-router-dom';
