@@ -242,7 +242,7 @@ export function IndexComponent({
           <div className="container">
             <div className="row justify-content-between">
               <div className="col-xs-8">
-                <span className={`${css(styles.logTitle)} entry-log-visitor-name`} data-testid="visitor_name" >
+                <span className={`${css(styles.logTitle)} entry-log-visitor-name`} data-testid="visitor_name">
                   {visitorName}
                 </span>
               </div>
