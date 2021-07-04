@@ -306,7 +306,7 @@ export function IndexComponent({
                   |
                   {' '}
                   {
-                    !event.data.note && (
+                    !event.hasExited && (
                       <Typography
                         component="span"
                         color="primary"

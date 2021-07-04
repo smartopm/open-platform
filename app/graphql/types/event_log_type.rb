@@ -16,6 +16,7 @@ module Types
     field :data, GraphQL::Types::JSON, null: true
     field :sentence, String, null: true
     field :source, String, null: true
+    field :has_exited, Boolean, null: true
 
     def sentence
       object.to_sentence
@@ -31,6 +32,10 @@ module Types
       return nil if object.ref_type != 'Users::User'
 
       Users::User.find_by(id: object.ref_id)
+    end
+
+    def has_exited
+      Logs::EventLog.where("data->>'note' = ? AND subject = ? AND ref_id = ?", 'Exited', 'observation_log', object.ref_id).present?
     end
   end
 end
