@@ -1,6 +1,7 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 /* eslint-disable jsx-a11y/no-autofocus */
 /* eslint-disable react/prop-types */
+/* eslint-disable no-console */
 import React, { useState } from 'react';
 import { StyleSheet, css } from 'aphrodite';
 import { withStyles } from '@material-ui/core/styles';

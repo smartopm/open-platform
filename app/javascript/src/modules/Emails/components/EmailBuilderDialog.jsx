@@ -17,6 +17,7 @@ import { formatError } from '../../../utils/helpers';
 import CreateEmailTemplateMutation, { EmailUpdateMutation } from '../graphql/email_mutations';
 import { Context } from '../../../containers/Provider/AuthStateProvider';
 
+// eslint-disable-next-line
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
