@@ -242,7 +242,10 @@ export function IndexComponent({
           <div className="container">
             <div className="row justify-content-between">
               <div className="col-xs-8">
-                <span className={`${css(styles.logTitle)} entry-log-visitor-name`} data-testid="visitor_name">
+                <span
+                  className={`${css(styles.logTitle)} entry-log-visitor-name`}
+                  data-testid="visitor_name"
+                >
                   {visitorName}
                 </span>
               </div>
@@ -260,7 +263,9 @@ export function IndexComponent({
             </div>
             <div className="row justify-content-between">
               <div className="col-xs-8">
-                <span className={css(styles.subTitle)} data-testid="entry_reason">{reason}</span>
+                <span className={css(styles.subTitle)} data-testid="entry_reason">
+                  {reason}
+                </span>
               </div>
               <div className="col-xs-4">
                 <span className={css(styles.subTitle)} data-testid="entry_time">
@@ -338,11 +343,13 @@ export function IndexComponent({
                       onClick={() => handleExitEvent(event, 'exit')}
                       data-testid="log_exit"
                     >
-                      {clickedEvent.refId === event.refId && observationDetails.loading ? (
+                      {
+                      clickedEvent.refId === event.refId && observationDetails.loading ? (
                         <Spinner />
                       ) : (
-                        t('logbook.log_exit')
-                      )}
+                        event.subject !== 'user_temp' && t('logbook.log_exit')
+                      )
+                      }
                     </Typography>
                   )}
                 </span>
