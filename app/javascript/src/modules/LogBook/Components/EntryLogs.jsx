@@ -180,7 +180,7 @@ export function IndexComponent({
 
   function handleSaveObservation(log = clickedEvent, type) {
     setDetails({ ...observationDetails, loading: true });
-    const exitNote = t('logbook.exited');
+    const exitNote = 'Exited';
     addObservationNote({
       variables: { note: observationNote || exitNote, id: log.refId, refType: log.refType }
     })
