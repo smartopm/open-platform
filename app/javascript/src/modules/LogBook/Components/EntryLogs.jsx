@@ -141,6 +141,7 @@ export function IndexComponent({
   const [observationDetails, setDetails] = useState({ isError: false, message: '', loading: false })
   const [addObservationNote] = useMutation(AddObservationNoteMutation)
 
+
   function routeToAction(eventLog) {
     if (eventLog.refType === 'Logs::EntryRequest') {
       router.push({
@@ -162,11 +163,18 @@ export function IndexComponent({
     });
   }
 
-  function handleSaveObservation() {
+  function handleExitEvent(eventLog){
+    handleSaveObservation(eventLog)
+  }
+
+  const logDetail = {refId: '', refType: '' }
+  function handleSaveObservation(log=logDetail) {
     setDetails({ ...observationDetails, loading: true })
-    addObservationNote({ variables: { note: observationNote } })
+    const exitNote = "Exited"
+    addObservationNote({ variables: { note: observationNote || exitNote, id: log.refId, refType: log.refType } })
       .then(() => {
         setDetails({ ...observationDetails, loading: false, isError: false, message: t('logbook:observation.created_observation') })
+        setObservationNote('')
         refetch()
         setIsObservationOpen(false)
       })
@@ -311,8 +319,11 @@ export function IndexComponent({
                         component="span"
                         color="primary"
                         style={{ cursor: 'pointer',  }}
+                        onClick={() => handleExitEvent(event)}
                       >
-                        Log Exit
+                        {
+                          logDetail.refId && observationDetails.loading ? <Spinner /> : "Log Exit"
+                        }
                       </Typography>
                     )
                   }
@@ -371,7 +382,7 @@ export function IndexComponent({
             <Button onClick={() => setIsObservationOpen(false)} color="secondary" variant="outlined" data-testid='cancel'>
               {t('common:form_actions.cancel')}
             </Button>
-            <Button onClick={handleSaveObservation} color="primary" variant="contained" data-testid='save' style={{color: 'white'}} autoFocus>
+            <Button onClick={() => handleSaveObservation()} color="primary" variant="contained" data-testid='save' style={{color: 'white'}} autoFocus>
               {t('common:form_actions.save')}
             </Button>
           </>
