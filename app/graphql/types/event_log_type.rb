@@ -34,8 +34,11 @@ module Types
       Users::User.find_by(id: object.ref_id)
     end
 
+    # rubocop:disable Naming/PredicateName
     def has_exited
-      Logs::EventLog.where("data->>'note' = ? AND subject = ? AND ref_id = ?", 'Exited', 'observation_log', object.ref_id).present?
+      Logs::EventLog.where("data->>'note' = ? AND subject = ? AND ref_id = ?", 'Exited',
+                           'observation_log', object.ref_id).present?
     end
+    # rubocop:enable Naming/PredicateName
   end
 end

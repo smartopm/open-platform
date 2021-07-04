@@ -24,12 +24,12 @@ module Mutations
         user = context[:current_user]
         ActiveRecord::Base.transaction do
           request = user.entry_requests.create!(vals.except(:temperature))
-           # make it compatible with previous temp recording
+          # make it compatible with previous temp recording
           data = { ref_name: vals[:name], note: vals[:temperature] }
 
           raise GraphQL::ExecutionError, request.errors.full_messages unless request.persisted?
 
-          user.generate_events('user_temp', request, data) unless vals[:temperature].blank?
+          user.generate_events('user_temp', request, data) if vals[:temperature].present?
           { entry_request: request }
         end
       end
