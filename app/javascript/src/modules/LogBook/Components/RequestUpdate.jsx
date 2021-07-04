@@ -42,6 +42,7 @@ const initialState = {
     expiresAt: '',
     email: '',
     companyName: '',
+    temperature: '',
     loaded: false
 }
 export default function RequestUpdate({ id }) {
@@ -524,6 +525,23 @@ export default function RequestUpdate({ id }) {
               ))}
             </TextField>
           </div>
+
+          {
+            !reqId && (
+              <div className="form-group">
+                <TextField
+                  className="form-control"
+                  type="text"
+                  label="Temperature(°C)"
+                  value={formData.temperature}
+                  onChange={handleInputChange}
+                  name="temperature"
+                  inputProps={{ 'data-testid': 'temperature' }}
+                  style={{ width: 200 }}
+                />
+              </div>
+            )
+          }
 
           <br />
           {previousRoute !== 'enroll' && reqId &&(
