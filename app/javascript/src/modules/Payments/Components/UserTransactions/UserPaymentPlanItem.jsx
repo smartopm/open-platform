@@ -53,6 +53,7 @@ export default function UserPaymentPlanItem({
   const [anchor, setAnchor] = useState(null);
   const [planAnchor, setPlanAnchor] = useState(null);
   const [transactionId, setTransactionId] = useState('');
+  const [planId, setPlanId] = useState('');
   const [landParcelId, setLandParcelId] = useState('');
   const [receiptOpen, setReceiptOpen] = useState(false);
   const [statementOpen, setStatementOpen] = useState(false);
@@ -108,10 +109,10 @@ export default function UserPaymentPlanItem({
   const handleClose = () => {
     setAnchorEl(null);
   };
-  function handleOpenDateMenu(event, planId) {
+  function handleOpenDateMenu(event, planid) {
     // avoid collapsing that shows invoices
     event.stopPropagation();
-    setPlanDetails({ ...details, planId });
+    setPlanDetails({ ...details, planid });
     setAnchorEl(event.currentTarget);
   }
 
@@ -131,7 +132,7 @@ export default function UserPaymentPlanItem({
 
   function handleTransactionClick(event) {
     event.stopPropagation()
-    history.push(`?tab=Plans&subtab=Transactions&id=${landParcelId}`)
+    history.push(`?tab=Plans&subtab=Transactions&id=${planId}`)
   }
 
   function handleTransactionMenu(event, payId){
@@ -140,10 +141,11 @@ export default function UserPaymentPlanItem({
     setTransactionId(payId)
   }
 
-  function handlePlanMenu(event, parcelId){
+  function handlePlanMenu(event, plan){
     event.stopPropagation()
     setPlanAnchor(event.currentTarget)
-    setLandParcelId(parcelId)
+    setLandParcelId(plan.landParcel.id)
+    setPlanId(plan.id)
   }
 
   function handlePlanListClose(event) {
@@ -359,7 +361,7 @@ export function renderPlan(plan, currencyData, userType, { handleMenu, loading }
           aria-controls="simple-menu"
           aria-haspopup="true"
           data-testid="plan-menu"
-          onClick={(event) => menuData.handlePlanMenu(event, plan?.landParcel?.id)}
+          onClick={(event) => menuData.handlePlanMenu(event, plan)}
         >
           <MoreHorizOutlined />
         </IconButton>

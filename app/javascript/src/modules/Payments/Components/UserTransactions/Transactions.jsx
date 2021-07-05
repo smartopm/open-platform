@@ -18,17 +18,20 @@ import ListHeader from '../../../../shared/list/ListHeader';
 import ButtonComponent from '../../../../shared/buttons/Button'
 import { useParamsQuery, formatError } from '../../../../utils/helpers'
 import { dateToString } from '../../../../components/DateContainer';
-import { PlanStatement } from '../../graphql/payment_query'
+import  Transactions from '../../graphql/payment_query'
 import { Spinner } from '../../../../shared/Loading';
+import useDebounce from '../../../../utils/useDebounce';
 
-export default function TransactionsList({ user, userData, transData, refetch, balanceRefetch, planData }) {
+export default function TransactionsList({ userId, user, userData, transData, refetch, balanceRefetch, planData }) {
   const path = useParamsQuery()
   const history = useHistory();
   const limit = 10
   const page = path.get('page')
-  const id = path.get('id')
+  const planId = path.get('id')
   const [offset, setOffset] = useState(Number(page) || 0)
   const [filterValue, setFilterValue] = useState('all')
+  const debouncedValue = useDebounce(filterValue, 500);
+  // const [filtering, setFiltering] = useState(false)
   const theme = useTheme();
   const { t } = useTranslation('common')
   const matches = useMediaQuery(theme.breakpoints.up('sm'));
@@ -46,8 +49,8 @@ export default function TransactionsList({ user, userData, transData, refetch, b
   const { locale } = user.community
   const currencyData = { currency, locale }
 
-  const [loadPlanTransactions, { loading, error, data }] = useLazyQuery(PlanStatement, {
-    variables: { landParcelId: id, limit, offset },
+  const [loadPlanTransactions, { loading, error, data }] = useLazyQuery(Transactions, {
+    variables: { userId, planId: debouncedValue, limit, offset },
     fetchPolicy: 'no-cache',
     errorPolicy: 'all'
   });
@@ -62,8 +65,8 @@ export default function TransactionsList({ user, userData, transData, refetch, b
   }
 
   useEffect(() => {
-    if (id) {
-      setFilterValue(id)
+    if (planId) {
+      setFilterValue(planId)
       loadPlanTransactions()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -73,8 +76,7 @@ export default function TransactionsList({ user, userData, transData, refetch, b
 
   return (
     <div>
-      {loading ? <Spinner /> : console.log(data)}
-      {(data?.paymentPlanStatement?.statements.length > 0 || transData?.userTransactions?.length > 0) ? (
+      {planId && loading ? <Spinner /> : (data?.userTransactions?.length > 0 || transData?.userTransactions?.length > 0) ? (
         <div className={classes.paymentList}>
           <div style={{ display: 'flex', width: '100%', justifyContent: 'space-between', marginBottom: '10px' }}>
             <Typography className={classes.payment} data-testid='header'>Transactions</Typography>
@@ -98,7 +100,7 @@ export default function TransactionsList({ user, userData, transData, refetch, b
             >
               <MenuItem value="all">All</MenuItem>
               {planData?.map(plan => (
-                <MenuItem value={plan.landParcel.id} key={plan.id}>
+                <MenuItem value={plan.id} key={plan.id}>
                   {dateToString(plan.startDate)}
                   {' '}
                   {plan.landParcel.parcelNumber}
@@ -107,11 +109,11 @@ export default function TransactionsList({ user, userData, transData, refetch, b
             </TextField>
           </div>
           {matches && <ListHeader headers={transactionHeader} color />}
-          {id && data?.paymentPlanStatement?.statements.length > 0 ? (
-            data?.paymentPlanStatement?.statements.map((trans) => (
+          {planId && Boolean(data?.userTransactions?.length) ? (
+            data.userTransactions.map((trans) => (
               <div key={trans.id}>
                 <UserTransactionsList 
-                  transaction={trans} 
+                  transaction={trans}
                   currencyData={currencyData}
                   userData={userData}
                   userType={user.userType}
@@ -120,6 +122,8 @@ export default function TransactionsList({ user, userData, transData, refetch, b
                 />
               </div>
             ))
+          ) : planId && data?.userTransactions?.length === 0 ? (
+            <CenteredContent>No Transaction Available for this Plan</CenteredContent>
           ) : (
             transData.userTransactions.map((trans) => (
               <div key={trans.id}>
@@ -134,20 +138,6 @@ export default function TransactionsList({ user, userData, transData, refetch, b
               </div>
             ))
           )}
-          {
-            transData.userTransactions.map((trans) => (
-              <div key={trans.id}>
-                <UserTransactionsList 
-                  transaction={trans} 
-                  currencyData={currencyData}
-                  userData={userData}
-                  userType={user.userType}
-                  refetch={refetch}
-                  balanceRefetch={balanceRefetch}
-                />
-              </div>
-            ))
-          }
         </div>
         ) : (
           <CenteredContent>No Transaction Available</CenteredContent>
