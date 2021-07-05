@@ -100,6 +100,7 @@ export default function UserPaymentPlanItem({
 
   const planMenuList = [
     { content: 'View Statement', isAdmin: true, handleClick: (event) => handlePlanClick(event)},
+    { content: 'View Transactions', isAdmin: true, handleClick: (event) => handlePlanClick(event)}
   ]
 
   const handleClose = () => {
