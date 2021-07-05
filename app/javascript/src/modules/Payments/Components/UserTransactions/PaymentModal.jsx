@@ -51,7 +51,7 @@ export default function PaymentModal({
   refetch,
   walletRefetch,
   userData,
-  csvRefetch
+  transRefetch
 }) {
   const classes = useStyles();
   const history = useHistory();
@@ -151,7 +151,7 @@ export default function PaymentModal({
         handleModalClose();
         refetch();
         walletRefetch();
-        csvRefetch();
+        transRefetch();
         setPaymentData(res.data.transactionCreate.transaction);
         setInputValue(initialValues);
         setPromptOpen(!!userId);
@@ -454,7 +454,7 @@ PaymentDetails.propTypes = {
 };
 
 PaymentModal.defaultProps = {
-  csvRefetch: () => {},
+  transRefetch: () => {},
   walletRefetch: () => {},
   userData: {},
   userId: null
@@ -468,7 +468,7 @@ PaymentModal.propTypes = {
     transactionNumber: PropTypes.number
   }),
   refetch: PropTypes.func.isRequired,
-  csvRefetch: PropTypes.func,
+  transRefetch: PropTypes.func,
   walletRefetch: PropTypes.func,
   currencyData: PropTypes.shape({
     currency: PropTypes.string,

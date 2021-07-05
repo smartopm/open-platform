@@ -4,8 +4,6 @@ import '@testing-library/jest-dom/extend-expect';
 import { MockedProvider } from '@apollo/react-testing';
 import { BrowserRouter } from 'react-router-dom';
 import TransactionsList from '../Components/UserTransactions/Transactions';
-import { UserBalance } from '../../../graphql/queries';
-import DepositQuery from '../graphql/payment_query'
 import { Spinner } from '../../../shared/Loading';
 import { AuthStateProvider } from '../../../containers/Provider/AuthStateProvider';
 import { generateId } from '../../../utils/helpers';
@@ -13,81 +11,28 @@ import { generateId } from '../../../utils/helpers';
 describe('Transactions Component', () => {
   it('should render the transactions list component', async () => {
     const userId = generateId()[1];
-    const depositMock = {
-      request: {
-        query: DepositQuery,
-        variables: { userId, limit: 10, offset: 0 }
-      },
-      result: {
-        data: {
-          userTransactions: [{
-            allocatedAmount: 200,
-            unallocatedAmount: 200,
-            source: 'cash',
-            transactionNumber: 12345,
-            createdAt: '2021-01-26',
-            id: 'f280159d-ac71-4c22-997a-07fd07344c94',
-            status: 'paid',
-            depositor: {
-              id: 'f280159d-ac71-4c22-997a-07fd07344c94',
-              name: 'some name'
-            },
-            user: {
-              id: 'f280159d-ac71-4c22-997a-07fd07344c94',
-              name: 'some name',
-              email: 'email@email.com',
-              phoneNumber: '123456',
-              extRefId: '25734'
-            }
-          }]
+    const transData = {
+      userTransactions: [{
+        allocatedAmount: 200,
+        unallocatedAmount: 200,
+        source: 'cash',
+        transactionNumber: 12345,
+        createdAt: '2021-01-26',
+        id: 'f280159d-ac71-4c22-997a-07fd07344c94',
+        status: 'paid',
+        depositor: {
+          id: 'f280159d-ac71-4c22-997a-07fd07344c94',
+          name: 'some name'
+        },
+        user: {
+          id: 'f280159d-ac71-4c22-997a-07fd07344c94',
+          name: 'some name',
+          email: 'email@email.com',
+          phoneNumber: '123456',
+          extRefId: '25734'
         }
-      }
-    };
-    const balanceMock = {
-      request: {
-        query: UserBalance,
-        variables: { userId }
-      },
-      result: {
-        data: {
-          userBalance: {
-            balance: '2000',
-            pendingBalance: '-12.0'
-          }
-        }
-      }
-    };
-
-    const csvDataMock = {
-      request: {
-        query: DepositQuery,
-        variables: { userId }
-      },
-      result: {
-        data: {
-          userTransactions: [{
-            allocatedAmount: 200,
-            unallocatedAmount: 200,
-            source: 'cash',
-            transactionNumber: 12345,
-            createdAt: '2021-01-26',
-            id: 'f280159d-ac71-4c22-997a-07fd07344c94',
-            status: 'paid',
-            depositor: {
-              id: 'f280159d-ac71-4c22-997a-07fd07344c94',
-              name: 'some name'
-            },
-            user: {
-              id: 'f280159d-ac71-4c22-997a-07fd07344c94',
-              name: 'some name',
-              email: 'email@email.com',
-              phoneNumber: '123456',
-              extRefId: '25734'
-            }
-          }]
-        }
-      }
-    };
+      }]
+    }
 
     const user = {
       id: '939453bef34-f3',
@@ -103,13 +48,10 @@ describe('Transactions Component', () => {
     }
 
     const container = render(
-      <MockedProvider
-        mocks={[depositMock, balanceMock, csvDataMock]}
-        addTypename={false}
-      >
+      <MockedProvider>
         <AuthStateProvider>
           <BrowserRouter>
-            <TransactionsList userId={userId} user={user} userData={userData} tab='Payments' />
+            <TransactionsList userId={userId} user={user} transData={transData} userData={userData} refetch={jest.fn()} balanceRefetch={jest.fn()} />
           </BrowserRouter>
         </AuthStateProvider>
       </MockedProvider>

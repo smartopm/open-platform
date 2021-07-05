@@ -5,7 +5,7 @@ import { MockedProvider } from '@apollo/react-testing';
 import { BrowserRouter } from 'react-router-dom';
 import UserPlan from '../Components/UserTransactions/Plans';
 import { UserBalance } from '../../../graphql/queries';
-import { UserPlans } from '../graphql/payment_query'
+import TransactionQuery, { UserPlans } from '../graphql/payment_query'
 import { Spinner } from '../../../shared/Loading';
 import { AuthStateProvider } from '../../../containers/Provider/AuthStateProvider';
 import { generateId } from '../../../utils/helpers';
@@ -45,6 +45,38 @@ describe('Plan List Component', () => {
         }
       }
     };
+
+    const transactionMock = {
+      request: {
+        query: TransactionQuery,
+        variables: { userId, limit: 10, offset: 0 }
+      },
+      result: {
+        data: {
+          userTransactions: [{
+            allocatedAmount: 200,
+            unallocatedAmount: 200,
+            source: 'cash',
+            transactionNumber: 12345,
+            createdAt: '2021-01-26',
+            id: 'f280159d-ac71-4c22-997a-07fd07344c94',
+            status: 'paid',
+            depositor: {
+              id: 'f280159d-ac71-4c22-997a-07fd07344c94',
+              name: 'some name'
+            },
+            user: {
+              id: 'f280159d-ac71-4c22-997a-07fd07344c94',
+              name: 'some name',
+              email: 'email@email.com',
+              phoneNumber: '123456',
+              extRefId: '25734'
+            }
+          }]
+        }
+      }
+    };
+
     const balanceMock = {
       request: {
         query: UserBalance,
@@ -74,7 +106,7 @@ describe('Plan List Component', () => {
 
     const container = render(
       <MockedProvider
-        mocks={[planMock, balanceMock]}
+        mocks={[planMock, balanceMock, transactionMock]}
         addTypename={false}
       >
         <AuthStateProvider>

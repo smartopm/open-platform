@@ -1,6 +1,7 @@
 /* eslint-disable no-nested-ternary */
 import React, { useState, useEffect } from 'react'
 import { useLazyQuery } from 'react-apollo'
+import { useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types'
 import { useTheme, makeStyles } from '@material-ui/core/styles';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
@@ -8,15 +9,17 @@ import { Typography } from '@material-ui/core'
 import UserPaymentPlanItem from './UserPaymentPlanItem'
 import Balance from './UserBalance'
 import { UserBalance } from '../../../../graphql/queries'
-import { UserPlans } from '../../graphql/payment_query'
+import DepositQuery, { UserPlans }  from '../../graphql/payment_query'
 import { Spinner } from '../../../../shared/Loading'
 import { formatError, useParamsQuery } from '../../../../utils/helpers'
 import { currencies } from '../../../../utils/constants'
 import CenteredContent from '../../../../components/CenteredContent'
 import Paginate from '../../../../components/Paginate'
 import ListHeader from '../../../../shared/list/ListHeader';
+import ButtonComponent from '../../../../shared/buttons/Button'
+import Transactions from './Transactions'
 
-export default function PaymentPlans({ userId, user, userData, tab }) {
+export default function PaymentPlans({ userId, user, userData }) {
   const planHeader = [
     { title: 'Plot Number', col: 2 },
     { title: 'Payment Plan', col: 2 },
@@ -25,7 +28,9 @@ export default function PaymentPlans({ userId, user, userData, tab }) {
     { title: 'Payment Day', col: 2 },
     { title: 'Menu', col: 2 }
   ];
+  const history = useHistory();
   const path = useParamsQuery()
+  const subtab = path.get('subtab')
   const classes = useStyles();
   const limit = 10
   const page = path.get('page')
@@ -33,6 +38,12 @@ export default function PaymentPlans({ userId, user, userData, tab }) {
   const matches = useMediaQuery(theme.breakpoints.up('sm'));
   const [offset, setOffset] = useState(Number(page) || 0)
   const [loadPlans, { loading, error, data, refetch }] = useLazyQuery(UserPlans, {
+    variables: { userId, limit, offset },
+    fetchPolicy: 'no-cache',
+    errorPolicy: 'all'
+  });
+
+  const [loadTransactions, { loading: transLoading, error: transError, data: transData, refetch: transRefetch }] = useLazyQuery(DepositQuery, {
     variables: { userId, limit, offset },
     fetchPolicy: 'no-cache',
     errorPolicy: 'all'
@@ -58,33 +69,52 @@ export default function PaymentPlans({ userId, user, userData, tab }) {
   }
 
   useEffect(() => {
-    if (tab === 'Plans') {
-      loadPlans()
-      loadBalance()
-    }
+    loadTransactions()
+    loadPlans()
+    loadBalance()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [tab]);
+  }, []);
 
   if (error && !data) return <CenteredContent>{formatError(error.message)}</CenteredContent>
   if (balanceError && !balanceData) return <CenteredContent>{formatError(balanceError.message)}</CenteredContent>
+  if (transError && !transData) return <CenteredContent>{formatError(transError.message)}</CenteredContent>
 
   return (
     <div>
       {balanceLoad ? <Spinner /> : (
         <Balance 
           user={user}
-          userId={userId}
           userData={userData}
           refetch={refetch}
           balanceData={balanceData?.userBalance}
           balanceRefetch={balanceRefetch}
+          transRefetch={transRefetch}
+          userId={userId}
         />
       )}
-      {loading ? <Spinner /> : (
+      {subtab === 'Transactions' ? (
+        transLoading ? <Spinner /> : (
+          <Transactions
+            userId={userId}
+            user={user}
+            userData={userData}
+            transData={transData}
+            refetch={transRefetch}
+            balanceRefetch={balanceRefetch}
+          />
+        )
+      ) : loading ? <Spinner /> : (
         data?.userPlansWithPayments?.length > 0 ? (
           <div className={classes.planList}>
             <div>
-              <Typography className={classes.plan}>Plans</Typography>
+              <div style={{ display: 'flex', width: '100%', justifyContent: 'space-between', marginBottom: '10px' }}>
+                <Typography className={classes.plan}>Plans</Typography>
+                {
+                  user.userType === 'admin' && (
+                  <ButtonComponent variant='outlined' buttonText="View all Transactions" handleClick={() => history.push('?tab=Plans&subtab=Transactions')} />
+                  )
+                }
+              </div>
               {matches && <ListHeader headers={planHeader} color />}
             </div>
             <div>
@@ -97,6 +127,15 @@ export default function PaymentPlans({ userId, user, userData, tab }) {
                 refetch={refetch}
                 balanceRefetch={balanceRefetch}
               />
+              <CenteredContent>
+                <Paginate
+                  offSet={offset}
+                  limit={limit}
+                  active={offset >= 1}
+                  handlePageChange={paginate}
+                  count={data?.userPlansWithPayments?.length}
+                />
+              </CenteredContent>
             </div>
           </div>
         ) : 
@@ -104,28 +143,16 @@ export default function PaymentPlans({ userId, user, userData, tab }) {
           <CenteredContent>No Plan Available</CenteredContent>
         )
       )}
-
-      <CenteredContent>
-        <Paginate
-          offSet={offset}
-          limit={limit}
-          active={offset >= 1}
-          handlePageChange={paginate}
-          count={data?.userPlansWithPayments?.length}
-        />
-      </CenteredContent>
     </div>
   )
 }
 
 PaymentPlans.defaultProps = {
   userData: {},
-  tab: "Contacts"
 }
 
 PaymentPlans.propTypes = {
   userId: PropTypes.string.isRequired,
-  tab: PropTypes.string,
   // eslint-disable-next-line react/forbid-prop-types
   userData: PropTypes.object,
   user: PropTypes.shape({
