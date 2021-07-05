@@ -1,9 +1,10 @@
 /* eslint-disable react/forbid-prop-types */
 /* eslint-disable no-nested-ternary */
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Typography } from '@material-ui/core'
 import { useHistory } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { useLazyQuery } from 'react-apollo';
 import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
 import PropTypes from 'prop-types'
@@ -15,14 +16,17 @@ import { currencies } from '../../../../utils/constants'
 import UserTransactionsList from './UserTransactions'
 import ListHeader from '../../../../shared/list/ListHeader';
 import ButtonComponent from '../../../../shared/buttons/Button'
-import { useParamsQuery } from '../../../../utils/helpers'
+import { useParamsQuery, formatError } from '../../../../utils/helpers'
 import { dateToString } from '../../../../components/DateContainer';
+import { PlanStatement } from '../../graphql/payment_query'
+import { Spinner } from '../../../../shared/Loading';
 
 export default function TransactionsList({ user, userData, transData, refetch, balanceRefetch, planData }) {
   const path = useParamsQuery()
   const history = useHistory();
   const limit = 10
   const page = path.get('page')
+  const id = path.get('id')
   const [offset, setOffset] = useState(Number(page) || 0)
   const [filterValue, setFilterValue] = useState('all')
   const theme = useTheme();
@@ -42,6 +46,12 @@ export default function TransactionsList({ user, userData, transData, refetch, b
   const { locale } = user.community
   const currencyData = { currency, locale }
 
+  const [loadPlanTransactions, { loading, error, data }] = useLazyQuery(PlanStatement, {
+    variables: { landParcelId: id, limit, offset },
+    fetchPolicy: 'no-cache',
+    errorPolicy: 'all'
+  });
+
   function paginate(action) {
     if (action === 'prev') {
       if (offset < limit) return
@@ -51,17 +61,28 @@ export default function TransactionsList({ user, userData, transData, refetch, b
     }
   }
 
+  useEffect(() => {
+    if (id) {
+      setFilterValue(id)
+      loadPlanTransactions()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  if (error && !data) return <CenteredContent>{formatError(error.message)}</CenteredContent>
+
   return (
     <div>
-      {transData?.userTransactions?.length > 0 ? (
+      {loading ? <Spinner /> : console.log(data)}
+      {(data?.paymentPlanStatement?.statements.length > 0 || transData?.userTransactions?.length > 0) ? (
         <div className={classes.paymentList}>
           <div style={{ display: 'flex', width: '100%', justifyContent: 'space-between', marginBottom: '10px' }}>
             <Typography className={classes.payment} data-testid='header'>Transactions</Typography>
             {
-                  user.userType === 'admin' && (
-                  <ButtonComponent variant='outlined' color='default' buttonText="View all Plans" handleClick={() => history.push('?tab=Plans')} />
-                  )
-                }
+              user.userType === 'admin' && (
+              <ButtonComponent variant='outlined' color='default' buttonText="View all Plans" handleClick={() => history.push('?tab=Plans')} />
+              )
+            }
           </div>
           <div style={{display: 'flex', margin: '-20px 0 10px 0'}}>
             <Typography className={classes.display} data-testid='header'>Displaying results for</Typography>
@@ -77,7 +98,7 @@ export default function TransactionsList({ user, userData, transData, refetch, b
             >
               <MenuItem value="all">All</MenuItem>
               {planData?.map(plan => (
-                <MenuItem value={plan.id} key={plan.id}>
+                <MenuItem value={plan.landParcel.id} key={plan.id}>
                   {dateToString(plan.startDate)}
                   {' '}
                   {plan.landParcel.parcelNumber}
@@ -86,6 +107,33 @@ export default function TransactionsList({ user, userData, transData, refetch, b
             </TextField>
           </div>
           {matches && <ListHeader headers={transactionHeader} color />}
+          {id && data?.paymentPlanStatement?.statements.length > 0 ? (
+            data?.paymentPlanStatement?.statements.map((trans) => (
+              <div key={trans.id}>
+                <UserTransactionsList 
+                  transaction={trans} 
+                  currencyData={currencyData}
+                  userData={userData}
+                  userType={user.userType}
+                  refetch={refetch}
+                  balanceRefetch={balanceRefetch}
+                />
+              </div>
+            ))
+          ) : (
+            transData.userTransactions.map((trans) => (
+              <div key={trans.id}>
+                <UserTransactionsList 
+                  transaction={trans} 
+                  currencyData={currencyData}
+                  userData={userData}
+                  userType={user.userType}
+                  refetch={refetch}
+                  balanceRefetch={balanceRefetch}
+                />
+              </div>
+            ))
+          )}
           {
             transData.userTransactions.map((trans) => (
               <div key={trans.id}>

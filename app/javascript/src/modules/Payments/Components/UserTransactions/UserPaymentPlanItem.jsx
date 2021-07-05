@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { useMutation, useLazyQuery } from 'react-apollo';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
+import { useHistory } from 'react-router-dom';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import {
   Grid,
@@ -47,6 +48,7 @@ export default function UserPaymentPlanItem({
   balanceRefetch
 }) {
   const classes = useStyles();
+  const history = useHistory();
   const [anchorEl, setAnchorEl] = useState(null);
   const [anchor, setAnchor] = useState(null);
   const [planAnchor, setPlanAnchor] = useState(null);
@@ -100,7 +102,7 @@ export default function UserPaymentPlanItem({
 
   const planMenuList = [
     { content: 'View Statement', isAdmin: true, handleClick: (event) => handlePlanClick(event)},
-    { content: 'View Transactions', isAdmin: true, handleClick: (event) => handlePlanClick(event)}
+    { content: 'View Transactions', isAdmin: true, handleClick: (event) => handleTransactionClick(event)}
   ]
 
   const handleClose = () => {
@@ -125,6 +127,11 @@ export default function UserPaymentPlanItem({
     loadStatement()
     setStatementOpen(true)
     setPlanAnchor(null)
+  }
+
+  function handleTransactionClick(event) {
+    event.stopPropagation()
+    history.push(`?tab=Plans&subtab=Transactions&id=${landParcelId}`)
   }
 
   function handleTransactionMenu(event, payId){
