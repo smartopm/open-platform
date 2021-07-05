@@ -15,7 +15,7 @@ import ListHeader from '../../../../shared/list/ListHeader';
 import ButtonComponent from '../../../../shared/buttons/Button'
 import { useParamsQuery } from '../../../../utils/helpers'
 
-export default function TransactionsList({ user, userData, transData, refetch }) {
+export default function TransactionsList({ user, userData, transData, refetch, balanceRefetch }) {
   const path = useParamsQuery()
   const history = useHistory();
   const limit = 10
@@ -47,8 +47,6 @@ export default function TransactionsList({ user, userData, transData, refetch })
     }
   }
 
-  // if (error && !data) return <CenteredContent>{formatError(error.message)}</CenteredContent>
-
   return (
     <div>
       {transData?.userTransactions?.length > 0 ? (
@@ -71,6 +69,7 @@ export default function TransactionsList({ user, userData, transData, refetch })
                   userData={userData}
                   userType={user.userType}
                   refetch={refetch}
+                  balanceRefetch={balanceRefetch}
                 />
               </div>
             ))
@@ -134,5 +133,6 @@ TransactionsList.propTypes = {
       locale: PropTypes.string
     }).isRequired
   }).isRequired,
-  refetch: PropTypes.func.isRequired
+  refetch: PropTypes.func.isRequired,
+  balanceRefetch: PropTypes.func.isRequired
 }

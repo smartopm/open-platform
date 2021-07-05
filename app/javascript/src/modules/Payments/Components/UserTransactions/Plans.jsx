@@ -69,10 +69,7 @@ export default function PaymentPlans({ userId, user, userData }) {
   }
 
   useEffect(() => {
-    if (subtab === 'Transactions') {
-      loadTransactions()
-    }
-
+    loadTransactions()
     loadPlans()
     loadBalance()
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -102,6 +99,7 @@ export default function PaymentPlans({ userId, user, userData }) {
             userData={userData}
             transData={transData}
             refetch={transRefetch}
+            balanceRefetch={balanceRefetch}
           />
         )
       ) : loading ? <Spinner /> : (
