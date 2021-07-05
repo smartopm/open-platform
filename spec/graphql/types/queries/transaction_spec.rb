@@ -163,7 +163,7 @@ RSpec.describe Types::Queries::Transaction do
           expect(payment_stats['trxDate'].to_date).to eql(
             transaction.created_at.in_time_zone('Africa/Lusaka').to_date,
           )
-          expect(payment_stats['cash']).to eql 500
+          expect(payment_stats['cash']).to eql 1500
           expect(payment_stats['mobileMoney']).to eql 0
           expect(payment_stats['bankTransfer']).to eql 0
           expect(payment_stats['eft']).to eql 0
@@ -192,10 +192,10 @@ RSpec.describe Types::Queries::Transaction do
                                              site_community: community,
                                            })
           transaction_summary_details = result.dig('data', 'transactionSummary')
-          expect(transaction_summary_details['today']).to eql 500.0
-          expect(transaction_summary_details['oneWeek']).to eql 500.0
-          expect(transaction_summary_details['oneMonth']).to eql 500.0
-          expect(transaction_summary_details['overOneMonth']).to eql 500.0
+          expect(transaction_summary_details['today']).to eql 1500.0
+          expect(transaction_summary_details['oneWeek']).to eql 1500.0
+          expect(transaction_summary_details['oneMonth']).to eql 1500.0
+          expect(transaction_summary_details['overOneMonth']).to eql 1500.0
         end
       end
     end
