@@ -8,7 +8,10 @@ RSpec.describe Types::Queries::Payment do
     let!(:community) { user.community }
     let!(:admin) { create(:admin_user, community_id: community.id) }
     let!(:non_admin) { create(:user_with_community) }
-    let!(:land_parcel) { create(:land_parcel, community_id: community.id) }
+    let!(:land_parcel) do
+      create(:land_parcel, community_id: community.id,
+                           parcel_number: 'Plot001')
+    end
     let!(:payment_plan) do
       create(:payment_plan, land_parcel_id: land_parcel.id, user_id: user.id,
                             monthly_amount: 100)
@@ -24,10 +27,8 @@ RSpec.describe Types::Queries::Payment do
     end
     let(:user_plans_with_payments) do
       <<~GQL
-        query UserPlansWithPayments(
-          $userId: ID!
-        ){
-          userPlansWithPayments(userId: $userId){
+        query UserPlansWithPayments($userId: ID!) {
+          userPlansWithPayments(userId: $userId) {
             planType
             pendingBalance
             monthlyAmount
@@ -76,12 +77,23 @@ RSpec.describe Types::Queries::Payment do
       GQL
     end
 
-    describe '#user_payment_plans' do
+    let(:user_payment_plans) do
+      <<~GQL
+        query userPaymentPlans($userId: ID!) {
+          userPaymentPlans(userId: $userId){
+            startDate
+            landParcel{
+              parcelNumber
+            }
+          }
+        }
+      GQL
+    end
+
+    describe '#user_plans_with_payments' do
       context 'when current user is not an admin and user is not same as current user' do
         it 'raises unauthorized error' do
-          variables = {
-            userId: user.id,
-          }
+          variables = { userId: user.id }
           result = DoubleGdpSchema.execute(user_plans_with_payments,
                                            variables: variables,
                                            context: {
@@ -98,9 +110,7 @@ RSpec.describe Types::Queries::Payment do
           payment_plan.save
         end
         it "returns list of all user's payment plans" do
-          variables = {
-            userId: user.id,
-          }
+          variables = { userId: user.id }
           result = DoubleGdpSchema.execute(user_plans_with_payments,
                                            variables: variables,
                                            context: {
@@ -212,6 +222,36 @@ RSpec.describe Types::Queries::Payment do
               expect(statement['unallocatedAmount']).to eql 50.0
             end
           end
+        end
+      end
+    end
+
+    describe '#user_payment_plans' do
+      context 'when current user is not an admin' do
+        it 'raises unauthorized error' do
+          variables = { userId: user.id }
+          result = DoubleGdpSchema.execute(user_plans_with_payments,
+                                           variables: variables,
+                                           context: {
+                                             current_user: non_admin,
+                                             site_community: community,
+                                           }).as_json
+          expect(result.dig('errors', 0, 'message')).to include 'Unauthorized'
+        end
+      end
+
+      context 'when current user is admin' do
+        it 'returns list of user payment plans' do
+          variables = { userId: user.id }
+          result = DoubleGdpSchema.execute(user_payment_plans,
+                                           variables: variables,
+                                           context: {
+                                             current_user: admin,
+                                             site_community: community,
+                                           })
+          payment_plans_result = result.dig('data', 'userPaymentPlans', 0)
+          expect(payment_plans_result['startDate'].to_date).to eql payment_plan.start_date.to_date
+          expect(payment_plans_result['landParcel']['parcelNumber']).to eql 'Plot001'
         end
       end
     end
