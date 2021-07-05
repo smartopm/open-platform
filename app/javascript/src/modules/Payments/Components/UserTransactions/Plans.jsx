@@ -101,6 +101,7 @@ export default function PaymentPlans({ userId, user, userData }) {
             transData={transData}
             refetch={transRefetch}
             balanceRefetch={balanceRefetch}
+            planData={data?.userPlansWithPayments}
           />
         )
       ) : loading ? <Spinner /> : (
@@ -111,7 +112,7 @@ export default function PaymentPlans({ userId, user, userData }) {
                 <Typography className={classes.plan}>Plans</Typography>
                 {
                   user.userType === 'admin' && (
-                  <ButtonComponent variant='outlined' buttonText="View all Transactions" handleClick={() => history.push('?tab=Plans&subtab=Transactions')} />
+                  <ButtonComponent color='default' variant='outlined' buttonText="View all Transactions" handleClick={() => history.push('?tab=Plans&subtab=Transactions')} />
                   )
                 }
               </div>

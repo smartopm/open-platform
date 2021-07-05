@@ -4,6 +4,8 @@ import React, { useState } from 'react'
 import { Typography } from '@material-ui/core'
 import { useHistory } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import TextField from '@material-ui/core/TextField';
+import MenuItem from '@material-ui/core/MenuItem';
 import PropTypes from 'prop-types'
 import { useTheme, makeStyles } from '@material-ui/core/styles';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
@@ -14,13 +16,15 @@ import UserTransactionsList from './UserTransactions'
 import ListHeader from '../../../../shared/list/ListHeader';
 import ButtonComponent from '../../../../shared/buttons/Button'
 import { useParamsQuery } from '../../../../utils/helpers'
+import { dateToString } from '../../../../components/DateContainer';
 
-export default function TransactionsList({ user, userData, transData, refetch, balanceRefetch }) {
+export default function TransactionsList({ user, userData, transData, refetch, balanceRefetch, planData }) {
   const path = useParamsQuery()
   const history = useHistory();
   const limit = 10
   const page = path.get('page')
   const [offset, setOffset] = useState(Number(page) || 0)
+  const [filterValue, setFilterValue] = useState('all')
   const theme = useTheme();
   const { t } = useTranslation('common')
   const matches = useMediaQuery(theme.breakpoints.up('sm'));
@@ -55,9 +59,31 @@ export default function TransactionsList({ user, userData, transData, refetch, b
             <Typography className={classes.payment} data-testid='header'>Transactions</Typography>
             {
                   user.userType === 'admin' && (
-                  <ButtonComponent variant='outlined' buttonText="View all Plans" handleClick={() => history.push('?tab=Plans')} />
+                  <ButtonComponent variant='outlined' color='default' buttonText="View all Plans" handleClick={() => history.push('?tab=Plans')} />
                   )
                 }
+          </div>
+          <div style={{display: 'flex', margin: '-20px 0 10px 0'}}>
+            <Typography className={classes.display} data-testid='header'>Displaying results for</Typography>
+            <TextField
+              color='primary'
+              margin="normal"
+              id="transaction-filter"
+              inputProps={{ 'data-testid': 'transaction-filter' }}
+              value={filterValue}
+              onChange={event => setFilterValue(event.target.value)}
+              required
+              select
+            >
+              <MenuItem value="all">All</MenuItem>
+              {planData?.map(plan => (
+                <MenuItem value={plan.id} key={plan.id}>
+                  {dateToString(plan.startDate)}
+                  {' '}
+                  {plan.landParcel.parcelNumber}
+                </MenuItem>
+              ))}
+            </TextField>
           </div>
           {matches && <ListHeader headers={transactionHeader} color />}
           {
@@ -112,6 +138,12 @@ const useStyles = makeStyles({
     right: 57,
     marginLeft: '30%',
     zIndex: '1000'
+  },
+  display: {
+    margin: '20px 10px 0 0',
+    fontSize: '16px',
+    fontWeight: 500,
+    color: '#313131'
   }
 });
 
@@ -134,5 +166,12 @@ TransactionsList.propTypes = {
     }).isRequired
   }).isRequired,
   refetch: PropTypes.func.isRequired,
-  balanceRefetch: PropTypes.func.isRequired
+  balanceRefetch: PropTypes.func.isRequired,
+  planData: PropTypes.arrayOf(PropTypes.shape({
+    id: PropTypes.string,
+    startDate: PropTypes.string,
+    landParcel: PropTypes.shape({
+      parcelNumber: PropTypes.string 
+    })
+  })).isRequired
 }
