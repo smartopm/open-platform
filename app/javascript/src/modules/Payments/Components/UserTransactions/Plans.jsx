@@ -89,6 +89,7 @@ export default function PaymentPlans({ userId, user, userData }) {
           balanceData={balanceData?.userBalance}
           balanceRefetch={balanceRefetch}
           transRefetch={transRefetch}
+          userId={userId}
         />
       )}
       {subtab === 'Transactions' ? (

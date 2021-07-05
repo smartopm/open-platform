@@ -6,7 +6,6 @@ import { useTranslation } from 'react-i18next';
 import { formatMoney } from '../../../../utils/helpers'
 import { currencies } from '../../../../utils/constants'
 import { Context as AuthStateContext } from '../../../../containers/Provider/AuthStateProvider'
-// import ButtonComponent from '../../../../shared/buttons/Button'
 import PaymentModal from './PaymentModal'
 
 export default function Balance({ user, userId, userData, refetch, balanceData, balanceRefetch, transRefetch }) {
@@ -55,7 +54,6 @@ export default function Balance({ user, userId, userData, refetch, balanceData, 
             >
               {t("common:misc.make_payment")}
             </Fab>
-            {/* <ButtonComponent color='primary' buttonText={t("common:misc.make_payment")} handleClick={() => setPayOpen(true)} /> */}
           </div>
         )
       }
