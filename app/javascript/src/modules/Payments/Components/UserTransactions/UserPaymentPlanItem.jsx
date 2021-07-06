@@ -53,7 +53,7 @@ export default function UserPaymentPlanItem({
   const [anchor, setAnchor] = useState(null);
   const [planAnchor, setPlanAnchor] = useState(null);
   const [transactionId, setTransactionId] = useState('');
-  const [planId, setPlanId] = useState('');
+  const [plannId, setPlannId] = useState('');
   const [landParcelId, setLandParcelId] = useState('');
   const [receiptOpen, setReceiptOpen] = useState(false);
   const [statementOpen, setStatementOpen] = useState(false);
@@ -109,10 +109,10 @@ export default function UserPaymentPlanItem({
   const handleClose = () => {
     setAnchorEl(null);
   };
-  function handleOpenDateMenu(event, planid) {
+  function handleOpenDateMenu(event, planId) {
     // avoid collapsing that shows invoices
     event.stopPropagation();
-    setPlanDetails({ ...details, planid });
+    setPlanDetails({ ...details, planId });
     setAnchorEl(event.currentTarget);
   }
 
@@ -132,7 +132,7 @@ export default function UserPaymentPlanItem({
 
   function handleTransactionClick(event) {
     event.stopPropagation()
-    history.push(`?tab=Plans&subtab=Transactions&id=${planId}`)
+    history.push(`?tab=Plans&subtab=Transactions&id=${plannId}`)
   }
 
   function handleTransactionMenu(event, payId){
@@ -145,7 +145,7 @@ export default function UserPaymentPlanItem({
     event.stopPropagation()
     setPlanAnchor(event.currentTarget)
     setLandParcelId(plan.landParcel.id)
-    setPlanId(plan.id)
+    setPlannId(plan.id)
   }
 
   function handlePlanListClose(event) {
