@@ -12,7 +12,11 @@ import { Footer } from '../../../components/Footer'
 import DatePickerDialog, { ThemedTimePicker } from '../../../components/DatePickerDialog'
 import { defaultBusinessReasons } from '../../../utils/constants'
 import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider'
+import { checkInValidRequiredFields, defaultRequiredFields } from '../utils'
 
+// TODO: As of now this is only serving the visit_reuest, we can still migrate to reuse the 2 forms
+// - RequestUpdate
+// - RequestForm
 export default function RequestForm({ path }) {
   const initialState = {
     name: '',
@@ -35,17 +39,7 @@ export default function RequestForm({ path }) {
   const [inputValidationMsg, setInputValidationMsg] = useState({ isError: false, isSubmitting: false })
   const { t } = useTranslation(['common', 'logbook'])
 
-  const defaultRequiredFields= ['name', 'phoneNumber', 'nrc', 'vehiclePlate', 'reason', 'business']
   const requiredFields = authState?.user?.community?.communityRequiredFields?.manualEntryRequestForm || defaultRequiredFields
-  function checkInValidRequiredFields(formData){
-    const values = requiredFields.map(field => formData[String(field)])
-
-    function isNotValid(element){
-      return !element
-    }
-
-    return (values.some(isNotValid))
-  }
 
   function handleSubmit() {
     const variables = {
@@ -54,8 +48,8 @@ export default function RequestForm({ path }) {
       reason: userData.business
     }
 
-    const isAnyInvalid = checkInValidRequiredFields(variables)
-    if(path.includes('entry_request') && isAnyInvalid){
+    const isAnyInvalid = checkInValidRequiredFields(variables, requiredFields)
+    if(isAnyInvalid && !path.includes('visit_request')){
       setInputValidationMsg({ isError: true })
       return
     }
@@ -63,15 +57,8 @@ export default function RequestForm({ path }) {
     setInputValidationMsg({ isSubmitting: true })
 
     delete variables.business
-    createEntryRequest({ variables }).then(({ data }) => {
-      // Send them to the wait page if it is an entry request
-      if(path.includes('entry_request')){
-        history.push(`/request/${data.result.entryRequest.id}`, {
-          from: 'entry_request'
-        })
-      } else {
+    createEntryRequest({ variables }).then(() => {
         history.push('/entry_logs')
-      }
     })
   }
 
@@ -166,69 +153,45 @@ export default function RequestForm({ path }) {
             />
 
           </div>
-          {path.includes('entry_request') && (
-            <>
-              <div className="form-group">
-                <label className="bmd-label-static" htmlFor="nrc">
-                  {t('form_fields.nrc')}
-                </label>
-                <TextField
-                  className="form-control"
-                  name="nrc"
-                  value={userData.nrc}
-                  onChange={handleChange}
-                  inputProps={{ 'data-testid': 'nrc' }}
-                  error={inputValidationMsg.isError &&
+          <div className="form-group">
+            <label className="bmd-label-static" htmlFor="nrc">
+              {t('form_fields.nrc')}
+            </label>
+            <TextField
+              className="form-control"
+              name="nrc"
+              value={userData.nrc}
+              onChange={handleChange}
+              inputProps={{ 'data-testid': 'nrc' }}
+              error={inputValidationMsg.isError &&
                     requiredFields.includes('nrc') &&
                     !userData.nrc}
-                  helperText={inputValidationMsg.isError &&
+              helperText={inputValidationMsg.isError &&
                     requiredFields.includes('nrc') &&
                     !userData.nrc &&
                     'ID is Required'}
-                />
-              </div>
-              <div className="form-group">
-                <label className="bmd-label-static" htmlFor="vehiclePlate">
-                  {t('form_fields.vehicle_plate_number')}
-                </label>
-                <TextField
-                  className="form-control"
-                  type="text"
-                  name="vehiclePlate"
-                  value={userData.vehiclePlate}
-                  onChange={handleChange}
-                  inputProps={{ 'data-testid': 'vehicle' }}
-                  error={inputValidationMsg.isError &&
-                    requiredFields.includes('vehiclePlate') &&
-                    !userData.vehiclePlate}
-                  helperText={inputValidationMsg.isError &&
-                    requiredFields.includes('vehiclePlate') &&
-                    !userData.vehiclePlate &&
-                    'Vehicle Plate Number is Required'}
-                />
-              </div>
-              <div className="form-group">
-                <label className="bmd-label-static" htmlFor="companyName">
-                  {t('form_fields.company_name')}
-                </label>
-                <TextField
-                  className="form-control"
-                  type="text"
-                  name="companyName"
-                  value={userData.companyName}
-                  onChange={handleChange}
-                  inputProps={{ 'data-testid': 'companyName' }}
-                  error={inputValidationMsg.isError &&
+            />
+          </div>
+          <div className="form-group">
+            <label className="bmd-label-static" htmlFor="companyName">
+              {t('form_fields.company_name')}
+            </label>
+            <TextField
+              className="form-control"
+              type="text"
+              name="companyName"
+              value={userData.companyName}
+              onChange={handleChange}
+              inputProps={{ 'data-testid': 'companyName' }}
+              error={inputValidationMsg.isError &&
                     requiredFields.includes('companyName') &&
                     !userData.companyName}
-                  helperText={inputValidationMsg.isError &&
+              helperText={inputValidationMsg.isError &&
                     requiredFields.includes('companyName') &&
                     !userData.companyName &&
                     'Company Name is Required'}
-                />
-              </div>
-            </>
-          )}
+            />
+          </div>
           <div className="form-group">
             <TextField
               id="reason"

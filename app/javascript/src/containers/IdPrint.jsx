@@ -38,7 +38,10 @@ export default function IdPrintPage({ match }){
 }
 
 function toTitleCase(str) {
-  return str.replace(/\w\S*/g, (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase())
+// eslint-disable-next-line
+  return str.replace(/\w\S*/g, function (txt) {
+    return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase()
+  })
 }
 
 export function UserPrintDetail({ data }) {
@@ -68,7 +71,7 @@ export function UserPrintDetail({ data }) {
           </div>
           <div className="d-flex justify-content-center">
             <div className="expires">
-              Exp: 
+              Exp:
               {' '}
               {expiresAtStr(data.user.expiresAt)}
             </div>

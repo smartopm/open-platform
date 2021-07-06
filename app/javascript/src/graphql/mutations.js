@@ -234,6 +234,7 @@ export const EntryRequestCreate = gql`
     $startTime: String
     $endTime: String
     $companyName: String
+    $temperature: String
   ) {
     result: entryRequestCreate(
       name: $name
@@ -247,6 +248,7 @@ export const EntryRequestCreate = gql`
       startTime: $startTime
       endTime: $endTime
       companyName: $companyName
+      temperature: $temperature
     ) {
       entryRequest {
         ...EntryRequestFields
@@ -282,7 +284,7 @@ export const EntryRequestUpdate = gql`
   }
   ${EntryRequestFragment.publicFields}
 `
-
+// Reduce the returned response load
 export const EntryRequestGrant = gql`
   mutation EntryRequestGrantMutation($id: ID!, $subject: String) {
     result: entryRequestGrant(id: $id, subject: $subject) {

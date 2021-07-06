@@ -9,6 +9,7 @@ module Types::Queries::Transaction
     field :user_transactions, [Types::TransactionType], null: true do
       description 'Get all user transactions'
       argument :user_id, GraphQL::Types::ID, required: true
+      argument :plan_id, GraphQL::Types::ID, required: false
       argument :offset, Integer, required: false
       argument :limit, Integer, required: false
     end
@@ -25,16 +26,23 @@ module Types::Queries::Transaction
   # Returns list of user's all transactions
   #
   # @param user_id [String]
+  # @param plan_id [String]
   # @param offset [Integer]
   # @param limit [Integer]
   #
   # @return [Array<TransactionType>]
-  def user_transactions(limit: nil, user_id: nil, offset: 0)
+  def user_transactions(user_id: nil, plan_id: nil, limit: nil, offset: 0)
     user = verified_user(user_id)
+    transactions =  user.transactions.not_cancelled.includes(:plan_payments, :depositor)
+    if plan_id.present?
+      payment_plan = user.payment_plans.find_by(id: plan_id)
+      raise_plan_not_found_error(payment_plan)
 
-    user.transactions.not_cancelled.includes(:plan_payments,
-                                             :depositor).order(created_at:
-                                            :desc).limit(limit).offset(offset)
+      transactions.where(plan_payments: { payment_plan_id: plan_id }).distinct.order(created_at:
+                  :desc).limit(limit).offset(offset)
+    else
+      transactions.order(created_at: :desc).limit(limit).offset(offset)
+    end
   end
 
   def payment_accounting_stats
@@ -76,5 +84,14 @@ module Types::Queries::Transaction
     return if transaction
 
     raise GraphQL::ExecutionError, I18n.t('errors.transaction.not_found')
+  end
+
+  # Raises GraphQL execution error if payment plan does not exist.
+  #
+  # @return [GraphQL::ExecutionError]
+  def raise_plan_not_found_error(payment_plan)
+    return if payment_plan
+
+    raise GraphQL::ExecutionError, I18n.t('errors.payment_plan.not_found')
   end
 end

@@ -36,7 +36,7 @@ const routes = [
     routeProps: {
       path: '/user/:id/otp',
       component: OTPFeedbackScreen,
-      exact: true,
+      exact: true
     },
     accessibleBy: ['admin'],
     name: 'user_otp',

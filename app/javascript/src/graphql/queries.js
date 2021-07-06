@@ -83,6 +83,7 @@ export const AllEventLogsQuery = gql`
       subject
       sentence
       data
+      hasExited
       actingUser {
         name
         id
@@ -91,6 +92,13 @@ export const AllEventLogsQuery = gql`
         reason
         id
         grantedState
+        grantedAt
+        name
+      }
+      user {
+        id
+        name
+        userType
       }
     }
   }

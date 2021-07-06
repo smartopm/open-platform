@@ -174,7 +174,7 @@ export function HomeGuard({ translate }) {
                 </Link>
               </div>
               <div className={`${css(styles.cardSize)} card align-self-center text-center`}>
-                <Link to="/entry_request" className="card-link">
+                <Link to="/request" className="card-link">
                   <div className="card-body">
                     <h5 className="card-title">
                       <RecentActorsIcon color="primary" fontSize="large" />

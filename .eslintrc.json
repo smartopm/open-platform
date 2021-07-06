@@ -26,7 +26,7 @@
     "security/detect-non-literal-fs-filename": 2,
     "security/detect-non-literal-regexp": 2,
     "security/detect-unsafe-regex": 2,
-    "arrow-body-style": 1
+    "arrow-body-style": 0
   },
   "env": {
     "browser": true,

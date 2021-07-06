@@ -2,7 +2,7 @@
 /* eslint-disable no-nested-ternary */
 /* eslint-disable no-use-before-define */
 import React, { useState, useEffect, useContext } from 'react';
-import { useQuery, useMutation } from 'react-apollo';
+import { useMutation, useLazyQuery } from 'react-apollo';
 import { TextField, MenuItem, Button , Grid } from '@material-ui/core';
 import { StyleSheet, css } from 'aphrodite';
 import { useHistory, useLocation, useParams } from 'react-router';
@@ -11,15 +11,15 @@ import PropTypes from 'prop-types'
 import CallIcon from '@material-ui/icons/Call';
 import { EntryRequestQuery } from '../../../graphql/queries';
 import {
-  EntryRequestUpdate,
   EntryRequestGrant,
   EntryRequestDeny,
   CreateUserMutation,
-  UpdateLogMutation
+  UpdateLogMutation,
+  EntryRequestCreate
 } from '../../../graphql/mutations';
-import Loading, { Spinner } from "../../../shared/Loading";
+import { Spinner } from "../../../shared/Loading";
 import { isTimeValid, getWeekDay } from '../../../utils/dateutil';
-import { userState, userType, communityVisitingHours } from '../../../utils/constants'
+import { userState, userType, communityVisitingHours, defaultBusinessReasons } from '../../../utils/constants'
 import { ModalDialog } from "../../../components/Dialog"
 import CaptureTemp from "../../../components/CaptureTemp";
 import { dateToString, dateTimeToString } from "../../../components/DateContainer";
@@ -28,8 +28,23 @@ import EntryNoteDialog from '../../../shared/dialogs/EntryNoteDialog';
 import CenteredContent from '../../../components/CenteredContent';
 import AddObservationNoteMutation from '../graphql/logbook_mutations';
 import MessageAlert from '../../../components/MessageAlert'
+import { checkInValidRequiredFields, defaultRequiredFields } from '../utils';
 
-
+const initialState = {
+    name: '',
+    phoneNumber: '',
+    nrc: '',
+    vehiclePlate: '',
+    reason: '',
+    otherReason: '',
+    state: '',
+    userType: '',
+    expiresAt: '',
+    email: '',
+    companyName: '',
+    temperature: '',
+    loaded: false
+}
 export default function RequestUpdate({ id }) {
     const { state } = useLocation()
     const { logs, } = useParams()
@@ -38,10 +53,10 @@ export default function RequestUpdate({ id }) {
     const previousRoute = state?.from || logs
     const isFromLogs = previousRoute === 'logs' ||  false
 
-  const { loading, data } = useQuery(EntryRequestQuery, {
+  const [loadRequest, { data }] = useLazyQuery(EntryRequestQuery, {
     variables: { id }
   });
-  const [updateEntryRequest] = useMutation(EntryRequestUpdate);
+  const [createEntryRequest] = useMutation(EntryRequestCreate)
   const [grantEntry] = useMutation(EntryRequestGrant);
   const [denyEntry] = useMutation(EntryRequestDeny);
   const [createUser] = useMutation(CreateUserMutation)
@@ -55,21 +70,11 @@ export default function RequestUpdate({ id }) {
   const [isClicked, setIsClicked] = useState(false)
   const [isObservationOpen, setIsObservationOpen] = useState(false)
   const [observationNote, setObservationNote] = useState("")
+  const [reqId, setRequestId] = useState(id)
   const [observationDetails, setDetails] = useState({ isError: false, message: '', loading: false })
-  const [formData, setFormData] = useState({
-    name: '',
-    phoneNumber: '',
-    nrc: '',
-    vehiclePlate: '',
-    reason: '',
-    otherReason: '',
-    state: '',
-    userType: '',
-    expiresAt: '',
-    email: '',
-    loaded: false
-  });
-
+  const [inputValidationMsg, setInputValidationMsg] = useState({ isError: false, isSubmitting: false })
+  const [formData, setFormData] = useState(initialState);
+  const requiredFields = authState?.user?.community?.communityRequiredFields?.manualEntryRequestForm || defaultRequiredFields
   const { t } = useTranslation(['common', 'logbook'])
 
   useEffect(() => {
@@ -80,12 +85,15 @@ export default function RequestUpdate({ id }) {
     };
   });
 
+  useEffect(() => {
+    if (id) {
+      loadRequest({ variables: { id } })
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id])
+
   function tick() {
     setDate(new Date());
-  }
-
-  if (loading) {
-    return <Loading />;
   }
 
   // Data is loaded, so set the initialState, but only once
@@ -100,15 +108,23 @@ export default function RequestUpdate({ id }) {
     });
   }
 
-  function handleUpdateRecord() {
-    return updateEntryRequest({ variables: formData });
+  function handleCreateRequest() {
+      return createEntryRequest({ variables: formData })
+      // eslint-disable-next-line no-shadow
+        .then(({ data }) => {
+          setRequestId(data.result.entryRequest.id)
+          return data.result.entryRequest.id
+        })
+        .catch(err => {
+          setDetails({ ...observationDetails, message: err.message });
+        });
   }
 
   function handleGrantRequest() {
     setLoading(true)
-    // TODO: Find out why are updating before granting access
-    handleUpdateRecord()
-      .then(grantEntry({ variables: { id } }))
+    setModal(false)
+    handleCreateRequest()
+      .then(requestId => grantEntry({ variables: { id: requestId } }))
       .then(() => {
         setDetails({ ...observationDetails, message: t('logbook:logbook.success_message', { action: t('logbook:logbook.granted') }) })
         setIsObservationOpen(true)
@@ -121,10 +137,15 @@ export default function RequestUpdate({ id }) {
   }
 
   function handleDenyRequest() {
+    const isAnyInvalid = checkInValidRequiredFields(formData, requiredFields)
+    if(isAnyInvalid){
+      setInputValidationMsg({ isError: true })
+      return
+    }
     setIsClicked(!isClicked)
     setLoading(true)
-    handleUpdateRecord()
-      .then(denyEntry({ variables: { id } }))
+    handleCreateRequest()
+      .then(requestId => denyEntry({ variables: { id: requestId } }))
       .then(() => {
         setDetails({ ...observationDetails, message: t('logbook:logbook.success_message', { action: t('logbook:logbook.denied')}) })
         setIsObservationOpen(true)
@@ -168,29 +189,39 @@ export default function RequestUpdate({ id }) {
   }
 
   function handleModal(_event, type) {
+    const isAnyInvalid = checkInValidRequiredFields(formData, requiredFields)
+    if(isAnyInvalid){
+      setInputValidationMsg({ isError: true })
+      return
+    }
     if (type === 'grant') {
       setModalAction('grant')
     } else {
       setModalAction('deny')
     }
     setModal(!isModalOpen)
-    if (!isModalOpen) {
-      setIsClicked(!isClicked)
-    } else {
-      setIsClicked(isClicked)
-    }
+  }
+
+  function resetForm(to){
+    setFormData(initialState)
+    setObservationNote("")
+    setRequestId("")
+    setIsObservationOpen(false)
+    setModal(false)
+    history.push(to)
   }
 
   function handleSaveObservation(to){
     // we are skipping the observation notes
     if(!observationNote) {
-      history.push(to)
+      resetForm(to)
+      return
     }
     setDetails({ ...observationDetails, loading: true })
-    addObservationNote({ variables: { id, note: observationNote, refType: 'Logs::EntryRequest'} })
+    addObservationNote({ variables: { id: reqId, note: observationNote, refType: 'Logs::EntryRequest'} })
       .then(() => {
-        setDetails({ ...observationDetails, loading: false, isError: false, message: t('logbook:observation.created_observation') })
-        history.push(to)
+        setDetails({ ...observationDetails, loading: false, isError: false, message: t('logbook:observations.created_observation') })
+        resetForm(to)
       })
       .catch(error => {
         setDetails({ ...observationDetails, loading: false, isError: true, message: error.message })
@@ -255,7 +286,7 @@ export default function RequestUpdate({ id }) {
               {t('logbook:observations.skip_scan_next_entry', { action: observationAction })}
             </Button>
             <Button
-              onClick={() => handleSaveObservation('/entry_request')}
+              onClick={() => handleSaveObservation('/request')}
               variant="outlined"
               className={css(styles.observationButton)}
               color="primary"
@@ -306,7 +337,7 @@ export default function RequestUpdate({ id }) {
             <TextField
               className="form-control"
               type="text"
-              value={formData.guard ? formData.guard.name : ''}
+              value={formData.guard?.name || authState.user.name}
               disabled
               name="name"
               required
@@ -323,7 +354,11 @@ export default function RequestUpdate({ id }) {
               onChange={handleInputChange}
               name="name"
               inputProps={{ 'data-testid': 'entry_user_name' }}
-              required
+              error={inputValidationMsg.isError && requiredFields.includes('name') && !formData.name}
+              helperText={inputValidationMsg.isError &&
+                requiredFields.includes('name') &&
+                !formData.name &&
+                'Name is Required'}
             />
           </div>
 
@@ -338,7 +373,13 @@ export default function RequestUpdate({ id }) {
               onChange={handleInputChange}
               name="nrc"
               inputProps={{ 'data-testid': 'entry_user_nrc' }}
-              required
+              error={inputValidationMsg.isError &&
+                requiredFields.includes('nrc') &&
+                !formData.nrc}
+              helperText={inputValidationMsg.isError &&
+                requiredFields.includes('nrc') &&
+                !formData.nrc &&
+                'ID is Required'}
             />
           </div>
           <div className="form-group">
@@ -352,7 +393,13 @@ export default function RequestUpdate({ id }) {
               onChange={handleInputChange}
               name="phoneNumber"
               inputProps={{ 'data-testid': 'entry_user_phone' }}
-              required={previousRoute === 'enroll'}
+              error={inputValidationMsg.isError &&
+                requiredFields.includes('phoneNumber') &&
+                !formData.phoneNumber}
+              helperText={inputValidationMsg.isError &&
+                requiredFields.includes('phoneNumber') &&
+                !formData.phoneNumber &&
+                'Phone Number is Required'}
             />
           </div>
           {previousRoute === 'enroll' && (
@@ -426,6 +473,33 @@ export default function RequestUpdate({ id }) {
               value={formData.vehiclePlate || ''}
               name="vehiclePlate"
               inputProps={{ 'data-testid': 'entry_user_vehicle' }}
+              error={inputValidationMsg.isError &&
+                requiredFields.includes('vehiclePlate') &&
+                !formData.vehiclePlate}
+              helperText={inputValidationMsg.isError &&
+                requiredFields.includes('vehiclePlate') &&
+                !formData.vehiclePlate &&
+                'Vehicle Plate Number is Required'}
+            />
+          </div>
+          <div className="form-group">
+            <label className="bmd-label-static" htmlFor="companyName">
+              {t('form_fields.company_name')}
+            </label>
+            <TextField
+              className="form-control"
+              type="text"
+              name="companyName"
+              value={formData.companyName || ''}
+              onChange={handleInputChange}
+              inputProps={{ 'data-testid': 'companyName' }}
+              error={inputValidationMsg.isError &&
+                    requiredFields.includes('companyName') &&
+                    !formData.companyName}
+              helperText={inputValidationMsg.isError &&
+                    requiredFields.includes('companyName') &&
+                    !formData.companyName &&
+                    'Company Name is Required'}
             />
           </div>
           <div className="form-group">
@@ -438,20 +512,44 @@ export default function RequestUpdate({ id }) {
               onChange={handleInputChange}
               className={`${css(styles.selectInput)}`}
               inputProps={{ 'data-testid': 'entry_user_visit' }}
+              error={inputValidationMsg.isError &&
+                requiredFields.includes('reason') &&
+                (!formData.reason) || (formData.reason === 'other' &&
+                !formData.reason)}
+              helperText={inputValidationMsg.isError &&
+                requiredFields.includes('reason') &&
+                !formData.reason &&
+                'Reason is Required'}
             >
-              <MenuItem value={formData.reason}>
-                {formData.reason && formData.reason === 'other'
-                  ? formData.otherReason
-                  : t(`logbook:business_reasons.${formData.reason}`)}
-              </MenuItem>
+              {Object.keys(defaultBusinessReasons).map(_reason => (
+                <MenuItem key={_reason} value={_reason}>
+                  {t(`logbook:business_reasons.${_reason}`) || defaultBusinessReasons[String(_reason)]}
+                </MenuItem>
+              ))}
             </TextField>
           </div>
 
-          <br />
-          {/* {Temproal component for temperature} */}
+          {
+            !reqId && (
+              <div className="form-group">
+                <TextField
+                  className="form-control"
+                  type="text"
+                  label="Temperature(°C)"
+                  value={formData.temperature}
+                  onChange={handleInputChange}
+                  name="temperature"
+                  inputProps={{ 'data-testid': 'temperature' }}
+                  style={{ width: 200 }}
+                />
+              </div>
+            )
+          }
 
-          {previousRoute !== 'enroll' && (
-            <CaptureTemp refId={id} refName={formData.name} refType="Logs::EntryRequest" />
+          <br />
+          {previousRoute !== 'enroll' && reqId &&(
+            // TODO: @olivier ==> This needs to be revisited
+            <CaptureTemp refId={reqId} refName={formData.name} refType="Logs::EntryRequest" />
           )}
 
           <br />
@@ -491,9 +589,10 @@ export default function RequestUpdate({ id }) {
                     disabled={isLoading}
                     data-testid="entry_user_grant"
                   >
-                    {isLoading && modalAction === 'grant'
-                      ? `${t('logbook:logbook.granting')} ...`
-                      : `${t('logbook:logbook.grant')}`}
+
+                    {
+                      isLoading ? <Spinner /> : t('logbook:logbook.grant')
+                    }
                   </Button>
                 </Grid>
                 <Grid item>
@@ -504,7 +603,9 @@ export default function RequestUpdate({ id }) {
                     disabled={isLoading}
                     data-testid="entry_user_deny"
                   >
-                    {t('logbook:logbook.deny')}
+                    {
+                      isLoading ? <Spinner /> : t('logbook:logbook.deny')
+                    }
                   </Button>
                 </Grid>
               </Grid>
@@ -532,8 +633,12 @@ export default function RequestUpdate({ id }) {
   );
 }
 
+RequestUpdate.defaultProps = {
+  id: null
+}
+
 RequestUpdate.propTypes = {
-  id: PropTypes.string.isRequired
+  id: PropTypes.string
 }
 
 

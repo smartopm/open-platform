@@ -12,8 +12,9 @@
     "all_visits": "All Visits",
     "new_visits": "New Visits",
     "upcoming_visits": "Upcoming Visits",
+    "observations": "Observations",
     "new_visit_request": "New Visit Request",
-    "filter_entries": "Filter Entries",
+    "filter_entries": "Filter Entries or Observations",
     "entry_request": "Entry Request",
     "data_time_submitted": "Date and time submitted",
     "visiting_reason": "Reason for visit",
@@ -31,7 +32,14 @@
     "log": "Log",
     "success_message": "Success: Access {{action}} successfully",
     "granted": "granted",
-    "denied": "denied"
+    "denied": "denied",
+    "add_observation": "Add Observation",
+    "granted_access_by": "Granted access by",
+    "denied_access_by": "Denied access by",
+    "time_of_access": "Time of access",
+    "today": "Today",
+    "log_exit": "Log Exit",
+    "exited": "Exited"
   },
   "log_title": {
     "visitor": "Visitor",
@@ -66,6 +74,7 @@
     "skip_record_manual_entry": "{{action}} & Manually Record Next Entry",
     "skip_scan_next_entry": "{{action}} & Scan Next Entry",
     "created_observation": "Observation note successfully added",
-    "add_your_observation": "Do you have any observations you'd like to add?"
+    "add_your_observation": "Do you have any observations you'd like to add?",
+    "created_observation_exit": "Observation exit has been logged successfully"
   }
 }
