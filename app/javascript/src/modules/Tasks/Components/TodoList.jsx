@@ -330,9 +330,7 @@ export default function TodoList({
         type: 'select',
         valueSources: ['value'],
         fieldSettings: {
-          listValues: liteData?.usersLite.map(u => {
-            return { value: u.name, title: u.name };
-          })
+          listValues: liteData?.usersLite.map(u => ({ value: u.name, title: u.name }))
         }
       },
       userName: {

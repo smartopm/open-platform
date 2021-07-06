@@ -143,9 +143,7 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
       type: 'select',
       valueSources: ['value'],
       fieldSettings: {
-        listValues: Object.entries(options).map(([key, val]) => {
-          return { value: key, title: val };
-        })
+        listValues: Object.entries(options).map(([key, val]) => ({ value: key, title: val }))
       }
     };
   }
@@ -466,8 +464,7 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
                   });
                 }}
                 options={ruleFieldsData.data?.ruleFields.map(option => titleize(option)) || []}
-                renderInput={params => {
-                  return (
+                renderInput={params => (
                     <TextField
                       {...params}
                       label={capitalize(actionField.name)}
@@ -476,8 +473,7 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
                       variant="outlined"
                       multiline
                     />
-                  );
-                }}
+                  )}
               />
             );
           })}
@@ -499,8 +495,7 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
                   });
                 }}
                 options={ruleFieldsData.data?.ruleFields.map(option => titleize(option)) || []}
-                renderInput={params => {
-                  return (
+                renderInput={params => (
                     <TextField
                       {...params}
                       label={capitalize(varName)}
@@ -509,8 +504,7 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
                       variant="outlined"
                       multiline
                     />
-                  );
-                }}
+                  )}
               />
             ))}
       </DialogContent>

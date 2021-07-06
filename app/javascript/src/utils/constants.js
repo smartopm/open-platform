@@ -412,9 +412,7 @@ export const dateWidget = {
         type: 'select',
         valueSources: ['value'],
         fieldSettings: {
-          listValues: Object.entries(paymentType).map(([key, val]) => {
-            return { value: key, title: val }
-          })
+          listValues: Object.entries(paymentType).map(([key, val]) => ({ value: key, title: val }))
         }
       },
       phoneNumber: {
