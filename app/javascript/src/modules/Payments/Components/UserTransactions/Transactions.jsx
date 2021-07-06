@@ -30,7 +30,7 @@ export default function TransactionsList({ userId, user, userData, transData, re
   const planId = path.get('id')
   const [offset, setOffset] = useState(Number(page) || 0)
   const [filterValue, setFilterValue] = useState('all')
-  const debouncedValue = useDebounce(filterValue, 500);
+  const debouncedValue = useDebounce(filterValue, 100);
   const theme = useTheme();
   const { t } = useTranslation('common')
   const matches = useMediaQuery(theme.breakpoints.up('sm'));
@@ -49,7 +49,7 @@ export default function TransactionsList({ userId, user, userData, transData, re
   const currencyData = { currency, locale }
 
   const [loadPlanTransactions, { loading, error, data }] = useLazyQuery(Transactions, {
-    variables: { userId, planId: debouncedValue, limit, offset },
+    variables: { userId, planId: filterValue === 'all' ? null : debouncedValue, limit, offset },
     fetchPolicy: 'no-cache',
     errorPolicy: 'all'
   });
