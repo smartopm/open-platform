@@ -82,7 +82,7 @@ export default function PaymentModal({
     setIsConfirm(true);
   }
 
-  const [loadLandParcel, { loading, data: landParcels }] = useLazyQuery(UserLandParcelWithPlan, {
+  const [loadLandParcel, { loading, data: landParcels, refetch: landParcelsRefetch }] = useLazyQuery(UserLandParcelWithPlan, {
     variables: { userId: paymentUserId },
     errorPolicy: 'all'
   });
@@ -152,6 +152,7 @@ export default function PaymentModal({
         refetch();
         walletRefetch();
         transRefetch();
+        landParcelsRefetch();
         setPaymentData(res.data.transactionCreate.transaction);
         setInputValue(initialValues);
         setPromptOpen(!!userId);
