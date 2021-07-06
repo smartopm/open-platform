@@ -9,6 +9,7 @@ import { Button, Typography } from '@material-ui/core';
 import { useApolloClient, useLazyQuery, useMutation } from 'react-apollo';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
+import PhoneInput from 'react-phone-input-2'
 import {
   reasons,
   requiredFields,
@@ -287,17 +288,28 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
           />
         </div>
         <div className="form-group">
-          <TextField
-            id="phoneNumber"
-            className="form-control"
-            label={t('common:form_fields.primary_number')}
-            name="phoneNumber"
-            type="text"
-            onChange={handleInputChange}
+          <label className="MuiFormLabel-root MuiInputLabel-shrink MuiInputLabel-root">
+            {t('common:form_fields.primary_number')}
+            <span
+              aria-hidden="true"
+              className="MuiFormLabel-asterisk
+            MuiInputLabel-asterisk"
+            >
+              &nbsp;*
+            </span>
+          </label>
+          <PhoneInput
             value={data.phoneNumber || ''}
-            inputProps={{ 'data-testid': 'primary_phone' }}
-            disabled={!isFromRef && !isAdmin}
-            required
+            inputStyle={{ width: "100%" }}
+            enableSearch
+            inputProps={{
+              name: 'phoneNumber',
+              required: true,
+              'data-testId': 'primary_phone'
+            }}
+            placeholder={t('common:form_placeholders.phone_number')}
+            onChange={value => setData({...data, phoneNumber: value})}
+            preferredCountries={['hn', 'zm', 'ng', 'in', 'us']}
           />
         </div>
         <div className="form-group">
