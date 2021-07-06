@@ -38,6 +38,7 @@ export default function PaymentPlans({ userId, user, userData }) {
   const theme = useTheme();
   const matches = useMediaQuery(theme.breakpoints.up('sm'));
   const [offset, setOffset] = useState(Number(page) || 0)
+  const [filtering, setFiltering] = useState(false)
   const [loadPlans, { loading, error, data, refetch }] = useLazyQuery(UserPlans, {
     variables: { userId, limit, offset },
     fetchPolicy: 'no-cache',
@@ -67,6 +68,11 @@ export default function PaymentPlans({ userId, user, userData }) {
     } else if (action === 'next') {
       setOffset(offset + limit)
     }
+  }
+
+  function handleButtonClick(){
+    history.push('?tab=Plans&subtab=Transactions')
+    setFiltering(false)
   }
 
   useEffect(() => {
@@ -104,8 +110,10 @@ export default function PaymentPlans({ userId, user, userData }) {
               refetch={transRefetch}
               balanceRefetch={balanceRefetch}
               planData={data?.userPlansWithPayments}
+              filtering={filtering}
+              setFiltering={setFiltering}
             />
-            {!id && (
+            {!id && filtering === false && (
               <CenteredContent>
                 <Paginate
                   offSet={offset}
@@ -124,11 +132,12 @@ export default function PaymentPlans({ userId, user, userData }) {
             <div>
               <div style={{ display: 'flex', width: '100%', justifyContent: 'space-between', marginBottom: '10px' }}>
                 <Typography className={classes.plan}>Plans</Typography>
-                {
-                  user.userType === 'admin' && (
-                  <ButtonComponent color='default' variant='outlined' buttonText="View all Transactions" handleClick={() => history.push('?tab=Plans&subtab=Transactions')} />
-                  )
-                }
+                <ButtonComponent 
+                  color='default' 
+                  variant='outlined' 
+                  buttonText="View all Transactions" 
+                  handleClick={() => handleButtonClick()}
+                />
               </div>
               {matches && <ListHeader headers={planHeader} color />}
             </div>

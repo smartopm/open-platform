@@ -22,7 +22,7 @@ import  Transactions from '../../graphql/payment_query'
 import { Spinner } from '../../../../shared/Loading';
 import useDebounce from '../../../../utils/useDebounce';
 
-export default function TransactionsList({ userId, user, userData, transData, refetch, balanceRefetch, planData }) {
+export default function TransactionsList({ userId, user, userData, transData, refetch, balanceRefetch, planData, setFiltering, filtering }) {
   const path = useParamsQuery()
   const history = useHistory();
   const limit = 10
@@ -31,7 +31,6 @@ export default function TransactionsList({ userId, user, userData, transData, re
   const [offset, setOffset] = useState(Number(page) || 0)
   const [filterValue, setFilterValue] = useState('all')
   const debouncedValue = useDebounce(filterValue, 500);
-  const [filtering, setFiltering] = useState(false)
   const theme = useTheme();
   const { t } = useTranslation('common')
   const matches = useMediaQuery(theme.breakpoints.up('sm'));
@@ -202,6 +201,8 @@ TransactionsList.defaultProps = {
 TransactionsList.propTypes = {
   userData: PropTypes.object,
   transData: PropTypes.object,
+  setFiltering: PropTypes.func.isRequired,
+  filtering: PropTypes.string.isRequired,
   user: PropTypes.shape({
     id: PropTypes.string,
     userType: PropTypes.string,
