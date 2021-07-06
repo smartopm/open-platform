@@ -31,7 +31,7 @@ export default function TransactionsList({ userId, user, userData, transData, re
   const [offset, setOffset] = useState(Number(page) || 0)
   const [filterValue, setFilterValue] = useState('all')
   const debouncedValue = useDebounce(filterValue, 500);
-  // const [filtering, setFiltering] = useState(false)
+  const [filtering, setFiltering] = useState(false)
   const theme = useTheme();
   const { t } = useTranslation('common')
   const matches = useMediaQuery(theme.breakpoints.up('sm'));
@@ -64,10 +64,17 @@ export default function TransactionsList({ userId, user, userData, transData, re
     }
   }
 
+  function handleSelecMenu(event) {
+    setFilterValue(event.target.value)
+    setFiltering(true)
+    loadPlanTransactions()
+  }
+
   useEffect(() => {
     if (planId) {
       setFilterValue(planId)
       loadPlanTransactions()
+      setFiltering(true)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -76,7 +83,7 @@ export default function TransactionsList({ userId, user, userData, transData, re
 
   return (
     <div>
-      {planId && loading ? <Spinner /> : (data?.userTransactions?.length > 0 || transData?.userTransactions?.length > 0) ? (
+      {filtering && loading ? <Spinner /> : (data?.userTransactions?.length > 0 || transData?.userTransactions?.length > 0) ? (
         <div className={classes.paymentList}>
           <div style={{ display: 'flex', width: '100%', justifyContent: 'space-between', marginBottom: '10px' }}>
             <Typography className={classes.payment} data-testid='header'>Transactions</Typography>
@@ -94,7 +101,7 @@ export default function TransactionsList({ userId, user, userData, transData, re
               id="transaction-filter"
               inputProps={{ 'data-testid': 'transaction-filter' }}
               value={filterValue}
-              onChange={event => setFilterValue(event.target.value)}
+              onChange={event => handleSelecMenu(event)}
               required
               select
             >
@@ -109,7 +116,7 @@ export default function TransactionsList({ userId, user, userData, transData, re
             </TextField>
           </div>
           {matches && <ListHeader headers={transactionHeader} color />}
-          {planId && Boolean(data?.userTransactions?.length) ? (
+          {filtering && Boolean(data?.userTransactions?.length) ? (
             data.userTransactions.map((trans) => (
               <div key={trans.id}>
                 <UserTransactionsList 
@@ -122,7 +129,7 @@ export default function TransactionsList({ userId, user, userData, transData, re
                 />
               </div>
             ))
-          ) : planId && data?.userTransactions?.length === 0 ? (
+          ) : filtering && data?.userTransactions?.length === 0 ? (
             <CenteredContent>No Transaction Available for this Plan</CenteredContent>
           ) : (
             transData.userTransactions.map((trans) => (
@@ -142,15 +149,17 @@ export default function TransactionsList({ userId, user, userData, transData, re
         ) : (
           <CenteredContent>No Transaction Available</CenteredContent>
         )}
-      <CenteredContent>
-        <Paginate
-          offSet={offset}
-          limit={limit}
-          active={offset >= 1}
-          handlePageChange={paginate}
-          count={transData?.userTransactions?.length}
-        />
-      </CenteredContent>
+      {filtering && Boolean(data?.userTransactions?.length) && (
+        <CenteredContent>
+          <Paginate
+            offSet={offset}
+            limit={limit}
+            active={offset >= 1}
+            handlePageChange={paginate}
+            count={transData?.userTransactions?.length}
+          />
+        </CenteredContent>
+      )}
     </div>
   )
 }
@@ -204,6 +213,7 @@ TransactionsList.propTypes = {
     }).isRequired
   }).isRequired,
   refetch: PropTypes.func.isRequired,
+  userId: PropTypes.string.isRequired,
   balanceRefetch: PropTypes.func.isRequired,
   planData: PropTypes.arrayOf(PropTypes.shape({
     id: PropTypes.string,

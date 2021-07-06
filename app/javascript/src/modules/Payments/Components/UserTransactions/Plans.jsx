@@ -31,6 +31,7 @@ export default function PaymentPlans({ userId, user, userData }) {
   const history = useHistory();
   const path = useParamsQuery()
   const subtab = path.get('subtab')
+  const id = path.get('id')
   const classes = useStyles();
   const limit = 10
   const page = path.get('page')
@@ -94,15 +95,28 @@ export default function PaymentPlans({ userId, user, userData }) {
       )}
       {subtab === 'Transactions' ? (
         transLoading ? <Spinner /> : (
-          <Transactions
-            userId={userId}
-            user={user}
-            userData={userData}
-            transData={transData}
-            refetch={transRefetch}
-            balanceRefetch={balanceRefetch}
-            planData={data?.userPlansWithPayments}
-          />
+          <>
+            <Transactions
+              userId={userId}
+              user={user}
+              userData={userData}
+              transData={transData}
+              refetch={transRefetch}
+              balanceRefetch={balanceRefetch}
+              planData={data?.userPlansWithPayments}
+            />
+            {!id && (
+              <CenteredContent>
+                <Paginate
+                  offSet={offset}
+                  limit={limit}
+                  active={offset >= 1}
+                  handlePageChange={paginate}
+                  count={transData?.userTransactions?.length}
+                />
+              </CenteredContent>
+            )}
+          </>
         )
       ) : loading ? <Spinner /> : (
         data?.userPlansWithPayments?.length > 0 ? (
