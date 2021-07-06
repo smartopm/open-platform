@@ -34,7 +34,9 @@ module Mutations
       # rubocop:enable Metrics/AbcSize
       # rubocop:enable Metrics/MethodLength
 
-      def update_prev_log(event_id)
+      def update_prev_log(event_id, note)
+        return unless note.eql?('Exited')
+        
         event = context[:site_community].event_logs.find_by(id: event_id)
         return if event.nil?
 
