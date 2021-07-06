@@ -343,13 +343,11 @@ export function IndexComponent({
                       onClick={() => handleExitEvent(event, 'exit')}
                       data-testid="log_exit"
                     >
-                      {
-                      clickedEvent.refId === event.refId && observationDetails.loading ? (
+                      {clickedEvent.refId === event.refId && observationDetails.loading ? (
                         <Spinner />
                       ) : (
                         event.subject !== 'user_temp' && t('logbook.log_exit')
-                      )
-                      }
+                      )}
                     </Typography>
                   )}
                 </span>
@@ -462,7 +460,13 @@ export function IndexComponent({
         <TabPanel value={tabValue} index={2}>
           {data &&
             data.result.map(log => (
-              <LogView key={log.id} user={log} refetch={refetch} tab={tabValue} />
+              <LogView
+                key={log.id}
+                user={log}
+                refetch={refetch}
+                tab={tabValue}
+                handleAddObservation={handleAddObservation}
+              />
             ))}
         </TabPanel>
         <TabPanel value={tabValue} index={3}>
@@ -488,8 +492,7 @@ export function IndexComponent({
             title={t('logbook.new_visit_request')}
             handleClick={() => router.push('/visit_request')}
           />
-        )
-        }
+        )}
       </div>
 
       <div className="d-flex justify-content-center">
@@ -518,7 +521,7 @@ export function IndexComponent({
 }
 
 // user here should be called eventlog
-export function LogView({ user, refetch, tab }) {
+export function LogView({ user, tab, handleAddObservation }) {
   const { t } = useTranslation(['common', 'logbook']);
   const [grantEntry] = useMutation(EntryRequestGrant);
   const [loading, setLoading] = useState(false);
@@ -534,7 +537,7 @@ export function LogView({ user, refetch, tab }) {
           detail: t('logbook:logbook.success_message', { action: t('logbook:logbook.granted') })
         });
         setLoading(false);
-        setTimeout(() => refetch(), 1500);
+        handleAddObservation(user);
       })
       .catch(error => {
         setMessage({ isError: true, detail: error.message });
@@ -591,9 +594,13 @@ export function LogView({ user, refetch, tab }) {
   );
 }
 
+LogView.defaultProps = {
+  handleAddObservation: () => {}
+};
+
 LogView.propTypes = {
   tab: PropTypes.number.isRequired,
-  refetch: PropTypes.func.isRequired,
+  handleAddObservation: PropTypes.func,
   user: PropTypes.shape({
     refId: PropTypes.string,
     createdAt: PropTypes.string,
