@@ -127,7 +127,8 @@ export default function UserLabels({ userId }) {
               }
               return setLabel(newValue);
             }}
-            renderTags={(value, getTagProps) => value.map((option, index) => (
+            renderTags={(value, getTagProps) => {
+              return value.map((option, index) => (
                 <Chip
                   // eslint-disable-next-line react/no-array-index-key
                   key={index}
@@ -135,7 +136,8 @@ export default function UserLabels({ userId }) {
                   label={option.shortDesc || option}
                   {...getTagProps({ index })}
                 />
-              ))}
+              ));
+            }}
             renderInput={params => (
               <TextField
                 {...params}

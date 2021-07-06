@@ -1,5 +1,5 @@
 import React from 'react'
-import Tag  from '../app/javascript/src/modules/News/Components/Tag'
+import Tag  from '../app/javascript/src/components/NewsPage/Tag'
 
 export default {
     title: 'Components/Tag',
