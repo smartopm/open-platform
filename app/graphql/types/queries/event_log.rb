@@ -36,7 +36,8 @@ module Types::Queries::EventLog
     query = build_event_log_query(context[:current_user], subject, ref_id, ref_type)
     return query_logs_with_name(query, name, limit, offset) if name.present?
 
-    context[:site_community].event_logs.includes(:acting_user, :community)
+    context[:site_community].event_logs.includes(:acting_user, :community, ref: [:users, :entry_requests,
+                                                 :some_undefined])
                             .where(query)
                             .limit(limit).offset(offset)
   end

@@ -6,6 +6,7 @@ module Logs
   class EventLog < ApplicationRecord
     belongs_to :community
     belongs_to :acting_user, optional: true, class_name: 'Users::User'
+    belongs_to :ref, polymorphic: true
 
     after_create :notify_slack
     after_create :populate_activity_points

@@ -25,13 +25,15 @@ module Types
     def entry_request
       return nil if object.ref_type != 'Logs::EntryRequest'
 
-      Logs::EntryRequest.find_by(id: object.ref_id)
+      # Logs::EntryRequest.find_by(id: object.ref_id)
+      object.ref
     end
 
     def user
       return nil if object.ref_type != 'Users::User'
 
-      Users::User.find_by(id: object.ref_id)
+      # Users::User.find_by(id: object.ref_id)
+      object.ref
     end
 
     # rubocop:disable Naming/PredicateName
