@@ -137,6 +137,7 @@ export default function PaymentPlans({ userId, user, userData }) {
                   variant='outlined' 
                   buttonText="View all Transactions" 
                   handleClick={() => handleButtonClick()}
+                  size='small'
                 />
               </div>
               {matches && <ListHeader headers={planHeader} color />}

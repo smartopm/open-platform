@@ -86,7 +86,13 @@ export default function TransactionsList({ userId, user, userData, transData, re
         <div className={classes.paymentList}>
           <div style={{ display: 'flex', width: '100%', justifyContent: 'space-between', marginBottom: '10px' }}>
             <Typography className={classes.payment} data-testid='header'>Transactions</Typography>
-            <ButtonComponent variant='outlined' color='default' buttonText="View all Plans" handleClick={() => history.push('?tab=Plans')} />
+            <ButtonComponent 
+              variant='outlined' 
+              color='default' 
+              buttonText="View all Plans" 
+              handleClick={() => history.push('?tab=Plans')}
+              size='small' 
+            />
           </div>
           <div style={{display: 'flex', margin: '-20px 0 10px 0'}}>
             <Typography className={classes.display} data-testid='header'>Displaying results for</Typography>
@@ -198,7 +204,7 @@ TransactionsList.propTypes = {
   userData: PropTypes.object,
   transData: PropTypes.object,
   setFiltering: PropTypes.func.isRequired,
-  filtering: PropTypes.string.isRequired,
+  filtering: PropTypes.bool.isRequired,
   user: PropTypes.shape({
     id: PropTypes.string,
     userType: PropTypes.string,
