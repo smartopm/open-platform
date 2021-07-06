@@ -1,9 +1,12 @@
 /* eslint-disable react/forbid-prop-types */
 /* eslint-disable no-nested-ternary */
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Typography } from '@material-ui/core'
 import { useHistory } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { useLazyQuery } from 'react-apollo';
+import TextField from '@material-ui/core/TextField';
+import MenuItem from '@material-ui/core/MenuItem';
 import PropTypes from 'prop-types'
 import { useTheme, makeStyles } from '@material-ui/core/styles';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
@@ -13,14 +16,21 @@ import { currencies } from '../../../../utils/constants'
 import UserTransactionsList from './UserTransactions'
 import ListHeader from '../../../../shared/list/ListHeader';
 import ButtonComponent from '../../../../shared/buttons/Button'
-import { useParamsQuery } from '../../../../utils/helpers'
+import { useParamsQuery, formatError } from '../../../../utils/helpers'
+import { dateToString } from '../../../../components/DateContainer';
+import  Transactions from '../../graphql/payment_query'
+import { Spinner } from '../../../../shared/Loading';
+import useDebounce from '../../../../utils/useDebounce';
 
-export default function TransactionsList({ user, userData, transData, refetch, balanceRefetch }) {
+export default function TransactionsList({ userId, user, userData, transData, refetch, balanceRefetch, planData, setFiltering, filtering }) {
   const path = useParamsQuery()
   const history = useHistory();
   const limit = 10
   const page = path.get('page')
+  const planId = path.get('id')
   const [offset, setOffset] = useState(Number(page) || 0)
+  const [filterValue, setFilterValue] = useState('all')
+  const debouncedValue = useDebounce(filterValue, 100);
   const theme = useTheme();
   const { t } = useTranslation('common')
   const matches = useMediaQuery(theme.breakpoints.up('sm'));
@@ -38,6 +48,12 @@ export default function TransactionsList({ user, userData, transData, refetch, b
   const { locale } = user.community
   const currencyData = { currency, locale }
 
+  const [loadPlanTransactions, { loading, error, data }] = useLazyQuery(Transactions, {
+    variables: { userId, planId: filterValue === 'all' ? null : debouncedValue, limit, offset },
+    fetchPolicy: 'no-cache',
+    errorPolicy: 'all'
+  });
+
   function paginate(action) {
     if (action === 'prev') {
       if (offset < limit) return
@@ -47,20 +63,76 @@ export default function TransactionsList({ user, userData, transData, refetch, b
     }
   }
 
+  function handleSelecMenu(event) {
+    setFilterValue(event.target.value)
+    setFiltering(true)
+    loadPlanTransactions()
+  }
+
+  useEffect(() => {
+    if (planId) {
+      setFilterValue(planId)
+      loadPlanTransactions()
+      setFiltering(true)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  if (error && !data) return <CenteredContent>{formatError(error.message)}</CenteredContent>
+
   return (
     <div>
-      {transData?.userTransactions?.length > 0 ? (
+      {filtering && loading ? <Spinner /> : (data?.userTransactions?.length > 0 || transData?.userTransactions?.length > 0) ? (
         <div className={classes.paymentList}>
           <div style={{ display: 'flex', width: '100%', justifyContent: 'space-between', marginBottom: '10px' }}>
             <Typography className={classes.payment} data-testid='header'>Transactions</Typography>
-            {
-                  user.userType === 'admin' && (
-                  <ButtonComponent variant='outlined' buttonText="View all Plans" handleClick={() => history.push('?tab=Plans')} />
-                  )
-                }
+            <ButtonComponent 
+              variant='outlined' 
+              color='default' 
+              buttonText="View all Plans" 
+              handleClick={() => history.push('?tab=Plans')}
+              size='small' 
+            />
+          </div>
+          <div style={{display: 'flex', margin: '-20px 0 10px 0'}}>
+            <Typography className={classes.display} data-testid='header'>Displaying results for</Typography>
+            <TextField
+              color='primary'
+              margin="normal"
+              id="transaction-filter"
+              inputProps={{ 'data-testid': 'transaction-filter' }}
+              value={filterValue}
+              onChange={event => handleSelecMenu(event)}
+              required
+              select
+            >
+              <MenuItem value="all">All</MenuItem>
+              {planData?.map(plan => (
+                <MenuItem value={plan.id} key={plan.id}>
+                  {dateToString(plan.startDate)}
+                  {' '}
+                  {plan.landParcel.parcelNumber}
+                </MenuItem>
+              ))}
+            </TextField>
           </div>
           {matches && <ListHeader headers={transactionHeader} color />}
-          {
+          {filtering && Boolean(data?.userTransactions?.length) ? (
+            data.userTransactions.map((trans) => (
+              <div key={trans.id}>
+                <UserTransactionsList 
+                  transaction={trans}
+                  currencyData={currencyData}
+                  userData={userData}
+                  userType={user.userType}
+                  refetch={refetch}
+                  balanceRefetch={balanceRefetch}
+                />
+              </div>
+            ))
+          ) : filtering && data?.userTransactions?.length === 0 ? (
+            <CenteredContent>No Transaction Available for this Plan</CenteredContent>
+          ) : (
             transData.userTransactions.map((trans) => (
               <div key={trans.id}>
                 <UserTransactionsList 
@@ -73,20 +145,22 @@ export default function TransactionsList({ user, userData, transData, refetch, b
                 />
               </div>
             ))
-          }
+          )}
         </div>
         ) : (
           <CenteredContent>No Transaction Available</CenteredContent>
         )}
-      <CenteredContent>
-        <Paginate
-          offSet={offset}
-          limit={limit}
-          active={offset >= 1}
-          handlePageChange={paginate}
-          count={transData?.userTransactions?.length}
-        />
-      </CenteredContent>
+      {filtering && Boolean(data?.userTransactions?.length) && (
+        <CenteredContent>
+          <Paginate
+            offSet={offset}
+            limit={limit}
+            active={offset >= 1}
+            handlePageChange={paginate}
+            count={transData?.userTransactions?.length}
+          />
+        </CenteredContent>
+      )}
     </div>
   )
 }
@@ -112,6 +186,12 @@ const useStyles = makeStyles({
     right: 57,
     marginLeft: '30%',
     zIndex: '1000'
+  },
+  display: {
+    margin: '20px 10px 0 0',
+    fontSize: '16px',
+    fontWeight: 500,
+    color: '#313131'
   }
 });
 
@@ -123,6 +203,8 @@ TransactionsList.defaultProps = {
 TransactionsList.propTypes = {
   userData: PropTypes.object,
   transData: PropTypes.object,
+  setFiltering: PropTypes.func.isRequired,
+  filtering: PropTypes.bool.isRequired,
   user: PropTypes.shape({
     id: PropTypes.string,
     userType: PropTypes.string,
@@ -134,5 +216,13 @@ TransactionsList.propTypes = {
     }).isRequired
   }).isRequired,
   refetch: PropTypes.func.isRequired,
-  balanceRefetch: PropTypes.func.isRequired
+  userId: PropTypes.string.isRequired,
+  balanceRefetch: PropTypes.func.isRequired,
+  planData: PropTypes.arrayOf(PropTypes.shape({
+    id: PropTypes.string,
+    startDate: PropTypes.string,
+    landParcel: PropTypes.shape({
+      parcelNumber: PropTypes.string 
+    })
+  })).isRequired
 }

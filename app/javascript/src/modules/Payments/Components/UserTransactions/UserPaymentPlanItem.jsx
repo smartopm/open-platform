@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { useMutation, useLazyQuery } from 'react-apollo';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
+import { useHistory } from 'react-router-dom';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import {
   Grid,
@@ -47,10 +48,12 @@ export default function UserPaymentPlanItem({
   balanceRefetch
 }) {
   const classes = useStyles();
+  const history = useHistory();
   const [anchorEl, setAnchorEl] = useState(null);
   const [anchor, setAnchor] = useState(null);
   const [planAnchor, setPlanAnchor] = useState(null);
   const [transactionId, setTransactionId] = useState('');
+  const [plannId, setPlannId] = useState('');
   const [landParcelId, setLandParcelId] = useState('');
   const [receiptOpen, setReceiptOpen] = useState(false);
   const [statementOpen, setStatementOpen] = useState(false);
@@ -100,6 +103,7 @@ export default function UserPaymentPlanItem({
 
   const planMenuList = [
     { content: 'View Statement', isAdmin: true, handleClick: (event) => handlePlanClick(event)},
+    { content: 'View Transactions', isAdmin: true, handleClick: (event) => handleTransactionClick(event)}
   ]
 
   const handleClose = () => {
@@ -126,16 +130,22 @@ export default function UserPaymentPlanItem({
     setPlanAnchor(null)
   }
 
+  function handleTransactionClick(event) {
+    event.stopPropagation()
+    history.push(`?tab=Plans&subtab=Transactions&id=${plannId}`)
+  }
+
   function handleTransactionMenu(event, payId){
     event.stopPropagation()
     setAnchor(event.currentTarget)
     setTransactionId(payId)
   }
 
-  function handlePlanMenu(event, parcelId){
+  function handlePlanMenu(event, plan){
     event.stopPropagation()
     setPlanAnchor(event.currentTarget)
-    setLandParcelId(parcelId)
+    setLandParcelId(plan.landParcel.id)
+    setPlannId(plan.id)
   }
 
   function handlePlanListClose(event) {
@@ -351,7 +361,7 @@ export function renderPlan(plan, currencyData, userType, { handleMenu, loading }
           aria-controls="simple-menu"
           aria-haspopup="true"
           data-testid="plan-menu"
-          onClick={(event) => menuData.handlePlanMenu(event, plan?.landParcel?.id)}
+          onClick={(event) => menuData.handlePlanMenu(event, plan)}
         >
           <MoreHorizOutlined />
         </IconButton>

@@ -31,12 +31,14 @@ export default function PaymentPlans({ userId, user, userData }) {
   const history = useHistory();
   const path = useParamsQuery()
   const subtab = path.get('subtab')
+  const id = path.get('id')
   const classes = useStyles();
   const limit = 10
   const page = path.get('page')
   const theme = useTheme();
   const matches = useMediaQuery(theme.breakpoints.up('sm'));
   const [offset, setOffset] = useState(Number(page) || 0)
+  const [filtering, setFiltering] = useState(false)
   const [loadPlans, { loading, error, data, refetch }] = useLazyQuery(UserPlans, {
     variables: { userId, limit, offset },
     fetchPolicy: 'no-cache',
@@ -68,6 +70,11 @@ export default function PaymentPlans({ userId, user, userData }) {
     }
   }
 
+  function handleButtonClick(){
+    history.push('?tab=Plans&subtab=Transactions')
+    setFiltering(false)
+  }
+
   useEffect(() => {
     loadTransactions()
     loadPlans()
@@ -94,14 +101,30 @@ export default function PaymentPlans({ userId, user, userData }) {
       )}
       {subtab === 'Transactions' ? (
         transLoading ? <Spinner /> : (
-          <Transactions
-            userId={userId}
-            user={user}
-            userData={userData}
-            transData={transData}
-            refetch={transRefetch}
-            balanceRefetch={balanceRefetch}
-          />
+          <>
+            <Transactions
+              userId={userId}
+              user={user}
+              userData={userData}
+              transData={transData}
+              refetch={transRefetch}
+              balanceRefetch={balanceRefetch}
+              planData={data?.userPlansWithPayments}
+              filtering={filtering}
+              setFiltering={setFiltering}
+            />
+            {!id && filtering === false && (
+              <CenteredContent>
+                <Paginate
+                  offSet={offset}
+                  limit={limit}
+                  active={offset >= 1}
+                  handlePageChange={paginate}
+                  count={transData?.userTransactions?.length}
+                />
+              </CenteredContent>
+            )}
+          </>
         )
       ) : loading ? <Spinner /> : (
         data?.userPlansWithPayments?.length > 0 ? (
@@ -109,11 +132,13 @@ export default function PaymentPlans({ userId, user, userData }) {
             <div>
               <div style={{ display: 'flex', width: '100%', justifyContent: 'space-between', marginBottom: '10px' }}>
                 <Typography className={classes.plan}>Plans</Typography>
-                {
-                  user.userType === 'admin' && (
-                  <ButtonComponent variant='outlined' buttonText="View all Transactions" handleClick={() => history.push('?tab=Plans&subtab=Transactions')} />
-                  )
-                }
+                <ButtonComponent 
+                  color='default' 
+                  variant='outlined' 
+                  buttonText="View all Transactions" 
+                  handleClick={() => handleButtonClick()}
+                  size='small'
+                />
               </div>
               {matches && <ListHeader headers={planHeader} color />}
             </div>
