@@ -71,7 +71,7 @@ export function UserPrintDetail({ data }) {
           </div>
           <div className="d-flex justify-content-center">
             <div className="expires">
-              Exp:
+              Exp: 
               {' '}
               {expiresAtStr(data.user.expiresAt)}
             </div>
