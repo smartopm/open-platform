@@ -116,7 +116,6 @@ export default function FormLinkList({ userType, community }) {
           >
             <DateAndTimePickers
               label="Form Expiry Date"
-              required
               selectedDateTime={expiresAt}
               handleDateChange={handleDateChange}
               pastDate
