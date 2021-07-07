@@ -7,6 +7,7 @@ import '@testing-library/jest-dom/extend-expect'
 import Loading from '../../shared/Loading'
 import FormLinkList from '../../components/Forms/FormList'
 import { FormsQuery } from '../../graphql/queries'
+import userMock from '../../__mocks__/userMock'
 
 describe('Form List Component', () => {
   it('should render form without error', async () => {
@@ -39,7 +40,7 @@ describe('Form List Component', () => {
       <MockedProvider mocks={[mocks]} addTypename={false}>
         <BrowserRouter>
           <ThemeProvider theme={theme}>
-            <FormLinkList userType="admin" />
+            <FormLinkList userType="admin" community={userMock.user.community} />
           </ThemeProvider>
         </BrowserRouter>
       </MockedProvider>
