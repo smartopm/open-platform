@@ -23,7 +23,7 @@ module Mutations
             id: vals[:id],
             community_id: context[:site_community].id,
           )
-          update_prev_log(vals[:event_log_id])
+          update_prev_log(vals[:event_log_id], vals[:note])
 
           evt = context[:current_user].generate_events('observation_log', log, note: vals[:note])
           raise GraphQL::ExecutionError, evt.errors.full_messages if evt.blank?
@@ -36,7 +36,7 @@ module Mutations
 
       def update_prev_log(event_id, note)
         return unless note.eql?('Exited')
-        
+
         event = context[:site_community].event_logs.find_by(id: event_id)
         return if event.nil?
 
