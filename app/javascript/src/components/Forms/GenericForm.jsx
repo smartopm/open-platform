@@ -163,7 +163,7 @@ export default function GenericForm({ formId, pathname, formData, refetch, editM
         setAlertOpen(true)
       })
       .catch(err => {
-        setMessage({ ...message, err: true, info: err.message })
+        setMessage({ ...message, err: true, info: err.message.replace(/GraphQL error:/, "") })
         setSubmitting(false)
         setAlertOpen(true)
       })

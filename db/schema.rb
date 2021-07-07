@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_06_25_124828) do
+ActiveRecord::Schema.define(version: 2021_07_07_133026) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -313,7 +313,6 @@ ActiveRecord::Schema.define(version: 2021_06_25_124828) do
     t.uuid "status_updated_by_id"
     t.index ["form_id"], name: "index_form_users_on_form_id"
     t.index ["status_updated_by_id"], name: "index_form_users_on_status_updated_by_id"
-    t.index ["user_id", "form_id"], name: "index_form_users_on_user_id_and_form_id", unique: true
     t.index ["user_id"], name: "index_form_users_on_user_id"
   end
 
@@ -325,6 +324,7 @@ ActiveRecord::Schema.define(version: 2021_06_25_124828) do
     t.datetime "updated_at", precision: 6, null: false
     t.integer "status", default: 0
     t.text "description"
+    t.boolean "multiple_submissions_allowed", default: false
     t.index ["community_id"], name: "index_forms_on_community_id"
     t.index ["name"], name: "index_forms_on_name", unique: true
   end

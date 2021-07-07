@@ -11,5 +11,6 @@ module Types
     field :expires_at, GraphQL::Types::ISO8601DateTime, null: false
     field :created_at, GraphQL::Types::ISO8601DateTime, null: false
     field :updated_at, GraphQL::Types::ISO8601DateTime, null: false
+    field :multiple_submissions_allowed, Boolean, null: false
   end
 end

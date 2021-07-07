@@ -15,6 +15,8 @@ import {
   IconButton,
   MenuItem,
   Menu,
+  FormControlLabel,
+  Checkbox
 } from '@material-ui/core'
 import MoreVertIcon from '@material-ui/icons/MoreVert'
 import AssignmentIcon from '@material-ui/icons/Assignment'
@@ -51,6 +53,7 @@ export default function FormLinkList({ userType, community }) {
   const fullScreen = useMediaQuery(theme.breakpoints.down('xs'))
   const [anchorEl, setAnchorEl] = useState(null)
   const [formId, setFormId] = useState("")
+  const [multipleSubmissionsAllowed, setMultipleSubmissionsAllowed] = useState(false)
 
   const menuOpen = Boolean(anchorEl)
 
@@ -61,7 +64,7 @@ export default function FormLinkList({ userType, community }) {
   }
   function submitForm(title, description) {
     createForm({
-      variables: { name: title, expiresAt, description }
+      variables: { name: title, expiresAt, description, multipleSubmissionsAllowed }
     })
       .then(() => {
         setMessage('Form created')
@@ -70,6 +73,7 @@ export default function FormLinkList({ userType, community }) {
           updateList()
         }, 1000)
         setOpen(!open)
+        setMultipleSubmissionsAllowed(false)
       })
       .catch(err => {
         setLoading(false)
@@ -114,6 +118,16 @@ export default function FormLinkList({ userType, community }) {
               msg: message
             }}
           >
+            <FormControlLabel
+              control={(
+                <Checkbox
+                  checked={multipleSubmissionsAllowed}
+                  onChange={event => {setMultipleSubmissionsAllowed(event.target.checked)}}
+                  color="primary"
+                />
+          )}
+              label="Allow multiple submissions"
+            />
             <DateAndTimePickers
               label="Form Expiry Date"
               required

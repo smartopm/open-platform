@@ -29,6 +29,10 @@ RSpec.describe Forms::Form, type: :model do
     it { is_expected.to have_db_column(:expires_at).of_type(:datetime) }
     it { is_expected.to have_db_column(:created_at).of_type(:datetime) }
     it { is_expected.to have_db_column(:updated_at).of_type(:datetime) }
+    it {
+      is_expected.to have_db_column(:multiple_submissions_allowed).of_type(:boolean)
+                                                                  .with_options(default: false)
+    }
   end
 
   describe 'associations' do

@@ -37,14 +37,16 @@ module Mutations
       end
 
       def create_form_user(form, vals)
+        unless form.multiple_submissions_allowed
+          raise_multiple_submissions_error(form, vals[:user_id])
+        end
+
         form_user = form.form_users.new(vals.except(:form_id, :prop_values)
                                             .merge(status: 'pending'))
         ActiveRecord::Base.transaction do
           return add_user_form_properties(form_user, vals) if form_user.save
 
           raise GraphQL::ExecutionError, form_user.errors.full_messages
-        rescue ActiveRecord::RecordNotUnique
-          { error: I18n.t('errors.duplicate.submission') }
         end
       end
 
@@ -75,6 +77,18 @@ module Mutations
 
         raise GraphQL::ExecutionError,
               I18n.t('errors.form.not_found')
+      end
+
+      # Raises GraphQL execution error if form is already submitted once by the user
+      #
+      # @param form [Forms::Form]
+      # @param user_id [String] User#ids
+      #
+      # @return [GraphQL::ExecutionError]
+      def raise_multiple_submissions_error(form, user_id)
+        return unless form.form_users.exists?(user_id: user_id)
+
+        raise GraphQL::ExecutionError, I18n.t('errors.submission.already_made')
       end
     end
   end

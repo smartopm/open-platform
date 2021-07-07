@@ -24,32 +24,84 @@ RSpec.describe Mutations::Form::FormUserCreate do
         }
       GQL
     end
-    it 'creates a form ' do
-      values = {
-        user_form_properties: [
-          {
-            form_property_id: form_property.id,
-            value: 'something new',
-          },
-        ],
-      }
-      variables = {
-        formId: form.id,
-        userId: current_user.id,
-        propValues: values.to_json,
-      }
 
-      expect(current_user.notes.count).to eql 0
-      result = DoubleGdpSchema.execute(mutation, variables: variables,
-                                                 context: {
-                                                   current_user: admin,
-                                                   site_community: current_user.community,
-                                                 }).as_json
+    context 'when multiple requests is not allowed in form' do
+      it 'creates a form user and raises error if another form submission is made' do
+        values = {
+          user_form_properties: [
+            {
+              form_property_id: form_property.id,
+              value: 'something new',
+            },
+          ],
+        }
+        variables = {
+          formId: form.id,
+          userId: current_user.id,
+          propValues: values.to_json,
+        }
 
-      expect(result.dig('data', 'formUserCreate', 'formUser', 'id')).not_to be_nil
-      expect(result.dig('data', 'formUserCreate', 'formUser', 'form', 'id')).to eql form.id
-      expect(current_user.notes.count).to eql 1
-      expect(result['errors']).to be_nil
+        expect(current_user.notes.count).to eql 0
+        first_result = DoubleGdpSchema.execute(mutation, variables: variables,
+                                                         context: {
+                                                           current_user: admin,
+                                                           site_community: current_user.community,
+                                                         }).as_json
+
+        expect(first_result.dig('data', 'formUserCreate', 'formUser', 'id')).not_to be_nil
+        expect(first_result.dig('data', 'formUserCreate', 'formUser', 'form', 'id')).to eql form.id
+        expect(current_user.notes.count).to eql 1
+        expect(first_result['errors']).to be_nil
+
+        second_result = DoubleGdpSchema.execute(mutation, variables: variables,
+                                                          context: {
+                                                            current_user: admin,
+                                                            site_community: current_user.community,
+                                                          }).as_json
+        expect(second_result.dig('errors', 0, 'message'))
+          .to eql 'You have already submitted the form once'
+      end
+    end
+
+    context 'when multiple requests is allowed in form' do
+      before { form.update(multiple_submissions_allowed: true) }
+      it 'allows creation of multiple form users' do
+        values = {
+          user_form_properties: [
+            {
+              form_property_id: form_property.id,
+              value: 'something new',
+            },
+          ],
+        }
+        variables = {
+          formId: form.id,
+          userId: current_user.id,
+          propValues: values.to_json,
+        }
+
+        expect(current_user.notes.count).to eql 0
+        first_result = DoubleGdpSchema.execute(mutation, variables: variables,
+                                                         context: {
+                                                           current_user: admin,
+                                                           site_community: current_user.community,
+                                                         }).as_json
+
+        expect(first_result.dig('data', 'formUserCreate', 'formUser', 'id')).not_to be_nil
+        expect(first_result.dig('data', 'formUserCreate', 'formUser', 'form', 'id')).to eql form.id
+        expect(current_user.notes.count).to eql 1
+        expect(first_result['errors']).to be_nil
+
+        second_result = DoubleGdpSchema.execute(mutation, variables: variables,
+                                                          context: {
+                                                            current_user: admin,
+                                                            site_community: current_user.community,
+                                                          }).as_json
+        expect(second_result.dig('data', 'formUserCreate', 'formUser', 'id')).not_to be_nil
+        expect(second_result.dig('data', 'formUserCreate', 'formUser', 'form', 'id')).to eql form.id
+        expect(current_user.notes.count).to eql 2
+        expect(second_result['errors']).to be_nil
+      end
     end
 
     it 'should err when form not provided' do
