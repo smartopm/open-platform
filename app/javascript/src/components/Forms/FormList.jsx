@@ -35,7 +35,7 @@ import { formStatus } from '../../utils/constants'
 import { ActionDialog } from '../Dialog'
 import MessageAlert from '../MessageAlert'
 import FloatButton from '../FloatButton'
-import { propAccessor } from '../../utils/helpers'
+import { propAccessor, formatError } from '../../utils/helpers'
 
 // here we get existing google forms and we mix them with our own created forms
 export default function FormLinkList({ userType, community }) {
@@ -73,7 +73,7 @@ export default function FormLinkList({ userType, community }) {
       })
       .catch(err => {
         setLoading(false)
-        setMessage(err.message)
+        setMessage(formatError(err.message))
       })
   }
 
