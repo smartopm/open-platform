@@ -60,26 +60,20 @@ export default function FormLinkList({ userType, community }) {
     setFormId(id)
   }
   function submitForm(title, description) {
+    setLoading(true)
     createForm({
       variables: { name: title, expiresAt, description }
     })
       .then(() => {
         setMessage('Form created')
+        refetch()
         setLoading(false)
-        setTimeout(() => {
-          updateList()
-        }, 1000)
         setOpen(!open)
       })
       .catch(err => {
         setLoading(false)
         setMessage(formatError(err.message))
       })
-  }
-
-  function updateList() {
-    refetch()
-    setOpen(!open)
   }
 
   function handleDateChange(date) {
@@ -106,7 +100,7 @@ export default function FormLinkList({ userType, community }) {
         </DialogTitle>
         <DialogContent>
           <TitleDescriptionForm
-            close={updateList}
+            close={() => setOpen(false)}
             type="form"
             save={submitForm}
             data={{

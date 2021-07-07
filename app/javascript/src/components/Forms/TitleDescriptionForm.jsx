@@ -1,18 +1,19 @@
 /* eslint-disable no-use-before-define */
-import React, { useState } from 'react'
-import { StyleSheet, css } from 'aphrodite'
-import { Button, TextField, Snackbar } from '@material-ui/core'
-import PropTypes from 'prop-types'
-import { titleize } from '../../utils/helpers'
+import React, { useState } from 'react';
+import { StyleSheet, css } from 'aphrodite';
+import { Button, TextField, Snackbar } from '@material-ui/core';
+import PropTypes from 'prop-types';
+import { titleize } from '../../utils/helpers';
+import { Spinner } from '../../shared/Loading'
 
 export default function TitleDescriptionForm({ save, type, close, data, children }) {
-  const [title, setTitle] = useState('')
-  const [description, setDescription] = useState('')
-  const [open, setOpen] = useState(false)
+  const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
+  const [open, setOpen] = useState(false);
 
   function handleSubmit(e) {
-    e.preventDefault()
-    save(title, description)
+    e.preventDefault();
+    save(title, description);
   }
 
   return (
@@ -25,10 +26,7 @@ export default function TitleDescriptionForm({ save, type, close, data, children
         anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
         message={`${titleize(type)} successfully created`}
       />
-      <form
-        onSubmit={handleSubmit}
-        aria-label={`${type}-form`}
-      >
+      <form onSubmit={handleSubmit} aria-label={`${type}-form`}>
         <TextField
           name="title"
           label={`${titleize(type)} Title`}
@@ -38,10 +36,10 @@ export default function TitleDescriptionForm({ save, type, close, data, children
           value={title}
           margin="normal"
           inputProps={{
-            'aria-label': `${type}_title`
+            'aria-label': `${type}_title`,
           }}
           InputLabelProps={{
-            shrink: true
+            shrink: true,
           }}
           required
         />
@@ -56,50 +54,48 @@ export default function TitleDescriptionForm({ save, type, close, data, children
           rows={3}
           margin="normal"
           inputProps={{
-            'aria-label': `${type}_description`
+            'aria-label': `${type}_description`,
           }}
           InputLabelProps={{
-            shrink: true
+            shrink: true,
           }}
           required
         />
-        {
-          children
-        }
+        {children}
         <br />
-        <div className="d-flex row justify-content-center">
-          <Button
-            variant="contained"
-            aria-label={`${type}_cancel`}
-            color="secondary"
-            onClick={close}
-            className={`${css(discussStyles.cancelBtn)}`}
-          >
-            Cancel
-          </Button>
-          <Button
-            variant="contained"
-            type="submit"
-            color="primary"
-            disabled={data.loading}
-            aria-label={`${type}_submit`}
-            className={`${css(discussStyles.submitBtn)}`}
-          >
-            {data.loading ? 'Submitting ...' : 'Submit'}
-          </Button>
-        </div>
+        {data.loading ?  <Spinner /> : (
+          <div className="d-flex row justify-content-center">
+            <Button
+              variant="contained"
+              aria-label={`${type}_cancel`}
+              color="secondary"
+              onClick={close}
+              className={`${css(discussStyles.cancelBtn)}`}
+            >
+              Cancel
+            </Button>
+            <Button
+              variant="contained"
+              type="submit"
+              color="primary"
+              disabled={data.loading}
+              aria-label={`${type}_submit`}
+              className={`${css(discussStyles.submitBtn)}`}
+            >
+              Submit
+            </Button>
+          </div>
+        )}
         <br />
-        <p className="text-center">
-          {Boolean(data.msg.length) && data.msg}
-        </p>
+        <p className="text-center">{Boolean(data.msg.length) && data.msg}</p>
       </form>
     </div>
-  )
+  );
 }
 
 TitleDescriptionForm.defaultProps = {
-  children: <span />
-}
+  children: <span />,
+};
 
 TitleDescriptionForm.propTypes = {
   close: PropTypes.func.isRequired,
@@ -107,10 +103,10 @@ TitleDescriptionForm.propTypes = {
   children: PropTypes.node,
   type: PropTypes.string.isRequired,
   data: PropTypes.shape({
-      loading: PropTypes.bool,
-      msg: PropTypes.string
-  }).isRequired
-}
+    loading: PropTypes.bool,
+    msg: PropTypes.string,
+  }).isRequired,
+};
 
 export const discussStyles = StyleSheet.create({
   submitBtn: {
@@ -119,8 +115,8 @@ export const discussStyles = StyleSheet.create({
     marginTop: 50,
     alignItems: 'center',
     ':hover': {
-      color: '#FFFFFF'
-    }
+      color: '#FFFFFF',
+    },
   },
   cancelBtn: {
     width: '30%',
@@ -128,7 +124,7 @@ export const discussStyles = StyleSheet.create({
     marginTop: 50,
     alignItems: 'center',
     ':hover': {
-      color: '#FFFFFF'
-    }
-  }
-})
+      color: '#FFFFFF',
+    },
+  },
+});
