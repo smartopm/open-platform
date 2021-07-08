@@ -183,7 +183,7 @@ export function IndexComponent({
     setDetails({ ...observationDetails, loading: true });
     const exitNote = 'Exited';
     addObservationNote({
-      variables: { note: observationNote || exitNote, id: log.refId, refType: log.refType }
+      variables: { note: observationNote || exitNote, id: log.refId, refType: log.refType, eventLogId: log.id }
     })
       .then(() => {
         setDetails({
@@ -335,7 +335,7 @@ export function IndexComponent({
                     {t('logbook.add_observation')}
                   </Typography>{' '}
                   |{' '}
-                  {!event.hasExited && (
+                  {!event.data.exited && (
                     <Typography
                       component="span"
                       color="primary"
