@@ -110,12 +110,14 @@ export default function FormLinkList({ userType, community }) {
               msg: message
             }}
           >
-            <SwitchInput
-              name="multipleSubmissionsAllowed"
-              label="Limit to 1 response"
-              value={!multipleSubmissionsAllowed}
-              handleChange={event => {setMultipleSubmissionsAllowed(!event.target.checked)}}
-            />
+            <div style={{marginLeft : '-15px'}}>
+              <SwitchInput
+                name="multipleSubmissionsAllowed"
+                label="Limit to 1 response"
+                value={!multipleSubmissionsAllowed}
+                handleChange={event => {setMultipleSubmissionsAllowed(!event.target.checked)}}
+              />
+            </div>
             <DateAndTimePickers
               label="Form Expiry Date"
               selectedDateTime={expiresAt}
