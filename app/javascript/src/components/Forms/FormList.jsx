@@ -14,7 +14,7 @@ import {
   Grid,
   IconButton,
   MenuItem,
-  Menu,
+  Menu
 } from '@material-ui/core'
 import MoreVertIcon from '@material-ui/icons/MoreVert'
 import AssignmentIcon from '@material-ui/icons/Assignment'
@@ -36,7 +36,7 @@ import { ActionDialog } from '../Dialog'
 import MessageAlert from '../MessageAlert'
 import FloatButton from '../FloatButton'
 import { propAccessor, formatError } from '../../utils/helpers'
-
+import SwitchInput from './SwitchInput'
 // here we get existing google forms and we mix them with our own created forms
 export default function FormLinkList({ userType, community }) {
   const { data, error, loading, refetch } = useQuery(FormsQuery)
@@ -51,6 +51,7 @@ export default function FormLinkList({ userType, community }) {
   const fullScreen = useMediaQuery(theme.breakpoints.down('xs'))
   const [anchorEl, setAnchorEl] = useState(null)
   const [formId, setFormId] = useState("")
+  const [multipleSubmissionsAllowed, setMultipleSubmissionsAllowed] = useState(true)
 
   const menuOpen = Boolean(anchorEl)
 
@@ -62,13 +63,14 @@ export default function FormLinkList({ userType, community }) {
   function submitForm(title, description) {
     setLoading(true)
     createForm({
-      variables: { name: title, expiresAt, description }
+      variables: { name: title, expiresAt, description, multipleSubmissionsAllowed }
     })
       .then(() => {
         setMessage('Form created')
         refetch()
         setLoading(false)
         setOpen(!open)
+        setMultipleSubmissionsAllowed(true)
       })
       .catch(err => {
         setLoading(false)
@@ -108,6 +110,14 @@ export default function FormLinkList({ userType, community }) {
               msg: message
             }}
           >
+            <div style={{marginLeft : '-15px'}}>
+              <SwitchInput
+                name="multipleSubmissionsAllowed"
+                label="Limit to 1 response"
+                value={!multipleSubmissionsAllowed}
+                handleChange={event => {setMultipleSubmissionsAllowed(!event.target.checked)}}
+              />
+            </div>
             <DateAndTimePickers
               label="Form Expiry Date"
               selectedDateTime={expiresAt}

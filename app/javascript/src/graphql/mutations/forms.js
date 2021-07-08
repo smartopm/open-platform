@@ -28,8 +28,8 @@ export const FormPropertyCreateMutation = gql`
 `
 
 export const FormCreateMutation = gql`
-  mutation  formCreate($name: String!, $expiresAt: String, $description: String) {
-    formCreate(name: $name, expiresAt:$expiresAt, description: $description){
+  mutation  formCreate($name: String!, $expiresAt: String!, $description: String, $multipleSubmissionsAllowed: Boolean!) {
+    formCreate(name: $name, expiresAt:$expiresAt, description: $description, multipleSubmissionsAllowed: $multipleSubmissionsAllowed      ){
       form {
         id
       }

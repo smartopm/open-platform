@@ -303,6 +303,8 @@ en:
     substatus_log:
       date_must_be_greater: Date can't be less than previous log's start date
       not_found: Substatus log Not found
+    submission:
+        already_made: You've already responded to this form. You can only fill out this form once. Please contact the support team if this is an error
     transaction:
       not_found: Transaction not found
       amount_not_sufficient: Unallocated amount is not sufficient for the payment
