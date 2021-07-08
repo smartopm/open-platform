@@ -14,9 +14,7 @@ import {
   Grid,
   IconButton,
   MenuItem,
-  Menu,
-  FormControlLabel,
-  Checkbox
+  Menu
 } from '@material-ui/core'
 import MoreVertIcon from '@material-ui/icons/MoreVert'
 import AssignmentIcon from '@material-ui/icons/Assignment'
@@ -38,7 +36,7 @@ import { ActionDialog } from '../Dialog'
 import MessageAlert from '../MessageAlert'
 import FloatButton from '../FloatButton'
 import { propAccessor } from '../../utils/helpers'
-
+import SwitchInput from './SwitchInput'
 // here we get existing google forms and we mix them with our own created forms
 export default function FormLinkList({ userType, community }) {
   const { data, error, loading, refetch } = useQuery(FormsQuery)
@@ -53,7 +51,7 @@ export default function FormLinkList({ userType, community }) {
   const fullScreen = useMediaQuery(theme.breakpoints.down('xs'))
   const [anchorEl, setAnchorEl] = useState(null)
   const [formId, setFormId] = useState("")
-  const [multipleSubmissionsAllowed, setMultipleSubmissionsAllowed] = useState(false)
+  const [multipleSubmissionsAllowed, setMultipleSubmissionsAllowed] = useState(true)
 
   const menuOpen = Boolean(anchorEl)
 
@@ -73,7 +71,7 @@ export default function FormLinkList({ userType, community }) {
           updateList()
         }, 1000)
         setOpen(!open)
-        setMultipleSubmissionsAllowed(false)
+        setMultipleSubmissionsAllowed(true)
       })
       .catch(err => {
         setLoading(false)
@@ -118,15 +116,11 @@ export default function FormLinkList({ userType, community }) {
               msg: message
             }}
           >
-            <FormControlLabel
-              control={(
-                <Checkbox
-                  checked={multipleSubmissionsAllowed}
-                  onChange={event => {setMultipleSubmissionsAllowed(event.target.checked)}}
-                  color="primary"
-                />
-          )}
-              label="Allow multiple submissions"
+            <SwitchInput
+              name="multipleSubmissionsAllowed"
+              label="Limit to 1 response"
+              value={!multipleSubmissionsAllowed}
+              handleChange={event => {setMultipleSubmissionsAllowed(!event.target.checked)}}
             />
             <DateAndTimePickers
               label="Form Expiry Date"
