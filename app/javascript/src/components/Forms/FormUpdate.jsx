@@ -241,7 +241,18 @@ export default function FormUpdate({ formId, userId, authState }) {
           />
           <br />
         </Fragment>
-      )
+      ),
+      dropdown: (
+        <TextInput
+          id={formPropertiesData.formProperty.id}
+          key={formPropertiesData.formProperty.id}
+          properties={formPropertiesData.formProperty}
+          value={formPropertiesData.value}
+          handleValue={event => handleValueChange(event, formPropertiesData.formProperty.id)}
+          editable={editable}
+          name={formPropertiesData.formProperty.fieldName}
+        />
+      ),
     }
     return fields[formPropertiesData.formProperty.fieldType]
   }
