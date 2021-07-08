@@ -40,6 +40,10 @@ export default function UploadField({ detail, upload, editable, uploaded }) {
   )
 }
 
+UploadField.defaultProps = {
+  uploaded: false
+}
+
 UploadField.propTypes = {
   detail: PropTypes.shape({
     type: PropTypes.string,
@@ -47,5 +51,5 @@ UploadField.propTypes = {
   }).isRequired,
   upload: PropTypes.func.isRequired,
   editable: PropTypes.bool.isRequired,
-  uploaded: PropTypes.bool.isRequired
+  uploaded: PropTypes.bool
 }
