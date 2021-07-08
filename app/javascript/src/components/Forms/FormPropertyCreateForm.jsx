@@ -22,7 +22,8 @@ const initData = {
     radio: 'Radio',
     image: 'Image',
     signature: 'Signature',
-    date: 'Date'
+    date: 'Date',
+    dropdown: 'Dropdown'
   }
 
   
@@ -96,7 +97,7 @@ export default function FormPropertyCreateForm({ formId, refetch }){
           options={fieldTypes}
         />
         {
-          propertyData.fieldType === 'radio' && (
+          (propertyData.fieldType === 'radio' || propertyData.fieldType === 'dropdown') && (
             <FormOptionInput 
               label="Option"
               options={options}

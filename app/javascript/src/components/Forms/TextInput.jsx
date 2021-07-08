@@ -1,5 +1,5 @@
 import React from 'react'
-import { TextField } from '@material-ui/core'
+import { TextField, MenuItem } from '@material-ui/core'
 import PropTypes from 'prop-types'
 
 export default function TextInput({id, handleValue, properties, value, editable }) {
@@ -20,7 +20,18 @@ export default function TextInput({id, handleValue, properties, value, editable 
         }}
         required={properties.required}
         helperText={editable && 'for admins only'}
-      />
+        select={properties.fieldType === 'dropdown'}
+      >
+        { properties.fieldType === 'dropdown' &&
+         (
+           properties.fieldValue?.map(obj => (
+             <MenuItem key={obj.label} value={obj.value}>
+               {obj.value}
+             </MenuItem>
+           ))
+         )
+        }
+      </TextField>
     )
   }
 
@@ -29,6 +40,8 @@ TextInput.propTypes = {
       properties: PropTypes.shape({
           fieldName: PropTypes.string,
           required: PropTypes.bool,
+          fieldType: PropTypes.string,
+          fieldValue: PropTypes.string,
       }).isRequired,
       // eslint-disable-next-line react/require-default-props
       value: PropTypes.oneOfType([PropTypes.string, PropTypes.bool, PropTypes.number]),

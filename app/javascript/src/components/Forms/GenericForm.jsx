@@ -279,6 +279,28 @@ export default function GenericForm({ formId, pathname, formData, refetch, editM
             </Fragment>
           </Grid>
         </Grid>
+      ),
+      dropdown: (
+        <Grid container spacing={3} key={formPropertiesData.id}>
+          {
+          editMode && (
+            <Grid item xs={1}>
+              <IconButton style={{ float: 'left', marginTop: 10 }} onClick={() => handleDeleteProperty(formPropertiesData.id)}>
+                { isDeletingProperty  && currentPropId === formPropertiesData.id ? <Spinner /> : <DeleteOutlineIcon /> }
+              </IconButton>
+            </Grid>
+          )
+        }
+          <Grid item xs={editMode ? 11 : 12}>
+            <TextInput
+              id={formPropertiesData.id}
+              properties={formPropertiesData}
+              value=""
+              handleValue={event => handleValueChange(event, formPropertiesData.id)}
+              editable={editable}
+            />
+          </Grid>
+        </Grid>
       )
     }
     return fields[formPropertiesData.fieldType]

@@ -41,6 +41,7 @@ FormPropertySelector.propTypes = {
     radio: PropTypes.string,
     image: PropTypes.string,
     signature: PropTypes.string,
-    date: PropTypes.string
+    date: PropTypes.string,
+    dropdown: PropTypes.string
   }).isRequired
 }

@@ -10,7 +10,8 @@ describe('Form property selector component', () => {
         radio: 'Radio',
         image: 'Image',
         signature: 'Signature',
-        date: 'Date'
+        date: 'Date',
+        dropdown: 'Dropdown'
       }
 
     const container = render(
@@ -22,6 +23,17 @@ describe('Form property selector component', () => {
         options={fieldTypes}
       />
     )
-    expect(container.queryByText('Text')).toBeInTheDocument()
+    expect(container.queryByText('Text')).toBeInTheDocument();
+
+    const anotherContainer = render(
+      <FormPropertySelector
+        label="Field Type"
+        name="fieldType"
+        value="dropdown"
+        handleChange={jest.fn()}
+        options={fieldTypes}
+      />
+    )
+    expect(anotherContainer.queryByText('Dropdown')).toBeInTheDocument()
   })
 })
