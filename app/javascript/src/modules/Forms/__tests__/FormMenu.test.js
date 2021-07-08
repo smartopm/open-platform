@@ -3,7 +3,7 @@ import { fireEvent, render } from '@testing-library/react'
 import '@testing-library/jest-dom/extend-expect'
 import { BrowserRouter } from 'react-router-dom'
 import { MockedProvider } from '@apollo/react-testing'
-import { FormMenu } from '../../components/Forms/FormList'
+import { FormMenu } from '../components/FormList'
 
 describe('TextInput component', () => {
   it('should not break the text input', () => {

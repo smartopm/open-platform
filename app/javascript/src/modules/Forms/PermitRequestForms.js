@@ -1,6 +1,6 @@
 import React from 'react';
 import DescriptionIcon from '@material-ui/icons/Description';
-import CommunityForms from '../../containers/Forms/FormLinks';
+import CommunityForms from './containers/FormLinks';
 
 // This is a concept of a module that has different types like forms,
 // there are forms to be submitted page and forms that have been submitted already

@@ -5,19 +5,18 @@ import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
 import { useApolloClient, useMutation, useQuery } from 'react-apollo'
 import PropTypes from 'prop-types'
 import { Alert } from '@material-ui/lab';
-import DatePickerDialog from '../DatePickerDialog'
-import CenteredContent from '../CenteredContent'
-import { Context as AuthStateContext } from '../../containers/Provider/AuthStateProvider'
-import { FormUserCreateMutation } from '../../graphql/mutations'
-import { FormQuery } from '../../graphql/queries'
-import { useFileUpload } from '../../graphql/useFileUpload'
+import DatePickerDialog from '../../../components/DatePickerDialog'
+import CenteredContent from '../../../components/CenteredContent'
+import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider'
+import { FormUserCreateMutation, FormPropertyDeleteMutation } from '../graphql/forms_mutation'
+import { FormQuery } from '../graphql/forms_queries'
+import { useFileUpload } from '../../../graphql/useFileUpload'
 import TextInput from './TextInput'
 import UploadField from './UploadField'
 import SignaturePad from './SignaturePad'
-import { convertBase64ToFile, sortPropertyOrder } from '../../utils/helpers'
+import { convertBase64ToFile, sortPropertyOrder } from '../../../utils/helpers'
 import RadioInput from './RadioInput'
-import { FormPropertyDeleteMutation } from '../../graphql/mutations/forms';
-import { Spinner } from '../../shared/Loading';
+import { Spinner } from '../../../shared/Loading';
 import FormTitle from './FormTitle'
 
 // date

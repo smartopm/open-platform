@@ -1,6 +1,6 @@
 import React from 'react';
 import { useParams } from 'react-router';
-import FormBuilder from '../../components/Forms/FormBuilder';
+import FormBuilder from '../components/FormBuilder';
 
 export default function FormBuilderPage() {
   const { formId } = useParams();

@@ -3,8 +3,8 @@ import React, { useState } from 'react';
 import { StyleSheet, css } from 'aphrodite';
 import { Button, TextField, Snackbar } from '@material-ui/core';
 import PropTypes from 'prop-types';
-import { titleize } from '../../utils/helpers';
-import { Spinner } from '../../shared/Loading'
+import { titleize } from '../../../utils/helpers';
+import { Spinner } from '../../../shared/Loading'
 
 export default function TitleDescriptionForm({ save, type, close, data, children }) {
   const [title, setTitle] = useState('');

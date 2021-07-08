@@ -5,17 +5,18 @@ import { Button, Container, Snackbar } from '@material-ui/core'
 import Icon from '@material-ui/core/Icon'
 import { Alert } from '@material-ui/lab'
 import { useMutation, useQuery } from 'react-apollo'
-import CenteredContent from '../CenteredContent'
+import CenteredContent from '../../../components/CenteredContent'
 import GenericForm from './GenericForm'
-import { AllEventLogsQuery, FormPropertiesQuery } from '../../graphql/queries'
-import { Spinner } from '../../shared/Loading'
+import { AllEventLogsQuery } from '../../../graphql/queries'
+import { FormPropertiesQuery } from '../graphql/forms_queries'
+import { Spinner } from '../../../shared/Loading'
 import FormPropertyCreateForm from './FormPropertyCreateForm'
-import { FormUpdateMutation } from '../../graphql/mutations/forms'
-import { formStatus } from '../../utils/constants'
-import Toggler from '../Campaign/ToggleButton'
-import FormTimeline from '../../shared/TimeLine'
-import { ActionDialog } from '../Dialog'
-import { formatError } from '../../utils/helpers'
+import { FormUpdateMutation } from '../graphql/forms_mutation'
+import { formStatus } from '../../../utils/constants'
+import Toggler from '../../../components/Campaign/ToggleButton'
+import FormTimeline from '../../../shared/TimeLine'
+import { ActionDialog } from '../../../components/Dialog'
+import { formatError } from '../../../utils/helpers'
 
 /**
  * @param {String} formId
@@ -76,7 +77,7 @@ export default function FormBuilder({ formId }) {
   }
   if (loading || formLogs.loading) return <Spinner />
   if (error || formLogs.error) return error?.message || formLogs?.error.message
-  
+
   return (
     <Container maxWidth="md">
       <ActionDialog

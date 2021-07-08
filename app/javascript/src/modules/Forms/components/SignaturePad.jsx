@@ -4,7 +4,7 @@ import React from 'react'
 import { makeStyles } from '@material-ui/styles'
 import Signature from "react-signature-canvas";
 import PropTypes from 'prop-types'
-import CenteredContent from '../CenteredContent';
+import CenteredContent from '../../../components/CenteredContent';
 
 
 const useStyles = makeStyles({

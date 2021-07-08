@@ -2,7 +2,7 @@ import React from 'react'
 import { render } from '@testing-library/react'
 import '@testing-library/jest-dom/extend-expect'
 import { MockedProvider } from '@apollo/react-testing'
-import FormPropertyCreateForm from '../../components/Forms/FormPropertyCreateForm'
+import FormPropertyCreateForm from '../components/FormPropertyCreateForm'
 
 describe('Form that creates other forms component', () => {
   it('it should render with no errors', () => {

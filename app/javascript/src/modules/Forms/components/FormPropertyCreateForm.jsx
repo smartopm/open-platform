@@ -2,8 +2,8 @@ import React, { useState } from 'react'
 import { useMutation } from 'react-apollo'
 import PropTypes from 'prop-types'
 import { Button, TextField } from '@material-ui/core'
-import { FormPropertyCreateMutation } from '../../graphql/mutations/forms'
-import CenteredContent from '../CenteredContent'
+import { FormPropertyCreateMutation } from '../graphql/forms_mutation'
+import CenteredContent from '../../../components/CenteredContent'
 import FormPropertySelector from './FormPropertySelector'
 import FormOptionInput from './FormOptionInput'
 import SwitchInput from './SwitchInput'
@@ -16,7 +16,7 @@ const initData = {
     order: '1',
     fieldValue: []
   }
-  
+
   const fieldTypes = {
     text: 'Text',
     radio: 'Radio',
@@ -25,13 +25,13 @@ const initData = {
     date: 'Date'
   }
 
-  
+
 export default function FormPropertyCreateForm({ formId, refetch }){
     const [propertyData, setProperty] = useState(initData)
     const [isLoading, setMutationLoading] = useState(false)
     const [options, setOptions] = useState([""])
     const [formPropertyCreate] = useMutation(FormPropertyCreateMutation)
-  
+
     function handlePropertyValueChange(event) {
       const { name, value } = event.target
       setProperty({
@@ -39,7 +39,7 @@ export default function FormPropertyCreateForm({ formId, refetch }){
         [name]: value
       })
     }
-  
+
     function handleRadioChange(event){
       const { name, checked } = event.target
       setProperty({
@@ -47,7 +47,7 @@ export default function FormPropertyCreateForm({ formId, refetch }){
         [name]: checked
       })
     }
-  
+
     function saveFormProperty(event){
       event.preventDefault()
       const nextOrder = Number(propertyData.order) + 1
@@ -73,7 +73,7 @@ export default function FormPropertyCreateForm({ formId, refetch }){
         setMutationLoading(false)
       })
     }
-  
+
     return (
       <form onSubmit={saveFormProperty}>
         <TextField
@@ -97,7 +97,7 @@ export default function FormPropertyCreateForm({ formId, refetch }){
         />
         {
           propertyData.fieldType === 'radio' && (
-            <FormOptionInput 
+            <FormOptionInput
               label="Option"
               options={options}
               setOptions={setOptions}
@@ -130,7 +130,7 @@ export default function FormPropertyCreateForm({ formId, refetch }){
         </div>
         <br />
         <CenteredContent>
-          <Button 
+          <Button
             variant="outlined"
             type="submit"
             disabled={isLoading}

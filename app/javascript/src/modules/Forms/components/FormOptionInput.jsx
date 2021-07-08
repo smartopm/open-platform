@@ -4,14 +4,14 @@ import { IconButton, TextField, Typography } from '@material-ui/core'
 import { AddCircleOutline, DeleteOutline } from '@material-ui/icons'
 import PhoneInput from 'react-phone-input-2'
 import { useTranslation } from 'react-i18next';
-import { propAccessor } from '../../utils/helpers'
+import { propAccessor } from '../../../utils/helpers'
 
 /**
- * 
+ *
  * @param {@description} this is for form fields that require separate inputs of same type
- * eg:  
+ * eg:
  * @example Phone Number => Phone Number 1, Phone Number 2
- */ 
+ */
 export default function FormOptionInput({ options, setOptions, label }) {
   const { t } = useTranslation('common');
   function handleOptionChange(event, index){
@@ -94,7 +94,7 @@ export default function FormOptionInput({ options, setOptions, label }) {
         ))
       }
       <IconButton onClick={handleAddOption} aria-label="add" style={{ marginLeft: -15 }}>
-        <AddCircleOutline /> 
+        <AddCircleOutline />
         <Typography color="primary" style={{ marginLeft: 10 }}>
           { `  Add ${label}` }
         </Typography>

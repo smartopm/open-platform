@@ -10,7 +10,7 @@ import {
 import PropTypes from 'prop-types'
 import { makeStyles } from '@material-ui/styles'
 import AssignmentIcon from '@material-ui/icons/Assignment'
-import { Context as AuthStateContext } from '../../containers/Provider/AuthStateProvider'
+import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider'
 
 // this is for existing google forms
 export default function FormLinks({ community }) {

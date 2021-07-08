@@ -4,22 +4,22 @@ import { Button, Container, TextField, Typography } from '@material-ui/core'
 import { useApolloClient, useMutation, useQuery } from 'react-apollo'
 import { useHistory } from 'react-router'
 import PropTypes from 'prop-types'
-import DatePickerDialog from '../DatePickerDialog'
-import { FormUserQuery, UserFormProperiesQuery } from '../../graphql/queries'
-import ErrorPage from '../Error'
-import CenteredContent from '../CenteredContent'
-import { FormUserStatusUpdateMutation, FormUserUpdateMutation } from '../../graphql/mutations'
+import DatePickerDialog from '../../../components/DatePickerDialog'
+import { FormUserQuery, UserFormProperiesQuery } from '../graphql/forms_queries'
+import ErrorPage from '../../../components/Error'
+import CenteredContent from '../../../components/CenteredContent'
+import { FormUserStatusUpdateMutation, FormUserUpdateMutation } from '../graphql/forms_mutation'
 import TextInput from './TextInput'
-import { convertBase64ToFile, sortPropertyOrder } from '../../utils/helpers'
-import DialogueBox from '../../shared/dialogs/DeleteDialogue'
+import { convertBase64ToFile, sortPropertyOrder } from '../../../utils/helpers'
+import DialogueBox from '../../../shared/dialogs/DeleteDialogue'
 import UploadField from './UploadField'
 import SignaturePad from './SignaturePad'
-import { useFileUpload } from '../../graphql/useFileUpload'
-import { dateFormatter } from '../DateContainer'
-import { formStatus as updatedFormStatus} from '../../utils/constants'
+import { useFileUpload } from '../../../graphql/useFileUpload'
+import { dateFormatter } from '../../../components/DateContainer'
+import { formStatus as updatedFormStatus} from '../../../utils/constants'
 import RadioInput from './RadioInput'
-import ImageAuth from '../../shared/ImageAuth'
-import Loading from '../../shared/Loading'
+import ImageAuth from '../../../shared/ImageAuth'
+import Loading from '../../../shared/Loading'
 import FormTitle from './FormTitle'
 
 // date
@@ -100,7 +100,7 @@ export default function FormUpdate({ formId, userId, authState }) {
       variables: {
         formId,
         userId,
-        status: formStatus 
+        status: formStatus
       }
     })
     .then(() => setMessage({ ...message, err: false, info: `The Form was successfully ${formStatus}` }))
@@ -110,11 +110,11 @@ export default function FormUpdate({ formId, userId, authState }) {
   function saveFormData(){
     const fileUploadType = data.formUserProperties.filter(item => item.formProperty.fieldType === 'image')[0]
     const fileSignType = data.formUserProperties.filter(item => item.formProperty.fieldType === 'signature')[0]
-    
+
     // get values from properties state
     const formattedProperties = Object.entries(properties).map(([, value]) => value)
     const filledInProperties = formattedProperties.filter(item => item.value && item.value?.checked !== null && item.form_property_id !== null)
-    
+
     // get signedBlobId as value and attach it to the form_property_id
     if (message.signed && signatureBlobId) {
       const newValue = { value: signatureBlobId, form_property_id: fileSignType.formProperty.id, image_blob_id: signatureBlobId }
@@ -167,8 +167,8 @@ export default function FormUpdate({ formId, userId, authState }) {
            break
       }
       setOpenModal(!openModal)
-      // wait a moment and route back where the user came from 
-      setTimeout(() => { 
+      // wait a moment and route back where the user came from
+      setTimeout(() => {
         setLoading(false)
         history.goBack()
       }, 2000)
@@ -205,7 +205,7 @@ export default function FormUpdate({ formId, userId, authState }) {
               <ImageAuth type={formPropertiesData.fileType?.split('/')[0]} imageLink={formPropertiesData.imageUrl} token={authState.token} />
             </>
           )}
-          <UploadField 
+          <UploadField
             detail={{ type: 'file', status }}
             key={formPropertiesData.id}
             upload={evt => onChange(evt.target.files[0])}
@@ -236,10 +236,10 @@ export default function FormUpdate({ formId, userId, authState }) {
         <Fragment key={formPropertiesData.formProperty.id}>
           <br />
           <br />
-          <RadioInput 
+          <RadioInput
             properties={formPropertiesData}
             value={properties.radio.value.checked}
-            handleValue={event => handleRadioValueChange(event, formPropertiesData.formProperty.id, formPropertiesData.formProperty.fieldName)} 
+            handleValue={event => handleRadioValueChange(event, formPropertiesData.formProperty.id, formPropertiesData.formProperty.fieldName)}
           />
           <br />
         </Fragment>
@@ -322,7 +322,7 @@ export default function FormUpdate({ formId, userId, authState }) {
               )
             }
           </div>
-          
+
           <br />
           <CenteredContent>
             {Boolean(message.info.length) && <Typography variant="subtitle1" color={message.err ? 'error' : 'primary'}>{message.info}</Typography>}

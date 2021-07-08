@@ -2,10 +2,10 @@ import React from 'react'
 import { render, waitFor } from '@testing-library/react'
 import '@testing-library/jest-dom/extend-expect'
 import { MockedProvider } from '@apollo/react-testing'
-import Loading from '../../shared/Loading'
-import Form from '../../components/Forms/Form'
-import { FormPropertiesQuery } from '../../graphql/queries'
-import { addPropWithValue, propExists } from '../../components/Forms/GenericForm'
+import Loading from '../../../shared/Loading'
+import Form from '../components/Form'
+import { FormPropertiesQuery } from '../graphql/forms_queries'
+import { addPropWithValue, propExists } from '../components/GenericForm'
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn())
 describe('Form Component', () => {

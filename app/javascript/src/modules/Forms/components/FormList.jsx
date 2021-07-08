@@ -24,18 +24,18 @@ import { StyleSheet, css } from 'aphrodite'
 import PropTypes from 'prop-types'
 import { useHistory } from 'react-router'
 import FormLinks, { useStyles } from './FormLinks'
-import { FormsQuery } from '../../graphql/queries'
-import Loading from '../../shared/Loading'
-import ErrorPage from '../Error'
-import CenteredContent from '../CenteredContent'
+import { FormsQuery } from '../graphql/forms_queries'
+import Loading from '../../../shared/Loading'
+import ErrorPage from '../../../components/Error'
+import CenteredContent from '../../../components/CenteredContent'
 import TitleDescriptionForm from './TitleDescriptionForm'
-import { DateAndTimePickers } from '../DatePickerDialog'
-import { FormCreateMutation, FormUpdateMutation } from '../../graphql/mutations/forms'
-import { formStatus } from '../../utils/constants'
-import { ActionDialog } from '../Dialog'
-import MessageAlert from '../MessageAlert'
-import FloatButton from '../FloatButton'
-import { propAccessor, formatError } from '../../utils/helpers'
+import { DateAndTimePickers } from '../../../components/DatePickerDialog'
+import { FormCreateMutation, FormUpdateMutation } from '../graphql/forms_mutation'
+import { formStatus } from '../../../utils/constants'
+import { ActionDialog } from '../../../components/Dialog'
+import MessageAlert from '../../../components/MessageAlert'
+import FloatButton from '../../../components/FloatButton'
+import { propAccessor, formatError } from '../../../utils/helpers'
 
 // here we get existing google forms and we mix them with our own created forms
 export default function FormLinkList({ userType, community }) {
@@ -181,7 +181,7 @@ export default function FormLinkList({ userType, community }) {
       </List>
 
       {userType === 'admin' && (
-        <FloatButton 
+        <FloatButton
           title="Create a Form"
           handleClick={() => setOpen(!open)}
         />
@@ -227,7 +227,7 @@ export function FormMenu({ formId, anchorEl, handleClose, open, refetch }) {
     })
   }
 
-  function routeToEdit(event){  
+  function routeToEdit(event){
     event.stopPropagation()
     history.push(`/edit_form/${formId}`)
   }
@@ -261,7 +261,7 @@ export function FormMenu({ formId, anchorEl, handleClose, open, refetch }) {
         }
       }}
       >
- 
+
         <div>
           <MenuItem
             id="edit_button"

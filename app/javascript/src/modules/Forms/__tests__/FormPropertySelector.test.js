@@ -1,7 +1,7 @@
 import React from 'react'
 import { render } from '@testing-library/react'
 import '@testing-library/jest-dom/extend-expect'
-import FormPropertySelector from '../../components/Forms/FormPropertySelector'
+import FormPropertySelector from '../components/FormPropertySelector'
 
 describe('Form property selector component', () => {
   it('should all options and render correctly passed values', () => {

@@ -1,7 +1,7 @@
 import React from 'react'
 import { fireEvent, render } from '@testing-library/react'
 import '@testing-library/jest-dom/extend-expect'
-import Upload from '../../components/Forms/UploadField'
+import Upload from '../components/UploadField'
 
 describe('Upload component', () => {
   it('should show the upload field', () => {

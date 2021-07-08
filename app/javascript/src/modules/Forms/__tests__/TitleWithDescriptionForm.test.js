@@ -1,7 +1,7 @@
 import React from 'react'
 import { fireEvent, render } from '@testing-library/react'
 import '@testing-library/jest-dom/extend-expect'
-import TitleDescriptionForm from '../../components/Forms/TitleDescriptionForm'
+import TitleDescriptionForm from '../components/TitleDescriptionForm'
 
 describe('Form with a title and a description component', () => {
   it('should have both title and description and option child element', () => {
@@ -28,7 +28,7 @@ describe('Form with a title and a description component', () => {
     expect(container.queryByText("Submit")).not.toBeDisabled()
     expect(container.queryByLabelText("form_title")).toBeInTheDocument()
     expect(container.queryByLabelText("form_description")).toBeInTheDocument()
-    
+
     // try firing some events
     fireEvent.change(container.queryByLabelText("form_title"),  { target: { value: 'This is a new form' } })
     expect(container.queryByLabelText("form_title").value).toBe('This is a new form')

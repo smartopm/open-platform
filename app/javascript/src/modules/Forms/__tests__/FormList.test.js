@@ -4,10 +4,10 @@ import { MockedProvider } from '@apollo/react-testing'
 import { createMuiTheme, ThemeProvider } from '@material-ui/core'
 import { BrowserRouter } from 'react-router-dom'
 import '@testing-library/jest-dom/extend-expect'
-import Loading from '../../shared/Loading'
-import FormLinkList from '../../components/Forms/FormList'
-import { FormsQuery } from '../../graphql/queries'
-import userMock from '../../__mocks__/userMock'
+import Loading from '../../../shared/Loading'
+import FormLinkList from '../components/FormList'
+import { FormsQuery } from '../graphql/forms_queries'
+import userMock from '../../../__mocks__/userMock'
 
 describe('Form List Component', () => {
   it('should render form without error', async () => {

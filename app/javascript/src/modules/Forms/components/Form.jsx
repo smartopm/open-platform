@@ -2,9 +2,9 @@
 import React from 'react'
 import { useQuery } from 'react-apollo'
 import PropTypes from 'prop-types'
-import { FormPropertiesQuery } from '../../graphql/queries'
+import { FormPropertiesQuery } from '../graphql/forms_queries'
 import GenericForm from './GenericForm'
-import { Spinner } from '../../shared/Loading'
+import { Spinner } from '../../../shared/Loading'
 
 export default function Form({ formId, pathname }) {
   const { data: formData, error, loading, refetch } = useQuery(FormPropertiesQuery, {
@@ -17,10 +17,10 @@ export default function Form({ formId, pathname }) {
 
   return (
     <>
-      <GenericForm 
-        formId={formId} 
-        pathname={pathname} 
-        formData={formData} 
+      <GenericForm
+        formId={formId}
+        pathname={pathname}
+        formData={formData}
         editMode={false}
         refetch={refetch}
       />
