@@ -2,14 +2,14 @@
 import React, { Fragment, useContext, useRef, useState, useEffect } from 'react'
 import { Button, Container, Grid, IconButton, Snackbar } from '@material-ui/core'
 import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
-import { useApolloClient, useMutation } from 'react-apollo'
+import { useApolloClient, useMutation, useQuery } from 'react-apollo'
 import PropTypes from 'prop-types'
 import { Alert } from '@material-ui/lab';
-import { useParams } from 'react-router-dom'
 import DatePickerDialog from '../DatePickerDialog'
 import CenteredContent from '../CenteredContent'
-import { FormUserCreateMutation } from '../../graphql/mutations'
 import { Context as AuthStateContext } from '../../containers/Provider/AuthStateProvider'
+import { FormUserCreateMutation } from '../../graphql/mutations'
+import { FormQuery } from '../../graphql/queries'
 import { useFileUpload } from '../../graphql/useFileUpload'
 import TextInput from './TextInput'
 import UploadField from './UploadField'
@@ -18,6 +18,7 @@ import { convertBase64ToFile, sortPropertyOrder } from '../../utils/helpers'
 import RadioInput from './RadioInput'
 import { FormPropertyDeleteMutation } from '../../graphql/mutations/forms';
 import { Spinner } from '../../shared/Loading';
+import FormTitle from './FormTitle'
 
 // date
 // text input (TextField or TextArea)
@@ -39,7 +40,7 @@ export default function GenericForm({ formId, pathname, formData, refetch, editM
   const [uploadedImages, setUploadedImages] = useState([])
   const signRef = useRef(null)
   const authState = useContext(AuthStateContext)
-  const { formName } = useParams()
+  const { data, loading } = useQuery(FormQuery, { variables: { id: formId } })
   // create form user
   const [createFormUser] = useMutation(FormUserCreateMutation)
   const [deleteProperty] = useMutation(FormPropertyDeleteMutation)
@@ -55,6 +56,7 @@ export default function GenericForm({ formId, pathname, formData, refetch, editM
     if (status === 'DONE' && currentPropId && !uploadedImages.find((im) => im.propertyId === currentPropId)) {
       setUploadedImages([...uploadedImages, { blobId: signedBlobId, propertyId: currentPropId}])
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status])
 
   function handleAlertClose(){
@@ -149,6 +151,7 @@ export default function GenericForm({ formId, pathname, formData, refetch, editM
         propValues: cleanFormData
       }
     })
+      // eslint-disable-next-line no-shadow
       .then(({ data }) => {
         if (data.formUserCreate.formUser === null) {
           setMessage({ ...message, err: true, info: data.formUserCreate.error })
@@ -294,9 +297,15 @@ export default function GenericForm({ formId, pathname, formData, refetch, editM
         </Alert>
       </Snackbar>
       <Container>
-      <CenteredContent>
-        <h4>{formName}</h4>
-      </CenteredContent>
+      {
+        loading && <Spinner />
+      }
+
+      {
+        !loading && data && <FormTitle name={data.form?.name} description={data.form?.name} />
+      }
+
+      <br />
         <form onSubmit={saveFormData}>
           {formData.formProperties.sort(sortPropertyOrder).map(renderForm)}
           {

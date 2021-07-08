@@ -20,6 +20,8 @@ import { formStatus as updatedFormStatus} from '../../utils/constants'
 import RadioInput from './RadioInput'
 import ImageAuth from '../../shared/ImageAuth'
 import Loading from '../../shared/Loading'
+import FormTitle from './FormTitle'
+
 // date
 // text input (TextField or TextArea)
 // upload
@@ -253,17 +255,7 @@ export default function FormUpdate({ formId, userId, authState }) {
   return (
     <>
       <Container>
-      <CenteredContent>
-        <Typography variant="h5" gutterBottom>
-          {formUserData.data?.formUser.form.name}
-        </Typography>
-      </CenteredContent>
-      <CenteredContent>
-        <Typography variant="body1" gutterBottom>
-          {formUserData.data?.formUser.form.description}
-        </Typography>
-      </CenteredContent>
-      <br />
+        <FormTitle name={formUserData.data?.formUser.form.name} description={formUserData.data?.formUser.form.description} />
         <form onSubmit={event => handleActionClick(event, 'update')}>
           {
             authState.user.userType === 'admin' && userId && (
