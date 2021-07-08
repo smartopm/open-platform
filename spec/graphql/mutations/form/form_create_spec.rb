@@ -9,7 +9,7 @@ RSpec.describe Mutations::Form::FormCreate do
 
     let(:mutation) do
       <<~GQL
-        mutation formCreate($name: String!, $expiresAt: String!) {
+        mutation formCreate($name: String!, $expiresAt: String) {
           formCreate(name: $name, expiresAt: $expiresAt){
             form {
               id

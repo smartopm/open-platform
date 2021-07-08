@@ -35,7 +35,7 @@ import { formStatus } from '../../utils/constants'
 import { ActionDialog } from '../Dialog'
 import MessageAlert from '../MessageAlert'
 import FloatButton from '../FloatButton'
-import { propAccessor } from '../../utils/helpers'
+import { propAccessor, formatError } from '../../utils/helpers'
 
 // here we get existing google forms and we mix them with our own created forms
 export default function FormLinkList({ userType, community }) {
@@ -60,26 +60,20 @@ export default function FormLinkList({ userType, community }) {
     setFormId(id)
   }
   function submitForm(title, description) {
+    setLoading(true)
     createForm({
       variables: { name: title, expiresAt, description }
     })
       .then(() => {
         setMessage('Form created')
+        refetch()
         setLoading(false)
-        setTimeout(() => {
-          updateList()
-        }, 1000)
         setOpen(!open)
       })
       .catch(err => {
         setLoading(false)
-        setMessage(err.message)
+        setMessage(formatError(err.message))
       })
-  }
-
-  function updateList() {
-    refetch()
-    setOpen(!open)
   }
 
   function handleDateChange(date) {
@@ -106,7 +100,7 @@ export default function FormLinkList({ userType, community }) {
         </DialogTitle>
         <DialogContent>
           <TitleDescriptionForm
-            close={updateList}
+            close={() => setOpen(false)}
             type="form"
             save={submitForm}
             data={{
@@ -116,7 +110,6 @@ export default function FormLinkList({ userType, community }) {
           >
             <DateAndTimePickers
               label="Form Expiry Date"
-              required
               selectedDateTime={expiresAt}
               handleDateChange={handleDateChange}
               pastDate

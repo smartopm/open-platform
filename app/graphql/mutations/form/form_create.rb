@@ -5,7 +5,7 @@ module Mutations
     # For creating a Form
     class FormCreate < BaseMutation
       argument :name, String, required: true
-      argument :expires_at, String, required: true
+      argument :expires_at, String, required: false
       argument :description, String, required: false
 
       field :form, Types::FormType, null: true
