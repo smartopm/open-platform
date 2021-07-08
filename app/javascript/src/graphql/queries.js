@@ -83,7 +83,6 @@ export const AllEventLogsQuery = gql`
       subject
       sentence
       data
-      hasExited
       actingUser {
         name
         id
