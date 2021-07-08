@@ -54,28 +54,36 @@ export default function UserActionMenu({
                     }
                   }}
                   className={linkStyles}
+                  style={{ textDecoration: 'none'}}
                 >
                   {t('menu.send_sms_to')} {data.user.name}
                 </Link>
               </MenuItem>
-
-              {data.user.phoneNumber ? (
+              {data.user.phoneNumber && (
                 <MenuItem key={'call_user'}>
                   <a
                     className={linkStyles}
                     href={`tel:+${data.user.phoneNumber}`}
+                    style={{ textDecoration: 'none'}}
                   >
-                    {t('menu.call')} {data.user.name}
+                    {t('misc.call')} {data.user.name}
                   </a>
                 </MenuItem>
-              ) : null}
+              )}
               <MenuItem key={'user_logs'}>
                 <Link
                   to={`/user/${data.user.id}/logs`}
                   className={linkStyles}
+                  style={{ textDecoration: 'none'}}
                 >
                   {t('menu.user_logs')}
                 </Link>
+              </MenuItem>
+              <MenuItem
+                key={'view_plans'}
+                onClick={() => router.push(`/user/${data.user.id}?tab=Plans`)}
+              >
+                {t('menu.view_plans')}
               </MenuItem>
             </>
           )}
@@ -84,6 +92,7 @@ export default function UserActionMenu({
               <MenuItem
                 id="edit_button"
                 key={'edit_user'}
+                className={linkStyles}
                 onClick={() => router.push(`/user/${data.user.id}/edit`)}
               >
                 {t('menu.user_edit')}
@@ -99,6 +108,7 @@ export default function UserActionMenu({
                     }
                   }}
                   className={linkStyles}
+                  style={{ textDecoration: 'none'}}
                 >
                  {t('menu.message_support')}
                 </Link>
@@ -107,6 +117,7 @@ export default function UserActionMenu({
                 <Link
                   to={`/print/${data.user.id}`}
                   className={linkStyles}
+                  style={{ textDecoration: 'none'}}
                 >
                   {t('menu.print_id')}
                 </Link>
@@ -115,6 +126,7 @@ export default function UserActionMenu({
                 <Link
                   to={`/user/${data.user.id}/otp`}
                   className={linkStyles}
+                  style={{ textDecoration: 'none'}}
                 >
                   {t('menu.send_otp')}
                 </Link>
