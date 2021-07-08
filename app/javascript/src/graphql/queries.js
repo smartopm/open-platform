@@ -783,6 +783,11 @@ export const FormUserQuery = gql`
     formUser(formId: $formId, userId: $userId) {
       id
       status
+      form {
+        id
+        name
+        description
+      }
       statusUpdatedBy {
         id
         name

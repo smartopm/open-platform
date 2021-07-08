@@ -5,6 +5,7 @@ import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
 import { useApolloClient, useMutation } from 'react-apollo'
 import PropTypes from 'prop-types'
 import { Alert } from '@material-ui/lab';
+import { useParams } from 'react-router-dom'
 import DatePickerDialog from '../DatePickerDialog'
 import CenteredContent from '../CenteredContent'
 import { FormUserCreateMutation } from '../../graphql/mutations'
@@ -38,6 +39,7 @@ export default function GenericForm({ formId, pathname, formData, refetch, editM
   const [uploadedImages, setUploadedImages] = useState([])
   const signRef = useRef(null)
   const authState = useContext(AuthStateContext)
+  const { formName } = useParams()
   // create form user
   const [createFormUser] = useMutation(FormUserCreateMutation)
   const [deleteProperty] = useMutation(FormPropertyDeleteMutation)
@@ -292,6 +294,9 @@ export default function GenericForm({ formId, pathname, formData, refetch, editM
         </Alert>
       </Snackbar>
       <Container>
+      <CenteredContent>
+        <h4>{formName}</h4>
+      </CenteredContent>
         <form onSubmit={saveFormData}>
           {formData.formProperties.sort(sortPropertyOrder).map(renderForm)}
           {

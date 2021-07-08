@@ -249,9 +249,21 @@ export default function FormUpdate({ formId, userId, authState }) {
   if (loading || formUserData.loading) return <Loading />
   if (error || formUserData.error) return <ErrorPage title={error?.message || formUserData.error?.message} />
 
+
   return (
     <>
       <Container>
+      <CenteredContent>
+        <Typography variant="h5" gutterBottom>
+          {formUserData.data?.formUser.form.name}
+        </Typography>
+      </CenteredContent>
+      <CenteredContent>
+        <Typography variant="body1" gutterBottom>
+          {formUserData.data?.formUser.form.description}
+        </Typography>
+      </CenteredContent>
+      <br />
         <form onSubmit={event => handleActionClick(event, 'update')}>
           {
             authState.user.userType === 'admin' && userId && (
