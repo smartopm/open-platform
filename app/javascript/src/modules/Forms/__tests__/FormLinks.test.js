@@ -2,11 +2,17 @@
 import React from 'react';
 import { render, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
-import FormLinks from '../components/Forms/FormLinks';
+import FormLinks from '../components/FormLinks';
+import { Context } from '../../../containers/Provider/AuthStateProvider';
+import userMock from '../../../__mocks__/userMock';
 
 describe('Shows the google form links', () => {
   it('It should render with no errors', () => {
-    const container = render(<FormLinks community="Nkwashi" />);
+    const container = render(
+      <Context.Provider values={userMock}>
+        <FormLinks community="Nkwashi" />
+      </Context.Provider>
+    );
 
     expect(container.queryByTestId('forms-crf')).toBeInTheDocument();
     expect(container.queryByTestId('forms-building-permit')).toBeInTheDocument();
@@ -15,7 +21,11 @@ describe('Shows the google form links', () => {
 
   it('It should click link and open new tab', () => {
     window.open = jest.fn();
-    const container = render(<FormLinks community="Nkwashi" />);
+    const container = render(
+      <Context.Provider values={userMock}>
+        <FormLinks community="Nkwashi" />
+      </Context.Provider>
+    );
     const buildPermit = container.queryByTestId('forms-link-building-permit');
     const clientForm = container.queryByTestId('forms-link-crf');
     fireEvent.click(buildPermit);

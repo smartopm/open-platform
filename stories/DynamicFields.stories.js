@@ -1,6 +1,6 @@
 import React from 'react'
 import DynamicContactFields from '../app/javascript/src/modules/Community/components/DynamicContactFields'
-import FormOptionInput from '../app/javascript/src/components/Forms/FormOptionInput'
+import FormOptionInput from '../app/javascript/src/modules/Forms/components/FormOptionInput'
 
 export function MultiFields(){
   const [options, setOptions] = React.useState([""])

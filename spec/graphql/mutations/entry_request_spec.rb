@@ -251,11 +251,14 @@ RSpec.describe Mutations::EntryRequest do
     let!(:guard) { create(:security_guard, community_id: user.community_id) }
     let!(:contractor) { create(:contractor, community_id: user.community_id) }
     let!(:entry_request) { guard.entry_requests.create(name: 'Mark Percival', reason: 'Visiting') }
+    let!(:event) do
+      guard.generate_events('observation_log', entry_request)
+    end
 
     let(:query) do
       <<~GQL
-        mutation addObservationNote($id: ID, $note: String, $refType: String) {
-          entryRequestNote(id: $id, note: $note, refType: $refType) {
+        mutation addObservationNote($id: ID, $note: String, $refType: String, $eventLogId: ID) {
+          entryRequestNote(id: $id, note: $note, refType: $refType, eventLogId: $eventLogId) {
             event {
               id
               data

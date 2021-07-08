@@ -40,7 +40,7 @@ describe('Form List Component', () => {
       <MockedProvider mocks={[mocks]} addTypename={false}>
         <BrowserRouter>
           <ThemeProvider theme={theme}>
-            <FormLinkList userType="admin" community={userMock.user.community} />
+            <FormLinkList userType="admin" community={userMock.user.community.name} />
           </ThemeProvider>
         </BrowserRouter>
       </MockedProvider>

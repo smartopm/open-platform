@@ -35,39 +35,41 @@ export default function FormOptionInput({ options, setOptions, label }) {
         options.map((value, i) => (
           // eslint-disable-next-line react/no-array-index-key
           <div key={i}>
-            <label
-              htmlFor='phoneNumber'
-              className="MuiFormLabel-root MuiInputLabel-shrink
-              MuiInputLabel-root"
-            >
-              Secondary Phone Number&nbsp;
-              {i}
-              <span aria-hidden="true" className="MuiFormLabel-asterisk MuiInputLabel-asterisk">
-              &nbsp;*
-              </span>
-            </label>
             {(label === t('common:form_fields.secondary_number'))
               ? (
-                <PhoneInput
-                  value={propAccessor(options, i)?.info}
-                  enableSearch
-                  inputProps={{
+                <>
+                  <label
+                    htmlFor='phoneNumber'
+                    className="MuiFormLabel-root MuiInputLabel-shrink
+              MuiInputLabel-root"
+                  >
+                    Secondary Phone Number&nbsp;
+                    {i}
+                    <span aria-hidden="true" className="MuiFormLabel-asterisk MuiInputLabel-asterisk">
+              &nbsp;*
+                    </span>
+                  </label>
+                  <PhoneInput
+                    value={propAccessor(options, i)?.info}
+                    enableSearch
+                    inputProps={{
                    name: 'phoneNumber',
                    required: true
                  }}
-                  placeholder={t('common:form_placeholders.phone_number')}
-                  onChange={val => {
+                    placeholder={t('common:form_placeholders.phone_number')}
+                    onChange={val => {
                   const values = options
                   values[parseInt(i, 10)] = val
                   setOptions([...options])
                  }}
-                  preferredCountries={['hn', 'zm', 'ng', 'in', 'us']}
-                  containerStyle={{
+                    preferredCountries={['hn', 'zm', 'ng', 'in', 'us']}
+                    containerStyle={{
                    width: '30%',
                    display: 'inline-block',
                    marginRight: '5px'
                 }}
-                />
+                  />
+                </>
 )
               : (
                 <TextField

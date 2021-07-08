@@ -11,7 +11,8 @@ describe('TextInput component', () => {
         handleClose: jest.fn(),
         formId: 'sjhef3042432',
         anchorEl: null,
-        open: true
+        open: true,
+        refetch: jest.fn()
     }
     const rendered = render(
       <BrowserRouter>

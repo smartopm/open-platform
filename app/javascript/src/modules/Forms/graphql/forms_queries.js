@@ -18,7 +18,7 @@ export const FormsQuery = gql`
       name
       expiresAt
       createdAt
-    }FormsQuery
+    }
   }
 `
 

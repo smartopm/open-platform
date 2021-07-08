@@ -24,6 +24,11 @@ describe('Form Component', () => {
           formUser: {
             id: "162f7517-7cc8-398542-b2d0-384sds",
             status: "pending",
+            form: {
+              id: "caea7b44-ee95-42a6-a42f-3e530432172e",
+              name: "Test Form",
+              description: "Some description"
+            },
             statusUpdatedBy: {
               id: "162f7517-7cc8-398542-b2d0-a83569",
               name: "Olivier JM Maniraho",

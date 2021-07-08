@@ -9,7 +9,8 @@ describe('TextInput component', () => {
         handleValue: jest.fn(),
         properties: { fieldName: 'Client Name', required: false },
         value: '',
-        editable: true
+        editable: true,
+        id: '3145c47e'
     }
     const rendered = render(<TextInput {...props} />)
     const formField = rendered.queryByLabelText('text-input')
@@ -22,7 +23,8 @@ describe('TextInput component', () => {
         handleValue: jest.fn(),
         properties: { fieldName: 'Client Name', required: false },
         value: '',
-        editable: false
+        editable: false,
+        id: '3145c4247e'
     }
     const rendered = render(<TextInput {...props} />)
     const formField = rendered.queryByLabelText('text-input')

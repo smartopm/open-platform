@@ -218,6 +218,7 @@
     "message_support": "Message Support",
     "send_sms": "Send SMS",
     "send_otp": "Send OTP",
+    "send_sms_to": "Send sms to",
     "balance": "Balance",
     "dashboard": "Dashboard",
     "settings": "Settings",
@@ -249,7 +250,8 @@
     "leave_a_comment": "Leave a comment",
     "mark_complete": "Mark as Complete",
     "mark_incomplete": "Mark as Incomplete",
-    "view_details": "View Details"
+    "view_details": "View Details",
+    "view_plans": "View Payment Plans"
   },
   "user_types": {
     "admin": "Admin",

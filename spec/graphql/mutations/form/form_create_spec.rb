@@ -9,47 +9,66 @@ RSpec.describe Mutations::Form::FormCreate do
 
     let(:mutation) do
       <<~GQL
-        mutation formCreate($name: String!, $expiresAt: String) {
-          formCreate(name: $name, expiresAt: $expiresAt){
+        mutation formCreate(
+          $name: String!,
+          $expiresAt: String!,
+          $description: String,
+          $multipleSubmissionsAllowed: Boolean!
+        ){
+          formCreate(
+            name: $name,
+            expiresAt: $expiresAt,
+            description: $description,
+            multipleSubmissionsAllowed: $multipleSubmissionsAllowed
+          ){
             form {
               id
               name
+              multipleSubmissionsAllowed
             }
           }
         }
       GQL
     end
 
-    it 'creates a form' do
-      variables = {
-        name: 'Form Name',
-        expiresAt: (rand * 10).to_i.day.from_now.to_s,
-      }
-      expect(Logs::EventLog.count).to eql 0
-      result = DoubleGdpSchema.execute(mutation, variables: variables,
-                                                 context: {
-                                                   current_user: admin,
-                                                   site_community: user.community,
-                                                 }).as_json
-      expect(Logs::EventLog.count).to eql 1
-      expect(Logs::EventLog.first.subject).to include 'form_create'
-      expect(result.dig('data', 'formCreate', 'form', 'id')).not_to be_nil
-      expect(result.dig('data', 'formCreate', 'form', 'name')).to eql 'Form Name'
-      expect(result['errors']).to be_nil
+    context 'when user is an admin' do
+      it 'creates a form' do
+        variables = {
+          name: 'Form Name',
+          expiresAt: (rand * 10).to_i.day.from_now.to_s,
+          multipleSubmissionsAllowed: true,
+        }
+        expect(Logs::EventLog.count).to eql 0
+        result = DoubleGdpSchema.execute(mutation, variables: variables,
+                                                   context: {
+                                                     current_user: admin,
+                                                     site_community: user.community,
+                                                   }).as_json
+        expect(Logs::EventLog.count).to eql 1
+        expect(Logs::EventLog.first.subject).to include 'form_create'
+        form_details = result.dig('data', 'formCreate', 'form')
+        expect(form_details['id']).not_to be_nil
+        expect(form_details['name']).to eql 'Form Name'
+        expect(form_details['multipleSubmissionsAllowed']).to eql true
+        expect(result['errors']).to be_nil
+      end
     end
 
-    it 'throws unauthorized error when user is not admin' do
-      variables = {
-        name: 'Form Name',
-        expiresAt: (rand * 10).to_i.day.from_now.to_s,
-      }
-      result = DoubleGdpSchema.execute(mutation, variables: variables,
-                                                 context: {
-                                                   current_user: user,
-                                                   site_community: user.community,
-                                                 }).as_json
-      expect(result.dig('data', 'formCreate', 'form', 'id')).to be_nil
-      expect(result.dig('errors', 0, 'message')).to eql 'Unauthorized'
+    context 'when user is not an admin' do
+      it 'throws unauthorized error when user is not admin' do
+        variables = {
+          name: 'Form Name',
+          expiresAt: (rand * 10).to_i.day.from_now.to_s,
+          multipleSubmissionsAllowed: true,
+        }
+        result = DoubleGdpSchema.execute(mutation, variables: variables,
+                                                   context: {
+                                                     current_user: user,
+                                                     site_community: user.community,
+                                                   }).as_json
+        expect(result.dig('data', 'formCreate', 'form', 'id')).to be_nil
+        expect(result.dig('errors', 0, 'message')).to eql 'Unauthorized'
+      end
     end
   end
 end

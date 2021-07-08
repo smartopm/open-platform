@@ -167,7 +167,7 @@ export default function GenericForm({ formId, pathname, formData, refetch, editM
         setAlertOpen(true)
       })
       .catch(err => {
-        setMessage({ ...message, err: true, info: err.message })
+        setMessage({ ...message, err: true, info: err.message.replace(/GraphQL error:/, "") })
         setSubmitting(false)
         setAlertOpen(true)
       })
@@ -283,6 +283,28 @@ export default function GenericForm({ formId, pathname, formData, refetch, editM
             </Fragment>
           </Grid>
         </Grid>
+      ),
+      dropdown: (
+        <Grid container spacing={3} key={formPropertiesData.id}>
+          {
+          editMode && (
+            <Grid item xs={1}>
+              <IconButton style={{ float: 'left', marginTop: 10 }} onClick={() => handleDeleteProperty(formPropertiesData.id)}>
+                { isDeletingProperty  && currentPropId === formPropertiesData.id ? <Spinner /> : <DeleteOutlineIcon /> }
+              </IconButton>
+            </Grid>
+          )
+        }
+          <Grid item xs={editMode ? 11 : 12}>
+            <TextInput
+              id={formPropertiesData.id}
+              properties={formPropertiesData}
+              value=""
+              handleValue={event => handleValueChange(event, formPropertiesData.id)}
+              editable={editable}
+            />
+          </Grid>
+        </Grid>
       )
     }
     return fields[formPropertiesData.fieldType]
@@ -296,15 +318,15 @@ export default function GenericForm({ formId, pathname, formData, refetch, editM
         </Alert>
       </Snackbar>
       <Container>
-      {
+        {
         loading && <Spinner />
       }
 
-      {
+        {
         !loading && data && <FormTitle name={data.form?.name} description={data.form?.name} />
       }
 
-      <br />
+        <br />
         <form onSubmit={saveFormData}>
           {formData.formProperties.sort(sortPropertyOrder).map(renderForm)}
           {

@@ -20,10 +20,10 @@ import MessageAlert from '../../../../components/MessageAlert';
 import { extractCurrency, formatError, formatMoney } from '../../../../utils/helpers';
 import ReceiptModal from './ReceiptModal';
 import { Spinner } from '../../../../shared/Loading';
-import SwitchInput from '../../../../components/Forms/SwitchInput';
 import DatePickerDialog from '../../../../components/DatePickerDialog';
 import useDebounce from '../../../../utils/useDebounce';
 import UserAutoResult from '../../../../shared/UserAutoResult';
+import SwitchInput from '../../../Forms/components/SwitchInput';
 
 const initialValues = {
   amount: '',

@@ -26,7 +26,7 @@ import crudHandler from '../../../graphql/crud_handler';
 import Loading from '../../../shared/Loading';
 import FormOptionInput, {
   FormOptionWithOwnActions
-} from '../../../components/Forms/FormOptionInput';
+} from '../../Forms/components/FormOptionInput';
 import { saniteError } from '../../../utils/helpers';
 import { ModalDialog } from '../../../components/Dialog';
 import CenteredContent from '../../../components/CenteredContent';
@@ -241,7 +241,7 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
                 {
                  status !== 'INIT' && t(`common:upload_state.${status}`)
                 }
-              </Typography> 
+              </Typography>
               <br />
             </div>
             <div className={`${css(styles.photoUpload)}`}>
