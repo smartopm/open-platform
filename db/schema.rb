@@ -324,7 +324,7 @@ ActiveRecord::Schema.define(version: 2021_07_07_133026) do
     t.datetime "updated_at", precision: 6, null: false
     t.integer "status", default: 0
     t.text "description"
-    t.boolean "multiple_submissions_allowed", default: false
+    t.boolean "multiple_submissions_allowed"
     t.index ["community_id"], name: "index_forms_on_community_id"
     t.index ["name"], name: "index_forms_on_name", unique: true
   end

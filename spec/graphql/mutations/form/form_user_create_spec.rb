@@ -59,7 +59,8 @@ RSpec.describe Mutations::Form::FormUserCreate do
                                                             site_community: current_user.community,
                                                           }).as_json
         expect(second_result.dig('errors', 0, 'message'))
-          .to eql 'You have already submitted the form once'
+          .to eql "You've already responded to this form. You can only fill out this form " \
+                   'once. Please contact the support team if this is an error'
       end
     end
 
