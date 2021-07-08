@@ -323,7 +323,7 @@ export default function GenericForm({ formId, pathname, formData, refetch, editM
       }
 
         {
-        !loading && data && <FormTitle name={data.form?.name} description={data.form?.name} />
+        !loading && data && <FormTitle name={data.form?.name} description={data.form?.description} />
       }
 
         <br />

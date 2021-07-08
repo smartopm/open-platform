@@ -37,7 +37,6 @@ describe('EntryLogs Component', () => {
           note: 'Exited',
           ref_name: 'Test Entry'
         },
-        hasExited: false,
         actingUser: {
           name: 'X User',
           id: '162f7517-7cc8-42f9-b2d0-a83a16d59569'

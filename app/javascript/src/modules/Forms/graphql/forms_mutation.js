@@ -1,5 +1,5 @@
 /* eslint-disable import/prefer-default-export */
-import gql from 'graphql-tag'
+import gql from 'graphql-tag';
 
 export const FormPropertyCreateMutation = gql`
   mutation formPropertiesCreate(
@@ -25,62 +25,72 @@ export const FormPropertyCreateMutation = gql`
       }
     }
   }
-`
+`;
 
 export const FormCreateMutation = gql`
-  mutation  formCreate($name: String!, $expiresAt: String, $description: String) {
-    formCreate(name: $name, expiresAt:$expiresAt, description: $description){
+  mutation formCreate(
+    $name: String!
+    $expiresAt: String
+    $description: String
+    $multipleSubmissionsAllowed: Boolean!
+  ) {
+    formCreate(
+      name: $name
+      expiresAt: $expiresAt
+      description: $description
+      multipleSubmissionsAllowed: $multipleSubmissionsAllowed
+    ) {
       form {
         id
       }
     }
   }
-`
+`;
 
 export const FormPropertyDeleteMutation = gql`
-  mutation formPropertiesDelete($formId: ID!, $formPropertyId: ID!){
-    formPropertiesDelete(formId: $formId, formPropertyId: $formPropertyId){
+  mutation formPropertiesDelete($formId: ID!, $formPropertyId: ID!) {
+    formPropertiesDelete(formId: $formId, formPropertyId: $formPropertyId) {
       formProperty {
         id
       }
     }
   }
-`
+`;
 export const FormUpdateMutation = gql`
-    mutation formUpdate($id: ID!, $status: String, $name: String, $description: String){
-      formUpdate(id: $id, status: $status, name: $name, description: $description){
-        form {
-          id
-        }
+  mutation formUpdate($id: ID!, $status: String, $name: String, $description: String) {
+    formUpdate(id: $id, status: $status, name: $name, description: $description) {
+      form {
+        id
       }
     }
-`
+  }
+`;
 
 export const FormUserCreateMutation = gql`
-  mutation formUserCreate($formId: ID!, $userId: ID!, $propValues: JSON!){
-    formUserCreate(formId: $formId, userId: $userId, propValues: $propValues){
+  mutation formUserCreate($formId: ID!, $userId: ID!, $propValues: JSON!) {
+    formUserCreate(formId: $formId, userId: $userId, propValues: $propValues) {
       formUser {
         id
       }
       error
     }
   }
-`
+`;
 export const FormUserUpdateMutation = gql`
-  mutation formUserUpdate($formId: ID!, $userId: ID!, $propValues: JSON!){
-    formUserUpdate(formId: $formId, userId: $userId, propValues: $propValues){
+  mutation formUserUpdate($formId: ID!, $userId: ID!, $propValues: JSON!) {
+    formUserUpdate(formId: $formId, userId: $userId, propValues: $propValues) {
       formUser {
         id
       }
     }
   }
-`
+`;
 export const FormUserStatusUpdateMutation = gql`
-    mutation formUserStatusUpdate($formId: ID!, $userId: ID!, $status: String!){
-      formUserStatusUpdate(formId: $formId, userId: $userId, status:$status){
-        formUser {
-          id
-        }
+  mutation formUserStatusUpdate($formId: ID!, $userId: ID!, $status: String!) {
+    formUserStatusUpdate(formId: $formId, userId: $userId, status: $status) {
+      formUser {
+        id
       }
     }
-`
+  }
+`;
