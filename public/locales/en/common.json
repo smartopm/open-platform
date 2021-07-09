@@ -183,6 +183,7 @@
     "user_merge_warning_text": "Merging this user will keep this account and merge data from the selected account into this account. The account being merged will no longer exist. Do you want to proceed?",
     "total_balance": "Total Balance",
     "unallocated_funds": "Unallocated Funds",
+    "total_transactions": "Total Transactions Made",
     "make_payment": "Record New Payment",
     "add_invoice": "Add an Invoice",
     "no_description": "No Description",

@@ -34,6 +34,14 @@ export default function Balance({ user, userId, userData, refetch, balanceData, 
           )
         }
         {
+          Boolean(balanceData?.totalTransactions) && (
+            <div style={{display: 'flex', flexDirection: 'column', marginLeft: '30px'}}>
+              <Typography variant='subtitle1'>{t("common:misc.total_transactions")}</Typography>
+              <Typography variant="h5" color='primary'>{formatMoney(currencyData, balanceData?.totalTransactions)}</Typography>
+            </div>
+          )
+        }
+        {
           balanceData?.balance > 0 && (
             <div style={{display: 'flex', flexDirection: 'column', marginLeft: '30px'}}>
               <Typography variant='subtitle1'>{t("common:misc.unallocated_funds")}</Typography>
@@ -106,7 +114,8 @@ Balance.propTypes = {
   balanceData: PropTypes.shape({
     id: PropTypes.string,
     pendingBalance: PropTypes.number,
-    balance: PropTypes.number
+    balance: PropTypes.number,
+    totalTransactions: PropTypes.number
   }).isRequired,
   refetch: PropTypes.func,
   transRefetch: PropTypes.func,
