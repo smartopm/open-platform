@@ -48,9 +48,9 @@ import DiscussonPage from '../src/containers/Discussions/DiscussionPage';
 import GeoMap from '../src/containers/GeoMap';
 import Notifications from '../src/modules/Preferences/Components/Notifications';
 import { theme } from '../src/themes/nkwashi/theme';
-import FormPage from '../src/containers/Forms/FormPage';
+import FormPage from '../src/modules/Forms/containers/FormPage';
 
-import FormBuilderPage from '../src/containers/Forms/FormBuilderPage';
+import FormBuilderPage from '../src/modules/Forms/containers/FormBuilderPage';
 import CommentsPage from '../src/containers/Comments/CommentPage';
 import { MainMenu } from '../src/modules/Menu';
 import modules from '../src/modules';
