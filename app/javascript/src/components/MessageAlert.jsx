@@ -5,7 +5,7 @@ import MuiAlert from '@material-ui/lab/Alert'
 
 export default function MessageAlert({ type, message, open, handleClose }) {
   function Alert(props) {
-    return <MuiAlert elevation={6} variant="filled" {...props} />
+    return <MuiAlert elevation={6} {...props} />
   }
 
   return (

@@ -4,6 +4,7 @@ import { useLocation } from 'react-router'
 import { Button, Container, Snackbar } from '@material-ui/core'
 import Icon from '@material-ui/core/Icon'
 import { Alert } from '@material-ui/lab'
+import { useTranslation } from 'react-i18next'
 import { useMutation, useQuery } from 'react-apollo'
 import CenteredContent from '../../../components/CenteredContent'
 import GenericForm from './GenericForm'
@@ -31,6 +32,7 @@ export default function FormBuilder({ formId }) {
   const [message, setMessage] = useState({ isError: false, detail: '' })
   const [type, setType] = useState('form')
   const { pathname } = useLocation()
+  const { t } = useTranslation(['form', 'common'])
   const { data, error, loading, refetch } = useQuery(FormPropertiesQuery, {
     variables: { formId },
     errorPolicy: 'all'
@@ -64,7 +66,7 @@ export default function FormBuilder({ formId }) {
       .then(() => {
         setMessage({
           isError: false,
-          detail: 'Successfully published the form'
+          detail: t('misc.published_form')
         })
         setIsPublishing(false)
         setAlertOpen(true)
@@ -84,7 +86,7 @@ export default function FormBuilder({ formId }) {
         open={open}
         handleClose={handleConfirmPublish}
         handleOnSave={publishForm}
-        message="Are you sure to publish this form"
+        message={t('misc.are_you_sure_to_publish')}
         type="confirm"
       />
 
@@ -106,8 +108,8 @@ export default function FormBuilder({ formId }) {
         type={type}
         handleType={handleType}
         data={{
-          type: 'form',
-          antiType: 'updates'
+          type: t('misc.form'),
+          antiType: t('misc.updates')
         }}
       />
       <br />
@@ -131,7 +133,7 @@ export default function FormBuilder({ formId }) {
               startIcon={<Icon>{!isAdd ? 'add' : 'close'}</Icon>}
               variant="outlined"
             >
-              {!isAdd ? 'Add Field' : 'Cancel'}
+              {!isAdd ? t('misc.add_field') : t('common:form_actions.cancel')}
             </Button>
           </CenteredContent>
           <br />
@@ -142,7 +144,7 @@ export default function FormBuilder({ formId }) {
                 color="primary"
                 onClick={handleConfirmPublish}
               >
-                {isPublishing ? 'Publishing the form ...' : 'Publish Form'}
+                {isPublishing ? t('misc.publishing_form') : t('misc.publish_form')}
               </Button>
             )}
           </CenteredContent>
