@@ -126,7 +126,7 @@ export default function UserPaymentPlanItem({
     setAnchor(null)
     handleClose()
   }
-   
+   // eslint-disable-next-line no-shadow
   function handleOpenDateMenu(event, planId) {
     // avoid collapsing that shows invoices
     event.stopPropagation();
