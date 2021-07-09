@@ -352,6 +352,8 @@ export function toCamelCase(str){
  * @example snake_name ==> Snake Name
  */
 export function toTitleCase(str) {
+  if (str === null) return;
+
   return str.replace(/_/g, ' ').toLowerCase().replace(/\b(\w)|'/g, s => s.toUpperCase());
 }
 /**
