@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { StyleSheet, css } from 'aphrodite';
 import { Button, TextField, Snackbar } from '@material-ui/core';
 import PropTypes from 'prop-types';
+import { useTranslation } from 'react-i18next'
 import { titleize } from '../../../utils/helpers';
 import { Spinner } from '../../../shared/Loading'
 
@@ -10,6 +11,7 @@ export default function TitleDescriptionForm({ save, type, close, data, children
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [open, setOpen] = useState(false);
+  const { t } = useTranslation(['common', 'form'])
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -24,14 +26,14 @@ export default function TitleDescriptionForm({ save, type, close, data, children
         autoHideDuration={6000}
         onClose={() => setOpen(!open)}
         anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-        message={`${titleize(type)} successfully created`}
+        message={t('misc.misc_successfully_created', { type: titleize(type)})}
       />
       <form onSubmit={handleSubmit} aria-label={`${type}-form`}>
         <TextField
-          name="title"
-          label={`${titleize(type)} Title`}
+          name={t('form_fields.title')}
+          label={t('form_fields.misc_title', { type: titleize(type)})}
           style={{ width: '100%' }}
-          placeholder="Type a title here"
+          placeholder={t('form_placeholders.type_title')}
           onChange={(e) => setTitle(e.target.value)}
           value={title}
           margin="normal"
@@ -44,10 +46,10 @@ export default function TitleDescriptionForm({ save, type, close, data, children
           required
         />
         <TextField
-          name="description"
-          label={`${titleize(type)} Description`}
+          name={t('form_fields.description')}
+          label={t('form_fields.misc_description', { type: titleize(type)})}
           style={{ width: '100%' }}
-          placeholder="Type a description here"
+          placeholder={t('form_placeholders.type_description')}
           onChange={(e) => setDescription(e.target.value)}
           value={description}
           multiline
@@ -72,7 +74,7 @@ export default function TitleDescriptionForm({ save, type, close, data, children
               onClick={close}
               className={`${css(discussStyles.cancelBtn)}`}
             >
-              Cancel
+              {t('form_actions.cancel')}
             </Button>
             <Button
               variant="contained"
@@ -82,7 +84,7 @@ export default function TitleDescriptionForm({ save, type, close, data, children
               aria-label={`${type}_submit`}
               className={`${css(discussStyles.submitBtn)}`}
             >
-              Submit
+              {t('form_actions.submit')}
             </Button>
           </div>
         )}

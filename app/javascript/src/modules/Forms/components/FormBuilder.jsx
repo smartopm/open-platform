@@ -133,7 +133,7 @@ export default function FormBuilder({ formId }) {
               startIcon={<Icon>{!isAdd ? 'add' : 'close'}</Icon>}
               variant="outlined"
             >
-              {!isAdd ? t('misc.add_field') : t('common:form_actions.cancel')}
+              {!isAdd ? t('actions.add_field') : t('common:form_actions.cancel')}
             </Button>
           </CenteredContent>
           <br />
@@ -144,7 +144,7 @@ export default function FormBuilder({ formId }) {
                 color="primary"
                 onClick={handleConfirmPublish}
               >
-                {isPublishing ? t('misc.publishing_form') : t('misc.publish_form')}
+                {isPublishing ? t('misc.publishing_form') : t('actions.publish_form')}
               </Button>
             )}
           </CenteredContent>

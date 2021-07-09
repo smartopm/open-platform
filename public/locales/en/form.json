@@ -2,10 +2,39 @@
 	"misc": {
 		"published_form": "Successfully published the form",
 		"are_you_sure_to_publish": "Are you sure to publish this form",
-		"add_field": "Add Field",
 		"publish_ing_form": "Publishing the form ...",
-		"publish_form": "Publish form",
 		"form": "form",
-		"updates": "updates"
+		"updates": "updates",
+		"client_request_form": "Client Request Form",
+		"building_permit": "Building Permit",
+		"form_created": "Form Successfully created",
+		"limit_1_response": "Limit to 1 response",
+		"form_expiry_date": "Form Expiry Date",
+		"form_action_success": "Successfully {{status}} the form",
+		"form_confirm_message": "Are you sure to {{actionType}} this form"
+	},
+	"actions": {
+		"create_a_form": "Create a form",
+		"add_field": "Add Field",
+		"publish_form": "Publish form"
+	},
+	"errors": {
+		"no_forms": "No Forms to submit"
+	},
+	"form_status": {
+	  "rejected": "Rejected",
+	  "approved": "Approved",
+	  "pending": "Pending",
+	  "draft": "draft",
+	  "publish": "published",
+	  "delete": "deleted"
+	},
+	"form_status_actions": {
+	  "rejected": "Reject",
+	  "approved": "Approv",
+	  "pending": "Mark Pending",
+	  "draft": "Mark as as draft",
+	  "publish": "publish",
+	  "delete": "delete"
 	}
 }

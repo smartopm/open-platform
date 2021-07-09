@@ -33,7 +33,11 @@
     "user_name_merge": "Find a user to merge",
     "operating_hours": "Operating Hours",
     "logo_url": "Logo Url",
-    "home_url": "Home Url"
+    "home_url": "Home Url",
+    "title": "Title",
+    "misc_title": "{{type}} Title",
+    "description": "Description",
+    "misc_description": "{{type}} Description"
   },
   "form_placeholders": {
     "phone_number": "Enter Phone Number",
@@ -50,7 +54,9 @@
     "message": "Type message here",
     "user_name_search": "Type the user name here",
     "user_name_search_choose_from_options": "Choose a user",
-    "message_search": "search message content, user name and phone number"
+    "message_search": "search message content, user name and phone number",
+    "type_description": "Type a description here",
+    "type_title": "Type a title here"
   },
   "form_actions": {
     "send_email": "Send Email",
@@ -191,7 +197,8 @@
     "links": "Links",
     "step": "Step",
     "step_plural": "Steps",
-    "new_property": "New Property"
+    "new_property": "New Property",
+    "misc_successfully_created": "{{type}} successfully created"
   },
   "menu": {
     "invoice": "Invoice",
@@ -251,7 +258,9 @@
     "mark_complete": "Mark as Complete",
     "mark_incomplete": "Mark as Incomplete",
     "view_details": "View Details",
-    "view_plans": "View Payment Plans"
+    "view_plans": "View Payment Plans",
+    "publish": "Publish",
+    "proceed": "Proceed"
   },
   "user_types": {
     "admin": "Admin",
