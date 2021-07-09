@@ -89,7 +89,7 @@ export default function FormOptionInput({ options, setOptions, label }) {
       ))}
       <IconButton onClick={handleAddOption} aria-label="add" style={{ marginLeft: -15 }}>
         <AddCircleOutline />
-        <Typography color="primary" style={{ marginLeft: 10 }}>
+        <Typography color="primary" style={{ marginLeft: 10 }} data-testid="add_type">
           {t('form_actions.add_type', { label })}
         </Typography>
       </IconButton>
