@@ -4,7 +4,7 @@
     "email": "Email",
     "phone_number": "Phone Number",
     "primary_number": "Primary Phone Number",
-    "secondary_number": "Secondary Phone number",
+    "secondary_number": "Secondary Phone number ",
     "primary_email": "Primary Email Address",
     "secondary_email": "Secondary Email Address",
     "primary_address": "Primary Address",
@@ -77,7 +77,8 @@
     "update": "Update",
     "save_changes": "Save changes",
     "merge": "Merge",
-    "create_business": "Create a Business"
+    "create_business": "Create a Business",
+    "add_type": "Add {{label}}"
   },
   "misc": {
     "or": "OR",
@@ -146,7 +147,7 @@
     "previous": "Previous",
     "next": "Next",
     "download": "Download",
-    "loading" : "Loading",
+    "loading": "Loading",
     "acknowledge": "Acknowledge",
     "call": "Call",
     "flag": "Flag",
@@ -198,7 +199,8 @@
     "step": "Step",
     "step_plural": "Steps",
     "new_property": "New Property",
-    "misc_successfully_created": "{{type}} successfully created"
+    "misc_successfully_created": "{{type}} successfully created",
+    "option_with_count": "option {{id}}"
   },
   "menu": {
     "invoice": "Invoice",
@@ -232,7 +234,7 @@
     "community": "Community",
     "contact": "Contact",
     "email_templates": "Email Templates",
-    "request_forms":"Permits and Request Forms",
+    "request_forms": "Permits and Request Forms",
     "message": "Message",
     "message_plural": "Messages",
     "my_messages": "My Messages",
