@@ -21,10 +21,10 @@ describe('TextInput component', () => {
         </MockedProvider>
       </BrowserRouter>
     )
-    expect(rendered.queryByText('Edit')).toBeInTheDocument()
-    expect(rendered.queryByText('Publish')).toBeInTheDocument()
-    expect(rendered.queryByText('Delete')).toBeInTheDocument()
-    fireEvent.click(rendered.queryByText('Publish'))
+    expect(rendered.queryByText('common:menu.edit')).toBeInTheDocument()
+    expect(rendered.queryByText('common:menu.publish')).toBeInTheDocument()
+    expect(rendered.queryByText('common:menu.delete')).toBeInTheDocument()
+    fireEvent.click(rendered.queryByText('common:menu.publish'))
     expect(props.handleClose).toBeCalled()
   })
 })

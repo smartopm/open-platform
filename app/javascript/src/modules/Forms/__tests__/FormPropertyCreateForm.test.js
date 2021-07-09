@@ -11,11 +11,11 @@ describe('Form that creates other forms component', () => {
         <FormPropertyCreateForm formId="34905fhjsbdf34" refetch={jest.fn()} />
       </MockedProvider>
     )
-    expect(container.queryByText("Field Name")).toBeInTheDocument()
-    expect(container.queryAllByText("Field Type").length).toBe(2)
-    expect(container.queryByText("This field is required")).toBeInTheDocument()
-    expect(container.queryByText("Only for admins")).toBeInTheDocument()
-    expect(container.queryByText("Add Property")).toBeInTheDocument()
-    expect(container.queryAllByText("Order Number").length).toBe(2)
+    expect(container.queryByText("form_fields.field_name")).toBeInTheDocument()
+    expect(container.queryAllByText("form_fields.field_type").length).toBe(2)
+    expect(container.queryByText("form_fields.required_field")).toBeInTheDocument()
+    expect(container.queryByText("form_fields.admins_only")).toBeInTheDocument()
+    expect(container.queryByText("actions.add_form_property")).toBeInTheDocument()
+    expect(container.queryAllByText("form_fields.order_number").length).toBe(2)
   })
 })
