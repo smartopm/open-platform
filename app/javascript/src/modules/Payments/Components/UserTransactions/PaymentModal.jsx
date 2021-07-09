@@ -178,14 +178,6 @@ export default function PaymentModal({
     setPromptOpen(false);
   }
 
-  // async function checked(event) {
-  //   await setSearchUser(event.target.value)
-  //   console.log(searchedUser.length)
-  //   if (searchedUser.length > 2) {
-  //     console.log('got hre')
-  //     searchUser()
-  //   }
-  // }
   return (
     <>
       <MessageAlert
