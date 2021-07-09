@@ -1073,6 +1073,7 @@ export const UserBalance = gql`
     userBalance(userId: $userId) {
       balance
       pendingBalance
+      totalTransactions
     }
   }
 `;

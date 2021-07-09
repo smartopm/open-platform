@@ -15,6 +15,7 @@ module Types::Queries::Balance
   # User's available balance and pending balance
   # * Available balance.
   # * Pending amount to be paid by user.
+  # * Total transactions made by the user
   #
   # @param user_id [String] User#id
   #
@@ -25,11 +26,12 @@ module Types::Queries::Balance
     user = context[:site_community].users.find_by(id: user_id)
     raise_user_not_found_error(user)
 
-    transaction_amount = user.transactions.not_cancelled.sum(:amount)
+    transactions_amount = user.transactions.not_cancelled.sum(:amount)
     payments_amount = user.plan_payments.not_cancelled.sum(:amount)
     {
-      balance: transaction_amount - payments_amount,
+      balance: transactions_amount - payments_amount,
       pending_balance: user.payment_plans.sum(:pending_balance),
+      total_transactions: transactions_amount,
     }
   end
 
