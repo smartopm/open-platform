@@ -88,7 +88,7 @@ export default function PaymentModal({
   });
 
   const [searchUser, { data }] = useLazyQuery(UsersLiteQuery, {
-    variables: { query: debouncedValue, limit: 10 },
+    variables: { query: debouncedValue.length > 0 ? debouncedValue : 'all', limit: 10 },
     errorPolicy: 'all',
     fetchPolicy: 'no-cache'
   });
@@ -177,6 +177,7 @@ export default function PaymentModal({
   function handlePromptClose() {
     setPromptOpen(false);
   }
+
   return (
     <>
       <MessageAlert
@@ -281,7 +282,7 @@ export default function PaymentModal({
                 helperText={isError && !inputValue.landParcelId && 'Land Parcel is required'}
                 required
                 disabled={landParcels?.userLandParcelWithPlan?.length === 0 || Boolean(!landParcels)}
-                select
+                select={landParcels?.userLandParcelWithPlan?.length > 0}
               >
                 {landParcels?.userLandParcelWithPlan?.map(land => (
                   <MenuItem value={land.id} key={land.id}>
