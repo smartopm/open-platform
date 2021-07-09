@@ -7,7 +7,9 @@ import { Button, Divider, IconButton, InputBase, Grid, Typography } from '@mater
 import { useTranslation } from 'react-i18next'
 import FilterListIcon from '@material-ui/icons/FilterList'
 import MaterialConfig from 'react-awesome-query-builder/lib/config/material'
-import Loading from '../../../shared/Loading'
+import Fab from '@material-ui/core/Fab';
+import { CSVLink } from 'react-csv';
+import Loading, { Spinner } from '../../../shared/Loading'
 import ErrorPage from '../../../components/Error'
 import { UsersDetails, LabelsQuery, UsersCount } from '../../../graphql/queries'
 import {
@@ -24,11 +26,23 @@ import QueryBuilder from '../../../components/QueryBuilder'
 import { dateToString } from '../../../utils/dateutil'
 
 import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider'
-import { pluralizeCount, propAccessor } from '../../../utils/helpers'
+import { pluralizeCount, propAccessor, toTitleCase } from '../../../utils/helpers'
 import SubStatusReportDialog from '../../CustomerJourney/Components/SubStatusReport'
+
 
 const limit = 25
 const USERS_CAMPAIGN_WARNING_LIMIT = 2000
+
+const csvHeaders = [
+  { label: "Name", key: "name" },
+  { label: 'Primary Email', key: 'email' },
+  { label: 'Primary Phone', key: 'phoneNumber' },
+  { label: 'External Ref ID', key: 'extRefId' },
+  { label: 'User Type', key: 'userType' },
+  { label: 'Customer Journey Stage', key: 'subStatus' },
+  { label: 'User State', key: 'state' },
+  { label: 'Expiration Date', key: 'expiresAt' },
+];
 
 export default function UsersList() {
   const classes = useStyles()
@@ -68,9 +82,13 @@ export default function UsersList() {
     fetchPolicy: 'cache-and-network'
   })
 
-  let userList
+  let csvUserData;
+  let userList;
   if (data) {
     userList = data.users.map(user => user.id)
+    csvUserData = data.users.map(user => {
+      return ({...user, subStatus: toTitleCase(user.subStatus)});
+    });
   }
 
   function getQuery() {
@@ -601,6 +619,16 @@ export default function UsersList() {
               usersCountData={usersCountData}
               selectCheckBox={selectCheckBox}
             />
+            <Fab color="primary" variant="extended" className={classes.download}>
+              <CSVLink
+                data={csvUserData || []}
+                style={{ color: 'white' }}
+                headers={csvHeaders}
+                filename={`user-data-${dateToString(new Date())}.csv`}
+              >
+                {loading ? <Spinner /> : 'Export CSV'}
+              </CSVLink>
+            </Fab>
             <UserListCard
               userData={data}
               handleNoteModal={handleNoteModal}
@@ -682,5 +710,13 @@ export const useStyles = makeStyles(theme => ({
     searchButton: {
       flexBasis: '100%'
     },
+  },
+  download: {
+    boxShadow: 'none',
+    position: 'fixed',
+    bottom: 30,
+    right: 57,
+    marginLeft: '30%',
+    zIndex: '1000'
   }
 }))

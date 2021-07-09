@@ -346,6 +346,16 @@ export function toCamelCase(str){
 
 /**
  *
+ * @param {String} str snake_case string
+ * @return {String} titleCase string
+ * @description converts a snake_case string to a titleCase by finding First character of word.
+ * @example snake_name ==> Snake Name
+ */
+export function toTitleCase(str) {
+  return str.replace(/_/g, ' ').toLowerCase().replace(/\b(\w)|'/g, s => s.toUpperCase());
+}
+/**
+ *
  * @param {Number} range integer number
  * @return {String} Hex color based on number range
  * @description Converts a number range to HEX color used for map map legend
