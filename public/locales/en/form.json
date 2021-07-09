@@ -13,7 +13,9 @@
 		"form_action_success": "Successfully {{status}} the form",
 		"form_confirm_message": "Are you sure to {{actionType}} this form",
 		"attachments": "Attachments",
-		"signature": "Signature"
+		"signature": "Signature",
+		"deleted_form_property": "Successfully deleted form property",
+		"form_submitted": "You have successfully submitted the form"
 	},
 	"actions": {
 		"create_a_form": "Create a form",

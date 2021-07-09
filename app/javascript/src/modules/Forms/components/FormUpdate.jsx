@@ -41,7 +41,7 @@ export default function FormUpdate({ formId, userId, authState }) {
   const [formAction, setFormAction] = useState('');
   const history = useHistory();
   const signRef = useRef(null);
-  const { t } = useTranslation('form');
+  const { t } = useTranslation(['form', 'common']);
   // create form user
   const [updateFormUser] = useMutation(FormUserUpdateMutation);
   const [updateFormUserStatus] = useMutation(FormUserStatusUpdateMutation);
