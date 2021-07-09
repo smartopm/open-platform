@@ -11,7 +11,9 @@
 		"limit_1_response": "Limit to 1 response",
 		"form_expiry_date": "Form Expiry Date",
 		"form_action_success": "Successfully {{status}} the form",
-		"form_confirm_message": "Are you sure to {{actionType}} this form"
+		"form_confirm_message": "Are you sure to {{actionType}} this form",
+		"attachments": "Attachments",
+		"signature": "Signature"
 	},
 	"actions": {
 		"create_a_form": "Create a form",
@@ -33,11 +35,12 @@
 	},
 	"form_status_actions": {
 		"rejected": "Reject",
-		"approved": "Approv",
+		"approved": "Approve",
 		"pending": "Mark Pending",
 		"draft": "Mark as as draft",
 		"publish": "publish",
-		"delete": "delete"
+		"delete": "delete",
+		"update": "Update"
 	},
 	"form_fields": {
 		"field_name": "Field Name",
@@ -45,6 +48,8 @@
 		"option": "Option",
 		"required_field": "This field is required",
 		"admins_only": "Only for admins",
-		"order_number": "Order Number"
+		"order_number": "Order Number",
+		"form_status": "Form Status",
+		"form_status_updated_by": "Form Status Updated By"
 	}
 }
