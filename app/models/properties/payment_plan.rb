@@ -41,6 +41,13 @@ module Properties
       start_date...(start_date + (duration_in_month || 12).month)
     end
 
+    # Cancels payment plan
+    #
+    # @return [Boolean]
+    def cancel!
+      update!(pending_balance: 0, status: 1)
+    end
+
     # Updates plan's pending balance.
     #
     # @param [Float] amount

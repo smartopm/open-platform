@@ -29,7 +29,7 @@ import Text from '../../../../shared/Text';
 import Label from '../../../../shared/label/Label';
 import { invoiceStatus } from '../../../../utils/constants';
 import MessageAlert from '../../../../components/MessageAlert';
-import PaymentPlanUpdateMutation from '../../graphql/payment_plan_mutations';
+import PaymentPlanUpdateMutation, { PaymentPlanCancelMutation } from '../../graphql/payment_plan_mutations';
 import { Spinner } from '../../../../shared/Loading';
 import { suffixedNumber } from '../../helpers';
 import ListHeader from '../../../../shared/list/ListHeader';
@@ -38,7 +38,11 @@ import { ReceiptPayment, PlanStatement } from '../../graphql/payment_query'
 import PaymentReceipt from './PaymentReceipt'
 import CenteredContent from '../../../../components/CenteredContent'
 import StatementPlan from './PlanStatement'
+<<<<<<< HEAD
 import PlanDetail from './PlanDetail'
+=======
+import { ActionDialog } from '../../../../components/Dialog';
+>>>>>>> add cancel payment plan
 
 export default function UserPaymentPlanItem({
   plans,
@@ -54,7 +58,7 @@ export default function UserPaymentPlanItem({
   const [anchor, setAnchor] = useState(null);
   const [planAnchor, setPlanAnchor] = useState(null);
   const [transactionId, setTransactionId] = useState('');
-  const [plannId, setPlannId] = useState('');
+  const [planId, setPlanId] = useState('');
   const [landParcelId, setLandParcelId] = useState('');
   const [receiptOpen, setReceiptOpen] = useState(false);
   const [planDetailOpen, setPlanDetailOpen] = useState(false);
@@ -66,7 +70,9 @@ export default function UserPaymentPlanItem({
     isError: false,
     info: ''
   });
+  const [confirmPlanCancelOpen, setConfirmPlanCancelOpen] = useState(false)
   const [updatePaymentPlan] = useMutation(PaymentPlanUpdateMutation);
+  const [cancelPaymentPlan] = useMutation(PaymentPlanCancelMutation);
   const validDays = [...Array(28).keys()];
   const theme = useTheme();
   const matches = useMediaQuery(theme.breakpoints.up('sm'));
@@ -105,6 +111,7 @@ export default function UserPaymentPlanItem({
   ]
 
   const planMenuList = [
+    { content: 'Cancel Plan', isAdmin: true, handleClick: (event) => handleCancelPlanClick(event)},
     { content: 'View Statement', isAdmin: true, handleClick: (event) => handlePlanClick(event)},
     { content: 'View Transactions', isAdmin: true, handleClick: (event) => handleTransactionClick(event)},
     { content: 'View Details', isAdmin: true, handleClick: (event) => handlePlanDetailClick(event)}
@@ -113,6 +120,13 @@ export default function UserPaymentPlanItem({
   const handleClose = () => {
     setAnchorEl(null);
   };
+
+  function handleCloseConfirmModal(){
+    setConfirmPlanCancelOpen(false)
+    setAnchor(null)
+    handleClose()
+  }
+   
   function handleOpenDateMenu(event, planId) {
     // avoid collapsing that shows invoices
     event.stopPropagation();
@@ -127,6 +141,41 @@ export default function UserPaymentPlanItem({
     setAnchor(null)
   }
 
+  function handleCancelPlanClick(event){
+    event.stopPropagation()
+    setConfirmPlanCancelOpen(true)
+  }
+
+  function handleCancelPlan(event){
+    event.stopPropagation()
+    handleCloseConfirmModal();
+    setPlanDetails({ ...details, isLoading: true });
+    cancelPaymentPlan({
+      variables: {
+        id: planId,
+        userId,
+      }
+    })
+      .then(() => {
+        setPlanDetails({
+          ...details,
+          isLoading: false,
+          isError: false,
+          info: 'Payment Plan successfully canceled'
+        });
+        refetch();
+        balanceRefetch()
+      })
+      .catch(err => {
+        setPlanDetails({
+          ...details,
+          isLoading: false,
+          isError: true,
+          info: formatError(err.message)
+        });
+      });
+  }
+
   function handlePlanClick(event){
     event.stopPropagation()
     loadStatement()
@@ -136,7 +185,7 @@ export default function UserPaymentPlanItem({
 
   function handleTransactionClick(event) {
     event.stopPropagation()
-    history.push(`?tab=Plans&subtab=Transactions&id=${plannId}`)
+    history.push(`?tab=Plans&subtab=Transactions&id=${planId}`)
   }
 
   function handlePlanDetailClick(event) {
@@ -154,7 +203,7 @@ export default function UserPaymentPlanItem({
     event.stopPropagation()
     setPlanAnchor(event.currentTarget)
     setLandParcelId(plan.landParcel.id)
-    setPlannId(plan.id)
+    setPlanId(plan.id)
     setPlanData(plan)
   }
 
@@ -247,6 +296,13 @@ export default function UserPaymentPlanItem({
           currencyData={currencyData}
         />
       )}
+      <ActionDialog
+        open={confirmPlanCancelOpen}
+        type="confirm"
+        message="You are about to cancel this payment plan?"
+        handleClose={handleCloseConfirmModal}
+        handleOnSave={handleCancelPlan}
+      />
       <MessageAlert
         type={!details.isError ? 'success' : 'error'}
         message={details.info}

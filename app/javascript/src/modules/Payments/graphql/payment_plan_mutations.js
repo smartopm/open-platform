@@ -10,4 +10,14 @@ const PaymentPlanUpdateMutation = gql`
   }
 `;
 
+export const PaymentPlanCancelMutation = gql`
+  mutation paymentPlanCancel($id: ID!, $userId: ID!) {
+    paymentPlanCancel(id: $id, userId: $userId) {
+      paymentPlan {
+        id
+      }
+    }
+  }
+`;
+
 export default PaymentPlanUpdateMutation;
