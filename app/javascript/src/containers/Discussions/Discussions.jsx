@@ -14,9 +14,9 @@ import Loading, { Spinner } from '../../shared/Loading'
 import ErrorPage from '../../components/Error'
 import CenteredContent from '../../components/CenteredContent'
 import { Context as AuthStateContext } from '../Provider/AuthStateProvider'
-import TitleDescriptionForm from '../../components/Forms/TitleDescriptionForm'
 import { DiscussionMutation } from '../../graphql/mutations'
 import FloatButton from '../../components/FloatButton'
+import TitleDescriptionForm from '../../modules/Forms/components/TitleDescriptionForm'
 
 export default function Discussions() {
   const limit = 20

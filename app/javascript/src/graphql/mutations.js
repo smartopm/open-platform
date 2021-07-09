@@ -942,17 +942,6 @@ mutation updateComment($commentId: ID!, $discussionId: ID!, $status: String!){
 }
 `
 
-export const FormUserCreateMutation = gql`
-  mutation formUserCreate($formId: ID!, $userId: ID!, $propValues: JSON!){
-    formUserCreate(formId: $formId, userId: $userId, propValues: $propValues){
-      formUser {
-        id
-      }
-      error
-    }
-  }
-`
-
 export const ImportCreate = gql`
   mutation usersImport($csvString: String!, $csvFileName: String!) {
     usersImport(csvString: $csvString, csvFileName: $csvFileName) {
@@ -967,24 +956,6 @@ export const DiscussionUpdateMutation = gql`
       success
     }
   }
-`
-export const FormUserUpdateMutation = gql`
-  mutation formUserUpdate($formId: ID!, $userId: ID!, $propValues: JSON!){
-    formUserUpdate(formId: $formId, userId: $userId, propValues: $propValues){
-      formUser {
-        id
-      }
-    }
-  }
-`
-export const FormUserStatusUpdateMutation = gql`
-    mutation formUserStatusUpdate($formId: ID!, $userId: ID!, $status: String!){
-      formUserStatusUpdate(formId: $formId, userId: $userId, status:$status){
-        formUser {
-          id
-        }
-      }
-    }
 `
 
 export const CreateActionFlow = gql`

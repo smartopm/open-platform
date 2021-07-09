@@ -15,7 +15,8 @@ const userMock = {
         imageUrl: 'http://image.jpg',
         locale: 'en-ZM',
         currency: 'ZMW',
-        id: "293849323829891"
+        id: "293849323829891",
+        wpLink: "http://link.com"
       }
     }
   };
