@@ -39,6 +39,7 @@ export const UserPlans = gql`
       planValue
       durationInMonth
       status
+      endDate
       user {
         name
         phoneNumber

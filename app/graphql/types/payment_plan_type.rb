@@ -13,6 +13,7 @@ module Types
     field :invoices, [Types::InvoiceType], null: false
     field :user, Types::UserType, null: false
     field :start_date, GraphQL::Types::ISO8601DateTime, null: true
+    field :end_date, GraphQL::Types::ISO8601DateTime, null: true
     field :created_at, GraphQL::Types::ISO8601DateTime, null: false
     field :updated_at, GraphQL::Types::ISO8601DateTime, null: false
     field :payment_day, Integer, null: false
@@ -43,6 +44,13 @@ module Types
     # @return [Float]
     def unallocated_amount
       object.plan_payments.not_cancelled.sum(:amount) - statement_paid_amount
+    end
+
+     # Returns end date for plan statement
+    #
+    # @return [DateTime]
+    def end_date
+      object.start_date + object.duration_in_month.month
     end
   end
 end

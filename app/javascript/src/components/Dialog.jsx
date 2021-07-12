@@ -144,7 +144,7 @@ export function CustomizedDialogs({
   )
 }
 
-export function DetailsDialog({ handleClose, open, title, children, noActionButton }){
+export function DetailsDialog({ handleClose, open, title, children, noActionButton, color }){
   const classes = useStyles()
   return(
     <Dialog
@@ -164,8 +164,8 @@ export function DetailsDialog({ handleClose, open, title, children, noActionButt
       <Divider />
       {!noActionButton && (
         <DialogActions style={{ margin: '10px' }}>
-          <Button onClick={handleClose} variant="outlined" color="secondary" data-testid='cancel'>
-            Cancel
+          <Button onClick={handleClose} variant="outlined" color={color} data-testid='cancel'>
+            Close
           </Button>
         </DialogActions>
       )}
@@ -317,7 +317,8 @@ FullScreenDialog.propTypes = {
 
 DetailsDialog.defaultProps = {
   children: {},
-  noActionButton: null
+  noActionButton: null,
+  color: 'secondary'
 }
 
 DetailsDialog.propTypes = {
@@ -325,7 +326,8 @@ DetailsDialog.propTypes = {
   open: PropTypes.bool.isRequired,
   title: PropTypes.string.isRequired,
   children: PropTypes.node,
-  noActionButton: PropTypes.bool
+  noActionButton: PropTypes.bool,
+  color: PropTypes.string
 }
 
 ModalDialog.propTypes = {
