@@ -63,10 +63,6 @@ export default function FormLinkList({ userType, community }) {
     setFormId(id)
   }
 
-  function handleAlertClose(){
-    setAlertOpen(false)
-  }
-
   function submitForm(title, description) {
     setLoading(true)
     createForm({
@@ -100,7 +96,7 @@ export default function FormLinkList({ userType, community }) {
         type={message.isError ? 'error' : 'success'}
         message={message.detail}
         open={alertOpen}
-        handleClose={handleAlertClose}
+        handleClose={() => setAlertOpen(false)}
       />
       <Dialog
         fullScreen={fullScreen}
