@@ -34,9 +34,9 @@ export const LandPaymentPlanCreateMutation = gql`
 
 export const MergeProperty = gql`
 mutation MergeProperty($id: ID!,
-  $parcelNumber: String!) {
+  $parcelNumber: String!, $geom: String!) {
     propertyMerge(id: $id,
-    parcelNumber: $parcelNumber) {
+    parcelNumber: $parcelNumber, geom: $geom) {
       landParcel {
         id
         valuations {
