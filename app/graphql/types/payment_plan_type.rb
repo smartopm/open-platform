@@ -46,7 +46,7 @@ module Types
       object.plan_payments.not_cancelled.sum(:amount) - statement_paid_amount
     end
 
-     # Returns end date for plan statement
+    # Returns end date for plan statement
     #
     # @return [DateTime]
     def end_date
