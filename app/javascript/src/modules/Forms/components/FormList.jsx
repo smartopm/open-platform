@@ -52,6 +52,7 @@ export default function FormLinkList({ userType, community }) {
   const fullScreen = useMediaQuery(theme.breakpoints.down('xs'))
   const [anchorEl, setAnchorEl] = useState(null)
   const [formId, setFormId] = useState("")
+  const [alertOpen, setAlertOpen] = useState(false)
   const [multipleSubmissionsAllowed, setMultipleSubmissionsAllowed] = useState(true)
 
   const menuOpen = Boolean(anchorEl)
@@ -61,13 +62,19 @@ export default function FormLinkList({ userType, community }) {
     setAnchorEl(event.currentTarget)
     setFormId(id)
   }
+
+  function handleAlertClose(){
+    setAlertOpen(false)
+  }
+
   function submitForm(title, description) {
     setLoading(true)
     createForm({
       variables: { name: title, expiresAt, description, multipleSubmissionsAllowed }
     })
       .then(() => {
-        setMessage('Form created')
+        setMessage({isError: false, detail: 'Successfully created the form'})
+        setAlertOpen(true)
         refetch()
         setLoading(false)
         setOpen(!open)
@@ -75,7 +82,8 @@ export default function FormLinkList({ userType, community }) {
       })
       .catch(err => {
         setLoading(false)
-        setMessage(formatError(err.message))
+        setMessage({ isError: true, detail: formatError(err.message) })
+        setAlertOpen(true)
       })
   }
 
@@ -88,6 +96,12 @@ export default function FormLinkList({ userType, community }) {
 
   return (
     <div>
+      <MessageAlert
+        type={message.isError ? 'error' : 'success'}
+        message={message.detail}
+        open={alertOpen}
+        handleClose={handleAlertClose}
+      />
       <Dialog
         fullScreen={fullScreen}
         open={open}
