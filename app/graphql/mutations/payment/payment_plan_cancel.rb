@@ -45,13 +45,6 @@ module Mutations
 
         raise GraphQL::ExecutionError, I18n.t('errors.payment_plan.not_found')
       end
-
-      # Raises error if plan payment is not present.
-      def raise_error_plan_payment_not_found(payment)
-        return if payment.present?
-
-        raise GraphQL::ExecutionError, I18n.t('errors.plan_payment.not_found')
-      end
     end
   end
 end
