@@ -36,6 +36,14 @@ export const UserPlans = gql`
       monthlyAmount
       paymentDay
       pendingBalance
+      planValue
+      durationInMonth
+      status
+      user {
+        name
+        phoneNumber
+        extRefId
+      }
       landParcel {
         id
         parcelNumber
