@@ -330,9 +330,9 @@ RSpec.describe Mutations::LandParcel do
     let(:propertyMergeQuery) do
       <<~GQL
         mutation MergeProperty($id: ID!,
-          $parcelNumber: String!) {
+          $parcelNumber: String!, $geom: String!) {
             propertyMerge(id: $id,
-            parcelNumber: $parcelNumber) {
+            parcelNumber: $parcelNumber, geom: $geom) {
               landParcel {
                 id
                 valuations {
@@ -348,10 +348,11 @@ RSpec.describe Mutations::LandParcel do
       GQL
     end
 
-    it 'merges a property and updates parcel number' do
+    it 'merges a property and updates parcel number and geom' do
       variables = {
         id: user_parcel.id,
         parcelNumber: 'BAD-PLOT',
+        geom: '{"type": "feature"}',
       }
 
       result = DoubleGdpSchema.execute(
@@ -365,6 +366,7 @@ RSpec.describe Mutations::LandParcel do
 
       parcel = Properties::LandParcel.find(user_parcel.id)
       expect(parcel.parcel_number).to eq('BAD-PLOT')
+      expect(parcel.geom).to eq(variables[:geom])
       expect(result['errors']).to be_nil
     end
 
@@ -372,6 +374,7 @@ RSpec.describe Mutations::LandParcel do
       variables = {
         id: user_parcel.id,
         parcelNumber: 'BAD-PLOT',
+        geom: '{"type": "feature"}',
       }
 
       result = DoubleGdpSchema.execute(propertyMergeQuery, variables: variables,

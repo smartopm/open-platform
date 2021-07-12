@@ -6,6 +6,7 @@ module Mutations
     class PropertyMerge < BaseMutation
       argument :id, ID, required: true
       argument :parcel_number, String, required: true
+      argument :geom, String, required: true
 
       field :land_parcel, Types::LandParcelType, null: true
 
@@ -14,7 +15,7 @@ module Mutations
         raise_land_parcel_not_found_error(land_parcel)
 
         ActiveRecord::Base.transaction do
-          land_parcel.update!(vals)
+          land_parcel.update!(vals.except(:id))
 
           { land_parcel: land_parcel }
         end
