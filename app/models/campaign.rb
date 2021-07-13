@@ -16,6 +16,7 @@ class Campaign < ApplicationRecord
   before_save :clean_message
 
   scope :existing, -> { where.not(status: 3) }
+  scope :still_pending, -> { where(status: [:in_progress, :scheduled]) }
   default_scope { order(created_at: :desc) }
 
   def clean_message
@@ -95,7 +96,7 @@ class Campaign < ApplicationRecord
         return false unless send_messages(admin_user, acc)
       end
     end
-    update(end_time: Time.current)
+    update({end_time: Time.current, status: :done})
   end
   # rubocop:enable Metrics/AbcSize
   # rubocop:enable Metrics/MethodLength
