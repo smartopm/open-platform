@@ -20,6 +20,12 @@ module Types::Queries::Form
       description 'Get form properties by form id'
       argument :form_id, GraphQL::Types::ID, required: true
     end
+    # Get form property
+    field :form_property, Types::FormPropertiesType, null: true do
+      description 'Get a form property by form id and form property id'
+      argument :form_id, GraphQL::Types::ID, required: true
+      argument :form_property_id, GraphQL::Types::ID, required: true
+    end
     # Get form status for user
     field :form_user, Types::FormUsersType, null: true do
       description 'Get user form by form id and user id'
@@ -50,6 +56,12 @@ module Types::Queries::Form
     raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') if context[:current_user].blank?
 
     context[:site_community].forms.find(form_id).form_properties
+  end
+
+  def form_property(form_id:, form_property_id:)
+    raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') if context[:current_user].blank?
+
+    context[:site_community].forms.find(form_id).form_properties.find_by(id: form_property_id)
   end
 
   def form_user(form_id:, user_id:)

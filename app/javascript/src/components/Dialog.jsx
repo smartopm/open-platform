@@ -317,7 +317,7 @@ FullScreenDialog.propTypes = {
 
 DetailsDialog.defaultProps = {
   children: {},
-  noActionButton: null,
+  noActionButton: false,
   color: 'secondary'
 }
 
