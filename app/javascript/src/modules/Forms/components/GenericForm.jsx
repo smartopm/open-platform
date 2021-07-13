@@ -1,7 +1,6 @@
 /* eslint-disable no-use-before-define */
 import React, { Fragment, useContext, useRef, useState, useEffect } from 'react'
-import { Button, Container, Grid, IconButton, Snackbar } from '@material-ui/core'
-import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
+import { Button, Container, Grid, Snackbar } from '@material-ui/core'
 import { useApolloClient, useMutation, useQuery } from 'react-apollo'
 import PropTypes from 'prop-types'
 import { Alert } from '@material-ui/lab';
@@ -18,6 +17,7 @@ import { convertBase64ToFile, sortPropertyOrder } from '../../../utils/helpers'
 import RadioInput from './RadioInput'
 import { Spinner } from '../../../shared/Loading';
 import FormTitle from './FormTitle'
+import FormPropertyAction from './FormPropertyAction';
 
 // date
 // text input (TextField or TextArea)
@@ -89,6 +89,7 @@ export default function GenericForm({ formId, pathname, formData, refetch, editM
     onChange(event.target.files[0])
   }
 
+  // eslint-disable-next-line no-unused-vars
   function handleDeleteProperty(propId){
     setDeleteLoading(true)
     setCurrentPropertyId(propId)
@@ -177,16 +178,13 @@ export default function GenericForm({ formId, pathname, formData, refetch, editM
     const fields = {
       text: (
         <Grid container spacing={3} key={formPropertiesData.id}>
-          {
-            editMode && (
-              <Grid item xs={1}>
-                <IconButton style={{ float: 'left', marginTop: 10 }} onClick={() => handleDeleteProperty(formPropertiesData.id)}>
-                  { isDeletingProperty  && currentPropId === formPropertiesData.id ? <Spinner /> : <DeleteOutlineIcon /> }
-                </IconButton>
-              </Grid>
-            )
-          }
-          <Grid item xs={editMode ? 11 : 12}>
+          <FormPropertyAction
+            editMode={editMode}
+            currentPropId={currentPropId}
+            propertyId={formPropertiesData.id}
+            isDeletingProperty={isDeletingProperty}
+          />
+          <Grid item xs={editMode ? 10 : 12}>
             <TextInput
               id={formPropertiesData.id}
               properties={formPropertiesData}
@@ -199,7 +197,7 @@ export default function GenericForm({ formId, pathname, formData, refetch, editM
       ),
       date: (
         <Grid container spacing={3} key={formPropertiesData.id}>
-          {
+          {/* {
             editMode && (
               <Grid item xs={1}>
                 <IconButton style={{ float: 'left', marginTop: 10 }} onClick={() => handleDeleteProperty(formPropertiesData.id)}>
@@ -207,8 +205,14 @@ export default function GenericForm({ formId, pathname, formData, refetch, editM
                 </IconButton>
               </Grid>
             )
-          }
-          <Grid item xs={editMode ? 11 : 12}>
+          } */}
+          <FormPropertyAction
+            editMode={editMode}
+            currentPropId={currentPropId}
+            propertyId={formPropertiesData.id}
+            isDeletingProperty={isDeletingProperty}
+          />
+          <Grid item xs={editMode ? 10 : 12}>
             <DatePickerDialog
               id={formPropertiesData.id}
               selectedDate={properties.date.value}
@@ -220,7 +224,7 @@ export default function GenericForm({ formId, pathname, formData, refetch, editM
       ),
       image: (
         <Grid container spacing={3} key={formPropertiesData.id}>
-          {
+          {/* {
             editMode && (
               <Grid item xs={1}>
                 <IconButton style={{ float: 'left', marginTop: 10 }} onClick={() => handleDeleteProperty(formPropertiesData.id)}>
@@ -228,8 +232,14 @@ export default function GenericForm({ formId, pathname, formData, refetch, editM
                 </IconButton>
               </Grid>
             )
-          }
-          <Grid item xs={editMode ? 11 : 12}>
+          } */}
+          <FormPropertyAction
+            editMode={editMode}
+            currentPropId={currentPropId}
+            propertyId={formPropertiesData.id}
+            isDeletingProperty={isDeletingProperty}
+          />
+          <Grid item xs={editMode ? 10 : 12}>
             <UploadField
               detail={{ type: 'file', label: formPropertiesData.fieldName }}
               upload={evt => onImageSelect(evt, formPropertiesData.id)}
@@ -241,7 +251,7 @@ export default function GenericForm({ formId, pathname, formData, refetch, editM
       ),
       signature: (
         <Grid container spacing={3} key={formPropertiesData.id}>
-          {
+          {/* {
             editMode && (
               <Grid item xs={1}>
                 <IconButton style={{ float: 'left', marginTop: 10 }} onClick={() => handleDeleteProperty(formPropertiesData.id)}>
@@ -249,8 +259,14 @@ export default function GenericForm({ formId, pathname, formData, refetch, editM
                 </IconButton>
               </Grid>
             )
-          }
-          <Grid item xs={editMode ? 11 : 12}>
+          } */}
+          <FormPropertyAction
+            editMode={editMode}
+            currentPropId={currentPropId}
+            propertyId={formPropertiesData.id}
+            isDeletingProperty={isDeletingProperty}
+          />
+          <Grid item xs={editMode ? 10 : 12}>
             <SignaturePad
               key={formPropertiesData.id}
               detail={{ type: 'signature', status: signatureStatus }}
@@ -262,7 +278,7 @@ export default function GenericForm({ formId, pathname, formData, refetch, editM
       ),
       radio: (
         <Grid container spacing={3} key={formPropertiesData.id}>
-          {
+          {/* {
             editMode && (
               <Grid item xs={1}>
                 <IconButton style={{ float: 'left', marginTop: 10 }} onClick={() => handleDeleteProperty(formPropertiesData.id)}>
@@ -270,8 +286,14 @@ export default function GenericForm({ formId, pathname, formData, refetch, editM
                 </IconButton>
               </Grid>
             )
-          }
-          <Grid item xs={editMode ? 11 : 12}>
+          } */}
+          <FormPropertyAction
+            editMode={editMode}
+            currentPropId={currentPropId}
+            propertyId={formPropertiesData.id}
+            isDeletingProperty={isDeletingProperty}
+          />
+          <Grid item xs={editMode ? 10 : 12}>
             <Fragment key={formPropertiesData.id}>
               <br />
               <RadioInput
@@ -286,7 +308,7 @@ export default function GenericForm({ formId, pathname, formData, refetch, editM
       ),
       dropdown: (
         <Grid container spacing={3} key={formPropertiesData.id}>
-          {
+          {/* {
           editMode && (
             <Grid item xs={1}>
               <IconButton style={{ float: 'left', marginTop: 10 }} onClick={() => handleDeleteProperty(formPropertiesData.id)}>
@@ -294,8 +316,14 @@ export default function GenericForm({ formId, pathname, formData, refetch, editM
               </IconButton>
             </Grid>
           )
-        }
-          <Grid item xs={editMode ? 11 : 12}>
+        } */}
+          <FormPropertyAction
+            editMode={editMode}
+            currentPropId={currentPropId}
+            propertyId={formPropertiesData.id}
+            isDeletingProperty={isDeletingProperty}
+          />
+          <Grid item xs={editMode ? 10 : 12}>
             <TextInput
               id={formPropertiesData.id}
               properties={formPropertiesData}
