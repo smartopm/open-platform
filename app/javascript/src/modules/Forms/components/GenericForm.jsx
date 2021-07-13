@@ -181,7 +181,6 @@ export default function GenericForm({ formId, pathname, formData, refetch, editM
           <FormPropertyAction
             formId={formId}
             editMode={editMode}
-            currentPropId={currentPropId}
             propertyId={formPropertiesData.id}
             isDeletingProperty={isDeletingProperty}
             refetch={refetch}
@@ -202,7 +201,6 @@ export default function GenericForm({ formId, pathname, formData, refetch, editM
           <FormPropertyAction
             formId={formId}
             editMode={editMode}
-            currentPropId={currentPropId}
             propertyId={formPropertiesData.id}
             isDeletingProperty={isDeletingProperty}
             refetch={refetch}
@@ -222,7 +220,6 @@ export default function GenericForm({ formId, pathname, formData, refetch, editM
           <FormPropertyAction
             formId={formId}
             editMode={editMode}
-            currentPropId={currentPropId}
             propertyId={formPropertiesData.id}
             isDeletingProperty={isDeletingProperty}
             refetch={refetch}
@@ -242,7 +239,6 @@ export default function GenericForm({ formId, pathname, formData, refetch, editM
           <FormPropertyAction
             formId={formId}
             editMode={editMode}
-            currentPropId={currentPropId}
             propertyId={formPropertiesData.id}
             isDeletingProperty={isDeletingProperty}
             refetch={refetch}
@@ -262,7 +258,6 @@ export default function GenericForm({ formId, pathname, formData, refetch, editM
           <FormPropertyAction
             formId={formId}
             editMode={editMode}
-            currentPropId={currentPropId}
             propertyId={formPropertiesData.id}
             isDeletingProperty={isDeletingProperty}
             refetch={refetch}
@@ -285,7 +280,6 @@ export default function GenericForm({ formId, pathname, formData, refetch, editM
           <FormPropertyAction
             formId={formId}
             editMode={editMode}
-            currentPropId={currentPropId}
             propertyId={formPropertiesData.id}
             isDeletingProperty={isDeletingProperty}
             refetch={refetch}
