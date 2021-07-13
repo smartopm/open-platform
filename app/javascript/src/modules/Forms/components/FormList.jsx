@@ -48,7 +48,7 @@ export default function FormLinkList({ userType, community }) {
   const { t } = useTranslation('form')
   const [open, setOpen] = useState(false)
   const [isLoading, setLoading] = useState(false)
-  const [message, setMessage] = useState('')
+  const [message, setMessage] = useState({ isError: false, detail: '' })
   const [expiresAt, setExpiresAtDate] = useState(null)
   const theme = useTheme()
   const fullScreen = useMediaQuery(theme.breakpoints.down('xs'))
@@ -120,7 +120,7 @@ export default function FormLinkList({ userType, community }) {
             save={submitForm}
             data={{
               loading: isLoading,
-              msg: message
+              msg: message.detail
             }}
           >
             <div style={{marginLeft : '-15px'}}>

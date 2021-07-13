@@ -39,7 +39,7 @@ export default function GenericForm({ formId, pathname, formData, refetch, editM
   const [currentPropId, setCurrentPropertyId] = useState('');
   const [uploadedImages, setUploadedImages] = useState([]);
   const signRef = useRef(null);
-  const { t } = useTranslation('form');
+  const { t } = useTranslation(['form', 'common']);
   const authState = useContext(AuthStateContext);
   const { data, loading } = useQuery(FormQuery, { variables: { id: formId } });
   // create form user
@@ -391,7 +391,7 @@ export default function GenericForm({ formId, pathname, formData, refetch, editM
                 aria-label="form_submit"
                 disabled={isSubmitting}
               >
-                {isSubmitting ? t('form_actions.submitting') : t('form_actions.submit')}
+                {isSubmitting ? t('common:form_actions.submitting') : t('common:form_actions.submit')}
               </Button>
             </CenteredContent>
           )}
