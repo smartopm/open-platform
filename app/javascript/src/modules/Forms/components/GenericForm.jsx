@@ -19,6 +19,7 @@ import { convertBase64ToFile, sortPropertyOrder } from '../../../utils/helpers';
 import RadioInput from './RadioInput';
 import { Spinner } from '../../../shared/Loading';
 import FormTitle from './FormTitle';
+import ImageAuth from '../../../shared/ImageAuth'
 
 // date
 // text input (TextField or TextArea)
@@ -46,7 +47,7 @@ export default function GenericForm({ formId, pathname, formData, refetch, editM
   const [createFormUser] = useMutation(FormUserCreateMutation);
   const [deleteProperty] = useMutation(FormPropertyDeleteMutation);
   // separate function for file upload
-  const { onChange, status, signedBlobId } = useFileUpload({
+  const { onChange, status, signedBlobId, contentType, url } = useFileUpload({
     client: useApolloClient(),
   });
   const {
@@ -63,7 +64,7 @@ export default function GenericForm({ formId, pathname, formData, refetch, editM
       currentPropId &&
       !uploadedImages.find((im) => im.propertyId === currentPropId)
     ) {
-      setUploadedImages([...uploadedImages, { blobId: signedBlobId, propertyId: currentPropId }]);
+      setUploadedImages([...uploadedImages, { blobId: signedBlobId, propertyId: currentPropId, contentType, url }]);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status]);
@@ -197,6 +198,7 @@ export default function GenericForm({ formId, pathname, formData, refetch, editM
     const editable = !formPropertiesData.adminUse
       ? false
       : !(formPropertiesData.adminUse && authState.user.userType === 'admin');
+    const uploadedFile = uploadedImages.find((im) => im.propertyId === formPropertiesData.id)
     const fields = {
       text: (
         <Grid container spacing={3} key={formPropertiesData.id}>
@@ -272,9 +274,14 @@ export default function GenericForm({ formId, pathname, formData, refetch, editM
               detail={{ type: 'file', label: formPropertiesData.fieldName }}
               upload={(evt) => onImageSelect(evt, formPropertiesData.id)}
               editable={editable}
-              uploaded={uploadedImages.find((im) => im.propertyId === formPropertiesData.id)}
+              uploaded={!!uploadedFile}
             />
           </Grid>
+          {
+            !!uploadedFile && (
+              <ImageAuth type={uploadedFile.contentType.split('/')[0]} imageLink={uploadedFile.url} token={authState.token} />
+            )
+          }
         </Grid>
       ),
       signature: (
@@ -390,6 +397,7 @@ export default function GenericForm({ formId, pathname, formData, refetch, editM
                 color="primary"
                 aria-label="form_submit"
                 disabled={isSubmitting}
+                style={{marginTop: '25px' }}
               >
                 {isSubmitting ? t('common:form_actions.submitting') : t('common:form_actions.submit')}
               </Button>
