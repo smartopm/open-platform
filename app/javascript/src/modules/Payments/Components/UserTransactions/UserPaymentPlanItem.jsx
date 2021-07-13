@@ -38,6 +38,7 @@ import { ReceiptPayment, PlanStatement } from '../../graphql/payment_query'
 import PaymentReceipt from './PaymentReceipt'
 import CenteredContent from '../../../../components/CenteredContent'
 import StatementPlan from './PlanStatement'
+import PlanDetail from './PlanDetail'
 
 export default function UserPaymentPlanItem({
   plans,
@@ -56,6 +57,8 @@ export default function UserPaymentPlanItem({
   const [plannId, setPlannId] = useState('');
   const [landParcelId, setLandParcelId] = useState('');
   const [receiptOpen, setReceiptOpen] = useState(false);
+  const [planDetailOpen, setPlanDetailOpen] = useState(false);
+  const [planData, setPlanData] = useState({});
   const [statementOpen, setStatementOpen] = useState(false);
   const [details, setPlanDetails] = useState({
     isLoading: false,
@@ -103,7 +106,8 @@ export default function UserPaymentPlanItem({
 
   const planMenuList = [
     { content: 'View Statement', isAdmin: true, handleClick: (event) => handlePlanClick(event)},
-    { content: 'View Transactions', isAdmin: true, handleClick: (event) => handleTransactionClick(event)}
+    { content: 'View Transactions', isAdmin: true, handleClick: (event) => handleTransactionClick(event)},
+    { content: 'View Details', isAdmin: true, handleClick: (event) => handlePlanDetailClick(event)}
   ]
 
   const handleClose = () => {
@@ -135,6 +139,11 @@ export default function UserPaymentPlanItem({
     history.push(`?tab=Plans&subtab=Transactions&id=${plannId}`)
   }
 
+  function handlePlanDetailClick(event) {
+    event.stopPropagation()
+    setPlanDetailOpen(true)
+  }
+
   function handleTransactionMenu(event, payId){
     event.stopPropagation()
     setAnchor(event.currentTarget)
@@ -146,6 +155,7 @@ export default function UserPaymentPlanItem({
     setPlanAnchor(event.currentTarget)
     setLandParcelId(plan.landParcel.id)
     setPlannId(plan.id)
+    setPlanData(plan)
   }
 
   function handlePlanListClose(event) {
@@ -209,6 +219,12 @@ export default function UserPaymentPlanItem({
 
   return (
     <>
+      <PlanDetail
+        open={planDetailOpen}
+        handleModalClose={() => setPlanDetailOpen(false)}
+        planData={planData}
+        currencyData={currencyData}
+      />
       {error && (
         <CenteredContent>{error.message}</CenteredContent>
       )}

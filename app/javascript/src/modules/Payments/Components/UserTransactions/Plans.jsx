@@ -113,7 +113,7 @@ export default function PaymentPlans({ userId, user, userData }) {
               filtering={filtering}
               setFiltering={setFiltering}
             />
-            {!id && filtering === false && (
+            {!id && !filtering && (
               <CenteredContent>
                 <Paginate
                   offSet={offset}
