@@ -147,9 +147,9 @@ describe('Form Component', () => {
     expect(loader.queryAllByTestId('loader')[0]).toBeInTheDocument()
     await waitFor(
       () => {
-        expect(container.queryByText('Update')).toBeInTheDocument()
-        expect(container.queryByText('Approve')).toBeInTheDocument()
-        expect(container.queryByText('Reject')).toBeInTheDocument()
+        expect(container.queryByText('form_status_actions.update')).toBeInTheDocument()
+        expect(container.queryByText('form_status_actions.approved')).toBeInTheDocument()
+        expect(container.queryByText('form_status_actions.rejected')).toBeInTheDocument()
         expect(container.queryAllByLabelText('text-input')).toHaveLength(1)
         expect(
           container.queryAllByLabelText('text-input')[0]
@@ -157,7 +157,7 @@ describe('Form Component', () => {
           expect(
             container.queryAllByTestId('date-picker')[0]
             ).toHaveTextContent('Dead Line')
-        expect(container.queryByText('Attachments')).toBeInTheDocument()
+        expect(container.queryByText('misc.attachments')).toBeInTheDocument()
         expect(container.queryByLabelText('Yes')).toBeInTheDocument()
         expect(container.queryByLabelText('No')).toBeInTheDocument()
         expect(container.queryByText('Would you rather?')).toBeInTheDocument()

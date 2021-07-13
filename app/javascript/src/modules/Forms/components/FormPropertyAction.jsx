@@ -24,6 +24,7 @@ export default function FormPropertyAction({
     const [modal, setModal] = useState({ type: '', isOpen: false})
     const [currentPropId, setCurrentPropId] = useState('')
 
+    // using default values in case we are just using the modal to close it.
     function handleModal(type='edit', id=currentPropId){
         setModal({type, isOpen: !modal.isOpen})
         setCurrentPropId(id)

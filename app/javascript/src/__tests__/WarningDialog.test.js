@@ -16,7 +16,7 @@ describe('ActionDialog component', () => {
     expect(
       container.queryByText('Wait what are you doing!??')
     ).toBeInTheDocument()
-    expect(container.queryByText('Proceed')).toBeInTheDocument()
-    expect(container.queryByText('Cancel')).toBeInTheDocument()
+    expect(container.queryByText('menu.proceed')).toBeInTheDocument()
+    expect(container.queryByText('form_actions.cancel')).toBeInTheDocument()
   })
 })

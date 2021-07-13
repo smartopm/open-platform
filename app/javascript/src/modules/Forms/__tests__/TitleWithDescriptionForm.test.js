@@ -23,9 +23,9 @@ describe('Form with a title and a description component', () => {
     )
     expect(container.queryByText("Additional Node Element")).toBeInTheDocument()
     expect(container.queryByText("Success")).toBeInTheDocument()
-    expect(container.queryByText("Cancel")).toBeInTheDocument()
-    expect(container.queryByText("Submit")).toBeInTheDocument()
-    expect(container.queryByText("Submit")).not.toBeDisabled()
+    expect(container.queryByText("form_actions.cancel")).toBeInTheDocument()
+    expect(container.queryByText("form_actions.submit")).toBeInTheDocument()
+    expect(container.queryByText("form_actions.submit")).not.toBeDisabled()
     expect(container.queryByLabelText("form_title")).toBeInTheDocument()
     expect(container.queryByLabelText("form_description")).toBeInTheDocument()
 
@@ -36,10 +36,10 @@ describe('Form with a title and a description component', () => {
     fireEvent.change(container.queryByLabelText("form_description"),  { target: { value: 'This is a good form description' } })
     expect(container.queryByLabelText("form_description").value).toBe('This is a good form description')
 
-    fireEvent.click(container.queryByText("Submit"))
+    fireEvent.click(container.queryByText("form_actions.submit"))
     expect(saveMock).toBeCalled()
 
-    fireEvent.click(container.queryByText("Cancel"))
+    fireEvent.click(container.queryByText("form_actions.cancel"))
     expect(closeMock).toBeCalled()
   })
 })

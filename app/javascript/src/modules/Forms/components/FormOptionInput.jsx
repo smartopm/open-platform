@@ -34,14 +34,14 @@ export default function FormOptionInput({ options, setOptions, label }) {
       {options.map((value, i) => (
         // eslint-disable-next-line react/no-array-index-key
         <div key={i}>
-          {label === t('common:form_fields.secondary_number') ? (
+          {label === t('form_fields.secondary_number') ? (
             <>
               <label
                 htmlFor="phoneNumber"
                 className="MuiFormLabel-root MuiInputLabel-shrink
               MuiInputLabel-root"
               >
-                Secondary Phone Number&nbsp;
+                {t('form_fields.secondary_number')}
                 {i}
                 <span aria-hidden="true" className="MuiFormLabel-asterisk MuiInputLabel-asterisk">
                   &nbsp;*
@@ -52,10 +52,10 @@ export default function FormOptionInput({ options, setOptions, label }) {
                 enableSearch
                 inputProps={{
                   name: 'phoneNumber',
-                  required: true
+                  required: true,
                 }}
-                placeholder={t('common:form_placeholders.phone_number')}
-                onChange={val => {
+                placeholder={t('form_placeholders.phone_number')}
+                onChange={(val) => {
                   const values = options;
                   values[parseInt(i, 10)] = val;
                   setOptions([...options]);
@@ -64,7 +64,7 @@ export default function FormOptionInput({ options, setOptions, label }) {
                 containerStyle={{
                   width: '30%',
                   display: 'inline-block',
-                  marginRight: '5px'
+                  marginRight: '5px',
                 }}
               />
             </>
@@ -89,8 +89,8 @@ export default function FormOptionInput({ options, setOptions, label }) {
       ))}
       <IconButton onClick={handleAddOption} aria-label="add" style={{ marginLeft: -15 }}>
         <AddCircleOutline />
-        <Typography color="primary" style={{ marginLeft: 10 }}>
-          {`  Add ${label}`}
+        <Typography color="primary" style={{ marginLeft: 10 }} data-testid="add_type">
+          {t('form_actions.add_type', { label })}
         </Typography>
       </IconButton>
     </div>
@@ -98,10 +98,11 @@ export default function FormOptionInput({ options, setOptions, label }) {
 }
 
 export function FormOptionWithOwnActions({ actions, value, id }) {
+  const { t } = useTranslation('common');
   return (
     <div>
       <TextField
-        label={`option ${id}`}
+        label={t('misc.option_with_count', { id })}
         variant="outlined"
         size="small"
         defaultValue={value}
@@ -135,14 +136,14 @@ FormOptionInput.propTypes = {
   /**
    * Description of a field being updated
    */
-  label: PropTypes.string.isRequired
+  label: PropTypes.string.isRequired,
 };
 
 FormOptionWithOwnActions.propTypes = {
   actions: PropTypes.shape({
     handleRemoveOption: PropTypes.func,
-    handleOptionChange: PropTypes.func
+    handleOptionChange: PropTypes.func,
   }).isRequired,
   value: PropTypes.string.isRequired,
-  id: PropTypes.number.isRequired
+  id: PropTypes.number.isRequired,
 };
