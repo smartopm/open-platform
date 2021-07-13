@@ -23,6 +23,7 @@ import { useTheme } from '@material-ui/styles'
 import { StyleSheet, css } from 'aphrodite'
 import PropTypes from 'prop-types'
 import { useHistory } from 'react-router'
+import { useTranslation } from 'react-i18next'
 import FormLinks, { useStyles } from './FormLinks'
 import { FormsQuery } from '../graphql/forms_queries'
 import Loading from '../../../shared/Loading'
@@ -44,9 +45,10 @@ export default function FormLinkList({ userType, community }) {
   const [createForm] = useMutation(FormCreateMutation)
   const history = useHistory()
   const classes = useStyles()
+  const { t } = useTranslation('form')
   const [open, setOpen] = useState(false)
   const [isLoading, setLoading] = useState(false)
-  const [message, setMessage] = useState('')
+  const [message, setMessage] = useState({ isError: false, detail: '' })
   const [expiresAt, setExpiresAtDate] = useState(null)
   const theme = useTheme()
   const fullScreen = useMediaQuery(theme.breakpoints.down('xs'))
@@ -69,7 +71,7 @@ export default function FormLinkList({ userType, community }) {
       variables: { name: title, expiresAt, description, multipleSubmissionsAllowed }
     })
       .then(() => {
-        setMessage({isError: false, detail: 'Successfully created the form'})
+        setMessage({isError: false, detail: t('misc.form_created')})
         setAlertOpen(true)
         refetch()
         setLoading(false)
@@ -108,7 +110,7 @@ export default function FormLinkList({ userType, community }) {
       >
         <DialogTitle id="responsive-dialog-title">
           <CenteredContent>
-            <span>Create a form</span>
+            <span>{t('actions.create_a_form')}</span>
           </CenteredContent>
         </DialogTitle>
         <DialogContent>
@@ -118,19 +120,19 @@ export default function FormLinkList({ userType, community }) {
             save={submitForm}
             data={{
               loading: isLoading,
-              msg: message
+              msg: message.detail
             }}
           >
             <div style={{marginLeft : '-15px'}}>
               <SwitchInput
                 name="multipleSubmissionsAllowed"
-                label="Limit to 1 response"
+                label={t('misc.limit_1_response')}
                 value={!multipleSubmissionsAllowed}
                 handleChange={event => {setMultipleSubmissionsAllowed(!event.target.checked)}}
               />
             </div>
             <DateAndTimePickers
-              label="Form Expiry Date"
+              label={t('misc.form_expiry_date')}
               selectedDateTime={expiresAt}
               handleDateChange={handleDateChange}
               pastDate
@@ -195,7 +197,7 @@ export default function FormLinkList({ userType, community }) {
       : (
         <CenteredContent>
           <Typography>
-            No Forms to Submit
+            {t('misc.no_forms')}
           </Typography>
         </CenteredContent>
     )}
@@ -203,7 +205,7 @@ export default function FormLinkList({ userType, community }) {
 
       {userType === 'admin' && (
         <FloatButton
-          title="Create a Form"
+          title={t('actions.create_a_form')}
           handleClick={() => setOpen(!open)}
         />
       )}
@@ -217,6 +219,7 @@ export function FormMenu({ formId, anchorEl, handleClose, open, refetch }) {
   const [alertOpen, setAlertOpen] = useState(false)
   const [actionType, setActionType] = useState('')
   const [message, setMessage] = useState({ isError: false, detail: '' })
+  const { t } = useTranslation(['form', 'common'])
 
   const [publish] = useMutation(FormUpdateMutation)
 
@@ -235,7 +238,7 @@ export function FormMenu({ formId, anchorEl, handleClose, open, refetch }) {
       variables: { id: formId, status: propAccessor(formStatus, actionType)}
     })
     .then(() => {
-      setMessage({isError: false, detail: `Successfully ${propAccessor(formStatus, actionType)} the form`})
+      setMessage({isError: false, detail: t('misc.form_action_success', { status: t(`form_status.${actionType}`)})})
       setOpen(!isDialogOpen)
       setAlertOpen(true)
       handleClose()
@@ -260,7 +263,7 @@ export function FormMenu({ formId, anchorEl, handleClose, open, refetch }) {
         open={isDialogOpen}
         handleClose={() => handleConfirm('')}
         handleOnSave={updateForm}
-        message={`Are you sure to ${actionType} this form`}
+        message={t('misc.form_confirm_message', { actionType: t(`form_status_actions.${actionType}`) })}
         type={actionType === 'delete' ? 'warning' : 'confirm'}
       />
 
@@ -289,21 +292,21 @@ export function FormMenu({ formId, anchorEl, handleClose, open, refetch }) {
             key="edit_form"
             onClick={routeToEdit}
           >
-            Edit
+            {t('common:menu.edit')}
           </MenuItem>
           <MenuItem
             id="publish_button"
             key="publish_form"
             onClick={() => handleConfirm('publish')}
           >
-            Publish
+            {t('common:menu.publish')}
           </MenuItem>
           <MenuItem
             id="delete_button"
             key="delete_form"
             onClick={() => handleConfirm('delete')}
           >
-            Delete
+            {t('common:menu.delete')}
           </MenuItem>
         </div>
       </Menu>

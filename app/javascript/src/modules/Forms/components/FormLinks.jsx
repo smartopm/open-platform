@@ -9,12 +9,16 @@ import {
 } from '@material-ui/core'
 import PropTypes from 'prop-types'
 import { makeStyles } from '@material-ui/styles'
+import { useTranslation } from 'react-i18next'
 import AssignmentIcon from '@material-ui/icons/Assignment'
 import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider'
+
 
 // this is for existing google forms
 export default function FormLinks({ community }) {
 const authState = useContext(AuthStateContext)
+const { t } = useTranslation('form')
+
 // eslint-disable-next-line no-use-before-define
 const classes = useStyles()
 if (community !== "Nkwashi") {
@@ -39,7 +43,7 @@ if (community !== "Nkwashi") {
         </ListItemAvatar>
         <Box className={classes.listBox}>
           <Typography variant="subtitle1" data-testid="forms-building-permit">
-            Building Permit
+            {t('misc.building_permit')}
           </Typography>
         </Box>
       </ListItem>
@@ -67,7 +71,7 @@ if (community !== "Nkwashi") {
         </ListItemAvatar>
         <Box className={classes.listBox}>
           <Typography variant="subtitle1" data-testid="forms-crf ">
-            Client Request Form
+            {t('misc.client_request_form')}
           </Typography>
         </Box>
       </ListItem>

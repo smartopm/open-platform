@@ -18,7 +18,7 @@ describe('Form Option Input component', () => {
     )
     expect(container.queryByText('Phone Number 1')).toBeInTheDocument()
     expect(container.queryByText('Phone Number 2')).toBeInTheDocument()
-    expect(container.queryByText('Add Phone Number')).toBeInTheDocument()
+    expect(container.queryByTestId('add_type')).toBeInTheDocument()
     expect(container.queryAllByLabelText('remove')[0]).not.toBeDisabled()
 
     fireEvent.click(container.queryAllByLabelText('remove')[0])
@@ -37,7 +37,7 @@ describe('Form with its own actions', () => {
     const container = render(
       <FormOptionWithOwnActions actions={actions} value="option 1" id={3} />
     )
-    expect(container.queryByText('option 3')).toBeInTheDocument()
+    expect(container.queryByText('misc.option_with_count')).toBeInTheDocument()
     expect(container.queryByLabelText('remove')).not.toBeDisabled()
 
     fireEvent.click(container.queryByLabelText('remove'))

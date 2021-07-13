@@ -62,7 +62,13 @@ phrase:
         locale_id: 5c6c3e050e8493da0e428087555a7b00
         tags: timecard
         update_translations: true
-    # upload spanish existing translations too 
+    - file: ./public/locales/en/form.json
+      params:
+        file_format: i18next
+        locale_id: 5c6c3e050e8493da0e428087555a7b00
+        tags: form
+        update_translations: true
+    # upload spanish existing translations too
     - file: ./public/locales/es/login.json
       params:
         file_format: i18next
@@ -145,3 +151,8 @@ phrase:
         file_format: i18next
         locale_id: fa26b7d00b593c4578f0e9749221cace
         tags: label
+    - file: ./public/locales/es/form.json
+      params:
+        file_format: i18next
+        locale_id: fa26b7d00b593c4578f0e9749221cace
+        tags: form

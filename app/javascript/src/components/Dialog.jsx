@@ -219,6 +219,7 @@ export function MapEditorFullScreenDialog({ handleClose, open, children }){
   )
 }
 export function ActionDialog({ handleClose, open, handleOnSave, message, type}) {
+  const { t } = useTranslation('common')
   const classes = useStyles()
   return (
     <Dialog
@@ -239,7 +240,7 @@ export function ActionDialog({ handleClose, open, handleOnSave, message, type}) 
       <Divider />
       <DialogActions style={{ margin: '10px' }}>
         <Button onClick={handleClose} variant="outlined" color="secondary">
-          Cancel
+          {t('form_actions.cancel')}
         </Button>
         <Button
           autoFocus
@@ -247,7 +248,7 @@ export function ActionDialog({ handleClose, open, handleOnSave, message, type}) 
           variant="contained"
           color="primary"
         >
-          Proceed
+          {t('menu.proceed')}
         </Button>
       </DialogActions>
     </Dialog>
