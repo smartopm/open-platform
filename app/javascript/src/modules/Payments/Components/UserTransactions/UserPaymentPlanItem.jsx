@@ -38,12 +38,8 @@ import { ReceiptPayment, PlanStatement } from '../../graphql/payment_query'
 import PaymentReceipt from './PaymentReceipt'
 import CenteredContent from '../../../../components/CenteredContent'
 import StatementPlan from './PlanStatement'
-<<<<<<< HEAD
-import PlanDetail from './PlanDetail'
-=======
 import { ActionDialog } from '../../../../components/Dialog';
->>>>>>> add cancel payment plan
-
+import PlanDetail from './PlanDetail'
 export default function UserPaymentPlanItem({
   plans,
   currencyData,
