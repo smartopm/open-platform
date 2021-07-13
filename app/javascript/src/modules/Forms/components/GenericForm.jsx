@@ -128,8 +128,7 @@ export default function GenericForm({ formId, pathname, formData, refetch, editM
     await uploadSignature(signature);
   }
 
-  function saveFormData(event) {
-    event.preventDefault();
+  function saveFormData() {
     setSubmitting(true);
     const fileSignType = formData.formProperties.filter(
       (item) => item.fieldType === 'signature'
@@ -346,7 +345,7 @@ export default function GenericForm({ formId, pathname, formData, refetch, editM
         }
 
         <br />
-        <form onSubmit={saveFormData}>
+        <form>
           {formData.formProperties.sort(sortPropertyOrder).map(renderForm)}
           {!pathname.includes('edit_form') && (
             <CenteredContent>
@@ -357,6 +356,7 @@ export default function GenericForm({ formId, pathname, formData, refetch, editM
                 aria-label="form_submit"
                 disabled={isSubmitting}
                 style={{marginTop: '25px' }}
+                onClick={saveFormData}
               >
                 {isSubmitting ? t('common:form_actions.submitting') : t('common:form_actions.submit')}
               </Button>

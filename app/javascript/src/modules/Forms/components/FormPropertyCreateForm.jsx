@@ -64,10 +64,11 @@ export default function FormPropertyCreateForm({ formId, refetch, propertyId }){
     });
   }
 
+  const nextOrder = Number(propertyData.order) + 1;
+  const fieldValue = options.map((option) => ({ value: option, label: option }));
+
   function saveFormProperty(event) {
     event.preventDefault();
-    const nextOrder = Number(propertyData.order) + 1;
-    const fieldValue = options.map((option) => ({ value: option, label: option }));
     setMutationLoading(true);
     formPropertyCreate({
       variables: {
@@ -90,8 +91,13 @@ export default function FormPropertyCreateForm({ formId, refetch, propertyId }){
       });
   }
 
+  function updateFormProperty(event){
+    event.preventDefault();
+    console.log("updating a form ...")
+  }
+
   return (
-    <form onSubmit={saveFormProperty}>
+    <form onSubmit={propertyId ? updateFormProperty : saveFormProperty}>
       <TextField
         id="standard-basic"
         label={t('form_fields.field_name')}
@@ -141,7 +147,9 @@ export default function FormPropertyCreateForm({ formId, refetch, propertyId }){
       <br />
       <CenteredContent>
         <Button variant="outlined" type="submit" disabled={isLoading} color="primary">
-          {isLoading ? t('actions.adding_form_property') : t('actions.add_form_property')}
+          {
+            !propertyId ? t('actions.add_form_property') : t('actions.update_form_property')
+          }
         </Button>
       </CenteredContent>
     </form>
