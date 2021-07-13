@@ -62,7 +62,7 @@ describe('Form Component', () => {
 
     expect(loader.queryAllByTestId('loader')[0]).toBeInTheDocument()
     await waitFor(() => {
-        expect(container.queryByText('form_actions.submit')).toBeInTheDocument(1)
+        expect(container.queryByText('common:form_actions.submit')).toBeInTheDocument(1)
         expect(container.queryAllByLabelText('text-input')).toHaveLength(1)
         expect(container.queryAllByLabelText('text-input')[0]).toHaveTextContent('Client Name')
         expect(container.queryByLabelText('Yes')).toBeInTheDocument()
