@@ -349,7 +349,8 @@ export default function LandParcelModal({
   function handleMerge(plot){
     handleSubmitMerge({
       id: plot.id,
-      parcelNumber: plot.parcelNumber
+      parcelNumber: plot.parcelNumber,
+      geom: plot.geom,
     });
   }
 

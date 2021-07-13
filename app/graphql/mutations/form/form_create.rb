@@ -19,7 +19,7 @@ module Mutations
           return { form: form }
         end
 
-        raise GraphQL::ExecutionError, form.errors.full_messages
+        raise GraphQL::ExecutionError, form.errors.full_messages&.join(', ')
       end
 
       # Verifies if current user is admin or not.
