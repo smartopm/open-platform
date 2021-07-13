@@ -206,6 +206,9 @@ export const UsersDetails = gql`
       avatarUrl
       imageUrl
       subStatus
+      extRefId
+      expiresAt
+      state
       notes {
         id
       }

@@ -2,12 +2,14 @@
 import React, { useState, useEffect, useContext } from 'react'
 import { useQuery, useMutation, useLazyQuery } from 'react-apollo'
 import { Redirect, Link , useLocation, useHistory} from 'react-router-dom'
-import { makeStyles } from '@material-ui/core/styles'
+import { makeStyles, useTheme } from '@material-ui/core/styles'
 import { Button, Divider, IconButton, InputBase, Grid, Typography } from '@material-ui/core'
 import { useTranslation } from 'react-i18next'
 import FilterListIcon from '@material-ui/icons/FilterList'
 import MaterialConfig from 'react-awesome-query-builder/lib/config/material'
-import Loading from '../../../shared/Loading'
+import Fab from '@material-ui/core/Fab';
+import { CSVLink } from 'react-csv';
+import Loading, { Spinner } from '../../../shared/Loading'
 import ErrorPage from '../../../components/Error'
 import { UsersDetails, LabelsQuery, UsersCount } from '../../../graphql/queries'
 import {
@@ -24,36 +26,50 @@ import QueryBuilder from '../../../components/QueryBuilder'
 import { dateToString } from '../../../utils/dateutil'
 
 import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider'
-import { pluralizeCount, propAccessor } from '../../../utils/helpers'
+import { pluralizeCount, propAccessor, toTitleCase } from '../../../utils/helpers'
 import SubStatusReportDialog from '../../CustomerJourney/Components/SubStatusReport'
+
 
 const limit = 25
 const USERS_CAMPAIGN_WARNING_LIMIT = 2000
 
+const csvHeaders = [
+  { label: "Name", key: "name" },
+  { label: 'Primary Email', key: 'email' },
+  { label: 'Primary Phone', key: 'phoneNumber' },
+  { label: 'External Ref ID', key: 'extRefId' },
+  { label: 'User Type', key: 'userType' },
+  { label: 'Customer Journey Stage', key: 'subStatus' },
+  { label: 'User State', key: 'state' },
+  { label: 'Expiration Date', key: 'expiresAt' },
+];
+
 export default function UsersList() {
-  const classes = useStyles()
-  const [isDialogOpen, setIsDialogOpen] = useState(false)
-  const [redirect, setRedirect] = useState(false)
-  const [offset, setOffset] = useState(0)
-  const [note, setNote] = useState('')
-  const [searchQuery, setSearchQuery] = useState('')
-  const [userId, setId] = useState('')
-  const [userName, setName] = useState('')
-  const [displayBuilder, setDisplayBuilder] = useState('none')
-  const [filterCount, setFilterCount] = useState(0)
-  const [modalAction, setModalAction] = useState('')
-  const [noteCreate, { loading: mutationLoading }] = useMutation(CreateNote)
-  const authState = useContext(AuthStateContext)
-  const [labelError, setError] = useState('')
-  const [campaignCreate] = useMutation(CampaignCreateThroughUsers)
-  const [campaignCreateOption, setCampaignCreateOption] = useState('none')
-  const [openCampaignWarning, setOpenCampaignWarning] = useState(false)
-  const [selectedUsers, setSelectedUsers] = useState([])
-  const [selectCheckBox, setSelectCheckBox] = useState(false)
-  const [substatusReportOpen, setSubstatusReportOpen] = useState(false)
-  const history = useHistory()
-  const location = useLocation()
-  const { t } = useTranslation(['users', 'common'])
+  const classes = useStyles();
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [redirect, setRedirect] = useState(false);
+  const [offset, setOffset] = useState(0);
+  const [note, setNote] = useState('');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [userId, setId] = useState('');
+  const [userName, setName] = useState('');
+  const [displayBuilder, setDisplayBuilder] = useState('none');
+  const [filterCount, setFilterCount] = useState(0);
+  const [modalAction, setModalAction] = useState('');
+  const [noteCreate, { loading: mutationLoading }] = useMutation(CreateNote);
+  const authState = useContext(AuthStateContext);
+  const [labelError, setError] = useState('');
+  const [campaignCreate] = useMutation(CampaignCreateThroughUsers);
+  const [campaignCreateOption, setCampaignCreateOption] = useState('none');
+  const [openCampaignWarning, setOpenCampaignWarning] = useState(false);
+  const [selectedUsers, setSelectedUsers] = useState([]);
+  const [selectCheckBox, setSelectCheckBox] = useState(false);
+  const [substatusReportOpen, setSubstatusReportOpen] = useState(false);
+  const history = useHistory();
+  const location = useLocation();
+  const { t } = useTranslation(['users', 'common']);
+  const theme = useTheme();
+
 
   function handleReportDialog(){
     setSubstatusReportOpen(!substatusReportOpen)
@@ -68,9 +84,22 @@ export default function UsersList() {
     fetchPolicy: 'cache-and-network'
   })
 
-  let userList
+  const [loadAllUsers, { loading: usersLoading, data: usersData, called }] = useLazyQuery(UsersDetails, {
+    // TODO: have a separate query with no limits
+    variables: {limit: 2000, query: searchQuery },
+    errorPolicy: 'all'
+  });
+
+  let csvUserData;
+  let userList;
   if (data) {
     userList = data.users.map(user => user.id)
+  }
+
+  if (usersData) {
+    csvUserData = usersData.users.map(user => {
+      return ({...user, subStatus: toTitleCase(user.subStatus)});
+    });
   }
 
   function getQuery() {
@@ -102,6 +131,9 @@ export default function UsersList() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
+  function handleDownloadCSV(){
+    loadAllUsers()
+  }
 
   // TODO: @dennis, add pop up for notes
   const [userLabelCreate] = useMutation(UserLabelCreate)
@@ -601,6 +633,26 @@ export default function UsersList() {
               usersCountData={usersCountData}
               selectCheckBox={selectCheckBox}
             />
+            <Fab color="primary" variant="extended" className={classes.download}>
+              {
+                !called ? (
+                  // eslint-disable-next-line jsx-a11y/click-events-have-key-events
+                  <span style={{ color: theme.palette.primary.contrastText }} role="button" tabIndex={0} aria-label="download csv" color="textPrimary" onClick={handleDownloadCSV}>
+                    {usersLoading ? <Spinner /> : 'Process CSV Data'}
+                  </span>
+                )
+                : (
+                  <CSVLink
+                    data={csvUserData || []}
+                    style={{ color: 'white' }}
+                    headers={csvHeaders}
+                    filename={`user-data-${dateToString(new Date())}.csv`}
+                  >
+                    {usersLoading ? <Spinner /> : 'Download CSV'}
+                  </CSVLink>
+                )
+              }
+            </Fab>
             <UserListCard
               userData={data}
               handleNoteModal={handleNoteModal}
@@ -682,5 +734,13 @@ export const useStyles = makeStyles(theme => ({
     searchButton: {
       flexBasis: '100%'
     },
+  },
+  download: {
+    boxShadow: 'none',
+    position: 'fixed',
+    bottom: 30,
+    right: 57,
+    marginLeft: '30%',
+    zIndex: '1000'
   }
 }))
