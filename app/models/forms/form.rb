@@ -14,5 +14,24 @@ module Forms
 
     default_scope { where.not(status: 2) }
     enum status: { draft: 0, published: 1, deleted: 2 }
+
+    def has_entries?
+      form_users.present?
+    end
+
+    def duplicate(form_property_id)
+      dup.tap do |new_form|
+        form_properties.each do |property|
+          next if property.id == form_property_id
+          new_form.form_properties.push property.dup
+        end
+      end
+    end
+
+    def latest_version
+      possible_name = name.gsub(/\((Version)\s\d*\)/, "")
+      Form.where("name = ? OR name like ?", possible_name, "%#{possible_name} (Version%")
+          .order(:created_at).last.version_number
+    end
   end
 end
