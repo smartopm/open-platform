@@ -4,6 +4,8 @@ module Types
   # FormType
   class FormUsersType < Types::BaseObject
     field :id, ID, null: false
+    field :form_id, ID, null: false
+    field :user_id, ID, null: false
     field :user, Types::UserType, null: false
     field :form, Types::FormType, null: true
     field :status, String, null: true

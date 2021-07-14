@@ -74,3 +74,22 @@ export const FormUserQuery = gql`
     }
   }
 `
+
+export const FormEntriesQuery = gql`
+  query formEntries ($formId: ID!, $query: String, $limit: Int, $offset: Int) {
+    formEntries(formId: $formId, query: $query, limit: $limit, offset: $offset) {
+      formName
+      formUsers{
+        id
+        userId
+        formId
+        createdAt
+        status
+        user{
+          name
+          imageUrl
+        }
+      }
+    }
+  }
+`
