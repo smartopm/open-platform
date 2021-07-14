@@ -184,6 +184,7 @@ export default function FormLinkList({ userType, community }) {
               formId === form.id && (
                 <FormMenu
                   formId={formId}
+                  formName={form.name}
                   anchorEl={anchorEl}
                   handleClose={() => setAnchorEl(null)}
                   open={menuOpen}
@@ -213,7 +214,7 @@ export default function FormLinkList({ userType, community }) {
   )
 }
 
-export function FormMenu({ formId, anchorEl, handleClose, open, refetch }) {
+export function FormMenu({ formId, formName, anchorEl, handleClose, open, refetch }) {
   const history = useHistory()
   const [isDialogOpen, setOpen] = useState(false)
   const [alertOpen, setAlertOpen] = useState(false)
@@ -308,6 +309,13 @@ export function FormMenu({ formId, anchorEl, handleClose, open, refetch }) {
           >
             {t('common:menu.delete')}
           </MenuItem>
+          <MenuItem
+            id="view_entries_button"
+            key="view_entries"
+            onClick={() => history.push(`/form/${formId}/${formName}/entries`)}
+          >
+            View Entries
+          </MenuItem>
         </div>
       </Menu>
     </>
@@ -319,6 +327,7 @@ FormMenu.defaultProps = {
 }
 FormMenu.propTypes = {
   formId: PropTypes.string.isRequired,
+  formName: PropTypes.string.isRequired,
   open: PropTypes.bool.isRequired,
   handleClose: PropTypes.func.isRequired,
   refetch: PropTypes.func.isRequired,

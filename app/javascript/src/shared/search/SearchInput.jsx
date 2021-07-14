@@ -9,7 +9,7 @@ import {
 import { ClearOutlined, FilterListOutlined } from '@material-ui/icons';
 import PropTypes from 'prop-types'
 
-export default function SearchInput({ title, searchValue, handleSearch, handleFilter, handleClear }) {
+export default function SearchInput({ title, searchValue, filterRequired, handleSearch, handleFilter, handleClear }) {
   return (
     <FormControl fullWidth variant="outlined">
       <InputLabel htmlFor="outlined-adornment-filter">{`Search for ${title}`}</InputLabel>
@@ -30,9 +30,11 @@ export default function SearchInput({ title, searchValue, handleSearch, handleFi
                 </IconButton>
               )
             }
+            {filterRequired && (
             <IconButton aria-label="toggle filter visibility" onClick={handleFilter} edge="end" data-testid="filter">
               <FilterListOutlined />
             </IconButton>
+          )}
           </InputAdornment>
         )}
         labelWidth={120}
@@ -42,13 +44,16 @@ export default function SearchInput({ title, searchValue, handleSearch, handleFi
 }
 
 SearchInput.defaultProps = {
-  handleClear: () => {}
+  handleClear: () => {},
+  handleFilter: () => {},
+  filterRequired: true
 }
 
 SearchInput.propTypes = {
     title: PropTypes.string.isRequired,
     searchValue: PropTypes.string.isRequired,
+    filterRequired: PropTypes.bool,
     handleSearch: PropTypes.func.isRequired,
-    handleFilter: PropTypes.func.isRequired,
+    handleFilter: PropTypes.func,
     handleClear: PropTypes.func,
 }

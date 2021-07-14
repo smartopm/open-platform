@@ -3,6 +3,8 @@
 module Forms
   # Form User Record
   class FormUser < ApplicationRecord
+    include SearchCop
+
     belongs_to :form
     belongs_to :user, class_name: 'Users::User'
     belongs_to :status_updated_by, class_name: 'Users::User'
@@ -15,6 +17,11 @@ module Forms
     default_scope { where.not(status: 4) }
 
     enum status: { draft: 0, pending: 1, approved: 2, rejected: 3, deleted: 4 }
+
+    search_scope :search do
+      attributes :status, :created_at
+      attributes user: ['user.name']
+    end
 
     def create_form_task(hostname)
       user.generate_note(
