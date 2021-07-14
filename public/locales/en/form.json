@@ -16,7 +16,7 @@
 		"signature": "Signature",
 		"deleted_form_property": "Successfully deleted form property",
 		"updated_form_property": "Successfully updated form property",
-		"created_form_property": "Successfully created form property",
+		"created_form_property": "Successfully added a form field",
 		"form_submitted": "You have successfully submitted the form"
 	},
 	"actions": {

@@ -1,9 +1,8 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import { useLocation } from 'react-router'
-import { Button, Container, Snackbar } from '@material-ui/core'
+import { Button, Container } from '@material-ui/core'
 import Icon from '@material-ui/core/Icon'
-import { Alert } from '@material-ui/lab'
 import { useTranslation } from 'react-i18next'
 import { useMutation, useQuery } from 'react-apollo'
 import CenteredContent from '../../../components/CenteredContent'
@@ -18,6 +17,7 @@ import Toggler from '../../../components/Campaign/ToggleButton'
 import FormTimeline from '../../../shared/TimeLine'
 import { ActionDialog } from '../../../components/Dialog'
 import { formatError } from '../../../utils/helpers'
+import MessageAlert from '../../../components/MessageAlert'
 
 /**
  * @param {String} formId
@@ -90,18 +90,12 @@ export default function FormBuilder({ formId }) {
         type="confirm"
       />
 
-      <Snackbar
+      <MessageAlert
+        type={message.isError ? 'error' : 'success'}
+        message={message.detail}
         open={alertOpen}
-        autoHideDuration={2000}
-        onClose={handleAlertClose}
-      >
-        <Alert
-          onClose={handleAlertClose}
-          severity={message.isError ? 'error' : 'success'}
-        >
-          {message.detail}
-        </Alert>
-      </Snackbar>
+        handleClose={handleAlertClose}
+      />
 
       <br />
       <Toggler
@@ -143,6 +137,8 @@ export default function FormBuilder({ formId }) {
                 variant="outlined"
                 color="primary"
                 onClick={handleConfirmPublish}
+                disabled={isPublishing}
+                startIcon={isPublishing && <Spinner />}
               >
                 {isPublishing ? t('misc.publishing_form') : t('actions.publish_form')}
               </Button>

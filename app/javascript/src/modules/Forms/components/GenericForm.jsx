@@ -1,9 +1,8 @@
 import React, { Fragment, useContext, useRef, useState, useEffect } from 'react'
-import { Button, Container, Grid, Snackbar } from '@material-ui/core'
+import { Button, Container, Grid } from '@material-ui/core'
 import { useApolloClient, useMutation, useQuery } from 'react-apollo'
 import PropTypes from 'prop-types'
 import { useTranslation } from 'react-i18next';
-import { Alert } from '@material-ui/lab';
 import DatePickerDialog from '../../../components/DatePickerDialog';
 import CenteredContent from '../../../components/CenteredContent';
 import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider';
@@ -19,6 +18,7 @@ import { Spinner } from '../../../shared/Loading';
 import FormTitle from './FormTitle'
 import FormPropertyAction from './FormPropertyAction';
 import ImageAuth from '../../../shared/ImageAuth'
+import MessageAlert from '../../../components/MessageAlert';
 
 // date
 // text input (TextField or TextArea)
@@ -303,11 +303,12 @@ export default function GenericForm({ formId, pathname, formData, refetch, editM
 
   return (
     <>
-      <Snackbar open={alertOpen} autoHideDuration={2000} onClose={handleAlertClose}>
-        <Alert onClose={handleAlertClose} severity={message.err ? 'error' : 'success'}>
-          {message.info}
-        </Alert>
-      </Snackbar>
+      <MessageAlert
+        type={message.err ? 'error' : 'success'}
+        message={message.info}
+        open={alertOpen}
+        handleClose={handleAlertClose}
+      />
       <Container>
         {loading && <Spinner />}
 
@@ -343,7 +344,6 @@ GenericForm.propTypes = {
   formId: PropTypes.string.isRequired,
   pathname: PropTypes.string.isRequired,
   // eslint-disable-next-line react/require-default-props
-  // eslint-disable-next-line react/forbid-prop-types
   // eslint-disable-next-line react/forbid-prop-types
   formData: PropTypes.object.isRequired,
   refetch: PropTypes.func.isRequired,
