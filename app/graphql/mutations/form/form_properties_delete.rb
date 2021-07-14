@@ -14,11 +14,24 @@ module Mutations
         form = context[:site_community].forms.find(vals[:form_id])
         raise_form_not_found_error(form)
 
-        check_form_user(vals[:form_id])
         form_property = form.form_properties.find(vals[:form_property_id])
+        form = form_property.form
 
-        data = { action: 'removed', field_name: form_property.field_name }
+        if form.has_entries?
+          latest_form_version = form.latest_version
+          new_version_number = (latest_form_version.nil? ? 2 : latest_form_version + 1)
+          new_form = form.duplicate(vals[:form_property_id])
+          new_form.version_number = new_version_number
+          new_form.name = "#{form.name} (Version #{new_version_number})"
+
+          if new_form.save
+            form_property.form.update(version_number: 1) if latest_form_version.nil?
+            return { form_property: form_property }
+          end
+        end
+
         if form_property.delete
+          data = { action: 'removed', field_name: form_property.field_name }
           context[:current_user].generate_events('form_update', form, data)
           return { form_property: form_property }
         end
@@ -26,14 +39,6 @@ module Mutations
         raise GraphQL::ExecutionError, form_property.errors.full_messages
       end
       # rubocop:enable Metrics/AbcSize
-
-      def check_form_user(form_id)
-        form = Forms::FormUser.find_by(form_id: form_id)
-        return if form.blank?
-
-        raise GraphQL::ExecutionError,
-              I18n.t('errors.form_user.submitted_form_can_not_be_deleted')
-      end
 
       # Verifies if current user is admin or not.
       def authorized?(_vals)
