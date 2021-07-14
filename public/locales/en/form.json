@@ -25,7 +25,8 @@
 		"publish_form": "Publish form",
 		"adding_form_property": "Adding Form Property",
 		"add_form_property": "Add Property",
-		"update_form_property": "Update Property"
+		"update_form_property": "Update Form Property",
+		"update_property": "Update Property"
 	},
 	"errors": {
 		"no_forms": "No Forms to submit"

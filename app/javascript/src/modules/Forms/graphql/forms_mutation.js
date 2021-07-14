@@ -7,6 +7,7 @@ export const FormPropertyCreateMutation = gql`
     $fieldName: String!
     $fieldType: String!
     $required: Boolean!
+    $adminUse: Boolean!
     $order: String!
     $fieldValue: JSON
   ) {
@@ -15,6 +16,7 @@ export const FormPropertyCreateMutation = gql`
       fieldName: $fieldName
       order: $order
       required: $required
+      adminUse: $adminUse
       fieldType: $fieldType
       fieldValue: $fieldValue
     ) {
@@ -102,6 +104,7 @@ mutation updateProps(
   $fieldName: String!
   $fieldType: String!
   $required: Boolean!
+  $adminUse: Boolean!
   $order: String!
   $fieldValue: JSON
 ) {
@@ -110,6 +113,7 @@ mutation updateProps(
     fieldName: $fieldName
     order: $order
     required: $required
+    adminUse: $adminUse
     fieldType: $fieldType
     fieldValue: $fieldValue
   ) {

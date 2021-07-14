@@ -12,38 +12,33 @@ import { FormPropertyDeleteMutation } from '../graphql/forms_mutation';
 import MessageAlert from '../../../components/MessageAlert';
 import { formatError } from '../../../utils/helpers';
 
-export default function FormPropertyAction({
-  propertyId,
-  editMode,
-  formId,
-  refetch
-}) {
-    const [modal, setModal] = useState({ type: '', isOpen: false})
-    const [currentPropId, setCurrentPropertyId] = useState('')
-    const [isDeletingProperty, setDeleteLoading] = useState(false)
-    const [deleteProperty] = useMutation(FormPropertyDeleteMutation);
-    const [message, setMessage] = useState({ isError: false, detail: ''});
-    const { t } = useTranslation('form')
+export default function FormPropertyAction({ propertyId, editMode, formId, refetch }) {
+  const [modal, setModal] = useState({ type: '', isOpen: false });
+  const [currentPropId, setCurrentPropertyId] = useState('');
+  const [isDeletingProperty, setDeleteLoading] = useState(false);
+  const [deleteProperty] = useMutation(FormPropertyDeleteMutation);
+  const [message, setMessage] = useState({ isError: false, detail: '' });
+  const { t } = useTranslation('form');
 
-    function handleModal(){
-        setModal({isOpen: !modal.isOpen})
-    }
+  function handleModal() {
+    setModal({ isOpen: !modal.isOpen });
+  }
 
   function handleDeleteProperty(propId) {
-    setDeleteLoading(true)
-    setCurrentPropertyId(propId)
+    setDeleteLoading(true);
+    setCurrentPropertyId(propId);
     deleteProperty({
-        variables: { formId, formPropertyId: propId }
-      })
+      variables: { formId, formPropertyId: propId }
+    })
       .then(() => {
-        setDeleteLoading(false)
-        setMessage({ ...message, isError: false, detail: t('misc.deleted_form_property') })
-        refetch()
+        setDeleteLoading(false);
+        setMessage({ ...message, isError: false, detail: t('misc.deleted_form_property') });
+        refetch();
       })
       .catch(err => {
-        setMessage({ ...message, isError: true, detail: formatError(err.message) })
-        setDeleteLoading(false)
-    })
+        setMessage({ ...message, isError: true, detail: formatError(err.message) });
+        setDeleteLoading(false);
+      });
   }
 
   if (!editMode) {
@@ -56,31 +51,36 @@ export default function FormPropertyAction({
         type={message.isError ? 'error' : 'success'}
         message={message.detail}
         open={!!message.detail}
-        handleClose={() => setMessage({ ...message, detail: '', })}
+        handleClose={() => setMessage({ ...message, detail: '' })}
       />
       <DetailsDialog
         handleClose={handleModal}
         open={modal.isOpen}
-        title="Update Form Property"
+        title={t('actions.update_form_property')}
         color="default"
       >
         <Container>
-          <FormPropertyCreateForm formId={formId} refetch={refetch} propertyId={propertyId} close={handleModal} />
+          <FormPropertyCreateForm
+            formId={formId}
+            refetch={refetch}
+            propertyId={propertyId}
+            close={handleModal}
+          />
         </Container>
       </DetailsDialog>
       <Grid item xs={2}>
         <Grid container direction="row">
           <Grid item xs>
-            <IconButton
-              onClick={() => handleDeleteProperty(propertyId)}
-            >
-              {isDeletingProperty && currentPropId === propertyId ? <Spinner /> : <DeleteOutlineIcon />}
+            <IconButton onClick={() => handleDeleteProperty(propertyId)}>
+              {isDeletingProperty && currentPropId === propertyId ? (
+                <Spinner />
+              ) : (
+                <DeleteOutlineIcon />
+              )}
             </IconButton>
           </Grid>
           <Grid item xs>
-            <IconButton
-              onClick={handleModal}
-            >
+            <IconButton onClick={handleModal}>
               <EditIcon />
             </IconButton>
           </Grid>
@@ -94,5 +94,5 @@ FormPropertyAction.propTypes = {
   propertyId: PropTypes.string.isRequired,
   formId: PropTypes.string.isRequired,
   editMode: PropTypes.bool.isRequired,
-  refetch: PropTypes.func.isRequired,
+  refetch: PropTypes.func.isRequired
 };

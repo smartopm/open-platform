@@ -1,14 +1,14 @@
-import React, { useEffect, useState } from 'react'
-import { useLazyQuery, useMutation } from 'react-apollo'
-import PropTypes from 'prop-types'
-import { Button, TextField } from '@material-ui/core'
+import React, { useEffect, useState } from 'react';
+import { useLazyQuery, useMutation } from 'react-apollo';
+import PropTypes from 'prop-types';
+import { Button, TextField } from '@material-ui/core';
 import { useTranslation } from 'react-i18next';
-import { FormPropertyCreateMutation, FormPropertyUpdateMutation } from '../graphql/forms_mutation'
-import CenteredContent from '../../../components/CenteredContent'
-import FormPropertySelector from './FormPropertySelector'
-import FormOptionInput from './FormOptionInput'
-import SwitchInput from './SwitchInput'
-import { FormPropertyQuery } from '../graphql/forms_queries'
+import { FormPropertyCreateMutation, FormPropertyUpdateMutation } from '../graphql/forms_mutation';
+import CenteredContent from '../../../components/CenteredContent';
+import FormPropertySelector from './FormPropertySelector';
+import FormOptionInput from './FormOptionInput';
+import SwitchInput from './SwitchInput';
+import { FormPropertyQuery } from '../graphql/forms_queries';
 import { Spinner } from '../../../shared/Loading';
 import { formatError } from '../../../utils/helpers';
 import MessageAlert from '../../../components/MessageAlert';
@@ -19,7 +19,7 @@ const initData = {
   required: false,
   adminUse: false,
   order: '1',
-  fieldValue: [],
+  fieldValue: []
 };
 
 const fieldTypes = {
@@ -28,36 +28,38 @@ const fieldTypes = {
   image: 'Image',
   signature: 'Signature',
   date: 'Date',
-  dropdown: 'Dropdown',
+  dropdown: 'Dropdown'
 };
 
-export default function FormPropertyCreateForm({ formId, refetch, propertyId, close }){
-    const [propertyData, setProperty] = useState(initData)
-    const [isLoading, setMutationLoading] = useState(false)
-    const [options, setOptions] = useState([""])
-    const { t } = useTranslation('form');
-    const [message, setMessage] = useState({ isError: false, detail: ''});
-    const [formPropertyCreate] = useMutation(FormPropertyCreateMutation)
-    const [formPropertyUpdate] = useMutation(FormPropertyUpdateMutation)
-    const [loadFields, { data }] = useLazyQuery(FormPropertyQuery, { variables: { formId, formPropertyId: propertyId } })
+export default function FormPropertyCreateForm({ formId, refetch, propertyId, close }) {
+  const [propertyData, setProperty] = useState(initData);
+  const [isLoading, setMutationLoading] = useState(false);
+  const [options, setOptions] = useState(['']);
+  const { t } = useTranslation('form');
+  const [message, setMessage] = useState({ isError: false, detail: '' });
+  const [formPropertyCreate] = useMutation(FormPropertyCreateMutation);
+  const [formPropertyUpdate] = useMutation(FormPropertyUpdateMutation);
+  const [loadFields, { data }] = useLazyQuery(FormPropertyQuery, {
+    variables: { formId, formPropertyId: propertyId }
+  });
 
-    useEffect(() => {
-      if (propertyId) {
-        loadFields();
-      }
-      if (data) {
-        setProperty({ ...propertyData, ...data.formProperty });
-        const values = data.formProperty.fieldValue.map(val => val.value)
-        setOptions(values)
-      }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [propertyId, data]);
+  useEffect(() => {
+    if (propertyId) {
+      loadFields();
+    }
+    if (data) {
+      setProperty({ ...propertyData, ...data.formProperty });
+      const values = data.formProperty.fieldValue.map(val => val.value);
+      setOptions(values);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [propertyId, data]);
 
   function handlePropertyValueChange(event) {
     const { name, value } = event.target;
     setProperty({
       ...propertyData,
-      [name]: value,
+      [name]: value
     });
   }
 
@@ -65,12 +67,12 @@ export default function FormPropertyCreateForm({ formId, refetch, propertyId, cl
     const { name, checked } = event.target;
     setProperty({
       ...propertyData,
-      [name]: checked,
+      [name]: checked
     });
   }
 
   const nextOrder = Number(propertyData.order) + 1;
-  const fieldValue = options.map((option) => ({ value: option, label: option }));
+  const fieldValue = options.map(option => ({ value: option, label: option }));
 
   function saveFormProperty(event) {
     event.preventDefault();
@@ -79,48 +81,48 @@ export default function FormPropertyCreateForm({ formId, refetch, propertyId, cl
       variables: {
         ...propertyData,
         fieldValue,
-        formId,
-      },
+        formId
+      }
     })
       .then(() => {
         refetch();
         setMutationLoading(false);
-        setMessage({ ...message, isError: false, detail: t('misc.created_form_property') })
+        setMessage({ ...message, isError: false, detail: t('misc.created_form_property') });
         setProperty({
           ...initData,
-          order: nextOrder.toString(),
+          order: nextOrder.toString()
         });
         setOptions(['']);
       })
-      .catch((err) => {
-        setMessage({ ...message, isError: true, detail: formatError(err.message) })
+      .catch(err => {
+        setMessage({ ...message, isError: true, detail: formatError(err.message) });
         setMutationLoading(false);
       });
   }
 
-  function updateFormProperty(event){
+  function updateFormProperty(event) {
     event.preventDefault();
     setMutationLoading(true);
     formPropertyUpdate({
       variables: {
         ...propertyData,
         fieldValue,
-        id: propertyId,
-      },
+        id: propertyId
+      }
     })
       .then(() => {
         refetch();
         setMutationLoading(false);
         setProperty({
           ...initData,
-          order: nextOrder.toString(),
+          order: nextOrder.toString()
         });
         setOptions(['']);
-        setMessage({ ...message, isError: false, detail: t('misc.updated_form_property') })
-        close()
+        setMessage({ ...message, isError: false, detail: t('misc.updated_form_property') });
+        close();
       })
-      .catch((err) => {
-        setMessage({ ...message, isError: true, detail: formatError(err.message) })
+      .catch(err => {
+        setMessage({ ...message, isError: true, detail: formatError(err.message) });
         setMutationLoading(false);
       });
   }
@@ -131,7 +133,7 @@ export default function FormPropertyCreateForm({ formId, refetch, propertyId, cl
         type={message.isError ? 'error' : 'success'}
         message={message.detail}
         open={!!message.detail}
-        handleClose={() => setMessage({ ...message, detail: '', })}
+        handleClose={() => setMessage({ ...message, detail: '' })}
       />
 
       <form onSubmit={propertyId ? updateFormProperty : saveFormProperty}>
@@ -155,8 +157,8 @@ export default function FormPropertyCreateForm({ formId, refetch, propertyId, cl
           options={fieldTypes}
         />
         {(propertyData.fieldType === 'radio' || propertyData.fieldType === 'dropdown') && (
-        <FormOptionInput label="Option" options={options} setOptions={setOptions} />
-      )}
+          <FormOptionInput label="Option" options={options} setOptions={setOptions} />
+        )}
         <div style={{ marginTop: 20 }}>
           <SwitchInput
             name="required"
@@ -190,9 +192,7 @@ export default function FormPropertyCreateForm({ formId, refetch, propertyId, cl
             disabled={isLoading}
             startIcon={isLoading && <Spinner />}
           >
-            {
-            !propertyId ? t('actions.add_form_property') : t('actions.update_form_property')
-          }
+            {!propertyId ? t('actions.add_form_property') : t('actions.update_property')}
           </Button>
         </CenteredContent>
       </form>
@@ -203,11 +203,11 @@ export default function FormPropertyCreateForm({ formId, refetch, propertyId, cl
 FormPropertyCreateForm.defaultProps = {
   propertyId: null,
   close: () => {}
-}
+};
 
 FormPropertyCreateForm.propTypes = {
-    refetch: PropTypes.func.isRequired,
-    formId: PropTypes.string.isRequired,
-    close: PropTypes.func,
-    propertyId: PropTypes.string,
-}
+  refetch: PropTypes.func.isRequired,
+  formId: PropTypes.string.isRequired,
+  close: PropTypes.func,
+  propertyId: PropTypes.string
+};
