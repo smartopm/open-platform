@@ -51,11 +51,6 @@ export default function FormPropertyAction({
     // })
   }
 
-  // eslint-disable-next-line
-  function handleUpdateProperty(propId){
-    console.log(propId)
-  }
-
   if (!editMode) {
     return null;
   }
@@ -72,7 +67,7 @@ export default function FormPropertyAction({
         <Container>
           {
             modal.type === 'edit'
-            ? <FormPropertyCreateForm formId={formId} refetch={refetch} propertyId={propertyId} />
+            ? <FormPropertyCreateForm formId={formId} refetch={refetch} propertyId={propertyId} close={handleModal} />
             : 'Delete this property'
           }
         </Container>

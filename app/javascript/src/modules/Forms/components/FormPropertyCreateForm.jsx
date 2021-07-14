@@ -28,7 +28,7 @@ const fieldTypes = {
   dropdown: 'Dropdown',
 };
 
-export default function FormPropertyCreateForm({ formId, refetch, propertyId }){
+export default function FormPropertyCreateForm({ formId, refetch, propertyId, close }){
     const [propertyData, setProperty] = useState(initData)
     const [isLoading, setMutationLoading] = useState(false)
     const [options, setOptions] = useState([""])
@@ -110,6 +110,7 @@ export default function FormPropertyCreateForm({ formId, refetch, propertyId }){
           order: nextOrder.toString(),
         });
         setOptions(['']);
+        close()
       })
       .catch(() => {
         setMutationLoading(false);
@@ -177,11 +178,13 @@ export default function FormPropertyCreateForm({ formId, refetch, propertyId }){
 }
 
 FormPropertyCreateForm.defaultProps = {
-  propertyId: null
+  propertyId: null,
+  close: () => {}
 }
 
 FormPropertyCreateForm.propTypes = {
     refetch: PropTypes.func.isRequired,
     formId: PropTypes.string.isRequired,
+    close: PropTypes.func,
     propertyId: PropTypes.string,
 }
