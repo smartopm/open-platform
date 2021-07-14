@@ -1,0 +1,57 @@
+{
+  "actions": {
+    "add_field": "Agregar Campo",
+    "add_form_property": "Agregar Propiedad",
+    "adding_form_property": "Agregar propiedad de formulario",
+    "create_a_form": "Crear un formulario",
+    "publish_form": "Publicar Formulario"
+  },
+  "errors": {
+    "no_forms": "No hay formularios para enviar"
+  },
+  "form_fields": {
+    "admins_only": "Solo para Administradores",
+    "field_name": "Nombre del campo",
+    "field_type": "Tipo de campo",
+    "form_status": "Estado del Formulario",
+    "form_status_updated_by": "Estado del formulario actualizado por",
+    "option": "Opción",
+    "order_number": "Número de orden",
+    "required_field": "Este campo es obligatorio"
+  },
+  "form_status_actions": {
+    "approved": "Aprobar",
+    "delete": "Eliminar",
+    "draft": "Marcar como borrador",
+    "pending": "Marcar como pendiente",
+    "publish": "Publicar",
+    "rejected": "Rechazar",
+    "update": "Actualizar"
+  },
+  "form_status": {
+    "approved": "Aprobado",
+    "delete": "Eliminado",
+    "draft": "Borrador",
+    "pending": "Pendiente",
+    "publish": "Publicado",
+    "rejected": "Rechazado"
+  },
+  "misc": {
+    "are_you_sure_to_publish": "¿Estás seguro de publicar este formulario?",
+    "attachments": "Archivos adjuntos",
+    "building_permit": "Permiso de construcción",
+    "client_request_form": "Formulario de solicitud de cliente",
+    "deleted_form_property": "Formulario de Propiedad eliminada correctamente",
+    "form": "Formulario",
+    "form_action_success": "El Formulario {{status}} con éxito",
+    "form_confirm_message": "¿Estás seguro de {{actionType}} este formulario?",
+    "form_created": "Formulario creado con éxito",
+    "form_expiry_date": "Fecha de vencimiento del formulario",
+    "form_submitted": "Ha enviado correctamente el formulario",
+    "limit_1_response": "Limitar a 1 respuesta",
+    "publish_ing_form": "Publicando el formulario ...",
+    "published_form": "Publicado con éxito el formulario",
+    "signature": "Firma",
+    "updates": "Novedades"
+  }
+}
