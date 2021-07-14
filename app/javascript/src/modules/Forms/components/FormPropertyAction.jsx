@@ -3,52 +3,47 @@ import { Container, Grid, IconButton } from '@material-ui/core';
 import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
 import EditIcon from '@material-ui/icons/Edit';
 import PropTypes from 'prop-types';
+import { useMutation } from 'react-apollo';
+import { useTranslation } from 'react-i18next';
 import { Spinner } from '../../../shared/Loading';
 import FormPropertyCreateForm from './FormPropertyCreateForm';
 import { DetailsDialog } from '../../../components/Dialog';
-
-
-
-// call update mutation
-// check if form has been submitted before
-// make the createproperty form component more generic
+import { FormPropertyDeleteMutation } from '../graphql/forms_mutation';
+import MessageAlert from '../../../components/MessageAlert';
+import { formatError } from '../../../utils/helpers';
 
 export default function FormPropertyAction({
   propertyId,
-  isDeletingProperty,
   editMode,
   formId,
   refetch
 }) {
-    // create states for the edit modal
     const [modal, setModal] = useState({ type: '', isOpen: false})
-    const [currentPropId, setCurrentPropId] = useState('')
+    const [currentPropId, setCurrentPropertyId] = useState('')
+    const [isDeletingProperty, setDeleteLoading] = useState(false)
+    const [deleteProperty] = useMutation(FormPropertyDeleteMutation);
+    const [message, setMessage] = useState({ isError: false, detail: ''});
+    const { t } = useTranslation('form')
 
-    // using default values in case we are just using the modal to close it.
-    function handleModal(type='edit', id=currentPropId){
-        setModal({type, isOpen: !modal.isOpen})
-        setCurrentPropId(id)
+    function handleModal(){
+        setModal({isOpen: !modal.isOpen})
     }
 
-  // eslint-disable-next-line
-  function handleDeleteProperty() {
-    console.log(propertyId)
-    // setDeleteLoading(true)
-    // setCurrentPropertyId(propId)
-    // deleteProperty({
-    //     variables: { formId, formPropertyId: propId }
-    //   })
-    //   .then(() => {
-    //     setDeleteLoading(false)
-    //     setMessage({ ...message, err: false, info: 'Deleted form property' })
-    //     setAlertOpen(true)
-    //     refetch()
-    //   })
-    //   .catch(err => {
-    //     setMessage({ ...message, err: true, info: err.message })
-    //     setAlertOpen(true)
-    //     setDeleteLoading(false)
-    // })
+  function handleDeleteProperty(propId) {
+    setDeleteLoading(true)
+    setCurrentPropertyId(propId)
+    deleteProperty({
+        variables: { formId, formPropertyId: propId }
+      })
+      .then(() => {
+        setDeleteLoading(false)
+        setMessage({ ...message, isError: false, detail: t('misc.deleted_form_property') })
+        refetch()
+      })
+      .catch(err => {
+        setMessage({ ...message, isError: true, detail: formatError(err.message) })
+        setDeleteLoading(false)
+    })
   }
 
   if (!editMode) {
@@ -57,35 +52,36 @@ export default function FormPropertyAction({
 
   return (
     <>
+      <MessageAlert
+        type={message.isError ? 'error' : 'success'}
+        message={message.detail}
+        open={!!message.detail}
+        handleClose={() => setMessage({ ...message, detail: '', })}
+      />
       <DetailsDialog
         handleClose={handleModal}
         open={modal.isOpen}
         title="Update Form Property"
         color="default"
-        noActionButton={modal.type !== 'edit'}
       >
         <Container>
-          {
-            modal.type === 'edit'
-            ? <FormPropertyCreateForm formId={formId} refetch={refetch} propertyId={propertyId} close={handleModal} />
-            : 'Delete this property'
-          }
+          <FormPropertyCreateForm formId={formId} refetch={refetch} propertyId={propertyId} close={handleModal} />
         </Container>
       </DetailsDialog>
       <Grid item xs={2}>
         <Grid container direction="row">
           <Grid item xs>
             <IconButton
-              onClick={() => handleModal('delete', propertyId)}
+              onClick={() => handleDeleteProperty(propertyId)}
             >
               {isDeletingProperty && currentPropId === propertyId ? <Spinner /> : <DeleteOutlineIcon />}
             </IconButton>
           </Grid>
           <Grid item xs>
             <IconButton
-              onClick={() => handleModal('edit', propertyId)}
+              onClick={handleModal}
             >
-              {isDeletingProperty && currentPropId === propertyId ? <Spinner /> : <EditIcon />}
+              <EditIcon />
             </IconButton>
           </Grid>
         </Grid>
@@ -97,7 +93,6 @@ export default function FormPropertyAction({
 FormPropertyAction.propTypes = {
   propertyId: PropTypes.string.isRequired,
   formId: PropTypes.string.isRequired,
-  isDeletingProperty: PropTypes.bool.isRequired,
   editMode: PropTypes.bool.isRequired,
   refetch: PropTypes.func.isRequired,
 };

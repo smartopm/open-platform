@@ -1,4 +1,3 @@
-/* eslint-disable no-use-before-define */
 import React, { Fragment, useContext, useRef, useState, useEffect } from 'react'
 import { Button, Container, Grid, Snackbar } from '@material-ui/core'
 import { useApolloClient, useMutation, useQuery } from 'react-apollo'
@@ -8,7 +7,7 @@ import { Alert } from '@material-ui/lab';
 import DatePickerDialog from '../../../components/DatePickerDialog';
 import CenteredContent from '../../../components/CenteredContent';
 import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider';
-import { FormUserCreateMutation, FormPropertyDeleteMutation } from '../graphql/forms_mutation';
+import { FormUserCreateMutation } from '../graphql/forms_mutation';
 import { FormQuery } from '../graphql/forms_queries';
 import { useFileUpload } from '../../../graphql/useFileUpload';
 import TextInput from './TextInput';
@@ -34,7 +33,6 @@ const initialData = {
 export default function GenericForm({ formId, pathname, formData, refetch, editMode }) {
   const [properties, setProperties] = useState(initialData);
   const [message, setMessage] = useState({ err: false, info: '', signed: false });
-  const [isDeletingProperty, setDeleteLoading] = useState(false);
   const [isSubmitting, setSubmitting] = useState(false);
   const [alertOpen, setAlertOpen] = useState(false);
   const [currentPropId, setCurrentPropertyId] = useState('');
@@ -45,7 +43,6 @@ export default function GenericForm({ formId, pathname, formData, refetch, editM
   const { data, loading } = useQuery(FormQuery, { variables: { id: formId } });
   // create form user
   const [createFormUser] = useMutation(FormUserCreateMutation);
-  const [deleteProperty] = useMutation(FormPropertyDeleteMutation);
   // separate function for file upload
   const { onChange, status, signedBlobId, contentType, url } = useFileUpload({
     client: useApolloClient(),
@@ -98,26 +95,6 @@ export default function GenericForm({ formId, pathname, formData, refetch, editM
   function onImageSelect(event, currentProperty) {
     setCurrentPropertyId(currentProperty);
     onChange(event.target.files[0]);
-  }
-
-  // eslint-disable-next-line no-unused-vars
-  function handleDeleteProperty(propId){
-    setDeleteLoading(true)
-    setCurrentPropertyId(propId)
-    deleteProperty({
-      variables: { formId, formPropertyId: propId },
-    })
-      .then(() => {
-        setDeleteLoading(false);
-        setMessage({ ...message, err: false, info: t('misc.deleted_form_property') });
-        setAlertOpen(true);
-        refetch();
-      })
-      .catch((err) => {
-        setMessage({ ...message, err: true, info: err.message });
-        setAlertOpen(true);
-        setDeleteLoading(false);
-      });
   }
 
   async function handleSignatureUpload() {
@@ -206,7 +183,6 @@ export default function GenericForm({ formId, pathname, formData, refetch, editM
             formId={formId}
             editMode={editMode}
             propertyId={formPropertiesData.id}
-            isDeletingProperty={isDeletingProperty}
             refetch={refetch}
           />
           <Grid item xs={editMode ? 10 : 12}>
@@ -226,7 +202,6 @@ export default function GenericForm({ formId, pathname, formData, refetch, editM
             formId={formId}
             editMode={editMode}
             propertyId={formPropertiesData.id}
-            isDeletingProperty={isDeletingProperty}
             refetch={refetch}
           />
           <Grid item xs={editMode ? 10 : 12}>
@@ -245,7 +220,6 @@ export default function GenericForm({ formId, pathname, formData, refetch, editM
             formId={formId}
             editMode={editMode}
             propertyId={formPropertiesData.id}
-            isDeletingProperty={isDeletingProperty}
             refetch={refetch}
           />
           <Grid item xs={editMode ? 10 : 12}>
@@ -269,7 +243,6 @@ export default function GenericForm({ formId, pathname, formData, refetch, editM
             formId={formId}
             editMode={editMode}
             propertyId={formPropertiesData.id}
-            isDeletingProperty={isDeletingProperty}
             refetch={refetch}
           />
           <Grid item xs={editMode ? 10 : 12}>
@@ -288,7 +261,6 @@ export default function GenericForm({ formId, pathname, formData, refetch, editM
             formId={formId}
             editMode={editMode}
             propertyId={formPropertiesData.id}
-            isDeletingProperty={isDeletingProperty}
             refetch={refetch}
           />
           <Grid item xs={editMode ? 10 : 12}>
@@ -312,7 +284,6 @@ export default function GenericForm({ formId, pathname, formData, refetch, editM
             formId={formId}
             editMode={editMode}
             propertyId={formPropertiesData.id}
-            isDeletingProperty={isDeletingProperty}
             refetch={refetch}
           />
           <Grid item xs={editMode ? 10 : 12}>
