@@ -4,7 +4,7 @@ import Users, { Logout, Profile } from './Users';
 import Dashboard from './Dashboard';
 import Community from './Community';
 import Forms from './Forms';
-import Plots from './Plots';
+import Plots, { Maps } from './Plots';
 import Communication from './Communication';
 import CustomerJourney from './CustomerJourney';
 import UserJourneyStats from './CustomerJourney/stats';
@@ -37,5 +37,6 @@ export default [
   Portal,
   ActionFlows,
   TimeCard,
+  Maps,
   Logout
 ];

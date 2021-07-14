@@ -102,6 +102,7 @@ export default function SubUrbanLayer(){
         background: rgba(255, 255, 255, 0.8);
         box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
         border-radius: 5px;
+        margin-left: 70px;
       }
 
       .info h5 {
