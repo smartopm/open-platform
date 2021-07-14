@@ -81,8 +81,8 @@ module Types::Queries::Form
     form = context[:site_community].forms.find_by(id: form_id)
     raise_form_not_found_error(form)
 
-    query = get_updated_query(query)
-    form_users = form.form_users.search(query).includes(:user).order(created_at: :desc)
+    query = updated_query(query)
+    form_users = form.form_users.includes(:user).search(query).order(created_at: :desc)
                      .limit(limit).offset(offset)
     { form_name: form.name, form_users: form_users }
   end
@@ -120,26 +120,14 @@ module Types::Queries::Form
     raise GraphQL::ExecutionError, I18n.t('errors.form.not_found')
   end
 
-  # Returns whether date is valid or not
-  #
-  # @param query [String]
-  #
-  # @return [Boolean]
-  def valid_date?(query)
-    Date.parse(query)
-    true
-  rescue ArgumentError
-    false
-  end
-
-  # Returns updated query by concatinating status
+  # Returns query by concatinating status and created at
   #
   # @param query [String]
   #
   # @return [String]
-  def get_updated_query(query)
+  def updated_query(query)
     return query if query.blank?
-    return "created_at:#{query}" if valid_date?(query)
+    return "created_at:#{query}" if Date.parse(query) rescue nil
 
     status = Forms::FormUser.statuses[query]
     query += " OR status:#{status}" if status.present?
