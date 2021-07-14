@@ -219,12 +219,14 @@ export default function UserPaymentPlanItem({
 
   return (
     <>
-      <PlanDetail
-        open={planDetailOpen}
-        handleModalClose={() => setPlanDetailOpen(false)}
-        planData={planData}
-        currencyData={currencyData}
-      />
+      {planDetailOpen && (
+        <PlanDetail
+          open={planDetailOpen}
+          handleModalClose={() => setPlanDetailOpen(false)}
+          planData={planData}
+          currencyData={currencyData}
+        />
+      )}
       {error && (
         <CenteredContent>{error.message}</CenteredContent>
       )}
