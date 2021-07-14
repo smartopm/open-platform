@@ -40,6 +40,7 @@ import CenteredContent from '../../../../components/CenteredContent'
 import StatementPlan from './PlanStatement'
 import { ActionDialog } from '../../../../components/Dialog';
 import PlanDetail from './PlanDetail'
+import TransactionDetails from './TransactionDetails'
 
 export default function UserPaymentPlanItem({
   plans,
@@ -58,6 +59,8 @@ export default function UserPaymentPlanItem({
   const [planId, setPlanId] = useState('');
   const [landParcelId, setLandParcelId] = useState('');
   const [receiptOpen, setReceiptOpen] = useState(false);
+  const [transDetailOpen, setTransDetailOpen] = useState(false);
+  const [transData, setTransData] = useState({})
   const [planDetailOpen, setPlanDetailOpen] = useState(false);
   const [planData, setPlanData] = useState({});
   const [statementOpen, setStatementOpen] = useState(false);
@@ -184,6 +187,12 @@ export default function UserPaymentPlanItem({
     history.push(`?tab=Plans&subtab=Transactions&id=${planId}`)
   }
 
+  function transactionDetailOpen(trans) {
+    console.log(trans)
+    setTransData(trans)
+    setTransDetailOpen(true)
+  }
+
   function handlePlanDetailClick(event) {
     event.stopPropagation()
     setPlanDetailOpen(true)
@@ -264,6 +273,9 @@ export default function UserPaymentPlanItem({
 
   return (
     <>
+      {transDetailOpen && (
+        <TransactionDetails />
+      )}
       {planDetailOpen && (
         <PlanDetail
           open={planDetailOpen}
@@ -366,7 +378,8 @@ export default function UserPaymentPlanItem({
                     keys={paymentHeader}
                     data={[renderPayments(pay, currencyData, menuData)]}
                     hasHeader={false}
-                    clickable={false}
+                    clickable
+                    handleClick={() => transactionDetailOpen(pay)}
                     color
                   />
                 </div>
