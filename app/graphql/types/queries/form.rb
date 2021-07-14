@@ -4,6 +4,7 @@
 module Types::Queries::Form
   extend ActiveSupport::Concern
 
+  # rubocop:disable Metrics/BlockLength
   included do
     # Get form entries
     field :forms, [Types::FormType], null: true do
@@ -39,6 +40,7 @@ module Types::Queries::Form
       argument :user_id, GraphQL::Types::ID, required: true
     end
   end
+  # rubocop:enable Metrics/BlockLength
 
   def forms
     raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') if context[:current_user].blank?
