@@ -127,7 +127,13 @@ module Types::Queries::Form
   # @return [String]
   def updated_query(query)
     return query if query.blank?
-    return "created_at:#{query}" if Date.parse(query) rescue nil
+
+    date = begin
+      Date.parse(query)
+    rescue StandardError
+      nil
+    end
+    return "created_at:#{date}" if date.present?
 
     status = Forms::FormUser.statuses[query]
     query += " OR status:#{status}" if status.present?
