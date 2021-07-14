@@ -140,7 +140,7 @@ describe('Form that creates other forms component', () => {
     fireEvent.submit(container.queryByTestId('form_property_submit'));
 
     await waitFor(() => {
-      expect(closeMock).not.toBeCalled();
+      expect(closeMock).not.toBeCalled(); // here we are not closing the modal because we are just on a page
       expect(refetchMock).toBeCalled();
       expect(container.queryByText('misc.created_form_property')).toBeInTheDocument();
     }, 50);
