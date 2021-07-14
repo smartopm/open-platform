@@ -49,7 +49,7 @@ import GeoMap from '../src/containers/GeoMap';
 import Notifications from '../src/modules/Preferences/Components/Notifications';
 import { theme } from '../src/themes/nkwashi/theme';
 import FormPage from '../src/modules/Forms/containers/FormPage';
-
+import FormEntriesPage from '../src/modules/Forms/containers/FormEntriesPage'
 import FormBuilderPage from '../src/modules/Forms/containers/FormBuilderPage';
 import CommentsPage from '../src/containers/Comments/CommentPage';
 import { MainMenu } from '../src/modules/Menu';
@@ -269,7 +269,8 @@ const App = () => {
                               <Route path="/news/slug" exact component={Posts} />
                               <Route path="/discussions/:id" exact component={DiscussonPage} />
                               <Route path="/business/:id" exact component={BusinessProfile} />
-                              <Route path="/form/:formId?/:formName?" component={FormPage} />
+                              <Route path="/form/:formId?/:formName?" exact component={FormPage} />
+                              <Route path="/form/:formId?/:formName?/entries" component={FormEntriesPage} />
                               <Route path="/edit_form/:formId" component={FormBuilderPage} />
                               <Route
                                 path="/user_form/:formId?/:userId?/:formName?/:type?"
