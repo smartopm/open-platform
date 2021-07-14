@@ -3,6 +3,7 @@ import { Grid,Typography, Avatar } from '@material-ui/core';
 import { useQuery } from 'react-apollo';
 import PropTypes from 'prop-types';
 import { useHistory } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { FormEntriesQuery } from '../graphql/forms_queries';
 import Loading from '../../../shared/Loading';
 import ErrorPage from '../../../components/Error';
@@ -24,13 +25,14 @@ export default function FormEntries({ formId }) {
   const history = useHistory();
   const [searchValue, setSearchValue] = useState('');
   const debouncedValue = useDebounce(searchValue, 500);
+  const { t } = useTranslation('form')
   const { data, error, loading } = useQuery(FormEntriesQuery, {
       variables : {formId, query: debouncedValue, limit, offset: pageNumber }
   })
   const entriesHeaders = [
-    { title: 'Date of Submission', col: 1 },
-    { title: 'Submitted by', col: 1 },
-    { title: 'Status', col: 1 }
+    { title: 'Date of Submission', col: 1, value: t('misc.submission_date') },
+    { title: 'Submitted by', col: 1, value: t('misc.submitted_by') },
+    { title: 'Status', col: 1, value: t('misc.status') }
   ];
 
   function paginate(action) {
@@ -48,7 +50,7 @@ export default function FormEntries({ formId }) {
 
 
   return (
-      
+
     <div>
       <div style={{marginLeft: '10px'}}>
         <Typography variant="h6" gutterBottom>
@@ -76,7 +78,7 @@ export default function FormEntries({ formId }) {
                 handleClick={() => {history.push(`/user_form/${formUser.formId}/${formUser.userId}/${data?.formEntries?.formName}`)}}
               />
             )) : (
-              <CenteredContent>No Entries Available</CenteredContent>
+              <CenteredContent>{t('misc.no_form_entries')}</CenteredContent>
             )
         }
       <CenteredContent>
@@ -90,7 +92,7 @@ export default function FormEntries({ formId }) {
       </CenteredContent>
     </div>
     )
-}   
+}
 
 export function renderFormEntry(formUser) {
   return [
