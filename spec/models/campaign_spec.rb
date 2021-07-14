@@ -62,15 +62,30 @@ RSpec.describe Campaign, type: :model do
   describe '#send_messages' do
     let!(:user) { create(:user_with_community) }
     let!(:admin) { create(:admin_user, community: user.community) }
-    let!(:campaign) { create(:campaign, community_id: user.community.id, campaign_type: 'sms') }
+    let!(:campaign) do
+      create(:campaign, community_id: user.community.id, campaign_type: 'sms',
+                        status: 'draft')
+    end
+    context 'when status in nexemo result belongs to success codes' do
+      it 'creates a new message' do
+        prev_message_count = Notifications::Message.count
+        allow(Sms).to receive(:send).and_return(OpenStruct.new({ messages: [campaign] }))
 
-    it 'creates a new message' do
-      prev_message_count = Notifications::Message.count
-      allow(Sms).to receive(:send).and_return(OpenStruct.new({ messages: [] }))
+        campaign.send_messages(admin, user)
 
-      campaign.send_messages(admin, user)
+        expect(Notifications::Message.count).to eq(prev_message_count + 1)
+      end
+    end
 
-      expect(Notifications::Message.count).to eq(prev_message_count + 1)
+    context 'when status in nexemo result does not belongs to success codes' do
+      it 'does not creates the message' do
+        prev_message_count = Notifications::Message.count
+        allow(Sms).to receive(:send).and_return(OpenStruct.new({ messages: [] }))
+
+        campaign.send_messages(admin, user)
+
+        expect(Notifications::Message.count).to eq prev_message_count
+      end
     end
   end
 

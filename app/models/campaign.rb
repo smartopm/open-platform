@@ -43,7 +43,7 @@ class Campaign < ApplicationRecord
 
   def target_list_user
     label = community.labels.find_by(short_desc: "com_news_#{campaign_type}")
-    user_ids = target_list.uniq
+    user_ids = target_list.uniq - already_sent_user_ids.uniq
     return [] if label.nil? || user_ids.empty?
 
     label.users.where(state: 'valid', id: user_ids)
@@ -59,15 +59,15 @@ class Campaign < ApplicationRecord
 
   def send_messages(campaign_user, acc)
     success_codes = [0, 7, 3, 6, 22, 29, 33]
-    smess = campaign_user.construct_message(receiver: acc.phone_number,
-                                            message: message,
-                                            user_id: acc.id, category: 'sms',
-                                            campaign_id: id)
-    smess.save
-    result = smess.reload.send_sms(add_prefix: false)
-    return false if result.messages.select { |mm| success_codes.include?(mm.status.to_i) }.blank?
-
-    true
+    sms_log = Notifications::Message.new
+    sms_log.assign_attributes(
+      receiver: acc.phone_number, message: message, user_id: acc.id,
+      sender_id: campaign_user.id, category: 'sms', campaign_id: id
+    )
+    result = sms_log.send_sms(add_prefix: false)
+    sms_delivered = result.messages.select { |mm| success_codes.include?(mm.status.to_i) }.present?
+    sms_log.save if sms_delivered
+    sms_delivered
   end
 
   def send_email(user_email)
