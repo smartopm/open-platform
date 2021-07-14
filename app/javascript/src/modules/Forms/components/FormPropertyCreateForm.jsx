@@ -3,7 +3,7 @@ import { useLazyQuery, useMutation } from 'react-apollo'
 import PropTypes from 'prop-types'
 import { Button, TextField } from '@material-ui/core'
 import { useTranslation } from 'react-i18next';
-import { FormPropertyCreateMutation } from '../graphql/forms_mutation'
+import { FormPropertyCreateMutation, FormPropertyUpdateMutation } from '../graphql/forms_mutation'
 import CenteredContent from '../../../components/CenteredContent'
 import FormPropertySelector from './FormPropertySelector'
 import FormOptionInput from './FormOptionInput'
@@ -34,6 +34,7 @@ export default function FormPropertyCreateForm({ formId, refetch, propertyId }){
     const [options, setOptions] = useState([""])
     const { t } = useTranslation('form');
     const [formPropertyCreate] = useMutation(FormPropertyCreateMutation)
+    const [formPropertyUpdate] = useMutation(FormPropertyUpdateMutation)
     const [loadFields, { data }] = useLazyQuery(FormPropertyQuery, { variables: { formId, formPropertyId: propertyId } })
 
     useEffect(() => {
@@ -93,7 +94,26 @@ export default function FormPropertyCreateForm({ formId, refetch, propertyId }){
 
   function updateFormProperty(event){
     event.preventDefault();
-    console.log("updating a form ...")
+    setMutationLoading(true);
+    formPropertyUpdate({
+      variables: {
+        ...propertyData,
+        fieldValue,
+        id: propertyId,
+      },
+    })
+      .then(() => {
+        refetch();
+        setMutationLoading(false);
+        setProperty({
+          ...initData,
+          order: nextOrder.toString(),
+        });
+        setOptions(['']);
+      })
+      .catch(() => {
+        setMutationLoading(false);
+      });
   }
 
   return (

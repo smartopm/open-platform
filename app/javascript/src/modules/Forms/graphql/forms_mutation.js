@@ -85,6 +85,7 @@ export const FormUserUpdateMutation = gql`
     }
   }
 `;
+
 export const FormUserStatusUpdateMutation = gql`
   mutation formUserStatusUpdate($formId: ID!, $userId: ID!, $status: String!) {
     formUserStatusUpdate(formId: $formId, userId: $userId, status: $status) {
@@ -93,4 +94,29 @@ export const FormUserStatusUpdateMutation = gql`
       }
     }
   }
+`;
+
+export const FormPropertyUpdateMutation = gql`
+mutation updateProps(
+  $id: ID!
+  $fieldName: String!
+  $fieldType: String!
+  $required: Boolean!
+  $order: String!
+  $fieldValue: JSON
+) {
+  formPropertiesUpdate(
+    id: $id
+    fieldName: $fieldName
+    order: $order
+    required: $required
+    fieldType: $fieldType
+    fieldValue: $fieldValue
+  ) {
+    formProperty {
+      id
+      fieldName
+    }
+  }
+}
 `;
