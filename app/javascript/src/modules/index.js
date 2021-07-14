@@ -4,7 +4,7 @@ import Users, { Logout, Profile } from './Users';
 import Dashboard from './Dashboard';
 import Community from './Community';
 import Forms from './Forms';
-import Plots from './Plots';
+import Plots, { Maps } from './Plots';
 import Communication from './Communication';
 import CustomerJourney from './CustomerJourney';
 import UserJourneyStats from './CustomerJourney/stats';
@@ -16,7 +16,6 @@ import Properties from './Plots/Properties';
 import UserPayments from './Payments/UserPayments';
 import MyMessages from './Messages/MyMessages'
 import Search from './Search';
-import { Maps } from './Contact'
 
 // and exported back here
 export default [
