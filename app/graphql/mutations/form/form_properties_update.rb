@@ -27,7 +27,7 @@ module Mutations
             new_form = form.duplicate(vals[:id])
             new_form.form_properties <<  new_form.form_properties.new(vals.except(:id))
             new_form.version_number = new_version_number
-            new_name = form.name.gsub(/\((Version)\s\d*\)/, "")
+            new_name = form.name.gsub(/\s\((Version)\s\d*\)/, "")
             new_form.name = "#{new_name} (Version #{new_version_number})"
 
             if new_form.save!

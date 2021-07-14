@@ -29,7 +29,7 @@ module Forms
     end
 
     def latest_version
-      possible_name = name.gsub(/\((Version)\s\d*\)/, "")
+      possible_name = name.gsub(/\s\((Version)\s\d*\)/, "")
       Form.where("name = ? OR name like ?", possible_name, "%#{possible_name} (Version%")
           .order(:created_at).last.version_number
     end
