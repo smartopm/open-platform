@@ -1,19 +1,22 @@
 // This component will house the customer journey dashboard
 import React,  { Fragment } from 'react';
 import PropTypes from 'prop-types'
-import { ListItemText, ListItemSecondaryAction, ListItem, List, makeStyles } from '@material-ui/core';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
+import { ListItemText, ListItemSecondaryAction, ListItem, List, makeStyles, useTheme } from '@material-ui/core';
 import { userSubStatusDurationLookup } from '../../../utils/constants';
 import { toCamelCase } from '../../../utils/helpers';
 
 export default function SubStatusTimeDistributionReport({ userSubStatus, subStatusDistributionData }) {
   const classes = useStyles();
   const data = subStatusDistributionData?.substatusDistributionQuery
+  const theme = useTheme();
+  const matches = useMediaQuery(theme.breakpoints.up('sm'));
 
   return (
     <>
       {data && Object.entries(userSubStatus).map(([userSubStatusKey, subStatus]) => (
         <Fragment key={userSubStatusKey}>
-          <div className={classes.statusSection}>
+          <div className={matches && classes.statusSection}>
             <div className={classes.titleSection}>
               <h5 className={classes.title}>{subStatus}</h5>
             </div>
@@ -44,7 +47,7 @@ const useStyles = makeStyles(theme => ({
   titleSection: {
     borderBottom: `1px ${theme.palette.primary.main} solid`,
     backgroundColor: theme.palette.primary.light,
-    height: 50
+    height: 55
   },
   title: {
     padding: 10

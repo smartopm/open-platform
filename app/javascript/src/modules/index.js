@@ -16,6 +16,7 @@ import Properties from './Plots/Properties';
 import UserPayments from './Payments/UserPayments';
 import MyMessages from './Messages/MyMessages'
 import Search from './Search';
+import { Maps } from './Contact'
 
 // and exported back here
 export default [
@@ -37,5 +38,6 @@ export default [
   Portal,
   ActionFlows,
   TimeCard,
+  Maps,
   Logout
 ];

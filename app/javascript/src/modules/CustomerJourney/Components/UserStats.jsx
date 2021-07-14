@@ -1,7 +1,8 @@
 // This component will house the customer journey dashboard
 import React from 'react';
-import { makeStyles } from '@material-ui/core';
+import { makeStyles, useTheme } from '@material-ui/core';
 import { useQuery } from 'react-apollo';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { useHistory } from 'react-router-dom';
 import { SubStatusQuery, SubStatusDistributionReportQuery } from '../../../graphql/queries';
 import { Spinner } from '../../../shared/Loading';
@@ -12,6 +13,8 @@ import SubStatusTimeDistributionReport from './SubStatusTimeDistributionReport';
 export default function UserStats() {
   const classes = useStyles();
   const history = useHistory();
+  const theme = useTheme();
+  const matches = useMediaQuery(theme.breakpoints.up('sm'));
   const { loading, data, error } = useQuery(SubStatusQuery);
   const { data: subStatusDistributionData } = useQuery(SubStatusDistributionReportQuery);
   const subStatus = {residents_count: 'Residents', ...userSubStatus};
@@ -22,7 +25,7 @@ export default function UserStats() {
 
   return (
     <>
-      <div className={classes.statusSection}>
+      <div className={matches && classes.statusSection}>
         <div className={classes.titleSection}>
           <h5 className={classes.title}>Customer Journey Stage</h5>
         </div>
@@ -42,7 +45,7 @@ export default function UserStats() {
           userSubStatus={userSubStatus} 
           subStatusDistributionData={subStatusDistributionData}
         />
-)}
+      )}
     </>
   );
 }
