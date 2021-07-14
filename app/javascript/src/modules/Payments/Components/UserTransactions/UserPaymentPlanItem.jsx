@@ -386,6 +386,8 @@ export function renderPlan(plan, currencyData, userType, { handleMenu, loading }
     'Payment Plan': (
       <Grid item xs={12} md={2} data-testid="payment-plan">
         {plan.planType}
+        <br />
+        <Text color="primary" content={`${plan.status}`} />
       </Grid>
     ),
     'Start Date': (
