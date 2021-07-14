@@ -55,6 +55,7 @@ export default function GenericForm({ formId, pathname, formData, refetch, editM
     client: useApolloClient(),
   });
 
+
   useEffect(() => {
     if (
       status === 'DONE' &&
@@ -65,6 +66,7 @@ export default function GenericForm({ formId, pathname, formData, refetch, editM
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status]);
+
 
   function handleAlertClose() {
     setAlertOpen(false);

@@ -136,7 +136,10 @@ export default function FormPropertyCreateForm({ formId, refetch, propertyId, cl
         handleClose={() => setMessage({ ...message, detail: '' })}
       />
 
-      <form onSubmit={propertyId ? updateFormProperty : saveFormProperty}>
+      <form
+        onSubmit={propertyId ? updateFormProperty : saveFormProperty}
+        data-testid="form_property_submit"
+      >
         <TextField
           id="standard-basic"
           label={t('form_fields.field_name')}
@@ -145,6 +148,7 @@ export default function FormPropertyCreateForm({ formId, refetch, propertyId, cl
           onChange={handlePropertyValueChange}
           name="fieldName"
           style={{ width: '100%' }}
+          inputProps={{ "data-testid": "field_name" }}
           margin="normal"
           autoFocus
           required
