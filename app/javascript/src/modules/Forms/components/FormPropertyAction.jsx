@@ -71,7 +71,7 @@ export default function FormPropertyAction({ propertyId, editMode, formId, refet
       <Grid item xs={2}>
         <Grid container direction="row">
           <Grid item xs>
-            <IconButton onClick={() => handleDeleteProperty(propertyId)}>
+            <IconButton onClick={() => handleDeleteProperty(propertyId)} data-testid="property_delete">
               {isDeletingProperty && currentPropId === propertyId ? (
                 <Spinner />
               ) : (
@@ -80,7 +80,7 @@ export default function FormPropertyAction({ propertyId, editMode, formId, refet
             </IconButton>
           </Grid>
           <Grid item xs>
-            <IconButton onClick={handleModal}>
+            <IconButton onClick={handleModal} data-testid="property_edit">
               <EditIcon />
             </IconButton>
           </Grid>
