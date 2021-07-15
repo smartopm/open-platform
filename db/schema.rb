@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_07_14_114144) do
+ActiveRecord::Schema.define(version: 2021_07_15_100435) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -325,7 +325,8 @@ ActiveRecord::Schema.define(version: 2021_07_14_114144) do
     t.integer "status", default: 0
     t.text "description"
     t.boolean "multiple_submissions_allowed"
-    t.integer "version_number"
+    t.integer "version_number", default: 1
+    t.uuid "grouping_id"
     t.index ["community_id"], name: "index_forms_on_community_id"
     t.index ["name"], name: "index_forms_on_name", unique: true
   end

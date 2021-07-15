@@ -18,15 +18,13 @@ module Mutations
         form = form_property.form
 
         if form.has_entries?
-          latest_form_version = form.latest_version
-          new_version_number = (latest_form_version.nil? ? 2 : latest_form_version + 1)
+          last_version_number = form.last_version
           new_form = form.duplicate(vals[:form_property_id])
-          new_form.version_number = new_version_number
+          new_form.version_number = (last_version_number + 1)
           new_name = form.name.gsub(/\s\((Version)\s\d*\)/, "")
-          new_form.name = "#{new_name} (Version #{new_version_number})"
+          new_form.name = "#{new_name} (Version #{last_version_number + 1})"
 
           if new_form.save
-            form_property.form.update(version_number: 1) if latest_form_version.nil?
             return { form_property: form_property }
           end
         end
