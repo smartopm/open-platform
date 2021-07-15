@@ -51,7 +51,7 @@ RSpec.describe Mutations::Form::FormPropertiesUpdate do
         user_id: user.id,
         form_id: form.id,
         status: 1,
-        status_updated_by_id: admin.id
+        status_updated_by_id: admin.id,
       )
       result = DoubleGdpSchema.execute(mutation, variables: variables,
                                                  context: {
