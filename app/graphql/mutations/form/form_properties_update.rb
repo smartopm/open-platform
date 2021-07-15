@@ -16,6 +16,7 @@ module Mutations
 
       field :form_property, Types::FormPropertiesType, null: true
       field :message, GraphQL::Types::String, null: true
+      field :new_form_version, Types::FormType, null: true
 
       # rubocop:disable Metrics/MethodLength
       # rubocop:disable Metrics/AbcSize
@@ -33,14 +34,14 @@ module Mutations
 
           if new_form.save!
             form.deprecated!
-            return { form_property: nil, message: 'New version created' }
+            return { message: 'New version created', new_form_version: new_form }
           end
         end
 
         if form_property.update(vals.except(:id))
           data = { action: 'updated', field_name: vals[:field_name] }
           context[:current_user].generate_events('form_update', form, data)
-          return { form_property: form_property, message: '' }
+          return { form_property: form_property }
         end
 
         raise GraphQL::ExecutionError, form_property.errors.full_messages
