@@ -46,7 +46,6 @@ export const UserPlans = gql`
         extRefId
       }
       landParcel {
-        id
         parcelNumber
       }
       planPayments {
@@ -54,9 +53,21 @@ export const UserPlans = gql`
         createdAt
         amount
         status
+        receiptNumber
+        paymentPlan {
+          pendingBalance
+          statementPaidAmount
+          unallocatedAmount
+          landParcel {
+            parcelNumber
+          }
+        }
         userTransaction {
-          id
           source
+          transactionNumber
+          depositor {
+            name
+          }
         }
       }
     }
