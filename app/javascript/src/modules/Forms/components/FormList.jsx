@@ -1,4 +1,4 @@
-import React, { Fragment, useState, useEffect } from 'react'
+import React, { Fragment, useState } from 'react'
 import {
   List,
   ListItem,
@@ -41,7 +41,9 @@ import SwitchInput from './SwitchInput'
 
 // here we get existing google forms and we mix them with our own created forms
 export default function FormLinkList({ userType, community }) {
-  const { data, error, loading, refetch } = useQuery(FormsQuery)
+  const { data, error, loading, refetch } = useQuery(FormsQuery, {
+    fetchPolicy: 'cache-and-network'
+  })
   const [createForm] = useMutation(FormCreateMutation)
   const history = useHistory()
   const classes = useStyles()
@@ -58,10 +60,6 @@ export default function FormLinkList({ userType, community }) {
   const [multipleSubmissionsAllowed, setMultipleSubmissionsAllowed] = useState(true)
 
   const menuOpen = Boolean(anchorEl)
-
-  useEffect(() => {
-    refetch()
-  }, [])
 
   function handleOpenMenu(event, id) {
     event.stopPropagation()
