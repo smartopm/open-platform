@@ -1,6 +1,7 @@
 import React from 'react'
 import { FormControl, InputLabel, MenuItem, Select } from '@material-ui/core'
 import PropTypes from 'prop-types'
+import { useTranslation } from 'react-i18next'
 
 export default function FormPropertySelector({
   label,
@@ -9,6 +10,7 @@ export default function FormPropertySelector({
   handleChange,
   options
 }) {
+  const { t } = useTranslation('form')
   return (
     <FormControl variant="outlined" style={{ width: '100%' }}>
       <InputLabel id={`${name}-${label}-id`}>{label}</InputLabel>
@@ -21,9 +23,9 @@ export default function FormPropertySelector({
         name={name}
         required
       >
-        {Object.entries(options).map(([key, val]) => (
+        {Object.entries(options).map(([key]) => (
           <MenuItem key={key} value={key}>
-            {val}
+            { t(`field_types.${key}`)}
           </MenuItem>
         ))}
       </Select>
