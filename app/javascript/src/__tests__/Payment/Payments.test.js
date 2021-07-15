@@ -19,6 +19,11 @@ describe('Payments Component', () => {
       </Context.Provider>
     );
 
-    expect(container.getAllByText(/Payments/)[0]).toBeInTheDocument();
+    expect(container.queryByText('Client Name')).toBeInTheDocument()
+    expect(container.queryAllByText('search.search_for')[0]).toBeInTheDocument()
+    expect(container.queryByText('Add filter')).toBeInTheDocument()
+    expect(container.queryByText('Add group')).toBeInTheDocument()
+    expect(container.queryByText('misc.previous')).toBeInTheDocument()
+    expect(container.queryByText('misc.next')).toBeInTheDocument()
   });
 });
