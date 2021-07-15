@@ -9,6 +9,14 @@
   "errors": {
     "no_forms": "No hay formularios para enviar"
   },
+  "field_types": {
+    "date": "Fecha",
+    "dropdown": "Desplegar",
+    "image": "Imagen",
+    "radio": "Radio",
+    "signature": "Firma",
+    "text": "Prueba"
+  },
   "form_fields": {
     "admins_only": "Solo para Administradores",
     "field_name": "Nombre del campo",
@@ -49,9 +57,13 @@
     "form_expiry_date": "Fecha de vencimiento del formulario",
     "form_submitted": "Ha enviado correctamente el formulario",
     "limit_1_response": "Limitar a 1 respuesta",
+    "no_form_entries": "No hay formulario  de entradas disponibles",
     "publish_ing_form": "Publicando el formulario ...",
     "published_form": "Publicado con éxito el formulario",
     "signature": "Firma",
+    "status": "Estado",
+    "submission_date": "Fecha de envío",
+    "submitted_by": "Enviado por",
     "updates": "Novedades"
   }
 }
