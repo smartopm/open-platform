@@ -69,7 +69,7 @@ const SideMenu = ({ toggleDrawer, menuItems, userType, direction, communityFeatu
       return {
         userType,
         paymentCheck: true,
-        loggedInUserPaymentPlan: authState.user.paymentPlan,
+        loggedInUserPaymentPlan: authState.user?.paymentPlan,
       }
     }
 
