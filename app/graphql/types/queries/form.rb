@@ -88,6 +88,7 @@ module Types::Queries::Form
   # @param form_id [String] Form#id
   #
   # @return [Hash]
+  # rubocop:disable Metrics/AbcSize
   def form_entries(form_id:, query: nil, limit: 20, offset: 0)
     raise_unauthorized_error
 
@@ -95,11 +96,13 @@ module Types::Queries::Form
     raise_form_not_found_error(form)
 
     query = updated_query(query)
-    form_users = Forms::FormUser.where(form_id: Forms::Form.where(grouping_id: form.grouping_id).pluck(:id))
-                      .includes(:user).search(query).order(created_at: :desc)
-                     .limit(limit).offset(offset)
+    form_users = Forms::FormUser.where(form_id: Forms::Form.where(grouping_id: form.grouping_id)
+                                .select(:id))
+                                .includes(:user).search(query).order(created_at: :desc)
+                                .limit(limit).offset(offset)
     { form_name: form.name, form_users: form_users }
   end
+  # rubocop:enable Metrics/AbcSize
 
   # rubocop:disable Metrics/AbcSize
   def form_user_properties(form_id:, user_id:)

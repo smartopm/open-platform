@@ -11,6 +11,7 @@ module Mutations
       field :message, GraphQL::Types::String, null: true
 
       # rubocop:disable Metrics/AbcSize
+      # rubocop:disable Metrics/MethodLength
       def resolve(vals)
         form = context[:site_community].forms.find(vals[:form_id])
         raise_form_not_found_error(form)
@@ -18,16 +19,16 @@ module Mutations
         form_property = form.form_properties.find(vals[:form_property_id])
         form = form_property.form
 
-        if form.has_entries?
+        if form.entries?
           last_version_number = form.last_version
           new_form = form.duplicate(vals[:form_property_id])
           new_form.version_number = (last_version_number + 1)
-          new_name = form.name.gsub(/\s\((Version)\s\d*\)/, "")
+          new_name = form.name.gsub(/\s\((Version)\s\d*\)/, '')
           new_form.name = "#{new_name} (Version #{last_version_number + 1})"
 
           if new_form.save
             form.deprecated!
-            return { form_property: form_property, message: 'New version created' }
+            return { form_property: nil, message: 'New version created' }
           end
         end
 
@@ -40,6 +41,7 @@ module Mutations
         raise GraphQL::ExecutionError, form_property.errors.full_messages
       end
       # rubocop:enable Metrics/AbcSize
+      # rubocop:enable Metrics/MethodLength
 
       # Verifies if current user is admin or not.
       def authorized?(_vals)
