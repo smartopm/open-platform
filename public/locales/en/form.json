@@ -57,7 +57,7 @@
   "field_types": {
     "text": "Text",
     "radio": "Radio",
-    "image": "File Uploadss",
+    "image": "File Upload",
     "signature": "Signature",
     "date": "Date",
     "dropdown": "Dropdown"
