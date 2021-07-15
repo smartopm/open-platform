@@ -68,7 +68,7 @@ const userMenus = [
       path: '/user/:id?tab=Plans',
       component: <span />
     },
-    name: t => t('menu.plan', { count: 0 }),
+    name: t => t('menu.payment', { count: 0 }),
     featureName: 'Payments',
     accessibleBy: ctx => handler({ userTypes: ['admin', 'client', 'resident'], ctx }),
   },

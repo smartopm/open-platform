@@ -80,7 +80,7 @@ const SideMenu = ({ toggleDrawer, menuItems, userType, direction, communityFeatu
     if (userType === 'admin') {
       return true
     }
-    if ((menuItem === 'Plans') && authState.user.paymentPlan === false) {
+    if ((menuItem === 'Payments') && authState.user.paymentPlan === false) {
       return false
     }
     return true
