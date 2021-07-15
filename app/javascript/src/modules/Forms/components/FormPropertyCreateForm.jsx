@@ -21,7 +21,7 @@ const initData = {
 const fieldTypes = {
   text: 'Text',
   radio: 'Radio',
-  image: 'Image',
+  image: 'File Upload',
   signature: 'Signature',
   date: 'Date',
   dropdown: 'Dropdown',
