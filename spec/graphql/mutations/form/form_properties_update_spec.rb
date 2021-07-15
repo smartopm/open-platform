@@ -17,6 +17,7 @@ RSpec.describe Mutations::Form::FormPropertiesUpdate do
               fieldName
               fieldType
             }
+            message
           }
         }
       GQL
@@ -46,13 +47,20 @@ RSpec.describe Mutations::Form::FormPropertiesUpdate do
         fieldType: %w[date image signature display_text display_image].sample,
       }
       previous_form_count = Forms::Form.count
-      Forms::FormUser.create!(user_id: user.id, form_id: form.id, status: 1, status_updated_by_id: admin.id)
+      Forms::FormUser.create!(
+        user_id: user.id,
+        form_id: form.id,
+        status: 1,
+        status_updated_by_id: admin.id
+      )
       result = DoubleGdpSchema.execute(mutation, variables: variables,
                                                  context: {
                                                    current_user: admin,
                                                    site_community: user.community,
                                                  }).as_json
-
+      expect(
+        result.dig('data', 'formPropertiesUpdate', 'message'),
+      ).to eql 'New version created'
       expect(Forms::Form.count).to eql(previous_form_count + 1)
     end
 
