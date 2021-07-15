@@ -15,7 +15,7 @@ module Forms
     after_create :update_grouping_id
 
     default_scope { where.not(status: 2) }
-    enum status: { draft: 0, published: 1, deleted: 2 }
+    enum status: { draft: 0, published: 1, deleted: 2, deprecated: 3 }
 
     def has_entries?
       form_users.present?

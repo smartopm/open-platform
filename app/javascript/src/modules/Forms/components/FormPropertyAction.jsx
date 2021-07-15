@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Container, Grid, IconButton } from '@material-ui/core';
+import { useHistory } from 'react-router-dom';
 import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
 import EditIcon from '@material-ui/icons/Edit';
 import PropTypes from 'prop-types';
@@ -17,6 +18,7 @@ export default function FormPropertyAction({ propertyId, editMode, formId, refet
   const [currentPropId, setCurrentPropertyId] = useState('');
   const [isDeletingProperty, setDeleteLoading] = useState(false);
   const [deleteProperty] = useMutation(FormPropertyDeleteMutation);
+  const history = useHistory();
   const [message, setMessage] = useState({ isError: false, detail: '' });
   const { t } = useTranslation('form');
 
@@ -30,9 +32,18 @@ export default function FormPropertyAction({ propertyId, editMode, formId, refet
     deleteProperty({
       variables: { formId, formPropertyId: propId }
     })
-      .then(() => {
+      .then((res) => {
         setDeleteLoading(false);
-        setMessage({ ...message, isError: false, detail: t('misc.deleted_form_property') });
+        if (res.data.formPropertiesDelete.message === 'New version created') {
+          history.push({
+            pathname: '/forms',
+            state: {
+              from: 'Form Property'
+            }
+          })
+        } else {
+          setMessage({ ...message, isError: false, detail: t('misc.deleted_form_property') });
+        }
         refetch();
       })
       .catch(err => {

@@ -15,6 +15,7 @@ module Mutations
       argument :long_desc, String, required: false
 
       field :form_property, Types::FormPropertiesType, null: true
+      field :message, GraphQL::Types::String, null: true
 
       def resolve(vals)
         form_property = Forms::FormProperty.find(vals[:id])
@@ -30,7 +31,8 @@ module Mutations
             new_form.name = "#{new_name} (Version #{last_version_number + 1})"
 
             if new_form.save!
-              return { form_property: form_property }
+              form.deprecated!
+              return { form_property: form_property, message: 'New version created' }
             end
           end
         end
@@ -38,7 +40,7 @@ module Mutations
         if form_property.update(vals.except(:id))
           data = { action: 'updated', field_name: vals[:field_name] }
           context[:current_user].generate_events('form_update', form, data)
-          return { form_property: form_property }
+          return { form_property: form_property, message: '' }
         end
 
         raise GraphQL::ExecutionError, form_property.errors.full_messages

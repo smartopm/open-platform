@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useLazyQuery, useMutation } from 'react-apollo';
 import PropTypes from 'prop-types';
 import { Button, TextField } from '@material-ui/core';
+import { useHistory } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { FormPropertyCreateMutation, FormPropertyUpdateMutation } from '../graphql/forms_mutation';
 import CenteredContent from '../../../components/CenteredContent';
@@ -39,6 +40,7 @@ export default function FormPropertyCreateForm({ formId, refetch, propertyId, cl
   const [message, setMessage] = useState({ isError: false, detail: '' });
   const [formPropertyCreate] = useMutation(FormPropertyCreateMutation);
   const [formPropertyUpdate] = useMutation(FormPropertyUpdateMutation);
+  const history = useHistory();
   const [loadFields, { data }] = useLazyQuery(FormPropertyQuery, {
     variables: { formId, formPropertyId: propertyId }
   });
@@ -110,15 +112,24 @@ export default function FormPropertyCreateForm({ formId, refetch, propertyId, cl
         id: propertyId
       }
     })
-      .then(() => {
-        refetch();
-        setMutationLoading(false);
-        setProperty({
-          ...initData,
-          order: nextOrder.toString()
-        });
-        setOptions(['']);
-        setMessage({ ...message, isError: false, detail: t('misc.updated_form_property') });
+      .then(res => {
+        if (res.data.formPropertiesUpdate.message === 'New version created') {
+          history.push({
+            pathname: '/forms',
+            state: {
+              from: 'Form Property'
+            }
+          });
+        } else {
+          refetch();
+          setMutationLoading(false);
+          setProperty({
+            ...initData,
+            order: nextOrder.toString()
+          });
+          setOptions(['']);
+          setMessage({ ...message, isError: false, detail: t('misc.updated_form_property') });
+        }
         close();
       })
       .catch(err => {
@@ -148,7 +159,7 @@ export default function FormPropertyCreateForm({ formId, refetch, propertyId, cl
           onChange={handlePropertyValueChange}
           name="fieldName"
           style={{ width: '100%' }}
-          inputProps={{ "data-testid": "field_name" }}
+          inputProps={{ 'data-testid': 'field_name' }}
           margin="normal"
           autoFocus
           required

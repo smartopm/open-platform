@@ -55,6 +55,7 @@ export const FormPropertyDeleteMutation = gql`
       formProperty {
         id
       }
+      message
     }
   }
 `;
@@ -121,6 +122,7 @@ mutation updateProps(
       id
       fieldName
     }
+    message
   }
 }
 `;

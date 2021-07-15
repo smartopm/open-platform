@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react'
+import React, { Fragment, useState, useEffect } from 'react'
 import {
   List,
   ListItem,
@@ -40,7 +40,7 @@ import { propAccessor, formatError } from '../../../utils/helpers'
 import SwitchInput from './SwitchInput'
 
 // here we get existing google forms and we mix them with our own created forms
-export default function FormLinkList({ userType, community }) {
+export default function FormLinkList({ userType, community, location }) {
   const { data, error, loading, refetch } = useQuery(FormsQuery)
   const [createForm] = useMutation(FormCreateMutation)
   const history = useHistory()
@@ -58,6 +58,14 @@ export default function FormLinkList({ userType, community }) {
   const [multipleSubmissionsAllowed, setMultipleSubmissionsAllowed] = useState(true)
 
   const menuOpen = Boolean(anchorEl)
+
+  useEffect(() => {
+    if (location.state && location.state.from === 'Form Property') {
+      refetch()
+      setMessage({ isError: false, detail: 'This form is now deprecated and a new version has been created.' })
+      setAlertOpen(true)
+    }
+  }, [location.state, refetch])
 
   function handleOpenMenu(event, id) {
     event.stopPropagation()
@@ -335,9 +343,14 @@ FormMenu.propTypes = {
   anchorEl: PropTypes.object
 }
 
+FormLinkList.defaultProps = {
+  location: {}
+}
 FormLinkList.propTypes = {
   userType: PropTypes.string.isRequired,
   community: PropTypes.string.isRequired,
+  // eslint-disable-next-line react/forbid-prop-types
+  location: PropTypes.object
 }
 
 const styles = StyleSheet.create({
