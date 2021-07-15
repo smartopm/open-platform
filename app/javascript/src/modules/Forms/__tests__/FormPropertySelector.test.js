@@ -4,15 +4,15 @@ import '@testing-library/jest-dom/extend-expect'
 import FormPropertySelector from '../components/FormPropertySelector'
 
 describe('Form property selector component', () => {
+  const fieldTypes = {
+      text: 'Text',
+      radio: 'Radio',
+      image: 'Image',
+      signature: 'Signature',
+      date: 'Date',
+      dropdown: 'Dropdown'
+    }
   it('should all options and render correctly passed values', () => {
-    const fieldTypes = {
-        text: 'Text',
-        radio: 'Radio',
-        image: 'Image',
-        signature: 'Signature',
-        date: 'Date',
-        dropdown: 'Dropdown'
-      }
 
     const container = render(
       <FormPropertySelector
@@ -23,7 +23,10 @@ describe('Form property selector component', () => {
         options={fieldTypes}
       />
     )
-    expect(container.queryByText('Text')).toBeInTheDocument();
+    expect(container.queryAllByText('Field Type')[0]).toBeInTheDocument();
+    expect(container.queryByText('field_types.text')).toBeInTheDocument();
+  })
+  it('should verify the dropdown menu on field types', () => {
 
     const anotherContainer = render(
       <FormPropertySelector
@@ -34,6 +37,6 @@ describe('Form property selector component', () => {
         options={fieldTypes}
       />
     )
-    expect(anotherContainer.queryByText('Dropdown')).toBeInTheDocument()
+    expect(anotherContainer.queryByText('field_types.dropdown')).toBeInTheDocument()
   })
 })

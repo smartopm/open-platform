@@ -264,7 +264,8 @@
     "view_plans": "View Payment Plans",
     "publish": "Publish",
     "proceed": "Proceed",
-    "maps": "Maps"
+    "maps": "Maps",
+    "view_entries": "View Entries"
   },
   "user_types": {
     "admin": "Admin",
