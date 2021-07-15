@@ -24,8 +24,8 @@ module Mutations
           last_version_number = form.last_version
           new_form = form.duplicate(vals[:form_property_id])
           new_form.version_number = (last_version_number + 1)
-          new_name = form.name.gsub(/\s\((Version)\s\d*\)/, '')
-          new_form.name = "#{new_name} (Version #{last_version_number + 1})"
+          new_name = form.name.gsub(/\s(V)\d*/, '')
+          new_form.name = "#{new_name} V#{last_version_number + 1}"
 
           if new_form.save
             form.deprecated!
