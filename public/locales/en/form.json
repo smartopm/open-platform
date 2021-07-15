@@ -8,6 +8,7 @@
 		"client_request_form": "Client Request Form",
 		"building_permit": "Building Permit",
 		"form_created": "Form Successfully created",
+		"form_version_created": "This form is now deprecated and a new version has been created",
 		"limit_1_response": "Limit to 1 response",
 		"form_expiry_date": "Form Expiry Date",
 		"form_action_success": "Successfully {{status}} the form",

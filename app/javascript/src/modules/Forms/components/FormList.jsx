@@ -62,10 +62,11 @@ export default function FormLinkList({ userType, community, location }) {
   useEffect(() => {
     if (location.state && location.state.from === 'Form Property') {
       refetch()
-      setMessage({ isError: false, detail: 'This form is now deprecated and a new version has been created.' })
+      setMessage({ isError: false, detail: t('misc.form_version_created') })
       setAlertOpen(true)
+      history.replace('/forms', {})
     }
-  }, [location.state, refetch])
+  }, [])
 
   function handleOpenMenu(event, id) {
     event.stopPropagation()

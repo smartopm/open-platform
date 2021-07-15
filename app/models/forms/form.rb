@@ -12,8 +12,6 @@ module Forms
 
     validates :name, presence: true, uniqueness: true
 
-    after_create :update_grouping_id
-
     default_scope { where.not(status: 2) }
     enum status: { draft: 0, published: 1, deleted: 2, deprecated: 3 }
 
@@ -33,12 +31,6 @@ module Forms
     def last_version
       Form.where(grouping_id: grouping_id)
           .order(:created_at).last.version_number
-    end
-
-    private
-
-    def update_grouping_id
-      update(grouping_id: id)
     end
   end
 end

@@ -15,7 +15,7 @@ module Mutations
         form = context[:site_community].forms.new(vals)
         if form.save
           context[:current_user].generate_events('form_create', form)
-
+          form.update!(grouping_id: form.id)
           return { form: form }
         end
 

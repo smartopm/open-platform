@@ -95,7 +95,8 @@ module Types::Queries::Form
     raise_form_not_found_error(form)
 
     query = updated_query(query)
-    form_users = form.form_users.includes(:user).search(query).order(created_at: :desc)
+    form_users = Forms::FormUser.where(form_id: Forms::Form.where(grouping_id: form.grouping_id).pluck(:id))
+                      .includes(:user).search(query).order(created_at: :desc)
                      .limit(limit).offset(offset)
     { form_name: form.name, form_users: form_users }
   end
