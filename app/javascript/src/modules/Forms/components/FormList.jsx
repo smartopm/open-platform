@@ -314,7 +314,7 @@ export function FormMenu({ formId, formName, anchorEl, handleClose, open, refetc
             key="view_entries"
             onClick={() => history.push(`/form/${formId}/${formName}/entries`)}
           >
-            View Entries
+            {t('common:menu.view_entries')}
           </MenuItem>
         </div>
       </Menu>
