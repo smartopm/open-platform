@@ -508,13 +508,23 @@ export function checkAllowedCommunityFeatures(features, module){
     return userTypes;
    }
 
-  // allow accessibility for self
-  if(ctx.userId && ctx.loggedInUserId && ctx.userId === ctx.loggedInUserId) {
+   // allow accessibility for admin
+  if(ctx.userType && ctx.userType.includes('admin')){
     return userTypes;
   }
 
-  // allow accessibility for admin
-  if(ctx.userType && ctx.userType.includes('admin')){
+  // on payment check, allow accessibility for user type
+  if(ctx.paymentCheck && ctx.userType){
+    // deny accessibility without payment plan
+    if(!ctx.loggedInUserPaymentPlan){
+      return (userTypes.filter(t => t !== ctx.userType));
+    }
+
+    return userTypes;
+  }
+
+  // allow accessibility for self
+  if(ctx.userId && ctx.loggedInUserId && ctx.userId === ctx.loggedInUserId) {
     return userTypes;
   }
 
