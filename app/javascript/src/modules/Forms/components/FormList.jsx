@@ -40,7 +40,7 @@ import { propAccessor, formatError } from '../../../utils/helpers'
 import SwitchInput from './SwitchInput'
 
 // here we get existing google forms and we mix them with our own created forms
-export default function FormLinkList({ userType, community, location }) {
+export default function FormLinkList({ userType, community }) {
   const { data, error, loading, refetch } = useQuery(FormsQuery)
   const [createForm] = useMutation(FormCreateMutation)
   const history = useHistory()
@@ -60,12 +60,7 @@ export default function FormLinkList({ userType, community, location }) {
   const menuOpen = Boolean(anchorEl)
 
   useEffect(() => {
-    if (location.state && location.state.from === 'Form Property') {
-      refetch()
-      setMessage({ isError: false, detail: t('misc.form_version_created') })
-      setAlertOpen(true)
-      history.replace('/forms', {})
-    }
+    refetch()
   }, [])
 
   function handleOpenMenu(event, id) {
@@ -344,14 +339,9 @@ FormMenu.propTypes = {
   anchorEl: PropTypes.object
 }
 
-FormLinkList.defaultProps = {
-  location: {}
-}
 FormLinkList.propTypes = {
   userType: PropTypes.string.isRequired,
   community: PropTypes.string.isRequired,
-  // eslint-disable-next-line react/forbid-prop-types
-  location: PropTypes.object
 }
 
 const styles = StyleSheet.create({

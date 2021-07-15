@@ -34,16 +34,12 @@ export default function FormPropertyAction({ propertyId, editMode, formId, refet
     })
       .then((res) => {
         setDeleteLoading(false);
-        if (res.data.formPropertiesDelete.message === 'New version created') {
-          history.push({
-            pathname: '/forms',
-            state: {
-              from: 'Form Property'
-            }
-          })
-        } else {
-          setMessage({ ...message, isError: false, detail: t('misc.deleted_form_property') });
+        const formPropResponse = res.data.formPropertiesDelete
+        if (formPropResponse.message === 'New version created') {
+          history.push(`/edit_form/${formPropResponse.newFormVersion.id}`)
         }
+
+        setMessage({ ...message, isError: false, detail: t('misc.deleted_form_property') });
         refetch();
       })
       .catch(err => {

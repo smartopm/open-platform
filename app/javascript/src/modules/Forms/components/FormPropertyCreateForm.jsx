@@ -113,23 +113,18 @@ export default function FormPropertyCreateForm({ formId, refetch, propertyId, cl
       }
     })
       .then(res => {
-        if (res.data.formPropertiesUpdate.message === 'New version created') {
-          history.push({
-            pathname: '/forms',
-            state: {
-              from: 'Form Property'
-            }
-          });
-        } else {
-          refetch();
-          setMutationLoading(false);
-          setProperty({
-            ...initData,
-            order: nextOrder.toString()
-          });
-          setOptions(['']);
-          setMessage({ ...message, isError: false, detail: t('misc.updated_form_property') });
+        const formPropResponse = res.data.formPropertiesUpdate
+        if (formPropResponse.message === 'New version created') {
+          history.push(`/edit_form/${formPropResponse.newFormVersion.id}`)
         }
+        refetch();
+        setMutationLoading(false);
+        setProperty({
+          ...initData,
+          order: nextOrder.toString()
+        });
+        setOptions(['']);
+        setMessage({ ...message, isError: false, detail: t('misc.updated_form_property') });
         close();
       })
       .catch(err => {
