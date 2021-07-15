@@ -15,7 +15,11 @@
 		"attachments": "Attachments",
 		"signature": "Signature",
 		"deleted_form_property": "Successfully deleted form property",
-		"form_submitted": "You have successfully submitted the form"
+		"form_submitted": "You have successfully submitted the form",
+		"no_form_entries": "No Form Entries Available",
+		"submission_date": "Date of Submitted",
+		"submitted_by": "Submitted By",
+		"status": "Status"
 	},
 	"actions": {
 		"create_a_form": "Create a form",
