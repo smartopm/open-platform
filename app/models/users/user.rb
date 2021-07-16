@@ -324,17 +324,6 @@ module Users
       end
     end
 
-    def user_form(form_id, user_id)
-      if admin?
-        forms = community.forms.find_by(id: form_id)
-        return if forms.nil?
-
-        forms.form_users.find_by(user_id: user_id)
-      else
-        form_users.find_by(form_id: form_id)
-      end
-    end
-
     def find_a_user(a_user_id)
       community.users.allowed_users(self).find(a_user_id)
     end

@@ -13,8 +13,8 @@ RSpec.describe Mutations::Form::FormUserStatusUpdate do
 
     let(:mutation) do
       <<~GQL
-        mutation formUserStatusUpdate($formId: ID!, $userId: ID!, $status: String!){
-          formUserStatusUpdate(formId: $formId, userId: $userId, status:$status){
+        mutation formUserStatusUpdate($formUserId: ID!, $status: String!){
+          formUserStatusUpdate(formUserId: $formUserId, status:$status){
             formUser {
               id
               status
@@ -26,8 +26,7 @@ RSpec.describe Mutations::Form::FormUserStatusUpdate do
 
     it 'updates form status when user is admin' do
       variables = {
-        formId: form.id,
-        userId: user.id,
+        formUserId: form_user.id,
         status: 'approved',
       }
       result = DoubleGdpSchema.execute(mutation, variables: variables,
@@ -42,8 +41,7 @@ RSpec.describe Mutations::Form::FormUserStatusUpdate do
 
     it 'throws unauthorized error when user is not admin' do
       variables = {
-        formId: form.id,
-        userId: user.id,
+        formUserId: form_user.id,
         status: 'approved',
       }
       result = DoubleGdpSchema.execute(mutation, variables: variables,
@@ -56,8 +54,7 @@ RSpec.describe Mutations::Form::FormUserStatusUpdate do
 
     it 'throws not found error when form user does not exist' do
       variables = {
-        formId: '53bhb-j4bnrh-34rfs3',
-        userId: user.id,
+        formUserId: '53bhb-j4bnrh-34rfs3',
         status: 'approved',
       }
       result = DoubleGdpSchema.execute(mutation, variables: variables,

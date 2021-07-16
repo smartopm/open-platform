@@ -26,7 +26,7 @@ module Forms
     def create_form_task(hostname)
       user.generate_note(
         body: "<a href=\"https://#{hostname}/user/#{user.id}\">#{user.name}</a> Submitted
-                <a href=\"https://#{hostname}/user_form/#{form.id}/#{user.id}/#{form.name}/task\">
+                <a href=\"https://#{hostname}/user_form/#{user.id}/#{id}/task\">
                 #{form.name}</a>",
         category: 'form',
         form_user_id: id,
