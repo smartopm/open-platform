@@ -26,7 +26,7 @@ RSpec.describe Mutations::Form::FormPropertiesUpdate do
       variables = {
         id: form_property.id,
         fieldName: 'Updated Name',
-        fieldType: %w[date image signature display_text display_image].sample,
+        fieldType: %w[date file_upload signature display_text display_image].sample,
       }
       result = DoubleGdpSchema.execute(mutation, variables: variables,
                                                  context: {
@@ -43,7 +43,7 @@ RSpec.describe Mutations::Form::FormPropertiesUpdate do
       variables = {
         id: form_property.id,
         fieldName: 'Updated Name',
-        fieldType: %w[date image signature display_text display_image].sample,
+        fieldType: %w[date file_upload signature display_text display_image].sample,
       }
       result = DoubleGdpSchema.execute(mutation, variables: variables,
                                                  context: {
