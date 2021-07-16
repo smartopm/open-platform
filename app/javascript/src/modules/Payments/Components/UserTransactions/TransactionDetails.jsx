@@ -56,14 +56,14 @@ export default function TransactionDetails({ open, handleModalClose, data, curre
               <Typography className={classes.detailsTitle} style={{ marginBottom: '15px' }}>
                 {`${formatMoney(
                   currencyData,
-                  data?.paymentPlan?.pendingBalance || transData?.paymentPlan?.pendingBalance
+                  data?.paymentPlan?.pendingBalance || transData?.paymentPlan?.pendingBalance || 0
                 )} remaining balance`}
               </Typography>
               <Typography className={classes.detailsTitle}>
                 {`Receipt ${data?.receiptNumber || transData?.receiptNumber}`}
               </Typography>
             </Grid>
-            <Grid item xs={6}>
+            <Grid item xs={6} style={{textAlign: 'right'}}>
               <Typography className={classes.detailsTitle}>Amount</Typography>
               <Typography className={classes.detailContent}>
                 {formatMoney(currencyData, data?.amount || transData?.amount)}
@@ -86,7 +86,7 @@ export default function TransactionDetails({ open, handleModalClose, data, curre
           <Typography color="primary" style={{ fontSize: '12px', fontWeight: 500 }}>
             {`${formatMoney(
               currencyData,
-              data?.paymentPlan?.unallocatedAmount || transData?.paymentPlan?.unallocatedAmount
+              data?.paymentPlan?.unallocatedAmount || transData?.paymentPlan?.unallocatedAmount || 0
             )} unallocated`}
           </Typography>
         </Grid>
