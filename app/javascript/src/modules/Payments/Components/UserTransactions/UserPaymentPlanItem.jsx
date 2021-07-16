@@ -4,6 +4,7 @@ import { useMutation, useLazyQuery } from 'react-apollo';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import { useHistory } from 'react-router-dom';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
+import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import {
   Grid,
   Typography,
@@ -447,6 +448,7 @@ export function renderPlan(plan, currencyData, userType, { handleMenu, loading }
             suffixedNumber(plan.paymentDay)
           )}
         </Button>
+        <KeyboardArrowDownIcon style={{ margin: '10px 0 0 15px'}} />
       </Grid>
     ),
     Menu: (
