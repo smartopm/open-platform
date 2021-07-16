@@ -5,7 +5,7 @@ import FormUpdate from '../components/FormUpdate'
 import { Context } from '../../../containers/Provider/AuthStateProvider'
 
 export default function FormPage(){
-  const { formId, userId } = useParams()
+  const { formId, userId, formUserId } = useParams()
   const {pathname } = useLocation()
   const authState = useContext(Context)
   const isFormFilled = pathname.includes('user_form')
@@ -13,7 +13,7 @@ export default function FormPage(){
       <>
         <br />
         {
-          isFormFilled ? <FormUpdate formId={formId} userId={userId} authState={authState} /> : <Form formId={formId} pathname={pathname} />
+          isFormFilled ? <FormUpdate userId={userId} formUserId={formUserId} authState={authState} /> : <Form formId={formId} pathname={pathname} />
         }
       </>
     )

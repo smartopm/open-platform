@@ -5,13 +5,13 @@ module Mutations
     # For updating form users and property values
     class FormUserUpdate < BaseMutation
       argument :user_id, ID, required: true
-      argument :form_id, ID, required: true
+      argument :form_user_id, ID, required: true
       argument :prop_values, GraphQL::Types::JSON, required: true
 
       field :form_user, Types::FormUsersType, null: true
 
       def resolve(vals)
-        form_user = context[:current_user].user_form(vals[:form_id], vals[:user_id])
+        form_user = Forms::FormUser.find_by(id: vals[:form_user_id])
         return add_user_form_properties(form_user, vals) if form_user.present?
 
         raise GraphQL::ExecutionError, I18n.t('errors.record_not_found')

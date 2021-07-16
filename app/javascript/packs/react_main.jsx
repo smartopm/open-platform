@@ -273,7 +273,7 @@ const App = () => {
                               <Route path="/form/:formId?/:formName?/entries" component={FormEntriesPage} />
                               <Route path="/edit_form/:formId" component={FormBuilderPage} />
                               <Route
-                                path="/user_form/:formId?/:userId?/:formName?/:type?"
+                                path="/user_form/:userId?/:formUserId?/:type?"
                                 component={FormPage}
                               />
 

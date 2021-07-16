@@ -15,8 +15,8 @@ RSpec.describe Mutations::Form::FormUserUpdate do
 
     let(:mutation) do
       <<~GQL
-        mutation formUserUpdate($formId: ID!, $userId: ID!, $propValues: JSON!) {
-            formUserUpdate(formId: $formId, userId: $userId, propValues: $propValues){
+        mutation formUserUpdate($userId: ID!, $formUserId: ID!, $propValues: JSON!) {
+            formUserUpdate(userId: $userId, formUserId: $formUserId, propValues: $propValues){
             formUser {
               id
               form {
@@ -37,7 +37,7 @@ RSpec.describe Mutations::Form::FormUserUpdate do
         ],
       }
       variables = {
-        formId: form.id,
+        formUserId: form_user.id,
         userId: current_user.id,
         propValues: values.to_json,
       }
@@ -61,7 +61,7 @@ RSpec.describe Mutations::Form::FormUserUpdate do
         ],
       }
       variables = {
-        formId: '3453rsnjsdi-43rdf34-sdf43',
+        formUserId: '3453rsnjsdi-43rdf34-sdf43',
         userId: current_user.id,
         propValues: values.to_json,
       }
@@ -84,7 +84,7 @@ RSpec.describe Mutations::Form::FormUserUpdate do
         ],
       }
       variables = {
-        formId: form.id,
+        formUserId: form_user.id,
         userId: current_user.id,
         propValues: values.to_json,
       }

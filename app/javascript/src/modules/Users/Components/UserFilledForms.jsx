@@ -19,8 +19,8 @@ export default function UserFilledForms({ userFormsFilled, userId }) {
     return <CenteredContent>{t('misc.no_forms')}</CenteredContent>
   }
 
-  function handleViewForm(formId, formName) {
-    history.push(`/user_form/${formId}/${userId}/${formName}`)
+  function handleViewForm(formUserId) {
+    history.push(`/user_form/${userId}/${formUserId}`)
   }
   return (
     <div className="container">
@@ -30,7 +30,7 @@ export default function UserFilledForms({ userFormsFilled, userId }) {
           key={userForm.id}
           button
           data-testid="form_item"
-          onClick={() => handleViewForm(userForm.form?.id, userForm.form?.name)}
+          onClick={() => handleViewForm(userForm.id)}
         >
           <ListItemText
             primary={(

@@ -4,15 +4,14 @@ module Mutations
   module Form
     # For updating status of form users
     class FormUserStatusUpdate < BaseMutation
-      argument :form_id, ID, required: true
-      argument :user_id, ID, required: true
+      argument :form_user_id, ID, required: true
       argument :status, String, required: true
 
       field :form_user, Types::FormUsersType, null: true
 
       def resolve(vals)
         user = context[:current_user]
-        form_user = user.user_form(vals[:form_id], vals[:user_id])
+        form_user = Forms::FormUser.find_by(id: vals[:form_user_id])
         raise_form_user_not_found_error(form_user)
 
         return { form_user: form_user } if form_user.update(status: vals[:status],

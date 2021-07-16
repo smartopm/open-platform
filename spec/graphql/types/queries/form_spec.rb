@@ -51,11 +51,8 @@ RSpec.describe Types::Queries::Form do
 
     let(:form_user_query) do
       <<~GQL
-        query formUser (
-          $formId: ID!
-          $userId: ID!
-        ) {
-          formUser(formId: $formId, userId: $userId) {
+        query formUser ($userId: ID!, $formUserId: ID!) {
+          formUser(userId: $userId, formUserId: $formUserId) {
             id
           }
         }
@@ -108,8 +105,8 @@ RSpec.describe Types::Queries::Form do
       expect(result.dig('data', 'formProperties', 1, 'id')).to eql form_property_date.id
     end
 
-    it 'should retrieve form user by form id and user id' do
-      variables = { formId: form.id, userId: current_user.id }
+    it 'should retrieve form user y form user id' do
+      variables = { userId: current_user.id, formUserId: form_user.id }
       result = DoubleGdpSchema.execute(form_user_query, variables: variables,
                                                         context: {
                                                           current_user: current_user,
