@@ -64,6 +64,15 @@ const SideMenu = ({ toggleDrawer, menuItems, userType, direction, communityFeatu
       }
     }
 
+    // context for Payments & Payment Plans
+    if(['Payments'].includes(type)){
+      return {
+        userType,
+        paymentCheck: true,
+        loggedInUserPaymentPlan: authState.user?.paymentPlan,
+      }
+    }
+
     return undefined;
   }
 
@@ -76,16 +85,6 @@ const SideMenu = ({ toggleDrawer, menuItems, userType, direction, communityFeatu
     return menuItem.accessibleBy.includes(userType)
   }
 
-  function checkToDisplayPayments(menuItem) {
-    if (userType === 'admin') {
-      return true
-    }
-    if ((menuItem === 'Plans') && authState.user.paymentPlan === false) {
-      return false
-    }
-    return true
-  }
-
   return (
     <div
       role="button"
@@ -96,7 +95,7 @@ const SideMenu = ({ toggleDrawer, menuItems, userType, direction, communityFeatu
     >
       <List>
         {menuItems.map(menuItem =>
-         communityFeatures.includes(menuItem.featureName) && checkMenuAccessibility(menuItem) && checkToDisplayPayments(menuItem.name(t)) ? (
+         communityFeatures.includes(menuItem.featureName) && checkMenuAccessibility(menuItem) ? (
            <Fragment key={typeof menuItem.name === 'function' && menuItem.name(t)}>
              <ListItem
                button
