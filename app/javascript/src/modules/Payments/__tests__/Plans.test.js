@@ -27,8 +27,11 @@ describe('Plan List Component', () => {
             paymentDay: 1,
             pendingBalance: 200,
             id: 'f280159d-ac71-4c22-997a-07fd07344c94',
+            planValue: 300,
+            durationInMonth: 12,
+            status: 'paid',
+            endDate: '2021-07-31',
             landParcel: {
-              id: 'f280159d-ac71-4c22-997a-07fd07344c94',
               parcelNumber: 'Basic-123'
             },
             planPayments: [{
@@ -36,9 +39,21 @@ describe('Plan List Component', () => {
               createdAt: '2021-01-26',
               amount: 200,
               status: 'paid',
+              receiptNumber: 'RI2345',
+              paymentPlan: {
+                pendingBalance: 200,
+                statementPaidAmount: 500,
+                unallocatedAmount: 300,
+                landParcel: {
+                  parcelNumber: 'test123'
+                }
+              },
               userTransaction: {
-                id: 'f280159d-ac71-4c22-997a-07fd07344c94',
-                source: 'cash'
+                source: 'cash',
+                transactionNumber: '23456',
+                depositor: {
+                  name: 'some name'
+                }
               }
             }]
           }]
@@ -54,17 +69,31 @@ describe('Plan List Component', () => {
       result: {
         data: {
           userTransactions: [{
+            id: 'f280159d-ac71-4c22-997a-07fd07344c94',
+            source: 'cash',
+            createdAt: '2021-01-26',
+            transactionNumber: 12345,
             allocatedAmount: 200,
             unallocatedAmount: 200,
-            source: 'cash',
-            transactionNumber: 12345,
-            createdAt: '2021-01-26',
-            id: 'f280159d-ac71-4c22-997a-07fd07344c94',
             status: 'paid',
             depositor: {
               id: 'f280159d-ac71-4c22-997a-07fd07344c94',
               name: 'some name'
             },
+            planPayments: [{
+              id: 'y68iu32r',
+              createdAt: '2021-08-08',
+              receiptNumber: 'TI23466',
+              amount: 200,
+              paymentPlan: {
+                pendingBalance: 200,
+                statementPaidAmount: 300,
+                unallocatedAmount: 400,
+                landParcel: {
+                  parcelNumber: 'test123'
+                }
+              }
+            }],
             user: {
               id: 'f280159d-ac71-4c22-997a-07fd07344c94',
               name: 'some name',

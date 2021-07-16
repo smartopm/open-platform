@@ -11,7 +11,6 @@ export const UserTransactions = gql`
       allocatedAmount
       unallocatedAmount
       status
-      transactionNumber
       planPayments {
         id
         createdAt
@@ -54,11 +53,6 @@ export const UserPlans = gql`
       durationInMonth
       status
       endDate
-      user {
-        name
-        phoneNumber
-        extRefId
-      }
       landParcel {
         parcelNumber
       }
