@@ -82,7 +82,7 @@ export default function FormOptionInput({ options, setOptions, label }) {
             />
           )}
 
-          <IconButton style={{ marginTop: 13 }} onClick={handleRemoveOption} aria-label="remove">
+          <IconButton style={{ marginTop: 13 }} onClick={() => handleRemoveOption(i)} aria-label="remove">
             <DeleteOutline />
           </IconButton>
         </div>
