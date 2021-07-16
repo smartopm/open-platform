@@ -6,7 +6,7 @@ import { useHistory } from 'react-router';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import DatePickerDialog from '../../../components/DatePickerDialog';
-import { FormUserQuery, UserFormProperiesQuery } from '../graphql/forms_queries';
+import { FormUserQuery, UserFormPropertiesQuery } from '../graphql/forms_queries';
 import ErrorPage from '../../../components/Error';
 import CenteredContent from '../../../components/CenteredContent';
 import { FormUserStatusUpdateMutation, FormUserUpdateMutation } from '../graphql/forms_mutation';
@@ -33,7 +33,7 @@ const initialData = {
   radio: { value: { label: '', checked: null } },
 };
 
-export default function FormUpdate({ formId, userId, authState }) {
+export default function FormUpdate({ formUserId, userId, authState }) {
   const [properties, setProperties] = useState(initialData);
   const [message, setMessage] = useState({ err: false, info: '', signed: false });
   const [openModal, setOpenModal] = useState(false);
@@ -46,14 +46,14 @@ export default function FormUpdate({ formId, userId, authState }) {
   const [updateFormUser] = useMutation(FormUserUpdateMutation);
   const [updateFormUserStatus] = useMutation(FormUserStatusUpdateMutation);
 
-  const { data, error, loading } = useQuery(UserFormProperiesQuery, {
-    variables: { formId, userId },
+  const { data, error, loading } = useQuery(UserFormPropertiesQuery, {
+    variables: { userId, formUserId },
     fetchPolicy: 'network-only',
     errorPolicy: 'all',
   });
 
   const formUserData = useQuery(FormUserQuery, {
-    variables: { formId, userId },
+    variables: { userId, formUserId },
     fetchPolicy: 'network-only',
     errorPolicy: 'all',
   });
@@ -103,8 +103,7 @@ export default function FormUpdate({ formId, userId, authState }) {
   function handleStatusUpdate(formStatus) {
     updateFormUserStatus({
       variables: {
-        formId,
-        userId,
+        formUserId,
         status: formStatus,
       },
     })
@@ -155,8 +154,8 @@ export default function FormUpdate({ formId, userId, authState }) {
 
     updateFormUser({
       variables: {
-        formId,
         userId,
+        formUserId,
         propValues: cleanFormData,
       },
     })
@@ -399,8 +398,8 @@ export default function FormUpdate({ formId, userId, authState }) {
 }
 
 FormUpdate.propTypes = {
-  formId: PropTypes.string.isRequired,
   userId: PropTypes.string.isRequired,
+  formUserId: PropTypes.string.isRequired,
   authState: PropTypes.shape({
     user: PropTypes.shape({ userType: PropTypes.string }),
     token: PropTypes.string,

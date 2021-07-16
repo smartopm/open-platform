@@ -4,7 +4,7 @@ import '@testing-library/jest-dom/extend-expect'
 import { MockedProvider } from '@apollo/react-testing'
 import { BrowserRouter } from 'react-router-dom'
 import Loading from '../../../shared/Loading'
-import { UserFormProperiesQuery, FormUserQuery } from '../graphql/forms_queries'
+import { UserFormPropertiesQuery, FormUserQuery } from '../graphql/forms_queries'
 import FormUpdate from '../components/FormUpdate'
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn())
@@ -15,8 +15,8 @@ describe('Form Component', () => {
       request: {
         query: FormUserQuery,
         variables: {
-          formId: 'caea7b44-ee95-42a6-a42f-3e530432172e',
-          userId: '162f7517-7cc8-42f9-b2d0-a83a16d59569'
+          userId: '162f7517-7cc8-42f9-b2d0-a83a16d59569',
+          formUserId: 'caea7b44-ee95-42a6-a42f-3e530432172e',
         }
       },
       result: {
@@ -40,10 +40,10 @@ describe('Form Component', () => {
     }
     const mocks = {
       request: {
-        query: UserFormProperiesQuery,
+        query: UserFormPropertiesQuery,
         variables: {
-          formId: 'caea7b44-ee95-42a6-a42f-3e530432172e',
-          userId: '162f7517-7cc8-42f9-b2d0-a83a16d59569'
+          formUserId: 'caea7b44-ee95-42a6-a42f-3e530432172e',
+          userId: "162f7517-7cc8-42f9-b2d0-a83a16d59569"
         }
       },
       result: {
@@ -135,7 +135,7 @@ describe('Form Component', () => {
       <MockedProvider mocks={[mocks, formUserMocks]} addTypename={false}>
         <BrowserRouter>
           <FormUpdate
-            formId="caea7b44-ee95-42a6-a42f-3e530432172e"
+            formUserId="caea7b44-ee95-42a6-a42f-3e530432172e"
             userId="162f7517-7cc8-42f9-b2d0-a83a16d59569"
             authState={authState}
           />

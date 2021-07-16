@@ -29,9 +29,9 @@ module Types::Queries::Form
     end
     # Get form status for user
     field :form_user, Types::FormUsersType, null: true do
-      description 'Get user form by form id and user id'
-      argument :form_id, GraphQL::Types::ID, required: true
+      description 'Get user form by form user id'
       argument :user_id, GraphQL::Types::ID, required: true
+      argument :form_user_id, GraphQL::Types::ID, required: true
     end
 
     field :form_entries, Types::FormEntriesType, null: true do
@@ -44,9 +44,9 @@ module Types::Queries::Form
 
     # Get form properties with values for user
     field :form_user_properties, [Types::UserFormPropertiesType], null: true do
-      description 'Get user form properties by form id and user id'
-      argument :form_id, GraphQL::Types::ID, required: true
+      description 'Get user form properties by form user id'
       argument :user_id, GraphQL::Types::ID, required: true
+      argument :form_user_id, GraphQL::Types::ID, required: true
     end
   end
   # rubocop:enable Metrics/BlockLength
@@ -75,12 +75,12 @@ module Types::Queries::Form
     context[:site_community].forms.find(form_id).form_properties.find_by(id: form_property_id)
   end
 
-  def form_user(form_id:, user_id:)
+  def form_user(user_id:, form_user_id:)
     unless context[:current_user]&.admin? || context[:current_user]&.id.eql?(user_id)
       raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
     end
 
-    Forms::FormUser.find_by(form_id: form_id, user_id: user_id)
+    Forms::FormUser.find_by(id: form_user_id)
   end
 
   # Returns all forms users associated with the form
@@ -104,16 +104,14 @@ module Types::Queries::Form
   end
   # rubocop:enable Metrics/AbcSize
 
-  # rubocop:disable Metrics/AbcSize
-  def form_user_properties(form_id:, user_id:)
+  def form_user_properties(user_id:, form_user_id:)
     unless context[:current_user]&.admin? || context[:current_user]&.id.eql?(user_id)
       raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
     end
 
-    context[:site_community].forms.find(form_id).form_users.find_by(user_id: user_id)
-                            .user_form_properties.eager_load(:form_property).with_attached_image
+    Forms::FormUser.find_by(id: form_user_id)
+                   .user_form_properties.eager_load(:form_property).with_attached_image
   end
-  # rubocop:enable Metrics/AbcSize
 
   private
 

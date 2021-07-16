@@ -75,7 +75,7 @@ export default function FormEntries({ formId }) {
                 data={renderFormEntry(formUser)}
                 hasHeader={false}
                 clickable
-                handleClick={() => history.push(`/user_form/${formUser.formId}/${formUser.userId}/${data?.formEntries?.formName}`)}
+                handleClick={() => {history.push(`/user_form/${formUser.userId}/${formUser.id}`)}}
               />
             )) : (
               <CenteredContent>{t('misc.no_form_entries')}</CenteredContent>

@@ -38,7 +38,6 @@ export const FormPropertiesQuery = gql`
   }
 `
 
-
 export const FormPropertyQuery = gql`
   query($formId: ID!, $formPropertyId: ID!) {
     formProperty(formId: $formId, formPropertyId: $formPropertyId) {
@@ -51,11 +50,12 @@ export const FormPropertyQuery = gql`
       order
     }
   }
-`
+  `
 
-export const UserFormProperiesQuery = gql`
-  query userFormProperties($formId: ID!, $userId: ID!) {
-    formUserProperties(formId: $formId, userId: $userId) {
+
+export const UserFormPropertiesQuery = gql`
+  query userFormProperties($userId: ID!, $formUserId: ID!) {
+    formUserProperties(userId: $userId, formUserId: $formUserId) {
       formProperty {
         fieldName
         fieldType
@@ -72,8 +72,8 @@ export const UserFormProperiesQuery = gql`
 `
 
 export const FormUserQuery = gql`
-  query formUser($formId: ID!, $userId: ID!) {
-    formUser(formId: $formId, userId: $userId) {
+  query formUser($userId: ID!, $formUserId: ID!) {
+    formUser(userId: $userId, formUserId: $formUserId) {
       id
       status
       form {
