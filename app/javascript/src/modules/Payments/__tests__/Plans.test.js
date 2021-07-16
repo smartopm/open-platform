@@ -21,12 +21,12 @@ describe('Plan List Component', () => {
       result: {
         data: {
           userPlansWithPayments: [{
+            id: 'f280159d-ac71-4c22-997a-07fd07344c94',
             planType: 'lease',
             startDate: '2021-01-26',
             monthlyAmount: '200',
             paymentDay: 1,
             pendingBalance: 200,
-            id: 'f280159d-ac71-4c22-997a-07fd07344c94',
             planValue: 300,
             durationInMonth: 12,
             status: 'paid',
@@ -115,7 +115,8 @@ describe('Plan List Component', () => {
         data: {
           userBalance: {
             balance: '2000',
-            pendingBalance: '-12.0'
+            pendingBalance: '-12.0',
+            totalTransactions: '2000'
           }
         }
       }
@@ -154,7 +155,7 @@ describe('Plan List Component', () => {
       () => {
         expect(container.queryByText('common:misc.total_balance')).toBeInTheDocument();
       },
-      { timeout: 100 }
+      { timeout: 200 }
     );
   });
 });

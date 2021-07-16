@@ -11,6 +11,10 @@ export const UserTransactions = gql`
       allocatedAmount
       unallocatedAmount
       status
+      depositor {
+        id
+        name
+      }
       planPayments {
         id
         createdAt
@@ -24,10 +28,6 @@ export const UserTransactions = gql`
             parcelNumber
           }
         }
-      }
-      depositor {
-        id
-        name
       }
       user {
         id
