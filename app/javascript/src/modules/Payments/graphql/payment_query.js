@@ -12,6 +12,20 @@ export const UserTransactions = gql`
       unallocatedAmount
       status
       transactionNumber
+      planPayments {
+        id
+        createdAt
+        receiptNumber
+        amount
+        paymentPlan {
+          pendingBalance
+          statementPaidAmount
+          unallocatedAmount
+          landParcel {
+            parcelNumber
+          }
+        }
+      }
       depositor {
         id
         name

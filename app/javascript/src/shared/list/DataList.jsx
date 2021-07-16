@@ -33,7 +33,7 @@ export default function DataList({ keys, data, hasHeader, clickable, handleClick
                 key={item.id || index} 
                 style={{display: 'flex', padding: '10px'}}
                 className={clickable ? classes.clickable : classes.list}
-                onClick={clickable ? (event) => handleClick(event, item) : null}
+                onClick={clickable ? () => handleClick(item) : null}
               >
                 <div style={{marginRight: '10px', width: '50%'}}>
                   <MobileCellData propNames={keys.slice(0, 2)} dataObj={item} />
@@ -58,7 +58,7 @@ export default function DataList({ keys, data, hasHeader, clickable, handleClick
                 justify="space-around"
                 alignItems="center"
                 className={clickable ? classes.clickable : classes.list}
-                onClick={clickable ? (event) => handleClick(event, item) : null}
+                onClick={clickable ? () => handleClick(item) : null}
                 key={item.id || index}
                 spacing={1}
                 style={color ? {backgroundColor: '#FDFDFD'} : {marginBottom: '7px'}}
