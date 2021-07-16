@@ -78,7 +78,7 @@ describe('Form Component', () => {
             {
               formProperty: {
                 fieldName: 'Dead Line',
-                fieldType: 'image',
+                fieldType: 'file_upload',
                 fieldValue: null,
                 id: '3145c47e-1279-47b0-9da454c-dc4a7e362e',
                 adminUse: false,
@@ -91,7 +91,7 @@ describe('Form Component', () => {
             {
               formProperty: {
                 fieldName: 'Attach a file here',
-                fieldType: 'image',
+                fieldType: 'file_upload',
                 fieldValue: null,
                 id: '3145c47e-1234-47b0-9dac-dc723d2e',
                 adminUse: false,
