@@ -8,22 +8,24 @@ import {
 } from '@material-ui/core';
 import { ClearOutlined, FilterListOutlined } from '@material-ui/icons';
 import PropTypes from 'prop-types'
+import { useTranslation } from 'react-i18next';
 
 export default function SearchInput({ title, searchValue, filterRequired, handleSearch, handleFilter, handleClear }) {
+  const { t } = useTranslation('search')
   return (
     <FormControl fullWidth variant="outlined">
-      <InputLabel htmlFor="outlined-adornment-filter">{`Search for ${title}`}</InputLabel>
+      <InputLabel htmlFor="outlined-adornment-filter">{t('search.search_for', { title })}</InputLabel>
       <OutlinedInput
         id="outlined-adornment-filter"
         type="search"
-        label={`Search for ${title}`}
+        label={t('search.search_for', { title })}
         value={searchValue}
         onChange={handleSearch}
-        placeholder="Type your search query"
+        placeholder={t('search.type_your_search')}
         inputProps={{ "data-testid": "search" }}
         endAdornment={(
           <InputAdornment position="end">
-            { 
+            {
               Boolean(searchValue.length) && handleClear &&(
                 <IconButton aria-label="clear search query" data-testid="clear_search" onClick={handleClear} edge="end">
                   <ClearOutlined />

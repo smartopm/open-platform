@@ -8,11 +8,12 @@
 /* eslint-disable react/jsx-one-expression-per-line */
 import React, { useState, Fragment, useContext, useEffect } from 'react';
 import { useMutation, useQuery } from 'react-apollo';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { useLocation } from 'react-router-dom';
 import { StyleSheet, css } from 'aphrodite';
 import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
-import { TextField, Typography, Button } from '@material-ui/core';
+import { TextField, Typography, Button, useTheme } from '@material-ui/core';
 import Loading, { Spinner } from '../../../shared/Loading';
 import { AllEventLogsQuery } from '../../../graphql/queries';
 import ErrorPage from '../../../components/Error';
@@ -146,6 +147,8 @@ export function IndexComponent({
     loading: false
   });
   const [addObservationNote] = useMutation(AddObservationNoteMutation);
+  const theme = useTheme();
+  const matches = useMediaQuery(theme.breakpoints.up('sm'));
 
   function routeToAction(eventLog) {
     if (eventLog.refType === 'Logs::EntryRequest') {
@@ -439,6 +442,8 @@ export function IndexComponent({
           value={tabValue}
           onChange={handleTabValue}
           aria-label="simple tabs example"
+          variant={!matches && 'scrollable'}
+          scrollButtons={!matches && "on"}
           centered
         >
           <StyledTab label={t('logbook.all_visits')} {...a11yProps(0)} />
