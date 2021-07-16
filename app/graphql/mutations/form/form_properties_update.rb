@@ -52,7 +52,7 @@ module Mutations
       def destructive_change?(vals, form_property)
         vals[:field_name] != form_property.field_name ||
           vals[:field_type] != form_property.field_type ||
-          (form_property.field_value - vals[:field_value]).present?
+          (form_property.field_value.map(&:to_json) - vals[:field_value].map(&:to_json)).present?
       end
 
       # Verifies if current user is admin or not.
