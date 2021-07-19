@@ -1,37 +1,27 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import PropTypes from 'prop-types'
 import { useMutation, useApolloClient, useLazyQuery } from 'react-apollo';
 import { Button, Grid, Divider } from '@material-ui/core';
 import AddPhotoAlternateIcon from '@material-ui/icons/AddPhotoAlternate';
 import { Map, FeatureGroup, GeoJSON, LayersControl, TileLayer } from 'react-leaflet'
+import { Context as AuthStateContext } from '../../containers/Provider/AuthStateProvider';
 import NkwashiSuburbBoundaryData from '../../data/nkwashi_suburb_boundary.json'
 import { LandParcel } from '../../graphql/queries';
 import { PointOfInterestDelete, PointOfInterestImageCreate } from '../../graphql/mutations/land_parcel';
 import { useFileUpload } from '../../graphql/useFileUpload'
-import { checkValidGeoJSON, getHexColor, formatError } from '../../utils/helpers'
+import { checkValidGeoJSON, formatError } from '../../utils/helpers'
 import { emptyPolygonFeature, mapTiles, plotStatusColorPallete } from '../../utils/constants'
 import PointsOfInterestMarker from '../Map/PointsOfInterestMarker'
 import { ActionDialog } from '../Dialog'
 import MessageAlert from "../MessageAlert"
 import PointOfInterestDrawerDialog from '../Map/PointOfInterestDrawerDialog'
+import SubUrbanLayer from '../Map/SubUrbanLayer'
 
-const { attribution, openStreetMap, centerPoint: { nkwashi } } = mapTiles
+const { attribution, openStreetMap, centerPoint } = mapTiles
 
 /* istanbul ignore next */
 function getColor(plotSold){
   return (plotSold ? plotStatusColorPallete.sold : plotStatusColorPallete.available)
-}
-
-/* istanbul ignore next */
-function geoJSONStyle(feature) {
-  return {
-    weight: 1,
-    opacity: 1,
-    color: 'white',
-    dashArray: "3",
-    fillOpacity: 0.7,
-    fillColor: getHexColor(feature && Number(feature.properties.estimated_population))
-  }
 }
 
 /* istanbul ignore next */
@@ -54,18 +44,31 @@ function geoJSONPoiStyle(feature) {
   }
 }
 
+  /* istanbul ignore next */
+  function getSubUrbanData(communityName){
+    if(communityName === 'Nkwashi'){
+      return NkwashiSuburbBoundaryData
+    }
+
+    return undefined;
+  }
+
 /* istanbul ignore next */
 export default function LandParcelMap({ handlePlotClick, geoData }){
+  const authState = useContext(AuthStateContext);
   const [deletePointOfInterest] = useMutation(PointOfInterestDelete);
   const [uploadPoiImage] = useMutation(PointOfInterestImageCreate);
   const [selectedPoi, setSelectedPoi] = useState(null)
   const [isSuccessAlert, setIsSuccessAlert] = useState(false)
   const [messageAlert, setMessageAlert] = useState('')
   const [confirmDeletePoi, setConfirmDeletePoi] = useState(false)
+
+  const communityName = authState.user?.community?.name
   const properties = geoData?.filter(({ parcelType }) => parcelType !== 'poi') || null
   const poiData = geoData?.filter(({ parcelType }) => parcelType === 'poi') || null
   const featureCollection = { type: 'FeatureCollection',  features: [] }
   const poiFeatureCollection = { type: 'FeatureCollection',  features: [] }
+  const subUrbanData = getSubUrbanData(communityName)
 
   const [ loadParcel, { data: parcelData, loading: parcelDataLoading } ] = useLazyQuery(LandParcel, {
     fetchPolicy: 'cache-and-network'
@@ -164,14 +167,7 @@ export default function LandParcelMap({ handlePlotClick, geoData }){
     }
   }
 
-   /* istanbul ignore next */
-  function onEachSuburbLayerFeature(feature, layer){
-    if(feature.properties.estimated_population && feature.properties.sub_urban){
-     return layer.bindPopup(feature.properties.sub_urban)
-    }
-  }
-
-   /* istanbul ignore next */
+  /* istanbul ignore next */
   /* eslint-disable consistent-return */
   function onEachPoiLayerFeature(feature, layer){
     if(feature.properties.parcel_no && feature.properties.parcel_type === 'poi'){
@@ -180,6 +176,15 @@ export default function LandParcelMap({ handlePlotClick, geoData }){
       })
     }
   }
+
+  function getMapCenterPoint(){
+    if(!communityName) {
+      return [0, 0];
+    }
+
+    return centerPoint[communityName.toLowerCase()]
+  }
+
 
   return (
     <>
@@ -270,7 +275,7 @@ export default function LandParcelMap({ handlePlotClick, geoData }){
         />
         {/* istanbul ignore next */}
         <Map
-          center={nkwashi}
+          center={getMapCenterPoint()}
           zoom={16}
           attributionControl
           zoomControl
@@ -287,71 +292,70 @@ export default function LandParcelMap({ handlePlotClick, geoData }){
                 url={openStreetMap}
               />
             </LayersControl.BaseLayer>
-            <LayersControl.Overlay checked name="Nkwashi Land Parcels">
-              <FeatureGroup>
-                {properties?.map(({ id, longX, latY, geom, parcelNumber, parcelType, plotSold, accounts, valuations }) => {
-                  if(checkValidGeoJSON(geom)){
-                    const feature = JSON.parse(geom)
-                    feature.properties.id = id
-                    feature.properties.parcel_no = parcelNumber
-                    feature.properties.parcel_type = parcelType
-                    feature.properties.plot_sold = plotSold
-                    feature.properties.long_x = longX
-                    feature.properties.lat_y = latY
-                    feature.properties.accounts = accounts
-                    feature.properties.valuations = valuations
-                    return featureCollection.features.push(feature)
-                  }
-                  return featureCollection.features.push(JSON.parse(emptyPolygonFeature))
-                  })}
-                <GeoJSON
-                  key={Math.random()}
-                  data={featureCollection}
-                  style={geoJSONPlotStyle}
-                  onEachFeature={onEachLandParcelFeature}
-                />
-              </FeatureGroup>
-            </LayersControl.Overlay>
-            <LayersControl.Overlay name="Nkwashi Points of Interest">
-              {poiData && (
-              <FeatureGroup>
-                {poiData.map(({ id, geom, parcelNumber, parcelType }) => {
-                        if(checkValidGeoJSON(geom)){
-                          const feature = JSON.parse(geom)
-                          const markerProps = {
-                             geoLatY: feature.properties.lat_y || 0,
-                             geoLongX: feature.properties.long_x || 0,
-                             iconUrl: feature.properties.icon || '',
-                             poiName: feature.properties.poi_name || 'Point of Interest',
-                             geomType: feature.geometry.type || 'Polygon'
-                        }
-                        feature.properties.id = id
-                        feature.properties.parcel_no = parcelNumber
-                        feature.properties.parcel_type = parcelType
-                        poiFeatureCollection.features.push(feature)
-                        return (<PointsOfInterestMarker key={id} markerProps={markerProps} />)
-                      }
-                      return poiFeatureCollection.features.push(JSON.parse(emptyPolygonFeature))
+            {properties && (
+              <LayersControl.Overlay checked name="Land Parcels">
+                <FeatureGroup>
+                  {properties?.map(({ id, longX, latY, geom, parcelNumber, parcelType, plotSold, accounts, valuations }) => {
+                    if(checkValidGeoJSON(geom)){
+                      const feature = JSON.parse(geom)
+                      feature.properties.id = id
+                      feature.properties.parcel_no = parcelNumber
+                      feature.properties.parcel_type = parcelType
+                      feature.properties.plot_sold = plotSold
+                      feature.properties.long_x = longX
+                      feature.properties.lat_y = latY
+                      feature.properties.accounts = accounts
+                      feature.properties.valuations = valuations
+                      return featureCollection.features.push(feature)
+                    }
+                    return featureCollection.features.push(JSON.parse(emptyPolygonFeature))
                     })}
-                <GeoJSON
-                  key={Math.random()}
-                  data={poiFeatureCollection}
-                  style={geoJSONPoiStyle}
-                  onEachFeature={onEachPoiLayerFeature}
-                />
-              </FeatureGroup>
-               )}
-            </LayersControl.Overlay>
-            <LayersControl.Overlay name="Nkwashi Sub-urban Areas">
-              <FeatureGroup>
-                <GeoJSON
-                  key={Math.random()}
-                  data={NkwashiSuburbBoundaryData}
-                  style={geoJSONStyle}
-                  onEachFeature={onEachSuburbLayerFeature}
-                />
-              </FeatureGroup>
-            </LayersControl.Overlay>
+                  <GeoJSON
+                    key={Math.random()}
+                    data={featureCollection}
+                    style={geoJSONPlotStyle}
+                    onEachFeature={onEachLandParcelFeature}
+                  />
+                </FeatureGroup>
+              </LayersControl.Overlay>
+            )}
+            {poiData && (
+              <LayersControl.Overlay name="Points of Interest">
+                <FeatureGroup>
+                  {poiData?.map(({ id, geom, parcelNumber, parcelType }) => {
+                          if(checkValidGeoJSON(geom)){
+                            const feature = JSON.parse(geom)
+                            const markerProps = {
+                              geoLatY: feature.properties.lat_y || 0,
+                              geoLongX: feature.properties.long_x || 0,
+                              iconUrl: feature.properties.icon || '',
+                              poiName: feature.properties.poi_name || 'Point of Interest',
+                              geomType: feature.geometry.type || 'Polygon'
+                          }
+                          feature.properties.id = id
+                          feature.properties.parcel_no = parcelNumber
+                          feature.properties.parcel_type = parcelType
+                          poiFeatureCollection.features.push(feature)
+                          return (<PointsOfInterestMarker key={id} markerProps={markerProps} />)
+                        }
+                        return poiFeatureCollection.features.push(JSON.parse(emptyPolygonFeature))
+                      })}
+                  <GeoJSON
+                    key={Math.random()}
+                    data={poiFeatureCollection}
+                    style={geoJSONPoiStyle}
+                    onEachFeature={onEachPoiLayerFeature}
+                  />
+                </FeatureGroup>
+              </LayersControl.Overlay>
+            )}
+            {subUrbanData && (
+              <LayersControl.Overlay name="Sub-urban Areas">
+                <FeatureGroup>
+                  <SubUrbanLayer data={subUrbanData} />
+                </FeatureGroup>
+              </LayersControl.Overlay>
+            )}
           </LayersControl>
         </Map>
       </div>
