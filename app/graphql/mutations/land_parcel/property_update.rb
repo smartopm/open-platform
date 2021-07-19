@@ -18,7 +18,6 @@ module Mutations
       argument :geom, GraphQL::Types::JSON, required: false
       argument :valuation_fields, GraphQL::Types::JSON, required: false
       argument :ownership_fields, GraphQL::Types::JSON, required: false
-      argument :payment_plan_fields, GraphQL::Types::JSON, required: false
 
       field :land_parcel, Types::LandParcelType, null: true
 
@@ -47,7 +46,6 @@ module Mutations
                                          community_id: context[:site_community].id)
           end
 
-          create_payment_plan(vals[:payment_plan_fields]) if vals[:payment_plan_fields].present?
           { land_parcel: land_parcel }
         end
       rescue ActiveRecord::RecordInvalid => e
@@ -64,31 +62,6 @@ module Mutations
       end
 
       private
-
-      def create_payment_plan(params)
-        vals = payment_plan_values(params)
-
-        user = context[:site_community].users.find(vals[:user_id])
-        raise_user_not_found_error(user)
-
-        payment_plan = user.payment_plans.create!(vals.except(:user_id))
-        return if payment_plan.persisted?
-
-        raise GraphQL::ExecutionError, payment_plan.errors.full_messages
-      rescue ActiveRecord::RecordNotUnique
-        raise GraphQL::ExecutionError,
-              I18n.t('errors.payment_plan.plan_already_exist')
-      end
-
-      def payment_plan_values(vals)
-        hash = {}
-        vals.each do |key, val|
-          new_key = key.underscore.to_sym
-          hash[new_key] = val
-        end
-
-        hash
-      end
 
       # Raises GraphQL execution error if land parcel does not exist.
       #
