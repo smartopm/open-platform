@@ -430,7 +430,7 @@ export default function CommunitySettings({ data, token, refetch }) {
               <TextField
                 id={`${i}-menu-link-input`}
                 style={{ width: '300px'}}
-                label='Link'
+                label={t('common:form_fields.link')}
                 onChange={(event) => handleMenuItemChange(event, i)}
                 value={propAccessor(menuItemOptions[parseInt(i, 10)], 'menu_link')}
                 name='menu_link'
@@ -439,7 +439,7 @@ export default function CommunitySettings({ data, token, refetch }) {
               <TextField
                 id={`${i}-menu-name-input`}
                 style={{ width: '200px', marginLeft: '40px' }}
-                label='Name'
+                label={t('common:form_fields.name')}
                 onChange={(event) => handleMenuItemChange(event, i)}
                 value={propAccessor(menuItemOptions[parseInt(i, 10)], 'menu_name')}
                 name='menu_name'

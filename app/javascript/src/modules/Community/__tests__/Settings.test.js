@@ -35,6 +35,9 @@ describe('Community settings page ', () => {
       socialLinks: [
         { social_link: 'www.facebook.com', category: 'facebook' },
       ],
+      menuItems: [
+        { menu_link: 'http://some-link.com', menu_name: 'Custom Menu' },
+      ],
       logoUrl: null,
       bankingDetails: {
         bankName: 'Test bank name',
@@ -67,6 +70,10 @@ describe('Community settings page ', () => {
           socialLinks: [
             { social_link: 'www.facebook.com', category: 'facebook' },
             { social_link: '', category: '' },
+          ],
+          menuItems: [
+            { menu_link: 'http://some-link.com', menu_name: 'Custom Menu' },
+            { menu_link: '', menu_name: '' },
           ],
           imageBlobId: null,
           locale: 'en-US',
@@ -114,19 +121,20 @@ describe('Community settings page ', () => {
     expect(container.queryByText('common:form_fields.add_email_address')).toBeInTheDocument();
     expect(container.queryByText('common:form_fields.add_whatsapp_number')).toBeInTheDocument();
     expect(container.queryByText('common:form_fields.add_social_link')).toBeInTheDocument();
+    expect(container.queryByText('common:form_fields.add_menu_item')).toBeInTheDocument();
     expect(container.queryByText('community.update_community')).toBeInTheDocument();
     expect(container.queryByText('community.update_community')).not.toBeDisabled();
     expect(container.queryAllByLabelText('common:form_fields.email')).toHaveLength(2);
     expect(container.queryByLabelText('common:form_fields.phone_number')).toBeInTheDocument();
     expect(container.queryByLabelText('WhatsApp')).toBeInTheDocument();
 
-    expect(container.queryAllByLabelText('remove')).toHaveLength(5);
+    expect(container.queryAllByLabelText('remove')).toHaveLength(6);
 
     fireEvent.click(container.queryAllByTestId('add_number')[0]);
 
-    expect(container.queryAllByLabelText('remove')).toHaveLength(6);
+    expect(container.queryAllByLabelText('remove')).toHaveLength(7);
     fireEvent.click(container.queryAllByLabelText('remove')[0]);
-    expect(container.queryAllByLabelText('remove')).toHaveLength(5);
+    expect(container.queryAllByLabelText('remove')).toHaveLength(6);
 
     expect(container.queryByTestId('locale')).toBeInTheDocument();
     expect(container.queryByTestId('currency')).toBeInTheDocument();
@@ -141,7 +149,7 @@ describe('Community settings page ', () => {
     expect(container.queryByTestId('city')).toBeInTheDocument();
     expect(container.queryByTestId('country')).toBeInTheDocument();
     expect(container.queryByTestId('taxIdNo')).toBeInTheDocument();
-    
+
     fireEvent.select(container.queryByTestId('locale'), { target: { value: 'en-US' } });
     expect(container.queryByTestId('locale').value).toBe('en-US');
 
@@ -186,6 +194,9 @@ describe('Community settings page ', () => {
 
     fireEvent.click(container.queryByTestId('social_link_click'));
     expect(container.queryAllByLabelText('common:form_fields.social_link')).toHaveLength(2);
+
+    fireEvent.click(container.queryByTestId('menu_item_click'));
+    expect(container.queryAllByLabelText('common:form_fields.link')).toHaveLength(2);
 
     fireEvent.change(container.queryByTestId('logo_url'), {
       target: { value: 'https://something.com' }

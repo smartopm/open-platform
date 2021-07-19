@@ -68,7 +68,7 @@ export function MainNav({ authState }) {
     styleProps: {},
     name: () => menuItem.menu_name,
     featureName: 'DynamicMenu',
-    accessibleBy: ['admin']
+    accessibleBy: []
   })) || [];
 
   const modulesWithCommMenu = modules.map(module => {
