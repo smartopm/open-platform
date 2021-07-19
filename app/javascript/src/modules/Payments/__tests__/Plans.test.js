@@ -42,8 +42,6 @@ describe('Plan List Component', () => {
               receiptNumber: 'RI2345',
               paymentPlan: {
                 pendingBalance: 200,
-                statementPaidAmount: 500,
-                unallocatedAmount: 300,
                 landParcel: {
                   parcelNumber: 'test123'
                 }
@@ -51,6 +49,7 @@ describe('Plan List Component', () => {
               userTransaction: {
                 source: 'cash',
                 transactionNumber: '23456',
+                allocatedAmount: 200,
                 depositor: {
                   name: 'some name'
                 }
@@ -87,8 +86,6 @@ describe('Plan List Component', () => {
               amount: 200,
               paymentPlan: {
                 pendingBalance: 200,
-                statementPaidAmount: 300,
-                unallocatedAmount: 400,
                 landParcel: {
                   parcelNumber: 'test123'
                 }
