@@ -69,8 +69,8 @@ RSpec.describe Mutations::LandParcel do
             stateProvince: $stateProvince,
             parcelType: $parcelType,
             country: $country,
-            valuationFields: $valuationFields
-            ownershipFields: $ownershipFields,) {
+            valuationFields: $valuationFields,
+            ownershipFields: $ownershipFields) {
               landParcel {
                 id
                 valuations {

@@ -10,14 +10,13 @@ module Mutations
       argument :bank_name, String, required: false
       argument :cheque_number, String, required: false
       argument :transaction_number, String, required: false
-      argument :land_parcel_id, ID, required: true
+      argument :payment_plan_id, ID, required: true
       argument :receipt_number, String, required: false
       argument :created_at, String, required: false
 
       field :transaction, Types::TransactionType, null: true
 
       # rubocop:disable Metrics/AbcSize
-      # rubocop:disable Metrics/MethodLength
       # Creates new Transaction(Deposit).
       # * Creates user's deposit entry.
       # * Creates payment entries against payment plan
@@ -28,8 +27,7 @@ module Mutations
       # @return [Hash]
       def resolve(values)
         ActiveRecord::Base.transaction do
-          land_parcel = context[:site_community].land_parcels.find_by(id: values[:land_parcel_id])
-          context[:payment_plan] = land_parcel.payment_plan
+          context[:payment_plan] = Properties::PaymentPlan.find_by(id: values[:payment_plan_id])
 
           raise_payment_plan_related_errors
           raise_receipt_number_validation_error(values[:receipt_number])
@@ -41,9 +39,8 @@ module Mutations
           { transaction: context[:transaction].reload }
         end
       end
-      # rubocop:enable Metrics/AbcSize
-      # rubocop:enable Metrics/MethodLength
 
+      # rubocop:enable Metrics/AbcSize
       # Verifies if current user is admin or not.
       def authorized?(_vals)
         return true if context[:current_user]&.admin?
@@ -60,7 +57,7 @@ module Mutations
       # @return [GraphQL::ExecutionError]
       def raise_payment_plan_related_errors
         if context[:payment_plan].nil?
-          raise GraphQL::ExecutionError, I18n.t('errors.payment_plan.does_not_exist_for_property')
+          raise GraphQL::ExecutionError, I18n.t('errors.payment_plan.not_found')
         end
 
         return if context[:payment_plan].pending_balance.positive?
@@ -93,7 +90,7 @@ module Mutations
       def create_user_transaction(values)
         user = context[:site_community].users.find_by(id: values[:user_id])
 
-        transaction_attributes = values.except(:land_parcel_id, :receipt_number)
+        transaction_attributes = values.except(:payment_plan_id, :receipt_number)
                                        .merge(
                                          status: 'accepted',
                                          community_id: context[:site_community]&.id,
