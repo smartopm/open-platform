@@ -22,8 +22,6 @@ export const UserTransactions = gql`
         amount
         paymentPlan {
           pendingBalance
-          statementPaidAmount
-          unallocatedAmount
           landParcel {
             parcelNumber
           }
@@ -64,8 +62,6 @@ export const UserPlans = gql`
         receiptNumber
         paymentPlan {
           pendingBalance
-          statementPaidAmount
-          unallocatedAmount
           landParcel {
             parcelNumber
           }
@@ -73,6 +69,7 @@ export const UserPlans = gql`
         userTransaction {
           source
           transactionNumber
+          allocatedAmount
           depositor {
             name
           }

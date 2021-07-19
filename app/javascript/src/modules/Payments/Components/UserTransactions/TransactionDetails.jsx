@@ -80,13 +80,13 @@ export default function TransactionDetails({ open, handleModalClose, data, curre
           <Typography color="primary" style={{ fontSize: '25px', fontWeight: 500 }}>
             {formatMoney(
               currencyData,
-              data?.paymentPlan?.statementPaidAmount || transData?.paymentPlan?.statementPaidAmount
+              data?.amount || transData?.amount
             )}
           </Typography>
           <Typography color="primary" style={{ fontSize: '12px', fontWeight: 500 }}>
             {`${formatMoney(
               currencyData,
-              data?.paymentPlan?.unallocatedAmount || transData?.paymentPlan?.unallocatedAmount || 0
+              data?.unallocatedAmount || transData?.unallocatedAmount || 0
             )} unallocated`}
           </Typography>
         </Grid>
@@ -159,10 +159,9 @@ TransactionDetails.propTypes = {
       landParcel: PropTypes.shape({
         parcelNumber: PropTypes.string
       }),
-      pendingBalance: PropTypes.number,
-      statementPaidAmount: PropTypes.number,
-      unallocatedAmount: PropTypes.number
+      pendingBalance: PropTypes.number
     }),
+    unallocatedAmount: PropTypes.number,
     createdAt: PropTypes.string,
     receiptNumber: PropTypes.string,
     amount: PropTypes.number,
