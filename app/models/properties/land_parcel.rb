@@ -10,7 +10,7 @@ module Properties
     has_many :accounts, through: :land_parcel_accounts
     has_many :valuations, -> { order(start_date: :asc) },
              dependent: :destroy, inverse_of: :land_parcel
-    has_one :payment_plan, dependent: :destroy
+    has_many :payment_plans, dependent: :destroy
     has_many_attached :images
 
     validates :parcel_number, uniqueness: true

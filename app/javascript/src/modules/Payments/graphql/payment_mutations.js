@@ -8,7 +8,7 @@ mutation PaymentCreate(
   $bankName: String
   $chequeNumber: String
   $transactionNumber: String
-  $landParcelId: ID!
+  $paymentPlanId: ID!
   $receiptNumber: String
   $createdAt: String
 ) {
@@ -19,7 +19,7 @@ mutation PaymentCreate(
     bankName: $bankName
     chequeNumber: $chequeNumber
     transactionNumber: $transactionNumber
-    landParcelId: $landParcelId
+    paymentPlanId: $paymentPlanId
     receiptNumber: $receiptNumber
     createdAt: $createdAt
   ) {

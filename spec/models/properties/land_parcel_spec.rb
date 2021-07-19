@@ -29,6 +29,6 @@ RSpec.describe Properties::LandParcel, type: :model do
     it { is_expected.to have_many(:land_parcel_accounts).dependent(:destroy) }
     it { is_expected.to have_many(:accounts).through(:land_parcel_accounts) }
     it { is_expected.to have_many(:valuations).dependent(:destroy).inverse_of(:land_parcel) }
-    it { is_expected.to have_one(:payment_plan).dependent(:destroy) }
+    it { is_expected.to have_many(:payment_plans).dependent(:destroy) }
   end
 end
