@@ -29,7 +29,7 @@ module Mutations
 
         ActiveRecord::Base.transaction do
           land_parcel.update!(
-            vals.except(:valuation_fields, :ownership_fields, :payment_plan_fields),
+            vals.except(:valuation_fields, :ownership_fields),
           )
 
           land_parcel.valuations.delete_all
@@ -70,15 +70,6 @@ module Mutations
         return if land_parcel
 
         raise GraphQL::ExecutionError, I18n.t('errors.land_parcel.not_found')
-      end
-
-      # Raises GraphQL execution error if user does not exist.
-      #
-      # @return [GraphQL::ExecutionError]
-      def raise_user_not_found_error(user)
-        return if user
-
-        raise GraphQL::ExecutionError, I18n.t('errors.user.not_found')
       end
     end
   end

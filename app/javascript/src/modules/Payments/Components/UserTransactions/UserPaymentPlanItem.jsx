@@ -58,7 +58,6 @@ export default function UserPaymentPlanItem({
   const [planAnchor, setPlanAnchor] = useState(null);
   const [transactionId, setTransactionId] = useState('');
   const [planId, setPlanId] = useState('');
-  const [landParcelId, setLandParcelId] = useState('');
   const [receiptOpen, setReceiptOpen] = useState(false);
   const [transDetailOpen, setTransDetailOpen] = useState(false);
   const [transData, setTransData] = useState({});
@@ -86,7 +85,7 @@ export default function UserPaymentPlanItem({
   });
 
   const [loadStatement, { loading: statementLoad, error: statementError, data: statementData }] = useLazyQuery(PlanStatement, {
-    variables: { landParcelId },
+    variables: { paymentPlanId: planId },
     fetchPolicy: 'no-cache',
     errorPolicy: 'all'
   });
@@ -207,7 +206,6 @@ export default function UserPaymentPlanItem({
   function handlePlanMenu(event, plan){
     event.stopPropagation()
     setPlanAnchor(event.currentTarget)
-    setLandParcelId(plan.landParcel.id)
     setPlanId(plan.id)
     setPlanData(plan)
   }

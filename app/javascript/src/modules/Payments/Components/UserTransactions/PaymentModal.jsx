@@ -31,7 +31,7 @@ const initialValues = {
   bankName: '',
   chequeNumber: '',
   transactionNumber: '',
-  landParcelId: '',
+  paymentPlanId: '',
   pastPayment: false,
   paidDate: subDays(new Date(), 1),
   receiptNumber: ''
@@ -82,7 +82,7 @@ export default function PaymentModal({
     setIsConfirm(true);
   }
 
-  const [loadLandParcel, { loading, data: landParcels, refetch: landParcelsRefetch }] = useLazyQuery(UserLandParcelWithPlan, {
+  const [loadLandParcel, { loading, data: paymentPlans, refetch: paymentPlansRefetch }] = useLazyQuery(UserLandParcelWithPlan, {
     variables: { userId: paymentUserId },
     errorPolicy: 'all'
   });
@@ -142,7 +142,7 @@ export default function PaymentModal({
         receiptNumber: inputValue.receiptNumber,
         // allow rails to pick its default date rather than the initialValue past on top
         createdAt: inputValue.pastPayment ? inputValue.paidDate : '',
-        landParcelId: inputValue.landParcelId
+        paymentPlanId: inputValue.paymentPlanId
       }
     })
       .then(res => {
@@ -152,7 +152,7 @@ export default function PaymentModal({
         refetch();
         walletRefetch();
         transRefetch();
-        landParcelsRefetch();
+        paymentPlansRefetch();
         setPaymentData(res.data.transactionCreate.transaction);
         setInputValue(initialValues);
         setPromptOpen(!!userId);
@@ -261,7 +261,7 @@ export default function PaymentModal({
                 )
               }
               {
-                 searchedUser && !landParcels?.userLandParcelWithPlan.length && (
+                 searchedUser && !paymentPlans?.userLandParcelWithPlan.length && (
                  <Typography color="secondary">
                    Selected user has no plots
                  </Typography>
@@ -276,17 +276,17 @@ export default function PaymentModal({
                 id="parcel-number"
                 inputProps={{ 'data-testid': 'parcel-number' }}
                 label="Plot No"
-                value={inputValue.landParcelId}
-                onChange={event => setInputValue({ ...inputValue, landParcelId: event.target.value })}
-                error={isError && submitting && !inputValue.landParcelId}
-                helperText={isError && !inputValue.landParcelId && 'Land Parcel is required'}
+                value={inputValue.paymentPlanId}
+                onChange={event => setInputValue({ ...inputValue, paymentPlanId: event.target.value })}
+                error={isError && submitting && !inputValue.paymentPlanId}
+                helperText={isError && !inputValue.paymentPlanId && 'Payment Plan is required'}
                 required
-                disabled={landParcels?.userLandParcelWithPlan?.length === 0 || Boolean(!landParcels)}
-                select={landParcels?.userLandParcelWithPlan?.length > 0}
+                disabled={paymentPlans?.userLandParcelWithPlan?.length === 0 || Boolean(!paymentPlans)}
+                select={paymentPlans?.userLandParcelWithPlan?.length > 0}
               >
-                {landParcels?.userLandParcelWithPlan?.map(land => (
-                  <MenuItem value={land.id} key={land.id}>
-                    {land.parcelNumber}
+                {paymentPlans?.userLandParcelWithPlan?.map(plan => (
+                  <MenuItem value={plan.id} key={plan.id}>
+                    {plan.landParcel.parcelNumber}
                   </MenuItem>
                 ))}
               </TextField>

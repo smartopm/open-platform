@@ -153,8 +153,8 @@ export const ReceiptPayment = gql`
 `
 
 export const PlanStatement = gql`
-  query PlanStatement($landParcelId: ID!) {
-    paymentPlanStatement(landParcelId: $landParcelId) {
+  query PlanStatement($paymentPlanId: ID!) {
+    paymentPlanStatement(paymentPlanId: $paymentPlanId) {
       paymentPlan {
         id
         startDate

@@ -45,8 +45,8 @@ RSpec.describe Types::Queries::Payment do
 
     let(:payment_plan_statement) do
       <<~GQL
-        query paymentPlanStatement($landParcelId: ID!) {
-          paymentPlanStatement(landParcelId: $landParcelId) {
+        query paymentPlanStatement($paymentPlanId: ID!) {
+          paymentPlanStatement(paymentPlanId: $paymentPlanId) {
             paymentPlan {
               id
               startDate
@@ -131,7 +131,7 @@ RSpec.describe Types::Queries::Payment do
     describe '#payment_plan_statement' do
       context 'when current is not an admin' do
         it 'raises unauthorized error' do
-          variables = { landParcelId: land_parcel.id }
+          variables = { paymentPlanId: payment_plan.id }
           result = DoubleGdpSchema.execute(
             payment_plan_statement,
             variables: variables,
@@ -145,9 +145,9 @@ RSpec.describe Types::Queries::Payment do
       end
 
       context 'when current user is an admin' do
-        context 'when land parcel is not present' do
-          it 'raises land parcel not found error' do
-            variables = { landParcelId: '1234' }
+        context 'when payment plan is not present' do
+          it 'raises payment plan not found error' do
+            variables = { paymentPlanId: '1234' }
             result = DoubleGdpSchema.execute(
               payment_plan_statement,
               variables: variables,
@@ -156,16 +156,16 @@ RSpec.describe Types::Queries::Payment do
                 site_community: admin.community,
               },
             ).as_json
-            expect(result.dig('errors', 0, 'message')).to eql 'Land parcel not found'
+            expect(result.dig('errors', 0, 'message')).to eql 'Payment Plan not found'
           end
         end
 
-        context 'when land parcel is present' do
+        context 'when payment plan is present' do
           context 'when payment amount is a multiple of monthly amount' do
             before { payment_plan.update(pending_balance: 1200 - 500) }
 
             it 'returns statements of payment plan' do
-              variables = { landParcelId: land_parcel.id }
+              variables = { paymentPlanId: payment_plan.id }
               result = DoubleGdpSchema.execute(
                 payment_plan_statement,
                 variables: variables,
@@ -198,7 +198,7 @@ RSpec.describe Types::Queries::Payment do
             end
 
             it 'returns statements of payment plan' do
-              variables = { landParcelId: land_parcel.id }
+              variables = { paymentPlanId: payment_plan.id }
               result = DoubleGdpSchema.execute(
                 payment_plan_statement,
                 variables: variables,
