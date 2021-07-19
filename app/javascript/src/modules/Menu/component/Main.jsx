@@ -18,6 +18,7 @@ import CenteredContent from '../../../components/CenteredContent';
 import userProps from '../../../shared/types/user';
 import UserAvatar from '../../Users/Components/UserAvatar';
 import UserActionOptions from '../../Users/Components/UserActionOptions';
+import { allUserTypes } from '../../../utils/constants';
 
 const drawerWidth = 260;
 
@@ -68,7 +69,7 @@ export function MainNav({ authState }) {
     styleProps: {},
     name: () => menuItem.menu_name,
     featureName: 'DynamicMenu',
-    accessibleBy: []
+    accessibleBy: allUserTypes
   })) || [];
 
   const modulesWithCommMenu = modules.map(module => {
