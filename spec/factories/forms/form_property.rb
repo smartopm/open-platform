@@ -7,7 +7,7 @@ FactoryBot.define do
 
   factory :form_property, class: 'Forms::FormProperty' do
     field_name { generate(:field_name) }
-    field_type { %w[text date image signature display_text display_image].sample }
+    field_type { %w[text date file_upload signature display_text display_image].sample }
     order { 'order' }
     form
   end

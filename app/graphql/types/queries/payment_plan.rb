@@ -14,7 +14,7 @@ module Types::Queries::PaymentPlan
 
     field :payment_plan_statement, Types::PaymentPlanDetailType, null: true do
       description 'Fetch statements of payment plan'
-      argument :land_parcel_id, GraphQL::Types::ID, required: true
+      argument :payment_plan_id, GraphQL::Types::ID, required: true
     end
 
     field :user_payment_plans, [Types::PaymentPlanType], null: true do
@@ -46,16 +46,17 @@ module Types::Queries::PaymentPlan
     end
   end
 
-  # Payment plan statement details of land parcel.
+  # Statement details of payment plan
   #
-  # @param [String] LandParcel#id
+  # @param [String] PaymentPlan#id
   #
   # @return [Hash]
-  def payment_plan_statement(land_parcel_id:)
+  def payment_plan_statement(payment_plan_id:)
     raise_unauthorized_error
-    parcel = context[:site_community].land_parcels.find_by(id: land_parcel_id)
-    raise_land_parcel_not_found_error(parcel)
-    payment_plan = parcel.payment_plan
+
+    payment_plan = Properties::PaymentPlan.find_by(id: payment_plan_id)
+    raise_payment_plan_not_found_error(payment_plan)
+
     {
       payment_plan: payment_plan,
       statements: statements(payment_plan),
@@ -87,13 +88,13 @@ module Types::Queries::PaymentPlan
     raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
   end
 
-  # Raises GraphQL execution error if land parcel does not exist.
+  # Raises GraphQL execution error if payment plan does not exist.
   #
   # @return [GraphQL::ExecutionError]
-  def raise_land_parcel_not_found_error(land_parcel)
-    return if land_parcel
+  def raise_payment_plan_not_found_error(payment_plan)
+    return if payment_plan
 
-    raise GraphQL::ExecutionError, I18n.t('errors.land_parcel.not_found')
+    raise GraphQL::ExecutionError, I18n.t('errors.payment_plan.not_found')
   end
 
   # Statement details of payment plan.

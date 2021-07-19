@@ -3,7 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe Types::Queries::Balance do
-  describe 'Balance queries' do
+  describe 'create plan payment' do
     let!(:user) { create(:user_with_community) }
     let!(:admin) { create(:admin_user) }
     let!(:community) { user.community }
@@ -23,20 +23,20 @@ RSpec.describe Types::Queries::Balance do
     end
     let!(:other_land_parcel) { create(:land_parcel, community_id: community.id) }
     let!(:other_payment_plan) do
-      create(:payment_plan, land_parcel_id: other_land_parcel.id, user_id: user.id, plot_balance: 0,
-                            monthly_amount: 200)
+      create(:payment_plan, land_parcel_id: other_land_parcel.id, user_id: user.id,
+                            plot_balance: 0, monthly_amount: 200)
     end
     let(:payment_create_mutation) do
       <<~GQL
         mutation PlanPaymentCreate(
           $userId: ID!,
-          $landParcelId: ID!,
+          $paymentPlanId: ID!,
           $transactionId: ID!,
           $amount: Float!
         ){
           planPaymentCreate(
             userId: $userId,
-            landParcelId: $landParcelId,
+            paymentPlanId: $paymentPlanId,
             transactionId: $transactionId,
             amount: $amount
           ){
@@ -58,7 +58,7 @@ RSpec.describe Types::Queries::Balance do
         it 'raises unauthorized error' do
           variables = {
             userId: user.id,
-            landParcelId: land_parcel.id,
+            paymentPlanId: payment_plan.id,
             transactionId: transaction.id,
             amount: 200,
           }
@@ -79,7 +79,7 @@ RSpec.describe Types::Queries::Balance do
         it 'raises not sufficient unallocated amount error' do
           variables = {
             userId: user.id,
-            landParcelId: other_land_parcel.id,
+            paymentPlanId: other_payment_plan.id,
             transactionId: transaction.id,
             amount: 1000,
           }
@@ -98,7 +98,7 @@ RSpec.describe Types::Queries::Balance do
         it 'creates plan payment and updates plan pending balance' do
           variables = {
             userId: user.id,
-            landParcelId: other_land_parcel.id,
+            paymentPlanId: other_payment_plan.id,
             transactionId: transaction.id,
             amount: 200,
           }

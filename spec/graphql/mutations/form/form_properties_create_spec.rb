@@ -35,7 +35,7 @@ RSpec.describe Mutations::Form::FormPropertiesCreate do
     it 'creates a form' do
       variables = {
         fieldName: 'Field Name',
-        fieldType: %w[text date image signature display_text display_image].sample,
+        fieldType: %w[text date file_upload signature display_text display_image].sample,
         formId: form.id,
         order: 'order',
       }
@@ -54,7 +54,7 @@ RSpec.describe Mutations::Form::FormPropertiesCreate do
     it 'throws unauthorized error when user is not admin' do
       variables = {
         fieldName: 'Field Name',
-        fieldType: %w[text date image signature display_text display_image].sample,
+        fieldType: %w[text date file_upload signature display_text display_image].sample,
         formId: form.id,
         order: 'order',
       }

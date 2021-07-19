@@ -11,21 +11,13 @@ module Mutations
 
       def resolve(vals)
         user = context[:site_community].users.find(vals[:id])
-        auth_token = user.auth_token if user.verify_phone_token!(vals[:token])
-
-        log(user)
-
-        return { auth_token: auth_token } if auth_token
+        if user.present?
+          auth_token = user.auth_token if user.verify_phone_token!(vals[:token])
+          user.generate_events('user_login', user)
+          return { auth_token: auth_token } if auth_token
+        end
 
         raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
-      end
-
-      def log(user)
-        Logs::EventLog.create(
-          acting_user: user, community: user.community,
-          subject: 'user_login',
-          ref_id: nil, ref_type: nil
-        )
       end
     end
   end

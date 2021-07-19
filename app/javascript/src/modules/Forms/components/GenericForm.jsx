@@ -1,15 +1,12 @@
-/* eslint-disable no-use-before-define */
-import React, { Fragment, useContext, useRef, useState, useEffect } from 'react';
-import { Button, Container, Grid, IconButton, Snackbar } from '@material-ui/core';
-import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
-import { useApolloClient, useMutation, useQuery } from 'react-apollo';
-import PropTypes from 'prop-types';
+import React, { Fragment, useContext, useRef, useState, useEffect } from 'react'
+import { Button, Container, Grid } from '@material-ui/core'
+import { useApolloClient, useMutation, useQuery } from 'react-apollo'
+import PropTypes from 'prop-types'
 import { useTranslation } from 'react-i18next';
-import { Alert } from '@material-ui/lab';
 import DatePickerDialog from '../../../components/DatePickerDialog';
 import CenteredContent from '../../../components/CenteredContent';
 import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider';
-import { FormUserCreateMutation, FormPropertyDeleteMutation } from '../graphql/forms_mutation';
+import { FormUserCreateMutation } from '../graphql/forms_mutation';
 import { FormQuery } from '../graphql/forms_queries';
 import { useFileUpload } from '../../../graphql/useFileUpload';
 import TextInput from './TextInput';
@@ -18,8 +15,10 @@ import SignaturePad from './SignaturePad';
 import { convertBase64ToFile, sortPropertyOrder } from '../../../utils/helpers';
 import RadioInput from './RadioInput';
 import { Spinner } from '../../../shared/Loading';
-import FormTitle from './FormTitle';
+import FormTitle from './FormTitle'
+import FormPropertyAction from './FormPropertyAction';
 import ImageAuth from '../../../shared/ImageAuth'
+import MessageAlert from '../../../components/MessageAlert';
 
 // date
 // text input (TextField or TextArea)
@@ -34,7 +33,6 @@ const initialData = {
 export default function GenericForm({ formId, pathname, formData, refetch, editMode }) {
   const [properties, setProperties] = useState(initialData);
   const [message, setMessage] = useState({ err: false, info: '', signed: false });
-  const [isDeletingProperty, setDeleteLoading] = useState(false);
   const [isSubmitting, setSubmitting] = useState(false);
   const [alertOpen, setAlertOpen] = useState(false);
   const [currentPropId, setCurrentPropertyId] = useState('');
@@ -45,7 +43,6 @@ export default function GenericForm({ formId, pathname, formData, refetch, editM
   const { data, loading } = useQuery(FormQuery, { variables: { id: formId } });
   // create form user
   const [createFormUser] = useMutation(FormUserCreateMutation);
-  const [deleteProperty] = useMutation(FormPropertyDeleteMutation);
   // separate function for file upload
   const { onChange, status, signedBlobId, contentType, url } = useFileUpload({
     client: useApolloClient(),
@@ -58,6 +55,7 @@ export default function GenericForm({ formId, pathname, formData, refetch, editM
     client: useApolloClient(),
   });
 
+
   useEffect(() => {
     if (
       status === 'DONE' &&
@@ -68,6 +66,7 @@ export default function GenericForm({ formId, pathname, formData, refetch, editM
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status]);
+
 
   function handleAlertClose() {
     setAlertOpen(false);
@@ -100,25 +99,6 @@ export default function GenericForm({ formId, pathname, formData, refetch, editM
     onChange(event.target.files[0]);
   }
 
-  function handleDeleteProperty(propId) {
-    setDeleteLoading(true);
-    setCurrentPropertyId(propId);
-    deleteProperty({
-      variables: { formId, formPropertyId: propId },
-    })
-      .then(() => {
-        setDeleteLoading(false);
-        setMessage({ ...message, err: false, info: t('misc.deleted_form_property') });
-        setAlertOpen(true);
-        refetch();
-      })
-      .catch((err) => {
-        setMessage({ ...message, err: true, info: err.message });
-        setAlertOpen(true);
-        setDeleteLoading(false);
-      });
-  }
-
   async function handleSignatureUpload() {
     setMessage({ ...message, signed: true });
     const url64 = signRef.current.toDataURL('image/png');
@@ -127,8 +107,7 @@ export default function GenericForm({ formId, pathname, formData, refetch, editM
     await uploadSignature(signature);
   }
 
-  function saveFormData(event) {
-    event.preventDefault();
+  function saveFormData() {
     setSubmitting(true);
     const fileSignType = formData.formProperties.filter(
       (item) => item.fieldType === 'signature'
@@ -202,21 +181,13 @@ export default function GenericForm({ formId, pathname, formData, refetch, editM
     const fields = {
       text: (
         <Grid container spacing={3} key={formPropertiesData.id}>
-          {editMode && (
-            <Grid item xs={1}>
-              <IconButton
-                style={{ float: 'left', marginTop: 10 }}
-                onClick={() => handleDeleteProperty(formPropertiesData.id)}
-              >
-                {isDeletingProperty && currentPropId === formPropertiesData.id ? (
-                  <Spinner />
-                ) : (
-                  <DeleteOutlineIcon />
-                )}
-              </IconButton>
-            </Grid>
-          )}
-          <Grid item xs={editMode ? 11 : 12}>
+          <FormPropertyAction
+            formId={formId}
+            editMode={editMode}
+            propertyId={formPropertiesData.id}
+            refetch={refetch}
+          />
+          <Grid item xs={editMode ? 10 : 12}>
             <TextInput
               id={formPropertiesData.id}
               properties={formPropertiesData}
@@ -229,21 +200,13 @@ export default function GenericForm({ formId, pathname, formData, refetch, editM
       ),
       date: (
         <Grid container spacing={3} key={formPropertiesData.id}>
-          {editMode && (
-            <Grid item xs={1}>
-              <IconButton
-                style={{ float: 'left', marginTop: 10 }}
-                onClick={() => handleDeleteProperty(formPropertiesData.id)}
-              >
-                {isDeletingProperty && currentPropId === formPropertiesData.id ? (
-                  <Spinner />
-                ) : (
-                  <DeleteOutlineIcon />
-                )}
-              </IconButton>
-            </Grid>
-          )}
-          <Grid item xs={editMode ? 11 : 12}>
+          <FormPropertyAction
+            formId={formId}
+            editMode={editMode}
+            propertyId={formPropertiesData.id}
+            refetch={refetch}
+          />
+          <Grid item xs={editMode ? 10 : 12}>
             <DatePickerDialog
               id={formPropertiesData.id}
               selectedDate={properties.date.value}
@@ -253,23 +216,15 @@ export default function GenericForm({ formId, pathname, formData, refetch, editM
           </Grid>
         </Grid>
       ),
-      image: (
+      file_upload: (
         <Grid container spacing={3} key={formPropertiesData.id}>
-          {editMode && (
-            <Grid item xs={1}>
-              <IconButton
-                style={{ float: 'left', marginTop: 10 }}
-                onClick={() => handleDeleteProperty(formPropertiesData.id)}
-              >
-                {isDeletingProperty && currentPropId === formPropertiesData.id ? (
-                  <Spinner />
-                ) : (
-                  <DeleteOutlineIcon />
-                )}
-              </IconButton>
-            </Grid>
-          )}
-          <Grid item xs={editMode ? 11 : 12}>
+          <FormPropertyAction
+            formId={formId}
+            editMode={editMode}
+            propertyId={formPropertiesData.id}
+            refetch={refetch}
+          />
+          <Grid item xs={editMode ? 10 : 12}>
             <UploadField
               detail={{ type: 'file', label: formPropertiesData.fieldName }}
               upload={(evt) => onImageSelect(evt, formPropertiesData.id)}
@@ -286,21 +241,13 @@ export default function GenericForm({ formId, pathname, formData, refetch, editM
       ),
       signature: (
         <Grid container spacing={3} key={formPropertiesData.id}>
-          {editMode && (
-            <Grid item xs={1}>
-              <IconButton
-                style={{ float: 'left', marginTop: 10 }}
-                onClick={() => handleDeleteProperty(formPropertiesData.id)}
-              >
-                {isDeletingProperty && currentPropId === formPropertiesData.id ? (
-                  <Spinner />
-                ) : (
-                  <DeleteOutlineIcon />
-                )}
-              </IconButton>
-            </Grid>
-          )}
-          <Grid item xs={editMode ? 11 : 12}>
+          <FormPropertyAction
+            formId={formId}
+            editMode={editMode}
+            propertyId={formPropertiesData.id}
+            refetch={refetch}
+          />
+          <Grid item xs={editMode ? 10 : 12}>
             <SignaturePad
               key={formPropertiesData.id}
               detail={{ type: 'signature', status: signatureStatus }}
@@ -312,21 +259,13 @@ export default function GenericForm({ formId, pathname, formData, refetch, editM
       ),
       radio: (
         <Grid container spacing={3} key={formPropertiesData.id}>
-          {editMode && (
-            <Grid item xs={1}>
-              <IconButton
-                style={{ float: 'left', marginTop: 10 }}
-                onClick={() => handleDeleteProperty(formPropertiesData.id)}
-              >
-                {isDeletingProperty && currentPropId === formPropertiesData.id ? (
-                  <Spinner />
-                ) : (
-                  <DeleteOutlineIcon />
-                )}
-              </IconButton>
-            </Grid>
-          )}
-          <Grid item xs={editMode ? 11 : 12}>
+          <FormPropertyAction
+            formId={formId}
+            editMode={editMode}
+            propertyId={formPropertiesData.id}
+            refetch={refetch}
+          />
+          <Grid item xs={editMode ? 10 : 12}>
             <Fragment key={formPropertiesData.id}>
               <br />
               <RadioInput
@@ -343,21 +282,13 @@ export default function GenericForm({ formId, pathname, formData, refetch, editM
       ),
       dropdown: (
         <Grid container spacing={3} key={formPropertiesData.id}>
-          {editMode && (
-            <Grid item xs={1}>
-              <IconButton
-                style={{ float: 'left', marginTop: 10 }}
-                onClick={() => handleDeleteProperty(formPropertiesData.id)}
-              >
-                {isDeletingProperty && currentPropId === formPropertiesData.id ? (
-                  <Spinner />
-                ) : (
-                  <DeleteOutlineIcon />
-                )}
-              </IconButton>
-            </Grid>
-          )}
-          <Grid item xs={editMode ? 11 : 12}>
+          <FormPropertyAction
+            formId={formId}
+            editMode={editMode}
+            propertyId={formPropertiesData.id}
+            refetch={refetch}
+          />
+          <Grid item xs={editMode ? 10 : 12}>
             <TextInput
               id={formPropertiesData.id}
               properties={formPropertiesData}
@@ -374,20 +305,21 @@ export default function GenericForm({ formId, pathname, formData, refetch, editM
 
   return (
     <>
-      <Snackbar open={alertOpen} autoHideDuration={2000} onClose={handleAlertClose}>
-        <Alert onClose={handleAlertClose} severity={message.err ? 'error' : 'success'}>
-          {message.info}
-        </Alert>
-      </Snackbar>
+      <MessageAlert
+        type={message.err ? 'error' : 'success'}
+        message={message.info}
+        open={alertOpen}
+        handleClose={handleAlertClose}
+      />
       <Container>
         {loading && <Spinner />}
 
-        {!loading && data && (
-          <FormTitle name={data.form?.name} description={data.form?.description} />
-        )}
+        {
+        !loading && data && <FormTitle name={data.form?.name} description={data.form?.description} />
+        }
 
         <br />
-        <form onSubmit={saveFormData}>
+        <form>
           {formData.formProperties.sort(sortPropertyOrder).map(renderForm)}
           {!pathname.includes('edit_form') && (
             <CenteredContent>
@@ -398,6 +330,7 @@ export default function GenericForm({ formId, pathname, formData, refetch, editM
                 aria-label="form_submit"
                 disabled={isSubmitting}
                 style={{marginTop: '25px' }}
+                onClick={saveFormData}
               >
                 {isSubmitting ? t('common:form_actions.submitting') : t('common:form_actions.submit')}
               </Button>
@@ -413,7 +346,6 @@ GenericForm.propTypes = {
   formId: PropTypes.string.isRequired,
   pathname: PropTypes.string.isRequired,
   // eslint-disable-next-line react/require-default-props
-  // eslint-disable-next-line react/forbid-prop-types
   // eslint-disable-next-line react/forbid-prop-types
   formData: PropTypes.object.isRequired,
   refetch: PropTypes.func.isRequired,

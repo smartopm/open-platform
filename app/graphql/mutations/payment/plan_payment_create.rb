@@ -6,7 +6,7 @@ module Mutations
     class PlanPaymentCreate < BaseMutation
       argument :user_id, ID, required: true
       argument :transaction_id, ID, required: true
-      argument :land_parcel_id, ID, required: true
+      argument :payment_plan_id, ID, required: true
       argument :amount, Float, required: true
 
       field :payment, Types::PlanPaymentType, null: true
@@ -22,9 +22,7 @@ module Mutations
       def resolve(values)
         context[:transaction] = Payments::Transaction.find_by(id: values[:transaction_id])
         raise_transaction_not_found_error
-
-        land_parcel = context[:site_community].land_parcels.find_by(id: values[:land_parcel_id])
-        context[:payment_plan] = land_parcel.payment_plan
+        context[:payment_plan] = Properties::PaymentPlan.find_by(id: values[:payment_plan_id])
 
         unallocated_amount = context[:transaction].unallocated_amount
         raise_amount_not_sufficient_error(values[:amount], unallocated_amount)

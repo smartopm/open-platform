@@ -20,7 +20,7 @@ RSpec.describe Mutations::Transaction::TransactionCreate do
           $userId: ID!,
           $amount: Float!,
           $source: String!,
-          $landParcelId: ID!,
+          $paymentPlanId: ID!,
           $transactionNumber: String,
           $receiptNumber: String
         ){
@@ -28,7 +28,7 @@ RSpec.describe Mutations::Transaction::TransactionCreate do
             userId: $userId,
             amount: $amount,
             source: $source,
-            landParcelId: $landParcelId,
+            paymentPlanId: $paymentPlanId,
             transactionNumber: $transactionNumber
             receiptNumber: $receiptNumber
           ){ 
@@ -59,7 +59,7 @@ RSpec.describe Mutations::Transaction::TransactionCreate do
             userId: user.id,
             amount: 100,
             source: 'cash',
-            landParcelId: land_parcel.id,
+            paymentPlanId: payment_plan.id,
           }
           result = DoubleGdpSchema.execute(transaction_create_mutation,
                                            variables: variables,
@@ -74,13 +74,13 @@ RSpec.describe Mutations::Transaction::TransactionCreate do
 
     describe '#resolve' do
       context 'when all required details are provided' do
-        context 'when payment plan is not present for the land parcel' do
+        context 'when payment plan id is invalid' do
           it 'raises payment plan does not exist error' do
             variables = {
               userId: user.id,
               amount: 2000,
               source: 'cash',
-              landParcelId: second_land_parcel.id,
+              paymentPlanId: 'lexe458',
               receiptNumber: '1001',
             }
             result = DoubleGdpSchema.execute(transaction_create_mutation,
@@ -90,11 +90,11 @@ RSpec.describe Mutations::Transaction::TransactionCreate do
                                                site_community: community,
                                              })
             expect(result.dig('errors', 0, 'message'))
-              .to eql 'Payment Plan does not exist for selected property'
+              .to eql 'Payment Plan not found'
           end
         end
 
-        context 'when payment plan is not present for the land parcel' do
+        context 'when pending balance is 0 for payment plan' do
           before { payment_plan.update(pending_balance: 0) }
 
           it 'raises pending balance is 0 for this property error' do
@@ -102,7 +102,7 @@ RSpec.describe Mutations::Transaction::TransactionCreate do
               userId: user.id,
               amount: 2000,
               source: 'cash',
-              landParcelId: land_parcel.id,
+              paymentPlanId: payment_plan.id,
               receiptNumber: '1001',
             }
             result = DoubleGdpSchema.execute(transaction_create_mutation,
@@ -124,7 +124,7 @@ RSpec.describe Mutations::Transaction::TransactionCreate do
               userId: user.id,
               amount: 2000,
               source: 'cash',
-              landParcelId: land_parcel.id,
+              paymentPlanId: payment_plan.id,
               receiptNumber: '1001',
             }
             result = DoubleGdpSchema.execute(transaction_create_mutation,
@@ -153,7 +153,7 @@ RSpec.describe Mutations::Transaction::TransactionCreate do
               userId: user.id,
               amount: 100,
               source: 'cash',
-              landParcelId: land_parcel.id,
+              paymentPlanId: payment_plan.id,
               receiptNumber: '1001',
             }
             result = DoubleGdpSchema.execute(transaction_create_mutation,

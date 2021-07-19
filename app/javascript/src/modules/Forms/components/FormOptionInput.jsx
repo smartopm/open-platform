@@ -74,15 +74,15 @@ export default function FormOptionInput({ options, setOptions, label }) {
               variant="outlined"
               size="small"
               style={{ width: 300 }}
-              value={propAccessor(options, i)?.info}
-              onChange={(event) => handleOptionChange(event, i)}
+              value={propAccessor(options, i)?.info || value}
+              onChange={event => handleOptionChange(event, i)}
               margin="normal"
               autoFocus
               required
             />
           )}
 
-          <IconButton style={{ marginTop: 13 }} onClick={handleRemoveOption} aria-label="remove">
+          <IconButton style={{ marginTop: 13 }} onClick={() => handleRemoveOption(i)} aria-label="remove">
             <DeleteOutline />
           </IconButton>
         </div>

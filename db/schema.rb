@@ -326,6 +326,8 @@ ActiveRecord::Schema.define(version: 2021_07_19_073746) do
     t.integer "status", default: 0
     t.text "description"
     t.boolean "multiple_submissions_allowed"
+    t.integer "version_number", default: 1
+    t.uuid "grouping_id"
     t.index ["community_id"], name: "index_forms_on_community_id"
     t.index ["name"], name: "index_forms_on_name", unique: true
   end
