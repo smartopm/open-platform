@@ -60,22 +60,42 @@ export function MainNav({ authState }) {
   const classes = useStyles();
   const [drawerOpen, setDrawerOpen] = useState(false);
 
+  const dynamicMenu = authState?.user?.community?.menuItems?.map(menuItem => ({
+    routeProps: {
+      path: menuItem.menu_link,
+      component: <span />
+    },
+    styleProps: {},
+    name: () => menuItem.menu_name,
+    featureName: 'DynamicMenu',
+    accessibleBy: ['admin']
+  }));
+
+  const modulesWithCommMenu = modules.map(module => {
+    if (module.routeProps.path === '' && module.featureName === 'Community') {
+      return {
+        ...module,
+        subMenu: [...module.subMenu, ...dynamicMenu]
+      };
+    }
+    return module;
+  });
+
   const handleDrawerToggle = () => {
     setDrawerOpen(!drawerOpen);
 
     if (window.screen.width > 768) {
       // A hack to dynamically change app-container's margin-left
       // There's a react-way of doing it but it re-renders the whole <App /> component
-      document.getElementById('app-container').style.marginLeft = drawerOpen ? 0 : `${drawerWidth}px`;
+      document.getElementById('app-container').style.marginLeft = drawerOpen
+        ? 0
+        : `${drawerWidth}px`;
     }
   };
 
   return (
     <div className={classes.root}>
-      <AppBar
-        position="fixed"
-        className={classes.appBar}
-      >
+      <AppBar position="fixed" className={classes.appBar}>
         <Toolbar>
           <IconButton
             color="primary"
@@ -122,7 +142,7 @@ export function MainNav({ authState }) {
           >
             <SideMenu
               toggleDrawer={handleDrawerToggle}
-              menuItems={modules}
+              menuItems={modulesWithCommMenu}
               userType={authState.user.userType}
               direction="left"
               communityFeatures={authState.user?.community.features || []}
