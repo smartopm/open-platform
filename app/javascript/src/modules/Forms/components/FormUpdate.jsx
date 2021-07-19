@@ -227,7 +227,7 @@ export default function FormUpdate({ formUserId, userId, authState }) {
           label={formPropertiesData.formProperty.fieldName}
         />
       ),
-      image: (
+      file_upload: (
         <div key={formPropertiesData.formProperty.id}>
           {formPropertiesData.imageUrl && (
             <>

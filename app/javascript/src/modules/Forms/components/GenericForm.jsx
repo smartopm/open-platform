@@ -216,7 +216,7 @@ export default function GenericForm({ formId, pathname, formData, refetch, editM
           </Grid>
         </Grid>
       ),
-      image: (
+      file_upload: (
         <Grid container spacing={3} key={formPropertiesData.id}>
           <FormPropertyAction
             formId={formId}
