@@ -18,7 +18,7 @@ export default function LandParcelLegend(){
     }
 
       /* istanbul ignore next */
-    map.on('overlayadd', function(layer){
+    map?.on('overlayadd', function(layer){
       if(layer?.name === 'Land Parcels'){
         landParcelLegend.addTo(map);
       }
@@ -26,7 +26,7 @@ export default function LandParcelLegend(){
     
       /* istanbul ignore next */
       /* eslint-disable no-unused-expressions */
-    map.on('overlayremove', function(layer){
+    map?.on('overlayremove', function(layer){
       if(layer?.name === 'Land Parcels'){
         map?.removeControl(landParcelLegend);
       }

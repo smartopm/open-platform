@@ -20,7 +20,6 @@ describe('<LandParcelLegendContent />', () => {
     })
 
     expect(container.queryByText(/legend/i)).toBeTruthy()
-    expect(container.queryByText(/nkwashi/i)).toBeTruthy()
   })
   it('should display plot statuses', async () => {
     

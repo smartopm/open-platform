@@ -32,14 +32,14 @@ export default function SubUrbanLegendContent(){
       return div
     }
 
-     map.on('overlayadd', function(layer){
-      if(layer.name === 'Sub-urban Areas'){
+     map?.on('overlayadd', function(layer){
+      if(layer?.name === 'Sub-urban Areas'){
         legend.addTo(map);
       }
     })
     
-    map.on('overlayremove', function(layer){
-      if(layer.name === 'Sub-urban Areas'){
+    map?.on('overlayremove', function(layer){
+      if(layer?.name === 'Sub-urban Areas'){
         map?.removeControl(legend);
       }
     })

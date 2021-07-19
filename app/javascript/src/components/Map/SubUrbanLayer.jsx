@@ -77,7 +77,7 @@ export default function SubUrbanLayer({ data }){
     }
 
     /* istanbul ignore next */
-    map.on('overlayadd', function(layer){
+    map?.on('overlayadd', function(layer){
       if(layer?.name === 'Sub-urban Areas'){
         geojson = L.geoJson(data, {
           style: geoJSONStyle,
@@ -90,7 +90,7 @@ export default function SubUrbanLayer({ data }){
     
       /* eslint-disable no-unused-expressions */
       /* istanbul ignore next */
-    map.on('overlayremove', function(layer){
+    map?.on('overlayremove', function(layer){
       if(layer?.name === 'Sub-urban Areas'){
         map?.removeControl(geojson);
         map?.removeControl(info);
