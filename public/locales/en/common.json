@@ -265,7 +265,8 @@
     "publish": "Publish",
     "proceed": "Proceed",
     "maps": "Maps",
-    "view_entries": "View Entries"
+    "view_entries": "View Entries",
+    "report": "Report"
   },
   "user_types": {
     "admin": "Admin",
