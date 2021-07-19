@@ -101,8 +101,13 @@ export const FormEntriesQuery = gql`
         createdAt
         status
         user{
+          id
           name
           imageUrl
+        }
+        form {
+          id
+          versionNumber
         }
       }
     }
