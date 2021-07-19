@@ -42,6 +42,12 @@ module Types::Queries::Form
       argument :user_id, GraphQL::Types::ID, required: true
       argument :form_user_id, GraphQL::Types::ID, required: true
     end
+
+    # Get form properties with values for user
+    field :form_submissions, [Types::UserFormPropertiesType], null: true do
+      description 'Get user form properties by form user id'
+      argument :id, GraphQL::Types::ID, required: true
+    end
   end
   # rubocop:enable Metrics/BlockLength
   def forms
@@ -95,6 +101,20 @@ module Types::Queries::Form
     Forms::FormUser.find_by(id: form_user_id)
                    .user_form_properties.eager_load(:form_property).with_attached_image
   end
+
+  def form_submissions(id:)
+    # unless context[:current_user]&.admin? || context[:current_user]&.id.eql?(user_id)
+    #   raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
+    # end
+
+    submissions = nil
+
+    context[:site_community].forms.find(id).form_users.each do |form_user|
+      submissions = form_user.user_form_properties.includes(:form_property)
+    end
+    submissions
+  end
+
 
   private
 
