@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_07_15_100435) do
+ActiveRecord::Schema.define(version: 2021_07_19_073746) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -194,6 +194,7 @@ ActiveRecord::Schema.define(version: 2021_07_15_100435) do
     t.json "social_links"
     t.json "banking_details"
     t.json "community_required_fields"
+    t.json "menu_items"
     t.index ["slug"], name: "index_communities_on_slug", unique: true
   end
 

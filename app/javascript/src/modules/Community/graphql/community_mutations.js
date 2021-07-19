@@ -8,6 +8,7 @@ export const CommunityUpdateMutation = gql`
     $supportEmail: JSON
     $supportWhatsapp: JSON
     $socialLinks: JSON
+    $menuItems: JSON
     $imageBlobId: String
     $currency: String
     $locale: String
@@ -25,6 +26,7 @@ export const CommunityUpdateMutation = gql`
       supportEmail: $supportEmail
       supportWhatsapp: $supportWhatsapp
       socialLinks: $socialLinks
+      menuItems: $menuItems
       imageBlobId: $imageBlobId
       currency: $currency
       locale: $locale
