@@ -11,10 +11,23 @@ export const UserTransactions = gql`
       allocatedAmount
       unallocatedAmount
       status
-      transactionNumber
       depositor {
         id
         name
+      }
+      planPayments {
+        id
+        createdAt
+        receiptNumber
+        amount
+        paymentPlan {
+          pendingBalance
+          statementPaidAmount
+          unallocatedAmount
+          landParcel {
+            parcelNumber
+          }
+        }
       }
       user {
         id
@@ -40,13 +53,7 @@ export const UserPlans = gql`
       durationInMonth
       status
       endDate
-      user {
-        name
-        phoneNumber
-        extRefId
-      }
       landParcel {
-        id
         parcelNumber
       }
       planPayments {
@@ -54,9 +61,21 @@ export const UserPlans = gql`
         createdAt
         amount
         status
+        receiptNumber
+        paymentPlan {
+          pendingBalance
+          statementPaidAmount
+          unallocatedAmount
+          landParcel {
+            parcelNumber
+          }
+        }
         userTransaction {
-          id
           source
+          transactionNumber
+          depositor {
+            name
+          }
         }
       }
     }

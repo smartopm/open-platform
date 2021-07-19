@@ -4,6 +4,7 @@ import { useMutation, useLazyQuery } from 'react-apollo';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import { useHistory } from 'react-router-dom';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
+import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import {
   Grid,
   Typography,
@@ -33,13 +34,14 @@ import PaymentPlanUpdateMutation, { PaymentPlanCancelMutation } from '../../grap
 import { Spinner } from '../../../../shared/Loading';
 import { suffixedNumber } from '../../helpers';
 import ListHeader from '../../../../shared/list/ListHeader';
-import MenuList from '../../../../shared/MenuList'
-import { ReceiptPayment, PlanStatement } from '../../graphql/payment_query'
-import PaymentReceipt from './PaymentReceipt'
-import CenteredContent from '../../../../components/CenteredContent'
-import StatementPlan from './PlanStatement'
+import MenuList from '../../../../shared/MenuList';
+import { ReceiptPayment, PlanStatement } from '../../graphql/payment_query';
+import PaymentReceipt from './PaymentReceipt';
+import CenteredContent from '../../../../components/CenteredContent';
+import StatementPlan from './PlanStatement';
 import { ActionDialog } from '../../../../components/Dialog';
-import PlanDetail from './PlanDetail'
+import PlanDetail from './PlanDetail';
+import TransactionDetails from './TransactionDetails';
 
 export default function UserPaymentPlanItem({
   plans,
@@ -58,6 +60,8 @@ export default function UserPaymentPlanItem({
   const [planId, setPlanId] = useState('');
   const [landParcelId, setLandParcelId] = useState('');
   const [receiptOpen, setReceiptOpen] = useState(false);
+  const [transDetailOpen, setTransDetailOpen] = useState(false);
+  const [transData, setTransData] = useState({});
   const [planDetailOpen, setPlanDetailOpen] = useState(false);
   const [planData, setPlanData] = useState({});
   const [statementOpen, setStatementOpen] = useState(false);
@@ -184,6 +188,11 @@ export default function UserPaymentPlanItem({
     history.push(`?tab=Plans&subtab=Transactions&id=${planId}`)
   }
 
+  function transactionDetailOpen(trans) {
+    setTransData(trans)
+    setTransDetailOpen(true)
+  }
+
   function handlePlanDetailClick(event) {
     event.stopPropagation()
     setPlanDetailOpen(true)
@@ -239,13 +248,18 @@ export default function UserPaymentPlanItem({
       });
     }
 
+    function handlePaymentMenuClose(event) {
+      event.stopPropagation()
+      setAnchor(null)
+    }
+
     const menuData = {
       menuList,
       handleTransactionMenu,
       anchorEl: anchor,
       open: anchorElOpen,
       userType: currentUser.userType,
-      handleClose: () => setAnchor(null)
+      handleClose: (event) => handlePaymentMenuClose(event)
     }
 
     const planMenuData = {
@@ -264,6 +278,14 @@ export default function UserPaymentPlanItem({
 
   return (
     <>
+      {transDetailOpen && (
+        <TransactionDetails
+          open={transDetailOpen}
+          handleModalClose={() => setTransDetailOpen(false)}
+          data={transData}
+          currencyData={currencyData}
+        />
+      )}
       {planDetailOpen && (
         <PlanDetail
           open={planDetailOpen}
@@ -366,7 +388,8 @@ export default function UserPaymentPlanItem({
                     keys={paymentHeader}
                     data={[renderPayments(pay, currencyData, menuData)]}
                     hasHeader={false}
-                    clickable={false}
+                    clickable
+                    handleClick={() => transactionDetailOpen(pay)}
                     color
                   />
                 </div>
@@ -425,6 +448,7 @@ export function renderPlan(plan, currencyData, userType, { handleMenu, loading }
             suffixedNumber(plan.paymentDay)
           )}
         </Button>
+        <KeyboardArrowDownIcon style={{ margin: '10px 0 0 15px'}} />
       </Grid>
     ),
     Menu: (
