@@ -23,7 +23,7 @@ describe('Form Entries Component', () => {
       },
       result: {
         data: {
-          formEntries: 
+          formEntries:
             {
                 formName: "Lease Form",
                 formUsers: [{
@@ -33,9 +33,14 @@ describe('Form Entries Component', () => {
                     status: "pending",
                     createdAt: "2021-07-08T12:07:56+02:00",
                     user: {
+                        id: "410ec828efgs",
                         name: "John Test",
                         imageUrl: 'http://host.com/image.jpg'
-                    }
+                    },
+                    form: {
+                        id: "410ec828efgs",
+                        versionNumber: 2,
+                    },
                 }]
             }
         }
@@ -54,7 +59,7 @@ describe('Form Entries Component', () => {
     )
     const loader = render(<Loading />)
     expect(loader.queryAllByTestId('loader')[0]).toBeInTheDocument()
-    
+
     await waitFor(() => {
         expect(container.queryAllByTestId('submitted_by')).toHaveLength(1);
         expect(container.queryAllByTestId('submitted_on')).toHaveLength(1);
@@ -62,6 +67,7 @@ describe('Form Entries Component', () => {
         expect(container.queryAllByTestId('submitted_by')[0].textContent).toEqual('John Test');
         expect(container.queryAllByTestId('submitted_on')[0].textContent).toEqual('2021-07-08');
         expect(container.queryAllByTestId('status')[0].textContent).toEqual('pending');
+        expect(container.queryAllByTestId('versionNumber')[0].textContent).toEqual("2");
       },
       { timeout: 500 }
     )
