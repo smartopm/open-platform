@@ -18,6 +18,7 @@ export default function LandParcelLegend(){
     }
 
       /* istanbul ignore next */
+      /* eslint-disable no-unused-expressions */
     map?.on('overlayadd', function(layer){
       if(layer?.name === 'Land Parcels'){
         landParcelLegend.addTo(map);

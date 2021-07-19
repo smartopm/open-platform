@@ -76,6 +76,7 @@ export default function SubUrbanLayer({ data }){
       })
     }
 
+     /* eslint-disable no-unused-expressions */
     /* istanbul ignore next */
     map?.on('overlayadd', function(layer){
       if(layer?.name === 'Sub-urban Areas'){
