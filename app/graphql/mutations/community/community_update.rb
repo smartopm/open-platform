@@ -9,6 +9,7 @@ module Mutations
       argument :support_email, GraphQL::Types::JSON, required: false
       argument :support_whatsapp, GraphQL::Types::JSON, required: false
       argument :social_links, GraphQL::Types::JSON, required: false
+      argument :menu_items, GraphQL::Types::JSON, required: false
       argument :image_blob_id, String, required: false
       argument :currency, String, required: false
       argument :locale, String, required: false

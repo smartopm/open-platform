@@ -2,8 +2,9 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import React, { useEffect, useState } from 'react';
 import Typography from '@material-ui/core/Typography';
-import { Button, TextField, MenuItem, Container, Grid } from '@material-ui/core';
+import { Button, TextField, MenuItem, Container, Grid, IconButton } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
+import { DeleteOutline } from '@material-ui/icons'
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
@@ -16,7 +17,7 @@ import { useFileUpload } from '../../../graphql/useFileUpload';
 import ImageCropper from './ImageCropper';
 import { currencies, locales, languages } from '../../../utils/constants';
 import ImageAuth from '../../../shared/ImageAuth';
-import { formatError } from '../../../utils/helpers';
+import { formatError, propAccessor } from '../../../utils/helpers';
 import { Spinner } from '../../../shared/Loading';
 import ColorPicker from './ColorPicker';
 import { validateThemeColor } from '../helpers';
@@ -40,6 +41,11 @@ export default function CommunitySettings({ data, token, refetch }) {
     category: ''
   };
 
+  const menuItems = {
+    menu_link: '',
+    menu_name: ''
+  };
+
   const theme = {
     primaryColor: data.themeColors?.primaryColor || '#69ABA4',
     secondaryColor: data.themeColors?.secondaryColor || '#cf5628'
@@ -57,12 +63,13 @@ export default function CommunitySettings({ data, token, refetch }) {
     country: data.bankingDetails?.country || '',
     taxIdNo: data.bankingDetails?.taxIdNo || '',
   }
- 
+
   const [communityUpdate] = useMutation(CommunityUpdateMutation);
   const [numberOptions, setNumberOptions] = useState([numbers]);
   const [emailOptions, setEmailOptions] = useState([emails]);
   const [whatsappOptions, setWhatsappOptions] = useState([whatsapps]);
   const [socialLinkOptions, setSocialLinkOptions] = useState([socialLinks]);
+  const [menuItemOptions, setMenuItemOptions] = useState([menuItems])
   const [themeColors, setThemeColor] = useState(theme);
   const [bankingDetails, setBankingDetails] = useState(banking);
   const [message, setMessage] = useState({ isError: false, detail: '' });
@@ -106,6 +113,10 @@ export default function CommunitySettings({ data, token, refetch }) {
     setSocialLinkOptions([...socialLinkOptions, socialLinks]);
   }
 
+  function handleAddMenuItemOption() {
+    setMenuItemOptions([...menuItemOptions, menuItems]);
+  }
+
   function updateOptions(index, newValue, options, type) {
     if (type === 'email') {
       handleSetOptions(setEmailOptions, index, newValue, options);
@@ -113,6 +124,8 @@ export default function CommunitySettings({ data, token, refetch }) {
       handleSetOptions(setWhatsappOptions, index, newValue, options);
     } else if (type === 'social_link') {
       handleSetOptions(setSocialLinkOptions, index, newValue, options);
+    } else if (type === 'menu_link') {
+      handleSetOptions(setMenuItemOptions, index, newValue, options);
     }
     else {
       handleSetOptions(setNumberOptions, index, newValue, options);
@@ -133,6 +146,10 @@ export default function CommunitySettings({ data, token, refetch }) {
 
   function handleWhatsappChange(event, index) {
     updateOptions(index, { [event.target.name]: event.target.value }, whatsappOptions, 'whatsapp');
+  }
+
+  function handleMenuItemChange(event, index) {
+    updateOptions(index, { [event.target.name]: event.target.value }, menuItemOptions, 'menu_link');
   }
 
   function handleSocialLinkChange(event, index) {
@@ -174,6 +191,14 @@ export default function CommunitySettings({ data, token, refetch }) {
       values.splice(id, 1);
     }
     setSocialLinkOptions([...values]);
+  }
+
+  function handleMenuItemRemoveRow(id) {
+    const values = menuItemOptions;
+    if (values.length !== 1) {
+      values.splice(id, 1);
+    }
+    setMenuItemOptions([...values]);
   }
 
   function onInputChange(file) {
@@ -224,7 +249,7 @@ export default function CommunitySettings({ data, token, refetch }) {
       setAlertOpen(true);
       setMessage({
         isError: true,
-        detail: t('common:errors.invalid_color_code') 
+        detail: t('common:errors.invalid_color_code')
       });
       return
     }
@@ -235,6 +260,7 @@ export default function CommunitySettings({ data, token, refetch }) {
         supportEmail: emailOptions,
         supportWhatsapp: whatsappOptions,
         socialLinks: socialLinkOptions,
+        menuItems: menuItemOptions,
         imageBlobId: signedBlobId,
         currency,
         locale,
@@ -250,7 +276,7 @@ export default function CommunitySettings({ data, token, refetch }) {
       .then(() => {
         setMessage({
           isError: false,
-          detail: t('community.community_updated') 
+          detail: t('community.community_updated')
         });
         setLanguageInLocalStorage(language)
         setAlertOpen(true);
@@ -272,6 +298,7 @@ export default function CommunitySettings({ data, token, refetch }) {
     setNumberOptions(data.supportNumber || [numbers]);
     setWhatsappOptions(data.supportWhatsapp || [whatsapps]);
     setSocialLinkOptions(data.socialLinks || [socialLinks]);
+    setMenuItemOptions(data.menuItems || [menuItems]);
     setCurrency(data.currency);
     setLocale(data.locale);
     setLanguage(data.language);
@@ -395,8 +422,49 @@ export default function CommunitySettings({ data, token, refetch }) {
           </div>
         </div>
       </div>
+      <div className={classes.information} style={{ marginTop: '40px' }}>
+        {
+          menuItemOptions.map((_menu, i) => (
+            // eslint-disable-next-line react/no-array-index-key
+            <div className={{display: 'flex', flexDirection: 'row', margin: '10px 0'}} key={i}>
+              <TextField
+                id={`${i}-menu-link-input`}
+                style={{ width: '300px'}}
+                label='Link'
+                onChange={(event) => handleMenuItemChange(event, i)}
+                value={propAccessor(menuItemOptions[parseInt(i, 10)], 'menu_link')}
+                name='menu_link'
+                data-testid='menu-link-input'
+              />
+              <TextField
+                id={`${i}-menu-name-input`}
+                style={{ width: '200px', marginLeft: '40px' }}
+                label='Name'
+                onChange={(event) => handleMenuItemChange(event, i)}
+                value={propAccessor(menuItemOptions[parseInt(i, 10)], 'menu_name')}
+                name='menu_name'
+                data-testid='menu-name-input'
+              />
 
-  
+              <IconButton
+                style={{ marginTop: 13 }}
+                onClick={() => handleMenuItemRemoveRow(i)}
+                aria-label="remove"
+              >
+                <DeleteOutline />
+              </IconButton>
+            </div>
+          ))
+        }
+        <div className={classes.addIcon} role="button" onClick={handleAddMenuItemOption} data-testid='menu_item_click'>
+          <AddCircleOutlineIcon />
+          <div style={{ marginLeft: '10px', color: 'secondary' }}>
+            <Typography align="center" variant="caption">
+              {t('common:form_fields.add_menu_item')}
+            </Typography>
+          </div>
+        </div>
+      </div>
       <TextField
         label={t('community.set_security_manager')}
         value={securityManager}
@@ -631,6 +699,7 @@ CommunitySettings.propTypes = {
     supportEmail: PropTypes.arrayOf(PropTypes.object),
     supportWhatsapp: PropTypes.arrayOf(PropTypes.object),
     socialLinks: PropTypes.arrayOf(PropTypes.object),
+    menuItems: PropTypes.arrayOf(PropTypes.object),
     imageUrl: PropTypes.string,
     currency: PropTypes.string,
     locale: PropTypes.string,
