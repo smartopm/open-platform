@@ -21,6 +21,12 @@ module Types::Queries::Form
       description 'Get form properties by form id'
       argument :form_id, GraphQL::Types::ID, required: true
     end
+    # Get form property
+    field :form_property, Types::FormPropertiesType, null: true do
+      description 'Get a form property by form id and form property id'
+      argument :form_id, GraphQL::Types::ID, required: true
+      argument :form_property_id, GraphQL::Types::ID, required: true
+    end
     # Get form status for user
     field :form_user, Types::FormUsersType, null: true do
       description 'Get user form by form user id'
@@ -44,10 +50,11 @@ module Types::Queries::Form
     end
   end
   # rubocop:enable Metrics/BlockLength
+
   def forms
     raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') if context[:current_user].blank?
 
-    context[:site_community].forms.order(created_at: :desc)
+    context[:site_community].forms.not_deprecated.order(created_at: :desc)
   end
 
   def form(id:)
@@ -60,6 +67,12 @@ module Types::Queries::Form
     raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') if context[:current_user].blank?
 
     context[:site_community].forms.find(form_id).form_properties
+  end
+
+  def form_property(form_id:, form_property_id:)
+    raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') if context[:current_user].blank?
+
+    context[:site_community].forms.find(form_id).form_properties.find_by(id: form_property_id)
   end
 
   def form_user(user_id:, form_user_id:)
@@ -75,6 +88,7 @@ module Types::Queries::Form
   # @param form_id [String] Form#id
   #
   # @return [Hash]
+  # rubocop:disable Metrics/AbcSize
   def form_entries(form_id:, query: nil, limit: 20, offset: 0)
     raise_unauthorized_error
 
@@ -82,10 +96,13 @@ module Types::Queries::Form
     raise_form_not_found_error(form)
 
     query = updated_query(query)
-    form_users = form.form_users.includes(:user).search(query).order(created_at: :desc)
-                     .limit(limit).offset(offset)
+    form_users = Forms::FormUser.where(form_id: Forms::Form.where(grouping_id: form.grouping_id)
+                                .select(:id))
+                                .includes(:user).search(query).order(created_at: :desc)
+                                .limit(limit).offset(offset)
     { form_name: form.name, form_users: form_users }
   end
+  # rubocop:enable Metrics/AbcSize
 
   def form_user_properties(user_id:, form_user_id:)
     unless context[:current_user]&.admin? || context[:current_user]&.id.eql?(user_id)

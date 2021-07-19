@@ -38,6 +38,21 @@ export const FormPropertiesQuery = gql`
   }
 `
 
+export const FormPropertyQuery = gql`
+  query($formId: ID!, $formPropertyId: ID!) {
+    formProperty(formId: $formId, formPropertyId: $formPropertyId) {
+      id
+      fieldName
+      fieldType
+      fieldValue
+      required
+      adminUse
+      order
+    }
+  }
+  `
+
+
 export const UserFormPropertiesQuery = gql`
   query userFormProperties($userId: ID!, $formUserId: ID!) {
     formUserProperties(userId: $userId, formUserId: $formUserId) {

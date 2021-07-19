@@ -41,11 +41,12 @@ RSpec.describe Mutations::Form::FormPropertiesDelete do
       expect(result['errors']).to be_nil
     end
 
-    it 'deleting a form property from a submitted form errors' do
+    it 'does not delete a form property from a submitted form' do
       variables = {
         formId: another_form.id,
         formPropertyId: another_form_property.id,
       }
+      previous_form_count = Forms::Form.count
       result = DoubleGdpSchema.execute(mutation, variables: variables,
                                                  context: {
                                                    current_user: admin,
@@ -53,7 +54,7 @@ RSpec.describe Mutations::Form::FormPropertiesDelete do
                                                  }).as_json
       expect(result.dig('data', 'formPropertiesDelete', 'formProperty', 'id')).to be_nil
       expect(another_form.form_properties.count).to eql 1
-      expect(result.dig('errors', 0, 'message')).to eql 'You can not delete from a submitted form'
+      expect(Forms::Form.count).to eql(previous_form_count + 1)
     end
 
     it 'throws unauthorized error when user is not admin' do

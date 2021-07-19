@@ -70,7 +70,7 @@ export default function FormEntries({ formId }) {
       {
             data?.formEntries?.formUsers?.length > 0 ? data?.formEntries?.formUsers?.map(formUser => (
               <DataList
-                key={data?.formEntries?.formUsers?.id}
+                key={formUser.id}
                 keys={entriesHeaders}
                 data={renderFormEntry(formUser)}
                 hasHeader={false}

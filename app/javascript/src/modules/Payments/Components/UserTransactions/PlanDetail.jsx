@@ -22,32 +22,32 @@ export default function PlanDetail({ open, handleModalClose, planData, currencyD
         <div className={classes.detailBody}>
           <Grid container spacing={1} data-testid='name'>
             <Grid item xs={6}>
-              <Typography color='primary' className={classes.name}>{planData?.user?.name}</Typography> 
+              <Typography color='primary' className={classes.name}>{planData?.user?.name}</Typography>
             </Grid>
             <Grid item xs={6}>
-              {' '} 
+              {' '}
             </Grid>
           </Grid>
           <Grid container spacing={1} style={{margin: '20px 0'}} data-testid='detail'>
             <Grid item xs={6}>
-              <Typography className={classes.details}>Details</Typography> 
+              <Typography className={classes.details}>Details</Typography>
             </Grid>
             <Grid item xs={6} style={{textAlign: 'right'}}>
-              <KeyboardArrowDownIcon /> 
+              <KeyboardArrowDownIcon />
             </Grid>
           </Grid>
           <Grid container spacing={1} data-testid='start-date'>
             <Grid item xs={6}>
-              <Typography className={classes.fieldTitle}>Start Date</Typography> 
+              <Typography className={classes.fieldTitle}>Start Date</Typography>
             </Grid>
             <Grid item xs={6} className={classes.fieldContent}>
-              {dateToString(planData.startDate)} 
+              {dateToString(planData.startDate)}
             </Grid>
           </Grid>
           <Divider className={classes.divider} />
           <Grid container spacing={1} data-testid='plan-duration'>
             <Grid item xs={6}>
-              <Typography className={classes.fieldTitle}>Plan Duration</Typography> 
+              <Typography className={classes.fieldTitle}>Plan Duration</Typography>
             </Grid>
             <Grid item xs={6} className={classes.fieldContent}>
               {`${planData.durationInMonth} months`}
@@ -56,7 +56,7 @@ export default function PlanDetail({ open, handleModalClose, planData, currencyD
           <Divider className={classes.divider} />
           <Grid container spacing={1} data-testid='end-date'>
             <Grid item xs={6}>
-              <Typography className={classes.fieldTitle}>End Date</Typography> 
+              <Typography className={classes.fieldTitle}>End Date</Typography>
             </Grid>
             <Grid item xs={6} className={classes.fieldContent}>
               {dateToString(planData.endDate)}
@@ -65,7 +65,7 @@ export default function PlanDetail({ open, handleModalClose, planData, currencyD
           <Divider className={classes.divider} />
           <Grid container spacing={1} data-testid='status'>
             <Grid item xs={6}>
-              <Typography className={classes.fieldTitle}>Status</Typography> 
+              <Typography className={classes.fieldTitle}>Status</Typography>
             </Grid>
             <Grid item xs={6} className={classes.fieldContent}>
               {planData.status}
@@ -74,7 +74,7 @@ export default function PlanDetail({ open, handleModalClose, planData, currencyD
           <Divider className={classes.divider} />
           <Grid container spacing={1} data-testid='plan-type'>
             <Grid item xs={6}>
-              <Typography className={classes.fieldTitle}>Plan Type</Typography> 
+              <Typography className={classes.fieldTitle}>Plan Type</Typography>
             </Grid>
             <Grid item xs={6} className={classes.fieldContent}>
               {planData.planType}
@@ -83,7 +83,7 @@ export default function PlanDetail({ open, handleModalClose, planData, currencyD
           <Divider className={classes.divider} />
           <Grid container spacing={1}>
             <Grid item xs={6}>
-              <Typography className={classes.fieldTitle}>Amount</Typography> 
+              <Typography className={classes.fieldTitle}>Amount</Typography>
             </Grid>
             <Grid item xs={6} className={classes.fieldContent}>
               {`${formatMoney(currencyData, planData.monthlyAmount)} monthly`}
@@ -92,7 +92,7 @@ export default function PlanDetail({ open, handleModalClose, planData, currencyD
           <Divider className={classes.divider} />
           <Grid container spacing={1}>
             <Grid item xs={6}>
-              <Typography className={classes.fieldTitle}>Plot</Typography> 
+              <Typography className={classes.fieldTitle}>Plot</Typography>
             </Grid>
             <Grid item xs={6} className={classes.fieldContent}>
               {planData?.landParcel?.parcelNumber}
