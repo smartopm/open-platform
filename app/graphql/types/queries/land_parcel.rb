@@ -20,7 +20,7 @@ module Types::Queries::LandParcel
     end
 
     # Get land parcel details that belongs to a user
-    field :user_land_parcel_with_plan, [Types::LandParcelType], null: true do
+    field :user_land_parcel_with_plan, [Types::PaymentPlanType], null: true do
       description 'Get a user land parcel which have a payment plan'
       argument :user_id, GraphQL::Types::ID, required: true
     end
@@ -33,11 +33,6 @@ module Types::Queries::LandParcel
 
     field :land_parcel_geo_data, [Types::LandParcelGeoDataType], null: true do
       description 'Get all land parcel Geo Data'
-    end
-
-    field :land_parcel_payment_plan, Types::PaymentPlanType, null: true do
-      description 'Get payment plan for a land_parcel'
-      argument :land_parcel_id, GraphQL::Types::ID, required: true
     end
   end
 
@@ -64,7 +59,7 @@ module Types::Queries::LandParcel
     raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') if context[:current_user].blank?
 
     user = context[:site_community].users.find_by(id: user_id)
-    user.land_parcels.joins(:payment_plan).where.not(payment_plans: { pending_balance: 0 })
+    user.payment_plans.includes(:land_parcel).where.not(pending_balance: 0)
   end
 
   def land_parcel(id:)
@@ -88,17 +83,6 @@ module Types::Queries::LandParcel
                             .eager_load(:valuations, :accounts)
                             .with_attached_images
                             .map { |p| geo_data(p) }
-  end
-
-  def land_parcel_payment_plan(land_parcel_id:)
-    unless context[:current_user].admin?
-      raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
-    end
-
-    parcel = context[:site_community].land_parcels.find_by(id: land_parcel_id)
-    return parcel.payment_plan if parcel.present?
-
-    raise GraphQL::ExecutionError, I18n.t('errors.land_parcel.not_found')
   end
 
   def geo_data(parcel)

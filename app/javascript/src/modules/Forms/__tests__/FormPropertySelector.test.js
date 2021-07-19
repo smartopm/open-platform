@@ -7,13 +7,12 @@ describe('Form property selector component', () => {
   const fieldTypes = {
       text: 'Text',
       radio: 'Radio',
-      image: 'Image',
+      file_upload: 'File Upload',
       signature: 'Signature',
       date: 'Date',
       dropdown: 'Dropdown'
     }
   it('should all options and render correctly passed values', () => {
-
     const container = render(
       <FormPropertySelector
         label="Field Type"

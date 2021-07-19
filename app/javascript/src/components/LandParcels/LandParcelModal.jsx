@@ -18,25 +18,11 @@ import { Context as AuthStateContext } from '../../containers/Provider/AuthState
 import { currencies } from '../../utils/constants';
 import { UsersLiteQuery } from '../../graphql/queries';
 import AddMoreButton from '../../shared/buttons/AddMoreButton';
-import Text from '../../shared/Text';
-import PaymentPlanForm from './PaymentPlanForm';
-import { LandPaymentPlanQuery } from '../../graphql/queries/landparcel';
-import PaymentPlan from './PaymentPlan';
 import LandParcelEditCoordinate from './LandParcelEditCoordinate';
 import LandParcelMergeModal from './LandParcelMergeModal';
 import useDebounce from '../../utils/useDebounce';
 import UserAutoResult from '../../shared/UserAutoResult';
 
-const initialPlanState = {
-  status: 0,
-  planType: 'lease',
-  percentage: '',
-  startDate: new Date(),
-  userId: '',
-  monthlyAmount: '',
-  totalAmount: 0,
-  durationInMonth: ''
-};
 export default function LandParcelModal({
   open,
   handleClose,
@@ -64,10 +50,8 @@ export default function LandParcelModal({
   const [tabValue, setTabValue] = useState('Details');
   const [valuationFields, setValuationFields] = useState([]);
   const [ownershipFields, setOwnershipFields] = useState(['']);
-  const [paymentPlanFields, setPaymentPlanFields] = useState(initialPlanState);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isEditing, setIsEditing] = useState(false);
-  const [showPaymentPlan, setShowPaymentPlan] = useState(false);
   const debouncedValue = useDebounce(ownershipFields[Number(currentIndex)]?.name, 500);
   const authState = useContext(AuthStateContext);
   const currency = currencies[authState.user?.community.currency] || '';
@@ -75,29 +59,14 @@ export default function LandParcelModal({
   const [editCoordinates, setEditCoordinates] = useState(false)
   const [mergeModalOpen, setMergeModalOpen] = useState(false)
   const [mergeData, setMergeData] = useState(null)
-  const [errorInfo, setErrorInfo] = useState({ isError: false, isSubmitting: false });
 
   useEffect(() => {
     setDetailsFields(landParcel);
-    if (open) {
-      fetchPaymentPlan()
-    }
     if (modalType === 'new' && location?.state?.from === 'users') {
       setOwnershipFields([{name: location?.state?.user?.userName, userId: location?.state?.user?.userId}])
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open]);
-
-  useEffect(() => {
-    const { percentage, monthlyAmount, durationInMonth } = paymentPlanFields;
-
-    let totalAmount = 0;
-    if (Number(percentage) > 0 || Number(monthlyAmount) > 0 || Number(durationInMonth) > 0) {
-      totalAmount = (monthlyAmount * durationInMonth * 100) / percentage;
-    }
-
-    setPaymentPlanFields({ ...paymentPlanFields, totalAmount: Number(parseFloat(totalAmount).toFixed(2)) })
-  }, [paymentPlanFields.percentage, paymentPlanFields.monthlyAmount, paymentPlanFields.durationInMonth]);
 
 
   const [searchUser, { data }] = useLazyQuery(UsersLiteQuery, {
@@ -106,23 +75,12 @@ export default function LandParcelModal({
     fetchPolicy: 'no-cache'
   });
 
-  const [fetchPaymentPlan, {data: paymentPlanData, called }] = useLazyQuery(LandPaymentPlanQuery, {
-    variables: { landParcelId:  landParcel?.id}
-  })
-
   function addOwnership() {
     setOwnershipFields([...ownershipFields, { name: '', address: '' }]);
   }
 
   function onChangeOwnershipField(event, index) {
     updateOwnershipField(event.target.name, event.target.value, index);
-  }
-
-  function onChangePaymentPlanFields(event){
-    const { name, value } = event.target;
-    const fields = { ...paymentPlanFields }
-    fields[String(name)] = value
-    setPaymentPlanFields(fields);
   }
 
   function updateOwnershipField(name, value, index) {
@@ -169,37 +127,8 @@ export default function LandParcelModal({
 
   function cleanUpOnModalClosing(){
     setIsEditing(false);
-    setShowPaymentPlan(false);
     setMergeModalOpen(false)
-    setPaymentPlanFields(initialPlanState)
-    setErrorInfo({ isError: false, isSubmitting: false });
     handleClose()
-  }
-
-  function checkPaymentPlanIsValid(newData){
-    const values = Object.values(newData);
-
-    function isValid(element) {
-      if (Number.isInteger(element) || element instanceof Date) {
-        return true;
-      }
-      return Boolean(element);
-    }
-
-    return(values.every(isValid))
-  }
-
-  function checkPaymentPlanHasInvalidField(formData){
-    const values = Object.values(formData);
-
-    function isNotValid(element) {
-      if (Number.isInteger(element) || element instanceof Date) {
-        return false;
-      }
-      return !element;
-    }
-
-    return(values.some(isNotValid))
   }
 
   function handleParcelSubmit() {
@@ -207,46 +136,6 @@ export default function LandParcelModal({
       setIsEditing(true);
       setValuationFields(landParcelValuations(landParcel));
       setOwnershipFields(landParcelOwners(landParcel));
-      return;
-    }
-
-    /* Create associated payment plan when:
-    /* 1. User Toggles option to Add Purchase Plan
-    /* 2. There is no existing payment plan for Land Parcel
-    /* 3. All payment plan fields are valid
-    */
-    const isAnyInvalid = checkPaymentPlanHasInvalidField(paymentPlanFields)
-    if(showPaymentPlan && isAnyInvalid){
-      setErrorInfo({ isError: true, isSubmitting: true });
-      setTabValue('Ownership')
-      return;
-    }
-
-    const paymentPlanIsValid = checkPaymentPlanIsValid(paymentPlanFields)
-    if(showPaymentPlan && !paymentPlanData?.landParcelPaymentPlan && paymentPlanIsValid){
-      const newPaymentPlan = {
-        ...paymentPlanFields,
-        landParcelId: landParcel.id,
-        monthlyAmount: parseFloat(paymentPlanFields.monthlyAmount),
-        durationInMonth: parseInt(paymentPlanFields.durationInMonth, 10)
-      };
-
-      handleSubmit({
-        parcelNumber,
-        address1,
-        address2,
-        city,
-        postalCode,
-        stateProvince,
-        parcelType,
-        country,
-        longX,
-        latY,
-        geom,
-        valuationFields,
-        ownershipFields,
-        paymentPlanFields: newPaymentPlan
-      });
       return;
     }
 
@@ -645,43 +534,6 @@ export default function LandParcelModal({
             <AddMoreButton title="New Owner" handleAdd={addOwnership} />
           </>
           )}
-          <br />
-          {
-            (called && paymentPlanData?.landParcelPaymentPlan) && (
-              <PaymentPlan
-                percentage={paymentPlanData?.landParcelPaymentPlan.percentage}
-                type={paymentPlanData?.landParcelPaymentPlan.planType}
-              />
-            )
-          }
-          {showPaymentPlan && !paymentPlanData?.landParcelPaymentPlan && (
-          <>
-            <br />
-            <Text content="Purchase Plan" />
-            <PaymentPlanForm
-              paymentCurrency={currency}
-              paymentPlanState={paymentPlanFields}
-              handleChange={e => onChangePaymentPlanFields(e)}
-              landParcel={landParcel}
-              errorInfo={errorInfo}
-            />
-          </>
-          )}
-          {
-          /*
-            Only show add purchase plan button when:
-              - landparcel has owner
-              - landparcel doesn't have an existing payment plan
-          */
-          }
-          {Boolean(landParcel?.accounts?.length &&
-            isEditing) &&
-            (called && !paymentPlanData?.landParcelPaymentPlan) && (
-              <AddMoreButton
-                title={`${showPaymentPlan ? 'Hide Payment Plan Form' : 'Add Purchase Plan'}`}
-                handleAdd={() => setShowPaymentPlan(!showPaymentPlan)}
-              />
-            )}
         </TabPanel>
         <TabPanel value={tabValue} index="Valuation History">
           {modalType === 'details' &&

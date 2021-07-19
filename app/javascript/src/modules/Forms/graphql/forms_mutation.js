@@ -7,6 +7,7 @@ export const FormPropertyCreateMutation = gql`
     $fieldName: String!
     $fieldType: String!
     $required: Boolean!
+    $adminUse: Boolean!
     $order: String!
     $fieldValue: JSON
   ) {
@@ -15,6 +16,7 @@ export const FormPropertyCreateMutation = gql`
       fieldName: $fieldName
       order: $order
       required: $required
+      adminUse: $adminUse
       fieldType: $fieldType
       fieldValue: $fieldValue
     ) {
@@ -53,6 +55,10 @@ export const FormPropertyDeleteMutation = gql`
       formProperty {
         id
       }
+      newFormVersion {
+        id
+      }
+      message
     }
   }
 `;
@@ -85,6 +91,7 @@ export const FormUserUpdateMutation = gql`
     }
   }
 `;
+
 export const FormUserStatusUpdateMutation = gql`
   mutation formUserStatusUpdate($formUserId: ID!, $status: String!) {
     formUserStatusUpdate(formUserId: $formUserId, status: $status) {
@@ -93,4 +100,35 @@ export const FormUserStatusUpdateMutation = gql`
       }
     }
   }
+`;
+
+export const FormPropertyUpdateMutation = gql`
+mutation updateProps(
+  $id: ID!
+  $fieldName: String!
+  $fieldType: String!
+  $required: Boolean!
+  $adminUse: Boolean!
+  $order: String!
+  $fieldValue: JSON
+) {
+  formPropertiesUpdate(
+    id: $id
+    fieldName: $fieldName
+    order: $order
+    required: $required
+    adminUse: $adminUse
+    fieldType: $fieldType
+    fieldValue: $fieldValue
+  ) {
+    formProperty {
+      id
+      fieldName
+    }
+    newFormVersion {
+      id
+    }
+    message
+  }
+}
 `;

@@ -16,6 +16,7 @@ import MessageAlert from "../../../../components/MessageAlert"
 import MenuList from '../../../../shared/MenuList'
 import { TransactionRevert } from '../../graphql/payment_mutations';
 import DeleteDialogueBox from '../../../../shared/dialogs/DeleteDialogue';
+import TransactionDetails from './TransactionDetails';
 
 export default function UserTransactionsList({transaction, currencyData, userType, userData, refetch, balanceRefetch }) {
   const { t } = useTranslation('common')
@@ -28,6 +29,8 @@ export default function UserTransactionsList({transaction, currencyData, userTyp
   const anchorElOpen = Boolean(anchorEl)
   const [isSuccessAlert, setIsSuccessAlert] = useState(false)
   const [revertTransaction] = useMutation(TransactionRevert)
+  const [transDetailOpen, setTransDetailOpen] = useState(false);
+  const [transData, setTransData] = useState({});
 
   const transactionHeader = [
     { title: 'Date', value: t('common:table_headers.date'), col: 1 },
@@ -55,6 +58,11 @@ export default function UserTransactionsList({transaction, currencyData, userTyp
   function handleTransactionMenu(event){
     event.stopPropagation()
     setAnchorEl(event.currentTarget)
+  }
+
+  function transactionDetailOpen(trans) {
+    setTransData(trans)
+    setTransDetailOpen(true)
   }
 
   function handleRevertTransaction(event) {
@@ -91,13 +99,18 @@ export default function UserTransactionsList({transaction, currencyData, userTyp
     setMessageAlert('');
   }
 
+  function handleClose(event) {
+    event.stopPropagation()
+    setAnchorEl(null)
+  }
+
   const menuData = {
     menuList,
     handleTransactionMenu,
     anchorEl,
     open: anchorElOpen,
     userType,
-    handleClose: () => setAnchorEl(null)
+    handleClose: (event) => handleClose(event)
   }
 
   if (!Object.keys(transaction).length || Object.keys(transaction).length === 0) {
@@ -106,6 +119,14 @@ export default function UserTransactionsList({transaction, currencyData, userTyp
 
   return (
     <div>
+      {transDetailOpen && (
+        <TransactionDetails
+          open={transDetailOpen}
+          handleModalClose={() => setTransDetailOpen(false)}
+          data={transData}
+          currencyData={currencyData}
+        />
+      )}
       <MessageAlert
         type={isSuccessAlert ? 'success' : 'error'}
         message={messageAlert}
@@ -125,6 +146,8 @@ export default function UserTransactionsList({transaction, currencyData, userTyp
         keys={transactionHeader}
         data={[renderTransactions(transaction, currencyData, menuData)]}
         hasHeader={false}
+        clickable
+        handleClick={() => transactionDetailOpen(transaction)}
         color
       />
     </div>

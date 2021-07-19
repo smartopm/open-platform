@@ -31,6 +31,7 @@ export default function FormEntries({ formId }) {
   })
   const entriesHeaders = [
     { title: 'Date of Submission', col: 1, value: t('misc.submission_date') },
+    { title: 'Version Number', col: 1, value: t('misc.version_number') },
     { title: 'Submitted by', col: 1, value: t('misc.submitted_by') },
     { title: 'Status', col: 1, value: t('misc.status') }
   ];
@@ -70,7 +71,7 @@ export default function FormEntries({ formId }) {
       {
             data?.formEntries?.formUsers?.length > 0 ? data?.formEntries?.formUsers?.map(formUser => (
               <DataList
-                key={data?.formEntries?.formUsers?.id}
+                key={formUser.id}
                 keys={entriesHeaders}
                 data={renderFormEntry(formUser)}
                 hasHeader={false}
@@ -100,6 +101,11 @@ export function renderFormEntry(formUser) {
       'Date of Submission': (
         <Grid item xs={12} md={2} data-testid="submitted_on">
           <Text content={dateToString(formUser.createdAt)} />
+        </Grid>
+      ),
+      'Version Number': (
+        <Grid item xs={12} md={2} data-testid="versionNumber">
+          <Text content={formUser.form.versionNumber} />
         </Grid>
       ),
       'Submitted by': (

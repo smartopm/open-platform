@@ -73,10 +73,10 @@ RSpec.describe MergeUsers do
   let!(:payment_plan) do
     create(:payment_plan, land_parcel_id: land_parcel.id, user_id: user.id, plot_balance: 0)
   end
-  let!(:invoice) do
-    create(:invoice, community: user.community, land_parcel: land_parcel, user_id: user.id,
-                     status: 'in_progress', invoice_number: '1234')
-  end
+  # let!(:invoice) do
+  #   create(:invoice, community: user.community, land_parcel: land_parcel, user_id: user.id,
+  #                    status: 'in_progress', invoice_number: '1234')
+  # end
   let!(:payment_plan) { create(:payment_plan, user: user, land_parcel: land_parcel) }
   let(:duplicate_wallet) { create(:wallet, user: duplicate_user) }
 
@@ -113,7 +113,7 @@ RSpec.describe MergeUsers do
     expect(timesheet.reload.user_id).to eq(duplicate_user.id)
     expect(wallet_transaction.reload.user_id).to eq(duplicate_user.id)
     expect(user_label.reload.user_id).to eq(duplicate_user.id)
-    expect(invoice.reload.user_id).to eq(duplicate_user.id)
+    # expect(invoice.reload.user_id).to eq(duplicate_user.id)
     expect(payment_plan.reload.user_id).to eq(duplicate_user.id)
     expect(showroom.reload.userId).to eq(duplicate_user.id)
     expect(activity_log.reload.reporting_user_id).to eq(duplicate_user.id)

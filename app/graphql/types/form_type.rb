@@ -7,6 +7,7 @@ module Types
     field :name, String, null: false
     field :status, String, null: false
     field :description, String, null: false
+    field :version_number, Integer, null: false
     field :community, Types::CommunityType, null: false
     field :expires_at, GraphQL::Types::ISO8601DateTime, null: true
     field :created_at, GraphQL::Types::ISO8601DateTime, null: false
