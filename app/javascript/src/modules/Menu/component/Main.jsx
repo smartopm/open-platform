@@ -69,7 +69,7 @@ export function MainNav({ authState }) {
     name: () => menuItem.menu_name,
     featureName: 'DynamicMenu',
     accessibleBy: ['admin']
-  }));
+  })) || [];
 
   const modulesWithCommMenu = modules.map(module => {
     if (module.routeProps.path === '' && module.featureName === 'Community') {
