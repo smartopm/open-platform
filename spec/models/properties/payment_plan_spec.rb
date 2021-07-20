@@ -13,7 +13,7 @@ RSpec.describe Properties::PaymentPlan, type: :model do
       land_parcel_id: land_parcel.id,
       user_id: user.id,
       monthly_amount: 100,
-      duration_in_month: 12
+      duration_in_month: 12,
     )
   end
   let(:new_payment_plan) do
@@ -22,7 +22,7 @@ RSpec.describe Properties::PaymentPlan, type: :model do
       land_parcel_id: land_parcel.id,
       user_id: user.id,
       monthly_amount: 100,
-      duration_in_month: 12
+      duration_in_month: 12,
     )
   end
   let(:transaction) do
@@ -31,7 +31,7 @@ RSpec.describe Properties::PaymentPlan, type: :model do
       user_id: user.id,
       community_id: community.id,
       depositor_id: user.id,
-      amount: 500
+      amount: 500,
     )
   end
   let(:plan_payment) do
@@ -41,7 +41,7 @@ RSpec.describe Properties::PaymentPlan, type: :model do
       community_id: community.id,
       transaction_id: transaction.id,
       payment_plan_id: payment_plan.id,
-      amount: 500
+      amount: 500,
     )
   end
 
