@@ -292,7 +292,7 @@ export default function LandParcelMap({ handlePlotClick, geoData }){
                 url={openStreetMap}
               />
             </LayersControl.BaseLayer>
-            {properties && (
+            {Array.isArray(properties) && properties?.length && (
               <LayersControl.Overlay checked name="Land Parcels">
                 <FeatureGroup>
                   {properties?.map(({ id, longX, latY, geom, parcelNumber, parcelType, plotSold, accounts, valuations }) => {
@@ -319,7 +319,7 @@ export default function LandParcelMap({ handlePlotClick, geoData }){
                 </FeatureGroup>
               </LayersControl.Overlay>
             )}
-            {poiData && (
+            {Array.isArray(poiData) && poiData?.length && (
               <LayersControl.Overlay name="Points of Interest">
                 <FeatureGroup>
                   {poiData?.map(({ id, geom, parcelNumber, parcelType }) => {

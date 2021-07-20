@@ -45,6 +45,7 @@ function geoJSONStyle(feature) {
 }
 
 function getMapBoundary(communityName){
+  console.log('comm', communityName)
   if(communityName === 'Ciudad Morazán'){
     return CMCoverageData
   }
@@ -199,11 +200,11 @@ export default function GeoMap() {
            easeLinearity={0.35}
          >
            <MapLayers>
-             {properties && (
+             {Array.isArray(properties) && properties?.length && (
                <LayersControl.Overlay name="Land Parcels">
                  <FeatureGroup>
                    {properties.map(({ geom, parcelNumber, parcelType, plotSold }) => {
-                      if(checkValidGeoJSON(geom)){
+                     if(checkValidGeoJSON(geom)){
                         // mutate properties, add parcelNo, parcelType
                         const feature = JSON.parse(geom)
                         feature.properties.parcel_no = parcelNumber
@@ -222,7 +223,7 @@ export default function GeoMap() {
                  </FeatureGroup>
                </LayersControl.Overlay>
               )}
-             {poiData && (
+             {Array.isArray(poiData) && poiData?.length && (
                <LayersControl.Overlay checked name="Points of Interest">
                  <FeatureGroup>
                    {poiData.map(({ id, geom, parcelNumber, parcelType }) => {

@@ -13,7 +13,7 @@ namespace :db do
       abort('Community not found') unless community
 
       dir = Rails.root.join('app/javascript/src/data')
-      src_file = 'sempala-plots.json'
+      src_file = 'doublegdp_plots.json'
       json_file = "#{dir}/#{src_file}"
 
       abort("Aborted. File not found - #{json_file}") unless File.exist?(json_file)
@@ -62,7 +62,7 @@ namespace :db do
 
           # check if the same land parcel has been migrated for this community
           # 2 polygons will not have the same center point(x,y) unless the are duplicates
-          duplicate_parcel = Properties::LandParcel.find_by(community_id: community_id,
+          duplicate_parcel = Properties::LandParcel.find_by(community_id: community.id,
                                                             long_x: long_x, lat_y: lat_y)
           if duplicate_parcel.present?
             abort("Aborted: Land Parcel already exists. Have you migrated before?

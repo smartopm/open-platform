@@ -4,10 +4,10 @@
     {
       "type": "Feature",
       "properties": {
-        "stroke": "#f5ef51",
+        "stroke": "#0c1f85",
         "stroke-width": 1,
         "stroke-opacity": 1,
-        "fill": "#efe6e6",
+        "fill": "#0c1f85",
         "fill-opacity": 0.5,
         "name": "Double GDP"
       },
