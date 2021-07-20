@@ -45,7 +45,6 @@ function geoJSONStyle(feature) {
 }
 
 function getMapBoundary(communityName){
-  console.log('comm', communityName)
   if(communityName === 'Ciudad Morazán'){
     return CMCoverageData
   }
