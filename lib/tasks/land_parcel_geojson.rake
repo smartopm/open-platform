@@ -6,9 +6,14 @@ require 'parcel_indexer'
 namespace :db do
   namespace :seed do
     desc 'Load GeoJSON parcel data into database'
-    task land_parcel_geojson: :environment do
+    task :land_parcel_geojson, %i[community_name] => :environment do |_t, args|
+      abort('Community Name required') unless args.community_name
+
+      community = Community.find_by(name: args.community_name)
+      abort('Community not found') unless community
+
       dir = Rails.root.join('app/javascript/src/data')
-      src_file = 'sempala-plots.json'
+      src_file = 'doublegdp_plots.json'
       json_file = "#{dir}/#{src_file}"
 
       abort("Aborted. File not found - #{json_file}") unless File.exist?(json_file)
@@ -54,11 +59,10 @@ namespace :db do
 
           long_x = f['properties']['long_x']
           lat_y = f['properties']['lat_y']
-          community_id = Community.find_by(name: 'Nkwashi')&.id
 
           # check if the same land parcel has been migrated for this community
           # 2 polygons will not have the same center point(x,y) unless the are duplicates
-          duplicate_parcel = Properties::LandParcel.find_by(community_id: community_id,
+          duplicate_parcel = Properties::LandParcel.find_by(community_id: community.id,
                                                             long_x: long_x, lat_y: lat_y)
           if duplicate_parcel.present?
             abort("Aborted: Land Parcel already exists. Have you migrated before?
@@ -66,7 +70,7 @@ namespace :db do
               lat_y: #{duplicate_parcel[:lat_y]}")
           end
 
-          Properties::LandParcel.create!(community_id: community_id,
+          Properties::LandParcel.create!(community_id: community.id,
                                          parcel_number: parcel_no,
                                          parcel_type: 'basic',
                                          geom: f.to_json,

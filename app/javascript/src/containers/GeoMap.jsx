@@ -7,6 +7,8 @@ import { Map, FeatureGroup, GeoJSON, LayersControl, TileLayer, Popup } from 'rea
 import { StyleSheet, css } from 'aphrodite'
 import NkwashiCoverageData from '../data/nkwashi_coverage_boundary.json'
 import CMCoverageData from '../data/cm_coverage_boundary.json'
+import DGDPCoverageData from '../data/doublegdp_boundary.json'
+import NkwashiSuburbBoundaryData from '../data/nkwashi_suburb_boundary.json'
 import { LandParcelGeoData, LandParcel } from '../graphql/queries'
 import LandParcelMarker from '../components/Map/LandParcelMarker'
 import PointsOfInterestMarker from '../components/Map/PointsOfInterestMarker'
@@ -42,6 +44,26 @@ function geoJSONStyle(feature) {
   }
 }
 
+function getMapBoundary(communityName){
+  if(communityName === 'Ciudad Morazán'){
+    return CMCoverageData
+  }
+
+  if(communityName === 'DoubleGDP'){
+    return DGDPCoverageData
+  }
+
+  return NkwashiCoverageData
+}
+
+function getSubUrbanData(communityName){
+  if(communityName === 'Nkwashi'){
+    return NkwashiSuburbBoundaryData
+  }
+
+  return undefined;
+}
+
 export default function GeoMap() {
   const [selectedPoi, setSelectedPoi] = useState(null)
   const { loading, data: geoData } = useQuery(LandParcelGeoData, {
@@ -53,11 +75,13 @@ export default function GeoMap() {
 
   const { data: communityData, loading: loadingCommunityData } = useQuery(CurrentCommunityQuery)
 
+  const communityName = communityData?.currentCommunity?.name;
   const properties = geoData?.landParcelGeoData.filter(({ parcelType }) => parcelType !== 'poi') || null
   const poiData = geoData?.landParcelGeoData.filter(({ parcelType }) => parcelType === 'poi') || null
   const featureCollection = { type: 'FeatureCollection',  features: [] }
   const poiFeatureCollection = { type: 'FeatureCollection',  features: [] }
-  const communityName = communityData?.currentCommunity?.name;
+  const coverageData = getMapBoundary(communityName)
+  const subUrbanData = getSubUrbanData(communityName)
 
   /* istanbul ignore next */
   function handleCloseDrawer(){
@@ -83,41 +107,41 @@ export default function GeoMap() {
   }
 
   /* istanbul ignore next */
-/* eslint-disable consistent-return */
-function onEachLandParcelFeature(feature, layer){
-  if(feature.properties.parcel_no && feature.properties.parcel_type){
-    const { long_x: longX, lat_y: latY, parcel_no: parcelNumber, parcel_type: parcelType, plot_sold: plotSold } = feature.properties
-    const markerProps = {
-      geoLatY: parseFloat(latY) || 0,
-      geoLongX: parseFloat(longX) || 0,
-      parcelNumber,
-      parcelType,
-      plotSold,
+  /* eslint-disable consistent-return */
+  function onEachLandParcelFeature(feature, layer){
+    if(feature.properties.parcel_no && feature.properties.parcel_type){
+      const { long_x: longX, lat_y: latY, parcel_no: parcelNumber, parcel_type: parcelType, plot_sold: plotSold } = feature.properties
+      const markerProps = {
+        geoLatY: parseFloat(latY) || 0,
+        geoLongX: parseFloat(longX) || 0,
+        parcelNumber,
+        parcelType,
+        plotSold,
+      }
+
+      const markerContents = renderToString(<LandParcelMarker key={Math.random} markerProps={markerProps} />)
+      return layer.bindPopup(markerContents)
+    }
+  }
+
+    /* istanbul ignore next */
+    /* eslint-disable consistent-return */
+  function onEachPoiLayerFeature(feature, layer){
+    if(feature.properties.parcel_no && feature.properties.parcel_type === 'poi'){
+      layer.on({
+        click: handlePoiLayerClick,
+      })
+    }
+  }
+
+    /* istanbul ignore next */
+  function getMapCenterPoint(){
+    if(!communityName) {
+      return [0, 0];
     }
 
-    const markerContents = renderToString(<LandParcelMarker key={Math.random} markerProps={markerProps} />)
-    return layer.bindPopup(markerContents)
+    return centerPoint[communityName.toLowerCase()]
   }
-}
-
-  /* istanbul ignore next */
-  /* eslint-disable consistent-return */
-function onEachPoiLayerFeature(feature, layer){
-  if(feature.properties.parcel_no && feature.properties.parcel_type === 'poi'){
-    layer.on({
-      click: handlePoiLayerClick,
-    })
-  }
-}
-
-  /* istanbul ignore next */
-function getMapCenterPoint(){
-  if(!communityName) {
-    return [0, 0];
-  }
-
-  return centerPoint[communityName.toLowerCase()]
-}
 
   if (loading || loadingCommunityData) return <></>;
 
@@ -174,22 +198,21 @@ function getMapCenterPoint(){
            animate
            easeLinearity={0.35}
          >
-           {communityName && communityName !== 'Ciudad Morazán'
-           ? (
-             <MapLayers>
-               <LayersControl.Overlay name="Nkwashi Land Parcels">
+           <MapLayers>
+             {Array.isArray(properties) && properties?.length && (
+               <LayersControl.Overlay name="Land Parcels">
                  <FeatureGroup>
-                   {properties && properties.map(({ geom, parcelNumber, parcelType, plotSold }) => {
-                    if(checkValidGeoJSON(geom)){
-                      // mutate properties, add parcelNo, parcelType
-                      const feature = JSON.parse(geom)
-                      feature.properties.parcel_no = parcelNumber
-                      feature.properties.parcel_type = parcelType
-                      feature.properties.plot_sold = plotSold
-                      return featureCollection.features.push(feature)
-                    }
-                    return featureCollection.features.push(JSON.parse(emptyPolygonFeature))
-                    })}
+                   {properties.map(({ geom, parcelNumber, parcelType, plotSold }) => {
+                     if(checkValidGeoJSON(geom)){
+                        // mutate properties, add parcelNo, parcelType
+                        const feature = JSON.parse(geom)
+                        feature.properties.parcel_no = parcelNumber
+                        feature.properties.parcel_type = parcelType
+                        feature.properties.plot_sold = plotSold
+                        return featureCollection.features.push(feature)
+                      }
+                      return featureCollection.features.push(JSON.parse(emptyPolygonFeature))
+                      })}
                    <GeoJSON
                      key={Math.random()}
                      data={featureCollection}
@@ -198,26 +221,28 @@ function getMapCenterPoint(){
                    />
                  </FeatureGroup>
                </LayersControl.Overlay>
-               <LayersControl.Overlay name="Nkwashi Points of Interest">
+              )}
+             {Array.isArray(poiData) && poiData?.length && (
+               <LayersControl.Overlay checked name="Points of Interest">
                  <FeatureGroup>
-                   {poiData && poiData.map(({ id, geom, parcelNumber, parcelType }) => {
-                          if(checkValidGeoJSON(geom)){
-                            const feature = JSON.parse(geom)
-                            const markerProps = {
-                              geoLatY: feature.properties.lat_y || 0,
-                              geoLongX: feature.properties.long_x || 0,
-                              iconUrl: feature.properties.icon || '',
-                              poiName: feature.properties.poi_name || 'Point of Interest',
-                              geomType: feature.geometry.type || 'Polygon'
+                   {poiData.map(({ id, geom, parcelNumber, parcelType }) => {
+                            if(checkValidGeoJSON(geom)){
+                              const feature = JSON.parse(geom)
+                              const markerProps = {
+                                geoLatY: feature.properties.lat_y || 0,
+                                geoLongX: feature.properties.long_x || 0,
+                                iconUrl: feature.properties.icon || '',
+                                poiName: feature.properties.poi_name || 'Point of Interest',
+                                geomType: feature.geometry.type || 'Polygon'
+                            }
+                            feature.properties.id = id
+                            feature.properties.parcel_no = parcelNumber
+                            feature.properties.parcel_type = parcelType
+                            poiFeatureCollection.features.push(feature)
+                            return (<PointsOfInterestMarker key={id} markerProps={markerProps} />)
                           }
-                          feature.properties.id = id
-                          feature.properties.parcel_no = parcelNumber
-                          feature.properties.parcel_type = parcelType
-                          poiFeatureCollection.features.push(feature)
-                          return (<PointsOfInterestMarker key={id} markerProps={markerProps} />)
-                        }
-                        return poiFeatureCollection.features.push(JSON.parse(emptyPolygonFeature))
-                      })}
+                          return poiFeatureCollection.features.push(JSON.parse(emptyPolygonFeature))
+                        })}
                    <GeoJSON
                      key={Math.random()}
                      data={poiFeatureCollection}
@@ -226,33 +251,26 @@ function getMapCenterPoint(){
                    />
                  </FeatureGroup>
                </LayersControl.Overlay>
-               <LayersControl.Overlay checked name="Nkwashi Sub-urban Areas">
+                )}
+             {subUrbanData && (
+               <LayersControl.Overlay name="Sub-urban Areas">
                  <FeatureGroup>
-                   <SubUrbanLayer />
-                 </FeatureGroup>
-               </LayersControl.Overlay> 
-               <LayersControl.Overlay name="Nkwashi Coverage Area">
-                 <FeatureGroup>
-                   <Popup>
-                     <Typography variant="body2">Nkwashi Estate</Typography>
-                   </Popup>
-                   <GeoJSON key={Math.random()} data={NkwashiCoverageData} style={geoJSONStyle} />
+                   <SubUrbanLayer data={subUrbanData} />
                  </FeatureGroup>
                </LayersControl.Overlay>
-             </MapLayers>
-             ) : (
-               <MapLayers>
-                 <LayersControl.Overlay name="Ciudad Morazán Coverage Area">
-                   <FeatureGroup>
-                     <Popup>
-                       <Typography variant="body2">Ciudad Morazán City</Typography>
-                     </Popup>
-                     <GeoJSON key={Math.random()} data={CMCoverageData} style={geoJSONStyle} />
-                   </FeatureGroup>
-                 </LayersControl.Overlay>
-               </MapLayers>
-             )}
-           {communityName !== 'Ciudad Morazán' && (<LandParcelLegend />)}
+               )}
+             {coverageData && (
+               <LayersControl.Overlay checked name="Coverage Area">
+                 <FeatureGroup>
+                   <Popup>
+                     <Typography variant="body2">{communityName}</Typography>
+                   </Popup>
+                   <GeoJSON key={Math.random()} data={coverageData} style={geoJSONStyle} />
+                 </FeatureGroup>
+               </LayersControl.Overlay>
+              )}
+           </MapLayers>
+           {properties && properties?.length > 0 && (<LandParcelLegend />)}
          </Map>
        </div>
      </>

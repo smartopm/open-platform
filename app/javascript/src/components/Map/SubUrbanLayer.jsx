@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
+import PropTypes from 'prop-types'
 import { useLeaflet } from 'react-leaflet'
 import L from 'leaflet'
-import NkwashiSuburbBoundaryData from '../../data/nkwashi_suburb_boundary.json'
 import SubUrbanLegendContent from './SubUrbanLegendContent'
 import { getHexColor } from '../../utils/helpers'
 
@@ -16,7 +16,7 @@ function geoJSONStyle(feature) {
   }
 }
 
-export default function SubUrbanLayer(){
+export default function SubUrbanLayer({ data }){
   const { map } = useLeaflet()
 
   /* istanbul ignore next */
@@ -34,18 +34,11 @@ export default function SubUrbanLayer(){
     /* eslint-disable react/prop-types */
     info.update = function(props){
       info.div.innerHTML =
-        `<h5>Est. Population Census/Nkwashi Sub-urban</h5>
-        <p>Index: 1 Plot == 1 Building == 1 Household </p>${ 
+        `<h6>Sub-urban Legend</h6>${ 
         props
-          ? `<b>${ 
-            props.sub_urban 
-            }</b><br />${ 
-            Number(props.estimated_population)
-            } people / mi<sup>2</sup>`
+          ? `<b>${String(props.sub_urban)}`
           : 'Hover over a Sub-urban area'}`
     };
-
-    info.addTo(map)
 
     /* istanbul ignore next */
     const highlightFeature = function(e) {
@@ -83,10 +76,27 @@ export default function SubUrbanLayer(){
       })
     }
 
-    geojson = L.geoJson(NkwashiSuburbBoundaryData, {
-      style: geoJSONStyle,
-      onEachFeature
-    })?.addTo(map)
+     /* eslint-disable no-unused-expressions */
+    /* istanbul ignore next */
+    map?.on('overlayadd', function(layer){
+      if(layer?.name === 'Sub-urban Areas'){
+        geojson = L.geoJson(data, {
+          style: geoJSONStyle,
+          onEachFeature
+        })?.addTo(map)
+
+        info.addTo(map);
+      }
+    })
+    
+      /* eslint-disable no-unused-expressions */
+      /* istanbul ignore next */
+    map?.on('overlayremove', function(layer){
+      if(layer?.name === 'Sub-urban Areas'){
+        map?.removeControl(geojson);
+        map?.removeControl(info);
+      }
+    })
   }, [map])
 
   return (
@@ -129,4 +139,9 @@ export default function SubUrbanLayer(){
       <SubUrbanLegendContent />
     </>
     )
+}
+
+SubUrbanLayer.propTypes = {
+  // eslint-disable-next-line react/forbid-prop-types
+  data: PropTypes.object.isRequired,
 }

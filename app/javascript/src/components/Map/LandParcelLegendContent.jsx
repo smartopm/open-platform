@@ -13,8 +13,6 @@ export default function LandParcelLegendContent() {
       <CardContent>
         <Typography variant='body2' component="h5">
           Legend
-          <br />
-          Nkwashi Plots
         </Typography>
         <br />
         <Grid container spacing={1}>

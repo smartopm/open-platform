@@ -5,6 +5,7 @@ import L from 'leaflet'
 import { getHexColor } from '../../utils/helpers'
 
 /* istanbul ignore next */
+/* eslint-disable no-unused-expressions */
 export default function SubUrbanLegendContent(){
   const { map } = useLeaflet()
 
@@ -31,7 +32,17 @@ export default function SubUrbanLegendContent(){
       return div
     }
 
-    legend.addTo(map)
+     map?.on('overlayadd', function(layer){
+      if(layer?.name === 'Sub-urban Areas'){
+        legend.addTo(map);
+      }
+    })
+    
+    map?.on('overlayremove', function(layer){
+      if(layer?.name === 'Sub-urban Areas'){
+        map?.removeControl(legend);
+      }
+    })
   }, [map])
 
   return null

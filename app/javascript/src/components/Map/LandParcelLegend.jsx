@@ -9,17 +9,32 @@ export default function LandParcelLegend(){
   const { map } = useLeaflet()
 
    useEffect(() => {
-    const legend = L.control({ position: 'topright' })
+    const landParcelLegend = L.control({ position: 'topright' })
 
-    legend.onAdd = () => {
-      const div = L.DomUtil.create('div', 'legend')
+    landParcelLegend.onAdd = () => {
+      const div = L.DomUtil.create('div', 'landParcelLegend')
       div.innerHTML = renderToString(<LandParcelLegendContent />)
       return div
     }
 
-    legend.addTo(map);
+      /* istanbul ignore next */
+      /* eslint-disable no-unused-expressions */
+    map?.on('overlayadd', function(layer){
+      if(layer?.name === 'Land Parcels'){
+        landParcelLegend.addTo(map);
+      }
+    })
+    
+      /* istanbul ignore next */
+      /* eslint-disable no-unused-expressions */
+    map?.on('overlayremove', function(layer){
+      if(layer?.name === 'Land Parcels'){
+        map?.removeControl(landParcelLegend);
+      }
+    })
 
-    return () => legend.remove() // cleanup
+
+    return () => landParcelLegend.remove() // cleanup
   }, [map])
 
   return null
