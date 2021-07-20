@@ -1,3 +1,4 @@
+/* eslint-disable import/no-extraneous-dependencies */
 import React, { useContext, useState } from 'react';
 import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core/styles';
@@ -5,7 +6,6 @@ import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 import { useQuery } from 'react-apollo';
 import { useHistory } from 'react-router';
-// eslint-disable-next-line import/no-extraneous-dependencies
 import groupBy from 'lodash/groupBy';
 import { Context } from '../../../containers/Provider/AuthStateProvider';
 import { FullScreenDialog } from '../../../components/Dialog';
@@ -13,6 +13,8 @@ import CenteredContent from '../../../components/CenteredContent';
 import FormSubmissionsQuery from '../graphql/report_queries';
 import Loading from '../../../shared/Loading';
 import { formatError } from '../../../utils/helpers';
+import { formatIfDate } from '../../../components/DateContainer';
+
 
 export default function Report() {
   const classes = useStyles();
@@ -20,7 +22,7 @@ export default function Report() {
   const [printOpen, setPrintIsOpen] = useState(true);
   const history = useHistory();
   const { data, error, loading } = useQuery(FormSubmissionsQuery, {
-    variables: { formId: '1c039ab4-fb74-469e-a743-00cfc60033ef' },
+    variables: { formId: '1c039ab4-fb74-469e-a743-00cfc60033ef' }, // replace this ID
     fetchPolicy: 'cache-and-network'
   });
 
@@ -39,8 +41,6 @@ export default function Report() {
     return <CenteredContent>{formatError(error.message)}</CenteredContent>
   }
   const formattedData = groupBy(data?.formSubmissions, 'fieldName');
-  console.log(formattedData);
-  console.log(data?.formSubmissions);
 
   let highestRecords = 1;
   return (
@@ -123,7 +123,7 @@ export default function Report() {
                   <Grid key={i} container direction="row" spacing={2}>
                     {Object.keys(formattedData).map(head => (
                       <Grid item xs key={head}>
-                        {formattedData[String(head)][Number(i)]?.value || '-'}
+                        {formatIfDate(formattedData[String(head)][Number(i)]?.value) || '-'}
                       </Grid>
                     ))}
                   </Grid>

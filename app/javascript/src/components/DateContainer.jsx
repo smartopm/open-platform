@@ -14,6 +14,18 @@ export function dateToString(date) {
 }
 
 /**
+ * Checks whether the given value is a date, if it is then it formats it properly
+ * @param {String} value
+ */
+ export function formatIfDate(value){
+  if (!Number.isNaN(Date.parse(value))) {
+    return dateToString(value)
+  }
+  return value
+}
+
+
+/**
  *
  * @param {Number} days
  * @returns Date
