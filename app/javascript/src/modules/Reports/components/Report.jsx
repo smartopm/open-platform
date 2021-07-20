@@ -27,8 +27,6 @@ export default function Report() {
   const history = useHistory();
   const [loadReportData, { data, error, loading, called }] = useLazyQuery(FormSubmissionsQuery, {
     variables: {
-      // replace this ID
-      formId: '1c039ab4-fb74-469e-a743-00cfc60033ef',
       startDate: reportingDate.startDate,
       endDate: reportingDate.endDate
     },
@@ -58,10 +56,6 @@ export default function Report() {
   function generateReport() {
     loadReportData();
   }
-
-  // if (error) {
-  //   return <CenteredContent>{formatError(error.message)}</CenteredContent>;
-  // }
   const formattedData = groupBy(data?.formSubmissions, 'fieldName');
 
   let highestRecords = 1;
@@ -105,7 +99,9 @@ export default function Report() {
             </CenteredContent>
             <br />
             {/* <p>You need to select both start and end date to generate the report</p> */}
-            {/* {error.message} */}
+            {
+              error ? formatError(error.message) : null
+            }
           </Container>
         </DetailsDialog>
         <FullScreenDialog

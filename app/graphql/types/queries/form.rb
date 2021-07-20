@@ -52,9 +52,8 @@ module Types::Queries::Form
     # Get form properties with values for user
     field :form_submissions, [Types::FormSubmissionType], null: true do
       description 'Get user form properties by form user id'
-      argument :id, GraphQL::Types::ID, required: true
-      argument :start_date, String, required: false
-      argument :end_date, String, required: false
+      argument :start_date, String, required: true
+      argument :end_date, String, required: true
     end
   end
   # rubocop:enable Metrics/BlockLength
@@ -121,13 +120,14 @@ module Types::Queries::Form
                    .user_form_properties.eager_load(:form_property).with_attached_image
   end
 
-  def form_submissions(id:, start_date:, end_date:)
+  def form_submissions(start_date:, end_date:)
     unless context[:current_user]&.admin?
       raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
     end
 
     submissions = []
-    form_name = "Customs Report Form"
+    # form_name = "Customs Report Form"
+    form_name = "Demo Form V3"
     last_version = Forms::Form.where('name ILIKE ?', "#{form_name}%").order(version_number: :desc).first
     Forms::Form.where(grouping_id: last_version.grouping_id).eager_load(form_users:{user_form_properties:[:form_property]}).where(form_users: {created_at: start_date..end_date}).each do |form|
       form.form_users.each do |form_user|
