@@ -15,7 +15,7 @@ import CenteredContent from '../../../components/CenteredContent';
 import FormSubmissionsQuery from '../graphql/report_queries';
 import { Spinner } from '../../../shared/Loading';
 import { formatError } from '../../../utils/helpers';
-import { formatIfDate } from '../../../components/DateContainer';
+import { dateToString, formatIfDate } from '../../../components/DateContainer';
 import DatePickerDialog from '../../../components/DatePickerDialog';
 
 export default function Report() {
@@ -121,14 +121,14 @@ export default function Report() {
               </h3>
             )}
           <CenteredContent>
-            <Typography className={classes.planTitle}>Customs Forms Report</Typography>
+            <Typography className={classes.planTitle}>Log of hours of service of sub-administrator in customs post</Typography>
           </CenteredContent>
           <div style={{ marginTop: '50px' }}>
             <Grid container>
               <Grid item xs={6}>
                 <Grid container spacing={1}>
                   <Grid item xs={4} className={classes.title}>
-                    T1
+                    Customs post
                   </Grid>
                   <Grid item xs={8} data-testid="client-name" className={classes.title}>
                     TC1
@@ -144,10 +144,10 @@ export default function Report() {
                 </Grid>
                 <Grid container spacing={1}>
                   <Grid item xs={4} className={classes.title}>
-                    T3
+                    Period
                   </Grid>
                   <Grid item xs={8} className={classes.title}>
-                    TC3
+                    {`${dateToString(reportingDate.startDate)} - ${dateToString(reportingDate.endDate)}`}
                   </Grid>
                 </Grid>
               </Grid>
