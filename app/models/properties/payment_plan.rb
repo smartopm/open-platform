@@ -94,7 +94,6 @@ module Properties
         duration.months
       end
     end
-
     # Transfers payments on PaymentPlan to different PaymentPlan.
     #
     # @param [PaymentPlan] plan
