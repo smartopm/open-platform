@@ -62,16 +62,8 @@ RSpec.describe Mutations::Payment::PaymentPlanCreate do
                                                               }).as_json
       expect(result['errors']).to be_nil
       expect(result.dig('data', 'paymentPlanCreate', 'paymentPlan', 'id')).not_to be_nil
-
-      # make sure there is no duplicate payment plan
-      b_result = DoubleGdpSchema.execute(payment_plan_mutation, variables: variables,
-                                                                context: {
-                                                                  current_user: admin,
-                                                                  site_community: user.community,
-                                                                }).as_json
-      expect(b_result.dig('errors', 0, 'message'))
-        .to include 'Start date Payment plan duration overlaps with other payment plans'
     end
+
     it 'should validate given variables inputs' do
       variables = {
         landParcelId: land_parcel.id,

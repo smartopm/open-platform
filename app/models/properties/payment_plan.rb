@@ -14,8 +14,6 @@ module Properties
     validates :payment_day,
               numericality: { only_integer: true, greater_than: 0, less_than_or_equal_to: 28 }
 
-    validate :plan_uniqueness_per_duration
-
     enum status: { active: 0, cancelled: 1, deleted: 2 }
 
     has_paper_trail
@@ -71,25 +69,43 @@ module Properties
       amount > pending_balance ? pending_balance : amount
     end
 
-    private
-
-    def set_pending_balance
-      self.pending_balance = monthly_amount * duration_in_month
+    # Transfers payments on PaymentPlan to different PaymentPlan.
+    #
+    # @param [PaymentPlan] plan
+    #
+    # @return [void]
+    def transfer_payments(plan)
+      plan.plan_payments.each do |payment|
+        payment_attributes = payment.attributes.slice(
+          'amount',
+          'status',
+          'transaction_id',
+          'user_id',
+          'community_id'
+        )
+        new_payment = plan_payments.build(payment_attributes)
+        new_payment.note = "transfer from plan #{plan.payment_plan_name}"
+        new_payment.save
+        payment.note = "transfer to plan #{payment_plan_name}"
+        payment.cancelled!
+      end
+      update_pending_balance(plan_payments.sum(:amount))
     end
 
-    # Validates whether payment plan is unique per duration.
-    # * adds error if payment plan overlaps with other payment plan.
+    # Returns PaymentPlan name by concatenating parcel number and start date.
     #
-    # @return [Array]
-    #
-    # Todo:- Change association between land parcel and payment to many-to-many.
-    # Todo:- Use 'land_parcel.payment_plans' once establish many-to-many association.
-    def plan_uniqueness_per_duration
-      plans = PaymentPlan.where(land_parcel_id: land_parcel_id).where.not(id: id)
-      is_overlapping = plans.any? { |plan| duration.overlaps?(plan.duration) }
-      return unless is_overlapping
+    # @return [String]
+    def payment_plan_name
+      "#{land_parcel.parcel_number} - #{start_date.strftime('%Y-%m-%d')}"
+    end
 
-      errors.add(:start_date, :plan_overlaps_with_other_plan)
+    private
+
+    # Assigns pending balance(product of monthly amount & duration_in_month).
+    #
+    # @return [void]
+    def set_pending_balance
+      self.pending_balance = monthly_amount * duration_in_month
     end
   end
 end

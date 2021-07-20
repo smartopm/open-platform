@@ -4,7 +4,46 @@ require 'rails_helper'
 
 RSpec.describe Properties::PaymentPlan, type: :model do
   let(:user) { create(:user_with_community) }
-  let(:land_parcel) { create(:land_parcel, community_id: user.community_id) }
+  let(:community) { user.community }
+  let(:land_parcel) { create(:land_parcel, community_id: community.id) }
+  let(:new_land_parcel) { create(:land_parcel, community_id: community.id) }
+  let(:payment_plan) do
+    create(
+      :payment_plan,
+      land_parcel_id: land_parcel.id,
+      user_id: user.id,
+      monthly_amount: 100,
+      duration_in_month: 12
+    )
+  end
+  let(:new_payment_plan) do
+    create(
+      :payment_plan,
+      land_parcel_id: land_parcel.id,
+      user_id: user.id,
+      monthly_amount: 100,
+      duration_in_month: 12
+    )
+  end
+  let(:transaction) do
+    create(
+      :transaction,
+      user_id: user.id,
+      community_id: community.id,
+      depositor_id: user.id,
+      amount: 500
+    )
+  end
+  let(:plan_payment) do
+    create(
+      :plan_payment,
+      user_id: user.id,
+      community_id: community.id,
+      transaction_id: transaction.id,
+      payment_plan_id: payment_plan.id,
+      amount: 500
+    )
+  end
 
   describe 'schema' do
     it { is_expected.to have_db_column(:id).of_type(:uuid) }
@@ -47,34 +86,6 @@ RSpec.describe Properties::PaymentPlan, type: :model do
         .is_greater_than(0)
         .is_less_than_or_equal_to(28)
     end
-
-    describe '#plan_uniqueness_per_duration' do
-      context 'when payment plan already exist for a duration' do
-        before do
-          create(:payment_plan, land_parcel_id: land_parcel.id, user_id: user.id)
-        end
-
-        it 'adds validation error for plan duration' do
-          plan = user.payment_plans.build(
-            land_parcel_id: land_parcel.id, start_date: Time.zone.now,
-          )
-          plan.valid?
-          expect(plan.errors.full_messages)
-            .to include('Start date Payment plan duration overlaps with other payment plans')
-        end
-      end
-
-      context 'when payment plan does not exist for a duration' do
-        it 'does not add validation error for plan duration' do
-          plan = user.payment_plans.build(
-            land_parcel_id: land_parcel.id, start_date: Time.zone.now,
-          )
-          plan.valid?
-          expect(plan.errors.full_messages)
-            .to_not include('Start date Payment plan duration overlaps with other payment plans')
-        end
-      end
-    end
   end
 
   describe 'callbacks' do
@@ -96,6 +107,26 @@ RSpec.describe Properties::PaymentPlan, type: :model do
         monthly_amount: 10,
       )
       expect(plan.pending_balance).to eql 50
+    end
+  end
+
+  describe 'Instance Method' do
+    describe '#transfer_payments' do
+      before do
+        plan_payment
+        new_payment_plan.transfer_payments(payment_plan)
+        plan_payment.reload
+      end
+
+      it 'transfers payments to other payment plan' do
+        payment = new_payment_plan.plan_payments.sample
+        expect(plan_payment.note).to eql("transfer to plan #{new_payment_plan.payment_plan_name}")
+        expect(plan_payment.status).to eql('cancelled')
+        expect(payment.status).to eql('paid')
+        expect(payment.amount).to eql(500.0)
+        expect(payment.note).to eql("transfer from plan #{payment_plan.payment_plan_name}")
+        expect(new_payment_plan.user_id).to eql(user.id)
+      end
     end
   end
 end
