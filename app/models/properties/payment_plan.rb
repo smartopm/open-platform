@@ -74,6 +74,7 @@ module Properties
     # @param [PaymentPlan] plan
     #
     # @return [void]
+    # rubocop:disable Metrics/MethodLength
     def transfer_payments(plan)
       plan.plan_payments.each do |payment|
         payment_attributes = payment.attributes.slice(
@@ -81,7 +82,7 @@ module Properties
           'status',
           'transaction_id',
           'user_id',
-          'community_id'
+          'community_id',
         )
         new_payment = plan_payments.build(payment_attributes)
         new_payment.note = "transfer from plan #{plan.payment_plan_name}"
@@ -91,6 +92,7 @@ module Properties
       end
       update_pending_balance(plan_payments.sum(:amount))
     end
+    # rubocop:enable Metrics/MethodLength
 
     # Returns PaymentPlan name by concatenating parcel number and start date.
     #
