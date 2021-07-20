@@ -15,11 +15,15 @@ export function dateToString(date) {
 
 /**
  * Checks whether the given value is a date, if it is then it formats it properly
+ * Also checks if the value has checked like this {"checked"=>"3", "label"=>"Ano"} and picks the value
  * @param {String} value
  */
  export function formatIfDate(value){
   if (!Number.isNaN(Date.parse(value))) {
     return dateToString(value)
+  }
+  if (value?.includes('checked')) {
+    return value.split('"')[3]
   }
   return value
 }
