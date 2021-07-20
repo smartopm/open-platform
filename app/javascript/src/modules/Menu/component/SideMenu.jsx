@@ -45,6 +45,12 @@ const SideMenu = ({ toggleDrawer, menuItems, userType, direction, communityFeatu
       history.push(item.routeProps.path.replace(':id', params.id));
       return;
     }
+
+    if (item.featureName === 'DynamicMenu') {
+      window.location.href = item.routeProps.path;
+      return;
+    }
+
     history.push(item.routeProps.path);
   }
 
