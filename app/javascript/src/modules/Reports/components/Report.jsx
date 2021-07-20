@@ -34,11 +34,11 @@ export default function Report() {
   });
 
   useEffect(() => {
-    if (called && !loading) {
+    if (called && !loading && !error) {
       setRangePickerOpen(false);
       setPrintIsOpen(true);
     }
-  }, [called, loading]);
+  }, [called, loading, error]);
 
   function printReport() {
     document.title = `Customs-Report-${new Date().toISOString()}`;
@@ -46,12 +46,9 @@ export default function Report() {
   }
 
   function handleCloseReport() {
-    setPrintIsOpen(!printOpen);
+    setPrintIsOpen(false);
     history.push('/reports');
   }
-
-
-  function handleModal() {}
 
   function generateReport() {
     loadReportData();
@@ -61,105 +58,103 @@ export default function Report() {
   let highestRecords = 1;
   return (
     <>
-      <div>
-        <DetailsDialog
-          handleClose={handleModal}
-          open={rangerPickerOpen}
-          title="Pick reporting date range"
-          color="default"
-        >
-          <Container>
-            <Grid container direction="row" spacing={4}>
-              <Grid item>
-                <DatePickerDialog
-                  selectedDate={reportingDate.startDate}
-                  handleDateChange={date => setReportingDate({ ...reportingDate, startDate: date })}
-                  label="Pick Report Start Date"
-                />
-              </Grid>
-              <Grid item>
-                <DatePickerDialog
-                  selectedDate={reportingDate.endDate}
-                  handleDateChange={date => setReportingDate({ ...reportingDate, endDate: date })}
-                  label="Pick Report End Date"
-                />
-              </Grid>
-            </Grid>
-            <br />
-            <CenteredContent>
-              <Button
-                variant="outlined"
-                color="primary"
-                onClick={generateReport}
-                disabled={loading || !reportingDate.startDate || !reportingDate.endDate}
-                startIcon={loading && <Spinner />}
-              >
-                Generate Report
-              </Button>
-            </CenteredContent>
-            <br />
-            {/* <p>You need to select both start and end date to generate the report</p> */}
-            {
-              error ? formatError(error.message) : null
-            }
-          </Container>
-        </DetailsDialog>
-        <FullScreenDialog
-          open={!rangerPickerOpen && called}
-          handleClose={handleCloseReport}
-          title="Plan Customs-Report"
-          actionText="Print"
-          handleSubmit={printReport}
-        >
-          <div className="print" style={{ margin: '57px 155px' }}>
-            {authState.user.community?.logoUrl ? (
-              <img
-                src={authState.user.community?.logoUrl}
-                alt="community-logo"
-                height="80"
-                width="150"
-                style={{ margin: '30px auto', display: 'block' }}
+      <DetailsDialog
+        handleClose={handleCloseReport}
+        open={rangerPickerOpen}
+        title="Pick reporting date range"
+        color="default"
+      >
+        <Container>
+          <Grid container direction="row" spacing={4}>
+            <Grid item>
+              <DatePickerDialog
+                selectedDate={reportingDate.startDate}
+                handleDateChange={date => setReportingDate({ ...reportingDate, startDate: date })}
+                label="Pick Report Start Date"
               />
+            </Grid>
+            <Grid item>
+              <DatePickerDialog
+                selectedDate={reportingDate.endDate}
+                handleDateChange={date => setReportingDate({ ...reportingDate, endDate: date })}
+                label="Pick Report End Date"
+              />
+            </Grid>
+          </Grid>
+          <br />
+          <CenteredContent>
+            <Button
+              variant="outlined"
+              color="primary"
+              onClick={generateReport}
+              disabled={loading || !reportingDate.startDate || !!error?.message}
+              startIcon={loading && <Spinner />}
+            >
+              Generate Report
+            </Button>
+          </CenteredContent>
+          <br />
+          <Typography component="span" color="secondary">
+            {error ? formatError(error.message) : null}
+          </Typography>
+        </Container>
+      </DetailsDialog>
+      <FullScreenDialog
+        open={!rangerPickerOpen && called && printOpen}
+        handleClose={handleCloseReport}
+        title="Customs-Report"
+        actionText="Print"
+        handleSubmit={printReport}
+      >
+        <div className="print" style={{ margin: '57px 155px' }}>
+          {authState.user.community?.logoUrl ? (
+            <img
+              src={authState.user.community?.logoUrl}
+              alt="community-logo"
+              height="80"
+              width="150"
+              style={{ margin: '30px auto', display: 'block' }}
+            />
             ) : (
               <h3 style={{ textAlign: 'center', marginTop: '15px' }}>
                 {authState.community?.name}
               </h3>
             )}
-            <CenteredContent>
-              <Typography className={classes.planTitle}>Customs Forms Report</Typography>
-            </CenteredContent>
-            <div style={{ marginTop: '50px' }}>
-              <Grid container>
-                <Grid item xs={6}>
-                  <Grid container spacing={1}>
-                    <Grid item xs={4} className={classes.title}>
-                      T1
-                    </Grid>
-                    <Grid item xs={8} data-testid="client-name" className={classes.title}>
-                      TC1
-                    </Grid>
+          <CenteredContent>
+            <Typography className={classes.planTitle}>Customs Forms Report</Typography>
+          </CenteredContent>
+          <div style={{ marginTop: '50px' }}>
+            <Grid container>
+              <Grid item xs={6}>
+                <Grid container spacing={1}>
+                  <Grid item xs={4} className={classes.title}>
+                    T1
                   </Grid>
-                  <Grid container spacing={1}>
-                    <Grid item xs={4} className={classes.title}>
-                      T2
-                    </Grid>
-                    <Grid item xs={8} className={classes.title} data-testid="nrc">
-                      TC2
-                    </Grid>
+                  <Grid item xs={8} data-testid="client-name" className={classes.title}>
+                    TC1
                   </Grid>
-                  <Grid container spacing={1}>
-                    <Grid item xs={4} className={classes.title}>
-                      T3
-                    </Grid>
-                    <Grid item xs={8} className={classes.title}>
-                      TC3
-                    </Grid>
+                </Grid>
+                <Grid container spacing={1}>
+                  <Grid item xs={4} className={classes.title}>
+                    T2
+                  </Grid>
+                  <Grid item xs={8} className={classes.title} data-testid="nrc">
+                    TC2
+                  </Grid>
+                </Grid>
+                <Grid container spacing={1}>
+                  <Grid item xs={4} className={classes.title}>
+                    T3
+                  </Grid>
+                  <Grid item xs={8} className={classes.title}>
+                    TC3
                   </Grid>
                 </Grid>
               </Grid>
-              <div className="plan-header" style={{ marginTop: 60 }}>
-                <Grid container spacing={5}>
-                  {Object.keys(formattedData).map(header => {
+            </Grid>
+            <div className="plan-header" style={{ marginTop: 60 }}>
+              <Grid container spacing={5}>
+                {Object.keys(formattedData).map(header => {
                     if (formattedData[String(header)].length > highestRecords)
                       highestRecords = formattedData[String(header)].length;
                     return (
@@ -174,68 +169,67 @@ export default function Report() {
                       </Grid>
                     );
                   })}
-                </Grid>
-                <Divider className={classes.divider} />
-                {Array.from(Array(highestRecords)).map((_val, i) => (
+              </Grid>
+              <Divider className={classes.divider} />
+              {Array.from(Array(highestRecords)).map((_val, i) => (
                   // eslint-disable-next-line react/no-array-index-key
-                  <Grid key={i} container direction="row" spacing={2}>
-                    {Object.keys(formattedData).map(head => (
-                      <Grid item xs key={head}>
-                        {formatIfDate(formattedData[String(head)][Number(i)]?.value) || '-'}
-                      </Grid>
+                <Grid key={i} container direction="row" spacing={2}>
+                  {Object.keys(formattedData).map(head => (
+                    <Grid item xs key={head}>
+                      {formatIfDate(formattedData[String(head)][Number(i)]?.value) || '-'}
+                    </Grid>
                     ))}
-                  </Grid>
-                ))}
-              </div>
-              <Grid container>
-                <Grid item xs={6}>
-                  {/* there should be a divider here */}
-                  <Divider className={classes.divider} />
-                  <div>
-                    <hr />
-                    <b style={{ fontSize: '16px' }}>D Title</b>
-                    {' '}
-                    <br />
-                    <Grid container spacing={1}>
-                      <Grid item xs={3} className={classes.title}>
-                        D1
-                      </Grid>
-                    </Grid>
-                    <Grid container spacing={1}>
-                      <Grid item xs={3} className={classes.title}>
-                        D2
-                      </Grid>
-                    </Grid>
-                    <Grid container spacing={1}>
-                      <Grid item xs={3} className={classes.title}>
-                        D3
-                      </Grid>
-                    </Grid>
-                  </div>
                 </Grid>
-                <Grid item xs={6}>
-                  <Divider className={classes.divider} />
+                ))}
+            </div>
+            <Grid container>
+              <Grid item xs={6}>
+                {/* there should be a divider here */}
+                <Divider className={classes.divider} />
+                <div>
+                  <hr />
+                  <b style={{ fontSize: '16px' }}>D Title</b>
+                  {' '}
+                  <br />
                   <Grid container spacing={1}>
-                    <Grid item xs={8} className={classes.title} style={{ textAlign: 'right' }}>
-                      AD1
+                    <Grid item xs={3} className={classes.title}>
+                      D1
                     </Grid>
                   </Grid>
                   <Grid container spacing={1}>
-                    <Grid item xs={8} className={classes.title} style={{ textAlign: 'right' }}>
-                      AD2
+                    <Grid item xs={3} className={classes.title}>
+                      D2
                     </Grid>
                   </Grid>
                   <Grid container spacing={1}>
-                    <Grid item xs={8} className={classes.title} style={{ textAlign: 'right' }}>
-                      AD3
+                    <Grid item xs={3} className={classes.title}>
+                      D3
                     </Grid>
+                  </Grid>
+                </div>
+              </Grid>
+              <Grid item xs={6}>
+                <Divider className={classes.divider} />
+                <Grid container spacing={1}>
+                  <Grid item xs={8} className={classes.title} style={{ textAlign: 'right' }}>
+                    AD1
+                  </Grid>
+                </Grid>
+                <Grid container spacing={1}>
+                  <Grid item xs={8} className={classes.title} style={{ textAlign: 'right' }}>
+                    AD2
+                  </Grid>
+                </Grid>
+                <Grid container spacing={1}>
+                  <Grid item xs={8} className={classes.title} style={{ textAlign: 'right' }}>
+                    AD3
                   </Grid>
                 </Grid>
               </Grid>
-            </div>
+            </Grid>
           </div>
-        </FullScreenDialog>
-      </div>
+        </div>
+      </FullScreenDialog>
     </>
   );
 }
