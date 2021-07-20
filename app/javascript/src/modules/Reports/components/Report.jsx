@@ -1,30 +1,46 @@
 /* eslint-disable import/no-extraneous-dependencies */
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
-import { useQuery } from 'react-apollo';
+import { useLazyQuery } from 'react-apollo';
 import { useHistory } from 'react-router';
+import Container from '@material-ui/core/Container';
 import groupBy from 'lodash/groupBy';
+import { Button } from '@material-ui/core';
 import { Context } from '../../../containers/Provider/AuthStateProvider';
-import { FullScreenDialog } from '../../../components/Dialog';
+import { DetailsDialog, FullScreenDialog } from '../../../components/Dialog';
 import CenteredContent from '../../../components/CenteredContent';
 import FormSubmissionsQuery from '../graphql/report_queries';
-import Loading from '../../../shared/Loading';
+import { Spinner } from '../../../shared/Loading';
 import { formatError } from '../../../utils/helpers';
 import { formatIfDate } from '../../../components/DateContainer';
-
+import DatePickerDialog from '../../../components/DatePickerDialog';
 
 export default function Report() {
   const classes = useStyles();
   const authState = useContext(Context);
-  const [printOpen, setPrintIsOpen] = useState(true);
+  const [printOpen, setPrintIsOpen] = useState(false);
+  const [reportingDate, setReportingDate] = useState({ startDate: null, endDate: null });
+  const [rangerPickerOpen, setRangePickerOpen] = useState(true);
   const history = useHistory();
-  const { data, error, loading } = useQuery(FormSubmissionsQuery, {
-    variables: { formId: '1c039ab4-fb74-469e-a743-00cfc60033ef' }, // replace this ID
+  const [loadReportData, { data, error, loading, called }] = useLazyQuery(FormSubmissionsQuery, {
+    variables: {
+      // replace this ID
+      formId: '1c039ab4-fb74-469e-a743-00cfc60033ef',
+      startDate: reportingDate.startDate,
+      endDate: reportingDate.endDate
+    },
     fetchPolicy: 'cache-and-network'
   });
+
+  useEffect(() => {
+    if (called && !loading) {
+      setRangePickerOpen(false);
+      setPrintIsOpen(true);
+    }
+  }, [called, loading]);
 
   function printReport() {
     document.title = `Customs-Report-${new Date().toISOString()}`;
@@ -33,21 +49,67 @@ export default function Report() {
 
   function handleCloseReport() {
     setPrintIsOpen(!printOpen);
-    history.push('/customs_report');
+    history.push('/reports');
   }
 
-  if (loading) return <Loading />;
-  if(error){
-    return <CenteredContent>{formatError(error.message)}</CenteredContent>
+
+  function handleModal() {}
+
+  function generateReport() {
+    loadReportData();
   }
+
+  // if (error) {
+  //   return <CenteredContent>{formatError(error.message)}</CenteredContent>;
+  // }
   const formattedData = groupBy(data?.formSubmissions, 'fieldName');
 
   let highestRecords = 1;
   return (
     <>
       <div>
+        <DetailsDialog
+          handleClose={handleModal}
+          open={rangerPickerOpen}
+          title="Pick reporting date range"
+          color="default"
+        >
+          <Container>
+            <Grid container direction="row" spacing={4}>
+              <Grid item>
+                <DatePickerDialog
+                  selectedDate={reportingDate.startDate}
+                  handleDateChange={date => setReportingDate({ ...reportingDate, startDate: date })}
+                  label="Pick Report Start Date"
+                />
+              </Grid>
+              <Grid item>
+                <DatePickerDialog
+                  selectedDate={reportingDate.endDate}
+                  handleDateChange={date => setReportingDate({ ...reportingDate, endDate: date })}
+                  label="Pick Report End Date"
+                />
+              </Grid>
+            </Grid>
+            <br />
+            <CenteredContent>
+              <Button
+                variant="outlined"
+                color="primary"
+                onClick={generateReport}
+                disabled={loading || !reportingDate.startDate || !reportingDate.endDate}
+                startIcon={loading && <Spinner />}
+              >
+                Generate Report
+              </Button>
+            </CenteredContent>
+            <br />
+            {/* <p>You need to select both start and end date to generate the report</p> */}
+            {/* {error.message} */}
+          </Container>
+        </DetailsDialog>
         <FullScreenDialog
-          open={printOpen}
+          open={!rangerPickerOpen && called}
           handleClose={handleCloseReport}
           title="Plan Customs-Report"
           actionText="Print"
@@ -128,7 +190,6 @@ export default function Report() {
                     ))}
                   </Grid>
                 ))}
-
               </div>
               <Grid container>
                 <Grid item xs={6}>
