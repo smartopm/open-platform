@@ -189,10 +189,6 @@ en:
               visitor_name_required: Visitor name required
             ref_id:
               ref_required: Must be associated with a user
-        properties/payment_plan:
-          attributes:
-            start_date:
-              plan_overlaps_with_other_plan: Payment plan duration overlaps with other payment plans
         users/user:
           attributes:
             phone_number:
