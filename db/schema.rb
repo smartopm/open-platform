@@ -558,6 +558,7 @@ ActiveRecord::Schema.define(version: 2021_07_30_144115) do
     t.datetime "updated_at", precision: 6, null: false
     t.string "manual_receipt_number"
     t.integer "automated_receipt_number"
+    t.string "note"
     t.index ["community_id"], name: "index_plan_payments_on_community_id"
     t.index ["manual_receipt_number", "community_id"], name: "index_plan_payments_on_manual_receipt_number_and_community_id", unique: true
     t.index ["payment_plan_id"], name: "index_plan_payments_on_payment_plan_id"
