@@ -50,6 +50,7 @@ RSpec.describe Mutations::PaymentPlan::PaymentPlanCreate do
       GQL
     end
 
+<<<<<<< HEAD
     context 'when co owners are not selected' do
       it 'creates a payment plan for one landparcel' do
         variables = {
@@ -101,6 +102,28 @@ RSpec.describe Mutations::PaymentPlan::PaymentPlanCreate do
         expect(payment_plan_resut['id']).not_to be_nil
         expect(payment_plan_resut['coOwners'].size).to eql 2
       end
+=======
+    it 'creates a payment plan for one landparcel' do
+      variables = {
+        landParcelId: land_parcel.id,
+        userId: user.id,
+        startDate: '2021-02-13',
+        status: 1,
+        planType: 'lease',
+        percentage: '50%',
+        durationInMonth: (rand * 10).ceil,
+        monthlyAmount: 0,
+        totalAmount: 0,
+        paymentDay: 2,
+      }
+      result = DoubleGdpSchema.execute(payment_plan_mutation, variables: variables,
+                                                              context: {
+                                                                current_user: admin,
+                                                                site_community: user.community,
+                                                              }).as_json
+      expect(result['errors']).to be_nil
+      expect(result.dig('data', 'paymentPlanCreate', 'paymentPlan', 'id')).not_to be_nil
+>>>>>>> Added mutation transfer payment plan to other plot
     end
 
     it 'should validate given variables inputs' do
