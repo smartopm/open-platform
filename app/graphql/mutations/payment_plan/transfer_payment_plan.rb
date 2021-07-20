@@ -9,6 +9,8 @@ module Mutations
 
       field :payment_plan, Types::PaymentPlanType, null: true
 
+      # rubocop:disable Metrics/AbcSize
+      # rubocop:disable Metrics/MethodLength
       def resolve(vals)
         payment_plan = Properties::PaymentPlan.find_by(id: vals[:payment_plan_id])
         raise_payment_plan_not_found_error(payment_plan)
@@ -22,7 +24,7 @@ module Mutations
             'id',
             'land_parcel_id',
             'created_at',
-            'updated_at'
+            'updated_at',
           )
           new_payment_plan = land_parcel.payment_plans.create!(plan_attributes)
           new_payment_plan.transfer_payments(payment_plan)
@@ -31,6 +33,8 @@ module Mutations
           raise GraphQL::ExecutionError, payment_plan.errors.full_messages
         end
       end
+      # rubocop:enable Metrics/AbcSize
+      # rubocop:enable Metrics/MethodLength
 
       # Verifies if current user is admin or not.
       def authorized?(_vals)

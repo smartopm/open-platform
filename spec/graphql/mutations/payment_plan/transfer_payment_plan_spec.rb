@@ -9,16 +9,20 @@ RSpec.describe Mutations::PaymentPlan::TransferPaymentPlan do
     let!(:admin) { create(:admin_user, community_id: community.id) }
     let!(:account) { create(:account, user_id: user.id, community_id: community.id) }
     let!(:land_parcel) { create(:land_parcel, community_id: community.id) }
-    let!(:land_parcel_account) { create(:land_parcel_account, land_parcel: land_parcel, account: account) }
+    let!(:land_parcel_account) do
+      create(:land_parcel_account, land_parcel: land_parcel, account: account)
+    end
     let!(:new_land_parcel) { create(:land_parcel, community_id: community.id) }
-    let!(:land_parcel_account) { create(:land_parcel_account, land_parcel: new_land_parcel, account: account) }
+    let!(:land_parcel_account) do
+      create(:land_parcel_account, land_parcel: new_land_parcel, account: account)
+    end
     let!(:payment_plan) do
       create(
         :payment_plan,
         land_parcel_id: land_parcel.id,
         user_id: user.id,
         monthly_amount: 100,
-        duration_in_month: 12
+        duration_in_month: 12,
       )
     end
     let!(:transaction) do
@@ -27,7 +31,7 @@ RSpec.describe Mutations::PaymentPlan::TransferPaymentPlan do
         user_id: user.id,
         community_id: community.id,
         depositor_id: user.id,
-        amount: 500
+        amount: 500,
       )
     end
     let!(:plan_payment) do
@@ -37,11 +41,11 @@ RSpec.describe Mutations::PaymentPlan::TransferPaymentPlan do
         community_id: community.id,
         transaction_id: transaction.id,
         payment_plan_id: payment_plan.id,
-        amount: 500
+        amount: 500,
       )
     end
 
-    let(:transfer_payment_plan) {
+    let(:transfer_payment_plan) do
       <<-GQL
         mutation transferPaymentPlan(
           $paymentPlanId: ID!
@@ -57,13 +61,13 @@ RSpec.describe Mutations::PaymentPlan::TransferPaymentPlan do
           }
         }
       GQL
-    }
+    end
     describe '#resolve' do
       context 'when payment plan is not present for payment_plan id' do
         it 'raises payment plan not found error' do
           variables = {
             paymentPlanId: '1f7e1787-cd4f-44e5-847f-96f665c4dc5',
-            landParcelId: new_land_parcel.id
+            landParcelId: new_land_parcel.id,
           }
           result = DoubleGdpSchema.execute(transfer_payment_plan,
                                            variables: variables,
@@ -79,7 +83,7 @@ RSpec.describe Mutations::PaymentPlan::TransferPaymentPlan do
         it 'raises land parcel not found error' do
           variables = {
             paymentPlanId: payment_plan.id,
-            landParcelId: '1f7e1787-cd4f-44e5-847f-96f665c4dc5'
+            landParcelId: '1f7e1787-cd4f-44e5-847f-96f665c4dc5',
           }
           result = DoubleGdpSchema.execute(transfer_payment_plan,
                                            variables: variables,
@@ -95,7 +99,7 @@ RSpec.describe Mutations::PaymentPlan::TransferPaymentPlan do
         it 'creates new payment plan and transfers plan payments to new payment plan' do
           variables = {
             paymentPlanId: payment_plan.id,
-            landParcelId: new_land_parcel.id
+            landParcelId: new_land_parcel.id,
           }
           result = DoubleGdpSchema.execute(transfer_payment_plan,
                                            variables: variables,
@@ -120,7 +124,7 @@ RSpec.describe Mutations::PaymentPlan::TransferPaymentPlan do
         it 'raises unauthorized error' do
           variables = {
             paymentPlanId: payment_plan.id,
-            landParcelId: new_land_parcel.id
+            landParcelId: new_land_parcel.id,
           }
           result = DoubleGdpSchema.execute(transfer_payment_plan,
                                            variables: variables,
