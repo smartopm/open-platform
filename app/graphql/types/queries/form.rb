@@ -50,7 +50,7 @@ module Types::Queries::Form
     end
 
     # Get form properties with values for user
-    field :form_submissions, [Types::UserFormPropertiesType], null: true do
+    field :form_submissions, [Types::FormSubmissionType], null: true do
       description 'Get user form properties by form user id'
       argument :id, GraphQL::Types::ID, required: true
     end
@@ -124,11 +124,18 @@ module Types::Queries::Form
     #   raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
     # end
 
-    submissions = nil
+    submissions = []
 
     context[:site_community].forms.find(id).form_users.each do |form_user|
-      submissions = form_user.user_form_properties.includes(:form_property)
+      # sub = form_user.user_form_properties.includes(:form_property)
+      form_user.user_form_properties.includes(:form_property).each do |property|
+        format_sub = { value: property.value, field_name: property.form_property.field_name, id: SecureRandom.uuid}
+        puts format_sub.to_json
+        submissions << format_sub
+      end
+      # submissions << form_user.user_form_properties.includes(:form_property)
     end
+    puts submissions.to_json
     submissions
   end
 

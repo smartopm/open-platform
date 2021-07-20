@@ -3,16 +3,26 @@ import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
+import { useQuery } from 'react-apollo';
 import { useHistory } from 'react-router';
+// eslint-disable-next-line import/no-extraneous-dependencies
+import groupBy from 'lodash/groupBy';
 import { Context } from '../../../containers/Provider/AuthStateProvider';
 import { FullScreenDialog } from '../../../components/Dialog';
 import CenteredContent from '../../../components/CenteredContent';
+import FormSubmissionsQuery from '../graphql/report_queries';
+import Loading from '../../../shared/Loading';
+import { formatError } from '../../../utils/helpers';
 
 export default function Report() {
   const classes = useStyles();
   const authState = useContext(Context);
   const [printOpen, setPrintIsOpen] = useState(true);
   const history = useHistory();
+  const { data, error, loading } = useQuery(FormSubmissionsQuery, {
+    variables: { formId: '1c039ab4-fb74-469e-a743-00cfc60033ef' },
+    fetchPolicy: 'cache-and-network'
+  });
 
   function printReport() {
     document.title = `Customs-Report-${new Date().toISOString()}`;
@@ -24,6 +34,15 @@ export default function Report() {
     history.push('/customs_report');
   }
 
+  if (loading) return <Loading />;
+  if(error){
+    return <CenteredContent>{formatError(error.message)}</CenteredContent>
+  }
+  const formattedData = groupBy(data?.formSubmissions, 'fieldName');
+  console.log(formattedData);
+  console.log(data?.formSubmissions);
+
+  let highestRecords = 1;
   return (
     <>
       <div>
@@ -80,73 +99,36 @@ export default function Report() {
                   </Grid>
                 </Grid>
               </Grid>
-              <div className="plan-header" style={{ margin: '60px 0' }}>
-                <Grid container spacing={1}>
-                  <Grid
-                    item
-                    xs={2}
-                    className={classes.title}
-                    key="receipt_number"
-                    style={{ fontWeight: 700, color: '#2D2D2D' }}
-                  >
-                    Receipt Number
-                  </Grid>
-                  <Grid
-                    item
-                    xs={2}
-                    className={classes.title}
-                    key="payment_date"
-                    style={{ fontWeight: 700, color: '#2D2D2D' }}
-                  >
-                    Payment Date
-                  </Grid>
-                  <Grid
-                    item
-                    xs={2}
-                    className={classes.title}
-                    key="amount_paid"
-                    style={{ fontWeight: 700, color: '#2D2D2D' }}
-                  >
-                    Amount Paid
-                  </Grid>
-                  <Grid
-                    item
-                    xs={2}
-                    className={classes.title}
-                    key="installment_amount"
-                    style={{ fontWeight: 700, color: '#2D2D2D' }}
-                  >
-                    Installment Amount
-                  </Grid>
-                  <Grid
-                    item
-                    xs={2}
-                    className={classes.title}
-                    key="number_of_installements"
-                    style={{ fontWeight: 700, color: '#2D2D2D' }}
-                  >
-                    No. of Installments
-                  </Grid>
-                  <Grid
-                    item
-                    xs={1}
-                    className={classes.title}
-                    key="debit"
-                    style={{ fontWeight: 700, color: '#2D2D2D' }}
-                  >
-                    Debit
-                  </Grid>
-                  <Grid
-                    item
-                    xs={1}
-                    className={classes.title}
-                    key="balance"
-                    style={{ fontWeight: 700, color: '#2D2D2D' }}
-                  >
-                    Unallocated Balance
-                  </Grid>
+              <div className="plan-header" style={{ marginTop: 60 }}>
+                <Grid container spacing={5}>
+                  {Object.keys(formattedData).map(header => {
+                    if (formattedData[String(header)].length > highestRecords)
+                      highestRecords = formattedData[String(header)].length;
+                    return (
+                      <Grid
+                        item
+                        xs
+                        className={classes.title}
+                        key={header}
+                        style={{ fontWeight: 700, color: '#2D2D2D' }}
+                      >
+                        {header}
+                      </Grid>
+                    );
+                  })}
                 </Grid>
                 <Divider className={classes.divider} />
+                {Array.from(Array(highestRecords)).map((_val, i) => (
+                  // eslint-disable-next-line react/no-array-index-key
+                  <Grid key={i} container direction="row" spacing={2}>
+                    {Object.keys(formattedData).map(head => (
+                      <Grid item xs key={head}>
+                        {formattedData[String(head)][Number(i)]?.value || '-'}
+                      </Grid>
+                    ))}
+                  </Grid>
+                ))}
+
               </div>
               <Grid container>
                 <Grid item xs={6}>
@@ -154,7 +136,7 @@ export default function Report() {
                   <Divider className={classes.divider} />
                   <div>
                     <hr />
-                    <b style={{ fontSize: '16px' }}>D Title</b> 
+                    <b style={{ fontSize: '16px' }}>D Title</b>
                     {' '}
                     <br />
                     <Grid container spacing={1}>
