@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 # form queries
+# rubocop:disable Metrics/ModuleLength
 module Types::Queries::Form
   extend ActiveSupport::Concern
 
@@ -109,8 +110,8 @@ module Types::Queries::Form
                                 .limit(limit).offset(offset)
     { form_name: form.name, form_users: form_users }
   end
-  # rubocop:enable Metrics/AbcSize
 
+  # rubocop:disable Metrics/MethodLength
   def form_user_properties(user_id:, form_user_id:)
     unless context[:current_user]&.admin? || context[:current_user]&.id.eql?(user_id)
       raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
@@ -127,18 +128,24 @@ module Types::Queries::Form
 
     submissions = []
     # form_name = "Customs Report Form"
-    form_name = "Demo Form V3"
-    last_version = Forms::Form.where('name ILIKE ?', "#{form_name}%").order(version_number: :desc).first
-    Forms::Form.where(grouping_id: last_version.grouping_id).eager_load(form_users:{user_form_properties:[:form_property]}).where(form_users: {created_at: start_date..end_date}).each do |form|
+    form_name = 'Demo Form V3'
+    last_version = Forms::Form.where('name ILIKE ?', "#{form_name}%")
+                              .order(version_number: :desc).first
+    Forms::Form.where(grouping_id: last_version.grouping_id)
+               .eager_load(form_users: { user_form_properties: [:form_property] })
+               .where(form_users: { created_at: start_date..end_date }).each do |form|
       form.form_users.each do |form_user|
-      form_user.user_form_properties.each do |property|
-        format_sub = { value: property.value, field_name: property.form_property.field_name, id: SecureRandom.uuid}
-        submissions << format_sub
+        form_user.user_form_properties.each do |property|
+          prop = { value: property.value, field_name: property.form_property.field_name,
+                   id: SecureRandom.uuid }
+          submissions << prop
+        end
       end
-    end
     end
     submissions
   end
+  # rubocop:enable Metrics/MethodLength
+  # rubocop:enable Metrics/AbcSize
 
   private
 
@@ -182,3 +189,4 @@ module Types::Queries::Form
     query
   end
 end
+# rubocop:enable Metrics/ModuleLength

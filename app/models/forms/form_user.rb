@@ -23,8 +23,6 @@ module Forms
       attributes user: ['user.name']
     end
 
-    scope :submitted_between, lambda {|start_date, end_date| where("created_at >= ? AND created_at <= ?", start_date, end_date )}
-
     def create_form_task(hostname)
       user.generate_note(
         body: "<a href=\"https://#{hostname}/user/#{user.id}\">#{user.name}</a> Submitted
