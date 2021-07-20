@@ -176,4 +176,24 @@ RSpec.describe Properties::PaymentPlan, type: :model do
       end
     end
   end
+
+  describe 'Instance Method' do
+    describe '#transfer_payments' do
+      before do
+        plan_payment
+        new_payment_plan.transfer_payments(payment_plan)
+        plan_payment.reload
+      end
+
+      it 'transfers payments to other payment plan' do
+        payment = new_payment_plan.plan_payments.sample
+        expect(plan_payment.note).to eql("transfer to plan #{new_payment_plan.payment_plan_name}")
+        expect(plan_payment.status).to eql('cancelled')
+        expect(payment.status).to eql('paid')
+        expect(payment.amount).to eql(500.0)
+        expect(payment.note).to eql("transfer from plan #{payment_plan.payment_plan_name}")
+        expect(new_payment_plan.user_id).to eql(user.id)
+      end
+    end
+  end
 end
