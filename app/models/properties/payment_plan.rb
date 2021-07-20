@@ -87,12 +87,45 @@ module Properties
         duration.months
       end
     end
+    
+    # Transfers payments on PaymentPlan to different PaymentPlan.
+    #
+    # @param [PaymentPlan] plan
+    #
+    # @return [void]
+    def transfer_payments(plan)
+      plan.plan_payments.each do |payment|
+        payment_attributes = payment.attributes.slice(
+          'amount',
+          'status',
+          'transaction_id',
+          'user_id',
+          'community_id'
+        )
+        new_payment = plan_payments.build(payment_attributes)
+        new_payment.note = "transfer from plan #{plan.payment_plan_name}"
+        new_payment.save
+        payment.note = "transfer to plan #{payment_plan_name}"
+        payment.cancelled!
+      end
+      update_pending_balance(plan_payments.sum(:amount))
+    end
     # rubocop:enable Metrics/MethodLength
+
+    # Returns PaymentPlan name by concatenating parcel number and start date.
+    #
+    # @return [String]
+    def payment_plan_name
+      "#{land_parcel.parcel_number} - #{start_date.strftime('%Y-%m-%d')}"
+    end
 
     private
 
+    # Assigns pending balance(product of monthly amount & duration_in_month).
+    #
+    # @return [void]
     def set_pending_balance
-      self.pending_balance = installment_amount * duration
+      self.pending_balance = installmemt_amount * duration
     end
   end
 end

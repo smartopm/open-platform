@@ -145,5 +145,8 @@ module Types
 
     # substatus_logs
     field :substatus_log_update, mutation: Mutations::SubstatusLog::SubstatusLogUpdate
+
+    # payment_plan
+    field :transfer_payment_plan, mutation: Mutations::PaymentPlan::TransferPaymentPlan
   end
 end
