@@ -99,6 +99,7 @@ module Properties
     # @param [PaymentPlan] plan
     #
     # @return [void]
+    # rubocop:disable Metrics/MethodLength
     def transfer_payments(plan)
       plan.plan_payments.each do |payment|
         payment_attributes = payment.attributes.slice(
