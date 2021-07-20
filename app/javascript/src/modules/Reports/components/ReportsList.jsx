@@ -5,7 +5,7 @@ import { useHistory } from 'react-router';
 import DataList from '../../../shared/list/DataList'
 import Text from '../../../shared/Text';
 
-export default function Report(){
+export default function ReportList(){
     const { t } = useTranslation('form')
     const history = useHistory()
     const reportHeader = [

@@ -1,4 +1,5 @@
-import ReportList from './components/Report';
+import ReportList from './components/ReportsList';
+import Report from './components/Report'
 
 export default {
   routeProps: {
@@ -13,7 +14,7 @@ export default {
       routeProps: {
         path: '/customs_report', // reports/:id
         exact: true,
-        component: ReportList // change to actual component that shows one report
+        component: Report // change to actual component that shows one report
       },
       name: 'Customs Report',
       accessibleBy: ['admin']
