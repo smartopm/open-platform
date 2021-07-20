@@ -131,6 +131,7 @@ module Properties
         payment.save!
       end
     end
+    # rubocop:enable Metrics/MethodLength
 
     def create_split_payment(plan, payment, payment_attributes)
       split_payment = user.general_payment_plan.plan_payments.build(payment_attributes)
