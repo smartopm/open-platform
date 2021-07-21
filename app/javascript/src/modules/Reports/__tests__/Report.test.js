@@ -9,7 +9,7 @@ import { Context } from '../../../containers/Provider/AuthStateProvider';
 import userMock from '../../../__mocks__/userMock';
 
 describe('Report Component', () => {
-  it('should mount component correctly', async () => {
+  it('should mount component correctly', () => {
     const data = [
       {
         id: 'd57b81b7-6388-401b-ae4d-28cadfb92aae',

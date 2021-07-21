@@ -15,7 +15,7 @@ export default function ReportHeader({ reportingDate }) {
           <Grid item xs={4} className={classes.title}>
             <b>{t('misc.customs')}</b>
           </Grid>
-          <Grid item xs={8} data-testid="client-name" className={classes.title}>
+          <Grid item xs={8} className={classes.title}>
             ZEDE Moraźan - 9100
           </Grid>
         </Grid>
@@ -23,13 +23,13 @@ export default function ReportHeader({ reportingDate }) {
           <Grid item xs={4} className={classes.title}>
             <b>{t('misc.sub_admin')}</b>
           </Grid>
-          <Grid item xs={8} className={classes.title} data-testid="nrc">
+          <Grid item xs={8} className={classes.title}>
             -
           </Grid>
         </Grid>
         <Grid container spacing={1}>
           <Grid item xs={4} className={classes.title}>
-            <b>Period</b>
+            <b>{t('misc.reporting_period')}</b>
           </Grid>
           <Grid item xs={8} className={classes.title}>
             {`${dateToString(reportingDate.startDate)} - ${dateToString(reportingDate.endDate)}`}

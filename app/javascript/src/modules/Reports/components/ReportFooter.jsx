@@ -9,7 +9,7 @@ export default function ReportFooter(){
     return (
       <Grid container>
         <Grid item xs={6}>
-          <div style={{ marginTop: 80, textAlign: 'center' }}>
+          <div style={{ marginTop: 100, textAlign: 'center' }}>
             <hr className={classes.hr} />
             <Grid container spacing={1}>
               <Grid item xs className={classes.title}>
@@ -29,7 +29,7 @@ export default function ReportFooter(){
           </div>
         </Grid>
         <Grid item xs={6}>
-          <div style={{ marginTop: 80}}>
+          <div style={{ marginTop: 100}}>
             <hr className={classes.hr} />
             <Grid
               container
@@ -64,7 +64,7 @@ const useStyles = makeStyles({
       color: '#656565'
     },
     hr: {
-        width: '80%',
+        width: '70%',
         height: 1,
         backgroundColor: '#000000'
       }
