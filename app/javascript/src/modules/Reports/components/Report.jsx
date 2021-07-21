@@ -121,7 +121,7 @@ export default function Report() {
               </h3>
             )}
           <CenteredContent>
-            <Typography className={classes.planTitle}>Log of hours of service of sub-administrator in customs post</Typography>
+            <Typography className={classes.reportTitle}>Log of hours of service of sub-administrator in customs post</Typography>
           </CenteredContent>
           <div style={{ marginTop: '50px' }}>
             <Grid container>
@@ -204,7 +204,7 @@ export default function Report() {
                   <Grid
                     container
                     direction="column"
-                    justifyContent="center"
+                    // justifyContent="center"
                     alignItems="center"
                     spacing={1}
                   >
@@ -215,7 +215,7 @@ export default function Report() {
                   <Grid
                     container
                     direction="column"
-                    justifyContent="center"
+                    // justifyContent="center"
                     alignItems="center"
                     spacing={1}
                   >
@@ -234,30 +234,15 @@ export default function Report() {
 }
 
 const useStyles = makeStyles({
-  container: {
-    margin: '80px 284px'
-  },
   title: {
     fontWeight: 400,
     fontSize: '16px',
     color: '#656565'
   },
-  name: {
-    fontWeight: 700,
-    fontSize: '16px',
-    color: '#2D2D2D'
-  },
-  details: {
-    display: 'flex',
-    justifyContent: 'spaceBetween'
-  },
-  paymentInfo: {
-    width: '500px'
-  },
   divider: {
     margin: '19px 0 27px 0'
   },
-  planTitle: {
+  reportTitle: {
     color: '#2D2D2D',
     fontSize: '20px',
     fontWeight: 700,
