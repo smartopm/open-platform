@@ -8,6 +8,7 @@ import { useHistory } from 'react-router';
 import Container from '@material-ui/core/Container';
 import groupBy from 'lodash/groupBy';
 import { Button } from '@material-ui/core';
+import { useTranslation } from 'react-i18next';
 import { Context } from '../../../containers/Provider/AuthStateProvider';
 import { DetailsDialog, FullScreenDialog } from '../../../components/Dialog';
 import CenteredContent from '../../../components/CenteredContent';
@@ -25,6 +26,7 @@ export default function Report() {
   const [printOpen, setPrintIsOpen] = useState(false);
   const [reportingDate, setReportingDate] = useState({ startDate: null, endDate: null });
   const [rangerPickerOpen, setRangePickerOpen] = useState(true);
+  const { t } = useTranslation('report')
   const history = useHistory();
   const [loadReportData, { data, error, loading, called }] = useLazyQuery(FormSubmissionsQuery, {
     variables: {
@@ -42,7 +44,7 @@ export default function Report() {
   }, [called, loading, error]);
 
   function printReport() {
-    document.title = `Customs-Report-${new Date().toISOString()}`;
+    document.title = `${t('misc.report_title')}-${new Date().toISOString()}`;
     window.print();
   }
 
@@ -61,7 +63,7 @@ export default function Report() {
       <DetailsDialog
         handleClose={handleCloseReport}
         open={rangerPickerOpen}
-        title="Pick reporting date range"
+        title={t('misc.pick_reporting_range')}
         color="default"
       >
         <Container>
@@ -70,14 +72,14 @@ export default function Report() {
               <DatePickerDialog
                 selectedDate={reportingDate.startDate}
                 handleDateChange={date => setReportingDate({ ...reportingDate, startDate: date })}
-                label="Pick Report Start Date"
+                label={t('misc.pick_start_date')}
               />
             </Grid>
             <Grid item>
               <DatePickerDialog
                 selectedDate={reportingDate.endDate}
                 handleDateChange={date => setReportingDate({ ...reportingDate, endDate: date })}
-                label="Pick Report End Date"
+                label={t('misc.pick_end_date')}
               />
             </Grid>
           </Grid>
@@ -90,7 +92,7 @@ export default function Report() {
               disabled={loading || !reportingDate.startDate || !!error?.message}
               startIcon={loading && <Spinner />}
             >
-              Generate Report
+              {t('misc.generate_report')}
             </Button>
           </CenteredContent>
           <br />
@@ -102,8 +104,8 @@ export default function Report() {
       <FullScreenDialog
         open={!rangerPickerOpen && called && printOpen}
         handleClose={handleCloseReport}
-        title="Customs-Report"
-        actionText="Print"
+        title={t('misc.report_title')}
+        actionText={t('misc.print_report')}
         handleSubmit={printReport}
       >
         <div className="print" style={{ margin: '57px 155px' }}>
@@ -122,7 +124,7 @@ export default function Report() {
               </h3>
             )}
           <CenteredContent>
-            <Typography className={classes.reportTitle}>Log of hours of service of sub-administrator in customs post</Typography>
+            <Typography className={classes.reportTitle}>{t('misc.report_header_text')}</Typography>
           </CenteredContent>
           <div style={{ marginTop: 50 }}>
             <ReportHeader reportingDate={reportingDate} />
