@@ -222,7 +222,6 @@ export default function PaymentPlanModal({
               value={inputValue.installmentAmount}
               onChange={handleInputChange}
               name="installmentAmount"
-            // style={{ width: '100%' }}
               type="number"
               required
               InputProps={{
@@ -325,7 +324,8 @@ export default function PaymentPlanModal({
                 Total Value
               </Typography>
               <Typography variant="h5" color="primary">
-                {`${currency} `}{inputValue.duration * inputValue.installmentAmount}
+                {`${currency} `}
+                {inputValue.duration * inputValue.installmentAmount}
               </Typography>
             </>
           )}
