@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe Mutations::Payment::PaymentPlanCancel do
+RSpec.describe Mutations::PaymentPlan::PaymentPlanCancel do
   describe 'payment plan cancel' do
     let!(:user) { create(:user_with_community) }
     let!(:community) { user.community }
@@ -10,7 +10,7 @@ RSpec.describe Mutations::Payment::PaymentPlanCancel do
     let!(:land_parcel) { create(:land_parcel, community_id: community.id) }
     let!(:payment_plan) do
       create(:payment_plan, land_parcel_id: land_parcel.id, user_id: user.id, plot_balance: 0,
-                            monthly_amount: 100)
+                            installment_amount: 100)
     end
     let(:payment_plan_cancel) do
       <<~GQL

@@ -85,7 +85,7 @@ export default function PaymentReceipt({ data, open, handleClose, currencyData }
                       <Grid item xs={8} className={classes.title}>
                         {formatMoney(currencyData, data?.paymentPlan?.planValue)}
                         (
-                        {data?.paymentPlan?.durationInMonth}
+                        {data?.paymentPlan?.duration}
                         )
                       </Grid>
                     </Grid>
@@ -391,7 +391,7 @@ PaymentReceipt.propTypes = {
       statementPaidAmount: PropTypes.string,
       pendingBalance: PropTypes.string,
       unallocatedAmount: PropTypes.string,
-      durationInMonth: PropTypes.string,
+      duration: PropTypes.string,
       user: PropTypes.shape({
         name: PropTypes.string,
         extRefId: PropTypes.string

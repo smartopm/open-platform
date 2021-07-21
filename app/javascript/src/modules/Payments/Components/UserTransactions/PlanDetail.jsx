@@ -50,7 +50,7 @@ export default function PlanDetail({ open, handleModalClose, planData, currencyD
               <Typography className={classes.fieldTitle}>Plan Duration</Typography>
             </Grid>
             <Grid item xs={6} className={classes.fieldContent}>
-              {`${planData.durationInMonth} months`}
+              {`${planData.duration} months`}
             </Grid>
           </Grid>
           <Divider className={classes.divider} />
@@ -86,7 +86,7 @@ export default function PlanDetail({ open, handleModalClose, planData, currencyD
               <Typography className={classes.fieldTitle}>Amount</Typography>
             </Grid>
             <Grid item xs={6} className={classes.fieldContent}>
-              {`${formatMoney(currencyData, planData.monthlyAmount)} monthly`}
+              {`${formatMoney(currencyData, planData.installmentAmount)} monthly`}
             </Grid>
           </Grid>
           <Divider className={classes.divider} />
@@ -150,10 +150,10 @@ const useStyles = makeStyles(() => ({
       name: PropTypes.string
     }),
     startDate: PropTypes.string,
-    durationInMonth: PropTypes.number,
+    duration: PropTypes.number,
     status: PropTypes.string,
     planType: PropTypes.string,
-    monthlyAmount: PropTypes.number,
+    installmentAmount: PropTypes.number,
     planValue: PropTypes.number,
     endDate: PropTypes.string,
     landParcel: PropTypes.shape({

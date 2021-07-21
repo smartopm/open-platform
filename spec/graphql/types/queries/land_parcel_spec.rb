@@ -94,16 +94,16 @@ RSpec.describe Types::Queries::LandParcel do
       end
     end
 
-    describe 'user_land_parcel' do
+    describe 'user_land_parcels' do
       let!(:land_parcel_2) { create(:land_parcel, community_id: current_user.community_id) }
       let!(:payment_plan) do
         create(:payment_plan, land_parcel_id: land_parcel.id,
-                              user_id: current_user.id, monthly_amount: 10, duration_in_month: 1)
+                              user_id: current_user.id, installment_amount: 10, duration: 1)
       end
 
-      let(:user_land_parcel_query) do
+      let(:user_land_parcels_query) do
         %(query {
-            userLandParcel(userId: "#{current_user.id}"){
+            userLandParcels(userId: "#{current_user.id}"){
               id
             }
           })
@@ -129,13 +129,13 @@ RSpec.describe Types::Queries::LandParcel do
       end
 
       it 'should return a single land parcel by id' do
-        result = DoubleGdpSchema.execute(user_land_parcel_query,
+        result = DoubleGdpSchema.execute(user_land_parcels_query,
                                          context: {
                                            current_user: admin_user,
                                            site_community: admin_user.community,
                                          }).as_json
-        expect(result.dig('data', 'userLandParcel', 1, 'id')).to eql land_parcel.id
-        expect(result.dig('data', 'userLandParcel').count).to eql 2
+        expect(result.dig('data', 'userLandParcels', 1, 'id')).to eql land_parcel.id
+        expect(result.dig('data', 'userLandParcels').count).to eql 2
       end
 
       it 'should return a single payment plan by id' do

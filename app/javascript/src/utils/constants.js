@@ -117,6 +117,13 @@ export const paymentPlanStatus = {
   2: 'deleted'
 }
 
+export const paymentPlanFrequency = {
+  0: 'daily',
+  1: 'weekly',
+  2: 'monthly',
+  3: 'quarterly'
+}
+
 export const paymentType = {
   'cheque/cashier_cheque': 'Cheque/Cashier Cheque',
   mobile_money: 'Mobile Money',

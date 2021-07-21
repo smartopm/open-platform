@@ -235,12 +235,12 @@ export default function PaymentReceipt({ paymentData, open, handleClose, currenc
                           className={classes.title}
                           style={{ textAlign: 'right' }}
                         >
-                          {formatMoney(currencyData, pay.paymentPlan?.monthlyAmount)}
+                          {formatMoney(currencyData, pay.paymentPlan?.installmentAmount)}
                         </Grid>
                       ))
                     ) : (
                       <Grid item xs={4} className={classes.title} style={{ textAlign: 'right' }}>
-                        {formatMoney(currencyData, paymentData?.paymentPlan?.monthlyAmount)}
+                        {formatMoney(currencyData, paymentData?.paymentPlan?.installmentAmount)}
                       </Grid>
                     )}
                   </Grid>
@@ -445,7 +445,7 @@ PaymentReceipt.propTypes = {
     }),
     paymentPlan: PropTypes.shape({
       id: PropTypes.string,
-      monthlyAmount: PropTypes.number,
+      installmentAmount: PropTypes.number,
       landParcel: PropTypes.shape({
         id: PropTypes.string,
         parcelNumber: PropTypes.string

@@ -12,9 +12,16 @@ RSpec.describe Types::Queries::Payment do
       create(:land_parcel, community_id: community.id,
                            parcel_number: 'Plot001')
     end
+    let(:another_payment_plan) do
+      create(:payment_plan, land_parcel_id: land_parcel.id, user_id: admin.id,
+                            installment_amount: 300)
+    end
+    let!(:plan_ownership) do
+      another_payment_plan.plan_ownerships.create(user_id: user.id)
+    end
     let!(:payment_plan) do
       create(:payment_plan, land_parcel_id: land_parcel.id, user_id: user.id,
-                            monthly_amount: 100)
+                            installment_amount: 100)
     end
     let!(:transaction) do
       create(:transaction, user_id: user.id, community_id: community.id, depositor_id: user.id,
@@ -31,7 +38,7 @@ RSpec.describe Types::Queries::Payment do
           userPlansWithPayments(userId: $userId) {
             planType
             pendingBalance
-            monthlyAmount
+            installmentAmount
             planPayments{
               amount
               userTransaction{
@@ -117,10 +124,11 @@ RSpec.describe Types::Queries::Payment do
                                              current_user: admin,
                                              site_community: community,
                                            })
+          expect(result.dig('data', 'userPlansWithPayments').size).to eql 2
           payment_plans_result = result.dig('data', 'userPlansWithPayments', 0)
           plan_payment_result = payment_plans_result['planPayments'][0]
           expect(payment_plans_result['planType']).to eql 'lease'
-          expect(payment_plans_result['monthlyAmount']).to eql 100.0
+          expect(payment_plans_result['installmentAmount']).to eql 100.0
           expect(payment_plans_result['pendingBalance']).to eql 700.0
           expect(plan_payment_result['amount']).to eql 500.0
           expect(plan_payment_result['userTransaction']['source']).to eql 'cash'

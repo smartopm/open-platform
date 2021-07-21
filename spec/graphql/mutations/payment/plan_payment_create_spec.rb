@@ -10,7 +10,7 @@ RSpec.describe Types::Queries::Balance do
     let!(:land_parcel) { create(:land_parcel, community_id: community.id) }
     let!(:payment_plan) do
       create(:payment_plan, land_parcel_id: land_parcel.id, user_id: user.id, plot_balance: 0,
-                            monthly_amount: 100)
+                            installment_amount: 100)
     end
     let!(:transaction) do
       create(:transaction, user_id: user.id, community_id: community.id, depositor_id: user.id,
@@ -24,7 +24,7 @@ RSpec.describe Types::Queries::Balance do
     let!(:other_land_parcel) { create(:land_parcel, community_id: community.id) }
     let!(:other_payment_plan) do
       create(:payment_plan, land_parcel_id: other_land_parcel.id, user_id: user.id,
-                            plot_balance: 0, monthly_amount: 200)
+                            plot_balance: 0, installment_amount: 200)
     end
     let(:payment_create_mutation) do
       <<~GQL

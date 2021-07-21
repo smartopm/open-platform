@@ -18,10 +18,24 @@ RSpec.describe Properties::PaymentPlan, type: :model do
     it { is_expected.to have_db_column(:plot_balance).of_type(:decimal) }
     it { is_expected.to have_db_column(:pending_balance).of_type(:decimal) }
     it { is_expected.to have_db_column(:total_amount).of_type(:decimal) }
-    it { is_expected.to have_db_column(:monthly_amount).of_type(:decimal) }
+    it { is_expected.to have_db_column(:installment_amount).of_type(:decimal) }
     it { is_expected.to have_db_column(:created_at).of_type(:datetime) }
     it { is_expected.to have_db_column(:updated_at).of_type(:datetime) }
     it { is_expected.to have_db_column(:payment_day).of_type(:integer) }
+    it { is_expected.to have_db_column(:duration).of_type(:integer) }
+    it { is_expected.to have_db_column(:frequency).of_type(:integer) }
+  end
+
+  describe 'enums' do
+    it do
+      is_expected.to define_enum_for(:status)
+        .with_values(active: 0, cancelled: 1, deleted: 2)
+    end
+
+    it do
+      is_expected.to define_enum_for(:frequency)
+        .with_values(daily: 0, weekly: 1, monthly: 2, quarterly: 3)
+    end
   end
 
   describe 'associations' do
@@ -38,6 +52,7 @@ RSpec.describe Properties::PaymentPlan, type: :model do
       is_expected.to have_many(:plan_payments)
         .class_name('Payments::PlanPayment')
     end
+    it { is_expected.to have_many(:plan_ownerships) }
   end
 
   describe 'validations' do
@@ -46,34 +61,6 @@ RSpec.describe Properties::PaymentPlan, type: :model do
         .only_integer
         .is_greater_than(0)
         .is_less_than_or_equal_to(28)
-    end
-
-    describe '#plan_uniqueness_per_duration' do
-      context 'when payment plan already exist for a duration' do
-        before do
-          create(:payment_plan, land_parcel_id: land_parcel.id, user_id: user.id)
-        end
-
-        it 'adds validation error for plan duration' do
-          plan = user.payment_plans.build(
-            land_parcel_id: land_parcel.id, start_date: Time.zone.now,
-          )
-          plan.valid?
-          expect(plan.errors.full_messages)
-            .to include('Start date Payment plan duration overlaps with other payment plans')
-        end
-      end
-
-      context 'when payment plan does not exist for a duration' do
-        it 'does not add validation error for plan duration' do
-          plan = user.payment_plans.build(
-            land_parcel_id: land_parcel.id, start_date: Time.zone.now,
-          )
-          plan.valid?
-          expect(plan.errors.full_messages)
-            .to_not include('Start date Payment plan duration overlaps with other payment plans')
-        end
-      end
     end
   end
 
@@ -92,8 +79,8 @@ RSpec.describe Properties::PaymentPlan, type: :model do
         plot_balance: 0,
         land_parcel: land_parcel,
         total_amount: 100,
-        duration_in_month: 5,
-        monthly_amount: 10,
+        duration: 5,
+        installment_amount: 10,
       )
       expect(plan.pending_balance).to eql 50
     end

@@ -37,7 +37,7 @@ mutation PaymentCreate(
         receiptNumber
         currentPlotPendingBalance
         paymentPlan {
-          monthlyAmount
+          installmentAmount
           landParcel {
             parcelNumber
           }
