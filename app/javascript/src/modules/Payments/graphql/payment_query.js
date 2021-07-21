@@ -53,7 +53,9 @@ export const UserPlans = gql`
       endDate
       frequency
       landParcel {
+        id
         parcelNumber
+        parcelType
       }
       planPayments {
         id
