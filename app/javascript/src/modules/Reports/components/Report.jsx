@@ -3,7 +3,6 @@ import React, { useContext, useState, useEffect } from 'react';
 import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
-import Divider from '@material-ui/core/Divider';
 import { useLazyQuery } from 'react-apollo';
 import { useHistory } from 'react-router';
 import Container from '@material-ui/core/Container';
@@ -15,8 +14,10 @@ import CenteredContent from '../../../components/CenteredContent';
 import FormSubmissionsQuery from '../graphql/report_queries';
 import { Spinner } from '../../../shared/Loading';
 import { formatError } from '../../../utils/helpers';
-import { dateToString, formatIfDate } from '../../../components/DateContainer';
 import DatePickerDialog from '../../../components/DatePickerDialog';
+import ReportFooter from './ReportFooter'
+import ReportData from './ReportData';
+import ReportHeader from './ReportHeader';
 
 export default function Report() {
   const classes = useStyles();
@@ -55,7 +56,6 @@ export default function Report() {
   }
   const formattedData = groupBy(data?.formSubmissions, 'fieldName');
 
-  let highestRecords = 1;
   return (
     <>
       <DetailsDialog
@@ -107,6 +107,7 @@ export default function Report() {
         handleSubmit={printReport}
       >
         <div className="print" style={{ margin: '57px 155px' }}>
+          {/* Find out why we aren't using the CommunityName component for this */}
           {authState.user.community?.logoUrl ? (
             <img
               src={authState.user.community?.logoUrl}
@@ -123,114 +124,10 @@ export default function Report() {
           <CenteredContent>
             <Typography className={classes.reportTitle}>Log of hours of service of sub-administrator in customs post</Typography>
           </CenteredContent>
-          <div style={{ marginTop: '50px' }}>
-            <Grid container>
-              <Grid item xs={6}>
-                <Grid container spacing={1}>
-                  <Grid item xs={4} className={classes.title}>
-                    <b>
-                      Customs post
-                    </b>
-                  </Grid>
-                  <Grid item xs={8} data-testid="client-name" className={classes.title}>
-                    ZEDE Moraźan - 9100
-                  </Grid>
-                </Grid>
-                <Grid container spacing={1}>
-                  <Grid item xs={4} className={classes.title}>
-                    <b>Sub-Administrator</b>
-                  </Grid>
-                  <Grid item xs={8} className={classes.title} data-testid="nrc">
-                    -
-                  </Grid>
-                </Grid>
-                <Grid container spacing={1}>
-                  <Grid item xs={4} className={classes.title}>
-                    <b>Period</b>
-                  </Grid>
-                  <Grid item xs={8} className={classes.title}>
-                    {`${dateToString(reportingDate.startDate)} - ${dateToString(reportingDate.endDate)}`}
-                  </Grid>
-                </Grid>
-              </Grid>
-            </Grid>
-            <div className="plan-header" style={{ marginTop: 60 }}>
-              <Grid container spacing={5}>
-                {Object.keys(formattedData).map(header => {
-                    if (formattedData[String(header)].length > highestRecords)
-                      highestRecords = formattedData[String(header)].length;
-                    return (
-                      <Grid
-                        item
-                        xs
-                        className={classes.title}
-                        key={header}
-                        style={{ fontWeight: 700, color: '#2D2D2D' }}
-                      >
-                        {header}
-                      </Grid>
-                    );
-                  })}
-              </Grid>
-              <Divider className={classes.divider} />
-              {Array.from(Array(highestRecords)).map((_val, i) => (
-                  // eslint-disable-next-line react/no-array-index-key
-                <Grid key={i} container direction="row" spacing={2}>
-                  {Object.keys(formattedData).map(head => (
-                    <Grid item xs key={head}>
-                      {formatIfDate(formattedData[String(head)][Number(i)]?.value) || '-'}
-                    </Grid>
-                    ))}
-                </Grid>
-                ))}
-            </div>
-            <Grid container>
-              <Grid item xs={6}>
-                <div style={{ marginTop: 80, textAlign: 'center' }}>
-                  <hr className={classes.hr} />
-                  <Grid container spacing={1}>
-                    <Grid item xs className={classes.title}>
-                      -
-                    </Grid>
-                  </Grid>
-                  <Grid container spacing={1}>
-                    <Grid item xs className={classes.title}>
-                      Sub-Administrator
-                    </Grid>
-                  </Grid>
-                  <Grid container spacing={1}>
-                    <Grid item xs className={classes.title}>
-                      Customs post 9100
-                    </Grid>
-                  </Grid>
-                </div>
-              </Grid>
-              <Grid item xs={6}>
-                <div style={{ marginTop: 80}}>
-                  <hr className={classes.hr} />
-                  <Grid
-                    container
-                    direction="column"
-                    alignItems="center"
-                    spacing={1}
-                  >
-                    <Grid item className={classes.title}>
-                      <b>Ciudad Moraźan</b>
-                    </Grid>
-                  </Grid>
-                  <Grid
-                    container
-                    direction="column"
-                    alignItems="center"
-                    spacing={1}
-                  >
-                    <Grid item className={classes.title}>
-                      Customs Administrator
-                    </Grid>
-                  </Grid>
-                </div>
-              </Grid>
-            </Grid>
+          <div style={{ marginTop: 50 }}>
+            <ReportHeader reportingDate={reportingDate} />
+            <ReportData formattedData={formattedData} />
+            <ReportFooter />
           </div>
         </div>
       </FullScreenDialog>
@@ -244,18 +141,10 @@ const useStyles = makeStyles({
     fontSize: '16px',
     color: '#656565'
   },
-  divider: {
-    margin: '19px 0 27px 0'
-  },
   reportTitle: {
     color: '#2D2D2D',
     fontSize: '20px',
     fontWeight: 700,
     marginTop: '69px'
   },
-  hr: {
-    width: '80%',
-    height: 1,
-    backgroundColor: '#000000'
-  }
 });
