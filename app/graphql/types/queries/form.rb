@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 # form queries
+# rubocop:disable Metrics/ModuleLength
 module Types::Queries::Form
   extend ActiveSupport::Concern
 
@@ -47,6 +48,13 @@ module Types::Queries::Form
       description 'Get user form properties by form user id'
       argument :user_id, GraphQL::Types::ID, required: true
       argument :form_user_id, GraphQL::Types::ID, required: true
+    end
+
+    # Get form properties with values for user
+    field :form_submissions, [Types::FormSubmissionType], null: true do
+      description 'Get user form properties by form user id'
+      argument :start_date, String, required: true
+      argument :end_date, String, required: true
     end
   end
   # rubocop:enable Metrics/BlockLength
@@ -102,8 +110,8 @@ module Types::Queries::Form
                                 .limit(limit).offset(offset)
     { form_name: form.name, form_users: form_users }
   end
-  # rubocop:enable Metrics/AbcSize
 
+  # rubocop:disable Metrics/MethodLength
   def form_user_properties(user_id:, form_user_id:)
     unless context[:current_user]&.admin? || context[:current_user]&.id.eql?(user_id)
       raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
@@ -112,6 +120,31 @@ module Types::Queries::Form
     Forms::FormUser.find_by(id: form_user_id)
                    .user_form_properties.eager_load(:form_property).with_attached_image
   end
+
+  def form_submissions(start_date:, end_date:)
+    unless context[:current_user]&.admin?
+      raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
+    end
+
+    submissions = []
+    form_name = 'Customs Registry'
+    last_version = Forms::Form.where('name ILIKE ?', "#{form_name}%")
+                              .order(version_number: :desc).first
+    Forms::Form.where(grouping_id: last_version.grouping_id)
+               .eager_load(form_users: { user_form_properties: [:form_property] })
+               .where(form_users: { created_at: start_date..end_date }).each do |form|
+      form.form_users.each do |form_user|
+        form_user.user_form_properties.each do |property|
+          prop = { value: property.value, field_name: property.form_property.field_name,
+                   field_type: property.form_property.field_type, id: SecureRandom.uuid }
+          submissions << prop
+        end
+      end
+    end
+    submissions
+  end
+  # rubocop:enable Metrics/MethodLength
+  # rubocop:enable Metrics/AbcSize
 
   private
 
@@ -155,3 +188,4 @@ module Types::Queries::Form
     query
   end
 end
+# rubocop:enable Metrics/ModuleLength
