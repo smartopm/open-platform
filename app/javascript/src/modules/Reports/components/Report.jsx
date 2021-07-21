@@ -128,7 +128,9 @@ export default function Report() {
               <Grid item xs={6}>
                 <Grid container spacing={1}>
                   <Grid item xs={4} className={classes.title}>
-                    Customs post
+                    <b>
+                      Customs post
+                    </b>
                   </Grid>
                   <Grid item xs={8} data-testid="client-name" className={classes.title}>
                     ZEDE Moraźan - 9100
@@ -136,15 +138,15 @@ export default function Report() {
                 </Grid>
                 <Grid container spacing={1}>
                   <Grid item xs={4} className={classes.title}>
-                    Sub-Administrator
+                    <b>Sub-Administrator</b>
                   </Grid>
                   <Grid item xs={8} className={classes.title} data-testid="nrc">
-                    TC2
+                    -
                   </Grid>
                 </Grid>
                 <Grid container spacing={1}>
                   <Grid item xs={4} className={classes.title}>
-                    Period
+                    <b>Period</b>
                   </Grid>
                   <Grid item xs={8} className={classes.title}>
                     {`${dateToString(reportingDate.startDate)} - ${dateToString(reportingDate.endDate)}`}
@@ -188,6 +190,11 @@ export default function Report() {
                   <hr className={classes.hr} />
                   <Grid container spacing={1}>
                     <Grid item xs className={classes.title}>
+                      -
+                    </Grid>
+                  </Grid>
+                  <Grid container spacing={1}>
+                    <Grid item xs className={classes.title}>
                       Sub-Administrator
                     </Grid>
                   </Grid>
@@ -204,18 +211,16 @@ export default function Report() {
                   <Grid
                     container
                     direction="column"
-                    // justifyContent="center"
                     alignItems="center"
                     spacing={1}
                   >
                     <Grid item className={classes.title}>
-                      Ciudad Moraźan
+                      <b>Ciudad Moraźan</b>
                     </Grid>
                   </Grid>
                   <Grid
                     container
                     direction="column"
-                    // justifyContent="center"
                     alignItems="center"
                     spacing={1}
                   >
