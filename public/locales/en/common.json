@@ -208,7 +208,11 @@
     "option_with_count": "option {{id}}",
     "close": "close",
     "transfer_plan_acceptance": "I accept that by clicking the transfer button, this plan will be cancelled and all payments will be migrated to the new plan.",
-    "no_property_found_for_plan_transfer": "There are no property other than the plan property that you wish to transfer. Please create new property to transfer payments."
+    "no_property_found_for_plan_transfer": "There are no property other than the plan property that you wish to transfer. Please create new property to transfer payments.",
+    "plan_transferred_successfully": "Your plan has been successfully transferred to {{landParcelName}}.",
+    "plan_transfer_confirmation_message_1": "Your plan has a total of",
+    "plan_transfer_confirmation_message_2": "payments with a total value of",
+    "plan_transfer_confirmation_message_3": "By transferring your plan, you will be transferring all payments associated to this plan. Click the 'Continue to verification' button to select the plot you want to migrate the plan to and confirm."
   },
   "menu": {
     "invoice": "Invoice",

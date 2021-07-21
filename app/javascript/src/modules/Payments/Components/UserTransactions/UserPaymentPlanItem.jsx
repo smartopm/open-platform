@@ -342,7 +342,7 @@ export default function UserPaymentPlanItem({
         handleModalClose={() => setTransferPlanModalOpen(!TransferPlanModalOpen)}
         planData={planData}
         userId={userId}
-        planId={planId}
+        paymentPlanId={planId}
         refetch={refetch}
         balanceRefetch={balanceRefetch}
       />
