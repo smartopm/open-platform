@@ -171,7 +171,8 @@
     "plot": "La Parcela",
     "plot_plural": "Parcelas",
     "transaction": "Transacción",
-    "transaction_plural": "Actas"
+    "transaction_plural": "Actas",
+    "report": "Informes"
   },
   "misc": {
     "acknowledge": "Reconocimiento",
