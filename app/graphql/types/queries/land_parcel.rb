@@ -14,7 +14,7 @@ module Types::Queries::LandParcel
     end
 
     # Get land parcel details that belongs to a user
-    field :user_land_parcel, [Types::LandParcelType], null: true do
+    field :user_land_parcels, [Types::LandParcelType], null: true do
       description 'Get a user land parcel details'
       argument :user_id, GraphQL::Types::ID, required: true
     end
@@ -49,10 +49,10 @@ module Types::Queries::LandParcel
                             .limit(limit).offset(offset)
   end
 
-  def user_land_parcel(user_id:)
+  def user_land_parcels(user_id:)
     raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') if context[:current_user].blank?
 
-    context[:site_community].users.find_by(id: user_id)&.land_parcels
+    context[:site_community].users.find_by(id: user_id).land_parcels.includes(:accounts)
   end
 
   def user_land_parcel_with_plan(user_id:)

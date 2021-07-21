@@ -97,6 +97,9 @@ module Users
     has_many :import_logs, class_name: 'Logs::ImportLog', dependent: :destroy
     has_many :transactions, class_name: 'Payments::Transaction', dependent: :destroy
     has_many :plan_payments, class_name: 'Payments::PlanPayment', dependent: :destroy
+    has_many :plan_ownerships, class_name: 'Properties::PlanOwnership', dependent: :destroy
+    has_many :co_owned_plans, class_name: 'Properties::PaymentPlan', through: :plan_ownerships,
+                              source: :payment_plan
     has_one_attached :avatar
     has_one_attached :document
 

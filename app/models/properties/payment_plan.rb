@@ -8,15 +8,16 @@ module Properties
     has_many :invoices, class_name: 'Payments::Invoice', dependent: :nullify
     has_many :wallet_transactions, class_name: 'Payments::WalletTransaction', dependent: :nullify
     has_many :plan_payments, class_name: 'Payments::PlanPayment', dependent: :nullify
+    has_many :plan_ownerships, dependent: :destroy
+    has_many :co_owners, class_name: 'Users::User', through: :plan_ownerships, source: :user
 
     before_create :set_pending_balance
 
     validates :payment_day,
               numericality: { only_integer: true, greater_than: 0, less_than_or_equal_to: 28 }
 
-    validate :plan_uniqueness_per_duration
-
     enum status: { active: 0, cancelled: 1, deleted: 2 }
+    enum frequency: { daily: 0, weekly: 1, monthly: 2, quarterly: 3 }
 
     has_paper_trail
 
@@ -37,8 +38,8 @@ module Properties
     # Returns payment plan duration (start and end date of plan).
     #
     # @return [Range]
-    def duration
-      start_date...(start_date + (duration_in_month || 12).month)
+    def plan_duration
+      start_date...(start_date + frequency_based_duration(duration || 12))
     end
 
     # Cancels payment plan
@@ -62,6 +63,7 @@ module Properties
       end
     end
 
+    # rubocop:disable Metrics/MethodLength
     # Returns maximum amount that can be allocated to plan.
     #
     # @param [Float] amount
@@ -71,25 +73,26 @@ module Properties
       amount > pending_balance ? pending_balance : amount
     end
 
+    def frequency_based_duration(duration)
+      case frequency
+      when 'daily'
+        duration.days
+      when 'weekly'
+        duration.weeks
+      when 'monthly'
+        duration.months
+      when 'quarterly'
+        (duration * 3).months
+      else
+        duration.months
+      end
+    end
+    # rubocop:enable Metrics/MethodLength
+
     private
 
     def set_pending_balance
-      self.pending_balance = monthly_amount * duration_in_month
-    end
-
-    # Validates whether payment plan is unique per duration.
-    # * adds error if payment plan overlaps with other payment plan.
-    #
-    # @return [Array]
-    #
-    # Todo:- Change association between land parcel and payment to many-to-many.
-    # Todo:- Use 'land_parcel.payment_plans' once establish many-to-many association.
-    def plan_uniqueness_per_duration
-      plans = PaymentPlan.where(land_parcel_id: land_parcel_id).where.not(id: id)
-      is_overlapping = plans.any? { |plan| duration.overlaps?(plan.duration) }
-      return unless is_overlapping
-
-      errors.add(:start_date, :plan_overlaps_with_other_plan)
+      self.pending_balance = installment_amount * duration
     end
   end
 end

@@ -2,7 +2,7 @@
 
 # Defines the mutation to update payment day.
 module Mutations
-  module Payment
+  module PaymentPlan
     # Updates Payment Day (PaymentPlan#payment_day) for a Land Parcel.
     class PaymentDayUpdate < BaseMutation
       argument :id, ID, required: true

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Mutations
-  module Payment
+  module PaymentPlan
     # Cancel Payment Plan
     class PaymentPlanCancel < BaseMutation
       argument :id, ID, required: true

@@ -124,11 +124,13 @@ module Types
     field :invoice_cancel, mutation: Mutations::Invoice::InvoiceCancel
 
     # payments
-    field :payment_plan_create, mutation: Mutations::Payment::PaymentPlanCreate
-    field :payment_plan_cancel, mutation: Mutations::Payment::PaymentPlanCancel
-    field :payment_day_update, mutation: Mutations::Payment::PaymentDayUpdate
     field :plan_payment_cancel, mutation: Mutations::Payment::PlanPaymentCancel
     field :plan_payment_create, mutation: Mutations::Payment::PlanPaymentCreate
+
+    # payment_plan
+    field :payment_plan_create, mutation: Mutations::PaymentPlan::PaymentPlanCreate
+    field :payment_plan_cancel, mutation: Mutations::PaymentPlan::PaymentPlanCancel
+    field :payment_day_update, mutation: Mutations::PaymentPlan::PaymentDayUpdate
 
     # transactions
     field :wallet_transaction_create, mutation: Mutations::Transaction::WalletTransactionCreate

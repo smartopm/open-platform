@@ -16,7 +16,7 @@ RSpec.describe Types::Queries::PlanPayment do
     end
     let!(:payment_plan) do
       create(:payment_plan, land_parcel_id: land_parcel.id, user_id: user.id, plot_balance: 0,
-                            pending_balance: 1200, monthly_amount: 100)
+                            pending_balance: 1200, installment_amount: 100)
     end
     let!(:transaction) do
       create(:transaction, user_id: user.id, community_id: community.id, depositor_id: user.id,

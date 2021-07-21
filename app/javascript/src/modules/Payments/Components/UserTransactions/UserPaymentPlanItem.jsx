@@ -24,7 +24,8 @@ import {
   formatError,
   formatMoney,
   InvoiceStatusColor,
-  propAccessor
+  propAccessor,
+  capitalize
 } from '../../../../utils/helpers';
 import Text from '../../../../shared/Text';
 import Label from '../../../../shared/label/Label';
@@ -422,7 +423,8 @@ export function renderPlan(plan, currencyData, userType, { handleMenu, loading }
       <Grid item xs={12} md={2} data-testid="balance">
         <Text content={formatMoney(currencyData, plan.pendingBalance)} />
         <br />
-        <Text color="primary" content={`Monthly Amount ${formatMoney(currencyData, plan.monthlyAmount)}`} />
+        {console.log(plan)}
+        <Text color="primary" content={`${capitalize(plan?.frequency || 'Monthly')} Amount ${formatMoney(currencyData, plan.installmentAmount)}`} />
       </Grid>
     ),
     'Payment Day': (

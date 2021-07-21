@@ -4,7 +4,7 @@ import '@testing-library/jest-dom/extend-expect'
 import { MockedProvider } from '@apollo/react-testing'
 import { BrowserRouter } from 'react-router-dom/'
 import { generateId } from '../../utils/helpers'
-import { UserLandParcel } from '../../graphql/queries'
+import { UserLandParcels } from '../../graphql/queries'
 import InvoiceModal from '../../modules/Payments/Components/UserTransactions/invoiceModal'
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn())
@@ -12,12 +12,12 @@ describe('It should test the invoice modal component', () => {
   const userId = generateId()[2]
   const landParcelMock = {
     request: {
-      query: UserLandParcel,
+      query: UserLandParcels,
       variables: { userId }
     },
     result: {
       data: {
-        userLandParcel: [
+        userLandParcels: [
           {
             id: '95e3c5f3-6757-48c1-837c-1d3e',
             parcelNumber: 'Plot-1343'

@@ -11,8 +11,9 @@ describe('Render Payment Plan Item', () => {
   const plan = {
     planType: 'lease',
     startDate: '2021-01-26',
-    monthlyAmount: '200',
+    installmentAmount: '200',
     paymentDay: 1,
+    frequency: 'monthly',
     pendingBalance: 200,
     id: 'f280159d-ac71-4c22-997a-07fd07344c94',
     planPayments: [{

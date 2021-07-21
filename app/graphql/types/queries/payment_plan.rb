@@ -25,6 +25,8 @@ module Types::Queries::PaymentPlan
     end
   end
 
+  # rubocop:disable Metrics/AbcSize
+  # rubocop:disable Metrics/MethodLength
   # Returns list of user's all payment plans with payments
   #
   # @param user_id [String]
@@ -34,7 +36,11 @@ module Types::Queries::PaymentPlan
   # @return [Array<PaymentPlan>]
   def user_plans_with_payments(user_id: nil, offset: 0, limit: 10)
     user = verified_user(user_id)
-    payment_plans = user.payment_plans.includes(:plan_payments)
+    payment_plans = Properties::PaymentPlan
+                    .left_joins(:plan_ownerships).where(
+                      'payment_plans.user_id = ? or plan_ownerships.user_id = ?', user.id,
+                      user.id
+                    ).distinct
 
     if context[:current_user].admin?
       payment_plans.order(created_at: :desc).offset(offset).limit(limit)
@@ -45,6 +51,8 @@ module Types::Queries::PaymentPlan
       ).offset(offset).limit(limit)
     end
   end
+  # rubocop:enable Metrics/AbcSize
+  # rubocop:enable Metrics/MethodLength
 
   # Statement details of payment plan
   #
@@ -123,16 +131,16 @@ module Types::Queries::PaymentPlan
   #
   # @return [Hash]
   def installment_detail(payment, unallocated_amount)
-    monthly_amount = payment.payment_plan.monthly_amount
+    installment_amount = payment.payment_plan.installment_amount
     available_amount = payment.amount + unallocated_amount
-    settled_installments = (available_amount / monthly_amount).floor
-    debit_amount = monthly_amount * settled_installments
+    settled_installments = (available_amount / installment_amount).floor
+    debit_amount = installment_amount * settled_installments
 
     {
       receipt_number: payment.receipt_number,
       payment_date: payment.created_at,
       amount_paid: payment.amount,
-      installment_amount: monthly_amount,
+      installment_amount: installment_amount,
       settled_installments: settled_installments,
       debit_amount: debit_amount,
       unallocated_amount: available_amount - debit_amount,

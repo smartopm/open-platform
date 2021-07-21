@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe Mutations::Payment::PaymentDayUpdate do
+RSpec.describe Mutations::PaymentPlan::PaymentDayUpdate do
   describe '.resolve' do
     let(:user) { create(:user_with_community) }
     let(:admin) { create(:admin_user, community_id: user.community_id) }

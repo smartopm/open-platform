@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_07_19_073746) do
+ActiveRecord::Schema.define(version: 2021_07_19_171829) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -511,10 +511,11 @@ ActiveRecord::Schema.define(version: 2021_07_19_073746) do
     t.boolean "generated", default: false
     t.decimal "plot_balance", precision: 11, scale: 2, default: "0.0"
     t.decimal "total_amount", precision: 11, scale: 2
-    t.integer "duration_in_month"
+    t.integer "duration"
     t.decimal "pending_balance", precision: 11, scale: 2, default: "0.0"
-    t.decimal "monthly_amount", precision: 11, scale: 2
+    t.decimal "installment_amount", precision: 11, scale: 2
     t.integer "payment_day", default: 1
+    t.integer "frequency"
     t.index ["land_parcel_id"], name: "index_payment_plans_on_land_parcel_id"
     t.index ["user_id"], name: "index_payment_plans_on_user_id"
   end
@@ -533,6 +534,16 @@ ActiveRecord::Schema.define(version: 2021_07_19_073746) do
     t.index ["community_id"], name: "index_payments_on_community_id"
     t.index ["invoice_id"], name: "index_payments_on_invoice_id"
     t.index ["user_id"], name: "index_payments_on_user_id"
+  end
+
+  create_table "plan_ownerships", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "user_id", null: false
+    t.uuid "payment_plan_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["payment_plan_id"], name: "index_plan_ownerships_on_payment_plan_id"
+    t.index ["user_id", "payment_plan_id"], name: "index_plan_ownerships_on_user_id_and_payment_plan_id", unique: true
+    t.index ["user_id"], name: "index_plan_ownerships_on_user_id"
   end
 
   create_table "plan_payments", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -799,6 +810,8 @@ ActiveRecord::Schema.define(version: 2021_07_19_073746) do
   add_foreign_key "payments", "communities"
   add_foreign_key "payments", "invoices"
   add_foreign_key "payments", "users"
+  add_foreign_key "plan_ownerships", "payment_plans"
+  add_foreign_key "plan_ownerships", "users"
   add_foreign_key "plan_payments", "communities"
   add_foreign_key "plan_payments", "payment_plans"
   add_foreign_key "plan_payments", "transactions"

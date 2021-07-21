@@ -11,9 +11,9 @@ describe('It should test the plan detail modal component', () => {
     id: '84h3ui7ehf',
     planType: 'type',
     startDate: '2020-12-12',
-    monthlyAmount: 100,
+    installmentAmount: 100,
     planValue: 200,
-    durationInMonth: 12,
+    duration: 12,
     status: 'active',
     endDate: '2020-12-12',
     user: {
