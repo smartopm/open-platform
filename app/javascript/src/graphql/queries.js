@@ -320,6 +320,7 @@ export const UserLandParcels = gql`
     userLandParcels(userId: $userId) {
       id
       parcelNumber
+      parcelType
       accounts{
         userId
         fullName
