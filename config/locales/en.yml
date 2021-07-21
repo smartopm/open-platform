@@ -283,10 +283,11 @@ en:
     notification:
       preference_update_failed: Preference Update Failed
     payment_plan:
-      plan_already_exist: Payment Plan for this landparcel already exist
       does_not_exist_for_property: Payment Plan does not exist for selected property
       have_zero_pending_balance: Pending balance is 0 for payment plan of selected property
       not_found: Payment Plan not found
+      plan_already_exist: Payment Plan for this landparcel already exist
+      transfer_can_not_be_processed: The payment plan has already been cancelled, the transfer cannot be processed.
     phone_number:
         found_blank: Phone number cannot be blank
     plan_payment:
