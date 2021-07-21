@@ -214,7 +214,7 @@ export default function UserPaymentPlanItem({
 
     let totalPayment = 0, totalPaymentAmount = 0;
     planData.planPayments.forEach(payment => {
-      if(payment.status !== 'cancelled'){
+      if(payment.status === 'paid'){
         totalPaymentAmount += payment.amount;
         totalPayment += 1;
       }
