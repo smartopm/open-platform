@@ -19,6 +19,7 @@ import {
 } from '@material-ui/core';
 import { MoreHorizOutlined } from '@material-ui/icons';
 import EditIcon from '@material-ui/icons/Edit';
+import { useTranslation } from 'react-i18next';
 import DataList from '../../../../shared/list/DataList';
 import { dateToString } from '../../../../components/DateContainer';
 import {
@@ -44,6 +45,8 @@ import StatementPlan from './PlanStatement';
 import { ActionDialog } from '../../../../components/Dialog';
 import PlanDetail from './PlanDetail';
 import TransactionDetails from './TransactionDetails';
+import PlanTransferConfirmDialog from './PlanTransferConfirmDialog';
+import TransferPlanModal from './TransferPlanModal'
 
 export default function UserPaymentPlanItem({
   plans,
@@ -74,6 +77,8 @@ export default function UserPaymentPlanItem({
     info: ''
   });
   const [confirmPlanCancelOpen, setConfirmPlanCancelOpen] = useState(false)
+  const [confirmTransferPlanOpen, setConfirmTransferPlanOpen] = useState(false)
+  const [TransferPlanModalOpen, setTransferPlanModalOpen] = useState(false)
   const [updatePaymentPlan] = useMutation(PaymentPlanUpdateMutation);
   const [cancelPaymentPlan] = useMutation(PaymentPlanCancelMutation);
   const validDays = [...Array(28).keys()];
@@ -92,6 +97,8 @@ export default function UserPaymentPlanItem({
     fetchPolicy: 'no-cache',
     errorPolicy: 'all'
   });
+
+  const { t } = useTranslation('common');
 
   const planHeader = [
     { title: 'Plot Number', col: 2 },
@@ -114,10 +121,11 @@ export default function UserPaymentPlanItem({
   ]
 
   const planMenuList = [
-    { content: t('actions.cancel_plan'), isAdmin: true, handleClick: (event) => handleCancelPlanClick(event)},
-    { content: t('actions.view_statement'), isAdmin: true, handleClick: (event) => handlePlanClick(event)},
-    { content: t('actions.view_transactions'), isAdmin: true, handleClick: (event) => handleTransactionClick(event)},
-    { content: t('common:menu.view_details'), isAdmin: true, handleClick: (event) => handlePlanDetailClick(event)}
+    { content: t('common:menu.cancel_plan'), isAdmin: true, handleClick: (event) => handleCancelPlanClick(event)},
+    { content: t('common:menu.view_statement'), isAdmin: true, handleClick: (event) => handlePlanClick(event)},
+    { content: t('common:menu.view_transactions'), isAdmin: true, handleClick: (event) => handleTransactionClick(event)},
+    { content: t('common:menu.view_details'), isAdmin: true, handleClick: (event) => handlePlanDetailClick(event)},
+    { content: t('common:menu.transfer_payment_plan'), isAdmin: true, handleClick: (event) => handleConfirmPlanTransferClick(event) }
   ]
 
   const handleClose = () => {
@@ -188,6 +196,27 @@ export default function UserPaymentPlanItem({
   function handleTransactionClick(event) {
     event.stopPropagation()
     history.push(`?tab=Plans&subtab=Transactions&id=${planId}`)
+  }
+
+  function handleConfirmPlanTransferClick(event) {
+    event.stopPropagation();
+    setConfirmTransferPlanOpen(true);
+  }
+
+  function handlePlanTransferClick(event) {
+    event.stopPropagation();
+    setConfirmTransferPlanOpen(false);
+    setTransferPlanModalOpen(true);
+  }
+
+  function planPaymentSummaryDetail() {
+    if (planId === '') return {};
+
+    const totalPaymentAmount = planData.planPayments.reduce((sum, payment) => sum + payment.amount, 0);
+    return ({
+      totalPayment: planData.planPayments.length,
+      totalPaymentAmount: formatMoney(currencyData, totalPaymentAmount)
+    });
   }
 
   function transactionDetailOpen(trans) {
@@ -302,6 +331,21 @@ export default function UserPaymentPlanItem({
           currencyData={currencyData}
         />
       )}
+      <PlanTransferConfirmDialog
+        open={confirmTransferPlanOpen}
+        handleDialogStatus={() => setConfirmTransferPlanOpen(!confirmTransferPlanOpen)}
+        PaymentData={planPaymentSummaryDetail()}
+        handlePlanTransferClick={handlePlanTransferClick}
+      />
+      <TransferPlanModal
+        open={TransferPlanModalOpen}
+        handleModalClose={() => setTransferPlanModalOpen(!TransferPlanModalOpen)}
+        planData={planData}
+        userId={userId}
+        planId={planId}
+        refetch={refetch}
+        balanceRefetch={balanceRefetch}
+      />
       {error && (
         <CenteredContent>{error.message}</CenteredContent>
       )}
