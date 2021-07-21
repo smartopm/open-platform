@@ -2,76 +2,107 @@
 
 require 'rails_helper'
 
-RSpec.describe Mutations::Payment::PaymentPlanCreate do
+RSpec.describe Mutations::PaymentPlan::PaymentPlanCreate do
   describe 'create for payment' do
     let!(:user) { create(:user_with_community) }
-    let!(:admin) { create(:admin_user, community_id: user.community_id) }
-    let!(:land_parcel) { create(:land_parcel, community_id: user.community_id) }
-
+    let!(:another_user) { create(:user_with_community) }
+    let!(:community) { user.community }
+    let!(:admin) { create(:admin_user, community_id: community.id) }
+    let!(:land_parcel) { create(:land_parcel, community_id: community.id) }
     let(:payment_plan_mutation) do
       <<~GQL
-        mutation paymentPlan(
+        mutation paymentPlanCreate(
             $landParcelId: ID!
             $userId: ID!
+            $coOwnersIds: [ID!]
             $startDate: String!
             $status: Int!
             $planType: String!
-            $percentage: String!
-            $durationInMonth: Int!
-            $monthlyAmount: Float!
+            $percentage: String
+            $duration: Int!
+            $installmentAmount: Float!
             $totalAmount: Float!
             $paymentDay: Int
+            $frequency: Int!
         ) {
             paymentPlanCreate(
             landParcelId: $landParcelId
             userId: $userId
+            coOwnersIds: $coOwnersIds
             startDate: $startDate
             status: $status
             planType: $planType
             percentage: $percentage
-            durationInMonth: $durationInMonth
-            monthlyAmount: $monthlyAmount
+            duration: $duration
+            installmentAmount: $installmentAmount
             totalAmount: $totalAmount
             paymentDay: $paymentDay
+            frequency: $frequency
             ) {
             paymentPlan {
                 id
+                coOwners{
+                  name
+                }
             }
-        }
+          }
         }
       GQL
     end
 
-    it 'creates a payment plan for one landparcel' do
-      variables = {
-        landParcelId: land_parcel.id,
-        userId: user.id,
-        startDate: '2021-02-13',
-        status: 1,
-        planType: 'lease',
-        percentage: '50%',
-        durationInMonth: (rand * 10).ceil,
-        monthlyAmount: 0,
-        totalAmount: 0,
-        paymentDay: 2,
-      }
-      result = DoubleGdpSchema.execute(payment_plan_mutation, variables: variables,
-                                                              context: {
-                                                                current_user: admin,
-                                                                site_community: user.community,
-                                                              }).as_json
-      expect(result['errors']).to be_nil
-      expect(result.dig('data', 'paymentPlanCreate', 'paymentPlan', 'id')).not_to be_nil
-
-      # make sure there is no duplicate payment plan
-      b_result = DoubleGdpSchema.execute(payment_plan_mutation, variables: variables,
+    context 'when co owners are not selected' do
+      it 'creates a payment plan for one landparcel' do
+        variables = {
+          landParcelId: land_parcel.id,
+          userId: user.id,
+          startDate: '2021-02-13',
+          status: 1,
+          planType: 'lease',
+          percentage: '50%',
+          duration: (rand * 10).ceil,
+          installmentAmount: 0,
+          totalAmount: 0,
+          paymentDay: 2,
+          frequency: 2,
+        }
+        result = DoubleGdpSchema.execute(payment_plan_mutation, variables: variables,
                                                                 context: {
                                                                   current_user: admin,
                                                                   site_community: user.community,
                                                                 }).as_json
-      expect(b_result.dig('errors', 0, 'message'))
-        .to include 'Start date Payment plan duration overlaps with other payment plans'
+        expect(result['errors']).to be_nil
+        expect(result.dig('data', 'paymentPlanCreate', 'paymentPlan', 'id')).not_to be_nil
+      end
     end
+
+    context 'when co owners are selected' do
+      it 'creates a payment plan for one landparcel' do
+        variables = {
+          landParcelId: land_parcel.id,
+          userId: user.id,
+          coOwnersIds: [admin.id, another_user.id],
+          startDate: '2021-02-13',
+          status: 1,
+          planType: 'lease',
+          percentage: '50%',
+          duration: (rand * 10).ceil,
+          installmentAmount: 0,
+          totalAmount: 0,
+          paymentDay: 2,
+          frequency: 2,
+        }
+        result = DoubleGdpSchema.execute(payment_plan_mutation, variables: variables,
+                                                                context: {
+                                                                  current_user: admin,
+                                                                  site_community: user.community,
+                                                                }).as_json
+        expect(result['errors']).to be_nil
+        payment_plan_resut = result.dig('data', 'paymentPlanCreate', 'paymentPlan')
+        expect(payment_plan_resut['id']).not_to be_nil
+        expect(payment_plan_resut['coOwners'].size).to eql 2
+      end
+    end
+
     it 'should validate given variables inputs' do
       variables = {
         landParcelId: land_parcel.id,
@@ -80,10 +111,11 @@ RSpec.describe Mutations::Payment::PaymentPlanCreate do
         status: '1',
         planType: 'lease',
         percentage: '50%',
-        durationInMonth: (rand * 10).ceil,
-        monthlyAmount: 100.0,
+        duration: (rand * 10).ceil,
+        installmentAmount: 100.0,
         totalAmount: 100.0,
         paymentDay: '2',
+        frequency: 2,
       }
       result = DoubleGdpSchema.execute(payment_plan_mutation, variables: variables,
                                                               context: {

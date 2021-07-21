@@ -11,7 +11,7 @@ import DatePickerDialog from '../../../../components/DatePickerDialog'
 import { extractCurrency, formatError } from '../../../../utils/helpers'
 import { InvoiceCreate } from '../../../../graphql/mutations'
 import MessageAlert from "../../../../components/MessageAlert"
-import { UserLandParcel } from '../../../../graphql/queries'
+import { UserLandParcels } from '../../../../graphql/queries'
 import { Spinner } from '../../../../shared/Loading'
 
 const initialValues = {
@@ -31,7 +31,7 @@ export default function InvoiceModal({ open, handleModalClose, userId, refetch, 
   const [isError, setIsError] = useState(false)
   const [submitting, setIsSubmitting] = useState(false)
 
-  const [loadLandParcel, { loading, data } ] = useLazyQuery(UserLandParcel,{
+  const [loadLandParcel, { loading, data } ] = useLazyQuery(UserLandParcels,{
     variables: { userId },
     errorPolicy: 'all',
     fetchPolicy: 'cache-and-network'
@@ -118,7 +118,7 @@ export default function InvoiceModal({ open, handleModalClose, userId, refetch, 
             error={isError && submitting && !inputValue.parcelId}
             helperText={isError && !inputValue.parcelId && 'Plot No is required'}
           >
-            {data?.userLandParcel.map(land => (
+            {data?.userLandParcels.map(land => (
               <MenuItem value={land.id} key={land.id}>{land.parcelNumber}</MenuItem>
               ))}
           </TextField>

@@ -17,18 +17,20 @@ module Types
     field :created_at, GraphQL::Types::ISO8601DateTime, null: false
     field :updated_at, GraphQL::Types::ISO8601DateTime, null: false
     field :payment_day, Integer, null: false
-    field :monthly_amount, Float, null: true
+    field :installment_amount, Float, null: true
     field :plan_payments, [Types::PlanPaymentType], null: true
     field :plan_value, Float, null: false
     field :statement_paid_amount, Float, null: false
     field :unallocated_amount, Float, null: false
-    field :duration_in_month, Integer, null: false
+    field :duration, Integer, null: false
+    field :frequency, String, null: true
+    field :co_owners, [Types::UserType], null: true
 
     # Returns plan's total value
     #
     # @return [Float]
     def plan_value
-      object.monthly_amount * object.duration_in_month
+      object.installment_amount * object.duration
     end
 
     # Returns total amount paid for plan statement
@@ -36,7 +38,7 @@ module Types
     # @return [Float]
     def statement_paid_amount
       payment_amount = object.plan_payments.not_cancelled.sum(:amount)
-      (payment_amount / object.monthly_amount).floor * object.monthly_amount
+      (payment_amount / object.installment_amount).floor * object.installment_amount
     end
 
     # Returns unallocated amount for plan statement
@@ -50,7 +52,7 @@ module Types
     #
     # @return [DateTime]
     def end_date
-      object.start_date + object.duration_in_month.month
+      object.start_date + object.frequency_based_duration(object.duration)
     end
   end
 end

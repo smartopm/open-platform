@@ -1,35 +1,43 @@
 /* eslint-disable import/prefer-default-export */
 import gql from 'graphql-tag';
 
-export const LandPaymentPlanCreateMutation = gql`
-  mutation paymentPlan(
-    $landParcelId: ID!
-    $userId: ID!
-    $startDate: String!
-    $status: Int!
-    $planType: String!
-    $percentage: String!
-    $monthlyAmount: Float!
-    $totalAmount: Float!
-    $durationInMonth: Int!
-
-  ) {
-    paymentPlanCreate(
-      landParcelId: $landParcelId
-      userId: $userId
-      startDate: $startDate
-      status: $status
-      planType: $planType
-      percentage: $percentage
-      monthlyAmount: $monthlyAmount
-      totalAmount: $totalAmount
-      durationInMonth: $durationInMonth
+export const PaymentPlanCreateMutation = gql`
+mutation paymentPlanCreate(
+  $landParcelId: ID!
+  $userId: ID!
+  $coOwnersIds: [ID!]
+  $startDate: String!
+  $status: Int!
+  $planType: String!
+  $percentage: String
+  $duration: Int!
+  $installmentAmount: Float!
+  $totalAmount: Float!
+  $paymentDay: Int
+  $frequency: Int!
+) {
+  paymentPlanCreate(
+    landParcelId: $landParcelId
+    userId: $userId
+    coOwnersIds: $coOwnersIds
+    startDate: $startDate
+    status: $status
+    planType: $planType
+    percentage: $percentage
+    duration: $duration
+    installmentAmount: $installmentAmount
+    totalAmount: $totalAmount
+    paymentDay: $paymentDay
+    frequency: $frequency
     ) {
-      paymentPlan {
+    paymentPlan {
         id
-      }
+        coOwners{
+          name
+        }
     }
   }
+}
 `;
 
 export const MergeProperty = gql`

@@ -10,8 +10,8 @@ RSpec.describe Mutations::Transaction::TransactionRevert do
     let!(:land_parcel) { create(:land_parcel, community_id: community.id) }
     let(:payment_plan) do
       create(:payment_plan, land_parcel_id: land_parcel.id, user_id: user.id,
-                            pending_balance: 1200, monthly_amount: 100,
-                            duration_in_month: 12)
+                            pending_balance: 1200, installment_amount: 100,
+                            duration: 12)
     end
     let!(:transaction) do
       create(:transaction, user_id: user.id, community_id: community.id, depositor_id: user.id,

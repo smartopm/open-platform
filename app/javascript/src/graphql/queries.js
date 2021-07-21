@@ -315,11 +315,15 @@ export const UserMessageQuery = gql`
   }
 `
 
-export const UserLandParcel = gql`
-  query userLandParcel($userId: ID!) {
-    userLandParcel(userId: $userId) {
+export const UserLandParcels = gql`
+  query userLandParcels($userId: ID!) {
+    userLandParcels(userId: $userId) {
       id
       parcelNumber
+      accounts{
+        userId
+        fullName
+      }
     }
   }
 `
@@ -328,6 +332,7 @@ export const UserLandParcelWithPlan = gql`
   query userLandParcelWithPlan($userId: ID!) {
     userLandParcelWithPlan(userId: $userId) {
       id
+      startDate
       landParcel{
         parcelNumber
       }

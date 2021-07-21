@@ -5,7 +5,7 @@ import { MockedProvider } from '@apollo/react-testing'
 import { BrowserRouter } from 'react-router-dom/'
 import PaymentModal, { PaymentDetails } from '../Components/UserTransactions/PaymentModal'
 import currency from '../../../__mocks__/currency'
-import { UserLandParcel } from '../../../graphql/queries';
+import { UserLandParcels } from '../../../graphql/queries';
 import { Spinner } from '../../../shared/Loading';
 import { PaymentCreate } from '../../../graphql/mutations'
 
@@ -14,7 +14,7 @@ describe('It should test the payment modal component', () => {
 
   const handleModalClose = jest.fn
 
-  const userLandParcel = [{
+  const userLandParcels = [{
     id: '1234',
     parcelNumber: 'ho2ij3'
   }]
@@ -22,12 +22,12 @@ describe('It should test the payment modal component', () => {
   it('it should render payment modal', async () => {
     const mock = [{
       request: {
-        query: UserLandParcel,
+        query: UserLandParcels,
         variables: {  userId: '279546' }
       },
       result: {
         data: {
-          userLandParcel
+          userLandParcels
         }
       }
     },

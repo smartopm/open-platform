@@ -20,7 +20,7 @@ module Types
     # @return [Float]
     def current_plot_pending_balance
       plan = object.payment_plan
-      total_balance = plan.monthly_amount * plan.duration_in_month
+      total_balance = plan.installment_amount * plan.duration
       plan_payments = plan.plan_payments.not_cancelled.created_at_lteq(object.created_at)
 
       total_balance - plan_payments.sum(:amount)

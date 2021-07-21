@@ -8,7 +8,7 @@ import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { Typography } from '@material-ui/core'
 import UserPaymentPlanItem from './UserPaymentPlanItem'
 import Balance from './UserBalance'
-import { UserBalance } from '../../../../graphql/queries'
+import { UserLandParcels, UserBalance } from '../../../../graphql/queries'
 import DepositQuery, { UserPlans }  from '../../graphql/payment_query'
 import { Spinner } from '../../../../shared/Loading'
 import { formatError, useParamsQuery } from '../../../../utils/helpers'
@@ -16,8 +16,10 @@ import { currencies } from '../../../../utils/constants'
 import CenteredContent from '../../../../components/CenteredContent'
 import Paginate from '../../../../components/Paginate'
 import ListHeader from '../../../../shared/list/ListHeader';
-import ButtonComponent from '../../../../shared/buttons/Button'
-import Transactions from './Transactions'
+import ButtonComponent from '../../../../shared/buttons/Button';
+import Transactions from './Transactions';
+import PaymentPlanModal from './PaymentPlanModal';
+import MessageAlert from '../../../../components/MessageAlert'
 
 export default function PaymentPlans({ userId, user, userData }) {
   const planHeader = [
@@ -38,6 +40,9 @@ export default function PaymentPlans({ userId, user, userData }) {
   const theme = useTheme();
   const matches = useMediaQuery(theme.breakpoints.up('sm'));
   const [offset, setOffset] = useState(Number(page) || 0)
+  const [planModalOpen, setPlanModalOpen] = useState(false);
+  const [message, setMessage] = useState({ isError: false, detail: '' });
+  const [alertOpen, setAlertOpen] = useState(false);
   const [filtering, setFiltering] = useState(false)
   const [loadPlans, { loading, error, data, refetch }] = useLazyQuery(UserPlans, {
     variables: { userId, limit, offset },
@@ -50,6 +55,12 @@ export default function PaymentPlans({ userId, user, userData }) {
     fetchPolicy: 'no-cache',
     errorPolicy: 'all'
   });
+
+  const [loadLandParcels, { data: landParcelsData}] = useLazyQuery(UserLandParcels, {
+    variables: { userId },
+    fetchPolicy: 'no-cache',
+    errorPolicy: 'all'
+  })
 
   const currency = currencies[user.community.currency] || ''
   const { locale } = user.community
@@ -75,6 +86,10 @@ export default function PaymentPlans({ userId, user, userData }) {
     setFiltering(false)
   }
 
+  function handlePlanModal(){
+    setPlanModalOpen(true)
+    loadLandParcels()
+  }
   useEffect(() => {
     loadTransactions()
     loadPlans()
@@ -127,21 +142,54 @@ export default function PaymentPlans({ userId, user, userData }) {
           </>
         )
       ) : loading ? <Spinner /> : (
-        data?.userPlansWithPayments?.length > 0 ? (
+        <>
           <div className={classes.planList}>
             <div>
               <div style={{ display: 'flex', width: '100%', justifyContent: 'space-between', marginBottom: '10px' }}>
                 <Typography className={classes.plan}>Plans</Typography>
-                <ButtonComponent 
-                  color='default' 
-                  variant='outlined' 
-                  buttonText="View all Transactions" 
-                  handleClick={() => handleButtonClick()}
-                  size='small'
+                <div style={{ display: 'flex', width: '100%', justifyContent: 'flex-end' }}>
+                  <div style={{marginRight: '10px'}}>
+                    <ButtonComponent 
+                      color='primary' 
+                      variant='contained' 
+                      buttonText="New Payment Plan" 
+                      handleClick={() => handlePlanModal()}
+                      size='large'
+                      style={{marginRight: '10px'}}
+                    />
+                  </div>
+                  <div>
+                    <ButtonComponent
+                      color='default' 
+                      variant='outlined' 
+                      buttonText="View all Transactions" 
+                      handleClick={() => handleButtonClick()}
+                      size='large'
+                    />
+                  </div>
+                </div>
+                <MessageAlert
+                  type={message.isError ? 'error' : 'success'}
+                  message={message.detail}
+                  open={alertOpen}
+                  handleClose={() => setAlertOpen(false)}
+                />
+                <PaymentPlanModal
+                  open={planModalOpen}
+                  handleModalClose={() => setPlanModalOpen(false)}
+                  userId={userId}
+                  userData={userData}
+                  currency={currency}
+                  paymentPlansRefetch={refetch}
+                  landParcelsData={landParcelsData}
+                  setMessage={setMessage}
+                  openAlertMessage={() => setAlertOpen(true)}
                 />
               </div>
               {matches && <ListHeader headers={planHeader} color />}
             </div>
+          </div>
+          {data?.userPlansWithPayments?.length > 0 ? (
             <div>
               <UserPaymentPlanItem 
                 plans={data.userPlansWithPayments} 
@@ -162,11 +210,11 @@ export default function PaymentPlans({ userId, user, userData }) {
                 />
               </CenteredContent>
             </div>
-          </div>
         ) : 
         (
           <CenteredContent>No Plan Available</CenteredContent>
-        )
+        )}
+        </>
       )}
     </div>
   )

@@ -24,6 +24,7 @@ import DatePickerDialog from '../../../../components/DatePickerDialog';
 import useDebounce from '../../../../utils/useDebounce';
 import UserAutoResult from '../../../../shared/UserAutoResult';
 import SwitchInput from '../../../Forms/components/SwitchInput';
+import { dateToString } from '../../../../components/DateContainer';
 
 const initialValues = {
   amount: '',
@@ -287,6 +288,8 @@ export default function PaymentModal({
                 {paymentPlans?.userLandParcelWithPlan?.map(plan => (
                   <MenuItem value={plan.id} key={plan.id}>
                     {plan.landParcel.parcelNumber}
+                    {' - '}
+                    {dateToString(plan.startDate)}
                   </MenuItem>
                 ))}
               </TextField>

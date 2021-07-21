@@ -10,7 +10,8 @@ FactoryBot.define do
     plot_balance { (rand * 10_000).floor }
     total_amount { 0 }
     user
-    monthly_amount { 0 }
-    duration_in_month { 12 }
+    installment_amount { 0 }
+    duration { 12 }
+    frequency { 'monthly' }
   end
 end

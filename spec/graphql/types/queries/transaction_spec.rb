@@ -13,7 +13,7 @@ RSpec.describe Types::Queries::Transaction do
     end
     let!(:payment_plan) do
       create(:payment_plan, land_parcel_id: land_parcel.id, user_id: user.id, plot_balance: 0,
-                            pending_balance: 1200, monthly_amount: 100)
+                            pending_balance: 1200, installment_amount: 100)
     end
     let!(:transaction) do
       create(:transaction, user_id: user.id, community_id: community.id, depositor_id: user.id,
@@ -27,7 +27,7 @@ RSpec.describe Types::Queries::Transaction do
     let!(:another_land_parcel) { create(:land_parcel, community_id: community.id) }
     let!(:another_payment_plan) do
       create(:payment_plan, land_parcel_id: another_land_parcel.id, user_id: user.id,
-                            plot_balance: 0, pending_balance: 2400, monthly_amount: 200)
+                            plot_balance: 0, pending_balance: 2400, installment_amount: 200)
     end
     let!(:another_transaction) do
       create(:transaction, user_id: user.id, community_id: community.id, depositor_id: user.id,

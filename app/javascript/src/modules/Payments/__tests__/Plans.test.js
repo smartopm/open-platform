@@ -24,11 +24,11 @@ describe('Plan List Component', () => {
             id: 'f280159d-ac71-4c22-997a-07fd07344c94',
             planType: 'lease',
             startDate: '2021-01-26',
-            monthlyAmount: '200',
+            installmentAmount: '200',
             paymentDay: 1,
             pendingBalance: 200,
             planValue: 300,
-            durationInMonth: 12,
+            duration: 12,
             status: 'paid',
             endDate: '2021-07-31',
             landParcel: {

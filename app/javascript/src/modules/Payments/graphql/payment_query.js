@@ -44,13 +44,14 @@ export const UserPlans = gql`
       id
       planType
       startDate
-      monthlyAmount
+      installmentAmount
       paymentDay
       pendingBalance
       planValue
-      durationInMonth
+      duration
       status
       endDate
+      frequency
       landParcel {
         parcelNumber
       }
@@ -143,7 +144,7 @@ export const ReceiptPayment = gql`
         }
       }
       paymentPlan {
-        monthlyAmount
+        installmentAmount
         landParcel {
           parcelNumber
         }
@@ -163,7 +164,7 @@ export const PlanStatement = gql`
         statementPaidAmount
         pendingBalance
         unallocatedAmount
-        durationInMonth
+        duration
         user {
           name
           phoneNumber
