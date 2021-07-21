@@ -96,9 +96,11 @@ export default function Report() {
             </Button>
           </CenteredContent>
           <br />
-          <Typography component="span" color="secondary">
-            {error ? formatError(error.message) : null}
-          </Typography>
+          <CenteredContent>
+            <Typography component="span" color="secondary">
+              {error ? formatError(error.message) : null}
+            </Typography>
+          </CenteredContent>
         </Container>
       </DetailsDialog>
       <FullScreenDialog
