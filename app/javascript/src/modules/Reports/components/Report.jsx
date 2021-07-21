@@ -131,12 +131,12 @@ export default function Report() {
                     Customs post
                   </Grid>
                   <Grid item xs={8} data-testid="client-name" className={classes.title}>
-                    TC1
+                    ZEDE Moraźan - 9100
                   </Grid>
                 </Grid>
                 <Grid container spacing={1}>
                   <Grid item xs={4} className={classes.title}>
-                    T2
+                    Sub-Administrator
                   </Grid>
                   <Grid item xs={8} className={classes.title} data-testid="nrc">
                     TC2
@@ -184,47 +184,46 @@ export default function Report() {
             </div>
             <Grid container>
               <Grid item xs={6}>
-                {/* there should be a divider here */}
-                <Divider className={classes.divider} />
-                <div>
-                  <hr />
-                  <b style={{ fontSize: '16px' }}>D Title</b>
-                  {' '}
-                  <br />
+                <div style={{ marginTop: 80, textAlign: 'center' }}>
+                  <hr className={classes.hr} />
                   <Grid container spacing={1}>
-                    <Grid item xs={3} className={classes.title}>
-                      D1
+                    <Grid item xs className={classes.title}>
+                      Sub-Administrator
                     </Grid>
                   </Grid>
                   <Grid container spacing={1}>
-                    <Grid item xs={3} className={classes.title}>
-                      D2
-                    </Grid>
-                  </Grid>
-                  <Grid container spacing={1}>
-                    <Grid item xs={3} className={classes.title}>
-                      D3
+                    <Grid item xs className={classes.title}>
+                      Customs post 9100
                     </Grid>
                   </Grid>
                 </div>
               </Grid>
               <Grid item xs={6}>
-                <Divider className={classes.divider} />
-                <Grid container spacing={1}>
-                  <Grid item xs={8} className={classes.title} style={{ textAlign: 'right' }}>
-                    AD1
+                <div style={{ marginTop: 80}}>
+                  <hr className={classes.hr} />
+                  <Grid
+                    container
+                    direction="column"
+                    justifyContent="center"
+                    alignItems="center"
+                    spacing={1}
+                  >
+                    <Grid item className={classes.title}>
+                      Ciudad Moraźan
+                    </Grid>
                   </Grid>
-                </Grid>
-                <Grid container spacing={1}>
-                  <Grid item xs={8} className={classes.title} style={{ textAlign: 'right' }}>
-                    AD2
+                  <Grid
+                    container
+                    direction="column"
+                    justifyContent="center"
+                    alignItems="center"
+                    spacing={1}
+                  >
+                    <Grid item className={classes.title}>
+                      Customs Administrator
+                    </Grid>
                   </Grid>
-                </Grid>
-                <Grid container spacing={1}>
-                  <Grid item xs={8} className={classes.title} style={{ textAlign: 'right' }}>
-                    AD3
-                  </Grid>
-                </Grid>
+                </div>
               </Grid>
             </Grid>
           </div>
@@ -263,5 +262,10 @@ const useStyles = makeStyles({
     fontSize: '20px',
     fontWeight: 700,
     marginTop: '69px'
+  },
+  hr: {
+    width: '80%',
+    height: 1,
+    backgroundColor: '#000000'
   }
 });
