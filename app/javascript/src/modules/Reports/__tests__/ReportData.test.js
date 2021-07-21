@@ -11,11 +11,13 @@ describe('Report Component', () => {
             createdAt: new Date("2021-07-19T10:33:58+02:00"),
             id: "abaea7ab-de4b-4d5e-9187-e465016a666a",
             value: "XJ is my name",
+            fieldType: "text"
           },
           {
             createdAt: new Date("2021-07-19T10:33:58+02:00"),
             id: "abaea7ab-de4b-4d5e-9187-e465016a666a",
             value: "XJ is my other name",
+            fieldType: "text"
           }
         ],
         "Another field": [
@@ -23,6 +25,7 @@ describe('Report Component', () => {
             createdAt: new Date("2021-07-19T10:33:58+02:00"),
             id: "4e61b13d-c1e5-421f-9f75-c6fd6016fecf",
             value: "1",
+            fieldType: "file_upload"
           }
         ]
       };

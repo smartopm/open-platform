@@ -128,7 +128,7 @@ module Types::Queries::Form
 
     submissions = []
     # form_name = "Customs Report Form"
-    form_name = 'Demo Form V3'
+    form_name = 'Customs Registry'
     last_version = Forms::Form.where('name ILIKE ?', "#{form_name}%")
                               .order(version_number: :desc).first
     Forms::Form.where(grouping_id: last_version.grouping_id)
@@ -137,7 +137,7 @@ module Types::Queries::Form
       form.form_users.each do |form_user|
         form_user.user_form_properties.each do |property|
           prop = { value: property.value, field_name: property.form_property.field_name,
-                   id: SecureRandom.uuid }
+                   field_type: property.form_property.field_type, id: SecureRandom.uuid }
           submissions << prop
         end
       end

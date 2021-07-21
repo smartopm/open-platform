@@ -6,6 +6,7 @@ const FormSubmissionsQuery = gql`
       id
       value
       fieldName
+      fieldType
     }
   }
 `;

@@ -2,9 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Divider, Grid } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
-import { formatIfDate } from '../../../components/DateContainer';
+import { useTranslation } from 'react-i18next';
+import formatCellData from '../utils';
 
 export default function ReportData({ formattedData }) {
+    const { t } = useTranslation('form')
   const classes = useStyles();
   let highestRecords = 1;
   return (
@@ -32,7 +34,7 @@ export default function ReportData({ formattedData }) {
         <Grid key={i} container direction="row" spacing={2}>
           {Object.keys(formattedData).map(head => (
             <Grid item xs key={head}>
-              {formatIfDate(formattedData[String(head)][Number(i)]?.value) || '-'}
+              {formatCellData(formattedData[String(head)][Number(i)], t)}
             </Grid>
           ))}
         </Grid>
