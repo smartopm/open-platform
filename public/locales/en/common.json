@@ -204,7 +204,10 @@
     "step_plural": "Steps",
     "new_property": "New Property",
     "misc_successfully_created": "{{type}} successfully created",
-    "option_with_count": "option {{id}}"
+    "option_with_count": "option {{id}}",
+    "close": "close",
+    "transfer_plan_acceptance": "I accept that by clicking the transfer button, this plan will be cancelled and all payments will be migrated to the new plan.",
+    "no_property_found_for_plan_transfer": "There are no property other than the plan property that you wish to transfer. Please create new property to transfer payments."
   },
   "menu": {
     "invoice": "Invoice",
@@ -268,7 +271,13 @@
     "publish": "Publish",
     "proceed": "Proceed",
     "maps": "Maps",
-    "view_entries": "View Entries"
+    "view_entries": "View Entries",
+    "cancel_plan": "Cancel Plan",
+    "view_statement": "View Statement",
+    "view_transactions": "View Transactions",
+    "transfer_payment_plan": "Transfer Payment Plan",
+    "transfer_plan": "Transfer Plan",
+    "continue_to_verification": "Continue to verification"
   },
   "user_types": {
     "admin": "Admin",
