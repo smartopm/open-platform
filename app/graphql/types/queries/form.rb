@@ -127,7 +127,6 @@ module Types::Queries::Form
     end
 
     submissions = []
-    # form_name = "Customs Report Form"
     form_name = 'Customs Registry'
     last_version = Forms::Form.where('name ILIKE ?', "#{form_name}%")
                               .order(version_number: :desc).first
