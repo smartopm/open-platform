@@ -9,27 +9,27 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Typography from '@material-ui/core/Typography';
 import { Button } from '@material-ui/core';
-import FormGroup from '@material-ui/core/FormGroup'
+import FormGroup from '@material-ui/core/FormGroup';
 import FormControl from '@material-ui/core/FormControl';
-import FormControlLabel from '@material-ui/core/FormControlLabel'
-import Checkbox from '@material-ui/core/Checkbox'
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Checkbox from '@material-ui/core/Checkbox';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
-import { UserLandParcel } from '../../../../graphql/queries'
-import { Spinner } from '../../../../shared/Loading'
 import MessageAlert from '../../../../components/MessageAlert';
+import { Spinner } from '../../../../shared/Loading';
+import { UserLandParcel } from '../../../../graphql/queries';
 import { TransferPaymentPlanMutation } from '../../graphql/payment_plan_mutations';
+import { formatError } from '../../../../utils/helpers';
 
 export default function TransferPlanModal({
   open,
   handleModalClose,
   planData,
   userId,
-  planId,
+  paymentPlanId,
   refetch,
   balanceRefetch
 }) {
-  // eslint-disable-next-line no-unused-vars
   const [isSuccessAlert, setIsSuccessAlert] = useState(false);
   const [messageAlert, setMessageAlert] = useState('');
   const [acceptanceCheckbox, setAcceptanceCheckbox] = useState(false);
@@ -55,21 +55,27 @@ export default function TransferPlanModal({
     setLandParcelId(event.target.value);
   }
 
-  // eslint-disable-next-line no-unused-vars
-  function handleAcceptanceCheckChange(_event) {
+  function handleAcceptanceCheckChange() {
     setAcceptanceCheckbox(!acceptanceCheckbox);
   }
 
   function handleSubmit(e) {
     e.preventDefault();
     transferPaymentPlan({
-      variables: { paymentPlanId: planId, landParcelId }
+      variables: { paymentPlanId, landParcelId }
+    }).then(res => {
+      const resLandParcel = res.data?.transferPaymentPlan?.paymentPlan?.landParcel;
+      const landParcelName = `${resLandParcel.parcelType} ${resLandParcel.parcelNumber}`;
+      handleModalClose();
+      setMessageAlert(t('common:misc.plan_transferred_successfully', { landParcelName }));
+      setIsSuccessAlert(true);
+      refetch();
+      balanceRefetch();
+    }).catch(err => {
+      handleModalClose();
+      setMessageAlert(formatError(err.message));
+      setIsSuccessAlert(false);
     })
-      .then(() => {
-        handleModalClose();
-        refetch();
-        balanceRefetch();
-      })
   }
 
   useEffect(() => {
@@ -113,31 +119,41 @@ export default function TransferPlanModal({
             </Typography>
             <Typography className={classes.content} paragraph variant="body1" color="textPrimary" display='body'>
               {
-                (data?.userLandParcel.length > 1) ? (
-                  <LandParcelForTransferPlan
-                    data={data}
-                    landParcelId={landParcelId}
-                    planLandParcelId={planData?.landParcel?.id}
-                    handleRadioChange={handleRadioChange}
-                  />
-                )
-                : t('common:misc.no_property_found_for_plan_transfer')
+                (data?.userLandParcel.length > 1) ?
+                  (
+                    <LandParcelForTransferPlan
+                      data={data}
+                      landParcelId={landParcelId}
+                      planLandParcelId={planData?.landParcel?.id}
+                      handleRadioChange={handleRadioChange}
+                    />
+                  ) : (
+                    <Typography className={classes.content} paragraph variant="body1" color="secondary" display='body'>
+                      {t('common:misc.no_property_found_for_plan_transfer')}
+                    </Typography>
+                  )
               }
             </Typography>
             <Typography className={classes.footer} paragraph variant="body1" color="textPrimary" display='body'>
-              <FormGroup row>
-                <FormControlLabel
-                  control={(
-                    <Checkbox
-                      checked={acceptanceCheckbox}
-                      onChange={handleAcceptanceCheckChange}
-                      name="acceptanceCheckbox"
+              { (data?.userLandParcel.length > 1) &&
+                (
+                  <FormGroup row>
+                    <FormControlLabel
+                      control={
+                        (
+                          <Checkbox
+                            checked={acceptanceCheckbox}
+                            onChange={handleAcceptanceCheckChange}
+                            name="acceptanceCheckbox"
+                          />
+                        )
+                      }
+                      label={t('common:misc.transfer_plan_acceptance')}
+                      labelPlacement="end"
                     />
-                  )}
-                  label={t('common:misc.transfer_plan_acceptance')}
-                  labelPlacement="end"
-                />
-              </FormGroup>
+                  </FormGroup>
+                )
+              }
             </Typography>
           </Typography>
         </DialogContent>
@@ -179,16 +195,16 @@ export function LandParcelForTransferPlan({data, landParcelId, planLandParcelId,
         onChange={handleRadioChange}
       >
         {
-        filteredLandParcels.map(land => (
-          <FormControlLabel
-            key={land?.id}
-            checked={landParcelId === land?.id}
-            value={land?.id}
-            control={<Radio />}
-            label={land.parcelNumber}
-          />
-        ))
-      }
+          filteredLandParcels.map(land => (
+            <FormControlLabel
+              key={land.id}
+              checked={landParcelId === land?.id}
+              value={land?.id}
+              control={<Radio />}
+              label={`${land.parcelType} ${land.parcelNumber}`}
+            />
+          ))
+        }
       </RadioGroup>
     </FormControl>
   )
@@ -200,7 +216,7 @@ TransferPlanModal.propTypes = {
   // eslint-disable-next-line react/forbid-prop-types
   planData: PropTypes.object.isRequired,
   userId: PropTypes.string.isRequired,
-  planId: PropTypes.string.isRequired,
+  paymentPlanId: PropTypes.string.isRequired,
   refetch: PropTypes.func.isRequired,
   balanceRefetch: PropTypes.func.isRequired,
 }

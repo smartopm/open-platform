@@ -13,7 +13,7 @@ module Mutations
       # rubocop:disable Metrics/MethodLength
       def resolve(vals)
         payment_plan = Properties::PaymentPlan.find_by(id: vals[:payment_plan_id])
-        raise_payment_plan_not_found_error(payment_plan)
+        raise_payment_plan_related_error(payment_plan)
 
         user = payment_plan.user
         land_parcel = user.land_parcels.find_by(id: vals[:land_parcel_id])
@@ -48,10 +48,12 @@ module Mutations
       # Raises GraphQL execution payment plan does not exist.
       #
       # @return [GraphQL::ExecutionError]
-      def raise_payment_plan_not_found_error(payment_plan)
-        return if payment_plan
-
-        raise GraphQL::ExecutionError, I18n.t('errors.payment_plan.not_found')
+      def raise_payment_plan_related_error(payment_plan)
+        if payment_plan.blank?
+          raise GraphQL::ExecutionError, I18n.t('errors.payment_plan.not_found')
+        elsif payment_plan.cancelled?
+          raise GraphQL::ExecutionError, I18n.t('errors.payment_plan.transfer_can_not_be_processed')
+        end
       end
 
       # Raises GraphQL execution error if land parcel does not exist.
