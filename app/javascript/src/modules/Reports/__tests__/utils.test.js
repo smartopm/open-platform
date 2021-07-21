@@ -13,12 +13,19 @@ describe('Utils Component', () => {
         },
         {
           createdAt: new Date("2021-07-19T10:33:58+02:00"),
+          id: "4d5e-9187-e465016a666a",
+          value: null,
+          fieldType: "date"
+        },
+        {
+          createdAt: new Date("2021-07-19T10:33:58+02:00"),
           id: "abaea7ab-de4b-4d5e-9187-e465016a666a",
           value: "XJ is my other name",
           fieldType: "file_upload"
         }
       ]
     expect(formatCellData(data[0], translate)).toBe('XJ is my name')
-    expect(formatCellData(data[1], translate)).toBe('Attachment')
+    expect(formatCellData(data[2], translate)).toBe('Attachment')
+    expect(formatCellData(data[1], translate)).toBe('-')
   });
 });
