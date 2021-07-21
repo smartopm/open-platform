@@ -21,7 +21,7 @@ import { UserLandParcel } from '../../../../graphql/queries';
 import { TransferPaymentPlanMutation } from '../../graphql/payment_plan_mutations';
 import { formatError } from '../../../../utils/helpers';
 
-export default function TransferPlanModal({
+export default function sTransferPlanModal({
   open,
   handleModalClose,
   planData,
