@@ -74,11 +74,11 @@ export default function PaymentPlanModal({
     setFrequency(frequencyValue);
   }
 
-  function getCalendarDuration() {
-    let calendarDuration = 'months';
-    switch (frequency) {
-      case 0: {
-        calendarDuration = 'days';
+  function getCalendarDuration(){
+    let calendarDuration = ''
+    switch(frequency){
+      case 0:{
+        calendarDuration = 'days'
         break;
       }
       case 1: {
@@ -94,7 +94,7 @@ export default function PaymentPlanModal({
         break;
       }
       default: {
-        calendarDuration = 'months';
+        calendarDuration = ''
         break;
       }
     }
@@ -136,7 +136,7 @@ export default function PaymentPlanModal({
 
   function confirmSubmission(event) {
     event.preventDefault();
-    if (!inputValue.installmentAmount || !inputValue.duration || !landParcelId) {
+    if(!inputValue.installmentAmount || !inputValue.duration || !landParcelId || frequency === null){
       setIsError(true);
       return;
     }
@@ -197,7 +197,27 @@ export default function PaymentPlanModal({
           }
           label={t('common:table_headers.start_date')}
           required
-        />
+        />s
+          <div>
+            <TextField
+              autoFocus
+              margin="frequency"
+              id="frequency"
+              aria-label="frequency"
+              label="Plan Frequency"
+              value=""
+              disabled
+              name="frequency"
+              style={{ width: '100%' }}
+              error={isError && frequency === null}
+              helperText={isError && frequency === null && 'Please select frequency'}
+            />
+          </div>
+          <FrequencyButton
+            frequency={frequency}
+            handleFrequency={handleFrequency}
+            data={paymentPlanFrequency}
+          />
         <FrequencyButton
           frequency={frequency}
           handleFrequency={handleFrequency}

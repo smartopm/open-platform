@@ -45,6 +45,7 @@ module Mutations
 
       private
 
+      # rubocop:disable Style/GuardClause
       # Raises GraphQL execution payment plan does not exist.
       #
       # @return [GraphQL::ExecutionError]
@@ -55,6 +56,7 @@ module Mutations
           raise GraphQL::ExecutionError, I18n.t('errors.payment_plan.transfer_can_not_be_processed')
         end
       end
+      # rubocop:enable Style/GuardClause
 
       # Raises GraphQL execution error if land parcel does not exist.
       #
