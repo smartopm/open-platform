@@ -21,8 +21,8 @@ RSpec.describe Mutations::PaymentPlan::TransferPaymentPlan do
         :payment_plan,
         land_parcel_id: land_parcel.id,
         user_id: user.id,
-        monthly_amount: 100,
-        duration_in_month: 12,
+        installment_amount: 100,
+        duration: 12,
       )
     end
     let!(:transaction) do

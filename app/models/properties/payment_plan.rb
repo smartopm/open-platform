@@ -94,13 +94,12 @@ module Properties
         duration.months
       end
     end
-    
+
     # Transfers payments on PaymentPlan to different PaymentPlan.
     #
     # @param [PaymentPlan] plan
     #
     # @return [void]
-    # rubocop:disable Metrics/MethodLength
     def transfer_payments(plan)
       plan.plan_payments.each do |payment|
         payment_attributes = payment.attributes.slice(
@@ -129,7 +128,7 @@ module Properties
 
     private
 
-    # Assigns pending balance(product of monthly amount & duration_in_month).
+    # Assigns pending balance(product of installmemt amount & duration).
     #
     # @return [void]
     def set_pending_balance
