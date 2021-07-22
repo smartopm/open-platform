@@ -61,16 +61,19 @@ export function MainNav({ authState }) {
   const classes = useStyles();
   const [drawerOpen, setDrawerOpen] = useState(false);
 
-  const dynamicMenu = authState?.user?.community?.menuItems?.map(menuItem => ({
-    routeProps: {
-      path: menuItem.menu_link,
-      component: <span />
-    },
-    styleProps: {},
-    name: () => menuItem.menu_name,
-    featureName: 'DynamicMenu',
-    accessibleBy: allUserTypes
-  })) || [];
+  const dynamicMenu =
+    authState?.user?.community?.menuItems
+      ?.filter(item => item.menu_link && item.menu_name)
+      .map(menuItem => ({
+        routeProps: {
+          path: menuItem.menu_link,
+          component: <span />
+        },
+        styleProps: {},
+        name: () => menuItem.menu_name,
+        featureName: 'DynamicMenu',
+        accessibleBy: allUserTypes
+      })) || [];
 
   const modulesWithCommMenu = modules.map(module => {
     if (module.routeProps.path === '' && module.featureName === 'Community') {
