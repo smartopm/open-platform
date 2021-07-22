@@ -113,7 +113,8 @@ export default function RequestUpdate({ id }) {
 
     const otherFormData = {
       ...formData,
-      reason: formData.reason === 'other' ? formData.business : '',
+      // return reason if not other
+      reason: formData.business || formData.reason
     }
 
       return createEntryRequest({ variables: otherFormData })
