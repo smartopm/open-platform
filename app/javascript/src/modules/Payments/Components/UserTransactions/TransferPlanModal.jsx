@@ -17,7 +17,7 @@ import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import MessageAlert from '../../../../components/MessageAlert';
 import { Spinner } from '../../../../shared/Loading';
-import { UserLandParcel } from '../../../../graphql/queries';
+import { UserLandParcels } from '../../../../graphql/queries';
 import { TransferPaymentPlanMutation } from '../../graphql/payment_plan_mutations';
 import { formatError } from '../../../../utils/helpers';
 
@@ -38,7 +38,7 @@ export default function TransferPlanModal({
   const [transferPaymentPlan] = useMutation(TransferPaymentPlanMutation);
   const classes = useStyles();
   const { t } = useTranslation('common');
-  const [loadLandParcel, { loading, data } ] = useLazyQuery(UserLandParcel,{
+  const [loadLandParcel, { loading, data } ] = useLazyQuery(UserLandParcels,{
     variables: { userId },
     errorPolicy: 'all',
     fetchPolicy: 'cache-and-network'
@@ -119,7 +119,7 @@ export default function TransferPlanModal({
             </Typography>
             <Typography className={classes.content} paragraph variant="body1" color="textPrimary" display='body'>
               {
-                (data?.userLandParcel.length > 1) ?
+                (data?.userLandParcels.length > 1) ?
                   (
                     <LandParcelForTransferPlan
                       data={data}
@@ -135,7 +135,7 @@ export default function TransferPlanModal({
               }
             </Typography>
             <Typography className={classes.footer} paragraph variant="body1" color="textPrimary" display='body'>
-              { (data?.userLandParcel.length > 1) &&
+              { (data?.userLandParcels.length > 1) &&
                 (
                   <FormGroup row>
                     <FormControlLabel
@@ -184,7 +184,7 @@ export default function TransferPlanModal({
 }
 
 export function LandParcelForTransferPlan({data, landParcelId, planLandParcelId, handleRadioChange}) {
-  const filteredLandParcels = data?.userLandParcel.filter(land => land.id !== planLandParcelId)
+  const filteredLandParcels = data?.userLandParcels.filter(land => land.id !== planLandParcelId)
 
   return (
     <FormControl component="fieldset">
@@ -213,8 +213,11 @@ export function LandParcelForTransferPlan({data, landParcelId, planLandParcelId,
 TransferPlanModal.propTypes = {
   open: PropTypes.bool.isRequired,
   handleModalClose: PropTypes.func.isRequired,
-  // eslint-disable-next-line react/forbid-prop-types
-  planData: PropTypes.object.isRequired,
+  planData: PropTypes.shape({
+    landParcel: PropTypes.shape({
+      id: PropTypes.string.isRequired
+    }).isRequired
+  }).isRequired,
   userId: PropTypes.string.isRequired,
   paymentPlanId: PropTypes.string.isRequired,
   refetch: PropTypes.func.isRequired,
@@ -222,8 +225,11 @@ TransferPlanModal.propTypes = {
 }
 
 LandParcelForTransferPlan.propTypes = {
-  // eslint-disable-next-line react/forbid-prop-types
-  data: PropTypes.object.isRequired,
+  data: PropTypes.shape({
+    userLandParcels: PropTypes.arrayOf(PropTypes.shape({
+      id: PropTypes.string
+     })).isRequired
+    }).isRequired,
   landParcelId: PropTypes.string.isRequired,
   planLandParcelId: PropTypes.string.isRequired,
   handleRadioChange: PropTypes.func.isRequired,

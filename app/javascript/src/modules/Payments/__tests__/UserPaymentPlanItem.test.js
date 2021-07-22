@@ -3,11 +3,13 @@ import { render, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { BrowserRouter } from 'react-router-dom';
 import { MockedProvider } from '@apollo/react-testing';
+import { useTranslation } from 'react-i18next';
 import PaymentPlan, { renderPlan } from '../Components/UserTransactions/UserPaymentPlanItem';
 import currency from '../../../__mocks__/currency';
 import PaymentPlanUpdateMutation from '../graphql/payment_plan_mutations';
 
 describe('Render Payment Plan Item', () => {
+  const { t } = useTranslation('common');
   const plan = {
     planType: 'lease',
     startDate: '2021-01-26',
@@ -99,8 +101,16 @@ describe('Render Payment Plan Item', () => {
 
     expect(container.getAllByTestId('plan-menu')[0]).toBeInTheDocument();
     fireEvent.click(container.getAllByTestId('plan-menu')[0]);
-    expect(container.getByText('View Statement')).toBeInTheDocument();
-    fireEvent.click(container.getByText('View Statement'));
+    expect(container.getByText(t('common:menu.view_statement'))).toBeInTheDocument();
+    fireEvent.click(container.getByText(t('common:menu.view_statement')));
+    expect(container.getByText(t('common:menu.cancel_plan'))).toBeInTheDocument();
+    fireEvent.click(container.getByText(t('common:menu.cancel_plan')));
+    expect(container.getByText(t('common:menu.view_transactions'))).toBeInTheDocument();
+    fireEvent.click(container.getByText(t('common:menu.view_transactions')));
+    expect(container.getByText(t('common:menu.view_details'))).toBeInTheDocument();
+    fireEvent.click(container.getByText(t('common:menu.view_details')));
+    expect(container.getByText(t('common:menu.transfer_payment_plan'))).toBeInTheDocument();
+    fireEvent.click(container.getByText(t('common:menu.transfer_payment_plan')));
   });
 
   it('should check if renderPlan works as expected', () => {

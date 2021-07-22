@@ -65,7 +65,7 @@ export default function PaymentPlanModal({
   }
 
   function getCalendarDuration(){
-    let calendarDuration = 'months'
+    let calendarDuration = ''
     switch(frequency){
       case 0:{
         calendarDuration = 'days'
@@ -84,7 +84,7 @@ export default function PaymentPlanModal({
         break;
       }
       default: {
-        calendarDuration = 'months'
+        calendarDuration = ''
         break;
       }
     }
@@ -126,7 +126,7 @@ export default function PaymentPlanModal({
 
   function confirmSubmission(event){
     event.preventDefault();
-    if(!inputValue.installmentAmount || !inputValue.duration || !landParcelId){
+    if(!inputValue.installmentAmount || !inputValue.duration || !landParcelId || frequency === null){
       setIsError(true);
       return;
     }
@@ -186,6 +186,21 @@ export default function PaymentPlanModal({
             label="Start Date"
             required
           />
+          <div>
+            <TextField
+              autoFocus
+              margin="frequency"
+              id="frequency"
+              aria-label="frequency"
+              label="Plan Frequency"
+              value=""
+              disabled
+              name="frequency"
+              style={{ width: '100%' }}
+              error={isError && frequency === null}
+              helperText={isError && frequency === null && 'Please select frequency'}
+            />
+          </div>
           <FrequencyButton
             frequency={frequency}
             handleFrequency={handleFrequency}
@@ -341,15 +356,18 @@ export default function PaymentPlanModal({
 };
 
 export function CoOwners({landParcel, userId, handleCoOwners}){
+  const filteredAccounts = landParcel?.accounts.filter(account => account.userId !== userId)
   return(
     <>
-      <div>
-        <FormLabel>
-          Select co-owners you would like to add to this plan
-        </FormLabel>
-      </div>
-      <div>
-        {landParcel?.accounts?.map(account => (
+      {filteredAccounts?.length > 0 && (
+      <>
+        <div>
+          <FormLabel>
+            Select co-owners you would like to add to this plan
+          </FormLabel>
+        </div>
+        <div>
+          {landParcel?.accounts?.map(account => (
        account.userId !== userId && (
        <FormControlLabel
          control={(
@@ -367,7 +385,9 @@ export function CoOwners({landParcel, userId, handleCoOwners}){
        />
          ) 
       ))}
-      </div>
+        </div>
+      </>
+    )}
     </>
   )
 };
