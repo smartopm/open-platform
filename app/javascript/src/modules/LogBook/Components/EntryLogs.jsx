@@ -258,9 +258,7 @@ export function IndexComponent({
                 </span>
                 <span className={css(styles.subTitle)} data-testid="entry_date">
                   {/* if an event is entry_request then it should show when it was granted or denied instead of when it was created */}
-                  {event.refType === 'Logs::EntryRequest'
-                    ? dateToString(event.entryRequest.grantedAt)
-                    : dateToString(event.createdAt)}
+                  {dateToString(event.entryRequest?.grantedAt || event.createdAt)}
                 </span>
               </div>
             </div>
@@ -272,9 +270,7 @@ export function IndexComponent({
               </div>
               <div className="col-xs-4">
                 <span className={css(styles.subTitle)} data-testid="entry_time">
-                  {event.refType === 'Logs::EntryRequest'
-                    ? dateTimeToString(event.entryRequest.grantedAt)
-                    : dateTimeToString(event.createdAt)}
+                  {dateTimeToString(event.entryRequest?.grantedAt || event.createdAt)}
                 </span>
               </div>
             </div>
