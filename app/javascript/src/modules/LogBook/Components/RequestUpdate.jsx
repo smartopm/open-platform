@@ -36,14 +36,13 @@ const initialState = {
     nrc: '',
     vehiclePlate: '',
     reason: '',
-    otherReason: '',
+    business: '',
     state: '',
     userType: '',
     expiresAt: '',
     email: '',
     companyName: '',
     temperature: '',
-    business: '',
     loaded: false
 }
 export default function RequestUpdate({ id }) {
@@ -105,13 +104,19 @@ export default function RequestUpdate({ id }) {
       [name]: value
     });
     // if a different reason is picked then reset the other reason
-    if (name === 'reason' && formData.otherReason) {
-      setFormData({ ...formData, otherReason: '' })
+    if (name === 'reason' && formData.business) {
+      setFormData({ ...formData, business: '' })
     }
   }
 
   function handleCreateRequest() {
-      return createEntryRequest({ variables: formData })
+
+    const otherFormData = {
+      ...formData,
+      reason: formData.reason === 'other' ? formData.business : '',
+    }
+
+      return createEntryRequest({ variables: otherFormData })
       // eslint-disable-next-line no-shadow
         .then(({ data }) => {
           setRequestId(data.result.entryRequest.id)
@@ -237,7 +242,7 @@ export default function RequestUpdate({ id }) {
   }
 
   function handleAddOtherReason(){
-    if (!formData.otherReason) {
+    if (!formData.business) {
       setInputValidationMsg({ isError: true })
       return
     }
@@ -256,9 +261,9 @@ export default function RequestUpdate({ id }) {
           <TextField
             className="form-control"
             type="text"
-            name="otherReason"
-            value={formData.otherReason}
-            onChange={event => setFormData({ ...formData, otherReason: event.target.value })}
+            name="business"
+            value={formData.business}
+            onChange={event => setFormData({ ...formData, business: event.target.value })}
             placeholder={t('logbook:logbook.other_reason')}
           />
         </div>
@@ -545,7 +550,7 @@ export default function RequestUpdate({ id }) {
               helperText={inputValidationMsg.isError &&
                 requiredFields.includes('reason') &&
                 !formData.reason ?
-                'Reason is Required' : formData.otherReason}
+                'Reason is Required' : formData.business}
             >
               {
                 Object.keys(defaultBusinessReasons).map(_reason => (
