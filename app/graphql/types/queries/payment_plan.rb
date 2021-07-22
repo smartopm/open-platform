@@ -25,8 +25,6 @@ module Types::Queries::PaymentPlan
     end
   end
 
-  # rubocop:disable Metrics/AbcSize
-  # rubocop:disable Metrics/MethodLength
   # Returns list of user's all payment plans with payments
   #
   # @param user_id [String]
@@ -37,22 +35,12 @@ module Types::Queries::PaymentPlan
   def user_plans_with_payments(user_id: nil, offset: 0, limit: 10)
     user = verified_user(user_id)
     payment_plans = Properties::PaymentPlan
-                    .left_joins(:plan_ownerships).where(
+                    .left_joins(:plan_ownerships).includes(:plan_payments).where(
                       'payment_plans.user_id = ? or plan_ownerships.user_id = ?', user.id,
                       user.id
                     ).distinct
-
-    if context[:current_user].admin?
-      payment_plans.order(created_at: :desc).offset(offset).limit(limit)
-    else
-      payment_plans.where.not(plan_payments: { status: :cancelled }).order(
-        created_at:
-        :desc,
-      ).offset(offset).limit(limit)
-    end
+    payment_plans.order(created_at: :desc).offset(offset).limit(limit)
   end
-  # rubocop:enable Metrics/AbcSize
-  # rubocop:enable Metrics/MethodLength
 
   # Statement details of payment plan
   #

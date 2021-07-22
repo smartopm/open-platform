@@ -382,6 +382,7 @@ export default function UserPaymentPlanItem({
             {plan.planPayments
               ?.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
               .map(pay => (
+                (currentUser.userType === 'admin' || pay?.status !== 'cancelled') && (
                 <div key={pay.id} className={classes.paymentList}>
                   <DataList
                     keys={paymentHeader}
@@ -392,6 +393,7 @@ export default function UserPaymentPlanItem({
                     color
                   />
                 </div>
+              )
               ))}
           </AccordionDetails>
         </Accordion>
