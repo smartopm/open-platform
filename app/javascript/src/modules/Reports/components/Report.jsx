@@ -19,6 +19,7 @@ import DatePickerDialog from '../../../components/DatePickerDialog';
 import ReportFooter from './ReportFooter'
 import ReportData from './ReportData';
 import ReportHeader from './ReportHeader';
+import MessageAlert from '../../../components/MessageAlert';
 
 export default function Report() {
   const classes = useStyles();
@@ -26,6 +27,7 @@ export default function Report() {
   const [printOpen, setPrintIsOpen] = useState(false);
   const [reportingDate, setReportingDate] = useState({ startDate: null, endDate: null });
   const [rangerPickerOpen, setRangePickerOpen] = useState(true);
+  const [alertOpen, setAlertOpen] = useState(false)
   const { t } = useTranslation('report')
   const history = useHistory();
   const [loadReportData, { data, error, loading, called }] = useLazyQuery(FormSubmissionsQuery, {
@@ -41,6 +43,10 @@ export default function Report() {
       setRangePickerOpen(false);
       setPrintIsOpen(true);
     }
+    if (called && !loading && error) {
+      setAlertOpen(!alertOpen)
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [called, loading, error]);
 
   function printReport() {
@@ -60,6 +66,12 @@ export default function Report() {
 
   return (
     <>
+      <MessageAlert
+        type='error'
+        message={formatError(error?.message)}
+        open={alertOpen}
+        handleClose={() => setAlertOpen(false)}
+      />
       <DetailsDialog
         handleClose={handleCloseReport}
         open={rangerPickerOpen}
@@ -94,12 +106,6 @@ export default function Report() {
             >
               {t('misc.generate_report')}
             </Button>
-          </CenteredContent>
-          <br />
-          <CenteredContent>
-            <Typography component="span" color="secondary">
-              {error ? formatError(error.message) : null}
-            </Typography>
           </CenteredContent>
         </Container>
       </DetailsDialog>
