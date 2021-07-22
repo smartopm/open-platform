@@ -126,7 +126,7 @@ module Properties
     #
     # @return [void]
     def set_pending_balance
-      self.pending_balance = installmemt_amount * duration
+      self.pending_balance = installment_amount * duration
     end
   end
 end
