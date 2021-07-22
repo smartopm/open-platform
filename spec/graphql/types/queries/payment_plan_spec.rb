@@ -13,7 +13,7 @@ RSpec.describe Types::Queries::Payment do
                            parcel_number: 'Plot001')
     end
     let(:another_payment_plan) do
-      create(:payment_plan, land_parcel_id: land_parcel.id, user_id: admin.id,
+      create(:payment_plan, land_parcel_id: land_parcel.id, user_id: non_admin.id,
                             installment_amount: 300)
     end
     let!(:plan_ownership) do
@@ -31,6 +31,17 @@ RSpec.describe Types::Queries::Payment do
       create(:plan_payment, user_id: user.id, community_id: community.id,
                             transaction_id: transaction.id, payment_plan_id: payment_plan.id,
                             amount: 500, manual_receipt_number: '12300')
+    end
+    let!(:other_transaction) do
+      create(:transaction, user_id: non_admin.id, community_id: community.id,
+                           depositor_id: admin.id, amount: 700, receipt_number: '12301',
+                           status: 'cancelled')
+    end
+    let!(:other_plan_payment) do
+      create(:plan_payment, user_id: user.id, community_id: community.id,
+                            transaction_id: other_transaction.id,
+                            payment_plan_id: another_payment_plan.id,
+                            amount: 700, manual_receipt_number: '12301', status: 'cancelled')
     end
     let(:user_plans_with_payments) do
       <<~GQL
@@ -133,6 +144,30 @@ RSpec.describe Types::Queries::Payment do
           expect(plan_payment_result['amount']).to eql 500.0
           expect(plan_payment_result['userTransaction']['source']).to eql 'cash'
         end
+      end
+    end
+
+    context 'when user is not an admin' do
+      before do
+        another_payment_plan.pending_balance -= other_plan_payment.amount
+        another_payment_plan.save
+      end
+      it "returns list of all user's payment plans with not cancelled payments" do
+        variables = { userId: non_admin.id }
+        result = DoubleGdpSchema.execute(user_plans_with_payments,
+                                         variables: variables,
+                                         context: {
+                                           current_user: non_admin,
+                                           site_community: community,
+                                         })
+        expect(result.dig('data', 'userPlansWithPayments').size).to eql 1
+        payment_plans_result = result.dig('data', 'userPlansWithPayments', 0)
+        plan_payment_result = payment_plans_result['planPayments'][0]
+        expect(payment_plans_result['planType']).to eql 'lease'
+        expect(payment_plans_result['installmentAmount']).to eql 300.0
+        expect(payment_plans_result['pendingBalance']).to eql 2900.0
+        expect(plan_payment_result['amount']).to eql 700.0
+        expect(plan_payment_result['userTransaction']['source']).to eql 'cash'
       end
     end
 
