@@ -216,6 +216,13 @@ export default function UserPaymentPlanItem({
     setPlanAnchor(null)
   }
 
+  function headersForNonAdminUsers(payments){
+    if(currentUser.userType !== 'admin' && payments?.every((payment) => payment.status === 'cancelled')){
+      return false;
+    }
+    return true;
+  }
+
   function handleSetDay(paymentDay) {
     // close the menu immediately to show mutation feedback
     handleClose();
@@ -369,7 +376,7 @@ export default function UserPaymentPlanItem({
             />
           </AccordionSummary>
           <AccordionDetails classes={{ root: classes.content }}>
-            {plan.planPayments && Boolean(plan.planPayments?.length) && (
+            {plan.planPayments && Boolean(plan.planPayments?.length) && headersForNonAdminUsers(plan?.planPayments) &&   (
               <div>
                 <Typography color="primary" className={classes.payment}>
                   Payments
