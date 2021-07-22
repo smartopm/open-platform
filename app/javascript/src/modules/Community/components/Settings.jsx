@@ -195,9 +195,12 @@ export default function CommunitySettings({ data, token, refetch }) {
 
   function handleMenuItemRemoveRow(id) {
     const values = menuItemOptions;
-    if (values.length !== 1) {
-      values.splice(id, 1);
+    if (values.length === 1) {
+      setMenuItemOptions([menuItems]);
+      return;
     }
+
+    values.splice(id, 1);
     setMenuItemOptions([...values]);
   }
 
