@@ -20,7 +20,7 @@ import {
 import { Spinner } from "../../../shared/Loading";
 import { isTimeValid, getWeekDay } from '../../../utils/dateutil';
 import { userState, userType, communityVisitingHours, defaultBusinessReasons } from '../../../utils/constants'
-import { ModalDialog } from "../../../components/Dialog"
+import { ModalDialog, ReasonInputModal } from "../../../components/Dialog"
 import CaptureTemp from "../../../components/CaptureTemp";
 import { dateToString, dateTimeToString } from "../../../components/DateContainer";
 import { Context } from '../../../containers/Provider/AuthStateProvider';
@@ -36,7 +36,7 @@ const initialState = {
     nrc: '',
     vehiclePlate: '',
     reason: '',
-    otherReason: '',
+    business: '',
     state: '',
     userType: '',
     expiresAt: '',
@@ -66,7 +66,7 @@ export default function RequestUpdate({ id }) {
   const [message, setMessage] = useState('')
   const [isModalOpen, setModal] = useState(false)
   const [modalAction, setModalAction] = useState('')
-  const [date, setDate] = useState(new Date());
+  const [date] = useState(new Date());
   const [isClicked, setIsClicked] = useState(false)
   const [isObservationOpen, setIsObservationOpen] = useState(false)
   const [observationNote, setObservationNote] = useState("")
@@ -76,14 +76,7 @@ export default function RequestUpdate({ id }) {
   const [formData, setFormData] = useState(initialState);
   const requiredFields = authState?.user?.community?.communityRequiredFields?.manualEntryRequestForm || defaultRequiredFields
   const { t } = useTranslation(['common', 'logbook'])
-
-  useEffect(() => {
-    const timerID = setInterval(() => tick(), 1000);
-
-    return function cleanup() {
-      clearInterval(timerID);
-    };
-  });
+  const [isReasonModalOpen, setReasonModal] = useState(false)
 
   useEffect(() => {
     if (id) {
@@ -92,9 +85,13 @@ export default function RequestUpdate({ id }) {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id])
 
-  function tick() {
-    setDate(new Date());
-  }
+  useEffect(() => {
+    if (formData.reason === 'other') {
+      setReasonModal(!isReasonModalOpen)
+    }
+   /* eslint-disable-next-line react-hooks/exhaustive-deps */
+  }, [formData.reason])
+
 
   // Data is loaded, so set the initialState, but only once
   if (!formData.loaded && data) {
@@ -106,10 +103,21 @@ export default function RequestUpdate({ id }) {
       ...formData,
       [name]: value
     });
+    // if a different reason is picked then reset the other reason
+    if (name === 'reason' && formData.business) {
+      setFormData({ ...formData, business: '' })
+    }
   }
 
   function handleCreateRequest() {
-      return createEntryRequest({ variables: formData })
+
+    const otherFormData = {
+      ...formData,
+      // return reason if not other
+      reason: formData.business || formData.reason
+    }
+
+      return createEntryRequest({ variables: otherFormData })
       // eslint-disable-next-line no-shadow
         .then(({ data }) => {
           setRequestId(data.result.entryRequest.id)
@@ -234,9 +242,34 @@ export default function RequestUpdate({ id }) {
     return isTimeValid({ date, visitingHours })
   }
 
+  function handleAddOtherReason(){
+    if (!formData.business) {
+      setInputValidationMsg({ isError: true })
+      return
+    }
+    setReasonModal(!isReasonModalOpen)
+  }
+
   const observationAction = observationNote ? 'Save' : 'Skip'
   return (
     <>
+      <ReasonInputModal
+        handleAddReason={handleAddOtherReason}
+        handleClose={() => setReasonModal(!isReasonModalOpen)}
+        open={isReasonModalOpen}
+      >
+        <div className="form-group">
+          <TextField
+            className="form-control"
+            type="text"
+            name="business"
+            value={formData.business}
+            onChange={event => setFormData({ ...formData, business: event.target.value })}
+            placeholder={t('logbook:logbook.other_reason')}
+          />
+        </div>
+      </ReasonInputModal>
+
       <MessageAlert
         type={!observationDetails.isError ? 'success' : 'error'}
         message={observationDetails.message}
@@ -514,18 +547,19 @@ export default function RequestUpdate({ id }) {
               inputProps={{ 'data-testid': 'entry_user_visit' }}
               error={inputValidationMsg.isError &&
                 requiredFields.includes('reason') &&
-                (!formData.reason) || (formData.reason === 'other' &&
-                !formData.reason)}
+                (!formData.reason)}
               helperText={inputValidationMsg.isError &&
                 requiredFields.includes('reason') &&
-                !formData.reason &&
-                'Reason is Required'}
+                !formData.reason ?
+                'Reason is Required' : formData.business}
             >
-              {Object.keys(defaultBusinessReasons).map(_reason => (
-                <MenuItem key={_reason} value={_reason}>
-                  {t(`logbook:business_reasons.${_reason}`) || defaultBusinessReasons[String(_reason)]}
-                </MenuItem>
-              ))}
+              {
+                Object.keys(defaultBusinessReasons).map(_reason => (
+                  <MenuItem key={_reason} value={_reason}>
+                    {t(`logbook:business_reasons.${_reason}`) || defaultBusinessReasons[String(_reason)]}
+                  </MenuItem>
+                  ))
+              }
             </TextField>
           </div>
 

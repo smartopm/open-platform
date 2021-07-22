@@ -63,6 +63,7 @@ export function ModalDialog({
 }
 
 export function ReasonInputModal({ handleAddReason, handleClose, open, children }) {
+  const { t } = useTranslation(['logbook', 'common'])
   return (
     <Dialog
       onClose={handleClose}
@@ -72,16 +73,16 @@ export function ReasonInputModal({ handleAddReason, handleClose, open, children 
       maxWidth="lg"
     >
       <DialogContent>
-        <p className="deny-msg">Other Business</p>
+        <p className="deny-msg">{t('logbook.other_reason')}</p>
         <br />
         {children}
       </DialogContent>
       <DialogActions>
         <Button autoFocus onClick={handleAddReason} color="primary">
-          Save
+          {t('common:form_actions.save')}
         </Button>
         <Button className="btn-close" onClick={handleClose}>
-          Cancel
+          {t('common:form_actions.cancel')}
         </Button>
       </DialogActions>
     </Dialog>
