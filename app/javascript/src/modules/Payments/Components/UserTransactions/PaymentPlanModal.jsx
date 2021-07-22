@@ -172,32 +172,30 @@ export default function PaymentPlanModal({
       });
   }
 
-  return (
-    <CustomizedDialogs
-      open={open}
-      handleModal={handleModalClose}
-      dialogHeader={t('misc.create_a_plan')}
-      subHeader={t('misc.create_a_payment_plan')}
-      handleBatchFilter={confirmSubmission}
-    >
-      <>
-        <TextField
-          id="owner"
-          aria-label="owner"
-          label={t('table_headers.owner')}
-          defaultValue={userData.name}
-          name="owner"
-          style={{ width: '100%' }}
-          disabled
-        />
-        <DatePickerDialog
-          selectedDate={inputValue.startDate}
-          handleDateChange={date =>
-            handleInputChange({ target: { name: 'startDate', value: date } })
-          }
-          label={t('common:table_headers.start_date')}
-          required
-        />s
+    return(
+      <CustomizedDialogs
+        open={open}
+        handleModal={handleModalClose}
+        dialogHeader="Create a plan"
+        subHeader="Create a payment plan for your plot"
+        handleBatchFilter={confirmSubmission}
+      >
+        <>
+          <TextField
+            id="owner"
+            aria-label="owner"
+            label="Owner"
+            defaultValue={userData.name}
+            name="owner"
+            style={{ width: '100%' }}
+            disabled
+          />
+          <DatePickerDialog
+            selectedDate={inputValue.startDate} 
+            handleDateChange={date => handleInputChange({ target: { name: 'startDate', value: date }})}
+            label="Start Date"
+            required
+          />
           <div>
             <TextField
               autoFocus
