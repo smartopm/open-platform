@@ -7,5 +7,6 @@ module Types
     field :value, String, null: true
     field :field_name, String, null: true
     field :field_type, String, null: true
+    field :order, String, null: true
   end
 end

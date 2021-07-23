@@ -62,7 +62,11 @@ export default function Report() {
   function generateReport() {
     loadReportData();
   }
-  const formattedData = groupBy(data?.formSubmissions, 'fieldName');
+
+
+  const sortedData = data?.formSubmissions.sort((a, b) => a.order - b.order) || []
+  const filteredData = sortedData.filter(submission => submission.fieldType !== 'file_upload')
+  const formattedData = groupBy(filteredData, 'fieldName');
 
   return (
     <>
