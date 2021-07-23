@@ -10,7 +10,7 @@ module Forms
     has_many :form_properties, dependent: :destroy
     has_many :form_users, dependent: :destroy
 
-    validates :name, presence: true, uniqueness: true
+    validates :name, presence: true, uniqueness: { scope: :community_id }
 
     default_scope { where.not(status: 2) }
     enum status: { draft: 0, published: 1, deleted: 2, deprecated: 3 }
