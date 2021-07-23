@@ -129,12 +129,12 @@ module Types::Queries::Form
     submissions = []
     form_name = 'Customs Registry'
     last_version = context[:site_community].forms.where('name ILIKE ?', "#{form_name}%")
-                              .order(version_number: :desc).first
+                                           .order(version_number: :desc).first
     raise_form_not_found_error(last_version)
 
     context[:site_community].forms.where(grouping_id: last_version.grouping_id)
-               .eager_load(form_users: { user_form_properties: [:form_property] })
-               .where(form_users: { created_at: start_date..end_date }).each do |form|
+                            .eager_load(form_users: { user_form_properties: [:form_property] })
+                            .where(form_users: { created_at: start_date..end_date }).each do |form|
       form.form_users.each do |form_user|
         form_user.user_form_properties.each do |property|
           prop = { value: property.value, field_name: property.form_property.field_name,
