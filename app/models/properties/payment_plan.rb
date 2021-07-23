@@ -11,12 +11,14 @@ module Properties
     has_many :plan_ownerships, dependent: :destroy
     has_many :co_owners, class_name: 'Users::User', through: :plan_ownerships, source: :user
 
+    default_scope { where.not(status: :deleted) }
+
     before_create :set_pending_balance
 
     validates :payment_day,
               numericality: { only_integer: true, greater_than: 0, less_than_or_equal_to: 28 }
 
-    enum status: { active: 0, cancelled: 1, deleted: 2 }
+    enum status: { active: 0, cancelled: 1, deleted: 2, completed: 3 }
     enum frequency: { daily: 0, weekly: 1, monthly: 2, quarterly: 3 }
 
     has_paper_trail
@@ -49,7 +51,7 @@ module Properties
       update!(pending_balance: 0, status: 1)
     end
 
-    # Updates plan's pending balance.
+    # Updates plan's pending balance and status.
     #
     # @param [Float] amount
     # @param [String] settle/revert
@@ -57,10 +59,13 @@ module Properties
     # @return [Boolean]
     def update_pending_balance(amount, action = :settle)
       if action.eql?(:settle)
-        update!(pending_balance: pending_balance - allocated_amount(amount))
+        self.pending_balance = pending_balance - allocated_amount(amount)
+        self.status = :completed if pending_balance.eql?(0)
       else
-        update!(pending_balance: pending_balance + amount)
+        self.status = :active if pending_balance.eql?(0)
+        self.pending_balance = pending_balance + amount
       end
+      save
     end
 
     # rubocop:disable Metrics/MethodLength

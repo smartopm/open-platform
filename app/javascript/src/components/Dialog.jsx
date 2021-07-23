@@ -100,7 +100,8 @@ export function CustomizedDialogs({
   disableActionBtn,
   cancelAction,
   actionable,
-  actionLoading
+  actionLoading,
+  displaySaveButton
 }) {
   const classes = useStyles()
   return (
@@ -127,6 +128,7 @@ export function CustomizedDialogs({
                 <Button onClick={handleModal} variant="outlined" color="secondary" data-testid='dialog_cancel'>
                   {cancelAction}
                 </Button>
+                {displaySaveButton && (
                 <Button
                   data-testid="custom-dialog-button"
                   onClick={handleBatchFilter}
@@ -136,6 +138,7 @@ export function CustomizedDialogs({
                 >
                   {saveAction || 'Save'}
                 </Button>
+              )}
               </>
             )}
           </DialogActions>
@@ -349,7 +352,8 @@ CustomizedDialogs.defaultProps = {
   disableActionBtn: false,
   cancelAction: 'Cancel',
   actionable: true,
-  actionLoading: false
+  actionLoading: false,
+  displaySaveButton: true
 }
 
 CustomizedDialogs.propTypes = {
@@ -363,7 +367,8 @@ CustomizedDialogs.propTypes = {
   cancelAction: PropTypes.string,
   disableActionBtn: PropTypes.bool,
   actionable: PropTypes.bool,
-  actionLoading: PropTypes.bool
+  actionLoading: PropTypes.bool,
+  displaySaveButton: PropTypes.bool
 }
 
 ModalDialog.defaultProps = {

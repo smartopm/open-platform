@@ -20,7 +20,6 @@ RSpec.describe Mutations::LandParcel do
           $stateProvince: String,
           $parcelType: String,
           $country: String,
-          $valuationFields: JSON
           $ownershipFields: JSON) {
             PropertyCreate(parcelNumber: $parcelNumber,
             address1: $address1,
@@ -30,13 +29,9 @@ RSpec.describe Mutations::LandParcel do
             stateProvince: $stateProvince,
             parcelType: $parcelType,
             country: $country,
-            valuationFields: $valuationFields
             ownershipFields: $ownershipFields) {
               landParcel {
                 id
-                valuations {
-                  amount
-                }
                 accounts {
                   fullName
                   address1
@@ -58,7 +53,6 @@ RSpec.describe Mutations::LandParcel do
           $stateProvince: String,
           $parcelType: String,
           $country: String,
-          $valuationFields: JSON
           $ownershipFields: JSON) {
             propertyUpdate(id: $id,
             parcelNumber: $parcelNumber,
@@ -69,13 +63,9 @@ RSpec.describe Mutations::LandParcel do
             stateProvince: $stateProvince,
             parcelType: $parcelType,
             country: $country,
-            valuationFields: $valuationFields,
             ownershipFields: $ownershipFields) {
               landParcel {
                 id
-                valuations {
-                  amount
-                }
                 accounts {
                   fullName
                   address1
@@ -96,12 +86,10 @@ RSpec.describe Mutations::LandParcel do
         stateProvince: 'this is state province',
         parcelType: 'this is parcel type',
         country: 'this is a country',
-        valuationFields: [{ amount: 200, startDate: 2.days.from_now }],
         ownershipFields: [{ name: 'owner name',
                             address: 'owner address',
                             userId: current_user.id }],
       }
-      prev_valuation_count = Properties::Valuation.count
 
       result = DoubleGdpSchema.execute(propertyQuery, variables: variables,
                                                       context: {
@@ -110,10 +98,6 @@ RSpec.describe Mutations::LandParcel do
                                                       }).as_json
 
       expect(result.dig('data', 'PropertyCreate', 'landParcel', 'id')).not_to be_nil
-      expect(result.dig('data', 'PropertyCreate', 'landParcel', 'valuations', 0, 'amount')).to eq(
-        200,
-      )
-      expect(Properties::Valuation.count).to eq(prev_valuation_count + 1)
       expect(result.dig('data', 'PropertyCreate', 'landParcel', 'accounts', 0, 'fullName')).to eq(
         'owner name',
       )
@@ -134,7 +118,6 @@ RSpec.describe Mutations::LandParcel do
         stateProvince: 'this is state province',
         parcelType: 'this is parcel type',
         country: 'this is a country',
-        valuationFields: [{ amount: 200, startDate: 2.days.from_now }],
         ownershipFields: [{ name: 'new name',
                             address: 'new address',
                             userId: current_user.id }],
@@ -151,7 +134,6 @@ RSpec.describe Mutations::LandParcel do
 
       parcel = Properties::LandParcel.find(user_parcel.id)
       expect(parcel.parcel_number).to eq('#new123')
-      expect(parcel.valuations.first.amount).to eq(200)
       expect(parcel.accounts.first.full_name).to eq('new name')
       expect(result['errors']).to be_nil
     end
@@ -167,7 +149,6 @@ RSpec.describe Mutations::LandParcel do
         stateProvince: 'this is state province',
         parcelType: 'this is parcel type',
         country: 'this is a country',
-        valuationFields: [{ amount: 200, startDate: 2.days.from_now }],
         ownershipFields: [{ name: 'new name',
                             address: 'new address',
                             userId: current_user.id }],
@@ -198,9 +179,6 @@ RSpec.describe Mutations::LandParcel do
             parcelNumber: $parcelNumber, geom: $geom) {
               landParcel {
                 id
-                valuations {
-                  amount
-                }
                 accounts {
                   fullName
                   address1

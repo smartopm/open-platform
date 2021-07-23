@@ -386,7 +386,6 @@ mutation AddNewProperty($parcelNumber: String!,
   $stateProvince: String,
   $parcelType: String,
   $country: String,
-  $valuationFields: JSON
   $ownershipFields: JSON) {
     PropertyCreate(parcelNumber: $parcelNumber,
     address1: $address1,
@@ -396,7 +395,6 @@ mutation AddNewProperty($parcelNumber: String!,
     stateProvince: $stateProvince,
     parcelType: $parcelType,
     country: $country,
-    valuationFields: $valuationFields,
     ownershipFields: $ownershipFields) {
       landParcel {
         id
@@ -418,7 +416,6 @@ mutation UpdateProperty($id: ID!,
   $longX: Float,
   $latY: Float,
   $geom: JSON,
-  $valuationFields: JSON
   $ownershipFields: JSON) {
     propertyUpdate(id: $id,
     parcelNumber: $parcelNumber,
@@ -432,16 +429,9 @@ mutation UpdateProperty($id: ID!,
     longX: $longX,
     latY: $latY,
     geom: $geom,
-    valuationFields: $valuationFields,
     ownershipFields: $ownershipFields) {
       landParcel {
         id
-        valuations {
-          id
-          amount
-          startDate
-          createdAt
-        }
         accounts {
           id
           fullName

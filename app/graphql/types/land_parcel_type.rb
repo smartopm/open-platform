@@ -23,6 +23,7 @@ module Types
     field :accounts, [Types::AccountType], null: false
     field :plot_sold, Boolean, null: true
     field :image_urls, [String], null: true
+    field :payment_plans, [Types::PaymentPlanType], null: true
 
     def image_urls
       return nil unless object.images.attached?

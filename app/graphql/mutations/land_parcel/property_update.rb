@@ -16,7 +16,6 @@ module Mutations
       argument :long_x, Float, required: false
       argument :lat_y, Float, required: false
       argument :geom, GraphQL::Types::JSON, required: false
-      argument :valuation_fields, GraphQL::Types::JSON, required: false
       argument :ownership_fields, GraphQL::Types::JSON, required: false
 
       field :land_parcel, Types::LandParcelType, null: true
@@ -29,15 +28,10 @@ module Mutations
 
         ActiveRecord::Base.transaction do
           land_parcel.update!(
-            vals.except(:valuation_fields, :ownership_fields),
+            vals.except(:ownership_fields),
           )
 
-          land_parcel.valuations.delete_all
           land_parcel.land_parcel_accounts.delete_all
-
-          Array.wrap(vals[:valuation_fields]).each do |v|
-            land_parcel.valuations.create!(amount: v['amount'], start_date: v['startDate'])
-          end
 
           Array.wrap(vals[:ownership_fields]).each do |v|
             land_parcel.accounts.create!(user_id: v['userId'],

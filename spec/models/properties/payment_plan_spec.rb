@@ -29,7 +29,7 @@ RSpec.describe Properties::PaymentPlan, type: :model do
   describe 'enums' do
     it do
       is_expected.to define_enum_for(:status)
-        .with_values(active: 0, cancelled: 1, deleted: 2)
+        .with_values(active: 0, cancelled: 1, deleted: 2, completed: 3)
     end
 
     it do
