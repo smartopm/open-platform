@@ -1,7 +1,7 @@
-import React, { Fragment, useContext, useRef, useState, useEffect } from 'react'
-import { Button, Container, Grid } from '@material-ui/core'
-import { useApolloClient, useMutation, useQuery } from 'react-apollo'
-import PropTypes from 'prop-types'
+import React, { Fragment, useContext, useRef, useState, useEffect } from 'react';
+import { Button, Container, Grid } from '@material-ui/core';
+import { useApolloClient, useMutation, useQuery } from 'react-apollo';
+import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import DatePickerDialog from '../../../components/DatePickerDialog';
 import CenteredContent from '../../../components/CenteredContent';
@@ -15,9 +15,9 @@ import SignaturePad from './SignaturePad';
 import { convertBase64ToFile, sortPropertyOrder } from '../../../utils/helpers';
 import RadioInput from './RadioInput';
 import { Spinner } from '../../../shared/Loading';
-import FormTitle from './FormTitle'
+import FormTitle from './FormTitle';
 import FormPropertyAction from './FormPropertyAction';
-import ImageAuth from '../../../shared/ImageAuth'
+import ImageAuth from '../../../shared/ImageAuth';
 import MessageAlert from '../../../components/MessageAlert';
 
 // date
@@ -27,13 +27,14 @@ const initialData = {
   fieldType: '',
   fieldName: ' ',
   date: { value: null },
-  radio: { value: { label: '', checked: null } },
+  radio: { value: { label: '', checked: null } }
 };
 
 export default function GenericForm({ formId, pathname, formData, refetch, editMode }) {
   const [properties, setProperties] = useState(initialData);
   const [message, setMessage] = useState({ err: false, info: '', signed: false });
   const [isSubmitting, setSubmitting] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
   const [alertOpen, setAlertOpen] = useState(false);
   const [currentPropId, setCurrentPropertyId] = useState('');
   const [uploadedImages, setUploadedImages] = useState([]);
@@ -45,29 +46,32 @@ export default function GenericForm({ formId, pathname, formData, refetch, editM
   const [createFormUser] = useMutation(FormUserCreateMutation);
   // separate function for file upload
   const { onChange, status, signedBlobId, contentType, url } = useFileUpload({
-    client: useApolloClient(),
+    client: useApolloClient()
   });
   const {
     onChange: uploadSignature,
     status: signatureStatus,
-    signedBlobId: signatureBlobId,
+    signedBlobId: signatureBlobId
   } = useFileUpload({
-    client: useApolloClient(),
+    client: useApolloClient()
   });
-
 
   useEffect(() => {
     if (
       status === 'DONE' &&
       currentPropId &&
-      !uploadedImages.find((im) => im.propertyId === currentPropId)
+      !uploadedImages.find(im => im.propertyId === currentPropId)
     ) {
-      setUploadedImages([...uploadedImages, { blobId: signedBlobId, propertyId: currentPropId, contentType, url }]);
+      setIsUploading(false);
+      setUploadedImages([
+        ...uploadedImages,
+        { blobId: signedBlobId, propertyId: currentPropId, contentType, url }
+      ]);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status]);
 
-
+  console.log(status, 'stat');
   function handleAlertClose() {
     setAlertOpen(false);
   }
@@ -76,13 +80,13 @@ export default function GenericForm({ formId, pathname, formData, refetch, editM
     const { name, value } = event.target;
     setProperties({
       ...properties,
-      [name]: { value, form_property_id: propId },
+      [name]: { value, form_property_id: propId }
     });
   }
   function handleDateChange(date, id) {
     setProperties({
       ...properties,
-      date: { value: date, form_property_id: id },
+      date: { value: date, form_property_id: id }
     });
   }
 
@@ -90,13 +94,14 @@ export default function GenericForm({ formId, pathname, formData, refetch, editM
     const { name, value } = event.target;
     setProperties({
       ...properties,
-      [fieldName]: { value: { checked: value, label: name }, form_property_id: propId },
+      [fieldName]: { value: { checked: value, label: name }, form_property_id: propId }
     });
   }
 
   function onImageSelect(event, currentProperty) {
     setCurrentPropertyId(currentProperty);
     onChange(event.target.files[0]);
+    setIsUploading(true);
   }
 
   async function handleSignatureUpload() {
@@ -109,14 +114,12 @@ export default function GenericForm({ formId, pathname, formData, refetch, editM
 
   function saveFormData() {
     setSubmitting(true);
-    const fileSignType = formData.formProperties.filter(
-      (item) => item.fieldType === 'signature'
-    )[0];
+    const fileSignType = formData.formProperties.filter(item => item.fieldType === 'signature')[0];
 
     // get values from properties state
     const formattedProperties = Object.entries(properties).map(([, value]) => value);
     const filledInProperties = formattedProperties.filter(
-      (item) => item.value && item.value?.checked !== null && item.form_property_id !== null
+      item => item.value && item.value?.checked !== null && item.form_property_id !== null
     );
 
     // get signedBlobId as value and attach it to the form_property_id
@@ -124,22 +127,22 @@ export default function GenericForm({ formId, pathname, formData, refetch, editM
       const newValue = {
         value: signatureBlobId,
         form_property_id: fileSignType.id,
-        image_blob_id: signatureBlobId,
+        image_blob_id: signatureBlobId
       };
       filledInProperties.push(newValue);
     }
     // check if we uploaded then attach the blob id to the newValue
-    uploadedImages.forEach((item) => {
+    uploadedImages.forEach(item => {
       const newValue = {
         value: item.blobId,
         form_property_id: item.propertyId,
-        image_blob_id: item.blobId,
+        image_blob_id: item.blobId
       };
       filledInProperties.push(newValue);
     });
 
     // update all form values
-    formData.formProperties.map((prop) => addPropWithValue(filledInProperties, prop.id));
+    formData.formProperties.map(prop => addPropWithValue(filledInProperties, prop.id));
     const cleanFormData = JSON.stringify({ user_form_properties: filledInProperties });
     // formUserId
     // fields and their values
@@ -148,8 +151,8 @@ export default function GenericForm({ formId, pathname, formData, refetch, editM
       variables: {
         formId,
         userId: authState.user.id,
-        propValues: cleanFormData,
-      },
+        propValues: cleanFormData
+      }
     })
       // eslint-disable-next-line no-shadow
       .then(({ data }) => {
@@ -163,11 +166,11 @@ export default function GenericForm({ formId, pathname, formData, refetch, editM
         setMessage({
           ...message,
           err: false,
-          info: t('misc.form_submitted'),
+          info: t('misc.form_submitted')
         });
         setAlertOpen(true);
       })
-      .catch((err) => {
+      .catch(err => {
         setMessage({ ...message, err: true, info: err.message.replace(/GraphQL error:/, '') });
         setSubmitting(false);
         setAlertOpen(true);
@@ -177,7 +180,7 @@ export default function GenericForm({ formId, pathname, formData, refetch, editM
     const editable = !formPropertiesData.adminUse
       ? false
       : !(formPropertiesData.adminUse && authState.user.userType === 'admin');
-    const uploadedFile = uploadedImages.find((im) => im.propertyId === formPropertiesData.id)
+    const uploadedFile = uploadedImages.find(im => im.propertyId === formPropertiesData.id);
     const fields = {
       text: (
         <Grid container spacing={3} key={formPropertiesData.id}>
@@ -192,7 +195,7 @@ export default function GenericForm({ formId, pathname, formData, refetch, editM
               id={formPropertiesData.id}
               properties={formPropertiesData}
               defaultValue={properties.fieldName}
-              handleValue={(event) => handleValueChange(event, formPropertiesData.id)}
+              handleValue={event => handleValueChange(event, formPropertiesData.id)}
               editable={editable}
             />
           </Grid>
@@ -210,7 +213,7 @@ export default function GenericForm({ formId, pathname, formData, refetch, editM
             <DatePickerDialog
               id={formPropertiesData.id}
               selectedDate={properties.date.value}
-              handleDateChange={(date) => handleDateChange(date, formPropertiesData.id)}
+              handleDateChange={date => handleDateChange(date, formPropertiesData.id)}
               label={formPropertiesData.fieldName}
             />
           </Grid>
@@ -227,16 +230,22 @@ export default function GenericForm({ formId, pathname, formData, refetch, editM
           <Grid item xs={editMode ? 10 : 12}>
             <UploadField
               detail={{ type: 'file', label: formPropertiesData.fieldName }}
-              upload={(evt) => onImageSelect(evt, formPropertiesData.id)}
+              upload={evt => onImageSelect(evt, formPropertiesData.id)}
               editable={editable}
               uploaded={!!uploadedFile}
             />
           </Grid>
-          {
+          {isUploading && currentPropId === formPropertiesData.id ? (
+            <Spinner />
+          ) : (
             !!uploadedFile && (
-              <ImageAuth type={uploadedFile.contentType.split('/')[0]} imageLink={uploadedFile.url} token={authState.token} />
+              <ImageAuth
+                type={uploadedFile.contentType.split('/')[0]}
+                imageLink={uploadedFile.url}
+                token={authState.token}
+              />
             )
-          }
+          )}
         </Grid>
       ),
       signature: (
@@ -271,7 +280,7 @@ export default function GenericForm({ formId, pathname, formData, refetch, editM
               <RadioInput
                 properties={formPropertiesData}
                 value={null}
-                handleValue={(event) =>
+                handleValue={event =>
                   handleRadioValueChange(event, formPropertiesData.id, formPropertiesData.fieldName)
                 }
               />
@@ -293,12 +302,12 @@ export default function GenericForm({ formId, pathname, formData, refetch, editM
               id={formPropertiesData.id}
               properties={formPropertiesData}
               value=""
-              handleValue={(event) => handleValueChange(event, formPropertiesData.id)}
+              handleValue={event => handleValueChange(event, formPropertiesData.id)}
               editable={editable}
             />
           </Grid>
         </Grid>
-      ),
+      )
     };
     return fields[formPropertiesData.fieldType];
   }
@@ -314,9 +323,9 @@ export default function GenericForm({ formId, pathname, formData, refetch, editM
       <Container>
         {loading && <Spinner />}
 
-        {
-        !loading && data && <FormTitle name={data.form?.name} description={data.form?.description} />
-        }
+        {!loading && data && (
+          <FormTitle name={data.form?.name} description={data.form?.description} />
+        )}
 
         <br />
         <form>
@@ -329,10 +338,12 @@ export default function GenericForm({ formId, pathname, formData, refetch, editM
                 color="primary"
                 aria-label="form_submit"
                 disabled={isSubmitting}
-                style={{marginTop: '25px' }}
+                style={{ marginTop: '25px' }}
                 onClick={saveFormData}
               >
-                {isSubmitting ? t('common:form_actions.submitting') : t('common:form_actions.submit')}
+                {isSubmitting
+                  ? t('common:form_actions.submitting')
+                  : t('common:form_actions.submit')}
               </Button>
             </CenteredContent>
           )}
@@ -349,7 +360,7 @@ GenericForm.propTypes = {
   // eslint-disable-next-line react/forbid-prop-types
   formData: PropTypes.object.isRequired,
   refetch: PropTypes.func.isRequired,
-  editMode: PropTypes.bool.isRequired,
+  editMode: PropTypes.bool.isRequired
 };
 
 /**
@@ -360,7 +371,7 @@ GenericForm.propTypes = {
  * @description checks if a form property exist
  */
 export function propExists(values, propId) {
-  return values.some((value) => value.form_property_id === propId);
+  return values.some(value => value.form_property_id === propId);
 }
 
 /**
