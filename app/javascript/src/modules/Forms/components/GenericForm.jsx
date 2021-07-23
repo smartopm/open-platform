@@ -71,7 +71,6 @@ export default function GenericForm({ formId, pathname, formData, refetch, editM
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status]);
 
-  console.log(status, 'stat');
   function handleAlertClose() {
     setAlertOpen(false);
   }
