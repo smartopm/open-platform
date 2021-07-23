@@ -62,7 +62,11 @@ export default function Report() {
   function generateReport() {
     loadReportData();
   }
-  const formattedData = groupBy(data?.formSubmissions, 'fieldName');
+
+  // remove specific file types
+  // - file uploads
+  const filteredData = data?.formSubmissions.filter(submission => submission.fieldType !== 'file_upload')
+  const formattedData = groupBy(filteredData, 'fieldName');
 
   return (
     <>
