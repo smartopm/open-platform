@@ -27,7 +27,8 @@ export default function FormEntries({ formId }) {
   const debouncedValue = useDebounce(searchValue, 500);
   const { t } = useTranslation('form')
   const { data, error, loading } = useQuery(FormEntriesQuery, {
-      variables : {formId, query: debouncedValue, limit, offset: pageNumber }
+      variables : {formId, query: debouncedValue, limit, offset: pageNumber },
+      fetchPolicy: 'cache-and-network'
   })
   const entriesHeaders = [
     { title: 'Date of Submission', col: 1, value: t('misc.submission_date') },
