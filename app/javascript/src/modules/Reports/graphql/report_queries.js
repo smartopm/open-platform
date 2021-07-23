@@ -5,6 +5,7 @@ const FormSubmissionsQuery = gql`
     formSubmissions(startDate: $startDate, endDate: $endDate) {
       id
       value
+      order
       fieldName
       fieldType
     }

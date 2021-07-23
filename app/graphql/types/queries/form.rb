@@ -138,7 +138,8 @@ module Types::Queries::Form
       form.form_users.each do |form_user|
         form_user.user_form_properties.each do |property|
           prop = { value: property.value, field_name: property.form_property.field_name,
-                   field_type: property.form_property.field_type, id: SecureRandom.uuid }
+                   field_type: property.form_property.field_type, id: SecureRandom.uuid,
+                   order: property.form_property.order }
           submissions << prop
         end
       end
