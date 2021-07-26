@@ -136,7 +136,6 @@ export const SecurityGuards = gql`
     securityGuards {
       name
       id
-      phoneNumber
     }
   }
 `

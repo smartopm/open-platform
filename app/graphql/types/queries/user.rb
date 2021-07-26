@@ -28,11 +28,6 @@ module Types::Queries::User
       argument :limit, Integer, required: false
     end
 
-    # Get a entry logs for a user
-    field :pending_users, [Types::UserType], null: true do
-      description 'Get all pending members'
-    end
-
     # Get a current user information
     field :current_user, Types::UserType, null: true do
       description 'Get the current logged in user'
@@ -134,15 +129,6 @@ module Types::Queries::User
     return context[:current_user] if context[:current_user]
 
     raise GraphQL::ExecutionError, 'Must be logged in to perform this action'
-  end
-
-  def pending_users
-    raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') unless context[:current_user]
-
-    Users::User.allowed_users(context[:current_user]).includes(accounts: [:land_parcels])
-               .eager_load(:notes, :accounts, :labels, :contact_infos)
-               .where(state: 'pending',
-                      community_id: context[:current_user].community_id).with_attached_avatar
   end
 
   def security_guards
