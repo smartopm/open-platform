@@ -15,7 +15,7 @@ module Forms
     default_scope { where.not(status: 2) }
 
     scope :by_published, lambda { |user|
-      self.published if user.user_type != 'admin'
+      published if user.user_type != 'admin'
     }
 
     enum status: { draft: 0, published: 1, deleted: 2, deprecated: 3 }
