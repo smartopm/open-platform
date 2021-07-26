@@ -148,12 +148,11 @@ module Types::Queries::User
   def security_guards
     raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') unless context[:current_user]
 
-    Users::User.allowed_users(context[:current_user]).includes(accounts: [:land_parcels])
-               .eager_load(:notes, :accounts, :labels, :contact_infos)
+    Users::User.allowed_users(context[:current_user])
                .where(
                  community_id: context[:current_user].community_id,
                  user_type: 'security_guard',
-               ).order(name: :asc).with_attached_avatar
+               ).order(name: :asc)
   end
 
   def users_lite(offset: 0, limit: 100, query: nil)
