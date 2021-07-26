@@ -20,7 +20,7 @@ export default function PlanDetail({ open, handleModalClose, planData, currencyD
   // eslint-disable-next-line consistent-return
   function handleCoOwners() {
     if (planData?.coOwners?.length > 0) {
-      return planData.coOwners.map(name => name).join('')
+      return planData.coOwners.map(owner => owner.name).join(', ')
     }
   }
   return (
