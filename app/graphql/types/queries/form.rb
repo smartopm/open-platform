@@ -60,9 +60,10 @@ module Types::Queries::Form
   # rubocop:enable Metrics/BlockLength
 
   def forms
-    raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') if context[:current_user].blank?
+    user = context[:current_user]
+    raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') if user.blank?
 
-    context[:site_community].forms.not_deprecated.by_published(context[:current_user]).order(created_at: :desc)
+    context[:site_community].forms.not_deprecated.by_published(user).order(created_at: :desc)
   end
 
   def form(id:)
