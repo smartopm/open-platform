@@ -147,27 +147,29 @@ export default function PaymentPlans({ userId, user, userData }) {
             <div>
               <div style={{ display: 'flex', width: '100%', justifyContent: 'space-between', marginBottom: '10px' }}>
                 <Typography className={classes.plan}>Plans</Typography>
-                <div style={{ display: 'flex', width: '100%', justifyContent: 'flex-end' }}>
-                  <div style={{marginRight: '10px'}}>
-                    <ButtonComponent 
-                      color='primary' 
-                      variant='contained' 
-                      buttonText="New Payment Plan" 
-                      handleClick={() => handlePlanModal()}
-                      size='large'
-                      style={{marginRight: '10px'}}
-                    />
+                {user.userType === 'admin' && (
+                  <div style={{ display: 'flex', width: '100%', justifyContent: 'flex-end' }}>
+                    <div style={{marginRight: '10px'}}>
+                      <ButtonComponent 
+                        color='primary' 
+                        variant='contained' 
+                        buttonText="New Payment Plan" 
+                        handleClick={() => handlePlanModal()}
+                        size='large'
+                        style={{marginRight: '10px'}}
+                      />
+                    </div>
+                    <div>
+                      <ButtonComponent
+                        color='default' 
+                        variant='outlined' 
+                        buttonText="View all Transactions" 
+                        handleClick={() => handleButtonClick()}
+                        size='large'
+                      />
+                    </div>
                   </div>
-                  <div>
-                    <ButtonComponent
-                      color='default' 
-                      variant='outlined' 
-                      buttonText="View all Transactions" 
-                      handleClick={() => handleButtonClick()}
-                      size='large'
-                    />
-                  </div>
-                </div>
+                )}
                 <MessageAlert
                   type={message.isError ? 'error' : 'success'}
                   message={message.detail}

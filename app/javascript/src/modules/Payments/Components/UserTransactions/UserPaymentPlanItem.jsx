@@ -393,7 +393,7 @@ export default function UserPaymentPlanItem({
                 <div key={pay.id} className={classes.paymentList}>
                   <DataList
                     keys={paymentHeader}
-                    data={[renderPayments(pay, currencyData, menuData)]}
+                    data={[renderPayments(pay, currencyData, currentUser.userType, menuData)]}
                     hasHeader={false}
                     clickable
                     handleClick={() => transactionDetailOpen(pay)}
@@ -461,27 +461,31 @@ export function renderPlan(plan, currencyData, userType, { handleMenu, loading }
     ),
     Menu: (
       <Grid item xs={12} md={1} data-testid="menu">
-        <IconButton
-          aria-controls="simple-menu"
-          aria-haspopup="true"
-          data-testid="plan-menu"
-          onClick={(event) => menuData.handlePlanMenu(event, plan)}
-        >
-          <MoreHorizOutlined />
-        </IconButton>
-        <MenuList
-          open={menuData?.open}
-          anchorEl={menuData?.anchorEl}
-          userType={menuData?.userType}
-          handleClose={menuData?.handleClose}
-          list={menuData?.menuList}
-        />
+        {userType === 'admin' && (
+          <>
+            <IconButton
+              aria-controls="simple-menu"
+              aria-haspopup="true"
+              data-testid="plan-menu"
+              onClick={(event) => menuData.handlePlanMenu(event, plan)}
+            >
+              <MoreHorizOutlined />
+            </IconButton>
+            <MenuList
+              open={menuData?.open}
+              anchorEl={menuData?.anchorEl}
+              userType={menuData?.userType}
+              handleClose={menuData?.handleClose}
+              list={menuData?.menuList}
+            />
+          </>
+        )}
       </Grid>
     )
   };
 }
 
-export function renderPayments(pay, currencyData, menuData) {
+export function renderPayments(pay, currencyData, userType, menuData) {
   return {
     'Payment Date': (
       <Grid item xs={12} md={2} data-testid="payment-date">
@@ -509,7 +513,7 @@ export function renderPayments(pay, currencyData, menuData) {
     Menu: (
       <Grid item xs={12} md={1} data-testid="menu">
         {
-          pay.status !== 'cancelled' &&
+          userType === 'admin' && pay.status !== 'cancelled' &&
           (
             <IconButton
               aria-controls="simple-menu"
