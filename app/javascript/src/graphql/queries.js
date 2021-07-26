@@ -136,7 +136,6 @@ export const SecurityGuards = gql`
     securityGuards {
       name
       id
-      phoneNumber
     }
   }
 `
@@ -183,17 +182,6 @@ export const allFeedback = gql`
   }
 `
 
-//TODO: @Team Fix n+1 problem on the database query
-export const UsersQuery = gql`
-  query users($limit: Int, $offset: Int, $query: String) {
-    users(limit: $limit, offset: $offset, query: $query) {
-      ...UserFields
-    }
-  }
-
-  ${UserFragment.publicFields}
-`
-
 export const UsersDetails = gql`
   query users($limit: Int, $offset: Int, $query: String) {
     users(limit: $limit, offset: $offset, query: $query) {
@@ -209,9 +197,6 @@ export const UsersDetails = gql`
       extRefId
       expiresAt
       state
-      notes {
-        id
-      }
       labels {
         id
         shortDesc

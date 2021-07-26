@@ -35,8 +35,7 @@ describe('Home Guard page', () => {
             securityGuards: [
                 {
                     name: "guard 1",
-                    id: "2743-4232e2-23ewed2",
-                    phoneNumber: "00909898392",
+                    id: "2743-4232e2-23ewed2"
                 }
             ]
           }
