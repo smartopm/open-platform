@@ -74,7 +74,7 @@ phrase:
         locale_id: 5c6c3e050e8493da0e428087555a7b00
         tags: report
         update_translations: true
-    - file: config/locales/en.yml
+    - file: ./config/locales/en.yml
       params:
         file_format: yml
         locale_id: 5c6c3e050e8493da0e428087555a7b00
@@ -116,7 +116,7 @@ phrase:
         file_format: i18next
         locale_id: fa26b7d00b593c4578f0e9749221cace
         tags: report
-    - file: config/locales/es.yml
+    - file: ./config/locales/es.yml
       params:
         file_format: yml
         locale_id: fa26b7d00b593c4578f0e9749221cace
@@ -183,7 +183,7 @@ phrase:
         file_format: i18next
         locale_id: fa26b7d00b593c4578f0e9749221cace
         tags: report
-    - file: config/locales/es.yml
+    - file: ./config/locales/es.yml
       params:
         file_format: yml
         locale_id: fa26b7d00b593c4578f0e9749221cace
