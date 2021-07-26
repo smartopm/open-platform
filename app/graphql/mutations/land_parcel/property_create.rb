@@ -12,7 +12,6 @@ module Mutations
       argument :state_province, String, required: false
       argument :parcel_type, String, required: false
       argument :country, String, required: false
-      argument :valuation_fields, GraphQL::Types::JSON, required: false
       argument :ownership_fields, GraphQL::Types::JSON, required: false
 
       field :land_parcel, Types::LandParcelType, null: true
@@ -22,11 +21,8 @@ module Mutations
       def resolve(vals)
         ActiveRecord::Base.transaction do
           land_parcel = context[:site_community].land_parcels.create!(
-            vals.except(:valuation_fields, :ownership_fields),
+            vals.except(:ownership_fields),
           )
-          Array.wrap(vals[:valuation_fields]).each do |v|
-            land_parcel.valuations.create!(amount: v['amount'], start_date: v['startDate'])
-          end
 
           Array.wrap(vals[:ownership_fields]).each do |v|
             land_parcel.accounts.create!(user_id: v['userId'],

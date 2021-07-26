@@ -29,18 +29,12 @@ describe('Land Property Modal Component', () => {
 
     expect(container.queryByText('Details')).toBeInTheDocument()
     expect(container.queryByText('Ownership')).toBeInTheDocument()
-    expect(container.queryByText('Valuation History')).toBeInTheDocument()
+    expect(container.queryByText('Plan History')).toBeInTheDocument()
 
     fireEvent.click(container.queryByText('Ownership'))
     expect(container.queryByText('New Owner')).toBeInTheDocument()
 
-    fireEvent.click(container.queryByText('Valuation History'))
-    expect(container.queryByText('Add Valuation')).toBeInTheDocument()
-
-    fireEvent.click(container.queryByText('Add Valuation'))
-    const valuationAmount = container.queryByTestId('valuation-amount')
-    fireEvent.change(valuationAmount, { target: { value: 200 } })
-    expect(valuationAmount.value).toBe('200')
+    fireEvent.click(container.queryByText('Plan History'))
 
     fireEvent.click(container.queryByText('New Owner'))
     const ownerAddress = container.queryByTestId('owner-address')
@@ -66,11 +60,9 @@ describe('Land Property Modal Component', () => {
         </BrowserRouter>
       </MockedProvider>)
 
-    expect(container.queryByText('Add Valuation')).toBeNull()
     expect(container.queryByText('New Owner')).toBeNull()
 
     fireEvent.click(container.queryByText('Edit Property'))
-    expect(container.queryByText('Add Valuation')).toBeInTheDocument()
     expect(container.queryByText('New Owner')).toBeInTheDocument()
 
     const parcelNumber = container.queryByTestId('parcel-number')

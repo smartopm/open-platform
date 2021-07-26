@@ -13,6 +13,20 @@ RSpec.describe Mutations::Transaction::TransactionRevert do
                             pending_balance: 1200, installment_amount: 100,
                             duration: 12)
     end
+    let(:other_payment_plan) do
+      create(:payment_plan, land_parcel_id: land_parcel.id, user_id: user.id,
+                            installment_amount: 200,
+                            duration: 8, status: 'completed')
+    end
+    let!(:other_transaction) do
+      create(:transaction, user_id: user.id, community_id: community.id, depositor_id: user.id,
+                           amount: 1600)
+    end
+    let!(:other_plan_payment) do
+      create(:plan_payment, user_id: user.id, community_id: community.id,
+                            transaction_id: other_transaction.id,
+                            payment_plan_id: other_payment_plan.id, amount: 1600)
+    end
     let!(:transaction) do
       create(:transaction, user_id: user.id, community_id: community.id, depositor_id: user.id,
                            amount: 1500)
@@ -58,7 +72,7 @@ RSpec.describe Mutations::Transaction::TransactionRevert do
       context 'when transaction id is valid' do
         before { payment_plan.update(pending_balance: 1000) }
 
-        it 'cancels transaction, payments and update plot pending balance' do
+        it 'cancels transaction, payments and update plan pending balance' do
           variables = { id: transaction.id }
           result = DoubleGdpSchema.execute(transaction_revert_mutation,
                                            variables: variables,
@@ -71,6 +85,25 @@ RSpec.describe Mutations::Transaction::TransactionRevert do
           expect(transaction_details['amount']).to eql 1500.0
           expect(transaction_details['planPayments'][0]['status']).to eql('cancelled')
           expect(payment_plan.reload.pending_balance).to eql 2000.0
+        end
+      end
+
+      context 'when a transaction is reverted for a payment plan with pending balance 0' do
+        before { other_payment_plan.update(pending_balance: 0) }
+        it 'cancels transaction, payments, updates plan pending balance and status' do
+          variables = { id: other_transaction.id }
+          result = DoubleGdpSchema.execute(transaction_revert_mutation,
+                                           variables: variables,
+                                           context: {
+                                             current_user: admin,
+                                             site_community: community,
+                                           }).as_json
+          transaction_details = result.dig('data', 'transactionRevert', 'transaction')
+          expect(transaction_details['status']).to eql 'cancelled'
+          expect(transaction_details['amount']).to eql 1600.0
+          expect(transaction_details['planPayments'][0]['status']).to eql('cancelled')
+          expect(other_payment_plan.reload.pending_balance).to eql 1600.0
+          expect(other_payment_plan.status).to eql 'active'
         end
       end
 

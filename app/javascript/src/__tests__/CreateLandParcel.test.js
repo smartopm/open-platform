@@ -28,7 +28,6 @@ describe('Land Property Component', () => {
           longX: 0, 
           latY: 0 ,
           geom: null,
-          valuationFields: [],
           ownershipFields: []
         },
       },

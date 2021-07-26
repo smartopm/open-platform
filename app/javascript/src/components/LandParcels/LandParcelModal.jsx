@@ -1,19 +1,19 @@
 import React, { useContext, useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
-import { useLocation } from 'react-router-dom'
+import { useLocation, Link } from 'react-router-dom'
 import { useLazyQuery } from 'react-apollo';
 import {
   TextField,
-  InputAdornment,
   IconButton,
   Typography,
+  Grid,
+  Divider
 } from '@material-ui/core';
 import { DeleteOutline, Room } from '@material-ui/icons';
 import Autocomplete from '@material-ui/lab/Autocomplete'
 import { CustomizedDialogs, ActionDialog } from '../Dialog';
 import { StyledTabs, StyledTab, TabPanel } from '../Tabs';
-import DatePickerDialog from '../DatePickerDialog';
 import { Context as AuthStateContext } from '../../containers/Provider/AuthStateProvider';
 import { currencies } from '../../utils/constants';
 import { UsersLiteQuery } from '../../graphql/queries';
@@ -22,6 +22,9 @@ import LandParcelEditCoordinate from './LandParcelEditCoordinate';
 import LandParcelMergeModal from './LandParcelMergeModal';
 import useDebounce from '../../utils/useDebounce';
 import UserAutoResult from '../../shared/UserAutoResult';
+import { dateToString } from "../DateContainer";
+import { capitalize } from '../../utils/helpers'
+
 
 export default function LandParcelModal({
   open,
@@ -48,7 +51,6 @@ export default function LandParcelModal({
   const [latY, setLatY] = useState(null);
   const [geom, setGeom] = useState(null);
   const [tabValue, setTabValue] = useState('Details');
-  const [valuationFields, setValuationFields] = useState([]);
   const [ownershipFields, setOwnershipFields] = useState(['']);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isEditing, setIsEditing] = useState(false);
@@ -120,7 +122,6 @@ export default function LandParcelModal({
     setLatY(parcel?.latY || 0);
     setGeom(parcel?.geom || null);
     setTabValue('Details');
-    setValuationFields([]);
     setOwnershipFields([]);
     setIsEditing(false);
   }
@@ -134,7 +135,6 @@ export default function LandParcelModal({
   function handleParcelSubmit() {
     if (modalType === 'details' && !isEditing) {
       setIsEditing(true);
-      setValuationFields(landParcelValuations(landParcel));
       setOwnershipFields(landParcelOwners(landParcel));
       return;
     }
@@ -151,7 +151,6 @@ export default function LandParcelModal({
       longX,
       latY,
       geom,
-      valuationFields,
       ownershipFields
     });
   }
@@ -221,7 +220,7 @@ export default function LandParcelModal({
 
   function checkPlotAccountsAndPayments({ plot }){
     return(
-      plot?.accounts.length > 0 || plot?.valuations.length > 0
+      plot?.accounts.length > 0
     )
   }
 
@@ -243,10 +242,6 @@ export default function LandParcelModal({
     });
   }
 
-  function landParcelValuations(parcel) {
-    return parcel.valuations.map(val => ({ amount: val.amount, startDate: val.startDate }));
-  }
-
   function landParcelOwners(parcel) {
     return parcel.accounts.map(owner => ({ name: owner.fullName, address: owner.address1, userId: owner.user.id }));
   }
@@ -255,28 +250,14 @@ export default function LandParcelModal({
     setTabValue(newValue);
   }
 
-  function onChangeValuationField(event, index) {
-    updateValuationField(event.target.name, event.target.value, index);
-  }
-
-  function onChangeValuationDateField(date, index) {
-    updateValuationField('startDate', date, index);
-  }
-
-  function updateValuationField(name, value, index) {
-    const fields = [...valuationFields];
-    fields[Number(index)] = { ...fields[Number(index)], [name]: value };
-    setValuationFields(fields);
-  }
-
-  function addValuation() {
-    setValuationFields([...valuationFields, { amount: '', startDate: new Date() }]);
-  }
-
-  function removeValuation(index) {
-    const valuationOptions = valuationFields;
-    valuationOptions.splice(index, 1);
-    setValuationFields([...valuationOptions]);
+  function totalPlanPayments(payments){
+    let totalAmount = 0;
+    payments.forEach(payment => {
+      if(payment.status !== 'cancelled'){
+        totalAmount += payment.amount;
+      }
+    })
+    return totalAmount;
   }
 
   function saveActionText() {
@@ -331,11 +312,13 @@ export default function LandParcelModal({
         handleBatchFilter={handleParcelSubmit}
         saveAction={saveActionText()}
         actionLoading={propertyUpdateLoading}
+        cancelAction={tabValue === 'Plan History' ? 'Close' : 'Cancel'}
+        displaySaveButton={tabValue !== 'Plan History'}
       >
         <StyledTabs value={tabValue} onChange={handleChange} aria-label="land parcel tabs">
           <StyledTab label="Details" value="Details" />
           <StyledTab label="Ownership" value="Ownership" />
-          <StyledTab label="Valuation History" value="Valuation History" />
+          <StyledTab label="Plan History" value="Plan History" />
         </StyledTabs>
         <TabPanel value={tabValue} index="Details">
           <div className={classes.parcelForm}>
@@ -535,83 +518,58 @@ export default function LandParcelModal({
           </>
           )}
         </TabPanel>
-        <TabPanel value={tabValue} index="Valuation History">
-          {modalType === 'details' &&
-            !isEditing &&
-            (landParcel?.valuations?.length ? (
-              landParcel?.valuations.map(valuation => (
-                <div className={classes.parcelForm} key={valuation.id}>
-                  <TextField
-                    autoFocus
-                    margin="dense"
-                    InputProps={{
-                      readOnly: isFormReadOnly,
-                      startAdornment: <InputAdornment position="start">{currency}</InputAdornment>
-                    }}
-                    // eslint-disable-next-line react/jsx-no-duplicate-props
-                    inputProps={{ style: { paddingTop: '6px' } }}
-                    label="Amount"
-                    type="number"
-                    defaultValue={valuation.amount}
-                    required
-                  />
-                  <DatePickerDialog
-                    label="Start Date"
-                    selectedDate={valuation.startDate}
-                    handleDateChange={() => {}}
-                    inputProps={{ readOnly: isFormReadOnly }}
-                    required
-                  />
-                </div>
+        <TabPanel value={tabValue} index="Plan History">
+          { (landParcel?.paymentPlans?.length ? (
+              landParcel?.paymentPlans?.sort((a, b) => new Date(b.startDate) - new Date(a.startDate))
+              .map(paymentPlan => (
+                <>
+                  <div key={paymentPlan.id} className={classes.planContainer}>
+                    <Grid container spacing={1} data-testid='start-date'>
+                      <Grid item xs={6}>
+                        <Typography variant="h6" color="primary">
+                          {paymentPlan?.user?.name}
+                        </Typography>
+                      </Grid>
+                      <Grid item xs={6} className={classes.rightContent}>
+                        {'Start date '}
+                        {dateToString(paymentPlan?.startDate)}
+                      </Grid>
+                      <Grid item xs={8}>
+                        <Typography>
+                          {'Total payments made: '}
+                          {currency}
+                          {' '}
+                          {totalPlanPayments(paymentPlan?.planPayments)}
+                        </Typography>
+                      </Grid>
+                      <Grid item xs={4} className={classes.rightContent}>
+                        {'End date '}
+                        {dateToString(paymentPlan?.endDate)}
+                      </Grid>
+                      <Grid item xs={12}>
+                        <Typography>
+                          {capitalize(paymentPlan?.planType)}
+                          {' Plan'}
+                        </Typography>
+                      </Grid>
+                      <Grid item xs={6}>
+                        <Link to={`/user/${paymentPlan?.userId}?tab=Plans`}>
+                          <Typography>
+                            View Plan
+                          </Typography>
+                        </Link>
+                      </Grid>
+                      <Grid item xs={6} />
+                    </Grid>
+                  </div>
+                  <div>
+                    <Divider />
+                  </div>
+                </>
               ))
             ) : (
-              <div>No Valuations Yet</div>
+              <div>No Payment Plans Yet</div>
             ))}
-          {(modalType === 'new' || isEditing) &&
-            valuationFields.map((_field, index) => (
-              // eslint-disable-next-line react/no-array-index-key
-              <div style={{ display: 'flex' }} key={index}>
-                <div className={classes.parcelForm}>
-                  <TextField
-                    autoFocus
-                    margin="dense"
-                    InputProps={{
-                      startAdornment: <InputAdornment position="start">{currency}</InputAdornment>
-                    }}
-                    // eslint-disable-next-line react/jsx-no-duplicate-props
-                    inputProps={{
-                      'data-testid': 'valuation-amount',
-                      style: { paddingTop: '6px' }
-                    }}
-                    label="Amount"
-                    name="amount"
-                    type="number"
-                    value={valuationFields[Number(index)].amount}
-                    onChange={e => onChangeValuationField(e, index)}
-                    required
-                  />
-                  <DatePickerDialog
-                    label="Start Date"
-                    selectedDate={valuationFields[Number(index)].startDate}
-                    handleDateChange={date => onChangeValuationDateField(date, index)}
-                    disablePastDate
-                    required
-                  />
-                </div>
-                <div className={classes.removeIcon}>
-                  <IconButton
-                    style={{ marginTop: 13 }}
-                    onClick={() => removeValuation(index)}
-                    aria-label="remove"
-                  >
-                    <DeleteOutline />
-                  </IconButton>
-                </div>
-              </div>
-            ))}
-          {(modalType === 'new' || isEditing) && (
-          <AddMoreButton title="Add Valuation" handleAdd={addValuation} />
-          )}
         </TabPanel>
       </CustomizedDialogs>
       <LandParcelEditCoordinate
@@ -646,6 +604,16 @@ const useStyles = makeStyles(() => ({
   },
   autocompleteOption: {
     padding: '0px'
+  },
+  rightContent: {
+    textAlign: 'right'
+  },
+  planContainer: {
+    marginBottom: '10px',
+    marginTop: '10px'
+  },
+  divEnd: {
+    borderBottom: '1px solid black'
   }
 }));
 

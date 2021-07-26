@@ -297,7 +297,7 @@ export default function LandParcelList() {
             </Grid>
             { loading && <Spinner /> }
             <div style={{margin: '0 20px'}}>
-              {!loading && data.fetchLandParcel.length > 0 && matches && 
+              {!loading && data?.fetchLandParcel.length > 0 && matches &&
                 <ListHeader headers={parcelHeaders} />}
               {!loading && data?.fetchLandParcel.map(parcel => (
                 <ParcelItem key={parcel.id} parcel={parcel} onParcelClick={onParcelClick} />

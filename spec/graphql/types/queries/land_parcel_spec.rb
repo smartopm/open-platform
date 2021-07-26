@@ -5,7 +5,9 @@ require 'rails_helper'
 RSpec.describe Types::Queries::LandParcel do
   describe 'parcel queries' do
     let!(:current_user) { create(:user_with_community) }
-    let!(:account) { create(:account, user: current_user, community: current_user.community) }
+    let!(:community) { current_user.community }
+    let!(:admin_user) { create(:admin_user, community_id: community.id) }
+    let!(:account) { create(:account, user: current_user, community: community) }
     let!(:land_parcel) do
       current_user.community.land_parcels.create(address1: 'This address',
                                                  parcel_number: 'basic-123',
@@ -13,7 +15,36 @@ RSpec.describe Types::Queries::LandParcel do
                                                  long_x: 28.234,
                                                  lat_y: -15.234)
     end
-    let!(:admin_user) { create(:admin_user, community_id: current_user.community.id) }
+    let!(:payment_plan) do
+      create(:payment_plan, land_parcel_id: land_parcel.id, user_id: current_user.id,
+                            installment_amount: 100, start_date: '2021-08-01')
+    end
+
+    let!(:another_payment_plan) do
+      create(:payment_plan, land_parcel_id: land_parcel.id, user_id: admin_user.id,
+                            installment_amount: 300, start_date: '2021-02-01')
+    end
+    let!(:transaction) do
+      create(:transaction, user_id: current_user.id, community_id: community.id,
+                           depositor_id: current_user.id, amount: 500,
+                           receipt_number: '12300')
+    end
+    let!(:plan_payment) do
+      create(:plan_payment, user_id: current_user.id, community_id: community.id,
+                            transaction_id: transaction.id, payment_plan_id: payment_plan.id,
+                            amount: 500, manual_receipt_number: '12300')
+    end
+    let!(:other_transaction) do
+      create(:transaction, user_id: admin_user.id, community_id: community.id,
+                           depositor_id: admin_user.id, amount: 700, receipt_number: '12301',
+                           status: 'cancelled')
+    end
+    let!(:other_plan_payment) do
+      create(:plan_payment, user_id: admin_user.id, community_id: community.id,
+                            transaction_id: other_transaction.id,
+                            payment_plan_id: another_payment_plan.id,
+                            amount: 700, manual_receipt_number: '12301', status: 'cancelled')
+    end
 
     let(:fetch_land_parcel_query) do
       %(query {
@@ -22,6 +53,16 @@ RSpec.describe Types::Queries::LandParcel do
           address1
           longX
           latY
+          paymentPlans{
+            id
+            startDate
+            user{
+              name
+            }
+            planPayments{
+              amount
+            }
+          }
         }
         })
     end
@@ -37,6 +78,18 @@ RSpec.describe Types::Queries::LandParcel do
       expect(result.dig('data', 'fetchLandParcel', 0, 'address1')).to eql 'This address'
       expect(result.dig('data', 'fetchLandParcel', 0, 'longX')).to eql 28.234
       expect(result.dig('data', 'fetchLandParcel', 0, 'latY')).to eql(-15.234)
+      expect(result.dig('data', 'fetchLandParcel', 0, 'paymentPlans').size).to eql 2
+      first_plan_result = result.dig('data', 'fetchLandParcel', 0, 'paymentPlans', 0)
+      expect(first_plan_result['id']).to eql payment_plan.id
+      expect(first_plan_result['startDate'].to_date).to eql payment_plan.start_date.to_date
+      expect(first_plan_result['user']['name']).to eql current_user.name
+      expect(first_plan_result['planPayments'][0]['amount']).to eql 500.0
+      second_plan_result = result.dig('data', 'fetchLandParcel', 0, 'paymentPlans', 1)
+      expect(second_plan_result['id']).to eql another_payment_plan.id
+      expect(second_plan_result['startDate'].to_date)
+        .to eql another_payment_plan.start_date.to_date
+      expect(second_plan_result['user']['name']).to eql admin_user.name
+      expect(second_plan_result['planPayments'][0]['amount']).to eql 700.0
     end
 
     it 'should not retrieve list of all land parcels if user is not admin' do
@@ -75,7 +128,6 @@ RSpec.describe Types::Queries::LandParcel do
                                              current_user: admin_user,
                                              site_community: admin_user.community,
                                            }).as_json
-          expect(result.dig('data', 'landParcel', 'id')).to eql land_parcel.id
           expect(result.dig('data', 'landParcel', 'id')).to eql land_parcel.id
         end
       end

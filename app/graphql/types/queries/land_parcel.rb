@@ -43,7 +43,7 @@ module Types::Queries::LandParcel
 
     context[:site_community].land_parcels
                             .search(query)
-                            .eager_load(:valuations, :accounts)
+                            .includes(accounts: :user, payment_plans: %i[user plan_payments])
                             .with_attached_images
                             .where("parcel_type <> 'poi' OR parcel_type is NULL")
                             .limit(limit).offset(offset)
@@ -68,7 +68,8 @@ module Types::Queries::LandParcel
     end
 
     parcel = context[:site_community].land_parcels
-                                     .eager_load(:valuations, :accounts)
+                                     .includes(accounts: :user, payment_plans:
+                                      %i[user plan_payments])
                                      .with_attached_images
                                      .find_by(id: id)
     raise GraphQL::ExecutionError, 'Record not found' if parcel.nil?

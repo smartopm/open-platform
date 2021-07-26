@@ -4,6 +4,7 @@ module Types
   # PaymentPlanType
   class PaymentPlanType < Types::BaseObject
     field :id, ID, null: false
+    field :user_id, ID, null: false
     field :status, String, null: true
     field :plan_type, String, null: true
     field :percentage, String, null: true
@@ -37,15 +38,21 @@ module Types
     #
     # @return [Float]
     def statement_paid_amount
-      payment_amount = object.plan_payments.not_cancelled.sum(:amount)
-      (payment_amount / object.installment_amount).floor * object.installment_amount
+      (total_payments / object.installment_amount).floor * object.installment_amount
     end
 
     # Returns unallocated amount for plan statement
     #
     # @return [Float]
     def unallocated_amount
-      object.plan_payments.not_cancelled.sum(:amount) - statement_paid_amount
+      total_payments - statement_paid_amount
+    end
+
+    # Returns total plan payments made for a plan
+    #
+    # @return [Float]
+    def total_payments
+      object.plan_payments.not_cancelled.sum(:amount)
     end
 
     # Returns end date for plan statement

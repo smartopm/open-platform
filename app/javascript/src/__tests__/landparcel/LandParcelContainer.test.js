@@ -40,8 +40,8 @@ describe('Land Property Page', () => {
       longX: null,
       geom: null,
       createdAt: '2021-02-04T09:02:06Z',
-      valuations: [],
-      accounts: []
+      accounts: [],
+      paymentPlans: []
     };
     const landParcelMock = [
       {

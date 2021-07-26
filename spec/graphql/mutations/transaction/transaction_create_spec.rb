@@ -10,7 +10,7 @@ RSpec.describe Mutations::Transaction::TransactionCreate do
     let!(:land_parcel) { create(:land_parcel, community_id: community.id) }
     let!(:payment_plan) do
       create(:payment_plan, land_parcel_id: land_parcel.id, user_id: user.id, plot_balance: 0,
-                            pending_balance: 1200, installment_amount: 100)
+                            pending_balance: 1200, installment_amount: 100, status: 'active')
     end
     let!(:second_land_parcel) { create(:land_parcel, community_id: community.id) }
 
@@ -44,6 +44,7 @@ RSpec.describe Mutations::Transaction::TransactionCreate do
                 currentPlotPendingBalance
                 paymentPlan{
                   pendingBalance
+                  status
                 }
               }
             }
@@ -142,6 +143,7 @@ RSpec.describe Mutations::Transaction::TransactionCreate do
             expect(plan_payment['receiptNumber']).to eql 'MI1001'
             expect(plan_payment['currentPlotPendingBalance']).to eql 0.0
             expect(plan_payment['paymentPlan']['pendingBalance']).to eql 0.0
+            expect(plan_payment['paymentPlan']['status']).to eql 'completed'
           end
         end
 
@@ -172,6 +174,7 @@ RSpec.describe Mutations::Transaction::TransactionCreate do
             expect(plan_payment['receiptNumber']).to eql 'MI1001'
             expect(plan_payment['currentPlotPendingBalance']).to eql 1100.0
             expect(plan_payment['paymentPlan']['pendingBalance']).to eql 1100.0
+            expect(plan_payment['paymentPlan']['status']).to eql 'active'
           end
         end
       end

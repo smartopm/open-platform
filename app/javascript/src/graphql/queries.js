@@ -461,12 +461,6 @@ export const ParcelsQuery = gql`
       geom
       plotSold
       createdAt
-      valuations {
-        id
-        amount
-        startDate
-        createdAt
-      }
       accounts {
         id
         fullName
@@ -474,6 +468,20 @@ export const ParcelsQuery = gql`
         user {
           id
           name
+        }
+      }
+      paymentPlans{
+        id
+        userId
+        startDate
+        endDate
+        planType
+        user{
+          name
+        }
+        planPayments{
+          status
+          amount
         }
       }
     }
@@ -961,12 +969,6 @@ export const LandParcel = gql`
       plotSold
       imageUrls
       createdAt
-      valuations {
-        id
-        amount
-        startDate
-        createdAt
-      }
       accounts {
         id
         fullName
@@ -978,6 +980,20 @@ export const LandParcel = gql`
           extRefId
           imageUrl
           avatarUrl
+        }
+      }
+      paymentPlans{
+        id
+        userId
+        startDate
+        endDate
+        planType
+        user{
+          name
+        }
+        planPayments{
+          status
+          amount
         }
       }
     }
