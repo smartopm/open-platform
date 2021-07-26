@@ -11,12 +11,16 @@ import { formatMoney } from '../../../../utils/helpers';
 
 export default function PlanDetail({ open, handleModalClose, planData, currencyData }) {
   const classes = useStyles();
+  const planFrequency = {
+    daily: 'days',
+    weekly: 'weeks',
+    monthly: 'months',
+    quarterly: 'quarters'
+  }
   // eslint-disable-next-line consistent-return
   function handleCoOwners() {
     if (planData?.coOwners?.length > 0) {
-      const ownersArray = [];
-      planData.coOwners.map(name => ownersArray.push(name));
-      return ownersArray.join('');
+      return planData.coOwners.map(name => name).join('')
     }
   }
   return (
@@ -69,7 +73,7 @@ export default function PlanDetail({ open, handleModalClose, planData, currencyD
               <Typography className={classes.fieldTitle}>Plan Duration</Typography>
             </Grid>
             <Grid item xs={6} className={classes.fieldContent}>
-              {`${planData.duration} months`}
+              {`${planData.duration} ${planFrequency[planData?.frequency]}`}
             </Grid>
           </Grid>
           <Divider className={classes.divider} />
