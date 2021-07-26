@@ -40,6 +40,7 @@
   "form_fields": {
     "accounts": "Cuentas",
     "add_email_address": "Agregar nueva dirección de correo electrónico",
+    "add_menu_item": "Agregar elemento al menú",
     "add_phone_number": "Agregar nuevo número de teléfono",
     "add_social_link": "Agregar Red Social",
     "add_whatsapp_number": "Agregar nuevo número de Whatsapp",
@@ -51,9 +52,11 @@
     "home_url": "URL de inicio",
     "invoice_details": "Detalle de la Factura",
     "invoice_number": "Número de Factura",
+    "link": "Enlace",
     "logo_url": "Logo Url",
     "misc_description": "{{type}} Descripción",
     "misc_title": "{{type}} Titulo",
+    "name": "Nombre",
     "nrc": "Tarjeta de Identidad",
     "operating_hours": "Horas de funcionamiento",
     "payment_Type": "Tipo de Pago",
@@ -140,6 +143,7 @@
     "print_id": "Imprimir ID",
     "proceed": "Continuar",
     "publish": "Publicar",
+    "report": "Informes",
     "request_forms": "Formularios de solicitud y permisos",
     "revert_transaction": "Revertir Transacción",
     "search": "Buscar",
@@ -171,8 +175,7 @@
     "plot": "La Parcela",
     "plot_plural": "Parcelas",
     "transaction": "Transacción",
-    "transaction_plural": "Actas",
-    "report": "Informes"
+    "transaction_plural": "Actas"
   },
   "misc": {
     "acknowledge": "Reconocimiento",

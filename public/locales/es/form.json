@@ -4,7 +4,9 @@
     "add_form_property": "Agregar Propiedad",
     "adding_form_property": "Agregar propiedad de formulario",
     "create_a_form": "Crear un formulario",
-    "publish_form": "Publicar Formulario"
+    "publish_form": "Publicar Formulario",
+    "update_form_property": "Actualizar formulario de propiedad ",
+    "update_property": "Update (Propiedad)"
   },
   "errors": {
     "no_forms": "No hay formularios para enviar"
@@ -12,6 +14,7 @@
   "field_types": {
     "date": "Fecha",
     "dropdown": "Desplegar",
+    "file_upload": "Subir archivo",
     "image": "Imagen",
     "radio": "Radio",
     "signature": "Firma",
@@ -49,6 +52,7 @@
     "attachments": "Archivos adjuntos",
     "building_permit": "Permiso de construcción",
     "client_request_form": "Formulario de solicitud de cliente",
+    "created_form_property": "Se agregó correctamente un campo en el formulario",
     "deleted_form_property": "Formulario de Propiedad eliminada correctamente",
     "form": "Formulario",
     "form_action_success": "El Formulario {{status}} con éxito",
@@ -56,6 +60,7 @@
     "form_created": "Formulario creado con éxito",
     "form_expiry_date": "Fecha de vencimiento del formulario",
     "form_submitted": "Ha enviado correctamente el formulario",
+    "form_version_created": "Este formulario ahora está obsoleto y se ha creado una nueva versión",
     "limit_1_response": "Limitar a 1 respuesta",
     "no_form_entries": "No hay formulario  de entradas disponibles",
     "publish_ing_form": "Publicando el formulario ...",
@@ -64,6 +69,8 @@
     "status": "Estado",
     "submission_date": "Fecha de envío",
     "submitted_by": "Enviado por",
-    "updates": "Novedades"
+    "updated_form_property": "Formulario de propiedad actualizada con éxito",
+    "updates": "Novedades",
+    "version_number": "Número de versión"
   }
 }

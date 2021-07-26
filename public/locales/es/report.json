@@ -1,16 +1,16 @@
 {
-    "misc": {
-      "pick_reporting_range": "Elija el intervalo de fechas del informe",
-      "pick_start_date": "fecha de inicio",
-      "pick_end_date": "fecha final",
-      "generate_report": "Generar informe",
-      "report_title": "Informe de Aduanas",
-      "report_header_text": "Bitacora de horas de servicio de sub-administrador en puesto aduanero",
-      "print_report": "Imprimir reporte",
-      "sub_admin": " Sub-Administrador",
-      "customs_post": "Puesto aduanero 9100",
-      "customs_admin": "Administración Aduaneria",
-      "customs": "Puesto aduanero",
-      "reporting_period": "Periodo"
-    }
+  "misc": {
+    "customs": "Puesto aduanero",
+    "customs_admin": "Administración de Aduana",
+    "customs_post": "Puesto aduanero 9100",
+    "generate_report": "Generar informe",
+    "pick_end_date": "fecha final",
+    "pick_reporting_range": "Elija el intervalo de fechas del informe",
+    "pick_start_date": "fecha de inicio",
+    "print_report": "Imprimir reporte",
+    "report_header_text": "Registro de horas de servicio del sub-administrador en aduana",
+    "report_title": "Informe de Aduanas",
+    "reporting_period": "Periodo",
+    "sub_admin": " Sub-Administrador"
+  }
 }
