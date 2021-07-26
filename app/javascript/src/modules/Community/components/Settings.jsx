@@ -257,7 +257,6 @@ export default function CommunitySettings({ data, token, refetch }) {
       });
       return
     }
-    console.log(subAdministrator)
     setCallMutation(true);
     communityUpdate({
       variables: {
@@ -311,7 +310,6 @@ export default function CommunitySettings({ data, token, refetch }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);
 
-  console.log(subAdministrator)
   return (
     <Container>
       <MessageAlert
