@@ -1,222 +1,176 @@
+---
 en:
   activerecord:
-    models:
-      properties/account: &account Account
-      action_flows/action_flow: &action_flow Action flow
-      logs/activity_log: Activity log
-      users/activity_point: Activity Point
-      notes/assignee_note: Assignee note
-      business: Business
-      campaign: Campaign
-      labels/campaign_label: Campaign label
-      comments/comment: Comment
-      community: &community Community
-      users/contact_info: Contact info
-      discussions/discussion: &discussion Discussion
-      discussions/discussion_user: Discussion user
-      notifications/email_template: Email template
-      logs/entry_request: Entry request
-      logs/event_log: Event log
-      users/feedback: Feedback
-      forms/form: &form Form
-      forms/form_property: &form_property Form property
-      forms/form_user: &form_user Form user
-      logs/import_log: Import log
-      payments/invoice: &invoice Invoice
-      labels/label: &label Label
-      properties/land_parcel: &land_parcel Land parcel
-      properties/land_parcel_account: Land parcel account
-      notifications/message: Message
-      notes/note: &note Note
-      comments/note_comment: Note comment
-      notes/note_history: Note history
-      notifications/notification: Notification
-      payments/payment: &payment Payment
-      payments/payment_invoice: Payment invoice
-      properties/payment_plan: &payment_plan Payment plan
-      payments/plan_payment: Plan payment
-      post_tags/post_tag: &post_tag Post tag
-      post_tags/post_tag_user: Post tag user
-      showroom: Showroom
-      logs/substatus_log: Substatus log
-      users/time_sheet: TimeSheet
-      payments/transaction: Transaction
-      users/user: &user User
-      forms/user_form_property: User form property
-      labels/user_label: User label
-      properties/valuation: Valuation
-      payments/wallet: Wallet
-      payments/wallet_transaction: Wallet transaction
     attributes:
-      properties/account:
-        community: *community
-        user: *user
       action_flows/action_flow:
-        community: *community
-        description: &description Description
+        community: Community
+        description: Description
         event_condition: Event condition
         event_condition_query: Event condition query
         event_type: Event type
-        status: &status status
+        status: status
         title: Title
-      logs/activity_log:
-        community: *community
-      users/activity_point:
-        user: *user
-      notes/assignee_note:
-        note: *note
-        user: *user
       business:
-        community: *community
-        name: &name Name
+        community: Community
+        name: Name
       campaign:
         campaign_type: Campaign type
-        community: *community
-      labels/campaign_label:
-        community: *community
-        label: *label
+        community: Community
       comments/comment:
-        user: *user
-        discussion: *discussion
+        discussion: Discussion
+        user: User
+      comments/note_comment:
+        note: Note
+        note_entity: Note entity
+        user: User
       community:
         currency: Currency
-      users/contact_info:
-        contact_type: Contact type
-        info: Info
-        user: *user
       discussions/discussion:
-        community: *community
-        user: *user
+        community: Community
+        user: User
       discussions/discussion_user:
-        discussion: *discussion
-        user: *user
-      notifications/email_template:
-        community: *community
-        name: *name
-      logs/entry_request:
-        community: *community
-        grantor: Grantor
-        name: *name
-        user: *user
-      logs/event_log:
-        community: *community
-        acting_user: Acting user
-        subject: Subject
-      users/feedback:
-        user: *user
+        discussion: Discussion
+        user: User
       forms/form:
-        community: *community
+        community: Community
         expires_at: Expires at
-        name: *name
+        name: Name
       forms/form_property:
-        form: *form
+        form: Form
       forms/form_user:
-        form: *form
+        form: Form
         status_updated_by: Status updated by
-        user: *user
-      logs/import_log:
-        community: *community
-        file_name: File name
-        user: *user
-      payments/invoice:
-        amount: &amount Amount
-        created_by: Created by
-        community: *community
-        land_parcel: *land_parcel
-        payment_plan: *payment_plan
-        user: *user
+        user: User
+      forms/user_form_property:
+        form_property: Form property
+        form_user: Form user
+        user: User
+      labels/campaign_label:
+        community: Community
+        label: Label
       labels/label:
-        community: *community
-      properties/land_parcel:
-        community: *community
-        parcel_number: Parcel number
-      properties/land_parcel_account:
-        account: *account
-        land_parcel: *land_parcel
-      notifications/message:
-        category: &category Category
-        note: *note
-        note_entity: &note_entity Note entity
-        sender: Sender
-        user: *user
+        community: Community
+      labels/user_label:
+        label: Label
+        user: User
+      logs/activity_log:
+        community: Community
+      logs/entry_request:
+        community: Community
+        grantor: Grantor
+        name: Name
+        user: User
+      logs/event_log:
+        acting_user: Acting user
+        community: Community
+        subject: Subject
+      logs/import_log:
+        community: Community
+        file_name: File name
+        user: User
+      logs/substatus_log:
+        community: Community
+        user: User
+      notes/assignee_note:
+        note: Note
+        user: User
       notes/note:
         author: Author
-        category: *category
-        community: *community
-        form_user: *form_user
-        user: *user
-      comments/note_comment:
-        note: *note
-        user: *user
-        note_entity: *note_entity
+        category: Category
+        community: Community
+        form_user: Form user
+        user: User
       notes/note_history:
-        note: *note
-        user: *user
+        note: Note
+        user: User
+      notifications/email_template:
+        community: Community
+        name: Name
+      notifications/message:
+        category: Category
+        note: Note
+        note_entity: Note entity
+        sender: Sender
+        user: User
       notifications/notification:
         notifable: Notifiable
+      payments/invoice:
+        amount: Amount
+        community: Community
+        created_by: Created by
+        land_parcel: Land parcel
+        payment_plan: Payment plan
+        user: User
       payments/payment:
-        community: *community
+        community: Community
         payment_type: Payment type
-        user: *user
+        user: User
       payments/payment_invoice:
-        invoice: *invoice
-        payment: *payment
-      properties/payment_plan:
-        land_parcel: *land_parcel
-        payment_day: Payment day
-        user: *user
+        invoice: Invoice
+        payment: Payment
       payments/plan_payment:
         amount: Amount
-        community: *community
+        community: Community
         manual_receipt_number: Receipt number
-        payment_plan: *payment_plan
-        user: *user
-      post_tags/post_tag:
-        community: *community
-        name: *name
-        user: *user
-      post_tags/post_tag_user:
-        post_tag: *post_tag
-        user: *user
-      logs/substatus_log:
-        community: *community
-        user: *user
-      users/time_sheet:
-        user: *user
+        payment_plan: Payment plan
+        user: User
       payments/transaction:
         amount: Amount
         bank_name: Bank name
-        community: *community
+        community: Community
         source: Source
         transaction_number: Transaction number
-        user: *user
+        user: User
+      payments/wallet:
+        user: User
+      payments/wallet_transaction:
+        amount: Amount
+        bank_name: Bank name
+        cheque_number: Cheque number
+        community: Community
+        source: Source
+        transaction_number: Transaction number
+        user: User
+      post_tags/post_tag:
+        community: Community
+        name: Name
+        user: User
+      post_tags/post_tag_user:
+        post_tag: Post tag
+        user: User
+      properties/account:
+        community: Community
+        user: User
+      properties/land_parcel:
+        community: Nkwashi
+        parcel_number: Parcel number
+      properties/land_parcel_account:
+        account: Account
+        land_parcel: Land parcel
+      properties/payment_plan:
+        land_parcel: Land parcel
+        payment_day: Payment day
+        user: User
+      properties/valuation:
+        amount: Amount
+        land_parcel: Land parcel
+        start_date: Start date
+      users/activity_point:
+        user: User
+      users/contact_info:
+        contact_type: Contact type
+        info: Info
+        user: User
+      users/feedback:
+        user: User
+      users/time_sheet:
+        user: User
       users/user:
-        community: *community
-        name: *name
+        community: Community
+        name: Name
         state: State
         sub_status: Sub status
         user_type: User type
-      forms/user_form_property:
-        form_property: *form_property
-        form_user: *form_user
-        user: *user
-      labels/user_label:
-        label: *label
-        user: *user
-      properties/valuation:
-        land_parcel: *land_parcel
-        amount: *amount
-        start_date: Start date
-      payments/wallet:
-        user: *user
-      payments/wallet_transaction:
-        community: *community
-        source: Source
-        bank_name: Bank name
-        cheque_number: Cheque number
-        transaction_number: Transaction number
-        amount: *amount
-        user: *user
     errors:
       messages:
         too_large: is too large
@@ -224,8 +178,8 @@ en:
         logs/event_log:
           attributes:
             acting_user_id:
-              reporting_user_required: Must be associated with a reporting user
               allowed_user_reporting_in_own_community: Can only report users in your own community
+              reporting_user_required: Must be associated with a reporting user
             data:
               visitor_name_required: Visitor name required
             ref_id:
@@ -237,12 +191,59 @@ en:
         users/user:
           attributes:
             phone_number:
-              invalid_phone_number: can only contain 0-9, '-', '+' and space
               invalid_length: must be a valid length
+              invalid_phone_number: can only contain 0-9, '-', '+' and space
+    models:
+      action_flows/action_flow: Action flow
+      business: Business
+      campaign: Campaign
+      comments/comment: Comment
+      comments/note_comment: Note comment
+      community: Community
+      discussions/discussion: Discussion
+      discussions/discussion_user: Discussion user
+      forms/form: Form
+      forms/form_property: Form property
+      forms/form_user: Form user
+      forms/user_form_property: User form property
+      labels/campaign_label: Campaign label
+      labels/label: Label
+      labels/user_label: User label
+      logs/activity_log: Activity log
+      logs/entry_request: Entry request
+      logs/event_log: Event log
+      logs/import_log: Import log
+      logs/substatus_log: Substatus log
+      notes/assignee_note: Assignee note
+      notes/note: Note
+      notes/note_history: Note history
+      notifications/email_template: Email template
+      notifications/message: Message
+      notifications/notification: Notification
+      payments/invoice: Invoice
+      payments/payment: Payment
+      payments/payment_invoice: Payment invoice
+      payments/plan_payment: Plan payment
+      payments/transaction: Transaction
+      payments/wallet: Wallet
+      payments/wallet_transaction: Wallet transaction
+      post_tags/post_tag: Post tag
+      post_tags/post_tag_user: Post tag user
+      properties/account: Account
+      properties/land_parcel: Land parcel
+      properties/land_parcel_account: Land parcel account
+      properties/payment_plan: Payment plan
+      properties/valuation: Valuation
+      showroom: Showroom
+      users/activity_point: Activity Point
+      users/contact_info: Contact info
+      users/feedback: Feedback
+      users/time_sheet: TimeSheet
+      users/user: User
   campaign:
     default:
-      message: 'Default Campaign Message'
-      name: 'Default Campaign Name'
+      message: Default Campaign Message
+      name: Default Campaign Name
   errors:
     action_flow:
       invalid_action_name: Invalid action name
@@ -254,20 +255,16 @@ en:
     comment:
       not_found: Comment not found
     duplicate:
-      submission: Duplicate Submission
       email: Duplicate email
       phone: Duplicate phone
     email_template:
       not_found: Template not found
+    entry_request:
+      empty_note: Note cannot be empty
     event_log:
       not_found: Event log not found
-    entry_request:
-      not_found: Entry request not found
-      empty_note: Note cannot be empty
     form:
       not_found: Form not found
-    form_user:
-      submitted_form_can_not_be_deleted: You can not delete from a submitted form
     invalid_argument_value: Invalid Argument Value
     invalid_value: Invalid Value
     invoice:
@@ -280,49 +277,48 @@ en:
     land_parcel:
       not_found: Land parcel not found
       poi_record_not_found: Poi Record not found
+    not_found: Not found
     note:
       task_not_found: No Task Found, Try a different query
       unable_to_update_tasks: Something went wrong while updating selected tasks
-    not_found: Not found
     notification:
       preference_update_failed: Preference Update Failed
     payment_plan:
-      plan_already_exist: Payment Plan for this landparcel already exist
       does_not_exist_for_property: Payment Plan does not exist for selected property
       have_zero_pending_balance: Pending balance is 0 for payment plan of selected property
       not_found: Payment Plan not found
     phone_number:
-        found_blank: Phone number cannot be blank
+      found_blank: Phone number cannot be blank
     plan_payment:
       not_found: Payment not found
     post_tag:
       not_found: Tag not found
-    record_not_found: Record not found
     receipt_number:
       already_exists: Receipt number already exists
+    record_not_found: Record not found
+    submission:
+      already_made: You've already responded to this form. You can only fill out this form once. Please contact the support team if this is an error
     substatus_log:
       date_must_be_greater: Date can't be less than previous log's start date
       not_found: Substatus log Not found
-    submission:
-        already_made: You've already responded to this form. You can only fill out this form once. Please contact the support team if this is an error
     transaction:
-      not_found: Transaction not found
       amount_not_sufficient: Unallocated amount is not sufficient for the payment
+      not_found: Transaction not found
     unauthorized: Unauthorized
     user:
       merge_failed: Merge Failed
-      not_found_with_id: 'Could not find User %{user_id}'
       not_found: This account does not exist. Submit a request to create an account or use the correct account information to log in
+      not_found_with_id: Could not find User %{user_id}
     user_form_property:
       not_found: User form property not found
-    visibility: 'You do not have permission to access %{field}'
+    visibility: You do not have permission to access %{field}
     wallet:
       funds_not_sufficient: Unallocated funds are not sufficient for the payment
     wallet_transaction:
       can_not_revert: Transaction Can not be reverted
       payment_not_found: Payment not found
   general:
-    thanks_for_using_our_app: 'Thank you for using our app, kindly use this link to give us feedback %{feedback_link}'
+    thanks_for_using_our_app: Thank you for using our app, kindly use this link to give us feedback %{feedback_link}
   response:
     failed: failed
     success: success
