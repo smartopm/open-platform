@@ -13,6 +13,11 @@ module Forms
     validates :name, presence: true, uniqueness: { scope: :community_id }
 
     default_scope { where.not(status: 2) }
+
+    scope :by_published, lambda { |user|
+      published if user.user_type != 'admin'
+    }
+
     enum status: { draft: 0, published: 1, deleted: 2, deprecated: 3 }
 
     def entries?
