@@ -49,6 +49,7 @@ const QUERY = gql`
         themeColors
         features
         securityManager
+        subAdministrator
         bankingDetails
         communityRequiredFields
       }
