@@ -122,8 +122,7 @@ module Types::Queries::User
       query = query.split(' ').last
     end
 
-    Users::User.allowed_users(context[:current_user]).includes(accounts: [:land_parcels])
-               .eager_load(:notes, :accounts, :labels, :contact_infos)
+    Users::User.allowed_users(context[:current_user])
                .send(search_method, query)
                .order(name: :asc)
                .limit(limit)
