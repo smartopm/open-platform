@@ -174,17 +174,19 @@ export default function PaymentPlans({ userId, user, userData }) {
                   open={alertOpen}
                   handleClose={() => setAlertOpen(false)}
                 />
-                <PaymentPlanModal
-                  open={planModalOpen}
-                  handleModalClose={() => setPlanModalOpen(false)}
-                  userId={userId}
-                  userData={userData}
-                  currency={currency}
-                  paymentPlansRefetch={refetch}
-                  landParcelsData={landParcelsData}
-                  setMessage={setMessage}
-                  openAlertMessage={() => setAlertOpen(true)}
-                />
+                {planModalOpen && (
+                  <PaymentPlanModal
+                    open={planModalOpen}
+                    handleModalClose={() => setPlanModalOpen(false)}
+                    userId={userId}
+                    userData={userData}
+                    currency={currency}
+                    paymentPlansRefetch={refetch}
+                    landParcelsData={landParcelsData}
+                    setMessage={setMessage}
+                    openAlertMessage={() => setAlertOpen(true)}
+                  />
+                )}
               </div>
               {matches && <ListHeader headers={planHeader} color />}
             </div>
