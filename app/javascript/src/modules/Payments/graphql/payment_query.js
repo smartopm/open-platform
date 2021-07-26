@@ -53,9 +53,11 @@ export const UserPlans = gql`
       endDate
       frequency
       coOwners {
+        id
         name
       }
       landParcel {
+        id
         parcelNumber
       }
       planPayments {
@@ -65,16 +67,20 @@ export const UserPlans = gql`
         status
         receiptNumber
         paymentPlan {
+          id
           pendingBalance
           landParcel {
+            id
             parcelNumber
           }
         }
         userTransaction {
+          id
           source
           transactionNumber
           allocatedAmount
           depositor {
+            id
             name
           }
         }
