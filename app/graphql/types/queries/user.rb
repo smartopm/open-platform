@@ -91,15 +91,15 @@ module Types::Queries::User
     raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') unless adm.present? && adm.admin?
 
     if query.present? && query.include?('date_filter')
-      Users::User.allowed_users(context[:current_user]).includes(accounts: [:land_parcels])
-                 .eager_load(:notes, :accounts, :labels, :contact_infos)
+      Users::User.allowed_users(context[:current_user])
+                 .eager_load(:labels)
                  .heavy_search(query)
                  .order(name: :asc)
                  .limit(limit)
                  .offset(offset).with_attached_avatar
     else
-      Users::User.allowed_users(context[:current_user]).includes(accounts: [:land_parcels])
-                 .eager_load(:notes, :accounts, :labels, :contact_infos)
+      Users::User.allowed_users(context[:current_user])
+                 .eager_load(:labels)
                  .search(query)
                  .order(name: :asc)
                  .limit(limit)
@@ -121,7 +121,6 @@ module Types::Queries::User
       search_method = 'search_by_contact_info'
       query = query.split(' ').last
     end
-
     Users::User.allowed_users(context[:current_user])
                .send(search_method, query)
                .order(name: :asc)

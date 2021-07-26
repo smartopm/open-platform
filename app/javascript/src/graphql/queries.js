@@ -209,9 +209,6 @@ export const UsersDetails = gql`
       extRefId
       expiresAt
       state
-      notes {
-        id
-      }
       labels {
         id
         shortDesc

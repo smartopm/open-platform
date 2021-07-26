@@ -15,7 +15,6 @@ import {
   Checkbox
 } from '@material-ui/core'
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz'
-import AssignmentIcon from '@material-ui/icons/Assignment'
 import PropTypes from 'prop-types'
 import { makeStyles } from '@material-ui/core/styles'
 import { useTranslation } from 'react-i18next'
@@ -106,14 +105,6 @@ export default function UserItem({
           </ListItemAvatar>
 
           <Hidden smUp>
-            <Grid style={{ width: '20%' }}>
-              <Grid container direction="row" alignItems="center">
-                <AssignmentIcon color="primary" />
-                [
-                {user.notes.length}
-                ]
-              </Grid>
-            </Grid>
             <Grid className={classes.actionIcon}>
               <IconButton
                 className={classes.menuButton}
@@ -187,14 +178,6 @@ export default function UserItem({
             ))}
           </Grid>
           <Hidden xsDown>
-            <Grid className={classes.noteCount}>
-              <Grid container direction="row" alignItems="center">
-                <AssignmentIcon color="primary" />
-                [
-                {user.notes.length}
-                ]
-              </Grid>
-            </Grid>
             <Grid className={classes.actionIcon}>
               <IconButton
                 className={classes.menuButton}
@@ -271,10 +254,7 @@ const useStyles = makeStyles(() => ({
       textAlign: 'center'
     },
     labelsRow: {
-      width: '35%'
-    },
-    noteCount: {
-      width: '10%'
+      width: '44%'
     },
     actionIcon: {
       width: '5%'
@@ -282,10 +262,10 @@ const useStyles = makeStyles(() => ({
   },
   '@media only screen and (min-width: 320px) and (max-width: 374px)': {
     detailsRow: {
-      width: '50%'
+      width: '60%'
     },
     userTypeRow: {
-      width: '50%',
+      width: '60%',
       textAlign: 'right'
     },
     actionIcon: {
@@ -294,10 +274,10 @@ const useStyles = makeStyles(() => ({
   },
   '@media only screen and (min-width: 375px) and (max-width: 767px)': {
     detailsRow: {
-      width: '50%'
+      width: '60%'
     },
     userTypeRow: {
-      width: '50%',
+      width: '60%',
       textAlign: 'right'
     },
     actionIcon: {
