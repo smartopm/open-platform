@@ -31,7 +31,7 @@ export default function DataList({ keys, data, hasHeader, clickable, handleClick
               // eslint-disable-next-line jsx-a11y/no-static-element-interactions
               <div 
                 key={item.id || index} 
-                style={{display: 'flex', padding: '10px'}}
+                style={{display: 'flex'}}
                 className={clickable ? classes.clickable : classes.list}
                 onClick={clickable ? () => handleClick(item) : null}
               >
