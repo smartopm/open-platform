@@ -24,6 +24,7 @@ module Types
     field :wp_link, String, null: true
     field :features, GraphQL::Types::JSON, null: true
     field :security_manager, String, null: true
+    field :sub_administrator, String, null: true
     field :banking_details, GraphQL::Types::JSON, null: true
     field :community_required_fields, GraphQL::Types::JSON, null: true
 

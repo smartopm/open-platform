@@ -5,8 +5,8 @@ import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import { dateToString } from '../../../components/DateContainer';
 
-export default function ReportHeader({ reportingDate }) {
-    const { t } = useTranslation('report')
+export default function ReportHeader({ reportingDate, subAdministrator }) {
+  const { t } = useTranslation('report');
   const classes = useStyles();
   return (
     <Grid container>
@@ -24,7 +24,7 @@ export default function ReportHeader({ reportingDate }) {
             <b>{t('misc.sub_admin')}</b>
           </Grid>
           <Grid item xs={8} className={classes.title}>
-            -
+            {subAdministrator}
           </Grid>
         </Grid>
         <Grid container spacing={1}>
@@ -40,11 +40,16 @@ export default function ReportHeader({ reportingDate }) {
   );
 }
 
+ReportHeader.defaultProps = {
+  subAdministrator: '-'
+};
+
 ReportHeader.propTypes = {
   reportingDate: PropTypes.shape({
     startDate: PropTypes.instanceOf(Date),
     endDate: PropTypes.instanceOf(Date)
-  }).isRequired
+  }).isRequired,
+  subAdministrator: PropTypes.string
 };
 
 const useStyles = makeStyles({

@@ -83,6 +83,7 @@ export default function CommunitySettings({ data, token, refetch }) {
   const [logoUrl, setLogoUrl] = useState(data?.logoUrl || '');
   const [wpLink, setWpLink] = useState(data?.wpLink || '');
   const [securityManager, setSecurityManager] = useState(data?.securityManager || '');
+  const [subAdministrator, setSubAdministrator] = useState(data?.subAdministrator || '');
   const [locale, setLocale] = useState('en-ZM');
   const [language, setLanguage] = useState('en-US');
   const [showCropper, setShowCropper] = useState(false);
@@ -272,6 +273,7 @@ export default function CommunitySettings({ data, token, refetch }) {
         logoUrl,
         wpLink,
         securityManager,
+        subAdministrator,
         themeColors,
         bankingDetails,
       },
@@ -475,6 +477,16 @@ export default function CommunitySettings({ data, token, refetch }) {
         name="securityManager"
         margin="normal"
         inputProps={{ "data-testid": "securityManager"}}
+        style={{ width: '100%'}}
+        required
+      />
+      <TextField
+        label={t('community.set_sub_administrator')}
+        value={subAdministrator}
+        onChange={event => setSubAdministrator(event.target.value)}
+        name="subAdministrator"
+        margin="normal"
+        inputProps={{ "data-testid": "subAdministrator"}}
         style={{ width: '100%'}}
         required
       />
@@ -710,6 +722,7 @@ CommunitySettings.propTypes = {
     tagline: PropTypes.string,
     wpLink: PropTypes.string,
     securityManager: PropTypes.string,
+    subAdministrator: PropTypes.string,
     themeColors: PropTypes.shape({
       primaryColor: PropTypes.string,
       secondaryColor: PropTypes.string,

@@ -25,7 +25,7 @@ describe('Community settings page ', () => {
       supportEmail: [
         {
           email: 'abc@gmail.com',
-          category: 'customer care'
+          category: 'customer_care'
         },
         {
           email: 'joey@hi.co',
@@ -39,6 +39,8 @@ describe('Community settings page ', () => {
         { menu_link: 'http://some-link.com', menu_name: 'Custom Menu' },
       ],
       logoUrl: null,
+      locale: 'en-US',
+      currency: 'honduran_lempira',
       bankingDetails: {
         bankName: 'Test bank name',
         accountName: 'Thebe',
@@ -59,7 +61,7 @@ describe('Community settings page ', () => {
         variables: {
           supportNumber: [{ phone_number: '', category: '' }],
           supportEmail: [
-            { email: 'abc@gmail.com', category: 'customer care' },
+            { email: 'abc@gmail.com', category: 'customer_care' },
             { email: 'joey@hi.co', category: 'sales' },
             { email: '', category: '' }
           ],
@@ -77,10 +79,12 @@ describe('Community settings page ', () => {
           ],
           imageBlobId: null,
           locale: 'en-US',
+          currency: 'honduran_lempira',
           tagline: '',
           logoUrl: '',
           wpLink: '',
           securityManager: '',
+          subAdministrator: '',
           themeColors: { primaryColor: '#69ABA4', secondaryColor: '#cf5628' },
           bankingDetails: {
             bankName: 'Test bank name',
@@ -127,6 +131,7 @@ describe('Community settings page ', () => {
     expect(container.queryAllByLabelText('common:form_fields.email')).toHaveLength(2);
     expect(container.queryByLabelText('common:form_fields.phone_number')).toBeInTheDocument();
     expect(container.queryByLabelText('WhatsApp')).toBeInTheDocument();
+    expect(container.queryByText('community.set_sub_administrator')).toBeInTheDocument();
 
     expect(container.queryAllByLabelText('remove')).toHaveLength(6);
 
@@ -153,8 +158,8 @@ describe('Community settings page ', () => {
     fireEvent.select(container.queryByTestId('locale'), { target: { value: 'en-US' } });
     expect(container.queryByTestId('locale').value).toBe('en-US');
 
-    fireEvent.select(container.queryByTestId('currency'), { target: { value: 'ZMW' } });
-    expect(container.queryByTestId('currency').value).toBe('ZMW');
+    fireEvent.select(container.queryByTestId('currency'), { target: { value: 'zambian_kwacha' } });
+    expect(container.queryByTestId('currency').value).toBe('zambian_kwacha');
 
     fireEvent.select(container.queryByTestId('accountName'), { target: { value: 'Thebe' } });
     expect(container.queryByTestId('accountName').value).toBe('Thebe');
