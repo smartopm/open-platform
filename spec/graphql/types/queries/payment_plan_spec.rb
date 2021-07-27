@@ -284,7 +284,7 @@ RSpec.describe Types::Queries::Payment do
       end
 
       context 'when current user is admin' do
-        it 'returns list of user payment plans' do
+        it "returns list of user's active payment plans" do
           variables = { userId: user.id }
           result = DoubleGdpSchema.execute(user_payment_plans,
                                            variables: variables,
@@ -292,6 +292,7 @@ RSpec.describe Types::Queries::Payment do
                                              current_user: admin,
                                              site_community: community,
                                            })
+          expect(result.dig('data', 'userPaymentPlans').size).to eql 1
           payment_plans_result = result.dig('data', 'userPaymentPlans', 0)
           expect(payment_plans_result['startDate'].to_date).to eql payment_plan.start_date.to_date
           expect(payment_plans_result['landParcel']['parcelNumber']).to eql 'Plot001'

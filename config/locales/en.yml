@@ -290,6 +290,8 @@ en:
       preference_update_failed: Preference Update Failed
     payment_plan:
       have_zero_pending_balance: Pending balance is 0 for payment plan of selected property
+      amount_greater_than_pending_balance: Amount cannot be greater than the plan pending balance
+      does_not_exist_for_property: Payment Plan does not exist for selected property
       not_found: Payment Plan not found
     phone_number:
       found_blank: Phone number cannot be blank
@@ -307,6 +309,7 @@ en:
       not_found: Substatus log Not found
     transaction:
       amount_not_sufficient: Unallocated amount is not sufficient for the payment
+      amount_should_be_same: Amount must be equal to sum of all amounts allocated to plans
       not_found: Transaction not found
     unauthorized: Unauthorized
     user:
