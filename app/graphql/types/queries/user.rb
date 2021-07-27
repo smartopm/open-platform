@@ -144,7 +144,7 @@ module Types::Queries::User
   def users_lite(offset: 0, limit: 50, query: nil)
     adm = context[:current_user]
     user_types =  %w[ security_guard contractor custodian admin].freeze
-    allowed = adm.present? && allowed_users.include?(adm.user_type)
+    allowed = adm.present? && user_types.include?(adm.user_type)
     raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') unless allowed
 
     Users::User.allowed_users(context[:current_user])

@@ -73,10 +73,11 @@ module Types::Queries::Note
   # rubocop:disable Metrics/MethodLength
   # rubocop:disable Metrics/AbcSize
   def flagged_notes(offset: 0, limit: 50, query: nil)
-    raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') unless current_user&.admin?
+    raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') unless valid_user?
 
     if query.present? && query.include?('assignees')
       context[:site_community].notes.search_assignee(query)
+                              .by_allowed(current_user)
                               .includes(:assignees, :author, :user)
                               .eager_load(:assignee_notes, :assignees, :user)
                               .where(flagged: true)
@@ -84,6 +85,7 @@ module Types::Queries::Note
                               .limit(limit).offset(offset)
     elsif query.present? && query.include?('user')
       context[:site_community].notes.search_user(query)
+                              .by_allowed(current_user)
                               .includes(:assignees, :author, :user)
                               .eager_load(:assignee_notes, :assignees, :user)
                               .where(flagged: true)
@@ -91,6 +93,7 @@ module Types::Queries::Note
                               .limit(limit).offset(offset)
     else
       context[:site_community].notes.includes(:assignees, :author, :user)
+                              .by_allowed(current_user)
                               .eager_load(:assignee_notes, :assignees, :user)
                               .where(flagged: true)
                               .search(query)
@@ -102,22 +105,23 @@ module Types::Queries::Note
   # rubocop:enable Metrics/AbcSize
 
   def task(task_id:)
-    raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') unless current_user&.admin?
+    raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') unless valid_user?
 
     context[:site_community].notes.includes(:assignees, :author, :user)
+                            .by_allowed(current_user)
                             .eager_load(:assignee_notes, :assignees, :user)
                             .where(flagged: true)
                             .find(task_id)
   end
 
   def task_comments(task_id:)
-    raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') unless current_user&.admin?
+    raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') unless valid_user?
 
     context[:site_community].notes.find(task_id).note_comments.eager_load(:user)
   end
 
   def task_histories(task_id:)
-    raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') unless current_user&.admin?
+    raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') unless valid_user?
 
     context[:site_community].notes.find(task_id)
                             .note_histories
@@ -126,7 +130,7 @@ module Types::Queries::Note
   end
 
   def my_tasks_count
-    raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') unless current_user&.admin?
+    raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') unless valid_user?
 
     my_task
   end
@@ -134,9 +138,9 @@ module Types::Queries::Note
   # rubocop:disable Metrics/AbcSize
   # rubocop:disable Metrics/MethodLength
   def task_stats
-    raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') unless current_user&.admin?
+    raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') unless valid_user?
 
-    tasks = context[:site_community].notes.where(flagged: true)
+    tasks = context[:site_community].notes.by_allowed(current_user).where(flagged: true)
 
     {
       tasks_open: tasks.by_completion(false).count,
@@ -158,10 +162,17 @@ module Types::Queries::Note
     context[:current_user].tasks.by_completion(false).count
   end
 
-  def user_tasks
-    raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') unless current_user&.admin?
+  def valid_user?
+    user_types =  %w[security_guard contractor custodian admin].freeze
+    allowed = current_user.present? && user_types.include?(current_user.user_type)
+    allowed
+  end
 
-    context[:current_user].tasks.by_completion(false).where.not(due_date: nil)
+  def user_tasks
+    raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') unless valid_user?
+
+    context[:current_user].tasks.by_completion(false).by_allowed(current_user)
+                          .where.not(due_date: nil)
                           .order(created_at: :desc)
                           .limit(5)
   end
