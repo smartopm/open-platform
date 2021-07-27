@@ -116,7 +116,7 @@ export default function TodoList({
   const taskCountData = useQuery(TaskStatsQuery);
 
   const [loadAssignees, { loading, data: liteData }] = useLazyQuery(UsersLiteQuery, {
-    variables: { query: 'user_type = admin' },
+    variables: { query: 'user_type:admin OR user_type:custodian OR user_type:security_guard OR user_type:contractor'},
     errorPolicy: 'all'
   });
 
@@ -132,7 +132,7 @@ export default function TodoList({
     : location === 'my_tasks'
     ? `assignees: '${currentUser.name}'`
     : '';
-  
+
    const joinedTaskQuery =  `${qr} ${
     // eslint-disable-next-line no-nested-ternary
     filterQuery ? `AND ${filterQuery}` : searchInputQuery ? `AND ${searchInputQuery}` : ''
@@ -398,7 +398,7 @@ export default function TodoList({
       completed: currentTile !== 'completedTasks',
       query: joinedTaskQuery
     }})
-    .then(() => { 
+    .then(() => {
       handleRefetch()
       setBulkUpdating(false)
       setSelected([])

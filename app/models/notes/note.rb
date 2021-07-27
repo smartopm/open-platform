@@ -36,6 +36,12 @@ module Notes
     scope :by_due_date, ->(date) { where('due_date <= ?', date) }
     scope :by_completion, ->(is_complete) { where(completed: is_complete) }
     scope :by_category, ->(category) { where(category: category) }
+    scope :by_allowed, lambda { |current_user|
+      if current_user.user_type != 'admin'
+        current_user.assignee_notes && self.where(author_id: current_user.id)
+      end
+    }
+
     VALID_CATEGORY = %w[call email text message to_do form other].freeze
     validates :category, inclusion: { in: VALID_CATEGORY, allow_nil: true }
 

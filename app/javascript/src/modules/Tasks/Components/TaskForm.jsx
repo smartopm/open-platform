@@ -145,7 +145,7 @@ export default function TaskForm({ close, refetch, users, assignUser}) {
         </Select>
       </FormControl>
       <br />
-      <UserSearch userData={userData} update={setData} /> 
+      <UserSearch userData={userData} update={setData} />
       <br />
       <div>
         <DatePickerDialog
