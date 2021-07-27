@@ -146,17 +146,16 @@ export default function PaymentPlans({ userId, user, userData }) {
           <div className={classes.planList}>
             <div>
               <div style={{ display: 'flex', width: '100%', justifyContent: 'space-between', marginBottom: '10px' }}>
-                <Typography className={classes.plan}>Plans</Typography>
+                <Typography className={matches ? classes.plan : classes.planMobile}>Plans</Typography>
                 {user.userType === 'admin' && (
-                  <div style={{ display: 'flex', width: '100%', justifyContent: 'flex-end' }}>
-                    <div style={{marginRight: '10px'}}>
+                  <div style={matches ? { display: 'flex', width: '100%', justifyContent: 'flex-end' } : {display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+                    <div style={{margin: '0 10px 10px 0'}}>
                       <ButtonComponent 
                         color='primary' 
                         variant='contained' 
                         buttonText="New Payment Plan" 
                         handleClick={() => handlePlanModal()}
-                        size='large'
-                        style={{marginRight: '10px'}}
+                        size='small'
                       />
                     </div>
                     <div>
@@ -165,7 +164,7 @@ export default function PaymentPlans({ userId, user, userData }) {
                         variant='outlined' 
                         buttonText="View all Transactions" 
                         handleClick={() => handleButtonClick()}
-                        size='large'
+                        size='small'
                       />
                     </div>
                   </div>
@@ -250,6 +249,12 @@ const useStyles = makeStyles({
     fontSize: '20px',
     color: '#313131',
     marginBottom: '30px'
+  },
+  planMobile: {
+    fontWeight: 500,
+    fontSize: '16px',
+    color: '#313131',
+    marginBottom: '10px'
   },
   planList: {
     backgroundColor: '#FDFDFD',

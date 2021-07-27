@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from 'react';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
+import { useTheme } from '@material-ui/core/styles';
 import { useTranslation } from 'react-i18next';
 import { useForm } from 'react-hook-form';
 import IconButton from '@material-ui/core/IconButton';
@@ -36,6 +38,8 @@ export default function UserInformation({
   accountData
 }) {
   const path = useParamsQuery();
+  const theme = useTheme();
+  const matches = useMediaQuery(theme.breakpoints.up('sm'));
   const tab = path.get('tab');
   const subtab = path.get('subtab');
   const type = path.get('type');
@@ -142,11 +146,11 @@ export default function UserInformation({
         </Grid>
 
         <Grid container>
-          <Grid item xs={3}>{' '}</Grid>
-          <Grid item xs={6} style={{textAlign: 'center', marginTop: '30px'}}>
+          <Grid item xs={matches ? 3 : 1}>{' '}</Grid>
+          <Grid item xs={matches ? 6 : 10} style={{textAlign: 'center', marginTop: '30px'}}>
             <UserDetail data={data} userType={userType} />
           </Grid>
-          <Grid item xs={3}>{' '}</Grid>
+          <Grid item xs={matches ? 3 : 1}>{' '}</Grid>
         </Grid>
 
         <br />
