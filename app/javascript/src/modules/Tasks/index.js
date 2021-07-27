@@ -1,6 +1,7 @@
 import Tasks from './containers/Todo';
 import TaskReminder from './TaskReminder'
 import TaskUpdate from './containers/TaskUpdate'
+import { siteManagers } from '../../utils/constants';
 
 export default {
   routeProps: {
@@ -10,7 +11,7 @@ export default {
   },
   name: t => t('misc.tasks'),
   featureName: 'Tasks',
-  accessibleBy: ['admin'],
+  accessibleBy: siteManagers,
   subRoutes: [
     {
       routeProps: {
@@ -19,7 +20,7 @@ export default {
         component: TaskUpdate
       },
       name: 'Task Update',
-      accessibleBy: ['admin']
+      accessibleBy: siteManagers
     },
     {
       routeProps: {
@@ -28,7 +29,7 @@ export default {
         component: Tasks
       },
       name: 'My Tasks',
-      accessibleBy: ['admin']
+      accessibleBy: siteManagers
     }
   ]
 };

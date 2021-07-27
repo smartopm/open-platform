@@ -564,6 +564,13 @@ export const paymentFilterFields = {
     'custodian'
   ];
 
+  export const siteManagers = [
+    'admin',
+    'security_guard',
+    'contractor',
+    'custodian'
+  ]
+
   export const pointOfInterestIconSet = {
     completedHome: {
       label: 'Completed Home',

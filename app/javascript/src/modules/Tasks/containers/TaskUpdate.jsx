@@ -1,6 +1,5 @@
-/* eslint-disable react/prop-types */
 import React, { useContext } from 'react'
-import { Redirect, useParams } from 'react-router-dom'
+import {  useParams } from 'react-router-dom'
 import { useQuery, useMutation } from 'react-apollo'
 import { TaskQuery, UsersLiteQuery, HistoryQuery } from '../../../graphql/queries'
 import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider'
@@ -33,10 +32,6 @@ export default function TaskUpdate() {
   async function assignUnassignUser(noteId, userId) {
     await assignUserToNote({ variables: { noteId, userId } })
     refetch()
-  }
-
-  if (authState?.user?.userType !== 'admin') {
-    return <Redirect push to="/" />
   }
   if (loading) return <Loading />
   if (error) return <ErrorPage title={error.message} />

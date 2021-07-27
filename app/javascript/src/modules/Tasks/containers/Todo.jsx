@@ -5,8 +5,7 @@ import { UpdateNote } from '../../../graphql/mutations'
 import TodoList from '../Components/TodoList'
 import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider'
 
-// eslint-disable-next-line react/prop-types
-export default function Todo({ history }) {
+export default function Todo() {
   const authState = useContext(AuthStateContext)
 
   const [noteUpdate] = useMutation(UpdateNote)
@@ -30,12 +29,7 @@ export default function Todo({ history }) {
   const handleDateChange = date => {
     setSelectedDate(new Date(date).toISOString())
   }
-  // this will be handled at the higher level in the routes and in modules
-  if (authState.user?.userType !== 'admin') {
-    // re-route to home
-    // eslint-disable-next-line react/prop-types
-    history.push('/')
-  }
+
   return (
     <>
       <TodoList
