@@ -11,7 +11,7 @@ import {
   InputLabel
 } from '@material-ui/core'
 import { StyleSheet, css } from 'aphrodite'
-import { useHistory, useLocation } from 'react-router-dom'
+import { useHistory, useLocation, Link } from 'react-router-dom'
 import { useMutation, useQuery } from 'react-apollo'
 import ReactGA from 'react-ga'
 import { useTranslation } from 'react-i18next'
@@ -129,6 +129,16 @@ export default function LoginScreen() {
 
   return (
     <div style={{ overflow: 'hidden' }}>
+      {
+        communityName === 'Nkwashi' &&
+        (
+        <nav className={`${css(styles.navBar)} navbar`}>
+          <Link to="/welcome" color='primary'>
+            <i className="material-icons" style={{color: '#000000'}}>arrow_back</i>
+          </Link>
+        </nav>
+)
+      }
       <div className="container ">
         <div
           className={`justify-content-center align-items-center ${css(
