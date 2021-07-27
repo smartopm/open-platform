@@ -55,7 +55,7 @@
     "link": "Enlace",
     "logo_url": "Logo Url",
     "misc_description": "{{type}} Descripción",
-    "misc_title": "{{type}} Titulo",
+    "misc_title": "{{type}} Título",
     "name": "Nombre",
     "nrc": "Tarjeta de Identidad",
     "operating_hours": "Horas de funcionamiento",
@@ -73,7 +73,7 @@
     "state": "Ciudad",
     "template_name": "Nombre de plantilla",
     "template_subject": "Asunto de la plantilla",
-    "title": "Titulo",
+    "title": "Título",
     "user_name_merge": "Busca un usuario para unir",
     "user_name_search": "Buscar un usuario",
     "user_type": "Tipo de usuario",
@@ -356,7 +356,7 @@
     "payment_type": "Tipo de Pago",
     "plot_details": "Estos datos se actualizaron el {{date}}. Si algo parece incorrecto, comuníquese con nuestro",
     "plot_message": "Parcelas asociadas a esta cuenta",
-    "plot_number": "Numero de Lote",
+    "plot_number": "Número de Lote",
     "plots": "Parcelas",
     "read": "Leer",
     "recorded_by": "Creado por",
@@ -367,9 +367,9 @@
     "support_team": "Equipo de apoyo.",
     "tag": "Etiqueta",
     "task": "Tareas",
-    "transaction_number": "Numero de Transacción",
+    "transaction_number": "Número de Transacción",
     "user_type": "Tipo de usuario",
-    "valuation": "% de valuacion total"
+    "valuation": "% de valuación total"
   },
   "upload_state": {
     "DONE": "Imagen cargada correctamente",
