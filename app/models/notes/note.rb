@@ -38,7 +38,7 @@ module Notes
     scope :by_category, ->(category) { where(category: category) }
     scope :by_allowed, lambda { |current_user|
       if current_user.user_type != 'admin'
-        current_user.assignee_notes && self.where(author_id: current_user.id)
+        current_user.assignee_notes && where(author_id: current_user.id)
       end
     }
 

@@ -163,9 +163,8 @@ module Types::Queries::Note
   end
 
   def valid_user?
-    user_types =  %w[security_guard contractor custodian admin].freeze
-    allowed = current_user.present? && user_types.include?(current_user.user_type)
-    allowed
+    user_types = %w[security_guard contractor custodian admin].freeze
+    current_user.present? && user_types.include?(current_user.user_type)
   end
 
   def user_tasks
