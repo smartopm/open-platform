@@ -17,6 +17,8 @@ module Properties
 
     validates :payment_day,
               numericality: { only_integer: true, greater_than: 0, less_than_or_equal_to: 28 }
+    validates :duration, numericality: { greater_than_or_equal_to: 1 }
+    validates :installment_amount, numericality: { greater_than_or_equal_to: 1 }, on: :create
 
     enum status: { active: 0, cancelled: 1, deleted: 2, completed: 3 }
     enum frequency: { daily: 0, weekly: 1, monthly: 2, quarterly: 3 }

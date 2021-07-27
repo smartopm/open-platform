@@ -60,7 +60,7 @@ RSpec.describe Mutations::PaymentPlan::PaymentPlanCreate do
           planType: 'lease',
           percentage: '50%',
           duration: (rand * 10).ceil,
-          installmentAmount: 0,
+          installmentAmount: 1,
           totalAmount: 0,
           paymentDay: 2,
           frequency: 2,
@@ -86,7 +86,7 @@ RSpec.describe Mutations::PaymentPlan::PaymentPlanCreate do
           planType: 'lease',
           percentage: '50%',
           duration: (rand * 10).ceil,
-          installmentAmount: 0,
+          installmentAmount: 1,
           totalAmount: 0,
           paymentDay: 2,
           frequency: 2,
@@ -108,13 +108,13 @@ RSpec.describe Mutations::PaymentPlan::PaymentPlanCreate do
         landParcelId: land_parcel.id,
         userId: user.id,
         startDate: '2021-02-13',
-        status: '1',
+        status: 0,
         planType: 'lease',
-        percentage: '50%',
-        duration: (rand * 10).ceil,
-        installmentAmount: 100.0,
+        percentage: '50',
+        duration: 0,
+        installmentAmount: 0.0,
         totalAmount: 100.0,
-        paymentDay: '2',
+        paymentDay: 31,
         frequency: 2,
       }
       result = DoubleGdpSchema.execute(payment_plan_mutation, variables: variables,
@@ -123,7 +123,8 @@ RSpec.describe Mutations::PaymentPlan::PaymentPlanCreate do
                                                                 site_community: user.community,
                                                               }).as_json
       expect(result.dig('errors', 0, 'message'))
-        .to include 'Variable $status of type Int! was provided invalid value'
+        .to eql 'Payment day must be less than or equal to 28,Duration must be greater than or ' \
+                  'equal to 1,Installment amount must be greater than or equal to 1'
     end
   end
 end
