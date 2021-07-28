@@ -1,6 +1,7 @@
 /* eslint-disable no-use-before-define */
 import React from 'react'
 import CloseIcon from '@material-ui/icons/Close';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 import {
   DialogContent,
   DialogActions,
@@ -179,6 +180,7 @@ export function DetailsDialog({ handleClose, open, title, children, noActionButt
 
 export function FullScreenDialog({ handleClose, open, children, actionText, handleSubmit }){
   const classes = useStyles()
+  const matches = useMediaQuery('(max-width:600px)');
   return(
     <Dialog
       onClose={handleClose}
@@ -190,7 +192,7 @@ export function FullScreenDialog({ handleClose, open, children, actionText, hand
           <IconButton edge="start" onClick={handleClose} aria-label="close">
             <CloseIcon style={{color: 'white'}} />
           </IconButton>
-          <div className={classes.print}>
+          <div className={matches ? classes.printMobile : classes.print}>
             {' '}
           </div>
           <Button autoFocus onClick={handleSubmit} style={{background: 'none'}} className={classes.print}>
@@ -287,6 +289,11 @@ export const useStyles = makeStyles(theme => ({
   },
   print: {
     marginLeft: '500px',
+    width: '30px',
+    flex: 1,
+    color: '#FFFFFF'
+  },
+  printMobile: {
     width: '30px',
     flex: 1,
     color: '#FFFFFF'

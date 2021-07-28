@@ -1,5 +1,6 @@
 import React from 'react';
 import Grid from '@material-ui/core/Grid';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
@@ -11,6 +12,7 @@ import CenteredContent from '../../../../components/CenteredContent';
 
 export default function PaymentReceipt({ data, open, handleClose, currencyData }) {
   const classes = useStyles();
+  const matches = useMediaQuery('(max-width:600px)');
 
   function printStatement() {
     document.title = `${data?.paymentPlan?.user?.name}-${
@@ -21,7 +23,7 @@ export default function PaymentReceipt({ data, open, handleClose, currencyData }
 
   return (
     <>
-      <div>
+      <div style={matches ? {overflowX: 'hidden'} : {}}>
         <FullScreenDialog
           open={open}
           handleClose={handleClose}
@@ -29,7 +31,7 @@ export default function PaymentReceipt({ data, open, handleClose, currencyData }
           actionText="Print"
           handleSubmit={printStatement}
         >
-          <div className="print" style={{ margin: '57px 155px' }}>
+          <div className="print" style={matches ? {overflowX: 'hidden'} : { margin: '57px 155px' }}>
             {data?.paymentPlan?.landParcel?.community?.logoUrl ? (
               <img
                 src={data?.paymentPlan?.landParcel?.community?.logoUrl}
@@ -48,41 +50,41 @@ export default function PaymentReceipt({ data, open, handleClose, currencyData }
               <Grid container>
                 <Grid item xs={6}>
                   <Grid container spacing={1}>
-                    <Grid item xs={4} className={classes.title}>
+                    <Grid item xs={4} className={matches ? classes.titleMobile : classes.title}>
                       Client Name
                     </Grid>
-                    <Grid item xs={8} data-testid="client-name" className={classes.title}>
+                    <Grid item xs={8} data-testid="client-name" className={matches ? classes.titleMobile : classes.title}>
                       {data?.paymentPlan?.user?.name}
                     </Grid>
                   </Grid>
                   <Grid container spacing={1}>
-                    <Grid item xs={4} className={classes.title}>
+                    <Grid item xs={4} className={matches ? classes.titleMobile : classes.title}>
                       NRC
                     </Grid>
-                    <Grid item xs={8} className={classes.title} data-testid="nrc">
+                    <Grid item xs={8} className={matches ? classes.titleMobile : classes.title} data-testid="nrc">
                       {data?.paymentPlan?.user?.extRefId || '-'}
                     </Grid>
                   </Grid>
                   <Grid container spacing={1}>
-                    <Grid item xs={4} className={classes.title}>
+                    <Grid item xs={4} className={matches ? classes.titleMobile : classes.title}>
                       Plot Number
                     </Grid>
-                    <Grid item xs={8} className={classes.title}>
+                    <Grid item xs={8} className={matches ? classes.titleMobile : classes.title}>
                       {data?.paymentPlan?.landParcel?.parcelNumber}
                     </Grid>
                     <Grid container spacing={1}>
-                      <Grid item xs={4} className={classes.title}>
+                      <Grid item xs={4} className={matches ? classes.titleMobile : classes.title}>
                         Payment Plan
                       </Grid>
-                      <Grid item xs={8} className={classes.title}>
+                      <Grid item xs={8} className={matches ? classes.titleMobile : classes.title}>
                         {data?.paymentPlan?.planType}
                       </Grid>
                     </Grid>
                     <Grid container spacing={1}>
-                      <Grid item xs={4} className={classes.title}>
+                      <Grid item xs={4} className={matches ? classes.titleMobile : classes.title}>
                         Plan Value(months)
                       </Grid>
-                      <Grid item xs={8} className={classes.title}>
+                      <Grid item xs={8} className={matches ? classes.titleMobile : classes.title}>
                         {formatMoney(currencyData, data?.paymentPlan?.planValue)}
                         (
                         {data?.paymentPlan?.duration}
@@ -93,35 +95,35 @@ export default function PaymentReceipt({ data, open, handleClose, currencyData }
                 </Grid>
                 <Grid item xs={6} style={{ textAlign: 'right' }}>
                   <Grid container spacing={1}>
-                    <Grid item xs={12} className={classes.title} data-testid="account-name">
+                    <Grid item xs={12} className={matches ? classes.titleMobile : classes.title} data-testid="account-name">
                       {data?.paymentPlan?.landParcel?.community?.bankingDetails?.accountName ||
                         'N/A'}
                     </Grid>
                   </Grid>
                   <Grid container spacing={1}>
-                    <Grid item xs={12} className={classes.title} data-testid="tax-id-no">
+                    <Grid item xs={12} className={matches ? classes.titleMobile : classes.title} data-testid="tax-id-no">
                       TPIN:
                       {' '}
                       {data?.paymentPlan?.landParcel?.community?.bankingDetails?.taxIdNo || 'N/A'}
                     </Grid>
                   </Grid>
                   <Grid container spacing={1}>
-                    <Grid item xs={12} className={classes.title} data-testid="address">
+                    <Grid item xs={12} className={matches ? classes.titleMobile : classes.title} data-testid="address">
                       {data?.paymentPlan?.landParcel?.community?.bankingDetails?.address || 'N/A'}
                     </Grid>
                   </Grid>
                   <Grid container spacing={1}>
-                    <Grid item xs={12} className={classes.title} data-testid="city">
+                    <Grid item xs={12} className={matches ? classes.titleMobile : classes.title} data-testid="city">
                       {data?.paymentPlan?.landParcel?.community?.bankingDetails?.city || 'N/A'}
                     </Grid>
                   </Grid>
                   <Grid container spacing={1}>
-                    <Grid item xs={12} className={classes.title} data-testid="country">
+                    <Grid item xs={12} className={matches ? classes.titleMobile : classes.title} data-testid="country">
                       {data?.paymentPlan?.landParcel?.community?.bankingDetails?.country || 'N/A'}
                     </Grid>
                   </Grid>
                   <Grid container spacing={1}>
-                    <Grid item xs={12} className={classes.title} data-testid="support-email">
+                    <Grid item xs={12} className={matches ? classes.titleMobile : classes.title} data-testid="support-email">
                       email:
                       {' '}
                       {data?.paymentPlan?.landParcel?.community?.supportEmail
@@ -130,7 +132,7 @@ export default function PaymentReceipt({ data, open, handleClose, currencyData }
                     </Grid>
                   </Grid>
                   <Grid container spacing={1}>
-                    <Grid item xs={12} className={classes.title} data-testid="website">
+                    <Grid item xs={12} className={matches ? classes.titleMobile : classes.title} data-testid="website">
                       web:
                       {' '}
                       {data?.paymentPlan?.landParcel?.community?.socialLinks
@@ -139,7 +141,7 @@ export default function PaymentReceipt({ data, open, handleClose, currencyData }
                     </Grid>
                   </Grid>
                   <Grid container spacing={1}>
-                    <Grid item xs={12} className={classes.title} data-testid="support-phone-no">
+                    <Grid item xs={12} className={matches ? classes.titleMobile : classes.title} data-testid="support-phone-no">
                       phone:
                       {' '}
                       {data?.paymentPlan?.landParcel?.community?.supportNumber
@@ -154,7 +156,7 @@ export default function PaymentReceipt({ data, open, handleClose, currencyData }
                   <Grid
                     item
                     xs={2}
-                    className={classes.title}
+                    className={matches ? classes.titleMobile : classes.title}
                     key="receipt_number"
                     style={{ fontWeight: 700, color: '#2D2D2D' }}
                   >
@@ -163,7 +165,7 @@ export default function PaymentReceipt({ data, open, handleClose, currencyData }
                   <Grid
                     item
                     xs={2}
-                    className={classes.title}
+                    className={matches ? classes.titleMobile : classes.title}
                     key="payment_date"
                     style={{ fontWeight: 700, color: '#2D2D2D' }}
                   >
@@ -172,7 +174,7 @@ export default function PaymentReceipt({ data, open, handleClose, currencyData }
                   <Grid
                     item
                     xs={2}
-                    className={classes.title}
+                    className={matches ? classes.titleMobile : classes.title}
                     key="amount_paid"
                     style={{ fontWeight: 700, color: '#2D2D2D' }}
                   >
@@ -181,7 +183,7 @@ export default function PaymentReceipt({ data, open, handleClose, currencyData }
                   <Grid
                     item
                     xs={2}
-                    className={classes.title}
+                    className={matches ? classes.titleMobile : classes.title}
                     key="installment_amount"
                     style={{ fontWeight: 700, color: '#2D2D2D' }}
                   >
@@ -189,8 +191,8 @@ export default function PaymentReceipt({ data, open, handleClose, currencyData }
                   </Grid>
                   <Grid
                     item
-                    xs={2}
-                    className={classes.title}
+                    xs={matches ? 1 : 2}
+                    className={matches ? classes.titleMobile : classes.title}
                     key="number_of_installements"
                     style={{ fontWeight: 700, color: '#2D2D2D' }}
                   >
@@ -199,7 +201,7 @@ export default function PaymentReceipt({ data, open, handleClose, currencyData }
                   <Grid
                     item
                     xs={1}
-                    className={classes.title}
+                    className={matches ? classes.titleMobile : classes.title}
                     key="debit"
                     style={{ fontWeight: 700, color: '#2D2D2D' }}
                   >
@@ -208,7 +210,7 @@ export default function PaymentReceipt({ data, open, handleClose, currencyData }
                   <Grid
                     item
                     xs={1}
-                    className={classes.title}
+                    className={matches ? classes.titleMobile : classes.title}
                     key="balance"
                     style={{ fontWeight: 700, color: '#2D2D2D' }}
                   >
@@ -219,25 +221,44 @@ export default function PaymentReceipt({ data, open, handleClose, currencyData }
                 {data?.statements && Boolean(data?.statements?.length > 0) ? (
                   data?.statements.map(plan => (
                     <Grid container spacing={1} key={plan.id}>
-                      <Grid item xs={2} className={classes.title} data-testid="receipt-no">
+                      <Grid
+                        item
+                        xs={2}
+                        className={matches ? classes.titleMobile : classes.title}
+                        data-testid="receipt-no"
+                      >
                         {plan.receiptNumber}
                       </Grid>
-                      <Grid item xs={2} className={classes.title} data-testid="pay-date">
+                      <Grid
+                        item
+                        xs={2}
+                        className={matches ? classes.titleMobile : classes.title}
+                        data-testid="pay-date"
+                      >
                         {plan.paymentDate && dateToString(plan.paymentDate)}
                       </Grid>
-                      <Grid item xs={2} className={classes.title} data-testid="amount">
+                      <Grid
+                        item
+                        xs={2}
+                        className={matches ? classes.titleMobile : classes.title}
+                        data-testid="amount"
+                      >
                         {formatMoney(currencyData, plan.amountPaid)}
                       </Grid>
-                      <Grid item xs={2} className={classes.title}>
+                      <Grid
+                        item
+                        xs={2}
+                        className={matches ? classes.titleMobile : classes.title}
+                      >
                         {formatMoney(currencyData, plan.installmentAmount)}
                       </Grid>
-                      <Grid item xs={2} className={classes.title}>
+                      <Grid item xs={matches ? 1 : 2} className={matches ? classes.titleMobile : classes.title}>
                         {plan.settledInstallments}
                       </Grid>
-                      <Grid item xs={1} className={classes.title}>
+                      <Grid item xs={1} className={matches ? classes.titleMobile : classes.title}>
                         {formatMoney(currencyData, plan.debitAmount)}
                       </Grid>
-                      <Grid item xs={1} className={classes.title}>
+                      <Grid item xs={1} className={matches ? classes.titleMobile : classes.title}>
                         {formatMoney(currencyData, plan.unallocatedAmount)}
                       </Grid>
                     </Grid>
@@ -253,86 +274,88 @@ export default function PaymentReceipt({ data, open, handleClose, currencyData }
                     {' '}
                     <br />
                     <Grid container spacing={1}>
-                      <Grid item xs={3} className={classes.title}>
+                      <Grid item xs={3} className={matches ? classes.titleMobile : classes.title}>
                         Bank
                       </Grid>
-                      <Grid item xs={3} className={classes.title}>
-                        {data?.paymentPlan?.landParcel?.community?.bankingDetails?.bankName || 'N/A'}
+                      <Grid item xs={3} className={matches ? classes.titleMobile : classes.title}>
+                        {data?.paymentPlan?.landParcel?.community?.bankingDetails?.bankName ||
+                          'N/A'}
                       </Grid>
                     </Grid>
                     <Grid container spacing={1}>
-                      <Grid item xs={3} className={classes.title}>
+                      <Grid item xs={3} className={matches ? classes.titleMobile : classes.title}>
                         Account Name
                       </Grid>
-                      <Grid item xs={6} className={classes.title}>
+                      <Grid item xs={6} className={matches ? classes.titleMobile : classes.title}>
                         {data?.paymentPlan?.landParcel?.community?.bankingDetails?.accountName ||
                           'N/A'}
                       </Grid>
                     </Grid>
                     <Grid container spacing={1}>
-                      <Grid item xs={3} className={classes.title}>
+                      <Grid item xs={3} className={matches ? classes.titleMobile : classes.title}>
                         Account Number
                       </Grid>
-                      <Grid item xs={3} className={classes.title}>
+                      <Grid item xs={3} className={matches ? classes.titleMobile : classes.title}>
                         {data?.paymentPlan?.landParcel?.community?.bankingDetails?.accountNo ||
                           'N/A'}
                       </Grid>
                     </Grid>
                     <Grid container spacing={1}>
-                      <Grid item xs={3} className={classes.title}>
+                      <Grid item xs={3} className={matches ? classes.titleMobile : classes.title}>
                         Branch
                       </Grid>
-                      <Grid item xs={3} className={classes.title}>
+                      <Grid item xs={3} className={matches ? classes.titleMobile : classes.title}>
                         {data?.paymentPlan?.landParcel?.community?.bankingDetails?.branch || 'N/A'}
                       </Grid>
                     </Grid>
                     <Grid container spacing={1}>
-                      <Grid item xs={3} className={classes.title}>
+                      <Grid item xs={3} className={matches ? classes.titleMobile : classes.title}>
                         Swift Code
                       </Grid>
-                      <Grid item xs={3} className={classes.title}>
+                      <Grid item xs={3} className={matches ? classes.titleMobile : classes.title}>
                         {data?.paymentPlan?.landParcel?.community?.bankingDetails?.swiftCode ||
                           'N/A'}
                       </Grid>
                     </Grid>
                     <Grid container spacing={1}>
-                      <Grid item xs={3} className={classes.title}>
+                      <Grid item xs={3} className={matches ? classes.titleMobile : classes.title}>
                         Sort Code
                       </Grid>
-                      <Grid item xs={3} className={classes.title}>
-                        {data?.paymentPlan?.landParcel?.community?.bankingDetails?.sortCode || 'N/A'}
+                      <Grid item xs={3} className={matches ? classes.titleMobile : classes.title}>
+                        {data?.paymentPlan?.landParcel?.community?.bankingDetails?.sortCode ||
+                          'N/A'}
                       </Grid>
                     </Grid>
                   </div>
                 </Grid>
                 <Grid item xs={6}>
                   <Grid container spacing={1}>
-                    <Grid item xs={8} className={classes.title} style={{ textAlign: 'right' }}>
+                    <Grid item xs={8} className={matches ? classes.titleMobile : classes.title} style={{ textAlign: 'right' }}>
                       Total Paid Installments
                     </Grid>
                     <Grid
                       item
                       xs={4}
                       data-testid="total-paid"
-                      className={classes.title}
+                      className={matches ? classes.titleMobile : classes.title}
                       style={{ textAlign: 'right' }}
                     >
                       {formatMoney(currencyData, data?.paymentPlan?.statementPaidAmount)}
                     </Grid>
                   </Grid>
                   <Grid container spacing={1}>
-                    <Grid item xs={8} className={classes.title} style={{ textAlign: 'right' }}>
+                    <Grid item xs={8} className={matches ? classes.titleMobile : classes.title} style={{ textAlign: 'right' }}>
                       Total Unallocated
                     </Grid>
-                    <Grid item xs={4} className={classes.title} style={{ textAlign: 'right' }}>
+                    <Grid item xs={4} className={matches ? classes.titleMobile : classes.title} style={{ textAlign: 'right' }}>
                       {formatMoney(currencyData, data?.paymentPlan?.unallocatedAmount)}
                     </Grid>
                   </Grid>
                   <Grid container spacing={1}>
-                    <Grid item xs={8} className={classes.title} style={{ textAlign: 'right' }}>
+                    <Grid item xs={8} className={matches ? classes.titleMobile : classes.title} style={{ textAlign: 'right' }}>
                       Balance Due
                     </Grid>
-                    <Grid item xs={4} className={classes.title} style={{ textAlign: 'right' }}>
+                    <Grid item xs={4} className={matches ? classes.titleMobile : classes.title} style={{ textAlign: 'right' }}>
                       {formatMoney(currencyData, data?.paymentPlan?.pendingBalance)}
                     </Grid>
                   </Grid>
@@ -353,6 +376,11 @@ const useStyles = makeStyles({
   title: {
     fontWeight: 400,
     fontSize: '16px',
+    color: '#656565'
+  },
+  titleMobile: {
+    fontWeight: 200,
+    fontSize: '10px',
     color: '#656565'
   },
   name: {

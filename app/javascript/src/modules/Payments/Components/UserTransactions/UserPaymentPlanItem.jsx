@@ -467,12 +467,13 @@ export function renderPlan(plan, currencyData, userType, { handleMenu, loading }
               aria-controls="simple-menu"
               aria-haspopup="true"
               data-testid="plan-menu"
+              dataid={plan.id}
               onClick={(event) => menuData.handlePlanMenu(event, plan)}
             >
               <MoreHorizOutlined />
             </IconButton>
             <MenuList
-              open={menuData?.open}
+              open={menuData?.open && menuData?.anchorEl?.getAttribute('dataid') === plan.id}
               anchorEl={menuData?.anchorEl}
               userType={menuData?.userType}
               handleClose={menuData?.handleClose}

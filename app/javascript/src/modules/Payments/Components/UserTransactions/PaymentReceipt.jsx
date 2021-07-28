@@ -1,4 +1,5 @@
 import React, { useRef } from 'react';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 import Grid from '@material-ui/core/Grid';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
@@ -13,6 +14,7 @@ import { paymentType } from '../../../../utils/constants';
 export default function PaymentReceipt({ paymentData, open, handleClose, currencyData }) {
   const signRef = useRef(null);
   const classes = useStyles();
+  const matches = useMediaQuery('(max-width:600px)');
 
   function printReceipt() {
     document.title = `${paymentData?.user?.name}-${paymentData?.planPayments ? paymentData?.planPayments[0]?.receiptNumber :
@@ -30,7 +32,7 @@ export default function PaymentReceipt({ paymentData, open, handleClose, currenc
           actionText="Print"
           handleSubmit={printReceipt}
         >
-          <div className="print" style={{ margin: '80px 284px' }}>
+          <div className="print" style={matches ? {} : { margin: '80px 284px' }}>
             {paymentData?.community?.logoUrl ? (
               <img
                 src={paymentData.community.logoUrl}
