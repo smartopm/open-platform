@@ -77,7 +77,7 @@ module Types::Queries::Note
 
     if query.present? && query.include?('assignees')
       context[:site_community].notes.search_assignee(query)
-                              .for_non_admin_users(current_user)
+                              .for_site_manager(current_user)
                               .includes(:assignees, :author, :user)
                               .eager_load(:assignee_notes, :assignees, :user)
                               .where(flagged: true)
@@ -85,7 +85,7 @@ module Types::Queries::Note
                               .limit(limit).offset(offset)
     elsif query.present? && query.include?('user')
       context[:site_community].notes.search_user(query)
-                              .for_non_admin_users(current_user)
+                              .for_site_manager(current_user)
                               .includes(:assignees, :author, :user)
                               .eager_load(:assignee_notes, :assignees, :user)
                               .where(flagged: true)
@@ -93,7 +93,7 @@ module Types::Queries::Note
                               .limit(limit).offset(offset)
     else
       context[:site_community].notes.includes(:assignees, :author, :user)
-                              .for_non_admin_users(current_user)
+                              .for_site_manager(current_user)
                               .eager_load(:assignee_notes, :assignees, :user)
                               .where(flagged: true)
                               .search(query)
@@ -108,7 +108,7 @@ module Types::Queries::Note
     raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') unless current_user.site_manager?
 
     context[:site_community].notes.includes(:assignees, :author, :user)
-                            .for_non_admin_users(current_user)
+                            .for_site_manager(current_user)
                             .eager_load(:assignee_notes, :assignees, :user)
                             .where(flagged: true)
                             .find(task_id)
@@ -140,7 +140,7 @@ module Types::Queries::Note
   def task_stats
     raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') unless current_user.site_manager?
 
-    tasks = context[:site_community].notes.for_non_admin_users(current_user).where(flagged: true)
+    tasks = context[:site_community].notes.for_site_manager(current_user).where(flagged: true)
 
     {
       tasks_open: tasks.by_completion(false).count,

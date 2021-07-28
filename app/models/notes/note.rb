@@ -36,21 +36,15 @@ module Notes
     scope :by_due_date, ->(date) { where('due_date <= ?', date) }
     scope :by_completion, ->(is_complete) { where(completed: is_complete) }
     scope :by_category, ->(category) { where(category: category) }
-    # scope :for_non_admin_users, lambda { |current_user|
-    #   if current_user.user_type != 'admin'
-    #     left_joins(:assignee_notes).where(self.arel_table[:author_id].eq(current_user.id)
-    #                .or(Notes::AssigneeNote.arel_table[:user_id].eq(current_user.id)))
-    #   end
-    # }
-    scope :for_non_admin_users, lambda { |current_user|
-                                  if current_user.user_type != 'admin'
-                                    left_joins(:assignee_notes).where(
-                                      arel_table[:author_id].eq(current_user.id)
-                                         .or(Notes::AssigneeNote.arel_table[:user_id]
-                                           .eq(current_user.id)),
-                                    ).distinct
-                                  end
-                                }
+    scope :for_site_manager, lambda { |current_user|
+                               if current_user.user_type != 'admin'
+                                 left_joins(:assignee_notes).where(
+                                   arel_table[:author_id].eq(current_user.id)
+                                      .or(Notes::AssigneeNote.arel_table[:user_id]
+                                        .eq(current_user.id)),
+                                 ).distinct
+                               end
+                             }
 
     VALID_CATEGORY = %w[call email text message to_do form other].freeze
     validates :category, inclusion: { in: VALID_CATEGORY, allow_nil: true }
