@@ -6,6 +6,7 @@ RSpec.describe Mutations::Note::NoteCommentUpdate do
   describe 'update for note comment' do
     let!(:user) { create(:user_with_community) }
     let!(:admin) { create(:admin_user, community_id: user.community_id) }
+    let!(:another_user) { create(:store_custodian, community_id: user.community_id) }
     let!(:note) do
       admin.notes.create!(
         body: 'Note body',
@@ -36,7 +37,7 @@ RSpec.describe Mutations::Note::NoteCommentUpdate do
       }
       result = DoubleGdpSchema.execute(query, variables: variables,
                                               context: {
-                                                current_user: user,
+                                                current_user: another_user,
                                               }).as_json
       expect(result.dig('data', 'noteCommentUpdate', 'noteComment', 'id')).not_to be_nil
       expect(result.dig('data', 'noteCommentUpdate', 'noteComment', 'body')).to eql 'Updated body'
