@@ -124,7 +124,7 @@ RSpec.describe Mutations::PaymentPlan::PaymentPlanCreate do
                                                               }).as_json
       expect(result.dig('errors', 0, 'message'))
         .to eql 'Payment day must be less than or equal to 28,Duration must be greater than or ' \
-                  'equal to 1,Installment amount must be greater than or equal to 1'
+                  'equal to 1,Installment Amount must be greater than or equal to 1'
     end
   end
 end
