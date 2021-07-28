@@ -38,7 +38,8 @@ module Notes
     scope :by_category, ->(category) { where(category: category) }
     scope :by_allowed, lambda { |current_user|
       if current_user.user_type != 'admin'
-        current_user.assignee_notes && where(author_id: current_user.id)
+        left_joins(:assignee_notes).where(self.arel_table[:author_id].eq(current_user.id)
+                   .or(Notes::AssigneeNote.arel_table[:user_id].eq(current_user.id)))
       end
     }
 

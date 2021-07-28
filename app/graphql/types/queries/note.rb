@@ -159,7 +159,7 @@ module Types::Queries::Note
   # rubocop:enable Metrics/MethodLength
 
   def my_task
-    context[:current_user].tasks.by_completion(false).count
+    context[:current_user].tasks.by_allowed(current_user).by_completion(false).count
   end
 
   def valid_user?
