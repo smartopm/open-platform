@@ -148,8 +148,13 @@ en:
         account: Account
         land_parcel: Land parcel
       properties/payment_plan:
+        duration: Duration
+        installment_amount: Installment Amount
         land_parcel: Land parcel
         payment_day: Payment day
+        user: User
+      properties/plan_ownership:
+        payment_plan: Payment Plan
         user: User
       properties/valuation:
         amount: Amount
@@ -233,6 +238,7 @@ en:
       properties/land_parcel: Land parcel
       properties/land_parcel_account: Land parcel account
       properties/payment_plan: Payment plan
+      properties/plan_ownership: Plan Ownership
       properties/valuation: Valuation
       showroom: Showroom
       users/activity_point: Activity Point
