@@ -42,7 +42,8 @@ module Mutations
       # TODO: Better auth here
       # Verifies if current user is admin or not.
       def authorized?(_vals)
-        return true if context[:current_user]&.admin?
+        user_types = %w[security_guard contractor custodian admin].freeze
+        return true if user_types.include?(context[:current_user].user_type)
 
         raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
       end
