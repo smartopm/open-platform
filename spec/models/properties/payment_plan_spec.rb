@@ -62,6 +62,16 @@ RSpec.describe Properties::PaymentPlan, type: :model do
         .is_greater_than(0)
         .is_less_than_or_equal_to(28)
     end
+
+    it do
+      is_expected.to validate_numericality_of(:duration)
+        .is_greater_than_or_equal_to(1)
+    end
+
+    it do
+      is_expected.to validate_numericality_of(:installment_amount)
+        .is_greater_than_or_equal_to(1).on(:create)
+    end
   end
 
   describe 'callbacks' do
