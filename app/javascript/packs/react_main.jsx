@@ -42,7 +42,7 @@ import ShowroomLogs from '../src/containers/showroom/ShowroomLogs';
 import ClientRequestForm from '../src/containers/ClientRequestForm';
 import CampaignCreate from '../src/containers/Campaigns/CampaignCreate';
 import Scan from '../src/containers/Scan';
-// import WelcomePage from '../src/components/AuthScreens/WelcomePage';
+import WelcomePage from '../src/components/AuthScreens/WelcomePage';
 import CampaignUpdate from '../src/containers/Campaigns/CampaignUpdate';
 import DiscussonPage from '../src/containers/Discussions/DiscussionPage';
 import GeoMap from '../src/containers/GeoMap';
@@ -163,7 +163,7 @@ const App = () => {
               {/* onboarding */}
               <I18Initializer />
               <Switch>
-                {/* <Route path="/welcome" component={WelcomePage} /> */}
+                <Route path="/welcome" component={WelcomePage} />
                 <Route path="/login" component={LoginScreen} />
                 <Route path="/code/:id" component={ConfirmCodeScreen} />
                 <Route path="/l/:id/:code" component={OneTimeLoginCode} />
