@@ -17,6 +17,6 @@ describe('Feedback Component', () => {
       </MockedProvider>
     );
 
-    expect(container.queryByTestId('loader')).toBeNull();
+    expect(container.queryByTestId('loader')).toBeInTheDocument();
   });
 });

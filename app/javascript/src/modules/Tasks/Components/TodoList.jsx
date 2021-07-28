@@ -528,6 +528,7 @@ export default function TodoList({
             justifyContent: 'space-between',
             position: 'relative'
           }}
+          data-testid="filter_container"
         >
           <Grid
             container
@@ -603,6 +604,7 @@ export default function TodoList({
               onClick={openModal}
               color="primary"
               className={`${css(styles.taskButton)} `}
+              data-testid="create_task_btn"
             >
               {t('common:form_actions.create_task')}
             </Fab>
