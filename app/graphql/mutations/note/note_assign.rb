@@ -36,7 +36,7 @@ module Mutations
       # TODO: Better auth here
       # Verifies if current user is admin or not.
       def authorized?(_vals)
-        return true if context[:current_user]&.admin?
+        return true if context[:current_user].site_manager?
 
         raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
       end

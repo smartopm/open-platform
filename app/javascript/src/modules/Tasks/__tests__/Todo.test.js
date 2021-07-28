@@ -1,5 +1,5 @@
 import React from 'react';
-import { act, render, waitFor } from '@testing-library/react';
+import { render, } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { BrowserRouter } from 'react-router-dom';
 import { ApolloProvider } from 'react-apollo';
@@ -27,7 +27,7 @@ describe('Todo list main page', () => {
       }
     }
   };
-  it('renders the todo list page correctly', async () => {
+  it('renders the todo list page correctly',  () => {
     const mocks = [
       {
         request: {
@@ -52,25 +52,24 @@ describe('Todo list main page', () => {
       }
     ];
 
-    const pushMock = jest.fn();
-    let container;
-    await act(async () => {
-      container = render(
+
+      const container = render(
         <ApolloProvider client={createClient}>
           <Context.Provider value={data}>
             <MockedProvider mocks={mocks} addTypename={false}>
               <BrowserRouter>
-                <Todo history={{ push: pushMock }} />
+                <Todo />
               </BrowserRouter>
             </MockedProvider>
           </Context.Provider>
         </ApolloProvider>
       );
-    });
-    // here what happens is that, because of the authstate, if the user isn't admin then it autoreroutes to home
-    expect(pushMock).toBeCalled();
-    await waitFor(() => {
-      expect(container.queryByText('Home')).toBeInTheDocument();
-    }, 50);
+
+      expect(container.queryByTestId('toggle_filter_btn')).toBeInTheDocument();
+      expect(container.queryByTestId('filter_container')).toBeInTheDocument();
+      expect(container.queryByTestId('create_task_btn')).toBeInTheDocument();
+      expect(container.queryByTestId('prev-btn')).toBeInTheDocument();
+      expect(container.queryByTestId('next-btn')).toBeInTheDocument();
+      expect(container.queryByLabelText('search tasks')).toBeInTheDocument();
   });
 });

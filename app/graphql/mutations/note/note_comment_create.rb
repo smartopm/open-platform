@@ -19,7 +19,7 @@ module Mutations
       end
 
       def authorized?(_vals)
-        return true if context[:current_user].present?
+        return true if context[:current_user].site_manager?
 
         raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
       end

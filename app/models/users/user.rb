@@ -168,6 +168,8 @@ module Users
       security_guard: { except: %i[state user_type] },
     }.freeze
 
+    SITE_MANAGERS = %w[security_guard contractor custodian admin].freeze
+
     def self.from_omniauth(auth, site_community)
       # Either create a User record or update it based on the provider (Google) and the UID
       user = find_or_initialize_from_oauth(auth, site_community)
@@ -198,6 +200,10 @@ module Users
 
     def self.lookup_by_id_card_token(token)
       find_by(id: token)
+    end
+
+    def site_manager?
+      SITE_MANAGERS.include?(user_type)
     end
 
     # rubocop:disable Metrics/AbcSize
