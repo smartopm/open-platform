@@ -85,7 +85,8 @@ export default function PaymentModal({
 
   const [loadLandParcel, { loading, data: paymentPlans, refetch: paymentPlansRefetch }] = useLazyQuery(UserLandParcelWithPlan, {
     variables: { userId: paymentUserId },
-    errorPolicy: 'all'
+    errorPolicy: 'all',
+    fetchPolicy: 'no-cache'
   });
 
   const [searchUser, { data }] = useLazyQuery(UsersLiteQuery, {
@@ -109,11 +110,11 @@ export default function PaymentModal({
 
 
   useEffect(() => {
-    if (userId){
+    if (open && userId) {
       loadLandParcel()
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [userId])
+  }, [open])
 
 
   function handleSearchPlot(user) {
