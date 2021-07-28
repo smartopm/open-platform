@@ -19,7 +19,7 @@ module ModelSpecHelper
       userId: user.id,
       amount: args[:amount],
       source: args[:source],
-      landParcelId: args[:land_parcel_id],
+      paymentPlanId: args[:payment_plan_id],
     }
     context = { current_user: args[:admin], site_community: user.community }
     DoubleGdpSchema.execute(txn_create_mutation, variables: variables, context: context).as_json
@@ -36,13 +36,13 @@ module ModelSpecHelper
         $userId: ID!,
         $amount: Float!,
         $source: String!,
-        $landParcelId: ID!    
+        $paymentPlanId: ID!
       ) {
         walletTransactionCreate(
           userId: $userId,
           amount: $amount,
           source: $source,
-          landParcelId: $landParcelId
+          paymentPlanId: $paymentPlanId
         ){
           walletTransaction {
             id

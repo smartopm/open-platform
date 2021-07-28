@@ -45,11 +45,10 @@ module Payments
     # @return [void]
     def update_pending_balance_of_wallet
       ActiveRecord::Base.transaction do
-        plan = land_parcel.payment_plan
         wallet = user.wallet
 
         wallet.update(pending_balance: wallet.pending_balance + amount)
-        plan.update(pending_balance: plan.pending_balance + amount)
+        payment_plan.update(pending_balance: payment_plan.pending_balance + amount)
       end
     end
 

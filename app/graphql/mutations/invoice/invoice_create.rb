@@ -4,7 +4,7 @@ module Mutations
   module Invoice
     # Create a new Invoice
     class InvoiceCreate < BaseMutation
-      argument :land_parcel_id, ID, required: true
+      argument :payment_plan_id, ID, required: true
       argument :description, String, required: false
       argument :note, String, required: false
       argument :amount, Float, required: true
@@ -19,11 +19,10 @@ module Mutations
       # Creates Invoice otherwise, raises GraphQL::ExecutionError with validation error message.
       def resolve(vals)
         vals = vals.merge(created_by: context[:current_user])
-        land_parcel = context[:site_community].land_parcels.find(vals[:land_parcel_id])
-        context[:payment_plan] = land_parcel.payment_plan
-        raise_plan_required_error
+        context[:payment_plan] = Properties::PaymentPlan.find_by(id: vals[:payment_plan_id])
+        raise_plan_not_found_error
         invoice = context[:site_community].invoices.create(
-          vals.merge(payment_plan: context[:payment_plan]),
+          vals.merge(land_parcel_id: context[:payment_plan].land_parcel.id),
         )
         return { invoice: invoice.reload } if invoice.persisted?
 
@@ -34,10 +33,10 @@ module Mutations
       # Raises GraphQL execution error if payment plan does not exists.
       #
       # @return [GraphQL::ExecutionError]
-      def raise_plan_required_error
+      def raise_plan_not_found_error
         return if context[:payment_plan].present?
 
-        raise GraphQL::ExecutionError, I18n.t('errors.invoice.plan_required')
+        raise GraphQL::ExecutionError, I18n.t('errors.payment_plan.not_found')
       end
 
       # Verifies if current user is admin or not.
