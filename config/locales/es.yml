@@ -1,0 +1,281 @@
+---
+es:
+  activerecord:
+    attributes:
+      action_flows/action_flow:
+        community: Comunidad
+        description: Descripción
+        event_condition: Condición del evento
+        event_condition_query: Consulta de condición de evento
+        event_type: Tipo de Pago
+        status: Estado
+        title: Título
+      business:
+        community: Comunidad
+        name: Nombre
+      campaign:
+        campaign_type: Tipo de campaña
+        community: Comunidad
+      comments/comment:
+        discussion: Discusión
+        user: Usuario
+      comments/note_comment:
+        note: Notas
+        note_entity: Entidad de nota
+        user: Usuario
+      community:
+        currency: Divisa
+      discussions/discussion_user:
+        discussion: Discusión
+        user: Usuario
+      discussions/discussion:
+        community: Comunidad
+        user: Usuario
+      forms/form_property:
+        form: Formulario
+      forms/form_user:
+        form: Formulario
+        status_updated_by: Estado actualizado por
+        user: Usuario
+      forms/form:
+        community: Comunidad
+        expires_at: 'Expira a las '
+        name: Nombre
+      forms/user_form_property:
+        form_property: 'Formulario de Propiedad '
+        form_user: Formularios de Usuario
+        user: Usuario
+      labels/campaign_label:
+        community: Comunidad
+        label: Etiqueta
+      labels/label:
+        community: Comunidad
+      labels/user_label:
+        label: Etiqueta
+        user: Usuario
+      logs/activity_log:
+        community: Comunidad
+      logs/entry_request:
+        community: Comunidad
+        grantor: Cedente
+        name: Nombre
+        user: Usuario
+      logs/event_log:
+        acting_user: Usuario interino
+        community: Comunidad
+        subject: Titulo
+      logs/import_log:
+        community: Comunidad
+        file_name: Nombre del archivo
+        user: Usuario
+      logs/substatus_log:
+        community: Comunidad
+        user: Usuario
+      notes/assignee_note:
+        note: Notas
+        user: Usuario
+      notes/note_history:
+        note: Notas
+        user: Usuario
+      notes/note:
+        author: Autor
+        category: Categoría
+        community: Comunidad
+        form_user: Formularios de Usuario
+        user: Usuario
+      notifications/email_template:
+        community: Comunidad
+        name: Nombre
+      notifications/message:
+        category: Categoría
+        note: Notas
+        note_entity: Entidad de nota
+        sender: Remitente
+        user: Usuario
+      notifications/notification:
+        notifable: De declaración obligatoria
+      payments/invoice:
+        amount: Monto
+        community: Comunidad
+        created_by: Creado por
+        land_parcel: Número de parcela de tierra
+        payment_plan: Plan de Pago
+        user: Usuario
+      payments/payment_invoice:
+        invoice: Factura
+        payment: Pago
+      payments/payment:
+        community: Comunidad
+        payment_type: Tipo de Pago
+        user: Usuario
+      payments/plan_payment:
+        amount: Monto
+        community: Comunidad
+        manual_receipt_number: Número de Recibo
+        payment_plan: Plan de Pago
+        user: Usuario
+      payments/transaction:
+        amount: Monto
+        bank_name: Nombre del Banco
+        community: Comunidad
+        source: Fuente
+        transaction_number: Número de Transacción
+        user: Usuario
+      payments/wallet_transaction:
+        amount: Monto
+        bank_name: Nombre del Banco
+        cheque_number: Número de cheque
+        community: Comunidad
+        source: Fuente
+        transaction_number: Número de Transacción
+        user: Usuario
+      payments/wallet:
+        user: Usuario
+      post_tags/post_tag_user:
+        post_tag: Día después
+        user: Usuario
+      post_tags/post_tag:
+        community: Comunidad
+        name: Nombre
+        user: Usuario
+      properties/account:
+        community: Comunidad
+      properties/land_parcel_account:
+        account: Cuenta
+        land_parcel: Número de parcela de tierra
+      properties/land_parcel:
+        community: Nkwashi
+        parcel_number: Numero de Lote
+      properties/payment_plan:
+        land_parcel: Número de parcela de tierra
+        payment_day: Fecha de Pago
+        user: Usuario
+      properties/valuation:
+        amount: Monto
+        land_parcel: Número de parcela de tierra
+        start_date: Fecha de inicio
+      users/activity_point:
+        user: Usuario
+      users/contact_info:
+        contact_type: Tipo de contacto
+        info: Información
+        user: Usuario
+      users/feedback:
+        user: Usuario
+      users/time_sheet:
+        user: Usuario
+      users/user:
+        community: Comunidad
+        sub_status: Sub Estado
+        user_type: Tipo de usuario
+    errors:
+      messages:
+        too_large: Es demasiado largo
+      models:
+        logs/event_log:
+          attributes:
+            acting_user_id:
+              reporting_user_required: Debe estar asociado con un usuario informante
+            data:
+              visitor_name_required: Se requiere el nombre del visitante
+            ref_id:
+              ref_required: Debe estar asociado a un usuario
+        properties/payment_plan:
+          attributes:
+            start_date:
+              plan_overlaps_with_other_plan: La duración del plan de pago se superpone
+                con otros planes de pago
+        users/user:
+          attributes:
+            phone_number:
+              invalid_length: debe tener una longitud válida
+              invalid_phone_number: solo puede contener 0-9, '-', '+' y espacio
+    models:
+      action_flows/action_flow: Flujos de acción
+      business: Empresa
+      campaign: Campaña
+      comments/comment: Comentario
+      community: Comunidad
+      discussions/discussion_user: Usuario de discusión
+      forms/form_property: 'Formulario de Propiedad '
+      forms/form_user: Formulario de Usuario
+      forms/user_form_property: Formularios de Propiedad
+      labels/campaign_label: Etiqueta de campaña
+      labels/label: Etiqueta
+      labels/user_label: Etiqueta de usuario
+      logs/activity_log: Registro de Actividad
+      logs/event_log: Registro de Evento
+      logs/import_log: Importar registro
+      logs/substatus_log: Registro de subestado
+      notes/assignee_note: Nota del cesionario
+      notes/note_history: Historial de notas
+      notifications/notification: Notificación
+      payments/invoice: Factura
+      payments/payment: Pago
+      payments/plan_payment: Plan de Pago
+      payments/wallet: Billetera
+      payments/wallet_transaction: Transacción de billetera
+      post_tags/post_tag: Día después
+      post_tags/post_tag_user: Publicar etiqueta de usuario
+      properties/account: Cuenta
+      properties/land_parcel: Número de parcela de tierra
+      properties/land_parcel_account: Cuenta de parcela de tierra
+      properties/valuation: Valuación
+      users/contact_info: Datos de contacto
+      users/feedback: Comentarios
+      users/time_sheet: Planilla de tiempo
+      users/user: Usuario
+  errors:
+    action_flow:
+      invalid_action_name: Nombre de acción no válido
+    can_not_process_request: Por alguna razón, no puedo procesar su solicitud.
+    comment:
+      not_found: Comentario no encontrado
+    duplicate:
+      email: Correo electronico duplicado
+      phone: Teléfono duplicado
+    email_template:
+      not_found: Plantilla no encontrada
+    invalid_argument_value: Valor de argumento no válido
+    invalid_value: Valor no válido
+    invoice:
+      can_not_be_cancelled: La factura no se puede cancelar
+      plan_required: El plan de pago no existe para la propiedad seleccionada
+    payment_plan:
+      does_not_exist_for_property: El plan de pago no existe para la propiedad seleccionada
+      have_zero_pending_balance: El saldo pendiente es 0 para el plan de pago de la
+        propiedad seleccionada
+    phone_number:
+      found_blank: El número de teléfono no puede estar en blanco
+    plan_payment:
+      not_found: Pago no encontrado
+    record_not_found: Registro no encontrado
+    submission:
+      already_made: Ya ha respondido a este formulario. Solo puede completar este
+        formulario una vez. Comuníquese con el equipo de soporte si se trata de un
+        error.
+    substatus_log:
+      date_must_be_greater: La fecha no puede ser menor que la fecha de inicio del
+        registro anterior
+    transaction:
+      amount_not_sufficient: El monto asignado no es suficiente para el pago
+      not_found: Transacción no encontrada
+    unauthorized: No autorizado
+    user_form_property:
+      not_found: Formulario de usuario de propiedad  no encontrada
+    user:
+      not_found: Esta cuenta no existe. Envíe una solicitud para crear una cuenta
+        o utilice la información de cuenta correcta para iniciar sesión
+      not_found_with_id: No se puede encontrar al Usuario %{user_id}
+    visibility: Usted no tiene permiso para acceder %{field}
+    wallet_transaction:
+      can_not_revert: La transacción no se puede revertir
+      payment_not_found: Pago no encontrado
+    wallet:
+      funds_not_sufficient: El monto asignado no es suficiente para el pago
+  general:
+    thanks_for_using_our_app: Gracias por usar nuestra aplicación, por favor use este
+      enlace para darnos su opinión %{feedback_link}
+  response:
+    failed: Fallido
+    updated: Actualizado
