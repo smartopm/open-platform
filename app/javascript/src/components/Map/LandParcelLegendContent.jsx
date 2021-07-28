@@ -7,7 +7,7 @@ import { plotStatusColorPallete } from '../../utils/constants'
 
 
 export default function LandParcelLegendContent() {
-  const { sold, available } = plotStatusColorPallete
+  const { sold, unknown } = plotStatusColorPallete
   return (
     <Card style={{ width: '160px', opacity: 1 }}>
       <CardContent>
@@ -25,11 +25,11 @@ export default function LandParcelLegendContent() {
             </Typography>
           </Grid>
           <Grid item xs={4}>
-            <Card style={{ backgroundColor: available, width: '30px', height: '30px' }} />
+            <Card style={{ backgroundColor: unknown, width: '30px', height: '30px' }} />
           </Grid>
           <Grid item xs={8}>
             <Typography variant='body2' component="p">
-              Available
+              Unknown
             </Typography>
           </Grid>
         </Grid>

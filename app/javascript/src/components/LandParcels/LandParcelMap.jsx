@@ -21,7 +21,7 @@ const { attribution, openStreetMap, centerPoint } = mapTiles
 
 /* istanbul ignore next */
 function getColor(plotSold){
-  return (plotSold ? plotStatusColorPallete.sold : plotStatusColorPallete.available)
+  return (plotSold ? plotStatusColorPallete.sold : plotStatusColorPallete.unknown)
 }
 
 /* istanbul ignore next */
