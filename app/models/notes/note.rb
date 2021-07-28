@@ -42,11 +42,15 @@ module Notes
     #                .or(Notes::AssigneeNote.arel_table[:user_id].eq(current_user.id)))
     #   end
     # }
-    scope :for_non_admin_users, -> (current_user) { left_joins(:assignee_notes).where(
-      self.arel_table[:author_id].eq(current_user.id)
-         .or(Notes::AssigneeNote.arel_table[:user_id]
-           .eq(current_user.id))).distinct if current_user.user_type != 'admin' }
-
+    scope :for_non_admin_users, lambda { |current_user|
+                                  if current_user.user_type != 'admin'
+                                    left_joins(:assignee_notes).where(
+                                      arel_table[:author_id].eq(current_user.id)
+                                         .or(Notes::AssigneeNote.arel_table[:user_id]
+                                           .eq(current_user.id)),
+                                    ).distinct
+                                  end
+                                }
 
     VALID_CATEGORY = %w[call email text message to_do form other].freeze
     validates :category, inclusion: { in: VALID_CATEGORY, allow_nil: true }
