@@ -35,6 +35,6 @@ describe('<LandParcelLegendContent />', () => {
     })
 
     expect(container.queryByText(/sold/i)).toBeTruthy()
-    expect(container.queryByText(/available/i)).toBeTruthy()
+    expect(container.queryByText(/unknown/i)).toBeTruthy()
   })
 })
