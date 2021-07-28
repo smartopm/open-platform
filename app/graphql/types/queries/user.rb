@@ -123,7 +123,7 @@ module Types::Queries::User
                .offset(offset).with_attached_avatar
   end
   # rubocop:enable Metrics/MethodLength
-  # rubocop:enable Metrics/AbcSize
+
 
   def current_user
     return context[:current_user] if context[:current_user]
@@ -154,6 +154,7 @@ module Types::Queries::User
                .limit(limit)
                .offset(offset).with_attached_avatar
   end
+# rubocop:enable Metrics/AbcSize
 
   def find_community_user(id)
     user = Users::User.allowed_users(context[:current_user]).find(id)
