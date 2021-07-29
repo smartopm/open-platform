@@ -14,7 +14,7 @@ export default function CommunityName({ authState, logoStyles }) {
         <Link to="/">
           <img
             src={authState.community.logoUrl}
-            className={logoStyles ? css(logoStyles.logo) : css(styles.logo)}
+            className={logoStyles.logo ? css(logoStyles.logo) : css(styles.logo)}
             alt="community logo"
           />
         </Link>
