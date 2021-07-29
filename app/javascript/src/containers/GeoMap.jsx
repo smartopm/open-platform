@@ -23,7 +23,7 @@ const { attribution, mapboxStreets, mapboxSatellite, openStreetMap, centerPoint 
 const { mapbox: mapboxPublicToken } = publicMapToken
 
 function getColor(plotSold){
-  return (plotSold ? plotStatusColorPallete.sold : plotStatusColorPallete.available)
+  return (plotSold ? plotStatusColorPallete.sold : plotStatusColorPallete.unknown)
 }
 
 function geoJSONPlotStyle(feature) {

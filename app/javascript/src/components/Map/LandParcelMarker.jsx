@@ -6,7 +6,7 @@ import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import { StyleSheet, css } from 'aphrodite'
 import SVGSoldIcon from '../../../../assets/images/sold-icon.svg'
-import SVGAvailableIcon from '../../../../assets/images/available-icon.svg'
+import SVGAvailableIcon from '../../../../assets/images/unknown-icon.svg'
 
 export default function LandParcelMarker({markerProps}) {
   return (
