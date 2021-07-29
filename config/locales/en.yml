@@ -142,14 +142,19 @@ en:
         community: Community
         user: User
       properties/land_parcel:
-        community: Nkwashi
+        community: Community
         parcel_number: Parcel number
       properties/land_parcel_account:
         account: Account
         land_parcel: Land parcel
       properties/payment_plan:
+        duration: Duration
+        installment_amount: Installment Amount
         land_parcel: Land parcel
         payment_day: Payment day
+        user: User
+      properties/plan_ownership:
+        payment_plan: Payment Plan
         user: User
       properties/valuation:
         amount: Amount
@@ -233,6 +238,7 @@ en:
       properties/land_parcel: Land parcel
       properties/land_parcel_account: Land parcel account
       properties/payment_plan: Payment plan
+      properties/plan_ownership: Plan Ownership
       properties/valuation: Valuation
       showroom: Showroom
       users/activity_point: Activity Point
@@ -269,7 +275,6 @@ en:
     invalid_value: Invalid Value
     invoice:
       can_not_be_cancelled: Invoice can not be cancelled
-      plan_required: Payment Plan does not exist for selected property
     label:
       duplicate_label: Duplicate label
       ids_can_not_be_same: label ids cannot be the same
@@ -284,7 +289,6 @@ en:
     notification:
       preference_update_failed: Preference Update Failed
     payment_plan:
-      does_not_exist_for_property: Payment Plan does not exist for selected property
       have_zero_pending_balance: Pending balance is 0 for payment plan of selected property
       not_found: Payment Plan not found
     phone_number:

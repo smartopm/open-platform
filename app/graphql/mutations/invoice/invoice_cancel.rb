@@ -63,7 +63,7 @@ module Mutations
       # @return [void]
       def update_plot_balance
         invoice = context[:invoice]
-        plan = invoice.land_parcel.payment_plan
+        plan = invoice.payment_plan
 
         plan.update(
           plot_balance: plan.plot_balance + (invoice.amount - invoice.pending_amount),

@@ -11,7 +11,7 @@ module Mutations
       argument :cheque_number, String, required: false
       argument :transaction_number, String, required: false
       argument :status, String, required: false
-      argument :land_parcel_id, ID, required: true
+      argument :payment_plan_id, ID, required: true
       argument :receipt_number, String, required: false
       argument :created_at, String, required: false
 
@@ -28,20 +28,17 @@ module Mutations
       def resolve(vals)
         ActiveRecord::Base.transaction do
           user = context[:site_community].users.find_by(id: vals[:user_id])
-          land_parcel = context[:site_community].land_parcels.find_by(id: vals[:land_parcel_id])
-          context[:payment_plan] = land_parcel.payment_plan
+          context[:payment_plan] = user.payment_plans.find_by(id: vals[:payment_plan_id])
           context[:wallet] = user.wallet
 
-          raise_plan_required_error
-          transaction_attributes = vals.except(:land_parcel_id)
-                                       .merge(
-                                         destination: 'wallet',
-                                         status: 'settled',
-                                         community_id: context[:site_community]&.id,
-                                         depositor_id: context[:current_user].id,
-                                         originally_created_at: user.current_time_in_timezone,
-                                         payment_plan_id: context[:payment_plan].id,
-                                       )
+          raise_plan_not_found_error
+          transaction_attributes = vals.merge(
+            destination: 'wallet',
+            status: 'settled',
+            community_id: context[:site_community]&.id,
+            depositor_id: context[:current_user].id,
+            originally_created_at: user.current_time_in_timezone,
+          )
 
           context[:transaction] = Payments::WalletTransaction.create(transaction_attributes)
           raise_transaction_validation_error
@@ -61,13 +58,13 @@ module Mutations
 
       private
 
-      # Raises GraphQL execution error if payment plan does not exists.
+      # Raises GraphQL execution error if payment plan does not exist.
       #
       # @return [GraphQL::ExecutionError]
-      def raise_plan_required_error
-        return if context[:payment_plan].present?
+      def raise_plan_not_found_error
+        return if context[:payment_plan]
 
-        raise GraphQL::ExecutionError, I18n.t('errors.payment_plan.does_not_exist_for_property')
+        raise GraphQL::ExecutionError, I18n.t('errors.payment_plan.not_found')
       end
 
       # Raises GraphQL execution error if transaction is not saved.

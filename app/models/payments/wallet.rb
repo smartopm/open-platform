@@ -160,7 +160,7 @@ module Payments
     def settle_from_unallocated_funds(inv, payment_amount, transaction)
       update_balance(payment_amount, 'debit')
       debit_unallocated_funds(payment_amount)
-      plan = inv.land_parcel.payment_plan
+      plan = inv.payment_plan
       plan.update(pending_balance: plan.pending_balance - payment_amount)
       make_payment(inv, payment_amount, transaction)
     end
@@ -174,7 +174,7 @@ module Payments
     def settle_invoices_with_plot_balance(transaction)
       settled_invoices = []
       pending_invoices.each do |invoice|
-        balance = invoice.land_parcel.payment_plan&.plot_balance
+        balance = invoice.payment_plan&.plot_balance
         next if balance.to_f.zero?
 
         payment_amount = invoice.pending_amount > balance ? balance : invoice.pending_amount
@@ -218,7 +218,7 @@ module Payments
     #
     def settle_from_plot_balance(inv, payment_amount, transaction)
       update_balance(payment_amount, 'debit')
-      plan = inv.land_parcel.payment_plan
+      plan = inv.payment_plan
       plan.update(
         plot_balance: plan.plot_balance - payment_amount,
         pending_balance: plan.pending_balance - payment_amount,
