@@ -317,8 +317,9 @@ export const UserLandParcelWithPlan = gql`
   query userLandParcelWithPlan($userId: ID!) {
     userLandParcelWithPlan(userId: $userId) {
       id
-      startDate
-      landParcel{
+      pendingBalance
+      landParcel {
+        id
         parcelNumber
       }
     }

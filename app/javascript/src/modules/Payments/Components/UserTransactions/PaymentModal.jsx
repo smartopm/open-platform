@@ -55,7 +55,6 @@ export default function PaymentModal({
   transRefetch
 }) {
   const classes = useStyles();
-  const history = useHistory();
   const [inputValue, setInputValue] = useState(initialValues);
   const [createPayment] = useMutation(PaymentCreate);
   const [isSuccessAlert, setIsSuccessAlert] = useState(false);
@@ -213,27 +212,25 @@ export default function PaymentModal({
         ) : (
           <>
             <div className={classes.invoiceForm}>
-              <TextField
-                autoFocus
-                margin="normal"
-                id="amount"
-                label="Amount"
-                type="number"
-                value={inputValue.amount}
-                onChange={event => setInputValue({ ...inputValue, amount: event.target.value })}
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      {extractCurrency(currencyData)}
-                    </InputAdornment>
-                  ),
-                  'data-testid': 'amount',
-                  step: 0.01
-                }}
-                required
-                error={isError && submitting && !inputValue.amount}
-                helperText={isError && !inputValue.amount && 'amount is required'}
+              <Typography className={classes.title}>
+                Make payment towards any of your plans below. You can make payment towards multiple plans as well.
+              </Typography>
+              <SwitchInput
+                name="pastPayment"
+                label="Is this a manual payment?"
+                value={inputValue.pastPayment}
+                handleChange={event => setInputValue({ ...inputValue, pastPayment: event.target.checked })}
+                labelPlacement="end"
               />
+              {inputValue.pastPayment && (
+                <>
+                  <DatePickerDialog
+                    selectedDate={inputValue.paidDate}
+                    label="Paid Date"
+                    handleDateChange={date => setInputValue({ ...inputValue, paidDate: date })}
+                  />
+                </>
+              )}
               {
                 !userId && (
                 <Grid container>
@@ -269,109 +266,111 @@ export default function PaymentModal({
                  </Typography>
                   )
               }
-
               {loading && <Spinner />}
-
-              <TextField
-                autoFocus
-                margin="normal"
-                id="parcel-number"
-                inputProps={{ 'data-testid': 'parcel-number' }}
-                label="Plot No"
-                value={inputValue.paymentPlanId}
-                onChange={event => setInputValue({ ...inputValue, paymentPlanId: event.target.value })}
-                error={isError && submitting && !inputValue.paymentPlanId}
-                helperText={isError && !inputValue.paymentPlanId && 'Payment Plan is required'}
-                required
-                disabled={paymentPlans?.userLandParcelWithPlan?.length === 0 || Boolean(!paymentPlans)}
-                select={paymentPlans?.userLandParcelWithPlan?.length > 0}
-              >
-                {paymentPlans?.userLandParcelWithPlan?.map(plan => (
-                  <MenuItem value={plan.id} key={plan.id}>
-                    {plan.landParcel.parcelNumber}
-                    {' - '}
-                    {dateToString(plan.startDate)}
-                  </MenuItem>
-                ))}
-              </TextField>
-              <Button style={{width: '20%'}} onClick={() => history.push('/land_parcels')} data-testid='add-plot'>
-                <AddIcon />
-                <Typography variant='caption'>add plot</Typography>
-              </Button>
-              <TextField
-                margin="normal"
-                id="transaction-type"
-                inputProps={{ 'data-testid': 'transaction-type' }}
-                label="Transaction Type"
-                value={inputValue.transactionType}
-                onChange={event => setInputValue({ ...inputValue, transactionType: event.target.value })}
-                required
-                select
-                error={isError && submitting && !inputValue.transactionType}
-                helperText={isError && !inputValue.transactionType && 'TransactionType is required'}
-              >
-                <MenuItem value="cash">Cash</MenuItem>
-                <MenuItem value="cheque/cashier_cheque">Cheque/Cashier Cheque</MenuItem>
-                <MenuItem value="mobile_money">Mobile Money</MenuItem>
-                <MenuItem value="bank_transfer/cash_deposit">Bank Transfer/Cash Deposit</MenuItem>
-                <MenuItem value="bank_transfer/eft">Bank Transfer/EFT</MenuItem>
-                <MenuItem value="pos">Point of Sale</MenuItem>
-              </TextField>
-              <br />
-              <SwitchInput
-                name="pastPayment"
-                label="Is this a manual payment?"
-                value={inputValue.pastPayment}
-                handleChange={event => setInputValue({ ...inputValue, pastPayment: event.target.checked })}
-                labelPlacement="end"
-              />
-              {inputValue.pastPayment && (
-                <>
-                  <TextField
-                    margin="normal"
-                    id="receipt-number"
-                    label="Receipt Number"
-                    type="string"
-                    value={inputValue.receiptNumber}
-                    onChange={event => setInputValue({ ...inputValue, receiptNumber: event.target.value })}
-                  />
-                  <DatePickerDialog
-                    selectedDate={inputValue.paidDate}
-                    label="Paid Date"
-                    handleDateChange={date => setInputValue({ ...inputValue, paidDate: date })}
-                  />
-                </>
-              )}
-              <TextField
-                margin="normal"
-                id="transaction-number"
-                label="Transaction Number"
-                type="string"
-                value={inputValue.transactionNumber}
-                onChange={event => setInputValue({ ...inputValue, transactionNumber: event.target.value })}
-              />
+              <div style={{display:'flex'}}>
+                <TextField
+                  margin="normal"
+                  id="transaction-type"
+                  inputProps={{ 'data-testid': 'transaction-type' }}
+                  label="Transaction Type"
+                  value={inputValue.transactionType}
+                  onChange={event => setInputValue({ ...inputValue, transactionType: event.target.value })}
+                  required
+                  select
+                  error={isError && submitting && !inputValue.transactionType}
+                  helperText={isError && !inputValue.transactionType && 'TransactionType is required'}
+                  style={{width: '50%', marginRight: '20px'}}
+                >
+                  <MenuItem value="cash">Cash</MenuItem>
+                  <MenuItem value="cheque/cashier_cheque">Cheque/Cashier Cheque</MenuItem>
+                  <MenuItem value="mobile_money">Mobile Money</MenuItem>
+                  <MenuItem value="bank_transfer/cash_deposit">Bank Transfer/Cash Deposit</MenuItem>
+                  <MenuItem value="bank_transfer/eft">Bank Transfer/EFT</MenuItem>
+                  <MenuItem value="pos">Point of Sale</MenuItem>
+                </TextField>
+                <TextField
+                  margin="normal"
+                  id="transaction-number"
+                  label="Transaction Number"
+                  type="string"
+                  style={{width: '50%'}}
+                  value={inputValue.transactionNumber}
+                  onChange={event => setInputValue({ ...inputValue, transactionNumber: event.target.value })}
+                />
+              </div>
+              
               {inputValue.transactionType === 'cheque/cashier_cheque' && (
-                <>
-                  <TextField
-                    autoFocus
-                    margin="normal"
-                    id="bank-name"
-                    label="Bank Name"
-                    type="string"
-                    value={inputValue.bankName}
-                    onChange={event => setInputValue({ ...inputValue, bankName: event.target.value })}
-                  />
-                  <TextField
-                    autoFocus
-                    margin="normal"
-                    id="cheque-number"
-                    label="Cheque Number"
-                    type="string"
-                    value={inputValue.chequeNumber}
-                    onChange={event => setInputValue({ ...inputValue, chequeNumber: event.target.value })}
-                  />
-                </>
+              <div style={{display: 'flex'}}>
+                <TextField
+                  autoFocus
+                  margin="normal"
+                  id="bank-name"
+                  label="Bank Name"
+                  type="string"
+                  style={{width: '50%', marginRight: '20px'}}
+                  value={inputValue.bankName}
+                  onChange={event => setInputValue({ ...inputValue, bankName: event.target.value })}
+                />
+                <TextField
+                  autoFocus
+                  margin="normal"
+                  id="cheque-number"
+                  label="Cheque Number"
+                  type="string"
+                  value={inputValue.chequeNumber}
+                  style={{width: '50%'}}
+                  onChange={event => setInputValue({ ...inputValue, chequeNumber: event.target.value })}
+                />
+              </div>
               )}
+              {paymentPlans?.userLandParcelWithPlan?.map((plan) => (
+                <div key={plan.id} className={classes.plotCard}>
+                  <div style={{width: '50%'}}>
+                    <Typography className={classes.plotNoTitle}>Plot No</Typography>
+                    <Typography className={classes.plotNo}>{plan?.landParcel?.parcelNumber.toUpperCase()}</Typography>
+                    <Typography className={classes.plotNoTitle}>{`${plan?.pendingBalance} remaining balance`}</Typography>
+                    {inputValue.pastPayment && (
+                      <TextField
+                        margin="normal"
+                        id="receipt-number"
+                        label="Receipt Number"
+                        type="string"
+                        value={inputValue.receiptNumber}
+                        onChange={event => setInputValue({ ...inputValue, receiptNumber: event.target.value })}
+                      />
+                    )}
+                  </div>
+                  <TextField
+                    margin="normal"
+                    id="amount"
+                    label="Amount"
+                    type="number"
+                    style={{width: '50%'}}
+                    value={inputValue.amount}
+                    onChange={event => setInputValue({ ...inputValue, amount: event.target.value })}
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          {extractCurrency(currencyData)}
+                        </InputAdornment>
+                      ),
+                        'data-testid': 'amount',
+                        step: 0.01
+                      }}
+                    required
+                    error={isError && submitting && !inputValue.amount}
+                    helperText={isError && !inputValue.amount && 'amount is required'}
+                  />
+                </div>
+              ))}
+            </div>
+            <div className={classes.totalAmountBody}>
+              <Typography className={classes.plotNoTitle}>
+                Total Amount
+              </Typography>
+              <Typography color='primary' className={classes.totalAmount}>
+                100
+              </Typography>
             </div>
           </>
         )}
@@ -439,6 +438,39 @@ const useStyles = makeStyles({
   },
   AutocompleteOption: {
     padding: '0px'
+  },
+  title: {
+    fontWeight: 500,
+    fontSize: '15px',
+    color: '#313131',
+    marginBottom: '20px'
+  },
+  plotNoTitle: {
+    fontSize: '12px',
+    fontWeight: 500,
+    color: '#8B8B8B'
+  },
+  plotNumber: {
+    fontSize: '16px',
+    fontWeight: 500,
+    color: '#212121'
+  },
+  plotCard: {
+    display: 'flex',
+    padding: '20px 18px',
+    border: '1px solid #E4E4E4',
+    borderRadius: '12px',
+    margin: '20px 0'
+  },
+  totalAmountBody: {
+    width: '100%',
+    textAlign: 'right',
+    background: '#FBFAFA',
+    padding: '15px 20px',
+  },
+  totalAmount: {
+    fontSize: '32px',
+    fontWeight: 600
   }
 });
 
