@@ -1,5 +1,6 @@
 import React from 'react';
 import Typography from '@material-ui/core/Typography';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { makeStyles } from '@material-ui/core/styles';
 import Divider from '@material-ui/core/Divider';
 import PropTypes from 'prop-types';
@@ -11,6 +12,7 @@ import { formatMoney } from '../../../../utils/helpers';
 
 export default function PlanDetail({ open, handleModalClose, planData, currencyData }) {
   const classes = useStyles();
+  const matches = useMediaQuery('(max-width:600px)');
   const planFrequency = {
     daily: 'days',
     weekly: 'weeks',
@@ -31,7 +33,7 @@ export default function PlanDetail({ open, handleModalClose, planData, currencyD
         title="Plan Details"
         color="default"
       >
-        <div className={classes.detailBody}>
+        <div className={matches ? classes.detailBodyMobile : classes.detailBody}>
           <Grid container spacing={1} data-testid="name">
             <Grid item xs={6}>
               <Typography color="primary" className={classes.name}>
@@ -147,6 +149,9 @@ export default function PlanDetail({ open, handleModalClose, planData, currencyD
 const useStyles = makeStyles(() => ({
   detailBody: {
     width: '520px',
+    margin: '21px'
+  },
+  detailBodyMobile: {
     margin: '21px'
   },
   name: {

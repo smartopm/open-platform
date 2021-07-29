@@ -11,7 +11,7 @@ export default function Label({ color, title }) {
         color: 'white',
         borderRadius: '15px',
         fontSize: '12px',
-        width: '60%'
+        width: '100%'
       }}
     >
       {title}

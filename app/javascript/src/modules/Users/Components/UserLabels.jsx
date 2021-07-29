@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
+import { useTheme } from '@material-ui/core/styles';
 import AddIcon from '@material-ui/icons/Add';
 import CloseIcon from '@material-ui/icons/Close';
 import { useQuery, useMutation } from 'react-apollo';
@@ -16,6 +18,8 @@ import ErrorPage from '../../../components/Error';
 
 export default function UserLabels({ userId }) {
   const [showAddTextBox, setshowAddTextBox] = useState(false);
+  const theme = useTheme();
+  const matches = useMediaQuery(theme.breakpoints.up('sm'));
   const [label, setLabel] = useState('');
   const newUserLabel = useDebounce(label, 500);
   const [labelCreate] = useMutation(LabelCreate);
@@ -89,7 +93,7 @@ export default function UserLabels({ userId }) {
         open={!!messageAlert}
         handleClose={handleMessageAlertClose}
       />
-      <div className=" row d-flex justifiy-content-around align-items-center">
+      <div className="row d-flex justifiy-content-around align-items-center">
         {userData.userLabels.length
           ? userData?.userLabels.map(lab => (
             <Chip
@@ -98,7 +102,7 @@ export default function UserLabels({ userId }) {
               size="medium"
               label={lab.shortDesc}
               onDelete={() => handleDelete(lab.id)}
-              style={{marginRight: '24px', backgroundColor: lab.color }}
+              style={matches ? {marginRight: '24px', backgroundColor: lab.color, marginBottom: '5px' } : {marginRight: '4px', backgroundColor: lab.color, marginBottom: '5px' }}
             />
             ))
           : null}
@@ -107,7 +111,7 @@ export default function UserLabels({ userId }) {
         </IconButton>
       </div>
 
-      <div className=" row d-flex justifiy-content-around align-items-center">
+      <div className="row d-flex justifiy-content-around align-items-center">
         {showAddTextBox ? (
           <Autocomplete
             data-testid="userLabel-autoCreate"
