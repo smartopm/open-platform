@@ -15,5 +15,10 @@ FactoryBot.define do
        'Email Templates', 'Community', 'Contact', 'Referral', 'My Thebe Portal', 'Action Flows',
        'Time Card', 'Logout', 'Showroom']
     end
+    theme_colors do
+      {
+        primaryColor: '#cf5628', secondaryColor: '#cf5628'
+      }
+    end
   end
 end
