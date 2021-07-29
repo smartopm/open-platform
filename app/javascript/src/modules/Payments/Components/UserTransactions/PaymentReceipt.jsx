@@ -1,18 +1,22 @@
-import React, { useRef } from 'react';
+import React, { useRef, useContext } from 'react';
 import Grid from '@material-ui/core/Grid';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
+import { StyleSheet } from 'aphrodite';
 import SignaturePad from '../../../Forms/components/SignaturePad';
 import { formatMoney } from '../../../../utils/helpers';
 import { dateToString } from '../../../../components/DateContainer';
 import { FullScreenDialog } from '../../../../components/Dialog';
 import { paymentType } from '../../../../utils/constants';
+import { Context as AuthStateContext } from '../../../../containers/Provider/AuthStateProvider';
+import CommunityName from '../../../../shared/CommunityName';
 
 export default function PaymentReceipt({ paymentData, open, handleClose, currencyData }) {
   const signRef = useRef(null);
   const classes = useStyles();
+  const authState = useContext(AuthStateContext);
 
   function printReceipt() {
     document.title = `${paymentData?.user?.name}-${paymentData?.planPayments ? paymentData?.planPayments[0]?.receiptNumber :
@@ -31,19 +35,7 @@ export default function PaymentReceipt({ paymentData, open, handleClose, currenc
           handleSubmit={printReceipt}
         >
           <div className="print" style={{ margin: '80px 284px' }}>
-            {paymentData?.community?.logoUrl ? (
-              <img
-                src={paymentData.community.logoUrl}
-                alt="reciept-logo"
-                height="80"
-                width="150"
-                style={{ margin: '30px auto', display: 'block' }}
-              />
-            ) : (
-              <h3 style={{ textAlign: 'center', marginTop: '15px' }}>
-                {paymentData?.community?.name}
-              </h3>
-            )}
+            <CommunityName authState={authState} logoStyles={logoStyles} />
             {paymentData?.planPayments ? (
               paymentData?.planPayments?.map(pay => (
                 <div key={pay.id}>
@@ -382,6 +374,14 @@ const useStyles = makeStyles({
   }
 });
 
+const logoStyles = StyleSheet.create({
+  logo: {
+    height: '80px',
+    width: '150px',
+    margin: '30px auto',
+    display: 'block'
+  }
+});
 PaymentReceipt.defaultProps = {
   paymentData: {}
 };
