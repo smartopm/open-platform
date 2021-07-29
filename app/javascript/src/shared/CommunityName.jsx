@@ -31,7 +31,7 @@ export default function CommunityName({ authState, logoStyles }) {
       <ImageAuth
         imageLink={authState.user?.community.imageUrl}
         token={authState.token}
-        className={logoStyles ? css(logoStyles.logo) : css(styles.logo)}
+        className={logoStyles.logo ? css(logoStyles.logo) : css(styles.logo)}
       />
     </Link>
   );
@@ -39,7 +39,7 @@ export default function CommunityName({ authState, logoStyles }) {
 
 CommunityName.defaultProps = {
   logoStyles: {
-    height: '25px'
+    logo: null
   }
 }
 
@@ -55,7 +55,6 @@ CommunityName.propTypes = {
    }).isRequired,
    logoStyles: PropTypes.shape({
      logo: PropTypes.shape({
-       height: PropTypes.string
      })
    })
 };
