@@ -167,7 +167,7 @@ describe('helper methods', () => {
 
     describe('#getHexColor', () => {
       it('should return HEX color string', () => {
-        expect(getHexColor(200)).toEqual('#FC4E2A');
+        expect(getHexColor(200)).toEqual('#F8F0E3');
       });
     });
 

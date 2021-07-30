@@ -37,10 +37,10 @@ function geoJSONPlotStyle(feature) {
 
 function geoJSONStyle(feature) {
   return {
-    color: feature.properties.stroke || "#f2eeee",
+    color: feature.properties.stroke || "#ff9999",
     weight: feature.properties['stroke-width'] || 1,
     fillOpacity: feature.properties['fill-opacity'] || 0.5,
-    fillColor: feature.properties.fill || "#10c647"
+    fillColor: feature.properties.fill || "#ffe6e6"
   }
 }
 

@@ -9,7 +9,7 @@ function geoJSONStyle(feature) {
   return {
     weight: 2,
     opacity: 1,
-    color: "white",
+    color: '#A8A8A8',
     dashArray: "3",
     fillOpacity: 0.7,
     fillColor: getHexColor(feature && Number(feature.properties.estimated_population))
