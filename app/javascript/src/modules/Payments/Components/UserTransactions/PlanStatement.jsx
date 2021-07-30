@@ -1,18 +1,22 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import Grid from '@material-ui/core/Grid';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
+import { StyleSheet } from 'aphrodite';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 import { formatMoney } from '../../../../utils/helpers';
 import { dateToString } from '../../../../components/DateContainer';
 import { FullScreenDialog } from '../../../../components/Dialog';
 import CenteredContent from '../../../../components/CenteredContent';
+import { Context as AuthStateContext } from '../../../../containers/Provider/AuthStateProvider';
+import CommunityName from '../../../../shared/CommunityName';
 
 export default function PaymentReceipt({ data, open, handleClose, currencyData }) {
   const classes = useStyles();
   const matches = useMediaQuery('(max-width:600px)');
+  const authState = useContext(AuthStateContext);
 
   function printStatement() {
     document.title = `${data?.paymentPlan?.user?.name}-${
@@ -32,19 +36,7 @@ export default function PaymentReceipt({ data, open, handleClose, currencyData }
           handleSubmit={printStatement}
         >
           <div className="print" style={matches ? {overflowX: 'hidden'} : { margin: '57px 155px' }}>
-            {data?.paymentPlan?.landParcel?.community?.logoUrl ? (
-              <img
-                src={data?.paymentPlan?.landParcel?.community?.logoUrl}
-                alt="reciept-logo"
-                height="80"
-                width="150"
-                style={{ margin: '30px auto', display: 'block' }}
-              />
-            ) : (
-              <h3 style={{ textAlign: 'center', marginTop: '15px' }}>
-                {data?.paymentPlan?.landParcel?.community?.name}
-              </h3>
-            )}
+            <CommunityName authState={authState} logoStyles={logoStyles} />
             <Typography className={classes.planTitle}>Statement for Plan</Typography>
             <div style={{ marginTop: '50px' }}>
               <Grid container>
@@ -403,6 +395,15 @@ const useStyles = makeStyles({
     fontSize: '20px',
     fontWeight: 700,
     marginTop: '69px'
+  }
+});
+
+const logoStyles = StyleSheet.create({
+  logo: {
+    height: '80px',
+    width: '150px',
+    margin: '30px auto',
+    display: 'block'
   }
 });
 

@@ -7,14 +7,14 @@ import ImageAuth from './ImageAuth';
 import userProps from './types/user';
 
 // TODO: This component needs to be revisited
-export default function CommunityName({ authState }) {
+export default function CommunityName({ authState, logoStyles }) {
   if (authState.id && authState.community) {
     if (authState.community.logoUrl) {
       return (
         <Link to="/">
           <img
             src={authState.community.logoUrl}
-            className={css(styles.logo)}
+            className={logoStyles.logo ? css(logoStyles.logo) : css(styles.logo)}
             alt="community logo"
           />
         </Link>
@@ -31,10 +31,16 @@ export default function CommunityName({ authState }) {
       <ImageAuth
         imageLink={authState.user?.community.imageUrl}
         token={authState.token}
-        className={css(styles.logo)}
+        className={logoStyles.logo ? css(logoStyles.logo) : css(styles.logo)}
       />
     </Link>
   );
+}
+
+CommunityName.defaultProps = {
+  logoStyles: {
+    logo: null
+  }
 }
 
 CommunityName.propTypes = {
@@ -46,7 +52,11 @@ CommunityName.propTypes = {
           logoUrl: PropTypes.string
       }),
       token: PropTypes.string,
-   }).isRequired
+   }).isRequired,
+   logoStyles: PropTypes.shape({
+     logo: PropTypes.shape({
+     })
+   })
 };
 
 const styles = StyleSheet.create({

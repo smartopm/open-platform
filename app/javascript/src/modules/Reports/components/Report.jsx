@@ -2,6 +2,7 @@
 import React, { useContext, useState, useEffect } from 'react';
 import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core/styles';
+import { StyleSheet } from 'aphrodite';
 import Typography from '@material-ui/core/Typography';
 import { useLazyQuery } from 'react-apollo';
 import { useHistory } from 'react-router';
@@ -20,6 +21,7 @@ import ReportFooter from './ReportFooter'
 import ReportData from './ReportData';
 import ReportHeader from './ReportHeader';
 import MessageAlert from '../../../components/MessageAlert';
+import CommunityName from '../../../shared/CommunityName';
 
 export default function Report() {
   const classes = useStyles();
@@ -121,20 +123,7 @@ export default function Report() {
         handleSubmit={printReport}
       >
         <div className="print" style={{ margin: '57px 155px' }}>
-          {/* Find out why we aren't using the CommunityName component for this */}
-          {authState.user.community?.logoUrl ? (
-            <img
-              src={authState.user.community?.logoUrl}
-              alt="community-logo"
-              height="80"
-              width="150"
-              style={{ margin: '30px auto', display: 'block' }}
-            />
-            ) : (
-              <h3 style={{ textAlign: 'center', marginTop: '15px' }}>
-                {authState.community?.name}
-              </h3>
-            )}
+          <CommunityName authState={authState} logoStyles={logoStyles} />
           <CenteredContent>
             <Typography className={classes.reportTitle}>{t('misc.report_header_text')}</Typography>
           </CenteredContent>
@@ -161,4 +150,13 @@ const useStyles = makeStyles({
     fontWeight: 700,
     marginTop: '69px'
   },
+});
+
+const logoStyles = StyleSheet.create({
+  logo: {
+    height: '80px',
+    width: '150px',
+    margin: '30px auto',
+    display: 'block'
+  }
 });
