@@ -40,7 +40,7 @@ export default function MailTemplateList() {
   const { loading, error, data, refetch } = useQuery(EmailTemplatesQuery, {
     errorPolicy: 'all',
     variables: { limit, offset },
-    // add a fetch policy here to not cache
+    fetchPolicy: 'cache-and-network'
   });
 
   const history = useHistory();
@@ -106,7 +106,7 @@ export default function MailTemplateList() {
       variables: { ...updatedDetails, body: html, data: editorData }
     })
       .then(() => {
-        setMessage({ ...message, detail: t('email.email.duplicated'), loading: false});
+        setMessage({ ...message, detail: t('email.duplicated'), loading: false});
         setAlertOpen(true);
         handleClose();
         refetch();
