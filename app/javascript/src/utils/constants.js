@@ -318,7 +318,7 @@ export const taskStatus = {
 
 export const plotStatusColorPallete = {
     sold: '#DB4949',
-    unknown: '#307404'
+    unknown: '#686868'
 }
 
 const InitialConfig = MaterialConfig

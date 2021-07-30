@@ -365,20 +365,20 @@ export function toTitleCase(str) {
 /* eslint-disable no-nested-ternary */
 export function getHexColor (range) {
   return (range > 320
-    ? '#800026'
+    ? '#E8E8E8'
     : range > 270
-    ? '#BD0026'
+    ? '#E8E8E8'
     : range > 220
-    ? '#E31A1C'
+    ? '#F8F0E3'
     : range > 170
-    ? '#FC4E2A'
+    ? '#F8F0E3'
     : range > 120
-    ? '#FD8D3C'
+    ? '#F8F0E3'
     : range > 20
-    ? '#FEB24C'
+    ? '#F8F0E3'
     : range > 10
-    ? '#FED976'
-    : '#FFEDA0'
+    ? '#F8F0E3'
+    : '#F8F0E3'
   )
 }
 
