@@ -84,7 +84,7 @@ describe('Community settings page ', () => {
           logoUrl: '',
           wpLink: '',
           securityManager: '',
-          subAdministrator: '',
+          subAdministrator: { id: '123df', name: 'User Name' },
           themeColors: { primaryColor: '#69ABA4', secondaryColor: '#cf5628' },
           bankingDetails: {
             bankName: 'Test bank name',

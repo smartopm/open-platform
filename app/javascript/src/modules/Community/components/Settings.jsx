@@ -84,7 +84,7 @@ export default function CommunitySettings({ data, token, refetch }) {
   const [logoUrl, setLogoUrl] = useState(data?.logoUrl || '');
   const [wpLink, setWpLink] = useState(data?.wpLink || '');
   const [securityManager, setSecurityManager] = useState(data?.securityManager || '');
-  const [subAdministrator, setSubAdministrator] = useState(data?.subAdministrator || '');
+  const [subAdministratorId, setSubAdministrator] = useState(data?.subAdministrator?.id || '');
   const [locale, setLocale] = useState('en-ZM');
   const [language, setLanguage] = useState('en-US');
   const [showCropper, setShowCropper] = useState(false);
@@ -279,7 +279,7 @@ export default function CommunitySettings({ data, token, refetch }) {
         logoUrl,
         wpLink,
         securityManager,
-        subAdministrator,
+        subAdministratorId,
         themeColors,
         bankingDetails,
       },
@@ -487,16 +487,23 @@ export default function CommunitySettings({ data, token, refetch }) {
         required
       />
       <TextField
+        style={{ width: '300px' }}
         label={t('community.set_sub_administrator')}
-        value={subAdministrator}
+        value={subAdministratorId}
         onChange={event => setSubAdministrator(event.target.value)}
         name="subAdministrator"
         margin="normal"
         inputProps={{ "data-testid": "subAdministrator"}}
-        style={{ width: '100%'}}
-        required
-      />
-
+        select
+      >
+        {
+            adminUsersData?.adminUsers?.map((admin) => (
+              <MenuItem key={admin.id} value={admin.id}>
+                {admin.name}
+              </MenuItem>
+            ))
+          }
+      </TextField>
       <br />
       <br />
 
@@ -689,27 +696,6 @@ export default function CommunitySettings({ data, token, refetch }) {
             Object.entries(languages).map(([key, val]) => (
               <MenuItem key={val} value={val}>
                 {key}
-              </MenuItem>
-            ))
-          }
-        </TextField>
-      </div>
-
-      <div style={{ marginTop: '40px' }}>
-        <Typography variant="h6">{t('community.set_campaign_admin')}</Typography>
-        <TextField
-          style={{ width: '200px' }}
-          select
-          value={language || 'en-US'}
-          onChange={event => setLanguage(event.target.value)}
-          name="campaign_admin"
-          margin="normal"
-          inputProps={{ "data-testid": "campaign_admin"}}
-        >
-          {
-            adminUsersData?.adminUsers?.map((admin) => (
-              <MenuItem key={admin.id} value={admin.id}>
-                {admin.name}
               </MenuItem>
             ))
           }

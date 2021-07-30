@@ -49,7 +49,10 @@ const QUERY = gql`
         themeColors
         features
         securityManager
-        subAdministrator
+        subAdministrator {
+          id
+          name
+        }
         bankingDetails
         communityRequiredFields
       }
