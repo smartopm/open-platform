@@ -14,8 +14,12 @@ export default function EmployeeLogs() {
   const { id } = useParams()
   const [monthCount, setMonthCount] = useState(-1)
   const date = new Date()
-  const firstDay = new Date(date.getFullYear(), date.getMonth() + monthCount, 27)
-  const lastDay = new Date(date.getFullYear(), date.getMonth() + 1 + monthCount, 26)
+  let month = date.getMonth()
+  if (date.getDate() >= 27) {
+    month += 1
+  }
+  const firstDay = new Date(date.getFullYear(), month + monthCount, 27)
+  const lastDay = new Date(date.getFullYear(), month + 1 + monthCount, 26)
 
   const { loading, data, error } = useQuery(UserTimeSheetQuery, {
     variables: {
@@ -53,6 +57,8 @@ export default function EmployeeLogs() {
       <Grid container direction="row" justify="center" alignItems="center">
         <Paginate
           count={data.userTimeSheetLogs.length}
+          // This does not matter. It's there to make pagination links active
+          limit={-1}
           active
           handlePageChange={paginate}
         />
