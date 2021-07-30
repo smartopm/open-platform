@@ -36,8 +36,7 @@ export default function EmailBuilderDialog() {
   const { emailId } = useParams()
   const history = useHistory()
 
-  // eslint-disable-next-line no-unused-vars
-  const { error, data: templateData } = useQuery(
+  const { data: templateData } = useQuery(
     EmailTemplateQuery,
     {
       variables: { id: emailId },
@@ -93,15 +92,11 @@ export default function EmailBuilderDialog() {
   }
 
   function onLoad() {
-    // avoid preloading previous state into the editor
-    // if (emailId) {
       if (emailEditorRef.current) {
         emailEditorRef.current.loadDesign(templateData?.emailTemplate.data?.design);
       } else {
-        // wait for the editor to initialize
         setTimeout(() => emailEditorRef.current.loadDesign(templateData?.emailTemplate.data?.design), 3000);
       }
-    // }
   }
 
   function handleDetailsDialog() {
@@ -121,7 +116,7 @@ export default function EmailBuilderDialog() {
         open={alertOpen}
         handleClose={handleAlertClose}
       />
-      <Dialog fullScreen open onClose={handleClose} TransitionComponent={Transition}>
+      <Dialog fullScreen open onClose={handleClose} TransitionComponent={Transition} data-testid="fullscreen_dialog">
         <AppBar position="relative">
           <Toolbar>
             <IconButton edge="start" data-testid="close_btn" onClick={handleClose} aria-label="close">
@@ -135,13 +130,12 @@ export default function EmailBuilderDialog() {
               disabled={message.loading}
               data-testid="submit_btn"
             >
-              {`${emailId && message.loading ? t('common:form_actions.saving') : emailId ? t('common:form_actions.update') :  t('common:form_actions.save')}`}
+              {`${message.loading ? t('common:form_actions.saving') : emailId ? t('common:form_actions.update') :  t('common:form_actions.save')}`}
             </Button>
           </Toolbar>
         </AppBar>
         <EmailEditor ref={emailEditorRef} onLoad={onLoad} options={{ locale: defaultLanguage || authState.user?.community.locale }} />
       </Dialog>
-      <div style={{ height: '100vh'}} />
     </>
   );
 }

@@ -11,38 +11,37 @@ describe('Mail Templates Component', () => {
     const templateMock = {
       request: {
         query: EmailTemplatesQuery,
-        variables: { limit: 50, offset: 0}
+        variables: { limit: 50, offset: 0 }
       },
       result: {
-          data: {
-              emailTemplates: [
-                  {
-                    "id": "501b718c-8687-4e78-60b732df534ab1",
-                    "name": "task update",
-                    "subject": "greet",
-                    "data": {},
-                    "variableNames": {},
-                    "createdAt": new Date()
-                    },
-              ]
-          }
+        data: {
+          emailTemplates: [
+            {
+              id: '501b718c-8687-4e78-60b732df534ab1',
+              name: 'task update',
+              subject: 'greet',
+              data: {},
+              variableNames: {},
+              createdAt: new Date(),
+              tag: 'some_tag'
+            }
+          ]
+        }
       }
-  }
+    };
     await act(async () => {
-    const container = render(
-      <MockedProvider mocks={[templateMock]}>
-        <BrowserRouter>
-          <MailTemplates />
-        </BrowserRouter>
-      </MockedProvider>
-    );
+      const container = render(
+        <MockedProvider mocks={[templateMock]} addTypename={false}>
+          <BrowserRouter>
+            <MailTemplates />
+          </BrowserRouter>
+        </MockedProvider>
+      );
 
-    await waitFor(() => {
-      expect(container.getByTestId('create')).toBeInTheDocument();
-    }, 50)
-    })
+      await waitFor(() => {
+        expect(container.getByTestId('create')).toBeInTheDocument();
+        expect(container.queryByText('task update')).toBeInTheDocument();
+      }, 50);
+    });
   });
 });
-
-
-

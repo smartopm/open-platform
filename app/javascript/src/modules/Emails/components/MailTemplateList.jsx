@@ -52,9 +52,6 @@ export default function MailTemplateList() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [type]);
 
-  if (loading) return <Spinner />;
-  if (error) return <CenteredContent>{formatError(error?.message)}</CenteredContent>;
-
   function paginate(action) {
     if (action === 'prev') {
       if (offset < limit) return;
@@ -119,6 +116,9 @@ export default function MailTemplateList() {
         setAlertOpen(true);
       });
   }
+
+  if (loading) return <Spinner />;
+  if (error) return <CenteredContent>{formatError(error?.message)}</CenteredContent>;
 
   return (
     <div className="container">
