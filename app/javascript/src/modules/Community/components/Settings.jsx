@@ -735,7 +735,10 @@ CommunitySettings.propTypes = {
     tagline: PropTypes.string,
     wpLink: PropTypes.string,
     securityManager: PropTypes.string,
-    subAdministrator: PropTypes.string,
+    subAdministrator: PropTypes.shape({
+      id: PropTypes.string,
+      name: PropTypes.string
+    }),
     themeColors: PropTypes.shape({
       primaryColor: PropTypes.string,
       secondaryColor: PropTypes.string,
