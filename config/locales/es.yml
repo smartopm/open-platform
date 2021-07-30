@@ -140,6 +140,7 @@ es:
         user: Usuario
       properties/account:
         community: Comunidad
+        user: Usuario
       properties/land_parcel_account:
         account: Cuenta
         land_parcel: Número de parcela de tierra
@@ -147,8 +148,12 @@ es:
         community: Nkwashi
         parcel_number: Numero de Lote
       properties/payment_plan:
+        installment_amount: Monto de la cuota
         land_parcel: Número de parcela de tierra
         payment_day: Fecha de Pago
+        user: Usuario
+      properties/plan_ownership:
+        payment_plan: Plan de Pago
         user: Usuario
       properties/valuation:
         amount: Monto
@@ -204,15 +209,18 @@ es:
       labels/label: Etiqueta
       labels/user_label: Etiqueta de usuario
       logs/activity_log: Registro de Actividad
+      logs/entry_request: Pedido de Ingreso
       logs/event_log: Registro de Evento
       logs/import_log: Importar registro
       logs/substatus_log: Registro de subestado
       notes/assignee_note: Nota del cesionario
       notes/note_history: Historial de notas
+      notifications/message: Mensaje
       notifications/notification: Notificación
       payments/invoice: Factura
       payments/payment: Pago
       payments/plan_payment: Plan de Pago
+      payments/transaction: Transacción
       payments/wallet: Billetera
       payments/wallet_transaction: Transacción de billetera
       post_tags/post_tag: Día después
@@ -220,7 +228,10 @@ es:
       properties/account: Cuenta
       properties/land_parcel: Número de parcela de tierra
       properties/land_parcel_account: Cuenta de parcela de tierra
+      properties/plan_ownership: Plan de Propiedad
       properties/valuation: Valuación
+      showroom: Sala de exposición
+      users/activity_point: Registro de Actividad
       users/contact_info: Datos de contacto
       users/feedback: Comentarios
       users/time_sheet: Planilla de tiempo
@@ -236,19 +247,38 @@ es:
       phone: Teléfono duplicado
     email_template:
       not_found: Plantilla no encontrada
+    event_log:
+      not_found: Registro de eventos no encontrado
     invalid_argument_value: Valor de argumento no válido
     invalid_value: Valor no válido
     invoice:
       can_not_be_cancelled: La factura no se puede cancelar
       plan_required: El plan de pago no existe para la propiedad seleccionada
+    label:
+      duplicate_label: Etiqueta duplicada
+      not_found: Etiqueta no encontrada
+    land_parcel:
+      not_found: Parcela de tierra no encontrada
+      poi_record_not_found: Registro de Poi no encontrado
+    not_found: No encontrado
+    note:
+      task_not_found: No se encontró ninguna tarea, pruebe con una consulta diferente
+      unable_to_update_tasks: Algo salió mal al actualizar las tareas seleccionadas
+    notification:
+      preference_update_failed: Error al actualizar la preferencia
     payment_plan:
       does_not_exist_for_property: El plan de pago no existe para la propiedad seleccionada
       have_zero_pending_balance: El saldo pendiente es 0 para el plan de pago de la
         propiedad seleccionada
+      not_found: Plan de Pago no encontrado
     phone_number:
       found_blank: El número de teléfono no puede estar en blanco
     plan_payment:
       not_found: Pago no encontrado
+    post_tag:
+      not_found: Etiqueta no encontrada
+    receipt_number:
+      already_exists: El número de recibo ya existe
     record_not_found: Registro no encontrado
     submission:
       already_made: Ya ha respondido a este formulario. Solo puede completar este
@@ -257,6 +287,7 @@ es:
     substatus_log:
       date_must_be_greater: La fecha no puede ser menor que la fecha de inicio del
         registro anterior
+      not_found: Registro de subestado no encontrado
     transaction:
       amount_not_sufficient: El monto asignado no es suficiente para el pago
       not_found: Transacción no encontrada
@@ -264,6 +295,7 @@ es:
     user_form_property:
       not_found: Formulario de usuario de propiedad  no encontrada
     user:
+      merge_failed: Union Fallida
       not_found: Esta cuenta no existe. Envíe una solicitud para crear una cuenta
         o utilice la información de cuenta correcta para iniciar sesión
       not_found_with_id: No se puede encontrar al Usuario %{user_id}
@@ -278,4 +310,5 @@ es:
       enlace para darnos su opinión %{feedback_link}
   response:
     failed: Fallido
+    success: Exito
     updated: Actualizado
