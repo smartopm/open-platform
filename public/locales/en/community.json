@@ -13,6 +13,7 @@
       "set_locale": "Set Locale",
       "language_settings": "Set Language Settings",
       "set_language": "Set Language",
+      "set_campaign_admin": "Set Campaign Admin",
       "update_community": "Update Community Settings",
       "logo_updated": "Logo uploaded successfully",
       "community_updated": "Community Updated successfully",

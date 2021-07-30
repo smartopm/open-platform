@@ -9,7 +9,7 @@ import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 
-import { useMutation, useApolloClient } from 'react-apollo';
+import { useMutation, useApolloClient, useQuery } from 'react-apollo';
 import { CommunityUpdateMutation } from '../graphql/community_mutations';
 import DynamicContactFields from './DynamicContactFields';
 import MessageAlert from '../../../components/MessageAlert';
@@ -21,6 +21,7 @@ import { formatError, propAccessor } from '../../../utils/helpers';
 import { Spinner } from '../../../shared/Loading';
 import ColorPicker from './ColorPicker';
 import { validateThemeColor } from '../helpers';
+import { AdminUsersQuery } from '../../Users/graphql/user_query'
 
 export default function CommunitySettings({ data, token, refetch }) {
   const numbers = {
@@ -91,6 +92,11 @@ export default function CommunitySettings({ data, token, refetch }) {
   const { onChange, signedBlobId } = useFileUpload({
     client: useApolloClient()
   });
+
+  const { data: adminUsersData } = useQuery(AdminUsersQuery, {
+    fetchPolicy: 'cache-and-network',
+    errorPolicy: 'all'
+  })
 
   const classes = useStyles();
 
@@ -683,6 +689,27 @@ export default function CommunitySettings({ data, token, refetch }) {
             Object.entries(languages).map(([key, val]) => (
               <MenuItem key={val} value={val}>
                 {key}
+              </MenuItem>
+            ))
+          }
+        </TextField>
+      </div>
+
+      <div style={{ marginTop: '40px' }}>
+        <Typography variant="h6">{t('community.set_campaign_admin')}</Typography>
+        <TextField
+          style={{ width: '200px' }}
+          select
+          value={language || 'en-US'}
+          onChange={event => setLanguage(event.target.value)}
+          name="campaign_admin"
+          margin="normal"
+          inputProps={{ "data-testid": "campaign_admin"}}
+        >
+          {
+            adminUsersData?.adminUsers?.map((admin) => (
+              <MenuItem key={admin.id} value={admin.id}>
+                {admin.name}
               </MenuItem>
             ))
           }

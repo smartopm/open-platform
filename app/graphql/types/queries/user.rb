@@ -68,6 +68,11 @@ module Types::Queries::User
     field :user_active_plan, GraphQL::Types::Boolean, null: true do
       description 'returns true if a user has an active payment plan'
     end
+
+    # Get a list of all admin users
+    field :admin_users, [Types::UserType], null: true do
+      description 'Get a list of all admin users'
+    end
   end
   # rubocop:enable Metrics/BlockLength
 
@@ -203,6 +208,14 @@ module Types::Queries::User
     raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') unless context[:current_user]
 
     context[:current_user].active_payment_plan?
+  end
+
+  def admin_users
+    unless context[:current_user]&.admin?
+      raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
+    end
+
+    context[:site_community].users.where(user_type: 'admin', state: 'valid')
   end
 end
 # rubocop:enable Metrics/ModuleLength
