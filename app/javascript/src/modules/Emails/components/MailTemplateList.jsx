@@ -3,14 +3,13 @@
 import React, { useEffect, useState } from 'react';
 import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
-import { useLazyQuery, useQuery, useMutation } from 'react-apollo';
+import { useQuery, useMutation } from 'react-apollo';
 import { useHistory } from 'react-router';
 import { useTranslation } from 'react-i18next';
-import EmailBuilderDialog from './EmailBuilderDialog';
 import EmailDetailsDialog from './EmailDetailsDialog';
 import MailTemplateItem from './MailTemplateItem';
 import MessageAlert from '../../../components/MessageAlert';
-import { EmailTemplateQuery, EmailTemplatesQuery } from '../graphql/email_queries';
+import { EmailTemplatesQuery } from '../graphql/email_queries';
 import CreateEmailTemplateMutation from '../graphql/email_mutations';
 import { Spinner } from '../../../shared/Loading';
 import CenteredContent from '../../../components/CenteredContent';
@@ -19,14 +18,12 @@ import Paginate from '../../../components/Paginate';
 import ListHeader from '../../../shared/list/ListHeader';
 
 export default function MailTemplateList() {
-  const [templateDialogOpen, setDialogOpen] = useState(false);
   const [currentEmail, setCurrentEmail] = useState({});
   const [emailDetailsDialogOpen, setEmailDetailsDialogOpen] = useState(false);
   const [alertOpen, setAlertOpen] = useState(false);
   const [message, setMessage] = useState({ isError: false, detail: '', loading: false });
   const [createEmailTemplate] = useMutation(CreateEmailTemplateMutation);
   const path = useParamsQuery();
-  const emailId = path.get('email');
   const type = path.get('type');
   const limit = 50;
   const [offset, setOffset] = useState(0);
@@ -42,36 +39,18 @@ export default function MailTemplateList() {
 
   const { loading, error, data, refetch } = useQuery(EmailTemplatesQuery, {
     errorPolicy: 'all',
-    variables: { limit, offset }
+    variables: { limit, offset },
+    // add a fetch policy here to not cache
   });
-  const [loadTemplate, { error: templateError, data: templateData, called }] = useLazyQuery(
-    EmailTemplateQuery,
-    {
-      variables: { id: emailId },
-      errorPolicy: 'all',
-      fetchPolicy: 'cache-and-network'
-    }
-  );
+
   const history = useHistory();
 
   useEffect(() => {
-    if (emailId) {
-      loadTemplate();
-    }
-    if (type === 'new') {
-      setDialogOpen(true);
-    }
-
     if (type === 'duplicate') {
       setEmailDetailsDialogOpen(true);
     }
-
-    if (called && !templateError && emailId) {
-      setCurrentEmail(templateData?.emailTemplate || {});
-      setDialogOpen(true);
-    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [emailId, type, called, templateData]);
+  }, [type]);
 
   if (loading) return <Spinner />;
   if (error) return <CenteredContent>{formatError(error?.message)}</CenteredContent>;
@@ -86,17 +65,17 @@ export default function MailTemplateList() {
   }
 
   function handleTemplateDialog() {
-    history.push(`/mail_templates?type=new`);
+    history.push(`/mail_templates/new`);
   }
 
   function handleClose() {
     history.replace(`/mail_templates`);
-    setDialogOpen(false);
     setEmailDetailsDialogOpen(false)
   }
 
   function handleOpenEmailDialog(emailData) {
-    history.push(`/mail_templates?email=${emailData.id}`);
+    // eslint-disable-next-line security/detect-non-literal-fs-filename
+    window.open(`/mail_templates/${emailData.id}`, '_self')
   }
 
   function handleDuplicateTemplate(emailData){
@@ -157,15 +136,8 @@ export default function MailTemplateList() {
         dialogHeader={t('email.duplicate_email')}
         initialData={{
           name: currentEmail?.name || '',
-          subject: currentEmail?.subject || '' 
+          subject: currentEmail?.subject || ''
         }}
-      />
-      <EmailBuilderDialog
-        initialData={currentEmail}
-        open={templateDialogOpen}
-        handleClose={handleClose}
-        emailId={emailId}
-        refetchEmails={refetch}
       />
       <ListHeader headers={mailListHeader} />
       {data?.emailTemplates.map(email => (

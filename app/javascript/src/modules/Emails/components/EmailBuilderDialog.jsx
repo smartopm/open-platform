@@ -8,21 +8,22 @@ import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import Slide from '@material-ui/core/Slide';
 import Button from '@material-ui/core/Button';
-import PropTypes from 'prop-types';
-import { useMutation } from 'react-apollo';
+import { useMutation, useQuery } from 'react-apollo';
 import { useTranslation } from 'react-i18next';
+import { useHistory, useParams } from 'react-router';
 import EmailDetailsDialog from './EmailDetailsDialog';
 import MessageAlert from '../../../components/MessageAlert';
 import { formatError } from '../../../utils/helpers';
 import CreateEmailTemplateMutation, { EmailUpdateMutation } from '../graphql/email_mutations';
 import { Context } from '../../../containers/Provider/AuthStateProvider';
+import { EmailTemplateQuery } from '../graphql/email_queries';
 
 // eslint-disable-next-line
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function EmailBuilderDialog({ initialData, open, handleClose, emailId, refetchEmails }) {
+export default function EmailBuilderDialog() {
   const emailEditorRef = useRef(null);
   const [createEmailTemplate] = useMutation(CreateEmailTemplateMutation);
   const [updateEmailTemplate] = useMutation(EmailUpdateMutation);
@@ -32,6 +33,22 @@ export default function EmailBuilderDialog({ initialData, open, handleClose, ema
   const { t } = useTranslation(['email' ,'common'])
   const defaultLanguage = localStorage.getItem('default-language');
   const authState = useContext(Context)
+  const { emailId } = useParams()
+  const history = useHistory()
+
+  // eslint-disable-next-line no-unused-vars
+  const { error, data: templateData } = useQuery(
+    EmailTemplateQuery,
+    {
+      variables: { id: emailId },
+      errorPolicy: 'all',
+      fetchPolicy: 'cache-and-network'
+    }
+  );
+
+  function handleClose(){
+    history.push('/mail_templates')
+  }
 
   function handleAlertClose() {
     setAlertOpen(false);
@@ -47,7 +64,6 @@ export default function EmailBuilderDialog({ initialData, open, handleClose, ema
           setMessage({ ...message, isError: false, detail: t('email.email_updated'), loading: false});
           setAlertOpen(true);
           handleClose();
-          refetchEmails()
         })
         .catch(err => {
           setMessage({ isError: true, detail: formatError(err.message), loading: false });
@@ -68,7 +84,6 @@ export default function EmailBuilderDialog({ initialData, open, handleClose, ema
           setAlertOpen(true);
           handleClose();
           handleDetailsDialog();
-          refetchEmails()
         })
         .catch(err => {
           setMessage({ isError: true, detail: formatError(err.message), loading: false});
@@ -79,14 +94,14 @@ export default function EmailBuilderDialog({ initialData, open, handleClose, ema
 
   function onLoad() {
     // avoid preloading previous state into the editor
-    if (emailId) {
+    // if (emailId) {
       if (emailEditorRef.current) {
-        emailEditorRef.current.loadDesign(initialData.data?.design);
+        emailEditorRef.current.loadDesign(templateData?.emailTemplate.data?.design);
       } else {
         // wait for the editor to initialize
-        setTimeout(() => emailEditorRef.current.loadDesign(initialData.data?.design), 3000);
+        setTimeout(() => emailEditorRef.current.loadDesign(templateData?.emailTemplate.data?.design), 3000);
       }
-    }
+    // }
   }
 
   function handleDetailsDialog() {
@@ -106,7 +121,7 @@ export default function EmailBuilderDialog({ initialData, open, handleClose, ema
         open={alertOpen}
         handleClose={handleAlertClose}
       />
-      <Dialog fullScreen open={open} onClose={handleClose} TransitionComponent={Transition}>
+      <Dialog fullScreen open onClose={handleClose} TransitionComponent={Transition}>
         <AppBar position="relative">
           <Toolbar>
             <IconButton edge="start" data-testid="close_btn" onClick={handleClose} aria-label="close">
@@ -126,18 +141,7 @@ export default function EmailBuilderDialog({ initialData, open, handleClose, ema
         </AppBar>
         <EmailEditor ref={emailEditorRef} onLoad={onLoad} options={{ locale: defaultLanguage || authState.user?.community.locale }} />
       </Dialog>
+      <div style={{ height: '100vh'}} />
     </>
   );
 }
-EmailBuilderDialog.defaultProps = {
-  initialData: {},
-  emailId: ''
-};
-EmailBuilderDialog.propTypes = {
-  open: PropTypes.bool.isRequired,
-  handleClose: PropTypes.func.isRequired,
-  refetchEmails: PropTypes.func.isRequired,
-  emailId: PropTypes.string,
-  // eslint-disable-next-line react/forbid-prop-types
-  initialData: PropTypes.object
-};
