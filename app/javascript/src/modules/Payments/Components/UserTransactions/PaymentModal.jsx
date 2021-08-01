@@ -1,9 +1,6 @@
 /* eslint-disable no-nested-ternary */
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-// import Button from '@material-ui/core/Button';
-// import { useHistory } from 'react-router-dom';
-// import AddIcon from '@material-ui/icons/Add';
 import { useLazyQuery, useMutation } from 'react-apollo';
 import subDays from 'date-fns/subDays';
 import TextField from '@material-ui/core/TextField';
@@ -210,7 +207,6 @@ export default function PaymentModal({
 
   return (
     <>
-      {console.log(plotInputValue)}
       <MessageAlert
         type={isSuccessAlert ? 'success' : 'error'}
         message={messageAlert}
