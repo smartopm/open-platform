@@ -24,7 +24,6 @@ import DatePickerDialog from '../../../../components/DatePickerDialog';
 import useDebounce from '../../../../utils/useDebounce';
 import UserAutoResult from '../../../../shared/UserAutoResult';
 import SwitchInput from '../../../Forms/components/SwitchInput';
-import { dateToString } from '../../../../components/DateContainer';
 
 const initialValues = {
   transactionType: '',
@@ -436,17 +435,6 @@ export function PaymentDetails({ inputValue, totalAmount, currencyData }) {
         Transaction Type:
         <b>{` ${inputValue.transactionType}`}</b>
       </Typography>
-      {inputValue.pastPayment && (
-        <Typography
-          variant="subtitle1"
-          data-testid="receiptNumber"
-          align="center"
-          key="receiptNumber"
-        >
-          Receipt Number:
-          <b>{` ${inputValue.receiptNumber}`}</b>
-        </Typography>
-      )}
       <Typography variant="subtitle1" data-testid="transactionNumber" align="center" key="number">
         {inputValue.transactionNumber && (
           <>
@@ -521,13 +509,11 @@ const useStyles = makeStyles({
 
 PaymentDetails.propTypes = {
   inputValue: PropTypes.shape({
-    amount: PropTypes.string.isRequired,
     transactionType: PropTypes.string.isRequired,
     status: PropTypes.string,
     bankName: PropTypes.string,
     chequeNumber: PropTypes.string,
     transactionNumber: PropTypes.string,
-    receiptNumber: PropTypes.string,
     pastPayment: PropTypes.bool
   }).isRequired,
   totalAmount: PropTypes.string.isRequired,
