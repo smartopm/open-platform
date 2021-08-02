@@ -410,7 +410,7 @@ export default function PaymentModal({
                         </InputAdornment>
                       ),
                       'data-testid': 'amount',
-                      min: "0", max: "10", step: "1"
+                      step: 0.01
                     }}
                     required
                     error={isError && submitting && totalAmount() === 0}
