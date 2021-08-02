@@ -38,6 +38,7 @@ describe('Community settings page ', () => {
       menuItems: [
         { menu_link: 'http://some-link.com', menu_name: 'Custom Menu' },
       ],
+      subAdministrator: { id: '123df', name: 'User Name' },
       logoUrl: null,
       locale: 'en-US',
       currency: 'honduran_lempira',
@@ -84,7 +85,7 @@ describe('Community settings page ', () => {
           logoUrl: '',
           wpLink: '',
           securityManager: '',
-          subAdministrator: '',
+          subAdministratorId: '123df',
           themeColors: { primaryColor: '#69ABA4', secondaryColor: '#cf5628' },
           bankingDetails: {
             bankName: 'Test bank name',

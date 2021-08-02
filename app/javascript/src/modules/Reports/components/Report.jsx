@@ -128,9 +128,9 @@ export default function Report() {
             <Typography className={classes.reportTitle}>{t('misc.report_header_text')}</Typography>
           </CenteredContent>
           <div style={{ marginTop: 50 }}>
-            <ReportHeader reportingDate={reportingDate} subAdministrator={authState.user.community.subAdministrator} />
+            <ReportHeader reportingDate={reportingDate} subAdministrator={authState.user.community.subAdministrator?.name} />
             <ReportData formattedData={formattedData} />
-            <ReportFooter subAdministrator={authState.user.community.subAdministrator} />
+            <ReportFooter subAdministrator={authState.user.community.subAdministrator?.name} />
           </div>
         </div>
       </FullScreenDialog>

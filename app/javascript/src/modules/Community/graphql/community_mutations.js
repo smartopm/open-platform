@@ -18,7 +18,7 @@ export const CommunityUpdateMutation = gql`
     $wpLink: String
     $themeColors: JSON
     $securityManager: String
-    $subAdministrator: String
+    $subAdministratorId: String
     $bankingDetails: JSON
   ) {
     communityUpdate(
@@ -37,7 +37,7 @@ export const CommunityUpdateMutation = gql`
       wpLink: $wpLink
       themeColors: $themeColors
       securityManager: $securityManager
-      subAdministrator: $subAdministrator
+      subAdministratorId: $subAdministratorId
       bankingDetails: $bankingDetails
     ) {
       community {

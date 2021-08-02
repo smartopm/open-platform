@@ -21,7 +21,10 @@ export const CurrentCommunityQuery = gql`
       themeColors
       features
       securityManager
-      subAdministrator
+      subAdministrator {
+        id
+        name
+      }
       bankingDetails
     }
   }

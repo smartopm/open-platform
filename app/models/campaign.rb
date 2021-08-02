@@ -32,7 +32,7 @@ class Campaign < ApplicationRecord
   end
 
   def campaign_admin_user
-    Users::User.find_by(name: 'Mutale Chibwe', state: 'valid')
+    community.sub_administrator || Users::User.find_by(name: 'Mutale Chibwe', state: 'valid')
   end
 
   def target_list
