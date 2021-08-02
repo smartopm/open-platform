@@ -12,11 +12,7 @@ jest.mock('react-email-editor')
 
 describe('Email Builder Component', () => {
   const props = {
-    open: true,
-    initialData: {},
     emailId: '03942342',
-    refetchEmails: jest.fn(),
-    handleClose: jest.fn()
   };
   const updateRequestMock = {
     request: {
@@ -64,18 +60,18 @@ describe('Email Builder Component', () => {
     const container = render(
       <MockedProvider mocks={[updateRequestMock, createRequestMock]}>
         <BrowserRouter>
-          <EmailBuilderDialog {...props} />
+          <EmailBuilderDialog  />
         </BrowserRouter>
       </MockedProvider>
     );
 
     render(<EmailEditor />)
-    expect(container.queryByText('common:form_actions.update')).toBeInTheDocument();
+    expect(container.queryByTestId('submit_btn').textContent).toContain('common:form_actions.save')
 
     fireEvent.click(container.queryByTestId('submit_btn'));
-    expect(container.queryByTestId('submit_btn').textContent).toContain('common:form_actions.saving')
 
+    expect(container.queryByTestId('close_btn')).toBeInTheDocument()
+    expect(container.queryByTestId('fullscreen_dialog')).toBeInTheDocument()
     fireEvent.click(container.queryByTestId('close_btn'))
-    expect(props.handleClose).toBeCalled()
   });
 });

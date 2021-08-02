@@ -62,6 +62,7 @@ import UsersImport from '../src/modules/Users/Containers/UsersImport';
 import { checkAllowedCommunityFeatures } from '../src/utils/helpers';
 import BusinessProfile from '../src/modules/Business/Components/BusinessProfilePage';
 import EmployeeTimeSheetLog from '../src/modules/TimeCard/Components/EmployeeLogs';
+import EmailBuilderDialog from '../src/modules/Emails/components/EmailBuilderDialog';
 
 // The routes defined here are carefully arranged, be mindful when changing them
 
@@ -272,6 +273,7 @@ const App = () => {
                               <Route path="/form/:formId?/:formName?" exact component={FormPage} />
                               <Route path="/form/:formId?/:formName?/entries" component={FormEntriesPage} />
                               <Route path="/edit_form/:formId" component={FormBuilderPage} />
+                              <Route path="/mail_templates/:emailId" component={EmailBuilderDialog} />
                               <Route
                                 path="/user_form/:userId?/:formUserId?/:type?"
                                 component={FormPage}
@@ -328,7 +330,7 @@ const useStyles = makeStyles(() => ({
     appContainer: {
     '@supports ( -moz-appearance:none )': {
       paddingTop: '75px'
-    }
+    },
   }
 }));
 
