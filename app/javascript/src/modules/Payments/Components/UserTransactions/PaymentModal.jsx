@@ -114,6 +114,12 @@ export default function PaymentModal({
   }, [open])
 
 
+  useEffect(() => {
+    setPlotInputValue([]);
+    setIsError(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open, isSuccessAlert]);
+
   function handleSearchPlot(user) {
     setPaymentUserId(user.id);
     loadLandParcel();
