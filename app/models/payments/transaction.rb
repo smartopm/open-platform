@@ -41,7 +41,7 @@ module Payments
     # @param [String] receipt_number
     #
     # @return [void]
-    def execute_transaction_callbacks(payment_plan, receipt_number)
+    def execute_transaction_callbacks(payment_plan, amount, receipt_number)
       amount_paid = payment_plan.allocated_amount(amount)
 
       payment_plan.update_pending_balance(amount)

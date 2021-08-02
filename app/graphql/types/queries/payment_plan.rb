@@ -34,12 +34,10 @@ module Types::Queries::PaymentPlan
   # @return [Array<PaymentPlan>]
   def user_plans_with_payments(user_id: nil, offset: 0, limit: 10)
     user = verified_user(user_id)
-    payment_plans = Properties::PaymentPlan
-                    .left_joins(:plan_ownerships).includes(:plan_payments).where(
-                      'payment_plans.user_id = ? or plan_ownerships.user_id = ?', user.id,
-                      user.id
-                    ).distinct
-    payment_plans.order(created_at: :desc).offset(offset).limit(limit)
+    Properties::PaymentPlan.left_joins(:plan_ownerships).includes(:plan_payments).where(
+      'payment_plans.user_id = ? or plan_ownerships.user_id = ?', user.id,
+      user.id
+    ).distinct.order(created_at: :desc).offset(offset).limit(limit)
   end
 
   # Statement details of payment plan
@@ -70,7 +68,8 @@ module Types::Queries::PaymentPlan
     raise_unauthorized_error
 
     user = context[:site_community].users.find_by(id: user_id)
-    user.payment_plans.includes(:land_parcel).limit(limit).offset(offset)
+    user.payment_plans.includes(:land_parcel).where.not(pending_balance: 0).limit(limit)
+        .offset(offset)
   end
 
   private

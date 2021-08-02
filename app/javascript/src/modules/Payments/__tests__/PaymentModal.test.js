@@ -58,8 +58,6 @@ describe('It should test the payment modal component', () => {
     await waitFor(
       () => {
         expect(container.getByTestId("transaction-type")).toBeInTheDocument()
-        expect(container.getAllByTestId("amount")[0]).toBeInTheDocument()
-        expect(container.getAllByTestId("add-plot")[0]).toBeInTheDocument()
       },
       { timeout: 10 }
     );
@@ -74,23 +72,20 @@ describe('It should test the payment modal component', () => {
 
 describe('Test Payment Details Screen', () => {
   const inputValue = {
-    amount: '200',
     transactionType: 'cash',
     bankName: 'Standard',
     chequeNumber: '423-22223-099',
     transactionNumber: 'R45F112',
-    pastPayment: true,
-    receiptNumber: '234652'
+    pastPayment: true
   }
   it('it should render payment details ', () => {
     const container = render(
-      <PaymentDetails inputValue={inputValue} currencyData={currency} />
+      <PaymentDetails inputValue={inputValue} totalAmount="200" currencyData={currency} />
     )
     expect(container.queryByTestId('amount')).toBeInTheDocument()
     expect(container.queryByTestId('type').textContent).toContain('Transaction Type: cash')
     expect(container.queryByTestId('transactionNumber').textContent).toContain('Transaction Number: R45F112')
     expect(container.queryByTestId('chequeNumber').textContent).toContain('Cheque Number: 423-22223-099')
     expect(container.queryByTestId('bankName').textContent).toContain('Bank Name: Standard')
-    expect(container.queryByTestId('receiptNumber').textContent).toContain('Receipt Number: 234652')
   });
 })

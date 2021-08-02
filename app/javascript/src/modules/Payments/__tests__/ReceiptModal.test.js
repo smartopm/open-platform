@@ -40,7 +40,6 @@ describe('It should test the payment receipt modal component', () => {
         </MockedProvider>
       </BrowserRouter>
     );
-    expect(container.getByTestId('print')).toBeInTheDocument();
     expect(container.getByTestId('continue')).toBeInTheDocument();
   });
 });

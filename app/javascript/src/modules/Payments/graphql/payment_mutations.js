@@ -8,9 +8,8 @@ mutation PaymentCreate(
   $bankName: String
   $chequeNumber: String
   $transactionNumber: String
-  $paymentPlanId: ID!
-  $receiptNumber: String
   $createdAt: String
+  $paymentsAttributes: [PlanPaymentInput!]!
 ) {
   transactionCreate(
     userId: $userId
@@ -19,9 +18,8 @@ mutation PaymentCreate(
     bankName: $bankName
     chequeNumber: $chequeNumber
     transactionNumber: $transactionNumber
-    paymentPlanId: $paymentPlanId
-    receiptNumber: $receiptNumber
     createdAt: $createdAt
+    paymentsAttributes: $paymentsAttributes
   ) {
     transaction {
       id
