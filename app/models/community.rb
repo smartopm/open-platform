@@ -4,6 +4,16 @@
 class Community < ApplicationRecord
   has_one_attached :image
 
+  COMMUNITY_FEATURES = [
+    'Dashboard', 'Search', 'Profile', 'Messages', 'Communication', 'LogBook', 'Payments',
+    'Invoices', 'Transactions', 'Forms', 'Customer Journey', 'UserStats', 'Users',
+    'Properties', 'News', 'Discussions', 'Campaigns', 'Labels', 'Tasks', 'Business',
+    'Forms', 'Email Templates', 'Community', 'Contact', 'Referral', 'My Thebe Portal',
+    'Action Flows', 'Time Card', 'Logout', 'Showroom', 'DynamicMenu'
+  ].freeze
+
+  after_initialize :add_default_community_features
+
   has_many :users, class_name: 'Users::User', dependent: :destroy
   # TODO: roles model is not defined, remove this if not required.
   has_many :roles, dependent: :destroy
@@ -80,5 +90,9 @@ class Community < ApplicationRecord
   rescue StandardError => e
     # Fail gracefully
     Rollbar.error(e)
+  end
+
+  def add_default_community_features
+    self.features = COMMUNITY_FEATURES if new_record?
   end
 end
