@@ -23,6 +23,14 @@ import PaymentPlanModal from './PaymentPlanModal';
 import MessageAlert from '../../../../components/MessageAlert'
 
 export default function PaymentPlans({ userId, user, userData }) {
+  const taskHeader = [
+    { title: 'Select', col: 1 },
+    { title: 'Task', value: t('common:table_headers.task'), col: 4 },
+    { title: 'Created By', value: t('common:table_headers.created_by'), col: 3 },
+    { title: 'Duedate', value: t('common:table_headers.due_date'), col: 1 },
+    { title: 'Assignees',value: t('common:table_headers.assignees'), col: 2 },
+    { title: 'Menu', value: t('common:table_headers.menu'), col: 1 }
+  ];
   const planHeader = [
     { title: 'Plot Number', col: 2 },
     { title: 'Payment Plan', col: 2 },
