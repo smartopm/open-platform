@@ -161,6 +161,11 @@ export default function PaymentList({ currencyData }) {
     loadAllPayments()
   }
 
+  function handlePaymentModal(){
+    setPaymentModalOpen(false)
+    history.push('/payments')
+  }
+
   if (error) {
     return <CenteredContent>{formatError(error.message)}</CenteredContent>;
   }
@@ -174,7 +179,7 @@ export default function PaymentList({ currencyData }) {
 
       <PaymentModal
         open={paymentModalOpen}
-        handleModalClose={() => setPaymentModalOpen(false)}
+        handleModalClose={handlePaymentModal}
         currencyData={currencyData}
         refetch={refetch}
       />
@@ -258,7 +263,7 @@ export default function PaymentList({ currencyData }) {
       <br />
       <br />
       <PaymentGraph handleClick={setGraphQuery} />
-      <Fab color="primary" variant="extended" className={classes.download} onClick={() => history.push('/payments?type=new')}>
+      <Fab color="primary" variant="extended" className={classes.download} onClick={() => setPaymentModalOpen(true)}>
         Record New Payment
       </Fab>
 
