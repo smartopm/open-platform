@@ -1,6 +1,7 @@
 /* eslint-disable no-nested-ternary */
 import React, { useState, useEffect } from 'react'
 import { useLazyQuery } from 'react-apollo'
+import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types'
 import { useTheme, makeStyles } from '@material-ui/core/styles';
@@ -31,6 +32,7 @@ export default function PaymentPlans({ userId, user, userData }) {
     { title: 'Menu', col: 2 }
   ];
   const history = useHistory();
+  const { t } = useTranslation(['payment', 'common']);
   const path = useParamsQuery()
   const subtab = path.get('subtab')
   const id = path.get('id')
@@ -146,14 +148,14 @@ export default function PaymentPlans({ userId, user, userData }) {
           <div className={classes.planList}>
             <div>
               <div style={{ display: 'flex', width: '100%', justifyContent: 'space-between', marginBottom: '10px' }}>
-                <Typography className={matches ? classes.plan : classes.planMobile}>Plans</Typography>
+                <Typography className={matches ? classes.plan : classes.planMobile}>{t('common:misc.plans')}</Typography>
                 {user.userType === 'admin' && (
                   <div style={matches ? { display: 'flex', width: '100%', justifyContent: 'flex-end' } : {display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
                     <div style={{margin: '0 10px 10px 0'}}>
                       <ButtonComponent 
                         color='primary' 
                         variant='contained' 
-                        buttonText="New Payment Plan" 
+                        buttonText={t('actions.new_payment_plan')} 
                         handleClick={() => handlePlanModal()}
                         size='small'
                       />
@@ -162,7 +164,7 @@ export default function PaymentPlans({ userId, user, userData }) {
                       <ButtonComponent
                         color='default' 
                         variant='outlined' 
-                        buttonText="View all Transactions" 
+                        buttonText={t('actions.view_all_transactions')}
                         handleClick={() => handleButtonClick()}
                         size='small'
                       />

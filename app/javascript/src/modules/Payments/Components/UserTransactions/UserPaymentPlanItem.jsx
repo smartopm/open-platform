@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
+import { useTranslation } from 'react-i18next';
 import { useMutation, useLazyQuery } from 'react-apollo';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import { useHistory } from 'react-router-dom';
@@ -53,6 +54,7 @@ export default function UserPaymentPlanItem({
   balanceRefetch
 }) {
   const classes = useStyles();
+  const { t } = useTranslation(['form', 'common']);
   const history = useHistory();
   const [anchorEl, setAnchorEl] = useState(null);
   const [anchor, setAnchor] = useState(null);

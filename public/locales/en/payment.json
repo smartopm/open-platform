@@ -1,0 +1,6 @@
+{
+  "actions": {
+    "new_payment_plan": "New Payment Plan",
+    "view_all_transactions": "View all Transactions"
+  }
+}
