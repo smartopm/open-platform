@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { useMutation } from 'react-apollo';
 import PropTypes from 'prop-types'
+import { useTranslation } from 'react-i18next';
 import DeleteDialogueBox from '../../shared/dialogs/DeleteDialogue'
 import { DeleteActionFlow } from '../../graphql/mutations'
 import MessageAlert from '../MessageAlert'
@@ -10,12 +11,13 @@ export default function ActionFlowDelete({ open, handleClose, data, refetch }){
   const [deleteAction] = useMutation(DeleteActionFlow);
   const [messageAlert, setMessageAlert] = useState('')
   const [isSuccessAlert, setIsSuccessAlert] = useState(false)
+  const { t } = useTranslation(['actionflow'])
 
   function handleDelete(){
     deleteAction({
       variables: { id: data.id }
     }).then(() => {
-      setMessageAlert('Action Flow deleted successfully');
+      setMessageAlert(t('actionflow:messages.delete_message'));
       setIsSuccessAlert(true);
       handleClose();
       refetch();
@@ -41,7 +43,7 @@ export default function ActionFlowDelete({ open, handleClose, data, refetch }){
         handleClose={handleClose}
         handleAction={handleDelete}
         action='delete'
-        title='Action Flow' 
+        title={t('actionflow:headers.action_flow')}
       />
       <MessageAlert
         type={isSuccessAlert ? 'success' : 'error'}

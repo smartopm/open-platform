@@ -2,6 +2,7 @@ import React from 'react'
 import { render } from '@testing-library/react'
 import { MockedProvider } from '@apollo/react-testing'
 import { BrowserRouter } from 'react-router-dom/cjs/react-router-dom.min'
+import { useTranslation } from 'react-i18next';
 import ActionCardMenu from '../components/ActionCardMenu'
 import '@testing-library/jest-dom/extend-expect'
 
@@ -18,6 +19,7 @@ const props = {
   }
 }
 describe('ActionCardMenu', () => {
+  const { t } = useTranslation(['common'])
   it('renders necessary menu options', () => {
     const container = render(
       <MockedProvider mocks={[]} addTypename={false}>
@@ -27,7 +29,7 @@ describe('ActionCardMenu', () => {
       </MockedProvider>
     )
 
-    expect(container.queryByText('Edit')).toBeInTheDocument()
-    expect(container.queryByText('Delete')).toBeInTheDocument()
+    expect(container.queryByText(t('common:menu.edit'))).toBeInTheDocument()
+    expect(container.queryByText(t('common:menu.delete'))).toBeInTheDocument()
   })
 })

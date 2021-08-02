@@ -9,6 +9,7 @@ import {
   Card
 } from '@material-ui/core'
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz'
+import { useTranslation } from 'react-i18next';
 import ActionFlowIcon from './ActionFlows/ActionFlowIcon'
 import ActionCardMenu from './ActionCardMenu'
 import { titleize } from '../utils/helpers'
@@ -60,6 +61,7 @@ export default function ActionCard({ actionFlow, openFlowModal, refetch }) {
   const [anchorEl, setAnchorEl] = useState(null)
   const open = Boolean(anchorEl)
   const theme = useTheme()
+  const { t } = useTranslation(['actionflow'])
 
   function isActive() {
     // Currently defaulting to Active, will be changed
@@ -111,13 +113,13 @@ export default function ActionCard({ actionFlow, openFlowModal, refetch }) {
           {actionFlow.title}
         </Typography>
         <Typography className={classes.content} gutterBottom>
-          {`Event Type: On ${titleize(actionFlow.eventType)}`}
+          {t('actionflow:misc.event_type', {eventType: titleize(actionFlow.eventType)})}
         </Typography>
         <Typography className={classes.content}>
           {actionFlow.description}
         </Typography>
         <Typography className={classes.datetime} variant="body2" component="p">
-          Created:
+          {t('actionflow:misc.created')}
           {' '}
           {`${date.getDate()} ${date
             .toDateString()
@@ -127,7 +129,7 @@ export default function ActionCard({ actionFlow, openFlowModal, refetch }) {
           className={classes.status}
           color="primary"
         >
-          {isActive() ? 'Active' : 'Inactive'}
+          {isActive() ? t('actionflow:misc.active') : t('actionflow:misc.inactive')}
         </Typography>
       </CardContent>
     </Card>
