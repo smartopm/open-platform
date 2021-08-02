@@ -118,7 +118,7 @@ export default function PaymentModal({
     setPlotInputValue([]);
     setIsError(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [open, isSuccessAlert]);
+  }, [open]);
 
   function handleSearchPlot(user) {
     setPaymentUserId(user.id);
@@ -132,6 +132,14 @@ export default function PaymentModal({
   function onChangePlotInputFields(event, plan) {
     updatePlotInputFields(event.target.name, event.target.value, plan.id);
     if (event.target.name === 'amount') { totalAmount() }
+  }
+
+  function checkInputValues(id, type) {
+    const res = plotInputValue.find(ele => ele.paymentPlanId === id)
+    if (type === "amount") {
+      return res?.amount
+    } 
+    return res?.receiptNumber
   }
 
   // eslint-disable-next-line consistent-return
@@ -156,7 +164,6 @@ export default function PaymentModal({
   function cancelPayment() {
     if (isConfirm) {
       setIsConfirm(false);
-      setPlotInputValue([]);
       return;
     }
     handleModalClose();
@@ -381,7 +388,7 @@ export default function PaymentModal({
                         id="receipt-number"
                         label="Receipt Number"
                         type="string"
-                        value={plotInputValue.receiptNumber}
+                        value={checkInputValues(plan.id, 'receipt')}
                         name="receiptNumber"
                         onChange={event => onChangePlotInputFields(event, plan)}
                       />
@@ -394,7 +401,7 @@ export default function PaymentModal({
                     type="number"
                     name="amount"
                     style={{ width: '50%' }}
-                    value={plotInputValue.amount}
+                    value={checkInputValues(plan.id, 'amount')}
                     onChange={event => onChangePlotInputFields(event, plan)}
                     InputProps={{
                       startAdornment: (
@@ -403,7 +410,7 @@ export default function PaymentModal({
                         </InputAdornment>
                       ),
                       'data-testid': 'amount',
-                      step: 0.01
+                      min: "0", max: "10", step: "1"
                     }}
                     required
                     error={isError && submitting && totalAmount() === 0}
