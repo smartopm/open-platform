@@ -17,11 +17,11 @@ import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import MessageAlert from '../../../../components/MessageAlert';
 import { Spinner } from '../../../../shared/Loading';
-import { UserLandParcels } from '../../../../graphql/queries';
+import { UserLandParcelWithPlan } from '../../../../graphql/queries';
 import { TransferPaymentPlanMutation } from '../../graphql/payment_plan_mutations';
 import { formatError } from '../../../../utils/helpers';
-
-export default function sTransferPlanModal({
+import { dateToString } from "../../../../components/DateContainer";
+export default function TransferPlanModal({
   open,
   handleModalClose,
   planData,
@@ -33,12 +33,12 @@ export default function sTransferPlanModal({
   const [isSuccessAlert, setIsSuccessAlert] = useState(false);
   const [messageAlert, setMessageAlert] = useState('');
   const [acceptanceCheckbox, setAcceptanceCheckbox] = useState(false);
-  const [landParcelId, setLandParcelId] = useState('');
+  const [destinationPlanId, setDestinationPlanId] = useState('');
   const [canSubmit, setCanSubmit] = useState(false);
   const [transferPaymentPlan] = useMutation(TransferPaymentPlanMutation);
   const classes = useStyles();
   const { t } = useTranslation('common');
-  const [loadLandParcel, { loading, data } ] = useLazyQuery(UserLandParcels,{
+  const [loadPaymentPlans, { loading, data } ] = useLazyQuery(UserLandParcelWithPlan,{
     variables: { userId },
     errorPolicy: 'all',
     fetchPolicy: 'cache-and-network'
@@ -52,7 +52,7 @@ export default function sTransferPlanModal({
   }
 
   function handleRadioChange(event) {
-    setLandParcelId(event.target.value);
+    setDestinationPlanId(event.target.value);
   }
 
   function handleAcceptanceCheckChange() {
@@ -62,12 +62,14 @@ export default function sTransferPlanModal({
   function handleSubmit(e) {
     e.preventDefault();
     transferPaymentPlan({
-      variables: { paymentPlanId, landParcelId }
+      variables: { sourcePlanId: paymentPlanId,
+        destinationPlanId: destinationPlanId }
     }).then(res => {
       const resLandParcel = res.data?.transferPaymentPlan?.paymentPlan?.landParcel;
-      const landParcelName = `${resLandParcel.parcelType} ${resLandParcel.parcelNumber}`;
+      const planStartDate = res.data?.transferPaymentPlan?.paymentPlan?.startDate
+      const paymentPlanName = `${resLandParcel.parcelNumber} ${planStartDate}`;
       handleModalClose();
-      setMessageAlert(t('common:misc.plan_transferred_successfully', { landParcelName }));
+      setMessageAlert(t('common:misc.plan_transferred_successfully', { paymentPlanName }));
       setIsSuccessAlert(true);
       refetch();
       balanceRefetch();
@@ -80,23 +82,23 @@ export default function sTransferPlanModal({
 
   useEffect(() => {
     if (open) {
-      loadLandParcel({variables: { userId },
+      loadPaymentPlans({variables: { userId },
       errorPolicy: 'all',
       fetchPolicy: 'no-cache'})
     } else {
       setAcceptanceCheckbox(false);
-      setLandParcelId('');
+      setDestinationPlanId('');
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open])
 
   useEffect(() => {
-    if (landParcelId.length !== 0 && acceptanceCheckbox) {
+    if (destinationPlanId?.length !== 0 && acceptanceCheckbox) {
       setCanSubmit(true);
     } else {
       setCanSubmit(false);
     }
-  }, [landParcelId, acceptanceCheckbox])
+  }, [destinationPlanId, acceptanceCheckbox])
 
   if (loading) return <Spinner />
 
@@ -115,16 +117,16 @@ export default function sTransferPlanModal({
         <DialogContent dividers>
           <Typography>
             <Typography paragraph variant="h6" color="textPrimary" display='body'>
-              Select the Plot you want to migrate this plan to?
+              Select the Plan you want to migrate this plan to?
             </Typography>
             <Typography className={classes.content} paragraph variant="body1" color="textPrimary" display='body'>
               {
-                (data?.userLandParcels.length > 1) ?
+                (data?.userLandParcelWithPlan.length > 1) ?
                   (
-                    <LandParcelForTransferPlan
+                    <PaymentPlansForTransferPlan
                       data={data}
-                      landParcelId={landParcelId}
-                      planLandParcelId={planData?.landParcel?.id}
+                      sourcePlanId={paymentPlanId}
+                      destinationPlanId={destinationPlanId}
                       handleRadioChange={handleRadioChange}
                     />
                   ) : (
@@ -135,7 +137,7 @@ export default function sTransferPlanModal({
               }
             </Typography>
             <Typography className={classes.footer} paragraph variant="body1" color="textPrimary" display='body'>
-              { (data?.userLandParcels.length > 1) &&
+              { (data?.userLandParcelWithPlan.length > 1) &&
                 (
                   <FormGroup row>
                     <FormControlLabel
@@ -183,25 +185,25 @@ export default function sTransferPlanModal({
   );
 }
 
-export function LandParcelForTransferPlan({data, landParcelId, planLandParcelId, handleRadioChange}) {
-  const filteredLandParcels = data?.userLandParcels.filter(land => land.id !== planLandParcelId)
+export function PaymentPlansForTransferPlan({data, destinationPlanId, sourcePlanId, handleRadioChange}) {
+  const filteredPaymentPlans = data?.userLandParcelWithPlan.filter(plan => plan.id !== sourcePlanId)
 
   return (
     <FormControl component="fieldset">
       <RadioGroup
-        aria-label="landParcelId"
-        name="landParcelId"
-        value={landParcelId}
+        aria-label="paymentPlanId"
+        name="paymentPlanId"
+        value={destinationPlanId}
         onChange={handleRadioChange}
       >
         {
-          filteredLandParcels.map(land => (
+          filteredPaymentPlans.map(plan => (
             <FormControlLabel
-              key={land.id}
-              checked={landParcelId === land?.id}
-              value={land?.id}
+              key={plan.id}
+              checked={destinationPlanId === plan?.id}
+              value={plan?.id}
               control={<Radio />}
-              label={`${land.parcelType} ${land.parcelNumber}`}
+              label={`${plan?.landParcel?.parcelNumber} - ${dateToString(plan?.startDate)}`}
             />
           ))
         }
@@ -224,14 +226,14 @@ TransferPlanModal.propTypes = {
   balanceRefetch: PropTypes.func.isRequired,
 }
 
-LandParcelForTransferPlan.propTypes = {
+PaymentPlansForTransferPlan.propTypes = {
   data: PropTypes.shape({
-    userLandParcels: PropTypes.arrayOf(PropTypes.shape({
+    userLandParcelWithPlan: PropTypes.arrayOf(PropTypes.shape({
       id: PropTypes.string
      })).isRequired
     }).isRequired,
-  landParcelId: PropTypes.string.isRequired,
-  planLandParcelId: PropTypes.string.isRequired,
+  sourcePlanId: PropTypes.string.isRequired,
+  destinationPlanId: PropTypes.string.isRequired,
   handleRadioChange: PropTypes.func.isRequired,
 }
 

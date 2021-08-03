@@ -12,7 +12,7 @@ module Mutations
         poi_to_delete = context[:site_community].land_parcels.find_by(id: id)
         raise_land_parcel_not_found_error(poi_to_delete)
 
-        return { success: true } if poi_to_delete.update(deleted_status: 1)
+        return { success: true } if poi_to_delete.update(status: 1)
       end
 
       # Verifies if current user is admin or not.

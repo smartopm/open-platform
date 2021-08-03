@@ -14,9 +14,9 @@ module Payments
     belongs_to :payment_plan, class_name: 'Properties::PaymentPlan'
     has_one :land_parcel, class_name: 'Properties::LandParcel', through: :payment_plan
 
-    validates :amount, numericality: { greater_than: 0 }
-    validates :manual_receipt_number, uniqueness: { allow_nil: true, scope: :community_id }
+    before_create :add_prefix_for_manual_receipt_number, if: -> { manual_receipt_number.present? }
 
+    validates :amount, numericality: { greater_than: 0 }
     has_paper_trail
 
     search_scope :search do
@@ -48,8 +48,14 @@ module Payments
     #
     # @return [String]
     def receipt_number
-      manual_receipt_number.present? ? "MI#{manual_receipt_number}" : "SI#{automated_receipt_number}"
+      manual_receipt_number.present? ? manual_receipt_number : automated_receipt_number
     end
     # rubocop:enable Layout/LineLength
+
+    private
+
+    def add_prefix_for_manual_receipt_number
+      manual_receipt_number.prepend("MI")
+    end
   end
 end

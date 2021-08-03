@@ -4,33 +4,24 @@ module Mutations
   module PaymentPlan
     # Transfers PaymentPlan to other LandParcel.
     class TransferPaymentPlan < BaseMutation
-      argument :payment_plan_id, ID, required: true
-      argument :land_parcel_id, ID, required: true
+      argument :source_plan_id, ID, required: true
+      argument :destination_plan_id, ID, required: true
 
       field :payment_plan, Types::PaymentPlanType, null: true
 
       # rubocop:disable Metrics/AbcSize
       # rubocop:disable Metrics/MethodLength
       def resolve(vals)
-        payment_plan = Properties::PaymentPlan.find_by(id: vals[:payment_plan_id])
-        raise_payment_plan_related_error(payment_plan)
-
-        user = payment_plan.user
-        land_parcel = user.land_parcels.find_by(id: vals[:land_parcel_id])
-        raise_land_parcel_not_found_error(land_parcel)
+        source_payment_plan = Properties::PaymentPlan.find_by(id: vals[:source_plan_id])
+        destination_payment_plan = Properties::PaymentPlan.find_by(id: vals[:destination_plan_id])
+        raise_payment_plan_related_error(source_payment_plan)
+        raise_payment_plan_related_error(destination_payment_plan)
 
         ActiveRecord::Base.transaction do
-          plan_attributes = payment_plan.attributes.except(
-            'id',
-            'land_parcel_id',
-            'created_at',
-            'updated_at',
-          )
-          new_payment_plan = land_parcel.payment_plans.create!(plan_attributes)
-          new_payment_plan.transfer_payments(payment_plan)
-          return { payment_plan: new_payment_plan.reload } if payment_plan.cancel!
+          destination_payment_plan.transfer_payments(source_payment_plan)
+          return { payment_plan: destination_payment_plan.reload } if source_payment_plan.cancel!
 
-          raise GraphQL::ExecutionError, payment_plan.errors.full_messages
+          raise GraphQL::ExecutionError, destination_payment_plan.errors.full_messages
         end
       end
       # rubocop:enable Metrics/AbcSize

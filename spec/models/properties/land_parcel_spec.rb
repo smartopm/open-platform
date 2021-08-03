@@ -24,6 +24,13 @@ RSpec.describe Properties::LandParcel, type: :model do
     it { is_expected.to validate_uniqueness_of(:parcel_number) }
   end
 
+  describe 'enums' do
+    it do
+      is_expected.to define_enum_for(:status)
+        .with_values(active: 0, deleted: 1, general: 2)
+    end
+  end
+
   describe 'associations' do
     it { is_expected.to belong_to(:community) }
     it { is_expected.to have_many(:land_parcel_accounts).dependent(:destroy) }
