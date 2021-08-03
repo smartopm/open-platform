@@ -7,7 +7,7 @@ import { useHistory } from 'react-router';
 import PropTypes from 'prop-types';
 import { dateTimeToString, dateToString } from '../../../components/DateContainer';
 import { Spinner } from '../../../shared/Loading';
-import userProps from '../../../shared/types/user';
+import authStateProps from '../../../shared/types/authState';
 
 export default function VisitEntryLogs({
   eventLogs,
@@ -207,10 +207,14 @@ VisitEntryLogs.propTypes = {
         startTime: PropTypes.oneOfType([PropTypes.string, PropTypes.instanceOf(Date)]),
         visitationDate: PropTypes.oneOfType([PropTypes.string, PropTypes.instanceOf(Date)]),
       }),
-      user: userProps
+      user: PropTypes.shape({
+        id: PropTypes.string,
+        name: PropTypes.string,
+        userType: PropTypes.string,
+      })
     })
   ),
-  authState: PropTypes.shape({ user: userProps }),
+  authState: authStateProps,
   routeToAction: PropTypes.func.isRequired,
   handleAddObservation: PropTypes.func.isRequired,
   handleExitEvent: PropTypes.func.isRequired,
