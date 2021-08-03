@@ -1,0 +1,29 @@
+{
+  "headers": {
+    "action_flow": "Action Flow"
+  },
+  "form_actions": {
+    "edit_workflow": "Edit Workflow",
+    "new_workflow": "New Workflow",
+    "select": "Select {{name}}"
+  },
+  "form_fields": {
+    "select_event": "Select Event Type",
+    "add_rule": "Add Rule",
+    "select_action": "Select an action",
+    "assign_user": "Assign this task to users",
+    "pick_date": "Pick a due date"
+  },
+  "messages": {
+    "success_message": "Success: Changes saved successfully",
+    "delete_message": "Action Flow deleted successfully",
+    "workflow_not_found": "No Workflow found"
+  },
+  "misc": {
+    "active": "Active",
+    "created": "Created:",
+    "event_type": "Event Type: On {{eventType}}",
+    "inactive": "Inactive"
+  }
+  
+}

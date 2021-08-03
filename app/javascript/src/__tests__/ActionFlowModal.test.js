@@ -6,7 +6,6 @@ import ActionFlowModal from '../containers/ActionFlows/ActionFlowModal';
 import { Events, Actions, ActionFields, RuleFields , UsersLiteQuery } from '../graphql/queries';
 import { EmailTemplatesQuery } from '../modules/Emails/graphql/email_queries';
 
-
 import '@testing-library/jest-dom/extend-expect';
 import MockedThemeProvider from '../modules/__mocks__/mock_theme';
 import { Context } from '../containers/Provider/AuthStateProvider';
@@ -49,13 +48,13 @@ describe('ActionFlowModal', () => {
       );
     });
 
-    expect(container.queryByText('Edit Workflow')).toBeInTheDocument();
-    expect(container.queryByText('Title')).toBeInTheDocument();
-    expect(container.queryByText('Description')).toBeInTheDocument();
-    expect(container.queryByText('Cancel')).toBeInTheDocument();
-    expect(container.queryByText('Save Changes')).toBeInTheDocument();
-    expect(container.queryByText('New Workflow')).toBeNull();
-    expect(container.queryByText('Save')).toBeNull();
+    expect(container.queryByText('actionflow:form_actions.edit_workflow')).toBeInTheDocument();
+    expect(container.queryByText('common:form_fields.title')).toBeInTheDocument();
+    expect(container.queryByText('common:form_fields.description')).toBeInTheDocument();
+    expect(container.queryByText('common:form_actions.cancel')).toBeInTheDocument();
+    expect(container.queryByText('common:form_actions.save_changes')).toBeInTheDocument();
+    expect(container.queryByText('actionflow:form_actions.new_workflow')).toBeNull();
+    expect(container.queryByText('common:form_actions.save')).toBeNull();
   });
 
   it('renders "New Workflow" and "Save" and other necessary elements', async () => {
@@ -78,13 +77,13 @@ describe('ActionFlowModal', () => {
       );
     });
 
-    expect(container.queryByText('Edit Workflow')).toBeNull();
-    expect(container.queryByText('Title')).toBeInTheDocument();
-    expect(container.queryByText('Description')).toBeInTheDocument();
-    expect(container.queryByText('Cancel')).toBeInTheDocument();
-    expect(container.queryByText('Save')).toBeInTheDocument();
-    expect(container.queryByText('Save Changes')).toBeNull();
-    expect(container.queryByText('New Workflow')).toBeInTheDocument();
+    expect(container.queryByText('actionflow:form_actions.edit_workflow')).toBeNull();
+    expect(container.queryByText('common:form_fields.title')).toBeInTheDocument();
+    expect(container.queryByText('common:form_fields.description')).toBeInTheDocument();
+    expect(container.queryByText('common:form_actions.cancel')).toBeInTheDocument();
+    expect(container.queryByText('common:form_actions.save')).toBeInTheDocument();
+    expect(container.queryByText('common:form_actions.save_changes')).toBeNull();
+    expect(container.queryByText('actionflow:form_actions.new_workflow')).toBeInTheDocument();
   });
 });
 

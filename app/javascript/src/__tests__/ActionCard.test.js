@@ -15,6 +15,7 @@ const props = {
     active: true
   }
 }
+
 describe('ActionCard', () => {
   it('renders action-flow information', () => {
     const container = render(
@@ -28,8 +29,8 @@ describe('ActionCard', () => {
     expect(container.queryByText('A workflow')).toBeInTheDocument()
     expect(container.queryByText('Some description')).toBeInTheDocument()
     expect(
-      container.queryByText('Event Type: On Task Update')
+      container.queryByText('actionflow:misc.event_type', {eventType: props.actionFlow.eventType})
     ).toBeInTheDocument()
-    expect(container.queryByText('Active')).toBeInTheDocument()
+    expect(container.queryByText('actionflow:misc.active')).toBeInTheDocument()
   })
 })

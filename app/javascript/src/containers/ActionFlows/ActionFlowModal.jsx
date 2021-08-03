@@ -22,6 +22,7 @@ import {
 } from '@material-ui/core';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import { useTheme } from '@material-ui/styles';
+import { useTranslation } from 'react-i18next';
 import DatePickerDialog from '../../components/DatePickerDialog';
 import { UserChip } from '../../modules/Tasks/Components/UserChip';
 import {
@@ -54,6 +55,7 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
   const [selectedDate, setDate] = useState(new Date());
   const [assignees, setAssignees] = useState([]);
   const theme = useTheme();
+  const { t } = useTranslation(['actionflow', 'common'])
 
   const [loadLabelsLite, { data: labelsLiteData }] = useLazyQuery(LabelsQuery, {
     fetchPolicy: 'cache-and-network'
@@ -257,14 +259,14 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
           color: theme.palette.primary.main
         }}
       >
-        {isEdit() ? 'Edit Workflow' : 'New Workflow'}
+        {isEdit() ? t('actionflow:form_actions.edit_workflow') : t('actionflow:form_actions.new_workflow')}
       </DialogTitle>
       <DialogContent>
         <TextField
           autoFocus
           margin="dense"
           id="title"
-          label="Title"
+          label={t('common:form_fields.title')}
           name="title"
           type="text"
           fullWidth
@@ -274,7 +276,7 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
         <TextField
           margin="dense"
           id="description"
-          label="Description"
+          label={t('common:form_fields.description')}
           name="description"
           type="text"
           fullWidth
@@ -285,7 +287,7 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
         <FormControl fullWidth>
           {eventData.data && (
             <>
-              <InputLabel id="select-event">Select Event Type</InputLabel>
+              <InputLabel id="select-event">{t('actionflow:form_fields.select_event')}</InputLabel>
               <Select
                 labelId="select-event"
                 id="select-event"
@@ -310,13 +312,13 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
             handleOnChange={handleQueryOnChange}
             builderConfig={queryBuilderConfig}
             initialQueryValue={JSON.parse(selectedActionFlow.eventConditionQuery || '{}')}
-            addRuleLabel="Add Rule"
+            addRuleLabel={t('actionflow:form_fields.add_rule')}
           />
         </div>
         <FormControl fullWidth>
           {data.eventType && actionData.data && (
             <>
-              <InputLabel id="select-action">Select an action</InputLabel>
+              <InputLabel id="select-action">{t('actionflow:form_fields.select_action')}</InputLabel>
               <Select
                 labelId="select-action"
                 id="select-action"
@@ -344,7 +346,7 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
               return (
                 <FormControl fullWidth>
                   <InputLabel id={`select-${actionField.name}`}>
-                    {`Select ${capitalize(actionField.name)}`}
+                    {t('actionflow:form_actions.select', {name: capitalize(actionField.name)})}
                   </InputLabel>
                   <Select
                     labelId={`select-${actionField.name}`}
@@ -367,7 +369,7 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
               return (
                 <FormControl fullWidth>
                   <InputLabel id={`select-${actionField.name}`}>
-                    {`Select ${capitalize(actionField.name)}`}
+                    {t('actionflow:form_actions.select', {name: capitalize(actionField.name)})}
                   </InputLabel>
                   <Select
                     labelId={`select-${actionField.name}`}
@@ -389,7 +391,7 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
             if (actionField.type === 'select' && actionField.name === 'assignees') {
               return (
                 <FormControl fullWidth>
-                  <FormHelperText>Assign this task to users</FormHelperText>
+                  <FormHelperText>{t('actionflow:form_fields.assign_user')}</FormHelperText>
                   <Select
                     labelId={`select-${actionField.name}`}
                     id={`${actionField.name}-id-section`}
@@ -420,7 +422,7 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
               return (
                 <FormControl fullWidth>
                   <InputLabel id={`select-${actionField.name}`}>
-                    {`Select ${capitalize(actionField.name)}`}
+                    {t('actionflow:form_actions.select', {name: capitalize(actionField.name)})}
                   </InputLabel>
                   <Select
                     labelId={`select-${actionField.name}`}
@@ -442,7 +444,7 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
             if (actionField.type === 'date' && actionField.name === 'due_date') {
               return (
                 <FormControl fullWidth>
-                  <FormHelperText>Pick a due date</FormHelperText>
+                  <FormHelperText>{t('actionflow:form_fields.pick_date')}</FormHelperText>
                   <DatePickerDialog
                     handleDateChange={date =>
                       handleDateChange({ name: actionField.name, value: date })}
@@ -516,10 +518,10 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
       </DialogContent>
       <DialogActions style={{ justifyContent: 'flex-start' }}>
         <Button onClick={closeModal} color="secondary" variant="outlined">
-          Cancel
+          {t('common:form_actions.cancel')}
         </Button>
         <Button onClick={() => handleSave(data, metaData)} color="primary" variant="contained">
-          {isEdit() ? 'Save Changes' : 'Save'}
+          {isEdit() ? t('common:form_actions.save_changes') : t('common:form_actions.save')}
         </Button>
       </DialogActions>
     </Dialog>

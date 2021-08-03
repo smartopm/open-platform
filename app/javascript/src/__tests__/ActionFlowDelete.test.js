@@ -14,7 +14,6 @@ describe('action flow delete component', () => {
     const open = true
     const refetch = jest.fn()
     const handleClose = jest.fn()
-
     const mocks = [
       {
         request: {
@@ -43,7 +42,7 @@ describe('action flow delete component', () => {
     await waitFor(() => {
       expect(handleClose).toBeCalled()
       expect(refetch).toBeCalled()
-      expect(container.queryByText('Action Flow deleted successfully')).toBeInTheDocument()
+      expect(container.queryByText('actionflow:messages.delete_message')).toBeInTheDocument()
     }, 10)
   })
 

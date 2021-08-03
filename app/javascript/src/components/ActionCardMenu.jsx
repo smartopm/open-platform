@@ -1,10 +1,12 @@
 import React, { useState } from 'react'
 import { Menu, MenuItem } from '@material-ui/core'
 import PropTypes from 'prop-types'
+import { useTranslation } from 'react-i18next';
 import ActionFLowDelete from './ActionFlows/ActionFlowDelete'
 
 export default function ActionCardMenu({ data, open, handleClose, anchorEl, openFlowModal, refetch }) {
   const [deleteOpen, setDeleteOpen] = useState(false)
+  const { t } = useTranslation(['common'])
   
   function handleDelete() {
     setDeleteOpen(true)
@@ -34,14 +36,14 @@ export default function ActionCardMenu({ data, open, handleClose, anchorEl, open
             key="edit"
             onClick={handleEdit}
           >
-            Edit
+            {t('common:menu.edit')}
           </MenuItem>
           <MenuItem
             key="delete"
             style={{ color: 'red' }}
             onClick={handleDelete}
           >
-            Delete
+            {t('common:menu.delete')}
           </MenuItem>
         </div>
       </Menu>

@@ -27,7 +27,7 @@ describe('ActionCardMenu', () => {
       </MockedProvider>
     )
 
-    expect(container.queryByText('Edit')).toBeInTheDocument()
-    expect(container.queryByText('Delete')).toBeInTheDocument()
+    expect(container.queryByText('common:menu.edit')).toBeInTheDocument()
+    expect(container.queryByText('common:menu.delete')).toBeInTheDocument()
   })
 })

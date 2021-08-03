@@ -3,6 +3,7 @@ import { StyleSheet, css } from 'aphrodite'
 import { useMutation, useQuery } from 'react-apollo'
 import { useHistory } from 'react-router-dom'
 import { Button } from '@material-ui/core'
+import { useTranslation } from 'react-i18next';
 import { CreateActionFlow, UpdateActionFlow } from '../../graphql/mutations'
 import MessageAlert from '../../components/MessageAlert'
 import ActionFlowModal from './ActionFlowModal'
@@ -24,6 +25,7 @@ export default function ActionFlows() {
   const history = useHistory()
   const [createActionFlow] = useMutation(CreateActionFlow)
   const [updateActionFlow] = useMutation(UpdateActionFlow)
+  const { t } = useTranslation(['actionflow'])
 
   const pathQuery = useParamsQuery('')
   const type = pathQuery.get('type');
@@ -123,7 +125,7 @@ export default function ActionFlows() {
       .then(() => {
         closeModal()
         refetch()
-        setMessageAlert('Success: Changes saved successfully')
+        setMessageAlert(t('actionflow:messages.success_message'))
         setIsSuccessAlert(true)
       })
       .catch(e => {
@@ -184,7 +186,7 @@ export default function ActionFlows() {
             className={`${css(styles.addFlow)} `}
             data-testid="new-flow-btn"
           >
-            New Workflow
+            {t('actionflow:form_actions.new_workflow')}
           </Button>
         </div>
         {data.actionFlows.length ? (
@@ -200,7 +202,7 @@ export default function ActionFlows() {
             </CenteredContent>
           </>
         ) : (
-          <div style={{ textAlign: 'center' }}>No Workflow found</div>
+          <div style={{ textAlign: 'center' }}>{t('actionflow:messages.workflow_not_found')}</div>
         )}
       </div>
     </>

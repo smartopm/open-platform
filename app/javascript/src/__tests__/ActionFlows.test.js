@@ -53,18 +53,18 @@ describe('ActionFlows', () => {
     expect(loader.queryAllByTestId('loader')[0]).toBeInTheDocument()
 
     await waitFor(
-      () => expect(container.queryByText('New Workflow')).toBeInTheDocument(),
+      () => expect(container.queryByText('actionflow:form_actions.new_workflow')).toBeInTheDocument(),
       { timeout: 10 }
     )
 
-    const newFlow = container.queryByText('New Workflow')
+    const newFlow = container.queryByText('actionflow:form_actions.new_workflow')
 
     fireEvent.click(newFlow)
 
-    expect(container.queryByText('Title')).toBeInTheDocument()
-    expect(container.queryByText('Description')).toBeInTheDocument()
-    expect(container.queryByText('Cancel')).toBeInTheDocument()
-    expect(container.queryByText('Save')).toBeInTheDocument()
+    expect(container.queryByText('common:form_fields.title')).toBeInTheDocument()
+    expect(container.queryByText('common:form_fields.description')).toBeInTheDocument()
+    expect(container.queryByText('common:form_actions.cancel')).toBeInTheDocument()
+    expect(container.queryByText('common:form_actions.save')).toBeInTheDocument()
   })
 
   it('renders no-workflow found if nothing is fetched', async () => {
@@ -90,7 +90,7 @@ describe('ActionFlows', () => {
     )
 
     await waitFor(
-      () => expect(container.queryByText('No Workflow found')).toBeInTheDocument(),
+      () => expect(container.queryByText('actionflow:messages.workflow_not_found')).toBeInTheDocument(),
       { timeout: 10 }
     )
   })
