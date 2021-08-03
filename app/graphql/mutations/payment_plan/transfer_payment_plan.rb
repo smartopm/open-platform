@@ -44,15 +44,6 @@ module Mutations
         end
       end
       # rubocop:enable Style/GuardClause
-
-      # Raises GraphQL execution error if land parcel does not exist.
-      #
-      # @return [GraphQL::ExecutionError]
-      def raise_land_parcel_not_found_error(land_parcel)
-        return if land_parcel
-
-        raise GraphQL::ExecutionError, I18n.t('errors.land_parcel.not_found')
-      end
     end
   end
 end

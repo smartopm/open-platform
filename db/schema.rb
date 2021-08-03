@@ -557,7 +557,7 @@ ActiveRecord::Schema.define(version: 2021_08_03_093217) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.string "manual_receipt_number"
-    t.string "automated_receipt_number", default: -> { "('SI'::text || nextval('automated_receipt_numbers_seq'::regclass))" }
+    t.string "automated_receipt_number"
     t.string "note"
     t.index ["community_id"], name: "index_plan_payments_on_community_id"
     t.index ["payment_plan_id"], name: "index_plan_payments_on_payment_plan_id"
