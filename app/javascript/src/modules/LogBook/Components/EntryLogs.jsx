@@ -350,25 +350,6 @@ export function IndexComponent({
           />
         )}
       </div>
-
-      {/* <div className="d-flex justify-content-center">
-        <nav aria-label="center Page navigation">
-          <ul className="pagination">
-            <li className={`page-item ${offset < limit && 'disabled'}`}>
-              <a className="page-link" onClick={previousPage} href="#">
-                {t('common:misc.previous')}
-              </a>
-            </li>
-            <li
-              className={`page-item ${data?.result && filteredEvents.length < limit && 'disabled'}`}
-            >
-              <a className="page-link" onClick={nextPage} href="#">
-                {t('common:misc.next')}
-              </a>
-            </li>
-          </ul>
-        </nav>
-      </div> */}
       <CenteredContent>
         <Paginate
           offSet={offset}
