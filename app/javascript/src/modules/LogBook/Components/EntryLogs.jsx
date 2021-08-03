@@ -27,6 +27,8 @@ import EntryNoteDialog from '../../../shared/dialogs/EntryNoteDialog';
 import AddObservationNoteMutation from '../graphql/logbook_mutations';
 import LogView from './LogView';
 import VisitEntryLogs from './VisitEntryLogs';
+import CenteredContent from '../../../components/CenteredContent';
+import Paginate from '../../../components/Paginate';
 
 export default ({ history, match }) => AllEventLogs(history, match);
 
@@ -80,15 +82,15 @@ const AllEventLogs = (history, match) => {
 
   if (error) return <ErrorPage title={error.message} />;
 
-  function handleNextPage() {
-    setOffset(offset + limit);
-  }
-  function handlePreviousPage() {
-    if (offset < limit) {
-      return;
+  function paginate(action) {
+    if (action === 'prev') {
+      if (offset < limit) return;
+      setOffset(offset - limit);
+    } else if (action === 'next') {
+      setOffset(offset + limit);
     }
-    setOffset(offset - limit);
   }
+
   function handleLimit() {
     setLimit(1000);
   }
@@ -103,9 +105,8 @@ const AllEventLogs = (history, match) => {
   return (
     <IndexComponent
       data={data}
-      previousPage={handlePreviousPage}
+      paginate={paginate}
       offset={offset}
-      nextPage={handleNextPage}
       router={history}
       handleLimit={handleLimit}
       limit={limit}
@@ -122,8 +123,7 @@ const AllEventLogs = (history, match) => {
 export function IndexComponent({
   data,
   router,
-  nextPage,
-  previousPage,
+  paginate,
   offset,
   limit,
   searchTerm,
@@ -351,11 +351,10 @@ export function IndexComponent({
         )}
       </div>
 
-      <div className="d-flex justify-content-center">
+      {/* <div className="d-flex justify-content-center">
         <nav aria-label="center Page navigation">
           <ul className="pagination">
             <li className={`page-item ${offset < limit && 'disabled'}`}>
-              {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
               <a className="page-link" onClick={previousPage} href="#">
                 {t('common:misc.previous')}
               </a>
@@ -363,14 +362,22 @@ export function IndexComponent({
             <li
               className={`page-item ${data?.result && filteredEvents.length < limit && 'disabled'}`}
             >
-              {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
               <a className="page-link" onClick={nextPage} href="#">
                 {t('common:misc.next')}
               </a>
             </li>
           </ul>
         </nav>
-      </div>
+      </div> */}
+      <CenteredContent>
+        <Paginate
+          offSet={offset}
+          limit={limit}
+          active={offset >= 1}
+          handlePageChange={paginate}
+          count={filteredEvents?.length}
+        />
+      </CenteredContent>
       <Footer position="3vh" />
     </div>
   );
