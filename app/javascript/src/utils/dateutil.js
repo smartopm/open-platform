@@ -22,6 +22,10 @@ function isExpired(date) {
   return now > new Date(date)
 }
 
+/**
+ *
+ * @deprecated prefer using the helpers in DateContainer
+ */
 export function dateToString(date) {
   if (!(date instanceof Date)) {
     date = fromISO8601(date)
@@ -35,6 +39,9 @@ export function dateToString(date) {
   )
 }
 
+/**
+ * @deprecated prefer using the helpers in DateContainer
+ */
 function formatDate(datetime) {
   if (datetime) {
     const date = fromISO8601(datetime)
@@ -50,9 +57,9 @@ function formatDate(datetime) {
 }
 
 /**
- * 
- * @param {object} {object} 
- * @description returns either true or false is the time is valid based on permitted visiting hours, this depends on which day of the week it is. 
+ *
+ * @param {object} {object}
+ * @description returns either true or false is the time is valid based on permitted visiting hours, this depends on which day of the week it is.
  * @returns {Boolean}
  */
  export function isTimeValid({ date, visitingHours }) {
@@ -64,8 +71,8 @@ function formatDate(datetime) {
 }
 
 /**
- * 
- * @param {Date} date 
+ *
+ * @param {Date} date
  * @description returns the day in a week in word format based on a given day
  * @returns {String} day in a week
  */
@@ -81,8 +88,8 @@ export function getWeekDay(date) {
 }
 
 /**
- * 
- * @param {Date} date 
+ *
+ * @param {Date} date
  * @description returns a boolean if the passed date less than today's date
  * @returns {Boolean} bool
  */
@@ -94,7 +101,7 @@ export function checkPastDate(selDate){
   if (Date.parse(selDate) < Date.parse(dateTime)){
     return true
   }
-  return false 
+  return false
 }
 
 /**
@@ -116,9 +123,9 @@ export function getMonthName(date) {
 }
 
 /**
- * 
- * @param {Date} startDate 
- * @param {Date} endDate 
+ *
+ * @param {Date} startDate
+ * @param {Date} endDate
  * @description calculates difference between 2 dates, if hours less than 1 then it ruturns number of minutes
  * @returns {String} hours || minutes
  */
