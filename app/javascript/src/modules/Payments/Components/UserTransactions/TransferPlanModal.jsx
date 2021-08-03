@@ -21,10 +21,10 @@ import { UserLandParcelWithPlan } from '../../../../graphql/queries';
 import { TransferPaymentPlanMutation } from '../../graphql/payment_plan_mutations';
 import { formatError } from '../../../../utils/helpers';
 import { dateToString } from "../../../../components/DateContainer";
+
 export default function TransferPlanModal({
   open,
   handleModalClose,
-  planData,
   userId,
   paymentPlanId,
   refetch,
@@ -63,7 +63,7 @@ export default function TransferPlanModal({
     e.preventDefault();
     transferPaymentPlan({
       variables: { sourcePlanId: paymentPlanId,
-        destinationPlanId: destinationPlanId }
+        destinationPlanId }
     }).then(res => {
       const resLandParcel = res.data?.transferPaymentPlan?.paymentPlan?.landParcel;
       const planStartDate = res.data?.transferPaymentPlan?.paymentPlan?.startDate
@@ -215,11 +215,6 @@ export function PaymentPlansForTransferPlan({data, destinationPlanId, sourcePlan
 TransferPlanModal.propTypes = {
   open: PropTypes.bool.isRequired,
   handleModalClose: PropTypes.func.isRequired,
-  planData: PropTypes.shape({
-    landParcel: PropTypes.shape({
-      id: PropTypes.string.isRequired
-    }).isRequired
-  }).isRequired,
   userId: PropTypes.string.isRequired,
   paymentPlanId: PropTypes.string.isRequired,
   refetch: PropTypes.func.isRequired,

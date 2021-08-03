@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 module Properties
+  # rubocop:disable Metrics/ClassLength
   # PaymentPlan
   class PaymentPlan < ApplicationRecord
     belongs_to :user, class_name: 'Users::User'
@@ -11,10 +12,10 @@ module Properties
     has_many :plan_ownerships, dependent: :destroy
     has_many :co_owners, class_name: 'Users::User', through: :plan_ownerships, source: :user
 
-    default_scope { where.not(status: [:deleted, :general]) }
+    default_scope { where.not(status: %i[deleted general]) }
 
     before_create :set_pending_balance
-    
+
     validates :payment_day,
               numericality: { only_integer: true, greater_than: 0, less_than_or_equal_to: 28 }
     validates :duration, numericality: { greater_than_or_equal_to: 1 }
@@ -95,30 +96,28 @@ module Properties
         duration.months
       end
     end
+    # rubocop:enable Metrics/MethodLength
+
+    # rubocop:disable Metrics/AbcSize
+    # rubocop:disable Metrics/MethodLength
     # Transfers payments on PaymentPlan to different PaymentPlan.
     #
     # @param [PaymentPlan] plan
     #
     # @return [void]
     def transfer_payments(plan)
-      plan.plan_payments.where(status: :paid).each do |payment|
-        payment_attributes = payment.attributes.slice(
-          'amount',
-          'status',
-          'transaction_id',
-          'user_id',
-          'community_id',
-          'automated_receipt_number'
-        )
-        new_payment = plan_payments.build(payment_attributes)
-        new_payment.note = "Migrated from plan #{plan.payment_plan_name} Id - #{plan.id}"
-        new_payment.manual_receipt_number = payment.manual_receipt_number.split('MI')[1] if payment.manual_receipt_number.present?       
-        if pending_balance > 0
+      plan.plan_payments.paid.order(amount: :asc).each do |payment|
+        new_payment = build_new_payment(plan, payment)
+        if pending_balance.positive?
           if pending_balance < payment.amount
             new_payment.amount = pending_balance
-            new_payment.automated_receipt_number = payment.automated_receipt_number + '-1'
-            new_payment.manual_receipt_number = payment.manual_receipt_number.split('MI')[1] + '-1' if payment.manual_receipt_number.present?
-            create_split_payment(plan, payment, payment_attributes)
+            new_payment.automated_receipt_number = "#{payment.automated_receipt_number}-1"
+            # rubocop:disable Layout/LineLength
+            if payment.manual_receipt_number.present?
+              new_payment.manual_receipt_number = "#{payment.manual_receipt_number.split('MI')[1]}-1"
+            end
+            # rubocop:enable Layout/LineLength
+            create_split_payment(plan, payment)
           end
           update_pending_balance(new_payment.amount)
         else
@@ -132,15 +131,40 @@ module Properties
     end
     # rubocop:enable Metrics/MethodLength
 
-    def create_split_payment(plan, payment, payment_attributes)
-      split_payment = user.general_payment_plan.plan_payments.build(payment_attributes)
-      split_payment.amount = payment.amount - pending_balance
-      split_payment.automated_receipt_number = payment.automated_receipt_number + '-2'
-      split_payment.manual_receipt_number = payment.manual_receipt_number.split('MI')[1] + '-2' if payment.manual_receipt_number.present?
-      split_payment.note = "Migrated from plan #{plan.payment_plan_name} Id - #{plan.id}"
+    def build_new_payment(plan, payment)
+      new_payment = plan_payments.build(payment_attributes(payment))
+      new_payment.note = "Migrated from plan #{plan.payment_plan_name} Id - #{plan.id}"
+      if payment.manual_receipt_number.present?
+        new_payment.manual_receipt_number = payment.manual_receipt_number.split('MI')[1]
+      end
+      new_payment
+    end
+
+    # rubocop:disable Metrics/AbcSize
+    def create_split_payment(plan, payment)
+      split_payment = user.general_payment_plan.plan_payments.build(payment_attributes(payment))
+      split_payment.assign_attributes(
+        amount: payment.amount - pending_balance,
+        automated_receipt_number: "#{payment.automated_receipt_number}-2",
+        note: "Migrated from plan #{plan.payment_plan_name} Id - #{plan.id}",
+      )
+      if payment.manual_receipt_number.present?
+        split_payment.manual_receipt_number = "#{payment.manual_receipt_number.split('MI')[1]}-2"
+      end
       split_payment.save!
     end
-    # rubocop:enable Metrics/MethodLength
+    # rubocop:enable Metrics/AbcSize
+
+    def payment_attributes(payment)
+      payment.attributes.slice(
+        'amount',
+        'status',
+        'transaction_id',
+        'user_id',
+        'community_id',
+        'automated_receipt_number',
+      )
+    end
 
     # Returns PaymentPlan name by concatenating parcel number and start date.
     #
@@ -159,9 +183,11 @@ module Properties
     end
 
     def general_plan_existence
-      if Properties::PaymentPlan.unscope(where: :status).exists?(user_id: user_id, status: 'general')
-        errors.add(:user_id, :general_plan_exists) 
+      if Properties::PaymentPlan.unscope(where: :status).exists?(user_id: user_id,
+                                                                 status: 'general')
+        errors.add(:user_id, :general_plan_exists)
       end
     end
   end
+  # rubocop:enable Metrics/ClassLength
 end

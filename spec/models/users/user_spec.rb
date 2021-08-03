@@ -170,11 +170,11 @@ RSpec.describe Users::User, type: :model do
   describe 'callbacks' do
     let!(:user) { create(:user_with_community) }
     describe 'after_create' do
-      it { 
+      it {
         is_expected.to callback(:create_general_land_parcel_and_payment_plan).after(:create)
       }
       describe '#create_general_land_parcel_and_payment_plan' do
-        it 'creates general land parcel and payment plan' do 
+        it 'creates general land parcel and payment plan' do
           expect(user.general_land_parcel.id).not_to be_nil
           expect(user.general_payment_plan.id).not_to be_nil
         end
