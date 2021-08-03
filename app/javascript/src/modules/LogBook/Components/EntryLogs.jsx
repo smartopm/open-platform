@@ -3,7 +3,6 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable react/jsx-props-no-spreading */
 /* eslint-disable no-nested-ternary */
-/* eslint-disable no-use-before-define */
 /* eslint-disable security/detect-object-injection */
 /* eslint-disable react/jsx-one-expression-per-line */
 import React, { useState, Fragment, useContext, useEffect } from 'react';
@@ -12,7 +11,6 @@ import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { useLocation } from 'react-router-dom';
 import { StyleSheet, css } from 'aphrodite';
 import { useTranslation } from 'react-i18next';
-import PropTypes from 'prop-types';
 import { TextField, Typography, Button, useTheme } from '@material-ui/core';
 import Loading, { Spinner } from '../../../shared/Loading';
 import { AllEventLogsQuery } from '../../../graphql/queries';
@@ -24,12 +22,12 @@ import { StyledTabs, StyledTab, TabPanel, a11yProps } from '../../../components/
 import { dateTimeToString, dateToString } from '../../../components/DateContainer';
 import FloatButton from '../../../components/FloatButton';
 import { propAccessor } from '../../../utils/helpers';
-import { EntryRequestGrant } from '../../../graphql/mutations';
 import MessageAlert from '../../../components/MessageAlert';
 import GroupedObservations from './GroupedObservations';
 import AddMoreButton from '../../../shared/buttons/AddMoreButton';
 import EntryNoteDialog from '../../../shared/dialogs/EntryNoteDialog';
 import AddObservationNoteMutation from '../graphql/logbook_mutations';
+import LogView from './LogView';
 
 export default ({ history, match }) => AllEventLogs(history, match);
 
@@ -521,98 +519,6 @@ export function IndexComponent({
   );
 }
 
-// user here should be called eventlog
-export function LogView({ user, tab, handleAddObservation }) {
-  const { t } = useTranslation(['common', 'logbook']);
-  const [grantEntry] = useMutation(EntryRequestGrant);
-  const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState({ isError: false, detail: '' });
-
-  // grant access right here
-  function handleGrantAccess() {
-    setLoading(true);
-    grantEntry({ variables: { id: user.refId, subject: 'visitor_entry' } })
-      .then(() => {
-        setMessage({
-          isError: false,
-          detail: t('logbook:logbook.success_message', { action: t('logbook:logbook.granted') })
-        });
-        setLoading(false);
-        handleAddObservation(user);
-      })
-      .catch(error => {
-        setMessage({ isError: true, detail: error.message });
-        setLoading(false);
-      });
-  }
-
-  return (
-    <>
-      <MessageAlert
-        type={message.isError ? 'error' : 'success'}
-        message={message.detail}
-        open={!!message.detail}
-        handleClose={() => setMessage({ ...message, detail: '' })}
-      />
-      <div className="container">
-        <div className="row justify-content-between">
-          <div className="col-xs-8">
-            <span className={css(styles.logTitle)}>{user.data.ref_name}</span>
-          </div>
-          <div className="col-xs-4">
-            <span className={css(styles.subTitle)}>
-              {
-                tab === 2
-                ? t('logbook:logbook.visit_scheduled', {date: dateToString(user.entryRequest?.visitationDate), time: dateTimeToString(user.entryRequest?.startTime)})
-                : `${dateToString(user.createdAt)} at ${dateTimeToString(user.createdAt)}`
-              }
-            </span>
-          </div>
-        </div>
-        <br />
-        <div className="row justify-content-between">
-          <div className="col-xs-8">
-            <span className={css(styles.subTitle)}>
-              {t(`common:user_types.${user.data?.type}`)}
-            </span>
-          </div>
-          {tab === 2 && (
-            <div className="col-xs-4">
-              <span className={css(styles.subTitle)}>
-                <Typography
-                  component="span"
-                  color="primary"
-                  style={{ cursor: 'pointer' }}
-                  onClick={handleGrantAccess}
-                  data-testid="grant_access_btn"
-                >
-                  {loading ? <Spinner /> : t('logbook:access_actions.grant_access')}
-                </Typography>
-              </span>
-            </div>
-          )}
-        </div>
-        <br />
-        <div className="border-top my-3" />
-      </div>
-    </>
-  );
-}
-
-LogView.defaultProps = {
-  handleAddObservation: () => {}
-};
-
-LogView.propTypes = {
-  tab: PropTypes.number.isRequired,
-  handleAddObservation: PropTypes.func,
-  user: PropTypes.shape({
-    refId: PropTypes.string,
-    createdAt: PropTypes.string,
-    // eslint-disable-next-line react/forbid-prop-types
-    data: PropTypes.object
-  }).isRequired
-};
 
 const styles = StyleSheet.create({
   logTitle: {
