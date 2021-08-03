@@ -11,16 +11,17 @@ module Properties
     has_many :plan_ownerships, dependent: :destroy
     has_many :co_owners, class_name: 'Users::User', through: :plan_ownerships, source: :user
 
-    default_scope { where.not(status: :deleted) }
+    default_scope { where.not(status: [:deleted, :general]) }
 
     before_create :set_pending_balance
-
+    
     validates :payment_day,
               numericality: { only_integer: true, greater_than: 0, less_than_or_equal_to: 28 }
     validates :duration, numericality: { greater_than_or_equal_to: 1 }
     validates :installment_amount, numericality: { greater_than_or_equal_to: 1 }, on: :create
+    validate :general_plan_existence, if: -> { status.eql?('general') }
 
-    enum status: { active: 0, cancelled: 1, deleted: 2, completed: 3 }
+    enum status: { active: 0, cancelled: 1, deleted: 2, completed: 3, general: 4 }
     enum frequency: { daily: 0, weekly: 1, monthly: 2, quarterly: 3 }
 
     has_paper_trail
@@ -100,21 +101,43 @@ module Properties
     #
     # @return [void]
     def transfer_payments(plan)
-      plan.plan_payments.each do |payment|
+      plan.plan_payments.where(status: :paid).each do |payment|
         payment_attributes = payment.attributes.slice(
           'amount',
           'status',
           'transaction_id',
           'user_id',
           'community_id',
+          'automated_receipt_number'
         )
         new_payment = plan_payments.build(payment_attributes)
-        new_payment.note = "transfer from plan #{plan.payment_plan_name}"
-        new_payment.save
-        payment.note = "transfer to plan #{payment_plan_name}"
-        payment.cancelled!
+        new_payment.note = "Migrated from plan #{plan.payment_plan_name} Id - #{plan.id}"
+        new_payment.manual_receipt_number = payment.manual_receipt_number.split('MI')[1] if payment.manual_receipt_number.present?       
+        if pending_balance > 0
+          if pending_balance < payment.amount
+            new_payment.amount = pending_balance
+            new_payment.automated_receipt_number = payment.automated_receipt_number + '-1'
+            new_payment.manual_receipt_number = payment.manual_receipt_number.split('MI')[1] + '-1' if payment.manual_receipt_number.present?
+            create_split_payment(plan, payment, payment_attributes)
+          end
+          update_pending_balance(new_payment.amount)
+        else
+          new_payment.payment_plan_id = user.general_payment_plan.id
+        end
+        new_payment.save!
+        payment.note = "Migrated to plan #{payment_plan_name} Id - #{id}"
+        payment.status = 'cancelled'
+        payment.save!
       end
-      update_pending_balance(plan_payments.sum(:amount))
+    end
+
+    def create_split_payment(plan, payment, payment_attributes)
+      split_payment = user.general_payment_plan.plan_payments.build(payment_attributes)
+      split_payment.amount = payment.amount - pending_balance
+      split_payment.automated_receipt_number = payment.automated_receipt_number + '-2'
+      split_payment.manual_receipt_number = payment.manual_receipt_number.split('MI')[1] + '-2' if payment.manual_receipt_number.present?
+      split_payment.note = "Migrated from plan #{plan.payment_plan_name} Id - #{plan.id}"
+      split_payment.save!
     end
     # rubocop:enable Metrics/MethodLength
 
@@ -131,7 +154,13 @@ module Properties
     #
     # @return [void]
     def set_pending_balance
-      self.pending_balance = installmemt_amount * duration
+      self.pending_balance = installment_amount * duration
+    end
+
+    def general_plan_existence
+      if Properties::PaymentPlan.unscope(where: :status).exists?(user_id: user_id, status: 'general')
+        errors.add(:user_id, :general_plan_exists) 
+      end
     end
   end
 end

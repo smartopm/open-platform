@@ -13,6 +13,8 @@ module Types
     field :created_at, GraphQL::Types::ISO8601DateTime, null: false
     field :updated_at, GraphQL::Types::ISO8601DateTime, null: false
     field :receipt_number, String, null: true
+    field :manual_receipt_number, String, null: true
+    field :automated_receipt_number, String, null: false
     field :current_plot_pending_balance, Float, null: true
 
     # Returns payment plan's current pending balance(balance remaining till payment date).

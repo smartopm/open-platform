@@ -19,9 +19,9 @@ module Types::Queries::LandParcel
       argument :user_id, GraphQL::Types::ID, required: true
     end
 
-    # Get land parcel details that belongs to a user
+    # Get payment plan and land parcel details that belongs to a user
     field :user_land_parcel_with_plan, [Types::PaymentPlanType], null: true do
-      description 'Get a user land parcel which have a payment plan'
+      description 'Get user payment plans'
       argument :user_id, GraphQL::Types::ID, required: true
     end
 

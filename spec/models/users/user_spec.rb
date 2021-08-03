@@ -167,6 +167,21 @@ RSpec.describe Users::User, type: :model do
     }
   end
 
+  describe 'callbacks' do
+    let!(:user) { create(:user_with_community) }
+    describe 'after_create' do
+      it { 
+        is_expected.to callback(:create_general_land_parcel_and_payment_plan).after(:create)
+      }
+      describe '#create_general_land_parcel_and_payment_plan' do
+        it 'creates general land parcel and payment plan' do 
+          expect(user.general_land_parcel.id).not_to be_nil
+          expect(user.general_payment_plan.id).not_to be_nil
+        end
+      end
+    end
+  end
+
   describe 'Creating a user from a oauth authentication callback' do
     let!(:community) { create(:community, name: 'Nkwashi') }
     auth_obj = OpenStruct.new(

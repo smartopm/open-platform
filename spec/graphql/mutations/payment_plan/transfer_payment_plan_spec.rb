@@ -12,9 +12,9 @@ RSpec.describe Mutations::PaymentPlan::TransferPaymentPlan do
     let!(:land_parcel_account) do
       create(:land_parcel_account, land_parcel: land_parcel, account: account)
     end
-    let!(:new_land_parcel) { create(:land_parcel, community_id: community.id) }
-    let!(:land_parcel_account) do
-      create(:land_parcel_account, land_parcel: new_land_parcel, account: account)
+    let!(:other_land_parcel) { create(:land_parcel, community_id: community.id) }
+    let!(:other_parcel_account) do
+      create(:land_parcel_account, land_parcel: other_land_parcel, account: account)
     end
     let!(:payment_plan) do
       create(
@@ -22,7 +22,16 @@ RSpec.describe Mutations::PaymentPlan::TransferPaymentPlan do
         land_parcel_id: land_parcel.id,
         user_id: user.id,
         installment_amount: 100,
-        duration: 12,
+        duration: 20,
+      )
+    end
+    let!(:other_payment_plan) do
+      create(
+        :payment_plan,
+        land_parcel_id: land_parcel.id,
+        user_id: user.id,
+        installment_amount: 100,
+        duration: 4,
       )
     end
     let!(:transaction) do
@@ -31,7 +40,7 @@ RSpec.describe Mutations::PaymentPlan::TransferPaymentPlan do
         user_id: user.id,
         community_id: community.id,
         depositor_id: user.id,
-        amount: 500,
+        amount: 200,
       )
     end
     let!(:plan_payment) do
@@ -41,21 +50,67 @@ RSpec.describe Mutations::PaymentPlan::TransferPaymentPlan do
         community_id: community.id,
         transaction_id: transaction.id,
         payment_plan_id: payment_plan.id,
-        amount: 500,
+        amount: 200,
+        manual_receipt_number: "13975"
       )
     end
-
+    let!(:new_transaction) do
+      create(
+        :transaction,
+        user_id: user.id,
+        community_id: community.id,
+        depositor_id: user.id,
+        amount: 300,
+      )
+    end
+    let!(:new_plan_payment) do
+      create(
+        :plan_payment,
+        user_id: user.id,
+        community_id: community.id,
+        transaction_id: transaction.id,
+        payment_plan_id: payment_plan.id,
+        amount: 300,
+        manual_receipt_number: "13976"
+      )
+    end
+    let!(:other_transaction) do
+      create(
+        :transaction,
+        user_id: user.id,
+        community_id: community.id,
+        depositor_id: user.id,
+        amount: 700,
+      )
+    end
+    let!(:other_plan_payment) do
+      create(
+        :plan_payment,
+        user_id: user.id,
+        community_id: community.id,
+        transaction_id: transaction.id,
+        payment_plan_id: payment_plan.id,
+        amount: 700,
+        manual_receipt_number: "13977"
+      )
+    end
+    
     let(:transfer_payment_plan) do
       <<-GQL
         mutation transferPaymentPlan(
-          $paymentPlanId: ID!
-          $landParcelId: ID!
+          $sourcePlanId: ID!
+          $destinationPlanId: ID!
         ) {
-          transferPaymentPlan(paymentPlanId: $paymentPlanId, landParcelId: $landParcelId) {
+          transferPaymentPlan(sourcePlanId: $sourcePlanId, destinationPlanId: $destinationPlanId) {
             paymentPlan {
               id
               landParcel {
                 parcelNumber
+              }
+              planPayments{
+                amount
+                automatedReceiptNumber
+                manualReceiptNumber
               }
             }
           }
@@ -63,11 +118,11 @@ RSpec.describe Mutations::PaymentPlan::TransferPaymentPlan do
       GQL
     end
     describe '#resolve' do
-      context 'when payment plan is not present for payment_plan id' do
+      context 'when source payment plan is not present' do
         it 'raises payment plan not found error' do
           variables = {
-            paymentPlanId: '1f7e1787-cd4f-44e5-847f-96f665c4dc5',
-            landParcelId: new_land_parcel.id,
+            sourcePlanId: '1f7e1787-cd4f-44e5-847f-96f665c4dc5',
+            destinationPlanId: other_payment_plan.id,
           }
           result = DoubleGdpSchema.execute(transfer_payment_plan,
                                            variables: variables,
@@ -79,11 +134,11 @@ RSpec.describe Mutations::PaymentPlan::TransferPaymentPlan do
         end
       end
 
-      context 'when land parcel is not present for land parcel id' do
-        it 'raises land parcel not found error' do
+      context 'when destination payment plan is not present' do
+        it 'raises payment plan not found error' do
           variables = {
-            paymentPlanId: payment_plan.id,
-            landParcelId: '1f7e1787-cd4f-44e5-847f-96f665c4dc5',
+            sourcePlanId: payment_plan.id,
+            destinationPlanId: '1f7e1787-cd4f-44e5-847f-96f665c4dc5',
           }
           result = DoubleGdpSchema.execute(transfer_payment_plan,
                                            variables: variables,
@@ -91,15 +146,19 @@ RSpec.describe Mutations::PaymentPlan::TransferPaymentPlan do
                                              current_user: admin,
                                              site_community: community,
                                            }).as_json
-          expect(result.dig('errors', 0, 'message')).to eql 'Land parcel not found'
+          expect(result.dig('errors', 0, 'message')).to eql 'Payment Plan not found'
         end
       end
 
-      context 'when land parcel id and payment plan id is valid' do
-        it 'creates new payment plan and transfers plan payments to new payment plan' do
+      context 'when source payment plan id and destination payment plan id is valid' do
+        before do
+          payment_plan.update(pending_balance: 800)
+        end
+        it 'transfers plan payments to new payment plan and allocate the additional payments to general plan' do
+          expect(payment_plan.pending_balance.to_f).to eql 800.0
           variables = {
-            paymentPlanId: payment_plan.id,
-            landParcelId: new_land_parcel.id,
+            sourcePlanId: payment_plan.id,
+            destinationPlanId: other_payment_plan.id,
           }
           result = DoubleGdpSchema.execute(transfer_payment_plan,
                                            variables: variables,
@@ -107,14 +166,27 @@ RSpec.describe Mutations::PaymentPlan::TransferPaymentPlan do
                                              current_user: admin,
                                              site_community: community,
                                            }).as_json
-          payment_plan_id = result.dig('data', 'transferPaymentPlan', 'paymentPlan', 'id')
-          plan = Properties::PaymentPlan.find(payment_plan_id)
-          expect(plan.status).to eql('active')
-          expect(plan.pending_balance).to eql(700.0)
-          expect(plan.plan_payments.pluck(:status)).to include('paid')
-          expect(payment_plan.reload.status).to eql('cancelled')
-          expect(payment_plan.pending_balance).to eql(0.0)
-          expect(payment_plan.plan_payments.pluck(:status)).to include('cancelled')
+          plan_result = result.dig('data', 'transferPaymentPlan', 'paymentPlan')
+          expect(plan_result['planPayments'].size).to eql 2
+          expect(plan_result['planPayments'][0]['amount']).to eql 200.0
+          expect(plan_result['planPayments'][0]['manualReceiptNumber']).to eql 'MI13975'
+          expect(plan_result['planPayments'][0]['automatedReceiptNumber']).to eql plan_payment.reload.automated_receipt_number
+          expect(plan_result['planPayments'][1]['amount']).to eql 200.0
+          expect(plan_result['planPayments'][1]['manualReceiptNumber']).to eql 'MI13976-1'
+          expect(plan_result['planPayments'][1]['automatedReceiptNumber']).to eql new_plan_payment.reload.automated_receipt_number + '-1'
+          expect(payment_plan.reload.pending_balance.to_f).to eql 0.0
+          expect(other_payment_plan.reload.pending_balance.to_f).to eql 0.0
+          general_payments = user.general_payment_plan.plan_payments.reload
+          expect(plan_payment.status).to eql 'cancelled'
+          expect(new_plan_payment.status).to eql 'cancelled'
+          expect(other_plan_payment.reload.status).to eql 'cancelled'
+          expect(general_payments.size).to eql 2
+          expect(general_payments[0].amount.to_f).to eql 100.0
+          expect(general_payments[0].manual_receipt_number).to eql 'MI13976-2'
+          expect(general_payments[0].automated_receipt_number).to eql new_plan_payment.automated_receipt_number + '-2'
+          expect(general_payments[1].amount.to_f).to eql 700.0
+          expect(general_payments[1].manual_receipt_number).to eql 'MI13977'
+          expect(general_payments[1].automated_receipt_number).to eql other_plan_payment.reload.automated_receipt_number
         end
       end
     end
@@ -123,8 +195,8 @@ RSpec.describe Mutations::PaymentPlan::TransferPaymentPlan do
       context 'when current user is not admin' do
         it 'raises unauthorized error' do
           variables = {
-            paymentPlanId: payment_plan.id,
-            landParcelId: new_land_parcel.id,
+            sourcePlanId: payment_plan.id,
+            destinationPlanId: other_payment_plan.id,
           }
           result = DoubleGdpSchema.execute(transfer_payment_plan,
                                            variables: variables,

@@ -22,12 +22,13 @@ export const PaymentPlanCancelMutation = gql`
 
 export const TransferPaymentPlanMutation = gql`
   mutation transferPaymentPlan(
-    $paymentPlanId: ID!
-    $landParcelId: ID!
+    $sourcePlanId: ID!
+    $destinationPlanId: ID!
   ) {
-    transferPaymentPlan(paymentPlanId: $paymentPlanId, landParcelId: $landParcelId) {
+    transferPaymentPlan(sourcePlanId: $sourcePlanId, destinationPlanId: $destinationPlanId) {
       paymentPlan {
         id
+        startDate
         landParcel {
           parcelNumber
           parcelType
