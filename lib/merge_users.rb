@@ -26,11 +26,31 @@ class MergeUsers
     end
 
     # Updates accounts details to their associated user's details
-    user = Users::User.find_by(id: duplicate_id)
-    user.update_associated_accounts_details
+    duplicate_user = Users::User.find_by(id: duplicate_id)
+
+    # Updates general plan
+    user = Users::User.find_by(id: user_id)
+    user.general_payment_plan.plan_payments.each do |payment|
+      payment.update(payment_plan_id: duplicate_user.general_payment_plan.id)
+    end
+    user.general_payment_plan.destroy
 
     # Merges wallet details of users.
     merge_user_wallets(user_id, duplicate_id)
+
+    # Update acounts
+    accounts = Properties::Account.where(user_id: user_id)
+    general_land_parcel = user.general_land_parcel
+    general_account = general_land_parcel.accounts.first
+    accounts.each do |account|
+      next if account.id.eql?(general_account.id)
+
+      account.update(user_id: duplicate_id)
+    end
+    general_land_parcel.land_parcel_accounts.delete_all
+    general_account.destroy!
+    general_land_parcel.destroy!
+    duplicate_user.update_associated_accounts_details
 
     # Update showroom User
     showrooms = Showroom.where(userId: user_id)
@@ -106,7 +126,7 @@ class MergeUsers
     model_names = []
     payment_models = %w[Invoice PaymentInvoice Payment Wallet WalletTransaction
                         Transaction PlanPayment]
-    property_models = %w[Account LandParcel LandParcelAccount PaymentPlan Valuation]
+    property_models = %w[PaymentPlan Valuation]
     note_models = %w[Note NoteHistory AssigneeNote]
     form_models = %w[Form FormUser]
     discussion_models = %w[Discussion DiscussionUser]

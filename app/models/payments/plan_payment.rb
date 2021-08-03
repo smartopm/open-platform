@@ -43,19 +43,17 @@ module Payments
       where(PlanPayment.arel_table[:created_at].lteq(created_at))
     }
 
-    # rubocop:disable Layout/LineLength
     # Returns receipt number
     #
     # @return [String]
     def receipt_number
-      manual_receipt_number.present? ? manual_receipt_number : automated_receipt_number
+      manual_receipt_number.presence || automated_receipt_number
     end
-    # rubocop:enable Layout/LineLength
 
     private
 
     def add_prefix_for_manual_receipt_number
-      manual_receipt_number.prepend("MI")
+      manual_receipt_number.prepend('MI')
     end
   end
 end

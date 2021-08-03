@@ -210,7 +210,7 @@ export default function UserPaymentPlanItem({
   function planPaymentSummaryDetail() {
     if (planId === '') return {};
 
-    let totalPayment = 0, totalPaymentAmount = 0;
+    let totalPayment = 0; let totalPaymentAmount = 0;
     planData.planPayments.forEach(payment => {
       if(payment.status !== 'cancelled'){
         totalPaymentAmount += payment.amount;
@@ -218,7 +218,7 @@ export default function UserPaymentPlanItem({
       }
     })
     return ({
-      totalPayment: totalPayment,
+      totalPayment,
       totalPaymentAmount: formatMoney(currencyData, totalPaymentAmount)
     });
   }

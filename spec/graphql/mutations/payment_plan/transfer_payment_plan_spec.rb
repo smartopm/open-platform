@@ -51,7 +51,7 @@ RSpec.describe Mutations::PaymentPlan::TransferPaymentPlan do
         transaction_id: transaction.id,
         payment_plan_id: payment_plan.id,
         amount: 200,
-        manual_receipt_number: "13975"
+        manual_receipt_number: '13975',
       )
     end
     let!(:new_transaction) do
@@ -71,7 +71,7 @@ RSpec.describe Mutations::PaymentPlan::TransferPaymentPlan do
         transaction_id: transaction.id,
         payment_plan_id: payment_plan.id,
         amount: 300,
-        manual_receipt_number: "13976"
+        manual_receipt_number: '13976',
       )
     end
     let!(:other_transaction) do
@@ -91,10 +91,10 @@ RSpec.describe Mutations::PaymentPlan::TransferPaymentPlan do
         transaction_id: transaction.id,
         payment_plan_id: payment_plan.id,
         amount: 700,
-        manual_receipt_number: "13977"
+        manual_receipt_number: '13977',
       )
     end
-    
+
     let(:transfer_payment_plan) do
       <<-GQL
         mutation transferPaymentPlan(
@@ -154,7 +154,8 @@ RSpec.describe Mutations::PaymentPlan::TransferPaymentPlan do
         before do
           payment_plan.update(pending_balance: 800)
         end
-        it 'transfers plan payments to new payment plan and allocate the additional payments to general plan' do
+        it 'transfers plan payments to new payment plan and allocates the additional payments
+         to general plan' do
           expect(payment_plan.pending_balance.to_f).to eql 800.0
           variables = {
             sourcePlanId: payment_plan.id,
@@ -170,10 +171,14 @@ RSpec.describe Mutations::PaymentPlan::TransferPaymentPlan do
           expect(plan_result['planPayments'].size).to eql 2
           expect(plan_result['planPayments'][0]['amount']).to eql 200.0
           expect(plan_result['planPayments'][0]['manualReceiptNumber']).to eql 'MI13975'
-          expect(plan_result['planPayments'][0]['automatedReceiptNumber']).to eql plan_payment.reload.automated_receipt_number
+          expect(
+            plan_result['planPayments'][0]['automatedReceiptNumber'],
+          ).to eql plan_payment.reload.automated_receipt_number
           expect(plan_result['planPayments'][1]['amount']).to eql 200.0
           expect(plan_result['planPayments'][1]['manualReceiptNumber']).to eql 'MI13976-1'
-          expect(plan_result['planPayments'][1]['automatedReceiptNumber']).to eql new_plan_payment.reload.automated_receipt_number + '-1'
+          expect(
+            plan_result['planPayments'][1]['automatedReceiptNumber'],
+          ).to eql "#{new_plan_payment.reload.automated_receipt_number}-1"
           expect(payment_plan.reload.pending_balance.to_f).to eql 0.0
           expect(other_payment_plan.reload.pending_balance.to_f).to eql 0.0
           general_payments = user.general_payment_plan.plan_payments.reload
@@ -183,10 +188,14 @@ RSpec.describe Mutations::PaymentPlan::TransferPaymentPlan do
           expect(general_payments.size).to eql 2
           expect(general_payments[0].amount.to_f).to eql 100.0
           expect(general_payments[0].manual_receipt_number).to eql 'MI13976-2'
-          expect(general_payments[0].automated_receipt_number).to eql new_plan_payment.automated_receipt_number + '-2'
+          expect(
+            general_payments[0].automated_receipt_number,
+          ).to eql "#{new_plan_payment.automated_receipt_number}-2"
           expect(general_payments[1].amount.to_f).to eql 700.0
           expect(general_payments[1].manual_receipt_number).to eql 'MI13977'
-          expect(general_payments[1].automated_receipt_number).to eql other_plan_payment.reload.automated_receipt_number
+          expect(
+            general_payments[1].automated_receipt_number,
+          ).to eql other_plan_payment.reload.automated_receipt_number
         end
       end
     end
