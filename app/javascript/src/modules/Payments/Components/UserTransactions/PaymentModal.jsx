@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useLazyQuery, useMutation } from 'react-apollo';
+import { useTranslation } from 'react-i18next';
 import subDays from 'date-fns/subDays';
 import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -63,6 +64,7 @@ export default function PaymentModal({
   const debouncedValue = useDebounce(searchedUser, 500);
   const [paymentUserId, setPaymentUserId] = useState(userId);
   const [mutationLoading, setMutationStatus] = useState(false);
+  const { t } = useTranslation(['payment', 'common']);
 
   function confirm(event) {
     event.preventDefault();
@@ -237,13 +239,13 @@ export default function PaymentModal({
         open={open}
         handleModal={cancelPayment}
         dialogHeader={
-          isConfirm ? 'You are about to make a payment with following details' : 'Make a Payment'
+          isConfirm ? t('misc.make_payment_details') : t('misc.make_a_payment')
         }
         handleBatchFilter={isConfirm ? handleSubmit : confirm}
         saveAction={
-          isConfirm && !mutationLoading ? 'Confirm' : mutationLoading ? 'Submitting ...' : 'Pay'
+          isConfirm && !mutationLoading ? t('misc.confirm') : mutationLoading ? t('common:form_actions.submitting') : t('actions.pay')
         }
-        cancelAction={isConfirm ? 'Go Back' : 'Cancel'}
+        cancelAction={isConfirm ? t('actions.go_back') : t('common:form_actions.cancel')}
         disableActionBtn={mutationLoading}
       >
         {isConfirm ? (
@@ -252,12 +254,11 @@ export default function PaymentModal({
           <>
             <div className={classes.invoiceForm}>
               <Typography className={classes.title}>
-                Make payment towards any of your plans below. You can make payment towards multiple
-                plans as well.
+                {t('misc.make_payment_towards')}
               </Typography>
               <SwitchInput
                 name="pastPayment"
-                label="Is this a manual payment?"
+                label={t('misc.manual_payment')}
                 value={inputValue.pastPayment}
                 handleChange={event =>
                   setInputValue({ ...inputValue, pastPayment: event.target.checked })
@@ -268,7 +269,7 @@ export default function PaymentModal({
                 <>
                   <DatePickerDialog
                     selectedDate={inputValue.paidDate}
-                    label="Paid Date"
+                    label={t('table_headers.paid_date')}
                     handleDateChange={date => setInputValue({ ...inputValue, paidDate: date })}
                   />
                 </>
@@ -290,7 +291,7 @@ export default function PaymentModal({
                     renderInput={params => (
                       <TextField
                         {...params}
-                        label="Input User Name"
+                        label={t('table_headers.input_user_name')}
                         style={{ width: '100%' }}
                         name="name"
                         onChange={event => setSearchUser(event.target.value)}
@@ -301,7 +302,7 @@ export default function PaymentModal({
                 </Grid>
               )}
               {searchedUser && !paymentPlans?.userLandParcelWithPlan.length && (
-                <Typography color="secondary">Selected user has no plots</Typography>
+                <Typography color="secondary">{t('errors.selected_user')}</Typography>
               )}
               {loading && <Spinner />}
               <div style={{ display: 'flex' }}>
@@ -309,7 +310,7 @@ export default function PaymentModal({
                   margin="normal"
                   id="transaction-type"
                   inputProps={{ 'data-testid': 'transaction-type' }}
-                  label="Transaction Type"
+                  label={t('table_headers.transaction_type')}
                   value={inputValue.transactionType}
                   onChange={event =>
                     setInputValue({ ...inputValue, transactionType: event.target.value })
@@ -318,7 +319,7 @@ export default function PaymentModal({
                   select
                   error={isError && submitting && !inputValue.transactionType}
                   helperText={
-                    isError && !inputValue.transactionType && 'TransactionType is required'
+                    isError && !inputValue.transactionType && t('errors.transaction_required')
                   }
                   style={{ width: '50%', marginRight: '20px' }}
                 >
@@ -332,7 +333,7 @@ export default function PaymentModal({
                 <TextField
                   margin="normal"
                   id="transaction-number"
-                  label="Transaction Number"
+                  label={t('common:table_headers.transaction_number')}
                   type="string"
                   style={{ width: '50%' }}
                   value={inputValue.transactionNumber}
@@ -348,7 +349,7 @@ export default function PaymentModal({
                     autoFocus
                     margin="normal"
                     id="bank-name"
-                    label="Bank Name"
+                    label={t('common:table_headers.bank_name')}
                     type="string"
                     style={{ width: '50%', marginRight: '20px' }}
                     value={inputValue.bankName}
@@ -360,7 +361,7 @@ export default function PaymentModal({
                     autoFocus
                     margin="normal"
                     id="cheque-number"
-                    label="Cheque Number"
+                    label={t('common:table_headers.cheque_number')}
                     type="string"
                     value={inputValue.chequeNumber}
                     style={{ width: '50%' }}
@@ -373,20 +374,20 @@ export default function PaymentModal({
               {paymentPlans?.userLandParcelWithPlan?.map(plan => (
                 <div key={plan.id} className={classes.plotCard}>
                   <div style={{ width: '50%' }}>
-                    <Typography className={classes.plotNoTitle}>Plot No</Typography>
+                    <Typography className={classes.plotNoTitle}>{t('table_headers.plot_no')}</Typography>
                     <Typography className={classes.plotNo}>
                       {plan?.landParcel?.parcelNumber.toUpperCase()}
                     </Typography>
                     <Typography
                       className={classes.plotNoTitle}
                     >
-                      {`${plan?.pendingBalance} remaining balance`}
+                      {t('table_headers.remaining_balance', {amount: formatMoney(currencyData, plan?.pendingBalance)})}
                     </Typography>
                     {inputValue.pastPayment && (
                       <TextField
                         margin="normal"
                         id="receipt-number"
-                        label="Receipt Number"
+                        label={t('table_headers.receipt_number')}
                         type="string"
                         value={checkInputValues(plan.id, 'receipt')}
                         name="receiptNumber"
@@ -397,7 +398,7 @@ export default function PaymentModal({
                   <TextField
                     margin="normal"
                     id="amount"
-                    label="Amount"
+                    label={t('common:table_headers.amount')}
                     type="number"
                     name="amount"
                     style={{ width: '50%' }}
@@ -414,13 +415,13 @@ export default function PaymentModal({
                     }}
                     required
                     error={isError && submitting && totalAmount() === 0}
-                    helperText={isError && totalAmount() === 0 && 'amount is required'}
+                    helperText={isError && totalAmount() === 0 && t('errors.amount_required')}
                   />
                 </div>
               ))}
             </div>
             <div className={classes.totalAmountBody}>
-              <Typography className={classes.plotNoTitle}>Total Amount</Typography>
+              <Typography className={classes.plotNoTitle}>{t('table_headers.total_amount')}</Typography>
               <Typography color="primary" className={classes.totalAmount}>
                 <b>{formatMoney(currencyData, totalAmount())}</b>
               </Typography>
@@ -433,21 +434,25 @@ export default function PaymentModal({
 }
 
 export function PaymentDetails({ inputValue, totalAmount, currencyData }) {
+  const { t } = useTranslation(['payment', 'common']);
   return (
     <div>
       <Typography variant="subtitle1" data-testid="amount" align="center" key="amount">
-        Total Amount: 
+        {t('table_headers.total_amount')}
+        : 
         {' '}
         <b>{formatMoney(currencyData, totalAmount)}</b>
       </Typography>
       <Typography variant="subtitle1" data-testid="type" align="center" key="type">
-        Transaction Type:
+        {t('table_headers.transaction_type')}
+        :
         <b>{` ${inputValue.transactionType}`}</b>
       </Typography>
       <Typography variant="subtitle1" data-testid="transactionNumber" align="center" key="number">
         {inputValue.transactionNumber && (
           <>
-            Transaction Number:
+            {t('common:table_headers.transaction_number')}
+            :
             <b>{` ${inputValue.transactionNumber}`}</b>
           </>
         )}
@@ -455,7 +460,8 @@ export function PaymentDetails({ inputValue, totalAmount, currencyData }) {
       <Typography variant="subtitle1" data-testid="bankName" align="center" key="bankName">
         {inputValue.bankName && (
           <>
-            Bank Name:
+            {t('common:table_headers.bank_name')}
+            :
             <b>{` ${inputValue.bankName}`}</b>
           </>
         )}
@@ -463,7 +469,8 @@ export function PaymentDetails({ inputValue, totalAmount, currencyData }) {
       <Typography variant="subtitle1" data-testid="chequeNumber" align="center" key="cheque">
         {inputValue.chequeNumber && (
           <>
-            Cheque Number:
+            {t('common:table_headers.cheque_number')}
+            :
             <b>{` ${inputValue.chequeNumber}`}</b>
           </>
         )}

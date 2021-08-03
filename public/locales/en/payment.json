@@ -5,7 +5,9 @@
     "view_statement": "View Statement",
     "view_transactions": "View Transactions",
     "cancel_plan": "Cancel Plan",
-    "view_all_plans": "View all Plans"
+    "view_all_plans": "View all Plans",
+    "pay": "Pay",
+    "go_back": "Go Back"
   },
   "misc": {
     "confirm": "Confirm",
@@ -28,7 +30,11 @@
     "create_a_payment_plan": "Create a payment plan for your plot",
     "lease": "lease",
     "other": "Other",
-    "displaying_result": "Displaying results for"
+    "displaying_result": "Displaying results for",
+    "make_a_payment": "Make a Payment",
+    "make_payment_towards": "Make payment towards any of your plans below. You can make payment towards multiple plans as well.",
+    "manual_payment": "is this a manual payment?",
+    "make_payment_details": "You are about to make a payment with following details"
   },
   "table_headers": {
     "receipt_number": "Receipt Number",
@@ -47,7 +53,13 @@
     "co_owners": "Co-owners",
     "total_value": "Total Value",
     "owner": "Owner",
-    "select_plot": "Select Plot"
+    "select_plot": "Select Plot",
+    "paid_date": "Paid Date",
+    "input_user_name": "Input User Name",
+    "transaction_type": "Transaction Type",
+    "plot_no": "Plot No",
+    "remaining_balance": "{{amount}} remaining balance",
+    "total_amount": "Total Amount"
   },
   "errors": {
     "duration_requied": "Duration is required",
@@ -55,6 +67,10 @@
     "status_required": "Status is required",
     "property_required": "Property is required",
     "no_plot": "No plot associated to this user, please go to property management and create and assign a plot to this user",
-    "all_bills": "* All bills are received by primary plan owner but the co-owners are able to view"
+    "all_bills": "* All bills are received by primary plan owner but the co-owners are able to view",
+    "selected_user": "Selected user has no plots",
+    "transaction_required": "TransactionType is required",
+    "no_transaction_available": "No Transaction Available for this Plan",
+    "no_plan_available": "No Plan Available"
   }
 }

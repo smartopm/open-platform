@@ -217,7 +217,7 @@ export default function PaymentPlans({ userId, user, userData }) {
             </div>
         ) : 
         (
-          <CenteredContent>No Plan Available</CenteredContent>
+          <CenteredContent>{t('errors.no_plan_available')}</CenteredContent>
         )}
         </>
       )}

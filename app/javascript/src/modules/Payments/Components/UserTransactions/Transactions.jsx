@@ -154,7 +154,7 @@ export default function TransactionsList({
               </div>
             ))
           ) : filtering && data?.userTransactions?.length === 0 ? (
-            <CenteredContent>No Transaction Available for this Plan</CenteredContent>
+            <CenteredContent>{t('errors.no_transaction_available')}</CenteredContent>
           ) : (
             transData.userTransactions.map(trans => (
               <div key={trans.id}>
