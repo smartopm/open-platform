@@ -40,7 +40,8 @@
     "today": "Today",
     "log_exit": "Log Exit",
     "exited": "Exited",
-    "other_reason": "Other visiting reason"
+    "other_reason": "Other visiting reason",
+    "visit_scheduled": "Visit scheduled for:"
   },
   "log_title": {
     "visitor": "Visitor",

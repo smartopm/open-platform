@@ -561,7 +561,11 @@ export function LogView({ user, tab, handleAddObservation }) {
           </div>
           <div className="col-xs-4">
             <span className={css(styles.subTitle)}>
-              {`${dateToString(user.createdAt)} at ${dateTimeToString(user.createdAt)}`}
+              {
+                tab === 2
+                ? `${t('logbook:logbook.visit_scheduled')} ${dateToString(user.entryRequest?.visitationDate)}`
+                : `${dateToString(user.createdAt)} at ${dateTimeToString(user.createdAt)}`
+              }
             </span>
           </div>
         </div>
