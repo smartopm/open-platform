@@ -3,7 +3,6 @@ import { fireEvent, render, waitFor } from '@testing-library/react'
 import '@testing-library/jest-dom/extend-expect'
 import { BrowserRouter } from 'react-router-dom'
 import { MockedProvider } from '@apollo/react-testing'
-import { useTranslation } from 'react-i18next';
 import ActionFlowDelete from '../components/ActionFlows/ActionFlowDelete'
 import { DeleteActionFlow } from '../graphql/mutations'
 
@@ -15,7 +14,6 @@ describe('action flow delete component', () => {
     const open = true
     const refetch = jest.fn()
     const handleClose = jest.fn()
-    const { t } = useTranslation(['actionflow'])
     const mocks = [
       {
         request: {
@@ -44,7 +42,7 @@ describe('action flow delete component', () => {
     await waitFor(() => {
       expect(handleClose).toBeCalled()
       expect(refetch).toBeCalled()
-      expect(container.queryByText(t('actionflow:messages.delete_message'))).toBeInTheDocument()
+      expect(container.queryByText('actionflow:messages.delete_message')).toBeInTheDocument()
     }, 10)
   })
 
