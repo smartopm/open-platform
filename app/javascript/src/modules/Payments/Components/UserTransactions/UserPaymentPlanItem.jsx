@@ -54,7 +54,7 @@ export default function UserPaymentPlanItem({
   balanceRefetch
 }) {
   const classes = useStyles();
-  const { t } = useTranslation(['form', 'common']);
+  const { t } = useTranslation(['payment', 'common']);
   const history = useHistory();
   const [anchorEl, setAnchorEl] = useState(null);
   const [anchor, setAnchor] = useState(null);
@@ -103,21 +103,21 @@ export default function UserPaymentPlanItem({
   ];
 
   const paymentHeader = [
-    { title: 'Payment Date', col: 2 },
-    { title: 'Payment Type', col: 2 },
-    { title: 'Amount', col: 2 },
-    { title: 'Status', col: 2 },
-    { title: 'Menu', col: 2 }
+    { title: 'Payment Date', value: t('common:table_headers.payment_date'), col: 2 },
+    { title: 'Payment Type', value: t('common:table_headers.payment_type'), col: 2 },
+    { title: 'Amount', value: t('common:table_headers.amount'), col: 2 },
+    { title: 'Status', value: t('common:table_headers.status'), col: 2 },
+    { title: 'Menu', value: t('common:table_headers.menu'), col: 2 }
   ];
   const menuList = [
-    { content: 'View Receipt', isAdmin: true, handleClick: (event) => handleClick(event)},
+    { content: t('common:menu.view_receipt'), isAdmin: true, handleClick: (event) => handleClick(event)},
   ]
 
   const planMenuList = [
-    { content: 'Cancel Plan', isAdmin: true, handleClick: (event) => handleCancelPlanClick(event)},
-    { content: 'View Statement', isAdmin: true, handleClick: (event) => handlePlanClick(event)},
-    { content: 'View Transactions', isAdmin: true, handleClick: (event) => handleTransactionClick(event)},
-    { content: 'View Details', isAdmin: true, handleClick: (event) => handlePlanDetailClick(event)}
+    { content: t('actions.cancel_plan'), isAdmin: true, handleClick: (event) => handleCancelPlanClick(event)},
+    { content: t('actions.view_statement'), isAdmin: true, handleClick: (event) => handlePlanClick(event)},
+    { content: t('actions.view_transactions'), isAdmin: true, handleClick: (event) => handleTransactionClick(event)},
+    { content: t('common:menu.view_details'), isAdmin: true, handleClick: (event) => handlePlanDetailClick(event)}
   ]
 
   const handleClose = () => {
@@ -326,8 +326,8 @@ export default function UserPaymentPlanItem({
       )}
       <ActionDialog
         open={confirmPlanCancelOpen}
-        type="confirm"
-        message="You are about to cancel this payment plan?"
+        type={t('misc.confirm')}
+        message={t('misc.about_to_cancel')}
         handleClose={handleCloseConfirmModal}
         handleOnSave={handleCancelPlan}
       />
@@ -381,7 +381,7 @@ export default function UserPaymentPlanItem({
             {plan.planPayments && Boolean(plan.planPayments?.length) && headersForNonAdminUsers(plan?.planPayments) &&   (
               <div>
                 <Typography color="primary" className={classes.payment}>
-                  Payments
+                  {t('common:menu.payment_plural')}
                 </Typography>
                 <div className={classes.paymentList}>
                   {matches && <ListHeader headers={paymentHeader} color />}

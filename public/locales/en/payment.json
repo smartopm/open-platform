@@ -1,6 +1,60 @@
 {
   "actions": {
     "new_payment_plan": "New Payment Plan",
-    "view_all_transactions": "View all Transactions"
+    "view_all_transactions": "View all Transactions",
+    "view_statement": "View Statement",
+    "view_transactions": "View Transactions",
+    "cancel_plan": "Cancel Plan",
+    "view_all_plans": "View all Plans"
+  },
+  "misc": {
+    "confirm": "Confirm",
+    "about_to_cancel": "You are about to cancel this payment plan?",
+    "plan_statement": "Plan Statement",
+    "print": "Print",
+    "statement_for_plan": "Statement for Plan",
+    "plan_value": "Plan Value(months)",
+    "phone": "phone",
+    "no_plan_available": "No Plan Details Available",
+    "banking_details": "Banking Details",
+    "bank": "Bank",
+    "account_name": "Account Name",
+    "account_number": "Account Number",
+    "branch": "Branch",
+    "swift_code": "Swift Code",
+    "sort_code": "Sort Code",
+    "plan_details": "Plan Details",
+    "create_a_plan": "Create a Plan",
+    "create_a_payment_plan": "Create a payment plan for your plot",
+    "lease": "lease",
+    "other": "Other",
+    "displaying_result": "Displaying results for"
+  },
+  "table_headers": {
+    "receipt_number": "Receipt Number",
+    "amount_paid": "Amount Paid",
+    "installment_amount": "Installment Amount",
+    "no_of_installments": "No. of Installments",
+    "debit": "Debit",
+    "unallocated_balance": "Unallocated Balance",
+    "total_paid_installments": "Total Paid Installments",
+    "total_unallocated": "Total Unallocated",
+    "balance_due": "Balance Due",
+    "frequency": "Frequency",
+    "plan_duration": "Plan Duration",
+    "end_date": "End Date",
+    "plan_type": "Plan Type",
+    "co_owners": "Co-owners",
+    "total_value": "Total Value",
+    "owner": "Owner",
+    "select_plot": "Select Plot"
+  },
+  "errors": {
+    "duration_requied": "Duration is required",
+    "amount_required": "Amount is required",
+    "status_required": "Status is required",
+    "property_required": "Property is required",
+    "no_plot": "No plot associated to this user, please go to property management and create and assign a plot to this user",
+    "all_bills": "* All bills are received by primary plan owner but the co-owners are able to view"
   }
 }

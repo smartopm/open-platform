@@ -1,38 +1,48 @@
 /* eslint-disable react/forbid-prop-types */
 /* eslint-disable no-nested-ternary */
-import React, { useState, useEffect } from 'react'
-import { Typography } from '@material-ui/core'
+import React, { useState, useEffect } from 'react';
+import { Typography } from '@material-ui/core';
 import { useHistory } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useLazyQuery } from 'react-apollo';
 import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
-import PropTypes from 'prop-types'
+import PropTypes from 'prop-types';
 import { useTheme, makeStyles } from '@material-ui/core/styles';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
-import CenteredContent from '../../../../components/CenteredContent'
-import Paginate from '../../../../components/Paginate'
-import { currencies } from '../../../../utils/constants'
-import UserTransactionsList from './UserTransactions'
+import CenteredContent from '../../../../components/CenteredContent';
+import Paginate from '../../../../components/Paginate';
+import { currencies } from '../../../../utils/constants';
+import UserTransactionsList from './UserTransactions';
 import ListHeader from '../../../../shared/list/ListHeader';
-import ButtonComponent from '../../../../shared/buttons/Button'
-import { useParamsQuery, formatError } from '../../../../utils/helpers'
+import ButtonComponent from '../../../../shared/buttons/Button';
+import { useParamsQuery, formatError } from '../../../../utils/helpers';
 import { dateToString } from '../../../../components/DateContainer';
-import  Transactions from '../../graphql/payment_query'
+import Transactions from '../../graphql/payment_query';
 import { Spinner } from '../../../../shared/Loading';
 import useDebounce from '../../../../utils/useDebounce';
 
-export default function TransactionsList({ userId, user, userData, transData, refetch, balanceRefetch, planData, setFiltering, filtering }) {
-  const path = useParamsQuery()
+export default function TransactionsList({
+  userId,
+  user,
+  userData,
+  transData,
+  refetch,
+  balanceRefetch,
+  planData,
+  setFiltering,
+  filtering
+}) {
+  const path = useParamsQuery();
   const history = useHistory();
-  const limit = 10
-  const page = path.get('page')
-  const planId = path.get('id')
-  const [offset, setOffset] = useState(Number(page) || 0)
-  const [filterValue, setFilterValue] = useState('all')
+  const limit = 10;
+  const page = path.get('page');
+  const planId = path.get('id');
+  const [offset, setOffset] = useState(Number(page) || 0);
+  const [filterValue, setFilterValue] = useState('all');
   const debouncedValue = useDebounce(filterValue, 100);
   const theme = useTheme();
-  const { t } = useTranslation('common')
+  const { t } = useTranslation(['payment', 'common']);
   const matches = useMediaQuery(theme.breakpoints.up('sm'));
   const classes = useStyles();
 
@@ -44,9 +54,9 @@ export default function TransactionsList({ userId, user, userData, transData, re
     { title: 'Menu', value: t('common:table_headers.menu'), col: 1 }
   ];
 
-  const currency = currencies[user.community.currency] || ''
-  const { locale } = user.community
-  const currencyData = { currency, locale }
+  const currency = currencies[user.community.currency] || '';
+  const { locale } = user.community;
+  const currencyData = { currency, locale };
 
   const [loadPlanTransactions, { loading, error, data }] = useLazyQuery(Transactions, {
     variables: { userId, planId: filterValue === 'all' ? null : debouncedValue, limit, offset },
@@ -56,48 +66,61 @@ export default function TransactionsList({ userId, user, userData, transData, re
 
   function paginate(action) {
     if (action === 'prev') {
-      if (offset < limit) return
-      setOffset(offset - limit)
+      if (offset < limit) return;
+      setOffset(offset - limit);
     } else if (action === 'next') {
-      setOffset(offset + limit)
+      setOffset(offset + limit);
     }
   }
 
   function handleSelecMenu(event) {
-    setFilterValue(event.target.value)
-    setFiltering(true)
-    loadPlanTransactions()
+    setFilterValue(event.target.value);
+    setFiltering(true);
+    loadPlanTransactions();
   }
 
   useEffect(() => {
     if (planId) {
-      setFilterValue(planId)
-      loadPlanTransactions()
-      setFiltering(true)
+      setFilterValue(planId);
+      loadPlanTransactions();
+      setFiltering(true);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  if (error && !data) return <CenteredContent>{formatError(error.message)}</CenteredContent>
+  if (error && !data) return <CenteredContent>{formatError(error.message)}</CenteredContent>;
 
   return (
     <div>
-      {filtering && loading ? <Spinner /> : (data?.userTransactions?.length > 0 || transData?.userTransactions?.length > 0) ? (
+      {filtering && loading ? (
+        <Spinner />
+      ) : data?.userTransactions?.length > 0 || transData?.userTransactions?.length > 0 ? (
         <div className={classes.paymentList}>
-          <div style={{ display: 'flex', width: '100%', justifyContent: 'space-between', marginBottom: '10px' }}>
-            <Typography className={classes.payment} data-testid='header'>Transactions</Typography>
-            <ButtonComponent 
-              variant='outlined' 
-              color='default' 
-              buttonText="View all Plans" 
+          <div
+            style={{
+              display: 'flex',
+              width: '100%',
+              justifyContent: 'space-between',
+              marginBottom: '10px'
+            }}
+          >
+            <Typography className={classes.payment} data-testid="header">
+              {t('common:menu.transaction_plural')}
+            </Typography>
+            <ButtonComponent
+              variant="outlined"
+              color="default"
+              buttonText={t('actions.view_all_plans')}
               handleClick={() => history.push('?tab=Plans')}
-              size='small' 
+              size="small"
             />
           </div>
-          <div style={{display: 'flex', margin: '-20px 0 10px 0'}}>
-            <Typography className={classes.display} data-testid='header'>Displaying results for</Typography>
+          <div style={{ display: 'flex', margin: '-20px 0 10px 0' }}>
+            <Typography className={classes.display} data-testid="header">
+              {t('misc.displaying_result')}
+            </Typography>
             <TextField
-              color='primary'
+              color="primary"
               margin="normal"
               id="transaction-filter"
               inputProps={{ 'data-testid': 'transaction-filter' }}
@@ -106,10 +129,10 @@ export default function TransactionsList({ userId, user, userData, transData, re
               required
               select
             >
-              <MenuItem value="all">All</MenuItem>
+              <MenuItem value="all">{t('common:misc.all')}</MenuItem>
               {planData?.map(plan => (
                 <MenuItem value={plan.id} key={plan.id}>
-                  {dateToString(plan.startDate)}
+                  {dateToString(plan.startDate)} 
                   {' '}
                   {plan.landParcel.parcelNumber}
                 </MenuItem>
@@ -118,9 +141,9 @@ export default function TransactionsList({ userId, user, userData, transData, re
           </div>
           {matches && <ListHeader headers={transactionHeader} color />}
           {filtering && Boolean(data?.userTransactions?.length) ? (
-            data.userTransactions.map((trans) => (
+            data.userTransactions.map(trans => (
               <div key={trans.id}>
-                <UserTransactionsList 
+                <UserTransactionsList
                   transaction={trans}
                   currencyData={currencyData}
                   userData={userData}
@@ -133,10 +156,10 @@ export default function TransactionsList({ userId, user, userData, transData, re
           ) : filtering && data?.userTransactions?.length === 0 ? (
             <CenteredContent>No Transaction Available for this Plan</CenteredContent>
           ) : (
-            transData.userTransactions.map((trans) => (
+            transData.userTransactions.map(trans => (
               <div key={trans.id}>
-                <UserTransactionsList 
-                  transaction={trans} 
+                <UserTransactionsList
+                  transaction={trans}
                   currencyData={currencyData}
                   userData={userData}
                   userType={user.userType}
@@ -147,9 +170,9 @@ export default function TransactionsList({ userId, user, userData, transData, re
             ))
           )}
         </div>
-        ) : (
-          <CenteredContent>No Transaction Available</CenteredContent>
-        )}
+      ) : (
+        <CenteredContent>No Transaction Available</CenteredContent>
+      )}
       {filtering && Boolean(data?.userTransactions?.length) && (
         <CenteredContent>
           <Paginate
@@ -162,7 +185,7 @@ export default function TransactionsList({ userId, user, userData, transData, re
         </CenteredContent>
       )}
     </div>
-  )
+  );
 }
 
 const useStyles = makeStyles({
@@ -198,7 +221,7 @@ const useStyles = makeStyles({
 TransactionsList.defaultProps = {
   userData: {},
   transData: {}
-}
+};
 
 TransactionsList.propTypes = {
   userData: PropTypes.object,
@@ -218,11 +241,13 @@ TransactionsList.propTypes = {
   refetch: PropTypes.func.isRequired,
   userId: PropTypes.string.isRequired,
   balanceRefetch: PropTypes.func.isRequired,
-  planData: PropTypes.arrayOf(PropTypes.shape({
-    id: PropTypes.string,
-    startDate: PropTypes.string,
-    landParcel: PropTypes.shape({
-      parcelNumber: PropTypes.string 
+  planData: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.string,
+      startDate: PropTypes.string,
+      landParcel: PropTypes.shape({
+        parcelNumber: PropTypes.string
+      })
     })
-  })).isRequired
-}
+  ).isRequired
+};

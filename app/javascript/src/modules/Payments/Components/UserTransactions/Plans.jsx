@@ -23,24 +23,16 @@ import PaymentPlanModal from './PaymentPlanModal';
 import MessageAlert from '../../../../components/MessageAlert'
 
 export default function PaymentPlans({ userId, user, userData }) {
-  const taskHeader = [
-    { title: 'Select', col: 1 },
-    { title: 'Task', value: t('common:table_headers.task'), col: 4 },
-    { title: 'Created By', value: t('common:table_headers.created_by'), col: 3 },
-    { title: 'Duedate', value: t('common:table_headers.due_date'), col: 1 },
-    { title: 'Assignees',value: t('common:table_headers.assignees'), col: 2 },
-    { title: 'Menu', value: t('common:table_headers.menu'), col: 1 }
-  ];
+  const { t } = useTranslation(['payment', 'common']);
   const planHeader = [
-    { title: 'Plot Number', col: 2 },
-    { title: 'Payment Plan', col: 2 },
-    { title: 'Start Date', col: 2 },
-    { title: 'Balance/Monthly Amount', col: 2 },
-    { title: 'Payment Day', col: 2 },
-    { title: 'Menu', col: 2 }
+    { title: 'Plot Number', value: t('common:table_headers.plot_number'), col: 2 },
+    { title: 'Payment Plan', value: t('common:table_headers.payment_plan'), col: 2 },
+    { title: 'Start Date', value: t('common:table_headers.start_date'), col: 2 },
+    { title: 'Balance/Monthly Amount', value: t('common:table_headers.balance_amount'), col: 2 },
+    { title: 'Payment Day', value: t('common:table_headers.payment_day'), col: 2 },
+    { title: 'Menu', value: t('common:table_headers.menu'), col: 2 }
   ];
   const history = useHistory();
-  const { t } = useTranslation(['payment', 'common']);
   const path = useParamsQuery()
   const subtab = path.get('subtab')
   const id = path.get('id')

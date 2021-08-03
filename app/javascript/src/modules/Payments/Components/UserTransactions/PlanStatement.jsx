@@ -1,5 +1,6 @@
 import React, { useContext } from 'react';
 import Grid from '@material-ui/core/Grid';
+import { useTranslation } from 'react-i18next';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
@@ -17,6 +18,7 @@ export default function PaymentReceipt({ data, open, handleClose, currencyData }
   const classes = useStyles();
   const matches = useMediaQuery('(max-width:600px)');
   const authState = useContext(AuthStateContext);
+  const { t } = useTranslation(['payment', 'common']);
 
   function printStatement() {
     document.title = `${data?.paymentPlan?.user?.name}-${
@@ -31,19 +33,19 @@ export default function PaymentReceipt({ data, open, handleClose, currencyData }
         <FullScreenDialog
           open={open}
           handleClose={handleClose}
-          title="Plan Statement"
-          actionText="Print"
+          title={t('misc.plan_statement')}
+          actionText={t('misc.print')}
           handleSubmit={printStatement}
         >
           <div className="print" style={matches ? {overflowX: 'hidden'} : { margin: '57px 155px' }}>
             <CommunityName authState={authState} logoStyles={logoStyles} />
-            <Typography className={classes.planTitle}>Statement for Plan</Typography>
+            <Typography className={classes.planTitle}>{t('misc.statement_for_plan')}</Typography>
             <div style={{ marginTop: '50px' }}>
               <Grid container>
                 <Grid item xs={6}>
                   <Grid container spacing={1}>
                     <Grid item xs={4} className={matches ? classes.titleMobile : classes.title}>
-                      Client Name
+                      {t('common:misc.client_name')}
                     </Grid>
                     <Grid item xs={8} data-testid="client-name" className={matches ? classes.titleMobile : classes.title}>
                       {data?.paymentPlan?.user?.name}
@@ -59,14 +61,14 @@ export default function PaymentReceipt({ data, open, handleClose, currencyData }
                   </Grid>
                   <Grid container spacing={1}>
                     <Grid item xs={4} className={matches ? classes.titleMobile : classes.title}>
-                      Plot Number
+                      {t('common:table_headers.plot_number')}
                     </Grid>
                     <Grid item xs={8} className={matches ? classes.titleMobile : classes.title}>
                       {data?.paymentPlan?.landParcel?.parcelNumber}
                     </Grid>
                     <Grid container spacing={1}>
                       <Grid item xs={4} className={matches ? classes.titleMobile : classes.title}>
-                        Payment Plan
+                        {t('common:table_headers.payment_plan')}
                       </Grid>
                       <Grid item xs={8} className={matches ? classes.titleMobile : classes.title}>
                         {data?.paymentPlan?.planType}
@@ -74,7 +76,7 @@ export default function PaymentReceipt({ data, open, handleClose, currencyData }
                     </Grid>
                     <Grid container spacing={1}>
                       <Grid item xs={4} className={matches ? classes.titleMobile : classes.title}>
-                        Plan Value(months)
+                        {t('misc.plan_value')}
                       </Grid>
                       <Grid item xs={8} className={matches ? classes.titleMobile : classes.title}>
                         {formatMoney(currencyData, data?.paymentPlan?.planValue)}
@@ -134,7 +136,8 @@ export default function PaymentReceipt({ data, open, handleClose, currencyData }
                   </Grid>
                   <Grid container spacing={1}>
                     <Grid item xs={12} className={matches ? classes.titleMobile : classes.title} data-testid="support-phone-no">
-                      phone:
+                      {t('misc.phone')}
+                      :
                       {' '}
                       {data?.paymentPlan?.landParcel?.community?.supportNumber
                         // eslint-disable-next-line react/prop-types
@@ -152,7 +155,7 @@ export default function PaymentReceipt({ data, open, handleClose, currencyData }
                     key="receipt_number"
                     style={{ fontWeight: 700, color: '#2D2D2D' }}
                   >
-                    Receipt Number
+                    {t('table_headers.receipt_number')}
                   </Grid>
                   <Grid
                     item
@@ -161,7 +164,7 @@ export default function PaymentReceipt({ data, open, handleClose, currencyData }
                     key="payment_date"
                     style={{ fontWeight: 700, color: '#2D2D2D' }}
                   >
-                    Payment Date
+                    {t('common:table_headers.payment_date')}
                   </Grid>
                   <Grid
                     item
@@ -170,7 +173,7 @@ export default function PaymentReceipt({ data, open, handleClose, currencyData }
                     key="amount_paid"
                     style={{ fontWeight: 700, color: '#2D2D2D' }}
                   >
-                    Amount Paid
+                    {t('table_headers.amount_paid')}
                   </Grid>
                   <Grid
                     item
@@ -179,7 +182,7 @@ export default function PaymentReceipt({ data, open, handleClose, currencyData }
                     key="installment_amount"
                     style={{ fontWeight: 700, color: '#2D2D2D' }}
                   >
-                    Installment Amount
+                    {t('table_headers.installment_amount')}
                   </Grid>
                   <Grid
                     item
@@ -188,7 +191,7 @@ export default function PaymentReceipt({ data, open, handleClose, currencyData }
                     key="number_of_installements"
                     style={{ fontWeight: 700, color: '#2D2D2D' }}
                   >
-                    No. of Installments
+                    {t('table_headers.no_of_installments')}
                   </Grid>
                   <Grid
                     item
@@ -197,7 +200,7 @@ export default function PaymentReceipt({ data, open, handleClose, currencyData }
                     key="debit"
                     style={{ fontWeight: 700, color: '#2D2D2D' }}
                   >
-                    Debit
+                    {t('table_headers.debit')}
                   </Grid>
                   <Grid
                     item
@@ -206,7 +209,7 @@ export default function PaymentReceipt({ data, open, handleClose, currencyData }
                     key="balance"
                     style={{ fontWeight: 700, color: '#2D2D2D' }}
                   >
-                    Unallocated Balance
+                    {t('table_headers.unallocated_balance')}
                   </Grid>
                 </Grid>
                 <Divider className={classes.divider} />
@@ -256,18 +259,18 @@ export default function PaymentReceipt({ data, open, handleClose, currencyData }
                     </Grid>
                   ))
                 ) : (
-                  <CenteredContent>No Plan Details Available</CenteredContent>
+                  <CenteredContent>{t('misc.no_plan_available')}</CenteredContent>
                 )}
               </div>
               <Grid container>
                 <Grid item xs={6}>
                   <div>
-                    <b style={{ fontSize: '16px' }}>Banking Details</b> 
+                    <b style={{ fontSize: '16px' }}>{t('misc.banking_details')}</b> 
                     {' '}
                     <br />
                     <Grid container spacing={1}>
                       <Grid item xs={3} className={matches ? classes.titleMobile : classes.title}>
-                        Bank
+                        {t('misc.bank')}
                       </Grid>
                       <Grid item xs={3} className={matches ? classes.titleMobile : classes.title}>
                         {data?.paymentPlan?.landParcel?.community?.bankingDetails?.bankName ||
@@ -276,7 +279,7 @@ export default function PaymentReceipt({ data, open, handleClose, currencyData }
                     </Grid>
                     <Grid container spacing={1}>
                       <Grid item xs={3} className={matches ? classes.titleMobile : classes.title}>
-                        Account Name
+                        {t('misc.account_name')}
                       </Grid>
                       <Grid item xs={6} className={matches ? classes.titleMobile : classes.title}>
                         {data?.paymentPlan?.landParcel?.community?.bankingDetails?.accountName ||
@@ -285,7 +288,7 @@ export default function PaymentReceipt({ data, open, handleClose, currencyData }
                     </Grid>
                     <Grid container spacing={1}>
                       <Grid item xs={3} className={matches ? classes.titleMobile : classes.title}>
-                        Account Number
+                        {t('misc.account_number')}
                       </Grid>
                       <Grid item xs={3} className={matches ? classes.titleMobile : classes.title}>
                         {data?.paymentPlan?.landParcel?.community?.bankingDetails?.accountNo ||
@@ -294,7 +297,7 @@ export default function PaymentReceipt({ data, open, handleClose, currencyData }
                     </Grid>
                     <Grid container spacing={1}>
                       <Grid item xs={3} className={matches ? classes.titleMobile : classes.title}>
-                        Branch
+                        {t('misc.branch')}
                       </Grid>
                       <Grid item xs={3} className={matches ? classes.titleMobile : classes.title}>
                         {data?.paymentPlan?.landParcel?.community?.bankingDetails?.branch || 'N/A'}
@@ -302,7 +305,7 @@ export default function PaymentReceipt({ data, open, handleClose, currencyData }
                     </Grid>
                     <Grid container spacing={1}>
                       <Grid item xs={3} className={matches ? classes.titleMobile : classes.title}>
-                        Swift Code
+                        {t('misc.swift_code')}
                       </Grid>
                       <Grid item xs={3} className={matches ? classes.titleMobile : classes.title}>
                         {data?.paymentPlan?.landParcel?.community?.bankingDetails?.swiftCode ||
@@ -311,7 +314,7 @@ export default function PaymentReceipt({ data, open, handleClose, currencyData }
                     </Grid>
                     <Grid container spacing={1}>
                       <Grid item xs={3} className={matches ? classes.titleMobile : classes.title}>
-                        Sort Code
+                        {t('misc.sort_code')}
                       </Grid>
                       <Grid item xs={3} className={matches ? classes.titleMobile : classes.title}>
                         {data?.paymentPlan?.landParcel?.community?.bankingDetails?.sortCode ||
@@ -323,7 +326,7 @@ export default function PaymentReceipt({ data, open, handleClose, currencyData }
                 <Grid item xs={6}>
                   <Grid container spacing={1}>
                     <Grid item xs={8} className={matches ? classes.titleMobile : classes.title} style={{ textAlign: 'right' }}>
-                      Total Paid Installments
+                      {t('table_headers.total_paid_installments')}
                     </Grid>
                     <Grid
                       item
@@ -337,7 +340,7 @@ export default function PaymentReceipt({ data, open, handleClose, currencyData }
                   </Grid>
                   <Grid container spacing={1}>
                     <Grid item xs={8} className={matches ? classes.titleMobile : classes.title} style={{ textAlign: 'right' }}>
-                      Total Unallocated
+                      {t('table_headers.total_unallocated')}
                     </Grid>
                     <Grid item xs={4} className={matches ? classes.titleMobile : classes.title} style={{ textAlign: 'right' }}>
                       {formatMoney(currencyData, data?.paymentPlan?.unallocatedAmount)}
@@ -345,7 +348,7 @@ export default function PaymentReceipt({ data, open, handleClose, currencyData }
                   </Grid>
                   <Grid container spacing={1}>
                     <Grid item xs={8} className={matches ? classes.titleMobile : classes.title} style={{ textAlign: 'right' }}>
-                      Balance Due
+                      {t('table_headers.balance_due')}
                     </Grid>
                     <Grid item xs={4} className={matches ? classes.titleMobile : classes.title} style={{ textAlign: 'right' }}>
                       {formatMoney(currencyData, data?.paymentPlan?.pendingBalance)}
