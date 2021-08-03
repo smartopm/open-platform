@@ -2,7 +2,7 @@
 /* eslint-disable no-nested-ternary */
 import React, { useState, useEffect } from 'react';
 import { CSVLink } from 'react-csv';
-import { Grid, List, Typography } from '@material-ui/core';
+import { Button, Container, Grid, List, Typography } from '@material-ui/core';
 import Avatar from '@material-ui/core/Avatar';
 import Fab from '@material-ui/core/Fab';
 import PropTypes from 'prop-types';
@@ -161,6 +161,11 @@ export default function PaymentList({ currencyData }) {
     loadAllPayments()
   }
 
+  function handlePaymentModal(){
+    setPaymentModalOpen(false)
+    history.push('/payments')
+  }
+
   if (error) {
     return <CenteredContent>{formatError(error.message)}</CenteredContent>;
   }
@@ -174,18 +179,68 @@ export default function PaymentList({ currencyData }) {
 
       <PaymentModal
         open={paymentModalOpen}
-        handleModalClose={() => setPaymentModalOpen(false)}
+        handleModalClose={handlePaymentModal}
         currencyData={currencyData}
         refetch={refetch}
       />
+      <Container maxWidth="xl">
+        <Grid
+          container
+          direction="row"
+          spacing={2}
+        >
+          <Grid item sm={9} xs={12}>
+            <SearchInput
+              title="Payments"
+              searchValue={searchValue}
+              handleSearch={event => setsearch(event.target.value)}
+              handleFilter={toggleFilterMenu}
+              handleClear={() => setSearchClear()}
+            />
+          </Grid>
+          <Grid item sm={3} xs={12}>
+            <Button
+              variant="outlined"
+              className={classes.exportDataBtn}
+            >
+              {listType === 'graph' && paymentStatData?.paymentStatDetails?.length > 0 ? (
+                <CSVLink
+                  data={paymentStatData?.paymentStatDetails}
+                  style={{ color: theme.palette.primary.main, textDecoration: 'none' }}
+                  headers={csvHeaders}
+                  filename={`payment-data-${dateToString(new Date())}.csv`}
+                >
+                  Download CSV
+                </CSVLink>
+              )
+              : (
+                <>
+                  {
+                  !called ? (
+                    // eslint-disable-next-line jsx-a11y/click-events-have-key-events
+                    <span role="button" aria-label="download csv" onClick={handleDownloadCSV}>
+                      {plansLoading ? <Spinner /> : 'Export Data'}
+                    </span>
+                  )
+                  : (
+                    <CSVLink
+                      data={plansData?.paymentsList || []}
+                      style={{ color: theme.palette.primary.main, textDecoration: 'none' }}
+                      headers={csvHeaders}
+                      filename={`payment-data-${dateToString(new Date())}.csv`}
+                    >
+                      {plansLoading ? <Spinner /> : 'Save CSV'}
+                    </CSVLink>
+                  )
+                }
+                </>
+              )
 
-      <SearchInput
-        title="Payments"
-        searchValue={searchValue}
-        handleSearch={event => setsearch(event.target.value)}
-        handleFilter={toggleFilterMenu}
-        handleClear={() => setSearchClear()}
-      />
+            }
+            </Button>
+          </Grid>
+        </Grid>
+      </Container>
       <Grid
         container
         justify="flex-end"
@@ -208,41 +263,9 @@ export default function PaymentList({ currencyData }) {
       <br />
       <br />
       <PaymentGraph handleClick={setGraphQuery} />
-      {listType === 'graph' && paymentStatData?.paymentStatDetails?.length > 0 && (
-        <Fab color="primary" variant="extended" className={classes.download}>
-          <CSVLink
-            data={paymentStatData?.paymentStatDetails}
-            style={{ color: 'white' }}
-            headers={csvHeaders}
-            filename={`payment-data-${dateToString(new Date())}.csv`}
-          >
-            Download CSV
-          </CSVLink>
-        </Fab>
-      )}
-      {listType === 'nongraph' && paymentList?.length > 0 && (
-        <Fab color="primary" variant="extended" className={classes.download}>
-          {
-            !called ? (
-              // eslint-disable-next-line jsx-a11y/click-events-have-key-events
-              <span style={{ color: theme.palette.primary.contrastText }} role="button" aria-label="download csv" color="textPrimary" onClick={handleDownloadCSV}>
-                {plansLoading ? <Spinner /> : 'Export Data'}
-              </span>
-            )
-            : (
-              <CSVLink
-                data={plansData?.paymentsList || []}
-                style={{ color: 'white' }}
-                headers={csvHeaders}
-                filename={`payment-data-${dateToString(new Date())}.csv`}
-              >
-                {plansLoading ? <Spinner /> : 'Save CSV'}
-              </CSVLink>
-
-            )
-          }
-        </Fab>
-      )}
+      <Fab color="primary" variant="extended" className={classes.download} onClick={() => setPaymentModalOpen(true)}>
+        Record New Payment
+      </Fab>
 
       {loading ? (
         <Spinner />
@@ -362,6 +385,9 @@ const useStyles = makeStyles(() => ({
     right: 57,
     marginLeft: '30%',
     zIndex: '1000'
+  },
+  exportDataBtn: {
+    height: 53
   }
 }));
 
