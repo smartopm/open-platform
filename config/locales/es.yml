@@ -148,6 +148,7 @@ es:
         community: Nkwashi
         parcel_number: Numero de Lote
       properties/payment_plan:
+        duration: Duración
         installment_amount: Monto de la cuota
         land_parcel: Número de parcela de tierra
         payment_day: Fecha de Pago
@@ -171,6 +172,8 @@ es:
         user: Usuario
       users/user:
         community: Comunidad
+        name: Nombre
+        state: Ciudad
         sub_status: Sub Estado
         user_type: Tipo de usuario
     errors:
@@ -180,6 +183,8 @@ es:
         logs/event_log:
           attributes:
             acting_user_id:
+              allowed_user_reporting_in_own_community: Solo puede denunciar a los
+                usuarios de su propia comunidad
               reporting_user_required: Debe estar asociado con un usuario informante
             data:
               visitor_name_required: Se requiere el nombre del visitante
@@ -200,8 +205,11 @@ es:
       business: Empresa
       campaign: Campaña
       comments/comment: Comentario
+      comments/note_comment: Comentario de nota
       community: Comunidad
+      discussions/discussion: Discusión
       discussions/discussion_user: Usuario de discusión
+      forms/form: Formulario
       forms/form_property: 'Formulario de Propiedad '
       forms/form_user: Formulario de Usuario
       forms/user_form_property: Formularios de Propiedad
@@ -214,11 +222,14 @@ es:
       logs/import_log: Importar registro
       logs/substatus_log: Registro de subestado
       notes/assignee_note: Nota del cesionario
+      notes/note: Nota
       notes/note_history: Historial de notas
+      notifications/email_template: 'Plantilla de correo electrónico '
       notifications/message: Mensaje
       notifications/notification: Notificación
       payments/invoice: Factura
       payments/payment: Pago
+      payments/payment_invoice: Factura de pago
       payments/plan_payment: Plan de Pago
       payments/transaction: Transacción
       payments/wallet: Billetera
@@ -228,6 +239,7 @@ es:
       properties/account: Cuenta
       properties/land_parcel: Número de parcela de tierra
       properties/land_parcel_account: Cuenta de parcela de tierra
+      properties/payment_plan: Plan de Pago
       properties/plan_ownership: Plan de Propiedad
       properties/valuation: Valuación
       showroom: Sala de exposición
@@ -290,6 +302,8 @@ es:
       not_found: Registro de subestado no encontrado
     transaction:
       amount_not_sufficient: El monto asignado no es suficiente para el pago
+      amount_should_be_same: El monto debe ser igual a la suma de todas las cantidades
+        asignadas a los planes
       not_found: Transacción no encontrada
     unauthorized: No autorizado
     user_form_property:
