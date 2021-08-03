@@ -563,7 +563,7 @@ export function LogView({ user, tab, handleAddObservation }) {
             <span className={css(styles.subTitle)}>
               {
                 tab === 2
-                ? `${t('logbook:logbook.visit_scheduled')} ${dateToString(user.entryRequest?.visitationDate)}`
+                ? t('logbook:logbook.visit_scheduled', {date: dateToString(user.entryRequest?.visitationDate), time: dateTimeToString(user.entryRequest?.startTime)})
                 : `${dateToString(user.createdAt)} at ${dateTimeToString(user.createdAt)}`
               }
             </span>
