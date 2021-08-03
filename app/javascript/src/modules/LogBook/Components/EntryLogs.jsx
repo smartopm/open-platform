@@ -283,9 +283,9 @@ export function IndexComponent({
           value={tabValue}
           onChange={handleTabValue}
           aria-label="simple tabs example"
-          variant={!matches && 'scrollable'}
-          scrollButtons={!matches && "on"}
-          centered
+          variant={!matches ? 'scrollable' : 'standard'}
+          scrollButtons={!matches ? "on" : "off"}
+          centered={matches}
         >
           <StyledTab label={t('logbook.all_visits')} {...a11yProps(0)} />
           <StyledTab label={t('logbook.new_visits')} {...a11yProps(1)} />
