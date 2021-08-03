@@ -163,7 +163,7 @@ export default function UserPaymentPlanItem({
           ...details,
           isLoading: false,
           isError: false,
-          info: 'Payment Plan successfully canceled'
+          info: t('misc.payment_cancelled')
         });
         refetch();
         balanceRefetch()
@@ -241,7 +241,7 @@ export default function UserPaymentPlanItem({
           ...details,
           isLoading: false,
           isError: false,
-          info: 'Payment Day successfully updated'
+          info: t('misc.pay_day_updated')
         });
         refetch();
         balanceRefetch()

@@ -38,7 +38,9 @@
     "make_payment_towards": "Make payment towards any of your plans below. You can make payment towards multiple plans as well.",
     "manual_payment": "is this a manual payment?",
     "make_payment_details": "You are about to make a payment with following details",
-    "total_amount_paid": "Total Amount Paid By Date"
+    "total_amount_paid": "Total Amount Paid By Date",
+    "payment_cancelled": "Payment Plan successfully canceled",
+    "pay_day_updated": "Payment Day successfully updated"
   },
   "table_headers": {
     "receipt_number": "Receipt Number",

@@ -83,7 +83,7 @@ describe('Render Payment Plan Item', () => {
 
     expect(container.getAllByTestId('pay-menu')[0]).toBeInTheDocument();
     fireEvent.click(container.getAllByTestId('pay-menu')[0]);
-    expect(container.getByText('View Receipt')).toBeInTheDocument();
+    expect(container.getByText('common:menu.view_receipt')).toBeInTheDocument();
 
     // click on a menu item like day one
     fireEvent.click(container.queryAllByTestId('payment-day-1')[0]);
@@ -93,14 +93,14 @@ describe('Render Payment Plan Item', () => {
 
 
     await waitFor(() => {
-      expect(container.queryByText('Payment Day successfully updated')).toBeInTheDocument();
+      expect(container.queryByText('misc.pay_day_updated')).toBeInTheDocument();
       expect(refetch).toBeCalled();
     }, 50);
 
     expect(container.getAllByTestId('plan-menu')[0]).toBeInTheDocument();
     fireEvent.click(container.getAllByTestId('plan-menu')[0]);
-    expect(container.getByText('View Statement')).toBeInTheDocument();
-    fireEvent.click(container.getByText('View Statement'));
+    expect(container.getByText('actions.view_statement')).toBeInTheDocument();
+    fireEvent.click(container.getByText('actions.view_statement'));
   });
 
   it('should check if renderPlan works as expected', () => {

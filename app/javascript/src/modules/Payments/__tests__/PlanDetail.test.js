@@ -38,7 +38,6 @@ describe('It should test the plan detail modal component', () => {
       </MockedProvider> 
     )
 
-    expect(container.getByTestId("name")).toBeInTheDocument()
     expect(container.getByTestId("detail")).toBeInTheDocument()
     expect(container.getByTestId("status")).toBeInTheDocument()
     expect(container.getByTestId("start-date")).toBeInTheDocument()
