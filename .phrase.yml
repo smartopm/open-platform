@@ -68,7 +68,7 @@ phrase:
         locale_id: 5c6c3e050e8493da0e428087555a7b00
         tags: form
         update_translations: true
-    - file: ./public/locales/en/form.json
+    - file: ./public/locales/en/payment.json
       params:
         file_format: i18next
         locale_id: 5c6c3e050e8493da0e428087555a7b00
