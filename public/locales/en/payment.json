@@ -7,7 +7,10 @@
     "cancel_plan": "Cancel Plan",
     "view_all_plans": "View all Plans",
     "pay": "Pay",
-    "go_back": "Go Back"
+    "go_back": "Go Back",
+    "download_csv": "Download CSV",
+    "export_data": "Export Data",
+    "save_csv": "Save CSV"
   },
   "misc": {
     "confirm": "Confirm",
@@ -34,7 +37,8 @@
     "make_a_payment": "Make a Payment",
     "make_payment_towards": "Make payment towards any of your plans below. You can make payment towards multiple plans as well.",
     "manual_payment": "is this a manual payment?",
-    "make_payment_details": "You are about to make a payment with following details"
+    "make_payment_details": "You are about to make a payment with following details",
+    "total_amount_paid": "Total Amount Paid By Date"
   },
   "table_headers": {
     "receipt_number": "Receipt Number",
@@ -59,7 +63,15 @@
     "transaction_type": "Transaction Type",
     "plot_no": "Plot No",
     "remaining_balance": "{{amount}} remaining balance",
-    "total_amount": "Total Amount"
+    "total_amount": "Total Amount",
+    "payment_amount": "Payment Amount",
+    "plot_info": "Plot Info",
+    "payment_receipt_status": "PaymentStatus/ReceiptNumber",
+    "cash": "Cash",
+    "mobile_money": "mobileMoney",
+    "bank_transfer": "bankTrasfer",
+    "eft": "eft",
+    "pos": "pos"
   },
   "errors": {
     "duration_requied": "Duration is required",
@@ -71,6 +83,7 @@
     "selected_user": "Selected user has no plots",
     "transaction_required": "TransactionType is required",
     "no_transaction_available": "No Transaction Available for this Plan",
-    "no_plan_available": "No Plan Available"
+    "no_plan_available": "No Plan Available",
+    "no_payment_available": "No Payments Available"
   }
 }

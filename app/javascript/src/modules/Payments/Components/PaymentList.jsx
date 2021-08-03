@@ -1,6 +1,7 @@
 /* eslint-disable jsx-a11y/interactive-supports-focus */
 /* eslint-disable no-nested-ternary */
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { CSVLink } from 'react-csv';
 import { Button, Container, Grid, List, Typography } from '@material-ui/core';
 import Avatar from '@material-ui/core/Avatar';
@@ -40,17 +41,8 @@ import { PlansPaymentsQuery } from '../graphql/payment_query';
 import PaymentModal from './UserTransactions/PaymentModal';
 import { dateToString } from '../../../components/DateContainer';
 
-const paymentHeaders = [
-  { title: 'Client Name', col: 1 },
-  { title: 'Payment Date', col: 1 },
-  { title: 'Payment Amount', col: 1 },
-  { title: 'Plot Info', col: 1 },
-  { title: 'Payment Type', col: 1 },
-  { title: 'PaymentStatus/ReceiptNumber', col: 2 }
-];
-
 const csvHeaders = [
-  { label: "Receipt Number", key: "receiptNumber" },
+  { label: 'Receipt Number', key: 'receiptNumber' },
   { label: 'Payment Status', key: 'status' },
   { label: 'Payment Amount', key: 'userTransaction.amount' },
   { label: 'Payment Date', key: 'createdAt' },
@@ -61,10 +53,19 @@ const csvHeaders = [
   { label: 'Client Name', key: 'user.name' },
   { label: 'Phone Number', key: 'user.phoneNumber' },
   { label: 'Email', key: 'user.email' },
-  { label: "External Id", key: "user.extRefId" }
+  { label: 'External Id', key: 'user.extRefId' }
 ];
 
 export default function PaymentList({ currencyData }) {
+  const { t } = useTranslation(['payment', 'common']);
+  const paymentHeaders = [
+    { title: 'Client Name', value: t('common:misc.client_name'), col: 1 },
+    { title: 'Payment Date', value: t('common:table_headers.payment_date'), col: 1 },
+    { title: 'Payment Amount', value: t('table_headers.payment_amount'), col: 1 },
+    { title: 'Plot Info', value: t('table_headers.plot_info'), col: 1 },
+    { title: 'Payment Type', value: t('common:form_fields.payment_Type'), col: 1 },
+    { title: 'PaymentStatus/ReceiptNumber', value: t('table_headers.payment_receipt_status'), col: 2 }
+  ];
   const limit = 50;
   const path = useParamsQuery();
   const classes = useStyles();
@@ -79,7 +80,7 @@ export default function PaymentList({ currencyData }) {
   const matches = useMediaQuery(theme.breakpoints.up('sm'));
   const [displayBuilder, setDisplayBuilder] = useState('none');
   const [searchQuery, setSearchQuery] = useState('');
-  const [paymentModalOpen, setPaymentModalOpen] = useState(false)
+  const [paymentModalOpen, setPaymentModalOpen] = useState(false);
 
   const pageNumber = Number(page);
   const { loading, data, error, refetch } = useQuery(PlansPaymentsQuery, {
@@ -87,11 +88,14 @@ export default function PaymentList({ currencyData }) {
     fetchPolicy: 'cache-and-network',
     errorPolicy: 'all'
   });
-  const [loadAllPayments, { loading: plansLoading, data: plansData, called }] = useLazyQuery(PlansPaymentsQuery, {
-    // TODO: have a separate query with no limits
-    variables: {limit: 2000, query: debouncedValue || searchQuery },
-    errorPolicy: 'all'
-  });
+  const [loadAllPayments, { loading: plansLoading, data: plansData, called }] = useLazyQuery(
+    PlansPaymentsQuery,
+    {
+      // TODO: have a separate query with no limits
+      variables: { limit: 2000, query: debouncedValue || searchQuery },
+      errorPolicy: 'all'
+    }
+  );
 
   const paymentList = data?.paymentsList;
   function paginate(action) {
@@ -153,17 +157,17 @@ export default function PaymentList({ currencyData }) {
 
   useEffect(() => {
     if (type === 'new') {
-      setPaymentModalOpen(true)
+      setPaymentModalOpen(true);
     }
-  }, [type])
+  }, [type]);
 
-   function handleDownloadCSV(){
-    loadAllPayments()
+  function handleDownloadCSV() {
+    loadAllPayments();
   }
 
-  function handlePaymentModal(){
-    setPaymentModalOpen(false)
-    history.push('/payments')
+  function handlePaymentModal() {
+    setPaymentModalOpen(false);
+    history.push('/payments');
   }
 
   if (error) {
@@ -176,7 +180,6 @@ export default function PaymentList({ currencyData }) {
 
   return (
     <div>
-
       <PaymentModal
         open={paymentModalOpen}
         handleModalClose={handlePaymentModal}
@@ -184,14 +187,10 @@ export default function PaymentList({ currencyData }) {
         refetch={refetch}
       />
       <Container maxWidth="xl">
-        <Grid
-          container
-          direction="row"
-          spacing={2}
-        >
+        <Grid container direction="row" spacing={2}>
           <Grid item sm={9} xs={12}>
             <SearchInput
-              title="Payments"
+              title={t('common:misc.payments')}
               searchValue={searchValue}
               handleSearch={event => setsearch(event.target.value)}
               handleFilter={toggleFilterMenu}
@@ -199,10 +198,7 @@ export default function PaymentList({ currencyData }) {
             />
           </Grid>
           <Grid item sm={3} xs={12}>
-            <Button
-              variant="outlined"
-              className={classes.exportDataBtn}
-            >
+            <Button variant="outlined" className={classes.exportDataBtn}>
               {listType === 'graph' && paymentStatData?.paymentStatDetails?.length > 0 ? (
                 <CSVLink
                   data={paymentStatData?.paymentStatDetails}
@@ -210,33 +206,27 @@ export default function PaymentList({ currencyData }) {
                   headers={csvHeaders}
                   filename={`payment-data-${dateToString(new Date())}.csv`}
                 >
-                  Download CSV
+                  {t('actions.download_csv')}
                 </CSVLink>
-              )
-              : (
+              ) : (
                 <>
-                  {
-                  !called ? (
+                  {!called ? (
                     // eslint-disable-next-line jsx-a11y/click-events-have-key-events
                     <span role="button" aria-label="download csv" onClick={handleDownloadCSV}>
-                      {plansLoading ? <Spinner /> : 'Export Data'}
+                      {plansLoading ? <Spinner /> : t('actions.export_data')}
                     </span>
-                  )
-                  : (
+                  ) : (
                     <CSVLink
                       data={plansData?.paymentsList || []}
                       style={{ color: theme.palette.primary.main, textDecoration: 'none' }}
                       headers={csvHeaders}
                       filename={`payment-data-${dateToString(new Date())}.csv`}
                     >
-                      {plansLoading ? <Spinner /> : 'Save CSV'}
+                      {plansLoading ? <Spinner /> : t('actions.save_csv')}
                     </CSVLink>
-                  )
-                }
+                  )}
                 </>
-              )
-
-            }
+              )}
             </Button>
           </Grid>
         </Grid>
@@ -257,14 +247,19 @@ export default function PaymentList({ currencyData }) {
           handleOnChange={queryOnChange}
           builderConfig={paymentQueryBuilderConfig}
           initialQueryValue={paymentQueryBuilderInitialValue}
-          addRuleLabel="Add filter"
+          addRuleLabel={t('common:misc.add_filter')}
         />
       </Grid>
       <br />
       <br />
       <PaymentGraph handleClick={setGraphQuery} />
-      <Fab color="primary" variant="extended" className={classes.download} onClick={() => setPaymentModalOpen(true)}>
-        Record New Payment
+      <Fab
+        color="primary"
+        variant="extended"
+        className={classes.download}
+        onClick={() => setPaymentModalOpen(true)}
+      >
+        {t('common:misc.make_payment')}
       </Fab>
 
       {loading ? (
@@ -294,7 +289,7 @@ export default function PaymentList({ currencyData }) {
               ))}
             </div>
           ) : (
-            <CenteredContent>No Payments Available</CenteredContent>
+            <CenteredContent>{t('errors.no_payment_available')}</CenteredContent>
           )}
         </List>
       )}
@@ -330,7 +325,6 @@ export function renderPayment(payment, currencyData) {
       'Payment Date': (
         <Grid item xs={12} md={2}>
           <Text content={dateToString(payment.createdAt)} />
-
         </Grid>
       ),
       'Payment Amount': (
@@ -341,7 +335,8 @@ export function renderPayment(payment, currencyData) {
       'Plot Info': (
         <Grid item xs={12} md={2} data-testid="plot_info">
           <Text
-            content={`${payment.paymentPlan?.landParcel.parcelType} - ${payment.paymentPlan?.landParcel.parcelNumber}`}
+            content={`${(payment.paymentPlan?.landParcel.parcelType || '')} ${payment.paymentPlan
+              ?.landParcel?.parcelType ? ' - ' : ''} ${payment.paymentPlan?.landParcel.parcelNumber}`}
           />
         </Grid>
       ),
@@ -349,18 +344,16 @@ export function renderPayment(payment, currencyData) {
         <Grid item xs={12} md={2} data-testid="payment_type">
           <Text
             content={
-              ['cash'].includes(payment.userTransaction.source) ? 'Cash Deposit' : paymentType[payment.userTransaction.source]
+              ['cash'].includes(payment.userTransaction.source)
+                ? 'Cash Deposit'
+                : paymentType[payment.userTransaction.source]
             }
           />
         </Grid>
       ),
       'PaymentStatus/ReceiptNumber': (
         <Grid item xs={12} md={2} data-testid="receipt_number">
-          <Text
-            content={`${titleize(payment.status)} - ${
-              payment.receiptNumber
-            }`}
-          />
+          <Text content={`${titleize(payment.status)} - ${payment.receiptNumber}`} />
         </Grid>
       )
     }
@@ -368,6 +361,15 @@ export function renderPayment(payment, currencyData) {
 }
 
 export function TransactionItem({ transaction, currencyData }) {
+  const { t } = useTranslation(['payment', 'common']);
+  const paymentHeaders = [
+    { title: 'Client Name', value: t('common:misc.client_name'), col: 1 },
+    { title: 'Payment Date', value: t('common:table_headers.payment_date'), col: 1 },
+    { title: 'Payment Amount', value: t('table_headers.payment_amount'), col: 1 },
+    { title: 'Plot Info', value: t('table_headers.plot_info'), col: 1 },
+    { title: 'Payment Type', value: t('common:form_fields.payment_Type'), col: 1 },
+    { title: 'PaymentStatus/ReceiptNumber', value: t('table_headers.payment_receipt_status'), col: 2 }
+  ];
   return (
     <DataList
       keys={paymentHeaders}
