@@ -10,6 +10,7 @@ import { paymentPlanStatus, paymentPlanFrequency } from '../../../../utils/const
 import {PaymentPlanCreateMutation} from '../../../../graphql/mutations/land_parcel'
 import { dateToString } from '../../../../components/DateContainer';
 import { capitalize, formatError } from '../../../../utils/helpers'
+import { useTranslation } from 'react-i18next';
 
 const initialPlanState = {
   status: 0,
@@ -38,6 +39,7 @@ export default function PaymentPlanModal({
   const[createPaymentPlan] = useMutation(PaymentPlanCreateMutation);
   const[inputValue, setInputValues] = useState(initialPlanState);
   const [isError, setIsError] = useState(false);
+  const { t } = useTranslation('common')
   
   function handleInputChange(event){
     const { name, value } = event.target;
@@ -198,7 +200,7 @@ export default function PaymentPlanModal({
               name="frequency"
               style={{ width: '100%' }}
               error={isError && frequency === null}
-              helperText={isError && frequency === null && 'Please select frequency'}
+              helperText={isError && frequency === null && t("common:misc.select_frequency")}
             />
           </div>
           <FrequencyButton
@@ -357,13 +359,14 @@ export default function PaymentPlanModal({
 
 export function CoOwners({landParcel, userId, handleCoOwners}){
   const filteredAccounts = landParcel?.accounts.filter(account => account.userId !== userId)
+  const { t } = useTranslation('common')
   return(
     <>
       {filteredAccounts?.length > 0 && (
       <>
         <div>
           <FormLabel>
-            Select co-owners you would like to add to this plan
+            {t("common:form_placeholders.select_co_owners")}
           </FormLabel>
         </div>
         <div>

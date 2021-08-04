@@ -117,7 +117,7 @@ export default function TransferPlanModal({
         <DialogContent dividers>
           <Typography>
             <Typography paragraph variant="h6" color="textPrimary" display='body'>
-              Select the Plan you want to migrate this plan to?
+              {t("common:misc.select_transfer_plan")}
             </Typography>
             <Typography className={classes.content} paragraph variant="body1" color="textPrimary" display='body'>
               {

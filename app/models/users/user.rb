@@ -619,7 +619,7 @@ module Users
     # rubocop:disable Metrics/MethodLength
     # Creates general land parcel and payment plan for user
     #
-    # @return [bool]
+    # @return [Boolean]
     def create_general_land_parcel_and_payment_plan
       land_parcel = general_land_parcel
       if land_parcel.nil?
@@ -628,7 +628,7 @@ module Users
         land_parcel.accounts.create!(user_id: id, full_name: name, community_id: community.id)
       end
 
-      return unless general_payment_plan.nil?
+      return if general_payment_plan.present?
 
       payement_plan = land_parcel.payment_plans.new(user_id: id, frequency: 'monthly',
                                                     installment_amount: 0, duration: 360,
