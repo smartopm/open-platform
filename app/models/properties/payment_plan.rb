@@ -225,29 +225,6 @@ module Properties
         'automated_receipt_number',
       )
     end
-
-    # Returns PaymentPlan name by concatenating parcel number and start date.
-    #
-    # @return [String]
-    def payment_plan_name
-      "#{land_parcel.parcel_number} - #{start_date.strftime('%Y-%m-%d')}"
-    end
-
-    private
-
-    # Assigns pending balance(product of installmemt amount & duration).
-    #
-    # @return [void]
-    def set_pending_balance
-      self.pending_balance = installmemt_amount * duration
-    end
-
-    def general_plan_existence
-      if Properties::PaymentPlan.unscope(where: :status).exists?(user_id: user_id,
-                                                                 status: 'general')
-        errors.add(:user_id, :general_plan_exists)
-      end
-    end
   end
   # rubocop:enable Metrics/ClassLength
 end

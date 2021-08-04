@@ -19,7 +19,6 @@ import { paymentPlanStatus, paymentPlanFrequency } from '../../../../utils/const
 import { PaymentPlanCreateMutation } from '../../../../graphql/mutations/land_parcel';
 import { dateToString } from '../../../../components/DateContainer';
 import { capitalize, formatError } from '../../../../utils/helpers'
-import { useTranslation } from 'react-i18next';
 
 const initialPlanState = {
   status: 0,
@@ -49,7 +48,6 @@ export default function PaymentPlanModal({
   const [createPaymentPlan] = useMutation(PaymentPlanCreateMutation);
   const [inputValue, setInputValues] = useState(initialPlanState);
   const [isError, setIsError] = useState(false);
-  const { t } = useTranslation('common')
   
   function handleInputChange(event){
     const { name, value } = event.target;
@@ -218,127 +216,122 @@ export default function PaymentPlanModal({
             handleFrequency={handleFrequency}
             data={paymentPlanFrequency}
           />
-        <FrequencyButton
-          frequency={frequency}
-          handleFrequency={handleFrequency}
-          data={paymentPlanFrequency}
-        />
-        <div style={{ display: 'flex', width: '100%', justifyContent: 'space-between' }}>
-          <TextField
-            margin="normal"
-            id="duration"
-            label={t('table_headers.plan_duration')}
-            aria-label="duration"
-            value={inputValue.duration}
-            onChange={handleInputChange}
-            name="duration"
-            style={{ marginRight: '15px' }}
-            type="number"
-            required
-            InputProps={{
+          <div style={{ display: 'flex', width: '100%', justifyContent: 'space-between' }}>
+            <TextField
+              margin="normal"
+              id="duration"
+              label={t('table_headers.plan_duration')}
+              aria-label="duration"
+              value={inputValue.duration}
+              onChange={handleInputChange}
+              name="duration"
+              style={{ marginRight: '15px' }}
+              type="number"
+              required
+              InputProps={{
               inputProps: {
                 min: 1
               },
               endAdornment: <InputAdornment position="end">{getCalendarDuration()}</InputAdornment>
             }}
-            error={isError && !inputValue.duration}
-            helperText={isError && !inputValue.duration && t('errors.duration_requied')}
-          />
-          <TextField
-            margin="normal"
-            id="installment-amount"
-            label={t('common:table_headers.amount')}
-            aria-label="installment-amount"
-            value={inputValue.installmentAmount}
-            onChange={handleInputChange}
-            name="installmentAmount"
-            type="number"
-            required
-            InputProps={{
+              error={isError && !inputValue.duration}
+              helperText={isError && !inputValue.duration && t('errors.duration_requied')}
+            />
+            <TextField
+              margin="normal"
+              id="installment-amount"
+              label={t('common:table_headers.amount')}
+              aria-label="installment-amount"
+              value={inputValue.installmentAmount}
+              onChange={handleInputChange}
+              name="installmentAmount"
+              type="number"
+              required
+              InputProps={{
               inputProps: {
                 min: 1
               },
               startAdornment: <InputAdornment position="start">{currency}</InputAdornment>
             }}
-            error={isError && !inputValue.installmentAmount}
-            helperText={isError && !inputValue.installmentAmount && t('errors.amount_required')}
-          />
-        </div>
-        {inputValue.duration && (
+              error={isError && !inputValue.installmentAmount}
+              helperText={isError && !inputValue.installmentAmount && t('errors.amount_required')}
+            />
+          </div>
+          {inputValue.duration && (
           <Typography variant="subtitle1" color="textPrimary">
             {`Your plan ends on ${dateToString(getEndDate())}`}
           </Typography>
         )}
-        <TextField
-          autoFocus
-          margin="normal"
-          id="status"
-          aria-label="status"
-          label={t('common:table_headers.status')}
-          value={inputValue.status}
-          onChange={handleInputChange}
-          name="status"
-          style={{ width: '100%' }}
-          required
-          select
-          error={isError && !Number.isInteger(inputValue.status)}
-          helperText={isError && inputValue.status === '' && t('errors.status_required')}
-        >
-          {Object.entries(paymentPlanStatus)?.map(([key, val]) => (
-            <MenuItem key={key} value={Number(key)}>
-              {val}
-            </MenuItem>
+          <TextField
+            autoFocus
+            margin="normal"
+            id="status"
+            aria-label="status"
+            label={t('common:table_headers.status')}
+            value={inputValue.status}
+            onChange={handleInputChange}
+            name="status"
+            style={{ width: '100%' }}
+            required
+            select
+            error={isError && !Number.isInteger(inputValue.status)}
+            helperText={isError && inputValue.status === '' && t('errors.status_required')}
+          >
+            {Object.entries(paymentPlanStatus)?.map(([key, val]) => (
+              <MenuItem key={key} value={Number(key)}>
+                {val}
+              </MenuItem>
           ))}
-        </TextField>
-        <TextField
-          autoFocus
-          margin="normal"
-          id="purchase_plan"
-          aria-label="purchase_plan"
-          label={t('table_headers.plan_type')}
-          value={inputValue.planType}
-          onChange={handleInputChange}
-          name="planType"
-          style={{ width: '100%' }}
-          required
-          select
-        >
-          <MenuItem key="lease_" value="lease">
-            {t('misc.lease')}
-          </MenuItem>
-          <MenuItem key="other" value="other">
-            {t('misc.other')}
-          </MenuItem>
-        </TextField>
-        <TextField
-          autoFocus
-          margin="normal"
-          id="plot"
-          aria-label="plot"
-          label={t('table_headers.select_plot')}
-          onChange={event => handleLandParcelSelect(event)}
-          name="plot"
-          style={{ width: '100%' }}
-          required
-          select
-          error={isError && !landParcelId}
-          helperText={isError && !landParcelId && t('errors.property_required')}
-        >
-          {landParcelsData?.userLandParcels?.map(parcel => (
-            <MenuItem key={parcel.id} value={parcel}>
-              {parcel.parcelNumber}
+          </TextField>
+          <TextField
+            autoFocus
+            margin="normal"
+            id="purchase_plan"
+            aria-label="purchase_plan"
+            label={t('table_headers.plan_type')}
+            value={inputValue.planType}
+            onChange={handleInputChange}
+            name="planType"
+            style={{ width: '100%' }}
+            required
+            select
+          >
+            <MenuItem key="lease_" value="lease">
+              {t('misc.lease')}
             </MenuItem>
+            <MenuItem key="other" value="other">
+              {t('misc.other')}
+            </MenuItem>
+          </TextField>
+          <TextField
+            autoFocus
+            margin="normal"
+            id="plot"
+            aria-label="plot"
+            label={t('table_headers.select_plot')}
+            onChange={event => handleLandParcelSelect(event)}
+            name="plot"
+            style={{ width: '100%' }}
+            required
+            select
+            error={isError && !landParcelId}
+            helperText={isError && !landParcelId && t('errors.property_required')}
+          >
+            {landParcelsData?.userLandParcels?.map(parcel => (
+              <MenuItem key={parcel.id} value={parcel}>
+                {parcel.parcelNumber}
+              </MenuItem>
           ))}
-        </TextField>
-        {landParcelsData?.userLandParcels.length === 0 && (
+          </TextField>
+          {landParcelsData?.userLandParcels.length === 0 && (
           <Typography color="textSecondary" style={{ marginBottom: '10px' }}>
             {t('errors.no_plot')}
           </Typography>
         )}
-        {landParcel?.accounts?.length && (
+          {landParcel?.accounts?.length && (
           <CoOwners landParcel={landParcel} userId={userId} handleCoOwners={handleCoOwners} />
         )}
-        {inputValue.duration && inputValue.installmentAmount && (
+          {inputValue.duration && inputValue.installmentAmount && (
           <>
             <Typography variant="subtitle1" color="textSecondary">
               {t('table_headers.total_value')}
@@ -349,11 +342,11 @@ export default function PaymentPlanModal({
             </Typography>
           </>
         )}
-        <Typography color="textPrimary">
-          {t('errors.all_bills')}
-        </Typography>
-      </>
-    </CustomizedDialogs>
+          <Typography color="textPrimary">
+            {t('errors.all_bills')}
+          </Typography>
+        </>
+      </CustomizedDialogs>
   );
 }
 

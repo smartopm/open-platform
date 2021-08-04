@@ -42,7 +42,6 @@ RSpec.describe Mutations::Transaction::TransactionCreate do
                 createdAt
                 amount
                 receiptNumber
-                automatedReceiptNumber
                 currentPlotPendingBalance
                 paymentPlan{
                   pendingBalance
@@ -205,7 +204,6 @@ RSpec.describe Mutations::Transaction::TransactionCreate do
           expect(plan_payment['receiptNumber']).to eql 'MI12345'
           expect(plan_payment['amount']).to eql 100.0
           expect(plan_payment['currentPlotPendingBalance']).to eql 1100.0
-          expect(plan_payment['automatedReceiptNumber']).not_to be_nil
           expect(plan_payment['paymentPlan']['pendingBalance']).to eql 1100.0
           expect(plan_payment['paymentPlan']['status']).to eql 'active'
 

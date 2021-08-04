@@ -19,7 +19,6 @@ import {
 } from '@material-ui/core';
 import { MoreHorizOutlined } from '@material-ui/icons';
 import EditIcon from '@material-ui/icons/Edit';
-import { useTranslation } from 'react-i18next';
 import DataList from '../../../../shared/list/DataList';
 import { dateToString } from '../../../../components/DateContainer';
 import {
@@ -97,8 +96,6 @@ export default function UserPaymentPlanItem({
     fetchPolicy: 'no-cache',
     errorPolicy: 'all'
   });
-
-  const { t } = useTranslation('common');
 
   const planHeader = [
     { title: 'Plot Number', col: 2 },
