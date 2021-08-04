@@ -101,7 +101,6 @@ export default function PaymentModal({
       ...inputValue,
       bankName: '',
       chequeNumber: '',
-      receiptNumber: '',
       paidDate: subDays(new Date(), 1)
     });
     setPlotInputValue([]);
@@ -144,6 +143,10 @@ export default function PaymentModal({
     return res?.receiptNumber
   }
 
+  function validatePlotInput(input) {
+    return input.map(({amount, paymentPlanId}) => ({ amount, paymentPlanId }))
+  }
+
   // eslint-disable-next-line consistent-return
   function updatePlotInputFields(name, value, paymentPlanId) {
     const fields = [...plotInputValue];
@@ -184,7 +187,7 @@ export default function PaymentModal({
         amount: totalAmount(),
         // allow rails to pick its default date rather than the initialValue past on top
         createdAt: inputValue.pastPayment ? inputValue.paidDate : '',
-        paymentsAttributes: plotInputValue
+        paymentsAttributes: inputValue.pastPayment ? plotInputValue : validatePlotInput(plotInputValue)
       }
     })
       .then(res => {
