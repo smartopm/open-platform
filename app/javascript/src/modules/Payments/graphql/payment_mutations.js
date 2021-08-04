@@ -33,6 +33,7 @@ mutation PaymentCreate(
       planPayments {
         id
         receiptNumber
+        amount
         currentPlotPendingBalance
         paymentPlan {
           installmentAmount
