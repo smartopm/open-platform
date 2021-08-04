@@ -189,7 +189,7 @@ export function CommentBox({
 }) {
   // in the future instead of using location, pass a prop called isUpload and show upload icon or don't
   const location = useLocation()
-  const { t } = useTranslation('common', 'discussion')
+  const { t } = useTranslation(['common', 'discussion'])
   return (
     <>
       <ListItem alignItems="flex-start">
@@ -223,7 +223,8 @@ export function CommentBox({
         {upload.status === 'DONE' && (
         <Grid item>
           <p style={{ marginTop: 5, marginRight: 35 }}>
-            {t('discussion:messages.image_uploaded')}
+
+            {t('messages.image_uploaded')}
           </p>
         </Grid>
         )}

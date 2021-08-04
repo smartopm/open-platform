@@ -41,7 +41,7 @@ export default function Discuss({ update }) {
         autoHideDuration={6000}
         onClose={() => setOpen(!open)}
         anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-        message={t('discussion:messages.discussion_topic_created')}
+        message={t('messages.discussion_topic_created')}
       />
       <form
         onSubmit={handleSubmit}
@@ -49,9 +49,9 @@ export default function Discuss({ update }) {
       >
         <TextField
           name="title"
-          label={t('discussion:label.discussion_title')}
+          label={t('label.discussion_title')}
           style={{ width: '63vw' }}
-          placeholder={t('discussion:placeholder.type_comment')}
+          placeholder={t('placeholder.type_comment')}
           onChange={(e) => setTitle(e.target.value)}
           value={title}
           margin="normal"

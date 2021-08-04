@@ -32,7 +32,7 @@ export default function Discussion({ discussionData }) {
       variables: { id, limit }
     }
   )
-  const { t } = useTranslation(['discussion'])
+  const { t } = useTranslation('discussion')
 
   const discussionBoardDisclaimer =
     `{t('discussion:discussion_board_disclaimer.first_line')}
