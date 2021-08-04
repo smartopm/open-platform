@@ -1,0 +1,18 @@
+{
+  "form_actions": {
+    "edit_workflow": "Editar flujo de trabajo",
+    "select": "Seleccionar {{name}}"
+  },
+  "form_fields": {
+    "assign_user": "Asignar esta tarea a los usuarios",
+    "pick_date": "Elija una fecha de vencimiento",
+    "select_action": "Seleccione una acción",
+    "select_event": "Seleccionar tipo de evento"
+  },
+  "messages": {
+    "success_message": "Éxito: los cambios se guardaron correctamente"
+  },
+  "misc": {
+    "inactive": "Inactivo"
+  }
+}
