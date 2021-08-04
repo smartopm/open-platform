@@ -103,7 +103,6 @@ export default function PaymentModal({
       chequeNumber: '',
       paidDate: subDays(new Date(), 1)
     });
-    setPlotInputValue([]);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [inputValue.transactionType, inputValue.pastPayment]);
 
