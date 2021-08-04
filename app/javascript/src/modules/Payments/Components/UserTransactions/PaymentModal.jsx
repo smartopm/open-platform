@@ -128,7 +128,7 @@ export default function PaymentModal({
   }
 
   function totalAmount() {
-    return plotInputValue.reduce((baseVal, val) => baseVal + parseInt(val.amount, 10), 0)
+    return plotInputValue.reduce((baseVal, val) => baseVal + parseFloat(val.amount), 0)
   }
 
   function onChangePlotInputFields(event, plan) {
