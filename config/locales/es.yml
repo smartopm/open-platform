@@ -248,9 +248,17 @@ es:
       users/feedback: Comentarios
       users/time_sheet: Planilla de tiempo
       users/user: Usuario
+  campaign:
+    default:
+      message: Mensaje de campaña predeterminado
+      name: Mensaje de campaña predeterminado
   errors:
     action_flow:
       invalid_action_name: Nombre de acción no válido
+      invalid_event_type: Tipo de evento invalido
+      not_found: Flujo de acción no encontrado
+    campaign:
+      missing_parameter: 'Falta el parámetro: proporcione el parámetro% {atributo}'
     can_not_process_request: Por alguna razón, no puedo procesar su solicitud.
     comment:
       not_found: Comentario no encontrado
@@ -259,8 +267,12 @@ es:
       phone: Teléfono duplicado
     email_template:
       not_found: Plantilla no encontrada
+    entry_request:
+      empty_note: La nota no puede estar vacía
     event_log:
       not_found: Registro de eventos no encontrado
+    form:
+      not_found: Formulario no encontrado
     invalid_argument_value: Valor de argumento no válido
     invalid_value: Valor no válido
     invoice:
@@ -268,6 +280,7 @@ es:
       plan_required: El plan de pago no existe para la propiedad seleccionada
     label:
       duplicate_label: Etiqueta duplicada
+      ids_can_not_be_same: Los ID de etiqueta no pueden ser iguales
       not_found: Etiqueta no encontrada
     land_parcel:
       not_found: Parcela de tierra no encontrada
@@ -279,6 +292,8 @@ es:
     notification:
       preference_update_failed: Error al actualizar la preferencia
     payment_plan:
+      amount_greater_than_pending_balance: La cantidad no puede ser mayor que el saldo
+        pendiente del plan
       does_not_exist_for_property: El plan de pago no existe para la propiedad seleccionada
       have_zero_pending_balance: El saldo pendiente es 0 para el plan de pago de la
         propiedad seleccionada
