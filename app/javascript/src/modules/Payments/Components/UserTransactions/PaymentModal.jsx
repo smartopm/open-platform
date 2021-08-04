@@ -128,7 +128,7 @@ export default function PaymentModal({
   }
 
   function totalAmount() {
-    return plotInputValue.reduce((baseVal, val) => baseVal + parseInt(val.amount, 10), 0)
+    return plotInputValue.reduce((baseVal, val) => baseVal + parseFloat(val.amount), 0)
   }
 
   function onChangePlotInputFields(event, plan) {
@@ -158,7 +158,7 @@ export default function PaymentModal({
         [name]: name === 'amount' ? parseFloat(value) : value
       };
     } else {
-      fields.push({ [name]: value, paymentPlanId });
+      fields.push({ [name]: name === 'amount' ? parseFloat(value) : value, paymentPlanId });
     }
     setPlotInputValue(fields);
   }

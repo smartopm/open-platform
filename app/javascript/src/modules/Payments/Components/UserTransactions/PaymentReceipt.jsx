@@ -13,7 +13,6 @@ export default function PaymentReceipt({ paymentData, open, handleClose, currenc
 
   return (
     <>
-      {console.log(paymentData)}
       <div>
         <FullScreenDialog
           open={open}
@@ -24,7 +23,7 @@ export default function PaymentReceipt({ paymentData, open, handleClose, currenc
         >
           {paymentData?.planPayments?.length ? (
             paymentData.planPayments.map(pay => (
-              <div key={pay.id} style={{marginBotton: '100px'}}>
+              <div key={pay.id} style={{marginBottom: '420px'}}>
                 <ReceiptDetail 
                   paymentData={paymentData} 
                   currencyData={currencyData}

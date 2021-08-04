@@ -1,7 +1,7 @@
 import React, { useRef, useContext } from 'react';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import Grid from '@material-ui/core/Grid';
-// import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
@@ -318,3 +318,110 @@ const logoStyles = StyleSheet.create({
     display: 'block'
   }
 });
+
+ReceiptDetail.defaultProps = {
+  paymentData: {},
+  planDetail: {}
+};
+
+ReceiptDetail.propTypes = {
+  planDetail: PropTypes.shape({
+    id: PropTypes.string,
+    amount: PropTypes.number,
+    receiptNumber: PropTypes.string,
+    currentPlotPendingBalance: PropTypes.string,
+    paymentPlan: PropTypes.shape({
+      id: PropTypes.string,
+      installmentAmount: PropTypes.number,
+      landParcel: PropTypes.shape({
+        id: PropTypes.string,
+        parcelNumber: PropTypes.string
+      })
+    })
+  }), 
+  paymentData: PropTypes.shape({
+    id: PropTypes.string,
+    source: PropTypes.string,
+    amount: PropTypes.number,
+    bankName: PropTypes.string,
+    chequeNumber: PropTypes.string,
+    createdAt: PropTypes.string,
+    currentPlotPendingBalance: PropTypes.string,
+    userTransaction: PropTypes.shape({
+      id: PropTypes.string,
+      source: PropTypes.string,
+      bankName: PropTypes.string,
+      chequeNumber: PropTypes.string,
+      depositor: PropTypes.shape({
+        id: PropTypes.string,
+        name: PropTypes.string
+      })
+    }),
+    community: PropTypes.shape({
+      id: PropTypes.string,
+      name: PropTypes.string,
+      logoUrl: PropTypes.string,
+      currency: PropTypes.string,
+      bankingDetails: PropTypes.shape({
+        bankName: PropTypes.string,
+        accountName: PropTypes.string,
+        accountNo: PropTypes.string,
+        branch: PropTypes.string,
+        swiftCode: PropTypes.string,
+        sortCode: PropTypes.string,
+        address:PropTypes.string,
+        city: PropTypes.string,
+        country: PropTypes.string,
+        taxIdNo: PropTypes.string,
+      }),
+      socialLinks: PropTypes.shape({
+        category: PropTypes.string,
+        social_link: PropTypes.string
+      }),
+      supportEmail: PropTypes.shape({
+        category: PropTypes.string,
+        email: PropTypes.string
+      }),
+      supportNumber: PropTypes.shape({
+        category: PropTypes.string,
+        phone_no: PropTypes.string
+      }),
+    }),
+    user: PropTypes.shape({
+      id: PropTypes.string,
+      name: PropTypes.string,
+      extRefId: PropTypes.string
+    }),
+    depositor: PropTypes.shape({
+      id: PropTypes.string,
+      name: PropTypes.string
+    }),
+    paymentPlan: PropTypes.shape({
+      id: PropTypes.string,
+      installmentAmount: PropTypes.number,
+      landParcel: PropTypes.shape({
+        id: PropTypes.string,
+        parcelNumber: PropTypes.string
+      })
+    }),
+    receiptNumber: PropTypes.string,
+    planPayments: PropTypes.arrayOf(
+      PropTypes.shape({
+        id: PropTypes.string,
+        receiptNumber: PropTypes.string,
+        currentPlotPendingBalance: PropTypes.number,
+        paymentPlan: PropTypes.shape({
+          id: PropTypes.string,
+          landParcel: PropTypes.shape({
+            id: PropTypes.string,
+            parcelNumber: PropTypes.string
+          })
+        })
+      })
+    )
+  }),
+  currencyData: PropTypes.shape({
+    currency: PropTypes.string,
+    locale: PropTypes.string
+  }).isRequired
+};
