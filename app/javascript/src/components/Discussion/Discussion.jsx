@@ -7,6 +7,7 @@ import {
 } from '@material-ui/core'
 import { useQuery } from 'react-apollo'
 import PropTypes from 'prop-types'
+import { useTranslation } from 'react-i18next'
 import Comment from './Comment'
 import {
   DiscussionCommentsQuery
@@ -31,11 +32,12 @@ export default function Discussion({ discussionData }) {
       variables: { id, limit }
     }
   )
-  const discussionBoardDisclaimer =
-    `Comments and discussion boards are provided as a free service for logged in community members.
-    Users must keep comments constructive, informative, positive, and free of profanity and obscenity.
-    We reserve the right to remove posts or boards that veer from these principles.`
+  const { t } = useTranslation(['discussion'])
 
+  const discussionBoardDisclaimer =
+    `{t('discussion:discussion_board_disclaimer.first_line')}
+    {t('discussion:discussion_board_disclaimer.second_line')}
+    {t('discussion:discussion_board_disclaimer.third_line')}`
 
   function fetchMoreComments() {
     setLoading(true)
@@ -68,7 +70,7 @@ export default function Discussion({ discussionData }) {
           </Grid>
           <Grid item xs={12}>
             <Typography variant="body1" data-testid="disc_desc">
-              {discussionData.description || 'No Description'}
+              {discussionData.description || t('discussion:headers.no_discussions')}
             </Typography>
           </Grid>
           <Grid item xs={6}>
@@ -88,7 +90,7 @@ export default function Discussion({ discussionData }) {
             <Disclaimer body={discussionBoardDisclaimer} />
           </Grid>
           <Grid item xs={12}>
-            <Typography variant="subtitle1">Comments</Typography>
+            <Typography variant="subtitle1">{t('discussion:headers.comments')}</Typography>
           </Grid>
           <Grid item xs={12}>
             <Comment
@@ -99,7 +101,7 @@ export default function Discussion({ discussionData }) {
             {data?.discussComments.length >= limit && (
               <CenteredContent>
                 <Button variant="outlined" onClick={fetchMoreComments}>
-                  {isLoading ? <Spinner /> : 'Load more comments'}
+                  {isLoading ? <Spinner /> : t('discussion:form_actions.more_comments')}
                 </Button>
               </CenteredContent>
             )}

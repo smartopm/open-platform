@@ -34,7 +34,7 @@ describe('CommentBox', () => {
     );
     // Todo: Use regex to match both Comment and Send to make sure it works well from message box
     expect(container.queryByText('common:misc.comment')).toBeInTheDocument();
-    expect(container.queryByText('Image uploaded')).toBeInTheDocument();
+    expect(container.queryByText('discussion:messages.image_uploaded')).toBeInTheDocument();
 
     const comment = container.queryByTestId('comment_content');
     fireEvent.change(comment, { target: { value: 'This is a good comment' } });

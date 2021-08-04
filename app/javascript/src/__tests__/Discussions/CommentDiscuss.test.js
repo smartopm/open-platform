@@ -40,7 +40,7 @@ describe('Discuss component', () => {
 
       const button = container.queryByTestId('button')
       fireEvent.click(button)
-      expect(container.queryByText('Create a discussion topic')).not.toBeInTheDocument()
+      expect(container.queryByText('discussion:headers.create_discussion')).not.toBeInTheDocument()
     })
   })
 
@@ -77,7 +77,7 @@ describe('Discuss component', () => {
 
       const button = container.queryByTestId('button')
       fireEvent.click(button)
-      expect(container.queryByText('Create a discussion topic')).not.toBeInTheDocument()
+      expect(container.queryByText('discussion:headers.create_discussion')).not.toBeInTheDocument()
     })
   })
 })
