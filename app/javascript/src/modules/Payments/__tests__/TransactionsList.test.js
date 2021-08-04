@@ -63,7 +63,7 @@ describe('Transactions Component', () => {
 
     await waitFor(
       () => {
-        expect(container.queryByText('Transactions')).toBeInTheDocument();
+        expect(container.queryByText('common:menu.transaction_plural')).toBeInTheDocument();
       },
       { timeout: 100 }
     );

@@ -83,9 +83,9 @@ describe('Test Payment Details Screen', () => {
       <PaymentDetails inputValue={inputValue} totalAmount="200" currencyData={currency} />
     )
     expect(container.queryByTestId('amount')).toBeInTheDocument()
-    expect(container.queryByTestId('type').textContent).toContain('Transaction Type: cash')
-    expect(container.queryByTestId('transactionNumber').textContent).toContain('Transaction Number: R45F112')
-    expect(container.queryByTestId('chequeNumber').textContent).toContain('Cheque Number: 423-22223-099')
-    expect(container.queryByTestId('bankName').textContent).toContain('Bank Name: Standard')
+    expect(container.queryByTestId('type').textContent).toContain('table_headers.transaction_type: cash')
+    expect(container.queryByTestId('transactionNumber').textContent).toContain('common:table_headers.transaction_number: R45F112')
+    expect(container.queryByTestId('chequeNumber').textContent).toContain('common:table_headers.cheque_number: 423-22223-099')
+    expect(container.queryByTestId('bankName').textContent).toContain('common:table_headers.bank_name: Standard')
   });
 })

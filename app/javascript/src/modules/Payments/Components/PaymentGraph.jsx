@@ -1,5 +1,6 @@
 import React from 'react'
 import { useQuery } from 'react-apollo';
+import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types'
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { useTheme } from '@material-ui/core/styles';
@@ -11,6 +12,7 @@ import { formatError } from '../../../utils/helpers';
 
 
 export default function PaymentGraph({ handleClick }){
+  const { t } = useTranslation(['payment', 'common']);
   const { data, error } = useQuery(PaymentStats, {
     fetchPolicy: 'cache-and-network'
   });
@@ -26,7 +28,7 @@ export default function PaymentGraph({ handleClick }){
         {data?.paymentAccountingStats && data?.paymentAccountingStats?.length && (
           <div>
             <div style={{borderBottom: `1px solid ${theme.palette.primary.main}`, padding: '25px'}}>
-              <Typography variant='body1' color='primary'>Total Amount Paid By Date</Typography>
+              <Typography variant='body1' color='primary'>{t('misc.total_amount_paid')}</Typography>
             </div>
             <div style={{padding: '30px'}}>
               <ResponsiveContainer width="100%" height={300}>

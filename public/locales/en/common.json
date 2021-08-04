@@ -81,7 +81,8 @@
     "save_changes": "Save changes",
     "merge": "Merge",
     "create_business": "Create a Business",
-    "add_type": "Add {{label}}"
+    "add_type": "Add {{label}}",
+    "close": "Close"
   },
   "misc": {
     "or": "OR",
@@ -314,7 +315,10 @@
     "recorded_by": "Recorded by",
     "payment_type": "Payment Type",
     "payment_id": "Payment/Receipt ID",
-    "amount_paid": "Amount Paid"
+    "amount_paid": "Amount Paid",
+    "payment_plan": "Payment Plan",
+    "balance_amount": "Balance/Monthly Amount",
+    "payment_day": "Payment Day"
   },
   "table_content": {
     "invoice_number": "Invoice Number {{numb}}",

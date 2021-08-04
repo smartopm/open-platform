@@ -1,72 +1,80 @@
 /* eslint-disable no-nested-ternary */
-import React, { useState, useEffect } from 'react'
-import { useLazyQuery } from 'react-apollo'
+import React, { useState, useEffect } from 'react';
+import { useLazyQuery } from 'react-apollo';
+import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
-import PropTypes from 'prop-types'
+import PropTypes from 'prop-types';
 import { useTheme, makeStyles } from '@material-ui/core/styles';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
-import { Typography } from '@material-ui/core'
-import UserPaymentPlanItem from './UserPaymentPlanItem'
-import Balance from './UserBalance'
-import { UserLandParcels, UserBalance } from '../../../../graphql/queries'
-import DepositQuery, { UserPlans }  from '../../graphql/payment_query'
-import { Spinner } from '../../../../shared/Loading'
-import { formatError, useParamsQuery } from '../../../../utils/helpers'
-import { currencies } from '../../../../utils/constants'
-import CenteredContent from '../../../../components/CenteredContent'
-import Paginate from '../../../../components/Paginate'
+import { Typography } from '@material-ui/core';
+import UserPaymentPlanItem from './UserPaymentPlanItem';
+import Balance from './UserBalance';
+import { UserLandParcels, UserBalance } from '../../../../graphql/queries';
+import DepositQuery, { UserPlans } from '../../graphql/payment_query';
+import { Spinner } from '../../../../shared/Loading';
+import { formatError, useParamsQuery } from '../../../../utils/helpers';
+import { currencies } from '../../../../utils/constants';
+import CenteredContent from '../../../../components/CenteredContent';
+import Paginate from '../../../../components/Paginate';
 import ListHeader from '../../../../shared/list/ListHeader';
 import ButtonComponent from '../../../../shared/buttons/Button';
 import Transactions from './Transactions';
 import PaymentPlanModal from './PaymentPlanModal';
-import MessageAlert from '../../../../components/MessageAlert'
+import MessageAlert from '../../../../components/MessageAlert';
 
 export default function PaymentPlans({ userId, user, userData }) {
+  const { t } = useTranslation(['payment', 'common']);
   const planHeader = [
-    { title: 'Plot Number', col: 2 },
-    { title: 'Payment Plan', col: 2 },
-    { title: 'Start Date', col: 2 },
-    { title: 'Balance/Monthly Amount', col: 2 },
-    { title: 'Payment Day', col: 2 },
-    { title: 'Menu', col: 2 }
+    { title: 'Plot Number', value: t('common:table_headers.plot_number'), col: 2 },
+    { title: 'Payment Plan', value: t('common:table_headers.payment_plan'), col: 2 },
+    { title: 'Start Date', value: t('common:table_headers.start_date'), col: 2 },
+    { title: 'Balance/Monthly Amount', value: t('common:table_headers.balance_amount'), col: 2 },
+    { title: 'Payment Day', value: t('common:table_headers.payment_day'), col: 2 },
+    { title: 'Menu', value: t('common:table_headers.menu'), col: 2 }
   ];
   const history = useHistory();
-  const path = useParamsQuery()
-  const subtab = path.get('subtab')
-  const id = path.get('id')
+  const path = useParamsQuery();
+  const subtab = path.get('subtab');
+  const id = path.get('id');
   const classes = useStyles();
-  const limit = 10
-  const page = path.get('page')
+  const limit = 10;
+  const page = path.get('page');
   const theme = useTheme();
   const matches = useMediaQuery(theme.breakpoints.up('sm'));
-  const [offset, setOffset] = useState(Number(page) || 0)
+  const [offset, setOffset] = useState(Number(page) || 0);
   const [planModalOpen, setPlanModalOpen] = useState(false);
   const [message, setMessage] = useState({ isError: false, detail: '' });
   const [alertOpen, setAlertOpen] = useState(false);
-  const [filtering, setFiltering] = useState(false)
+  const [filtering, setFiltering] = useState(false);
   const [loadPlans, { loading, error, data, refetch }] = useLazyQuery(UserPlans, {
     variables: { userId, limit, offset },
     fetchPolicy: 'no-cache',
     errorPolicy: 'all'
   });
 
-  const [loadTransactions, { loading: transLoading, error: transError, data: transData, refetch: transRefetch }] = useLazyQuery(DepositQuery, {
+  const [
+    loadTransactions,
+    { loading: transLoading, error: transError, data: transData, refetch: transRefetch }
+  ] = useLazyQuery(DepositQuery, {
     variables: { userId, limit, offset },
     fetchPolicy: 'no-cache',
     errorPolicy: 'all'
   });
 
-  const [loadLandParcels, { data: landParcelsData}] = useLazyQuery(UserLandParcels, {
+  const [loadLandParcels, { data: landParcelsData }] = useLazyQuery(UserLandParcels, {
     variables: { userId },
     fetchPolicy: 'no-cache',
     errorPolicy: 'all'
-  })
+  });
 
-  const currency = currencies[user.community.currency] || ''
-  const { locale } = user.community
-  const currencyData = { currency, locale }
+  const currency = currencies[user.community.currency] || '';
+  const { locale } = user.community;
+  const currencyData = { currency, locale };
 
-  const [ loadBalance, { loading: balanceLoad, error: balanceError, data: balanceData, refetch: balanceRefetch }] = useLazyQuery(UserBalance, {
+  const [
+    loadBalance,
+    { loading: balanceLoad, error: balanceError, data: balanceData, refetch: balanceRefetch }
+  ] = useLazyQuery(UserBalance, {
     variables: { userId },
     fetchPolicy: 'no-cache',
     errorPolicy: 'all'
@@ -74,37 +82,41 @@ export default function PaymentPlans({ userId, user, userData }) {
 
   function paginate(action) {
     if (action === 'prev') {
-      if (offset < limit) return
-      setOffset(offset - limit)
+      if (offset < limit) return;
+      setOffset(offset - limit);
     } else if (action === 'next') {
-      setOffset(offset + limit)
+      setOffset(offset + limit);
     }
   }
 
-  function handleButtonClick(){
-    history.push('?tab=Plans&subtab=Transactions')
-    setFiltering(false)
+  function handleButtonClick() {
+    history.push('?tab=Plans&subtab=Transactions');
+    setFiltering(false);
   }
 
-  function handlePlanModal(){
-    setPlanModalOpen(true)
-    loadLandParcels()
+  function handlePlanModal() {
+    setPlanModalOpen(true);
+    loadLandParcels();
   }
   useEffect(() => {
-    loadTransactions()
-    loadPlans()
-    loadBalance()
+    loadTransactions();
+    loadPlans();
+    loadBalance();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  if (error && !data) return <CenteredContent>{formatError(error.message)}</CenteredContent>
-  if (balanceError && !balanceData) return <CenteredContent>{formatError(balanceError.message)}</CenteredContent>
-  if (transError && !transData) return <CenteredContent>{formatError(transError.message)}</CenteredContent>
+  if (error && !data) return <CenteredContent>{formatError(error.message)}</CenteredContent>;
+  if (balanceError && !balanceData)
+    return <CenteredContent>{formatError(balanceError.message)}</CenteredContent>;
+  if (transError && !transData)
+    return <CenteredContent>{formatError(transError.message)}</CenteredContent>;
 
   return (
     <div>
-      {balanceLoad ? <Spinner /> : (
-        <Balance 
+      {balanceLoad ? (
+        <Spinner />
+      ) : (
+        <Balance
           user={user}
           userData={userData}
           refetch={refetch}
@@ -115,7 +127,9 @@ export default function PaymentPlans({ userId, user, userData }) {
         />
       )}
       {subtab === 'Transactions' ? (
-        transLoading ? <Spinner /> : (
+        transLoading ? (
+          <Spinner />
+        ) : (
           <>
             <Transactions
               userId={userId}
@@ -141,30 +155,47 @@ export default function PaymentPlans({ userId, user, userData }) {
             )}
           </>
         )
-      ) : loading ? <Spinner /> : (
+      ) : loading ? (
+        <Spinner />
+      ) : (
         <>
           <div className={classes.planList}>
             <div>
-              <div style={{ display: 'flex', width: '100%', justifyContent: 'space-between', marginBottom: '10px' }}>
-                <Typography className={matches ? classes.plan : classes.planMobile}>Plans</Typography>
+              <div
+                style={{
+                  display: 'flex',
+                  width: '100%',
+                  justifyContent: 'space-between',
+                  marginBottom: '10px'
+                }}
+              >
+                <Typography className={matches ? classes.plan : classes.planMobile}>
+                  {t('common:misc.plans')}
+                </Typography>
                 {user.userType === 'admin' && (
-                  <div style={matches ? { display: 'flex', width: '100%', justifyContent: 'flex-end' } : {display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
-                    <div style={{margin: '0 10px 10px 0'}}>
-                      <ButtonComponent 
-                        color='primary' 
-                        variant='contained' 
-                        buttonText="New Payment Plan" 
+                  <div
+                    style={
+                      matches
+                        ? { display: 'flex', width: '100%', justifyContent: 'flex-end' }
+                        : { display: 'flex', flexDirection: 'column', alignItems: 'center' }
+                    }
+                  >
+                    <div style={{ margin: '0 10px 10px 0' }}>
+                      <ButtonComponent
+                        color="primary"
+                        variant="contained"
+                        buttonText={t('actions.new_payment_plan')}
                         handleClick={() => handlePlanModal()}
-                        size='small'
+                        size="small"
                       />
                     </div>
                     <div>
                       <ButtonComponent
-                        color='default' 
-                        variant='outlined' 
-                        buttonText="View all Transactions" 
+                        color="default"
+                        variant="outlined"
+                        buttonText={t('actions.view_all_transactions')}
                         handleClick={() => handleButtonClick()}
-                        size='small'
+                        size="small"
                       />
                     </div>
                   </div>
@@ -194,8 +225,8 @@ export default function PaymentPlans({ userId, user, userData }) {
           </div>
           {data?.userPlansWithPayments?.length > 0 ? (
             <div>
-              <UserPaymentPlanItem 
-                plans={data.userPlansWithPayments} 
+              <UserPaymentPlanItem
+                plans={data.userPlansWithPayments}
                 currencyData={currencyData}
                 userData={userData}
                 currentUser={user}
@@ -213,19 +244,18 @@ export default function PaymentPlans({ userId, user, userData }) {
                 />
               </CenteredContent>
             </div>
-        ) : 
-        (
-          <CenteredContent>No Plan Available</CenteredContent>
-        )}
+          ) : (
+            <CenteredContent>{t('errors.no_plan_available')}</CenteredContent>
+          )}
         </>
       )}
     </div>
-  )
+  );
 }
 
 PaymentPlans.defaultProps = {
-  userData: {},
-}
+  userData: {}
+};
 
 PaymentPlans.propTypes = {
   userId: PropTypes.string.isRequired,
@@ -241,7 +271,7 @@ PaymentPlans.propTypes = {
       locale: PropTypes.string
     }).isRequired
   }).isRequired
-}
+};
 
 const useStyles = makeStyles({
   plan: {

@@ -105,6 +105,7 @@ export function CustomizedDialogs({
   displaySaveButton
 }) {
   const classes = useStyles()
+  const { t } = useTranslation(['logbook', 'common'])
   return (
     <Dialog
       onClose={handleModal}
@@ -127,7 +128,7 @@ export function CustomizedDialogs({
             {actionLoading ? (<Spinner />) : (
               <>
                 <Button onClick={handleModal} variant="outlined" color="secondary" data-testid='dialog_cancel'>
-                  {cancelAction}
+                  {cancelAction || t('common:form_actions.cancel')}
                 </Button>
                 {displaySaveButton && (
                 <Button
@@ -137,7 +138,7 @@ export function CustomizedDialogs({
                   variant="contained"
                   disabled={disableActionBtn}
                 >
-                  {saveAction || 'Save'}
+                  {saveAction || t('common:form_actions.save')}
                 </Button>
               )}
               </>
@@ -151,6 +152,7 @@ export function CustomizedDialogs({
 
 export function DetailsDialog({ handleClose, open, title, children, noActionButton, color }){
   const classes = useStyles()
+  const { t } = useTranslation(['logbook', 'common'])
   return(
     <Dialog
       onClose={handleClose}
@@ -170,7 +172,7 @@ export function DetailsDialog({ handleClose, open, title, children, noActionButt
       {!noActionButton && (
         <DialogActions style={{ margin: '10px' }}>
           <Button onClick={handleClose} variant="outlined" color={color} data-testid='cancel'>
-            Close
+            {t('common:form_actions.close')}
           </Button>
         </DialogActions>
       )}
@@ -355,9 +357,9 @@ CustomizedDialogs.defaultProps = {
   dialogHeader: '',
   subHeader: '',
   children: {},
-  saveAction: 'Save',
+  saveAction: '',
   disableActionBtn: false,
-  cancelAction: 'Cancel',
+  cancelAction: '',
   actionable: true,
   actionLoading: false,
   displaySaveButton: true

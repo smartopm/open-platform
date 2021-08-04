@@ -72,7 +72,7 @@ describe('It should test the plan statement modal component', () => {
       </BrowserRouter>
     );
 
-    expect(container.queryByText('Statement for Plan')).toBeInTheDocument();
+    expect(container.queryByText('misc.statement_for_plan')).toBeInTheDocument();
     expect(container.queryByText('11, Nalikwanda Rd,')).toBeInTheDocument();
     expect(container.queryByText('Lusaka')).toBeInTheDocument();
 
@@ -92,12 +92,12 @@ describe('It should test the plan statement modal component', () => {
     expect(container.queryByTestId('pay-date')).toHaveTextContent('2020-12-28');
     expect(container.queryByTestId('amount')).toBeInTheDocument();
 
-    expect(container.queryByText('Banking Details')).toBeInTheDocument();
-    expect(container.queryByText('Bank')).toBeInTheDocument();
-    expect(container.queryByText('Account Name')).toBeInTheDocument();
-    expect(container.queryByText('Account Number')).toBeInTheDocument();
-    expect(container.queryByText('Branch')).toBeInTheDocument();
-    expect(container.queryByText('Swift Code')).toBeInTheDocument();
-    expect(container.queryByText('Sort Code')).toBeInTheDocument();
+    expect(container.queryByText('misc.banking_details')).toBeInTheDocument();
+    expect(container.queryByText('misc.bank')).toBeInTheDocument();
+    expect(container.queryByText('misc.account_name')).toBeInTheDocument();
+    expect(container.queryByText('misc.account_number')).toBeInTheDocument();
+    expect(container.queryByText('misc.branch')).toBeInTheDocument();
+    expect(container.queryByText('misc.swift_code')).toBeInTheDocument();
+    expect(container.queryByText('misc.sort_code')).toBeInTheDocument();
   });
 });
