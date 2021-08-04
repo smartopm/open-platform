@@ -151,51 +151,137 @@ RSpec.describe Mutations::PaymentPlan::TransferPaymentPlan do
       end
 
       context 'when source payment plan id and destination payment plan id is valid' do
-        before do
-          payment_plan.update(pending_balance: 800)
+        before { payment_plan.update(pending_balance: 800) }
+
+        context "when destinaion plan's pending balance is more than the minimum payment amount
+                  of soure payment plan" do
+          it 'transfers plan payments to new payment plan and allocates the additional payments
+              to general plan' do
+            expect(payment_plan.pending_balance.to_f).to eql 800.0
+            variables = {
+              sourcePlanId: payment_plan.id,
+              destinationPlanId: other_payment_plan.id,
+            }
+            result = DoubleGdpSchema.execute(transfer_payment_plan,
+                                             variables: variables,
+                                             context: {
+                                               current_user: admin,
+                                               site_community: community,
+                                             }).as_json
+            expect(result.dig('errors', 0, 'message')).to be_nil
+            plan_result = result.dig('data', 'transferPaymentPlan', 'paymentPlan')
+            expect(plan_result['planPayments'].size).to eql 2
+            expect(plan_result['planPayments'][0]['amount']).to eql 200.0
+            expect(plan_result['planPayments'][0]['manualReceiptNumber']).to eql 'MI13975'
+            expect(
+              plan_result['planPayments'][0]['automatedReceiptNumber'],
+            ).to eql plan_payment.reload.automated_receipt_number
+            expect(plan_result['planPayments'][1]['amount']).to eql 200.0
+            expect(plan_result['planPayments'][1]['manualReceiptNumber']).to eql 'MI13976-1'
+            expect(
+              plan_result['planPayments'][1]['automatedReceiptNumber'],
+            ).to eql "#{new_plan_payment.reload.automated_receipt_number}-1"
+            expect(payment_plan.reload.pending_balance.to_f).to eql 0.0
+            expect(other_payment_plan.reload.pending_balance.to_f).to eql 0.0
+            general_payments = user.general_payment_plan.plan_payments.reload.order(:amount)
+            expect(plan_payment.status).to eql 'cancelled'
+            expect(new_plan_payment.status).to eql 'cancelled'
+            expect(other_plan_payment.reload.status).to eql 'cancelled'
+            expect(general_payments.size).to eql 2
+            expect(general_payments[0].amount.to_f).to eql 100.0
+            expect(general_payments[0].manual_receipt_number).to eql 'MI13976-2'
+            expect(
+              general_payments[0].automated_receipt_number,
+            ).to eql "#{new_plan_payment.automated_receipt_number}-2"
+            expect(general_payments[1].amount.to_f).to eql 700.0
+            expect(general_payments[1].manual_receipt_number).to eql 'MI13977'
+            expect(
+              general_payments[1].automated_receipt_number,
+            ).to eql other_plan_payment.reload.automated_receipt_number
+          end
         end
-        it 'transfers plan payments to new payment plan and allocates the additional payments
-         to general plan' do
-          expect(payment_plan.pending_balance.to_f).to eql 800.0
-          variables = {
-            sourcePlanId: payment_plan.id,
-            destinationPlanId: other_payment_plan.id,
-          }
-          result = DoubleGdpSchema.execute(transfer_payment_plan,
-                                           variables: variables,
-                                           context: {
-                                             current_user: admin,
-                                             site_community: community,
-                                           }).as_json
-          plan_result = result.dig('data', 'transferPaymentPlan', 'paymentPlan')
-          expect(plan_result['planPayments'].size).to eql 2
-          expect(plan_result['planPayments'][0]['amount']).to eql 200.0
-          expect(plan_result['planPayments'][0]['manualReceiptNumber']).to eql 'MI13975'
-          expect(
-            plan_result['planPayments'][0]['automatedReceiptNumber'],
-          ).to eql plan_payment.reload.automated_receipt_number
-          expect(plan_result['planPayments'][1]['amount']).to eql 200.0
-          expect(plan_result['planPayments'][1]['manualReceiptNumber']).to eql 'MI13976-1'
-          expect(
-            plan_result['planPayments'][1]['automatedReceiptNumber'],
-          ).to eql "#{new_plan_payment.reload.automated_receipt_number}-1"
-          expect(payment_plan.reload.pending_balance.to_f).to eql 0.0
-          expect(other_payment_plan.reload.pending_balance.to_f).to eql 0.0
-          general_payments = user.general_payment_plan.plan_payments.reload
-          expect(plan_payment.status).to eql 'cancelled'
-          expect(new_plan_payment.status).to eql 'cancelled'
-          expect(other_plan_payment.reload.status).to eql 'cancelled'
-          expect(general_payments.size).to eql 2
-          expect(general_payments[0].amount.to_f).to eql 100.0
-          expect(general_payments[0].manual_receipt_number).to eql 'MI13976-2'
-          expect(
-            general_payments[0].automated_receipt_number,
-          ).to eql "#{new_plan_payment.automated_receipt_number}-2"
-          expect(general_payments[1].amount.to_f).to eql 700.0
-          expect(general_payments[1].manual_receipt_number).to eql 'MI13977'
-          expect(
-            general_payments[1].automated_receipt_number,
-          ).to eql other_plan_payment.reload.automated_receipt_number
+
+        context "when destinaion plan's pending balance is equal to minimum payment amount
+                of soure payment plan" do
+          before { other_payment_plan.update(pending_balance: 200) }
+
+          it 'uses the full amount of minimum payment and the other payments are allocated to
+              the general plan' do
+            variables = {
+              sourcePlanId: payment_plan.id,
+              destinationPlanId: other_payment_plan.id,
+            }
+            result = DoubleGdpSchema.execute(transfer_payment_plan,
+                                             variables: variables,
+                                             context: {
+                                               current_user: admin,
+                                               site_community: community,
+                                             }).as_json
+            expect(result.dig('errors', 0, 'message')).to be_nil
+            plan_result = result.dig('data', 'transferPaymentPlan', 'paymentPlan')
+            expect(plan_result['planPayments'].size).to eql 1
+            expect(plan_result['planPayments'][0]['amount']).to eql 200.0
+            expect(plan_result['planPayments'][0]['manualReceiptNumber']).to eql 'MI13975'
+            expect(
+              plan_result['planPayments'][0]['automatedReceiptNumber'],
+            ).to eql plan_payment.reload.automated_receipt_number
+            general_payments = user.general_payment_plan.plan_payments.reload.order(:amount)
+            expect(general_payments.size).to eql 2
+            expect(general_payments[0].amount.to_f).to eql 300.0
+            expect(general_payments[0].manual_receipt_number).to eql 'MI13976'
+            expect(
+              general_payments[0].automated_receipt_number,
+            ).to eql new_plan_payment.automated_receipt_number
+            expect(general_payments[1].amount.to_f).to eql 700.0
+            expect(general_payments[1].manual_receipt_number).to eql 'MI13977'
+            expect(
+              general_payments[1].automated_receipt_number,
+            ).to eql other_plan_payment.automated_receipt_number
+          end
+        end
+
+        context "when destinaion plan's pending balance is less than minimum payment amount
+                of soure payment plan" do
+          before { other_payment_plan.update(pending_balance: 100) }
+
+          it 'uses the required amount of minimum payment, the unused amount of minimum payment
+              and other payments are allocated to the general plan' do
+            variables = {
+              sourcePlanId: payment_plan.id,
+              destinationPlanId: other_payment_plan.id,
+            }
+            result = DoubleGdpSchema.execute(transfer_payment_plan,
+                                             variables: variables,
+                                             context: {
+                                               current_user: admin,
+                                               site_community: community,
+                                             }).as_json
+            expect(result.dig('errors', 0, 'message')).to be_nil
+            plan_result = result.dig('data', 'transferPaymentPlan', 'paymentPlan')
+            expect(plan_result['planPayments'].size).to eql 1
+            expect(plan_result['planPayments'][0]['amount']).to eql 100.0
+            expect(plan_result['planPayments'][0]['manualReceiptNumber']).to eql 'MI13975-1'
+            expect(
+              plan_result['planPayments'][0]['automatedReceiptNumber'],
+            ).to eql "#{plan_payment.reload.automated_receipt_number}-1"
+            general_payments = user.general_payment_plan.plan_payments.reload.order(:amount)
+            expect(general_payments.size).to eql 3
+            expect(general_payments[0].amount.to_f).to eql 100.0
+            expect(general_payments[0].manual_receipt_number).to eql 'MI13975-2'
+            expect(
+              general_payments[0].automated_receipt_number,
+            ).to eql "#{plan_payment.automated_receipt_number}-2"
+            expect(general_payments[1].amount.to_f).to eql 300.0
+            expect(general_payments[1].manual_receipt_number).to eql 'MI13976'
+            expect(
+              general_payments[1].automated_receipt_number,
+            ).to eql new_plan_payment.automated_receipt_number
+            expect(general_payments[2].amount.to_f).to eql 700.0
+            expect(general_payments[2].manual_receipt_number).to eql 'MI13977'
+            expect(
+              general_payments[2].automated_receipt_number,
+            ).to eql other_plan_payment.automated_receipt_number
+          end
         end
       end
     end

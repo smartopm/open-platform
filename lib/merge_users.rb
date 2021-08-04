@@ -25,32 +25,29 @@ class MergeUsers
       raise StandardError, 'Update Failed' if table_name.constantize.where(user_id: user_id).any?
     end
 
-    # Updates accounts details to their associated user's details
+    user = Users::User.find_by(id: user_id)
     duplicate_user = Users::User.find_by(id: duplicate_id)
 
-    # Updates general plan
-    user = Users::User.find_by(id: user_id)
-    user.general_payment_plan.plan_payments.each do |payment|
-      payment.update(payment_plan_id: duplicate_user.general_payment_plan.id)
-    end
+    # rubocop:disable Rails/SkipsModelValidations
+    # Updates plan payments of general plan
+    user.general_payment_plan.plan_payments.update_all(user_id: duplicate_id)
     user.general_payment_plan.destroy
 
-    # Merges wallet details of users.
-    merge_user_wallets(user_id, duplicate_id)
-
-    # Update acounts
+    # Update acounts and destroy user general land parcel
     accounts = Properties::Account.where(user_id: user_id)
     general_land_parcel = user.general_land_parcel
     general_account = general_land_parcel.accounts.first
-    accounts.each do |account|
-      next if account.id.eql?(general_account.id)
-
-      account.update(user_id: duplicate_id)
-    end
+    accounts.where.not(id: general_account.id).update_all(user_id: duplicate_id)
     general_land_parcel.land_parcel_accounts.delete_all
     general_account.destroy!
     general_land_parcel.destroy!
+    # rubocop:enable Rails/SkipsModelValidations
+
+    # Updates accounts details to their associated user's details
     duplicate_user.update_associated_accounts_details
+
+    # Merges wallet details of users.
+    merge_user_wallets(user_id, duplicate_id)
 
     # Update showroom User
     showrooms = Showroom.where(userId: user_id)

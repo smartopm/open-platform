@@ -14,7 +14,7 @@ module Properties
     has_many_attached :images
 
     validates :parcel_number, uniqueness: true
-    default_scope { where(status: 0).order(created_at: :desc) }
+    default_scope { where(status: :active).order(created_at: :desc) }
 
     search_scope :search do
       attributes :parcel_number, :address1, :address2, :parcel_type

@@ -59,7 +59,8 @@
     "user_name_search_choose_from_options": "Choose a user",
     "message_search": "search message content, user name and phone number",
     "type_description": "Type a description here",
-    "type_title": "Type a title here"
+    "type_title": "Type a title here",
+    "select_co_owners": "Select co-owners you would like to add to this plan"
   },
   "form_actions": {
     "send_email": "Send Email",
@@ -212,7 +213,9 @@
     "plan_transferred_successfully": "Your plan has been successfully transferred to {{paymentPlanName}}.",
     "plan_transfer_confirmation_message_1": "Your plan has a total of",
     "plan_transfer_confirmation_message_2": "payments with a total value of",
-    "plan_transfer_confirmation_message_3": "By transferring your plan, you will be transferring all payments associated to this plan. Click the 'Continue to verification' button to select the plot you want to migrate the plan to and confirm."
+    "plan_transfer_confirmation_message_3": "By transferring your plan, you will be transferring all payments associated to this plan. Click the 'Continue to verification' button to select the plot you want to migrate the plan to and confirm.",
+    "select_frequency": "Please select frequency",
+    "select_transfer_plan": "Select the Plan you want to migrate this plan to?"
   },
   "menu": {
     "invoice": "Invoice",
