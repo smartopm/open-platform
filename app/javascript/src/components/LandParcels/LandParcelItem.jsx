@@ -5,6 +5,7 @@ import PropTypes from 'prop-types'
 import DataList from '../../shared/list/DataList';
 import Text from '../../shared/Text';
 import MenuList from '../../shared/MenuList'
+import { titleize } from '../../utils/helpers';
 
 const parcelHeaders = [
   { title: 'Property Number/Property Type', col: 2 },
@@ -64,7 +65,8 @@ export default function ParcelItem({ parcel, onParcelClick, onAddHouseClick }) {
           <div style={{fontWeight: 'bold', fontSize: '12px'}}>{parcel.parcelNumber}</div>
           <Text content={parcel.parcelType} />
           <br />
-          <Text color="primary" content={`status: ${parcel.status || '-'}`} />
+          {parcel.objectType && <Text color="primary" content={`Category: ${titleize(parcel.objectType)}`} />}
+          {parcel.status && <Text color="primary" content={` | Status: ${titleize(parcel.status)}`} />}
         </Grid>
       ),
       'Address1/Address2': (

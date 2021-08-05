@@ -47,7 +47,7 @@ export default function CreateLandParcel({ refetch, selectedLandParcel, newHouse
     addProperty({  variables: variableSave  }).then(() => {
       setMessageAlert(t('messages.property_added'))
       setIsSuccessAlert(true)
-      setOpen(false);
+      closeNewParcelModal();
       if(location?.state?.from === 'users') {
         history.push(`user/${location?.state?.user?.userId}?tab=Plots`);
       }
@@ -64,8 +64,8 @@ export default function CreateLandParcel({ refetch, selectedLandParcel, newHouse
   }
 
   function closeNewParcelModal() {
-    setOpen(false)
     history.push('/land_parcels')
+    setOpen(false)
   }
 
   return (

@@ -28,7 +28,9 @@ describe('Land Property Component', () => {
           longX: 0, 
           latY: 0 ,
           geom: null,
-          ownershipFields: []
+          ownershipFields: [],
+          status: '',
+          objectType: ''
         },
       },
       result: { data: { PropertyCreate: { landParcel: { id: "7867943" } } } },
