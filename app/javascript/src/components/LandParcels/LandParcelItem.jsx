@@ -20,9 +20,13 @@ export default function ParcelItem({ parcel, onParcelClick, onAddHouseClick }) {
   const [anchorEl, setAnchorEl] = useState(null)
   const anchorElOpen = Boolean(anchorEl)
   const menuList = [
-    { content: 'Add House', isAdmin: true, color: '', handleClick: () => onAddHouseClick(parcel)},
     { content: 'Edit Property', isAdmin: true, color: '', handleClick: () => onParcelClick(parcel)}
   ]
+  if(parcel && parcel.objectType !== 'house') {
+    menuList.unshift(
+      { content: 'Add House', isAdmin: true, color: '', handleClick: () => onAddHouseClick(parcel)}
+    )
+  }
   const menuData = {
     menuList,
     handlePropertyMenu,
