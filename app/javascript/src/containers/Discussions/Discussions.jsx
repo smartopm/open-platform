@@ -8,6 +8,7 @@ import {
 } from '@material-ui/core'
 import { useMutation, useQuery } from 'react-apollo'
 import { useTheme } from '@material-ui/core/styles'
+import { useTranslation } from 'react-i18next'
 import DiscussionList from '../../components/Discussion/DiscussionList'
 import { DiscussionsQuery } from '../../graphql/queries'
 import Loading, { Spinner } from '../../shared/Loading'
@@ -33,7 +34,7 @@ export default function Discussions() {
   const theme = useTheme()
   const fullScreen = useMediaQuery(theme.breakpoints.down('xs'))
   const authState = useContext(AuthStateContext)
-
+  const { t } = useTranslation('discussion')
   function openModal() {
     setOpen(!open)
   }
@@ -61,7 +62,7 @@ export default function Discussions() {
     setLoading(true)
     createDiscuss({ variables: { title, description } })
       .then(() => {
-        setMessage('Discussion created')
+        setMessage(t('messages.discussion_created'))
         setLoading(false)
         setTimeout(() => {
           updateList()
@@ -91,7 +92,7 @@ export default function Discussions() {
         >
           <DialogTitle id="responsive-dialog-title">
             <CenteredContent>
-              <span>Create a discussion topic</span>
+              <span>{t('headers.create_discussion')}</span>
             </CenteredContent>
           </DialogTitle>
           <DialogContent>
@@ -115,13 +116,13 @@ export default function Discussions() {
         {data.discussions.length >= limit && (
           <CenteredContent>
             <Button variant="outlined" onClick={fetchMoreDiscussions}>
-              {isLoading ? <Spinner /> : 'Load more discussions'}
+              {isLoading ? <Spinner /> : t('form_actions.more_discussions')}
             </Button>
           </CenteredContent>
         )}
         {authState?.user?.userType === 'admin' && (
           <FloatButton
-            title="Create discussion topic"
+            title={t('headers.create_discussion')}
             handleClick={openModal}
           />
         )}
