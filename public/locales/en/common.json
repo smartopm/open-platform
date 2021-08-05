@@ -215,7 +215,8 @@
     "plan_transfer_confirmation_message_2": "payments with a total value of",
     "plan_transfer_confirmation_message_3": "By transferring your plan, you will be transferring all payments associated to this plan. Click the 'Continue to verification' button to select the plot you want to migrate the plan to and confirm.",
     "select_frequency": "Please select frequency",
-    "select_transfer_plan": "Select the Plan you want to migrate this plan to?"
+    "select_transfer_plan": "Select the Plan you want to migrate this plan to?",
+    "plan_frequency": "Plan Frequency"
   },
   "menu": {
     "invoice": "Invoice",
