@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# rubocop:disable Metrics/BlockLength
 # rubocop:disable Layout/LineLength
 namespace :import do
   desc 'Migrate Points of Interest'
@@ -15,13 +16,18 @@ namespace :import do
     end
 
     poi_id_list = %w[
-      POI-52925
-      POI-65342
-      POI-13612
-      POI-31483
-      POI-23663
-      POI-45051
-      POI-40610
+      POI-46902
+      POI-20182
+      POI-21388
+      POI-51408
+      POI-96230
+      POI-47588
+      POI-99503
+      POI-22922
+      POI-91253
+      POI-96494
+      POI-41067
+      POI-55732
     ]
 
     ActiveRecord::Base.transaction do
@@ -40,3 +46,4 @@ namespace :import do
   end
 end
 # rubocop:enable Layout/LineLength
+# rubocop:enable Metrics/BlockLength

@@ -420,37 +420,37 @@ export default function LandParcelModal({
               onChange={e => setPostalCode(e.target.value)}
             />
             <br />
-          <InputLabel id="status">Status</InputLabel>
+            <InputLabel id="status">Status</InputLabel>
             <Select
-                id="status"
-                value={status}
-                name="status"
-                onChange={e => setStatus(e.target.value)}
-                fullWidth
-                inputProps={{
+              id="status"
+              value={status}
+              name="status"
+              onChange={e => setStatus(e.target.value)}
+              fullWidth
+              inputProps={{
                   'data-testid': 'status',
                   readOnly: isFormReadOnly
                 }}
-              >
-                {modalType === 'new_house' && ['built', 'planned', 'in construction'].map(v => (
-                  <MenuItem key={v} value={v}>{v}</MenuItem>
+            >
+              {modalType === 'new_house' && ['built', 'planned', 'in construction'].map(v => (
+                <MenuItem key={v} value={v}>{v}</MenuItem>
                 ))}
 
-                {modalType !== 'new_house' && (<MenuItem value="active">active</MenuItem>)}
+              {modalType !== 'new_house' && (<MenuItem value="active">active</MenuItem>)}
             </Select>
             <br />
             <InputLabel id="object_type">Object Type</InputLabel>
             <Select
-                value={objectType}
-                name="object_type"
-                onChange={e => setObjectType(e.target.value)}
-                fullWidth
-                inputProps={{
+              value={objectType}
+              name="object_type"
+              onChange={e => setObjectType(e.target.value)}
+              fullWidth
+              inputProps={{
                   'data-testid': 'object-type',
                   readOnly: isFormReadOnly
                 }}
-              >
-                {modalType === 'new_house'
+            >
+              {modalType === 'new_house'
                 ? <MenuItem key="house" value="house">house</MenuItem>
                 : <MenuItem key="land" value="land">land</MenuItem>
                 }

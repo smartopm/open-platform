@@ -64,7 +64,7 @@ export default function ParcelItem({ parcel, onParcelClick, onAddHouseClick }) {
           <div style={{fontWeight: 'bold', fontSize: '12px'}}>{parcel.parcelNumber}</div>
           <Text content={parcel.parcelType} />
           <br />
-          <Text content={`status: ${parcel.status || '-'}`} />
+          <Text color="primary" content={`status: ${parcel.status || '-'}`} />
         </Grid>
       ),
       'Address1/Address2': (

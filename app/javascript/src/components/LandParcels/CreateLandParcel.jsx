@@ -44,7 +44,7 @@ export default function CreateLandParcel({ refetch, selectedLandParcel, newHouse
       }
     }
 
-    addProperty({ variableSave }).then(() => {
+    addProperty({  variables: variableSave  }).then(() => {
       setMessageAlert(t('messages.property_added'))
       setIsSuccessAlert(true)
       setOpen(false);
@@ -107,5 +107,9 @@ const useStyles = makeStyles(() => ({
 }));
 
 CreateLandParcel.propTypes = {
-  refetch: PropTypes.func.isRequired
+  refetch: PropTypes.func.isRequired,
+  newHouse: PropTypes.bool.isRequired,
+  selectedLandParcel: PropTypes.shape({
+    id: PropTypes.string,
+  }).isRequired,
 }
