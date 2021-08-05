@@ -34,7 +34,7 @@ export default function Discussions() {
   const theme = useTheme()
   const fullScreen = useMediaQuery(theme.breakpoints.down('xs'))
   const authState = useContext(AuthStateContext)
-  const { t } = useTranslation(['discussion'])
+  const { t } = useTranslation('discussion')
   function openModal() {
     setOpen(!open)
   }
@@ -62,7 +62,7 @@ export default function Discussions() {
     setLoading(true)
     createDiscuss({ variables: { title, description } })
       .then(() => {
-        setMessage(t('discussion:messages.discussion_created'))
+        setMessage(t('messages.discussion_created'))
         setLoading(false)
         setTimeout(() => {
           updateList()
@@ -92,7 +92,7 @@ export default function Discussions() {
         >
           <DialogTitle id="responsive-dialog-title">
             <CenteredContent>
-              <span>{t('discussion:headers.create_discussion')}</span>
+              <span>{t('headers.create_discussion')}</span>
             </CenteredContent>
           </DialogTitle>
           <DialogContent>
@@ -116,13 +116,13 @@ export default function Discussions() {
         {data.discussions.length >= limit && (
           <CenteredContent>
             <Button variant="outlined" onClick={fetchMoreDiscussions}>
-              {isLoading ? <Spinner /> : t('discussion:form_actions.more_discussions')}
+              {isLoading ? <Spinner /> : t('form_actions.more_discussions')}
             </Button>
           </CenteredContent>
         )}
         {authState?.user?.userType === 'admin' && (
           <FloatButton
-            title={t('discussion:headers.create_discussion')}
+            title={t('headers.create_discussion')}
             handleClick={openModal}
           />
         )}

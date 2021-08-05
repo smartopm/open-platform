@@ -27,7 +27,7 @@ export default function DiscussionList({ data, refetch, isAdmin }) {
   const [openModal, setOpenModal] = useState(false)
   const [error, setError] = useState(null)
   const history = useHistory()
-const { t } = useTranslation(['discussion'])
+const { t } = useTranslation('discussion')
   function handleDeleteClick(event, id = discussionId) {
     event.stopPropagation()
     event.preventDefault()
@@ -101,7 +101,7 @@ const { t } = useTranslation(['discussion'])
               <Divider component="li" />
             </Fragment>
             ))
-          : t('discussion:headers.no_discussions')}
+          : t('headers.no_discussions')}
         <DeleteDialogueBox
           open={openModal}
           handleClose={handleDeleteClick}

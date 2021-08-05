@@ -10,7 +10,7 @@ import { MockedProvider } from '@apollo/react-testing'
 describe('Discuss form component', () => {
     it('should render with wrong props', () => {
         const container = render(<MockedProvider><Discuss /></MockedProvider>)
-        expect(container.queryByText('common:form_actions.submit')).toBeInTheDocument()
+        expect(container.queryByText('form_actions.submit')).toBeInTheDocument()
 
         const title = container.queryByLabelText('discuss_title')
         fireEvent.change(title, { target: { value: 'This is a title' } })

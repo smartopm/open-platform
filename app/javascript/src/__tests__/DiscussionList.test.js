@@ -12,7 +12,7 @@ describe('Discussion List page', () => {
             <DiscussionList data={[]} />
           </MockedProvider>
         )
-        expect(container.queryByText('discussion:headers.no_discussions')).toBeInTheDocument()
+        expect(container.queryByText('headers.no_discussions')).toBeInTheDocument()
     })
       
     it('renders list of topics when provided', () => {
@@ -39,7 +39,7 @@ describe('Discussion List page', () => {
             </BrowserRouter>
           </MockedProvider>
         )
-        expect(container.queryByText('discussion:headers.no_discussions')).not.toBeInTheDocument()
+        expect(container.queryByText('headers.no_discussions')).not.toBeInTheDocument()
         expect(container.queryAllByTestId('disc_title')).toHaveLength(2)
         expect(container.queryByText('John Mbuzi')).toBeInTheDocument()
         expect(container.queryByText('Second Title')).toBeInTheDocument()

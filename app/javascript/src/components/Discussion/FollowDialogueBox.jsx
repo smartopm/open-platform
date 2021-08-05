@@ -98,10 +98,10 @@ export default function FollowDialogueBox({
             </DialogContent>
             <DialogActions>
               <Button onClick={handleEmailUpdate} color="primary">
-                {t('common:form_actions.cancel')}
+                {t('form_actions.cancel')}
               </Button>
               <Button onClick={handleSendEmail} color="primary">
-                {t('common:misc.send')}
+                {t('misc.send')}
               </Button>
             </DialogActions>
           </Dialog>

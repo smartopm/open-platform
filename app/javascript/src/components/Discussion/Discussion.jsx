@@ -35,9 +35,9 @@ export default function Discussion({ discussionData }) {
   const { t } = useTranslation('discussion')
 
   const discussionBoardDisclaimer =
-    `{t('discussion:discussion_board_disclaimer.first_line')}
-    {t('discussion:discussion_board_disclaimer.second_line')}
-    {t('discussion:discussion_board_disclaimer.third_line')}`
+    `{t('discussion_board_disclaimer.first_line')}
+    {t('discussion_board_disclaimer.second_line')}
+    {t('discussion_board_disclaimer.third_line')}`
 
   function fetchMoreComments() {
     setLoading(true)
@@ -70,7 +70,7 @@ export default function Discussion({ discussionData }) {
           </Grid>
           <Grid item xs={12}>
             <Typography variant="body1" data-testid="disc_desc">
-              {discussionData.description || t('discussion:headers.no_discussions')}
+              {discussionData.description || t('headers.no_discussions')}
             </Typography>
           </Grid>
           <Grid item xs={6}>
@@ -90,7 +90,7 @@ export default function Discussion({ discussionData }) {
             <Disclaimer body={discussionBoardDisclaimer} />
           </Grid>
           <Grid item xs={12}>
-            <Typography variant="subtitle1">{t('discussion:headers.comments')}</Typography>
+            <Typography variant="subtitle1">{t('headers.comments')}</Typography>
           </Grid>
           <Grid item xs={12}>
             <Comment
@@ -101,7 +101,7 @@ export default function Discussion({ discussionData }) {
             {data?.discussComments.length >= limit && (
               <CenteredContent>
                 <Button variant="outlined" onClick={fetchMoreComments}>
-                  {isLoading ? <Spinner /> : t('discussion:form_actions.more_comments')}
+                  {isLoading ? <Spinner /> : t('form_actions.more_comments')}
                 </Button>
               </CenteredContent>
             )}

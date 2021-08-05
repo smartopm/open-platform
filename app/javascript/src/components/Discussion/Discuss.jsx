@@ -20,7 +20,7 @@ export default function Discuss({ update }) {
     setLoading(true)
     createDiscuss({ variables: { title, description } })
       .then(() => {
-        setMessage(t('common:errors.empty_text'))
+        setMessage(t('errors.empty_text'))
         setLoading(false)
         setTimeout(() => {
           update()
@@ -41,7 +41,7 @@ export default function Discuss({ update }) {
         autoHideDuration={6000}
         onClose={() => setOpen(!open)}
         anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-        message={t('messages.discussion_topic_created')}
+        message={t('discussion:messages.discussion_topic_created')}
       />
       <form
         onSubmit={handleSubmit}
@@ -92,7 +92,7 @@ export default function Discuss({ update }) {
             onClick={update}
             className={`${css(discussStyles.cancelBtn)}`}
           >
-            {t('common:form_actions.cancel')}
+            {t('form_actions.cancel')}
           </Button>
           <Button
             variant="contained"
@@ -103,7 +103,7 @@ export default function Discuss({ update }) {
             className={`${css(discussStyles.submitBtn)}`}
             data-testid='button'
           >
-            {loading ? t('common:form_actions.submitting') : t('common:form_actions.submit')}
+            {loading ? t('form_actions.submitting') : t('form_actions.submit')}
           </Button>
         </div>
         <br />
