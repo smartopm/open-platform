@@ -62,6 +62,7 @@ export default function LandParcelList() {
 
   const path = useParamsQuery('')
   const plot = path.get('plot');
+  const subaction = path.get('subaction');
 
   const { loading, error, data, refetch } = useQuery(ParcelsQuery, {
     variables: { query: debouncedValue || searchQuery, limit, offset }
@@ -123,6 +124,11 @@ export default function LandParcelList() {
     setSelectedLandParcel(landParcel);
     history.push(`/land_parcels?plot=${landParcel.id}`);
     setDetailsModalOpen(true);
+  }
+
+  function onAddHouseClick(landParcel) {
+    setSelectedLandParcel(landParcel);
+    history.push(`/land_parcels?subaction=new_house`);
   }
 
   function onViewResultsOnMapClick(){
@@ -221,7 +227,7 @@ export default function LandParcelList() {
         </Grid>
         <Grid item xs={12} sm={2}>
           {type === 'plots' ? (
-            <CreateLandParcel refetch={refetch} />
+            <CreateLandParcel refetch={refetch} selectedLandParcel={selectedLandParcel} newHouse={subaction === 'new_house'} />
           ) : (
             <CreatePointOfInterest refetch={refetch} />
           )}
@@ -230,7 +236,7 @@ export default function LandParcelList() {
       <LandParcelModal
         open={open}
         handleClose={handleDetailsModalClose}
-        modalType="details"
+        modalType={subaction === 'new_house' ? subaction : 'details'}
         landParcel={selectedLandParcel}
         handleSubmit={handleSubmit}
         landParcels={conflictingParcelData?.fetchLandParcel}
@@ -302,7 +308,7 @@ export default function LandParcelList() {
               {!loading && data?.fetchLandParcel.length > 0 && matches &&
                 <ListHeader headers={parcelHeaders} />}
               {!loading && data?.fetchLandParcel.map(parcel => (
-                <ParcelItem key={parcel.id} parcel={parcel} onParcelClick={onParcelClick} />
+                <ParcelItem key={parcel.id} parcel={parcel} onParcelClick={onParcelClick} onAddHouseClick={onAddHouseClick} />
               ))}
             </div>
             <div className="d-flex justify-content-center">

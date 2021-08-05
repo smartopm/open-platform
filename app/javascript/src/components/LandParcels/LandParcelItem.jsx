@@ -15,10 +15,11 @@ const parcelHeaders = [
   { title: 'Menu', col: 1 },
 ];
 
-export default function ParcelItem({ parcel, onParcelClick }) {
+export default function ParcelItem({ parcel, onParcelClick, onAddHouseClick }) {
   const [anchorEl, setAnchorEl] = useState(null)
   const anchorElOpen = Boolean(anchorEl)
   const menuList = [
+    { content: 'Add House', isAdmin: true, color: '', handleClick: () => onAddHouseClick(parcel)},
     { content: 'Edit Property', isAdmin: true, color: '', handleClick: () => onParcelClick(parcel)}
   ]
   const menuData = {
@@ -44,7 +45,7 @@ export default function ParcelItem({ parcel, onParcelClick }) {
       data={renderParcel(parcel, menuData)}
       hasHeader={false}
       clickable
-      handleClick={() => onParcelClick(parcel)}
+      // handleClick={() => onParcelClick(parcel)}
     />
   )
 }
@@ -62,6 +63,8 @@ export default function ParcelItem({ parcel, onParcelClick }) {
         <Grid item xs={12} md={2} data-testid="property">
           <div style={{fontWeight: 'bold', fontSize: '12px'}}>{parcel.parcelNumber}</div>
           <Text content={parcel.parcelType} />
+          <br />
+          <Text content={`status: ${parcel.status || '-'}`} />
         </Grid>
       ),
       'Address1/Address2': (
@@ -122,5 +125,6 @@ ParcelItem.propTypes = {
         country: PropTypes.string,
         parcelType: PropTypes.string
     }).isRequired,
-    onParcelClick: PropTypes.func.isRequired
+    onParcelClick: PropTypes.func.isRequired,
+    onAddHouseClick: PropTypes.func.isRequired
 }

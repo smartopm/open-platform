@@ -13,8 +13,11 @@ module Properties
     has_many :payment_plans, dependent: :destroy
     has_many_attached :images
 
+    VALID_OBJECT_TYPES = %w[land house poi].freeze
+
     validates :parcel_number, uniqueness: true
     default_scope { where(status: :active).order(created_at: :desc) }
+    validates :object_type, inclusion: { in: VALID_OBJECT_TYPES, allow_nil: true }
 
     search_scope :search do
       attributes :parcel_number, :address1, :address2, :parcel_type

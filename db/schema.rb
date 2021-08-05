@@ -406,6 +406,9 @@ ActiveRecord::Schema.define(version: 2021_08_03_093217) do
     t.json "geom"
     t.integer "status", default: 0
     t.boolean "is_poi", default: false
+    t.string "object_type"
+    t.string "status"
+    t.uuid "house_land_parcel_id"
     t.index ["community_id"], name: "index_land_parcels_on_community_id"
     t.index ["parcel_number"], name: "index_land_parcels_on_parcel_number", unique: true
     t.index ["status"], name: "index_land_parcels_on_status"

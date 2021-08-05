@@ -450,6 +450,8 @@ export const ParcelsQuery = gql`
       longX
       geom
       plotSold
+      objectType
+      status
       createdAt
       accounts {
         id

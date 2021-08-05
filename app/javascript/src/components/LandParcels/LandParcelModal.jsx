@@ -8,7 +8,10 @@ import {
   IconButton,
   Typography,
   Grid,
-  Divider
+  Divider,
+  Select,
+  MenuItem,
+  InputLabel
 } from '@material-ui/core';
 import { DeleteOutline, Room } from '@material-ui/icons';
 import Autocomplete from '@material-ui/lab/Autocomplete'
@@ -51,6 +54,8 @@ export default function LandParcelModal({
   const [longX, setLongX] = useState(null);
   const [latY, setLatY] = useState(null);
   const [geom, setGeom] = useState(null);
+  const [status, setStatus] = useState('');
+  const [objectType, setObjectType] = useState('');
   const [tabValue, setTabValue] = useState('Details');
   const [ownershipFields, setOwnershipFields] = useState(['']);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -122,6 +127,8 @@ export default function LandParcelModal({
     setLongX(parcel?.longX || 0);
     setLatY(parcel?.latY || 0);
     setGeom(parcel?.geom || null);
+    setStatus(parcel?.status || '');
+    setObjectType(parcel?.objectType || '');
     setTabValue('Details');
     setOwnershipFields([]);
     setIsEditing(false);
@@ -152,7 +159,9 @@ export default function LandParcelModal({
       longX,
       latY,
       geom,
-      ownershipFields
+      ownershipFields,
+      status,
+      objectType,
     });
   }
 
@@ -309,7 +318,8 @@ export default function LandParcelModal({
       <CustomizedDialogs
         open={open}
         handleModal={cleanUpOnModalClosing}
-        dialogHeader={modalType === 'new' ? t('property:dialog_headers.new_property') : t('property:dialog_headers.property', {parcelNumber: landParcel.parcelNumber})}
+        // eslint-disable-next-line no-nested-ternary
+        dialogHeader={modalType === 'new' ? t('property:dialog_headers.new_property') : modalType === 'new_house' ? t('property:dialog_headers.new_house') : t('property:dialog_headers.property', {parcelNumber: landParcel.parcelNumber})}
         handleBatchFilter={handleParcelSubmit}
         saveAction={saveActionText()}
         actionLoading={propertyUpdateLoading}
@@ -409,6 +419,42 @@ export default function LandParcelModal({
               value={postalCode}
               onChange={e => setPostalCode(e.target.value)}
             />
+            <br />
+          <InputLabel id="status">Status</InputLabel>
+            <Select
+                id="status"
+                value={status}
+                name="status"
+                onChange={e => setStatus(e.target.value)}
+                fullWidth
+                inputProps={{
+                  'data-testid': 'status',
+                  readOnly: isFormReadOnly
+                }}
+              >
+                {modalType === 'new_house' && ['built', 'planned', 'in construction'].map(v => (
+                  <MenuItem key={v} value={v}>{v}</MenuItem>
+                ))}
+
+                {modalType !== 'new_house' && (<MenuItem value="active">active</MenuItem>)}
+            </Select>
+            <br />
+            <InputLabel id="object_type">Object Type</InputLabel>
+            <Select
+                value={objectType}
+                name="object_type"
+                onChange={e => setObjectType(e.target.value)}
+                fullWidth
+                inputProps={{
+                  'data-testid': 'object-type',
+                  readOnly: isFormReadOnly
+                }}
+              >
+                {modalType === 'new_house'
+                ? <MenuItem key="house" value="house">house</MenuItem>
+                : <MenuItem key="land" value="land">land</MenuItem>
+                }
+            </Select>
             <br />
             <br />
             {!landParcel?.geom && !(modalType === 'new') && (

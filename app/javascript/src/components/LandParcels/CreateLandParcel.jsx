@@ -10,7 +10,7 @@ import MessageAlert from "../MessageAlert"
 import LandParcelModal from './LandParcelModal'
 import { formatError, useParamsQuery } from '../../utils/helpers'
 
-export default function CreateLandParcel({ refetch }) {
+export default function CreateLandParcel({ refetch, selectedLandParcel, newHouse }) {
   const classes = useStyles()
   const location = useLocation()
   const [open, setOpen] = useState(false)
@@ -35,7 +35,16 @@ export default function CreateLandParcel({ refetch }) {
   }
 
   function handleSubmit(variables) {
-    addProperty({ variables }).then(() => {
+    let variableSave = { ...variables }
+
+    if(newHouse) {
+      variableSave = {
+        ...variableSave,
+        houseLandParcelId: selectedLandParcel.id,
+      }
+    }
+
+    addProperty({ variableSave }).then(() => {
       setMessageAlert(t('messages.property_added'))
       setIsSuccessAlert(true)
       setOpen(false);
@@ -71,10 +80,10 @@ export default function CreateLandParcel({ refetch }) {
         {(t('buttons.new_property'))}
       </Button>
       <LandParcelModal
-        open={open}
+        open={open || newHouse}
         handleClose={closeNewParcelModal}
         handleSubmit={handleSubmit}
-        modalType='new'
+        modalType={newHouse ? 'new_house' : 'new'}
       />
       <MessageAlert
         type={isSuccessAlert ? 'success' : 'error'}
