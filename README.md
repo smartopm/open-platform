@@ -2,8 +2,17 @@
 
 Will add more notes here as we grow
 
-## Development / Docker
+## Development setup
 
+To avoid consuming alot more resources on development machine, we recommend development through ssh tunnel to a developer owned space on Digital Ocean
+
+Reach out to your manager for setup and login credentials and follow the `DEV_PLAYBOOK.md` instructions
+
+## Getting the project on your local development environment
+
+Navigate to your desired working directory or you can create one or even home directory is okay.
+
+Git clone `https://gitlab.com/doublegdp/app.git` then change directory to the project directory.
 ### Docker
 
 #### Setting up Docker
@@ -12,24 +21,20 @@ Requires Docker and docker-compose to be installed
 
 - `docker-compose build`
 - `./bin/docker_rails db:create db:schema:load`
+- `docker-compose run --rm webpacker yarn install --check-files`
 - `docker-compose up`
 
 If you're a member of the DoubleGDP team, request the development key
 and place it in `config/credentials/development.key`
 
-At this point you will have access to the environment variables required
-to run the app.
+To generate the environment variables required to run the app, run:
 
-They can be seen and edited by running
+`docker-compose run rails credentials:edit --environment development`
 
-`docker-compose run --rm rails credentials:edit --environment development`
+Please look at `config/credentials/development.yml.sample` for a list of credentials
+that will be needed to run the app and created by running the same `credentials:edit` function as above.
 
-If you don't have access to this key, please look at
-`config/credentials/development.yml.sample` for a list of credentials
-that will be needed to run the app and create the development credentials
-by running the same `credentials:edit` function as above.
-
-Run this for db migration
+Run this for db migration to apply unapplied migrations or new migrations
 
 `./bin/docker_rails db:migrate RAILS_ENV=development`
 
@@ -39,14 +44,17 @@ Caddy is being used to serve the application via SSL. If you like, you can rely
 on its own self signed certificates which are available on localhost:443
 
 Rather than rely on self-signed certificates, we include certificates for
-dev.dgdp.site. They are encrypted with the development.key from above, and may
-be decrypted by running `./bin/cert_setup.sh`
+dev.dgdp.site. They are encrypted with the development.key from above, and you should
+decrypt them by running `./bin/cert_setup.sh` on your development environment.
 
-The site is now available as https://dev.dgdp.site and https://localhost 
-and Storybook will be available at http://localhost:6006
+The application will be available at custom set url for you. Example `https://<custom_name>.dgdp.site/`.
+
+Incase you do not know the url, consult your manager.
 
 dev.dgdp.site points to 127.0.0.1, if your development server is somewhere else
 please update /etc/hosts to point dev.dgdp.site to the appropriate IP address.
+
+The site is now available as https://dev.dgdp.site and https://localhost incase of local development
 
 ### Updating gems or node_modules
 
@@ -128,6 +136,19 @@ if you are on a UNIX based OS, edit ~/.bashrc file and add these lines
 `alias ylint='docker-compose run --rm webpacker yarn run lint'`  
 
 You can customize aliases according to your liking
+
+### Pushing to Gitlab with HTTP
+Gitlab requires to authenticate using the gitlab token to be able to push code.
+
+Make sure you have the role of a maintainer to organization repository and confirm from your manager.
+
+Go to your Gitlab Profile and click on `Access Tokens` tab and from here create a token.
+
+Copy the token and in your terminal replace `mytoken` with your token. Run the command
+
+`git remote set-url origin https://oauth2:<mytoken>@gitlab.com/doublegdp/app.git`
+
+You should be good to push code and make your first merge request.
 
 #### Before a merge/pull request
 
