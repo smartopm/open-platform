@@ -13,7 +13,7 @@
     "save_csv": "Save CSV"
   },
   "misc": {
-    "confirm": "Confirm",
+    "confirm": "confirm",
     "about_to_cancel": "You are about to cancel this payment plan?",
     "plan_statement": "Plan Statement",
     "print": "Print",
