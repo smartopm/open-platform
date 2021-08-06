@@ -48,9 +48,9 @@ export default function PlanTransferConfirmDialog({
       balanceRefetch();
     })
     .catch(err => {
-      handleClose();
       setMessageAlert(formatError(err.message));
       setIsSuccessAlert(false);
+      handleModal();
     });
   }
 
