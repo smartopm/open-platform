@@ -17,8 +17,7 @@ export default function PlanTransferConfirmDialog({
   paymentPlanId,
   destinationPlanId,
   refetch,
-  balanceRefetch,
-  handleModal
+  balanceRefetch
 }) {
   const classes = useStyles();
   const { totalPayment, totalPaymentAmount } = PaymentData;
@@ -43,14 +42,14 @@ export default function PlanTransferConfirmDialog({
       const paymentPlanName = `${res.data?.transferPaymentPlan?.paymentPlan?.landParcel.parcelNumber} ${dateToString(res.data?.transferPaymentPlan?.paymentPlan?.startDate)}`;
       setMessageAlert(t('common:misc.plan_transferred_successfully', { paymentPlanName }));
       setIsSuccessAlert(true);
-      handleModal();
+      handleClose();
       refetch();
       balanceRefetch();
     })
     .catch(err => {
       setMessageAlert(formatError(err.message));
       setIsSuccessAlert(false);
-      handleModal();
+      handleClose();
     });
   }
 
@@ -106,8 +105,7 @@ PlanTransferConfirmDialog.propTypes = {
     totalPaymentAmount: PropTypes.string
   }).isRequired,
   refetch: PropTypes.func.isRequired,
-  balanceRefetch: PropTypes.func.isRequired,
-  handleModal: PropTypes.func.isRequired
+  balanceRefetch: PropTypes.func.isRequired
 };
 
 const useStyles = makeStyles(() => ({

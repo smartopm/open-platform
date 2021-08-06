@@ -65,8 +65,8 @@ export default function TransferPlanModal({
   }
 
   function handleTransferPlanClose() {
+    setDestinationPlanId('');
     setConfirmTransferPlanOpen(false);
-    handleModalClose();
   }
 
   function handleTransferPlanSubmit() {
@@ -78,6 +78,9 @@ export default function TransferPlanModal({
     if (open) {
       loadPaymentPlans({ variables: { userId }, errorPolicy: 'all', fetchPolicy: 'no-cache' });
     } else {
+      if(!confirmTransferPlanOpen){
+        setDestinationPlanId('');
+      }
       setAcceptanceCheckbox(false);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -104,7 +107,6 @@ export default function TransferPlanModal({
         handleModalClose={handleModalClose}
         refetch={refetch}
         balanceRefetch={balanceRefetch}
-        handleModal={() => setConfirmTransferPlanOpen(false)}
       />
       <CustomizedDialogs
         open={open}

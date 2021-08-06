@@ -318,6 +318,7 @@ export const UserLandParcelWithPlan = gql`
   query userLandParcelWithPlan($userId: ID!) {
     userLandParcelWithPlan(userId: $userId) {
       id
+      startDate
       pendingBalance
       landParcel {
         id
