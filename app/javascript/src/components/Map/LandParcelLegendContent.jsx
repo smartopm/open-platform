@@ -14,7 +14,7 @@ export default function LandParcelLegendContent() {
     <Card style={{ width: '160px', opacity: 1 }}>
       <CardContent>
         <Typography variant='body2' component="h5">
-          {t('property:misc.legend')}
+          {t('misc.legend')}
         </Typography>
         <br />
         <Grid container spacing={1}>
@@ -23,7 +23,7 @@ export default function LandParcelLegendContent() {
           </Grid>
           <Grid item xs={8}>
             <Typography variant='body2' component="p">
-              {t('property:misc.sold')}
+              {t('misc.sold')}
             </Typography>
           </Grid>
           <Grid item xs={4}>
@@ -31,7 +31,7 @@ export default function LandParcelLegendContent() {
           </Grid>
           <Grid item xs={8}>
             <Typography variant='body2' component="p">
-              {t('property:misc.unknown')}
+              {t('misc.unknown')}
             </Typography>
           </Grid>
         </Grid>

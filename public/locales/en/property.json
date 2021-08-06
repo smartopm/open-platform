@@ -36,10 +36,12 @@
     "state_province": "State Province"
   },
   "map_markers": {
+    "available": "Avaiable",
     "latitude_x": "Longitude X",
     "longitude_y": "Latitude Y",
     "property_no": "Property No:",
-    "property_type": "Property Type:"
+    "property_type": "Property Type:",
+    "sold": "Sold"
   },
   "messages":{
     "image_uploaded": "Image Uploaded successfully",

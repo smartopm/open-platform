@@ -86,7 +86,7 @@ describe('Land Property Component', () => {
       expect(loader.queryAllByTestId('loader')[0]).toBeInTheDocument();
       await waitFor(
         () => {
-          expect(container.queryByText(('property:messages.property_added'))).toBeInTheDocument()
+          expect(container.queryByText(('messages.property_added'))).toBeInTheDocument()
         },
         { timeout: 500 }
       );

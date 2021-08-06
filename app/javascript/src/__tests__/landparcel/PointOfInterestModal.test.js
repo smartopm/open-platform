@@ -23,7 +23,7 @@ describe('Point Of Interest Modal Component', () => {
         </MockedProvider>)
     })
 
-    expect(container.getByText(('property:dialog_header.new_point_of_interest'))).toBeInTheDocument()
+    expect(container.getByText(('dialog_header.new_point_of_interest'))).toBeInTheDocument()
     expect(container.queryByTestId('poi-name')).toBeInTheDocument()
     expect(container.queryByTestId('long_x')).toBeInTheDocument()
     expect(container.queryByTestId('lat_y')).toBeInTheDocument()

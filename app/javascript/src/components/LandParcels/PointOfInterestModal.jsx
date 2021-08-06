@@ -59,7 +59,7 @@ export default function PointOfInterestModal({
       <CustomizedDialogs
         open={open}
         handleModal={handleClose}
-        dialogHeader={t('property:dialog_header.new_point_of_interest')}
+        dialogHeader={t('dialog_header.new_point_of_interest')}
         handleBatchFilter={handlePointOfInterestSubmit}
         saveAction="Save"
         actionable={Boolean(poiName && longX && latY && iconUrl)}
@@ -68,7 +68,7 @@ export default function PointOfInterestModal({
           <TextField
             margin="dense"
             id="poi-name"
-            label={t('property:form_fields.poi_name')}
+            label={t('form_fields.poi_name')}
             inputProps={{ 'data-testid': 'poi-name' }}
             type="text"
             value={poiName}
@@ -77,7 +77,7 @@ export default function PointOfInterestModal({
           <TextField
             margin="dense"
             id="long_x"
-            label={t('property:form_fields.geo_long_x')}
+            label={t('form_fields.geo_long_x')}
             inputProps={{ 'data-testid': 'long_x' }}
             type="text"
             value={longX}
@@ -86,7 +86,7 @@ export default function PointOfInterestModal({
           <TextField
             margin="dense"
             id="lat_y"
-            label={t('property:form_fields.geo_lat_y')}
+            label={t('form_fields.geo_lat_y')}
             inputProps={{ 'data-testid': 'lat_y' }}
             type="text"
             value={latY}
@@ -94,7 +94,7 @@ export default function PointOfInterestModal({
           />
           <FormControl>
             <InputLabel id="demo-simple-select-outlined-label">
-              {t('property:form_fields.choose_icon')}
+              {t('form_fields.choose_icon')}
             </InputLabel>
             <Select
               labelId="demo-simple-select-outlined-label"

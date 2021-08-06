@@ -37,7 +37,7 @@ export default function CreatePointOfInterest({ refetch }) {
 
   function handleSubmit(variables) {
     addPointOfInterest({ variables }).then(() => {
-      setMessageAlert(t('property:messages.poi_added'))
+      setMessageAlert(t('messages.poi_added'))
       setIsSuccessAlert(true)
       setOpen(false);
       refetch();
@@ -67,7 +67,7 @@ export default function CreatePointOfInterest({ refetch }) {
         onClick={openNewPointOfInterestModal}
         data-testid="new-poi-button"
       >
-        {(t('property:buttons.new_point_of_interest'))}
+        {(t('buttons.new_point_of_interest'))}
       </Button>
       <PointOfInterestModal
         open={open}

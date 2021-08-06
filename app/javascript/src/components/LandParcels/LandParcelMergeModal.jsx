@@ -12,41 +12,41 @@ export default function LandParcelMergeModal({ open, mergeData, handleClose, han
         <FullScreenDialog
           open={open}
           handleClose={handleClose}
-          title={t('property:misc.parcel_merge_dialog')}
-          actionText={t('poperty:buttons.merge_and_save')}
+          title={t('misc.parcel_merge_dialog')}
+          actionText={t('buttons.merge_and_save')}
           handleSubmit={handleSubmit}
         >
-          <h3>{t('property:messages.merge_properties')}</h3>
+          <h3>{t('messages.merge_properties')}</h3>
           <br />
           <br />
           <Grid container spacing={1}>
             <Grid item xs={12} md={3} sm={3}>
-              <b>{t('property:misc.selected_property')}</b>
+              <b>{t('misc.selected_property')}</b>
               <b> + </b>
-              <b>{t('property:misc.existing_property')}</b>
+              <b>{t('misc.existing_property')}</b>
               {' ===> '}
             </Grid>
             <Grid item xs={12} md={3} sm={3}>
-              <b>{t('property:misc.merge_plot_to_keep')}</b>
+              <b>{t('misc.merge_plot_to_keep')}</b>
             </Grid>
             <Grid item xs={12} md={3} sm={3}>
-              <b>{t('property:misc.merge_plot_to_remove')}</b>
+              <b>{t('misc.merge_plot_to_remove')}</b>
             </Grid>
           </Grid>
           <br />
           <br />
           <Grid container spacing={1}>
             <Grid item xs={12} md={3} sm={3}>
-              <ConfirmMergeCard title={t('property:misc.selected_property')} data={mergeData?.selectedPlot} />
+              <ConfirmMergeCard title={t('misc.selected_property')} data={mergeData?.selectedPlot} />
             </Grid>
             <Grid item xs={12} md={3} sm={3}>
-              <ConfirmMergeCard title={t('property:misc.existing_property')} data={mergeData?.existingPlot} />
+              <ConfirmMergeCard title={t('misc.existing_property')} data={mergeData?.existingPlot} />
             </Grid>
             <Grid item xs={12} md={3} sm={3}>
-              <ConfirmMergeCard title={t('property:misc.merge_plot_to_keep')} data={mergeData?.plotToMerge} />
+              <ConfirmMergeCard title={t('misc.merge_plot_to_keep')} data={mergeData?.plotToMerge} />
             </Grid>
             <Grid item xs={12} md={3} sm={3}>
-              <ConfirmMergeCard title={t('property:misc.merge_plot_to_remove')} data={mergeData?.plotToRemove} />
+              <ConfirmMergeCard title={t('misc.merge_plot_to_remove')} data={mergeData?.plotToRemove} />
             </Grid>
           </Grid>
         </FullScreenDialog>
@@ -62,34 +62,34 @@ export function ConfirmMergeCard({ title, data }){
       <CardHeader title={title} />
       <CardContent>
         <Typography>
-          {t('property:misc.id')}
+          {t('misc.id')}
           {' '}
           {data?.id}
         </Typography>
         <Typography>
-          {t('property:misc.parcel_number')}
+          {t('misc.parcel_number')}
           {' '}
           <b>{data?.parcelNumber}</b>
         </Typography>
         <Typography>
-          {t('property:misc.parcel_type')}
+          {t('misc.parcel_type')}
           {' '}
           {data?.parcelType}
         </Typography>
         <Typography>
-          {t('property:misc.payments')}
+          {t('misc.payments')}
           {' '}
-          {(data?.valuations.length > 0) ? t('property:misc.yes') : t('property:misc.no')}
+          {(data?.valuations.length > 0) ? t('misc.yes') : t('misc.no')}
         </Typography>
         <Typography>
-          {t('property:misc.accounts')}
+          {t('misc.accounts')}
           {' '}
-          {(data?.accounts.length > 0) ? t('property:misc.yes') : t('property:misc.no')}
+          {(data?.accounts.length > 0) ? t('misc.yes') : t('misc.no')}
         </Typography>
         <Typography>
-          {t('property:misc.geo_coordinates')}
+          {t('misc.geo_coordinates')}
           {' '}
-          {(data?.geom) ? t('property:misc.yes') : t('property:misc.no')}
+          {(data?.geom) ? t('misc.yes') : t('misc.no')}
         </Typography>
       </CardContent>
     </Card>

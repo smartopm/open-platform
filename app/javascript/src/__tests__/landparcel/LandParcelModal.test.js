@@ -215,11 +215,11 @@ describe('Land Property Modal Component', () => {
     
     fireEvent.click(proceedButton)
     
-    expect(container.getByText(('poperty:buttons.merge_and_save'))).toBeInTheDocument()
-    expect(container.getByText(('property:messages.merge_properties'))).toBeInTheDocument()
-    expect(container.getAllByText(('property:misc.selected_property'))[0]).toBeInTheDocument()
-    expect(container.getAllByText(('property:misc.existing_property'))[0]).toBeInTheDocument()
-    expect(container.getAllByText(('property:misc.merge_plot_to_keep'))[0]).toBeInTheDocument()
-    expect(container.getAllByText(('property:misc.merge_plot_to_remove'))[0]).toBeInTheDocument()
+    expect(container.getByText(('buttons.merge_and_save'))).toBeInTheDocument()
+    expect(container.getByText(('messages.merge_properties'))).toBeInTheDocument()
+    expect(container.getAllByText(('misc.selected_property'))[0]).toBeInTheDocument()
+    expect(container.getAllByText(('misc.existing_property'))[0]).toBeInTheDocument()
+    expect(container.getAllByText(('misc.merge_plot_to_keep'))[0]).toBeInTheDocument()
+    expect(container.getAllByText(('misc.merge_plot_to_remove'))[0]).toBeInTheDocument()
   });
 })

@@ -17,26 +17,26 @@ export default function LandParcelMarker({markerProps}) {
         <CardMedia
           className={css(styles.cardMedia)}
           image={(markerProps.plotSold) ? SVGSoldIcon : SVGAvailableIcon}
-          title={(markerProps.plotSold) ? 'Sold' : 'Available'}
+          title={(markerProps.plotSold) ? t('map_markers.sold') : t('map_markers.available')}
         />
         <CardContent>
           <Typography variant='body2' color="textSecondary" component="p">
-            {t('property:map_markers.property_no')}
+            {t('map_markers.property_no')}
             {' '}
             {markerProps.parcelNumber || ''}
           </Typography>
           <Typography variant='body2' color="textSecondary" component="p">
-            {t('property:map_markers.property_type')}
+            {t('map_markers.property_type')}
             {' '}
             {(markerProps.parcelType && markerProps.parcelType.toUpperCase()) || ''}
           </Typography>
           <Typography variant='body2' color="textSecondary">
-            {t('property:map_markers.latitude_y')}
+            {t('map_markers.latitude_y')}
             {' '}
             {markerProps.geoLatY}
           </Typography>
           <Typography variant='body2' color="textSecondary">
-            {t('property:map_markers.longitude_x')}
+            {t('map_markers.longitude_x')}
             {' '}
             {markerProps.geoLongX}
           </Typography>

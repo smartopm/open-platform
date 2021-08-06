@@ -46,25 +46,25 @@ export default function PointOfInterestDrawerDialog({ anchor, children, open, on
           {selectedPoi ? (
             <>
               <List>
-                <h4>{t('property:dialog_headers.details')}</h4>
+                <h4>{t('dialog_headers.details')}</h4>
                 <ListItem>
-                  <b>{t('property:poi_list.poi')}</b>
+                  <b>{t('poi_list.poi')}</b>
                   <ListItemText primary={selectedPoi.poiName} />
                 </ListItem>
                 <ListItem>
-                  <b>{t('property:poi_list.id')}</b>
+                  <b>{t('poi_list.id')}</b>
                   <ListItemText primary={selectedPoi.parcelNumber} />
                 </ListItem>
                 <ListItem>
-                  <b>{t('property:poi_list.type')}</b>
+                  <b>{t('poi_list.type')}</b>
                   <ListItemText primary={selectedPoi.parcelType} />
                 </ListItem>
                 <ListItem>
-                  <b>{t('property:poi_list.longitude_x')}</b>
+                  <b>{t('poi_list.longitude_x')}</b>
                   <ListItemText primary={selectedPoi.longX} />
                 </ListItem>
                 <ListItem>
-                  <b>{t('property:poi_list.latitude_y')}</b>
+                  <b>{t('poi_list.latitude_y')}</b>
                   <ListItemText primary={selectedPoi.latY} />
                 </ListItem>
                 <ListItem button>
@@ -73,7 +73,7 @@ export default function PointOfInterestDrawerDialog({ anchor, children, open, on
               </List>
               {children}
             </>
-             ) : t('property:misc.no_details')}
+             ) : t('misc.no_details')}
         </Drawer>
       </div>
     </>

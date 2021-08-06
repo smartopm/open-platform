@@ -9,7 +9,7 @@ export default function LandParcelEditCoordinate({ open, handleClose, handleSave
   return (
     <>
       <div>
-        <MapEditorFullScreenDialog open={open} handleClose={handleClose} title={t('properties:misc.map_editor')}>
+        <MapEditorFullScreenDialog open={open} handleClose={handleClose} title={t('misc.map_editor')}>
           <div>
             <MapEditor handleSaveMapEdit={handleSaveMapEdit} />
           </div>

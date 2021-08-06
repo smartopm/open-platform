@@ -36,7 +36,7 @@ export default function CreateLandParcel({ refetch }) {
 
   function handleSubmit(variables) {
     addProperty({ variables }).then(() => {
-      setMessageAlert(t('property:messages.property_added'))
+      setMessageAlert(t('messages.property_added'))
       setIsSuccessAlert(true)
       setOpen(false);
       if(location?.state?.from === 'users') {
@@ -68,7 +68,7 @@ export default function CreateLandParcel({ refetch }) {
         onClick={openNewParcelModal}
         data-testid="parcel-button"
       >
-        {(t('property:buttons.new_property'))}
+        {(t('buttons.new_property'))}
       </Button>
       <LandParcelModal
         open={open}
