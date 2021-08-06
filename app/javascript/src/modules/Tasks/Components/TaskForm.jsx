@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import TextField from '@material-ui/core/TextField'
 import Autocomplete from '@material-ui/lab/Autocomplete';
-import { makeStyles } from '@material-ui/core/styles';
 import {
   Button,
   FormHelperText,
@@ -18,7 +17,6 @@ import UserAutoResult from '../../../shared/UserAutoResult';
 import { CreateNote } from '../../../graphql/mutations'
 import DatePickerDialog from '../../../components/DatePickerDialog'
 import { discussStyles } from '../../../components/Discussion/Discuss'
-import { UserChip } from './UserChip'
 import { NotesCategories } from '../../../utils/constants'
 // TODO: This should be moved to the shared directory
 import UserSearch from '../../Users/Components/UserSearch'
@@ -123,19 +121,17 @@ export default function TaskForm({ close, refetch, users, assignUser}) {
       <Autocomplete
         multiple
         id="tags-standard"
-        options = {users}
+        options={users}
+        ListboxProps={{ style: { maxHeight: "20rem" }}}
         renderOption={option => <UserAutoResult user={option} />}
-        value={assignees}
         name="assignees"
-        onChange={(event, value) => setAssignees(value)}
+        onChange={(_event, value) => setAssignees(value)}
         getOptionLabel={(option) => option.name}
-
         renderInput={(params) => (
           <TextField
             {...params}
             variant="standard"
             label={t('task.task_assignee_label')}
-            
             placeholder={t('task.task_search_placeholder')} 
           />
         )}
