@@ -6,6 +6,7 @@ import { useHistory, useLocation } from 'react-router-dom';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { useTheme } from '@material-ui/core/styles';
 import RoomIcon from '@material-ui/icons/Room';
+import { useTranslation } from 'react-i18next';
 import { ParcelsQuery, LandParcel, LandParcelGeoData } from '../../graphql/queries';
 import Loading, { Spinner } from '../../shared/Loading';
 import ErrorPage from '../Error';
@@ -57,6 +58,7 @@ export default function LandParcelList() {
   const theme = useTheme();
   const matches = useMediaQuery(theme.breakpoints.up('sm'));
   const location = useLocation()
+  const { t } = useTranslation(['common', 'property'])
 
   const path = useParamsQuery('')
   const plot = path.get('plot');
@@ -147,7 +149,7 @@ export default function LandParcelList() {
     variableUpdates.id = selectedLandParcel.id;
     updateProperty({ variables: variableUpdates })
       .then(() => {
-        setMessageAlert('Property updated successfully');
+        setMessageAlert(t('property:messages.property_updated'));
         setIsSuccessAlert(true);
         handleDetailsModalClose();
         if(location?.state?.from === 'users') {
@@ -172,7 +174,7 @@ export default function LandParcelList() {
   function handleMergeLandParcel(variables){
     mergeProperty({ variables })
       .then(() => {
-        setMessageAlert('Merge successful');
+        setMessageAlert(t('property:messages.merge_successful'));
         setIsSuccessAlert(true);
         handleDetailsModalClose();
         refetch();
@@ -210,7 +212,7 @@ export default function LandParcelList() {
       <Grid container style={{padding: '20px 0 20px 20px'}}>
         <Grid item xs={12} sm={10}>
           <SearchInput 
-            title='Plot Properties' 
+            title={t('property:misc.plot_properties')}
             searchValue={searchValue} 
             handleSearch={event => setSearchValue(event.target.value)} 
             handleFilter={toggleFilter}
@@ -259,7 +261,7 @@ export default function LandParcelList() {
               handleOnChange={queryOnChange}
               builderConfig={propertyQueryBuilderConfig}
               initialQueryValue={propertyQueryBuilderInitialValue}
-              addRuleLabel="Add filter"
+              addRuleLabel={t('common:misc.add_filter')}
             />
           </Grid>
         )
@@ -289,7 +291,7 @@ export default function LandParcelList() {
                       variant="body2"
                       onClick={onViewResultsOnMapClick}
                     >
-                      View results on map
+                      {t('property:misc.view_results_on_map')}
                     </Link>
                   </Typography>
                 )}
@@ -308,12 +310,12 @@ export default function LandParcelList() {
                 <ul className="pagination">
                   <li className={`page-item ${offset < limit && 'disabled'}`}>
                     <a className="page-link" onClick={handlePreviousPage} href="#">
-                      Previous
+                      {t('property:misc.previous')}
                     </a>
                   </li>
                   <li className={`page-item ${data?.fetchLandParcel.length < limit && 'disabled'}`}>
                     <a className="page-link" onClick={handleNextPage} href="#">
-                      Next
+                      {t('property:misc.next')}
                     </a>
                   </li>
                 </ul>

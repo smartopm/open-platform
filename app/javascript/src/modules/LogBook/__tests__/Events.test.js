@@ -4,7 +4,7 @@ import '@testing-library/jest-dom/extend-expect'
 import { BrowserRouter } from 'react-router-dom'
 import { MockedProvider } from '@apollo/react-testing'
 import Events from '../Components/Events'
-import { LogView } from '../Components/EntryLogs'
+import LogView from '../Components/LogView'
 import MockedThemeProvider from '../../__mocks__/mock_theme'
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn())
@@ -82,12 +82,12 @@ describe('Should Render Events Component', () => {
       }
     const { getByText, getByTestId } = render(
       <MockedProvider>
-        <LogView user={log} refetch={jest.fn()} tab={2} /> 
+        <LogView user={log} refetch={jest.fn()} tab={2} />
       </MockedProvider>
       )
     expect(getByText('Some User')).toBeInTheDocument()
     expect(getByText('common:user_types.client')).toBeInTheDocument()
-    expect(getByText(/2021-05-13/g)).toBeInTheDocument()
+    expect(getByText('logbook:logbook.visit_scheduled')).toBeInTheDocument()
     expect(getByTestId('grant_access_btn')).toBeInTheDocument()
     expect(getByTestId('grant_access_btn').textContent).toContain("logbook:access_actions.grant_access")
   })

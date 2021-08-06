@@ -15,7 +15,7 @@ module Notes
     private
 
     def notify_user
-      send_email_from_db
+      send_email_from_db if user.email.present?
     end
 
     # rubocop:disable Metrics/AbcSize
