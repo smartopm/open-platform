@@ -1,18 +1,28 @@
 {
   "form_actions": {
     "edit_workflow": "Editar flujo de trabajo",
+    "new_workflow": "Nuevo flujo de trabajo",
     "select": "Seleccionar {{name}}"
   },
   "form_fields": {
+    "add_rule": "Añadir Regla",
     "assign_user": "Asignar esta tarea a los usuarios",
     "pick_date": "Elija una fecha de vencimiento",
     "select_action": "Seleccione una acción",
     "select_event": "Seleccionar tipo de evento"
   },
+  "headers": {
+    "action_flow": "Flujos de acción"
+  },
   "messages": {
-    "success_message": "Éxito: los cambios se guardaron correctamente"
+    "delete_message": "Flujo de trabajo borrado con éxito",
+    "success_message": "Éxito: los cambios se guardaron correctamente",
+    "workflow_not_found": "No se encontró ningún flujo de trabajo"
   },
   "misc": {
+    "active": "Activo",
+    "created": "Creado:",
+    "event_type": "Tipo de Evento: ON {{eventType}}",
     "inactive": "Inactivo"
   }
 }

@@ -3,6 +3,7 @@ import React, { useState } from 'react'
 import { StyleSheet, css } from 'aphrodite'
 import { Button, TextField, Snackbar } from '@material-ui/core'
 import { useMutation } from 'react-apollo'
+import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types'
 import { DiscussionMutation } from '../../graphql/mutations'
 
@@ -13,13 +14,13 @@ export default function Discuss({ update }) {
   const [loading, setLoading] = useState(false)
   const [open, setOpen] = useState(false)
   const [createDiscuss] = useMutation(DiscussionMutation)
-
+  const { t } = useTranslation(['common','discussion'])
   function handleSubmit(e) {
     e.preventDefault()
     setLoading(true)
     createDiscuss({ variables: { title, description } })
       .then(() => {
-        setMessage('Discussion created')
+        setMessage(t('errors.empty_text'))
         setLoading(false)
         setTimeout(() => {
           update()
@@ -40,7 +41,7 @@ export default function Discuss({ update }) {
         autoHideDuration={6000}
         onClose={() => setOpen(!open)}
         anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-        message="Discussion topic successfully created"
+        message={t('discussion:messages.discussion_topic_created')}
       />
       <form
         onSubmit={handleSubmit}
@@ -48,9 +49,9 @@ export default function Discuss({ update }) {
       >
         <TextField
           name="title"
-          label="Discussion Title"
+          label={t('label.discussion_title')}
           style={{ width: '63vw' }}
-          placeholder="Type a comment here"
+          placeholder={t('placeholder.type_comment')}
           onChange={(e) => setTitle(e.target.value)}
           value={title}
           margin="normal"
@@ -65,9 +66,9 @@ export default function Discuss({ update }) {
         />
         <TextField
           name="description"
-          label="Discussion Description"
+          label={t('discussion:label.discussion_description')}
           style={{ width: '63vw' }}
-          placeholder="Type a comment here"
+          placeholder={t('discussion:placeholder.type_comment')}
           onChange={(e) => setDescription(e.target.value)}
           value={description}
           multiline
@@ -91,7 +92,7 @@ export default function Discuss({ update }) {
             onClick={update}
             className={`${css(discussStyles.cancelBtn)}`}
           >
-            Cancel
+            {t('form_actions.cancel')}
           </Button>
           <Button
             variant="contained"
@@ -102,7 +103,7 @@ export default function Discuss({ update }) {
             className={`${css(discussStyles.submitBtn)}`}
             data-testid='button'
           >
-            {loading ? 'Submitting ...' : 'Submit'}
+            {loading ? t('form_actions.submitting') : t('form_actions.submit')}
           </Button>
         </div>
         <br />

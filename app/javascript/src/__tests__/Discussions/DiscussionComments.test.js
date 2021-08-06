@@ -61,7 +61,7 @@ describe('Discussion with comments', () => {
       
       fireEvent.click(container.queryByText('follow'))
       
-      expect(container.queryByText('Subscribe to Discussion')).toBeInTheDocument();
+      expect(container.queryByText('discussion:headers.subscribe')).toBeInTheDocument();
     }, 50);
   });
 });

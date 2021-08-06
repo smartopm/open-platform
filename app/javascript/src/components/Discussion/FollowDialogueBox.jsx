@@ -12,6 +12,8 @@ import {
   TextField
 } from '@material-ui/core'
 
+import { useTranslation } from 'react-i18next'
+
 export default function FollowDialogueBox({
   authState,
   open,
@@ -25,6 +27,7 @@ export default function FollowDialogueBox({
   error
 }) {
   const email = authState.user?.email
+  const { t } = useTranslation(['common','discussion'])
   return (
     <>
       <Dialog
@@ -34,80 +37,71 @@ export default function FollowDialogueBox({
         aria-describedby="alert-dialog-description"
       >
         <DialogTitle id="alert-dialog-title">
-          Subscribe to Discussion
+          {t('discussion:headers.subscribe')}
         </DialogTitle>
         <DialogContent>
           {!subscribe && email ? (
             <DialogContentText id="alert-dialog-description">
-              Thank you for following this discussion! You will receive daily
-              email alerts for new messages posted by other community members on
-              this board to 
+              {t('dicussion:messages.subscribed_first_part')}
               {' '}
               <b>{email}</b>
-              . To stop receiving the alerts, please unfollow this
-              board. If this email is incorrect, please 
+              {t('dicussion:messages.subscribed_second_part')}
               {' '}
-              <a href="https://app.doublegdp.com/contact">contact our support team</a>
+              <a href="https://app.doublegdp.com/contact">{t('dicussion:messages.contact_team')}</a>
             </DialogContentText>
           ) : !subscribe && !email ?
               (
                 <DialogContentText id="alert-dialog-description">
-                  Thank you for following the discussion! 
+                  {t('discussion:messages.not_subscribed_first_part')}
                   {' '}
                   <a href="#" onClick={handleEmailUpdate}>
-                    Please share an email for your account
+                    {t('discussion:messages.not_subscribed_second_part')}
                   </a>
                   {' '}
-                  to receive daily email alert for
-                  new messages posted by other community members
-                  on this board. To stop receiving the alerts, please unfollow this board.
+                  {t('discussion:messages.not_subscribed_third_part')}
                 </DialogContentText>
               ) :
               (
                 <DialogContentText id="alert-dialog-description">
-                  You have unfollowed this discussion. You will no longer receive
-                  alerts for new messages posted by other community members on this
-                  board. Please provide us feedback on your discussion experience by
-                  sending us a message. We look forward to you participating in
-                  future discussions with the Nkwashi community!
+                  {t('discussion:messages.unfolllow_ack_message')}
                 </DialogContentText>
               )}
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose} color="secondary">
-            Disagree
+            {t('discussion:form_actions.disagree')}
           </Button>
           <Button onClick={handleFollow} color="primary" autoFocus>
-            Agree
+            {t('discussion:form_actions.agree')}
           </Button>
         </DialogActions>
       </Dialog>
       {
         updateEmail && (
           <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
-            <DialogTitle id="form-dialog-title">Update Email</DialogTitle>
+            <DialogTitle id="form-dialog-title">{t('discussion:headers.update_email_header')}</DialogTitle>
             <DialogContent>
               <DialogContentText>
-                To update your email, please enter your email in the field below and our customer support will reach out to you.
+                {t('discussion:messages.update_email_helper')}
               </DialogContentText>
               <TextField
                 error={error}
                 autoFocus
                 margin="dense"
                 id="name"
-                label="Email Address"
+                label={t('discussion:form_fields.email_address')}
                 type="email"
                 onChange={textFieldOnChange}
                 fullWidth
-                helperText="Invalid email."
+                helperText={t('discussion:helper_text.invalid_email')}
               />
             </DialogContent>
             <DialogActions>
               <Button onClick={handleEmailUpdate} color="primary">
-                Cancel
+                {t('form_actions.cancel')}
               </Button>
               <Button onClick={handleSendEmail} color="primary">
-                Send
+                {t('misc.send')}
               </Button>
             </DialogActions>
           </Dialog>

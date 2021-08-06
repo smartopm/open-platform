@@ -4,6 +4,7 @@ import PropTypes from 'prop-types'
 import { useMutation } from 'react-apollo';
 import { useHistory } from 'react-router-dom'
 import { makeStyles } from "@material-ui/core/styles"
+import { useTranslation } from 'react-i18next';
 import { PointOfInterestCreate } from '../../graphql/mutations/land_parcel';
 import MessageAlert from "../MessageAlert"
 import PointOfInterestModal from './PointOfInterestModal'
@@ -17,6 +18,7 @@ export default function CreatePointOfInterest({ refetch }) {
   const history = useHistory()
   const path = useParamsQuery('')
   const type = path.get('type');
+  const { t } = useTranslation('property')
 
   const [addPointOfInterest] = useMutation(PointOfInterestCreate);
 
@@ -35,7 +37,7 @@ export default function CreatePointOfInterest({ refetch }) {
 
   function handleSubmit(variables) {
     addPointOfInterest({ variables }).then(() => {
-      setMessageAlert('Point of Interest added successfully')
+      setMessageAlert(t('messages.poi_added'))
       setIsSuccessAlert(true)
       setOpen(false);
       refetch();
@@ -65,7 +67,7 @@ export default function CreatePointOfInterest({ refetch }) {
         onClick={openNewPointOfInterestModal}
         data-testid="new-poi-button"
       >
-        New Point of Interest
+        {(t('buttons.new_point_of_interest'))}
       </Button>
       <PointOfInterestModal
         open={open}

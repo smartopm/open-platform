@@ -89,7 +89,6 @@ describe('Discussions Component', () => {
         </MockedProvider>
       );
     });
-
-    expect(container.getByText(/No Discussions Topics/)).toBeInTheDocument();
+    expect(container.getByText('headers.no_discussions')).toBeInTheDocument();
   });
 });

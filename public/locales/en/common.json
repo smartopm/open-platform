@@ -216,7 +216,8 @@
     "plan_transfer_confirmation_message_3": "By transferring your plan, you will be transferring all payments associated to this plan. Click the 'Continue' button to transfer plan",
     "select_frequency": "Please select frequency",
     "select_transfer_plan": "Select the Plan you want to migrate this plan to?",
-    "plan_frequency": "Plan Frequency"
+    "plan_frequency": "Plan Frequency",
+    "image_uploaded": "Image uploaded"
   },
   "menu": {
     "invoice": "Invoice",

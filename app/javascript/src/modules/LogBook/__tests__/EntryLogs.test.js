@@ -46,7 +46,9 @@ describe('EntryLogs Component', () => {
           id: 'faff8c88-982c-4f87-ba69-c43c06f6576e',
           grantedState: 1,
           grantedAt: '2021-07-02T11:19:27+02:00',
-          name: 'HU'
+          name: 'HU',
+          startTime: '2021-07-02T11:19:27+02:00',
+          visitationDate: '2021-07-02T11:19:27+02:00'
         }
       }]
     }
@@ -55,8 +57,7 @@ describe('EntryLogs Component', () => {
       router: {
         push: jest.fn()
       },
-      nextPage: jest.fn(),
-      previousPage: jest.fn(),
+      paginate: jest.fn(),
       offset: 0,
       limit: 20,
       searchTerm: '',
@@ -85,8 +86,8 @@ describe('EntryLogs Component', () => {
     expect(container.queryByText('common:misc.more_details')).toBeInTheDocument();
     expect(container.queryAllByText('logbook.add_observation')[0]).toBeInTheDocument();
     expect(container.queryByText('logbook.log_exit')).toBeInTheDocument();
-    expect(container.queryByText('common:misc.previous')).toBeInTheDocument();
-    expect(container.queryByText('common:misc.next')).toBeInTheDocument();
+    expect(container.queryByText('misc.previous')).toBeInTheDocument();
+    expect(container.queryByText('misc.next')).toBeInTheDocument();
     expect(container.queryByLabelText('simple tabs example')).toBeInTheDocument()
 
     fireEvent.change(container.queryByLabelText('simple tabs example'))

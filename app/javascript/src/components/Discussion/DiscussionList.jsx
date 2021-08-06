@@ -10,6 +10,7 @@ import {
   IconButton
 } from '@material-ui/core'
 import { useHistory } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import DeleteIcon from '@material-ui/icons/Delete'
 import { css, StyleSheet } from 'aphrodite'
 import PropTypes from 'prop-types'
@@ -26,7 +27,7 @@ export default function DiscussionList({ data, refetch, isAdmin }) {
   const [openModal, setOpenModal] = useState(false)
   const [error, setError] = useState(null)
   const history = useHistory()
-
+const { t } = useTranslation('discussion')
   function handleDeleteClick(event, id = discussionId) {
     event.stopPropagation()
     event.preventDefault()
@@ -100,7 +101,7 @@ export default function DiscussionList({ data, refetch, isAdmin }) {
               <Divider component="li" />
             </Fragment>
             ))
-          : 'No Discussions Topics'}
+          : t('headers.no_discussions')}
         <DeleteDialogueBox
           open={openModal}
           handleClose={handleDeleteClick}

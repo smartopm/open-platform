@@ -101,10 +101,8 @@ export default function PaymentModal({
       ...inputValue,
       bankName: '',
       chequeNumber: '',
-      receiptNumber: '',
       paidDate: subDays(new Date(), 1)
     });
-    setPlotInputValue([]);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [inputValue.transactionType, inputValue.pastPayment]);
 
@@ -144,6 +142,10 @@ export default function PaymentModal({
     return res?.receiptNumber
   }
 
+  function validatePlotInput(input) {
+    return input.map(({amount, paymentPlanId}) => ({ amount, paymentPlanId }))
+  }
+
   // eslint-disable-next-line consistent-return
   function updatePlotInputFields(name, value, paymentPlanId) {
     const fields = [...plotInputValue];
@@ -158,7 +160,7 @@ export default function PaymentModal({
         [name]: name === 'amount' ? parseFloat(value) : value
       };
     } else {
-      fields.push({ [name]: value, paymentPlanId });
+      fields.push({ [name]: name === 'amount' ? parseFloat(value) : value, paymentPlanId });
     }
     setPlotInputValue(fields);
   }
@@ -184,7 +186,7 @@ export default function PaymentModal({
         amount: totalAmount(),
         // allow rails to pick its default date rather than the initialValue past on top
         createdAt: inputValue.pastPayment ? inputValue.paidDate : '',
-        paymentsAttributes: plotInputValue
+        paymentsAttributes: inputValue.pastPayment ? plotInputValue : validatePlotInput(plotInputValue)
       }
     })
       .then(res => {

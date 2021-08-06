@@ -69,7 +69,7 @@ describe('PointOfInterestDrawerDialog', () => {
       )
     })
 
-    expect(container.queryByText(/no details/ig)).toBeTruthy()
+    expect(container.queryByText(('misc.no_details'))).toBeTruthy()
   });
 
   it('should close dialog', async () => {
