@@ -19,7 +19,7 @@ module Mutations
           destination_payment_plan.transfer_payments(source_payment_plan)
           return { payment_plan: destination_payment_plan.reload } if source_payment_plan.cancel!
 
-          raise GraphQL::ExecutionError, destination_payment_plan.errors.full_messages
+          raise GraphQL::ExecutionError, source_payment_plan.errors.full_messages
         end
       end
 

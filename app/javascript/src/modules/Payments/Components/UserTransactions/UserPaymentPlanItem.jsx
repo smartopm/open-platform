@@ -227,11 +227,6 @@ export default function UserPaymentPlanItem({
     setTransferPlanModalOpen(true);
   }
 
-  // function handlePlanTransferClick(event) {
-  //   event.stopPropagation();
-  //   setTransferPlanModalOpen(false);
-  // }
-
   function transactionDetailOpen(trans) {
     setTransData(trans);
     setTransDetailOpen(true);
