@@ -213,7 +213,7 @@
     "plan_transferred_successfully": "Your plan has been successfully transferred to {{paymentPlanName}}.",
     "plan_transfer_confirmation_message_1": "Your plan has a total of",
     "plan_transfer_confirmation_message_2": "payments with a total value of",
-    "plan_transfer_confirmation_message_3": "By transferring your plan, you will be transferring all payments associated to this plan. Click the 'Continue to verification' button to select the plot you want to migrate the plan to and confirm.",
+    "plan_transfer_confirmation_message_3": "By transferring your plan, you will be transferring all payments associated to this plan. Click the 'Continue' button to transfer plan",
     "select_frequency": "Please select frequency",
     "select_transfer_plan": "Select the Plan you want to migrate this plan to?",
     "plan_frequency": "Plan Frequency"
@@ -287,7 +287,7 @@
     "view_transactions": "View Transactions",
     "transfer_payment_plan": "Transfer Plan",
     "transfer_plan": "Transfer Plan",
-    "continue_to_verification": "Continue to verification"
+    "continue_to_verification": "Continue"
   },
   "user_types": {
     "admin": "Admin",

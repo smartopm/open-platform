@@ -30,6 +30,7 @@ export const TransferPaymentPlanMutation = gql`
         id
         startDate
         landParcel {
+          id
           parcelNumber
           parcelType
         }

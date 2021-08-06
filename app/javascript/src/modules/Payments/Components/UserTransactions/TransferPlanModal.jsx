@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { useLazyQuery, useMutation } from 'react-apollo';
+import { useLazyQuery } from 'react-apollo';
 import { makeStyles } from '@material-ui/core/styles';
 import { useTranslation } from 'react-i18next';
 import Typography from '@material-ui/core/Typography';
@@ -10,11 +10,9 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
-import MessageAlert from '../../../../components/MessageAlert';
 import { Spinner } from '../../../../shared/Loading';
 import { UserLandParcelWithPlan } from '../../../../graphql/queries';
-import { TransferPaymentPlanMutation } from '../../graphql/payment_plan_mutations';
-import { formatError, formatMoney } from '../../../../utils/helpers';
+import { formatMoney } from '../../../../utils/helpers';
 import { dateToString } from '../../../../components/DateContainer';
 import { CustomizedDialogs } from '../../../../components/Dialog';
 import PlanTransferConfirmDialog from './PlanTransferConfirmDialog';
@@ -27,14 +25,11 @@ export default function TransferPlanModal({
   refetch,
   balanceRefetch,
   planData,
-  currencyData,
+  currencyData
 }) {
-  const [isSuccessAlert, setIsSuccessAlert] = useState(false);
-  const [messageAlert, setMessageAlert] = useState('');
   const [acceptanceCheckbox, setAcceptanceCheckbox] = useState(false);
   const [destinationPlanId, setDestinationPlanId] = useState('');
   const [canSubmit, setCanSubmit] = useState(false);
-  const [transferPaymentPlan] = useMutation(TransferPaymentPlanMutation);
   const [confirmTransferPlanOpen, setConfirmTransferPlanOpen] = useState(false);
   const classes = useStyles();
   const { t } = useTranslation('common');
@@ -43,13 +38,6 @@ export default function TransferPlanModal({
     errorPolicy: 'all',
     fetchPolicy: 'cache-and-network'
   });
-
-  function handleMessageAlertClose(_event, reason) {
-    if (reason === 'clickaway') {
-      return;
-    }
-    setMessageAlert('');
-  }
 
   function handleRadioChange(event) {
     setDestinationPlanId(event.target.value);
@@ -61,10 +49,10 @@ export default function TransferPlanModal({
 
   function planPaymentSummaryDetail() {
     if (paymentPlanId === '') return {};
-
     let totalPayment = 0;
     let totalPaymentAmount = 0;
-    planData.planPayments.forEach(payment => {
+    // eslint-disable-next-line no-unused-expressions
+    planData?.planPayments?.forEach(payment => {
       if (payment.status === 'paid') {
         totalPaymentAmount += payment.amount;
         totalPayment += 1;
@@ -76,36 +64,14 @@ export default function TransferPlanModal({
     };
   }
 
-  function handleSubmit(e) {
-    e.preventDefault();
-    transferPaymentPlan({
-      variables: { sourcePlanId: paymentPlanId, destinationPlanId }
-    })
-      .then(res => {
-        const resLandParcel = res.data?.transferPaymentPlan?.paymentPlan?.landParcel;
-        const planStartDate = res.data?.transferPaymentPlan?.paymentPlan?.startDate;
-        const paymentPlanName = `${resLandParcel.parcelNumber} ${planStartDate}`;
-        handleModalClose();
-        setMessageAlert(t('common:misc.plan_transferred_successfully', { paymentPlanName }));
-        setIsSuccessAlert(true);
-        refetch();
-        balanceRefetch();
-      })
-      .catch(err => {
-        handleModalClose();
-        setMessageAlert(formatError(err.message));
-        setIsSuccessAlert(false);
-      });
-  }
-
   function handleTransferPlanClose() {
-    setConfirmTransferPlanOpen(false)
-    handleModalClose()
+    setConfirmTransferPlanOpen(false);
+    handleModalClose();
   }
 
   function handleTransferPlanSubmit() {
-    setConfirmTransferPlanOpen(true)
-    handleModalClose()
+    setConfirmTransferPlanOpen(true);
+    handleModalClose();
   }
 
   useEffect(() => {
@@ -113,7 +79,6 @@ export default function TransferPlanModal({
       loadPaymentPlans({ variables: { userId }, errorPolicy: 'all', fetchPolicy: 'no-cache' });
     } else {
       setAcceptanceCheckbox(false);
-      setDestinationPlanId('');
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open]);
@@ -130,19 +95,16 @@ export default function TransferPlanModal({
 
   return (
     <>
-      {console.log(userId)}
-      {console.log(paymentPlanId)}
-      <MessageAlert
-        type={isSuccessAlert ? 'success' : 'error'}
-        message={messageAlert}
-        open={!!messageAlert}
-        handleClose={handleMessageAlertClose}
-      />
       <PlanTransferConfirmDialog
         open={confirmTransferPlanOpen}
         handleClose={handleTransferPlanClose}
         PaymentData={planPaymentSummaryDetail()}
-        handleSubmit={handleSubmit}
+        paymentPlanId={paymentPlanId}
+        destinationPlanId={destinationPlanId}
+        handleModalClose={handleModalClose}
+        refetch={refetch}
+        balanceRefetch={balanceRefetch}
+        handleModal={() => setConfirmTransferPlanOpen(false)}
       />
       <CustomizedDialogs
         open={open}
@@ -154,15 +116,13 @@ export default function TransferPlanModal({
         disableActionBtn={!canSubmit}
       >
         <div>
-          <Typography paragraph variant="h6" color="textPrimary" display="body">
+          <Typography paragraph variant="h6" color="textPrimary" data-testid='title'>
             {t('common:misc.select_transfer_plan')}
           </Typography>
-          <Typography
+          <div
             className={classes.content}
-            paragraph
-            variant="body1"
             color="textPrimary"
-            display="body"
+            data-testid='plots'
           >
             {data?.userLandParcelWithPlan.length > 1 ? (
               <PaymentPlansForTransferPlan
@@ -177,18 +137,14 @@ export default function TransferPlanModal({
                 paragraph
                 variant="body1"
                 color="secondary"
-                display="body"
               >
                 {t('common:misc.no_property_found_for_plan_transfer')}
               </Typography>
             )}
-          </Typography>
-          <Typography
+          </div>
+          <div
             className={classes.footer}
-            paragraph
-            variant="body1"
             color="textPrimary"
-            display="body"
           >
             {data?.userLandParcelWithPlan.length > 1 && (
               <FormGroup row>
@@ -205,7 +161,7 @@ export default function TransferPlanModal({
                 />
               </FormGroup>
             )}
-          </Typography>
+          </div>
         </div>
       </CustomizedDialogs>
     </>
@@ -233,8 +189,8 @@ export function PaymentPlansForTransferPlan({
         {filteredPaymentPlans.map(plan => (
           <FormControlLabel
             key={plan.id}
-            checked={destinationPlanId === plan?.id}
-            value={plan?.id}
+            checked={destinationPlanId === plan.id}
+            value={plan.id}
             control={<Radio />}
             label={`${plan?.landParcel?.parcelNumber} - ${dateToString(plan?.startDate)}`}
           />
@@ -250,7 +206,18 @@ TransferPlanModal.propTypes = {
   userId: PropTypes.string.isRequired,
   paymentPlanId: PropTypes.string.isRequired,
   refetch: PropTypes.func.isRequired,
-  balanceRefetch: PropTypes.func.isRequired
+  balanceRefetch: PropTypes.func.isRequired,
+  planData: PropTypes.arrayOf({
+    planPayments: PropTypes.shape({
+      id: PropTypes.string,
+      status: PropTypes.string,
+      amount: PropTypes.number
+    })
+  }).isRequired,
+  currencyData: PropTypes.shape({
+    currency: PropTypes.string,
+    locale: PropTypes.string
+  }).isRequired,
 };
 
 PaymentPlansForTransferPlan.propTypes = {
