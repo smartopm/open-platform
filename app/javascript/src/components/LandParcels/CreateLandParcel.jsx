@@ -4,6 +4,7 @@ import PropTypes from 'prop-types'
 import { useMutation } from 'react-apollo';
 import { useHistory, useLocation } from 'react-router-dom'
 import { makeStyles } from "@material-ui/core/styles"
+import { useTranslation } from 'react-i18next';
 import { AddNewProperty } from '../../graphql/mutations'
 import MessageAlert from "../MessageAlert"
 import LandParcelModal from './LandParcelModal'
@@ -19,7 +20,7 @@ export default function CreateLandParcel({ refetch }) {
   const path = useParamsQuery('')
   const type = path.get('type');
   const [addProperty] = useMutation(AddNewProperty);
-
+  const { t } = useTranslation('property')
   useEffect(() => {
     if (type === 'new') {
       setOpen(true)
@@ -35,7 +36,7 @@ export default function CreateLandParcel({ refetch }) {
 
   function handleSubmit(variables) {
     addProperty({ variables }).then(() => {
-      setMessageAlert('Property added successfully')
+      setMessageAlert(t('messages.property_added'))
       setIsSuccessAlert(true)
       setOpen(false);
       if(location?.state?.from === 'users') {
@@ -67,7 +68,7 @@ export default function CreateLandParcel({ refetch }) {
         onClick={openNewParcelModal}
         data-testid="parcel-button"
       >
-        New Property
+        {(t('buttons.new_property'))}
       </Button>
       <LandParcelModal
         open={open}
