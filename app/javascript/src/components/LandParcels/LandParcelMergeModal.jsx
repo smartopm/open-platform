@@ -1,50 +1,52 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Card, CardContent, CardHeader, Grid, Typography} from '@material-ui/core';
+import { useTranslation } from 'react-i18next';
 import { FullScreenDialog } from '../Dialog'
 
 export default function LandParcelMergeModal({ open, mergeData, handleClose, handleSubmit }){
+  const { t } = useTranslation('property')
   return (
     <>
       {mergeData && (
         <FullScreenDialog
           open={open}
           handleClose={handleClose}
-          title='Land Parcel Merge Dialog'
-          actionText="Merge and Save"
+          title={t('property:misc.parcel_merge_dialog')}
+          actionText={t('poperty:buttons.merge_and_save')}
           handleSubmit={handleSubmit}
         >
-          <h3>You are about to merge these two properties!</h3>
+          <h3>{t('property:messages.merge_properties')}</h3>
           <br />
           <br />
           <Grid container spacing={1}>
             <Grid item xs={12} md={3} sm={3}>
-              <b>Selected Property</b>
+              <b>{t('property:misc.selected_property')}</b>
               <b> + </b>
-              <b>Existing Property</b>
+              <b>{t('property:misc.existing_property')}</b>
               {' ===> '}
             </Grid>
             <Grid item xs={12} md={3} sm={3}>
-              <b>After Merge (New Plot to Keep)</b>
+              <b>{t('property:misc.merge_plot_to_keep')}</b>
             </Grid>
             <Grid item xs={12} md={3} sm={3}>
-              <b>After Merge (Plot to Remove)</b>
+              <b>{t('property:misc.merge_plot_to_remove')}</b>
             </Grid>
           </Grid>
           <br />
           <br />
           <Grid container spacing={1}>
             <Grid item xs={12} md={3} sm={3}>
-              <ConfirmMergeCard title="Selected Property" data={mergeData?.selectedPlot} />
+              <ConfirmMergeCard title={t('property:misc.selected_property')} data={mergeData?.selectedPlot} />
             </Grid>
             <Grid item xs={12} md={3} sm={3}>
-              <ConfirmMergeCard title="Existing  Property" data={mergeData?.existingPlot} />
+              <ConfirmMergeCard title={t('property:misc.existing_property')} data={mergeData?.existingPlot} />
             </Grid>
             <Grid item xs={12} md={3} sm={3}>
-              <ConfirmMergeCard title="After Merge (Plot to Keep)" data={mergeData?.plotToMerge} />
+              <ConfirmMergeCard title={t('property:misc.merge_plot_to_keep')} data={mergeData?.plotToMerge} />
             </Grid>
             <Grid item xs={12} md={3} sm={3}>
-              <ConfirmMergeCard title="After Merge (Plot to Remove)" data={mergeData?.plotToRemove} />
+              <ConfirmMergeCard title={t('property:misc.merge_plot_to_remove')} data={mergeData?.plotToRemove} />
             </Grid>
           </Grid>
         </FullScreenDialog>
@@ -54,39 +56,40 @@ export default function LandParcelMergeModal({ open, mergeData, handleClose, han
 }
 
 export function ConfirmMergeCard({ title, data }){
+  const { t } = useTranslation('property')
   return (
     <Card variant="outlined">
       <CardHeader title={title} />
       <CardContent>
         <Typography>
-          ID: 
+          {t('property:misc.id')}
           {' '}
           {data?.id}
         </Typography>
         <Typography>
-          Parcel Number: 
+          {t('property:misc.parcel_number')}
           {' '}
           <b>{data?.parcelNumber}</b>
         </Typography>
         <Typography>
-          Parcel Type: 
+          {t('property:misc.parcel_type')}
           {' '}
           {data?.parcelType}
         </Typography>
         <Typography>
-          Payments?: 
+          {t('property:misc.payments')}
           {' '}
-          {(data?.valuations.length > 0) ? 'Yes' : 'No'}
+          {(data?.valuations.length > 0) ? t('property:misc.yes') : t('property:misc.no')}
         </Typography>
         <Typography>
-          Accounts?: 
+          {t('property:misc.accounts')}
           {' '}
-          {(data?.accounts.length > 0) ? 'Yes' : 'No'}
+          {(data?.accounts.length > 0) ? t('property:misc.yes') : t('property:misc.no')}
         </Typography>
         <Typography>
-          Geo-Coordinates?: 
+          {t('property:misc.geo_coordinates')}
           {' '}
-          {(data?.geom) ? 'Yes' : 'No'}
+          {(data?.geom) ? t('property:misc.yes') : t('property:misc.no')}
         </Typography>
       </CardContent>
     </Card>

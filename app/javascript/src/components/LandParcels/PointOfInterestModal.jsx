@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import { TextField, FormControl, Select, InputLabel, MenuItem } from '@material-ui/core';
+import { useTranslation } from 'react-i18next';
 import { CustomizedDialogs } from '../Dialog';
 import {pointOfInterestIconSet} from '../../utils/constants'
 
@@ -15,6 +16,7 @@ export default function PointOfInterestModal({
   const [longX, setLongX] = useState('');
   const [latY, setLatY] = useState('');
   const [iconUrl, setIconUrl] = useState('');
+  const { t } = useTranslation('property')
 
   function handlePointOfInterestSubmit(){
     const geom = getPoiPointFeature({ 
@@ -57,7 +59,7 @@ export default function PointOfInterestModal({
       <CustomizedDialogs
         open={open}
         handleModal={handleClose}
-        dialogHeader='New Point of Interest'
+        dialogHeader={t('property:dialog_header.new_point_of_interest')}
         handleBatchFilter={handlePointOfInterestSubmit}
         saveAction="Save"
         actionable={Boolean(poiName && longX && latY && iconUrl)}
@@ -66,7 +68,7 @@ export default function PointOfInterestModal({
           <TextField
             margin="dense"
             id="poi-name"
-            label="POI Name"
+            label={t('property:form_fields.poi_name')}
             inputProps={{ 'data-testid': 'poi-name' }}
             type="text"
             value={poiName}
@@ -75,7 +77,7 @@ export default function PointOfInterestModal({
           <TextField
             margin="dense"
             id="long_x"
-            label="Geo-Coordinates Long_X"
+            label={t('property:form_fields.geo_long_x')}
             inputProps={{ 'data-testid': 'long_x' }}
             type="text"
             value={longX}
@@ -84,7 +86,7 @@ export default function PointOfInterestModal({
           <TextField
             margin="dense"
             id="lat_y"
-            label="Geo-Coordinates Lat_Y"
+            label={t('property:form_fields.geo_lat_y')}
             inputProps={{ 'data-testid': 'lat_y' }}
             type="text"
             value={latY}
@@ -92,14 +94,14 @@ export default function PointOfInterestModal({
           />
           <FormControl>
             <InputLabel id="demo-simple-select-outlined-label">
-              Choose an Icon Type
+              {t('property:form_fields.choose_icon')}
             </InputLabel>
             <Select
               labelId="demo-simple-select-outlined-label"
               id="demo-simple-select-outlined"
               value={iconUrl}
               onChange={event => setIconUrl(event.target.value)}
-              label="icon-url"
+              label={t('property:form_fields.icon_url')}
               data-testid="icon-url"
               required
             >

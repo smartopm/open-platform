@@ -12,6 +12,7 @@ import {
 } from '@material-ui/core';
 import { DeleteOutline, Room } from '@material-ui/icons';
 import Autocomplete from '@material-ui/lab/Autocomplete'
+import { useTranslation } from 'react-i18next';
 import { CustomizedDialogs, ActionDialog } from '../Dialog';
 import { StyledTabs, StyledTab, TabPanel } from '../Tabs';
 import { Context as AuthStateContext } from '../../containers/Provider/AuthStateProvider';
@@ -61,7 +62,7 @@ export default function LandParcelModal({
   const [editCoordinates, setEditCoordinates] = useState(false)
   const [mergeModalOpen, setMergeModalOpen] = useState(false)
   const [mergeData, setMergeData] = useState(null)
-
+  const { t } = useTranslation(['common', 'property'])
   useEffect(() => {
     setDetailsFields(landParcel);
     if (modalType === 'new' && location?.state?.from === 'users') {
@@ -253,7 +254,7 @@ export default function LandParcelModal({
   function totalPlanPayments(payments){
     let totalAmount = 0;
     payments.forEach(payment => {
-      if(payment.status !== 'cancelled'){
+      if(payment.status === 'paid'){
         totalAmount += payment.amount;
       }
     })
@@ -263,11 +264,11 @@ export default function LandParcelModal({
   function saveActionText() {
     if (modalType === 'details') {
       if (isEditing) {
-        return 'Save Changes';
+        return t('common:form_actions.save_changes');
       }
-      return 'Edit Property';
+      return t('property:form_actions.edit_property');
     }
-    return 'Save';
+    return t('common:form_actions.save');
   }
 
   function filteredOwnerList(users) {
@@ -301,14 +302,14 @@ export default function LandParcelModal({
       <ActionDialog
         open={confirmMergeOpen}
         type="confirm"
-        message="Parcel Number Already exists. Do you want to merge these plots?"
+        message={t('property:messages.parcel_number_exists')}
         handleClose={cleanUpOnModalClosing}
         handleOnSave={handleTriggerMergeRoutine}
       />
       <CustomizedDialogs
         open={open}
         handleModal={cleanUpOnModalClosing}
-        dialogHeader={modalType === 'new' ? 'New Property' : `Property ${landParcel.parcelNumber}`}
+        dialogHeader={modalType === 'new' ? t('property:dialog_headers.new_property') : t('property:dialog_headers.property', {parcelNumber: landParcel.parcelNumber})}
         handleBatchFilter={handleParcelSubmit}
         saveAction={saveActionText()}
         actionLoading={propertyUpdateLoading}
@@ -316,9 +317,9 @@ export default function LandParcelModal({
         displaySaveButton={tabValue !== 'Plan History'}
       >
         <StyledTabs value={tabValue} onChange={handleChange} aria-label="land parcel tabs">
-          <StyledTab label="Details" value="Details" />
-          <StyledTab label="Ownership" value="Ownership" />
-          <StyledTab label="Plan History" value="Plan History" />
+          <StyledTab label={t('property:dialog_headers.details')} value="Details" />
+          <StyledTab label={t('property:dialog_headers.ownership')} value="Ownership" />
+          <StyledTab label={t('property:dialog_headers.plan_history')} value="Plan History" />
         </StyledTabs>
         <TabPanel value={tabValue} index="Details">
           <div className={classes.parcelForm}>
@@ -330,7 +331,7 @@ export default function LandParcelModal({
                 'data-testid': 'parcel-number',
                 readOnly: isFormReadOnly
               }}
-              label="Property Number"
+              label={t('property:form_fields.property_number')}
               type="text"
               value={parcelNumber}
               onChange={e => setParcelNumber(e.target.value)}
@@ -339,7 +340,7 @@ export default function LandParcelModal({
             <TextField
               margin="dense"
               id="address1"
-              label="Address1"
+              label={t('property:form_fields.address_1')}
               inputProps={{ 'data-testid': 'address1', readOnly: isFormReadOnly }}
               type="text"
               value={address1}
@@ -348,7 +349,7 @@ export default function LandParcelModal({
             <TextField
               margin="dense"
               id="address2"
-              label="Address2"
+              label={t('property:form_fields.address_2')}
               inputProps={{ 'data-testid': 'address2', readOnly: isFormReadOnly }}
               type="text"
               value={address2}
@@ -357,7 +358,7 @@ export default function LandParcelModal({
             <TextField
               margin="dense"
               id="city"
-              label="city"
+              label={t('property:form_fields.city')}
               inputProps={{ 'data-testid': 'city', readOnly: isFormReadOnly }}
               type="text"
               value={city}
@@ -366,7 +367,7 @@ export default function LandParcelModal({
             <TextField
               margin="dense"
               id="state-province"
-              label="State Province"
+              label={t('property:form_fields.state_province')}
               inputProps={{
                 'data-testid': 'state-province',
                 readOnly: isFormReadOnly
@@ -378,7 +379,7 @@ export default function LandParcelModal({
             <TextField
               margin="dense"
               id="country"
-              label="Country"
+              label={t('property:form_fields.country')}
               type="text"
               inputProps={{ 'data-testid': 'country', readOnly: isFormReadOnly }}
               value={country}
@@ -387,7 +388,7 @@ export default function LandParcelModal({
             <TextField
               margin="dense"
               id="parcel-type"
-              label="Property Type"
+              label={t('property:form_fields.property_type')}
               inputProps={{
                 'data-testid': 'parcel-type',
                 readOnly: isFormReadOnly
@@ -399,7 +400,7 @@ export default function LandParcelModal({
             <TextField
               margin="dense"
               id="postal-code"
-              label="Postal Code"
+              label={t('property:form_fields.postal_code')}
               inputProps={{
                 'data-testid': 'postal-code',
                 readOnly: isFormReadOnly
@@ -418,7 +419,7 @@ export default function LandParcelModal({
               <Room />
               {' '}
               {' '}
-              <Typography>Edit Coordinates</Typography>
+              <Typography>{t('property:buttons.edit_coordinates')}</Typography>
             </IconButton>
             )}
           </div>
@@ -433,7 +434,7 @@ export default function LandParcelModal({
                     id={`user-search-${owner.fullName || owner.user.name}`}
                     focused
                     value={owner.fullName || owner.user.name || ''}
-                    label="Owner"
+                    label={t('property:form_fields.owner')}
                     name="name"
                     className={classes.textField}
                     style={{ marginBottom: '15px' }}
@@ -445,7 +446,7 @@ export default function LandParcelModal({
                     id={`user-search-${owner.address1}`}
                     focused
                     value={owner.address1 || ''}
-                    label="Address"
+                    label={t('property:form_fields.address')}
                     name="address"
                     className={classes.textField}
                     inputProps={{
@@ -455,7 +456,7 @@ export default function LandParcelModal({
                 </div>
               ))
             ) : (
-              <div>No owner yet</div>
+              <div>{t('property:messages.no_owner_yet')}</div>
             ))}
           {ownershipFields?.map((_field, index) => (
             // eslint-disable-next-line react/no-array-index-key
@@ -479,7 +480,7 @@ export default function LandParcelModal({
                   renderInput={params => (
                     <TextField
                       {...params}
-                      label="Add owner"
+                      label={t('property:form_fields.add_owner')}
                       style={{ width: "100%" }}
                       name="name"
                       onChange={event => onChangeOwnershipField(event, index)}
@@ -494,7 +495,7 @@ export default function LandParcelModal({
                     'data-testid': 'owner-address'
                   }}
                   value={ownershipFields[Number(index)].address}
-                  label="Address"
+                  label={t('property:form_fields.address')}
                   onChange={event => onChangeOwnershipField(event, index)}
                   name="address"
                   className={classes.textField}
@@ -514,7 +515,7 @@ export default function LandParcelModal({
           ))}
           {(modalType === 'new' || isEditing) && (
           <>
-            <AddMoreButton title="New Owner" handleAdd={addOwnership} />
+            <AddMoreButton title={t('property:buttons.new_owner')} handleAdd={addOwnership} />
           </>
           )}
         </TabPanel>
@@ -536,26 +537,29 @@ export default function LandParcelModal({
                       </Grid>
                       <Grid item xs={8}>
                         <Typography>
-                          {'Total payments made: '}
+                          {t('property:misc.total_payments')}
+                          {' '}
                           {currency}
                           {' '}
                           {totalPlanPayments(paymentPlan?.planPayments)}
                         </Typography>
                       </Grid>
                       <Grid item xs={4} className={classes.rightContent}>
-                        {'End date '}
+                        {t('property:misc.end_date')}
+                        {' '}
                         {dateToString(paymentPlan?.endDate)}
                       </Grid>
                       <Grid item xs={12}>
                         <Typography>
                           {capitalize(paymentPlan?.planType)}
-                          {' Plan'}
+                          {' '}
+                          {t('property:misc.plan')}
                         </Typography>
                       </Grid>
                       <Grid item xs={6}>
                         <Link to={`/user/${paymentPlan?.userId}?tab=Plans`}>
                           <Typography>
-                            View Plan
+                            {t('property:misc.view_plan')}
                           </Typography>
                         </Link>
                       </Grid>
@@ -568,7 +572,7 @@ export default function LandParcelModal({
                 </>
               ))
             ) : (
-              <div>No Payment Plans Yet</div>
+              <div>{t('property:misc.no_payment_plans')}</div>
             ))}
         </TabPanel>
       </CustomizedDialogs>

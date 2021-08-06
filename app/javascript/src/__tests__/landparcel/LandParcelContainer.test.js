@@ -74,7 +74,7 @@ describe('Land Property Page', () => {
         </BrowserRouter>
       </MockedProvider>
     );
-    expect(container.queryByText('New Property')).toBeInTheDocument()
+    expect(container.queryByText(('property:buttons.new_property'))).toBeInTheDocument()
 
     const loader = render(<Spinner />);
     expect(loader.queryAllByTestId('loader')[0]).toBeInTheDocument();

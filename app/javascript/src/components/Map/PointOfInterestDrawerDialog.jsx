@@ -1,6 +1,7 @@
 import React, { useState, useContext } from 'react'
 import PropTypes from 'prop-types'
 import { Drawer, List, ListItem, ListItemText, GridList, GridListTile, ListSubheader } from '@material-ui/core';
+import { useTranslation } from 'react-i18next';
 import { Context } from '../../containers/Provider/AuthStateProvider'
 import ImageAuth from '../../shared/ImageAuth'
 import { CustomizedDialogs } from '../Dialog'
@@ -8,7 +9,7 @@ import { CustomizedDialogs } from '../Dialog'
 export default function PointOfInterestDrawerDialog({ anchor, children, open, onClose, imageData, selectedPoi }){
   const authState = useContext(Context)
   const [imageDialogOpen, setImageDialogOpen] = useState(false)
-
+  const { t } = useTranslation('property');
   function handleImageDialogClose(){
     setImageDialogOpen(false)
   }
@@ -45,25 +46,25 @@ export default function PointOfInterestDrawerDialog({ anchor, children, open, on
           {selectedPoi ? (
             <>
               <List>
-                <h4>Details</h4>
+                <h4>{t('property:dialog_headers.details')}</h4>
                 <ListItem>
-                  <b>POI:</b>
+                  <b>{t('property:poi_list.poi')}</b>
                   <ListItemText primary={selectedPoi.poiName} />
                 </ListItem>
                 <ListItem>
-                  <b>ID:</b>
+                  <b>{t('property:poi_list.id')}</b>
                   <ListItemText primary={selectedPoi.parcelNumber} />
                 </ListItem>
                 <ListItem>
-                  <b>Type:</b>
+                  <b>{t('property:poi_list.type')}</b>
                   <ListItemText primary={selectedPoi.parcelType} />
                 </ListItem>
                 <ListItem>
-                  <b>Longitude X:</b>
+                  <b>{t('property:poi_list.longitude_x')}</b>
                   <ListItemText primary={selectedPoi.longX} />
                 </ListItem>
                 <ListItem>
-                  <b>Latitude Y:</b>
+                  <b>{t('property:poi_list.latitude_y')}</b>
                   <ListItemText primary={selectedPoi.latY} />
                 </ListItem>
                 <ListItem button>
@@ -72,7 +73,7 @@ export default function PointOfInterestDrawerDialog({ anchor, children, open, on
               </List>
               {children}
             </>
-             ) : 'No Details'}
+             ) : t('property:misc.no_details')}
         </Drawer>
       </div>
     </>

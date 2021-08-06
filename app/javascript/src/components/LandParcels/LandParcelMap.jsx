@@ -4,6 +4,7 @@ import { useMutation, useApolloClient, useLazyQuery } from 'react-apollo';
 import { Button, Grid, Divider } from '@material-ui/core';
 import AddPhotoAlternateIcon from '@material-ui/icons/AddPhotoAlternate';
 import { Map, FeatureGroup, GeoJSON, LayersControl, TileLayer } from 'react-leaflet'
+import { useTranslation } from 'react-i18next';
 import { Context as AuthStateContext } from '../../containers/Provider/AuthStateProvider';
 import NkwashiSuburbBoundaryData from '../../data/nkwashi_suburb_boundary.json'
 import { LandParcel } from '../../graphql/queries';
@@ -69,7 +70,7 @@ export default function LandParcelMap({ handlePlotClick, geoData }){
   const featureCollection = { type: 'FeatureCollection',  features: [] }
   const poiFeatureCollection = { type: 'FeatureCollection',  features: [] }
   const subUrbanData = getSubUrbanData(communityName)
-
+  const { t } = useTranslation(['common', 'property'])
   const [ loadParcel, { data: parcelData, loading: parcelDataLoading } ] = useLazyQuery(LandParcel, {
     fetchPolicy: 'cache-and-network'
   });
@@ -124,7 +125,7 @@ export default function LandParcelMap({ handlePlotClick, geoData }){
     deletePointOfInterest({
       variables: { id: selectedPoi.id }
     }).then(() => {
-      setMessageAlert('Point of Interest removed successfully')
+      setMessageAlert(t('property:messages.poi_removed'))
       setIsSuccessAlert(true)
       handleCloseDrawer()
     }).catch((err) => {
@@ -147,7 +148,7 @@ export default function LandParcelMap({ handlePlotClick, geoData }){
     uploadPoiImage({
       variables: { id: selectedPoi.id, imageBlobId: signedBlobId }
     }).then(() => {
-      setMessageAlert('Image Uploaded successfully')
+      setMessageAlert(t('property:messages.image_uploaded'))
       setIsSuccessAlert(true)
       handleCloseDrawer()
     }).catch((err) => {
@@ -191,7 +192,7 @@ export default function LandParcelMap({ handlePlotClick, geoData }){
       <ActionDialog
         open={confirmDeletePoi}
         type="warning"
-        message="You are about to delete a Point of Interest!. Cancel if you are not sure."
+        message={t('property:messages.poi_delete_warning')}
         handleClose={handleCloseDrawer}
         handleOnSave={handleClickDelete}
       />
@@ -237,10 +238,10 @@ export default function LandParcelMap({ handlePlotClick, geoData }){
           {uploadStatus === 'DONE' && (
             <Grid item>
               <span style={{ marginTop: 5, marginRight: 35 }}>
-                Image uploaded
+                {t('common:misc.image_uploaded')}
               </span>
               <Button variant="contained" color="secondary" onClick={handleSaveUploadedPhoto}>
-                Save Changes
+                {t('common:form_actions.save_changes')}
               </Button>
             </Grid>
           )}
@@ -329,8 +330,8 @@ export default function LandParcelMap({ handlePlotClick, geoData }){
                               geoLatY: feature.properties.lat_y || 0,
                               geoLongX: feature.properties.long_x || 0,
                               iconUrl: feature.properties.icon || '',
-                              poiName: feature.properties.poi_name || 'Point of Interest',
-                              geomType: feature.geometry.type || 'Polygon'
+                              poiName: feature.properties.poi_name || t('property:misc.point_of_interest'),
+                              geomType: feature.geometry.type || t('property:misc.polygon')
                           }
                           feature.properties.id = id
                           feature.properties.parcel_no = parcelNumber

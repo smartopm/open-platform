@@ -1,0 +1,94 @@
+{
+  "buttons":{
+    "edit_coordinates": "Edit Coordinates",
+    "merge_and_save": "Merge and Save",
+    "new_owner": "New Owner",
+    "new_property": "New Property",
+    "new_point_of_interest": "New Point of Interest"
+  },
+  "dialog_headers":{
+    "details": "Details",
+    "new_point_of_interest": "New Point of Interest",
+    "new_property": "New Property",
+    "ownership": "Ownership",
+    "plan_history": "Plan History",
+    "property": "Property {{parcelNumber}}"
+  },
+  "form_actions":{
+    "edit_property":"Edit Property"
+  },
+  "form_fields":{
+    "add_owner": "Add Owner",
+    "address": "Address",
+    "address_1": "Address1",
+    "address_2": "Address2",
+    "choose_icon": "Choose an Icon Type",
+    "city": "City",
+    "country": "Country",
+    "geo_lat_y": "Geo-Coordinates Lat_Y",
+    "geo_long_x": "Geo-Coordinates Long_X",
+    "icon_url": "icon-url",
+    "owner": "Owner",
+    "poi_name": "POI Name",
+    "postal_code":"Postal Code",
+    "property_number": "Property Number",
+    "property_type": "Property Type",
+    "state_province": "State Province"
+  },
+  "map_markers": {
+    "latitude_x": "Longitude X",
+    "longitude_y": "Latitude Y",
+    "property_no": "Property No:",
+    "property_type": "Property Type:"
+  },
+  "messages":{
+    "image_uploaded": "Image Uploaded successfully",
+    "merge_properties": "You are about to merge these two properties!",
+    "merge_successful": "Merge successful",
+    "no_owner_yet": "No owner yet",
+    "parcel_number_exists": "Parcel Number Already exists. Do you want to merge these plots?",
+    "poi_added": "'Point of Interest added successfully'",
+    "poi_delete_warning": "You are about to delete a Point of Interest!. Cancel if you are not sure.",
+    "poi_removed": "Point of Interest removed successfully",
+    "property_added": "Property added successfully",
+    "property_updated": "Property updated successfully"
+  },
+  "misc":{
+    "accounts": "Accounts?:",
+    "end_date": "End date",
+    "existing_property": "Existing Property",
+    "geo_coordinates": "Geo-Coordinates?:",
+    "id": "ID:",
+    "legend": "Legend",
+    "map_editor": "Map Editor",
+    "merge_plot_to_keep": "After Merge (New Plot to Keep)",
+    "merge_plot_to_remove": "After Merge (Plot to Remove)",
+    "next": "Next",
+    "no_payment_plans": "No Payment Plans Yet",
+    "no": "No",
+    "no_details": "No details",
+    "parcel_merge_dialog": "Land Parcel Merge Dialog",
+    "parcel_number": "Parcel Number:",
+    "parcel_type": "Parcel Type:",
+    "payments": "Payments?:",
+    "plan": "Plan",
+    "point_of_interest": "Point of Interest",
+    "plot_properties": "Plot Properties",
+    "polygon": "Polygon",
+    "previous": "Previous",
+    "selected_property": "Selected Property",
+    "sold": "Sold",
+    "total_payments": "Total payments made:",
+    "unknown": "Unknown",
+    "view_plan": "View Plan",
+    "view_results_on_map": "View results on map",
+    "yes": "Yes"
+  },
+  "poi_list": {
+    "id": "ID:",
+    "latitude_y": "Latitude Y:",
+    "longitude_x": "Longitude X:",
+    "poi": "POI:",
+    "type": "Type:"
+  }
+}

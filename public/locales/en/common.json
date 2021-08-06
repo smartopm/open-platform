@@ -205,7 +205,8 @@
     "step_plural": "Steps",
     "new_property": "New Property",
     "misc_successfully_created": "{{type}} successfully created",
-    "option_with_count": "option {{id}}"
+    "option_with_count": "option {{id}}",
+    "image_uploaded": "Image uploaded"
   },
   "menu": {
     "invoice": "Invoice",

@@ -27,16 +27,16 @@ describe('Land Property Modal Component', () => {
         </BrowserRouter>
       </MockedProvider>)
 
-    expect(container.queryByText('Details')).toBeInTheDocument()
-    expect(container.queryByText('Ownership')).toBeInTheDocument()
-    expect(container.queryByText('Plan History')).toBeInTheDocument()
+    expect(container.queryByText(('property:dialog_headers.details'))).toBeInTheDocument()
+    expect(container.queryByText(('property:dialog_headers.ownership'))).toBeInTheDocument()
+    expect(container.queryByText(('property:dialog_headers.plan_history'))).toBeInTheDocument()
 
-    fireEvent.click(container.queryByText('Ownership'))
-    expect(container.queryByText('New Owner')).toBeInTheDocument()
+    fireEvent.click(container.queryByText(('property:dialog_headers.ownership')))
+    expect(container.queryByText(('property:buttons.new_owner'))).toBeInTheDocument()
 
-    fireEvent.click(container.queryByText('Plan History'))
+    fireEvent.click(container.queryByText(('property:dialog_headers.plan_history')))
 
-    fireEvent.click(container.queryByText('New Owner'))
+    fireEvent.click(container.queryByText(('property:buttons.new_owner')))
     const ownerAddress = container.queryByTestId('owner-address')
     fireEvent.change(ownerAddress, { target: { value: 'Owner Address' } })
     expect(ownerAddress.value).toBe('Owner Address')
@@ -60,10 +60,10 @@ describe('Land Property Modal Component', () => {
         </BrowserRouter>
       </MockedProvider>)
 
-    expect(container.queryByText('New Owner')).toBeNull()
+    expect(container.queryByText(('property:buttons.new_owner'))).toBeNull()
 
-    fireEvent.click(container.queryByText('Edit Property'))
-    expect(container.queryByText('New Owner')).toBeInTheDocument()
+    fireEvent.click(container.queryByText(('property:form_actions.edit_property')))
+    expect(container.queryByText(('property:buttons.new_owner'))).toBeInTheDocument()
 
     const parcelNumber = container.queryByTestId('parcel-number')
     fireEvent.change(parcelNumber, { target: { value: '12345' } })
@@ -91,7 +91,7 @@ describe('Land Property Modal Component', () => {
         </MockedProvider>)
     })
 
-    expect(container.getByText(/parcel number already exists. do you want to merge/gi)).toBeTruthy()
+    expect(container.getByText(('property:messages.parcel_number_exists'))).toBeTruthy()
     expect(container.getByText(/proceed/i)).toBeTruthy()
   });
 
@@ -215,11 +215,11 @@ describe('Land Property Modal Component', () => {
     
     fireEvent.click(proceedButton)
     
-    expect(container.getByText(/merge and save/i)).toBeInTheDocument()
-    expect(container.getByText(/you are about to merge these two properties!/i)).toBeInTheDocument()
-    expect(container.getAllByText(/selected/i)[0]).toBeInTheDocument()
-    expect(container.getAllByText(/existing/i)[0]).toBeInTheDocument()
-    expect(container.getAllByText(/plot to keep/i)[0]).toBeInTheDocument()
-    expect(container.getAllByText(/plot to remove/i)[0]).toBeInTheDocument()
+    expect(container.getByText(('poperty:buttons.merge_and_save'))).toBeInTheDocument()
+    expect(container.getByText(('property:messages.merge_properties'))).toBeInTheDocument()
+    expect(container.getAllByText(('property:misc.selected_property'))[0]).toBeInTheDocument()
+    expect(container.getAllByText(('property:misc.existing_property'))[0]).toBeInTheDocument()
+    expect(container.getAllByText(('property:misc.merge_plot_to_keep'))[0]).toBeInTheDocument()
+    expect(container.getAllByText(('property:misc.merge_plot_to_remove'))[0]).toBeInTheDocument()
   });
 })
