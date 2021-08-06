@@ -129,7 +129,9 @@ ParcelItem.propTypes = {
         postalCode: PropTypes.string,
         stateProvince: PropTypes.string,
         country: PropTypes.string,
-        parcelType: PropTypes.string
+        parcelType: PropTypes.string,
+        status: PropTypes.string,
+        objectType: PropTypes.string,
     }).isRequired,
     onParcelClick: PropTypes.func.isRequired,
     onAddHouseClick: PropTypes.func.isRequired
