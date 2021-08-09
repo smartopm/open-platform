@@ -12,7 +12,9 @@ import { dateTimeToString, dateToString } from "../../components/DateContainer";
  export default function formatCellData(data, translate) {
     if (!data || !data?.value) return '-';
     if (!Number.isNaN(Date.parse(data.value)) && data.fieldType === 'date') {
-      return `${dateToString(data.value)} - ${dateTimeToString(data.value)}`
+      // don't show time for the first field in this form
+      const date = Number(data.order) === 1 ? dateToString(data.value) : dateTimeToString(data.value)
+      return date
     }
     if (data.value?.includes('checked')) {
       return data.value.split('"')[3]; // TODO: Find a better way to handle this extraction
@@ -36,7 +38,7 @@ export function checkExtraShifts(formattedShifts){
       const current = shifts[Number(index)];
       // last shift wont have a next value so we equate it to current value and check later
       const next = shifts.length === index + 1 ? current : shifts[index + 1];
-      // if (Number(next[0]) > Number(current[0])) {
+
       if (isAfter(parseISO(next[0]), parseISO(current[0]))) {
         extras.push([current[0], next[1]])
         shifts.splice(index, 1)
@@ -53,9 +55,9 @@ export function checkExtraShifts(formattedShifts){
 
 /**
  *
- * @param {[Number]} shifts a 2d array that contains formatted shifts with no overlaps
+ * @param {[number]} shifts a 2d array that contains formatted shifts with no overlaps
  * @description finds a total difference in each formatted shift and sums them all up
- * @returns {Number} a sum of all shifts
+ * @returns {number} a sum of all shifts
  */
 export function countExtraHours(extraHours) {
   const hours = []
@@ -69,11 +71,13 @@ export function countExtraHours(extraHours) {
 
 /**
  *
- * @param {[object]} entryShift - an array that contains all the entry hours collected from the form
+ * @param {[object]} startShift - an array that contains all the entry hours collected from the form
  * @param {[object]} exitShift  - an array that contains all the exit hours collected from the form
  * @returns {[[String]]} a 2d array of strings that contain values from entry and exit hours collected from the form
  */
-export function formatShifts(entryShift, exitShift){
-  if(!entryShift || !exitShift) return []
-  return entryShift.map((e, i) => [e.value, exitShift[Number(i)].value])
+export function formatShifts(startShift, exitShift){
+  if(!startShift || !exitShift) return []
+  // in cases where some start or exit entries were not entered we remove them
+  const cleaned = startShift.filter(entry => Boolean(entry.value))
+  return cleaned.map((e, i) => [e.value, exitShift[Number(i)].value])
 }

@@ -1,6 +1,5 @@
 import formatCellData, { countExtraHours, formatShifts, checkExtraShifts } from '../utils';
 
-// add other utils tests
 describe('Utils Component', () => {
 
   it('should format the cell data', () => {
@@ -65,18 +64,21 @@ describe('Utils Component', () => {
   });
   it('it should properly format start and exit shifts ', () => {
     // formatShifts
-    const entry = [
+    const start = [
       {id: "dae23e16-cd96-405d", value: "2021-08-09T07:50:00.000Z", order: "6", fieldName: "Hora Entrada*",},
       {id: "68c19dcd-4ea5-4a93-82de", value: "2021-08-09T08:55:00.000Z", order: "6", fieldName: "Hora Entrada*"},
       {id: "0fc1b4ce-0955-4ef1-b151", value: "2021-08-09T09:50:00.000Z", order: "6", fieldName: "Hora Entrada*"},
+      {id: "0fc1b4ce-0955-4ef1-b4251", value: null, order: "6", fieldName: "Hora Entrada*"},
     ]
 
     const exit = [
       {id: "dae23e16-cd96-405d", value: "2021-08-09T09:00:25.573Z", order: "6", fieldName: "Hora Salida *",},
       {id: "68c19dcd-4ea5-4a93-82de", value: "2021-08-09T09:30:25.573Z", order: "6", fieldName: "Hora Salida *"},
-      {id: "0fc1b4ce-0955-4ef1-b151", value: "2021-08-09T10:50:25.573Z", order: "6", fieldName: "Hora Salida *"},
+      {id: "0fc1b4ce-0955-4ef1-51", value: "2021-08-09T10:50:25.573Z", order: "6", fieldName: "Hora Salida *"},
+      {id: "0fc1b4ce-0955-4ef1-", value: null, order: "6", fieldName: "Hora Salida *"},
+      {id: "0fc1b4ce-0955-4ef1-b151", value: null, order: "6", fieldName: "Hora Salida *"},
     ]
-    const formattedShifts = formatShifts(entry, exit)
+    const formattedShifts = formatShifts(start, exit)
     expect(formattedShifts).toHaveLength(3)
     expect(formattedShifts).toMatchObject([
       ['2021-08-09T07:50:00.000Z', '2021-08-09T09:00:25.573Z'],
