@@ -85,10 +85,10 @@ export default function FormUpdate({ formUserId, userId, authState }) {
     });
   }
 
-  function handleDateChange(date, id) {
+  function handleDateChange(date, id, name) {
     setProperties({
       ...properties,
-      date: { value: date, form_property_id: id },
+      [name]: { value: date, form_property_id: id },
     });
   }
 
@@ -222,8 +222,8 @@ export default function FormUpdate({ formUserId, userId, authState }) {
       date: (
         <DateAndTimePickers
           key={formPropertiesData.formProperty.id}
-          selectedDateTime={properties.date.value || formPropertiesData.value}
-          handleDateChange={(date) => handleDateChange(date, formPropertiesData.formProperty.id)}
+          selectedDateTime={properties[String(formPropertiesData.formProperty.fieldName)]?.value || formPropertiesData.value}
+          handleDateChange={(date) => handleDateChange(date, formPropertiesData.formProperty.id, formPropertiesData.formProperty.fieldName)}
           label={formPropertiesData.formProperty.fieldName}
         />
       ),
