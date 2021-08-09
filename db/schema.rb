@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_07_30_144115) do
+ActiveRecord::Schema.define(version: 2021_08_03_093217) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -404,11 +404,11 @@ ActiveRecord::Schema.define(version: 2021_07_30_144115) do
     t.decimal "long_x", precision: 10, scale: 6
     t.decimal "lat_y", precision: 10, scale: 6
     t.json "geom"
-    t.integer "deleted_status", default: 0
+    t.integer "status", default: 0
     t.boolean "is_poi", default: false
     t.index ["community_id"], name: "index_land_parcels_on_community_id"
-    t.index ["deleted_status"], name: "index_land_parcels_on_deleted_status"
     t.index ["parcel_number"], name: "index_land_parcels_on_parcel_number", unique: true
+    t.index ["status"], name: "index_land_parcels_on_status"
   end
 
   create_table "messages", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -522,7 +522,7 @@ ActiveRecord::Schema.define(version: 2021_07_30_144115) do
   end
 
   create_table "payments", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.uuid "user_id"
+    t.uuid "user_id", null: false
     t.uuid "invoice_id"
     t.string "payment_type"
     t.decimal "amount", precision: 11, scale: 2
@@ -557,9 +557,9 @@ ActiveRecord::Schema.define(version: 2021_07_30_144115) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.string "manual_receipt_number"
-    t.integer "automated_receipt_number"
+    t.string "automated_receipt_number"
+    t.string "note"
     t.index ["community_id"], name: "index_plan_payments_on_community_id"
-    t.index ["manual_receipt_number", "community_id"], name: "index_plan_payments_on_manual_receipt_number_and_community_id", unique: true
     t.index ["payment_plan_id"], name: "index_plan_payments_on_payment_plan_id"
     t.index ["transaction_id"], name: "index_plan_payments_on_transaction_id"
     t.index ["user_id"], name: "index_plan_payments_on_user_id"

@@ -75,7 +75,7 @@ export default function PaymentPlanModal({
   }
 
   function getCalendarDuration() {
-    let calendarDuration = 'months';
+    let calendarDuration = '';
     switch (frequency) {
       case 0: {
         calendarDuration = 'days';
@@ -94,7 +94,7 @@ export default function PaymentPlanModal({
         break;
       }
       default: {
-        calendarDuration = 'months';
+        calendarDuration = '';
         break;
       }
     }
@@ -136,7 +136,7 @@ export default function PaymentPlanModal({
 
   function confirmSubmission(event) {
     event.preventDefault();
-    if (!inputValue.installmentAmount || !inputValue.duration || !landParcelId) {
+    if (!inputValue.installmentAmount || !inputValue.duration || !landParcelId || frequency === null) {
       setIsError(true);
       return;
     }
@@ -198,6 +198,21 @@ export default function PaymentPlanModal({
           label={t('common:table_headers.start_date')}
           required
         />
+        <div>
+          <TextField
+            autoFocus
+            margin="frequency"
+            id="frequency"
+            aria-label="frequency"
+            label={t('common:misc.plan_frequency')}
+            value=""
+            disabled
+            name="frequency"
+            style={{ width: '100%' }}
+            error={isError && frequency === null}
+            helperText={isError && frequency === null && t("common:misc.select_frequency")}
+          />
+        </div>
         <FrequencyButton
           frequency={frequency}
           handleFrequency={handleFrequency}
@@ -338,10 +353,11 @@ export default function PaymentPlanModal({
 }
 
 export function CoOwners({ landParcel, userId, handleCoOwners }) {
+  const { t } = useTranslation('common');
   return (
     <>
       <div>
-        <FormLabel>Select co-owners you would like to add to this plan</FormLabel>
+        <FormLabel>{t('common:form_placeholders.select_co_owners')}</FormLabel>
       </div>
       <div>
         {landParcel?.accounts?.map(

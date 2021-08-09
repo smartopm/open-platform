@@ -189,15 +189,15 @@ en:
               visitor_name_required: Visitor name required
             ref_id:
               ref_required: Must be associated with a user
-        properties/payment_plan:
-          attributes:
-            start_date:
-              plan_overlaps_with_other_plan: Payment plan duration overlaps with other payment plans
         users/user:
           attributes:
             phone_number:
               invalid_length: must be a valid length
               invalid_phone_number: can only contain 0-9, '-', '+' and space
+        properties/payment_plan:
+          attributes:
+            user_id:
+              general_plan_exists: General plan exists for the user 
     models:
       action_flows/action_flow: Action flow
       business: Business
@@ -293,6 +293,8 @@ en:
       amount_greater_than_pending_balance: Amount cannot be greater than the plan pending balance
       does_not_exist_for_property: Payment Plan does not exist for selected property
       not_found: Payment Plan not found
+      plan_already_exist: Payment Plan for this landparcel already exist
+      transfer_can_not_be_processed: The payment plan has already been cancelled, the transfer cannot be processed.
     phone_number:
       found_blank: Phone number cannot be blank
     plan_payment:

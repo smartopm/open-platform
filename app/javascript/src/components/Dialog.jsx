@@ -102,9 +102,9 @@ export function CustomizedDialogs({
   cancelAction,
   actionable,
   actionLoading,
-  displaySaveButton
+  displaySaveButton,
+  dividers
 }) {
-  const classes = useStyles()
   const { t } = useTranslation(['logbook', 'common'])
   return (
     <Dialog
@@ -113,12 +113,12 @@ export function CustomizedDialogs({
       open={open}
       data-testid="dialog"
     >
-      <DialogTitle className={classes.title}>
+      <DialogTitle>
         <div className="d-flex justify-content-between">
           <h6 data-testid="customDialog">{dialogHeader}</h6>
         </div>
       </DialogTitle>
-      <DialogContent data-testid="customDialogcontent">
+      <DialogContent data-testid="customDialogcontent" dividers={dividers}>
         {subHeader ? <DialogContentText>{subHeader}</DialogContentText> : null}
         {children}
       </DialogContent>
@@ -362,7 +362,8 @@ CustomizedDialogs.defaultProps = {
   cancelAction: '',
   actionable: true,
   actionLoading: false,
-  displaySaveButton: true
+  displaySaveButton: true,
+  dividers: true
 }
 
 CustomizedDialogs.propTypes = {
@@ -377,7 +378,8 @@ CustomizedDialogs.propTypes = {
   disableActionBtn: PropTypes.bool,
   actionable: PropTypes.bool,
   actionLoading: PropTypes.bool,
-  displaySaveButton: PropTypes.bool
+  displaySaveButton: PropTypes.bool,
+  dividers: PropTypes.bool
 }
 
 ModalDialog.defaultProps = {

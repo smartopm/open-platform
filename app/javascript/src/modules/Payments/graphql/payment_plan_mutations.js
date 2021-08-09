@@ -20,4 +20,23 @@ export const PaymentPlanCancelMutation = gql`
   }
 `;
 
+export const TransferPaymentPlanMutation = gql`
+  mutation transferPaymentPlan(
+    $sourcePlanId: ID!
+    $destinationPlanId: ID!
+  ) {
+    transferPaymentPlan(sourcePlanId: $sourcePlanId, destinationPlanId: $destinationPlanId) {
+      paymentPlan {
+        id
+        startDate
+        landParcel {
+          id
+          parcelNumber
+          parcelType
+        }
+      }
+    }
+  }
+`;
+
 export default PaymentPlanUpdateMutation;

@@ -25,9 +25,26 @@ class MergeUsers
       raise StandardError, 'Update Failed' if table_name.constantize.where(user_id: user_id).any?
     end
 
+    user = Users::User.find_by(id: user_id)
+    duplicate_user = Users::User.find_by(id: duplicate_id)
+
+    # rubocop:disable Rails/SkipsModelValidations
+    # Updates plan payments of general plan
+    user.general_payment_plan.plan_payments.update_all(user_id: duplicate_id)
+    user.general_payment_plan.destroy
+
+    # Update acounts and destroy user general land parcel
+    accounts = Properties::Account.where(user_id: user_id)
+    general_land_parcel = user.general_land_parcel
+    general_account = general_land_parcel.accounts.first
+    accounts.where.not(id: general_account.id).update_all(user_id: duplicate_id)
+    general_land_parcel.land_parcel_accounts.delete_all
+    general_account.destroy!
+    general_land_parcel.destroy!
+    # rubocop:enable Rails/SkipsModelValidations
+
     # Updates accounts details to their associated user's details
-    user = Users::User.find_by(id: duplicate_id)
-    user.update_associated_accounts_details
+    duplicate_user.update_associated_accounts_details
 
     # Merges wallet details of users.
     merge_user_wallets(user_id, duplicate_id)
@@ -106,7 +123,7 @@ class MergeUsers
     model_names = []
     payment_models = %w[Invoice PaymentInvoice Payment Wallet WalletTransaction
                         Transaction PlanPayment]
-    property_models = %w[Account LandParcel LandParcelAccount PaymentPlan Valuation]
+    property_models = %w[PaymentPlan Valuation]
     note_models = %w[Note NoteHistory AssigneeNote]
     form_models = %w[Form FormUser]
     discussion_models = %w[Discussion DiscussionUser]

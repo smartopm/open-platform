@@ -12,7 +12,7 @@ RSpec.describe Payments::PlanPayment, type: :model do
     it { is_expected.to have_db_column(:community_id).of_type(:uuid) }
     it { is_expected.to have_db_column(:payment_plan_id).of_type(:uuid) }
     it { is_expected.to have_db_column(:manual_receipt_number).of_type(:string) }
-    it { is_expected.to have_db_column(:automated_receipt_number).of_type(:integer) }
+    it { is_expected.to have_db_column(:automated_receipt_number).of_type(:string) }
   end
 
   describe 'enums' do

@@ -4,7 +4,46 @@ require 'rails_helper'
 
 RSpec.describe Properties::PaymentPlan, type: :model do
   let(:user) { create(:user_with_community) }
-  let(:land_parcel) { create(:land_parcel, community_id: user.community_id) }
+  let(:community) { user.community }
+  let(:land_parcel) { create(:land_parcel, community_id: community.id) }
+  let(:new_land_parcel) { create(:land_parcel, community_id: community.id) }
+  let(:payment_plan) do
+    create(
+      :payment_plan,
+      land_parcel_id: land_parcel.id,
+      user_id: user.id,
+      installment_amount: 100,
+      duration: 12,
+    )
+  end
+  let(:new_payment_plan) do
+    create(
+      :payment_plan,
+      land_parcel_id: land_parcel.id,
+      user_id: user.id,
+      installment_amount: 100,
+      duration: 12,
+    )
+  end
+  let(:transaction) do
+    create(
+      :transaction,
+      user_id: user.id,
+      community_id: community.id,
+      depositor_id: user.id,
+      amount: 500,
+    )
+  end
+  let(:plan_payment) do
+    create(
+      :plan_payment,
+      user_id: user.id,
+      community_id: community.id,
+      transaction_id: transaction.id,
+      payment_plan_id: payment_plan.id,
+      amount: 500,
+    )
+  end
 
   describe 'schema' do
     it { is_expected.to have_db_column(:id).of_type(:uuid) }
@@ -29,7 +68,7 @@ RSpec.describe Properties::PaymentPlan, type: :model do
   describe 'enums' do
     it do
       is_expected.to define_enum_for(:status)
-        .with_values(active: 0, cancelled: 1, deleted: 2, completed: 3)
+        .with_values(active: 0, cancelled: 1, deleted: 2, completed: 3, general: 4)
     end
 
     it do
@@ -78,21 +117,66 @@ RSpec.describe Properties::PaymentPlan, type: :model do
     let!(:user) { create(:user_with_community) }
     let!(:land_parcel) { create(:land_parcel, community_id: user.community_id) }
     let!(:valuation) { create(:valuation, land_parcel_id: land_parcel.id) }
+    describe 'before_create' do
+      describe '#set_pending_balance' do
+        it 'creates pending-balance on create' do
+          plan = Properties::PaymentPlan.create(
+            percentage: 50,
+            status: 'active',
+            plan_type: 'lease',
+            start_date: Time.zone.now,
+            user: user,
+            plot_balance: 0,
+            land_parcel: land_parcel,
+            total_amount: 100,
+            duration: 5,
+            installment_amount: 10,
+          )
+          expect(plan.pending_balance).to eql 50
+        end
+      end
 
-    it 'creates pending-balance on create' do
-      plan = Properties::PaymentPlan.create(
-        percentage: 50,
-        status: 'active',
-        plan_type: 'lease',
-        start_date: Time.zone.now,
-        user: user,
-        plot_balance: 0,
-        land_parcel: land_parcel,
-        total_amount: 100,
-        duration: 5,
-        installment_amount: 10,
-      )
-      expect(plan.pending_balance).to eql 50
+      describe '#check_general_plan_existence' do
+        it 'raises error if another payment plan with general status for the user is being
+         created' do
+          plan = Properties::PaymentPlan.create(
+            percentage: 50,
+            status: 'general',
+            plan_type: 'lease',
+            start_date: Time.zone.now,
+            user: user,
+            plot_balance: 0,
+            land_parcel: land_parcel,
+            total_amount: 100,
+            duration: 5,
+            installment_amount: 10,
+          )
+          expect(plan.persisted?).to eql false
+          expect(plan.errors.full_messages[0]).to eql 'User General plan exists for the user'
+        end
+      end
+    end
+  end
+
+  describe 'Instance Method' do
+    describe '#transfer_payments' do
+      before do
+        plan_payment
+        new_payment_plan.transfer_payments(payment_plan)
+        plan_payment.reload
+      end
+
+      # rubocop:disable Layout/LineLength
+      it 'transfers payments to other payment plan' do
+        payment = new_payment_plan.plan_payments.sample
+        expect(plan_payment.note).to eql("Migrated to plan #{new_payment_plan.payment_plan_name} Id - #{new_payment_plan.id}")
+        expect(plan_payment.status).to eql('cancelled')
+        expect(payment.status).to eql('paid')
+        expect(payment.amount).to eql(500.0)
+        expect(payment.note).to eql("Migrated from plan #{payment_plan.payment_plan_name} Id - #{payment_plan.id}")
+        expect(new_payment_plan.user_id).to eql(user.id)
+      end
+      # rubocop:enable Layout/LineLength
     end
   end
 end
