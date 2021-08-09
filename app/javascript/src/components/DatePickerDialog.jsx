@@ -41,6 +41,7 @@ export function DateAndTimePickers({ selectedDateTime, handleDateChange, label, 
   return (
     <MuiPickersUtilsProvider utils={DateFnsUtils}>
       <KeyboardDateTimePicker
+        data-testid='datetime-picker'
         label={label}
         style={{ width: '100%' }}
         value={selectedDateTime}

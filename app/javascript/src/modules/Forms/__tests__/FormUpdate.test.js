@@ -155,7 +155,7 @@ describe('Form Component', () => {
           container.queryAllByLabelText('text-input')[0]
           ).toHaveTextContent('Address')
           expect(
-            container.queryAllByTestId('date-picker')[0]
+            container.queryAllByTestId('datetime-picker')[0]
             ).toHaveTextContent('Dead Line')
         expect(container.queryByText('misc.attachments')).toBeInTheDocument()
         expect(container.queryByLabelText('Yes')).toBeInTheDocument()
