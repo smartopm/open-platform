@@ -128,7 +128,7 @@ module Types::Queries::Form
     end
 
     submissions = []
-    form_name = 'Customs Registry'
+    form_name = 'Another Registry'
     last_version = context[:site_community].forms.where('name ILIKE ?', "#{form_name}%")
                                            .order(version_number: :desc).first
     raise_form_not_found_error(last_version)

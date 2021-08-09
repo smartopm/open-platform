@@ -11,6 +11,7 @@
     "customs_post": "Customs post 9100",
     "customs_admin": "Customs Administrator",
     "customs": "Customs post",
-    "reporting_period": "Period"
+    "reporting_period": "Period",
+    "extra_hours": "Extra Hours"
   }
 }

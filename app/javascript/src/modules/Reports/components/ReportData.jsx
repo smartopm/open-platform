@@ -1,14 +1,21 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Divider, Grid } from '@material-ui/core';
+import { Divider, Grid, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
 import { useTranslation } from 'react-i18next';
-import formatCellData from '../utils';
+import formatCellData, { countShifts, formatShifts } from '../utils';
+import CenteredContent from '../../../components/CenteredContent';
 
 export default function ReportData({ formattedData }) {
-    const { t } = useTranslation('form')
+  const { t } = useTranslation('form');
   const classes = useStyles();
   let highestRecords = 1;
+
+  const entryAndExitTime = formatShifts(
+    formattedData['Hora Entrada'],
+    formattedData['Hora Salida']
+  );
+  const totalExtraHours = countShifts(entryAndExitTime);
   return (
     <div className="plan-header" style={{ marginTop: 60 }}>
       <Grid container spacing={5}>
@@ -39,6 +46,15 @@ export default function ReportData({ formattedData }) {
           ))}
         </Grid>
       ))}
+      <br />
+      <br />
+      <CenteredContent>
+        <Typography data-testid="extra_horas">
+          {`
+            ${t('misc.extra_hours')} : ${totalExtraHours}
+          `}
+        </Typography>
+      </CenteredContent>
     </div>
   );
 }

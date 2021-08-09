@@ -1,4 +1,7 @@
 /* eslint-disable no-plusplus */
+import { parseISO } from "date-fns";
+import differenceInHours from "date-fns/differenceInHours";
+import isAfter from "date-fns/isAfter/index";
 import { dateToString } from "../../components/DateContainer";
 
 /**
@@ -33,7 +36,8 @@ export function checkExtraShifts(formattedShifts){
       const current = shifts[Number(index)];
       // last shift wont have a next value so we equate it to current value and check later
       const next = shifts.length === index + 1 ? current : shifts[index + 1];
-      if (Number(next[0]) > Number(current[0])) {
+      // if (Number(next[0]) > Number(current[0])) {
+      if (isAfter(parseISO(next[0]), parseISO(current[0]))) {
         extras.push([current[0], next[1]])
         shifts.splice(index, 1)
       }
@@ -58,10 +62,10 @@ export function countShifts(shifts) {
   const hours = []
   for (let index = 0; index < extraHours.length; index++) {
     const element = extraHours[Number(index)];
-    const diff = Number(element[1]) - Number(element[0])
+    const diff = differenceInHours(parseISO(element[0]), parseISO(element[1]))
     hours.push(diff)
   }
-  return hours.reduce((a, b) => a + b)
+  return hours.reduce((a, b) => a + b, 0)
 }
 
 /**
@@ -71,5 +75,6 @@ export function countShifts(shifts) {
  * @returns {[[String]]} a 2d array of strings that contain values from entry and exit hours collected from the form
  */
 export function formatShifts(entryShift, exitShift){
+  if(!entryShift || !exitShift) return []
   return entryShift.map((e, i) => [e.value, exitShift[Number(i)].value])
 }

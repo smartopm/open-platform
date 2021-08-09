@@ -1,5 +1,6 @@
 import formatCellData from '../utils';
 
+// add other utils tests
 describe('Utils Component', () => {
   it('should format the cell data', () => {
     const translate = jest.fn(() => 'Attachment');
