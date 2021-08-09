@@ -2,7 +2,7 @@
 import { parseISO } from "date-fns";
 import differenceInHours from "date-fns/differenceInHours";
 import isAfter from "date-fns/isAfter/index";
-import { dateToString } from "../../components/DateContainer";
+import { dateTimeToString, dateToString } from "../../components/DateContainer";
 
 /**
  * Checks whether the given value is a date, if it is then it formats it properly
@@ -12,7 +12,7 @@ import { dateToString } from "../../components/DateContainer";
  export default function formatCellData(data, translate) {
     if (!data || !data?.value) return '-';
     if (!Number.isNaN(Date.parse(data.value)) && data.fieldType === 'date') {
-      return dateToString(data.value);
+      return `${dateToString(data.value)} - ${dateTimeToString(data.value)}`
     }
     if (data.value?.includes('checked')) {
       return data.value.split('"')[3]; // TODO: Find a better way to handle this extraction
@@ -57,12 +57,11 @@ export function checkExtraShifts(formattedShifts){
  * @description finds a total difference in each formatted shift and sums them all up
  * @returns {Number} a sum of all shifts
  */
-export function countShifts(shifts) {
-  const extraHours = checkExtraShifts(shifts)
+export function countExtraHours(extraHours) {
   const hours = []
   for (let index = 0; index < extraHours.length; index++) {
     const element = extraHours[Number(index)];
-    const diff = differenceInHours(parseISO(element[0]), parseISO(element[1]))
+    const diff = differenceInHours(parseISO(element[1]), parseISO(element[0]))
     hours.push(diff)
   }
   return hours.reduce((a, b) => a + b, 0)

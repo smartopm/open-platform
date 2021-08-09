@@ -1,7 +1,8 @@
-import formatCellData from '../utils';
+import formatCellData, { countExtraHours, formatShifts, checkExtraShifts } from '../utils';
 
 // add other utils tests
 describe('Utils Component', () => {
+
   it('should format the cell data', () => {
     const translate = jest.fn(() => 'Attachment');
     const data = [
@@ -34,5 +35,53 @@ describe('Utils Component', () => {
     expect(formatCellData(data[2], translate)).toBe('Attachment');
     expect(formatCellData(data[1], translate)).toBe('-');
     expect(formatCellData(data[3], translate)).toBe('Keating Constructions');
+  });
+  it('it should check for extra shifts', () => {
+    const extras = [
+      ['2021-08-09T07:50:00.000Z', '2021-08-09T09:00:25.573Z'],
+      ['2021-08-09T08:55:00.000Z', '2021-08-09T09:30:25.573Z'],
+      ['2021-08-09T09:50:00.000Z', '2021-08-09T10:50:25.573Z'],
+      ['2021-08-09T10:48:00.000Z', '2021-08-09T11:50:18.573Z']
+    ];
+    const xtra = checkExtraShifts(extras)
+    expect(xtra).toHaveLength(2)
+    expect(xtra).toMatchObject(
+      [
+        [ '2021-08-09T07:50:00.000Z', '2021-08-09T09:30:25.573Z' ],
+        [ '2021-08-09T09:50:00.000Z', '2021-08-09T11:50:18.573Z' ]
+      ]
+    )
+  });
+  it('it count total numbers of extra hours', () => {
+    // countExtraHours
+    const otherHoras = [
+      ['2021-08-09T07:50:00.000Z', '2021-08-09T09:00:25.573Z'],
+      ['2021-08-09T08:55:00.000Z', '2021-08-09T09:30:25.573Z'],
+      ['2021-08-09T09:50:00.000Z', '2021-08-09T10:50:25.573Z'],
+      ['2021-08-09T10:48:00.000Z', '2021-08-09T11:50:18.573Z']
+    ];
+    const xtra = checkExtraShifts(otherHoras)
+    expect(countExtraHours(xtra)).toBe(3)
+  });
+  it('it should properly format start and exit shifts ', () => {
+    // formatShifts
+    const entry = [
+      {id: "dae23e16-cd96-405d", value: "2021-08-09T07:50:00.000Z", order: "6", fieldName: "Hora Entrada*",},
+      {id: "68c19dcd-4ea5-4a93-82de", value: "2021-08-09T08:55:00.000Z", order: "6", fieldName: "Hora Entrada*"},
+      {id: "0fc1b4ce-0955-4ef1-b151", value: "2021-08-09T09:50:00.000Z", order: "6", fieldName: "Hora Entrada*"},
+    ]
+
+    const exit = [
+      {id: "dae23e16-cd96-405d", value: "2021-08-09T09:00:25.573Z", order: "6", fieldName: "Hora Salida *",},
+      {id: "68c19dcd-4ea5-4a93-82de", value: "2021-08-09T09:30:25.573Z", order: "6", fieldName: "Hora Salida *"},
+      {id: "0fc1b4ce-0955-4ef1-b151", value: "2021-08-09T10:50:25.573Z", order: "6", fieldName: "Hora Salida *"},
+    ]
+    const formattedShifts = formatShifts(entry, exit)
+    expect(formattedShifts).toHaveLength(3)
+    expect(formattedShifts).toMatchObject([
+      ['2021-08-09T07:50:00.000Z', '2021-08-09T09:00:25.573Z'],
+      ['2021-08-09T08:55:00.000Z', '2021-08-09T09:30:25.573Z'],
+      ['2021-08-09T09:50:00.000Z', '2021-08-09T10:50:25.573Z'],
+    ])
   });
 });

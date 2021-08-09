@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Divider, Grid, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
 import { useTranslation } from 'react-i18next';
-import formatCellData, { countShifts, formatShifts } from '../utils';
+import formatCellData, { checkExtraShifts, countExtraHours, formatShifts } from '../utils';
 import CenteredContent from '../../../components/CenteredContent';
 
 export default function ReportData({ formattedData }) {
@@ -15,7 +15,9 @@ export default function ReportData({ formattedData }) {
     formattedData['Hora Entrada'],
     formattedData['Hora Salida']
   );
-  const totalExtraHours = countShifts(entryAndExitTime);
+
+  const extraShifts = checkExtraShifts(entryAndExitTime)
+  const totalExtraHours = countExtraHours(extraShifts);
   return (
     <div className="plan-header" style={{ marginTop: 60 }}>
       <Grid container spacing={5}>
