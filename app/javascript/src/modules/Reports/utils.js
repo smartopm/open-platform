@@ -1,7 +1,9 @@
 /* eslint-disable no-plusplus */
 import { parseISO } from "date-fns";
 import differenceInHours from "date-fns/differenceInHours";
-import isAfter from "date-fns/isAfter/index";
+import isAfter from "date-fns/isAfter";
+// eslint-disable-next-line import/no-extraneous-dependencies
+import isEqual from 'lodash/isEqual';
 import { dateTimeToString, dateToString } from "../../components/DateContainer";
 
 /**
@@ -38,13 +40,12 @@ export function checkExtraShifts(formattedShifts){
       const current = shifts[Number(index)];
       // last shift wont have a next value so we equate it to current value and check later
       const next = shifts.length === index + 1 ? current : shifts[index + 1];
-
       if (isAfter(parseISO(next[0]), parseISO(current[0]))) {
         extras.push([current[0], next[1]])
         shifts.splice(index, 1)
       }
       // eslint-disable-next-line eqeqeq
-      if(next == current){
+      if(isEqual(next, current)){
       // case where there is a remaining shift with no overlapping time we add it to extras
         extras.push([next[0], next[1]])
       }
@@ -77,7 +78,8 @@ export function countExtraHours(extraHours) {
  */
 export function formatShifts(startShift, exitShift){
   if(!startShift || !exitShift) return []
-  // in cases where some start or exit entries were not entered we remove them
-  const cleaned = startShift.filter(entry => Boolean(entry.value))
-  return cleaned.map((e, i) => [e.value, exitShift[Number(i)].value])
+  // in cases where some start or exit entries were not entered we remove them and sort it to avoid wrong overlaps
+  const filteredData = startShift.filter(entry => Boolean(entry.value))
+  const cleaned = filteredData.map((e, i) => [e.value, exitShift[Number(i)].value])
+  return cleaned.sort((a, b) => new Date(a[0]) - new Date(b[0]))
 }
