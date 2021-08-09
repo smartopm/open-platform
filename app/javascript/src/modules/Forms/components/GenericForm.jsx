@@ -27,7 +27,7 @@ const initialData = {
   fieldType: '',
   fieldName: ' ',
   date: { value: null },
-  radio: { value: { label: '', checked: null } }
+  radio: { value: { label: '', checked: null } },
 };
 
 export default function GenericForm({ formId, pathname, formData, refetch, editMode }) {
@@ -82,10 +82,10 @@ export default function GenericForm({ formId, pathname, formData, refetch, editM
       [name]: { value, form_property_id: propId }
     });
   }
-  function handleDateChange(date, id) {
+  function handleDateChange(date, id, name) {
     setProperties({
       ...properties,
-      date: { value: date, form_property_id: id }
+      [name]: { value: date, form_property_id: id }
     });
   }
 
@@ -211,8 +211,8 @@ export default function GenericForm({ formId, pathname, formData, refetch, editM
           <Grid item xs={editMode ? 10 : 12}>
             <DateAndTimePickers
               id={formPropertiesData.id}
-              selectedDateTime={properties.date.value}
-              handleDateChange={date => handleDateChange(date, formPropertiesData.id)}
+              selectedDateTime={properties[String(formPropertiesData.fieldName)]?.value || null}
+              handleDateChange={date => handleDateChange(date, formPropertiesData.id, formPropertiesData.fieldName)}
               label={formPropertiesData.fieldName}
             />
           </Grid>
