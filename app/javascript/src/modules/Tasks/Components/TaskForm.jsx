@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import TextField from '@material-ui/core/TextField'
+import Autocomplete from '@material-ui/lab/Autocomplete';
 import {
   Button,
   FormHelperText,
@@ -16,7 +17,6 @@ import UserAutoResult from '../../../shared/UserAutoResult';
 import { CreateNote } from '../../../graphql/mutations'
 import DatePickerDialog from '../../../components/DatePickerDialog'
 import { discussStyles } from '../../../components/Discussion/Discuss'
-import { UserChip } from './UserChip'
 import { NotesCategories } from '../../../utils/constants'
 // TODO: This should be moved to the shared directory
 import UserSearch from '../../Users/Components/UserSearch'
@@ -25,7 +25,6 @@ const initialData = {
   user: '',
   userId: ''
 }
-
 export default function TaskForm({ close, refetch, users, assignUser}) {
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
@@ -118,32 +117,26 @@ export default function TaskForm({ close, refetch, users, assignUser}) {
         </Select>
       </FormControl>
       <br />
-      <FormControl fullWidth>
-        <InputLabel id="assignees">{t('task.task_assignee_label')}</InputLabel>
-        <Select
-          id="assignees"
-          value={assignees}
-          onChange={event => setAssignees(event.target.value)}
-          name="assignees"
-          fullWidth
-          multiple
-          MenuProps={{ MenuListProps: { disablePadding: true } }}
-          renderValue={selected => (
-            <div>
-              {selected.map((value, i) => (
-                // eslint-disable-next-line react/no-array-index-key
-                <UserChip user={value} key={i} label={value.name} />
-                ))}
-            </div>
-            )}
-        >
-          {Boolean(users.length) && users.map((user) => (
-            <MenuItem key={user.id} value={user} style={{padding: 0}}>
-              <UserAutoResult user={user} />
-            </MenuItem>
-              ))}
-        </Select>
-      </FormControl>
+
+      <Autocomplete
+        multiple
+        id="tags-standard"
+        options={users}
+        ListboxProps={{ style: { maxHeight: "20rem" }}}
+        renderOption={option => <UserAutoResult user={option} />}
+        name="assignees"
+        onChange={(_event, value) => setAssignees(value)}
+        getOptionLabel={(option) => option.name}
+        renderInput={(params) => (
+          <TextField
+            {...params}
+            variant="standard"
+            label={t('task.task_assignee_label')}
+            placeholder={t('task.task_search_placeholder')} 
+          />
+        )}
+      />
+
       <br />
       <UserSearch userData={userData} update={setData} />
       <br />

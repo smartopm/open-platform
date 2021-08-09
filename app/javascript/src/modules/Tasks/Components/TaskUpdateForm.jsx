@@ -17,7 +17,6 @@ import {
   Checkbox,
   Tooltip,
 } from '@material-ui/core'
-import { makeStyles } from '@material-ui/core/styles';
 import { useMutation } from 'react-apollo'
 import PropTypes from 'prop-types'
 import { useTranslation } from 'react-i18next';
@@ -57,7 +56,6 @@ export default function TaskForm({
   authState,
   taskId,
 }) {
-  const classes = useStyles();
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
   const [error, setErrorMessage] = useState('')
@@ -391,28 +389,24 @@ export default function TaskForm({
 
                 {autoCompleteOpen && (
                 <Autocomplete
-                  clearOnEscape
-                  clearOnBlur
                   open={autoCompleteOpen}
-                  onClose={() => setOpen(!autoCompleteOpen)}
-                  classes={{ option: classes.autocompleteOption, listbox: classes.autocompleteOption }}
+                  ListboxProps={{ style: { maxHeight: "15rem" }}}
                   loading={loading}
                   id={data.id}
                   options={users}
                   getOptionLabel={option => option.name}
-                  style={{ width: 500 }}
                   onChange={(_evt, value) => {
-                  if (!value) {
-                      return
-                    }
-                    assignUser(data.id, value.id)
-                  }}
+                if (!value) {
+                    return
+                  }
+                  assignUser(data.id, value.id)
+                }}
                   renderOption={(option) => (
                     <UserAutoResult user={option} />
-                  )}
-                  renderInput={params => (
-                    <TextField {...params} placeholder={t('task.chip_add_assignee_placeholder')} />
                 )}
+                  renderInput={params => (
+                    <TextField {...params} variant="standard" placeholder={t('task.task_search_placeholder')} />
+              )}
                 />
             )}
               </div>
@@ -455,12 +449,6 @@ export default function TaskForm({
     </>
   )
 }
-
-const useStyles = makeStyles(() => ({
-  autocompleteOption: {
-    padding: '0px'
-  }
-}));
 
 TaskForm.defaultProps = {
   users: [],
