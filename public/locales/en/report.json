@@ -5,13 +5,13 @@
     "pick_end_date": "Pick Report End Date",
     "generate_report": "Generate Report",
     "report_title": "Customs-Report",
+    "extra_hours": "Extra Hours",
     "report_header_text": "Log of hours of service of sub-administrator in customs post",
     "print_report": "Print Report",
     "sub_admin": " Sub-Administrator",
     "customs_post": "Customs post 9100",
     "customs_admin": "Customs Administrator",
     "customs": "Customs post",
-    "reporting_period": "Period",
-    "extra_hours": "Extra Hours"
+    "reporting_period": "Period"
   }
 }

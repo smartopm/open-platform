@@ -35,6 +35,6 @@ describe('Report Component', () => {
     expect(container.queryByText('Last Name')).toBeInTheDocument()
     expect(container.queryByText('XJ is my name')).toBeInTheDocument()
     expect(container.queryByText('XJ is my other name')).toBeInTheDocument()
-    expect(container.queryByTestId('extra_horas').textContent).toContain('misc.extra_hours : 0')
+    expect(container.queryByTestId('extra_horas').textContent).toContain('report:misc.extra_hours : 0')
   });
 });

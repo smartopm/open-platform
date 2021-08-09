@@ -7,7 +7,7 @@ import formatCellData, { checkExtraShifts, countExtraHours, formatShifts } from 
 import CenteredContent from '../../../components/CenteredContent';
 
 export default function ReportData({ formattedData }) {
-  const { t } = useTranslation('form');
+  const { t } = useTranslation(['form', 'report']);
   const classes = useStyles();
   let highestRecords = 1;
 
@@ -54,7 +54,7 @@ export default function ReportData({ formattedData }) {
       <CenteredContent>
         <Typography data-testid="extra_horas">
           {`
-            ${t('misc.extra_hours')} : ${totalExtraHours}
+            ${t('report:misc.extra_hours')} : ${totalExtraHours}
           `}
         </Typography>
       </CenteredContent>
