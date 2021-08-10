@@ -288,7 +288,8 @@
     "view_transactions": "View Transactions",
     "transfer_payment_plan": "Transfer Plan",
     "transfer_plan": "Transfer Plan",
-    "continue_to_verification": "Continue"
+    "continue": "Continue",
+    "transferring": "Transferring ..."
   },
   "user_types": {
     "admin": "Admin",

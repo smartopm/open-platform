@@ -329,7 +329,7 @@ export function renderPayment(payment, currencyData) {
       ),
       'Payment Amount': (
         <Grid item xs={12} md={2} data-testid="payment_amount">
-          <Text content={formatMoney(currencyData, payment.userTransaction.amount)} />
+          <Text content={formatMoney(currencyData, payment.amount)} />
         </Grid>
       ),
       'Plot Info': (

@@ -13,6 +13,7 @@ import { PlansPaymentsQuery } from '../../modules/Payments/graphql/payment_query
 describe('Payment List Item Component', () => {
   const transactions = [
     {
+      amount: 1000,
       receiptNumber: 'SI1008',
       status: 'paid',
       createdAt: '2021-06-04T08:50:45Z',

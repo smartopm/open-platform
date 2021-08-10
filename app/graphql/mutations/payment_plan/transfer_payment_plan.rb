@@ -9,19 +9,22 @@ module Mutations
 
       field :payment_plan, Types::PaymentPlanType, null: true
 
+      # rubocop:disable Metrics/MethodLength
       def resolve(vals)
         source_payment_plan = Properties::PaymentPlan.find_by(id: vals[:source_plan_id])
         destination_payment_plan = Properties::PaymentPlan.find_by(id: vals[:destination_plan_id])
         raise_payment_plan_related_error(source_payment_plan)
         raise_payment_plan_related_error(destination_payment_plan)
-
         ActiveRecord::Base.transaction do
+          source_payment_plan.lock!
+          destination_payment_plan.lock!
           destination_payment_plan.transfer_payments(source_payment_plan)
           return { payment_plan: destination_payment_plan.reload } if source_payment_plan.cancel!
 
           raise GraphQL::ExecutionError, source_payment_plan.errors.full_messages
         end
       end
+      # rubocop:enable Metrics/MethodLength
 
       # Verifies if current user is admin or not.
       def authorized?(_vals)
