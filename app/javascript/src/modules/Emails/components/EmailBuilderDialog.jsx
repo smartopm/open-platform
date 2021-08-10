@@ -10,7 +10,7 @@ import Slide from '@material-ui/core/Slide';
 import Button from '@material-ui/core/Button';
 import { useMutation, useQuery } from 'react-apollo';
 import { useTranslation } from 'react-i18next';
-import { useHistory, useLocation, useParams } from 'react-router';
+import { useHistory, useParams } from 'react-router';
 import EmailDetailsDialog from './EmailDetailsDialog';
 import MessageAlert from '../../../components/MessageAlert';
 import { formatError } from '../../../utils/helpers';
@@ -35,7 +35,6 @@ export default function EmailBuilderDialog() {
   const authState = useContext(Context)
   const { emailId } = useParams()
   const history = useHistory()
-  const { pathname } = useLocation()
 
   const { data: templateData } = useQuery(
     EmailTemplateQuery,
@@ -45,14 +44,6 @@ export default function EmailBuilderDialog() {
       fetchPolicy: 'cache-and-network'
     }
   );
-
-  console.log(pathname)
-  // useEffect(() => {
-  //   if(emailId){
-  //     setEmailBuilderOpen(true)
-  //   }
-  //   // return  setEmailBuilderOpen(false)
-  // }, [emailId]);
 
   function handleClose(){
     history.push('/mail_templates')
