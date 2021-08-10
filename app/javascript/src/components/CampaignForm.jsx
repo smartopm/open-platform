@@ -17,7 +17,7 @@ import { saniteError, getJustLabels, delimitorFormator } from '../utils/helpers'
 import CampaignLabels from './CampaignLabels'
 import Toggler from './Campaign/ToggleButton'
 import TemplateList from '../modules/Emails/components/TemplateList'
-import EmailBuilderDialog from '../modules/Emails/components/EmailBuilderDialog'
+// import EmailBuilderDialog from '../modules/Emails/components/EmailBuilderDialog'
 
 const initData = {
   id: '',
@@ -151,7 +151,7 @@ function handleTemplateDialog(status){
   return (
     <div className="container">
       {/* only show this when no template is selected */}
-      <EmailBuilderDialog open={templateDialogOpen} handleClose={handleTemplateDialog} />
+      {/* <EmailBuilderDialog open={templateDialogOpen} handleClose={handleTemplateDialog} /> */}
 
       <Snackbar
         open={isSubmitted}
