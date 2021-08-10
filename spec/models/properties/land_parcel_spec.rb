@@ -31,7 +31,7 @@ RSpec.describe Properties::LandParcel, type: :model do
     end
     it do
       is_expected.to define_enum_for(:object_type)
-        .with_values(land: 0, poi: 1, house: 3 )
+        .with_values(land: 0, poi: 1, house: 3)
     end
   end
 
