@@ -17,7 +17,6 @@ import { saniteError, getJustLabels, delimitorFormator } from '../utils/helpers'
 import CampaignLabels from './CampaignLabels'
 import Toggler from './Campaign/ToggleButton'
 import TemplateList from '../modules/Emails/components/TemplateList'
-// import EmailBuilderDialog from '../modules/Emails/components/EmailBuilderDialog'
 
 const initData = {
   id: '',
@@ -38,9 +37,7 @@ export default function CampaignForm({
   const [label, setLabel] = useState([])
   const [errorMsg, setErrorMsg] = useState('')
   const [isSubmitted, setIsSubmitted] = useState(false)
-  const [templateDialogOpen, setDialogOpen] = useState(false)
   const [mutationLoading, setLoading] = useState(false)
-  const [isUpdated, setIsUpdated] = useState(false)
 
   const [campaignCreate] = useMutation(CampaignCreate)
   const [campaignUpdate] = useMutation(CampaignUpdateMutation)
@@ -53,13 +50,6 @@ export default function CampaignForm({
   const handleCampaignType = (_event, newCampaignType) => {
     setCampaignType(newCampaignType);
   };
-
-function handleTemplateDialog(status){
-  setDialogOpen(!templateDialogOpen)
-  if (status === 'closed') {
-    setIsUpdated(true)
-  }
-}
 
   function handleTemplateValue(event){
     setFormData({
@@ -150,9 +140,6 @@ function handleTemplateDialog(status){
   }
   return (
     <div className="container">
-      {/* only show this when no template is selected */}
-      {/* <EmailBuilderDialog open={templateDialogOpen} handleClose={handleTemplateDialog} /> */}
-
       <Snackbar
         open={isSubmitted}
         autoHideDuration={3000}
@@ -210,10 +197,8 @@ function handleTemplateDialog(status){
         {formData.campaignType === 'email' && (
           <>
             <TemplateList
-              value={formData.emailTemplatesId}
+              value={formData.emailTemplatesId || ''}
               handleValue={handleTemplateValue}
-              createTemplate={handleTemplateDialog}
-              shouldRefecth={isUpdated}
               isRequired
             />
           </>
