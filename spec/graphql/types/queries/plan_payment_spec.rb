@@ -27,6 +27,12 @@ RSpec.describe Types::Queries::PlanPayment do
                             transaction_id: transaction.id, payment_plan_id: payment_plan.id,
                             amount: 500, manual_receipt_number: '12345')
     end
+    let!(:general_plan) { user.general_payment_plan }
+    let!(:general_payment) do
+      create(:plan_payment, user_id: user.id, community_id: community.id,
+                            transaction_id: transaction.id, payment_plan: user.general_payment_plan,
+                            amount: 200)
+    end
     let(:payment_list_query) do
       <<~GQL
         query paymentsList(
@@ -76,6 +82,7 @@ RSpec.describe Types::Queries::PlanPayment do
       <<~GQL
         query paymentStats($query: String){
           paymentStatDetails(query: $query){
+            amount
             receiptNumber
             status
             createdAt
@@ -259,10 +266,12 @@ RSpec.describe Types::Queries::PlanPayment do
                                              current_user: admin,
                                              site_community: community,
                                            })
+          expect(result.dig('data', 'paymentStatDetails').size).to eql 1
           payment_stat_details = result.dig('data', 'paymentStatDetails', 0)
           expect(payment_stat_details['receiptNumber']).to eql 'MI12345'
           expect(payment_stat_details['status']).to eql 'paid'
           expect(payment_stat_details['createdAt'].to_date).to eql plan_payment.created_at.to_date
+          expect(payment_stat_details['amount']).to eql 500.0
           expect(payment_stat_details['userTransaction']['source']).to eql 'cash'
           expect(payment_stat_details['userTransaction']['amount']).to eql 500.0
           expect(payment_stat_details['user']['name']).to eql 'Mark Test'

@@ -916,6 +916,7 @@ export const InvoicesStatsDetails = gql`
 export const PaymentStatsDetails = gql`
   query PaymentStatsDetails($query: String!) {
     paymentStatDetails(query: $query) {
+      amount
       receiptNumber
       status
       createdAt
