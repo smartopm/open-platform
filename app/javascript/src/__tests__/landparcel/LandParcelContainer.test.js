@@ -42,6 +42,8 @@ describe('Land Property Page', () => {
       createdAt: '2021-02-04T09:02:06Z',
       accounts: [],
       paymentPlans: [],
+      status: '',
+      objectType: ''
     };
     const landParcelMock = [
       {
