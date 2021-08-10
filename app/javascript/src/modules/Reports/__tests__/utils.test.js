@@ -60,7 +60,7 @@ describe('Utils Component', () => {
       ['2021-08-09T10:48:00.000Z', '2021-08-09T11:50:18.573Z']
     ];
     const xtra = checkExtraShifts(otherHoras)
-    expect(countExtraHours(xtra)).toBe(3)
+    expect(countExtraHours(xtra)).toBe(4)
   });
   it('it should properly format start and exit shifts ', () => {
     // formatShifts

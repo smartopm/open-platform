@@ -1,9 +1,6 @@
 /* eslint-disable no-plusplus */
-import { parseISO } from "date-fns";
-import differenceInHours from "date-fns/differenceInHours";
-import isAfter from "date-fns/isAfter";
-// eslint-disable-next-line import/no-extraneous-dependencies
-import isEqual from 'lodash/isEqual';
+import parseISO from "date-fns/parseISO";
+import differenceInMinutes from "date-fns/differenceInMinutes";
 import { dateTimeToString, dateToString } from "../../components/DateContainer";
 
 /**
@@ -40,13 +37,13 @@ export function checkExtraShifts(formattedShifts){
       const current = shifts[Number(index)];
       // last shift wont have a next value so we equate it to current value and check later
       const next = shifts.length === index + 1 ? current : shifts[index + 1];
-      if (isAfter(parseISO(next[0]), parseISO(current[0]))) {
+      if(new Date(next[0]) > new Date(current[0]) && new Date(next[0]) < new Date(current[1])){
         extras.push([current[0], next[1]])
         shifts.splice(index, 1)
+      } else if(new Date(next[0]) > new Date(current[1])){
+        extras.push([current[0], current[1]])
       }
-      // eslint-disable-next-line eqeqeq
-      if(isEqual(next, current)){
-      // case where there is a remaining shift with no overlapping time we add it to extras
+      else if(next[0] === current[0] && next[1] === current[1]){
         extras.push([next[0], next[1]])
       }
     }
@@ -64,8 +61,9 @@ export function countExtraHours(extraHours) {
   const hours = []
   for (let index = 0; index < extraHours.length; index++) {
     const element = extraHours[Number(index)];
-    const diff = differenceInHours(parseISO(element[1]), parseISO(element[0]))
-    hours.push(diff)
+    const diff = differenceInMinutes(parseISO(element[1]), parseISO(element[0]))
+    const hoursTime = Math.ceil(diff / 60)
+    hours.push(hoursTime)
   }
   return hours.reduce((a, b) => a + b, 0)
 }

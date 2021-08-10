@@ -18,7 +18,6 @@ export default function ReportData({ formattedData }) {
 
   const extraShifts = checkExtraShifts(entryAndExitTime)
   const totalExtraHours = countExtraHours(extraShifts);
-
   return (
     <div className="plan-header" style={{ marginTop: 60 }}>
       <Grid container spacing={5}>
