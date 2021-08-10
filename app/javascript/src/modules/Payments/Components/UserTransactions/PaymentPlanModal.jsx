@@ -18,7 +18,7 @@ import DatePickerDialog from '../../../../components/DatePickerDialog';
 import { paymentPlanStatus, paymentPlanFrequency } from '../../../../utils/constants';
 import { PaymentPlanCreateMutation } from '../../../../graphql/mutations/land_parcel';
 import { dateToString } from '../../../../components/DateContainer';
-import { capitalize, formatError } from '../../../../utils/helpers';
+import { capitalize, formatError, titleize } from '../../../../utils/helpers';
 
 const initialPlanState = {
   status: 0,
@@ -321,7 +321,7 @@ export default function PaymentPlanModal({
         >
           {landParcelsData?.userLandParcels?.map(parcel => (
             <MenuItem key={parcel.id} value={parcel}>
-              {parcel.parcelNumber}
+              {`${titleize(parcel.objectType) || 'Land'}: ${parcel.parcelNumber}`}
             </MenuItem>
           ))}
         </TextField>

@@ -308,6 +308,7 @@ export const UserLandParcels = gql`
       id
       parcelNumber
       parcelType
+      objectType
       accounts{
         userId
         fullName
