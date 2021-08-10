@@ -2,10 +2,10 @@ import React from 'react';
 import Button from '@material-ui/core/Button';
 import PropTypes from 'prop-types';
 
-export default function ButtonComponent({ variant, color, buttonText, handleClick, size}) {
+export default function ButtonComponent({ variant, color, buttonText, handleClick, size, ...otherProps}) {
   return (
     <>
-      <Button variant={variant} color={color} size={size} role="button" onClick={() => handleClick()}>
+      <Button {...otherProps} variant={variant} color={color} size={size} role="button" onClick={() => handleClick()}>
         {buttonText}
       </Button>
     </>

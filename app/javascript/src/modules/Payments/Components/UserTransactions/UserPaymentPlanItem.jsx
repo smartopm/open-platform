@@ -47,6 +47,7 @@ import { ActionDialog } from '../../../../components/Dialog';
 import PlanDetail from './PlanDetail';
 import TransactionDetails from './TransactionDetails';
 import TransferPlanModal from './TransferPlanModal';
+import PlanMobileDataList, { PaymentMobileDataList } from './PaymentMobileDataList';
 
 
 export default function UserPaymentPlanItem({
@@ -415,9 +416,10 @@ export default function UserPaymentPlanItem({
             data-testid="summary"
             className={classes.accordion}
           >
-            <DataList
-              keys={planHeader}
-              data={[
+            {matches ? (
+              <DataList
+                keys={planHeader}
+                data={[
                 renderPlan(
                   plan,
                   currencyData,
@@ -429,18 +431,37 @@ export default function UserPaymentPlanItem({
                   planMenuData,
                   t
                 )
-              ]}
-              hasHeader={false}
-              clickable={false}
-              color
-            />
+                ]}
+                hasHeader={false}
+                clickable={false}
+                color
+              />
+            ) : (
+              <PlanMobileDataList
+                keys={planHeader}
+                data={[
+                renderPlan(
+                  plan,
+                  currencyData,
+                  currentUser.userType,
+                  {
+                    handleMenu: event => handleOpenDateMenu(event, plan.id),
+                    loading: details.isLoading,
+                    planList: true
+                  },
+                  planMenuData,
+                )
+                ]}
+                clickable={false}
+              />
+            )}
           </AccordionSummary>
           <AccordionDetails classes={{ root: classes.content }}>
             {plan.planPayments &&
               Boolean(plan.planPayments?.length) &&
               headersForNonAdminUsers(plan?.planPayments) && (
                 <div>
-                  <Typography color="primary" className={classes.payment}>
+                  <Typography color="primary" className={matches ? classes.payment : classes.paymentMobile}>
                     {t('common:menu.payment_plural')}
                   </Typography>
                   <div className={classes.paymentList}>
@@ -453,15 +474,26 @@ export default function UserPaymentPlanItem({
               .map(
                 pay =>
                   (currentUser.userType === 'admin' || pay?.status !== 'cancelled') && (
-                    <div key={pay.id} className={classes.paymentList}>
-                      <DataList
-                        keys={paymentHeader}
-                        data={[renderPayments(pay, currencyData, currentUser.userType, menuData)]}
-                        hasHeader={false}
-                        clickable
-                        handleClick={() => transactionDetailOpen(pay)}
-                        color
-                      />
+                    <div key={pay.id}>
+                      {matches ? (
+                        <div className={classes.paymentList}>
+                          <DataList
+                            keys={paymentHeader}
+                            data={[renderPayments(pay, currencyData, currentUser.userType, menuData)]}
+                            hasHeader={false}
+                            clickable
+                            handleClick={() => transactionDetailOpen(pay)}
+                            color
+                          />
+                        </div>
+                      ) : (
+                        <PaymentMobileDataList
+                          keys={paymentHeader}
+                          data={[renderPayments(pay, currencyData, currentUser.userType, menuData)]}
+                          clickable
+                          handleClick={() => transactionDetailOpen(pay)}
+                        />
+                      )}
                     </div>
                   )
               )}
@@ -472,7 +504,7 @@ export default function UserPaymentPlanItem({
   );
 }
 
-export function renderPlan(plan, currencyData, userType, { handleMenu, loading }, menuData, t) {
+export function renderPlan(plan, currencyData, userType, { handleMenu, loading, planList }, menuData, t) {
   /* eslint-disable no-unused-expressions */
   const planMenuList = [];
   menuData?.menuList.forEach(obj => {
@@ -499,7 +531,14 @@ export function renderPlan(plan, currencyData, userType, { handleMenu, loading }
       <Grid item xs={12} md={2} data-testid="payment-plan">
         {plan.planType}
         <br />
-        <Text color="primary" content={`${plan.status}`} />
+        {planList ? (
+          <Grid item xs={9} md={2} style={{marginTop: '10px'}} data-testid="status">
+            <Label
+              title={propAccessor(invoiceStatus, plan.status)}
+              color={propAccessor(InvoiceStatusColor, plan.status)}
+            />
+          </Grid>
+        ) : <Text color="primary" content={`${plan.status}`} />}
       </Grid>
     ),
     'Start Date': (
@@ -509,10 +548,12 @@ export function renderPlan(plan, currencyData, userType, { handleMenu, loading }
     ),
     'Balance/Monthly Amount': (
       <Grid item xs={12} md={2} data-testid="balance">
-        <Text content={formatMoney(currencyData, plan.pendingBalance)} />
+        <Text style={planList ? {fontSize: '18px', fontWeight: '500', color: '#141414'} : null} content={formatMoney(currencyData, plan.pendingBalance)} />
+        {planList && <Text style={{marginLeft: '8px'}} content='balance' />}
         <br />
         <Text
           color="primary"
+          style={planList ? {fontSize: '13px', fontWeight: '300', color: '#595959'} : null}
           content={`${capitalize(plan?.frequency || 'Monthly')} Amount ${formatMoney(
             currencyData,
             plan.installmentAmount
@@ -653,6 +694,11 @@ const useStyles = makeStyles(() => ({
   },
   payment: {
     padding: '0 0 20px 50px',
+    fontWeight: 400,
+    backgroundColor: '#FDFDFD'
+  },
+  paymentMobile: {
+    padding: '0 0 20px 20px',
     fontWeight: 400,
     backgroundColor: '#FDFDFD'
   },

@@ -274,6 +274,7 @@ export const InvoiceStatusColor = {
   late: '#E79040',
   cancelled: '#E74540',
   in_progress: '#3493FB',
+  active: '#00A98B'
 }
 
 export const InvoiceType = {
