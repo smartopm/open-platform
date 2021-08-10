@@ -516,6 +516,7 @@ export function renderPlan(plan, currencyData, userType, { handleMenu, loading, 
 
     planMenuList.push({ ...obj});
   });
+  
   return {
     'Plot Number': (
       <Grid item xs={12} md={2} data-testid="plot-number">
