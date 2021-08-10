@@ -17,6 +17,8 @@ module Mutations
       argument :lat_y, Float, required: false
       argument :geom, GraphQL::Types::JSON, required: false
       argument :ownership_fields, GraphQL::Types::JSON, required: false
+      argument :status, String, required: false
+      argument :object_type, String, required: false
 
       field :land_parcel, Types::LandParcelType, null: true
 

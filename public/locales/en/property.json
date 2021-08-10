@@ -10,6 +10,7 @@
     "details": "Details",
     "new_point_of_interest": "New Point of Interest",
     "new_property": "New Property",
+    "new_house": "New House",
     "ownership": "Ownership",
     "plan_history": "Plan History",
     "property": "Property {{parcelNumber}}"

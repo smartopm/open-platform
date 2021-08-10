@@ -603,3 +603,8 @@ export const paymentFilterFields = {
       sunday: { isNotOff: false },
     },
   };
+
+  export const PropertyStatus = {
+    land: 'active',
+    house: [ 'planned', 'in_construction', 'built'],
+  }

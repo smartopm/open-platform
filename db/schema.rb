@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_08_03_093217) do
+ActiveRecord::Schema.define(version: 2021_08_03_211938) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -406,6 +406,8 @@ ActiveRecord::Schema.define(version: 2021_08_03_093217) do
     t.json "geom"
     t.integer "status", default: 0
     t.boolean "is_poi", default: false
+    t.integer "object_type", default: 0
+    t.uuid "house_land_parcel_id"
     t.index ["community_id"], name: "index_land_parcels_on_community_id"
     t.index ["parcel_number"], name: "index_land_parcels_on_parcel_number", unique: true
     t.index ["status"], name: "index_land_parcels_on_status"

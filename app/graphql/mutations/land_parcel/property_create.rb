@@ -13,6 +13,9 @@ module Mutations
       argument :parcel_type, String, required: false
       argument :country, String, required: false
       argument :ownership_fields, GraphQL::Types::JSON, required: false
+      argument :status, String, required: false
+      argument :object_type, String, required: false
+      argument :house_land_parcel_id, ID, required: false
 
       field :land_parcel, Types::LandParcelType, null: true
 
