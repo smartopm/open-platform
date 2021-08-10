@@ -1,9 +1,8 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
-import { renderToString } from 'react-dom/server';
 import { useQuery, useLazyQuery } from 'react-apollo'
 import { Typography } from '@material-ui/core';
-import { Map, FeatureGroup, GeoJSON, LayersControl, TileLayer, Popup } from 'react-leaflet'
+import { Map, FeatureGroup, GeoJSON, LayersControl, TileLayer, Popup, Marker } from 'react-leaflet'
 import { StyleSheet, css } from 'aphrodite'
 import NkwashiCoverageData from '../data/nkwashi_coverage_boundary.json'
 import CMCoverageData from '../data/cm_coverage_boundary.json'
@@ -66,6 +65,7 @@ function getSubUrbanData(communityName){
 
 export default function GeoMap() {
   const [selectedPoi, setSelectedPoi] = useState(null)
+  const [selectedLandParcel, setSelectedLandParcel] = useState(null)
   const { loading, data: geoData } = useQuery(LandParcelGeoData, {
     fetchPolicy: 'cache-and-network'
   })
@@ -86,6 +86,12 @@ export default function GeoMap() {
   /* istanbul ignore next */
   function handleCloseDrawer(){
     setSelectedPoi(null)
+  }
+
+  function handleLandParcelLayerClick(markerProps){
+    setSelectedLandParcel({
+      ...markerProps,
+    })
   }
 
   /* istanbul ignore next */
@@ -119,8 +125,9 @@ export default function GeoMap() {
         plotSold,
       }
 
-      const markerContents = renderToString(<LandParcelMarker key={Math.random} markerProps={markerProps} />)
-      return layer.bindPopup(markerContents)
+      layer.on({
+        click: () => handleLandParcelLayerClick(markerProps),
+      })
     }
   }
 
@@ -213,6 +220,13 @@ export default function GeoMap() {
                       }
                       return featureCollection.features.push(JSON.parse(emptyPolygonFeature))
                       })}
+                   {selectedLandParcel && (
+                     <Marker position={[selectedLandParcel.geoLatY, selectedLandParcel.geoLongX]}>
+                       <Popup>
+                         <LandParcelMarker markerProps={selectedLandParcel} />
+                       </Popup>
+                     </Marker>
+                   )}
                    <GeoJSON
                      key={Math.random()}
                      data={featureCollection}
