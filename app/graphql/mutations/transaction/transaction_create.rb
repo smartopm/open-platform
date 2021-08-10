@@ -92,6 +92,7 @@ module Mutations
 
         payment_exists = Payments::PlanPayment.exists?(
           manual_receipt_number: "MI#{receipt_number}",
+          status: :paid,
           community_id: context[:site_community].id,
         )
         return unless payment_exists
