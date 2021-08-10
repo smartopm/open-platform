@@ -19,7 +19,7 @@ import { useTranslation } from 'react-i18next';
 import { CustomizedDialogs, ActionDialog } from '../Dialog';
 import { StyledTabs, StyledTab, TabPanel } from '../Tabs';
 import { Context as AuthStateContext } from '../../containers/Provider/AuthStateProvider';
-import { currencies } from '../../utils/constants';
+import { currencies, PropertyStatus } from '../../utils/constants';
 import { UsersLiteQuery } from '../../graphql/queries';
 import AddMoreButton from '../../shared/buttons/AddMoreButton';
 import LandParcelEditCoordinate from './LandParcelEditCoordinate';
@@ -27,7 +27,7 @@ import LandParcelMergeModal from './LandParcelMergeModal';
 import useDebounce from '../../utils/useDebounce';
 import UserAutoResult from '../../shared/UserAutoResult';
 import { dateToString } from "../DateContainer";
-import { capitalize } from '../../utils/helpers'
+import { capitalize, titleize } from '../../utils/helpers'
 
 
 export default function LandParcelModal({
@@ -147,7 +147,7 @@ export default function LandParcelModal({
       return;
     }
 
-    handleSubmit({
+    let variables = {
       parcelNumber,
       address1,
       address2,
@@ -160,8 +160,18 @@ export default function LandParcelModal({
       latY,
       geom,
       ownershipFields,
-      status,
-      objectType,
+    }
+
+    if (modalType === 'new_house') {
+      variables = {
+        ...variables,
+        status: status || 'planned',
+        objectType: objectType || 'house'
+      }
+    }
+
+    handleSubmit({
+      ...variables
     });
   }
 
@@ -419,42 +429,39 @@ export default function LandParcelModal({
               value={postalCode}
               onChange={e => setPostalCode(e.target.value)}
             />
-            <br />
-            <InputLabel id="status">Status</InputLabel>
-            <Select
-              id="status"
-              value={status}
-              name="status"
-              onChange={e => setStatus(e.target.value)}
-              fullWidth
-              inputProps={{
-                  'data-testid': 'status',
-                  readOnly: isFormReadOnly
-                }}
-            >
-              {modalType === 'new_house' && ['built', 'planned', 'in construction'].map(v => (
-                <MenuItem key={v} value={v}>{v}</MenuItem>
-                ))}
-
-              {modalType !== 'new_house' && (<MenuItem value="active">active</MenuItem>)}
-            </Select>
-            <br />
-            <InputLabel id="object_type">Object Type</InputLabel>
-            <Select
-              value={objectType}
-              name="object_type"
-              onChange={e => setObjectType(e.target.value)}
-              fullWidth
-              inputProps={{
-                  'data-testid': 'object-type',
-                  readOnly: isFormReadOnly
-                }}
-            >
-              {modalType === 'new_house'
-                ? <MenuItem key="house" value="house">house</MenuItem>
-                : <MenuItem key="land" value="land">land</MenuItem>
-                }
-            </Select>
+            {modalType === 'new_house' && (
+              <>
+                <br />
+                <InputLabel id="status">Status</InputLabel>
+                <Select
+                  id="status"
+                  value={status}
+                  name="status"
+                  onChange={e => setStatus(e.target.value)}
+                  fullWidth
+                  inputProps={{
+                    'data-testid': 'status',
+                    readOnly: isFormReadOnly
+                  }}
+                >
+                  {PropertyStatus.house.map(v => (<MenuItem key={v} value={v}>{titleize(v)}</MenuItem>))}
+                </Select>
+                <br />
+                <InputLabel id="object_type">Category</InputLabel>
+                <Select
+                  value={objectType}
+                  name="object_type"
+                  onChange={e => setObjectType(e.target.value)}
+                  fullWidth
+                  inputProps={{
+                      'data-testid': 'object-type',
+                      readOnly: isFormReadOnly
+                    }}
+                >
+                  <MenuItem key="house" value="house">House</MenuItem>
+                </Select>
+              </>
+            )}
             <br />
             <br />
             {!landParcel?.geom && !(modalType === 'new') && (

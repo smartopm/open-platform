@@ -23,6 +23,7 @@ module Properties
       attributes :parcel_number, :address1, :address2, :parcel_type
       attributes owner: ['accounts.full_name', 'accounts.address1', 'accounts.address2']
     end
-    enum status: { active: 0, deleted: 1, general: 2 }
+    enum status: { active: 0, deleted: 1, general: 2, planned: 3, in_construction: 4, built: 5 }
+    enum object_type: { land: 0, poi: 1, house: 3 }
   end
 end

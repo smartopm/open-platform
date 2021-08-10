@@ -100,8 +100,6 @@ RSpec.describe Mutations::LandParcel do
         postalCode: 'this is postal code',
         stateProvince: 'this is state province',
         parcelType: 'this is parcel type',
-        objectType: 'land',
-        status: 'active',
         country: 'this is a country',
         ownershipFields: [{ name: 'owner name',
                             address: 'owner address',
@@ -154,7 +152,7 @@ RSpec.describe Mutations::LandParcel do
       expect(result.dig('data', 'PropertyCreate', 'landParcel', 'objectType')).to eq('house')
       expect(result.dig('data', 'PropertyCreate', 'landParcel', 'status')).to eq('planned')
       expect(result['errors']).to be_nil
-      house = Properties::LandParcel.find_by(parcel_number: '12345')
+      house = current_user.community.land_parcels.unscoped.find_by(parcel_number: '12345')
       expect(house.house_land_parcel_id).to eq(user_parcel.id)
     end
 
@@ -335,6 +333,7 @@ RSpec.describe Mutations::LandParcel do
       expect(parcel.parcel_number).to match(/poi-\w+/i)
       expect(parcel.parcel_type).to eq('poi')
       expect(parcel.object_type).to eq('poi')
+      expect(parcel.status).to eq('active')
       expect(parcel.geom).not_to be_nil
       expect(result['errors']).to be_nil
     end
@@ -380,6 +379,7 @@ RSpec.describe Mutations::LandParcel do
       expect(parcel.parcel_number).to match(/poi-\w+/i)
       expect(parcel.parcel_type).to eq('poi')
       expect(parcel.object_type).to eq('poi')
+      expect(parcel.status).to eq('active')
       expect(parcel.geom).not_to be_nil
       expect(result['errors']).to be_nil
 
