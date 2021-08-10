@@ -218,8 +218,8 @@ TransferPlanModal.propTypes = {
   planData: PropTypes.arrayOf({
     planPayments: PropTypes.shape({
       id: PropTypes.string,
-      // status: PropTypes.string,
-      // amount: PropTypes.number
+      status: PropTypes.string,
+      amount: PropTypes.number
     })
   }).isRequired,
   currencyData: PropTypes.shape({

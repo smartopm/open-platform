@@ -132,35 +132,35 @@ const useStyles = makeStyles(() => ({
 }));
 
 PlanMobileDataList.defaultProps = {
-  keys: [],
-  data: []
+  keys: [{}],
+  data: [{}]
 }
 
 PaymentMobileDataList.defaultProps = {
   handleClick: () => {},
-  keys: [],
-  data: []
+  keys: [{}],
+  data: [{}]
 }
 
 TransactionMobileDataList.defaultProps = {
   handleClick: () => {},
-  keys: [],
-  data: []
+  keys: [{}],
+  data: [{}]
 }
 
 PlanMobileDataList.propTypes = {
-  keys: PropTypes.arrayOf(PropTypes.shape(PropTypes.object)),
-  data: PropTypes.arrayOf(PropTypes.shape(PropTypes.object))
+  keys: PropTypes.arrayOf(PropTypes.shape()),
+  data: PropTypes.arrayOf(PropTypes.shape())
 };
 
 PaymentMobileDataList.propTypes = {
-  keys: PropTypes.arrayOf(PropTypes.shape(PropTypes.object)),
-  data: PropTypes.arrayOf(PropTypes.shape(PropTypes.object)),
+  keys: PropTypes.arrayOf(PropTypes.shape()),
+  data: PropTypes.arrayOf(PropTypes.shape()),
   handleClick: PropTypes.func
 };
 
 TransactionMobileDataList.propTypes = {
-  keys: PropTypes.arrayOf(PropTypes.shape(PropTypes.object)),
-  data: PropTypes.arrayOf(PropTypes.shape(PropTypes.object)),
+  keys: PropTypes.arrayOf(PropTypes.shape()),
+  data: PropTypes.arrayOf(PropTypes.shape()),
   handleClick: PropTypes.func
 };
