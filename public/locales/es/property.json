@@ -1,0 +1,92 @@
+{
+  "buttons": {
+    "edit_coordinates": "Editar Coordenadas",
+    "new_owner": "Nuevo Propietario",
+    "new_property": "Nueva Propiedad"
+  },
+  "dialog_headers": {
+    "details": "Detalles",
+    "new_house": "Nueva Casa",
+    "new_point_of_interest": "Nuevo punto de interés",
+    "new_property": "Nueva Propiedad",
+    "ownership": "Propiedad",
+    "plan_history": "Historial del plan",
+    "property": "Propiedad {{parcelNumber}}"
+  },
+  "form_actions": {
+    "edit_property": "Editar Propiedad"
+  },
+  "form_fields": {
+    "add_owner": "Agregar Propietario",
+    "address": "Dirección",
+    "choose_icon": "Elija un tipo de icono",
+    "city": "Ciudad",
+    "country": "País",
+    "geo_lat_y": "Coordenadas geográficas Lat_Y",
+    "geo_long_x": "Coordenadas geográficas Long_X",
+    "icon_url": "icono-url",
+    "owner": "Dueño",
+    "poi_name": "Nombre del Punto de Interes",
+    "postal_code": "Código Postal",
+    "property_number": "Número de Propiedad ",
+    "property_type": "Tipo de Propiedad",
+    "state_province": "Estado Provincia"
+  },
+  "map_markers": {
+    "available": "Disponible",
+    "latitude_x": "Longitud X",
+    "longitude_y": "Latitud Y",
+    "property_no": "Propiedad No:",
+    "property_type": "Tipo de Propiedad:",
+    "sold": "Vendido"
+  },
+  "messages": {
+    "image_uploaded": "Imagen cargada correctamente",
+    "merge_properties": "¡Estás a punto de fusionar estas dos propiedades!",
+    "merge_successful": "Union exitosa",
+    "no_owner_yet": "Sin dueño todavía",
+    "parcel_number_exists": "El número de parcela ya existe. ¿Quieres fusionar estas parcelas?",
+    "poi_added": "'Punto de interés agregado correctamente'",
+    "poi_delete_warning": "¡Está a punto de eliminar un Punto de interés !. Cancele si no está seguro.",
+    "property_added": "Propiedad agregada correctamente",
+    "property_updated": "Propiedad actualizada correctamente"
+  },
+  "misc": {
+    "accounts": "Cuentas?:",
+    "end_date": "Fecha final",
+    "existing_property": "Propiedad existente",
+    "geo_coordinates": "Geo-Coordenadas?:",
+    "id": "ID:",
+    "legend": "Leyenda",
+    "map_editor": "Editor de mapas",
+    "merge_plot_to_keep": "Después de fusionar (nueva parcela para conservar)",
+    "merge_plot_to_remove": "Después de fusionar (parcela para remover)",
+    "next": "Siguiente",
+    "no": "No",
+    "no_details": "Sin Detalles",
+    "no_payment_plans": "Aún no hay planes de pago",
+    "parcel_merge_dialog": "Cuadro de diálogo Fusión de parcela de terreno",
+    "parcel_number": "Número de parcela :",
+    "parcel_type": "Tipo de Parcela:",
+    "payments": "Pagos",
+    "plan": "Plan",
+    "plot_properties": "Propiedades de la parcela",
+    "point_of_interest": "Punto de interés",
+    "polygon": "Polígono",
+    "previous": "Anterior",
+    "selected_property": "Seleccionar Propiedad",
+    "sold": "Vendido",
+    "total_payments": "Pagos totales realizados:",
+    "unknown": "Desconocido",
+    "view_plan": "Ver Plan",
+    "view_results_on_map": "Ver resultados en el mapa",
+    "yes": "Si"
+  },
+  "poi_list": {
+    "id": "ID:",
+    "latitude_y": "Latitud X:",
+    "longitude_x": "Longitud X:",
+    "poi": "PDI:",
+    "type": "Tipo"
+  }
+}

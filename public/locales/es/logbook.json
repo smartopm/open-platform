@@ -75,6 +75,7 @@
     "today_is": "Hoy es {{date}}, {{time}}",
     "upcoming_visits": "Próximas visitas",
     "user_enrolled": "El usuario fue registrado con exito",
+    "visit_scheduled": "Visita programada para: {{date}} a las {{time}}",
     "visiting_reason": "Motivo de la visita"
   },
   "observations": {
