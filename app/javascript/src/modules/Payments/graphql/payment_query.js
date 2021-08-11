@@ -52,6 +52,7 @@ export const UserPlans = gql`
       status
       endDate
       frequency
+      paidPaymentsExists
       coOwners {
         id
         name

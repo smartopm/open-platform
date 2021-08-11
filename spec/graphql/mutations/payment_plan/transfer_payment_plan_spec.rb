@@ -28,7 +28,7 @@ RSpec.describe Mutations::PaymentPlan::TransferPaymentPlan do
     let!(:other_payment_plan) do
       create(
         :payment_plan,
-        land_parcel_id: land_parcel.id,
+        land_parcel_id: other_land_parcel.id,
         user_id: user.id,
         installment_amount: 100,
         duration: 4,
@@ -150,8 +150,96 @@ RSpec.describe Mutations::PaymentPlan::TransferPaymentPlan do
         end
       end
 
+      context 'when source payment plan is cancelled' do
+        before { payment_plan.cancel! }
+
+        context 'when source plan have only cancelled payments' do
+          # rubocop:disable Rails/SkipsModelValidations
+          before { payment_plan.plan_payments.update_all(status: :cancelled) }
+          # rubocop:enable Rails/SkipsModelValidations
+          it 'raises transfer plan cannot be processed error' do
+            variables = {
+              sourcePlanId: payment_plan.id,
+              destinationPlanId: other_payment_plan.id,
+            }
+            result = DoubleGdpSchema.execute(transfer_payment_plan,
+                                             variables: variables,
+                                             context: {
+                                               current_user: admin,
+                                               site_community: community,
+                                             }).as_json
+            expect(result.dig('errors', 0, 'message')).to eql 'The payment plan and all its ' \
+                        'payments have already been cancelled, the transfer cannot be processed'
+          end
+        end
+
+        context 'when source plan have atleast one paid payment' do
+          before do
+            plan_payment.cancelled!
+            new_plan_payment.cancelled!
+          end
+
+          it 'transfers the paid payments of souce plan to the destination plan' do
+            variables = {
+              sourcePlanId: payment_plan.reload.id,
+              destinationPlanId: other_payment_plan.id,
+            }
+            result = DoubleGdpSchema.execute(transfer_payment_plan,
+                                             variables: variables,
+                                             context: {
+                                               current_user: admin,
+                                               site_community: community,
+                                             }).as_json
+            expect(result.dig('errors', 0, 'message')).to be_nil
+            plan_result = result.dig('data', 'transferPaymentPlan', 'paymentPlan')
+            expect(plan_result['planPayments'].size).to eql 1
+            expect(plan_result['planPayments'][0]['amount']).to eql 400.0
+            expect(plan_result['planPayments'][0]['manualReceiptNumber']).to eql 'MI13977-1'
+            expect(
+              plan_result['planPayments'][0]['automatedReceiptNumber'],
+            ).to eql "#{plan_payment.reload.automated_receipt_number}-1"
+            expect(payment_plan.reload.pending_balance.to_f).to eql 0.0
+            expect(other_payment_plan.reload.pending_balance.to_f).to eql 0.0
+            expect(payment_plan.status).to eql 'cancelled'
+            general_payments = user.general_payment_plan.plan_payments.reload.order(:amount)
+            expect(other_plan_payment.reload.status).to eql 'cancelled'
+            expect(general_payments.size).to eql 1
+            expect(general_payments[0].amount.to_f).to eql 300.0
+            expect(general_payments[0].manual_receipt_number).to eql 'MI13977-2'
+            expect(
+              general_payments[0].automated_receipt_number,
+            ).to eql "#{other_plan_payment.automated_receipt_number}-2"
+          end
+        end
+      end
+
+      context 'when destination payment plan is cancelled' do
+        before { other_payment_plan.cancel! }
+
+        it 'raise transfer plan cannot be processed error' do
+          variables = {
+            sourcePlanId: payment_plan.id,
+            destinationPlanId: other_payment_plan.id,
+          }
+          result = DoubleGdpSchema.execute(transfer_payment_plan,
+                                           variables: variables,
+                                           context: {
+                                             current_user: admin,
+                                             site_community: community,
+                                           }).as_json
+          expect(result.dig('errors', 0, 'message')).to eql 'Transfer of plan cannot be made to '\
+            'a cancelled payment plan. Please try transferring to other plans'
+        end
+      end
+
       context 'when source payment plan id and destination payment plan id is valid' do
-        before { payment_plan.update(pending_balance: 800) }
+        # rubocop:disable Rails/SkipsModelValidations
+        before do
+          other_payment_plan.active!
+          payment_plan.update(status: :active, pending_balance: 800)
+          payment_plan.plan_payments.update_all(status: :paid)
+        end
+        # rubocop:enable Rails/SkipsModelValidations
 
         context "when destinaion plan's pending balance is more than the minimum payment amount
                   of soure payment plan" do

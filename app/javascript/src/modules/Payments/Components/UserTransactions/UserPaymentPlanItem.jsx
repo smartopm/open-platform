@@ -426,7 +426,8 @@ export default function UserPaymentPlanItem({
                     handleMenu: event => handleOpenDateMenu(event, plan.id),
                     loading: details.isLoading
                   },
-                  planMenuData
+                  planMenuData,
+                  t
                 )
               ]}
               hasHeader={false}
@@ -471,7 +472,18 @@ export default function UserPaymentPlanItem({
   );
 }
 
-export function renderPlan(plan, currencyData, userType, { handleMenu, loading }, menuData) {
+export function renderPlan(plan, currencyData, userType, { handleMenu, loading }, menuData, t) {
+  /* eslint-disable no-unused-expressions */
+  const planMenuList = [];
+  menuData?.menuList.forEach(obj => {
+    if(
+      plan.status === 'cancelled' &&
+      (obj.content === t('common:menu.cancel_plan') ||
+      (obj.content === t('common:menu.transfer_payment_plan') && !plan.paidPaymentsExists)))
+        return;
+
+    planMenuList.push({ ...obj});
+  });
   return {
     'Plot Number': (
       <Grid item xs={12} md={2} data-testid="plot-number">
@@ -550,7 +562,7 @@ export function renderPlan(plan, currencyData, userType, { handleMenu, loading }
               anchorEl={menuData?.anchorEl}
               userType={menuData?.userType}
               handleClose={menuData?.handleClose}
-              list={menuData?.menuList}
+              list={planMenuList}
             />
           </>
         )}

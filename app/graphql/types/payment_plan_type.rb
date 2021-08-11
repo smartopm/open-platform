@@ -26,7 +26,7 @@ module Types
     field :duration, Integer, null: false
     field :frequency, String, null: true
     field :co_owners, [Types::UserType], null: true
-
+    field :paid_payments_exists, Boolean, null: true
     # Returns plan's total value
     #
     # @return [Float]
@@ -60,6 +60,10 @@ module Types
     # @return [DateTime]
     def end_date
       object.start_date + object.frequency_based_duration(object.duration)
+    end
+
+    def paid_payments_exists
+      object.plan_payments.exists?(status: :paid)
     end
   end
 end

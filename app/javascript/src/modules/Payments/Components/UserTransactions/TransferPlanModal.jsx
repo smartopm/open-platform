@@ -126,43 +126,14 @@ export default function TransferPlanModal({
             color="textPrimary"
             data-testid='plots'
           >
-            {data?.userLandParcelWithPlan.length > 1 ? (
-              <PaymentPlansForTransferPlan
-                data={data}
-                sourcePlanId={paymentPlanId}
-                destinationPlanId={destinationPlanId}
-                handleRadioChange={handleRadioChange}
-              />
-            ) : (
-              <Typography
-                className={classes.content}
-                paragraph
-                variant="body1"
-                color="secondary"
-              >
-                {t('common:misc.no_property_found_for_plan_transfer')}
-              </Typography>
-            )}
-          </div>
-          <div
-            className={classes.footer}
-            color="textPrimary"
-          >
-            {data?.userLandParcelWithPlan.length > 1 && (
-              <FormGroup row>
-                <FormControlLabel
-                  control={(
-                    <Checkbox
-                      checked={acceptanceCheckbox}
-                      onChange={handleAcceptanceCheckChange}
-                      name="acceptanceCheckbox"
-                    />
-                  )}
-                  label={t('common:misc.transfer_plan_acceptance')}
-                  labelPlacement="end"
-                />
-              </FormGroup>
-            )}
+            <PaymentPlansForTransferPlan
+              data={data}
+              sourcePlanId={paymentPlanId}
+              destinationPlanId={destinationPlanId}
+              handleRadioChange={handleRadioChange}
+              acceptanceCheckbox={acceptanceCheckbox}
+              handleAcceptanceCheckChange={handleAcceptanceCheckChange}
+            />
           </div>
         </div>
       </CustomizedDialogs>
@@ -174,31 +145,66 @@ export function PaymentPlansForTransferPlan({
   data,
   destinationPlanId,
   sourcePlanId,
-  handleRadioChange
+  handleRadioChange,
+  acceptanceCheckbox,
+  handleAcceptanceCheckChange
 }) {
   const filteredPaymentPlans = data?.userLandParcelWithPlan.filter(
     plan => plan.id !== sourcePlanId
   );
+  const classes = useStyles();
+  const { t } = useTranslation('common');
 
   return (
-    <FormControl component="fieldset">
-      <RadioGroup
-        aria-label="paymentPlanId"
-        name="paymentPlanId"
-        value={destinationPlanId}
-        onChange={handleRadioChange}
+    filteredPaymentPlans?.length >= 1 ? (
+      <>
+        <FormControl component="fieldset">
+          <RadioGroup
+            aria-label="paymentPlanId"
+            name="paymentPlanId"
+            value={destinationPlanId}
+            onChange={handleRadioChange}
+          >
+            {filteredPaymentPlans?.map(plan => (
+              <FormControlLabel
+                key={plan.id}
+                checked={destinationPlanId === plan.id}
+                value={plan.id}
+                control={<Radio />}
+                label={`${plan?.landParcel?.parcelNumber} - ${dateToString(plan?.startDate)}`}
+              />
+          ))}
+          </RadioGroup>
+        </FormControl>
+        <div
+          className={classes.footer}
+          color="textPrimary"
+        >
+          <FormGroup row>
+            <FormControlLabel
+              control={(
+                <Checkbox
+                  checked={acceptanceCheckbox}
+                  onChange={handleAcceptanceCheckChange}
+                  name="acceptanceCheckbox"
+                />
+          )}
+              label={t('common:misc.transfer_plan_acceptance')}
+              labelPlacement="end"
+            />
+          </FormGroup>
+        </div>
+      </>
+    ) : (
+      <Typography
+        className={classes.content}
+        paragraph
+        variant="body1"
+        color="secondary"
       >
-        {filteredPaymentPlans.map(plan => (
-          <FormControlLabel
-            key={plan.id}
-            checked={destinationPlanId === plan.id}
-            value={plan.id}
-            control={<Radio />}
-            label={`${plan?.landParcel?.parcelNumber} - ${dateToString(plan?.startDate)}`}
-          />
-        ))}
-      </RadioGroup>
-    </FormControl>
+        {t('common:misc.no_property_found_for_plan_transfer')}
+      </Typography>
+    )
   );
 }
 
@@ -232,7 +238,9 @@ PaymentPlansForTransferPlan.propTypes = {
   }).isRequired,
   sourcePlanId: PropTypes.string.isRequired,
   destinationPlanId: PropTypes.string.isRequired,
-  handleRadioChange: PropTypes.func.isRequired
+  handleRadioChange: PropTypes.func.isRequired,
+  acceptanceCheckbox: PropTypes.bool.isRequired,
+  handleAcceptanceCheckChange: PropTypes.func.isRequired
 };
 
 const useStyles = makeStyles(() => ({

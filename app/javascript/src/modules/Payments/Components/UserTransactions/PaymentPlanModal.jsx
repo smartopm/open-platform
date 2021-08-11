@@ -330,7 +330,7 @@ export default function PaymentPlanModal({
             {t('errors.no_plot')}
           </Typography>
         )}
-        {landParcel?.accounts?.length && (
+        {landParcel?.accounts?.length > 1 && (
           <CoOwners landParcel={landParcel} userId={userId} handleCoOwners={handleCoOwners} />
         )}
         {inputValue.duration && inputValue.installmentAmount && (
