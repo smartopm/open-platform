@@ -12,7 +12,7 @@ export default function PlanMobileDataList({ keys, data }) {
     <div>
       {data.map((item, index) => (
         <div key={item.id || index}>
-          <Grid container>
+          <Grid container data-testid='title'>
             <Grid item xs={6}>
               {propAccessor(item, keys[3].title)}
             </Grid>
@@ -20,7 +20,7 @@ export default function PlanMobileDataList({ keys, data }) {
               {propAccessor(item, keys[5].title)}
             </Grid>
           </Grid>
-          <Grid container style={{ marginTop: '23px' }}>
+          <Grid container style={{ marginTop: '23px' }} data-testid='content'>
             <Grid item xs={5} className={classes.title}>
               <Typography style={{fontWeight: 500, fontSize: '12px'}}>Payment Plan</Typography>
               {propAccessor(item, keys[1].title)}
@@ -49,7 +49,7 @@ export function PaymentMobileDataList({ keys, data, handleClick }) {
   return (
     <div>
       {data.map((item, index) => (
-        <Grid key={item.id || index} className={classes.body} onClick={() => handleClick(item)}>
+        <Grid key={item.id || index} className={classes.body} onClick={() => handleClick(item)} data-testid='title'>
           <Grid container>
             <Grid item xs={4}>
               <Typography style={{fontWeight: 500, fontSize: '12px'}}>Payment Date</Typography>
@@ -63,7 +63,7 @@ export function PaymentMobileDataList({ keys, data, handleClick }) {
               {propAccessor(item, keys[4].title)}
             </Grid>
           </Grid>
-          <Grid container style={{ marginTop: '23px' }}>
+          <Grid container style={{ marginTop: '23px' }} data-testid='content'>
             <Grid item xs={6} className={classes.title}>
               <Typography style={{fontWeight: 500, fontSize: '12px'}}>Payment Type</Typography>
               {propAccessor(item, keys[1].title)}
@@ -84,7 +84,7 @@ export function TransactionMobileDataList({ keys, data, handleClick }) {
   return (
     <div>
       {data.map((item, index) => (
-        <Grid key={item.id || index} className={classes.body} onClick={() => handleClick(item)}>
+        <Grid key={item.id || index} className={classes.body} onClick={() => handleClick(item)} data-testid='title'>
           <Grid container>
             <Grid item xs={6}>
               <Typography style={{fontWeight: 500, fontSize: '12px'}}>Payment Date</Typography>
@@ -94,7 +94,7 @@ export function TransactionMobileDataList({ keys, data, handleClick }) {
               {propAccessor(item, keys[4].title)}
             </Grid>
           </Grid>
-          <Grid container style={{ marginTop: '23px' }}>
+          <Grid container style={{ marginTop: '23px' }} data-testid='content'>
             <Grid item xs={4}>
               <Typography style={{fontWeight: 500, fontSize: '12px'}}>Amount Paid</Typography>
               {propAccessor(item, keys[3].title)}
