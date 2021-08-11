@@ -21,7 +21,6 @@ import { Spinner } from "../../../shared/Loading";
 import { isTimeValid, getWeekDay } from '../../../utils/dateutil';
 import { userState, userType, communityVisitingHours, defaultBusinessReasons } from '../../../utils/constants'
 import { ModalDialog, ReasonInputModal } from "../../../components/Dialog"
-import CaptureTemp from "../../../components/CaptureTemp";
 import { dateToString, dateTimeToString } from "../../../components/DateContainer";
 import { Context } from '../../../containers/Provider/AuthStateProvider';
 import EntryNoteDialog from '../../../shared/dialogs/EntryNoteDialog';
@@ -319,7 +318,7 @@ export default function RequestUpdate({ id }) {
               {t('logbook:observations.skip_scan_next_entry', { action: observationAction })}
             </Button>
             <Button
-              onClick={() => handleSaveObservation('/request')}
+              onClick={() => handleSaveObservation(id ? '/entry_logs' : '/request')}
               variant="outlined"
               className={css(styles.observationButton)}
               color="primary"
@@ -582,8 +581,17 @@ export default function RequestUpdate({ id }) {
 
           <br />
           {previousRoute !== 'enroll' && reqId &&(
-            // TODO: @olivier ==> This needs to be revisited
-            <CaptureTemp refId={reqId} refName={formData.name} refType="Logs::EntryRequest" />
+          <Button
+            variant="contained"
+            onClick={event => handleModal(event, 'grant')}
+            className={css(styles.grantButton)}
+            disabled={isLoading}
+            data-testid="entry_user_grant"
+          >
+            {
+              isLoading ? <Spinner /> : 'Log This Entry'
+            }
+          </Button>
           )}
 
           <br />
