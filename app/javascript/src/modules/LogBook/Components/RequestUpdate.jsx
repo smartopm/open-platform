@@ -93,7 +93,7 @@ export default function RequestUpdate({ id }) {
 
 
   // Data is loaded, so set the initialState, but only once
-  if (!formData.loaded && data) {
+  if (!formData.loaded && data && id) {
     setFormData({ ...data.result, loaded: true });
   }
   function handleInputChange(e) {
@@ -318,7 +318,7 @@ export default function RequestUpdate({ id }) {
               {t('logbook:observations.skip_scan_next_entry', { action: observationAction })}
             </Button>
             <Button
-              onClick={() => handleSaveObservation(id ? '/entry_logs' : '/request')}
+              onClick={() => handleSaveObservation('/request')}
               variant="outlined"
               className={css(styles.observationButton)}
               color="primary"
@@ -580,16 +580,16 @@ export default function RequestUpdate({ id }) {
           }
 
           <br />
-          {previousRoute !== 'enroll' && reqId &&(
+          {previousRoute !== 'enroll' && id &&(
           <Button
             variant="contained"
             onClick={event => handleModal(event, 'grant')}
             className={css(styles.grantButton)}
             disabled={isLoading}
-            data-testid="entry_user_grant"
+            data-testid="entry_user_grant_request"
           >
             {
-              isLoading ? <Spinner /> : 'Log This Entry'
+              isLoading ? <Spinner /> : t('misc.log_entry')
             }
           </Button>
           )}

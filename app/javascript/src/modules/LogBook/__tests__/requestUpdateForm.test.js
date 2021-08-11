@@ -71,6 +71,7 @@ describe("RequestUpdate Component ",() => {
       fireEvent.change(container.queryByTestId('entry_user_vehicle'), { target: { value: 'ABT' } })
       expect(container.queryByTestId('entry_user_vehicle').value).toBe('ABT')
       expect(container.queryByTestId('entry_user_grant').textContent).toContain('logbook:logbook.grant')
+      expect(container.queryByTestId('entry_user_grant_request').textContent).toContain('misc.log_entry')
       expect(container.queryByTestId('entry_user_grant')).not.toBeDisabled()
       expect(container.queryByTestId('entry_user_deny').textContent).toContain('logbook:logbook.deny')
       expect(container.queryByTestId('entry_user_deny')).not.toBeDisabled()
