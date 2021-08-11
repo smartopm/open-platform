@@ -548,8 +548,8 @@ export function renderPlan(
         {planList ? (
           <Grid item xs={9} md={2} style={{ marginTop: '10px' }} data-testid="status">
             <Label
-              title={propAccessor(invoiceStatus, plan.status)}
-              color={propAccessor(InvoiceStatusColor, plan.status)}
+              title={propAccessor(invoiceStatus, plan?.status)}
+              color={propAccessor(InvoiceStatusColor, plan?.status)}
             />
           </Grid>
         ) : (
