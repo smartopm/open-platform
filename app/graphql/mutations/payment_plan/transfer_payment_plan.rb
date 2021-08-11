@@ -35,6 +35,7 @@ module Mutations
 
       private
 
+      # rubocop:disable Metrics/MethodLength
       # rubocop:disable Style/GuardClause
       # Raises GraphQL execution payment plan does not exist.
       #
@@ -46,13 +47,14 @@ module Mutations
           if type.eql?(:destination)
             raise GraphQL::ExecutionError,
                   I18n.t('errors.payment_plan.cannot_transfer_to_cancelled_plan')
+          elsif type.eql?(:source) && !payment_plan.plan_payments.exists?(status: :paid)
+            raise GraphQL::ExecutionError,
+                  I18n.t('errors.payment_plan.transfer_can_not_be_processed')
           end
-          return if type.eql?(:source) && payment_plan.plan_payments.exists?(status: :paid)
-
-          raise GraphQL::ExecutionError, I18n.t('errors.payment_plan.transfer_can_not_be_processed')
         end
       end
       # rubocop:enable Style/GuardClause
+      # rubocop:enable Metrics/MethodLength
     end
   end
 end
