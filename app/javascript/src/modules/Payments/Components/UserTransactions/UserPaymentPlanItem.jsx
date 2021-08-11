@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import { useMutation, useLazyQuery } from 'react-apollo';
-import { makeStyles, useTheme } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import { useHistory } from 'react-router-dom';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
@@ -26,8 +26,9 @@ import {
   formatMoney,
   InvoiceStatusColor,
   propAccessor,
-  capitalize
-, titleize } from '../../../../utils/helpers';
+  capitalize,
+  titleize
+} from '../../../../utils/helpers';
 import Text from '../../../../shared/Text';
 import Label from '../../../../shared/label/Label';
 import { invoiceStatus } from '../../../../utils/constants';
@@ -48,7 +49,6 @@ import PlanDetail from './PlanDetail';
 import TransactionDetails from './TransactionDetails';
 import TransferPlanModal from './TransferPlanModal';
 import PlanMobileDataList, { PaymentMobileDataList } from './PaymentMobileDataList';
-
 
 export default function UserPaymentPlanItem({
   plans,
@@ -83,8 +83,7 @@ export default function UserPaymentPlanItem({
   const [updatePaymentPlan] = useMutation(PaymentPlanUpdateMutation);
   const [cancelPaymentPlan] = useMutation(PaymentPlanCancelMutation);
   const validDays = [...Array(28).keys()];
-  const theme = useTheme();
-  const matches = useMediaQuery(theme.breakpoints.up('sm'));
+  const matches = useMediaQuery('(max-width:600px)');
   const anchorElOpen = Boolean(anchor);
   const planAnchorElOpen = Boolean(planAnchor);
   const [loadReceiptDetails, { loading, error, data }] = useLazyQuery(ReceiptPayment, {
@@ -417,42 +416,43 @@ export default function UserPaymentPlanItem({
             className={classes.accordion}
           >
             {matches ? (
+              <PlanMobileDataList
+                keys={planHeader}
+                data={[
+                  renderPlan(
+                    plan,
+                    currencyData,
+                    currentUser.userType,
+                    {
+                      handleMenu: event => handleOpenDateMenu(event, plan.id),
+                      loading: details.isLoading,
+                      planList: true
+                    },
+                    planMenuData,
+                    t
+                  )
+                ]}
+                clickable={false}
+              />
+            ) : (
               <DataList
                 keys={planHeader}
                 data={[
-                renderPlan(
-                  plan,
-                  currencyData,
-                  currentUser.userType,
-                  {
-                    handleMenu: event => handleOpenDateMenu(event, plan.id),
-                    loading: details.isLoading
-                  },
-                  planMenuData,
-                  t
-                )
+                  renderPlan(
+                    plan,
+                    currencyData,
+                    currentUser.userType,
+                    {
+                      handleMenu: event => handleOpenDateMenu(event, plan.id),
+                      loading: details.isLoading
+                    },
+                    planMenuData,
+                    t
+                  )
                 ]}
                 hasHeader={false}
                 clickable={false}
                 color
-              />
-            ) : (
-              <PlanMobileDataList
-                keys={planHeader}
-                data={[
-                renderPlan(
-                  plan,
-                  currencyData,
-                  currentUser.userType,
-                  {
-                    handleMenu: event => handleOpenDateMenu(event, plan.id),
-                    loading: details.isLoading,
-                    planList: true
-                  },
-                  planMenuData,
-                )
-                ]}
-                clickable={false}
               />
             )}
           </AccordionSummary>
@@ -461,11 +461,14 @@ export default function UserPaymentPlanItem({
               Boolean(plan.planPayments?.length) &&
               headersForNonAdminUsers(plan?.planPayments) && (
                 <div>
-                  <Typography color="primary" className={matches ? classes.payment : classes.paymentMobile}>
+                  <Typography
+                    color="primary"
+                    className={!matches ? classes.payment : classes.paymentMobile}
+                  >
                     {t('common:menu.payment_plural')}
                   </Typography>
                   <div className={classes.paymentList}>
-                    {matches && <ListHeader headers={paymentHeader} color />}
+                    {!matches && <ListHeader headers={paymentHeader} color />}
                   </div>
                 </div>
               )}
@@ -475,11 +478,13 @@ export default function UserPaymentPlanItem({
                 pay =>
                   (currentUser.userType === 'admin' || pay?.status !== 'cancelled') && (
                     <div key={pay.id}>
-                      {matches ? (
+                      {!matches ? (
                         <div className={classes.paymentList}>
                           <DataList
                             keys={paymentHeader}
-                            data={[renderPayments(pay, currencyData, currentUser.userType, menuData)]}
+                            data={[
+                              renderPayments(pay, currencyData, currentUser.userType, menuData)
+                            ]}
                             hasHeader={false}
                             clickable
                             handleClick={() => transactionDetailOpen(pay)}
@@ -504,19 +509,27 @@ export default function UserPaymentPlanItem({
   );
 }
 
-export function renderPlan(plan, currencyData, userType, { handleMenu, loading, planList }, menuData, t) {
+export function renderPlan(
+  plan,
+  currencyData,
+  userType,
+  { handleMenu, loading, planList },
+  menuData,
+  t
+) {
   /* eslint-disable no-unused-expressions */
   const planMenuList = [];
   menuData?.menuList.forEach(obj => {
-    if(
+    if (
       plan.status === 'cancelled' &&
       (obj.content === t('common:menu.cancel_plan') ||
-      (obj.content === t('common:menu.transfer_payment_plan') && !plan.paidPaymentsExists)))
-        return;
+        (obj.content === t('common:menu.transfer_payment_plan') && !plan.paidPaymentsExists))
+    )
+      return;
 
-    planMenuList.push({ ...obj});
+    planMenuList.push({ ...obj });
   });
-  
+
   return {
     'Plot Number': (
       <Grid item xs={12} md={2} data-testid="plot-number">
@@ -533,13 +546,15 @@ export function renderPlan(plan, currencyData, userType, { handleMenu, loading, 
         {plan.planType}
         <br />
         {planList ? (
-          <Grid item xs={9} md={2} style={{marginTop: '10px'}} data-testid="status">
+          <Grid item xs={9} md={2} style={{ marginTop: '10px' }} data-testid="status">
             <Label
               title={propAccessor(invoiceStatus, plan.status)}
               color={propAccessor(InvoiceStatusColor, plan.status)}
             />
           </Grid>
-        ) : <Text color="primary" content={`${plan.status}`} />}
+        ) : (
+          <Text color="primary" content={`${plan.status}`} />
+        )}
       </Grid>
     ),
     'Start Date': (
@@ -549,12 +564,15 @@ export function renderPlan(plan, currencyData, userType, { handleMenu, loading, 
     ),
     'Balance/Monthly Amount': (
       <Grid item xs={12} md={2} data-testid="balance">
-        <Text style={planList ? {fontSize: '18px', fontWeight: '500', color: '#141414'} : null} content={formatMoney(currencyData, plan.pendingBalance)} />
-        {planList && <Text style={{marginLeft: '8px'}} content='balance' />}
+        <Text
+          style={planList ? { fontSize: '18px', fontWeight: '500', color: '#141414' } : null}
+          content={formatMoney(currencyData, plan.pendingBalance)}
+        />
+        {planList && <Text style={{ marginLeft: '8px' }} content="balance" />}
         <br />
         <Text
           color="primary"
-          style={planList ? {fontSize: '13px', fontWeight: '300', color: '#595959'} : null}
+          style={planList ? { fontSize: '13px', fontWeight: '300', color: '#595959' } : null}
           content={`${capitalize(plan?.frequency || 'Monthly')} Amount ${formatMoney(
             currencyData,
             plan.installmentAmount
