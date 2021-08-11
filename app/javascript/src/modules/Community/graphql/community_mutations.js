@@ -20,6 +20,8 @@ export const CommunityUpdateMutation = gql`
     $securityManager: String
     $subAdministratorId: String
     $bankingDetails: JSON
+    $smsPhoneNumbers: [String]
+    $emergencyCallNumber: String
   ) {
     communityUpdate(
       name: $name
@@ -39,6 +41,8 @@ export const CommunityUpdateMutation = gql`
       securityManager: $securityManager
       subAdministratorId: $subAdministratorId
       bankingDetails: $bankingDetails
+      smsPhoneNumbers: $smsPhoneNumbers
+      emergencyCallNumber: $emergencyCallNumber
     ) {
       community {
         id

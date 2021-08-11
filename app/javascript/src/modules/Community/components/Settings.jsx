@@ -88,10 +88,19 @@ export default function CommunitySettings({ data, token, refetch }) {
   const [locale, setLocale] = useState('en-ZM');
   const [language, setLanguage] = useState('en-US');
   const [showCropper, setShowCropper] = useState(false);
+  const [smsPhoneNumbers, setSMSPhoneNumbers] = useState(data?.smsPhoneNumbers || [])
+  const [emergencyCallNumber, setEmergencyCallNumber] = useState(data?.emergencyCallNumber || '')
   const { t } = useTranslation(['community', 'common'])
   const { onChange, signedBlobId } = useFileUpload({
     client: useApolloClient()
   });
+
+  function updateSMSPhoneNumbers() {
+    if (typeof smsPhoneNumbers === 'string' || smsPhoneNumbers instanceof String){
+      const currentSMSPhoneNumbers =  smsPhoneNumbers.split(/[ ,]+/)
+      setSMSPhoneNumbers([...new Set(currentSMSPhoneNumbers)]);
+    }
+  };
 
   const { data: adminUsersData } = useQuery(AdminUsersQuery, {
     fetchPolicy: 'cache-and-network',
@@ -263,7 +272,10 @@ export default function CommunitySettings({ data, token, refetch }) {
       });
       return
     }
+    updateSMSPhoneNumbers()
     setCallMutation(true);
+
+    
     communityUpdate({
       variables: {
         supportNumber: numberOptions,
@@ -282,6 +294,8 @@ export default function CommunitySettings({ data, token, refetch }) {
         subAdministratorId,
         themeColors,
         bankingDetails,
+        smsPhoneNumbers,
+        emergencyCallNumber
       },
     })
       .then(() => {
@@ -678,8 +692,33 @@ export default function CommunitySettings({ data, token, refetch }) {
           inputProps={{ "data-testid": "taxIdNo"}}
           style={{ width: '100%'}}
         />
+
       </div>
 
+      <br />
+
+      <Typography variant="h6">{t('community.sms_phone_numbers_header')}</Typography>
+
+      <TextField
+        label={t('community.sms_phone_numbers')}
+        value={smsPhoneNumbers}
+        onChange={event => setSMSPhoneNumbers(event.target.value)}
+        name="smsPhoneNumber"
+        margin="normal"
+        inputProps={{ "data-testid": "smsPhoneNumber" }}
+        style={{ width: '100%'}}
+      />
+      <br />
+
+      <TextField
+        label={t('community.emergency_call_number')}
+        value={emergencyCallNumber}
+        onChange={event => setEmergencyCallNumber(event.target.value )}
+        name="emergencyCallNumber"
+        margin="normal"
+        inputProps={{ "data-testid": "emergencyCallNumber"}}
+        style={{ width: '100%'}}
+      />
       <div style={{ marginTop: '40px' }}>
         <Typography variant="h6">{t('community.language_settings')}</Typography>
         <TextField
@@ -701,7 +740,7 @@ export default function CommunitySettings({ data, token, refetch }) {
           }
         </TextField>
       </div>
-
+      
       <div className={classes.button}>
         <Button
           disableElevation
@@ -754,7 +793,10 @@ CommunitySettings.propTypes = {
       city: PropTypes.string,
       country: PropTypes.string,
       taxIdNo: PropTypes.string,
-    }),
+    }
+    ),
+    emergencyCallNumber: PropTypes.string,
+    smsPhoneNumbers: PropTypes.arrayOf(PropTypes.string),
   }).isRequired,
   token: PropTypes.string.isRequired,
   refetch: PropTypes.func.isRequired,
