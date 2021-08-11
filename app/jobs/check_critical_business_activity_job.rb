@@ -60,7 +60,7 @@ class CheckCriticalBusinessActivityJob < ApplicationJob
 
     return if activity_window.sunday?
 
-    nil #TODO: Olvier, Saurabh how to check timesheets log on community level
+    nil # TODO: Olvier, Saurabh how to check timesheets log on community level
   end
 
   def current_time_in_time_zone(timezone)
