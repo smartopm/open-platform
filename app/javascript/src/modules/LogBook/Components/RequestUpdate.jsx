@@ -85,11 +85,11 @@ export default function RequestUpdate({ id }) {
   }, [id])
 
   useEffect(() => {
-    if (formData.reason === 'other') {
+    if (formData.reason === 'other' && !id) {
       setReasonModal(!isReasonModalOpen)
     }
    /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [formData.reason])
+  }, [formData.reason, id])
 
 
   // Data is loaded, so set the initialState, but only once
