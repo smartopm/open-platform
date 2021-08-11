@@ -30,7 +30,7 @@ class CheckCriticalBusinessActivityJob < ApplicationJob
     return unless community
 
     now = current_time_in_time_zone(community.timezone)
-    activity_window = now.ago(3.days)
+    activity_window = now..now.ago(3.days)
     community.plan_payments
              .not_cancelled
              .eager_load(:user)
@@ -42,7 +42,7 @@ class CheckCriticalBusinessActivityJob < ApplicationJob
     return unless community
 
     now = current_time_in_time_zone(community.timezone)
-    activity_window = now.ago(1.day)
+    activity_window = now..now.ago(1.day)
 
     community.event_logs
              .eager_load(:acting_user)
@@ -56,11 +56,11 @@ class CheckCriticalBusinessActivityJob < ApplicationJob
     return unless community
 
     now = current_time_in_time_zone(community.timezone)
-    activity_window = now.ago(1.day)
+    activity_window = now..now.ago(1.day)
 
     return if activity_window.sunday?
 
-    nil # TODO: Olvier, Saurabh how to check timesheets log on community level
+    TimeSheet.where(created_at: activity_window).count
   end
 
   def current_time_in_time_zone(timezone)
