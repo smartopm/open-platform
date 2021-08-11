@@ -16,6 +16,7 @@ describe('Render Payment Plan Item', () => {
     installmentAmount: '200',
     paymentDay: 1,
     frequency: 'monthly',
+    paidPaymentsExists: true,
     pendingBalance: 200,
     id: 'f280159d-ac71-4c22-997a-07fd07344c94',
     planPayments: [{

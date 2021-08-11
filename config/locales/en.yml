@@ -291,10 +291,11 @@ en:
     payment_plan:
       have_zero_pending_balance: Pending balance is 0 for payment plan of selected property
       amount_greater_than_pending_balance: Amount cannot be greater than the plan pending balance
+      cannot_transfer_to_cancelled_plan: Transfer of plan cannot be made to a cancelled payment plan. Please try transferring to other plans
       does_not_exist_for_property: Payment Plan does not exist for selected property
       not_found: Payment Plan not found
       plan_already_exist: Payment Plan for this landparcel already exist
-      transfer_can_not_be_processed: The payment plan has already been cancelled, the transfer cannot be processed.
+      transfer_can_not_be_processed: The payment plan and all its payments have already been cancelled, the transfer cannot be processed
     phone_number:
       found_blank: Phone number cannot be blank
     plan_payment:
