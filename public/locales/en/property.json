@@ -38,11 +38,12 @@
   },
   "map_markers": {
     "available": "Avaiable",
-    "latitude_x": "Longitude X",
-    "longitude_y": "Latitude Y",
+    "latitude_x": "Longitude X:",
+    "longitude_y": "Latitude Y:",
     "property_no": "Property No:",
     "property_type": "Property Type:",
-    "sold": "Sold"
+    "sold": "Sold",
+    "house_status": "House Status:"
   },
   "messages":{
     "image_uploaded": "Image Uploaded successfully",
@@ -83,6 +84,9 @@
     "sold": "Sold",
     "total_payments": "Total payments made:",
     "unknown": "Unknown",
+    "planned": "Planned",
+    "built": "Built",
+    "in_construction": "In Construction",
     "view_plan": "View Plan",
     "view_results_on_map": "View results on map",
     "yes": "Yes"

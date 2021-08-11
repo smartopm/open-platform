@@ -76,7 +76,6 @@ export default function LandParcelModal({
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open]);
 
-
   const [searchUser, { data }] = useLazyQuery(UsersLiteQuery, {
     variables: { query: debouncedValue, limit: 10 },
     errorPolicy: 'all',
@@ -464,7 +463,7 @@ export default function LandParcelModal({
             )}
             <br />
             <br />
-            {!landParcel?.geom && !(modalType === 'new') && (
+            {!landParcel?.geom && !(['new', 'new_house'].includes(modalType)) &&  !(landParcel?.objectType === 'house') && (
             <IconButton
               onClick={handleEditCoordinatesOpen}
               aria-label="edit-coordinate"

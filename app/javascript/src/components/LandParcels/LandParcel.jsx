@@ -7,7 +7,7 @@ import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { useTheme } from '@material-ui/core/styles';
 import RoomIcon from '@material-ui/icons/Room';
 import { useTranslation } from 'react-i18next';
-import { ParcelsQuery, LandParcel, LandParcelGeoData } from '../../graphql/queries';
+import { ParcelsQuery, LandParcel, LandParcelGeoData, HouseQuery } from '../../graphql/queries';
 import Loading, { Spinner } from '../../shared/Loading';
 import ErrorPage from '../Error';
 import ParcelItem from './LandParcelItem';
@@ -19,7 +19,7 @@ import { MergeProperty } from '../../graphql/mutations/land_parcel';
 import MessageAlert from '../MessageAlert';
 import { formatError, handleQueryOnChange, useParamsQuery } from '../../utils/helpers';
 import SearchInput from '../../shared/search/SearchInput';
-import Toggler from '../Campaign/ToggleButton'
+import { MultipleToggler } from '../Campaign/ToggleButton'
 import LandParcelMap from './LandParcelMap'
 import useDebounce from '../../utils/useDebounce';
 import QueryBuilder from '../QueryBuilder';
@@ -66,6 +66,10 @@ export default function LandParcelList() {
 
   const { loading, error, data, refetch } = useQuery(ParcelsQuery, {
     variables: { query: debouncedValue || searchQuery, limit, offset }
+  });
+
+  const { loading: loadingHouseData, data: houseData, refetch: refetchHouseData } = useQuery(HouseQuery, {
+    variables: { limit, offset }
   });
 
   const { data: geoData } = useQuery(LandParcelGeoData, {
@@ -162,6 +166,7 @@ export default function LandParcelList() {
           history.push(`user/${location?.state?.userId}?tab=Plots`);
         }
         refetch();
+        refetchHouseData();
       })
       .catch(err => {
         const triggerMergeRegex = /parcel number has already been taken/gi
@@ -226,9 +231,10 @@ export default function LandParcelList() {
           />
         </Grid>
         <Grid item xs={12} sm={2}>
-          {type === 'plots' ? (
+          {type === 'plots' && (
             <CreateLandParcel refetch={refetch} selectedLandParcel={selectedLandParcel} newHouse={subaction === 'new_house'} />
-          ) : (
+          )}
+          {type === 'map' && (
             <CreatePointOfInterest refetch={refetch} />
           )}
         </Grid>
@@ -274,17 +280,10 @@ export default function LandParcelList() {
       }
 
       <Grid item xs={12} sm={12} style={{margin: '0 0 10px 20px'}}>
-        <Toggler
-          type={type}
-          handleType={handleType}
-          data={{
-            type: 'plots',
-            antiType: 'map'
-          }}
-        />
+        <MultipleToggler type={type} handleType={handleType} options={['plots', 'houses', 'map']} />
       </Grid>
 
-      {type === 'plots' ? 
+      {type === 'plots' && 
         (
           <>
             <Grid container spacing={0}>
@@ -328,20 +327,49 @@ export default function LandParcelList() {
               </nav>
             </div>
           </>
-        ):(
-          <div style={{margin: '0 20px'}}>
-            {viewResultsOnMap ? (
-              <LandParcelMap
-                handlePlotClick={onParcelClick}
-                geoData={data?.fetchLandParcel}
-              />
+        )}
+      {type === 'map' && (
+      <div style={{margin: '0 20px'}}>
+        {viewResultsOnMap ? (
+          <LandParcelMap
+            handlePlotClick={onParcelClick}
+            geoData={data?.fetchLandParcel}
+          />
             ) : (
               <LandParcelMap
                 handlePlotClick={onParcelClick}
                 geoData={geoData?.landParcelGeoData}
               />
             )}
-          </div>
+      </div>
+        )}
+      {type === 'houses' && (
+      <>
+        { loadingHouseData && <Spinner /> }
+        <div style={{margin: '0 20px'}}>
+          {!loadingHouseData && houseData?.fetchHouse.length > 0 && matches &&
+          <ListHeader headers={parcelHeaders} />}
+          {!loadingHouseData && houseData?.fetchHouse.map(house => (
+            <ParcelItem key={house.id} parcel={house} onParcelClick={onParcelClick} onAddHouseClick={onAddHouseClick} />
+              ))}
+        </div>
+        <div className="d-flex justify-content-center">
+          <nav aria-label="center Page navigation">
+            <ul className="pagination">
+              <li className={`page-item ${offset < limit && 'disabled'}`}>
+                <a className="page-link" onClick={handlePreviousPage} href="#">
+                  {t('property:misc.previous')}
+                </a>
+              </li>
+              <li className={`page-item ${houseData?.fetchHouse.length < limit && 'disabled'}`}>
+                <a className="page-link" onClick={handleNextPage} href="#">
+                  {t('property:misc.next')}
+                </a>
+              </li>
+            </ul>
+          </nav>
+        </div>
+      </>
         )}
     </>
   );

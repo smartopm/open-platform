@@ -23,6 +23,24 @@ export default function Toggler({ type, handleType, data }) {
   )
 }
 
+export function MultipleToggler({ type, handleType, options}) {
+  return (
+    <ToggleButtonGroup
+      value={type}
+      exclusive
+      onChange={handleType}
+      aria-label="toggle different modes"
+      style={{ marginBottom: '10px' }}
+    >
+      {Array.isArray(options) && options.length > 0 && options.map(option => (
+        <ToggleButton key={option} value={option} aria-label={option}>
+          {titleize(option)}
+        </ToggleButton>
+    ))}
+    </ToggleButtonGroup>
+  )
+}
+
 Toggler.propTypes = {
   /**
    * This is managed by the state of the parent component that tells toggler the current view
@@ -39,5 +57,21 @@ Toggler.propTypes = {
     type: PropTypes.string.isRequired,
     antiType: PropTypes.string.isRequired
   }).isRequired
+}
+
+
+MultipleToggler.propTypes = {
+  /**
+   * This is managed by the state of the parent component that tells toggler the current view
+   */
+  type: PropTypes.string.isRequired,
+  /**
+   * Function that switches between the toggler(it switches between the type and anti-type)
+   */
+  handleType: PropTypes.func.isRequired,
+  /**
+   * Static data that needed in case a component uses different wording
+   */
+  options: PropTypes.arrayOf(PropTypes.string.isRequired).isRequired
 }
 
