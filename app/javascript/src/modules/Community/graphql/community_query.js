@@ -26,6 +26,8 @@ export const CurrentCommunityQuery = gql`
         name
       }
       bankingDetails
+      smsPhoneNumbers
+      emergencyCallNumber
     }
   }
 `;

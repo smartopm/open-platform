@@ -9,8 +9,7 @@
 # migrations use external dependencies or application code.
 #
 # It's strongly recommended that you check this file into your version control system.
-
-ActiveRecord::Schema.define(version: 2021_08_03_211938) do
+ActiveRecord::Schema.define(version: 2021_08_10_120116) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -196,6 +195,8 @@ ActiveRecord::Schema.define(version: 2021_08_03_211938) do
     t.json "community_required_fields"
     t.json "menu_items"
     t.uuid "sub_administrator_id"
+    t.string "sms_phone_numbers", default: [], array: true
+    t.string "emergency_call_number"
     t.index ["slug"], name: "index_communities_on_slug", unique: true
   end
 
@@ -524,7 +525,7 @@ ActiveRecord::Schema.define(version: 2021_08_03_211938) do
   end
 
   create_table "payments", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.uuid "user_id", null: false
+    t.uuid "user_id"
     t.uuid "invoice_id"
     t.string "payment_type"
     t.decimal "amount", precision: 11, scale: 2
@@ -559,7 +560,7 @@ ActiveRecord::Schema.define(version: 2021_08_03_211938) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.string "manual_receipt_number"
-    t.string "automated_receipt_number"
+    t.string "automated_receipt_number", default: -> { "('SI'::text || nextval('automated_receipt_numbers_seq'::regclass))" }
     t.string "note"
     t.index ["community_id"], name: "index_plan_payments_on_community_id"
     t.index ["payment_plan_id"], name: "index_plan_payments_on_payment_plan_id"

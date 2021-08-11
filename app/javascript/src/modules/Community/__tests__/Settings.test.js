@@ -54,6 +54,8 @@ describe('Community settings page ', () => {
         country: '',
         taxIdNo: '',
       },
+      smsPhoneNumbers: ["+254724821901", "+254723456789"],
+      emergencyCallNumber: "+94848584844"
     };
 
     const communityMutationMock = {
@@ -99,6 +101,8 @@ describe('Community settings page ', () => {
             country: '',
             taxIdNo: '',
           },
+          smsPhoneNumbers: ["+254724821901", "+254723456789"],
+          emergencyCallNumber: "+94848584844"
         }
       },
       result: {
@@ -133,6 +137,9 @@ describe('Community settings page ', () => {
     expect(container.queryByLabelText('common:form_fields.phone_number')).toBeInTheDocument();
     expect(container.queryByLabelText('WhatsApp')).toBeInTheDocument();
     expect(container.queryByText('community.set_sub_administrator')).toBeInTheDocument();
+    expect(container.queryByText('community.sms_phone_numbers')).not.toBeDisabled();
+    expect(container.queryByText('community.emergency_call_number')).not.toBeDisabled();
+    expect(container.queryByText('community.sms_phone_numbers_header')).toBeInTheDocument();
 
     expect(container.queryAllByLabelText('remove')).toHaveLength(6);
 
@@ -155,6 +162,10 @@ describe('Community settings page ', () => {
     expect(container.queryByTestId('city')).toBeInTheDocument();
     expect(container.queryByTestId('country')).toBeInTheDocument();
     expect(container.queryByTestId('taxIdNo')).toBeInTheDocument();
+    expect(container.queryByTestId('smsPhoneNumbers')).toBeInTheDocument();
+    expect(container.queryByTestId('currentSMSPhoneNumbers')).toBeInTheDocument();
+    expect(container.queryByTestId('emergencyCallNumber')).toBeInTheDocument();
+
 
     fireEvent.select(container.queryByTestId('locale'), { target: { value: 'en-US' } });
     expect(container.queryByTestId('locale').value).toBe('en-US');
@@ -225,6 +236,9 @@ describe('Community settings page ', () => {
     fireEvent.click(container.queryByTestId('update_community'));
 
     expect(container.queryByTestId('update_community')).toBeDisabled();
+
+    fireEvent.select(container.queryByTestId('emergencyCallNumber'), { target: { value: '+94848584844' } });
+    expect(container.queryByTestId('emergencyCallNumber').value).toBe('+94848584844');
 
     await waitFor(() => {
       expect(refetchMock).toBeCalled();

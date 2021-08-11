@@ -21,10 +21,13 @@ module Mutations
       argument :sub_administrator_id, String, required: false
       argument :theme_colors, GraphQL::Types::JSON, required: false
       argument :banking_details, GraphQL::Types::JSON, required: false
+      argument :sms_phone_numbers, [String, null: true], required: false
+      argument :emergency_call_number, String, required: false
 
       field :community, Types::CommunityType, null: true
 
       def resolve(vals)
+        Rails.logger.info "Am in mutation file, #{vals}!"
         community = context[:site_community].update(vals.except(:image_blob_id))
 
         context[:site_community].attach_image(vals) if vals[:image_blob_id].present?

@@ -28,6 +28,11 @@
       "address": "Address",
       "city": "City",
       "country": "Country",
-      "tax_id_no": "Tax Payer Identification Number"
+      "tax_id_no": "Tax Payer Identification Number",
+      "sms_phone_numbers": "New SMS Phone Numbers",
+      "emergency_call_number": "Emergency Call Number",
+      "sms_phone_numbers_header": "SMS Phone Number"
+
+      
     }
 }
