@@ -98,7 +98,7 @@ export default function VisitEntryLogs({
               <span className={css(styles.subTitle)}>
                 {' '}
                 {/* eslint-disable-next-line no-useless-concat */}
-                {event.subject === 'user_temp' ? `${t('logbook.temperature_recorded')} |` : ''}
+                {(event.subject === 'user_temp' && !event.entryRequest?.grantedState) ? `${t('logbook.temperature_recorded')} |` : ''}
               </span>
 
               <span className={css(styles.subTitle)}>
