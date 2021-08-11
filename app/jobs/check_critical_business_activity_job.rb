@@ -29,7 +29,7 @@ class CheckCriticalBusinessActivityJob < ApplicationJob
   def payment_activity_in_24_hours(community)
     return unless community
 
-    now = current_time_in_time_zone('Africa/Lusaka')
+    now = current_time_in_time_zone(community.timezone)
     activity_window = now.ago(3.days)
     community.plan_payments
              .not_cancelled
@@ -55,7 +55,7 @@ class CheckCriticalBusinessActivityJob < ApplicationJob
   def time_entry_activity_in_24_hours(community)
     return unless community
 
-    now = current_time_in_time_zone('Africa/Lusaka')
+    now = current_time_in_time_zone(community.timezone)
     activity_window = now.ago(1.day)
 
     return if activity_window.sunday?
