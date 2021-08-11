@@ -86,11 +86,11 @@ export default function UserTransactionsList({
       .then(() => {
         setAnchorEl(null);
         setMessageAlert('Transaction reverted');
-        balanceRefetch();
-        refetch();
         setIsSuccessAlert(true);
         setRevertModalOpen(false);
         setRevertTransactionLoading(false);
+        refetch();
+        balanceRefetch();
       })
       .catch(err => {
         setMessageAlert(formatError(err.message));
