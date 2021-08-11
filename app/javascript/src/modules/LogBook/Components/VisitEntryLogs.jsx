@@ -64,7 +64,7 @@ export default function VisitEntryLogs({
             <div className="col-xs-4">
               <span className={css(styles.access)} data-testid="access_status">
                 <strong>
-                  {accessStatus}
+                  {event.subject !== 'user_temp' && accessStatus}
                   {' '}
                 </strong>
               </span>
@@ -98,7 +98,7 @@ export default function VisitEntryLogs({
               <span className={css(styles.subTitle)}>
                 {' '}
                 {/* eslint-disable-next-line no-useless-concat */}
-                {(event.subject === 'user_temp' && !event.entryRequest?.grantedState) ? `${t('logbook.temperature_recorded')} |` : ''}
+                {event.subject === 'user_temp' ? `${t('logbook.temperature_recorded')} |` : ''}
               </span>
 
               <span className={css(styles.subTitle)}>
