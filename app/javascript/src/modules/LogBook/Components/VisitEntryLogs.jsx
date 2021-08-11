@@ -64,7 +64,7 @@ export default function VisitEntryLogs({
             <div className="col-xs-4">
               <span className={css(styles.access)} data-testid="access_status">
                 <strong>
-                  {accessStatus}
+                  {event.subject !== 'user_temp' && accessStatus}
                   {' '}
                 </strong>
               </span>

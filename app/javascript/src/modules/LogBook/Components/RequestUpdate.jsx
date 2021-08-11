@@ -21,7 +21,6 @@ import { Spinner } from "../../../shared/Loading";
 import { isTimeValid, getWeekDay } from '../../../utils/dateutil';
 import { userState, userType, communityVisitingHours, defaultBusinessReasons } from '../../../utils/constants'
 import { ModalDialog, ReasonInputModal } from "../../../components/Dialog"
-import CaptureTemp from "../../../components/CaptureTemp";
 import { dateToString, dateTimeToString } from "../../../components/DateContainer";
 import { Context } from '../../../containers/Provider/AuthStateProvider';
 import EntryNoteDialog from '../../../shared/dialogs/EntryNoteDialog';
@@ -86,15 +85,15 @@ export default function RequestUpdate({ id }) {
   }, [id])
 
   useEffect(() => {
-    if (formData.reason === 'other') {
+    if (formData.reason === 'other' && !id) {
       setReasonModal(!isReasonModalOpen)
     }
    /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [formData.reason])
+  }, [formData.reason, id])
 
 
   // Data is loaded, so set the initialState, but only once
-  if (!formData.loaded && data) {
+  if (!formData.loaded && data && id) {
     setFormData({ ...data.result, loaded: true });
   }
   function handleInputChange(e) {
@@ -581,9 +580,18 @@ export default function RequestUpdate({ id }) {
           }
 
           <br />
-          {previousRoute !== 'enroll' && reqId &&(
-            // TODO: @olivier ==> This needs to be revisited
-            <CaptureTemp refId={reqId} refName={formData.name} refType="Logs::EntryRequest" />
+          {previousRoute !== 'enroll' && id &&(
+          <Button
+            variant="contained"
+            onClick={event => handleModal(event, 'grant')}
+            className={css(styles.grantButton)}
+            disabled={isLoading}
+            data-testid="entry_user_grant_request"
+          >
+            {
+              isLoading ? <Spinner /> : t('misc.log_new_entry')
+            }
+          </Button>
           )}
 
           <br />
