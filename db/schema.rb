@@ -525,7 +525,7 @@ ActiveRecord::Schema.define(version: 2021_08_10_120116) do
   end
 
   create_table "payments", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.uuid "user_id"
+    t.uuid "user_id", null: false
     t.uuid "invoice_id"
     t.string "payment_type"
     t.decimal "amount", precision: 11, scale: 2
@@ -560,7 +560,7 @@ ActiveRecord::Schema.define(version: 2021_08_10_120116) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.string "manual_receipt_number"
-    t.string "automated_receipt_number", default: -> { "('SI'::text || nextval('automated_receipt_numbers_seq'::regclass))" }
+    t.string "automated_receipt_number"
     t.string "note"
     t.index ["community_id"], name: "index_plan_payments_on_community_id"
     t.index ["payment_plan_id"], name: "index_plan_payments_on_payment_plan_id"

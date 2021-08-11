@@ -88,18 +88,18 @@ export default function CommunitySettings({ data, token, refetch }) {
   const [locale, setLocale] = useState('en-ZM');
   const [language, setLanguage] = useState('en-US');
   const [showCropper, setShowCropper] = useState(false);
-  const [smsPhoneNumbers, setSMSPhoneNumber] = useState(data?.smsPhoneNumbers || [])
+  const [smsPhoneNumbers, setSMSPhoneNumbers] = useState(data?.smsPhoneNumbers || [])
   const [emergencyCallNumber, setEmergencyCallNumber] = useState(data?.emergencyCallNumber || '')
-  const [smsPhoneNumberString, setSMSPhoneNumberString] = useState('')
   const { t } = useTranslation(['community', 'common'])
   const { onChange, signedBlobId } = useFileUpload({
     client: useApolloClient()
   });
 
   function updateSMSPhoneNumbers() {
-    const currentSMSPhoneNumbers =  smsPhoneNumberString.split(/[ ,]+/)
-    const updatedSMSPhoneNumbers = [ ...smsPhoneNumbers, ...currentSMSPhoneNumbers];
-    setSMSPhoneNumber([...new Set(updatedSMSPhoneNumbers)]);
+    if (typeof smsPhoneNumbers === 'string' || smsPhoneNumbers instanceof String){
+      const currentSMSPhoneNumbers =  smsPhoneNumbers.split(/[ ,]+/)
+      setSMSPhoneNumbers([...new Set(currentSMSPhoneNumbers)]);
+    }
   };
 
   const { data: adminUsersData } = useQuery(AdminUsersQuery, {
@@ -693,16 +693,6 @@ export default function CommunitySettings({ data, token, refetch }) {
           style={{ width: '100%'}}
         />
 
-        <TextField
-          label={t('community.sms_phone_numbers')}
-          value={smsPhoneNumberString}
-          onChange={event => setSMSPhoneNumberString(event.target.value)}
-          name="smsPhoneNumbers"
-          margin="normal"
-          inputProps={{ "data-testid": "smsPhoneNumbers" }}
-          style={{ width: '100%'}}
-        />
-
       </div>
 
       <br />
@@ -710,14 +700,14 @@ export default function CommunitySettings({ data, token, refetch }) {
       <Typography variant="h6">{t('community.sms_phone_numbers_header')}</Typography>
 
       <TextField
-        value={smsPhoneNumbers.join(', ')}
-        name="currentSMSPhoneNumbers"
-        disabled
+        label={t('community.sms_phone_numbers')}
+        value={smsPhoneNumbers}
+        onChange={event => setSMSPhoneNumbers(event.target.value)}
+        name="smsPhoneNumber"
         margin="normal"
-        inputProps={{ "data-testid": "currentSMSPhoneNumbers"}}
+        inputProps={{ "data-testid": "smsPhoneNumber" }}
         style={{ width: '100%'}}
       />
-
       <br />
 
       <TextField
@@ -807,7 +797,6 @@ CommunitySettings.propTypes = {
     ),
     emergencyCallNumber: PropTypes.string,
     smsPhoneNumbers: PropTypes.arrayOf(PropTypes.string),
-    smsPhoneNumberString: PropTypes.string
   }).isRequired,
   token: PropTypes.string.isRequired,
   refetch: PropTypes.func.isRequired,

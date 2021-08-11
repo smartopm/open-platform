@@ -162,8 +162,7 @@ describe('Community settings page ', () => {
     expect(container.queryByTestId('city')).toBeInTheDocument();
     expect(container.queryByTestId('country')).toBeInTheDocument();
     expect(container.queryByTestId('taxIdNo')).toBeInTheDocument();
-    expect(container.queryByTestId('smsPhoneNumbers')).toBeInTheDocument();
-    expect(container.queryByTestId('currentSMSPhoneNumbers')).toBeInTheDocument();
+    expect(container.queryByTestId('smsPhoneNumber')).toBeInTheDocument();
     expect(container.queryByTestId('emergencyCallNumber')).toBeInTheDocument();
 
 
