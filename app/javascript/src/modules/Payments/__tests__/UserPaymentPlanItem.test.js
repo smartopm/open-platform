@@ -89,13 +89,13 @@ describe('Render Payment Plan Item', () => {
     fireEvent.click(container.queryAllByTestId('payment-day-1')[0]);
     // we should have called the mutation by now after a loader
 
-    // expect(container.queryAllByTestId('loader')[0]).toBeInTheDocument();
+    expect(container.queryAllByTestId('loader')[0]).toBeInTheDocument();
 
 
-    // await waitFor(() => {
-    //   expect(container.queryByText('misc.pay_day_updated')).toBeInTheDocument();
-    //   expect(refetch).toBeCalled();
-    // }, 200);
+    await waitFor(() => {
+      expect(container.queryByText('misc.pay_day_updated')).toBeInTheDocument();
+      expect(refetch).toBeCalled();
+    }, 200);
 
     expect(container.getAllByTestId('pay-menu')[0]).toBeInTheDocument();
     fireEvent.click(container.getAllByTestId('pay-menu')[0]);
