@@ -589,7 +589,7 @@ export default function RequestUpdate({ id }) {
             data-testid="entry_user_grant_request"
           >
             {
-              isLoading ? <Spinner /> : t('misc.log_entry')
+              isLoading ? <Spinner /> : t('misc.log_new_entry')
             }
           </Button>
           )}
