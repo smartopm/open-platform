@@ -27,7 +27,7 @@ import {
   InvoiceStatusColor,
   propAccessor,
   capitalize
-} from '../../../../utils/helpers';
+, titleize } from '../../../../utils/helpers';
 import Text from '../../../../shared/Text';
 import Label from '../../../../shared/label/Label';
 import { invoiceStatus } from '../../../../utils/constants';
@@ -47,6 +47,7 @@ import { ActionDialog } from '../../../../components/Dialog';
 import PlanDetail from './PlanDetail';
 import TransactionDetails from './TransactionDetails';
 import TransferPlanModal from './TransferPlanModal';
+
 
 export default function UserPaymentPlanItem({
   plans,
@@ -474,7 +475,12 @@ export function renderPlan(plan, currencyData, userType, { handleMenu, loading }
   return {
     'Plot Number': (
       <Grid item xs={12} md={2} data-testid="plot-number">
-        {plan.landParcel.parcelNumber}
+        <Text content={plan.landParcel.parcelNumber} />
+        <br />
+        <Text
+          color="primary"
+          content={`Category: ${titleize(plan.landParcel.objectType) || 'Land'}`}
+        />
       </Grid>
     ),
     'Payment Plan': (

@@ -60,6 +60,7 @@ export const UserPlans = gql`
         id
         parcelNumber
         parcelType
+        objectType
       }
       planPayments {
         id
