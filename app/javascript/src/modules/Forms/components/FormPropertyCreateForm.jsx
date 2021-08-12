@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useLazyQuery, useMutation } from 'react-apollo';
 import PropTypes from 'prop-types';
-import { Button, TextField } from '@material-ui/core';
+import { Button, FormControl, InputLabel, MenuItem, Select, TextField } from '@material-ui/core';
 import { useHistory } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { FormPropertyCreateMutation, FormPropertyUpdateMutation } from '../graphql/forms_mutation';
@@ -13,6 +13,7 @@ import { FormPropertyQuery } from '../graphql/forms_queries';
 import { Spinner } from '../../../shared/Loading';
 import { formatError } from '../../../utils/helpers';
 import MessageAlert from '../../../components/MessageAlert';
+import { categories } from './CategoryForm';
 
 const initData = {
   fieldName: '',
@@ -20,7 +21,8 @@ const initData = {
   required: false,
   adminUse: false,
   order: '1',
-  fieldValue: []
+  fieldValue: [],
+  category: ''
 };
 
 const fieldTypes = {
@@ -159,6 +161,7 @@ export default function FormPropertyCreateForm({ formId, refetch, propertyId, cl
           autoFocus
           required
         />
+
         <FormPropertySelector
           label={t('form_fields.field_type')}
           name="fieldType"
@@ -169,6 +172,24 @@ export default function FormPropertyCreateForm({ formId, refetch, propertyId, cl
         {(propertyData.fieldType === 'radio' || propertyData.fieldType === 'dropdown') && (
           <FormOptionInput label="Option" options={options} setOptions={setOptions} />
         )}
+        <FormControl variant="outlined" style={{ width: '100%' }} margin="normal">
+          <InputLabel>Category</InputLabel>
+          <Select
+            labelId="select-category"
+            id="category"
+            value={propertyData.category}
+            onChange={handlePropertyValueChange}
+            label="Choose Category"
+            name="category"
+            required
+          >
+            {categories.map((cat) => (
+              <MenuItem key={cat.id} value={cat.id}>
+                {cat.name}
+              </MenuItem>
+              ))}
+          </Select>
+        </FormControl>
         <div style={{ marginTop: 20 }}>
           <SwitchInput
             name="required"

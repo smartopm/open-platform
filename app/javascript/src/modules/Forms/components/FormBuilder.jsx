@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import { useLocation } from 'react-router'
 import { Button, Container } from '@material-ui/core'
-import Icon from '@material-ui/core/Icon'
+// import Icon from '@material-ui/core/Icon'
 import { useTranslation } from 'react-i18next'
 import { useMutation, useQuery } from 'react-apollo'
 import CenteredContent from '../../../components/CenteredContent'
@@ -15,9 +15,10 @@ import { FormUpdateMutation } from '../graphql/forms_mutation'
 import { formStatus } from '../../../utils/constants'
 import Toggler from '../../../components/Campaign/ToggleButton'
 import FormTimeline from '../../../shared/TimeLine'
-import { ActionDialog } from '../../../components/Dialog'
+import { ActionDialog, DetailsDialog } from '../../../components/Dialog'
 import { formatError } from '../../../utils/helpers'
 import MessageAlert from '../../../components/MessageAlert'
+import CategoryForm from './CategoryForm'
 
 /**
  * @param {String} formId
@@ -77,6 +78,16 @@ export default function FormBuilder({ formId }) {
         setAlertOpen(true)
       })
   }
+
+  function handleAddFieldToCategory(categoryId){
+    console.log(categoryId)
+    setAdd(!isAdd)
+  }
+
+  function handleModal(){
+    setAdd(!isAdd)
+  }
+
   if (loading || formLogs.loading) return <Spinner />
   if (error || formLogs.error) return error?.message || formLogs?.error.message
 
@@ -96,6 +107,22 @@ export default function FormBuilder({ formId }) {
         open={alertOpen}
         handleClose={handleAlertClose}
       />
+
+      <DetailsDialog
+        handleClose={handleModal}
+        open={isAdd}
+        title={t('actions.update_form_property')}
+        color="default"
+      >
+        <Container>
+          <FormPropertyCreateForm
+            formId={formId}
+            refetch={refetch}
+            // propertyId={propertyId}
+            close={handleModal}
+          />
+        </Container>
+      </DetailsDialog>
 
       <br />
       <Toggler
@@ -117,11 +144,13 @@ export default function FormBuilder({ formId }) {
             editMode
           />
 
-          {isAdd && (
+          <CategoryForm handleAddField={handleAddFieldToCategory} />
+
+          {/* {isAdd && (
             <FormPropertyCreateForm formId={formId} refetch={refetch} />
-          )}
+          )} */}
           <br />
-          <CenteredContent>
+          {/* <CenteredContent>
             <Button
               onClick={() => setAdd(!isAdd)}
               startIcon={<Icon>{!isAdd ? 'add' : 'close'}</Icon>}
@@ -129,7 +158,7 @@ export default function FormBuilder({ formId }) {
             >
               {!isAdd ? t('actions.add_field') : t('common:form_actions.cancel')}
             </Button>
-          </CenteredContent>
+          </CenteredContent> */}
           <br />
           <CenteredContent>
             {Boolean(data.formProperties.length) && (
