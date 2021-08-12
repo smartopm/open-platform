@@ -2,7 +2,7 @@
 import { useReducer, useEffect } from 'react'
 import { FileChecksum } from '@rails/activestorage/src/file_checksum'
 
-import { CreateUpload } from './mutations'
+import { CreateUpload } from '../graphql/mutations'
 import ImageResize from '../utils/imageResizer'
 
 // FileUploader

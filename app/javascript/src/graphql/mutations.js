@@ -1,6 +1,6 @@
 /* eslint-disable */
 import gql from 'graphql-tag'
-import { UserFragment, EntryRequestFragment } from './fragments'
+import { UserFragment, EntryRequestFragment } from '../graphql/fragments'
 
 export const CreateUserMutation = gql`
   mutation CreateUserMutation(
