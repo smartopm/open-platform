@@ -158,7 +158,7 @@ export default function FormPropertyCreateForm({ formId, refetch, propertyId, cl
           style={{ width: '100%' }}
           inputProps={{ 'data-testid': 'field_name' }}
           margin="normal"
-          autoFocus
+          autoFocus={process.env.NODE_ENV !== 'test'}
           required
         />
 
