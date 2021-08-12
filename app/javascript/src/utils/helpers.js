@@ -542,3 +542,8 @@ export function extractCountry(locale){
   if(!locale || !locale.includes('-')) return 'zm'
   return locale.split('-')[1].toLowerCase()
 }
+
+
+export function ifNotTest(){
+  return process.env.NODE_ENV !== 'test'
+}
