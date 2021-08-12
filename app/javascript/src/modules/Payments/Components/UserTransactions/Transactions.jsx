@@ -108,7 +108,7 @@ export default function TransactionsList({
               {t('common:menu.transaction_plural')}
             </Typography>
             <ButtonComponent
-              variant="outlined"
+              variant={matches ? 'outlined' : 'text'}
               color="default"
               buttonText={t('actions.view_all_plans')}
               handleClick={() => history.push('?tab=Plans')}

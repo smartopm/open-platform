@@ -149,6 +149,7 @@ export const paymentStatus = {
 
 export const invoiceStatus = {
   inProgress: 'In-Progress',
+  active: 'Active',
   paid: 'Paid',
   late: 'Late',
   cancelled: 'Cancelled',

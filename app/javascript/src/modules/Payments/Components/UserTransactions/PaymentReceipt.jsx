@@ -23,7 +23,7 @@ export default function PaymentReceipt({ paymentData, open, handleClose, currenc
         >
           {paymentData?.planPayments?.length ? (
             paymentData.planPayments.map(pay => (
-              <div key={pay.id} style={{marginBottom: '420px'}}>
+              <div key={pay.id} style={{marginBottom: '400px'}}>
                 <ReceiptDetail 
                   paymentData={paymentData} 
                   currencyData={currencyData}

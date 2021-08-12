@@ -68,14 +68,32 @@ export default function PaymentModal({
 
   function confirm(event) {
     event.preventDefault();
-    
-    const receiptCheck = plotInputValue.map((val) => !!val.receiptNumber).every(Boolean)
 
-    if (totalAmount() === 0 || !inputValue.transactionType || (inputValue.pastPayment && !receiptCheck)) {
+    const receiptCheck = plotInputValue.map(val => !!val.receiptNumber).every(Boolean);
+    const amountCheck = plotInputValue.map(val => !!val.amount).every(Boolean);
+
+    if (totalAmount() === 0 || !inputValue.transactionType) {
       setIsError(true);
       setIsSubmitting(true);
       return;
     }
+
+    if (inputValue.pastPayment && !receiptCheck) {
+      setIsError(true);
+      setIsSubmitting(true);
+      setIsSuccessAlert(false);
+      setMessageAlert('Receipt Number cannot be blank');
+      return;
+    }
+
+    if (inputValue.pastPayment && !amountCheck) {
+      setIsError(true);
+      setIsSubmitting(true);
+      setIsSuccessAlert(false);
+      setMessageAlert('Amount cannot be blank');
+      return;
+    }
+
     setIsConfirm(true);
   }
 
@@ -108,11 +126,10 @@ export default function PaymentModal({
 
   useEffect(() => {
     if (open && userId) {
-      loadLandParcel()
+      loadLandParcel();
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [open])
-
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open]);
 
   useEffect(() => {
     setPlotInputValue([]);
@@ -126,38 +143,44 @@ export default function PaymentModal({
   }
 
   function totalAmount() {
-    return plotInputValue.reduce((baseVal, val) => baseVal + parseFloat(val.amount), 0)
+    return plotInputValue.reduce((baseVal, val) => baseVal + parseFloat(val.amount || 0), 0);
   }
 
   function onChangePlotInputFields(event, plan) {
     updatePlotInputFields(event.target.name, event.target.value, plan.id);
-    if (event.target.name === 'amount') { totalAmount() }
+    if (event.target.name === 'amount') {
+      totalAmount();
+    }
   }
 
   function checkInputValues(id, type) {
-    const res = plotInputValue.find(ele => ele.paymentPlanId === id)
-    if (type === "amount") {
-      return res?.amount
-    } 
-    return res?.receiptNumber
+    const res = plotInputValue.find(ele => ele.paymentPlanId === id);
+    if (type === 'amount') {
+      return res?.amount;
+    }
+    return res?.receiptNumber;
   }
 
   function validatePlotInput(input) {
-    return input.map(({amount, paymentPlanId}) => ({ amount, paymentPlanId }))
+    return input.map(({ amount, paymentPlanId }) => ({ amount, paymentPlanId }));
   }
 
   // eslint-disable-next-line consistent-return
   function updatePlotInputFields(name, value, paymentPlanId) {
     const fields = [...plotInputValue];
     const index = fields.findIndex(val => val.paymentPlanId === paymentPlanId);
-    if(name === 'amount' && value === '') {
-      fields.splice(index, 1);
-      return setPlotInputValue(fields);
+    if (value === '') {
+      const a = fields[Number(index)].receiptNumber;
+      const r = fields[Number(index)].amount;
+      if (!a || !r) {
+        fields.splice(index, 1);
+        return setPlotInputValue(fields);
+      }
     }
     if (fields[Number(index)]) {
       fields[Number(index)] = {
         ...fields[Number(index)],
-        [name]: name === 'amount' ? parseFloat(value) : value
+        [name]: (name === 'amount' && value !== '') ? parseFloat(value) : value
       };
     } else {
       fields.push({ [name]: name === 'amount' ? parseFloat(value) : value, paymentPlanId });
@@ -186,7 +209,9 @@ export default function PaymentModal({
         amount: totalAmount(),
         // allow rails to pick its default date rather than the initialValue past on top
         createdAt: inputValue.pastPayment ? inputValue.paidDate : '',
-        paymentsAttributes: inputValue.pastPayment ? plotInputValue : validatePlotInput(plotInputValue)
+        paymentsAttributes: inputValue.pastPayment
+          ? plotInputValue
+          : validatePlotInput(plotInputValue)
       }
     })
       .then(res => {
@@ -240,24 +265,28 @@ export default function PaymentModal({
       <CustomizedDialogs
         open={open}
         handleModal={cancelPayment}
-        dialogHeader={
-          isConfirm ? t('misc.make_payment_details') : t('misc.make_a_payment')
-        }
+        dialogHeader={isConfirm ? t('misc.make_payment_details') : t('misc.make_a_payment')}
         handleBatchFilter={isConfirm ? handleSubmit : confirm}
         saveAction={
-          isConfirm && !mutationLoading ? t('misc.confirm') : mutationLoading ? t('common:form_actions.submitting') : t('actions.pay')
+          isConfirm && !mutationLoading
+            ? t('misc.confirm')
+            : mutationLoading
+            ? t('common:form_actions.submitting')
+            : t('actions.pay')
         }
         cancelAction={isConfirm ? t('actions.go_back') : t('common:form_actions.cancel')}
         disableActionBtn={mutationLoading}
       >
         {isConfirm ? (
-          <PaymentDetails inputValue={inputValue} totalAmount={totalAmount()} currencyData={currencyData} />
+          <PaymentDetails
+            inputValue={inputValue}
+            totalAmount={totalAmount()}
+            currencyData={currencyData}
+          />
         ) : (
           <>
             <div className={classes.invoiceForm}>
-              <Typography className={classes.title}>
-                {t('misc.make_payment_towards')}
-              </Typography>
+              <Typography className={classes.title}>{t('misc.make_payment_towards')}</Typography>
               <SwitchInput
                 name="pastPayment"
                 label={t('misc.manual_payment')}
@@ -376,14 +405,16 @@ export default function PaymentModal({
               {paymentPlans?.userLandParcelWithPlan?.map(plan => (
                 <div key={plan.id} className={classes.plotCard}>
                   <div style={{ width: '50%' }}>
-                    <Typography className={classes.plotNoTitle}>{t('table_headers.plot_no')}</Typography>
+                    <Typography className={classes.plotNoTitle}>
+                      {t('table_headers.plot_no')}
+                    </Typography>
                     <Typography className={classes.plotNo}>
                       {plan?.landParcel?.parcelNumber.toUpperCase()}
                     </Typography>
-                    <Typography
-                      className={classes.plotNoTitle}
-                    >
-                      {t('table_headers.remaining_balance', {amount: formatMoney(currencyData, plan?.pendingBalance)})}
+                    <Typography className={classes.plotNoTitle}>
+                      {t('table_headers.remaining_balance', {
+                        amount: formatMoney(currencyData, plan?.pendingBalance)
+                      })}
                     </Typography>
                     {inputValue.pastPayment && (
                       <TextField
@@ -423,7 +454,9 @@ export default function PaymentModal({
               ))}
             </div>
             <div className={classes.totalAmountBody}>
-              <Typography className={classes.plotNoTitle}>{t('table_headers.total_amount')}</Typography>
+              <Typography className={classes.plotNoTitle}>
+                {t('table_headers.total_amount')}
+              </Typography>
               <Typography color="primary" className={classes.totalAmount}>
                 <b>{formatMoney(currencyData, totalAmount())}</b>
               </Typography>
@@ -441,8 +474,7 @@ export function PaymentDetails({ inputValue, totalAmount, currencyData }) {
     <div>
       <Typography variant="subtitle1" data-testid="amount" align="center" key="amount">
         {t('table_headers.total_amount')}
-        : 
-        {' '}
+        :
         <b>{formatMoney(currencyData, totalAmount)}</b>
       </Typography>
       <Typography variant="subtitle1" data-testid="type" align="center" key="type">
@@ -534,7 +566,7 @@ PaymentDetails.propTypes = {
     transactionNumber: PropTypes.string,
     pastPayment: PropTypes.bool
   }).isRequired,
-  totalAmount: PropTypes.string.isRequired,
+  totalAmount: PropTypes.number.isRequired,
   currencyData: PropTypes.shape({
     currency: PropTypes.string,
     locale: PropTypes.string
