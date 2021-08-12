@@ -132,6 +132,7 @@ module Types::Queries::LandParcel
 
   def geom_fields(parcel, properties)
     if parcel[:object_type] == 'house' && parcel[:house_land_parcel_id].present?
+      # TODO: Victor we need a better assocaiation between land parcels and houses
       house_land_parcel = properties.filter { |p| p[:id] == parcel[:house_land_parcel_id] }.first
 
       return { geom: house_land_parcel[:geom],
