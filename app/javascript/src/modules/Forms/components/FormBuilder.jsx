@@ -18,7 +18,7 @@ import FormTimeline from '../../../shared/TimeLine'
 import { ActionDialog, DetailsDialog } from '../../../components/Dialog'
 import { formatError } from '../../../utils/helpers'
 import MessageAlert from '../../../components/MessageAlert'
-import CategoryForm from './CategoryForm'
+import CategoryList from './CategoryForm'
 
 /**
  * @param {String} formId
@@ -111,14 +111,13 @@ export default function FormBuilder({ formId }) {
       <DetailsDialog
         handleClose={handleModal}
         open={isAdd}
-        title={t('actions.update_form_property')}
+        title="Add Form Property"
         color="default"
       >
         <Container>
           <FormPropertyCreateForm
             formId={formId}
             refetch={refetch}
-            // propertyId={propertyId}
             close={handleModal}
           />
         </Container>
@@ -144,7 +143,7 @@ export default function FormBuilder({ formId }) {
             editMode
           />
 
-          <CategoryForm handleAddField={handleAddFieldToCategory} />
+          <CategoryList handleAddField={handleAddFieldToCategory} />
 
           {/* {isAdd && (
             <FormPropertyCreateForm formId={formId} refetch={refetch} />
