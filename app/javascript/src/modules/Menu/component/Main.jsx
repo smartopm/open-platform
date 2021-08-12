@@ -6,9 +6,11 @@ import Drawer from '@material-ui/core/Drawer';
 import MenuIcon from '@material-ui/icons/Menu';
 import { StyleSheet, css } from 'aphrodite';
 import { Button, IconButton } from '@material-ui/core';
+// import { SvgIcon } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
 import PropTypes from 'prop-types';
 import DoubleArrowOutlinedIcon from '@material-ui/icons/DoubleArrowOutlined';
+import EmergencyCallIcon from '../../../../../assets/images/emergency-call.svg';
 import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider';
 import SideMenu from './SideMenu';
 import NotificationBell from '../../../components/NotificationBell';
@@ -18,6 +20,7 @@ import CenteredContent from '../../../components/CenteredContent';
 import userProps from '../../../shared/types/user';
 import UserAvatar from '../../Users/Components/UserAvatar';
 import UserActionOptions from '../../Users/Components/UserActionOptions';
+
 import { allUserTypes } from '../../../utils/constants';
 
 const drawerWidth = 260;
@@ -118,6 +121,10 @@ export function MainNav({ authState }) {
               <MenuIcon />
             )}
           </IconButton>
+
+          < EmergencyCallIcon />
+          {/* <SvgIcon component={EmergencyCallIcon} viewBox="0 0 384 512"/> */}
+
           <UserAvatar imageUrl={authState?.user?.imageUrl} />
           <UserActionOptions />
           <NotificationBell user={authState.user} />
