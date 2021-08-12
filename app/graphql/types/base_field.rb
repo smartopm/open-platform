@@ -22,7 +22,7 @@ module Types
       return true if @visible[:user] && context[:current_user] &&
                      context[:current_user].id == object[@visible[:user]]
 
-      raise GraphQL::VisibilityError, I18n.t('errors.visibility', field: original_name)
+      raise GraphQL::VisibilityError, "permission #{I18n.t('errors.visibility', field: original_name)}"
     end
   end
 end
