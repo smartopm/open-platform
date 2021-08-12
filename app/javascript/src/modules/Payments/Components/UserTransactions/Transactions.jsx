@@ -58,8 +58,8 @@ export default function TransactionsList({
   const { locale } = user.community;
   const currencyData = { currency, locale };
 
-  const [loadPlanTransactions, { loading, error, data }] = useLazyQuery(Transactions, {
-    variables: { userId, planId: filterValue === 'all' ? null : debouncedValue, limit, offset },
+  const [loadPlanTransactions, { loading, error, data, refetch: transRefetch }] = useLazyQuery(Transactions, {
+    variables: { userId, planId: debouncedValue, limit, offset },
     fetchPolicy: 'no-cache',
     errorPolicy: 'all'
   });
@@ -82,8 +82,8 @@ export default function TransactionsList({
   useEffect(() => {
     if (planId) {
       setFilterValue(planId);
-      loadPlanTransactions();
       setFiltering(true);
+      loadPlanTransactions();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -148,7 +148,7 @@ export default function TransactionsList({
                   currencyData={currencyData}
                   userData={userData}
                   userType={user.userType}
-                  refetch={refetch}
+                  refetch={transRefetch}
                   balanceRefetch={balanceRefetch}
                 />
               </div>
@@ -171,7 +171,7 @@ export default function TransactionsList({
           )}
         </div>
       ) : (
-        <CenteredContent>No Transaction Available</CenteredContent>
+        <CenteredContent>{t('errors.no_transaction_available')}</CenteredContent>
       )}
       {filtering && Boolean(data?.userTransactions?.length) && (
         <CenteredContent>

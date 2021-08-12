@@ -34,6 +34,7 @@ module Types::Queries::Transaction
   def user_transactions(user_id: nil, plan_id: nil, limit: nil, offset: 0)
     user = verified_user(user_id)
     transactions =  user.transactions.not_cancelled.includes(:plan_payments, :depositor)
+    return if plan_id === 'all'
     if plan_id.present?
       payment_plan = user.payment_plans.find_by(id: plan_id)
       raise_plan_not_found_error(payment_plan)
