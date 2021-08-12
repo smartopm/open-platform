@@ -1,7 +1,9 @@
 {
   "buttons": {
     "edit_coordinates": "Editar Coordenadas",
+    "merge_and_save": "Unir y Guardar",
     "new_owner": "Nuevo Propietario",
+    "new_point_of_interest": "Nuevo punto de interés",
     "new_property": "Nueva Propiedad"
   },
   "dialog_headers": {
@@ -48,6 +50,7 @@
     "parcel_number_exists": "El número de parcela ya existe. ¿Quieres fusionar estas parcelas?",
     "poi_added": "'Punto de interés agregado correctamente'",
     "poi_delete_warning": "¡Está a punto de eliminar un Punto de interés !. Cancele si no está seguro.",
+    "poi_removed": "Punto de interés eliminado con éxito",
     "property_added": "Propiedad agregada correctamente",
     "property_updated": "Propiedad actualizada correctamente"
   },
