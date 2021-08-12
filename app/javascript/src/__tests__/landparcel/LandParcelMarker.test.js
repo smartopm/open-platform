@@ -44,7 +44,7 @@ describe('<LandParcelMarker />', () => {
       container = render(
         <MockedProvider>
           <BrowserRouter>
-            <LandParcelMarker markerProps={houseMarkerProps} category="house"/>
+            <LandParcelMarker markerProps={houseMarkerProps} category="house" />
           </BrowserRouter>
         </MockedProvider>
       )
