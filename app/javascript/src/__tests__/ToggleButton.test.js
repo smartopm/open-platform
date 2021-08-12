@@ -21,9 +21,9 @@ describe('It should render the toggle button delete', () => {
       />
     )
 
-    expect(container.queryAllByText('Draft')[0]).toBeInTheDocument()
-    expect(container.queryAllByText('Scheduled')[0]).toBeInTheDocument()
-    fireEvent.click(container.queryAllByLabelText('draft')[0])
+    expect(container.queryByText('Draft')).toBeInTheDocument()
+    expect(container.queryByText('Scheduled')).toBeInTheDocument()
+    fireEvent.click(container.queryByLabelText('draft'))
     expect(mock).toBeCalled()
   });
 
