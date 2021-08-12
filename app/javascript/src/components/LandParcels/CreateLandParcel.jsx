@@ -10,7 +10,7 @@ import MessageAlert from "../MessageAlert"
 import LandParcelModal from './LandParcelModal'
 import { formatError, useParamsQuery } from '../../utils/helpers'
 
-export default function CreateLandParcel({ refetch, selectedLandParcel, newHouse }) {
+export default function CreateLandParcel({ refetch, selectedLandParcel, newHouse, refetchHouseData}) {
   const classes = useStyles()
   const location = useLocation()
   const [open, setOpen] = useState(false)
@@ -52,6 +52,7 @@ export default function CreateLandParcel({ refetch, selectedLandParcel, newHouse
         history.push(`user/${location?.state?.user?.userId}?tab=Plots`);
       }
       refetch();
+      refetchHouseData();
     }).catch((err) => {
       setMessageAlert(formatError(err.message))
       setIsSuccessAlert(false)
@@ -108,6 +109,7 @@ const useStyles = makeStyles(() => ({
 
 CreateLandParcel.propTypes = {
   refetch: PropTypes.func.isRequired,
+  refetchHouseData: PropTypes.func.isRequired,
   newHouse: PropTypes.bool.isRequired,
   selectedLandParcel: PropTypes.shape({
     id: PropTypes.string,

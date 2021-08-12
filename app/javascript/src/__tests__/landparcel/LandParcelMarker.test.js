@@ -9,7 +9,7 @@ describe('<LandParcelMarker />', () => {
       parcelNumber: '1234',
       parcelType: 'basic',
       geoLongX: 28.6530035716,
-      geoLatY: -15.5096758256
+      geoLatY: -15.5096758256,
     }
   
   it('should render marker correctly', async () => {
@@ -26,6 +26,32 @@ describe('<LandParcelMarker />', () => {
 
     expect(container.queryByText(/basic/i)).toBeTruthy()
     expect(container.queryByText(/1234/)).toBeTruthy()
+    expect(container.queryByText(/28/)).toBeTruthy()
+    expect(container.queryByText(/-15/)).toBeTruthy()
+  })
+
+   
+  it('should render marker correctly for houses', async () => {
+    const houseMarkerProps = {
+      parcelNumber: 'House1234',
+      geoLongX: 28.6530035716,
+      geoLatY: -15.5096758256,
+      status: 'Planned'
+    }
+
+    let container;
+    await act(async () => {
+      container = render(
+        <MockedProvider>
+          <BrowserRouter>
+            <LandParcelMarker markerProps={houseMarkerProps} category="house" />
+          </BrowserRouter>
+        </MockedProvider>
+      )
+    })
+
+    expect(container.queryByText(/Planned/i)).toBeTruthy()
+    expect(container.queryByText(/House1234/)).toBeTruthy()
     expect(container.queryByText(/28/)).toBeTruthy()
     expect(container.queryByText(/-15/)).toBeTruthy()
   })

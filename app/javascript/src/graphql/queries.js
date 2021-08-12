@@ -480,6 +480,51 @@ export const ParcelsQuery = gql`
     }
   }
 `
+export const HouseQuery = gql`
+  query house($limit: Int, $offset: Int) {
+    fetchHouse(limit: $limit, offset: $offset) {
+      id
+      parcelNumber
+      address1
+      address2
+      city
+      postalCode
+      stateProvince
+      country
+      parcelType
+      latY
+      longX
+      geom
+      plotSold
+      objectType
+      status
+      createdAt
+      accounts {
+        id
+        fullName
+        address1
+        user {
+          id
+          name
+        }
+      }
+      paymentPlans{
+        id
+        userId
+        startDate
+        endDate
+        planType
+        user{
+          name
+        }
+        planPayments{
+          status
+          amount
+        }
+      }
+    }
+  }
+`
 export const LandParcelGeoData = gql`
   query landParcelGeoData {
     landParcelGeoData {
@@ -489,6 +534,8 @@ export const LandParcelGeoData = gql`
       latY
       longX
       geom
+      objectType
+      status
       plotSold
       valuations {
         id

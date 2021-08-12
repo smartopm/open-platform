@@ -20,11 +20,13 @@ describe('It should test the comment component', () => {
     postalCode: '123234',
     stateProvince: 'hiwhe',
     country: 'Nigeria',
-    parcelType: 'land'
+    parcelType: 'basic',
+    objectType: 'land',
+    status: 'active'
   }
 
   const menuData = {
-    menuList: [{ content: 'Example', isAdmin: true, color: '', handleClick: jest.fn()}],
+    menuList: [{ content: 'Add House', isAdmin: true, color: '', handleClick: jest.fn()}],
     handlePropertyMenu: jest.fn(),
     anchorEl: null,
     open: true,
