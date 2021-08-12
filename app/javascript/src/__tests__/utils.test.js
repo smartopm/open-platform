@@ -17,7 +17,8 @@ import {
   formatMoney,
   extractCurrency,
   extractCountry,
-  checkAllowedCommunityFeatures
+  checkAllowedCommunityFeatures,
+  ifNotTest
 } from '../utils/helpers'
 
 const message =
@@ -164,10 +165,10 @@ describe('array methods', () => {
     expect(propAccessor({a: 4}, 'a')).toBe(4)
     // prop must be a property in the given object
     expect(propAccessor({a: 4}, 'b')).toBeUndefined()
-    // the object should only be of type object 
+    // the object should only be of type object
     expect(propAccessor([], 'b')).toBeUndefined()
   })
-  
+
   it('should check if x belongs to array', () => {
     const features = ['a', 'b']
     expect(checkAllowedCommunityFeatures(features, 'b')).toBe(true)
@@ -224,5 +225,11 @@ describe('locales', () => {
     expect(extractCountry(details.locale)).toBe("us")
     expect(extractCountry()).toBe("zm")
     expect(extractCountry("someesdfs")).toBe("zm")
+  })
+})
+
+describe('everything else ', () => {
+  it('ifNotTest should always return false because it is run in test env', () => {
+    expect(ifNotTest()).toBe(false)
   })
 })

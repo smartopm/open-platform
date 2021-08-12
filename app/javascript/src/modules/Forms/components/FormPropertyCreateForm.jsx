@@ -11,7 +11,7 @@ import FormOptionInput from './FormOptionInput';
 import SwitchInput from './SwitchInput';
 import { FormPropertyQuery } from '../graphql/forms_queries';
 import { Spinner } from '../../../shared/Loading';
-import { formatError } from '../../../utils/helpers';
+import { formatError, ifNotTest } from '../../../utils/helpers';
 import MessageAlert from '../../../components/MessageAlert';
 import { categories } from './CategoryForm';
 
@@ -158,7 +158,7 @@ export default function FormPropertyCreateForm({ formId, refetch, propertyId, cl
           style={{ width: '100%' }}
           inputProps={{ 'data-testid': 'field_name' }}
           margin="normal"
-          autoFocus={process.env.NODE_ENV !== 'test'}
+          autoFocus={ifNotTest}
           required
         />
 
