@@ -62,7 +62,11 @@
     "admins_only": "Only for admins",
     "order_number": "Order Number",
     "form_status": "Form Status",
-    "form_status_updated_by": "Form Status Updated By"
+    "form_status_updated_by": "Form Status Updated By",
+    "description": "Description",
+    "rendered_text": "Rendered Text",
+    "name": "Name",
+    "header_visible": "Visible Header"
   },
   "field_types": {
     "text": "Text",
