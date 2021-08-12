@@ -296,6 +296,8 @@ es:
     payment_plan:
       amount_greater_than_pending_balance: La cantidad no puede ser mayor que el saldo
         pendiente del plan
+      cannot_transfer_to_cancelled_plan: No se puede transferir el plan a un plan
+        de pago cancelado. Intente transferir a otros planes
       does_not_exist_for_property: El plan de pago no existe para la propiedad seleccionada
       have_zero_pending_balance: El saldo pendiente es 0 para el plan de pago de la
         propiedad seleccionada
