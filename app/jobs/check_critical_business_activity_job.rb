@@ -2,7 +2,7 @@
 
 require 'slack'
 
-# alert user if there is new posts related to the the tag a user is subscribed to
+# alert slack if critical business activities are not performed
 class CheckCriticalBusinessActivityJob < ApplicationJob
   queue_as :default
   # rubocop:disable Metrics/AbcSize
