@@ -422,7 +422,7 @@ export default function PaymentModal({
                         id="receipt-number"
                         label={t('table_headers.receipt_number')}
                         type="string"
-                        value={checkInputValues(plan.id, 'receipt')?.receiptNumber}
+                        value={checkInputValues(plan.id)?.receiptNumber}
                         name="receiptNumber"
                         onChange={event => onChangePlotInputFields(event, plan)}
                       />
@@ -435,7 +435,7 @@ export default function PaymentModal({
                     type="number"
                     name="amount"
                     style={{ width: '50%' }}
-                    value={checkInputValues(plan.id, 'amount')?.amount}
+                    value={checkInputValues(plan.id)?.amount}
                     onChange={event => onChangePlotInputFields(event, plan)}
                     InputProps={{
                       startAdornment: (

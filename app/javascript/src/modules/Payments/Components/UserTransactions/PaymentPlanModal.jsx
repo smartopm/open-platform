@@ -42,7 +42,7 @@ export default function PaymentPlanModal({
 }) {
   const [landParcelId, setLandParcelId] = useState('');
   const { t } = useTranslation(['payment', 'common']);
-  const [landParcel, setLandParcel] = useState(null);
+  const [landParcel, setLandParcel] = useState("");
   const [frequency, setFrequency] = useState(2);
   const coOwnersIds = [];
   const [createPaymentPlan] = useMutation(PaymentPlanCreateMutation);
@@ -201,7 +201,7 @@ export default function PaymentPlanModal({
         <div>
           <TextField
             autoFocus
-            margin="frequency"
+            margin="normal"
             id="frequency"
             aria-label="frequency"
             label={t('common:misc.plan_frequency')}
@@ -315,7 +315,8 @@ export default function PaymentPlanModal({
           name="plot"
           style={{ width: '100%' }}
           required
-          select
+          value={landParcel}
+          select={landParcelsData?.userLandParcels?.length > 0}
           error={isError && !landParcelId}
           helperText={isError && !landParcelId && t('errors.property_required')}
         >
@@ -325,7 +326,7 @@ export default function PaymentPlanModal({
             </MenuItem>
           ))}
         </TextField>
-        {landParcelsData?.userLandParcels.length === 0 && (
+        {landParcelsData?.userLandParcels?.length === 0 && (
           <Typography color="textSecondary" style={{ marginBottom: '10px' }}>
             {t('errors.no_plot')}
           </Typography>
@@ -363,20 +364,22 @@ export function CoOwners({ landParcel, userId, handleCoOwners }) {
         {landParcel?.accounts?.map(
           account =>
             account.userId !== userId && (
-              <FormControlLabel
-                control={(
-                  <Checkbox
-                    name="coOwner"
-                    color="primary"
-                    value={account.userId}
-                    onChange={() => handleCoOwners(account.userId)}
-                    inputProps={{ 'aria-label': 'primary checkbox' }}
-                  >
-                    {account.fullName}
-                  </Checkbox>
+              <div key={account.userId}>
+                <FormControlLabel
+                  control={(
+                    <Checkbox
+                      name="coOwner"
+                      color="primary"
+                      value={account.userId}
+                      onChange={() => handleCoOwners(account.userId)}
+                      inputProps={{ 'aria-label': 'primary checkbox' }}
+                    >
+                      {account.fullName}
+                    </Checkbox>
                 )}
-                label={account.fullName}
-              />
+                  label={account.fullName}
+                />
+              </div>
             )
         )}
       </div>
@@ -407,6 +410,18 @@ export function FrequencyButton({ frequency, handleFrequency, data }) {
   );
 }
 
+PaymentPlanModal.defaultProps = {
+  landParcelsData: {
+    userLandParcels: []
+  }
+}
+
+FrequencyButton.defaultProps = {
+  data: {
+    key: ''
+  }
+}
+
 PaymentPlanModal.propTypes = {
   open: PropTypes.bool.isRequired,
   handleModalClose: PropTypes.func.isRequired,
@@ -428,8 +443,8 @@ PaymentPlanModal.propTypes = {
           })
         )
       })
-    ).isRequired
-  }).isRequired,
+    )
+  }),
   setMessage: PropTypes.func.isRequired,
   openAlertMessage: PropTypes.func.isRequired
 };
@@ -453,6 +468,6 @@ FrequencyButton.propTypes = {
   frequency: PropTypes.number.isRequired,
   handleFrequency: PropTypes.func.isRequired,
   data: PropTypes.shape({
-    key: PropTypes.string.isRequired
-  }).isRequired
+    key: PropTypes.string
+  })
 };
