@@ -118,7 +118,8 @@ Balance.defaultProps = {
   userData: {},
   transRefetch: () => {},
   refetch: () => {},
-  balanceRefetch: () => {}
+  balanceRefetch: () => {},
+  balanceData: {}
 };
 
 Balance.propTypes = {
@@ -140,7 +141,7 @@ Balance.propTypes = {
     pendingBalance: PropTypes.number,
     balance: PropTypes.number,
     totalTransactions: PropTypes.number
-  }).isRequired,
+  }),
   refetch: PropTypes.func,
   transRefetch: PropTypes.func,
   balanceRefetch: PropTypes.func

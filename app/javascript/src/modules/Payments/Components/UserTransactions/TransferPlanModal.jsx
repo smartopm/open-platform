@@ -228,14 +228,18 @@ TransferPlanModal.propTypes = {
   }).isRequired,
 };
 
+PaymentPlansForTransferPlan.defaultProps = {
+  data: {}
+}
+
 PaymentPlansForTransferPlan.propTypes = {
   data: PropTypes.shape({
     userLandParcelWithPlan: PropTypes.arrayOf(
       PropTypes.shape({
         id: PropTypes.string
       })
-    ).isRequired
-  }).isRequired,
+    )
+  }),
   sourcePlanId: PropTypes.string.isRequired,
   destinationPlanId: PropTypes.string.isRequired,
   handleRadioChange: PropTypes.func.isRequired,

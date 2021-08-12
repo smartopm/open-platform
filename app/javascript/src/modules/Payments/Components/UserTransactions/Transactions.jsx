@@ -220,7 +220,10 @@ const useStyles = makeStyles({
 
 TransactionsList.defaultProps = {
   userData: {},
-  transData: {}
+  transData: {},
+  refetch: () => {},
+  balanceRefetch: () => {},
+  planData: []
 };
 
 TransactionsList.propTypes = {
@@ -238,9 +241,9 @@ TransactionsList.propTypes = {
       locale: PropTypes.string
     }).isRequired
   }).isRequired,
-  refetch: PropTypes.func.isRequired,
+  refetch: PropTypes.func,
   userId: PropTypes.string.isRequired,
-  balanceRefetch: PropTypes.func.isRequired,
+  balanceRefetch: PropTypes.func,
   planData: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.string,
@@ -249,5 +252,5 @@ TransactionsList.propTypes = {
         parcelNumber: PropTypes.string
       })
     })
-  ).isRequired
+  )
 };
