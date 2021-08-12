@@ -58,7 +58,7 @@ module Types::Queries::LandParcel
                             .search(query)
                             .includes(accounts: :user, payment_plans: %i[user plan_payments])
                             .with_attached_images
-                            .where("parcel_type <> 'poi' OR parcel_type is NULL")
+                            .where(object_type: 'land')
                             .limit(limit).offset(offset)
   end
 
@@ -94,8 +94,6 @@ module Types::Queries::LandParcel
     raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') if context[:current_user].blank?
 
     properties = context[:site_community].land_parcels
-                                         .unscoped
-                                         .where('status != 1')
                                          .eager_load(:valuations, :accounts)
                                          .with_attached_images
 
@@ -108,7 +106,6 @@ module Types::Queries::LandParcel
     end
 
     context[:site_community].land_parcels
-                            .unscoped
                             .where(object_type: 'house')
                             .includes(accounts: :user, payment_plans: %i[user plan_payments])
                             .with_attached_images

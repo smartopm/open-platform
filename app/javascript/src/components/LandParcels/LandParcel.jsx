@@ -232,7 +232,7 @@ export default function LandParcelList() {
         </Grid>
         <Grid item xs={12} sm={2}>
           {type === 'plots' && (
-            <CreateLandParcel refetch={refetch} selectedLandParcel={selectedLandParcel} newHouse={subaction === 'new_house'} />
+            <CreateLandParcel refetch={refetch} selectedLandParcel={selectedLandParcel} newHouse={subaction === 'new_house'} refetchHouseData={refetchHouseData} />
           )}
           {type === 'map' && (
             <CreatePointOfInterest refetch={refetch} />
