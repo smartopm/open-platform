@@ -12,15 +12,15 @@ class CheckCriticalBusinessActivityJob < ApplicationJob
     nkwashi = Community.find_by(name: communities.first)
     cm = Community.find_by(name: communities.last)
     send_slack_notification(nkwashi, 'gate_activity') unless
-                        gate_activity_in_24_hours(nkwashi)&.positive?
+                        gate_activity_in_24_hours(nkwashi).positive?
 
-    send_slack_notification(cm, 'gate_activity') unless gate_activity_in_24_hours(cm)&.positive?
+    send_slack_notification(cm, 'gate_activity') unless gate_activity_in_24_hours(cm).positive?
 
     send_slack_notification(nkwashi, 'time_activity') unless
-                          time_entry_activity_in_24_hours(nkwashi)&.positive?
+                          time_entry_activity_in_24_hours(nkwashi).positive?
 
     send_slack_notification(nkwashi, 'payment_activity') unless
-                            payment_activity_in_24_hours(nkwashi)&.positive?
+                            payment_activity_in_24_hours(nkwashi).positive?
   end
   # rubocop:enable Metrics/AbcSize
 
