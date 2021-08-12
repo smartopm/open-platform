@@ -43,6 +43,7 @@ describe('Form that creates other forms component', () => {
         required: false,
         adminUse: false,
         order: '1',
+        category: '',
         fieldValue: [{ value: '', label: '' }]
       }
     },
@@ -55,6 +56,11 @@ describe('Form that creates other forms component', () => {
             fieldType: '',
             __typename: 'FormProperties'
           },
+          newFormVersion: {
+            id: '5290d212',
+            __typename: "Form"
+          },
+          message: "some text",
           __typename: 'FormPropertiesUpdatePayload'
         }
       }
@@ -70,6 +76,7 @@ describe('Form that creates other forms component', () => {
         required: false,
         adminUse: false,
         order: '1',
+        category: '',
         fieldValue: [{ value: '', label: '' }]
       }
     },
