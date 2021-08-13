@@ -66,7 +66,8 @@
     "description": "Description",
     "rendered_text": "Rendered Text",
     "name": "Name",
-    "header_visible": "Visible Header"
+    "header_visible": "Visible Header",
+    "general_category": "General"
   },
   "field_types": {
     "text": "Text",

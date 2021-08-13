@@ -3,6 +3,7 @@
 module Types
   # CategoryType
   class CategoryType < Types::BaseObject
+    field :id, ID, null: false
     field :form_id, ID, null: false
     field :field_name, String, null: false
     field :order, Integer, null: false
