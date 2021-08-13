@@ -10,5 +10,6 @@ FactoryBot.define do
     field_type { %w[text date file_upload signature display_text display_image].sample }
     order { 'order' }
     form
+    category
   end
 end

@@ -89,6 +89,9 @@ module Types
     field :follow_post_tag, mutation: Mutations::Post::FollowPostTag
 
     # forms
+    field :category_create, mutation: Mutations::Form::CategoryCreate
+    field :category_delete, mutation: Mutations::Form::CategoryDelete
+    field :category_update, mutation: Mutations::Form::CategoryUpdate
     field :form_create, mutation: Mutations::Form::FormCreate
     field :form_update, mutation: Mutations::Form::FormUpdate
     field :form_properties_create, mutation: Mutations::Form::FormPropertiesCreate
