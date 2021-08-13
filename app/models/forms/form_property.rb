@@ -3,8 +3,11 @@
 module Forms
   # Form Fields
   class FormProperty < ApplicationRecord
+    # TODO: Remove the association, won't be required because we have category now.
     belongs_to :form
+    belongs_to :category
     has_many :user_form_properties, dependent: :destroy
+    has_many :sub_categories, class_name: 'Category', dependent: :destroy
 
     default_scope { order(order: :asc) }
 

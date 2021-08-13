@@ -9,6 +9,7 @@ module Forms
 
     has_many :form_properties, dependent: :destroy
     has_many :form_users, dependent: :destroy
+    has_many :categories, dependent: :destroy
 
     validates :name, presence: true, uniqueness: { scope: :community_id }
 
