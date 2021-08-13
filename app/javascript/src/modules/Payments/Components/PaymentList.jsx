@@ -330,9 +330,7 @@ export default function PaymentList({ currencyData }) {
   );
 }
 
-export function renderPayment(payment, currencyData) {
-  const theme = useTheme();
-  const matches = useMediaQuery(theme.breakpoints.up('sm'));
+export function renderPayment(payment, currencyData, theme, matches) {
   return [
     {
       [`${matches ? 'Client Info' : 'Client Name'}`]: (
@@ -450,7 +448,7 @@ export function TransactionItem({ transaction, currencyData }) {
     <div style={{ padding: '0 20px' }}>
       <DataList
         keys={paymentHeaders}
-        data={renderPayment(transaction, currencyData)}
+        data={renderPayment(transaction, currencyData, theme, matches)}
         hasHeader={false}
       />
     </div>
