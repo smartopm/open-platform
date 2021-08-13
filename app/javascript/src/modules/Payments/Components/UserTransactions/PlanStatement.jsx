@@ -14,7 +14,7 @@ import CenteredContent from '../../../../components/CenteredContent';
 import { Context as AuthStateContext } from '../../../../containers/Provider/AuthStateProvider';
 import CommunityName from '../../../../shared/CommunityName';
 
-export default function PaymentReceipt({ data, open, handleClose, currencyData }) {
+export default function PaymentStatement({ data, open, handleClose, currencyData }) {
   const classes = useStyles();
   const matches = useMediaQuery('(max-width:600px)');
   const authState = useContext(AuthStateContext);
@@ -214,8 +214,9 @@ export default function PaymentReceipt({ data, open, handleClose, currencyData }
                 </Grid>
                 <Divider className={classes.divider} />
                 {data?.statements && Boolean(data?.statements?.length > 0) ? (
-                  data?.statements.map(plan => (
-                    <Grid container spacing={1} key={plan.id}>
+                  data?.statements.map((plan, index) => (
+                    // eslint-disable-next-line react/no-array-index-key
+                    <Grid container spacing={1} key={index}>
                       <Grid
                         item
                         xs={2}
@@ -410,20 +411,20 @@ const logoStyles = StyleSheet.create({
   }
 });
 
-PaymentReceipt.defaultProps = {
+PaymentStatement.defaultProps = {
   data: {}
 };
-PaymentReceipt.propTypes = {
+PaymentStatement.propTypes = {
   data: PropTypes.shape({
     paymentPlan: PropTypes.shape({
       id: PropTypes.string,
       planType: PropTypes.string,
       startDate: PropTypes.string,
-      planValue: PropTypes.string,
-      statementPaidAmount: PropTypes.string,
-      pendingBalance: PropTypes.string,
-      unallocatedAmount: PropTypes.string,
-      duration: PropTypes.string,
+      planValue: PropTypes.number,
+      statementPaidAmount: PropTypes.number,
+      pendingBalance: PropTypes.number,
+      unallocatedAmount: PropTypes.number,
+      duration: PropTypes.number,
       user: PropTypes.shape({
         name: PropTypes.string,
         extRefId: PropTypes.string
@@ -445,18 +446,18 @@ PaymentReceipt.propTypes = {
             country: PropTypes.string,
             taxIdNo: PropTypes.string
           }),
-          socialLinks: PropTypes.shape({
+          socialLinks: PropTypes.arrayOf(PropTypes.shape({
             category: PropTypes.string,
             social_link: PropTypes.string
-          }),
-          supportEmail: PropTypes.shape({
+          })),
+          supportEmail: PropTypes.arrayOf(PropTypes.shape({
             category: PropTypes.string,
             email: PropTypes.string
-          }),
-          supportNumber: PropTypes.shape({
+          })),
+          supportNumber: PropTypes.arrayOf(PropTypes.shape({
             category: PropTypes.string,
             phone_no: PropTypes.string
-          })
+          }))
         })
       })
     }),

@@ -153,12 +153,12 @@ export default function PaymentModal({
     }
   }
 
-  function checkInputValues(id, type) {
-    const res = plotInputValue.find(ele => ele.paymentPlanId === id);
-    if (type === 'amount') {
-      return res?.amount;
+  function checkInputValues(id) {
+    const res = plotInputValue.find(ele => ele.paymentPlanId === id)
+    return {
+      amount: res?.amount || '',
+      receiptNumber: res?.receiptNumber || ''
     }
-    return res?.receiptNumber;
   }
 
   function validatePlotInput(input) {
@@ -422,7 +422,7 @@ export default function PaymentModal({
                         id="receipt-number"
                         label={t('table_headers.receipt_number')}
                         type="string"
-                        value={checkInputValues(plan.id, 'receipt')}
+                        value={checkInputValues(plan.id)?.receiptNumber}
                         name="receiptNumber"
                         onChange={event => onChangePlotInputFields(event, plan)}
                       />
@@ -435,7 +435,7 @@ export default function PaymentModal({
                     type="number"
                     name="amount"
                     style={{ width: '50%' }}
-                    value={checkInputValues(plan.id, 'amount')}
+                    value={checkInputValues(plan.id)?.amount}
                     onChange={event => onChangePlotInputFields(event, plan)}
                     InputProps={{
                       startAdornment: (

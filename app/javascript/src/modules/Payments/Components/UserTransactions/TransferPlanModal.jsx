@@ -149,7 +149,7 @@ export function PaymentPlansForTransferPlan({
   acceptanceCheckbox,
   handleAcceptanceCheckChange
 }) {
-  const filteredPaymentPlans = data?.userLandParcelWithPlan.filter(
+  const filteredPaymentPlans = data?.userLandParcelWithPlan?.filter(
     plan => plan.id !== sourcePlanId
   );
   const classes = useStyles();
@@ -215,12 +215,8 @@ TransferPlanModal.propTypes = {
   paymentPlanId: PropTypes.string.isRequired,
   refetch: PropTypes.func.isRequired,
   balanceRefetch: PropTypes.func.isRequired,
-  planData: PropTypes.arrayOf({
-    planPayments: PropTypes.shape({
-      id: PropTypes.string,
-      status: PropTypes.string,
-      amount: PropTypes.number
-    })
+  planData: PropTypes.shape({
+    planPayments: PropTypes.arrayOf(PropTypes.object)
   }).isRequired,
   currencyData: PropTypes.shape({
     currency: PropTypes.string,
@@ -228,14 +224,20 @@ TransferPlanModal.propTypes = {
   }).isRequired,
 };
 
+PaymentPlansForTransferPlan.defaultProps = {
+  data: {
+    userLandParcelWithPlan: []
+  }
+}
+
 PaymentPlansForTransferPlan.propTypes = {
   data: PropTypes.shape({
     userLandParcelWithPlan: PropTypes.arrayOf(
       PropTypes.shape({
         id: PropTypes.string
       })
-    ).isRequired
-  }).isRequired,
+    )
+  }),
   sourcePlanId: PropTypes.string.isRequired,
   destinationPlanId: PropTypes.string.isRequired,
   handleRadioChange: PropTypes.func.isRequired,
