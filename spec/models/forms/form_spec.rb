@@ -38,5 +38,6 @@ RSpec.describe Forms::Form, type: :model do
     it { is_expected.to belong_to(:community) }
     it { is_expected.to have_many(:form_properties) }
     it { is_expected.to have_many(:form_users) }
+    it { is_expected.to have_many(:categories) }
   end
 end

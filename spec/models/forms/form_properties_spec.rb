@@ -18,7 +18,9 @@ RSpec.describe Forms::FormProperty, type: :model do
 
   describe 'associations' do
     it { is_expected.to belong_to(:form) }
+    it { is_expected.to belong_to(:category) }
     it { is_expected.to have_many(:user_form_properties).dependent(:destroy) }
+    it { is_expected.to have_many(:sub_categories).dependent(:destroy) }
   end
 
   describe 'enums' do

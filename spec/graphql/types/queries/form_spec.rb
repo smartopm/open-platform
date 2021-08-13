@@ -7,9 +7,17 @@ RSpec.describe Types::Queries::Form do
     let!(:admin) { create(:admin_user, community_id: current_user.community_id) }
     let!(:current_user) { create(:user_with_community, name: 'John Test') }
     let!(:form) { create(:form, community_id: current_user.community_id) }
+    let!(:category) { create(:category, form: form, order: 1) }
     let!(:another_form) { create(:form, community_id: current_user.community_id, status: 2) }
-    let!(:form_property_text) { create(:form_property, form: form, field_type: 'text') }
-    let!(:form_property_date) { create(:form_property, form: form, field_type: 'date') }
+    let!(:form_property_text) do
+      create(:form_property, form: form, category: category, field_type: 'text')
+    end
+    let!(:sub_category) do
+      create(:category, form: form, form_property_id: form_property_text.id, order: 2)
+    end
+    let!(:form_property_date) do
+      create(:form_property, form: form, category: sub_category, field_type: 'date')
+    end
     let!(:form_user) { create(:form_user, form: form, user: current_user, status: 'approved') }
     let!(:another_form_user) { create(:form_user, form: form, user: admin, status: 'pending') }
 
@@ -69,6 +77,33 @@ RSpec.describe Types::Queries::Form do
               status
               user{
                 name
+              }
+            }
+          }
+        }
+      GQL
+    end
+
+    let(:form_categories_query) do
+      <<~GQL
+        query formCategories ($formId: ID!) {
+          formCategories(formId: $formId) {
+            fieldName
+            order
+            headerVisible
+            formProperties{
+              fieldName
+              fieldType
+              order
+              subCategories{
+                fieldName
+                order
+                headerVisible
+                formProperties{
+                  fieldName
+                  fieldType
+                  order
+                }
               }
             }
           }
@@ -166,6 +201,30 @@ RSpec.describe Types::Queries::Form do
           expect(form_entries['formUsers'].size).to eql 1
           expect(form_entries['formUsers'][0]['user']['name']).to eql 'John Test'
           expect(form_entries['formUsers'][0]['status']).to eql 'approved'
+        end
+      end
+
+      context 'when form categories query is called' do
+        it 'returns list of all the form categories that are associated with the form' do
+          variables = { formId: form.id }
+          result = DoubleGdpSchema.execute(form_categories_query, variables: variables,
+                                                                  context: {
+                                                                    current_user: admin,
+                                                                    site_community: admin.community,
+                                                                  }).as_json
+          expect(result['errors']).to be_nil
+          category_result = result.dig('data', 'formCategories', 0)
+          expect(category_result['fieldName']).to eql category.field_name
+          expect(category_result['order']).to eql 1
+          form_property_result = category_result['formProperties'][0]
+          expect(form_property_result['fieldName']).to eql form_property_text.field_name
+          expect(form_property_result['fieldType']).to eql 'text'
+          sub_category_result = form_property_result['subCategories'][0]
+          expect(sub_category_result['fieldName']).to eql sub_category.field_name
+          expect(sub_category_result['order']).to eql 2
+          sub_form_property = sub_category_result['formProperties'][0]
+          expect(sub_form_property['fieldName']).to eql form_property_date.field_name
+          expect(sub_form_property['fieldType']).to eql 'date'
         end
       end
     end

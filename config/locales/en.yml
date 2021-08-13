@@ -258,6 +258,8 @@ en:
     campaign:
       missing_parameter: 'Missing Parameter: Please Supply %{attribute} parameter'
     can_not_process_request: For some reason, I can't process your request
+    category:
+      not_found: Category not found
     comment:
       not_found: Comment not found
     duplicate:

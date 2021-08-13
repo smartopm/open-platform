@@ -9,7 +9,8 @@
 # migrations use external dependencies or application code.
 #
 # It's strongly recommended that you check this file into your version control system.
-ActiveRecord::Schema.define(version: 2021_08_10_120116) do
+
+ActiveRecord::Schema.define(version: 2021_08_12_060829) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -153,6 +154,20 @@ ActiveRecord::Schema.define(version: 2021_08_10_120116) do
     t.index ["community_id", "status"], name: "index_campaigns_on_community_id_and_status"
     t.index ["community_id"], name: "index_campaigns_on_community_id"
     t.index ["email_templates_id"], name: "index_campaigns_on_email_templates_id"
+  end
+
+  create_table "categories", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "field_name"
+    t.string "description"
+    t.integer "order"
+    t.boolean "header_visible"
+    t.text "rendered_text"
+    t.boolean "general", default: false
+    t.uuid "form_property_id"
+    t.uuid "form_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["form_id"], name: "index_categories_on_form_id"
   end
 
   create_table "comments", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -304,6 +319,8 @@ ActiveRecord::Schema.define(version: 2021_08_10_120116) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.json "field_value"
+    t.uuid "category_id"
+    t.index ["category_id"], name: "index_form_properties_on_category_id"
     t.index ["form_id"], name: "index_form_properties_on_form_id"
   end
 
@@ -776,6 +793,7 @@ ActiveRecord::Schema.define(version: 2021_08_10_120116) do
   add_foreign_key "campaign_labels", "labels"
   add_foreign_key "campaigns", "communities"
   add_foreign_key "campaigns", "email_templates", column: "email_templates_id"
+  add_foreign_key "categories", "forms"
   add_foreign_key "comments", "communities"
   add_foreign_key "contact_infos", "users"
   add_foreign_key "discussion_users", "discussions"
@@ -784,6 +802,7 @@ ActiveRecord::Schema.define(version: 2021_08_10_120116) do
   add_foreign_key "discussions", "users"
   add_foreign_key "email_templates", "communities"
   add_foreign_key "feedbacks", "communities"
+  add_foreign_key "form_properties", "categories"
   add_foreign_key "form_properties", "forms"
   add_foreign_key "form_users", "forms"
   add_foreign_key "form_users", "users"
