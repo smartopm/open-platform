@@ -18,7 +18,7 @@ import FormTimeline from '../../../shared/TimeLine'
 import { ActionDialog, DetailsDialog } from '../../../components/Dialog'
 import { formatError } from '../../../utils/helpers'
 import MessageAlert from '../../../components/MessageAlert'
-import CategoryList from './CategoryForm'
+import CategoryList from './Category/CategoryList'
 
 /**
  * @param {String} formId
