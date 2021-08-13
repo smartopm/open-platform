@@ -20,7 +20,8 @@ export const categories = [
     description: 'Some Description here',
     headerVisible: true,
     renderedText: 'This will initially be a very long text that looks similar to a contract',
-    properties: []
+    properties: [],
+    general: false
   },
   {
     id: 2,
@@ -29,7 +30,8 @@ export const categories = [
     description: 'Some General Category Description here',
     headerVisible: false,
     renderedText: 'This will initially be a very long text that looks similar to a contract',
-    properties: []
+    properties: [],
+    general: false
   }
 ];
 
@@ -38,7 +40,8 @@ const initialData = {
     order: 0,
     description: '',
     headerVisible: false,
-    renderedText: ''
+    renderedText: '',
+    general: false
   };
 export default function CategoryList({ handleAddField }) {
   const [formOpen, setFormOpen] = useState(false);
@@ -54,16 +57,21 @@ export default function CategoryList({ handleAddField }) {
     setFormOpen(true)
     setFormData(initialData)
   }
+
+  function handleClose(){
+    setFormOpen(false)
+  }
+
   return (
     <>
       <DetailsDialog
-        handleClose={() => setFormOpen(false)}
+        handleClose={handleClose}
         open={formOpen}
         title="Category"
         color="default"
       >
         <Container>
-          <CategoryForm data={data} />
+          <CategoryForm data={data} close={handleClose} />
         </Container>
       </DetailsDialog>
       <Button

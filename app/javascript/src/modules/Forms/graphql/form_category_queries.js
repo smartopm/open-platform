@@ -9,6 +9,14 @@ export const FormCategoriesQuery = gql`
       description
       formProperties {
         id
+        fieldName
+        fieldType
+        fieldValue
+        shortDesc
+        longDesc
+        required
+        adminUse
+        order
       }
     }
   }
