@@ -13,7 +13,7 @@ import { FormPropertyQuery } from '../graphql/forms_queries';
 import { Spinner } from '../../../shared/Loading';
 import { formatError, ifNotTest } from '../../../utils/helpers';
 import MessageAlert from '../../../components/MessageAlert';
-import { categories } from './CategoryForm';
+import { categories } from './Category/CategoryList';
 
 const initData = {
   fieldName: '',
