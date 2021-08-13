@@ -36,6 +36,7 @@
   },
   "map_markers": {
     "available": "Disponible",
+    "house_status": "Estado de la Casa:",
     "latitude_x": "Longitud X",
     "longitude_y": "Latitud Y",
     "property_no": "Propiedad No:",
@@ -56,10 +57,12 @@
   },
   "misc": {
     "accounts": "Cuentas?:",
+    "built": "Construido",
     "end_date": "Fecha final",
     "existing_property": "Propiedad existente",
     "geo_coordinates": "Geo-Coordenadas?:",
     "id": "ID:",
+    "in_construction": "En Construcción",
     "legend": "Leyenda",
     "map_editor": "Editor de mapas",
     "merge_plot_to_keep": "Después de fusionar (nueva parcela para conservar)",
@@ -73,6 +76,7 @@
     "parcel_type": "Tipo de Parcela:",
     "payments": "Pagos",
     "plan": "Plan",
+    "planned": "Planeado",
     "plot_properties": "Propiedades de la parcela",
     "point_of_interest": "Punto de interés",
     "polygon": "Polígono",
