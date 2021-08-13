@@ -1,9 +1,10 @@
 /* eslint-disable jsx-a11y/interactive-supports-focus */
 /* eslint-disable no-nested-ternary */
+/* eslint-disable react-hooks/rules-of-hooks */
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { CSVLink } from 'react-csv';
-import { Button, Container, Grid, List, Typography } from '@material-ui/core';
+import { Button, Container, Grid, List, Typography, Hidden } from '@material-ui/core';
 import Avatar from '@material-ui/core/Avatar';
 import Fab from '@material-ui/core/Fab';
 import PropTypes from 'prop-types';
@@ -61,13 +62,6 @@ const csvHeaders = [
 
 export default function PaymentList({ currencyData }) {
   const { t } = useTranslation(['payment', 'common']);
-  const paymentHeaders = [
-    { title: 'Client Info', value: t('common:misc.client_info'), col: 2 },
-    { title: 'Payment Date', value: t('common:table_headers.payment_date'), col: 1 },
-    { title: 'Payment Info', value: t('table_headers.payment_info'), col: 1 },
-    { title: 'Receipt Number', value: t('table_headers.receipt_number'), col: 1 },
-    { title: 'Status', value: t('table_headers.payment_status'), col: 2 }
-  ];
   const limit = 50;
   const path = useParamsQuery();
   const classes = useStyles();
@@ -83,6 +77,33 @@ export default function PaymentList({ currencyData }) {
   const [displayBuilder, setDisplayBuilder] = useState('none');
   const [searchQuery, setSearchQuery] = useState('');
   const [paymentModalOpen, setPaymentModalOpen] = useState(false);
+
+  const paymentHeaders = [
+    {
+      title: `${matches ? 'Client Info' : 'Client Name'}`,
+      value: matches ? t('common:misc.client_info') : t('common:misc.client_name'),
+      col: 2
+    },
+    { title: 'Payment Date', value: t('common:table_headers.payment_date'), col: 1 },
+    { title: 'Payment Info', value: t('table_headers.payment_info'), col: 1 },
+    {
+      title: 'Receipt Number',
+      value: t('table_headers.receipt_number'),
+      col: 1,
+      style: matches ? {} : { textAlign: 'right' }
+    },
+    { title: 'Status', value: t('table_headers.payment_status'), col: 2 }
+  ];
+
+  if (!matches) {
+    paymentHeaders[1] = {
+      title: 'Plot Info',
+      value: t('table_headers.plot_info'),
+      col: 1,
+      style: { textAlign: 'right' }
+    };
+    [paymentHeaders[1], paymentHeaders[2]] = [paymentHeaders[2], paymentHeaders[1]];
+  }
 
   const pageNumber = Number(page);
   const { loading, data, error, refetch } = useQuery(PlansPaymentsQuery, {
@@ -310,9 +331,11 @@ export default function PaymentList({ currencyData }) {
 }
 
 export function renderPayment(payment, currencyData) {
+  const theme = useTheme();
+  const matches = useMediaQuery(theme.breakpoints.up('sm'));
   return [
     {
-      'Client Info': (
+      [`${matches ? 'Client Info' : 'Client Name'}`]: (
         <Grid item xs={12} md={2} data-testid="created_by">
           <Link
             to={`/user/${payment.user.id}?tab=Plans`}
@@ -321,26 +344,44 @@ export function renderPayment(payment, currencyData) {
             <div style={{ display: 'flex' }}>
               <Avatar src={payment.user.imageUrl} alt="avatar-image" />
               <Typography style={{ margin: '7px', fontSize: '12px' }}>
-                <Text color="primary" content={payment.user.name} />
-                <br />
-                <Text
-                  content={`${payment.paymentPlan?.landParcel.parcelType || ''} ${
-                    payment.paymentPlan?.landParcel?.parcelType ? ' - ' : ''
-                  } ${payment.paymentPlan?.landParcel.parcelNumber}`}
-                />
+                <Text color={matches ? 'primary' : 'inherit'} content={payment.user.name} />
+                <Hidden smDown>
+                  <br />
+                  <Text
+                    content={`${payment.paymentPlan?.landParcel.parcelType || ''} ${
+                      payment.paymentPlan?.landParcel?.parcelType ? ' - ' : ''
+                    } ${payment.paymentPlan?.landParcel.parcelNumber}`}
+                  />
+                </Hidden>
               </Typography>
             </div>
           </Link>
         </Grid>
       ),
-      'Payment Date': (
+      [`${matches ? 'Payment Date' : 'Plot Info'}`]: (
         <Grid item xs={12} md={2}>
-          <Text content={dateToString(payment.createdAt)} />
+          {matches ? (
+            <Text content={dateToString(payment.createdAt)} />
+          ) : (
+            <Text
+              content={`${payment.paymentPlan?.landParcel.parcelType || ''} ${
+                payment.paymentPlan?.landParcel?.parcelType ? ' - ' : ''
+              } ${payment.paymentPlan?.landParcel.parcelNumber}`}
+            />
+          )}
         </Grid>
       ),
       'Payment Info': (
         <Grid item xs={12} md={2} data-testid="payment_info">
-          <Text content={formatMoney(currencyData, payment.amount)} />
+          {matches ? (
+            <Text content={formatMoney(currencyData, payment.amount)} />
+          ) : (
+            <Text
+              content={`Paid ${formatMoney(currencyData, payment.amount)} on ${dateToString(
+                payment.createdAt
+              )}`}
+            />
+          )}
           <br />
           <Text
             content={
@@ -357,7 +398,13 @@ export function renderPayment(payment, currencyData) {
         </Grid>
       ),
       Status: (
-        <Grid item xs={12} md={2} data-testid="payment_status">
+        <Grid
+          item
+          xs={12}
+          md={2}
+          data-testid="payment_status"
+          style={matches ? {} : { width: '90px' }}
+        >
           <Label
             title={titleize(payment.status)}
             color={propAccessor(InvoiceStatusColor, payment?.status)}
@@ -370,19 +417,43 @@ export function renderPayment(payment, currencyData) {
 
 export function TransactionItem({ transaction, currencyData }) {
   const { t } = useTranslation(['payment', 'common']);
+  const theme = useTheme();
+  const matches = useMediaQuery(theme.breakpoints.up('sm'));
   const paymentHeaders = [
-    { title: 'Client Info', value: t('common:misc.client_info'), col: 2 },
+    {
+      title: `${matches ? 'Client Info' : 'Client Name'}`,
+      value: matches ? t('common:misc.client_info') : t('common:misc.client_name'),
+      col: 2
+    },
     { title: 'Payment Date', value: t('common:table_headers.payment_date'), col: 1 },
     { title: 'Payment Info', value: t('table_headers.payment_info'), col: 1 },
-    { title: 'Receipt Number', value: t('table_headers.receipt_number'), col: 1 },
+    {
+      title: 'Receipt Number',
+      value: t('table_headers.receipt_number'),
+      col: 1,
+      style: matches ? {} : { textAlign: 'right' }
+    },
     { title: 'Status', value: t('table_headers.payment_status'), col: 2 }
   ];
+
+  if (!matches) {
+    paymentHeaders[1] = {
+      title: 'Plot Info',
+      value: t('table_headers.plot_info'),
+      col: 1,
+      style: { textAlign: 'right' }
+    };
+    [paymentHeaders[1], paymentHeaders[2]] = [paymentHeaders[2], paymentHeaders[1]];
+  }
+
   return (
-    <DataList
-      keys={paymentHeaders}
-      data={renderPayment(transaction, currencyData)}
-      hasHeader={false}
-    />
+    <div style={{ padding: '0 20px' }}>
+      <DataList
+        keys={paymentHeaders}
+        data={renderPayment(transaction, currencyData)}
+        hasHeader={false}
+      />
+    </div>
   );
 }
 
