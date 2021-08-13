@@ -4,6 +4,7 @@ import gql from 'graphql-tag';
 export const FormPropertyCreateMutation = gql`
   mutation formPropertiesCreate(
     $formId: ID!
+    $categoryId: ID!
     $fieldName: String!
     $fieldType: String!
     $required: Boolean!
@@ -13,6 +14,7 @@ export const FormPropertyCreateMutation = gql`
   ) {
     formPropertiesCreate(
       formId: $formId
+      categoryId: $categoryId
       fieldName: $fieldName
       order: $order
       required: $required
