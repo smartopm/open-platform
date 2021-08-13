@@ -1,0 +1,9 @@
+{
+    "panic_alerts": {
+      "panic_error_alert": "Sorry, emergency not triggered. You need to long press the button for 3 seconds",
+      "panic_success_alert": "A message has been sent to the security team."
+
+
+      
+    }
+}

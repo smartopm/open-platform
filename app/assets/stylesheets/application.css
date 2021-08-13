@@ -292,3 +292,7 @@ body {
     overflow: hidden;
   }
 }
+
+.emergency-call-icon:hover {
+  cursor: pointer;
+}

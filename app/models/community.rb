@@ -95,4 +95,13 @@ class Community < ApplicationRecord
   def add_default_community_features
     self.features = COMMUNITY_FEATURES if new_record?
   end
+
+  def send_emergency_sms
+    raise UserError, 'No phone number to send one time code to' unless sms_phone_numbers
+
+    sms_phone_numbers.each  do |sms_phone_number|
+      Rails.logger.info "Sending #{sms_phone_number}"
+      Sms.send(sms_phone_number, 'A user has an emergency. Kindly act on this as soon as possible')
+    end
+  end
 end
