@@ -40,7 +40,8 @@
     "make_payment_details": "You are about to make a payment with following details",
     "total_amount_paid": "Total Amount Paid By Date",
     "payment_cancelled": "Payment Plan successfully canceled",
-    "pay_day_updated": "Payment Day successfully updated"
+    "pay_day_updated": "Payment Day successfully updated",
+    "transaction_title": "Kindly find your transaction details below."
   },
   "table_headers": {
     "receipt_number": "Receipt Number",
@@ -73,7 +74,11 @@
     "mobile_money": "mobileMoney",
     "bank_transfer": "bankTrasfer",
     "eft": "eft",
-    "pos": "pos"
+    "pos": "pos",
+    "receipt": "Receipt {{number}}",
+    "recorded_details": "Recorded by {{name}}",
+    "total_paid": "Total Amount Paid",
+    "unallocated_amount": "{{amount}} unallocated"
   },
   "errors": {
     "duration_requied": "Duration is required",
