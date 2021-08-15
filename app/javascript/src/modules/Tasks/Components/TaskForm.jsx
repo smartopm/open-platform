@@ -40,7 +40,6 @@ export default function TaskForm({ close, refetch, users, assignUser}) {
   function handleSubmit(event) {
     event.preventDefault()
     setLoadingStatus(true)
-
     createTask({
       variables: {
         body: title,

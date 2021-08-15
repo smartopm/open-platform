@@ -2,7 +2,7 @@
 import gql from 'graphql-tag';
 
 export const CommunityEmergencyMutation = gql`
-    mutation communityEmergency {
+    mutation communityEmergency{
         communityEmergency {
         success
         }

@@ -89,7 +89,6 @@ export function MainNav({ authState }) {
     return module;
   });
 
-  console.log(authState)
   const handleDrawerToggle = () => {
     setDrawerOpen(!drawerOpen);
 
@@ -101,11 +100,6 @@ export function MainNav({ authState }) {
         : `${drawerWidth}px`;
     }
   };
-
-  const openSOSModal = () =>{
-    setOpen(!open);
-
-  }
 
   return (
     <div className={classes.root}>
@@ -129,9 +123,9 @@ export function MainNav({ authState }) {
             )}
           </IconButton>
 
-          <SvgIcon component={SOSIcon} viewBox="0 0 384 512" openSOSModal={openSOSModal} />
+          <SvgIcon component={SOSIcon} viewBox="0 0 384 512" setOpen={setOpen} />
 
-          <SOSModal open={open} openSOSModal={openSOSModal} />
+          <SOSModal open={open} setOpen={setOpen} {...{ authState }} />
 
           <UserAvatar imageUrl={authState?.user?.imageUrl} />
           <UserActionOptions />
@@ -205,7 +199,9 @@ MainNav.propTypes = {
 
 NewsNav.propTypes = {
   children: PropTypes.node.isRequired,
+  // eslint-disable-next-line react/forbid-prop-types
   history: PropTypes.object.isRequired
+
 };
 
 const styles = StyleSheet.create({

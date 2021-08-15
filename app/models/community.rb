@@ -2,6 +2,7 @@
 
 # A Community is a city, or organization under which members/citizens exist
 class Community < ApplicationRecord
+  class CommunityError < StandardError; end
   has_one_attached :image
 
   COMMUNITY_FEATURES = [
@@ -96,12 +97,26 @@ class Community < ApplicationRecord
     self.features = COMMUNITY_FEATURES if new_record?
   end
 
-  def send_emergency_sms
-    raise UserError, 'No phone number to send one time code to' unless sms_phone_numbers
+  # rubocop:disable Layout/LineLength
+  def craft_sms(**params)
+    raise CommunityError, 'No phone numbers to send sms to' if sms_phone_numbers.blank?
 
+    task_url = "https://#{HostEnv.base_url(self)}/tasks/#{params[:note_id]}"
+    message = if params[:current_user].phone_number.present?
+
+                "Emergency SOS #{params[:current_user].name} has initiated an emergency support request and can likely be reached on #{params[:current_user].phone_number}."
+              else
+                "Emergency SOS #{params[:current_user].name} has initiated an emergency support request and do not have a contact number in our system."
+              end
+    message += " You are receiving this message as you are a member of the emergency escalation team for #{name}. Please confirm the person is safe and the emergency is resolved, then mark as complete #{task_url}"
+    send_sms(message)
+  end
+
+  # rubocop:enable Layout/LineLength
+  def send_sms(message)
     sms_phone_numbers.each  do |sms_phone_number|
       Rails.logger.info "Sending #{sms_phone_number}"
-      Sms.send(sms_phone_number, 'A user has an emergency. Kindly act on this as soon as possible')
+      Sms.send(sms_phone_number, message)
     end
   end
 end

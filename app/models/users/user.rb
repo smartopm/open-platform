@@ -459,7 +459,6 @@ module Users
     end
 
     def self.find_via_auth_token(auth_token, community)
-      puts "I am here in the user model #{community}"
       decoded_token = JWT.decode auth_token,
                                  Rails.application.credentials.secret_key_base,
                                  true,

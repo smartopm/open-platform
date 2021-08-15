@@ -1,13 +1,9 @@
 
 import React from 'react';
+import PropTypes from 'prop-types'
 
 const PanicButtonSVG = ({bind}) => (
-  <svg width="217px" height="217px" {...bind}>
-    <defs>
-      <filter x="-6.2%" y="-6.2%" width="112.4%" height="112.4%" filterUnits="objectBoundingBox" id="filter-1">
-        <feGaussianBlur stdDeviation="4" in="SourceGraphic" />
-      </filter>
-    </defs>
+  <svg width="217px" height="217px" {...bind} data-testid="sos-modal-panic-button">
     <g id="Panic-Button" stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
       <g id="Emergency" transform="translate(-97.000000, -156.000000)">
         <g id="Group" transform="translate(109.000000, 168.000000)">
@@ -24,5 +20,8 @@ const PanicButtonSVG = ({bind}) => (
     </g>
   </svg>
   );
+  PanicButtonSVG.propTypes = {
+    bind: PropTypes.func.isRequired
+  }
 
 export default PanicButtonSVG
