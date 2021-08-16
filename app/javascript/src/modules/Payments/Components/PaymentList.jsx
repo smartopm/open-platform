@@ -1,9 +1,10 @@
 /* eslint-disable jsx-a11y/interactive-supports-focus */
 /* eslint-disable no-nested-ternary */
+/* eslint-disable react-hooks/rules-of-hooks */
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { CSVLink } from 'react-csv';
-import { Button, Container, Grid, List, Typography } from '@material-ui/core';
+import { Button, Container, Grid, List, Typography, Hidden } from '@material-ui/core';
 import Avatar from '@material-ui/core/Avatar';
 import Fab from '@material-ui/core/Fab';
 import PropTypes from 'prop-types';
@@ -19,8 +20,11 @@ import {
   formatMoney,
   useParamsQuery,
   handleQueryOnChange,
+  InvoiceStatusColor,
+  propAccessor,
   titleize
 } from '../../../utils/helpers';
+import Label from '../../../shared/label/Label';
 import CenteredContent from '../../../components/CenteredContent';
 import SearchInput from '../../../shared/search/SearchInput';
 import useDebounce from '../../../utils/useDebounce';
@@ -58,14 +62,6 @@ const csvHeaders = [
 
 export default function PaymentList({ currencyData }) {
   const { t } = useTranslation(['payment', 'common']);
-  const paymentHeaders = [
-    { title: 'Client Name', value: t('common:misc.client_name'), col: 1 },
-    { title: 'Payment Date', value: t('common:table_headers.payment_date'), col: 1 },
-    { title: 'Payment Amount', value: t('table_headers.payment_amount'), col: 1 },
-    { title: 'Plot Info', value: t('table_headers.plot_info'), col: 1 },
-    { title: 'Payment Type', value: t('common:form_fields.payment_Type'), col: 1 },
-    { title: 'PaymentStatus/ReceiptNumber', value: t('table_headers.payment_receipt_status'), col: 2 }
-  ];
   const limit = 50;
   const path = useParamsQuery();
   const classes = useStyles();
@@ -81,6 +77,33 @@ export default function PaymentList({ currencyData }) {
   const [displayBuilder, setDisplayBuilder] = useState('none');
   const [searchQuery, setSearchQuery] = useState('');
   const [paymentModalOpen, setPaymentModalOpen] = useState(false);
+
+  const paymentHeaders = [
+    {
+      title: `${matches ? 'Client Info' : 'Client Name'}`,
+      value: matches ? t('common:misc.client_info') : t('common:misc.client_name'),
+      col: 2
+    },
+    { title: 'Payment Date', value: t('common:table_headers.payment_date'), col: 1 },
+    { title: 'Payment Info', value: t('table_headers.payment_info'), col: 1 },
+    {
+      title: 'Receipt Number',
+      value: t('table_headers.receipt_number'),
+      col: 1,
+      style: matches ? {} : { textAlign: 'right' }
+    },
+    { title: 'Status', value: t('table_headers.payment_status'), col: 2 }
+  ];
+
+  if (!matches) {
+    paymentHeaders[1] = {
+      title: 'Plot Info',
+      value: t('table_headers.plot_info'),
+      col: 1,
+      style: { textAlign: 'right' }
+    };
+    [paymentHeaders[1], paymentHeaders[2]] = [paymentHeaders[2], paymentHeaders[1]];
+  }
 
   const pageNumber = Number(page);
   const { loading, data, error, refetch } = useQuery(PlansPaymentsQuery, {
@@ -268,7 +291,11 @@ export default function PaymentList({ currencyData }) {
         <List>
           {listType === 'graph' && paymentStatData?.paymentStatDetails?.length > 0 ? (
             <div>
-              {matches && <ListHeader headers={paymentHeaders} />}
+              {matches && (
+                <div style={{ padding: '0 20px' }}>
+                  <ListHeader headers={paymentHeaders} />
+                </div>
+              )}
               {paymentStatData.paymentStatDetails.map(payment => (
                 <TransactionItem
                   key={payment.id}
@@ -279,7 +306,11 @@ export default function PaymentList({ currencyData }) {
             </div>
           ) : paymentList?.length > 0 ? (
             <div>
-              {matches && <ListHeader headers={paymentHeaders} />}
+              {matches && (
+                <div style={{ padding: '0 20px' }}>
+                  <ListHeader headers={paymentHeaders} />
+                </div>
+              )}
               {paymentList.map(payment => (
                 <TransactionItem
                   key={payment.id}
@@ -307,41 +338,57 @@ export default function PaymentList({ currencyData }) {
   );
 }
 
-export function renderPayment(payment, currencyData) {
+export function renderPayment(payment, currencyData, theme, matches) {
   return [
     {
-      'Client Name': (
+      [`${matches ? 'Client Info' : 'Client Name'}`]: (
         <Grid item xs={12} md={2} data-testid="created_by">
-          <Link to={`/user/${payment.user.id}?tab=Plans`} style={{ textDecoration: 'none' }}>
+          <Link
+            to={`/user/${payment.user.id}?tab=Plans`}
+            style={{ textDecoration: 'none', color: 'inherit' }}
+          >
             <div style={{ display: 'flex' }}>
               <Avatar src={payment.user.imageUrl} alt="avatar-image" />
-              <Typography color="primary" style={{ margin: '7px', fontSize: '12px' }}>
-                {payment.user.name}
+              <Typography style={{ margin: '7px', fontSize: '12px' }}>
+                <Text color={matches ? 'primary' : 'inherit'} content={payment.user.name} />
+                <Hidden smDown>
+                  <br />
+                  <Text
+                    content={`${payment.paymentPlan?.landParcel.parcelType || ''} ${
+                      payment.paymentPlan?.landParcel?.parcelType ? ' - ' : ''
+                    } ${payment.paymentPlan?.landParcel.parcelNumber}`}
+                  />
+                </Hidden>
               </Typography>
             </div>
           </Link>
         </Grid>
       ),
-      'Payment Date': (
+      [`${matches ? 'Payment Date' : 'Plot Info'}`]: (
         <Grid item xs={12} md={2}>
-          <Text content={dateToString(payment.createdAt)} />
+          {matches ? (
+            <Text content={dateToString(payment.createdAt)} />
+          ) : (
+            <Text
+              content={`${payment.paymentPlan?.landParcel.parcelType || ''} ${
+                payment.paymentPlan?.landParcel?.parcelType ? ' - ' : ''
+              } ${payment.paymentPlan?.landParcel.parcelNumber}`}
+            />
+          )}
         </Grid>
       ),
-      'Payment Amount': (
-        <Grid item xs={12} md={2} data-testid="payment_amount">
-          <Text content={formatMoney(currencyData, payment.amount)} />
-        </Grid>
-      ),
-      'Plot Info': (
-        <Grid item xs={12} md={2} data-testid="plot_info">
-          <Text
-            content={`${(payment.paymentPlan?.landParcel.parcelType || '')} ${payment.paymentPlan
-              ?.landParcel?.parcelType ? ' - ' : ''} ${payment.paymentPlan?.landParcel.parcelNumber}`}
-          />
-        </Grid>
-      ),
-      'Payment Type': (
-        <Grid item xs={12} md={2} data-testid="payment_type">
+      'Payment Info': (
+        <Grid item xs={12} md={2} data-testid="payment_info">
+          {matches ? (
+            <Text content={formatMoney(currencyData, payment.amount)} />
+          ) : (
+            <Text
+              content={`Paid ${formatMoney(currencyData, payment.amount)} on ${dateToString(
+                payment.createdAt
+              )}`}
+            />
+          )}
+          <br />
           <Text
             content={
               ['cash'].includes(payment.userTransaction.source)
@@ -351,9 +398,23 @@ export function renderPayment(payment, currencyData) {
           />
         </Grid>
       ),
-      'PaymentStatus/ReceiptNumber': (
+      'Receipt Number': (
         <Grid item xs={12} md={2} data-testid="receipt_number">
-          <Text content={`${titleize(payment.status)} - ${payment.receiptNumber}`} />
+          <Text content={payment.receiptNumber || '-'} />
+        </Grid>
+      ),
+      Status: (
+        <Grid
+          item
+          xs={12}
+          md={2}
+          data-testid="payment_status"
+          style={matches ? {} : { width: '90px' }}
+        >
+          <Label
+            title={titleize(payment.status)}
+            color={propAccessor(InvoiceStatusColor, payment?.status)}
+          />
         </Grid>
       )
     }
@@ -362,20 +423,43 @@ export function renderPayment(payment, currencyData) {
 
 export function TransactionItem({ transaction, currencyData }) {
   const { t } = useTranslation(['payment', 'common']);
+  const theme = useTheme();
+  const matches = useMediaQuery(theme.breakpoints.up('sm'));
   const paymentHeaders = [
-    { title: 'Client Name', value: t('common:misc.client_name'), col: 1 },
+    {
+      title: `${matches ? 'Client Info' : 'Client Name'}`,
+      value: matches ? t('common:misc.client_info') : t('common:misc.client_name'),
+      col: 2
+    },
     { title: 'Payment Date', value: t('common:table_headers.payment_date'), col: 1 },
-    { title: 'Payment Amount', value: t('table_headers.payment_amount'), col: 1 },
-    { title: 'Plot Info', value: t('table_headers.plot_info'), col: 1 },
-    { title: 'Payment Type', value: t('common:form_fields.payment_Type'), col: 1 },
-    { title: 'PaymentStatus/ReceiptNumber', value: t('table_headers.payment_receipt_status'), col: 2 }
+    { title: 'Payment Info', value: t('table_headers.payment_info'), col: 1 },
+    {
+      title: 'Receipt Number',
+      value: t('table_headers.receipt_number'),
+      col: 1,
+      style: matches ? {} : { textAlign: 'right' }
+    },
+    { title: 'Status', value: t('table_headers.payment_status'), col: 2 }
   ];
+
+  if (!matches) {
+    paymentHeaders[1] = {
+      title: 'Plot Info',
+      value: t('table_headers.plot_info'),
+      col: 1,
+      style: { textAlign: 'right' }
+    };
+    [paymentHeaders[1], paymentHeaders[2]] = [paymentHeaders[2], paymentHeaders[1]];
+  }
+
   return (
-    <DataList
-      keys={paymentHeaders}
-      data={renderPayment(transaction, currencyData)}
-      hasHeader={false}
-    />
+    <div style={{ padding: '0 20px' }}>
+      <DataList
+        keys={paymentHeaders}
+        data={renderPayment(transaction, currencyData, theme, matches)}
+        hasHeader={false}
+      />
+    </div>
   );
 }
 

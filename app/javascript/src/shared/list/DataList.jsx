@@ -29,8 +29,8 @@ export default function DataList({ keys, data, hasHeader, clickable, handleClick
           <div>
             {data.map((item, index) => (
               // eslint-disable-next-line jsx-a11y/no-static-element-interactions
-              <div 
-                key={item.id || index} 
+              <div
+                key={item.id || index}
                 style={{display: 'flex'}}
                 className={clickable ? classes.clickable : classes.list}
                 onClick={clickable ? () => handleClick(item) : null}
@@ -76,7 +76,7 @@ export default function DataList({ keys, data, hasHeader, clickable, handleClick
 export function CellData({ propNames, dataObj }) {
   return propNames.map(prop => (
     <Fragment
-      key={prop.title} 
+      key={prop.title}
     >
       {propAccessor(dataObj, prop.title)}
     </Fragment>
@@ -88,12 +88,12 @@ export function MobileCellData({ propNames, dataObj, singlePropName }) {
   if (singlePropName?.status) {
     names = propNames.filter(prop => prop.title === singlePropName.value)
   }
-  
+
   return names.map(prop => (
     <Fragment
       key={prop.title}
     >
-      <div style={{margin: '20px 10px'}}>
+      <div style={{margin: '20px 10px', ...prop.style}}>
         {!singlePropName && <div style={{ fontWeight: 'bold', fontSize: '13px' }}>{prop.title}</div>}
         {propAccessor(dataObj, prop.title)}
       </div>

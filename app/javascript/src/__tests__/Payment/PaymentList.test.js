@@ -22,7 +22,7 @@ describe('Payment List Item Component', () => {
         source: 'cash',
         amount: 1000,
         id: 'dd7bcc9d-c063-4aad-8110-d784d535f3e3',
-        transactionNumber: "9234832423" 
+        transactionNumber: "9234832423"
       },
       user: {
         id: '9c617681-b6b3-4ebf-b5aa-c7a606c2f2f4',
@@ -70,10 +70,8 @@ describe('Payment List Item Component', () => {
     await waitFor(
       () => {
         expect(container.queryAllByTestId('created_by')[0].textContent).toContain('JM');
-        expect(container.queryAllByTestId('payment_type')[0].textContent).toContain('Cash Deposit');
-        expect(container.queryAllByTestId('payment_type')).toHaveLength(1);
-        expect(container.queryAllByTestId('payment_amount')).toHaveLength(1);
-        expect(container.queryAllByTestId('plot_info')).toHaveLength(1);
+        expect(container.queryAllByTestId('payment_info')[0].textContent).toContain('Cash Deposit');
+        expect(container.queryAllByTestId('payment_info')).toHaveLength(1);
         expect(container.queryAllByTestId('receipt_number')).toHaveLength(1);
       },
       { timeout: 100 }
@@ -91,10 +89,8 @@ describe('Payment List Item Component', () => {
     const results = renderPayment(transactions[0], currency);
     expect(results).toBeInstanceOf(Array);
     expect(results[0]).toHaveProperty('Client Name');
-    expect(results[0]).toHaveProperty('Payment Date');
-    expect(results[0]).toHaveProperty('Payment Type');
-    expect(results[0]).toHaveProperty('Payment Amount');
-    expect(results[0]).toHaveProperty('PaymentStatus/ReceiptNumber');
+    expect(results[0]).toHaveProperty('Payment Info');
+    expect(results[0]).toHaveProperty('Receipt Number');
     expect(results[0]).toHaveProperty('Plot Info');
   });
 });
