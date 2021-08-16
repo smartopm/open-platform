@@ -15,8 +15,6 @@ import { formatError } from '../../../utils/helpers';
 import MessageAlert from '../../../components/MessageAlert';
 import { LiteFormCategories } from '../graphql/form_category_queries';
 
-
-
 const fieldTypes = {
   text: 'Text',
   radio: 'Radio',
@@ -26,7 +24,7 @@ const fieldTypes = {
   dropdown: 'Dropdown'
 };
 
-export default function FormPropertyCreateForm({ formId, refetch, propertyId, categoryId }) {
+export default function FormPropertyCreateForm({ formId, refetch, propertyId, categoryId, close }) {
   const initData = {
     fieldName: '',
     fieldType: '',
@@ -130,7 +128,7 @@ export default function FormPropertyCreateForm({ formId, refetch, propertyId, ca
         });
         setOptions(['']);
         setMessage({ ...message, isError: false, detail: t('misc.updated_form_property') });
-        // close();
+        close();
       })
       .catch(err => {
         setMessage({ ...message, isError: true, detail: formatError(err.message) });
@@ -236,11 +234,13 @@ export default function FormPropertyCreateForm({ formId, refetch, propertyId, ca
 
 FormPropertyCreateForm.defaultProps = {
   propertyId: null,
+  close: () => {}
 };
 
 FormPropertyCreateForm.propTypes = {
   refetch: PropTypes.func.isRequired,
   formId: PropTypes.string.isRequired,
   categoryId: PropTypes.string.isRequired,
-  propertyId: PropTypes.string
+  propertyId: PropTypes.string,
+  close: PropTypes.func
 };

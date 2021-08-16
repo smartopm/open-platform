@@ -53,7 +53,7 @@ export default function FormPropertyAction({ propertyId, editMode, formId, refet
   if (!editMode) {
     return null;
   }
-  console.log(categoryId)
+
   return (
     <>
       <MessageAlert
@@ -74,6 +74,7 @@ export default function FormPropertyAction({ propertyId, editMode, formId, refet
             refetch={refetch}
             propertyId={propertyId}
             categoryId={categoryId}
+            close={handleModal}
           />
         </Container>
       </DetailsDialog>
