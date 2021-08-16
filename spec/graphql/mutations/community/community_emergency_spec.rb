@@ -35,9 +35,9 @@ RSpec.describe Mutations::Community::CommunityEmergency do
 
     it 'throws unauthorized error when no authorization is not provided' do
       result = DoubleGdpSchema.execute(create_sos_ticket, variables: nil,
-                                                            context: {
-                                                              site_community: user.community,
-                                                            }).as_json
+                                                          context: {
+                                                            site_community: user.community,
+                                                          }).as_json
 
       expect(result.dig('data', 'communityEmergency', 'success')).to be_nil
       expect(result.dig('errors', 0, 'message')).to eql 'Unauthorized'
