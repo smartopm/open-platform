@@ -107,7 +107,6 @@ export default function FormPropertyCreateForm({ formId, refetch, propertyId, ca
         setMutationLoading(false);
       });
   }
-
   function updateFormProperty(event) {
     event.preventDefault();
     setMutationLoading(true);
@@ -115,7 +114,7 @@ export default function FormPropertyCreateForm({ formId, refetch, propertyId, ca
       variables: {
         ...propertyData,
         fieldValue,
-        id: propertyId
+        formPropertyId: propertyId,
       }
     })
       .then(res => {

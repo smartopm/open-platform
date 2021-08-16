@@ -106,7 +106,7 @@ export const FormUserStatusUpdateMutation = gql`
 
 export const FormPropertyUpdateMutation = gql`
 mutation updateProps(
-  $id: ID!
+  $formPropertyId: ID!
   $fieldName: String!
   $fieldType: String!
   $required: Boolean!
@@ -115,7 +115,7 @@ mutation updateProps(
   $fieldValue: JSON
 ) {
   formPropertiesUpdate(
-    id: $id
+    formPropertyId: $formPropertyId
     fieldName: $fieldName
     order: $order
     required: $required

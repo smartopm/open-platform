@@ -95,13 +95,13 @@ export default function CategoryForm({ data, close, refetchCategory }) {
           <SwitchInput
             name="headerVisible"
             label={t('form:form_fields.header_visible')}
-            value={categoryData.headerVisible}
+            value={categoryData.headerVisible || false}
             handleChange={handleRadioChange}
           />
           <SwitchInput
             name="general"
             label={t('form:form_fields.general_category')}
-            value={categoryData.general}
+            value={categoryData.general || false}
             handleChange={handleRadioChange}
           />
           <TextField
