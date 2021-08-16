@@ -22,7 +22,7 @@ module Mutations
         form = context[:site_community].forms.find(vals[:form_id])
         raise_form_not_found_error(form)
 
-        category = get_category(form, vals[:category_id])
+        category = get_category(form, vals)
         form_property = category.form_properties.new(vals.merge({ category_id: category.id }))
         data = { action: 'added', field_name: vals[:field_name] }
 
@@ -64,13 +64,13 @@ module Mutations
       # @param category_id [String]
       #
       # @return [Forms::Category]
-      def get_category(form, category_id)
-        if category_id.present?
-          category = form.categories.find_by(id: category_id)
+      def get_category(form, vals)
+        if vals[:category_id].present?
+          category = form.categories.find_by(id: vals[:category_id])
           raise_category_not_found_error(category)
         else
           category = form.categories.create(field_name: 'General Category', general: true,
-                                            header_visible: false)
+                                            header_visible: false, order: vals[:order].to_i)
         end
         category
       end

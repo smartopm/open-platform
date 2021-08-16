@@ -18,28 +18,20 @@ module Mutations
         raise_form_not_found_error(form)
 
         form_property = form.form_properties.find(vals[:form_property_id])
-        form = form_property.form
+        raise_form_property_not_found_error(form_property)
 
         if form.entries?
-          last_version_number = form.last_version
-          new_form = form.duplicate(vals[:form_property_id])
-          new_form.version_number = (last_version_number + 1)
-          new_name = form.name.gsub(/\s(V)\d*/, '')
-          new_form.name = "#{new_name} V#{last_version_number + 1}"
-
-          if new_form.save
-            form.deprecated!
-            return { message: 'New version created', new_form_version: new_form }
+          new_form = duplicate_form(form, vals)
+          { message: 'New version created', new_form_version: new_form } if new_form.persisted?
+        else
+          if form_property.destroy
+            data = { action: 'removed', field_name: form_property.field_name }
+            context[:current_user].generate_events('form_update', form, data)
+            return { form_property: form_property }
           end
-        end
 
-        if form_property.delete
-          data = { action: 'removed', field_name: form_property.field_name }
-          context[:current_user].generate_events('form_update', form, data)
-          return { form_property: form_property }
+          raise GraphQL::ExecutionError, form_property.errors.full_messages
         end
-
-        raise GraphQL::ExecutionError, form_property.errors.full_messages
       end
       # rubocop:enable Metrics/AbcSize
       # rubocop:enable Metrics/MethodLength
@@ -62,6 +54,39 @@ module Mutations
         raise GraphQL::ExecutionError,
               I18n.t('errors.form.not_found')
       end
+
+      # Raises GraphQL execution error if form property does not exists
+      #
+      # @return [GraphQL::ExecutionError]
+      def raise_form_property_not_found_error(form_property)
+        return if form_property
+
+        raise GraphQL::ExecutionError, I18n.t('errors.form_property.not_found')
+      end
+
+      # rubocop:disable Metrics/MethodLength
+      # Duplicates form with new version number
+      #
+      # @param form [Forms::Form]
+      # @param vals [Hash]
+      #
+      # @return new_form [Forms::Form]
+      def duplicate_form(form, vals)
+        ActiveRecord::Base.transaction do
+          last_version_number = form.last_version
+          new_form = form.dup
+          new_form.version_number = (last_version_number + 1)
+          new_name = form.name.gsub(/\s(V)\d*/, '')
+          new_form.name = "#{new_name} V#{last_version_number + 1}"
+
+          if new_form.save!
+            form.duplicate(new_form, vals, :property_delete)
+            form.deprecated!
+          end
+          new_form
+        end
+      end
+      # rubocop:enable Metrics/MethodLength
     end
   end
 end
