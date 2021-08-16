@@ -25,3 +25,12 @@ export const FormCategoriesQuery = gql`
     }
   }
 `;
+
+export const LiteFormCategories = gql`
+  query categories($formId: ID!) {
+    formCategories(formId: $formId) {
+      id
+      fieldName
+    }
+  }
+`;

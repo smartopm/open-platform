@@ -320,11 +320,11 @@ export default function GenericForm({ formId, pathname, formData, refetch, editM
         handleClose={handleAlertClose}
       />
       <Container>
-        {loading && <Spinner />}
+        {/* {loading && <Spinner />}
 
         {!loading && data && (
           <FormTitle name={data.form?.name} description={data.form?.description} />
-        )}
+        )} */}
 
         <br />
         <form>

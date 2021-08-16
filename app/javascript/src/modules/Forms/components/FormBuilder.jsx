@@ -1,21 +1,17 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
-import { useLocation } from 'react-router'
 import { Button, Container } from '@material-ui/core'
-// import Icon from '@material-ui/core/Icon'
 import { useTranslation } from 'react-i18next'
 import { useMutation, useQuery } from 'react-apollo'
 import CenteredContent from '../../../components/CenteredContent'
-import GenericForm from './GenericForm'
 import { AllEventLogsQuery } from '../../../graphql/queries'
 import { FormPropertiesQuery } from '../graphql/forms_queries'
 import { Spinner } from '../../../shared/Loading'
-import FormPropertyCreateForm from './FormPropertyCreateForm'
 import { FormUpdateMutation } from '../graphql/forms_mutation'
 import { formStatus } from '../../../utils/constants'
 import Toggler from '../../../components/Campaign/ToggleButton'
 import FormTimeline from '../../../shared/TimeLine'
-import { ActionDialog, DetailsDialog } from '../../../components/Dialog'
+import { ActionDialog } from '../../../components/Dialog'
 import { formatError } from '../../../utils/helpers'
 import MessageAlert from '../../../components/MessageAlert'
 import CategoryList from './Category/CategoryList'
@@ -26,13 +22,11 @@ import CategoryList from './Category/CategoryList'
  * @returns {Node}
  */
 export default function FormBuilder({ formId }) {
-  const [isAdd, setAdd] = useState(false)
   const [open, setOpen] = useState(false)
   const [isPublishing, setIsPublishing] = useState(false)
   const [alertOpen, setAlertOpen] = useState(false)
   const [message, setMessage] = useState({ isError: false, detail: '' })
   const [type, setType] = useState('form')
-  const { pathname } = useLocation()
   const { t } = useTranslation(['form', 'common'])
   const { data, error, loading, refetch } = useQuery(FormPropertiesQuery, {
     variables: { formId },
@@ -79,15 +73,6 @@ export default function FormBuilder({ formId }) {
       })
   }
 
-  function handleAddFieldToCategory(categoryId){
-    console.log(categoryId)
-    setAdd(!isAdd)
-  }
-
-  function handleModal(){
-    setAdd(!isAdd)
-  }
-
   if (loading || formLogs.loading) return <Spinner />
   if (error || formLogs.error) return error?.message || formLogs?.error.message
 
@@ -108,21 +93,6 @@ export default function FormBuilder({ formId }) {
         handleClose={handleAlertClose}
       />
 
-      <DetailsDialog
-        handleClose={handleModal}
-        open={isAdd}
-        title="Add Form Property"
-        color="default"
-      >
-        <Container>
-          <FormPropertyCreateForm
-            formId={formId}
-            refetch={refetch}
-            close={handleModal}
-          />
-        </Container>
-      </DetailsDialog>
-
       <br />
       <Toggler
         type={type}
@@ -135,29 +105,9 @@ export default function FormBuilder({ formId }) {
       <br />
       {type === 'form' ? (
         <>
-          <GenericForm
-            formId={formId}
-            pathname={pathname}
-            formData={data}
-            refetch={refetch}
-            editMode
-          />
 
-          <CategoryList handleAddField={handleAddFieldToCategory} />
-
-          {/* {isAdd && (
-            <FormPropertyCreateForm formId={formId} refetch={refetch} />
-          )} */}
+          <CategoryList />
           <br />
-          {/* <CenteredContent>
-            <Button
-              onClick={() => setAdd(!isAdd)}
-              startIcon={<Icon>{!isAdd ? 'add' : 'close'}</Icon>}
-              variant="outlined"
-            >
-              {!isAdd ? t('actions.add_field') : t('common:form_actions.cancel')}
-            </Button>
-          </CenteredContent> */}
           <br />
           <CenteredContent>
             {Boolean(data.formProperties.length) && (
