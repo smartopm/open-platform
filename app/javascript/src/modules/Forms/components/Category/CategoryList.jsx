@@ -52,15 +52,6 @@ export default function CategoryList() {
           <CategoryForm data={data} close={handleClose} refetchCategory={categoriesData.refetch} />
         </Container>
       </DetailsDialog>
-      <Button
-        variant="outlined"
-        color="default"
-        startIcon={<AddIcon color="primary" />}
-        style={{ float: 'right' }}
-        onClick={handleAddCategory}
-      >
-        Add Category
-      </Button>
       <br />
       {categoriesData.loading && <Spinner />}
       {categoriesData?.data &&
@@ -91,6 +82,16 @@ export default function CategoryList() {
             )}
           </CategoryItem>
         ))}
+      <br />
+      <Button
+        variant="outlined"
+        color="default"
+        startIcon={<AddIcon color="primary" />}
+        style={{ float: 'right' }}
+        onClick={handleAddCategory}
+      >
+        Add Category
+      </Button>
     </>
   );
 }

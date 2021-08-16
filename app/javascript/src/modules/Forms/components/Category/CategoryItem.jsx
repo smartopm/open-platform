@@ -47,7 +47,7 @@ const useStyles = makeStyles({
     borderStyle: 'solid',
     borderWidth: 'thin',
     borderRadius: 5,
-    marginTop: 20
+    marginTop: 22
   },
   categoryName: {
     padding: 13
