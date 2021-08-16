@@ -5,10 +5,11 @@ import useMediaQuery from '@material-ui/core/useMediaQuery';
 import Drawer from '@material-ui/core/Drawer';
 import MenuIcon from '@material-ui/icons/Menu';
 import { StyleSheet, css } from 'aphrodite';
-import { Button, IconButton } from '@material-ui/core';
+import { Button, IconButton, SvgIcon } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
 import PropTypes from 'prop-types';
 import DoubleArrowOutlinedIcon from '@material-ui/icons/DoubleArrowOutlined';
+import SOSIcon from './SOSIcon';
 import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider';
 import SideMenu from './SideMenu';
 import NotificationBell from '../../../components/NotificationBell';
@@ -18,6 +19,8 @@ import CenteredContent from '../../../components/CenteredContent';
 import userProps from '../../../shared/types/user';
 import UserAvatar from '../../Users/Components/UserAvatar';
 import UserActionOptions from '../../Users/Components/UserActionOptions';
+import SOSModal from './SOSModal';
+
 import { allUserTypes } from '../../../utils/constants';
 
 const drawerWidth = 260;
@@ -60,6 +63,7 @@ export function MainNav({ authState }) {
   const matches = useMediaQuery('(max-width:600px)');
   const classes = useStyles();
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [open, setOpen] = useState(false);
 
   const dynamicMenu =
     authState?.user?.community?.menuItems
@@ -118,6 +122,11 @@ export function MainNav({ authState }) {
               <MenuIcon />
             )}
           </IconButton>
+
+          <SvgIcon component={SOSIcon} viewBox="0 0 384 512" setOpen={setOpen} />
+
+          <SOSModal open={open} setOpen={setOpen} {...{ authState }} />
+
           <UserAvatar imageUrl={authState?.user?.imageUrl} />
           <UserActionOptions />
           <NotificationBell user={authState.user} />
@@ -192,6 +201,7 @@ NewsNav.propTypes = {
   children: PropTypes.node.isRequired,
   // eslint-disable-next-line react/forbid-prop-types
   history: PropTypes.object.isRequired
+
 };
 
 const styles = StyleSheet.create({

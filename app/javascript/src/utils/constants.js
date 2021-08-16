@@ -171,7 +171,8 @@ export const NotesCategories = {
   message: 'Message',
   email: 'Email',
   to_do: 'To-Do',
-  form: 'Form'
+  form: 'Form',
+  emergency: 'Emergency SOS'
 };
 
 export const businessCategories = {

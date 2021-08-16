@@ -46,7 +46,7 @@ module Notes
                                end
                              }
 
-    VALID_CATEGORY = %w[call email text message to_do form other].freeze
+    VALID_CATEGORY = %w[call email text message to_do form emergency other].freeze
     validates :category, inclusion: { in: VALID_CATEGORY, allow_nil: true }
 
     def assign_or_unassign_user(user_id)
