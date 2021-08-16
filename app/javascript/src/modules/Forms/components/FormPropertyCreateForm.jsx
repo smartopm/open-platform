@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useLazyQuery, useMutation } from 'react-apollo';
+import { useLazyQuery, useMutation, useQuery } from 'react-apollo';
 import PropTypes from 'prop-types';
 import { Button, FormControl, InputLabel, MenuItem, Select, TextField } from '@material-ui/core';
 import { useHistory } from 'react-router-dom';
@@ -13,17 +13,9 @@ import { FormPropertyQuery } from '../graphql/forms_queries';
 import { Spinner } from '../../../shared/Loading';
 import { formatError } from '../../../utils/helpers';
 import MessageAlert from '../../../components/MessageAlert';
-import { categories } from './Category/CategoryList';
+import { LiteFormCategories } from '../graphql/form_category_queries';
 
-const initData = {
-  fieldName: '',
-  fieldType: '',
-  required: false,
-  adminUse: false,
-  order: '1',
-  fieldValue: [],
-  category: ''
-};
+
 
 const fieldTypes = {
   text: 'Text',
@@ -34,7 +26,16 @@ const fieldTypes = {
   dropdown: 'Dropdown'
 };
 
-export default function FormPropertyCreateForm({ formId, refetch, propertyId, close }) {
+export default function FormPropertyCreateForm({ formId, refetch, propertyId, categoryId }) {
+  const initData = {
+    fieldName: '',
+    fieldType: '',
+    required: false,
+    adminUse: false,
+    order: '1',
+    fieldValue: [],
+    categoryId
+  };
   const [propertyData, setProperty] = useState(initData);
   const [isLoading, setMutationLoading] = useState(false);
   const [options, setOptions] = useState(['']);
@@ -45,6 +46,9 @@ export default function FormPropertyCreateForm({ formId, refetch, propertyId, cl
   const history = useHistory();
   const [loadFields, { data }] = useLazyQuery(FormPropertyQuery, {
     variables: { formId, formPropertyId: propertyId }
+  });
+  const categoriesData = useQuery(LiteFormCategories, {
+    variables: { formId }
   });
 
   useEffect(() => {
@@ -85,7 +89,7 @@ export default function FormPropertyCreateForm({ formId, refetch, propertyId, cl
       variables: {
         ...propertyData,
         fieldValue,
-        formId
+        formId,
       }
     })
       .then(() => {
@@ -115,9 +119,9 @@ export default function FormPropertyCreateForm({ formId, refetch, propertyId, cl
       }
     })
       .then(res => {
-        const formPropResponse = res.data.formPropertiesUpdate
+        const formPropResponse = res.data.formPropertiesUpdate;
         if (formPropResponse.message === 'New version created') {
-          history.push(`/edit_form/${formPropResponse.newFormVersion.id}`)
+          history.push(`/edit_form/${formPropResponse.newFormVersion.id}`);
         }
         refetch();
         setMutationLoading(false);
@@ -127,7 +131,7 @@ export default function FormPropertyCreateForm({ formId, refetch, propertyId, cl
         });
         setOptions(['']);
         setMessage({ ...message, isError: false, detail: t('misc.updated_form_property') });
-        close();
+        // close();
       })
       .catch(err => {
         setMessage({ ...message, isError: true, detail: formatError(err.message) });
@@ -177,17 +181,17 @@ export default function FormPropertyCreateForm({ formId, refetch, propertyId, cl
           <Select
             labelId="select-category"
             id="category"
-            value={propertyData.category}
+            value={propertyData.categoryId}
             onChange={handlePropertyValueChange}
             label="Choose Category"
-            name="category"
+            name="categoryId"
             required
           >
-            {categories.map((cat) => (
-              <MenuItem key={cat.id} value={cat.id}>
-                {cat.name}
+            {categoriesData?.data?.formCategories.map(category => (
+              <MenuItem key={category.id} value={category.id}>
+                {category.fieldName}
               </MenuItem>
-              ))}
+            ))}
           </Select>
         </FormControl>
         <div style={{ marginTop: 20 }}>
@@ -233,12 +237,11 @@ export default function FormPropertyCreateForm({ formId, refetch, propertyId, cl
 
 FormPropertyCreateForm.defaultProps = {
   propertyId: null,
-  close: () => {}
 };
 
 FormPropertyCreateForm.propTypes = {
   refetch: PropTypes.func.isRequired,
   formId: PropTypes.string.isRequired,
-  close: PropTypes.func,
+  categoryId: PropTypes.string.isRequired,
   propertyId: PropTypes.string
 };
