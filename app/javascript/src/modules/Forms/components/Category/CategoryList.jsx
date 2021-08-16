@@ -5,9 +5,13 @@ import {
 } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import PropTypes from 'prop-types';
+import { useQuery } from 'react-apollo';
+import { useParams } from 'react-router';
 import { DetailsDialog } from '../../../../components/Dialog';
 import CategoryForm from './CategoryForm';
 import CategoryItem from './CategoryItem';
+import { FormCategoriesQuery } from '../../graphql/form_category_queries';
+import { Spinner } from '../../../../shared/Loading';
 
 // This will contain the main category
 // from the main category you should be able to add questions to that category
@@ -46,11 +50,16 @@ const initialData = {
 export default function CategoryList({ handleAddField }) {
   const [formOpen, setFormOpen] = useState(false);
   const [data, setFormData] = useState({})
+  const { formId } = useParams()
+  const categoriesData = useQuery(FormCategoriesQuery, {
+    variables: { formId },
+    fetchPolicy: "cache-and-network"
+  })
 
-  function handleEditCategory(catId) {
-    console.log(catId);
+  function handleEditCategory(category) {
+    console.log(category);
     setFormOpen(true)
-    setFormData(categories.find(cat => cat.id === catId))
+    setFormData(category)
   }
   function handleAddCategory() {
     console.log('adding a cateogy');
@@ -61,7 +70,7 @@ export default function CategoryList({ handleAddField }) {
   function handleClose(){
     setFormOpen(false)
   }
-
+// console.log(categoriesData.data.formCategories)
   return (
     <>
       <DetailsDialog
@@ -71,7 +80,7 @@ export default function CategoryList({ handleAddField }) {
         color="default"
       >
         <Container>
-          <CategoryForm data={data} close={handleClose} />
+          <CategoryForm data={data} close={handleClose} refetchCategory={categoriesData.refetch} />
         </Container>
       </DetailsDialog>
       <Button
@@ -84,12 +93,15 @@ export default function CategoryList({ handleAddField }) {
         Add Category
       </Button>
       <br />
-      {categories.map(category => (
+      {
+        categoriesData.loading && <Spinner />
+      }
+      {categoriesData?.data && categoriesData.data?.formCategories.map(category => (
         <CategoryItem
-          name={category.name}
+          name={category.fieldName}
           key={category.id}
           handleAddField={() => handleAddField(category.id)}
-          handleEditCategory={() => handleEditCategory(category.id)}
+          handleEditCategory={() => handleEditCategory(category)}
         />
       ))}
     </>
@@ -98,6 +110,6 @@ export default function CategoryList({ handleAddField }) {
 
 
 CategoryList.propTypes = {
-  handleAddField: PropTypes.func.isRequired
+  handleAddField: PropTypes.func.isRequired,
 };
 

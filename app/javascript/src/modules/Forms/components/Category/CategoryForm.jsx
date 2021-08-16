@@ -10,29 +10,22 @@ import { FormCategoryCreateMutation } from '../../graphql/form_category_mutation
 import { Spinner } from '../../../../shared/Loading';
 import MessageAlert from '../../../../components/MessageAlert';
 
-export default function CategoryForm({ data, close }) {
-  const initialData = {
-    fieldName: '',
-    order: 1,
-    description: '',
-    headerVisible: false,
-    renderedText: '',
-    general: false
-  };
+export default function CategoryForm({ data, close, refetchCategory }) {
   const { t } = useTranslation('form');
-  const [categoryData, setCategoryData] = useState(initialData);
+  const [categoryData, setCategoryData] = useState(data);
   const [createCategory, { loading, error, called }] = useMutation(FormCategoryCreateMutation);
   const { formId } = useParams();
 
   function handleSaveCategory(event) {
     event.preventDefault();
     createCategory({ variables: { ...categoryData, order: Number(categoryData.order), formId } })
-      .then(() => close())
-    //   .catch();
+      .then(() => {
+        refetchCategory()
+        close()
+      })
   }
 
   console.log(loading, error);
-  console.log(data);
   function handleChange(event) {
     const { name, value } = event.target;
     setCategoryData({
@@ -141,11 +134,13 @@ export default function CategoryForm({ data, close }) {
 
 CategoryForm.propTypes = {
   data: PropTypes.shape({
-    name: PropTypes.string,
+    fieldName: PropTypes.string,
     order: PropTypes.number,
     description: PropTypes.string,
     headerVisible: PropTypes.bool,
-    renderedText: PropTypes.string
+    renderedText: PropTypes.string,
+    general: PropTypes.string,
   }).isRequired,
-  close: PropTypes.func.isRequired
+  close: PropTypes.func.isRequired,
+  refetchCategory: PropTypes.func.isRequired,
 };

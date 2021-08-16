@@ -4,9 +4,13 @@ import gql from 'graphql-tag';
 export const FormCategoriesQuery = gql`
   query formCategories($formId: ID!) {
     formCategories(formId: $formId) {
-      formId
+      id
+      order
       fieldName
       description
+      general
+      headerVisible
+      renderedText
       formProperties {
         id
         fieldName
