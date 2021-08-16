@@ -8,7 +8,10 @@ module Mutations
       argument :category_id, ID, required: true
 
       field :message, String, null: true
+      field :new_form_version, Types::FormType, null: true
 
+      # rubocop:disable Metrics/AbcSize
+      # rubocop:disable Metrics/MethodLength
       def resolve(values)
         form = Forms::Form.find_by(id: values[:form_id])
         raise_form_not_found_error(form)
@@ -16,10 +19,21 @@ module Mutations
         category = form.categories.find_by(id: values[:category_id])
         raise_category_not_found_error(category)
 
-        return { message: 'Category deleted successfully' } if category.destroy
+        if form.entries?
+          new_form = duplicate_form(form, values)
+          { message: 'New version created', new_form_version: new_form } if new_form.persisted?
+        else
+          if category.destroy
+            data = { action: 'removed', field_name: category.field_name }
+            context[:current_user].generate_events('form_update', form, data)
+            return { message: I18n.t('response.category_deleted') }
+          end
 
-        raise GraphQL::ExecutionError, category.errors.full_messages
+          raise GraphQL::ExecutionError, category.errors.full_messages
+        end
       end
+      # rubocop:enable Metrics/AbcSize
+      # rubocop:enable Metrics/MethodLength
 
       # Verifies if current user is admin or not.
       def authorized?(_vals)
@@ -47,6 +61,30 @@ module Mutations
 
         raise GraphQL::ExecutionError, I18n.t('errors.category.not_found')
       end
+
+      # rubocop:disable Metrics/MethodLength
+      # Duplicates form with new version number
+      #
+      # @param form [Forms::Form]
+      # @param values [Hash]
+      #
+      # @return new_form [Forms::Form]
+      def duplicate_form(form, values)
+        ActiveRecord::Base.transaction do
+          last_version_number = form.last_version
+          new_form = form.dup
+          new_form.version_number = (last_version_number + 1)
+          new_name = form.name.gsub(/\s(V)\d*/, '')
+          new_form.name = "#{new_name} V#{last_version_number + 1}"
+
+          if new_form.save!
+            form.duplicate(new_form, values, :category_delete)
+            form.deprecated!
+            new_form
+          end
+        end
+      end
+      # rubocop:enable Metrics/MethodLength
     end
   end
 end

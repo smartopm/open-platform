@@ -7,12 +7,31 @@ RSpec.describe Mutations::Form::FormPropertiesUpdate do
     let!(:user) { create(:user_with_community) }
     let!(:admin) { create(:admin_user, community_id: user.community_id) }
     let!(:form) { create(:form, community_id: user.community_id) }
-    let!(:form_property) { create(:form_property, form: form, field_type: 'text') }
+    let!(:category) { create(:category, form: form, field_name: 'Business Info') }
+    let!(:form_property) do
+      create(:form_property, form: form, field_type: 'text', category: category,
+                             field_name: 'Select Business')
+    end
+    let!(:sub_category) do
+      create(:category, form: form, form_property_id: form_property.id, field_name: 'Fishing')
+    end
+    let!(:sub_property) do
+      create(:form_property, form: form, field_type: 'text', category: sub_category,
+                             field_name: 'Upload fishing license')
+    end
+    let(:form_user) { create(:form_user, form: form, user: user, status: :approved) }
 
     let(:mutation) do
       <<~GQL
-        mutation formPropertiesUpdate($id: ID!, $fieldName: String!, $fieldType: String!) {
-          formPropertiesUpdate(id: $id, fieldName: $fieldName, fieldType: $fieldType){
+        mutation formPropertiesUpdate(
+          $formPropertyId: ID!,
+          $fieldName: String!,
+          $fieldType: String!) {
+          formPropertiesUpdate(
+            formPropertyId: $formPropertyId,
+            fieldName: $fieldName,
+            fieldType: $fieldType
+          ){
             formProperty {
               fieldName
               fieldType
@@ -23,50 +42,54 @@ RSpec.describe Mutations::Form::FormPropertiesUpdate do
       GQL
     end
 
-    it 'updates a form' do
-      variables = {
-        id: form_property.id,
-        fieldName: 'Updated Name',
-        fieldType: %w[date file_upload signature display_text display_image].sample,
-      }
-      result = DoubleGdpSchema.execute(mutation, variables: variables,
-                                                 context: {
-                                                   current_user: admin,
-                                                   site_community: user.community,
-                                                 }).as_json
-      expect(
-        result.dig('data', 'formPropertiesUpdate', 'formProperty', 'fieldName'),
-      ).to eql 'Updated Name'
-      expect(result['errors']).to be_nil
+    context 'when form does not have any submissions' do
+      it 'updates the form property' do
+        variables = {
+          formPropertyId: form_property.id,
+          fieldName: 'Updated Name',
+          fieldType: %w[date file_upload signature display_text display_image].sample,
+        }
+        result = DoubleGdpSchema.execute(mutation, variables: variables,
+                                                   context: {
+                                                     current_user: admin,
+                                                     site_community: user.community,
+                                                   }).as_json
+        expect(
+          result.dig('data', 'formPropertiesUpdate', 'formProperty', 'fieldName'),
+        ).to eql 'Updated Name'
+        expect(result['errors']).to be_nil
+      end
     end
 
-    it 'creates a new form instead if form has submissions' do
-      variables = {
-        id: form_property.id,
-        fieldName: 'Updated Name',
-        fieldType: %w[date file_upload signature display_text display_image].sample,
-      }
-      previous_form_count = Forms::Form.count
-      Forms::FormUser.create!(
-        user_id: user.id,
-        form_id: form.id,
-        status: 1,
-        status_updated_by_id: admin.id,
-      )
-      result = DoubleGdpSchema.execute(mutation, variables: variables,
-                                                 context: {
-                                                   current_user: admin,
-                                                   site_community: user.community,
-                                                 }).as_json
-      expect(
-        result.dig('data', 'formPropertiesUpdate', 'message'),
-      ).to eql 'New version created'
-      expect(Forms::Form.count).to eql(previous_form_count + 1)
+    context 'when form has submissions' do
+      before { form_user }
+
+      it 'creates a new form with updated form property' do
+        previous_form_count = Forms::Form.count
+        variables = {
+          formPropertyId: sub_property.id,
+          fieldName: 'Updated Name',
+          fieldType: %w[date file_upload signature display_text display_image].sample,
+        }
+        result = DoubleGdpSchema.execute(mutation, variables: variables,
+                                                   context: {
+                                                     current_user: admin,
+                                                     site_community: user.community,
+                                                   }).as_json
+        expect(
+          result.dig('data', 'formPropertiesUpdate', 'message'),
+        ).to eql 'New version created'
+        expect(Forms::Form.count).to eql(previous_form_count + 1)
+        new_form = Forms::Form.where.not(id: form.id).first
+        updated_form_property = new_form.categories.where.not(form_property_id: nil)
+                                        .first.form_properties.first
+        expect(updated_form_property.field_name).to eql 'Updated Name'
+      end
     end
 
     it 'throws unauthorized error when user is not admin' do
       variables = {
-        id: form_property.id,
+        formPropertyId: form_property.id,
         fieldName: 'Updated Name',
         fieldType: %w[date file_upload signature display_text display_image].sample,
       }

@@ -16,8 +16,7 @@ module Mutations
       field :category, Types::CategoryType, null: true
 
       def resolve(values)
-        # add this to its community
-        form = Forms::Form.find_by(id: values[:form_id])
+        form = context[:site_community].forms.find_by(id: values[:form_id])
         raise_form_not_found_error(form)
 
         category = form.categories.create(values)
