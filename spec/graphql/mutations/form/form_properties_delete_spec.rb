@@ -7,13 +7,18 @@ RSpec.describe Mutations::Form::FormPropertiesDelete do
     let!(:user) { create(:user_with_community) }
     let!(:admin) { create(:admin_user, community_id: user.community_id) }
     let!(:form) { create(:form, community_id: user.community_id) }
-    let!(:another_form) { create(:form, community_id: user.community_id) }
-    let!(:form_property) { create(:form_property, form: form, field_type: 'text') }
-    let!(:another_form_property) { create(:form_property, form: another_form, field_type: 'text') }
-
-    let!(:form_user) do
-      user.form_users.create!(form_id: another_form.id, status: 1, status_updated_by_id: admin.id)
+    let!(:category) { create(:category, form: form, field_name: 'Business Info') }
+    let!(:form_property) do
+      create(:form_property, form: form, category: category, field_type: 'text')
     end
+    let!(:sub_category) do
+      create(:category, form: form, form_property_id: form_property.id, field_name: 'Fishing')
+    end
+    let!(:sub_form_property) do
+      create(:form_property, form: form, category: sub_category, field_type: 'radio')
+    end
+
+    let(:form_user) { create(:form_user, form: form, user: user, status: :approved) }
     let(:mutation) do
       <<~GQL
         mutation formPropertiesDelete($formId: ID!, $formPropertyId: ID!){
@@ -26,35 +31,64 @@ RSpec.describe Mutations::Form::FormPropertiesDelete do
       GQL
     end
 
-    it 'deletes a form property' do
-      variables = {
-        formId: form.id,
-        formPropertyId: form_property.id,
-      }
-      result = DoubleGdpSchema.execute(mutation, variables: variables,
-                                                 context: {
-                                                   current_user: admin,
-                                                   site_community: user.community,
-                                                 }).as_json
-      expect(result.dig('data', 'formPropertiesDelete', 'formProperty', 'id')).not_to be_nil
-      expect(form.form_properties.count).to eql 0
-      expect(result['errors']).to be_nil
+    context 'when there are no submissions made for the form' do
+      it 'deletes the form property' do
+        variables = {
+          formId: form.id,
+          formPropertyId: sub_form_property.id,
+        }
+        result = DoubleGdpSchema.execute(mutation, variables: variables,
+                                                   context: {
+                                                     current_user: admin,
+                                                     site_community: user.community,
+                                                   }).as_json
+        expect(result.dig('data', 'formPropertiesDelete', 'formProperty', 'id')).not_to be_nil
+        expect(form.form_properties.count).to eql 1
+        expect(result['errors']).to be_nil
+      end
     end
 
-    it 'does not delete a form property from a submitted form' do
-      variables = {
-        formId: another_form.id,
-        formPropertyId: another_form_property.id,
-      }
-      previous_form_count = Forms::Form.count
-      result = DoubleGdpSchema.execute(mutation, variables: variables,
-                                                 context: {
-                                                   current_user: admin,
-                                                   site_community: user.community,
-                                                 }).as_json
-      expect(result.dig('data', 'formPropertiesDelete', 'formProperty', 'id')).to be_nil
-      expect(another_form.form_properties.count).to eql 1
-      expect(Forms::Form.count).to eql(previous_form_count + 1)
+    context 'when form has entries' do
+      before { form_user }
+
+      it 'does not delete the form property and duplicates the form except the property' do
+        variables = {
+          formId: form.id,
+          formPropertyId: form_property.id,
+        }
+        previous_form_count = Forms::Form.count
+        result = DoubleGdpSchema.execute(mutation, variables: variables,
+                                                   context: {
+                                                     current_user: admin,
+                                                     site_community: user.community,
+                                                   }).as_json
+        expect(result.dig('data', 'formPropertiesDelete', 'formProperty', 'id')).to be_nil
+        expect(Forms::Form.count).to eql(previous_form_count + 1)
+        new_form = Forms::Form.where.not(id: form.id).first
+        expect(new_form.categories.reload.count).to eql 1
+        expect(new_form.form_properties.reload.count).to eql 0
+      end
+
+      it 'does not delete the form property and duplicates the form except the property' do
+        variables = {
+          formId: form.id,
+          formPropertyId: sub_form_property.id,
+        }
+        previous_form_count = Forms::Form.count
+        result = DoubleGdpSchema.execute(mutation, variables: variables,
+                                                   context: {
+                                                     current_user: admin,
+                                                     site_community: user.community,
+                                                   }).as_json
+        expect(result.dig('data', 'formPropertiesDelete', 'formProperty', 'id')).to be_nil
+
+        expect(Forms::Form.count).to eql(previous_form_count + 1)
+        expect(result.dig('data', 'formPropertiesDelete', 'formProperty', 'id')).to be_nil
+        expect(Forms::Form.count).to eql(previous_form_count + 1)
+        new_form = Forms::Form.where.not(id: form.id).first
+        expect(new_form.categories.reload.count).to eql 2
+        expect(new_form.form_properties.reload.count).to eql 1
+      end
     end
 
     it 'throws unauthorized error when user is not admin' do

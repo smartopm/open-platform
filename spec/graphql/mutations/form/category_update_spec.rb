@@ -9,10 +9,23 @@ RSpec.describe Mutations::Form::FormCreate do
     let!(:admin) { create(:admin_user, community: community) }
     let!(:form) { create(:form, community: community) }
     let!(:category) { create(:category, form: form, general: true) }
+    let!(:form_property) do
+      create(:form_property, form: form, field_type: 'text', category: category,
+                             field_name: 'Select Business')
+    end
+    let!(:sub_category) do
+      create(:category, form: form, form_property_id: form_property.id, field_name: 'Fishing')
+    end
+    let!(:sub_property) do
+      create(:form_property, form: form, field_type: 'text', category: sub_category,
+                             field_name: 'Upload fishing license')
+    end
+    let(:form_user) { create(:form_user, form: form, user: user, status: :approved) }
+
     let(:mutation) do
       <<~GQL
         mutation categoryUpdate(
-          $id: ID!,
+          $categoryId: ID!,
           $fieldName: String!
           $order: Int!,
           $headerVisible: Boolean!,
@@ -21,7 +34,7 @@ RSpec.describe Mutations::Form::FormCreate do
           $renderedText: String
         ) {
           categoryUpdate(
-            id: $id,
+            categoryId: $categoryId,
             fieldName: $fieldName,
             order: $order,
             headerVisible: $headerVisible,
@@ -35,6 +48,7 @@ RSpec.describe Mutations::Form::FormCreate do
               headerVisible
               general
             }
+            message
           }
         }
       GQL
@@ -43,7 +57,7 @@ RSpec.describe Mutations::Form::FormCreate do
     context 'when category id is invalid' do
       it 'raises category not found error' do
         variables = {
-          id: 'zzzzzyyyy558',
+          categoryId: 'zzzzzyyyy558',
           fieldName: 'personal info',
           order: 1,
           headerVisible: true,
@@ -59,10 +73,10 @@ RSpec.describe Mutations::Form::FormCreate do
       end
     end
 
-    context 'when category is valid' do
+    context 'when no submissions are made for the form' do
       it 'updates category for the form' do
         variables = {
-          id: category.id,
+          categoryId: category.id,
           fieldName: 'personal info',
           order: 1,
           headerVisible: true,
@@ -83,10 +97,66 @@ RSpec.describe Mutations::Form::FormCreate do
       end
     end
 
+    context 'when there are submissions made for the form' do
+      before { form_user }
+
+      it 'creates a new form with update category fields instead of deleting the category' do
+        previous_form_count = Forms::Form.count
+        variables = {
+          categoryId: category.id,
+          fieldName: 'personal info',
+          order: 1,
+          headerVisible: true,
+          general: false,
+        }
+
+        result = DoubleGdpSchema.execute(mutation, variables: variables,
+                                                   context: {
+                                                     current_user: admin,
+                                                     site_community: community,
+                                                   }).as_json
+        expect(result.dig('errors', 0, 'message')).to be_nil
+        expect(
+          result.dig('data', 'categoryUpdate', 'message'),
+        ).to eql 'New version created'
+        expect(Forms::Form.count).to eql(previous_form_count + 1)
+        new_form = Forms::Form.where.not(id: form.id).first
+        updated_category = new_form.categories.where(form_property_id: nil)
+                                   .first
+        expect(updated_category.field_name).to eql 'personal info'
+      end
+
+      it 'creates a new form with update category fields instead of deleting the category' do
+        previous_form_count = Forms::Form.count
+        variables = {
+          categoryId: sub_category.id,
+          fieldName: 'Pharmacy',
+          order: 1,
+          headerVisible: true,
+          general: false,
+        }
+
+        result = DoubleGdpSchema.execute(mutation, variables: variables,
+                                                   context: {
+                                                     current_user: admin,
+                                                     site_community: community,
+                                                   }).as_json
+        expect(result.dig('errors', 0, 'message')).to be_nil
+        expect(
+          result.dig('data', 'categoryUpdate', 'message'),
+        ).to eql 'New version created'
+        expect(Forms::Form.count).to eql(previous_form_count + 1)
+        new_form = Forms::Form.where.not(id: form.id).first
+        updated_category = new_form.categories.where.not(form_property_id: nil)
+                                   .first
+        expect(updated_category.field_name).to eql 'Pharmacy'
+      end
+    end
+
     context 'when current user is not admin' do
       it 'raises unauthorized error' do
         variables = {
-          id: category.id,
+          categoryId: category.id,
           fieldName: 'personal info',
           order: 1,
           headerVisible: true,

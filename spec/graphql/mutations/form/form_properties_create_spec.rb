@@ -33,6 +33,7 @@ RSpec.describe Mutations::Form::FormPropertiesCreate do
                 fieldName
                 general
                 headerVisible
+                order
               }
             }
           }
@@ -47,7 +48,7 @@ RSpec.describe Mutations::Form::FormPropertiesCreate do
           fieldType: %w[text date file_upload signature display_text display_image].sample,
           formId: form.id,
           categoryId: category.id,
-          order: 'order',
+          order: '1',
         }
         result = DoubleGdpSchema.execute(mutation, variables: variables,
                                                    context: {
@@ -68,7 +69,7 @@ RSpec.describe Mutations::Form::FormPropertiesCreate do
           fieldName: 'Field Name',
           fieldType: %w[text date file_upload signature display_text display_image].sample,
           formId: form.id,
-          order: 'order',
+          order: '2',
         }
         result = DoubleGdpSchema.execute(mutation, variables: variables,
                                                    context: {
@@ -83,6 +84,7 @@ RSpec.describe Mutations::Form::FormPropertiesCreate do
         expect(category_result['fieldName']).to eql 'General Category'
         expect(category_result['general']).to eql true
         expect(category_result['headerVisible']).to eql false
+        expect(category_result['order']).to eql 2
         expect(result['errors']).to be_nil
       end
     end
@@ -94,7 +96,7 @@ RSpec.describe Mutations::Form::FormPropertiesCreate do
           fieldType: %w[text date file_upload signature display_text display_image].sample,
           formId: 'zzzyyy555',
           categoryId: category.id,
-          order: 'order',
+          order: '1',
         }
         result = DoubleGdpSchema.execute(mutation, variables: variables,
                                                    context: {
@@ -112,7 +114,7 @@ RSpec.describe Mutations::Form::FormPropertiesCreate do
           fieldType: %w[text date file_upload signature display_text display_image].sample,
           formId: form.id,
           categoryId: 'zzzyyy555',
-          order: 'order',
+          order: '1',
         }
         result = DoubleGdpSchema.execute(mutation, variables: variables,
                                                    context: {

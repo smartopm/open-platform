@@ -4,7 +4,7 @@ module Mutations
   module Form
     # For updating fields to a form
     class FormPropertiesUpdate < BaseMutation
-      argument :id, ID, required: true
+      argument :form_property_id, ID, required: true
       argument :order, String, required: false
       argument :field_name, String, required: false
       argument :field_type, String, required: false
@@ -21,30 +21,23 @@ module Mutations
       # rubocop:disable Metrics/MethodLength
       # rubocop:disable Metrics/AbcSize
       def resolve(vals)
-        form_property = Forms::FormProperty.find(vals[:id])
+        form_property = Forms::FormProperty.find_by(id: vals[:form_property_id])
+        raise_form_property_not_found_error(form_property)
+
         form = form_property.form
 
         if form.entries? && destructive_change?(vals, form_property)
-          last_version_number = form.last_version
-          new_form = form.duplicate(vals[:id])
-          new_form.form_properties << new_form.form_properties.new(vals.except(:id))
-          new_form.version_number = (last_version_number + 1)
-          new_name = form.name.gsub(/\s(V)\d*/, '')
-          new_form.name = "#{new_name} V#{last_version_number + 1}"
-
-          if new_form.save!
-            form.deprecated!
-            return { message: 'New version created', new_form_version: new_form }
+          new_form = duplicate_form(form, vals)
+          { message: 'New version created', new_form_version: new_form } if new_form.persisted?
+        else
+          if form_property.update(vals.except(:form_property_id))
+            data = { action: 'updated', field_name: vals[:field_name] }
+            context[:current_user].generate_events('form_update', form, data)
+            return { form_property: form_property }
           end
-        end
 
-        if form_property.update(vals.except(:id))
-          data = { action: 'updated', field_name: vals[:field_name] }
-          context[:current_user].generate_events('form_update', form, data)
-          return { form_property: form_property }
+          raise GraphQL::ExecutionError, form_property.errors.full_messages
         end
-
-        raise GraphQL::ExecutionError, form_property.errors.full_messages
       end
       # rubocop:enable Metrics/MethodLength
       # rubocop:enable Metrics/AbcSize
@@ -61,6 +54,39 @@ module Mutations
 
         raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
       end
+
+      # Raises GraphQL execution error if form property does not exists
+      #
+      # @return [GraphQL::ExecutionError]
+      def raise_form_property_not_found_error(form_property)
+        return if form_property
+
+        raise GraphQL::ExecutionError, I18n.t('errors.form_property.not_found')
+      end
+
+      # rubocop:disable Metrics/MethodLength
+      # Duplicates form with new version number
+      #
+      # @param form [Forms::Form]
+      # @param vals [Hash]
+      #
+      # @return new_form [Forms::Form]
+      def duplicate_form(form, vals)
+        ActiveRecord::Base.transaction do
+          last_version_number = form.last_version
+          new_form = form.dup
+          new_form.version_number = (last_version_number + 1)
+          new_name = form.name.gsub(/\s(V)\d*/, '')
+          new_form.name = "#{new_name} V#{last_version_number + 1}"
+
+          if new_form.save!
+            form.duplicate(new_form, vals, :property_update)
+            form.deprecated!
+          end
+          new_form
+        end
+      end
+      # rubocop:enable Metrics/MethodLength
     end
   end
 end
