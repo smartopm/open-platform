@@ -291,7 +291,11 @@ export default function PaymentList({ currencyData }) {
         <List>
           {listType === 'graph' && paymentStatData?.paymentStatDetails?.length > 0 ? (
             <div>
-              {matches && <ListHeader headers={paymentHeaders} />}
+              {matches && (
+                <div style={{ padding: '0 20px' }}>
+                  <ListHeader headers={paymentHeaders} />
+                </div>
+              )}
               {paymentStatData.paymentStatDetails.map(payment => (
                 <TransactionItem
                   key={payment.id}
@@ -302,7 +306,11 @@ export default function PaymentList({ currencyData }) {
             </div>
           ) : paymentList?.length > 0 ? (
             <div>
-              {matches && <ListHeader headers={paymentHeaders} />}
+              {matches && (
+                <div style={{ padding: '0 20px' }}>
+                  <ListHeader headers={paymentHeaders} />
+                </div>
+              )}
               {paymentList.map(payment => (
                 <TransactionItem
                   key={payment.id}
