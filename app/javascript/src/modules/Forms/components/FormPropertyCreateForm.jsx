@@ -8,7 +8,7 @@ import { FormPropertyCreateMutation, FormPropertyUpdateMutation } from '../graph
 import CenteredContent from '../../../components/CenteredContent';
 import FormPropertySelector from './FormPropertySelector';
 import FormOptionInput from './FormOptionInput';
-import SwitchInput from './SwitchInput';
+import SwitchInput from './FormProperties/SwitchInput';
 import { FormPropertyQuery } from '../graphql/forms_queries';
 import { Spinner } from '../../../shared/Loading';
 import { formatError } from '../../../utils/helpers';
