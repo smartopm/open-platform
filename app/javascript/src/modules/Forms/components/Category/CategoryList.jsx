@@ -16,6 +16,7 @@ import FormTitle from '../FormTitle';
 import { FormQuery } from '../../graphql/forms_queries';
 import { FormContext } from '../../Context';
 import CenteredContent from '../../../../components/CenteredContent';
+import { Context } from '../../../../containers/Provider/AuthStateProvider';
 
 // This will contain the main category
 // from the main category you should be able to add questions to that category
@@ -34,6 +35,7 @@ export default function CategoryList({ editMode }) {
   });
   const { data: formDetailData, loading } = useQuery(FormQuery, { variables: { id: formId } });
   const { formState, saveFormData } = useContext(FormContext)
+  const authState = useContext(Context);
 
   function handleEditCategory(category) {
     setCategoryFormOpen(true);
@@ -52,6 +54,7 @@ export default function CategoryList({ editMode }) {
   function handleClose() {
     setCategoryFormOpen(false);
   }
+  const formData = []
 
   return (
     <>
@@ -122,7 +125,7 @@ export default function CategoryList({ editMode }) {
               aria-label="form_submit"
               disabled={formState.isSubmitting}
               style={{ marginTop: '25px' }}
-              onClick={saveFormData}
+              onClick={() => saveFormData(formData, formId, authState.user.id)}
             >
               {formState.isSubmitting
                   ? t('common:form_actions.submitting')
