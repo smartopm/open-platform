@@ -1,6 +1,7 @@
 /* eslint-disable jsx-a11y/interactive-supports-focus */
 /* eslint-disable no-nested-ternary */
 /* eslint-disable react-hooks/rules-of-hooks */
+/* eslint-disable security/detect-object-injection */
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { CSVLink } from 'react-csv';
@@ -44,6 +45,7 @@ import QueryBuilder from '../../../components/QueryBuilder';
 import { PlansPaymentsQuery } from '../graphql/payment_query';
 import PaymentModal from './UserTransactions/PaymentModal';
 import { dateToString } from '../../../components/DateContainer';
+import { StyledTabs, StyledTab, TabPanel, a11yProps } from '../../../components/Tabs';
 
 const csvHeaders = [
   { label: 'Receipt Number', key: 'receiptNumber' },
@@ -68,6 +70,7 @@ export default function PaymentList({ currencyData }) {
   const classes = useStyles();
   const page = path.get('page');
   const type = path.get('type');
+  const tab = path.get('tab');
   const [searchValue, setSearchValue] = useState('');
   const debouncedValue = useDebounce(searchValue, 500);
   const [listType, setListType] = useState('nongraph');
@@ -78,6 +81,12 @@ export default function PaymentList({ currencyData }) {
   const [displayBuilder, setDisplayBuilder] = useState('none');
   const [searchQuery, setSearchQuery] = useState('');
   const [paymentModalOpen, setPaymentModalOpen] = useState(false);
+  const [tabValue, setTabValue] = useState(0);
+
+  const TAB_VALUES = {
+    payments: 0,
+    plans: 1
+  };
 
   const paymentHeaders = [
     {
@@ -189,6 +198,13 @@ export default function PaymentList({ currencyData }) {
     }
   }, [type]);
 
+  useEffect(() => {
+    if (tab) {
+      setTabValue(TAB_VALUES[tab]);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [path, tab]);
+
   function handleDownloadCSV() {
     loadAllPayments();
   }
@@ -196,6 +212,11 @@ export default function PaymentList({ currencyData }) {
   function handlePaymentModal() {
     setPaymentModalOpen(false);
     history.push('/payments');
+  }
+
+  function handleTabValueChange(_event, newValue) {
+    history.push(`?tab=${Object.keys(TAB_VALUES).find(key => TAB_VALUES[key] === newValue)}`);
+    setTabValue(newValue);
   }
 
   if (error) {
@@ -208,137 +229,154 @@ export default function PaymentList({ currencyData }) {
 
   return (
     <div>
-      <PaymentModal
-        open={paymentModalOpen}
-        handleModalClose={handlePaymentModal}
-        currencyData={currencyData}
-        refetch={refetch}
-      />
-      <Container maxWidth="xl">
-        <Grid container direction="row" spacing={2}>
-          <Grid item sm={9} xs={12}>
-            <SearchInput
-              title={t('common:misc.payments')}
-              searchValue={searchValue}
-              handleSearch={event => setsearch(event.target.value)}
-              handleFilter={toggleFilterMenu}
-              handleClear={() => setSearchClear()}
-            />
-          </Grid>
-          <Grid item sm={3} xs={12}>
-            <Button variant="outlined" className={classes.exportDataBtn}>
-              {listType === 'graph' && paymentStatData?.paymentStatDetails?.length > 0 ? (
-                <CSVLink
-                  data={csvData(paymentStatData?.paymentStatDetails)}
-                  style={{ color: theme.palette.primary.main, textDecoration: 'none' }}
-                  headers={csvHeaders}
-                  filename={`payment-data-${dateToString(new Date())}.csv`}
-                >
-                  {t('actions.download_csv')}
-                </CSVLink>
-              ) : (
-                <>
-                  {!called ? (
-                    // eslint-disable-next-line jsx-a11y/click-events-have-key-events
-                    <span role="button" aria-label="download csv" onClick={handleDownloadCSV}>
-                      {plansLoading ? <Spinner /> : t('actions.export_data')}
-                    </span>
-                  ) : (
+      <StyledTabs
+        value={tabValue}
+        onChange={handleTabValueChange}
+        aria-label="payment screen tabs"
+        centered
+      >
+        <StyledTab label="Payments" {...a11yProps(0)} />
+        <StyledTab label="Plans" {...a11yProps(1)} />
+      </StyledTabs>
+      <TabPanel value={tabValue} index={0}>
+        <>
+          <PaymentModal
+            open={paymentModalOpen}
+            handleModalClose={handlePaymentModal}
+            currencyData={currencyData}
+            refetch={refetch}
+          />
+          <Container maxWidth="xl">
+            <Grid container direction="row" spacing={2}>
+              <Grid item sm={9} xs={12}>
+                <SearchInput
+                  title={t('common:misc.payments')}
+                  searchValue={searchValue}
+                  handleSearch={event => setsearch(event.target.value)}
+                  handleFilter={toggleFilterMenu}
+                  handleClear={() => setSearchClear()}
+                />
+              </Grid>
+              <Grid item sm={3} xs={12}>
+                <Button variant="outlined" className={classes.exportDataBtn}>
+                  {listType === 'graph' && paymentStatData?.paymentStatDetails?.length > 0 ? (
                     <CSVLink
-                      data={plansData?.paymentsList.length > 0 ? csvData(plansData?.paymentsList) : []}
+                      data={csvData(paymentStatData?.paymentStatDetails)}
                       style={{ color: theme.palette.primary.main, textDecoration: 'none' }}
                       headers={csvHeaders}
                       filename={`payment-data-${dateToString(new Date())}.csv`}
                     >
-                      {plansLoading ? <Spinner /> : t('actions.save_csv')}
+                      {t('actions.download_csv')}
                     </CSVLink>
+                  ) : (
+                    <>
+                      {!called ? (
+                        // eslint-disable-next-line jsx-a11y/click-events-have-key-events
+                        <span role="button" aria-label="download csv" onClick={handleDownloadCSV}>
+                          {plansLoading ? <Spinner /> : t('actions.export_data')}
+                        </span>
+                      ) : (
+                        <CSVLink
+                          data={plansData?.paymentsList.length > 0 ? csvData(plansData?.paymentsList) : []}
+                          style={{ color: theme.palette.primary.main, textDecoration: 'none' }}
+                          headers={csvHeaders}
+                          filename={`payment-data-${dateToString(new Date())}.csv`}
+                        >
+                          {plansLoading ? <Spinner /> : t('actions.save_csv')}
+                        </CSVLink>
+                      )}
+                    </>
                   )}
-                </>
-              )}
-            </Button>
+                </Button>
+              </Grid>
+            </Grid>
+          </Container>
+          <Grid
+            container
+            justify="flex-end"
+            style={{
+              width: '100.5%',
+              position: 'absolute',
+              zIndex: 1,
+              marginTop: '-2px',
+              marginLeft: '-300px',
+              display: displayBuilder
+            }}
+          >
+            <QueryBuilder
+              handleOnChange={queryOnChange}
+              builderConfig={paymentQueryBuilderConfig}
+              initialQueryValue={paymentQueryBuilderInitialValue}
+              addRuleLabel={t('common:misc.add_filter')}
+            />
           </Grid>
-        </Grid>
-      </Container>
-      <Grid
-        container
-        justify="flex-end"
-        style={{
-          width: '100.5%',
-          position: 'absolute',
-          zIndex: 1,
-          marginTop: '-2px',
-          marginLeft: '-300px',
-          display: displayBuilder
-        }}
-      >
-        <QueryBuilder
-          handleOnChange={queryOnChange}
-          builderConfig={paymentQueryBuilderConfig}
-          initialQueryValue={paymentQueryBuilderInitialValue}
-          addRuleLabel={t('common:misc.add_filter')}
-        />
-      </Grid>
-      <br />
-      <br />
-      <PaymentGraph handleClick={setGraphQuery} />
-      <Fab
-        color="primary"
-        variant="extended"
-        className={classes.download}
-        onClick={() => setPaymentModalOpen(true)}
-      >
-        {t('common:misc.make_payment')}
-      </Fab>
+          <br />
+          <br />
+          <PaymentGraph handleClick={setGraphQuery} />
+          <Fab
+            color="primary"
+            variant="extended"
+            className={classes.download}
+            onClick={() => setPaymentModalOpen(true)}
+          >
+            {t('common:misc.make_payment')}
+          </Fab>
 
-      {loading ? (
-        <Spinner />
-      ) : (
-        <List>
-          {listType === 'graph' && paymentStatData?.paymentStatDetails?.length > 0 ? (
-            <div>
-              {matches && (
-                <div style={{ padding: '0 20px' }}>
-                  <ListHeader headers={paymentHeaders} />
-                </div>
-              )}
-              {paymentStatData.paymentStatDetails.map(payment => (
-                <TransactionItem
-                  key={payment.id}
-                  transaction={payment}
-                  currencyData={currencyData}
-                />
-              ))}
-            </div>
-          ) : paymentList?.length > 0 ? (
-            <div>
-              {matches && (
-                <div style={{ padding: '0 20px' }}>
-                  <ListHeader headers={paymentHeaders} />
-                </div>
-              )}
-              {paymentList.map(payment => (
-                <TransactionItem
-                  key={payment.id}
-                  transaction={payment}
-                  currencyData={currencyData}
-                />
-              ))}
-            </div>
+          {loading ? (
+            <Spinner />
           ) : (
-            <CenteredContent>{t('errors.no_payment_available')}</CenteredContent>
+            <List>
+              {listType === 'graph' && paymentStatData?.paymentStatDetails?.length > 0 ? (
+                <div>
+                  {matches && (
+                    <div style={{ padding: '0 20px' }}>
+                      <ListHeader headers={paymentHeaders} />
+                    </div>
+                  )}
+                  {paymentStatData.paymentStatDetails.map(payment => (
+                    <TransactionItem
+                      key={payment.id}
+                      transaction={payment}
+                      currencyData={currencyData}
+                    />
+                  ))}
+                </div>
+              ) : paymentList?.length > 0 ? (
+                <div>
+                  {matches && (
+                    <div style={{ padding: '0 20px' }}>
+                      <ListHeader headers={paymentHeaders} />
+                    </div>
+                  )}
+                  {paymentList.map(payment => (
+                    <TransactionItem
+                      key={payment.id}
+                      transaction={payment}
+                      currencyData={currencyData}
+                    />
+                  ))}
+                </div>
+              ) : (
+                <CenteredContent>{t('errors.no_payment_available')}</CenteredContent>
+              )}
+            </List>
           )}
-        </List>
-      )}
 
-      <CenteredContent>
-        <Paginate
-          offSet={pageNumber}
-          limit={limit}
-          active={pageNumber >= 1}
-          handlePageChange={paginate}
-          count={data?.paymentsList?.length}
-        />
-      </CenteredContent>
+          <CenteredContent>
+            <Paginate
+              offSet={pageNumber}
+              limit={limit}
+              active={pageNumber >= 1}
+              handlePageChange={paginate}
+              count={data?.paymentsList?.length}
+            />
+          </CenteredContent>
+        </>
+      </TabPanel>
+
+      <TabPanel value={tabValue} index={1}>
+        <>I gat you</>
+      </TabPanel>
     </div>
   );
 }
