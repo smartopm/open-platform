@@ -144,7 +144,7 @@ export default function GenericForm({ formId, formData, refetch, editMode, categ
     });
 
     // update all form values
-    formData.formProperties.map(prop => addPropWithValue(filledInProperties, prop.id));
+    // formData.formProperties.map(prop => addPropWithValue(filledInProperties, prop.id));
     const cleanFormData = JSON.stringify({ user_form_properties: filledInProperties });
     // formUserId
     // fields and their values
@@ -384,15 +384,15 @@ export function propExists(values, propId) {
   return values.some(value => value.form_property_id === propId);
 }
 
-/**
- *
- * @param {{}} properties
- * @param {String} propId
- * @description check form values that weren't filled in and add default values
- */
-export function addPropWithValue(properties, propId) {
-  if (propExists(properties, propId)) {
-    return;
-  }
-  properties.push({ value: null, form_property_id: propId });
-}
+// /**
+//  *
+//  * @param {{}} properties
+//  * @param {String} propId
+//  * @description check form values that weren't filled in and add default values
+//  */
+// export function addPropWithValue(properties, propId) {
+//   if (propExists(properties, propId)) {
+//     return;
+//   }
+//   properties.push({ value: null, form_property_id: propId });
+// }
