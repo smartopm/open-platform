@@ -57,7 +57,8 @@ const csvHeaders = [
   { label: 'Client Name', key: 'user.name' },
   { label: 'Phone Number', key: 'user.phoneNumber' },
   { label: 'Email', key: 'user.email' },
-  { label: 'External Id', key: 'user.extRefId' }
+  { label: 'External Id', key: 'user.extRefId' },
+  { label: 'Formatted Date', key: 'formattedDate' }
 ];
 
 export default function PaymentList({ currencyData }) {
@@ -129,6 +130,10 @@ export default function PaymentList({ currencyData }) {
       if (paymentList.length < limit) return;
       history.push(`/payments?page=${pageNumber + limit}`);
     }
+  }
+
+  function csvData(csv) {
+    return csv.map(val => ({ ...val, formattedDate: dateToString(val.createdAt, true)}))
   }
 
   function setGraphQuery(qu) {
@@ -224,7 +229,7 @@ export default function PaymentList({ currencyData }) {
             <Button variant="outlined" className={classes.exportDataBtn}>
               {listType === 'graph' && paymentStatData?.paymentStatDetails?.length > 0 ? (
                 <CSVLink
-                  data={paymentStatData?.paymentStatDetails}
+                  data={csvData(paymentStatData?.paymentStatDetails)}
                   style={{ color: theme.palette.primary.main, textDecoration: 'none' }}
                   headers={csvHeaders}
                   filename={`payment-data-${dateToString(new Date())}.csv`}
@@ -240,7 +245,7 @@ export default function PaymentList({ currencyData }) {
                     </span>
                   ) : (
                     <CSVLink
-                      data={plansData?.paymentsList || []}
+                      data={plansData?.paymentsList.length > 0 ? csvData(plansData?.paymentsList) : []}
                       style={{ color: theme.palette.primary.main, textDecoration: 'none' }}
                       headers={csvHeaders}
                       filename={`payment-data-${dateToString(new Date())}.csv`}
