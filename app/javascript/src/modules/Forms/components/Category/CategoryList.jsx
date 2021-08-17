@@ -3,6 +3,7 @@ import { Button, Container } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import { useQuery } from 'react-apollo';
 import { useParams } from 'react-router';
+import PropTypes from 'prop-types';
 import { DetailsDialog } from '../../../../components/Dialog';
 import CategoryForm from './CategoryForm';
 import CategoryItem from './CategoryItem';
@@ -15,7 +16,7 @@ import FormPropertyCreateForm from '../FormPropertyCreateForm';
 // from the main category you should be able to add questions to that category
 // below the main category, you can add another category
 
-export default function CategoryList() {
+export default function CategoryList({ editMode }) {
   const [formOpen, setFormOpen] = useState(false);
   const [propertyFormOpen, setPropertyFormOpen] = useState(false);
   const [data, setFormData] = useState({});
@@ -27,12 +28,10 @@ export default function CategoryList() {
   });
 
   function handleEditCategory(category) {
-    console.log(category);
     setFormOpen(true);
     setFormData(category);
   }
   function handleAddCategory(category) {
-    console.log('adding a cateogy');
     setFormOpen(true);
     setFormData(category);
   }
@@ -62,6 +61,7 @@ export default function CategoryList() {
             handleAddField={() => handleAddField(category.id)}
             handleEditCategory={() => handleEditCategory(category)}
             collapsed={propertyFormOpen && categoryId === category.id}
+            editMode={editMode}
           >
             {category.formProperties.map(formProperty => (
               <RenderForm
@@ -70,7 +70,7 @@ export default function CategoryList() {
                 formId={formId}
                 refetch={categoriesData.refetch}
                 categoryId={category.id}
-                editMode
+                editMode={editMode}
               />
             ))}
             {propertyFormOpen && categoryId === category.id && (
@@ -83,15 +83,23 @@ export default function CategoryList() {
           </CategoryItem>
         ))}
       <br />
-      <Button
-        variant="outlined"
-        color="default"
-        startIcon={<AddIcon color="primary" />}
-        style={{ float: 'right' }}
-        onClick={handleAddCategory}
-      >
-        Add Category
-      </Button>
+      {
+        editMode && (
+          <Button
+            variant="outlined"
+            color="default"
+            startIcon={<AddIcon color="primary" />}
+            style={{ float: 'right' }}
+            onClick={handleAddCategory}
+          >
+            Add Category
+          </Button>
+        )
+      }
     </>
   );
+}
+
+CategoryList.propTypes = {
+  editMode: PropTypes.bool.isRequired
 }

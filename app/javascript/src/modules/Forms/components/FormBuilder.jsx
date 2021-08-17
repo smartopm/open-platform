@@ -28,7 +28,7 @@ export default function FormBuilder({ formId }) {
   const [message, setMessage] = useState({ isError: false, detail: '' })
   const [type, setType] = useState('form')
   const { t } = useTranslation(['form', 'common'])
-  const { data, error, loading, refetch } = useQuery(FormPropertiesQuery, {
+  const { data, error, loading } = useQuery(FormPropertiesQuery, {
     variables: { formId },
     errorPolicy: 'all'
   })
@@ -105,8 +105,7 @@ export default function FormBuilder({ formId }) {
       <br />
       {type === 'form' ? (
         <>
-
-          <CategoryList />
+          <CategoryList editMode />
           <br />
           <br />
           <CenteredContent>
