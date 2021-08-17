@@ -138,7 +138,7 @@ CategoryForm.propTypes = {
     description: PropTypes.string,
     headerVisible: PropTypes.bool,
     renderedText: PropTypes.string,
-    general: PropTypes.string,
+    general: PropTypes.bool,
   }).isRequired,
   close: PropTypes.func.isRequired,
   refetchCategories: PropTypes.func.isRequired,
