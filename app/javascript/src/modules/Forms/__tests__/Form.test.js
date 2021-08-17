@@ -3,7 +3,7 @@ import { render, waitFor } from '@testing-library/react'
 import '@testing-library/jest-dom/extend-expect'
 import { MockedProvider } from '@apollo/react-testing'
 import Loading from '../../../shared/Loading'
-import Form from '../components/Form'
+// import Form from '../components/Form'
 import { FormPropertiesQuery } from '../graphql/forms_queries'
 import { propExists } from '../components/GenericForm'
 import { addPropWithValue } from '../utils'
@@ -56,7 +56,7 @@ describe.skip('Form Component', () => {
       }
     const container = render(
       <MockedProvider mocks={[mocks]} addTypename={false}>
-        <Form formId="caea7b44-ee95-42a6-a42f-3e530432172e" pathname="form" />
+        {/* <Form formId="caea7b44-ee95-42a6-a42f-3e530432172e" pathname="form" /> */}
       </MockedProvider>
     )
     const loader = render(<Loading />)
