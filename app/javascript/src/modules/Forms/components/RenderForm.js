@@ -12,6 +12,7 @@ import TextInput from './FormProperties/TextInput';
 import UploadField from './FormProperties/UploadField';
 import SignaturePad from './FormProperties/SignaturePad';
 import FormPropertyAction from './FormPropertyAction';
+import { FormContext } from '../Context';
 
 const initialData = {
     fieldType: '',
@@ -23,7 +24,7 @@ const initialData = {
 export default  function RenderForm({formPropertiesData, formId, refetch, editMode, categoryId}) {
     const [properties, setProperties] = useState(initialData);
     const [message, setMessage] = useState({ err: false, info: '', signed: false });
-    const [isSubmitting, setSubmitting] = useState(false);
+    // const [isSubmitting, setSubmitting] = useState(false);
     const [isUploading, setIsUploading] = useState(false);
     const [alertOpen, setAlertOpen] = useState(false);
     const [currentPropId, setCurrentPropertyId] = useState('');
@@ -31,16 +32,18 @@ export default  function RenderForm({formPropertiesData, formId, refetch, editMo
     const signRef = useRef(null);
     const { t } = useTranslation(['form', 'common']);
     const authState = useContext(Context);
+    const { setFormProperties } = useContext(FormContext)
 
     function handleValueChange(event, propId) {
         const { name, value } = event.target;
-        setProperties({
+        setFormProperties({
           ...properties,
           [name]: { value, form_property_id: propId }
         });
       }
+
       function handleDateChange(date, id) {
-        setProperties({
+        setFormProperties({
           ...properties,
           date: { value: date, form_property_id: id }
         });
@@ -48,7 +51,7 @@ export default  function RenderForm({formPropertiesData, formId, refetch, editMo
 
       function handleRadioValueChange(event, propId, fieldName) {
         const { name, value } = event.target;
-        setProperties({
+        setFormProperties({
           ...properties,
           [fieldName]: { value: { checked: value, label: name }, form_property_id: propId }
         });

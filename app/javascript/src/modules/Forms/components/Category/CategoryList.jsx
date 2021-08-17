@@ -13,6 +13,7 @@ import RenderForm from '../RenderForm';
 import FormPropertyCreateForm from '../FormPropertyCreateForm';
 import FormTitle from '../FormTitle';
 import { FormQuery } from '../../graphql/forms_queries';
+import FormContextProvider from '../../Context';
 
 // This will contain the main category
 // from the main category you should be able to add questions to that category
@@ -29,6 +30,8 @@ export default function CategoryList({ editMode }) {
     fetchPolicy: 'cache-and-network'
   });
   const { data: formDetailData, loading } = useQuery(FormQuery, { variables: { id: formId } });
+
+
 
   function handleEditCategory(category) {
     setCategoryFormOpen(true);
@@ -48,7 +51,7 @@ export default function CategoryList({ editMode }) {
     setCategoryFormOpen(false);
   }
   return (
-    <>
+    <FormContextProvider>
       <DetailsDialog handleClose={handleClose} open={categoryFormOpen} title="Category" color="default">
         <Container>
           <CategoryForm data={data} close={handleClose} refetchCategories={categoriesData.refetch} />
@@ -106,7 +109,7 @@ export default function CategoryList({ editMode }) {
           </Button>
         )
       }
-    </>
+    </FormContextProvider>
   );
 }
 
