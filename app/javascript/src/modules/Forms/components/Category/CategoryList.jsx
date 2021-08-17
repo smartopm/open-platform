@@ -48,7 +48,7 @@ export default function CategoryList({ editMode }) {
     <>
       <DetailsDialog handleClose={handleClose} open={formOpen} title="Category" color="default">
         <Container>
-          <CategoryForm data={data} close={handleClose} refetchCategory={categoriesData.refetch} />
+          <CategoryForm data={data} close={handleClose} refetchCategories={categoriesData.refetch} />
         </Container>
       </DetailsDialog>
       <br />
@@ -73,7 +73,7 @@ export default function CategoryList({ editMode }) {
                 editMode={editMode}
               />
             ))}
-            {propertyFormOpen && categoryId === category.id && (
+            {propertyFormOpen && categoryId === category.id && editMode && (
               <FormPropertyCreateForm
                 formId={formId}
                 refetch={categoriesData.refetch}

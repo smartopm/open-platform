@@ -10,7 +10,7 @@ import { FormCategoryCreateMutation } from '../../graphql/form_category_mutation
 import { Spinner } from '../../../../shared/Loading';
 import MessageAlert from '../../../../components/MessageAlert';
 
-export default function CategoryForm({ data, close, refetchCategory }) {
+export default function CategoryForm({ data, close, refetchCategories }) {
   const { t } = useTranslation('form');
   const [categoryData, setCategoryData] = useState(data);
   const [createCategory, { loading, error, called }] = useMutation(FormCategoryCreateMutation);
@@ -20,12 +20,11 @@ export default function CategoryForm({ data, close, refetchCategory }) {
     event.preventDefault();
     createCategory({ variables: { ...categoryData, order: Number(categoryData.order), formId } })
       .then(() => {
-        refetchCategory()
+        refetchCategories()
         close()
       })
   }
 
-  console.log(loading, error);
   function handleChange(event) {
     const { name, value } = event.target;
     setCategoryData({
@@ -142,5 +141,5 @@ CategoryForm.propTypes = {
     general: PropTypes.string,
   }).isRequired,
   close: PropTypes.func.isRequired,
-  refetchCategory: PropTypes.func.isRequired,
+  refetchCategories: PropTypes.func.isRequired,
 };
