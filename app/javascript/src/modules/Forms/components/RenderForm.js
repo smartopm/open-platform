@@ -205,8 +205,5 @@ export default  function RenderForm({formPropertiesData, formId, refetch, editMo
         </Grid>
       )
     };
-    console.log(formPropertiesData)
     return <>{fields[formPropertiesData.fieldType]}</>;
   }
-
-//   signatureStatus

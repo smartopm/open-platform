@@ -6,7 +6,14 @@ import AddIcon from '@material-ui/icons/Add';
 import CloseIcon from '@material-ui/icons/Close';
 import { makeStyles } from '@material-ui/styles';
 
-export default function CategoryItem({ name, handleAddField, handleEditCategory, children, collapsed }) {
+export default function CategoryItem({
+  name,
+  handleAddField,
+  handleEditCategory,
+  children,
+  collapsed,
+  editMode
+}) {
   const classes = useStyles();
   return (
     <>
@@ -15,21 +22,23 @@ export default function CategoryItem({ name, handleAddField, handleEditCategory,
           <Typography className={classes.categoryName}>{name}</Typography>
         </Grid>
         <Grid item xs={2} sm={1}>
-          <IconButton aria-label="edit this category" onClick={handleEditCategory}>
-            <CreateIcon color="primary" />
-          </IconButton>
+          {editMode && (
+            <IconButton aria-label="edit this category" onClick={handleEditCategory}>
+              <CreateIcon color="primary" />
+            </IconButton>
+          )}
         </Grid>
         <Grid item xs={2} sm={1}>
-          <IconButton aria-label="add questions to this category" onClick={handleAddField}>
-            {
-              collapsed ? <CloseIcon color="primary" /> : <AddIcon color="primary" />
+          {
+              editMode && (
+                <IconButton aria-label="add questions to this category" onClick={handleAddField}>
+                  {collapsed ? <CloseIcon color="primary" /> : <AddIcon color="primary" />}
+                </IconButton>
+              )
             }
-          </IconButton>
         </Grid>
       </Grid>
-      <Container>
-        {children}
-      </Container>
+      <Container>{children}</Container>
     </>
   );
 }
@@ -40,6 +49,7 @@ CategoryItem.propTypes = {
   handleEditCategory: PropTypes.func.isRequired,
   children: PropTypes.node.isRequired,
   collapsed: PropTypes.bool.isRequired,
+  editMode: PropTypes.bool.isRequired
 };
 
 const useStyles = makeStyles({
