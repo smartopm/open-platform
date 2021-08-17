@@ -8,7 +8,8 @@ import moment from 'moment';
 export function dateTimeToString(date) {
   return moment.parseZone(date).format('HH:mm');
 }
-export function dateToString(date, otherFormat) {
+export function dateToString(date, otherFormat=false) {
+  // otherFormat is required to be true if date in format 'MM-DD-YYYY'
   if (otherFormat) {
     return moment.parseZone(date).format('MM-DD-YYYY');
   }
