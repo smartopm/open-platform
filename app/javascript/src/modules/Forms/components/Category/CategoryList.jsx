@@ -19,7 +19,7 @@ import { FormQuery } from '../../graphql/forms_queries';
 // below the main category, you can add another category
 
 export default function CategoryList({ editMode }) {
-  const [formOpen, setFormOpen] = useState(false);
+  const [categoryFormOpen, setCategoryFormOpen] = useState(false);
   const [propertyFormOpen, setPropertyFormOpen] = useState(false);
   const [data, setFormData] = useState({});
   const [categoryId, setCategoryId] = useState('');
@@ -31,11 +31,11 @@ export default function CategoryList({ editMode }) {
   const { data: formDetailData, loading } = useQuery(FormQuery, { variables: { id: formId } });
 
   function handleEditCategory(category) {
-    setFormOpen(true);
+    setCategoryFormOpen(true);
     setFormData(category);
   }
   function handleAddCategory(category) {
-    setFormOpen(true);
+    setCategoryFormOpen(true);
     setFormData(category);
   }
 
@@ -45,11 +45,11 @@ export default function CategoryList({ editMode }) {
   }
 
   function handleClose() {
-    setFormOpen(false);
+    setCategoryFormOpen(false);
   }
   return (
     <>
-      <DetailsDialog handleClose={handleClose} open={formOpen} title="Category" color="default">
+      <DetailsDialog handleClose={handleClose} open={categoryFormOpen} title="Category" color="default">
         <Container>
           <CategoryForm data={data} close={handleClose} refetchCategories={categoriesData.refetch} />
         </Container>
