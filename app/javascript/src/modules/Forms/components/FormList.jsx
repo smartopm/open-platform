@@ -37,7 +37,7 @@ import { ActionDialog } from '../../../components/Dialog'
 import MessageAlert from '../../../components/MessageAlert'
 import FloatButton from '../../../components/FloatButton'
 import { propAccessor, formatError } from '../../../utils/helpers'
-import SwitchInput from './SwitchInput'
+import SwitchInput from './FormProperties/SwitchInput'
 
 // here we get existing google forms and we mix them with our own created forms
 export default function FormLinkList({ userType, community }) {

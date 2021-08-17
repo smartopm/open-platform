@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import { useMutation } from 'react-apollo';
 import { useParams } from 'react-router';
-import SwitchInput from '../SwitchInput';
+import SwitchInput from '../FormProperties/SwitchInput';
 import CenteredContent from '../../../../components/CenteredContent';
 import { FormCategoryCreateMutation } from '../../graphql/form_category_mutations';
 import { Spinner } from '../../../../shared/Loading';

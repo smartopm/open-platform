@@ -6,7 +6,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 import { StyleSheet } from 'aphrodite';
-import SignaturePad from '../../../Forms/components/SignaturePad';
+import SignaturePad from '../../../Forms/components/FormProperties/SignaturePad';
 import { formatMoney } from '../../../../utils/helpers';
 import { dateToString } from '../../../../components/DateContainer';
 import { paymentType } from '../../../../utils/constants';
@@ -338,7 +338,7 @@ ReceiptDetail.propTypes = {
         parcelNumber: PropTypes.string
       })
     })
-  }), 
+  }),
   paymentData: PropTypes.shape({
     id: PropTypes.string,
     source: PropTypes.string,

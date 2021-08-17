@@ -7,10 +7,10 @@ import DatePickerDialog from '../../../components/DatePickerDialog';
 import { Context } from '../../../containers/Provider/AuthStateProvider';
 import ImageAuth from '../../../shared/ImageAuth';
 import { Spinner } from '../../../shared/Loading';
-import RadioInput from './RadioInput';
-import TextInput from './TextInput';
-import UploadField from './UploadField';
-import SignaturePad from './SignaturePad';
+import RadioInput from './FormProperties/RadioInput';
+import TextInput from './FormProperties/TextInput';
+import UploadField from './FormProperties/UploadField';
+import SignaturePad from './FormProperties/SignaturePad';
 import FormPropertyAction from './FormPropertyAction';
 
 const initialData = {

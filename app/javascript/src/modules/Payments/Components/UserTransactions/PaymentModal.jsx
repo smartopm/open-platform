@@ -21,7 +21,7 @@ import { Spinner } from '../../../../shared/Loading';
 import DatePickerDialog from '../../../../components/DatePickerDialog';
 import useDebounce from '../../../../utils/useDebounce';
 import UserAutoResult from '../../../../shared/UserAutoResult';
-import SwitchInput from '../../../Forms/components/SwitchInput';
+import SwitchInput from '../../../Forms/components/FormProperties/SwitchInput';
 
 const initialValues = {
   transactionType: '',
@@ -68,7 +68,7 @@ export default function PaymentModal({
 
   function confirm(event) {
     event.preventDefault();
-    
+
     const receiptCheck = plotInputValue.map((val) => !!val.receiptNumber).every(Boolean)
 
     if (totalAmount() === 0 || !inputValue.transactionType || (inputValue.pastPayment && !receiptCheck)) {
@@ -138,7 +138,7 @@ export default function PaymentModal({
     const res = plotInputValue.find(ele => ele.paymentPlanId === id)
     if (type === "amount") {
       return res?.amount
-    } 
+    }
     return res?.receiptNumber
   }
 
@@ -441,7 +441,7 @@ export function PaymentDetails({ inputValue, totalAmount, currencyData }) {
     <div>
       <Typography variant="subtitle1" data-testid="amount" align="center" key="amount">
         {t('table_headers.total_amount')}
-        : 
+        :
         {' '}
         <b>{formatMoney(currencyData, totalAmount)}</b>
       </Typography>
