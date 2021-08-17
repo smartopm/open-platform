@@ -37,12 +37,14 @@ export const FormCreateMutation = gql`
     $expiresAt: String
     $description: String
     $multipleSubmissionsAllowed: Boolean!
+    $preview: Boolean!
   ) {
     formCreate(
       name: $name
       expiresAt: $expiresAt
       description: $description
       multipleSubmissionsAllowed: $multipleSubmissionsAllowed
+      preview: $preview
     ) {
       form {
         id

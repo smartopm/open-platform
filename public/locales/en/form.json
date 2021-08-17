@@ -23,7 +23,8 @@
     "submission_date": "Date of Submitted",
     "submitted_by": "Submitted By",
     "status": "Status",
-    "version_number": "Version Number"
+    "version_number": "Version Number",
+    "previewable": "Should have a preview"
   },
   "actions": {
     "create_a_form": "Create a form",
