@@ -1,11 +1,13 @@
 import React, { useContext } from 'react'
 import { useLocation, useParams } from 'react-router'
-import Form from '../components/Form'
+import { Container } from '@material-ui/core'
 import FormUpdate from '../components/FormUpdate'
 import { Context } from '../../../containers/Provider/AuthStateProvider'
+import FormContextProvider from '../Context'
+import Form from '../components/Category/Form'
 
 export default function FormPage(){
-  const { formId, userId, formUserId } = useParams()
+  const { userId, formUserId } = useParams()
   const {pathname } = useLocation()
   const authState = useContext(Context)
   const isFormFilled = pathname.includes('user_form')
@@ -13,7 +15,15 @@ export default function FormPage(){
       <>
         <br />
         {
-          isFormFilled ? <FormUpdate userId={userId} formUserId={formUserId} authState={authState} /> : <Form formId={formId} pathname={pathname} />
+          isFormFilled
+          ? <FormUpdate userId={userId} formUserId={formUserId} authState={authState} />
+          : (
+            <FormContextProvider>
+              <Container maxWidth="md">
+                <Form editMode={false} />
+              </Container>
+            </FormContextProvider>
+          )
         }
       </>
     )

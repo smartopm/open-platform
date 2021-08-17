@@ -14,7 +14,7 @@ import FormTimeline from '../../../shared/TimeLine'
 import { ActionDialog } from '../../../components/Dialog'
 import { formatError } from '../../../utils/helpers'
 import MessageAlert from '../../../components/MessageAlert'
-import CategoryList from './Category/CategoryList'
+import Form from './Category/Form'
 import FormContextProvider from '../Context'
 
 /**
@@ -107,7 +107,7 @@ export default function FormBuilder({ formId }) {
         <br />
         {type === 'form' ? (
           <>
-            <CategoryList editMode />
+            <Form editMode />
             <br />
             <br />
             <CenteredContent>
