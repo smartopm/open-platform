@@ -218,6 +218,6 @@ RenderForm.propTypes = {
     id: PropTypes.string,
     fieldType: PropTypes.string,
     fieldName: PropTypes.string,
-    adminUse: PropTypes.string
+    adminUse: PropTypes.bool
   }).isRequired,
 }
