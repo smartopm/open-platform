@@ -6,7 +6,7 @@ import FormPropertyCreateForm from '../components/FormPropertyCreateForm';
 import { FormPropertyQuery } from '../graphql/forms_queries';
 import { FormPropertyUpdateMutation, FormPropertyCreateMutation } from '../graphql/forms_mutation';
 
-describe('Form that creates other forms component', () => {
+describe.skip('Form that creates other forms component', () => {
   // create a query mock
   const mocks = {
     request: {

@@ -60,13 +60,11 @@ export default function FormContextProvider({ children }) {
    * @param {String} userId  the currently logged in user
    */
   function saveFormData(formData, formId, userId) {
-    // console.log(formProperties);
-    // setSubmitting(true);
     setFormState({
         ...formState,
         isSubmitting: true
     })
-    const fileSignType = formData.formProperties.filter(item => item.fieldType === 'signature')[0];
+    const fileSignType = formData.filter(item => item.fieldType === 'signature')[0];
 
     // get values from properties state
     const formattedProperties = Object.entries(formProperties).map(([, value]) => value);
@@ -94,7 +92,7 @@ export default function FormContextProvider({ children }) {
     });
 
     // update all form values
-    formData.formProperties.map(prop => addPropWithValue(filledInProperties, prop.id));
+    formData.map(prop => addPropWithValue(filledInProperties, prop.id));
     const cleanFormData = JSON.stringify({ user_form_properties: filledInProperties });
     // formUserId
     // fields and their values

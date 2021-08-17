@@ -17,6 +17,7 @@ import { FormQuery } from '../../graphql/forms_queries';
 import { FormContext } from '../../Context';
 import CenteredContent from '../../../../components/CenteredContent';
 import { Context } from '../../../../containers/Provider/AuthStateProvider';
+import { flattenFormProperties } from '../../utils';
 
 // This will contain the main category
 // from the main category you should be able to add questions to that category
@@ -54,7 +55,7 @@ export default function CategoryList({ editMode }) {
   function handleClose() {
     setCategoryFormOpen(false);
   }
-  const formData = []
+  const formData = flattenFormProperties(categoriesData.data?.formCategories)
 
   return (
     <>
