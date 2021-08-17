@@ -88,19 +88,12 @@ export default function CommunitySettings({ data, token, refetch }) {
   const [locale, setLocale] = useState('en-ZM');
   const [language, setLanguage] = useState('en-US');
   const [showCropper, setShowCropper] = useState(false);
-  const [smsPhoneNumbers, setSMSPhoneNumbers] = useState(data?.smsPhoneNumbers || [])
+  const [smsPhoneNumbers, setSMSPhoneNumbers] = useState(data?.smsPhoneNumbers?.join(",") || '')
   const [emergencyCallNumber, setEmergencyCallNumber] = useState(data?.emergencyCallNumber || '')
   const { t } = useTranslation(['community', 'common'])
   const { onChange, signedBlobId } = useFileUpload({
     client: useApolloClient()
   });
-
-  function updateSMSPhoneNumbers() {
-    if (typeof smsPhoneNumbers === 'string' || smsPhoneNumbers instanceof String){
-      const currentSMSPhoneNumbers =  smsPhoneNumbers.split(/[ ,]+/)
-      setSMSPhoneNumbers([...new Set(currentSMSPhoneNumbers)]);
-    }
-  };
 
   const { data: adminUsersData } = useQuery(AdminUsersQuery, {
     fetchPolicy: 'cache-and-network',
@@ -272,9 +265,7 @@ export default function CommunitySettings({ data, token, refetch }) {
       });
       return
     }
-    updateSMSPhoneNumbers()
     setCallMutation(true);
-
     
     communityUpdate({
       variables: {
@@ -294,7 +285,7 @@ export default function CommunitySettings({ data, token, refetch }) {
         subAdministratorId,
         themeColors,
         bankingDetails,
-        smsPhoneNumbers,
+        smsPhoneNumbers: smsPhoneNumbers.split(/[ ,]+/),
         emergencyCallNumber
       },
     })
