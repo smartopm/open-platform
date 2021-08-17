@@ -133,7 +133,7 @@ export default function PaymentList({ currencyData }) {
   }
 
   function csvData(csv) {
-    return csv.map(val => ({ ...val, formattedDate: dateToString(val.createdAt, true)}))
+    return csv.map(val => ({ ...val, formattedDate: dateToString(val.createdAt, 'MM-DD-YYYY')}))
   }
 
   function setGraphQuery(qu) {
