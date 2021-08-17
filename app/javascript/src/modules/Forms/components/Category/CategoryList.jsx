@@ -11,6 +11,8 @@ import { FormCategoriesQuery } from '../../graphql/form_category_queries';
 import { Spinner } from '../../../../shared/Loading';
 import RenderForm from '../RenderForm';
 import FormPropertyCreateForm from '../FormPropertyCreateForm';
+import FormTitle from '../FormTitle';
+import { FormQuery } from '../../graphql/forms_queries';
 
 // This will contain the main category
 // from the main category you should be able to add questions to that category
@@ -26,6 +28,7 @@ export default function CategoryList({ editMode }) {
     variables: { formId },
     fetchPolicy: 'cache-and-network'
   });
+  const { data: formDetailData, loading } = useQuery(FormQuery, { variables: { id: formId } });
 
   function handleEditCategory(category) {
     setFormOpen(true);
@@ -52,6 +55,13 @@ export default function CategoryList({ editMode }) {
         </Container>
       </DetailsDialog>
       <br />
+
+      {loading && <Spinner />}
+
+      {!loading && formDetailData && (
+        <FormTitle name={formDetailData.form?.name} description={formDetailData.form?.description} />
+      )}
+
       {categoriesData.loading && <Spinner />}
       {categoriesData?.data &&
         categoriesData.data?.formCategories.map(category => (

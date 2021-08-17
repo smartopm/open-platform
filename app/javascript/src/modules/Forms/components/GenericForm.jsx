@@ -1,21 +1,21 @@
 import React, { Fragment, useContext, useRef, useState, useEffect } from 'react';
 import { Button, Container, Grid } from '@material-ui/core';
-import { useApolloClient, useMutation, useQuery } from 'react-apollo';
+import { useApolloClient, useMutation } from 'react-apollo';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import DatePickerDialog from '../../../components/DatePickerDialog';
 import CenteredContent from '../../../components/CenteredContent';
 import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider';
 import { FormUserCreateMutation } from '../graphql/forms_mutation';
-import { FormQuery } from '../graphql/forms_queries';
+// import { FormQuery } from '../graphql/forms_queries';
 import { useFileUpload } from '../../../graphql/useFileUpload';
-import TextInput from './TextInput';
-import UploadField from './UploadField';
-import SignaturePad from './SignaturePad';
+import RadioInput from './FormProperties/RadioInput';
+import TextInput from './FormProperties/TextInput';
+import UploadField from './FormProperties/UploadField';
+import SignaturePad from './FormProperties/SignaturePad';
 import { convertBase64ToFile, sortPropertyOrder } from '../../../utils/helpers';
-import RadioInput from './RadioInput';
 import { Spinner } from '../../../shared/Loading';
-import FormTitle from './FormTitle';
+// import FormTitle from './FormTitle';
 import FormPropertyAction from './FormPropertyAction';
 import ImageAuth from '../../../shared/ImageAuth';
 import MessageAlert from '../../../components/MessageAlert';
@@ -30,7 +30,10 @@ const initialData = {
   radio: { value: { label: '', checked: null } }
 };
 
-export default function GenericForm({ formId, pathname, formData, refetch, editMode }) {
+/**
+ * @deprecated in favor of RenderForm
+ */
+export default function GenericForm({ formId, formData, refetch, editMode, categoryId }) {
   const [properties, setProperties] = useState(initialData);
   const [message, setMessage] = useState({ err: false, info: '', signed: false });
   const [isSubmitting, setSubmitting] = useState(false);
@@ -41,7 +44,7 @@ export default function GenericForm({ formId, pathname, formData, refetch, editM
   const signRef = useRef(null);
   const { t } = useTranslation(['form', 'common']);
   const authState = useContext(AuthStateContext);
-  const { data, loading } = useQuery(FormQuery, { variables: { id: formId } });
+  // const { data, loading } = useQuery(FormQuery, { variables: { id: formId } });
   // create form user
   const [createFormUser] = useMutation(FormUserCreateMutation);
   // separate function for file upload
@@ -188,6 +191,7 @@ export default function GenericForm({ formId, pathname, formData, refetch, editM
             editMode={editMode}
             propertyId={formPropertiesData.id}
             refetch={refetch}
+            categoryId={categoryId}
           />
           <Grid item xs={editMode ? 10 : 12}>
             <TextInput
@@ -207,6 +211,7 @@ export default function GenericForm({ formId, pathname, formData, refetch, editM
             editMode={editMode}
             propertyId={formPropertiesData.id}
             refetch={refetch}
+            categoryId={categoryId}
           />
           <Grid item xs={editMode ? 10 : 12}>
             <DatePickerDialog
@@ -225,6 +230,7 @@ export default function GenericForm({ formId, pathname, formData, refetch, editM
             editMode={editMode}
             propertyId={formPropertiesData.id}
             refetch={refetch}
+            categoryId={categoryId}
           />
           <Grid item xs={editMode ? 10 : 12}>
             <UploadField
@@ -254,6 +260,7 @@ export default function GenericForm({ formId, pathname, formData, refetch, editM
             editMode={editMode}
             propertyId={formPropertiesData.id}
             refetch={refetch}
+            categoryId={categoryId}
           />
           <Grid item xs={editMode ? 10 : 12}>
             <SignaturePad
@@ -272,6 +279,7 @@ export default function GenericForm({ formId, pathname, formData, refetch, editM
             editMode={editMode}
             propertyId={formPropertiesData.id}
             refetch={refetch}
+            categoryId={categoryId}
           />
           <Grid item xs={editMode ? 10 : 12}>
             <Fragment key={formPropertiesData.id}>
@@ -295,6 +303,7 @@ export default function GenericForm({ formId, pathname, formData, refetch, editM
             editMode={editMode}
             propertyId={formPropertiesData.id}
             refetch={refetch}
+            categoryId={categoryId}
           />
           <Grid item xs={editMode ? 10 : 12}>
             <TextInput
@@ -308,7 +317,7 @@ export default function GenericForm({ formId, pathname, formData, refetch, editM
         </Grid>
       )
     };
-    return fields[formPropertiesData.fieldType];
+    return <>{fields[formPropertiesData.fieldType]}</>;
   }
 
   return (
@@ -329,23 +338,24 @@ export default function GenericForm({ formId, pathname, formData, refetch, editM
         <br />
         <form>
           {formData.formProperties.sort(sortPropertyOrder).map(renderForm)}
-          {!pathname.includes('edit_form') && (
-            <CenteredContent>
-              <Button
-                variant="outlined"
-                type="submit"
-                color="primary"
-                aria-label="form_submit"
-                disabled={isSubmitting}
-                style={{ marginTop: '25px' }}
-                onClick={saveFormData}
-              >
-                {isSubmitting
+
+          {/* {!pathname.includes('edit_form') && ( */}
+          <CenteredContent>
+            <Button
+              variant="outlined"
+              type="submit"
+              color="primary"
+              aria-label="form_submit"
+              disabled={isSubmitting}
+              style={{ marginTop: '25px' }}
+              onClick={saveFormData}
+            >
+              {isSubmitting
                   ? t('common:form_actions.submitting')
                   : t('common:form_actions.submit')}
-              </Button>
-            </CenteredContent>
-          )}
+            </Button>
+          </CenteredContent>
+          {/* )} */}
         </form>
       </Container>
     </>
@@ -354,12 +364,13 @@ export default function GenericForm({ formId, pathname, formData, refetch, editM
 
 GenericForm.propTypes = {
   formId: PropTypes.string.isRequired,
-  pathname: PropTypes.string.isRequired,
+  // pathname: PropTypes.string.isRequired,
   // eslint-disable-next-line react/require-default-props
   // eslint-disable-next-line react/forbid-prop-types
   formData: PropTypes.object.isRequired,
   refetch: PropTypes.func.isRequired,
-  editMode: PropTypes.bool.isRequired
+  editMode: PropTypes.bool.isRequired,
+  categoryId: PropTypes.string.isRequired,
 };
 
 /**
