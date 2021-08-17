@@ -5,6 +5,7 @@ module Mutations
     # For updating fields to a form
     class FormPropertiesUpdate < BaseMutation
       argument :form_property_id, ID, required: true
+      argument :category_id, ID, required: false
       argument :order, String, required: false
       argument :field_name, String, required: false
       argument :field_type, String, required: false

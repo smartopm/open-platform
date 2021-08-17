@@ -7,7 +7,6 @@ module Forms
     belongs_to :form
     belongs_to :category
     has_many :user_form_properties, dependent: :destroy
-    has_many :sub_categories, class_name: 'Category', dependent: :destroy
 
     default_scope { order(order: :asc) }
 

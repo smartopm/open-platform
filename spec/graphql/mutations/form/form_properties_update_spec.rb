@@ -12,11 +12,9 @@ RSpec.describe Mutations::Form::FormPropertiesUpdate do
       create(:form_property, form: form, field_type: 'text', category: category,
                              field_name: 'Select Business')
     end
-    let!(:sub_category) do
-      create(:category, form: form, form_property_id: form_property.id, field_name: 'Fishing')
-    end
-    let!(:sub_property) do
-      create(:form_property, form: form, field_type: 'text', category: sub_category,
+    let!(:other_category) { create(:category, form: form, field_name: 'Fishing') }
+    let!(:other_property) do
+      create(:form_property, form: form, field_type: 'text', category: other_category,
                              field_name: 'Upload fishing license')
     end
     let(:form_user) { create(:form_user, form: form, user: user, status: :approved) }
@@ -25,10 +23,12 @@ RSpec.describe Mutations::Form::FormPropertiesUpdate do
       <<~GQL
         mutation formPropertiesUpdate(
           $formPropertyId: ID!,
+          $categoryId: ID,
           $fieldName: String!,
           $fieldType: String!) {
           formPropertiesUpdate(
             formPropertyId: $formPropertyId,
+            categoryId: $categoryId,
             fieldName: $fieldName,
             fieldType: $fieldType
           ){
@@ -67,7 +67,7 @@ RSpec.describe Mutations::Form::FormPropertiesUpdate do
       it 'creates a new form with updated form property' do
         previous_form_count = Forms::Form.count
         variables = {
-          formPropertyId: sub_property.id,
+          formPropertyId: form_property.id,
           fieldName: 'Updated Name',
           fieldType: %w[date file_upload signature display_text display_image].sample,
         }
@@ -81,9 +81,28 @@ RSpec.describe Mutations::Form::FormPropertiesUpdate do
         ).to eql 'New version created'
         expect(Forms::Form.count).to eql(previous_form_count + 1)
         new_form = Forms::Form.where.not(id: form.id).first
-        updated_form_property = new_form.categories.where.not(form_property_id: nil)
+        updated_form_property = new_form.categories.where(field_name: 'Business Info')
                                         .first.form_properties.first
         expect(updated_form_property.field_name).to eql 'Updated Name'
+      end
+    end
+
+    context 'when admin wants to assign form property to different category' do
+      it 'assigns the form property to another category' do
+        variables = {
+          fieldName: form_property.field_name,
+          fieldType: form_property.field_type,
+          formPropertyId: form_property.id,
+          categoryId: other_category.id,
+        }
+        result = DoubleGdpSchema.execute(mutation, variables: variables,
+                                                   context: {
+                                                     current_user: admin,
+                                                     site_community: user.community,
+                                                   }).as_json
+        expect(result['error']).to be_nil
+        expect(category.form_properties.reload.count).to eql 0
+        expect(other_category.form_properties.reload.count).to eql 2
       end
     end
 

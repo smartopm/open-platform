@@ -166,7 +166,7 @@ module Types::Queries::Form
     form = Forms::Form.find_by(id: form_id)
     raise_form_not_found_error(form)
 
-    form.categories.where(form_property_id: nil).order(:order)
+    form.categories.order(:order)
   end
 
   private

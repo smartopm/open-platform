@@ -86,36 +86,6 @@ RSpec.describe Mutations::Form::FormCreate do
       end
     end
 
-    context 'when a category is grouped under a form property' do
-      before do
-        category
-        form_property
-      end
-      it 'creates a category associated with the form property' do
-        variables = {
-          formId: form.id,
-          fieldName: 'Pharmacy',
-          order: 1,
-          headerVisible: true,
-          general: false,
-          formPropertyId: form_property.id,
-        }
-
-        result = DoubleGdpSchema.execute(mutation, variables: variables,
-                                                   context: {
-                                                     current_user: admin,
-                                                     site_community: community,
-                                                   }).as_json
-        expect(result.dig('errors', 0, 'message')).to be_nil
-        category_result = result.dig('data', 'categoryCreate', 'category')
-        expect(category_result['fieldName']).to eql 'Pharmacy'
-        expect(category_result['order']).to eql 1
-        expect(category_result['headerVisible']).to eql true
-        expect(category_result['general']).to eql false
-        expect(form_property.sub_categories.reload.first.field_name).to eql 'Pharmacy'
-      end
-    end
-
     context 'when current user is not admin' do
       it 'raises unauthorized error' do
         variables = {

@@ -12,11 +12,11 @@ RSpec.describe Types::Queries::Form do
     let!(:form_property_text) do
       create(:form_property, form: form, category: category, field_type: 'text')
     end
-    let!(:sub_category) do
+    let!(:other_category) do
       create(:category, form: form, form_property_id: form_property_text.id, order: 2)
     end
     let!(:form_property_date) do
-      create(:form_property, form: form, category: sub_category, field_type: 'date')
+      create(:form_property, form: form, category: other_category, field_type: 'date')
     end
     let!(:form_user) { create(:form_user, form: form, user: current_user, status: 'approved') }
     let!(:another_form_user) { create(:form_user, form: form, user: admin, status: 'pending') }
@@ -95,16 +95,6 @@ RSpec.describe Types::Queries::Form do
               fieldName
               fieldType
               order
-              subCategories{
-                fieldName
-                order
-                headerVisible
-                formProperties{
-                  fieldName
-                  fieldType
-                  order
-                }
-              }
             }
           }
         }
@@ -219,12 +209,12 @@ RSpec.describe Types::Queries::Form do
           form_property_result = category_result['formProperties'][0]
           expect(form_property_result['fieldName']).to eql form_property_text.field_name
           expect(form_property_result['fieldType']).to eql 'text'
-          sub_category_result = form_property_result['subCategories'][0]
-          expect(sub_category_result['fieldName']).to eql sub_category.field_name
-          expect(sub_category_result['order']).to eql 2
-          sub_form_property = sub_category_result['formProperties'][0]
-          expect(sub_form_property['fieldName']).to eql form_property_date.field_name
-          expect(sub_form_property['fieldType']).to eql 'date'
+          other_category_result = result.dig('data', 'formCategories', 1)
+          expect(other_category_result['fieldName']).to eql other_category.field_name
+          expect(other_category_result['order']).to eql 2
+          other_form_property = other_category_result['formProperties'][0]
+          expect(other_form_property['fieldName']).to eql form_property_date.field_name
+          expect(other_form_property['fieldType']).to eql 'date'
         end
       end
     end

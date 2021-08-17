@@ -15,7 +15,6 @@ module Types
     field :form, Types::FormType, null: false
     field :created_at, GraphQL::Types::ISO8601DateTime, null: false
     field :updated_at, GraphQL::Types::ISO8601DateTime, null: false
-    field :sub_categories, [Types::CategoryType], null: true
     field :category, Types::CategoryType, null: false
   end
 end

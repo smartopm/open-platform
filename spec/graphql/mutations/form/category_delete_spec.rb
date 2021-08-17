@@ -13,13 +13,6 @@ RSpec.describe Mutations::Form::FormCreate do
       create(:form_property, form: form, field_type: 'text', category: category,
                              field_name: 'Select Business')
     end
-    let!(:sub_category) do
-      create(:category, form: form, form_property_id: form_property.id, field_name: 'Fishing')
-    end
-    let!(:sub_property) do
-      create(:form_property, form: form, field_type: 'text', category: sub_category,
-                             field_name: 'Upload fishing license')
-    end
     let(:form_user) { create(:form_user, form: form, user: user, status: :approved) }
 
     let(:mutation) do
@@ -91,24 +84,6 @@ RSpec.describe Mutations::Form::FormCreate do
         new_form = Forms::Form.where.not(id: form.id).first
         expect(new_form.categories.reload.count).to eql 0
         expect(new_form.form_properties.reload.count).to eql 0
-      end
-
-      it 'does not delete the form property and duplicates the form except the property' do
-        variables = {
-          formId: form.id,
-          categoryId: sub_category.id,
-        }
-
-        result = DoubleGdpSchema.execute(mutation, variables: variables,
-                                                   context: {
-                                                     current_user: admin,
-                                                     site_community: community,
-                                                   }).as_json
-        expect(result.dig('errors', 0, 'message')).to be_nil
-        expect(result.dig('data', 'categoryDelete', 'message')).to eql 'New version created'
-        new_form = Forms::Form.where.not(id: form.id).first
-        expect(new_form.categories.reload.count).to eql 1
-        expect(new_form.form_properties.reload.count).to eql 1
       end
     end
 
