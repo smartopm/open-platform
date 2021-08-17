@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState , useContext } from 'react';
 import { Button, Container } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import { useQuery } from 'react-apollo';
 import { useParams } from 'react-router';
 import PropTypes from 'prop-types';
+import { useTranslation } from 'react-i18next';
 import { DetailsDialog } from '../../../../components/Dialog';
 import CategoryForm from './CategoryForm';
 import CategoryItem from './CategoryItem';
@@ -13,7 +14,8 @@ import RenderForm from '../RenderForm';
 import FormPropertyCreateForm from '../FormPropertyCreateForm';
 import FormTitle from '../FormTitle';
 import { FormQuery } from '../../graphql/forms_queries';
-import FormContextProvider from '../../Context';
+import { FormContext } from '../../Context';
+import CenteredContent from '../../../../components/CenteredContent';
 
 // This will contain the main category
 // from the main category you should be able to add questions to that category
@@ -23,6 +25,7 @@ export default function CategoryList({ editMode }) {
   const [categoryFormOpen, setCategoryFormOpen] = useState(false);
   const [propertyFormOpen, setPropertyFormOpen] = useState(false);
   const [data, setFormData] = useState({});
+  const { t } = useTranslation('common')
   const [categoryId, setCategoryId] = useState('');
   const { formId } = useParams();
   const categoriesData = useQuery(FormCategoriesQuery, {
@@ -30,8 +33,7 @@ export default function CategoryList({ editMode }) {
     fetchPolicy: 'cache-and-network'
   });
   const { data: formDetailData, loading } = useQuery(FormQuery, { variables: { id: formId } });
-
-
+  const { formState, saveFormData } = useContext(FormContext)
 
   function handleEditCategory(category) {
     setCategoryFormOpen(true);
@@ -50,8 +52,9 @@ export default function CategoryList({ editMode }) {
   function handleClose() {
     setCategoryFormOpen(false);
   }
+
   return (
-    <FormContextProvider>
+    <>
       <DetailsDialog handleClose={handleClose} open={categoryFormOpen} title="Category" color="default">
         <Container>
           <CategoryForm data={data} close={handleClose} refetchCategories={categoriesData.refetch} />
@@ -109,7 +112,27 @@ export default function CategoryList({ editMode }) {
           </Button>
         )
       }
-    </FormContextProvider>
+      {
+        !editMode && (
+          <CenteredContent>
+            <Button
+              variant="outlined"
+              type="submit"
+              color="primary"
+              aria-label="form_submit"
+              disabled={formState.isSubmitting}
+              style={{ marginTop: '25px' }}
+              onClick={saveFormData}
+            >
+              {formState.isSubmitting
+                  ? t('common:form_actions.submitting')
+                  : t('common:form_actions.submit')
+            }
+            </Button>
+          </CenteredContent>
+        )
+      }
+    </>
   );
 }
 

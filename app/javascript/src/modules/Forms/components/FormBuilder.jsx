@@ -15,6 +15,7 @@ import { ActionDialog } from '../../../components/Dialog'
 import { formatError } from '../../../utils/helpers'
 import MessageAlert from '../../../components/MessageAlert'
 import CategoryList from './Category/CategoryList'
+import FormContextProvider from '../Context'
 
 /**
  * @param {String} formId
@@ -77,39 +78,40 @@ export default function FormBuilder({ formId }) {
   if (error || formLogs.error) return error?.message || formLogs?.error.message
 
   return (
-    <Container maxWidth="md">
-      <ActionDialog
-        open={open}
-        handleClose={handleConfirmPublish}
-        handleOnSave={publishForm}
-        message={t('misc.are_you_sure_to_publish')}
-        type="confirm"
-      />
+    <FormContextProvider>
+      <Container maxWidth="md">
+        <ActionDialog
+          open={open}
+          handleClose={handleConfirmPublish}
+          handleOnSave={publishForm}
+          message={t('misc.are_you_sure_to_publish')}
+          type="confirm"
+        />
 
-      <MessageAlert
-        type={message.isError ? 'error' : 'success'}
-        message={message.detail}
-        open={alertOpen}
-        handleClose={handleAlertClose}
-      />
+        <MessageAlert
+          type={message.isError ? 'error' : 'success'}
+          message={message.detail}
+          open={alertOpen}
+          handleClose={handleAlertClose}
+        />
 
-      <br />
-      <Toggler
-        type={type}
-        handleType={handleType}
-        data={{
+        <br />
+        <Toggler
+          type={type}
+          handleType={handleType}
+          data={{
           type: t('misc.form'),
           antiType: t('misc.updates')
         }}
-      />
-      <br />
-      {type === 'form' ? (
-        <>
-          <CategoryList editMode />
-          <br />
-          <br />
-          <CenteredContent>
-            {Boolean(data.formProperties.length) && (
+        />
+        <br />
+        {type === 'form' ? (
+          <>
+            <CategoryList editMode />
+            <br />
+            <br />
+            <CenteredContent>
+              {Boolean(data.formProperties.length) && (
               <Button
                 variant="outlined"
                 color="primary"
@@ -120,12 +122,13 @@ export default function FormBuilder({ formId }) {
                 {isPublishing ? t('misc.publishing_form') : t('actions.publish_form')}
               </Button>
             )}
-          </CenteredContent>
-        </>
+            </CenteredContent>
+          </>
       ) : (
         <FormTimeline data={formLogs.data?.result} />
       )}
-    </Container>
+      </Container>
+    </FormContextProvider>
   )
 }
 
