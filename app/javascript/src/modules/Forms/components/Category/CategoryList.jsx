@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import CategoryItem from './CategoryItem';
 import RenderForm from '../RenderForm';
 import FormPropertyCreateForm from '../FormPropertyCreateForm';
 import { Spinner } from '../../../../shared/Loading';
+
 
 export default function CategoryList({
   categoriesData,
@@ -11,22 +12,34 @@ export default function CategoryList({
   formId,
   propertyFormOpen,
   categoryId,
-  categoryItem
+  categoryItem,
+  loading
 }) {
+ 
+ // to only show a loader on category that is being deleted
+ const [currentId, setCurrentId] = useState('')
   if (categoriesData.loading) {
     return <Spinner />;
+  }
+
+  function handleRemoveCategory(id){
+      setCurrentId(id)
+      categoryItem.handleDeleteCategory(id)
   }
   return (
     <>
       {categoriesData?.data &&
         categoriesData.data?.formCategories.map(category => (
           <CategoryItem
-            name={category.fieldName}
+            category={category}
             key={category.id}
             handleAddField={() => categoryItem.handleAddField(category.id)}
+            handleDeleteCategory={() => handleRemoveCategory(category.id)}
             handleEditCategory={() => categoryItem.handleEditCategory(category)}
             collapsed={propertyFormOpen && categoryId === category.id}
             editMode={editMode}
+            loading={loading}
+            currentId={currentId}
           >
             {category.formProperties.map(formProperty => (
               <RenderForm
@@ -69,11 +82,13 @@ CategoryList.propTypes = {
     })
   }).isRequired,
   editMode: PropTypes.bool.isRequired,
+  loading: PropTypes.bool.isRequired,
   formId: PropTypes.string.isRequired,
   categoryId: PropTypes.string.isRequired,
   propertyFormOpen: PropTypes.bool,
   categoryItem: PropTypes.shape({
     handleAddField: PropTypes.func,
-    handleEditCategory: PropTypes.func
+    handleEditCategory: PropTypes.func,
+    handleDeleteCategory: PropTypes.func,
   }).isRequired
 };

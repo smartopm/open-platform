@@ -1,8 +1,8 @@
 import React, { useState, useContext } from 'react';
 import { Button, Container, DialogContent, DialogContentText } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
-import { useQuery } from 'react-apollo';
-import { useParams } from 'react-router';
+import { useMutation, useQuery } from 'react-apollo';
+import { useHistory, useParams } from 'react-router';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import { DetailsDialog } from '../../../../components/Dialog';
@@ -18,6 +18,8 @@ import { flattenFormProperties } from '../../utils';
 import CategoryList from './CategoryList';
 import FormPreview from '../FormPreview';
 import MessageAlert from '../../../../components/MessageAlert';
+import { FormCategoryDeleteMutation } from '../../graphql/form_category_mutations';
+import { formatError } from '../../../../utils/helpers';
 
 // This will contain the main category
 // from the main category you should be able to add questions to that category
@@ -37,6 +39,8 @@ export default function Form({ editMode }) {
   const { data: formDetailData, loading } = useQuery(FormQuery, { variables: { id: formId } });
   const { formState, saveFormData, setFormState } = useContext(FormContext);
   const authState = useContext(Context);
+  const history = useHistory()
+  const [categoryDelete, { loading: isDeleting, error }] = useMutation(FormCategoryDeleteMutation)
 
   function handleEditCategory(category) {
     setCategoryFormOpen(true);
@@ -45,6 +49,18 @@ export default function Form({ editMode }) {
   function handleAddCategory(category) {
     setCategoryFormOpen(true);
     setFormData(category);
+  }
+
+  function handleDeleteCategory(category) {
+    categoryDelete({
+      variables: { categoryId: category, formId }
+    }).then((res) => {
+      const formPropResponse = res.data.categoryDelete;
+      if (formPropResponse.message === 'New version created') {
+        history.push(`/edit_form/${formPropResponse.newFormVersion.id}`);
+      }
+      categoriesData.refetch()
+    })
   }
 
   function handleAddField(catId) {
@@ -73,9 +89,9 @@ export default function Form({ editMode }) {
   return (
     <>
       <MessageAlert
-        type={formState.error ? 'error' : 'success'}
-        message={formState.info}
-        open={formState.alertOpen}
+        type={formState.error || error ? 'error' : 'success'}
+        message={formState.info || formatError(error?.message)}
+        open={formState.alertOpen || !!error}
         handleClose={() => setFormState({ ...formState, alertOpen: false })}
       />
       <DetailsDialog
@@ -126,7 +142,8 @@ export default function Form({ editMode }) {
         formId={formId}
         propertyFormOpen={propertyFormOpen}
         categoryId={categoryId}
-        categoryItem={{ handleAddField, handleEditCategory }}
+        categoryItem={{ handleAddField, handleEditCategory, handleDeleteCategory }}
+        loading={isDeleting}
       />
       <br />
       {editMode && (

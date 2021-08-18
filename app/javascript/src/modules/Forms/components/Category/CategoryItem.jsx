@@ -5,21 +5,33 @@ import CreateIcon from '@material-ui/icons/Create';
 import AddIcon from '@material-ui/icons/Add';
 import CloseIcon from '@material-ui/icons/Close';
 import { makeStyles } from '@material-ui/styles';
+import { DeleteOutline } from '@material-ui/icons';
+import { Spinner } from '../../../../shared/Loading';
 
 export default function CategoryItem({
-  name,
+  category,
   handleAddField,
   handleEditCategory,
+  handleDeleteCategory,
   children,
   collapsed,
-  editMode
+  editMode,
+  loading,
+  currentId
 }) {
   const classes = useStyles();
   return (
     <>
       <Grid container className={classes.categorySection}>
-        <Grid item xs={8} sm={10}>
-          <Typography className={classes.categoryName}>{name}</Typography>
+        <Grid item xs={6} sm={9}>
+          <Typography className={classes.categoryName}>{category.name}</Typography>
+        </Grid>
+        <Grid item xs={2} sm={1}>
+          {editMode && (
+            <IconButton aria-label="delete this category" onClick={handleDeleteCategory}>
+              { loading && currentId === category.id ? <Spinner /> : <DeleteOutline color="primary" /> }
+            </IconButton>
+          )}
         </Grid>
         <Grid item xs={2} sm={1}>
           {editMode && (
@@ -44,12 +56,18 @@ export default function CategoryItem({
 }
 
 CategoryItem.propTypes = {
-  name: PropTypes.string.isRequired,
+  category: PropTypes.shape({
+    name: PropTypes.string,
+    id: PropTypes.string,
+  }).isRequired,
   handleAddField: PropTypes.func.isRequired,
   handleEditCategory: PropTypes.func.isRequired,
+  handleDeleteCategory: PropTypes.func.isRequired,
   children: PropTypes.node.isRequired,
   collapsed: PropTypes.bool.isRequired,
-  editMode: PropTypes.bool.isRequired
+  editMode: PropTypes.bool.isRequired,
+  loading: PropTypes.bool.isRequired,
+  currentId: PropTypes.string.isRequired,
 };
 
 const useStyles = makeStyles({

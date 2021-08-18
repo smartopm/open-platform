@@ -57,3 +57,20 @@ export const FormCategoryUpdateMutation = gql`
     }
   }
 `;
+
+export const FormCategoryDeleteMutation = gql`
+  mutation formCategoryDelete(
+    $formId: ID!
+    $categoryId: ID!
+  ) {
+    categoryDelete(
+      formId: $formId
+      categoryId: $categoryId
+    ) {
+      newFormVersion {
+        id
+      }
+      message
+    }
+  }
+`;
