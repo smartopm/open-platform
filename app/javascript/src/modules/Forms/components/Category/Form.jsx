@@ -17,6 +17,7 @@ import { Context } from '../../../../containers/Provider/AuthStateProvider';
 import { flattenFormProperties } from '../../utils';
 import CategoryList from './CategoryList';
 import FormPreview from '../FormPreview';
+import MessageAlert from '../../../../components/MessageAlert';
 
 // This will contain the main category
 // from the main category you should be able to add questions to that category
@@ -71,6 +72,12 @@ export default function Form({ editMode }) {
 
   return (
     <>
+      <MessageAlert
+        type={formState.error ? 'error' : 'success'}
+        message={formState.info}
+        open={formState.alertOpen}
+        handleClose={() => setFormState({ ...formState, alertOpen: false })}
+      />
       <DetailsDialog
         handleClose={handleCategoryClose}
         open={categoryFormOpen}

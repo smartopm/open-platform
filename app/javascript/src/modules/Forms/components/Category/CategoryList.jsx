@@ -56,7 +56,6 @@ CategoryList.defaultProps = {
 };
 
 CategoryList.propTypes = {
-  // eslint-disable-next-line react/forbid-prop-types
   categoriesData: PropTypes.shape({
     refetch: PropTypes.func,
     loading: PropTypes.bool,

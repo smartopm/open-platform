@@ -65,6 +65,8 @@ export default function FormContextProvider({ children }) {
         ...formState,
         isSubmitting: true
     })
+
+    // eslint-disable-next-line no-unreachable
     const fileSignType = formData.filter(item => item.fieldType === 'signature')[0];
 
     // get values from properties state
