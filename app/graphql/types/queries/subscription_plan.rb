@@ -5,7 +5,7 @@ module Types::Queries::SubscriptionPlan
   extend ActiveSupport::Concern
 
   included do
-    field :subscription_plans, [Types::SubscriptionPlanType], null: false do
+    field :subscription_plans, [Types::SubscriptionPlanType], null: true do
       description 'return all subscription plans'
     end
   end
