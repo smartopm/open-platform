@@ -200,7 +200,11 @@ en:
         properties/payment_plan:
           attributes:
             user_id:
-              general_plan_exists: General plan exists for the user 
+              general_plan_exists: General plan exists for the user
+        properties/subscription_plan:
+          attributes:
+            end_date:
+              invalid_dates: must be greater than start date
     models:
       action_flows/action_flow: Action flow
       business: Business

@@ -137,6 +137,9 @@ module Types
     field :payment_day_update, mutation: Mutations::PaymentPlan::PaymentDayUpdate
     field :transfer_payment_plan, mutation: Mutations::PaymentPlan::TransferPaymentPlan
 
+    # subscription_plan
+    field :subscription_plan_create, mutation: Mutations::SubscriptionPlan::SubscriptionPlanCreate
+
     # transactions
     field :wallet_transaction_create, mutation: Mutations::Transaction::WalletTransactionCreate
     field :wallet_transaction_update, mutation: Mutations::Transaction::WalletTransactionUpdate

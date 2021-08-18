@@ -208,4 +208,17 @@ export const PlanStatement = gql`
   }
 `
 
+export const SubscriptionPlansQuery = gql`
+  {
+    subscriptionPlans {
+      id
+      status
+      planType
+      amount
+      startDate
+      endDate
+    }
+  }
+`
+
 export default UserTransactions;

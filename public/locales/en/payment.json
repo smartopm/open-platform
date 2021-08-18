@@ -10,7 +10,8 @@
     "go_back": "Go Back",
     "download_csv": "Download CSV",
     "export_data": "Export Data",
-    "save_csv": "Save CSV"
+    "save_csv": "Save CSV",
+    "edit_subscription_plan": "Edit subscription plan"
   },
   "misc": {
     "confirm": "confirm",
@@ -30,6 +31,8 @@
     "sort_code": "Sort Code",
     "plan_details": "Plan Details",
     "create_a_plan": "Create a Plan",
+    "create_subscription_plan": "Create subscription plan",
+    "set_monthly_payment": "Set monthly payment amount based on the plan type",
     "create_a_payment_plan": "Create a payment plan for your plot",
     "lease": "lease",
     "other": "Other",
@@ -41,7 +44,8 @@
     "total_amount_paid": "Total Amount Paid By Date",
     "payment_cancelled": "Payment Plan successfully canceled",
     "pay_day_updated": "Payment Day successfully updated",
-    "transaction_title": "Kindly find your transaction details below."
+    "transaction_title": "Kindly find your transaction details below.",
+    "subscription_plan_created": "Successfuly created subscription plan"
   },
   "table_headers": {
     "receipt_number": "Receipt Number",
@@ -92,6 +96,7 @@
     "transaction_required": "TransactionType is required",
     "no_transaction_available": "No Transaction Available for this Plan",
     "no_plan_available": "No Plan Available",
-    "no_payment_available": "No Payments Available"
+    "no_payment_available": "No Payments Available",
+    "no_subscription_available": "No Subscription Plan Available"
   }
 }

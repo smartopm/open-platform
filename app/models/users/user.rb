@@ -16,6 +16,9 @@ module Users
   class User < ApplicationRecord
     # General user error to return on actions that are not possible
     class UserError < StandardError; end
+    class ExpiredSignature < StandardError; end
+    class DecodeError < StandardError; end
+
     include SearchCop
 
     search_scope :search do
@@ -459,16 +462,24 @@ module Users
     end
 
     def self.find_via_auth_token(auth_token, community)
-      decoded_token = JWT.decode auth_token,
-                                 Rails.application.credentials.secret_key_base,
-                                 true,
-                                 algorithm: 'HS256'
+      decoded_token = decode_auth_token(auth_token)
       payload = decoded_token[0]
-      community.users.find(payload['user_id'])
+      community.users.find payload['user_id']
     end
 
-    # rubocop:disable Metrics/MethodLength
+    def self.decode_auth_token(auth_token)
+      JWT.decode auth_token,
+                 Rails.application.credentials.secret_key_base,
+                 true,
+                 algorithm: 'HS256'
+    rescue JWT::ExpiredSignature
+      raise ExpiredSignature
+    rescue JWT::DecodeError, JWT::VerificationError
+      raise DecodeError
+    end
+
     # rubocop:disable Metrics/AbcSize
+    # rubocop:disable Metrics/MethodLength
     def self.already_existing(email, phone_list, community)
       email = email&.presence
       phone_list = phone_list.reject(&:blank?)
@@ -482,9 +493,9 @@ module Users
           )
       ).uniq
     end
+
     # rubocop:enable Metrics/MethodLength
     # rubocop:enable Metrics/AbcSize
-
     def send_email_msg
       return if self[:email].nil?
 
