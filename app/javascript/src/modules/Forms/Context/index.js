@@ -16,7 +16,8 @@ export default function FormContextProvider({ children }) {
     currentPropId: '',
     error: false,
     info: '',
-    signed: false
+    signed: false,
+    previewable: false
   };
   const initialData = {
     fieldType: '',
@@ -94,9 +95,6 @@ export default function FormContextProvider({ children }) {
     // update all form values
     formData.map(prop => addPropWithValue(filledInProperties, prop.id));
     const cleanFormData = JSON.stringify({ user_form_properties: filledInProperties });
-    // formUserId
-    // fields and their values
-    // create form user ==> form_id, user_id, status
     createFormUser({
       variables: {
         formId,
@@ -107,9 +105,6 @@ export default function FormContextProvider({ children }) {
       // eslint-disable-next-line no-shadow
       .then(({ data }) => {
         if (data.formUserCreate.formUser === null) {
-        //   setMessage({ ...message, err: true, info: data.formUserCreate.error });
-        //   setAlertOpen(true);
-        //   setSubmitting(false);
           setFormState({
             ...formState,
             error: true,
@@ -125,20 +120,11 @@ export default function FormContextProvider({ children }) {
             error: false,
             info: t('misc.form_submitted'),
             alertOpen: true,
-            isSubmitting: false
+            isSubmitting: false,
+            previewable: false
           })
-        // setSubmitting(false);
-        // setMessage({
-        //   ...message,
-        //   err: false,
-        //   info: t('misc.form_submitted')
-        // });
-        // setAlertOpen(true);
       })
       .catch(err => {
-        // setMessage({ ...message, err: true, info: err.message.replace(/GraphQL error:/, '') });
-        // setSubmitting(false);
-        // setAlertOpen(true);
         setFormState({
             ...formState,
             error: true,
