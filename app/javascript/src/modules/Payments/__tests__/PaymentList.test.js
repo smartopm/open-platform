@@ -3,12 +3,12 @@ import { render, waitFor, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { MockedProvider } from '@apollo/react-testing';
 import { BrowserRouter } from 'react-router-dom';
-import { Spinner } from '../../shared/Loading';
-import PaymentList, { renderPayment, renderSubscriptionPlans } from '../../modules/Payments/Components/PaymentList';
-import currency from '../../__mocks__/currency';
-import { Context } from '../../containers/Provider/AuthStateProvider';
-import userMock from '../../__mocks__/userMock';
-import { PlansPaymentsQuery, SubscriptionPlansQuery } from '../../modules/Payments/graphql/payment_query';
+import { Spinner } from '../../../shared/Loading';
+import PaymentList, { renderPayment, renderSubscriptionPlans } from '../Components/PaymentList';
+import currency from '../../../__mocks__/currency';
+import { Context } from '../../../containers/Provider/AuthStateProvider';
+import userMock from '../../../__mocks__/userMock';
+import { PlansPaymentsQuery, SubscriptionPlansQuery } from '../graphql/payment_query';
 
 describe('Payment List Item Component', () => {
   const transactions = [

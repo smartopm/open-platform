@@ -18,7 +18,7 @@ module Mutations
         raise_subscription_not_found_error(subscription)
 
         return { success: true } if subscription.update(vals)
-        
+
         raise GraphQL::ExecutionError, subscription.errors.full_messages
       end
 
