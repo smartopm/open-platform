@@ -77,7 +77,7 @@ export default function FormPreview({loading, handleFormSubmit}) {
           disabled={loading}
           startIcon={loading && <Spinner />}
         >
-          I agree
+          Confirm
         </Button>
       </CenteredContent>
     </Container>

@@ -27,8 +27,8 @@ export default function FormBuilder({ formId }) {
   const [isPublishing, setIsPublishing] = useState(false)
   const [alertOpen, setAlertOpen] = useState(false)
   const [message, setMessage] = useState({ isError: false, detail: '' })
-  const [type, setType] = useState('form')
   const { t } = useTranslation(['form', 'common'])
+  const [type, setType] = useState(t('misc.form'))
   const { data, error, loading } = useQuery(FormPropertiesQuery, {
     variables: { formId },
     errorPolicy: 'all'
@@ -105,7 +105,7 @@ export default function FormBuilder({ formId }) {
         }}
         />
         <br />
-        {type === 'form' ? (
+        {type !== t('misc.updates') ? (
           <>
             <Form formId={formId} editMode />
             <br />
