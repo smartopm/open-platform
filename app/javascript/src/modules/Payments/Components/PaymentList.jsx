@@ -92,13 +92,14 @@ export default function PaymentList({ currencyData }) {
   const anchorElOpen = Boolean(anchorEl);
   const [message, setMessage] = useState({ isError: false, detail: '' });
   const [alertOpen, setAlertOpen] = useState(false);
+  const [subData, setSubData] = useState(null);
 
   const menuList = [
     {
       content: t('actions.edit_subscription_plan'),
       isAdmin: true,
       color: '',
-      handleClick: () => {}
+      handleClick: () => setSubscriptionModalOpen(true)
     }
   ];
 
@@ -274,14 +275,16 @@ export default function PaymentList({ currencyData }) {
     if (newValue === 1) loadSubscriptionPlans();
   }
 
-  function handleSubscriptionMenu(event) {
+  function handleSubscriptionMenu(event, subscription) {
     event.stopPropagation();
     setAnchorEl(event.currentTarget);
+    setSubData(subscription);
   }
 
   function handleClose(event) {
     event.stopPropagation();
     setAnchorEl(null);
+    setSubData(null);
   }
 
   const menuData = {
@@ -454,13 +457,16 @@ export default function PaymentList({ currencyData }) {
       </TabPanel>
 
       <TabPanel value={tabValue} index={1}>
-        <SubscriptionPlanModal
-          open={subscriptionModalOpen}
-          handleModalClose={() => setSubscriptionModalOpen(false)}
-          subscriptionPlansRefetch={subscriptionPlansRefetch}
-          setMessage={setMessage}
-          openAlertMessage={() => setAlertOpen(true)}
-        />
+        {subscriptionModalOpen && (
+          <SubscriptionPlanModal
+            open={subscriptionModalOpen}
+            handleModalClose={() => setSubscriptionModalOpen(false)}
+            subscriptionPlansRefetch={subscriptionPlansRefetch}
+            setMessage={setMessage}
+            openAlertMessage={() => setAlertOpen(true)}
+            subscriptionData={subData}
+          />
+        )}
         {subscriptionPlansLoading ? (
           <Spinner />
         ) : subscriptionPlansData?.subscriptionPlans?.length === 0 ? (
@@ -616,12 +622,13 @@ export function renderSubscriptionPlans(subscription, currencyData, menuData) {
             aria-controls="sub-menu"
             aria-haspopup="true"
             data-testid="subscription-plan-menu"
-            onClick={event => menuData.handleSubscriptionMenu(event)}
+            dataid={subscription.id}
+            onClick={event => menuData.handleSubscriptionMenu(event, subscription)}
           >
             <MoreHorizOutlined />
           </IconButton>
           <MenuList
-            open={menuData.open}
+            open={menuData.open && menuData?.anchorEl?.getAttribute('dataid') === subscription.id}
             anchorEl={menuData.anchorEl}
             handleClose={menuData.handleClose}
             list={menuData.menuList}

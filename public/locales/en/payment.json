@@ -45,7 +45,9 @@
     "payment_cancelled": "Payment Plan successfully canceled",
     "pay_day_updated": "Payment Day successfully updated",
     "transaction_title": "Kindly find your transaction details below.",
-    "subscription_plan_created": "Successfuly created subscription plan"
+    "subscription_plan_created": "Successfuly created subscription plan",
+    "update_subscription_plan": "Edit subscription plan",
+    "subscription_plan_updated": "Subscription plan updated successfully"
   },
   "table_headers": {
     "receipt_number": "Receipt Number",
@@ -97,6 +99,7 @@
     "no_transaction_available": "No Transaction Available for this Plan",
     "no_plan_available": "No Plan Available",
     "no_payment_available": "No Payments Available",
-    "no_subscription_available": "No Subscription Plan Available"
+    "no_subscription_available": "No Subscription Plan Available",
+    "plan_type_required": "PlanType is required"
   }
 }

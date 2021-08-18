@@ -100,4 +100,26 @@ mutation SubscriptionPlanCreate(
 }
 `
 
+export const  SubscriptionPlanUpdate = gql`
+mutation SubscriptionPlanUpdate(
+  $amount: Float!
+  $planType: String!
+  $startDate: String!
+  $endDate: String!
+  $status: String
+  $id: ID!
+) {
+  subscriptionPlanUpdate(
+    amount: $amount
+    planType: $planType
+    startDate: $startDate
+    endDate: $endDate
+    status: $status
+    id: $id
+  ) {
+    success
+  }
+}
+`
+
 export default PaymentCreate;
