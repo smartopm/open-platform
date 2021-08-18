@@ -7,7 +7,7 @@ import FormContextProvider from '../Context'
 import Form from '../components/Category/Form'
 
 export default function FormPage(){
-  const { userId, formUserId } = useParams()
+  const { userId, formUserId, formId } = useParams()
   const {pathname } = useLocation()
   const authState = useContext(Context)
   const isFormFilled = pathname.includes('user_form')
@@ -20,7 +20,7 @@ export default function FormPage(){
           : (
             <FormContextProvider>
               <Container maxWidth="md">
-                <Form editMode={false} />
+                <Form editMode={false} formId={formId} />
               </Container>
             </FormContextProvider>
           )

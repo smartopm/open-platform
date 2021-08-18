@@ -48,7 +48,7 @@ export default function CategoryItem({
           <Grid item xs={2} sm={1}>
             {editMode && (
               <IconButton aria-label="add questions to this category" onClick={handleAddField}>
-                {collapsed ? <CloseIcon color="primary" /> : <AddIcon color="primary" />}
+                {collapsed ? <CloseIcon color="primary" /> : <AddIcon color="primary" data-testid="add-icon" />}
               </IconButton>
             )}
           </Grid>

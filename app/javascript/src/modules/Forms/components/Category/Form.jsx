@@ -2,7 +2,7 @@ import React, { useState, useContext } from 'react';
 import { Button, Container, DialogContent, DialogContentText } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import { useMutation, useQuery } from 'react-apollo';
-import { useHistory, useParams } from 'react-router';
+import { useHistory } from 'react-router';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import { DetailsDialog } from '../../../../components/Dialog';
@@ -25,13 +25,12 @@ import { formatError } from '../../../../utils/helpers';
 // from the main category you should be able to add questions to that category
 // below the main category, you can add another category
 
-export default function Form({ editMode }) {
+export default function Form({ editMode, formId }) {
   const [categoryFormOpen, setCategoryFormOpen] = useState(false);
   const [propertyFormOpen, setPropertyFormOpen] = useState(false);
   const [data, setFormData] = useState({});
   const { t } = useTranslation(['common', 'form']);
   const [categoryId, setCategoryId] = useState('');
-  const { formId } = useParams();
   const categoriesData = useQuery(FormCategoriesQuery, {
     variables: { formId },
     fetchPolicy: 'cache-and-network'
@@ -161,6 +160,7 @@ export default function Form({ editMode }) {
           startIcon={<AddIcon color="primary" />}
           style={{ float: 'right' }}
           onClick={handleAddCategory}
+          data-testid="add_category"
         >
           {t('form:actions.add_category')}
         </Button>
@@ -184,5 +184,6 @@ export default function Form({ editMode }) {
 }
 
 Form.propTypes = {
-  editMode: PropTypes.bool.isRequired
+  editMode: PropTypes.bool.isRequired,
+  formId: PropTypes.string.isRequired,
 };

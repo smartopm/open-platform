@@ -84,7 +84,7 @@ export default function CategoryForm({ data, close, refetchCategories }) {
           style={{ width: '100%' }}
           inputProps={{ 'data-testid': 'name' }}
           margin="dense"
-          autoFocus
+          autoFocus={process.env.NODE_ENV !== 'test'}
           required
         />
         <TextField
@@ -110,7 +110,6 @@ export default function CategoryForm({ data, close, refetchCategories }) {
           inputProps={{ 'data-testid': 'rendered_text' }}
           margin="dense"
           rows={3}
-          required
           multiline
         />
 
@@ -136,6 +135,7 @@ export default function CategoryForm({ data, close, refetchCategories }) {
             size="small"
             name="order"
             style={{ marginLeft: 20 }}
+            inputProps={{ 'data-testid': 'order_number' }}
           />
         </div>
         <br />
@@ -144,6 +144,7 @@ export default function CategoryForm({ data, close, refetchCategories }) {
             variant="outlined"
             type="submit"
             color="primary"
+            data-testid="category_action_btn"
             disabled={loading || updateLoading}
             startIcon={(loading || updateLoading) && <Spinner />}
           >

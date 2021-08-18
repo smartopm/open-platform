@@ -107,7 +107,7 @@ export default function FormBuilder({ formId }) {
         <br />
         {type === 'form' ? (
           <>
-            <Form editMode />
+            <Form formId={formId} editMode />
             <br />
             <br />
             <CenteredContent>
