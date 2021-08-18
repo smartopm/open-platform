@@ -22,7 +22,7 @@ export default function CategoryItem({
   const classes = useStyles();
   return (
     <>
-      {category.headerVisible && (
+      {(!category.headerVisible && !editMode)  ? null : (
         <Grid container className={classes.categorySection}>
           <Grid item xs={6} sm={9}>
             <Typography className={classes.categoryName}>{category.fieldName}</Typography>
