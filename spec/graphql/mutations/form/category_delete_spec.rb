@@ -9,9 +9,11 @@ RSpec.describe Mutations::Form::FormCreate do
     let!(:admin) { create(:admin_user, community: community) }
     let!(:form) { create(:form, community: community) }
     let!(:category) { create(:category, form: form, general: true) }
+    let!(:other_category) { create(:category, form: form, general: true) }
     let!(:form_property) do
       create(:form_property, form: form, field_type: 'text', category: category,
-                             field_name: 'Select Business')
+                             field_name: 'Select Business',
+                             field_value: [{ 'category_name': other_category.field_name }])
     end
     let(:form_user) { create(:form_user, form: form, user: user, status: :approved) }
 
@@ -63,6 +65,23 @@ RSpec.describe Mutations::Form::FormCreate do
         expect(result.dig('data', 'categoryDelete', 'message')).to eql 'Category deleted '\
                     'successfully'
       end
+
+      it 'deletes the category for the form' do
+        variables = {
+          formId: form.id,
+          categoryId: other_category.id,
+        }
+
+        result = DoubleGdpSchema.execute(mutation, variables: variables,
+                                                   context: {
+                                                     current_user: admin,
+                                                     site_community: community,
+                                                   }).as_json
+        expect(result.dig('errors', 0, 'message')).to be_nil
+        expect(result.dig('data', 'categoryDelete', 'message')).to eql 'Category deleted '\
+                    'successfully'
+        expect(form_property.reload.field_value[0]['category_name']).to eql ''
+      end
     end
 
     context 'when form has submissions' do
@@ -82,8 +101,27 @@ RSpec.describe Mutations::Form::FormCreate do
         expect(result.dig('errors', 0, 'message')).to be_nil
         expect(result.dig('data', 'categoryDelete', 'message')).to eql 'New version created'
         new_form = Forms::Form.where.not(id: form.id).first
-        expect(new_form.categories.reload.count).to eql 0
+        expect(new_form.categories.reload.count).to eql 1
         expect(new_form.form_properties.reload.count).to eql 0
+      end
+
+      it 'does not delete the form property and duplicates the form except the property' do
+        variables = {
+          formId: form.id,
+          categoryId: other_category.id,
+        }
+
+        result = DoubleGdpSchema.execute(mutation, variables: variables,
+                                                   context: {
+                                                     current_user: admin,
+                                                     site_community: community,
+                                                   }).as_json
+        expect(result.dig('errors', 0, 'message')).to be_nil
+        expect(result.dig('data', 'categoryDelete', 'message')).to eql 'New version created'
+        new_form = Forms::Form.where.not(id: form.id).first
+        expect(new_form.categories.reload.count).to eql 1
+        expect(new_form.form_properties.reload.count).to eql 1
+        expect(new_form.form_properties.first.field_value[0]['category_name']).to eql ''
       end
     end
 

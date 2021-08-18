@@ -19,6 +19,10 @@ RSpec.describe Types::Queries::Form do
       create(:form_property, form: form, category: other_category, field_type: 'date')
     end
     let!(:form_user) { create(:form_user, form: form, user: current_user, status: 'approved') }
+    let(:user_form_property) do
+      create(:user_form_property, form_property: form_property_text, form_user: form_user,
+                                  user: current_user, value: 'name')
+    end
     let!(:another_form_user) { create(:form_user, form: form, user: admin, status: 'pending') }
 
     let(:forms_query) do
@@ -77,6 +81,31 @@ RSpec.describe Types::Queries::Form do
               status
               user{
                 name
+              }
+            }
+          }
+        }
+      GQL
+    end
+
+    let(:form_user_properties_query) do
+      <<~GQL
+        query userFormProperties($userId: ID!, $formUserId: ID!) {
+          formUserProperties(userId: $userId, formUserId: $formUserId) {
+            value
+            imageUrl
+            fileType
+            formProperty {
+              fieldName
+              fieldType
+              fieldValue
+              order
+              id
+              adminUse
+              category{
+                fieldName
+                order
+                headerVisible
               }
             }
           }
@@ -191,6 +220,24 @@ RSpec.describe Types::Queries::Form do
           expect(form_entries['formUsers'].size).to eql 1
           expect(form_entries['formUsers'][0]['user']['name']).to eql 'John Test'
           expect(form_entries['formUsers'][0]['status']).to eql 'approved'
+        end
+      end
+
+      context 'when form user properties query is fetched' do
+        before { user_form_property }
+        it 'returns list of all form user properties' do
+          variables = { userId: current_user.id, formUserId: form_user.id }
+          result = DoubleGdpSchema.execute(form_user_properties_query,
+                                           variables: variables,
+                                           context: {
+                                             current_user: admin,
+                                             site_community: admin.community,
+                                           }).as_json
+          expect(result['errors']).to be_nil
+          user_property = result.dig('data', 'formUserProperties', 0)
+          expect(user_property['value']).to eql 'name'
+          expect(user_property['formProperty']['fieldName']).to eql form_property_text.field_name
+          expect(user_property['formProperty']['category']['fieldName']).to eql category.field_name
         end
       end
 

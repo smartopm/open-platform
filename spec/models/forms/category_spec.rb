@@ -19,4 +19,14 @@ RSpec.describe Forms::Category, type: :model do
     it { is_expected.to belong_to(:form) }
     it { is_expected.to have_many(:form_properties).dependent(:destroy) }
   end
+
+  describe 'validations' do
+    let!(:user) { create(:user_with_community) }
+    let!(:form) { create(:form, community: user.community) }
+    let!(:category) { create(:category, field_name: 'Business Info', form: form) }
+    it do
+      is_expected.to validate_presence_of(:field_name)
+      is_expected.to validate_uniqueness_of(:field_name).scoped_to(:form_id)
+    end
+  end
 end

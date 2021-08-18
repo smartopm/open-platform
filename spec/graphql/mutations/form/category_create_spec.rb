@@ -8,8 +8,6 @@ RSpec.describe Mutations::Form::FormCreate do
     let!(:community) { user.community }
     let!(:admin) { create(:admin_user, community: community) }
     let!(:form) { create(:form, community: community) }
-    let(:category) { create(:category, field_name: 'Business Info', form: form) }
-    let(:form_property) { create(:form_property, form: form, category: category) }
     let(:mutation) do
       <<~GQL
         mutation categoryCreate(

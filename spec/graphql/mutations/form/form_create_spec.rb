@@ -13,12 +13,14 @@ RSpec.describe Mutations::Form::FormCreate do
           $name: String!,
           $expiresAt: String!,
           $description: String,
+          $preview: Boolean!,
           $multipleSubmissionsAllowed: Boolean!
         ){
           formCreate(
             name: $name,
             expiresAt: $expiresAt,
             description: $description,
+            preview: $preview,
             multipleSubmissionsAllowed: $multipleSubmissionsAllowed
           ){
             form {
@@ -36,6 +38,7 @@ RSpec.describe Mutations::Form::FormCreate do
         variables = {
           name: 'Form Name',
           expiresAt: (rand * 10).to_i.day.from_now.to_s,
+          preview: true,
           multipleSubmissionsAllowed: true,
         }
         expect(Logs::EventLog.count).to eql 0
@@ -59,6 +62,7 @@ RSpec.describe Mutations::Form::FormCreate do
         variables = {
           name: 'Form Name',
           expiresAt: (rand * 10).to_i.day.from_now.to_s,
+          preview: true,
           multipleSubmissionsAllowed: true,
         }
         result = DoubleGdpSchema.execute(mutation, variables: variables,

@@ -124,7 +124,7 @@ module Types::Queries::Form
     end
 
     Forms::FormUser.find_by(id: form_user_id)
-                   .user_form_properties.eager_load(:form_property).with_attached_image
+                   .user_form_properties.eager_load(form_property: :category).with_attached_image
   end
 
   def form_submissions(start_date:, end_date:)

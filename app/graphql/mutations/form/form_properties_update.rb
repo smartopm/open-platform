@@ -26,6 +26,7 @@ module Mutations
         raise_form_property_not_found_error(form_property)
 
         form = form_property.form
+        raise_category_name_related_errors(form, form_property.category, vals[:field_value])
 
         if form.entries? && destructive_change?(vals, form_property)
           new_form = duplicate_form(form, vals)
@@ -64,6 +65,30 @@ module Mutations
 
         raise GraphQL::ExecutionError, I18n.t('errors.form_property.not_found')
       end
+
+      # rubocop:disable Style/GuardClause
+      # Raises error if the category which is being linked to property does not exists or is same
+      # as the parent category
+      #
+      # @param form [Forms::Form]
+      # @param category_name [String]
+      # @param field_value [JSON]
+      #
+      # @return [void]
+      def raise_category_name_related_errors(form, category, field_value)
+        return if field_value.nil?
+
+        field_value.map do |value|
+          if value['category_name'].present?
+            if value['category_name'].eql?(category.field_name)
+              raise GraphQL::ExecutionError, I18n.t('errors.category.cannot_be_linked')
+            elsif !form.categories.exists?(field_name: value['category_name'])
+              raise GraphQL::ExecutionError, I18n.t('errors.category.not_found')
+            end
+          end
+        end
+      end
+      # rubocop:enable Style/GuardClause
 
       # rubocop:disable Metrics/MethodLength
       # Duplicates form with new version number

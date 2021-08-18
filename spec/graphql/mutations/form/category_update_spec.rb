@@ -8,10 +8,11 @@ RSpec.describe Mutations::Form::FormCreate do
     let!(:community) { user.community }
     let!(:admin) { create(:admin_user, community: community) }
     let!(:form) { create(:form, community: community) }
-    let!(:category) { create(:category, form: form, general: true) }
+    let!(:category) { create(:category, form: form, general: true, field_name: 'info') }
     let!(:form_property) do
       create(:form_property, form: form, field_type: 'text', category: category,
-                             field_name: 'Select Business')
+                             field_name: 'Select Business',
+                             field_value: [{ 'category_name': category.field_name }])
     end
     let(:form_user) { create(:form_user, form: form, user: user, status: :approved) }
 
@@ -87,6 +88,9 @@ RSpec.describe Mutations::Form::FormCreate do
         expect(category_result['order']).to eql 1
         expect(category_result['headerVisible']).to eql true
         expect(category_result['general']).to eql false
+        expect(
+          category.form_properties.first.field_value[0]['category_name'],
+        ).to eql 'personal info'
       end
     end
 
@@ -116,6 +120,9 @@ RSpec.describe Mutations::Form::FormCreate do
         new_form = Forms::Form.where.not(id: form.id).first
         updated_category = new_form.categories.first
         expect(updated_category.field_name).to eql 'personal info'
+        expect(
+          updated_category.form_properties.first.field_value[0]['category_name'],
+        ).to eql 'personal info'
       end
     end
 
