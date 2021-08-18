@@ -9,7 +9,8 @@
 # migrations use external dependencies or application code.
 #
 # It's strongly recommended that you check this file into your version control system.
-ActiveRecord::Schema.define(version: 2021_08_10_120116) do
+
+ActiveRecord::Schema.define(version: 2021_08_18_094234) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -601,6 +602,19 @@ ActiveRecord::Schema.define(version: 2021_08_10_120116) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
+  create_table "subscription_plans", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.integer "plan_type"
+    t.integer "status", default: 0
+    t.date "start_date"
+    t.date "end_date"
+    t.decimal "amount"
+    t.uuid "community_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["community_id"], name: "index_subscription_plans_on_community_id"
+    t.index ["start_date", "end_date", "amount"], name: "index_subscription_plans_on_start_date_and_end_date_and_amount", unique: true
+  end
+
   create_table "substatus_logs", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.datetime "start_date"
     t.datetime "stop_date"
@@ -823,6 +837,7 @@ ActiveRecord::Schema.define(version: 2021_08_10_120116) do
   add_foreign_key "post_tag_users", "post_tags"
   add_foreign_key "post_tag_users", "users"
   add_foreign_key "post_tags", "communities"
+  add_foreign_key "subscription_plans", "communities"
   add_foreign_key "substatus_logs", "communities"
   add_foreign_key "substatus_logs", "users"
   add_foreign_key "transactions", "communities"

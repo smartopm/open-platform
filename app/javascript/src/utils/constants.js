@@ -117,6 +117,13 @@ export const paymentPlanStatus = {
   2: 'deleted'
 }
 
+export const subscriptionPlanType = {
+  0: 'starter',
+  1: 'basic',
+  2: 'standard',
+  3: 'premium'
+}
+
 export const paymentPlanFrequency = {
   0: 'daily',
   1: 'weekly',

@@ -1,10 +1,12 @@
 /* eslint-disable jsx-a11y/interactive-supports-focus */
 /* eslint-disable no-nested-ternary */
 /* eslint-disable react-hooks/rules-of-hooks */
+/* eslint-disable security/detect-object-injection */
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { CSVLink } from 'react-csv';
-import { Button, Container, Grid, List, Typography, Hidden } from '@material-ui/core';
+import { Button, Container, Grid, List, Typography, Hidden, IconButton } from '@material-ui/core';
+import { MoreHorizOutlined } from '@material-ui/icons';
 import Avatar from '@material-ui/core/Avatar';
 import Fab from '@material-ui/core/Fab';
 import PropTypes from 'prop-types';
@@ -22,7 +24,8 @@ import {
   handleQueryOnChange,
   InvoiceStatusColor,
   propAccessor,
-  titleize
+  titleize,
+  capitalize
 } from '../../../utils/helpers';
 import Label from '../../../shared/label/Label';
 import CenteredContent from '../../../components/CenteredContent';
@@ -41,9 +44,13 @@ import Text from '../../../shared/Text';
 import PaymentGraph from './PaymentGraph';
 import { Spinner } from '../../../shared/Loading';
 import QueryBuilder from '../../../components/QueryBuilder';
-import { PlansPaymentsQuery } from '../graphql/payment_query';
+import { PlansPaymentsQuery, SubscriptionPlansQuery } from '../graphql/payment_query';
 import PaymentModal from './UserTransactions/PaymentModal';
 import { dateToString } from '../../../components/DateContainer';
+import { StyledTabs, StyledTab, TabPanel, a11yProps } from '../../../components/Tabs';
+import MenuList from '../../../shared/MenuList';
+import SubscriptionPlanModal from './SubscriptionPlanModal';
+import MessageAlert from '../../../components/MessageAlert';
 
 const csvHeaders = [
   { label: 'Receipt Number', key: 'receiptNumber' },
@@ -68,6 +75,7 @@ export default function PaymentList({ currencyData }) {
   const classes = useStyles();
   const page = path.get('page');
   const type = path.get('type');
+  const tab = path.get('tab');
   const [searchValue, setSearchValue] = useState('');
   const debouncedValue = useDebounce(searchValue, 500);
   const [listType, setListType] = useState('nongraph');
@@ -78,6 +86,26 @@ export default function PaymentList({ currencyData }) {
   const [displayBuilder, setDisplayBuilder] = useState('none');
   const [searchQuery, setSearchQuery] = useState('');
   const [paymentModalOpen, setPaymentModalOpen] = useState(false);
+  const [subscriptionModalOpen, setSubscriptionModalOpen] = useState(false);
+  const [tabValue, setTabValue] = useState(0);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const anchorElOpen = Boolean(anchorEl);
+  const [message, setMessage] = useState({ isError: false, detail: '' });
+  const [alertOpen, setAlertOpen] = useState(false);
+
+  const menuList = [
+    {
+      content: t('actions.edit_subscription_plan'),
+      isAdmin: true,
+      color: '',
+      handleClick: () => {}
+    }
+  ];
+
+  const TAB_VALUES = {
+    payments: 0,
+    plans: 1
+  };
 
   const paymentHeaders = [
     {
@@ -106,6 +134,23 @@ export default function PaymentList({ currencyData }) {
     [paymentHeaders[1], paymentHeaders[2]] = [paymentHeaders[2], paymentHeaders[1]];
   }
 
+  const subscriptionPlanHeaders = [
+    {
+      title: 'Plan Type',
+      value: t('table_headers.plan_type'),
+      col: 2
+    },
+    { title: 'Start Date', value: t('common:table_headers.start_date'), col: 2 },
+    {
+      title: 'End Date',
+      value: t('table_headers.end_date'),
+      col: 2
+    },
+    { title: 'Amount', value: t('common:table_headers.amount'), col: 2 },
+    { title: 'Status', value: t('common:table_headers.status'), col: 2 },
+    { title: 'Menu', value: t('common:table_headers.menu'), col: 1 }
+  ];
+
   const pageNumber = Number(page);
   const { loading, data, error, refetch } = useQuery(PlansPaymentsQuery, {
     variables: { limit, offset: pageNumber, query: debouncedValue || searchQuery },
@@ -120,6 +165,17 @@ export default function PaymentList({ currencyData }) {
       errorPolicy: 'all'
     }
   );
+
+  const [
+    loadSubscriptionPlans,
+    {
+      loading: subscriptionPlansLoading,
+      data: subscriptionPlansData,
+      refetch: subscriptionPlansRefetch
+    }
+  ] = useLazyQuery(SubscriptionPlansQuery, {
+    errorPolicy: 'all'
+  });
 
   const paymentList = data?.paymentsList;
   function paginate(action) {
@@ -189,6 +245,20 @@ export default function PaymentList({ currencyData }) {
     }
   }, [type]);
 
+  useEffect(() => {
+    if (tab) {
+      setTabValue(TAB_VALUES[tab]);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [path, tab]);
+
+  useEffect(() => {
+    if (tab === 'plans') {
+      loadSubscriptionPlans();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   function handleDownloadCSV() {
     loadAllPayments();
   }
@@ -197,6 +267,30 @@ export default function PaymentList({ currencyData }) {
     setPaymentModalOpen(false);
     history.push('/payments');
   }
+
+  function handleTabValueChange(_event, newValue) {
+    history.push(`?tab=${Object.keys(TAB_VALUES).find(key => TAB_VALUES[key] === newValue)}`);
+    setTabValue(newValue);
+    if (newValue === 1) loadSubscriptionPlans();
+  }
+
+  function handleSubscriptionMenu(event) {
+    event.stopPropagation();
+    setAnchorEl(event.currentTarget);
+  }
+
+  function handleClose(event) {
+    event.stopPropagation();
+    setAnchorEl(null);
+  }
+
+  const menuData = {
+    menuList,
+    handleSubscriptionMenu,
+    anchorEl,
+    open: anchorElOpen,
+    handleClose
+  };
 
   if (error) {
     return <CenteredContent>{formatError(error.message)}</CenteredContent>;
@@ -208,137 +302,196 @@ export default function PaymentList({ currencyData }) {
 
   return (
     <div>
-      <PaymentModal
-        open={paymentModalOpen}
-        handleModalClose={handlePaymentModal}
-        currencyData={currencyData}
-        refetch={refetch}
+      <MessageAlert
+        type={message.isError ? 'error' : 'success'}
+        message={message.detail}
+        open={alertOpen}
+        handleClose={() => setAlertOpen(false)}
       />
-      <Container maxWidth="xl">
-        <Grid container direction="row" spacing={2}>
-          <Grid item sm={9} xs={12}>
-            <SearchInput
-              title={t('common:misc.payments')}
-              searchValue={searchValue}
-              handleSearch={event => setsearch(event.target.value)}
-              handleFilter={toggleFilterMenu}
-              handleClear={() => setSearchClear()}
-            />
-          </Grid>
-          <Grid item sm={3} xs={12}>
-            <Button variant="outlined" className={classes.exportDataBtn}>
-              {listType === 'graph' && paymentStatData?.paymentStatDetails?.length > 0 ? (
-                <CSVLink
-                  data={csvData(paymentStatData?.paymentStatDetails)}
-                  style={{ color: theme.palette.primary.main, textDecoration: 'none' }}
-                  headers={csvHeaders}
-                  filename={`payment-data-${dateToString(new Date())}.csv`}
-                >
-                  {t('actions.download_csv')}
-                </CSVLink>
-              ) : (
-                <>
-                  {!called ? (
-                    // eslint-disable-next-line jsx-a11y/click-events-have-key-events
-                    <span role="button" aria-label="download csv" onClick={handleDownloadCSV}>
-                      {plansLoading ? <Spinner /> : t('actions.export_data')}
-                    </span>
-                  ) : (
+      <StyledTabs
+        value={tabValue}
+        onChange={handleTabValueChange}
+        aria-label="payment screen tabs"
+        centered
+      >
+        <StyledTab label="Payments" {...a11yProps(0)} />
+        <StyledTab label="Plans" {...a11yProps(1)} />
+      </StyledTabs>
+      <TabPanel value={tabValue} index={0}>
+        <>
+          <PaymentModal
+            open={paymentModalOpen}
+            handleModalClose={handlePaymentModal}
+            currencyData={currencyData}
+            refetch={refetch}
+          />
+          <Container maxWidth="xl">
+            <Grid container direction="row" spacing={2}>
+              <Grid item sm={9} xs={12}>
+                <SearchInput
+                  title={t('common:misc.payments')}
+                  searchValue={searchValue}
+                  handleSearch={event => setsearch(event.target.value)}
+                  handleFilter={toggleFilterMenu}
+                  handleClear={() => setSearchClear()}
+                />
+              </Grid>
+              <Grid item sm={3} xs={12}>
+                <Button variant="outlined" className={classes.exportDataBtn}>
+                  {listType === 'graph' && paymentStatData?.paymentStatDetails?.length > 0 ? (
                     <CSVLink
-                      data={plansData?.paymentsList.length > 0 ? csvData(plansData?.paymentsList) : []}
+                      data={csvData(paymentStatData?.paymentStatDetails)}
                       style={{ color: theme.palette.primary.main, textDecoration: 'none' }}
                       headers={csvHeaders}
                       filename={`payment-data-${dateToString(new Date())}.csv`}
                     >
-                      {plansLoading ? <Spinner /> : t('actions.save_csv')}
+                      {t('actions.download_csv')}
                     </CSVLink>
+                  ) : (
+                    <>
+                      {!called ? (
+                        // eslint-disable-next-line jsx-a11y/click-events-have-key-events
+                        <span role="button" aria-label="download csv" onClick={handleDownloadCSV}>
+                          {plansLoading ? <Spinner /> : t('actions.export_data')}
+                        </span>
+                      ) : (
+                        <CSVLink
+                          data={plansData?.paymentsList.length > 0 ? csvData(plansData?.paymentsList) : []}
+                          style={{ color: theme.palette.primary.main, textDecoration: 'none' }}
+                          headers={csvHeaders}
+                          filename={`payment-data-${dateToString(new Date())}.csv`}
+                        >
+                          {plansLoading ? <Spinner /> : t('actions.save_csv')}
+                        </CSVLink>
+                      )}
+                    </>
                   )}
-                </>
-              )}
-            </Button>
+                </Button>
+              </Grid>
+            </Grid>
+          </Container>
+          <Grid
+            container
+            justify="flex-end"
+            style={{
+              width: '100.5%',
+              position: 'absolute',
+              zIndex: 1,
+              marginTop: '-2px',
+              marginLeft: '-300px',
+              display: displayBuilder
+            }}
+          >
+            <QueryBuilder
+              handleOnChange={queryOnChange}
+              builderConfig={paymentQueryBuilderConfig}
+              initialQueryValue={paymentQueryBuilderInitialValue}
+              addRuleLabel={t('common:misc.add_filter')}
+            />
           </Grid>
-        </Grid>
-      </Container>
-      <Grid
-        container
-        justify="flex-end"
-        style={{
-          width: '100.5%',
-          position: 'absolute',
-          zIndex: 1,
-          marginTop: '-2px',
-          marginLeft: '-300px',
-          display: displayBuilder
-        }}
-      >
-        <QueryBuilder
-          handleOnChange={queryOnChange}
-          builderConfig={paymentQueryBuilderConfig}
-          initialQueryValue={paymentQueryBuilderInitialValue}
-          addRuleLabel={t('common:misc.add_filter')}
-        />
-      </Grid>
-      <br />
-      <br />
-      <PaymentGraph handleClick={setGraphQuery} />
-      <Fab
-        color="primary"
-        variant="extended"
-        className={classes.download}
-        onClick={() => setPaymentModalOpen(true)}
-      >
-        {t('common:misc.make_payment')}
-      </Fab>
+          <br />
+          <br />
+          <PaymentGraph handleClick={setGraphQuery} />
+          <Fab
+            color="primary"
+            variant="extended"
+            className={classes.download}
+            onClick={() => setPaymentModalOpen(true)}
+          >
+            {t('common:misc.make_payment')}
+          </Fab>
 
-      {loading ? (
-        <Spinner />
-      ) : (
-        <List>
-          {listType === 'graph' && paymentStatData?.paymentStatDetails?.length > 0 ? (
-            <div>
-              {matches && (
-                <div style={{ padding: '0 20px' }}>
-                  <ListHeader headers={paymentHeaders} />
-                </div>
-              )}
-              {paymentStatData.paymentStatDetails.map(payment => (
-                <TransactionItem
-                  key={payment.id}
-                  transaction={payment}
-                  currencyData={currencyData}
-                />
-              ))}
-            </div>
-          ) : paymentList?.length > 0 ? (
-            <div>
-              {matches && (
-                <div style={{ padding: '0 20px' }}>
-                  <ListHeader headers={paymentHeaders} />
-                </div>
-              )}
-              {paymentList.map(payment => (
-                <TransactionItem
-                  key={payment.id}
-                  transaction={payment}
-                  currencyData={currencyData}
-                />
-              ))}
-            </div>
+          {loading ? (
+            <Spinner />
           ) : (
-            <CenteredContent>{t('errors.no_payment_available')}</CenteredContent>
+            <List>
+              {listType === 'graph' && paymentStatData?.paymentStatDetails?.length > 0 ? (
+                <div>
+                  {matches && (
+                    <div style={{ padding: '0 20px' }}>
+                      <ListHeader headers={paymentHeaders} />
+                    </div>
+                  )}
+                  {paymentStatData.paymentStatDetails.map(payment => (
+                    <TransactionItem
+                      key={payment.id}
+                      transaction={payment}
+                      currencyData={currencyData}
+                    />
+                  ))}
+                </div>
+              ) : paymentList?.length > 0 ? (
+                <div>
+                  {matches && (
+                    <div style={{ padding: '0 20px' }}>
+                      <ListHeader headers={paymentHeaders} />
+                    </div>
+                  )}
+                  {paymentList.map(payment => (
+                    <TransactionItem
+                      key={payment.id}
+                      transaction={payment}
+                      currencyData={currencyData}
+                    />
+                  ))}
+                </div>
+              ) : (
+                <CenteredContent>{t('errors.no_payment_available')}</CenteredContent>
+              )}
+            </List>
           )}
-        </List>
-      )}
 
-      <CenteredContent>
-        <Paginate
-          offSet={pageNumber}
-          limit={limit}
-          active={pageNumber >= 1}
-          handlePageChange={paginate}
-          count={data?.paymentsList?.length}
+          <CenteredContent>
+            <Paginate
+              offSet={pageNumber}
+              limit={limit}
+              active={pageNumber >= 1}
+              handlePageChange={paginate}
+              count={data?.paymentsList?.length}
+            />
+          </CenteredContent>
+        </>
+      </TabPanel>
+
+      <TabPanel value={tabValue} index={1}>
+        <SubscriptionPlanModal
+          open={subscriptionModalOpen}
+          handleModalClose={() => setSubscriptionModalOpen(false)}
+          subscriptionPlansRefetch={subscriptionPlansRefetch}
+          setMessage={setMessage}
+          openAlertMessage={() => setAlertOpen(true)}
         />
-      </CenteredContent>
+        {subscriptionPlansLoading ? (
+          <Spinner />
+        ) : subscriptionPlansData?.subscriptionPlans?.length === 0 ? (
+          <CenteredContent>{t('errors.no_subscription_available')}</CenteredContent>
+        ) : (
+          <div>
+            {matches && (
+              <div style={{ padding: '0 20px' }}>
+                <ListHeader headers={subscriptionPlanHeaders} />
+              </div>
+            )}
+            {subscriptionPlansData?.subscriptionPlans?.map(sub => (
+              <div style={{ padding: '0 20px' }} key={sub.id}>
+                <DataList
+                  keys={subscriptionPlanHeaders}
+                  data={renderSubscriptionPlans(sub, currencyData, menuData)}
+                  hasHeader={false}
+                />
+              </div>
+            ))}
+          </div>
+        )}
+        <Fab
+          color="primary"
+          variant="extended"
+          className={classes.download}
+          onClick={() => setSubscriptionModalOpen(true)}
+        >
+          {t('common:misc.new_plan')}
+        </Fab>
+      </TabPanel>
     </div>
   );
 }
@@ -419,6 +572,59 @@ export function renderPayment(payment, currencyData, theme, matches) {
           <Label
             title={titleize(payment.status)}
             color={propAccessor(InvoiceStatusColor, payment?.status)}
+          />
+        </Grid>
+      )
+    }
+  ];
+}
+
+export function renderSubscriptionPlans(subscription, currencyData, menuData) {
+  return [
+    {
+      'Plan Type': (
+        <Grid item xs={12} md={2} data-testid="plan_type">
+          <Text content={titleize(subscription.planType)} />
+        </Grid>
+      ),
+      'Start Date': (
+        <Grid item xs={12} md={2} data-testid="start_date">
+          <Text content={dateToString(subscription.startDate)} />
+        </Grid>
+      ),
+      'End Date': (
+        <Grid item xs={12} md={2} data-testid="end_date">
+          <Text content={dateToString(subscription.endDate)} />
+        </Grid>
+      ),
+      Amount: (
+        <Grid item xs={12} md={2} data-testid="amount">
+          <Text content={formatMoney(currencyData, subscription.amount)} />
+        </Grid>
+      ),
+      Status: (
+        <Grid item xs={12} md={2} data-testid="subscription_status" style={{ width: '90px' }}>
+          <Label
+            title={capitalize(subscription.status).split("_").join("")}
+            color={propAccessor(InvoiceStatusColor, subscription?.status)}
+          />
+        </Grid>
+      ),
+      Menu: (
+        <Grid item xs={12} md={1} data-testid="menu">
+          <IconButton
+            aria-controls="sub-menu"
+            aria-haspopup="true"
+            data-testid="subscription-plan-menu"
+            onClick={event => menuData.handleSubscriptionMenu(event)}
+          >
+            <MoreHorizOutlined />
+          </IconButton>
+          <MenuList
+            open={menuData.open}
+            anchorEl={menuData.anchorEl}
+            handleClose={menuData.handleClose}
+            list={menuData.menuList}
           />
         </Grid>
       )
