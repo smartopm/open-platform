@@ -24,7 +24,7 @@ export default function CategoryItem({
     <>
       <Grid container className={classes.categorySection}>
         <Grid item xs={6} sm={9}>
-          <Typography className={classes.categoryName}>{category.name}</Typography>
+          <Typography className={classes.categoryName}>{category.fieldName}</Typography>
         </Grid>
         <Grid item xs={2} sm={1}>
           {editMode && (
@@ -57,7 +57,7 @@ export default function CategoryItem({
 
 CategoryItem.propTypes = {
   category: PropTypes.shape({
-    name: PropTypes.string,
+    fieldName: PropTypes.string,
     id: PropTypes.string,
   }).isRequired,
   handleAddField: PropTypes.func.isRequired,

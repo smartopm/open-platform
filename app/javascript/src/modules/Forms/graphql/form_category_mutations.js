@@ -32,8 +32,7 @@ export const FormCategoryCreateMutation = gql`
 
 export const FormCategoryUpdateMutation = gql`
   mutation formCategoryUpdate(
-    $id: ID!
-    $formPropertyID: ID
+    $categoryId: ID!
     $order: Int!
     $fieldName: String!
     $description: String!
@@ -42,8 +41,7 @@ export const FormCategoryUpdateMutation = gql`
     $renderedText: String
   ) {
     categoryUpdate(
-      id: $id
-      formPropertyID: $formPropertyID
+      categoryId: $categoryId
       order: $order
       fieldName: $fieldName
       headerVisible: $headerVisible
@@ -54,6 +52,10 @@ export const FormCategoryUpdateMutation = gql`
       category {
         id
       }
+      newFormVersion {
+        id
+      }
+      message
     }
   }
 `;

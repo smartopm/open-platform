@@ -3,18 +3,21 @@ import { Button, TextField } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import { useMutation } from 'react-apollo';
-import { useParams } from 'react-router';
+import { useHistory, useParams } from 'react-router';
 import SwitchInput from '../FormProperties/SwitchInput';
 import CenteredContent from '../../../../components/CenteredContent';
-import { FormCategoryCreateMutation } from '../../graphql/form_category_mutations';
+import { FormCategoryCreateMutation, FormCategoryUpdateMutation } from '../../graphql/form_category_mutations';
 import { Spinner } from '../../../../shared/Loading';
 import MessageAlert from '../../../../components/MessageAlert';
 
 export default function CategoryForm({ data, close, refetchCategories }) {
   const { t } = useTranslation('form');
   const [categoryData, setCategoryData] = useState(data);
-  const [createCategory, { loading, error, called }] = useMutation(FormCategoryCreateMutation);
+  const [info, setInfo] = useState({error: false, message: ''})
+  const [createCategory, { loading, called }] = useMutation(FormCategoryCreateMutation);
+  const [updateCategory, { loading: updateLoading, called: updateCalled }] = useMutation(FormCategoryUpdateMutation);
   const { formId } = useParams();
+  const history = useHistory()
 
   function handleSaveCategory(event) {
     event.preventDefault();
@@ -22,6 +25,26 @@ export default function CategoryForm({ data, close, refetchCategories }) {
       .then(() => {
         refetchCategories()
         close()
+        setInfo({ error: false, message: 'Successfully created a category' })
+      }).catch(err => {
+        setInfo({ ...info, error: err.message })
+      })
+  }
+
+  function handleUpdateCategory(event){
+    event.preventDefault();
+    updateCategory({ variables: { ...categoryData, order: Number(categoryData.order), categoryId: data.id } })
+      .then((res) => {
+        const categoryResponse = res.data.categoryUpdate;
+        if (categoryResponse.message === 'New version created') {
+          history.push(`/edit_form/${categoryResponse.newFormVersion.id}`);
+        }
+        setInfo({ error: false, message: 'Successfully updated the category' })
+        refetchCategories()
+        close()
+      })
+      .catch(err => {
+        setInfo({ error: true, message: err.message })
       })
   }
 
@@ -40,16 +63,16 @@ export default function CategoryForm({ data, close, refetchCategories }) {
       [name]: checked
     });
   }
-
+  
   return (
     <>
       <MessageAlert
-        type={error ? 'error' : 'success'}
-        message={error?.message || 'Successfully created a category'}
-        open={called && !loading}
+        type={info.error ? 'error' : 'success'}
+        message={info.message}
+        open={(called || updateCalled) && !loading}
         handleClose={() => {}}
       />
-      <form onSubmit={handleSaveCategory} data-testid="form_property_submit">
+      <form onSubmit={data.id ? handleUpdateCategory : handleSaveCategory} data-testid="form_property_submit">
         <TextField
           id="cat-name"
           label={t('form_fields.name')}
@@ -120,10 +143,10 @@ export default function CategoryForm({ data, close, refetchCategories }) {
             variant="outlined"
             type="submit"
             color="primary"
-            disabled={loading}
-            startIcon={loading && <Spinner />}
+            disabled={loading || updateLoading}
+            startIcon={(loading || updateLoading) && <Spinner />}
           >
-            Save Category
+            { data.id ? 'Update Category': 'Create Category' }
           </Button>
         </CenteredContent>
       </form>
@@ -133,6 +156,7 @@ export default function CategoryForm({ data, close, refetchCategories }) {
 
 CategoryForm.propTypes = {
   data: PropTypes.shape({
+    id: PropTypes.string,
     fieldName: PropTypes.string,
     order: PropTypes.number,
     description: PropTypes.string,

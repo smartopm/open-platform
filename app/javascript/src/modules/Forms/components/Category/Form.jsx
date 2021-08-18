@@ -46,9 +46,17 @@ export default function Form({ editMode }) {
     setCategoryFormOpen(true);
     setFormData(category);
   }
-  function handleAddCategory(category) {
+  function handleAddCategory() {
     setCategoryFormOpen(true);
-    setFormData(category);
+    const init = {
+      fieldName: '',
+      description: '',
+      headerVisible: false,
+      general: false,
+      order: 1,
+      renderedText: ''
+    }
+    setFormData(init);
   }
 
   function handleDeleteCategory(category) {
