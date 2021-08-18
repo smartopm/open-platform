@@ -29,7 +29,7 @@ export default function Form({ editMode }) {
   const [categoryFormOpen, setCategoryFormOpen] = useState(false);
   const [propertyFormOpen, setPropertyFormOpen] = useState(false);
   const [data, setFormData] = useState({});
-  const { t } = useTranslation('common');
+  const { t } = useTranslation(['common', 'form']);
   const [categoryId, setCategoryId] = useState('');
   const { formId } = useParams();
   const categoriesData = useQuery(FormCategoriesQuery, {
@@ -105,7 +105,7 @@ export default function Form({ editMode }) {
       <DetailsDialog
         handleClose={handleCategoryClose}
         open={categoryFormOpen}
-        title="Category"
+        title={t('form:misc.category')}
         color="default"
       >
         <Container>
@@ -120,7 +120,7 @@ export default function Form({ editMode }) {
       <DetailsDialog
         handleClose={handleCancelPreview}
         open={formState.previewable}
-        title="Contract Preview"
+        title={t('form:misc.contract_preview')}
         color="default"
         scroll="paper"
       >
@@ -162,7 +162,7 @@ export default function Form({ editMode }) {
           style={{ float: 'right' }}
           onClick={handleAddCategory}
         >
-          Add Category
+          {t('form:actions.add_category')}
         </Button>
       )}
       {!editMode && (

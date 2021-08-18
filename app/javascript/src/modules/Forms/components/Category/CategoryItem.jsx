@@ -22,34 +22,38 @@ export default function CategoryItem({
   const classes = useStyles();
   return (
     <>
-      <Grid container className={classes.categorySection}>
-        <Grid item xs={6} sm={9}>
-          <Typography className={classes.categoryName}>{category.fieldName}</Typography>
+      {category.headerVisible && (
+        <Grid container className={classes.categorySection}>
+          <Grid item xs={6} sm={9}>
+            <Typography className={classes.categoryName}>{category.fieldName}</Typography>
+          </Grid>
+          <Grid item xs={2} sm={1}>
+            {editMode && (
+              <IconButton aria-label="delete this category" onClick={handleDeleteCategory}>
+                {loading && currentId === category.id ? (
+                  <Spinner />
+                ) : (
+                  <DeleteOutline color="primary" />
+                )}
+              </IconButton>
+            )}
+          </Grid>
+          <Grid item xs={2} sm={1}>
+            {editMode && (
+              <IconButton aria-label="edit this category" onClick={handleEditCategory}>
+                <CreateIcon color="primary" />
+              </IconButton>
+            )}
+          </Grid>
+          <Grid item xs={2} sm={1}>
+            {editMode && (
+              <IconButton aria-label="add questions to this category" onClick={handleAddField}>
+                {collapsed ? <CloseIcon color="primary" /> : <AddIcon color="primary" />}
+              </IconButton>
+            )}
+          </Grid>
         </Grid>
-        <Grid item xs={2} sm={1}>
-          {editMode && (
-            <IconButton aria-label="delete this category" onClick={handleDeleteCategory}>
-              { loading && currentId === category.id ? <Spinner /> : <DeleteOutline color="primary" /> }
-            </IconButton>
-          )}
-        </Grid>
-        <Grid item xs={2} sm={1}>
-          {editMode && (
-            <IconButton aria-label="edit this category" onClick={handleEditCategory}>
-              <CreateIcon color="primary" />
-            </IconButton>
-          )}
-        </Grid>
-        <Grid item xs={2} sm={1}>
-          {
-              editMode && (
-                <IconButton aria-label="add questions to this category" onClick={handleAddField}>
-                  {collapsed ? <CloseIcon color="primary" /> : <AddIcon color="primary" />}
-                </IconButton>
-              )
-            }
-        </Grid>
-      </Grid>
+      )}
       <Container>{children}</Container>
     </>
   );
@@ -58,7 +62,8 @@ export default function CategoryItem({
 CategoryItem.propTypes = {
   category: PropTypes.shape({
     fieldName: PropTypes.string,
-    id: PropTypes.string,
+    headerVisible: PropTypes.bool,
+    id: PropTypes.string
   }).isRequired,
   handleAddField: PropTypes.func.isRequired,
   handleEditCategory: PropTypes.func.isRequired,
@@ -67,7 +72,7 @@ CategoryItem.propTypes = {
   collapsed: PropTypes.bool.isRequired,
   editMode: PropTypes.bool.isRequired,
   loading: PropTypes.bool.isRequired,
-  currentId: PropTypes.string.isRequired,
+  currentId: PropTypes.string.isRequired
 };
 
 const useStyles = makeStyles({

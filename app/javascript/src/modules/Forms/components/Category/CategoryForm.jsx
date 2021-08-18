@@ -9,6 +9,7 @@ import CenteredContent from '../../../../components/CenteredContent';
 import { FormCategoryCreateMutation, FormCategoryUpdateMutation } from '../../graphql/form_category_mutations';
 import { Spinner } from '../../../../shared/Loading';
 import MessageAlert from '../../../../components/MessageAlert';
+import { formatError } from '../../../../utils/helpers'
 
 export default function CategoryForm({ data, close, refetchCategories }) {
   const { t } = useTranslation('form');
@@ -25,9 +26,9 @@ export default function CategoryForm({ data, close, refetchCategories }) {
       .then(() => {
         refetchCategories()
         close()
-        setInfo({ error: false, message: 'Successfully created a category' })
+        setInfo({ error: false, message: t('misc.created_form_category') })
       }).catch(err => {
-        setInfo({ ...info, error: err.message })
+        setInfo({ ...info, error: formatError(err.message) })
       })
   }
 
@@ -39,12 +40,12 @@ export default function CategoryForm({ data, close, refetchCategories }) {
         if (categoryResponse.message === 'New version created') {
           history.push(`/edit_form/${categoryResponse.newFormVersion.id}`);
         }
-        setInfo({ error: false, message: 'Successfully updated the category' })
+        setInfo({ error: false, message: t('misc.updated_form_category') })
         refetchCategories()
         close()
       })
       .catch(err => {
-        setInfo({ error: true, message: err.message })
+        setInfo({ error: true, message: formatError(err.message) })
       })
   }
 
@@ -116,13 +117,13 @@ export default function CategoryForm({ data, close, refetchCategories }) {
         <div style={{ marginTop: 20 }}>
           <SwitchInput
             name="headerVisible"
-            label={t('form:form_fields.header_visible')}
+            label={t('form_fields.header_visible')}
             value={categoryData.headerVisible || false}
             handleChange={handleRadioChange}
           />
           <SwitchInput
             name="general"
-            label={t('form:form_fields.general_category')}
+            label={t('form_fields.general_category')}
             value={categoryData.general || false}
             handleChange={handleRadioChange}
           />
@@ -146,7 +147,7 @@ export default function CategoryForm({ data, close, refetchCategories }) {
             disabled={loading || updateLoading}
             startIcon={(loading || updateLoading) && <Spinner />}
           >
-            { data.id ? 'Update Category': 'Create Category' }
+            { data.id ? t('actions.update_category'): t('actions.create_category') }
           </Button>
         </CenteredContent>
       </form>
