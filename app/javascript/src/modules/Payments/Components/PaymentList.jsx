@@ -605,7 +605,7 @@ export function renderSubscriptionPlans(subscription, currencyData, menuData) {
       Status: (
         <Grid item xs={12} md={2} data-testid="subscription_status" style={{ width: '90px' }}>
           <Label
-            title={capitalize(subscription.status)}
+            title={capitalize(subscription.status).split("_").join("")}
             color={propAccessor(InvoiceStatusColor, subscription?.status)}
           />
         </Grid>

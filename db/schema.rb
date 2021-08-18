@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_08_17_142250) do
+ActiveRecord::Schema.define(version: 2021_08_18_094234) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -612,6 +612,7 @@ ActiveRecord::Schema.define(version: 2021_08_17_142250) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["community_id"], name: "index_subscription_plans_on_community_id"
+    t.index ["start_date", "end_date", "amount"], name: "index_subscription_plans_on_start_date_and_end_date_and_amount", unique: true
   end
 
   create_table "substatus_logs", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|

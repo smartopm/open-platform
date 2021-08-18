@@ -12,6 +12,8 @@ module Payments
 
     validates :amount, numericality: { greater_than: 0 }
     validates :start_date, :end_date, :plan_type, presence: true
+    validates :start_date, uniqueness: { scope: %i[end_date amount],
+                                         message: ', End date and Amount already exist' }
     validate :ensure_valid_dates
 
     private
