@@ -56,6 +56,11 @@ module Types::Queries::Form
       argument :start_date, String, required: true
       argument :end_date, String, required: true
     end
+
+    field :form_categories, [Types::CategoryType], null: true do
+      description 'Get all categories of a form'
+      argument :form_id, GraphQL::Types::ID, required: true
+    end
   end
   # rubocop:enable Metrics/BlockLength
 
@@ -119,7 +124,7 @@ module Types::Queries::Form
     end
 
     Forms::FormUser.find_by(id: form_user_id)
-                   .user_form_properties.eager_load(:form_property).with_attached_image
+                   .user_form_properties.eager_load(form_property: :category).with_attached_image
   end
 
   def form_submissions(start_date:, end_date:)
@@ -149,6 +154,20 @@ module Types::Queries::Form
   end
   # rubocop:enable Metrics/MethodLength
   # rubocop:enable Metrics/AbcSize
+
+  # Returns all categories associated with the form
+  #
+  # @param form_id [String] Form#id
+  #
+  # @return [Array<Forms::Category>]
+  def form_categories(form_id:)
+    raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') if context[:current_user].blank?
+
+    form = Forms::Form.find_by(id: form_id)
+    raise_form_not_found_error(form)
+
+    form.categories.order(:order)
+  end
 
   private
 

@@ -37,7 +37,7 @@ import { ActionDialog } from '../../../components/Dialog'
 import MessageAlert from '../../../components/MessageAlert'
 import FloatButton from '../../../components/FloatButton'
 import { propAccessor, formatError } from '../../../utils/helpers'
-import SwitchInput from './SwitchInput'
+import SwitchInput from './FormProperties/SwitchInput'
 
 // here we get existing google forms and we mix them with our own created forms
 export default function FormLinkList({ userType, community }) {
@@ -58,6 +58,7 @@ export default function FormLinkList({ userType, community }) {
   const [formId, setFormId] = useState("")
   const [alertOpen, setAlertOpen] = useState(false)
   const [multipleSubmissionsAllowed, setMultipleSubmissionsAllowed] = useState(true)
+  const [preview, setPreview] = useState(false)
 
   const menuOpen = Boolean(anchorEl)
 
@@ -70,7 +71,7 @@ export default function FormLinkList({ userType, community }) {
   function submitForm(title, description) {
     setLoading(true)
     createForm({
-      variables: { name: title, expiresAt, description, multipleSubmissionsAllowed }
+      variables: { name: title, expiresAt, description, multipleSubmissionsAllowed, preview }
     })
       .then(() => {
         setMessage({isError: false, detail: t('misc.form_created')})
@@ -131,6 +132,13 @@ export default function FormLinkList({ userType, community }) {
                 label={t('misc.limit_1_response')}
                 value={!multipleSubmissionsAllowed}
                 handleChange={event => {setMultipleSubmissionsAllowed(!event.target.checked)}}
+              />
+
+              <SwitchInput
+                name="multipleSubmissionsAllowed"
+                label={t('misc.previewable')}
+                value={preview}
+                handleChange={event => setPreview(event.target.checked)}
               />
             </div>
             <DateAndTimePickers

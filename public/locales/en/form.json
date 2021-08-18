@@ -18,12 +18,17 @@
     "deleted_form_property": "Successfully deleted form property",
     "updated_form_property": "Successfully updated form property",
     "created_form_property": "Successfully added a form field",
+    "created_form_category": "Successfully created a category",
+    "updated_form_category": "Successfully updated a category",
     "form_submitted": "You have successfully submitted the form",
     "no_form_entries": "No Form Entries Available",
     "submission_date": "Date of Submitted",
     "submitted_by": "Submitted By",
     "status": "Status",
-    "version_number": "Version Number"
+    "version_number": "Version Number",
+    "previewable": "Should have a preview",
+    "contract_preview": "Contract Preview",
+    "category": "Category"
   },
   "actions": {
     "create_a_form": "Create a form",
@@ -32,7 +37,10 @@
     "adding_form_property": "Adding Form Property",
     "add_form_property": "Add Property",
     "update_form_property": "Update Form Property",
-    "update_property": "Update Property"
+    "update_property": "Update Property",
+    "update_category": "Update Category",
+    "create_category": "Create Category",
+    "add_category": "Add Category"
   },
   "errors": {
     "no_forms": "No Forms to submit"
@@ -62,7 +70,12 @@
     "admins_only": "Only for admins",
     "order_number": "Order Number",
     "form_status": "Form Status",
-    "form_status_updated_by": "Form Status Updated By"
+    "form_status_updated_by": "Form Status Updated By",
+    "description": "Description",
+    "rendered_text": "Rendered Text",
+    "name": "Name",
+    "header_visible": "Visible Header",
+    "general_category": "General"
   },
   "field_types": {
     "text": "Text",

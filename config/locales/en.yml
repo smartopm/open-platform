@@ -31,12 +31,15 @@ en:
       discussions/discussion_user:
         discussion: Discussion
         user: User
+      forms/category:
+        field_name: Field Name
       forms/form:
         community: Community
         expires_at: Expires at
         name: Name
       forms/form_property:
         form: Form
+        category: Category
       forms/form_user:
         form: Form
         status_updated_by: Status updated by
@@ -211,6 +214,7 @@ en:
       community: Community
       discussions/discussion: Discussion
       discussions/discussion_user: Discussion user
+      forms/category: Category
       forms/form: Form
       forms/form_property: Form property
       forms/form_user: Form user
@@ -262,6 +266,9 @@ en:
     campaign:
       missing_parameter: 'Missing Parameter: Please Supply %{attribute} parameter'
     can_not_process_request: For some reason, I can't process your request
+    category:
+      not_found: Category not found
+      cannot_be_linked: Category cannot be linked
     comment:
       not_found: Comment not found
     duplicate:
@@ -275,6 +282,8 @@ en:
       not_found: Event log not found
     form:
       not_found: Form not found
+    form_property:
+      not_found: Form Property not found
     invalid_argument_value: Invalid Argument Value
     invalid_value: Invalid Value
     invoice:
@@ -337,3 +346,4 @@ en:
     failed: failed
     success: success
     updated: updated
+    category_deleted: Category deleted successfully

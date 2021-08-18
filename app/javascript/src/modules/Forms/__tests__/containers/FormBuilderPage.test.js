@@ -5,8 +5,7 @@ import { BrowserRouter } from 'react-router-dom/';
 import { MockedProvider } from '@apollo/react-testing';
 import FormBuilderPage from '../../containers/FormBuilderPage';
 
-
-
+jest.mock('react-markdown', () => <div />);
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
 
 describe('FormBuilderPage Component', () => {

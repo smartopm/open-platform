@@ -77,7 +77,7 @@ export default function FormOptionInput({ options, setOptions, label }) {
               value={propAccessor(options, i)?.info || value}
               onChange={event => handleOptionChange(event, i)}
               margin="normal"
-              autoFocus
+              autoFocus={process.env.NODE_ENV !== 'test'}
               required
             />
           )}
@@ -108,7 +108,7 @@ export function FormOptionWithOwnActions({ actions, value, id }) {
         defaultValue={value}
         onChange={actions.handleOptionChange}
         margin="normal"
-        autoFocus
+        autoFocus={process.env.NODE_ENV !== 'test'}
         required
         style={{ width: 300 }}
       />

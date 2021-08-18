@@ -6,6 +6,7 @@ export const FormQuery = gql`
     form(id: $id) {
       id
       name
+      preview
       description
     }
   }

@@ -150,7 +150,7 @@ export function CustomizedDialogs({
   )
 }
 
-export function DetailsDialog({ handleClose, open, title, children, noActionButton, color }){
+export function DetailsDialog({ handleClose, open, title, children, noActionButton, color, ...otherProps }){
   const classes = useStyles()
   const { t } = useTranslation(['logbook', 'common'])
   return(
@@ -158,6 +158,7 @@ export function DetailsDialog({ handleClose, open, title, children, noActionButt
       onClose={handleClose}
       aria-labelledby="customized-dialog-title"
       open={open}
+      {...otherProps}
     >
       <DialogTitle
         id="customized-dialog-title"

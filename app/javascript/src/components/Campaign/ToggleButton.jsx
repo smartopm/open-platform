@@ -4,6 +4,7 @@ import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 import PropTypes from 'prop-types'
 import { titleize } from '../../utils/helpers';
 
+// TODO: Improve on how this toggler works or deprecate it in favor of line 27
 export default function Toggler({ type, handleType, data }) {
   return (
     <ToggleButtonGroup

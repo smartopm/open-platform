@@ -21,7 +21,7 @@ import { Spinner } from '../../../../shared/Loading';
 import DatePickerDialog from '../../../../components/DatePickerDialog';
 import useDebounce from '../../../../utils/useDebounce';
 import UserAutoResult from '../../../../shared/UserAutoResult';
-import SwitchInput from '../../../Forms/components/SwitchInput';
+import SwitchInput from '../../../Forms/components/FormProperties/SwitchInput';
 
 const initialValues = {
   transactionType: '',

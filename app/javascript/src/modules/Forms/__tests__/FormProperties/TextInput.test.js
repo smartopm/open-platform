@@ -1,7 +1,7 @@
 import React from 'react'
 import { render } from '@testing-library/react'
 import '@testing-library/jest-dom/extend-expect'
-import TextInput from '../components/TextInput'
+import TextInput from '../../components/FormProperties/TextInput'
 
 describe('TextInput component', () => {
   it('should not break the text input', () => {

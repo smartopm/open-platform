@@ -4,6 +4,7 @@ import gql from 'graphql-tag';
 export const FormPropertyCreateMutation = gql`
   mutation formPropertiesCreate(
     $formId: ID!
+    $categoryId: ID!
     $fieldName: String!
     $fieldType: String!
     $required: Boolean!
@@ -13,6 +14,7 @@ export const FormPropertyCreateMutation = gql`
   ) {
     formPropertiesCreate(
       formId: $formId
+      categoryId: $categoryId
       fieldName: $fieldName
       order: $order
       required: $required
@@ -35,12 +37,14 @@ export const FormCreateMutation = gql`
     $expiresAt: String
     $description: String
     $multipleSubmissionsAllowed: Boolean!
+    $preview: Boolean!
   ) {
     formCreate(
       name: $name
       expiresAt: $expiresAt
       description: $description
       multipleSubmissionsAllowed: $multipleSubmissionsAllowed
+      preview: $preview
     ) {
       form {
         id
@@ -104,7 +108,8 @@ export const FormUserStatusUpdateMutation = gql`
 
 export const FormPropertyUpdateMutation = gql`
 mutation updateProps(
-  $id: ID!
+  $formPropertyId: ID!
+  $categoryId: ID!
   $fieldName: String!
   $fieldType: String!
   $required: Boolean!
@@ -113,7 +118,8 @@ mutation updateProps(
   $fieldValue: JSON
 ) {
   formPropertiesUpdate(
-    id: $id
+    formPropertyId: $formPropertyId
+    categoryId: $categoryId
     fieldName: $fieldName
     order: $order
     required: $required

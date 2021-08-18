@@ -7,13 +7,15 @@ import PropTypes from 'prop-types';
 import { useMutation } from 'react-apollo';
 import { useTranslation } from 'react-i18next';
 import { Spinner } from '../../../shared/Loading';
-import FormPropertyCreateForm from './FormPropertyCreateForm';
-import { DetailsDialog } from '../../../components/Dialog';
+// import FormPropertyCreateForm from './FormPropertyCreateForm';
+// import { DetailsDialog } from '../../../components/Dialog';
 import { FormPropertyDeleteMutation } from '../graphql/forms_mutation';
 import MessageAlert from '../../../components/MessageAlert';
 import { formatError } from '../../../utils/helpers';
+import FormPropertyCreateForm from './FormPropertyCreateForm';
+import { DetailsDialog } from '../../../components/Dialog';
 
-export default function FormPropertyAction({ propertyId, editMode, formId, refetch }) {
+export default function FormPropertyAction({ propertyId, editMode, formId, refetch, categoryId }) {
   const [modal, setModal] = useState({ type: '', isOpen: false });
   const [currentPropId, setCurrentPropertyId] = useState('');
   const [isDeletingProperty, setDeleteLoading] = useState(false);
@@ -71,6 +73,7 @@ export default function FormPropertyAction({ propertyId, editMode, formId, refet
             formId={formId}
             refetch={refetch}
             propertyId={propertyId}
+            categoryId={categoryId}
             close={handleModal}
           />
         </Container>
@@ -99,6 +102,7 @@ export default function FormPropertyAction({ propertyId, editMode, formId, refet
 
 FormPropertyAction.propTypes = {
   propertyId: PropTypes.string.isRequired,
+  categoryId: PropTypes.string.isRequired,
   formId: PropTypes.string.isRequired,
   editMode: PropTypes.bool.isRequired,
   refetch: PropTypes.func.isRequired

@@ -1,27 +1,19 @@
 import React, { useEffect, useState } from 'react';
-import { useLazyQuery, useMutation } from 'react-apollo';
+import { useLazyQuery, useMutation, useQuery } from 'react-apollo';
 import PropTypes from 'prop-types';
-import { Button, TextField } from '@material-ui/core';
+import { Button, FormControl, InputLabel, MenuItem, Select, TextField } from '@material-ui/core';
 import { useHistory } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { FormPropertyCreateMutation, FormPropertyUpdateMutation } from '../graphql/forms_mutation';
 import CenteredContent from '../../../components/CenteredContent';
 import FormPropertySelector from './FormPropertySelector';
 import FormOptionInput from './FormOptionInput';
-import SwitchInput from './SwitchInput';
+import SwitchInput from './FormProperties/SwitchInput';
 import { FormPropertyQuery } from '../graphql/forms_queries';
 import { Spinner } from '../../../shared/Loading';
 import { formatError } from '../../../utils/helpers';
 import MessageAlert from '../../../components/MessageAlert';
-
-const initData = {
-  fieldName: '',
-  fieldType: '',
-  required: false,
-  adminUse: false,
-  order: '1',
-  fieldValue: []
-};
+import { LiteFormCategories } from '../graphql/form_category_queries';
 
 const fieldTypes = {
   text: 'Text',
@@ -32,7 +24,16 @@ const fieldTypes = {
   dropdown: 'Dropdown'
 };
 
-export default function FormPropertyCreateForm({ formId, refetch, propertyId, close }) {
+export default function FormPropertyCreateForm({ formId, refetch, propertyId, categoryId, close }) {
+  const initData = {
+    fieldName: '',
+    fieldType: '',
+    required: false,
+    adminUse: false,
+    order: '1',
+    fieldValue: [],
+    categoryId
+  };
   const [propertyData, setProperty] = useState(initData);
   const [isLoading, setMutationLoading] = useState(false);
   const [options, setOptions] = useState(['']);
@@ -43,6 +44,9 @@ export default function FormPropertyCreateForm({ formId, refetch, propertyId, cl
   const history = useHistory();
   const [loadFields, { data }] = useLazyQuery(FormPropertyQuery, {
     variables: { formId, formPropertyId: propertyId }
+  });
+  const categoriesData = useQuery(LiteFormCategories, {
+    variables: { formId }
   });
 
   useEffect(() => {
@@ -83,7 +87,7 @@ export default function FormPropertyCreateForm({ formId, refetch, propertyId, cl
       variables: {
         ...propertyData,
         fieldValue,
-        formId
+        formId,
       }
     })
       .then(() => {
@@ -101,7 +105,6 @@ export default function FormPropertyCreateForm({ formId, refetch, propertyId, cl
         setMutationLoading(false);
       });
   }
-
   function updateFormProperty(event) {
     event.preventDefault();
     setMutationLoading(true);
@@ -109,13 +112,13 @@ export default function FormPropertyCreateForm({ formId, refetch, propertyId, cl
       variables: {
         ...propertyData,
         fieldValue,
-        id: propertyId
+        formPropertyId: propertyId,
       }
     })
       .then(res => {
-        const formPropResponse = res.data.formPropertiesUpdate
+        const formPropResponse = res.data.formPropertiesUpdate;
         if (formPropResponse.message === 'New version created') {
-          history.push(`/edit_form/${formPropResponse.newFormVersion.id}`)
+          history.push(`/edit_form/${formPropResponse.newFormVersion.id}`);
         }
         refetch();
         setMutationLoading(false);
@@ -156,9 +159,10 @@ export default function FormPropertyCreateForm({ formId, refetch, propertyId, cl
           style={{ width: '100%' }}
           inputProps={{ 'data-testid': 'field_name' }}
           margin="normal"
-          autoFocus
+          autoFocus={process.env.NODE_ENV !== 'test'}
           required
         />
+
         <FormPropertySelector
           label={t('form_fields.field_type')}
           name="fieldType"
@@ -169,6 +173,24 @@ export default function FormPropertyCreateForm({ formId, refetch, propertyId, cl
         {(propertyData.fieldType === 'radio' || propertyData.fieldType === 'dropdown') && (
           <FormOptionInput label="Option" options={options} setOptions={setOptions} />
         )}
+        <FormControl variant="outlined" style={{ width: '100%' }} margin="normal">
+          <InputLabel>Category</InputLabel>
+          <Select
+            labelId="select-category"
+            id="category"
+            value={propertyData.categoryId}
+            onChange={handlePropertyValueChange}
+            label="Choose Category"
+            name="categoryId"
+            required
+          >
+            {categoriesData?.data?.formCategories.map(category => (
+              <MenuItem key={category.id} value={category.id}>
+                {category.fieldName}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
         <div style={{ marginTop: 20 }}>
           <SwitchInput
             name="required"
@@ -218,6 +240,7 @@ FormPropertyCreateForm.defaultProps = {
 FormPropertyCreateForm.propTypes = {
   refetch: PropTypes.func.isRequired,
   formId: PropTypes.string.isRequired,
-  close: PropTypes.func,
-  propertyId: PropTypes.string
+  categoryId: PropTypes.string.isRequired,
+  propertyId: PropTypes.string,
+  close: PropTypes.func
 };

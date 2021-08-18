@@ -21,7 +21,9 @@ const PanicButtonSVG = ({bind}) => (
   </svg>
   );
   PanicButtonSVG.propTypes = {
-    bind: PropTypes.func.isRequired
+    // TODO: Add correct proptypes, func can't be spread 
+    // eslint-disable-next-line react/forbid-prop-types
+    bind: PropTypes.object.isRequired
   }
 
 export default PanicButtonSVG
