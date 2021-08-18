@@ -80,4 +80,24 @@ export const TransactionRevert = gql`
   }
 `
 
+export const  SubscriptionPlanCreate = gql`
+mutation SubscriptionPlanCreate(
+  $amount: Float!
+  $planType: String!
+  $startDate: String!
+  $endDate: String!
+  $status: String
+) {
+  subscriptionPlanCreate(
+    amount: $amount
+    planType: $planType
+    startDate: $startDate
+    endDate: $endDate
+    status: $status
+  ) {
+    success
+  }
+}
+`
+
 export default PaymentCreate;

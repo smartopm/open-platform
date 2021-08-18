@@ -82,6 +82,7 @@
     "save_changes": "Save changes",
     "merge": "Merge",
     "create_business": "Create a Business",
+    "create_plan": "Create Plan",
     "add_type": "Add {{label}}",
     "close": "Close"
   },
@@ -217,9 +218,12 @@
     "plan_transfer_confirmation_message_2": "payments with a total value of",
     "plan_transfer_confirmation_message_3": "By transferring your plan, you will be transferring all payments associated to this plan. Click the 'Continue' button to transfer plan",
     "select_frequency": "Please select frequency",
+    "select_plan_type": "Please select a plan type",
     "select_transfer_plan": "Select the Plan you want to migrate this plan to?",
     "plan_frequency": "Plan Frequency",
-    "image_uploaded": "Image uploaded"
+    "image_uploaded": "Image uploaded",
+    "new_plan": "New Plan",
+    "activate": "Activate"
   },
   "menu": {
     "invoice": "Invoice",

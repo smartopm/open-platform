@@ -24,7 +24,8 @@ import {
   handleQueryOnChange,
   InvoiceStatusColor,
   propAccessor,
-  titleize
+  titleize,
+  capitalize
 } from '../../../utils/helpers';
 import Label from '../../../shared/label/Label';
 import CenteredContent from '../../../components/CenteredContent';
@@ -48,6 +49,8 @@ import PaymentModal from './UserTransactions/PaymentModal';
 import { dateToString } from '../../../components/DateContainer';
 import { StyledTabs, StyledTab, TabPanel, a11yProps } from '../../../components/Tabs';
 import MenuList from '../../../shared/MenuList';
+import SubscriptionPlanModal from './SubscriptionPlanModal';
+import MessageAlert from '../../../components/MessageAlert';
 
 const csvHeaders = [
   { label: 'Receipt Number', key: 'receiptNumber' },
@@ -83,9 +86,12 @@ export default function PaymentList({ currencyData }) {
   const [displayBuilder, setDisplayBuilder] = useState('none');
   const [searchQuery, setSearchQuery] = useState('');
   const [paymentModalOpen, setPaymentModalOpen] = useState(false);
+  const [subscriptionModalOpen, setSubscriptionModalOpen] = useState(false);
   const [tabValue, setTabValue] = useState(0);
   const [anchorEl, setAnchorEl] = useState(null);
   const anchorElOpen = Boolean(anchorEl);
+  const [message, setMessage] = useState({ isError: false, detail: '' });
+  const [alertOpen, setAlertOpen] = useState(false);
 
   const menuList = [
     {
@@ -161,8 +167,12 @@ export default function PaymentList({ currencyData }) {
   );
 
   const [
-    loadSubscriptioPlans,
-    { loading: subscriptionPlansLoading, data: subscriptionPlansData }
+    loadSubscriptionPlans,
+    {
+      loading: subscriptionPlansLoading,
+      data: subscriptionPlansData,
+      refetch: subscriptionPlansRefetch
+    }
   ] = useLazyQuery(SubscriptionPlansQuery, {
     errorPolicy: 'all'
   });
@@ -244,7 +254,7 @@ export default function PaymentList({ currencyData }) {
 
   useEffect(() => {
     if (tab === 'plans') {
-      loadSubscriptioPlans();
+      loadSubscriptionPlans();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -261,7 +271,7 @@ export default function PaymentList({ currencyData }) {
   function handleTabValueChange(_event, newValue) {
     history.push(`?tab=${Object.keys(TAB_VALUES).find(key => TAB_VALUES[key] === newValue)}`);
     setTabValue(newValue);
-    if (newValue === 1) loadSubscriptioPlans();
+    if (newValue === 1) loadSubscriptionPlans();
   }
 
   function handleSubscriptionMenu(event) {
@@ -292,6 +302,12 @@ export default function PaymentList({ currencyData }) {
 
   return (
     <div>
+      <MessageAlert
+        type={message.isError ? 'error' : 'success'}
+        message={message.detail}
+        open={alertOpen}
+        handleClose={() => setAlertOpen(false)}
+      />
       <StyledTabs
         value={tabValue}
         onChange={handleTabValueChange}
@@ -438,6 +454,13 @@ export default function PaymentList({ currencyData }) {
       </TabPanel>
 
       <TabPanel value={tabValue} index={1}>
+        <SubscriptionPlanModal
+          open={subscriptionModalOpen}
+          handleModalClose={() => setSubscriptionModalOpen(false)}
+          subscriptionPlansRefetch={subscriptionPlansRefetch}
+          setMessage={setMessage}
+          openAlertMessage={() => setAlertOpen(true)}
+        />
         {subscriptionPlansLoading ? (
           <Spinner />
         ) : subscriptionPlansData?.subscriptionPlans?.length === 0 ? (
@@ -460,6 +483,14 @@ export default function PaymentList({ currencyData }) {
             ))}
           </div>
         )}
+        <Fab
+          color="primary"
+          variant="extended"
+          className={classes.download}
+          onClick={() => setSubscriptionModalOpen(true)}
+        >
+          {t('common:misc.new_plan')}
+        </Fab>
       </TabPanel>
     </div>
   );
@@ -574,7 +605,7 @@ export function renderSubscriptionPlans(subscription, currencyData, menuData) {
       Status: (
         <Grid item xs={12} md={2} data-testid="subscription_status" style={{ width: '90px' }}>
           <Label
-            title={titleize(subscription.status)}
+            title={capitalize(subscription.status)}
             color={propAccessor(InvoiceStatusColor, subscription?.status)}
           />
         </Grid>

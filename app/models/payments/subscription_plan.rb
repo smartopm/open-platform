@@ -5,6 +5,8 @@ module Payments
   class SubscriptionPlan < ApplicationRecord
     belongs_to :community
 
+    default_scope { order(created_at: :desc) }
+
     enum status: { active: 0, in_active: 1 }, _prefix: true
     enum plan_type: { starter: 0, basic: 1, standard: 2, premium: 3 }, _prefix: true
 
