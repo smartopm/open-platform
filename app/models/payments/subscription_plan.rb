@@ -1,4 +1,7 @@
+# frozen_string_literal: true
+
 module Payments
+  # Manages community subscription plans
   class SubscriptionPlan < ApplicationRecord
     belongs_to :community
 
@@ -14,9 +17,7 @@ module Payments
     def ensure_valid_dates
       return if start_date.nil? || end_date.nil?
 
-      if end_date <= start_date
-        errors.add(:end_date, :invalid_dates)
-      end
+      errors.add(:end_date, :invalid_dates) if end_date <= start_date
     end
   end
 end

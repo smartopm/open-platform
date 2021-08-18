@@ -5,7 +5,8 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { CSVLink } from 'react-csv';
-import { Button, Container, Grid, List, Typography, Hidden } from '@material-ui/core';
+import { Button, Container, Grid, List, Typography, Hidden, IconButton } from '@material-ui/core';
+import { MoreHorizOutlined } from '@material-ui/icons';
 import Avatar from '@material-ui/core/Avatar';
 import Fab from '@material-ui/core/Fab';
 import PropTypes from 'prop-types';
@@ -42,10 +43,11 @@ import Text from '../../../shared/Text';
 import PaymentGraph from './PaymentGraph';
 import { Spinner } from '../../../shared/Loading';
 import QueryBuilder from '../../../components/QueryBuilder';
-import { PlansPaymentsQuery } from '../graphql/payment_query';
+import { PlansPaymentsQuery, SubscriptionPlansQuery } from '../graphql/payment_query';
 import PaymentModal from './UserTransactions/PaymentModal';
 import { dateToString } from '../../../components/DateContainer';
 import { StyledTabs, StyledTab, TabPanel, a11yProps } from '../../../components/Tabs';
+import MenuList from '../../../shared/MenuList';
 
 const csvHeaders = [
   { label: 'Receipt Number', key: 'receiptNumber' },
@@ -82,6 +84,17 @@ export default function PaymentList({ currencyData }) {
   const [searchQuery, setSearchQuery] = useState('');
   const [paymentModalOpen, setPaymentModalOpen] = useState(false);
   const [tabValue, setTabValue] = useState(0);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const anchorElOpen = Boolean(anchorEl);
+
+  const menuList = [
+    {
+      content: t('actions.edit_subscription_plan'),
+      isAdmin: true,
+      color: '',
+      handleClick: () => {}
+    }
+  ];
 
   const TAB_VALUES = {
     payments: 0,
@@ -115,6 +128,23 @@ export default function PaymentList({ currencyData }) {
     [paymentHeaders[1], paymentHeaders[2]] = [paymentHeaders[2], paymentHeaders[1]];
   }
 
+  const subscriptionPlanHeaders = [
+    {
+      title: 'Plan Type',
+      value: t('table_headers.plan_type'),
+      col: 2
+    },
+    { title: 'Start Date', value: t('common:table_headers.start_date'), col: 2 },
+    {
+      title: 'End Date',
+      value: t('table_headers.end_date'),
+      col: 2
+    },
+    { title: 'Amount', value: t('common:table_headers.amount'), col: 2 },
+    { title: 'Status', value: t('common:table_headers.status'), col: 2 },
+    { title: 'Menu', value: t('common:table_headers.menu'), col: 1 }
+  ];
+
   const pageNumber = Number(page);
   const { loading, data, error, refetch } = useQuery(PlansPaymentsQuery, {
     variables: { limit, offset: pageNumber, query: debouncedValue || searchQuery },
@@ -129,6 +159,13 @@ export default function PaymentList({ currencyData }) {
       errorPolicy: 'all'
     }
   );
+
+  const [
+    loadSubscriptioPlans,
+    { loading: subscriptionPlansLoading, data: subscriptionPlansData }
+  ] = useLazyQuery(SubscriptionPlansQuery, {
+    errorPolicy: 'all'
+  });
 
   const paymentList = data?.paymentsList;
   function paginate(action) {
@@ -205,6 +242,13 @@ export default function PaymentList({ currencyData }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [path, tab]);
 
+  useEffect(() => {
+    if (tab === 'plans') {
+      loadSubscriptioPlans();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   function handleDownloadCSV() {
     loadAllPayments();
   }
@@ -217,7 +261,26 @@ export default function PaymentList({ currencyData }) {
   function handleTabValueChange(_event, newValue) {
     history.push(`?tab=${Object.keys(TAB_VALUES).find(key => TAB_VALUES[key] === newValue)}`);
     setTabValue(newValue);
+    if (newValue === 1) loadSubscriptioPlans();
   }
+
+  function handleSubscriptionMenu(event) {
+    event.stopPropagation();
+    setAnchorEl(event.currentTarget);
+  }
+
+  function handleClose(event) {
+    event.stopPropagation();
+    setAnchorEl(null);
+  }
+
+  const menuData = {
+    menuList,
+    handleSubscriptionMenu,
+    anchorEl,
+    open: anchorElOpen,
+    handleClose
+  };
 
   if (error) {
     return <CenteredContent>{formatError(error.message)}</CenteredContent>;
@@ -375,7 +438,28 @@ export default function PaymentList({ currencyData }) {
       </TabPanel>
 
       <TabPanel value={tabValue} index={1}>
-        <>I gat you</>
+        {subscriptionPlansLoading ? (
+          <Spinner />
+        ) : subscriptionPlansData?.subscriptionPlans?.length === 0 ? (
+          <CenteredContent>{t('errors.no_subscription_available')}</CenteredContent>
+        ) : (
+          <div>
+            {matches && (
+              <div style={{ padding: '0 20px' }}>
+                <ListHeader headers={subscriptionPlanHeaders} />
+              </div>
+            )}
+            {subscriptionPlansData?.subscriptionPlans?.map(sub => (
+              <div style={{ padding: '0 20px' }} key={sub.id}>
+                <DataList
+                  keys={subscriptionPlanHeaders}
+                  data={renderSubscriptionPlans(sub, currencyData, menuData)}
+                  hasHeader={false}
+                />
+              </div>
+            ))}
+          </div>
+        )}
       </TabPanel>
     </div>
   );
@@ -457,6 +541,59 @@ export function renderPayment(payment, currencyData, theme, matches) {
           <Label
             title={titleize(payment.status)}
             color={propAccessor(InvoiceStatusColor, payment?.status)}
+          />
+        </Grid>
+      )
+    }
+  ];
+}
+
+export function renderSubscriptionPlans(subscription, currencyData, menuData) {
+  return [
+    {
+      'Plan Type': (
+        <Grid item xs={12} md={2} data-testid="plan_type">
+          <Text content={titleize(subscription.planType)} />
+        </Grid>
+      ),
+      'Start Date': (
+        <Grid item xs={12} md={2} data-testid="start_date">
+          <Text content={dateToString(subscription.startDate)} />
+        </Grid>
+      ),
+      'End Date': (
+        <Grid item xs={12} md={2} data-testid="end_date">
+          <Text content={dateToString(subscription.endDate)} />
+        </Grid>
+      ),
+      Amount: (
+        <Grid item xs={12} md={2} data-testid="amount">
+          <Text content={formatMoney(currencyData, subscription.amount)} />
+        </Grid>
+      ),
+      Status: (
+        <Grid item xs={12} md={2} data-testid="subscription_status" style={{ width: '90px' }}>
+          <Label
+            title={titleize(subscription.status)}
+            color={propAccessor(InvoiceStatusColor, subscription?.status)}
+          />
+        </Grid>
+      ),
+      Menu: (
+        <Grid item xs={12} md={1} data-testid="menu">
+          <IconButton
+            aria-controls="sub-menu"
+            aria-haspopup="true"
+            data-testid="subscription-plan-menu"
+            onClick={event => menuData.handleSubscriptionMenu(event)}
+          >
+            <MoreHorizOutlined />
+          </IconButton>
+          <MenuList
+            open={menuData.open}
+            anchorEl={menuData.anchorEl}
+            handleClose={menuData.handleClose}
+            list={menuData.menuList}
           />
         </Grid>
       )

@@ -10,7 +10,8 @@
     "go_back": "Go Back",
     "download_csv": "Download CSV",
     "export_data": "Export Data",
-    "save_csv": "Save CSV"
+    "save_csv": "Save CSV",
+    "edit_subscription_plan": "Edit subscription plan"
   },
   "misc": {
     "confirm": "confirm",
@@ -92,6 +93,7 @@
     "transaction_required": "TransactionType is required",
     "no_transaction_available": "No Transaction Available for this Plan",
     "no_plan_available": "No Plan Available",
-    "no_payment_available": "No Payments Available"
+    "no_payment_available": "No Payments Available",
+    "no_subscription_available": "No Subscription Plan Available"
   }
 }
