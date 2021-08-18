@@ -5,8 +5,7 @@ import { MockedProvider } from '@apollo/react-testing'
 import Loading from '../../../shared/Loading'
 // import Form from '../components/Form'
 import { FormPropertiesQuery } from '../graphql/forms_queries'
-import { propExists } from '../components/GenericForm'
-import { addPropWithValue } from '../utils'
+import { addPropWithValue, propExists } from '../utils'
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn())
 describe.skip('Form Component', () => {
