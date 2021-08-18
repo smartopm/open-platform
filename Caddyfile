@@ -62,6 +62,22 @@ https://daniel.dgdp.site {
   }
 }
 
+https://bonny.dgdp.site {
+  tls /root/certs/bonny.dgdp.site/cert.pem /root/certs/bonny.dgdp.site/privkey.pem
+  log stdout
+  errors stdout
+  proxy /packs webpacker:3035 {
+    transparent
+  }
+  proxy /sockjs-node webpacker:3035 {
+    transparent
+    websocket
+  }
+  proxy / rails:3000 {
+    transparent
+  }
+}
+
 https://saurabh.dgdp.site {
   tls /root/certs/saurabh.dgdp.site/cert.pem /root/certs/saurabh.dgdp.site/privkey.pem
   log stdout

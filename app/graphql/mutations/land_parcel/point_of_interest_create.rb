@@ -20,6 +20,7 @@ module Mutations
           land_parcel = context[:site_community].land_parcels.create!(
             parcel_number: parcel_number,
             parcel_type: 'poi',
+            object_type: 'poi',
             long_x: vals[:long_x],
             lat_y: vals[:lat_y],
             geom: vals[:geom],

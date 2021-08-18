@@ -308,6 +308,7 @@ export const UserLandParcels = gql`
       id
       parcelNumber
       parcelType
+      objectType
       accounts{
         userId
         fullName
@@ -450,6 +451,53 @@ export const ParcelsQuery = gql`
       longX
       geom
       plotSold
+      objectType
+      status
+      createdAt
+      accounts {
+        id
+        fullName
+        address1
+        user {
+          id
+          name
+        }
+      }
+      paymentPlans{
+        id
+        userId
+        startDate
+        endDate
+        planType
+        user{
+          name
+        }
+        planPayments{
+          status
+          amount
+        }
+      }
+    }
+  }
+`
+export const HouseQuery = gql`
+  query house($limit: Int, $offset: Int) {
+    fetchHouse(limit: $limit, offset: $offset) {
+      id
+      parcelNumber
+      address1
+      address2
+      city
+      postalCode
+      stateProvince
+      country
+      parcelType
+      latY
+      longX
+      geom
+      plotSold
+      objectType
+      status
       createdAt
       accounts {
         id
@@ -486,6 +534,8 @@ export const LandParcelGeoData = gql`
       latY
       longX
       geom
+      objectType
+      status
       plotSold
       valuations {
         id
@@ -914,6 +964,7 @@ export const InvoicesStatsDetails = gql`
 export const PaymentStatsDetails = gql`
   query PaymentStatsDetails($query: String!) {
     paymentStatDetails(query: $query) {
+      amount
       receiptNumber
       status
       createdAt

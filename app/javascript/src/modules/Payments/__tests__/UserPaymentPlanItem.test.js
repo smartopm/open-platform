@@ -16,8 +16,10 @@ describe('Render Payment Plan Item', () => {
     installmentAmount: '200',
     paymentDay: 1,
     frequency: 'monthly',
+    paidPaymentsExists: true,
     pendingBalance: 200,
     id: 'f280159d-ac71-4c22-997a-07fd07344c94',
+    status: 'active',
     planPayments: [{
       id: 'f280159d-ac71-4c22-997a-07fd07344c94',
       createdAt: '2021-01-26',
@@ -83,10 +85,6 @@ describe('Render Payment Plan Item', () => {
     expect(container.getAllByTestId('menu-open')[0]).toBeInTheDocument();
     expect(container.getAllByTestId('payment-day-1')[0]).toBeInTheDocument();
 
-    expect(container.getAllByTestId('pay-menu')[0]).toBeInTheDocument();
-    fireEvent.click(container.getAllByTestId('pay-menu')[0]);
-    expect(container.getByText('common:menu.view_receipt')).toBeInTheDocument();
-
     // click on a menu item like day one
     fireEvent.click(container.queryAllByTestId('payment-day-1')[0]);
     // we should have called the mutation by now after a loader
@@ -97,7 +95,11 @@ describe('Render Payment Plan Item', () => {
     await waitFor(() => {
       expect(container.queryByText('misc.pay_day_updated')).toBeInTheDocument();
       expect(refetch).toBeCalled();
-    }, 50);
+    }, 200);
+
+    expect(container.getAllByTestId('pay-menu')[0]).toBeInTheDocument();
+    fireEvent.click(container.getAllByTestId('pay-menu')[0]);
+    expect(container.getByText('common:menu.view_receipt')).toBeInTheDocument();
 
     expect(container.getAllByTestId('plan-menu')[0]).toBeInTheDocument();
     fireEvent.click(container.getAllByTestId('plan-menu')[0]);

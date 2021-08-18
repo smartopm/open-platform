@@ -27,7 +27,11 @@ RSpec.describe Properties::LandParcel, type: :model do
   describe 'enums' do
     it do
       is_expected.to define_enum_for(:status)
-        .with_values(active: 0, deleted: 1, general: 2)
+        .with_values(active: 0, deleted: 1, general: 2, planned: 3, in_construction: 4, built: 5)
+    end
+    it do
+      is_expected.to define_enum_for(:object_type)
+        .with_values(land: 0, poi: 1, house: 3)
     end
   end
 

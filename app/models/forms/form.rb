@@ -34,7 +34,7 @@ module Forms
     # @return [void]
     def duplicate(new_form, vals, action)
       duplicate_categories(new_form: new_form, form_categories: categories, vals: vals,
-                           action: action, category_type: :super)
+                           action: action)
     end
 
     def last_version
@@ -46,7 +46,6 @@ module Forms
 
     # rubocop:disable Metrics/AbcSize
     # rubocop:disable Metrics/MethodLength
-    # rubocop:disable Metrics/CyclomaticComplexity
     # Clones each category and it's association with form and form property
     #
     # @param args [Hash]
@@ -54,9 +53,6 @@ module Forms
     # @return [void]
     def duplicate_categories(args = {})
       form_categories = args[:form_categories]
-      if args[:category_type].eql?(:super)
-        form_categories = args[:form_categories].where(form_property_id: nil)
-      end
       vals = args[:vals]
       form_categories.each do |category|
         next if category.id.eql?(vals[:category_id]) && args[:action].eql?(:category_delete)
@@ -73,10 +69,9 @@ module Forms
                              action: args[:action])
       end
     end
+
     # rubocop:enable Metrics/AbcSize
     # rubocop:enable Metrics/MethodLength
-    # rubocop:enable Metrics/CyclomaticComplexity
-
     # rubocop:disable Metrics/AbcSize
     # rubocop:disable Metrics/MethodLength
     # Clones each form property and it's association with form and category
@@ -96,10 +91,6 @@ module Forms
         new_property.form_id = args[:new_form].id
         new_property.category_id = args[:new_category].id
         new_property.save!
-        duplicate_categories(new_form: args[:new_form],
-                             form_categories: property.sub_categories, vals: vals,
-                             form_property: new_property, action: args[:action],
-                             category_type: :sub)
       end
     end
     # rubocop:enable Metrics/AbcSize

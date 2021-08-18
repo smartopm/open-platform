@@ -15,3 +15,8 @@
     class: PostTagsAlertJob
     args: ['Nkwashi']
     description: "Check if there are new posts in wordpress related to the tags user is following"
+  check_critical_business_activity:
+    cron: '0 0 * * * Africa/Lusaka'
+    class: CheckCriticalBusinessActivityJob
+    args: [['Nkwashi','Ciudad Morazán']]
+    description: "Check critical business activities and send alert to slack"

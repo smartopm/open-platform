@@ -5,6 +5,7 @@ import PropTypes from 'prop-types'
 import DataList from '../../shared/list/DataList';
 import Text from '../../shared/Text';
 import MenuList from '../../shared/MenuList'
+import { titleize } from '../../utils/helpers';
 
 const parcelHeaders = [
   { title: 'Property Number/Property Type', col: 2 },
@@ -15,12 +16,17 @@ const parcelHeaders = [
   { title: 'Menu', col: 1 },
 ];
 
-export default function ParcelItem({ parcel, onParcelClick }) {
+export default function ParcelItem({ parcel, onParcelClick, onAddHouseClick }) {
   const [anchorEl, setAnchorEl] = useState(null)
   const anchorElOpen = Boolean(anchorEl)
   const menuList = [
     { content: 'Edit Property', isAdmin: true, color: '', handleClick: () => onParcelClick(parcel)}
   ]
+  if(parcel && parcel.objectType !== 'house') {
+    menuList.unshift(
+      { content: 'Add House', isAdmin: true, color: '', handleClick: () => onAddHouseClick(parcel)}
+    )
+  }
   const menuData = {
     menuList,
     handlePropertyMenu,
@@ -44,7 +50,7 @@ export default function ParcelItem({ parcel, onParcelClick }) {
       data={renderParcel(parcel, menuData)}
       hasHeader={false}
       clickable
-      handleClick={() => onParcelClick(parcel)}
+      // handleClick={() => onParcelClick(parcel)}
     />
   )
 }
@@ -62,6 +68,9 @@ export default function ParcelItem({ parcel, onParcelClick }) {
         <Grid item xs={12} md={2} data-testid="property">
           <div style={{fontWeight: 'bold', fontSize: '12px'}}>{parcel.parcelNumber}</div>
           <Text content={parcel.parcelType} />
+          <br />
+          {parcel.objectType && <Text color="primary" content={`Category: ${titleize(parcel.objectType)}`} />}
+          {parcel.status && <Text color="primary" content={` | Status: ${titleize(parcel.status)}`} />}
         </Grid>
       ),
       'Address1/Address2': (
@@ -120,7 +129,10 @@ ParcelItem.propTypes = {
         postalCode: PropTypes.string,
         stateProvince: PropTypes.string,
         country: PropTypes.string,
-        parcelType: PropTypes.string
+        parcelType: PropTypes.string,
+        status: PropTypes.string,
+        objectType: PropTypes.string,
     }).isRequired,
-    onParcelClick: PropTypes.func.isRequired
+    onParcelClick: PropTypes.func.isRequired,
+    onAddHouseClick: PropTypes.func.isRequired
 }

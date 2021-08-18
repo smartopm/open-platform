@@ -94,6 +94,7 @@
     "uploaded": "Uploaded Successfully",
     "take_photo": "Upload Profile Photo",
     "client_name": "Client Name",
+    "client_info": "Client Info",
     "customer_journey_stage": "Customer Journey Stage",
     "expiration_date": "Expiration Date",
     "refer": "Refer",
@@ -188,6 +189,7 @@
     "user_label": "User Label",
     "add_label": "Add Label",
     "log_entry": "Log This Entry",
+    "log_new_entry": "Log New Entry",
     "call_manager": "Call Manager",
     "log": "Log",
     "temp_record": "Temperature recorded",
@@ -288,7 +290,8 @@
     "view_transactions": "View Transactions",
     "transfer_payment_plan": "Transfer Plan",
     "transfer_plan": "Transfer Plan",
-    "continue_to_verification": "Continue"
+    "continue": "Continue",
+    "transferring": "Transferring ..."
   },
   "user_types": {
     "admin": "Admin",
@@ -317,6 +320,7 @@
     "issue_date": "Issue Date",
     "issue_dated": "Issued Date",
     "payment_date": "Payment Date",
+    "payment_info": "Payment Info",
     "plot_number": "Plot Number",
     "start_date": "Start Date",
     "valuation": "% of total valuation",

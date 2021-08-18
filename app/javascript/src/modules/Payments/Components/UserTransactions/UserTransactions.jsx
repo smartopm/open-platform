@@ -6,31 +6,41 @@ import Grid from '@material-ui/core/Grid';
 import { useMutation } from 'react-apollo';
 import PropTypes from 'prop-types';
 import { MoreHorizOutlined } from '@material-ui/icons';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 import IconButton from '@material-ui/core/IconButton';
 import DataList from '../../../../shared/list/DataList';
 import Text, { GridText } from '../../../../shared/Text';
 import { dateToString } from '../../../../components/DateContainer';
 import CenteredContent from '../../../../components/CenteredContent';
 import { formatMoney, formatError } from '../../../../utils/helpers';
-import MessageAlert from "../../../../components/MessageAlert"
-import MenuList from '../../../../shared/MenuList'
+import MessageAlert from '../../../../components/MessageAlert';
+import MenuList from '../../../../shared/MenuList';
 import { TransactionRevert } from '../../graphql/payment_mutations';
 import DeleteDialogueBox from '../../../../shared/dialogs/DeleteDialogue';
 import TransactionDetails from './TransactionDetails';
+import { TransactionMobileDataList } from './PaymentMobileDataList';
 
-export default function UserTransactionsList({transaction, currencyData, userType, userData, refetch, balanceRefetch }) {
-  const { t } = useTranslation('common')
-  const [transactionId, setTransactionId] = useState(false)
-  const [name, setName] = useState('')
-  const [revertModalOpen, setRevertModalOpen] = useState(false)
-  const [revertTransactionLoading, setRevertTransactionLoading] = useState(false)
-  const [anchorEl, setAnchorEl] = useState(null)
-  const [messageAlert, setMessageAlert] = useState('')
-  const anchorElOpen = Boolean(anchorEl)
-  const [isSuccessAlert, setIsSuccessAlert] = useState(false)
-  const [revertTransaction] = useMutation(TransactionRevert)
+export default function UserTransactionsList({
+  transaction,
+  currencyData,
+  userType,
+  userData,
+  refetch,
+  balanceRefetch
+}) {
+  const { t } = useTranslation('common');
+  const [transactionId, setTransactionId] = useState(false);
+  const [name, setName] = useState('');
+  const [revertModalOpen, setRevertModalOpen] = useState(false);
+  const [revertTransactionLoading, setRevertTransactionLoading] = useState(false);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [messageAlert, setMessageAlert] = useState('');
+  const anchorElOpen = Boolean(anchorEl);
+  const [isSuccessAlert, setIsSuccessAlert] = useState(false);
+  const [revertTransaction] = useMutation(TransactionRevert);
   const [transDetailOpen, setTransDetailOpen] = useState(false);
   const [transData, setTransData] = useState({});
+  const matches = useMediaQuery('(max-width:600px)');
 
   const transactionHeader = [
     { title: 'Date', value: t('common:table_headers.date'), col: 1 },
@@ -40,57 +50,63 @@ export default function UserTransactionsList({transaction, currencyData, userTyp
     { title: 'Menu', value: t('common:table_headers.menu'), col: 1 }
   ];
 
-  function handleClick(event, txn, user){
-    const txnId = txn.id
-    const userName = user.name
-    event.stopPropagation()
-    setTransactionId(txnId)
-    setName(userName)
-    setRevertModalOpen(true)
+  function handleClick(event, txn, user) {
+    const txnId = txn.id;
+    const userName = user.name;
+    event.stopPropagation();
+    setTransactionId(txnId);
+    setName(userName);
+    setRevertModalOpen(true);
   }
 
-  function handleRevertClose(event){
-    event.stopPropagation()
-    setRevertModalOpen(false)
-    setRevertTransactionLoading(false)
+  function handleRevertClose(event) {
+    event.stopPropagation();
+    setRevertModalOpen(false);
+    setRevertTransactionLoading(false);
   }
 
-  function handleTransactionMenu(event){
-    event.stopPropagation()
-    setAnchorEl(event.currentTarget)
+  function handleTransactionMenu(event) {
+    event.stopPropagation();
+    setAnchorEl(event.currentTarget);
   }
 
   function transactionDetailOpen(trans) {
-    setTransData(trans)
-    setTransDetailOpen(true)
+    setTransData(trans);
+    setTransDetailOpen(true);
   }
 
   function handleRevertTransaction(event) {
-    event.stopPropagation()
-    setRevertTransactionLoading(true)
+    event.stopPropagation();
+    setRevertTransactionLoading(true);
     revertTransaction({
       variables: {
         id: transactionId
       }
-    }).then(() => {
-      setAnchorEl(null)
-      setMessageAlert('Transaction reverted')
-      balanceRefetch()
-      refetch()
-      setIsSuccessAlert(true)
-      setRevertModalOpen(false)
-      setRevertTransactionLoading(false)
     })
-    .catch((err) => {
-      setMessageAlert(formatError(err.message))
-      setIsSuccessAlert(false)
-      setRevertTransactionLoading(false)
-    })
+      .then(() => {
+        setAnchorEl(null);
+        setMessageAlert('Transaction reverted');
+        setIsSuccessAlert(true);
+        setRevertModalOpen(false);
+        setRevertTransactionLoading(false);
+        refetch();
+        balanceRefetch();
+      })
+      .catch(err => {
+        setMessageAlert(formatError(err.message));
+        setIsSuccessAlert(false);
+        setRevertTransactionLoading(false);
+      });
   }
 
   const menuList = [
-    { content: t("common:menu.revert_transaction"), isAdmin: true, color: 'red', handleClick: (event) => handleClick(event, transaction, userData)},
-  ]
+    {
+      content: t('common:menu.revert_transaction'),
+      isAdmin: true,
+      color: 'red',
+      handleClick: event => handleClick(event, transaction, userData)
+    }
+  ];
 
   function handleMessageAlertClose(_event, reason) {
     if (reason === 'clickaway') {
@@ -100,8 +116,8 @@ export default function UserTransactionsList({transaction, currencyData, userTyp
   }
 
   function handleClose(event) {
-    event.stopPropagation()
-    setAnchorEl(null)
+    event.stopPropagation();
+    setAnchorEl(null);
   }
 
   const menuData = {
@@ -110,11 +126,15 @@ export default function UserTransactionsList({transaction, currencyData, userTyp
     anchorEl,
     open: anchorElOpen,
     userType,
-    handleClose: (event) => handleClose(event)
-  }
+    handleClose: event => handleClose(event)
+  };
 
   if (!Object.keys(transaction).length || Object.keys(transaction).length === 0) {
-    return <CenteredContent><Text content="No Transactions Yet" align="justify" /></CenteredContent>
+    return (
+      <CenteredContent>
+        <Text content="No Transactions Yet" align="justify" />
+      </CenteredContent>
+    );
   }
 
   return (
@@ -135,67 +155,60 @@ export default function UserTransactionsList({transaction, currencyData, userTyp
       />
       <DeleteDialogueBox
         open={revertModalOpen}
-        handleClose={(event) => handleRevertClose(event)}
-        handleAction={(event) => handleRevertTransaction(event)}
-        title='Transaction'
-        action='delete'
+        handleClose={event => handleRevertClose(event)}
+        handleAction={event => handleRevertTransaction(event)}
+        title="Transaction"
+        action="delete"
         user={name}
         loading={revertTransactionLoading}
       />
-      <DataList
-        keys={transactionHeader}
-        data={[renderTransactions(transaction, currencyData, menuData)]}
-        hasHeader={false}
-        clickable
-        handleClick={() => transactionDetailOpen(transaction)}
-        color
-      />
+      {matches ? (
+        <TransactionMobileDataList
+          keys={transactionHeader}
+          data={[renderTransactions(transaction, currencyData, menuData)]}
+          handleClick={() => transactionDetailOpen(transaction)}
+        />
+      ) : (
+        <DataList
+          keys={transactionHeader}
+          data={[renderTransactions(transaction, currencyData, menuData)]}
+          hasHeader={false}
+          clickable
+          handleClick={() => transactionDetailOpen(transaction)}
+          color
+        />
+      )}
     </div>
-  )
+  );
 }
 
 export function renderTransactions(transaction, currencyData, menuData) {
   return {
-    'Date': (
-      <GridText
-        data-testid="date"
-        content={dateToString(transaction.createdAt)}
-      />
-    ),
-    'Recorded by': (
-      <GridText
-        data-testid="recorded"
-        content={transaction.depositor.name}
-      />
-    ),
-    "Payment Type": (
-      <GridText
-        data-testid="description"
-        content={transaction.source}
-      />
-    ),
-    "Amount Paid": (
+    Date: <GridText data-testid="date" content={dateToString(transaction.createdAt)} />,
+    'Recorded by': <GridText data-testid="recorded" content={transaction.depositor.name} />,
+    'Payment Type': <GridText data-testid="description" content={transaction.source} />,
+    'Amount Paid': (
       <Grid item xs={12} md={2} data-testid="amount">
         <Text content={formatMoney(currencyData, transaction.allocatedAmount)} />
         <br />
-        <Text color="primary" content={`unallocated ${formatMoney(currencyData, transaction.unallocatedAmount)}`} />
+        <Text
+          color="primary"
+          content={`unallocated ${formatMoney(currencyData, transaction.unallocatedAmount)}`}
+        />
       </Grid>
     ),
     Menu: (
       <Grid item xs={12} md={1} data-testid="menu">
-        {
-          transaction.status !== 'cancelled' &&
-          (
-            <IconButton
-              aria-controls="simple-menu"
-              aria-haspopup="true"
-              data-testid="menu"
-              onClick={(event) => menuData.handleTransactionMenu(event)}
-            >
-              <MoreHorizOutlined />
-            </IconButton>
-          )
-        }
+        {transaction.status !== 'cancelled' && (
+          <IconButton
+            aria-controls="simple-menu"
+            aria-haspopup="true"
+            data-testid="menu"
+            onClick={event => menuData.handleTransactionMenu(event)}
+          >
+            <MoreHorizOutlined />
+          </IconButton>
+        )}
         <MenuList
           open={menuData.open}
           anchorEl={menuData.anchorEl}

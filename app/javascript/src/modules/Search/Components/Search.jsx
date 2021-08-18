@@ -104,7 +104,7 @@ export default function SearchContainer({ location }) {
   if (!['security_guard', 'admin', 'custodian'].includes(authState.user?.userType.toLowerCase())) {
     return <Redirect to="/" />;
   }
-  if (error && !error.message.includes('permission')) {
+  if (error && !/permission|permiso/.test(error.message)) {
     return <ErrorPage title={error.message} />;
   }
 

@@ -23,7 +23,7 @@ export default function PaymentReceipt({ paymentData, open, handleClose, currenc
         >
           {paymentData?.planPayments?.length ? (
             paymentData.planPayments.map(pay => (
-              <div key={pay.id} style={{marginBottom: '420px'}}>
+              <div key={pay.id} style={{marginBottom: '400px'}}>
                 <ReceiptDetail 
                   paymentData={paymentData} 
                   currencyData={currencyData}
@@ -55,7 +55,7 @@ PaymentReceipt.propTypes = {
     bankName: PropTypes.string,
     chequeNumber: PropTypes.string,
     createdAt: PropTypes.string,
-    currentPlotPendingBalance: PropTypes.string,
+    currentPlotPendingBalance: PropTypes.number,
     userTransaction: PropTypes.shape({
       id: PropTypes.string,
       source: PropTypes.string,
@@ -65,36 +65,6 @@ PaymentReceipt.propTypes = {
         id: PropTypes.string,
         name: PropTypes.string
       })
-    }),
-    community: PropTypes.shape({
-      id: PropTypes.string,
-      name: PropTypes.string,
-      logoUrl: PropTypes.string,
-      currency: PropTypes.string,
-      bankingDetails: PropTypes.shape({
-        bankName: PropTypes.string,
-        accountName: PropTypes.string,
-        accountNo: PropTypes.string,
-        branch: PropTypes.string,
-        swiftCode: PropTypes.string,
-        sortCode: PropTypes.string,
-        address:PropTypes.string,
-        city: PropTypes.string,
-        country: PropTypes.string,
-        taxIdNo: PropTypes.string,
-      }),
-      socialLinks: PropTypes.shape({
-        category: PropTypes.string,
-        social_link: PropTypes.string
-      }),
-      supportEmail: PropTypes.shape({
-        category: PropTypes.string,
-        email: PropTypes.string
-      }),
-      supportNumber: PropTypes.shape({
-        category: PropTypes.string,
-        phone_no: PropTypes.string
-      }),
     }),
     user: PropTypes.shape({
       id: PropTypes.string,

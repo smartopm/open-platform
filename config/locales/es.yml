@@ -146,7 +146,7 @@ es:
         land_parcel: Número de parcela de tierra
       properties/land_parcel:
         community: Nkwashi
-        parcel_number: Numero de Lote
+        parcel_number: Número de Lote
       properties/payment_plan:
         duration: Duración
         installment_amount: Monto de la cuota
@@ -195,6 +195,8 @@ es:
             start_date:
               plan_overlaps_with_other_plan: La duración del plan de pago se superpone
                 con otros planes de pago
+            user_id:
+              general_plan_exists: Existe un plan general para el usuario
         users/user:
           attributes:
             phone_number:
@@ -294,10 +296,15 @@ es:
     payment_plan:
       amount_greater_than_pending_balance: La cantidad no puede ser mayor que el saldo
         pendiente del plan
+      cannot_transfer_to_cancelled_plan: No se puede transferir el plan a un plan
+        de pago cancelado. Intente transferir a otros planes
       does_not_exist_for_property: El plan de pago no existe para la propiedad seleccionada
       have_zero_pending_balance: El saldo pendiente es 0 para el plan de pago de la
         propiedad seleccionada
       not_found: Plan de Pago no encontrado
+      plan_already_exist: El plan de pago para este terreno ya existe
+      transfer_can_not_be_processed: El plan de pago ya ha sido cancelado, la transferencia
+        no se puede procesar.
     phone_number:
       found_blank: El número de teléfono no puede estar en blanco
     plan_payment:

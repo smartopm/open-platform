@@ -20,7 +20,7 @@ module Mutations
 
           phone_number = entry_request.phone_number
           entry_request.send_feedback_link(phone_number) if phone_number
-          event.update!(subject: vals[:subject]) if vals[:subject]
+          event.update!(subject: vals[:subject]) if vals[:subject].present?
           { entry_request: entry_request }
         end
       end

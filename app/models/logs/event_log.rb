@@ -8,7 +8,6 @@ module Logs
     belongs_to :acting_user, optional: true, class_name: 'Users::User'
     belongs_to :ref, polymorphic: true, optional: true
 
-    after_create :notify_slack
     after_create :populate_activity_points
     after_commit :execute_action_flows
     validate :validate_log, :validate_acting_user
@@ -222,10 +221,6 @@ module Logs
     def validate_user_entry
       errors.add(:ref_id, :ref_required) unless ref_id
       errors.add(:acting_user_id, :reporting_user_required) unless acting_user
-    end
-
-    def notify_slack
-      SlackNotification.perform_later(community, to_sentence) if to_sentence
     end
 
     def deleted_user?

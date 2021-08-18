@@ -22,7 +22,6 @@
     "@rails/activestorage": "^6.0.0-alpha",
     "@rails/ujs": "^6.0.0-alpha",
     "@rails/webpacker": "^4.0.7",
-    "add": "^2.0.6",
     "aphrodite": "^2.4.0",
     "apollo-cache-inmemory": "^1.6.3",
     "apollo-client": "^2.6.4",
@@ -71,7 +70,8 @@
     "react-router-dom": "^5.1.2",
     "react-share": "^4.2.0",
     "react-signature-canvas": "^1.0.3",
-    "recharts": "^2.0.6"
+    "recharts": "^2.0.6",
+    "use-long-press": "^1.1.1"
   },
   "version": "0.1.0",
   "devDependencies": {

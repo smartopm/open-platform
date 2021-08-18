@@ -26,12 +26,28 @@ function getColor(plotSold){
 }
 
 /* istanbul ignore next */
+function getHouseColor(status){
+  return plotStatusColorPallete[String(status)]
+}
+
+
+/* istanbul ignore next */
 function geoJSONPlotStyle(feature) {
   return {
     color: '#f2eeee',
     weight: 1,
     fillOpacity: 0.7,
     fillColor: getColor(feature && feature.properties.plot_sold)
+  }
+}
+
+/* istanbul ignore next */
+function geoJSONHouseStyle(feature) {
+  return {
+    color: '#f2eeee',
+    weight: 1,
+    fillOpacity: 0.7,
+    fillColor: getHouseColor(feature && feature.properties.status)
   }
 }
 
@@ -65,10 +81,12 @@ export default function LandParcelMap({ handlePlotClick, geoData }){
   const [confirmDeletePoi, setConfirmDeletePoi] = useState(false)
 
   const communityName = authState.user?.community?.name
-  const properties = geoData?.filter(({ parcelType }) => parcelType !== 'poi') || null
-  const poiData = geoData?.filter(({ parcelType }) => parcelType === 'poi') || null
+  const properties = geoData?.filter(({ geom, objectType, parcelType }) => geom && objectType === 'land' && parcelType !== 'poi') || null
+  const poiData = geoData?.filter(({ geom, parcelType }) => geom && parcelType === 'poi') || null
+  const houseData = geoData?.filter(({ geom, objectType }) => geom && objectType === 'house') || null
   const featureCollection = { type: 'FeatureCollection',  features: [] }
   const poiFeatureCollection = { type: 'FeatureCollection',  features: [] }
+  const houseFeatureCollection = { type: 'FeatureCollection',  features: [] }
   const subUrbanData = getSubUrbanData(communityName)
   const { t } = useTranslation(['common', 'property'])
   const [ loadParcel, { data: parcelData, loading: parcelDataLoading } ] = useLazyQuery(LandParcel, {
@@ -80,7 +98,7 @@ export default function LandParcelMap({ handlePlotClick, geoData }){
   /* istanbul ignore next */
   function handleOnPlotClick({ target }){
    const { 
-     properties: { id, parcel_no: parcelNumber, parcel_type: parcelType, long_x: longX, lat_y: latY, accounts, valuations }
+     properties: { id, parcel_no: parcelNumber, parcel_type: parcelType, long_x: longX, lat_y: latY, accounts, valuations, status, object_type: objectType }
     } = target.feature
    return (target.feature && 
       handlePlotClick({
@@ -91,7 +109,9 @@ export default function LandParcelMap({ handlePlotClick, geoData }){
         latY,
         geom: JSON.stringify(target.feature),
         accounts,
-        valuations
+        valuations,
+        status,
+        objectType,
       })
     )
   }
@@ -162,6 +182,16 @@ export default function LandParcelMap({ handlePlotClick, geoData }){
   /* eslint-disable consistent-return */
   function onEachLandParcelFeature(feature, layer){
     if(feature.properties.parcel_no && feature.properties.parcel_type){
+      layer.on({
+        click: handleOnPlotClick,
+      })
+    }
+  }
+
+     /* istanbul ignore next */
+  /* eslint-disable consistent-return */
+  function onEachHouseFeature(feature, layer){
+    if(feature.properties.parcel_no && feature.properties.object_type){
       layer.on({
         click: handleOnPlotClick,
       })
@@ -296,7 +326,7 @@ export default function LandParcelMap({ handlePlotClick, geoData }){
             {Array.isArray(properties) && properties?.length && (
               <LayersControl.Overlay checked name="Land Parcels">
                 <FeatureGroup>
-                  {properties?.map(({ id, longX, latY, geom, parcelNumber, parcelType, plotSold, accounts, valuations }) => {
+                  {properties?.map(({ id, longX, latY, geom, parcelNumber, parcelType, plotSold, accounts, valuations, status, objectType }) => {
                     if(checkValidGeoJSON(geom)){
                       const feature = JSON.parse(geom)
                       feature.properties.id = id
@@ -307,6 +337,8 @@ export default function LandParcelMap({ handlePlotClick, geoData }){
                       feature.properties.lat_y = latY
                       feature.properties.accounts = accounts
                       feature.properties.valuations = valuations
+                      feature.properties.status = status
+                      feature.properties.object_type = objectType
                       return featureCollection.features.push(feature)
                     }
                     return featureCollection.features.push(JSON.parse(emptyPolygonFeature))
@@ -346,6 +378,32 @@ export default function LandParcelMap({ handlePlotClick, geoData }){
                     data={poiFeatureCollection}
                     style={geoJSONPoiStyle}
                     onEachFeature={onEachPoiLayerFeature}
+                  />
+                </FeatureGroup>
+              </LayersControl.Overlay>
+            )}
+            {Array.isArray(houseData) && houseData?.length && (
+              <LayersControl.Overlay name="Houses">
+                <FeatureGroup>
+                  {houseData?.map(({ id, longX, latY, geom, parcelNumber, parcelType, status, objectType }) => {
+                    if(checkValidGeoJSON(geom)){
+                      const feature = JSON.parse(geom)
+                      feature.properties.id = id
+                      feature.properties.parcel_no = parcelNumber
+                      feature.properties.parcel_type = parcelType
+                      feature.properties.long_x = longX
+                      feature.properties.lat_y = latY
+                      feature.properties.status = status
+                      feature.properties.object_type = objectType
+                      return houseFeatureCollection.features.push(feature)
+                    }
+                    return houseFeatureCollection.features.push(JSON.parse(emptyPolygonFeature))
+                    })}
+                  <GeoJSON
+                    key={Math.random()}
+                    data={houseFeatureCollection}
+                    style={geoJSONHouseStyle}
+                    onEachFeature={onEachHouseFeature}
                   />
                 </FeatureGroup>
               </LayersControl.Overlay>

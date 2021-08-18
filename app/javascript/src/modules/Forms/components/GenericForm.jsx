@@ -3,7 +3,7 @@ import { Button, Container, Grid } from '@material-ui/core';
 import { useApolloClient, useMutation } from 'react-apollo';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
-import DatePickerDialog from '../../../components/DatePickerDialog';
+import { DateAndTimePickers } from '../../../components/DatePickerDialog';
 import CenteredContent from '../../../components/CenteredContent';
 import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider';
 import { FormUserCreateMutation } from '../graphql/forms_mutation';
@@ -27,7 +27,7 @@ const initialData = {
   fieldType: '',
   fieldName: ' ',
   date: { value: null },
-  radio: { value: { label: '', checked: null } }
+  radio: { value: { label: '', checked: null } },
 };
 
 /**
@@ -85,10 +85,10 @@ export default function GenericForm({ formId, formData, refetch, editMode, categ
       [name]: { value, form_property_id: propId }
     });
   }
-  function handleDateChange(date, id) {
+  function handleDateChange(date, id, name) {
     setProperties({
       ...properties,
-      date: { value: date, form_property_id: id }
+      [name]: { value: date, form_property_id: id }
     });
   }
 
@@ -214,10 +214,10 @@ export default function GenericForm({ formId, formData, refetch, editMode, categ
             categoryId={categoryId}
           />
           <Grid item xs={editMode ? 10 : 12}>
-            <DatePickerDialog
+            <DateAndTimePickers
               id={formPropertiesData.id}
-              selectedDate={properties.date.value}
-              handleDateChange={date => handleDateChange(date, formPropertiesData.id)}
+              selectedDateTime={properties[String(formPropertiesData.fieldName)]?.value || null}
+              handleDateChange={date => handleDateChange(date, formPropertiesData.id, formPropertiesData.fieldName)}
               label={formPropertiesData.fieldName}
             />
           </Grid>

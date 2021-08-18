@@ -1,6 +1,6 @@
 /* eslint-disable */
 import gql from 'graphql-tag'
-import { UserFragment, EntryRequestFragment } from '../graphql/fragments'
+import { UserFragment, EntryRequestFragment } from './fragments'
 
 export const CreateUserMutation = gql`
   mutation CreateUserMutation(
@@ -386,7 +386,10 @@ mutation AddNewProperty($parcelNumber: String!,
   $stateProvince: String,
   $parcelType: String,
   $country: String,
-  $ownershipFields: JSON) {
+  $ownershipFields: JSON
+  $objectType: String
+  $status: String
+  $houseLandParcelId: ID) {
     PropertyCreate(parcelNumber: $parcelNumber,
     address1: $address1,
     address2: $address2,
@@ -395,7 +398,10 @@ mutation AddNewProperty($parcelNumber: String!,
     stateProvince: $stateProvince,
     parcelType: $parcelType,
     country: $country,
-    ownershipFields: $ownershipFields) {
+    ownershipFields: $ownershipFields
+    objectType: $objectType
+    status: $status
+    houseLandParcelId: $houseLandParcelId) {
       landParcel {
         id
     }
@@ -416,7 +422,9 @@ mutation UpdateProperty($id: ID!,
   $longX: Float,
   $latY: Float,
   $geom: JSON,
-  $ownershipFields: JSON) {
+  $ownershipFields: JSON
+  $status: String
+  $objectType: String) {
     propertyUpdate(id: $id,
     parcelNumber: $parcelNumber,
     address1: $address1,
@@ -429,7 +437,9 @@ mutation UpdateProperty($id: ID!,
     longX: $longX,
     latY: $latY,
     geom: $geom,
-    ownershipFields: $ownershipFields) {
+    ownershipFields: $ownershipFields
+    status: $status
+    objectType: $objectType) {
       landParcel {
         id
         accounts {

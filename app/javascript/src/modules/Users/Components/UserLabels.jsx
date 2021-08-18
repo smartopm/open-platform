@@ -41,7 +41,7 @@ export default function UserLabels({ userId }) {
         .then(({ data }) => {
           LabelRefetch();
           return userLabelCreate({
-            variables: { userId, labelId: data.labelCreate.label.id }
+            variables: { userList: userId, labelId: data.labelCreate.label.id }
           });
         })
         .then(() => userLabelRefetch())

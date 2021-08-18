@@ -1,9 +1,8 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
-import { renderToString } from 'react-dom/server';
 import { useQuery, useLazyQuery } from 'react-apollo'
 import { Typography } from '@material-ui/core';
-import { Map, FeatureGroup, GeoJSON, LayersControl, TileLayer, Popup } from 'react-leaflet'
+import { Map, FeatureGroup, GeoJSON, LayersControl, TileLayer, Popup, Marker } from 'react-leaflet'
 import { StyleSheet, css } from 'aphrodite'
 import NkwashiCoverageData from '../data/nkwashi_coverage_boundary.json'
 import CMCoverageData from '../data/cm_coverage_boundary.json'
@@ -26,6 +25,11 @@ function getColor(plotSold){
   return (plotSold ? plotStatusColorPallete.sold : plotStatusColorPallete.unknown)
 }
 
+/* istanbul ignore next */
+function getHouseColor(status){
+  return plotStatusColorPallete[String(status)]
+}
+
 function geoJSONPlotStyle(feature) {
   return {
     color: '#f2eeee',
@@ -41,6 +45,16 @@ function geoJSONStyle(feature) {
     weight: feature.properties['stroke-width'] || 1,
     fillOpacity: feature.properties['fill-opacity'] || 0.5,
     fillColor: feature.properties.fill || "#ffe6e6"
+  }
+}
+
+/* istanbul ignore next */
+function geoJSONHouseStyle(feature) {
+  return {
+    color: '#f2eeee',
+    weight: 1,
+    fillOpacity: 0.7,
+    fillColor: getHouseColor(feature && feature.properties.status)
   }
 }
 
@@ -66,6 +80,7 @@ function getSubUrbanData(communityName){
 
 export default function GeoMap() {
   const [selectedPoi, setSelectedPoi] = useState(null)
+  const [selectedLandParcel, setSelectedLandParcel] = useState(null)
   const { loading, data: geoData } = useQuery(LandParcelGeoData, {
     fetchPolicy: 'cache-and-network'
   })
@@ -76,16 +91,24 @@ export default function GeoMap() {
   const { data: communityData, loading: loadingCommunityData } = useQuery(CurrentCommunityQuery)
 
   const communityName = communityData?.currentCommunity?.name;
-  const properties = geoData?.landParcelGeoData.filter(({ parcelType }) => parcelType !== 'poi') || null
-  const poiData = geoData?.landParcelGeoData.filter(({ parcelType }) => parcelType === 'poi') || null
+  const properties = geoData?.landParcelGeoData.filter(({ geom, objectType, parcelType }) => geom && objectType === 'land' && parcelType !== 'poi') || null
+  const poiData = geoData?.landParcelGeoData.filter(({  geom, parcelType }) => geom && parcelType === 'poi') || null
+  const houseData = geoData?.landParcelGeoData.filter(({ geom, objectType }) => geom && objectType === 'house') || null
   const featureCollection = { type: 'FeatureCollection',  features: [] }
   const poiFeatureCollection = { type: 'FeatureCollection',  features: [] }
+  const houseFeatureCollection = { type: 'FeatureCollection',  features: [] }
   const coverageData = getMapBoundary(communityName)
   const subUrbanData = getSubUrbanData(communityName)
 
   /* istanbul ignore next */
   function handleCloseDrawer(){
     setSelectedPoi(null)
+  }
+
+  function handleLandParcelLayerClick(markerProps){
+    setSelectedLandParcel({
+      ...markerProps,
+    })
   }
 
   /* istanbul ignore next */
@@ -119,8 +142,27 @@ export default function GeoMap() {
         plotSold,
       }
 
-      const markerContents = renderToString(<LandParcelMarker key={Math.random} markerProps={markerProps} />)
-      return layer.bindPopup(markerContents)
+      layer.on({
+        click: () => handleLandParcelLayerClick(markerProps),
+      })
+    }
+  }
+
+    /* istanbul ignore next */
+  /* eslint-disable consistent-return */
+  function onEachHouseFeature(feature, layer){
+    if(feature.properties.parcel_no){
+      const { long_x: longX, lat_y: latY, parcel_no: parcelNumber, status } = feature.properties
+      const markerProps = {
+        geoLatY: parseFloat(latY) || 0,
+        geoLongX: parseFloat(longX) || 0,
+        parcelNumber,
+        status,
+      }
+
+      layer.on({
+        click: () => handleLandParcelLayerClick(markerProps),
+      })
     }
   }
 
@@ -213,6 +255,13 @@ export default function GeoMap() {
                       }
                       return featureCollection.features.push(JSON.parse(emptyPolygonFeature))
                       })}
+                   {selectedLandParcel && (
+                     <Marker position={[selectedLandParcel.geoLatY, selectedLandParcel.geoLongX]}>
+                       <Popup>
+                         <LandParcelMarker markerProps={selectedLandParcel} />
+                       </Popup>
+                     </Marker>
+                   )}
                    <GeoJSON
                      key={Math.random()}
                      data={featureCollection}
@@ -252,6 +301,34 @@ export default function GeoMap() {
                  </FeatureGroup>
                </LayersControl.Overlay>
                 )}
+             {Array.isArray(houseData) && houseData?.length && (
+             <LayersControl.Overlay name="Houses">
+               <FeatureGroup>
+                 {houseData.map(({ geom, parcelNumber, status }) => {
+                     if(checkValidGeoJSON(geom)){
+                        const feature = JSON.parse(geom)
+                        feature.properties.parcel_no = parcelNumber
+                        feature.properties.status = status
+                        return houseFeatureCollection.features.push(feature)
+                      }
+                      return houseFeatureCollection.features.push(JSON.parse(emptyPolygonFeature))
+                      })}
+                 {selectedLandParcel && (
+                 <Marker position={[selectedLandParcel.geoLatY, selectedLandParcel.geoLongX]}>
+                   <Popup>
+                     <LandParcelMarker markerProps={selectedLandParcel} category="house" />
+                   </Popup>
+                 </Marker>
+                   )}
+                 <GeoJSON
+                   key={Math.random()}
+                   data={houseFeatureCollection}
+                   style={geoJSONHouseStyle}
+                   onEachFeature={onEachHouseFeature}
+                 />
+               </FeatureGroup>
+             </LayersControl.Overlay>
+              )}
              {subUrbanData && (
                <LayersControl.Overlay name="Sub-urban Areas">
                  <FeatureGroup>

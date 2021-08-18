@@ -8,17 +8,11 @@ RSpec.describe Mutations::Form::FormCreate do
     let!(:community) { user.community }
     let!(:admin) { create(:admin_user, community: community) }
     let!(:form) { create(:form, community: community) }
-    let!(:category) { create(:category, form: form, general: true) }
+    let!(:category) { create(:category, form: form, general: true, field_name: 'info') }
     let!(:form_property) do
       create(:form_property, form: form, field_type: 'text', category: category,
-                             field_name: 'Select Business')
-    end
-    let!(:sub_category) do
-      create(:category, form: form, form_property_id: form_property.id, field_name: 'Fishing')
-    end
-    let!(:sub_property) do
-      create(:form_property, form: form, field_type: 'text', category: sub_category,
-                             field_name: 'Upload fishing license')
+                             field_name: 'Select Business',
+                             field_value: [{ 'category_name': category.field_name }])
     end
     let(:form_user) { create(:form_user, form: form, user: user, status: :approved) }
 
@@ -94,6 +88,9 @@ RSpec.describe Mutations::Form::FormCreate do
         expect(category_result['order']).to eql 1
         expect(category_result['headerVisible']).to eql true
         expect(category_result['general']).to eql false
+        expect(
+          category.form_properties.first.field_value[0]['category_name'],
+        ).to eql 'personal info'
       end
     end
 
@@ -121,35 +118,11 @@ RSpec.describe Mutations::Form::FormCreate do
         ).to eql 'New version created'
         expect(Forms::Form.count).to eql(previous_form_count + 1)
         new_form = Forms::Form.where.not(id: form.id).first
-        updated_category = new_form.categories.where(form_property_id: nil)
-                                   .first
+        updated_category = new_form.categories.first
         expect(updated_category.field_name).to eql 'personal info'
-      end
-
-      it 'creates a new form with update category fields instead of deleting the category' do
-        previous_form_count = Forms::Form.count
-        variables = {
-          categoryId: sub_category.id,
-          fieldName: 'Pharmacy',
-          order: 1,
-          headerVisible: true,
-          general: false,
-        }
-
-        result = DoubleGdpSchema.execute(mutation, variables: variables,
-                                                   context: {
-                                                     current_user: admin,
-                                                     site_community: community,
-                                                   }).as_json
-        expect(result.dig('errors', 0, 'message')).to be_nil
         expect(
-          result.dig('data', 'categoryUpdate', 'message'),
-        ).to eql 'New version created'
-        expect(Forms::Form.count).to eql(previous_form_count + 1)
-        new_form = Forms::Form.where.not(id: form.id).first
-        updated_category = new_form.categories.where.not(form_property_id: nil)
-                                   .first
-        expect(updated_category.field_name).to eql 'Pharmacy'
+          updated_category.form_properties.first.field_value[0]['category_name'],
+        ).to eql 'personal info'
       end
     end
 

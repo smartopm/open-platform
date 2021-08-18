@@ -329,7 +329,7 @@ ReceiptDetail.propTypes = {
     id: PropTypes.string,
     amount: PropTypes.number,
     receiptNumber: PropTypes.string,
-    currentPlotPendingBalance: PropTypes.string,
+    currentPlotPendingBalance: PropTypes.number,
     paymentPlan: PropTypes.shape({
       id: PropTypes.string,
       installmentAmount: PropTypes.number,
@@ -346,7 +346,7 @@ ReceiptDetail.propTypes = {
     bankName: PropTypes.string,
     chequeNumber: PropTypes.string,
     createdAt: PropTypes.string,
-    currentPlotPendingBalance: PropTypes.string,
+    currentPlotPendingBalance: PropTypes.number,
     userTransaction: PropTypes.shape({
       id: PropTypes.string,
       source: PropTypes.string,
@@ -374,18 +374,18 @@ ReceiptDetail.propTypes = {
         country: PropTypes.string,
         taxIdNo: PropTypes.string,
       }),
-      socialLinks: PropTypes.shape({
+      socialLinks: PropTypes.arrayOf(PropTypes.shape({
         category: PropTypes.string,
         social_link: PropTypes.string
-      }),
-      supportEmail: PropTypes.shape({
+      })),
+      supportEmail: PropTypes.arrayOf(PropTypes.shape({
         category: PropTypes.string,
         email: PropTypes.string
-      }),
-      supportNumber: PropTypes.shape({
+      })),
+      supportNumber: PropTypes.arrayOf(PropTypes.shape({
         category: PropTypes.string,
         phone_no: PropTypes.string
-      }),
+      })),
     }),
     user: PropTypes.shape({
       id: PropTypes.string,

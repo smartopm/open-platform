@@ -8,6 +8,7 @@ FactoryBot.define do
   factory :community do
     name { generate(:community_name) }
     currency { 'zambian_kwacha' }
+    sms_phone_numbers { %w[254723456783 254724861281] }
     theme_colors do
       {
         primaryColor: '#cf5628', secondaryColor: '#cf5628'

@@ -55,13 +55,14 @@ const QUERY = gql`
         }
         bankingDetails
         communityRequiredFields
+        emergencyCallNumber
       }
     }
   }
 `;
 
 export default function AuthToken({ children }) {
-  function reducer(state, action) {
+  function reducer(_state, action) {
     switch (action.type) {
       case 'delete':
         localStorage.removeItem(AUTH_TOKEN_KEY);

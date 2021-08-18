@@ -240,6 +240,7 @@ end
 # rubocop:enable Metrics/BlockLength
 # rubocop:enable Layout/LineLength
 
+# rubocop:disable Metrics/BlockLength
 namespace :backfill do
   desc 'Move valuation amount to payment plan'
   task total_amount_on_payment_plan: :environment do
@@ -255,4 +256,20 @@ namespace :backfill do
     end
     puts 'Done.'
   end
+
+  desc 'Create entry request for user_temp logs'
+  task create_user_temp_entry_request: :environment do
+    puts 'Starting...'
+    comm = Community.find_by(name: 'Ciudad Morazán')
+    ActiveRecord::Base.transaction do
+      comm.event_logs.where(subject: 'user_temp').each do |ev|
+        new_entry_request = ev.ref.dup
+        new_entry_request.granted_at = ev.created_at
+        new_entry_request.save!
+        ev.update!(ref_id: new_entry_request.id)
+      end
+    end
+    puts 'Done.'
+  end
 end
+# rubocop:enable Metrics/BlockLength

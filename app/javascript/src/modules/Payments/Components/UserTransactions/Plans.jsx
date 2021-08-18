@@ -162,12 +162,12 @@ export default function PaymentPlans({ userId, user, userData }) {
           <div className={classes.planList}>
             <div>
               <div
-                style={{
+                style={matches ? {
                   display: 'flex',
                   width: '100%',
                   justifyContent: 'space-between',
                   marginBottom: '10px'
-                }}
+                } : null}
               >
                 <Typography className={matches ? classes.plan : classes.planMobile}>
                   {t('common:misc.plans')}
@@ -177,16 +177,17 @@ export default function PaymentPlans({ userId, user, userData }) {
                     style={
                       matches
                         ? { display: 'flex', width: '100%', justifyContent: 'flex-end' }
-                        : { display: 'flex', flexDirection: 'column', alignItems: 'center' }
+                        : { display: 'flex' }
                     }
                   >
-                    <div style={{ margin: '0 10px 10px 0' }}>
+                    <div style={{ margin: '0 10px 10px 0', fontSize: '10px' }}>
                       <ButtonComponent
                         color="primary"
                         variant="contained"
                         buttonText={t('actions.new_payment_plan')}
                         handleClick={() => handlePlanModal()}
                         size="small"
+                        style={matches ? {} : {fontSize: '10px'}}
                       />
                     </div>
                     <div>
@@ -196,6 +197,7 @@ export default function PaymentPlans({ userId, user, userData }) {
                         buttonText={t('actions.view_all_transactions')}
                         handleClick={() => handleButtonClick()}
                         size="small"
+                        style={matches ? {} : {fontSize: '10px'}}
                       />
                     </div>
                   </div>

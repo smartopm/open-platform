@@ -25,6 +25,7 @@ export default function PlanTransferConfirmDialog({
   const [transferPaymentPlan] = useMutation(TransferPaymentPlanMutation);
   const [isSuccessAlert, setIsSuccessAlert] = useState(false);
   const [messageAlert, setMessageAlert] = useState('');
+  const [mutationLoading, setMutationStatus] = useState(false);
 
   function handleMessageAlertClose(_event, reason) {
     if (reason === 'clickaway') {
@@ -35,6 +36,7 @@ export default function PlanTransferConfirmDialog({
 
   function handleSubmit(e) {
     e.preventDefault();
+    setMutationStatus(true);
     transferPaymentPlan({
       variables: { sourcePlanId: paymentPlanId, destinationPlanId }
     })
@@ -45,11 +47,13 @@ export default function PlanTransferConfirmDialog({
       handleClose();
       refetch();
       balanceRefetch();
+      setMutationStatus(false);
     })
     .catch(err => {
       setMessageAlert(formatError(err.message));
       setIsSuccessAlert(false);
       handleClose();
+      setMutationStatus(false);
     });
   }
 
@@ -66,8 +70,9 @@ export default function PlanTransferConfirmDialog({
         handleModal={handleClose}
         dialogHeader={t('common:menu.transfer_plan')}
         handleBatchFilter={handleSubmit}
-        saveAction={t('common:menu.continue_to_verification')}
+        saveAction={mutationLoading ? t('common:menu.transferring') : t('common:menu.continue')}
         cancelAction={t('common:misc.close')}
+        disableActionBtn={mutationLoading}
       >
         <div className={classes.content} data-testid='content'>
           <Typography paragraph variant="body1" color="textPrimary" display="inline">

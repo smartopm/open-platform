@@ -43,6 +43,10 @@ module Payments
       where(PlanPayment.arel_table[:created_at].lteq(created_at))
     }
 
+    scope :exluding_general_payments, lambda {
+      joins(:payment_plan).where.not(payment_plans: { status: %i[deleted general] })
+    }
+
     # Returns receipt number
     #
     # @return [String]

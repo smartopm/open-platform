@@ -118,6 +118,7 @@ module Types
 
     # community
     field :community_update, mutation: Mutations::Community::CommunityUpdate
+    field :community_emergency, mutation: Mutations::Community::CommunityEmergency
 
     # contact_info
     field :contact_info_delete, mutation: Mutations::ContactInfo::Delete

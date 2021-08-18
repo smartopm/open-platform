@@ -58,8 +58,8 @@ export default function TransactionsList({
   const { locale } = user.community;
   const currencyData = { currency, locale };
 
-  const [loadPlanTransactions, { loading, error, data }] = useLazyQuery(Transactions, {
-    variables: { userId, planId: filterValue === 'all' ? null : debouncedValue, limit, offset },
+  const [loadPlanTransactions, { loading, error, data, refetch: transRefetch }] = useLazyQuery(Transactions, {
+    variables: { userId, planId: debouncedValue, limit, offset },
     fetchPolicy: 'no-cache',
     errorPolicy: 'all'
   });
@@ -82,8 +82,8 @@ export default function TransactionsList({
   useEffect(() => {
     if (planId) {
       setFilterValue(planId);
-      loadPlanTransactions();
       setFiltering(true);
+      loadPlanTransactions();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -108,7 +108,7 @@ export default function TransactionsList({
               {t('common:menu.transaction_plural')}
             </Typography>
             <ButtonComponent
-              variant="outlined"
+              variant={matches ? 'outlined' : 'text'}
               color="default"
               buttonText={t('actions.view_all_plans')}
               handleClick={() => history.push('?tab=Plans')}
@@ -148,7 +148,7 @@ export default function TransactionsList({
                   currencyData={currencyData}
                   userData={userData}
                   userType={user.userType}
-                  refetch={refetch}
+                  refetch={transRefetch}
                   balanceRefetch={balanceRefetch}
                 />
               </div>
@@ -171,7 +171,7 @@ export default function TransactionsList({
           )}
         </div>
       ) : (
-        <CenteredContent>No Transaction Available</CenteredContent>
+        <CenteredContent>{t('errors.no_transaction_available')}</CenteredContent>
       )}
       {filtering && Boolean(data?.userTransactions?.length) && (
         <CenteredContent>
@@ -220,7 +220,10 @@ const useStyles = makeStyles({
 
 TransactionsList.defaultProps = {
   userData: {},
-  transData: {}
+  transData: {},
+  refetch: () => {},
+  balanceRefetch: () => {},
+  planData: []
 };
 
 TransactionsList.propTypes = {
@@ -238,9 +241,9 @@ TransactionsList.propTypes = {
       locale: PropTypes.string
     }).isRequired
   }).isRequired,
-  refetch: PropTypes.func.isRequired,
+  refetch: PropTypes.func,
   userId: PropTypes.string.isRequired,
-  balanceRefetch: PropTypes.func.isRequired,
+  balanceRefetch: PropTypes.func,
   planData: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.string,
@@ -249,5 +252,5 @@ TransactionsList.propTypes = {
         parcelNumber: PropTypes.string
       })
     })
-  ).isRequired
+  )
 };

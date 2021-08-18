@@ -23,6 +23,8 @@ module Types::Queries::PlanPayment
     end
   end
 
+  # rubocop:disable Metrics/AbcSize
+  # rubocop:disable Metrics/MethodLength
   # Returns list of all payments
   #
   # @param query [String]
@@ -37,11 +39,15 @@ module Types::Queries::PlanPayment
 
     search_method = 'search'
     search_method = 'search_by_numbers' if query&.exclude?(':') && query.to_i.positive?
-    context[:site_community].plan_payments.send(search_method, query)
+    context[:site_community].plan_payments
+                            .exluding_general_payments
+                            .send(search_method, query)
                             .eager_load(:user, :payment_plan)
                             .order(created_at: :desc)
                             .limit(limit).offset(offset)
   end
+  # rubocop:enable Metrics/AbcSize
+  # rubocop:enable Metrics/MethodLength
 
   # Payment's receipt details.
   #
@@ -59,6 +65,7 @@ module Types::Queries::PlanPayment
   # rubocop:disable Metrics/MethodLength
   def payment_stat_details(query:)
     payments = context[:site_community].plan_payments
+                                       .exluding_general_payments
                                        .not_cancelled
                                        .eager_load(:user)
     case query

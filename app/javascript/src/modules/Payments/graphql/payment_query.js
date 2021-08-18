@@ -52,6 +52,7 @@ export const UserPlans = gql`
       status
       endDate
       frequency
+      paidPaymentsExists
       coOwners {
         id
         name
@@ -60,6 +61,7 @@ export const UserPlans = gql`
         id
         parcelNumber
         parcelType
+        objectType
       }
       planPayments {
         id
@@ -94,6 +96,7 @@ export const UserPlans = gql`
 export const PlansPaymentsQuery = gql`
   query allPayments($limit: Int, $offset: Int, $query: String) {
     paymentsList(limit: $limit, offset: $offset, query: $query) {
+      amount
       receiptNumber
       status
       createdAt

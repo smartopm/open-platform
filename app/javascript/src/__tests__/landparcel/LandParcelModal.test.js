@@ -222,4 +222,30 @@ describe('Land Property Modal Component', () => {
     expect(container.getAllByText(('misc.merge_plot_to_keep'))[0]).toBeInTheDocument()
     expect(container.getAllByText(('misc.merge_plot_to_remove'))[0]).toBeInTheDocument()
   });
+
+  it('it should render new house dialog', () => {
+    const props = {
+      open: true,
+      handleClose: jest.fn,
+      modalType: 'new_house',
+      landParcel: {
+        id: '1u2y3y4',
+        parcelNumber: '15800'
+      }
+    }
+    const container = render(
+      <MockedProvider>
+        <BrowserRouter>
+          <LandParcelModal {...props} />
+        </BrowserRouter>
+      </MockedProvider>)
+
+    expect(container.queryByText(('property:dialog_headers.details'))).toBeInTheDocument()
+    expect(container.queryByText(('property:dialog_headers.ownership'))).toBeInTheDocument()
+    expect(container.queryByText(('property:dialog_headers.plan_history'))).toBeInTheDocument()
+    expect(container.queryByText(('property:dialog_headers.new_house'))).toBeInTheDocument()
+
+    expect(container.queryByTestId("status")).toBeDefined();
+    expect(container.queryByTestId("object-type")).toBeDefined();
+  })
 })

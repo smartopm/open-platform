@@ -10,7 +10,7 @@ import MessageAlert from "../MessageAlert"
 import LandParcelModal from './LandParcelModal'
 import { formatError, useParamsQuery } from '../../utils/helpers'
 
-export default function CreateLandParcel({ refetch }) {
+export default function CreateLandParcel({ refetch, selectedLandParcel, newHouse, refetchHouseData}) {
   const classes = useStyles()
   const location = useLocation()
   const [open, setOpen] = useState(false)
@@ -35,14 +35,24 @@ export default function CreateLandParcel({ refetch }) {
   }
 
   function handleSubmit(variables) {
-    addProperty({ variables }).then(() => {
+    let variableSave = { ...variables }
+
+    if(newHouse) {
+      variableSave = {
+        ...variableSave,
+        houseLandParcelId: selectedLandParcel.id,
+      }
+    }
+
+    addProperty({  variables: variableSave  }).then(() => {
       setMessageAlert(t('messages.property_added'))
       setIsSuccessAlert(true)
-      setOpen(false);
+      closeNewParcelModal();
       if(location?.state?.from === 'users') {
         history.push(`user/${location?.state?.user?.userId}?tab=Plots`);
       }
       refetch();
+      refetchHouseData();
     }).catch((err) => {
       setMessageAlert(formatError(err.message))
       setIsSuccessAlert(false)
@@ -55,8 +65,8 @@ export default function CreateLandParcel({ refetch }) {
   }
 
   function closeNewParcelModal() {
-    setOpen(false)
     history.push('/land_parcels')
+    setOpen(false)
   }
 
   return (
@@ -71,10 +81,10 @@ export default function CreateLandParcel({ refetch }) {
         {(t('buttons.new_property'))}
       </Button>
       <LandParcelModal
-        open={open}
+        open={open || newHouse}
         handleClose={closeNewParcelModal}
         handleSubmit={handleSubmit}
-        modalType='new'
+        modalType={newHouse ? 'new_house' : 'new'}
       />
       <MessageAlert
         type={isSuccessAlert ? 'success' : 'error'}
@@ -98,5 +108,10 @@ const useStyles = makeStyles(() => ({
 }));
 
 CreateLandParcel.propTypes = {
-  refetch: PropTypes.func.isRequired
+  refetch: PropTypes.func.isRequired,
+  refetchHouseData: PropTypes.func.isRequired,
+  newHouse: PropTypes.bool.isRequired,
+  selectedLandParcel: PropTypes.shape({
+    id: PropTypes.string,
+  }).isRequired,
 }

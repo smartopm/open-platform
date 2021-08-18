@@ -31,12 +31,15 @@ en:
       discussions/discussion_user:
         discussion: Discussion
         user: User
+      forms/category:
+        field_name: Field Name
       forms/form:
         community: Community
         expires_at: Expires at
         name: Name
       forms/form_property:
         form: Form
+        category: Category
       forms/form_user:
         form: Form
         status_updated_by: Status updated by
@@ -207,6 +210,7 @@ en:
       community: Community
       discussions/discussion: Discussion
       discussions/discussion_user: Discussion user
+      forms/category: Category
       forms/form: Form
       forms/form_property: Form property
       forms/form_user: Form user
@@ -260,6 +264,7 @@ en:
     can_not_process_request: For some reason, I can't process your request
     category:
       not_found: Category not found
+      cannot_be_linked: Category cannot be linked
     comment:
       not_found: Comment not found
     duplicate:
@@ -295,10 +300,11 @@ en:
     payment_plan:
       have_zero_pending_balance: Pending balance is 0 for payment plan of selected property
       amount_greater_than_pending_balance: Amount cannot be greater than the plan pending balance
+      cannot_transfer_to_cancelled_plan: Transfer of plan cannot be made to a cancelled payment plan. Please try transferring to other plans
       does_not_exist_for_property: Payment Plan does not exist for selected property
       not_found: Payment Plan not found
       plan_already_exist: Payment Plan for this landparcel already exist
-      transfer_can_not_be_processed: The payment plan has already been cancelled, the transfer cannot be processed.
+      transfer_can_not_be_processed: The payment plan and all its payments have already been cancelled, the transfer cannot be processed
     phone_number:
       found_blank: Phone number cannot be blank
     plan_payment:

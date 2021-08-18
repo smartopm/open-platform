@@ -12,6 +12,17 @@ RSpec.describe Mutations::Transaction::TransactionCreate do
       create(:payment_plan, land_parcel_id: land_parcel.id, user_id: user.id, status: 'active',
                             installment_amount: 100)
     end
+    let!(:transaction) do
+      create(:transaction, user_id: user.id, community_id: community.id, depositor_id: user.id,
+                           amount: 200, status: 'cancelled')
+    end
+    let!(:plan_payment) do
+      create(
+        :plan_payment, user_id: user.id, community_id: community.id,
+                       transaction_id: transaction.id, payment_plan_id: payment_plan.id,
+                       amount: 200, manual_receipt_number: '13975', status: 'cancelled'
+      )
+    end
     let!(:other_payment_plan) do
       create(:payment_plan, land_parcel_id: land_parcel.id, user_id: user.id, status: 'active',
                             installment_amount: 200)
@@ -146,6 +157,37 @@ RSpec.describe Mutations::Transaction::TransactionCreate do
                                            })
           expect(result.dig('errors', 0, 'message'))
             .to eql 'Receipt number already exists'
+        end
+      end
+
+      context 'when an existing receipt number of a cancelled payment is entered' do
+        it 'creates the transaction and payment entry without raising error' do
+          variables = {
+            userId: user.id,
+            amount: 200,
+            source: 'cash',
+            paymentsAttributes: [{
+              paymentPlanId: payment_plan.id,
+              amount: 200,
+              receiptNumber: '13975',
+            }],
+          }
+          result = DoubleGdpSchema.execute(transaction_create_mutation,
+                                           variables: variables,
+                                           context: {
+                                             current_user: admin,
+                                             site_community: community,
+                                           })
+          transaction_result = result.dig('data', 'transactionCreate', 'transaction')
+          expect(result.dig('errors', 0, 'message')).to be_nil
+          expect(transaction_result['source']).to eql 'cash'
+          expect(transaction_result['amount']).to eql 200.0
+          expect(transaction_result['status']).to eql 'accepted'
+          plan_payment = transaction_result['planPayments'][0]
+          expect(plan_payment['createdAt']).to eql transaction_result['createdAt']
+          expect(plan_payment['receiptNumber']).to eql 'MI13975'
+          expect(plan_payment['amount']).to eql 200.0
+          expect(plan_payment['paymentPlan']['pendingBalance']).to eql 1000.0
         end
       end
 

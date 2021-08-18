@@ -21,6 +21,8 @@ module Mutations
       argument :sub_administrator_id, String, required: false
       argument :theme_colors, GraphQL::Types::JSON, required: false
       argument :banking_details, GraphQL::Types::JSON, required: false
+      argument :sms_phone_numbers, [String, { null: true }], required: false
+      argument :emergency_call_number, String, required: false
 
       field :community, Types::CommunityType, null: true
 

@@ -210,6 +210,8 @@ ActiveRecord::Schema.define(version: 2021_08_17_092144) do
     t.json "community_required_fields"
     t.json "menu_items"
     t.uuid "sub_administrator_id"
+    t.string "sms_phone_numbers", default: [], array: true
+    t.string "emergency_call_number"
     t.index ["slug"], name: "index_communities_on_slug", unique: true
   end
 
@@ -423,6 +425,8 @@ ActiveRecord::Schema.define(version: 2021_08_17_092144) do
     t.json "geom"
     t.integer "status", default: 0
     t.boolean "is_poi", default: false
+    t.integer "object_type", default: 0
+    t.uuid "house_land_parcel_id"
     t.index ["community_id"], name: "index_land_parcels_on_community_id"
     t.index ["parcel_number"], name: "index_land_parcels_on_parcel_number", unique: true
     t.index ["status"], name: "index_land_parcels_on_status"

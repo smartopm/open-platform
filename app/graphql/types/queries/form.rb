@@ -124,7 +124,7 @@ module Types::Queries::Form
     end
 
     Forms::FormUser.find_by(id: form_user_id)
-                   .user_form_properties.eager_load(:form_property).with_attached_image
+                   .user_form_properties.eager_load(form_property: :category).with_attached_image
   end
 
   def form_submissions(start_date:, end_date:)
@@ -166,7 +166,7 @@ module Types::Queries::Form
     form = Forms::Form.find_by(id: form_id)
     raise_form_not_found_error(form)
 
-    form.categories.where(form_property_id: nil).order(:order)
+    form.categories.order(:order)
   end
 
   private
