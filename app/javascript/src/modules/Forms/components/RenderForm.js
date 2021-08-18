@@ -1,7 +1,7 @@
 import React, { Fragment, useRef, useContext } from 'react';
 import { Grid } from '@material-ui/core';
 import PropTypes from 'prop-types'
-import DatePickerDialog from '../../../components/DatePickerDialog';
+import { DateAndTimePickers } from '../../../components/DatePickerDialog';
 import { Context } from '../../../containers/Provider/AuthStateProvider';
 import ImageAuth from '../../../shared/ImageAuth';
 import { Spinner } from '../../../shared/Loading';
@@ -35,10 +35,10 @@ export default function RenderForm({ formPropertiesData, formId, refetch, editMo
     });
   }
 
-  function handleDateChange(date, id) {
+  function handleDateChange(date, id, name) {
     setFormProperties({
       ...formProperties,
-      date: { value: date, form_property_id: id }
+      [name]: { value: date, form_property_id: id }
     });
   }
 
@@ -102,10 +102,10 @@ export default function RenderForm({ formPropertiesData, formId, refetch, editMo
           categoryId={categoryId}
         />
         <Grid item xs={editMode ? 10 : 12}>
-          <DatePickerDialog
+          <DateAndTimePickers
             id={formPropertiesData.id}
-            selectedDate={formProperties.date.value}
-            handleDateChange={date => handleDateChange(date, formPropertiesData.id)}
+            selectedDateTime={formProperties[String(formPropertiesData.fieldName)]?.value || null}
+            handleDateChange={date => handleDateChange(date, formPropertiesData.id, formPropertiesData.fieldName)}
             label={formPropertiesData.fieldName}
           />
         </Grid>
