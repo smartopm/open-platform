@@ -21,7 +21,7 @@ import UserAvatar from '../../Users/Components/UserAvatar';
 import UserActionOptions from '../../Users/Components/UserActionOptions';
 import SOSModal from './SOSModal';
 
-import { allUserTypes } from '../../../utils/constants';
+import { allUserTypes, sosAllowedUsers } from '../../../utils/constants';
 
 const drawerWidth = 260;
 
@@ -122,8 +122,9 @@ export function MainNav({ authState }) {
               <MenuIcon />
             )}
           </IconButton>
+          {sosAllowedUsers.includes(authState?.user?.userType?.toLowerCase()) && <SvgIcon component={SOSIcon} viewBox="0 0 384 512" setOpen={setOpen} />}
 
-          <SvgIcon component={SOSIcon} viewBox="0 0 384 512" setOpen={setOpen} />
+          
 
           <SOSModal open={open} setOpen={setOpen} {...{ authState }} />
 

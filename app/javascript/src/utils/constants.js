@@ -620,3 +620,10 @@ export const paymentFilterFields = {
     land: 'active',
     house: [ 'planned', 'in_construction', 'built'],
   }
+
+  export const sosAllowedUsers = [
+    'admin',
+    'guard',
+    'resident',
+    'custodian'
+  ];
