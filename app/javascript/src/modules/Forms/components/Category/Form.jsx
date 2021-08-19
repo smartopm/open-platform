@@ -128,6 +128,7 @@ export default function Form({ editMode, formId }) {
             <FormPreview
               loading={formState.isSubmitting}
               handleFormSubmit={() => saveFormData(formData, formId, authState.user.id)}
+              categoriesData={categoriesData}
             />
           </DialogContentText>
         </DialogContent>
