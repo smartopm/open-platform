@@ -136,7 +136,7 @@ export default function SubscriptionPlanModal({
     <CustomizedDialogs
       open={open}
       handleModal={handleModalClose}
-      dialogHeader={modalType === 'new' ? t('misc.create_subscription_plan') : t('misc.update_subscription_plan')}
+      dialogHeader={modalType === 'new' ? t('misc.create_subscription_plan') : t('actions.edit_subscription_plan')}
       subHeader={modalType === 'new' ? t('misc.set_monthly_payment') : null}
       saveAction={
         modalType === 'new' && mutationLoading
