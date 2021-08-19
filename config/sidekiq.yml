@@ -20,3 +20,7 @@
     class: CheckCriticalBusinessActivityJob
     args: [['Nkwashi','Ciudad Morazán']]
     description: "Check critical business activities and send alert to slack"
+  renew_payment_plans:
+    cron: '0 0 * * * Africa/Lusaka'
+    class: PlanRenewalJob
+    description: "Create new payment plans based on subscription plans"
