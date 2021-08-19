@@ -31,7 +31,10 @@ es:
       discussions/discussion:
         community: Comunidad
         user: Usuario
+      forms/category:
+        field_name: Nombre del campo
       forms/form_property:
+        category: Categoría
         form: Formulario
       forms/form_user:
         form: Formulario
@@ -197,6 +200,10 @@ es:
                 con otros planes de pago
             user_id:
               general_plan_exists: Existe un plan general para el usuario
+        properties/subscription_plan:
+          attributes:
+            end_date:
+              invalid_dates: debe ser mayor que la fecha de inicio
         users/user:
           attributes:
             phone_number:
@@ -211,6 +218,7 @@ es:
       community: Comunidad
       discussions/discussion: Discusión
       discussions/discussion_user: Usuario de discusión
+      forms/category: Categoría
       forms/form: Formulario
       forms/form_property: 'Formulario de Propiedad '
       forms/form_user: Formulario de Usuario
@@ -262,6 +270,9 @@ es:
     campaign:
       missing_parameter: 'Falta el parámetro: proporcione el parámetro% {atributo}'
     can_not_process_request: Por alguna razón, no puedo procesar su solicitud.
+    category:
+      cannot_be_linked: La categoría no se puede vincular
+      not_found: Categoría no encontrada
     comment:
       not_found: Comentario no encontrado
     duplicate:
@@ -273,6 +284,8 @@ es:
       empty_note: La nota no puede estar vacía
     event_log:
       not_found: Registro de eventos no encontrado
+    form_property:
+      not_found: Formulario de Propiedad no encontrado
     form:
       not_found: Formulario no encontrado
     invalid_argument_value: Valor de argumento no válido
@@ -345,6 +358,7 @@ es:
     thanks_for_using_our_app: Gracias por usar nuestra aplicación, por favor use este
       enlace para darnos su opinión %{feedback_link}
   response:
+    category_deleted: Categoría eliminada correctamente
     failed: Fallido
     success: Exito
     updated: Actualizado
