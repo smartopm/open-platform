@@ -2,10 +2,12 @@ import { Button, Container } from '@material-ui/core';
 import React from 'react';
 import ReactMarkDown from 'react-markdown';
 import PropTypes from 'prop-types';
+import { useTranslation } from 'react-i18next';
 import CenteredContent from '../../../components/CenteredContent';
 import { Spinner } from '../../../shared/Loading';
 
 export default function FormPreview({ loading, handleFormSubmit, categoriesData }) {
+  const { t } = useTranslation('form')
   const markdown = categoriesData.data.formCategories.map(category => `${category.renderedText}  `).join('');
   return (
     <Container>
@@ -21,8 +23,9 @@ export default function FormPreview({ loading, handleFormSubmit, categoriesData 
           onClick={handleFormSubmit}
           disabled={loading}
           startIcon={loading && <Spinner />}
+          data-testid="confirm_contract"
         >
-          Confirm
+          {t('actions.confirm')}
         </Button>
       </CenteredContent>
     </Container>
@@ -36,8 +39,6 @@ FormPreview.propTypes = {
     data: PropTypes.shape({
       formCategories: PropTypes.arrayOf(
         PropTypes.shape({
-          id: PropTypes.string.isRequired,
-          fieldName: PropTypes.string.isRequired,
           renderedText: PropTypes.string.isRequired
         })
       )

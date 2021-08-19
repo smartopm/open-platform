@@ -40,7 +40,8 @@
     "update_property": "Update Property",
     "update_category": "Update Category",
     "create_category": "Create Category",
-    "add_category": "Add Category"
+    "add_category": "Add Category",
+    "confirm": "Confirm"
   },
   "errors": {
     "no_forms": "No Forms to submit"
