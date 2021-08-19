@@ -287,6 +287,11 @@ export default function PaymentList({ currencyData }) {
     setSubData(null);
   }
 
+  function handleModalClose() {
+    setSubscriptionModalOpen(false)
+    setAnchorEl(null);
+  }
+
   const menuData = {
     menuList,
     handleSubscriptionMenu,
@@ -460,7 +465,7 @@ export default function PaymentList({ currencyData }) {
         {subscriptionModalOpen && (
           <SubscriptionPlanModal
             open={subscriptionModalOpen}
-            handleModalClose={() => setSubscriptionModalOpen(false)}
+            handleModalClose={() => handleModalClose()}
             subscriptionPlansRefetch={subscriptionPlansRefetch}
             setMessage={setMessage}
             openAlertMessage={() => setAlertOpen(true)}
@@ -470,7 +475,7 @@ export default function PaymentList({ currencyData }) {
         {subscriptionPlansLoading ? (
           <Spinner />
         ) : subscriptionPlansData?.subscriptionPlans?.length === 0 ? (
-          <CenteredContent>{t('errors.no_subscription_available')}</CenteredContent>
+          <CenteredContent>{t('errors.no_plan_available')}</CenteredContent>
         ) : (
           <div>
             {matches && (

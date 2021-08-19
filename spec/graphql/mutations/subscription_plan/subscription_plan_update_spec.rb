@@ -6,7 +6,7 @@ RSpec.describe Mutations::SubscriptionPlan::SubscriptionPlanUpdate do
   describe 'update a subscription plan' do
     let!(:user) { create(:user_with_community) }
     let!(:admin) { create(:admin_user, community_id: user.community.id) }
-    let(:subscription_plan) { create(:land_parcel, community_id: user.community_id) }
+    let(:subscription_plan) { create(:subscription_plan, community_id: user.community_id) }
 
     let(:sub_plan_update_mutation) do
       <<~GQL
