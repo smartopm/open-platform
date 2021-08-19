@@ -5,8 +5,8 @@ import '@testing-library/jest-dom/extend-expect'
 import FormPreview from '../components/FormPreview'
 
 jest.mock('react-markdown', () => 'anything');
-describe('TextInput component', () => {
-  it('should not break the text input', () => {
+describe('Form Preview component', () => {
+  it('should not break form preview', () => {
     const props = {
         categoriesData: {
             data: {
