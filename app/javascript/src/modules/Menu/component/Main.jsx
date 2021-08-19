@@ -122,7 +122,7 @@ export function MainNav({ authState }) {
               <MenuIcon />
             )}
           </IconButton>
-          {sosAllowedUsers.includes(authState?.user?.userType?.toUpperCase()) && <SvgIcon component={SOSIcon} viewBox="0 0 384 512" setOpen={setOpen} />}
+          {sosAllowedUsers.includes(authState?.user?.userType?.toLowerCase()) && <SvgIcon component={SOSIcon} viewBox="0 0 384 512" setOpen={setOpen} />}
 
           
 

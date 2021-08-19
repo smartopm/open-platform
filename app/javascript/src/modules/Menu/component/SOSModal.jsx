@@ -21,13 +21,29 @@ import userProps from '../../../shared/types/user';
 const useStyles = makeStyles((theme) => ({
   paper: {
     width: 400,
-    height: 850,
     backgroundColor: "#ff7f7f",
     boxShadow: theme.shadows[5],
     padding: theme.spacing(2, 4),
-    marginTop: "5rem",
-    marginBottom: "4rem",
-    color: "#FFFFFF"
+    color: "#FFFFFF",
+    position: "fixed",
+    marginBottom: "2px",
+    height: "90%",
+    overflow: "auto",
+    '@media (min-device-width: 320px) and (max-device-height: 568px)' : {
+      width: 380,
+      height: "100%",
+    } ,
+
+    '@media (min-device-width: 414px) and (max-device-height: 736px)' : {
+      height: "100%",
+    },
+
+    '@media (min-device-width: 375px) and (max-device-height: 667px) and (orientation: portrait)' : {
+      height: "100%",
+    },
+    '@media  (min-device-width: 360px) and (max-device-height: 640px)' : {
+      height: "100%",
+    }
   },
 
   contents: {
@@ -70,8 +86,6 @@ const useStyles = makeStyles((theme) => ({
   header:{
     fontWeight: "bold",
     fontSize: "17px",
-    '@media (min-device-width: 375px) and (max-device-height: 667px) and (orientation: portrait)' : {
-    },
   },
 
   info:{
@@ -101,16 +115,16 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "space-between",
     marginTop: "2rem",
     '@media (min-device-width: 414px) and (max-device-height: 736px)' : {
-      marginTop: "4rem",
+      marginTop: "1rem",
     },
     '@media (min-device-width: 375px) and (max-device-height: 667px)' : {
-      marginTop: "5rem",
+      marginTop: "1rem",
     },
     '@media (min-device-width: 320px) and (max-device-height: 568px)' : {
-      marginTop: "9rem"
+      marginTop: "1rem"
     } ,
     '@media  (min-device-width: 360px) and (max-device-height: 640px)' : {
-      marginTop: "6rem"
+      marginTop: "2px"
     }
   },
 
@@ -179,6 +193,7 @@ const useStyles = makeStyles((theme) => ({
   modal: {
     display: "flex",
     alignItems: "center",
+    overflow:'scroll',
     justifyContent: "center"
   }
 }));
@@ -253,7 +268,7 @@ const SOSModal=({open, setOpen, authState})=> {
           {communityHasEmergencyNumber ? (
             <p>
               <a href={`tel: ${authState.user?.community.emergencyCallNumber}`}>
-                {t('panic_alerts.click_to_call')} 
+                {t('panic_alerts.click_to_call')}
                 {' '}
                 {authState.user?.community.emergencyCallNumber}
               </a>

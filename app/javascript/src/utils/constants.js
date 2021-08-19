@@ -622,8 +622,8 @@ export const paymentFilterFields = {
   }
 
   export const sosAllowedUsers = [
-    'ADMIN',
-    'GUARD',
-    'RESIDENT',
-    'CUSTODIAN'
+    'admin',
+    'guard',
+    'resident',
+    'custodian'
   ];
