@@ -109,7 +109,7 @@ export default function CategoryForm({ data, close, refetchCategories }) {
           style={{ width: '100%' }}
           inputProps={{ 'data-testid': 'rendered_text' }}
           margin="dense"
-          rows={3}
+          rows={6}
           multiline
         />
 
