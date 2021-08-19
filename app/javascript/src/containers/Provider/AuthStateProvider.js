@@ -55,6 +55,7 @@ const QUERY = gql`
         }
         bankingDetails
         communityRequiredFields
+        smsPhoneNumbers
         emergencyCallNumber
       }
     }

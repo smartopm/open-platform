@@ -206,8 +206,6 @@ const SOSModal=({open, setOpen, authState})=> {
   const [panicButtonPressed, setPanicButtonPressed] = useState(false);
   const [communityEmergency] = useMutation(CommunityEmergencyMutation)
 
-  const communityHasEmergencyNumber = Boolean(authState.user?.community.emergencyCallNumber)
-
   const { t } = useTranslation('panic_alerts')
   // eslint-disable-next-line no-unused-vars
   const callback = useCallback(_event => {
@@ -265,15 +263,14 @@ const SOSModal=({open, setOpen, authState})=> {
       <div className={classes.paper}>
         <div className={classes.CloseIcon}>
           <CloseIcon onClick={resetSOSModalState} />
-          {communityHasEmergencyNumber ? (
-            <p>
-              <a href={`tel: ${authState.user?.community.emergencyCallNumber}`}>
-                {t('panic_alerts.click_to_call')}
-                {' '}
-                {authState.user?.community.emergencyCallNumber}
-              </a>
-            </p>
-) : null}
+          <p>
+            <a href={`tel: ${authState.user?.community.emergencyCallNumber}`}>
+              {t('panic_alerts.click_to_call')}
+              {' '}
+              {authState.user?.community.emergencyCallNumber}
+            </a>
+          </p>
+
         </div>
         <MessageAlert
           type={panicButtonMessage.isError ? 'error' : 'success'}
