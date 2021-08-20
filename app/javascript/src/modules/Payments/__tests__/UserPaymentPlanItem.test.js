@@ -46,7 +46,7 @@ describe('Render Payment Plan Item', () => {
     const requestMock = {
       request: {
         query: PaymentPlanUpdateMutation,
-        variables: { id: plan.id, userId: user.userId, paymentDay: 2 }
+        variables: { planId: plan.id, paymentDay: 2 }
       },
       result: { data: { paymentDayUpdate: { paymentPlan: { id: plan.id } } } }
     };

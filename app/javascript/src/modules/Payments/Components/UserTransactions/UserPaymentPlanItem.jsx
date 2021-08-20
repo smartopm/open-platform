@@ -80,6 +80,8 @@ export default function UserPaymentPlanItem({
   });
   const [confirmPlanCancelOpen, setConfirmPlanCancelOpen] = useState(false);
   const [TransferPlanModalOpen, setTransferPlanModalOpen] = useState(false);
+  const [isSuccessAlert, setIsSuccessAlert] = useState(false);
+  const [messageAlert, setMessageAlert] = useState('');
   const [updatePaymentPlan] = useMutation(PaymentPlanUpdateMutation);
   const [cancelPaymentPlan] = useMutation(PaymentPlanCancelMutation);
   const validDays = [...Array(28).keys()];
@@ -272,8 +274,7 @@ export default function UserPaymentPlanItem({
     setPlanDetails({ ...details, isLoading: true });
     updatePaymentPlan({
       variables: {
-        id: details.planId,
-        userId,
+        planId: details.planId,
         paymentDay
       }
     })
@@ -301,6 +302,13 @@ export default function UserPaymentPlanItem({
     event.stopPropagation();
     setAnchor(null);
   }
+
+  function handleMessageAlertClose(_event, reason) {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setMessageAlert('');
+  };
 
   const menuData = {
     menuList,
@@ -341,8 +349,18 @@ export default function UserPaymentPlanItem({
           handleModalClose={() => setPlanDetailOpen(false)}
           planData={planData}
           currencyData={currencyData}
+          updatePaymentPlan={updatePaymentPlan}
+          plansRefetch={refetch}
+          setMessageAlert={setMessageAlert}
+          setIsSuccessAlert={setIsSuccessAlert}
         />
       )}
+      <MessageAlert
+        type={isSuccessAlert ? 'success' : 'error'}
+        message={messageAlert}
+        open={!!messageAlert}
+        handleClose={handleMessageAlertClose}
+      />
       <TransferPlanModal
         open={TransferPlanModalOpen}
         handleModalClose={() => setTransferPlanModalOpen(!TransferPlanModalOpen)}
