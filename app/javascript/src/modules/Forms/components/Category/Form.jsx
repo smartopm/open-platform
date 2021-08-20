@@ -53,7 +53,8 @@ export default function Form({ editMode, formId }) {
       headerVisible: false,
       general: false,
       order: 1,
-      renderedText: ''
+      renderedText: '',
+      displayCondition: ''
     }
     setFormData(init);
   }
@@ -111,6 +112,7 @@ export default function Form({ editMode, formId }) {
           <CategoryForm
             data={data}
             close={handleCategoryClose}
+            formData={formData}
             refetchCategories={categoriesData.refetch}
           />
         </Container>

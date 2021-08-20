@@ -28,7 +28,8 @@
     "version_number": "Version Number",
     "previewable": "Should have a preview",
     "contract_preview": "Contract Preview",
-    "category": "Category"
+    "category": "Category",
+    "display_condition": "Display Condition"
   },
   "actions": {
     "create_a_form": "Create a form",
@@ -76,7 +77,10 @@
     "rendered_text": "Rendered Text",
     "name": "Name",
     "header_visible": "Visible Header",
-    "general_category": "General"
+    "general_category": "General",
+    "property_field_name": "Property Name",
+    "condition": "Condition",
+    "condition_value" :"Value"
   },
   "field_types": {
     "text": "Text",
