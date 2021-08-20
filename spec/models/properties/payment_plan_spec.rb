@@ -63,6 +63,9 @@ RSpec.describe Properties::PaymentPlan, type: :model do
     it { is_expected.to have_db_column(:payment_day).of_type(:integer) }
     it { is_expected.to have_db_column(:duration).of_type(:integer) }
     it { is_expected.to have_db_column(:frequency).of_type(:integer) }
+    it do
+      is_expected.to have_db_column(:renewable).of_type(:boolean).with_options(default: false)
+    end
   end
 
   describe 'enums' do

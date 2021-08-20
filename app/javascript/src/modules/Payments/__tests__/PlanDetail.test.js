@@ -33,6 +33,10 @@ describe('It should test the plan detail modal component', () => {
             handleModalClose={jest.fn}
             currencyData={{ currency: 'ZMW', locale: 'en-ZM'}}
             planData={planData}
+            updatePaymentPlan={jest.fn}
+            setIsSuccessAlert={jest.fn}
+            setMessageAlert={jest.fn}
+            plansRefetch={jest.fn}
           />
         </BrowserRouter>
       </MockedProvider> 
