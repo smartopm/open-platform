@@ -24,8 +24,9 @@ export default function CategoryForm({ data, close, formData, refetchCategories 
     renderedText: '',
     condition: '',
     groupingId: '',
-    conditionValue: ''
+    value: '' // value for the condition
   };
+  
   const { t } = useTranslation('form');
   const [categoryData, setCategoryData] = useState(initialData);
   const [info, setInfo] = useState({ error: false, message: '' });
@@ -38,13 +39,28 @@ export default function CategoryForm({ data, close, formData, refetchCategories 
 
   useEffect(() => {
     if (data.id) {
-      setCategoryData(data);
+      setCategoryData({
+        ...data,
+        condition: data.displayCondition?.condition || '',
+        groupingId: data.displayCondition?.groupingId || '',
+        value: data.displayCondition?.value
+      });
     }
   }, [data]);
 
   function handleSaveCategory(event) {
     event.preventDefault();
-    createCategory({ variables: { ...categoryData, order: Number(categoryData.order), formId } })
+    createCategory({ 
+      variables: { 
+        ...categoryData, 
+        displayCondition: {
+          condition: categoryData.condition,
+          groupingId: categoryData.groupingId,
+          value: categoryData.value
+        },
+        order: Number(categoryData.order), 
+        formId 
+      } })
       .then(() => {
         refetchCategories();
         close();
@@ -58,7 +74,16 @@ export default function CategoryForm({ data, close, formData, refetchCategories 
   function handleUpdateCategory(event) {
     event.preventDefault();
     updateCategory({
-      variables: { ...categoryData, order: Number(categoryData.order), categoryId: data.id }
+      variables: { 
+        ...categoryData,
+        displayCondition: {
+          condition: categoryData.condition,
+          groupingId: categoryData.groupingId,
+          value: categoryData.value
+        },
+        order: Number(categoryData.order), 
+        categoryId: data.id 
+      }
     })
       .then(res => {
         const categoryResponse = res.data.categoryUpdate;
@@ -175,9 +200,9 @@ export default function CategoryForm({ data, close, formData, refetchCategories 
               id="cat-condition_value"
               label={t('form_fields.condition_value')}
               variant="outlined"
-              value={categoryData.conditionValue}
+              value={categoryData.value}
               onChange={handleChange}
-              name="displayCondition"
+              name="value"
               inputProps={{ 'data-testid': 'condition_value' }}
               margin="dense"
               required
@@ -245,7 +270,11 @@ CategoryForm.propTypes = {
   data: PropTypes.shape({
     id: PropTypes.string,
     fieldName: PropTypes.string,
-    displayCondition: PropTypes.string,
+    displayCondition: PropTypes.shape({
+      condition: PropTypes.string,
+      groupingId: PropTypes.string,
+      value: PropTypes.string,
+    }),
     order: PropTypes.number,
     description: PropTypes.string,
     headerVisible: PropTypes.bool,

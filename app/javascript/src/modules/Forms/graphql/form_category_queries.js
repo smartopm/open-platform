@@ -11,6 +11,7 @@ export const FormCategoriesQuery = gql`
       general
       headerVisible
       renderedText
+      displayCondition
       formProperties {
         id
         fieldName
