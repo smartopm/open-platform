@@ -145,6 +145,7 @@ export default function Form({ editMode, formId }) {
         categoryId={categoryId}
         categoryItem={{ handleAddField, handleEditCategory, handleDeleteCategory }}
         loading={isDeleting}
+        formData={formData}
       />
       <br />
       {editMode && (

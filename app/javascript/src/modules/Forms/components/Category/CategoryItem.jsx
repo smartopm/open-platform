@@ -7,6 +7,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import { makeStyles } from '@material-ui/styles';
 import { DeleteOutline } from '@material-ui/icons';
 import { Spinner } from '../../../../shared/Loading';
+import { checkCondition } from '../../utils';
 
 export default function CategoryItem({
   category,
@@ -17,12 +18,16 @@ export default function CategoryItem({
   collapsed,
   editMode,
   loading,
-  currentId
+  currentId,
+  properties
 }) {
   const classes = useStyles();
+  if(!checkCondition(category, properties, editMode)){
+    return null
+  }
   return (
     <>
-      {(!category.headerVisible && !editMode)  ? null : (
+      {(!category.headerVisible && !editMode) ? null : (
         <Grid container className={classes.categorySection}>
           <Grid item xs={6} sm={9}>
             <Typography className={classes.categoryName}>{category.fieldName}</Typography>
@@ -48,7 +53,11 @@ export default function CategoryItem({
           <Grid item xs={2} sm={1}>
             {editMode && (
               <IconButton aria-label="add questions to this category" onClick={handleAddField}>
-                {collapsed ? <CloseIcon color="primary" /> : <AddIcon color="primary" data-testid="add-icon" />}
+                {collapsed ? (
+                  <CloseIcon color="primary" />
+                ) : (
+                  <AddIcon color="primary" data-testid="add-icon" />
+                )}
               </IconButton>
             )}
           </Grid>
@@ -72,7 +81,13 @@ CategoryItem.propTypes = {
   collapsed: PropTypes.bool.isRequired,
   editMode: PropTypes.bool.isRequired,
   loading: PropTypes.bool.isRequired,
-  currentId: PropTypes.string.isRequired
+  currentId: PropTypes.string.isRequired,
+  properties: PropTypes.arrayOf(
+    PropTypes.shape({
+      groupingId: PropTypes.string,
+      value: PropTypes.string
+    })
+  ).isRequired
 };
 
 const useStyles = makeStyles({

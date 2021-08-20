@@ -45,10 +45,16 @@ import dompurify from "dompurify";
    * @param {[object]} properties 
    * @returns {Boolean}
    */
-  export function checkCondition(category, properties) {
-    const property = properties.find((prop) => prop.groupingId === category.displayCondition?.groupingId);
-    if (property && eval(dompurify.sanitize(`${property.value} ${category.displayCondition.condition} ${category.displayCondition?.value}`))) {
+  export function checkCondition(category, properties, editMode) {
+    if(editMode) {
       return true;
     }
-    return false
+    if (!category.displayCondition) {
+      return true
+    } 
+    const property = properties.find((prop) => prop.groupingId === category.displayCondition.groupingId);
+    if (property && eval(dompurify.sanitize(`${property.value} ${category.displayCondition.condition} ${category.displayCondition.value}`))) {
+      return true;
+    }
+    return false;
 }

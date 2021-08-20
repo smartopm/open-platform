@@ -43,7 +43,7 @@ export default function CategoryForm({ data, close, formData, refetchCategories 
         ...data,
         condition: data.displayCondition?.condition || '',
         groupingId: data.displayCondition?.groupingId || '',
-        value: data.displayCondition?.value
+        value: data.displayCondition?.value || ''
       });
     }
   }, [data]);
@@ -156,16 +156,14 @@ export default function CategoryForm({ data, close, formData, refetchCategories 
           <Grid item xs={12} sm={4}>
             <TextField
               id="property_field_name"
-              // rename this to a grouping_id
               value={categoryData.groupingId}
               onChange={handleChange}
               label={t('form_fields.property_field_name')}
               style={{ width: '100%' }}
               variant="outlined"
               margin="dense"
-              select
               name="groupingId"
-              required
+              select
             >
               {formData.map(property => (
                 <MenuItem key={property.id} value={property.id}>
@@ -186,7 +184,6 @@ export default function CategoryForm({ data, close, formData, refetchCategories 
               variant="outlined"
               margin="dense"
               select
-              required
             >
               {Object.entries(t('conditions', { returnObjects: true })).map(([key, value]) => (
                 <MenuItem key={key} value={key}>
@@ -205,7 +202,6 @@ export default function CategoryForm({ data, close, formData, refetchCategories 
               name="value"
               inputProps={{ 'data-testid': 'condition_value' }}
               margin="dense"
-              required
             />
           </Grid>
         </Grid>
