@@ -29,7 +29,7 @@
     "previewable": "Should have a preview",
     "contract_preview": "Contract Preview",
     "category": "Category",
-    "display_condition": "Display Condition"
+    "display_condition": "Display Condition - Optional"
   },
   "actions": {
     "create_a_form": "Create a form",

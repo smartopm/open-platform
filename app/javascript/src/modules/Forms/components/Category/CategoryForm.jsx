@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Grid, MenuItem, TextField } from '@material-ui/core';
+import { Button, Grid, MenuItem, TextField, Typography } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import { useMutation } from 'react-apollo';
@@ -152,6 +152,7 @@ export default function CategoryForm({ data, close, formData, refetchCategories 
           margin="dense"
           required
         />
+        <Typography gutterBottom variant="caption">{t('misc.display_condition')}</Typography>
         <Grid container spacing={2}>
           <Grid item xs={12} sm={4}>
             <TextField
