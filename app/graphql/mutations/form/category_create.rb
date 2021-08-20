@@ -11,7 +11,7 @@ module Mutations
       argument :general, Boolean, required: true
       argument :description, String, required: false
       argument :rendered_text, String, required: false
-      argument :form_property_id, ID, required: false
+      argument :display_condition, GraphQL::Types::JSON, required: false
 
       field :category, Types::CategoryType, null: true
 
