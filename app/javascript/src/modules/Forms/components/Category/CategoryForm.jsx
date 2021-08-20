@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Button, Grid, TextField } from '@material-ui/core';
+import React, { useState, useEffect } from 'react';
+import { Button, Grid, MenuItem, TextField } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import { useMutation } from 'react-apollo';
@@ -15,8 +15,19 @@ import MessageAlert from '../../../../components/MessageAlert';
 import { formatError } from '../../../../utils/helpers';
 
 export default function CategoryForm({ data, close, formData, refetchCategories }) {
+  const initialData = {
+    fieldName: '',
+    description: '',
+    headerVisible: false,
+    general: false,
+    order: 1,
+    renderedText: '',
+    condition: '',
+    groupingId: '',
+    conditionValue: ''
+  };
   const { t } = useTranslation('form');
-  const [categoryData, setCategoryData] = useState(data);
+  const [categoryData, setCategoryData] = useState(initialData);
   const [info, setInfo] = useState({ error: false, message: '' });
   const [createCategory, { loading, called }] = useMutation(FormCategoryCreateMutation);
   const [updateCategory, { loading: updateLoading, called: updateCalled }] = useMutation(
@@ -24,6 +35,12 @@ export default function CategoryForm({ data, close, formData, refetchCategories 
   );
   const { formId } = useParams();
   const history = useHistory();
+
+  useEffect(() => {
+    if (data.id) {
+      setCategoryData(data);
+    }
+  }, [data]);
 
   function handleSaveCategory(event) {
     event.preventDefault();
@@ -73,8 +90,6 @@ export default function CategoryForm({ data, close, formData, refetchCategories 
     });
   }
 
-  console.log(formData)
-
   return (
     <>
       <MessageAlert
@@ -112,36 +127,50 @@ export default function CategoryForm({ data, close, formData, refetchCategories 
           margin="dense"
           required
         />
-        <Grid container spacing={3}>
-          <Grid item xs>
-            {/* This should be a dropdown */}
+        <Grid container spacing={2}>
+          <Grid item xs={12} sm={4}>
             <TextField
-              id="cat-property_field_name"
-              label={t('form_fields.property_field_name')}
-              variant="outlined"
-              value={categoryData.propertyFieldName}
+              id="property_field_name"
+              // rename this to a grouping_id
+              value={categoryData.groupingId}
               onChange={handleChange}
-              name="displayCondition"
-              inputProps={{ 'data-testid': 'property_field_name' }}
+              label={t('form_fields.property_field_name')}
+              style={{ width: '100%' }}
+              variant="outlined"
               margin="dense"
+              select
+              name="groupingId"
               required
-            />
+            >
+              {formData.map(property => (
+                <MenuItem key={property.id} value={property.id}>
+                  {property.fieldName}
+                </MenuItem>
+              ))}
+            </TextField>
           </Grid>
-          {/* This too should be a dropdown */}
-          <Grid item xs>
+          <Grid item xs={12} sm={4}>
             <TextField
               id="cat-condition"
-              label={t('form_fields.condition')}
-              variant="outlined"
               value={categoryData.condition}
               onChange={handleChange}
-              name="displayCondition"
+              label={t('form_fields.condition')}
+              name="condition"
               inputProps={{ 'data-testid': 'condition' }}
+              style={{ width: '100%' }}
+              variant="outlined"
               margin="dense"
+              select
               required
-            />
+            >
+              {Object.entries(t('conditions', { returnObjects: true })).map(([key, value]) => (
+                <MenuItem key={key} value={key}>
+                  {value}
+                </MenuItem>
+              ))}
+            </TextField>
           </Grid>
-          <Grid item xs>
+          <Grid item xs={12} sm={4}>
             <TextField
               id="cat-condition_value"
               label={t('form_fields.condition_value')}
@@ -225,6 +254,10 @@ CategoryForm.propTypes = {
   }).isRequired,
   close: PropTypes.func.isRequired,
   refetchCategories: PropTypes.func.isRequired,
-  // eslint-disable-next-line react/forbid-prop-types
-  formData: PropTypes.object.isRequired,
+  formData: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.string,
+      fieldName: PropTypes.string
+    })
+  ).isRequired
 };

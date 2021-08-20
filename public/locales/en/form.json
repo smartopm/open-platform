@@ -80,7 +80,7 @@
     "general_category": "General",
     "property_field_name": "Property Name",
     "condition": "Condition",
-    "condition_value" :"Value"
+    "condition_value": "Value"
   },
   "field_types": {
     "text": "Text",
@@ -89,5 +89,12 @@
     "signature": "Signature",
     "date": "Date",
     "dropdown": "Dropdown"
+  },
+  "conditions": {
+    "===": "equals to",
+    ">": "is greater than",
+    "<": "is less than ",
+    ">=": "is greater or equal to",
+    "<=": "is less or equal to"
   }
 }
