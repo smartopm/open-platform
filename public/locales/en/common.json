@@ -84,7 +84,8 @@
     "create_business": "Create a Business",
     "create_plan": "Create Plan",
     "add_type": "Add {{label}}",
-    "close": "Close"
+    "close": "Close",
+    "creating_plan": "Creating a Plan ..."
   },
   "misc": {
     "or": "OR",

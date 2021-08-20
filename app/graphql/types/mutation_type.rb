@@ -139,6 +139,7 @@ module Types
 
     # subscription_plan
     field :subscription_plan_create, mutation: Mutations::SubscriptionPlan::SubscriptionPlanCreate
+    field :subscription_plan_update, mutation: Mutations::SubscriptionPlan::SubscriptionPlanUpdate
 
     # transactions
     field :wallet_transaction_create, mutation: Mutations::Transaction::WalletTransactionCreate
