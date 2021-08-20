@@ -1,3 +1,7 @@
+/* eslint-disable no-eval */
+/* eslint-disable security/detect-eval-with-expression */
+import dompurify from "dompurify";
+
 /**
  *
  * @param {{}} values
@@ -33,3 +37,18 @@
     const properties =  categories.map(category => category.formProperties)
     return properties.flat()
   }
+
+
+  /**
+   * 
+   * @param {object} category 
+   * @param {[object]} properties 
+   * @returns {Boolean}
+   */
+  export function checkCondition(category, properties) {
+    const property = properties.find((prop) => prop.groupingId === category.displayCondition?.groupingId);
+    if (property && eval(dompurify.sanitize(`${property.value} ${category.displayCondition.condition} ${category.displayCondition?.value}`))) {
+      return true;
+    }
+    return false
+}
