@@ -37,9 +37,9 @@
     "state_province": "State Province"
   },
   "map_markers": {
-    "available": "Avaiable",
-    "latitude_x": "Longitude X:",
-    "longitude_y": "Latitude Y:",
+    "available": "Available",
+    "latitude_y": "Latitude Y:",
+    "longitude_x": "Longitude X:",
     "property_no": "Property No:",
     "property_type": "Property Type:",
     "sold": "Sold",
