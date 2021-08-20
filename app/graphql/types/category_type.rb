@@ -12,5 +12,6 @@ module Types
     field :description, String, null: true
     field :rendered_text, String, null: true
     field :form_properties, [Types::FormPropertiesType], null: true
+    field :display_condition, GraphQL::Types::JSON, null: true
   end
 end
