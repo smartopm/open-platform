@@ -6,6 +6,7 @@ import { BrowserRouter } from 'react-router-dom';
 import CategoryForm from '../../components/Category/CategoryForm';
 import { FormCategoryUpdateMutation } from '../../graphql/form_category_mutations';
 
+// TODO: @olivier: fix the console warning in this 
 describe('CategoryForm Component', () => {
   const props = {
     data: {
@@ -17,6 +18,12 @@ describe('CategoryForm Component', () => {
       renderedText: '',
       general: false
     },
+    formData: [
+      {
+        id: '23423',
+        fieldName: 'Some Other Name'
+      }
+    ],
     close: jest.fn(),
     refetchCategories: jest.fn()
   };
