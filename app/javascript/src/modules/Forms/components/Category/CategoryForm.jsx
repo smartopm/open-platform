@@ -202,6 +202,7 @@ export default function CategoryForm({ data, close, formData, refetchCategories 
               onChange={handleChange}
               name="value"
               inputProps={{ 'data-testid': 'condition_value' }}
+              style={{ width: '100%' }}
               margin="dense"
             />
           </Grid>
