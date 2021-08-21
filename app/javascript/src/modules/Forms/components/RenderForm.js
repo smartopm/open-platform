@@ -1,7 +1,7 @@
 import React, { Fragment, useRef, useContext } from 'react';
 import { Grid } from '@material-ui/core';
 import PropTypes from 'prop-types'
-import { DateAndTimePickers } from '../../../components/DatePickerDialog';
+import DatePickerDialog, { DateAndTimePickers, ThemedTimePicker } from '../../../components/DatePickerDialog';
 import { Context } from '../../../containers/Provider/AuthStateProvider';
 import ImageAuth from '../../../shared/ImageAuth';
 import { Spinner } from '../../../shared/Loading';
@@ -93,6 +93,44 @@ export default function RenderForm({ formPropertiesData, formId, refetch, editMo
       </Grid>
     ),
     date: (
+      <Grid container spacing={3} key={formPropertiesData.id}>
+        <FormPropertyAction
+          formId={formId}
+          editMode={editMode}
+          propertyId={formPropertiesData.id}
+          refetch={refetch}
+          categoryId={categoryId}
+        />
+        <Grid item xs={editMode ? 10 : 12}>
+          <DatePickerDialog
+            id={formPropertiesData.id}
+            selectedDate={formProperties[String(formPropertiesData.fieldName)]?.value || null}
+            handleDateChange={date => handleDateChange(date, formPropertiesData.id, formPropertiesData.fieldName)}
+            label={formPropertiesData.fieldName}
+          />
+        </Grid>
+      </Grid>
+    ),
+    time: (
+      <Grid container spacing={3} key={formPropertiesData.id}>
+        <FormPropertyAction
+          formId={formId}
+          editMode={editMode}
+          propertyId={formPropertiesData.id}
+          refetch={refetch}
+          categoryId={categoryId}
+        />
+        <Grid item xs={editMode ? 10 : 12}>
+          <ThemedTimePicker
+            id={formPropertiesData.id}
+            time={formProperties[String(formPropertiesData.fieldName)]?.value || null}
+            handleTimeChange={date => handleDateChange(date, formPropertiesData.id, formPropertiesData.fieldName)}
+            label={formPropertiesData.fieldName}
+          />
+        </Grid>
+      </Grid>
+    ),
+    datetime: (
       <Grid container spacing={3} key={formPropertiesData.id}>
         <FormPropertyAction
           formId={formId}

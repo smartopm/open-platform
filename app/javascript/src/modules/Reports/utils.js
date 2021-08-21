@@ -10,6 +10,7 @@ import { dateTimeToString, dateToString } from "../../components/DateContainer";
  */
  export default function formatCellData(data, translate) {
     if (!data || !data?.value) return '-';
+    // TODO: check for datetime and time as well 
     if (!Number.isNaN(Date.parse(data.value)) && data.fieldType === 'date') {
       // don't show time for the first field in this form
       const date = Number(data.order) === 1 ? dateToString(data.value) : dateTimeToString(data.value)
