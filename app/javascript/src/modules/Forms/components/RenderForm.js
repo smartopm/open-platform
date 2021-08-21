@@ -126,6 +126,7 @@ export default function RenderForm({ formPropertiesData, formId, refetch, editMo
             time={formProperties[String(formPropertiesData.fieldName)]?.value || null}
             handleTimeChange={date => handleDateChange(date, formPropertiesData.id, formPropertiesData.fieldName)}
             label={formPropertiesData.fieldName}
+            style={{ width: '100%' }}
           />
         </Grid>
       </Grid>
