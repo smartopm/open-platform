@@ -19,12 +19,12 @@ import { LiteFormCategories } from '../graphql/form_category_queries';
 const fieldTypes = {
   text: 'Text',
   radio: 'Radio',
-  file_upload: 'File Upload',
-  signature: 'Signature',
   date: 'Date',
   time: 'Time',
   datetime: 'Date with Time',
-  dropdown: 'Dropdown'
+  dropdown: 'Dropdown',
+  signature: 'Signature',
+  file_upload: 'File Upload',
 };
 
 export default function FormPropertyCreateForm({ formId, refetch, propertyId, categoryId, close }) {
