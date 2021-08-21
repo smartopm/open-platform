@@ -28,7 +28,9 @@
     "version_number": "Version Number",
     "previewable": "Should have a preview",
     "contract_preview": "Contract Preview",
-    "category": "Category"
+    "category": "Category",
+    "upload_file": "Upload File",
+    "file_uploaded": "File Uploaded"
   },
   "actions": {
     "create_a_form": "Create a form",
