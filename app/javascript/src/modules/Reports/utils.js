@@ -9,9 +9,9 @@ import { dateTimeToString, dateToString } from "../../components/DateContainer";
  * @param {String} value
  */
  export default function formatCellData(data, translate) {
+   const validDateTypes = ['date', 'time', 'datetime']
     if (!data || !data?.value) return '-';
-    // TODO: check for datetime and time as well 
-    if (!Number.isNaN(Date.parse(data.value)) && data.fieldType === 'date') {
+    if (!Number.isNaN(Date.parse(data.value)) && validDateTypes.includes(data.fieldType)) {
       // don't show time for the first field in this form
       const date = Number(data.order) === 1 ? dateToString(data.value) : dateTimeToString(data.value)
       return date
@@ -66,7 +66,7 @@ export function countExtraHours(extraHours) {
     const hoursTime = Math.ceil(diff / 60)
     hours.push(hoursTime)
   }
-  return hours.reduce((a, b) => a + b, 0)
+  return Math.abs(hours.reduce((a, b) => a + b, 0))
 }
 
 /**
