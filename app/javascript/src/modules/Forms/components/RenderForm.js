@@ -31,14 +31,14 @@ export default function RenderForm({ formPropertiesData, formId, refetch, editMo
     const { name, value } = event.target;
     setFormProperties({
       ...formProperties,
-      [name]: { value, form_property_id: property.id, groupingId: property.groupingId }
+      [name]: { value, form_property_id: property.id }
     });
   }
 
   function handleDateChange(date, property) {
     setFormProperties({
       ...formProperties,
-      [property.fieldName]: { value: date, form_property_id: property.id, groupingId: property.groupingId }
+      [property.fieldName]: { value: date, form_property_id: property.id }
     });
   }
 
@@ -46,7 +46,7 @@ export default function RenderForm({ formPropertiesData, formId, refetch, editMo
     const { name, value } = event.target;
     setFormProperties({
       ...formProperties,
-      [property.fieldName]: { value: { checked: value, label: name }, form_property_id: property.id, groupingId: property.groupingId }
+      [property.fieldName]: { value: { checked: value, label: name }, form_property_id: property.id }
     });
   }
 

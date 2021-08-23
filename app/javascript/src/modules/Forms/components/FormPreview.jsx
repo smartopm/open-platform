@@ -40,7 +40,7 @@ FormPreview.propTypes = {
     data: PropTypes.shape({
       formCategories: PropTypes.arrayOf(
         PropTypes.shape({
-          renderedText: PropTypes.string.isRequired
+          renderedText: PropTypes.string
         })
       )
     })
