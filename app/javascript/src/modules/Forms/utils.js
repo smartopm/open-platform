@@ -38,9 +38,13 @@ export function flattenFormProperties(categories) {
 }
 
 /**
- *
+ * We always want to show a category when we are editing the form  
+ * We always want to show a category when it has no display condition
+ * We can only display a category when its groupingId in displayCondition matches the value in the matching property
+ * Otherwise we just dont display a category
  * @param {object} category
  * @param {[object]} properties
+ * @param {boolean} editMode
  * @returns {Boolean}
  */
 export function checkCondition(category, properties, editMode) {
@@ -51,11 +55,12 @@ export function checkCondition(category, properties, editMode) {
     return true;
   }
   const property = properties.find(prop => prop.form_property_id === category.displayCondition.groupingId);
+  const value = typeof property?.value === 'object' ? property?.value.checked : property?.value
   if (
     property &&
     eval(
       dompurify.sanitize(
-        `"${property.value}" ${category.displayCondition.condition} "${category.displayCondition.value}"`
+        `"${value}" ${category.displayCondition.condition} "${category.displayCondition.value}"`
       )
     )
   ) {
