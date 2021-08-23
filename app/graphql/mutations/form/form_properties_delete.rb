@@ -20,11 +20,15 @@ module Mutations
         form_property = form.form_properties.find(vals[:form_property_id])
         raise_form_property_not_found_error(form_property)
 
+        args = { grouping_id: form_property.grouping_id, field_value: form_property.field_value }
+
         if form.entries?
           new_form = duplicate_form(form, vals)
+          update_category_display_condition(args.merge(form: new_form))
           { message: 'New version created', new_form_version: new_form } if new_form.persisted?
         else
           if form_property.destroy
+            update_category_display_condition(args.merge(form: form))
             data = { action: 'removed', field_name: form_property.field_name }
             context[:current_user].generate_events('form_update', form, data)
             return { form_property: form_property }
@@ -87,6 +91,23 @@ module Mutations
         end
       end
       # rubocop:enable Metrics/MethodLength
+
+      # Resets the grouping_id in display condition for categories which have grouping_id same as
+      # the form property which is being deleted
+      #
+      # @param args [Hash]
+      #
+      # @return [void]
+      def update_category_display_condition(args = {})
+        return if args[:field_value].nil?
+
+        categories = args[:form].categories.where("display_condition->>'grouping_id' = ?",
+                                                  args[:grouping_id])
+        categories.each do |category|
+          category.display_condition['grouping_id'] = ''
+          category.save!
+        end
+      end
     end
   end
 end

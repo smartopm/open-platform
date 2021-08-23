@@ -74,8 +74,8 @@ RSpec.describe Mutations::Form::FormCreate do
           displayCondition: {
             'grouping_id': form_property.grouping_id,
             'condition': '===',
-            'value': 'Fishing'
-          }
+            'value': 'Fishing',
+          },
         }
 
         result = DoubleGdpSchema.execute(mutation, variables: variables,
