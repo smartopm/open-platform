@@ -1,4 +1,4 @@
-/* eslint-disable no-nested-ternary */
+
 import React, { useState } from 'react';
 import Typography from '@material-ui/core/Typography';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
@@ -10,7 +10,7 @@ import EditIcon from '@material-ui/icons/Edit';
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import { CustomizedDialogs } from '../../../../components/Dialog';
 import { dateToString } from '../../../../components/DateContainer';
-import { formatMoney, formatError,titleize } from '../../../../utils/helpers';
+import { formatMoney, formatError, titleize } from '../../../../utils/helpers';
 import { suffixedNumber } from '../../helpers';
 import { StyledTabs, StyledTab, TabPanel } from '../../../../components/Tabs';
 import SwitchInput from '../../../Forms/components/FormProperties/SwitchInput';
@@ -48,7 +48,7 @@ export default function PlanDetail({
     }
   }
 
-  function handleChange(_event, newValue) {
+  function handleTabValueChange(_event, newValue) {
     setTabValue(newValue);
   };
 
@@ -81,6 +81,7 @@ export default function PlanDetail({
       })
         .then(() => {
           setMutationLoading(false);
+          setEditing(false);
           handleModalClose();
           setMessageAlert(t('misc.payment_plan_updated'));
           setIsSuccessAlert(true);
@@ -88,6 +89,7 @@ export default function PlanDetail({
         })
         .catch(err => {
           setMutationLoading(false);
+          setEditing(false);
           setMessageAlert(formatError(err.message));
           setIsSuccessAlert(false);
           handleModalClose();
@@ -109,7 +111,7 @@ export default function PlanDetail({
         cancelAction={tabValue === 'Plan Details' ? t('common:form_actions.close') : t('common:form_actions.cancel')}
         displaySaveButton={tabValue === 'Plan Settings'}
       >
-        <StyledTabs value={tabValue} onChange={handleChange} aria-label="payment plan tabs">
+        <StyledTabs value={tabValue} onChange={handleTabValueChange} aria-label="payment plan tabs">
           <StyledTab label={t('misc.plan_details')} value="Plan Details" />
           <StyledTab label={t('misc.plan_settings')} value="Plan Settings" />
         </StyledTabs>
@@ -266,7 +268,7 @@ export default function PlanDetail({
                 {t('misc.auto_renewal')}
               </Grid>
               <Grid className={classes.rightAlign} item xs={6}>
-                {editing ? (
+                {editing && (
                   <div className={classes.slider}>
                     <SwitchInput
                       name="renewable"
@@ -275,7 +277,8 @@ export default function PlanDetail({
                       handleChange={event => {setRenewable(event.target.checked)}}
                     />
                   </div>
-                ) : (
+                )}
+                {!editing && (
                   renewable ? (
                     <Typography variant='body1'>{t('misc.active')}</Typography>
                   ) : (
