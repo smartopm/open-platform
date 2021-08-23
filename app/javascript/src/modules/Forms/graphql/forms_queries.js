@@ -27,6 +27,7 @@ export const FormPropertiesQuery = gql`
   query($formId: ID!) {
     formProperties(formId: $formId) {
       id
+      groupingId
       fieldName
       fieldType
       fieldValue
@@ -43,6 +44,7 @@ export const FormPropertyQuery = gql`
   query($formId: ID!, $formPropertyId: ID!) {
     formProperty(formId: $formId, formPropertyId: $formPropertyId) {
       id
+      groupingId
       fieldName
       fieldType
       fieldValue
@@ -61,6 +63,7 @@ export const UserFormPropertiesQuery = gql`
         fieldName
         fieldType
         fieldValue
+        groupingId
         order
         id
         adminUse

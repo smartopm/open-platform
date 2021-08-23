@@ -27,26 +27,26 @@ export default function RenderForm({ formPropertiesData, formId, refetch, editMo
   } = useContext(FormContext);
 
 
-  function handleValueChange(event, propId) {
+  function handleValueChange(event, property) {
     const { name, value } = event.target;
     setFormProperties({
       ...formProperties,
-      [name]: { value, form_property_id: propId }
+      [name]: { value, form_property_id: property.id, groupingId: property.groupingId }
     });
   }
 
-  function handleDateChange(date, id, name) {
+  function handleDateChange(date, property) {
     setFormProperties({
       ...formProperties,
-      [name]: { value: date, form_property_id: id }
+      [property.fieldName]: { value: date, form_property_id: property.id, groupingId: property.groupingId }
     });
   }
 
-  function handleRadioValueChange(event, propId, fieldName) {
+  function handleRadioValueChange(event, property) {
     const { name, value } = event.target;
     setFormProperties({
       ...formProperties,
-      [fieldName]: { value: { checked: value, label: name }, form_property_id: propId }
+      [property.fieldName]: { value: { checked: value, label: name }, form_property_id: property.id, groupingId: property.groupingId }
     });
   }
 
@@ -86,7 +86,7 @@ export default function RenderForm({ formPropertiesData, formId, refetch, editMo
             id={formPropertiesData.id}
             properties={formPropertiesData}
             value={formProperties.fieldName}
-            handleValue={event => handleValueChange(event, formPropertiesData.id)}
+            handleValue={event => handleValueChange(event, formPropertiesData)}
             editable={editable}
           />
         </Grid>
@@ -105,7 +105,7 @@ export default function RenderForm({ formPropertiesData, formId, refetch, editMo
           <DateAndTimePickers
             id={formPropertiesData.id}
             selectedDateTime={formProperties[String(formPropertiesData.fieldName)]?.value || null}
-            handleDateChange={date => handleDateChange(date, formPropertiesData.id, formPropertiesData.fieldName)}
+            handleDateChange={date => handleDateChange(date, formPropertiesData)}
             label={formPropertiesData.fieldName}
           />
         </Grid>
@@ -176,7 +176,7 @@ export default function RenderForm({ formPropertiesData, formId, refetch, editMo
               properties={formPropertiesData}
               value={null}
               handleValue={event =>
-                handleRadioValueChange(event, formPropertiesData.id, formPropertiesData.fieldName)
+                handleRadioValueChange(event, formPropertiesData)
               }
             />
             <br />
@@ -198,7 +198,7 @@ export default function RenderForm({ formPropertiesData, formId, refetch, editMo
             id={formPropertiesData.id}
             properties={formPropertiesData}
             value=""
-            handleValue={event => handleValueChange(event, formPropertiesData.id)}
+            handleValue={event => handleValueChange(event, formPropertiesData)}
             editable={editable}
           />
         </Grid>

@@ -49,12 +49,23 @@ import dompurify from "dompurify";
     if(editMode) {
       return true;
     }
-    if (!category.displayCondition) {
+    if (!category.displayCondition?.groupingId) {
       return true
     } 
-    const property = properties.find((prop) => prop.groupingId === category.displayCondition.groupingId);
+    const property = properties.find((prop) => prop.form_property_id === category.displayCondition.groupingId);
     if (property && eval(dompurify.sanitize(`${property.value} ${category.displayCondition.condition} ${category.displayCondition.value}`))) {
       return true;
     }
     return false;
+}
+
+
+/**
+ * 
+ * @param {object} formProperties 
+ * @description removes the field name from a property so focus on groupingId and value
+ * @returns [object]
+ */
+export function extraFormPropertyValue(formProperties){
+  return Object.entries(formProperties).map(([, value]) => value)
 }

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Container, Grid, IconButton, Typography } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import CreateIcon from '@material-ui/icons/Create';
@@ -7,7 +7,8 @@ import CloseIcon from '@material-ui/icons/Close';
 import { makeStyles } from '@material-ui/styles';
 import { DeleteOutline } from '@material-ui/icons';
 import { Spinner } from '../../../../shared/Loading';
-import { checkCondition } from '../../utils';
+import { checkCondition , extraFormPropertyValue } from '../../utils';
+import { FormContext } from '../../Context';
 
 export default function CategoryItem({
   category,
@@ -19,9 +20,11 @@ export default function CategoryItem({
   editMode,
   loading,
   currentId,
-  properties
 }) {
   const classes = useStyles();
+  const { formProperties } = useContext(FormContext)
+  const properties = extraFormPropertyValue(formProperties)
+
   if(!checkCondition(category, properties, editMode)){
     return null
   }
@@ -82,12 +85,6 @@ CategoryItem.propTypes = {
   editMode: PropTypes.bool.isRequired,
   loading: PropTypes.bool.isRequired,
   currentId: PropTypes.string.isRequired,
-  properties: PropTypes.arrayOf(
-    PropTypes.shape({
-      groupingId: PropTypes.string,
-      value: PropTypes.string
-    })
-  ).isRequired
 };
 
 const useStyles = makeStyles({

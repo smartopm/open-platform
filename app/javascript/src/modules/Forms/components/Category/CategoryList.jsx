@@ -12,8 +12,7 @@ export default function CategoryList({
   propertyFormOpen,
   categoryId,
   categoryItem,
-  loading,
-  formData
+  loading
 }) {
   // to only show a loader on category that is being deleted
   const [currentId, setCurrentId] = useState('');
@@ -40,7 +39,6 @@ export default function CategoryList({
             editMode={editMode}
             loading={loading}
             currentId={currentId}
-            properties={formData}
           >
             {category.formProperties.map(formProperty => (
               <RenderForm
@@ -92,10 +90,4 @@ CategoryList.propTypes = {
     handleEditCategory: PropTypes.func,
     handleDeleteCategory: PropTypes.func
   }).isRequired,
-  formData: PropTypes.arrayOf(
-    PropTypes.shape({
-      groupingId: PropTypes.string,
-      value: PropTypes.string
-    })
-  ).isRequired
 };

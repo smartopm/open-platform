@@ -21,10 +21,6 @@ import MessageAlert from '../../../../components/MessageAlert';
 import { FormCategoryDeleteMutation } from '../../graphql/form_category_mutations';
 import { formatError } from '../../../../utils/helpers';
 
-// This will contain the main category
-// from the main category you should be able to add questions to that category
-// below the main category, you can add another category
-
 export default function Form({ editMode, formId }) {
   const [categoryFormOpen, setCategoryFormOpen] = useState(false);
   const [propertyFormOpen, setPropertyFormOpen] = useState(false);
@@ -145,7 +141,6 @@ export default function Form({ editMode, formId }) {
         categoryId={categoryId}
         categoryItem={{ handleAddField, handleEditCategory, handleDeleteCategory }}
         loading={isDeleting}
-        formData={formData}
       />
       <br />
       {editMode && (

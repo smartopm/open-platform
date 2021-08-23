@@ -14,6 +14,7 @@ export const FormCategoriesQuery = gql`
       displayCondition
       formProperties {
         id
+        groupingId
         fieldName
         fieldType
         fieldValue
