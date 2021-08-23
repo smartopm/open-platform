@@ -194,7 +194,7 @@ export default function GeoMap() {
 
   useEffect(() => {
     // TODO: Victor control map canvas re-size from useMap (v3.2.1)
-    setTimeout(()=> window.dispatchEvent(new Event('resize')), 1000);
+    setTimeout(()=> window.dispatchEvent(new Event('resize')), 500);
   })
 
   if (loading || loadingCommunityData) return <Spinner />;
