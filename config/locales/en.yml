@@ -268,7 +268,6 @@ en:
     can_not_process_request: For some reason, I can't process your request
     category:
       not_found: Category not found
-      cannot_be_linked: Category cannot be linked
     comment:
       not_found: Comment not found
     duplicate:

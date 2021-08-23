@@ -9,7 +9,14 @@ RSpec.describe Mutations::Form::FormPropertiesDelete do
     let!(:form) { create(:form, community_id: user.community_id) }
     let!(:category) { create(:category, form: form, field_name: 'Business Info') }
     let!(:form_property) do
-      create(:form_property, form: form, category: category, field_type: 'text')
+      create(:form_property, form: form, field_type: 'radio', category: category,
+                             field_name: 'Select Business',
+                             field_value: [{ 'value': 'Fishing' }])
+    end
+    let!(:other_category) do
+      create(:category, form: form, field_name: 'Fishing',
+                        display_condition: { 'grouping_id': form_property.reload.grouping_id,
+                                             'value': 'Fishing' })
     end
     let(:form_user) { create(:form_user, form: form, user: user, status: :approved) }
     let(:mutation) do
@@ -37,6 +44,7 @@ RSpec.describe Mutations::Form::FormPropertiesDelete do
                                                    }).as_json
         expect(result.dig('data', 'formPropertiesDelete', 'formProperty', 'id')).not_to be_nil
         expect(form.form_properties.count).to eql 0
+        expect(other_category.reload.display_condition['grouping_id']).to eql ''
         expect(result['errors']).to be_nil
       end
     end
@@ -58,8 +66,10 @@ RSpec.describe Mutations::Form::FormPropertiesDelete do
         expect(result.dig('data', 'formPropertiesDelete', 'formProperty', 'id')).to be_nil
         expect(Forms::Form.count).to eql(previous_form_count + 1)
         new_form = Forms::Form.where.not(id: form.id).first
-        expect(new_form.categories.reload.count).to eql 1
+        expect(new_form.categories.reload.count).to eql 2
         expect(new_form.form_properties.reload.count).to eql 0
+        updated_category = new_form.categories.where.not(display_condition: nil).first
+        expect(updated_category.reload.display_condition['grouping_id']).to eql ''
       end
     end
 
