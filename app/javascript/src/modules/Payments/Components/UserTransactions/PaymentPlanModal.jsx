@@ -15,7 +15,7 @@ import ToggleButton from '@material-ui/lab/ToggleButton';
 import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 import { CustomizedDialogs } from '../../../../components/Dialog';
 import DatePickerDialog from '../../../../components/DatePickerDialog';
-import { paymentPlanStatus, paymentPlanFrequency, paymentPlanType } from '../../../../utils/constants';
+import { paymentPlanStatus, paymentPlanFrequency, subscriptionPlanType } from '../../../../utils/constants';
 import { PaymentPlanCreateMutation } from '../../../../graphql/mutations/land_parcel';
 import { dateToString } from '../../../../components/DateContainer';
 import { capitalize, formatError, titleize } from '../../../../utils/helpers';
@@ -298,7 +298,7 @@ export default function PaymentPlanModal({
           required
           select
         >
-          {Object.entries(paymentPlanType)?.map(([key, value]) => (
+          {Object.entries(subscriptionPlanType)?.map(([key, value]) => (
             <MenuItem key={key} value={value}>
               {titleize(value)}
             </MenuItem>

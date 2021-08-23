@@ -292,15 +292,12 @@ export default function PlanDetail({
               <Grid className={classes.renew} item xs={12}>
                 <>
                   <Typography className={classes.renewContent}>
-                    {t('misc.plan_renewal_text_1')}
+                    {t('misc.plan_renewal_text')}
                   </Typography>
                   <Typography className={classes.renewContent}>
                     &nbsp;
                     <b>{dateToString(planData.renewDate, 'YYYY/MM/DD')}</b>
                     &nbsp;
-                  </Typography>
-                  <Typography className={classes.renewContent}>
-                    {t('misc.plan_renewal_text_2', {amount: formatMoney(currencyData, planData.planValue)})}
                   </Typography>
                 </>
               </Grid>

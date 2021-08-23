@@ -55,8 +55,7 @@
     "transaction_title": "Kindly find your transaction details below.",
     "subscription_plan_created": "Plan created successfuly",
     "subscription_plan_updated": "Plan updated successfully",
-    "plan_renewal_text_1": "Your plan will auto renew on",
-    "plan_renewal_text_2": "at a plan value of {{amount}}"
+    "plan_renewal_text": "Your plan will auto renew on"
   },
   "table_headers": {
     "receipt_number": "Receipt Number",
