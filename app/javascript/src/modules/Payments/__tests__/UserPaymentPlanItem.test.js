@@ -11,7 +11,7 @@ import PaymentPlanUpdateMutation from '../graphql/payment_plan_mutations';
 describe('Render Payment Plan Item', () => {
   const { t } = useTranslation('common');
   const plan = {
-    planType: 'lease',
+    planType: 'basic',
     startDate: '2021-01-26',
     installmentAmount: '200',
     paymentDay: 1,

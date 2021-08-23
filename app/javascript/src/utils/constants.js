@@ -131,6 +131,13 @@ export const paymentPlanFrequency = {
   3: 'quarterly'
 }
 
+export const paymentPlanType = {
+  0: 'starter',
+  1: 'basic',
+  2: 'standard',
+  3: 'premium'
+}
+
 export const paymentType = {
   'cheque/cashier_cheque': 'Cheque/Cashier Cheque',
   mobile_money: 'Mobile Money',

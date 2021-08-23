@@ -49,7 +49,7 @@ RSpec.describe Properties::PaymentPlan, type: :model do
     it { is_expected.to have_db_column(:id).of_type(:uuid) }
     it { is_expected.to have_db_column(:user_id).of_type(:uuid) }
     it { is_expected.to have_db_column(:land_parcel_id).of_type(:uuid) }
-    it { is_expected.to have_db_column(:plan_type).of_type(:string) }
+    it { is_expected.to have_db_column(:plan_type).of_type(:integer) }
     it { is_expected.to have_db_column(:start_date).of_type(:datetime) }
     it { is_expected.to have_db_column(:status).of_type(:integer) }
     it { is_expected.to have_db_column(:percentage).of_type(:decimal) }
@@ -77,6 +77,11 @@ RSpec.describe Properties::PaymentPlan, type: :model do
     it do
       is_expected.to define_enum_for(:frequency)
         .with_values(daily: 0, weekly: 1, monthly: 2, quarterly: 3)
+    end
+
+    it do
+      is_expected.to define_enum_for(:plan_type)
+        .with_values(starter: 0, basic: 1, standard: 2, premium: 3)
     end
   end
 
@@ -126,7 +131,7 @@ RSpec.describe Properties::PaymentPlan, type: :model do
           plan = Properties::PaymentPlan.create(
             percentage: 50,
             status: 'active',
-            plan_type: 'lease',
+            plan_type: 'basic',
             start_date: Time.zone.now,
             user: user,
             plot_balance: 0,
@@ -145,7 +150,7 @@ RSpec.describe Properties::PaymentPlan, type: :model do
           plan = Properties::PaymentPlan.create(
             percentage: 50,
             status: 'general',
-            plan_type: 'lease',
+            plan_type: 'basic',
             start_date: Time.zone.now,
             user: user,
             plot_balance: 0,

@@ -10,7 +10,7 @@ import EditIcon from '@material-ui/icons/Edit';
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import { CustomizedDialogs } from '../../../../components/Dialog';
 import { dateToString } from '../../../../components/DateContainer';
-import { formatMoney, formatError } from '../../../../utils/helpers';
+import { formatMoney, formatError,titleize } from '../../../../utils/helpers';
 import { suffixedNumber } from '../../helpers';
 import { StyledTabs, StyledTab, TabPanel } from '../../../../components/Tabs';
 import SwitchInput from '../../../Forms/components/FormProperties/SwitchInput';
@@ -137,7 +137,7 @@ export default function PlanDetail({
                 <Typography className={classes.fieldTitle}>{t('table_headers.frequency')}</Typography>
               </Grid>
               <Grid item xs={6} className={classes.fieldContent}>
-                {planData.frequency}
+                {titleize(planData.frequency)}
               </Grid>
             </Grid>
             <Divider className={classes.divider} />
@@ -164,16 +164,7 @@ export default function PlanDetail({
                 <Typography className={classes.fieldTitle}>{t('common:table_headers.status')}</Typography>
               </Grid>
               <Grid item xs={6} className={classes.fieldContent}>
-                {planData.status}
-              </Grid>
-            </Grid>
-            <Divider className={classes.divider} />
-            <Grid container spacing={1} data-testid=" ry-type">
-              <Grid item xs={6}>
-                <Typography className={classes.fieldTitle}>{t('table_headers.category_type')}</Typography>
-              </Grid>
-              <Grid item xs={6} className={classes.fieldContent}>
-                {planData.landParcel.parcelType}
+                {titleize(planData.status)}
               </Grid>
             </Grid>
             <Divider className={classes.divider} />
@@ -182,7 +173,7 @@ export default function PlanDetail({
                 <Typography className={classes.fieldTitle}>{t('table_headers.plan_type')}</Typography>
               </Grid>
               <Grid item xs={6} className={classes.fieldContent}>
-                {planData.planType}
+                {titleize(planData.planType)}
               </Grid>
             </Grid>
             <Divider className={classes.divider} />
@@ -222,7 +213,7 @@ export default function PlanDetail({
             </Grid>
           </TabPanel>
           <TabPanel value={tabValue} index="Plan Settings">
-            <Grid container spacing={1} style={{ margin: '20px 0' }}>
+            <Grid container spacing={1} data-testid="payment-day">
               <Grid item xs={6}>
                 <Typography variant='body1'>{t('misc.payment_day')}</Typography>
               </Grid>
@@ -270,7 +261,7 @@ export default function PlanDetail({
               </Grid>
             </Grid>
             <Divider className={classes.divider} />
-            <Grid container spacing={1} style={{ margin: '20px 0' }}>
+            <Grid container spacing={1} data-testid="renewable-slider">
               <Grid item xs={6}>
                 {t('misc.auto_renewal')}
               </Grid>
@@ -293,7 +284,7 @@ export default function PlanDetail({
                 )}
               </Grid>
             </Grid>
-            <Grid container spacing={1} style={{ margin: '20px 0' }}>
+            <Grid container spacing={1} data-testid="renewable-text">
               {renewable && (
               <Grid className={classes.renew} item xs={12}>
                 <>

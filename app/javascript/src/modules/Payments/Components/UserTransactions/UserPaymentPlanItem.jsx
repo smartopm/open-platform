@@ -561,7 +561,7 @@ export function renderPlan(
     ),
     'Payment Plan': (
       <Grid item xs={12} md={2} data-testid="payment-plan">
-        {plan.planType}
+        {titleize(plan.planType)}
         <br />
         {planList ? (
           <Grid item xs={9} md={2} style={{ marginTop: '10px' }} data-testid="status">

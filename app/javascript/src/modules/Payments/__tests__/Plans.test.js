@@ -22,7 +22,7 @@ describe('Plan List Component', () => {
         data: {
           userPlansWithPayments: [{
             id: 'f280159d-ac71-4c22-997a-07fd07344c94',
-            planType: 'lease',
+            planType: 'basic',
             startDate: '2021-01-26',
             installmentAmount: '200',
             paymentDay: 1,
