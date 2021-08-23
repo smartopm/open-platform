@@ -7,7 +7,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import { makeStyles } from '@material-ui/styles';
 import { DeleteOutline } from '@material-ui/icons';
 import { Spinner } from '../../../../shared/Loading';
-import { checkCondition , extraFormPropertyValue } from '../../utils';
+import { checkCondition , extractValidFormPropertyValue } from '../../utils';
 import { FormContext } from '../../Context';
 
 export default function CategoryItem({
@@ -23,8 +23,8 @@ export default function CategoryItem({
 }) {
   const classes = useStyles();
   const { formProperties } = useContext(FormContext)
-  const properties = extraFormPropertyValue(formProperties)
-
+  const properties = extractValidFormPropertyValue(formProperties)
+  
   if(!checkCondition(category, properties, editMode)){
     return null
   }
