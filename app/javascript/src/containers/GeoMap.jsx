@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect} from 'react'
 import PropTypes from 'prop-types'
 import { useQuery, useLazyQuery } from 'react-apollo'
 import { Typography } from '@material-ui/core';
@@ -19,6 +19,7 @@ import { checkValidGeoJSON } from '../utils/helpers'
 import { emptyPolygonFeature, mapTiles, publicMapToken, plotStatusColorPallete } from '../utils/constants'
 import PointOfInterestDrawerDialog from '../components/Map/PointOfInterestDrawerDialog'
 import { CurrentCommunityQuery } from '../modules/Community/graphql/community_query'
+import { Spinner } from '../shared/Loading';
 
 const { attribution, mapboxStreets, mapboxSatellite, openStreetMap, centerPoint } = mapTiles
 const { mapbox: mapboxPublicToken } = publicMapToken
@@ -191,7 +192,12 @@ export default function GeoMap() {
     return centerPoint[communityName.toLowerCase()]
   }
 
-  if (loading || loadingCommunityData) return <></>;
+  useEffect(() => {
+    // TODO: Victor control map canvas re-size from useMap (v3.2.1)
+    setTimeout(()=> window.dispatchEvent(new Event('resize')), 500);
+  })
+
+  if (loading || loadingCommunityData) return <Spinner />;
 
    return (
      <>
