@@ -3,8 +3,10 @@ import { AddCircleOutline } from '@material-ui/icons'
 import DoneIcon from '@material-ui/icons/Done'
 import { Button, FormHelperText } from '@material-ui/core'
 import PropTypes from 'prop-types'
+import { useTranslation } from 'react-i18next'
 
 export default function UploadField({ detail, upload, editable, uploaded }) {
+  const { t } = useTranslation(['common', 'form'])
   return (
     <>
       <label htmlFor={`button-${detail.label}`}>
@@ -33,7 +35,7 @@ export default function UploadField({ detail, upload, editable, uploaded }) {
           disabled={editable}
           startIcon={detail.type === 'file' && uploaded ? <DoneIcon /> : <AddCircleOutline />}
         >
-          {uploaded ? 'File Uploaded' : 'Upload File'}
+          {uploaded ? t('form:misc.file_uploaded') : t('form:misc.upload_file')}
         </Button>
       </label>
     </>

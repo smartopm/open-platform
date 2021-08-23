@@ -85,6 +85,8 @@
     "updated_form_category": "Actualizó con éxito una categoría",
     "updated_form_property": "Formulario de propiedad actualizada con éxito",
     "updates": "Novedades",
-    "version_number": "Número de versión"
+    "version_number": "Número de versión",
+    "upload_file": "Subir archivo",
+    "file_uploaded": "Archivo subido"
   }
 }
