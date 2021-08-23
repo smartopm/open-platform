@@ -59,7 +59,7 @@ export function DateAndTimePickers({ selectedDateTime, handleDateChange, label, 
 }
 
 
-export function ThemedTimePicker({ handleTimeChange, time, label }){
+export function ThemedTimePicker({ handleTimeChange, time, label, ...otherProps }){
   return (
     <MuiPickersUtilsProvider utils={DateFnsUtils}>
       <TimePicker
@@ -68,6 +68,7 @@ export function ThemedTimePicker({ handleTimeChange, time, label }){
         label={label}
         value={time}
         onChange={handleTimeChange}
+        {...otherProps}
       />
     </MuiPickersUtilsProvider>
   )

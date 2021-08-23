@@ -15,13 +15,16 @@ import { formatError } from '../../../utils/helpers';
 import MessageAlert from '../../../components/MessageAlert';
 import { LiteFormCategories } from '../graphql/form_category_queries';
 
+// Replace this with translation and remove options on FormPropertySelector
 const fieldTypes = {
   text: 'Text',
   radio: 'Radio',
-  file_upload: 'File Upload',
-  signature: 'Signature',
   date: 'Date',
-  dropdown: 'Dropdown'
+  time: 'Time',
+  datetime: 'Date with Time',
+  dropdown: 'Dropdown',
+  signature: 'Signature',
+  file_upload: 'File Upload',
 };
 
 export default function FormPropertyCreateForm({ formId, refetch, propertyId, categoryId, close }) {
@@ -87,7 +90,7 @@ export default function FormPropertyCreateForm({ formId, refetch, propertyId, ca
       variables: {
         ...propertyData,
         fieldValue,
-        formId,
+        formId
       }
     })
       .then(() => {
@@ -112,7 +115,7 @@ export default function FormPropertyCreateForm({ formId, refetch, propertyId, ca
       variables: {
         ...propertyData,
         fieldValue,
-        formPropertyId: propertyId,
+        formPropertyId: propertyId
       }
     })
       .then(res => {

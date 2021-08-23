@@ -84,6 +84,8 @@
     "file_upload": "File Upload",
     "signature": "Signature",
     "date": "Date",
+    "time": "Time",
+    "datetime": "Date with Time",
     "dropdown": "Dropdown"
   }
 }
