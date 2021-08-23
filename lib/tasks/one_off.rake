@@ -289,7 +289,9 @@ namespace :backfill do
         if type
           plan.update!(plan_type: type)
         else
-          errors << { 'invalid type' => [plan.id, plan.user.name, plan.user.community.name] }
+          errors << {
+            'Amount does not match any plan' => [plan.id, plan.user.name, plan.user.community.name],
+          }
         end
       end
 
@@ -297,6 +299,8 @@ namespace :backfill do
     end
 
     puts "Errors: #{errors}" if errors.present?
+    puts '-----#############--------'
+    puts "Affected plan ids: #{errors.map { |er| er.values.flatten.first }}" if errors.present?
     puts 'Done.'
   end
 end

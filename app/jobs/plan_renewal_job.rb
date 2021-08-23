@@ -8,7 +8,7 @@ class PlanRenewalJob < ApplicationJob
   # rubocop:disable Metrics/AbcSize
   # rubocop:disable Metrics/MethodLength
   def perform
-    Properties::PaymentPlan..where(renewable: true).find_each do |payment_plan|
+    Properties::PaymentPlan.where(renewable: true).find_each do |payment_plan|
       next unless payment_plan.plan_duration.last.to_date == 2.months.from_now.to_date
       next unless VALID_PLAN_TYPES.keys.include?(payment_plan.plan_type)
 
@@ -22,7 +22,8 @@ class PlanRenewalJob < ApplicationJob
 
       if sub_plan.present?
         new_payment_plan = payment_plan.dup
-        new_payment_plan.start_date = sub_plan.start_date
+        new_payment_plan.start_date = next_plan_start_date(payment_plan)
+        new_payment_plan.plan_type = sub_plan.plan_type
         new_payment_plan.installment_amount = sub_plan.amount
         new_payment_plan.total_amount = sub_plan.amount * payment_plan.duration
         new_payment_plan.save!
