@@ -4,10 +4,10 @@ module Types
   # FormType
   class FormPropertiesType < Types::BaseObject
     field :id, ID, null: false
-    field :grouping_id, ID, null: true # change this later
+    field :grouping_id, ID, null: false
     field :order, String, null: true
     field :field_name, String, null: false
-    field :field_type, String, null: true
+    field :field_type, String, null: false
     field :field_value, GraphQL::Types::JSON, null: true
     field :short_desc, String, null: true
     field :long_desc, String, null: true

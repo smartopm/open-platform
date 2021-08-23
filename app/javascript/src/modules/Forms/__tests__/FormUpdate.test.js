@@ -55,6 +55,7 @@ describe('Form Component', () => {
                 fieldType: 'text',
                 fieldValue: null,
                 id: '3145c47e-1279-47b0-9dac-dc4a7e30562e',
+                groupingId: '3145c47e-1279-47b0-9dac',
                 adminUse: false,
                 order: '1'
               },
@@ -68,6 +69,7 @@ describe('Form Component', () => {
                 fieldType: 'date',
                 fieldValue: null,
                 id: '3145c47e-1279-47b0-8dac-dc4a7e362e',
+                groupingId: '3145c47e-1279-47b0',
                 adminUse: false,
                 order: '2'
               },
@@ -81,6 +83,7 @@ describe('Form Component', () => {
                 fieldType: 'file_upload',
                 fieldValue: null,
                 id: '3145c47e-1279-47b0-9da454c-dc4a7e362e',
+                groupingId: '3145c47e-1279-47b0',
                 adminUse: false,
                 order: '3'
               },
@@ -94,6 +97,7 @@ describe('Form Component', () => {
                 fieldType: 'file_upload',
                 fieldValue: null,
                 id: '3145c47e-1234-47b0-9dac-dc723d2e',
+                groupingId: '3145c47e-1279-47',
                 adminUse: false,
                 order: '5'
               },
@@ -116,6 +120,7 @@ describe('Form Component', () => {
                   }
                 ],
                 id: '3145c47e-1234-34b0-9dac-dc723d2e',
+                groupingId: '3145c47e-1279-9dac',
                 adminUse: false,
                 order: '6'
               },
@@ -162,7 +167,7 @@ describe('Form Component', () => {
         expect(container.queryByLabelText('No')).toBeInTheDocument()
         expect(container.queryByText('Would you rather?')).toBeInTheDocument()
       },
-      { timeout: 500 }
+      { timeout: 50 }
     )
   })
 })

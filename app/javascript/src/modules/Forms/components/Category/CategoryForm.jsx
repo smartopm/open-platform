@@ -50,13 +50,14 @@ export default function CategoryForm({ data, close, formData, refetchCategories 
 
   function handleSaveCategory(event) {
     event.preventDefault();
+    const { condition, groupingId, value, ...catData } = categoryData
     createCategory({ 
       variables: { 
-        ...categoryData, 
+        ...catData, 
         displayCondition: {
-          condition: categoryData.condition,
-          groupingId: categoryData.groupingId,
-          value: categoryData.value
+          condition,
+          groupingId,
+          value
         },
         order: Number(categoryData.order), 
         formId 
@@ -73,13 +74,14 @@ export default function CategoryForm({ data, close, formData, refetchCategories 
 
   function handleUpdateCategory(event) {
     event.preventDefault();
+    const { condition, groupingId, value, ...catData } = categoryData
     updateCategory({
       variables: { 
-        ...categoryData,
+        ...catData,
         displayCondition: {
-          condition: categoryData.condition,
-          groupingId: categoryData.groupingId,
-          value: categoryData.value
+          condition,
+          groupingId,
+          value
         },
         order: Number(categoryData.order), 
         categoryId: data.id 

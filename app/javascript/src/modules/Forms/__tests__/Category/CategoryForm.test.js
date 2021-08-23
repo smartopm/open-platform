@@ -6,7 +6,7 @@ import { BrowserRouter } from 'react-router-dom';
 import CategoryForm from '../../components/Category/CategoryForm';
 import { FormCategoryUpdateMutation } from '../../graphql/form_category_mutations';
 
-// TODO: @olivier: fix the console warning in this 
+jest.mock('@rails/activestorage/src/file_checksum', () => []);
 describe('CategoryForm Component', () => {
   const props = {
     data: {
@@ -16,7 +16,12 @@ describe('CategoryForm Component', () => {
       description: 'ser',
       headerVisible: false,
       renderedText: '',
-      general: false
+      general: false,
+      displayCondition: {
+        condition: '',
+        value: '',
+        groupingId: ''
+      }
     },
     formData: [
       {
