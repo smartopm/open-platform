@@ -21,7 +21,7 @@ export default function CategoryForm({ data, close, formData, refetchCategories 
     headerVisible: false,
     general: false,
     order: 1,
-    renderedText: '',
+    renderedText: ' ',
     condition: '',
     groupingId: '',
     value: '' // value for the condition

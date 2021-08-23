@@ -55,9 +55,7 @@ export function checkCondition(category, properties, editMode) {
     property &&
     eval(
       dompurify.sanitize(
-        `${property.value || 0} ${category.displayCondition.condition} ${
-          category.displayCondition.value
-        }`
+        `"${property.value}" ${category.displayCondition.condition} "${category.displayCondition.value}"`
       )
     )
   ) {
