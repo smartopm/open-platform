@@ -102,7 +102,7 @@ export function MainNav({ authState }) {
   };
 
   const communityHasEmergencyNumber = Boolean(authState.user?.community?.emergencyCallNumber)
-  const communityHasEmergencySMSNumber = Boolean(authState.user?.community?.smsPhoneNumbers)
+  const communityHasEmergencySMSNumber = Boolean(authState.user?.community?.smsPhoneNumbers.filter(Boolean).length != 0)
 
   return (
     <div className={classes.root}>

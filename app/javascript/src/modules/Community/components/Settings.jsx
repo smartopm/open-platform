@@ -285,7 +285,7 @@ export default function CommunitySettings({ data, token, refetch }) {
         subAdministratorId,
         themeColors,
         bankingDetails,
-        smsPhoneNumbers: smsPhoneNumbers.split(/[ ,]+/),
+        smsPhoneNumbers: smsPhoneNumbers.split(/[ ,]+/).filter(Boolean),
         emergencyCallNumber
       },
     })
