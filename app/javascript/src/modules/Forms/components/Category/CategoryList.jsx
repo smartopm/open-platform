@@ -5,7 +5,6 @@ import RenderForm from '../RenderForm';
 import FormPropertyCreateForm from '../FormPropertyCreateForm';
 import { Spinner } from '../../../../shared/Loading';
 
-
 export default function CategoryList({
   categoriesData,
   editMode,
@@ -15,17 +14,17 @@ export default function CategoryList({
   categoryItem,
   loading
 }) {
- 
- // to only show a loader on category that is being deleted
- const [currentId, setCurrentId] = useState('')
+  // to only show a loader on category that is being deleted
+  const [currentId, setCurrentId] = useState('');
   if (categoriesData.loading) {
     return <Spinner />;
   }
 
-  function handleRemoveCategory(id){
-      setCurrentId(id)
-      categoryItem.handleDeleteCategory(id)
+  function handleRemoveCategory(id) {
+    setCurrentId(id);
+    categoryItem.handleDeleteCategory(id);
   }
+
   return (
     <>
       {categoriesData?.data &&
@@ -89,6 +88,6 @@ CategoryList.propTypes = {
   categoryItem: PropTypes.shape({
     handleAddField: PropTypes.func,
     handleEditCategory: PropTypes.func,
-    handleDeleteCategory: PropTypes.func,
-  }).isRequired
+    handleDeleteCategory: PropTypes.func
+  }).isRequired,
 };

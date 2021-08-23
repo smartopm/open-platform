@@ -18,15 +18,12 @@ module Mutations
 
         category = form.categories.find_by(id: values[:category_id])
         raise_category_not_found_error(category)
-        category_name = category.field_name
 
         if form.entries?
           new_form = duplicate_form(form, values)
-          remove_category_name_from_field_value(new_form, category_name)
           { message: 'New version created', new_form_version: new_form } if new_form.persisted?
         else
           if category.destroy
-            remove_category_name_from_field_value(form, category_name)
             data = { action: 'removed', field_name: category.field_name }
             context[:current_user].generate_events('form_update', form, data)
             return { message: I18n.t('response.category_deleted') }
@@ -88,24 +85,6 @@ module Mutations
         end
       end
       # rubocop:enable Metrics/MethodLength
-
-      # Removes the category_name of field value where the category_name is same as the field
-      # name of category which is going to be deleted
-      #
-      # @param form [Forms::Form]
-      # @param category_name [String]
-      #
-      # @return [void]
-      def remove_category_name_from_field_value(form, category_name)
-        form_properties = form.form_properties.where('field_value::jsonb @> ?',
-                                                     [{ category_name: category_name }].to_json)
-        form_properties.each do |property|
-          property.field_value&.map do |values|
-            values['category_name'] = '' if values['category_name'].eql?(category_name)
-          end
-          property.save!
-        end
-      end
     end
   end
 end

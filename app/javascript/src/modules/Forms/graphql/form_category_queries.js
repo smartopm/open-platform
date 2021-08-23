@@ -11,8 +11,10 @@ export const FormCategoriesQuery = gql`
       general
       headerVisible
       renderedText
+      displayCondition
       formProperties {
         id
+        groupingId
         fieldName
         fieldType
         fieldValue

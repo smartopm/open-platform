@@ -8,6 +8,8 @@ RSpec.describe Mutations::Form::FormCreate do
     let!(:community) { user.community }
     let!(:admin) { create(:admin_user, community: community) }
     let!(:form) { create(:form, community: community) }
+    let!(:category) { create(:category, form: form) }
+    let!(:form_property) { create(:form_property, form: form, category: category) }
     let(:mutation) do
       <<~GQL
         mutation categoryCreate(
@@ -18,7 +20,7 @@ RSpec.describe Mutations::Form::FormCreate do
           $general: Boolean!,
           $description: String,
           $renderedText: String,
-          $formPropertyId: ID
+          $displayCondition: JSON
         ) {
           categoryCreate(
             formId: $formId,
@@ -28,13 +30,14 @@ RSpec.describe Mutations::Form::FormCreate do
             general: $general,
             description: $description,
             renderedText: $renderedText,
-            formPropertyId: $formPropertyId
+            displayCondition: $displayCondition
           ){
             category{
               fieldName
               order
               headerVisible
               general
+              displayCondition
             }
           }
         }
@@ -68,6 +71,11 @@ RSpec.describe Mutations::Form::FormCreate do
           order: 1,
           headerVisible: true,
           general: false,
+          displayCondition: {
+            'grouping_id': form_property.grouping_id,
+            'condition': '===',
+            'value': 'Fishing',
+          },
         }
 
         result = DoubleGdpSchema.execute(mutation, variables: variables,
@@ -81,6 +89,7 @@ RSpec.describe Mutations::Form::FormCreate do
         expect(category_result['order']).to eql 1
         expect(category_result['headerVisible']).to eql true
         expect(category_result['general']).to eql false
+        expect(category_result['displayCondition']['grouping_id']).to eql form_property.grouping_id
       end
     end
 

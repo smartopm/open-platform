@@ -4,7 +4,7 @@ import { useApolloClient, useMutation } from 'react-apollo';
 import { useTranslation } from 'react-i18next';
 import { useFileUpload } from '../../../graphql/useFileUpload';
 import { FormUserCreateMutation } from '../graphql/forms_mutation';
-import { addPropWithValue } from '../utils';
+import { addPropWithValue, extractValidFormPropertyValue } from '../utils';
 
 export const FormContext = createContext({});
 
@@ -21,7 +21,7 @@ export default function FormContextProvider({ children }) {
   };
   const initialData = {
     fieldType: '',
-    fieldName: ' ',
+    fieldName: '',
     date: { value: null },
     radio: { value: { label: '', checked: null } }
   };
@@ -68,12 +68,7 @@ export default function FormContextProvider({ children }) {
     
     // eslint-disable-next-line no-unreachable
     const fileSignType = formData.filter(item => item.fieldType === 'signature')[0];
-
-    // get values from properties state
-    const formattedProperties = Object.entries(formProperties).map(([, value]) => value);
-    const filledInProperties = formattedProperties.filter(
-      item => item.value && item.value?.checked !== null && item.form_property_id !== null
-    );
+    const filledInProperties = extractValidFormPropertyValue(formProperties)
 
     // get signedBlobId as value and attach it to the form_property_id
     if (formState.signed && signature.signedBlobId) {

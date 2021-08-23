@@ -14,6 +14,7 @@ RSpec.describe Forms::FormProperty, type: :model do
     it { is_expected.to have_db_column(:required).of_type(:boolean) }
     it { is_expected.to have_db_column(:created_at).of_type(:datetime) }
     it { is_expected.to have_db_column(:updated_at).of_type(:datetime) }
+    it { is_expected.to have_db_column(:grouping_id).of_type(:uuid) }
   end
 
   describe 'associations' do

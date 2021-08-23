@@ -26,15 +26,13 @@ module Mutations
         category = form.categories.find_by(id: vals[:category_id])
         raise_category_not_found_error(category)
 
-        raise_category_name_related_errors(form, category.field_name, vals[:field_value])
-
         form_property = category.form_properties.new(vals.merge({ category_id: category.id }))
         data = { action: 'added', field_name: vals[:field_name] }
 
         if form_property.save
           context[:current_user].generate_events('form_update', form, data)
 
-          return { form_property: form_property }
+          return { form_property: form_property.reload }
         end
 
         raise GraphQL::ExecutionError, form_property.errors.full_messages
@@ -69,30 +67,6 @@ module Mutations
 
         raise GraphQL::ExecutionError, I18n.t('errors.category.not_found')
       end
-
-      # rubocop:disable Style/GuardClause
-      # Raises error if the category which is being linked to property does not exists or is same
-      # as the parent category
-      #
-      # @param form [Forms::Form]
-      # @param category_name [String]
-      # @param field_value [JSON]
-      #
-      # @return [void]
-      def raise_category_name_related_errors(form, category_name, field_value)
-        return if field_value.nil?
-
-        field_value.map do |value|
-          if value['category_name'].present?
-            if value['category_name'].eql?(category_name)
-              raise GraphQL::ExecutionError, I18n.t('errors.category.cannot_be_linked')
-            elsif !form.categories.exists?(field_name: value['category_name'])
-              raise GraphQL::ExecutionError, I18n.t('errors.category.not_found')
-            end
-          end
-        end
-      end
-      # rubocop:enable Style/GuardClause
     end
   end
 end

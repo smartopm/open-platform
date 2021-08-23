@@ -26,13 +26,15 @@ module Mutations
         raise_form_property_not_found_error(form_property)
 
         form = form_property.form
-        raise_category_name_related_errors(form, form_property.category, vals[:field_value])
+        grouping_id = form_property.grouping_id
 
         if form.entries? && destructive_change?(vals, form_property)
           new_form = duplicate_form(form, vals)
+          update_category_display_condition(new_form, grouping_id)
           { message: 'New version created', new_form_version: new_form } if new_form.persisted?
         else
           if form_property.update(vals.except(:form_property_id))
+            update_category_display_condition(form, grouping_id)
             data = { action: 'updated', field_name: vals[:field_name] }
             context[:current_user].generate_events('form_update', form, data)
             return { form_property: form_property }
@@ -66,30 +68,6 @@ module Mutations
         raise GraphQL::ExecutionError, I18n.t('errors.form_property.not_found')
       end
 
-      # rubocop:disable Style/GuardClause
-      # Raises error if the category which is being linked to property does not exists or is same
-      # as the parent category
-      #
-      # @param form [Forms::Form]
-      # @param category_name [String]
-      # @param field_value [JSON]
-      #
-      # @return [void]
-      def raise_category_name_related_errors(form, category, field_value)
-        return if field_value.nil?
-
-        field_value.map do |value|
-          if value['category_name'].present?
-            if value['category_name'].eql?(category.field_name)
-              raise GraphQL::ExecutionError, I18n.t('errors.category.cannot_be_linked')
-            elsif !form.categories.exists?(field_name: value['category_name'])
-              raise GraphQL::ExecutionError, I18n.t('errors.category.not_found')
-            end
-          end
-        end
-      end
-      # rubocop:enable Style/GuardClause
-
       # rubocop:disable Metrics/MethodLength
       # Duplicates form with new version number
       #
@@ -112,6 +90,34 @@ module Mutations
           new_form
         end
       end
+      # rubocop:enable Metrics/MethodLength
+
+      # rubocop:disable Metrics/AbcSize
+      # rubocop:disable Metrics/MethodLength
+      # Resets the grouping_id in category display condition when the value
+      # of field_value is updated.
+      #
+      # @param form [Forms::Form]
+      # @param grouping_id [String]
+      #
+      # @return [void]
+      def update_category_display_condition(form, grouping_id)
+        form_property = form.form_properties.find_by(grouping_id: grouping_id)
+
+        field_values = []
+        form_property.field_value&.map do |values|
+          field_values << values['value'] if values['value'].present?
+        end
+
+        categories = form.categories.where("display_condition->>'grouping_id' = ?", grouping_id)
+        categories.each do |category|
+          next if field_values.include?(category.display_condition['value'])
+
+          category.display_condition['grouping_id'] = ''
+          category.save!
+        end
+      end
+      # rubocop:enable Metrics/AbcSize
       # rubocop:enable Metrics/MethodLength
     end
   end

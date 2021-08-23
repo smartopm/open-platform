@@ -11,26 +11,23 @@ module Mutations
       argument :general, Boolean, required: true
       argument :description, String, required: false
       argument :rendered_text, String, required: false
+      argument :display_condition, GraphQL::Types::JSON, required: false
 
       field :category, Types::CategoryType, null: true
       field :message, String, null: true
       field :new_form_version, Types::FormType, null: true
 
       # rubocop:disable Metrics/MethodLength
-      # rubocop:disable Metrics/AbcSize
       def resolve(values)
         category = Forms::Category.find_by(id: values[:category_id])
         raise_category_not_found_error(category)
 
         form = category.form
-        category_name = category.field_name
         if form.entries?
           new_form = duplicate_form(form, values)
-          update_form_property_field_value(new_form, category_name, values[:field_name])
           { message: 'New version created', new_form_version: new_form } if new_form.persisted?
         else
           if category.update(values.except(:category_id))
-            update_form_property_field_value(form, category_name, values[:field_name])
             data = { action: 'updated', field_name: values[:field_name] }
             context[:current_user].generate_events('form_update', form, data)
             return { category: category }
@@ -39,9 +36,8 @@ module Mutations
           raise GraphQL::ExecutionError, category.errors.full_messages
         end
       end
-      # rubocop:enable Metrics/MethodLength
-      # rubocop:enable Metrics/AbcSize
 
+      # rubocop:enable Metrics/MethodLength
       # Verifies if current user is admin or not.
       def authorized?(_vals)
         return true if context[:current_user]&.admin?
@@ -83,27 +79,6 @@ module Mutations
         end
       end
       # rubocop:enable Metrics/MethodLength
-
-      # Updates the category_name of field value here the category_name is same as the field name
-      # of category whose field name is going to be updated
-      #
-      # @param form [Forms::Form]
-      # @param category_name [String]
-      # @param new_field_name [String]
-      #
-      # @return [void]
-      def update_form_property_field_value(form, category_name, new_field_name)
-        return if category_name.eql?(new_field_name)
-
-        form_properties = form.form_properties.where('field_value::jsonb @> ?',
-                                                     [{ category_name: category_name }].to_json)
-        form_properties.each do |property|
-          property.field_value&.map do |values|
-            values['category_name'] = new_field_name if values['category_name'].eql?(category_name)
-          end
-          property.save!
-        end
-      end
     end
   end
 end

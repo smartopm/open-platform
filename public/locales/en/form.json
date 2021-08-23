@@ -29,6 +29,7 @@
     "previewable": "Should have a preview",
     "contract_preview": "Contract Preview",
     "category": "Category",
+    "display_condition": "Display Condition - Optional",
     "upload_file": "Upload File",
     "file_uploaded": "File Uploaded"
   },
@@ -78,7 +79,10 @@
     "rendered_text": "Rendered Text",
     "name": "Name",
     "header_visible": "Visible Header",
-    "general_category": "General"
+    "general_category": "General",
+    "property_field_name": "Property Name",
+    "condition": "Condition",
+    "condition_value": "Value"
   },
   "field_types": {
     "text": "Text",
@@ -89,5 +93,12 @@
     "time": "Time",
     "datetime": "Date with Time",
     "dropdown": "Dropdown"
+  },
+  "conditions": {
+    "===": "equals to",
+    ">": "is greater than",
+    "<": "is less than ",
+    ">=": "is greater or equal to",
+    "<=": "is less or equal to"
   }
 }

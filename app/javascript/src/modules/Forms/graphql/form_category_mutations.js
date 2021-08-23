@@ -4,23 +4,23 @@ import gql from 'graphql-tag';
 export const FormCategoryCreateMutation = gql`
   mutation formCategoryCreate(
     $formId: ID!
-    $formPropertyId: ID
     $order: Int!
     $fieldName: String!
     $description: String!
     $headerVisible: Boolean!
     $general: Boolean!
     $renderedText: String
+    $displayCondition: JSON
   ) {
     categoryCreate(
       formId: $formId
-      formPropertyId: $formPropertyId
       order: $order
       fieldName: $fieldName
       headerVisible: $headerVisible
       general: $general
       description: $description
       renderedText: $renderedText
+      displayCondition: $displayCondition
     ) {
       category {
         id
@@ -39,6 +39,7 @@ export const FormCategoryUpdateMutation = gql`
     $headerVisible: Boolean!
     $general: Boolean!
     $renderedText: String
+    $displayCondition: JSON
   ) {
     categoryUpdate(
       categoryId: $categoryId
@@ -48,6 +49,7 @@ export const FormCategoryUpdateMutation = gql`
       general: $general
       description: $description
       renderedText: $renderedText
+      displayCondition: $displayCondition
     ) {
       category {
         id

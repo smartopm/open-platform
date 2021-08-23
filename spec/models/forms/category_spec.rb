@@ -13,6 +13,7 @@ RSpec.describe Forms::Category, type: :model do
     it { is_expected.to have_db_column(:general).of_type(:boolean).with_options(default: false) }
     it { is_expected.to have_db_column(:form_property_id).of_type(:uuid) }
     it { is_expected.to have_db_column(:form_id).of_type(:uuid) }
+    it { is_expected.to have_db_column(:display_condition).of_type(:json) }
   end
 
   describe 'associations' do

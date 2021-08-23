@@ -167,6 +167,7 @@ ActiveRecord::Schema.define(version: 2021_08_23_050307) do
     t.uuid "form_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.json "display_condition"
     t.index ["form_id"], name: "index_categories_on_form_id"
   end
 
@@ -320,6 +321,7 @@ ActiveRecord::Schema.define(version: 2021_08_23_050307) do
     t.datetime "updated_at", precision: 6, null: false
     t.json "field_value"
     t.uuid "category_id"
+    t.uuid "grouping_id", default: -> { "gen_random_uuid()" }
     t.index ["category_id"], name: "index_form_properties_on_category_id"
     t.index ["form_id"], name: "index_form_properties_on_form_id"
   end

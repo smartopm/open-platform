@@ -6,6 +6,7 @@ import { BrowserRouter } from 'react-router-dom';
 import CategoryForm from '../../components/Category/CategoryForm';
 import { FormCategoryUpdateMutation } from '../../graphql/form_category_mutations';
 
+jest.mock('@rails/activestorage/src/file_checksum', () => []);
 describe('CategoryForm Component', () => {
   const props = {
     data: {
@@ -15,8 +16,19 @@ describe('CategoryForm Component', () => {
       description: 'ser',
       headerVisible: false,
       renderedText: '',
-      general: false
+      general: false,
+      displayCondition: {
+        condition: '',
+        value: '',
+        groupingId: ''
+      }
     },
+    formData: [
+      {
+        id: '23423',
+        fieldName: 'Some Other Name'
+      }
+    ],
     close: jest.fn(),
     refetchCategories: jest.fn()
   };
