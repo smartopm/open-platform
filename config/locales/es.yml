@@ -331,6 +331,8 @@ es:
       already_made: Ya ha respondido a este formulario. Solo puede completar este
         formulario una vez. Comuníquese con el equipo de soporte si se trata de un
         error.
+    subscription:
+      not_found: No se encontró la suscripción al plan
     substatus_log:
       date_must_be_greater: La fecha no puede ser menor que la fecha de inicio del
         registro anterior

@@ -37,8 +37,10 @@
   "map_markers": {
     "available": "Disponible",
     "house_status": "Estado de la Casa:",
+    "latitude_x": "Longitud X",
     "latitude_y": "Latitud Y:",
     "longitude_x": "Longitud X:",
+    "longitude_y": "Latitud Y",
     "property_no": "Propiedad No:",
     "property_type": "Tipo de Propiedad:",
     "sold": "Vendido"
@@ -91,7 +93,7 @@
   },
   "poi_list": {
     "id": "ID:",
-    "latitude_y": "Latitud Y:",
+    "latitude_y": "Latitud X:",
     "longitude_x": "Longitud X:",
     "poi": "PDI:",
     "type": "Tipo"
