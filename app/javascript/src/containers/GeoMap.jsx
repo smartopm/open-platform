@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import { useQuery, useLazyQuery } from 'react-apollo'
 import { Typography } from '@material-ui/core';
 import { renderToString } from 'react-dom/server'
+import L from 'leaflet'
 import { Map, FeatureGroup, GeoJSON, LayersControl, TileLayer, Popup } from 'react-leaflet'
 import { StyleSheet, css } from 'aphrodite'
 import NkwashiCoverageData from '../data/nkwashi_coverage_boundary.json'
@@ -99,6 +100,9 @@ export default function GeoMap() {
   const houseFeatureCollection = { type: 'FeatureCollection',  features: [] }
   const coverageData = getMapBoundary(communityName)
   const subUrbanData = getSubUrbanData(communityName)
+  // monkey-patch to remove focus on zoom control buttons
+  /* eslint-disable-next-line no-underscore-dangle */
+  L.Control.prototype._refocusOnMap = function _refocusOnMap() {};
 
   /* istanbul ignore next */
   function handleCloseDrawer(){
