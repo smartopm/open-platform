@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_08_18_094234) do
+ActiveRecord::Schema.define(version: 2021_08_23_050307) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -524,7 +524,7 @@ ActiveRecord::Schema.define(version: 2021_08_18_094234) do
   create_table "payment_plans", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "user_id", null: false
     t.uuid "land_parcel_id", null: false
-    t.string "plan_type"
+    t.integer "plan_type"
     t.datetime "start_date"
     t.integer "status"
     t.decimal "percentage", precision: 11, scale: 2
@@ -538,6 +538,7 @@ ActiveRecord::Schema.define(version: 2021_08_18_094234) do
     t.decimal "installment_amount", precision: 11, scale: 2
     t.integer "payment_day", default: 1
     t.integer "frequency"
+    t.boolean "renewable", default: false
     t.index ["land_parcel_id"], name: "index_payment_plans_on_land_parcel_id"
     t.index ["user_id"], name: "index_payment_plans_on_user_id"
   end

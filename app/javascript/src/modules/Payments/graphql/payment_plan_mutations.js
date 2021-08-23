@@ -1,8 +1,8 @@
 import gql from 'graphql-tag';
 
 const PaymentPlanUpdateMutation = gql`
-  mutation paymentDayUpdate($id: ID!, $userId: ID!, $paymentDay: Int) {
-    paymentDayUpdate(id: $id, userId: $userId, paymentDay: $paymentDay) {
+  mutation paymentPlanUpdate($planId: ID!, $paymentDay: Int, $renewable: Boolean) {
+    paymentPlanUpdate(planId: $planId, paymentDay: $paymentDay, renewable: $renewable) {
       paymentPlan {
         id
       }

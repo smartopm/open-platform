@@ -1,19 +1,39 @@
-import React from 'react';
+
+import React, { useState } from 'react';
 import Typography from '@material-ui/core/Typography';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { useTranslation } from 'react-i18next';
 import { makeStyles } from '@material-ui/core/styles';
-import Divider from '@material-ui/core/Divider';
 import PropTypes from 'prop-types';
-import Grid from '@material-ui/core/Grid';
+import { Divider, Grid, Button, Menu, MenuItem } from '@material-ui/core';
+import EditIcon from '@material-ui/icons/Edit';
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
-import { DetailsDialog } from '../../../../components/Dialog';
+import { CustomizedDialogs } from '../../../../components/Dialog';
 import { dateToString } from '../../../../components/DateContainer';
-import { formatMoney } from '../../../../utils/helpers';
+import { formatMoney, formatError, titleize } from '../../../../utils/helpers';
+import { suffixedNumber } from '../../helpers';
+import { StyledTabs, StyledTab, TabPanel } from '../../../../components/Tabs';
+import SwitchInput from '../../../Forms/components/FormProperties/SwitchInput';
 
-export default function PlanDetail({ open, handleModalClose, planData, currencyData }) {
+export default function PlanDetail({
+  open,
+  handleModalClose,
+  planData,
+  currencyData,
+  updatePaymentPlan,
+  plansRefetch,
+  setMessageAlert,
+  setIsSuccessAlert
+}) {
   const classes = useStyles();
   const matches = useMediaQuery('(max-width:600px)');
+  const [tabValue, setTabValue] = useState('Plan Details');
+  const [editing, setEditing] = useState(false);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [mutationLoading, setMutationLoading] = useState(false);
+  const [paymentDay, setPaymentDay] = useState(planData.paymentDay);
+  const [renewable, setRenewable] = useState(planData.renewable);
+  const validDays = [...Array(28).keys()];
   const { t } = useTranslation(['payment', 'common']);
   const planFrequency = {
     daily: 'days',
@@ -27,113 +47,265 @@ export default function PlanDetail({ open, handleModalClose, planData, currencyD
       return planData.coOwners.map(owner => owner.name).join(', ')
     }
   }
+
+  function handleTabValueChange(_event, newValue) {
+    setTabValue(newValue);
+  };
+
+  function handleSetDay(day){
+    handleMenuClose();
+    setPaymentDay(day);
+  }
+
+  function handleMenu(event){
+    if(editing){
+      setAnchorEl(event.currentTarget);
+    }
+  }
+
+  function handleMenuClose() {
+    setAnchorEl(null);
+  };
+
+  function handlePlanUpdate(){
+    if(!editing){
+      setEditing(true);
+    }else{
+      setMutationLoading(true);
+      updatePaymentPlan({
+        variables: {
+          planId: planData.id,
+          paymentDay,
+          renewable
+        }
+      })
+        .then(() => {
+          setMutationLoading(false);
+          setEditing(false);
+          handleModalClose();
+          setMessageAlert(t('misc.payment_plan_updated'));
+          setIsSuccessAlert(true);
+          plansRefetch();
+        })
+        .catch(err => {
+          setMutationLoading(false);
+          setEditing(false);
+          setMessageAlert(formatError(err.message));
+          setIsSuccessAlert(false);
+          handleModalClose();
+        });
+    }
+  };
+
   return (
     <>
-      <DetailsDialog
+     
+      <CustomizedDialogs
         open={open}
-        handleClose={handleModalClose}
-        title={t('misc.plan_details')}
-        color="default"
+        handleModal={handleModalClose}
+        dialogHeader={tabValue === 'Plan Details' ? t('misc.plan_details') : t('misc.plan_settings')}
+        handleBatchFilter={handlePlanUpdate}
+        saveAction={editing ? t('common:form_actions.save') : t('actions.edit_plan_settings')}
+        actionLoading={mutationLoading}
+        disableActionBtn={mutationLoading}
+        cancelAction={tabValue === 'Plan Details' ? t('common:form_actions.close') : t('common:form_actions.cancel')}
+        displaySaveButton={tabValue === 'Plan Settings'}
       >
+        <StyledTabs value={tabValue} onChange={handleTabValueChange} aria-label="payment plan tabs">
+          <StyledTab label={t('misc.plan_details')} value="Plan Details" />
+          <StyledTab label={t('misc.plan_settings')} value="Plan Settings" />
+        </StyledTabs>
         <div className={matches ? classes.detailBodyMobile : classes.detailBody}>
-          <Grid container spacing={1} style={{ margin: '20px 0' }} data-testid="detail">
-            <Grid item xs={6}>
-              <Typography className={classes.details}>{t('common:misc.details')}</Typography>
+          <TabPanel value={tabValue} index="Plan Details">
+            <Grid container spacing={1} style={{ margin: '20px 0' }} data-testid="detail">
+              <Grid item xs={6}>
+                <Typography className={classes.details}>{t('common:misc.details')}</Typography>
+              </Grid>
+              <Grid item xs={6} style={{ textAlign: 'right' }}>
+                <KeyboardArrowDownIcon />
+              </Grid>
             </Grid>
-            <Grid item xs={6} style={{ textAlign: 'right' }}>
-              <KeyboardArrowDownIcon />
+            <Grid container spacing={1} data-testid="start-date">
+              <Grid item xs={6}>
+                <Typography className={classes.fieldTitle}>{t('common:table_headers.start_date')}</Typography>
+              </Grid>
+              <Grid item xs={6} className={classes.fieldContent}>
+                {dateToString(planData.startDate)}
+              </Grid>
             </Grid>
-          </Grid>
-          <Grid container spacing={1} data-testid="start-date">
-            <Grid item xs={6}>
-              <Typography className={classes.fieldTitle}>{t('common:table_headers.start_date')}</Typography>
+            <Divider className={classes.divider} />
+            <Grid container spacing={1} data-testid="frequency">
+              <Grid item xs={6}>
+                <Typography className={classes.fieldTitle}>{t('table_headers.frequency')}</Typography>
+              </Grid>
+              <Grid item xs={6} className={classes.fieldContent}>
+                {titleize(planData.frequency)}
+              </Grid>
             </Grid>
-            <Grid item xs={6} className={classes.fieldContent}>
-              {dateToString(planData.startDate)}
+            <Divider className={classes.divider} />
+            <Grid container spacing={1} data-testid="plan-duration">
+              <Grid item xs={6}>
+                <Typography className={classes.fieldTitle}>{t('table_headers.plan_duration')}</Typography>
+              </Grid>
+              <Grid item xs={6} className={classes.fieldContent}>
+                {`${planData.duration} ${planFrequency[planData?.frequency]}`}
+              </Grid>
             </Grid>
-          </Grid>
-          <Divider className={classes.divider} />
-          <Grid container spacing={1} data-testid="frequency">
-            <Grid item xs={6}>
-              <Typography className={classes.fieldTitle}>{t('table_headers.frequency')}</Typography>
+            <Divider className={classes.divider} />
+            <Grid container spacing={1} data-testid="end-date">
+              <Grid item xs={6}>
+                <Typography className={classes.fieldTitle}>{t('table_headers.end_date')}</Typography>
+              </Grid>
+              <Grid item xs={6} className={classes.fieldContent}>
+                {dateToString(planData.endDate)}
+              </Grid>
             </Grid>
-            <Grid item xs={6} className={classes.fieldContent}>
-              {planData.frequency}
+            <Divider className={classes.divider} />
+            <Grid container spacing={1} data-testid="status">
+              <Grid item xs={6}>
+                <Typography className={classes.fieldTitle}>{t('common:table_headers.status')}</Typography>
+              </Grid>
+              <Grid item xs={6} className={classes.fieldContent}>
+                {titleize(planData.status)}
+              </Grid>
             </Grid>
-          </Grid>
-          <Divider className={classes.divider} />
-          <Grid container spacing={1} data-testid="plan-duration">
-            <Grid item xs={6}>
-              <Typography className={classes.fieldTitle}>{t('table_headers.plan_duration')}</Typography>
+            <Divider className={classes.divider} />
+            <Grid container spacing={1} data-testid="plan-type">
+              <Grid item xs={6}>
+                <Typography className={classes.fieldTitle}>{t('table_headers.plan_type')}</Typography>
+              </Grid>
+              <Grid item xs={6} className={classes.fieldContent}>
+                {titleize(planData.planType)}
+              </Grid>
             </Grid>
-            <Grid item xs={6} className={classes.fieldContent}>
-              {`${planData.duration} ${planFrequency[planData?.frequency]}`}
+            <Divider className={classes.divider} />
+            <Grid container spacing={1}>
+              <Grid item xs={6}>
+                <Typography className={classes.fieldTitle}>{t('common:table_headers.amount')}</Typography>
+              </Grid>
+              <Grid item xs={6} className={classes.fieldContent}>
+                {formatMoney(currencyData, planData.installmentAmount)} 
+                {' '}
+                {planData?.frequency}
+              </Grid>
             </Grid>
-          </Grid>
-          <Divider className={classes.divider} />
-          <Grid container spacing={1} data-testid="end-date">
-            <Grid item xs={6}>
-              <Typography className={classes.fieldTitle}>{t('table_headers.end_date')}</Typography>
+            <Divider className={classes.divider} />
+            <Grid container spacing={1}>
+              <Grid item xs={6}>
+                <Typography className={classes.fieldTitle}>{t('common:menu.plot')}</Typography>
+              </Grid>
+              <Grid item xs={6} className={classes.fieldContent}>
+                {planData?.landParcel?.parcelNumber}
+              </Grid>
             </Grid>
-            <Grid item xs={6} className={classes.fieldContent}>
-              {dateToString(planData.endDate)}
+            <Divider />
+            <Grid container spacing={1}>
+              <Grid item xs={6}>
+                <Typography className={classes.fieldTitle}>{t('table_headers.co_owners')}</Typography>
+              </Grid>
+              <Grid item xs={6} className={classes.fieldContent}>
+                {handleCoOwners() || '-'}
+              </Grid>
             </Grid>
-          </Grid>
-          <Divider className={classes.divider} />
-          <Grid container spacing={1} data-testid="status">
-            <Grid item xs={6}>
-              <Typography className={classes.fieldTitle}>{t('common:table_headers.status')}</Typography>
+            <Grid className={classes.totalValue}>
+              <Typography>{t('table_headers.total_value')}</Typography>
+              <Typography color="primary" style={{ fontSize: '25px', fontWeight: 500 }}>
+                {formatMoney(currencyData, planData.planValue)}
+              </Typography>
             </Grid>
-            <Grid item xs={6} className={classes.fieldContent}>
-              {planData.status}
+          </TabPanel>
+          <TabPanel value={tabValue} index="Plan Settings">
+            <Grid container spacing={1} data-testid="payment-day">
+              <Grid item xs={6}>
+                <Typography variant='body1'>{t('misc.payment_day')}</Typography>
+              </Grid>
+              <Grid className={classes.rightAlign} item xs={6}>
+                <Menu
+                  id="set-payment-date-menu"
+                  anchorEl={anchorEl}
+                  keepMounted
+                  open={Boolean(anchorEl)}
+                  onClose={handleMenuClose}
+                  data-testid="menu-open"
+                  PaperProps={{
+                  style: {
+                    maxHeight: 250
+                  }
+                }}
+                >
+                  {validDays.map(day => (
+                    <MenuItem
+                      key={day}
+                      data-testid={`payment-day-${day}`}
+                      onClick={() => handleSetDay(day + 1)}
+                    >
+                      {day + 1}
+                    </MenuItem>
+                ))}
+                </Menu>
+                <Button
+                  aria-controls="set-payment-date-menu"
+                  variant={editing ? 'outlined' : 'text'}
+                  aria-haspopup="true"
+                  data-testid="menu"
+                  onClick={handleMenu}
+                >
+
+                  {editing  ? (
+                    <span>
+                      <EditIcon fontSize="small" style={{ marginBottom: -4 }} />
+                      {`   ${suffixedNumber(paymentDay)}`}
+                    </span>
+                  ) : (
+                    suffixedNumber(paymentDay)
+                  )}
+                </Button>
+              </Grid>
             </Grid>
-          </Grid>
-          <Divider className={classes.divider} />
-          <Grid container spacing={1} data-testid="plan-type">
-            <Grid item xs={6}>
-              <Typography className={classes.fieldTitle}>{t('table_headers.plan_type')}</Typography>
+            <Divider className={classes.divider} />
+            <Grid container spacing={1} data-testid="renewable-slider">
+              <Grid item xs={6}>
+                {t('misc.auto_renewal')}
+              </Grid>
+              <Grid className={classes.rightAlign} item xs={6}>
+                {editing && (
+                  <div className={classes.slider}>
+                    <SwitchInput
+                      name="renewable"
+                      label=""
+                      value={renewable}
+                      handleChange={event => {setRenewable(event.target.checked)}}
+                    />
+                  </div>
+                )}
+                {!editing && (
+                  renewable ? (
+                    <Typography variant='body1'>{t('misc.active')}</Typography>
+                  ) : (
+                    <Typography variant='body1'>{t('misc.inactive')}</Typography>
+                  )
+                )}
+              </Grid>
             </Grid>
-            <Grid item xs={6} className={classes.fieldContent}>
-              {planData.planType}
+            <Grid container spacing={1} data-testid="renewable-text">
+              {renewable && (
+              <Grid className={classes.renew} item xs={12}>
+                <>
+                  <Typography className={classes.renewContent}>
+                    {t('misc.plan_renewal_text')}
+                  </Typography>
+                  <Typography className={classes.renewContent}>
+                    &nbsp;
+                    <b>{dateToString(planData.renewDate, 'YYYY/MM/DD')}</b>
+                    &nbsp;
+                  </Typography>
+                </>
+              </Grid>
+            )}
             </Grid>
-          </Grid>
-          <Divider className={classes.divider} />
-          <Grid container spacing={1}>
-            <Grid item xs={6}>
-              <Typography className={classes.fieldTitle}>{t('common:table_headers.amount')}</Typography>
-            </Grid>
-            <Grid item xs={6} className={classes.fieldContent}>
-              {formatMoney(currencyData, planData.installmentAmount)} 
-              {' '}
-              {planData?.frequency}
-            </Grid>
-          </Grid>
-          <Divider className={classes.divider} />
-          <Grid container spacing={1}>
-            <Grid item xs={6}>
-              <Typography className={classes.fieldTitle}>{t('common:menu.plot')}</Typography>
-            </Grid>
-            <Grid item xs={6} className={classes.fieldContent}>
-              {planData?.landParcel?.parcelNumber}
-            </Grid>
-          </Grid>
-          <Divider className={classes.divider} />
-          <Grid container spacing={1}>
-            <Grid item xs={6}>
-              <Typography className={classes.fieldTitle}>{t('table_headers.co_owners')}</Typography>
-            </Grid>
-            <Grid item xs={6} className={classes.fieldContent}>
-              {handleCoOwners() || '-'}
-            </Grid>
-          </Grid>
+          </TabPanel>
         </div>
-        <Grid className={classes.totalValue}>
-          <Typography>{t('table_headers.total_value')}</Typography>
-          <Typography color="primary" style={{ fontSize: '25px', fontWeight: 500 }}>
-            {formatMoney(currencyData, planData.planValue)}
-          </Typography>
-        </Grid>
-      </DetailsDialog>
+      </CustomizedDialogs>
     </>
   );
 }
@@ -173,12 +345,30 @@ const useStyles = makeStyles(() => ({
     marginTop: '30px',
     background: '#F0F0F0',
     padding: '20px'
+  },
+  rightAlign: {
+    textAlign: 'right'
+  },
+  slider: {
+    display: 'flex',
+    justifyContent: 'end'
+  },
+  renew: {
+    marginTop: '10px'
+  },
+  renewContent: {
+    fontSize: '14px',
+    display: 'inline'
   }
 }));
 
 PlanDetail.propTypes = {
   // eslint-disable-next-line react/forbid-prop-types
   planData: PropTypes.shape({
+    id: PropTypes.string,
+    paymentDay: PropTypes.number,
+    renewable: PropTypes.bool,
+    renewDate: PropTypes.string,
     user: PropTypes.shape({
       name: PropTypes.string
     }),
@@ -196,7 +386,8 @@ PlanDetail.propTypes = {
     planValue: PropTypes.number,
     endDate: PropTypes.string,
     landParcel: PropTypes.shape({
-      parcelNumber: PropTypes.string
+      parcelNumber: PropTypes.string,
+      parcelType: PropTypes.string
     })
   }).isRequired,
   currencyData: PropTypes.shape({
@@ -204,5 +395,9 @@ PlanDetail.propTypes = {
     locale: PropTypes.string
   }).isRequired,
   open: PropTypes.bool.isRequired,
-  handleModalClose: PropTypes.func.isRequired
+  handleModalClose: PropTypes.func.isRequired,
+  plansRefetch: PropTypes.func.isRequired,
+  setMessageAlert: PropTypes.func.isRequired,
+  setIsSuccessAlert: PropTypes.func.isRequired,
+  updatePaymentPlan: PropTypes.func.isRequired
 };

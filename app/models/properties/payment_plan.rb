@@ -24,6 +24,7 @@ module Properties
 
     enum status: { active: 0, cancelled: 1, deleted: 2, completed: 3, general: 4 }
     enum frequency: { daily: 0, weekly: 1, monthly: 2, quarterly: 3 }
+    enum plan_type: { starter: 0, basic: 1, standard: 2, premium: 3 }
 
     has_paper_trail
 
