@@ -2,7 +2,7 @@
 
 FactoryBot.define do
   factory :payment_plan, class: 'Properties::PaymentPlan' do
-    plan_type { 'lease' }
+    plan_type { 'basic' }
     start_date { Time.zone.now }
     percentage { '50%' }
     status { 'active' }

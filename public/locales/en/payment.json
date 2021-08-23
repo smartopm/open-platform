@@ -61,7 +61,6 @@
   "table_headers": {
     "receipt_number": "Receipt Number",
     "amount_paid": "Amount Paid",
-    "category_type": "Category",
     "installment_amount": "Installment Amount",
     "no_of_installments": "No. of Installments",
     "debit": "Debit",
