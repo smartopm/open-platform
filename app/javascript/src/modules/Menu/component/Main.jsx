@@ -102,7 +102,7 @@ export function MainNav({ authState }) {
   };
 
   const communityHasEmergencyNumber = Boolean(authState.user?.community?.emergencyCallNumber)
-  const communityHasEmergencySMSNumber = Boolean(authState.user?.community?.smsPhoneNumbers.filter(Boolean).length != 0)
+  const communityHasEmergencySMSNumber = Boolean(authState.user?.community?.smsPhoneNumbers?.filter(Boolean)?.length !== 0)
 
   return (
     <div className={classes.root}>
@@ -206,7 +206,7 @@ MainNav.propTypes = {
 NewsNav.propTypes = {
   children: PropTypes.node.isRequired,
   // eslint-disable-next-line react/forbid-prop-types
-  history: PropTypes.object.isRequired
+  history: PropTypes.func.isRequired
 
 };
 
