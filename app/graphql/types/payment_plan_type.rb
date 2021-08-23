@@ -27,6 +27,9 @@ module Types
     field :frequency, String, null: true
     field :co_owners, [Types::UserType], null: true
     field :paid_payments_exists, Boolean, null: true
+    field :renewable, Boolean, null: true
+    field :renew_date, GraphQL::Types::ISO8601DateTime, null: true
+
     # Returns plan's total value
     #
     # @return [Float]
@@ -53,6 +56,10 @@ module Types
     # @return [Float]
     def total_payments
       object.plan_payments.not_cancelled.sum(:amount)
+    end
+
+    def renew_date
+      end_date - 2.months
     end
 
     # Returns end date for plan statement

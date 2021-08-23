@@ -15,14 +15,14 @@ import ToggleButton from '@material-ui/lab/ToggleButton';
 import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 import { CustomizedDialogs } from '../../../../components/Dialog';
 import DatePickerDialog from '../../../../components/DatePickerDialog';
-import { paymentPlanStatus, paymentPlanFrequency } from '../../../../utils/constants';
+import { paymentPlanStatus, paymentPlanFrequency, subscriptionPlanType } from '../../../../utils/constants';
 import { PaymentPlanCreateMutation } from '../../../../graphql/mutations/land_parcel';
 import { dateToString } from '../../../../components/DateContainer';
 import { capitalize, formatError, titleize } from '../../../../utils/helpers';
 
 const initialPlanState = {
   status: 0,
-  planType: 'lease',
+  planType: '',
   startDate: new Date(),
   amount: '',
   totalAmount: 0,
@@ -298,12 +298,11 @@ export default function PaymentPlanModal({
           required
           select
         >
-          <MenuItem key="lease_" value="lease">
-            {t('misc.lease')}
-          </MenuItem>
-          <MenuItem key="other" value="other">
-            {t('misc.other')}
-          </MenuItem>
+          {Object.entries(subscriptionPlanType)?.map(([key, value]) => (
+            <MenuItem key={key} value={value}>
+              {titleize(value)}
+            </MenuItem>
+          ))}
         </TextField>
         <TextField
           autoFocus

@@ -29,7 +29,9 @@
     "previewable": "Should have a preview",
     "contract_preview": "Contract Preview",
     "category": "Category",
-    "display_condition": "Display Condition - Optional"
+    "display_condition": "Display Condition - Optional",
+    "upload_file": "Upload File",
+    "file_uploaded": "File Uploaded"
   },
   "actions": {
     "create_a_form": "Create a form",
@@ -88,6 +90,8 @@
     "file_upload": "File Upload",
     "signature": "Signature",
     "date": "Date",
+    "time": "Time",
+    "datetime": "Date with Time",
     "dropdown": "Dropdown"
   },
   "conditions": {

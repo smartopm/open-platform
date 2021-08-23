@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+/* eslint-disable no-nested-ternary */
+import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useMutation } from 'react-apollo';
 import PropTypes from 'prop-types';
@@ -7,13 +8,13 @@ import { CustomizedDialogs } from '../../../components/Dialog';
 import DatePickerDialog from '../../../components/DatePickerDialog';
 import { subscriptionPlanType } from '../../../utils/constants';
 import { formatError, titleize } from '../../../utils/helpers';
-import { SubscriptionPlanCreate } from '../graphql/payment_mutations';
+import { SubscriptionPlanCreate, SubscriptionPlanUpdate } from '../graphql/payment_mutations';
 
 const initialPlanState = {
   active: true,
   planType: '',
   startDate: new Date(),
-  endDate: new Date(),
+  endDate: new Date(+new Date() + 86400000),
   amount: ''
 };
 
@@ -22,12 +23,32 @@ export default function SubscriptionPlanModal({
   handleModalClose,
   subscriptionPlansRefetch,
   setMessage,
-  openAlertMessage
+  openAlertMessage,
+  subscriptionData
 }) {
   const { t } = useTranslation(['payment', 'common']);
   const [createSubscriptionPlan] = useMutation(SubscriptionPlanCreate);
+  const [updateSubscriptionPlan] = useMutation(SubscriptionPlanUpdate);
   const [inputValue, setInputValues] = useState(initialPlanState);
   const [isError, setIsError] = useState(false);
+  const [modalType, setModalType] = useState('new');
+  const [mutationLoading, setMutationloading] = useState(false);
+
+  useEffect(() => {
+    if (subscriptionData) {
+      const { id, status, planType, startDate, endDate, amount } = subscriptionData;
+      setInputValues({
+        id,
+        active: status === 'active',
+        planType,
+        startDate,
+        endDate,
+        amount
+      });
+      setModalType('edit');
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   function handleInputChange(event) {
     const { name, value } = event.target;
@@ -51,11 +72,42 @@ export default function SubscriptionPlanModal({
       setIsError(true);
       return;
     }
+    if (modalType === 'new') {
+      handleSubmit();
+    } else {
+      handleUpdateSubmit();
+    }
+  }
 
-    handleSubmit();
+  function handleUpdateSubmit() {
+    setMutationloading(true);
+    updateSubscriptionPlan({
+      variables: {
+        status: inputValue.active ? 'active' : 'in_active',
+        planType: inputValue.planType,
+        startDate: inputValue.startDate,
+        endDate: inputValue.endDate,
+        amount: parseFloat(inputValue.amount),
+        id: inputValue.id
+      }
+    })
+      .then(() => {
+        handleModalClose();
+        subscriptionPlansRefetch();
+        setMessage({ isError: false, detail: t('misc.subscription_plan_updated') });
+        openAlertMessage();
+        setInputValues(initialPlanState);
+        setMutationloading(false);
+      })
+      .catch(err => {
+        setMessage({ isError: true, detail: formatError(err.message) });
+        openAlertMessage();
+        setMutationloading(false);
+      });
   }
 
   function handleSubmit() {
+    setMutationloading(true);
     createSubscriptionPlan({
       variables: {
         status: inputValue.active ? 'active' : 'in_active',
@@ -71,10 +123,12 @@ export default function SubscriptionPlanModal({
         setMessage({ isError: false, detail: t('misc.subscription_plan_created') });
         openAlertMessage();
         setInputValues(initialPlanState);
+        setMutationloading(false);
       })
       .catch(err => {
         setMessage({ isError: true, detail: formatError(err.message) });
         openAlertMessage();
+        setMutationloading(false);
       });
   }
 
@@ -82,11 +136,20 @@ export default function SubscriptionPlanModal({
     <CustomizedDialogs
       open={open}
       handleModal={handleModalClose}
-      dialogHeader={t('misc.create_subscription_plan')}
-      subHeader={t('misc.set_monthly_payment')}
-      saveAction={t('common:form_actions.create_plan')}
+      dialogHeader={modalType === 'new' ? t('misc.create_subscription_plan') : t('actions.edit_subscription_plan')}
+      subHeader={modalType === 'new' ? t('misc.set_monthly_payment') : null}
+      saveAction={
+        modalType === 'new' && mutationLoading
+          ? t('common:form_actions.creating_plan')
+          : modalType === 'edit' && mutationLoading
+          ? t('common:form_actions.saving')
+          : modalType === 'edit'
+          ? t('common:form_actions.save_changes')
+          : t('common:form_actions.create_plan')
+      }
       cancelAction={t('common:form_actions.cancel')}
       handleBatchFilter={createSubscriptionPlanHandler}
+      disableActionBtn={mutationLoading}
     >
       <>
         <TextField
@@ -100,6 +163,8 @@ export default function SubscriptionPlanModal({
           required
           style={{ width: '100%' }}
           select
+          error={isError && !inputValue.planType}
+          helperText={isError && !inputValue.planType && t('errors.plan_type_required')}
         >
           {Object.entries(subscriptionPlanType)?.map(([key, val]) => (
             <MenuItem key={key} value={val}>
@@ -138,7 +203,7 @@ export default function SubscriptionPlanModal({
             }
           }}
           error={isError && !inputValue.amount}
-          helperText={isError && !inputValue.duration && t('errors.amount_required')}
+          helperText={isError && !inputValue.amount && t('errors.amount_required')}
         />
         <div
           style={{
@@ -163,10 +228,22 @@ export default function SubscriptionPlanModal({
   );
 }
 
+SubscriptionPlanModal.defaultProps = {
+  subscriptionData: {}
+}
+
 SubscriptionPlanModal.propTypes = {
   open: PropTypes.bool.isRequired,
   handleModalClose: PropTypes.func.isRequired,
   subscriptionPlansRefetch: PropTypes.func.isRequired,
   setMessage: PropTypes.func.isRequired,
-  openAlertMessage: PropTypes.func.isRequired
+  openAlertMessage: PropTypes.func.isRequired,
+  subscriptionData: PropTypes.shape({
+    id: PropTypes.string,
+    status: PropTypes.string,
+    planType: PropTypes.string,
+    startDate: PropTypes.string,
+    endDate: PropTypes.string,
+    amount: PropTypes.number
+  })
 };

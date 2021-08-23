@@ -11,10 +11,14 @@
     "download_csv": "Download CSV",
     "export_data": "Export Data",
     "save_csv": "Save CSV",
-    "edit_subscription_plan": "Edit subscription plan"
+    "edit_subscription_plan": "Edit plan",
+    "edit_plan_settings": "Edit Plan Settings"
   },
   "misc": {
+    "active": "Active",
+    "auto_renewal": "Auto Renewal",
     "confirm": "confirm",
+    "inactive": "Inactive",
     "about_to_cancel": "You are about to cancel this payment plan?",
     "plan_statement": "Plan Statement",
     "print": "Print",
@@ -30,8 +34,9 @@
     "swift_code": "Swift Code",
     "sort_code": "Sort Code",
     "plan_details": "Plan Details",
+    "plan_settings": "Plan Settings",
     "create_a_plan": "Create a Plan",
-    "create_subscription_plan": "Create subscription plan",
+    "create_subscription_plan": "Create plan",
     "set_monthly_payment": "Set monthly payment amount based on the plan type",
     "create_a_payment_plan": "Create a payment plan for your plot",
     "lease": "lease",
@@ -41,11 +46,16 @@
     "make_payment_towards": "Make payment towards any of your plans below. You can make payment towards multiple plans as well.",
     "manual_payment": "is this a manual payment?",
     "make_payment_details": "You are about to make a payment with following details",
+    "renewable": "Renewable",
     "total_amount_paid": "Total Amount Paid By Date",
     "payment_cancelled": "Payment Plan successfully canceled",
+    "payment_day": "Payment Day",
+    "payment_plan_updated": "Payment Plan successfully updated",
     "pay_day_updated": "Payment Day successfully updated",
     "transaction_title": "Kindly find your transaction details below.",
-    "subscription_plan_created": "Successfuly created subscription plan"
+    "subscription_plan_created": "Plan created successfuly",
+    "subscription_plan_updated": "Plan updated successfully",
+    "plan_renewal_text": "Your plan will auto renew on"
   },
   "table_headers": {
     "receipt_number": "Receipt Number",
@@ -97,6 +107,6 @@
     "no_transaction_available": "No Transaction Available for this Plan",
     "no_plan_available": "No Plan Available",
     "no_payment_available": "No Payments Available",
-    "no_subscription_available": "No Subscription Plan Available"
+    "plan_type_required": "Plan Type is required"
   }
 }

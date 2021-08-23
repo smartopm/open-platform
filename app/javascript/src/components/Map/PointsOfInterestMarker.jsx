@@ -76,7 +76,7 @@ const styles = StyleSheet.create({
     whiteSpace: 'nowrap',
     color: '#080808',
     padding: '3px',
-    backgroundColor: '#edebeb'
+    opacity: 0.8,
   },
 })
 

@@ -5,7 +5,7 @@ import { useApolloClient, useMutation, useQuery } from 'react-apollo';
 import { useHistory } from 'react-router';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
-import {DateAndTimePickers} from '../../../components/DatePickerDialog';
+import DatePickerDialog, {DateAndTimePickers, ThemedTimePicker} from '../../../components/DatePickerDialog';
 import { FormUserQuery, UserFormPropertiesQuery } from '../graphql/forms_queries';
 import ErrorPage from '../../../components/Error';
 import CenteredContent from '../../../components/CenteredContent';
@@ -220,6 +220,23 @@ export default function FormUpdate({ formUserId, userId, authState }) {
         />
       ),
       date: (
+        <DatePickerDialog
+          key={formPropertiesData.formProperty.id}
+          selectedDate={properties[String(formPropertiesData.formProperty.fieldName)]?.value || formPropertiesData.value}
+          handleDateChange={(date) => handleDateChange(date, formPropertiesData.formProperty.id, formPropertiesData.formProperty.fieldName)}
+          label={formPropertiesData.formProperty.fieldName}
+        />
+      ),
+      time: (
+        <ThemedTimePicker
+          key={formPropertiesData.formProperty.id}
+          time={properties[String(formPropertiesData.formProperty.fieldName)]?.value || formPropertiesData.value}
+          handleTimeChange={(date) => handleDateChange(date, formPropertiesData.formProperty.id, formPropertiesData.formProperty.fieldName)}
+          label={formPropertiesData.formProperty.fieldName}
+          style={{ width: '100%' }}
+        />
+      ),
+      datetime: (
         <DateAndTimePickers
           key={formPropertiesData.formProperty.id}
           selectedDateTime={properties[String(formPropertiesData.formProperty.fieldName)]?.value || formPropertiesData.value}

@@ -9,7 +9,7 @@ jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn())
 describe('It should test the plan detail modal component', () => {
   const planData = {
     id: '84h3ui7ehf',
-    planType: 'type',
+    planType: 'basic',
     startDate: '2020-12-12',
     installmentAmount: 100,
     planValue: 200,
@@ -33,14 +33,21 @@ describe('It should test the plan detail modal component', () => {
             handleModalClose={jest.fn}
             currencyData={{ currency: 'ZMW', locale: 'en-ZM'}}
             planData={planData}
+            updatePaymentPlan={jest.fn}
+            setIsSuccessAlert={jest.fn}
+            setMessageAlert={jest.fn}
+            plansRefetch={jest.fn}
           />
         </BrowserRouter>
       </MockedProvider> 
     )
 
-    expect(container.getByTestId("detail")).toBeInTheDocument()
-    expect(container.getByTestId("status")).toBeInTheDocument()
-    expect(container.getByTestId("start-date")).toBeInTheDocument()
-    expect(container.getByTestId("end-date")).toBeInTheDocument()
+    expect(container.getByTestId("detail")).toBeInTheDocument();
+    expect(container.getByTestId("status")).toBeInTheDocument();
+    expect(container.getByTestId("start-date")).toBeInTheDocument();
+    expect(container.getByTestId("end-date")).toBeInTheDocument();
+    expect(container.getByTestId("payment-day")).toBeInTheDocument();
+    expect(container.getByTestId("renewable-slider")).toBeInTheDocument();
+    expect(container.getByTestId("renewable-text")).toBeInTheDocument();
   });
 });

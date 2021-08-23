@@ -291,6 +291,8 @@ en:
       duplicate_label: Duplicate label
       ids_can_not_be_same: label ids cannot be the same
       not_found: Label not found
+    subscription:
+      not_found: Plan subscription not found
     land_parcel:
       not_found: Land parcel not found
       poi_record_not_found: Poi Record not found

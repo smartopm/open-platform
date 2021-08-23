@@ -101,6 +101,9 @@ export function MainNav({ authState }) {
     }
   };
 
+  const communityHasEmergencyNumber = Boolean(authState.user?.community?.emergencyCallNumber)
+  const communityHasEmergencySMSNumber = Boolean(authState.user?.community?.smsPhoneNumbers?.filter(Boolean)?.length !== 0)
+
   return (
     <div className={classes.root}>
       <AppBar position="fixed" className={classes.appBar}>
@@ -122,7 +125,9 @@ export function MainNav({ authState }) {
               <MenuIcon />
             )}
           </IconButton>
-          {sosAllowedUsers.includes(authState?.user?.userType?.toLowerCase()) && <SvgIcon component={SOSIcon} viewBox="0 0 384 512" setOpen={setOpen} />}
+          {sosAllowedUsers.includes(authState?.user?.userType?.toLowerCase()) 
+           && communityHasEmergencyNumber && communityHasEmergencySMSNumber 
+           && <SvgIcon component={SOSIcon} viewBox="0 0 384 512" setOpen={setOpen} />}
 
           
 
@@ -201,7 +206,7 @@ MainNav.propTypes = {
 NewsNav.propTypes = {
   children: PropTypes.node.isRequired,
   // eslint-disable-next-line react/forbid-prop-types
-  history: PropTypes.object.isRequired
+  history: PropTypes.func.isRequired
 
 };
 

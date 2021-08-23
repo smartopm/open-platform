@@ -38,6 +38,8 @@
     "available": "Disponible",
     "house_status": "Estado de la Casa:",
     "latitude_x": "Longitud X",
+    "latitude_y": "Latitud Y:",
+    "longitude_x": "Longitud X:",
     "longitude_y": "Latitud Y",
     "property_no": "Propiedad No:",
     "property_type": "Tipo de Propiedad:",

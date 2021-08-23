@@ -4,6 +4,7 @@
     "add_field": "Agregar Campo",
     "add_form_property": "Agregar Propiedad",
     "adding_form_property": "Agregar propiedad de formulario",
+    "confirm": "Confirmar",
     "create_a_form": "Crear un formulario",
     "create_category": "Crear Categoría",
     "publish_form": "Publicar Formulario",
@@ -84,6 +85,8 @@
     "updated_form_category": "Actualizó con éxito una categoría",
     "updated_form_property": "Formulario de propiedad actualizada con éxito",
     "updates": "Novedades",
-    "version_number": "Número de versión"
+    "version_number": "Número de versión",
+    "upload_file": "Subir archivo",
+    "file_uploaded": "Archivo subido"
   }
 }

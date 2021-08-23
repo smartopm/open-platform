@@ -27,7 +27,8 @@ RSpec.describe Forms::FormProperty, type: :model do
     it do
       is_expected.to define_enum_for(:field_type)
         .with_values(text: 0, date: 1, file_upload: 2, signature: 3, display_text: 4,
-                     display_image: 5, radio: 6, checkbox: 7, dropdown: 8)
+                     display_image: 5, radio: 6, checkbox: 7, dropdown: 8, time: 9,
+                     datetime: 10)
     end
   end
 end

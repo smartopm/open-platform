@@ -18,7 +18,7 @@ describe('Upload component', () => {
     expect(uploadBtn).not.toBeDisabled()
     fireEvent.change(uploadField)
     expect(handler).toHaveBeenCalled()
-    expect(container.queryByText('Upload File')).toBeInTheDocument()
+    expect(container.queryByText('form:misc.upload_file')).toBeInTheDocument()
     expect(container.queryByText('Image Label')).toBeInTheDocument()
   })
 })
