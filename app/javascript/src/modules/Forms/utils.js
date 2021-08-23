@@ -76,6 +76,7 @@ export function checkCondition(category, properties, editMode) {
  * @returns {[object]}
  */
 export function extractValidFormPropertyValue(formProperties) {
+  if(!Object.keys(formProperties).length) return []
   return Object.entries(formProperties)
     .map(([, value]) => value)
     .filter(item => item.value && item.value?.checked !== null && item.form_property_id !== null);

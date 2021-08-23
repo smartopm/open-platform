@@ -1,8 +1,11 @@
 import React from 'react';
 import { fireEvent, render } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
+import { MockedProvider } from '@apollo/react-testing';
 import CategoryItem from '../../components/Category/CategoryItem';
+import FormContextProvider from '../../Context';
 
+jest.mock('@rails/activestorage/src/file_checksum', () => []);
 describe('CategoryItem', () => {
   const props = {
     category: {
@@ -19,9 +22,13 @@ describe('CategoryItem', () => {
     currentId: '2343242'
   };
   const wrapper = render(
-    <CategoryItem {...props}>
-      <p>Some child component</p>
-    </CategoryItem>
+    <MockedProvider>
+      <FormContextProvider>
+        <CategoryItem {...props}>
+          <p>Some child component</p>
+        </CategoryItem>
+      </FormContextProvider>
+    </MockedProvider>
   );
 
   it('should properly render given props', () => {
