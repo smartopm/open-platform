@@ -150,7 +150,7 @@ export default function FormBuilder({ formId }) {
                   {isPublishing ? t('misc.publishing_form') : t('actions.publish_form')}
                 </Button>
               )}
-            </CenteredContent>
+              </CenteredContent>
             </>
       ) : (
         <FormTimeline data={formLogs.data?.result} />
