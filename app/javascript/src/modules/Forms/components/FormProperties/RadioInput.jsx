@@ -14,7 +14,7 @@ export default function RadioInput({ handleValue, properties, value }) {
   const parsedValue = tempValue ? JSON.parse(cleanValue) : {}
   return (
     <FormControl component="fieldset">
-      <FormLabel component="legend">
+      <FormLabel component="legend" data-testid="radio_field_name">
         {`${properties.fieldName || properties.formProperty.fieldName} ${properties.required && '*'}`}
       </FormLabel>
       <RadioGroup
