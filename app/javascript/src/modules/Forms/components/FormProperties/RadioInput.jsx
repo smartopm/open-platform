@@ -14,8 +14,8 @@ export default function RadioInput({ handleValue, properties, value }) {
   const parsedValue = tempValue ? JSON.parse(cleanValue) : {}
   return (
     <FormControl component="fieldset">
-      <FormLabel component="legend">
-        {properties.fieldName || properties.formProperty.fieldName}
+      <FormLabel component="legend" data-testid="radio_field_name">
+        {`${properties.fieldName || properties.formProperty.fieldName} ${properties.required ? '*' : ''}`}
       </FormLabel>
       <RadioGroup
         aria-label={properties.fieldName}
@@ -30,7 +30,7 @@ export default function RadioInput({ handleValue, properties, value }) {
               <FormControlLabel
                 key={parsedValue.label}
                 value={parsedValue.checked}
-                control={<Radio color="primary" />}
+                control={<Radio color="primary" required={properties.required} />}
                 label={parsedValue.checked}
               />
             )
@@ -39,7 +39,7 @@ export default function RadioInput({ handleValue, properties, value }) {
             <FormControlLabel
               key={field.label}
               value={field.value}
-              control={<Radio color="primary" />}
+              control={<Radio color="primary" required={properties.required} />}
               label={field.label}
             />
           )

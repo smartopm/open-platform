@@ -8,7 +8,7 @@ describe('Upload component', () => {
       const handler = jest.fn()
     const props = {
         upload: handler,
-        detail: { status: '', type: 'file', label: 'Image Label' },
+        detail: { status: '', type: 'file', label: 'Image Label', required: true },
         editable: false,
         uploaded: false
     }
@@ -19,6 +19,6 @@ describe('Upload component', () => {
     fireEvent.change(uploadField)
     expect(handler).toHaveBeenCalled()
     expect(container.queryByText('form:misc.upload_file')).toBeInTheDocument()
-    expect(container.queryByText('Image Label')).toBeInTheDocument()
+    expect(container.queryByText('Image Label *')).toBeInTheDocument()
   })
 })

@@ -126,7 +126,7 @@ describe('Form Component', () => {
               },
               value: "{\"checked\"=>\"Yes\", \"label\"=>\"Would you rather?\"}",
               imageUrl: null,
-              fileType: null
+              fileType: null,
             }
           ]
         }
@@ -165,7 +165,8 @@ describe('Form Component', () => {
         expect(container.queryByText('misc.attachments')).toBeInTheDocument()
         expect(container.queryByLabelText('Yes')).toBeInTheDocument()
         expect(container.queryByLabelText('No')).toBeInTheDocument()
-        expect(container.queryByText('Would you rather?')).toBeInTheDocument()
+        expect(container.queryByTestId('radio_field_name')).toBeInTheDocument()
+        expect(container.queryByTestId('radio_field_name').textContent).toContain('Would you rather?')
       },
       { timeout: 50 }
     )

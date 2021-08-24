@@ -106,8 +106,8 @@ export default function RenderForm({ formPropertiesData, formId, refetch, editMo
           <DatePickerDialog
             id={formPropertiesData.id}
             selectedDate={formProperties[String(formPropertiesData.fieldName)]?.value || null}
-            handleDateChange={date => handleDateChange(date, formPropertiesData.id, formPropertiesData.fieldName)}
-            label={formPropertiesData.fieldName}
+            handleDateChange={date => handleDateChange(date, formPropertiesData)}
+            label={`${formPropertiesData.fieldName} ${formPropertiesData.required && '*'}`}
           />
         </Grid>
       </Grid>
@@ -125,8 +125,8 @@ export default function RenderForm({ formPropertiesData, formId, refetch, editMo
           <ThemedTimePicker
             id={formPropertiesData.id}
             time={formProperties[String(formPropertiesData.fieldName)]?.value || null}
-            handleTimeChange={date => handleDateChange(date, formPropertiesData.id, formPropertiesData.fieldName)}
-            label={formPropertiesData.fieldName}
+            handleTimeChange={date => handleDateChange(date, formPropertiesData)}
+            label={`${formPropertiesData.fieldName} ${formPropertiesData.required && '*'}`}
             style={{ width: '100%' }}
           />
         </Grid>
@@ -146,7 +146,7 @@ export default function RenderForm({ formPropertiesData, formId, refetch, editMo
             id={formPropertiesData.id}
             selectedDateTime={formProperties[String(formPropertiesData.fieldName)]?.value || null}
             handleDateChange={date => handleDateChange(date, formPropertiesData)}
-            label={formPropertiesData.fieldName}
+            label={`${formPropertiesData.fieldName} ${formPropertiesData.required && '*'}`}
           />
         </Grid>
       </Grid>
@@ -162,7 +162,7 @@ export default function RenderForm({ formPropertiesData, formId, refetch, editMo
         />
         <Grid item xs={editMode ? 10 : 12}>
           <UploadField
-            detail={{ type: 'file', label: formPropertiesData.fieldName }}
+            detail={{ type: 'file', label: formPropertiesData.fieldName, required: formPropertiesData.required }}
             upload={evt => onImageSelect(evt, formPropertiesData.id)}
             editable={editable}
             uploaded={!!uploadedFile}
@@ -193,7 +193,7 @@ export default function RenderForm({ formPropertiesData, formId, refetch, editMo
         <Grid item xs={editMode ? 10 : 12}>
           <SignaturePad
             key={formPropertiesData.id}
-            detail={{ type: 'signature', status: signature.status }}
+            detail={{ type: 'signature', status: signature.status, required: formPropertiesData.required }}
             signRef={signRef}
             onEnd={() => handleSignatureUpload(formPropertiesData.id)}
           />
@@ -245,7 +245,7 @@ export default function RenderForm({ formPropertiesData, formId, refetch, editMo
       </Grid>
     )
   };
-  return <>{fields[formPropertiesData.fieldType]}</>;
+  return <>{fields[String(formPropertiesData.fieldType)]}</>;
 }
 
 
@@ -258,6 +258,7 @@ RenderForm.propTypes = {
     id: PropTypes.string,
     fieldType: PropTypes.string,
     fieldName: PropTypes.string,
-    adminUse: PropTypes.bool
+    adminUse: PropTypes.bool,
+    required: PropTypes.bool,
   }).isRequired,
 }
