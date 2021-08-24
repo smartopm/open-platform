@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next'
 import { useMutation, useQuery } from 'react-apollo'
 import CenteredContent from '../../../components/CenteredContent'
 import { AllEventLogsQuery } from '../../../graphql/queries'
-import { FormPropertiesQuery } from '../graphql/forms_queries'
+import { FormPropertiesQuery, FormQuery } from '../graphql/forms_queries'
 import { Spinner } from '../../../shared/Loading'
 import { FormUpdateMutation } from '../graphql/forms_mutation'
 import { formStatus } from '../../../utils/constants'
@@ -16,6 +16,7 @@ import { formatError } from '../../../utils/helpers'
 import MessageAlert from '../../../components/MessageAlert'
 import Form from './Category/Form'
 import FormContextProvider from '../Context'
+import { FormDialog } from './FormList'
 
 /**
  * @param {String} formId
@@ -23,32 +24,38 @@ import FormContextProvider from '../Context'
  * @returns {Node}
  */
 export default function FormBuilder({ formId }) {
-  const [open, setOpen] = useState(false)
-  const [isPublishing, setIsPublishing] = useState(false)
-  const [alertOpen, setAlertOpen] = useState(false)
-  const [message, setMessage] = useState({ isError: false, detail: '' })
-  const { t } = useTranslation(['form', 'common'])
-  const [type, setType] = useState(t('misc.form'))
+  const [open, setOpen] = useState(false);
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [isPublishing, setIsPublishing] = useState(false);
+  const [alertOpen, setAlertOpen] = useState(false);
+  const [message, setMessage] = useState({ isError: false, detail: '' });
+  const { t } = useTranslation(['form', 'common']);
+  const [type, setType] = useState(t('misc.form'));
   const { data, error, loading } = useQuery(FormPropertiesQuery, {
     variables: { formId },
     errorPolicy: 'all'
-  })
+  });
   const formLogs = useQuery(AllEventLogsQuery, {
     variables: {
       refId: formId,
       refType: 'Forms::Form',
       subject: null
     }
+  });
+  const [updateForm] = useMutation(FormUpdateMutation)
+  const formData = useQuery(FormQuery, {
+    variables: { id: formId }
   })
-  const [publish] = useMutation(FormUpdateMutation)
 
   function handleType(_event, value) {
     setType(value)
     formLogs.refetch()
   }
+
   function handleConfirmPublish() {
     setOpen(!open)
   }
+
   function handleAlertClose() {
     setAlertOpen(false)
   }
@@ -56,7 +63,7 @@ export default function FormBuilder({ formId }) {
   function publishForm() {
     setIsPublishing(true)
     setOpen(!open)
-    publish({
+    updateForm({
       variables: { id: formId, status: formStatus.publish }
     })
       .then(() => {
@@ -74,61 +81,83 @@ export default function FormBuilder({ formId }) {
       })
   }
 
-  if (loading || formLogs.loading) return <Spinner />
-  if (error || formLogs.error) return error?.message || formLogs?.error.message
+  if (loading || formLogs.loading || formData.loading) return <Spinner />
+  if (error || formLogs.error || formData.error) return error?.message || formLogs?.error.message
 
   return (
-    <FormContextProvider>
-      <Container maxWidth="md">
-        <ActionDialog
-          open={open}
-          handleClose={handleConfirmPublish}
-          handleOnSave={publishForm}
-          message={t('misc.are_you_sure_to_publish')}
-          type="confirm"
-        />
+    <>
+      <FormDialog
+        actionType="update"
+        form={formData.data.form}
+        formMutation={updateForm}
+        message={message}
+        setMessage={setMessage}
+        open={dialogOpen}
+        setOpen={setDialogOpen}
+        setAlertOpen={setAlertOpen}
+      />
+      <FormContextProvider>
+        <Container maxWidth="md">
+          <ActionDialog
+            open={open}
+            handleClose={handleConfirmPublish}
+            handleOnSave={publishForm}
+            message={t('misc.are_you_sure_to_publish')}
+            type="confirm"
+          />
 
-        <MessageAlert
-          type={message.isError ? 'error' : 'success'}
-          message={message.detail}
-          open={alertOpen}
-          handleClose={handleAlertClose}
-        />
+          <MessageAlert
+            type={message.isError ? 'error' : 'success'}
+            message={message.detail}
+            open={alertOpen}
+            handleClose={handleAlertClose}
+          />
 
-        <br />
-        <Toggler
-          type={type}
-          handleType={handleType}
-          data={{
+          <br />
+          <Toggler
+            type={type}
+            handleType={handleType}
+            data={{
           type: t('misc.form'),
           antiType: t('misc.updates')
         }}
-        />
-        <br />
-        {type !== t('misc.updates') ? (
-          <>
-            <Form formId={formId} editMode />
-            <br />
-            <br />
-            <CenteredContent>
-              {Boolean(data.formProperties.length) && (
-              <Button
-                variant="outlined"
-                color="primary"
-                onClick={handleConfirmPublish}
-                disabled={isPublishing}
-                startIcon={isPublishing && <Spinner />}
-              >
-                {isPublishing ? t('misc.publishing_form') : t('actions.publish_form')}
-              </Button>
-            )}
-            </CenteredContent>
-          </>
+          />
+          <br />
+          {type !== t('misc.updates') ? (
+            <>
+              <Form formId={formId} editMode />
+              <br />
+              <br />
+              <CenteredContent>
+                <Button
+                  variant="outlined"
+                  color="primary"
+                  onClick={() => setDialogOpen(true)}
+                >
+                  {t('actions.edit_form')}
+                </Button>
+              </CenteredContent>
+              <br />
+              <CenteredContent>
+                {Boolean(data.formProperties.length) && (
+                <Button
+                  variant="outlined"
+                  color="primary"
+                  onClick={handleConfirmPublish}
+                  disabled={isPublishing}
+                  startIcon={isPublishing && <Spinner />}
+                >
+                  {isPublishing ? t('misc.publishing_form') : t('actions.publish_form')}
+                </Button>
+              )}
+              </CenteredContent>
+            </>
       ) : (
         <FormTimeline data={formLogs.data?.result} />
       )}
-      </Container>
-    </FormContextProvider>
+        </Container>
+      </FormContextProvider>
+    </>
   )
 }
 

@@ -9,6 +9,8 @@ module Mutations
       argument :status, String, required: false
       argument :description, String, required: false
       argument :expires_at, String, required: false
+      argument :preview, Boolean, required: false
+      argument :multiple_submissions_allowed, Boolean, required: false
 
       field :form, Types::FormType, null: true
 

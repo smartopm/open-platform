@@ -7,7 +7,10 @@ RSpec.describe Mutations::Form::FormUserCreate do
     let!(:current_user) { create(:user_with_community) }
     let!(:another_user) { create(:user, community_id: current_user.community_id) }
     let!(:admin) { create(:admin_user, community_id: current_user.community_id) }
-    let!(:form) { create(:form, community_id: current_user.community_id) }
+    let!(:form) do
+      create(:form, community_id: current_user.community_id,
+                    multiple_submissions_allowed: false)
+    end
     let!(:form_property) { create(:form_property, form: form, field_type: 'text') }
 
     let(:mutation) do

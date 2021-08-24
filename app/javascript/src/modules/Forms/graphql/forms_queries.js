@@ -8,6 +8,9 @@ export const FormQuery = gql`
       name
       preview
       description
+      expiresAt
+      multipleSubmissionsAllowed
+      preview
     }
   }
 `

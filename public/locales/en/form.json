@@ -8,6 +8,7 @@
     "client_request_form": "Client Request Form",
     "building_permit": "Building Permit",
     "form_created": "Form Successfully created",
+    "form_updated": "Form Successfully updated",
     "form_version_created": "This form is now deprecated and a new version has been created",
     "limit_1_response": "Limit to 1 response",
     "form_expiry_date": "Form Expiry Date",
@@ -35,6 +36,7 @@
   },
   "actions": {
     "create_a_form": "Create a form",
+    "edit_form": "Edit Form",
     "add_field": "Add Field",
     "publish_form": "Publish form",
     "adding_form_property": "Adding Form Property",

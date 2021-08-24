@@ -10,11 +10,24 @@ RSpec.describe Mutations::Form::FormUpdate do
 
     let(:mutation) do
       <<~GQL
-        mutation formUpdate($id: ID!, $name: String, $status: String) {
-          formUpdate(id: $id, name: $name, status: $status){
+        mutation formUpdate(
+          $id: ID!,
+          $name: String,
+          $status: String,
+          $preview: Boolean,
+          $multipleSubmissionsAllowed: Boolean
+          ) {
+          formUpdate(id: $id,
+            name: $name,
+            status: $status,
+            preview: $preview,
+            multipleSubmissionsAllowed: $multipleSubmissionsAllowed
+          ){
             form {
               id
               name
+              preview
+              multipleSubmissionsAllowed
             }
           }
         }
@@ -25,13 +38,18 @@ RSpec.describe Mutations::Form::FormUpdate do
       variables = {
         id: form.id,
         name: 'Updated Name',
+        preview: true,
+        multipleSubmissionsAllowed: false,
       }
       result = DoubleGdpSchema.execute(mutation, variables: variables,
                                                  context: {
                                                    current_user: admin,
                                                    site_community: user.community,
                                                  }).as_json
-      expect(result.dig('data', 'formUpdate', 'form', 'name')).to eql 'Updated Name'
+      form_result = result.dig('data', 'formUpdate', 'form')
+      expect(form_result['name']).to eql 'Updated Name'
+      expect(form_result['preview']).to eql true
+      expect(form_result['multipleSubmissionsAllowed']).to eql false
       expect(result['errors']).to be_nil
     end
 
