@@ -106,7 +106,7 @@ export default function RenderForm({ formPropertiesData, formId, refetch, editMo
           <DatePickerDialog
             id={formPropertiesData.id}
             selectedDate={formProperties[String(formPropertiesData.fieldName)]?.value || null}
-            handleDateChange={date => handleDateChange(date, formPropertiesData.id, formPropertiesData.fieldName)}
+            handleDateChange={date => handleDateChange(date, formPropertiesData)}
             label={formPropertiesData.fieldName}
           />
         </Grid>
@@ -125,7 +125,7 @@ export default function RenderForm({ formPropertiesData, formId, refetch, editMo
           <ThemedTimePicker
             id={formPropertiesData.id}
             time={formProperties[String(formPropertiesData.fieldName)]?.value || null}
-            handleTimeChange={date => handleDateChange(date, formPropertiesData.id, formPropertiesData.fieldName)}
+            handleTimeChange={date => handleDateChange(date, formPropertiesData)}
             label={formPropertiesData.fieldName}
             style={{ width: '100%' }}
           />
