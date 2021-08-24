@@ -14,7 +14,7 @@ RSpec.describe PlanRenewalJob, type: :job do
 
   let!(:subscription_plan) do
     create(:subscription_plan, community_id: community.id, amount: 200,
-                               start_date: 3.months.from_now.beginning_of_month)
+                               start_date: 2.months.from_now.beginning_of_month)
   end
 
   before do
