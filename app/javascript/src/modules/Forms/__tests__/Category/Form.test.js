@@ -21,7 +21,9 @@ describe('Form Component', () => {
           id: '7d05e98e-e6bb-43cb-838e-e6d76005e326',
           name: 'Another Registry V2',
           preview: true,
-          description: 'This is a customs form'
+          description: 'This is a customs form',
+          expiresAt: '2021-12-31T23:59:59Z',
+          multipleSubmissionsAllowed: true
         }
       }
     }

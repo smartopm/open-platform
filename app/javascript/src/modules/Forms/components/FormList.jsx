@@ -49,16 +49,11 @@ export default function FormLinkList({ userType, community }) {
   const classes = useStyles()
   const { t } = useTranslation('form')
   const [open, setOpen] = useState(false)
-  const [isLoading, setLoading] = useState(false)
   const [message, setMessage] = useState({ isError: false, detail: '' })
-  const [expiresAt, setExpiresAtDate] = useState(null)
-  const theme = useTheme()
-  const fullScreen = useMediaQuery(theme.breakpoints.down('xs'))
   const [anchorEl, setAnchorEl] = useState(null)
   const [formId, setFormId] = useState("")
   const [alertOpen, setAlertOpen] = useState(false)
-  const [multipleSubmissionsAllowed, setMultipleSubmissionsAllowed] = useState(true)
-  const [preview, setPreview] = useState(false)
+
 
   const menuOpen = Boolean(anchorEl)
 
@@ -66,30 +61,6 @@ export default function FormLinkList({ userType, community }) {
     event.stopPropagation()
     setAnchorEl(event.currentTarget)
     setFormId(id)
-  }
-
-  function submitForm(title, description) {
-    setLoading(true)
-    createForm({
-      variables: { name: title, expiresAt, description, multipleSubmissionsAllowed, preview }
-    })
-      .then(() => {
-        setMessage({isError: false, detail: t('misc.form_created')})
-        setAlertOpen(true)
-        refetch()
-        setLoading(false)
-        setOpen(!open)
-        setMultipleSubmissionsAllowed(true)
-      })
-      .catch(err => {
-        setLoading(false)
-        setMessage({ isError: true, detail: formatError(err.message) })
-        setAlertOpen(true)
-      })
-  }
-
-  function handleDateChange(date) {
-    setExpiresAtDate(date)
   }
 
   if (loading) return <Loading />
@@ -103,53 +74,15 @@ export default function FormLinkList({ userType, community }) {
         open={alertOpen}
         handleClose={() => setAlertOpen(false)}
       />
-      <Dialog
-        fullScreen={fullScreen}
+      <FormDialog
+        formMutation={createForm}
+        message={message}
+        setMessage={setMessage}
         open={open}
-        fullWidth
-        maxWidth="lg"
-        onClose={() => setOpen(!open)}
-        aria-labelledby="responsive-dialog-title"
-      >
-        <DialogTitle id="responsive-dialog-title">
-          <CenteredContent>
-            <span>{t('actions.create_a_form')}</span>
-          </CenteredContent>
-        </DialogTitle>
-        <DialogContent>
-          <TitleDescriptionForm
-            close={() => setOpen(false)}
-            type="form"
-            save={submitForm}
-            data={{
-              loading: isLoading,
-              msg: message.detail
-            }}
-          >
-            <div style={{marginLeft : '-15px'}}>
-              <SwitchInput
-                name="multipleSubmissionsAllowed"
-                label={t('misc.limit_1_response')}
-                value={!multipleSubmissionsAllowed}
-                handleChange={event => {setMultipleSubmissionsAllowed(!event.target.checked)}}
-              />
-
-              <SwitchInput
-                name="multipleSubmissionsAllowed"
-                label={t('misc.previewable')}
-                value={preview}
-                handleChange={event => setPreview(event.target.checked)}
-              />
-            </div>
-            <DateAndTimePickers
-              label={t('misc.form_expiry_date')}
-              selectedDateTime={expiresAt}
-              handleDateChange={handleDateChange}
-              pastDate
-            />
-          </TitleDescriptionForm>
-        </DialogContent>
-      </Dialog>
+        setOpen={setOpen}
+        setAlertOpen={setAlertOpen}
+        refetch={refetch}
+      />
       <List data-testid="forms-link-holder" style={{ cursor: 'pointer' }}>
         <FormLinks community={community} />
         {data.forms.length ? data.forms.map(form => (
@@ -332,6 +265,98 @@ export function FormMenu({ formId, formName, anchorEl, handleClose, open, refetc
   )
 }
 
+export function FormDialog({actionType, form, formMutation, open, setOpen, message, setMessage, setAlertOpen, refetch}){
+  const theme = useTheme();
+  const fullScreen = useMediaQuery(theme.breakpoints.down('xs'));
+  const { t } = useTranslation('form')
+  const [expiresAt, setExpiresAtDate] = useState(form?.expiresAt || null)
+  const [isLoading, setLoading] = useState(false);
+  const [multipleSubmissionsAllowed, setMultipleSubmissionsAllowed] = useState(form ? form.multipleSubmissionsAllowed : true)
+  const [preview, setPreview] = useState(form ? form.preview : false)
+
+  function handleDateChange(date) {
+    setExpiresAtDate(date)
+  }
+
+  function submitForm(title, description) {
+    const variables = { name: title, expiresAt, description, multipleSubmissionsAllowed, preview }
+    if (actionType === 'update'){
+      variables.id = form?.id
+    }
+    setLoading(true);
+    formMutation({
+      variables
+    })
+      .then(() => {
+        setMessage({isError: false, detail: actionType === 'update' ? t('misc.form_updated') : t('misc.form_created')});
+        setAlertOpen(true);
+        refetch();
+        setLoading(false);
+        setOpen(!open);
+        if(actionType === 'update'){
+          window.location.reload();
+        }
+      })
+      .catch(err => {
+        setLoading(false);
+        setMessage({ isError: true, detail: formatError(err.message) });
+        setAlertOpen(true);
+      })
+  }
+
+  return(
+    <Dialog
+      fullScreen={fullScreen}
+      open={open}
+      fullWidth
+      maxWidth="lg"
+      onClose={() => setOpen(!open)}
+      aria-labelledby="responsive-dialog-title"
+    >
+      <DialogTitle id="responsive-dialog-title">
+        <CenteredContent>
+          <span>{actionType === 'create' ? t('actions.create_a_form') : t('actions.edit_form')}</span>
+        </CenteredContent>
+      </DialogTitle>
+      <DialogContent>
+        <TitleDescriptionForm
+          formTitle={form?.name || ''}
+          formDescription={form?.description || ''}
+          close={() => setOpen(false)}
+          type="form"
+          save={submitForm}
+          data={{
+            loading: isLoading,
+            msg: message.detail
+          }}
+        >
+          <div style={{marginLeft : '-15px'}}>
+            <SwitchInput
+              name="multipleSubmissionsAllowed"
+              label={t('misc.limit_1_response')}
+              value={!multipleSubmissionsAllowed}
+              handleChange={event => setMultipleSubmissionsAllowed(!event.target.checked)}
+            />
+
+            <SwitchInput
+              name="multipleSubmissionsAllowed"
+              label={t('misc.previewable')}
+              value={preview}
+              handleChange={event => setPreview(event.target.checked)}
+            />
+          </div>
+          <DateAndTimePickers
+            label={t('misc.form_expiry_date')}
+            selectedDateTime={expiresAt}
+            handleDateChange={handleDateChange}
+            pastDate
+          />
+        </TitleDescriptionForm>
+      </DialogContent>
+    </Dialog>
+  )
+}
+
 FormMenu.defaultProps = {
   anchorEl: {}
 }
@@ -348,6 +373,35 @@ FormMenu.propTypes = {
 FormLinkList.propTypes = {
   userType: PropTypes.string.isRequired,
   community: PropTypes.string.isRequired,
+}
+
+FormDialog.defaultProps = {
+  refetch: () => {},
+  actionType: 'create',
+  form: null,
+
+}
+
+FormDialog.propTypes = {
+  actionType: PropTypes.string,
+  form: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    multipleSubmissionsAllowed: PropTypes.bool.isRequired,
+    preview: PropTypes.bool.isRequired,
+    expiresAt: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired,
+    description: PropTypes.string.isRequired
+  }),
+  formMutation: PropTypes.func.isRequired,
+  open: PropTypes.bool.isRequired,
+  setOpen: PropTypes.func.isRequired,
+  message: PropTypes.shape({
+    detail: PropTypes.string.isRequired,
+    isError: PropTypes.bool.isRequired
+  }).isRequired,
+  setMessage: PropTypes.func.isRequired,
+  setAlertOpen: PropTypes.func.isRequired,
+  refetch: PropTypes.func
 }
 
 const styles = StyleSheet.create({

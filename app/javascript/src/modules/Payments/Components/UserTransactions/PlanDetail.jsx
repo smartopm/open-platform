@@ -351,7 +351,7 @@ const useStyles = makeStyles(() => ({
   },
   slider: {
     display: 'flex',
-    justifyContent: 'end'
+    justifyContent: 'flex-end'
   },
   renew: {
     marginTop: '10px'

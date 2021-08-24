@@ -7,9 +7,9 @@ import { useTranslation } from 'react-i18next'
 import { titleize } from '../../../utils/helpers';
 import { Spinner } from '../../../shared/Loading'
 
-export default function TitleDescriptionForm({ save, type, close, data, children }) {
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
+export default function TitleDescriptionForm({ formTitle, formDescription, save, type, close, data, children }) {
+  const [title, setTitle] = useState(formTitle);
+  const [description, setDescription] = useState(formDescription);
   const [open, setOpen] = useState(false);
   const { t } = useTranslation(['common', 'form'])
 
@@ -97,9 +97,13 @@ export default function TitleDescriptionForm({ save, type, close, data, children
 
 TitleDescriptionForm.defaultProps = {
   children: <span />,
+  formTitle: '',
+  formDescription: ''
 };
 
 TitleDescriptionForm.propTypes = {
+  formTitle: PropTypes.string,
+  formDescription: PropTypes.string,
   close: PropTypes.func.isRequired,
   save: PropTypes.func.isRequired,
   children: PropTypes.node,

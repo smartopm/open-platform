@@ -10,5 +10,7 @@ FactoryBot.define do
     expires_at { 10.days.from_now }
     status { 1 }
     community
+    preview { false }
+    multiple_submissions_allowed { true }
   end
 end
