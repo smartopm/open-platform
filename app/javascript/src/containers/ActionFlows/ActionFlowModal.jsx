@@ -118,6 +118,17 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
           cancelled: 'Cancelled',
           '': 'Null'
         });
+      } else if (field === 'task_create_user_type') {
+        addQuerySelectMenu(field, {
+          admin: 'Admin',
+          security_guard: 'Security Guard',
+          resident: 'Resident',
+          contractor: 'Contractor',
+          prospective_client: 'Prospective Client',
+          client: 'Client',
+          visitor: 'Visitor',
+          custodian: 'Store Custodian'
+        });
       } else if (['visit_request_start_time', 'visit_request_end_time'].includes(field)) {
         addQueryDateInput(field);
       } else if (field === 'visit_request_reason') {
