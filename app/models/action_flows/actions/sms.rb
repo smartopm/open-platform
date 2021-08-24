@@ -6,7 +6,7 @@ module ActionFlows
   module Actions
     # Action defined to create a task
     class Sms
-      def self.execute_action(data)
+      def self.execute_action(data, field_config=nil)
         community = ::Community.find_by(id: data[:task_create_community_id])
         author_name = Users::User.find(data[:task_create_author_id]).name
         message = "#{author_name} just created a task '#{data[:task_create_body]}'"
