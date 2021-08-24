@@ -213,7 +213,7 @@ export default function CategoryForm({ data, close, formData, refetchCategories 
           id="cat-rendered_text"
           label={t('form_fields.rendered_text')}
           variant="outlined"
-          value={categoryData.renderedText}
+          value={categoryData.renderedText || ''}
           onChange={handleChange}
           name="renderedText"
           style={{ width: '100%' }}

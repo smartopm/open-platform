@@ -26,7 +26,7 @@ export default function SignaturePad({signRef, onEnd, detail, label}){
       <>
         <div className={classes.signatureContainer}>
           <label className="bmd-label-static" aria-label="sign_title">
-            {label}
+            {`${label} ${detail.required && '*'}`}
           </label>
           <Signature
             canvasProps={{ className: classes.signaturePad }}
@@ -51,7 +51,8 @@ SignaturePad.propTypes = {
     onEnd: PropTypes.func.isRequired,
     detail: PropTypes.shape({
       status: PropTypes.string,
-      type: PropTypes.string
+      type: PropTypes.string,
+      required: PropTypes.bool,
     }).isRequired,
     label: PropTypes.string
 }
