@@ -37,7 +37,7 @@ module Notes
     scope :by_completion, ->(is_complete) { where(completed: is_complete) }
     scope :by_category, ->(category) { where(category: category) }
     scope :for_site_manager, lambda { |current_user|
-                               if current_user.user_type != 'admin'
+                               unless %i[admin custodian].include? current_user.user_type.to_sym
                                  left_joins(:assignee_notes).where(
                                    arel_table[:author_id].eq(current_user.id)
                                       .or(Notes::AssigneeNote.arel_table[:user_id]
