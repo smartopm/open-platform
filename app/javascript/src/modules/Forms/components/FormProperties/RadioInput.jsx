@@ -15,7 +15,7 @@ export default function RadioInput({ handleValue, properties, value }) {
   return (
     <FormControl component="fieldset">
       <FormLabel component="legend" data-testid="radio_field_name">
-        {`${properties.fieldName || properties.formProperty.fieldName} ${properties.required && '*'}`}
+        {`${properties.fieldName || properties.formProperty.fieldName} ${properties.required ? '*' : ''}`}
       </FormLabel>
       <RadioGroup
         aria-label={properties.fieldName}
