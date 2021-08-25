@@ -154,7 +154,7 @@ module Logs
     end
 
     def task_assign_to_sentence
-      'Some just got assigned'
+      "#{acting_user_name} assigned a task"
     end
 
     def user_enrolled_to_sentence
