@@ -4,14 +4,14 @@ require 'host_env'
 
 module ActionFlows
   module Events
-    # Task Create Event to handle related action
-    class TaskCreateEvent < ActionFlows::EventPop
-      EVENT_TYPE = 'task_create'
-      EVENT_DESC = 'Task Create'
+    # Task Assign Event to handle related action
+    class TaskAssignEvent < ActionFlows::EventPop
+      EVENT_TYPE = 'task_assign'
+      EVENT_DESC = 'Task Assign'
 
       def self.event_metadata
         {
-          'TaskCreate' => obj_data['TaskCreate'],
+          'TaskAssign' => obj_data['TaskAssign'],
         }
       end
 
@@ -30,14 +30,15 @@ module ActionFlows
       end
 
       def preload_data(eventlog)
-        note = eventlog.ref_type.constantize.find eventlog.ref_id
-        user_type = note.user.user_type
-        community_id = note.community_id
+        note_assign = eventlog.ref_type.constantize.find eventlog.ref_id
+        user_type = note_assign.note.user.user_type
+        author_id = note_assign.note.author_id
+        body = note_assign.note.body
         load_data(
-          { 'TaskCreate' => note },
+          { 'TaskAssign' => note_assign },
           'user_type' => user_type,
-          'community_id' => community_id,
-          'url' => "https://#{HostEnv.base_url(eventlog.community)}/tasks/#{note.id}",
+          'author_id' => author_id,
+          'body' => body,
         )
       end
     end

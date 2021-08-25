@@ -65,13 +65,12 @@ module ActionFlows
         'end_time' => '',
         'visitor' => '',
       },
-      'TaskCreate' => {
+      'TaskAssign' => {
         'user_type' => '',
         'user_id' => '',
+        'note_id' => '',
         'author_id' => '',
         'body' => '',
-        'url' => '',
-        'community_id' => '',
       },
     }.freeze
 

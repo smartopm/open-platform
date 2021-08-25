@@ -54,7 +54,8 @@ module Notes
       if a_notes.present?
         a_notes.delete
       else
-        assignee_notes.create!(user_id: user_id, note_id: self[:id])
+        p = assignee_notes.create!(user_id: user_id, note_id: self[:id])
+        user.generate_events('task_assign', p)
       end
     end
 

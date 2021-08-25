@@ -23,6 +23,7 @@ import {
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import { useTheme } from '@material-ui/styles';
 import { useTranslation } from 'react-i18next';
+import PhoneInput from 'react-phone-input-2'
 import DatePickerDialog from '../../components/DatePickerDialog';
 import { UserChip } from '../../modules/Tasks/Components/UserChip';
 import {
@@ -118,7 +119,7 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
           cancelled: 'Cancelled',
           '': 'Null'
         });
-      } else if (field === 'task_create_user_type') {
+      } else if (field === 'task_assign_user_type') {
         addQuerySelectMenu(field, {
           admin: 'Admin',
           security_guard: 'Security Guard',
@@ -198,6 +199,19 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
   function handleSelect(event) {
     const { name, value } = event.target;
 
+    setMetaData({
+      ...metaData,
+      [name]: value
+    });
+
+    setData({
+      ...data,
+      [name]: value
+    });
+  }
+
+  function handlePhoneNumberInput(event) {
+    const { name, value } = event
     setMetaData({
       ...metaData,
       [name]: value
@@ -462,6 +476,23 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
                     selectedDate={selectedDate}
                   />
                 </FormControl>
+              );
+            }
+            if (actionField.type === 'text' && actionField.name === 'phone_number') {
+              return (
+                <PhoneInput
+                  value={data.phoneNumber || ''}
+                  inputStyle={{ width: "100%" }}
+                  enableSearch
+                  inputProps={{
+                    name: 'phoneNumber',
+                    required: true,
+                    'data-testId': 'primary_phone'
+                  }}
+                  placeholder={t('common:form_placeholders.phone_number')}
+                  onChange={value => handlePhoneNumberInput({name: actionField.name, value})}
+                  preferredCountries={['hn', 'zm', 'ng', 'in', 'us']}
+                />
               );
             }
             return (

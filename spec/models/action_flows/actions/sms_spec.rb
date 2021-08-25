@@ -3,26 +3,31 @@
 require 'rails_helper'
 
 RSpec.describe ActionFlows::Actions::Sms do
-  let!(:user) { create(:user_with_community, name: 'some name') }
+  let!(:user) { create(:user_with_community, name: 'some name', phone_number: '2341234567') }
   let!(:acting_user) do
-    create(:user_with_community, community: user.community,
-                                 phone_number: '2341234567',
-                                 user_type: 'custodian')
+    create(:user_with_community, community: user.community, user_type: 'custodian')
   end
   let!(:user_note) do
     create(:note, community_id: user.community_id,
-                  user_id: user.id, author_id: user.id, body: 'some body')
+                  user_id: acting_user.id, author_id: user.id, body: 'some body')
   end
+
+  let!(:assign_note) do
+    create(:assignee_note, user_id: user.id, note_id: user_note.id)
+  end
+
   let!(:event_log) do
-    create(:event_log, subject: 'task_create', ref_type: 'Notes::Note', ref_id: user_note.id,
+    create(:event_log, subject: 'task_assign',
+                       ref_type: 'Notes::AssigneeNote', ref_id: assign_note.id,
                        acting_user: acting_user, community: user.community)
   end
 
   let!(:action_flow) do
     create(:action_flow, event_action: {
-             action_name: 'Sms', action_fields: {}
-           },
-                         community: user.community, event_type: 'task_create')
+             action_name: 'Sms',
+             action_fields: { phone_number:
+             { name: 'phone_number', value: '1234567', type: 'string' } },
+           }, community: user.community, event_type: 'task_assign')
   end
 
   it 'executes action' do
@@ -31,7 +36,8 @@ RSpec.describe ActionFlows::Actions::Sms do
 
     event = flow.event_object.new
     event.preload_data(event_log)
-    expect(Sms).to receive(:send).with('2341234567', "some name just created a task 'some body'")
-    described_class.execute_action(event.data_set)
+    expect(Sms).to receive(:send)
+      .with('1234567', "some name just assigned a task 'some body' to some name")
+    described_class.execute_action(event.data_set, flow.action_fields)
   end
 end
