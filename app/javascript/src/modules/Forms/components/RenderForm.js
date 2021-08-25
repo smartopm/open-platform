@@ -264,7 +264,6 @@ export default function RenderForm({ formPropertiesData, formId, refetch, editMo
             <br />
             <CheckboxInput
               properties={formPropertiesData}
-              value={null}
               checkboxState={formProperties[formPropertiesData.fieldName]}
               handleValue={event => handleCheckboxSelect(event, formPropertiesData)}
             />

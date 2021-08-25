@@ -1,4 +1,5 @@
 /* eslint-disable no-use-before-define */
+/* eslint-disable security/detect-object-injection */
 import React, { Fragment, useRef, useState } from 'react';
 import { Button, Container, TextField, Typography } from '@material-ui/core';
 import { useApolloClient, useMutation, useQuery } from 'react-apollo';
@@ -22,6 +23,7 @@ import RadioInput from './FormProperties/RadioInput';
 import ImageAuth from '../../../shared/ImageAuth';
 import Loading from '../../../shared/Loading';
 import FormTitle from './FormTitle';
+import CheckboxInput from './FormProperties/CheckboxInput';
 
 // date
 // text input (TextField or TextArea)
@@ -82,6 +84,17 @@ export default function FormUpdate({ formUserId, userId, authState }) {
     setProperties({
       ...properties,
       [name]: { value, form_property_id: propId },
+    });
+  }
+
+  function handleCheckboxSelect(event, propId, fieldName) {
+    const { name, checked } = event.target;
+    setProperties({
+      ...properties,
+      [fieldName]: {
+        value: { ...properties[fieldName]?.value, [name]: checked },
+        form_property_id: propId
+      }
     });
   }
 
@@ -291,6 +304,24 @@ export default function FormUpdate({ formUserId, userId, authState }) {
             value={properties.radio.value.checked}
             handleValue={(event) =>
               handleRadioValueChange(
+                event,
+                formPropertiesData.formProperty.id,
+                formPropertiesData.formProperty.fieldName
+              )
+            }
+          />
+          <br />
+        </Fragment>
+      ),
+      checkbox: (
+        <Fragment key={formPropertiesData.formProperty.id}>
+          <br />
+          <br />
+          <CheckboxInput
+            properties={formPropertiesData}
+            checkboxState={properties[formPropertiesData.formProperty.fieldName]}
+            handleValue={(event) =>
+              handleCheckboxSelect(
                 event,
                 formPropertiesData.formProperty.id,
                 formPropertiesData.formProperty.fieldName
