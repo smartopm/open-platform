@@ -3,6 +3,7 @@ import {
   checkCondition,
   extractValidFormPropertyValue,
   flattenFormProperties,
+  parseRenderedText,
   propExists
 } from '../utils';
 
@@ -165,5 +166,21 @@ describe('Utilities', () => {
     expect(checkCondition(categoryWithWrongCondition, properties, false)).toBe(false) // condition has no matching property
     expect(checkCondition(categoryWithPropertyId, properties, false)).toBe(false) // condition matches property but wrong condition
     expect(checkCondition(categoryWithMatchingCondition, properties, false)).toBe(true) // condition matches all 
+  })
+
+  it('should parse and then find and replace variables in a string', () => {
+    const text = `This is a nice string with #variables that has #name with end of line \n#support \n\n#support`
+    const data = {
+      name: {
+        value: ' Joe',
+      },
+      'variables': {
+        value: 'And yes it is true',
+      },
+      'support': {
+        value: 'yes',
+      },
+    }
+    expect(parseRenderedText(text, data)).toContain('This is a nice string with And yes it is true that has  Joe with end of line \nyes \n\nyes')
   })
 });

@@ -11,10 +11,8 @@ import { FormContext } from '../Context';
 
 export default function FormPreview({ loading, handleFormSubmit, categoriesData }) {
   const { t } = useTranslation('form')
-  // TODO: search for variables in the renderedText and substitute them with entered field values from the form
   const text = categoriesData.data.formCategories.map(category => `${category.renderedText}  `).join('');
   const { formProperties } = useContext(FormContext)
-  // clean up filled property
   const markdown = parseRenderedText(text, formProperties)
   return (
     <Container>
