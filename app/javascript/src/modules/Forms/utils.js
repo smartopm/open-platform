@@ -115,17 +115,14 @@ export function extractValidFormPropertyFieldNames(formProperties) {
  */
 export function parseRenderedText(renderedText, data) {
   const properties = extractValidFormPropertyFieldNames(data)
-  // console.log(properties.find(
-  //   (prop) => prop.fieldName === "Choices"
-  // ))
   const words = renderedText.split(' ');
   return words
     .map((word) => {
       const formProperty = properties.find(
-        (prop) => prop.fieldName === word.replace('#', '')
+        (prop) => prop.fieldName === word.replace(/\n|#/g, '')
       );
       if (formProperty) {
-        return word.replace(/\B#[A-Za-z0-9]+|^#/gi, formProperty.value);
+        return word.replace(/#[A-Za-z0-9]+/, formProperty.value);
       }
       return word;
     })
