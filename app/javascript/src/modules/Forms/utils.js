@@ -75,7 +75,7 @@ export function checkCondition(category, properties, editMode) {
  * @param {object} item 
  * @returns {boolean}
  */
-export function nullValues(item){
+export function nonNullValues(item){
   return item.value && item.value?.checked !== null && item.form_property_id !== null
 }
 
@@ -89,7 +89,7 @@ export function extractValidFormPropertyValue(formProperties) {
   if(!Object.keys(formProperties).length) return []
   return Object.entries(formProperties)
     .map(([, value]) => value)
-    .filter(nullValues);
+    .filter(nonNullValues);
 }
 
 /**
@@ -102,7 +102,7 @@ export function extractValidFormPropertyFieldNames(formProperties) {
   if(!Object.keys(formProperties).length) return []
   return Object.entries(formProperties)
     .map(([key, prop]) => ({fieldName: key, value: prop.value?.checked || prop.value}))
-    .filter(nullValues);
+    .filter(nonNullValues);
 }
 
 

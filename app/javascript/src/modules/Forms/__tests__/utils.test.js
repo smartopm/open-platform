@@ -1,8 +1,10 @@
 import {
   addPropWithValue,
   checkCondition,
+  extractValidFormPropertyFieldNames,
   extractValidFormPropertyValue,
   flattenFormProperties,
+  nonNullValues,
   parseRenderedText,
   propExists
 } from '../utils';
@@ -104,6 +106,21 @@ describe('Utilities', () => {
         value: ' And yes it is true'
       }
     ]);
+
+    expect(extractValidFormPropertyFieldNames(formProperties)).toMatchObject([
+      {
+        value: ' 26',
+        fieldName: 'How are you?'
+      },
+      {
+        fieldName: 'Name',
+        value: ' their name'
+      },
+      {
+        fieldName: 'Something else',
+        value: ' And yes it is true'
+      }
+    ]);
   });
 
   it('only shows a category if it matches the given display condition', () => {
@@ -182,5 +199,16 @@ describe('Utilities', () => {
       },
     }
     expect(parseRenderedText(text, data)).toContain('This is a nice string with And yes it is true that has  Joe with end of line \nyes \n\nyes')
+  })
+
+  it('checks for null values', () => {
+    const item = {
+      value: 'sds',
+      form_property_id: null
+    }
+    expect(nonNullValues(item)).toBe(false)
+    expect(nonNullValues({ value: 'some', form_property_id: 'wweqw' })).toBe(true)
+    expect(nonNullValues({ value: {checked: 'somed'}, form_property_id: '290384321' })).toBe(true)
+    expect(nonNullValues({ value: {checked: null}, form_property_id: null })).toBe(false)
   })
 });
