@@ -24,10 +24,10 @@ module ActionFlows
         author = Users::User.find(data[:task_assign_author_id]).name
         assign_user = Users::User.find(data[:task_assign_user_id])
         message = "Task '#{data[:task_assign_body]}' has just been assigned to #{author}"
-        a_s = "#{author} just assigned a task '#{data[:task_assign_body]}' to #{assign_user.name}"
+        msg = "#{author} just assigned a task '#{data[:task_assign_body]}' to #{assign_user.name}"
 
         hash = action_flow_fields(data, field_config)
-        sms_head_custodian(data[:task_assign_user_type], hash[:phone_number], a_s)
+        sms_head_custodian(data[:task_assign_user_type], hash[:phone_number], msg)
 
         return unless assign_user.user_type == 'custodian'
 
