@@ -107,7 +107,7 @@ export default function RenderForm({ formPropertiesData, formId, refetch, editMo
             id={formPropertiesData.id}
             selectedDate={formProperties[String(formPropertiesData.fieldName)]?.value || null}
             handleDateChange={date => handleDateChange(date, formPropertiesData)}
-            label={`${formPropertiesData.fieldName} ${formPropertiesData.required && '*'}`}
+            label={`${formPropertiesData.fieldName} ${formPropertiesData.required ? '*' : ''}`}
           />
         </Grid>
       </Grid>
@@ -126,7 +126,7 @@ export default function RenderForm({ formPropertiesData, formId, refetch, editMo
             id={formPropertiesData.id}
             time={formProperties[String(formPropertiesData.fieldName)]?.value || null}
             handleTimeChange={date => handleDateChange(date, formPropertiesData)}
-            label={`${formPropertiesData.fieldName} ${formPropertiesData.required && '*'}`}
+            label={`${formPropertiesData.fieldName} ${formPropertiesData.required ? '*' : ''}`}
             style={{ width: '100%' }}
           />
         </Grid>
@@ -146,7 +146,7 @@ export default function RenderForm({ formPropertiesData, formId, refetch, editMo
             id={formPropertiesData.id}
             selectedDateTime={formProperties[String(formPropertiesData.fieldName)]?.value || null}
             handleDateChange={date => handleDateChange(date, formPropertiesData)}
-            label={`${formPropertiesData.fieldName} ${formPropertiesData.required && '*'}`}
+            label={`${formPropertiesData.fieldName} ${formPropertiesData.required ? '*' : ''}`}
           />
         </Grid>
       </Grid>
