@@ -157,6 +157,7 @@ export default function FormLinkList({ userType, community }) {
   )
 }
 
+// TODO: This should be its own separate file
 export function FormMenu({ formId, formName, anchorEl, handleClose, open, refetch }) {
   const history = useHistory()
   const [isDialogOpen, setOpen] = useState(false)
@@ -265,6 +266,7 @@ export function FormMenu({ formId, formName, anchorEl, handleClose, open, refetc
   )
 }
 
+// TODO: This should be its own separate file
 export function FormDialog({actionType, form, formMutation, open, setOpen, message, setMessage, setAlertOpen, refetch}){
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('xs'));
@@ -388,7 +390,7 @@ FormDialog.propTypes = {
     id: PropTypes.string.isRequired,
     multipleSubmissionsAllowed: PropTypes.bool.isRequired,
     preview: PropTypes.bool.isRequired,
-    expiresAt: PropTypes.string.isRequired,
+    expiresAt: PropTypes.string,
     name: PropTypes.string.isRequired,
     description: PropTypes.string.isRequired
   }),
