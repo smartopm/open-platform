@@ -1,6 +1,8 @@
 /* eslint-disable no-use-before-define */
 /* eslint-disable security/detect-object-injection */
-import React, { Fragment, useRef, useState } from 'react';
+/* eslint-disable no-unused-expressions */
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { Fragment, useRef, useState, useEffect } from 'react';
 import { Button, Container, TextField, Typography } from '@material-ui/core';
 import { useApolloClient, useMutation, useQuery } from 'react-apollo';
 import { useHistory } from 'react-router';
@@ -70,6 +72,20 @@ export default function FormUpdate({ formUserId, userId, authState }) {
   } = useFileUpload({
     client: useApolloClient(),
   });
+
+
+  useEffect(() => {
+    const checkboxProperties = data?.formUserProperties?.filter((prop) => prop.formProperty.fieldType === 'checkbox')
+    checkboxProperties?.forEach((checkboxProp) => {
+      setProperties({
+        ...properties,
+        [checkboxProp.formProperty.fieldName]: {
+          value: JSON.parse(checkboxProp.value.replace(/=>/g, ':')),
+          form_property_id: checkboxProp.formProperty.id
+        }
+      });
+    })
+  }, [data])
 
   async function handleSignatureUpload() {
     setMessage({ ...message, signed: true });

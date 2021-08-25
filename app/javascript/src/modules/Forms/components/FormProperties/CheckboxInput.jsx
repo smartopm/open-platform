@@ -10,24 +10,22 @@ import Checkbox from '@material-ui/core/Checkbox';
 export default function CheckboxInput({ handleValue, properties, checkboxState }) {
   const fieldValues = checkboxState?.value;
   const { formProperty } = properties;
-  const cleanValue = properties.value?.replace(/=>/g, ':') || '{}';
-  const parsedValue = JSON.parse(cleanValue);
 
   return (
     <FormControl component="fieldset">
       <FormLabel component="legend">
-        {`${formProperty.fieldName} ${
+        {`${properties.fieldName || formProperty.fieldName} ${
         properties.required ? '*' : ''
       }`}
       </FormLabel>
       <FormGroup>
-        {formProperty.fieldValue?.map(obj => (
+        {(formProperty?.fieldValue || properties?.fieldValue)?.map(obj => (
           <FormControlLabel
             key={obj.label}
             control={(
               <Checkbox
                 checked={
-                  parsedValue[obj.label] || (fieldValues ? fieldValues[obj.label] || false : false)
+                  fieldValues ? fieldValues[obj.label] || false : false
                 }
                 onChange={handleValue}
                 name={obj.label}
@@ -42,8 +40,12 @@ export default function CheckboxInput({ handleValue, properties, checkboxState }
   );
 }
 
+CheckboxInput.defaultProps = {
+  checkboxState: null
+}
+
 CheckboxInput.propTypes = {
   handleValue: PropTypes.func.isRequired,
   properties: PropTypes.object.isRequired,
-  checkboxState: PropTypes.object.isRequired
+  checkboxState: PropTypes.object
 };
