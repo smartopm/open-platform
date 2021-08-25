@@ -16,7 +16,7 @@ export function propExists(values, propId) {
 /**
  *
  * @param {object} properties
- * @param {String} propId
+ * @param {string} propId
  * @description check form values that weren't filled in and add default values
  */
 export function addPropWithValue(properties, propId) {
@@ -45,7 +45,7 @@ export function flattenFormProperties(categories) {
  * @param {object} category
  * @param {[object]} properties
  * @param {boolean} editMode
- * @returns {Boolean}
+ * @returns {boolean}
  */
 export function checkCondition(category, properties, editMode) {
   if (editMode) {
@@ -109,9 +109,9 @@ export function extractValidFormPropertyFieldNames(formProperties) {
 /**
  * gets a markdown text and a list of formproperties with their values and finds variables that matches 
  * the fieldname and replaces its actual value from the about to be submitted form property.
- * @param {String} renderedText 
+ * @param {string} renderedText 
  * @param {[object]} data 
- * @returns {String}
+ * @returns {string}
  */
 export function parseRenderedText(renderedText, data) {
   const properties = extractValidFormPropertyFieldNames(data)
