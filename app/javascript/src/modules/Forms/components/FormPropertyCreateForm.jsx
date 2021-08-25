@@ -19,12 +19,13 @@ import { LiteFormCategories } from '../graphql/form_category_queries';
 const fieldTypes = {
   text: 'Text',
   radio: 'Radio',
+  checkbox: 'Checkbox',
   date: 'Date',
   time: 'Time',
   datetime: 'Date with Time',
   dropdown: 'Dropdown',
   signature: 'Signature',
-  file_upload: 'File Upload',
+  file_upload: 'File Upload'
 };
 
 export default function FormPropertyCreateForm({ formId, refetch, propertyId, categoryId, close }) {
@@ -173,7 +174,9 @@ export default function FormPropertyCreateForm({ formId, refetch, propertyId, ca
           handleChange={handlePropertyValueChange}
           options={fieldTypes}
         />
-        {(propertyData.fieldType === 'radio' || propertyData.fieldType === 'dropdown') && (
+        {(propertyData.fieldType === 'radio' ||
+          propertyData.fieldType === 'dropdown' ||
+          propertyData.fieldType === 'checkbox') && (
           <FormOptionInput label="Option" options={options} setOptions={setOptions} />
         )}
         <FormControl variant="outlined" style={{ width: '100%' }} margin="normal">

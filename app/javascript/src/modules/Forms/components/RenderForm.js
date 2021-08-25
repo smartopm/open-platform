@@ -1,11 +1,15 @@
 import React, { Fragment, useRef, useContext } from 'react';
 import { Grid } from '@material-ui/core';
-import PropTypes from 'prop-types'
-import DatePickerDialog, { DateAndTimePickers, ThemedTimePicker } from '../../../components/DatePickerDialog';
+import PropTypes from 'prop-types';
+import DatePickerDialog, {
+  DateAndTimePickers,
+  ThemedTimePicker
+} from '../../../components/DatePickerDialog';
 import { Context } from '../../../containers/Provider/AuthStateProvider';
 import ImageAuth from '../../../shared/ImageAuth';
 import { Spinner } from '../../../shared/Loading';
 import RadioInput from './FormProperties/RadioInput';
+import CheckboxInput from './FormProperties/CheckboxInput';
 import TextInput from './FormProperties/TextInput';
 import UploadField from './FormProperties/UploadField';
 import SignaturePad from './FormProperties/SignaturePad';
@@ -24,9 +28,19 @@ export default function RenderForm({ formPropertiesData, formId, refetch, editMo
     setFormProperties,
     setFormState,
     onChange,
-    signature,
+    signature
   } = useContext(FormContext);
 
+  function handleCheckboxSelect(event, property) {
+    const { name, checked } = event.target;
+    setFormProperties({
+      ...formProperties,
+      [property.fieldName]: {
+        value: { ...formProperties[property.fieldName]?.value, [name]: checked },
+        form_property_id: property.id
+      }
+    });
+  }
 
   function handleValueChange(event, property) {
     const { name, value } = event.target;
@@ -39,7 +53,10 @@ export default function RenderForm({ formPropertiesData, formId, refetch, editMo
   function handleDateChange(date, property) {
     setFormProperties({
       ...formProperties,
-      [property.fieldName]: { value: dateToString(date, 'YYYY-MM-DD HH:mm'), form_property_id: property.id }
+      [property.fieldName]: {
+        value: dateToString(date, 'YYYY-MM-DD HH:mm'),
+        form_property_id: property.id
+      }
     });
   }
 
@@ -47,7 +64,10 @@ export default function RenderForm({ formPropertiesData, formId, refetch, editMo
     const { name, value } = event.target;
     setFormProperties({
       ...formProperties,
-      [property.fieldName]: { value: { checked: value, label: name }, form_property_id: property.id }
+      [property.fieldName]: {
+        value: { checked: value, label: name },
+        form_property_id: property.id
+      }
     });
   }
 
@@ -56,7 +76,7 @@ export default function RenderForm({ formPropertiesData, formId, refetch, editMo
       ...formState,
       currentPropId: currentProperty,
       isUploading: true
-    })
+    });
     onChange(event.target.files[0]);
   }
 
@@ -162,7 +182,11 @@ export default function RenderForm({ formPropertiesData, formId, refetch, editMo
         />
         <Grid item xs={editMode ? 10 : 12}>
           <UploadField
-            detail={{ type: 'file', label: formPropertiesData.fieldName, required: formPropertiesData.required }}
+            detail={{
+              type: 'file',
+              label: formPropertiesData.fieldName,
+              required: formPropertiesData.required
+            }}
             upload={evt => onImageSelect(evt, formPropertiesData.id)}
             editable={editable}
             uploaded={!!uploadedFile}
@@ -193,7 +217,11 @@ export default function RenderForm({ formPropertiesData, formId, refetch, editMo
         <Grid item xs={editMode ? 10 : 12}>
           <SignaturePad
             key={formPropertiesData.id}
-            detail={{ type: 'signature', status: signature.status, required: formPropertiesData.required }}
+            detail={{
+              type: 'signature',
+              status: signature.status,
+              required: formPropertiesData.required
+            }}
             signRef={signRef}
             onEnd={() => handleSignatureUpload(formPropertiesData.id)}
           />
@@ -215,9 +243,30 @@ export default function RenderForm({ formPropertiesData, formId, refetch, editMo
             <RadioInput
               properties={formPropertiesData}
               value={null}
-              handleValue={event =>
-                handleRadioValueChange(event, formPropertiesData)
-              }
+              handleValue={event => handleRadioValueChange(event, formPropertiesData)}
+            />
+            <br />
+          </Fragment>
+        </Grid>
+      </Grid>
+    ),
+    checkbox: (
+      <Grid container spacing={3} key={formPropertiesData.id}>
+        <FormPropertyAction
+          formId={formId}
+          editMode={editMode}
+          propertyId={formPropertiesData.id}
+          refetch={refetch}
+          categoryId={categoryId}
+        />
+        <Grid item xs={editMode ? 10 : 12}>
+          <Fragment key={formPropertiesData.id}>
+            <br />
+            <CheckboxInput
+              properties={formPropertiesData}
+              value={null}
+              checkboxState={formProperties[formPropertiesData.fieldName]}
+              handleValue={event => handleCheckboxSelect(event, formPropertiesData)}
             />
             <br />
           </Fragment>
@@ -248,7 +297,6 @@ export default function RenderForm({ formPropertiesData, formId, refetch, editMo
   return <>{fields[String(formPropertiesData.fieldType)]}</>;
 }
 
-
 RenderForm.propTypes = {
   formId: PropTypes.string.isRequired,
   refetch: PropTypes.func.isRequired,
@@ -259,6 +307,6 @@ RenderForm.propTypes = {
     fieldType: PropTypes.string,
     fieldName: PropTypes.string,
     adminUse: PropTypes.bool,
-    required: PropTypes.bool,
-  }).isRequired,
-}
+    required: PropTypes.bool
+  }).isRequired
+};
