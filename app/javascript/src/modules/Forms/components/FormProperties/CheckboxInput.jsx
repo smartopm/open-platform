@@ -13,7 +13,7 @@ export default function CheckboxInput({ handleValue, properties, checkboxState }
 
   return (
     <FormControl component="fieldset">
-      <FormLabel component="legend">
+      <FormLabel component="legend" data-testid="checkbox_field_name">
         {`${properties.fieldName || formProperty.fieldName} ${
         properties.required ? '*' : ''
       }`}
