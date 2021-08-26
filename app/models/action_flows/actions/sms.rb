@@ -23,7 +23,7 @@ module ActionFlows
       def self.execute_action(data, field_config)
         author = Users::User.find(data[:task_assign_author_id]).name
         assign_user = Users::User.find(data[:task_assign_user_id])
-        message = "Task '#{data[:task_assign_body]}' has just been assigned to #{author}"
+        message = "Task '#{data[:task_assign_body]}'was assigned to #{assign_user.name}"
         msg = "#{author} just assigned a task '#{data[:task_assign_body]}' to #{assign_user.name}"
 
         hash = action_flow_fields(data, field_config)
