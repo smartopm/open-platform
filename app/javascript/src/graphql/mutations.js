@@ -871,6 +871,7 @@ export const LabelCreate = gql`
     labelCreate(shortDesc: $shortDesc, description: $description, color: $color) {
       label {
         id
+        shortDesc
       }
     }
   }

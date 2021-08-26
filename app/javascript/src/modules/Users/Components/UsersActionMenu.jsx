@@ -14,7 +14,7 @@ import { useTheme } from '@material-ui/styles'
 import { CustomizedDialogs, ActionDialog } from '../../../components/Dialog'
 import CreateLabel from '../../../components/CreateLabel'
 import CampaignIcon from '../../../components/Campaign/CampaignIcon'
-
+import MessageAlert from '../../../components/MessageAlert';
 // TODO: @olivier ==> Find a way to reuse this for other similar actions like we have on tasks
 const USERS_LABEL_WARNING_LIMIT = 2000
 export default function UsersActionMenu({
@@ -31,6 +31,8 @@ export default function UsersActionMenu({
   const [labelSelectModalOpen, setLabelSelectModalOpen] = useState(false)
   const [labelAssignWarningOpen, setLabelAssignWarningOpen] = useState(false)
   const [selectedLabels, setSelectedLabels] = useState([])
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState({ isError: false, detail: '' });
   const { t } = useTranslation(['users', 'common'])
   const theme = useTheme()
 
@@ -46,6 +48,7 @@ export default function UsersActionMenu({
       setLabelAssignWarningOpen(true)
       return
     }
+    setLoading(true);
     handleLabelSelect(selectedLabels)
   }
 
@@ -59,6 +62,12 @@ export default function UsersActionMenu({
 
   return (
     <Grid container>
+      <MessageAlert
+        type={message.isError ? 'error' : 'success'}
+        message={message.detail}
+        open={!!message.detail}
+        handleClose={() => setMessage({ ...message, detail: '' })}
+      />
       <CustomizedDialogs
         open={labelSelectModalOpen}
         handleModal={() => setLabelSelectModalOpen(false)}
@@ -66,8 +75,14 @@ export default function UsersActionMenu({
         handleBatchFilter={handleAssignLabel}
         saveAction={t('common:form_actions.assign')}
         disableActionBtn={selectedLabels.length === 0}
+        actionLoading={loading}
       >
-        <CreateLabel handleLabelSelect={labels => setSelectedLabels(labels)} />
+        <CreateLabel
+          handleLabelSelect={labels => setSelectedLabels(labels)}
+          loading={loading}
+          setLoading={setLoading}
+          setMessage={setMessage}
+        />
       </CustomizedDialogs>
       <ActionDialog
         open={labelAssignWarningOpen}
