@@ -24,6 +24,7 @@ export default function CheckboxInput({ handleValue, properties, checkboxState }
             key={obj.label}
             control={(
               <Checkbox
+                color="primary"
                 checked={
                   fieldValues ? fieldValues[obj.label] || false : false
                 }

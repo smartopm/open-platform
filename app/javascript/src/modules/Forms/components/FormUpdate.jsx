@@ -80,7 +80,7 @@ export default function FormUpdate({ formUserId, userId, authState }) {
       setProperties({
         ...properties,
         [checkboxProp.formProperty.fieldName]: {
-          value: JSON.parse(checkboxProp.value.replace(/=>/g, ':')),
+          value: JSON.parse(checkboxProp.value?.replace(/=>/g, ':') || '{}'),
           form_property_id: checkboxProp.formProperty.id
         }
       });
