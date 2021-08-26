@@ -4,7 +4,7 @@ import MoreVertIcon from '@material-ui/icons/MoreVert';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import LabelActionMenu from './LabelActionMenu';
-import Label from '../../shared/label/Label';
+import Label from '../../../shared/label/Label';
 
 export default function LabelItem({ label, userType, refetch }) {
   const classes = useStyles();
@@ -43,7 +43,7 @@ export default function LabelItem({ label, userType, refetch }) {
               aria-haspopup="true"
               onClick={handleOpenMenu}
               dataid={label.id}
-              data-testid='label_icon'
+              data-testid="label_icon"
             >
               <MoreVertIcon />
             </IconButton>

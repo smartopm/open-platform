@@ -4,12 +4,12 @@ import { Grid, Typography, Container } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
-import { LabelsQuery } from '../../graphql/queries';
-import ErrorPage from '../Error';
-import Loading from '../../shared/Loading';
+import { LabelsQuery } from '../../../graphql/queries';
+import ErrorPage from '../../../components/Error';
+import Loading from '../../../shared/Loading';
 import LabelItem from './LabelItem';
-import CenteredContent from '../CenteredContent';
-import Paginate from '../Paginate';
+import CenteredContent from '../../../components/CenteredContent';
+import Paginate from '../../../components/Paginate';
 
 export default function LabelList({ userType }) {
   const limit = 50;
@@ -54,7 +54,7 @@ export default function LabelList({ userType }) {
 function LabelPageTitle() {
   // eslint-disable-next-line no-use-before-define
   const classes = useStyles();
-  const { t } = useTranslation('common')
+  const { t } = useTranslation('common');
 
   return (
     <Grid container spacing={6} className={classes.labelTitle}>
