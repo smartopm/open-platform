@@ -65,6 +65,13 @@ module ActionFlows
         'end_time' => '',
         'visitor' => '',
       },
+      'TaskAssign' => {
+        'user_type' => '',
+        'user_id' => '',
+        'note_id' => '',
+        'author_id' => '',
+        'body' => '',
+      },
     }.freeze
 
     attr_accessor :data_set
