@@ -10,10 +10,14 @@ import Loading from '../../../shared/Loading';
 import LabelItem from './LabelItem';
 import CenteredContent from '../../../components/CenteredContent';
 import Paginate from '../../../components/Paginate';
+import ButtonComponent from '../../../shared/buttons/Button';
+import EditModal from './EditModal';
 
 export default function LabelList({ userType }) {
+  const classes = useStyles();
   const limit = 50;
   const [offset, setOffset] = useState(0);
+  const [open, setOpen] = useState(false);
   const { data, error, loading, refetch } = useQuery(LabelsQuery, {
     variables: { limit, offset }
   });
@@ -33,6 +37,24 @@ export default function LabelList({ userType }) {
   }
   return (
     <Container>
+      <div className={classes.labelButton}>
+        <ButtonComponent
+          variant='contained'
+          color="primary"
+          buttonText='create a label'
+          handleClick={() => setOpen(true)}
+          size="large"
+        />
+        {open && (
+          <EditModal
+            open={open}
+            handleClose={() => setOpen(false)}
+            refetch={refetch}
+            data={data}
+            type='new'
+          />
+        )}
+      </div>
       <LabelPageTitle />
       <br />
       {data?.labels.map(label => (
@@ -52,7 +74,6 @@ export default function LabelList({ userType }) {
 }
 
 function LabelPageTitle() {
-  // eslint-disable-next-line no-use-before-define
   const classes = useStyles();
   const { t } = useTranslation('common');
 
@@ -86,5 +107,8 @@ const useStyles = makeStyles(() => ({
   },
   label: {
     marginLeft: 20
+  },
+  labelButton: {
+    textAlign: 'right'
   }
 }));

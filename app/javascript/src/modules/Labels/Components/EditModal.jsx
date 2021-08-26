@@ -1,55 +1,101 @@
 /* eslint-disable react/no-array-index-key */
 import React, { useState, useEffect } from 'react';
-import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
-import Dialog from '@material-ui/core/Dialog';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
 import Paper from '@material-ui/core/Paper';
 import { useMutation } from 'react-apollo';
-import { LabelEdit } from '../../../graphql/mutations';
+import { LabelEdit, LabelCreate } from '../../../graphql/mutations';
 import { colorPallete } from '../../../utils/constants';
+import { formatError } from '../../../utils/helpers';
+import { CustomizedDialogs } from '../../../components/Dialog';
+import MessageAlert from '../../../components/MessageAlert';
 
-export default function EditModal({ open, handleClose, data, refetch }) {
+export default function EditModal({ open, handleClose, data, refetch, type }) {
   const [editLabel] = useMutation(LabelEdit);
+  const [createLabel] = useMutation(LabelCreate);
   const [color, setColor] = useState(null);
-  const [error, setErrorMessage] = useState('');
   const [shortDesc, setShortDesc] = useState('');
   const [description, setDescription] = useState('');
+  const [mutationLoading, setMutationLoading] = useState(false);
+  const [isSuccessAlert, setIsSuccessAlert] = useState(false);
+  const [messageAlert, setMessageAlert] = useState('');
   const { t } = useTranslation(['label', 'common']);
 
   function handleEdit() {
+    setMutationLoading(true)
     editLabel({
       variables: { id: data.id, shortDesc, description, color }
     })
       .then(() => {
+        setMutationLoading(false)
+        setMessageAlert(t('label.label_edited'));
+        setIsSuccessAlert(true);
         handleClose();
         refetch();
       })
       .catch(err => {
-        handleClose();
-        setErrorMessage(err);
+        setMutationLoading(false)
+        setMessageAlert(formatError(err.message));
+        setIsSuccessAlert(false);
       });
   }
+
+  function handleLabelCreate() {
+    setMutationLoading(true)
+    createLabel({
+      variables: { shortDesc, description, color }
+    })
+      .then(() => {
+        setMutationLoading(false)
+        setMessageAlert(t('label.label_created'));
+        setIsSuccessAlert(true);
+        // handleClose();
+        refetch();
+      })
+      .catch(err => {
+        setMutationLoading(false)
+        setMessageAlert(formatError(err.message));
+        setIsSuccessAlert(false);
+      });
+  }
+
   function setDefaultValues() {
     setColor(data.color);
     setShortDesc(data.shortDesc);
     setDescription(data.description);
   }
+
+  function handleMessageAlertClose(_event, reason) {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setMessageAlert('');
+  }
+  
   useEffect(() => {
     setDefaultValues();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return (
-    <div>
-      <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
-        <DialogTitle id="form-dialog-title">{t('label.edit_dialog_title')}</DialogTitle>
-        <DialogContent>
+    <>
+      <MessageAlert
+        type={isSuccessAlert ? 'success' : 'error'}
+        message={messageAlert}
+        open={!!messageAlert}
+        handleClose={handleMessageAlertClose}
+      />
+      <CustomizedDialogs
+        open={open}
+        handleModal={handleClose}
+        dialogHeader={type === 'edit' ? t('label.edit_dialog_title') : t('label.new_dialog_title')}
+        handleBatchFilter={type === 'edit' ? handleEdit : handleLabelCreate}
+        saveAction={type === 'edit' ? t('common:form_actions.save_changes') : t('common:form_actions.save')}
+        cancelAction={t('common:form_actions.cancel')}
+        disableActionBtn={mutationLoading}
+      >
+        <div>
           <TextField
-            autoFocus
             margin="dense"
             id="title"
             label={t('label.title_field_label')}
@@ -80,9 +126,9 @@ export default function EditModal({ open, handleClose, data, refetch }) {
               style={{ height: '40px', width: '40px', margin: '5px', backgroundColor: `${color}` }}
             />
             <TextField
+              autoFocus
               margin="dense"
               id="color"
-              label={t('label.background_color_field_label')}
               type="text"
               fullWidth
               value={color}
@@ -109,23 +155,9 @@ export default function EditModal({ open, handleClose, data, refetch }) {
               />
             ))}
           </div>
-        </DialogContent>
-        <DialogActions>
-          <Button
-            onClick={handleClose}
-            color="secondary"
-            variant="outlined"
-            data-testid="cancel_button"
-          >
-            {t('common:form_actions.cancel')}
-          </Button>
-          <Button onClick={handleEdit} color="primary" variant="contained" data-testid="button">
-            {t('common:form_actions.save_changes')}
-          </Button>
-        </DialogActions>
-      </Dialog>
-      <p className="text-center">{Boolean(error.length) && error}</p>
-    </div>
+        </div>
+      </CustomizedDialogs>
+    </>
   );
 }
 
@@ -138,5 +170,6 @@ EditModal.propTypes = {
   }).isRequired,
   open: PropTypes.bool.isRequired,
   handleClose: PropTypes.func.isRequired,
-  refetch: PropTypes.func.isRequired
+  refetch: PropTypes.func.isRequired,
+  type: PropTypes.func.isRequired
 };

@@ -46,6 +46,7 @@ export default function LabelActionMenu({ data, anchorEl, handleClose, open, ref
             handleClose={() => setOpenEdit(false)}
             refetch={refetch}
             data={data}
+            type='edit'
           />
           <DeleteModal
             open={openDelete}
