@@ -35,13 +35,20 @@ describe('Create Label Component', () => {
   it('renders correctly', async () => {
     const container = render(
       <MockedProvider mocks={[mock]}>
-        <CreateLabel handleLabelSelect={jest.fn} />
+        <CreateLabel
+          handleLabelSelect={jest.fn}
+          loading={false}
+          setLoading={jest.fn}
+          setMessage={jest.fn}
+        />
       </MockedProvider>
     );
 
     await waitFor(
       () => {
-        expect(container.getByTestId("userLabel-creator")).toBeInTheDocument()
+        expect(container.getByTestId("userLabel-creator")).toBeInTheDocument();
+        expect(container.queryByTestId("chip-label")).toBeDefined();
+        expect(container.queryByTestId("text-field")).toBeDefined();
       },
       { timeout: 500 }
     );

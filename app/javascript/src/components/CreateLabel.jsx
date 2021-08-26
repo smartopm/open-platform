@@ -5,6 +5,7 @@ import { TextField, Chip } from '@material-ui/core'
 import { useQuery, useMutation } from 'react-apollo'
 import { LabelsQuery } from '../graphql/queries'
 import { LabelCreate }from '../graphql/mutations';
+import PropTypes from 'prop-types'
 
 export default function CreateLabel({ handleLabelSelect, loading, setLoading, setMessage }) {
   const { data, refetch } = useQuery(LabelsQuery);
@@ -91,6 +92,7 @@ export default function CreateLabel({ handleLabelSelect, loading, setLoading, se
           renderTags={(value, getTagProps) => {
             return value.map((option, index) => (
               <Chip
+                data-testid="chip-label"
                 key={index}
                 variant="outlined"
                 label={option.shortDesc || option}
@@ -101,6 +103,7 @@ export default function CreateLabel({ handleLabelSelect, loading, setLoading, se
           renderInput={params => (
             <TextField
               {...params}
+              data-testid="text-field"
               placeholder="Assign Label"
               style={{width: "100%"}}
             />
@@ -109,4 +112,11 @@ export default function CreateLabel({ handleLabelSelect, loading, setLoading, se
       </Fragment>
     </div>
   )
+}
+
+CreateLabel.propTypes = {
+  handleLabelSelect: PropTypes.func.isRequired,
+  loading: PropTypes.bool.isRequired,
+  setLoading: PropTypes.func.isRequired,
+  setMessage: PropTypes.func.isRequired
 }
