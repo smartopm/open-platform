@@ -39,7 +39,7 @@ class PlanRenewalJob < ApplicationJob
 
       if sub_plan.present?
         Rails.logger.info "Found a subscription-plan: #{sub_plan.id} to \
-        renew payment-plan: #{payment_plan.id}"
+        renew payment-plan: #{payment_plan.inspect}"
 
         unless dry_run
           new_payment_plan = payment_plan.dup
