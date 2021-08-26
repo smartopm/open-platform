@@ -3,7 +3,7 @@ import React, { useState, useEffect, useContext } from 'react'
 import { useMutation } from 'react-apollo'
 import { StyleSheet, css } from 'aphrodite'
 import { useTranslation } from 'react-i18next'
-import { Button, TextField, MenuItem } from '@material-ui/core'
+import { Button, TextField, MenuItem, Grid } from '@material-ui/core'
 import { useHistory } from 'react-router'
 import PropTypes from 'prop-types'
 import { EntryRequestCreate } from '../../../graphql/mutations'
@@ -223,28 +223,43 @@ export default function RequestForm({ path }) {
               ))}
             </TextField>
           </div>
-          {path.includes('visit_request') && (
-            <>
+
+          <div>
+            <Button>Daily</Button>
+            <Button>Weekly</Button>
+          </div>
+          {/* Start Time and End Time */}
+          <Grid container spacing={3}>
+            <Grid item xs={12} sm={6}>
               <DatePickerDialog
                 selectedDate={userData.visitationDate}
                 handleDateChange={date => handleChange({ target: { name: 'visitationDate', value: date }})}
-                label={t('logbook:logbook.date_of_visit')}
-              />
+                label="Start date"
+              />  
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <DatePickerDialog
+                selectedDate={userData.visitationDate}
+                handleDateChange={date => handleChange({ target: { name: 'visitationDate', value: date }})}
+                label="End date"
+              />   
+            </Grid>
+          </Grid>
+         
+          <div>
+            <ThemedTimePicker
+              time={userData.startTime}
+              handleTimeChange={date => handleChange({ target: { name: 'startTime', value: date }})}
+              label={t('misc.start_time')}
+            />
+            <span style={{ marginLeft: 20 }}>
               <ThemedTimePicker
-                time={userData.startTime}
-                handleTimeChange={date => handleChange({ target: { name: 'startTime', value: date }})}
-                label={t('misc.start_time')}
+                time={userData.endTime}
+                handleTimeChange={date => handleChange({ target: { name: 'endTime', value: date }})}
+                label={t('misc.end_time')}
               />
-              <span style={{ marginLeft: 20 }}>
-                <ThemedTimePicker
-                  time={userData.endTime}
-                  handleTimeChange={date => handleChange({ target: { name: 'endTime', value: date }})}
-                  label={t('misc.end_time')}
-                />
-              </span>
-            </>
-          )}
-          <br />
+            </span>
+          </div>
 
           <div className="row justify-content-center align-items-center ">
             <Button
