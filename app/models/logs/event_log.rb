@@ -59,103 +59,150 @@ module Logs
 
     def visitor_entry_to_sentence
       if data['action'] == 'started'
-        "#{acting_user_name} started registering #{visitor_name} for entry."
-      else
-        "#{acting_user_name} #{data['action']} #{visitor_name} for entry."
+        I18n.t('activerecord.attributes.logs/event_log.
+          event_logs_to_sentence.start_visitor_entry_to_sentence',
+               acting_user_name: acting_user_name,
+               visitor_name: visitor_name)
       end
+      I18n.t('activerecord.attributes.logs/event_log.
+        event_logs_to_sentence.visitor_entry_to_sentence',
+             acting_user_name: acting_user_name,
+             visitor_name: visitor_name, action: data['action'])
     end
 
     def user_entry_to_sentence
-      "User #{ref_user_name} was recorded entering by #{acting_user_name}"
+      I18n.t('activerecord.attributes.logs/event_log.
+        event_logs_to_sentence.user_entry_to_sentence',
+             acting_user_name: acting_user_name,
+             ref_user_name: ref_user_name)
     end
 
     def user_login_to_sentence
-      "User #{acting_user_name} logged in"
+      I18n.t('activerecord.attributes.logs/event_log.
+        event_logs_to_sentence.user_login_to_sentence',
+             acting_user_name: acting_user_name)
     end
 
     def user_switch_to_sentence
-      "User #{acting_user_name} switched to user #{ref_user_name}"
+      I18n.t('activerecord.attributes.logs/event_log.
+        event_logs_to_sentence.user_switch_to_sentence',
+             acting_user_name: acting, ref_user_name: ref_user_name)
     end
 
     def user_active_to_sentence
-      "User #{acting_user_name} was active"
+      I18n.t('activerecord.attributes.logs/event_log.
+        event_logs_to_sentence.user_active_to_sentence',
+             acting_user_name: acting_user_name)
     end
 
-    # rubocop:disable Layout/LineLength
     def user_feedback_to_sentence
       # send a message of the newest feedback
       feedback = Users::Feedback.last
-      "User #{acting_user_name} gave thumbs #{feedback.is_thumbs_up == true ? 'up' : 'down'} feedback"
+
+      if feedback.is_thumbs_up
+        I18n.t('activerecord.attributes.logs/event_log.
+          event_logs_to_sentence.user_thumbs_up_feedback_to_sentence',
+               acting_user_name: acting_user_name)
+      else
+        I18n.t('activerecord.attributes.logs/event_log.
+          event_logs_to_sentence.user_thumbs_down_feedback_to_sentence',
+               acting_user_name: acting_user_name)
+      end
     end
-    # rubocop:enable Layout/LineLength
 
     def showroom_entry_to_sentence
       user = EntryRequest.last
-      "User #{user.name} was recorded in the showroom"
+      I18n.t('activerecord.attributes.logs/event_log.sentences.showroom_entry_to_sentence',
+             name: user.name)
     end
 
     def user_update_to_sentence
-      "#{ref_user_name} was updated by #{acting_user_name}"
+      I18n.t('activerecord.attributes.logs/event_log.
+        event_logs_to_sentence.user_update_to_sentence',
+             ref_user_name: ref_user_name,
+             acting_user_name: acting_user_name)
     end
 
     def user_temp_to_sentence
-      "Temperature for #{visitor_name} was recorded by #{acting_user_name}"
+      I18n.t('activerecord.attributes.logs/event_log.sentences.user_temp_to_sentence',
+             visitor_name: visitor_name,
+             acting_user_name: acting_user_name)
     end
 
     def shift_start_to_sentence
-      "Shift for #{ref_user_name} was started by #{acting_user_name}"
+      I18n.t('activerecord.attributes.logs/event_log.sentences.shift_start_to_sentence',
+             ref_user_name: ref_user_name,
+             acting_user_name: acting_user_name)
     end
 
     def shift_end_to_sentence
-      "Shift for #{ref_user_name} was ended by #{acting_user_name}"
+      I18n.t('activerecord.attributes.logs/event_log.sentences.shift_end_to_sentence',
+             ref_user_name: ref_user_name,
+             acting_user_name: acting_user_name)
     end
 
     def user_referred_to_sentence
-      "User #{ref_user_name} was referred by #{acting_user_name}"
+      I18n.t('activerecord.attributes.logs/event_log.sentences.user_referred_to_sentence',
+             ref_user_name: ref_user_name,
+             acting_user_name: acting_user_name)
     end
 
     def post_read_to_sentence
-      "Post #{data['post_id']} was read by #{acting_user_name}"
+      I18n.t('activerecord.attributes.logs/event_log.sentences.post_read_to_sentence',
+             post_id: data['post_id'],
+             acting_user_name: acting_user_name)
     end
 
     def post_shared_to_sentence
-      "Post #{data['post_id']} was shared by #{acting_user_name}"
+      I18n.t('activerecord.attributes.logs/event_log.sentences.post_shared_to_sentence',
+             post_id: data['post_id'],
+             acting_user_name: acting_user_name)
     end
 
     # form_create form_update form_publish
     def form_create_to_sentence
-      "#{acting_user_name} created the form"
+      I18n.t('activerecord.attributes.logs/event_log.sentences.form_create_to_sentence',
+             acting_user_name: acting_user_name)
     end
 
     def form_update_to_sentence
-      "#{acting_user_name} #{data['action']} #{data['field_name']} field"
+      I18n.t('activerecord.attributes.logs/event_log.sentences.form_update_to_sentence',
+             acting_user_name: acting_user_name,
+             field_name: data['field_name'])
     end
 
     # invoice_change and payment_change
     def invoice_change_to_sentence
-      "#{acting_user_name} changed an invoice"
+      I18n.t('activerecord.attributes.logs/event_log.sentences.invoice_change_to_sentence',
+             acting_user_name: acting_user_name)
     end
 
     def deposit_create_to_sentence
-      "#{acting_user_name} created a deposit"
+      I18n.t('activerecord.attributes.logs/event_log.sentences.deposit_create_to_sentence',
+             acting_user_name: acting_user_name)
     end
 
     def payment_update_to_sentence
-      "#{acting_user_name} made changes to this payment"
+      I18n.t('activerecord.attributes.logs/event_log.sentences.payment_update_to_sentence',
+             acting_user_name: acting_user_name)
     end
 
     def form_publish_to_sentence
       # published or deleted
-      "#{acting_user_name} #{data['action']} the form"
+      I18n.t('activerecord.attributes.logs/event_log.sentences.form_publish_to_sentence',
+             acting_user_name: acting_user_name,
+             action: data['action'])
     end
 
     def observation_log_to_sentence
-      "#{acting_user_name} added an observation log to an entry request"
+      I18n.t('activerecord.attributes.logs/event_log.sentences.observation_log_to_sentence',
+             acting_user_name: acting_user_name)
     end
 
     def user_enrolled_to_sentence
       new_user = Users::User.order('created_at').last
-      "#{new_user[:name]} was enrolled"
+      I18n.t('activerecord.attributes.logs/event_log.sentences.user_enrolled_to_sentence',
+             new_user_name: new_user[:name])
     end
 
     def ref_user_name
@@ -163,13 +210,14 @@ module Logs
       if user
         user.name
       else
-        "Deleted User(#{ref_id})"
+        I18n.t('activerecord.attributes.logs/event_log.sentences.ref_user_name', ref_id: ref_id)
       end
     end
 
     def acting_user_name
       if deleted_user?
-        "Deleted User(#{acting_user_id})"
+        I18n.t('activerecord.attributes.logs/event_log.sentences.deleted_user',
+               acting_user_id: acting_user_id)
       else
         acting_user.name
       end
