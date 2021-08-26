@@ -8,13 +8,17 @@ class PlanRenewalJob < ApplicationJob
   # rubocop:disable Metrics/AbcSize
   # rubocop:disable Metrics/MethodLength
   # rubocop:disable Metrics/BlockLength
-  def perform
-    Properties::PaymentPlan.where(renewable: true).find_each do |payment_plan|
-      next unless payment_plan.plan_duration.last.to_date == 2.months.from_now.to_date
-      next unless VALID_PLAN_TYPES.keys.include?(payment_plan.plan_type)
+  def perform(dry_run: true)
+    Properties::PaymentPlan.not_cancelled.where(
+      renewable: true, plan_type: VALID_PLAN_TYPES.keys,
+    ).find_each do |payment_plan|
+      unless payment_plan.within_renewable_dates?
+        Rails.logger.info "Payment-plan #{payment_plan.id} does not fall within renewable date"
+        next
+      end
 
       community = payment_plan.user.community
-      next_plan_start_date = payment_plan.plan_duration.last.to_date
+      next_plan_start_date = payment_plan.next_plan_start_date
 
       if Properties::PaymentPlan.find_by(
         user_id: payment_plan.user.id,
@@ -22,6 +26,7 @@ class PlanRenewalJob < ApplicationJob
         plan_type: payment_plan.plan_type,
         start_date: next_plan_start_date,
       ).present?
+        Rails.logger.info "Payment-plan #{payment_plan.id} has already been renewed for this period"
         next
       end
 
@@ -33,12 +38,19 @@ class PlanRenewalJob < ApplicationJob
       )
 
       if sub_plan.present?
-        new_payment_plan = payment_plan.dup
-        new_payment_plan.start_date = next_plan_start_date
-        new_payment_plan.plan_type = sub_plan.plan_type
-        new_payment_plan.installment_amount = sub_plan.amount
-        new_payment_plan.total_amount = sub_plan.amount * payment_plan.duration
-        new_payment_plan.save!
+        Rails.logger.info "Found a subscription-plan: #{sub_plan.id} to \
+        renew payment-plan: #{payment_plan.id}"
+
+        unless dry_run
+          new_payment_plan = payment_plan.dup
+          new_payment_plan.start_date = next_plan_start_date
+          new_payment_plan.plan_type = sub_plan.plan_type
+          new_payment_plan.installment_amount = sub_plan.amount
+          new_payment_plan.total_amount = sub_plan.amount * payment_plan.duration
+          new_payment_plan.save!
+        end
+      else
+        Rails.logger.info "No active subscription-plan found for payment-plan: #{payment_plan.id}"
       end
     end
   end

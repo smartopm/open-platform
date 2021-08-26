@@ -32,8 +32,13 @@ RSpec.describe PlanRenewalJob, type: :job do
       end.to have_enqueued_job
     end
     it 'creates a new payment plan' do
-      expect { perform_enqueued_jobs { described_class.perform_later } }.to(
+      expect { perform_enqueued_jobs { described_class.perform_later(dry_run: false) } }.to(
         change { Properties::PaymentPlan.count }.from(1).to(2),
+      )
+    end
+    it 'does not create a new plan for dry run' do
+      expect { perform_enqueued_jobs { described_class.perform_later(dry_run: true) } }.to(
+        change { Properties::PaymentPlan.count }.by(0),
       )
     end
   end
