@@ -16,7 +16,7 @@ export function propExists(values, propId) {
 /**
  *
  * @param {object} properties
- * @param {String} propId
+ * @param {string} propId
  * @description check form values that weren't filled in and add default values
  */
 export function addPropWithValue(properties, propId) {
@@ -45,7 +45,7 @@ export function flattenFormProperties(categories) {
  * @param {object} category
  * @param {[object]} properties
  * @param {boolean} editMode
- * @returns {Boolean}
+ * @returns {boolean}
  */
 export function checkCondition(category, properties, editMode) {
   if (editMode) {
@@ -70,6 +70,16 @@ export function checkCondition(category, properties, editMode) {
 }
 
 /**
+ * check if a given item has a value or a form_property_id
+ * This is used to check fields that values before submitting a form
+ * @param {object} item 
+ * @returns {boolean}
+ */
+export function nonNullValues(item){
+  return item.value && item.value?.checked !== null && item.form_property_id !== null
+}
+
+/**
  *
  * @param {object} formProperties
  * @description removes the field name from a property so focus on groupingId and value
@@ -79,5 +89,42 @@ export function extractValidFormPropertyValue(formProperties) {
   if(!Object.keys(formProperties).length) return []
   return Object.entries(formProperties)
     .map(([, value]) => value)
-    .filter(item => item.value && item.value?.checked !== null && item.form_property_id !== null);
+    .filter(nonNullValues);
+}
+
+/**
+ * This focuses on field names which extractValidFormPropertyValue lacks, 
+ * we could've done both under one function but when submitting a form GraphQL test complain because of unmatching args
+ * @param {object} formProperties 
+ * @returns [{object}]
+ */
+export function extractValidFormPropertyFieldNames(formProperties) {
+  if(!Object.keys(formProperties).length) return []
+  return Object.entries(formProperties)
+    .map(([key, prop]) => ({fieldName: key, value: prop.value?.checked || prop.value}))
+    .filter(nonNullValues);
+}
+
+
+/**
+ * gets a markdown text and a list of formproperties with their values and finds variables that matches 
+ * the fieldname and replaces its actual value from the about to be submitted form property.
+ * @param {string} renderedText 
+ * @param {[object]} data 
+ * @returns {string}
+ */
+export function parseRenderedText(renderedText, data) {
+  const properties = extractValidFormPropertyFieldNames(data)
+  const words = renderedText.split(' ');
+  return words
+    .map((word) => {
+      const formProperty = properties.find(
+        (prop) => prop.fieldName === word.replace(/\n|#/g, '')
+      );
+      if (formProperty) {
+        return word.replace(/#[A-Za-z0-9]+/, formProperty.value);
+      }
+      return word;
+    })
+    .join(' ');
 }
