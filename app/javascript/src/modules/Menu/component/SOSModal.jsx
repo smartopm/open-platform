@@ -1,5 +1,5 @@
 
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useState, useEffect } from 'react';
 import { useMutation } from 'react-apollo'
 import { useTranslation } from 'react-i18next'; 
 // eslint-disable-next-line import/no-unresolved
@@ -17,6 +17,7 @@ import MessageAlert from '../../../components/MessageAlert';
 import { formatError } from '../../../utils/helpers';
 import {CommunityEmergencyMutation} from '../graphql/sos_mutation';
 import userProps from '../../../shared/types/user';
+import useGeoLocation from '../../../hooks/useGeoLocation' 
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -207,21 +208,49 @@ const SOSModal=({open, setOpen, authState})=> {
   const [communityEmergency] = useMutation(CommunityEmergencyMutation)
 
   const { t } = useTranslation('panic_alerts')
+  const location = useGeoLocation();
+
+  console.log("in the SOS modal", location)
+
+
+    useEffect(() => {
+    }, [location]);
   // eslint-disable-next-line no-unused-vars
   const callback = useCallback(_event => {
+    if (location.loaded && !location.error){
+      let googleMapUrl = `https://www.google.com/maps/search/?api=1&query=${location.coordinates.lat},${location.coordinates.lng}`
+      console.log("googleMapUrl ", googleMapUrl)
+      communityEmergency({ variables: { googleMapUrl: googleMapUrl } }).then(()=>{
+        setPanicButtonPressed(true)
+        setPanicButtonMessage({
+          isError: false,
+          detail: t('panic_alerts.panic_success_alert')
+        });
+        setPanicAlertOpen(true);
+      })
+      .catch(error => {
+        setPanicButtonMessage({ isError: true, detail: formatError(error.message) });
+        setPanicAlertOpen(true);
+      }) 
 
-    communityEmergency().then(()=>{
-      setPanicButtonPressed(true)
-      setPanicButtonMessage({
-        isError: false,
-        detail: t('panic_alerts.panic_success_alert')
-      });
-      setPanicAlertOpen(true);
-    })
-    .catch(error => {
-      setPanicButtonMessage({ isError: true, detail: formatError(error.message) });
-      setPanicAlertOpen(true);
-    })
+    }
+    else{
+      communityEmergency({ variables: { googleMapUrl: null } }).then(()=>{
+        setPanicButtonPressed(true)
+        setPanicButtonMessage({
+          isError: false,
+          detail: t('panic_alerts.panic_success_alert')
+        });
+        setPanicAlertOpen(true);
+      })
+      .catch(error => {
+        setPanicButtonMessage({ isError: true, detail: formatError(error.message) });
+        setPanicAlertOpen(true);
+      }) 
+      
+    }
+
+
   },[t, communityEmergency ]);
 
   const showPanicAlert = ()=> {

@@ -1,5 +1,6 @@
 /* eslint-disable no-use-before-define */
-import React, { useContext } from 'react';
+import React, { useContext, useState, useEffect } from "react";
+import { useMutation } from 'react-apollo';
 import Divider from '@material-ui/core/Divider';
 import { useTranslation } from 'react-i18next';
 import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider';
@@ -7,6 +8,7 @@ import Loading from '../../../shared/Loading';
 import Homepage from '../../../components/HomePage';
 import { TaskReminder } from '../../Tasks';
 import { PaymentSummary } from '../../Payments';
+import MessageAlert from '../../../components/MessageAlert';
 import UserDetail from '../../Users/Components/UserDetail';
 import ViewCustomerJourney from '../../CustomerJourney/Components/ViewCustomerJourney';
 import LanguageToggle from '../../i18n/Components/LanguageToggle';
@@ -14,15 +16,29 @@ import { PlotDetail } from '../../Plots';
 import CustomerJourneyStatus from '../../CustomerJourney/Components/CustomerJourneyStatus';
 import NewsFeed from '../../News/Components/NewsFeed';
 import FeatureCheck from '../../Features';
+import { formatError } from '../../../utils/helpers';
 import SocialMediaLinks from '../../../components/SocialMediaLinks';
+import { NonAdminUpdateMutation } from '../../../graphql/mutations';
 
-export default function Home() {
+import useGeoLocation from '../../../hooks/useGeoLocation' 
+
+const Home = () => {
   const authState = useContext(AuthStateContext);
   const { t } = useTranslation(['dashboard', 'common']);
+  const [message, setMessage] = useState({ isError: false, detail: '' });
+  const [alertOpen, setAlertOpen] = useState(false);
+  const [addUserLocation] = useMutation(NonAdminUpdateMutation)
 
-  if (!authState.loggedIn) return <Loading />;
+  const location = useGeoLocation();
+  
   return (
     <div style={{ marginTop: '-30px' }}>
+      <MessageAlert
+        type={message.isError ? 'error' : 'success'}
+        message={message.detail}
+        open={alertOpen}
+        handleClose={() => setAlertOpen(false)}
+      />
       <LanguageToggle />
       {authState.user.userType === 'admin' && (
         <div>
@@ -77,3 +93,5 @@ export default function Home() {
     </div>
   );
 }
+
+export default Home;

@@ -99,21 +99,44 @@ class Community < ApplicationRecord
   end
 
   # rubocop:disable Layout/LineLength
+  # rubocop:disable Metrics/MethodLength
+  # rubocop:disable Metrics/CyclomaticComplexity
+  # rubocop:disable Metrics/AbcSize
   def craft_sms(**params)
     raise CommunityError, 'No phone numbers to send sms to' if sms_phone_numbers.blank?
 
-    task_url = "https://#{HostEnv.base_url(self)}/tasks/#{params[:note_id]}"
-    message = if params[:current_user].phone_number.present?
+    puts"Phone number #{params[:current_user].phone_number}"
 
-                "Emergency SOS #{params[:current_user].name} has initiated an emergency support request and can likely be reached on #{params[:current_user].phone_number}."
-              else
-                "Emergency SOS #{params[:current_user].name} has initiated an emergency support request and do not have a contact number in our system."
-              end
+    puts"Map url is defined #{params[:google_map_url]}"
+
+    task_url = "https://#{HostEnv.base_url(self)}/tasks/#{params[:note_id]}"
+    if params[:current_user].phone_number.present? && params[:google_map_url] != nil
+
+      message = "Emergency SOS #{params[:current_user].name} has initiated an emergency support request rom this approximate #{params[:google_map_url]} and can likely be reached on #{params[:current_user].phone_number}."
+    end
+
+    if params[:current_user].phone_number.present? && params[:google_map_url] == nil
+      
+      message =  "Emergency SOS #{params[:current_user].name} has initiated an emergency support request and do not have approximate location in our system and can likely be reached on #{params[:current_user].phone_number}."
+
+    end
+
+    if params[:google_map_url] != nil && params[:current_user].phone_number.blank?
+      message =  "Emergency SOS #{params[:current_user].name} has initiated an emergency support request from this approximate location #{params[:google_map_url]} and do not have a contact number in our system."
+    end
+
+    if params[:google_map_url] == nil && params[:current_user].phone_number.blank?
+      message =  "Emergency SOS #{params[:current_user].name} has initiated an emergency support request and do not have approximate location a contact number in our system."
+    end
+
     message += " You are receiving this message as you are a member of the emergency escalation team for #{name}. Please confirm the person is safe and the emergency is resolved, then mark as complete #{task_url}"
     send_sms(message)
   end
 
   # rubocop:enable Layout/LineLength
+  # rubocop:enable Metrics/MethodLength
+  # rubocop:enable Metrics/CyclomaticComplexity
+  # rubocop:enable Metrics/AbcSize
   def send_sms(message)
     sms_phone_numbers.each  do |sms_phone_number|
       Rails.logger.info "Sending #{sms_phone_number}"

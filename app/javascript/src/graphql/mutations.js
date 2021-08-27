@@ -95,6 +95,7 @@ mutation UpdateUserMutation(
   $avatarBlobId: String
   $address: String
   $secondaryInfo: [JSON!]
+  $location: String
 ) {
   result: userUpdate(
     id: $id
@@ -102,6 +103,7 @@ mutation UpdateUserMutation(
     avatarBlobId: $avatarBlobId
     address: $address
     secondaryInfo: $secondaryInfo
+    location: $location
   ) {
     user {
       id

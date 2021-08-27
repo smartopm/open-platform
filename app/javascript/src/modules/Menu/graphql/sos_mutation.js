@@ -2,8 +2,8 @@
 import gql from 'graphql-tag';
 
 export const CommunityEmergencyMutation = gql`
-    mutation communityEmergency{
-        communityEmergency {
+    mutation communityEmergency ($googleMapUrl: String){
+        communityEmergency(googleMapUrl: $googleMapUrl) {
         success
         }
     }
