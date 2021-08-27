@@ -235,6 +235,8 @@ export const EntryRequestCreate = gql`
     $endTime: String
     $companyName: String
     $temperature: String
+    $occursOn: [String!]
+    $visitEndDate: String
   ) {
     result: entryRequestCreate(
       name: $name
@@ -249,6 +251,8 @@ export const EntryRequestCreate = gql`
       endTime: $endTime
       companyName: $companyName
       temperature: $temperature
+      occursOn: $occursOn
+      visitEndDate: $visitEndDate
     ) {
       entryRequest {
         ...EntryRequestFields

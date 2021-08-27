@@ -28,6 +28,7 @@ export default function RequestForm({ path }) {
     business: '',
     reason: '',
     visitationDate: null,
+    visitEndDate: null,
     startTime: new Date(),
     endTime: new Date(),
   }
@@ -47,7 +48,9 @@ export default function RequestForm({ path }) {
     const variables = {
       ...userData,
       otherReason: userData.business === 'other' ? userData.reason : '',
-      reason: userData.business
+      reason: userData.business,
+      occursOn: days, 
+      // visitEndDate
     }
 
     const isAnyInvalid = checkInValidRequiredFields(variables, requiredFields)
@@ -271,8 +274,8 @@ export default function RequestForm({ path }) {
           {
               Boolean(days.length) && (
                 <DatePickerDialog
-                  selectedDate={userData.visitationDate}
-                  handleDateChange={date => handleChange({ target: { name: 'visitationDate', value: date }})}
+                  selectedDate={userData.visitEndDate}
+                  handleDateChange={date => handleChange({ target: { name: 'visitEndDate', value: date }})}
                   label="Repeat until"
                   disablePastDate
                 /> 

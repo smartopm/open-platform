@@ -17,6 +17,8 @@ module Mutations
       argument :end_time, String, required: false
       argument :company_name, String, required: false
       argument :temperature, String, required: false
+      argument :occurs_on, [String], required: false
+      argument :visit_end_date, String, required: false
 
       field :entry_request, Types::EntryRequestType, null: true
 
