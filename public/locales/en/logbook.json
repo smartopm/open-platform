@@ -78,5 +78,14 @@
     "created_observation": "Observation note successfully added",
     "add_your_observation": "Do you have any observations you'd like to add?",
     "created_observation_exit": "Observation exit has been logged successfully"
+  },
+  "days": {
+    "sunday": "Sunday",
+    "monday": "Monday",
+    "tuesday": "Tuesday",
+    "wednesday": "Wednesday",
+    "thursday": "Thursday",
+    "friday": "Friday",
+    "saturday": "Saturday"
   }
 }

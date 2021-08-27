@@ -3,7 +3,7 @@ import React, { useState, useEffect, useContext } from 'react'
 import { useMutation } from 'react-apollo'
 import { StyleSheet, css } from 'aphrodite'
 import { useTranslation } from 'react-i18next'
-import { Button, TextField, MenuItem, Grid } from '@material-ui/core'
+import { Button, TextField, MenuItem, Grid, IconButton , Avatar } from '@material-ui/core'
 import { useHistory } from 'react-router'
 import PropTypes from 'prop-types'
 import { EntryRequestCreate } from '../../../graphql/mutations'
@@ -13,6 +13,7 @@ import DatePickerDialog, { ThemedTimePicker } from '../../../components/DatePick
 import { defaultBusinessReasons } from '../../../utils/constants'
 import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider'
 import { checkInValidRequiredFields, defaultRequiredFields } from '../utils'
+
 
 // TODO: As of now this is only serving the visit_reuest, we can still migrate to reuse the 2 forms
 // - RequestUpdate
@@ -34,6 +35,7 @@ export default function RequestForm({ path }) {
   const history = useHistory()
   const authState = useContext(AuthStateContext)
   const [userData, setUserData] = useState(initialState)
+  const [days, setDays] = useState([])
   const [createEntryRequest] = useMutation(EntryRequestCreate)
   const [isModalOpen, setModal] = useState(false)
   const [inputValidationMsg, setInputValidationMsg] = useState({ isError: false, isSubmitting: false })
@@ -67,6 +69,15 @@ export default function RequestForm({ path }) {
     const fields = { ...userData }
     fields[String(name)] = value
     setUserData(fields)
+  }
+
+  function handleChangeOccurrence(day){
+    if(days.includes(day)){
+      const leftDays = days.filter(d => d !== day)
+      setDays(leftDays)
+      return
+    }
+    setDays([...days, day])
   }
 
   function handleAddOtherReason(){
@@ -224,10 +235,17 @@ export default function RequestForm({ path }) {
             </TextField>
           </div>
 
-          <div>
-            <Button>Daily</Button>
-            <Button>Weekly</Button>
-          </div>
+          {Object.entries(t('logbook:days', { returnObjects: true })).map(([key, value]) => (
+            <IconButton
+              key={key}
+              color="primary"
+              aria-label="choose day of week"
+              component="span"
+              onClick={() => handleChangeOccurrence(key)}
+            >
+              <Avatar style={{ backgroundColor: new Set(days).has(key) ? '#009CFF' : '#ADA7A7' }}>{value.charAt(0)}</Avatar>
+            </IconButton>
+          ))}
           {/* Start Time and End Time */}
           <Grid container spacing={3}>
             <Grid item xs={12} sm={6}>
@@ -270,7 +288,7 @@ export default function RequestForm({ path }) {
               color="primary"
               data-testid="submit_button"
             >
-              {inputValidationMsg.isSubmitting ? ` ${t('form_actions.submitting')} ...` : ` ${t('form_actions.submit')} `}
+              {inputValidationMsg.isSubmitting ? ` ${t('form_actions.submitting')} ...` : ` ${t('form_actions.invite_guest')} `}
             </Button>
           </div>
         </form>
@@ -289,7 +307,8 @@ const styles = StyleSheet.create({
     width: '75%',
     boxShadow: 'none',
     marginTop: 60,
-    height: 50
+    height: 50,
+    color: "#FFFFFF"
   },
   selectInput: {
     width: '100%'

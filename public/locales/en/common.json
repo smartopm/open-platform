@@ -85,7 +85,9 @@
     "create_plan": "Create Plan",
     "add_type": "Add {{label}}",
     "close": "Close",
-    "creating_plan": "Creating a Plan ..."
+    "creating_plan": "Creating a Plan ...",
+    "invite_guest": "Invite Guest",
+    "invite_another_guest": "Invite Another Guest"
   },
   "misc": {
     "or": "OR",
