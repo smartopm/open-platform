@@ -1,5 +1,8 @@
 /* eslint-disable no-use-before-define */
-import React, { Fragment, useRef, useState } from 'react';
+/* eslint-disable security/detect-object-injection */
+/* eslint-disable no-unused-expressions */
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { Fragment, useRef, useState, useEffect } from 'react';
 import { Button, Container, TextField, Typography } from '@material-ui/core';
 import { useApolloClient, useMutation, useQuery } from 'react-apollo';
 import { useHistory } from 'react-router';
@@ -22,6 +25,7 @@ import RadioInput from './FormProperties/RadioInput';
 import ImageAuth from '../../../shared/ImageAuth';
 import Loading from '../../../shared/Loading';
 import FormTitle from './FormTitle';
+import CheckboxInput from './FormProperties/CheckboxInput';
 
 // date
 // text input (TextField or TextArea)
@@ -69,6 +73,20 @@ export default function FormUpdate({ formUserId, userId, authState }) {
     client: useApolloClient(),
   });
 
+
+  useEffect(() => {
+    const checkboxProperties = data?.formUserProperties?.filter((prop) => prop.formProperty.fieldType === 'checkbox')
+    checkboxProperties?.forEach((checkboxProp) => {
+      setProperties({
+        ...properties,
+        [checkboxProp.formProperty.fieldName]: {
+          value: JSON.parse(checkboxProp.value?.replace(/=>/g, ':') || '{}'),
+          form_property_id: checkboxProp.formProperty.id
+        }
+      });
+    })
+  }, [data])
+
   async function handleSignatureUpload() {
     setMessage({ ...message, signed: true });
     const url64 = signRef.current.toDataURL('image/png');
@@ -82,6 +100,17 @@ export default function FormUpdate({ formUserId, userId, authState }) {
     setProperties({
       ...properties,
       [name]: { value, form_property_id: propId },
+    });
+  }
+
+  function handleCheckboxSelect(event, propId, fieldName) {
+    const { name, checked } = event.target;
+    setProperties({
+      ...properties,
+      [fieldName]: {
+        value: { ...properties[fieldName]?.value, [name]: checked },
+        form_property_id: propId
+      }
     });
   }
 
@@ -291,6 +320,24 @@ export default function FormUpdate({ formUserId, userId, authState }) {
             value={properties.radio.value.checked}
             handleValue={(event) =>
               handleRadioValueChange(
+                event,
+                formPropertiesData.formProperty.id,
+                formPropertiesData.formProperty.fieldName
+              )
+            }
+          />
+          <br />
+        </Fragment>
+      ),
+      checkbox: (
+        <Fragment key={formPropertiesData.formProperty.id}>
+          <br />
+          <br />
+          <CheckboxInput
+            properties={formPropertiesData}
+            checkboxState={properties[formPropertiesData.formProperty.fieldName]}
+            handleValue={(event) =>
+              handleCheckboxSelect(
                 event,
                 formPropertiesData.formProperty.id,
                 formPropertiesData.formProperty.fieldName

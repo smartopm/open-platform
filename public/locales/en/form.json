@@ -89,6 +89,7 @@
   "field_types": {
     "text": "Text",
     "radio": "Radio",
+    "checkbox": "Checkbox",
     "file_upload": "File Upload",
     "signature": "Signature",
     "date": "Date",
