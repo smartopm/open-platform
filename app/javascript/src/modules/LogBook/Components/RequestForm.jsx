@@ -3,7 +3,7 @@ import React, { useState, useEffect, useContext } from 'react'
 import { useMutation } from 'react-apollo'
 import { StyleSheet, css } from 'aphrodite'
 import { useTranslation } from 'react-i18next'
-import { Button, TextField, MenuItem, Grid, IconButton , Avatar } from '@material-ui/core'
+import { Button, TextField, MenuItem, IconButton , Avatar } from '@material-ui/core'
 import { useHistory } from 'react-router'
 import PropTypes from 'prop-types'
 import { EntryRequestCreate } from '../../../graphql/mutations'
@@ -235,34 +235,11 @@ export default function RequestForm({ path }) {
             </TextField>
           </div>
 
-          {Object.entries(t('logbook:days', { returnObjects: true })).map(([key, value]) => (
-            <IconButton
-              key={key}
-              color="primary"
-              aria-label="choose day of week"
-              component="span"
-              onClick={() => handleChangeOccurrence(key)}
-            >
-              <Avatar style={{ backgroundColor: new Set(days).has(key) ? '#009CFF' : '#ADA7A7' }}>{value.charAt(0)}</Avatar>
-            </IconButton>
-          ))}
-          {/* Start Time and End Time */}
-          <Grid container spacing={3}>
-            <Grid item xs={12} sm={6}>
-              <DatePickerDialog
-                selectedDate={userData.visitationDate}
-                handleDateChange={date => handleChange({ target: { name: 'visitationDate', value: date }})}
-                label="Start date"
-              />  
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <DatePickerDialog
-                selectedDate={userData.visitationDate}
-                handleDateChange={date => handleChange({ target: { name: 'visitationDate', value: date }})}
-                label="End date"
-              />   
-            </Grid>
-          </Grid>
+          <DatePickerDialog
+            selectedDate={userData.visitationDate}
+            handleDateChange={date => handleChange({ target: { name: 'visitationDate', value: date }})}
+            label="Day of visit"
+          /> 
          
           <div>
             <ThemedTimePicker
@@ -278,6 +255,29 @@ export default function RequestForm({ path }) {
               />
             </span>
           </div>
+
+          <br />
+          {Object.entries(t('logbook:days', { returnObjects: true })).map(([key, value]) => (
+            <IconButton
+              key={key}
+              color="primary"
+              aria-label="choose day of week"
+              component="span"
+              onClick={() => handleChangeOccurrence(key)}
+            >
+              <Avatar style={{ backgroundColor: new Set(days).has(key) ? '#009CFF' : '#ADA7A7' }}>{value.charAt(0)}</Avatar>
+            </IconButton>
+          ))}
+          {
+              Boolean(days.length) && (
+                <DatePickerDialog
+                  selectedDate={userData.visitationDate}
+                  handleDateChange={date => handleChange({ target: { name: 'visitationDate', value: date }})}
+                  label="Repeat until"
+                  disablePastDate
+                /> 
+              )
+            }
 
           <div className="row justify-content-center align-items-center ">
             <Button
