@@ -18,6 +18,7 @@ export default function LabelList({ userType }) {
   const limit = 50;
   const [offset, setOffset] = useState(0);
   const [open, setOpen] = useState(false);
+  const { t } = useTranslation('label');
   const { data, error, loading, refetch } = useQuery(LabelsQuery, {
     variables: { limit, offset }
   });
@@ -41,19 +42,17 @@ export default function LabelList({ userType }) {
         <ButtonComponent
           variant='contained'
           color="primary"
-          buttonText='create a label'
+          buttonText={t('label.create_label')}
           handleClick={() => setOpen(true)}
           size="large"
         />
-        {open && (
-          <EditModal
-            open={open}
-            handleClose={() => setOpen(false)}
-            refetch={refetch}
-            data={data}
-            type='new'
-          />
-        )}
+        <EditModal
+          open={open}
+          handleClose={() => setOpen(false)}
+          refetch={refetch}
+          data={data}
+          type='new'
+        />
       </div>
       <LabelPageTitle />
       <br />

@@ -50,7 +50,7 @@ export default function EditModal({ open, handleClose, data, refetch, type }) {
         setMutationLoading(false)
         setMessageAlert(t('label.label_created'));
         setIsSuccessAlert(true);
-        // handleClose();
+        handleClose();
         refetch();
       })
       .catch(err => {
@@ -171,5 +171,5 @@ EditModal.propTypes = {
   open: PropTypes.bool.isRequired,
   handleClose: PropTypes.func.isRequired,
   refetch: PropTypes.func.isRequired,
-  type: PropTypes.func.isRequired
+  type: PropTypes.string.isRequired
 };
