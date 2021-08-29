@@ -23,38 +23,38 @@ export default function EditModal({ open, handleClose, data, refetch, type }) {
   const { t } = useTranslation(['label', 'common']);
 
   function handleEdit() {
-    setMutationLoading(true)
+    setMutationLoading(true);
     editLabel({
       variables: { id: data.id, shortDesc, description, color }
     })
       .then(() => {
-        setMutationLoading(false)
+        setMutationLoading(false);
         setMessageAlert(t('label.label_edited'));
         setIsSuccessAlert(true);
         handleClose();
         refetch();
       })
       .catch(err => {
-        setMutationLoading(false)
+        setMutationLoading(false);
         setMessageAlert(formatError(err.message));
         setIsSuccessAlert(false);
       });
   }
 
   function handleLabelCreate() {
-    setMutationLoading(true)
+    setMutationLoading(true);
     createLabel({
       variables: { shortDesc, description, color }
     })
       .then(() => {
-        setMutationLoading(false)
+        setMutationLoading(false);
         setMessageAlert(t('label.label_created'));
         setIsSuccessAlert(true);
         handleClose();
         refetch();
       })
       .catch(err => {
-        setMutationLoading(false)
+        setMutationLoading(false);
         setMessageAlert(formatError(err.message));
         setIsSuccessAlert(false);
       });
@@ -72,7 +72,7 @@ export default function EditModal({ open, handleClose, data, refetch, type }) {
     }
     setMessageAlert('');
   }
-  
+
   useEffect(() => {
     setDefaultValues();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -90,7 +90,9 @@ export default function EditModal({ open, handleClose, data, refetch, type }) {
         handleModal={handleClose}
         dialogHeader={type === 'edit' ? t('label.edit_dialog_title') : t('label.new_dialog_title')}
         handleBatchFilter={type === 'edit' ? handleEdit : handleLabelCreate}
-        saveAction={type === 'edit' ? t('common:form_actions.save_changes') : t('common:form_actions.save')}
+        saveAction={
+          type === 'edit' ? t('common:form_actions.save_changes') : t('common:form_actions.save')
+        }
         cancelAction={t('common:form_actions.cancel')}
         disableActionBtn={mutationLoading}
       >
@@ -161,13 +163,17 @@ export default function EditModal({ open, handleClose, data, refetch, type }) {
   );
 }
 
+EditModal.defaultProps = {
+  data: {}
+};
+
 EditModal.propTypes = {
   data: PropTypes.shape({
     id: PropTypes.string,
     shortDesc: PropTypes.string,
     color: PropTypes.string,
     description: PropTypes.string
-  }).isRequired,
+  }),
   open: PropTypes.bool.isRequired,
   handleClose: PropTypes.func.isRequired,
   refetch: PropTypes.func.isRequired,

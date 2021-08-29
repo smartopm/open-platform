@@ -40,19 +40,13 @@ export default function LabelList({ userType }) {
     <Container>
       <div className={classes.labelButton}>
         <ButtonComponent
-          variant='contained'
+          variant="contained"
           color="primary"
           buttonText={t('label.create_label')}
           handleClick={() => setOpen(true)}
           size="large"
         />
-        <EditModal
-          open={open}
-          handleClose={() => setOpen(false)}
-          refetch={refetch}
-          data={data}
-          type='new'
-        />
+        <EditModal open={open} handleClose={() => setOpen(false)} refetch={refetch} type="new" />
       </div>
       <LabelPageTitle />
       <br />
