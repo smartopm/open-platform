@@ -17,6 +17,7 @@ export default function LogView({ user, tab, handleAddObservation }) {
 
   function handleGrantAccess() {
     setLoading(true);
+    // the refId here will become the entry_request id that will be used more than once.
     grantEntry({ variables: { id: user.refId, subject: 'visitor_entry' } })
       .then(() => {
         setMessage({

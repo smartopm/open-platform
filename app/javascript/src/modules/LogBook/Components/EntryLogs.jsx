@@ -29,6 +29,7 @@ import LogView from './LogView';
 import VisitEntryLogs from './VisitEntryLogs';
 import CenteredContent from '../../../components/CenteredContent';
 import Paginate from '../../../components/Paginate';
+import GuestBook from './GuestBook';
 
 export default ({ history, match }) => AllEventLogs(history, match);
 
@@ -289,7 +290,7 @@ export function IndexComponent({
         >
           <StyledTab label={t('logbook.all_visits')} {...a11yProps(0)} />
           <StyledTab label={t('logbook.new_visits')} {...a11yProps(1)} />
-          <StyledTab label={t('logbook.upcoming_visits')} {...a11yProps(2)} />
+          <StyledTab label={t('logbook.registered_guests')} {...a11yProps(2)} />
           <StyledTab label={t('logbook.observations')} {...a11yProps(3)} />
         </StyledTabs>
         {loading && <Loading />}
@@ -314,7 +315,7 @@ export function IndexComponent({
             ))}
         </TabPanel>
         <TabPanel value={tabValue} index={2}>
-          {data &&
+          {/* {data &&
             data.result.map(log => (
               <LogView
                 key={log.id}
@@ -323,7 +324,8 @@ export function IndexComponent({
                 tab={tabValue}
                 handleAddObservation={handleAddObservation}
               />
-            ))}
+            ))} */}
+          <GuestBook tabValue={tabValue} />
         </TabPanel>
         <TabPanel value={tabValue} index={3}>
           <>
@@ -345,7 +347,7 @@ export function IndexComponent({
         {// only admins should be able to schedule a visit request
         authState.user.userType === 'admin' && (
           <FloatButton
-            title={t('logbook.new_visit_request')}
+            title={t('logbook.new_invite')}
             handleClick={() => router.push('/visit_request')}
           />
         )}
