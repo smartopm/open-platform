@@ -8,6 +8,7 @@ import { useLazyQuery } from 'react-apollo';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router';
 import { makeStyles } from '@material-ui/styles';
+import { Link } from 'react-router-dom';
 import CenteredContent from '../../../components/CenteredContent';
 import { dateToString, dateTimeToString } from '../../../components/DateContainer';
 import DataList from '../../../shared/list/DataList';
@@ -25,10 +26,10 @@ export default function GuestBook({ tabValue }) {
   // eslint-disable-next-line no-unused-vars
   const [loadGuests, { data, error, loading }] = useLazyQuery(GuestEntriesQuery);
   const entriesHeaders = [
-    { title: 'guestName', col: 3, value: t('misc.submission_date') },
+    { title: 'guestName', col: 5, value: t('misc.submission_date') },
     { title: 'occurence', col: 4, value: t('misc.version_number') },
-    { title: 'visitDates', col: 3, value: t('misc.submitted_by') },
-    { title: 'validity', col: 2, value: t('misc.status') }
+    { title: 'visitDates', col: 2, value: t('misc.submitted_by') },
+    { title: 'validity', col: 1, value: t('misc.status') }
   ];
 
   //   we check which tab we are on then we call the guests
@@ -38,7 +39,9 @@ export default function GuestBook({ tabValue }) {
     }
   }, [tabValue, loadGuests]);
 
-  console.log(data);
+  function handleGrantAccess(entryId){
+    console.log(entryId)
+  }
   return (
     <div>
       {data?.scheduledRequests?.length > 0 ? (
@@ -46,9 +49,9 @@ export default function GuestBook({ tabValue }) {
           <DataList
             key={guest.id}
             keys={entriesHeaders}
-            data={renderGuest(guest, classes)}
+            data={renderGuest(guest, classes, handleGrantAccess)}
             hasHeader={false}
-            clickable
+            clickable={false}
             handleClick={() => history.push(`/request/${guest.id}`)}
           />
         ))
@@ -59,28 +62,40 @@ export default function GuestBook({ tabValue }) {
   );
 }
 
-export function renderGuest(guest, classes) {
+export function renderGuest(guest, classes, grantAccess) {
   return [
     {
       guestName: (
-        <Grid item xs={12} md={3} data-testid="guest_name">
+        <Grid item xs={12} md={5} data-testid="guest_name">
           <Grid container>
-            <Grid item xs={3}>
+            <Grid item xs={false} sm={2}>
               <Avatar imageUrl={guest.user.imageUrl} user={guest.user} alt="avatar-image" />
             </Grid>
-            <Grid item xs={9}>
+            <Grid item xs={10}>
               <Typography color="primary">
                 {guest.name}
               </Typography>
               <b>Host: </b>
               <Text content={guest.user.name} className={classes.text} />
-
+              <br />
+              <br />
+              <Grid container spacing={4}>
+                <Grid item xs>
+                  <Text 
+                    content="Grant Access"
+                    color="primary" 
+                    className={classes.guestEntryActions} 
+                    onClick={() => grantAccess(guest.id)}
+                  />
+                </Grid>
+                <Grid item xs>
+                  <Link to={`/request/${guest.id}/invite`}>
+                    <Text content="Invite Again" color="primary" />
+                  </Link>
+                </Grid>
+              </Grid>
             </Grid>
           </Grid>
-          {/* <Text content={guest.name} className={classes.text} />  */}
-          {' '}
-
-          <div />
         </Grid>
       ),
       occurence: (
@@ -91,14 +106,14 @@ export function renderGuest(guest, classes) {
         </Grid>
       ),
       visitDates: (
-        <Grid item xs={12} md={3} data-testid="visit_dates">
+        <Grid item xs={12} md={2} data-testid="visit_dates">
           <Text content={`Visit date ${dateToString(guest.visitationDate)}`} className={classes.text} />
           <br /> 
           <Text content={`${dateTimeToString(guest.startTime)} - ${dateTimeToString(guest.endTime)}`} className={classes.text} />
         </Grid>
       ),
       validity: (
-        <Grid item xs={12} md={2} data-testid="validity">
+        <Grid item xs={12} md={1} data-testid="validity">
           <Label title={checkRequests(guest, new Date()).title} color={checkRequests(guest, new Date()).color} />
         </Grid>
       )
@@ -109,6 +124,9 @@ export function renderGuest(guest, classes) {
 const useStyles = makeStyles({
   text: {
     fontSize: 14
+  },
+  guestEntryActions: {
+      cursor: 'pointer'
   }
 });
 
