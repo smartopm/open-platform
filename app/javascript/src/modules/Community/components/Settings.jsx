@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import Typography from '@material-ui/core/Typography';
 import { Button, TextField, MenuItem, Container, Grid, IconButton } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import { DeleteOutline } from '@material-ui/icons'
+import { DeleteOutline } from '@material-ui/icons';
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
@@ -21,7 +21,8 @@ import { formatError, propAccessor } from '../../../utils/helpers';
 import { Spinner } from '../../../shared/Loading';
 import ColorPicker from './ColorPicker';
 import { validateThemeColor } from '../helpers';
-import { AdminUsersQuery } from '../../Users/graphql/user_query'
+import { AdminUsersQuery } from '../../Users/graphql/user_query';
+import MultiSelect from '../../../shared/MultiSelect';
 
 export default function CommunitySettings({ data, token, refetch }) {
   const numbers = {
@@ -44,13 +45,14 @@ export default function CommunitySettings({ data, token, refetch }) {
 
   const menuItems = {
     menu_link: '',
-    menu_name: ''
+    menu_name: '',
+    display_on: ['Dashboard']
   };
 
   const theme = {
     primaryColor: data.themeColors?.primaryColor || '#69ABA4',
     secondaryColor: data.themeColors?.secondaryColor || '#cf5628'
-  }
+  };
 
   const banking = {
     bankName: data.bankingDetails?.bankName || '',
@@ -62,15 +64,17 @@ export default function CommunitySettings({ data, token, refetch }) {
     address: data.bankingDetails?.address || '',
     city: data.bankingDetails?.city || '',
     country: data.bankingDetails?.country || '',
-    taxIdNo: data.bankingDetails?.taxIdNo || '',
-  }
+    taxIdNo: data.bankingDetails?.taxIdNo || ''
+  };
+
+  const quickLinksDisplayOptions = ['Dashboard', 'Menu'];
 
   const [communityUpdate] = useMutation(CommunityUpdateMutation);
   const [numberOptions, setNumberOptions] = useState([numbers]);
   const [emailOptions, setEmailOptions] = useState([emails]);
   const [whatsappOptions, setWhatsappOptions] = useState([whatsapps]);
   const [socialLinkOptions, setSocialLinkOptions] = useState([socialLinks]);
-  const [menuItemOptions, setMenuItemOptions] = useState([menuItems])
+  const [menuItemOptions, setMenuItemOptions] = useState([menuItems]);
   const [themeColors, setThemeColor] = useState(theme);
   const [bankingDetails, setBankingDetails] = useState(banking);
   const [message, setMessage] = useState({ isError: false, detail: '' });
@@ -88,9 +92,10 @@ export default function CommunitySettings({ data, token, refetch }) {
   const [locale, setLocale] = useState('en-ZM');
   const [language, setLanguage] = useState('en-US');
   const [showCropper, setShowCropper] = useState(false);
-  const [smsPhoneNumbers, setSMSPhoneNumbers] = useState(data?.smsPhoneNumbers?.join(",") || '')
-  const [emergencyCallNumber, setEmergencyCallNumber] = useState(data?.emergencyCallNumber || '')
-  const { t } = useTranslation(['community', 'common'])
+  // const [quickLinksOptions, setQuickLinkOptions] = useState(['Dashboard']);
+  const [smsPhoneNumbers, setSMSPhoneNumbers] = useState(data?.smsPhoneNumbers?.join(',') || '');
+  const [emergencyCallNumber, setEmergencyCallNumber] = useState(data?.emergencyCallNumber || '');
+  const { t } = useTranslation(['community', 'common']);
   const { onChange, signedBlobId } = useFileUpload({
     client: useApolloClient()
   });
@@ -98,7 +103,7 @@ export default function CommunitySettings({ data, token, refetch }) {
   const { data: adminUsersData } = useQuery(AdminUsersQuery, {
     fetchPolicy: 'cache-and-network',
     errorPolicy: 'all'
-  })
+  });
 
   const classes = useStyles();
 
@@ -109,6 +114,10 @@ export default function CommunitySettings({ data, token, refetch }) {
   function getBlob(blobb) {
     setBlob(blobb);
   }
+
+  // function handleQuicklyDisplay(event) {
+  //   setQuickLinkOptions(event.target.value)
+  // }
 
   function handleAddEmailOption() {
     setEmailOptions([...emailOptions, emails]);
@@ -135,8 +144,7 @@ export default function CommunitySettings({ data, token, refetch }) {
       handleSetOptions(setSocialLinkOptions, index, newValue, options);
     } else if (type === 'menu_link') {
       handleSetOptions(setMenuItemOptions, index, newValue, options);
-    }
-    else {
+    } else {
       handleSetOptions(setNumberOptions, index, newValue, options);
     }
   }
@@ -167,7 +175,7 @@ export default function CommunitySettings({ data, token, refetch }) {
       { [event.target.name]: event.target.value },
       socialLinkOptions,
       'social_link'
-      );
+    );
   }
 
   function handleNumberRemove(id) {
@@ -257,16 +265,16 @@ export default function CommunitySettings({ data, token, refetch }) {
   }
 
   function updateCommunity() {
-    if(!validateThemeColor(themeColors)){
+    if (!validateThemeColor(themeColors)) {
       setAlertOpen(true);
       setMessage({
         isError: true,
         detail: t('common:errors.invalid_color_code')
       });
-      return
+      return;
     }
     setCallMutation(true);
-    
+
     communityUpdate({
       variables: {
         supportNumber: numberOptions,
@@ -287,21 +295,21 @@ export default function CommunitySettings({ data, token, refetch }) {
         bankingDetails,
         smsPhoneNumbers: smsPhoneNumbers.split(/[ ,]+/).filter(Boolean),
         emergencyCallNumber
-      },
+      }
     })
       .then(() => {
         setMessage({
           isError: false,
           detail: t('community.community_updated')
         });
-        setLanguageInLocalStorage(language)
+        setLanguageInLocalStorage(language);
         setAlertOpen(true);
         setCallMutation(false);
         // only reload if the primary color has changed
-        if(themeColors.primaryColor !== data.themeColors?.primaryColor) {
-          window.location.reload()
+        if (themeColors.primaryColor !== data.themeColors?.primaryColor) {
+          window.location.reload();
         }
-        refetch()
+        refetch();
       })
       .catch(error => {
         setMessage({ isError: true, detail: formatError(error.message) });
@@ -396,7 +404,12 @@ export default function CommunitySettings({ data, token, refetch }) {
           handleRemoveRow={handleWhatsappRemoveRow}
           data={{ label: 'WhatsApp', name: 'whatsapp' }}
         />
-        <div className={classes.addIcon} role="button" onClick={handleAddWhatsappOption} data-testid='whatsapp_click'>
+        <div
+          className={classes.addIcon}
+          role="button"
+          onClick={handleAddWhatsappOption}
+          data-testid="whatsapp_click"
+        >
           <AddCircleOutlineIcon />
           <div style={{ marginLeft: '10px', color: 'secondary' }}>
             <Typography align="center" variant="caption">
@@ -412,7 +425,12 @@ export default function CommunitySettings({ data, token, refetch }) {
           handleRemoveRow={handleEmailRemoveRow}
           data={{ label: t('common:form_fields.email'), name: 'email' }}
         />
-        <div className={classes.addIcon} role="button" onClick={handleAddEmailOption} data-testid='email_click'>
+        <div
+          className={classes.addIcon}
+          role="button"
+          onClick={handleAddEmailOption}
+          data-testid="email_click"
+        >
           <AddCircleOutlineIcon />
           <div style={{ marginLeft: '10px', color: 'secondary' }}>
             <Typography align="center" variant="caption">
@@ -429,7 +447,12 @@ export default function CommunitySettings({ data, token, refetch }) {
           data={{ label: t('common:form_fields.social_link'), name: 'social_link' }}
           hasSocialLink
         />
-        <div className={classes.addIcon} role="button" onClick={handleAddSocialLinkOption} data-testid='social_link_click'>
+        <div
+          className={classes.addIcon}
+          role="button"
+          onClick={handleAddSocialLinkOption}
+          data-testid="social_link_click"
+        >
           <AddCircleOutlineIcon />
           <div style={{ marginLeft: '10px', color: 'secondary' }}>
             <Typography align="center" variant="caption">
@@ -439,29 +462,41 @@ export default function CommunitySettings({ data, token, refetch }) {
         </div>
       </div>
       <div className={classes.information} style={{ marginTop: '40px' }}>
-        {
-          menuItemOptions.map((_menu, i) => (
-            // eslint-disable-next-line react/no-array-index-key
-            <div className={{display: 'flex', flexDirection: 'row', margin: '10px 0'}} key={i}>
-              <TextField
-                id={`${i}-menu-link-input`}
-                style={{ width: '300px'}}
-                label={t('common:form_fields.link')}
-                onChange={(event) => handleMenuItemChange(event, i)}
-                value={propAccessor(menuItemOptions[parseInt(i, 10)], 'menu_link')}
-                name='menu_link'
-                data-testid='menu-link-input'
-              />
-              <TextField
-                id={`${i}-menu-name-input`}
-                style={{ width: '200px', marginLeft: '40px' }}
-                label={t('common:form_fields.name')}
-                onChange={(event) => handleMenuItemChange(event, i)}
-                value={propAccessor(menuItemOptions[parseInt(i, 10)], 'menu_name')}
-                name='menu_name'
-                data-testid='menu-name-input'
-              />
-
+        {menuItemOptions.map((_menu, i) => (
+          // eslint-disable-next-line react/no-array-index-key
+          <div style={{ display: 'flex', flexDirection: 'row', margin: '10px 0' }} key={i}>
+            <div>
+              <div style={{ display: 'flex', flexDirection: 'row', margin: '10px 0' }}>
+                <TextField
+                  id={`${i}-menu-link-input`}
+                  style={{ width: '300px' }}
+                  label={t('common:form_fields.link')}
+                  onChange={event => handleMenuItemChange(event, i)}
+                  value={propAccessor(menuItemOptions[parseInt(i, 10)], 'menu_link')}
+                  name="menu_link"
+                  data-testid="menu-link-input"
+                />
+                <TextField
+                  id={`${i}-menu-name-input`}
+                  style={{ width: '200px', marginLeft: '40px' }}
+                  label={t('common:form_fields.name')}
+                  onChange={event => handleMenuItemChange(event, i)}
+                  value={propAccessor(menuItemOptions[parseInt(i, 10)], 'menu_name')}
+                  name="menu_name"
+                  data-testid="menu-name-input"
+                />
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'row', margin: '20px 0 10px 0' }}>
+                <MultiSelect
+                  labelName="Display on"
+                  fieldName="display_on"
+                  options={quickLinksDisplayOptions}
+                  handleOnChange={event => handleMenuItemChange(event, i)}
+                  selectedOptions={propAccessor(menuItemOptions[parseInt(i, 10)], 'display_on')}
+                />
+              </div>
+            </div>
+            <div style={{ paddingTop: '20px' }}>
               <IconButton
                 style={{ marginTop: 13 }}
                 onClick={() => handleMenuItemRemoveRow(i)}
@@ -470,9 +505,14 @@ export default function CommunitySettings({ data, token, refetch }) {
                 <DeleteOutline />
               </IconButton>
             </div>
-          ))
-        }
-        <div className={classes.addIcon} role="button" onClick={handleAddMenuItemOption} data-testid='menu_item_click'>
+          </div>
+        ))}
+        <div
+          className={classes.addIcon}
+          role="button"
+          onClick={handleAddMenuItemOption}
+          data-testid="menu_item_click"
+        >
           <AddCircleOutlineIcon />
           <div style={{ marginLeft: '10px', color: 'secondary' }}>
             <Typography align="center" variant="caption">
@@ -487,8 +527,8 @@ export default function CommunitySettings({ data, token, refetch }) {
         onChange={event => setSecurityManager(event.target.value)}
         name="securityManager"
         margin="normal"
-        inputProps={{ "data-testid": "securityManager"}}
-        style={{ width: '100%'}}
+        inputProps={{ 'data-testid': 'securityManager' }}
+        style={{ width: '100%' }}
         required
       />
       <TextField
@@ -498,16 +538,14 @@ export default function CommunitySettings({ data, token, refetch }) {
         onChange={event => setSubAdministrator(event.target.value)}
         name="subAdministrator"
         margin="normal"
-        inputProps={{ "data-testid": "subAdministrator"}}
+        inputProps={{ 'data-testid': 'subAdministrator' }}
         select
       >
-        {
-            adminUsersData?.adminUsers?.map((admin) => (
-              <MenuItem key={admin.id} value={admin.id}>
-                {admin.name}
-              </MenuItem>
-            ))
-          }
+        {adminUsersData?.adminUsers?.map(admin => (
+          <MenuItem key={admin.id} value={admin.id}>
+            {admin.name}
+          </MenuItem>
+        ))}
       </TextField>
       <br />
       <br />
@@ -517,13 +555,19 @@ export default function CommunitySettings({ data, token, refetch }) {
           Primary Color
         </Grid>
         <Grid item xs={12} sm={9}>
-          <ColorPicker color={themeColors.primaryColor} handleColor={color => setThemeColor({ ...themeColors, primaryColor: color })} />
+          <ColorPicker
+            color={themeColors.primaryColor}
+            handleColor={color => setThemeColor({ ...themeColors, primaryColor: color })}
+          />
         </Grid>
         <Grid item xs={12} sm={3}>
           Secondary Color
         </Grid>
         <Grid item xs={12} sm={9}>
-          <ColorPicker color={themeColors.secondaryColor} handleColor={color => setThemeColor({ ...themeColors, secondaryColor: color })} />
+          <ColorPicker
+            color={themeColors.secondaryColor}
+            handleColor={color => setThemeColor({ ...themeColors, secondaryColor: color })}
+          />
         </Grid>
       </Grid>
 
@@ -534,7 +578,7 @@ export default function CommunitySettings({ data, token, refetch }) {
           onChange={event => setTagline(event.target.value)}
           name="tagline"
           margin="normal"
-          inputProps={{ "data-testid": "tagline"}}
+          inputProps={{ 'data-testid': 'tagline' }}
         />
         <TextField
           label={t('community.community_logo_url')}
@@ -542,7 +586,7 @@ export default function CommunitySettings({ data, token, refetch }) {
           onChange={event => setLogoUrl(event.target.value)}
           name="tagline"
           margin="normal"
-          inputProps={{ "data-testid": "logo_url"}}
+          inputProps={{ 'data-testid': 'logo_url' }}
         />
         <TextField
           label={t('community.wordpress_url')}
@@ -550,9 +594,8 @@ export default function CommunitySettings({ data, token, refetch }) {
           onChange={event => setWpLink(event.target.value)}
           name="wp_link"
           margin="normal"
-          inputProps={{ "data-testid": "wp_link"}}
+          inputProps={{ 'data-testid': 'wp_link' }}
         />
-
       </div>
 
       <div style={{ marginTop: '40px' }}>
@@ -565,7 +608,7 @@ export default function CommunitySettings({ data, token, refetch }) {
           onChange={event => setCurrency(event.target.value)}
           name="currency"
           margin="normal"
-          inputProps={{ "data-testid": "currency"}}
+          inputProps={{ 'data-testid': 'currency' }}
         >
           {Object.entries(currencies).map(([key, val]) => (
             <MenuItem key={key} value={key}>
@@ -582,9 +625,9 @@ export default function CommunitySettings({ data, token, refetch }) {
           onChange={event => setLocale(event.target.value)}
           name="locale"
           margin="normal"
-          inputProps={{ "data-testid": "locale"}}
+          inputProps={{ 'data-testid': 'locale' }}
         >
-          {locales.map((loc) => (
+          {locales.map(loc => (
             <MenuItem key={loc} value={loc}>
               {loc}
             </MenuItem>
@@ -596,20 +639,24 @@ export default function CommunitySettings({ data, token, refetch }) {
         <TextField
           label={t('community.account_name')}
           value={bankingDetails.accountName}
-          onChange={event => setBankingDetails({ ...bankingDetails, accountName: event.target.value })}
+          onChange={event =>
+            setBankingDetails({ ...bankingDetails, accountName: event.target.value })
+          }
           name="accountName"
           margin="normal"
-          inputProps={{ "data-testid": "accountName"}}
-          style={{ width: '100%'}}
+          inputProps={{ 'data-testid': 'accountName' }}
+          style={{ width: '100%' }}
         />
         <TextField
           label={t('community.account_no')}
           value={bankingDetails.accountNo}
-          onChange={event => setBankingDetails({ ...bankingDetails, accountNo: event.target.value })}
+          onChange={event =>
+            setBankingDetails({ ...bankingDetails, accountNo: event.target.value })
+          }
           name="accountNo"
           margin="normal"
-          inputProps={{ "data-testid": "accountNo"}}
-          style={{ width: '100%'}}
+          inputProps={{ 'data-testid': 'accountNo' }}
+          style={{ width: '100%' }}
         />
         <TextField
           label={t('community.bank')}
@@ -617,8 +664,8 @@ export default function CommunitySettings({ data, token, refetch }) {
           onChange={event => setBankingDetails({ ...bankingDetails, bankName: event.target.value })}
           name="bankName"
           margin="normal"
-          inputProps={{ "data-testid": "bankName"}}
-          style={{ width: '100%'}}
+          inputProps={{ 'data-testid': 'bankName' }}
+          style={{ width: '100%' }}
         />
         <TextField
           label={t('community.branch')}
@@ -626,17 +673,19 @@ export default function CommunitySettings({ data, token, refetch }) {
           onChange={event => setBankingDetails({ ...bankingDetails, branch: event.target.value })}
           name="branch"
           margin="normal"
-          inputProps={{ "data-testid": "branch"}}
-          style={{ width: '100%'}}
+          inputProps={{ 'data-testid': 'branch' }}
+          style={{ width: '100%' }}
         />
         <TextField
           label={t('community.swift_code')}
           value={bankingDetails.swiftCode}
-          onChange={event => setBankingDetails({ ...bankingDetails, swiftCode: event.target.value })}
+          onChange={event =>
+            setBankingDetails({ ...bankingDetails, swiftCode: event.target.value })
+          }
           name="swiftCode"
           margin="normal"
-          inputProps={{ "data-testid": "swiftCode"}}
-          style={{ width: '100%'}}
+          inputProps={{ 'data-testid': 'swiftCode' }}
+          style={{ width: '100%' }}
         />
         <TextField
           label={t('community.sort_code')}
@@ -644,8 +693,8 @@ export default function CommunitySettings({ data, token, refetch }) {
           onChange={event => setBankingDetails({ ...bankingDetails, sortCode: event.target.value })}
           name="sortCode"
           margin="normal"
-          inputProps={{ "data-testid": "sortCode"}}
-          style={{ width: '100%'}}
+          inputProps={{ 'data-testid': 'sortCode' }}
+          style={{ width: '100%' }}
         />
         <TextField
           label={t('community.address')}
@@ -653,8 +702,8 @@ export default function CommunitySettings({ data, token, refetch }) {
           onChange={event => setBankingDetails({ ...bankingDetails, address: event.target.value })}
           name="address"
           margin="normal"
-          inputProps={{ "data-testid": "address"}}
-          style={{ width: '100%'}}
+          inputProps={{ 'data-testid': 'address' }}
+          style={{ width: '100%' }}
         />
         <TextField
           label={t('community.city')}
@@ -662,8 +711,8 @@ export default function CommunitySettings({ data, token, refetch }) {
           onChange={event => setBankingDetails({ ...bankingDetails, city: event.target.value })}
           name="city"
           margin="normal"
-          inputProps={{ "data-testid": "city"}}
-          style={{ width: '100%'}}
+          inputProps={{ 'data-testid': 'city' }}
+          style={{ width: '100%' }}
         />
         <TextField
           label={t('community.country')}
@@ -671,8 +720,8 @@ export default function CommunitySettings({ data, token, refetch }) {
           onChange={event => setBankingDetails({ ...bankingDetails, country: event.target.value })}
           name="country"
           margin="normal"
-          inputProps={{ "data-testid": "country"}}
-          style={{ width: '100%'}}
+          inputProps={{ 'data-testid': 'country' }}
+          style={{ width: '100%' }}
         />
         <TextField
           label={t('community.tax_id_no')}
@@ -680,10 +729,9 @@ export default function CommunitySettings({ data, token, refetch }) {
           onChange={event => setBankingDetails({ ...bankingDetails, taxIdNo: event.target.value })}
           name="taxIdNo"
           margin="normal"
-          inputProps={{ "data-testid": "taxIdNo"}}
-          style={{ width: '100%'}}
+          inputProps={{ 'data-testid': 'taxIdNo' }}
+          style={{ width: '100%' }}
         />
-
       </div>
 
       <br />
@@ -696,19 +744,19 @@ export default function CommunitySettings({ data, token, refetch }) {
         onChange={event => setSMSPhoneNumbers(event.target.value)}
         name="smsPhoneNumber"
         margin="normal"
-        inputProps={{ "data-testid": "smsPhoneNumber" }}
-        style={{ width: '100%'}}
+        inputProps={{ 'data-testid': 'smsPhoneNumber' }}
+        style={{ width: '100%' }}
       />
       <br />
 
       <TextField
         label={t('community.emergency_call_number')}
         value={emergencyCallNumber}
-        onChange={event => setEmergencyCallNumber(event.target.value )}
+        onChange={event => setEmergencyCallNumber(event.target.value)}
         name="emergencyCallNumber"
         margin="normal"
-        inputProps={{ "data-testid": "emergencyCallNumber"}}
-        style={{ width: '100%'}}
+        inputProps={{ 'data-testid': 'emergencyCallNumber' }}
+        style={{ width: '100%' }}
       />
       <div style={{ marginTop: '40px' }}>
         <Typography variant="h6">{t('community.language_settings')}</Typography>
@@ -720,18 +768,16 @@ export default function CommunitySettings({ data, token, refetch }) {
           onChange={event => setLanguage(event.target.value)}
           name="language"
           margin="normal"
-          inputProps={{ "data-testid": "language"}}
+          inputProps={{ 'data-testid': 'language' }}
         >
-          {
-            Object.entries(languages).map(([key, val]) => (
-              <MenuItem key={val} value={val}>
-                {key}
-              </MenuItem>
-            ))
-          }
+          {Object.entries(languages).map(([key, val]) => (
+            <MenuItem key={val} value={val}>
+              {key}
+            </MenuItem>
+          ))}
         </TextField>
       </div>
-      
+
       <div className={classes.button}>
         <Button
           disableElevation
@@ -741,9 +787,7 @@ export default function CommunitySettings({ data, token, refetch }) {
           onClick={updateCommunity}
           data-testid="update_community"
         >
-          {
-            mutationLoading ? <Spinner /> : t('community.update_community')
-          }
+          {mutationLoading ? <Spinner /> : t('community.update_community')}
         </Button>
       </div>
     </Container>
@@ -771,7 +815,7 @@ CommunitySettings.propTypes = {
     }),
     themeColors: PropTypes.shape({
       primaryColor: PropTypes.string,
-      secondaryColor: PropTypes.string,
+      secondaryColor: PropTypes.string
     }),
     bankingDetails: PropTypes.shape({
       bankName: PropTypes.string,
@@ -780,17 +824,16 @@ CommunitySettings.propTypes = {
       branch: PropTypes.string,
       swiftCode: PropTypes.string,
       sortCode: PropTypes.string,
-      address:PropTypes.string,
+      address: PropTypes.string,
       city: PropTypes.string,
       country: PropTypes.string,
-      taxIdNo: PropTypes.string,
-    }
-    ),
+      taxIdNo: PropTypes.string
+    }),
     emergencyCallNumber: PropTypes.string,
-    smsPhoneNumbers: PropTypes.arrayOf(PropTypes.string),
+    smsPhoneNumbers: PropTypes.arrayOf(PropTypes.string)
   }).isRequired,
   token: PropTypes.string.isRequired,
-  refetch: PropTypes.func.isRequired,
+  refetch: PropTypes.func.isRequired
 };
 
 const useStyles = makeStyles(theme => ({
