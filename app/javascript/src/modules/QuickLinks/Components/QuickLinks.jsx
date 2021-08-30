@@ -14,7 +14,7 @@ export default function QuickLinks({ menuItems, translate }) {
     we we still have the community.menu_items field populated like so: [{"menu_link"=>"", "menu_name"=>""}].
     We need to fix this in future so that we have a truly empty array
   */
-  if (menuItems && menuItems.filter(item => item.menu_link !== "").length === 0) {
+  if (!menuItems || (menuItems && menuItems.filter(item => item.menu_link !== "").length === 0)) {
     return <div />
   }
   return (
