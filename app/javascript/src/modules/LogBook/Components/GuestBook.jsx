@@ -94,7 +94,7 @@ export function renderGuest(guest, classes, grantAccess, isMobile) {
       ),
       'End of Visit': (
         <Grid item xs={12} md={2} data-testid="visit_dates">
-          <Text content={`Ends on ${dateToString(guest.visitEndDate)}`} className={classes.text} />
+          <Text content={Boolean(guest.visitEndDate) && `Ends on ${dateToString(guest.visitEndDate)}`} className={classes.text} />
         </Grid>
       ),
       validity: (
