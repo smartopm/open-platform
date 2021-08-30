@@ -10,7 +10,7 @@ import { propAccessor } from '../../utils/helpers';
 import ListHeader from './ListHeader';
 import CenteredContent from '../../components/CenteredContent';
 
-export default function DataList({ keys, data, hasHeader, clickable, handleClick, color }) {
+export default function DataList({ keys, data, hasHeader, clickable, handleClick, color, defaultView }) {
   const classes = useStyles();
   const theme = useTheme();
   const matches = useMediaQuery(theme.breakpoints.down('sm'));
@@ -25,7 +25,7 @@ export default function DataList({ keys, data, hasHeader, clickable, handleClick
   return (
     <>
       {
-        matches ? (
+        matches && defaultView ? (
           <div>
             {data.map((item, index) => (
               // eslint-disable-next-line jsx-a11y/no-static-element-interactions
@@ -105,7 +105,8 @@ DataList.defaultProps = {
   hasHeader: true,
   clickable: false,
   handleClick: () => {},
-  color: false
+  color: false,
+  defaultView: true
 };
 
 DataList.propTypes = {
@@ -131,7 +132,8 @@ DataList.propTypes = {
    */
   clickable: PropTypes.bool,
   handleClick: PropTypes.func,
-  color: PropTypes.bool
+  color: PropTypes.bool,
+  defaultView: PropTypes.bool
 };
 
 CellData.propTypes = {

@@ -1,5 +1,6 @@
 /* eslint-disable import/prefer-default-export */
 
+// import { dateTimeToString } from "../../components/DateContainer";
 import { getWeekDay } from "../../utils/dateutil";
 import { titleCase } from '../../utils/helpers'
 
@@ -17,18 +18,22 @@ export const defaultRequiredFields= ['name', 'phoneNumber', 'nrc', 'vehiclePlate
 
 
 // TODO get this translated
-export function checkRequests(req, today){
+// add another case for one day visits
+export function checkRequests(req){
+  const today = new Date()
   const dayOfTheWeek = getWeekDay(today)
     if(req.occursOn.length){ // if true then we know this will happen again
       if(req.occursOn.includes(dayOfTheWeek.toLowerCase())){ // if true then we know today they can be allowed in 
         if(today > new Date(req.startTime) && today < new Date(req.endTime)){
-          return { title: 'Valid', color: '#66A69B' }
+          return { title: 'Valid', color: '#66A69B', valid: true }
         }
-        return { title: 'Invalid Now', color: '#E74540' }
+        return { title: 'Invalid Now', color: '#E74540', valid: false }
       }
-      return { title: 'Invalid Today', color: '#E74540' }
+      return { title: 'Invalid Today', color: '#E74540', valid: false }
+    } if (today > new Date(req.startTime) && today < new Date(req.endTime)) {
+      return { title: 'Valid', color: '#66A69B', valid: true }
     }
-    return { title: 'Expired', color: '#E74540' }
+    return { title: 'Expired', color: '#E74540', valid: false }
 }
 
 

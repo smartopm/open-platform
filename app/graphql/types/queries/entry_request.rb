@@ -39,6 +39,8 @@ module Types::Queries::EntryRequest
     raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') unless admin_or_security_guard
 
     context[:site_community].entry_requests.where.not(visitation_date: nil)
+                            .unscope(:order)
+                            .order(created_at: :desc)
   end
 
   private
