@@ -11,12 +11,24 @@ describe('SOSModal component', () => {
   const bind = jest.fn()
   const setOpen = jest.fn
   const theme = createMuiTheme();
-  it('should render proper the sos modal', () => {
+  const mockGeolocation = {
+    getCurrentPosition: jest.fn()
+      .mockImplementationOnce((success) => Promise.resolve(success({
+        coords: {
+          latitude: 51.1,
+          longitude: 45.3
+        }
+      }))),
+      watchPosition: jest.fn(),
+  };
+  global.navigator.geolocation = mockGeolocation;
+
+  it('should render properly the sos modal', () => {
     const container = render(
       <ThemeProvider theme={theme}>
         <MockedProvider>
           <BrowserRouter>
-            <SOSModal open setOpen={setOpen} bind={bind} {...{ authState }} />
+            <SOSModal open setOpen={setOpen} bind={bind} location={mockGeolocation} {...{ authState }} />
           </BrowserRouter>
         </MockedProvider>
       </ThemeProvider>

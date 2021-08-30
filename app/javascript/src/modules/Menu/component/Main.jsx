@@ -19,7 +19,9 @@ import CenteredContent from '../../../components/CenteredContent';
 import userProps from '../../../shared/types/user';
 import UserAvatar from '../../Users/Components/UserAvatar';
 import UserActionOptions from '../../Users/Components/UserActionOptions';
+import Loading from '../../../shared/Loading';
 import SOSModal from './SOSModal';
+import useGeoLocation from '../../../hooks/useGeoLocation' 
 
 import { allUserTypes, sosAllowedUsers } from '../../../utils/constants';
 
@@ -64,6 +66,7 @@ export function MainNav({ authState }) {
   const classes = useStyles();
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [open, setOpen] = useState(false);
+  const location = useGeoLocation();
 
   const dynamicMenu =
     authState?.user?.community?.menuItems
@@ -104,6 +107,8 @@ export function MainNav({ authState }) {
   const communityHasEmergencyNumber = Boolean(authState.user?.community?.emergencyCallNumber)
   const communityHasEmergencySMSNumber = Boolean(authState.user?.community?.smsPhoneNumbers?.filter(Boolean)?.length !== 0)
 
+  if (!location.loaded) return <Loading />;
+
   return (
     <div className={classes.root}>
       <AppBar position="fixed" className={classes.appBar}>
@@ -127,11 +132,11 @@ export function MainNav({ authState }) {
           </IconButton>
           {sosAllowedUsers.includes(authState?.user?.userType?.toLowerCase()) 
            && communityHasEmergencyNumber && communityHasEmergencySMSNumber 
-           && <SvgIcon component={SOSIcon} viewBox="0 0 384 512" setOpen={setOpen} />}
+           && <SvgIcon component={SOSIcon} viewBox="0 0 384 512" setOpen={setOpen} data-testid="sos-icon" />}
 
           
 
-          <SOSModal open={open} setOpen={setOpen} {...{ authState }} />
+          <SOSModal open={open} setOpen={setOpen} location={location} {...{ authState }} />
 
           <UserAvatar imageUrl={authState?.user?.imageUrl} />
           <UserActionOptions />

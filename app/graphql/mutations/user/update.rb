@@ -19,7 +19,6 @@ module Mutations
       argument :sub_status, String, required: false
       argument :secondary_info, [GraphQL::Types::JSON], required: false
       argument :ext_ref_id, String, required: false
-      argument :location, String, required: false
 
       field :user, Types::UserType, null: true
       # rubocop:disable Metrics/AbcSize
