@@ -15,6 +15,7 @@ import CustomerJourneyStatus from '../../CustomerJourney/Components/CustomerJour
 import NewsFeed from '../../News/Components/NewsFeed';
 import FeatureCheck from '../../Features';
 import SocialMediaLinks from '../../../components/SocialMediaLinks';
+import QuickLinks from '../../QuickLinks/Components/QuickLinks'
 
 export default function Home() {
   const authState = useContext(AuthStateContext);
@@ -30,6 +31,7 @@ export default function Home() {
           <FeatureCheck features={authState.user.community.features} name="Customer Journey">
             <ViewCustomerJourney translate={t} />
           </FeatureCheck>
+          <QuickLinks menuItems={authState.user.community.menuItems} translate={t} />
           <FeatureCheck features={authState.user.community.features} name="Payments">
             <PaymentSummary authState={authState} translate={t} />
           </FeatureCheck>
