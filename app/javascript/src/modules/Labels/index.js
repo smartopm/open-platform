@@ -1,6 +1,6 @@
 import React from 'react'
 import ForumIcon from '@material-ui/icons/Forum';
-import Labels from '../../containers/Label/Labels';
+import Labels from './Containers/Labels';
 
 export default {
   routeProps: {

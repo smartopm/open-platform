@@ -3,8 +3,8 @@ import { fireEvent, render } from '@testing-library/react'
 import '@testing-library/jest-dom/extend-expect'
 import { BrowserRouter } from 'react-router-dom'
 import { MockedProvider } from '@apollo/react-testing'
-import LabelActionMenu from '../../components/Label/LabelActionMenu'
-import { DeleteBusiness } from '../../modules/Business/graphql/business_mutations'
+import LabelActionMenu from '../Components/LabelActionMenu'
+import { DeleteBusiness } from '../../Business/graphql/business_mutations'
 
 describe('Label action menu component', () => {
   it('show correct action menu', async () => {
@@ -53,7 +53,7 @@ describe('Label action menu component', () => {
     fireEvent.click(container.queryByTestId('dialog_cancel'))
     expect(container.queryByTestId('dialog_cancel')).toBeInTheDocument()
     fireEvent.click(container.queryByText('menu.edit'))
-    fireEvent.click(container.queryByTestId('cancel_button'))
-    expect(container.queryByTestId('cancel_button')).toBeInTheDocument()
+    fireEvent.click(container.queryAllByTestId('dialog_cancel')[0])
+    expect(container.queryAllByTestId('dialog_cancel')[0]).toBeInTheDocument()
   })
 })

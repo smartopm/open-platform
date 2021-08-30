@@ -1,7 +1,7 @@
 import React from 'react';
 import { render } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
-import Label from '../shared/label/Label';
+import Label from '../../../shared/label/Label';
 
 describe('Label component', () => {
   it('should render proper the label', () => {

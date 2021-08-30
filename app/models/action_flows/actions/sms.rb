@@ -23,15 +23,13 @@ module ActionFlows
       def self.execute_action(data, field_config)
         author = Users::User.find(data[:task_assign_author_id]).name
         assign_user = Users::User.find(data[:task_assign_user_id])
-        message = "Task '#{data[:task_assign_body]}' has just been assigned to #{author}"
+        message = "Task '#{data[:task_assign_body]}' was assigned to #{assign_user.name}"
         msg = "#{author} just assigned a task '#{data[:task_assign_body]}' to #{assign_user.name}"
 
         hash = action_flow_fields(data, field_config)
         sms_head_custodian(data[:task_assign_user_type], hash[:phone_number], msg)
 
-        return unless assign_user.user_type == 'custodian'
-
-        sms_custodian(assign_user.phone_number, hash[:phone_number], message)
+        sms_custodian(assign_user, hash[:phone_number], message)
       end
 
       def self.sms_head_custodian(user_type, phone_number, message)
@@ -47,8 +45,10 @@ module ActionFlows
         hash
       end
 
-      def self.sms_custodian(phone_number, hash_phone_number, message)
-        ::Sms.send(phone_number, message)
+      def self.sms_custodian(user, hash_phone_number, message)
+        return unless user.user_type == 'custodian'
+
+        ::Sms.send(user.phone_number, message)
         ::Sms.send(hash_phone_number, message)
       end
     end

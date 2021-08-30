@@ -4,16 +4,21 @@ import { Grid, Typography, Container } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
-import { LabelsQuery } from '../../graphql/queries';
-import ErrorPage from '../Error';
-import Loading from '../../shared/Loading';
+import { LabelsQuery } from '../../../graphql/queries';
+import ErrorPage from '../../../components/Error';
+import Loading from '../../../shared/Loading';
 import LabelItem from './LabelItem';
-import CenteredContent from '../CenteredContent';
-import Paginate from '../Paginate';
+import CenteredContent from '../../../components/CenteredContent';
+import Paginate from '../../../components/Paginate';
+import ButtonComponent from '../../../shared/buttons/Button';
+import EditModal from './EditModal';
 
 export default function LabelList({ userType }) {
+  const classes = useStyles();
   const limit = 50;
   const [offset, setOffset] = useState(0);
+  const [open, setOpen] = useState(false);
+  const { t } = useTranslation('label');
   const { data, error, loading, refetch } = useQuery(LabelsQuery, {
     variables: { limit, offset }
   });
@@ -33,6 +38,16 @@ export default function LabelList({ userType }) {
   }
   return (
     <Container>
+      <div className={classes.labelButton}>
+        <ButtonComponent
+          variant="contained"
+          color="primary"
+          buttonText={t('label.create_label')}
+          handleClick={() => setOpen(true)}
+          size="large"
+        />
+        <EditModal open={open} handleClose={() => setOpen(false)} refetch={refetch} type="new" />
+      </div>
       <LabelPageTitle />
       <br />
       {data?.labels.map(label => (
@@ -52,9 +67,8 @@ export default function LabelList({ userType }) {
 }
 
 function LabelPageTitle() {
-  // eslint-disable-next-line no-use-before-define
   const classes = useStyles();
-  const { t } = useTranslation('common')
+  const { t } = useTranslation('common');
 
   return (
     <Grid container spacing={6} className={classes.labelTitle}>
@@ -86,5 +100,8 @@ const useStyles = makeStyles(() => ({
   },
   label: {
     marginLeft: 20
+  },
+  labelButton: {
+    textAlign: 'right'
   }
 }));
