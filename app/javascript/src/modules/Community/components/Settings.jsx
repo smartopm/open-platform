@@ -92,7 +92,7 @@ export default function CommunitySettings({ data, token, refetch }) {
   const [locale, setLocale] = useState('en-ZM');
   const [language, setLanguage] = useState('en-US');
   const [showCropper, setShowCropper] = useState(false);
-  // const [quickLinksOptions, setQuickLinkOptions] = useState(['Dashboard']);
+  const [hasQuickLinksSettingChanged, setHasQuickLinksSettingChanged] = useState(false);
   const [smsPhoneNumbers, setSMSPhoneNumbers] = useState(data?.smsPhoneNumbers?.join(',') || '');
   const [emergencyCallNumber, setEmergencyCallNumber] = useState(data?.emergencyCallNumber || '');
   const { t } = useTranslation(['community', 'common']);
@@ -166,6 +166,7 @@ export default function CommunitySettings({ data, token, refetch }) {
   }
 
   function handleMenuItemChange(event, index) {
+    setHasQuickLinksSettingChanged(true)
     updateOptions(index, { [event.target.name]: event.target.value }, menuItemOptions, 'menu_link');
   }
 
@@ -306,7 +307,7 @@ export default function CommunitySettings({ data, token, refetch }) {
         setAlertOpen(true);
         setCallMutation(false);
         // only reload if the primary color has changed
-        if (themeColors.primaryColor !== data.themeColors?.primaryColor) {
+        if ((themeColors.primaryColor !== data.themeColors?.primaryColor) || (hasQuickLinksSettingChanged)) {
           window.location.reload();
         }
         refetch();

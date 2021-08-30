@@ -21,7 +21,7 @@ import UserAvatar from '../../Users/Components/UserAvatar';
 import UserActionOptions from '../../Users/Components/UserActionOptions';
 import Loading from '../../../shared/Loading';
 import SOSModal from './SOSModal';
-import useGeoLocation from '../../../hooks/useGeoLocation' 
+import useGeoLocation from '../../../hooks/useGeoLocation'
 
 import { allUserTypes, sosAllowedUsers } from '../../../utils/constants';
 
@@ -67,9 +67,10 @@ export function MainNav({ authState }) {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [open, setOpen] = useState(false);
   const location = useGeoLocation();
+  const menuQuickLinks = authState?.user?.community?.menuItems?.filter((quickLink) => quickLink.display_on.includes('Menu'))
 
   const dynamicMenu =
-    authState?.user?.community?.menuItems
+    menuQuickLinks
       ?.filter(item => item.menu_link && item.menu_name)
       .map(menuItem => ({
         routeProps: {
@@ -130,11 +131,11 @@ export function MainNav({ authState }) {
               <MenuIcon />
             )}
           </IconButton>
-          {sosAllowedUsers.includes(authState?.user?.userType?.toLowerCase()) 
-           && communityHasEmergencyNumber && communityHasEmergencySMSNumber 
+          {sosAllowedUsers.includes(authState?.user?.userType?.toLowerCase())
+           && communityHasEmergencyNumber && communityHasEmergencySMSNumber
            && <SvgIcon component={SOSIcon} viewBox="0 0 384 512" setOpen={setOpen} data-testid="sos-icon" />}
 
-          
+
 
           <SOSModal open={open} setOpen={setOpen} location={location} {...{ authState }} />
 

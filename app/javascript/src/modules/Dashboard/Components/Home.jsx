@@ -21,6 +21,8 @@ const Home = () => {
   const authState = useContext(AuthStateContext);
   const { t } = useTranslation(['dashboard', 'common']);
 
+  const dashboardQuickLinks = authState.user.community.menuItems.filter((quickLink) => quickLink.display_on.includes('Dashboard'));
+
   if (!authState.loggedIn) return <Loading />;
   
   return (
@@ -32,7 +34,7 @@ const Home = () => {
           <FeatureCheck features={authState.user.community.features} name="Customer Journey">
             <ViewCustomerJourney translate={t} />
           </FeatureCheck>
-          <QuickLinks menuItems={authState.user.community.menuItems} translate={t} />
+          <QuickLinks menuItems={dashboardQuickLinks} translate={t} />
           <FeatureCheck features={authState.user.community.features} name="Payments">
             <PaymentSummary authState={authState} translate={t} />
           </FeatureCheck>
