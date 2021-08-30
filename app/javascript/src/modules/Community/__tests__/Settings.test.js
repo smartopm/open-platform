@@ -36,7 +36,7 @@ describe('Community settings page ', () => {
         { social_link: 'www.facebook.com', category: 'facebook' },
       ],
       menuItems: [
-        { menu_link: 'http://some-link.com', menu_name: 'Custom Menu' },
+        { menu_link: 'http://some-link.com', menu_name: 'Custom Menu', display_on: ['Menu'] },
       ],
       subAdministrator: { id: '123df', name: 'User Name' },
       logoUrl: null,
@@ -77,8 +77,8 @@ describe('Community settings page ', () => {
             { social_link: '', category: '' },
           ],
           menuItems: [
-            { menu_link: 'http://some-link.com', menu_name: 'Custom Menu' },
-            { menu_link: '', menu_name: '' },
+            { menu_link: 'http://some-link.com', menu_name: 'Custom Menu', display_on: ['Menu'] },
+            { menu_link: '', menu_name: '', display_on: ['Dashboard'] },
           ],
           imageBlobId: null,
           locale: 'en-US',
