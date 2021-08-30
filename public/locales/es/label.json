@@ -1,12 +1,14 @@
 {
   "label": {
     "background_color_field_label": "Color de fondo",
+    "create_label": "Crear una etiqueta",
     "delete_dialog_title": "¿Estás seguro de que deseas eliminar esta etiqueta?",
     "delete_warning_text": "Estas proximo a borrar esta etiqueta \" {{shortDesc}}\"",
     "description_field_label": "Descripción",
     "edit_dialog_title": "Editar etiqueta",
     "merge_dialog_title": "La combinación de esta etiqueta moverá a todos los usuarios de esta etiqueta a la etiqueta seleccionada",
     "merge_text": "Unir esta etqueta con:",
+    "new_dialog_title": "Nueva Etiqueta",
     "title_field_label": "Título"
   }
 }
