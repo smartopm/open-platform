@@ -68,7 +68,7 @@ export default function TaskDelete({ open, handleClose, refetch, data }) {
 const useStyles = makeStyles({
   root: {
     margin: 0,
-    padding: 10
+    padding: '10px'
   },
   closeButton: {
     position: 'absolute',
@@ -81,7 +81,7 @@ const useStyles = makeStyles({
     borderBottom: '1px #f1a3a2 solid'
   },
   deleteCard: {
-    fontSize: 14,
+    fontSize: '14px',
     fontWeight: 'bold'
   }
 });
