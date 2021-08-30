@@ -48,6 +48,9 @@ export default function EditModal({ open, handleClose, data, refetch, type }) {
     })
       .then(() => {
         setMutationLoading(false);
+        setShortDesc('');
+        setDescription('');
+        setColor(null);
         setMessageAlert(t('label.label_created'));
         setIsSuccessAlert(true);
         handleClose();
