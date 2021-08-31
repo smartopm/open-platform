@@ -30,7 +30,9 @@ export default function GuestBook({ tabValue, handleAddObservation }) {
   const [message, setMessage] = useState({ isError: false, detail: ''});
 
   // eslint-disable-next-line no-unused-vars
-  const [loadGuests, { data, error }] = useLazyQuery(GuestEntriesQuery);
+  const [loadGuests, { data, loading: guestsLoading }] = useLazyQuery(GuestEntriesQuery, {
+      fetchPolicy: "cache-and-network"
+  });
   const entriesHeaders = [
     { title: 'Guest Name', col: 4, value: t('misc.guest_name') },
     { title: 'Start of Visit', col: 2, value: t('misc.start_of_visit') },
@@ -79,26 +81,30 @@ export default function GuestBook({ tabValue, handleAddObservation }) {
         open={!!message.detail}
         handleClose={() => setMessage({ ...message, detail: '' })}
       />
+
+      {
+        guestsLoading && <Spinner />
+      }
       {data?.scheduledRequests?.length > 0 ? (
         data?.scheduledRequests?.map(guest => (
           <DataList
             key={guest.id}
             keys={entriesHeaders}
-            data={renderGuest(guest, classes, handleGrantAccess, isMobile, loadingStatus)}
+            data={renderGuest(guest, classes, handleGrantAccess, isMobile, loadingStatus, t)}
             hasHeader={false}
             clickable={false} // TODO: @olivier allow it to be clickable to update the request
             defaultView={false}
             handleClick={() => history.push(`/request/${guest.id}?tab=${tabValue}`)}
           />
         ))
-      ) : (
+      ) : !guestsLoading && (
         <CenteredContent>{t('logbook.no_invited_guests')}</CenteredContent>
       )}
     </>
   );
 }
 
-export function renderGuest(guest, classes, grantAccess, isMobile, loadingStatus) {
+export function renderGuest(guest, classes, grantAccess, isMobile, loadingStatus, translate) {
   return [
     {
       'Guest Name': (
@@ -118,7 +124,7 @@ export function renderGuest(guest, classes, grantAccess, isMobile, loadingStatus
             </Grid>
             <Grid item xs={4}>
               {
-                 isMobile &&  <Label title={checkRequests(guest).title} color={checkRequests(guest).color} />
+                 isMobile &&  <Label title={checkRequests(guest, translate).title} color={checkRequests(guest, translate).color} />
               }
             </Grid>
           </Grid>
@@ -143,7 +149,7 @@ export function renderGuest(guest, classes, grantAccess, isMobile, loadingStatus
         <Grid item xs={12} md={1} data-testid="validity">
           {
                 !isMobile && (
-                <Label title={checkRequests(guest).title} color={checkRequests(guest).color} />
+                <Label title={checkRequests(guest, translate).title} color={checkRequests(guest, translate).color} />
                 )
             }
         </Grid>
@@ -152,11 +158,11 @@ export function renderGuest(guest, classes, grantAccess, isMobile, loadingStatus
         <Grid item xs={12} md={1} data-testid="access_actions">
           <CenteredContent>
             <Button 
-              disabled={!checkRequests(guest).valid} 
+              disabled={!checkRequests(guest, translate).valid} 
               variant={isMobile ? "contained" : "text"}
               onClick={event => grantAccess(event, guest)}
               disableElevation
-              style={isMobile ? { backgroundColor: checkRequests(guest).valid && '#66A69B', color: '#FFFFFF' } : {}}
+              style={isMobile ? { backgroundColor: checkRequests(guest, translate).valid && '#66A69B', color: '#FFFFFF' } : {}}
               startIcon={loadingStatus.loading && loadingStatus.currentId === guest.id && <Spinner />}
               fullWidth
             >

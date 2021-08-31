@@ -17,23 +17,21 @@ export function isNotValidCheck(element) {
 export const defaultRequiredFields= ['name', 'phoneNumber', 'nrc', 'vehiclePlate', 'reason']
 
 
-// TODO get this translated
-// add another case for one day visits
-export function checkRequests(req){
+export function checkRequests(req, translate){
   const today = new Date()
   const dayOfTheWeek = getWeekDay(today)
-    if(req.occursOn.length){ // if true then we know this will happen again
-      if(req.occursOn.includes(dayOfTheWeek.toLowerCase())){ // if true then we know today they can be allowed in 
+    if(req.occursOn.length){ 
+      if(req.occursOn.includes(dayOfTheWeek.toLowerCase())){
         if(today > new Date(req.startTime) && today < new Date(req.endTime)){
-          return { title: 'Valid', color: '#00A98B', valid: true }
+          return { title: translate('logbook.valid'), color: '#00A98B', valid: true }
         }
-        return { title: 'Invalid Now', color: '#E74540', valid: false }
+        return { title: translate('logbook.invalid_now'), color: '#E74540', valid: false }
       }
-      return { title: 'Invalid Today', color: '#E74540', valid: false }
+      return { title: translate('logbook.invalid_today'), color: '#E74540', valid: false }
     } if (today > new Date(req.startTime) && today < new Date(req.endTime)) {
-      return { title: 'Valid', color: '#00A98B', valid: true }
+      return { title: translate('logbook.valid'), color: '#00A98B', valid: true }
     }
-    return { title: 'Expired', color: '#DA1414', valid: false }
+    return { title: translate('logbook.expired'), color: '#DA1414', valid: false }
 }
 
 

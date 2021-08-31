@@ -271,6 +271,13 @@ export const EntryRequestUpdate = gql`
     $nrc: String
     $otherReason: String
     $phoneNumber: String
+    $visitationDate: String
+    $startTime: String
+    $endTime: String
+    $companyName: String
+    $temperature: String
+    $occursOn: [String!]
+    $visitEndDate: String
   ) {
     result: entryRequestUpdate(
       id: $id
@@ -280,6 +287,13 @@ export const EntryRequestUpdate = gql`
       nrc: $nrc
       otherReason: $otherReason
       phoneNumber: $phoneNumber
+      visitationDate: $visitationDate
+      startTime: $startTime
+      endTime: $endTime
+      companyName: $companyName
+      temperature: $temperature
+      occursOn: $occursOn
+      visitEndDate: $visitEndDate
     ) {
       entryRequest {
         ...EntryRequestFields
