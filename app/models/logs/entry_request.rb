@@ -25,16 +25,16 @@ module Logs
         granted_state: 1,
         granted_at: Time.zone.now,
       )
-      log_entry_start
+      log_entry_start('granted')
     end
 
-    # TODO: update the deny when we implement revoking access
     def deny!(grantor)
       update(
         grantor_id: grantor.id,
         granted_state: 2,
         granted_at: Time.zone.now,
       )
+      log_entry_start('denied')
     end
 
     # Leaving this here for now in case it is needed
@@ -107,10 +107,6 @@ module Logs
       SMS.send(number, "https://#{HostEnv.base_url(user.community)}/feedback")
     end
 
-    def last_event_log
-      Logs::EventLog.where('ref_id=? and ref_type=?', id, self.class).last
-    end
-
     private
 
     # Assigns community id of user.
@@ -120,22 +116,13 @@ module Logs
       self[:community_id] = user&.community_id
     end
 
-    def log_entry
-      if showroom?
-        log_showroom_entry
-      else
-        log_entry_start
-
-      end
-    end
-
-    def log_entry_start
+    def log_entry_start(action)
       Logs::EventLog.create(
         acting_user: user, community: user.community,
         subject: 'visitor_entry',
         ref_id: self[:id], ref_type: 'Logs::EntryRequest',
         data: {
-          action: 'recorded',
+          action: action,
           ref_name: self[:name],
           type: user.user_type,
         }
@@ -153,14 +140,6 @@ module Logs
           type: 'showroom',
         }
       )
-    end
-
-    def log_decision(decision, event_id)
-      event = Logs::EventLog.find(event_id)
-      return false if event.blank?
-
-      event.data['action'] = decision
-      event.save
     end
   end
   # rubocop:enable Metrics/ClassLength
