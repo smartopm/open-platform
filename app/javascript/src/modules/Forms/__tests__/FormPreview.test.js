@@ -2,16 +2,22 @@ import React from 'react'
 import { fireEvent, render } from '@testing-library/react'
 import '@testing-library/jest-dom/extend-expect'
 
+import { MockedProvider } from '@apollo/react-testing';
 import FormPreview from '../components/FormPreview'
+import FormContextProvider from '../Context';
 
-jest.mock('react-markdown', () => 'anything');
+// while running tests, it automatically wraps this in <> so it is better to mock with a valid tagname to avoid jest warnings
+jest.mock('react-markdown', () => 'div'); 
+jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
 describe('Form Preview component', () => {
   it('should not break form preview', () => {
     const props = {
         categoriesData: {
             data: {
                 formCategories: [
-                   { renderedText: "Some preview text here and there"}
+                   { 
+                     renderedText: "Some preview text here and there"
+                  }
                 ]
             }
         },
@@ -19,7 +25,11 @@ describe('Form Preview component', () => {
         handleFormSubmit: jest.fn()
     }
     const rendered = render(
-      <FormPreview {...props} />
+      <MockedProvider>
+        <FormContextProvider>
+          <FormPreview {...props} />
+        </FormContextProvider>
+      </MockedProvider>
     )
     expect(rendered.queryByText('actions.confirm')).toBeInTheDocument()
     expect(rendered.queryByText('Some preview text here and there')).toBeInTheDocument()

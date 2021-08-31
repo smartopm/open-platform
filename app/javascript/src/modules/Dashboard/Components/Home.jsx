@@ -1,5 +1,5 @@
 /* eslint-disable no-use-before-define */
-import React, { useContext } from 'react';
+import React, { useContext } from "react";
 import Divider from '@material-ui/core/Divider';
 import { useTranslation } from 'react-i18next';
 import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider';
@@ -15,12 +15,16 @@ import CustomerJourneyStatus from '../../CustomerJourney/Components/CustomerJour
 import NewsFeed from '../../News/Components/NewsFeed';
 import FeatureCheck from '../../Features';
 import SocialMediaLinks from '../../../components/SocialMediaLinks';
+import QuickLinks from '../../QuickLinks/Components/QuickLinks'
 
-export default function Home() {
+const Home = () => {
   const authState = useContext(AuthStateContext);
   const { t } = useTranslation(['dashboard', 'common']);
 
+  const dashboardQuickLinks = authState.user.community.menuItems.filter((quickLink) => quickLink.display_on.includes('Dashboard'));
+
   if (!authState.loggedIn) return <Loading />;
+  
   return (
     <div style={{ marginTop: '-30px' }}>
       <LanguageToggle />
@@ -30,6 +34,7 @@ export default function Home() {
           <FeatureCheck features={authState.user.community.features} name="Customer Journey">
             <ViewCustomerJourney translate={t} />
           </FeatureCheck>
+          <QuickLinks menuItems={dashboardQuickLinks} translate={t} />
           <FeatureCheck features={authState.user.community.features} name="Payments">
             <PaymentSummary authState={authState} translate={t} />
           </FeatureCheck>
@@ -77,3 +82,5 @@ export default function Home() {
     </div>
   );
 }
+
+export default Home;

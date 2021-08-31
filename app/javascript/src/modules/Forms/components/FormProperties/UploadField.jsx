@@ -15,7 +15,7 @@ export default function UploadField({ detail, upload, editable, uploaded }) {
             margin: '4px 4px 0 0',
           }}
         >
-          {`${detail.label} ${detail.required ? '*' : ''}`}
+          {`${detail.label || ''} ${detail.required ? '*' : ''}`}
         </FormHelperText>
         <br />
         <input

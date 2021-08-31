@@ -885,8 +885,8 @@ export const DiscussionSubscription = gql`
 `
 
 export const LabelCreate = gql`
-  mutation labelCreate($shortDesc: String!) {
-    labelCreate(shortDesc: $shortDesc) {
+  mutation labelCreate($shortDesc: String!, $description: String, $color: String) {
+    labelCreate(shortDesc: $shortDesc, description: $description, color: $color) {
       label {
         id
       }

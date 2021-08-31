@@ -67,6 +67,32 @@ en:
         acting_user: Acting user
         community: Community
         subject: Subject
+        sentences:
+          start_visitor_entry_to_sentence: '%{acting_user_name} started registering %{visitor_name} for entry.'
+          visitor_entry_to_sentence: '%{acting_user_name} %{action} %{visitor_name} for entry.'
+          user_entry_to_sentence: 'User %{ref_user_name} was recorded entering by %{acting_user_name}'
+          user_login_to_sentence: 'User %{acting_user_name} logged in'
+          user_switch_to_sentence: 'User %{acting_user_name} switched to user %{ref_user_name}'
+          user_active_to_sentence: 'User %{acting_user_name} was active'
+          thumbs_up_feedback_to_sentence: 'User %{acting_user_name} gave thumbs up feedback'
+          thumbs_down_feedback_to_sentence: 'User #{acting_user_name} gave thumbs down feedback'
+          showroom_entry_to_sentence: 'User %{name} was recorded in the showroom'
+          user_update_to_sentence: '%{ref_user_name} was updated by %{acting_user_name}'
+          user_temp_to_sentence: 'Temperature for %{visitor_name} was recorded by %{acting_user_name}'
+          shift_end_to_sentence: 'Shift for %{ref_user_name} was ended by %{acting_user_name}'
+          user_referred_to_sentence: 'User %{ref_user_name} was referred by %{acting_user_name}'
+          post_read_to_sentence: 'Post %{post_id} was read by %{acting_user_name}'
+          post_shared_to_sentence: 'Post %{post_id} was shared by %{acting_user_name}'
+          form_create_to_sentence: '%{acting_user_name} created the form'
+          form_update_to_sentence: '%{acting_user_name} %{action} %{field_name} field'
+          invoice_change_to_sentence: '%{acting_user_name} changed an invoice'
+          deposit_create_to_sentence: '%{acting_user_name} created a deposit'
+          payment_update_to_sentence: '%{acting_user_name} made changes to this payment'
+          form_publish_to_sentence: '%{acting_user_name} %{action} the form'
+          observation_log_to_sentence: '%{acting_user_name} added an observation log to an entry request'
+          user_enrolled_to_sentence: '%{new_user_name} was enrolled'
+          ref_user_name: 'Deleted User(%{ref_id})'
+          deleted_user: 'Deleted User(%{acting_user_id})'
       logs/import_log:
         community: Community
         file_name: File name
@@ -349,3 +375,5 @@ en:
     success: success
     updated: updated
     category_deleted: Category deleted successfully
+
+

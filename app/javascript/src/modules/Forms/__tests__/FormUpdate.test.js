@@ -127,6 +127,33 @@ describe('Form Component', () => {
               value: "{\"checked\"=>\"Yes\", \"label\"=>\"Would you rather?\"}",
               imageUrl: null,
               fileType: null,
+            },
+            {
+              formProperty: {
+                fieldName: 'Select your favorite colors',
+                fieldType: 'checkbox',
+                fieldValue: [
+                  {
+                    value: "Red",
+                    label: "Red"
+                  },
+                  {
+                    value: "Green",
+                    label: "Green"
+                  },
+                  {
+                    value: "Blue",
+                    label: "Blue"
+                  }
+                ],
+                id: '3145c47e-1234-1093-9dac-dc723d2e',
+                groupingId: '3145c47e-1001-9dac',
+                adminUse: false,
+                order: '7'
+              },
+              value: "{\"Red\"=>true, \"Blue\"=>true}",
+              imageUrl: null,
+              fileType: null,
             }
           ]
         }
@@ -166,7 +193,9 @@ describe('Form Component', () => {
         expect(container.queryByLabelText('Yes')).toBeInTheDocument()
         expect(container.queryByLabelText('No')).toBeInTheDocument()
         expect(container.queryByTestId('radio_field_name')).toBeInTheDocument()
+        expect(container.queryByTestId('checkbox_field_name')).toBeInTheDocument()
         expect(container.queryByTestId('radio_field_name').textContent).toContain('Would you rather?')
+        expect(container.queryByTestId('checkbox_field_name').textContent).toContain('Select your favorite colors')
       },
       { timeout: 50 }
     )

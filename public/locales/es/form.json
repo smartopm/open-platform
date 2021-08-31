@@ -24,6 +24,7 @@
     "no_forms": "No hay formularios para enviar"
   },
   "field_types": {
+    "checkbox": "Caja",
     "date": "Fecha",
     "datetime": "Fecha con hora",
     "dropdown": "Desplegar",

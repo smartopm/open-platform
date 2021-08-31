@@ -1,9 +1,13 @@
 import {
   addPropWithValue,
   checkCondition,
+  extractValidFormPropertyFieldNames,
   extractValidFormPropertyValue,
   flattenFormProperties,
-  propExists
+  nonNullValues,
+  parseRenderedText,
+  propExists,
+  requiredFieldIsEmpty
 } from '../utils';
 
 describe('Utilities', () => {
@@ -103,6 +107,21 @@ describe('Utilities', () => {
         value: ' And yes it is true'
       }
     ]);
+
+    expect(extractValidFormPropertyFieldNames(formProperties)).toMatchObject([
+      {
+        value: ' 26',
+        fieldName: 'How are you?'
+      },
+      {
+        fieldName: 'Name',
+        value: ' their name'
+      },
+      {
+        fieldName: 'Something else',
+        value: ' And yes it is true'
+      }
+    ]);
   });
 
   it('only shows a category if it matches the given display condition', () => {
@@ -164,6 +183,66 @@ describe('Utilities', () => {
     expect(checkCondition(category, properties, false)).toBe(true) // not in editmode but no condition provided
     expect(checkCondition(categoryWithWrongCondition, properties, false)).toBe(false) // condition has no matching property
     expect(checkCondition(categoryWithPropertyId, properties, false)).toBe(false) // condition matches property but wrong condition
-    expect(checkCondition(categoryWithMatchingCondition, properties, false)).toBe(true) // condition matches all 
+    expect(checkCondition(categoryWithMatchingCondition, properties, false)).toBe(true) // condition matches all
+  })
+
+  it('should parse and then find and replace variables in a string', () => {
+    const text = `This is a nice string with #variables that has #name with end of line \n#support \n\n#support`
+    const data = {
+      name: {
+        value: ' Joe',
+      },
+      'variables': {
+        value: 'And yes it is true',
+      },
+      'support': {
+        value: 'yes',
+      },
+    }
+    expect(parseRenderedText(text, data)).toContain('This is a nice string with And yes it is true that has  Joe with end of line \nyes \n\nyes')
+  })
+
+  it('checks for null values', () => {
+    const item = {
+      value: 'sds',
+      form_property_id: null
+    }
+    expect(nonNullValues(item)).toBe(false)
+    expect(nonNullValues({ value: 'some', form_property_id: 'wweqw' })).toBe(true)
+    expect(nonNullValues({ value: {checked: 'somed'}, form_property_id: '290384321' })).toBe(true)
+    expect(nonNullValues({ value: {checked: null}, form_property_id: null })).toBe(false)
+  })
+
+  it('checks for empty required fields', () => {
+    const formData  = [
+      {
+        id: '5d8a6fd7-3ebc-4d34-9562-00a2518cddda',
+        fieldName: 'What is your location ?',
+        fieldType: 'text',
+        required: false
+      },
+      {
+        id: '527a112d-2342-4bff-b8f1-b5f9e92dce18',
+        fieldName: 'What is your name ?',
+        fieldType: 'text',
+        required: true
+      }
+    ]
+
+    const filledInProperties = [
+      { value: 'Lagos', form_property_id: '5d8a6fd7-3ebc-4d34-9562-00a2518cddda' },
+      { value: null, form_property_id: '527a112d-2342-4bff-b8f1-b5f9e92dce18' }
+    ];
+
+    expect(requiredFieldIsEmpty(filledInProperties, formData)).toBe(true)
+
+    formData[1] = {
+      id: '527a112d-2342-4bff-b8f1-b5f9e92dce18',
+      fieldName: 'What is your name ?',
+      fieldType: 'text',
+      required: false
+    }
+
+    expect(requiredFieldIsEmpty(filledInProperties, formData)).toBe(false)
   })
 });

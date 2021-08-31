@@ -34,7 +34,7 @@ module Mutations
 
           values[:payments_attributes].each do |input|
             payment_plan = Properties::PaymentPlan.find_by(id: input[:payment_plan_id])
-            raise_payment_plan_related_errors(payment_plan, input[:amount])
+            raise_payment_plan_not_found_error(payment_plan)
             raise_receipt_number_validation_error(input[:receipt_number])
 
             context[:transaction].execute_transaction_callbacks(payment_plan, input[:amount],
@@ -73,14 +73,8 @@ module Mutations
       # * If amount is more than the pending balance
       #
       # @return [GraphQL::ExecutionError]
-      def raise_payment_plan_related_errors(payment_plan, amount)
+      def raise_payment_plan_not_found_error(payment_plan)
         raise GraphQL::ExecutionError, I18n.t('errors.payment_plan.not_found') if payment_plan.nil?
-
-        return if payment_plan.pending_balance >= amount
-
-        # rubocop:disable Layout/LineLength
-        raise GraphQL::ExecutionError, I18n.t('errors.payment_plan.amount_greater_than_pending_balance')
-        # rubocop:enable Layout/LineLength
       end
 
       # Raises GraphQL execution error if a payment with same receipt number already exists

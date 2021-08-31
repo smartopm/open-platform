@@ -9,8 +9,8 @@ RSpec.describe Mutations::Community::CommunityEmergency do
 
     let(:create_sos_ticket) do
       <<~GQL
-        mutation communityEmergency{
-            communityEmergency{
+        mutation communityEmergency($googleMapUrl: String){
+            communityEmergency(googleMapUrl: $googleMapUrl){
             
             success
           }
@@ -22,7 +22,10 @@ RSpec.describe Mutations::Community::CommunityEmergency do
     end
 
     it 'creates an sos ticket for current user' do
-      result = DoubleGdpSchema.execute(create_sos_ticket, variables: nil,
+      variables = {
+        googleMapUrl: SecureRandom.alphanumeric(8),
+      }
+      result = DoubleGdpSchema.execute(create_sos_ticket, variables: variables,
                                                           context: {
                                                             current_user: user,
                                                             site_community: user.community,
@@ -34,7 +37,10 @@ RSpec.describe Mutations::Community::CommunityEmergency do
     end
 
     it 'throws unauthorized error when no authorization is not provided' do
-      result = DoubleGdpSchema.execute(create_sos_ticket, variables: nil,
+      variables = {
+        googleMapUrl: SecureRandom.alphanumeric(8),
+      }
+      result = DoubleGdpSchema.execute(create_sos_ticket, variables: variables,
                                                           context: {
                                                             site_community: user.community,
                                                           }).as_json

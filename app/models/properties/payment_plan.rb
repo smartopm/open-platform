@@ -49,6 +49,19 @@ module Properties
       start_date...(start_date + frequency_based_duration(duration || 12))
     end
 
+    def next_plan_start_date
+      return unless renewable
+
+      plan_duration.last.to_date
+    end
+
+    def within_renewable_dates?
+      return unless renewable
+
+      next_plan_start_date >= (2.months - 2.days).from_now.to_date &&
+        next_plan_start_date <= 2.months.from_now.to_date
+    end
+
     # Cancels payment plan
     #
     # @return [Boolean]

@@ -5,8 +5,12 @@
     "merge_text": "Merge this label into:",
     "merge_dialog_title": "Merging this label will move all users from this  label into the selected label",
     "edit_dialog_title": "Edit Label",
+    "new_dialog_title": "New Label",
     "title_field_label": "Title",
     "description_field_label": "Description",
-    "background_color_field_label": "Background color"
+    "background_color_field_label": "Background color",
+    "label_edited": "Label edited successfully",
+    "label_created": "Label created successfully",
+    "create_label": "Create a Label"
   }
 }

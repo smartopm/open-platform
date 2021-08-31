@@ -16,7 +16,10 @@ const userMock = {
         locale: 'en-ZM',
         currency: 'ZMW',
         id: "293849323829891",
-        wpLink: "http://link.com"
+        wpLink: "http://link.com",
+        menuItems: [
+          { menu_link: 'http://some-link.com', menu_name: 'Custom Menu', display_on: ['Menu', 'Dashboard'] },
+        ]
       }
     }
   };

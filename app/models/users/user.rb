@@ -133,7 +133,6 @@ module Users
     validates :name, presence: true
     validate :phone_number_valid?
     after_create :add_notification_preference
-    after_create :create_general_land_parcel_and_payment_plan
     before_update :log_sub_status_change, if: :sub_status_changed?
     after_update :update_associated_accounts_details, if: -> { saved_changes.key?('name') }
 
@@ -565,14 +564,14 @@ module Users
     #
     # @return [Properties::LandParcel]
     def general_land_parcel
-      land_parcels.unscope(where: :status).general.first
+      land_parcels.unscope(where: :status).general.first.presence || create_general_land_parcel
     end
 
     # Return general payment plan associated with user
     #
     # @return [Properties::PaymentPlan]
     def general_payment_plan
-      payment_plans.unscope(where: :status).general.first
+      payment_plans.unscope(where: :status).general.first.presence || create_general_plan
     end
 
     private
@@ -626,29 +625,28 @@ module Users
       )
     end
 
-    # rubocop:disable Metrics/AbcSize
-    # rubocop:disable Metrics/MethodLength
-    # Creates general land parcel and payment plan for user
+    # Creates general land parcel for user
     #
     # @return [Boolean]
-    def create_general_land_parcel_and_payment_plan
-      land_parcel = general_land_parcel
-      if land_parcel.nil?
-        land_parcel = Properties::LandParcel.create!(parcel_number:
-          "Genral Property #{name} - #{id}", community_id: community.id, status: 'general')
-        land_parcel.accounts.create!(user_id: id, full_name: name, community_id: community.id)
-      end
-
-      return if general_payment_plan.present?
-
-      payement_plan = land_parcel.payment_plans.new(user_id: id, frequency: 'monthly',
-                                                    installment_amount: 0, duration: 360,
-                                                    total_amount: 0, status: 'general',
-                                                    start_date: Time.zone.now)
-      payement_plan.save!(validate: false)
+    def create_general_land_parcel
+      land_parcel = Properties::LandParcel.create!(parcel_number:
+        "Genral Property #{name} - #{id}", community_id: community.id, status: 'general')
+      land_parcel.accounts.create!(user_id: id, full_name: name, community_id: community.id)
+      land_parcel
     end
-    # rubocop:enable Metrics/AbcSize
-    # rubocop:enable Metrics/MethodLength
+
+    # Creates general payment plan for user
+    #
+    # @return [Boolean]
+    def create_general_plan
+      land_parcel = general_land_parcel
+      payment_plan = land_parcel.payment_plans.new(user_id: id, frequency: 'monthly',
+                                                   installment_amount: 0, duration: 360,
+                                                   total_amount: 0, status: 'general',
+                                                   start_date: Time.zone.now)
+      payment_plan.save!(validate: false)
+      payment_plan
+    end
   end
   # rubocop:enable Metrics/ClassLength
 end

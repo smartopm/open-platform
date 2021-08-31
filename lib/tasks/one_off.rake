@@ -271,5 +271,37 @@ namespace :backfill do
     end
     puts 'Done.'
   end
+
+  desc 'Update plan type on payment plans'
+  task update_payment_plans: :environment do
+    plan_types = {
+      '527' => 'starter',
+      '698.95' => 'basic',
+      '1237.6' => 'standard',
+      '3249.45' => 'premium',
+    }.freeze
+    errors = []
+
+    puts 'Starting...'
+    ActiveRecord::Base.transaction do
+      Properties::PaymentPlan.find_each do |plan|
+        type = plan_types[plan.installment_amount.to_s]
+        if type
+          plan.update!(plan_type: type)
+        else
+          errors << {
+            'Amount does not match any plan' => [plan.id, plan.user.name, plan.user.community.name],
+          }
+        end
+      end
+
+      raise ActiveRecord::Rollback unless errors.empty?
+    end
+
+    puts "Errors: #{errors}" if errors.present?
+    puts '-----#############--------'
+    puts "Affected plan ids: #{errors.map { |er| er.values.flatten.first }}" if errors.present?
+    puts 'Done.'
+  end
 end
 # rubocop:enable Metrics/BlockLength

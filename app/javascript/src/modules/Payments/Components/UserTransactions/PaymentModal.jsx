@@ -1,4 +1,5 @@
 /* eslint-disable no-nested-ternary */
+/* eslint-disable security/detect-object-injection */
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useLazyQuery, useMutation } from 'react-apollo';
@@ -236,6 +237,24 @@ export default function PaymentModal({
       });
   }
 
+  function validateAmount(plan){
+    const index = plotInputValue.findIndex((obj) => obj.paymentPlanId === plan.id);
+    if(index === -1 || plotInputValue[index].amount <= plan.pendingBalance){
+      return 0;
+    }
+      return plotInputValue[index].amount - plan.pendingBalance;
+
+  }
+
+  function amountHelperText(plan) {
+    if (isError && totalAmount() === 0) return t('errors.amount_required');
+      const extraAmount = validateAmount(plan);
+    if (extraAmount > 0){
+      return t('misc.payment_split_message', { amount: formatMoney(currencyData, extraAmount) });
+    }
+    return '';
+  }
+
   function handleMessageAlertClose(_event, reason) {
     if (reason === 'clickaway') {
       return;
@@ -448,7 +467,7 @@ export default function PaymentModal({
                     }}
                     required
                     error={isError && submitting && totalAmount() === 0}
-                    helperText={isError && totalAmount() === 0 && t('errors.amount_required')}
+                    helperText={amountHelperText(plan)}
                   />
                 </div>
               ))}

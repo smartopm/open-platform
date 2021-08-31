@@ -5,13 +5,15 @@ module Mutations
     # Create a new Label
     class LabelCreate < BaseMutation
       argument :short_desc, String, required: true
+      argument :description, String, required: false
+      argument :color, String, required: false
 
       field :label, Types::LabelType, null: true
 
-      def resolve(short_desc:)
-        raise_duplicate_label_error(short_desc)
+      def resolve(vals)
+        raise_duplicate_label_error(vals[:short_desc])
 
-        label = context[:site_community].labels.create!(short_desc: short_desc)
+        label = context[:site_community].labels.create!(vals)
         return { label: label } if label.persisted?
 
         raise GraphQL::ExecutionError, label.errors.full_messages

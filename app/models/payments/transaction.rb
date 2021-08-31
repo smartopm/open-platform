@@ -42,10 +42,11 @@ module Payments
     #
     # @return [void]
     def execute_transaction_callbacks(payment_plan, amount, receipt_number)
-      amount_paid = payment_plan.allocated_amount(amount)
+      plan_allocated_amount = payment_plan.allocated_amount(amount)
 
       payment_plan.update_pending_balance(amount)
-      create_plan_payment(payment_plan, amount_paid, receipt_number)
+      create_plan_payment(payment_plan, plan_allocated_amount, receipt_number)
+      create_general_payment(amount - plan_allocated_amount)
     end
 
     # Returns unallocated amount for the transaction
@@ -118,6 +119,20 @@ module Payments
         payment_plan_id: payment_plan.id,
         created_at: created_at,
         manual_receipt_number: receipt_number,
+      )
+    end
+
+    def create_general_payment(amount)
+      return if amount.to_d.zero?
+
+      general_plan = user.general_payment_plan
+      plan_payments.create!(
+        user_id: user_id,
+        community_id: community_id,
+        amount: amount,
+        status: 'paid',
+        payment_plan: general_plan,
+        created_at: created_at,
       )
     end
   end

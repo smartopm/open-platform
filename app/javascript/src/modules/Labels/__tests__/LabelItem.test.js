@@ -3,7 +3,7 @@ import { render, fireEvent } from '@testing-library/react';
 import { MockedProvider } from '@apollo/react-testing';
 import { BrowserRouter } from 'react-router-dom/';
 import '@testing-library/jest-dom/extend-expect';
-import LabelItem from '../components/Label/LabelItem';
+import LabelItem from '../Components/LabelItem';
 
 describe('Label Item Component', () => {
   it('it should include the label details ', () => {
