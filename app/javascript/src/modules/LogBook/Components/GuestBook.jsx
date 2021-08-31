@@ -87,7 +87,7 @@ export default function GuestBook({ tabValue, handleAddObservation }) {
             hasHeader={false}
             clickable
             defaultView={false}
-            handleClick={() => history.push(`/request/${guest.id}`)}
+            handleClick={() => history.push(`/request/${guest.id}?type=update`)}
           />
         ))
       ) : (

@@ -563,7 +563,8 @@ export default function RequestUpdate({ id }) {
           </div>
 
           {
-            !reqId && (
+            // TODO: Find better ways to disable specific small feature per community 
+            !reqId && authState.user.community.name !== 'Ciudad Morazán' && (
               <div className="form-group">
                 <TextField
                   className="form-control"

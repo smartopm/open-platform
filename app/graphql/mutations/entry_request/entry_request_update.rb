@@ -12,6 +12,13 @@ module Mutations
       argument :reason, String, required: false
       argument :other_reason, String, required: false
       argument :concern_flag, GraphQL::Types::Boolean, required: false
+      argument :visitation_date, String, required: false
+      argument :start_time, String, required: false
+      argument :end_time, String, required: false
+      argument :company_name, String, required: false
+      argument :temperature, String, required: false
+      argument :occurs_on, [String], required: false
+      argument :visit_end_date, String, required: false
 
       field :entry_request, Types::EntryRequestType, null: true
 

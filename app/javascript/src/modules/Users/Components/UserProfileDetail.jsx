@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { css, StyleSheet } from 'aphrodite';
 import { useTranslation } from 'react-i18next';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
@@ -10,10 +10,12 @@ import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 import UserLabels from './UserLabels';
 import CaptureTemp from '../../../components/CaptureTemp';
+import { Context } from '../../../containers/Provider/AuthStateProvider';
 
 export default function UserDetail({ data, userType }) {
   const { t } = useTranslation('users');
   const matches = useMediaQuery('(max-width:600px)');
+  const authState = useContext(Context)
   return (
     <>
       <div>
@@ -86,7 +88,7 @@ export default function UserDetail({ data, userType }) {
             </div>
           )}
         </div>
-        {userType === 'security_guard' && (
+        {userType === 'security_guard' && authState.user.community.name !== 'Ciudad Morazán' && (
           <div
             className="container row d-flex justify-content-between"
             style={matches ? {} : { marginLeft: '80px' }}
