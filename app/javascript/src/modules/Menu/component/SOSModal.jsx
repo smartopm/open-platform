@@ -1,5 +1,5 @@
 
-import React, { useCallback, useState } from 'react';
+import React, { useState } from 'react';
 import { useMutation } from 'react-apollo'
 import { useTranslation } from 'react-i18next'; 
 // eslint-disable-next-line import/no-unresolved
@@ -16,7 +16,7 @@ import FeedbackButtonSVG from './FeedbackButtonSVG';
 import MessageAlert from '../../../components/MessageAlert';
 import { formatError } from '../../../utils/helpers';
 import {CommunityEmergencyMutation} from '../graphql/sos_mutation';
-import userProps from '../../../shared/types/user';
+import userProps from '../../../shared/types/user'; 
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -199,7 +199,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-const SOSModal=({open, setOpen, authState})=> {
+const SOSModal=({open, setOpen, location, authState})=> {
 
   const [panicButtonMessage, setPanicButtonMessage] = useState({ isError: false, detail: '' });
   const [panicAlertOpen, setPanicAlertOpen] = useState(false);
@@ -207,22 +207,41 @@ const SOSModal=({open, setOpen, authState})=> {
   const [communityEmergency] = useMutation(CommunityEmergencyMutation)
 
   const { t } = useTranslation('panic_alerts')
-  // eslint-disable-next-line no-unused-vars
-  const callback = useCallback(_event => {
+  
+  const callback = () => {
+    if (location.loaded && !location.error){
+      const googleMapUrl = `https://www.google.com/maps/search/?api=1&query=${location.coordinates.lat},${location.coordinates.lng}`
+      communityEmergency({ variables: { googleMapUrl } }).then(()=>{
+        setPanicButtonPressed(true)
+        setPanicButtonMessage({
+          isError: false,
+          detail: t('panic_alerts.panic_success_alert')
+        });
+        setPanicAlertOpen(true);
+      })
+      .catch(error => {
+        setPanicButtonMessage({ isError: true, detail: formatError(error.message) });
+        setPanicAlertOpen(true);
+      }) 
 
-    communityEmergency().then(()=>{
-      setPanicButtonPressed(true)
-      setPanicButtonMessage({
-        isError: false,
-        detail: t('panic_alerts.panic_success_alert')
-      });
-      setPanicAlertOpen(true);
-    })
-    .catch(error => {
-      setPanicButtonMessage({ isError: true, detail: formatError(error.message) });
-      setPanicAlertOpen(true);
-    })
-  },[t, communityEmergency ]);
+    }
+    else{
+      communityEmergency({ variables: { googleMapUrl: null } }).then(()=>{
+        setPanicButtonPressed(true)
+        setPanicButtonMessage({
+          isError: false,
+          detail: t('panic_alerts.panic_success_alert')
+        });
+        setPanicAlertOpen(true);
+      })
+      .catch(error => {
+        setPanicButtonMessage({ isError: true, detail: formatError(error.message) });
+        setPanicAlertOpen(true);
+      }) 
+      
+    }
+
+  };
 
   const showPanicAlert = ()=> {
     setPanicButtonMessage({ isError: true, detail: t('panic_alerts.panic_error_alert') });
@@ -347,14 +366,22 @@ const SOSModal=({open, setOpen, authState})=> {
 
   }
 
-
   SOSModal.propTypes = {
     open: PropTypes.bool.isRequired,
     setOpen: PropTypes.func.isRequired,
 
     authState: PropTypes.shape({
       user: userProps,
+    }).isRequired,
+    location: PropTypes.shape({
+      loaded: PropTypes.bool,
+      error: PropTypes.string,
+      coordinates: PropTypes.shape({
+        lat: PropTypes.string,
+        lng: PropTypes.string
+      })
     }).isRequired
+
   }
 
 

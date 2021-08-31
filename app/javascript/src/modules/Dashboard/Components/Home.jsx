@@ -1,5 +1,5 @@
 /* eslint-disable no-use-before-define */
-import React, { useContext } from 'react';
+import React, { useContext } from "react";
 import Divider from '@material-ui/core/Divider';
 import { useTranslation } from 'react-i18next';
 import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider';
@@ -17,11 +17,12 @@ import FeatureCheck from '../../Features';
 import SocialMediaLinks from '../../../components/SocialMediaLinks';
 import QuickLinks from '../../QuickLinks/Components/QuickLinks'
 
-export default function Home() {
+const Home = () => {
   const authState = useContext(AuthStateContext);
   const { t } = useTranslation(['dashboard', 'common']);
 
   if (!authState.loggedIn) return <Loading />;
+  
   return (
     <div style={{ marginTop: '-30px' }}>
       <LanguageToggle />
@@ -79,3 +80,5 @@ export default function Home() {
     </div>
   );
 }
+
+export default Home;
