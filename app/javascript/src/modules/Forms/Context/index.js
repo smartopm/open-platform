@@ -4,7 +4,7 @@ import { useApolloClient, useMutation } from 'react-apollo';
 import { useTranslation } from 'react-i18next';
 import { useFileUpload } from '../../../graphql/useFileUpload';
 import { FormUserCreateMutation } from '../graphql/forms_mutation';
-import { addPropWithValue, extractValidFormPropertyValue } from '../utils';
+import { addPropWithValue, extractValidFormPropertyValue, requiredFieldIsEmpty } from '../utils';
 
 export const FormContext = createContext({});
 
@@ -54,17 +54,6 @@ export default function FormContextProvider({ children }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status]);
 
-  function requiredFieldIsEmpty(filledInProperties, formData) {
-    let result = false
-    // eslint-disable-next-line no-restricted-syntax
-    for (const form of formData) {
-      if (form.required && !filledInProperties.find(filled => form.id === filled.form_property_id)?.value) {
-        result = true;
-        break;
-      }
-    }
-    return result
-  }
   /**
    *
    * @param {object} formData all form properties for this form being submitted
