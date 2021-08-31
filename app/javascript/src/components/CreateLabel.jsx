@@ -8,7 +8,7 @@ import { LabelCreate }from '../graphql/mutations';
 import PropTypes from 'prop-types'
 
 export default function CreateLabel({ handleLabelSelect, loading, setLoading, setMessage }) {
-  const { data, refetch } = useQuery(LabelsQuery);
+  const { data, error, refetch } = useQuery(LabelsQuery);
   const [labelCreate] = useMutation(LabelCreate);
   const newLabels  = useRef([]);
 
@@ -58,6 +58,7 @@ export default function CreateLabel({ handleLabelSelect, loading, setLoading, se
     });
   }
 
+  if (error) { console.log(error) }
   return (
     <div>
       <Fragment>
