@@ -117,8 +117,8 @@ RSpec.describe MergeUsers do
     expect(payment_plan.reload.user_id).to eq(duplicate_user.id)
     expect(showroom.reload.userId).to eq(duplicate_user.id)
     expect(activity_log.reload.reporting_user_id).to eq(duplicate_user.id)
-    expect(duplicate_user.reload.land_parcels.unscope(where: :status).general.count).to eql 1
-    expect(duplicate_user.reload.payment_plans.unscope(where: :status).general.count).to eql 1
+    expect(duplicate_user.reload.land_parcels.unscope(where: :status).general.count).to eql 0
+    expect(duplicate_user.reload.payment_plans.unscope(where: :status).general.count).to eql 0
   end
 
   # rubocop:disable Rails/SkipsModelValidations
