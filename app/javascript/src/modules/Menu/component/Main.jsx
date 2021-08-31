@@ -67,7 +67,7 @@ export function MainNav({ authState }) {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [open, setOpen] = useState(false);
   const location = useGeoLocation();
-  const menuQuickLinks = authState?.user?.community?.menuItems?.filter((quickLink) => quickLink.display_on.includes('Menu'))
+  const menuQuickLinks = authState?.user?.community?.menuItems?.filter((quickLink) => quickLink?.display_on?.includes('Menu'))
 
   const dynamicMenu =
     menuQuickLinks
