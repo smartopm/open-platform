@@ -52,7 +52,7 @@ RSpec.describe Logs::EntryRequest, type: :model do
       expect(@entry_request.denied?).to be true
       expect(@entry_request.granted?).to be false
       expect(@entry_request.grantor_id).to eql @guard.id
-      expect(Logs::EventLog.where(ref_id: @entry_request.id).count).to eql 0
+      expect(Logs::EventLog.where(ref_id: @entry_request.id).count).to eql 1
     end
 
     it 'should create a task record for prospective client', skip_before: true do
