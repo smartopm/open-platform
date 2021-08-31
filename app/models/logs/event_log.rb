@@ -159,7 +159,8 @@ module Logs
     def form_update_to_sentence
       I18n.t('activerecord.attributes.logs/event_log.sentences.form_update_to_sentence',
              acting_user_name: acting_user_name,
-             field_name: data['field_name'])
+             field_name: data['field_name'],
+             action: data['action'])
     end
 
     # invoice_change and payment_change
