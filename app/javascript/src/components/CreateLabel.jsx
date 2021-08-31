@@ -50,7 +50,6 @@ export default function CreateLabel({ handleLabelSelect, loading, setLoading, se
       }
     })
     .catch(err => {
-      console.log(err)
       setLoading(false);
       setMessage({
         isError: true,

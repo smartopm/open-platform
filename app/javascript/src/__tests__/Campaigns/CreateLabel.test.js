@@ -75,16 +75,16 @@ describe('Create Label Component', () => {
     const autoComplete = container.queryByTestId("userLabel-creator")
     const input = within(autoComplete).getByRole("textbox");
 
+    autoComplete.focus()
     userEvent.type(input, 'COM')
 
     await waitFor(
       () => {
         fireEvent.keyDown(autoComplete, { key: 'ArrowDown' })
         fireEvent.keyDown(autoComplete, { key: 'Enter' })
-
         expect(input.value).toEqual('COM') 
       },
-      { timeout: 200 }
+      { timeout: 500 }
     );
   });
 
@@ -102,16 +102,16 @@ describe('Create Label Component', () => {
 
     const autoComplete = container.queryByTestId("userLabel-creator")
     const input = within(autoComplete).getByRole("textbox");
-    
+
+    autoComplete.focus()
     userEvent.type(input, 'COM234')
 
     await waitFor(
       () => {
         fireEvent.keyDown(autoComplete, { key: 'Enter' })
-
         expect(input.value).toEqual('COM234') 
       },
-      { timeout: 200 }
+      { timeout: 500 }
     );
   });
 });
