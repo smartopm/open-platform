@@ -21,10 +21,10 @@ const Home = () => {
   const authState = useContext(AuthStateContext);
   const { t } = useTranslation(['dashboard', 'common']);
 
-  const dashboardQuickLinks = authState.user.community.menuItems.filter((quickLink) => quickLink.display_on.includes('Dashboard'));
+  const dashboardQuickLinks = authState?.user?.community?.menuItems?.filter((quickLink) => quickLink?.display_on?.includes('Dashboard'));
 
   if (!authState.loggedIn) return <Loading />;
-  
+
   return (
     <div style={{ marginTop: '-30px' }}>
       <LanguageToggle />
