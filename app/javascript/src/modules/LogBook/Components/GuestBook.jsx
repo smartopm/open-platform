@@ -1,11 +1,12 @@
 // use the logview to display a list of all scheduled visits
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Grid, Typography , useMediaQuery } from '@material-ui/core';
 import PropTypes from 'prop-types';
-import { useLazyQuery } from 'react-apollo';
+import { useLazyQuery, useMutation } from 'react-apollo';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router';
 import { makeStyles , useTheme } from '@material-ui/styles';
+import { Link } from 'react-router-dom';
 import CenteredContent from '../../../components/CenteredContent';
 import { dateToString } from '../../../components/DateContainer';
 import DataList from '../../../shared/list/DataList';
@@ -14,16 +15,22 @@ import { GuestEntriesQuery } from '../graphql/guestbook_queries';
 import Label from '../../../shared/label/Label';
 import { checkRequests } from '../utils';
 import Avatar from '../../../components/Avatar';
+import { EntryRequestGrant } from '../../../graphql/mutations';
+import { Spinner } from '../../../shared/Loading';
+import MessageAlert from '../../../components/MessageAlert';
 
-export default function GuestBook({ tabValue }) {
+export default function GuestBook({ tabValue, handleAddObservation }) {
   const { t } = useTranslation('logbook');
   const history = useHistory();
   const classes = useStyles();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const [grantEntry] = useMutation(EntryRequestGrant);
+  const [loadingStatus, setLoading] = useState({ loading: false, currentId: ''});
+  const [message, setMessage] = useState({ isError: false, detail: ''});
 
   // eslint-disable-next-line no-unused-vars
-  const [loadGuests, { data, error, loading }] = useLazyQuery(GuestEntriesQuery);
+  const [loadGuests, { data, error }] = useLazyQuery(GuestEntriesQuery);
   const entriesHeaders = [
     { title: 'Guest Name', col: 4, value: t('misc.submission_date') },
     { title: 'Start of Visit', col: 2, value: t('misc.version_number') },
@@ -39,17 +46,38 @@ export default function GuestBook({ tabValue }) {
     }
   }, [tabValue, loadGuests]);
 
-  function handleGrantAccess(entryId){
-    console.log(entryId)
+  function handleGrantAccess(user){
+    setLoading({ loading: true, currentId: user.id });
+    // the refId here will become the entry_request id that will be used more than once.
+    grantEntry({ variables: { id: user.id, subject: 'visitor_entry' } })
+      .then(() => {
+        setMessage({
+          isError: false,
+          detail: t('logbook:logbook.success_message', { action: t('logbook:logbook.granted') })
+        });
+        setLoading({ ...loadingStatus, loading: false });
+        handleAddObservation(user);
+      })
+      .catch(err => {
+        setMessage({ isError: true, detail: err.message });
+        setLoading({ ...loadingStatus, loading: false });
+      });
   }
   return (
-    <div>
+    <>
+      {/* add a toaster to show errors */}
+      <MessageAlert
+        type={message.isError ? 'error' : 'success'}
+        message={message.detail}
+        open={!!message.detail}
+        handleClose={() => setMessage({ ...message, detail: '' })}
+      />
       {data?.scheduledRequests?.length > 0 ? (
         data?.scheduledRequests?.map(guest => (
           <DataList
             key={guest.id}
             keys={entriesHeaders}
-            data={renderGuest(guest, classes, handleGrantAccess, isMobile)}
+            data={renderGuest(guest, classes, handleGrantAccess, isMobile, loadingStatus)}
             hasHeader={false}
             clickable={false}
             defaultView={false}
@@ -57,13 +85,13 @@ export default function GuestBook({ tabValue }) {
           />
         ))
       ) : (
-        <CenteredContent>{t('misc.no_form_entries')}</CenteredContent>
+        <CenteredContent>{t('logbook.no_invited_guests')}</CenteredContent>
       )}
-    </div>
+    </>
   );
 }
 
-export function renderGuest(guest, classes, grantAccess, isMobile) {
+export function renderGuest(guest, classes, grantAccess, isMobile, loadingStatus) {
   return [
     {
       'Guest Name': (
@@ -77,7 +105,9 @@ export function renderGuest(guest, classes, grantAccess, isMobile) {
                 {guest.name}
               </Typography>
               <b>Host: </b>
-              <Text content={guest.user.name} className={classes.text} />
+              <Link to={`/user/${guest.user.id}`}>
+                <Text content={guest.user.name} className={classes.host} />
+              </Link>
             </Grid>
             <Grid item xs={4}>
               {
@@ -112,9 +142,10 @@ export function renderGuest(guest, classes, grantAccess, isMobile) {
             <Button 
               disabled={!checkRequests(guest).valid} 
               variant={isMobile ? "contained" : "text"}
-              onClick={() => grantAccess(guest.id)}
+              onClick={() => grantAccess(guest)}
               disableElevation
               style={isMobile ? { backgroundColor: checkRequests(guest).valid && '#66A69B', color: '#FFFFFF' } : {}}
+              startIcon={loadingStatus.loading && loadingStatus.currentId === guest.id && <Spinner />}
               fullWidth
             >
               Grant Access
@@ -132,9 +163,14 @@ const useStyles = makeStyles({
   },
   guestEntryActions: {
       cursor: 'pointer'
+  },
+  host: {
+    fontSize: 14,
+    color: '#2E2E2E'
   }
 });
 
 GuestBook.propTypes = {
-  tabValue: PropTypes.number.isRequired
+  tabValue: PropTypes.number.isRequired,
+  handleAddObservation: PropTypes.func.isRequired,
 };

@@ -43,7 +43,8 @@
     "log_exit": "Log Exit",
     "exited": "Exited",
     "other_reason": "Other visiting reason",
-    "visit_scheduled": "Visit scheduled for: {{date}} at {{time}}"
+    "visit_scheduled": "Visit scheduled for: {{date}} at {{time}}",
+    "no_invited_guests": "No invited guests"
   },
   "log_title": {
     "visitor": "Visitor",

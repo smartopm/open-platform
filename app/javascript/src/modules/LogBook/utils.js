@@ -25,15 +25,15 @@ export function checkRequests(req){
     if(req.occursOn.length){ // if true then we know this will happen again
       if(req.occursOn.includes(dayOfTheWeek.toLowerCase())){ // if true then we know today they can be allowed in 
         if(today > new Date(req.startTime) && today < new Date(req.endTime)){
-          return { title: 'Valid', color: '#66A69B', valid: true }
+          return { title: 'Valid', color: '#00A98B', valid: true }
         }
         return { title: 'Invalid Now', color: '#E74540', valid: false }
       }
       return { title: 'Invalid Today', color: '#E74540', valid: false }
     } if (today > new Date(req.startTime) && today < new Date(req.endTime)) {
-      return { title: 'Valid', color: '#66A69B', valid: true }
+      return { title: 'Valid', color: '#00A98B', valid: true }
     }
-    return { title: 'Expired', color: '#E74540', valid: false }
+    return { title: 'Expired', color: '#DA1414', valid: false }
 }
 
 
