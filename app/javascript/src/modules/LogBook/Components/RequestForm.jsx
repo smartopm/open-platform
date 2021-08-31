@@ -13,9 +13,12 @@ import DatePickerDialog, { ThemedTimePicker } from '../../../components/DatePick
 import { defaultBusinessReasons } from '../../../utils/constants'
 import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider'
 import { checkInValidRequiredFields, defaultRequiredFields } from '../utils'
+import { useParamsQuery } from '../../../utils/helpers'
+import MessageAlert from '../../../components/MessageAlert'
+import { Spinner } from '../../../shared/Loading'
 
 
-// TODO: As of now this is only serving the visit_reuest, we can still migrate to reuse the 2 forms
+// TODO: As of now this is only serving the visit_request, we can still migrate to reuse the 2 forms
 // - RequestUpdate
 // - RequestForm
 export default function RequestForm({ path }) {
@@ -41,6 +44,9 @@ export default function RequestForm({ path }) {
   const [isModalOpen, setModal] = useState(false)
   const [inputValidationMsg, setInputValidationMsg] = useState({ isError: false, isSubmitting: false })
   const { t } = useTranslation(['common', 'logbook'])
+  const requestPath = useParamsQuery()
+  const tabValue = requestPath.get('tab');
+  const [message, setMessage] = useState({ isError: false, detail: ''});
 
   const requiredFields = authState?.user?.community?.communityRequiredFields?.manualEntryRequestForm || defaultRequiredFields
 
@@ -50,7 +56,6 @@ export default function RequestForm({ path }) {
       otherReason: userData.business === 'other' ? userData.reason : '',
       reason: userData.business,
       occursOn: days, 
-      // visitEndDate
     }
 
     const isAnyInvalid = checkInValidRequiredFields(variables, requiredFields)
@@ -62,9 +67,13 @@ export default function RequestForm({ path }) {
     setInputValidationMsg({ isSubmitting: true })
 
     delete variables.business
-    createEntryRequest({ variables }).then(() => {
-        history.push('/entry_logs')
-    })
+    createEntryRequest({ variables })
+      .then(() => {
+        history.push(`/entry_logs?tab=${tabValue}`)
+      })
+      .catch(err => {
+        setMessage({ isError: true, detail: err.message });
+      })
   }
 
   function handleChange(event){
@@ -100,6 +109,13 @@ export default function RequestForm({ path }) {
 
   return (
     <>
+      <MessageAlert
+        type={message.isError ? 'error' : 'success'}
+        message={message.detail}
+        open={!!message.detail}
+        handleClose={() => setMessage({ ...message, detail: '' })}
+      />
+
       <ReasonInputModal
         handleAddReason={handleAddOtherReason}
         handleClose={() => setModal(!isModalOpen)}
@@ -288,6 +304,7 @@ export default function RequestForm({ path }) {
               className={`${css(styles.logButton)}`}
               onClick={handleSubmit}
               disabled={inputValidationMsg.isSubmitting}
+              startIcon={inputValidationMsg.isSubmitting && <Spinner />}
               color="primary"
               data-testid="submit_button"
             >

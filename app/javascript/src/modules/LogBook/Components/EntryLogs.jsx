@@ -19,7 +19,7 @@ import useDebounce from '../../../utils/useDebounce';
 import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider';
 import { StyledTabs, StyledTab, TabPanel, a11yProps } from '../../../components/Tabs';
 import FloatButton from '../../../components/FloatButton';
-import { propAccessor } from '../../../utils/helpers';
+import { propAccessor, useParamsQuery } from '../../../utils/helpers';
 import MessageAlert from '../../../components/MessageAlert';
 import GroupedObservations from './GroupedObservations';
 import AddMoreButton from '../../../shared/buttons/AddMoreButton';
@@ -40,7 +40,9 @@ const AllEventLogs = (history, match) => {
   const [offset, setOffset] = useState(0);
   const [limit, setLimit] = useState(initialLimit);
   const [searchTerm, setSearchTerm] = useState('');
-  const [value, setvalue] = useState(0);
+  const path = useParamsQuery()
+  const tabValue = path.get('tab');
+  const [value, setvalue] = useState(Number(tabValue) || 0);
   const dbcSearchTerm = useDebounce(searchTerm, 500);
 
   const refId = match.params.userId || null;
@@ -102,6 +104,7 @@ const AllEventLogs = (history, match) => {
   function handleChange(_event, newValue) {
     setvalue(newValue);
     refetch();
+    history.push(`/entry_logs?tab=${newValue}`)
   }
   return (
     <IndexComponent
@@ -348,7 +351,7 @@ export function IndexComponent({
         authState.user.userType === 'admin' && (
           <FloatButton
             title={t('logbook.new_invite')}
-            handleClick={() => router.push('/visit_request')}
+            handleClick={() => router.push(`/visit_request/?tab=2`)}
           />
         )}
       </div>
