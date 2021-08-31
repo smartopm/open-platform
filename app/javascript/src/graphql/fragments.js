@@ -84,6 +84,7 @@ export const EntryRequestFragment = {
       createdAt
       updatedAt
       grantedAt
+      companyName
     }
   `
 }

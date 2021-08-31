@@ -19,7 +19,7 @@ import useDebounce from '../../../utils/useDebounce';
 import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider';
 import { StyledTabs, StyledTab, TabPanel, a11yProps } from '../../../components/Tabs';
 import FloatButton from '../../../components/FloatButton';
-import { propAccessor } from '../../../utils/helpers';
+import { propAccessor, useParamsQuery } from '../../../utils/helpers';
 import MessageAlert from '../../../components/MessageAlert';
 import GroupedObservations from './GroupedObservations';
 import AddMoreButton from '../../../shared/buttons/AddMoreButton';
@@ -29,6 +29,7 @@ import LogView from './LogView';
 import VisitEntryLogs from './VisitEntryLogs';
 import CenteredContent from '../../../components/CenteredContent';
 import Paginate from '../../../components/Paginate';
+import GuestBook from './GuestBook';
 
 export default ({ history, match }) => AllEventLogs(history, match);
 
@@ -39,7 +40,9 @@ const AllEventLogs = (history, match) => {
   const [offset, setOffset] = useState(0);
   const [limit, setLimit] = useState(initialLimit);
   const [searchTerm, setSearchTerm] = useState('');
-  const [value, setvalue] = useState(0);
+  const path = useParamsQuery()
+  const tabValue = path.get('tab');
+  const [value, setvalue] = useState(Number(tabValue) || 0);
   const dbcSearchTerm = useDebounce(searchTerm, 500);
 
   const refId = match.params.userId || null;
@@ -101,6 +104,7 @@ const AllEventLogs = (history, match) => {
   function handleChange(_event, newValue) {
     setvalue(newValue);
     refetch();
+    history.push(`/entry_logs?tab=${newValue}`)
   }
   return (
     <IndexComponent
@@ -289,7 +293,7 @@ export function IndexComponent({
         >
           <StyledTab label={t('logbook.all_visits')} {...a11yProps(0)} />
           <StyledTab label={t('logbook.new_visits')} {...a11yProps(1)} />
-          <StyledTab label={t('logbook.upcoming_visits')} {...a11yProps(2)} />
+          <StyledTab label={t('logbook.registered_guests')} {...a11yProps(2)} />
           <StyledTab label={t('logbook.observations')} {...a11yProps(3)} />
         </StyledTabs>
         {loading && <Loading />}
@@ -310,20 +314,11 @@ export function IndexComponent({
           {/* Todo: Handle the listing of enrolled users here */}
           {data &&
             data.result.map(user => (
-              <LogView key={user.id} user={user} refetch={refetch} tab={tabValue} />
+              <LogView key={user.id} user={user} />
             ))}
         </TabPanel>
         <TabPanel value={tabValue} index={2}>
-          {data &&
-            data.result.map(log => (
-              <LogView
-                key={log.id}
-                user={log}
-                refetch={refetch}
-                tab={tabValue}
-                handleAddObservation={handleAddObservation}
-              />
-            ))}
+          <GuestBook tabValue={tabValue} handleAddObservation={handleAddObservation} offset={offset} limit={limit}  />
         </TabPanel>
         <TabPanel value={tabValue} index={3}>
           <>
@@ -345,8 +340,8 @@ export function IndexComponent({
         {// only admins should be able to schedule a visit request
         authState.user.userType === 'admin' && (
           <FloatButton
-            title={t('logbook.new_visit_request')}
-            handleClick={() => router.push('/visit_request')}
+            title={t('logbook.new_invite')}
+            handleClick={() => router.push(`/visit_request/?tab=2`)}
           />
         )}
       </div>

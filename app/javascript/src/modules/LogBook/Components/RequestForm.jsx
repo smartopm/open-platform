@@ -3,7 +3,7 @@ import React, { useState, useEffect, useContext } from 'react'
 import { useMutation } from 'react-apollo'
 import { StyleSheet, css } from 'aphrodite'
 import { useTranslation } from 'react-i18next'
-import { Button, TextField, MenuItem } from '@material-ui/core'
+import { Button, TextField, MenuItem, IconButton , Avatar, Typography } from '@material-ui/core'
 import { useHistory } from 'react-router'
 import PropTypes from 'prop-types'
 import { EntryRequestCreate } from '../../../graphql/mutations'
@@ -13,8 +13,12 @@ import DatePickerDialog, { ThemedTimePicker } from '../../../components/DatePick
 import { defaultBusinessReasons } from '../../../utils/constants'
 import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider'
 import { checkInValidRequiredFields, defaultRequiredFields } from '../utils'
+import { formatError, useParamsQuery } from '../../../utils/helpers'
+import MessageAlert from '../../../components/MessageAlert'
+import { Spinner } from '../../../shared/Loading'
 
-// TODO: As of now this is only serving the visit_reuest, we can still migrate to reuse the 2 forms
+
+// TODO: As of now this is only serving the visit_request, we can still migrate to reuse the 2 forms
 // - RequestUpdate
 // - RequestForm
 export default function RequestForm({ path }) {
@@ -27,6 +31,7 @@ export default function RequestForm({ path }) {
     business: '',
     reason: '',
     visitationDate: null,
+    visitEndDate: null,
     startTime: new Date(),
     endTime: new Date(),
   }
@@ -34,10 +39,14 @@ export default function RequestForm({ path }) {
   const history = useHistory()
   const authState = useContext(AuthStateContext)
   const [userData, setUserData] = useState(initialState)
+  const [days, setDays] = useState([])
   const [createEntryRequest] = useMutation(EntryRequestCreate)
   const [isModalOpen, setModal] = useState(false)
   const [inputValidationMsg, setInputValidationMsg] = useState({ isError: false, isSubmitting: false })
   const { t } = useTranslation(['common', 'logbook'])
+  const requestPath = useParamsQuery()
+  const tabValue = requestPath.get('tab');
+  const [message, setMessage] = useState({ isError: false, detail: ''});
 
   const requiredFields = authState?.user?.community?.communityRequiredFields?.manualEntryRequestForm || defaultRequiredFields
 
@@ -45,7 +54,8 @@ export default function RequestForm({ path }) {
     const variables = {
       ...userData,
       otherReason: userData.business === 'other' ? userData.reason : '',
-      reason: userData.business
+      reason: userData.business,
+      occursOn: days, 
     }
 
     const isAnyInvalid = checkInValidRequiredFields(variables, requiredFields)
@@ -54,12 +64,22 @@ export default function RequestForm({ path }) {
       return
     }
 
+    if (!userData.visitationDate || (days.length && !userData.visitEndDate)) {
+      setMessage({ isError: true, detail: t('logbook:logbook.visit_end_error') });
+      return
+    }
+
     setInputValidationMsg({ isSubmitting: true })
 
     delete variables.business
-    createEntryRequest({ variables }).then(() => {
-        history.push('/entry_logs')
-    })
+    createEntryRequest({ variables })
+      .then(() => {
+        history.push(`/entry_logs?tab=${tabValue}`)
+      })
+      .catch(err => {
+        setInputValidationMsg({ isSubmitting: false })
+        setMessage({ isError: true, detail: formatError(err.message) });
+      })
   }
 
   function handleChange(event){
@@ -67,6 +87,15 @@ export default function RequestForm({ path }) {
     const fields = { ...userData }
     fields[String(name)] = value
     setUserData(fields)
+  }
+
+  function handleChangeOccurrence(day){
+    if(days.includes(day)){
+      const leftDays = days.filter(d => d !== day)
+      setDays(leftDays)
+      return
+    }
+    setDays([...days, day])
   }
 
   function handleAddOtherReason(){
@@ -86,6 +115,13 @@ export default function RequestForm({ path }) {
 
   return (
     <>
+      <MessageAlert
+        type={message.isError ? 'error' : 'success'}
+        message={message.detail}
+        open={!!message.detail}
+        handleClose={() => setMessage({ ...message, detail: '' })}
+      />
+
       <ReasonInputModal
         handleAddReason={handleAddOtherReason}
         handleClose={() => setModal(!isModalOpen)}
@@ -223,28 +259,52 @@ export default function RequestForm({ path }) {
               ))}
             </TextField>
           </div>
-          {path.includes('visit_request') && (
-            <>
-              <DatePickerDialog
-                selectedDate={userData.visitationDate}
-                handleDateChange={date => handleChange({ target: { name: 'visitationDate', value: date }})}
-                label={t('logbook:logbook.date_of_visit')}
-              />
+
+          <DatePickerDialog
+            selectedDate={userData.visitationDate}
+            handleDateChange={date => handleChange({ target: { name: 'visitationDate', value: date }})}
+            label="Day of visit"
+          /> 
+         
+          <div>
+            <ThemedTimePicker
+              time={userData.startTime}
+              handleTimeChange={date => handleChange({ target: { name: 'startTime', value: date }})}
+              label={t('misc.start_time')}
+            />
+            <span style={{ marginLeft: 20 }}>
               <ThemedTimePicker
-                time={userData.startTime}
-                handleTimeChange={date => handleChange({ target: { name: 'startTime', value: date }})}
-                label={t('misc.start_time')}
+                time={userData.endTime}
+                handleTimeChange={date => handleChange({ target: { name: 'endTime', value: date }})}
+                label={t('misc.end_time')}
               />
-              <span style={{ marginLeft: 20 }}>
-                <ThemedTimePicker
-                  time={userData.endTime}
-                  handleTimeChange={date => handleChange({ target: { name: 'endTime', value: date }})}
-                  label={t('misc.end_time')}
-                />
-              </span>
-            </>
-          )}
+            </span>
+          </div>
+
           <br />
+          <Typography gutterBottom>{t('logbook:guest_book.repeats_on')}</Typography>
+          {Object.entries(t('logbook:days', { returnObjects: true })).map(([key, value]) => (
+            <IconButton
+              key={key}
+              color="primary"
+              aria-label="choose day of week"
+              component="span"
+              onClick={() => handleChangeOccurrence(key)}
+              data-testid="week_days"
+            >
+              <Avatar style={{ backgroundColor: new Set(days).has(key) ? '#009CFF' : '#ADA7A7' }}>{value.charAt(0)}</Avatar>
+            </IconButton>
+          ))}
+          {
+              Boolean(days.length) && (
+                <DatePickerDialog
+                  selectedDate={userData.visitEndDate}
+                  handleDateChange={date => handleChange({ target: { name: 'visitEndDate', value: date }})}
+                  label={t('logbook:guest_book.repeats_until')}
+                  disablePastDate
+                /> 
+              )
+            }
 
           <div className="row justify-content-center align-items-center ">
             <Button
@@ -252,10 +312,11 @@ export default function RequestForm({ path }) {
               className={`${css(styles.logButton)}`}
               onClick={handleSubmit}
               disabled={inputValidationMsg.isSubmitting}
+              startIcon={inputValidationMsg.isSubmitting && <Spinner />}
               color="primary"
               data-testid="submit_button"
             >
-              {inputValidationMsg.isSubmitting ? ` ${t('form_actions.submitting')} ...` : ` ${t('form_actions.submit')} `}
+              {inputValidationMsg.isSubmitting ? ` ${t('form_actions.submitting')} ...` : ` ${t('form_actions.invite_guest')} `}
             </Button>
           </div>
         </form>
@@ -274,7 +335,8 @@ const styles = StyleSheet.create({
     width: '75%',
     boxShadow: 'none',
     marginTop: 60,
-    height: 50
+    height: 50,
+    color: "#FFFFFF"
   },
   selectInput: {
     width: '100%'

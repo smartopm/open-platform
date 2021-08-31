@@ -262,11 +262,11 @@ module Users
     # @param event_id [String]
     #
     # @return [EntryRequest]
-    def grant!(entry_request_id, event_id)
+    def grant!(entry_request_id)
       entry = community.entry_requests.find_by(id: entry_request_id)
       return nil if entry.blank?
 
-      entry.grant!(self, event_id)
+      entry.grant!(self)
       entry
     end
 

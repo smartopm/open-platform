@@ -11,7 +11,6 @@ module Logs
     belongs_to :grantor, class_name: 'Users::User', optional: true
 
     before_validation :attach_community
-    after_create :log_entry
     validates :name, presence: true
 
     default_scope { order(created_at: :asc) }
@@ -20,13 +19,13 @@ module Logs
 
     GRANT_STATE = %w[Pending Granted Denied].freeze
 
-    def grant!(grantor, event_id = last_event_log.id)
+    def grant!(grantor)
       update(
         grantor_id: grantor.id,
         granted_state: 1,
         granted_at: Time.zone.now,
       )
-      log_decision('granted', event_id)
+      log_entry_start('granted')
     end
 
     def deny!(grantor)
@@ -35,7 +34,7 @@ module Logs
         granted_state: 2,
         granted_at: Time.zone.now,
       )
-      log_decision('denied', last_event_log.id)
+      log_entry_start('denied')
     end
 
     # Leaving this here for now in case it is needed
@@ -74,12 +73,12 @@ module Logs
       self[:source] == 'showroom'
     end
 
+    # This is deprecated
     def acknowledge!
       update(
         acknowledged: true,
         id: id,
       )
-      log_decision('acknowledged', last_event_log.id)
     end
 
     # TODO: Build this into a proper notification scheme
@@ -108,10 +107,6 @@ module Logs
       SMS.send(number, "https://#{HostEnv.base_url(user.community)}/feedback")
     end
 
-    def last_event_log
-      Logs::EventLog.where('ref_id=? and ref_type=?', id, self.class).last
-    end
-
     private
 
     # Assigns community id of user.
@@ -121,22 +116,13 @@ module Logs
       self[:community_id] = user&.community_id
     end
 
-    def log_entry
-      if showroom?
-        log_showroom_entry
-      else
-        log_entry_start
-
-      end
-    end
-
-    def log_entry_start
+    def log_entry_start(action)
       Logs::EventLog.create(
         acting_user: user, community: user.community,
-        subject: self[:visitation_date].nil? ? 'visitor_entry' : 'visit_request',
+        subject: 'visitor_entry',
         ref_id: self[:id], ref_type: 'Logs::EntryRequest',
         data: {
-          action: self[:visitation_date].nil? ? 'started' : 'requested',
+          action: action,
           ref_name: self[:name],
           type: user.user_type,
         }
@@ -154,14 +140,6 @@ module Logs
           type: 'showroom',
         }
       )
-    end
-
-    def log_decision(decision, event_id)
-      event = Logs::EventLog.find(event_id)
-      return false if event.blank?
-
-      event.data['action'] = decision
-      event.save
     end
   end
   # rubocop:enable Metrics/ClassLength

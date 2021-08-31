@@ -303,6 +303,7 @@ en:
       not_found: Template not found
     entry_request:
       empty_note: Note cannot be empty
+      not_found: EntryRequest not found
     event_log:
       not_found: Event log not found
     form:

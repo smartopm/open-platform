@@ -50,7 +50,8 @@ RSpec.describe Types::QueryType do
           subject: nil, refId: nil, refType: nil
         },
       ).as_json
-      expect(result.dig('data', 'result').length).to eql 6
+      # we expect only 3 events since no event is created after an entry request
+      expect(result.dig('data', 'result').length).to eql 3
     end
 
     it 'returns select event logs' do

@@ -11,8 +11,8 @@ RSpec.describe Mutations::EntryRequest::EntryRequestGrant do
 
     let(:entry_request_grant_mutation) do
       <<~GQL
-        mutation EntryRequestGrantMutation($id: ID!, $subject: String) {
-          result: entryRequestGrant(id: $id, subject: $subject) {
+        mutation EntryRequestGrantMutation($id: ID!) {
+          result: entryRequestGrant(id: $id) {
             entryRequest {
               id
               name
@@ -40,25 +40,24 @@ RSpec.describe Mutations::EntryRequest::EntryRequestGrant do
                                            variables: variables,
                                            context: {
                                              current_user: admin,
-                                             site_community: admin.community,
                                            }).as_json
+
           expect(result.dig('data', 'result', 'entryRequest', 'id')).not_to be_nil
           expect(result.dig('data', 'result', 'entryRequest', 'grantedState')).to eql 1
           expect(result['errors']).to be_nil
         end
       end
 
-      context 'when event log is not present of entry request' do
+      context 'when entry request is not present' do
         it 'raises error' do
           variables = { id: '1234' }
           result = DoubleGdpSchema.execute(entry_request_grant_mutation,
                                            variables: variables,
                                            context: {
                                              current_user: admin,
-                                             site_community: admin.community,
                                            }).as_json
           expect(result.dig('data', 'result')).to be_nil
-          expect(result.dig('errors', 0, 'message')).to eql 'Event log not found'
+          expect(result.dig('errors', 0, 'message')).to eql 'EntryRequest not found'
         end
       end
     end

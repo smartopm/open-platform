@@ -85,7 +85,9 @@
     "create_plan": "Create Plan",
     "add_type": "Add {{label}}",
     "close": "Close",
-    "creating_plan": "Creating a Plan ..."
+    "creating_plan": "Creating a Plan ...",
+    "invite_guest": "Invite Guest",
+    "invite_another_guest": "Invite Another Guest"
   },
   "misc": {
     "or": "OR",
@@ -159,8 +161,8 @@
     "acknowledge": "Acknowledge",
     "call": "Call",
     "flag": "Flag",
-    "start_time": "Start Time",
-    "end_time": "End Time",
+    "start_time": "Visit start time",
+    "end_time": "Visit end time",
     "user_type": "User Type",
     "expiration": "Expiration",
     "already_expired": "Already Expired",

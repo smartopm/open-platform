@@ -6,18 +6,19 @@ import { MockedProvider } from '@apollo/react-testing';
 import EntryLogs, { IndexComponent } from '../Components/EntryLogs';
 import { Context } from '../../../containers/Provider/AuthStateProvider';
 import userMock from '../../../__mocks__/userMock';
-
-jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
+import MockedThemeProvider from '../../__mocks__/mock_theme';
 
 describe('EntryLogs Component', () => {
   it('renders loader when loading record', () => {
     const container = render(
       <MockedProvider>
-        <BrowserRouter>
-          <Context.Provider value={userMock}>
-            <EntryLogs match={{ params: { id: '123' } }} />
-          </Context.Provider>
-        </BrowserRouter>
+        <MockedThemeProvider>
+          <BrowserRouter>
+            <Context.Provider value={userMock}>
+              <EntryLogs match={{ params: { id: '123' } }} />
+            </Context.Provider>
+          </BrowserRouter>
+        </MockedThemeProvider>
       </MockedProvider>
     );
 
@@ -69,11 +70,13 @@ describe('EntryLogs Component', () => {
     };
     const container = render(
       <MockedProvider>
-        <BrowserRouter>
-          <Context.Provider value={userMock}>
-            <IndexComponent {...props} />
-          </Context.Provider>
-        </BrowserRouter>
+        <MockedThemeProvider>
+          <BrowserRouter>
+            <Context.Provider value={userMock}>
+              <IndexComponent {...props} />
+            </Context.Provider>
+          </BrowserRouter>
+        </MockedThemeProvider>
       </MockedProvider>
     );
 

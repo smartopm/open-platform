@@ -26,6 +26,26 @@ RSpec.describe Types::Queries::EntryRequest do
         })
     end
 
+    let(:scheduledRequests_query) do
+      %(query {
+        scheduledRequests {
+          id
+          name
+          user {
+            id
+            name
+            imageUrl
+            avatarUrl
+          }
+          occursOn
+          visitEndDate
+          visitationDate
+          endTime
+          startTime
+        }
+        })
+    end
+
     it 'should retrieve one entry_request' do
       entry_request = current_user.entry_requests.create(reason: 'Visiting',
                                                          name: 'Visitor Joe', nrc: '012345')
@@ -51,6 +71,31 @@ RSpec.describe Types::Queries::EntryRequest do
                                          site_community: current_user.community,
                                        }).as_json
       expect(result.dig('data', 'entryRequests').length).to eql 2
+    end
+
+    it 'should retrieve list of registered guests' do
+      2.times do
+        current_user.entry_requests.create(reason: 'Visiting', name: 'Visitor Joe', nrc: '012345',
+                                           visitation_date: Time.zone.now)
+      end
+      result = DoubleGdpSchema.execute(scheduledRequests_query, context: {
+                                         current_user: admin,
+                                         site_community: current_user.community,
+                                       }).as_json
+      expect(result.dig('data', 'scheduledRequests').length).to eql 2
+    end
+
+    it 'should not retrieve list of registered guests' do
+      # 2.times do
+      #   current_user.entry_requests.create(reason: 'Visiting',name: 'Visitor Joe', nrc: '012345',
+      #                                      visitation_date: Time.zone.now)
+      # end
+      result = DoubleGdpSchema.execute(scheduledRequests_query, context: {
+                                         current_user: current_user,
+                                         site_community: current_user.community,
+                                       }).as_json
+      expect(result.dig('errors', 0, 'message')).to include 'Unauthorized'
+      expect(result.dig('data', 'scheduledRequests')).to be_nil
     end
   end
 end

@@ -70,7 +70,7 @@ export default function VisitEntryLogs({
               </span>
               <span className={css(styles.subTitle)} data-testid="entry_date">
                 {/* if an event is entry_request then it should show when it was granted or denied instead of when it was created */}
-                {dateToString(event.entryRequest?.grantedAt || event.createdAt)}
+                {dateToString(event.createdAt)}
               </span>
             </div>
           </div>
@@ -82,7 +82,7 @@ export default function VisitEntryLogs({
             </div>
             <div className="col-xs-4">
               <span className={css(styles.subTitle)} data-testid="entry_time">
-                {dateTimeToString(event.entryRequest?.grantedAt || event.createdAt)}
+                {dateTimeToString(event.createdAt)}
               </span>
             </div>
           </div>

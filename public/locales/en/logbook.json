@@ -12,8 +12,10 @@
     "all_visits": "All Visits",
     "new_visits": "New Visits",
     "upcoming_visits": "Upcoming Visits",
+    "registered_guests": "Registered Guests",
     "observations": "Observations",
     "new_visit_request": "New Visit Request",
+    "new_invite": "New Invite",
     "filter_entries": "Filter Entries or Observations",
     "entry_request": "Entry Request",
     "data_time_submitted": "Date and time submitted",
@@ -41,7 +43,9 @@
     "log_exit": "Log Exit",
     "exited": "Exited",
     "other_reason": "Other visiting reason",
-    "visit_scheduled": "Visit scheduled for: {{date}} at {{time}}"
+    "visit_scheduled": "Visit scheduled for: {{date}} at {{time}}",
+    "no_invited_guests": "No invited guests",
+    "visit_end_error": "Visitation dates are required"
   },
   "log_title": {
     "visitor": "Visitor",
@@ -78,5 +82,25 @@
     "created_observation": "Observation note successfully added",
     "add_your_observation": "Do you have any observations you'd like to add?",
     "created_observation_exit": "Observation exit has been logged successfully"
+  },
+  "days": {
+    "sunday": "Sunday",
+    "monday": "Monday",
+    "tuesday": "Tuesday",
+    "wednesday": "Wednesday",
+    "thursday": "Thursday",
+    "friday": "Friday",
+    "saturday": "Saturday"
+  },
+  "guest_book": {
+    "valid": "Valid",
+    "invalid_now": "Invalid now",
+    "invalid_today": "Invalid today",
+    "expired": "Expired",
+    "ends_on_date": "Ends on {{date}}",
+    "start_of_visit": "Start of visit {{date}}",
+    "visit_time": "Visit time {{startTime}} - {{endTime}}",
+    "repeats_on": "Repeats on",
+    "repeats_until": "Repeats Until"
   }
 }
