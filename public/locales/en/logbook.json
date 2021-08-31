@@ -44,11 +44,7 @@
     "exited": "Exited",
     "other_reason": "Other visiting reason",
     "visit_scheduled": "Visit scheduled for: {{date}} at {{time}}",
-    "no_invited_guests": "No invited guests",
-    "valid": "Valid",
-    "invalid_now": "Invalid now",
-    "invalid_today": "Invalid today",
-    "expired": "Expired"
+    "no_invited_guests": "No invited guests"
   },
   "log_title": {
     "visitor": "Visitor",
@@ -94,5 +90,14 @@
     "thursday": "Thursday",
     "friday": "Friday",
     "saturday": "Saturday"
+  },
+  "guest_book": {
+    "valid": "Valid",
+    "invalid_now": "Invalid now",
+    "invalid_today": "Invalid today",
+    "expired": "Expired",
+    "ends_on_date": "Ends on {{date}}",
+    "start_of_visit": "Start of visit {{date}}",
+    "visit_time": "Visit time {{startTime}} - {{endTime}}"
   }
 }

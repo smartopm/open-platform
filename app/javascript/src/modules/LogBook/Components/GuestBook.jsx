@@ -131,18 +131,27 @@ export function renderGuest(guest, classes, grantAccess, isMobile, loadingStatus
         </Grid>
       ),
       'Start of Visit': (
-        <Grid item xs={12} md={2} data-testid="occurence">
-          <Text content={`Start of Visit ${dateToString(guest.visitationDate)}`} className={classes.text} />
+        <Grid item xs={12} md={2} data-testid="start_of_visit">
+          <Text 
+            content={translate('guest_book.start_of_visit', { date: dateToString(guest.visitationDate) })} 
+            className={classes.text}
+          />
         </Grid>
       ),
       'End of Visit': (
-        <Grid item xs={12} md={2} data-testid="visit_dates">
-          <Text content={Boolean(guest.visitEndDate) && `Ends on ${dateToString(guest.visitEndDate)}`} className={classes.text} />
+        <Grid item xs={12} md={2} data-testid="endofvisit">
+          <Text 
+            content={guest.visitEndDate ? translate('guest_book.ends_on_date', { date: dateToString(guest.visitEndDate) }) : '-'} 
+            className={classes.text}
+          />
         </Grid>
       ),
       'Access Time': (
-        <Grid item xs={12} md={2} data-testid="visit_dates">
-          <Text content={`Visit Time ${dateTimeToString(guest.startTime)} - ${dateTimeToString(guest.endTime)}`} className={classes.text} />
+        <Grid item xs={12} md={2} data-testid="access_time">
+          <Text 
+            content={translate('guest_book.visit_time', { startTime: dateTimeToString(guest.startTime), endTime: dateTimeToString(guest.endTime) })} 
+            className={classes.text}
+          />
         </Grid>
       ),
       validity: (
@@ -166,7 +175,7 @@ export function renderGuest(guest, classes, grantAccess, isMobile, loadingStatus
               startIcon={loadingStatus.loading && loadingStatus.currentId === guest.id && <Spinner />}
               fullWidth
             >
-              Grant Access
+              {translate('access_actions.grant_access')}
             </Button>
           </CenteredContent>
         </Grid>
