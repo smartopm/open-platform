@@ -11,7 +11,6 @@ module Logs
     belongs_to :grantor, class_name: 'Users::User', optional: true
 
     before_validation :attach_community
-    after_create :log_entry
     validates :name, presence: true
 
     default_scope { order(created_at: :asc) }
@@ -20,15 +19,16 @@ module Logs
 
     GRANT_STATE = %w[Pending Granted Denied].freeze
 
-    def grant!(grantor, event_id = last_event_log.id)
+    def grant!(grantor)
       update(
         grantor_id: grantor.id,
         granted_state: 1,
         granted_at: Time.zone.now,
       )
-      log_decision('granted', event_id)
+      log_entry_start
     end
 
+    # TODO: update the deny when we implement revoking access
     def deny!(grantor)
       update(
         grantor_id: grantor.id,
@@ -133,10 +133,10 @@ module Logs
     def log_entry_start
       Logs::EventLog.create(
         acting_user: user, community: user.community,
-        subject: self[:visitation_date].nil? ? 'visitor_entry' : 'visit_request',
+        subject: 'visitor_entry',
         ref_id: self[:id], ref_type: 'Logs::EntryRequest',
         data: {
-          action: self[:visitation_date].nil? ? 'started' : 'requested',
+          action: 'recorded',
           ref_name: self[:name],
           type: user.user_type,
         }
