@@ -9,10 +9,6 @@ RSpec.describe Logs::EntryRequest, type: :model do
     it { is_expected.to belong_to(:grantor).class_name('Users::User').optional }
   end
 
-  describe 'callbacks' do
-    it { is_expected.to callback(:log_entry).after(:create) }
-  end
-
   describe 'Basic usage' do
     before :each do
       @guard = FactoryBot.create(:user_with_community)
@@ -25,7 +21,7 @@ RSpec.describe Logs::EntryRequest, type: :model do
                                                     name: 'Visitor Joe', nrc: '012345')
       expect(@entry_request.community_id).to eql @guard.community_id
       expect(@entry_request.pending?).to be true
-      expect(Logs::EventLog.where(ref_id: @entry_request.id).count).to eql 1
+      expect(Logs::EventLog.where(ref_id: @entry_request.id).count).to eql 0
     end
 
     it 'should work with only a name required' do
@@ -34,7 +30,7 @@ RSpec.describe Logs::EntryRequest, type: :model do
       @entry_request = @guard.entry_requests.create(name: 'Visitor Joe')
       expect(@entry_request.community_id).to eql @guard.community_id
       expect(@entry_request.pending?).to be true
-      expect(Logs::EventLog.where(ref_id: @entry_request.id).count).to eql 1
+      expect(Logs::EventLog.where(ref_id: @entry_request.id).count).to eql 0
     end
 
     it 'should handle an admin granting a request' do
@@ -56,7 +52,7 @@ RSpec.describe Logs::EntryRequest, type: :model do
       expect(@entry_request.denied?).to be true
       expect(@entry_request.granted?).to be false
       expect(@entry_request.grantor_id).to eql @guard.id
-      expect(Logs::EventLog.where(ref_id: @entry_request.id).count).to eql 1
+      expect(Logs::EventLog.where(ref_id: @entry_request.id).count).to eql 0
     end
 
     it 'should create a task record for prospective client', skip_before: true do

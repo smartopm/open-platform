@@ -4,13 +4,11 @@ require 'merge_users'
 
 RSpec.describe MergeUsers do
   before do
-    Logs::EntryRequest.skip_callback(:create, :after, :log_entry)
     Forms::FormUser.skip_callback(:create, :after, :log_create_event)
     Comments::NoteComment.skip_callback(:create, :after, :log_create_event)
   end
 
   after do
-    Logs::EntryRequest.set_callback(:create, :after, :log_entry)
     Forms::FormUser.set_callback(:create, :after, :log_create_event)
     Comments::NoteComment.set_callback(:create, :after, :log_create_event)
   end

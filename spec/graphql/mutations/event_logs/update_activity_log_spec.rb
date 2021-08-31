@@ -7,6 +7,8 @@ RSpec.describe Mutations::ActivityLog::UpdateLog do
     let!(:user) { create(:user_with_community) }
     let!(:admin) { create(:admin_user, community_id: user.community_id) }
     let!(:entry_request) { user.entry_requests.create(name: 'Benje', reason: 'Passing through') }
+    # since we no longer create an event after creating an entry, we can only check after grant!
+    let!(:grant) { admin.grant!(entry_request.id) }
 
     let(:query) do
       <<~GQL

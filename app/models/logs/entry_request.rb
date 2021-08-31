@@ -35,7 +35,6 @@ module Logs
         granted_state: 2,
         granted_at: Time.zone.now,
       )
-      log_decision('denied', last_event_log.id)
     end
 
     # Leaving this here for now in case it is needed
@@ -74,12 +73,12 @@ module Logs
       self[:source] == 'showroom'
     end
 
+    # This is deprecated
     def acknowledge!
       update(
         acknowledged: true,
         id: id,
       )
-      log_decision('acknowledged', last_event_log.id)
     end
 
     # TODO: Build this into a proper notification scheme

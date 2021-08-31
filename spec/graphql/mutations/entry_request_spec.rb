@@ -210,7 +210,7 @@ RSpec.describe Mutations::EntryRequest do
                                                 site_community: user.community,
                                               }).as_json
       expect(result['errors']).not_to be_nil
-      expect(result.dig('errors', 0, 'message')).to include 'Event log not found'
+      expect(result.dig('errors', 0, 'message')).to include 'EntryRequest not found'
     end
   end
 
