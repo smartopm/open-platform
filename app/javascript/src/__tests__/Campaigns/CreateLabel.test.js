@@ -37,7 +37,7 @@ describe('Create Label Component', () => {
     },
     result: {
       data: {
-        labelCreate: {label: { id: 'hh27uyiu3hb43uy4iu3', shortDesc: 'COM' }}
+        labelCreate: { label: { id: 'hh27uyiu3hb43uy4iu3', shortDesc: 'COM' }}
       }
     }
   };

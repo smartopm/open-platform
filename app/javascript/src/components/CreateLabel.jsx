@@ -8,7 +8,7 @@ import { LabelCreate }from '../graphql/mutations';
 import PropTypes from 'prop-types'
 
 export default function CreateLabel({ handleLabelSelect, loading, setLoading, setMessage }) {
-  const { data, loading: labelLoading, refetch } = useQuery(LabelsQuery);
+  const { data, refetch } = useQuery(LabelsQuery);
   const [labelCreate] = useMutation(LabelCreate);
   const newLabels  = useRef([]);
 
@@ -66,7 +66,6 @@ export default function CreateLabel({ handleLabelSelect, loading, setLoading, se
           style={{ width: 250, margin: 1 }}
           multiple
           freeSolo
-          loading={labelLoading}
           disabled={loading}
           id="tags-filled"
           options={data?.labels || []}
@@ -107,7 +106,6 @@ export default function CreateLabel({ handleLabelSelect, loading, setLoading, se
               data-testid="text-field"
               placeholder="Assign Label"
               style={{width: "100%"}}
-              type='text'
             />
           )}
         />
