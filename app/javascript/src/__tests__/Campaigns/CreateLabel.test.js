@@ -4,30 +4,9 @@ import '@testing-library/jest-dom/extend-expect';
 import userEvent from '@testing-library/user-event'
 import { MockedProvider } from '@apollo/react-testing';
 import CreateLabel from '../../components/CreateLabel';
-import { LabelsQuery } from '../../graphql/queries';
 import { LabelCreate }from '../../graphql/mutations';
 
 describe('Create Label Component', () => {
-  const labels = [
-    {
-      id: 'hh27uyiu3hb43uy4iu3',
-      shortDesc: 'COM',
-      userCount: 2,
-      description: 'desc',
-      color: 'blue'
-    }
-  ]
-  const mock = {
-    request: {
-      query: LabelsQuery
-    },
-    result: {
-      data: {
-        labels
-      }
-    }
-  };
-
   const anotherLabelCreateMock = {
     request: {
       query: LabelCreate,
@@ -44,7 +23,7 @@ describe('Create Label Component', () => {
 
   it('test creating a new label', async () => {
     const container = render(
-      <MockedProvider mocks={[mock, anotherLabelCreateMock]} addTypename={false}>
+      <MockedProvider mocks={[anotherLabelCreateMock]} addTypename={false}>
         <CreateLabel
           handleLabelSelect={jest.fn}
           loading={false}
