@@ -28,8 +28,8 @@ describe('Should render Guest Book Component', () => {
             occursOn: [],
             visitEndDate: null,
             visitationDate: '2021-08-20T10:51:00+02:00',
-            endTime: '2021-08-31T08:51:44.842Z',
-            startTime: '2021-08-31T08:51:44.842Z'
+            endTime: '2021-10-31T02:51:44.842Z',
+            startTime: '2021-04-31T11:51:44.842Z'
           },
           {
             id: '696d857',
@@ -50,6 +50,7 @@ describe('Should render Guest Book Component', () => {
       }
     }
   };
+
   it('should render proper data', async() => {
     const observe = jest.fn();
     const { getAllByText, getAllByTestId, getByText } = render(
@@ -78,10 +79,13 @@ describe('Should render Guest Book Component', () => {
 
         fireEvent.click(getAllByTestId('grant_access_btn')[0])
         expect(observe).not.toBeCalled() // since it is expired
-    }, 50)
+    }, 5000)
   });
 
   it('should render the guest function properly', () => {
+    // This is a good option to set specific date but apollo doesnt like it much in the first test case above
+    jest.useFakeTimers('modern')
+    jest.setSystemTime(new Date('2021-05-20T10:51:00+02:00'))
       const classes = {}
       const grantedAccess = jest.fn()
       const translate = jest.fn(() => 'Translated text')
@@ -114,7 +118,10 @@ describe('Should render Guest Book Component', () => {
       const accessAction = render(guestView['Access Action'])
       expect(accessAction.queryByTestId('access_actions')).toBeInTheDocument()
       expect(accessAction.queryByTestId('grant_access_btn')).toBeInTheDocument()
-      expect(accessAction.queryByTestId('grant_access_btn')).toBeDisabled()
+      expect(accessAction.queryByTestId('grant_access_btn')).not.toBeDisabled()
       expect(accessAction.queryByTestId('grant_access_btn').textContent).toContain('Translated text')
+
+      fireEvent.click(accessAction.queryByTestId('grant_access_btn'))
+      expect(grantedAccess).toBeCalled()
   })
 });
