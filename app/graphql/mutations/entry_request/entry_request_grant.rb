@@ -11,7 +11,7 @@ module Mutations
 
       # rubocop:disable Metrics/AbcSize
       def resolve(vals)
-        event = context[:site_community].event_logs.find_by(ref_id: vals[:id])
+        event = context[:site_community].event_logs.find_by(ref_id: vals[:id], subject: ['visitor_entry', 'visit_request'])
         raise GraphQL::ExecutionError, I18n.t('errors.event_log.not_found') unless event
 
         ActiveRecord::Base.transaction do
@@ -20,7 +20,6 @@ module Mutations
 
           phone_number = entry_request.phone_number
           entry_request.send_feedback_link(phone_number) if phone_number
-          event.update!(subject: vals[:subject]) if vals[:subject].present?
           { entry_request: entry_request }
         end
       end

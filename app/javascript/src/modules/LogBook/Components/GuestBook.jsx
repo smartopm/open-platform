@@ -8,7 +8,7 @@ import { useHistory } from 'react-router';
 import { makeStyles , useTheme } from '@material-ui/styles';
 import { Link } from 'react-router-dom';
 import CenteredContent from '../../../components/CenteredContent';
-import { dateToString } from '../../../components/DateContainer';
+import { dateToString, dateTimeToString } from '../../../components/DateContainer';
 import DataList from '../../../shared/list/DataList';
 import Text from '../../../shared/Text';
 import { GuestEntriesQuery } from '../graphql/guestbook_queries';
@@ -32,11 +32,12 @@ export default function GuestBook({ tabValue, handleAddObservation }) {
   // eslint-disable-next-line no-unused-vars
   const [loadGuests, { data, error }] = useLazyQuery(GuestEntriesQuery);
   const entriesHeaders = [
-    { title: 'Guest Name', col: 4, value: t('misc.submission_date') },
-    { title: 'Start of Visit', col: 2, value: t('misc.version_number') },
-    { title: 'End of Visit', col: 2, value: t('misc.submitted_by') },
-    { title: 'validity', col: 2, value: t('misc.status') },
-    { title: 'Access Action', col: 2, value: t('misc.status') }
+    { title: 'Guest Name', col: 4, value: t('misc.guest_name') },
+    { title: 'Start of Visit', col: 2, value: t('misc.start_of_visit') },
+    { title: 'End of Visit', col: 2, value: t('misc.end_of_visit') },
+    { title: 'Access Time', col: 2, value: t('misc.access_time') },
+    { title: 'validity', col: 1, value: t('misc.validity') },
+    { title: 'Access Action', col: 1, value: t('misc.access_action') }
   ];
 
   //   we check which tab we are on then we call the guests
@@ -85,7 +86,7 @@ export default function GuestBook({ tabValue, handleAddObservation }) {
             keys={entriesHeaders}
             data={renderGuest(guest, classes, handleGrantAccess, isMobile, loadingStatus)}
             hasHeader={false}
-            clickable
+            clickable={false} // TODO: @olivier allow it to be clickable to update the request
             defaultView={false}
             handleClick={() => history.push(`/request/${guest.id}?tab=${tabValue}`)}
           />
@@ -133,8 +134,13 @@ export function renderGuest(guest, classes, grantAccess, isMobile, loadingStatus
           <Text content={Boolean(guest.visitEndDate) && `Ends on ${dateToString(guest.visitEndDate)}`} className={classes.text} />
         </Grid>
       ),
+      'Access Time': (
+        <Grid item xs={12} md={2} data-testid="visit_dates">
+          <Text content={`Visit Time ${dateTimeToString(guest.startTime)} - ${dateTimeToString(guest.endTime)}`} className={classes.text} />
+        </Grid>
+      ),
       validity: (
-        <Grid item xs={12} md={2} data-testid="validity">
+        <Grid item xs={12} md={1} data-testid="validity">
           {
                 !isMobile && (
                 <Label title={checkRequests(guest).title} color={checkRequests(guest).color} />
@@ -143,7 +149,7 @@ export function renderGuest(guest, classes, grantAccess, isMobile, loadingStatus
         </Grid>
       ),
       'Access Action': (
-        <Grid item xs={12} md={2} data-testid="access_actions">
+        <Grid item xs={12} md={1} data-testid="access_actions">
           <CenteredContent>
             <Button 
               disabled={!checkRequests(guest).valid} 
