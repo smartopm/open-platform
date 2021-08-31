@@ -59,39 +59,33 @@ module Logs
 
     def visitor_entry_to_sentence
       if data['action'] == 'started'
-        I18n.t('activerecord.attributes.logs/event_log.
-          event_logs_to_sentence.start_visitor_entry_to_sentence',
+        I18n.t('activerecord.attributes.logs/event_log.sentences.start_visitor_entry_to_sentence',
                acting_user_name: acting_user_name,
                visitor_name: visitor_name)
       end
-      I18n.t('activerecord.attributes.logs/event_log.
-        event_logs_to_sentence.visitor_entry_to_sentence',
+      I18n.t('activerecord.attributes.logs/event_log.sentences.visitor_entry_to_sentence',
              acting_user_name: acting_user_name,
              visitor_name: visitor_name, action: data['action'])
     end
 
     def user_entry_to_sentence
-      I18n.t('activerecord.attributes.logs/event_log.
-        event_logs_to_sentence.user_entry_to_sentence',
+      I18n.t('activerecord.attributes.logs/event_log.sentences.user_entry_to_sentence',
              acting_user_name: acting_user_name,
              ref_user_name: ref_user_name)
     end
 
     def user_login_to_sentence
-      I18n.t('activerecord.attributes.logs/event_log.
-        event_logs_to_sentence.user_login_to_sentence',
+      I18n.t('activerecord.attributes.logs/event_log.sentences.user_login_to_sentence',
              acting_user_name: acting_user_name)
     end
 
     def user_switch_to_sentence
-      I18n.t('activerecord.attributes.logs/event_log.
-        event_logs_to_sentence.user_switch_to_sentence',
+      I18n.t('activerecord.attributes.logs/event_log.sentences.user_switch_to_sentence',
              acting_user_name: acting, ref_user_name: ref_user_name)
     end
 
     def user_active_to_sentence
-      I18n.t('activerecord.attributes.logs/event_log.
-        event_logs_to_sentence.user_active_to_sentence',
+      I18n.t('activerecord.attributes.logs/event_log.sentences.user_active_to_sentence',
              acting_user_name: acting_user_name)
     end
 
@@ -100,12 +94,10 @@ module Logs
       feedback = Users::Feedback.last
 
       if feedback.is_thumbs_up
-        I18n.t('activerecord.attributes.logs/event_log.
-          event_logs_to_sentence.user_thumbs_up_feedback_to_sentence',
+        I18n.t('activerecord.attributes.logs/event_log.sentences.thumbs_up_feedback_to_sentence',
                acting_user_name: acting_user_name)
       else
-        I18n.t('activerecord.attributes.logs/event_log.
-          event_logs_to_sentence.user_thumbs_down_feedback_to_sentence',
+        I18n.t('activerecord.attributes.logs/event_log.sentences.thumbs_down_feedback_to_sentence',
                acting_user_name: acting_user_name)
       end
     end
@@ -117,8 +109,7 @@ module Logs
     end
 
     def user_update_to_sentence
-      I18n.t('activerecord.attributes.logs/event_log.
-        event_logs_to_sentence.user_update_to_sentence',
+      I18n.t('activerecord.attributes.logs/event_log.sentences.user_update_to_sentence',
              ref_user_name: ref_user_name,
              acting_user_name: acting_user_name)
     end
