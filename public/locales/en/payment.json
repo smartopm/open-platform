@@ -55,7 +55,8 @@
     "transaction_title": "Kindly find your transaction details below.",
     "subscription_plan_created": "Plan created successfuly",
     "subscription_plan_updated": "Plan updated successfully",
-    "plan_renewal_text": "Your plan will auto renew on"
+    "plan_renewal_text": "Your plan will auto renew on",
+    "payment_split_message": "The additional amount {{amount}} will be allocated to the general fund"
   },
   "table_headers": {
     "receipt_number": "Receipt Number",

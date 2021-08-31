@@ -145,22 +145,24 @@ RSpec.describe Properties::PaymentPlan, type: :model do
       end
 
       describe '#check_general_plan_existence' do
-        it 'raises error if another payment plan with general status for the user is being
-         created' do
-          plan = Properties::PaymentPlan.create(
-            percentage: 50,
-            status: 'general',
-            plan_type: 'basic',
-            start_date: Time.zone.now,
-            user: user,
-            plot_balance: 0,
-            land_parcel: land_parcel,
-            total_amount: 100,
-            duration: 5,
-            installment_amount: 10,
-          )
-          expect(plan.persisted?).to eql false
-          expect(plan.errors.full_messages[0]).to eql 'User General plan exists for the user'
+        context 'when a payment plan with general status already exits' do
+          before { user.general_payment_plan }
+          it 'raises error' do
+            plan = Properties::PaymentPlan.create(
+              percentage: 50,
+              status: 'general',
+              plan_type: 'basic',
+              start_date: Time.zone.now,
+              user: user,
+              plot_balance: 0,
+              land_parcel: land_parcel,
+              total_amount: 100,
+              duration: 5,
+              installment_amount: 10,
+            )
+            expect(plan.persisted?).to eql false
+            expect(plan.errors.full_messages[0]).to eql 'User General plan exists for the user'
+          end
         end
       end
     end

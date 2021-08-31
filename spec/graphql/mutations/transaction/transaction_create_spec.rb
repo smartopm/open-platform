@@ -53,7 +53,6 @@ RSpec.describe Mutations::Transaction::TransactionCreate do
                 createdAt
                 amount
                 receiptNumber
-                currentPlotPendingBalance
                 paymentPlan{
                   pendingBalance
                   status
@@ -192,7 +191,7 @@ RSpec.describe Mutations::Transaction::TransactionCreate do
       end
 
       context 'when payment amount is more than the pending balance' do
-        it 'raises amount greater than pending balance error' do
+        it 'splits the payment and allocates the overpay amount to general plan' do
           variables = {
             userId: user.id,
             amount: 5000,
@@ -208,8 +207,13 @@ RSpec.describe Mutations::Transaction::TransactionCreate do
                                              current_user: admin,
                                              site_community: community,
                                            })
-          expect(result.dig('errors', 0, 'message'))
-            .to eql 'Amount cannot be greater than the plan pending balance'
+          expect(result.dig('errors', 0, 'message')).to be_nil
+          transaction_result = result.dig('data', 'transactionCreate', 'transaction')
+          expect(transaction_result['amount']).to eql 5000.0
+          plan_payment = transaction_result['planPayments'][0]
+          expect(plan_payment['amount']).to eql 1200.0
+          general_payments = user.general_payment_plan.plan_payments.reload
+          expect(general_payments[0].amount).to eql 3800.0
         end
       end
 
@@ -245,7 +249,6 @@ RSpec.describe Mutations::Transaction::TransactionCreate do
           expect(plan_payment['createdAt']).to eql transaction_result['createdAt']
           expect(plan_payment['receiptNumber']).to eql 'MI12345'
           expect(plan_payment['amount']).to eql 100.0
-          expect(plan_payment['currentPlotPendingBalance']).to eql 1100.0
           expect(plan_payment['paymentPlan']['pendingBalance']).to eql 1100.0
           expect(plan_payment['paymentPlan']['status']).to eql 'active'
 
@@ -253,7 +256,6 @@ RSpec.describe Mutations::Transaction::TransactionCreate do
           expect(other_plan_payment['createdAt']).to eql transaction_result['createdAt']
           expect(other_plan_payment['amount']).to eql 50.0
           expect(other_plan_payment['receiptNumber']).to eql 'MI12346'
-          expect(other_plan_payment['currentPlotPendingBalance']).to eql 2350.0
           expect(other_plan_payment['paymentPlan']['pendingBalance']).to eql 2350.0
           expect(other_plan_payment['paymentPlan']['status']).to eql 'active'
           expect(result.dig('errors', 0, 'message')).to eql nil
