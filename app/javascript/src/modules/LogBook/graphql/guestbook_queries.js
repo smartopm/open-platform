@@ -5,8 +5,8 @@ import gql from 'graphql-tag'
 
 
 export const GuestEntriesQuery = gql`
-  query schedledGuestEntries {
-    scheduledRequests {
+  query schedledGuestEntries($offset: Int, $limit: Int) {
+    scheduledRequests(offset: $offset, limit: $limit) {
         id
         name
         user {

@@ -10,8 +10,8 @@ import { GuestEntriesQuery } from '../graphql/guestbook_queries';
 describe('Should render Guest Book Component', () => {
   const mocks = {
     request: {
-      query: GuestEntriesQuery
-      //   variables: { id: '3c2f8ee2-598b-437c-b217-3e4c0f86c761' }
+      query: GuestEntriesQuery,
+      variables: { offset: 0, limit: 50 }
     },
     result: {
       data: {
@@ -56,7 +56,7 @@ describe('Should render Guest Book Component', () => {
       <MockedProvider mocks={[mocks]} addTypename={false}>
         <BrowserRouter>
           <MockedThemeProvider>
-            <GuestBook tabValue={2} handleAddObservation={observe} />
+            <GuestBook tabValue={2} handleAddObservation={observe} offset={0} limit={50} />
           </MockedThemeProvider>
         </BrowserRouter>
       </MockedProvider>

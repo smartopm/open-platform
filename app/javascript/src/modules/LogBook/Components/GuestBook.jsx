@@ -18,7 +18,7 @@ import { EntryRequestGrant } from '../../../graphql/mutations';
 import { Spinner } from '../../../shared/Loading';
 import MessageAlert from '../../../components/MessageAlert';
 
-export default function GuestBook({ tabValue, handleAddObservation }) {
+export default function GuestBook({ tabValue, handleAddObservation, offset, limit }) {
   const { t } = useTranslation('logbook');
   const history = useHistory();
   const classes = useStyles();
@@ -29,6 +29,7 @@ export default function GuestBook({ tabValue, handleAddObservation }) {
   const [message, setMessage] = useState({ isError: false, detail: ''});
 
   const [loadGuests, { data, loading: guestsLoading }] = useLazyQuery(GuestEntriesQuery, {
+      variables: { offset, limit },
       fetchPolicy: "cache-and-network"
   });
   const entriesHeaders = [
@@ -196,5 +197,7 @@ const useStyles = makeStyles({
 
 GuestBook.propTypes = {
   tabValue: PropTypes.number.isRequired,
+  offset: PropTypes.number.isRequired,
+  limit: PropTypes.number.isRequired,
   handleAddObservation: PropTypes.func.isRequired,
 };
