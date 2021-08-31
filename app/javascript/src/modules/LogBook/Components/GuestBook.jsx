@@ -46,8 +46,14 @@ export default function GuestBook({ tabValue, handleAddObservation }) {
     }
   }, [tabValue, loadGuests]);
 
-  function handleGrantAccess(user){
+  function handleGrantAccess(event, user){
+      event.stopPropagation()
     setLoading({ loading: true, currentId: user.id });
+    // handling compatibility with event log
+    const log = {
+        refId: user.id,
+        refType: 'Logs::EntryRequest'
+    }
     // the refId here will become the entry_request id that will be used more than once.
     grantEntry({ variables: { id: user.id, subject: 'visitor_entry' } })
       .then(() => {
@@ -56,7 +62,7 @@ export default function GuestBook({ tabValue, handleAddObservation }) {
           detail: t('logbook:logbook.success_message', { action: t('logbook:logbook.granted') })
         });
         setLoading({ ...loadingStatus, loading: false });
-        handleAddObservation(user);
+        handleAddObservation(log);
       })
       .catch(err => {
         setMessage({ isError: true, detail: err.message });
@@ -79,7 +85,7 @@ export default function GuestBook({ tabValue, handleAddObservation }) {
             keys={entriesHeaders}
             data={renderGuest(guest, classes, handleGrantAccess, isMobile, loadingStatus)}
             hasHeader={false}
-            clickable={false}
+            clickable
             defaultView={false}
             handleClick={() => history.push(`/request/${guest.id}`)}
           />
@@ -142,7 +148,7 @@ export function renderGuest(guest, classes, grantAccess, isMobile, loadingStatus
             <Button 
               disabled={!checkRequests(guest).valid} 
               variant={isMobile ? "contained" : "text"}
-              onClick={() => grantAccess(guest)}
+              onClick={event => grantAccess(event, guest)}
               disableElevation
               style={isMobile ? { backgroundColor: checkRequests(guest).valid && '#66A69B', color: '#FFFFFF' } : {}}
               startIcon={loadingStatus.loading && loadingStatus.currentId === guest.id && <Spinner />}

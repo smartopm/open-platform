@@ -325,7 +325,7 @@ export function IndexComponent({
                 handleAddObservation={handleAddObservation}
               />
             ))} */}
-          <GuestBook tabValue={tabValue} />
+          <GuestBook tabValue={tabValue} handleAddObservation={handleAddObservation} />
         </TabPanel>
         <TabPanel value={tabValue} index={3}>
           <>
