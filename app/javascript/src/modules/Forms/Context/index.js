@@ -54,6 +54,17 @@ export default function FormContextProvider({ children }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status]);
 
+  function requiredFieldIsEmpty(filledInProperties, formData) {
+    let result = false
+    // eslint-disable-next-line no-restricted-syntax
+    for (const form of formData) {
+      if (form.required && !filledInProperties.find(filled => form.id === filled.form_property_id)?.value) {
+        result = true;
+        break;
+      }
+    }
+    return result
+  }
   /**
    *
    * @param {object} formData all form properties for this form being submitted
@@ -92,6 +103,18 @@ export default function FormContextProvider({ children }) {
     // update all form values
     formData.map(prop => addPropWithValue(filledInProperties, prop.id));
     const cleanFormData = JSON.stringify({ user_form_properties: filledInProperties });
+
+    if (requiredFieldIsEmpty(filledInProperties, formData)) {
+      setFormState({
+        ...formState,
+        error: true,
+        info: t('misc.required_fields_empty'),
+        alertOpen: true,
+        isSubmitting: false
+      })
+      return;
+    }
+
     createFormUser({
       variables: {
         formId,
