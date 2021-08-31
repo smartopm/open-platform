@@ -1,6 +1,7 @@
 import React from 'react';
 import { render, waitFor, fireEvent, within } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
+import userEvent from '@testing-library/user-event'
 import { MockedProvider } from '@apollo/react-testing';
 import CreateLabel from '../../components/CreateLabel';
 import { LabelsQuery } from '../../graphql/queries';
@@ -31,7 +32,6 @@ describe('Create Label Component', () => {
     request: {
       query: LabelCreate,
       variables: {
-        id: 'hh27uyiu3hb43uy4iu3',
         shortDesc: 'COM',
       }
     },
@@ -42,7 +42,21 @@ describe('Create Label Component', () => {
     }
   };
 
-  it('renders correctly', async () => {
+  const anotherLabelCreateMock = {
+    request: {
+      query: LabelCreate,
+      variables: {
+        shortDesc: 'COM234',
+      }
+    },
+    result: {
+      data: {
+        labelCreate: {label: { id: 'hh27uyiu3hb43uy4iu3', shortDesc: 'COM234' }}
+      }
+    }
+  };
+
+  it('creating already existing label', async () => {
     const container = render(
       <MockedProvider mocks={[mock, labelCreateMock]} addTypename={false}>
         <CreateLabel
@@ -61,9 +75,7 @@ describe('Create Label Component', () => {
     const autoComplete = container.queryByTestId("userLabel-creator")
     const input = within(autoComplete).getByRole("textbox");
 
-    autoComplete.focus()
-
-    fireEvent.change(input, { target: { value: 'COM' } })
+    userEvent.type(input, 'COM')
 
     await waitFor(
       () => {
@@ -72,10 +84,26 @@ describe('Create Label Component', () => {
 
         expect(input.value).toEqual('COM') 
       },
-      { timeout: 500 }
+      { timeout: 200 }
+    );
+  });
+
+  it('test creating a new label', async () => {
+    const container = render(
+      <MockedProvider mocks={[mock, anotherLabelCreateMock]} addTypename={false}>
+        <CreateLabel
+          handleLabelSelect={jest.fn}
+          loading={false}
+          setLoading={jest.fn}
+          setMessage={jest.fn}
+        />
+      </MockedProvider>
     );
 
-    fireEvent.change(input, { target: { value: 'COM234' } })
+    const autoComplete = container.queryByTestId("userLabel-creator")
+    const input = within(autoComplete).getByRole("textbox");
+    
+    userEvent.type(input, 'COM234')
 
     await waitFor(
       () => {
@@ -83,7 +111,7 @@ describe('Create Label Component', () => {
 
         expect(input.value).toEqual('COM234') 
       },
-      { timeout: 500 }
+      { timeout: 200 }
     );
   });
 });
