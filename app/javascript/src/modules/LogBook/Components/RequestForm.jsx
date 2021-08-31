@@ -3,7 +3,7 @@ import React, { useState, useEffect, useContext } from 'react'
 import { useMutation } from 'react-apollo'
 import { StyleSheet, css } from 'aphrodite'
 import { useTranslation } from 'react-i18next'
-import { Button, TextField, MenuItem, IconButton , Avatar } from '@material-ui/core'
+import { Button, TextField, MenuItem, IconButton , Avatar, Typography } from '@material-ui/core'
 import { useHistory } from 'react-router'
 import PropTypes from 'prop-types'
 import { EntryRequestCreate } from '../../../graphql/mutations'
@@ -61,6 +61,10 @@ export default function RequestForm({ path }) {
     const isAnyInvalid = checkInValidRequiredFields(variables, requiredFields)
     if(isAnyInvalid && !path.includes('visit_request')){
       setInputValidationMsg({ isError: true })
+      return
+    }
+    if (days.length && !userData.visitEndDate) {
+      setMessage({ isError: true, detail: t('logbook:logbook.visit_end_error') });
       return
     }
 
@@ -276,6 +280,7 @@ export default function RequestForm({ path }) {
           </div>
 
           <br />
+          <Typography gutterBottom>{t('logbook:guest_book.repeats_on')}</Typography>
           {Object.entries(t('logbook:days', { returnObjects: true })).map(([key, value]) => (
             <IconButton
               key={key}
@@ -292,7 +297,7 @@ export default function RequestForm({ path }) {
                 <DatePickerDialog
                   selectedDate={userData.visitEndDate}
                   handleDateChange={date => handleChange({ target: { name: 'visitEndDate', value: date }})}
-                  label="Repeat until"
+                  label={t('logbook:guest_book.repeats_until')}
                   disablePastDate
                 /> 
               )
