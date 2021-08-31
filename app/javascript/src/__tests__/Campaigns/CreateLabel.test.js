@@ -74,5 +74,16 @@ describe('Create Label Component', () => {
       },
       { timeout: 500 }
     );
+
+    fireEvent.change(input, { target: { value: 'COM234' } })
+
+    await waitFor(
+      () => {
+        fireEvent.keyDown(autoComplete, { key: 'Enter' })
+
+        expect(input.value).toEqual('COM234') 
+      },
+      { timeout: 500 }
+    );
   });
 });
