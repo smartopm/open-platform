@@ -28,20 +28,6 @@ describe('Create Label Component', () => {
     }
   };
 
-  const labelCreateMock = {
-    request: {
-      query: LabelCreate,
-      variables: {
-        shortDesc: 'COM',
-      }
-    },
-    result: {
-      data: {
-        labelCreate: { label: { id: 'hh27uyiu3hb43uy4iu3', shortDesc: 'COM' }}
-      }
-    }
-  };
-
   const anotherLabelCreateMock = {
     request: {
       query: LabelCreate,
@@ -55,38 +41,6 @@ describe('Create Label Component', () => {
       }
     }
   };
-
-  it('creating already existing label', async () => {
-    const container = render(
-      <MockedProvider mocks={[mock, labelCreateMock]} addTypename={false}>
-        <CreateLabel
-          handleLabelSelect={jest.fn}
-          loading={false}
-          setLoading={jest.fn}
-          setMessage={jest.fn}
-        />
-      </MockedProvider>
-    );
-
-    expect(container.getByTestId("userLabel-creator")).toBeInTheDocument();
-    expect(container.queryByTestId("chip-label")).toBeDefined();
-    expect(container.queryByTestId("text-field")).toBeDefined();
-
-    const autoComplete = container.queryByTestId("userLabel-creator")
-    const input = within(autoComplete).getByRole("textbox");
-
-    autoComplete.focus()
-    userEvent.type(input, 'COM')
-
-    await waitFor(
-      () => {
-        fireEvent.keyDown(autoComplete, { key: 'ArrowDown' })
-        fireEvent.keyDown(autoComplete, { key: 'Enter' })
-        expect(input.value).toEqual('COM') 
-      },
-      { timeout: 500 }
-    );
-  });
 
   it('test creating a new label', async () => {
     const container = render(
