@@ -56,7 +56,7 @@ export default function GuestBook({ tabValue, handleAddObservation, offset, limi
         refType: 'Logs::EntryRequest'
     }
     
-    grantEntry({ variables: { id: user.id, subject: 'visitor_entry' } })
+    grantEntry({ variables: { id: user.id } })
       .then(() => {
         setMessage({
           isError: false,
