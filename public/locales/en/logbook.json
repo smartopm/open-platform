@@ -45,7 +45,7 @@
     "other_reason": "Other visiting reason",
     "visit_scheduled": "Visit scheduled for: {{date}} at {{time}}",
     "no_invited_guests": "No invited guests",
-    "visit_end_error": "End of visit date is required when a day is selected"
+    "visit_end_error": "Visitation dates are required"
   },
   "log_title": {
     "visitor": "Visitor",

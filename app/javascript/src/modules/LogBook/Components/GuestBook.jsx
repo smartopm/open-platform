@@ -106,7 +106,7 @@ export function renderGuest(guest, classes, grantAccess, isMobile, loadingStatus
     {
       'Guest Name': (
         <Grid item xs={12} md={4} data-testid="guest_name">
-          <Grid container spacing={1}>
+          <Grid container spacing={1} className={classes.userDetail}>
             <Grid item xs={2} sm={2}>
               <Avatar imageUrl={guest.user.imageUrl} user={guest.user} alt="avatar-image" />
             </Grid>
@@ -116,10 +116,10 @@ export function renderGuest(guest, classes, grantAccess, isMobile, loadingStatus
               </Typography>
               <b>Host: </b>
               <Link to={`/user/${guest.user.id}`}>
-                <Text content={guest.user.name} className={classes.host} />
+                <Text content={guest.user.name}  />
               </Link>
             </Grid>
-            <Grid item xs={4}>
+            <Grid item xs={4} style={{ paddingRight: 16 }}>
               {
                  isMobile &&  <Label title={checkRequests(guest, translate).title} color={checkRequests(guest, translate).color} />
               }
@@ -184,10 +184,18 @@ export function renderGuest(guest, classes, grantAccess, isMobile, loadingStatus
 
 const useStyles = makeStyles({
   text: {
-    fontSize: 14
+    fontSize: 14,
+    paddingLeft: 16
   },
   guestEntryActions: {
       cursor: 'pointer'
+  },
+  labelOnMobile: {
+    paddingRight: 16,
+    paddingLeft: 0
+  },
+  userDetail: {
+    paddingLeft: 16
   },
   host: {
     fontSize: 14,

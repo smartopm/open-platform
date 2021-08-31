@@ -30,7 +30,7 @@ export default function RequestForm({ path }) {
     companyName: '',
     business: '',
     reason: '',
-    visitationDate: null,
+    visitationDate: new Date(),
     visitEndDate: null,
     startTime: new Date(),
     endTime: new Date(),
@@ -63,7 +63,8 @@ export default function RequestForm({ path }) {
       setInputValidationMsg({ isError: true })
       return
     }
-    if (days.length && !userData.visitEndDate) {
+
+    if (!userData.visitationDate || (days.length && !userData.visitEndDate)) {
       setMessage({ isError: true, detail: t('logbook:logbook.visit_end_error') });
       return
     }
