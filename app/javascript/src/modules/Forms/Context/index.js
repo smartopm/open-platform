@@ -4,7 +4,7 @@ import { useApolloClient, useMutation } from 'react-apollo';
 import { useTranslation } from 'react-i18next';
 import { useFileUpload } from '../../../graphql/useFileUpload';
 import { FormUserCreateMutation } from '../graphql/forms_mutation';
-import { addPropWithValue, extractValidFormPropertyValue } from '../utils';
+import { addPropWithValue, extractValidFormPropertyValue, requiredFieldIsEmpty } from '../utils';
 
 export const FormContext = createContext({});
 
@@ -92,6 +92,18 @@ export default function FormContextProvider({ children }) {
     // update all form values
     formData.map(prop => addPropWithValue(filledInProperties, prop.id));
     const cleanFormData = JSON.stringify({ user_form_properties: filledInProperties });
+
+    if (requiredFieldIsEmpty(filledInProperties, formData)) {
+      setFormState({
+        ...formState,
+        error: true,
+        info: t('misc.required_fields_empty'),
+        alertOpen: true,
+        isSubmitting: false
+      })
+      return;
+    }
+
     createFormUser({
       variables: {
         formId,

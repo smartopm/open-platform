@@ -38,7 +38,7 @@ export function flattenFormProperties(categories) {
 }
 
 /**
- * We always want to show a category when we are editing the form  
+ * We always want to show a category when we are editing the form
  * We always want to show a category when it has no display condition
  * We can only display a category when its groupingId in displayCondition matches the value in the matching property
  * Otherwise we just dont display a category
@@ -72,7 +72,7 @@ export function checkCondition(category, properties, editMode) {
 /**
  * check if a given item has a value or a form_property_id
  * This is used to check fields that values before submitting a form
- * @param {object} item 
+ * @param {object} item
  * @returns {boolean}
  */
 export function nonNullValues(item){
@@ -93,9 +93,9 @@ export function extractValidFormPropertyValue(formProperties) {
 }
 
 /**
- * This focuses on field names which extractValidFormPropertyValue lacks, 
+ * This focuses on field names which extractValidFormPropertyValue lacks,
  * we could've done both under one function but when submitting a form GraphQL test complain because of unmatching args
- * @param {object} formProperties 
+ * @param {object} formProperties
  * @returns [{object}]
  */
 export function extractValidFormPropertyFieldNames(formProperties) {
@@ -107,10 +107,10 @@ export function extractValidFormPropertyFieldNames(formProperties) {
 
 
 /**
- * gets a markdown text and a list of formproperties with their values and finds variables that matches 
+ * gets a markdown text and a list of formproperties with their values and finds variables that matches
  * the fieldname and replaces its actual value from the about to be submitted form property.
- * @param {string} renderedText 
- * @param {[object]} data 
+ * @param {string} renderedText
+ * @param {[object]} data
  * @returns {string}
  */
 export function parseRenderedText(renderedText, data) {
@@ -127,4 +127,22 @@ export function parseRenderedText(renderedText, data) {
       return word;
     })
     .join(' ');
+}
+
+/**
+ * Validates required fields
+ * @param {[object]} filledInProperties
+ * @param {[object]} formData
+ * @returns {Boolean}
+ */
+export function requiredFieldIsEmpty(filledInProperties, formData) {
+  let result = false
+  // eslint-disable-next-line no-restricted-syntax
+  for (const form of formData) {
+    if (form.required && !filledInProperties.find(filled => form.id === filled.form_property_id)?.value) {
+      result = true;
+      break;
+    }
+  }
+  return result
 }
