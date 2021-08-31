@@ -8,7 +8,7 @@ import { LabelCreate }from '../graphql/mutations';
 import PropTypes from 'prop-types'
 
 export default function CreateLabel({ handleLabelSelect, loading, setLoading, setMessage }) {
-  const { data, refetch } = useQuery(LabelsQuery);
+  const { data, loading: labelLoading, refetch } = useQuery(LabelsQuery);
   const [labelCreate] = useMutation(LabelCreate);
   const newLabels  = useRef([]);
 
@@ -50,6 +50,7 @@ export default function CreateLabel({ handleLabelSelect, loading, setLoading, se
       }
     })
     .catch(err => {
+      console.log(err)
       setLoading(false);
       setMessage({
         isError: true,
@@ -66,9 +67,10 @@ export default function CreateLabel({ handleLabelSelect, loading, setLoading, se
           style={{ width: 250, margin: 1 }}
           multiple
           freeSolo
+          loading={labelLoading}
           disabled={loading}
           id="tags-filled"
-          options={data?.labels}
+          options={data?.labels || []}
           getOptionLabel={option => option.shortDesc}
           onChange={(event, newValue) => {
             // 2 things are happening here, there is a new value and an autocompleted value
@@ -106,6 +108,7 @@ export default function CreateLabel({ handleLabelSelect, loading, setLoading, se
               data-testid="text-field"
               placeholder="Assign Label"
               style={{width: "100%"}}
+              type='text'
             />
           )}
         />
