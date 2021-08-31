@@ -314,20 +314,10 @@ export function IndexComponent({
           {/* Todo: Handle the listing of enrolled users here */}
           {data &&
             data.result.map(user => (
-              <LogView key={user.id} user={user} refetch={refetch} tab={tabValue} />
+              <LogView key={user.id} user={user} />
             ))}
         </TabPanel>
         <TabPanel value={tabValue} index={2}>
-          {/* {data &&
-            data.result.map(log => (
-              <LogView
-                key={log.id}
-                user={log}
-                refetch={refetch}
-                tab={tabValue}
-                handleAddObservation={handleAddObservation}
-              />
-            ))} */}
           <GuestBook tabValue={tabValue} handleAddObservation={handleAddObservation} />
         </TabPanel>
         <TabPanel value={tabValue} index={3}>

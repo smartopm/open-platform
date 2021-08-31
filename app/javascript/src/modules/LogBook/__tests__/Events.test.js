@@ -7,8 +7,6 @@ import Events from '../Components/Events'
 import LogView from '../Components/LogView'
 import MockedThemeProvider from '../../__mocks__/mock_theme'
 
-jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn())
-
 describe('Should Render Events Component', () => {
   const data = {
     result: [
@@ -80,15 +78,12 @@ describe('Should Render Events Component', () => {
           type: 'client'
         }
       }
-    const { getByText, getByTestId } = render(
+    const { getByText } = render(
       <MockedProvider>
-        <LogView user={log} refetch={jest.fn()} tab={2} />
+        <LogView user={log} />
       </MockedProvider>
       )
     expect(getByText('Some User')).toBeInTheDocument()
-    expect(getByText('common:user_types.client')).toBeInTheDocument()
-    expect(getByText('logbook:logbook.visit_scheduled')).toBeInTheDocument()
-    expect(getByTestId('grant_access_btn')).toBeInTheDocument()
-    expect(getByTestId('grant_access_btn').textContent).toContain("logbook:access_actions.grant_access")
+    expect(getByText('user_types.client')).toBeInTheDocument()
   })
 })

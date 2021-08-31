@@ -1,4 +1,3 @@
-// use the logview to display a list of all scheduled visits
 import React, { useEffect, useState } from 'react';
 import { Button, Grid, Typography , useMediaQuery } from '@material-ui/core';
 import PropTypes from 'prop-types';
@@ -29,7 +28,6 @@ export default function GuestBook({ tabValue, handleAddObservation }) {
   const [loadingStatus, setLoading] = useState({ loading: false, currentId: ''});
   const [message, setMessage] = useState({ isError: false, detail: ''});
 
-  // eslint-disable-next-line no-unused-vars
   const [loadGuests, { data, loading: guestsLoading }] = useLazyQuery(GuestEntriesQuery, {
       fetchPolicy: "cache-and-network"
   });
@@ -42,7 +40,6 @@ export default function GuestBook({ tabValue, handleAddObservation }) {
     { title: 'Access Action', col: 1, value: t('misc.access_action') }
   ];
 
-  //   we check which tab we are on then we call the guests
   useEffect(() => {
     if (tabValue === 2) {
       loadGuests();
@@ -57,7 +54,7 @@ export default function GuestBook({ tabValue, handleAddObservation }) {
         refId: user.id,
         refType: 'Logs::EntryRequest'
     }
-    // the refId here will become the entry_request id that will be used more than once.
+    
     grantEntry({ variables: { id: user.id, subject: 'visitor_entry' } })
       .then(() => {
         setMessage({
@@ -74,7 +71,6 @@ export default function GuestBook({ tabValue, handleAddObservation }) {
   }
   return (
     <>
-      {/* add a toaster to show errors */}
       <MessageAlert
         type={message.isError ? 'error' : 'success'}
         message={message.detail}
@@ -139,7 +135,7 @@ export function renderGuest(guest, classes, grantAccess, isMobile, loadingStatus
         </Grid>
       ),
       'End of Visit': (
-        <Grid item xs={12} md={2} data-testid="endofvisit">
+        <Grid item xs={12} md={2} data-testid="end_of_visit">
           <Text 
             content={guest.visitEndDate ? translate('guest_book.ends_on_date', { date: dateToString(guest.visitEndDate) }) : '-'} 
             className={classes.text}
@@ -173,6 +169,7 @@ export function renderGuest(guest, classes, grantAccess, isMobile, loadingStatus
               disableElevation
               style={isMobile ? { backgroundColor: checkRequests(guest, translate).valid && '#66A69B', color: '#FFFFFF' } : {}}
               startIcon={loadingStatus.loading && loadingStatus.currentId === guest.id && <Spinner />}
+              data-testid="grant_access_btn"
               fullWidth
             >
               {translate('access_actions.grant_access')}

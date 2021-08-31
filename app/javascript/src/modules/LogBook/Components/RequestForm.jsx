@@ -13,7 +13,7 @@ import DatePickerDialog, { ThemedTimePicker } from '../../../components/DatePick
 import { defaultBusinessReasons } from '../../../utils/constants'
 import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider'
 import { checkInValidRequiredFields, defaultRequiredFields } from '../utils'
-import { useParamsQuery } from '../../../utils/helpers'
+import { formatError, useParamsQuery } from '../../../utils/helpers'
 import MessageAlert from '../../../components/MessageAlert'
 import { Spinner } from '../../../shared/Loading'
 
@@ -76,7 +76,8 @@ export default function RequestForm({ path }) {
         history.push(`/entry_logs?tab=${tabValue}`)
       })
       .catch(err => {
-        setMessage({ isError: true, detail: err.message });
+        setInputValidationMsg({ isSubmitting: false })
+        setMessage({ isError: true, detail: formatError(err.message) });
       })
   }
 
@@ -288,6 +289,7 @@ export default function RequestForm({ path }) {
               aria-label="choose day of week"
               component="span"
               onClick={() => handleChangeOccurrence(key)}
+              data-testid="week_days"
             >
               <Avatar style={{ backgroundColor: new Set(days).has(key) ? '#009CFF' : '#ADA7A7' }}>{value.charAt(0)}</Avatar>
             </IconButton>
