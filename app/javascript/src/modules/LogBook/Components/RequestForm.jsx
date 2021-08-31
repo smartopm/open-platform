@@ -30,7 +30,7 @@ export default function RequestForm({ path }) {
     companyName: '',
     business: '',
     reason: '',
-    visitationDate: new Date(),
+    visitationDate: null,
     visitEndDate: null,
     startTime: new Date(),
     endTime: new Date(),
