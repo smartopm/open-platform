@@ -12,6 +12,15 @@
     "sales": "Persona de ventas",
     "working": "Trabajando"
   },
+  "days": {
+    "friday": "Viernes",
+    "monday": "Lunes",
+    "saturday": "Sábado",
+    "sunday": "Domingo",
+    "thursday": "Jueves",
+    "tuesday": "Martes",
+    "wednesday": "Miércoles"
+  },
   "entry_reason": [
     "Cliente",
     "Futuro cliente",
@@ -20,6 +29,17 @@
     "Pase temporario",
     "Otro"
   ],
+  "guest_book": {
+    "ends_on_date": "Termina el ‪{{date}}‬",
+    "expired": "Expiró",
+    "invalid_now": "Ahora invalido",
+    "invalid_today": "No Habilitado Hoy",
+    "repeats_on": "Se repite",
+    "repeats_until": "Se repite hasta",
+    "start_of_visit": "Inicio de visita ‪{{date}}‬",
+    "valid": "Valido",
+    "visit_time": "Tiempo de visita ‪{{startTime}}‬ - ‪{{endTime}}‬"
+  },
   "log_title": {
     "date": "Fecha",
     "description": "Descripción",
@@ -61,12 +81,15 @@
     "log": "Registro",
     "log_exit": "Registrar Salida",
     "manual": "Manual",
+    "new_invite": "Nueva Invitación",
     "new_visit_request": "Solicitud de nueva visita",
     "new_visits": "Nueva Visita",
     "no_entry": "No hay registros de ingresos previos",
+    "no_invited_guests": "No tiene invitados",
     "observations": "Observaciones",
     "other_reason": "Otro motivo de visita",
     "print_scan": "Imprimir Scan",
+    "registered_guests": "Invitados Registrados",
     "showromm": "Sala de Exposicion",
     "success_message": "El permiso de acceso se ha aprobado.",
     "temperature_recorded": "Control de Temperatura",
@@ -75,6 +98,7 @@
     "today_is": "Hoy es {{date}}, {{time}}",
     "upcoming_visits": "Próximas visitas",
     "user_enrolled": "El usuario fue registrado con exito",
+    "visit_end_error": "Días de visita son requeridos",
     "visit_scheduled": "Visita programada para: {{date}} a las {{time}}",
     "visiting_reason": "Motivo de la visita"
   },

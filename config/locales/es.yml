@@ -66,6 +66,45 @@ es:
       logs/event_log:
         acting_user: Usuario interino
         community: Comunidad
+        sentences:
+          deleted_user: User(%{acting_user_id}) eliminado
+          deposit_create_to_sentence: "%{acting_user_name} creó un depósito"
+          form_create_to_sentence: "%{acting_user_name} creó el formulario"
+          form_publish_to_sentence: "%{acting_user_name} %{action} el formulario"
+          form_update_to_sentence: "%{acting_user_name}%{action}%{field_name} campo"
+          invoice_change_to_sentence: "%{acting_user_name} cambió una factura"
+          observation_log_to_sentence: "%{acting_user_name} agregó una observación
+            a una solicitud de entrada"
+          payment_update_to_sentence: "%{acting_user_name} hizo cambios a este pago"
+          post_read_to_sentence: La publicación %{post_id} fue leída por %{acting_user_name}
+          post_shared_to_sentence: La publicación %{post_id} fue compartida por %{acting_user_name}
+          ref_user_name: User(%{ref_id}) eliminado
+          shift_end_to_sentence: Turno de %{ref_user_name} fue terminado por %{acting_user_name}
+          showroom_entry_to_sentence: 'Usuario %{name} fue registrado en la sala de
+            exposición '
+          start_visitor_entry_to_sentence: "%{acting_user_name} comenzó a registrar
+            a %{visitor_name} para entrar."
+          thumbs_down_feedback_to_sentence: 'Usuario #{acting_user_name} dio respuesta
+            negativa'
+          thumbs_up_feedback_to_sentence: Usuario %{acting_user_name} dio respuesta
+            positiva
+          user_active_to_sentence: El usuario %{acting_user_name} estaba activo
+          user_enrolled_to_sentence: "%{new_user_name} fue registrado"
+          user_entry_to_sentence: El usuario %{acting_user_name} registró la entrada
+            de %{ref_user_name}
+          user_login_to_sentence: Usuario %{acting_user_name} entró
+          user_referred_to_sentence: Usuario %{ref_user_name} fue referido por %{acting_user_name}
+          user_switch_to_sentence: El usuario %{acting_user_name} fue cambiado al
+            usuario %{ref_user_name}
+          user_temp_to_sentence: Temperatura de %{visitor_name} fue registrada por
+            %{acting_user_name}
+          user_thumbs_down_feedback_to_sentence: 'Usuario #{acting_user_name} dio
+            respuesta negativa'
+          user_thumbs_up_feedback_to_sentence: Usuario %{acting_user_name} dio respuesta
+            positiva
+          user_update_to_sentence: "%{ref_user_name} fue actualizado por %{acting_user_name}"
+          visitor_entry_to_sentence: "%{acting_user_name}%{action}%{visitor_name}
+            para entrar."
         subject: Titulo
       logs/import_log:
         community: Comunidad
@@ -282,6 +321,7 @@ es:
       not_found: Plantilla no encontrada
     entry_request:
       empty_note: La nota no puede estar vacía
+      not_found: Solicitud de ingreso no encontrada
     event_log:
       not_found: Registro de eventos no encontrado
     form_property:
