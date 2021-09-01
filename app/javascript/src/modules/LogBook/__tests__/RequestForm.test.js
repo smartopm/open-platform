@@ -42,8 +42,8 @@ describe('Request Form Component', () => {
         expect(container.queryByText('logbook:guest_book.repeats_on')).toBeInTheDocument()
         expect(container.queryAllByTestId('week_days')[0]).toBeInTheDocument()
         // since there are no valid translations here, test will pick individual letters logbook:days 
-        expect(container.queryAllByTestId('week_days')[0]).toHaveTextContent('l')
-        expect(container.queryAllByTestId('week_days')[1]).toHaveTextContent('o')
-        expect(container.queryAllByTestId('week_days')[2]).toHaveTextContent('g')
+        expect(container.queryAllByTestId('week_days')[0]).toHaveTextContent('d')
+        expect(container.queryAllByTestId('week_days')[1]).toHaveTextContent('a')
+        expect(container.queryAllByTestId('week_days')[2]).toHaveTextContent('y')
     })
 })
