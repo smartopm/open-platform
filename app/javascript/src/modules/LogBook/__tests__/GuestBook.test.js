@@ -119,10 +119,10 @@ describe('Should render Guest Book Component', () => {
       const accessAction = render(guestView['Access Action'])
       expect(accessAction.queryByTestId('access_actions')).toBeInTheDocument()
       expect(accessAction.queryByTestId('grant_access_btn')).toBeInTheDocument()
-      expect(accessAction.queryByTestId('grant_access_btn')).not.toBeDisabled()
+      expect(accessAction.queryByTestId('grant_access_btn')).toBeDisabled()
       expect(accessAction.queryByTestId('grant_access_btn').textContent).toContain('Translated text')
 
       fireEvent.click(accessAction.queryByTestId('grant_access_btn'))
-      expect(grantedAccess).toBeCalled()
+      expect(grantedAccess).not.toBeCalled()
   })
 });
