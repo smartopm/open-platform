@@ -56,7 +56,15 @@
     "subscription_plan_created": "Plan created successfuly",
     "subscription_plan_updated": "Plan updated successfully",
     "plan_renewal_text": "Your plan will auto renew on",
-    "payment_split_message": "The additional amount {{amount}} will be allocated to the general fund"
+    "payment_split_message": "The additional amount {{amount}} will be allocated to the general fund",
+    "starts_on": "Starts on",
+    "ends_on": "Ends on",
+    "paid": "Paid",
+    "expected_payments": "Expected payments",
+    "value": "Value",
+    "owing": "Owing",
+    "installments": "Installments",
+    "subscription_plans": "Subscription Plans"
   },
   "table_headers": {
     "receipt_number": "Receipt Number",
@@ -94,7 +102,10 @@
     "receipt": "Receipt {{number}}",
     "recorded_details": "Recorded by {{name}}",
     "total_paid": "Total Amount Paid",
-    "unallocated_amount": "{{amount}} unallocated"
+    "unallocated_amount": "{{amount}} unallocated",
+    "plot_user_info": "Plot/User Info",
+    "dates": "Dates",
+    "owing_info": "Owing Info"
   },
   "errors": {
     "duration_requied": "Duration is required",

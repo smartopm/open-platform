@@ -23,7 +23,7 @@ describe('Payments Component', () => {
     expect(container.queryAllByText('search.search_for')[0]).toBeInTheDocument()
     expect(container.queryByText('common:misc.add_filter')).toBeInTheDocument()
     expect(container.queryByText('Add group')).toBeInTheDocument()
-    expect(container.queryByText('misc.previous')).toBeInTheDocument()
-    expect(container.queryByText('misc.next')).toBeInTheDocument()
+    expect(container.queryAllByText('misc.previous')[0]).toBeInTheDocument()
+    expect(container.queryAllByText('misc.next')[0]).toBeInTheDocument()
   });
 });

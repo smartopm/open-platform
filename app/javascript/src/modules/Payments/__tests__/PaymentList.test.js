@@ -4,7 +4,7 @@ import '@testing-library/jest-dom/extend-expect';
 import { MockedProvider } from '@apollo/react-testing';
 import { BrowserRouter } from 'react-router-dom';
 import { Spinner } from '../../../shared/Loading';
-import PaymentList, { renderPayment, renderSubscriptionPlans } from '../Components/PaymentList';
+import PaymentList, { renderPayment } from '../Components/PaymentList';
 import currency from '../../../__mocks__/currency';
 import { Context } from '../../../containers/Provider/AuthStateProvider';
 import userMock from '../../../__mocks__/userMock';
@@ -122,23 +122,5 @@ describe('Payment List Item Component', () => {
     expect(results[0]).toHaveProperty('Payment Info');
     expect(results[0]).toHaveProperty('Receipt Number');
     expect(results[0]).toHaveProperty('Plot Info');
-  });
-
-  it('should check if renderSubscriptionPlans works as expected', () => {
-    const menuData = {
-      menuList: [{ content: 'Edit subscription plan', isAdmin: true, color: '', handleClick: jest.fn()}],
-      handleTransactionMenu: jest.fn(),
-      anchorEl: null,
-      open: true,
-      userType: 'admin',
-      handleClose: jest.fn()
-    }
-    const results = renderSubscriptionPlans(subscriptionPlans[0], currency, menuData);
-    expect(results).toBeInstanceOf(Array);
-    expect(results[0]).toHaveProperty('Plan Type');
-    expect(results[0]).toHaveProperty('Start Date');
-    expect(results[0]).toHaveProperty('End Date');
-    expect(results[0]).toHaveProperty('Amount');
-    expect(results[0]).toHaveProperty('Status');
   });
 });

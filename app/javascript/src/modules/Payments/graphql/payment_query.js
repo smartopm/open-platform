@@ -223,4 +223,29 @@ export const SubscriptionPlansQuery = gql`
   }
 `
 
+export const CommunityPlansQuery = gql`
+  query communityPaymentPlans {
+    communityPaymentPlans {
+      pendingBalance
+      planType
+      startDate
+      endDate
+      planValue
+      status
+      totalPayments
+      expectedPayments
+      installmentsDue
+      owingAmount
+      user{
+        id
+        name
+        imageUrl
+      }
+      landParcel{
+        parcelNumber
+      }
+    }
+  }
+`
+
 export default UserTransactions;
