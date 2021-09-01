@@ -1,6 +1,6 @@
 import { checkInValidRequiredFields, checkRequests, isNotValidCheck } from '../utils';
 
-describe('check if the required fields are valid', () => {
+describe('logbook utils', () => {
   it('check required', () => {
     const initialState = {
       name: '',
@@ -41,13 +41,13 @@ describe('check if the required fields are valid', () => {
 
   it('return true for a valid guest', () => {
     jest.useFakeTimers('modern')
-    jest.setSystemTime(new Date('2021-05-20T10:51:00+02:00'))
+    jest.setSystemTime(new Date('2021-05-20 12:51'))
 
     const req = {
       visitEndDate: '2021-08-01T16:21:10.731Z',
-      visitationDate: '2021-08-20T10:51:00+02:00',
-      endTime: '2021-10-31T02:51:44.842Z',
-      startTime: '2021-04-31T11:51:44.842Z',
+      visitationDate: '2021-05-20 10:40',
+      endTime: '2021-05-20 17:51',
+      startTime: '2021-05-20 11:51',
       occursOn: [],
     }
 

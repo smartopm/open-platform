@@ -13,13 +13,13 @@
     "working": "Trabajando"
   },
   "days": {
-    "friday": "Viernes",
-    "monday": "Lunes",
-    "saturday": "Sábado",
     "sunday": "Domingo",
-    "thursday": "Jueves",
+    "monday": "Lunes",
     "tuesday": "Martes",
-    "wednesday": "Miércoles"
+    "wednesday": "Miércoles",
+    "thursday": "Jueves",
+    "friday": "Viernes",
+    "saturday": "Sábado"
   },
   "entry_reason": [
     "Cliente",

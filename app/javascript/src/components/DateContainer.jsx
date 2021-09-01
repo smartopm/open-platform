@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import moment from 'moment';
 
+
 // returns a stringified date
 export function dateTimeToString(date) {
   return moment.parseZone(date).format('HH:mm');

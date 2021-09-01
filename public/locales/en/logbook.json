@@ -102,5 +102,10 @@
     "visit_time": "Visit time {{startTime}} - {{endTime}}",
     "repeats_on": "Repeats on",
     "repeats_until": "Repeats Until"
+  },
+  "date_picker": {
+    "ok_label": "Ok",
+    "clear": "Clear",
+    "cancel": "Cancel"
   }
 }

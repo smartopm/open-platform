@@ -14,6 +14,7 @@ export default function I18Initializer() {
   useEffect(() => {
     if (!error && !loading && data.currentCommunity) {
       i18n.changeLanguage(savedLang || data.currentCommunity.language);
+      localStorage.setItem('default-language', savedLang || data.currentCommunity.language)
     } else {
       i18n.changeLanguage(savedLang);
     }

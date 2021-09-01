@@ -24,7 +24,7 @@ export default function MultiSelect({
         labelId="demo-mutiple-checkbox-label"
         id="demo-mutiple-checkbox"
         multiple
-        value={selectedOptions}
+        value={selectedOptions || []}
         onChange={handleOnChange}
         input={<Input />}
         name={fieldName}
@@ -33,7 +33,7 @@ export default function MultiSelect({
       >
         {options.map(option => (
           <MenuItem key={option} value={option}>
-            <Checkbox checked={selectedOptions.indexOf(option) > -1} color="primary" />
+            <Checkbox checked={selectedOptions?.indexOf(option) > -1} color="primary" />
             <ListItemText primary={option} />
           </MenuItem>
         ))}
