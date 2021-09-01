@@ -12,15 +12,6 @@
     "sales": "Persona de ventas",
     "working": "Trabajando"
   },
-  "days": {
-    "sunday": "Domingo",
-    "monday": "Lunes",
-    "tuesday": "Martes",
-    "wednesday": "Miércoles",
-    "thursday": "Jueves",
-    "friday": "Viernes",
-    "saturday": "Sábado"
-  },
   "entry_reason": [
     "Cliente",
     "Futuro cliente",

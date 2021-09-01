@@ -44,7 +44,7 @@ export default function RequestForm({ path }) {
   const [createEntryRequest] = useMutation(EntryRequestCreate)
   const [isModalOpen, setModal] = useState(false)
   const [inputValidationMsg, setInputValidationMsg] = useState({ isError: false, isSubmitting: false })
-  const { t } = useTranslation(['common', 'logbook'])
+  const { t } = useTranslation(['common', 'logbook', 'days'])
   const requestPath = useParamsQuery()
   const tabValue = requestPath.get('tab');
   const [message, setMessage] = useState({ isError: false, detail: ''});
@@ -286,7 +286,7 @@ export default function RequestForm({ path }) {
 
           <br />
           <Typography gutterBottom>{t('logbook:guest_book.repeats_on')}</Typography>
-          {Object.entries(t('logbook:days', { returnObjects: true })).map(([key, value]) => (
+          {Object.entries(t('days:days', { returnObjects: true })).map(([key, value]) => (
             <IconButton
               key={key}
               color="primary"
