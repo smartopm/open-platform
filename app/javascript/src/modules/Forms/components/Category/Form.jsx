@@ -21,6 +21,7 @@ import MessageAlert from '../../../../components/MessageAlert';
 import { FormCategoryDeleteMutation } from '../../graphql/form_category_mutations';
 import { formatError } from '../../../../utils/helpers';
 
+
 export default function Form({ editMode, formId }) {
   const [categoryFormOpen, setCategoryFormOpen] = useState(false);
   const [propertyFormOpen, setPropertyFormOpen] = useState(false);
@@ -76,7 +77,7 @@ export default function Form({ editMode, formId }) {
       setFormState({ ...formState, previewable: formDetailData.form?.preview });
       return;
     }
-    saveFormData(propertiesData, formId, authState.user.id);
+    saveFormData(propertiesData, formId, authState.user.id, categoriesData.data?.formCategories);
   }
 
   const formData = flattenFormProperties(categoriesData.data?.formCategories);
@@ -116,7 +117,7 @@ export default function Form({ editMode, formId }) {
           <DialogContentText component="div">
             <FormPreview
               loading={formState.isSubmitting}
-              handleFormSubmit={() => saveFormData(formData, formId, authState.user.id)}
+              handleFormSubmit={() => saveFormData(formData, formId, authState.user.id, categoriesData.data?.formCategories)}
               categoriesData={categoriesData}
             />
           </DialogContentText>

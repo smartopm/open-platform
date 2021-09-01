@@ -55,7 +55,7 @@ export function checkCondition(category, properties, editMode) {
     return true;
   }
   const property = properties.find(prop => prop.form_property_id === category.displayCondition.groupingId);
-  const value = typeof property?.value === 'object' ? property?.value.checked : property?.value
+  const value = typeof property?.value === 'object' ? property?.value?.checked : property?.value
   if (
     property &&
     eval(
@@ -137,11 +137,17 @@ export function parseRenderedText(renderedText, data) {
  */
 export function requiredFieldIsEmpty(filledInProperties, formData) {
   let result = false
+  const valid = formData.filter(category => checkCondition(category, filledInProperties, false))
+
+  // TODO: This could use some optimization
   // eslint-disable-next-line no-restricted-syntax
-  for (const form of formData) {
-    if (form.required && !filledInProperties.find(filled => form.id === filled.form_property_id)?.value) {
-      result = true;
-      break;
+  for (const category of valid) {
+    // eslint-disable-next-line no-restricted-syntax
+    for (const form of category.formProperties) {
+      if (form.required && !filledInProperties.find(filled => form.id === filled.form_property_id)?.value) {
+        result = true;
+        break;
+      }
     }
   }
   return result

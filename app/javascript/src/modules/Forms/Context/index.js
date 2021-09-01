@@ -60,7 +60,7 @@ export default function FormContextProvider({ children }) {
    * @param {String} formId form being submitted
    * @param {String} userId  the currently logged in user
    */
-  function saveFormData(formData, formId, userId) {
+  function saveFormData(formData, formId, userId, categories) {
     setFormState({
         ...formState,
         isSubmitting: true
@@ -93,7 +93,7 @@ export default function FormContextProvider({ children }) {
     formData.map(prop => addPropWithValue(filledInProperties, prop.id));
     const cleanFormData = JSON.stringify({ user_form_properties: filledInProperties });
 
-    if (requiredFieldIsEmpty(filledInProperties, formData)) {
+    if (requiredFieldIsEmpty(filledInProperties, categories)) {
       setFormState({
         ...formState,
         error: true,

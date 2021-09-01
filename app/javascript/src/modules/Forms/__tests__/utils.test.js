@@ -229,20 +229,36 @@ describe('Utilities', () => {
       }
     ]
 
+    const categories = [
+      {
+        formId: '7d05e98e-e6bb-43cb-838e-e6d76005e326',
+        displayCondition: null,
+        formProperties: formData 
+      },
+    ]
+
     const filledInProperties = [
       { value: 'Lagos', form_property_id: '5d8a6fd7-3ebc-4d34-9562-00a2518cddda' },
       { value: null, form_property_id: '527a112d-2342-4bff-b8f1-b5f9e92dce18' }
     ];
 
-    expect(requiredFieldIsEmpty(filledInProperties, formData)).toBe(true)
+    expect(requiredFieldIsEmpty(filledInProperties, categories)).toBe(true)
 
-    formData[1] = {
-      id: '527a112d-2342-4bff-b8f1-b5f9e92dce18',
-      fieldName: 'What is your name ?',
-      fieldType: 'text',
-      required: false
-    }
+    const categories2 = [
+      {
+        formId: '7d05e98e-e6bb-43cb-838e-e6d76005e326',
+        displayCondition: null,
+        formProperties: [
+          {
+            id: '5d8a6fd7-3ebc-4d34-9562-00a2518cddda',
+            fieldName: 'What is your location ?',
+            fieldType: 'text',
+            required: false
+          },
+        ] 
+      },
+    ]
 
-    expect(requiredFieldIsEmpty(filledInProperties, formData)).toBe(false)
+    expect(requiredFieldIsEmpty(filledInProperties, categories2)).toBe(false)
   })
 });
