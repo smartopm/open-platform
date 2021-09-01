@@ -6,7 +6,7 @@ const authState = {
     community: {
       name: 'City',
       logoUrl: 'http://image.jpg',
-      menuItems: [{ menu_link: 'https://some-link', menu_name: 'Custom Menu', display_on: ['Dashboard'] }],
+      menuItems: [{ menu_link: 'https://some-link', menu_name: 'Custom Menu', display_on: ['Dashboard'], roles: ['admin', 'client'] }],
       smsPhoneNumbers: ["+254724821901", "+154724582391"],
       emergencyCallNumber: "254724821901"
     },
