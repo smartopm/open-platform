@@ -163,6 +163,7 @@
     "flag": "Flag",
     "start_time": "Visit start time",
     "end_time": "Visit end time",
+    "day_of_visit": "Day of visit",
     "user_type": "User Type",
     "expiration": "Expiration",
     "already_expired": "Already Expired",

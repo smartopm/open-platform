@@ -266,7 +266,7 @@ export default function RequestForm({ path }) {
           <DatePickerDialog
             selectedDate={userData.visitationDate}
             handleDateChange={date => handleChange({ target: { name: 'visitationDate', value: date }})}
-            label="Day of visit"
+            label={t('misc.day_of_visit')}
           /> 
          
           <div>
