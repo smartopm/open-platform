@@ -59,6 +59,7 @@ export default function RequestForm({ path }) {
       occursOn: days,
       startTime: dateToString(userData.startTime, 'YYYY-MM-DD HH:mm'),
       endTime: dateToString(userData.endTime, 'YYYY-MM-DD HH:mm'),
+      visitEndDate: userData.visitEndDate || userData.visitationDate
     }
 
     const isAnyInvalid = checkInValidRequiredFields(variables, requiredFields)
