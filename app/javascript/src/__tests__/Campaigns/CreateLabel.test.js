@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, waitFor, fireEvent, within } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
-import userEvent from '@testing-library/user-event'
+// import userEvent from '@testing-library/user-event'
 import { MockedProvider } from '@apollo/react-testing';
 import CreateLabel from '../../components/CreateLabel';
 import { LabelCreate }from '../../graphql/mutations';
@@ -36,11 +36,11 @@ describe('Create Label Component', () => {
     const autoComplete = container.queryByTestId("userLabel-creator")
     const input = within(autoComplete).getByRole("textbox");
 
-    autoComplete.focus()
-    userEvent.type(input, 'COM234')
-
+    autoComplete.focus();
+    expect(autoComplete).toBeVisible();
     await waitFor(
       () => {
+        fireEvent.change(input, { target: { value: 'COM234' } });
         fireEvent.keyDown(autoComplete, { key: 'Enter' })
         expect(input.value).toEqual('COM234') 
       },
