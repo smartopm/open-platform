@@ -16,6 +16,7 @@ import { checkInValidRequiredFields, defaultRequiredFields } from '../utils'
 import { formatError, useParamsQuery } from '../../../utils/helpers'
 import MessageAlert from '../../../components/MessageAlert'
 import { Spinner } from '../../../shared/Loading'
+import { dateToString } from '../../../components/DateContainer'
 
 
 // TODO: As of now this is only serving the visit_request, we can still migrate to reuse the 2 forms
@@ -55,7 +56,9 @@ export default function RequestForm({ path }) {
       ...userData,
       otherReason: userData.business === 'other' ? userData.reason : '',
       reason: userData.business,
-      occursOn: days, 
+      occursOn: days,
+      startTime: dateToString(userData.startTime, 'YYYY-MM-DD HH:mm'),
+      endTime: dateToString(userData.endTime, 'YYYY-MM-DD HH:mm'),
     }
 
     const isAnyInvalid = checkInValidRequiredFields(variables, requiredFields)

@@ -7,12 +7,19 @@ import {
   KeyboardDateTimePicker,
   TimePicker
 } from '@material-ui/pickers'
+import { useTranslation } from 'react-i18next';
+import { es, enUS } from "date-fns/locale";
 import { checkPastDate } from "../utils/dateutil"
+import { getCurrentLng } from '../modules/i18n/util';
 
 export default function DatePickerDialog({ selectedDate, handleDateChange, label, width, required, inputProps, disablePastDate, inputVariant, styles, ...others }) {
+  const { t } = useTranslation('logbook')
     return (
-      <MuiPickersUtilsProvider utils={DateFnsUtils}>
+      <MuiPickersUtilsProvider utils={DateFnsUtils} locale={getCurrentLng().includes('es') ? es : enUS}>
         <KeyboardDatePicker
+          okLabel={t('date_picker.ok_label')}
+          clearLabel={t('date_picker.clear')}
+          cancelLabel={t('date_picker.cancel')}
           data-testid='date-picker'
           style={{ width: `${width || '100%'}`, ...styles }}
           clearable
@@ -38,9 +45,13 @@ export default function DatePickerDialog({ selectedDate, handleDateChange, label
 }
 
 export function DateAndTimePickers({ selectedDateTime, handleDateChange, label, pastDate }) {
+  const { t } = useTranslation('logbook')
   return (
-    <MuiPickersUtilsProvider utils={DateFnsUtils}>
+    <MuiPickersUtilsProvider utils={DateFnsUtils} locale={getCurrentLng().includes('es') ? es : enUS}>
       <KeyboardDateTimePicker
+        okLabel={t('date_picker.ok_label')}
+        clearLabel={t('date_picker.clear')}
+        cancelLabel={t('date_picker.cancel')}
         data-testid='datetime-picker'
         label={label}
         style={{ width: '100%' }}
@@ -60,9 +71,13 @@ export function DateAndTimePickers({ selectedDateTime, handleDateChange, label, 
 
 
 export function ThemedTimePicker({ handleTimeChange, time, label, ...otherProps }){
+  const { t } = useTranslation('logbook')
   return (
-    <MuiPickersUtilsProvider utils={DateFnsUtils}>
+    <MuiPickersUtilsProvider utils={DateFnsUtils} locale={getCurrentLng().includes('es') ? es : enUS}>
       <TimePicker
+        okLabel={t('date_picker.ok_label')}
+        clearLabel={t('date_picker.clear')}
+        cancelLabel={t('date_picker.cancel')}
         autoOk
         clearable
         label={label}
