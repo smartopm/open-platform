@@ -7,6 +7,7 @@ import MockedThemeProvider from '../../__mocks__/mock_theme';
 import GuestBook, { renderGuest } from '../Components/GuestBook';
 import { GuestEntriesQuery } from '../graphql/guestbook_queries';
 
+
 describe('Should render Guest Book Component', () => {
   const mocks = {
     request: {
@@ -28,8 +29,8 @@ describe('Should render Guest Book Component', () => {
             occursOn: [],
             visitEndDate: null,
             visitationDate: '2021-08-20T10:51:00+02:00',
-            endTime: '2021-10-31T02:51:44.842Z',
-            startTime: '2021-04-31T11:51:44.842Z'
+            endTime: '2021-10-31 22:51',
+            startTime: '2021-10-31 02:51'
           },
           {
             id: '696d857',
@@ -43,8 +44,8 @@ describe('Should render Guest Book Component', () => {
             occursOn: [],
             visitEndDate: null,
             visitationDate: '2021-08-31T10:20:21+02:00',
-            endTime: '2021-08-31T08:20:21.115Z',
-            startTime: '2021-08-31T08:20:21.115Z'
+            endTime: '2021-10-31 22:51',
+            startTime: '2021-10-31 02:51'
           }
         ]
       }
@@ -85,7 +86,7 @@ describe('Should render Guest Book Component', () => {
   it('should render the guest function properly', () => {
     // This is a good option to set specific date but apollo doesnt like it much in the first test case above
     jest.useFakeTimers('modern')
-    jest.setSystemTime(new Date('2021-05-20T10:51:00+02:00'))
+    jest.setSystemTime(new Date('2021-05-20 12:51'))
       const classes = {}
       const grantedAccess = jest.fn()
       const translate = jest.fn(() => 'Translated text')
