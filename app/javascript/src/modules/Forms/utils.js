@@ -139,6 +139,7 @@ export function requiredFieldIsEmpty(filledInProperties, formData) {
   let result = false
   const valid = formData.filter(category => checkCondition(category, filledInProperties, false))
 
+  // TODO: This could use some optimization
   // eslint-disable-next-line no-restricted-syntax
   for (const category of valid) {
     // eslint-disable-next-line no-restricted-syntax
