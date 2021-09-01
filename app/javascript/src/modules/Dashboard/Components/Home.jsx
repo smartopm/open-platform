@@ -15,13 +15,14 @@ import CustomerJourneyStatus from '../../CustomerJourney/Components/CustomerJour
 import NewsFeed from '../../News/Components/NewsFeed';
 import FeatureCheck from '../../Features';
 import SocialMediaLinks from '../../../components/SocialMediaLinks';
-import QuickLinks from '../../QuickLinks/Components/QuickLinks'
+import QuickLinks from '../../QuickLinks/Components/QuickLinks';
+import { filterQuickLinksByRole } from '../utils';
 
 const Home = () => {
   const authState = useContext(AuthStateContext);
   const { t } = useTranslation(['dashboard', 'common']);
-
   const dashboardQuickLinks = authState?.user?.community?.menuItems?.filter((quickLink) => quickLink?.display_on?.includes('Dashboard'));
+  const filteredQuickLinks = filterQuickLinksByRole(dashboardQuickLinks, authState.user.userType);
 
   if (!authState.loggedIn) return <Loading />;
 
@@ -34,7 +35,7 @@ const Home = () => {
           <FeatureCheck features={authState.user.community.features} name="Customer Journey">
             <ViewCustomerJourney translate={t} />
           </FeatureCheck>
-          <QuickLinks menuItems={dashboardQuickLinks} translate={t} />
+          <QuickLinks menuItems={filteredQuickLinks} translate={t} />
           <FeatureCheck features={authState.user.community.features} name="Payments">
             <PaymentSummary authState={authState} translate={t} />
           </FeatureCheck>
@@ -52,6 +53,7 @@ const Home = () => {
       {authState.user.userType === 'client' && (
         <div>
           <UserDetail user={authState.user} />
+          <QuickLinks menuItems={filteredQuickLinks} translate={t} />
           {authState.user.subStatus && (
             <FeatureCheck features={authState.user.community.features} name="Customer Journey">
               <CustomerJourneyStatus
@@ -75,7 +77,7 @@ const Home = () => {
           <FeatureCheck features={authState.user.community.features} name="News">
             <NewsFeed wordpressEndpoint={authState.user?.community.wpLink} />
           </FeatureCheck>
-          <Homepage authState={authState} />
+          <Homepage authState={authState} quickLinks={filteredQuickLinks} />
         </div>
       )}
       <SocialMediaLinks data={authState.user.community.socialLinks} communityName={authState.user.community.name} />

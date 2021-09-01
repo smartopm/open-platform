@@ -30,12 +30,12 @@ import HomeWorkIcon from '@material-ui/icons/HomeWork';
 import LibraryBooksIcon from '@material-ui/icons/LibraryBooks';
 import { useTranslation } from 'react-i18next'
 import Card from './Card'
-
+import QuickLinks from '../modules/QuickLinks/Components/QuickLinks';
 import SocialMediaLinks from './SocialMediaLinks'
 import { Footer } from './Footer'
 
 // This should be deprecated in favour of the new dashboard
-export default function Homepage({ authState }) {
+export default function Homepage({ authState, quickLinks }) {
   const { t } = useTranslation('dashboard')
   if (authState.user.userType === 'security_guard') {
     return <Redirect push to="/guard_home" />
@@ -288,6 +288,13 @@ export default function Homepage({ authState }) {
   return (
     <div>
       <div className="container">
+        <div className={css(styles.QuickLinks)}>
+          {
+            authState.user.userType === 'resident' && (
+              <QuickLinks menuItems={quickLinks} translate={t} />
+            )
+          }
+        </div>
         <div className="row justify-content-center">
           <div className="col-4-lg col-12-sm index-cards">
             <div className="d-flex flex-row flex-wrap justify-content-center mb-3">
@@ -328,5 +335,8 @@ const styles = StyleSheet.create({
   cardSize: {
     width: 200,
     height: 154
+  },
+  QuickLinks: {
+    marginLeft: '2em'
   }
 })

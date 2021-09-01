@@ -1,5 +1,5 @@
 import React from 'react';
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { BrowserRouter } from 'react-router-dom/';
 import { MockedProvider } from '@apollo/react-testing';
@@ -171,5 +171,39 @@ describe('HomePage component ', () => {
     expect(container.queryByText('common:misc.log_book')).toBeNull();
     expect(container.queryByText('common:misc.users')).toBeNull();
     expect(container.queryByText('common:misc.referrals')).toBeNull();
+  });
+
+  describe('Residents dashboard', () => {
+    const clientAuthState = {
+      loaded: true,
+      loggedIn: true,
+      setToken: jest.fn(),
+      user: {
+        avatarUrl: null,
+        community: {
+          name: 'Nkwashi',
+          menuItems: [{ menu_link: 'https://some-link', menu_name: 'Custom Menu', display_on: ['Dashboard'], roles: ['resident'] }],
+        },
+        email: '9753942',
+        expiresAt: null,
+        id: '11cdad78',
+        imageUrl: null,
+        name: 'John Doctor',
+        phoneNumber: '260971500000',
+        userType: 'resident'
+      }
+    };
+    it('renders quick links for residents', () => {
+      render(
+        <MockedProvider>
+          <BrowserRouter>
+            <Homepage authState={clientAuthState} quickLinks={clientAuthState.user.community.menuItems} />
+          </BrowserRouter>
+        </MockedProvider>
+      );
+      const quickLinks = screen.queryAllByTestId('link-button')
+
+      expect(quickLinks[0]).toBeInTheDocument();
+    });
   });
 });

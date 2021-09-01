@@ -22,7 +22,7 @@ import UserActionOptions from '../../Users/Components/UserActionOptions';
 import Loading from '../../../shared/Loading';
 import SOSModal from './SOSModal';
 import useGeoLocation from '../../../hooks/useGeoLocation'
-
+import { filterQuickLinksByRole } from '../../Dashboard/utils';
 import { allUserTypes, sosAllowedUsers } from '../../../utils/constants';
 
 const drawerWidth = 260;
@@ -68,9 +68,10 @@ export function MainNav({ authState }) {
   const [open, setOpen] = useState(false);
   const location = useGeoLocation();
   const menuQuickLinks = authState?.user?.community?.menuItems?.filter((quickLink) => quickLink?.display_on?.includes('Menu'))
+  const quickLinks = filterQuickLinksByRole(menuQuickLinks, authState?.user?.userType);
 
   const dynamicMenu =
-    menuQuickLinks
+    quickLinks
       ?.filter(item => item.menu_link && item.menu_name)
       .map(menuItem => ({
         routeProps: {
