@@ -23,6 +23,10 @@ module Types::Queries::PaymentPlan
       argument :offset, Integer, required: false
       argument :limit, Integer, required: false
     end
+
+    field :community_payment_plans, [Types::PaymentPlanType], null: true do
+      description 'returns all payment plans for community'
+    end
   end
 
   # Returns list of user's all payment plans with payments
@@ -70,6 +74,17 @@ module Types::Queries::PaymentPlan
     user = context[:site_community].users.find_by(id: user_id)
     user.payment_plans.includes(:land_parcel).where.not(pending_balance: 0).limit(limit)
         .offset(offset)
+  end
+
+  # Returns list of all communiy's payment plans
+  #
+  # @return [Array<PaymentPlan>]
+  def community_payment_plans
+    raise_unauthorized_error
+
+    Properties::PaymentPlan.joins(:land_parcel).where(
+      land_parcels: { community_id: context[:site_community].id },
+    ).order(:status)
   end
 
   private

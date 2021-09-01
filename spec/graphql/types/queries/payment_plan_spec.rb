@@ -7,21 +7,21 @@ RSpec.describe Types::Queries::Payment do
     let!(:user) { create(:user_with_community) }
     let!(:community) { user.community }
     let!(:admin) { create(:admin_user, community_id: community.id) }
-    let!(:non_admin) { create(:user_with_community) }
+    let!(:non_admin) { create(:user, community_id: community.id) }
     let!(:land_parcel) do
       create(:land_parcel, community_id: community.id,
                            parcel_number: 'Plot001')
     end
     let(:another_payment_plan) do
       create(:payment_plan, land_parcel_id: land_parcel.id, user_id: non_admin.id,
-                            installment_amount: 300)
+                            installment_amount: 300, status: 'completed')
     end
     let!(:plan_ownership) do
       another_payment_plan.plan_ownerships.create(user_id: user.id)
     end
     let!(:payment_plan) do
       create(:payment_plan, land_parcel_id: land_parcel.id, user_id: user.id,
-                            installment_amount: 100)
+                            installment_amount: 100, start_date: Time.zone.today - 2.months)
     end
     let!(:transaction) do
       create(:transaction, user_id: user.id, community_id: community.id, depositor_id: user.id,
@@ -103,6 +103,19 @@ RSpec.describe Types::Queries::Payment do
             landParcel{
               parcelNumber
             }
+          }
+        }
+      GQL
+    end
+
+    let(:community_payment_plans) do
+      <<~GQL
+        query communityPaymentPlans {
+          communityPaymentPlans {
+            totalPayments
+            expectedPayments
+            owingAmount
+            installmentsDue
           }
         }
       GQL
@@ -296,6 +309,35 @@ RSpec.describe Types::Queries::Payment do
           payment_plans_result = result.dig('data', 'userPaymentPlans', 0)
           expect(payment_plans_result['startDate'].to_date).to eql payment_plan.start_date.to_date
           expect(payment_plans_result['landParcel']['parcelNumber']).to eql 'Plot001'
+        end
+      end
+    end
+
+    describe '#community_payment_plans' do
+      context 'when current user is admin' do
+        it "returns list of community's active payment plans" do
+          result = DoubleGdpSchema.execute(community_payment_plans,
+                                           context: {
+                                             current_user: admin,
+                                             site_community: community,
+                                           }).as_json
+          expect(result.dig('data', 'communityPaymentPlans').size).to eql 2
+          payment_plan_result = result.dig('data', 'communityPaymentPlans', 0)
+          expect(payment_plan_result['totalPayments']).to eql 500.0
+          expect(payment_plan_result['expectedPayments']).to eql 300.0
+          expect(payment_plan_result['owingAmount']).to eql 0.0
+          expect(payment_plan_result['installmentsDue']).to eql 0
+        end
+      end
+
+      context 'when current user is not an admin' do
+        it 'raises unauthorized error' do
+          result = DoubleGdpSchema.execute(community_payment_plans,
+                                           context: {
+                                             current_user: non_admin,
+                                             site_community: community,
+                                           }).as_json
+          expect(result.dig('errors', 0, 'message')).to eql 'Unauthorized'
         end
       end
     end
