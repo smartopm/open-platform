@@ -277,8 +277,9 @@ export default function FormUpdate({ formUserId, userId, authState }) {
         <div key={formPropertiesData.formProperty.id}>
           {formPropertiesData.imageUrl && (
             <>
-              {formPropertiesData.formProperty.fieldName}
               <br />
+              <br />
+              <div style={{marginBottom: '-25px'}}>{formPropertiesData.formProperty.fieldName}</div>
               <ImageAuth
                 type={formPropertiesData.fileType?.split('/')[0]}
                 imageLink={formPropertiesData.imageUrl}
