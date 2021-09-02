@@ -3,6 +3,7 @@
 require 'roo'
 
 # rubocop:disable Metrics/ClassLength
+# rubocop:disable Rails/SkipsModelValidations
 # Script to read from spreadsheet and merge duplicate users
 class MergeUsers
   def self.batch_merge_from_file(path)
@@ -28,23 +29,15 @@ class MergeUsers
     user = Users::User.find_by(id: user_id)
     duplicate_user = Users::User.find_by(id: duplicate_id)
 
-    # rubocop:disable Rails/SkipsModelValidations
-    # Updates plan payments of general plan
-    user.general_payment_plan.plan_payments.update_all(user_id: duplicate_id)
-    user.general_payment_plan.destroy
+    # Update PlanPayment user
+    user.plan_payments.exluding_general_payments.update_all(user_id: duplicate_id)
 
-    # Update acounts and destroy user general land parcel
-    accounts = Properties::Account.where(user_id: user_id)
-    general_land_parcel = user.general_land_parcel
-    general_account = general_land_parcel.accounts.first
-    accounts.where.not(id: general_account.id).update_all(user_id: duplicate_id)
-    general_land_parcel.land_parcel_accounts.delete_all
-    general_account.destroy!
-    general_land_parcel.destroy!
-    # rubocop:enable Rails/SkipsModelValidations
+    merge_accounts_and_general_payments(user, duplicate_user)
+    raise StandardError, 'Update Failed' if Payments::PlanPayment.where(user_id: user_id).any?
 
     # Updates accounts details to their associated user's details
     duplicate_user.update_associated_accounts_details
+    raise StandardError, 'Update Failed' if Properties::Account.where(user_id: user_id).any?
 
     # Merges wallet details of users.
     merge_user_wallets(user_id, duplicate_id)
@@ -107,6 +100,22 @@ class MergeUsers
     end
     raise StandardError, 'Update Failed' if Logs::EventLog.where(acting_user_id: user_id).any?
 
+    # Update status_updated_by_id in FormUser
+    Forms::FormUser.where(status_updated_by_id: user_id)
+                   .update_all(status_updated_by_id: duplicate_id)
+    raise StandardError, 'Update Failed' if Forms::FormUser
+                                            .where(status_updated_by_id: user_id).any?
+
+    # Update depositor_id in Transaction
+    Payments::Transaction.where(depositor_id: user_id).update_all(depositor_id: duplicate_id)
+    raise StandardError, 'Update Failed' if Payments::Transaction.where(depositor_id: user_id).any?
+
+    # Update sub_administrator_id in Community
+    if user.community.sub_administrator_id.eql?(user_id)
+      user.community.update(sub_administrator_id: duplicate_id)
+      raise StandardError, 'Update Failed' if user.community.sub_administrator_id.eql?(user.id)
+    end
+
     models_with_user_id.each do |table_name|
       next if table_name.constantize.where(user_id: user_id).empty?
 
@@ -116,21 +125,44 @@ class MergeUsers
     raise StandardError, 'Delete Failed' unless Users::User.find(user_id).delete
   end
 
+  def self.merge_accounts_and_general_payments(user, duplicate_user)
+    if user.land_parcels.unscope(where: :status).general.first.present?
+      # Updates plan payments of general plan
+      general_plan = duplicate_user.general_payment_plan
+      user.general_payment_plan.plan_payments.update_all(user_id: duplicate_user.id,
+                                                         payment_plan_id: general_plan.id)
+      user.general_payment_plan.destroy!
+
+      # Update accounts and destroy user general land parcel
+      accounts = Properties::Account.where(user_id: user.id)
+      general_land_parcel = user.general_land_parcel
+      general_account = general_land_parcel.accounts.first
+      accounts.where.not(id: general_account.id).update_all(user_id: duplicate_user.id)
+      general_land_parcel.land_parcel_accounts.delete_all
+      general_account.destroy!
+      general_land_parcel.destroy!
+    else
+      accounts = Properties::Account.where(user_id: user.id)
+      accounts.update_all(user_id: duplicate_user.id)
+    end
+  end
+
   # Returns model names(including namespace models) which consist user_id.
   #
   # @return [Array] Model name (with/without namespace).
   def self.models_with_user_id
     model_names = []
     payment_models = %w[Invoice PaymentInvoice Payment Wallet WalletTransaction
-                        Transaction PlanPayment]
-    property_models = %w[PaymentPlan Valuation]
+                        Transaction]
+    property_models = %w[PaymentPlan Valuation PlanOwnership]
     note_models = %w[Note NoteHistory AssigneeNote]
-    form_models = %w[Form FormUser]
+    form_models = %w[FormUser UserFormProperty]
     discussion_models = %w[Discussion DiscussionUser]
     comment_models = %w[Comment NoteComment]
     log_models = %w[ActivityLog EventLog ImportLog SubstatusLog EntryRequest]
     notification_models = %w[EmailTemplate Message Notification]
     user_models = %w[ContactInfo Feedback ActivityPoint TimeSheet]
+    post_tag_models = %w[PostTagUser]
     ActiveRecord::Base.connection.tables.map(&:classify).each do |class_name|
       model_name = case class_name
                    when *payment_models then "Payments::#{class_name}"
@@ -142,6 +174,7 @@ class MergeUsers
                    when *log_models then "Logs::#{class_name}"
                    when *notification_models then "Notifications::#{class_name}"
                    when *user_models then "Users::#{class_name}"
+                   when *post_tag_models then "PostTags::#{class_name}"
                    else
                      class_name
                    end
@@ -174,3 +207,4 @@ class MergeUsers
   # rubocop:enable Metrics/PerceivedComplexity
 end
 # rubocop:enable Metrics/ClassLength
+# rubocop:enable Rails/SkipsModelValidations

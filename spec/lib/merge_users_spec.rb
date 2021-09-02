@@ -14,7 +14,8 @@ RSpec.describe MergeUsers do
   end
 
   let!(:user) { create(:user_with_community) }
-  let!(:duplicate_user) { create(:user_with_community, name: 'John Doe') }
+  let!(:community) { user.community }
+  let!(:duplicate_user) { create(:user, community: community, name: 'John Doe') }
 
   let!(:activity_point) { create(:activity_point, user: user, article_read: 2, referral: 10) }
 
@@ -25,24 +26,29 @@ RSpec.describe MergeUsers do
   let!(:assignee_note) { create(:assignee_note, user: user, note: note) }
 
   let!(:business) do
-    create(:business, user: user, community_id: user.community_id,
+    create(:business, user: user, community_id: community.id,
                       status: 'verified')
   end
 
   let!(:account) do
-    create(:account, user: user, community_id: user.community_id,
+    create(:account, user: user, community_id: community.id,
                      full_name: user.name)
   end
-  let!(:discussion) { create(:discussion, user: user, community_id: user.community_id) }
+  let!(:discussion) { create(:discussion, user: user, community_id: community.id) }
   let!(:comment) do
-    create(:comment, user: user, community_id: user.community_id, discussion: discussion)
+    create(:comment, user: user, community_id: community.id, discussion: discussion)
   end
   let!(:contact_info) { create(:contact_info, user: user) }
   let!(:discussion_user) { create(:discussion_user, user: user, discussion: discussion) }
-  let!(:entry_request) { create(:pending_entry_request, user: user, community: user.community) }
-  let!(:feedback) { create(:feedback, user: user, community: user.community) }
-  let!(:form) { create(:form, community: user.community) }
-  let!(:form_user) { create(:form_user, form: form, user: user) }
+  let!(:entry_request) { create(:pending_entry_request, user: user, community: community) }
+  let!(:feedback) { create(:feedback, user: user, community: community) }
+  let!(:form) { create(:form, community: community) }
+  let!(:category) { create(:category, form: form) }
+  let!(:form_property) { create(:form_property, form: form, category: category) }
+  let!(:form_user) { create(:form_user, form: form, user: user, status_updated_by: user) }
+  let!(:user_form_property) do
+    create(:user_form_property, form_property: form_property, form_user: form_user, user: user)
+  end
   let!(:message) { create(:message, user: user) }
   let!(:note_comment) { create(:note_comment, note: note, user: user, status: 'active') }
   let!(:note_history) do
@@ -57,25 +63,39 @@ RSpec.describe MergeUsers do
       note_entity_id: note.id,
     )
   end
-  let!(:payment) { create(:payment, user: user, community: user.community) }
-  let!(:substatus_log) { create(:payment, user: user, community: user.community) }
+  let!(:payment) { create(:payment, user: user, community: community) }
+  let!(:substatus_log) { create(:payment, user: user, community: community) }
   let!(:timesheet) { create(:time_sheet, user: user) }
   let!(:wallet) { create(:wallet, user: user) }
-  let!(:wallet_transaction) { create(:wallet_transaction, user: user, community: user.community) }
+  let!(:wallet_transaction) { create(:wallet_transaction, user: user, community: community) }
   let!(:showroom) { create(:showroom, userId: user.id) }
   let!(:user_label) { create(:user_label, user: user) }
   let!(:activity_log) do
-    create(:activity_log, reporting_user_id: user.id, community: user.community)
+    create(:activity_log, reporting_user_id: user.id, community: community)
   end
-  let!(:land_parcel) { create(:land_parcel, community_id: user.community_id) }
+  let!(:land_parcel) { create(:land_parcel, community_id: community.id) }
   let!(:payment_plan) do
     create(:payment_plan, land_parcel_id: land_parcel.id, user_id: user.id, plot_balance: 0)
   end
+  let!(:plan_ownership) do
+    create(:plan_ownership, user: user, payment_plan: payment_plan)
+  end
+  let!(:transaction) do
+    create(:transaction, user_id: user.id, community_id: community.id, amount: 500,
+                         depositor_id: user.id)
+  end
+  let!(:plan_payment) do
+    create(:plan_payment, user_id: user.id, community_id: community.id,
+                          transaction_id: transaction.id, payment_plan_id: payment_plan.id,
+                          amount: 500)
+  end
   let!(:invoice) do
-    create(:invoice, community: user.community, land_parcel: land_parcel, user_id: user.id,
+    create(:invoice, community: community, land_parcel: land_parcel, user_id: user.id,
                      payment_plan: payment_plan, status: 'in_progress', invoice_number: '1234')
   end
   let!(:payment_plan) { create(:payment_plan, user: user, land_parcel: land_parcel) }
+  let!(:post_tag) { create(:post_tag, community: community) }
+  let!(:post_tag_user) { create(:post_tag_user, post_tag: post_tag, user: user) }
   let(:duplicate_wallet) { create(:wallet, user: duplicate_user) }
 
   shared_examples 'merges_wallet_details_and_destroy_duplicate_user' do |pending_balance, balance|
@@ -90,6 +110,7 @@ RSpec.describe MergeUsers do
   end
 
   it 'updates user_id on neccessary tables' do
+    community.update(sub_administrator_id: user.id)
     MergeUsers.merge(user.id, duplicate_user.id)
 
     expect(activity_point.reload.user_id).to eq(duplicate_user.id)
@@ -103,6 +124,8 @@ RSpec.describe MergeUsers do
     expect(entry_request.reload.user_id).to eq(duplicate_user.id)
     expect(feedback.reload.user_id).to eq(duplicate_user.id)
     expect(form_user.reload.user_id).to eq(duplicate_user.id)
+    expect(form_user.status_updated_by_id).to eq(duplicate_user.id)
+    expect(user_form_property.reload.user_id).to eq(duplicate_user.id)
     expect(message.reload.user_id).to eq(duplicate_user.id)
     expect(note_comment.reload.user_id).to eq(duplicate_user.id)
     expect(note_history.reload.user_id).to eq(duplicate_user.id)
@@ -115,8 +138,44 @@ RSpec.describe MergeUsers do
     expect(payment_plan.reload.user_id).to eq(duplicate_user.id)
     expect(showroom.reload.userId).to eq(duplicate_user.id)
     expect(activity_log.reload.reporting_user_id).to eq(duplicate_user.id)
-    expect(duplicate_user.reload.land_parcels.unscope(where: :status).general.count).to eql 0
-    expect(duplicate_user.reload.payment_plans.unscope(where: :status).general.count).to eql 0
+    expect(plan_ownership.reload.user_id).to eq(duplicate_user.id)
+    expect(transaction.reload.user_id).to eq(duplicate_user.id)
+    expect(transaction.depositor_id).to eq(duplicate_user.id)
+    expect(plan_payment.reload.user_id).to eq(duplicate_user.id)
+    expect(business.reload.user_id).to eq(duplicate_user.id)
+    expect(post_tag_user.reload.user_id).to eq(duplicate_user.id)
+    expect(community.reload.sub_administrator_id).to eq(duplicate_user.id)
+  end
+
+  context 'when user have general plan and duplicate user do not have general plan' do
+    before do
+      user.general_payment_plan.plan_payments.create!(transaction_id: transaction.id,
+                                                      community_id: community.id,
+                                                      user_id: user.id, amount: 50.0)
+    end
+
+    it 'transfers the payments of general plan and destroys the general plan and land parcel' do
+      MergeUsers.merge(user.id, duplicate_user.id)
+
+      expect(duplicate_user.general_payment_plan.plan_payments.first.amount.to_f).to eql 50.0
+    end
+  end
+
+  context 'when both user and duplicate user have general plan' do
+    before do
+      user.general_payment_plan.plan_payments.create!(transaction_id: transaction.id,
+                                                      community_id: community.id,
+                                                      user_id: user.id, amount: 50.0)
+      duplicate_user.general_payment_plan
+    end
+
+    it 'transfers the payments of general plan and destroys the general plan and land parcel' do
+      MergeUsers.merge(user.id, duplicate_user.id)
+
+      expect(duplicate_user.reload.land_parcels.unscope(where: :status).general.count).to eql 1
+      expect(duplicate_user.reload.payment_plans.unscope(where: :status).general.count).to eql 1
+      expect(duplicate_user.general_payment_plan.plan_payments.first.amount.to_f).to eql 50.0
+    end
   end
 
   # rubocop:disable Rails/SkipsModelValidations
