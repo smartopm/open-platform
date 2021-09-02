@@ -279,7 +279,7 @@ export default function FormUpdate({ formUserId, userId, authState }) {
             <>
               <br />
               <br />
-              <div style={{marginBottom: '-25px'}}>{formPropertiesData.formProperty.fieldName}</div>
+              <div style={{marginBottom: '-25px'}} data-testid="attachment-name">{formPropertiesData.formProperty.fieldName}</div>
               <ImageAuth
                 type={formPropertiesData.fileType?.split('/')[0]}
                 imageLink={formPropertiesData.imageUrl}
