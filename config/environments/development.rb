@@ -60,7 +60,7 @@ Rails.application.configure do
 
   config.hosts << /[a-z0-9]+\.dgdp\.site/
 
-  Rails.application.routes.default_url_options[:host] = ENV['HOST'] || 'dev.dgdp.site'
+  Rails.application.routes.default_url_options[:host] = 'nurudeen.dgdp.site'
   Rails.application.routes.default_url_options[:protocol] = 'https'
 
 end
