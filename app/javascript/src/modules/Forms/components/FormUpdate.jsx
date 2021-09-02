@@ -277,7 +277,7 @@ export default function FormUpdate({ formUserId, userId, authState }) {
         <div key={formPropertiesData.formProperty.id}>
           {formPropertiesData.imageUrl && (
             <>
-              {t('misc.attachments')}
+              {formPropertiesData.formProperty.fieldName}
               <br />
               <ImageAuth
                 type={formPropertiesData.fileType?.split('/')[0]}
