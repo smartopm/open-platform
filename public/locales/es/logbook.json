@@ -12,6 +12,20 @@
     "sales": "Persona de ventas",
     "working": "Trabajando"
   },
+  "date_picker": {
+    "cancel": "Cancelar",
+    "clear": "Limpiar",
+    "ok_label": "Listo"
+  },
+  "days": {
+    "friday": "Viernes",
+    "monday": "Lunes",
+    "saturday": "Sábado",
+    "sunday": "Domingo",
+    "thursday": "Jueves",
+    "tuesday": "Martes",
+    "wednesday": "Miércoles"
+  },
   "entry_reason": [
     "Cliente",
     "Futuro cliente",
