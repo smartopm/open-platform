@@ -78,7 +78,7 @@ const AllEventLogs = (history, match) => {
       refType: null,
       offset,
       limit,
-      name: dbcSearchTerm
+      name: value !== 2 ? dbcSearchTerm : ''
     },
     fetchPolicy: 'cache-and-network'
   });
@@ -103,7 +103,7 @@ const AllEventLogs = (history, match) => {
 
   function handleChange(_event, newValue) {
     setvalue(newValue);
-    refetch();
+    setSearchTerm('');
     history.push(`/entry_logs?tab=${newValue}`)
   }
   return (
