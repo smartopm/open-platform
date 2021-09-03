@@ -66,6 +66,7 @@ export default function GuestBook({ tabValue, handleAddObservation, offset, limi
         handleAddObservation(log);
       })
       .catch(err => {
+        console.log(err)
         setMessage({ isError: true, detail: err.message });
         setLoading({ ...loadingStatus, loading: false });
       });
@@ -164,7 +165,7 @@ export function renderGuest(guest, classes, grantAccess, isMobile, loadingStatus
         <Grid item xs={12} md={1} data-testid="access_actions">
           <CenteredContent>
             <Button 
-              disabled={!checkRequests(guest, translate).valid} 
+              disabled={!checkRequests(guest, translate).valid || loadingStatus.loading && loadingStatus.currentId} 
               variant={isMobile ? "contained" : "text"}
               onClick={event => grantAccess(event, guest)}
               disableElevation

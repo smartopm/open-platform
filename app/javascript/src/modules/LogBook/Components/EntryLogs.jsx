@@ -5,7 +5,6 @@
 import React, { useState, Fragment, useContext, useEffect } from 'react';
 import { useMutation, useQuery } from 'react-apollo';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
-import { useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { TextField, Button, useTheme } from '@material-ui/core';
 import Loading, { Spinner } from '../../../shared/Loading';
@@ -48,19 +47,12 @@ const AllEventLogs = (history, match) => {
     setSearchTerm(dbcSearchTerm);
   }, [dbcSearchTerm]);
 
-  // TODO: olivier clean this up
-  function getQuery() {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    return new URLSearchParams(useLocation().search);
-  }
-
-  const query = getQuery();
+  const query = useParamsQuery();
 
   useEffect(() => {
     const offsetParams = query.get('offset');
     setOffset(Number(offsetParams));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [query]);
 
   const logsQuery = {
     0: subjects,
