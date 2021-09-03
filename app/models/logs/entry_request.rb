@@ -6,6 +6,8 @@ module Logs
   # rubocop:disable Metrics/ClassLength
   # Record of visitor entries to a community
   class EntryRequest < ApplicationRecord
+    include SearchCop
+
     belongs_to :user, class_name: 'Users::User'
     belongs_to :community
     belongs_to :grantor, class_name: 'Users::User', optional: true
@@ -14,6 +16,9 @@ module Logs
     validates :name, presence: true
 
     default_scope { order(created_at: :asc) }
+    search_scope :search do
+      attributes :name, :phone_number, :visitation_date, :visit_end_date, :start_time, :end_time
+    end
 
     class Unauthorized < StandardError; end
 

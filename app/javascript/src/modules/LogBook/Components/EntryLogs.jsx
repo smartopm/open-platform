@@ -318,7 +318,13 @@ export function IndexComponent({
             ))}
         </TabPanel>
         <TabPanel value={tabValue} index={2}>
-          <GuestBook tabValue={tabValue} handleAddObservation={handleAddObservation} offset={offset} limit={limit}  />
+          <GuestBook 
+            tabValue={tabValue} 
+            handleAddObservation={handleAddObservation} 
+            offset={offset} 
+            limit={limit}  
+            query={searchTerm}
+          />
         </TabPanel>
         <TabPanel value={tabValue} index={3}>
           <>
