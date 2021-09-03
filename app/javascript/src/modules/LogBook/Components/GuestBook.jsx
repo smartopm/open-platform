@@ -66,7 +66,6 @@ export default function GuestBook({ tabValue, handleAddObservation, offset, limi
         handleAddObservation(log);
       })
       .catch(err => {
-        console.log(err)
         setMessage({ isError: true, detail: err.message });
         setLoading({ ...loadingStatus, loading: false });
       });
