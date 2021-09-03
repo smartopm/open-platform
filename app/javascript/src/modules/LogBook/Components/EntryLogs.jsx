@@ -1,9 +1,6 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
-/* eslint-disable react/jsx-props-no-spreading */
-/* eslint-disable no-nested-ternary */
-/* eslint-disable security/detect-object-injection */
 /* eslint-disable react/jsx-one-expression-per-line */
 import React, { useState, Fragment, useContext, useEffect } from 'react';
 import { useMutation, useQuery } from 'react-apollo';
@@ -51,6 +48,7 @@ const AllEventLogs = (history, match) => {
     setSearchTerm(dbcSearchTerm);
   }, [dbcSearchTerm]);
 
+  // TODO: olivier clean this up
   function getQuery() {
     // eslint-disable-next-line react-hooks/rules-of-hooks
     return new URLSearchParams(useLocation().search);
@@ -165,6 +163,12 @@ export function IndexComponent({
       });
     }
   }
+  const searchPlaceholder = {
+    0: t('logbook.all_visits'),
+    1: t('logbook.new_visits'),
+    2: t('logbook.registered_guests'),
+    3: t('logbook.observations')
+  }
 
   function handleExitEvent(eventLog, logType) {
     setClickedEvent(eventLog);
@@ -221,11 +225,11 @@ export function IndexComponent({
   if (tabValue === 3) {
     observationLogs = data?.result?.reduce((groups, log) => {
       const date = log.createdAt.split('T')[0];
-      if (!groups[date]) {
+      if (!groups[String(date)]) {
         // eslint-disable-next-line no-param-reassign
-        groups[date] = [];
+        groups[String(date)] = [];
       }
-      groups[date].push(log);
+      groups[String(date)].push(log);
       return groups;
     }, {});
   }
@@ -278,7 +282,7 @@ export function IndexComponent({
             value={searchTerm}
             onChange={handleSearch}
             className="form-control"
-            placeholder={t('logbook.filter_entries')}
+            placeholder={`${t('common:form_placeholders.search')} ${searchPlaceholder[Number(tabValue)]}`}
           />
         </div>
       </div>
@@ -337,7 +341,7 @@ export function IndexComponent({
                 <GroupedObservations
                   key={groupedDate}
                   groupedDate={groupedDate}
-                  eventLogs={observationLogs[groupedDate]}
+                  eventLogs={observationLogs[String(groupedDate)]}
                   routeToEntry={routeToAction}
                 />
               ))}
