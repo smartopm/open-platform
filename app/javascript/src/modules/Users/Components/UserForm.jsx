@@ -452,6 +452,9 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
                     inputProps={{ 'aria-label': 'subStatus' }}
                     className={`${css(styles.selectInput)}`}
                   >
+                    <MenuItem key="none" value={null}>
+                      {t('misc.none')}
+                    </MenuItem>
                     {Object.entries(userSubStatus).map(([key, val]) => (
                       <MenuItem key={key} value={key}>
                         {val}
