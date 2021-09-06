@@ -12,7 +12,7 @@ export default function UploadField({ detail, upload, editable, uploaded }) {
       <label htmlFor={`button-${detail.label}`}>
         <FormHelperText
           style={{
-            margin: '4px 4px 0 0',
+            margin: '4px 4px -12px 0',
           }}
         >
           {`${detail.label || ''} ${detail.required ? '*' : ''}`}

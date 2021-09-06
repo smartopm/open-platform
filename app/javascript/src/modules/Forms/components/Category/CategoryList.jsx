@@ -4,6 +4,7 @@ import CategoryItem from './CategoryItem';
 import RenderForm from '../RenderForm';
 import FormPropertyCreateForm from '../FormPropertyCreateForm';
 import { Spinner } from '../../../../shared/Loading';
+import { sortPropertyOrder } from '../../../../utils/helpers';
 
 export default function CategoryList({
   categoriesData,
@@ -40,7 +41,7 @@ export default function CategoryList({
             loading={loading}
             currentId={currentId}
           >
-            {category.formProperties.map(formProperty => (
+            {category.formProperties.sort(sortPropertyOrder).map(formProperty => (
               <RenderForm
                 key={formProperty.id}
                 formPropertiesData={formProperty}

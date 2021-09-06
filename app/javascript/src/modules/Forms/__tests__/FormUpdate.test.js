@@ -79,7 +79,7 @@ describe('Form Component', () => {
             },
             {
               formProperty: {
-                fieldName: 'Dead Line',
+                fieldName: 'Image 1',
                 fieldType: 'file_upload',
                 fieldValue: null,
                 id: '3145c47e-1279-47b0-9da454c-dc4a7e362e',
@@ -189,7 +189,9 @@ describe('Form Component', () => {
           expect(
             container.queryAllByTestId('date-picker')[0]
             ).toHaveTextContent('Dead Line')
-        expect(container.queryByText('misc.attachments')).toBeInTheDocument()
+        expect(
+          container.queryAllByTestId('attachment-name')[0]
+          ).toHaveTextContent('Image 1')
         expect(container.queryByLabelText('Yes')).toBeInTheDocument()
         expect(container.queryByLabelText('No')).toBeInTheDocument()
         expect(container.queryByTestId('radio_field_name')).toBeInTheDocument()
