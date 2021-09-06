@@ -1,12 +1,41 @@
 import React from 'react';
 import { render, waitFor, fireEvent, within } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
-// import userEvent from '@testing-library/user-event'
+import userEvent from '@testing-library/user-event'
 import { MockedProvider } from '@apollo/react-testing';
 import CreateLabel from '../../components/CreateLabel';
 import { LabelCreate }from '../../graphql/mutations';
+import { LabelsQuery } from '../../graphql/queries'
 
 describe('Create Label Component', () => {
+  const labels = [
+    {
+      id: 'hh27uyiu3hb43uy4iu3',
+      shortDesc: 'COM',
+      userCount: 2,
+      description: 'desc',
+      color: 'blue'
+    },
+    {
+      id: 'hh27uyiu3hb43uy4',
+      shortDesc: 'COM2',
+      userCount: 3,
+      description: 'desc2',
+      color: 'black'
+    }
+  ];
+
+  const mock = {
+    request: {
+      query: LabelsQuery
+    },
+    result: {
+      data: {
+        labels
+      }
+    }
+  };
+
   const anotherLabelCreateMock = {
     request: {
       query: LabelCreate,
@@ -23,7 +52,7 @@ describe('Create Label Component', () => {
 
   it('test creating a new label', async () => {
     const container = render(
-      <MockedProvider mocks={[anotherLabelCreateMock]} addTypename={false}>
+      <MockedProvider mocks={[mock, anotherLabelCreateMock]} addTypename={false}>
         <CreateLabel
           handleLabelSelect={jest.fn}
           loading={false}
@@ -33,16 +62,16 @@ describe('Create Label Component', () => {
       </MockedProvider>
     );
 
-    const autoComplete = container.queryByTestId("userLabel-creator")
+    const autoComplete = container.queryByTestId("userLabel-creator");
     const input = within(autoComplete).getByRole("textbox");
 
     autoComplete.focus();
     expect(autoComplete).toBeVisible();
+    userEvent.type(input, 'COM234');
     await waitFor(
       () => {
-        fireEvent.change(input, { target: { value: 'COM234' } });
-        fireEvent.keyDown(autoComplete, { key: 'Enter' })
-        expect(input.value).toEqual('COM234') 
+        fireEvent.keyDown(input, { key: 'Enter' });
+        expect(input.value).toEqual('COM234');
       },
       { timeout: 500 }
     );
