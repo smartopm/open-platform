@@ -79,24 +79,26 @@ export default function GuestBook({ tabValue, handleAddObservation, offset, limi
         handleClose={() => setMessage({ ...message, detail: '' })}
       />
 
-      {
-        guestsLoading && <Spinner />
-      }
-      {data?.scheduledRequests?.length > 0 ? (
-        data?.scheduledRequests?.map(guest => (
+      {guestsLoading && <Spinner />}
+      {data?.scheduledRequests?.length > 0
+        ? data?.scheduledRequests?.map(guest => (
           <DataList
             key={guest.id}
             keys={entriesHeaders}
             data={renderGuest(guest, classes, handleGrantAccess, isMobile, loadingStatus, t)}
             hasHeader={false}
-            clickable={false} // TODO: @olivier allow it to be clickable to update the request
+            clickable
             defaultView={false}
-            handleClick={() => history.push(`/request/${guest.id}?tab=${tabValue}`)}
+            handleClick={() =>
+                history.push({
+                  pathname: `/request/${guest.id}`,
+                  search: `?tab=${tabValue}&type=guest`,
+                  state: { from: 'guests', offset }
+                })
+              }
           />
-        ))
-      ) : !guestsLoading && (
-        <CenteredContent>{t('logbook.no_invited_guests')}</CenteredContent>
-      )}
+          ))
+        : !guestsLoading && <CenteredContent>{t('logbook.no_invited_guests')}</CenteredContent>}
     </>
   );
 }

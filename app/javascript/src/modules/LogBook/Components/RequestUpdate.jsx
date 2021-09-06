@@ -28,6 +28,7 @@ import CenteredContent from '../../../components/CenteredContent';
 import AddObservationNoteMutation from '../graphql/logbook_mutations';
 import MessageAlert from '../../../components/MessageAlert'
 import { checkInValidRequiredFields, defaultRequiredFields } from '../utils';
+import { useParamsQuery } from '../../../utils/helpers';
 
 const initialState = {
     name: '',
@@ -44,14 +45,16 @@ const initialState = {
     temperature: '',
     loaded: false
 }
+// TODO: move react router hooks out of this component to make it easy to test different functionalities
 export default function RequestUpdate({ id }) {
-    const { state } = useLocation()
-    const { logs, } = useParams()
-    const history = useHistory()
-    const authState = useContext(Context)
-    const previousRoute = state?.from || logs
-    const isFromLogs = previousRoute === 'logs' ||  false
-
+  const { state } = useLocation()
+  const { logs, } = useParams()
+  const history = useHistory()
+  const authState = useContext(Context)
+  const query = useParamsQuery()
+  const requestType = query.get('type')
+  const previousRoute = state?.from || logs
+  const isFromLogs = previousRoute === 'logs' ||  false
   const [loadRequest, { data }] = useLazyQuery(EntryRequestQuery, {
     variables: { id }
   });
@@ -81,14 +84,12 @@ export default function RequestUpdate({ id }) {
     if (id) {
       loadRequest({ variables: { id } })
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [id])
+  }, [id, loadRequest])
 
   useEffect(() => {
-    if (formData.reason === 'other' && !id) {
-      setReasonModal(!isReasonModalOpen)
+    if (formData.reason === 'other') {
+      setReasonModal(true)
     }
-   /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [formData.reason, id])
 
 
@@ -201,12 +202,21 @@ export default function RequestUpdate({ id }) {
       setInputValidationMsg({ isError: true })
       return
     }
-    if (type === 'grant') {
-      setModalAction('grant')
-    } else {
-      setModalAction('deny')
+    switch (type) {
+      case 'grant':
+        setModalAction('grant')
+        setModal(!isModalOpen)
+        break;
+      case 'deny':
+        setModalAction('deny')
+        setModal(!isModalOpen)
+        break;
+      case 'update':
+        console.log('updating a guest request')
+        break;
+      default:
+        break;
     }
-    setModal(!isModalOpen)
   }
 
   function resetForm(to){
@@ -581,16 +591,18 @@ export default function RequestUpdate({ id }) {
           }
 
           <br />
-          {previousRoute !== 'enroll' && id &&(
+          {previousRoute !== 'enroll' && id && (
           <Button
             variant="contained"
-            onClick={event => handleModal(event, 'grant')}
+            onClick={event => handleModal(event, requestType === 'guest' ? 'update' : 'grant')}
             className={css(styles.grantButton)}
+            // color={requestType === 'guest' ? 'primary' : 'inherit'}
             disabled={isLoading}
             data-testid="entry_user_grant_request"
+            startIcon={isLoading && <Spinner />}
           >
             {
-              isLoading ? <Spinner /> : t('misc.log_new_entry')
+              requestType === 'guest' ? 'Update Guest' : t('misc.log_new_entry')
             }
           </Button>
           )}
@@ -621,7 +633,7 @@ export default function RequestUpdate({ id }) {
                 )}
               </div>
             </>
-          ) : !/logs|enroll/.test(previousRoute) ? (
+          ) : !/logs|enroll|guests/.test(previousRoute) ? (
             <>
               <Grid container direction="row" justify="flex-start" spacing={2}>
                 <Grid item>
