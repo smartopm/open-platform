@@ -262,46 +262,6 @@ export const EntryRequestCreate = gql`
   ${EntryRequestFragment.publicFields}
 `
 
-export const EntryRequestUpdate = gql`
-  mutation EntryRequestUpdateMutation(
-    $id: ID!
-    $name: String!
-    $reason: String
-    $vehiclePlate: String
-    $nrc: String
-    $otherReason: String
-    $phoneNumber: String
-    $visitationDate: String
-    $startTime: String
-    $endTime: String
-    $companyName: String
-    $temperature: String
-    $occursOn: [String!]
-    $visitEndDate: String
-  ) {
-    result: entryRequestUpdate(
-      id: $id
-      name: $name
-      reason: $reason
-      vehiclePlate: $vehiclePlate
-      nrc: $nrc
-      otherReason: $otherReason
-      phoneNumber: $phoneNumber
-      visitationDate: $visitationDate
-      startTime: $startTime
-      endTime: $endTime
-      companyName: $companyName
-      temperature: $temperature
-      occursOn: $occursOn
-      visitEndDate: $visitEndDate
-    ) {
-      entryRequest {
-        ...EntryRequestFields
-      }
-    }
-  }
-  ${EntryRequestFragment.publicFields}
-`
 // Reduce the returned response load
 export const EntryRequestGrant = gql`
   mutation EntryRequestGrantMutation($id: ID!) {

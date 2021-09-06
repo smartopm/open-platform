@@ -25,7 +25,7 @@ import { dateToString, dateTimeToString } from "../../../components/DateContaine
 import { Context } from '../../../containers/Provider/AuthStateProvider';
 import EntryNoteDialog from '../../../shared/dialogs/EntryNoteDialog';
 import CenteredContent from '../../../components/CenteredContent';
-import AddObservationNoteMutation from '../graphql/logbook_mutations';
+import AddObservationNoteMutation, { EntryRequestUpdateMutation } from '../graphql/logbook_mutations';
 import MessageAlert from '../../../components/MessageAlert'
 import { checkInValidRequiredFields, defaultRequiredFields } from '../utils';
 import { useParamsQuery } from '../../../utils/helpers';
@@ -61,6 +61,7 @@ export default function RequestUpdate({ id }) {
   const [createEntryRequest] = useMutation(EntryRequestCreate)
   const [grantEntry] = useMutation(EntryRequestGrant);
   const [denyEntry] = useMutation(EntryRequestDeny);
+  const [updateRequest] = useMutation(EntryRequestUpdateMutation)
   const [createUser] = useMutation(CreateUserMutation)
   const [updateLog] = useMutation(UpdateLogMutation)
   const [addObservationNote] = useMutation(AddObservationNoteMutation)
@@ -126,6 +127,24 @@ export default function RequestUpdate({ id }) {
         .catch(err => {
           setDetails({ ...observationDetails, message: err.message });
         });
+  }
+
+  function handleUpdateRequest() {
+    const otherFormData = {
+      ...formData,
+      reason: formData.business || formData.reason
+    };
+
+    setLoading(true);
+    updateRequest({ variables: { id, ...otherFormData } })
+      .then(() => {
+        setLoading(false);
+        setDetails({ ...observationDetails, message: t('logbook:logbook.registered_guest_updated') });
+      })
+      .catch(error => {
+        setLoading(false);
+        setDetails({ ...observationDetails, message: error.message });
+      });
   }
 
   function handleGrantRequest() {
@@ -212,7 +231,7 @@ export default function RequestUpdate({ id }) {
         setModal(!isModalOpen)
         break;
       case 'update':
-        console.log('updating a guest request')
+        handleUpdateRequest()
         break;
       default:
         break;

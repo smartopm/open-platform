@@ -33,6 +33,7 @@
     "grant_deny_access": "Are you sure you want to {{action}} access to {{name}} ?",
     "log": "Log",
     "success_message": "Success: Access {{action}} successfully",
+    "registered_guest_updated": "Success: Registered Guest successfully updated",
     "granted": "granted",
     "denied": "denied",
     "add_observation": "Add Observation",
