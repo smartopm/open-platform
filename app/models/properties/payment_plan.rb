@@ -66,7 +66,7 @@ module Properties
     #
     # @return [Boolean]
     def cancel!
-      update!(pending_balance: 0, status: 1)
+      update!(pending_balance: 0, status: :cancelled, renewable: false)
     end
 
     # Updates plan's pending balance and status.

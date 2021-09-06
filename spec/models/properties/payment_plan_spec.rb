@@ -64,7 +64,7 @@ RSpec.describe Properties::PaymentPlan, type: :model do
     it { is_expected.to have_db_column(:duration).of_type(:integer) }
     it { is_expected.to have_db_column(:frequency).of_type(:integer) }
     it do
-      is_expected.to have_db_column(:renewable).of_type(:boolean).with_options(default: false)
+      is_expected.to have_db_column(:renewable).of_type(:boolean).with_options(default: true)
     end
   end
 
