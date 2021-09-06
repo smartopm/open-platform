@@ -116,6 +116,18 @@ class MergeUsers
       raise StandardError, 'Update Failed' if user.community.sub_administrator_id.eql?(user.id)
     end
 
+    # Update PlanOwnerhip user
+    plan_ownerships = Properties::PlanOwnership.where(user_id: user_id)
+    plan_ownerships.each do |ownership|
+      if duplicate_user.plan_ownerships.exists?(payment_plan_id: ownership.payment_plan_id) ||
+         duplicate_user.payment_plans.exists?(id: ownership.payment_plan_id)
+        ownership.destroy
+      else
+        ownership.update(user_id: duplicate_id)
+      end
+    end
+    raise StandardError, 'Update Failed' if Properties::PlanOwnership.where(user_id: user_id).any?
+
     models_with_user_id.each do |table_name|
       next if table_name.constantize.where(user_id: user_id).empty?
 
@@ -154,7 +166,7 @@ class MergeUsers
     model_names = []
     payment_models = %w[Invoice PaymentInvoice Payment Wallet WalletTransaction
                         Transaction]
-    property_models = %w[PaymentPlan Valuation PlanOwnership]
+    property_models = %w[PaymentPlan Valuation]
     note_models = %w[Note NoteHistory AssigneeNote]
     form_models = %w[FormUser UserFormProperty]
     discussion_models = %w[Discussion DiscussionUser]

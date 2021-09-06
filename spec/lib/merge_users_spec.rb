@@ -16,7 +16,7 @@ RSpec.describe MergeUsers do
   let!(:user) { create(:user_with_community) }
   let!(:community) { user.community }
   let!(:duplicate_user) { create(:user, community: community, name: 'John Doe') }
-
+  let!(:other_user) { create(:user, community: community, name: 'John Doe') }
   let!(:activity_point) { create(:activity_point, user: user, article_read: 2, referral: 10) }
 
   let!(:note) do
@@ -77,8 +77,14 @@ RSpec.describe MergeUsers do
   let!(:payment_plan) do
     create(:payment_plan, land_parcel_id: land_parcel.id, user_id: user.id, plot_balance: 0)
   end
+  let!(:other_payment_plan) do
+    create(:payment_plan, land_parcel_id: land_parcel.id, user_id: other_user.id)
+  end
   let!(:plan_ownership) do
-    create(:plan_ownership, user: user, payment_plan: payment_plan)
+    create(:plan_ownership, user: user, payment_plan: other_payment_plan)
+  end
+  let(:other_plan_ownership) do
+    create(:plan_ownership, user: duplicate_user, payment_plan: other_payment_plan)
   end
   let!(:transaction) do
     create(:transaction, user_id: user.id, community_id: community.id, amount: 500,
@@ -139,6 +145,7 @@ RSpec.describe MergeUsers do
     expect(showroom.reload.userId).to eq(duplicate_user.id)
     expect(activity_log.reload.reporting_user_id).to eq(duplicate_user.id)
     expect(plan_ownership.reload.user_id).to eq(duplicate_user.id)
+    expect(Properties::PlanOwnership.count).to eql 1
     expect(transaction.reload.user_id).to eq(duplicate_user.id)
     expect(transaction.depositor_id).to eq(duplicate_user.id)
     expect(plan_payment.reload.user_id).to eq(duplicate_user.id)
@@ -175,6 +182,26 @@ RSpec.describe MergeUsers do
       expect(duplicate_user.reload.land_parcels.unscope(where: :status).general.count).to eql 1
       expect(duplicate_user.reload.payment_plans.unscope(where: :status).general.count).to eql 1
       expect(duplicate_user.general_payment_plan.plan_payments.first.amount.to_f).to eql 50.0
+    end
+  end
+
+  context 'when both users are co-owners of same payment plan' do
+    before { other_plan_ownership }
+
+    it "does not assigns user' plan ownewrship to duplicate user and destroys it" do
+      expect(Properties::PlanOwnership.count).to eql 2
+      MergeUsers.merge(user.id, duplicate_user.id)
+      expect(Properties::PlanOwnership.count).to eql 1
+      expect(other_plan_ownership.id).not_to be_nil
+    end
+  end
+
+  context 'when user is owner and duplicate user is co-owner of same payment plan' do
+    before { other_payment_plan.update(user_id: duplicate_user.id) }
+
+    it "does not assigns user' plan ownewrship to duplicate user and destroys it" do
+      MergeUsers.merge(user.id, duplicate_user.id)
+      expect(Properties::PlanOwnership.count).to eql 0
     end
   end
 
