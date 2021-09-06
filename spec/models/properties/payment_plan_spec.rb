@@ -188,5 +188,14 @@ RSpec.describe Properties::PaymentPlan, type: :model do
       end
       # rubocop:enable Layout/LineLength
     end
+
+    describe '#cancel!' do
+      before { payment_plan.cancel! }
+      it 'cancels the payment plan' do
+        expect(payment_plan.status).to eql('cancelled')
+        expect(payment_plan.pending_balance.to_f).to eql 0.0
+        expect(payment_plan.renewable).to eql false
+      end
+    end
   end
 end
