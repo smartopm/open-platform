@@ -29,6 +29,7 @@ import AddObservationNoteMutation, { EntryRequestUpdateMutation } from '../graph
 import MessageAlert from '../../../components/MessageAlert'
 import { checkInValidRequiredFields, defaultRequiredFields } from '../utils';
 import { useParamsQuery } from '../../../utils/helpers';
+import GuestTime from './GuestTime';
 
 const initialState = {
     name: '',
@@ -43,7 +44,8 @@ const initialState = {
     email: '',
     companyName: '',
     temperature: '',
-    loaded: false
+    loaded: false,
+    occursOn: []
 }
 // TODO: move react router hooks out of this component to make it easy to test different functionalities
 export default function RequestUpdate({ id }) {
@@ -53,6 +55,7 @@ export default function RequestUpdate({ id }) {
   const authState = useContext(Context)
   const query = useParamsQuery()
   const requestType = query.get('type')
+  const tabValue = query.get('tab');
   const previousRoute = state?.from || logs
   const isFromLogs = previousRoute === 'logs' ||  false
   const [loadRequest, { data }] = useLazyQuery(EntryRequestQuery, {
@@ -80,6 +83,7 @@ export default function RequestUpdate({ id }) {
   const requiredFields = authState?.user?.community?.communityRequiredFields?.manualEntryRequestForm || defaultRequiredFields
   const { t } = useTranslation(['common', 'logbook'])
   const [isReasonModalOpen, setReasonModal] = useState(false)
+  
 
   useEffect(() => {
     if (id) {
@@ -110,12 +114,29 @@ export default function RequestUpdate({ id }) {
     }
   }
 
+  function handleChangeOccurrence(day){
+    if(formData.occursOn.includes(day)){
+      const leftDays = formData.occursOn.filter(d => d !== day)
+      setFormData({
+        ...formData,
+        occursOn: leftDays
+      });
+      return
+    }
+    setFormData({
+      ...formData,
+      occursOn: [ ...formData.occursOn, day]
+    });
+  }
+
   function handleCreateRequest() {
 
     const otherFormData = {
       ...formData,
       // return reason if not other
-      reason: formData.business || formData.reason
+      reason: formData.business || formData.reason,
+      startTime: dateToString(formData.startTime, 'YYYY-MM-DD HH:mm'),
+      endTime: dateToString(formData.endTime, 'YYYY-MM-DD HH:mm')
     }
 
       return createEntryRequest({ variables: otherFormData })
@@ -132,7 +153,9 @@ export default function RequestUpdate({ id }) {
   function handleUpdateRequest() {
     const otherFormData = {
       ...formData,
-      reason: formData.business || formData.reason
+      reason: formData.business || formData.reason,
+      startTime: dateToString(formData.startTime, 'YYYY-MM-DD HH:mm'),
+      endTime: dateToString(formData.endTime, 'YYYY-MM-DD HH:mm')
     };
 
     setLoading(true);
@@ -140,6 +163,7 @@ export default function RequestUpdate({ id }) {
       .then(() => {
         setLoading(false);
         setDetails({ ...observationDetails, message: t('logbook:logbook.registered_guest_updated') });
+        history.push(`/entry_logs?tab=${tabValue}`)
       })
       .catch(error => {
         setLoading(false);
@@ -609,13 +633,24 @@ export default function RequestUpdate({ id }) {
             )
           }
 
+          {/* This should only show for registered users */}
+          {
+            requestType === 'guest' && (
+              <GuestTime
+                days={formData.occursOn}
+                userData={formData}
+                handleChange={handleInputChange}
+                handleChangeOccurrence={handleChangeOccurrence}
+              />
+            )
+          }
+
           <br />
           {previousRoute !== 'enroll' && id && (
           <Button
             variant="contained"
             onClick={event => handleModal(event, requestType === 'guest' ? 'update' : 'grant')}
             className={css(styles.grantButton)}
-            // color={requestType === 'guest' ? 'primary' : 'inherit'}
             disabled={isLoading}
             data-testid="entry_user_grant_request"
             startIcon={isLoading && <Spinner />}
@@ -652,7 +687,7 @@ export default function RequestUpdate({ id }) {
                 )}
               </div>
             </>
-          ) : !/logs|enroll|guests/.test(previousRoute) ? (
+          ) : !/logs|enroll|guests/.test(previousRoute) && !tabValue ? (
             <>
               <Grid container direction="row" justify="flex-start" spacing={2}>
                 <Grid item>

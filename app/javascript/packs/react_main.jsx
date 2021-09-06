@@ -300,7 +300,7 @@ const App = () => {
                                   <Route path="/event_logs" component={EventLogs} />
                                   <Route path="/new/user" exact component={UserEdit} />
                                   <Route path="/comments" exact component={CommentsPage} />
-                                  <Route path="/visit_request" component={EntryRequest} />
+                                  <Route path="/visit_request" component={RequestUpdate} />
                                 </Switch>
                               </AdminRoutes>
                               {/* we will also need a not found page for non-logged in user */}
