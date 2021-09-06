@@ -18,7 +18,7 @@ import { EntryRequestGrant } from '../../../graphql/mutations';
 import { Spinner } from '../../../shared/Loading';
 import MessageAlert from '../../../components/MessageAlert';
 
-export default function GuestBook({ tabValue, handleAddObservation, offset, limit }) {
+export default function GuestBook({ tabValue, handleAddObservation, offset, limit, query }) {
   const { t } = useTranslation('logbook');
   const history = useHistory();
   const classes = useStyles();
@@ -29,7 +29,7 @@ export default function GuestBook({ tabValue, handleAddObservation, offset, limi
   const [message, setMessage] = useState({ isError: false, detail: ''});
 
   const [loadGuests, { data, loading: guestsLoading }] = useLazyQuery(GuestEntriesQuery, {
-      variables: { offset, limit },
+      variables: { offset, limit, query },
       fetchPolicy: "cache-and-network"
   });
   const entriesHeaders = [
@@ -45,7 +45,7 @@ export default function GuestBook({ tabValue, handleAddObservation, offset, limi
     if (tabValue === 2) {
       loadGuests();
     }
-  }, [tabValue, loadGuests]);
+  }, [tabValue, loadGuests, query]);
 
   function handleGrantAccess(event, user){
       event.stopPropagation()
@@ -164,7 +164,7 @@ export function renderGuest(guest, classes, grantAccess, isMobile, loadingStatus
         <Grid item xs={12} md={1} data-testid="access_actions">
           <CenteredContent>
             <Button 
-              disabled={!checkRequests(guest, translate).valid} 
+              disabled={!checkRequests(guest, translate).valid || loadingStatus.loading && loadingStatus.currentId} 
               variant={isMobile ? "contained" : "text"}
               onClick={event => grantAccess(event, guest)}
               disableElevation
@@ -208,4 +208,5 @@ GuestBook.propTypes = {
   offset: PropTypes.number.isRequired,
   limit: PropTypes.number.isRequired,
   handleAddObservation: PropTypes.func.isRequired,
+  query: PropTypes.string.isRequired,
 };

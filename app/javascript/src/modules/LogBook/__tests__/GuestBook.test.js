@@ -12,7 +12,7 @@ describe('Should render Guest Book Component', () => {
   const mocks = {
     request: {
       query: GuestEntriesQuery,
-      variables: { offset: 0, limit: 50 }
+      variables: { offset: 0, limit: 50, query: '' }
     },
     result: {
       data: {
@@ -58,7 +58,7 @@ describe('Should render Guest Book Component', () => {
       <MockedProvider mocks={[mocks]} addTypename={false}>
         <BrowserRouter>
           <MockedThemeProvider>
-            <GuestBook tabValue={2} handleAddObservation={observe} offset={0} limit={50} />
+            <GuestBook tabValue={2} handleAddObservation={observe} offset={0} limit={50} query="" />
           </MockedThemeProvider>
         </BrowserRouter>
       </MockedProvider>
