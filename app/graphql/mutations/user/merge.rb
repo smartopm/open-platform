@@ -13,12 +13,12 @@ module Mutations
         user = context[:site_community].users.find(id)
         raise GraphQL::ExecutionError, I18n.t('errors.not_found') unless user
 
-        begin
+        ActiveRecord::Base.transaction do
           user.merge_user(duplicate_id)
           { success: true }
-        rescue StandardError
-          raise GraphQL::ExecutionError, I18n.t('errors.user.merge_failed')
         end
+      rescue StandardError
+        raise GraphQL::ExecutionError, I18n.t('errors.user.merge_failed')
       end
 
       def authorized?(vals)
