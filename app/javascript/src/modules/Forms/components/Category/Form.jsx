@@ -30,7 +30,7 @@ export default function Form({ editMode, formId }) {
   const [categoryId, setCategoryId] = useState('');
   const categoriesData = useQuery(FormCategoriesQuery, {
     variables: { formId },
-    fetchPolicy: 'cache-and-network'
+    fetchPolicy: 'no-cache'
   });
   const { data: formDetailData, loading } = useQuery(FormQuery, { variables: { id: formId } });
   const { formState, saveFormData, setFormState } = useContext(FormContext);
