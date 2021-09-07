@@ -93,7 +93,8 @@
     "start_of_visit": "Start of visit {{date}}",
     "visit_time": "Visit time {{startTime}} - {{endTime}}",
     "repeats_on": "Repeats on",
-    "repeats_until": "Repeats Until"
+    "repeats_until": "Repeats Until",
+    "update_guest": "Update Guest"
   },
   "date_picker": {
     "ok_label": "Ok",

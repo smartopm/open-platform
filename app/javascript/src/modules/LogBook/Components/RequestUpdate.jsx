@@ -44,17 +44,15 @@ const initialState = {
     companyName: '',
     temperature: '',
     loaded: false,
-    occursOn: []
+    occursOn: [],
+    visitationDate: null,
+    visitEndDate: null,
+    startTime: new Date(),
+    endTime: new Date(),
 }
 // TODO: move react router hooks out of this component to make it easy to test different functionalities
 export default function RequestUpdate({ id, previousRoute, requestType, tabValue }) {
-  // const { state } = useLocation()
-  // const { logs, } = useParams()
   const history = useHistory()
-  // const query = useParamsQuery()
-  // const requestType = query.get('type')
-  // const tabValue = query.get('tab');
-  // const previousRoute = state?.from || logs
   const authState = useContext(Context)
   const isFromLogs = previousRoute === 'logs' ||  false
   const [loadRequest, { data }] = useLazyQuery(EntryRequestQuery, {
@@ -144,7 +142,7 @@ export default function RequestUpdate({ id, previousRoute, requestType, tabValue
           return data.result.entryRequest.id
         })
         .catch(err => {
-          setDetails({ ...observationDetails, message: err.message });
+          setDetails({ ...observationDetails, isError: true, message: err.message });
         });
   }
 
@@ -156,6 +154,11 @@ export default function RequestUpdate({ id, previousRoute, requestType, tabValue
       endTime: dateToString(formData.endTime, 'YYYY-MM-DD HH:mm')
     };
 
+    if (!formData.visitationDate || (formData.occursOn.length && !formData.visitEndDate)) {
+      setDetails({ ...observationDetails, isError: true, message: t('logbook:logbook.visit_end_error') });
+      return
+    }
+
     setLoading(true);
     updateRequest({ variables: { id, ...otherFormData } })
       .then(() => {
@@ -165,7 +168,7 @@ export default function RequestUpdate({ id, previousRoute, requestType, tabValue
       })
       .catch(error => {
         setLoading(false);
-        setDetails({ ...observationDetails, message: error.message });
+        setDetails({ ...observationDetails, isError: true, message: error.message });
       });
   }
 
@@ -181,7 +184,7 @@ export default function RequestUpdate({ id, previousRoute, requestType, tabValue
       })
       .catch((error) => {
         setLoading(false)
-        setDetails({ ...observationDetails, message: error.message })
+        setDetails({ ...observationDetails, isError: true, message: error.message })
       });
   }
 
@@ -202,7 +205,7 @@ export default function RequestUpdate({ id, previousRoute, requestType, tabValue
       })
       .catch((error) => {
         setLoading(false)
-        setDetails({ ...observationDetails, message: error.message })
+        setDetails({ ...observationDetails, isError: true, message: error.message })
       });
   }
 
@@ -233,7 +236,7 @@ export default function RequestUpdate({ id, previousRoute, requestType, tabValue
       })
       .catch((err) => {
         setLoading(false)
-        setDetails({ ...observationDetails, message: err.message })
+        setDetails({ ...observationDetails, isError: true, message: err.message })
       })
   }
 
@@ -654,7 +657,7 @@ export default function RequestUpdate({ id, previousRoute, requestType, tabValue
             startIcon={isLoading && <Spinner />}
           >
             {
-              requestType === 'guest' ? 'Update Guest' : t('misc.log_new_entry')
+              requestType === 'guest' ? t('logbook:guest_book.update_guest') : t('misc.log_new_entry')
             }
           </Button>
           )}
@@ -668,7 +671,9 @@ export default function RequestUpdate({ id, previousRoute, requestType, tabValue
                   variant="contained"
                   onClick={handleEnrollUser}
                   className={css(styles.grantButton)}
+                  data-testid="entry_user_enroll"
                   disabled={isLoading}
+                  startIcon={isLoading && <Spinner />}
                 >
                   {isLoading
                     ? `${t('logbook:logbook.enrolling')} ...`

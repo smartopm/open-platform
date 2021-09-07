@@ -8,6 +8,7 @@ import RequestUpdate from '../Components/RequestUpdate';
 import MockedThemeProvider from '../../__mocks__/mock_theme';
 import userMock from '../../../__mocks__/userMock';
 import { Context } from '../../../containers/Provider/AuthStateProvider';
+import { EntryRequestUpdateMutation } from '../graphql/logbook_mutations';
 
 describe('RequestUpdate Component ', () => {
   const mocks = {
@@ -35,6 +36,12 @@ describe('RequestUpdate Component ', () => {
             id: '162f7517-7cc8-42f9-b2d0-a83a16d59569',
             __typename: 'User'
           },
+          occursOn: ["monday"],
+          visitEndDate: "2020-10-15T09:31:06Z",
+          visitationDate: "2020-10-05T09:31:06Z",
+          endTime: "2020-10-15T09:31:06Z",
+          startTime: "2020-10-15T19:31:06Z",
+          companyName: "",
           __typename: 'EntryRequest'
         }
       }
@@ -95,8 +102,104 @@ describe('RequestUpdate Component ', () => {
           'logbook:logbook.call_manager'
         );
         expect(container.queryByText('form_fields.full_name')).toBeInTheDocument();
+        
+        fireEvent.click(container.queryByTestId('entry_user_grant'))
       },
       { timeout: 50 }
     );
   });
+
+  it('should render proper form when coming from guest list', async () => {
+    const previousRoute = "guests"
+    const requestType = "guest"
+    const updateMock = {
+      request: {
+        query: EntryRequestUpdateMutation,
+        variables: { 
+          id: "3c2f8ee2-598b-437c-b217-3e4c0f86c761",
+          name: 'some name',
+          phoneNumber: '',
+          nrc: '',
+          vehiclePlate: '',
+          reason: '',
+          business: '',
+          state: '',
+          userType: '',
+          expiresAt: '',
+          email: '',
+          companyName: '',
+          temperature: '',
+          loaded: false,
+          occursOn: [],
+          visitEndDate: "",
+          visitationDate: "",
+          endTime: "",
+          startTime: "",
+         },
+         result: {
+           data: {
+            entryRequestUpdate: {
+              id: "3c2f8ee2-598b-437c-b217-3e4c0f86c761"
+            }
+           }
+         }
+      },
+    }
+    const container = render(
+      <MockedProvider mocks={[mocks, updateMock]} addTypename>
+        <BrowserRouter>
+          <MockedThemeProvider>
+            <Context.Provider value={userMock}>
+              <RequestUpdate 
+                id="3c2f8ee2-598b-437c-b217-3e4c0f86c761"
+                previousRoute={previousRoute}
+                requestType={requestType}
+                tabValue="2"
+              />
+            </Context.Provider>
+          </MockedThemeProvider>
+        </BrowserRouter>
+      </MockedProvider>
+    );
+    await waitFor(() => {
+      expect(container.queryByText('form_fields.full_name')).toBeInTheDocument();
+      expect(container.queryByTestId('entry_user_call_mgr')).not.toBeInTheDocument()
+      expect(container.queryByTestId('entry_user_grant_request').textContent).toContain(
+        'logbook:guest_book.update_guest'
+      );
+      expect(container.queryByTestId('entry_user_grant')).not.toBeInTheDocument()
+      expect(container.queryByTestId('guest_repeats_on')).toBeInTheDocument()
+      expect(container.queryByTestId('guest_repeats_on').textContent).toContain('guest_book.repeats_on')
+
+      fireEvent.click(container.queryByTestId('entry_user_grant_request'))
+    }, 50)
+
+  })
+
+  it('should render proper form when enrolling a user for the first time', async () => {
+    const previousRoute = "enroll"
+    const requestType = "adasds"
+    const container = render(
+      <MockedProvider mocks={[mocks]} addTypename>
+        <BrowserRouter>
+          <MockedThemeProvider>
+            <Context.Provider value={userMock}>
+              <RequestUpdate 
+                id="3c2f8ee2-598b-437c-b217-3e4c0f86c761"
+                previousRoute={previousRoute}
+                requestType={requestType}
+                tabValue=""
+              />
+            </Context.Provider>
+          </MockedThemeProvider>
+        </BrowserRouter>
+      </MockedProvider>
+    );
+    await waitFor(() => {
+      expect(container.queryByText('form_fields.full_name')).toBeInTheDocument();
+      expect(container.queryByTestId('entry_user_call_mgr')).not.toBeInTheDocument()
+      expect(container.queryByTestId('entry_user_enroll')).toBeInTheDocument()
+      expect(container.queryByTestId('entry_user_enroll').textContent).toContain('logbook:logbook.enroll')
+    }, 50)
+  })
 });

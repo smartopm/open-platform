@@ -30,7 +30,7 @@ export default function GuestTime({ userData, handleChange, handleChangeOccurren
       </div>
 
       <br />
-      <Typography gutterBottom>{t('guest_book.repeats_on')}</Typography>
+      <Typography gutterBottom data-testid="guest_repeats_on">{t('guest_book.repeats_on')}</Typography>
       {Object.entries(t('days:days', { returnObjects: true })).map(([key, value]) => (
         <IconButton
           key={key}
