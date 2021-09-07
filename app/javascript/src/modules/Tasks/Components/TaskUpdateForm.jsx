@@ -17,7 +17,7 @@ import {
   Checkbox,
   Tooltip,
 } from '@material-ui/core'
-import { useMutation } from 'react-apollo'
+import { useMutation, useLazyQuery } from 'react-apollo'
 import PropTypes from 'prop-types'
 import { useTranslation } from 'react-i18next';
 import AddCircleIcon from '@material-ui/icons/AddCircle'
@@ -39,6 +39,8 @@ import TaskUpdateList from './TaskUpdateList'
 import TaskComment from './TaskComment'
 import { dateToString, dateTimeToString } from '../../../components/DateContainer'
 import UserAutoResult from '../../../shared/UserAutoResult';
+import { UsersLiteQuery } from '../../../graphql/queries';
+import useDebounce from '../../../utils/useDebounce';
 
 const initialData = {
   user: '',
@@ -71,6 +73,8 @@ export default function TaskForm({
   const [reminderTime, setReminderTime] = useState(null)
   const [mode, setMode] = useState('preview')
   const { t } = useTranslation(['task', 'common'])
+  const [searchedUser, setSearchUser] = useState('');
+  const debouncedValue = useDebounce(searchedUser, 500);
 
   const [type, setType] = useState('task')
   const handleType = (_event, value) => {
@@ -79,6 +83,15 @@ export default function TaskForm({
 
   const [anchorEl, setAnchorEl] = useState(null)
   const open = Boolean(anchorEl)
+
+  const allowedAssignees = ["admin", "custodian", "security_guard", "contractor"]
+
+  const [searchUser, { data: liteData }] = useLazyQuery(UsersLiteQuery, {
+    variables: { query: debouncedValue.length > 0 ? debouncedValue : 'user_type:admin OR user_type:custodian OR user_type:security_guard OR user_type:contractor', limit: 10 },
+    errorPolicy: 'all',
+    fetchPolicy: 'no-cache'
+  });
+
 
   function handleSubmit(event) {
     event.preventDefault()
@@ -393,8 +406,8 @@ export default function TaskForm({
                   ListboxProps={{ style: { maxHeight: "15rem" }}}
                   loading={loading}
                   id={data.id}
-                  options={users}
-                  getOptionLabel={option => option.name}
+                  options={liteData?.usersLite || users}
+                  getOptionLabel={option =>allowedAssignees.includes(option.userType) ? option.name : ''}
                   onChange={(_evt, value) => {
                 if (!value) {
                     return
@@ -405,7 +418,13 @@ export default function TaskForm({
                     <UserAutoResult user={option} />
                 )}
                   renderInput={params => (
-                    <TextField {...params} variant="standard" placeholder={t('task.task_search_placeholder')} />
+                    <TextField
+                      {...params}
+                      variant="standard"
+                      placeholder={t('task.task_search_placeholder')}
+                      onChange={event => setSearchUser(event.target.value)}
+                      onKeyDown={() => searchUser()} 
+                    />
               )}
                 />
             )}
