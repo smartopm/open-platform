@@ -60,7 +60,9 @@
     "message_search": "search message content, user name and phone number",
     "type_description": "Type a description here",
     "type_title": "Type a title here",
-    "select_co_owners": "Select co-owners you would like to add to this plan"
+    "select_co_owners": "Select co-owners you would like to add to this plan",
+    "select_roles": "Select roles that can view this link",
+    "display_on": "Display on"
   },
   "form_actions": {
     "send_email": "Send Email",

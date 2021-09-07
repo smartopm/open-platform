@@ -5,18 +5,37 @@ import {
   FormControl,
   InputLabel,
   Checkbox,
+  Chip,
   ListItemText,
   Select,
   Input
 } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
 
 export default function MultiSelect({
   labelName,
   options,
   selectedOptions,
   handleOnChange,
-  fieldName
+  fieldName,
+  type
 }) {
+  const classes = useStyles();
+
+  function renderValue(selected) {
+    if(type === 'chip') {
+      return(
+        <div className={classes.chips}>
+          {selected.map((value) => (
+            <Chip key={value} label={value} className={classes.chip} />
+        ))}
+        </div>
+      )
+    }
+    return(selected.join(', '))
+  }
+
+
   return (
     <FormControl>
       <InputLabel id="demo-mutiple-checkbox-label">{labelName}</InputLabel>
@@ -28,8 +47,9 @@ export default function MultiSelect({
         onChange={handleOnChange}
         input={<Input />}
         name={fieldName}
-        renderValue={selected => selected.join(', ')}
+        renderValue={selected => renderValue(selected)}
         style={{ width: '300px' }}
+        className={fieldName === 'display_on' ? classes.displayOnMenu : ''}
       >
         {options.map(option => (
           <MenuItem key={option} value={option}>
@@ -42,10 +62,30 @@ export default function MultiSelect({
   );
 }
 
+const useStyles = makeStyles(() => ({
+  chips: {
+    display: 'flex',
+    flexWrap: 'wrap',
+  },
+  chip: {
+    margin: '0.125em',
+    backgroundColor: '#EDEDED'
+  },
+  displayOnMenu: {
+    paddingTop: '7px',
+    paddingBottom: '10px'
+  }
+}));
+
+MultiSelect.defaultProps = {
+  type: 'tag'
+}
+
 MultiSelect.propTypes = {
   labelName: PropTypes.string.isRequired,
   options: PropTypes.arrayOf(PropTypes.string).isRequired,
   selectedOptions: PropTypes.arrayOf(PropTypes.string).isRequired,
   handleOnChange: PropTypes.func.isRequired,
-  fieldName: PropTypes.string.isRequired
+  fieldName: PropTypes.string.isRequired,
+  type: PropTypes.string
 };
