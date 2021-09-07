@@ -26,7 +26,9 @@ export default function UsersActionMenu({
   usersCountData,
   selectedUsers,
   userList,
-  selectCheckBox
+  selectCheckBox,
+  labelsData,
+  labelsRefetch
 }) {
   const [labelSelectModalOpen, setLabelSelectModalOpen] = useState(false)
   const [labelAssignWarningOpen, setLabelAssignWarningOpen] = useState(false)
@@ -82,6 +84,8 @@ export default function UsersActionMenu({
           loading={loading}
           setLoading={setLoading}
           setMessage={setMessage}
+          data={labelsData}
+          refetch={labelsRefetch}
         />
       </CustomizedDialogs>
       <ActionDialog
@@ -161,5 +165,12 @@ UsersActionMenu.propTypes = {
   selectCheckBox: PropTypes.bool.isRequired,
   usersCountData: PropTypes.shape({
     usersCount: PropTypes.number.isRequired
-  })
+  }),
+  labelsData: PropTypes.shape({
+    labels: PropTypes.arrayOf(PropTypes.shape({
+      id: PropTypes.string,
+      shortDesc: PropTypes.string
+    }))
+  }).isRequired,
+  labelsRefetch: PropTypes.func.isRequired
 }

@@ -2,13 +2,11 @@
 import React, { Fragment, useRef } from 'react'
 import Autocomplete from '@material-ui/lab/Autocomplete'
 import { TextField, Chip } from '@material-ui/core'
-import { useQuery, useMutation } from 'react-apollo'
-import { LabelsQuery } from '../graphql/queries'
+import { useMutation } from 'react-apollo'
 import { LabelCreate }from '../graphql/mutations';
 import PropTypes from 'prop-types'
 
-export default function CreateLabel({ handleLabelSelect, loading, setLoading, setMessage }) {
-  const { data, refetch } = useQuery(LabelsQuery);
+export default function CreateLabel({ handleLabelSelect, loading, setLoading, setMessage, data, refetch }) {
   const [labelCreate] = useMutation(LabelCreate);
   const newLabels  = useRef([]);
 
@@ -118,5 +116,12 @@ CreateLabel.propTypes = {
   handleLabelSelect: PropTypes.func.isRequired,
   loading: PropTypes.bool.isRequired,
   setLoading: PropTypes.func.isRequired,
-  setMessage: PropTypes.func.isRequired
+  setMessage: PropTypes.func.isRequired,
+  data: PropTypes.shape({
+    labels: PropTypes.arrayOf(PropTypes.shape({
+      id: PropTypes.string,
+      shortDesc: PropTypes.string
+    }))
+  }).isRequired,
+  refetch: PropTypes.func.isRequired
 }

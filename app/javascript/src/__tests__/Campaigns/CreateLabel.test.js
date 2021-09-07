@@ -5,35 +5,25 @@ import userEvent from '@testing-library/user-event'
 import { MockedProvider } from '@apollo/react-testing';
 import CreateLabel from '../../components/CreateLabel';
 import { LabelCreate }from '../../graphql/mutations';
-import { LabelsQuery } from '../../graphql/queries'
 
 describe('Create Label Component', () => {
-  const labels = [
-    {
-      id: 'hh27uyiu3hb43uy4iu3',
-      shortDesc: 'COM',
-      userCount: 2,
-      description: 'desc',
-      color: 'blue'
-    },
-    {
-      id: 'hh27uyiu3hb43uy4',
-      shortDesc: 'COM2',
-      userCount: 3,
-      description: 'desc2',
-      color: 'black'
-    }
-  ];
-
-  const mock = {
-    request: {
-      query: LabelsQuery
-    },
-    result: {
-      data: {
-        labels
+  const data = {
+    labels: [
+      {
+        id: 'hh27uyiu3hb43uy4iu3',
+        shortDesc: 'COM',
+        userCount: 2,
+        description: 'desc',
+        color: 'blue'
+      },
+      {
+        id: 'hh27uyiu3hb43uy4',
+        shortDesc: 'COM2',
+        userCount: 3,
+        description: 'desc2',
+        color: 'black'
       }
-    }
+    ]
   };
 
   const anotherLabelCreateMock = {
@@ -52,12 +42,14 @@ describe('Create Label Component', () => {
 
   it('test creating a new label', async () => {
     const container = render(
-      <MockedProvider mocks={[mock, anotherLabelCreateMock]} addTypename={false}>
+      <MockedProvider mocks={[anotherLabelCreateMock]} addTypename={false}>
         <CreateLabel
           handleLabelSelect={jest.fn}
           loading={false}
           setLoading={jest.fn}
           setMessage={jest.fn}
+          data={data}
+          refetch={jest.fn}
         />
       </MockedProvider>
     );
