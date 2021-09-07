@@ -375,5 +375,7 @@ en:
     success: success
     updated: updated
     category_deleted: Category deleted successfully
+    update_failed: Update Failed
+    delete_failed: Delete Failed
 
 
