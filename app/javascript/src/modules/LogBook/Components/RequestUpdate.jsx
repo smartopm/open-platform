@@ -181,7 +181,7 @@ export default function RequestUpdate({ id, previousRoute, requestType, tabValue
     handleCreateRequest()
       .then(requestId => grantEntry({ variables: { id: requestId } }))
       .then(() => {
-        setDetails({ ...observationDetails, message: t('logbook:logbook.success_message', { action: t('logbook:logbook.granted') }) })
+        setDetails({ ...observationDetails, isError: false, message: t('logbook:logbook.success_message', { action: t('logbook:logbook.granted') }) })
         setIsObservationOpen(true)
         setLoading(false)
       })
