@@ -89,10 +89,6 @@ module Logs
       # rubocop:enable Layout/LineLength
     end
 
-    def notify_client(number)
-      SMS.send(number, "https://#{HostEnv.base_url(user.community)}/feedback")
-    end
-
     private
 
     # Assigns community id of user.
