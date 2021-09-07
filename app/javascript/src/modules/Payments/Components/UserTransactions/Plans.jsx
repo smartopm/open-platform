@@ -188,6 +188,7 @@ export default function PaymentPlans({ userId, user, userData }) {
                         handleClick={() => handlePlanModal()}
                         size="small"
                         style={matches ? {} : {fontSize: '10px'}}
+                        className='new-payment-plan-btn'
                       />
                     </div>
                     <div>
@@ -247,7 +248,7 @@ export default function PaymentPlans({ userId, user, userData }) {
               </CenteredContent>
             </div>
           ) : (
-            <CenteredContent>{t('errors.no_plan_available')}</CenteredContent>
+            <CenteredContent><div data-testid='no-plan-available'>{t('errors.no_plan_available')}</div></CenteredContent>
           )}
         </>
       )}

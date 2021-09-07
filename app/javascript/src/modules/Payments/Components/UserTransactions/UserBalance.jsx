@@ -83,7 +83,7 @@ export default function Balance({
             variant="extended"
             onClick={() => setPayOpen(true)}
             data-testid="add-payment"
-            className={classes.addPayment}
+            className={`${classes.addPayment} record-new-payment-btn`}
           >
             {t('common:misc.make_payment')}
           </Fab>

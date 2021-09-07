@@ -359,7 +359,7 @@ export default function PaymentModal({
                 <TextField
                   margin="normal"
                   id="transaction-type"
-                  inputProps={{ 'data-testid': 'transaction-type' }}
+                  inputProps={{ 'data-testid': 'transaction-type', className: 'transaction-type-select-input' }}
                   label={t('table_headers.transaction_type')}
                   value={inputValue.transactionType}
                   onChange={event =>
@@ -390,6 +390,7 @@ export default function PaymentModal({
                   onChange={event =>
                     setInputValue({ ...inputValue, transactionNumber: event.target.value })
                   }
+                  className='transaction-number-input'
                 />
               </div>
 
@@ -465,6 +466,7 @@ export default function PaymentModal({
                       'data-testid': 'amount',
                       step: 0.01
                     }}
+                    className='transaction-amount-input'
                     required
                     error={isError && submitting && totalAmount() === 0}
                     helperText={amountHelperText(plan)}

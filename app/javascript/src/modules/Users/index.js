@@ -22,7 +22,7 @@ export default {
     icon: <PersonIcon />
   },
   name: t => t('misc.users'),
-  
+
   featureName: 'Users',
   accessibleBy: ['admin']
 };
@@ -35,7 +35,8 @@ export const Profile = {
     component: UserShow
   },
   styleProps: {
-    icon: <AccountCircleIcon />
+    icon: <AccountCircleIcon />,
+    className: 'my-profile-menu-item'
   },
   name: t => t('menu.my_profile'),
   featureName: 'Profile',

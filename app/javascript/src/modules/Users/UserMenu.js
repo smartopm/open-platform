@@ -68,13 +68,16 @@ const userMenus = [
       path: '/user/:id?tab=Plans',
       component: <span />
     },
+    styleProps: {
+      className: 'right-menu-payment-item',
+    },
     name: t => t('menu.payment', { count: 0 }),
     featureName: 'Payments',
     accessibleBy: ctx => handler({ userTypes: ['admin', 'client', 'resident'], ctx }),
   },
   {
     routeProps: {
-      path: '/user/:id?type=MergeUser', // changed to remove console and jest errors 
+      path: '/user/:id?type=MergeUser', // changed to remove console and jest errors
       component: <span />
     },
     name: t => t('menu.merge_user'),

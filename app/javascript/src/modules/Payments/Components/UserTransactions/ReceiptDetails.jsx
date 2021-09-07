@@ -185,7 +185,7 @@ export default function ReceiptDetail({ paymentData, currencyData, planDetail })
               <Grid item xs={8} className={classes.title}>
                 Expected Monthly Payment
               </Grid>
-              <Grid item xs={4} className={classes.title} style={{ textAlign: 'right' }}>
+              <Grid item xs={4} data-testid="expected-monthly-amount" className={classes.title} style={{ textAlign: 'right' }}>
                 {formatMoney(currencyData, (paymentData?.paymentPlan?.installmentAmount || planDetail?.paymentPlan?.installmentAmount))}
               </Grid>
             </Grid>

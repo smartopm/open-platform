@@ -392,13 +392,13 @@ export function getHexColor (range) {
  */
 
  export function formatMoney(currencyData, amount) {
-  if(process.env.NODE_ENV !== "test"){
-     const formatted = new Intl.NumberFormat(currencyData?.locale || 'en-ZM', {
-      style: 'currency',
-      currency: currencyData?.currency,
-    })?.format(amount);
-    return formatted;
-   }
+  if (process.env.NODE_ENV === "test") return `K ${amount}`;
+
+  const formatted = new Intl.NumberFormat(currencyData?.locale || 'en-ZM', {
+    style: 'currency',
+    currency: currencyData?.currency,
+  })?.format(amount);
+  return formatted;
  }
 
  /**
