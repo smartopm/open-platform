@@ -31,7 +31,6 @@ module Mutations
         raise GraphQL::ExecutionError, entry_request.errors.full_messages
       end
 
-
       def authorized?(_vals)
         return true if context[:current_user]&.role?(%i[security_guard admin])
 
