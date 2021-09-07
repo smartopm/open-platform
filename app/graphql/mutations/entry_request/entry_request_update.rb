@@ -24,7 +24,7 @@ module Mutations
 
       def resolve(vals)
         entry_request = context[:site_community].entry_requests.find(vals.delete(:id))
-        raise_entry_request_not_found_error(entry_request)
+        raise GraphQL::ExecutionError, I18n.t('errors.not_found') unless entry_request
 
         return { entry_request: entry_request } if entry_request.update!(vals)
 
@@ -35,17 +35,6 @@ module Mutations
         return true if context[:current_user]&.role?(%i[security_guard admin])
 
         raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
-      end
-
-      private
-
-      # Raises GraphQL execution error if entry request does not exists.
-      #
-      # @return [GraphQL::ExecutionError]
-      def raise_entry_request_not_found_error(entry_request)
-        return if entry_request
-
-        raise GraphQL::ExecutionError, I18n.t('errors.not_found')
       end
     end
   end

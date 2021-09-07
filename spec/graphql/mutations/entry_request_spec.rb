@@ -96,11 +96,42 @@ RSpec.describe Mutations::EntryRequest do
       }
       result = DoubleGdpSchema.execute(query, variables: variables,
                                               context: {
-                                                current_user: user,
+                                                current_user: admin,
+                                                site_community: admin.community,
                                               }).as_json
       expect(result.dig('data', 'result', 'entryRequest', 'id')).not_to be_nil
       expect(result.dig('data', 'result', 'entryRequest', 'name')).to eql 'Mark Smith'
       expect(result['errors']).to be_nil
+    end
+
+    it 'returns anauthorized for non allowed users' do
+      variables = {
+        id: entry_request.id,
+        name: 'Mark Smith',
+        reason: 'Visiting',
+      }
+      result = DoubleGdpSchema.execute(query, variables: variables,
+                                              context: {
+                                                current_user: user,
+                                                site_community: user.community,
+                                              }).as_json
+      expect(result.dig('data', 'result', 'entryRequest', 'id')).to be_nil
+      expect(result['errors']).not_to be_nil
+      expect(result.dig('errors', 0, 'message')).to include 'Unauthorized'
+    end
+    it 'returns an error with wrong inputs' do
+      variables = {
+        name: 'Mark Smith',
+        reason: 'Visiting',
+      }
+      result = DoubleGdpSchema.execute(query, variables: variables,
+                                              context: {
+                                                current_user: admin,
+                                                site_community: admin.community,
+                                              }).as_json
+      expect(result.dig('data', 'result', 'entryRequest', 'id')).to be_nil
+      expect(result['errors']).not_to be_nil
+      expect(result.dig('errors', 0, 'message')).to include 'ID! was provided invalid value'
     end
   end
 
@@ -136,6 +167,18 @@ RSpec.describe Mutations::EntryRequest do
       expect(result['errors']).to be_nil
     end
 
+    it 'returns Unauthorized for non Unauthorized users' do
+      variables = {
+        id: entry_request.id,
+      }
+      result = DoubleGdpSchema.execute(query, variables: variables,
+                                              context: {
+                                                current_user: user,
+                                              }).as_json
+      expect(result['errors']).not_to be_nil
+      expect(result.dig('errors', 0, 'message')).to include 'Unauthorized'
+    end
+
     it 'returns not found when a request does not exist' do
       variables = {
         id: SecureRandom.uuid,
@@ -145,7 +188,19 @@ RSpec.describe Mutations::EntryRequest do
                                                 current_user: admin,
                                               }).as_json
       expect(result['errors']).not_to be_nil
-      expect(result.dig('errors', 0, 'message')).to include 'Logs::EntryRequest'
+      expect(result.dig('errors', 0, 'message')).to include 'Logs::EntryRequest not found'
+    end
+
+    it 'returns error when provided wrong inputs' do
+      variables = {
+        id: false,
+      }
+      result = DoubleGdpSchema.execute(query, variables: variables,
+                                              context: {
+                                                current_user: admin,
+                                              }).as_json
+      expect(result['errors']).not_to be_nil
+      expect(result.dig('errors', 0, 'message')).to include 'invalid value'
     end
   end
 

@@ -15,10 +15,8 @@ module Mutations
         raise GraphQL::ExecutionError, entry_request.errors.full_messages
       end
 
-      # TODO: Better auth here
-      # Verifies if current user is present or not.
       def authorized?(_vals)
-        return true if context[:current_user]
+        return true if context[:current_user]&.role?(%i[security_guard admin])
 
         raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
       end
