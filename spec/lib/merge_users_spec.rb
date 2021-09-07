@@ -19,10 +19,7 @@ RSpec.describe MergeUsers do
   let!(:other_user) { create(:user, community: community, name: 'John Doe') }
   let!(:activity_point) { create(:activity_point, user: user, article_read: 2, referral: 10) }
 
-  let!(:note) do
-    create(:note, user: create(:user_with_community),
-                  author: create(:user_with_community))
-  end
+  let!(:note) { create(:note, user: user, author: user) }
   let!(:assignee_note) { create(:assignee_note, user: user, note: note) }
 
   let!(:business) do
@@ -40,7 +37,9 @@ RSpec.describe MergeUsers do
   end
   let!(:contact_info) { create(:contact_info, user: user) }
   let!(:discussion_user) { create(:discussion_user, user: user, discussion: discussion) }
-  let!(:entry_request) { create(:pending_entry_request, user: user, community: community) }
+  let!(:entry_request) do
+    create(:pending_entry_request, user: user, community: community, grantor: user)
+  end
   let!(:feedback) { create(:feedback, user: user, community: community) }
   let!(:form) { create(:form, community: community) }
   let!(:category) { create(:category, form: form) }
@@ -103,6 +102,10 @@ RSpec.describe MergeUsers do
   let!(:post_tag) { create(:post_tag, community: community) }
   let!(:post_tag_user) { create(:post_tag_user, post_tag: post_tag, user: user) }
   let(:duplicate_wallet) { create(:wallet, user: duplicate_user) }
+  let!(:event_log) do
+    create(:event_log, community_id: community.id, acting_user_id: user.id,
+                       ref_type: 'Users::User', ref_id: user.id, subject: 'user_entry')
+  end
 
   shared_examples 'merges_wallet_details_and_destroy_duplicate_user' do |pending_balance, balance|
     before { MergeUsers.merge(user.id, duplicate_user.id) }
@@ -128,11 +131,14 @@ RSpec.describe MergeUsers do
     expect(discussion.reload.user_id).to eq(duplicate_user.id)
     expect(discussion_user.reload.user_id).to eq(duplicate_user.id)
     expect(entry_request.reload.user_id).to eq(duplicate_user.id)
+    expect(entry_request.grantor_id).to eq(duplicate_user.id)
     expect(feedback.reload.user_id).to eq(duplicate_user.id)
     expect(form_user.reload.user_id).to eq(duplicate_user.id)
     expect(form_user.status_updated_by_id).to eq(duplicate_user.id)
     expect(user_form_property.reload.user_id).to eq(duplicate_user.id)
     expect(message.reload.user_id).to eq(duplicate_user.id)
+    expect(note.reload.user_id).to eq(duplicate_user.id)
+    expect(note.author_id).to eq(duplicate_user.id)
     expect(note_comment.reload.user_id).to eq(duplicate_user.id)
     expect(note_history.reload.user_id).to eq(duplicate_user.id)
     expect(payment.reload.user_id).to eq(duplicate_user.id)
@@ -152,6 +158,8 @@ RSpec.describe MergeUsers do
     expect(business.reload.user_id).to eq(duplicate_user.id)
     expect(post_tag_user.reload.user_id).to eq(duplicate_user.id)
     expect(community.reload.sub_administrator_id).to eq(duplicate_user.id)
+    expect(event_log.reload.acting_user_id).to eq(duplicate_user.id)
+    expect(event_log.ref_id).to eq(duplicate_user.id)
   end
 
   context 'when user have general plan and duplicate user do not have general plan' do

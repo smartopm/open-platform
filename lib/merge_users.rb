@@ -23,9 +23,7 @@ class MergeUsers
     models_with_user_id.each do |table_name|
       table_name.constantize.where(user_id: user_id).update(user_id: duplicate_id)
 
-      if table_name.constantize.where(user_id: user_id).any?
-        raise StandardError, I18n.t('response.update_failed')
-      end
+      raise_update_failed_error if table_name.constantize.where(user_id: user_id).any?
     end
 
     user = Users::User.find_by(id: user_id)
@@ -35,15 +33,11 @@ class MergeUsers
     user.plan_payments.exluding_general_payments.update_all(user_id: duplicate_id)
 
     merge_accounts_and_general_payments(user, duplicate_user)
-    if Payments::PlanPayment.where(user_id: user_id).any?
-      raise StandardError, I18n.t('response.update_failed')
-    end
+    raise_update_failed_error if Payments::PlanPayment.where(user_id: user_id).any?
 
     # Updates accounts details to their associated user's details
     duplicate_user.update_associated_accounts_details
-    if Properties::Account.where(user_id: user_id).any?
-      raise StandardError, I18n.t('response.update_failed')
-    end
+    raise_update_failed_error if Properties::Account.where(user_id: user_id).any?
 
     # Merges wallet details of users.
     merge_user_wallets(user_id, duplicate_id)
@@ -53,52 +47,42 @@ class MergeUsers
     showrooms.each do |showroom|
       showroom.update(userId: duplicate_id)
     end
-    raise StandardError, I18n.t('response.update_failed') if Showroom.where(userId: user_id).any?
+    raise_update_failed_error if Showroom.where(userId: user_id).any?
 
     # Update author in Notes
     notes_auth = Notes::Note.where(author_id: user_id)
     notes_auth.each do |note|
       note.update(author_id: duplicate_id)
     end
-    if Notes::Note.where(author_id: user_id).any?
-      raise StandardError, I18n.t('response.update_failed')
-    end
+    raise_update_failed_error if Notes::Note.where(author_id: user_id).any?
 
     # Update sender in Messages
     message_senders = Notifications::Message.where(sender_id: user_id)
     message_senders.each do |message|
       message.update(sender_id: duplicate_id)
     end
-    if Notifications::Message.where(sender_id: user_id).any?
-      raise StandardError, I18n.t('response.update_failed')
-    end
+    raise_update_failed_error if Notifications::Message.where(sender_id: user_id).any?
 
     # Update grantor in Entry Request
     entry_request_grantors = Logs::EntryRequest.where(grantor_id: user_id)
     entry_request_grantors.each do |entry_request_grantor|
       entry_request_grantor.update(grantor_id: duplicate_id)
     end
-    if Logs::EntryRequest.where(grantor_id: user_id).any?
-      raise StandardError, I18n.t('response.update_failed')
-    end
+    raise_update_failed_error if Logs::EntryRequest.where(grantor_id: user_id).any?
 
     # Update acting user in Event Log
     event_logs = Logs::EventLog.where(acting_user_id: user_id)
     event_logs.each do |event_log|
       event_log.update(acting_user_id: duplicate_id)
     end
-    if Logs::EventLog.where(acting_user_id: user_id).any?
-      raise StandardError, I18n.t('response.update_failed')
-    end
+    raise_update_failed_error if Logs::EventLog.where(acting_user_id: user_id).any?
 
     # Update user ref in Event Log
     refs = Logs::EventLog.where(ref_id: user_id, ref_type: 'Users::User')
     refs.each do |ref|
       ref.update(ref_id: duplicate_id)
     end
-    if Logs::EventLog.where(ref_id: user_id, ref_type: 'Users::User').any?
-      raise StandardError, I18n.t('response.update_failed')
-    end
+    raise_update_failed_error if Logs::EventLog.where(ref_id: user_id, ref_type: 'Users::User').any?
 
     # Update user in UserLabel
     user_labels = Labels::UserLabel.where(user_id: user_id)
@@ -109,38 +93,28 @@ class MergeUsers
         user_label.update(user_id: duplicate_id)
       end
     end
-    if Labels::UserLabel.where(user_id: user_id).any?
-      raise StandardError, I18n.t('response.update_failed')
-    end
+    raise_update_failed_error if Labels::UserLabel.where(user_id: user_id).any?
 
     # Update reporting_user_id in ActivityLog
     logs = Logs::ActivityLog.where(reporting_user_id: user_id)
     logs.each do |log|
       log.update(reporting_user_id: duplicate_id)
     end
-    if Logs::EventLog.where(acting_user_id: user_id).any?
-      raise StandardError, I18n.t('response.update_failed')
-    end
+    raise_update_failed_error if Logs::EventLog.where(acting_user_id: user_id).any?
 
     # Update status_updated_by_id in FormUser
     Forms::FormUser.where(status_updated_by_id: user_id)
                    .update_all(status_updated_by_id: duplicate_id)
-    if Forms::FormUser.where(status_updated_by_id: user_id).any?
-      raise StandardError, I18n.t('response.update_failed')
-    end
+    raise_update_failed_error if Forms::FormUser.where(status_updated_by_id: user_id).any?
 
     # Update depositor_id in Transaction
     Payments::Transaction.where(depositor_id: user_id).update_all(depositor_id: duplicate_id)
-    if Payments::Transaction.where(depositor_id: user_id).any?
-      raise StandardError, I18n.t('response.update_failed')
-    end
+    raise_update_failed_error if Payments::Transaction.where(depositor_id: user_id).any?
 
     # Update sub_administrator_id in Community
     if user.community.sub_administrator_id.eql?(user_id)
       user.community.update(sub_administrator_id: duplicate_id)
-      if user.community.sub_administrator_id.eql?(user.id)
-        raise StandardError, I18n.t('response.update_failed')
-      end
+      raise_update_failed_error if user.community.sub_administrator_id.eql?(user.id)
     end
 
     # Update PlanOwnership user
@@ -152,14 +126,12 @@ class MergeUsers
         ownership.update(user_id: duplicate_id)
       end
     end
-    if Properties::PlanOwnership.where(user_id: user_id).any?
-      raise StandardError, I18n.t('response.update_failed')
-    end
+    raise_update_failed_error if Properties::PlanOwnership.where(user_id: user_id).any?
 
     models_with_user_id.each do |table_name|
       next if table_name.constantize.where(user_id: user_id).empty?
 
-      raise StandardError, I18n.t('response.update_failed')
+      raise_update_failed_error
     end
 
     raise StandardError, I18n.t('response.delete_failed') unless Users::User.find(user_id).delete
@@ -252,6 +224,10 @@ class MergeUsers
     return true if duplicate_user.plan_ownerships.exists?(payment_plan_id: plan_id)
 
     duplicate_user.payment_plans.exists?(id: plan_id)
+  end
+
+  def self.raise_update_failed_error
+    raise StandardError, I18n.t('response.update_failed')
   end
   # rubocop:enable Metrics/AbcSize
   # rubocop:enable Metrics/CyclomaticComplexity
