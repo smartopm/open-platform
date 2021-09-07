@@ -621,7 +621,7 @@ export default function RequestUpdate({ id, previousRoute, requestType, tabValue
 
           {
             // TODO: Find better ways to disable specific small feature per community 
-            !reqId && authState.user.community.name !== 'Ciudad Morazán' && (
+            !reqId && authState.user.community.name !== 'Ciudad Morazán' && requestType !== 'guest' && (
               <div className="form-group">
                 <TextField
                   className="form-control"

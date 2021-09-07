@@ -5,26 +5,26 @@ import { useTranslation } from 'react-i18next';
 import DatePickerDialog, { ThemedTimePicker } from '../../../components/DatePickerDialog';
 
 export default function GuestTime({ userData, handleChange, handleChangeOccurrence }) {
-  const { t } = useTranslation(['logbook', 'days']);
+  const { t } = useTranslation(['logbook', 'common', 'days']);
   return (
     <>
       <DatePickerDialog
         selectedDate={userData.visitationDate}
         handleDateChange={date => handleChange({ target: { name: 'visitationDate', value: date } })}
-        label={t('misc.day_of_visit')}
+        label={t('common:misc.day_of_visit')}
       />
 
       <div>
         <ThemedTimePicker
           time={userData.startTime}
           handleTimeChange={date => handleChange({ target: { name: 'startTime', value: date } })}
-          label={t('misc.start_time')}
+          label={t('common:misc.start_time')}
         />
         <span style={{ marginLeft: 20 }}>
           <ThemedTimePicker
             time={userData.endTime}
             handleTimeChange={date => handleChange({ target: { name: 'endTime', value: date } })}
-            label={t('misc.end_time')}
+            label={t('common:misc.end_time')}
           />
         </span>
       </div>
