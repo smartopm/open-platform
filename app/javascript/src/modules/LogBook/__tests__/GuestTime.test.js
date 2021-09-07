@@ -22,7 +22,7 @@ describe('Should render Guest Time Component', () => {
       </MockedThemeProvider>
     );
     
-    expect(container.queryByLabelText('misc.day_of_visit')).toBeInTheDocument()
+    expect(container.queryByLabelText('common:misc.day_of_visit')).toBeInTheDocument()
     expect(container.queryAllByTestId('week_days')[0]).toBeInTheDocument()
     expect(container.queryAllByTestId('guest_repeats_on')[0]).toBeInTheDocument()
     expect(container.queryAllByTestId('time_picker')[0]).toBeInTheDocument()
