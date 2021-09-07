@@ -29,7 +29,6 @@ import { Context as AuthStateContext } from '../../../containers/Provider/AuthSt
 import { pluralizeCount, propAccessor, toTitleCase } from '../../../utils/helpers'
 import SubStatusReportDialog from '../../CustomerJourney/Components/SubStatusReport'
 
-
 const limit = 25
 const USERS_CAMPAIGN_WARNING_LIMIT = 2000
 
@@ -140,7 +139,8 @@ export default function UsersList() {
   const {
     loading: labelsLoading,
     error: labelsError,
-    data: labelsData
+    data: labelsData,
+    refetch: labelsRefetch
   } = useQuery(LabelsQuery)
 
   const [fetchUsersCount, { data: usersCountData, loading: fetchingUsersCount }] = useLazyQuery(UsersCount, {
@@ -632,6 +632,8 @@ export default function UsersList() {
               handleLabelSelect={handleLabelSelect}
               usersCountData={usersCountData}
               selectCheckBox={selectCheckBox}
+              labelsData={labelsData}
+              labelsRefetch={labelsRefetch}
             />
             <Fab color="primary" variant="extended" className={classes.download}>
               {
