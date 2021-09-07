@@ -22,6 +22,11 @@ import { dateToString } from '../../../components/DateContainer'
 // TODO: As of now this is only serving the visit_request, we can still migrate to reuse the 2 forms
 // - RequestUpdate
 // - RequestForm
+/**
+ * @deprecated
+ * @param {*} param0 
+ * @returns 
+ */
 export default function RequestForm({ path }) {
   const initialState = {
     name: '',

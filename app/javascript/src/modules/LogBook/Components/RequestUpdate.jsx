@@ -5,7 +5,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import { useMutation, useLazyQuery } from 'react-apollo';
 import { TextField, MenuItem, Button , Grid } from '@material-ui/core';
 import { StyleSheet, css } from 'aphrodite';
-import { useHistory, useLocation, useParams } from 'react-router';
+import { useHistory} from 'react-router';
 import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types'
 import CallIcon from '@material-ui/icons/Call';
@@ -28,7 +28,6 @@ import CenteredContent from '../../../components/CenteredContent';
 import AddObservationNoteMutation, { EntryRequestUpdateMutation } from '../graphql/logbook_mutations';
 import MessageAlert from '../../../components/MessageAlert'
 import { checkInValidRequiredFields, defaultRequiredFields } from '../utils';
-import { useParamsQuery } from '../../../utils/helpers';
 import GuestTime from './GuestTime';
 
 const initialState = {
@@ -48,15 +47,15 @@ const initialState = {
     occursOn: []
 }
 // TODO: move react router hooks out of this component to make it easy to test different functionalities
-export default function RequestUpdate({ id }) {
-  const { state } = useLocation()
-  const { logs, } = useParams()
+export default function RequestUpdate({ id, previousRoute, requestType, tabValue }) {
+  // const { state } = useLocation()
+  // const { logs, } = useParams()
   const history = useHistory()
+  // const query = useParamsQuery()
+  // const requestType = query.get('type')
+  // const tabValue = query.get('tab');
+  // const previousRoute = state?.from || logs
   const authState = useContext(Context)
-  const query = useParamsQuery()
-  const requestType = query.get('type')
-  const tabValue = query.get('tab');
-  const previousRoute = state?.from || logs
   const isFromLogs = previousRoute === 'logs' ||  false
   const [loadRequest, { data }] = useLazyQuery(EntryRequestQuery, {
     variables: { id }
@@ -69,7 +68,6 @@ export default function RequestUpdate({ id }) {
   const [updateLog] = useMutation(UpdateLogMutation)
   const [addObservationNote] = useMutation(AddObservationNoteMutation)
   const [isLoading, setLoading] = useState(false)
-  const [message, setMessage] = useState('')
   const [isModalOpen, setModal] = useState(false)
   const [modalAction, setModalAction] = useState('')
   const [date] = useState(new Date());
@@ -229,13 +227,13 @@ export default function RequestUpdate({ id }) {
           }
         }).then(() => {
           setLoading(false)
-          setMessage(t('logbook:logbook.user_enrolled'))
+          setDetails({ ...observationDetails, message: t('logbook:logbook.user_enrolled') })
           history.push(`/user/${response.data.result.user.id}`)
         })
       })
       .catch((err) => {
         setLoading(false)
-        setMessage(err.message)
+        setDetails({ ...observationDetails, message: err.message })
       })
   }
 
@@ -677,15 +675,6 @@ export default function RequestUpdate({ id }) {
                     : ` ${t('logbook:logbook.enroll')}`}
                 </Button>
               </div>
-              <div className="row justify-content-center align-items-center">
-                <br />
-                <br />
-                {!isLoading && message.length ? (
-                  <span className="text-danger">{message}</span>
-                ) : (
-                  <span />
-                )}
-              </div>
             </>
           ) : !/logs|enroll|guests/.test(previousRoute) && !tabValue ? (
             <>
@@ -697,10 +686,11 @@ export default function RequestUpdate({ id }) {
                     className={css(styles.grantButton)}
                     disabled={isLoading}
                     data-testid="entry_user_grant"
+                    startIcon={isLoading && <Spinner />}
                   >
 
                     {
-                      isLoading ? <Spinner /> : t('logbook:logbook.grant')
+                      t('logbook:logbook.grant')
                     }
                   </Button>
                 </Grid>
@@ -711,9 +701,10 @@ export default function RequestUpdate({ id }) {
                     className={css(styles.denyButton)}
                     disabled={isLoading}
                     data-testid="entry_user_deny"
+                    startIcon={isLoading && <Spinner />}
                   >
                     {
-                      isLoading ? <Spinner /> : t('logbook:logbook.deny')
+                      t('logbook:logbook.deny')
                     }
                   </Button>
                 </Grid>
@@ -747,8 +738,12 @@ RequestUpdate.defaultProps = {
 }
 
 RequestUpdate.propTypes = {
-  id: PropTypes.string
+  id: PropTypes.string,
+  previousRoute: PropTypes.string.isRequired,
+  requestType: PropTypes.string.isRequired,
+  tabValue: PropTypes.string.isRequired,
 }
+
 
 
 const styles = StyleSheet.create({
