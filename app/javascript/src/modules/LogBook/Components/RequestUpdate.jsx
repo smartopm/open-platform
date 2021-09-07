@@ -80,7 +80,6 @@ export default function RequestUpdate({ id, previousRoute, requestType, tabValue
   const { t } = useTranslation(['common', 'logbook'])
   const [isReasonModalOpen, setReasonModal] = useState(false)
   
-
   useEffect(() => {
     if (id) {
       loadRequest({ variables: { id } })
@@ -156,11 +155,6 @@ export default function RequestUpdate({ id, previousRoute, requestType, tabValue
       startTime: dateToString(formData.startTime, 'YYYY-MM-DD HH:mm'),
       endTime: dateToString(formData.endTime, 'YYYY-MM-DD HH:mm')
     };
-
-    if (!formData.visitationDate || (formData.occursOn.length && !formData.visitEndDate)) {
-      setDetails({ ...observationDetails, isError: true, message: t('logbook:logbook.visit_end_error') });
-      return
-    }
 
     setLoading(true);
     updateRequest({ variables: { id, ...otherFormData } })
@@ -245,10 +239,15 @@ export default function RequestUpdate({ id, previousRoute, requestType, tabValue
 
   function handleModal(_event, type) {
     const isAnyInvalid = checkInValidRequiredFields(formData, requiredFields)
-    if(isAnyInvalid){
+    if(isAnyInvalid ){
       setInputValidationMsg({ isError: true })
       return
     }
+    if (requestType === 'guest' && !formData.visitationDate) {
+      setDetails({ ...observationDetails, isError: true, message: t('logbook:logbook.visit_end_error') });
+      return
+    }
+
     switch (type) {
       case 'grant':
         setModalAction('grant')
@@ -260,6 +259,9 @@ export default function RequestUpdate({ id, previousRoute, requestType, tabValue
         break;
       case 'update':
         handleUpdateRequest()
+        break;
+      case 'create':
+        handleCreateRequest()
         break;
       default:
         break;
@@ -655,7 +657,7 @@ export default function RequestUpdate({ id, previousRoute, requestType, tabValue
                 <Button
                   variant="contained"
                   className={`${css(styles.inviteGuestButton)}`}
-                  onClick={handleCreateRequest}
+                  onClick={event => handleModal(event, 'create')}
                   disabled={isLoading}
                   startIcon={isLoading && <Spinner />}
                   color="primary"
