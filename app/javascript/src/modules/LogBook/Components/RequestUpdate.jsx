@@ -139,6 +139,9 @@ export default function RequestUpdate({ id, previousRoute, requestType, tabValue
       // eslint-disable-next-line no-shadow
         .then(({ data }) => {
           setRequestId(data.result.entryRequest.id)
+          if (requestType === 'guest') {
+            history.push(`/entry_logs?tab=${tabValue}`)
+          }
           return data.result.entryRequest.id
         })
         .catch(err => {
@@ -646,6 +649,24 @@ export default function RequestUpdate({ id, previousRoute, requestType, tabValue
             )
           }
 
+          {
+            requestType === 'guest' && !id && (
+              <div className="row justify-content-center align-items-center ">
+                <Button
+                  variant="contained"
+                  className={`${css(styles.inviteGuestButton)}`}
+                  onClick={handleCreateRequest}
+                  disabled={isLoading}
+                  startIcon={isLoading && <Spinner />}
+                  color="primary"
+                  data-testid="submit_button"
+                >
+                  {isLoading ? ` ${t('form_actions.submitting')} ...` : ` ${t('form_actions.invite_guest')} `}
+                </Button>
+              </div>
+            )
+          }
+
           <br />
           {previousRoute !== 'enroll' && id && (
           <Button
@@ -732,6 +753,8 @@ export default function RequestUpdate({ id, previousRoute, requestType, tabValue
           ) : (
             <span />
           )}
+
+
         </form>
       </div>
     </>
@@ -739,16 +762,18 @@ export default function RequestUpdate({ id, previousRoute, requestType, tabValue
 }
 
 RequestUpdate.defaultProps = {
-  id: null
+  id: null,
+  previousRoute: '',
+  requestType: '',
+  tabValue: null,
 }
 
 RequestUpdate.propTypes = {
   id: PropTypes.string,
-  previousRoute: PropTypes.string.isRequired,
-  requestType: PropTypes.string.isRequired,
-  tabValue: PropTypes.string.isRequired,
+  previousRoute: PropTypes.string,
+  requestType: PropTypes.string,
+  tabValue: PropTypes.string,
 }
-
 
 
 const styles = StyleSheet.create({
@@ -770,5 +795,12 @@ const styles = StyleSheet.create({
   },
   observationButton: {
     margin: 5,
-  }
+  },
+  inviteGuestButton: {
+    width: '75%',
+    boxShadow: 'none',
+    marginTop: 60,
+    height: 50,
+    color: "#FFFFFF"
+  },
 });
