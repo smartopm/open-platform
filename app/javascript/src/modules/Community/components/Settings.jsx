@@ -46,7 +46,8 @@ export default function CommunitySettings({ data, token, refetch }) {
   const menuItems = {
     menu_link: '',
     menu_name: '',
-    display_on: ['Dashboard']
+    display_on: ['Dashboard'],
+    roles: []
   };
 
   const theme = {
@@ -68,6 +69,7 @@ export default function CommunitySettings({ data, token, refetch }) {
   };
 
   const quickLinksDisplayOptions = ['Dashboard', 'Menu'];
+  const roleOptions = ['admin', 'client', 'resident'];
 
   const [communityUpdate] = useMutation(CommunityUpdateMutation);
   const [numberOptions, setNumberOptions] = useState([numbers]);
@@ -479,7 +481,8 @@ export default function CommunitySettings({ data, token, refetch }) {
                 />
                 <TextField
                   id={`${i}-menu-name-input`}
-                  style={{ width: '200px', marginLeft: '40px' }}
+                  style={{ width: '200px' }}
+                  className={classes.menuItemRight}
                   label={t('common:form_fields.name')}
                   onChange={event => handleMenuItemChange(event, i)}
                   value={propAccessor(menuItemOptions[parseInt(i, 10)], 'menu_name')}
@@ -489,12 +492,22 @@ export default function CommunitySettings({ data, token, refetch }) {
               </div>
               <div style={{ display: 'flex', flexDirection: 'row', margin: '20px 0 10px 0' }}>
                 <MultiSelect
-                  labelName="Display on"
-                  fieldName="display_on"
-                  options={quickLinksDisplayOptions}
+                  labelName={t('common:form_placeholders.select_roles')}
+                  fieldName="roles"
+                  options={roleOptions}
+                  type="chip"
                   handleOnChange={event => handleMenuItemChange(event, i)}
-                  selectedOptions={propAccessor(menuItemOptions[parseInt(i, 10)], 'display_on')}
+                  selectedOptions={propAccessor(menuItemOptions[parseInt(i, 10)], 'roles')}
                 />
+                <span className={classes.menuItemRight}>
+                  <MultiSelect
+                    labelName={t('common:form_placeholders.display_on')}
+                    fieldName="display_on"
+                    options={quickLinksDisplayOptions}
+                    handleOnChange={event => handleMenuItemChange(event, i)}
+                    selectedOptions={propAccessor(menuItemOptions[parseInt(i, 10)], 'display_on')}
+                  />
+                </span>
               </div>
             </div>
             <div style={{ paddingTop: '20px' }}>
@@ -865,5 +878,8 @@ const useStyles = makeStyles(theme => ({
   },
   button: {
     marginTop: '15px'
+  },
+  menuItemRight: {
+    marginLeft: '2.5em'
   }
 }));
