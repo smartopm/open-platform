@@ -20,7 +20,7 @@ export default function PaymentSlider({ data, currencyData }) {
     return `${percentage}%`;
   }
   return (
-    <div className={classes.flex}>
+    <div className={classes.flex} data-testid='body'>
       <div style={{ width: calcPercentage(data?.totalPayments, data?.planValue) }}>
         <div className={classes.totalPayment}> </div>
         <div className={classes.sliderDetail}>
@@ -104,7 +104,7 @@ export default function PaymentSlider({ data, currencyData }) {
           <SliderBreaker type={data.owingAmount > 0} />
         </>
       )}
-      <div style={{ width: calcPercentage(planVal, data?.planValue) }}>
+      <div style={{ width: calcPercentage(planVal, data?.planValue) }} data-testid='plan-value'>
         <div className={classes.planValue}> </div>
         <div className={classes.spaceBetween}>
           <Typography> </Typography>

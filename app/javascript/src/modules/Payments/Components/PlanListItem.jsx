@@ -30,7 +30,7 @@ export default function PlanListItem({ data, currencyData }) {
   return (
     <>
       <Grid container spacing={2} className={classes.container}>
-        <Grid item xs={12} sm={2}>
+        <Grid item xs={12} sm={2} data-testid='landparcel'>
           <Typography className={classes.weight} variant="caption">
             {data?.landParcel?.parcelNumber}
           </Typography>
@@ -41,11 +41,11 @@ export default function PlanListItem({ data, currencyData }) {
             {data?.planType}
           </Typography>
         </Grid>
-        <Grid item xs={12} sm={8}>
+        <Grid item xs={12} sm={8} data-testid='payment-slider'>
           <PaymentSlider data={data} currencyData={currencyData} />
         </Grid>
-        <Grid item xs={12} sm={2}>
-          <Label title={capitalize(planStatus(data))} color={colors[planStatus(data)]} />
+        <Grid item xs={12} sm={2} data-testid='label'>
+          <Label title={capitalize(planStatus(data) || '')} color={colors[planStatus(data)]} />
         </Grid>
       </Grid>
     </>
