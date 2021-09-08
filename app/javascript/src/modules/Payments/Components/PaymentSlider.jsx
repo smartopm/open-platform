@@ -221,6 +221,10 @@ PaymentSlider.propTypes = {
   }).isRequired,
 }
 
+SliderBreaker.defaultProps = {
+  type: false
+}
+
 SliderBreaker.propTypes = {
-  type: PropTypes.bool.isRequired
+  type: PropTypes.bool
 }

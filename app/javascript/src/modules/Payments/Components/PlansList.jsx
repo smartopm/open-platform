@@ -89,7 +89,7 @@ export function PlansList({
             </div>
           </div>
           {communityPlans?.slice(offset, limit + offset - 1).map(plan => (
-            <div style={{ padding: '0 20px' }} key={plan.id}>
+            <div className={classes.body} style={matches ? {} : {marginTop: '30px'}} key={plan.id}>
               <PlanListItem data={plan} currencyData={currencyData} />
             </div>
           ))}
@@ -341,8 +341,15 @@ const useStyles = makeStyles(() => ({
     borderRadius: '4px',
     border: '1px solid #EEEEEE',
     marginTop: '20px'
+  },
+  body: {
+    padding: '0 2%'
   }
 }));
+
+PlansList.defaultProps = {
+  communityPlans: []
+}
 
 PlansList.propTypes = {
   matches: PropTypes.bool.isRequired,
@@ -356,7 +363,7 @@ PlansList.propTypes = {
       id: PropTypes.string,
       status: PropTypes.string,
     })
-  ).isRequired,
+  ),
   setDisplaySubscriptionPlans: PropTypes.func.isRequired
 }
 
