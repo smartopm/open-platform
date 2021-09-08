@@ -5,9 +5,10 @@ import RadioGroup from '@material-ui/core/RadioGroup'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
 import FormControl from '@material-ui/core/FormControl'
 import FormLabel from '@material-ui/core/FormLabel'
+import FormHelperText from '@material-ui/core/FormHelperText';
 import PropTypes from 'prop-types'
 
-export default function RadioInput({ handleValue, properties, value }) {
+export default function RadioInput({ handleValue, properties, value, inputValidation }) {
   const tempValue = properties?.value
   // convert ruby hash into a normal object by replacing => with : and the parse the value
   const cleanValue = tempValue?.replace(/=>/g, ':')
@@ -57,12 +58,16 @@ export default function RadioInput({ handleValue, properties, value }) {
             />
           ))}
       </RadioGroup>
+      {inputValidation.error && <FormHelperText error>{`${properties.fieldName} is Required`}</FormHelperText>}
     </FormControl>
   )
 }
 
 RadioInput.defaultProps = {
-  value: null
+  value: null,
+  inputValidation: {
+    error: false,
+  }
 }
 
 RadioInput.propTypes = {
@@ -89,5 +94,8 @@ RadioInput.propTypes = {
     PropTypes.string,
     PropTypes.bool,
     PropTypes.number
-  ])
+  ]),
+  inputValidation: PropTypes.shape({
+    error: PropTypes.bool,
+  })
 }

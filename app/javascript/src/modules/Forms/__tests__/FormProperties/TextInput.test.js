@@ -31,4 +31,16 @@ describe('TextInput component', () => {
     expect(formField).toHaveTextContent('Client Name')
     expect(formField).not.toHaveTextContent('for admins only')
   })
+
+  it('should show validation error message', () => {
+    const props = {
+        handleValue: jest.fn(),
+        properties: { fieldName: 'Address', required: true },
+        value: '',
+        editable: false,
+        id: '3145c4247e'
+    }
+    const rendered = render(<TextInput {...props} inputValidation={{error: true}} />)
+    expect(rendered.queryByText(/Address is Required/i)).toBeInTheDocument()
+  })
 })

@@ -6,8 +6,9 @@ import FormLabel from '@material-ui/core/FormLabel';
 import FormGroup from '@material-ui/core/FormGroup';
 import PropTypes from 'prop-types';
 import Checkbox from '@material-ui/core/Checkbox';
+import FormHelperText from '@material-ui/core/FormHelperText';
 
-export default function CheckboxInput({ handleValue, properties, checkboxState }) {
+export default function CheckboxInput({ handleValue, properties, checkboxState, inputValidation }) {
   const fieldValues = checkboxState?.value;
   const { formProperty } = properties;
 
@@ -37,16 +38,23 @@ export default function CheckboxInput({ handleValue, properties, checkboxState }
           />
         ))}
       </FormGroup>
+      {inputValidation.error && <FormHelperText error data-testid="error-msg">{`${properties.fieldName} is Required`}</FormHelperText>}
     </FormControl>
   );
 }
 
 CheckboxInput.defaultProps = {
-  checkboxState: null
+  checkboxState: null,
+  inputValidation: {
+    error: false,
+  }
 }
 
 CheckboxInput.propTypes = {
   handleValue: PropTypes.func.isRequired,
   properties: PropTypes.object.isRequired,
-  checkboxState: PropTypes.object
+  checkboxState: PropTypes.object,
+  inputValidation: PropTypes.shape({
+    error: PropTypes.bool,
+  })
 };

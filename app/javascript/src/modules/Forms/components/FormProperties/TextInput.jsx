@@ -2,7 +2,7 @@ import React from 'react'
 import { TextField, MenuItem } from '@material-ui/core'
 import PropTypes from 'prop-types'
 
-export default function TextInput({id, handleValue, properties, value, editable }) {
+export default function TextInput({id, handleValue, properties, value, editable, inputValidation }) {
     return (
       <TextField
         id={id}
@@ -19,8 +19,16 @@ export default function TextInput({id, handleValue, properties, value, editable 
           shrink: true
         }}
         required={properties.required}
-        helperText={editable && 'for admins only'}
+         /* eslint-disable no-nested-ternary */
         select={properties.fieldType === 'dropdown'}
+        {...inputValidation} 
+        helperText={(editable && inputValidation.error)
+           ? `${properties.fieldName} is Required. For admins only`
+           : editable
+             ? 'for admins only'
+             : inputValidation.error
+               ? `${properties.fieldName} is Required`
+               : ''}
       >
         { properties.fieldType === 'dropdown' &&
          (
@@ -35,6 +43,12 @@ export default function TextInput({id, handleValue, properties, value, editable 
     )
   }
 
+TextInput.defaultProps = {
+  inputValidation: {
+    error: false,
+  }
+}
+
 TextInput.propTypes = {
       handleValue: PropTypes.func.isRequired,
       properties: PropTypes.shape({
@@ -47,4 +61,7 @@ TextInput.propTypes = {
       value: PropTypes.oneOfType([PropTypes.string, PropTypes.bool, PropTypes.number]),
       editable: PropTypes.bool.isRequired,
       id: PropTypes.string.isRequired,
+      inputValidation: PropTypes.shape({
+        error: PropTypes.bool,
+    }),
   }

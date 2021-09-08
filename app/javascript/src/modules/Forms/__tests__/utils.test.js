@@ -8,7 +8,8 @@ import {
   parseRenderedText,
   propExists,
   requiredFieldIsEmpty,
-  extractRenderedTextFromCategory
+  extractRenderedTextFromCategory,
+  checkRequiredFormPropertyIsFilled
 } from '../utils';
 
 describe('Utilities', () => {
@@ -302,4 +303,62 @@ describe('Utilities', () => {
 
     expect(requiredFieldIsEmpty(filledInProperties, categories2)).toBe(false)
   })
+
+  it('returns true if on validation error a required form property is not filled', () => {
+    expect(checkRequiredFormPropertyIsFilled(
+      {
+        id: '5d8a6fd7-3ebc-4d34-9562-00a2518cddda',
+            fieldName: 'What is your location ?',
+            fieldType: 'text',
+            required: true
+      },
+      {
+        error: true,
+        filledInProperties: [
+          { value: null, form_property_id: '5d8a6fd7-3ebc-4d34-9562-00a2518cddda' },
+        ]
+      }
+    )).toBe(true)
+  });
+
+  it('returns false if on validation error a required form property is filled', () => {
+    expect(checkRequiredFormPropertyIsFilled(
+      {
+        id: '5d8a6fd7-3ebc-4d34-9562-00a2518cddda',
+            fieldName: 'What is your location ?',
+            fieldType: 'text',
+            required: true
+      },
+      {
+        error: true,
+        filledInProperties: [
+          { value: 'Lagos', form_property_id: '5d8a6fd7-3ebc-4d34-9562-00a2518cddda' },
+        ]
+      }
+    )).toBe(false)
+  });
+
+  it('returns defaults to false if undefined', () => {
+    expect(checkRequiredFormPropertyIsFilled(
+     undefined,
+     undefined
+    )).toBe(false)
+  });
+
+  it('returns true if on validation error a required form property is filled', () => {
+    expect(checkRequiredFormPropertyIsFilled(
+      {
+        id: '5d8a6fd7-3ebc-4d34-9562-00a2518cddda',
+            fieldName: 'Qualifications',
+            fieldType: 'checkbox',
+            required: true
+      },
+      {
+        error: true,
+        filledInProperties: [
+          { value: { Bachelor: true, Masters: false }, form_property_id: '5d8a6fd7-3ebc-4d34-9562-00a2518cddda' },
+        ]
+      }
+    )).toBe(true)
+  });
 });

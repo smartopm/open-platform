@@ -17,6 +17,7 @@ import FormPropertyAction from './FormPropertyAction';
 import { FormContext } from '../Context';
 import { convertBase64ToFile } from '../../../utils/helpers';
 import { dateToString } from '../../../components/DateContainer';
+import { checkRequiredFormPropertyIsFilled } from '../utils';
 
 export default function RenderForm({ formPropertiesData, formId, refetch, editMode, categoryId }) {
   const signRef = useRef(null);
@@ -109,6 +110,9 @@ export default function RenderForm({ formPropertiesData, formId, refetch, editMo
             value={formProperties.fieldName}
             handleValue={event => handleValueChange(event, formPropertiesData)}
             editable={editable}
+            inputValidation={{
+              error: checkRequiredFormPropertyIsFilled(formPropertiesData, formState),
+            }}
           />
         </Grid>
       </Grid>
@@ -244,6 +248,9 @@ export default function RenderForm({ formPropertiesData, formId, refetch, editMo
               properties={formPropertiesData}
               value={null}
               handleValue={event => handleRadioValueChange(event, formPropertiesData)}
+              inputValidation={{
+                error: checkRequiredFormPropertyIsFilled(formPropertiesData, formState)
+              }}
             />
             <br />
           </Fragment>
@@ -266,6 +273,9 @@ export default function RenderForm({ formPropertiesData, formId, refetch, editMo
               properties={formPropertiesData}
               checkboxState={formProperties[formPropertiesData.fieldName]}
               handleValue={event => handleCheckboxSelect(event, formPropertiesData)}
+              inputValidation={{
+                error: checkRequiredFormPropertyIsFilled(formPropertiesData, formState)
+              }}
             />
             <br />
           </Fragment>
@@ -288,6 +298,9 @@ export default function RenderForm({ formPropertiesData, formId, refetch, editMo
             value=""
             handleValue={event => handleValueChange(event, formPropertiesData)}
             editable={editable}
+            inputValidation={{
+              error: checkRequiredFormPropertyIsFilled(formPropertiesData, formState),
+            }}
           />
         </Grid>
       </Grid>

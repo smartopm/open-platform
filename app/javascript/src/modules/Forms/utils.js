@@ -170,3 +170,29 @@ export function requiredFieldIsEmpty(filledInProperties, formData) {
   }
   return result
 }
+
+/**
+ * Validates individual required field
+ * @param {object} property
+ * @param {[object]} formData
+ * @returns {Boolean}
+ */
+export function checkRequiredFormPropertyIsFilled(property, formData){
+  if(property && Array.isArray(formData?.filledInProperties) && formData?.filledInProperties.length > 0){
+    if(formData.error && property.required) {
+      if(property.fieldType === 'checkbox') {
+        const fieldValues = formData?.filledInProperties.find(filledProp => property.id === filledProp.form_property_id)?.value
+        return(
+          !fieldValues || Object.values(fieldValues).some(val => !val)
+        )
+      }
+
+      return (
+        !(formData?.filledInProperties
+          .find(filledProp => property.id === filledProp.form_property_id)?.value)
+      )
+    }
+  }
+
+ return false
+}
