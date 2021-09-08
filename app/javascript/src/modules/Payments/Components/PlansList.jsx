@@ -25,6 +25,7 @@ import { dateToString } from '../../../components/DateContainer';
 import MenuList from '../../../shared/MenuList';
 import SubscriptionPlanModal from './SubscriptionPlanModal';
 import ButtonComponent from '../../../shared/buttons/Button';
+import PlanListItem from './PlanListItem';
 
 
 export function PlansList({
@@ -53,16 +54,6 @@ export function PlansList({
     } else if (action === 'next') {
       setOffset(offset + limit);
     }
-  }
-
-  function planStatus(plan) {
-    if(plan.status !== 'active'){
-      return plan.status;
-    }
-    if(plan.owingAmount > 0){
-      return 'behind';
-    }
-    return 'up-to-date';
   }
 
   return (
@@ -106,20 +97,11 @@ export function PlansList({
               </div>
             </div>
           </div>
-          {matches && (
-          <div style={{ padding: '0 20px' }}>
-            <ListHeader headers={communityPlansHeaders} />
-          </div>
-       )}
           {communityPlans?.slice(offset, limit + offset - 1).map(plan => (
             <div style={{ padding: '0 20px' }} key={plan.id}>
-              <DataList
-                keys={communityPlansHeaders}
-                data={renderCommunityPlans(plan, currencyData, planStatus, t)}
-                hasHeader={false}
-              />
+              <PlanListItem data={plan} currencyData={currencyData} />
             </div>
-        ))}
+          ))}
         </div>
       </>
     )}
