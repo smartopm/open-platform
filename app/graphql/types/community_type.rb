@@ -29,6 +29,7 @@ module Types
     field :community_required_fields, GraphQL::Types::JSON, null: true
     field :sms_phone_numbers, [String, { null: true }], null: true
     field :emergency_call_number, String, null: true
+    field :templates, GraphQL::Types::JSON, null: true
 
     def image_url
       return nil unless object.image.attached?
