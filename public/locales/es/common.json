@@ -88,6 +88,7 @@
   "form_placeholders": {
     "action_note": "Escriba que sea hacer aquí",
     "add_note": "Ingresa comentarios aqui",
+    "display_on": "Mostrar en",
     "email": "Ingrese correo electrónico",
     "flag": "Marcar todo",
     "message": "Ingrese su mensaje aquí",
@@ -100,6 +101,7 @@
     "search_tasks": "Buscar Tareas",
     "search_user": "Buscar usuario",
     "select_co_owners": "Seleccione los copropietarios que le gustaría agregar a este plan",
+    "select_roles": "Selecciones los roles que pueden ver este enlace",
     "type_description": "Escriba una descripción aquí",
     "type_title": "Escriba un título aquí",
     "user_name_search": "Escriba el nombre de usuario aquí",
