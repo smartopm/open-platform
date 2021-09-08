@@ -38,6 +38,8 @@
     "plot_detail_plural": "Plot Details",
     "plot": "Plot",
     "plot_plural": "Plots",
-    "quick_links": "Quick Links"
+    "quick_links": "Quick Links",
+    "no_plots_available": "No Plot Available",
+    "plots_appear_here": "Your plots will appear here"
   }
 }
