@@ -3,9 +3,7 @@ import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Grid, Typography, IconButton } from '@material-ui/core';
 import { MoreHorizOutlined } from '@material-ui/icons';
-import Avatar from '@material-ui/core/Avatar';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import DataList from '../../../shared/list/DataList';
 import {
@@ -39,13 +37,6 @@ export function PlansList({
   const limit = 10;
   const [offset, setOffset] = useState(0);
   const classes = useStyles();
-  const communityPlansHeaders = [
-    { title: 'Plot/User Info', value: t('table_headers.plot_user_info'), col: 2},
-    { title: 'Dates', value: t('table_headers.dates'), col: 2 },
-    { title: 'Payment Info', value: t('common:table_headers.payment_info'), col: 2 },
-    { title: 'Owing Info', value: t('table_headers.owing_info'), col: 2 },
-    { title: 'Status', value: t('common:table_headers.status'), col: 2 }
-  ];
 
   function paginatePlans(action) {
     if (action === 'prev') {
@@ -116,61 +107,6 @@ export function PlansList({
       </CenteredContent>
     </div>
   );
-}
-
-export function renderCommunityPlans(plan, currencyData, planStatus, t) {
-  return [
-    {
-      'Plot/User Info': (
-        <Grid item xs={12} md={2} data-testid="plot_user_info">
-          <Text content={<b>{`${titleize(plan?.planType)} - ${titleize(plan?.landParcel?.parcelNumber)}`}</b>} />
-          <br />
-          <Link
-            to={`/user/${plan.user.id}?tab=Plans`}
-            style={{ textDecoration: 'none', color: 'inherit' }}
-          >
-            <div style={{ display: 'flex' }}>
-              <Avatar src={plan.user.imageUrl} alt="avatar-image" />
-              <Typography style={{ margin: '7px', fontSize: '12px' }}>
-                <Text color="primary" content={plan.user.name} />
-              </Typography>
-            </div>
-          </Link>
-        </Grid>
-      ),
-      'Dates': (
-        <Grid item xs={12} md={2} data-testid="dates">
-          <Text content={`${t('misc.starts_on')} ${dateToString(plan.startDate)}`} />
-          <br />
-          <Text content={`${t('misc.ends_on')} ${dateToString(plan.endDate)}`} />
-        </Grid>
-      ),
-      'Payment Info': (
-        <Grid item xs={12} md={2} data-testid="payment_info">
-          <Text content={`${t('misc.paid')} ${formatMoney(currencyData, plan.totalPayments)}`} />
-          <br />
-          <Text content={`${t('misc.expected_payments')} ${formatMoney(currencyData, plan.expectedPayments)}`} />
-          <br />
-          <Text content={`${t('misc.value')} ${formatMoney(currencyData, plan.planValue)}`} />
-        </Grid>
-      ),
-      'Owing Info': (
-        <Grid item xs={12} md={2} data-testid="owing_info" style={plan.owingAmount > 0 ? {color: 'red'} : {color: 'green'}}>
-          <Text content={`${t('misc.owing')} ${formatMoney(currencyData, plan.owingAmount)}`} />
-          <br />
-          <Text content={`${t('misc.installments')} ${plan.installmentsDue}`} />
-        </Grid>
-      ),
-      'Status': (
-        <Grid item xs={12} md={2} data-testid="plan _status" style={{ width: '90px' }}>
-          <Label
-            title={capitalize(planStatus(plan))}
-            color={colors[planStatus(plan)]}
-          />
-        </Grid>
-      )
-    }
-  ];
 }
 
 export function SubscriptionPlans({
@@ -376,14 +312,6 @@ export function renderSubscriptionPlans(subscription, currencyData, menuData) {
       )
     }
   ];
-}
-
-
-const colors = {
-  'cancelled': '#e74540',
-  'up-to-date': '#00a98b',
-  'behind': '#eea92d',
-  'completed': '#29ec47'
 }
 
 const useStyles = makeStyles(() => ({

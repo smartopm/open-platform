@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
@@ -55,19 +56,20 @@ export default function PaymentSlider({ data, currencyData }) {
       {data?.owingAmount > 0 && (
         <>
           <div style={{ width: calcPercentage(data?.owingAmount, data?.planValue) }}>
-            
             <div className={classes.expectedPayment}> </div>
             {data?.owingAmount < data?.planValue ? (
-              <div
-                className={classes.bodySecond}
-              >
+              <div className={classes.bodySecond}>
                 <Typography> </Typography>
                 <div className={classes.body}>
-                  <ArrowDropDownIcon style={{color: '#EA2626', marginTop: '-10px', marginLeft: '25%'}} />
+                  <ArrowDropDownIcon
+                    style={{ color: '#EA2626', marginTop: '-10px', marginLeft: '25%' }}
+                  />
                   <div className={classes.owing}>
-                    <Typography variant='caption'>owing</Typography>
-                    <Typography variant='caption'>{formatMoney(currencyData, data?.owingAmount)}</Typography>
-                    <Typography variant='caption'>{`${data?.installmentsDue} installments`}</Typography>
+                    <Typography variant="caption">owing</Typography>
+                    <Typography variant="caption">
+                      {formatMoney(currencyData, data?.owingAmount)}
+                    </Typography>
+                    <Typography variant="caption">{`${data?.installmentsDue} installments`}</Typography>
                   </div>
                 </div>
                 <div className={classes.amountDue}>
@@ -81,11 +83,13 @@ export default function PaymentSlider({ data, currencyData }) {
               <div className={classes.spaceBetween}>
                 <Typography> </Typography>
                 <div className={classes.body}>
-                  <ArrowDropDownIcon style={{color: '#EA2626', marginTop: '-10px'}} />
+                  <ArrowDropDownIcon style={{ color: '#EA2626', marginTop: '-10px' }} />
                   <div className={classes.owing}>
-                    <Typography variant='caption'>owing</Typography>
-                    <Typography variant='caption'>{formatMoney(currencyData, data?.owingAmount)}</Typography>
-                    <Typography variant='caption'>{`${data?.installmentsDue} installments`}</Typography>
+                    <Typography variant="caption">owing</Typography>
+                    <Typography variant="caption">
+                      {formatMoney(currencyData, data?.owingAmount)}
+                    </Typography>
+                    <Typography variant="caption">{`${data?.installmentsDue} installments`}</Typography>
                   </div>
                 </div>
                 <div className={classes.body}>
@@ -120,7 +124,14 @@ export default function PaymentSlider({ data, currencyData }) {
 
 function SliderBreaker({ type }) {
   const classes = useStyles();
-  return <div className={classes.sliderBreaker} style={type ? {backgroundColor: '#EA2626'} : {backgroundColor: '#66A59A'}}> </div>;
+  return (
+    <div
+      className={classes.sliderBreaker}
+      style={type ? { backgroundColor: '#EA2626' } : { backgroundColor: '#66A59A' }}
+    >
+      {' '}
+    </div>
+  );
 }
 
 const useStyles = makeStyles(() => ({
@@ -149,46 +160,67 @@ const useStyles = makeStyles(() => ({
     marginTop: '10px'
   },
   body: {
-    display: 'flex', 
+    display: 'flex',
     flexDirection: 'column'
   },
   bodyFirst: {
-    display: 'flex', 
-    justifyContent: 'space-between', 
+    display: 'flex',
+    justifyContent: 'space-between',
     marginRight: '-40px'
   },
   amountPaid: {
-    display: 'flex', 
-    flexDirection: 'column', 
+    display: 'flex',
+    flexDirection: 'column',
     marginTop: '20px'
   },
   planBodyValue: {
-    display: 'flex', 
-    flexDirection: 'column', 
+    display: 'flex',
+    flexDirection: 'column',
     marginRight: '30px'
   },
   bodySecond: {
-    display: 'flex', 
-    justifyContent: 'space-between', 
+    display: 'flex',
+    justifyContent: 'space-between',
     marginRight: '-60px'
   },
   owing: {
-    marginTop: '20px', 
-    display: 'flex', 
-    flexDirection: 'column', 
-    textAlign: 'center', 
+    marginTop: '20px',
+    display: 'flex',
+    flexDirection: 'column',
+    textAlign: 'center',
     marginLeft: '-10px'
   },
   amountDue: {
-    display: 'flex', 
-    flexDirection: 'column', 
+    display: 'flex',
+    flexDirection: 'column',
     marginTop: '10px'
   },
   spaceBetween: {
-    display: 'flex', 
+    display: 'flex',
     justifyContent: 'space-between'
   },
   flex: {
     display: 'flex'
   }
 }));
+
+PaymentSlider.propTypes = {
+  data: PropTypes.shape({
+    planType: PropTypes.string,
+    planValue: PropTypes.number,
+    totalPayments: PropTypes.number,
+    owingAmount: PropTypes.number,
+    installmentsDue: PropTypes.number,
+    landParcel: PropTypes.shape({
+      parcelNumber: PropTypes.string
+    })
+  }).isRequired,
+  currencyData: PropTypes.shape({
+    currency: PropTypes.string,
+    locale: PropTypes.string
+  }).isRequired,
+}
+
+SliderBreaker.propTypes = {
+  type: PropTypes.bool.isRequired
+}
