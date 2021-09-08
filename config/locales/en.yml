@@ -331,7 +331,6 @@ en:
       preference_update_failed: Preference Update Failed
     payment_plan:
       have_zero_pending_balance: Pending balance is 0 for payment plan of selected property
-      amount_greater_than_pending_balance: Amount cannot be greater than the plan pending balance
       cannot_transfer_to_cancelled_plan: Transfer of plan cannot be made to a cancelled payment plan. Please try transferring to other plans
       does_not_exist_for_property: Payment Plan does not exist for selected property
       not_found: Payment Plan not found
@@ -361,6 +360,7 @@ en:
       not_found: This account does not exist. Submit a request to create an account or use the correct account information to log in
       not_found_with_id: Could not find User %{user_id}
       update_failed: Failed to migrate the user details
+      does_not_exists: User does not exists
     user_form_property:
       not_found: User form property not found
     visibility: You do not have permission to access %{field}

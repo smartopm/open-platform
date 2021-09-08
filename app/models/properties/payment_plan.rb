@@ -137,6 +137,71 @@ module Properties
       "#{land_parcel.parcel_number} - #{start_date.strftime('%Y-%m-%d')}"
     end
 
+    # Returns plan's total value
+    #
+    # @return [Float]
+    def plan_value
+      installment_amount * duration
+    end
+
+    # Returns payments expected till current date
+    #
+    # @return [Float]
+    def expected_payments
+      if !status.eql?('active') || start_date.to_date > Time.zone.today
+        0
+      else
+        current_duration * installment_amount
+      end
+    end
+
+    # Returns installments due till current date
+    #
+    # @return [Float]
+    def installments_due
+      (owing_amount / installment_amount).ceil
+    end
+
+    # Returns amount which is due from the expected payments
+    #
+    # @return [Float]
+    def owing_amount
+      if !status.eql?('active') || start_date.to_date > Time.zone.today
+        0
+      else
+        amount = expected_payments - total_payments
+        amount.positive? ? amount : 0
+      end
+    end
+
+    # rubocop:disable Metrics/MethodLength
+    # Returns the duration between the start date and current date
+    #
+    # @return [Float]
+    def current_duration
+      days = (Time.zone.today - start_date.to_date).to_i
+      return 0 if days <= 0
+
+      case frequency
+      when 'daily'
+        days
+      when 'weekly'
+        (days / 7.0).ceil
+      when 'quarterly'
+        (days / 90.0).ceil
+      else
+        (days / 30.0).ceil
+      end
+    end
+    # rubocop:enable Metrics/MethodLength
+
+    # Returns total plan payments made for a plan
+    #
+    # @return [Float]
+    def total_payments
+      plan_payments.not_cancelled.sum(:amount)
+    end
+
     private
 
     # Assigns pending balance(product of installmemt amount & duration).
