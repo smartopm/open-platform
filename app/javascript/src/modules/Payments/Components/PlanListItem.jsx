@@ -40,6 +40,10 @@ export default function PlanListItem({ data, currencyData }) {
           <Typography className={classes.weight} variant="caption">
             {data?.planType}
           </Typography>
+          <br />
+          <Typography className={classes.weight} variant="caption">
+            {data?.landParcel?.parcelType}
+          </Typography>
         </Grid>
         <Grid item xs={12} sm={8} data-testid='payment-slider'>
           <PaymentSlider data={data} currencyData={currencyData} />
@@ -68,7 +72,8 @@ PlanListItem.propTypes = {
   data: PropTypes.shape({
     planType: PropTypes.string,
     landParcel: PropTypes.shape({
-      parcelNumber: PropTypes.string
+      parcelNumber: PropTypes.string,
+      parcelType: PropTypes.string
     })
   }).isRequired,
   currencyData: PropTypes.shape({

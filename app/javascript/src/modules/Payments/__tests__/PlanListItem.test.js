@@ -9,7 +9,8 @@ describe('It should test the plan item list item component', () => {
   const data = {
     planType: 'basic',
     landParcel: {
-      parcelNumber: 'test123'
+      parcelNumber: 'test123',
+      parcelType: 'basic'
     }
   }
 
