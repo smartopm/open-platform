@@ -47,7 +47,8 @@
     "update_category": "Update Category",
     "create_category": "Create Category",
     "add_category": "Add Category",
-    "confirm": "Confirm"
+    "confirm": "Confirm",
+    "clear_condition": "Clear Condition"
   },
   "errors": {
     "no_forms": "No Forms to submit"

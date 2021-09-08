@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Grid, Hidden, IconButton, MenuItem, TextField, Typography } from '@material-ui/core';
+import { Button, Grid, Hidden, IconButton, makeStyles, MenuItem, TextField, Typography } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import { useMutation } from 'react-apollo';
@@ -37,6 +37,7 @@ export default function CategoryForm({ data, close, formData, refetchCategories 
   );
   const { formId } = useParams();
   const history = useHistory();
+  const classes = useStyles()
 
   useEffect(() => {
     if (data.id) {
@@ -164,7 +165,9 @@ export default function CategoryForm({ data, close, formData, refetchCategories 
           margin="dense"
           required
         />
-        <Typography gutterBottom variant="caption">{t('misc.display_condition')}</Typography>
+        <Typography gutterBottom variant="caption">
+          {t('misc.display_condition')}
+        </Typography>
         <Grid container spacing={2}>
           <Grid item xs={12} sm={4}>
             <TextField
@@ -178,7 +181,6 @@ export default function CategoryForm({ data, close, formData, refetchCategories 
               name="groupingId"
               select
             >
-              {/* <MenuItem key="none" value="none">None</MenuItem> */}
               {formData.map(property => (
                 <MenuItem key={property.id} value={property.id}>
                   {property.fieldName}
@@ -219,14 +221,16 @@ export default function CategoryForm({ data, close, formData, refetchCategories 
               margin="dense"
             />
           </Grid>
-          <Grid item sm={1} xs={6}>
+          <Grid item sm={1} xs={6} data-testid="clear_condition">
             <Hidden xsDown>
-              <IconButton data-testid="clear condition" onClick={clearDisplayCondition}>
+              <IconButton onClick={clearDisplayCondition} className={classes.clearIcon}>
                 <DeleteOutline color="primary" />
               </IconButton>
             </Hidden>
             <Hidden only={['sm', 'lg', 'md', 'xl']}>
-              <Button color="primary" onClick={clearDisplayCondition}>Clear Condition</Button>
+              <Button color="primary" onClick={clearDisplayCondition} className={classes.clearTex}>
+                {t('actions.clear_condition')}
+              </Button>
             </Hidden>
           </Grid>
         </Grid>
@@ -287,6 +291,15 @@ export default function CategoryForm({ data, close, formData, refetchCategories 
     </>
   );
 }
+const useStyles = makeStyles({
+  // keeping pixels for height measurements
+  clearIcon: {
+    marginTop: 4
+  },
+  clearTex: {
+    marginTop: -17
+  },
+})
 
 CategoryForm.propTypes = {
   data: PropTypes.shape({
