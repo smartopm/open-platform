@@ -73,6 +73,7 @@ export const FormUpdateMutation = gql`
     $name: String
     $expiresAt: String
     $description: String
+    $status: String
     $multipleSubmissionsAllowed: Boolean
     $preview: Boolean
     ) {
@@ -81,6 +82,7 @@ export const FormUpdateMutation = gql`
       name: $name
       expiresAt: $expiresAt
       description: $description
+      status: $status
       multipleSubmissionsAllowed: $multipleSubmissionsAllowed
       preview: $preview
     ){
