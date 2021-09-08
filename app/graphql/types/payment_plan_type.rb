@@ -52,13 +52,6 @@ module Types
       end_date - 2.months
     end
 
-    # Returns end date for plan statement
-    #
-    # @return [DateTime]
-    def end_date
-      object.start_date + object.frequency_based_duration(object.duration)
-    end
-
     def paid_payments_exists
       object.plan_payments.exists?(status: :paid)
     end

@@ -176,11 +176,13 @@ module Properties
     end
 
     # rubocop:disable Metrics/MethodLength
+    # rubocop:disable Metrics/AbcSize
     # Returns the duration between the start date and current date
     #
     # @return [Float]
     def current_duration
-      days = (Time.zone.today - start_date.to_date).to_i
+      current_date = Time.zone.today > end_date ? end_date : Time.zone.today
+      days = (current_date - start_date.to_date).to_i
       return 0 if days <= 0
 
       case frequency
@@ -195,12 +197,20 @@ module Properties
       end
     end
     # rubocop:enable Metrics/MethodLength
+    # rubocop:enable Metrics/AbcSize
 
     # Returns total plan payments made for a plan
     #
     # @return [Float]
     def total_payments
       plan_payments.not_cancelled.sum(:amount)
+    end
+
+    # Returns end date for plan statement
+    #
+    # @return [DateTime]
+    def end_date
+      plan_duration.last.to_date
     end
 
     private

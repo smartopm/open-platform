@@ -25,7 +25,7 @@ RSpec.describe Mutations::PaymentPlan::PaymentReminderCreate do
       GQL
     end
 
-    context 'when cuurent user is an admin' do
+    context 'when current user is an admin' do
       it 'sends payment reminder email to the users' do
         variables = {
           userId: user.id,
