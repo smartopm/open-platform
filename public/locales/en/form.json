@@ -85,7 +85,8 @@
     "general_category": "General",
     "property_field_name": "Property Name",
     "condition": "Condition",
-    "condition_value": "Value"
+    "condition_value": "Value",
+    "rendered_text_helper": "Hint: Add space after markdown titles"
   },
   "field_types": {
     "text": "Text",
