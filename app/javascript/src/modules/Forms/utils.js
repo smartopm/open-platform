@@ -113,9 +113,10 @@ export function extractValidFormPropertyFieldNames(formProperties) {
  * @param {[object]} data
  * @returns {string}
  */
-export function parseRenderedText(renderedText, data) {
-  if(!renderedText) return ''
+export function parseRenderedText(categories, data) {
+  if(!categories) return ''
   const properties = extractValidFormPropertyFieldNames(data)
+  const renderedText = extractRenderedTextFromCategory(data, categories)
   const words = renderedText.split(' ');
   return words
     .map((word) => {
@@ -129,6 +130,21 @@ export function parseRenderedText(renderedText, data) {
       return word;
     })
     .join(' ');
+}
+
+
+/**
+ * Ensure we only show contract preview for currently enabled categories in this form
+ * @param {[object]} formProperties 
+ * @param {[object]} categoriesData 
+ * @returns {string}
+ */
+export function extractRenderedTextFromCategory(formProperties, categoriesData){
+  if(!categoriesData) return ''
+  const properties = extractValidFormPropertyValue(formProperties)
+  const validCategories = categoriesData.filter(category => checkCondition(category, properties, false))
+  const text = validCategories.map(category => `${category.renderedText}  `).join('');
+  return text
 }
 
 /**
