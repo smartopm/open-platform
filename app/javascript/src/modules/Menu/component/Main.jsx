@@ -5,7 +5,7 @@ import useMediaQuery from '@material-ui/core/useMediaQuery';
 import Drawer from '@material-ui/core/Drawer';
 import MenuIcon from '@material-ui/icons/Menu';
 import { StyleSheet, css } from 'aphrodite';
-import { Button, IconButton, SvgIcon } from '@material-ui/core';
+import { Button, IconButton, SvgIcon, Breadcrumbs, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
 import PropTypes from 'prop-types';
 import DoubleArrowOutlinedIcon from '@material-ui/icons/DoubleArrowOutlined';
