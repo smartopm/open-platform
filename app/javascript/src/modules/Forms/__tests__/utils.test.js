@@ -198,6 +198,31 @@ describe('Utilities', () => {
   it('should parse and then find and replace variables in a string', () => {
     const text = `This is a nice string with #variables that has #name with #NAME, OR #variables. end of line \n#support \n\n#support`
     const sampleText = `And some other text riught here  with cook underscores #some_Dynamic_Values and another one here #some_dynamic_values or this \n\n#SOME_DYNAMIC_VALUES ## Another nice tile \n#some_Dynamic_Values`
+    
+    const categories = [{
+        fieldName: 'Main Category',
+        headerVisible: true,
+        id: '34234234',
+        displayCondition: {
+          condition: '',
+          value: '',
+          groupingId: ''
+        },
+        renderedText: text
+      },
+      {
+        fieldName: 'Main Category',
+        headerVisible: true,
+        id: '878',
+        displayCondition: {
+          condition: '',
+          value: '',
+          groupingId: ''
+        },
+        renderedText: sampleText
+      }
+    ]
+
     const data = {
       name: {
         value: ' Joe',
@@ -212,11 +237,10 @@ describe('Utilities', () => {
         value: 'test one three',
       },
     }
-    
-    const emptyText = ''
-    expect(parseRenderedText(text, data)).toContain('This is a nice string with And yes it is true that has  Joe with  Joe, OR And yes it is true. end of line \nyes \n\nyes')
-    expect(parseRenderedText(emptyText, data)).toBe('')
-    expect(parseRenderedText(sampleText, data)).toBe(`And some other text riught here  with cook underscores test one three and another one here test one three or this \n\ntest one three ## Another nice tile \ntest one three`)
+
+    expect(parseRenderedText([categories[0]], data)).toContain('This is a nice string with And yes it is true that has  Joe with  Joe, OR And yes it is true. end of line \nyes \n\nyes')
+    expect(parseRenderedText(categories, data)).toContain(`And some other text riught here  with cook underscores test one three and another one here test one three or this \n\ntest one three ## Another nice tile \ntest one three`)
+    expect(parseRenderedText([], data)).toBe('')
   })
 
   it('checks for null values', () => {
