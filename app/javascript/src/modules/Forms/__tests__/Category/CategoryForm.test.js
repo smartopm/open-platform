@@ -70,6 +70,7 @@ describe('CategoryForm Component', () => {
     expect(formWrapper.queryByTestId('category_action_btn').textContent).toContain(
       'actions.update_category'
     );
+    expect(formWrapper.queryByTestId('clear_condition')).toBeInTheDocument()
     expect(formWrapper.queryByTestId('category_action_btn')).not.toBeDisabled();
 
     fireEvent.change(formWrapper.queryByTestId('name'), {

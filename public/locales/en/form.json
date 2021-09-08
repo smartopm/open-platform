@@ -47,7 +47,8 @@
     "update_category": "Update Category",
     "create_category": "Create Category",
     "add_category": "Add Category",
-    "confirm": "Confirm"
+    "confirm": "Confirm",
+    "clear_condition": "Clear Condition"
   },
   "errors": {
     "no_forms": "No Forms to submit"
@@ -85,7 +86,8 @@
     "general_category": "General",
     "property_field_name": "Property Name",
     "condition": "Condition",
-    "condition_value": "Value"
+    "condition_value": "Value",
+    "rendered_text_helper": "Hint: Add space after markdown titles"
   },
   "field_types": {
     "text": "Text",

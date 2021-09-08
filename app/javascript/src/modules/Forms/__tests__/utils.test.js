@@ -7,7 +7,8 @@ import {
   nonNullValues,
   parseRenderedText,
   propExists,
-  requiredFieldIsEmpty
+  requiredFieldIsEmpty,
+  extractRenderedTextFromCategory
 } from '../utils';
 
 describe('Utilities', () => {
@@ -133,7 +134,8 @@ describe('Utilities', () => {
         condition: '',
         value: '',
         groupingId: ''
-      }
+      },
+      renderedText: 'Some category'
     }
 
     // matches the propertyId but wrong condition
@@ -145,7 +147,8 @@ describe('Utilities', () => {
         condition: '===',
         value: '10',
         groupingId: '9e50f4db-3d75-431d-a772-261971a6ed92'
-      }
+      },
+      renderedText: 'categoryWithPropertyId'
     }
 
     const categoryWithWrongCondition = {
@@ -166,7 +169,8 @@ describe('Utilities', () => {
         condition: '>',
         value: '10',
         groupingId: '9e50f4db-3d75-431d-a772-261971a6ed92'
-      }
+      },
+      renderedText: 'and this also matches'
     }
     const properties = [
       {
@@ -184,10 +188,41 @@ describe('Utilities', () => {
     expect(checkCondition(categoryWithWrongCondition, properties, false)).toBe(false) // condition has no matching property
     expect(checkCondition(categoryWithPropertyId, properties, false)).toBe(false) // condition matches property but wrong condition
     expect(checkCondition(categoryWithMatchingCondition, properties, false)).toBe(true) // condition matches all
+
+    // extract rendered text 
+    expect(extractRenderedTextFromCategory(properties, [category, categoryWithPropertyId, categoryWithWrongCondition])).toEqual('Some category  ')
+    expect(extractRenderedTextFromCategory(properties, [category, categoryWithMatchingCondition])).toEqual('Some category  and this also matches  ')
+    expect(extractRenderedTextFromCategory(properties, [])).toEqual('')
   })
 
   it('should parse and then find and replace variables in a string', () => {
-    const text = `This is a nice string with #variables that has #name with end of line \n#support \n\n#support`
+    const text = `This is a nice string with #variables that has #name with #NAME, OR #variables. end of line \n#support \n\n#support`
+    const sampleText = `And some other text riught here  with cook underscores #some_Dynamic_Values and another one here #some_dynamic_values or this \n\n#SOME_DYNAMIC_VALUES ## Another nice tile \n#some_Dynamic_Values`
+    
+    const categories = [{
+        fieldName: 'Main Category',
+        headerVisible: true,
+        id: '34234234',
+        displayCondition: {
+          condition: '',
+          value: '',
+          groupingId: ''
+        },
+        renderedText: text
+      },
+      {
+        fieldName: 'Main Category',
+        headerVisible: true,
+        id: '878',
+        displayCondition: {
+          condition: '',
+          value: '',
+          groupingId: ''
+        },
+        renderedText: sampleText
+      }
+    ]
+
     const data = {
       name: {
         value: ' Joe',
@@ -198,8 +233,14 @@ describe('Utilities', () => {
       'support': {
         value: 'yes',
       },
+      'some dynamic values': {
+        value: 'test one three',
+      },
     }
-    expect(parseRenderedText(text, data)).toContain('This is a nice string with And yes it is true that has  Joe with end of line \nyes \n\nyes')
+
+    expect(parseRenderedText([categories[0]], data)).toContain('This is a nice string with And yes it is true that has  Joe with  Joe, OR And yes it is true. end of line \nyes \n\nyes')
+    expect(parseRenderedText(categories, data)).toContain(`And some other text riught here  with cook underscores test one three and another one here test one three or this \n\ntest one three ## Another nice tile \ntest one three`)
+    expect(parseRenderedText([], data)).toBe('')
   })
 
   it('checks for null values', () => {
