@@ -119,10 +119,10 @@ export function parseRenderedText(renderedText, data) {
   return words
     .map((word) => {
       const formProperty = properties.find(
-        (prop) => prop.fieldName === word.replace(/\n|#/g, '')
+        (prop) => prop.fieldName?.toLowerCase() === word.replace(/\n|#/gi, '').replace(/[,.]/, '').toLowerCase()
       );
       if (formProperty) {
-        return word.replace(/#[A-Za-z0-9]+/, formProperty.value);
+        return word.replace(/#[A-Za-z0-9]+/i, formProperty.value);
       }
       return word;
     })
