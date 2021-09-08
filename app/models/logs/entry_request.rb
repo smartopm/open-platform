@@ -14,6 +14,8 @@ module Logs
 
     default_scope { order(created_at: :asc) }
 
+    has_paper_trail
+
     class Unauthorized < StandardError; end
 
     GRANT_STATE = %w[Pending Granted Denied].freeze
