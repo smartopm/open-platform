@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import TextField from '@material-ui/core/TextField'
-import Autocomplete from '@material-ui/lab/Autocomplete';
 import {
   Button,
   FormHelperText,
@@ -10,19 +9,16 @@ import {
   FormControl,
 } from '@material-ui/core'
 import { css } from 'aphrodite'
-import { useMutation , useLazyQuery } from 'react-apollo'
+import { useMutation } from 'react-apollo'
 import PropTypes from 'prop-types'
 import { useTranslation } from 'react-i18next';
-import UserAutoResult from '../../../shared/UserAutoResult';
 import { CreateNote } from '../../../graphql/mutations'
 import DatePickerDialog from '../../../components/DatePickerDialog'
 import { discussStyles } from '../../../components/Discussion/Discuss'
 import { NotesCategories } from '../../../utils/constants'
 // TODO: This should be moved to the shared directory
 import UserSearch from '../../Users/Components/UserSearch'
-
-import { UsersLiteQuery } from '../../../graphql/queries';
-import useDebounce from '../../../utils/useDebounce';
+import CustomAutoComplete from '../../../shared/autoComplete/CustomAutoComplete';
 
 const initialData = {
   user: '',
@@ -39,16 +35,6 @@ export default function TaskForm({ close, refetch, users, assignUser}) {
   const [createTask] = useMutation(CreateNote)
   const [userData, setData] = useState(initialData)
   const { t } = useTranslation(['task', 'common'])
-  const [searchedUser, setSearchUser] = useState('');
-  const debouncedValue = useDebounce(searchedUser, 500);
-
-  const allowedAssignees = ["admin", "custodian", "security_guard", "contractor"]
-
-  const [searchUser, { data: liteData }] = useLazyQuery(UsersLiteQuery, {
-    variables: { query: debouncedValue.length > 0 ? debouncedValue : 'user_type:admin OR user_type:custodian OR user_type:security_guard OR user_type:contractor', limit: 10 },
-    errorPolicy: 'all',
-    fetchPolicy: 'no-cache'
-  });
 
   function handleSubmit(event) {
     event.preventDefault()
@@ -129,26 +115,15 @@ export default function TaskForm({ close, refetch, users, assignUser}) {
         </Select>
       </FormControl>
       <br />
-
-      <Autocomplete
-        multiple
-        id="tags-standard"
-        options={liteData?.usersLite || users}
-        ListboxProps={{ style: { maxHeight: "20rem" }}}
-        renderOption={option => <UserAutoResult user={option} />}
-        name="assignees"
-        onChange={(_event, value) => setAssignees(value)}
-        getOptionLabel={(option) => allowedAssignees.includes(option.userType) ? option.name : ''}
-        renderInput={(params) => (
-          <TextField
-            {...params}
-            variant="standard"
-            label={t('task.task_assignee_label')}
-            placeholder={t('task.task_search_placeholder')} 
-            onChange={event => setSearchUser(event.target.value)}
-            onKeyDown={() => searchUser()}
-          />
-        )}
+      <CustomAutoComplete
+        users={users}
+        isMultiple
+        onChange={(_evt, value) => {
+        if(!value) {
+          return
+        }
+        setAssignees(value)
+      }}
       />
 
       <br />
@@ -196,8 +171,7 @@ TaskForm.defaultProps = {
 }
 
 TaskForm.propTypes = {
-  // eslint-disable-next-line react/forbid-prop-types
-  users: PropTypes.array,
+  users: PropTypes.arrayOf(PropTypes.string),
   close: PropTypes.func.isRequired,
   refetch: PropTypes.func.isRequired,
   assignUser: PropTypes.func.isRequired
