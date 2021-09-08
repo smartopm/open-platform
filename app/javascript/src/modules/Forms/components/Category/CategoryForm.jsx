@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Grid, MenuItem, TextField, Typography } from '@material-ui/core';
+import { Button, Grid, Hidden, IconButton, MenuItem, TextField, Typography } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import { useMutation } from 'react-apollo';
 import { useHistory, useParams } from 'react-router';
+import DeleteOutline from '@material-ui/icons/DeleteOutline';
 import SwitchInput from '../FormProperties/SwitchInput';
 import CenteredContent from '../../../../components/CenteredContent';
 import {
@@ -117,6 +118,15 @@ export default function CategoryForm({ data, close, formData, refetchCategories 
     });
   }
 
+  function clearDisplayCondition() {
+    setCategoryData({
+      ...categoryData,
+        condition: '',
+        groupingId: '',
+        value: ''
+    });
+  }
+
   return (
     <>
       <MessageAlert
@@ -168,6 +178,7 @@ export default function CategoryForm({ data, close, formData, refetchCategories 
               name="groupingId"
               select
             >
+              {/* <MenuItem key="none" value="none">None</MenuItem> */}
               {formData.map(property => (
                 <MenuItem key={property.id} value={property.id}>
                   {property.fieldName}
@@ -195,7 +206,7 @@ export default function CategoryForm({ data, close, formData, refetchCategories 
               ))}
             </TextField>
           </Grid>
-          <Grid item xs={12} sm={4}>
+          <Grid item xs={12} sm={3}>
             <TextField
               id="cat-condition_value"
               label={t('form_fields.condition_value')}
@@ -207,6 +218,16 @@ export default function CategoryForm({ data, close, formData, refetchCategories 
               style={{ width: '100%' }}
               margin="dense"
             />
+          </Grid>
+          <Grid item sm={1} xs={6}>
+            <Hidden xsDown>
+              <IconButton data-testid="clear condition" onClick={clearDisplayCondition}>
+                <DeleteOutline color="primary" />
+              </IconButton>
+            </Hidden>
+            <Hidden only={['sm', 'lg', 'md', 'xl']}>
+              <Button color="primary" onClick={clearDisplayCondition}>Clear Condition</Button>
+            </Hidden>
           </Grid>
         </Grid>
         <TextField
