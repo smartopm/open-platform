@@ -3,6 +3,9 @@
 unless Rails.env.production?
   require Rails.root.join('spec/factories/community.rb')
   require Rails.root.join('spec/factories/users/user.rb')
+  require Rails.root.join('spec/factories/properties/account.rb')
+  require Rails.root.join('spec/factories/properties/land_parcel_account.rb')
+  require Rails.root.join('spec/factories/properties/land_parcel.rb')
 end
 
 # Cypress support to seed data
@@ -27,6 +30,7 @@ class Cypress::FactoriesController < ApplicationController
     params.fetch(:name)
   end
 
+  # rubocop:disable Metrics/MethodLength
   def factory_attributes
     params.fetch(:attributes).permit(
       :name,
@@ -34,6 +38,11 @@ class Cypress::FactoriesController < ApplicationController
       :email,
       :state,
       :community_id,
+      :parcel_number,
+      :user_id,
+      :land_parcel_id,
+      :account_id,
     ).to_h
   end
+  # rubocop:enable Metrics/MethodLength
 end

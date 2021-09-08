@@ -120,7 +120,7 @@ export function MainNav({ authState }) {
             aria-label="open drawer"
             edge="start"
             onClick={handleDrawerToggle}
-            className={classes.menuButton}
+            className={`${classes.menuButton} left-menu-collapsible`}
             style={{ paddingTop: drawerOpen ? '20px' : '0px' }}
             data-testid="drawer"
           >

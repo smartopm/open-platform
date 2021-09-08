@@ -228,6 +228,7 @@ export default function PaymentPlanModal({
             onChange={handleInputChange}
             name="duration"
             style={{ marginRight: '15px' }}
+            className='plan-duration-txt-input'
             type="number"
             required
             InputProps={{
@@ -246,6 +247,7 @@ export default function PaymentPlanModal({
             aria-label="installment-amount"
             value={inputValue.installmentAmount}
             onChange={handleInputChange}
+            className='plan-amount-txt-input'
             name="installmentAmount"
             type="number"
             required
@@ -295,6 +297,9 @@ export default function PaymentPlanModal({
           onChange={handleInputChange}
           name="planType"
           style={{ width: '100%' }}
+          InputProps={{
+            className: 'plan-type-select-input'
+          }}
           required
           select
         >
@@ -315,6 +320,9 @@ export default function PaymentPlanModal({
           style={{ width: '100%' }}
           required
           value={landParcel}
+          InputProps={{
+            className: 'plan-plot-select-input'
+          }}
           select={landParcelsData?.userLandParcels?.length > 0}
           error={isError && !landParcelId}
           helperText={isError && !landParcelId && t('errors.property_required')}

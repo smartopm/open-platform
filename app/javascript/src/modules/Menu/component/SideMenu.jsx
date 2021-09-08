@@ -107,6 +107,7 @@ const SideMenu = ({ toggleDrawer, menuItems, userType, direction, communityFeatu
                button
                onClick={event => routeTo(event, menuItem)}
                selected={pathname === menuItem.routeProps.path}
+               className={menuItem.styleProps?.className}
              >
                {menuItem.styleProps?.icon && (
                <ListItemIcon className={`${css(styles.listItemIcon)}`}>

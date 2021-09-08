@@ -192,7 +192,7 @@ export function FullScreenDialog({ handleClose, open, children, actionText, hand
     >
       <AppBar className={classes.appBar}>
         <Toolbar>
-          <IconButton edge="start" onClick={handleClose} aria-label="close">
+          <IconButton edge="start" onClick={handleClose} aria-label="close" className="close-receipt-details">
             <CloseIcon style={{color: 'white'}} />
           </IconButton>
           <div className={matches ? classes.printMobile : classes.print}>

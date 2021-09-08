@@ -126,6 +126,7 @@ export default function UserInformation({
                 aria-controls="long-menu"
                 aria-haspopup="true"
                 onClick={() => setDrawerOpen(true)}
+                className='right-menu-drawer'
                 style={{
                   float: 'right',
                   marginRight: -23
