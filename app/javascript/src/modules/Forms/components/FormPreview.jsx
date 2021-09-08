@@ -11,7 +11,7 @@ import { FormContext } from '../Context';
 
 export default function FormPreview({ loading, handleFormSubmit, categoriesData }) {
   const { t } = useTranslation('form')
-  const text = categoriesData.data.formCategories.map(category => `${category.renderedText}  `).join('');
+  const text = categoriesData.data?.formCategories.map(category => `${category.renderedText}  `).join('');
   const { formProperties } = useContext(FormContext)
   const markdown = parseRenderedText(text, formProperties)
   return (

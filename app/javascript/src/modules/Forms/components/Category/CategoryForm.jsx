@@ -218,6 +218,7 @@ export default function CategoryForm({ data, close, formData, refetchCategories 
           name="renderedText"
           style={{ width: '100%' }}
           inputProps={{ 'data-testid': 'rendered_text' }}
+          helperText="Hint: add space after markdown titles"
           margin="dense"
           rows={6}
           multiline

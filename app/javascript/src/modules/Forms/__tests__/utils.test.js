@@ -187,7 +187,8 @@ describe('Utilities', () => {
   })
 
   it('should parse and then find and replace variables in a string', () => {
-    const text = `This is a nice string with #variables that has #name with end of line \n#support \n\n#support`
+    const text = `This is a nice string with #variables that has #name with #NAME, OR #variables. end of line \n#support \n\n#support`
+    const sampleText = `And some other text riught here  with cook underscores #some_Dynamic_Values and another one here #some_dynamic_values or this \n\n#SOME_DYNAMIC_VALUES ## Another nice tile \n#some_Dynamic_Values`
     const data = {
       name: {
         value: ' Joe',
@@ -198,8 +199,15 @@ describe('Utilities', () => {
       'support': {
         value: 'yes',
       },
+      'some dynamic values': {
+        value: 'test one three',
+      },
     }
-    expect(parseRenderedText(text, data)).toContain('This is a nice string with And yes it is true that has  Joe with end of line \nyes \n\nyes')
+    
+    const emptyText = ''
+    expect(parseRenderedText(text, data)).toContain('This is a nice string with And yes it is true that has  Joe with  Joe, OR And yes it is true. end of line \nyes \n\nyes')
+    expect(parseRenderedText(emptyText, data)).toBe('')
+    expect(parseRenderedText(sampleText, data)).toBe(`And some other text riught here  with cook underscores test one three and another one here test one three or this \n\ntest one three ## Another nice tile \ntest one three`)
   })
 
   it('checks for null values', () => {

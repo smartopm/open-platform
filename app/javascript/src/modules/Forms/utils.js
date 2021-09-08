@@ -114,15 +114,17 @@ export function extractValidFormPropertyFieldNames(formProperties) {
  * @returns {string}
  */
 export function parseRenderedText(renderedText, data) {
+  if(!renderedText) return ''
   const properties = extractValidFormPropertyFieldNames(data)
   const words = renderedText.split(' ');
   return words
     .map((word) => {
-      const formProperty = properties.find(
-        (prop) => prop.fieldName?.toLowerCase() === word.replace(/\n|#/gi, '').replace(/[,.]/, '').toLowerCase()
-      );
+      const wordToReplace = word.split('_').join(' ')
+      const formProperty = properties.find((prop) => {
+        return prop.fieldName?.toLowerCase().trim() === wordToReplace.replace(/\n|#/gi, '').replace(/[,.]/, '').toLowerCase()
+      });
       if (formProperty) {
-        return word.replace(/#[A-Za-z0-9]+/i, formProperty.value);
+        return word.replace(/#(\w+)/i, formProperty.value)
       }
       return word;
     })
