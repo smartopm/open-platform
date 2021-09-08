@@ -23,6 +23,7 @@ import ColorPicker from './ColorPicker';
 import { validateThemeColor } from '../helpers';
 import { AdminUsersQuery } from '../../Users/graphql/user_query';
 import MultiSelect from '../../../shared/MultiSelect';
+import { EmailTemplatesQuery } from '../../Emails/graphql/email_queries';
 
 export default function CommunitySettings({ data, token, refetch }) {
   const numbers = {
@@ -75,6 +76,8 @@ export default function CommunitySettings({ data, token, refetch }) {
   const [whatsappOptions, setWhatsappOptions] = useState([whatsapps]);
   const [socialLinkOptions, setSocialLinkOptions] = useState([socialLinks]);
   const [menuItemOptions, setMenuItemOptions] = useState([menuItems]);
+  const [paymentReminderTemplate, setPaymentReminderTemplate] = useState(null);
+  const [templateOptions, setTemplateOptions] = useState([]);
   const [themeColors, setThemeColor] = useState(theme);
   const [bankingDetails, setBankingDetails] = useState(banking);
   const [message, setMessage] = useState({ isError: false, detail: '' });
@@ -101,6 +104,10 @@ export default function CommunitySettings({ data, token, refetch }) {
   });
 
   const { data: adminUsersData } = useQuery(AdminUsersQuery, {
+    fetchPolicy: 'cache-and-network',
+    errorPolicy: 'all'
+  });
+  const { data: emailTemplatesData } = useQuery(EmailTemplatesQuery, {
     fetchPolicy: 'cache-and-network',
     errorPolicy: 'all'
   });
@@ -265,6 +272,11 @@ export default function CommunitySettings({ data, token, refetch }) {
     localStorage.setItem('default-language', selectedLanguage);
   }
 
+  function handleTemplates(event){
+    setPaymentReminderTemplate(event.target.value)
+    setTemplateOptions([...templateOptions, {'payment_reminder_template': event.target.value}])
+  }
+
   function updateCommunity() {
     if (!validateThemeColor(themeColors)) {
       setAlertOpen(true);
@@ -284,6 +296,7 @@ export default function CommunitySettings({ data, token, refetch }) {
         socialLinks: socialLinkOptions,
         menuItems: menuItemOptions,
         imageBlobId: signedBlobId,
+        templates: templateOptions,
         currency,
         locale,
         language,
@@ -324,9 +337,14 @@ export default function CommunitySettings({ data, token, refetch }) {
     setWhatsappOptions(data.supportWhatsapp || [whatsapps]);
     setSocialLinkOptions(data.socialLinks || [socialLinks]);
     setMenuItemOptions(data.menuItems || [menuItems]);
+    setTemplateOptions(data.templates || templateOptions);
     setCurrency(data.currency);
     setLocale(data.locale);
     setLanguage(data.language);
+    console.log(data);
+    console.log(data.templates);
+    console.log("TEMP DATA");
+    console.log(emailTemplatesData);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);
 
@@ -597,6 +615,22 @@ export default function CommunitySettings({ data, token, refetch }) {
           margin="normal"
           inputProps={{ 'data-testid': 'wp_link' }}
         />
+         <TextField
+          margin="normal"
+          id="payment-reminder"
+          aria-label="payment reminder"
+          label={t('community.set_payment_reminder')}
+          value={paymentReminderTemplate}
+          onChange={handleTemplates}
+          name="template"
+          select
+        >
+          {emailTemplatesData?.emailTemplates?.map((template) => (
+            <MenuItem key={template.id} value={template?.id}>
+              {template?.name}
+            </MenuItem>
+          ))}
+        </TextField>
       </div>
 
       <div style={{ marginTop: '40px' }}>

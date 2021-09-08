@@ -34,87 +34,18 @@ module Types
     field :owing_amount, Float, null: true
     field :installments_due, Integer, null: true
 
-    # Returns plan's total value
-    #
-    # @return [Float]
-    def plan_value
-      object.installment_amount * object.duration
-    end
-
     # Returns total amount paid for plan statement
     #
     # @return [Float]
     def statement_paid_amount
-      (total_payments / object.installment_amount).floor * object.installment_amount
+      (object.total_payments / object.installment_amount).floor * object.installment_amount
     end
 
     # Returns unallocated amount for plan statement
     #
     # @return [Float]
     def unallocated_amount
-      total_payments - statement_paid_amount
-    end
-
-    # Returns payments expected till current date
-    #
-    # @return [Float]
-    def expected_payments
-      if !object.status.eql?('active') || object.start_date.to_date > Time.zone.today
-        0
-      else
-        current_duration * object.installment_amount
-      end
-    end
-
-    # Returns installments due till current date
-    #
-    # @return [Float]
-    def installments_due
-      (owing_amount / object.installment_amount).ceil
-    end
-
-    # Returns amount which is due from the expected payments
-    #
-    # @return [Float]
-    def owing_amount
-      if !object.status.eql?('active') || object.start_date.to_date > Time.zone.today
-        0
-      else
-        amount = expected_payments - total_payments
-        amount.positive? ? amount : 0
-      end
-    end
-
-    # rubocop:disable Metrics/AbcSize
-    # rubocop:disable Metrics/MethodLength
-    # Returns the duration between the start date and current date
-    #
-    # @return [Float]
-    def current_duration
-      days = (Time.zone.today - object.start_date.to_date).to_i
-      return 0 if days <= 0
-
-      case object.frequency
-      when 'daily'
-        days
-      when 'weekly'
-        (days / 7.0).ceil
-      when 'monthly'
-        (days / 30.0).ceil
-      when 'quarterly'
-        (days / 90.0).ceil
-      else
-        (days / 30.0).ceil
-      end
-    end
-    # rubocop:enable Metrics/AbcSize
-    # rubocop:enable Metrics/MethodLength
-
-    # Returns total plan payments made for a plan
-    #
-    # @return [Float]
-    def total_payments
-      object.plan_payments.not_cancelled.sum(:amount)
+      object.total_payments - statement_paid_amount
     end
 
     def renew_date
