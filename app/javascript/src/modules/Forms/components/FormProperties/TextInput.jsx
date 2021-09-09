@@ -1,8 +1,10 @@
 import React from 'react'
 import { TextField, MenuItem } from '@material-ui/core'
 import PropTypes from 'prop-types'
+import { useTranslation } from 'react-i18next';
 
 export default function TextInput({id, handleValue, properties, value, editable, inputValidation }) {
+    const { t } = useTranslation('form');
     return (
       <TextField
         id={id}
@@ -23,11 +25,11 @@ export default function TextInput({id, handleValue, properties, value, editable,
         select={properties.fieldType === 'dropdown'}
         {...inputValidation} 
         helperText={(editable && inputValidation.error)
-           ? `${properties.fieldName} is Required. For admins only`
+           ? t('errors.required_field_for_admins_only', { fieldName: properties.fieldName })
            : editable
-             ? 'for admins only'
+             ? t('errors.admins_only')
              : inputValidation.error
-               ? `${properties.fieldName} is Required`
+               ? t('errors.required_field', { fieldName: properties.fieldName })
                : ''}
       >
         { properties.fieldType === 'dropdown' &&

@@ -316,7 +316,13 @@ describe('Utilities', () => {
         error: true,
         filledInProperties: [
           { value: null, form_property_id: '5d8a6fd7-3ebc-4d34-9562-00a2518cddda' },
-        ]
+        ],
+        categories: [
+          {
+            displayCondition: {condition: '', groupingId: '', value: ''},
+            formProperties: [{ id: '5d8a6fd7-3ebc-4d34-9562-00a2518cddda' }]
+          }
+        ],
       }
     )).toBe(true)
   });
@@ -333,15 +339,14 @@ describe('Utilities', () => {
         error: true,
         filledInProperties: [
           { value: 'Lagos', form_property_id: '5d8a6fd7-3ebc-4d34-9562-00a2518cddda' },
-        ]
+        ],
+        categories: [
+          {
+            displayCondition: {condition: '', groupingId: '', value: ''},
+            formProperties: [{ id: '5d8a6fd7-3ebc-4d34-9562-00a2518cddda' }]
+          }
+        ],
       }
-    )).toBe(false)
-  });
-
-  it('returns defaults to false if undefined', () => {
-    expect(checkRequiredFormPropertyIsFilled(
-     undefined,
-     undefined
     )).toBe(false)
   });
 
@@ -357,8 +362,67 @@ describe('Utilities', () => {
         error: true,
         filledInProperties: [
           { value: { Bachelor: true, Masters: false }, form_property_id: '5d8a6fd7-3ebc-4d34-9562-00a2518cddda' },
-        ]
+        ],
+        categories: [
+          {
+            displayCondition: {condition: '', groupingId: '', value: ''},
+            formProperties: [{ id: '5d8a6fd7-3ebc-4d34-9562-00a2518cddda' }]
+          }
+        ],
       }
     )).toBe(true)
+  });
+
+  it('considers active categories, returns false on validation error if a required form property is filled', () => {
+    expect(checkRequiredFormPropertyIsFilled(
+      {
+        id: '5d8a6fd7-3ebc-4d34-9562-00a2518cddda',
+        fieldName: 'What is your location ?',
+        fieldType: 'text',
+        required: true
+      },
+      {
+        error: true,
+        filledInProperties: [
+          { value: 'Lagos', form_property_id: '5d8a6fd7-3ebc-4d34-9562-00a2518cddda' },
+        ],
+        categories: [
+          {
+            displayCondition: {condition: '===', groupingId: '5d8a6fd7-3ebc-4d34-9562-00a2518cddda', value: 'Lagos'},
+            formProperties: [{ id: '5d8a6fd7-3ebc-4d34-9562-00a2518cddda' }]
+          }
+        ],
+      }
+    )).toBe(false)
+  });
+
+  it('considers no active categories, returns false without performing validations', () => {
+    expect(checkRequiredFormPropertyIsFilled(
+      {
+        id: '5d8a6fd7-3ebc-4d34-9562-00a2518cddda',
+        fieldName: 'What is your location ?',
+        fieldType: 'text',
+        required: true
+      },
+      {
+        error: false,
+        filledInProperties: [
+          { value: null, form_property_id: '5d8a6fd7-3ebc-4d34-9562-00a2518cddda' },
+        ],
+        categories: [
+          {
+            displayCondition: {condition: '===', groupingId: '5d8a6fd7-3ebc-4d34-9562-00a2518cddda', value: 'Lusaka'},
+            formProperties: [{ id: '5d8a6fd7-3ebc-4d34-9562-00a2518cddda' }]
+          }
+        ],
+      }
+    )).toBe(false)
+  });
+
+  it('returns defaults to false if undefined', () => {
+    expect(checkRequiredFormPropertyIsFilled(
+     undefined,
+     undefined
+    )).toBe(false)
   });
 });

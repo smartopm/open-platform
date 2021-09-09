@@ -101,6 +101,7 @@ export default function FormContextProvider({ children }) {
         alertOpen: true,
         isSubmitting: false,
         filledInProperties,
+        categories,
       })
       return;
     }

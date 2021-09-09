@@ -1,5 +1,6 @@
 /* eslint-disable react/prop-types */
 import React from 'react'
+import { useTranslation } from 'react-i18next';
 import Radio from '@material-ui/core/Radio'
 import RadioGroup from '@material-ui/core/RadioGroup'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
@@ -9,6 +10,7 @@ import FormHelperText from '@material-ui/core/FormHelperText';
 import PropTypes from 'prop-types'
 
 export default function RadioInput({ handleValue, properties, value, inputValidation }) {
+  const { t } = useTranslation('form');
   const tempValue = properties?.value
   // convert ruby hash into a normal object by replacing => with : and the parse the value
   const cleanValue = tempValue?.replace(/=>/g, ':')
@@ -58,7 +60,7 @@ export default function RadioInput({ handleValue, properties, value, inputValida
             />
           ))}
       </RadioGroup>
-      {inputValidation.error && <FormHelperText error>{`${properties.fieldName} is Required`}</FormHelperText>}
+      {inputValidation.error && <FormHelperText error>{t('errors.required_field', { fieldName: properties.fieldName })}</FormHelperText>}
     </FormControl>
   )
 }

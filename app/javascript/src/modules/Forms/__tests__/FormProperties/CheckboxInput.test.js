@@ -69,5 +69,6 @@ describe('Checkbox component', () => {
 
     const wrapper = render(<CheckboxInput {...props} inputValidation={{error: true}} />);
     expect(wrapper.queryByTestId('error-msg')).toBeInTheDocument();
+    expect(wrapper.queryByText('errors.required_field')).toBeInTheDocument()
   });
 });
