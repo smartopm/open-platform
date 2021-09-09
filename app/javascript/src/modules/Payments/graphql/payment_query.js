@@ -187,6 +187,7 @@ export const PlanStatement = gql`
         }
         landParcel {
           parcelNumber
+          parcelType
           community {
             name
             logoUrl
