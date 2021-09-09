@@ -56,8 +56,8 @@ export function checkCondition(category, properties, editMode) {
   }
   const property = properties.find(prop => prop.form_property_id === category.displayCondition.groupingId);
   const value = typeof property?.value === 'object' ? property?.value?.checked : property?.value
-  const processedValue = value?.replace(/\s/g,'').toLowerCase();
-  const processedConditionValue = category?.displayCondition?.value.replace(/\s/g,'').toLowerCase();
+  const processedValue = value?.trim().toLowerCase();
+  const processedConditionValue = category?.displayCondition?.value.trim().toLowerCase();
   if (
     property &&
     eval(
