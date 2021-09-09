@@ -88,10 +88,16 @@ export function nonNullValues(item){
 export function extractValidFormPropertyValue(formProperties) {
   if(!Object.keys(formProperties).length) return []
   return Object.entries(formProperties)
-    .map(([, value]) => value)
+    .map(([, prop]) => {
+      if (prop.value && Object.prototype.toString.call(prop) === '[object Object]' && !Object.keys(prop.value).includes('checked')) {
+        console.log(prop.value, 'check')
+        return Object.keys(prop.value).join(', ')
+      }
+      return prop
+    })
     .filter(nonNullValues);
 }
-
+//  Object.prototype.toString.call(prop.value) !== '[object Object]'
 /**
  * This focuses on field names which extractValidFormPropertyValue lacks,
  * we could've done both under one function but when submitting a form GraphQL test complain because of unmatching args
@@ -124,6 +130,7 @@ export function parseRenderedText(categories, data) {
       const formProperty = properties.find((prop) => {
         return prop.fieldName?.toLowerCase().trim() === wordToReplace.replace(/\n|#/gi, '').replace(/[,.]/, '').toLowerCase()
       });
+      // console.log(formProperty);
       if (formProperty) {
         return word.replace(/#(\w+)/i, formProperty.value)
       }
@@ -142,6 +149,7 @@ export function parseRenderedText(categories, data) {
 export function extractRenderedTextFromCategory(formProperties, categoriesData){
   if(!categoriesData) return ''
   const properties = extractValidFormPropertyValue(formProperties)
+  // console.log(properties)
   const validCategories = categoriesData.filter(category => checkCondition(category, properties, false))
   const text = validCategories.map(category => `${category.renderedText}  `).join('');
   return text
