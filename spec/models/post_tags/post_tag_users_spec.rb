@@ -9,7 +9,7 @@ RSpec.describe PostTags::PostTagUser, type: :model do
   end
 
   describe 'associations' do
-    it { is_expected.to belong_to(:user).class_name('Users::User').dependent(:destroy) }
-    it { is_expected.to belong_to(:post_tag).dependent(:destroy) }
+    it { is_expected.to belong_to(:user).class_name('Users::User') }
+    it { is_expected.to belong_to(:post_tag) }
   end
 end

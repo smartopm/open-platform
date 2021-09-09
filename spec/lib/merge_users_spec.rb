@@ -21,7 +21,7 @@ RSpec.describe MergeUsers do
 
   let!(:note) { create(:note, user: user, author: user) }
   let!(:assignee_note) { create(:assignee_note, user: user, note: note) }
-
+  let(:other_assignee_note) { create(:assignee_note, user: duplicate_user, note: note) }
   let!(:business) do
     create(:business, user: user, community_id: community.id,
                       status: 'verified')
@@ -37,6 +37,9 @@ RSpec.describe MergeUsers do
   end
   let!(:contact_info) { create(:contact_info, user: user) }
   let!(:discussion_user) { create(:discussion_user, user: user, discussion: discussion) }
+  let(:other_discussion_user) do
+    create(:discussion_user, user: duplicate_user, discussion: discussion)
+  end
   let!(:entry_request) do
     create(:pending_entry_request, user: user, community: community, grantor: user)
   end
@@ -101,6 +104,7 @@ RSpec.describe MergeUsers do
   let!(:payment_plan) { create(:payment_plan, user: user, land_parcel: land_parcel) }
   let!(:post_tag) { create(:post_tag, community: community) }
   let!(:post_tag_user) { create(:post_tag_user, post_tag: post_tag, user: user) }
+  let(:other_post_tag_user) { create(:post_tag_user, post_tag: post_tag, user: duplicate_user) }
   let(:duplicate_wallet) { create(:wallet, user: duplicate_user) }
   let!(:event_log) do
     create(:event_log, community_id: community.id, acting_user_id: user.id,
@@ -213,6 +217,26 @@ RSpec.describe MergeUsers do
     end
   end
 
+  context 'when discussion user for common discussion, assignee not for common note,
+            post tag user for post tag is present' do
+    before do
+      other_discussion_user
+      other_post_tag_user
+      other_assignee_note
+    end
+    it 'does not assigns the discussion user, post tag user and assignee note and destroys them' do
+      expect(Discussions::DiscussionUser.count).to eql 2
+      expect(Notes::AssigneeNote.count).to eql 2
+      expect(PostTags::PostTagUser.count).to eql 2
+      MergeUsers.merge(user.id, duplicate_user.id)
+      expect(Discussions::DiscussionUser.count).to eql 1
+      expect(Notes::AssigneeNote.count).to eql 1
+      expect(PostTags::PostTagUser.count).to eql 1
+      expect(other_discussion_user.id).not_to be_nil
+      expect(other_post_tag_user.id).not_to be_nil
+      expect(other_assignee_note.id).not_to be_nil
+    end
+  end
   # rubocop:disable Rails/SkipsModelValidations
   context 'when balance and pending balance is positive in both wallets' do
     before do
