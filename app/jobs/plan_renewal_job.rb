@@ -8,9 +8,9 @@ class PlanRenewalJob < ApplicationJob
   # rubocop:disable Metrics/AbcSize
   # rubocop:disable Metrics/MethodLength
   # rubocop:disable Metrics/BlockLength
-  def perform(dry_run: true)
+  def perform(dry_run = true)
     Properties::PaymentPlan.not_cancelled.where(
-      renewable: true, plan_type: VALID_PLAN_TYPES.keys,
+      renewable: true, plan_type: VALID_PLAN_TYPES.keys, renewed_plan_id: nil
     ).find_each do |payment_plan|
       unless payment_plan.within_renewable_dates?
         Rails.logger.info "Payment-plan #{payment_plan.id} does not fall within renewable date"
@@ -38,8 +38,8 @@ class PlanRenewalJob < ApplicationJob
       )
 
       if sub_plan.present?
-        Rails.logger.info "Found a subscription-plan: #{sub_plan.id} to \
-        renew payment-plan: #{payment_plan.inspect}"
+        Rails.logger.info "Found a subscription-plan: #{sub_plan.id} to "\
+        "renew payment-plan: #{payment_plan.inspect}"
 
         unless dry_run
           new_payment_plan = payment_plan.dup
@@ -48,6 +48,7 @@ class PlanRenewalJob < ApplicationJob
           new_payment_plan.installment_amount = sub_plan.amount
           new_payment_plan.total_amount = sub_plan.amount * payment_plan.duration
           new_payment_plan.save!
+          payment_plan.update!(renewed_plan_id: new_payment_plan.id)
         end
       else
         Rails.logger.info "No active subscription-plan found for payment-plan: #{payment_plan.id}"
