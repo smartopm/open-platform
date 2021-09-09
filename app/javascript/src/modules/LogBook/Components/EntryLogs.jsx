@@ -30,7 +30,7 @@ import GuestBook from './GuestBook';
 export default ({ history, match }) => AllEventLogs(history, match);
 
 // Todo: Find the total number of allEventLogs
-const initialLimit = 50;
+const initialLimit = 20;
 const AllEventLogs = (history, match) => {
   const subjects = ['user_entry', 'visitor_entry', 'user_temp'];
   const [offset, setOffset] = useState(0);
@@ -51,8 +51,14 @@ const AllEventLogs = (history, match) => {
 
   useEffect(() => {
     const offsetParams = query.get('offset');
-    setOffset(Number(offsetParams));
+    if (offsetParams) {
+      setOffset(Number(offsetParams));
+    }
   }, [query]);
+
+    useEffect(() => {
+      window.scrollTo({top: 0, behavior: 'smooth'});
+    }, [offset]);
 
   const logsQuery = {
     0: subjects,
@@ -78,9 +84,9 @@ const AllEventLogs = (history, match) => {
   function paginate(action) {
     if (action === 'prev') {
       if (offset < limit) return;
-      setOffset(offset - limit);
+      history.push(`/entry_logs?tab=${value}&offset=${offset - limit}`)
     } else if (action === 'next') {
-      setOffset(offset + limit);
+      history.push(`/entry_logs?tab=${value}&offset=${offset + limit}`)
     }
   }
 
@@ -94,7 +100,8 @@ const AllEventLogs = (history, match) => {
   function handleChange(_event, newValue) {
     setvalue(newValue);
     setSearchTerm('');
-    history.push(`/entry_logs?tab=${newValue}`)
+    // reset pagination after changing the tab
+    history.push(`/entry_logs?tab=${newValue}&offset=${0}`)
   }
   return (
     <IndexComponent

@@ -45,7 +45,7 @@ export default function GuestBook({ tabValue, handleAddObservation, offset, limi
     if (tabValue === 2) {
       loadGuests();
     }
-  }, [tabValue, loadGuests, query]);
+  }, [tabValue, loadGuests, query, offset]);
 
   function handleGrantAccess(event, user){
       event.stopPropagation()
