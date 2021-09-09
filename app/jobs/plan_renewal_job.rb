@@ -8,9 +8,10 @@ class PlanRenewalJob < ApplicationJob
   # rubocop:disable Metrics/AbcSize
   # rubocop:disable Metrics/MethodLength
   # rubocop:disable Metrics/BlockLength
+  # rubocop:disable Style/OptionalBooleanParameter
   def perform(dry_run = true)
     Properties::PaymentPlan.not_cancelled.where(
-      renewable: true, plan_type: VALID_PLAN_TYPES.keys, renewed_plan_id: nil
+      renewable: true, plan_type: VALID_PLAN_TYPES.keys, renewed_plan_id: nil,
     ).find_each do |payment_plan|
       unless payment_plan.within_renewable_dates?
         Rails.logger.info "Payment-plan #{payment_plan.id} does not fall within renewable date"
@@ -58,4 +59,5 @@ class PlanRenewalJob < ApplicationJob
   # rubocop:enable Metrics/MethodLength
   # rubocop:enable Metrics/AbcSize
   # rubocop:enable Metrics/BlockLength
+  # rubocop:enable Style/OptionalBooleanParameter
 end
