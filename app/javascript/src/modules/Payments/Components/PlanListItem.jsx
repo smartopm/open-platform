@@ -30,7 +30,7 @@ export default function PlanListItem({ data, currencyData }) {
   return (
     <>
       <Grid container spacing={2} className={classes.container}>
-        <Grid item xs={12} sm={2} data-testid='landparcel'>
+        <Grid item xs={12} sm={2} data-testid='landparcel' className={classes.bottom}>
           <Typography className={classes.weight} variant="caption">
             {data?.landParcel?.parcelNumber}
           </Typography>
@@ -65,6 +65,9 @@ const useStyles = makeStyles(() => ({
   },
   weight: {
     fontWeight: 500
+  },
+  bottom: {
+    marginBottom: '10px'
   }
 }));
 

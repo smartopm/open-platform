@@ -19,8 +19,17 @@ export default function PaymentSlider({ data, currencyData }) {
     }
     return `${percentage}%`;
   }
+
+  function checkAmountPaid() {
+    return (
+      Math.abs(
+        parseInt(calcPercentage(data?.totalPayments, data?.planValue), 10) -
+          parseInt(calcPercentage(data?.owingAmount, data?.planValue), 10)
+      ) < 10
+    );
+  }
   return (
-    <div className={classes.flex} data-testid='body'>
+    <div className={classes.flex} data-testid="body">
       <div style={{ width: calcPercentage(data?.totalPayments, data?.planValue) }}>
         <div className={classes.totalPayment}> </div>
         <div className={classes.sliderDetail}>
@@ -34,8 +43,11 @@ export default function PaymentSlider({ data, currencyData }) {
             <div className={classes.bodyFirst}>
               <Typography variant="caption">{formatMoney(currencyData, 0)}</Typography>
               {data?.totalPayments < data?.planValue ? (
-                <div className={classes.amountPaid}>
-                  <Typography variant="caption">Amount Paid</Typography>
+                <div
+                  className={classes.amountPaid}
+                  style={checkAmountPaid() ? { marginTop: '-55px' } : {}}
+                >
+                  <Typography variant="caption">Paid</Typography>
                   <Typography variant="caption" align="center">
                     {formatMoney(currencyData, data?.totalPayments)}
                   </Typography>
@@ -55,7 +67,7 @@ export default function PaymentSlider({ data, currencyData }) {
       <SliderBreaker />
       {data?.owingAmount > 0 && (
         <>
-          <div style={{ width: calcPercentage(data?.owingAmount, data?.planValue) }}>
+          <div style={{ width: calcPercentage(data?.owingAmount, data?.planValue) }} data-testid='owing'>
             <div className={classes.expectedPayment}> </div>
             {data?.owingAmount < data?.planValue ? (
               <div className={classes.bodySecond}>
@@ -65,15 +77,15 @@ export default function PaymentSlider({ data, currencyData }) {
                     style={{ color: '#EA2626', marginTop: '-10px', marginLeft: '25%' }}
                   />
                   <div className={classes.owing}>
-                    <Typography variant="caption">owing</Typography>
+                    <Typography variant="caption">owed</Typography>
                     <Typography variant="caption">
                       {formatMoney(currencyData, data?.owingAmount)}
                     </Typography>
                     <Typography variant="caption">{`${data?.installmentsDue} installments`}</Typography>
                   </div>
                 </div>
-                <div className={classes.amountDue}>
-                  <Typography variant="caption">Amount due</Typography>
+                <div className={classes.amountDue} style={{ marginTop: '10px' }}>
+                  <Typography variant="caption">Due</Typography>
                   <Typography variant="caption" align="center">
                     {formatMoney(currencyData, data?.owingAmount)}
                   </Typography>
@@ -101,10 +113,10 @@ export default function PaymentSlider({ data, currencyData }) {
               </div>
             )}
           </div>
-          <SliderBreaker type={data.owingAmount > 0} />
+          <SliderBreaker type={data?.owingAmount > 0} />
         </>
       )}
-      <div style={{ width: calcPercentage(planVal, data?.planValue) }} data-testid='plan-value'>
+      <div style={{ width: calcPercentage(planVal, data?.planValue) }} data-testid="plan-value">
         <div className={classes.planValue}> </div>
         <div className={classes.spaceBetween}>
           <Typography> </Typography>
@@ -170,8 +182,7 @@ const useStyles = makeStyles(() => ({
   },
   amountPaid: {
     display: 'flex',
-    flexDirection: 'column',
-    marginTop: '20px'
+    flexDirection: 'column'
   },
   planBodyValue: {
     display: 'flex',
@@ -192,8 +203,7 @@ const useStyles = makeStyles(() => ({
   },
   amountDue: {
     display: 'flex',
-    flexDirection: 'column',
-    marginTop: '10px'
+    flexDirection: 'column'
   },
   spaceBetween: {
     display: 'flex',
@@ -218,13 +228,13 @@ PaymentSlider.propTypes = {
   currencyData: PropTypes.shape({
     currency: PropTypes.string,
     locale: PropTypes.string
-  }).isRequired,
-}
+  }).isRequired
+};
 
 SliderBreaker.defaultProps = {
   type: false
-}
+};
 
 SliderBreaker.propTypes = {
   type: PropTypes.bool
-}
+};
