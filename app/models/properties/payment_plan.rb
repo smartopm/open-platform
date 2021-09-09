@@ -58,8 +58,7 @@ module Properties
     def within_renewable_dates?
       return unless renewable
 
-      next_plan_start_date >= (2.months - 2.days).from_now.to_date &&
-        next_plan_start_date <= 2.months.from_now.to_date
+      next_plan_start_date <= 2.months.from_now.to_date
     end
 
     # Cancels payment plan
