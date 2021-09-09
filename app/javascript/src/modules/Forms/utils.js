@@ -89,15 +89,16 @@ export function extractValidFormPropertyValue(formProperties) {
   if(!Object.keys(formProperties).length) return []
   return Object.entries(formProperties)
     .map(([, prop]) => {
-      if (prop.value && Object.prototype.toString.call(prop) === '[object Object]' && !Object.keys(prop.value).includes('checked')) {
-        console.log(prop.value, 'check')
-        return Object.keys(prop.value).join(', ')
+      if(prop.type === 'checkbox') {
+        return {
+          value: Object.keys(prop.value).join(', '),
+          form_property_id: prop.form_property_id,
+        }
       }
       return prop
     })
     .filter(nonNullValues);
 }
-//  Object.prototype.toString.call(prop.value) !== '[object Object]'
 /**
  * This focuses on field names which extractValidFormPropertyValue lacks,
  * we could've done both under one function but when submitting a form GraphQL test complain because of unmatching args
@@ -107,7 +108,15 @@ export function extractValidFormPropertyValue(formProperties) {
 export function extractValidFormPropertyFieldNames(formProperties) {
   if(!Object.keys(formProperties).length) return []
   return Object.entries(formProperties)
-    .map(([key, prop]) => ({fieldName: key, value: prop.value?.checked || prop.value}))
+    .map(([key, prop]) => {
+      if(prop.type === 'checkbox') {
+        return {
+          value: Object.entries(prop.value).map(([k, val]) => val ? k : '').join(', '),
+          fieldName: key,
+        }
+      }
+      return {fieldName: key, value: prop.value?.checked || prop.value}
+    })
     .filter(nonNullValues);
 }
 
@@ -130,7 +139,6 @@ export function parseRenderedText(categories, data) {
       const formProperty = properties.find((prop) => {
         return prop.fieldName?.toLowerCase().trim() === wordToReplace.replace(/\n|#/gi, '').replace(/[,.]/, '').toLowerCase()
       });
-      // console.log(formProperty);
       if (formProperty) {
         return word.replace(/#(\w+)/i, formProperty.value)
       }
@@ -149,7 +157,6 @@ export function parseRenderedText(categories, data) {
 export function extractRenderedTextFromCategory(formProperties, categoriesData){
   if(!categoriesData) return ''
   const properties = extractValidFormPropertyValue(formProperties)
-  // console.log(properties)
   const validCategories = categoriesData.filter(category => checkCondition(category, properties, false))
   const text = validCategories.map(category => `${category.renderedText}  `).join('');
   return text
