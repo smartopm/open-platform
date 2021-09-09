@@ -37,7 +37,8 @@ export default function RenderForm({ formPropertiesData, formId, refetch, editMo
       ...formProperties,
       [property.fieldName]: {
         value: { ...formProperties[property.fieldName]?.value, [name]: checked },
-        form_property_id: property.id
+        form_property_id: property.id,
+        type: 'checkbox'
       }
     });
   }

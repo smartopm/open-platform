@@ -90,10 +90,17 @@ export function nonNullValues(item){
 export function extractValidFormPropertyValue(formProperties) {
   if(!Object.keys(formProperties).length) return []
   return Object.entries(formProperties)
-    .map(([, value]) => value)
+    .map(([, prop]) => {
+      if(prop.type === 'checkbox') {
+        return {
+          value: Object.keys(prop.value).join(', '),
+          form_property_id: prop.form_property_id,
+        }
+      }
+      return prop
+    })
     .filter(nonNullValues);
 }
-
 /**
  * This focuses on field names which extractValidFormPropertyValue lacks,
  * we could've done both under one function but when submitting a form GraphQL test complain because of unmatching args
@@ -103,7 +110,15 @@ export function extractValidFormPropertyValue(formProperties) {
 export function extractValidFormPropertyFieldNames(formProperties) {
   if(!Object.keys(formProperties).length) return []
   return Object.entries(formProperties)
-    .map(([key, prop]) => ({fieldName: key, value: prop.value?.checked || prop.value}))
+    .map(([key, prop]) => {
+      if(prop.type === 'checkbox') {
+        return {
+          value: Object.entries(prop.value).map(([k, val]) => val ? k : null).filter(Boolean).join(', '),
+          fieldName: key,
+        }
+      }
+      return {fieldName: key, value: prop.value?.checked || prop.value}
+    })
     .filter(nonNullValues);
 }
 
