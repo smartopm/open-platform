@@ -9,7 +9,7 @@ RSpec.describe Discussions::DiscussionUser, type: :model do
   end
 
   describe 'associations' do
-    it { is_expected.to belong_to(:user).class_name('Users::User').dependent(:destroy) }
-    it { is_expected.to belong_to(:discussion).dependent(:destroy) }
+    it { is_expected.to belong_to(:user).class_name('Users::User') }
+    it { is_expected.to belong_to(:discussion) }
   end
 end
