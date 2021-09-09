@@ -178,8 +178,6 @@ export function requiredFieldIsEmpty(filledInProperties, formData) {
  * @returns {Boolean}
  */
 export function checkRequiredFormPropertyIsFilled(property, formData){
-  // console.log('categories inside checkRequired', formData?.categories)
-
   if(property
     && Array.isArray(formData?.categories)
     && formData?.categories.length > 0
@@ -197,6 +195,11 @@ export function checkRequiredFormPropertyIsFilled(property, formData){
           return(
             !fieldValues || Object.values(fieldValues).some(val => !val)
           )
+        }
+
+        if(['date', 'time', 'datetime'].includes(property.fieldType)){
+          const fieldValue = formData?.filledInProperties.find(filledProp => property.id === filledProp.form_property_id)?.value
+          return (!fieldValue || fieldValue.includes("Invalid date"))
         }
 
         return (

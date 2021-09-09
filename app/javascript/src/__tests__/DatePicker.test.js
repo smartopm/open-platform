@@ -17,6 +17,17 @@ describe('Mounts date picker', () => {
         expect(getByTestId('date-picker')).toBeTruthy()
         
     });
+
+    it('Render date component with validation error', () => {
+        const rendered = render(
+            <DatePickerDialog selectedDate='2020/05/12'
+                handleDateChange={jest.fn()}
+                label='Expiration Date'
+                inputValidation={{ error: true, fieldName: 'Expiration Date' }}
+            />
+        )
+        expect(rendered.queryByText('form:errors.required_field')).toBeTruthy()
+    });
     
     afterEach(cleanup)
 });

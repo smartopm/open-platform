@@ -132,6 +132,10 @@ export default function RenderForm({ formPropertiesData, formId, refetch, editMo
             selectedDate={formProperties[String(formPropertiesData.fieldName)]?.value || null}
             handleDateChange={date => handleDateChange(date, formPropertiesData)}
             label={`${formPropertiesData.fieldName} ${formPropertiesData.required ? '*' : ''}`}
+            inputValidation={{
+              error: checkRequiredFormPropertyIsFilled(formPropertiesData, formState),
+              fieldName: formPropertiesData.fieldName,
+            }}
           />
         </Grid>
       </Grid>
@@ -152,6 +156,10 @@ export default function RenderForm({ formPropertiesData, formId, refetch, editMo
             handleTimeChange={date => handleDateChange(date, formPropertiesData)}
             label={`${formPropertiesData.fieldName} ${formPropertiesData.required ? '*' : ''}`}
             style={{ width: '100%' }}
+            inputValidation={{
+              error: checkRequiredFormPropertyIsFilled(formPropertiesData, formState),
+              fieldName: formPropertiesData.fieldName,
+            }}
           />
         </Grid>
       </Grid>
@@ -171,6 +179,10 @@ export default function RenderForm({ formPropertiesData, formId, refetch, editMo
             selectedDateTime={formProperties[String(formPropertiesData.fieldName)]?.value || null}
             handleDateChange={date => handleDateChange(date, formPropertiesData)}
             label={`${formPropertiesData.fieldName} ${formPropertiesData.required ? '*' : ''}`}
+            inputValidation={{
+              error: checkRequiredFormPropertyIsFilled(formPropertiesData, formState),
+              fieldName: formPropertiesData.fieldName,
+            }}
           />
         </Grid>
       </Grid>
