@@ -390,6 +390,7 @@ es:
       not_found: Esta cuenta no existe. Envíe una solicitud para crear una cuenta
         o utilice la información de cuenta correcta para iniciar sesión
       not_found_with_id: No se puede encontrar al Usuario %{user_id}
+      update_failed: Fallo al migrar los detalles del usuario
     visibility: Usted no tiene permiso para acceder %{field}
     wallet_transaction:
       can_not_revert: La transacción no se puede revertir
