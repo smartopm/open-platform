@@ -8,12 +8,10 @@ import { Spinner } from '../../../shared/Loading';
 import { parseRenderedText } from '../utils';
 import { FormContext } from '../Context';
 
-
 export default function FormPreview({ loading, handleFormSubmit, categoriesData }) {
   const { t } = useTranslation('form')
-  const text = categoriesData.data.formCategories.map(category => `${category.renderedText}  `).join('');
   const { formProperties } = useContext(FormContext)
-  const markdown = parseRenderedText(text, formProperties)
+  const markdown = parseRenderedText(categoriesData.data?.formCategories, formProperties)
   return (
     <Container>
       <ReactMarkDown 

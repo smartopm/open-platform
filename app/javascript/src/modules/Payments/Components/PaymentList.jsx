@@ -52,7 +52,7 @@ import { PlansList, SubscriptionPlans } from './PlansList';
 const csvHeaders = [
   { label: 'Receipt Number', key: 'receiptNumber' },
   { label: 'Payment Status', key: 'status' },
-  { label: 'Payment Amount', key: 'userTransaction.amount' },
+  { label: 'Payment Amount', key: 'amount' },
   { label: 'Payment Date', key: 'createdAt' },
   { label: 'Payment Type', key: 'userTransaction.source' },
   { label: 'Transaction Number', key: 'userTransaction.transactionNumber' },

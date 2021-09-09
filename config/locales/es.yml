@@ -401,6 +401,8 @@ es:
       enlace para darnos su opinión %{feedback_link}
   response:
     category_deleted: Categoría eliminada correctamente
+    delete_failed: Eliminar Falló
     failed: Fallido
     success: Exito
+    update_failed: 'Actualizar Falló '
     updated: Actualizado

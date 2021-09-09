@@ -4,8 +4,8 @@ import '@testing-library/jest-dom/extend-expect';
 import { MockedProvider } from '@apollo/react-testing';
 import { BrowserRouter } from 'react-router-dom';
 import PlotDetailCard from '../Components/PlotDetailCard';
-import { PaymentPlan } from '../graphql/plot_detail_query';
 import { Spinner } from '../../../../shared/Loading';
+import { UserPlans } from '../../../Payments/graphql/payment_query';
 
 describe('Plot Detail Card', () => {
   const authState = {
@@ -18,32 +18,30 @@ describe('Plot Detail Card', () => {
 
   const mock = {
     request: {
-      query: PaymentPlan,
-      variables: {
-        userId: 'noehr945'
-      }
+      query: UserPlans,
+      variables: { userId: authState.id }
     },
     result: {
       data: {
-        paymentPlan:
-          [{
-            id: 'ykwe394oh3',
-            plotBalance: 200,
-            landParcel: {
-              id: '834jdh3',
-              parcelNumber: 'test123'
-            },
-            invoices: [
-              {
-                id: 'hiue8u398re',
-                invoiceNumber: '133404',
-                dueDate: '2021-02-02T10:13:21Z'
-              }
-            ]
-          }]
+        userPlansWithPayments: [{
+          id: 'f280159d-ac71-4c22-997a-07fd07344c94',
+          planType: 'basic',
+          startDate: '2021-01-26',
+          installmentAmount: '200',
+          paymentDay: 1,
+          pendingBalance: 200,
+          planValue: 300,
+          duration: 12,
+          frequency: 'monthly',
+          status: 'paid',
+          endDate: '2021-07-31',
+          landParcel: {
+            parcelNumber: 'Basic-123'
+          }
+        }]
       }
     }
-  }
+  };
 
   it('should render the plot detail card component', async () => {
     const container = render(

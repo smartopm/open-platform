@@ -64,7 +64,7 @@ RSpec.describe Properties::PaymentPlan, type: :model do
     it { is_expected.to have_db_column(:duration).of_type(:integer) }
     it { is_expected.to have_db_column(:frequency).of_type(:integer) }
     it do
-      is_expected.to have_db_column(:renewable).of_type(:boolean).with_options(default: false)
+      is_expected.to have_db_column(:renewable).of_type(:boolean).with_options(default: true)
     end
   end
 
@@ -187,6 +187,15 @@ RSpec.describe Properties::PaymentPlan, type: :model do
         expect(new_payment_plan.user_id).to eql(user.id)
       end
       # rubocop:enable Layout/LineLength
+    end
+
+    describe '#cancel!' do
+      before { payment_plan.cancel! }
+      it 'cancels the payment plan' do
+        expect(payment_plan.status).to eql('cancelled')
+        expect(payment_plan.pending_balance.to_f).to eql 0.0
+        expect(payment_plan.renewable).to eql false
+      end
     end
   end
 end

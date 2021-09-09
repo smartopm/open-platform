@@ -26,6 +26,7 @@ RSpec.describe Mutations::PaymentPlan::PaymentPlanCancel do
               id
               status
               pendingBalance
+              renewable
             }
           }
         }
@@ -82,6 +83,7 @@ RSpec.describe Mutations::PaymentPlan::PaymentPlanCancel do
           payment_plan_result = result.dig('data', 'paymentPlanCancel', 'paymentPlan')
           expect(payment_plan_result['status']).to eql 'cancelled'
           expect(payment_plan_result['pendingBalance']).to eql 0.0
+          expect(payment_plan_result['renewable']).to eql false
           expect(result['errors']).to be_nil
         end
       end

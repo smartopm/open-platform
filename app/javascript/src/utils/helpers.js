@@ -259,7 +259,14 @@ export async function convertBase64ToFile(data){
 export function sortPropertyOrder(field1, field2){
   if(!field1 || !field2) return
   if(field1.formProperty) {
+    if (field1.formProperty.order === field2.formProperty.order) {
+      if (field1.formProperty.id > field2.formProperty.id) return -1; else return 1;
+    }
     return Number(field1.formProperty.order) - Number(field2.formProperty.order)
+  }
+
+  if (field1.order === field2.order) {
+    if (field1.id > field2.id) return -1; else return 1;
   }
   return Number(field1.order) - Number(field2.order)
 }
@@ -392,13 +399,13 @@ export function getHexColor (range) {
  */
 
  export function formatMoney(currencyData, amount) {
-  if(process.env.NODE_ENV !== "test"){
-     const formatted = new Intl.NumberFormat(currencyData?.locale || 'en-ZM', {
-      style: 'currency',
-      currency: currencyData?.currency,
-    })?.format(amount);
-    return formatted;
-   }
+  if (process.env.NODE_ENV === "test") return `K ${amount}`;
+
+  const formatted = new Intl.NumberFormat(currencyData?.locale || 'en-ZM', {
+    style: 'currency',
+    currency: currencyData?.currency,
+  })?.format(amount);
+  return formatted;
  }
 
  /**

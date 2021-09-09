@@ -83,9 +83,9 @@ function getSubUrbanData(communityName){
 
 export default function GeoMap() {
   const [selectedPoi, setSelectedPoi] = useState(null)
-  const { loading, data: geoData } = useQuery(LandParcelGeoData, {
+  const [ loadGeoData, { data: geoData } ] = useLazyQuery(LandParcelGeoData, {
     fetchPolicy: 'cache-and-network'
-  })
+  });
   const [ loadParcel, { data: parcelData, loading: parcelDataLoading } ] = useLazyQuery(LandParcel, {
     fetchPolicy: 'cache-and-network'
   });
@@ -192,12 +192,20 @@ export default function GeoMap() {
     return centerPoint[communityName.toLowerCase()]
   }
 
+  function handleMapZoom({ target }){
+    const zoomLevel = target[String('_zoom')]
+    if(!geoData && zoomLevel >= 13){
+      loadGeoData()
+    }
+  }
+
   useEffect(() => {
     // TODO: Victor control map canvas re-size from useMap (v3.2.1)
     setTimeout(()=> window.dispatchEvent(new Event('resize')), 1000);
   })
 
-  if (loading || loadingCommunityData) return <Spinner />;
+  // if (loading || loadingCommunityData) return <Spinner />;
+  if (loadingCommunityData) return <Spinner />;
 
    return (
      <>
@@ -242,7 +250,7 @@ export default function GeoMap() {
          {/* istanbul ignore next */}
          <Map
            center={getMapCenterPoint()}
-           zoom={13}
+           zoom={11}
            className={css(styles.mapContainer)}
            attributionControl
            zoomControl
@@ -251,6 +259,7 @@ export default function GeoMap() {
            dragging
            animate
            easeLinearity={0.35}
+           onZoomEnd={handleMapZoom}
          >
            <MapLayers>
              {Array.isArray(properties) && properties?.length && (

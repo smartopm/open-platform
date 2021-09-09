@@ -5,6 +5,8 @@ require 'host_env'
 module Logs
   # Record of visitor entries to a community
   class EntryRequest < ApplicationRecord
+    include SearchCop
+
     belongs_to :user, class_name: 'Users::User'
     belongs_to :community
     belongs_to :grantor, class_name: 'Users::User', optional: true
@@ -13,6 +15,9 @@ module Logs
     validates :name, presence: true
 
     default_scope { order(created_at: :asc) }
+    search_scope :search do
+      attributes :name, :phone_number, :visitation_date, :visit_end_date, :start_time, :end_time
+    end
 
     has_paper_trail
 

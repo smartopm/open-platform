@@ -1,47 +1,69 @@
 import React from 'react';
-import { render, waitFor } from '@testing-library/react';
+import { render, waitFor, fireEvent, within } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
+import userEvent from '@testing-library/user-event'
 import { MockedProvider } from '@apollo/react-testing';
 import CreateLabel from '../../components/CreateLabel';
-import { LabelsQuery } from '../../graphql/queries';
+import { LabelCreate }from '../../graphql/mutations';
 
 describe('Create Label Component', () => {
-  const labels = [
-    {
-      id: 'hh27uyiu3hb43uy4iu3',
-      shortDesc: 'COM',
-      userCount: 2,
-      description: 'desc',
-      color: 'blue'
-    },
-    {
-      id: 'hh27uyiu3hb43uy4',
-      shortDesc: 'COM2',
-      userCount: 3,
-      description: 'desc2',
-      color: 'black'
-    }
-  ]
-  const mock = {
+  const data = {
+    labels: [
+      {
+        id: 'hh27uyiu3hb43uy4iu3',
+        shortDesc: 'COM',
+        userCount: 2,
+        description: 'desc',
+        color: 'blue'
+      },
+      {
+        id: 'hh27uyiu3hb43uy4',
+        shortDesc: 'COM2',
+        userCount: 3,
+        description: 'desc2',
+        color: 'black'
+      }
+    ]
+  };
+
+  const anotherLabelCreateMock = {
     request: {
-      query: LabelsQuery
+      query: LabelCreate,
+      variables: {
+        shortDesc: 'COM234',
+      }
     },
     result: {
       data: {
-        labels
+        labelCreate: {label: { id: 'hh27uyiu3hb43uy4iu3', shortDesc: 'COM234' }}
       }
     }
   };
-  it('renders correctly', async () => {
+
+  it('test creating a new label', async () => {
     const container = render(
-      <MockedProvider mocks={[mock]}>
-        <CreateLabel handleLabelSelect={jest.fn} />
+      <MockedProvider mocks={[anotherLabelCreateMock]} addTypename={false}>
+        <CreateLabel
+          handleLabelSelect={jest.fn}
+          loading={false}
+          setLoading={jest.fn}
+          setMessage={jest.fn}
+          data={data}
+          refetch={jest.fn}
+        />
       </MockedProvider>
     );
 
+    const autoComplete = container.queryByTestId("userLabel-creator");
+    const input = within(autoComplete).getByRole("textbox");
+
+    autoComplete.focus();
+    expect(autoComplete).toBeVisible();
+    userEvent.type(input, 'COM234');
     await waitFor(
       () => {
-        expect(container.getByTestId("userLabel-creator")).toBeInTheDocument()
+        fireEvent.keyDown(input, { key: 'Enter' });
+        expect(input.value).toEqual('COM234');
       },
       { timeout: 500 }
     );

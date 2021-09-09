@@ -78,7 +78,7 @@ describe('Community settings page ', () => {
           ],
           menuItems:[
             { menu_link: "http://some-link.com", menu_name: "Custom Menu", display_on:["Menu"], roles: ["admin"] },
-            { menu_link: "", menu_name: "", display_on: ["Dashboard"] }
+            { menu_link: "", menu_name: "", display_on: ["Dashboard"], roles: [] }
           ],
           imageBlobId: null,
           locale: 'en-US',

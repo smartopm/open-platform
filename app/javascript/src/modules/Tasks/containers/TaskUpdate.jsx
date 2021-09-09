@@ -19,7 +19,7 @@ export default function TaskUpdate() {
   const [assignUserToNote] = useMutation(AssignUser)
 
   const { data: liteData } = useQuery(UsersLiteQuery, {
-    variables: { query: 'user_type:admin OR user_type:custodian OR user_type:security_guard OR user_type:contractor'},
+    variables: { query: 'user_type:admin OR user_type:custodian OR user_type:security_guard OR user_type:contractor', limit: 150 },
     errorPolicy: 'all'
   })
 

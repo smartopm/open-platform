@@ -7,7 +7,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { StyleSheet } from 'aphrodite';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
-import { formatMoney } from '../../../../utils/helpers';
+import { formatMoney, capitalize } from '../../../../utils/helpers';
 import { dateToString } from '../../../../components/DateContainer';
 import { FullScreenDialog } from '../../../../components/Dialog';
 import CenteredContent from '../../../../components/CenteredContent';
@@ -64,6 +64,8 @@ export default function PaymentStatement({ data, open, handleClose, currencyData
                       {t('common:table_headers.plot_number')}
                     </Grid>
                     <Grid item xs={8} className={matches ? classes.titleMobile : classes.title}>
+                      {data?.paymentPlan?.landParcel?.parcelType && data?.paymentPlan?.landParcel?.parcelType}
+                      {' '}
                       {data?.paymentPlan?.landParcel?.parcelNumber}
                     </Grid>
                     <Grid container spacing={1}>
@@ -71,7 +73,7 @@ export default function PaymentStatement({ data, open, handleClose, currencyData
                         {t('common:table_headers.payment_plan')}
                       </Grid>
                       <Grid item xs={8} className={matches ? classes.titleMobile : classes.title}>
-                        {data?.paymentPlan?.planType}
+                        {capitalize(t('misc.lease'))}
                       </Grid>
                     </Grid>
                     <Grid container spacing={1}>
@@ -431,6 +433,7 @@ PaymentStatement.propTypes = {
       }),
       landParcel: PropTypes.shape({
         parcelNumber: PropTypes.string,
+        parcelType: PropTypes.string,
         community: PropTypes.shape({
           name: PropTypes.string,
           logoUrl: PropTypes.string,

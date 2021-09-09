@@ -13,6 +13,7 @@ export default function Label({ color, title }) {
         fontSize: '12px',
         width: '100%'
       }}
+      className='custom-label'
     >
       {title}
     </p>
