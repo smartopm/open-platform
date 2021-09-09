@@ -4,6 +4,7 @@
     "add_field": "Agregar Campo",
     "add_form_property": "Agregar Propiedad",
     "adding_form_property": "Agregar propiedad de formulario",
+    "clear_condition": "Limpiar Condición ",
     "confirm": "Confirmar",
     "create_a_form": "Crear un formulario",
     "create_category": "Crear Categoría",
@@ -51,6 +52,7 @@
     "order_number": "Número de orden",
     "property_field_name": "Nombre de la Propiedad",
     "rendered_text": "Texto renderizado",
+    "rendered_text_helper": "Pista: Agregar espacio después de los títulos de marcado",
     "required_field": "Este campo es obligatorio"
   },
   "form_status_actions": {

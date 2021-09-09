@@ -20,6 +20,7 @@
     "need_help_to_next_journey": "Necesito ayuda para pasar a la siguiente etapa.",
     "new_user": "Nuevo usuario",
     "no_pending_tasks": "Sin tareas pendientes",
+    "no_plots_available": "No hay Lote disponible",
     "payment": {
       "oneMonth": "Monto total de pago mensual",
       "oneWeek": "Importe total de pago semanal",
@@ -27,6 +28,7 @@
       "today": "Importe total pagado hoy"
     },
     "pending_tasks_text": "Tus tareas pendientes aparecerán aquí",
+    "plots_appear_here": "Tus lotes aparecerán aquí ",
     "quick_links": "Enlaces Rápidos",
     "recent_news": "Ultimas Novedades",
     "request": "Peticiones",
