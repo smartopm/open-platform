@@ -92,6 +92,15 @@ describe('Utilities', () => {
       'Something else': {
         form_property_id: '9e50f4db-3d75-431d-a772-261971a6ed92',
         value: ' And yes it is true'
+      },
+      "Choices": {
+        form_property_id: '9e50f4db-3d75-431d-a772-261971a6ed92',
+        type: 'checkbox',
+        value: {
+          first: true,
+          second: false,
+          third: true
+        }
       }
     };
     expect(extractValidFormPropertyValue(formProperties)).toMatchObject([
@@ -106,7 +115,12 @@ describe('Utilities', () => {
       {
         form_property_id: '9e50f4db-3d75-431d-a772-261971a6ed92',
         value: ' And yes it is true'
-      }
+      },
+      {
+        form_property_id: '9e50f4db-3d75-431d-a772-261971a6ed92',
+        value: 'first, second, third'
+      },
+
     ]);
 
     expect(extractValidFormPropertyFieldNames(formProperties)).toMatchObject([
@@ -121,7 +135,11 @@ describe('Utilities', () => {
       {
         fieldName: 'Something else',
         value: ' And yes it is true'
-      }
+      },
+      {
+        fieldName: 'Choices',
+        value: 'first, third'
+      },
     ]);
   });
 

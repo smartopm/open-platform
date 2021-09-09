@@ -111,7 +111,7 @@ export function extractValidFormPropertyFieldNames(formProperties) {
     .map(([key, prop]) => {
       if(prop.type === 'checkbox') {
         return {
-          value: Object.entries(prop.value).map(([k, val]) => val ? k : '').join(', '),
+          value: Object.entries(prop.value).map(([k, val]) => val ? k : null).filter(Boolean).join(', '),
           fieldName: key,
         }
       }
