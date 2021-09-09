@@ -357,9 +357,10 @@ en:
       not_found: Transaction not found
     unauthorized: Unauthorized
     user:
-      merge_failed: Merge Failed
+      merge_failed: Failed to merge the user account
       not_found: This account does not exist. Submit a request to create an account or use the correct account information to log in
       not_found_with_id: Could not find User %{user_id}
+      update_failed: Failed to migrate the user details
     user_form_property:
       not_found: User form property not found
     visibility: You do not have permission to access %{field}
@@ -375,7 +376,5 @@ en:
     success: success
     updated: updated
     category_deleted: Category deleted successfully
-    update_failed: Update Failed
-    delete_failed: Delete Failed
 
 

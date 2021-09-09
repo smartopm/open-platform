@@ -128,13 +128,48 @@ class MergeUsers
     end
     raise_update_failed_error if Properties::PlanOwnership.where(user_id: user_id).any?
 
+    # Update DiscussionUser user
+    discussion_users = Discussions::DiscussionUser.where(user_id: user_id)
+    discussion_users.each do |discussion_user|
+      if Discussions::DiscussionUser.exists?(user_id: duplicate_id,
+                                             discussion_id: discussion_user.discussion_id)
+        discussion_user.destroy
+      else
+        discussion_user.update(user_id: duplicate_id)
+      end
+    end
+    raise_update_failed_error if Discussions::DiscussionUser.where(user_id: user_id).any?
+
+    # Update AssigneeNote user
+    assignee_notes = Notes::AssigneeNote.where(user_id: user_id)
+    assignee_notes.each do |assignee_note|
+      if Notes::AssigneeNote.exists?(user_id: duplicate_id, note_id: assignee_note.note_id)
+        assignee_note.destroy
+      else
+        assignee_note.update(user_id: duplicate_id)
+      end
+    end
+    raise_update_failed_error if Notes::AssigneeNote.where(user_id: user_id).any?
+
+    # Update PostTagUser user
+    post_tag_users = PostTags::PostTagUser.where(user_id: user_id)
+    post_tag_users.each do |post_tag_user|
+      if PostTags::PostTagUser.exists?(user_id: duplicate_id,
+                                       post_tag_id: post_tag_user.post_tag_id)
+        post_tag_user.destroy
+      else
+        post_tag_user.update(user_id: duplicate_id)
+      end
+    end
+    raise_update_failed_error if PostTags::PostTagUser.where(user_id: user_id).any?
+
     models_with_user_id.each do |table_name|
       next if table_name.constantize.where(user_id: user_id).empty?
 
       raise_update_failed_error
     end
 
-    raise StandardError, I18n.t('response.delete_failed') unless Users::User.find(user_id).delete
+    raise StandardError, I18n.t('errors.user.merge_failed') unless Users::User.find(user_id).delete
   end
 
   def self.merge_accounts_and_general_payments(user, duplicate_user)
@@ -167,14 +202,13 @@ class MergeUsers
     payment_models = %w[Invoice PaymentInvoice Payment Wallet WalletTransaction
                         Transaction]
     property_models = %w[PaymentPlan Valuation]
-    note_models = %w[Note NoteHistory AssigneeNote]
+    note_models = %w[Note NoteHistory]
     form_models = %w[FormUser UserFormProperty]
-    discussion_models = %w[Discussion DiscussionUser]
+    discussion_models = %w[Discussion]
     comment_models = %w[Comment NoteComment]
     log_models = %w[ActivityLog EventLog ImportLog SubstatusLog EntryRequest]
     notification_models = %w[EmailTemplate Message Notification]
     user_models = %w[ContactInfo Feedback ActivityPoint TimeSheet]
-    post_tag_models = %w[PostTagUser]
     ActiveRecord::Base.connection.tables.map(&:classify).each do |class_name|
       model_name = case class_name
                    when *payment_models then "Payments::#{class_name}"
@@ -186,7 +220,6 @@ class MergeUsers
                    when *log_models then "Logs::#{class_name}"
                    when *notification_models then "Notifications::#{class_name}"
                    when *user_models then "Users::#{class_name}"
-                   when *post_tag_models then "PostTags::#{class_name}"
                    else
                      class_name
                    end
@@ -227,7 +260,7 @@ class MergeUsers
   end
 
   def self.raise_update_failed_error
-    raise StandardError, I18n.t('response.update_failed')
+    raise StandardError, I18n.t('errors.user.update_failed')
   end
   # rubocop:enable Metrics/AbcSize
   # rubocop:enable Metrics/CyclomaticComplexity
