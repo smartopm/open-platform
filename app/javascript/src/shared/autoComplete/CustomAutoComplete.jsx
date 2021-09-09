@@ -11,7 +11,7 @@ import useDebounce from '../../utils/useDebounce';
 import UserAutoResult from '../UserAutoResult';
 
 
-const CustomAutoComplete = ({users, onChange, isMultiple })=>{
+export default function CustomAutoComplete({users, onChange, isMultiple }){
     const [searchedUser, setSearchUser] = useState('');
     const debouncedValue = useDebounce(searchedUser, 500);
     const { t } = useTranslation(['task', 'common'])
@@ -27,6 +27,7 @@ const CustomAutoComplete = ({users, onChange, isMultiple })=>{
 
     return (
       <Autocomplete
+        data-testid="autocomplete"
         multiple={isMultiple}
         disablePortal
         id="custom-auto-complete"
@@ -61,4 +62,4 @@ CustomAutoComplete.propTypes = {
   isMultiple: PropTypes.bool.isRequired
 }
 
-export default CustomAutoComplete;
+
