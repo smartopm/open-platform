@@ -98,7 +98,7 @@ export default function FormContextProvider({ children }) {
         ...formState,
         error: true,
         info: t('misc.required_fields_empty'),
-        alertOpen: true,
+        alertOpen: false,
         isSubmitting: false,
         filledInProperties,
         categories,
