@@ -1,6 +1,6 @@
 import React from 'react'
 import { mount } from 'enzyme'
-import DateContainer, { dateFormatter, dateTimeToString, dateToString } from '../components/DateContainer'
+import DateContainer, { dateFormatter, dateTimeToString, dateToString, isValidDate, updateDateWithTime } from '../components/DateContainer'
 import DateUtils, { lastDayOfTheMonth, getMonthName, getWeekDay, differenceInHours } from '../utils/dateutil'
 
 describe('date container component', () => {
@@ -59,5 +59,17 @@ describe('date container component', () => {
   })
   it('should return never when date is null', () => {
     expect(DateUtils.formatDate()).toContain('Never')
+  })
+
+  it('should check if a date is valid', () => {
+    expect(isValidDate(new Date())).toBe(true)
+    expect(isValidDate('wrong date')).toBe(false)
+    expect(isValidDate(1212321311)).toBe(false)
+  })
+  it('should append time to the date', () => {
+    const date1 = new Date('2021-09-07T15:39:00')
+    const date2 = new Date('2021-09-01T20:39:00')
+    expect(updateDateWithTime(date1, date2)).toBe('2021-09-07 20:39')
+    expect(updateDateWithTime('date1', 23421)).toBe('')
   })
 })
