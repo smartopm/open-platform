@@ -50,8 +50,8 @@ const initialState = {
     startTime: new Date(),
     endTime: new Date(),
 }
-// TODO: move react router hooks out of this component to make it easy to test different functionalities
-export default function RequestUpdate({ id, previousRoute, requestType, tabValue }) {
+
+export default function RequestUpdate({ id, previousRoute, isGuestRequest, tabValue }) {
   const history = useHistory()
   const authState = useContext(Context)
   const isFromLogs = previousRoute === 'logs' ||  false
@@ -138,7 +138,7 @@ export default function RequestUpdate({ id, previousRoute, requestType, tabValue
       // eslint-disable-next-line no-shadow
         .then(({ data }) => {
           setRequestId(data.result.entryRequest.id)
-          if (requestType === 'guest') {
+          if (isGuestRequest) {
             history.push(`/entry_logs?tab=${tabValue}`)
           }
           return data.result.entryRequest.id
@@ -243,7 +243,7 @@ export default function RequestUpdate({ id, previousRoute, requestType, tabValue
       setInputValidationMsg({ isError: true })
       return
     }
-    if (requestType === 'guest' && !formData.visitationDate) {
+    if (isGuestRequest && !formData.visitationDate) {
       setDetails({ ...observationDetails, isError: true, message: t('logbook:logbook.visit_end_error') });
       return
     }
@@ -623,7 +623,7 @@ export default function RequestUpdate({ id, previousRoute, requestType, tabValue
 
           {
             // TODO: Find better ways to disable specific small feature per community 
-            !reqId && authState.user.community.name !== 'Ciudad Morazán' && requestType !== 'guest' && (
+            !reqId && authState.user.community.name !== 'Ciudad Morazán' && !isGuestRequest && (
               <div className="form-group">
                 <TextField
                   className="form-control"
@@ -641,7 +641,7 @@ export default function RequestUpdate({ id, previousRoute, requestType, tabValue
 
           {/* This should only show for registered users */}
           {
-            requestType === 'guest' && (
+            isGuestRequest && (
               <GuestTime
                 days={formData.occursOn}
                 userData={formData}
@@ -652,7 +652,7 @@ export default function RequestUpdate({ id, previousRoute, requestType, tabValue
           }
 
           {
-            requestType === 'guest' && !id && (
+            isGuestRequest && !id && (
               <div className="row justify-content-center align-items-center ">
                 <Button
                   variant="contained"
@@ -673,14 +673,14 @@ export default function RequestUpdate({ id, previousRoute, requestType, tabValue
           {previousRoute !== 'enroll' && id && (
           <Button
             variant="contained"
-            onClick={event => handleModal(event, requestType === 'guest' ? 'update' : 'grant')}
+            onClick={event => handleModal(event, isGuestRequest ? 'update' : 'grant')}
             className={css(styles.grantButton)}
             disabled={isLoading}
             data-testid="entry_user_grant_request"
             startIcon={isLoading && <Spinner />}
           >
             {
-              requestType === 'guest' ? t('logbook:guest_book.update_guest') : t('misc.log_new_entry')
+              isGuestRequest ? t('logbook:guest_book.update_guest') : t('misc.log_new_entry')
             }
           </Button>
           )}
@@ -766,14 +766,13 @@ export default function RequestUpdate({ id, previousRoute, requestType, tabValue
 RequestUpdate.defaultProps = {
   id: null,
   previousRoute: '',
-  requestType: '',
   tabValue: null,
 }
 
 RequestUpdate.propTypes = {
   id: PropTypes.string,
   previousRoute: PropTypes.string,
-  requestType: PropTypes.string,
+  isGuestRequest: PropTypes.bool.isRequired,
   tabValue: PropTypes.string,
 }
 

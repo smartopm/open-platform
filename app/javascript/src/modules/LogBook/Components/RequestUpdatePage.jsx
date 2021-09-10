@@ -9,8 +9,9 @@ export default function RequestUpdatePage() {
   const { logs, } = useParams()
   const query = useParamsQuery()
   const requestType = query.get('type')
+  const isGuestRequest = requestType === 'guest'
   const tabValue = query.get('tab');
   const previousRoute = state?.from || logs
 
-  return <RequestUpdate id={id} previousRoute={previousRoute} tabValue={tabValue} requestType={requestType} />;
+  return <RequestUpdate id={id} previousRoute={previousRoute} tabValue={tabValue} isGuestRequest={isGuestRequest} />;
 }
