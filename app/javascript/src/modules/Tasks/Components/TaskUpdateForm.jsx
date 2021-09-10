@@ -24,7 +24,6 @@ import AddCircleIcon from '@material-ui/icons/AddCircle'
 import EditIcon from '@material-ui/icons/Edit'
 import Visibility from '@material-ui/icons/Visibility';
 import CancelIcon from '@material-ui/icons/Cancel'
-import Autocomplete from '@material-ui/lab/Autocomplete'
 import AlarmIcon from '@material-ui/icons/Alarm'
 import DatePickerDialog from '../../../components/DatePickerDialog'
 import CenteredContent from '../../../components/CenteredContent'
@@ -38,7 +37,8 @@ import RemindMeLaterMenu from './RemindMeLaterMenu'
 import TaskUpdateList from './TaskUpdateList'
 import TaskComment from './TaskComment'
 import { dateToString, dateTimeToString } from '../../../components/DateContainer'
-import UserAutoResult from '../../../shared/UserAutoResult';
+import  CustomAutoComplete  from '../../../shared/autoComplete/CustomAutoComplete';
+
 
 const initialData = {
   user: '',
@@ -386,29 +386,19 @@ export default function TaskForm({
                   icon={autoCompleteOpen ? <CancelIcon /> : <AddCircleIcon />}
                   onClick={event => handleOpenAutoComplete(event, data.id)}
                 />
-
-                {autoCompleteOpen && (
-                <Autocomplete
-                  open={autoCompleteOpen}
-                  ListboxProps={{ style: { maxHeight: "15rem" }}}
-                  loading={loading}
-                  id={data.id}
-                  options={users}
-                  getOptionLabel={option => option.name}
-                  onChange={(_evt, value) => {
-                if (!value) {
-                    return
-                  }
-                  assignUser(data.id, value.id)
-                }}
-                  renderOption={(option) => (
-                    <UserAutoResult user={option} />
+                {autoCompleteOpen &&(
+                  <CustomAutoComplete
+                    users={users}
+                    isMultiple
+                    onChange={(_evt, value) => {
+                    if(!value) {
+                      return
+                    }
+                    assignUser(data.id, value.id)
+                  }}          
+                  />
                 )}
-                  renderInput={params => (
-                    <TextField {...params} variant="standard" placeholder={t('task.task_search_placeholder')} />
-              )}
-                />
-            )}
+      
               </div>
             </FormControl>
             <br />
