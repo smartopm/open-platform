@@ -14,6 +14,24 @@ export function dateToString(date, format = 'YYYY-MM-DD') {
   return moment.parseZone(date).format(format);
 }
 
+export function isValidDate(date) {
+  return date && Object.prototype.toString.call(date) === "[object Date]" && !Number.isNaN(date);
+}
+
+
+/**
+ * Updates current date with given time from another date
+ * @param {Date} date 
+ * @param {Date} dateWithTime 
+ * @returns {string}
+ */
+ export function updateDateWithTime(date, dateWithTime){
+  if(!isValidDate(date) || !isValidDate(dateWithTime)) return ''
+  const time = dateTimeToString(dateWithTime).split(':') // 11:00
+  const dateTime = new Date(date).setHours(time[0], time[1]) // 1631272618379
+
+  return dateToString(dateTime, 'YYYY-MM-DD HH:mm') // 2021-09-01 11:00
+}
 /**
  *
  * @param {Number} days

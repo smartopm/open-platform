@@ -21,7 +21,7 @@ import { Spinner } from "../../../shared/Loading";
 import { isTimeValid, getWeekDay } from '../../../utils/dateutil';
 import { userState, userType, communityVisitingHours, defaultBusinessReasons } from '../../../utils/constants'
 import { ModalDialog, ReasonInputModal } from "../../../components/Dialog"
-import { dateToString, dateTimeToString } from "../../../components/DateContainer";
+import { dateToString, dateTimeToString, updateDateWithTime } from "../../../components/DateContainer";
 import { Context } from '../../../containers/Provider/AuthStateProvider';
 import EntryNoteDialog from '../../../shared/dialogs/EntryNoteDialog';
 import CenteredContent from '../../../components/CenteredContent';
@@ -152,10 +152,9 @@ export default function RequestUpdate({ id, previousRoute, isGuestRequest, tabVa
     const otherFormData = {
       ...formData,
       reason: formData.business || formData.reason,
-      startTime: dateToString(formData.startTime, 'YYYY-MM-DD HH:mm'),
-      endTime: dateToString(formData.endTime, 'YYYY-MM-DD HH:mm')
+      startTime: updateDateWithTime(formData.visitationDate, formData.startTime),
+      endTime: updateDateWithTime(formData.visitationDate, formData.endTime),
     };
-
     setLoading(true);
     updateRequest({ variables: { id, ...otherFormData } })
       .then(() => {
