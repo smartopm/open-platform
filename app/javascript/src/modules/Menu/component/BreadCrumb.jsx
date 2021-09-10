@@ -37,12 +37,13 @@ export default function BreadCrumb({ data }) {
       separator={<NavigateNextIcon fontSize="small" color="primary" />}
     >
       {data?.length > 0 && (
-        <Link color="primary" href="/" style={{fontSize: '12px'}}>
+        <Link color="primary" href="/" style={{fontSize: '12px'}} data-testid='home'>
           Home
         </Link>
       )}
       {data?.length > 1 && (
         <Link
+          data-testid='link'
           style={{fontSize: '12px'}}
           color="primary"
           href={
@@ -57,7 +58,7 @@ export default function BreadCrumb({ data }) {
             : `${modifyString(breadCrumbs[0])}s`}
         </Link>
       )}
-      <Typography color="textPrimary" variant='caption'>
+      <Typography color="textPrimary" variant='caption' data-testid='title'>
         {toTitleCase(breadCrumbs[breadCrumbs.length - 1])}
       </Typography>
     </Breadcrumbs>
