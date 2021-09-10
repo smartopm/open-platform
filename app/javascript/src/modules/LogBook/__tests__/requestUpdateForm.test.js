@@ -49,7 +49,7 @@ describe('RequestUpdate Component ', () => {
   };
   it('should render RequestUpdate page without error', async () => {
     const previousRoute = "nowhere"
-    const requestType = "not_guest"
+    const isGuestRequest = false
 
     const container = render(
       <MockedProvider mocks={[mocks]} addTypename>
@@ -59,7 +59,7 @@ describe('RequestUpdate Component ', () => {
               <RequestUpdate 
                 id="3c2f8ee2-598b-437c-b217-3e4c0f86c761"
                 previousRoute={previousRoute}
-                requestType={requestType}
+                isGuestRequest={isGuestRequest}
                 tabValue=""
               />
             </Context.Provider>
@@ -111,7 +111,7 @@ describe('RequestUpdate Component ', () => {
 
   it('should render proper form when coming from guest list', async () => {
     const previousRoute = "guests"
-    const requestType = "guest"
+    const isGuestRequest = true
     const updateMock = {
       request: {
         query: EntryRequestUpdateMutation,
@@ -153,7 +153,7 @@ describe('RequestUpdate Component ', () => {
               <RequestUpdate 
                 id="3c2f8ee2-598b-437c-b217-3e4c0f86c761"
                 previousRoute={previousRoute}
-                requestType={requestType}
+                isGuestRequest={isGuestRequest}
                 tabValue="2"
               />
             </Context.Provider>
@@ -178,7 +178,7 @@ describe('RequestUpdate Component ', () => {
 
   it('should render proper form when enrolling a user for the first time', async () => {
     const previousRoute = "enroll"
-    const requestType = "adasds"
+    const isGuestRequest = false
     const container = render(
       <MockedProvider mocks={[mocks]} addTypename>
         <BrowserRouter>
@@ -187,7 +187,7 @@ describe('RequestUpdate Component ', () => {
               <RequestUpdate 
                 id="3c2f8ee2-598b-437c-b217-3e4c0f86c761"
                 previousRoute={previousRoute}
-                requestType={requestType}
+                isGuestRequest={isGuestRequest}
                 tabValue=""
               />
             </Context.Provider>
