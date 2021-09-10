@@ -260,6 +260,7 @@ export default function GeoMap() {
            animate
            easeLinearity={0.35}
            onZoomEnd={handleMapZoom}
+           maxZoom={30}
          >
            <MapLayers>
              {Array.isArray(properties) && properties?.length && (

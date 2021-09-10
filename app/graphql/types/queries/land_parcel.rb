@@ -113,6 +113,7 @@ module Types::Queries::LandParcel
   end
 
   # rubocop:disable Metrics/MethodLength
+  # rubocop:disable Metrics/AbcSize
   def geo_data(parcel, properties)
     geom_fields = geom_fields(parcel, properties)
 
@@ -126,8 +127,15 @@ module Types::Queries::LandParcel
       object_type: parcel[:object_type],
       plot_sold: parcel.accounts.present?,
       accounts: parcel.accounts,
-      valuations: parcel.valuations }
+      valuations: parcel.valuations,
+      address1: parcel[:address1],
+      address2: parcel[:address2],
+      city: parcel[:city],
+      postal_code: parcel[:postal_code],
+      state_province: parcel[:state_province],
+      country: parcel[:country] }
   end
+  # rubocop:enable Metrics/AbcSize
   # rubocop:enable Metrics/MethodLength
 
   def geom_fields(parcel, properties)
