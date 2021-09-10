@@ -1,9 +1,14 @@
 import React from 'react';
+import PropTypes from 'prop-types';
+import { makeStyles } from '@material-ui/core/styles';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { Breadcrumbs, Typography, Link } from '@material-ui/core';
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 import { toTitleCase, capitalize } from '../../../utils/helpers';
 
 export default function BreadCrumb({ data }) {
+  const classes = useStyles();
+  const matches = useMediaQuery('(max-width:600px)');
   const breadCrumbs = data?.filter(
     val =>
       !/^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/.test(val)
@@ -27,17 +32,18 @@ export default function BreadCrumb({ data }) {
   return (
     <Breadcrumbs
       aria-label="breadcrumb"
-      style={{ width: '70%' }}
-      separator={<NavigateNextIcon fontSize="small" />}
+      className={classes.body}
+      style={matches ? {marginLeft: '-25px'} : {}}
+      separator={<NavigateNextIcon fontSize="small" color="primary" />}
     >
-      {console.log(breadCrumbs)}
       {data?.length > 0 && (
-        <Link color="primary" href="/" onClick={() => {}}>
+        <Link color="primary" href="/" style={{fontSize: '12px'}}>
           Home
         </Link>
       )}
       {data?.length > 1 && (
         <Link
+          style={{fontSize: '12px'}}
           color="primary"
           href={
             data?.length > 2 && uuid.length
@@ -51,9 +57,25 @@ export default function BreadCrumb({ data }) {
             : `${modifyString(breadCrumbs[0])}s`}
         </Link>
       )}
-      <Typography color="textPrimary">
+      <Typography color="textPrimary" variant='caption'>
         {toTitleCase(breadCrumbs[breadCrumbs.length - 1])}
       </Typography>
     </Breadcrumbs>
   );
 }
+
+const useStyles = makeStyles(() => ({
+  body: {
+    width: '70%',
+    paddingBootom: '10px',
+    marginTop: '-10px'
+  }
+}));
+
+BreadCrumb.defaultProps = {
+  data: []
+};
+
+BreadCrumb.propTypes = {
+  data: PropTypes.arrayOf(PropTypes.string)
+};

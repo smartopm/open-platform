@@ -73,7 +73,7 @@ const styles = StyleSheet.create({
     bottom: 24,
     right: 25,
     height: 20,
-    marginRight: 90,
+    marginRight: 77,
     ':hover': {
       cursor: 'pointer'
     }
