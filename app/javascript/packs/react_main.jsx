@@ -29,7 +29,6 @@ import ConfirmCodeScreen from '../src/components/AuthScreens/ConfirmCodeScreen';
 import OneTimeLoginCode from '../src/components/AuthScreens/OneTimeLoginCode';
 import MobileMoney from '../src/components/MobileMoney';
 import GuardHome from '../src/modules/Dashboard/Components/GuardHome';
-import EntryRequest from '../src/modules/LogBook/Components/EntryRequest';
 import RequestUpdate from '../src/modules/LogBook/Components/RequestUpdatePage';
 import ErrorPage from '../src/components/Error';
 import MainAuthCallback from '../src/components/AuthScreens/MainAuthCallback';
@@ -255,7 +254,6 @@ const App = () => {
                               {/* Guard home is somehow kinda special leaving it now */}
                               <Route path="/guard_home" component={GuardHome} />
                               {/* Guard home ends */}
-                              <Route path="/entry_request" component={EntryRequest} />
                               <Route path="/request/:id?/:logs?" component={RequestUpdate} />
                               <Route path="/feedback" component={Feedback} />
                               <Route path="/feedback_success" component={FeedbackSuccess} />
@@ -300,7 +298,7 @@ const App = () => {
                                   <Route path="/event_logs" component={EventLogs} />
                                   <Route path="/new/user" exact component={UserEdit} />
                                   <Route path="/comments" exact component={CommentsPage} />
-                                  <Route path="/visit_request" component={EntryRequest} />
+                                  <Route path="/visit_request" component={RequestUpdate} />
                                 </Switch>
                               </AdminRoutes>
                               {/* we will also need a not found page for non-logged in user */}

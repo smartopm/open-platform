@@ -33,6 +33,7 @@
     "grant_deny_access": "Are you sure you want to {{action}} access to {{name}} ?",
     "log": "Log",
     "success_message": "Success: Access {{action}} successfully",
+    "registered_guest_updated": "Success: Registered Guest successfully updated",
     "granted": "granted",
     "denied": "denied",
     "add_observation": "Add Observation",
@@ -92,7 +93,8 @@
     "start_of_visit": "Start of visit {{date}}",
     "visit_time": "Visit time {{startTime}} - {{endTime}}",
     "repeats_on": "Repeats on",
-    "repeats_until": "Repeats Until"
+    "repeats_until": "Repeats Until",
+    "update_guest": "Update Guest"
   },
   "date_picker": {
     "ok_label": "Ok",

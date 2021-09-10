@@ -78,6 +78,7 @@ export function ThemedTimePicker({ handleTimeChange, time, label, ...otherProps 
         okLabel={t('date_picker.ok_label')}
         clearLabel={t('date_picker.clear')}
         cancelLabel={t('date_picker.cancel')}
+        data-testid="time_picker"
         autoOk
         clearable
         label={label}

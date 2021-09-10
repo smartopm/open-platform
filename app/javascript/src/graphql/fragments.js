@@ -85,6 +85,11 @@ export const EntryRequestFragment = {
       updatedAt
       grantedAt
       companyName
+      occursOn
+      visitEndDate
+      visitationDate
+      endTime
+      startTime
     }
   `
 }

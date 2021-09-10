@@ -5,7 +5,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import { useMutation, useLazyQuery } from 'react-apollo';
 import { TextField, MenuItem, Button , Grid } from '@material-ui/core';
 import { StyleSheet, css } from 'aphrodite';
-import { useHistory, useLocation, useParams } from 'react-router';
+import { useHistory} from 'react-router';
 import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types'
 import CallIcon from '@material-ui/icons/Call';
@@ -25,9 +25,10 @@ import { dateToString, dateTimeToString } from "../../../components/DateContaine
 import { Context } from '../../../containers/Provider/AuthStateProvider';
 import EntryNoteDialog from '../../../shared/dialogs/EntryNoteDialog';
 import CenteredContent from '../../../components/CenteredContent';
-import AddObservationNoteMutation from '../graphql/logbook_mutations';
+import AddObservationNoteMutation, { EntryRequestUpdateMutation } from '../graphql/logbook_mutations';
 import MessageAlert from '../../../components/MessageAlert'
 import { checkInValidRequiredFields, defaultRequiredFields } from '../utils';
+import GuestTime from './GuestTime';
 
 const initialState = {
     name: '',
@@ -42,27 +43,29 @@ const initialState = {
     email: '',
     companyName: '',
     temperature: '',
-    loaded: false
+    loaded: false,
+    occursOn: [],
+    visitationDate: null,
+    visitEndDate: null,
+    startTime: new Date(),
+    endTime: new Date(),
 }
-export default function RequestUpdate({ id }) {
-    const { state } = useLocation()
-    const { logs, } = useParams()
-    const history = useHistory()
-    const authState = useContext(Context)
-    const previousRoute = state?.from || logs
-    const isFromLogs = previousRoute === 'logs' ||  false
 
+export default function RequestUpdate({ id, previousRoute, isGuestRequest, tabValue }) {
+  const history = useHistory()
+  const authState = useContext(Context)
+  const isFromLogs = previousRoute === 'logs' ||  false
   const [loadRequest, { data }] = useLazyQuery(EntryRequestQuery, {
     variables: { id }
   });
   const [createEntryRequest] = useMutation(EntryRequestCreate)
   const [grantEntry] = useMutation(EntryRequestGrant);
   const [denyEntry] = useMutation(EntryRequestDeny);
+  const [updateRequest] = useMutation(EntryRequestUpdateMutation)
   const [createUser] = useMutation(CreateUserMutation)
   const [updateLog] = useMutation(UpdateLogMutation)
   const [addObservationNote] = useMutation(AddObservationNoteMutation)
   const [isLoading, setLoading] = useState(false)
-  const [message, setMessage] = useState('')
   const [isModalOpen, setModal] = useState(false)
   const [modalAction, setModalAction] = useState('')
   const [date] = useState(new Date());
@@ -76,19 +79,17 @@ export default function RequestUpdate({ id }) {
   const requiredFields = authState?.user?.community?.communityRequiredFields?.manualEntryRequestForm || defaultRequiredFields
   const { t } = useTranslation(['common', 'logbook'])
   const [isReasonModalOpen, setReasonModal] = useState(false)
-
+  
   useEffect(() => {
     if (id) {
       loadRequest({ variables: { id } })
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [id])
+  }, [id, loadRequest])
 
   useEffect(() => {
-    if (formData.reason === 'other' && !id) {
-      setReasonModal(!isReasonModalOpen)
+    if (formData.reason === 'other') {
+      setReasonModal(true)
     }
-   /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [formData.reason, id])
 
 
@@ -108,23 +109,64 @@ export default function RequestUpdate({ id }) {
     }
   }
 
+  function handleChangeOccurrence(day){
+    if(formData.occursOn.includes(day)){
+      const leftDays = formData.occursOn.filter(d => d !== day)
+      setFormData({
+        ...formData,
+        occursOn: leftDays
+      });
+      return
+    }
+    setFormData({
+      ...formData,
+      occursOn: [ ...formData.occursOn, day]
+    });
+  }
+
   function handleCreateRequest() {
 
     const otherFormData = {
       ...formData,
       // return reason if not other
-      reason: formData.business || formData.reason
+      reason: formData.business || formData.reason,
+      startTime: dateToString(formData.startTime, 'YYYY-MM-DD HH:mm'),
+      endTime: dateToString(formData.endTime, 'YYYY-MM-DD HH:mm')
     }
 
       return createEntryRequest({ variables: otherFormData })
       // eslint-disable-next-line no-shadow
         .then(({ data }) => {
           setRequestId(data.result.entryRequest.id)
+          if (isGuestRequest) {
+            history.push(`/entry_logs?tab=${tabValue}`)
+          }
           return data.result.entryRequest.id
         })
         .catch(err => {
-          setDetails({ ...observationDetails, message: err.message });
+          setDetails({ ...observationDetails, isError: true, message: err.message });
         });
+  }
+
+  function handleUpdateRequest() {
+    const otherFormData = {
+      ...formData,
+      reason: formData.business || formData.reason,
+      startTime: dateToString(formData.startTime, 'YYYY-MM-DD HH:mm'),
+      endTime: dateToString(formData.endTime, 'YYYY-MM-DD HH:mm')
+    };
+
+    setLoading(true);
+    updateRequest({ variables: { id, ...otherFormData } })
+      .then(() => {
+        setLoading(false);
+        setDetails({ ...observationDetails, message: t('logbook:logbook.registered_guest_updated') });
+        history.push(`/entry_logs?tab=${tabValue}`)
+      })
+      .catch(error => {
+        setLoading(false);
+        setDetails({ ...observationDetails, isError: true, message: error.message });
+      });
   }
 
   function handleGrantRequest() {
@@ -133,13 +175,13 @@ export default function RequestUpdate({ id }) {
     handleCreateRequest()
       .then(requestId => grantEntry({ variables: { id: requestId } }))
       .then(() => {
-        setDetails({ ...observationDetails, message: t('logbook:logbook.success_message', { action: t('logbook:logbook.granted') }) })
+        setDetails({ ...observationDetails, isError: false, message: t('logbook:logbook.success_message', { action: t('logbook:logbook.granted') }) })
         setIsObservationOpen(true)
         setLoading(false)
       })
       .catch((error) => {
         setLoading(false)
-        setDetails({ ...observationDetails, message: error.message })
+        setDetails({ ...observationDetails, isError: true, message: error.message })
       });
   }
 
@@ -160,7 +202,7 @@ export default function RequestUpdate({ id }) {
       })
       .catch((error) => {
         setLoading(false)
-        setDetails({ ...observationDetails, message: error.message })
+        setDetails({ ...observationDetails, isError: true, message: error.message })
       });
   }
 
@@ -185,28 +227,45 @@ export default function RequestUpdate({ id }) {
           }
         }).then(() => {
           setLoading(false)
-          setMessage(t('logbook:logbook.user_enrolled'))
+          setDetails({ ...observationDetails, message: t('logbook:logbook.user_enrolled') })
           history.push(`/user/${response.data.result.user.id}`)
         })
       })
       .catch((err) => {
         setLoading(false)
-        setMessage(err.message)
+        setDetails({ ...observationDetails, isError: true, message: err.message })
       })
   }
 
   function handleModal(_event, type) {
     const isAnyInvalid = checkInValidRequiredFields(formData, requiredFields)
-    if(isAnyInvalid){
+    if(isAnyInvalid ){
       setInputValidationMsg({ isError: true })
       return
     }
-    if (type === 'grant') {
-      setModalAction('grant')
-    } else {
-      setModalAction('deny')
+    if (isGuestRequest && !formData.visitationDate) {
+      setDetails({ ...observationDetails, isError: true, message: t('logbook:logbook.visit_end_error') });
+      return
     }
-    setModal(!isModalOpen)
+
+    switch (type) {
+      case 'grant':
+        setModalAction('grant')
+        setModal(!isModalOpen)
+        break;
+      case 'deny':
+        setModalAction('deny')
+        setModal(!isModalOpen)
+        break;
+      case 'update':
+        handleUpdateRequest()
+        break;
+      case 'create':
+        handleCreateRequest()
+        break;
+      default:
+        break;
+    }
   }
 
   function resetForm(to){
@@ -564,7 +623,7 @@ export default function RequestUpdate({ id }) {
 
           {
             // TODO: Find better ways to disable specific small feature per community 
-            !reqId && authState.user.community.name !== 'Ciudad Morazán' && (
+            !reqId && authState.user.community.name !== 'Ciudad Morazán' && !isGuestRequest && (
               <div className="form-group">
                 <TextField
                   className="form-control"
@@ -580,17 +639,48 @@ export default function RequestUpdate({ id }) {
             )
           }
 
+          {/* This should only show for registered users */}
+          {
+            isGuestRequest && (
+              <GuestTime
+                days={formData.occursOn}
+                userData={formData}
+                handleChange={handleInputChange}
+                handleChangeOccurrence={handleChangeOccurrence}
+              />
+            )
+          }
+
+          {
+            isGuestRequest && !id && (
+              <div className="row justify-content-center align-items-center ">
+                <Button
+                  variant="contained"
+                  className={`${css(styles.inviteGuestButton)}`}
+                  onClick={event => handleModal(event, 'create')}
+                  disabled={isLoading}
+                  startIcon={isLoading && <Spinner />}
+                  color="primary"
+                  data-testid="submit_button"
+                >
+                  {isLoading ? ` ${t('form_actions.submitting')} ...` : ` ${t('form_actions.invite_guest')} `}
+                </Button>
+              </div>
+            )
+          }
+
           <br />
-          {previousRoute !== 'enroll' && id &&(
+          {previousRoute !== 'enroll' && id && (
           <Button
             variant="contained"
-            onClick={event => handleModal(event, 'grant')}
+            onClick={event => handleModal(event, isGuestRequest ? 'update' : 'grant')}
             className={css(styles.grantButton)}
             disabled={isLoading}
             data-testid="entry_user_grant_request"
+            startIcon={isLoading && <Spinner />}
           >
             {
-              isLoading ? <Spinner /> : t('misc.log_new_entry')
+              isGuestRequest ? t('logbook:guest_book.update_guest') : t('misc.log_new_entry')
             }
           </Button>
           )}
@@ -604,24 +694,17 @@ export default function RequestUpdate({ id }) {
                   variant="contained"
                   onClick={handleEnrollUser}
                   className={css(styles.grantButton)}
+                  data-testid="entry_user_enroll"
                   disabled={isLoading}
+                  startIcon={isLoading && <Spinner />}
                 >
                   {isLoading
                     ? `${t('logbook:logbook.enrolling')} ...`
                     : ` ${t('logbook:logbook.enroll')}`}
                 </Button>
               </div>
-              <div className="row justify-content-center align-items-center">
-                <br />
-                <br />
-                {!isLoading && message.length ? (
-                  <span className="text-danger">{message}</span>
-                ) : (
-                  <span />
-                )}
-              </div>
             </>
-          ) : !/logs|enroll/.test(previousRoute) ? (
+          ) : !/logs|enroll|guests/.test(previousRoute) && !tabValue ? (
             <>
               <Grid container direction="row" justify="flex-start" spacing={2}>
                 <Grid item>
@@ -631,10 +714,11 @@ export default function RequestUpdate({ id }) {
                     className={css(styles.grantButton)}
                     disabled={isLoading}
                     data-testid="entry_user_grant"
+                    startIcon={isLoading && <Spinner />}
                   >
 
                     {
-                      isLoading ? <Spinner /> : t('logbook:logbook.grant')
+                      t('logbook:logbook.grant')
                     }
                   </Button>
                 </Grid>
@@ -645,9 +729,10 @@ export default function RequestUpdate({ id }) {
                     className={css(styles.denyButton)}
                     disabled={isLoading}
                     data-testid="entry_user_deny"
+                    startIcon={isLoading && <Spinner />}
                   >
                     {
-                      isLoading ? <Spinner /> : t('logbook:logbook.deny')
+                      t('logbook:logbook.deny')
                     }
                   </Button>
                 </Grid>
@@ -670,6 +755,8 @@ export default function RequestUpdate({ id }) {
           ) : (
             <span />
           )}
+
+
         </form>
       </div>
     </>
@@ -677,11 +764,16 @@ export default function RequestUpdate({ id }) {
 }
 
 RequestUpdate.defaultProps = {
-  id: null
+  id: null,
+  previousRoute: '',
+  tabValue: null,
 }
 
 RequestUpdate.propTypes = {
-  id: PropTypes.string
+  id: PropTypes.string,
+  previousRoute: PropTypes.string,
+  isGuestRequest: PropTypes.bool.isRequired,
+  tabValue: PropTypes.string,
 }
 
 
@@ -704,5 +796,12 @@ const styles = StyleSheet.create({
   },
   observationButton: {
     margin: 5,
-  }
+  },
+  inviteGuestButton: {
+    width: '75%',
+    boxShadow: 'none',
+    marginTop: 60,
+    height: 50,
+    color: "#FFFFFF"
+  },
 });

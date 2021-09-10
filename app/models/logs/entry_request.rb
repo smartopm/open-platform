@@ -3,7 +3,6 @@
 require 'host_env'
 
 module Logs
-  # rubocop:disable Metrics/ClassLength
   # Record of visitor entries to a community
   class EntryRequest < ApplicationRecord
     include SearchCop
@@ -19,6 +18,8 @@ module Logs
     search_scope :search do
       attributes :name, :phone_number, :visitation_date, :visit_end_date, :start_time, :end_time
     end
+
+    has_paper_trail
 
     class Unauthorized < StandardError; end
 
@@ -86,19 +87,6 @@ module Logs
       )
     end
 
-    # TODO: Build this into a proper notification scheme
-    def notify_admin(granted)
-      return unless ENV['REQUEST_NOTIFICATION_NUMBER']
-
-      link = "https://#{HostEnv.base_url(user.community)}/request_hos/#{id}/edit"
-      Rails.logger.info "Sending entry request approval notification for #{link}"
-
-      Sms.send(ENV['REQUEST_NOTIFICATION_NUMBER'],
-               "FYI #{name} -
-        has been #{granted ? 'granted' : 'denied'} entry by #{user.name},
-        for details click #{link}")
-    end
-
     def send_feedback_link(number)
       feedback_link = "https://#{HostEnv.base_url(user.community)}/feedback"
       Rails.logger.info "Phone number to send #{number}"
@@ -106,10 +94,6 @@ module Logs
       # rubocop:disable Layout/LineLength
       Sms.send(number, "Thank you for using our app, kindly use this link to give us feedback #{feedback_link}")
       # rubocop:enable Layout/LineLength
-    end
-
-    def notify_client(number)
-      SMS.send(number, "https://#{HostEnv.base_url(user.community)}/feedback")
     end
 
     private
@@ -147,5 +131,4 @@ module Logs
       )
     end
   end
-  # rubocop:enable Metrics/ClassLength
 end
