@@ -2,10 +2,10 @@ import React, { useContext, useState } from 'react';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
+import { useLocation } from 'react-router-dom';
 import Drawer from '@material-ui/core/Drawer';
 import MenuIcon from '@material-ui/icons/Menu';
 import { StyleSheet, css } from 'aphrodite';
-import { useLocation } from 'react-router-dom';
 import { Button, IconButton, SvgIcon } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
 import PropTypes from 'prop-types';
@@ -25,7 +25,7 @@ import SOSModal from './SOSModal';
 import useGeoLocation from '../../../hooks/useGeoLocation'
 import { filterQuickLinksByRole } from '../../Dashboard/utils';
 import { allUserTypes, sosAllowedUsers } from '../../../utils/constants';
-import BreadCrumb from './BreadCrumb';
+import BackArrow from './BackArrow';
 
 const drawerWidth = 260;
 
@@ -64,15 +64,14 @@ export default function Main() {
 }
 
 export function MainNav({ authState }) {
-  const pathLocation = useLocation()
   const matches = useMediaQuery('(max-width:600px)');
+  const path = useLocation().pathname
   const classes = useStyles();
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [open, setOpen] = useState(false);
   const location = useGeoLocation();
   const menuQuickLinks = authState?.user?.community?.menuItems?.filter((quickLink) => quickLink?.display_on?.includes('Menu'))
   const quickLinks = filterQuickLinksByRole(menuQuickLinks, authState?.user?.userType);
-  const pathsArray = pathLocation.pathname.split('/').filter(arr => arr)
 
   const dynamicMenu =
     quickLinks
@@ -140,7 +139,7 @@ export function MainNav({ authState }) {
            && communityHasEmergencyNumber && communityHasEmergencySMSNumber
            && <SvgIcon component={SOSIcon} viewBox="0 0 384 512" setOpen={setOpen} data-testid="sos-icon" />}
 
-          <BreadCrumb data={pathsArray} />
+          <BackArrow path={path} />
           <SOSModal open={open} setOpen={setOpen} location={location} {...{ authState }} />
 
           <UserAvatar imageUrl={authState?.user?.imageUrl} />
