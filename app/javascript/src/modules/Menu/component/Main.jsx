@@ -6,7 +6,7 @@ import Drawer from '@material-ui/core/Drawer';
 import MenuIcon from '@material-ui/icons/Menu';
 import { StyleSheet, css } from 'aphrodite';
 import { useLocation } from 'react-router-dom';
-import { Button, IconButton, SvgIcon, Breadcrumbs, Typography, Link } from '@material-ui/core';
+import { Button, IconButton, SvgIcon } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
 import PropTypes from 'prop-types';
 import DoubleArrowOutlinedIcon from '@material-ui/icons/DoubleArrowOutlined';
@@ -25,6 +25,7 @@ import SOSModal from './SOSModal';
 import useGeoLocation from '../../../hooks/useGeoLocation'
 import { filterQuickLinksByRole } from '../../Dashboard/utils';
 import { allUserTypes, sosAllowedUsers } from '../../../utils/constants';
+import BreadCrumb from './BreadCrumb';
 
 const drawerWidth = 260;
 
@@ -71,7 +72,7 @@ export function MainNav({ authState }) {
   const location = useGeoLocation();
   const menuQuickLinks = authState?.user?.community?.menuItems?.filter((quickLink) => quickLink?.display_on?.includes('Menu'))
   const quickLinks = filterQuickLinksByRole(menuQuickLinks, authState?.user?.userType);
-  const pathsArray = pathLocation.pathname.split('//^(?!.*[a-zA-Z])(?!.*[0-9])[A-Za-z0-9]+$/')
+  const pathsArray = pathLocation.pathname.split('/').filter(arr => arr)
 
   const dynamicMenu =
     quickLinks
@@ -138,19 +139,8 @@ export function MainNav({ authState }) {
           {sosAllowedUsers.includes(authState?.user?.userType?.toLowerCase())
            && communityHasEmergencyNumber && communityHasEmergencySMSNumber
            && <SvgIcon component={SOSIcon} viewBox="0 0 384 512" setOpen={setOpen} data-testid="sos-icon" />}
-          
-          {/* {console.log(document.referrer)}
-          <Breadcrumbs aria-label="breadcrumb" style={{width: '70%'}}>
-            <Link color="inherit" href="/" onClick={() => {}}>
-              Material-UI
-            </Link>
-            <Link color="inherit" href="/getting-started/installation/" onClick={() => {}}>
-              Core
-            </Link>
-            <Typography color="textPrimary">Breadcrumb</Typography>
-          </Breadcrumbs> */}
 
-
+          <BreadCrumb data={pathsArray} />
           <SOSModal open={open} setOpen={setOpen} location={location} {...{ authState }} />
 
           <UserAvatar imageUrl={authState?.user?.imageUrl} />
