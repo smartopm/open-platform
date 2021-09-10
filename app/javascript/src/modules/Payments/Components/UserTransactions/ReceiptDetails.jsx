@@ -7,9 +7,10 @@ import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 import { StyleSheet } from 'aphrodite';
 import SignaturePad from '../../../Forms/components/FormProperties/SignaturePad';
-import { formatMoney } from '../../../../utils/helpers';
+import { formatMoney , objectAccessor } from '../../../../utils/helpers';
 import { dateToString } from '../../../../components/DateContainer';
 import { paymentType } from '../../../../utils/constants';
+
 import { Context as AuthStateContext } from '../../../../containers/Provider/AuthStateProvider';
 import CommunityName from '../../../../shared/CommunityName';
 
@@ -141,8 +142,8 @@ export default function ReceiptDetail({ paymentData, currencyData, planDetail })
               {paymentData?.paymentPlan?.landParcel?.parcelNumber || planDetail?.paymentPlan?.landParcel?.parcelNumber}
             </Grid>
             <Grid item xs={4} className={classes.title} style={{ textAlign: 'center' }}>
-              {paymentType[paymentData.source] ||
-                      paymentType[paymentData?.userTransaction?.source]}
+              {objectAccessor(paymentType, paymentData.source) ||
+                      objectAccessor(paymentType, paymentData?.userTransaction?.source)}
             </Grid>
             <Grid item xs={4} className={classes.title} style={{ textAlign: 'right' }}>
               {formatMoney(currencyData, (planDetail?.amount || paymentData?.amount))}

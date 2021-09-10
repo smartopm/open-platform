@@ -11,7 +11,8 @@ import {
   InvoiceStatusColor,
   propAccessor,
   titleize,
-  capitalize
+  capitalize,
+  objectAccessor
 } from '../../../utils/helpers';
 import Label from '../../../shared/label/Label';
 import CenteredContent from '../../../components/CenteredContent';
@@ -236,14 +237,14 @@ export function SubscriptionPlans({
               </div>
             </div>
           </div>
-      
-        
+
+
           {matches && (
           <div style={{ padding: '0 20px' }}>
             <ListHeader headers={subscriptionPlanHeaders} />
           </div>
         )}
-       
+
           {subscriptionPlansData?.subscriptionPlans?.map(sub => (
             <div style={{ padding: '0 20px' }} key={sub.id}>
               <DataList
@@ -257,7 +258,7 @@ export function SubscriptionPlans({
       </>
     )}
     </div>
-  ); 
+  );
 }
 
 export function renderSubscriptionPlans(subscription, currencyData, menuData) {

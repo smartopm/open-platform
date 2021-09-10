@@ -12,14 +12,14 @@ import { useHistory } from 'react-router-dom';
 import { useTranslation } from 'react-i18next'
 import { Spinner } from '../../../../shared/Loading';
 import CenteredContent from '../../../../components/CenteredContent';
-import { formatError, formatMoney } from '../../../../utils/helpers';
+import { formatError, formatMoney, objectAccessor } from '../../../../utils/helpers';
 import EmptyCard from '../../../../shared/EmptyCard'
 import { currencies } from '../../../../utils/constants';
 import { UserPlans } from '../../../Payments/graphql/payment_query';
 
 export default function PlotDetailCard({ authState }) {
   const matches = useMediaQuery('(max-width:600px)')
-  const currency = currencies[authState?.community?.currency] || '';
+  const currency = objectAccessor(currencies, authState?.community?.currency) || '';
   const currencyData = { currency, locale: authState?.community?.locale }
   const { loading, data, error } = useQuery(UserPlans, {
     variables: {
@@ -97,7 +97,7 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: '8px'
   },
   date: {
-    display: 'flex', 
+    display: 'flex',
     marginBottom: '-8px'
   },
   plot: {
@@ -165,11 +165,11 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 PlotDetailCard.propTypes = {
-  authState: PropTypes.shape({ 
+  authState: PropTypes.shape({
     id: PropTypes.string,
     community: PropTypes.shape({
-      currency: PropTypes.string, 
+      currency: PropTypes.string,
       locale: PropTypes.string
-    }) 
+    })
   }).isRequired
 };

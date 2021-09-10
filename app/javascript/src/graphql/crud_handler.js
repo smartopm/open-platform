@@ -1,5 +1,7 @@
 /* eslint-disable */
 // Handle basic CRUD for a record and form
+import { objectAccessor } from '../utils/helpers';
+
 export default ({
   createMutation,
   readLazyQuery,
@@ -23,9 +25,9 @@ export default ({
   const returnedData = updatedResult || createdResult || queryResult
   let result = {}
   if (returnedData && returnedData.result) {
-    result = returnedData.result[typeName]
-  } else if (returnedData && returnedData[typeName]) {
-    result = returnedData[typeName]
+    result = objectAccessor(returnedData.result, typeName)
+  } else if (returnedData && objectAccessor(returnedData, typeName)) {
+    result = objectAccessor(returnedData, typeName)
   }
   const error = updateError || createError || queryError
   const isNewRecord = !result.id

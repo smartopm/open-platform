@@ -15,7 +15,7 @@ import useDebounce from '../../../utils/useDebounce';
 import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider';
 import { StyledTabs, StyledTab, TabPanel, a11yProps } from '../../../components/Tabs';
 import FloatButton from '../../../components/FloatButton';
-import { propAccessor, useParamsQuery } from '../../../utils/helpers';
+import { useParamsQuery, objectAccessor } from '../../../utils/helpers';
 import MessageAlert from '../../../components/MessageAlert';
 import GroupedObservations from './GroupedObservations';
 import AddMoreButton from '../../../shared/buttons/AddMoreButton';
@@ -36,7 +36,7 @@ const AllEventLogs = (history, match) => {
   const [offset, setOffset] = useState(0);
   const [limit, setLimit] = useState(initialLimit);
   const [searchTerm, setSearchTerm] = useState('');
-  const path = useParamsQuery()
+  const path = useParamsQuery();
   const tabValue = path.get('tab');
   const [value, setvalue] = useState(Number(tabValue) || 0);
   const dbcSearchTerm = useDebounce(searchTerm, 500);
@@ -56,9 +56,9 @@ const AllEventLogs = (history, match) => {
     }
   }, [query]);
 
-    useEffect(() => {
-      window.scrollTo({top: 0, behavior: 'smooth'});
-    }, [offset]);
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, [offset]);
 
   const logsQuery = {
     0: subjects,
@@ -69,7 +69,7 @@ const AllEventLogs = (history, match) => {
 
   const { loading, error, data, refetch } = useQuery(AllEventLogsQuery, {
     variables: {
-      subject: propAccessor(logsQuery, value),
+      subject: objectAccessor(logsQuery, value),
       refId,
       refType: null,
       offset,
@@ -84,9 +84,9 @@ const AllEventLogs = (history, match) => {
   function paginate(action) {
     if (action === 'prev') {
       if (offset < limit) return;
-      history.push(`/entry_logs?tab=${value}&offset=${offset - limit}`)
+      history.push(`/entry_logs?tab=${value}&offset=${offset - limit}`);
     } else if (action === 'next') {
-      history.push(`/entry_logs?tab=${value}&offset=${offset + limit}`)
+      history.push(`/entry_logs?tab=${value}&offset=${offset + limit}`);
     }
   }
 
@@ -101,7 +101,7 @@ const AllEventLogs = (history, match) => {
     setvalue(newValue);
     setSearchTerm('');
     // reset pagination after changing the tab
-    history.push(`/entry_logs?tab=${newValue}&offset=${0}`)
+    history.push(`/entry_logs?tab=${newValue}&offset=${0}`);
   }
   return (
     <IndexComponent
@@ -167,7 +167,7 @@ export function IndexComponent({
     1: t('logbook.new_visits'),
     2: t('logbook.registered_guests'),
     3: t('logbook.observations')
-  }
+  };
 
   function handleExitEvent(eventLog, logType) {
     setClickedEvent(eventLog);
@@ -183,7 +183,12 @@ export function IndexComponent({
     setDetails({ ...observationDetails, loading: true });
     const exitNote = 'Exited';
     addObservationNote({
-      variables: { note: observationNote || exitNote, id: log.refId, refType: log.refType, eventLogId: log.id }
+      variables: {
+        note: observationNote || exitNote,
+        id: log.refId,
+        refType: log.refType,
+        eventLogId: log.id
+      }
     })
       .then(() => {
         setDetails({
@@ -281,7 +286,10 @@ export function IndexComponent({
             value={searchTerm}
             onChange={handleSearch}
             className="form-control"
-            placeholder={`${t('common:form_placeholders.search')} ${searchPlaceholder[Number(tabValue)]}`}
+            placeholder={`${t('common:form_placeholders.search')} ${objectAccessor(
+              searchPlaceholder,
+              tabValue
+            )}`}
           />
         </div>
       </div>
@@ -291,7 +299,7 @@ export function IndexComponent({
           onChange={handleTabValue}
           aria-label="simple tabs example"
           variant={!matches ? 'scrollable' : 'standard'}
-          scrollButtons={!matches ? "on" : "off"}
+          scrollButtons={!matches ? 'on' : 'off'}
           centered={matches}
         >
           <StyledTab label={t('logbook.all_visits')} {...a11yProps(0)} />
@@ -301,31 +309,29 @@ export function IndexComponent({
         </StyledTabs>
         {loading && <Loading />}
         <TabPanel value={tabValue} index={0}>
-          <>{data && (
-            <VisitEntryLogs
-              eventLogs={filteredEvents}
-              authState={authState}
-              routeToAction={routeToAction}
-              handleAddObservation={handleAddObservation}
-              handleExitEvent={handleExitEvent}
-              logDetails={{clickedEvent,observationDetails, offset}}
-            />
-          )}
+          <>
+            {data && (
+              <VisitEntryLogs
+                eventLogs={filteredEvents}
+                authState={authState}
+                routeToAction={routeToAction}
+                handleAddObservation={handleAddObservation}
+                handleExitEvent={handleExitEvent}
+                logDetails={{ clickedEvent, observationDetails, offset }}
+              />
+            )}
           </>
         </TabPanel>
         <TabPanel value={tabValue} index={1}>
           {/* Todo: Handle the listing of enrolled users here */}
-          {data &&
-            data.result.map(user => (
-              <LogView key={user.id} user={user} />
-            ))}
+          {data && data.result.map(user => <LogView key={user.id} user={user} />)}
         </TabPanel>
         <TabPanel value={tabValue} index={2}>
-          <GuestBook 
-            tabValue={tabValue} 
-            handleAddObservation={handleAddObservation} 
-            offset={offset} 
-            limit={limit}  
+          <GuestBook
+            tabValue={tabValue}
+            handleAddObservation={handleAddObservation}
+            offset={offset}
+            limit={limit}
             query={searchTerm}
           />
         </TabPanel>
@@ -340,7 +346,7 @@ export function IndexComponent({
                 <GroupedObservations
                   key={groupedDate}
                   groupedDate={groupedDate}
-                  eventLogs={observationLogs[String(groupedDate)]}
+                  eventLogs={objectAccessor(observationLogs, groupedDate)}
                   routeToEntry={routeToAction}
                 />
               ))}

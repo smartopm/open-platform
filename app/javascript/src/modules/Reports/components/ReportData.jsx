@@ -5,6 +5,7 @@ import { makeStyles } from '@material-ui/styles';
 import { useTranslation } from 'react-i18next';
 import formatCellData, { checkExtraShifts, countExtraHours, formatShifts } from '../utils';
 import CenteredContent from '../../../components/CenteredContent';
+import { objectAccessor } from '../../../utils/helpers';
 
 export default function ReportData({ formattedData }) {
   const { t } = useTranslation(['form', 'report']);
@@ -22,8 +23,8 @@ export default function ReportData({ formattedData }) {
     <div className="plan-header" style={{ marginTop: 60 }}>
       <Grid container spacing={5}>
         {Object.keys(formattedData).map(header => {
-          if (formattedData[String(header)].length > highestRecords)
-            highestRecords = formattedData[String(header)].length;
+          if (objectAccessor(formattedData, header).length > highestRecords)
+            highestRecords = objectAccessor(formattedData, header).length;
           return (
             <Grid
               item

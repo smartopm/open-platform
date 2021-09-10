@@ -341,6 +341,10 @@ export function checkValidGeoJSON(str){
     }
 }
 
+export function objectAccessor(object, key) {
+  return object[key]
+}
+
 /**
  *
  * @param {String} str snake_case string

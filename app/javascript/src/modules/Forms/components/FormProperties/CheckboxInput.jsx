@@ -8,6 +8,7 @@ import FormGroup from '@material-ui/core/FormGroup';
 import PropTypes from 'prop-types';
 import Checkbox from '@material-ui/core/Checkbox';
 import FormHelperText from '@material-ui/core/FormHelperText';
+import { objectAccessor } from '../../../../utils/helpers';
 
 export default function CheckboxInput({ handleValue, properties, checkboxState, inputValidation }) {
   const { t } = useTranslation('form');
@@ -29,7 +30,7 @@ export default function CheckboxInput({ handleValue, properties, checkboxState, 
               <Checkbox
                 color="primary"
                 checked={
-                  fieldValues ? fieldValues[obj.label] || false : false
+                  fieldValues ? objectAccessor(fieldValues, obj.label) || false : false
                 }
                 onChange={handleValue}
                 name={obj.label}

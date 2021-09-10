@@ -27,7 +27,7 @@ import LandParcelMergeModal from './LandParcelMergeModal';
 import useDebounce from '../../utils/useDebounce';
 import UserAutoResult from '../../shared/UserAutoResult';
 import { dateToString } from "../DateContainer";
-import { capitalize, titleize } from '../../utils/helpers'
+import { capitalize, titleize, objectAccessor } from '../../utils/helpers'
 
 
 export default function LandParcelModal({
@@ -60,9 +60,9 @@ export default function LandParcelModal({
   const [ownershipFields, setOwnershipFields] = useState(['']);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isEditing, setIsEditing] = useState(false);
-  const debouncedValue = useDebounce(ownershipFields[Number(currentIndex)]?.name, 500);
+  const debouncedValue = useDebounce(objectAccessor(ownershipFields, currentIndex)?.name, 500);
   const authState = useContext(AuthStateContext);
-  const currency = currencies[authState.user?.community.currency] || '';
+  const currency = objectAccessor(currencies, authState.user?.community.currency) || '';
   const isFormReadOnly = modalType === 'details' && !isEditing;
   const [editCoordinates, setEditCoordinates] = useState(false)
   const [mergeModalOpen, setMergeModalOpen] = useState(false)
@@ -92,7 +92,7 @@ export default function LandParcelModal({
 
   function updateOwnershipField(name, value, index) {
     const fields = [...ownershipFields];
-    fields[Number(index)] = { ...fields[Number(index)], [name]: value };
+    fields[Number(index)] = { ...objectAccessor(fields, index), [name]: value };
     setOwnershipFields(fields);
   }
 
@@ -109,7 +109,7 @@ export default function LandParcelModal({
 
   const handleOwnershipChange = (selected, index) => {
     const fields = [...ownershipFields];
-    fields[Number(index)] = { ...fields[Number(index)], name: selected?.name, userId: selected?.id };
+    fields[Number(index)] = { ...objectAccessor(fields, index), name: selected?.name, userId: selected?.id };
     setOwnershipFields(fields);
   };
 
@@ -523,7 +523,7 @@ export default function LandParcelModal({
                   options={filteredOwnerList(data?.usersLite)}
                   getOptionLabel={option => option?.name}
                   getOptionSelected={(option, value) => option.name === value.name}
-                  value={ownershipFields[Number(index)]}
+                  value={objectAccessor(ownershipFields, index)}
                   onChange={(_event, newValue) => handleOwnershipChange(newValue, index)}
                   classes={{ option: classes.autocompleteOption, listbox: classes.autocompleteOption }}
                   renderOption={(option) => (
@@ -546,7 +546,7 @@ export default function LandParcelModal({
                   inputProps={{
                     'data-testid': 'owner-address'
                   }}
-                  value={ownershipFields[Number(index)].address}
+                  value={objectAccessor(ownershipFields, index).address}
                   label={t('property:form_fields.address')}
                   onChange={event => onChangeOwnershipField(event, index)}
                   name="address"

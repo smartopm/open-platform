@@ -23,7 +23,8 @@ import {
   handleQueryOnChange,
   InvoiceStatusColor,
   propAccessor,
-  titleize
+  titleize,
+  objectAccessor
 } from '../../../utils/helpers';
 import Label from '../../../shared/label/Label';
 import CenteredContent from '../../../components/CenteredContent';
@@ -499,7 +500,7 @@ export function renderPayment(payment, currencyData, theme, matches) {
             content={
               ['cash'].includes(payment.userTransaction.source)
                 ? 'Cash Deposit'
-                : paymentType[payment.userTransaction.source]
+                : objectAccessor(paymentType, payment.userTransaction.source)
             }
           />
         </Grid>
