@@ -46,3 +46,5 @@ export function checkRequests(req, translate) {
     }
     return { title: translate('guest_book.invalid_today'), color: '#E74540', valid: false };
 }
+
+
