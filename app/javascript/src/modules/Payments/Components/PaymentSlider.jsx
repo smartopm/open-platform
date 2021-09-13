@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { useTranslation } from 'react-i18next';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
@@ -7,6 +8,7 @@ import { formatMoney } from '../../../utils/helpers';
 
 export default function PaymentSlider({ data, currencyData }) {
   const classes = useStyles();
+  const { t } = useTranslation('payment');
   const planVal = data?.planValue - (data?.totalPayments + data?.owingAmount);
 
   function calcPercentage(value, total) {
@@ -47,7 +49,6 @@ export default function PaymentSlider({ data, currencyData }) {
 
   return (
     <div className={classes.flex} data-testid="body">
-      {/* {console.log(parseInt(calcPercentage(data?.totalPayments, data?.planValue), 10))} */}
       <div style={{ width: checkPaidPercentage() }}>
         <div className={classes.totalPayment}> </div>
         <div className={classes.sliderDetail}>
@@ -64,14 +65,14 @@ export default function PaymentSlider({ data, currencyData }) {
                 <div
                   className={classes.amountPaid}
                 >
-                  <Typography variant="caption">Paid</Typography>
+                  <Typography variant="caption">{t("misc.paid")}</Typography>
                   <Typography variant="caption" align="center">
                     {formatMoney(currencyData, data?.totalPayments)}
                   </Typography>
                 </div>
               ) : (
                 <div className={classes.planBodyValue}>
-                  <Typography variant="caption">Plan Value</Typography>
+                  <Typography variant="caption">{t("misc.plan_values")}</Typography>
                   <Typography variant="caption" align="center">
                     {formatMoney(currencyData, data?.planValue)}
                   </Typography>
@@ -94,15 +95,15 @@ export default function PaymentSlider({ data, currencyData }) {
                     style={{ color: '#EA2626', marginTop: '-10px', marginLeft: '25%' }}
                   />
                   <div className={classes.owing}>
-                    <Typography variant="caption">owed</Typography>
+                    <Typography variant="caption">{t("misc.owed")}</Typography>
                     <Typography variant="caption">
                       {formatMoney(currencyData, data?.owingAmount)}
                     </Typography>
-                    <Typography variant="caption">{`${data?.installmentsDue} installments`}</Typography>
+                    <Typography variant="caption">{`${data?.installmentsDue} ${t("misc.installments")}`}</Typography>
                   </div>
                 </div>
                 <div className={classes.amountDue} style={{ marginTop: '10px' }}>
-                  <Typography variant="caption">Due</Typography>
+                  <Typography variant="caption">{t("misc.due")}</Typography>
                   <Typography variant="caption" align="center">
                     {formatMoney(currencyData, data?.expectedPayments)}
                   </Typography>
@@ -114,15 +115,15 @@ export default function PaymentSlider({ data, currencyData }) {
                 <div className={classes.body}>
                   <ArrowDropDownIcon style={{ color: '#EA2626', marginTop: '-10px' }} />
                   <div className={classes.owing}>
-                    <Typography variant="caption">owing</Typography>
+                    <Typography variant="caption">{t("misc.owed")}</Typography>
                     <Typography variant="caption">
                       {formatMoney(currencyData, data?.owingAmount)}
                     </Typography>
-                    <Typography variant="caption">{`${data?.installmentsDue} installments`}</Typography>
+                    <Typography variant="caption">{`${data?.installmentsDue} ${t("misc.installments")}`}</Typography>
                   </div>
                 </div>
                 <div className={classes.body}>
-                  <Typography variant="caption">Plan Value</Typography>
+                  <Typography variant="caption">{t("misc.plan_values")}</Typography>
                   <Typography variant="caption" align="center">
                     {formatMoney(currencyData, data?.planValue)}
                   </Typography>
@@ -139,7 +140,7 @@ export default function PaymentSlider({ data, currencyData }) {
           <Typography> </Typography>
           {data?.totalPayments < data?.planValue && (
             <div className={classes.body}>
-              <Typography variant="caption">Plan Value</Typography>
+              <Typography variant="caption">{t("misc.plan_values")}</Typography>
               <Typography variant="caption" align="center">
                 {formatMoney(currencyData, data?.planValue)}
               </Typography>
