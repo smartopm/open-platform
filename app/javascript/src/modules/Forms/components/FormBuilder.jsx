@@ -17,6 +17,7 @@ import MessageAlert from '../../../components/MessageAlert'
 import Form from './Category/Form'
 import FormContextProvider from '../Context'
 import { FormDialog } from './FormList'
+import ErrorPage from '../../../components/Error';
 
 /**
  * @param {String} formId
@@ -82,7 +83,7 @@ export default function FormBuilder({ formId }) {
   }
 
   if (loading || formLogs.loading || formData.loading) return <Spinner />
-  if (error || formLogs.error || formData.error) return error?.message || formLogs?.error.message
+  if (error || formLogs.error || formData.error) return  <ErrorPage title={error?.message || formLogs?.error?.message} />
 
   return (
     <>
