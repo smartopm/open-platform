@@ -20,17 +20,35 @@ export default function PaymentSlider({ data, currencyData }) {
     return `${percentage}%`;
   }
 
-  function checkAmountPaid() {
-    return (
-      Math.abs(
-        parseInt(calcPercentage(data?.totalPayments, data?.planValue), 10) -
-          parseInt(calcPercentage(data?.owingAmount, data?.planValue), 10)
-      ) < 10
-    );
+  function checkOwingPercentage() {
+    const val = calcPercentage(data?.owingAmount, data?.planValue)
+    const percentage = parseInt(val, 10)
+
+    if (percentage > 0 && percentage < 20) {
+      return '40%'
+    } 
+    return val
   }
+
+  function checkPaidPercentage() {
+    const val = calcPercentage(data?.totalPayments, data?.planValue)
+    const percentage = parseInt(val, 10)
+
+    if (percentage === 100) {
+      return '100%'
+    }
+
+    if (percentage > 0 && percentage < 20) {
+      return '30%'
+    } 
+
+    return val
+  }
+
   return (
     <div className={classes.flex} data-testid="body">
-      <div style={{ width: calcPercentage(data?.totalPayments, data?.planValue) }}>
+      {/* {console.log(parseInt(calcPercentage(data?.totalPayments, data?.planValue), 10))} */}
+      <div style={{ width: checkPaidPercentage() }}>
         <div className={classes.totalPayment}> </div>
         <div className={classes.sliderDetail}>
           {data?.totalPayments === 0 ? (
@@ -45,7 +63,6 @@ export default function PaymentSlider({ data, currencyData }) {
               {data?.totalPayments < data?.planValue ? (
                 <div
                   className={classes.amountPaid}
-                  style={checkAmountPaid() ? { marginTop: '-55px' } : {}}
                 >
                   <Typography variant="caption">Paid</Typography>
                   <Typography variant="caption" align="center">
@@ -67,7 +84,7 @@ export default function PaymentSlider({ data, currencyData }) {
       <SliderBreaker />
       {data?.owingAmount > 0 && (
         <>
-          <div style={{ width: calcPercentage(data?.owingAmount, data?.planValue) }} data-testid='owing'>
+          <div style={{ width: checkOwingPercentage() }} data-testid='owing'>
             <div className={classes.expectedPayment}> </div>
             {data?.owingAmount < data?.planValue ? (
               <div className={classes.bodySecond}>
@@ -87,7 +104,7 @@ export default function PaymentSlider({ data, currencyData }) {
                 <div className={classes.amountDue} style={{ marginTop: '10px' }}>
                   <Typography variant="caption">Due</Typography>
                   <Typography variant="caption" align="center">
-                    {formatMoney(currencyData, data?.owingAmount)}
+                    {formatMoney(currencyData, data?.expectedPayments)}
                   </Typography>
                 </div>
               </div>
@@ -195,7 +212,7 @@ const useStyles = makeStyles(() => ({
     marginRight: '-60px'
   },
   owing: {
-    marginTop: '20px',
+    marginTop: '30px',
     display: 'flex',
     flexDirection: 'column',
     textAlign: 'center',
@@ -221,6 +238,7 @@ PaymentSlider.propTypes = {
     totalPayments: PropTypes.number,
     owingAmount: PropTypes.number,
     installmentsDue: PropTypes.number,
+    expectedPayments: PropTypes.number,
     landParcel: PropTypes.shape({
       parcelNumber: PropTypes.string
     })

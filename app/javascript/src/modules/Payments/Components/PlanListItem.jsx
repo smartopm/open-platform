@@ -29,6 +29,7 @@ export default function PlanListItem({ data, currencyData }) {
 
   return (
     <>
+      {console.log(data)}
       <Grid container spacing={2} className={classes.container}>
         <Grid item xs={12} sm={2} data-testid='landparcel' className={classes.bottom}>
           <Typography className={classes.weight} variant="caption">
