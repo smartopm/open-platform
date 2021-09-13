@@ -3,7 +3,7 @@ import { render } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { BrowserRouter } from 'react-router-dom';
 import { Spinner } from '../../../shared/Loading';
-import { PlansList, SubscriptionPlans, renderSubscriptionPlans, renderCommunityPlans } from '../Components/PlansList';
+import { PlansList, SubscriptionPlans, renderSubscriptionPlans} from '../Components/PlansList';
 import currency from '../../../__mocks__/currency';
 
 describe('Plans List Item Component', () => {
@@ -95,16 +95,6 @@ describe('Plans List Item Component', () => {
     expect(results[0]).toHaveProperty('Start Date');
     expect(results[0]).toHaveProperty('End Date');
     expect(results[0]).toHaveProperty('Amount');
-    expect(results[0]).toHaveProperty('Status');
-  });
-
-  it('should check if renderCommunityPlans works as expected', () => {
-    const results = renderCommunityPlans(communityPlans[0], currency, () => 'behind', jest.fn);
-    expect(results).toBeInstanceOf(Array);
-    expect(results[0]).toHaveProperty('Plot/User Info');
-    expect(results[0]).toHaveProperty('Dates');
-    expect(results[0]).toHaveProperty('Payment Info');
-    expect(results[0]).toHaveProperty('Owing Info');
     expect(results[0]).toHaveProperty('Status');
   });
 });

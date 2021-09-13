@@ -63,8 +63,11 @@
     "expected_payments": "Expected payments",
     "value": "Value",
     "owing": "Owing",
+    "owed": "Owed",
     "installments": "Installments",
-    "subscription_plans": "Subscription Plans"
+    "subscription_plans": "Subscription Plans",
+    "plan_values": "Plan Value",
+    "due": "Due"
   },
   "table_headers": {
     "receipt_number": "Receipt Number",
