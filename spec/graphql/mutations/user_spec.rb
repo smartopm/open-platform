@@ -237,25 +237,6 @@ RSpec.describe Mutations::User do
       expect(result.dig('data', 'userUpdate', 'user')).to be_nil
       expect(result['errors']).not_to be_empty
     end
-
-    it 'should create a substatus log' do
-      variables = {
-        id: current_user.id,
-        name: 'joey',
-        userType: 'admin',
-        subStatus: 'floor_plan_purchased',
-      }
-      result = DoubleGdpSchema.execute(query, variables: variables,
-                                              context: {
-                                                current_user: current_user,
-                                                site_community: current_user.community,
-                                              }).as_json
-      expect(result['errors']).to be_nil
-      expect(result.dig('data', 'userUpdate', 'user')).not_to be_nil
-      status = Logs::SubstatusLog.find_by(user_id: current_user.id)
-      expect(status.start_date).not_to be_nil
-      expect(status.new_status).to eql 'floor_plan_purchased'
-    end
   end
 
   describe 'updating a user' do
@@ -271,13 +252,15 @@ RSpec.describe Mutations::User do
             $id: ID!,
             $userType: String
             $vehicle: String
-            $name: String
+            $name: String,
+            $subStatus: String
           ) {
           userUpdate(
               id: $id,
               userType: $userType,
               vehicle: $vehicle,
-              name: $name
+              name: $name,
+              subStatus: $subStatus
             ) {
             user {
               id
@@ -449,6 +432,98 @@ RSpec.describe Mutations::User do
                                                          }).as_json
       expect(result.dig('data', 'userMerge', 'success')).to be_nil
       expect(result.dig('errors', 0, 'message')).to eql 'Unauthorized'
+    end
+
+    describe 'substatus change log' do
+      let(:current_user) { create(:admin_user, community_id: user.community.id) }
+      let(:variables) do
+        {
+          id: user.id,
+          name: 'joey',
+          userType: 'client',
+          subStatus: 'floor_plan_purchased',
+        }
+      end
+
+      it 'should create a substatus log' do
+        result = DoubleGdpSchema.execute(query, variables: variables,
+                                                context: {
+                                                  current_user: current_user,
+                                                  site_community: user.community,
+                                                }).as_json
+        expect(result['errors']).to be_nil
+        expect(result.dig('data', 'userUpdate', 'user')).not_to be_nil
+        status = Logs::SubstatusLog.find_by(user_id: user.id)
+        expect(status.start_date).not_to be_nil
+        expect(status.new_status).to eql 'floor_plan_purchased'
+      end
+
+      it 'does not allow non admin users to edit sub_status' do
+        result = DoubleGdpSchema.execute(query, variables: variables,
+                                                context: {
+                                                  current_user: user,
+                                                  site_community: user.community,
+                                                }).as_json
+
+        expect(result['errors']).not_to be_empty
+        expect(result['errors'][0]['message']).to equal('Unauthorized Arguments')
+      end
+
+      it 'should not create Substatus Log without substatus change' do
+        variables.delete(:subStatus)
+        result = DoubleGdpSchema.execute(query, variables: variables,
+                                                context: {
+                                                  current_user: current_user,
+                                                  site_community: user.community,
+                                                }).as_json
+
+        expect(result['errors']).to be_nil
+        expect(Logs::SubstatusLog.count).to eq 0
+      end
+
+      it 'should create Substatus Log after user substatus is updated' do
+        DoubleGdpSchema.execute(query, variables: variables,
+                                       context: {
+                                         current_user: current_user,
+                                         site_community: user.community,
+                                       }).as_json
+
+        expect(Logs::SubstatusLog.count).to eq 1
+        stop_date = Logs::SubstatusLog.first&.stop_date
+        expect(stop_date).to be_nil
+      end
+
+      it 'updates SubstatusLog updated_by_id field' do
+        DoubleGdpSchema.execute(query, variables: variables,
+                                       context: {
+                                         current_user: current_user,
+                                         site_community: user.community,
+                                       }).as_json
+
+        substatus_log = Logs::SubstatusLog.last
+
+        expect(substatus_log.updated_by_id).to eq(current_user.id)
+      end
+
+      it 'updates stop_date only when User changes to new_status' do
+        DoubleGdpSchema.execute(query, variables: variables,
+                                       context: {
+                                         current_user: current_user,
+                                         site_community: user.community,
+                                       }).as_json
+        variables[:subStatus] = 'building_permit_approved'
+        DoubleGdpSchema.execute(query, variables: variables,
+                                       context: {
+                                         current_user: current_user,
+                                         site_community: user.community,
+                                       }).as_json
+
+        expect(Logs::SubstatusLog.count).to eq 2
+        substatus_log = Logs::SubstatusLog.find_by(stop_date: nil)
+        expect(substatus_log).not_to be_nil
+        expect(substatus_log.new_status).to eq 'building_permit_approved'
+        expect(substatus_log.previous_status).to eq 'floor_plan_purchased'
+      end
     end
   end
 

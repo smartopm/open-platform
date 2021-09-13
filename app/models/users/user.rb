@@ -137,7 +137,6 @@ module Users
     }
     validate :phone_number_valid?
     after_create :add_notification_preference
-    before_update :log_sub_status_change, if: :sub_status_changed?
     after_update :update_associated_accounts_details, if: -> { saved_changes.key?('name') }
 
     devise :omniauthable, omniauth_providers: %i[google_oauth2 facebook]
@@ -599,34 +598,6 @@ module Users
                 community.labels.create!(short_desc: pref)
         user_labels.create!(label_id: label.id)
       end
-    end
-
-    def log_sub_status_change
-      return sub_status_log if changes_to_save.present? && changes_to_save.key?('sub_status')
-    end
-
-    def sub_status_log
-      sub_status_changes = changes_to_save['sub_status']
-
-      start_date = current_time_in_timezone
-      previous_status = sub_status_changes.first
-      new_status = sub_status_changes.last
-      stop_date = nil
-
-      latest_substatus = create_sub_status_log(start_date, previous_status, new_status, stop_date)
-
-      self[:latest_substatus_id] = latest_substatus[:id]
-    end
-
-    def create_sub_status_log(start_date, previous_status, new_status, stop_date)
-      Logs::SubstatusLog.create(
-        start_date: start_date,
-        previous_status: previous_status,
-        new_status: new_status,
-        stop_date: stop_date,
-        user_id: id,
-        community_id: self[:community_id],
-      )
     end
 
     # Creates general land parcel for user

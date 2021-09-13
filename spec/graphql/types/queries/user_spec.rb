@@ -564,10 +564,27 @@ RSpec.describe Types::Queries::User do
       end
 
       it 'returns the substatus distribution report' do
+        admin_log = create(:substatus_log, user_id: admin_user.id,
+                                           community_id: admin_user.community.id,
+                                           new_status: 'floor_plan_purchased',
+                                           updated_by_id: admin_user.id)
+        admin_user.update(latest_substatus_id: admin_log.id)
+        client_log = create(:substatus_log, user_id: client_user.id,
+                                            community_id: admin_user.community.id,
+                                            new_status: 'construction_in_progress_self_build',
+                                            updated_by_id: admin_user.id)
+        client_user.update(latest_substatus_id: client_log.id)
+        resident_log = create(:substatus_log, user_id: resident.id,
+                                              community_id: admin_user.community.id,
+                                              new_status: 'construction_completed',
+                                              updated_by_id: admin_user.id)
+        resident.update(latest_substatus_id: resident_log.id)
+
         result = DoubleGdpSchema.execute(substatus_distribution_query, context: {
                                            current_user: admin_user,
                                            site_community: admin_user.community,
                                          }).as_json
+
         expect(result['errors']).to be_nil
         distrubution_data = result.dig('data', 'substatusDistributionQuery')
         expect(distrubution_data['plotsFullyPurchased']).not_to be_nil

@@ -64,6 +64,11 @@ export const UserFragment = {
         stopDate
         newStatus
         previousStatus
+        updatedBy {
+          id
+          name
+          email
+        }
       }
     }
   `

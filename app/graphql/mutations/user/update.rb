@@ -3,6 +3,7 @@
 module Mutations
   module User
     # Create a new request/pending member
+    # rubocop: disable Metrics/ClassLength
     class Update < BaseMutation
       argument :id, ID, required: true
       argument :name, String, required: false
@@ -21,7 +22,7 @@ module Mutations
       argument :ext_ref_id, String, required: false
 
       field :user, Types::UserType, null: true
-      # rubocop:disable Metrics/AbcSize
+
       def resolve(vals)
         user = context[:site_community].users.find(vals.delete(:id))
         raise GraphQL::ExecutionError, I18n.t('errors.user.not_found') unless user
@@ -30,13 +31,18 @@ module Mutations
         log_user_update(user)
         update_secondary_info(user, vals.delete(:secondary_info))
 
-        if user.update(vals.except(*ATTACHMENTS.keys))
-          update_substatus_date(user, vals[:sub_status])
-          return { user: user }
-        end
-        raise GraphQL::ExecutionError, user.errors.full_messages&.join(', ')
+        user_with_substatus_log = update_sub_status_log(user, vals) if vals[:sub_status]
+        user_to_update = user_with_substatus_log || user
+        update_user(vals, user_to_update)
       end
-      # rubocop:enable Metrics/AbcSize
+
+      def update_user(vals, user_to_update)
+        if user_to_update.update(vals.except(*ATTACHMENTS.keys))
+          update_substatus_date(user_to_update, vals[:sub_status])
+          return { user: user_to_update }
+        end
+        raise GraphQL::ExecutionError, user_to_update.errors.full_messages&.join(', ')
+      end
 
       def attach_avatars(user, vals)
         ATTACHMENTS.each_pair do |key, attr|
@@ -71,6 +77,39 @@ module Mutations
         context[:current_user].id == vals[:id]
       end
 
+      def update_sub_status_log(user, vals)
+        unless context[:current_user].admin?
+          raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
+        end
+
+        user.sub_status = vals[:sub_status]
+        return unless user.sub_status_changed?
+
+        params = sub_status_log_params(user.changes_to_save[:sub_status])
+        substatus_log = create_sub_status_log(user, params[:previous_status], params[:new_status])
+        user.latest_substatus_id = substatus_log.id
+        user
+      end
+
+      def sub_status_log_params(changes)
+        {
+          new_status: changes.last,
+          previous_status: changes.first,
+        }
+      end
+
+      def create_sub_status_log(user, previous_status, new_status)
+        Logs::SubstatusLog.create(
+          start_date: user.current_time_in_timezone,
+          previous_status: previous_status,
+          new_status: new_status,
+          stop_date: nil,
+          user_id: user.id,
+          community_id: user.community.id,
+          updated_by_id: context[:current_user].id,
+        )
+      end
+
       def update_substatus_date(user, substatus)
         return if substatus.nil?
 
@@ -95,5 +134,6 @@ module Mutations
         true
       end
     end
+    # rubocop: enable Metrics/ClassLength
   end
 end
