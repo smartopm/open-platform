@@ -47,6 +47,17 @@ export default function PaymentSlider({ data, currencyData }) {
     return val
   }
 
+  function checkValuePercentage() {
+   const val =  calcPercentage(planVal, data?.planValue)
+   const percentage = parseInt(val, 10)
+
+   if (percentage < 20) {
+     return true
+   }
+
+   return false
+  }
+
   return (
     <div className={classes.flex} data-testid="body">
       <div style={{ width: checkPaidPercentage() }}>
@@ -139,7 +150,7 @@ export default function PaymentSlider({ data, currencyData }) {
         <div className={classes.spaceBetween}>
           <Typography> </Typography>
           {data?.totalPayments < data?.planValue && (
-            <div className={classes.body}>
+            <div className={classes.body} style={checkValuePercentage() ? {marginTop: '-40px', marginLeft: '-40px'} : {}}>
               <Typography variant="caption">{t("misc.plan_values")}</Typography>
               <Typography variant="caption" align="center">
                 {formatMoney(currencyData, data?.planValue)}
