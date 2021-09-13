@@ -5,7 +5,7 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import PaymentSlider from './PaymentSlider';
 import Label from '../../../shared/label/Label';
-import { capitalize } from '../../../utils/helpers';
+import { capitalize, objectAccessor } from '../../../utils/helpers';
 
 export default function PlanListItem({ data, currencyData }) {
   const classes = useStyles();
@@ -49,7 +49,7 @@ export default function PlanListItem({ data, currencyData }) {
           <PaymentSlider data={data} currencyData={currencyData} />
         </Grid>
         <Grid item xs={12} sm={2} data-testid='label'>
-          <Label title={capitalize(planStatus(data) || '')} color={colors[planStatus(data)]} />
+          <Label title={capitalize(planStatus(data) || '')} color={objectAccessor(colors, planStatus(data))} />
         </Grid>
       </Grid>
     </>

@@ -9,9 +9,9 @@ import DataList from '../../../shared/list/DataList';
 import {
   formatMoney,
   InvoiceStatusColor,
-  propAccessor,
   titleize,
-  capitalize
+  capitalize,
+  objectAccessor
 } from '../../../utils/helpers';
 import Label from '../../../shared/label/Label';
 import CenteredContent from '../../../components/CenteredContent';
@@ -236,14 +236,14 @@ export function SubscriptionPlans({
               </div>
             </div>
           </div>
-      
-        
+
+
           {matches && (
           <div style={{ padding: '0 20px' }}>
             <ListHeader headers={subscriptionPlanHeaders} />
           </div>
         )}
-       
+
           {subscriptionPlansData?.subscriptionPlans?.map(sub => (
             <div style={{ padding: '0 20px' }} key={sub.id}>
               <DataList
@@ -257,7 +257,7 @@ export function SubscriptionPlans({
       </>
     )}
     </div>
-  ); 
+  );
 }
 
 export function renderSubscriptionPlans(subscription, currencyData, menuData) {
@@ -287,7 +287,7 @@ export function renderSubscriptionPlans(subscription, currencyData, menuData) {
         <Grid item xs={12} md={2} data-testid="subscription_status" style={{ width: '90px' }}>
           <Label
             title={capitalize(subscription.status).split("_").join("")}
-            color={propAccessor(InvoiceStatusColor, subscription?.status)}
+            color={objectAccessor(InvoiceStatusColor, subscription?.status)}
           />
         </Grid>
       ),

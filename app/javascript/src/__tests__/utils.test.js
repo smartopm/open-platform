@@ -12,7 +12,7 @@ import {
   titleize,
   formatError,
   generateId,
-  propAccessor,
+  objectAccessor,
   toCamelCase,
   formatMoney,
   extractCurrency,
@@ -168,13 +168,14 @@ describe('array methods', () => {
 
   // property accessor
   it('should validate params', () => {
-    expect(propAccessor({a: 4}, 3)).toBeUndefined()
+    expect(objectAccessor({a: 4}, 3)).toBeUndefined()
     // get correct value
-    expect(propAccessor({a: 4}, 'a')).toBe(4)
+    expect(objectAccessor({a: 4}, 'a')).toBe(4)
+    expect(objectAccessor([1, 2, 3], 1)).toBe(2)
     // prop must be a property in the given object
-    expect(propAccessor({a: 4}, 'b')).toBeUndefined()
+    expect(objectAccessor({a: 4}, 'b')).toBeUndefined()
     // the object should only be of type object
-    expect(propAccessor([], 'b')).toBeUndefined()
+    expect(objectAccessor([], 'b')).toBeUndefined()
   })
 
   it('should check if x belongs to array', () => {

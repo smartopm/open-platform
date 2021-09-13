@@ -322,23 +322,13 @@ export function checkValidGeoJSON(str){
 
 /**
  *
- * @param {object} obj
- * @param {String} prop
- * @description get value based on a passed property name, if validates object and string first
+ * @param {object} object
+ * @param {String} key
+ * @description gets a value out of an object or an array purposely to reduce the "Code Injection" vulnerabilities
  */
-  export function propAccessor(obj, prop){
-    // check if the given prop is a string
-    const newProp = prop.toString()
-    // check if obj is a valid object
-    // I couldn't find a better way of validating am object
-    if(Object.prototype.toString.call(obj) !== '[object Object]') return
-    // check if prop is in obj
-    if(!obj.hasOwnProperty(newProp)) return
-    for (const [key, value] of Object.entries(obj)) {
-        if(key === newProp){
-            return value
-        }
-    }
+export function objectAccessor(object, key) {
+  if (!object) return
+  return object[key]
 }
 
 /**
@@ -478,7 +468,7 @@ export function handleQueryOnChange(selectedOptions, filterFields) {
           // skipped nested object accessor here until fully tested
           // eslint-disable-next-line security/detect-object-injection
           const property = filterFields[option[operator][0].var]
-          let value = propAccessor(option, operator)[1]
+          let value = objectAccessor(option, operator)[1]
 
           if (operator === '==') operator = ':'
           if (property === 'created_at' || property === 'due_date') {

@@ -395,10 +395,10 @@ export default function TaskForm({
                       return
                     }
                     assignUser(data.id, value.id)
-                  }}          
+                  }}
                   />
                 )}
-      
+
               </div>
             </FormControl>
             <br />

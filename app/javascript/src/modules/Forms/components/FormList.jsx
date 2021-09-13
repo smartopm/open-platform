@@ -36,7 +36,7 @@ import { formStatus } from '../../../utils/constants'
 import { ActionDialog } from '../../../components/Dialog'
 import MessageAlert from '../../../components/MessageAlert'
 import FloatButton from '../../../components/FloatButton'
-import { propAccessor, formatError } from '../../../utils/helpers'
+import { objectAccessor, formatError } from '../../../utils/helpers'
 import SwitchInput from './FormProperties/SwitchInput'
 
 // here we get existing google forms and we mix them with our own created forms
@@ -180,7 +180,7 @@ export function FormMenu({ formId, formName, anchorEl, handleClose, open, refetc
 
   function updateForm(){
     publish({
-      variables: { id: formId, status: propAccessor(formStatus, actionType)}
+      variables: { id: formId, status: objectAccessor(formStatus, actionType)}
     })
     .then(() => {
       setMessage({isError: false, detail: t('misc.form_action_success', { status: t(`form_status.${actionType}`)})})

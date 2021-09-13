@@ -19,6 +19,7 @@ import {
 } from '../../../graphql/mutations';
 import { Spinner } from "../../../shared/Loading";
 import { isTimeValid, getWeekDay } from '../../../utils/dateutil';
+import { objectAccessor } from '../../../utils/helpers'
 import { userState, userType, communityVisitingHours, defaultBusinessReasons } from '../../../utils/constants'
 import { ModalDialog, ReasonInputModal } from "../../../components/Dialog"
 import { dateToString, dateTimeToString, updateDateWithTime } from "../../../components/DateContainer";
@@ -79,7 +80,7 @@ export default function RequestUpdate({ id, previousRoute, isGuestRequest, tabVa
   const requiredFields = authState?.user?.community?.communityRequiredFields?.manualEntryRequestForm || defaultRequiredFields
   const { t } = useTranslation(['common', 'logbook'])
   const [isReasonModalOpen, setReasonModal] = useState(false)
-  
+
   useEffect(() => {
     if (id) {
       loadRequest({ variables: { id } })
@@ -294,7 +295,8 @@ export default function RequestUpdate({ id, previousRoute, isGuestRequest, tabVa
   }
   function checkTimeIsValid(){
     const communityName = authState.user.community.name
-    const visitingHours = communityVisitingHours[String(communityName.toLowerCase())];
+    const accessor = communityName.toLowerCase()
+    const visitingHours = objectAccessor(communityVisitingHours, accessor)
 
     return isTimeValid({ date, visitingHours })
   }
@@ -613,7 +615,7 @@ export default function RequestUpdate({ id, previousRoute, isGuestRequest, tabVa
               {
                 Object.keys(defaultBusinessReasons).map(_reason => (
                   <MenuItem key={_reason} value={_reason}>
-                    {t(`logbook:business_reasons.${_reason}`) || defaultBusinessReasons[String(_reason)]}
+                    {t(`logbook:business_reasons.${_reason}`) || objectAccessor(defaultBusinessReasons, _reason)}
                   </MenuItem>
                   ))
               }
@@ -621,7 +623,7 @@ export default function RequestUpdate({ id, previousRoute, isGuestRequest, tabVa
           </div>
 
           {
-            // TODO: Find better ways to disable specific small feature per community 
+            // TODO: Find better ways to disable specific small feature per community
             !reqId && authState.user.community.name !== 'Ciudad Morazán' && !isGuestRequest && (
               <div className="form-group">
                 <TextField

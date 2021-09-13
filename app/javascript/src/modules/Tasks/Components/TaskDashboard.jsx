@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 import { useTranslation } from 'react-i18next';
 import TaskStatCard from './TaskStatCard'
 import CenteredContent from '../../../components/CenteredContent'
-import { propAccessor } from '../../../utils/helpers'
+import { objectAccessor } from '../../../utils/helpers'
 
 export default function TaskDashboard({ taskData, filterTasks, currentTile }) {
   const { t } = useTranslation('task')
@@ -41,7 +41,7 @@ export default function TaskDashboard({ taskData, filterTasks, currentTile }) {
       <TaskStatCard
         filter={evt => filterTasks(evt, key)}
         title={val}
-        count={propAccessor(taskData.data?.taskStats, key)}
+        count={objectAccessor(taskData.data?.taskStats, key)}
         isCurrent={key === currentTile}
       />
     </Grid>

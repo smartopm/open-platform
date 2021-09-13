@@ -22,8 +22,8 @@ import {
   useParamsQuery,
   handleQueryOnChange,
   InvoiceStatusColor,
-  propAccessor,
-  titleize
+  titleize,
+  objectAccessor
 } from '../../../utils/helpers';
 import Label from '../../../shared/label/Label';
 import CenteredContent from '../../../components/CenteredContent';
@@ -499,7 +499,7 @@ export function renderPayment(payment, currencyData, theme, matches) {
             content={
               ['cash'].includes(payment.userTransaction.source)
                 ? 'Cash Deposit'
-                : paymentType[payment.userTransaction.source]
+                : objectAccessor(paymentType, payment.userTransaction.source)
             }
           />
         </Grid>
@@ -519,7 +519,7 @@ export function renderPayment(payment, currencyData, theme, matches) {
         >
           <Label
             title={titleize(payment.status)}
-            color={propAccessor(InvoiceStatusColor, payment?.status)}
+            color={objectAccessor(InvoiceStatusColor, payment?.status)}
           />
         </Grid>
       )

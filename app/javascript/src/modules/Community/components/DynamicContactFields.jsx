@@ -4,7 +4,7 @@ import { DeleteOutline } from '@material-ui/icons'
 import PropTypes from 'prop-types'
 import { useTranslation } from 'react-i18next'
 import { makeStyles } from '@material-ui/styles'
-import { propAccessor } from '../../../utils/helpers'
+import { objectAccessor } from '../../../utils/helpers'
 
 export default function DynamicContactFields({
   options,
@@ -27,7 +27,7 @@ export default function DynamicContactFields({
         style={{ width: '300px'}}
         label={data.label}
         onChange={event => handleChange(event, i)}
-        value={propAccessor(options[parseInt(i, 10)], data.name)}
+        value={objectAccessor(options[parseInt(i, 10)], data.name)}
         name={data.name}
         data-testid='text_field'
       />

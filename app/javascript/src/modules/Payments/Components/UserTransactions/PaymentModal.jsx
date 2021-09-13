@@ -16,7 +16,7 @@ import { CustomizedDialogs } from '../../../../components/Dialog';
 import PaymentCreate from '../../graphql/payment_mutations';
 import { UserLandParcelWithPlan, UsersLiteQuery } from '../../../../graphql/queries';
 import MessageAlert from '../../../../components/MessageAlert';
-import { extractCurrency, formatError, formatMoney } from '../../../../utils/helpers';
+import { extractCurrency, formatError, formatMoney, objectAccessor } from '../../../../utils/helpers';
 import ReceiptModal from './ReceiptModal';
 import { Spinner } from '../../../../shared/Loading';
 import DatePickerDialog from '../../../../components/DatePickerDialog';
@@ -171,16 +171,16 @@ export default function PaymentModal({
     const fields = [...plotInputValue];
     const index = fields.findIndex(val => val.paymentPlanId === paymentPlanId);
     if (value === '') {
-      const a = fields[Number(index)].receiptNumber;
-      const r = fields[Number(index)].amount;
+      const a = objectAccessor(fields, index).receiptNumber;
+      const r = objectAccessor(fields, index).amount;
       if (!a || !r) {
         fields.splice(index, 1);
         return setPlotInputValue(fields);
       }
     }
-    if (fields[Number(index)]) {
+    if (objectAccessor(fields, index)) {
       fields[Number(index)] = {
-        ...fields[Number(index)],
+        ...objectAccessor(fields, index),
         [name]: (name === 'amount' && value !== '') ? parseFloat(value) : value
       };
     } else {

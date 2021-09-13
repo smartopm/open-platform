@@ -9,6 +9,7 @@ import { makeStyles } from '@material-ui/styles';
 import Typography from '@material-ui/core/Typography';
 import { dateToString } from '../../../components/DateContainer';
 import UserPlotMap from './UserPlotMap';
+import { objectAccessor } from '../../../utils/helpers';
 
 export default function UserPlotInfo({ account, userId, userName }) {
   const [plotNumber, setPlotNumber] = useState([]);
@@ -72,7 +73,7 @@ export default function UserPlotInfo({ account, userId, userName }) {
                 </div>
               ))}
               <Typography variant="body2">
-                {t('common:misc.plot_details', { date: dateToString(parcels()[Number(parcels().length - 1)]?.updatedAt) })}
+                {t('common:misc.plot_details', { date: dateToString(objectAccessor(parcels(), parcels().length - 1)?.updatedAt) })}
                 <span className={classes.supportLink}>
                   &nbsp;
                   <Link data-testid="support_link" to="/contact" className={classes.routeLink}>

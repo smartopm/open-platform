@@ -25,7 +25,7 @@ import {
   formatError,
   formatMoney,
   InvoiceStatusColor,
-  propAccessor,
+  objectAccessor,
   capitalize,
   titleize
 } from '../../../../utils/helpers';
@@ -566,8 +566,8 @@ export function renderPlan(
         {planList ? (
           <Grid item xs={9} md={2} style={{ marginTop: '10px' }} data-testid="status">
             <Label
-              title={propAccessor(invoiceStatus, plan?.status)}
-              color={propAccessor(InvoiceStatusColor, plan?.status)}
+              title={objectAccessor(invoiceStatus, plan?.status)}
+              color={objectAccessor(InvoiceStatusColor, plan?.status)}
             />
           </Grid>
         ) : (
@@ -669,8 +669,8 @@ export function renderPayments(pay, currencyData, userType, menuData) {
     Status: (
       <Grid item xs={12} md={2} data-testid="status">
         <Label
-          title={propAccessor(invoiceStatus, pay.status)}
-          color={propAccessor(InvoiceStatusColor, pay.status)}
+          title={objectAccessor(invoiceStatus, pay.status)}
+          color={objectAccessor(InvoiceStatusColor, pay.status)}
         />
       </Grid>
     ),

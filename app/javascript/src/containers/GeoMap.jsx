@@ -15,7 +15,7 @@ import LandParcelMarker from '../components/Map/LandParcelMarker'
 import PointsOfInterestMarker from '../components/Map/PointsOfInterestMarker'
 import LandParcelLegend from '../components/Map/LandParcelLegend'
 import SubUrbanLayer from '../components/Map/SubUrbanLayer'
-import { checkValidGeoJSON } from '../utils/helpers'
+import { checkValidGeoJSON, objectAccessor } from '../utils/helpers'
 import { emptyPolygonFeature, mapTiles, publicMapToken, plotStatusColorPallete } from '../utils/constants'
 import PointOfInterestDrawerDialog from '../components/Map/PointOfInterestDrawerDialog'
 import { CurrentCommunityQuery } from '../modules/Community/graphql/community_query'
@@ -30,7 +30,7 @@ function getColor(plotSold){
 
 /* istanbul ignore next */
 function getHouseColor(status){
-  return plotStatusColorPallete[String(status)]
+  return objectAccessor(plotStatusColorPallete, status)
 }
 
 function geoJSONPlotStyle(feature) {
@@ -112,7 +112,7 @@ export default function GeoMap() {
 
   /* istanbul ignore next */
   function handlePoiLayerClick({ target }){
-    const { properties: { id, icon, poi_name: poiName, parcel_no: parcelNumber, parcel_type: parcelType, long_x: longX, lat_y: latY } 
+    const { properties: { id, icon, poi_name: poiName, parcel_no: parcelNumber, parcel_type: parcelType, long_x: longX, lat_y: latY }
   } = target.feature
 
     setSelectedPoi({
@@ -189,11 +189,11 @@ export default function GeoMap() {
       return [0, 0];
     }
 
-    return centerPoint[communityName.toLowerCase()]
+    return objectAccessor(centerPoint, communityName.toLowerCase())
   }
 
   function handleMapZoom({ target }){
-    const zoomLevel = target[String('_zoom')]
+    const zoomLevel = objectAccessor(target, '_zoom')
     if(!geoData && zoomLevel >= 13){
       loadGeoData()
     }

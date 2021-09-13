@@ -8,13 +8,16 @@ import { useApolloClient, useMutation, useQuery } from 'react-apollo';
 import { useHistory } from 'react-router';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
-import DatePickerDialog, {DateAndTimePickers, ThemedTimePicker} from '../../../components/DatePickerDialog';
+import DatePickerDialog, {
+  DateAndTimePickers,
+  ThemedTimePicker
+} from '../../../components/DatePickerDialog';
 import { FormUserQuery, UserFormPropertiesQuery } from '../graphql/forms_queries';
 import ErrorPage from '../../../components/Error';
 import CenteredContent from '../../../components/CenteredContent';
 import { FormUserStatusUpdateMutation, FormUserUpdateMutation } from '../graphql/forms_mutation';
 import TextInput from './FormProperties/TextInput';
-import { convertBase64ToFile, sortPropertyOrder } from '../../../utils/helpers';
+import { convertBase64ToFile, sortPropertyOrder, objectAccessor } from '../../../utils/helpers';
 import DialogueBox from '../../../shared/dialogs/DeleteDialogue';
 import UploadField from './FormProperties/UploadField';
 import SignaturePad from './FormProperties/SignaturePad';
@@ -34,7 +37,7 @@ const initialData = {
   fieldType: '',
   fieldName: ' ',
   date: { value: null },
-  radio: { value: { label: '', checked: null } },
+  radio: { value: { label: '', checked: null } }
 };
 
 export default function FormUpdate({ formUserId, userId, authState }) {
@@ -53,30 +56,31 @@ export default function FormUpdate({ formUserId, userId, authState }) {
   const { data, error, loading } = useQuery(UserFormPropertiesQuery, {
     variables: { userId, formUserId },
     fetchPolicy: 'network-only',
-    errorPolicy: 'all',
+    errorPolicy: 'all'
   });
 
   const formUserData = useQuery(FormUserQuery, {
     variables: { userId, formUserId },
     fetchPolicy: 'network-only',
-    errorPolicy: 'all',
+    errorPolicy: 'all'
   });
 
   const { onChange, status, url, signedBlobId } = useFileUpload({
-    client: useApolloClient(),
+    client: useApolloClient()
   });
   const {
     onChange: uploadSignature,
     status: signatureStatus,
-    signedBlobId: signatureBlobId,
+    signedBlobId: signatureBlobId
   } = useFileUpload({
-    client: useApolloClient(),
+    client: useApolloClient()
   });
 
-
   useEffect(() => {
-    const checkboxProperties = data?.formUserProperties?.filter((prop) => prop.formProperty.fieldType === 'checkbox')
-    checkboxProperties?.forEach((checkboxProp) => {
+    const checkboxProperties = data?.formUserProperties?.filter(
+      prop => prop.formProperty.fieldType === 'checkbox'
+    );
+    checkboxProperties?.forEach(checkboxProp => {
       setProperties({
         ...properties,
         [checkboxProp.formProperty.fieldName]: {
@@ -84,8 +88,8 @@ export default function FormUpdate({ formUserId, userId, authState }) {
           form_property_id: checkboxProp.formProperty.id
         }
       });
-    })
-  }, [data])
+    });
+  }, [data]);
 
   async function handleSignatureUpload() {
     setMessage({ ...message, signed: true });
@@ -99,7 +103,7 @@ export default function FormUpdate({ formUserId, userId, authState }) {
     const { name, value } = event.target;
     setProperties({
       ...properties,
-      [name]: { value, form_property_id: propId },
+      [name]: { value, form_property_id: propId }
     });
   }
 
@@ -108,7 +112,7 @@ export default function FormUpdate({ formUserId, userId, authState }) {
     setProperties({
       ...properties,
       [fieldName]: {
-        value: { ...properties[fieldName]?.value, [name]: checked },
+        value: { ...objectAccessor(properties, fieldName)?.value, [name]: checked },
         form_property_id: propId
       }
     });
@@ -117,7 +121,7 @@ export default function FormUpdate({ formUserId, userId, authState }) {
   function handleDateChange(date, id, name) {
     setProperties({
       ...properties,
-      [name]: { value: date, form_property_id: id },
+      [name]: { value: date, form_property_id: id }
     });
   }
 
@@ -125,7 +129,7 @@ export default function FormUpdate({ formUserId, userId, authState }) {
     const { name, value } = event.target;
     setProperties({
       ...properties,
-      [fieldName]: { value: { checked: value, label: name }, form_property_id: propId },
+      [fieldName]: { value: { checked: value, label: name }, form_property_id: propId }
     });
   }
 
@@ -133,31 +137,31 @@ export default function FormUpdate({ formUserId, userId, authState }) {
     updateFormUserStatus({
       variables: {
         formUserId,
-        status: formStatus,
-      },
+        status: formStatus
+      }
     })
       .then(() =>
         setMessage({
           ...message,
           err: false,
-          info: t('misc.form_action_success', { status: t(`form_status.${formStatus}`) }),
+          info: t('misc.form_action_success', { status: t(`form_status.${formStatus}`) })
         })
       )
-      .catch((err) => setMessage({ ...message, err: true, info: err.message }));
+      .catch(err => setMessage({ ...message, err: true, info: err.message }));
   }
 
   function saveFormData() {
     const fileUploadType = data.formUserProperties.filter(
-      (item) => item.formProperty.fieldType === 'image'
+      item => item.formProperty.fieldType === 'image'
     )[0];
     const fileSignType = data.formUserProperties.filter(
-      (item) => item.formProperty.fieldType === 'signature'
+      item => item.formProperty.fieldType === 'signature'
     )[0];
 
     // get values from properties state
     const formattedProperties = Object.entries(properties).map(([, value]) => value);
     const filledInProperties = formattedProperties.filter(
-      (item) => item.value && item.value?.checked !== null && item.form_property_id !== null
+      item => item.value && item.value?.checked !== null && item.form_property_id !== null
     );
 
     // get signedBlobId as value and attach it to the form_property_id
@@ -165,7 +169,7 @@ export default function FormUpdate({ formUserId, userId, authState }) {
       const newValue = {
         value: signatureBlobId,
         form_property_id: fileSignType.formProperty.id,
-        image_blob_id: signatureBlobId,
+        image_blob_id: signatureBlobId
       };
       filledInProperties.push(newValue);
     }
@@ -174,7 +178,7 @@ export default function FormUpdate({ formUserId, userId, authState }) {
       const newValue = {
         value: signedBlobId,
         form_property_id: fileUploadType.formProperty.id,
-        image_blob_id: signedBlobId,
+        image_blob_id: signedBlobId
       };
       filledInProperties.push(newValue);
     }
@@ -185,18 +189,18 @@ export default function FormUpdate({ formUserId, userId, authState }) {
       variables: {
         userId,
         formUserId,
-        propValues: cleanFormData,
-      },
+        propValues: cleanFormData
+      }
     })
       .then(() => {
         setLoading(false);
         setMessage({
           ...message,
           err: false,
-          info: t('misc.form_action_success', { status: 'updated' }),
+          info: t('misc.form_action_success', { status: 'updated' })
         });
       })
-      .catch((err) => {
+      .catch(err => {
         setLoading(false);
         setMessage({ ...message, err: true, info: err.message });
       });
@@ -243,7 +247,7 @@ export default function FormUpdate({ formUserId, userId, authState }) {
           key={formPropertiesData.formProperty.id}
           properties={formPropertiesData.formProperty}
           value={formPropertiesData.value}
-          handleValue={(event) => handleValueChange(event, formPropertiesData.formProperty.id)}
+          handleValue={event => handleValueChange(event, formPropertiesData.formProperty.id)}
           editable={editable}
           name={formPropertiesData.formProperty.fieldName}
         />
@@ -251,16 +255,34 @@ export default function FormUpdate({ formUserId, userId, authState }) {
       date: (
         <DatePickerDialog
           key={formPropertiesData.formProperty.id}
-          selectedDate={properties[String(formPropertiesData.formProperty.fieldName)]?.value || formPropertiesData.value}
-          handleDateChange={(date) => handleDateChange(date, formPropertiesData.formProperty.id, formPropertiesData.formProperty.fieldName)}
+          selectedDate={
+            objectAccessor(properties, formPropertiesData.formProperty.fieldName)?.value ||
+            formPropertiesData.value
+          }
+          handleDateChange={date =>
+            handleDateChange(
+              date,
+              formPropertiesData.formProperty.id,
+              formPropertiesData.formProperty.fieldName
+            )
+          }
           label={formPropertiesData.formProperty.fieldName}
         />
       ),
       time: (
         <ThemedTimePicker
           key={formPropertiesData.formProperty.id}
-          time={properties[String(formPropertiesData.formProperty.fieldName)]?.value || formPropertiesData.value}
-          handleTimeChange={(date) => handleDateChange(date, formPropertiesData.formProperty.id, formPropertiesData.formProperty.fieldName)}
+          time={
+            objectAccessor(properties, formPropertiesData.formProperty.fieldName)?.value ||
+            formPropertiesData.value
+          }
+          handleTimeChange={date =>
+            handleDateChange(
+              date,
+              formPropertiesData.formProperty.id,
+              formPropertiesData.formProperty.fieldName
+            )
+          }
           label={formPropertiesData.formProperty.fieldName}
           style={{ width: '100%' }}
         />
@@ -268,8 +290,17 @@ export default function FormUpdate({ formUserId, userId, authState }) {
       datetime: (
         <DateAndTimePickers
           key={formPropertiesData.formProperty.id}
-          selectedDateTime={properties[String(formPropertiesData.formProperty.fieldName)]?.value || formPropertiesData.value}
-          handleDateChange={(date) => handleDateChange(date, formPropertiesData.formProperty.id, formPropertiesData.formProperty.fieldName)}
+          selectedDateTime={
+            objectAccessor(properties, formPropertiesData.formProperty.fieldName)?.value ||
+            formPropertiesData.value
+          }
+          handleDateChange={date =>
+            handleDateChange(
+              date,
+              formPropertiesData.formProperty.id,
+              formPropertiesData.formProperty.fieldName
+            )
+          }
           label={formPropertiesData.formProperty.fieldName}
         />
       ),
@@ -290,7 +321,7 @@ export default function FormUpdate({ formUserId, userId, authState }) {
           <UploadField
             detail={{ type: 'file', status }}
             key={formPropertiesData.id}
-            upload={(evt) => onChange(evt.target.files[0])}
+            upload={evt => onChange(evt.target.files[0])}
             editable={editable}
           />
         </div>
@@ -319,7 +350,7 @@ export default function FormUpdate({ formUserId, userId, authState }) {
           <RadioInput
             properties={formPropertiesData}
             value={properties.radio.value.checked}
-            handleValue={(event) =>
+            handleValue={event =>
               handleRadioValueChange(
                 event,
                 formPropertiesData.formProperty.id,
@@ -336,8 +367,8 @@ export default function FormUpdate({ formUserId, userId, authState }) {
           <br />
           <CheckboxInput
             properties={formPropertiesData}
-            checkboxState={properties[formPropertiesData.formProperty.fieldName]}
-            handleValue={(event) =>
+            checkboxState={objectAccessor(properties, formPropertiesData.formProperty.fieldName)}
+            handleValue={event =>
               handleCheckboxSelect(
                 event,
                 formPropertiesData.formProperty.id,
@@ -354,13 +385,13 @@ export default function FormUpdate({ formUserId, userId, authState }) {
           key={formPropertiesData.formProperty.id}
           properties={formPropertiesData.formProperty}
           value={formPropertiesData.value}
-          handleValue={(event) => handleValueChange(event, formPropertiesData.formProperty.id)}
+          handleValue={event => handleValueChange(event, formPropertiesData.formProperty.id)}
           editable={editable}
           name={formPropertiesData.formProperty.fieldName}
         />
-      ),
+      )
     };
-    return fields[formPropertiesData.formProperty.fieldType];
+    return objectAccessor(fields, formPropertiesData.formProperty.fieldType);
   }
 
   if (loading || formUserData.loading) return <Loading />;
@@ -374,18 +405,19 @@ export default function FormUpdate({ formUserId, userId, authState }) {
           name={formUserData.data?.formUser.form.name}
           description={formUserData.data?.formUser.form.description}
         />
-        <form onSubmit={(event) => handleActionClick(event, 'update')}>
+        <form onSubmit={event => handleActionClick(event, 'update')}>
           {authState.user.userType === 'admin' && userId && (
             <>
               <TextField
                 label={t('form_fields.form_status')}
-                value={`${updatedFormStatus[formUserData.data?.formUser.status]} - ${dateFormatter(
-                  formUserData.data?.formUser.updatedAt
-                )}`}
+                value={`${objectAccessor(
+                  updatedFormStatus,
+                  formUserData.data?.formUser.status
+                )} - ${dateFormatter(formUserData.data?.formUser.updatedAt)}`}
                 disabled
                 margin="dense"
                 InputLabelProps={{
-                  shrink: true,
+                  shrink: true
                 }}
                 style={{ width: '100%' }}
               />
@@ -395,7 +427,7 @@ export default function FormUpdate({ formUserId, userId, authState }) {
                 disabled
                 margin="dense"
                 InputLabelProps={{
-                  shrink: true,
+                  shrink: true
                 }}
                 style={{ width: '100%' }}
               />
@@ -418,7 +450,7 @@ export default function FormUpdate({ formUserId, userId, authState }) {
               <>
                 <Button
                   variant="contained"
-                  onClick={(event) => handleActionClick(event, 'approve')}
+                  onClick={event => handleActionClick(event, 'approve')}
                   color="primary"
                   aria-label="form_approve"
                   style={{ marginLeft: '10vw' }}
@@ -428,7 +460,7 @@ export default function FormUpdate({ formUserId, userId, authState }) {
                 </Button>
                 <Button
                   variant="contained"
-                  onClick={(event) => handleActionClick(event, 'reject')}
+                  onClick={event => handleActionClick(event, 'reject')}
                   aria-label="form_reject"
                   style={{ marginLeft: '10vw', backgroundColor: '#DC004E', color: '#FFFFFF' }}
                   disabled={isLoading}
@@ -467,6 +499,6 @@ FormUpdate.propTypes = {
   formUserId: PropTypes.string.isRequired,
   authState: PropTypes.shape({
     user: PropTypes.shape({ userType: PropTypes.string }),
-    token: PropTypes.string,
-  }).isRequired,
+    token: PropTypes.string
+  }).isRequired
 };

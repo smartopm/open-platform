@@ -12,7 +12,7 @@ import Balance from './UserBalance';
 import { UserLandParcels, UserBalance } from '../../../../graphql/queries';
 import DepositQuery, { UserPlans } from '../../graphql/payment_query';
 import { Spinner } from '../../../../shared/Loading';
-import { formatError, useParamsQuery } from '../../../../utils/helpers';
+import { formatError, useParamsQuery, objectAccessor } from '../../../../utils/helpers';
 import { currencies } from '../../../../utils/constants';
 import CenteredContent from '../../../../components/CenteredContent';
 import Paginate from '../../../../components/Paginate';
@@ -67,7 +67,7 @@ export default function PaymentPlans({ userId, user, userData }) {
     errorPolicy: 'all'
   });
 
-  const currency = currencies[user.community.currency] || '';
+  const currency = objectAccessor(currencies, user.community.currency) || '';
   const { locale } = user.community;
   const currencyData = { currency, locale };
 

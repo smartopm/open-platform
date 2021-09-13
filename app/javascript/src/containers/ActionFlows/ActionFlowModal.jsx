@@ -37,7 +37,7 @@ import {
 // from a different module
 import { EmailTemplatesQuery } from '../../modules/Emails/graphql/email_queries';
 import QueryBuilder from '../../components/QueryBuilder';
-import { titleize, capitalize, sentencizeAction } from '../../utils/helpers';
+import { titleize, capitalize, sentencizeAction, objectAccessor } from '../../utils/helpers';
 import { dateWidget, NotesCategories, defaultBusinessReasons } from '../../utils/constants';
 import UserAutoResult from '../../shared/UserAutoResult';
 
@@ -377,7 +377,7 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
                     labelId={`select-${actionField.name}`}
                     id={`${actionField.name}-id-section`}
                     name={actionField.name}
-                    value={data[actionField.name] || ''}
+                    value={objectAccessor(data, actionField.name) || ''}
                     onChange={handleSelect}
                     fullWidth
                   >
@@ -400,7 +400,7 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
                     labelId={`select-${actionField.name}`}
                     id={`${actionField.name}-id-section`}
                     name={actionField.name}
-                    value={data[actionField.name] || ''}
+                    value={objectAccessor(data, actionField.name) || ''}
                     onChange={handleSelect}
                     fullWidth
                   >
@@ -453,7 +453,7 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
                     labelId={`select-${actionField.name}`}
                     id={`${actionField.name}-id-section`}
                     name={actionField.name}
-                    value={data[actionField.name] || ''}
+                    value={objectAccessor(data, actionField.name) || ''}
                     onChange={handleSelect}
                     fullWidth
                   >
@@ -501,8 +501,8 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
                 key={index}
                 id={`${actionField.name}-action-input`}
                 freeSolo
-                value={metaData[actionField.name]}
-                inputValue={metaData[actionField.name]}
+                value={objectAccessor(metaData, actionField.name)}
+                inputValue={objectAccessor(metaData, actionField.name)}
                 onInputChange={(_event, newValue) => {
                   setMetaData({
                     ...metaData,
@@ -534,8 +534,8 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
                 key={index}
                 id={`${varName}-action-input`}
                 freeSolo
-                value={metaData[varName]}
-                inputValue={metaData[varName]}
+                value={objectAccessor(metaData, varName)}
+                inputValue={objectAccessor(metaData, varName)}
                 onInputChange={(_event, newValue) => {
                   setMetaData({
                     ...metaData,

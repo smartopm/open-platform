@@ -2,6 +2,7 @@
 import parseISO from "date-fns/parseISO";
 import differenceInMinutes from "date-fns/differenceInMinutes";
 import { dateTimeToString, dateToString } from "../../components/DateContainer";
+import { objectAccessor } from '../../utils/helpers';
 
 /**
  * Checks whether the given value is a date, if it is then it formats it properly
@@ -35,9 +36,9 @@ export function checkExtraShifts(formattedShifts){
   const shifts = formattedShifts;
     const extras = []
     for (let index = 0; index < shifts.length; index++) {
-      const current = shifts[Number(index)];
+      const current = objectAccessor(shifts, index);
       // last shift wont have a next value so we equate it to current value and check later
-      const next = shifts.length === index + 1 ? current : shifts[index + 1];
+      const next = shifts.length === index + 1 ? current : objectAccessor(shifts, index + 1);
       if(new Date(next[0]) > new Date(current[0]) && new Date(next[0]) < new Date(current[1])){
         extras.push([current[0], next[1]])
         shifts.splice(index, 1)
@@ -61,7 +62,7 @@ export function checkExtraShifts(formattedShifts){
 export function countExtraHours(extraHours) {
   const hours = []
   for (let index = 0; index < extraHours.length; index++) {
-    const element = extraHours[Number(index)];
+    const element = objectAccessor(extraHours, index);
     const diff = differenceInMinutes(parseISO(element[1]), parseISO(element[0]))
     const hoursTime = Math.ceil(diff / 60)
     hours.push(hoursTime)
@@ -79,6 +80,6 @@ export function formatShifts(startShift, exitShift){
   if(!startShift || !exitShift) return []
   // in cases where some start or exit entries were not entered we remove them and sort it to avoid wrong overlaps
   const filteredData = startShift.filter(entry => Boolean(entry.value))
-  const cleaned = filteredData.map((e, i) => [e.value, exitShift[Number(i)].value])
+  const cleaned = filteredData.map((e, i) => [e.value, objectAccessor(exitShift, i).value])
   return cleaned.sort((a, b) => new Date(a[0]) - new Date(b[0]))
 }
