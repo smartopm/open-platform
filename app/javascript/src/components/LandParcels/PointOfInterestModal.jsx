@@ -59,7 +59,7 @@ export default function PointOfInterestModal({
       <CustomizedDialogs
         open={open}
         handleModal={handleClose}
-        dialogHeader={t('dialog_header.new_point_of_interest')}
+        dialogHeader={t('dialog_headers.new_point_of_interest')}
         handleBatchFilter={handlePointOfInterestSubmit}
         saveAction="Save"
         actionable={Boolean(poiName && longX && latY && iconUrl)}
