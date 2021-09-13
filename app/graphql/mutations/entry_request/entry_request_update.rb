@@ -6,6 +6,7 @@ module Mutations
     class EntryRequestUpdate < BaseMutation
       argument :id, ID, required: true
       argument :name, String, required: false
+      argument :email, String, required: false
       argument :nrc, String, required: false
       argument :phone_number, String, required: false
       argument :vehicle_plate, String, required: false
