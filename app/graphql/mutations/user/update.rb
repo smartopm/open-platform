@@ -34,7 +34,7 @@ module Mutations
           update_substatus_date(user, vals[:sub_status])
           return { user: user }
         end
-        raise GraphQL::ExecutionError, user.errors.full_messages
+        raise GraphQL::ExecutionError, user.errors.full_messages&.join(', ')
       end
       # rubocop:enable Metrics/AbcSize
 

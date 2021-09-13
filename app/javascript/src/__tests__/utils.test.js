@@ -36,6 +36,7 @@ const allFieldsError = `GraphQL error: name of type String! was provided invalid
 
 const duplicateError = 'GraphQL error: Duplicate Email'
 
+const nonGraphQLError = "PG::UniqueViolation: ERROR: duplicate key value violates unique constraint";
 const fieldError =
   'GraphQL error: userType of type String! was provided invalid value'
 const requiredKeys = ['userType', 'phoneNumber', 'name', 'email']
@@ -114,6 +115,13 @@ describe('sanitize GraphQL errors', () => {
   it('should return cleaned error when multiple fields are missing', () => {
     expect(saniteError(requiredKeys, allFieldsError)).toBe(
       'User Type or Phone Number or name value is required'
+    )
+  })
+
+  // if the error is not related to GraphQL or missing value
+  it('should return unexpected error happened mesage', () => {
+    expect(saniteError(requiredKeys, nonGraphQLError)).toBe(
+      'Unexpected error happened, Please try again'
     )
   })
 })

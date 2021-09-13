@@ -63,7 +63,7 @@ module Users
                         joins(:labels).where(labels: { short_desc: label&.split(',') })
                       }
 
-    belongs_to :community, dependent: :destroy
+    belongs_to :community
     has_many :entry_requests, class_name: 'Logs::EntryRequest', dependent: :destroy
     has_many :granted_entry_requests, class_name: 'Logs::EntryRequest', foreign_key: :grantor_id,
                                       dependent: :destroy, inverse_of: :user
@@ -131,6 +131,10 @@ module Users
     validates :state, inclusion: { in: VALID_STATES, allow_nil: true }
     validates :sub_status, inclusion: { in: sub_statuses.keys, allow_nil: true }
     validates :name, presence: true
+    validates :email, uniqueness: {
+      scope: :community_id,
+      case_sensitive: true,
+    }
     validate :phone_number_valid?
     after_create :add_notification_preference
     before_update :log_sub_status_change, if: :sub_status_changed?

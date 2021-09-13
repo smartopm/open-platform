@@ -4,7 +4,7 @@ require 'rails_helper'
 
 RSpec.describe Users::User, type: :model do
   describe 'associations' do
-    it { is_expected.to belong_to(:community).dependent(:destroy) }
+    it { is_expected.to belong_to(:community) }
     it do
       is_expected
         .to have_many(:entry_requests)
@@ -165,6 +165,18 @@ RSpec.describe Users::User, type: :model do
       should define_enum_for(:sub_status)
         .with_values(Users::User.sub_statuses)
     }
+  end
+
+  describe 'scoped validations' do
+    let!(:user) { create(:user_with_community, email: 'john@doublegdp.com') }
+    it 'checks for uniqueness of email per community' do
+      expect do
+        user.community.users.create!(name: 'john doe', email: 'JOHN@DOUBLEGDP.COM')
+      end.to raise_error(
+        ActiveRecord::RecordInvalid,
+        'Validation failed: Email has already been taken',
+      )
+    end
   end
 
   describe 'Creating a user from a oauth authentication callback' do
