@@ -178,7 +178,7 @@ export default function PaymentModal({
         return setPlotInputValue(fields);
       }
     }
-    if (fields[Number(index)]) {
+    if (objectAccessor(fields, index)) {
       fields[Number(index)] = {
         ...objectAccessor(fields, index),
         [name]: (name === 'amount' && value !== '') ? parseFloat(value) : value

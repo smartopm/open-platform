@@ -22,7 +22,6 @@ import {
   useParamsQuery,
   handleQueryOnChange,
   InvoiceStatusColor,
-  propAccessor,
   titleize,
   objectAccessor
 } from '../../../utils/helpers';
@@ -520,7 +519,7 @@ export function renderPayment(payment, currencyData, theme, matches) {
         >
           <Label
             title={titleize(payment.status)}
-            color={propAccessor(InvoiceStatusColor, payment?.status)}
+            color={objectAccessor(InvoiceStatusColor, payment?.status)}
           />
         </Grid>
       )

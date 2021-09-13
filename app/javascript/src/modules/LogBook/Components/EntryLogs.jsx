@@ -229,7 +229,7 @@ export function IndexComponent({
   if (tabValue === 3) {
     observationLogs = data?.result?.reduce((groups, log) => {
       const date = log.createdAt.split('T')[0];
-      if (!groups[String(date)]) {
+      if (!objectAccessor(groups, date)) {
         // eslint-disable-next-line no-param-reassign
         groups[String(date)] = [];
       }

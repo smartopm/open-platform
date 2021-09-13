@@ -6,7 +6,7 @@ import Grid from '@material-ui/core/Grid';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
-import { propAccessor } from '../../utils/helpers';
+import { objectAccessor } from '../../utils/helpers';
 import ListHeader from './ListHeader';
 import CenteredContent from '../../components/CenteredContent';
 
@@ -78,7 +78,7 @@ export function CellData({ propNames, dataObj }) {
     <Fragment
       key={prop.title}
     >
-      {propAccessor(dataObj, prop.title)}
+      {objectAccessor(dataObj, prop.title)}
     </Fragment>
   ));
 }
@@ -95,7 +95,7 @@ export function MobileCellData({ propNames, dataObj, singlePropName }) {
     >
       <div style={{margin: '20px 10px', ...prop.style}}>
         {!singlePropName && <div style={{ fontWeight: 'bold', fontSize: '13px' }}>{prop.title}</div>}
-        {propAccessor(dataObj, prop.title)}
+        {objectAccessor(dataObj, prop.title)}
       </div>
     </Fragment>
   ));

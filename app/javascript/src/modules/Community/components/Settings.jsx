@@ -17,7 +17,7 @@ import { useFileUpload } from '../../../graphql/useFileUpload';
 import ImageCropper from './ImageCropper';
 import { currencies, locales, languages } from '../../../utils/constants';
 import ImageAuth from '../../../shared/ImageAuth';
-import { formatError, propAccessor, objectAccessor } from '../../../utils/helpers';
+import { formatError, objectAccessor } from '../../../utils/helpers';
 import { Spinner } from '../../../shared/Loading';
 import ColorPicker from './ColorPicker';
 import { validateThemeColor } from '../helpers';
@@ -475,7 +475,7 @@ export default function CommunitySettings({ data, token, refetch }) {
                   style={{ width: '300px' }}
                   label={t('common:form_fields.link')}
                   onChange={event => handleMenuItemChange(event, i)}
-                  value={propAccessor(objectAccessor(menuItemOptions, i), 'menu_link')}
+                  value={objectAccessor(objectAccessor(menuItemOptions, i), 'menu_link')}
                   name="menu_link"
                   data-testid="menu-link-input"
                 />
@@ -485,7 +485,7 @@ export default function CommunitySettings({ data, token, refetch }) {
                   className={classes.menuItemRight}
                   label={t('common:form_fields.name')}
                   onChange={event => handleMenuItemChange(event, i)}
-                  value={propAccessor(objectAccessor(menuItemOptions, i), 'menu_name')}
+                  value={objectAccessor(objectAccessor(menuItemOptions, i), 'menu_name')}
                   name="menu_name"
                   data-testid="menu-name-input"
                 />
@@ -497,7 +497,7 @@ export default function CommunitySettings({ data, token, refetch }) {
                   options={roleOptions}
                   type="chip"
                   handleOnChange={event => handleMenuItemChange(event, i)}
-                  selectedOptions={propAccessor(objectAccessor(menuItemOptions, i), 'roles')}
+                  selectedOptions={objectAccessor(objectAccessor(menuItemOptions, i), 'roles')}
                 />
                 <span className={classes.menuItemRight}>
                   <MultiSelect
@@ -505,7 +505,7 @@ export default function CommunitySettings({ data, token, refetch }) {
                     fieldName="display_on"
                     options={quickLinksDisplayOptions}
                     handleOnChange={event => handleMenuItemChange(event, i)}
-                    selectedOptions={propAccessor(objectAccessor(menuItemOptions, i), 'display_on')}
+                    selectedOptions={objectAccessor(objectAccessor(menuItemOptions, i), 'display_on')}
                   />
                 </span>
               </div>

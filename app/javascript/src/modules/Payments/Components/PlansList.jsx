@@ -9,7 +9,6 @@ import DataList from '../../../shared/list/DataList';
 import {
   formatMoney,
   InvoiceStatusColor,
-  propAccessor,
   titleize,
   capitalize,
   objectAccessor
@@ -288,7 +287,7 @@ export function renderSubscriptionPlans(subscription, currencyData, menuData) {
         <Grid item xs={12} md={2} data-testid="subscription_status" style={{ width: '90px' }}>
           <Label
             title={capitalize(subscription.status).split("_").join("")}
-            color={propAccessor(InvoiceStatusColor, subscription?.status)}
+            color={objectAccessor(InvoiceStatusColor, subscription?.status)}
           />
         </Grid>
       ),

@@ -11,13 +11,13 @@ import Typography from '@material-ui/core/Typography';
 import HeadsetMicIcon from '@material-ui/icons/HeadsetMic';
 import { customerJourneyBar, customerJourneyStatus, customerJourneyLink } from "../../../utils/constants"
 import CustomerJourneyStatusBar from './CustomerJourneyStatusBar'
-import { propAccessor } from '../../../utils/helpers';
+import { objectAccessor } from '../../../utils/helpers';
 
 export default function CustomerJourneyStatus({ subStatus, communityName }){
   const classes = useStyles();
   const matches = useMediaQuery('(max-width:600px)')
   const { t } = useTranslation(['dashboard', 'common'])
-  const barCount = propAccessor(customerJourneyBar, subStatus)
+  const barCount = objectAccessor(customerJourneyBar, subStatus)
   const coloredBarArray = Array.apply(null, Array(barCount))
   const nonColoredBarArray = Array.apply(null, Array(6 - barCount))
   return (
@@ -26,7 +26,7 @@ export default function CustomerJourneyStatus({ subStatus, communityName }){
         <Typography className={matches ? classes.titleMobile : classes.title} data-testid='customer'>{t('dashboard.your_customer_journey')}</Typography>
         <Typography className={matches ? classes.countMobile : classes.count} data-testid='customer_steps'>
           {barCount}
-          /6 
+          /6
           {' '}
           {t('common:misc.step', { count: 0 })}
         </Typography>
@@ -48,15 +48,15 @@ export default function CustomerJourneyStatus({ subStatus, communityName }){
         )}
       </Grid>
       <div style={matches ? {margin: '5px 20px 0 20px'} : {display: 'flex', margin: '20px 79px 0 79px'}}>
-        <Typography className={matches ? classes.statusMobile : classes.status}>{propAccessor(customerJourneyStatus, subStatus)}</Typography>
+        <Typography className={matches ? classes.statusMobile : classes.status}>{objectAccessor(customerJourneyStatus, subStatus)}</Typography>
         {communityName === 'Nkwashi' && (
           <div style={{display: 'flex', marginLeft: 'auto'}}>
-            <HeadsetMicIcon style={matches ? 
-              {color: '#66A59A', verticalAlign: 'middle', height: '15.4px', width: '11.9px', marginRight: '7px'} : 
-              {color: '#66A59A', verticalAlign: 'middle', height: '22.18px', width: '17.14px', marginRight: '17px'}} 
+            <HeadsetMicIcon style={matches ?
+              {color: '#66A59A', verticalAlign: 'middle', height: '15.4px', width: '11.9px', marginRight: '7px'} :
+              {color: '#66A59A', verticalAlign: 'middle', height: '22.18px', width: '17.14px', marginRight: '17px'}}
             />
             <Typography className={matches ? classes.helpMobile : classes.help}>
-              <Link to={propAccessor(customerJourneyLink, subStatus)}>{t('dashboard.need_help_to_next_journey')}</Link>
+              <Link to={objectAccessor(customerJourneyLink, subStatus)}>{t('dashboard.need_help_to_next_journey')}</Link>
             </Typography>
           </div>
         )}

@@ -2,7 +2,7 @@
 import React, { Fragment } from 'react';
 import { ListItemText, ListItemSecondaryAction, ListItem, List } from '@material-ui/core';
 import { string, number, func, object } from 'prop-types';
-import { propAccessor, toCamelCase } from '../utils/helpers';
+import { objectAccessor, toCamelCase } from '../utils/helpers';
 
 export default function StatusCount({ title, count, handleFilter }) {
   return (
@@ -19,7 +19,7 @@ export function StatusList({ data, statuses, handleFilter }) {
       {Object.entries(statuses).map(([key, val], index) => (
         <Fragment key={key}>
           <StatusCount
-            count={propAccessor(data, toCamelCase(key))}
+            count={objectAccessor(data, toCamelCase(key))}
             title={val}
             handleFilter={() => handleFilter(index)}
           />

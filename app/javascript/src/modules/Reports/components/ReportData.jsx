@@ -44,7 +44,7 @@ export default function ReportData({ formattedData }) {
         <Grid key={i} container direction="row" spacing={2}>
           {Object.keys(formattedData).map(head => (
             <Grid item xs key={head}>
-              {formatCellData(formattedData[String(head)][Number(i)], t)}
+              {formatCellData(objectAccessor(objectAccessor(formattedData, head), i), t)}
             </Grid>
           ))}
         </Grid>

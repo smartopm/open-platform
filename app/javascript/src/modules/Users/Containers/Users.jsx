@@ -26,7 +26,7 @@ import QueryBuilder from '../../../components/QueryBuilder'
 import { dateToString } from '../../../utils/dateutil'
 
 import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider'
-import { pluralizeCount, propAccessor, toTitleCase } from '../../../utils/helpers'
+import { pluralizeCount, objectAccessor, toTitleCase } from '../../../utils/helpers'
 import SubStatusReportDialog from '../../CustomerJourney/Components/SubStatusReport'
 
 const limit = 25
@@ -160,7 +160,7 @@ export default function UsersList() {
             // skipped nested object accessor here until fully tested
             // eslint-disable-next-line security/detect-object-injection
             const property = filterFields[option[operator][0].var]
-            let value = propAccessor(option, operator)[1]
+            let value = objectAccessor(option, operator)[1]
 
             if (operator === '==') operator = '=' // make = the default operator
             if (property === 'date_filter') {
@@ -210,7 +210,7 @@ export default function UsersList() {
       Answered: 'Answered',
       Missed: 'Missed'
     }
-    setModalAction(propAccessor(NoteTypes, noteType))
+    setModalAction(objectAccessor(NoteTypes, noteType))
   }
 
   function inputToSearch() {

@@ -10,6 +10,7 @@ import { dateFormatter } from '../../../components/DateContainer';
 import { userSubStatus } from '../../../utils/constants';
 import UserJourneyDialog from './UserJourneyDialog';
 import CenteredContent from '../../../components/CenteredContent';
+import { objectAccessor } from '../../../utils/helpers';
 
 export function getInitialSubStatusContent({ date, newStatus, previousStatus }) {
   // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -21,11 +22,11 @@ export function getInitialSubStatusContent({ date, newStatus, previousStatus }) 
       {' '}
       {previousStatus ? t("users.from") : t("users.to")}
       {' '}
-      <b>{userSubStatus[String(previousStatus)]}</b>
+      <b>{objectAccessor(userSubStatus, previousStatus)}</b>
       {' '}
       {previousStatus && t("users.to")}
       {' '}
-      <b>{userSubStatus[String(newStatus)]}</b>
+      <b>{objectAccessor(userSubStatus, newStatus)}</b>
       {' '}
       {date}
       {'.'}
@@ -42,11 +43,11 @@ export function getSubStatusChangeContent({ startDate, stopDate, previousStatus,
       {' '}
       {t("users.user_journey_status")}
       {' '}
-      <b>{userSubStatus[String(previousStatus)]}</b>
+      <b>{objectAccessor(userSubStatus, previousStatus)}</b>
       {' '}
       {t("users.to")}
       {' '}
-      <b>{userSubStatus[String(newStatus)]}</b>
+      <b>{objectAccessor(userSubStatus, newStatus)}</b>
       {' '}
       {t("users.between")}
       {' '}
