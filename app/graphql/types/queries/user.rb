@@ -145,9 +145,13 @@ module Types::Queries::User
                ).order(name: :asc)
   end
 
+  # rubocop:disable Metrics/MethodLength
   def users_lite(offset: 0, limit: 50, query: nil)
-    adm = context[:current_user]
-    raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') unless adm.site_manager?
+    current = context[:current_user]
+    unless current.site_manager? || current.site_worker?
+      raise GraphQL::ExecutionError,
+            I18n.t('errors.unauthorized')
+    end
 
     Users::User.allowed_users(context[:current_user])
                .includes(:accounts)
@@ -156,6 +160,7 @@ module Types::Queries::User
                .limit(limit)
                .offset(offset).with_attached_avatar
   end
+  # rubocop:enable Metrics/MethodLength
   # rubocop:enable Metrics/AbcSize
 
   def find_community_user(id)

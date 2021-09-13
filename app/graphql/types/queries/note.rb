@@ -145,7 +145,6 @@ module Types::Queries::Note
       raise GraphQL::ExecutionError,
             I18n.t('errors.unauthorized')
     end
-
     context[:site_community].notes.find(task_id).note_comments.eager_load(:user)
   end
 

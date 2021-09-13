@@ -94,6 +94,20 @@ RSpec.describe Mutations::Note do
       expect(result['errors']).to be_nil
     end
 
+    it 'raises unauthorized if current user is nil' do
+      variables = {
+        userId: user.id,
+        body: 'A note by site worker',
+        category: 'email',
+      }
+      result = DoubleGdpSchema.execute(create_query, variables: variables,
+                                                     context: {
+                                                       current_user: nil,
+                                                       site_community: user.community,
+                                                     }).as_json
+      expect(result.dig('errors', 0, 'message')).to include 'Unauthorized'
+    end
+
     it 'does not return a created note with the right category' do
       variables = {
         userId: user.id,

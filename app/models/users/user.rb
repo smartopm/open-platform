@@ -352,7 +352,7 @@ module Users
       self[:id]
     end
 
-    %w[admin custodian security_guard].each do |user_type|
+    VALID_USER_TYPES.each do |user_type|
       define_method "#{user_type}?" do
         self[:user_type] == user_type
       end

@@ -277,6 +277,7 @@ export default function TodoList({
     setOpenFilter(!filterOpen);
   }
 
+
   function handleQueryOnChange(selectedOptions) {
     if (selectedOptions) {
       const andConjugate = selectedOptions.logic?.and;

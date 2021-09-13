@@ -54,7 +54,7 @@ RSpec.describe Types::Queries::Note do
       )
     end
 
-    let(:first_note_comment) do
+    let!(:first_note_comment) do
       create(:note_comment,
              note: first_note,
              user: site_worker,
@@ -97,6 +97,17 @@ RSpec.describe Types::Queries::Note do
                         name
                         id
                     }
+                }
+            })
+    end
+
+    let(:note_comments_query) do
+      %(query {
+        taskComments(taskId: "#{first_note.id}") {
+                    id
+                    body
+                    userId
+                    createdAt
                 }
             })
     end
@@ -169,6 +180,32 @@ RSpec.describe Types::Queries::Note do
 
     it 'should raise unauthorised error if request does not have a current user' do
       result = DoubleGdpSchema.execute(note_query, context: {
+                                         site_community: site_worker.community,
+                                       }).as_json
+      expect(result.dig('errors', 0, 'message'))
+        .to include('Must be logged in to perform this action')
+    end
+
+    it 'should retrieve note comments with site manager as current user' do
+      result = DoubleGdpSchema.execute(note_comments_query, context: {
+                                         current_user: admin,
+                                         site_community: site_worker.community,
+                                       }).as_json
+      expect(result.dig('data', 'taskComments')).not_to be_empty
+    end
+
+    it 'should retrieve note comments with site worker as current user' do
+      result = DoubleGdpSchema.execute(note_comments_query, context: {
+                                         current_user: site_worker,
+                                         site_community: site_worker.community,
+                                       }).as_json
+      expect(result.dig('data', 'taskComments')).not_to be_empty
+    end
+
+    it 'should raise unautorised error/
+      for retrieve comments when current user is nil' do
+      result = DoubleGdpSchema.execute(note_comments_query, context: {
+                                         current_user: nil,
                                          site_community: site_worker.community,
                                        }).as_json
       expect(result.dig('errors', 0, 'message'))

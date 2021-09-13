@@ -25,6 +25,10 @@ module Policy
             'ability_list' => ['admin@can_see?', 'custodian@can_see?'],
             'can_see_self' => true,
           },
+          'site_worker' => {
+            'ability_list' => ['admin@can_see?', 'site_worker@can_see?'],
+            'can_see_self' => true,
+          },
           'resident' => { 'ability_list' => ['admin@can_see?'], 'can_see_self' => true },
           'visitor' => { 'ability_list' => ['admin@can_see?'], 'can_see_self' => true },
         }
