@@ -150,7 +150,7 @@ export default function PaymentSlider({ data, currencyData }) {
         <div className={classes.spaceBetween}>
           <Typography> </Typography>
           {data?.totalPayments < data?.planValue && (
-            <div className={classes.body} style={checkValuePercentage() ? {marginTop: '-40px', marginLeft: '-40px'} : {}}>
+            <div className={classes.body} style={checkValuePercentage() ? {marginTop: '-50px', marginLeft: '-40px'} : {}}>
               <Typography variant="caption">{t("misc.plan_values")}</Typography>
               <Typography variant="caption" align="center">
                 {formatMoney(currencyData, data?.planValue)}
