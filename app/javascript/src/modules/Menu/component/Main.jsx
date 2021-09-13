@@ -135,11 +135,15 @@ export function MainNav({ authState }) {
               <MenuIcon />
             )}
           </IconButton>
+          
+          {matches && <BackArrow path={path} />}
+          
           {sosAllowedUsers.includes(authState?.user?.userType?.toLowerCase())
            && communityHasEmergencyNumber && communityHasEmergencySMSNumber
            && <SvgIcon component={SOSIcon} viewBox="0 0 384 512" setOpen={setOpen} data-testid="sos-icon" />}
 
-          <BackArrow path={path} />
+          {!matches && <BackArrow path={path} />}
+
           <SOSModal open={open} setOpen={setOpen} location={location} {...{ authState }} />
 
           <UserAvatar imageUrl={authState?.user?.imageUrl} />
