@@ -134,7 +134,6 @@ module Users
     validates :email, uniqueness: {
       scope: :community_id,
       case_sensitive: true,
-      message: :already_exists,
     }
     validate :phone_number_valid?
     after_create :add_notification_preference

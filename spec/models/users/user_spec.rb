@@ -174,7 +174,7 @@ RSpec.describe Users::User, type: :model do
         user.community.users.create!(name: 'john doe', email: 'JOHN@DOUBLEGDP.COM')
       end.to raise_error(
         ActiveRecord::RecordInvalid,
-        'Validation failed: Email already exists for a user in the community',
+        'Validation failed: Email has already been taken',
       )
     end
   end
