@@ -7,6 +7,7 @@ RSpec.describe Mutations::Note::SetNoteReminder do
     let!(:user) { create(:user_with_community) }
     let!(:admin) { create(:admin_user, community_id: user.community_id) }
     let!(:second_admin) { create(:admin_user, community_id: user.community_id) }
+    let!(:site_worker) { create(:site_worker, community_id: user.community_id) }
     let!(:note) do
       admin.notes.create!(
         body: 'Note body',
@@ -70,7 +71,30 @@ RSpec.describe Mutations::Note::SetNoteReminder do
       expect(result['errors']).to be_nil
     end
 
-    it 'throws authorization error if not an admin' do
+    it 'site worker sets a 24 hour reminder and 1 hour/
+     reminder time on assigned note for 2 assignees' do
+      # First assignee
+      note.assign_or_unassign_user(site_worker.id)
+
+      variables = {
+        noteId: note.id,
+        hour: 24,
+      }
+
+      result = DoubleGdpSchema.execute(query, variables: variables,
+                                              context: {
+                                                current_user: site_worker,
+                                                site_community: admin.community,
+                                              }).as_json
+
+      assigned_note = site_worker.assignee_notes.find_by(note: note)
+      expect(assigned_note.reminder_time).not_to be_nil
+      expect(assigned_note.reminder_time.to_datetime
+        .strftime('%d %b %Y, %H:%M')).to eql 24.hours.from_now.strftime('%d %b %Y, %H:%M')
+      expect(result['errors']).to be_nil
+    end
+
+    it 'throws authorization error if not an site manager' do
       note.assign_or_unassign_user(user.id)
 
       variables = {

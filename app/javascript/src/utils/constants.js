@@ -30,7 +30,8 @@ export const userType = {
   prospective_client: 'Prospective Client',
   client: 'Client',
   visitor: 'Visitor',
-  custodian: 'Store Custodian'
+  custodian: 'Store Custodian',
+  site_worker: 'Site Worker'
 };
 
 export const colorPallete = [
@@ -573,14 +574,16 @@ export const paymentFilterFields = {
     'contractor',
     'resident',
     'visitor',
-    'custodian'
+    'custodian',
+    'site_worker'
   ];
 
   export const siteManagers = [
     'admin',
     'security_guard',
     'contractor',
-    'custodian'
+    'custodian',
+    'site_worker'
   ]
 
   export const pointOfInterestIconSet = {

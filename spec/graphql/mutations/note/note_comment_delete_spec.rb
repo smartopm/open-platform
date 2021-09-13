@@ -39,5 +39,17 @@ RSpec.describe Mutations::Note::NoteCommentDelete do
       expect(result.dig('data', 'noteCommentDelete', 'commentDelete')).to eql true
       expect(result['errors']).to be_nil
     end
+
+    it 'raises unauthorized error if current user is nil/missing' do
+      variables = {
+        id: note_comment.id,
+      }
+      result = DoubleGdpSchema.execute(query, variables: variables,
+                                              context: {
+                                                current_user: nil,
+                                              }).as_json
+      expect(result.dig('errors', 0, 'message')).to include('Unauthorized')
+      expect(result['errors']).not_to be_nil
+    end
   end
 end

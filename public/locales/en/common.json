@@ -311,7 +311,8 @@
     "prospective_client": "Prospective Client",
     "security_guard": "Security Guard",
     "resident": "Resident",
-    "contractor": "Contractor"
+    "contractor": "Contractor",
+    "site_worker": "Site Worker"
   },
   "table_headers": {
     "date_created": "Date Created",

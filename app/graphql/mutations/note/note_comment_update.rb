@@ -26,7 +26,12 @@ module Mutations
 
       # Verifies if current user is present or not.
       def authorized?(_vals)
-        return true if context[:current_user].site_manager?
+        return true if context[:current_user]&.site_manager? ||
+                       ::Policy::Note::NotePolicy.new(
+                         context[:current_user], nil
+                       ).permission?(
+                         :can_update_note_comment,
+                       )
 
         raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
       end
