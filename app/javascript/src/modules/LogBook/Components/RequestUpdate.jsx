@@ -451,7 +451,19 @@ export default function RequestUpdate({ id, previousRoute, isGuestRequest, tabVa
                 'Name is Required'}
             />
           </div>
-
+          <div className="form-group">
+            <label className="bmd-label-static" htmlFor="_name">
+              {t('form_fields.email')}
+            </label>
+            <TextField
+              className="form-control"
+              name="email"
+              type="email"
+              onChange={handleInputChange}
+              value={formData.email}
+              inputProps={{ 'data-testid': 'email' }}
+            />
+          </div>
           <div className="form-group">
             <label className="bmd-label-static" htmlFor="nrc">
               {t('form_fields.nrc')}

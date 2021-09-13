@@ -5,6 +5,7 @@ module Mutations
     # Create a new request/pending member
     class EntryRequestCreate < BaseMutation
       argument :name, String, required: true
+      argument :email, String, required: false
       argument :nrc, String, required: false
       argument :phone_number, String, required: false
       argument :vehicle_plate, String, required: false
@@ -36,10 +37,9 @@ module Mutations
         end
       end
 
-      # TODO: Better auth here
-      # Verifies if current user is present or not.
+      # Verifies if current user admin or security guard.
       def authorized?(_vals)
-        return true if context[:current_user]
+        return true if context[:current_user]&.role?(%i[security_guard admin])
 
         raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
       end

@@ -10,11 +10,22 @@ RSpec.describe Mutations::EntryRequest do
 
     let(:query) do
       <<~GQL
-        mutation CreateEntryRequest($name: String!, $reason: String!, $temperature: String) {
-          result: entryRequestCreate(name: $name, reason: $reason, temperature: $temperature) {
+        mutation CreateEntryRequest(
+          $name: String!
+          $reason: String!
+          $temperature: String
+          $email: String
+          ) {
+          result: entryRequestCreate(
+            name: $name
+            reason: $reason
+            temperature: $temperature
+            email: $email
+          ) {
             entryRequest {
               id
               name
+              email
               user {
                 id
               }
@@ -28,12 +39,14 @@ RSpec.describe Mutations::EntryRequest do
       variables = {
         name: 'Mark Percival',
         reason: 'Visiting',
+        email: 'john@xyz.com',
       }
       result = DoubleGdpSchema.execute(query, variables: variables,
                                               context: {
-                                                current_user: user,
+                                                current_user: admin,
                                               }).as_json
       expect(result.dig('data', 'result', 'entryRequest', 'id')).not_to be_nil
+      expect(result.dig('data', 'result', 'entryRequest', 'email')).to eql 'john@xyz.com'
       expect(result['errors']).to be_nil
     end
 
@@ -44,7 +57,7 @@ RSpec.describe Mutations::EntryRequest do
       }
       result = DoubleGdpSchema.execute(query, variables: variables,
                                               context: {
-                                                current_user: nil,
+                                                current_user: user,
                                               }).as_json
       expect(result['errors']).not_to be_nil
       expect(result.dig('errors', 0, 'message')).to include 'Unauthorized'
@@ -58,7 +71,7 @@ RSpec.describe Mutations::EntryRequest do
       }
       result = DoubleGdpSchema.execute(query, variables: variables,
                                               context: {
-                                                current_user: user,
+                                                current_user: admin,
                                               }).as_json
       expect(result.dig('data', 'result', 'entryRequest', 'id')).not_to be_nil
       ref_id = result.dig('data', 'result', 'entryRequest', 'id')
@@ -77,11 +90,12 @@ RSpec.describe Mutations::EntryRequest do
 
     let(:query) do
       <<~GQL
-        mutation UpdateEntryRequest($id: ID!, $name: String) {
-          result: entryRequestUpdate(id: $id, name: $name) {
+        mutation UpdateEntryRequest($id: ID!, $name: String, $email: String) {
+          result: entryRequestUpdate(id: $id, name: $name, email: $email) {
             entryRequest {
               id
               name
+              email
             }
           }
         }
@@ -93,6 +107,7 @@ RSpec.describe Mutations::EntryRequest do
         id: entry_request.id,
         name: 'Mark Smith',
         reason: 'Visiting',
+        email: 'john@xyz.com',
       }
       result = DoubleGdpSchema.execute(query, variables: variables,
                                               context: {
@@ -101,6 +116,7 @@ RSpec.describe Mutations::EntryRequest do
                                               }).as_json
       expect(result.dig('data', 'result', 'entryRequest', 'id')).not_to be_nil
       expect(result.dig('data', 'result', 'entryRequest', 'name')).to eql 'Mark Smith'
+      expect(result.dig('data', 'result', 'entryRequest', 'email')).to eql 'john@xyz.com'
       expect(result['errors']).to be_nil
     end
 

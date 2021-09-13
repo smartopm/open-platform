@@ -224,6 +224,7 @@ export const SendOneTimePasscode = gql`
 export const EntryRequestCreate = gql`
   mutation EntryRequestCreateMutation(
     $name: String!
+    $email: String
     $reason: String
     $vehiclePlate: String
     $nrc: String
@@ -240,6 +241,7 @@ export const EntryRequestCreate = gql`
   ) {
     result: entryRequestCreate(
       name: $name
+      email: $email
       reason: $reason
       vehiclePlate: $vehiclePlate
       nrc: $nrc

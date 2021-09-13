@@ -16,6 +16,7 @@ export const EntryRequestUpdateMutation = gql`
   mutation EntryRequestUpdateMutation(
     $id: ID!
     $name: String!
+    $email: String
     $reason: String
     $vehiclePlate: String
     $nrc: String
@@ -32,6 +33,7 @@ export const EntryRequestUpdateMutation = gql`
     result: entryRequestUpdate(
       id: $id
       name: $name
+      email: $email
       reason: $reason
       vehiclePlate: $vehiclePlate
       nrc: $nrc
