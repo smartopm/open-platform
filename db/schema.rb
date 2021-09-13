@@ -647,7 +647,9 @@ ActiveRecord::Schema.define(version: 2021_09_09_094439) do
     t.uuid "user_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.uuid "updated_by_id"
     t.index ["community_id"], name: "index_substatus_logs_on_community_id"
+    t.index ["updated_by_id"], name: "index_substatus_logs_on_updated_by_id"
     t.index ["user_id"], name: "index_substatus_logs_on_user_id"
   end
 
@@ -865,6 +867,7 @@ ActiveRecord::Schema.define(version: 2021_09_09_094439) do
   add_foreign_key "subscription_plans", "communities"
   add_foreign_key "substatus_logs", "communities"
   add_foreign_key "substatus_logs", "users"
+  add_foreign_key "substatus_logs", "users", column: "updated_by_id"
   add_foreign_key "transactions", "communities"
   add_foreign_key "transactions", "users"
   add_foreign_key "user_form_properties", "form_properties"

@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import Grid from '@material-ui/core/Grid';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
+import { makeStyles } from '@material-ui/core/styles';
 import { dateFormatter } from '../../../components/DateContainer';
 import { userSubStatus } from '../../../utils/constants';
 import UserJourneyDialog from './UserJourneyDialog';
@@ -16,17 +17,18 @@ export function getInitialSubStatusContent({ date, newStatus, previousStatus }) 
   return (
     <span data-testid="initial_log_content">
       {' '}
-      {t("users.change")} 
+      {t("users.change")}
       {' '}
-      {previousStatus ? t("users.from") : t("users.to")} 
+      {previousStatus ? t("users.from") : t("users.to")}
       {' '}
       <b>{userSubStatus[String(previousStatus)]}</b>
       {' '}
-      {previousStatus && t("users.to")} 
+      {previousStatus && t("users.to")}
       {' '}
-      <b>{userSubStatus[String(newStatus)]}</b> 
+      <b>{userSubStatus[String(newStatus)]}</b>
       {' '}
       {date}
+      {'.'}
     </span>
   );
 }
@@ -38,7 +40,7 @@ export function getSubStatusChangeContent({ startDate, stopDate, previousStatus,
   return (
     <span data-testid="log_content">
       {' '}
-      {t("users.user_journey_status")} 
+      {t("users.user_journey_status")}
       {' '}
       <b>{userSubStatus[String(previousStatus)]}</b>
       {' '}
@@ -48,15 +50,16 @@ export function getSubStatusChangeContent({ startDate, stopDate, previousStatus,
       {' '}
       {t("users.between")}
       {' '}
-      {startDate} 
+      {startDate}
       {' '}
       {t("users.and", {date: stopDate})}
+      {'.'}
     </span>
   );
 }
 
 export function subsStatusLogsFormatter(subStatusLogs) {
-  /* 
+  /*
   Sort by startDate. Don't mutate object
   Time lapse = startDate[index + 1] to startDate[index]
   For initial sub-status, change message content.
@@ -75,7 +78,8 @@ export function subsStatusLogsFormatter(subStatusLogs) {
         previousStatus: log.previousStatus,
         userId: log.userId,
         startDate: log.startDate,
-        stopDate: log.stopDate
+        stopDate: log.stopDate,
+        updatedBy: log.updatedBy?.name
       };
     }
 
@@ -91,12 +95,14 @@ export function subsStatusLogsFormatter(subStatusLogs) {
       startDate: log.startDate,
       stopDate: log.stopDate,
       previousStatus,
-      userId: log.userId
+      userId: log.userId,
+      updatedBy: log.updatedBy?.name
     };
   });
 }
 export default function UserJourney({ data, refetch }) {
   const { t } = useTranslation('users')
+  const classes = useStyles();
   const [isEditOpen, setIsEditing] = useState(false);
   const [selectedJourneyLog, setCurrentLog] = useState({});
 
@@ -124,6 +130,14 @@ export default function UserJourney({ data, refetch }) {
             <Typography variant="body2" style={{ marginTop: 10, marginLeft: '12px' }} data-testid="user_journey_content">
               <b>{data.user.name}</b>
               {log.content}
+              {
+                log.updatedBy && (
+                  <span className={classes.changedBy}>
+                    Updated by &nbsp;
+                    <b>{log.updatedBy}</b>
+                  </span>
+                  )
+              }
             </Typography>
           </Grid>
           <Grid item xs={2}>
@@ -141,6 +155,12 @@ export default function UserJourney({ data, refetch }) {
     </>
   );
 }
+
+const useStyles = makeStyles({
+  changedBy: {
+    marginLeft: '0.5em'
+  }
+});
 
 const User = PropTypes.shape({
   name: PropTypes.string,

@@ -6,5 +6,7 @@ FactoryBot.define do
     community
     previous_status { 'plots_fully_purchased' }
     new_status { 'eligible_to_start_construction' }
+    start_date { Time.now.in_time_zone('Africa/Lusaka') }
+    association :updated_by, factory: [:admin_user]
   end
 end
