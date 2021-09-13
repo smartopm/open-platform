@@ -47,7 +47,7 @@ module Users
     end
 
     scope :allowed_users, lambda { |current_user|
-      policy = UserPolicy.new(current_user, nil)
+      policy = ::Policy::User::UserPolicy.new(current_user, nil)
       allowed_user_types = policy.roles_user_can_see
       relat = where(community_id: current_user.community_id)
       return relat if allowed_user_types == '*'
@@ -113,7 +113,7 @@ module Users
     has_paper_trail
 
     VALID_USER_TYPES = %w[security_guard admin resident contractor
-                          prospective_client client visitor custodian].freeze
+                          prospective_client client visitor custodian site_worker].freeze
     VALID_STATES = %w[valid pending banned expired].freeze
     DEFAULT_PREFERENCE = %w[com_news_sms com_news_email weekly_point_reminder_email].freeze
 
@@ -355,7 +355,7 @@ module Users
       self[:id]
     end
 
-    %w[admin custodian security_guard].each do |user_type|
+    VALID_USER_TYPES.each do |user_type|
       define_method "#{user_type}?" do
         self[:user_type] == user_type
       end

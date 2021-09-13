@@ -6,6 +6,7 @@ RSpec.describe Mutations::Note::NoteBulkUpdate do
   describe 'bulk update on tasks' do
     let!(:user) { create(:user_with_community) }
     let!(:admin) { create(:admin_user, community_id: user.community_id) }
+    let!(:site_worker) { create(:site_worker, community_id: user.community_id) }
     let!(:note) do
       admin.notes.create!(
         body: 'Note body',
@@ -55,6 +56,21 @@ RSpec.describe Mutations::Note::NoteBulkUpdate do
       expect(result.dig('data', 'noteBulkUpdate', 'success')).to eql true
     end
 
+    it 'site worker should bulk task update by providing list of ids' do
+      variables = {
+        ids: [note.id, another_note.id],
+        completed: true,
+        query: '',
+      }
+      result = DoubleGdpSchema.execute(query, variables: variables,
+                                              context: {
+                                                current_user: site_worker,
+                                                site_community: admin.community,
+                                              }).as_json
+      expect(result['errors']).to be_nil
+      expect(result.dig('data', 'noteBulkUpdate', 'success')).to eql true
+    end
+
     it 'should handle bulk task update when provided with just a query' do
       variables = {
         ids: [],
@@ -83,6 +99,20 @@ RSpec.describe Mutations::Note::NoteBulkUpdate do
                                               }).as_json
       expect(result['errors']).to be_nil
       expect(result.dig('data', 'noteBulkUpdate', 'success')).to eql true
+    end
+
+    it 'should fail when bulk task update request does not have a current user' do
+      variables = {
+        ids: [note.id, another_note.id],
+        completed: true,
+        query: '',
+      }
+      result = DoubleGdpSchema.execute(query, variables: variables,
+                                              context: {
+                                                site_community: admin.community,
+                                              }).as_json
+      expect(result.dig('errors', 0, 'message')).to include('Unauthorized')
+      expect(result['errors']).not_to be_nil
     end
   end
 end

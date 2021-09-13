@@ -31,6 +31,7 @@ module Mutations
         client: { except: %i[state user_type phone_number email] },
         resident: { except: %i[state user_type phone_number email] },
         contractor: { except: %i[state user_type phone_number email] },
+        site_worker: { except: %i[state user_type phone_number email] },
         custodian: { except: %i[state user_type phone_number email] },
         prospective_client: { except: %i[state user_type phone_number email] },
         visitor: { except: %i[state user_type phone_number email] },

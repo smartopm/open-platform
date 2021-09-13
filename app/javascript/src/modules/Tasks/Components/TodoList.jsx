@@ -116,7 +116,7 @@ export default function TodoList({
   const taskCountData = useQuery(TaskStatsQuery);
 
   const [loadAssignees, { loading, data: liteData }] = useLazyQuery(UsersLiteQuery, {
-    variables: { query: 'user_type:admin OR user_type:custodian OR user_type:security_guard OR user_type:contractor'},
+    variables: { query: 'user_type:admin OR user_type:custodian OR user_type:security_guard OR user_type:contractor OR user_type:site_worker'},
     errorPolicy: 'all'
   });
 
@@ -276,6 +276,7 @@ export default function TodoList({
     }
     setOpenFilter(!filterOpen);
   }
+
 
   function handleQueryOnChange(selectedOptions) {
     if (selectedOptions) {

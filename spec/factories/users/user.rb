@@ -44,5 +44,9 @@ FactoryBot.define do
       user_type { 'custodian' }
       community
     end
+    factory :site_worker do
+      user_type { 'site_worker' }
+      community
+    end
   end
 end
