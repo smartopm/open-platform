@@ -15,7 +15,7 @@ describe('TextInput component', () => {
     const rendered = render(<TextInput {...props} />)
     const formField = rendered.queryByLabelText('text-input')
     expect(formField).toHaveTextContent('Client Name')
-    expect(formField).toHaveTextContent('for admins only')
+    expect(rendered.queryByText('errors.admins_only')).toBeInTheDocument()
   })
 
   it('should not show the admin only editable is false', () => {
@@ -29,6 +29,18 @@ describe('TextInput component', () => {
     const rendered = render(<TextInput {...props} />)
     const formField = rendered.queryByLabelText('text-input')
     expect(formField).toHaveTextContent('Client Name')
-    expect(formField).not.toHaveTextContent('for admins only')
+    expect(rendered.queryByText('errors.admins_only')).not.toBeInTheDocument()
+  })
+
+  it('should show validation error message', () => {
+    const props = {
+        handleValue: jest.fn(),
+        properties: { fieldName: 'Address', required: true },
+        value: '',
+        editable: false,
+        id: '3145c4247e'
+    }
+    const rendered = render(<TextInput {...props} inputValidation={{error: true}} />)
+    expect(rendered.queryByText('errors.required_field')).toBeInTheDocument()
   })
 })

@@ -98,8 +98,10 @@ export default function FormContextProvider({ children }) {
         ...formState,
         error: true,
         info: t('misc.required_fields_empty'),
-        alertOpen: true,
-        isSubmitting: false
+        alertOpen: false,
+        isSubmitting: false,
+        filledInProperties,
+        categories,
       })
       return;
     }

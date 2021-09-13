@@ -187,3 +187,45 @@ export function requiredFieldIsEmpty(filledInProperties, formData) {
   }
   return result
 }
+
+/**
+ * Validates individual required field
+ * @param {object} property
+ * @param {[object]} formData
+ * @returns {Boolean}
+ */
+export function checkRequiredFormPropertyIsFilled(property, formData){
+  if(property
+    && Array.isArray(formData?.categories)
+    && formData?.categories.length > 0
+    && Array.isArray(formData?.filledInProperties)
+    && formData?.filledInProperties.length > 0
+    ){
+    const activeCategories = formData?.categories?.filter(category => checkCondition(category, formData?.filledInProperties, false))
+    const propertyBelongsToActiveCategory = activeCategories.some(category => category.formProperties.some(prop => prop.id === property.id))
+    
+    // Validate properties from active categories only
+    if(propertyBelongsToActiveCategory){
+      if(formData.error && property.required) {
+        if(property.fieldType === 'checkbox') {
+          const fieldValues = formData?.filledInProperties.find(filledProp => property.id === filledProp.form_property_id)?.value
+          return(
+            !fieldValues || Object.values(fieldValues).some(val => !val)
+          )
+        }
+
+        if(['date', 'time', 'datetime'].includes(property.fieldType)){
+          const fieldValue = formData?.filledInProperties.find(filledProp => property.id === filledProp.form_property_id)?.value
+          return (!fieldValue || fieldValue.includes("Invalid date"))
+        }
+
+        return (
+          !(formData?.filledInProperties
+            .find(filledProp => property.id === filledProp.form_property_id)?.value)
+        )
+      }
+    }
+  }
+
+ return false
+}
