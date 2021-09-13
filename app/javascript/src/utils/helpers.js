@@ -327,6 +327,7 @@ export function checkValidGeoJSON(str){
  * @description gets a value out of an object or an array purposely to reduce the "Code Injection" vulnerabilities
  */
 export function objectAccessor(object, key) {
+  if (!object) return
   return object[key]
 }
 
