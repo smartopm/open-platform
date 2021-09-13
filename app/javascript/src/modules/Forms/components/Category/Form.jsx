@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { Button, Container, DialogContent, DialogContentText } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import { useMutation, useQuery } from 'react-apollo';
@@ -79,6 +79,14 @@ export default function Form({ editMode, formId }) {
     }
     saveFormData(propertiesData, formId, authState.user.id, categoriesData.data?.formCategories);
   }
+
+  useEffect(() => {
+    if(formState?.successfulSubmit) {
+      // Reset Form
+      history.push(`/form/${formId}/${formDetailData.form?.name}`);
+      window.location.reload();
+    }
+  }, [formState.successfulSubmit])
 
   const formData = flattenFormProperties(categoriesData.data?.formCategories);
 
