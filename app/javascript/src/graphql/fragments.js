@@ -79,6 +79,7 @@ export const EntryRequestFragment = {
     fragment EntryRequestFields on EntryRequest {
       id
       name
+      email
       phoneNumber
       nrc
       vehiclePlate

@@ -7,6 +7,7 @@ module Types
     field :user, Types::UserType, null: false
     field :grantor, Types::UserType, null: true
     field :name, String, null: true
+    field :email, String, null: true
     field :nrc, String, null: true
     field :phone_number, String, null: true
     field :vehicle_plate, String, null: true
