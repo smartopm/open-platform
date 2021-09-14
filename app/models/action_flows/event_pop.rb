@@ -38,6 +38,7 @@ module ActionFlows
         'reviewers_email' => '',
         'form_name' => '',
         'user_name' => '',
+        'user_id' => '',
         'user_email' => '',
         'status' => '',
         'has_status_changed' => '',

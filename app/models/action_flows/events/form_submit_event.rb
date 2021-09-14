@@ -38,6 +38,7 @@ module ActionFlows
           'form_name' => form_user.form.name,
           'user_name' => form_user.user.name,
           'user_email' => form_user.user.email,
+          'user_id' => form_user.user.id,
           'reviewers_email' => reviewers_email,
           'url' => url_format(eventlog.community),
           'has_status_changed' => false,
