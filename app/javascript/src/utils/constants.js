@@ -140,6 +140,12 @@ export const paymentType = {
   pos: 'Point of Sale',
   cash: 'Cash'
 };
+export const planType = {
+  'active': 'Active',
+  'cancelled': 'Cancelled',
+  'behind': 'Behind',
+  'on_track': 'On Track'
+};
 
 export const paymentStatusColor = {
   pending: '#3493FB',
@@ -476,6 +482,32 @@ export const dateWidget = {
     widgets: dateWidget
   }
 
+  export const planQueryBuilderConfig = {
+    ...InitialConfig,
+    fields: {
+      status: {
+        label: 'Plan Status',
+        type: 'select',
+        valueSources: ['value'],
+        fieldSettings: {
+          listValues: Object.entries(planType).map(([key, val]) => {
+            return { value: key, title: val }
+          })
+        }
+      },
+      amountOwned: {
+        label: 'Amount Owed',
+        type: 'number',
+        valueSources: ['value']
+      },
+      installmentsDue: {
+        label: 'Due Installments',
+        type: 'number',
+        valueSources: ['value']
+      }
+    }
+  }
+
   export const paymentQueryBuilderInitialValue = {
     // Just any random UUID
     id: '76a8a9ba-0123-3344-c56d-b16e532c8cd0',
@@ -494,6 +526,24 @@ export const dateWidget = {
     }
   }
 
+export const planQueryBuilderInitialValue = {
+  // Just any random UUID
+  id: '76a8a9ba-0123-3344-c56d-b16e532c8cd0',
+  type: 'group',
+  children1: {
+    '98a8a9ba-0123-4456-b89a-b16e721c8cd0': {
+      type: 'rule',
+      properties: {
+        field: 'status',
+          operator: 'select_equals',
+          value: [''],
+          valueSrc: ['value'],
+          valueType: ['select']
+      },
+    }
+  }
+}
+
 export const paymentFilterFields = {
     clientName: 'user',
     phoneNumber: 'phone_number',
@@ -504,6 +554,12 @@ export const paymentFilterFields = {
     manualReceiptNumber: 'manual_receipt_number',
     amount: 'amount',
     nrc: 'ext_ref_id'
+  }
+
+  export const planFilterFields = {
+    status: 'status',
+    amountOwned: 'amount_owned',
+    installmentsDue: 'installments_due'
   }
 
   export const propertyQueryBuilderConfig = {

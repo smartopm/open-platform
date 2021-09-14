@@ -40,6 +40,14 @@ export default function QueryBuilder({
       not_equal: {
         ...builderConfig.operators.not_equal,
         label: 'Is Not'
+      },
+      less: {
+        ...builderConfig.operators.less,
+        label: 'Less'
+      },
+      greater: {
+        ...builderConfig.operators.greater,
+        label: 'Greater'
       }
     }
   }
