@@ -198,7 +198,7 @@ export function PlansList({
               position: 'absolute',
               zIndex: 1,
               marginTop: '-2px',
-              marginLeft: '0px',
+              marginLeft: matches ? '-300px' : '0',
               display: displayBuilder
             }}
           >
@@ -516,6 +516,9 @@ const useStyles = makeStyles(() => ({
   },
   body: {
     padding: '0 2%'
+  },
+  search: {
+    
   }
 }));
 
