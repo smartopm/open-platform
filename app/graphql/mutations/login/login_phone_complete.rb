@@ -10,14 +10,14 @@ module Mutations
       field :auth_token, String, null: true
 
       def resolve(vals)
-        user = context[:site_community].users.find(vals[:id])
-        if user.present?
-          auth_token = user.auth_token if user.verify_phone_token!(vals[:token])
-          user.generate_events('user_login', user)
-          return { auth_token: auth_token } if auth_token
-        end
+        user = context[:site_community].users.find_by(id: vals[:id])
+        raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') unless user
 
-        raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
+        auth_token = user.auth_token if user.verify_phone_token!(vals[:token])
+        raise GraphQL::ExecutionError, 'Invalid token' unless auth_token
+
+        user.generate_events('user_login', user)
+        { auth_token: auth_token }
       end
     end
   end

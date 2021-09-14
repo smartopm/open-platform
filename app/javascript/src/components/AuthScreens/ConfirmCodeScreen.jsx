@@ -78,7 +78,7 @@ export default function ConfirmCodeScreen({ match }) {
 
     loginPhoneComplete({
       variables: { id, token: code },
-      errorPolicy: 'all'
+      errorPolicy: 'none'
     })
       .then(({ data }) => {
         authState.setToken({
@@ -87,8 +87,8 @@ export default function ConfirmCodeScreen({ match }) {
         })
         setIsLoading(false)
       })
-      .catch(_error => {
-        setError(_error.message)
+      .catch(err => {
+        setError(err.message.replace(/GraphQL error:/, ''))
         setIsLoading(false)
       })
   }
