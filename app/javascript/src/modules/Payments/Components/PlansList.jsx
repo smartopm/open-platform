@@ -14,7 +14,8 @@ import {
   titleize,
   capitalize,
   objectAccessor,
-  formatError
+  formatError,
+  handleQueryOnChange
 } from '../../../utils/helpers';
 import Label from '../../../shared/label/Label';
 import CenteredContent from '../../../components/CenteredContent';
@@ -30,6 +31,13 @@ import PlanListItem from './PlanListItem';
 import { ActionDialog } from '../../../components/Dialog';
 import { PaymentReminderMutation } from '../graphql/payment_plan_mutations';
 import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider';
+import SearchInput from '../../../shared/search/SearchInput';
+import QueryBuilder from '../../../components/QueryBuilder';
+import {
+  planQueryBuilderConfig,
+  planQueryBuilderInitialValue,
+  planFilterFields
+} from '../../../utils/constants';
 
 export function PlansList({
   matches,
@@ -123,6 +131,9 @@ export function PlansList({
       handleAfterMutation();
     })
   }
+  const [searchValue, setSearchValue] = useState('');
+  const [displayBuilder, setDisplayBuilder] = useState('none');
+  const [searchQuery, setSearchQuery] = useState('');
 
   function paginatePlans(action) {
     if (action === 'prev') {
@@ -131,6 +142,18 @@ export function PlansList({
     } else if (action === 'next') {
       setOffset(offset + limit);
     }
+  }
+
+  function toggleFilterMenu() {
+    if (displayBuilder === '') {
+      setDisplayBuilder('none');
+    } else {
+      setDisplayBuilder('');
+    }
+  }
+
+  function queryOnChange(selectedOptions) {
+    setSearchQuery(handleQueryOnChange(selectedOptions, planFilterFields));
   }
 
   return (
@@ -155,51 +178,91 @@ export function PlansList({
       />
       {communityPlansLoading ? (
         <Spinner />
-    ) : communityPlans?.length === 0 ? (
-      <CenteredContent>{t('errors.no_plan_available')}</CenteredContent>
-    ) : (
-      <>
-        <div className={classes.planList}>
-          <div>
-            <div
-              style={matches ? {
-              display: 'flex',
-              width: '100%',
-              justifyContent: 'space-between',
-              marginBottom: '10px'
-            } : null}
-            >
-              <Typography className={matches ? classes.plan : classes.planMobile}>
-                {t('common:misc.plans')}
-              </Typography>
+      ) : communityPlans?.length === 0 ? (
+        <CenteredContent>{t('errors.no_plan_available')}</CenteredContent>
+      ) : (
+        <>
+          {console.log(searchQuery)}
+          <SearchInput
+            title={t('common:misc.plans')}
+            searchValue={searchValue}
+            handleSearch={event => setSearchValue(event.target.value)}
+            handleFilter={toggleFilterMenu}
+            handleClear={() => setSearchValue('')}
+          />
+          <Grid
+            container
+            justify="flex-end"
+            style={{
+              width: '100.5%',
+              position: 'absolute',
+              zIndex: 1,
+              marginTop: '-2px',
+              marginLeft: '0px',
+              display: displayBuilder
+            }}
+          >
+            <QueryBuilder
+              handleOnChange={queryOnChange}
+              builderConfig={planQueryBuilderConfig}
+              initialQueryValue={planQueryBuilderInitialValue}
+              addRuleLabel={t('common:misc.add_filter')}
+            />
+          </Grid>
+          <div className={classes.planList}>
+            <div>
               <div
                 style={
-                matches
-                  ? { display: 'flex', width: '100%', justifyContent: 'flex-end', marginBottom: '5px' }
-                  : { display: 'flex', marginBottom: '5px' }
+                  matches
+                    ? {
+                        display: 'flex',
+                        width: '100%',
+                        justifyContent: 'space-between',
+                        marginBottom: '10px'
+                      }
+                    : null
                 }
               >
-                <div>
-                  <ButtonComponent
-                    color="default"
-                    variant="outlined"
-                    buttonText='View All Subscription Plans'
-                    handleClick={() => setDisplaySubscriptionPlans(true)}
-                    size="small"
-                    style={matches ? {} : {fontSize: '10px'}}
-                  />
+                <Typography className={matches ? classes.plan : classes.planMobile}>
+                  {t('common:misc.plans')}
+                </Typography>
+                <div
+                  style={
+                    matches
+                      ? {
+                          display: 'flex',
+                          width: '100%',
+                          justifyContent: 'flex-end',
+                          marginBottom: '5px'
+                        }
+                      : { display: 'flex', marginBottom: '5px' }
+                  }
+                >
+                  <div>
+                    <ButtonComponent
+                      color="default"
+                      variant="outlined"
+                      buttonText="View All Subscription Plans"
+                      handleClick={() => setDisplaySubscriptionPlans(true)}
+                      size="small"
+                      style={matches ? {} : { fontSize: '10px' }}
+                    />
+                  </div>
                 </div>
               </div>
             </div>
+            {communityPlans?.slice(offset, limit + offset - 1).map(plan => (
+              <div
+                className={classes.body}
+                style={matches ? {} : { marginTop: '30px' }}
+                key={plan.id}
+              >
+                <PlanListItem data={plan} currencyData={currencyData} menuData={menuData} />
+              </div>
+            ))}
           </div>
-          {communityPlans?.slice(offset, limit + offset - 1).map(plan => (
-            <div className={classes.body} style={matches ? {} : {marginTop: '30px'}} key={plan.id}>
-              <PlanListItem data={plan} currencyData={currencyData} menuData={menuData} />
-            </div>
-          ))}
-        </div>
-      </>
-    )}
+        </>
+      )}
       <CenteredContent>
         <Paginate
           offSet={offset}
@@ -222,7 +285,7 @@ export function SubscriptionPlans({
   subscriptionPlansData,
   subscriptionPlansRefetch,
   setDisplaySubscriptionPlans
-}){
+}) {
   const [subscriptionModalOpen, setSubscriptionModalOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const [subData, setSubData] = useState(null);
@@ -267,7 +330,7 @@ export function SubscriptionPlans({
   }
 
   function handleModalClose() {
-    setSubscriptionModalOpen(false)
+    setSubscriptionModalOpen(false);
     setAnchorEl(null);
   }
 
@@ -281,85 +344,88 @@ export function SubscriptionPlans({
   return (
     <div>
       {subscriptionModalOpen && (
-      <SubscriptionPlanModal
-        open={subscriptionModalOpen}
-        handleModalClose={() => handleModalClose()}
-        subscriptionPlansRefetch={subscriptionPlansRefetch}
-        setMessage={setMessage}
-        openAlertMessage={() => setAlertOpen(true)}
-        subscriptionData={subData}
-      />
-    )}
+        <SubscriptionPlanModal
+          open={subscriptionModalOpen}
+          handleModalClose={() => handleModalClose()}
+          subscriptionPlansRefetch={subscriptionPlansRefetch}
+          setMessage={setMessage}
+          openAlertMessage={() => setAlertOpen(true)}
+          subscriptionData={subData}
+        />
+      )}
       {subscriptionPlansLoading ? (
         <Spinner />
-    ) : subscriptionPlansData?.subscriptionPlans?.length === 0 ? (
-      <CenteredContent>{t('errors.no_plan_available')}</CenteredContent>
-    ) : (
-      <>
-        <div className={classes.planList}>
-          <div>
-            <div
-              style={matches ? {
-              display: 'flex',
-              width: '100%',
-              justifyContent: 'space-between',
-              marginBottom: '10px'
-            } : null}
-            >
-              <Typography className={matches ? classes.plan : classes.planMobile}>
-                {t('misc.subscription_plans')}
-              </Typography>
+      ) : subscriptionPlansData?.subscriptionPlans?.length === 0 ? (
+        <CenteredContent>{t('errors.no_plan_available')}</CenteredContent>
+      ) : (
+        <>
+          <div className={classes.planList}>
+            <div>
               <div
                 style={
                   matches
-                  ? { display: 'flex', width: '80%', justifyContent: 'flex-end' }
-                  : { display: 'flex' }
+                    ? {
+                        display: 'flex',
+                        width: '100%',
+                        justifyContent: 'space-between',
+                        marginBottom: '10px'
+                      }
+                    : null
                 }
               >
-                <div style={{ margin: '0 10px 10px 0', fontSize: '10px' }}>
-                  <ButtonComponent
-                    color="primary"
-                    variant="contained"
-                    buttonText='New Subscription Plan'
-                    handleClick={() => setSubscriptionModalOpen(true)}
-                    size="small"
-                    style={matches ? {} : {fontSize: '10px'}}
-                    data-test-id='new_subscription_plan'
-                  />
-                </div>
-                <div>
-                  <ButtonComponent
-                    color="default"
-                    variant="outlined"
-                    buttonText='View All Plans'
-                    handleClick={() => setDisplaySubscriptionPlans(false)}
-                    size="small"
-                    style={matches ? {} : {fontSize: '10px'}}
-                  />
+                <Typography className={matches ? classes.plan : classes.planMobile}>
+                  {t('misc.subscription_plans')}
+                </Typography>
+                <div
+                  style={
+                    matches
+                      ? { display: 'flex', width: '80%', justifyContent: 'flex-end' }
+                      : { display: 'flex' }
+                  }
+                >
+                  <div style={{ margin: '0 10px 10px 0', fontSize: '10px' }}>
+                    <ButtonComponent
+                      color="primary"
+                      variant="contained"
+                      buttonText="New Subscription Plan"
+                      handleClick={() => setSubscriptionModalOpen(true)}
+                      size="small"
+                      style={matches ? {} : { fontSize: '10px' }}
+                      data-test-id="new_subscription_plan"
+                    />
+                  </div>
+                  <div>
+                    <ButtonComponent
+                      color="default"
+                      variant="outlined"
+                      buttonText="View All Plans"
+                      handleClick={() => setDisplaySubscriptionPlans(false)}
+                      size="small"
+                      style={matches ? {} : { fontSize: '10px' }}
+                    />
+                  </div>
                 </div>
               </div>
             </div>
+
+            {matches && (
+              <div style={{ padding: '0 20px' }}>
+                <ListHeader headers={subscriptionPlanHeaders} />
+              </div>
+            )}
+
+            {subscriptionPlansData?.subscriptionPlans?.map(sub => (
+              <div style={{ padding: '0 20px' }} key={sub.id}>
+                <DataList
+                  keys={subscriptionPlanHeaders}
+                  data={renderSubscriptionPlans(sub, currencyData, menuData)}
+                  hasHeader={false}
+                />
+              </div>
+            ))}
           </div>
-
-
-          {matches && (
-          <div style={{ padding: '0 20px' }}>
-            <ListHeader headers={subscriptionPlanHeaders} />
-          </div>
-        )}
-
-          {subscriptionPlansData?.subscriptionPlans?.map(sub => (
-            <div style={{ padding: '0 20px' }} key={sub.id}>
-              <DataList
-                keys={subscriptionPlanHeaders}
-                data={renderSubscriptionPlans(sub, currencyData, menuData)}
-                hasHeader={false}
-              />
-            </div>
-        ))}
-        </div>
-      </>
-    )}
+        </>
+      )}
     </div>
   );
 }
@@ -390,7 +456,9 @@ export function renderSubscriptionPlans(subscription, currencyData, menuData) {
       Status: (
         <Grid item xs={12} md={2} data-testid="subscription_status" style={{ width: '90px' }}>
           <Label
-            title={capitalize(subscription.status).split("_").join("")}
+            title={capitalize(subscription.status)
+              .split('_')
+              .join('')}
             color={objectAccessor(InvoiceStatusColor, subscription?.status)}
           />
         </Grid>
@@ -453,7 +521,7 @@ const useStyles = makeStyles(() => ({
 
 PlansList.defaultProps = {
   communityPlans: []
-}
+};
 
 PlansList.propTypes = {
   matches: PropTypes.bool.isRequired,
@@ -465,7 +533,7 @@ PlansList.propTypes = {
   communityPlans: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.string,
-      status: PropTypes.string,
+      status: PropTypes.string
     })
   ),
   setDisplaySubscriptionPlans: PropTypes.func.isRequired,
@@ -492,4 +560,4 @@ SubscriptionPlans.propTypes = {
   }).isRequired,
   subscriptionPlansRefetch: PropTypes.func.isRequired,
   setDisplaySubscriptionPlans: PropTypes.func.isRequired
-}
+};
