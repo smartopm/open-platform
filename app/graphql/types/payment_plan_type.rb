@@ -34,7 +34,6 @@ module Types
     field :owing_amount, Float, null: true
     field :installments_due, Integer, null: true
     field :outstanding_days, Integer, null: true
-    field :paid_installments, Integer, null: true
 
     # Returns total amount paid for plan statement
     #

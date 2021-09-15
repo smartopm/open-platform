@@ -2,10 +2,10 @@ import React from 'react';
 import { render } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { BrowserRouter } from 'react-router-dom';
+import { MockedProvider } from '@apollo/react-testing';
 import { Spinner } from '../../../shared/Loading';
 import { PlansList, SubscriptionPlans, renderSubscriptionPlans} from '../Components/PlansList';
 import currency from '../../../__mocks__/currency';
-import { MockedProvider } from '@apollo/react-testing';
 import { PaymentReminderMutation } from '../graphql/payment_plan_mutations';
 
 describe('Plans List Item Component', () => {

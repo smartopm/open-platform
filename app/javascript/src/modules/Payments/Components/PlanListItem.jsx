@@ -7,7 +7,7 @@ import { IconButton } from '@material-ui/core';
 import { MoreHorizOutlined } from '@material-ui/icons';
 import PaymentSlider from './PaymentSlider';
 import Label from '../../../shared/label/Label';
-import { capitalize } from '../../../utils/helpers';
+import { capitalize, objectAccessor } from '../../../utils/helpers';
 import MenuList from '../../../shared/MenuList';
 
 export default function PlanListItem({ data, currencyData, menuData }) {
