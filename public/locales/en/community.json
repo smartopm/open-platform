@@ -32,6 +32,9 @@
       "sms_phone_numbers": "SMS Phone Numbers",
       "emergency_call_number": "Emergency Call Number",
       "sms_phone_numbers_header": "Emergency Contacts",
-      "set_payment_reminder": "Set Payment Reminder Template"
+      "select_template": "Select Template",
+      "behind": "Behind",
+      "status": "Status",
+      "notification_templates": "Notification Templates"
     }
 }

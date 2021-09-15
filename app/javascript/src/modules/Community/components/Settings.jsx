@@ -276,7 +276,7 @@ export default function CommunitySettings({ data, token, refetch }) {
 
   function handleTemplates(event){
     setPaymentReminderTemplate(event.target.value)
-    setTemplateOptions([...templateOptions, {'payment_reminder_template': event.target.value}])
+    setTemplateOptions([...templateOptions, {'payment_reminder_template_behind': event.target.value}])
   }
 
   function updateCommunity() {
@@ -624,23 +624,6 @@ export default function CommunitySettings({ data, token, refetch }) {
           margin="normal"
           inputProps={{ 'data-testid': 'wp_link' }}
         />
-        <TextField
-          margin="normal"
-          id="payment-reminder"
-          aria-label="payment reminder"
-          label={t('community.set_payment_reminder')}
-          value={paymentReminderTemplate}
-          onChange={handleTemplates}
-          name="template"
-          inputProps={{ 'data-testid': 'payment_reminder_template' }}
-          select
-        >
-          {emailTemplatesData?.emailTemplates?.map((template) => (
-            <MenuItem key={template.id} value={template?.id}>
-              {template?.name}
-            </MenuItem>
-          ))}
-        </TextField>
       </div>
 
       <div style={{ marginTop: '40px' }}>
@@ -821,6 +804,46 @@ export default function CommunitySettings({ data, token, refetch }) {
             </MenuItem>
           ))}
         </TextField>
+      </div>
+
+      <div style={{ marginTop: '40px' }}>
+        <Typography variant="h6">{t('community.notification_templates')}</Typography>
+        <div style={{ display: 'flex', flexDirection: 'row', margin: '10px 0' }}>
+          <TextField
+            margin="normal"
+            id="behind"
+            label={t('community.status')}
+            aria-label="behind"
+            value={t('community.behind')}
+            name="duration"
+            style={{ width: '200px'}}
+            InputProps={{
+              disableUnderline: true,
+              'data-testid': 'plan_status'
+            }}
+            disabled
+          />
+          <TextField
+            margin="normal"
+            id="payment-reminder"
+            aria-label="payment reminder"
+            label={t('community.select_template')}
+            value={paymentReminderTemplate}
+            onChange={handleTemplates}
+            name="template"
+            inputProps={{
+                'data-testid': 'payment_reminder_template'
+            }}
+            style={{ width: '200px', marginLeft: '40px' }}
+            select
+          >
+            {emailTemplatesData?.emailTemplates?.map((template) => (
+              <MenuItem key={template.id} value={template?.id}>
+                {template?.name}
+              </MenuItem>
+            ))}
+          </TextField>
+        </div>
       </div>
 
       <div className={classes.button}>

@@ -32,7 +32,7 @@ RSpec.describe PaymentReminderJob, type: :job do
 
     context 'when template is found' do
       before do
-        community.templates = [{ 'payment_reminder_template' => template.id.to_s }]
+        community.templates = [{ 'payment_reminder_template_behind' => template.id.to_s }]
         community.save
       end
       it 'invokes EmailMsg' do

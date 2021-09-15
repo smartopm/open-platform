@@ -8,8 +8,8 @@ class PaymentReminderJob < ApplicationJob
   # rubocop:disable Metrics/MethodLength
   # rubocop:disable Metrics/AbcSize
   def perform(user, payment_plan)
-    template = user.community.templates&.find { |h| h.key?('payment_reminder_template') }
-    template_id = template.presence ? template['payment_reminder_template'] : nil
+    template = user.community.templates&.find { |h| h.key?('payment_reminder_template_behind') }
+    template_id = template.presence ? template['payment_reminder_template_behind'] : nil
     email_template = user.community.email_templates.find_by(id: template_id)
 
     return unless email_template

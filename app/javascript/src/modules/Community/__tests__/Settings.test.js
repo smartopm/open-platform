@@ -189,6 +189,7 @@ describe('Community settings page ', () => {
     expect(container.queryByTestId('smsPhoneNumber')).toBeInTheDocument();
     expect(container.queryByTestId('emergencyCallNumber')).toBeInTheDocument();
     expect(container.queryByTestId('payment_reminder_template')).toBeInTheDocument();
+    expect(container.queryByTestId('plan_status')).toBeInTheDocument();
 
 
     fireEvent.select(container.queryByTestId('locale'), { target: { value: 'en-US' } });
