@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'task_create'
+
 module Forms
   # Form User Record
   class FormUser < ApplicationRecord
@@ -23,8 +25,10 @@ module Forms
       attributes user: ['user.name']
     end
 
+    # rubocop:disable Metrics/AbcSize
+    # rubocop:disable Metrics/MethodLength
     def create_form_task(hostname)
-      user.generate_note(
+      task_params = {
         body: "<a href=\"https://#{hostname}/user/#{user.id}\">#{user.name}</a> Submitted
                 <a href=\"https://#{hostname}/user_form/#{user.id}/#{id}/task\">
                 #{form.name}</a>",
@@ -32,8 +36,15 @@ module Forms
         form_user_id: id,
         flagged: true,
         completed: false,
-      )
+        user_id: user.id,
+        author_id: user.id,
+        assignees: user.community.sub_administrator_id,
+      }
+
+      TaskCreate.new_from_action(task_params)
     end
+    # rubocop:enable Metrics/AbcSize
+    # rubocop:enable Metrics/MethodLength
 
     private
 

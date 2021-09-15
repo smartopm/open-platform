@@ -42,6 +42,7 @@ module ActionFlows
         'user_email' => '',
         'status' => '',
         'has_status_changed' => '',
+        'form_property_subject' => '',
       },
       'Invoice' => {
         'amount' => '',

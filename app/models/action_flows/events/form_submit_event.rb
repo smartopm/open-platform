@@ -42,12 +42,23 @@ module ActionFlows
           'reviewers_email' => reviewers_email,
           'url' => url_format(eventlog.community),
           'has_status_changed' => false,
+          'form_property_subject' => report_an_issue_subject(form_user),
         )
       end
       # rubocop:enable Metrics/MethodLength
 
       def url_format(community)
         "https://#{HostEnv.base_url(community)}/forms"
+      end
+
+      def report_an_issue_subject(form_user)
+        return unless form_user.form.report_an_issue?
+
+        subject_property = form_user.user_form_properties.find do |f|
+          %w[Subject Asunto].include?(f.form_property.field_name)
+        end
+
+        subject_property&.value
       end
     end
   end

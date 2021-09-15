@@ -42,6 +42,10 @@ module Forms
           .order(:created_at).last.version_number
     end
 
+    def report_an_issue?
+      ['Report an Issue', 'Informar de un problema'].include?(name)
+    end
+
     private
 
     # rubocop:disable Metrics/AbcSize
