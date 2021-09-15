@@ -13,14 +13,10 @@ module Mutations
         user = context[:site_community].users.find_by(id: vals[:user_id])
         raise_user_not_found_error(user)
 
-        payment_plan = Properties::PaymentPlan.find_by(id: vals[:payment_plan_id])
+        payment_plan = user.payment_plans.find_by(id: vals[:payment_plan_id])
         raise_plan_not_found_error(payment_plan)
 
         PaymentReminderJob.perform_later(user, payment_plan)
-
-        # TOODO: Remove
-        # rescue StandardError
-        #   raise GraphQL::ExecutionError, I18n.t('errors.user.does_not_exists')
 
         { message: 'Sucess' }
       end

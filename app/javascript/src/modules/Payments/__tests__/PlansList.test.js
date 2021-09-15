@@ -5,6 +5,8 @@ import { BrowserRouter } from 'react-router-dom';
 import { Spinner } from '../../../shared/Loading';
 import { PlansList, SubscriptionPlans, renderSubscriptionPlans} from '../Components/PlansList';
 import currency from '../../../__mocks__/currency';
+import { MockedProvider } from '@apollo/react-testing';
+import { PaymentReminderMutation } from '../graphql/payment_plan_mutations';
 
 describe('Plans List Item Component', () => {
   const subscriptionPlansData = {
@@ -41,17 +43,36 @@ describe('Plans List Item Component', () => {
       }
     }
   ]
+
+  const mocks = [
+    {
+      request: {
+        query: PaymentReminderMutation,
+        variables: {
+          userId: "xsxnkjasnxkn-31",
+          paymentPlanId: "kjkjsadas-87"
+        }
+      },
+      result: {
+        data: {
+          paymentRemiderCreate: { message: 'success' }
+        }
+      }
+    }
+  ]
   it('should render the plans list component', async () => {
     render(
-      <BrowserRouter>
-        <PlansList
-          currencyData={currency}
-          matches={false}
-          communityPlansLoading={false}
-          communityPlans={communityPlans}
-          setDisplaySubscriptionPlans={jest.fn}
-        />
-      </BrowserRouter>
+      <MockedProvider mocks={mocks} addTypename={false}>
+        <BrowserRouter>
+          <PlansList
+            currencyData={currency}
+            matches={false}
+            communityPlansLoading={false}
+            communityPlans={communityPlans}
+            setDisplaySubscriptionPlans={jest.fn}
+          />
+        </BrowserRouter>
+      </MockedProvider>
     );
 
     const loader = render(<Spinner />);

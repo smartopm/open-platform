@@ -14,6 +14,22 @@ describe('It should test the plan item list item component', () => {
     }
   }
 
+  const menuList = [
+    {
+      content: ('payment.misc.payment_reminder'),
+      isAdmin: true,
+      handleClick: () => jest.fn()
+    }
+  ]
+  const menuData = {
+    menuList,
+    handleMenuClick: jest.fn,
+    anchorEl: null,
+    open: false,
+    userType: 'admin',
+    handleClose: () => jest.fn
+  }
+
   it('it should render plan item list component', () => {
     const container = render(
       <MockedProvider>
@@ -21,6 +37,7 @@ describe('It should test the plan item list item component', () => {
           <PlanListItem 
             currencyData={{ currency: 'ZMW', locale: 'en-ZM'}}
             data={data}
+            menuData={menuData}
           />
         </BrowserRouter>
       </MockedProvider> 
@@ -29,5 +46,6 @@ describe('It should test the plan item list item component', () => {
     expect(container.getByTestId("landparcel")).toBeInTheDocument();
     expect(container.getByTestId("payment-slider")).toBeInTheDocument();
     expect(container.getByTestId("label")).toBeInTheDocument();
+    expect(container.getByTestId("menu")).toBeInTheDocument();
   });
 });

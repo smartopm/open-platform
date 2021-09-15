@@ -67,7 +67,10 @@
     "installments": "Installments",
     "subscription_plans": "Subscription Plans",
     "plan_values": "Plan Value",
-    "due": "Due"
+    "due": "Due",
+    "payment_reminder": "Payment Reminder",
+    "email_sent": "Email has been sent successfully",
+    "email_confirmation": "You are about to send an email to the owner of Plot {{parcel_number}}"
   },
   "table_headers": {
     "receipt_number": "Receipt Number",

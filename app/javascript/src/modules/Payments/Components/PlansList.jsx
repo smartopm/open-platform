@@ -1,17 +1,19 @@
 /* eslint-disable no-nested-ternary */
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Grid, Typography, IconButton } from '@material-ui/core';
 import { MoreHorizOutlined } from '@material-ui/icons';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
+import { useMutation } from 'react-apollo';
 import DataList from '../../../shared/list/DataList';
 import {
   formatMoney,
   InvoiceStatusColor,
   titleize,
   capitalize,
-  objectAccessor
+  objectAccessor,
+  formatError
 } from '../../../utils/helpers';
 import Label from '../../../shared/label/Label';
 import CenteredContent from '../../../components/CenteredContent';
@@ -24,19 +26,79 @@ import MenuList from '../../../shared/MenuList';
 import SubscriptionPlanModal from './SubscriptionPlanModal';
 import ButtonComponent from '../../../shared/buttons/Button';
 import PlanListItem from './PlanListItem';
-
+import { ActionDialog } from '../../../components/Dialog';
+import { PaymentReminderMutation } from '../graphql/payment_plan_mutations';
+import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider';
 
 export function PlansList({
   matches,
   currencyData,
   communityPlansLoading,
   communityPlans,
-  setDisplaySubscriptionPlans
+  setDisplaySubscriptionPlans,
+  setMessage,
+  setAlertOpen
 }){
   const { t } = useTranslation(['payment', 'common']);
   const limit = 10;
   const [offset, setOffset] = useState(0);
   const classes = useStyles();
+  const [confirmationModalOpen, setConfirmationModalOpen] = useState(false);
+  const [createPaymentRemider] = useMutation(PaymentReminderMutation);
+  const [paymentPlan, setPaymentPlan] = useState(null);
+  const [mutationLoading, setMutationLoading] = useState(false);
+  const authState = useContext(AuthStateContext);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const anchorElOpen = Boolean(anchorEl);
+
+  const menuList = [
+    {
+      content: t('misc.payment_reminder'),
+      isAdmin: true,
+      handleClick: () => setConfirmationModalOpen(true)
+    }
+  ]
+  const menuData = {
+    menuList,
+    handleMenuClick,
+    anchorEl,
+    open: anchorElOpen,
+    userType: authState?.user?.userType,
+    handleClose: () => handleMenuClose()
+  }
+
+  function handleMenuClose() {
+    setAnchorEl(null);
+    setPaymentPlan(null);
+  }
+
+  function handleMenuClick(event, plan) {
+    event.stopPropagation();
+    setAnchorEl(event.currentTarget);
+    setPaymentPlan(plan);
+  }
+
+  function handleAfterMutation() {
+    setMutationLoading(false);
+    setAlertOpen(true);
+    setConfirmationModalOpen(false);
+    setAnchorEl(null);
+  }
+
+  function sendPaymentReminderMail() {
+    setMutationLoading(true);
+    createPaymentRemider({
+      variables: {userId: paymentPlan?.user.id, paymentPlanId: paymentPlan.id}
+    })
+    .then(() => {
+      setMessage({ isError: false, detail: t('misc.email_sent') });
+      handleAfterMutation();
+    })
+    .catch(error => {
+      setMessage({ isError: true, detail: formatError(error.message) });
+      handleAfterMutation();
+    })
+  }
 
   function paginatePlans(action) {
     if (action === 'prev') {
@@ -49,6 +111,14 @@ export function PlansList({
 
   return (
     <div>
+      <ActionDialog
+        open={confirmationModalOpen}
+        type="confirm"
+        message={t('misc.email_confirmation', { parcel_number: paymentPlan?.landParcel?.parcelNumber })}
+        handleClose={() => setConfirmationModalOpen(false)}
+        handleOnSave={sendPaymentReminderMail}
+        disableActionBtn={mutationLoading}
+      />
       {communityPlansLoading ? (
         <Spinner />
     ) : communityPlans?.length === 0 ? (
@@ -90,7 +160,7 @@ export function PlansList({
           </div>
           {communityPlans?.slice(offset, limit + offset - 1).map(plan => (
             <div className={classes.body} style={matches ? {} : {marginTop: '30px'}} key={plan.id}>
-              <PlanListItem data={plan} currencyData={currencyData} />
+              <PlanListItem data={plan} currencyData={currencyData} menuData={menuData} />
             </div>
           ))}
         </div>
@@ -364,7 +434,9 @@ PlansList.propTypes = {
       status: PropTypes.string,
     })
   ),
-  setDisplaySubscriptionPlans: PropTypes.func.isRequired
+  setDisplaySubscriptionPlans: PropTypes.func.isRequired,
+  setMessage: PropTypes.func.isRequired,
+  setAlertOpen: PropTypes.func.isRequired,
 }
 
 SubscriptionPlans.propTypes = {

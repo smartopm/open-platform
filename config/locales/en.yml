@@ -376,3 +376,4 @@ en:
     success: success
     updated: updated
     category_deleted: Category deleted successfully
+    email_not_sent: Email was not sent

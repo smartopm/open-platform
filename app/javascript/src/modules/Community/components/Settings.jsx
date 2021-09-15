@@ -343,10 +343,6 @@ export default function CommunitySettings({ data, token, refetch }) {
     setCurrency(data.currency);
     setLocale(data.locale);
     setLanguage(data.language);
-    console.log(data);
-    console.log(data.templates);
-    console.log("TEMP DATA");
-    console.log(emailTemplatesData);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);
 
@@ -628,7 +624,7 @@ export default function CommunitySettings({ data, token, refetch }) {
           margin="normal"
           inputProps={{ 'data-testid': 'wp_link' }}
         />
-         <TextField
+        <TextField
           margin="normal"
           id="payment-reminder"
           aria-label="payment reminder"
@@ -636,6 +632,7 @@ export default function CommunitySettings({ data, token, refetch }) {
           value={paymentReminderTemplate}
           onChange={handleTemplates}
           name="template"
+          inputProps={{ 'data-testid': 'payment_reminder_template' }}
           select
         >
           {emailTemplatesData?.emailTemplates?.map((template) => (
@@ -850,6 +847,7 @@ CommunitySettings.propTypes = {
     supportWhatsapp: PropTypes.arrayOf(PropTypes.object),
     socialLinks: PropTypes.arrayOf(PropTypes.object),
     menuItems: PropTypes.arrayOf(PropTypes.object),
+    templates: PropTypes.arrayOf(PropTypes.object),
     imageUrl: PropTypes.string,
     currency: PropTypes.string,
     locale: PropTypes.string,
