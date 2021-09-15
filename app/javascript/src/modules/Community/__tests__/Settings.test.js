@@ -40,6 +40,7 @@ describe('Community settings page ', () => {
       menuItems: [
         { menu_link: 'http://some-link.com', menu_name: 'Custom Menu', display_on: ['Menu'], roles: ['admin'] },
       ],
+      templates: {},
       subAdministrator: { id: '123df', name: 'User Name' },
       logoUrl: null,
       locale: 'en-US',
@@ -83,7 +84,7 @@ describe('Community settings page ', () => {
             { menu_link: "", menu_name: "", display_on: ["Dashboard"], roles: [] }
           ],
           imageBlobId: null,
-          templates: [],
+          templates: {},
           locale: 'en-US',
           currency: 'honduran_lempira',
           tagline: '',

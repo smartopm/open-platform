@@ -5,11 +5,8 @@ require 'email_msg'
 class PaymentReminderJob < ApplicationJob
   queue_as :default
 
-  # rubocop:disable Metrics/MethodLength
-  # rubocop:disable Metrics/AbcSize
   def perform(user, payment_plan)
-    template = user.community.templates&.find { |h| h.key?('payment_reminder_template_behind') }
-    template_id = template.presence ? template['payment_reminder_template_behind'] : nil
+    template_id = user.community.templates&.dig('payment_reminder_template_behind')
     email_template = user.community.email_templates.find_by(id: template_id)
 
     return unless email_template
@@ -22,6 +19,4 @@ class PaymentReminderJob < ApplicationJob
     ]
     EmailMsg.send_mail_from_db(user.email, email_template, template_data)
   end
-  # rubocop:enable Metrics/AbcSize
-  # rubocop:enable Metrics/MethodLength
 end

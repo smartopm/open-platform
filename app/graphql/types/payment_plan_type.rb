@@ -50,7 +50,7 @@ module Types
     end
 
     def renew_date
-      end_date - 2.months
+      object.end_date - 2.months
     end
 
     def paid_payments_exists

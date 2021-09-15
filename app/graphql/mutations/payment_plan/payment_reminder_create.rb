@@ -36,7 +36,7 @@ module Mutations
       def raise_user_not_found_error(user)
         return if user
 
-        raise GraphQL::ExecutionError, I18n.t('errors.user.does_not_exists')
+        raise GraphQL::ExecutionError, I18n.t('errors.user.does_not_exist')
       end
 
       # Raises GraphQL execution error if payment plan does not exist.

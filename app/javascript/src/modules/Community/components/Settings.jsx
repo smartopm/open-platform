@@ -79,7 +79,7 @@ export default function CommunitySettings({ data, token, refetch }) {
   const [socialLinkOptions, setSocialLinkOptions] = useState([socialLinks]);
   const [menuItemOptions, setMenuItemOptions] = useState([menuItems]);
   const [paymentReminderTemplate, setPaymentReminderTemplate] = useState(null);
-  const [templateOptions, setTemplateOptions] = useState([]);
+  const [templateOptions, setTemplateOptions] = useState(data?.templates || {});
   const [themeColors, setThemeColor] = useState(theme);
   const [bankingDetails, setBankingDetails] = useState(banking);
   const [message, setMessage] = useState({ isError: false, detail: '' });
@@ -275,8 +275,8 @@ export default function CommunitySettings({ data, token, refetch }) {
   }
 
   function handleTemplates(event){
-    setPaymentReminderTemplate(event.target.value)
-    setTemplateOptions([...templateOptions, {'payment_reminder_template_behind': event.target.value}])
+    setPaymentReminderTemplate(event.target.value);
+    setTemplateOptions({...templateOptions, payment_reminder_template_behind: event.target.value});
   }
 
   function updateCommunity() {
@@ -870,7 +870,7 @@ CommunitySettings.propTypes = {
     supportWhatsapp: PropTypes.arrayOf(PropTypes.object),
     socialLinks: PropTypes.arrayOf(PropTypes.object),
     menuItems: PropTypes.arrayOf(PropTypes.object),
-    templates: PropTypes.arrayOf(PropTypes.object),
+    templates: PropTypes.shape({}),
     imageUrl: PropTypes.string,
     currency: PropTypes.string,
     locale: PropTypes.string,
