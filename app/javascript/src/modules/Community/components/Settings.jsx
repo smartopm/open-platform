@@ -23,6 +23,7 @@ import ColorPicker from './ColorPicker';
 import { validateThemeColor } from '../helpers';
 import { AdminUsersQuery } from '../../Users/graphql/user_query';
 import MultiSelect from '../../../shared/MultiSelect';
+import { EmailTemplatesQuery } from '../../Emails/graphql/email_queries';
 
 export default function CommunitySettings({ data, token, refetch }) {
   const numbers = {
@@ -77,6 +78,8 @@ export default function CommunitySettings({ data, token, refetch }) {
   const [whatsappOptions, setWhatsappOptions] = useState([whatsapps]);
   const [socialLinkOptions, setSocialLinkOptions] = useState([socialLinks]);
   const [menuItemOptions, setMenuItemOptions] = useState([menuItems]);
+  const [paymentReminderTemplate, setPaymentReminderTemplate] = useState(null);
+  const [templateOptions, setTemplateOptions] = useState(data?.templates || {});
   const [themeColors, setThemeColor] = useState(theme);
   const [bankingDetails, setBankingDetails] = useState(banking);
   const [message, setMessage] = useState({ isError: false, detail: '' });
@@ -103,6 +106,10 @@ export default function CommunitySettings({ data, token, refetch }) {
   });
 
   const { data: adminUsersData } = useQuery(AdminUsersQuery, {
+    fetchPolicy: 'cache-and-network',
+    errorPolicy: 'all'
+  });
+  const { data: emailTemplatesData } = useQuery(EmailTemplatesQuery, {
     fetchPolicy: 'cache-and-network',
     errorPolicy: 'all'
   });
@@ -267,6 +274,11 @@ export default function CommunitySettings({ data, token, refetch }) {
     localStorage.setItem('default-language', selectedLanguage);
   }
 
+  function handleTemplates(event){
+    setPaymentReminderTemplate(event.target.value);
+    setTemplateOptions({...templateOptions, payment_reminder_template_behind: event.target.value});
+  }
+
   function updateCommunity() {
     if (!validateThemeColor(themeColors)) {
       setAlertOpen(true);
@@ -286,6 +298,7 @@ export default function CommunitySettings({ data, token, refetch }) {
         socialLinks: socialLinkOptions,
         menuItems: menuItemOptions,
         imageBlobId: signedBlobId,
+        templates: templateOptions,
         currency,
         locale,
         language,
@@ -326,6 +339,7 @@ export default function CommunitySettings({ data, token, refetch }) {
     setWhatsappOptions(data.supportWhatsapp || [whatsapps]);
     setSocialLinkOptions(data.socialLinks || [socialLinks]);
     setMenuItemOptions(data.menuItems || [menuItems]);
+    setTemplateOptions(data.templates || templateOptions);
     setCurrency(data.currency);
     setLocale(data.locale);
     setLanguage(data.language);
@@ -792,6 +806,46 @@ export default function CommunitySettings({ data, token, refetch }) {
         </TextField>
       </div>
 
+      <div style={{ marginTop: '40px' }}>
+        <Typography variant="h6">{t('community.notification_templates')}</Typography>
+        <div style={{ display: 'flex', flexDirection: 'row', margin: '10px 0' }}>
+          <TextField
+            margin="normal"
+            id="behind"
+            label={t('community.status')}
+            aria-label="behind"
+            value={t('community.behind')}
+            name="duration"
+            style={{ width: '200px'}}
+            InputProps={{
+              disableUnderline: true,
+              'data-testid': 'plan_status'
+            }}
+            disabled
+          />
+          <TextField
+            margin="normal"
+            id="payment-reminder"
+            aria-label="payment reminder"
+            label={t('community.select_template')}
+            value={paymentReminderTemplate}
+            onChange={handleTemplates}
+            name="template"
+            inputProps={{
+                'data-testid': 'payment_reminder_template'
+            }}
+            style={{ width: '200px', marginLeft: '40px' }}
+            select
+          >
+            {emailTemplatesData?.emailTemplates?.map((template) => (
+              <MenuItem key={template.id} value={template?.id}>
+                {template?.name}
+              </MenuItem>
+            ))}
+          </TextField>
+        </div>
+      </div>
+
       <div className={classes.button}>
         <Button
           disableElevation
@@ -816,6 +870,7 @@ CommunitySettings.propTypes = {
     supportWhatsapp: PropTypes.arrayOf(PropTypes.object),
     socialLinks: PropTypes.arrayOf(PropTypes.object),
     menuItems: PropTypes.arrayOf(PropTypes.object),
+    templates: PropTypes.shape({}),
     imageUrl: PropTypes.string,
     currency: PropTypes.string,
     locale: PropTypes.string,

@@ -21,6 +21,7 @@ export const CurrentCommunityQuery = gql`
       themeColors
       features
       securityManager
+      templates
       subAdministrator {
         id
         name

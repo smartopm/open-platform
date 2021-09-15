@@ -437,6 +437,8 @@ export default function PaymentList({ currencyData }) {
             communityPlansLoading={communityPlansLoading}
             communityPlans={communityPlansData?.communityPaymentPlans?.sort((a,b) => b.owingAmount - a.owingAmount)}
             setDisplaySubscriptionPlans={setDisplaySubscriptionPlans}
+            setMessage={setMessage}
+            setAlertOpen={setAlertOpen}
           />
         )}
       </TabPanel>

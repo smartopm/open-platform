@@ -3,11 +3,14 @@ import Grid from '@material-ui/core/Grid';
 import PropTypes from 'prop-types';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
+import { IconButton } from '@material-ui/core';
+import { MoreHorizOutlined } from '@material-ui/icons';
 import PaymentSlider from './PaymentSlider';
 import Label from '../../../shared/label/Label';
 import { capitalize, objectAccessor } from '../../../utils/helpers';
+import MenuList from '../../../shared/MenuList';
 
-export default function PlanListItem({ data, currencyData }) {
+export default function PlanListItem({ data, currencyData, menuData }) {
   const classes = useStyles();
 
   const colors = {
@@ -45,11 +48,31 @@ export default function PlanListItem({ data, currencyData }) {
             {data?.landParcel?.parcelType}
           </Typography>
         </Grid>
-        <Grid item xs={12} sm={8} data-testid='payment-slider'>
+        <Grid item xs={12} sm={7} data-testid='payment-slider'>
           <PaymentSlider data={data} currencyData={currencyData} />
         </Grid>
         <Grid item xs={12} sm={2} data-testid='label'>
           <Label title={capitalize(planStatus(data) || '')} color={objectAccessor(colors, planStatus(data))} />
+        </Grid>
+        <Grid item xs={12} sm={1} data-testid="menu">
+          {menuData?.userType === 'admin' && planStatus(data) === 'behind' && (
+            <IconButton
+              aria-controls="simple-menu"
+              aria-haspopup="true"
+              data-testid="plan-menu"
+              dataid={data.id}
+              onClick={event => menuData?.handleMenuClick(event, data)}
+            >
+              <MoreHorizOutlined />
+            </IconButton>
+          )}
+          <MenuList
+            open={menuData?.open && menuData?.anchorEl?.getAttribute('dataid') === data.id}
+            anchorEl={menuData?.anchorEl}
+            userType={menuData?.userType}
+            handleClose={menuData?.handleClose}
+            list={menuData?.menuList}
+          />
         </Grid>
       </Grid>
     </>
@@ -73,6 +96,7 @@ const useStyles = makeStyles(() => ({
 
 PlanListItem.propTypes = {
   data: PropTypes.shape({
+    id: PropTypes.string,
     planType: PropTypes.string,
     landParcel: PropTypes.shape({
       parcelNumber: PropTypes.string,
@@ -83,4 +107,18 @@ PlanListItem.propTypes = {
     currency: PropTypes.string,
     locale: PropTypes.string
   }).isRequired,
+  menuData: PropTypes.shape({
+    handleMenuClick: PropTypes.func,
+    open: PropTypes.bool,
+    anchorEl: PropTypes.shape({
+      getAttribute: PropTypes.func
+    }),
+    userType: PropTypes.string,
+    handleClose: PropTypes.func,
+    menuList: PropTypes.arrayOf(
+      PropTypes.shape({
+        content: PropTypes.string
+      })
+    )
+  }).isRequired
 }

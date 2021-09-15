@@ -23,6 +23,7 @@ module Mutations
       argument :banking_details, GraphQL::Types::JSON, required: false
       argument :sms_phone_numbers, [String, { null: true }], required: false
       argument :emergency_call_number, String, required: false
+      argument :templates, GraphQL::Types::JSON, required: false
 
       field :community, Types::CommunityType, null: true
 
