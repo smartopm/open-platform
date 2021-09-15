@@ -40,4 +40,15 @@ RSpec.describe Forms::Form, type: :model do
     it { is_expected.to have_many(:form_users) }
     it { is_expected.to have_many(:categories) }
   end
+
+  describe '#report_an_issue?' do
+    let!(:user) { create(:admin_user) }
+    let!(:form) { create(:form, community: user.community) }
+    let!(:report_form) { create(:form, community: user.community, name: 'Report an Issue') }
+
+    it 'checks if a form is a report-an-issue form' do
+      expect(form.report_an_issue?).to eq(false)
+      expect(report_form.report_an_issue?).to eq(true)
+    end
+  end
 end

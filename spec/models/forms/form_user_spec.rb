@@ -19,4 +19,21 @@ RSpec.describe Forms::FormUser, type: :model do
     it { is_expected.to have_many(:user_form_properties).dependent(:destroy) }
     it { is_expected.to have_one(:note).class_name('Notes::Note').dependent(:destroy) }
   end
+
+  describe '#create_form_task' do
+    let!(:user) { create(:admin_user) }
+    let!(:form) { create(:form, community: user.community) }
+    let!(:form_user) { create(:form_user, form: form, user: user) }
+
+    it 'creates a task' do
+      previous_notes_count = Notes::Note.count
+
+      form_user.create_form_task('nurudeen.dgdp.site')
+      expect(Notes::Note.count).to eq(previous_notes_count + 1)
+
+      latest_note = Notes::Note.order(:created_at).first
+      expect(latest_note.user_id).to eq(user.id)
+      expect(latest_note.author_id).to eq(user.id)
+    end
+  end
 end
