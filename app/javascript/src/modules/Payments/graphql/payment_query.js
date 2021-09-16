@@ -162,6 +162,7 @@ export const ReceiptPayment = gql`
         installmentAmount
         landParcel {
           parcelNumber
+          parcelType
         }
       }
     }
