@@ -16,6 +16,7 @@ module Mutations
       argument :duration, Integer, required: true
       argument :payment_day, Integer, required: false
       argument :frequency, Integer, required: true
+      argument :renewable, Boolean, required: true
 
       field :payment_plan, Types::PaymentPlanType, null: true
 

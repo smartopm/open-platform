@@ -16,12 +16,12 @@ namespace :migrate_deposits do
                                   .not_cancelled
                                   .where.not('source = ? OR destination = ?', 'invoice', 'invoice')
 
-        if plan.monthly_amount.nil? || plan.duration_in_month.nil?
+        if plan.installment_amount.nil? || plan.duration.nil?
           warning["payment_plan_#{plan.id}"] = "Unable to migrate deposit for user '#{plan.user.name}'. Because either monthly amount or duration_in_month is not present."
           next
         end
 
-        total_pending_balance = plan.monthly_amount * plan.duration_in_month
+        total_pending_balance = plan.installment_amount * plan.duration
 
         if plan.pending_balance != (total_pending_balance - wallet_transactions.sum(:amount))
           warning["payment_plan_#{plan.id}"] = "Unable to migrate deposit for user '#{plan.user.name}'. Have to handle it manually because there is a data inconsistency with the payment plan."
