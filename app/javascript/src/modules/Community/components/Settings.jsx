@@ -78,7 +78,7 @@ export default function CommunitySettings({ data, token, refetch }) {
   const [whatsappOptions, setWhatsappOptions] = useState([whatsapps]);
   const [socialLinkOptions, setSocialLinkOptions] = useState([socialLinks]);
   const [menuItemOptions, setMenuItemOptions] = useState([menuItems]);
-  const [paymentReminderTemplate, setPaymentReminderTemplate] = useState(null);
+  const [paymentReminderTemplate, setPaymentReminderTemplate] = useState(data?.templates?.payment_reminder_template_behind);
   const [templateOptions, setTemplateOptions] = useState(data?.templates || {});
   const [themeColors, setThemeColor] = useState(theme);
   const [bankingDetails, setBankingDetails] = useState(banking);
@@ -870,7 +870,9 @@ CommunitySettings.propTypes = {
     supportWhatsapp: PropTypes.arrayOf(PropTypes.object),
     socialLinks: PropTypes.arrayOf(PropTypes.object),
     menuItems: PropTypes.arrayOf(PropTypes.object),
-    templates: PropTypes.shape({}),
+    templates: PropTypes.shape({
+      payment_reminder_template_behind: PropTypes.string
+    }),
     imageUrl: PropTypes.string,
     currency: PropTypes.string,
     locale: PropTypes.string,
