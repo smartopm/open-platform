@@ -24,6 +24,7 @@ RSpec.describe Mutations::PaymentPlan::PaymentPlanCreate do
             $totalAmount: Float!
             $paymentDay: Int
             $frequency: Int!
+            $renewable: Boolean!
         ) {
             paymentPlanCreate(
             landParcelId: $landParcelId
@@ -38,9 +39,11 @@ RSpec.describe Mutations::PaymentPlan::PaymentPlanCreate do
             totalAmount: $totalAmount
             paymentDay: $paymentDay
             frequency: $frequency
+            renewable: $renewable
             ) {
             paymentPlan {
                 id
+                renewable
                 coOwners{
                   name
                 }
@@ -64,6 +67,7 @@ RSpec.describe Mutations::PaymentPlan::PaymentPlanCreate do
           totalAmount: 0,
           paymentDay: 2,
           frequency: 2,
+          renewable: false,
         }
         result = DoubleGdpSchema.execute(payment_plan_mutation, variables: variables,
                                                                 context: {
@@ -72,6 +76,7 @@ RSpec.describe Mutations::PaymentPlan::PaymentPlanCreate do
                                                                 }).as_json
         expect(result['errors']).to be_nil
         expect(result.dig('data', 'paymentPlanCreate', 'paymentPlan', 'id')).not_to be_nil
+        expect(result.dig('data', 'paymentPlanCreate', 'paymentPlan', 'renewable')).to eql false
       end
     end
 
@@ -90,6 +95,7 @@ RSpec.describe Mutations::PaymentPlan::PaymentPlanCreate do
           totalAmount: 0,
           paymentDay: 2,
           frequency: 2,
+          renewable: true,
         }
         result = DoubleGdpSchema.execute(payment_plan_mutation, variables: variables,
                                                                 context: {
@@ -116,6 +122,7 @@ RSpec.describe Mutations::PaymentPlan::PaymentPlanCreate do
         totalAmount: 100.0,
         paymentDay: 31,
         frequency: 2,
+        renewable: true,
       }
       result = DoubleGdpSchema.execute(payment_plan_mutation, variables: variables,
                                                               context: {

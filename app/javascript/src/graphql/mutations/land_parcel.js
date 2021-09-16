@@ -15,6 +15,7 @@ mutation paymentPlanCreate(
   $totalAmount: Float!
   $paymentDay: Int
   $frequency: Int!
+  $renewable: Boolean!
 ) {
   paymentPlanCreate(
     landParcelId: $landParcelId
@@ -29,6 +30,7 @@ mutation paymentPlanCreate(
     totalAmount: $totalAmount
     paymentDay: $paymentDay
     frequency: $frequency
+    renewable: $renewable
     ) {
     paymentPlan {
         id
