@@ -69,7 +69,7 @@ describe('It should test the CoOwners component', () => {
   };
 
   it('should render the CoOwners component', async() => {
-    render(
+    const container = render(
       <BrowserRouter>
         <CoOwners
           landParcel={landParcel}
@@ -78,5 +78,8 @@ describe('It should test the CoOwners component', () => {
         />
       </BrowserRouter>
     );
+
+    expect(container.queryByTestId("form-label")).toBeInTheDocument();
+    expect(container.queryByText("John Doe")).toBeInTheDocument();
   });
 });

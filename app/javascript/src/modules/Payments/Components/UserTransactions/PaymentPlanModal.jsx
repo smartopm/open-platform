@@ -377,7 +377,7 @@ export function CoOwners({ landParcel, userId, handleCoOwners }) {
   return (
     <>
       <div>
-        <FormLabel>{t('common:form_placeholders.select_co_owners')}</FormLabel>
+        <FormLabel data-testid="form-label">{t('common:form_placeholders.select_co_owners')}</FormLabel>
       </div>
       <div>
         {landParcel?.accounts?.map(
