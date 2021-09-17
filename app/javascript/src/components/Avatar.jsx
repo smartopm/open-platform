@@ -22,11 +22,22 @@ export default function Avatar({ imageUrl, user, style, searchedUser }) {
   };
   // we have imageUrl and avatarUrl on User and we don't need to re-authenticate these
   // user.imageUrl contains links from Auth Providers ==> Google and Facebook
+  if(searchedUser && searchedUser.avatarUrl){
+    // non Auth provider user, but has attached image
+    return (
+      <ImageAuth
+        imageLink={safeAvatarLink({ imageUrl: searchedUser.avatarUrl})}
+        token={token}
+        className={css(propAccessor(imageStyles, style))}
+        alt="avatar for the user"
+      />
+    );
+  }
   if(searchedUser && searchedUser.imageUrl){
     // Auth provider user - Google & Facebook
     return (
       <img
-        src={safeAvatarLink({ imageUrl: searchedUser.imageUrl  })}
+        src={safeAvatarLink({ imageUrl: searchedUser.imageUrl})}
         className={css(propAccessor(imageStyles, style))}
         alt="avatar for the user"
         data-testid="searched_auth_user_avatar"
@@ -34,17 +45,6 @@ export default function Avatar({ imageUrl, user, style, searchedUser }) {
     );
   }
 
-  if(searchedUser && searchedUser.avatarUrl){
-    // non Auth provider user, but has attached image
-    return (
-      <img
-        src={safeAvatarLink({ imageUrl: searchedUser.avatarUrl  })}
-        className={css(propAccessor(imageStyles, style))}
-        alt="avatar for the user"
-        data-testid="searched_non_auth_user_avatar"
-      />
-    );
-  }
 
   if(searchedUser && !(searchedUser.imageUrl || searchedUser.avatarUrl)){
     // Non Auth provider user, no Image attached. Uses default
@@ -80,7 +80,7 @@ export default function Avatar({ imageUrl, user, style, searchedUser }) {
 
 Avatar.defaultProps = {
   user: {
-    avatarUrl: '/images/default_avatar.svg',
+    avatarUrl: null,
     imageUrl: '/images/default_avatar.svg'
   },
   imageUrl: '/images/default_avatar.svg',
