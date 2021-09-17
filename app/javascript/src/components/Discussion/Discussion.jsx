@@ -35,9 +35,9 @@ export default function Discussion({ discussionData }) {
   const { t } = useTranslation('discussion')
 
   const discussionBoardDisclaimer =
-    `{t('discussion_board_disclaimer.first_line')}
-    {t('discussion_board_disclaimer.second_line')}
-    {t('discussion_board_disclaimer.third_line')}`
+    `${t('discussion_board_disclaimer.first_line')}
+    ${t('discussion_board_disclaimer.second_line')}
+    ${t('discussion_board_disclaimer.third_line')}`
 
   function fetchMoreComments() {
     setLoading(true)

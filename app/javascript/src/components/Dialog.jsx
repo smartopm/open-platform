@@ -198,7 +198,7 @@ export function FullScreenDialog({ handleClose, open, children, actionText, hand
           <div className={matches ? classes.printMobile : classes.print}>
             {' '}
           </div>
-          <Button autoFocus onClick={handleSubmit} style={{background: 'none'}} className={classes.print}>
+          <Button autoFocus onClick={handleSubmit} style={{background: 'none'}} className={classes.print} data-testid="action-button">
             {actionText}
           </Button>
         </Toolbar>

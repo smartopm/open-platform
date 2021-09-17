@@ -229,7 +229,10 @@
     "plan_frequency": "Plan Frequency",
     "image_uploaded": "Image uploaded",
     "new_plan": "New Plan",
-    "activate": "Activate"
+    "activate": "Activate",
+    "web": "Web",
+    "phone": "Phone",
+    "signature": "Signature"
   },
   "menu": {
     "invoice": "Invoice",

@@ -11,7 +11,7 @@ import { dateToString } from '../../../components/DateContainer';
 import UserPlotMap from './UserPlotMap';
 import { objectAccessor } from '../../../utils/helpers';
 
-export default function UserPlotInfo({ account, userId, userName }) {
+export default function UserPlotInfo({ account, userId, userName, currentUserType }) {
   const [plotNumber, setPlotNumber] = useState([]);
   const { t } = useTranslation(['users', 'common'])
   const classes = useStyles();
@@ -39,7 +39,7 @@ export default function UserPlotInfo({ account, userId, userName }) {
   }, [account]);
 
   function parcels() {
-    if (account) {
+    if (account.length > 0) {
       const landParcels = account
         .map(acc => {
           return acc.landParcels.map(plot => plot);
@@ -51,9 +51,11 @@ export default function UserPlotInfo({ account, userId, userName }) {
 
   return (
     <>
-      <Fab color="primary" variant="extended" className={classes.plot} onClick={() => handlePlotCreteClick()} data-testid='add-plot'>
-        {t("common:misc.new_property")}
-      </Fab>
+      {currentUserType === 'admin' && (
+        <Fab color="primary" variant="extended" className={classes.plot} onClick={() => handlePlotCreteClick()} data-testid='add-plot'>
+          {t("common:misc.new_property")}
+        </Fab>
+      )}
       {parcels().length > 0 ? (
         <div className="container">
           <div className={classes.body}>
@@ -153,5 +155,6 @@ UserPlotInfo.propTypes = {
     })
   ),
   userId: PropTypes.string.isRequired,
-  userName: PropTypes.string.isRequired
+  userName: PropTypes.string.isRequired,
+  currentUserType: PropTypes.string.isRequired
 };
