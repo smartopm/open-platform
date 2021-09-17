@@ -4,7 +4,7 @@ require 'rails_helper'
 
 RSpec.describe Users::User, type: :model do
   describe 'associations' do
-    it { is_expected.to belong_to(:community).dependent(:destroy) }
+    it { is_expected.to belong_to(:community) }
     it do
       is_expected
         .to have_many(:entry_requests)
@@ -165,6 +165,18 @@ RSpec.describe Users::User, type: :model do
       should define_enum_for(:sub_status)
         .with_values(Users::User.sub_statuses)
     }
+  end
+
+  describe 'scoped validations' do
+    let!(:user) { create(:user_with_community, email: 'john@doublegdp.com') }
+    it 'checks for uniqueness of email per community' do
+      expect do
+        user.community.users.create!(name: 'john doe', email: 'JOHN@DOUBLEGDP.COM')
+      end.to raise_error(
+        ActiveRecord::RecordInvalid,
+        'Validation failed: Email has already been taken',
+      )
+    end
   end
 
   describe 'Creating a user from a oauth authentication callback' do
@@ -474,37 +486,6 @@ RSpec.describe Users::User, type: :model do
         expect(EmailMsg).not_to receive(:send_mail_from_db)
         user.send_email_msg
       end
-    end
-  end
-
-  describe 'User substatus change log' do
-    let!(:user) { create(:user_with_community) }
-
-    it { is_expected.to callback(:log_sub_status_change).before(:update) }
-
-    it 'should not create Substatus Log without subsatus change' do
-      user.update(name: 'New Name')
-
-      expect(Logs::SubstatusLog.count).to eq 0
-    end
-
-    it 'should create Substatus Log after user substatus is updated' do
-      user.update(sub_status: 'plots_fully_purchased')
-
-      expect(Logs::SubstatusLog.count).to eq 1
-      stop_date = Logs::SubstatusLog.first&.stop_date
-      expect(stop_date).to be_nil
-    end
-
-    it '#log_sub_status_change should update stop_date only when User changes to new_status' do
-      user.update(sub_status: 'plots_fully_purchased')
-      user.update(sub_status: 'eligible_to_start_construction')
-
-      expect(Logs::SubstatusLog.count).to eq 2
-      substatus_log = Logs::SubstatusLog.find_by(stop_date: nil)
-      expect(substatus_log).not_to be_nil
-      expect(substatus_log.new_status).to eq 'eligible_to_start_construction'
-      expect(substatus_log.previous_status).to eq 'plots_fully_purchased'
     end
   end
 end

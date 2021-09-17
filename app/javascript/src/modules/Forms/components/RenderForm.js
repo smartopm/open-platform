@@ -15,8 +15,9 @@ import UploadField from './FormProperties/UploadField';
 import SignaturePad from './FormProperties/SignaturePad';
 import FormPropertyAction from './FormPropertyAction';
 import { FormContext } from '../Context';
-import { convertBase64ToFile } from '../../../utils/helpers';
+import { convertBase64ToFile, objectAccessor } from '../../../utils/helpers';
 import { dateToString } from '../../../components/DateContainer';
+import { checkRequiredFormPropertyIsFilled } from '../utils';
 
 export default function RenderForm({ formPropertiesData, formId, refetch, editMode, categoryId }) {
   const signRef = useRef(null);
@@ -36,7 +37,7 @@ export default function RenderForm({ formPropertiesData, formId, refetch, editMo
     setFormProperties({
       ...formProperties,
       [property.fieldName]: {
-        value: { ...formProperties[property.fieldName]?.value, [name]: checked },
+        value: { ...objectAccessor(formProperties, property.fieldName)?.value, [name]: checked },
         form_property_id: property.id,
         type: 'checkbox'
       }
@@ -110,6 +111,9 @@ export default function RenderForm({ formPropertiesData, formId, refetch, editMo
             value={formProperties.fieldName}
             handleValue={event => handleValueChange(event, formPropertiesData)}
             editable={editable}
+            inputValidation={{
+              error: checkRequiredFormPropertyIsFilled(formPropertiesData, formState),
+            }}
           />
         </Grid>
       </Grid>
@@ -126,9 +130,13 @@ export default function RenderForm({ formPropertiesData, formId, refetch, editMo
         <Grid item xs={editMode ? 10 : 12}>
           <DatePickerDialog
             id={formPropertiesData.id}
-            selectedDate={formProperties[String(formPropertiesData.fieldName)]?.value || null}
+            selectedDate={objectAccessor(formProperties, formPropertiesData.fieldName)?.value || null}
             handleDateChange={date => handleDateChange(date, formPropertiesData)}
             label={`${formPropertiesData.fieldName} ${formPropertiesData.required ? '*' : ''}`}
+            inputValidation={{
+              error: checkRequiredFormPropertyIsFilled(formPropertiesData, formState),
+              fieldName: formPropertiesData.fieldName,
+            }}
           />
         </Grid>
       </Grid>
@@ -145,10 +153,14 @@ export default function RenderForm({ formPropertiesData, formId, refetch, editMo
         <Grid item xs={editMode ? 10 : 12}>
           <ThemedTimePicker
             id={formPropertiesData.id}
-            time={formProperties[String(formPropertiesData.fieldName)]?.value || null}
+            time={objectAccessor(formProperties, formPropertiesData.fieldName)?.value || null}
             handleTimeChange={date => handleDateChange(date, formPropertiesData)}
             label={`${formPropertiesData.fieldName} ${formPropertiesData.required ? '*' : ''}`}
             style={{ width: '100%' }}
+            inputValidation={{
+              error: checkRequiredFormPropertyIsFilled(formPropertiesData, formState),
+              fieldName: formPropertiesData.fieldName,
+            }}
           />
         </Grid>
       </Grid>
@@ -165,9 +177,13 @@ export default function RenderForm({ formPropertiesData, formId, refetch, editMo
         <Grid item xs={editMode ? 10 : 12}>
           <DateAndTimePickers
             id={formPropertiesData.id}
-            selectedDateTime={formProperties[String(formPropertiesData.fieldName)]?.value || null}
+            selectedDateTime={objectAccessor(formProperties, formPropertiesData.fieldName)?.value || null}
             handleDateChange={date => handleDateChange(date, formPropertiesData)}
             label={`${formPropertiesData.fieldName} ${formPropertiesData.required ? '*' : ''}`}
+            inputValidation={{
+              error: checkRequiredFormPropertyIsFilled(formPropertiesData, formState),
+              fieldName: formPropertiesData.fieldName,
+            }}
           />
         </Grid>
       </Grid>
@@ -245,6 +261,9 @@ export default function RenderForm({ formPropertiesData, formId, refetch, editMo
               properties={formPropertiesData}
               value={null}
               handleValue={event => handleRadioValueChange(event, formPropertiesData)}
+              inputValidation={{
+                error: checkRequiredFormPropertyIsFilled(formPropertiesData, formState)
+              }}
             />
             <br />
           </Fragment>
@@ -265,8 +284,11 @@ export default function RenderForm({ formPropertiesData, formId, refetch, editMo
             <br />
             <CheckboxInput
               properties={formPropertiesData}
-              checkboxState={formProperties[formPropertiesData.fieldName]}
+              checkboxState={objectAccessor(formProperties, formPropertiesData.fieldName)}
               handleValue={event => handleCheckboxSelect(event, formPropertiesData)}
+              inputValidation={{
+                error: checkRequiredFormPropertyIsFilled(formPropertiesData, formState)
+              }}
             />
             <br />
           </Fragment>
@@ -289,12 +311,15 @@ export default function RenderForm({ formPropertiesData, formId, refetch, editMo
             value=""
             handleValue={event => handleValueChange(event, formPropertiesData)}
             editable={editable}
+            inputValidation={{
+              error: checkRequiredFormPropertyIsFilled(formPropertiesData, formState),
+            }}
           />
         </Grid>
       </Grid>
     )
   };
-  return <>{fields[String(formPropertiesData.fieldType)]}</>;
+  return <>{objectAccessor(fields, formPropertiesData.fieldType)}</>;
 }
 
 RenderForm.propTypes = {

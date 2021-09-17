@@ -229,7 +229,10 @@
     "plan_frequency": "Plan Frequency",
     "image_uploaded": "Image uploaded",
     "new_plan": "New Plan",
-    "activate": "Activate"
+    "activate": "Activate",
+    "web": "Web",
+    "phone": "Phone",
+    "signature": "Signature"
   },
   "menu": {
     "invoice": "Invoice",
@@ -311,7 +314,8 @@
     "prospective_client": "Prospective Client",
     "security_guard": "Security Guard",
     "resident": "Resident",
-    "contractor": "Contractor"
+    "contractor": "Contractor",
+    "site_worker": "Site Worker"
   },
   "table_headers": {
     "date_created": "Date Created",

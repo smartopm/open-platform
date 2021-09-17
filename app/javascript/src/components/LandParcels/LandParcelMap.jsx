@@ -10,7 +10,7 @@ import NkwashiSuburbBoundaryData from '../../data/nkwashi_suburb_boundary.json'
 import { LandParcel } from '../../graphql/queries';
 import { PointOfInterestDelete, PointOfInterestImageCreate } from '../../graphql/mutations/land_parcel';
 import { useFileUpload } from '../../graphql/useFileUpload'
-import { checkValidGeoJSON, formatError } from '../../utils/helpers'
+import { checkValidGeoJSON, formatError, objectAccessor } from '../../utils/helpers'
 import { emptyPolygonFeature, mapTiles, plotStatusColorPallete } from '../../utils/constants'
 import PointsOfInterestMarker from '../Map/PointsOfInterestMarker'
 import { ActionDialog } from '../Dialog'
@@ -27,7 +27,7 @@ function getColor(plotSold){
 
 /* istanbul ignore next */
 function getHouseColor(status){
-  return plotStatusColorPallete[String(status)]
+  return objectAccessor(plotStatusColorPallete, status)
 }
 
 
@@ -97,10 +97,10 @@ export default function LandParcelMap({ handlePlotClick, geoData }){
 
   /* istanbul ignore next */
   function handleOnPlotClick({ target }){
-   const { 
-     properties: { id, parcel_no: parcelNumber, parcel_type: parcelType, long_x: longX, lat_y: latY, accounts, valuations, status, object_type: objectType }
+   const {
+     properties: { id, parcel_no: parcelNumber, parcel_type: parcelType, long_x: longX, lat_y: latY, accounts, valuations, status, object_type: objectType, others }
     } = target.feature
-   return (target.feature && 
+    return (target.feature &&
       handlePlotClick({
         id,
         parcelNumber,
@@ -112,13 +112,14 @@ export default function LandParcelMap({ handlePlotClick, geoData }){
         valuations,
         status,
         objectType,
+        ...others
       })
     )
   }
 
   /* istanbul ignore next */
   function handlePoiLayerClick({ target }){
-    const { properties: { id, icon, poi_name: poiName, parcel_no: parcelNumber, parcel_type: parcelType, long_x: longX, lat_y: latY } 
+    const { properties: { id, icon, poi_name: poiName, parcel_no: parcelNumber, parcel_type: parcelType, long_x: longX, lat_y: latY }
   } = target.feature
 
     setSelectedPoi({
@@ -213,7 +214,7 @@ export default function LandParcelMap({ handlePlotClick, geoData }){
       return [0, 0];
     }
 
-    return centerPoint[communityName.toLowerCase()]
+    return objectAccessor(centerPoint, communityName.toLowerCase())
   }
 
 
@@ -315,6 +316,7 @@ export default function LandParcelMap({ handlePlotClick, geoData }){
           dragging
           animate
           easeLinearity={0.35}
+          maxZoom={30}
         >
           <LayersControl position="topleft">
             <LayersControl.BaseLayer checked name="OSM">
@@ -326,7 +328,7 @@ export default function LandParcelMap({ handlePlotClick, geoData }){
             {Array.isArray(properties) && properties?.length && (
               <LayersControl.Overlay checked name="Land Parcels">
                 <FeatureGroup>
-                  {properties?.map(({ id, longX, latY, geom, parcelNumber, parcelType, plotSold, accounts, valuations, status, objectType }) => {
+                  {properties?.map(({ id, longX, latY, geom, parcelNumber, parcelType, plotSold, accounts, valuations, status, objectType, ...rest }) => {
                     if(checkValidGeoJSON(geom)){
                       const feature = JSON.parse(geom)
                       feature.properties.id = id
@@ -339,6 +341,7 @@ export default function LandParcelMap({ handlePlotClick, geoData }){
                       feature.properties.valuations = valuations
                       feature.properties.status = status
                       feature.properties.object_type = objectType
+                      feature.properties.others = rest
                       return featureCollection.features.push(feature)
                     }
                     return featureCollection.features.push(JSON.parse(emptyPolygonFeature))
@@ -439,7 +442,7 @@ LandParcelMap.propTypes = {
       parcelNumber: PropTypes.string,
       parcelType: PropTypes.string,
       latY: PropTypes.number,
-      longX: PropTypes.number, 
+      longX: PropTypes.number,
       geom: PropTypes.string,
       plotSold: PropTypes.bool,
   })

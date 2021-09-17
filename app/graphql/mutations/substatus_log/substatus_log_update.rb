@@ -18,6 +18,7 @@ module Mutations
         user_log = user.substatus_logs.find_by(id: vals[:id])
         raise GraphQL::ExecutionError, I18n.t('errors.substatus_log.not_found') if user_log.nil?
 
+        vals[:updated_by_id] = context[:current_user].id
         if user_log.update(vals)
           update_previous(user_log, user, vals[:start_date])
           return { log: user_log }

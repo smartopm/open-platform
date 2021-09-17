@@ -81,7 +81,7 @@ module Logs
 
     def user_switch_to_sentence
       I18n.t('activerecord.attributes.logs/event_log.sentences.user_switch_to_sentence',
-             acting_user_name: acting, ref_user_name: ref_user_name)
+             acting_user_name: acting_user_name, ref_user_name: ref_user_name)
     end
 
     def user_active_to_sentence

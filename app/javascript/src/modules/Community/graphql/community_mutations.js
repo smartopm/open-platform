@@ -10,6 +10,7 @@ export const CommunityUpdateMutation = gql`
     $socialLinks: JSON
     $menuItems: JSON
     $imageBlobId: String
+    $templates: JSON
     $currency: String
     $locale: String
     $tagline: String
@@ -31,6 +32,7 @@ export const CommunityUpdateMutation = gql`
       socialLinks: $socialLinks
       menuItems: $menuItems
       imageBlobId: $imageBlobId
+      templates: $templates
       currency: $currency
       locale: $locale
       language: $language

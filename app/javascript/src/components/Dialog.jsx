@@ -198,7 +198,7 @@ export function FullScreenDialog({ handleClose, open, children, actionText, hand
           <div className={matches ? classes.printMobile : classes.print}>
             {' '}
           </div>
-          <Button autoFocus onClick={handleSubmit} style={{background: 'none'}} className={classes.print}>
+          <Button autoFocus onClick={handleSubmit} style={{background: 'none'}} className={classes.print} data-testid="action-button">
             {actionText}
           </Button>
         </Toolbar>
@@ -227,7 +227,7 @@ export function MapEditorFullScreenDialog({ handleClose, open, children }){
     </Dialog>
   )
 }
-export function ActionDialog({ handleClose, open, handleOnSave, message, type}) {
+export function ActionDialog({ handleClose, open, handleOnSave, message, type, disableActionBtn}) {
   const { t } = useTranslation('common')
   const classes = useStyles()
   return (
@@ -256,6 +256,7 @@ export function ActionDialog({ handleClose, open, handleOnSave, message, type}) 
           onClick={handleOnSave}
           variant="contained"
           color="primary"
+          disabled={disableActionBtn}
         >
           {t('menu.proceed')}
         </Button>
@@ -307,7 +308,8 @@ export const useStyles = makeStyles(theme => ({
 }))
 
 ActionDialog.defaultProps = {
-  type: 'warning'
+  type: 'warning',
+  disableActionBtn: false
 }
 
 ActionDialog.propTypes = {
@@ -316,6 +318,7 @@ ActionDialog.propTypes = {
   message: PropTypes.string.isRequired,
   type: PropTypes.oneOf(['warning', 'confirm']),
   handleOnSave: PropTypes.func.isRequired,
+  disableActionBtn: PropTypes.bool
 }
 
 FullScreenDialog.defaultProps = {

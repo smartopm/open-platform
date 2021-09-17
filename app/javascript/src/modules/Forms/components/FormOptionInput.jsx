@@ -4,7 +4,7 @@ import { IconButton, TextField, Typography } from '@material-ui/core';
 import { AddCircleOutline, DeleteOutline } from '@material-ui/icons';
 import PhoneInput from 'react-phone-input-2';
 import { useTranslation } from 'react-i18next';
-import { propAccessor } from '../../../utils/helpers';
+import { objectAccessor } from '../../../utils/helpers';
 
 /**
  *
@@ -48,7 +48,7 @@ export default function FormOptionInput({ options, setOptions, label }) {
                 </span>
               </label>
               <PhoneInput
-                value={propAccessor(options, i)?.info}
+                value={objectAccessor(options, i)?.info}
                 enableSearch
                 inputProps={{
                   name: 'phoneNumber',
@@ -74,7 +74,7 @@ export default function FormOptionInput({ options, setOptions, label }) {
               variant="outlined"
               size="small"
               style={{ width: 300 }}
-              value={propAccessor(options, i)?.info || value}
+              value={objectAccessor(options, i)?.info || value}
               onChange={event => handleOptionChange(event, i)}
               margin="normal"
               autoFocus={process.env.NODE_ENV !== 'test'}

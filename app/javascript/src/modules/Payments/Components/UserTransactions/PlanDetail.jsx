@@ -10,10 +10,11 @@ import EditIcon from '@material-ui/icons/Edit';
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import { CustomizedDialogs } from '../../../../components/Dialog';
 import { dateToString } from '../../../../components/DateContainer';
-import { formatMoney, formatError, titleize } from '../../../../utils/helpers';
+import { formatMoney, formatError, titleize , objectAccessor } from '../../../../utils/helpers';
 import { suffixedNumber } from '../../helpers';
 import { StyledTabs, StyledTab, TabPanel } from '../../../../components/Tabs';
 import SwitchInput from '../../../Forms/components/FormProperties/SwitchInput';
+
 
 export default function PlanDetail({
   open,
@@ -99,7 +100,7 @@ export default function PlanDetail({
 
   return (
     <>
-     
+
       <CustomizedDialogs
         open={open}
         handleModal={handleModalClose}
@@ -148,7 +149,7 @@ export default function PlanDetail({
                 <Typography className={classes.fieldTitle}>{t('table_headers.plan_duration')}</Typography>
               </Grid>
               <Grid item xs={6} className={classes.fieldContent}>
-                {`${planData.duration} ${planFrequency[planData?.frequency]}`}
+                {`${planData.duration} ${objectAccessor(planFrequency, planData?.frequency)}`}
               </Grid>
             </Grid>
             <Divider className={classes.divider} />
@@ -184,7 +185,7 @@ export default function PlanDetail({
                 <Typography className={classes.fieldTitle}>{t('common:table_headers.amount')}</Typography>
               </Grid>
               <Grid item xs={6} className={classes.fieldContent}>
-                {formatMoney(currencyData, planData.installmentAmount)} 
+                {formatMoney(currencyData, planData.installmentAmount)}
                 {' '}
                 {planData?.frequency}
               </Grid>

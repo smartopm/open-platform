@@ -1,5 +1,6 @@
 /* eslint-disable react/prop-types */
 import React from 'react';
+import PropTypes from 'prop-types'
 import DateFnsUtils from '@date-io/date-fns'
 import {
   KeyboardDatePicker,
@@ -7,13 +8,14 @@ import {
   KeyboardDateTimePicker,
   TimePicker
 } from '@material-ui/pickers'
+import FormHelperText from '@material-ui/core/FormHelperText';
 import { useTranslation } from 'react-i18next';
 import { es, enUS } from "date-fns/locale";
 import { checkPastDate } from "../utils/dateutil"
 import { getCurrentLng } from '../modules/i18n/util';
 
-export default function DatePickerDialog({ selectedDate, handleDateChange, label, width, required, inputProps, disablePastDate, inputVariant, styles, ...others }) {
-  const { t } = useTranslation('logbook')
+export default function DatePickerDialog({ selectedDate, handleDateChange, label, width, required, inputProps, disablePastDate, inputVariant, styles, inputValidation, ...others }) {
+  const { t } = useTranslation(['logbook', 'form'])
     return (
       <MuiPickersUtilsProvider utils={DateFnsUtils} locale={getCurrentLng().includes('es') ? es : enUS}>
         <KeyboardDatePicker
@@ -38,14 +40,16 @@ export default function DatePickerDialog({ selectedDate, handleDateChange, label
           KeyboardButtonProps={{
                         'aria-label': 'change date'
                     }}
+          {...inputValidation}
+          helperText={inputValidation.error && t('form:errors.required_field', { fieldName: inputValidation.fieldName })}
           {...others}
         />
       </MuiPickersUtilsProvider>
     );
 }
 
-export function DateAndTimePickers({ selectedDateTime, handleDateChange, label, pastDate }) {
-  const { t } = useTranslation('logbook')
+export function DateAndTimePickers({ selectedDateTime, handleDateChange, label, pastDate, inputValidation }) {
+  const { t } = useTranslation(['logbook', 'form'])
   return (
     <MuiPickersUtilsProvider utils={DateFnsUtils} locale={getCurrentLng().includes('es') ? es : enUS}>
       <KeyboardDateTimePicker
@@ -62,16 +66,21 @@ export function DateAndTimePickers({ selectedDateTime, handleDateChange, label, 
         clearable
         disablePast={pastDate || false}
         minutesStep={pastDate ? 60 : 1}
-        error={pastDate ? checkPastDate(selectedDateTime) : null}
-        helperText={pastDate ? 'Please select a date and time in the future' : ''}
+        error={pastDate ? checkPastDate(selectedDateTime) : inputValidation.error}
+        /* eslint-disable no-nested-ternary */
+        helperText={pastDate
+          ? t('form:errors.date_time_in_the_future')
+          : inputValidation.error
+            ? t('form:errors.required_field', { fieldName: inputValidation.fieldName })
+            : ''}
       />
     </MuiPickersUtilsProvider>
   );
 }
 
 
-export function ThemedTimePicker({ handleTimeChange, time, label, ...otherProps }){
-  const { t } = useTranslation('logbook')
+export function ThemedTimePicker({ handleTimeChange, time, label, inputValidation, ...otherProps }){
+  const { t } = useTranslation(['logbook', 'form'])
   return (
     <MuiPickersUtilsProvider utils={DateFnsUtils} locale={getCurrentLng().includes('es') ? es : enUS}>
       <TimePicker
@@ -86,6 +95,49 @@ export function ThemedTimePicker({ handleTimeChange, time, label, ...otherProps 
         onChange={handleTimeChange}
         {...otherProps}
       />
+      {inputValidation.error && <FormHelperText error>{t('form:errors.required_field', { fieldName: inputValidation.fieldName })}</FormHelperText>}
     </MuiPickersUtilsProvider>
   )
+}
+
+DatePickerDialog.defaultProps = {
+  inputValidation: {
+    error: false,
+    fieldName: '',
+  }
+}
+
+DateAndTimePickers.defaultProps = {
+  inputValidation: {
+    error: false,
+    fieldName: '',
+  }
+}
+
+ThemedTimePicker.defaultProps = {
+  inputValidation: {
+    error: false,
+    fieldName: '',
+  }
+}
+
+DatePickerDialog.propTypes = {
+  inputValidation: PropTypes.shape({
+    error: PropTypes.bool,
+    fieldName: PropTypes.string,
+  })
+}
+
+DateAndTimePickers.propTypes = {
+  inputValidation: PropTypes.shape({
+    error: PropTypes.bool,
+    fieldName: PropTypes.string,
+  })
+}
+
+ThemedTimePicker.propTypes = {
+  inputValidation: PropTypes.shape({
+    error: PropTypes.bool,
+    fieldName: PropTypes.string,
+  })
 }

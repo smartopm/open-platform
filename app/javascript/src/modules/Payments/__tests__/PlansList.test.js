@@ -2,9 +2,11 @@ import React from 'react';
 import { render } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { BrowserRouter } from 'react-router-dom';
+import { MockedProvider } from '@apollo/react-testing';
 import { Spinner } from '../../../shared/Loading';
-import { PlansList, SubscriptionPlans, renderSubscriptionPlans, renderCommunityPlans } from '../Components/PlansList';
+import { PlansList, SubscriptionPlans, renderSubscriptionPlans} from '../Components/PlansList';
 import currency from '../../../__mocks__/currency';
+import { PaymentReminderMutation } from '../graphql/payment_plan_mutations';
 
 describe('Plans List Item Component', () => {
   const subscriptionPlansData = {
@@ -41,17 +43,36 @@ describe('Plans List Item Component', () => {
       }
     }
   ]
+
+  const mocks = [
+    {
+      request: {
+        query: PaymentReminderMutation,
+        variables: {
+          userId: "xsxnkjasnxkn-31",
+          paymentPlanId: "kjkjsadas-87"
+        }
+      },
+      result: {
+        data: {
+          paymentRemiderCreate: { message: 'success' }
+        }
+      }
+    }
+  ]
   it('should render the plans list component', async () => {
     render(
-      <BrowserRouter>
-        <PlansList
-          currencyData={currency}
-          matches={false}
-          communityPlansLoading={false}
-          communityPlans={communityPlans}
-          setDisplaySubscriptionPlans={jest.fn}
-        />
-      </BrowserRouter>
+      <MockedProvider mocks={mocks} addTypename={false}>
+        <BrowserRouter>
+          <PlansList
+            currencyData={currency}
+            matches={false}
+            communityPlansLoading={false}
+            communityPlans={communityPlans}
+            setDisplaySubscriptionPlans={jest.fn}
+          />
+        </BrowserRouter>
+      </MockedProvider>
     );
 
     const loader = render(<Spinner />);
@@ -95,16 +116,6 @@ describe('Plans List Item Component', () => {
     expect(results[0]).toHaveProperty('Start Date');
     expect(results[0]).toHaveProperty('End Date');
     expect(results[0]).toHaveProperty('Amount');
-    expect(results[0]).toHaveProperty('Status');
-  });
-
-  it('should check if renderCommunityPlans works as expected', () => {
-    const results = renderCommunityPlans(communityPlans[0], currency, () => 'behind', jest.fn);
-    expect(results).toBeInstanceOf(Array);
-    expect(results[0]).toHaveProperty('Plot/User Info');
-    expect(results[0]).toHaveProperty('Dates');
-    expect(results[0]).toHaveProperty('Payment Info');
-    expect(results[0]).toHaveProperty('Owing Info');
     expect(results[0]).toHaveProperty('Status');
   });
 });

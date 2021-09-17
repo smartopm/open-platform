@@ -12,7 +12,7 @@ import {
   titleize,
   formatError,
   generateId,
-  propAccessor,
+  objectAccessor,
   toCamelCase,
   formatMoney,
   extractCurrency,
@@ -36,6 +36,7 @@ const allFieldsError = `GraphQL error: name of type String! was provided invalid
 
 const duplicateError = 'GraphQL error: Duplicate Email'
 
+const nonGraphQLError = "PG::UniqueViolation: ERROR: duplicate key value violates unique constraint";
 const fieldError =
   'GraphQL error: userType of type String! was provided invalid value'
 const requiredKeys = ['userType', 'phoneNumber', 'name', 'email']
@@ -116,6 +117,13 @@ describe('sanitize GraphQL errors', () => {
       'User Type or Phone Number or name value is required'
     )
   })
+
+  // if the error is not related to GraphQL or missing value
+  it('should return unexpected error happened mesage', () => {
+    expect(saniteError(requiredKeys, nonGraphQLError)).toBe(
+      'Unexpected error happened, Please try again'
+    )
+  })
 })
 
 describe('array methods', () => {
@@ -160,13 +168,14 @@ describe('array methods', () => {
 
   // property accessor
   it('should validate params', () => {
-    expect(propAccessor({a: 4}, 3)).toBeUndefined()
+    expect(objectAccessor({a: 4}, 3)).toBeUndefined()
     // get correct value
-    expect(propAccessor({a: 4}, 'a')).toBe(4)
+    expect(objectAccessor({a: 4}, 'a')).toBe(4)
+    expect(objectAccessor([1, 2, 3], 1)).toBe(2)
     // prop must be a property in the given object
-    expect(propAccessor({a: 4}, 'b')).toBeUndefined()
+    expect(objectAccessor({a: 4}, 'b')).toBeUndefined()
     // the object should only be of type object
-    expect(propAccessor([], 'b')).toBeUndefined()
+    expect(objectAccessor([], 'b')).toBeUndefined()
   })
 
   it('should check if x belongs to array', () => {

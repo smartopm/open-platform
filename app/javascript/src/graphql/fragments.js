@@ -64,6 +64,11 @@ export const UserFragment = {
         stopDate
         newStatus
         previousStatus
+        updatedBy {
+          id
+          name
+          email
+        }
       }
     }
   `
@@ -74,6 +79,7 @@ export const EntryRequestFragment = {
     fragment EntryRequestFields on EntryRequest {
       id
       name
+      email
       phoneNumber
       nrc
       vehiclePlate

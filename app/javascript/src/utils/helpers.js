@@ -108,15 +108,16 @@ export function saniteError(requiredFields, errorMessage) {
   const errArr = errorMessage.replace(/\$/, '').split(" ");
   const foundFields = requiredFields.filter(field => errArr.includes(field));
   const cleanFields = foundFields.map(field => cleanedFields[field])
-  // duplicate errors are already sanitized, we just need to remove the GraphQL
-  if (errArr.includes("Duplicate")) {
-    return `${errorMessage.replace(/GraphQL error:/, "")}`;
+  // If required field(s) is missing
+  if(foundFields.length > 0){
+    return `${cleanFields.join(" or ")} value is required`;
   }
   // if we don't know the error
-  if (!foundFields.length) {
+  if (!errorMessage.includes("GraphQL error")) {
     return "Unexpected error happened, Please try again";
   }
-  return `${cleanFields.join(" or ")} value is required`;
+
+  return `${errorMessage.replace(/GraphQL error:/, "")}`;
 }
 
 export function delimitorFormator(params) {
@@ -321,23 +322,13 @@ export function checkValidGeoJSON(str){
 
 /**
  *
- * @param {object} obj
- * @param {String} prop
- * @description get value based on a passed property name, if validates object and string first
+ * @param {object} object
+ * @param {String} key
+ * @description gets a value out of an object or an array purposely to reduce the "Code Injection" vulnerabilities
  */
-  export function propAccessor(obj, prop){
-    // check if the given prop is a string
-    const newProp = prop.toString()
-    // check if obj is a valid object
-    // I couldn't find a better way of validating am object
-    if(Object.prototype.toString.call(obj) !== '[object Object]') return
-    // check if prop is in obj
-    if(!obj.hasOwnProperty(newProp)) return
-    for (const [key, value] of Object.entries(obj)) {
-        if(key === newProp){
-            return value
-        }
-    }
+export function objectAccessor(object, key) {
+  if (!object) return
+  return object[key]
 }
 
 /**
@@ -361,7 +352,7 @@ export function toCamelCase(str){
  * @example snake_name ==> Snake Name
  */
 export function toTitleCase(str) {
-  if (str === null) return;
+  if (str === (null || undefined)) return;
 
   return str.replace(/_/g, ' ').toLowerCase().replace(/\b(\w)|'/g, s => s.toUpperCase());
 }
@@ -477,7 +468,7 @@ export function handleQueryOnChange(selectedOptions, filterFields) {
           // skipped nested object accessor here until fully tested
           // eslint-disable-next-line security/detect-object-injection
           const property = filterFields[option[operator][0].var]
-          let value = propAccessor(option, operator)[1]
+          let value = objectAccessor(option, operator)[1]
 
           if (operator === '==') operator = ':'
           if (property === 'created_at' || property === 'due_date') {

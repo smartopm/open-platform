@@ -2,7 +2,7 @@
 import React, { useContext } from 'react';
 import { StyleSheet, css } from 'aphrodite';
 import PropTypes from 'prop-types';
-import { forceLinkHttps, propAccessor } from '../utils/helpers';
+import { forceLinkHttps, objectAccessor } from '../utils/helpers';
 import ImageAuth from '../shared/ImageAuth';
 import { Context } from '../containers/Provider/AuthStateProvider';
 
@@ -28,7 +28,7 @@ export default function Avatar({ imageUrl, user, style, searchedUser }) {
       <ImageAuth
         imageLink={safeAvatarLink({ imageUrl: searchedUser.avatarUrl})}
         token={token}
-        className={css(propAccessor(imageStyles, style))}
+        className={css(objectAccessor(imageStyles, style))}
       />
     );
   }
@@ -37,7 +37,7 @@ export default function Avatar({ imageUrl, user, style, searchedUser }) {
     return (
       <img
         src={safeAvatarLink({ imageUrl: searchedUser.imageUrl})}
-        className={css(propAccessor(imageStyles, style))}
+        className={css(objectAccessor(imageStyles, style))}
         alt="avatar for the user"
         data-testid="searched_auth_user_avatar"
       />
@@ -50,7 +50,7 @@ export default function Avatar({ imageUrl, user, style, searchedUser }) {
     return (
       <img
         src={safeAvatarLink({ imageUrl: '/images/default_avatar.svg' })}
-        className={css(propAccessor(imageStyles, style))}
+        className={css(objectAccessor(imageStyles, style))}
         alt="avatar for the user"
         data-testid="searched_default_user_avatar"
       />
@@ -62,7 +62,7 @@ export default function Avatar({ imageUrl, user, style, searchedUser }) {
       <ImageAuth
         imageLink={safeAvatarLink({ imageUrl, user })}
         token={token}
-        className={css(propAccessor(imageStyles, style))}
+        className={css(objectAccessor(imageStyles, style))}
         alt="avatar for the user"
       />
     );
@@ -70,7 +70,7 @@ export default function Avatar({ imageUrl, user, style, searchedUser }) {
   return (
     <img
       src={safeAvatarLink({ user, imageUrl })}
-      className={css(propAccessor(imageStyles, style))}
+      className={css(objectAccessor(imageStyles, style))}
       alt="avatar for the user"
       data-testid="user_avatar"
     />

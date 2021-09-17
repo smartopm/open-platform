@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_09_09_094439) do
+ActiveRecord::Schema.define(version: 2021_09_13_082152) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -286,6 +286,7 @@ ActiveRecord::Schema.define(version: 2021_09_09_094439) do
     t.string "company_name"
     t.string "occurs_on", default: [], array: true
     t.datetime "visit_end_date"
+    t.string "email"
   end
 
   create_table "event_logs", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -647,7 +648,9 @@ ActiveRecord::Schema.define(version: 2021_09_09_094439) do
     t.uuid "user_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.uuid "updated_by_id"
     t.index ["community_id"], name: "index_substatus_logs_on_community_id"
+    t.index ["updated_by_id"], name: "index_substatus_logs_on_updated_by_id"
     t.index ["user_id"], name: "index_substatus_logs_on_user_id"
   end
 
@@ -865,6 +868,7 @@ ActiveRecord::Schema.define(version: 2021_09_09_094439) do
   add_foreign_key "subscription_plans", "communities"
   add_foreign_key "substatus_logs", "communities"
   add_foreign_key "substatus_logs", "users"
+  add_foreign_key "substatus_logs", "users", column: "updated_by_id"
   add_foreign_key "transactions", "communities"
   add_foreign_key "transactions", "users"
   add_foreign_key "user_form_properties", "form_properties"

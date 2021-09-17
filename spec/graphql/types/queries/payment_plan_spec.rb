@@ -21,7 +21,7 @@ RSpec.describe Types::Queries::Payment do
     end
     let!(:payment_plan) do
       create(:payment_plan, land_parcel_id: land_parcel.id, user_id: user.id,
-                            installment_amount: 100, start_date: Time.zone.today - 2.months)
+                            installment_amount: 100, start_date: Time.zone.today - 6.months)
     end
     let!(:transaction) do
       create(:transaction, user_id: user.id, community_id: community.id, depositor_id: user.id,
@@ -116,6 +116,7 @@ RSpec.describe Types::Queries::Payment do
             expectedPayments
             owingAmount
             installmentsDue
+            outstandingDays
           }
         }
       GQL
@@ -324,9 +325,10 @@ RSpec.describe Types::Queries::Payment do
           expect(result.dig('data', 'communityPaymentPlans').size).to eql 2
           payment_plan_result = result.dig('data', 'communityPaymentPlans', 0)
           expect(payment_plan_result['totalPayments']).to eql 500.0
-          expect(payment_plan_result['expectedPayments']).to eql 300.0
-          expect(payment_plan_result['owingAmount']).to eql 0.0
-          expect(payment_plan_result['installmentsDue']).to eql 0
+          expect(payment_plan_result['expectedPayments']).to eql 700.0
+          expect(payment_plan_result['owingAmount']).to eql 200.0
+          expect(payment_plan_result['installmentsDue']).to eql 2
+          expect(payment_plan_result['outstandingDays']).to eql 31
         end
       end
 

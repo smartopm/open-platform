@@ -2,6 +2,7 @@ import React, { useContext, useState } from 'react';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
+import { useLocation } from 'react-router-dom';
 import Drawer from '@material-ui/core/Drawer';
 import MenuIcon from '@material-ui/icons/Menu';
 import { StyleSheet, css } from 'aphrodite';
@@ -24,6 +25,7 @@ import SOSModal from './SOSModal';
 import useGeoLocation from '../../../hooks/useGeoLocation'
 import { filterQuickLinksByRole } from '../../Dashboard/utils';
 import { allUserTypes, sosAllowedUsers } from '../../../utils/constants';
+import BackArrow from './BackArrow';
 
 const drawerWidth = 260;
 
@@ -63,6 +65,7 @@ export default function Main() {
 
 export function MainNav({ authState }) {
   const matches = useMediaQuery('(max-width:600px)');
+  const path = useLocation().pathname
   const classes = useStyles();
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [open, setOpen] = useState(false);
@@ -132,11 +135,14 @@ export function MainNav({ authState }) {
               <MenuIcon />
             )}
           </IconButton>
+          
+          {matches && <BackArrow path={path} />}
+          
           {sosAllowedUsers.includes(authState?.user?.userType?.toLowerCase())
            && communityHasEmergencyNumber && communityHasEmergencySMSNumber
            && <SvgIcon component={SOSIcon} viewBox="0 0 384 512" setOpen={setOpen} data-testid="sos-icon" />}
 
-
+          {!matches && <BackArrow path={path} />}
 
           <SOSModal open={open} setOpen={setOpen} location={location} {...{ authState }} />
 

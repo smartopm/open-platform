@@ -47,7 +47,7 @@ module Users
     end
 
     scope :allowed_users, lambda { |current_user|
-      policy = UserPolicy.new(current_user, nil)
+      policy = ::Policy::User::UserPolicy.new(current_user, nil)
       allowed_user_types = policy.roles_user_can_see
       relat = where(community_id: current_user.community_id)
       return relat if allowed_user_types == '*'
@@ -63,7 +63,7 @@ module Users
                         joins(:labels).where(labels: { short_desc: label&.split(',') })
                       }
 
-    belongs_to :community, dependent: :destroy
+    belongs_to :community
     has_many :entry_requests, class_name: 'Logs::EntryRequest', dependent: :destroy
     has_many :granted_entry_requests, class_name: 'Logs::EntryRequest', foreign_key: :grantor_id,
                                       dependent: :destroy, inverse_of: :user
@@ -113,7 +113,7 @@ module Users
     has_paper_trail
 
     VALID_USER_TYPES = %w[security_guard admin resident contractor
-                          prospective_client client visitor custodian].freeze
+                          prospective_client client visitor custodian site_worker].freeze
     VALID_STATES = %w[valid pending banned expired].freeze
     DEFAULT_PREFERENCE = %w[com_news_sms com_news_email weekly_point_reminder_email].freeze
 
@@ -131,9 +131,13 @@ module Users
     validates :state, inclusion: { in: VALID_STATES, allow_nil: true }
     validates :sub_status, inclusion: { in: sub_statuses.keys, allow_nil: true }
     validates :name, presence: true
+    validates :email, uniqueness: {
+      scope: :community_id,
+      case_sensitive: true,
+      allow_nil: true,
+    }
     validate :phone_number_valid?
     after_create :add_notification_preference
-    before_update :log_sub_status_change, if: :sub_status_changed?
     after_update :update_associated_accounts_details, if: -> { saved_changes.key?('name') }
 
     devise :omniauthable, omniauth_providers: %i[google_oauth2 facebook]
@@ -352,7 +356,7 @@ module Users
       self[:id]
     end
 
-    %w[admin custodian security_guard].each do |user_type|
+    VALID_USER_TYPES.each do |user_type|
       define_method "#{user_type}?" do
         self[:user_type] == user_type
       end
@@ -595,34 +599,6 @@ module Users
                 community.labels.create!(short_desc: pref)
         user_labels.create!(label_id: label.id)
       end
-    end
-
-    def log_sub_status_change
-      return sub_status_log if changes_to_save.present? && changes_to_save.key?('sub_status')
-    end
-
-    def sub_status_log
-      sub_status_changes = changes_to_save['sub_status']
-
-      start_date = current_time_in_timezone
-      previous_status = sub_status_changes.first
-      new_status = sub_status_changes.last
-      stop_date = nil
-
-      latest_substatus = create_sub_status_log(start_date, previous_status, new_status, stop_date)
-
-      self[:latest_substatus_id] = latest_substatus[:id]
-    end
-
-    def create_sub_status_log(start_date, previous_status, new_status, stop_date)
-      Logs::SubstatusLog.create(
-        start_date: start_date,
-        previous_status: previous_status,
-        new_status: new_status,
-        stop_date: stop_date,
-        user_id: id,
-        community_id: self[:community_id],
-      )
     end
 
     # Creates general land parcel for user

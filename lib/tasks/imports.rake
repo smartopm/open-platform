@@ -112,9 +112,9 @@ namespace :imports do
               start_date: start_date,
               plan_type: 'lease',
               percentage: 2.75,
-              monthly_amount: monthly_amount,
+              installment_amount: monthly_amount,
               total_amount: ((monthly_amount * 12 * 100) / 2.75),
-              duration_in_month: 12,
+              duration: 12,
             )
 
             errors[row_num + 1] = plan.errors.full_messages unless plan.persisted?

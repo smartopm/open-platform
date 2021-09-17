@@ -34,5 +34,31 @@ RSpec.describe Mutations::Login::LoginPhoneComplete do
       expect(result['errors']).to be_nil
       expect(Logs::EventLog.count).to eq(prev_log_count + 1)
     end
+
+    it 'handles expired tokens correctly' do
+      variables = {
+        id: user.id,
+        token: '5f7f275243hj3536',
+      }
+      user.update(phone_token_expires_at: 1.minute.ago)
+      result = DoubleGdpSchema.execute(query, variables: variables,
+                                              context: {
+                                                site_community: user.community,
+                                              }).as_json
+      expect(result['errors'][0]['message']).to eq('Invalid or expired phone token')
+    end
+
+    it 'handles invalid tokens correctly' do
+      variables = {
+        id: user.id,
+        token: '5f7f275243hj3536',
+      }
+      user.update(phone_token: 'asdfgh')
+      result = DoubleGdpSchema.execute(query, variables: variables,
+                                              context: {
+                                                site_community: user.community,
+                                              }).as_json
+      expect(result['errors'][0]['message']).to eq('Invalid or expired phone token')
+    end
   end
 end

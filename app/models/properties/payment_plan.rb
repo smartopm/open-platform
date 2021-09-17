@@ -85,7 +85,6 @@ module Properties
       save
     end
 
-    # rubocop:disable Metrics/MethodLength
     # Returns maximum amount that can be allocated to plan.
     #
     # @param [Float] amount
@@ -94,27 +93,6 @@ module Properties
     def allocated_amount(amount)
       amount > pending_balance ? pending_balance : amount
     end
-
-    # Returns duration based on frequency
-    #
-    # @param duration [Integer]
-    #
-    # @return [ActiveSupport::Duration]
-    def frequency_based_duration(duration)
-      case frequency
-      when 'daily'
-        duration.days
-      when 'weekly'
-        duration.weeks
-      when 'monthly'
-        duration.months
-      when 'quarterly'
-        (duration * 3).months
-      else
-        duration.months
-      end
-    end
-    # rubocop:enable Metrics/MethodLength
 
     # Transfers payments on PaymentPlan to different PaymentPlan.
     #
@@ -135,6 +113,63 @@ module Properties
     # @return [String]
     def payment_plan_name
       "#{land_parcel.parcel_number} - #{start_date.strftime('%Y-%m-%d')}"
+    end
+
+    # Returns plan's total value
+    #
+    # @return [Float]
+    def plan_value
+      installment_amount * duration
+    end
+
+    # Returns payments expected till current date
+    #
+    # @return [Float]
+    def expected_payments
+      return 0.0 if plan_is_not_active?
+
+      current_duration * installment_amount
+    end
+
+    # Returns the number of outstanding days for installments due
+    #
+    # @return [Integer]
+    def outstanding_days
+      return 0 if owing_amount.to_d.zero?
+
+      last_paid_installment_due_date = start_date + frequency_based_duration(paid_installments)
+      (Time.zone.today - last_paid_installment_due_date.to_date).to_i
+    end
+
+    # Returns installments due till current date
+    #
+    # @return [Float]
+    def installments_due
+      (owing_amount / installment_amount).ceil
+    end
+
+    # Returns amount which is due from the expected payments
+    #
+    # @return [Float]
+    def owing_amount
+      return 0.0 if plan_is_not_active?
+
+      amount = expected_payments - total_payments
+      amount.positive? ? amount : 0.0
+    end
+
+    # Returns total plan payments made for a plan
+    #
+    # @return [Float]
+    def total_payments
+      plan_payments.not_cancelled.sum(:amount)
+    end
+
+    # Returns end date for plan statement
+    #
+    # @return [DateTime]
+    def end_date
+      plan_duration.last.to_date
     end
 
     private
@@ -237,6 +272,62 @@ module Properties
         'community_id',
         'automated_receipt_number',
       )
+    end
+
+    # Returns duration based on frequency
+    #
+    # @param duration [Integer]
+    #
+    # @return [ActiveSupport::Duration]
+    def frequency_based_duration(duration)
+      case frequency
+      when 'daily'
+        duration.days
+      when 'weekly'
+        duration.weeks
+      when 'quarterly'
+        (duration * 3).months
+      else
+        duration.months
+      end
+    end
+
+    # rubocop:disable Metrics/MethodLength
+    # rubocop:disable Metrics/AbcSize
+    # Returns the duration between the start date and current date
+    #
+    # @return [Float]
+    def current_duration
+      current_date = Time.zone.today > end_date ? end_date : Time.zone.today
+      days = (current_date - start_date.to_date).to_i
+      return 0 if days <= 0
+
+      case frequency
+      when 'daily'
+        days
+      when 'weekly'
+        (days / 7.0).ceil
+      when 'quarterly'
+        (days / 90.0).ceil
+      else
+        (days / 30.0).ceil
+      end
+    end
+    # rubocop:enable Metrics/MethodLength
+    # rubocop:enable Metrics/AbcSize
+
+    # Returns the total paid installments
+    #
+    # @return [Integer]
+    def paid_installments
+      (total_payments / installment_amount).floor
+    end
+
+    # Returns true if plan is not active or the plan has not started
+    #
+    # @return [Boolean]
+    def plan_is_not_active?
+      return true if !status.eql?('active') || start_date.to_date > Time.zone.today
     end
   end
   # rubocop:enable Metrics/ClassLength

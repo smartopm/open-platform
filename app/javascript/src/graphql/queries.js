@@ -538,6 +538,12 @@ export const LandParcelGeoData = gql`
       objectType
       status
       plotSold
+      address1
+      address2
+      city
+      postalCode
+      stateProvince
+      country
       valuations {
         id
         amount

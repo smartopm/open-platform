@@ -19,9 +19,10 @@ import {
 } from '../../../graphql/mutations';
 import { Spinner } from "../../../shared/Loading";
 import { isTimeValid, getWeekDay } from '../../../utils/dateutil';
+import { objectAccessor } from '../../../utils/helpers'
 import { userState, userType, communityVisitingHours, defaultBusinessReasons } from '../../../utils/constants'
 import { ModalDialog, ReasonInputModal } from "../../../components/Dialog"
-import { dateToString, dateTimeToString } from "../../../components/DateContainer";
+import { dateToString, dateTimeToString, updateDateWithTime } from "../../../components/DateContainer";
 import { Context } from '../../../containers/Provider/AuthStateProvider';
 import EntryNoteDialog from '../../../shared/dialogs/EntryNoteDialog';
 import CenteredContent from '../../../components/CenteredContent';
@@ -79,7 +80,7 @@ export default function RequestUpdate({ id, previousRoute, isGuestRequest, tabVa
   const requiredFields = authState?.user?.community?.communityRequiredFields?.manualEntryRequestForm || defaultRequiredFields
   const { t } = useTranslation(['common', 'logbook'])
   const [isReasonModalOpen, setReasonModal] = useState(false)
-  
+
   useEffect(() => {
     if (id) {
       loadRequest({ variables: { id } })
@@ -123,7 +124,7 @@ export default function RequestUpdate({ id, previousRoute, isGuestRequest, tabVa
       occursOn: [ ...formData.occursOn, day]
     });
   }
-
+  
   function handleCreateRequest() {
 
     const otherFormData = {
@@ -152,10 +153,9 @@ export default function RequestUpdate({ id, previousRoute, isGuestRequest, tabVa
     const otherFormData = {
       ...formData,
       reason: formData.business || formData.reason,
-      startTime: dateToString(formData.startTime, 'YYYY-MM-DD HH:mm'),
-      endTime: dateToString(formData.endTime, 'YYYY-MM-DD HH:mm')
+      startTime: updateDateWithTime(formData.visitationDate, formData.startTime),
+      endTime: updateDateWithTime(formData.visitationDate, formData.endTime),
     };
-
     setLoading(true);
     updateRequest({ variables: { id, ...otherFormData } })
       .then(() => {
@@ -295,7 +295,8 @@ export default function RequestUpdate({ id, previousRoute, isGuestRequest, tabVa
   }
   function checkTimeIsValid(){
     const communityName = authState.user.community.name
-    const visitingHours = communityVisitingHours[String(communityName.toLowerCase())];
+    const accessor = communityName.toLowerCase()
+    const visitingHours = objectAccessor(communityVisitingHours, accessor)
 
     return isTimeValid({ date, visitingHours })
   }
@@ -452,7 +453,19 @@ export default function RequestUpdate({ id, previousRoute, isGuestRequest, tabVa
                 'Name is Required'}
             />
           </div>
-
+          <div className="form-group">
+            <label className="bmd-label-static" htmlFor="_name">
+              {t('form_fields.email')}
+            </label>
+            <TextField
+              className="form-control"
+              name="email"
+              type="email"
+              onChange={handleInputChange}
+              value={formData.email}
+              inputProps={{ 'data-testid': 'email' }}
+            />
+          </div>
           <div className="form-group">
             <label className="bmd-label-static" htmlFor="nrc">
               {t('form_fields.nrc')}
@@ -614,7 +627,7 @@ export default function RequestUpdate({ id, previousRoute, isGuestRequest, tabVa
               {
                 Object.keys(defaultBusinessReasons).map(_reason => (
                   <MenuItem key={_reason} value={_reason}>
-                    {t(`logbook:business_reasons.${_reason}`) || defaultBusinessReasons[String(_reason)]}
+                    {t(`logbook:business_reasons.${_reason}`) || objectAccessor(defaultBusinessReasons, _reason)}
                   </MenuItem>
                   ))
               }
@@ -622,7 +635,7 @@ export default function RequestUpdate({ id, previousRoute, isGuestRequest, tabVa
           </div>
 
           {
-            // TODO: Find better ways to disable specific small feature per community 
+            // TODO: Find better ways to disable specific small feature per community
             !reqId && authState.user.community.name !== 'Ciudad Morazán' && !isGuestRequest && (
               <div className="form-group">
                 <TextField

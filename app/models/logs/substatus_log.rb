@@ -7,6 +7,7 @@ module Logs
   class SubstatusLog < ApplicationRecord
     belongs_to :community
     belongs_to :user, class_name: 'Users::User'
+    belongs_to :updated_by, class_name: 'Users::User'
 
     default_scope { order(created_at: :desc) }
 

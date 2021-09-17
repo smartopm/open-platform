@@ -2,7 +2,7 @@
 import React, { useEffect } from 'react'
 import { useLeaflet } from 'react-leaflet'
 import L from 'leaflet'
-import { getHexColor } from '../../utils/helpers'
+import { getHexColor, objectAccessor } from '../../utils/helpers'
 
 /* istanbul ignore next */
 /* eslint-disable no-unused-expressions */
@@ -21,7 +21,7 @@ export default function SubUrbanLegendContent(){
 
       grades.forEach((element, index) => {
         from = element
-        to = grades[index + 1]
+        to = objectAccessor(grades, index + 1)
 
         labels.push(
           `<i style="background:${getHexColor(from + 1)}"></i>${from}${to ? `&ndash;${  to}` : '+'}`
@@ -37,7 +37,7 @@ export default function SubUrbanLegendContent(){
         legend.addTo(map);
       }
     })
-    
+
     map?.on('overlayremove', function(layer){
       if(layer?.name === 'Sub-urban Areas'){
         map?.removeControl(legend);

@@ -9,8 +9,9 @@ import { makeStyles } from '@material-ui/styles';
 import Typography from '@material-ui/core/Typography';
 import { dateToString } from '../../../components/DateContainer';
 import UserPlotMap from './UserPlotMap';
+import { objectAccessor } from '../../../utils/helpers';
 
-export default function UserPlotInfo({ account, userId, userName }) {
+export default function UserPlotInfo({ account, userId, userName, currentUserType }) {
   const [plotNumber, setPlotNumber] = useState([]);
   const { t } = useTranslation(['users', 'common'])
   const classes = useStyles();
@@ -38,7 +39,7 @@ export default function UserPlotInfo({ account, userId, userName }) {
   }, [account]);
 
   function parcels() {
-    if (account) {
+    if (account.length > 0) {
       const landParcels = account
         .map(acc => {
           return acc.landParcels.map(plot => plot);
@@ -50,9 +51,11 @@ export default function UserPlotInfo({ account, userId, userName }) {
 
   return (
     <>
-      <Fab color="primary" variant="extended" className={classes.plot} onClick={() => handlePlotCreteClick()} data-testid='add-plot'>
-        {t("common:misc.new_property")}
-      </Fab>
+      {currentUserType === 'admin' && (
+        <Fab color="primary" variant="extended" className={classes.plot} onClick={() => handlePlotCreteClick()} data-testid='add-plot'>
+          {t("common:misc.new_property")}
+        </Fab>
+      )}
       {parcels().length > 0 ? (
         <div className="container">
           <div className={classes.body}>
@@ -72,7 +75,7 @@ export default function UserPlotInfo({ account, userId, userName }) {
                 </div>
               ))}
               <Typography variant="body2">
-                {t('common:misc.plot_details', { date: dateToString(parcels()[Number(parcels().length - 1)]?.updatedAt) })}
+                {t('common:misc.plot_details', { date: dateToString(objectAccessor(parcels(), parcels().length - 1)?.updatedAt) })}
                 <span className={classes.supportLink}>
                   &nbsp;
                   <Link data-testid="support_link" to="/contact" className={classes.routeLink}>
@@ -152,5 +155,6 @@ UserPlotInfo.propTypes = {
     })
   ),
   userId: PropTypes.string.isRequired,
-  userName: PropTypes.string.isRequired
+  userName: PropTypes.string.isRequired,
+  currentUserType: PropTypes.string.isRequired
 };

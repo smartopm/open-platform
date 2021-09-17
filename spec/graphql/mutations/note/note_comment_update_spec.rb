@@ -7,6 +7,7 @@ RSpec.describe Mutations::Note::NoteCommentUpdate do
     let!(:user) { create(:user_with_community) }
     let!(:admin) { create(:admin_user, community_id: user.community_id) }
     let!(:another_user) { create(:store_custodian, community_id: user.community_id) }
+    let!(:site_worker) { create(:site_worker, community_id: user.community_id) }
     let!(:note) do
       admin.notes.create!(
         body: 'Note body',
@@ -42,6 +43,33 @@ RSpec.describe Mutations::Note::NoteCommentUpdate do
       expect(result.dig('data', 'noteCommentUpdate', 'noteComment', 'id')).not_to be_nil
       expect(result.dig('data', 'noteCommentUpdate', 'noteComment', 'body')).to eql 'Updated body'
       expect(result['errors']).to be_nil
+    end
+
+    it 'creates a comment under note with site worker as current user' do
+      variables = {
+        id: note_comment.id,
+        body: 'Updated commment by site worker',
+      }
+      result = DoubleGdpSchema.execute(query, variables: variables,
+                                              context: {
+                                                current_user: site_worker,
+                                              }).as_json
+      expect(result.dig('data', 'noteCommentUpdate', 'noteComment', 'id')).not_to be_nil
+      expect(result.dig('data', 'noteCommentUpdate', 'noteComment', 'body'))
+        .to eql 'Updated commment by site worker'
+      expect(result['errors']).to be_nil
+    end
+
+    it 'fails when current user is not in the context' do
+      variables = {
+        id: note_comment.id,
+        body: 'Updated body',
+      }
+      result = DoubleGdpSchema.execute(query, variables: variables,
+                                              context: {
+                                              }).as_json
+      expect(result.dig('errors', 0, 'message')).to include('Unauthorized')
+      expect(result['errors']).not_to be_nil
     end
   end
 end

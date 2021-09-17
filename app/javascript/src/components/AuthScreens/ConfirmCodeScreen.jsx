@@ -16,6 +16,7 @@ import { Context as AuthStateContext } from '../../containers/Provider/AuthState
 import useTimer from '../../utils/customHooks'
 import { CurrentCommunityQuery } from '../../modules/Community/graphql/community_query'
 import { Spinner } from '../../shared/Loading'
+import { objectAccessor } from '../../utils/helpers';
 
 const randomCodeData = [1, 2, 3, 4, 5, 6, 7]
 
@@ -77,7 +78,7 @@ export default function ConfirmCodeScreen({ match }) {
 
     loginPhoneComplete({
       variables: { id, token: code },
-      errorPolicy: 'all'
+      errorPolicy: 'none'
     })
       .then(({ data }) => {
         authState.setToken({
@@ -86,8 +87,8 @@ export default function ConfirmCodeScreen({ match }) {
         })
         setIsLoading(false)
       })
-      .catch(_error => {
-        setError(_error.message)
+      .catch(err => {
+        setError(err.message.replace(/GraphQL error:/, ''))
         setIsLoading(false)
       })
   }
@@ -130,7 +131,7 @@ export default function ConfirmCodeScreen({ match }) {
               className={`${css(styles.newInput)} code-input-${index}`}
               onChange={() =>
                 item < 6
-                  ? elementsRef.current[Number(item + 1)].current.focus()
+                  ? objectAccessor(elementsRef.current, item + 1).current.focus()
                   : submitRef.current.click()}
               // hide the seventh input for the next ref to work [6]
               hidden={item === 7 && true}

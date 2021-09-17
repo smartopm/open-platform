@@ -16,7 +16,7 @@ import { currencies } from '../../../../utils/constants';
 import UserTransactionsList from './UserTransactions';
 import ListHeader from '../../../../shared/list/ListHeader';
 import ButtonComponent from '../../../../shared/buttons/Button';
-import { useParamsQuery, formatError } from '../../../../utils/helpers';
+import { useParamsQuery, formatError, objectAccessor } from '../../../../utils/helpers';
 import { dateToString } from '../../../../components/DateContainer';
 import Transactions from '../../graphql/payment_query';
 import { Spinner } from '../../../../shared/Loading';
@@ -54,7 +54,7 @@ export default function TransactionsList({
     { title: 'Menu', value: t('common:table_headers.menu'), col: 1 }
   ];
 
-  const currency = currencies[user.community.currency] || '';
+  const currency = objectAccessor(currencies, user.community.currency) || '';
   const { locale } = user.community;
   const currencyData = { currency, locale };
 
@@ -132,7 +132,7 @@ export default function TransactionsList({
               <MenuItem value="all">{t('common:misc.all')}</MenuItem>
               {planData?.map(plan => (
                 <MenuItem value={plan.id} key={plan.id}>
-                  {dateToString(plan.startDate)} 
+                  {dateToString(plan.startDate)}
                   {' '}
                   {plan.landParcel.parcelNumber}
                 </MenuItem>

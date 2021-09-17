@@ -17,7 +17,7 @@ import {
   Checkbox,
   Tooltip,
 } from '@material-ui/core'
-import { useMutation } from 'react-apollo'
+import { useMutation, useLazyQuery } from 'react-apollo'
 import PropTypes from 'prop-types'
 import { useTranslation } from 'react-i18next';
 import AddCircleIcon from '@material-ui/icons/AddCircle'
@@ -25,6 +25,7 @@ import EditIcon from '@material-ui/icons/Edit'
 import Visibility from '@material-ui/icons/Visibility';
 import CancelIcon from '@material-ui/icons/Cancel'
 import AlarmIcon from '@material-ui/icons/Alarm'
+import Autocomplete from '@material-ui/lab/Autocomplete'
 import DatePickerDialog from '../../../components/DatePickerDialog'
 import CenteredContent from '../../../components/CenteredContent'
 import { UpdateNote } from '../../../graphql/mutations'
@@ -37,7 +38,10 @@ import RemindMeLaterMenu from './RemindMeLaterMenu'
 import TaskUpdateList from './TaskUpdateList'
 import TaskComment from './TaskComment'
 import { dateToString, dateTimeToString } from '../../../components/DateContainer'
-import  CustomAutoComplete  from '../../../shared/autoComplete/CustomAutoComplete';
+import { UsersLiteQuery } from '../../../graphql/queries';
+import useDebounce from '../../../utils/useDebounce';
+import UserAutoResult from '../../../shared/UserAutoResult';
+
 
 
 const initialData = {
@@ -79,6 +83,18 @@ export default function TaskForm({
 
   const [anchorEl, setAnchorEl] = useState(null)
   const open = Boolean(anchorEl)
+
+  // Todo: figure out why reusing the customautocomplete component does not work for task update
+  const [searchedUser, setSearchUser] = useState('');
+  const debouncedValue = useDebounce(searchedUser, 500);
+
+  const allowedAssignees = ["admin", "custodian", "security_guard", "contractor", "site_worker" ]
+
+  const [searchUser, { data: liteData }] = useLazyQuery(UsersLiteQuery, {
+    variables: { query: debouncedValue.length > 0 ? debouncedValue : 'user_type:admin OR user_type:custodian OR user_type:security_guard OR user_type:contractor', limit: 10 },
+    errorPolicy: 'all',
+    fetchPolicy: 'no-cache'
+  });
 
   function handleSubmit(event) {
     event.preventDefault()
@@ -387,18 +403,33 @@ export default function TaskForm({
                   onClick={event => handleOpenAutoComplete(event, data.id)}
                 />
                 {autoCompleteOpen &&(
-                  <CustomAutoComplete
-                    users={users}
-                    isMultiple
+                  <Autocomplete
+                    disablePortal
+                    id={data.id}
+                    options={liteData?.usersLite || users}
+                    ListboxProps={{ style: { maxHeight: "20rem" }}}
+                    renderOption={option => <UserAutoResult user={option} />}
+                    name="assignees"
                     onChange={(_evt, value) => {
-                    if(!value) {
-                      return
-                    }
-                    assignUser(data.id, value.id)
-                  }}          
+                      if(!value) {
+                        return
+                      }
+                      assignUser(data.id, value.id)
+                    }}
+                    getOptionLabel={(option) => allowedAssignees.includes(option.userType) ? option.name : ''}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        variant="standard"
+                        label={t('task.task_assignee_label')}
+                        placeholder={t('task.task_search_placeholder')} 
+                        onChange={event => setSearchUser(event.target.value)}
+                        onKeyDown={() => searchUser()}
+                      />
+                  )}
                   />
                 )}
-      
+
               </div>
             </FormControl>
             <br />

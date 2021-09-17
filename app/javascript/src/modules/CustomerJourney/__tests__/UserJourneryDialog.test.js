@@ -7,15 +7,14 @@ import UserJourneyDialog from '../../Users/Components/UserJourneyDialog'
 
 
 describe('user journey dialog', () => {
-    
     const log =  {
         id: '90849232-234234-sdfloeop34',
         startDate: '2020-03-01',
         stopDate: '2020-03-03',
-        userId: '90849232-234234-9238493284e9ewdx',
+        userId: '90849232-234234-9238493284e9ewdx'
       }
     it('should call the mutation', async () => {
-  
+
     const open = true
     const refetch = jest.fn()
     const handleClose = jest.fn()
@@ -24,10 +23,10 @@ describe('user journey dialog', () => {
       {
         request: {
           query: UserJourneyUpdateMutation,
-          variables: { 
+          variables: {
             id: log.id,
             userId: log.userId,
-            startDate: log.startDate,
+            startDate: log.startDate
            },
         },
         result: { data: { substatusLogUpdate: { log: log.id } } },
@@ -64,10 +63,10 @@ describe('user journey dialog', () => {
       {
         request: {
             query: UserJourneyUpdateMutation,
-            variables: { 
+            variables: {
               id: log.id,
               userId: log.userId,
-              startDate: log.startDate,
+              startDate: log.startDate
              },
           },
         error: new Error('An error occurred, the date is wrong'),
@@ -85,7 +84,7 @@ describe('user journey dialog', () => {
       </MockedProvider>
     )
     fireEvent.click(container.queryByTestId('custom-dialog-button'))
-    
+
     await waitFor(() => {
       expect(handleClose).not.toBeCalled()
       expect(refetch).not.toBeCalled()

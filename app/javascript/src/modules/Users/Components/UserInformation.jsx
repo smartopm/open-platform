@@ -221,6 +221,7 @@ export default function UserInformation({
                   account={accountData?.user?.accounts || []}
                   userId={data.user.id}
                   userName={data.user.name}
+                  currentUserType={authState.user.userType}
                 />
               </TabPanel>
             </FeatureCheck>

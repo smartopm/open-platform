@@ -3,7 +3,7 @@ import { Grid, Typography } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import { makeStyles } from '@material-ui/core/styles';
-import { propAccessor } from '../../../../utils/helpers';
+import { objectAccessor } from '../../../../utils/helpers';
 
 export default function PlanMobileDataList({ keys, data }) {
   const classes = useStyles();
@@ -14,24 +14,24 @@ export default function PlanMobileDataList({ keys, data }) {
         <div key={item.id || index}>
           <Grid container data-testid='title'>
             <Grid item xs={6}>
-              {propAccessor(item, keys[3].title)}
+              {objectAccessor(item, keys[3].title)}
             </Grid>
             <Grid item xs={6} style={{ textAlign: 'right' }}>
-              {propAccessor(item, keys[5].title)}
+              {objectAccessor(item, keys[5].title)}
             </Grid>
           </Grid>
           <Grid container style={{ marginTop: '23px' }} data-testid='content'>
             <Grid item xs={5} className={classes.title}>
               <Typography style={{fontWeight: 500, fontSize: '12px'}}>Payment Plan</Typography>
-              {propAccessor(item, keys[1].title)}
+              {objectAccessor(item, keys[1].title)}
             </Grid>
             <Grid item xs={4} className={classes.title}>
               <Typography style={{fontWeight: 500, fontSize: '12px'}}>Plot Number</Typography>
-              {propAccessor(item, keys[0].title)}
+              {objectAccessor(item, keys[0].title)}
             </Grid>
             <Grid item xs={3} className={classes.title}>
               <Typography style={{fontWeight: 500, fontSize: '12px'}}>Start Date</Typography>
-              {propAccessor(item, keys[2].title)}
+              {objectAccessor(item, keys[2].title)}
             </Grid>
           </Grid>
           <Grid item xs={12} style={{ textAlign: 'center' }}>
@@ -53,23 +53,23 @@ export function PaymentMobileDataList({ keys, data, handleClick }) {
           <Grid container>
             <Grid item xs={4}>
               <Typography style={{fontWeight: 500, fontSize: '12px'}}>Payment Date</Typography>
-              {propAccessor(item, keys[0].title)}
+              {objectAccessor(item, keys[0].title)}
             </Grid>
             <Grid item xs={4} style={{ textAlign: 'right' }}>
               <Typography style={{fontWeight: 500, fontSize: '12px'}}>Amount</Typography>
-              {propAccessor(item, keys[2].title)}
+              {objectAccessor(item, keys[2].title)}
             </Grid>
             <Grid item xs={4} style={{ textAlign: 'right' }}>
-              {propAccessor(item, keys[4].title)}
+              {objectAccessor(item, keys[4].title)}
             </Grid>
           </Grid>
           <Grid container style={{ marginTop: '23px' }} data-testid='content'>
             <Grid item xs={6} className={classes.title}>
               <Typography style={{fontWeight: 500, fontSize: '12px'}}>Payment Type</Typography>
-              {propAccessor(item, keys[1].title)}
+              {objectAccessor(item, keys[1].title)}
             </Grid>
             <Grid item xs={6} className={classes.title}>
-              {propAccessor(item, keys[3].title)}
+              {objectAccessor(item, keys[3].title)}
             </Grid>
           </Grid>
         </Grid>
@@ -88,24 +88,24 @@ export function TransactionMobileDataList({ keys, data, handleClick }) {
           <Grid container>
             <Grid item xs={6}>
               <Typography style={{fontWeight: 500, fontSize: '12px'}}>Payment Date</Typography>
-              {propAccessor(item, keys[0].title)}
+              {objectAccessor(item, keys[0].title)}
             </Grid>
             <Grid item xs={6} style={{ textAlign: 'right' }}>
-              {propAccessor(item, keys[4].title)}
+              {objectAccessor(item, keys[4].title)}
             </Grid>
           </Grid>
           <Grid container style={{ marginTop: '23px' }} data-testid='content'>
             <Grid item xs={4}>
               <Typography style={{fontWeight: 500, fontSize: '12px'}}>Amount Paid</Typography>
-              {propAccessor(item, keys[3].title)}
+              {objectAccessor(item, keys[3].title)}
             </Grid>
             <Grid item xs={4} className={classes.title}>
               <Typography style={{fontWeight: 500, fontSize: '12px'}}>Payment Type</Typography>
-              {propAccessor(item, keys[2].title)}
+              {objectAccessor(item, keys[2].title)}
             </Grid>
             <Grid item xs={4} className={classes.title}>
               <Typography style={{fontWeight: 500, fontSize: '12px'}}>Recorded By</Typography>
-              {propAccessor(item, keys[1].title)}
+              {objectAccessor(item, keys[1].title)}
             </Grid>
           </Grid>
         </Grid>

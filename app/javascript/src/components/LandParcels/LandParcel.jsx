@@ -72,7 +72,7 @@ export default function LandParcelList() {
     variables: { limit, offset }
   });
 
-  const { data: geoData } = useQuery(LandParcelGeoData, {
+  const { data: geoData, refetch: refetchGeoData } = useQuery(LandParcelGeoData, {
     fetchPolicy: 'cache-and-network'
   })
 
@@ -167,6 +167,7 @@ export default function LandParcelList() {
         }
         refetch();
         refetchHouseData();
+        refetchGeoData();
       })
       .catch(err => {
         const triggerMergeRegex = /parcel number has already been taken/gi

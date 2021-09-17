@@ -162,6 +162,7 @@ export const ReceiptPayment = gql`
         installmentAmount
         landParcel {
           parcelNumber
+          parcelType
         }
       }
     }
@@ -227,6 +228,7 @@ export const SubscriptionPlansQuery = gql`
 export const CommunityPlansQuery = gql`
   query communityPaymentPlans {
     communityPaymentPlans {
+      id
       pendingBalance
       planType
       startDate
@@ -244,6 +246,7 @@ export const CommunityPlansQuery = gql`
       }
       landParcel{
         parcelNumber
+        parcelType
       }
     }
   }

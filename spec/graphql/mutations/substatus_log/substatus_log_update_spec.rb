@@ -9,14 +9,15 @@ RSpec.describe Mutations::SubstatusLog::SubstatusLogUpdate do
     let!(:substatus_log) do
       create(:substatus_log, community_id: user.community_id,
                              user_id: user.id,
-                             start_date: Time.zone.now,
-                             stop_date: 10.days.from_now)
+                             start_date: 'Fri, 10 Sep 2021 22:39:14 CAT +02:00',
+                             stop_date: 10.days.from_now,
+                             updated_by_id: admin.id)
     end
 
     let(:substatus_mutation) do
       <<~GQL
-        mutation update_subtatus {
-          substatusLogUpdate(id:"#{substatus_log.id}", startDate:"#{5.days.from_now}", userId:"#{user.id}"){
+        mutation updateSubStatus($id: ID!, $userId: ID!, $startDate: String!) {
+          substatusLogUpdate(id: $id, userId: $userId, startDate: $startDate){
             log {
               id
             }
@@ -26,13 +27,45 @@ RSpec.describe Mutations::SubstatusLog::SubstatusLogUpdate do
     end
 
     it 'updates a substatus log' do
-      result = DoubleGdpSchema.execute(substatus_mutation,
-                                       context: {
-                                         current_user: admin,
-                                         site_community: user.community,
-                                       }).as_json
+      variables = {
+        id: substatus_log.id,
+        userId: user.id,
+        startDate: 'Fri, 10 Sep 2021 22:39:14 CAT +02:00',
+      }
+
+      result = DoubleGdpSchema.execute(substatus_mutation, variables: variables,
+                                                           context: {
+                                                             current_user: admin,
+                                                             site_community: admin.community,
+                                                           }).as_json
+
       expect(result.dig('data', 'substatusLogUpdate', 'log', 'id')).to eql substatus_log.id
       expect(result['errors']).to be_nil
+    end
+
+    it 'records who made the update' do
+      other_admin = create(:admin_user, community_id: user.community_id)
+      log = create(:substatus_log,
+                   community_id: user.community_id,
+                   user_id: user.id,
+                   start_date: 'Fri, 10 Sep 2021 22:39:14 CAT +02:00',
+                   stop_date: 10.days.from_now,
+                   updated_by_id: admin.id)
+
+      variables = {
+        id: log.id,
+        userId: user.id,
+        startDate: 'Sat, 11 Sep 2021 22:39:14 CAT +02:00',
+      }
+
+      DoubleGdpSchema.execute(substatus_mutation, variables: variables,
+                                                  context: {
+                                                    current_user: other_admin,
+                                                    site_community: other_admin.community,
+                                                  }).as_json
+      log.reload
+
+      expect(log.updated_by_id).to eq(other_admin.id)
     end
   end
 end

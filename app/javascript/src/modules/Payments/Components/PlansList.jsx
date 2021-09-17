@@ -1,19 +1,19 @@
 /* eslint-disable no-nested-ternary */
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Grid, Typography, IconButton } from '@material-ui/core';
 import { MoreHorizOutlined } from '@material-ui/icons';
-import Avatar from '@material-ui/core/Avatar';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
+import { useMutation } from 'react-apollo';
 import DataList from '../../../shared/list/DataList';
 import {
   formatMoney,
   InvoiceStatusColor,
-  propAccessor,
   titleize,
-  capitalize
+  capitalize,
+  objectAccessor,
+  formatError
 } from '../../../utils/helpers';
 import Label from '../../../shared/label/Label';
 import CenteredContent from '../../../components/CenteredContent';
@@ -25,26 +25,80 @@ import { dateToString } from '../../../components/DateContainer';
 import MenuList from '../../../shared/MenuList';
 import SubscriptionPlanModal from './SubscriptionPlanModal';
 import ButtonComponent from '../../../shared/buttons/Button';
-
+import PlanListItem from './PlanListItem';
+import { ActionDialog } from '../../../components/Dialog';
+import { PaymentReminderMutation } from '../graphql/payment_plan_mutations';
+import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider';
 
 export function PlansList({
   matches,
   currencyData,
   communityPlansLoading,
   communityPlans,
-  setDisplaySubscriptionPlans
+  setDisplaySubscriptionPlans,
+  setMessage,
+  setAlertOpen
 }){
   const { t } = useTranslation(['payment', 'common']);
   const limit = 10;
   const [offset, setOffset] = useState(0);
   const classes = useStyles();
-  const communityPlansHeaders = [
-    { title: 'Plot/User Info', value: t('table_headers.plot_user_info'), col: 2},
-    { title: 'Dates', value: t('table_headers.dates'), col: 2 },
-    { title: 'Payment Info', value: t('common:table_headers.payment_info'), col: 2 },
-    { title: 'Owing Info', value: t('table_headers.owing_info'), col: 2 },
-    { title: 'Status', value: t('common:table_headers.status'), col: 2 }
-  ];
+  const [confirmationModalOpen, setConfirmationModalOpen] = useState(false);
+  const [createPaymentRemider] = useMutation(PaymentReminderMutation);
+  const [paymentPlan, setPaymentPlan] = useState(null);
+  const [mutationLoading, setMutationLoading] = useState(false);
+  const authState = useContext(AuthStateContext);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const anchorElOpen = Boolean(anchorEl);
+
+  const menuList = [
+    {
+      content: t('misc.payment_reminder'),
+      isAdmin: true,
+      handleClick: () => setConfirmationModalOpen(true)
+    }
+  ]
+  const menuData = {
+    menuList,
+    handleMenuClick,
+    anchorEl,
+    open: anchorElOpen,
+    userType: authState?.user?.userType,
+    handleClose: () => handleMenuClose()
+  }
+
+  function handleMenuClose() {
+    setAnchorEl(null);
+    setPaymentPlan(null);
+  }
+
+  function handleMenuClick(event, plan) {
+    event.stopPropagation();
+    setAnchorEl(event.currentTarget);
+    setPaymentPlan(plan);
+  }
+
+  function handleAfterMutation() {
+    setMutationLoading(false);
+    setAlertOpen(true);
+    setConfirmationModalOpen(false);
+    setAnchorEl(null);
+  }
+
+  function sendPaymentReminderMail() {
+    setMutationLoading(true);
+    createPaymentRemider({
+      variables: {userId: paymentPlan?.user.id, paymentPlanId: paymentPlan.id}
+    })
+    .then(() => {
+      setMessage({ isError: false, detail: t('misc.email_sent') });
+      handleAfterMutation();
+    })
+    .catch(error => {
+      setMessage({ isError: true, detail: formatError(error.message) });
+      handleAfterMutation();
+    })
+  }
 
   function paginatePlans(action) {
     if (action === 'prev') {
@@ -55,18 +109,16 @@ export function PlansList({
     }
   }
 
-  function planStatus(plan) {
-    if(plan.status !== 'active'){
-      return plan.status;
-    }
-    if(plan.owingAmount > 0){
-      return 'behind';
-    }
-    return 'up-to-date';
-  }
-
   return (
     <div>
+      <ActionDialog
+        open={confirmationModalOpen}
+        type="confirm"
+        message={t('misc.email_confirmation', { parcel_number: paymentPlan?.landParcel?.parcelNumber })}
+        handleClose={() => setConfirmationModalOpen(false)}
+        handleOnSave={sendPaymentReminderMail}
+        disableActionBtn={mutationLoading}
+      />
       {communityPlansLoading ? (
         <Spinner />
     ) : communityPlans?.length === 0 ? (
@@ -106,20 +158,11 @@ export function PlansList({
               </div>
             </div>
           </div>
-          {matches && (
-          <div style={{ padding: '0 20px' }}>
-            <ListHeader headers={communityPlansHeaders} />
-          </div>
-       )}
           {communityPlans?.slice(offset, limit + offset - 1).map(plan => (
-            <div style={{ padding: '0 20px' }} key={plan.id}>
-              <DataList
-                keys={communityPlansHeaders}
-                data={renderCommunityPlans(plan, currencyData, planStatus, t)}
-                hasHeader={false}
-              />
+            <div className={classes.body} style={matches ? {} : {marginTop: '30px'}} key={plan.id}>
+              <PlanListItem data={plan} currencyData={currencyData} menuData={menuData} />
             </div>
-        ))}
+          ))}
         </div>
       </>
     )}
@@ -134,61 +177,6 @@ export function PlansList({
       </CenteredContent>
     </div>
   );
-}
-
-export function renderCommunityPlans(plan, currencyData, planStatus, t) {
-  return [
-    {
-      'Plot/User Info': (
-        <Grid item xs={12} md={2} data-testid="plot_user_info">
-          <Text content={<b>{`${titleize(plan?.planType)} - ${titleize(plan?.landParcel?.parcelNumber)}`}</b>} />
-          <br />
-          <Link
-            to={`/user/${plan.user.id}?tab=Plans`}
-            style={{ textDecoration: 'none', color: 'inherit' }}
-          >
-            <div style={{ display: 'flex' }}>
-              <Avatar src={plan.user.imageUrl} alt="avatar-image" />
-              <Typography style={{ margin: '7px', fontSize: '12px' }}>
-                <Text color="primary" content={plan.user.name} />
-              </Typography>
-            </div>
-          </Link>
-        </Grid>
-      ),
-      'Dates': (
-        <Grid item xs={12} md={2} data-testid="dates">
-          <Text content={`${t('misc.starts_on')} ${dateToString(plan.startDate)}`} />
-          <br />
-          <Text content={`${t('misc.ends_on')} ${dateToString(plan.endDate)}`} />
-        </Grid>
-      ),
-      'Payment Info': (
-        <Grid item xs={12} md={2} data-testid="payment_info">
-          <Text content={`${t('misc.paid')} ${formatMoney(currencyData, plan.totalPayments)}`} />
-          <br />
-          <Text content={`${t('misc.expected_payments')} ${formatMoney(currencyData, plan.expectedPayments)}`} />
-          <br />
-          <Text content={`${t('misc.value')} ${formatMoney(currencyData, plan.planValue)}`} />
-        </Grid>
-      ),
-      'Owing Info': (
-        <Grid item xs={12} md={2} data-testid="owing_info" style={plan.owingAmount > 0 ? {color: 'red'} : {color: 'green'}}>
-          <Text content={`${t('misc.owing')} ${formatMoney(currencyData, plan.owingAmount)}`} />
-          <br />
-          <Text content={`${t('misc.installments')} ${plan.installmentsDue}`} />
-        </Grid>
-      ),
-      'Status': (
-        <Grid item xs={12} md={2} data-testid="plan _status" style={{ width: '90px' }}>
-          <Label
-            title={capitalize(planStatus(plan))}
-            color={colors[planStatus(plan)]}
-          />
-        </Grid>
-      )
-    }
-  ];
 }
 
 export function SubscriptionPlans({
@@ -318,14 +306,14 @@ export function SubscriptionPlans({
               </div>
             </div>
           </div>
-      
-        
+
+
           {matches && (
           <div style={{ padding: '0 20px' }}>
             <ListHeader headers={subscriptionPlanHeaders} />
           </div>
         )}
-       
+
           {subscriptionPlansData?.subscriptionPlans?.map(sub => (
             <div style={{ padding: '0 20px' }} key={sub.id}>
               <DataList
@@ -339,7 +327,7 @@ export function SubscriptionPlans({
       </>
     )}
     </div>
-  ); 
+  );
 }
 
 export function renderSubscriptionPlans(subscription, currencyData, menuData) {
@@ -369,7 +357,7 @@ export function renderSubscriptionPlans(subscription, currencyData, menuData) {
         <Grid item xs={12} md={2} data-testid="subscription_status" style={{ width: '90px' }}>
           <Label
             title={capitalize(subscription.status).split("_").join("")}
-            color={propAccessor(InvoiceStatusColor, subscription?.status)}
+            color={objectAccessor(InvoiceStatusColor, subscription?.status)}
           />
         </Grid>
       ),
@@ -394,14 +382,6 @@ export function renderSubscriptionPlans(subscription, currencyData, menuData) {
       )
     }
   ];
-}
-
-
-const colors = {
-  'cancelled': '#e74540',
-  'up-to-date': '#00a98b',
-  'behind': '#eea92d',
-  'completed': '#29ec47'
 }
 
 const useStyles = makeStyles(() => ({
@@ -431,8 +411,15 @@ const useStyles = makeStyles(() => ({
     borderRadius: '4px',
     border: '1px solid #EEEEEE',
     marginTop: '20px'
+  },
+  body: {
+    padding: '0 2%'
   }
 }));
+
+PlansList.defaultProps = {
+  communityPlans: []
+}
 
 PlansList.propTypes = {
   matches: PropTypes.bool.isRequired,
@@ -446,8 +433,10 @@ PlansList.propTypes = {
       id: PropTypes.string,
       status: PropTypes.string,
     })
-  ).isRequired,
-  setDisplaySubscriptionPlans: PropTypes.func.isRequired
+  ),
+  setDisplaySubscriptionPlans: PropTypes.func.isRequired,
+  setMessage: PropTypes.func.isRequired,
+  setAlertOpen: PropTypes.func.isRequired,
 }
 
 SubscriptionPlans.propTypes = {

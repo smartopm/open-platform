@@ -5,6 +5,8 @@ import { MockedProvider } from '@apollo/react-testing';
 import CommunitySettings from '../components/Settings';
 import { CommunityUpdateMutation } from '../graphql/community_mutations';
 import MockedThemeProvider from '../../__mocks__/mock_theme';
+import { EmailTemplatesQuery } from '../../Emails/graphql/email_queries';
+
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
 describe('Community settings page ', () => {
@@ -38,6 +40,7 @@ describe('Community settings page ', () => {
       menuItems: [
         { menu_link: 'http://some-link.com', menu_name: 'Custom Menu', display_on: ['Menu'], roles: ['admin'] },
       ],
+      templates: {},
       subAdministrator: { id: '123df', name: 'User Name' },
       logoUrl: null,
       locale: 'en-US',
@@ -81,6 +84,7 @@ describe('Community settings page ', () => {
             { menu_link: "", menu_name: "", display_on: ["Dashboard"], roles: [] }
           ],
           imageBlobId: null,
+          templates: {},
           locale: 'en-US',
           currency: 'honduran_lempira',
           tagline: '',
@@ -113,9 +117,30 @@ describe('Community settings page ', () => {
         }
       }
     };
+
+    const templateMock = {
+      request: {
+        query: EmailTemplatesQuery
+      },
+      result: {
+        data: {
+          emailTemplates: [
+            {
+              id: '501b718c-8687-4e78-60b732df534ab1',
+              name: 'payment_reminder_template',
+              subject: 'greet',
+              data: {},
+              variableNames: {},
+              createdAt: new Date(),
+              tag: 'some_tag'
+            }
+          ]
+        }
+      }
+    };
     const refetchMock = jest.fn();
     const container = render(
-      <MockedProvider mocks={[communityMutationMock]}>
+      <MockedProvider mocks={[communityMutationMock, templateMock]}>
         <MockedThemeProvider>
           <CommunitySettings data={data} token="374857uwehfsdf232" refetch={refetchMock} />
         </MockedThemeProvider>
@@ -164,6 +189,8 @@ describe('Community settings page ', () => {
     expect(container.queryByTestId('taxIdNo')).toBeInTheDocument();
     expect(container.queryByTestId('smsPhoneNumber')).toBeInTheDocument();
     expect(container.queryByTestId('emergencyCallNumber')).toBeInTheDocument();
+    expect(container.queryByTestId('payment_reminder_template')).toBeInTheDocument();
+    expect(container.queryByTestId('plan_status')).toBeInTheDocument();
 
 
     fireEvent.select(container.queryByTestId('locale'), { target: { value: 'en-US' } });

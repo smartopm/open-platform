@@ -63,8 +63,20 @@
     "expected_payments": "Expected payments",
     "value": "Value",
     "owing": "Owing",
+    "owed": "Owed",
     "installments": "Installments",
-    "subscription_plans": "Subscription Plans"
+    "subscription_plans": "Subscription Plans",
+    "plan_values": "Plan Value",
+    "due": "Due",
+    "payment_reminder": "Payment Reminder",
+    "email_sent": "Email has been sent successfully",
+    "email_confirmation": "You are about to send an email to the owner of Plot {{parcel_number}}",
+    "receipt_#": "Receipt #",
+    "cashier_name": "Cashier name",
+    "expected_monthly_payment": "Expected Monthly Payment",
+    "total_balance_remaining": "Total Balance Remaining",
+    "currency": "Currency",
+    "plot_plan_no": "Plot/Plan No."
   },
   "table_headers": {
     "receipt_number": "Receipt Number",

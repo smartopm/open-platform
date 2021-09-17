@@ -39,7 +39,8 @@ describe('User Plot Info Page', () => {
 
   const userMock = {
     userName:'some name',
-    userId: 'bwekwjkewj'
+    userId: 'bwekwjkewj',
+    userType: 'admin'
   }
 
   it('should include this type of a plot', () => {
@@ -47,7 +48,7 @@ describe('User Plot Info Page', () => {
       <MockedProvider mock={[]}>
         <BrowserRouter>
           <MockedThemeProvider>
-            <UserPlotInfo account={account} userId={userMock.userId} userName={userMock.userName} />
+            <UserPlotInfo account={account} userId={userMock.userId} userName={userMock.userName} currentUserType={userMock.userType} />
           </MockedThemeProvider>
         </BrowserRouter>
       </MockedProvider>
@@ -62,7 +63,7 @@ describe('User Plot Info Page', () => {
       <MockedProvider mock={[]}>
         <BrowserRouter>
           <MockedThemeProvider>
-            <UserPlotInfo account={account} userId={userMock.userId} userName={userMock.userName} />
+            <UserPlotInfo account={account} userId={userMock.userId} userName={userMock.userName} currentUserType={userMock.userType} />
           </MockedThemeProvider>
         </BrowserRouter>
       </MockedProvider>
@@ -75,7 +76,7 @@ describe('User Plot Info Page', () => {
       <MockedProvider mock={[]}>
         <BrowserRouter>
           <MockedThemeProvider>
-            <UserPlotInfo account={[]} userId={userMock.userId} userName={userMock.userName} />
+            <UserPlotInfo account={[]} userId={userMock.userId} userName={userMock.userName} currentUserType={userMock.userType} />
           </MockedThemeProvider>
         </BrowserRouter>
       </MockedProvider>
@@ -91,13 +92,27 @@ describe('User Plot Info Page', () => {
       <MockedProvider mock={[]}>
         <BrowserRouter>
           <MockedThemeProvider>
-            <UserPlotInfo account={account} userId={userMock.userId} userName={userMock.userName} />
+            <UserPlotInfo account={account} userId={userMock.userId} userName={userMock.userName} currentUserType={userMock.userType} />
           </MockedThemeProvider>
         </BrowserRouter>
       </MockedProvider>
     )
     expect(getByTestId('support_link').textContent).toContain('common:misc.support_team')
   })
+
+  it('should not display the new property button when current user is not an admin', () => {
+    const container = render(
+      <MockedProvider mock={[]}>
+        <BrowserRouter>
+          <MockedThemeProvider>
+            <UserPlotInfo account={account} userId={userMock.userId} userName={userMock.userName} currentUserType='client' />
+          </MockedThemeProvider>
+        </BrowserRouter>
+      </MockedProvider>
+    );
+
+    expect(container.queryByTestId('add-plot')).toBeNull();
+  });
 
   afterEach(cleanup)
 })

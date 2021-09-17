@@ -11,7 +11,7 @@ import { Grid, Typography } from '@material-ui/core'
 import { PaymentSummaryQuery } from '../graphql/payment_summary_query'
 import { Spinner } from '../../../../shared/Loading';
 import PaymentSummaryCard from './PaymentSummaryCard'
-import { propAccessor, formatError } from '../../../../utils/helpers'
+import { objectAccessor, formatError } from '../../../../utils/helpers'
 import CenteredContent from '../../../../components/CenteredContent';
 import { currencies } from '../../../../utils/constants';
 import authStateProps from '../../../../shared/types/authState';
@@ -28,7 +28,7 @@ export default function PaymentSummary({ authState, translate }) {
   const matches = useMediaQuery('(max-width:600px)')
   const classes = useStyles();
   const theme = useTheme()
-  
+
   const currency = currencies[authState.user?.community.currency] || '';
   const currencyData = { currency, locale: authState.user?.community.locale }
 
@@ -61,7 +61,7 @@ export default function PaymentSummary({ authState, translate }) {
           ) : (
             <div style={{marginLeft: '79px', marginTop: '20px'}}>
               <Grid container alignItems="center">
-                <Typography 
+                <Typography
                   className={classes.bold}
                   style={{marginRight: '20px', width: '102px', cursor: 'pointer'}}
                 >
@@ -81,7 +81,7 @@ export default function PaymentSummary({ authState, translate }) {
                   <Grid item xs={6} sm={3} key={key}>
                     <PaymentSummaryCard
                       title={translate(`dashboard.payment.${key}`)}
-                      value={propAccessor(payData?.transactionSummary, key)}
+                      value={objectAccessor(payData?.transactionSummary, key)}
                       currencyData={currencyData}
                       handleClick={handleClick}
                       query={key}

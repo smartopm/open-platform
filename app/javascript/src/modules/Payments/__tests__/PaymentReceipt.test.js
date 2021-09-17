@@ -1,5 +1,5 @@
 import React from 'react';
-import { render } from '@testing-library/react';
+import { fireEvent, render } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { MockedProvider } from '@apollo/react-testing';
 import { BrowserRouter } from 'react-router-dom/';
@@ -78,16 +78,20 @@ describe('It should test the payment receipt modal component', () => {
       </BrowserRouter>
     );
 
-    expect(container.queryByText('Name')).toBeInTheDocument();
+    expect(container.queryByText('common:table_headers.name')).toBeInTheDocument();
     expect(container.queryByText('NRC')).toBeInTheDocument();
-    expect(container.queryByText('Date')).toBeInTheDocument();
+    expect(container.queryByText('common:table_headers.date')).toBeInTheDocument();
+    expect(container.queryByText('common:table_headers.payment_plan')).toBeInTheDocument();
+    expect(container.queryByText('common:table_headers.plot_number')).toBeInTheDocument();
+    expect(container.queryByTestId('action-button')).toBeInTheDocument();
+    fireEvent.click(container.queryByTestId('action-button'));
 
     expect(container.queryByTestId('client-name')).toHaveTextContent('some name');
     expect(container.queryByTestId('nrc')).toHaveTextContent('234');
 
-    expect(container.queryByTestId('plot-no')).toHaveTextContent('Plot/Plan No.');
-    expect(container.queryByTestId('pay-type')).toHaveTextContent('Payment Type');
-    expect(container.queryByTestId('amount')).toHaveTextContent('Amount Paid');
+    expect(container.queryByTestId('plot-no')).toHaveTextContent(('misc.plot_plan_no'));
+    expect(container.queryByTestId('pay-type')).toHaveTextContent('common:table_headers.payment_type');
+    expect(container.queryByTestId('amount')).toHaveTextContent('table_headers.amount_paid');
 
     expect(container.queryByTestId('account-name')).toHaveTextContent('Thebe');
     expect(container.queryByTestId('tax-id-no')).toHaveTextContent('tax1234');
@@ -98,12 +102,12 @@ describe('It should test the payment receipt modal component', () => {
     expect(container.queryByTestId('website')).toHaveTextContent('www.web.com');
     expect(container.queryByTestId('support-phone-no')).toHaveTextContent('+260 1234');
 
-    expect(container.queryByText('Banking Details')).toBeInTheDocument();
-    expect(container.queryByText('Bank')).toBeInTheDocument();
-    expect(container.queryByText('Account Name')).toBeInTheDocument();
-    expect(container.queryByText('Account Number')).toBeInTheDocument();
-    expect(container.queryByText('Branch')).toBeInTheDocument();
-    expect(container.queryByText('Swift Code')).toBeInTheDocument();
-    expect(container.queryByText('Sort Code')).toBeInTheDocument();
+    expect(container.queryByText('misc.banking_details')).toBeInTheDocument();
+    expect(container.queryByText('misc.bank')).toBeInTheDocument();
+    expect(container.queryByText('misc.account_name')).toBeInTheDocument();
+    expect(container.queryByText('misc.account_number')).toBeInTheDocument();
+    expect(container.queryByText('misc.branch')).toBeInTheDocument();
+    expect(container.queryByText('misc.swift_code')).toBeInTheDocument();
+    expect(container.queryByText('misc.sort_code')).toBeInTheDocument();
   });
 });

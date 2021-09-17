@@ -33,7 +33,7 @@ import DatePickerDialog from '../../../components/DatePickerDialog';
 import Loading from '../../../shared/Loading';
 import QueryBuilder from '../../../components/QueryBuilder';
 import { ModalDialog } from '../../../components/Dialog';
-import { formatError, pluralizeCount, propAccessor } from '../../../utils/helpers';
+import { formatError, pluralizeCount, objectAccessor } from '../../../utils/helpers';
 import useDebounce from '../../../utils/useDebounce';
 import ListHeaders from '../../../shared/list/ListHeader';
 import MessageAlert from '../../../components/MessageAlert';
@@ -116,7 +116,7 @@ export default function TodoList({
   const taskCountData = useQuery(TaskStatsQuery);
 
   const [loadAssignees, { loading, data: liteData }] = useLazyQuery(UsersLiteQuery, {
-    variables: { query: 'user_type:admin OR user_type:custodian OR user_type:security_guard OR user_type:contractor'},
+    variables: { query: 'user_type:admin OR user_type:custodian OR user_type:security_guard OR user_type:contractor OR user_type:site_worker'},
     errorPolicy: 'all'
   });
 
@@ -252,7 +252,7 @@ export default function TodoList({
   function handleTaskFilter(_evt, key) {
     if (key === 'tasksWithNoDueDate') return;
     setCurrentTile(key);
-    setQuery(propAccessor(taskQuery, key));
+    setQuery(objectAccessor(taskQuery, key));
     // show tasks when a filter has been applied, we might have to move this to useEffect
     loadTasks();
   }
@@ -277,6 +277,7 @@ export default function TodoList({
     setOpenFilter(!filterOpen);
   }
 
+
   function handleQueryOnChange(selectedOptions) {
     if (selectedOptions) {
       const andConjugate = selectedOptions.logic?.and;
@@ -290,7 +291,7 @@ export default function TodoList({
         const queryText = availableConjugate
           .map(option => {
             let operator = Object.keys(option)[0];
-            const [inputFilterProperty, inputFilterValue] = propAccessor(option, operator);
+            const [inputFilterProperty, inputFilterValue] = objectAccessor(option, operator);
 
             property = filterFields[inputFilterProperty.var];
             value = inputFilterValue;

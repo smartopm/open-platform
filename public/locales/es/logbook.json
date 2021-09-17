@@ -42,6 +42,7 @@
     "repeats_on": "Se repite",
     "repeats_until": "Se repite hasta",
     "start_of_visit": "Inicio de visita ‪{{date}}‬",
+    "update_guest": "Actualizar Invitado",
     "valid": "Valido",
     "visit_time": "Tiempo de visita ‪{{startTime}}‬ - ‪{{endTime}}‬"
   },
@@ -94,6 +95,7 @@
     "observations": "Observaciones",
     "other_reason": "Otro motivo de visita",
     "print_scan": "Imprimir Scan",
+    "registered_guest_updated": "Exitoso: Invitado Registrado actualizado exitosamente ",
     "registered_guests": "Invitados Registrados",
     "showromm": "Sala de Exposicion",
     "success_message": "El permiso de acceso se ha aprobado.",

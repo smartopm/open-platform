@@ -19,6 +19,7 @@ import { paymentPlanStatus, paymentPlanFrequency, subscriptionPlanType } from '.
 import { PaymentPlanCreateMutation } from '../../../../graphql/mutations/land_parcel';
 import { dateToString } from '../../../../components/DateContainer';
 import { capitalize, formatError, titleize } from '../../../../utils/helpers';
+import SwitchInput from '../../../Forms/components/FormProperties/SwitchInput';
 
 const initialPlanState = {
   status: 0,
@@ -48,6 +49,7 @@ export default function PaymentPlanModal({
   const [createPaymentPlan] = useMutation(PaymentPlanCreateMutation);
   const [inputValue, setInputValues] = useState(initialPlanState);
   const [isError, setIsError] = useState(false);
+  const [renewable, setRenewable] = useState(true);
 
   function handleInputChange(event) {
     const { name, value } = event.target;
@@ -132,6 +134,7 @@ export default function PaymentPlanModal({
   function cleanModal() {
     setInputValues(initialPlanState);
     setFrequency(2);
+    setRenewable(true);
   }
 
   function confirmSubmission(event) {
@@ -156,7 +159,8 @@ export default function PaymentPlanModal({
         installmentAmount: parseFloat(inputValue.installmentAmount),
         totalAmount: parseFloat(inputValue.installmentAmount) * parseInt(inputValue.duration, 10),
         duration: parseInt(inputValue.duration, 10),
-        frequency
+        frequency,
+        renewable
       }
     })
       .then(() => {
@@ -309,6 +313,14 @@ export default function PaymentPlanModal({
             </MenuItem>
           ))}
         </TextField>
+        <div className="MuiFormLabel-root" style={{marginLeft : '-15px', marginTop: '10px'}}>
+          <SwitchInput
+            name="renewable"
+            label={t('misc.renewable')}
+            value={renewable}
+            handleChange={event => {setRenewable(event.target.checked)}}
+          />
+        </div>
         <TextField
           autoFocus
           margin="normal"
@@ -365,7 +377,7 @@ export function CoOwners({ landParcel, userId, handleCoOwners }) {
   return (
     <>
       <div>
-        <FormLabel>{t('common:form_placeholders.select_co_owners')}</FormLabel>
+        <FormLabel data-testid="form-label">{t('common:form_placeholders.select_co_owners')}</FormLabel>
       </div>
       <div>
         {landParcel?.accounts?.map(
