@@ -9,6 +9,7 @@ module Mutations
       argument :description, String, required: false
       argument :preview, Boolean, required: true
       argument :multiple_submissions_allowed, Boolean, required: true
+      argument :roles, [String, { null: true }], required: false
 
       field :form, Types::FormType, null: true
 

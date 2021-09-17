@@ -15,6 +15,7 @@ RSpec.describe Mutations::Form::FormCreate do
           $description: String,
           $preview: Boolean!,
           $multipleSubmissionsAllowed: Boolean!
+          $roles: [String]
         ){
           formCreate(
             name: $name,
@@ -22,11 +23,13 @@ RSpec.describe Mutations::Form::FormCreate do
             description: $description,
             preview: $preview,
             multipleSubmissionsAllowed: $multipleSubmissionsAllowed
+            roles: $roles
           ){
             form {
               id
               name
               multipleSubmissionsAllowed
+              roles
             }
           }
         }
@@ -40,6 +43,7 @@ RSpec.describe Mutations::Form::FormCreate do
           expiresAt: (rand * 10).to_i.day.from_now.to_s,
           preview: true,
           multipleSubmissionsAllowed: true,
+          roles: %w[admin resident],
         }
         expect(Logs::EventLog.count).to eql 0
         result = DoubleGdpSchema.execute(mutation, variables: variables,
@@ -53,6 +57,9 @@ RSpec.describe Mutations::Form::FormCreate do
         expect(form_details['id']).not_to be_nil
         expect(form_details['name']).to eql 'Form Name'
         expect(form_details['multipleSubmissionsAllowed']).to eql true
+        expect(form_details['roles'].size).to eql 2
+        expect(form_details['roles'][0]).to eql 'admin'
+        expect(form_details['roles'][1]).to eql 'resident'
         expect(result['errors']).to be_nil
       end
     end

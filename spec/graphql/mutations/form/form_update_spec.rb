@@ -6,7 +6,7 @@ RSpec.describe Mutations::Form::FormUpdate do
   describe 'Update for forms' do
     let!(:user) { create(:user_with_community) }
     let!(:admin) { create(:admin_user, community_id: user.community_id) }
-    let!(:form) { create(:form, community_id: user.community_id) }
+    let!(:form) { create(:form, community_id: user.community_id, roles: ['resident']) }
 
     let(:mutation) do
       <<~GQL
@@ -16,18 +16,21 @@ RSpec.describe Mutations::Form::FormUpdate do
           $status: String,
           $preview: Boolean,
           $multipleSubmissionsAllowed: Boolean
+          $roles: [String]
           ) {
           formUpdate(id: $id,
             name: $name,
             status: $status,
             preview: $preview,
             multipleSubmissionsAllowed: $multipleSubmissionsAllowed
+            roles: $roles
           ){
             form {
               id
               name
               preview
               multipleSubmissionsAllowed
+              roles
             }
           }
         }
@@ -40,6 +43,7 @@ RSpec.describe Mutations::Form::FormUpdate do
         name: 'Updated Name',
         preview: true,
         multipleSubmissionsAllowed: false,
+        roles: [],
       }
       result = DoubleGdpSchema.execute(mutation, variables: variables,
                                                  context: {
@@ -50,6 +54,7 @@ RSpec.describe Mutations::Form::FormUpdate do
       expect(form_result['name']).to eql 'Updated Name'
       expect(form_result['preview']).to eql true
       expect(form_result['multipleSubmissionsAllowed']).to eql false
+      expect(form_result['roles']).to eql []
       expect(result['errors']).to be_nil
     end
 

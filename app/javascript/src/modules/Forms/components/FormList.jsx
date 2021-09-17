@@ -14,7 +14,10 @@ import {
   Grid,
   IconButton,
   MenuItem,
-  Menu
+  Menu,
+  Select,
+  FormControl,
+  InputLabel
 } from '@material-ui/core'
 import MoreVertIcon from '@material-ui/icons/MoreVert'
 import AssignmentIcon from '@material-ui/icons/Assignment'
@@ -32,7 +35,7 @@ import CenteredContent from '../../../components/CenteredContent'
 import TitleDescriptionForm from './TitleDescriptionForm'
 import { DateAndTimePickers } from '../../../components/DatePickerDialog'
 import { FormCreateMutation, FormUpdateMutation } from '../graphql/forms_mutation'
-import { formStatus } from '../../../utils/constants'
+import { formStatus, formRoles } from '../../../utils/constants'
 import { ActionDialog } from '../../../components/Dialog'
 import MessageAlert from '../../../components/MessageAlert'
 import FloatButton from '../../../components/FloatButton'
@@ -275,13 +278,14 @@ export function FormDialog({actionType, form, formMutation, open, setOpen, messa
   const [isLoading, setLoading] = useState(false);
   const [multipleSubmissionsAllowed, setMultipleSubmissionsAllowed] = useState(form ? form.multipleSubmissionsAllowed : true)
   const [preview, setPreview] = useState(form ? form.preview : false)
+  const [roles, setRoles] = useState(form?.roles || [])
 
   function handleDateChange(date) {
     setExpiresAtDate(date)
   }
 
   function submitForm(title, description) {
-    const variables = { name: title, expiresAt, description, multipleSubmissionsAllowed, preview }
+    const variables = { name: title, expiresAt, description, multipleSubmissionsAllowed, preview, roles }
     if (actionType === 'update'){
       variables.id = form?.id
     }
@@ -332,7 +336,7 @@ export function FormDialog({actionType, form, formMutation, open, setOpen, messa
             msg: message.detail
           }}
         >
-          <div style={{marginLeft : '-15px'}}>
+          <div style={{marginLeft : '-15px', display: 'inline-block'}}>
             <SwitchInput
               name="multipleSubmissionsAllowed"
               label={t('misc.limit_1_response')}
@@ -346,6 +350,31 @@ export function FormDialog({actionType, form, formMutation, open, setOpen, messa
               value={preview}
               handleChange={event => setPreview(event.target.checked)}
             />
+          </div>
+          <div>
+            <FormControl style={{width:  200}}>
+              <InputLabel id="demo-multiple-name-label">{t('misc.select_roles')}</InputLabel>
+              <Select
+                id="multiple-roles"
+                multiple
+                value={roles}
+                onChange={event => setRoles(event.target.value)}
+                MenuProps={{
+                PaperProps: {
+                  style: {
+                    maxHeight: 500,
+                    marginTop: 50
+                  },
+                },
+              }}
+              >
+                {Object.entries(formRoles).map(([key, val]) => (
+                  <MenuItem key={key} value={val}>
+                    {val}
+                  </MenuItem>
+              ))}
+              </Select>
+            </FormControl>
           </div>
           <DateAndTimePickers
             label={t('misc.form_expiry_date')}
@@ -392,7 +421,10 @@ FormDialog.propTypes = {
     preview: PropTypes.bool.isRequired,
     expiresAt: PropTypes.string,
     name: PropTypes.string.isRequired,
-    description: PropTypes.string.isRequired
+    description: PropTypes.string.isRequired,
+    roles: PropTypes.arrayOf(
+      PropTypes.string
+    )
   }),
   formMutation: PropTypes.func.isRequired,
   open: PropTypes.bool.isRequired,
