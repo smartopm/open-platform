@@ -6,9 +6,18 @@ RSpec.describe Types::Queries::Form do
   describe 'Form queries' do
     let!(:admin) { create(:admin_user, community_id: current_user.community_id) }
     let!(:current_user) { create(:user_with_community, name: 'John Test') }
-    let!(:form) { create(:form, community_id: current_user.community_id) }
+    let!(:form) do
+      create(:form, community_id: current_user.community_id, status: :published,
+                    roles: %w[client resident])
+    end
     let!(:category) { create(:category, form: form, order: 1) }
-    let!(:another_form) { create(:form, community_id: current_user.community_id, status: 2) }
+    let!(:another_form) do
+      create(:form, community_id: current_user.community_id, status: :published,
+                    roles: ['resident'])
+    end
+    let!(:second_form) do
+      create(:form, community_id: current_user.community_id, status: :published, roles: [])
+    end
     let!(:form_property_text) do
       create(:form_property, form: form, category: category, field_type: 'text')
     end
@@ -130,13 +139,37 @@ RSpec.describe Types::Queries::Form do
       GQL
     end
 
-    it 'should retrieve list of forms' do
-      result = DoubleGdpSchema.execute(forms_query, context: {
-                                         current_user: current_user,
-                                         site_community: current_user.community,
-                                       }).as_json
-      expect(result.dig('data', 'forms').length).to eql 1
-      expect(result.dig('data', 'forms', 0, 'id')).to eql form.id
+    context 'when current user is an admin' do
+      it 'retrieves all list of forms' do
+        result = DoubleGdpSchema.execute(forms_query, context: {
+                                           current_user: admin,
+                                           site_community: current_user.community,
+                                         }).as_json
+        expect(result.dig('data', 'forms').length).to eql 3
+        expect(result.dig('data', 'forms', 0, 'id')).to eql second_form.id
+      end
+    end
+
+    context 'when current user is a client' do
+      before { current_user.update(user_type: :client) }
+      it 'retrieves list of forms where either client role is present or no role is present' do
+        result = DoubleGdpSchema.execute(forms_query, context: {
+                                           current_user: current_user,
+                                           site_community: current_user.community,
+                                         }).as_json
+        expect(result.dig('data', 'forms').length).to eql 2
+      end
+    end
+
+    context 'when current user is a resident' do
+      before { current_user.update(user_type: :resident) }
+      it 'retrieves list of forms where either residentt role is present or no role is present' do
+        result = DoubleGdpSchema.execute(forms_query, context: {
+                                           current_user: current_user,
+                                           site_community: current_user.community,
+                                         }).as_json
+        expect(result.dig('data', 'forms').length).to eql 3
+      end
     end
 
     it 'should retrieve form by id' do

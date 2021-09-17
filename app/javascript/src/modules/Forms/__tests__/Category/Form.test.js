@@ -23,7 +23,8 @@ describe('Form Component', () => {
           preview: true,
           description: 'This is a customs form',
           expiresAt: '2021-12-31T23:59:59Z',
-          multipleSubmissionsAllowed: true
+          multipleSubmissionsAllowed: true,
+          roles: []
         }
       }
     }
