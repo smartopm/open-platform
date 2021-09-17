@@ -100,5 +100,8 @@
     "ok_label": "Ok",
     "clear": "Clear",
     "cancel": "Cancel"
-  }
+  },
+  "errors": {
+    "required_field": "{{fieldName}} is Required",
+    }
 }
