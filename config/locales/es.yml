@@ -386,6 +386,7 @@ es:
     user_form_property:
       not_found: Formulario de usuario de propiedad  no encontrada
     user:
+      does_not_exist: El usuario no existe
       merge_failed: Union Fallida
       not_found: Esta cuenta no existe. Envíe una solicitud para crear una cuenta
         o utilice la información de cuenta correcta para iniciar sesión
@@ -403,6 +404,7 @@ es:
   response:
     category_deleted: Categoría eliminada correctamente
     delete_failed: Eliminar Falló
+    email_not_sent: El correo no se envió
     failed: Fallido
     success: Exito
     update_failed: 'Actualizar Falló '
