@@ -11,14 +11,11 @@ import { makeStyles } from '@material-ui/styles';
 import EmailIcon from '@material-ui/icons/Email';
 import { Spinner } from '../../../shared/Loading';
 
-export default function QRCodeConfirmation({
-  open,
-  closeModal,
-  guestEmail
-}) {
+export default function QRCodeConfirmation({ open, closeModal, guestEmail, emailHandler }) {
   const classes = useStyles();
   const { t } = useTranslation('logbook');
   const observationDetails = { loading: false };
+
   return (
     <>
       <Dialog
@@ -54,8 +51,8 @@ export default function QRCodeConfirmation({
                 label="Enter email address"
                 name="email"
                 type="email"
-                onChange={() => {}}
-                value="ADE"
+                onChange={event => emailHandler.handleEmailChange(event.target.value)}
+                value={emailHandler.value}
                 inputProps={{ 'data-testid': 'guest-email' }}
                 className={`form-control ${classes.newEmail}`}
               />
@@ -116,10 +113,10 @@ const useStyles = makeStyles(theme => ({
 
 QRCodeConfirmation.propTypes = {
   open: PropTypes.bool.isRequired,
-  // observationHandler: PropTypes.shape({
-  //   value: PropTypes.string,
-  //   handleChange: PropTypes.func
-  // }).isRequired,
+  emailHandler: PropTypes.shape({
+    value: PropTypes.string,
+    handleEmailChange: PropTypes.func
+  }).isRequired,
   closeModal: PropTypes.func.isRequired,
   guestEmail: PropTypes.string.isRequired
 };

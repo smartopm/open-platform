@@ -102,6 +102,7 @@ export default function RequestUpdate({ id, previousRoute, isGuestRequest, tabVa
   const { t } = useTranslation(['common', 'logbook']);
   const [isReasonModalOpen, setReasonModal] = useState(false);
   const [isQrModalOpen, setQrModal] = useState(false);
+  const [qrCodeEmail, setQrCodeEmail] = useState('');
 
   useEffect(() => {
     if (id) {
@@ -377,6 +378,7 @@ export default function RequestUpdate({ id, previousRoute, isGuestRequest, tabVa
         open={isQrModalOpen}
         guestEmail={null}
         closeModal={() => setQrModal(!isQrModalOpen)}
+        emailHandler={{ value: qrCodeEmail, handleEmailChange: setQrCodeEmail}}
       />
       <MessageAlert
         type={!observationDetails.isError ? 'success' : 'error'}
