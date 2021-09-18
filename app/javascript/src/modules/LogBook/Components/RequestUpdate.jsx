@@ -3,11 +3,11 @@
 /* eslint-disable no-use-before-define */
 import React, { useState, useEffect, useContext } from 'react';
 import { useMutation, useLazyQuery } from 'react-apollo';
-import { TextField, MenuItem, Button , Grid } from '@material-ui/core';
+import { TextField, MenuItem, Button, Grid } from '@material-ui/core';
 import { StyleSheet, css } from 'aphrodite';
-import { useHistory} from 'react-router';
+import { useHistory } from 'react-router';
 import { useTranslation } from 'react-i18next';
-import PropTypes from 'prop-types'
+import PropTypes from 'prop-types';
 import CallIcon from '@material-ui/icons/Call';
 import { EntryRequestQuery } from '../../../graphql/queries';
 import {
@@ -17,19 +17,31 @@ import {
   UpdateLogMutation,
   EntryRequestCreate
 } from '../../../graphql/mutations';
-import { Spinner } from "../../../shared/Loading";
+import { Spinner } from '../../../shared/Loading';
 import { isTimeValid, getWeekDay } from '../../../utils/dateutil';
-import { objectAccessor } from '../../../utils/helpers'
-import { userState, userType, communityVisitingHours, defaultBusinessReasons } from '../../../utils/constants'
-import { ModalDialog, ReasonInputModal } from "../../../components/Dialog"
-import { dateToString, dateTimeToString } from "../../../components/DateContainer";
+import { objectAccessor } from '../../../utils/helpers';
+import {
+  userState,
+  userType,
+  communityVisitingHours,
+  defaultBusinessReasons
+} from '../../../utils/constants';
+import { ModalDialog, ReasonInputModal } from '../../../components/Dialog';
+import {
+  dateToString,
+  dateTimeToString,
+  updateDateWithTime
+} from '../../../components/DateContainer';
 import { Context } from '../../../containers/Provider/AuthStateProvider';
 import EntryNoteDialog from '../../../shared/dialogs/EntryNoteDialog';
 import CenteredContent from '../../../components/CenteredContent';
-import AddObservationNoteMutation, { EntryRequestUpdateMutation } from '../graphql/logbook_mutations';
-import MessageAlert from '../../../components/MessageAlert'
+import AddObservationNoteMutation, {
+  EntryRequestUpdateMutation
+} from '../graphql/logbook_mutations';
+import MessageAlert from '../../../components/MessageAlert';
 import { checkInValidRequiredFields, defaultRequiredFields } from '../utils';
 import GuestTime from './GuestTime';
+import QRCodeConfirmation from './QRCodeConfirmation';
 
 const initialState = {
     name: '',
@@ -53,46 +65,55 @@ const initialState = {
 }
 
 export default function RequestUpdate({ id, previousRoute, isGuestRequest, tabValue }) {
-  const history = useHistory()
-  const authState = useContext(Context)
-  const isFromLogs = previousRoute === 'logs' ||  false
+  const history = useHistory();
+  const authState = useContext(Context);
+  const isFromLogs = previousRoute === 'logs' || false;
   const [loadRequest, { data }] = useLazyQuery(EntryRequestQuery, {
     variables: { id }
   });
-  const [createEntryRequest] = useMutation(EntryRequestCreate)
+  const [createEntryRequest] = useMutation(EntryRequestCreate);
   const [grantEntry] = useMutation(EntryRequestGrant);
   const [denyEntry] = useMutation(EntryRequestDeny);
-  const [updateRequest] = useMutation(EntryRequestUpdateMutation)
-  const [createUser] = useMutation(CreateUserMutation)
-  const [updateLog] = useMutation(UpdateLogMutation)
-  const [addObservationNote] = useMutation(AddObservationNoteMutation)
-  const [isLoading, setLoading] = useState(false)
-  const [isModalOpen, setModal] = useState(false)
-  const [modalAction, setModalAction] = useState('')
+  const [updateRequest] = useMutation(EntryRequestUpdateMutation);
+  const [createUser] = useMutation(CreateUserMutation);
+  const [updateLog] = useMutation(UpdateLogMutation);
+  const [addObservationNote] = useMutation(AddObservationNoteMutation);
+  const [isLoading, setLoading] = useState(false);
+  const [isModalOpen, setModal] = useState(false);
+  const [modalAction, setModalAction] = useState('');
   const [date] = useState(new Date());
-  const [isClicked, setIsClicked] = useState(false)
-  const [isObservationOpen, setIsObservationOpen] = useState(false)
-  const [observationNote, setObservationNote] = useState("")
-  const [reqId, setRequestId] = useState(id)
-  const [observationDetails, setDetails] = useState({ isError: false, message: '', loading: false })
-  const [inputValidationMsg, setInputValidationMsg] = useState({ isError: false, isSubmitting: false })
+  const [isClicked, setIsClicked] = useState(false);
+  const [isObservationOpen, setIsObservationOpen] = useState(false);
+  const [observationNote, setObservationNote] = useState('');
+  const [reqId, setRequestId] = useState(id);
+  const [observationDetails, setDetails] = useState({
+    isError: false,
+    message: '',
+    loading: false
+  });
+  const [inputValidationMsg, setInputValidationMsg] = useState({
+    isError: false,
+    isSubmitting: false
+  });
   const [formData, setFormData] = useState(initialState);
-  const requiredFields = authState?.user?.community?.communityRequiredFields?.manualEntryRequestForm || defaultRequiredFields
-  const { t } = useTranslation(['common', 'logbook'])
-  const [isReasonModalOpen, setReasonModal] = useState(false)
+  const requiredFields =
+    authState?.user?.community?.communityRequiredFields?.manualEntryRequestForm ||
+    defaultRequiredFields;
+  const { t } = useTranslation(['common', 'logbook']);
+  const [isReasonModalOpen, setReasonModal] = useState(false);
+  const [isQrModalOpen, setQrModal] = useState(false);
 
   useEffect(() => {
     if (id) {
-      loadRequest({ variables: { id } })
+      loadRequest({ variables: { id } });
     }
-  }, [id, loadRequest])
+  }, [id, loadRequest]);
 
   useEffect(() => {
     if (formData.reason === 'other') {
-      setReasonModal(true)
+      setReasonModal(true);
     }
-  }, [formData.reason, id])
-
+  }, [formData.reason, id]);
 
   // Data is loaded, so set the initialState, but only once
   if (!formData.loaded && data && id) {
@@ -106,45 +127,47 @@ export default function RequestUpdate({ id, previousRoute, isGuestRequest, tabVa
     });
     // if a different reason is picked then reset the other reason
     if (name === 'reason' && formData.business) {
-      setFormData({ ...formData, business: '' })
+      setFormData({ ...formData, business: '' });
     }
   }
 
-  function handleChangeOccurrence(day){
-    if(formData.occursOn.includes(day)){
-      const leftDays = formData.occursOn.filter(d => d !== day)
+  function handleChangeOccurrence(day) {
+    if (formData.occursOn.includes(day)) {
+      const leftDays = formData.occursOn.filter(d => d !== day);
       setFormData({
         ...formData,
         occursOn: leftDays
       });
-      return
+      return;
     }
     setFormData({
       ...formData,
-      occursOn: [ ...formData.occursOn, day]
+      occursOn: [...formData.occursOn, day]
     });
   }
 
   function handleCreateRequest() {
-
+    setQrModal(true);
     const otherFormData = {
       ...formData,
       // return reason if not other
       reason: formData.business || formData.reason,
     }
 
-      return createEntryRequest({ variables: otherFormData })
-      // eslint-disable-next-line no-shadow
+    return (
+      createEntryRequest({ variables: otherFormData })
+        // eslint-disable-next-line no-shadow
         .then(({ data }) => {
-          setRequestId(data.result.entryRequest.id)
+          setRequestId(data.result.entryRequest.id);
           if (isGuestRequest) {
-            history.push(`/entry_logs?tab=${tabValue}`)
+            history.push(`/entry_logs?tab=${tabValue}`);
           }
-          return data.result.entryRequest.id
+          return data.result.entryRequest.id;
         })
         .catch(err => {
           setDetails({ ...observationDetails, isError: true, message: err.message });
-        });
+        })
+    );
   }
 
   function handleUpdateRequest() {
@@ -156,8 +179,11 @@ export default function RequestUpdate({ id, previousRoute, isGuestRequest, tabVa
     updateRequest({ variables: { id, ...otherFormData } })
       .then(() => {
         setLoading(false);
-        setDetails({ ...observationDetails, message: t('logbook:logbook.registered_guest_updated') });
-        history.push(`/entry_logs?tab=${tabValue}`)
+        setDetails({
+          ...observationDetails,
+          message: t('logbook:logbook.registered_guest_updated')
+        });
+        history.push(`/entry_logs?tab=${tabValue}`);
       })
       .catch(error => {
         setLoading(false);
@@ -166,44 +192,51 @@ export default function RequestUpdate({ id, previousRoute, isGuestRequest, tabVa
   }
 
   function handleGrantRequest() {
-    setLoading(true)
-    setModal(false)
+    setLoading(true);
+    setModal(false);
     handleCreateRequest()
       .then(requestId => grantEntry({ variables: { id: requestId } }))
       .then(() => {
-        setDetails({ ...observationDetails, isError: false, message: t('logbook:logbook.success_message', { action: t('logbook:logbook.granted') }) })
-        setIsObservationOpen(true)
-        setLoading(false)
+        setDetails({
+          ...observationDetails,
+          isError: false,
+          message: t('logbook:logbook.success_message', { action: t('logbook:logbook.granted') })
+        });
+        setIsObservationOpen(true);
+        setLoading(false);
       })
-      .catch((error) => {
-        setLoading(false)
-        setDetails({ ...observationDetails, isError: true, message: error.message })
+      .catch(error => {
+        setLoading(false);
+        setDetails({ ...observationDetails, isError: true, message: error.message });
       });
   }
 
   function handleDenyRequest() {
-    const isAnyInvalid = checkInValidRequiredFields(formData, requiredFields)
-    if(isAnyInvalid){
-      setInputValidationMsg({ isError: true })
-      return
+    const isAnyInvalid = checkInValidRequiredFields(formData, requiredFields);
+    if (isAnyInvalid) {
+      setInputValidationMsg({ isError: true });
+      return;
     }
-    setIsClicked(!isClicked)
-    setLoading(true)
+    setIsClicked(!isClicked);
+    setLoading(true);
     handleCreateRequest()
       .then(requestId => denyEntry({ variables: { id: requestId } }))
       .then(() => {
-        setDetails({ ...observationDetails, message: t('logbook:logbook.success_message', { action: t('logbook:logbook.denied')}) })
-        setIsObservationOpen(true)
-        setLoading(false)
+        setDetails({
+          ...observationDetails,
+          message: t('logbook:logbook.success_message', { action: t('logbook:logbook.denied') })
+        });
+        setIsObservationOpen(true);
+        setLoading(false);
       })
-      .catch((error) => {
-        setLoading(false)
-        setDetails({ ...observationDetails, isError: true, message: error.message })
+      .catch(error => {
+        setLoading(false);
+        setDetails({ ...observationDetails, isError: true, message: error.message });
       });
   }
 
   function handleEnrollUser() {
-    setLoading(true)
+    setLoading(true);
     createUser({
       variables: {
         name: formData.name,
@@ -216,96 +249,112 @@ export default function RequestUpdate({ id, previousRoute, isGuestRequest, tabVa
         vehicle: formData.vehiclePlate
       }
     })
-      .then((response) => {
+      .then(response => {
         updateLog({
           variables: {
             refId: id
           }
         }).then(() => {
-          setLoading(false)
-          setDetails({ ...observationDetails, message: t('logbook:logbook.user_enrolled') })
-          history.push(`/user/${response.data.result.user.id}`)
-        })
+          setLoading(false);
+          setDetails({ ...observationDetails, message: t('logbook:logbook.user_enrolled') });
+          history.push(`/user/${response.data.result.user.id}`);
+        });
       })
-      .catch((err) => {
-        setLoading(false)
-        setDetails({ ...observationDetails, isError: true, message: err.message })
-      })
+      .catch(err => {
+        setLoading(false);
+        setDetails({ ...observationDetails, isError: true, message: err.message });
+      });
   }
 
   function handleModal(_event, type) {
-    const isAnyInvalid = checkInValidRequiredFields(formData, requiredFields)
-    if(isAnyInvalid ){
-      setInputValidationMsg({ isError: true })
-      return
+    const isAnyInvalid = checkInValidRequiredFields(formData, requiredFields);
+    if (isAnyInvalid) {
+      setInputValidationMsg({ isError: true });
+      return;
     }
     if (isGuestRequest && !formData.visitationDate) {
-      setDetails({ ...observationDetails, isError: true, message: t('logbook:logbook.visit_end_error') });
-      return
+      setDetails({
+        ...observationDetails,
+        isError: true,
+        message: t('logbook:logbook.visit_end_error')
+      });
+      return;
     }
 
     switch (type) {
       case 'grant':
-        setModalAction('grant')
-        setModal(!isModalOpen)
+        setModalAction('grant');
+        setModal(!isModalOpen);
         break;
       case 'deny':
-        setModalAction('deny')
-        setModal(!isModalOpen)
+        setModalAction('deny');
+        setModal(!isModalOpen);
         break;
       case 'update':
-        handleUpdateRequest()
+        handleUpdateRequest();
         break;
       case 'create':
-        handleCreateRequest()
+        handleCreateRequest();
         break;
       default:
         break;
     }
   }
 
-  function resetForm(to){
-    setFormData(initialState)
-    setObservationNote("")
-    setRequestId("")
-    setIsObservationOpen(false)
-    setModal(false)
-    history.push(to)
+  function resetForm(to) {
+    setFormData(initialState);
+    setObservationNote('');
+    setRequestId('');
+    setIsObservationOpen(false);
+    setModal(false);
+    history.push(to);
   }
 
-  function handleSaveObservation(to){
+  function handleSaveObservation(to) {
     // we are skipping the observation notes
-    if(!observationNote) {
-      resetForm(to)
-      return
+    if (!observationNote) {
+      resetForm(to);
+      return;
     }
-    setDetails({ ...observationDetails, loading: true })
-    addObservationNote({ variables: { id: reqId, note: observationNote, refType: 'Logs::EntryRequest'} })
+    setDetails({ ...observationDetails, loading: true });
+    addObservationNote({
+      variables: { id: reqId, note: observationNote, refType: 'Logs::EntryRequest' }
+    })
       .then(() => {
-        setDetails({ ...observationDetails, loading: false, isError: false, message: t('logbook:observations.created_observation') })
-        resetForm(to)
+        setDetails({
+          ...observationDetails,
+          loading: false,
+          isError: false,
+          message: t('logbook:observations.created_observation')
+        });
+        resetForm(to);
       })
       .catch(error => {
-        setDetails({ ...observationDetails, loading: false, isError: true, message: error.message })
-      })
+        setDetails({
+          ...observationDetails,
+          loading: false,
+          isError: true,
+          message: error.message
+        });
+      });
   }
-  function checkTimeIsValid(){
-    const communityName = authState.user.community.name
-    const accessor = communityName.toLowerCase()
-    const visitingHours = objectAccessor(communityVisitingHours, accessor)
+  function checkTimeIsValid() {
+    const communityName = authState.user.community.name;
+    const accessor = communityName.toLowerCase();
+    const visitingHours = objectAccessor(communityVisitingHours, accessor);
 
-    return isTimeValid({ date, visitingHours })
+    return isTimeValid({ date, visitingHours });
   }
 
-  function handleAddOtherReason(){
+  function handleAddOtherReason() {
     if (!formData.business) {
-      setInputValidationMsg({ isError: true })
-      return
+      setInputValidationMsg({ isError: true });
+      return;
     }
-    setReasonModal(!isReasonModalOpen)
+    setReasonModal(!isReasonModalOpen);
   }
 
-  const observationAction = observationNote ? 'Save' : 'Skip'
+  const observationAction = observationNote ? 'Save' : 'Skip';
   return (
     <>
       <ReasonInputModal
@@ -324,7 +373,11 @@ export default function RequestUpdate({ id, previousRoute, isGuestRequest, tabVa
           />
         </div>
       </ReasonInputModal>
-
+      <QRCodeConfirmation
+        open={isQrModalOpen}
+        guestEmail={null}
+        closeModal={() => setQrModal(!isQrModalOpen)}
+      />
       <MessageAlert
         type={!observationDetails.isError ? 'success' : 'error'}
         message={observationDetails.message}
@@ -442,8 +495,11 @@ export default function RequestUpdate({ id, previousRoute, isGuestRequest, tabVa
               onChange={handleInputChange}
               name="name"
               inputProps={{ 'data-testid': 'entry_user_name' }}
-              error={inputValidationMsg.isError && requiredFields.includes('name') && !formData.name}
-              helperText={inputValidationMsg.isError &&
+              error={
+                inputValidationMsg.isError && requiredFields.includes('name') && !formData.name
+              }
+              helperText={
+                inputValidationMsg.isError &&
                 requiredFields.includes('name') &&
                 !formData.name &&
                 t('logbook:errors.required_field', { fieldName: 'Name' })}
@@ -473,10 +529,9 @@ export default function RequestUpdate({ id, previousRoute, isGuestRequest, tabVa
               onChange={handleInputChange}
               name="nrc"
               inputProps={{ 'data-testid': 'entry_user_nrc' }}
-              error={inputValidationMsg.isError &&
-                requiredFields.includes('nrc') &&
-                !formData.nrc}
-              helperText={inputValidationMsg.isError &&
+              error={inputValidationMsg.isError && requiredFields.includes('nrc') && !formData.nrc}
+              helperText={
+                inputValidationMsg.isError &&
                 requiredFields.includes('nrc') &&
                 !formData.nrc &&
                 t('logbook:errors.required_field', { fieldName: 'ID' })}
@@ -493,10 +548,13 @@ export default function RequestUpdate({ id, previousRoute, isGuestRequest, tabVa
               onChange={handleInputChange}
               name="phoneNumber"
               inputProps={{ 'data-testid': 'entry_user_phone' }}
-              error={inputValidationMsg.isError &&
+              error={
+                inputValidationMsg.isError &&
                 requiredFields.includes('phoneNumber') &&
-                !formData.phoneNumber}
-              helperText={inputValidationMsg.isError &&
+                !formData.phoneNumber
+              }
+              helperText={
+                inputValidationMsg.isError &&
                 requiredFields.includes('phoneNumber') &&
                 !formData.phoneNumber &&
                 t('logbook:errors.required_field', { fieldName: 'Phone Number' })}
@@ -573,10 +631,13 @@ export default function RequestUpdate({ id, previousRoute, isGuestRequest, tabVa
               value={formData.vehiclePlate || ''}
               name="vehiclePlate"
               inputProps={{ 'data-testid': 'entry_user_vehicle' }}
-              error={inputValidationMsg.isError &&
+              error={
+                inputValidationMsg.isError &&
                 requiredFields.includes('vehiclePlate') &&
-                !formData.vehiclePlate}
-              helperText={inputValidationMsg.isError &&
+                !formData.vehiclePlate
+              }
+              helperText={
+                inputValidationMsg.isError &&
                 requiredFields.includes('vehiclePlate') &&
                 !formData.vehiclePlate &&
                 t('logbook:errors.required_field', { fieldName: 'Vehicle Plate Number' })}
@@ -630,68 +691,62 @@ export default function RequestUpdate({ id, previousRoute, isGuestRequest, tabVa
             </TextField>
           </div>
 
-          {
-            // TODO: Find better ways to disable specific small feature per community
-            !reqId && authState.user.community.name !== 'Ciudad Morazán' && !isGuestRequest && (
-              <div className="form-group">
-                <TextField
-                  className="form-control"
-                  type="text"
-                  label="Temperature(°C)"
-                  value={formData.temperature}
-                  onChange={handleInputChange}
-                  name="temperature"
-                  inputProps={{ 'data-testid': 'temperature' }}
-                  style={{ width: 200 }}
-                />
-              </div>
-            )
-          }
+          {// TODO: Find better ways to disable specific small feature per community
+          !reqId && authState.user.community.name !== 'Ciudad Morazán' && !isGuestRequest && (
+            <div className="form-group">
+              <TextField
+                className="form-control"
+                type="text"
+                label="Temperature(°C)"
+                value={formData.temperature}
+                onChange={handleInputChange}
+                name="temperature"
+                inputProps={{ 'data-testid': 'temperature' }}
+                style={{ width: 200 }}
+              />
+            </div>
+          )}
 
           {/* This should only show for registered users */}
-          {
-            isGuestRequest && (
-              <GuestTime
-                days={formData.occursOn}
-                userData={formData}
-                handleChange={handleInputChange}
-                handleChangeOccurrence={handleChangeOccurrence}
-              />
-            )
-          }
+          {isGuestRequest && (
+            <GuestTime
+              days={formData.occursOn}
+              userData={formData}
+              handleChange={handleInputChange}
+              handleChangeOccurrence={handleChangeOccurrence}
+            />
+          )}
 
-          {
-            isGuestRequest && !id && (
-              <div className="row justify-content-center align-items-center ">
-                <Button
-                  variant="contained"
-                  className={`${css(styles.inviteGuestButton)}`}
-                  onClick={event => handleModal(event, 'create')}
-                  disabled={isLoading}
-                  startIcon={isLoading && <Spinner />}
-                  color="primary"
-                  data-testid="submit_button"
-                >
-                  {isLoading ? ` ${t('form_actions.submitting')} ...` : ` ${t('form_actions.invite_guest')} `}
-                </Button>
-              </div>
-            )
-          }
+          {isGuestRequest && !id && (
+            <div className="row justify-content-center align-items-center ">
+              <Button
+                variant="contained"
+                className={`${css(styles.inviteGuestButton)}`}
+                onClick={event => handleModal(event, 'create')}
+                disabled={isLoading}
+                startIcon={isLoading && <Spinner />}
+                color="primary"
+                data-testid="submit_button"
+              >
+                {isLoading
+                  ? ` ${t('form_actions.submitting')} ...`
+                  : ` ${t('form_actions.invite_guest')} `}
+              </Button>
+            </div>
+          )}
 
           <br />
           {previousRoute !== 'enroll' && id && (
-          <Button
-            variant="contained"
-            onClick={event => handleModal(event, isGuestRequest ? 'update' : 'grant')}
-            className={css(styles.grantButton)}
-            disabled={isLoading}
-            data-testid="entry_user_grant_request"
-            startIcon={isLoading && <Spinner />}
-          >
-            {
-              isGuestRequest ? t('logbook:guest_book.update_guest') : t('misc.log_new_entry')
-            }
-          </Button>
+            <Button
+              variant="contained"
+              onClick={event => handleModal(event, isGuestRequest ? 'update' : 'grant')}
+              className={css(styles.grantButton)}
+              disabled={isLoading}
+              data-testid="entry_user_grant_request"
+              startIcon={isLoading && <Spinner />}
+            >
+              {isGuestRequest ? t('logbook:guest_book.update_guest') : t('misc.log_new_entry')}
+            </Button>
           )}
 
           <br />
@@ -725,10 +780,7 @@ export default function RequestUpdate({ id, previousRoute, isGuestRequest, tabVa
                     data-testid="entry_user_grant"
                     startIcon={isLoading && <Spinner />}
                   >
-
-                    {
-                      t('logbook:logbook.grant')
-                    }
+                    {t('logbook:logbook.grant')}
                   </Button>
                 </Grid>
                 <Grid item>
@@ -740,9 +792,7 @@ export default function RequestUpdate({ id, previousRoute, isGuestRequest, tabVa
                     data-testid="entry_user_deny"
                     startIcon={isLoading && <Spinner />}
                   >
-                    {
-                      t('logbook:logbook.deny')
-                    }
+                    {t('logbook:logbook.deny')}
                   </Button>
                 </Grid>
               </Grid>
@@ -764,8 +814,6 @@ export default function RequestUpdate({ id, previousRoute, isGuestRequest, tabVa
           ) : (
             <span />
           )}
-
-
         </form>
       </div>
     </>
@@ -775,28 +823,27 @@ export default function RequestUpdate({ id, previousRoute, isGuestRequest, tabVa
 RequestUpdate.defaultProps = {
   id: null,
   previousRoute: '',
-  tabValue: null,
-}
+  tabValue: null
+};
 
 RequestUpdate.propTypes = {
   id: PropTypes.string,
   previousRoute: PropTypes.string,
   isGuestRequest: PropTypes.bool.isRequired,
-  tabValue: PropTypes.string,
-}
-
+  tabValue: PropTypes.string
+};
 
 const styles = StyleSheet.create({
   selectInput: {
     width: '100%'
   },
   grantButton: {
-    backgroundColor: "#66A59A",
-    color: "#FFFFFF"
+    backgroundColor: '#66A59A',
+    color: '#FFFFFF'
   },
   denyButton: {
-    backgroundColor: "#C31515",
-    color: "#FFFFFF"
+    backgroundColor: '#C31515',
+    color: '#FFFFFF'
   },
   callButton: {
     color: '#66A59A',
@@ -804,13 +851,13 @@ const styles = StyleSheet.create({
     textDecoration: 'none'
   },
   observationButton: {
-    margin: 5,
+    margin: 5
   },
   inviteGuestButton: {
     width: '75%',
     boxShadow: 'none',
     marginTop: 60,
     height: 50,
-    color: "#FFFFFF"
-  },
+    color: '#FFFFFF'
+  }
 });

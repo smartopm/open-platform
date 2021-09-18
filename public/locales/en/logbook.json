@@ -84,6 +84,13 @@
     "add_your_observation": "Do you have any observations you'd like to add?",
     "created_observation_exit": "Observation exit has been logged successfully"
   },
+  "qrcode_confirmation": {
+    "title": "Access QR Code",
+    "send_qr_code": "Send QR Code to",
+    "send": "Send",
+    "dont_send": "Don't send",
+    "enter_email_text": "No email address was added for this guest. Add an email if you would like to send a QR Code to this visitor."
+  },
   "guest_book": {
     "valid": "Valid",
     "invalid_now": "Invalid now",
