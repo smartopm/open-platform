@@ -147,8 +147,12 @@ export default function RequestUpdate({ id, previousRoute, isGuestRequest, tabVa
     });
   }
 
+  function closeQrModal() {
+    setQrModal(false)
+    history.push(`/entry_logs?tab=${tabValue}`);
+  }
+
   function handleCreateRequest() {
-    setQrModal(true);
     const otherFormData = {
       ...formData,
       // return reason if not other
@@ -161,7 +165,8 @@ export default function RequestUpdate({ id, previousRoute, isGuestRequest, tabVa
         .then(({ data }) => {
           setRequestId(data.result.entryRequest.id);
           if (isGuestRequest) {
-            history.push(`/entry_logs?tab=${tabValue}`);
+            setDetails({ ...observationDetails, isError: false, message: t('logbook:logbook.registered_guest_created') })
+            setQrModal(true);
           }
           return data.result.entryRequest.id;
         })
@@ -376,8 +381,8 @@ export default function RequestUpdate({ id, previousRoute, isGuestRequest, tabVa
       </ReasonInputModal>
       <QRCodeConfirmation
         open={isQrModalOpen}
-        guestEmail={null}
-        closeModal={() => setQrModal(!isQrModalOpen)}
+        guestEmail={formData.email}
+        closeModal={closeQrModal}
         emailHandler={{ value: qrCodeEmail, handleEmailChange: setQrCodeEmail}}
       />
       <MessageAlert

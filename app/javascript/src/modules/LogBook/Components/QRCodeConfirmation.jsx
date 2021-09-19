@@ -65,7 +65,7 @@ export default function QRCodeConfirmation({ open, closeModal, guestEmail, email
           ) : (
             <>
               <Button
-                onClick={() => {}}
+                onClick={closeModal}
                 color="secondary"
                 variant="outlined"
                 data-testid="dont-send-confirmation"

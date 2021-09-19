@@ -34,6 +34,7 @@
     "log": "Log",
     "success_message": "Success: Access {{action}} successfully",
     "registered_guest_updated": "Success: Registered Guest successfully updated",
+    "registered_guest_created": "Success: Registered Guest successfully created",
     "granted": "granted",
     "denied": "denied",
     "add_observation": "Add Observation",
