@@ -98,6 +98,12 @@ phrase:
         locale_id: 5c6c3e050e8493da0e428087555a7b00
         tags: property
         update_translations: true
+    - file: ./public/locales/en/panic_alerts.json
+      params:
+        file_format: i18next
+        locale_id: 5c6c3e050e8493da0e428087555a7b00
+        tags: panic-alert
+        update_translations: true
     - file: ./config/locales/en.yml
       params:
         file_format: yml
@@ -149,6 +155,11 @@ phrase:
         file_format: i18next
         locale_id: fa26b7d00b593c4578f0e9749221cace
         tags: property
+    - file: ./public/locales/es/panic_alerts.json
+      params:
+        file_format: i18next
+        locale_id: fa26b7d00b593c4578f0e9749221cace
+        tags: panic-alert
     - file: ./config/locales/es.yml
       params:
         file_format: yml
@@ -226,6 +237,11 @@ phrase:
         file_format: i18next
         locale_id: fa26b7d00b593c4578f0e9749221cace
         tags: property
+    - file: ./public/locales/es/panic_alerts.json
+      params:
+        file_format: i18next
+        locale_id: fa26b7d00b593c4578f0e9749221cace
+        tags: panic-alert
     - file: ./config/locales/es.yml
       params:
         file_format: yml
