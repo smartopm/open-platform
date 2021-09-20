@@ -101,10 +101,10 @@ module Properties
     # @return [void]
     def transfer_payments(plan)
       plan.plan_payments.paid.order(amount: :asc).each do |payment|
-        create_new_payment(plan, payment)
         payment.note = "Migrated to plan #{payment_plan_name} Id - #{id}"
         payment.status = :cancelled
         payment.save!
+        create_new_payment(plan, payment)
       end
     end
 
@@ -266,12 +266,11 @@ module Properties
     def payment_attributes(payment)
       payment.attributes.slice(
         'amount',
-        'status',
         'transaction_id',
         'user_id',
         'community_id',
         'automated_receipt_number',
-      )
+      ).merge('status': 'paid')
     end
 
     # Returns duration based on frequency

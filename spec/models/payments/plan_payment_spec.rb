@@ -3,6 +3,28 @@
 require 'rails_helper'
 
 RSpec.describe Payments::PlanPayment, type: :model do
+  let!(:user) do
+    create(:user_with_community, ext_ref_id: '396745', email: 'demo@xyz.com',
+                                 phone_number: '260123456')
+  end
+  let!(:community) { user.community }
+  let!(:land_parcel) do
+    create(:land_parcel, community_id: community.id,
+                         parcel_number: 'Plot001', parcel_type: 'Basic')
+  end
+  let!(:payment_plan) do
+    create(:payment_plan, land_parcel_id: land_parcel.id, user_id: user.id,
+                          pending_balance: 1200, installment_amount: 100)
+  end
+  let!(:transaction) do
+    create(:transaction, user_id: user.id, community_id: community.id, depositor_id: user.id,
+                         amount: 500)
+  end
+  let!(:plan_payment) do
+    create(:plan_payment, user_id: user.id, community_id: community.id,
+                          transaction_id: transaction.id, payment_plan_id: payment_plan.id,
+                          amount: 500, manual_receipt_number: '12345')
+  end
   describe 'schema' do
     it { is_expected.to have_db_column(:id).of_type(:uuid) }
     it { is_expected.to have_db_column(:amount).of_type(:decimal) }
@@ -23,6 +45,28 @@ RSpec.describe Payments::PlanPayment, type: :model do
 
   describe 'validations' do
     it { is_expected.to validate_numericality_of(:amount).is_greater_than(0) }
+
+    context 'when a paid payment with same receipt number exist' do
+      it 'raises an error' do
+        expect do
+          payment_plan.plan_payments.create!(transaction_id: transaction.id, user_id: user.id,
+                                             community_id: community.id, amount: 100.0,
+                                             manual_receipt_number: '12345')
+        end.to raise_error(
+          ActiveRecord::RecordInvalid,
+          'Validation failed: Receipt number already exists',
+        )
+      end
+
+      context 'when a paid payment with same receipt number does not exist' do
+        before { plan_payment.update(status: :cancelled) }
+        it 'creates plan payment without error' do
+          payment_plan.plan_payments.create!(transaction_id: transaction.id, user_id: user.id,
+                                             community_id: community.id, amount: 100.0,
+                                             manual_receipt_number: '12345')
+        end
+      end
+    end
   end
 
   describe 'associations' do
