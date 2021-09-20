@@ -50,7 +50,7 @@ export default function FormLinkList({ userType, community }) {
   const [createForm] = useMutation(FormCreateMutation)
   const history = useHistory()
   const classes = useStyles()
-  const { t } = useTranslation('form')
+  const { t } = useTranslation(['form', 'common'])
   const [open, setOpen] = useState(false)
   const [message, setMessage] = useState({ isError: false, detail: '' })
   const [anchorEl, setAnchorEl] = useState(null)
@@ -353,7 +353,7 @@ export function FormDialog({actionType, form, formMutation, open, setOpen, messa
           </div>
           <div>
             <FormControl style={{width:  200}}>
-              <InputLabel id="demo-multiple-name-label">{t('misc.select_roles')}</InputLabel>
+              <InputLabel id="multiple-roles-label">{t('misc.select_roles')}</InputLabel>
               <Select
                 id="multiple-roles"
                 multiple
@@ -370,7 +370,7 @@ export function FormDialog({actionType, form, formMutation, open, setOpen, messa
               >
                 {Object.entries(formRoles).map(([key, val]) => (
                   <MenuItem key={key} value={val}>
-                    {val}
+                    {t(`common:user_types.${val}`)}
                   </MenuItem>
               ))}
               </Select>
