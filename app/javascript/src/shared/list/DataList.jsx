@@ -51,21 +51,22 @@ export default function DataList({ keys, data, hasHeader, clickable, handleClick
         ) : (
           <div>
             {hasHeader && <ListHeader headers={keys} />}
-            {data.map((item, index) => (
-              <Grid
-                container
-                direction="row"
-                justify="space-around"
-                alignItems="center"
-                className={clickable ? classes.clickable : classes.list}
-                onClick={clickable ? () => handleClick(item) : null}
-                key={item.id || index}
-                spacing={1}
-                style={color ? {backgroundColor: '#FDFDFD'} : {marginBottom: '7px'}}
-              >
-                <CellData propNames={keys} dataObj={item} />
-              </Grid>
-            ))}
+            {data.map((item, index) => {
+              return (
+                <Grid
+                  container
+                  direction="row"
+                  justify="space-around"
+                  alignItems="center"
+                  className={clickable ? classes.clickable : classes.list}
+                  onClick={clickable ? () => handleClick(item) : null}
+                  key={item.id || index}
+                  spacing={1}
+                  style={color ? {backgroundColor: '#FDFDFD'} : {marginBottom: '7px'}}
+                >
+                  <CellData propNames={keys} dataObj={item} />
+                </Grid>
+              )})}
           </div>
         )
 }

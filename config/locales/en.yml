@@ -70,6 +70,7 @@ en:
         sentences:
           start_visitor_entry_to_sentence: '%{acting_user_name} started registering %{visitor_name} for entry.'
           visitor_entry_to_sentence: '%{acting_user_name} %{action} %{visitor_name} for entry.'
+          revoke_entry_to_sentence: '%{acting_user_name} %{action} for %{visitor_name}.'
           user_entry_to_sentence: 'User %{ref_user_name} was recorded entering by %{acting_user_name}'
           user_login_to_sentence: 'User %{acting_user_name} logged in'
           user_switch_to_sentence: 'User %{acting_user_name} switched to user %{ref_user_name}'

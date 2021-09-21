@@ -30,6 +30,7 @@ import OneTimeLoginCode from '../src/components/AuthScreens/OneTimeLoginCode';
 import MobileMoney from '../src/components/MobileMoney';
 import GuardHome from '../src/modules/Dashboard/Components/GuardHome';
 import RequestUpdate from '../src/modules/LogBook/Components/RequestUpdatePage';
+import GuestUpdate from '../src/modules/GuestList/containers/GuestUpdate';
 import ErrorPage from '../src/components/Error';
 import MainAuthCallback from '../src/components/AuthScreens/MainAuthCallback';
 import { AUTH_TOKEN_KEY } from '../src/utils/apollo';
@@ -255,6 +256,7 @@ const App = () => {
                               <Route path="/guard_home" component={GuardHome} />
                               {/* Guard home ends */}
                               <Route path="/request/:id?/:logs?" component={RequestUpdate} />
+                              <Route path="/guest-list/:guestListEntryId" component={GuestUpdate} />
                               <Route path="/feedback" component={Feedback} />
                               <Route path="/feedback_success" component={FeedbackSuccess} />
                               <Route path="/campaign-create" component={CampaignCreate} />

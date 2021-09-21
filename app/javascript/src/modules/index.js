@@ -16,6 +16,7 @@ import Properties from './Plots/Properties';
 import UserPayments from './Payments/UserPayments';
 import MyMessages from './Messages/MyMessages'
 import Search from './Search';
+import GuestList from './GuestList';
 
 // and exported back here
 export default [
@@ -23,6 +24,7 @@ export default [
   Search,
   Profile,
   MyMessages,
+  GuestList,
   Plots,
   Communication,
   LogBook,

@@ -264,6 +264,49 @@ export const EntryRequestCreate = gql`
   ${EntryRequestFragment.publicFields}
 `
 
+export const GuestEntryRequestCreate = gql`
+  mutation GuestEntryRequestCreateMutation(
+    $name: String!
+    $email: String
+    $reason: String
+    $vehiclePlate: String
+    $nrc: String
+    $otherReason: String
+    $phoneNumber: String
+    $source: String
+    $visitationDate: String
+    $startTime: String
+    $endTime: String
+    $companyName: String
+    $occursOn: [String!]
+    $visitEndDate: String,
+    $isGuest: Boolean
+  ) {
+    result: guestEntryRequestCreate(
+      name: $name
+      email: $email
+      reason: $reason
+      vehiclePlate: $vehiclePlate
+      nrc: $nrc
+      otherReason: $otherReason
+      phoneNumber: $phoneNumber
+      source: $source
+      visitationDate: $visitationDate
+      startTime: $startTime
+      endTime: $endTime
+      companyName: $companyName
+      occursOn: $occursOn
+      visitEndDate: $visitEndDate
+      isGuest: $isGuest
+    ) {
+      entryRequest {
+        ...EntryRequestFields
+      }
+    }
+  }
+  ${EntryRequestFragment.publicFields}
+`
+
 // Reduce the returned response load
 export const EntryRequestGrant = gql`
   mutation EntryRequestGrantMutation($id: ID!) {
@@ -279,6 +322,18 @@ export const EntryRequestGrant = gql`
 export const EntryRequestDeny = gql`
   mutation EntryRequestGrantMutation($id: ID!) {
     result: entryRequestDeny(id: $id) {
+      entryRequest {
+        ...EntryRequestFields
+      }
+    }
+  }
+  ${EntryRequestFragment.publicFields}
+`
+
+
+export const GuestEntryRequestRevoke = gql`
+  mutation GuestEntryRequestRevokeMutation($id: ID!, $userId: ID!) {
+    result: guestEntryRequestRevoke(id: $id, userId: $userId) {
       entryRequest {
         ...EntryRequestFields
       }

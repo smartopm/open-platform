@@ -90,6 +90,7 @@ export const EntryRequestFragment = {
       createdAt
       updatedAt
       grantedAt
+      revokedAt
       companyName
       occursOn
       visitEndDate

@@ -29,5 +29,17 @@ module Types
     field :ends_at, GraphQL::Types::ISO8601DateTime, null: true
     field :company_name, String, null: true
     field :occurs_on, [String], null: true
+    field :revoked_at, GraphQL::Types::ISO8601DateTime, null: true
+    field :entry_request_state, Integer, null: true
+    field :active, Boolean, null: true
+    field :revoked, Boolean, null: true
+
+    def active
+      object.active?
+    end
+
+    def revoked
+      object.revoked?
+    end
   end
 end
