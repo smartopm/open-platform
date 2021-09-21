@@ -450,7 +450,7 @@ export default function RequestUpdate({ id, previousRoute, isGuestRequest, tabVa
               helperText={inputValidationMsg.isError &&
                 requiredFields.includes('name') &&
                 !formData.name &&
-                'Name is Required'}
+                t('logbook:errors.required_field', { fieldName: 'Name' })}
             />
           </div>
           <div className="form-group">
@@ -483,7 +483,7 @@ export default function RequestUpdate({ id, previousRoute, isGuestRequest, tabVa
               helperText={inputValidationMsg.isError &&
                 requiredFields.includes('nrc') &&
                 !formData.nrc &&
-                'ID is Required'}
+                t('logbook:errors.required_field', { fieldName: 'ID' })}
             />
           </div>
           <div className="form-group">
@@ -503,7 +503,7 @@ export default function RequestUpdate({ id, previousRoute, isGuestRequest, tabVa
               helperText={inputValidationMsg.isError &&
                 requiredFields.includes('phoneNumber') &&
                 !formData.phoneNumber &&
-                'Phone Number is Required'}
+                t('logbook:errors.required_field', { fieldName: 'Phone Number' })}
             />
           </div>
           {previousRoute === 'enroll' && (
@@ -583,7 +583,7 @@ export default function RequestUpdate({ id, previousRoute, isGuestRequest, tabVa
               helperText={inputValidationMsg.isError &&
                 requiredFields.includes('vehiclePlate') &&
                 !formData.vehiclePlate &&
-                'Vehicle Plate Number is Required'}
+                t('logbook:errors.required_field', { fieldName: 'Vehicle Plate Number' })}
             />
           </div>
           <div className="form-group">
@@ -603,7 +603,7 @@ export default function RequestUpdate({ id, previousRoute, isGuestRequest, tabVa
               helperText={inputValidationMsg.isError &&
                     requiredFields.includes('companyName') &&
                     !formData.companyName &&
-                    'Company Name is Required'}
+                    t('logbook:errors.required_field', { fieldName: 'Company Name' })}
             />
           </div>
           <div className="form-group">
@@ -622,7 +622,7 @@ export default function RequestUpdate({ id, previousRoute, isGuestRequest, tabVa
               helperText={inputValidationMsg.isError &&
                 requiredFields.includes('reason') &&
                 !formData.reason ?
-                'Reason is Required' : formData.business}
+                t('logbook:errors.required_field', { fieldName: 'Reason' }) : formData.business}
             >
               {
                 Object.keys(defaultBusinessReasons).map(_reason => (
