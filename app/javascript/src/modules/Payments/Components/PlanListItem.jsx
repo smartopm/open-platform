@@ -173,7 +173,7 @@ export default function PlanListItem({ data, currencyData, menuData }) {
 const useStyles = makeStyles(() => ({
   container: {
     backgroundColor: 'white',
-    padding: '3%',
+    padding: '16px',
     border: '1px solid #ECECEC',
     borderRadius: '4px'
   },

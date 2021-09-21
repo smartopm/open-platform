@@ -135,7 +135,7 @@ export default function PaymentSlider({ data, currencyData }) {
               ) : (
                 <div className={classes.spaceBetween}>
                   <Typography> </Typography>
-                  <div className={classes.body}>
+                  <div className={classes.body} style={{marginTop: '10px'}}>
                     <Typography variant="caption">{t('misc.plan_values')}</Typography>
                     <Typography variant="caption" align="center">
                       {formatMoney(currencyData, data?.planValue)}
@@ -154,7 +154,7 @@ export default function PaymentSlider({ data, currencyData }) {
             {data?.totalPayments < data?.planValue && (
               <div
                 className={classes.body}
-                style={checkValuePercentage() ? { marginTop: '-50px', marginLeft: '-50px' } : {}}
+                style={checkValuePercentage() ? { marginTop: '-50px', marginLeft: '-50px' } : {marginTop: '10px'}}
               >
                 <Typography variant="caption">{t('misc.plan_values')}</Typography>
                 <Typography variant="caption" align="center">
@@ -217,7 +217,8 @@ const useStyles = makeStyles(() => ({
   },
   amountPaid: {
     display: 'flex',
-    flexDirection: 'column'
+    flexDirection: 'column',
+    flexWrap: 'wrap'
   },
   planBodyValue: {
     display: 'flex',
@@ -241,7 +242,8 @@ const useStyles = makeStyles(() => ({
     justifyContent: 'space-between'
   },
   flex: {
-    display: 'flex'
+    display: 'flex',
+    overflow: 'elipses'
   }
 }));
 

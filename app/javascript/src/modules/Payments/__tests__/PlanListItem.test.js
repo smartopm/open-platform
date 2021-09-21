@@ -46,6 +46,5 @@ describe('It should test the plan item list item component', () => {
     expect(container.getByTestId("landparcel")).toBeInTheDocument();
     expect(container.getByTestId("payment-slider")).toBeInTheDocument();
     expect(container.getByTestId("label")).toBeInTheDocument();
-    expect(container.getByTestId("menu")).toBeInTheDocument();
   });
 });
