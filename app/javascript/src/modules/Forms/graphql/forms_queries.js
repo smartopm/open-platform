@@ -11,6 +11,7 @@ export const FormQuery = gql`
       expiresAt
       multipleSubmissionsAllowed
       preview
+      roles
     }
   }
 `
@@ -22,6 +23,7 @@ export const FormsQuery = gql`
       name
       expiresAt
       createdAt
+      roles
     }
   }
 `

@@ -33,7 +33,8 @@
     "category": "Category",
     "display_condition": "Display Condition - Optional",
     "upload_file": "Upload File",
-    "file_uploaded": "File Uploaded"
+    "file_uploaded": "File Uploaded",
+    "select_roles": "Select roles"
   },
   "actions": {
     "create_a_form": "Create a form",

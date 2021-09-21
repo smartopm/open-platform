@@ -353,6 +353,7 @@ ActiveRecord::Schema.define(version: 2021_09_21_045425) do
     t.integer "version_number", default: 1
     t.uuid "grouping_id"
     t.boolean "preview"
+    t.string "roles", default: [], array: true
     t.index ["community_id"], name: "index_forms_on_community_id"
     t.index ["name"], name: "index_forms_on_name", unique: true
   end

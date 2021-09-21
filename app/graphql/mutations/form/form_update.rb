@@ -11,6 +11,7 @@ module Mutations
       argument :expires_at, String, required: false
       argument :preview, Boolean, required: false
       argument :multiple_submissions_allowed, Boolean, required: false
+      argument :roles, [String, { null: true }], required: false
 
       field :form, Types::FormType, null: true
 
