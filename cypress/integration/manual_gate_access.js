@@ -39,12 +39,15 @@ describe('Manual Gate Access', () => {
       cy.get('.confirm_grant').click()
       cy.wait(2000);
       // Add an observation 
-      cy.get('[data-testid=entry-dialog-field]').type('Observation example ')
+      cy.get('[data-testid=entry-dialog-field]').type('Observation example')
       cy.get('.save_and_record_other').click()
 
       // Check if Test Manual User was recorded in the logbook
       cy.visit('/entry_logs')
       cy.get('.entry-log-visitor-name').should('contain', 'Test Manual User')
+      // check if an observation was successfully added
+      cy.visit('/entry_logs?tab=3')
+      cy.get('.exit_note').should('contain', 'Observation example')
     })
   })
   
