@@ -26,6 +26,7 @@ export function dateToString(date, format = 'YYYY-MM-DD') {
 
   return new Date(dateTime)
 }
+
 /**
  *
  * @param {Number} days

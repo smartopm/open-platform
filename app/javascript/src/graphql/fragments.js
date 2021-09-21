@@ -94,6 +94,8 @@ export const EntryRequestFragment = {
       occursOn
       visitEndDate
       visitationDate
+      endTime
+      startTime
       endsAt
       startsAt
     }

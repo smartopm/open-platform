@@ -1,6 +1,8 @@
 /* eslint-disable import/prefer-default-export */
 // eslint-disable-next-line import/no-extraneous-dependencies
 import moment from 'moment';
+import timezone from 'moment-timezone'
+import { updateDateWithTime } from '../../components/DateContainer';
 import { getWeekDay } from '../../utils/dateutil';
 
 export function checkInValidRequiredFields(formData, requiredFields) {
@@ -15,11 +17,22 @@ export function isNotValidCheck(element) {
 
 export const defaultRequiredFields = ['name', 'phoneNumber', 'nrc', 'vehiclePlate', 'reason'];
 
-export function checkRequests(req, translate) {
+export function checkRequests(req, translate, tz) {
 
   const today = new Date();
   const dayOfTheWeek = getWeekDay(today);
+  /**
+   * moved the conversion here because:
+   *  - If a user updates a request's visitation date, the time wont be changed, this will fail our validity check
+   *  - If the guest is re-occuring then the visitation date won't be the same as the date for the endsAt or startsAt time
+   *  - moment's isSameOrAfter() and isSameOrBefore() rely on a full date instead of just time to validate the time.
+   *  - Having the updateDateWithTime here, allows us to always rely on today's date as the date for both the endsAt and startsAt times
+   */
+  // today in the timezone of the current community
+  const timeNow = timezone.tz(new Date(), tz).format()
 
+  const startTime = updateDateWithTime(timeNow, req.startsAt || req.startTime)
+  const endTime = updateDateWithTime(timeNow, req.endsAt || req.endTime)
 
   if (req.occursOn.length) {
     if (today > new Date(req.visitEndDate)) {
@@ -27,7 +40,7 @@ export function checkRequests(req, translate) {
     }
     if (req.occursOn.includes(dayOfTheWeek.toLowerCase())) {
       if (
-        moment().isSameOrAfter(req.startsAt || req.startTime) && moment().isSameOrBefore(req.endsAt || req.endTime)
+        moment().isSameOrAfter(startTime) && moment().isSameOrBefore(endTime)
       ) {
         return { title: translate('guest_book.valid'), color: '#00A98B', valid: true };
       }
@@ -38,7 +51,7 @@ export function checkRequests(req, translate) {
     // is today the right date
     if (moment(req.visitationDate).isSame(moment(), 'day')) {
       if (
-        moment().isSameOrAfter(req.startsAt || req.startTime) && moment().isSameOrBefore(req.endsAt || req.endTime)
+        moment().isSameOrAfter(startTime) && moment().isSameOrBefore(endTime)
       ) {
         return { title: translate('guest_book.valid'), color: '#00A98B', valid: true };
       }

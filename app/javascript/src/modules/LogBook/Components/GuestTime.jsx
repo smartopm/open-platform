@@ -16,13 +16,13 @@ export default function GuestTime({ userData, handleChange, handleChangeOccurren
 
       <div>
         <ThemedTimePicker
-          time={userData.startsAt}
+          time={userData.startsAt || userData.startTime}
           handleTimeChange={date => handleChange({ target: { name: 'startsAt', value: date } })}
           label={t('common:misc.start_time')}
         />
         <span style={{ marginLeft: 20 }}>
           <ThemedTimePicker
-            time={userData.endsAt}
+            time={userData.endsAt || userData.endTime}
             handleTimeChange={date => handleChange({ target: { name: 'endsAt', value: date } })}
             label={t('common:misc.end_time')}
           />
@@ -62,6 +62,8 @@ GuestTime.propTypes = {
     visitEndDate: PropTypes.oneOfType([PropTypes.string, PropTypes.instanceOf(Date)]),
     startsAt: PropTypes.oneOfType([PropTypes.string, PropTypes.instanceOf(Date)]),
     endsAt: PropTypes.oneOfType([PropTypes.string, PropTypes.instanceOf(Date)]),
+    startTime: PropTypes.oneOfType([PropTypes.string, PropTypes.instanceOf(Date)]),
+    endTime: PropTypes.oneOfType([PropTypes.string, PropTypes.instanceOf(Date)]),
     visitationDate: PropTypes.oneOfType([PropTypes.string, PropTypes.instanceOf(Date)]),
     occursOn: PropTypes.arrayOf(PropTypes.string)
   }).isRequired,

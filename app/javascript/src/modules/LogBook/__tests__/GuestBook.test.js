@@ -6,6 +6,8 @@ import { MockedProvider } from '@apollo/react-testing';
 import MockedThemeProvider from '../../__mocks__/mock_theme';
 import GuestBook, { renderGuest } from '../Components/GuestBook';
 import { GuestEntriesQuery } from '../graphql/guestbook_queries';
+import { Context } from '../../../containers/Provider/AuthStateProvider';
+import userMock from '../../../__mocks__/userMock';
 
 // TODO: @olivier add proper timers to test more date related things
 describe('Should render Guest Book Component', () => {
@@ -59,13 +61,15 @@ describe('Should render Guest Book Component', () => {
   it('should render proper data', async () => {
     const observe = jest.fn();
     const { getAllByText, getAllByTestId, getByText } = render(
-      <MockedProvider mocks={[mocks]} addTypename={false}>
-        <BrowserRouter>
-          <MockedThemeProvider>
-            <GuestBook tabValue={2} handleAddObservation={observe} offset={0} limit={50} query="" />
-          </MockedThemeProvider>
-        </BrowserRouter>
-      </MockedProvider>
+      <Context.Provider value={userMock}>
+        <MockedProvider mocks={[mocks]} addTypename={false}>
+          <BrowserRouter>
+            <MockedThemeProvider>
+              <GuestBook tabValue={2} handleAddObservation={observe} offset={0} limit={50} query="" />
+            </MockedThemeProvider>
+          </BrowserRouter>
+        </MockedProvider>
+      </Context.Provider>
     );
     // initially it should not contain any guests, this is because we lazily load this query
     expect(getByText('logbook.no_invited_guests')).toBeInTheDocument();
