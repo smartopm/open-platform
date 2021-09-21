@@ -410,7 +410,7 @@ export default function RequestUpdate({ id, previousRoute, isGuestRequest, tabVa
                 className="form-control"
                 type="text"
                 value={
-                  formData.guard
+                  formData.grantor
                     ? `${dateToString(formData.createdAt)} at ${dateTimeToString(
                         formData.createdAt
                       )}`
@@ -429,7 +429,7 @@ export default function RequestUpdate({ id, previousRoute, isGuestRequest, tabVa
             <TextField
               className="form-control"
               type="text"
-              value={formData.guard?.name || authState.user.name}
+              value={formData.grantor?.name || authState.user.name}
               disabled
               name="name"
               required
