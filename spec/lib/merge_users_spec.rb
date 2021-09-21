@@ -67,7 +67,7 @@ RSpec.describe MergeUsers do
   end
   let!(:payment) { create(:payment, user: user, community: community) }
   let!(:substatus_log) { create(:payment, user: user, community: community) }
-  let!(:timesheet) { create(:time_sheet, user: user) }
+  let!(:timesheet) { create(:time_sheet, user: user, community: community) }
   let!(:wallet) { create(:wallet, user: user) }
   let!(:wallet_transaction) { create(:wallet_transaction, user: user, community: community) }
   let!(:showroom) { create(:showroom, userId: user.id) }

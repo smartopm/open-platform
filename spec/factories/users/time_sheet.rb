@@ -3,5 +3,6 @@
 FactoryBot.define do
   factory :time_sheet, class: 'Users::TimeSheet' do
     user
+    community
   end
 end

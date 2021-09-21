@@ -32,8 +32,6 @@ class CheckCriticalBusinessActivityJob < ApplicationJob
     now = current_time_in_time_zone(community.timezone)
     activity_window = now.ago(3.days)..now
     community.plan_payments
-             .not_cancelled
-             .eager_load(:user)
              .where(created_at: activity_window)
              .count
   end
@@ -61,7 +59,7 @@ class CheckCriticalBusinessActivityJob < ApplicationJob
 
     activity_window = now.ago(1.day)..now
 
-    Users::TimeSheet.where(created_at: activity_window).count
+    community.time_sheets.where(created_at: activity_window).count
   end
 
   def current_time_in_time_zone(timezone)
