@@ -103,7 +103,7 @@ export function renderGuestData(guestListEntry, menuData, translate) {
           <IconButton
             aria-controls="simple-menu"
             aria-haspopup="true"
-            data-testid="email-template-menu"
+            data-testid="guest-list-menu"
             onClick={(event) => menuData.handleGuestMenu(event)}
           >
             <MoreHorizIcon />

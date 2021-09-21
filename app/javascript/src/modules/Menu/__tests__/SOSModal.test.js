@@ -9,7 +9,7 @@ import authState from '../../../__mocks__/authstate';
 
 describe('SOSModal component', () => {
   const bind = jest.fn()
-  const setOpen = jest.fn
+  const setOpen = jest.fn()
   const theme = createMuiTheme();
   const mockGeolocation = {
     getCurrentPosition: jest.fn()
