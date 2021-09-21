@@ -42,7 +42,7 @@ import Text from '../../../shared/Text';
 import PaymentGraph from './PaymentGraph';
 import { Spinner } from '../../../shared/Loading';
 import QueryBuilder from '../../../components/QueryBuilder';
-import { PlansPaymentsQuery, SubscriptionPlansQuery, CommunityPlansQuery } from '../graphql/payment_query';
+import { PlansPaymentsQuery, SubscriptionPlansQuery } from '../graphql/payment_query';
 import PaymentModal from './UserTransactions/PaymentModal';
 import { dateToString } from '../../../components/DateContainer';
 import { StyledTabs, StyledTab, TabPanel, a11yProps } from '../../../components/Tabs';
@@ -146,16 +146,6 @@ export default function PaymentList({ currencyData }) {
     errorPolicy: 'all'
   });
 
-  const [
-    loadCommunityPlans,
-    {
-      loading: communityPlansLoading,
-      data: communityPlansData
-    }
-  ] = useLazyQuery(CommunityPlansQuery, {
-    errorPolicy: 'all'
-  });
-
   const paymentList = data?.paymentsList;
   function paginate(action) {
     if (action === 'prev') {
@@ -234,7 +224,6 @@ export default function PaymentList({ currencyData }) {
   useEffect(() => {
     if (tab === 'plans') {
       loadSubscriptionPlans();
-      loadCommunityPlans();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -253,7 +242,6 @@ export default function PaymentList({ currencyData }) {
     setTabValue(newValue);
     if (newValue === 1){
       loadSubscriptionPlans();
-      loadCommunityPlans();
     }
   }
 
@@ -434,8 +422,8 @@ export default function PaymentList({ currencyData }) {
           <PlansList
             matches={matches}
             currencyData={currencyData}
-            communityPlansLoading={communityPlansLoading}
-            communityPlans={communityPlansData?.communityPaymentPlans?.sort((a,b) => b.owingAmount - a.owingAmount)}
+            // communityPlansLoading={communityPlansLoading}
+            // communityPlans={communityPlansData?.communityPaymentPlans?.sort((a,b) => b.owingAmount - a.owingAmount)}
             setDisplaySubscriptionPlans={setDisplaySubscriptionPlans}
             setMessage={setMessage}
             setAlertOpen={setAlertOpen}

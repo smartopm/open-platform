@@ -26,6 +26,7 @@ module Types::Queries::PaymentPlan
 
     field :community_payment_plans, [Types::PaymentPlanType], null: true do
       description 'returns all payment plans for community'
+      argument :query, String, required: false
     end
   end
 
@@ -79,10 +80,16 @@ module Types::Queries::PaymentPlan
   # Returns list of all communiy's payment plans
   #
   # @return [Array<PaymentPlan>]
-  def community_payment_plans
+  def community_payment_plans(query: nil)
+    puts '######################################'
+    puts query
+    puts '######################################'
     raise_unauthorized_error
 
-    Properties::PaymentPlan.joins(:land_parcel).where(
+    search_method = 'search'
+    search_method = 'search_by_numbers' if query&.exclude?(':') && query.to_i.positive?
+
+    Properties::PaymentPlan.send(search_method, query).joins(:land_parcel).where(
       land_parcels: { community_id: context[:site_community].id },
     ).order(:status)
   end

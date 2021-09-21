@@ -141,7 +141,7 @@ export const paymentType = {
   cash: 'Cash'
 };
 export const planType = {
-  'active': 'Active',
+  'all': 'All',
   'cancelled': 'Cancelled',
   'behind': 'Behind',
   'on_track': 'On Track'
@@ -498,12 +498,14 @@ export const dateWidget = {
       amountOwned: {
         label: 'Amount Owed',
         type: 'number',
-        valueSources: ['value']
+        valueSources: ['value'],
+        excludeOperators: ['not_equal']
       },
       installmentsDue: {
         label: 'Due Installments',
         type: 'number',
-        valueSources: ['value']
+        valueSources: ['value'],
+        excludeOperators: ['not_equal']
       }
     }
   }
@@ -536,7 +538,7 @@ export const planQueryBuilderInitialValue = {
       properties: {
         field: 'status',
           operator: 'select_equals',
-          value: [''],
+          value: ['all'],
           valueSrc: ['value'],
           valueType: ['select']
       },
@@ -591,7 +593,7 @@ export const entryLogsQueryBuilderInitialValue = {
 }
   export const planFilterFields = {
     status: 'status',
-    amountOwned: 'amount_owned',
+    amountOwned: 'owing_amount',
     installmentsDue: 'installments_due'
   }
 

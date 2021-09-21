@@ -8,7 +8,9 @@ import { makeStyles } from '@material-ui/core/styles';
 import { useMutation } from 'react-apollo';
 import { CSVLink } from 'react-csv';
 import DataList from '../../../shared/list/DataList';
+import useDebounce from '../../../utils/useDebounce';
 import {
+  formatError,
   formatMoney,
   InvoiceStatusColor,
   titleize,
@@ -38,6 +40,7 @@ import {
   planQueryBuilderInitialValue,
   planFilterFields
 } from '../../../utils/constants';
+import { CommunityPlansQuery } from '../graphql/payment_query';
 
 export function PlansList({
   matches,
@@ -49,6 +52,8 @@ export function PlansList({
   setAlertOpen
 }){
   const { t } = useTranslation(['payment', 'common']);
+  const [searchValue, setSearchValue] = useState('');
+  const debouncedValue = useDebounce(searchValue, 500);
   const limit = 10;
   const [offset, setOffset] = useState(0);
   const classes = useStyles();
@@ -135,6 +140,14 @@ export function PlansList({
   const [displayBuilder, setDisplayBuilder] = useState('none');
   const [searchQuery, setSearchQuery] = useState('');
 
+  const { loading, error, data: communityPlansData } = useQuery(CommunityPlansQuery, {
+    variables: { query: debouncedValue || searchQuery },
+    errorPolicy: 'all',
+    fetchPolicy: 'cache-and-network'
+  });
+
+  const communityPlans = communityPlansData?.communityPaymentPlans?.sort((a,b) => b.owingAmount - a.owingAmount)
+
   function paginatePlans(action) {
     if (action === 'prev') {
       if (offset < limit) return;
@@ -177,38 +190,43 @@ export function PlansList({
         disableActionBtn={mutationLoading}
       />
       {communityPlansLoading ? (
+      {console.log(searchQuery)}
+      {error && (
+        <p>{formatError(error.message)}</p>
+      )}
+      <SearchInput
+        title={t('common:misc.plans')}
+        searchValue={searchValue}
+        handleSearch={event => setSearchValue(event.target.value)}
+        handleFilter={toggleFilterMenu}
+        handleClear={() => setSearchValue('')}
+      />
+      <Grid
+        container
+        justify="flex-end"
+        style={{
+          width: '100.5%',
+          position: 'absolute',
+          zIndex: 1,
+          marginTop: '-2px',
+          marginLeft: matches ? '-100px' : '-50px',
+          display: displayBuilder
+        }}
+      >
+        <QueryBuilder
+          handleOnChange={queryOnChange}
+          builderConfig={planQueryBuilderConfig}
+          initialQueryValue={planQueryBuilderInitialValue}
+          addRuleLabel={t('common:misc.add_filter')}
+          multiple={false}
+        />
+      </Grid>
+      {loading ? (
         <Spinner />
       ) : communityPlans?.length === 0 ? (
         <CenteredContent>{t('errors.no_plan_available')}</CenteredContent>
       ) : (
         <>
-          {console.log(searchQuery)}
-          <SearchInput
-            title={t('common:misc.plans')}
-            searchValue={searchValue}
-            handleSearch={event => setSearchValue(event.target.value)}
-            handleFilter={toggleFilterMenu}
-            handleClear={() => setSearchValue('')}
-          />
-          <Grid
-            container
-            justify="flex-end"
-            style={{
-              width: '100.5%',
-              position: 'absolute',
-              zIndex: 1,
-              marginTop: '-2px',
-              marginLeft: matches ? '-300px' : '0',
-              display: displayBuilder
-            }}
-          >
-            <QueryBuilder
-              handleOnChange={queryOnChange}
-              builderConfig={planQueryBuilderConfig}
-              initialQueryValue={planQueryBuilderInitialValue}
-              addRuleLabel={t('common:misc.add_filter')}
-            />
-          </Grid>
           <div className={classes.planList}>
             <div>
               <div
@@ -521,10 +539,6 @@ const useStyles = makeStyles(() => ({
     
   }
 }));
-
-PlansList.defaultProps = {
-  communityPlans: []
-};
 
 PlansList.propTypes = {
   matches: PropTypes.bool.isRequired,
