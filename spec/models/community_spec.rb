@@ -73,6 +73,9 @@ RSpec.describe Community, type: :model do
         .dependent(:destroy)
     end
     it { is_expected.to have_many(:feedbacks).class_name('Users::Feedback').dependent(:destroy) }
+    it do
+      is_expected.to have_many(:time_sheets).class_name('Users::TimeSheet').dependent(:destroy)
+    end
   end
 
   it 'should be associated with users' do

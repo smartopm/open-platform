@@ -21,7 +21,8 @@ RSpec.describe Types::Queries::TimeSheet do
              started_at: time_minus_2days,
              created_at: time_minus_2days,
              ended_at: time_minus_1days,
-             updated_at: time_minus_1days)
+             updated_at: time_minus_1days,
+             community_id: user1.community_id)
     end
 
     let!(:time_log2_user1) do
@@ -30,7 +31,8 @@ RSpec.describe Types::Queries::TimeSheet do
              started_at: time_minus_1days,
              created_at: time_minus_1days,
              ended_at: time_now,
-             updated_at: time_now)
+             updated_at: time_now,
+             community_id: user1.community_id)
     end
 
     let!(:time_log1_user2) do
@@ -39,7 +41,8 @@ RSpec.describe Types::Queries::TimeSheet do
              started_at: time_minus_1days,
              created_at: time_minus_1days,
              ended_at: time_now,
-             updated_at: time_now)
+             updated_at: time_now,
+             community_id: user1.community_id)
     end
 
     let(:query) do
@@ -102,7 +105,10 @@ RSpec.describe Types::Queries::TimeSheet do
     end
 
     it 'list contains one row per employee' do
-      result = DoubleGdpSchema.execute(query, context: { current_user: custodian }).as_json
+      result = DoubleGdpSchema.execute(query, context: {
+                                         current_user: custodian,
+                                         site_community: custodian.community,
+                                       }).as_json
       expect(result.dig('data', 'timeSheetLogs', 0, 'userId')).to eql time_log2_user1.user_id
       expect(result.dig('data', 'timeSheetLogs', 1, 'userId')).to eql time_log1_user2.user_id
     end

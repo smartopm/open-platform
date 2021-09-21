@@ -45,6 +45,7 @@ class Community < ApplicationRecord
   has_many :feedbacks, class_name: 'Users::Feedback', dependent: :destroy
   has_many :subscription_plans, class_name: 'Payments::SubscriptionPlan', dependent: :destroy
   belongs_to :sub_administrator, class_name: 'Users::User', optional: true
+  has_many :time_sheets, class_name: 'Users::TimeSheet', dependent: :destroy
 
   VALID_CURRENCIES = %w[zambian_kwacha honduran_lempira].freeze
 
