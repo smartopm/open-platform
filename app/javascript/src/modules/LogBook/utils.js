@@ -17,10 +17,14 @@ export function isNotValidCheck(element) {
 
 export const defaultRequiredFields = ['name', 'phoneNumber', 'nrc', 'vehiclePlate', 'reason'];
 
+/**
+ * Checks if a guest is valid to be granted access at the gate at the time of visiting the site
+ * @param {object} req 
+ * @param {Function} translate 
+ * @param {String} tz 
+ * @returns 
+ */
 export function checkRequests(req, translate, tz) {
-
-  const today = new Date();
-  const dayOfTheWeek = getWeekDay(today);
   /**
    * moved the conversion here because:
    *  - If a user updates a request's visitation date, the time wont be changed, this will fail our validity check
@@ -28,14 +32,16 @@ export function checkRequests(req, translate, tz) {
    *  - moment's isSameOrAfter() and isSameOrBefore() rely on a full date instead of just time to validate the time.
    *  - Having the updateDateWithTime here, allows us to always rely on today's date as the date for both the endsAt and startsAt times
    */
+
   // today in the timezone of the current community
   const timeNow = timezone.tz(new Date(), tz).format()
 
   const startTime = updateDateWithTime(timeNow, req.startsAt || req.startTime)
   const endTime = updateDateWithTime(timeNow, req.endsAt || req.endTime)
+  const dayOfTheWeek = getWeekDay(timeNow);
 
   if (req.occursOn.length) {
-    if (today > new Date(req.visitEndDate)) {
+    if (!moment(timeNow).isSameOrBefore(req.visitEndDate, 'day')) {
       return { title: translate('guest_book.expired'), color: '#DA1414', valid: false };
     }
     if (req.occursOn.includes(dayOfTheWeek.toLowerCase())) {

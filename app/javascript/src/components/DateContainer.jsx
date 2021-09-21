@@ -14,6 +14,10 @@ export function dateToString(date, format = 'YYYY-MM-DD') {
   return moment.parseZone(date).format(format);
 }
 
+export function isDateValid(date){
+  const temp = new Date(date)
+  return moment(temp, 'YYYY-MM-DD hh:mm', true).isValid()
+}
 /**
  * Updates current date with given time from another date
  * @param {Date} date
@@ -21,6 +25,7 @@ export function dateToString(date, format = 'YYYY-MM-DD') {
  * @returns {string}
  */
  export function updateDateWithTime(date, dateWithTime){
+   if(!isDateValid(date) || !isDateValid(dateWithTime)) return 'Invalid date'
   const time = dateTimeToString(dateWithTime).split(':') // 11:00
   const dateTime = new Date(date).setHours(time[0], time[1]) // 1631272618379
 
