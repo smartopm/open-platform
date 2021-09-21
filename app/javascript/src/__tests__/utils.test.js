@@ -18,7 +18,8 @@ import {
   extractCurrency,
   extractCountry,
   checkAllowedCommunityFeatures,
-  ifNotTest
+  ifNotTest,
+  toTitleCase
 } from '../utils/helpers'
 
 const message =
@@ -243,3 +244,14 @@ describe('everything else ', () => {
     expect(ifNotTest()).toBe(false)
   })
 })
+
+describe('toTitleCase', () => {
+  it('should return undefined if null or undefined is passed as parameter', () => {
+    expect(toTitleCase(null)).toBe(undefined);
+    expect(toTitleCase(undefined)).toBe(undefined);
+  });
+
+  it('should convert the snake case to title case', () => {
+    expect(toTitleCase('prospective_client')).toBe('Prospective Client');
+  });
+});

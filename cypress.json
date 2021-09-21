@@ -2,5 +2,6 @@
   "screenshotsFolder": "tmp/cypress/screenshots",
   "videosFolder": "tmp/cypress/videos",
   "baseUrl": "http://rails:3000",
-  "responseTimeout": 60000
+  "responseTimeout": 60000,
+  "pageLoadTimeout": 80000
 }

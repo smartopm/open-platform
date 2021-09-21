@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_09_17_172946) do
+ActiveRecord::Schema.define(version: 2021_09_21_045425) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -664,6 +664,8 @@ ActiveRecord::Schema.define(version: 2021_09_17_172946) do
     t.datetime "ended_at"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.uuid "community_id"
+    t.index ["community_id"], name: "index_time_sheets_on_community_id"
     t.index ["shift_end_event_log_id"], name: "index_time_sheets_on_shift_end_event_log_id"
     t.index ["shift_start_event_log_id"], name: "index_time_sheets_on_shift_start_event_log_id"
     t.index ["user_id"], name: "index_time_sheets_on_user_id"
@@ -871,6 +873,7 @@ ActiveRecord::Schema.define(version: 2021_09_17_172946) do
   add_foreign_key "substatus_logs", "communities"
   add_foreign_key "substatus_logs", "users"
   add_foreign_key "substatus_logs", "users", column: "updated_by_id"
+  add_foreign_key "time_sheets", "communities"
   add_foreign_key "transactions", "communities"
   add_foreign_key "transactions", "users"
   add_foreign_key "user_form_properties", "form_properties"

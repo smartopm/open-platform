@@ -5,7 +5,8 @@ require 'rails_helper'
 RSpec.describe Mutations::Timesheet::ManageShift do
   describe 'track user time shift' do
     let!(:user) { create(:contractor) }
-    let!(:custodian) { create(:store_custodian, community_id: user.community_id) }
+    let!(:community) { user.community }
+    let!(:custodian) { create(:store_custodian, community_id: community.id) }
 
     let(:query) do
       <<~GQL
@@ -23,6 +24,7 @@ RSpec.describe Mutations::Timesheet::ManageShift do
       variables = {
         userId: user.id,
         eventTag: 'shift_start',
+        community_id: community.id,
       }
 
       result = DoubleGdpSchema.execute(query, variables: variables,
@@ -42,6 +44,7 @@ RSpec.describe Mutations::Timesheet::ManageShift do
       variables = {
         userId: user.id,
         eventTag: 'shift_end',
+        community_id: community.id,
       }
       result = DoubleGdpSchema.execute(query, variables: variables,
                                               context: {
@@ -64,6 +67,7 @@ RSpec.describe Mutations::Timesheet::ManageShift do
       variables = {
         userId: custodian.id,
         eventTag: 'shift_start',
+        community_id: community.id,
       }
       result = DoubleGdpSchema.execute(query, variables: variables,
                                               context: {
@@ -77,6 +81,7 @@ RSpec.describe Mutations::Timesheet::ManageShift do
       variables = {
         userId: SecureRandom.uuid,
         eventTag: 'shift_start',
+        community_id: community.id,
       }
       result = DoubleGdpSchema.execute(query, variables: variables,
                                               context: {

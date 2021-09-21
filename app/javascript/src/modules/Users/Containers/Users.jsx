@@ -640,7 +640,7 @@ export default function UsersList() {
                 !called ? (
                   // eslint-disable-next-line jsx-a11y/click-events-have-key-events
                   <span style={{ color: theme.palette.primary.contrastText }} role="button" tabIndex={0} aria-label="download csv" color="textPrimary" onClick={handleDownloadCSV}>
-                    {usersLoading ? <Spinner /> : 'Process CSV Data'}
+                    {usersLoading ? <Spinner /> : t('users.process_csv')}
                   </span>
                 )
                 : (
@@ -650,7 +650,7 @@ export default function UsersList() {
                     headers={csvHeaders}
                     filename={`user-data-${dateToString(new Date())}.csv`}
                   >
-                    {usersLoading ? <Spinner /> : 'Download CSV'}
+                    {usersLoading ? <Spinner /> : t('users.download_csv')}
                   </CSVLink>
                 )
               }

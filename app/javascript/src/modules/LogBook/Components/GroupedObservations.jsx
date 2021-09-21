@@ -94,7 +94,7 @@ export default function GroupedObservations({ groupedDate, eventLogs, routeToEnt
               spacing={2}
               style={{ marginBottom: '20px' }}
             >
-              <Grid item sm={8}>
+              <Grid item sm={8} className="exit_note">
                 {eventLog.data.note === 'Exited' ? t('logbook.exited') : eventLog.data.note}
               </Grid>
 

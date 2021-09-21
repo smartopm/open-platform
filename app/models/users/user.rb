@@ -314,7 +314,8 @@ module Users
       event = generate_events(event_tag, user, data)
 
       if event_tag == 'shift_start'
-        user.time_sheets.create(started_at: Time.current, shift_start_event_log: event)
+        user.time_sheets.create(started_at: Time.current, shift_start_event_log: event,
+                                community_id: community_id)
       else
         timesheet = user.time_sheets.find_by(ended_at: nil)
         return unless timesheet

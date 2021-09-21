@@ -47,6 +47,7 @@ export function ModalDialog({
         <Button
           autoFocus
           onClick={handleConfirm}
+          className="confirm_grant"
           color={
             ['grant', 'acknowledge', 'save', 'proceed'].includes(action)
               ? 'primary'

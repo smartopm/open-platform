@@ -42,7 +42,8 @@ RSpec.describe CheckCriticalBusinessActivityJob, type: :job do
       event_log = create(:event_log, subject: 'user_entry', ref_type: 'Users::User',
                                      ref_id: user.id, acting_user: user, community: user.community)
       # record a time activity
-      user.time_sheets.create(started_at: Time.current, shift_start_event_log: event_log)
+      user.time_sheets.create(started_at: Time.current, shift_start_event_log: event_log,
+                              community_id: user.community_id)
 
       expect(Slack).not_to receive(:new)
       perform_enqueued_jobs { described_class.perform_later(['Nkwashi']) }
