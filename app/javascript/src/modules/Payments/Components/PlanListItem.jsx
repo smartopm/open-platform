@@ -2,6 +2,7 @@ import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import PropTypes from 'prop-types';
 import Typography from '@material-ui/core/Typography';
+import Hidden from '@material-ui/core/Hidden';
 import { makeStyles } from '@material-ui/core/styles';
 import { IconButton } from '@material-ui/core';
 import { MoreHorizOutlined } from '@material-ui/icons';
@@ -23,7 +24,7 @@ export default function PlanListItem({ data, currencyData, menuData }) {
   return (
     <>
       <Grid container spacing={2} className={classes.container}>
-        <Grid item xs={12} sm={2} data-testid='landparcel' className={classes.bottom}>
+        <Grid item xs={6} sm={2} data-testid="landparcel" className={classes.bottom}>
           <Typography className={classes.weight} variant="caption">
             {data?.landParcel?.parcelNumber}
           </Typography>
@@ -38,7 +39,35 @@ export default function PlanListItem({ data, currencyData, menuData }) {
             {data?.landParcel?.parcelType}
           </Typography>
         </Grid>
-        <Grid item xs={12} sm={7} data-testid='payment-slider'>
+        <Hidden smUp>
+          <Grid
+            item
+            xs={6}
+            sm={1}
+            data-testid="menu"
+            style={{ textAlign: 'right', marginTop: '-10px' }}
+          >
+            {menuData?.userType === 'admin' && planStatus(data) === 'behind' && (
+              <IconButton
+                aria-controls="simple-menu"
+                aria-haspopup="true"
+                data-testid="plan-menu"
+                dataid={data.id}
+                onClick={event => menuData?.handleMenuClick(event, data)}
+              >
+                <MoreHorizOutlined />
+              </IconButton>
+            )}
+            <MenuList
+              open={menuData?.open && menuData?.anchorEl?.getAttribute('dataid') === data.id}
+              anchorEl={menuData?.anchorEl}
+              userType={menuData?.userType}
+              handleClose={menuData?.handleClose}
+              list={menuData?.menuList}
+            />
+          </Grid>
+        </Hidden>
+        <Grid item xs={12} sm={7} data-testid="payment-slider">
           <PaymentSlider data={data} currencyData={currencyData} />
         </Grid>
         <Grid item xs={12} sm={2} data-testid='label'>
@@ -64,6 +93,28 @@ export default function PlanListItem({ data, currencyData, menuData }) {
             list={menuData?.menuList}
           />
         </Grid>
+        <Hidden smDown>
+          <Grid item xs={12} sm={1} data-testid="menu">
+            {menuData?.userType === 'admin' && planStatus(data) === 'behind' && (
+              <IconButton
+                aria-controls="simple-menu"
+                aria-haspopup="true"
+                data-testid="plan-menu"
+                dataid={data.id}
+                onClick={event => menuData?.handleMenuClick(event, data)}
+              >
+                <MoreHorizOutlined />
+              </IconButton>
+            )}
+            <MenuList
+              open={menuData?.open && menuData?.anchorEl?.getAttribute('dataid') === data.id}
+              anchorEl={menuData?.anchorEl}
+              userType={menuData?.userType}
+              handleClose={menuData?.handleClose}
+              list={menuData?.menuList}
+            />
+          </Grid>
+        </Hidden>
       </Grid>
     </>
   );
@@ -112,4 +163,4 @@ PlanListItem.propTypes = {
       })
     )
   }).isRequired
-}
+};
