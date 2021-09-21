@@ -48,8 +48,8 @@ const initialState = {
     occursOn: [],
     visitationDate: null,
     visitEndDate: null,
-    startTime: new Date(),
-    endTime: new Date(),
+    startsAt: new Date(),
+    endsAt: new Date(),
 }
 
 export default function RequestUpdate({ id, previousRoute, isGuestRequest, tabValue }) {
@@ -131,8 +131,6 @@ export default function RequestUpdate({ id, previousRoute, isGuestRequest, tabVa
       ...formData,
       // return reason if not other
       reason: formData.business || formData.reason,
-      startTime: dateToString(formData.startTime, 'YYYY-MM-DD HH:mm'),
-      endTime: dateToString(formData.endTime, 'YYYY-MM-DD HH:mm')
     }
 
       return createEntryRequest({ variables: otherFormData })
@@ -153,8 +151,8 @@ export default function RequestUpdate({ id, previousRoute, isGuestRequest, tabVa
     const otherFormData = {
       ...formData,
       reason: formData.business || formData.reason,
-      startTime: updateDateWithTime(formData.visitationDate, formData.startTime),
-      endTime: updateDateWithTime(formData.visitationDate, formData.endTime),
+      startsAt: updateDateWithTime(formData.visitationDate, formData.startsAt),
+      endsAt: updateDateWithTime(formData.visitationDate, formData.endsAt),
     };
     setLoading(true);
     updateRequest({ variables: { id, ...otherFormData } })

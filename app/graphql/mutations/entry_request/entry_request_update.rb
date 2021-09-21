@@ -14,8 +14,8 @@ module Mutations
       argument :other_reason, String, required: false
       argument :concern_flag, GraphQL::Types::Boolean, required: false
       argument :visitation_date, String, required: false
-      argument :start_time, String, required: false
-      argument :end_time, String, required: false
+      argument :starts_at, String, required: false
+      argument :ends_at, String, required: false
       argument :company_name, String, required: false
       argument :temperature, String, required: false
       argument :occurs_on, [String], required: false

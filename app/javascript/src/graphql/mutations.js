@@ -232,8 +232,8 @@ export const EntryRequestCreate = gql`
     $phoneNumber: String
     $source: String
     $visitationDate: String
-    $startTime: String
-    $endTime: String
+    $startsAt: String
+    $endsAt: String
     $companyName: String
     $temperature: String
     $occursOn: [String!]
@@ -249,8 +249,8 @@ export const EntryRequestCreate = gql`
       phoneNumber: $phoneNumber
       source: $source
       visitationDate: $visitationDate
-      startTime: $startTime
-      endTime: $endTime
+      startsAt: $startsAt
+      endsAt: $endsAt
       companyName: $companyName
       temperature: $temperature
       occursOn: $occursOn

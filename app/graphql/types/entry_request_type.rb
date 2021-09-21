@@ -23,8 +23,8 @@ module Types
     field :acknowledged, Boolean, null: true
     field :visitation_date, GraphQL::Types::ISO8601DateTime, null: true
     field :visit_end_date, GraphQL::Types::ISO8601DateTime, null: true
-    field :start_time, String, null: true
-    field :end_time, String, null: true
+    field :starts_at, GraphQL::Types::ISO8601DateTime, null: true
+    field :ends_at, GraphQL::Types::ISO8601DateTime, null: true
     field :company_name, String, null: true
     field :occurs_on, [String], null: true
   end
