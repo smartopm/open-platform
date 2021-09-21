@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import { formatMoney } from '../../../utils/helpers';
@@ -8,6 +9,7 @@ import CenteredContent from '../../../components/CenteredContent';
 
 export default function PaymentSlider({ data, currencyData }) {
   const classes = useStyles();
+  const matches = useMediaQuery('(max-width:600px)');
   const { t } = useTranslation('payment');
   const planVal = data?.planValue - (data?.totalPayments + data?.owingAmount);
 
@@ -61,22 +63,43 @@ export default function PaymentSlider({ data, currencyData }) {
   return (
     <>
       {data?.owingAmount > 0 && (
-        <CenteredContent>
-          <div className={classes.owing}>
-            <Typography variant="caption" style={{ marginRight: '2px' }}>
-              {t('misc.owed')}
-            </Typography>
-            <Typography variant="caption" style={{ marginRight: '2px' }}>
-              {formatMoney(currencyData, data?.owingAmount)}
-              {','}
-            </Typography>
-            <Typography variant="caption">
-              {`${data?.installmentsDue} ${t(
-              'misc.installments'
-            )}`}
-            </Typography>
-          </div>
-        </CenteredContent>
+        <div>
+          {!matches ? (
+            <CenteredContent>
+              <div className={classes.owing}>
+                <Typography variant="caption" style={{ marginRight: '2px' }}>
+                  {t('misc.owed')}
+                </Typography>
+                <Typography variant="caption" style={{ marginRight: '2px' }}>
+                  {formatMoney(currencyData, data?.owingAmount)}
+                  {','}
+                </Typography>
+                <Typography variant="caption">
+                  {`${data?.installmentsDue} ${t('misc.installments')}`}
+                </Typography>
+              </div>
+            </CenteredContent>
+          ) : (
+            <div className={classes.owing}>
+              <Typography variant="caption" style={{ marginRight: '2px' }}>
+                {t('misc.owed')}
+              </Typography>
+              <Typography variant="caption" style={{ marginRight: '2px' }}>
+                {formatMoney(currencyData, data?.owingAmount)}
+                {','}
+              </Typography>
+              <Typography variant="caption">
+                {`${data?.installmentsDue} ${t('misc.installments')}`}
+              </Typography>
+            </div>
+          )}
+        </div>
+      )}
+      {checkValuePercentage() && data?.totalPayments < data?.planValue && (
+        <div className={classes.body} style={{ textAlign: 'right' }}>
+          <Typography variant="caption">{t('misc.plan_values')}</Typography>
+          <Typography variant="caption">{formatMoney(currencyData, data?.planValue)}</Typography>
+        </div>
       )}
       <div className={classes.flex} data-testid="body">
         <div style={{ width: checkPaidPercentage() }}>
@@ -135,7 +158,7 @@ export default function PaymentSlider({ data, currencyData }) {
               ) : (
                 <div className={classes.spaceBetween}>
                   <Typography> </Typography>
-                  <div className={classes.body} style={{marginTop: '10px'}}>
+                  <div className={classes.body} style={{ marginTop: '10px' }}>
                     <Typography variant="caption">{t('misc.plan_values')}</Typography>
                     <Typography variant="caption" align="center">
                       {formatMoney(currencyData, data?.planValue)}
@@ -151,11 +174,8 @@ export default function PaymentSlider({ data, currencyData }) {
           <div className={classes.planValue}> </div>
           <div className={classes.spaceBetween}>
             <Typography> </Typography>
-            {data?.totalPayments < data?.planValue && (
-              <div
-                className={classes.body}
-                style={checkValuePercentage() ? { marginTop: '-50px', marginLeft: '-50px' } : {marginTop: '10px'}}
-              >
+            {data?.totalPayments < data?.planValue && !checkValuePercentage() && (
+              <div className={classes.body} style={{ marginTop: '10px' }}>
                 <Typography variant="caption">{t('misc.plan_values')}</Typography>
                 <Typography variant="caption" align="center">
                   {formatMoney(currencyData, data?.planValue)}
