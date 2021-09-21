@@ -1,15 +1,17 @@
 import React from 'react';
 import { isYesterday, isToday } from 'date-fns';
 import PropTypes from 'prop-types';
-import moment from "moment-timezone";
+// eslint-disable-next-line import/no-extraneous-dependencies
+import moment from 'moment';
+
 
 // returns a stringified date
 export function dateTimeToString(date) {
-  return moment(date).tz("America/Tegucigalpa").format('HH:mm');
+  return moment.parseZone(date).format('HH:mm');
 }
 export function dateToString(date, format = 'YYYY-MM-DD') {
   // eslint-disable-next-line import/no-named-as-default-member
-  return moment(date).tz("America/Tegucigalpa").format(format);
+  return moment.parseZone(date).format(format);
 }
 
 /**
