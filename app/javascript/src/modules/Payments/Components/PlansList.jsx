@@ -78,7 +78,7 @@ export function PlansList({
     anchorEl,
     open: anchorElOpen,
     userType: authState?.user?.userType,
-    handleClose: () => handleMenuClose()
+    handleClose: (e) => handleMenuClose(e)
   }
 
   const csvHeaders = [
