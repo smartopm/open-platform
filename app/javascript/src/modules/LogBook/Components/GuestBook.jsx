@@ -148,7 +148,7 @@ export function renderGuest(guest, classes, grantAccess, isMobile, loadingStatus
       'Access Time': (
         <Grid item xs={12} md={2} data-testid="access_time">
           <Text 
-            content={translate('guest_book.visit_time', { startTime: dateTimeToString(guest.startsAt), endTime: dateTimeToString(guest.endsAt) })} 
+            content={translate('guest_book.visit_time', { startTime: dateTimeToString(guest.startsAt || guest.startTime), endTime: dateTimeToString(guest.endsAt || guest.endTime) })} 
             className={classes.text}
           />
         </Grid>

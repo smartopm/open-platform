@@ -27,7 +27,7 @@ export function checkRequests(req, translate) {
     }
     if (req.occursOn.includes(dayOfTheWeek.toLowerCase())) {
       if (
-        moment().isSameOrAfter(req.startsAt) && moment().isSameOrBefore(req.endsAt)
+        moment().isSameOrAfter(req.startsAt || req.startTime) && moment().isSameOrBefore(req.endsAt || req.endTime)
       ) {
         return { title: translate('guest_book.valid'), color: '#00A98B', valid: true };
       }
@@ -38,7 +38,7 @@ export function checkRequests(req, translate) {
     // is today the right date
     if (moment(req.visitationDate).isSame(moment(), 'day')) {
       if (
-        moment().isSameOrAfter(req.startsAt) && moment().isSameOrBefore(req.endsAt)
+        moment().isSameOrAfter(req.startsAt || req.startTime) && moment().isSameOrBefore(req.endsAt || req.endTime)
       ) {
         return { title: translate('guest_book.valid'), color: '#00A98B', valid: true };
       }

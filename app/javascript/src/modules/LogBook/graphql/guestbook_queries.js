@@ -18,6 +18,8 @@ export const GuestEntriesQuery = gql`
         occursOn
         visitEndDate
         visitationDate
+        endTime
+        startTime
         endsAt
         startsAt
       }
