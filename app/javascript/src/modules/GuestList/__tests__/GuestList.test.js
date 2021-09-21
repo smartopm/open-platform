@@ -1,5 +1,5 @@
 import React from 'react';
-import { fireEvent, render, waitFor } from '@testing-library/react';
+import { render, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { BrowserRouter } from 'react-router-dom';
 import { MockedProvider } from '@apollo/react-testing';
@@ -7,8 +7,7 @@ import MockedThemeProvider from '../../__mocks__/mock_theme';
 import { GuestListEntriesQuery } from '../graphql/guest_list_queries'
 import GuestList from '../Components/GuestList';
 
-describe('Should render Guest Book Component', () => {
-//   const openGuestRequestForm = jest.fn()
+describe('Should render Guest List Component', () => {
 
   const mocks = {
     request: {
@@ -65,26 +64,16 @@ describe('Should render Guest Book Component', () => {
         </BrowserRouter>
       </MockedProvider>
     );
-    // initially it should not contain any guests, this is because we lazily load this query
     expect(getByText('logbook.no_invited_guests')).toBeInTheDocument()
     expect(getByTestId('new_guest_btn').textContent).toContain('common:form_actions.new_guest');
     expect(getByTestId('next-btn').textContent).toContain('misc.next');
     expect(getByTestId('prev-btn').textContent).toContain('misc.previous');
 
-    // await waitFor(() => {
-    //     // expect(getByText('Test another')).toBeInTheDocument()
-    //     // expect(getByText('X Name')).toBeInTheDocument()
-    //     // expect(getByText('Js sdd')).toBeInTheDocument()
-    //     // expect(getByText('Js user x')).toBeInTheDocument()
-    //     // expect(getAllByText('guest_book.start_on_date_time')[0]).toBeInTheDocument()
-    //     // expect(getAllByText('guest_book.ends_on_date_time')[0]).toBeInTheDocument()
-
-    //     expect(getByTestId('new_guest_btn').textContent).toContain('common:form_actions.new_guest');
-    //     expect(getByTestId('next-btn').textContent).toContain('misc.next');
-    //     expect(getByTestId('prev-btn').textContent).toContain('misc.previous');
-
-    //     fireEvent.click(getByTestId('new_guest_btn'))
-    //     expect(openGuestRequestForm).toBeCalled()
-    // }, 50)
+    await waitFor(() => {
+        expect(getByTestId('new_guest_btn').textContent).toContain('common:form_actions.new_guest');
+        expect(getByTestId('next-btn').textContent).toContain('misc.next');
+        expect(getByTestId('prev-btn').textContent).toContain('misc.previous');
+    }, 1000)
   });
+
 });

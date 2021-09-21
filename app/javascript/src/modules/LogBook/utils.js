@@ -39,7 +39,7 @@ export function checkRequests(req, translate, tz) {
 
   const dayOfTheWeek = getWeekDay(timeNow);
   if(req.revoked){
-    return { title: translate('guest_book.revoked'), color: '#42a5f5', valid: false };
+    return { title: translate('guest_book.revoked'), color: '#BA000D', valid: false };
 
   }
 

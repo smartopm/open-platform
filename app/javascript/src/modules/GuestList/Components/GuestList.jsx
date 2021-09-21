@@ -44,7 +44,7 @@ export default function GuestList() {
       fetchPolicy: "cache-and-network"
   });
 
-
+  console.log("Data from backend", data)
   useEffect(() => {
     loadGuestListEntries();
   }, [loadGuestListEntries, offset, limit]);

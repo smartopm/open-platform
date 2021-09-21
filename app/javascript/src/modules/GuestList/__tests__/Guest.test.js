@@ -30,13 +30,14 @@ describe('Should render Guest Book Component', () => {
 
   it('should render proper data', async() => {
     const { getByText } = render(
-      <MockedProvider >
+      <MockedProvider>
         <BrowserRouter>
           <MockedThemeProvider>
             <Guest  
-            guestListEntry={guestListEntry}
-            handleGuestDetails={handleGuestDetails}
-             handleGuestRevoke={handleGuestRevoke}/>
+              guestListEntry={guestListEntry}
+              handleGuestDetails={handleGuestDetails}
+              handleGuestRevoke={handleGuestRevoke}
+            />
           </MockedThemeProvider>
         </BrowserRouter>
       </MockedProvider>

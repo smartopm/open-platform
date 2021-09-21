@@ -242,7 +242,7 @@ export default function GuestRequestForm({ id }) {
               value={formData.name}
               onChange={handleInputChange}
               name="name"
-              inputProps={{ 'data-testid': 'entry_user_name' }}
+              inputProps={{ 'data-testid': 'guest_entry_user_name' }}
               error={inputValidationMsg.isError && requiredFields.includes('name') && !formData.name}
               helperText={inputValidationMsg.isError &&
                 requiredFields.includes('name') &&
@@ -273,7 +273,7 @@ export default function GuestRequestForm({ id }) {
               value={formData.nrc || ''}
               onChange={handleInputChange}
               name="nrc"
-              inputProps={{ 'data-testid': 'entry_user_nrc' }}
+              inputProps={{ 'data-testid': 'guest_entry_user_nrc' }}
               error={inputValidationMsg.isError &&
                 requiredFields.includes('nrc') &&
                 !formData.nrc}
@@ -293,7 +293,7 @@ export default function GuestRequestForm({ id }) {
               value={formData.phoneNumber || ''}
               onChange={handleInputChange}
               name="phoneNumber"
-              inputProps={{ 'data-testid': 'entry_user_phone' }}
+              inputProps={{ 'data-testid': 'guest_entry_user_phone' }}
               error={inputValidationMsg.isError &&
                 requiredFields.includes('phoneNumber') &&
                 !formData.phoneNumber}
@@ -314,7 +314,7 @@ export default function GuestRequestForm({ id }) {
               onChange={handleInputChange}
               value={formData.vehiclePlate || ''}
               name="vehiclePlate"
-              inputProps={{ 'data-testid': 'entry_user_vehicle' }}
+              inputProps={{ 'data-testid': 'guest_entry_user_vehicle' }}
               error={inputValidationMsg.isError &&
                 requiredFields.includes('vehiclePlate') &&
                 !formData.vehiclePlate}
@@ -334,7 +334,7 @@ export default function GuestRequestForm({ id }) {
               name="companyName"
               value={formData.companyName || ''}
               onChange={handleInputChange}
-              inputProps={{ 'data-testid': 'companyName' }}
+              inputProps={{ 'data-testid': 'guest_company_name' }}
               error={inputValidationMsg.isError &&
                     requiredFields.includes('companyName') &&
                     !formData.companyName}
@@ -353,7 +353,7 @@ export default function GuestRequestForm({ id }) {
               value={formData.reason || ''}
               onChange={handleInputChange}
               className={`${css(styles.selectInput)}`}
-              inputProps={{ 'data-testid': 'entry_user_visit' }}
+              inputProps={{ 'data-testid': 'guest_entry_visit_reason' }}
               error={inputValidationMsg.isError &&
                 requiredFields.includes('reason') &&
                 (!formData.reason)}
@@ -392,6 +392,7 @@ export default function GuestRequestForm({ id }) {
               color="secondary"
               onClick={closeGuestRequestForm}
               className={`${css(styles.cancelGuestButton)}`}
+              data-testid="cancel_update_guest_btn"
             >
               {t('common:form_actions.cancel')}
             </Button>
@@ -399,11 +400,11 @@ export default function GuestRequestForm({ id }) {
               <Button
                 variant="contained"
                 className={`${css(styles.inviteGuestButton)}`}
+                data-testid="update_guest_btn"
                 onClick={event => handleModal(event, 'update')}
                 disabled={isLoading}
                 startIcon={isLoading && <Spinner />}
                 color="primary"
-                data-testid="submit_button"
               >
                 {isLoading ? ` ${t('form_actions.submitting')} ...` : ` ${t('logbook:guest_book.update_guest')} `}
               </Button>
@@ -412,11 +413,11 @@ export default function GuestRequestForm({ id }) {
                   <Button
                     variant="contained"
                     className={`${css(styles.inviteGuestButton)}`}
+                    data-testid="invite_guest_btn"
                     onClick={event => handleModal(event, 'create')}
                     disabled={isLoading}
                     startIcon={isLoading && <Spinner />}
                     color="primary"
-                    data-testid="submit_button"
                   >
                     {isLoading ? ` ${t('form_actions.submitting')} ...` : ` ${t('form_actions.invite_guest')} `}
                   </Button>
