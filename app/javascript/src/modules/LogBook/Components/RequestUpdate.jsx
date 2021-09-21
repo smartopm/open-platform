@@ -380,7 +380,7 @@ export default function RequestUpdate({ id, previousRoute, isGuestRequest, tabVa
             <Button
               onClick={() => handleSaveObservation('/request')}
               variant="outlined"
-              className={css(styles.observationButton)}
+              className={`${css(styles.observationButton)} save_and_record_other`}
               color="primary"
               fullWidth
             >
@@ -614,7 +614,7 @@ export default function RequestUpdate({ id, previousRoute, isGuestRequest, tabVa
               name="reason"
               value={formData.reason || ''}
               onChange={handleInputChange}
-              className={`${css(styles.selectInput)}`}
+              className={`${css(styles.selectInput)} visiting_reason`}
               inputProps={{ 'data-testid': 'entry_user_visit' }}
               error={inputValidationMsg.isError &&
                 requiredFields.includes('reason') &&
