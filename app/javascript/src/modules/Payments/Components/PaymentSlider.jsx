@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
-import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import { formatMoney } from '../../../utils/helpers';
+import CenteredContent from '../../../components/CenteredContent';
 
 export default function PaymentSlider({ data, currencyData }) {
   const classes = useStyles();
@@ -23,143 +23,149 @@ export default function PaymentSlider({ data, currencyData }) {
   }
 
   function checkOwingPercentage() {
-    const val = calcPercentage(data?.owingAmount, data?.planValue)
-    const percentage = parseInt(val, 10)
+    const val = calcPercentage(data?.owingAmount, data?.planValue);
+    const percentage = parseInt(val, 10);
 
     if (percentage > 0 && percentage < 20) {
-      return '40%'
-    } 
-    return val
+      return '40%';
+    }
+    return val;
   }
 
   function checkPaidPercentage() {
-    const val = calcPercentage(data?.totalPayments, data?.planValue)
-    const percentage = parseInt(val, 10)
+    const val = calcPercentage(data?.totalPayments, data?.planValue);
+    const percentage = parseInt(val, 10);
 
     if (percentage === 100) {
-      return '100%'
+      return '100%';
     }
 
     if (percentage > 0 && percentage < 20) {
-      return '30%'
-    } 
+      return '30%';
+    }
 
-    return val
+    return val;
   }
 
   function checkValuePercentage() {
-   const val =  calcPercentage(planVal, data?.planValue)
-   const percentage = parseInt(val, 10)
+    const val = calcPercentage(planVal, data?.planValue);
+    const percentage = parseInt(val, 10);
 
-   if (percentage < 20) {
-     return true
-   }
+    if (percentage < 20) {
+      return true;
+    }
 
-   return false
+    return false;
   }
 
   return (
-    <div className={classes.flex} data-testid="body">
-      <div style={{ width: checkPaidPercentage() }}>
-        <div className={classes.totalPayment}> </div>
-        <div className={classes.sliderDetail}>
-          {data?.totalPayments === 0 ? (
-            <div className={classes.body}>
-              <Typography variant="caption">
-                {formatMoney(currencyData, data?.totalPayments)}
-              </Typography>
-            </div>
-          ) : (
-            <div className={classes.bodyFirst}>
-              <Typography variant="caption">{formatMoney(currencyData, 0)}</Typography>
-              {data?.totalPayments < data?.planValue ? (
-                <div
-                  className={classes.amountPaid}
-                >
-                  <Typography variant="caption">{t("misc.paid")}</Typography>
-                  <Typography variant="caption" align="center">
-                    {formatMoney(currencyData, data?.totalPayments)}
-                  </Typography>
-                </div>
-              ) : (
-                <div className={classes.planBodyValue}>
-                  <Typography variant="caption">{t("misc.plan_values")}</Typography>
-                  <Typography variant="caption" align="center">
-                    {formatMoney(currencyData, data?.planValue)}
-                  </Typography>
-                </div>
-              )}
-            </div>
-          )}
-        </div>
-      </div>
-      <SliderBreaker />
+    <>
       {data?.owingAmount > 0 && (
-        <>
-          <div style={{ width: checkOwingPercentage() }} data-testid='owing'>
-            <div className={classes.expectedPayment}> </div>
-            {data?.owingAmount < data?.planValue ? (
-              <div className={classes.bodySecond}>
-                <Typography> </Typography>
-                <div className={classes.body}>
-                  <ArrowDropDownIcon
-                    style={{ color: '#EA2626', marginTop: '-10px', marginLeft: '25%' }}
-                  />
-                  <div className={classes.owing}>
-                    <Typography variant="caption">{t("misc.owed")}</Typography>
-                    <Typography variant="caption">
-                      {formatMoney(currencyData, data?.owingAmount)}
-                    </Typography>
-                    <Typography variant="caption">{`${data?.installmentsDue} ${t("misc.installments")}`}</Typography>
-                  </div>
-                </div>
-                <div className={classes.amountDue} style={{ marginTop: '10px' }}>
-                  <Typography variant="caption">{t("misc.due")}</Typography>
-                  <Typography variant="caption" align="center">
-                    {formatMoney(currencyData, data?.expectedPayments)}
-                  </Typography>
-                </div>
+        <CenteredContent>
+          <div className={classes.owing}>
+            <Typography variant="caption" style={{ marginRight: '2px' }}>
+              {t('misc.owed')}
+            </Typography>
+            <Typography variant="caption" style={{ marginRight: '2px' }}>
+              {formatMoney(currencyData, data?.owingAmount)}
+              {','}
+            </Typography>
+            <Typography variant="caption">
+              {`${data?.installmentsDue} ${t(
+              'misc.installments'
+            )}`}
+            </Typography>
+          </div>
+        </CenteredContent>
+      )}
+      <div className={classes.flex} data-testid="body">
+        <div style={{ width: checkPaidPercentage() }}>
+          <div className={classes.totalPayment}> </div>
+          <div className={classes.sliderDetail}>
+            {data?.totalPayments === 0 ? (
+              <div className={classes.body}>
+                <Typography variant="caption">
+                  {formatMoney(currencyData, data?.totalPayments)}
+                </Typography>
               </div>
             ) : (
-              <div className={classes.spaceBetween}>
-                <Typography> </Typography>
-                <div className={classes.body}>
-                  <ArrowDropDownIcon style={{ color: '#EA2626', marginTop: '-10px' }} />
-                  <div className={classes.owing}>
-                    <Typography variant="caption">{t("misc.owed")}</Typography>
-                    <Typography variant="caption">
-                      {formatMoney(currencyData, data?.owingAmount)}
+              <div className={classes.bodyFirst}>
+                <Typography variant="caption">{formatMoney(currencyData, 0)}</Typography>
+                {data?.totalPayments < data?.planValue ? (
+                  <div className={classes.amountPaid}>
+                    <Typography variant="caption">{t('misc.paid')}</Typography>
+                    <Typography variant="caption" align="center">
+                      {formatMoney(currencyData, data?.totalPayments)}
                     </Typography>
-                    <Typography variant="caption">{`${data?.installmentsDue} ${t("misc.installments")}`}</Typography>
                   </div>
-                </div>
-                <div className={classes.body}>
-                  <Typography variant="caption">{t("misc.plan_values")}</Typography>
-                  <Typography variant="caption" align="center">
-                    {formatMoney(currencyData, data?.planValue)}
-                  </Typography>
-                </div>
+                ) : (
+                  <div className={classes.planBodyValue}>
+                    <Typography variant="caption">{t('misc.plan_values')}</Typography>
+                    <Typography variant="caption" align="center">
+                      {formatMoney(currencyData, data?.planValue)}
+                    </Typography>
+                  </div>
+                )}
               </div>
             )}
           </div>
-          <SliderBreaker type={data?.owingAmount > 0} />
-        </>
-      )}
-      <div style={{ width: calcPercentage(planVal, data?.planValue) }} data-testid="plan-value">
-        <div className={classes.planValue}> </div>
-        <div className={classes.spaceBetween}>
-          <Typography> </Typography>
-          {data?.totalPayments < data?.planValue && (
-            <div className={classes.body} style={checkValuePercentage() ? {marginTop: '-50px', marginLeft: '-40px'} : {}}>
-              <Typography variant="caption">{t("misc.plan_values")}</Typography>
-              <Typography variant="caption" align="center">
-                {formatMoney(currencyData, data?.planValue)}
-              </Typography>
+        </div>
+        <SliderBreaker />
+        {data?.owingAmount > 0 && (
+          <>
+            <div style={{ width: checkOwingPercentage() }} data-testid="owing">
+              <div className={classes.expectedPayment}> </div>
+              {data?.owingAmount < data?.planValue ? (
+                <div className={classes.bodySecond}>
+                  <Typography> </Typography>
+                  <div
+                    className={classes.amountDue}
+                    style={
+                      checkValuePercentage()
+                        ? { marginTop: '10px', marginLeft: '-50px' }
+                        : { marginTop: '10px' }
+                    }
+                  >
+                    <Typography variant="caption">{t('misc.due')}</Typography>
+                    <Typography variant="caption" align="center">
+                      {formatMoney(currencyData, data?.expectedPayments)}
+                    </Typography>
+                  </div>
+                </div>
+              ) : (
+                <div className={classes.spaceBetween}>
+                  <Typography> </Typography>
+                  <div className={classes.body}>
+                    <Typography variant="caption">{t('misc.plan_values')}</Typography>
+                    <Typography variant="caption" align="center">
+                      {formatMoney(currencyData, data?.planValue)}
+                    </Typography>
+                  </div>
+                </div>
+              )}
             </div>
-          )}
+            <SliderBreaker type={data?.owingAmount > 0} />
+          </>
+        )}
+        <div style={{ width: calcPercentage(planVal, data?.planValue) }} data-testid="plan-value">
+          <div className={classes.planValue}> </div>
+          <div className={classes.spaceBetween}>
+            <Typography> </Typography>
+            {data?.totalPayments < data?.planValue && (
+              <div
+                className={classes.body}
+                style={checkValuePercentage() ? { marginTop: '-50px', marginLeft: '-50px' } : {}}
+              >
+                <Typography variant="caption">{t('misc.plan_values')}</Typography>
+                <Typography variant="caption" align="center">
+                  {formatMoney(currencyData, data?.planValue)}
+                </Typography>
+              </div>
+            )}
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
 
@@ -224,11 +230,7 @@ const useStyles = makeStyles(() => ({
     marginRight: '-60px'
   },
   owing: {
-    marginTop: '30px',
-    display: 'flex',
-    flexDirection: 'column',
-    textAlign: 'center',
-    marginLeft: '-10px'
+    display: 'flex'
   },
   amountDue: {
     display: 'flex',
