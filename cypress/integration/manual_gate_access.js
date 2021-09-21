@@ -3,14 +3,6 @@
 describe('Manual Gate Access', () => {
     it('allows security guards to record manual entries', () => {
       cy.factory('community', { name: 'Nkwashi' }).then((res1) => {
-        cy.factory('admin_user', {
-          name: 'An Admin User',
-          phone_number: '2348167740149',
-          email: 'adminuser@gmail.com',
-          state: 'valid',
-          community_id: res1.body.id
-        })
-  
         cy.factory('security_guard', {
           name: 'A Guard',
           phone_number: '2347065834175',
