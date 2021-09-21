@@ -39,8 +39,8 @@ describe('RequestUpdate Component ', () => {
           occursOn: ["monday"],
           visitEndDate: "2020-10-15T09:31:06Z",
           visitationDate: "2020-10-05T09:31:06Z",
-          endTime: "2020-10-15T09:31:06Z",
-          startTime: "2020-10-15T19:31:06Z",
+          endsAt: "2020-10-15T09:31:06Z",
+          startsAt: "2020-10-15T19:31:06Z",
           companyName: "",
           __typename: 'EntryRequest'
         }
@@ -133,8 +133,8 @@ describe('RequestUpdate Component ', () => {
           occursOn: [],
           visitEndDate: "",
           visitationDate: "",
-          endTime: "",
-          startTime: "",
+          endsAt: "",
+          startsAt: "",
          },
          result: {
            data: {

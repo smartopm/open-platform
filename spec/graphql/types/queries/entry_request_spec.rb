@@ -40,8 +40,8 @@ RSpec.describe Types::Queries::EntryRequest do
           occursOn
           visitEndDate
           visitationDate
-          endTime
-          startTime
+          endsAt
+          startsAt
         }
         })
     end
