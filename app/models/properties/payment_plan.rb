@@ -4,6 +4,20 @@ module Properties
   # rubocop:disable Metrics/ClassLength
   # PaymentPlan
   class PaymentPlan < ApplicationRecord
+
+    include SearchCop
+
+    search_scope :search do
+      attributes :status
+      attributes name: ['user.name']
+      attributes land_parcel: ['land_parcel.parcel_number']
+      attributes plot_type: ['land_parcel.parcel_type']
+    end
+
+    search_scope :search_by_numbers do
+      attributes :owing_amount, :installments_due
+    end
+
     belongs_to :user, class_name: 'Users::User'
     belongs_to :land_parcel
     has_many :invoices, class_name: 'Payments::Invoice', dependent: :nullify

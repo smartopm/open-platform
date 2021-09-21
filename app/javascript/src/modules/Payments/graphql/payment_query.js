@@ -225,8 +225,8 @@ export const SubscriptionPlansQuery = gql`
 `
 
 export const CommunityPlansQuery = gql`
-  query communityPaymentPlans {
-    communityPaymentPlans {
+  query communityPaymentPlans($query: String) {
+    communityPaymentPlans(query: $query) {
       id
       pendingBalance
       planType

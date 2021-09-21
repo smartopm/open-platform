@@ -2,11 +2,14 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Grid, Typography, IconButton } from '@material-ui/core';
+import { useQuery } from 'react-apollo';
 import { MoreHorizOutlined } from '@material-ui/icons';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
+import useDebounce from '../../../utils/useDebounce';
 import DataList from '../../../shared/list/DataList';
 import {
+  formatError,
   formatMoney,
   InvoiceStatusColor,
   titleize,
@@ -32,21 +35,29 @@ import {
   planQueryBuilderInitialValue,
   planFilterFields
 } from '../../../utils/constants';
+import { CommunityPlansQuery } from '../graphql/payment_query';
 
 export function PlansList({
   matches,
   currencyData,
-  communityPlansLoading,
-  communityPlans,
   setDisplaySubscriptionPlans
 }) {
   const { t } = useTranslation(['payment', 'common']);
+  const [searchValue, setSearchValue] = useState('');
+  const debouncedValue = useDebounce(searchValue, 500);
   const limit = 10;
   const [offset, setOffset] = useState(0);
   const classes = useStyles();
-  const [searchValue, setSearchValue] = useState('');
   const [displayBuilder, setDisplayBuilder] = useState('none');
   const [searchQuery, setSearchQuery] = useState('');
+
+  const { loading, error, data: communityPlansData } = useQuery(CommunityPlansQuery, {
+    variables: { query: debouncedValue || searchQuery },
+    errorPolicy: 'all',
+    fetchPolicy: 'cache-and-network'
+  });
+
+  const communityPlans = communityPlansData?.communityPaymentPlans?.sort((a,b) => b.owingAmount - a.owingAmount)
 
   function paginatePlans(action) {
     if (action === 'prev') {
@@ -71,39 +82,43 @@ export function PlansList({
 
   return (
     <div>
-      {communityPlansLoading ? (
+      {console.log(searchQuery)}
+      {error && (
+        <p>{formatError(error.message)}</p>
+      )}
+      <SearchInput
+        title={t('common:misc.plans')}
+        searchValue={searchValue}
+        handleSearch={event => setSearchValue(event.target.value)}
+        handleFilter={toggleFilterMenu}
+        handleClear={() => setSearchValue('')}
+      />
+      <Grid
+        container
+        justify="flex-end"
+        style={{
+          width: '100.5%',
+          position: 'absolute',
+          zIndex: 1,
+          marginTop: '-2px',
+          marginLeft: matches ? '-100px' : '-50px',
+          display: displayBuilder
+        }}
+      >
+        <QueryBuilder
+          handleOnChange={queryOnChange}
+          builderConfig={planQueryBuilderConfig}
+          initialQueryValue={planQueryBuilderInitialValue}
+          addRuleLabel={t('common:misc.add_filter')}
+          multiple={false}
+        />
+      </Grid>
+      {loading ? (
         <Spinner />
       ) : communityPlans?.length === 0 ? (
         <CenteredContent>{t('errors.no_plan_available')}</CenteredContent>
       ) : (
         <>
-          {console.log(searchQuery)}
-          <SearchInput
-            title={t('common:misc.plans')}
-            searchValue={searchValue}
-            handleSearch={event => setSearchValue(event.target.value)}
-            handleFilter={toggleFilterMenu}
-            handleClear={() => setSearchValue('')}
-          />
-          <Grid
-            container
-            justify="flex-end"
-            style={{
-              width: '100.5%',
-              position: 'absolute',
-              zIndex: 1,
-              marginTop: '-2px',
-              marginLeft: matches ? '-300px' : '0',
-              display: displayBuilder
-            }}
-          >
-            <QueryBuilder
-              handleOnChange={queryOnChange}
-              builderConfig={planQueryBuilderConfig}
-              initialQueryValue={planQueryBuilderInitialValue}
-              addRuleLabel={t('common:misc.add_filter')}
-            />
-          </Grid>
           <div className={classes.planList}>
             <div>
               <div
@@ -417,23 +432,12 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
-PlansList.defaultProps = {
-  communityPlans: []
-};
-
 PlansList.propTypes = {
   matches: PropTypes.bool.isRequired,
   currencyData: PropTypes.shape({
     currency: PropTypes.string,
     locale: PropTypes.string
   }).isRequired,
-  communityPlansLoading: PropTypes.bool.isRequired,
-  communityPlans: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.string,
-      status: PropTypes.string
-    })
-  ),
   setDisplaySubscriptionPlans: PropTypes.func.isRequired
 };
 
