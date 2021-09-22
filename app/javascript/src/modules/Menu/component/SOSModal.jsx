@@ -344,7 +344,7 @@ const SOSModal=({open, setOpen, location, authState})=> {
   <div>
     <div className={classes.feedbackContents}>
       <div>
-        <FeedbackButtonSVG  t={t}/>
+        <FeedbackButtonSVG t={t} />
       </div>
 
       <br />

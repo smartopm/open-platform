@@ -21,7 +21,8 @@ const PanicButtonSVG = ({bind, t}) => (
   </svg>
   );
   PanicButtonSVG.propTypes = {
-    bind: PropTypes.instanceOf(Object).isRequired
+    bind: PropTypes.instanceOf(Object).isRequired,
+    t: PropTypes.func.isRequired
   }
 
 export default PanicButtonSVG
