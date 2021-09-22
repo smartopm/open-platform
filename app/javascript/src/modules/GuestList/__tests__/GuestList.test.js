@@ -12,7 +12,7 @@ describe('Should render Guest List Component', () => {
   const mocks = {
     request: {
       query: GuestListEntriesQuery,
-      variables: { offset: 0, limit: 50, query: '' }
+      variables: { offset: 0, limit: 50}
     },
     result: {
       data: {
@@ -26,6 +26,7 @@ describe('Should render Guest List Component', () => {
               imageUrl: 'https://lh3.googleusercontent.com',
               avatarUrl: null
             },
+            active: true,
             occursOn: [],
             visitEndDate: null,
             visitationDate: '2021-08-20T10:51:00+02:00',
@@ -42,6 +43,7 @@ describe('Should render Guest List Component', () => {
               imageUrl: 'https://lh3.googleusercontent.com/a-/',
               avatarUrl: null
             },
+            active: true,
             occursOn: [],
             visitEndDate: null,
             visitationDate: '2021-08-31T10:20:21+02:00',
@@ -55,8 +57,8 @@ describe('Should render Guest List Component', () => {
   };
 
   it('should render proper data', async() => {
-    const { getByTestId, getByText } = render(
-      <MockedProvider mocks={[mocks]}>
+    const { getByTestId, getAllByTestId, getByText } = render(
+      <MockedProvider mocks={[mocks]} addTypename={false}>
         <BrowserRouter>
           <MockedThemeProvider>
             <GuestList />
@@ -68,12 +70,14 @@ describe('Should render Guest List Component', () => {
     expect(getByTestId('new_guest_btn').textContent).toContain('common:form_actions.new_guest');
     expect(getByTestId('next-btn').textContent).toContain('misc.next');
     expect(getByTestId('prev-btn').textContent).toContain('misc.previous');
-
+    expect(getByTestId('new_guest_btn').textContent).toContain('common:form_actions.new_guest');
+    expect(getByTestId('next-btn').textContent).toContain('misc.next');
+    expect(getByTestId('prev-btn').textContent).toContain('misc.previous');
+    
     await waitFor(() => {
-        expect(getByTestId('new_guest_btn').textContent).toContain('common:form_actions.new_guest');
-        expect(getByTestId('next-btn').textContent).toContain('misc.next');
-        expect(getByTestId('prev-btn').textContent).toContain('misc.previous');
-    }, 1000)
+      expect(getAllByTestId('guest_name')[0].textContent).toContain('Test another');
+      // TODO: @daniel add more test cases here
+    }, 50)
   });
 
 });
