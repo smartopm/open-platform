@@ -481,7 +481,7 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
             if (actionField.type === 'text' && actionField.name === 'phone_number') {
               return (
                 <PhoneInput
-                  value={data.phoneNumber || ''}
+                  value={metaData.phone_number || ''}
                   inputStyle={{ width: "100%" }}
                   enableSearch
                   inputProps={{
