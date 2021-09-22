@@ -25,7 +25,8 @@ describe('Should render Guest Book Component', () => {
         visitationDate: '2021-08-20T10:51:00+02:00',
         endTime: '2021-10-31 22:51',
         startTime: '2021-10-31 02:51',
-        revoked: true
+        active: true,
+        revoked: false
         }
 
   it('should render proper data', async() => {
@@ -45,8 +46,6 @@ describe('Should render Guest Book Component', () => {
     expect(getByText('Test Mutuba')).toBeInTheDocument()
     expect(getByText('logbook:guest_book.start_on_date_time')).toBeInTheDocument()
     expect(getByText('logbook:guest_book.ends_on_date_time')).toBeInTheDocument()
-    expect(getByText('guest_book.revoked')).toBeInTheDocument()
-    expect(getByText('guest_book.revoked')).toBeInTheDocument()
     expect(getByText('common:menu.revoke_access')).toBeInTheDocument()
     expect(getByText('common:menu.more_details')).toBeInTheDocument()
 

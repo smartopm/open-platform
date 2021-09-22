@@ -125,7 +125,7 @@ export default function GuestRequestForm({ id }) {
           setMessage({
             isError: false,
             detail: t('logbook:logbook.guest_entry_created_successful')
-          });
+          });   
           setLoading({ ...isLoading, loading: false });
 
           history.push('/guest-list')

@@ -7,11 +7,12 @@ import { GuestListEntryQuery } from '../../../graphql/queries';
 import MockedThemeProvider from '../../__mocks__/mock_theme';
 import userMock from '../../../__mocks__/userMock';
 import { Context } from '../../../containers/Provider/AuthStateProvider';
-// import { GuestEntrytUpdateMutation } from '../graphql/guest_list_mutation';
 import GuestRequestForm from '../Components/GuestRequestForm';
 
 
 describe('GuestRequestForm Component ', () => {
+  const handleCreateRequest = jest.fn()
+  const handleUpdateRequest = jest.fn()
   const mocks = {
     request: {
       query: GuestListEntryQuery,
@@ -29,7 +30,7 @@ describe('GuestRequestForm Component ', () => {
           reason: 'prospective_client',
           otherReason: null,
           concernFlag: null,
-          grantedState: 1,
+          grantedState: 0,
           createdAt: '2020-10-15T09:31:02Z',
           updatedAt: '2020-10-15T09:31:06Z',
           grantedAt: '2020-10-15T09:31:06Z',
@@ -82,10 +83,15 @@ describe('GuestRequestForm Component ', () => {
       },
       { timeout: 50 }
     );
+
+
     expect(container.queryByText('logbook:guest_book.update_guest')).toBeInTheDocument();
     expect(container.queryByTestId('cancel_update_guest_btn')).toBeInTheDocument();
     
     fireEvent.click(container.queryByText('logbook:guest_book.update_guest'))
+    await waitFor(() => {
+      expect(handleUpdateRequest).not.toBeCalled()
+    });
 
   });
   it('should render proper form when creating a new guest list entry', async () => {
@@ -109,8 +115,52 @@ describe('GuestRequestForm Component ', () => {
       expect(container.queryByText('form_fields.company_name')).toBeInTheDocument();
       expect(container.queryByText('logbook:logbook.visiting_reason')).toBeInTheDocument();
       expect(container.queryByText('form_actions.invite_guest')).toBeInTheDocument();
-      fireEvent.click(container.queryByText('form_actions.invite_guest'))
+      const guestName = container.queryByTestId('guest_entry_user_name');
+      fireEvent.change(guestName, { target: { value: 'Some User Name' } });
+      expect(guestName.value).toBe('Some User Name');
+
+      fireEvent.change(container.queryByTestId('guest_entry_user_nrc'), {
+        target: { value: '100100/10/1' }
+      });
+      expect(container.queryByTestId('guest_entry_user_nrc').value).toBe('100100/10/1');
+
+      fireEvent.change(container.queryByTestId('guest_entry_user_phone'), {
+        target: { value: '100100' }
+      });
+      expect(container.queryByTestId('guest_entry_user_phone').value).toBe('100100');
+
+      fireEvent.change(container.queryByTestId('guest_entry_user_vehicle'), {
+        target: { value: 'ABT' }
+      });
+      expect(container.queryByTestId('guest_entry_user_vehicle').value).toBe('ABT');
+
+      fireEvent.change(container.queryByTestId('email'), {
+        target: { value: 'sample@gmail.com' }
+      });
+      expect(container.queryByTestId('email').value).toBe('sample@gmail.com');
+
+      fireEvent.change(container.queryByTestId('guest_company_name'), {
+        target: { value: 'sample company' }
+      });
+      expect(container.queryByTestId('guest_company_name').value).toBe('sample company');
+
+      fireEvent.change(container.queryByTestId('guest_entry_visit_reason'), {
+        target: { value: 'Sales' }
+      });
+      
+      fireEvent.click(container.queryByLabelText('common:misc.day_of_visit'))
+
+      // fireEvent.change(container.queryByTestId('date_picker_dialog'), {
+      //   target: { value: '2021-12-21' }
+      // });
+
     }, 50)
+
+
+    fireEvent.click(container.queryByText('form_actions.invite_guest'))
+    await waitFor(() => {
+      expect(handleCreateRequest).not.toBeCalled()
+    });
 
   })
 

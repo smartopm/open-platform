@@ -39,7 +39,7 @@ export default function GuestList() {
   const { t } = useTranslation('logbook');
   const [revokeEntry] = useMutation(GuestEntryRequestRevoke);
 
-  const [loadGuestListEntries, { data, loading: guestsLoading, refetch: reloadGuests }] = useLazyQuery(GuestListEntriesQuery, {
+  const [loadGuestListEntries, { data, loading: guestsLoading, refetch }] = useLazyQuery(GuestListEntriesQuery, {
       variables: { offset, limit },
       fetchPolicy: "cache-and-network"
   });
@@ -63,7 +63,7 @@ export default function GuestList() {
            { action: t('logbook:logbook.revoked') })
         });
         setLoading({ ...loadingStatus, loading: false });
-        reloadGuests()
+        refetch()
       })
       .catch(err => {
         setMessage({ isError: true, detail: formatError(err.message) });
@@ -87,6 +87,7 @@ export default function GuestList() {
       setOffset(offset + limit);
     }
   }
+
   return (
     <>
       <div className="container" data-testid="todo-container">
