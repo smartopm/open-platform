@@ -35,12 +35,13 @@ import CenteredContent from '../../../components/CenteredContent'
 import TitleDescriptionForm from './TitleDescriptionForm'
 import { DateAndTimePickers } from '../../../components/DatePickerDialog'
 import { FormCreateMutation, FormUpdateMutation } from '../graphql/forms_mutation'
-import { formStatus, formRoles } from '../../../utils/constants'
+import { formStatus , allUserTypes } from '../../../utils/constants'
 import { ActionDialog } from '../../../components/Dialog'
 import MessageAlert from '../../../components/MessageAlert'
 import FloatButton from '../../../components/FloatButton'
 import { objectAccessor, formatError } from '../../../utils/helpers'
-import SwitchInput from './FormProperties/SwitchInput'
+import SwitchInput from './FormProperties/SwitchInput';
+
 
 // here we get existing google forms and we mix them with our own created forms
 export default function FormLinkList({ userType, community }) {
@@ -352,7 +353,7 @@ export function FormDialog({actionType, form, formMutation, open, setOpen, messa
             />
           </div>
           <div>
-            <FormControl style={{width:  200}}>
+            <FormControl style={{minWidth:  250, maxWidth: 400}}>
               <InputLabel id="multiple-roles-label">{t('misc.select_roles')}</InputLabel>
               <Select
                 id="multiple-roles"
@@ -360,15 +361,17 @@ export function FormDialog({actionType, form, formMutation, open, setOpen, messa
                 value={roles}
                 onChange={event => setRoles(event.target.value)}
                 MenuProps={{
+                getContentAnchorEl: () => null,
                 PaperProps: {
                   style: {
-                    maxHeight: 500,
-                    marginTop: 50
+                    maxHeight: 190,
+                    minWidth: 250,
+                    marginTop: 35
                   },
                 },
               }}
               >
-                {Object.entries(formRoles).map(([key, val]) => (
+                {Object.entries(allUserTypes).map(([key, val]) => (
                   <MenuItem key={key} value={val}>
                     {t(`common:user_types.${val}`)}
                   </MenuItem>

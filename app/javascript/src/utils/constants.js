@@ -258,11 +258,6 @@ export const formStatus = {
   delete: 'deleted'
 };
 
-export const formRoles = {
-  resident: 'resident',
-  client: 'client'
-}
-
 export const currencies = {
   zambian_kwacha: 'ZMW',
   honduran_lempira: 'HNL'
