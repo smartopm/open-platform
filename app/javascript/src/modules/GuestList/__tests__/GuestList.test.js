@@ -19,6 +19,7 @@ describe('Should render Guest List Component', () => {
     },
     result: {
       data: {
+        /* eslint-disable no-dupe-keys */
         scheduledGuestList: [
           {
             id: 'a91dbad4-eeb4',
