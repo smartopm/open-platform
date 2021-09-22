@@ -36,6 +36,10 @@ RSpec.describe ActionFlows::Actions::Sms do
 
     event = flow.event_object.new
     event.preload_data(event_log)
+
+    expect(Sms).to receive(:send)
+      .with('2341234567', "Task 'some body' was assigned to you")
+      
     expect(Sms).to receive(:send)
       .with('1234567', "some name just assigned a task 'some body' to some name")
     described_class.execute_action(event.data_set, flow.action_fields)

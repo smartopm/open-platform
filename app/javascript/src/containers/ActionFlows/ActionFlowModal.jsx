@@ -128,7 +128,8 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
           prospective_client: 'Prospective Client',
           client: 'Client',
           visitor: 'Visitor',
-          custodian: 'Store Custodian'
+          custodian: 'Store Custodian',
+          site_worker: 'Site Worker'
         });
       } else if (['visit_request_start_time', 'visit_request_end_time'].includes(field)) {
         addQueryDateInput(field);
@@ -481,7 +482,7 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
             if (actionField.type === 'text' && actionField.name === 'phone_number') {
               return (
                 <PhoneInput
-                  value={data.phoneNumber || ''}
+                  value={metaData.phone_number || ''}
                   inputStyle={{ width: "100%" }}
                   enableSearch
                   inputProps={{
