@@ -29,6 +29,7 @@ export default function Avatar({ imageUrl, user, style, searchedUser }) {
         imageLink={safeAvatarLink({ imageUrl: searchedUser.avatarUrl})}
         token={token}
         className={css(objectAccessor(imageStyles, style))}
+        alt="avatar for the user"
       />
     );
   }
