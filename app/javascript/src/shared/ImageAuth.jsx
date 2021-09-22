@@ -39,7 +39,7 @@ export default function ImageAuth({ imageLink, token, className, type, alt }) {
     return <img data-testid="authenticated_image" src={response.url} className={className} alt={alt} />
   }
   if (type === 'imageAvatar') {
-    return <Avatar alt="avatar-image" src={response.url}  />
+    return <Avatar alt={alt} src={response.url}  />
   }
   return <iframe height={600} width={width < 550 ? width - 20 : 600} title="attachment" src={response.url} />
 }
