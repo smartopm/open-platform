@@ -1,9 +1,8 @@
-/* eslint-disable */
-import React, { useContext } from 'react'
-import { Link } from 'react-router-dom'
-import { StyleSheet, css } from 'aphrodite'
-import PropTypes from 'prop-types'
-import { Context as ThemeContext } from '../../Themes/Nkwashi/ThemeProvider'
+import React, { useContext } from 'react';
+import { Link } from 'react-router-dom';
+import { StyleSheet, css } from 'aphrodite';
+import PropTypes from 'prop-types';
+import { Context as ThemeContext } from '../../Themes/Nkwashi/ThemeProvider';
 
 export default function Card({
   title,
@@ -17,50 +16,59 @@ export default function Card({
   access,
   authState
 }) {
-  const theme = useContext(ThemeContext)
-  if (!access.includes(authState.user.userType.toLowerCase())) {
-    return null
+  const theme = useContext(ThemeContext);
+  if (
+    !access.includes(authState.user.userType.toLowerCase()) ||
+    (id === 10 && authState.user.community.name !== 'Nkwashi')
+  ) {
+    return null;
   }
 
   return (
-    <div
-      className={`${css(styles.cardSize)} card align-self-center text-center`}
-
-    >
+    <div className={`${css(styles.cardSize)} card align-self-center text-center`}>
       <span>{children}</span>
       <Link
         to={{
           pathname: path,
           state: {
-            clientName: clientName,
-            clientNumber: clientNumber,
-            from: from
+            clientName,
+            clientNumber,
+            from
           }
         }}
-
         id={id}
-        className={`card-link`}
+        className="card-link"
       >
-
         <div className="card-body">
           <h5 className="card-title">
-            <span style={{ color: theme.primaryColor }} >
-              {icon}
-            </span>
+            <span style={{ color: theme.primaryColor }}>{icon}</span>
           </h5>
           <p className={css(styles.CardtextIcon)}>{title}</p>
-
         </div>
       </Link>
-
-
     </div>
-  )
+  );
 }
 
 export function SVGIcon({ image, alt }) {
-  return <img src={image} alt={alt} />
+  return <img src={image} alt={alt} />;
 }
+
+SVGIcon.propTypes = {
+  image: PropTypes.node.isRequired,
+  alt: PropTypes.string.isRequired
+}
+
+Card.defaultProps = {
+  children: <div />,
+  from: '',
+  clientName: '',
+  clientNumber: '',
+  id: '',
+  icon: <div />,
+  title: '',
+  path: null
+};
 
 Card.propTypes = {
   icon: PropTypes.node,
@@ -68,11 +76,16 @@ Card.propTypes = {
   title: PropTypes.string,
   path: PropTypes.string,
   from: PropTypes.string,
-  handleClick: PropTypes.func,
   clientName: PropTypes.string,
   clientNumber: PropTypes.string,
-  id: PropTypes.string
-}
+  id: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.number
+  ]),
+  access: PropTypes.arrayOf(PropTypes.string).isRequired,
+  // eslint-disable-next-line react/forbid-prop-types
+  authState: PropTypes.object.isRequired
+};
 
 const styles = StyleSheet.create({
   CardtextIcon: {
@@ -85,4 +98,4 @@ const styles = StyleSheet.create({
     width: 200,
     height: 154
   }
-})
+});

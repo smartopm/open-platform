@@ -152,7 +152,8 @@ export default function Homepage({ authState, quickLinks }) {
       clientName: authState.user.name,
       from: 'home',
       icon: <HomeWorkIcon color="primary" fontSize="large" />,
-      access: ['admin', 'resident', 'client']
+      access: ['admin', 'resident', 'client'],
+      communityName: authState.user,
     },
     {
       card_id: 11,
@@ -310,7 +311,7 @@ export default function Homepage({ authState, quickLinks }) {
                   authState={authState}
                   clientName={card.clientName}
                   clientNumber={card.clientNumber}
-                  id={card.id}
+                  id={card.card_id}
                 >
                   {card.children}
                 </Card>
