@@ -30,6 +30,7 @@ export default function MenuList({
     >
       {listData.map((menu, index) => (
         <MenuItem
+          data-testid="menu_item"
           id={index}
           key={index}
           style={menu.color ? {color: menu.color} : null}

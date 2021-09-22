@@ -100,19 +100,23 @@ export function renderGuestData(guestListEntry, menuData, translate) {
       ),
       Menu: (
         <Grid item xs={12} sm={2} md={2} style={{ textAlign: 'center'}} data-testid="menu">
-          <IconButton
-            aria-controls="simple-menu"
-            aria-haspopup="true"
-            data-testid="guest-list-menu"
-            onClick={(event) => menuData.handleGuestMenu(event)}
-          >
-            <MoreHorizIcon />
-          </IconButton>
+          {
+            guestListEntry.active ? (
+              <IconButton
+                aria-controls="simple-menu"
+                aria-haspopup="true"
+                data-testid="guest-list-menu"
+                onClick={(event) => menuData.handleGuestMenu(event)}
+              >
+                <MoreHorizIcon />
+              </IconButton>
+): ''
+          }
           <MenuList
             open={menuData.open}
             anchorEl={menuData.anchorEl}
             handleClose={menuData.handleClose}
-            list={menuData.menuList}
+            list={guestListEntry.active ? menuData.menuList : []}
           />
         </Grid>
       )

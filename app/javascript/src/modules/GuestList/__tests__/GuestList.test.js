@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, waitFor } from '@testing-library/react';
+import { render, waitFor,fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { BrowserRouter } from 'react-router-dom';
 import { MockedProvider } from '@apollo/react-testing';
@@ -8,7 +8,10 @@ import { GuestListEntriesQuery } from '../graphql/guest_list_queries'
 import GuestList from '../Components/GuestList';
 
 describe('Should render Guest List Component', () => {
-
+  const openGuestRequestForm = jest.fn()
+  const handleGuestDetails = jest.fn()
+  const handleGuestRevoke = jest.fn()
+  const paginate = jest.fn()
   const mocks = {
     request: {
       query: GuestListEntriesQuery,
@@ -32,7 +35,8 @@ describe('Should render Guest List Component', () => {
             visitationDate: '2021-08-20T10:51:00+02:00',
             endTime: '2021-10-31 22:51',
             startTime: '2021-10-31 02:51',
-            revoked: true
+            revoked: false,
+            active: true
           },
           {
             id: '696d857',
@@ -49,7 +53,8 @@ describe('Should render Guest List Component', () => {
             visitationDate: '2021-08-31T10:20:21+02:00',
             endTime: '2021-10-31 22:51',
             startTime: '2021-10-31 02:51',
-            revoked: true
+            revoked: false,
+            active: true
           }
         ]
       }
@@ -72,12 +77,46 @@ describe('Should render Guest List Component', () => {
     expect(getByTestId('prev-btn').textContent).toContain('misc.previous');
     expect(getByTestId('new_guest_btn').textContent).toContain('common:form_actions.new_guest');
     expect(getByTestId('next-btn').textContent).toContain('misc.next');
-    expect(getByTestId('prev-btn').textContent).toContain('misc.previous');
-    
+    expect(getByTestId('prev-btn').textContent).toContain('misc.previous');    
     await waitFor(() => {
       expect(getAllByTestId('guest_name')[0].textContent).toContain('Test another');
-      // TODO: @daniel add more test cases here
+      expect(getAllByTestId('start_of_visit')[0].textContent).toContain('logbook:guest_book.start_on_date_time');
+      expect(getAllByTestId('end_of_visit')[0].textContent).toContain('logbook:guest_book.ends_on_date_time');
     }, 50)
+
+
+    fireEvent.click(getByTestId('new_guest_btn'))
+    await waitFor(() => {
+      expect(openGuestRequestForm).not.toBeCalled()
+    });
+
+    fireEvent.click(getAllByTestId('menu')[0])
+    await waitFor(() => {
+      expect(getAllByTestId('menu_item')[0].textContent).toContain('common:menu.revoke_access');
+    });
+    
+
+    fireEvent.click(getAllByTestId('menu_item')[0])
+    await waitFor(() => {
+      expect(handleGuestRevoke).not.toBeCalled()
+    });
+
+    fireEvent.click(getAllByTestId('menu_item')[1])
+    await waitFor(() => {
+      expect(handleGuestDetails).not.toBeCalled()
+    });
+
+    fireEvent.click(getByTestId('next-btn'))
+    await waitFor(() => {
+      expect(paginate).not.toBeCalled()
+    });
+
+    fireEvent.click(getByTestId('prev-btn'))
+    await waitFor(() => {
+      expect(paginate).not.toBeCalled()
+    });
+
   });
 
 });
+
