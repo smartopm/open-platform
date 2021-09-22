@@ -225,13 +225,13 @@ export default function UserInformation({
                 />
               </TabPanel>
             </FeatureCheck>
-            <FeatureCheck features={authState.user.community.features} name="Forms">
-              <TabPanel value={tabValue} index="Forms">
-                <UserFilledForms userFormsFilled={data.user.formUsers} userId={data.user.id} />
-              </TabPanel>
-            </FeatureCheck>
           </>
         )}
+        <FeatureCheck features={authState.user.community.features} name="Forms">
+          <TabPanel value={tabValue} index="Forms">
+            <UserFilledForms userFormsFilled={data.user.formUsers} userId={data.user.id} />
+          </TabPanel>
+        </FeatureCheck>
         <FeatureCheck features={authState.user.community.features} name="Payments">
           <TabPanel value={tabValue} index="Plans">
             <PaymentPlans

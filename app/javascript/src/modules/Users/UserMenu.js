@@ -52,7 +52,7 @@ const userMenus = [
     },
     name: t => t('menu.form', { count: 0 }),
     featureName: 'Forms',
-    accessibleBy: ctx => handler({ userTypes: ['admin', 'client', 'resident'], ctx }),
+    accessibleBy: ctx => handler({ userTypes: allUserTypes, ctx }),
   },
   {
     routeProps: {
