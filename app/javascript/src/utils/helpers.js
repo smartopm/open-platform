@@ -1,7 +1,7 @@
 /* eslint-disable */
 import dompurify from 'dompurify';
 import { useLocation } from 'react-router';
-import { dateToString as utilDate } from './dateutil'
+import { dateToString } from '../components/DateContainer';
 
 // keep string methods [helpers]
 
@@ -467,12 +467,18 @@ export function handleQueryOnChange(selectedOptions, filterFields) {
           let operator = Object.keys(option)[0]
           // skipped nested object accessor here until fully tested
           // eslint-disable-next-line security/detect-object-injection
-          const property = filterFields[option[operator][0].var]
+          const property = operator === '<=' ? filterFields[option[operator][1].var] : filterFields[option[operator][0].var];
           let value = objectAccessor(option, operator)[1]
 
+          if(property === 'created_at' && operator === '<='){
+            const start_date = dateToString(objectAccessor(option, operator)[0]);
+            const end_date = dateToString(objectAccessor(option, operator)[2]);
+
+            return `created_at >= ${start_date} AND created_at <= ${end_date}`
+          }
           if (operator === '==') operator = ':'
           if (property === 'created_at' || property === 'due_date') {
-            value = utilDate(value)
+            value = dateToString(value)
           }
 
           return `${property} ${operator} "${value}"`

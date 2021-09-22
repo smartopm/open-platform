@@ -23,7 +23,6 @@ module Types::Queries::PlanPayment
     end
   end
 
-  # rubocop:disable Metrics/AbcSize
   # rubocop:disable Metrics/MethodLength
   # Returns list of all payments
   #
@@ -38,15 +37,14 @@ module Types::Queries::PlanPayment
     end
 
     search_method = 'search'
-    search_method = 'search_by_numbers' if query&.exclude?(':') && query.to_i.positive?
+    search_method = 'search_by_numbers' if query_is_number?(query)
     context[:site_community].plan_payments
                             .exluding_general_payments
-                            .send(search_method, query)
+                            .send(search_method, filtered_query(query))
                             .eager_load(:user, :payment_plan)
                             .order(created_at: :desc)
                             .limit(limit).offset(offset)
   end
-  # rubocop:enable Metrics/AbcSize
   # rubocop:enable Metrics/MethodLength
 
   # Payment's receipt details.
@@ -94,5 +92,35 @@ module Types::Queries::PlanPayment
     return if payment
 
     raise GraphQL::ExecutionError, I18n.t('errors.plan_payment.not_found')
+  end
+
+  # Checks whether the query is a positive number
+  #
+  # @return [Boolean]
+  def query_is_number?(query)
+    return true if query&.exclude?(':') && query.to_i.positive? && get_date(query).nil?
+  end
+
+  # Returns the updated query for the range to include the end date when searching in DB
+  #
+  # @return [String]
+  def filtered_query(query)
+    return query unless query&.include?('>=')
+
+    split_query = query.split(' ')
+    end_date = get_date(split_query.last)
+    return query if end_date.nil?
+
+    split_query[-1] = (end_date + 1.day).to_s
+    split_query.join(' ')
+  end
+
+  # Returns the parsed date if valid or returns nil
+  #
+  # @returns [Date]
+  def get_date(query)
+    Date.parse(query)
+  rescue StandardError
+    nil
   end
 end
