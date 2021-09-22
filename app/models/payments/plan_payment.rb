@@ -17,6 +17,7 @@ module Payments
     before_create :add_prefix_for_manual_receipt_number, if: -> { manual_receipt_number.present? }
 
     validates :amount, numericality: { greater_than: 0 }
+    validate :validate_manual_receipt_number
     has_paper_trail
 
     search_scope :search do
@@ -58,6 +59,16 @@ module Payments
 
     def add_prefix_for_manual_receipt_number
       manual_receipt_number.prepend('MI')
+    end
+
+    def validate_manual_receipt_number
+      if PlanPayment.exists?(
+        community_id: community_id,
+        manual_receipt_number: "MI#{receipt_number}",
+        status: :paid,
+      )
+        errors.add(:base, I18n.t('errors.receipt_number.already_exists'))
+      end
     end
   end
 end
