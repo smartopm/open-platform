@@ -73,7 +73,7 @@ RSpec.describe Mutations::EntryRequest::GuestEntryRequestRevoke do
                                              current_user: admin,
                                            }).as_json
           expect(result.dig('data', 'result')).to be_nil
-          expect(result.dig('errors', 0, 'message')).to eql 'Logs::EntryRequest not found'
+          expect(result.dig('errors', 0, 'message')).to eql 'EntryRequest not found'
         end
       end
     end

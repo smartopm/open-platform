@@ -228,10 +228,6 @@ RSpec.describe Types::Queries::EntryRequest do
     end
 
     it 'should not retrieve list of registered guests when authentication is missing' do
-      # 2.times do
-      #   current_user.entry_requests.create(reason: 'Visiting',name: 'Visitor Joe', nrc: '012345',
-      #                                      visitation_date: Time.zone.now)
-      # end
       result = DoubleGdpSchema.execute(scheduledRequests_query, context: {
                                          current_user: current_user,
                                          site_community: current_user.community,

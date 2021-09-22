@@ -19,7 +19,7 @@ module Mutations
       end
 
       def authorized?(vals)
-        entry_request = Logs::EntryRequest.find(vals[:id])
+        entry_request = Logs::EntryRequest.find_by(id: vals[:id])
         raise_entry_request_not_found_error(entry_request)
         return true if context[:current_user]&.role?(%i[custodian admin security_guard]) ||
                        entry_request.user_id.eql?(vals[:user_id])
@@ -31,7 +31,7 @@ module Mutations
       def raise_entry_request_not_found_error(entry_request)
         return if entry_request
 
-        raise GraphQL::ExecutionError, I18n.t('errors.not_found')
+        raise GraphQL::ExecutionError, I18n.t('errors.entry_request.not_found')
       end
     end
   end

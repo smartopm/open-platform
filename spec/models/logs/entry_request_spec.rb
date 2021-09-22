@@ -15,9 +15,11 @@ RSpec.describe Logs::EntryRequest, type: :model do
     it { is_expected.to have_db_column(:other_reason).of_type(:string) }
     it { is_expected.to have_db_column(:concern_flag).of_type(:boolean) }
     it { is_expected.to have_db_column(:grantor_id).of_type(:uuid) }
+    it { is_expected.to have_db_column(:revoker_id).of_type(:uuid) }
     it { is_expected.to have_db_column(:created_at).of_type(:datetime) }
     it { is_expected.to have_db_column(:updated_at).of_type(:datetime) }
     it { is_expected.to have_db_column(:granted_at).of_type(:datetime) }
+    it { is_expected.to have_db_column(:revoked_at).of_type(:datetime) }
     it { is_expected.to have_db_column(:source).of_type(:string) }
     it { is_expected.to have_db_column(:acknowledged).of_type(:boolean) }
     it { is_expected.to have_db_column(:visitation_date).of_type(:datetime) }
@@ -27,11 +29,13 @@ RSpec.describe Logs::EntryRequest, type: :model do
     it { is_expected.to have_db_column(:occurs_on).of_type(:string).with_options(default: []) }
     it { is_expected.to have_db_column(:visit_end_date).of_type(:datetime) }
     it { is_expected.to have_db_column(:email).of_type(:string) }
+    it { is_expected.to have_db_column(:entry_request_state).of_type(:integer) }
   end
   describe 'Associations' do
     it { is_expected.to belong_to(:user).class_name('Users::User') }
     it { is_expected.to belong_to(:community) }
     it { is_expected.to belong_to(:grantor).class_name('Users::User').optional }
+    it { is_expected.to belong_to(:revoker).class_name('Users::User').optional }
   end
 
   describe 'Basic usage' do
