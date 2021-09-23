@@ -34,6 +34,9 @@
     "Pase temporario",
     "Otro"
   ],
+  "errors": {
+    "required_field": "‪{{fieldName}}‬ es Requerido"
+  },
   "guest_book": {
     "ends_on_date": "Termina el ‪{{date}}‬",
     "expired": "Expiró",
