@@ -20,6 +20,8 @@ export const GuestEntriesQuery = gql`
         visitationDate
         endTime
         startTime
+        endsAt
+        startsAt
       }
   }
 `

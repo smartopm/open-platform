@@ -11,7 +11,7 @@ describe('Should render Guest Time Component', () => {
     const handleDays = jest.fn()
     const userData = {
         visitationDate: '2021-09-07T12:53:30.834Z',
-        startTime: '2021-09-07T02:53:30.834Z',
+        startsAt: '2021-09-07T02:53:30.834Z',
         endTime: '2021-09-07T19:53:30.834Z',
         occursOn: ['monday', 'tuesday'],
         visitEndDate: '2021-09-17T12:53:30.834Z',

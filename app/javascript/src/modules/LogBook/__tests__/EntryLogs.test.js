@@ -48,7 +48,7 @@ describe('EntryLogs Component', () => {
           grantedState: 1,
           grantedAt: '2021-07-02T11:19:27+02:00',
           name: 'HU',
-          startTime: '2021-07-02T11:19:27+02:00',
+          startsAt: '2021-07-02T11:19:27+02:00',
           visitationDate: '2021-07-02T11:19:27+02:00'
         }
       }]

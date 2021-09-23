@@ -16,7 +16,7 @@ module Logs
 
     default_scope { order(created_at: :asc) }
     search_scope :search do
-      attributes :name, :phone_number, :visitation_date, :visit_end_date, :start_time, :end_time
+      attributes :name, :phone_number, :visitation_date, :visit_end_date, :starts_at, :ends_at
     end
 
     has_paper_trail

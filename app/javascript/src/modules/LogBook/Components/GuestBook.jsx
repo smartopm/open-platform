@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Button, Grid, Typography , useMediaQuery } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import { useLazyQuery, useMutation } from 'react-apollo';
@@ -17,6 +17,7 @@ import Avatar from '../../../components/Avatar';
 import { EntryRequestGrant } from '../../../graphql/mutations';
 import { Spinner } from '../../../shared/Loading';
 import MessageAlert from '../../../components/MessageAlert';
+import { Context } from '../../../containers/Provider/AuthStateProvider';
 
 export default function GuestBook({ tabValue, handleAddObservation, offset, limit, query }) {
   const { t } = useTranslation('logbook');
@@ -27,6 +28,7 @@ export default function GuestBook({ tabValue, handleAddObservation, offset, limi
   const [grantEntry] = useMutation(EntryRequestGrant);
   const [loadingStatus, setLoading] = useState({ loading: false, currentId: ''});
   const [message, setMessage] = useState({ isError: false, detail: ''});
+  const authState = useContext(Context)
 
   const [loadGuests, { data, loading: guestsLoading }] = useLazyQuery(GuestEntriesQuery, {
       variables: { offset, limit, query },
@@ -85,7 +87,7 @@ export default function GuestBook({ tabValue, handleAddObservation, offset, limi
           <DataList
             key={guest.id}
             keys={entriesHeaders}
-            data={renderGuest(guest, classes, handleGrantAccess, isMobile, loadingStatus, t)}
+            data={renderGuest(guest, classes, handleGrantAccess, isMobile, loadingStatus, t, authState.user.community.timezone)}
             hasHeader={false}
             clickable
             defaultView={false}
@@ -103,7 +105,7 @@ export default function GuestBook({ tabValue, handleAddObservation, offset, limi
   );
 }
 
-export function renderGuest(guest, classes, grantAccess, isMobile, loadingStatus, translate) {
+export function renderGuest(guest, classes, grantAccess, isMobile, loadingStatus, translate, tz) {
   return [
     {
       'Guest Name': (
@@ -123,7 +125,7 @@ export function renderGuest(guest, classes, grantAccess, isMobile, loadingStatus
             </Grid>
             <Grid item xs={4} style={{ paddingRight: 16 }}>
               {
-                 isMobile &&  <Label title={checkRequests(guest, translate).title} color={checkRequests(guest, translate).color} />
+                 isMobile &&  <Label title={checkRequests(guest, translate, tz).title} color={checkRequests(guest, translate, tz).color} />
               }
             </Grid>
           </Grid>
@@ -148,7 +150,7 @@ export function renderGuest(guest, classes, grantAccess, isMobile, loadingStatus
       'Access Time': (
         <Grid item xs={12} md={2} data-testid="access_time">
           <Text 
-            content={translate('guest_book.visit_time', { startTime: dateTimeToString(guest.startTime), endTime: dateTimeToString(guest.endTime) })} 
+            content={translate('guest_book.visit_time', { startTime: dateTimeToString(guest.startsAt || guest.startTime), endTime: dateTimeToString(guest.endsAt || guest.endTime) })} 
             className={classes.text}
           />
         </Grid>
@@ -157,7 +159,7 @@ export function renderGuest(guest, classes, grantAccess, isMobile, loadingStatus
         <Grid item xs={12} md={1} data-testid="validity">
           {
                 !isMobile && (
-                <Label title={checkRequests(guest, translate).title} color={checkRequests(guest, translate).color} />
+                <Label title={checkRequests(guest, translate, tz).title} color={checkRequests(guest, translate, tz).color} />
                 )
             }
         </Grid>
@@ -166,11 +168,11 @@ export function renderGuest(guest, classes, grantAccess, isMobile, loadingStatus
         <Grid item xs={12} md={1} data-testid="access_actions">
           <CenteredContent>
             <Button 
-              disabled={!checkRequests(guest, translate).valid || loadingStatus.loading && loadingStatus.currentId} 
+              disabled={!checkRequests(guest, translate, tz).valid || loadingStatus.loading && loadingStatus.currentId} 
               variant={isMobile ? "contained" : "text"}
               onClick={event => grantAccess(event, guest)}
               disableElevation
-              style={isMobile ? { backgroundColor: checkRequests(guest, translate).valid && '#66A69B', color: '#FFFFFF' } : {}}
+              style={isMobile ? { backgroundColor: checkRequests(guest, translate, tz).valid && '#66A69B', color: '#FFFFFF' } : {}}
               startIcon={loadingStatus.loading && loadingStatus.currentId === guest.id && <Spinner />}
               data-testid="grant_access_btn"
               fullWidth

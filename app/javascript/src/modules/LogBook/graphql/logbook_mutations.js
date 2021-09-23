@@ -23,8 +23,8 @@ export const EntryRequestUpdateMutation = gql`
     $otherReason: String
     $phoneNumber: String
     $visitationDate: String
-    $startTime: String
-    $endTime: String
+    $startsAt: String
+    $endsAt: String
     $companyName: String
     $temperature: String
     $occursOn: [String!]
@@ -40,8 +40,8 @@ export const EntryRequestUpdateMutation = gql`
       otherReason: $otherReason
       phoneNumber: $phoneNumber
       visitationDate: $visitationDate
-      startTime: $startTime
-      endTime: $endTime
+      startsAt: $startsAt
+      endsAt: $endsAt
       companyName: $companyName
       temperature: $temperature
       occursOn: $occursOn

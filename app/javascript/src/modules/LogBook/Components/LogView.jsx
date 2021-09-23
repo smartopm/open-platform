@@ -45,7 +45,7 @@ LogView.propTypes = {
     }),
     entryRequest: PropTypes.shape({
       visitationDate: PropTypes.oneOfType([PropTypes.string, PropTypes.instanceOf(Date)]),
-      startTime: PropTypes.oneOfType([PropTypes.string, PropTypes.instanceOf(Date)])
+      startsAt: PropTypes.oneOfType([PropTypes.string, PropTypes.instanceOf(Date)])
     })
   }).isRequired
 };

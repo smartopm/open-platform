@@ -287,6 +287,8 @@ ActiveRecord::Schema.define(version: 2021_09_21_045425) do
     t.string "occurs_on", default: [], array: true
     t.datetime "visit_end_date"
     t.string "email"
+    t.datetime "starts_at"
+    t.datetime "ends_at"
   end
 
   create_table "event_logs", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|

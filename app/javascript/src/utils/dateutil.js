@@ -77,13 +77,8 @@ function formatDate(datetime) {
  * @returns {String} day in a week
  */
 export function getWeekDay(date) {
-  let new_date
-  if (!(date instanceof Date)) {
-    new_date = new Date(date)
-  }
-  new_date = date
   const weekdays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
-  const day = new_date.getDay();
+  const day = new Date(date).getDay();
   return weekdays[day];
 }
 

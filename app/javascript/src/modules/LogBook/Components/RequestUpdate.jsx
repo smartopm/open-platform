@@ -22,7 +22,7 @@ import { isTimeValid, getWeekDay } from '../../../utils/dateutil';
 import { objectAccessor } from '../../../utils/helpers'
 import { userState, userType, communityVisitingHours, defaultBusinessReasons } from '../../../utils/constants'
 import { ModalDialog, ReasonInputModal } from "../../../components/Dialog"
-import { dateToString, dateTimeToString, updateDateWithTime } from "../../../components/DateContainer";
+import { dateToString, dateTimeToString } from "../../../components/DateContainer";
 import { Context } from '../../../containers/Provider/AuthStateProvider';
 import EntryNoteDialog from '../../../shared/dialogs/EntryNoteDialog';
 import CenteredContent from '../../../components/CenteredContent';
@@ -48,8 +48,8 @@ const initialState = {
     occursOn: [],
     visitationDate: null,
     visitEndDate: null,
-    startTime: new Date(),
-    endTime: new Date(),
+    startsAt: new Date(),
+    endsAt: new Date(),
 }
 
 export default function RequestUpdate({ id, previousRoute, isGuestRequest, tabValue }) {
@@ -124,15 +124,13 @@ export default function RequestUpdate({ id, previousRoute, isGuestRequest, tabVa
       occursOn: [ ...formData.occursOn, day]
     });
   }
-  
+
   function handleCreateRequest() {
 
     const otherFormData = {
       ...formData,
       // return reason if not other
       reason: formData.business || formData.reason,
-      startTime: dateToString(formData.startTime, 'YYYY-MM-DD HH:mm'),
-      endTime: dateToString(formData.endTime, 'YYYY-MM-DD HH:mm')
     }
 
       return createEntryRequest({ variables: otherFormData })
@@ -153,8 +151,6 @@ export default function RequestUpdate({ id, previousRoute, isGuestRequest, tabVa
     const otherFormData = {
       ...formData,
       reason: formData.business || formData.reason,
-      startTime: updateDateWithTime(formData.visitationDate, formData.startTime),
-      endTime: updateDateWithTime(formData.visitationDate, formData.endTime),
     };
     setLoading(true);
     updateRequest({ variables: { id, ...otherFormData } })

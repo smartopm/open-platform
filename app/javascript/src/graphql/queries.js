@@ -93,7 +93,7 @@ export const AllEventLogsQuery = gql`
         grantedState
         grantedAt
         name
-        startTime
+        startsAt
         visitationDate
       }
       user {

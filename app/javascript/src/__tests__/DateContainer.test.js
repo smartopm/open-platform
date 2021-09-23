@@ -1,6 +1,6 @@
 import React from 'react'
 import { mount } from 'enzyme'
-import DateContainer, { dateFormatter, dateTimeToString, dateToString, updateDateWithTime } from '../components/DateContainer'
+import DateContainer, { dateFormatter, dateTimeToString, dateToString, isDateValid, updateDateWithTime } from '../components/DateContainer'
 import DateUtils, { lastDayOfTheMonth, getMonthName, getWeekDay, differenceInHours } from '../utils/dateutil'
 
 describe('date container component', () => {
@@ -17,7 +17,7 @@ describe('date container component', () => {
     // get yesterday's date
     const date = new Date()
     const previousDate = date.setDate(date.getDate() - 1)
-    const component = mount(<DateContainer date={previousDate} />)
+    const component = mount(<DateContainer date={new Date(previousDate)} />)
     expect(component.find('span').text()).toContain('Yesterday')
     expect(dateFormatter(previousDate)).toContain('Yesterday')
   })
@@ -26,7 +26,7 @@ describe('date container component', () => {
    // get old date
    const date = new Date()
    const oldDate = date.setDate(date.getDate() - 2)
-   const component = mount(<DateContainer date={oldDate} />)
+   const component = mount(<DateContainer date={new Date(oldDate)} />)
    expect(component.find('span').text()).toContain(
      dateToString(oldDate)
    )
@@ -37,7 +37,7 @@ describe('date container component', () => {
 
   it('should return the correct week day', () => {
       const date = "2020-06-11T15:26:05.596Z"
-      expect(getWeekDay(new Date(date))).toContain('Thursday') // 26 as last day of the month
+      expect(getWeekDay(date)).toContain('Thursday') // 26 as last day of the month
   })
 
   it('should return the correct time difference', () => {
@@ -61,9 +61,14 @@ describe('date container component', () => {
     expect(DateUtils.formatDate()).toContain('Never')
   })
   it('should append time to the date', () => {
-    const date1 = new Date('2021-09-07T15:39:00')
-    const date2 = new Date('2021-09-01T20:39:00')
-    expect(updateDateWithTime(date1, date2)).toBe('2021-09-07 20:39')
+    const date1 = new Date('2021-09-07T15:39:00.000Z')
+    const date2 = new Date('2021-09-01T20:39:00.000Z')
+    const updatedDate = updateDateWithTime(date1, date2)
+    expect(new Date(updatedDate)).toEqual(new Date('2021-09-07T20:39:00.000Z'))
     expect(updateDateWithTime('date1', 23421)).toBe('Invalid date')
+  })
+  it('checks if a given date is valid', () => {
+    expect(isDateValid('1d39123212')).toBe(false)
+    expect(isDateValid('2021-09-07T15:39:00.000Z')).toBe(true)
   })
 })

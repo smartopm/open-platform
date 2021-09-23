@@ -1,8 +1,7 @@
 import React from 'react';
 import { isYesterday, isToday } from 'date-fns';
 import PropTypes from 'prop-types';
-// eslint-disable-next-line import/no-extraneous-dependencies
-import moment from 'moment';
+import moment from 'moment-timezone'
 
 
 // returns a stringified date
@@ -14,18 +13,26 @@ export function dateToString(date, format = 'YYYY-MM-DD') {
   return moment.parseZone(date).format(format);
 }
 
+export function isDateValid(date){
+  const temp = new Date(date)
+  return moment(temp, 'YYYY-MM-DD hh:mm', true).isValid()
+}
 /**
  * Updates current date with given time from another date
- * @param {Date} date 
- * @param {Date} dateWithTime 
+ * @param {Date} date
+ * @param {Date} dateWithTime
  * @returns {string}
  */
- export function updateDateWithTime(date, dateWithTime){
-  const time = dateTimeToString(dateWithTime).split(':') // 11:00
-  const dateTime = new Date(date).setHours(time[0], time[1]) // 1631272618379
+ export function updateDateWithTime(date, dateWithTime, timezone){
+   if(!isDateValid(date) || !isDateValid(dateWithTime)) return 'Invalid date'
 
-  return dateToString(dateTime, 'YYYY-MM-DD HH:mm') // 2021-09-01 11:00
+   const currentDate = moment.tz(date, timezone)
+   const hour  = moment.tz(dateWithTime, timezone).hours()
+   const minute  = moment.tz(dateWithTime, timezone).minutes()
+
+   return currentDate.set({ hour, minute })
 }
+
 /**
  *
  * @param {Number} days

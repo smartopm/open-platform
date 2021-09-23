@@ -96,7 +96,9 @@ export const EntryRequestFragment = {
       visitationDate
       endTime
       startTime
-      grantor{
+      endsAt
+      startsAt
+      grantor {
         name
       }
     }

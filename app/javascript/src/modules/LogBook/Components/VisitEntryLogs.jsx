@@ -204,7 +204,7 @@ VisitEntryLogs.propTypes = {
         grantedState: PropTypes.grantedState,
         grantedAt: PropTypes.oneOfType([PropTypes.string, PropTypes.instanceOf(Date)]),
         name: PropTypes.string,
-        startTime: PropTypes.oneOfType([PropTypes.string, PropTypes.instanceOf(Date)]),
+        startsAt: PropTypes.oneOfType([PropTypes.string, PropTypes.instanceOf(Date)]),
         visitationDate: PropTypes.oneOfType([PropTypes.string, PropTypes.instanceOf(Date)]),
       }),
       user: PropTypes.shape({
