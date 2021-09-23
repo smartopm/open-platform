@@ -9,7 +9,6 @@ import { useTranslation } from 'react-i18next';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/styles';
 import EmailIcon from '@material-ui/icons/Email';
-import { Spinner } from '../../../shared/Loading';
 
 export default function QRCodeConfirmation({
   open,
@@ -21,7 +20,6 @@ export default function QRCodeConfirmation({
 }) {
   const classes = useStyles();
   const { t } = useTranslation('logbook');
-  const observationDetails = { loading: false };
 
   return (
     <>
@@ -67,30 +65,26 @@ export default function QRCodeConfirmation({
           )}
         </DialogContent>
         <DialogActions>
-          {observationDetails.loading ? (
-            <Spinner />
-          ) : (
-            <>
-              <Button
-                onClick={closeModal}
-                color="secondary"
-                variant="outlined"
-                data-testid="dont-send-confirmation"
-              >
-                {t('qrcode_confirmation.dont_send')}
-              </Button>
-              <Button
-                onClick={() => sendQrCode(guestRequest?.id, guestEmail || emailHandler.value)}
-                color="primary"
-                variant="contained"
-                data-testid="send-confirmation"
-                style={{ color: 'white' }}
-                autoFocus
-              >
-                {t('qrcode_confirmation.send')}
-              </Button>
-            </>
-          )}
+          <>
+            <Button
+              onClick={closeModal}
+              color="secondary"
+              variant="outlined"
+              data-testid="dont-send-confirmation"
+            >
+              {t('qrcode_confirmation.dont_send')}
+            </Button>
+            <Button
+              onClick={() => sendQrCode(guestRequest?.id, guestEmail || emailHandler.value)}
+              color="primary"
+              variant="contained"
+              data-testid="send-confirmation"
+              style={{ color: 'white' }}
+              autoFocus
+            >
+              {t('qrcode_confirmation.send')}
+            </Button>
+          </>
         </DialogActions>
       </Dialog>
     </>
