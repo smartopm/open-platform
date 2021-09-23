@@ -25,11 +25,11 @@ export default function Guest({guestListEntry, handleGuestDetails, handleGuestRe
   ];
 
   const guestListHeaders = [
-    { title: 'Guest Name', col: 1 },
-    { title: 'Start of Visit', col: 4},
-    { title: 'End of Visit', col: 4 },
-    { title: 'validity', col: 1 },
-    { title: 'Menu', col: 2}
+    { title: "Guest Name", col:  1,  value: t('guest.guest_name')},
+    { title:  'Start of Visit', col: 4, value: t('guest.start_of_visit')},
+    { title:  "End of Visit", col: 4, value: t('guest.end_of_visit') },
+    { title:  "validity" , col: 1, value: t('guest.validity')},
+    { title: 'Menu', col: 2 }
   ]
 
   const menuData = {
@@ -71,7 +71,7 @@ export function renderGuestData(guestListEntry, menuData, translate) {
     {
       'Guest Name': (
         <Grid item xs={12} sm={2} md={2} pl={10} data-testid="guest_name">
-          <Box pl={2}>
+          <Box md={{ pl: 2 }} xs={{ pl: 1 }}>
             <Typography color="primary">
               {guestListEntry.name}
             </Typography>
@@ -80,23 +80,25 @@ export function renderGuestData(guestListEntry, menuData, translate) {
       ),
       
       'Start of Visit': (
-        <Grid item xs={12} sm={2} md={3} style={{fontSize: '12px'}} data-testid="start_of_visit">
-          <Text 
-            content={translate('logbook:guest_book.start_on_date_time', { date: dateToString(guestListEntry.startTime), time: dateTimeToString(guestListEntry.startTime) })} 
-          />
+        <Grid item xs={12} sm={2} md={2} style={{fontSize: '12px'}} data-testid="start_of_visit">
+          <Box sx={{ textOverflow: 'wrap' }}>
+            <Text 
+              content={translate('logbook:guest_book.start_on_date_time', { date: dateToString(guestListEntry.startTime), time: dateTimeToString(guestListEntry.startTime) })}
+            />
+          </Box>
         </Grid>
       ),
 
 
       'End of Visit': (
-        <Grid item xs={12} sm={2} md={3} style={{fontSize: '12px'}} data-testid="end_of_visit">
+        <Grid item xs={12} sm={2} md={2} style={{fontSize: '12px'}} data-testid="end_of_visit">
           <Text 
             content={guestListEntry.endTime ? translate('logbook:guest_book.ends_on_date_time', { date: dateToString(guestListEntry.endTime), time: dateTimeToString(guestListEntry.startTime)  }) : '-'} 
           />
         </Grid>
       ),
       validity: (
-        <Grid item xs={12} sm={2} md={2} data-testid="validity">
+        <Grid item xs={12} sm={6} md={2} data-testid="validity">
           <Box sx={{ width: '50%' }}>
             <Label title={checkRequests(guestListEntry, translate).title} color={checkRequests(guestListEntry, translate).color} />
           </Box>

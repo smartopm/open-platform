@@ -36,12 +36,12 @@ export default function GuestBook({ tabValue, handleAddObservation, offset, limi
   });
 
   const entriesHeaders = [
-    { title: 'Guest Name', col: 4, value: t('misc.guest_name') },
-    { title: 'Start of Visit', col: 2, value: t('misc.start_of_visit') },
-    { title: 'End of Visit', col: 2, value: t('misc.end_of_visit') },
-    { title: 'Access Time', col: 2, value: t('misc.access_time') },
-    { title: 'validity', col: 1, value: t('misc.validity') },
-    { title: 'Access Action', col: 1, value: t('misc.access_action') }
+    { title: 'Guest Name', col: 4, value: t('guest.guest_name') },
+    { title: 'Start of Visit', col: 2, value: t('guest.start_of_visit') },
+    { title: 'End of Visit', col: 2, value: t('guest.end_of_visit') },
+    { title: 'Access Time', col: 2, value: t('guest.access_time') },
+    { title: 'validity', col: 1, value: t('guest.validity') },
+    { title: 'Access Action', col: 1, value: t('guest.access_action') }
   ];
 
   useEffect(() => {
