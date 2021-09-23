@@ -59,17 +59,17 @@ describe('logbook utils', () => {
       startsAt: '2021-05-20 11:51',
       occursOn: [],
     }
-
-    const req2 = {
+    // same date but expired time
+    const req3 = {
       visitEndDate: '2021-08-01T16:21:10.731Z',
       visitationDate: '2021-05-20 10:40',
-      endsAt: '2021-05-20 13:51',
-      startsAt: '2021-05-20 12:51',
+      endsAt: '2021-05-20 07:51',
+      startsAt: '2021-05-20 09:51',
       occursOn: [],
     }
 
     const translate = jest.fn(() => 'valid')
-    
+
     const validity = checkRequests(req, translate, tz)
     expect(validity.valid).toBe(true)
     expect(validity.title).toBe('valid')
@@ -77,6 +77,21 @@ describe('logbook utils', () => {
     const validity1 = checkRequests(req1, translate, tz)
     expect(validity1.valid).toBe(false)
 
+    const validity3 = checkRequests(req3, translate, tz)
+    expect(validity3.valid).toBe(false)
+  })
+
+  it('another mocked separately', () => {
+    jest.useFakeTimers('modern')
+    jest.setSystemTime(new Date('2021-05-20 13:00'))
+    const req2 = {
+      visitEndDate: '2021-08-01T16:21:10.731Z',
+      visitationDate: '2021-05-20 10:40',
+      endsAt: '2021-05-20 13:51',
+      startsAt: '2021-05-20 12:51',
+      occursOn: [],
+    }
+    const translate = jest.fn(() => 'valid')
     const validity2 = checkRequests(req2, translate, tz)
     expect(validity2.valid).toBe(true)
   })
