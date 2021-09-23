@@ -24,12 +24,14 @@ export function isDateValid(date){
  * @param {Date} dateWithTime
  * @returns {string}
  */
- export function updateDateWithTime(date, dateWithTime){
+ export function updateDateWithTime(date, dateWithTime, timezone){
    if(!isDateValid(date) || !isDateValid(dateWithTime)) return 'Invalid date'
-  const time = dateTimeToString(dateWithTime).split(':') // 11:00
-  const dateTime = new Date(date).setHours(time[0], time[1]) // 1631272618379
 
-  return new Date(dateTime)
+   const currentDate = moment.tz(date, timezone)
+   const hour  = moment.tz(dateWithTime, timezone).hours()
+   const minute  = moment.tz(dateWithTime, timezone).minutes()
+
+   return currentDate.set({ hour, minute })
 }
 
 /**

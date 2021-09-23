@@ -124,7 +124,7 @@ export default function RequestUpdate({ id, previousRoute, isGuestRequest, tabVa
       occursOn: [ ...formData.occursOn, day]
     });
   }
-  
+
   function handleCreateRequest() {
 
     const otherFormData = {

@@ -1,7 +1,5 @@
 /* eslint-disable import/prefer-default-export */
-// eslint-disable-next-line import/no-extraneous-dependencies
-import moment from 'moment';
-import timezone from 'moment-timezone'
+import moment from 'moment-timezone'
 import { updateDateWithTime } from '../../components/DateContainer';
 import { getWeekDay } from '../../utils/dateutil';
 
@@ -19,10 +17,10 @@ export const defaultRequiredFields = ['name', 'phoneNumber', 'nrc', 'vehiclePlat
 
 /**
  * Checks if a guest is valid to be granted access at the gate at the time of visiting the site
- * @param {object} req 
- * @param {Function} translate 
- * @param {String} tz 
- * @returns 
+ * @param {object} req
+ * @param {Function} translate
+ * @param {String} tz
+ * @returns
  */
 export function checkRequests(req, translate, tz) {
   /**
@@ -34,19 +32,20 @@ export function checkRequests(req, translate, tz) {
    */
 
   // today in the timezone of the current community
-  const timeNow = timezone.tz(new Date(), tz).format()
+  const timeNow = moment.tz(tz)
 
-  const startTime = updateDateWithTime(timeNow, req.startsAt || req.startTime)
-  const endTime = updateDateWithTime(timeNow, req.endsAt || req.endTime)
+  const startTime = updateDateWithTime(new Date(), req.startsAt || req.startTime, tz)
+  const endTime = updateDateWithTime(new Date(), req.endsAt || req.endTime, tz)
+
   const dayOfTheWeek = getWeekDay(timeNow);
 
   if (req.occursOn.length) {
-    if (!moment(timeNow).isSameOrBefore(req.visitEndDate, 'day')) {
+    if (!timeNow.isSameOrBefore(moment.tz(req.visitEndDate, tz), 'day')) {
       return { title: translate('guest_book.expired'), color: '#DA1414', valid: false };
     }
     if (req.occursOn.includes(dayOfTheWeek.toLowerCase())) {
       if (
-        moment().isSameOrAfter(startTime) && moment().isSameOrBefore(endTime)
+        timeNow.isSameOrAfter(startTime) && timeNow.isSameOrBefore(endTime)
       ) {
         return { title: translate('guest_book.valid'), color: '#00A98B', valid: true };
       }
@@ -55,9 +54,9 @@ export function checkRequests(req, translate, tz) {
     return { title: translate('guest_book.invalid_today'), color: '#E74540', valid: false };
   }
     // is today the right date
-    if (moment(req.visitationDate).isSame(moment(), 'day')) {
+    if (moment.tz(req.visitationDate, tz).isSame(timeNow, 'day')) {
       if (
-        moment().isSameOrAfter(startTime) && moment().isSameOrBefore(endTime)
+        timeNow.isSameOrAfter(moment.tz(startTime, tz)) && timeNow.isSameOrBefore(moment.tz(endTime, tz))
       ) {
         return { title: translate('guest_book.valid'), color: '#00A98B', valid: true };
       }
