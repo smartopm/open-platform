@@ -14,7 +14,10 @@ import {
   Grid,
   IconButton,
   MenuItem,
-  Menu
+  Menu,
+  Select,
+  FormControl,
+  InputLabel
 } from '@material-ui/core'
 import MoreVertIcon from '@material-ui/icons/MoreVert'
 import AssignmentIcon from '@material-ui/icons/Assignment'
@@ -32,12 +35,13 @@ import CenteredContent from '../../../components/CenteredContent'
 import TitleDescriptionForm from './TitleDescriptionForm'
 import { DateAndTimePickers } from '../../../components/DatePickerDialog'
 import { FormCreateMutation, FormUpdateMutation } from '../graphql/forms_mutation'
-import { formStatus } from '../../../utils/constants'
+import { formStatus , allUserTypes } from '../../../utils/constants'
 import { ActionDialog } from '../../../components/Dialog'
 import MessageAlert from '../../../components/MessageAlert'
 import FloatButton from '../../../components/FloatButton'
 import { objectAccessor, formatError } from '../../../utils/helpers'
-import SwitchInput from './FormProperties/SwitchInput'
+import SwitchInput from './FormProperties/SwitchInput';
+
 
 // here we get existing google forms and we mix them with our own created forms
 export default function FormLinkList({ userType, community }) {
@@ -47,7 +51,7 @@ export default function FormLinkList({ userType, community }) {
   const [createForm] = useMutation(FormCreateMutation)
   const history = useHistory()
   const classes = useStyles()
-  const { t } = useTranslation('form')
+  const { t } = useTranslation(['form', 'common'])
   const [open, setOpen] = useState(false)
   const [message, setMessage] = useState({ isError: false, detail: '' })
   const [anchorEl, setAnchorEl] = useState(null)
@@ -275,13 +279,14 @@ export function FormDialog({actionType, form, formMutation, open, setOpen, messa
   const [isLoading, setLoading] = useState(false);
   const [multipleSubmissionsAllowed, setMultipleSubmissionsAllowed] = useState(form ? form.multipleSubmissionsAllowed : true)
   const [preview, setPreview] = useState(form ? form.preview : false)
+  const [roles, setRoles] = useState(form?.roles || [])
 
   function handleDateChange(date) {
     setExpiresAtDate(date)
   }
 
   function submitForm(title, description) {
-    const variables = { name: title, expiresAt, description, multipleSubmissionsAllowed, preview }
+    const variables = { name: title, expiresAt, description, multipleSubmissionsAllowed, preview, roles }
     if (actionType === 'update'){
       variables.id = form?.id
     }
@@ -332,7 +337,7 @@ export function FormDialog({actionType, form, formMutation, open, setOpen, messa
             msg: message.detail
           }}
         >
-          <div style={{marginLeft : '-15px'}}>
+          <div style={{marginLeft : '-15px', display: 'inline-block'}}>
             <SwitchInput
               name="multipleSubmissionsAllowed"
               label={t('misc.limit_1_response')}
@@ -346,6 +351,33 @@ export function FormDialog({actionType, form, formMutation, open, setOpen, messa
               value={preview}
               handleChange={event => setPreview(event.target.checked)}
             />
+          </div>
+          <div>
+            <FormControl style={{minWidth:  250, maxWidth: 400}}>
+              <InputLabel id="multiple-roles-label">{t('misc.select_roles')}</InputLabel>
+              <Select
+                id="multiple-roles"
+                multiple
+                value={roles}
+                onChange={event => setRoles(event.target.value)}
+                MenuProps={{
+                getContentAnchorEl: () => null,
+                PaperProps: {
+                  style: {
+                    maxHeight: 190,
+                    minWidth: 250,
+                    marginTop: 35
+                  },
+                },
+              }}
+              >
+                {Object.entries(allUserTypes).map(([key, val]) => (
+                  <MenuItem key={key} value={val}>
+                    {t(`common:user_types.${val}`)}
+                  </MenuItem>
+              ))}
+              </Select>
+            </FormControl>
           </div>
           <DateAndTimePickers
             label={t('misc.form_expiry_date')}
@@ -392,7 +424,10 @@ FormDialog.propTypes = {
     preview: PropTypes.bool.isRequired,
     expiresAt: PropTypes.string,
     name: PropTypes.string.isRequired,
-    description: PropTypes.string.isRequired
+    description: PropTypes.string.isRequired,
+    roles: PropTypes.arrayOf(
+      PropTypes.string
+    )
   }),
   formMutation: PropTypes.func.isRequired,
   open: PropTypes.bool.isRequired,

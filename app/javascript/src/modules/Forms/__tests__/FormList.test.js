@@ -5,7 +5,7 @@ import { createMuiTheme, ThemeProvider } from '@material-ui/core'
 import { BrowserRouter } from 'react-router-dom'
 import '@testing-library/jest-dom/extend-expect'
 import Loading from '../../../shared/Loading'
-import FormLinkList from '../components/FormList'
+import FormLinkList, { FormDialog } from '../components/FormList'
 import { FormsQuery } from '../graphql/forms_queries'
 import userMock from '../../../__mocks__/userMock'
 
@@ -22,13 +22,15 @@ describe('Form List Component', () => {
                 id: "caea7b44-ee95-42a6",
                 name: "Lease Form",
                 expiresAt: "2020-12-31T23:59:59Z",
-                createdAt: "2020-10-07T09:37:03Z"
+                createdAt: "2020-10-07T09:37:03Z",
+                roles: ["client"]
             },
             {
                 id: "3e530432172e",
                 name: "Another Form",
                 expiresAt: "2020-12-31T23:59:59Z",
-                createdAt: "2020-10-07T09:37:03Z"
+                createdAt: "2020-10-07T09:37:03Z",
+                roles: ['admin', 'resident']
             },
           ]
         }
@@ -63,3 +65,31 @@ describe('Form List Component', () => {
     )
   })
 })
+
+describe('Form Dialog component', () => {
+  it('should render form dialog without error', async () => {
+    const theme = createMuiTheme();
+    const container = render(
+      <BrowserRouter>
+        <ThemeProvider theme={theme}>
+          <FormDialog
+            actionType='create'
+            form={null}
+            formMutation={jest.fn}
+            open
+            setOpen={jest.fn}
+            message={{detail: '', isError: ''}}
+            setMessage={jest.fn}
+            setAlertOpen={jest.fn}
+            refetch={jest.fn}
+          />
+        </ThemeProvider>
+      </BrowserRouter>
+    );
+
+    expect(container.queryByText('misc.limit_1_response')).toBeInTheDocument();
+    expect(container.queryByText('misc.previewable')).toBeInTheDocument();
+    expect(container.queryByText('misc.select_roles')).toBeInTheDocument();
+    expect(container.queryByText('misc.form_expiry_date')).toBeInTheDocument();
+  });
+});

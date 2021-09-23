@@ -305,7 +305,7 @@ const SOSModal=({open, setOpen, location, authState})=> {
 
               <div className={classes.contents}>
                 <div>
-                  <PanicButtonSVG bind={bind} />
+                  <PanicButtonSVG bind={bind} t={t} />
                 </div>
 
                 <br />
@@ -344,7 +344,7 @@ const SOSModal=({open, setOpen, location, authState})=> {
   <div>
     <div className={classes.feedbackContents}>
       <div>
-        <FeedbackButtonSVG />
+        <FeedbackButtonSVG t={t} />
       </div>
 
       <br />

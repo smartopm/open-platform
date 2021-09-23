@@ -40,19 +40,16 @@ describe('Avatar component', () => {
   })
   it('should render a searched user avatar if available by upload', () => {
     const customAvatar = 'http://host.com/image.jpg'
-    const userData = {
-      imageUrl: customAvatar,
-    }
     const searchedUser = {
       avatarUrl: customAvatar,
     }
     
     const rendered = render(
       <Context.Provider value={userMock}>
-        <Avatar user={userData} imageUrl={customAvatar} searchedUser={searchedUser} />
+        <Avatar searchedUser={searchedUser} />
       </Context.Provider>
     )
-    expect(rendered.queryByTestId('searched_non_auth_user_avatar')).toBeInTheDocument()
+    expect(rendered.queryByTestId('loader')).toBeInTheDocument()
     expect(safeAvatarLink({ imageUrl: searchedUser.avatarUrl })).toContain('https')
   })
   it('should render a default avatar for searched user avatar if not available', () => {

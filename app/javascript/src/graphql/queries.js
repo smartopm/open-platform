@@ -415,6 +415,7 @@ export const DiscussionCommentsQuery = gql`
         id
         name
         avatarUrl
+        imageUrl
       }
     }
   }

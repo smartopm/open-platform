@@ -1,5 +1,6 @@
 import React from 'react'
 import DescriptionIcon from '@material-ui/icons/Description';
+import { allUserTypes } from '../../utils/constants';
 
 // There are 2 different types of forms
 // forms for the user and forms where admin manages and creates form
@@ -14,10 +15,5 @@ export default {
   },
   name: t => t('menu.form', { count: 0 }),
   featureName: 'Forms',
-  accessibleBy: [
-    'client',
-    'prospective_client',
-    'contractor',
-    'resident',
-  ]
+  accessibleBy: allUserTypes
 };

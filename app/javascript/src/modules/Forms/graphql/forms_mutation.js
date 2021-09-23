@@ -38,6 +38,7 @@ export const FormCreateMutation = gql`
     $description: String
     $multipleSubmissionsAllowed: Boolean!
     $preview: Boolean!
+    $roles: [String]
   ) {
     formCreate(
       name: $name
@@ -45,6 +46,7 @@ export const FormCreateMutation = gql`
       description: $description
       multipleSubmissionsAllowed: $multipleSubmissionsAllowed
       preview: $preview
+      roles: $roles
     ) {
       form {
         id
@@ -76,6 +78,7 @@ export const FormUpdateMutation = gql`
     $status: String
     $multipleSubmissionsAllowed: Boolean
     $preview: Boolean
+    $roles: [String]
     ) {
     formUpdate(
       id: $id,
@@ -85,6 +88,7 @@ export const FormUpdateMutation = gql`
       status: $status
       multipleSubmissionsAllowed: $multipleSubmissionsAllowed
       preview: $preview
+      roles: $roles
     ){
       form {
         id
