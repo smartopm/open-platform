@@ -1,8 +1,7 @@
 import React from 'react';
 import { isYesterday, isToday } from 'date-fns';
 import PropTypes from 'prop-types';
-// eslint-disable-next-line import/no-extraneous-dependencies
-import moment from 'moment';
+import moment from 'moment-timezone'
 
 
 // returns a stringified date

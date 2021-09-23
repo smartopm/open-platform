@@ -68,14 +68,15 @@ describe('logbook utils', () => {
     }
 
     const translate = jest.fn(() => 'valid')
-    const validity = checkRequests(req, translate)
+    const tz = 'Africa/Lusaka'
+    const validity = checkRequests(req, translate, tz)
     expect(validity.valid).toBe(true)
     expect(validity.title).toBe('valid')
 
-    const validity1 = checkRequests(req1, translate)
+    const validity1 = checkRequests(req1, translate, tz)
     expect(validity1.valid).toBe(false)
 
-    const validity2 = checkRequests(req2, translate)
+    const validity2 = checkRequests(req2, translate, tz)
     expect(validity2.valid).toBe(true)
   })
 });

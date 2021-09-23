@@ -26,7 +26,7 @@ describe('date container component', () => {
    // get old date
    const date = new Date()
    const oldDate = date.setDate(date.getDate() - 2)
-   const component = mount(<DateContainer date={oldDate} />)
+   const component = mount(<DateContainer date={new Date(oldDate)} />)
    expect(component.find('span').text()).toContain(
      dateToString(oldDate)
    )
