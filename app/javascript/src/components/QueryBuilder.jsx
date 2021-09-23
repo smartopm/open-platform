@@ -40,6 +40,10 @@ export default function QueryBuilder({
       not_equal: {
         ...builderConfig.operators.not_equal,
         label: 'Is Not'
+      },
+      between: {
+        ...builderConfig.operators.between,
+        label: 'Between'
       }
     }
   }

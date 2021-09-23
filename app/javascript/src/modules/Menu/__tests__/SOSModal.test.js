@@ -35,8 +35,7 @@ describe('SOSModal component', () => {
     );
 
     expect(container.queryByTestId('sos-modal')).toBeInTheDocument();
-    expect(container.queryByText('Press for 3 seconds')).toBeInTheDocument()
-  
+    expect(container.queryByTestId('sos-modal').textContent).toContain('panic_alerts.press_for_3_seconds');
   });
 
 });

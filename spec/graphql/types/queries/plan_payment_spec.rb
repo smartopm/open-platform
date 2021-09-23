@@ -218,6 +218,15 @@ RSpec.describe Types::Queries::PlanPayment do
       context 'when payments are searched by non existing source' do
         include_examples 'returns empty list', 'mobile_money'
       end
+
+      context 'when payments are searched for a valid date' do
+        include_examples 'returns payments list', Time.zone.today.to_s
+      end
+
+      context 'when payments are searched between a valid range' do
+        include_examples 'returns payments list',
+                         "created_at >= #{Time.zone.today} AND created_at <= #{Time.zone.today}"
+      end
     end
 
     describe '#payment_receipt' do

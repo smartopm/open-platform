@@ -10,6 +10,8 @@
       "sos_feedback": "Please stand by, we are currently requesting for help",
       "click_to_call": "CALL",
       "am_safe": "I'm safe ",
-      "user_message": "has initiated an emergency support request. Please confirm the person is safe and the emergency is resolved."
+      "user_message": "has initiated an emergency support request. Please confirm the person is safe and the emergency is resolved.",
+      "sos": "SOS",
+      "press_for_3_seconds": "Press for 3 seconds"
     }
 }
