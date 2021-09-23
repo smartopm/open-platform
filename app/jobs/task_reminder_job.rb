@@ -42,14 +42,15 @@ class TaskReminderJob < ApplicationJob
     EmailMsg.send_mail_from_db(user.email, template, template_data)
   end
 
-  def send_sms_reminder(assigned_note)
-    user = assigned_note.user
+  def send_sms_reminder(note_assignee)
+    user = note_assignee.user
     number = user.phone_number
     return if number.blank?
 
-    note_id = assigned_note.note_id
+    note_id = note_assignee.note_id
+    due_date = note_assignee.note.due_date.to_date.to_s
     task_link = "#{HostEnv.base_url(user.community)}/tasks/#{note_id}"
-    Sms.send(number, I18n.t('general.task_reminder', task_link: task_link,
+    Sms.send(number, I18n.t('general.task_reminder', due_date: due_date, task_link: task_link,
                                                      community_name: user.community.name))
   end
   # rubocop:enable Metrics/AbcSize
