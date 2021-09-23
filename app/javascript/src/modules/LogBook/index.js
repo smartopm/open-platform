@@ -1,11 +1,11 @@
 import React from 'react'
 import MenuBookIcon from '@material-ui/icons/MenuBook';
+import PeopleIcon from '@material-ui/icons/People';
 import EntryLogs from './Components/EntryLogs';
 import GuestList from './GuestList/Components/GuestList'
 import GuestUpdate from './GuestList/containers/GuestUpdate'
 import { siteManagers } from '../../utils/constants';
 
-import PeopleIcon from '@material-ui/icons/People';
 import RequestUpdate from './Components/RequestUpdate';
 
 

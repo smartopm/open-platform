@@ -26,8 +26,10 @@ import {
   communityVisitingHours,
   defaultBusinessReasons
 } from '../../../utils/constants';
-import { ModalDialog, ReasonInputModal } from '../../../components/Dialog';
 import { dateToString, dateTimeToString } from '../../../components/DateContainer';
+import { objectAccessor } from '../../../utils/helpers'
+import { userState, userType, communityVisitingHours, defaultBusinessReasons } from '../../../utils/constants'
+import { ModalDialog, ReasonInputModal } from "../../../components/Dialog"
 import { Context } from '../../../containers/Provider/AuthStateProvider';
 import EntryNoteDialog from '../../../shared/dialogs/EntryNoteDialog';
 import CenteredContent from '../../../components/CenteredContent';

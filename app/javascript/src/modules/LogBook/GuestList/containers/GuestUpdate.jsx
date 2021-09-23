@@ -6,14 +6,14 @@ import RequestUpdate from '../../Components/RequestUpdate';
 export default function GuestUpdate() {
   const { guestListEntryId } = useParams()
   const isGuestRequest = true
-  const fromGuestListPage = true
+  const guestListRequest = true
   return (
     <>
       <div className="container">
         <RequestUpdate
           id={guestListEntryId}
           isGuestRequest={isGuestRequest}
-          fromGuestListPage={fromGuestListPage}
+          guestListRequest={guestListRequest}
         />
       </div>
     </>

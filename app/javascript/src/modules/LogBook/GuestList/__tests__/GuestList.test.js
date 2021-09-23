@@ -3,8 +3,8 @@ import { render, waitFor,fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { BrowserRouter } from 'react-router-dom';
 import { MockedProvider } from '@apollo/react-testing';
-import MockedThemeProvider from '../../__mocks__/mock_theme';
-import { GuestListEntriesQuery } from '../graphql/guest_list_queries'
+import MockedThemeProvider from '../../../__mocks__/mock_theme'
+import { GuestListEntriesQuery } from '../../graphql/guest_list_queries'
 import GuestList from '../Components/GuestList';
 
 describe('Should render Guest List Component', () => {

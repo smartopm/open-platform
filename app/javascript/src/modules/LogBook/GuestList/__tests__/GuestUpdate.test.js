@@ -4,10 +4,10 @@ import '@testing-library/jest-dom/extend-expect';
 import { BrowserRouter } from 'react-router-dom';
 import { ApolloProvider } from 'react-apollo';
 import { MockedProvider } from '@apollo/react-testing';
-import { Context } from '../../../containers/Provider/AuthStateProvider';
-import { createClient } from '../../../utils/apollo';
+import { Context } from '../../../../containers/Provider/AuthStateProvider'
+import { createClient } from '../../../../utils/apollo'
 import GuestUpdate from '../containers/GuestUpdate';
-import GuestRequestForm from '../Components/GuestRequestForm';
+import RequestUpdate from '../../Components/RequestUpdate';
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
 describe('RequestUpdate main page', () => {
@@ -22,14 +22,14 @@ describe('RequestUpdate main page', () => {
       }
     }
   };
-it('renders the GuestRequestForm page correctly', async () => {
+it('renders the RequestUpdate page correctly', async () => {
     await act(async () => {
       render(
         <ApolloProvider client={createClient}>
           <Context.Provider value={data}>
             <MockedProvider>
               <BrowserRouter>
-                <GuestRequestForm id="23942342dsd" />
+                <RequestUpdate id="23942342dsd" isGuestRequest />
               </BrowserRouter>
             </MockedProvider>
           </Context.Provider>

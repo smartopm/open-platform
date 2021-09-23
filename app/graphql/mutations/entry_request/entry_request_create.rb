@@ -20,6 +20,7 @@ module Mutations
       argument :temperature, String, required: false
       argument :occurs_on, [String], required: false
       argument :visit_end_date, String, required: false
+      argument :is_guest, Boolean, required: false
 
       field :entry_request, Types::EntryRequestType, null: true
 
@@ -39,7 +40,9 @@ module Mutations
 
       # Verifies if current user admin or security guard.
       def authorized?(_vals)
-        return true if context[:current_user]&.role?(%i[security_guard admin])
+        if context[:current_user]&.role?(%i[security_guard admin custodian client resident])
+          return true
+        end
 
         raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
       end

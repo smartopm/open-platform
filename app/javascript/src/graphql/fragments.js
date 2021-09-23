@@ -100,6 +100,8 @@ export const EntryRequestFragment = {
       endsAt
       startsAt
       grantor {
+      isGuest
+      grantor{
         name
       }
     }
