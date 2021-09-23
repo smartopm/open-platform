@@ -46,25 +46,25 @@ describe('logbook utils', () => {
 
     const req = {
       visitEndDate: '2021-08-01T16:21:10.731Z',
-      visitationDate: '2021-05-20 10:40',
-      endsAt: '2021-05-20 17:51',
-      startsAt: '2021-05-20 11:51',
+      visitationDate: '2021-05-20T10:40:00.000Z',
+      endsAt: '2021-05-20T17:51:00.000Z',
+      startsAt: '2021-05-20T11:51:00.000Z',
       occursOn: [],
     }
 
     const req1 = {
       visitEndDate: '2021-08-01T16:21:10.731Z',
-      visitationDate: '2021-08-20 10:40',
-      endsAt: '2021-05-20 17:51',
-      startsAt: '2021-05-20 11:51',
+      visitationDate: '2021-08-20T10:40:00.000Z',
+      endsAt: '2021-05-20T17:51:00.000Z',
+      startsAt: '2021-05-20T11:51:00.000Z',
       occursOn: [],
     }
     // same date but expired time
     const req3 = {
       visitEndDate: '2021-08-01T16:21:10.731Z',
-      visitationDate: '2021-05-20 10:40',
-      endsAt: '2021-05-20 07:51',
-      startsAt: '2021-05-20 09:51',
+      visitationDate: '2021-05-20T10:40:00.000Z',
+      endsAt: '2021-05-20T07:51:00.000Z',
+      startsAt: '2021-05-20T09:51:00.000Z',
       occursOn: [],
     }
 
@@ -86,9 +86,9 @@ describe('logbook utils', () => {
     jest.setSystemTime(new Date('2021-05-20 13:00'))
     const req2 = {
       visitEndDate: '2021-08-01T16:21:10.731Z',
-      visitationDate: '2021-05-20 10:40',
-      endsAt: '2021-05-20 13:51',
-      startsAt: '2021-05-20 12:51',
+      visitationDate: '2021-05-20T10:40:00.000Z',
+      endsAt: '2021-05-20T13:51:00.000Z',
+      startsAt: '2021-05-20T12:51:00.000Z',
       occursOn: [],
     }
     const translate = jest.fn(() => 'valid')
