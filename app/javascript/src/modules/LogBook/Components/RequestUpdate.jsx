@@ -147,7 +147,7 @@ export default function RequestUpdate({ id, previousRoute, isGuestRequest, tabVa
           ...observationDetails,
           message: t('qrcode_confirmation.qr_code_sent')
         });
-        setTimeout(() => closeQrModal(), 500);
+        setTimeout(() => closeQrModal(), 100);
       })
       .catch(error => {
         setDetails({ ...observationDetails, isError: true, message: error.message });

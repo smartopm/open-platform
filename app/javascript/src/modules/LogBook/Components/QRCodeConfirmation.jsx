@@ -80,7 +80,7 @@ export default function QRCodeConfirmation({
                 {t('qrcode_confirmation.dont_send')}
               </Button>
               <Button
-                onClick={() => sendQrCode(guestRequest?.id, guestEmail)}
+                onClick={() => sendQrCode(guestRequest?.id, guestEmail || emailHandler.value)}
                 color="primary"
                 variant="contained"
                 data-testid="send-confirmation"
