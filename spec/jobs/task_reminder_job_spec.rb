@@ -17,6 +17,7 @@ RSpec.describe TaskReminderJob, type: :job do
       community_id: user.community_id,
       author_id: admin.id,
       completed: false,
+      due_date: Time.zone.today,
     )
   end
   let!(:assignee_note) { create(:assignee_note, user: admin, note: note) }
@@ -70,12 +71,14 @@ RSpec.describe TaskReminderJob, type: :job do
         { key: '%url%', value: "#{ENV['HOST']}/tasks/#{note.id}" },
       ]
       task_link = "#{HostEnv.base_url(user.community)}/tasks/#{note.id}"
+      due_date = note.due_date.to_date.to_s
 
       expect(EmailMsg).to receive(:send_mail_from_db).with(
         admin.email, template, template_data
       )
       expect(Sms).to receive(:send).with(
-        admin.phone_number, I18n.t('general.task_reminder', task_link: task_link,
+        admin.phone_number, I18n.t('general.task_reminder', due_date: due_date,
+                                                            task_link: task_link,
                                                             community_name: user.community.name)
       )
       perform_enqueued_jobs { described_class.perform_later('automated') }
