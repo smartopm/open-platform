@@ -27,7 +27,7 @@ module Mutations
               .errors.full_messages
           end
 
-          job = TaskReminderJob.set(wait: time).perform_later(assigned_note)
+          job = TaskReminderJob.set(wait: time).perform_later('manual', assigned_note)
           TaskReminderUpdateJob.perform_later(assigned_note, job.provider_job_id)
         end
 
