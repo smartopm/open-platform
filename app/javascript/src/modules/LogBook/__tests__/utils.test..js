@@ -1,6 +1,7 @@
 import { checkInValidRequiredFields, checkRequests, isNotValidCheck } from '../utils';
 
 describe('logbook utils', () => {
+  const tz = 'Africa/Lusaka'
   it('check required', () => {
     const initialState = {
       name: '',
@@ -29,8 +30,8 @@ describe('logbook utils', () => {
       visitEndDate: '2021-08-01T16:21:10.731Z'
     }
     const translate = jest.fn(() => 'invalid')
-    const validity = checkRequests(request1, translate)
-    const validityCheck2 = checkRequests(request2, translate)
+    const validity = checkRequests(request1, translate, tz)
+    const validityCheck2 = checkRequests(request2, translate, tz)
 
     expect(validity.valid).toBe(false)
     expect(validity.title).toEqual('invalid')
@@ -68,7 +69,7 @@ describe('logbook utils', () => {
     }
 
     const translate = jest.fn(() => 'valid')
-    const tz = 'Africa/Lusaka'
+    
     const validity = checkRequests(req, translate, tz)
     expect(validity.valid).toBe(true)
     expect(validity.title).toBe('valid')
