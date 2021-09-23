@@ -90,7 +90,8 @@
     "send_qr_code": "Send QR Code to",
     "send": "Send",
     "dont_send": "Don't send",
-    "enter_email_text": "No email address was added for this guest. Add an email if you would like to send a QR Code to this visitor."
+    "enter_email_text": "No email address was added for this guest. Add an email if you would like to send a QR Code to this visitor.",
+    "qr_code_sent": "Success: QR Code has been sent"
   },
   "guest_book": {
     "valid": "Valid",

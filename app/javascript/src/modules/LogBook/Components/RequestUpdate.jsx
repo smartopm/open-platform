@@ -36,7 +36,8 @@ import { Context } from '../../../containers/Provider/AuthStateProvider';
 import EntryNoteDialog from '../../../shared/dialogs/EntryNoteDialog';
 import CenteredContent from '../../../components/CenteredContent';
 import AddObservationNoteMutation, {
-  EntryRequestUpdateMutation
+  EntryRequestUpdateMutation,
+  SendGuestQrCodeMutation
 } from '../graphql/logbook_mutations';
 import MessageAlert from '../../../components/MessageAlert';
 import { checkInValidRequiredFields, defaultRequiredFields } from '../utils';
@@ -72,6 +73,7 @@ export default function RequestUpdate({ id, previousRoute, isGuestRequest, tabVa
     variables: { id }
   });
   const [createEntryRequest] = useMutation(EntryRequestCreate);
+  const [sendGuestQrCode] = useMutation(SendGuestQrCodeMutation);
   const [grantEntry] = useMutation(EntryRequestGrant);
   const [denyEntry] = useMutation(EntryRequestDeny);
   const [updateRequest] = useMutation(EntryRequestUpdateMutation);
@@ -103,6 +105,7 @@ export default function RequestUpdate({ id, previousRoute, isGuestRequest, tabVa
   const [isReasonModalOpen, setReasonModal] = useState(false);
   const [isQrModalOpen, setQrModal] = useState(false);
   const [qrCodeEmail, setQrCodeEmail] = useState('');
+  const [guestRequest, setGuestRequest] = useState(null);
 
   useEffect(() => {
     if (id) {
@@ -130,6 +133,25 @@ export default function RequestUpdate({ id, previousRoute, isGuestRequest, tabVa
     if (name === 'reason' && formData.business) {
       setFormData({ ...formData, business: '' });
     }
+  }
+
+  function sendQrCode(requestId, guestEmail) {
+    sendGuestQrCode({
+      variables: {
+        id: requestId,
+        guestEmail
+      }
+     })
+      .then(() => {
+        setDetails({
+          ...observationDetails,
+          message: t('qrcode_confirmation.qr_code_sent')
+        });
+        setTimeout(() => closeQrModal(), 500);
+      })
+      .catch(error => {
+        setDetails({ ...observationDetails, isError: true, message: error.message });
+      });
   }
 
   function handleChangeOccurrence(day) {
@@ -166,6 +188,7 @@ export default function RequestUpdate({ id, previousRoute, isGuestRequest, tabVa
           setRequestId(data.result.entryRequest.id);
           if (isGuestRequest) {
             setDetails({ ...observationDetails, isError: false, message: t('logbook:logbook.registered_guest_created') })
+            setGuestRequest(data.result.entryRequest)
             setQrModal(true);
           }
           return data.result.entryRequest.id;
@@ -384,6 +407,8 @@ export default function RequestUpdate({ id, previousRoute, isGuestRequest, tabVa
         guestEmail={formData.email}
         closeModal={closeQrModal}
         emailHandler={{ value: qrCodeEmail, handleEmailChange: setQrCodeEmail}}
+        sendQrCode={sendQrCode}
+        guestRequest={guestRequest}
       />
       <MessageAlert
         type={!observationDetails.isError ? 'success' : 'error'}

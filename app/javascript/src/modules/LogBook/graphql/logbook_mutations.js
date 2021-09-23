@@ -11,7 +11,6 @@ const AddObservationNoteMutation = gql`
 `;
 export default AddObservationNoteMutation;
 
-
 export const EntryRequestUpdateMutation = gql`
   mutation EntryRequestUpdateMutation(
     $id: ID!
@@ -52,4 +51,12 @@ export const EntryRequestUpdateMutation = gql`
       }
     }
   }
-`
+`;
+
+export const SendGuestQrCodeMutation = gql`
+  mutation SendGuestQrCodeMutation($id: ID!, $guestEmail: String!) {
+    result: sendGuestQrCode(id: $id, guestEmail: $guestEmail) {
+      message
+    }
+  }
+`;

@@ -11,7 +11,14 @@ import { makeStyles } from '@material-ui/styles';
 import EmailIcon from '@material-ui/icons/Email';
 import { Spinner } from '../../../shared/Loading';
 
-export default function QRCodeConfirmation({ open, closeModal, guestEmail, emailHandler }) {
+export default function QRCodeConfirmation({
+  open,
+  closeModal,
+  guestEmail,
+  emailHandler,
+  sendQrCode,
+  guestRequest
+}) {
   const classes = useStyles();
   const { t } = useTranslation('logbook');
   const observationDetails = { loading: false };
@@ -73,7 +80,7 @@ export default function QRCodeConfirmation({ open, closeModal, guestEmail, email
                 {t('qrcode_confirmation.dont_send')}
               </Button>
               <Button
-                onClick={() => {}}
+                onClick={() => sendQrCode(guestRequest?.id, guestEmail)}
                 color="primary"
                 variant="contained"
                 data-testid="send-confirmation"
@@ -118,5 +125,9 @@ QRCodeConfirmation.propTypes = {
     handleEmailChange: PropTypes.func
   }).isRequired,
   closeModal: PropTypes.func.isRequired,
-  guestEmail: PropTypes.string.isRequired
+  sendQrCode: PropTypes.func.isRequired,
+  guestEmail: PropTypes.string.isRequired,
+  guestRequest: PropTypes.shape({
+    id: PropTypes.string
+  }).isRequired
 };
