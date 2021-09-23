@@ -30,7 +30,7 @@ import OneTimeLoginCode from '../src/components/AuthScreens/OneTimeLoginCode';
 import MobileMoney from '../src/components/MobileMoney';
 import GuardHome from '../src/modules/Dashboard/Components/GuardHome';
 import RequestUpdate from '../src/modules/LogBook/Components/RequestUpdatePage';
-import GuestUpdate from '../src/modules/GuestList/containers/GuestUpdate';
+import GuestUpdate from '../src/modules/LogBook/GuestList/containers/GuestUpdate'
 import ErrorPage from '../src/components/Error';
 import MainAuthCallback from '../src/components/AuthScreens/MainAuthCallback';
 import { AUTH_TOKEN_KEY } from '../src/utils/apollo';

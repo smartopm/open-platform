@@ -13,17 +13,16 @@ import { makeStyles } from '@material-ui/core/styles';
 import { useMutation, useLazyQuery } from 'react-apollo';
 import { useHistory ,useLocation  } from 'react-router';
 import { useTranslation } from 'react-i18next';
-import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider';
-import { formatError } from '../../../utils/helpers';
+import { Context as AuthStateContext } from '../../../../containers/Provider/AuthStateProvider';
+import {formatError} from '../../../../utils/helpers'
 import { GuestListEntriesQuery } from '../graphql/guest_list_queries'
-import { GuestEntryRequestRevoke } from '../../../graphql/mutations';
-import Paginate from '../../../components/Paginate';
-import CenteredContent from '../../../components/CenteredContent';
-import { Spinner } from '../../../shared/Loading';
-
-import MessageAlert from '../../../components/MessageAlert';
+import {GuestEntryRequestRevoke} from '../../../../graphql/mutations'
+import Paginate from '../../../../components/Paginate';
+import CenteredContent from '../../../../components/CenteredContent';
+import {Spinner} from '../../../../shared/Loading'
+import MessageAlert from '../../../../components/MessageAlert'
 import Guest from './Guest';
-import GuestRequestForm from './GuestRequestForm';
+import RequestUpdate from '../../Components/RequestUpdate';
 
 export default function GuestList() {
   const classes = useStyles();
@@ -36,6 +35,7 @@ export default function GuestList() {
   const [message, setMessage] = useState({ isError: false, detail: ''});
   const authState = useContext(AuthStateContext);
 
+  const from = 'guest-list'
   const { t } = useTranslation('logbook');
   const [revokeEntry] = useMutation(GuestEntryRequestRevoke);
 
@@ -50,7 +50,7 @@ export default function GuestList() {
 
 
   const  handleGuestDetails = ({ guestListEntryId })=>{
-    history.push(`/guest-list/${guestListEntryId}/action=update-guest-entry`);
+    history.push(`/guest-list/${guestListEntryId}`);
   }
 
   const handleGuestRevoke = ({guestListEntryId})=>{
@@ -73,7 +73,7 @@ export default function GuestList() {
   }
 
   const openGuestRequestForm = ()=>{
-    history.push("/guest-list/action=new-guest-entry");
+    history.push("/guest-list/new-guest-entry");
   }
 
 
@@ -97,7 +97,7 @@ export default function GuestList() {
           open={!!message.detail}
           handleClose={() => setMessage({ ...message, detail: '' })}
         />
-        {action === 'new-guest-entry' ? <GuestRequestForm /> :  (
+        {action === 'new-guest-entrygg' ? <RequestUpdate  isGuestRequest={true} from={from}/> :  (
           <> 
       
             <div className={classes.root}>

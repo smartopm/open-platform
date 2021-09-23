@@ -10,11 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-<<<<<<< HEAD
 ActiveRecord::Schema.define(version: 2021_09_19_073637) do
-=======
-ActiveRecord::Schema.define(version: 2021_09_21_045425) do
->>>>>>> Add more backend tests for entry request model
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
