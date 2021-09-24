@@ -506,6 +506,40 @@ export const paymentFilterFields = {
     nrc: 'ext_ref_id'
   }
 
+export const entryLogsFilterFields = {
+  endTime: 'ends_at'
+}
+
+export const entryLogsQueryBuilderConfig = {
+  ...InitialConfig,
+  fields: {
+    endTime: {
+      label: 'Visit End Time',
+      type: 'date',
+      valueSources: ['value']
+    }
+  },
+  widgets: dateWidget
+}
+
+export const entryLogsQueryBuilderInitialValue = {
+  // Just any random UUID
+  id: '76a8a9ba-0123-3344-c56d-b16e532c8cd0',
+  type: 'group',
+  children1: {
+    '98a8a9ba-0123-4456-b89a-b16e721c8cd0': {
+      type: 'rule',
+      properties: {
+        field: 'endTime',
+        operator: 'equal',
+        value: [''],
+        valueSrc: ['value'],
+        valueType: ['text']
+      }
+    }
+  }
+}
+
   export const propertyQueryBuilderConfig = {
     ...InitialConfig,
     fields: {

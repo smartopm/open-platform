@@ -2,11 +2,13 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable react/jsx-one-expression-per-line */
+import moment from 'moment-timezone'
 import React, { useState, Fragment, useContext, useEffect } from 'react';
 import { useMutation, useQuery } from 'react-apollo';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { useTranslation } from 'react-i18next';
-import { TextField, Button, useTheme } from '@material-ui/core';
+import { Button, Grid, useTheme, makeStyles } from '@material-ui/core';
+import SearchInput from '../../../shared/search/SearchInput';
 import Loading, { Spinner } from '../../../shared/Loading';
 import { AllEventLogsQuery } from '../../../graphql/queries';
 import ErrorPage from '../../../components/Error';
@@ -15,7 +17,13 @@ import useDebounce from '../../../utils/useDebounce';
 import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider';
 import { StyledTabs, StyledTab, TabPanel, a11yProps } from '../../../components/Tabs';
 import FloatButton from '../../../components/FloatButton';
-import { useParamsQuery, objectAccessor } from '../../../utils/helpers';
+import { useParamsQuery, objectAccessor, handleQueryOnChange } from '../../../utils/helpers';
+import QueryBuilder from '../../../components/QueryBuilder';
+import {
+  entryLogsFilterFields,
+  entryLogsQueryBuilderConfig,
+  entryLogsQueryBuilderInitialValue,
+} from '../../../utils/constants';
 import MessageAlert from '../../../components/MessageAlert';
 import GroupedObservations from './GroupedObservations';
 import AddMoreButton from '../../../shared/buttons/AddMoreButton';
@@ -36,6 +44,9 @@ const AllEventLogs = (history, match) => {
   const [offset, setOffset] = useState(0);
   const [limit, setLimit] = useState(initialLimit);
   const [searchTerm, setSearchTerm] = useState('');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [scope, setScope] = useState(7);
+  const [displayBuilder, setDisplayBuilder] = useState('none');
   const path = useParamsQuery();
   const tabValue = path.get('tab');
   const [value, setvalue] = useState(Number(tabValue) || 0);
@@ -59,6 +70,14 @@ const AllEventLogs = (history, match) => {
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [offset]);
+
+  function toggleFilterMenu() {
+    if (displayBuilder === '') {
+      setDisplayBuilder('none');
+    } else {
+      setDisplayBuilder('');
+    }
+  }
 
   const logsQuery = {
     0: subjects,
@@ -93,8 +112,18 @@ const AllEventLogs = (history, match) => {
   function handleLimit() {
     setLimit(1000);
   }
+
   function handleSearch(event) {
     setSearchTerm(event.target.value);
+  }
+
+  function handleSearchClear() {
+    setSearchTerm('');
+  }
+
+  function queryOnChange(selectedOptions) {
+    setSearchQuery(handleQueryOnChange(selectedOptions, entryLogsFilterFields));
+    setScope(null)
   }
 
   function handleChange(_event, newValue) {
@@ -111,8 +140,14 @@ const AllEventLogs = (history, match) => {
       router={history}
       handleLimit={handleLimit}
       limit={limit}
-      searchTerm={searchTerm}
+      scope={scope}
+      searchTerm={dbcSearchTerm}
+      searchQuery={searchQuery}
       handleSearch={handleSearch}
+      toggleFilterMenu={toggleFilterMenu}
+      handleSearchClear={handleSearchClear}
+      displayBuilder={displayBuilder}
+      queryOnChange={queryOnChange}
       handleTabValue={handleChange}
       tabValue={value}
       loading={loading}
@@ -128,7 +163,13 @@ export function IndexComponent({
   offset,
   limit,
   searchTerm,
+  scope,
+  searchQuery,
   handleSearch,
+  toggleFilterMenu,
+  handleSearchClear,
+  displayBuilder,
+  queryOnChange,
   tabValue,
   handleTabValue,
   loading,
@@ -147,6 +188,7 @@ export function IndexComponent({
   const [addObservationNote] = useMutation(AddObservationNoteMutation);
   const theme = useTheme();
   const matches = useMediaQuery(theme.breakpoints.up('sm'));
+  const classes = useStyles();
 
   function routeToAction(eventLog) {
     if (eventLog.refType === 'Logs::EntryRequest') {
@@ -225,6 +267,16 @@ export function IndexComponent({
       return visitorName.toLowerCase().includes(searchTerm.toLowerCase());
     });
 
+  const activeEvents = filteredEvents && filteredEvents.filter(log => {
+    let endTime
+    if (log.entryRequest?.visitEndDate) {
+      endTime = log.entryRequest.visitEndDate
+    } else {
+      endTime = log.entryRequest?.endsAt || log.entryRequest?.endTime
+    }
+    return moment().isBefore(endTime)
+  });
+
   let observationLogs;
   if (tabValue === 3) {
     observationLogs = data?.result?.reduce((groups, log) => {
@@ -280,19 +332,30 @@ export function IndexComponent({
         )}
       </EntryNoteDialog>
       <div className="container">
-        <div className="form-group">
-          <TextField
-            type="text"
-            value={searchTerm}
-            onChange={handleSearch}
-            className="form-control"
-            placeholder={`${t('common:form_placeholders.search')} ${objectAccessor(
-              searchPlaceholder,
-              tabValue
-            )}`}
-          />
-        </div>
+        <SearchInput
+          title={objectAccessor(searchPlaceholder, tabValue)}
+          searchValue={searchTerm}
+          filterRequired
+          handleSearch={handleSearch}
+          handleFilter={toggleFilterMenu}
+          handleClear={handleSearchClear}
+        />
       </div>
+      <Grid
+        container
+        justify="flex-end"
+        className={classes.filter}
+        style={{
+          display: displayBuilder
+        }}
+      >
+        <QueryBuilder
+          handleOnChange={queryOnChange}
+          builderConfig={entryLogsQueryBuilderConfig}
+          initialQueryValue={entryLogsQueryBuilderInitialValue}
+          addRuleLabel={t('common:misc.add_filter')}
+        />
+      </Grid>
       <div>
         <StyledTabs
           value={tabValue}
@@ -312,7 +375,7 @@ export function IndexComponent({
           <>
             {data && (
               <VisitEntryLogs
-                eventLogs={filteredEvents}
+                eventLogs={activeEvents}
                 authState={authState}
                 routeToAction={routeToAction}
                 handleAddObservation={handleAddObservation}
@@ -332,7 +395,8 @@ export function IndexComponent({
             handleAddObservation={handleAddObservation}
             offset={offset}
             limit={limit}
-            query={searchTerm}
+            query={`${searchTerm} ${searchQuery}`}
+            scope={scope}
           />
         </TabPanel>
         <TabPanel value={tabValue} index={3}>
@@ -366,10 +430,36 @@ export function IndexComponent({
           limit={limit}
           active={offset >= 1}
           handlePageChange={paginate}
-          count={filteredEvents?.length}
+          count={activeEvents?.length}
         />
       </CenteredContent>
       <Footer position="3vh" />
     </div>
   );
 }
+
+const useStyles = makeStyles(theme => ({
+  filter: {
+    width: '100%',
+    position: 'absolute',
+    zIndex: 1,
+    marginTop: '-15px',
+    marginLeft: '-28%',
+    [theme.breakpoints.up('xs')]: {
+      marginTop: '2px',
+      marginLeft: '5px',
+      width: '95%'
+    },
+    [theme.breakpoints.up('sm')]: {
+      marginTop: '2px',
+      marginLeft: '-5%',
+      width: '95%'
+    },
+    [theme.breakpoints.up('md')]: {
+      marginLeft: '5%',
+    },
+    [theme.breakpoints.up('lg')]: {
+      marginLeft: '-23%',
+    }
+  }
+}));

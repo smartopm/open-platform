@@ -94,7 +94,9 @@ export const AllEventLogsQuery = gql`
         grantedAt
         name
         startsAt
+        endsAt
         visitationDate
+        visitEndDate
       }
       user {
         id
