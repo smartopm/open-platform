@@ -51,6 +51,7 @@ RSpec.describe Types::Queries::Note do
         flagged: true,
         community_id: site_worker.community_id,
         author_id: site_worker.id,
+        due_date: Time.zone.today,
       )
     end
 
@@ -113,20 +114,22 @@ RSpec.describe Types::Queries::Note do
     end
 
     let(:flagged_notes_query) do
-      %(query {
-            flaggedNotes {
-                    category
-                    description
-                    flagged
-                    body
-                    createdAt
-                    userId
-                    user {
-                        name
-                        id
-                    }
-                }
-            })
+      <<~GQL
+        query flaggedNotes($query: String){
+          flaggedNotes(query: $query){
+            category
+            description
+            flagged
+            body
+            createdAt
+            userId
+            user {
+                name
+                id
+            }
+          }
+        }
+      GQL
     end
 
     let(:note_count) do
@@ -159,6 +162,18 @@ RSpec.describe Types::Queries::Note do
                                          site_community: site_worker.community,
                                        }).as_json
       expect(result.dig('data', 'flaggedNotes').length).to eql 2
+    end
+
+    it 'should retrieve list of flagged notes without due date' do
+      variables = { query: 'due_date:nil' }
+      result = DoubleGdpSchema.execute(flagged_notes_query,
+                                       variables: variables,
+                                       context: {
+                                         current_user: site_worker,
+                                         site_community: site_worker.community,
+                                       }).as_json
+      expect(result.dig('errors', 0, 'message')).to be_nil
+      expect(result.dig('data', 'flaggedNotes').length).to eql 1
     end
 
     it 'should raise unauthorised error when current user is nil' do

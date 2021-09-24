@@ -85,31 +85,26 @@ module Types::Queries::Note
             I18n.t('errors.unauthorized')
     end
 
-    if query.present? && query.include?('assignees')
-      context[:site_community].notes.search_assignee(query)
-                              .for_site_manager(current_user)
-                              .includes(:assignees, :author, :user)
-                              .eager_load(:assignee_notes, :assignees, :user)
-                              .where(flagged: true)
-                              .order(completed: :desc, created_at: :desc)
-                              .limit(limit).offset(offset)
-    elsif query.present? && query.include?('user')
-      context[:site_community].notes.search_user(query)
-                              .for_site_manager(current_user)
-                              .includes(:assignees, :author, :user)
-                              .eager_load(:assignee_notes, :assignees, :user)
-                              .where(flagged: true)
-                              .order(completed: :desc, created_at: :desc)
-                              .limit(limit).offset(offset)
-    else
-      context[:site_community].notes.includes(:assignees, :author, :user)
-                              .for_site_manager(current_user)
-                              .eager_load(:assignee_notes, :assignees, :user)
-                              .where(flagged: true)
-                              .search(query)
-                              .order(completed: :desc, created_at: :desc)
-                              .limit(limit).offset(offset)
+    search_method = 'search'
+    if query&.include?('assignees')
+      search_method = 'search_assignee'
+    elsif query&.include?('user')
+      search_method = 'search_user'
     end
+
+    notes = if query&.include?('due_date:nil')
+              context[:site_community].notes.where(due_date: nil)
+            else
+              context[:site_community].notes.send(search_method, query)
+            end
+
+    return notes if notes.nil?
+
+    notes.includes(:assignees, :author, :user, :assignee_notes)
+         .for_site_manager(current_user)
+         .where(flagged: true)
+         .order(completed: :desc, created_at: :desc)
+         .limit(limit).offset(offset)
   end
   # rubocop:enable Metrics/CyclomaticComplexity
   # rubocop:enable Metrics/PerceivedComplexity
