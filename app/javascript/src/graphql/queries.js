@@ -46,15 +46,6 @@ export const EntryRequestQuery = gql`
   ${EntryRequestFragment.publicFields}
 `
 
-export const GuestListEntryQuery = gql`
-  query GuestListEntry($id: ID!) {
-    result: guestListEntry(id: $id) {
-      ...EntryRequestFields
-    }
-  }
-  ${EntryRequestFragment.publicFields}
-`
-
 export const AllEntryRequestsQuery = gql`
   query AllEntryRequests {
     result: entryRequests {

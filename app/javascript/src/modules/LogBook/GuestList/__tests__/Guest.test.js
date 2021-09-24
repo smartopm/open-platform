@@ -25,6 +25,8 @@ describe('Should render Guest Book Component', () => {
         visitationDate: '2021-08-20T10:51:00+02:00',
         endTime: '2021-10-31 22:51',
         startTime: '2021-10-31 02:51',
+        endsAt: '2021-10-31 22:51',
+        startsAt: '2021-10-31 02:51',
         active: true,
         revoked: false
         }

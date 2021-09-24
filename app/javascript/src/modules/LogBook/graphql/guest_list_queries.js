@@ -20,6 +20,8 @@ export const GuestListEntriesQuery = gql`
         visitationDate
         endTime
         startTime
+        endsAt
+        startsAt
         active
         revoked
       }

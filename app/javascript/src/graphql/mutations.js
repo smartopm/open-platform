@@ -289,18 +289,6 @@ export const EntryRequestDeny = gql`
   ${EntryRequestFragment.publicFields}
 `
 
-
-export const GuestEntryRequestRevoke = gql`
-  mutation GuestEntryRequestRevokeMutation($id: ID!, $userId: ID!) {
-    result: guestEntryRequestRevoke(id: $id, userId: $userId) {
-      entryRequest {
-        ...EntryRequestFields
-      }
-    }
-  }
-  ${EntryRequestFragment.publicFields}
-`
-
 export const loginPhone = gql`
   mutation loginPhoneStart($phoneNumber: String) {
     loginPhoneStart(phoneNumber: $phoneNumber) {

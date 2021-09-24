@@ -16,7 +16,7 @@ import { useTranslation } from 'react-i18next';
 import { Context as AuthStateContext } from '../../../../containers/Provider/AuthStateProvider';
 import {formatError} from '../../../../utils/helpers'
 import { GuestListEntriesQuery } from '../../graphql/guest_list_queries'
-import {GuestEntryRequestRevoke} from '../../../../graphql/mutations'
+import GuestEntryRequestRevoke  from '../graphql/mutations'
 import Paginate from '../../../../components/Paginate';
 import CenteredContent from '../../../../components/CenteredContent';
 import {Spinner} from '../../../../shared/Loading'

@@ -1,12 +1,10 @@
 # frozen_string_literal: true
 
 # rubocop:disable Metrics/ClassLength
-
 require 'host_env'
 
 module Logs
   # Record of visitor entries to a community
-  # rubocop:disable Metrics/ClassLength
   class EntryRequest < ApplicationRecord
     include SearchCop
 
