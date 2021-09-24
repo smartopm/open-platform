@@ -44,27 +44,28 @@ import QRCodeConfirmation from './QRCodeConfirmation';
 
 
 const initialState = {
-  name: '',
-  phoneNumber: '',
-  nrc: '',
-  vehiclePlate: '',
-  reason: '',
-  business: '',
-  state: '',
-  userType: '',
-  expiresAt: '',
-  email: '',
-  companyName: '',
-  temperature: '',
-  loaded: false,
-  occursOn: [],
-  visitationDate: null,
-  visitEndDate: null,
-  startsAt: new Date(),
-  endsAt: new Date()
-};
+    name: '',
+    phoneNumber: '',
+    nrc: '',
+    vehiclePlate: '',
+    reason: '',
+    business: '',
+    state: '',
+    userType: '',
+    expiresAt: '',
+    email: '',
+    companyName: '',
+    temperature: '',
+    loaded: false,
+    occursOn: [],
+    visitationDate: null,
+    visitEndDate: null,
+    startsAt: new Date(),
+    endsAt: new Date(),
+    isGuest: false
+}
 
-export default function RequestUpdate({ id, previousRoute, fromGuestListPage, isGuestRequest, tabValue }) {
+export default function RequestUpdate({ id, previousRoute,guestListRequest, isGuestRequest, tabValue }) {
   const history = useHistory()
   const authState = useContext(Context)
   const isFromLogs = previousRoute === 'logs' ||  false
@@ -234,6 +235,7 @@ export default function RequestUpdate({ id, previousRoute, fromGuestListPage, is
     history.push(`/entry_logs?tab=${tabValue}`);
   }
 
+  
   function handleCreateRequest({guestListRequest: _guestListRequest}) {
     const otherFormData = {
       ...formData,
@@ -259,11 +261,9 @@ export default function RequestUpdate({ id, previousRoute, fromGuestListPage, is
           setRequestId(data.result.entryRequest.id)
           
           if(data.result.entryRequest.isGuest){
-            history.push('/guest-list')
+            return history.push('/guest-list')
           }
-          if (isGuestRequest) {
-            history.push(`/entry_logs?tab=${tabValue}`)
-          }
+          history.push(`/entry_logs?tab=${tabValue}`)
 
           return data.result.entryRequest.id
         })
@@ -280,7 +280,8 @@ export default function RequestUpdate({ id, previousRoute, fromGuestListPage, is
     };
     setLoading(true);
     updateRequest({ variables: { id, ...otherFormData } })
-      .then(() => {
+      // eslint-disable-next-line no-shadow
+      .then((data) => {
         setLoading(false);
         setDetails({
           ...observationDetails,
@@ -288,8 +289,9 @@ export default function RequestUpdate({ id, previousRoute, fromGuestListPage, is
         });
         history.push(`/entry_logs?tab=${tabValue}`);
         setDetails({ ...observationDetails, message: t('logbook:logbook.registered_guest_updated') });
-        if(fromGuestListPage){
+        if(data.data.result.entryRequest.isGuest){
           history.push('/guest-list')
+          return
         }
         history.push(`/entry_logs?tab=${tabValue}`)
       })
@@ -464,8 +466,9 @@ export default function RequestUpdate({ id, previousRoute, fromGuestListPage, is
 
   const observationAction = observationNote ? 'Save' : 'Skip'
 
-  function closeForm(id, fromGuestListPage){
-    if(id === 'new-guest-entry' || fromGuestListPage ){
+  function closeForm({id: _id, guestListRequest: _guestListRequest}){
+
+    if(_id === 'new-guest-entry' || _guestListRequest ){
       history.push({pathname: '/guest-list'})
       return 
     }
@@ -1024,7 +1027,7 @@ const styles = StyleSheet.create({
   denyButton: {
     backgroundColor: "#C31515",
     color: "#FFFFFF",
-    width: '20%',
+    width: '100%',
     boxShadow: 'none',
     marginTop: 50,
     alignItems: 'center',

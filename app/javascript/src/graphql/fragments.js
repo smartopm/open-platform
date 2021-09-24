@@ -90,7 +90,6 @@ export const EntryRequestFragment = {
       createdAt
       updatedAt
       grantedAt
-      revokedAt
       companyName
       occursOn
       visitEndDate
@@ -100,8 +99,6 @@ export const EntryRequestFragment = {
       endsAt
       startsAt
       grantor {
-      isGuest
-      grantor{
         name
       }
     }
