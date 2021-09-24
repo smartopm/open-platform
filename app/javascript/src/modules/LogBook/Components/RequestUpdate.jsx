@@ -64,7 +64,7 @@ const initialState = {
   endsAt: new Date()
 };
 
-export default function RequestUpdate({ id, previousRoute,fromGuestListPage, isGuestRequest, tabValue }) {
+export default function RequestUpdate({ id, previousRoute, fromGuestListPage, isGuestRequest, tabValue }) {
   const history = useHistory()
   const authState = useContext(Context)
   const isFromLogs = previousRoute === 'logs' ||  false
@@ -239,8 +239,8 @@ export default function RequestUpdate({ id, previousRoute,fromGuestListPage, isG
       ...formData,
       // return reason if not other
       reason: formData.business || formData.reason,
-      isGuest: fromGuestListPage ? true: false
-    };
+      isGuest: !!_guestListRequest
+    }
 
     return (
       createEntryRequest({ variables: otherFormData })
@@ -261,8 +261,9 @@ export default function RequestUpdate({ id, previousRoute,fromGuestListPage, isG
           if(data.result.entryRequest.isGuest){
             history.push('/guest-list')
           }
-          
-          history.push(`/entry_logs?tab=${tabValue}`)
+          if (isGuestRequest) {
+            history.push(`/entry_logs?tab=${tabValue}`)
+          }
 
           return data.result.entryRequest.id
         })
@@ -401,7 +402,7 @@ export default function RequestUpdate({ id, previousRoute,fromGuestListPage, isG
         handleUpdateRequest();
         break;
       case 'create':
-        handleCreateRequest();
+        handleCreateRequest({guestListRequest})
         break;
       default:
         break;
