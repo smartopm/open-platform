@@ -29,8 +29,7 @@ import {
 import { ModalDialog, ReasonInputModal } from '../../../components/Dialog';
 import {
   dateToString,
-  dateTimeToString,
-  updateDateWithTime
+  dateTimeToString
 } from '../../../components/DateContainer';
 import { Context } from '../../../containers/Provider/AuthStateProvider';
 import EntryNoteDialog from '../../../shared/dialogs/EntryNoteDialog';
