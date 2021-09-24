@@ -61,7 +61,7 @@ describe('Plans List Item Component', () => {
     }
   ]
   it('should render the plans list component', async () => {
-    render(
+    const container = render(
       <MockedProvider mocks={mocks} addTypename={false}>
         <BrowserRouter>
           <PlansList
@@ -78,6 +78,7 @@ describe('Plans List Item Component', () => {
     const loader = render(<Spinner />);
 
     expect(loader.queryAllByTestId('loader')[0]).toBeInTheDocument();
+    expect(container.queryByTestId('csv-fab')).toBeInTheDocument();
   });
 
   it('should render the subscription plans component', async () => {

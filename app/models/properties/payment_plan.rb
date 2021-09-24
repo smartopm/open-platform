@@ -292,7 +292,6 @@ module Properties
     end
 
     # rubocop:disable Metrics/MethodLength
-    # rubocop:disable Metrics/AbcSize
     # Returns the duration between the start date and current date
     #
     # @return [Float]
@@ -305,16 +304,15 @@ module Properties
       when 'daily'
         days
       when 'weekly'
-        (days / 7.0).ceil
+        days / 7
       when 'quarterly'
-        (days / 90.0).ceil
+        days / 90
       else
-        (days / 30.0).ceil
+        days / 30
       end
     end
-    # rubocop:enable Metrics/MethodLength
-    # rubocop:enable Metrics/AbcSize
 
+    # rubocop:enable Metrics/MethodLength
     # Returns the total paid installments
     #
     # @return [Integer]
