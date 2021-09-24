@@ -1,7 +1,6 @@
 /* eslint-disable no-nested-ternary */
-import React, { useContext, useRef, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import Dialog from '@material-ui/core/Dialog';
-import EmailEditor from 'react-email-editor';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
@@ -17,6 +16,7 @@ import { formatError } from '../../../utils/helpers';
 import CreateEmailTemplateMutation, { EmailUpdateMutation } from '../graphql/email_mutations';
 import { Context } from '../../../containers/Provider/AuthStateProvider';
 import { EmailTemplateQuery } from '../graphql/email_queries';
+import { useScript } from '../../../utils/customHooks'
 
 // eslint-disable-next-line
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -24,7 +24,6 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 });
 
 export default function EmailBuilderDialog() {
-  const emailEditorRef = useRef(null);
   const [createEmailTemplate] = useMutation(CreateEmailTemplateMutation);
   const [updateEmailTemplate] = useMutation(EmailUpdateMutation);
   const [detailsOpen, setOpenDetails] = useState(false);
@@ -35,6 +34,9 @@ export default function EmailBuilderDialog() {
   const authState = useContext(Context)
   const { emailId } = useParams()
   const history = useHistory()
+  const status = useScript('https://editor.unlayer.com/embed.js');
+  const { unlayer } = window;
+
 
   const { data: templateData } = useQuery(
     EmailTemplateQuery,
@@ -55,7 +57,7 @@ export default function EmailBuilderDialog() {
 
   function updateTemplate(){
     setMessage({ ...message, loading: true });
-    emailEditorRef.current.editor.exportHtml(data => {
+    unlayer.exportHtml(data => {
       updateEmailTemplate({
         variables: { id: emailId, body: data.html, data }
       })
@@ -73,7 +75,7 @@ export default function EmailBuilderDialog() {
 
   function saveTemplate(details) {
     setMessage({ ...message, loading: true });
-    emailEditorRef.current.editor.exportHtml(data => {
+    unlayer.exportHtml(data => {
       const { html } = data;
       createEmailTemplate({
         variables: { ...details, body: html, data }
@@ -91,17 +93,30 @@ export default function EmailBuilderDialog() {
     });
   }
 
-  function onLoad() {
-      if (emailEditorRef.current) {
-        emailEditorRef.current.loadDesign(templateData?.emailTemplate.data?.design);
-      } else {
-        setTimeout(() => emailEditorRef.current.loadDesign(templateData?.emailTemplate.data?.design), 3000);
-      }
-  }
-
   function handleDetailsDialog() {
     setOpenDetails(!detailsOpen);
   }
+
+  function initializeUnLayer () {
+    unlayer.init({
+      id: 'email-editor-container',
+      displayMode: 'web',
+      locale: defaultLanguage || authState.user?.community.locale 
+    })
+  }
+
+  useEffect(() => {
+    if(status === 'ready'){
+      initializeUnLayer();
+    }
+  }, [status])
+
+  useEffect(() => {
+    if(status === 'ready' && emailId && templateData?.emailTemplate?.data) {
+      unlayer.loadDesign(templateData?.emailTemplate.data?.design)
+    }
+  }, [emailId, templateData, status])
+
   return (
     <>
       <EmailDetailsDialog
@@ -134,7 +149,7 @@ export default function EmailBuilderDialog() {
             </Button>
           </Toolbar>
         </AppBar>
-        <EmailEditor ref={emailEditorRef} onLoad={onLoad} options={{ locale: defaultLanguage || authState.user?.community.locale }} />
+        <div id="email-editor-container" style={{ minHeight: '700px', minWidth: '1024px'}} />
       </Dialog>
     </>
   );
