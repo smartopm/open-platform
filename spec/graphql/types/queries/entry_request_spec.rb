@@ -27,8 +27,8 @@ RSpec.describe Types::Queries::EntryRequest do
     end
 
     let(:scheduledRequests_query) do
-      %(query {
-        scheduledRequests {
+      %(query ($offset: Int, $limit: Int, $query: String, $scope: Int){
+        scheduledRequests(offset: $offset, limit: $limit, query: $query, scope: $scope) {
           id
           name
           user {
@@ -83,6 +83,50 @@ RSpec.describe Types::Queries::EntryRequest do
                                          site_community: current_user.community,
                                        }).as_json
       expect(result.dig('data', 'scheduledRequests').length).to eql 2
+    end
+
+    it 'retrieves list of registered guests by end_time scope' do
+      2.times do
+        current_user.entry_requests.create(reason: 'Visiting', name: 'Visitor Joe', nrc: '012345',
+                                           visitation_date: Time.zone.now,
+                                           ends_at: Time.zone.now + 1.hour)
+      end
+      current_user.entry_requests.create(reason: 'client', name: 'Jane Doe', nrc: '012345',
+                                         visitation_date: 8.days.ago,
+                                         ends_at: 8.days.ago)
+
+      result = DoubleGdpSchema.execute(scheduledRequests_query, variables: { scope: 7 }, context: {
+                                         current_user: admin,
+                                         site_community: current_user.community,
+                                       }).as_json
+
+      expect(result.dig('data', 'scheduledRequests').length).to eql 2
+      expect(
+        result['data']['scheduledRequests'].find { |guest| guest['name'] == 'Jane Doe' },
+      ).to be_nil
+    end
+
+    it 'searches with end_time and ends_at' do
+      variables = { query: 'ends_at : 2021-09-23' }
+      current_user.entry_requests.create(
+        reason: 'Visiting', name: 'Visitor Jane', nrc: '012345',
+        visitation_date: Time.zone.now, ends_at: '2021-09-23T11:00:19+02:00'
+      )
+      current_user.entry_requests.create(
+        reason: 'Visiting', name: 'Visitor John', nrc: '012345',
+        visitation_date: Time.zone.now, end_time: '2021-09-23 12:00'
+      )
+
+      result = DoubleGdpSchema.execute(
+        scheduledRequests_query,
+        variables: variables,
+        context: {
+          current_user: admin,
+          site_community: current_user.community,
+        },
+      ).as_json
+
+      expect(result.dig('data', 'scheduledRequests').length).to eq 2
     end
 
     it 'should not retrieve list of registered guests' do

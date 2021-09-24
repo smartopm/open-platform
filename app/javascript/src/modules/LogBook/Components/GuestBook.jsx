@@ -19,7 +19,7 @@ import { Spinner } from '../../../shared/Loading';
 import MessageAlert from '../../../components/MessageAlert';
 import { Context } from '../../../containers/Provider/AuthStateProvider';
 
-export default function GuestBook({ tabValue, handleAddObservation, offset, limit, query }) {
+export default function GuestBook({ tabValue, handleAddObservation, offset, limit, query, scope }) {
   const { t } = useTranslation('logbook');
   const history = useHistory();
   const classes = useStyles();
@@ -31,9 +31,10 @@ export default function GuestBook({ tabValue, handleAddObservation, offset, limi
   const authState = useContext(Context)
 
   const [loadGuests, { data, loading: guestsLoading }] = useLazyQuery(GuestEntriesQuery, {
-      variables: { offset, limit, query },
+      variables: { offset, limit, query, scope },
       fetchPolicy: "cache-and-network"
   });
+
   const entriesHeaders = [
     { title: 'Guest Name', col: 4, value: t('misc.guest_name') },
     { title: 'Start of Visit', col: 2, value: t('misc.start_of_visit') },
@@ -57,7 +58,7 @@ export default function GuestBook({ tabValue, handleAddObservation, offset, limi
         refId: user.id,
         refType: 'Logs::EntryRequest'
     }
-    
+
     grantEntry({ variables: { id: user.id } })
       .then(() => {
         setMessage({
@@ -133,24 +134,24 @@ export function renderGuest(guest, classes, grantAccess, isMobile, loadingStatus
       ),
       'Start of Visit': (
         <Grid item xs={12} md={2} data-testid="start_of_visit">
-          <Text 
-            content={translate('guest_book.start_of_visit', { date: dateToString(guest.visitationDate) })} 
+          <Text
+            content={translate('guest_book.start_of_visit', { date: dateToString(guest.visitationDate) })}
             className={classes.text}
           />
         </Grid>
       ),
       'End of Visit': (
         <Grid item xs={12} md={2} data-testid="end_of_visit">
-          <Text 
-            content={guest.visitEndDate ? translate('guest_book.ends_on_date', { date: dateToString(guest.visitEndDate) }) : '-'} 
+          <Text
+            content={guest.visitEndDate ? translate('guest_book.ends_on_date', { date: dateToString(guest.visitEndDate) }) : '-'}
             className={classes.text}
           />
         </Grid>
       ),
       'Access Time': (
         <Grid item xs={12} md={2} data-testid="access_time">
-          <Text 
-            content={translate('guest_book.visit_time', { startTime: dateTimeToString(guest.startsAt || guest.startTime), endTime: dateTimeToString(guest.endsAt || guest.endTime) })} 
+          <Text
+            content={translate('guest_book.visit_time', { startTime: dateTimeToString(guest.startsAt || guest.startTime), endTime: dateTimeToString(guest.endsAt || guest.endTime) })}
             className={classes.text}
           />
         </Grid>
@@ -167,8 +168,8 @@ export function renderGuest(guest, classes, grantAccess, isMobile, loadingStatus
       'Access Action': (
         <Grid item xs={12} md={1} data-testid="access_actions">
           <CenteredContent>
-            <Button 
-              disabled={!checkRequests(guest, translate, tz).valid || loadingStatus.loading && loadingStatus.currentId} 
+            <Button
+              disabled={!checkRequests(guest, translate, tz).valid || loadingStatus.loading && loadingStatus.currentId}
               variant={isMobile ? "contained" : "text"}
               onClick={event => grantAccess(event, guest)}
               disableElevation
@@ -207,10 +208,15 @@ const useStyles = makeStyles({
   }
 });
 
+GuestBook.defaultProps = {
+  scope: null
+}
+
 GuestBook.propTypes = {
   tabValue: PropTypes.number.isRequired,
   offset: PropTypes.number.isRequired,
   limit: PropTypes.number.isRequired,
   handleAddObservation: PropTypes.func.isRequired,
   query: PropTypes.string.isRequired,
+  scope: PropTypes.number,
 };

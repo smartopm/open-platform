@@ -477,7 +477,7 @@ export function handleQueryOnChange(selectedOptions, filterFields) {
             return `created_at >= ${start_date} AND created_at <= ${end_date}`
           }
           if (operator === '==') operator = ':'
-          if (property === 'created_at' || property === 'due_date') {
+          if (property === 'created_at' || property === 'due_date' || property === 'ends_at') {
             value = dateToString(value)
           }
 
