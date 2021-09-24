@@ -20,16 +20,6 @@ export default function PlanListItem({ data, currencyData, menuData }) {
     completed: '#29ec47'
   };
 
-  function planStatus(plan) {
-    if (plan.status !== 'active') {
-      return plan.status;
-    }
-    if (plan.owingAmount > 0) {
-      return 'behind';
-    }
-    return 'on track';
-  }
-
   return (
     <>
       <Grid container spacing={2} className={classes.container}>
@@ -52,10 +42,10 @@ export default function PlanListItem({ data, currencyData, menuData }) {
           <PaymentSlider data={data} currencyData={currencyData} />
         </Grid>
         <Grid item xs={12} sm={2} data-testid='label'>
-          <Label title={capitalize(planStatus(data) || '')} color={objectAccessor(colors, planStatus(data))} />
+          <Label title={capitalize(data.planStatus || '')} color={objectAccessor(colors, data.planStatus)} />
         </Grid>
         <Grid item xs={12} sm={1} data-testid="menu">
-          {menuData?.userType === 'admin' && planStatus(data) === 'behind' && (
+          {menuData?.userType === 'admin' && data.planStatus === 'behind' && (
             <IconButton
               aria-controls="simple-menu"
               aria-haspopup="true"
@@ -98,6 +88,7 @@ PlanListItem.propTypes = {
   data: PropTypes.shape({
     id: PropTypes.string,
     planType: PropTypes.string,
+    planStatus: PropTypes.string,
     landParcel: PropTypes.shape({
       parcelNumber: PropTypes.string,
       parcelType: PropTypes.string

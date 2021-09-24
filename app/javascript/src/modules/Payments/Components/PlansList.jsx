@@ -1,11 +1,12 @@
 /* eslint-disable no-nested-ternary */
 import React, { useState, useContext } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Grid, Typography, IconButton } from '@material-ui/core';
+import { Grid, Typography, IconButton, Fab } from '@material-ui/core';
 import { MoreHorizOutlined } from '@material-ui/icons';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import { useMutation } from 'react-apollo';
+import { CSVLink } from 'react-csv';
 import DataList from '../../../shared/list/DataList';
 import {
   formatMoney,
@@ -67,6 +68,29 @@ export function PlansList({
     handleClose: () => handleMenuClose()
   }
 
+  const csvHeaders = [
+    { label: 'Parcel Type', key: 'landParcel.parcelType' },
+    { label: 'Parcel Number', key: 'landParcel.parcelNumber' },
+    { label: 'User Name', key: 'user.name' },
+    { label: 'User Email', key: 'user.email' },
+    { label: 'Start Date', key: 'formattedStartDate' },
+    { label: 'End Date', key: 'formattedEndDate' },
+    { label: 'Plan Value', key: 'planValue' },
+    { label: 'Installment Amount', key: 'installmentAmount' },
+    { label: 'Amount Paid', key: 'totalPayments' },
+    { label: 'Expected Payments', key: 'expectedPayments' },
+    { label: 'Owing Amount', key: 'owingAmount' },
+    { label: 'Installments Due', key: 'installmentsDue' },
+    { label: 'Pending Balance', key: 'pendingBalance' },
+    { label: 'Status', key: 'planStatus' }
+  ];
+
+  function formattedCsvData(csvData) {
+    return csvData.map(val =>({
+      ...val, formattedStartDate: dateToString(val.startDate, 'MM-DD-YYYY'), formattedEndDate: dateToString(val.endDate, 'MM-DD-YYYY') 
+    }))
+  }
+
   function handleMenuClose() {
     setAnchorEl(null);
     setPaymentPlan(null);
@@ -111,6 +135,16 @@ export function PlansList({
 
   return (
     <div>
+      <Fab color="primary" variant="extended" className={classes.download} data-testid="csv-fab">
+        <CSVLink
+          data={formattedCsvData(communityPlans) || []}
+          style={{ color: 'white' }}
+          headers={csvHeaders}
+          filename={`payment-plans-data-${dateToString(new Date())}.csv`}
+        >
+          {communityPlansLoading ? <Spinner /> : t('actions.download_csv')}
+        </CSVLink>
+      </Fab>
       <ActionDialog
         open={confirmationModalOpen}
         type="confirm"

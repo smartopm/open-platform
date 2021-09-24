@@ -239,10 +239,13 @@ export const CommunityPlansQuery = gql`
       expectedPayments
       installmentsDue
       owingAmount
+      planStatus
+      installmentAmount
       user{
         id
         name
         imageUrl
+        email
       }
       landParcel{
         parcelNumber

@@ -325,9 +325,9 @@ RSpec.describe Types::Queries::Payment do
           expect(result.dig('data', 'communityPaymentPlans').size).to eql 2
           payment_plan_result = result.dig('data', 'communityPaymentPlans', 0)
           expect(payment_plan_result['totalPayments']).to eql 500.0
-          expect(payment_plan_result['expectedPayments']).to eql 700.0
-          expect(payment_plan_result['owingAmount']).to eql 200.0
-          expect(payment_plan_result['installmentsDue']).to eql 2
+          expect(payment_plan_result['expectedPayments']).to eql 600.0
+          expect(payment_plan_result['owingAmount']).to eql 100.0
+          expect(payment_plan_result['installmentsDue']).to eql 1
           expect(payment_plan_result['outstandingDays']).to eql 31
         end
       end
