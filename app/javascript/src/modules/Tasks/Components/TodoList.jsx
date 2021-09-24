@@ -250,7 +250,6 @@ export default function TodoList({
   }
 
   function handleTaskFilter(_evt, key) {
-    if (key === 'tasksWithNoDueDate') return;
     setCurrentTile(key);
     setQuery(objectAccessor(taskQuery, key));
     // show tasks when a filter has been applied, we might have to move this to useEffect
