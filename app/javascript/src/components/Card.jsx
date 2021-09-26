@@ -19,7 +19,8 @@ export default function Card({
   const theme = useContext(ThemeContext);
   if (
     !access.includes(authState.user.userType.toLowerCase()) ||
-    (id === 10 && authState.user.community.name !== 'Nkwashi')
+    (id === 10 && authState.user.community.name !== 'Nkwashi') ||
+    (id === 14 && authState.user.community.name === 'Ciudad Morazán')
   ) {
     return null;
   }
