@@ -4,6 +4,7 @@ require 'email_msg'
 require 'host_env'
 
 # Send qr-code to a registered guest
+# rubocop:disable Layout/LineLength
 class GuestQrCodeJob < ApplicationJob
   queue_as :default
 
@@ -13,7 +14,7 @@ class GuestQrCodeJob < ApplicationJob
 
     base_url = HostEnv.base_url(current_user.community)
     qr_code_url = 'https://api.qrserver.com/v1/create-qr-code/' \
-                  "?data=#{CGI.escape("https://#{base_url}/request/#{entry_req.id}")}&size=256x256"
+                  "?data=#{CGI.escape("https://#{base_url}/request/#{entry_req.id}?type=scan")}&size=256x256"
 
     template_data = [
       { key: '%community_name%', value: current_user.community.name },
@@ -23,3 +24,4 @@ class GuestQrCodeJob < ApplicationJob
     EmailMsg.send_mail_from_db(guest_email, template, template_data)
   end
 end
+# rubocop:enable Layout/LineLength

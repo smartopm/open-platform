@@ -34,7 +34,7 @@ RSpec.describe GuestQrCodeJob, type: :job do
     it 'invokes EmailMsg' do
       base_url = HostEnv.base_url(user.community)
       qr_code_url = 'https://api.qrserver.com/v1/create-qr-code/' \
-                    "?data=#{CGI.escape("https://#{base_url}/request/#{entry_req.id}")}&size=256x256"
+                    "?data=#{CGI.escape("https://#{base_url}/request/#{entry_req.id}?type=scan")}&size=256x256"
 
       template_data = [
         { key: '%community_name%', value: user.community.name },
