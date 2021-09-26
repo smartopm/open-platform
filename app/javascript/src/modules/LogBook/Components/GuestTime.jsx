@@ -12,6 +12,7 @@ export default function GuestTime({ userData, handleChange, handleChangeOccurren
         selectedDate={userData.visitationDate}
         handleDateChange={date => handleChange({ target: { name: 'visitationDate', value: date } })}
         label={t('common:misc.day_of_visit')}
+        inputProps={{ 'data-testid': 'day_of_visit_input' }}
       />
 
       <div>
@@ -19,12 +20,14 @@ export default function GuestTime({ userData, handleChange, handleChangeOccurren
           time={userData.startsAt || userData.startTime}
           handleTimeChange={date => handleChange({ target: { name: 'startsAt', value: date } })}
           label={t('common:misc.start_time')}
+          inputProps={{ 'data-testid': 'start_time_input' }}
         />
         <span style={{ marginLeft: 20 }}>
           <ThemedTimePicker
             time={userData.endsAt || userData.endTime}
             handleTimeChange={date => handleChange({ target: { name: 'endsAt', value: date } })}
             label={t('common:misc.end_time')}
+            inputProps={{ 'data-testid': 'end_time_input' }}
           />
         </span>
       </div>
@@ -50,6 +53,7 @@ export default function GuestTime({ userData, handleChange, handleChangeOccurren
           selectedDate={userData.visitEndDate}
           handleDateChange={date => handleChange({ target: { name: 'visitEndDate', value: date } })}
           label={t('guest_book.repeats_until')}
+          inputProps={{ 'data-testid': 'repeats_until_input' }}
           disablePastDate
         />
       )}

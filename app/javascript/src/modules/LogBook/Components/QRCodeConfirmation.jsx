@@ -43,7 +43,9 @@ export default function QRCodeConfirmation({
               <Typography gutterBottom>{`${t('qrcode_confirmation.send_qr_code')}:`}</Typography>
               <Grid className={classes.emailGrid}>
                 <EmailIcon color="primary" />
-                <Typography className={classes.emailText}>{guestEmail}</Typography>
+                <Typography className={classes.emailText} data-testid="guest-email">
+                  {guestEmail}
+                </Typography>
               </Grid>
             </>
           ) : (
@@ -58,7 +60,7 @@ export default function QRCodeConfirmation({
                 type="email"
                 onChange={event => emailHandler.handleEmailChange(event.target.value)}
                 value={emailHandler.value}
-                inputProps={{ 'data-testid': 'guest-email' }}
+                inputProps={{ 'data-testid': 'guest-email-input' }}
                 className={`form-control ${classes.newEmail}`}
               />
             </>
