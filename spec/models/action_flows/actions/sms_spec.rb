@@ -31,6 +31,7 @@ RSpec.describe ActionFlows::Actions::Sms do
   end
 
   it 'executes action' do
+    id = assign_note.note_id
     flow = ActionFlows::WebFlow.new(action_flow.description, action_flow.event_type,
                                     action_flow.event_condition, action_flow.event_action)
 
@@ -38,10 +39,16 @@ RSpec.describe ActionFlows::Actions::Sms do
     event.preload_data(event_log)
 
     expect(Sms).to receive(:send)
-      .with('2341234567', "Task 'some body' was assigned to you")
-      
+      .with(
+        '2341234567',
+        "Task 'some body' was assigned to you\nhttps:///tasks/#{id}\n",
+      )
+
     expect(Sms).to receive(:send)
-      .with('1234567', "some name just assigned a task 'some body' to some name")
+      .with(
+        '1234567',
+        "some name just assigned a task 'some body'\nto some name https:///tasks/#{id}\n",
+      )
     described_class.execute_action(event.data_set, flow.action_fields)
   end
 end
