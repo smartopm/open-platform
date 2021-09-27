@@ -5,7 +5,7 @@ import { Grid, Typography, IconButton, Fab } from '@material-ui/core';
 import { MoreHorizOutlined } from '@material-ui/icons';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
-import { useMutation } from 'react-apollo';
+import { useMutation , useQuery } from 'react-apollo';
 import { CSVLink } from 'react-csv';
 import DataList from '../../../shared/list/DataList';
 import useDebounce from '../../../utils/useDebounce';
@@ -16,7 +16,6 @@ import {
   titleize,
   capitalize,
   objectAccessor,
-  formatError,
   handleQueryOnChange
 } from '../../../utils/helpers';
 import Label from '../../../shared/label/Label';
@@ -42,11 +41,12 @@ import {
 } from '../../../utils/constants';
 import { CommunityPlansQuery } from '../graphql/payment_query';
 
+
 export function PlansList({
   matches,
   currencyData,
   communityPlansLoading,
-  communityPlans,
+  // communityPlansData,
   setDisplaySubscriptionPlans,
   setMessage,
   setAlertOpen
@@ -64,6 +64,8 @@ export function PlansList({
   const authState = useContext(AuthStateContext);
   const [anchorEl, setAnchorEl] = useState(null);
   const anchorElOpen = Boolean(anchorEl);
+  const [displayBuilder, setDisplayBuilder] = useState('none');
+  const [searchQuery, setSearchQuery] = useState('');
 
   const menuList = [
     {
@@ -136,11 +138,8 @@ export function PlansList({
       handleAfterMutation();
     })
   }
-  const [searchValue, setSearchValue] = useState('');
-  const [displayBuilder, setDisplayBuilder] = useState('none');
-  const [searchQuery, setSearchQuery] = useState('');
-
-  const { loading, error, data: communityPlansData } = useQuery(CommunityPlansQuery, {
+  
+  const { loading, data: communityPlansData } = useQuery(CommunityPlansQuery, {
     variables: { query: debouncedValue || searchQuery },
     errorPolicy: 'all',
     fetchPolicy: 'cache-and-network'
@@ -189,11 +188,11 @@ export function PlansList({
         handleOnSave={sendPaymentReminderMail}
         disableActionBtn={mutationLoading}
       />
-      {communityPlansLoading ? (
+      {/* {communityPlansLoading ? (
       {console.log(searchQuery)}
       {error && (
         <p>{formatError(error.message)}</p>
-      )}
+      )} */}
       <SearchInput
         title={t('common:misc.plans')}
         searchValue={searchValue}
@@ -547,12 +546,12 @@ PlansList.propTypes = {
     locale: PropTypes.string
   }).isRequired,
   communityPlansLoading: PropTypes.bool.isRequired,
-  communityPlans: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.string,
-      status: PropTypes.string
-    })
-  ),
+  // communityPlans: PropTypes.arrayOf(
+  //   PropTypes.shape({
+  //     id: PropTypes.string,
+  //     status: PropTypes.string
+  //   })
+  // ),
   setDisplaySubscriptionPlans: PropTypes.func.isRequired,
   setMessage: PropTypes.func.isRequired,
   setAlertOpen: PropTypes.func.isRequired,
