@@ -7,10 +7,9 @@ module Properties
     include SearchCop
 
     search_scope :search do
-      attributes :status
+      attributes :status, :plan_type
       attributes name: ['user.name']
       attributes land_parcel: ['land_parcel.parcel_number']
-      attributes plot_type: ['land_parcel.parcel_type']
     end
 
     belongs_to :user, class_name: 'Users::User'

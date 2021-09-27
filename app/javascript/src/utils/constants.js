@@ -497,6 +497,16 @@ export const dateWidget = {
           })
         }
       },
+      planType: {
+        label: 'Plan Type',
+        type: 'select',
+        valueSources: ['value'],
+        fieldSettings: {
+        listValues: Object.entries(subscriptionPlanType).map(([key, val]) => {
+            return { value: key, title: toTitleCase(val) }
+          })
+        }
+      },
       amountOwned: {
         label: 'Amount Owed',
         type: 'number',
@@ -596,7 +606,8 @@ export const entryLogsQueryBuilderInitialValue = {
   export const planFilterFields = {
     status: 'plan_status',
     amountOwned: 'owing_amount',
-    installmentsDue: 'installments_due'
+    installmentsDue: 'installments_due',
+    planType: 'plan_type'
   }
 
   export const propertyQueryBuilderConfig = {
