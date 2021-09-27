@@ -527,9 +527,6 @@ const useStyles = makeStyles(() => ({
   },
   body: {
     padding: '0 2%'
-  },
-  search: {
-    
   }
 }));
 
