@@ -67,6 +67,8 @@ module Users
     has_many :entry_requests, class_name: 'Logs::EntryRequest', dependent: :destroy
     has_many :granted_entry_requests, class_name: 'Logs::EntryRequest', foreign_key: :grantor_id,
                                       dependent: :destroy, inverse_of: :user
+    has_many :revoked_entry_requests, class_name: 'Logs::EntryRequest', foreign_key: :revoker_id,
+                                      dependent: :destroy, inverse_of: :user
 
     has_many :payments, class_name: 'Payments::Payment', dependent: :destroy
     has_many :invoices, class_name: 'Payments::Invoice', dependent: :destroy, inverse_of: :user
@@ -280,6 +282,11 @@ module Users
 
       entry.deny!(self)
       entry
+    end
+
+    def revoke!(entry_request_object)
+      entry_request_object.revoke!(self)
+      entry_request_object
     end
 
     def generate_events(event_tag, target_obj, data = {})

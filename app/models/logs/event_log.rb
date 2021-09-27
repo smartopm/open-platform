@@ -26,7 +26,7 @@ module Logs
                         task_create task_update note_comment_create note_comment_update
                         form_create form_update form_publish form_submit form_update_submit
                         visit_request invoice_change deposit_create payment_update
-                        observation_log task_assign].freeze
+                        observation_log task_assign revoke_guest_entry].freeze
     validates :subject, inclusion: { in: VALID_SUBJECTS, allow_nil: false }
 
     # Only log user activity if we haven't seen them
@@ -217,6 +217,13 @@ module Logs
       else
         acting_user.name
       end
+    end
+
+    def revoke_guest_entry_to_sentence
+      I18n.t('activerecord.attributes.logs/event_log.sentences.revoke_entry_to_sentence',
+             acting_user_name: acting_user_name,
+             visitor_name: visitor_name,
+             action: data['action'])
     end
 
     # Executes action flows for a event log.

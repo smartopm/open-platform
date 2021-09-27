@@ -1,16 +1,17 @@
 # frozen_string_literal: true
 
+# rubocop:disable Metrics/ClassLength
 require 'host_env'
 
 module Logs
   # Record of visitor entries to a community
-  # rubocop:disable Metrics/ClassLength
   class EntryRequest < ApplicationRecord
     include SearchCop
 
     belongs_to :user, class_name: 'Users::User'
     belongs_to :community
     belongs_to :grantor, class_name: 'Users::User', optional: true
+    belongs_to :revoker, class_name: 'Users::User', optional: true
 
     before_validation :attach_community
     validates :name, presence: true
@@ -31,6 +32,8 @@ module Logs
 
     GRANT_STATE = %w[Pending Granted Denied].freeze
 
+    ENTRY_REQUEST_STATE = %w[Active Revoked].freeze
+
     def grant!(grantor)
       update(
         grantor_id: grantor.id,
@@ -47,6 +50,15 @@ module Logs
         granted_at: Time.zone.now,
       )
       log_entry_start('denied')
+    end
+
+    def revoke!(revoker)
+      update!(
+        revoker_id: revoker.id,
+        entry_request_state: 1,
+        revoked_at: Time.zone.now,
+      )
+      log_guest_entry_revoke('revoked guest entry')
     end
 
     # Leaving this here for now in case it is needed
@@ -85,6 +97,14 @@ module Logs
       self[:source] == 'showroom'
     end
 
+    def active?
+      self[:entry_request_state].nil? || self[:entry_request_state].zero?
+    end
+
+    def revoked?
+      self[:entry_request_state] == 1
+    end
+
     # This is deprecated
     def acknowledge!
       update(
@@ -115,6 +135,19 @@ module Logs
       Logs::EventLog.create(
         acting_user: user, community: user.community,
         subject: 'visitor_entry',
+        ref_id: self[:id], ref_type: 'Logs::EntryRequest',
+        data: {
+          action: action,
+          ref_name: self[:name],
+          type: user.user_type,
+        }
+      )
+    end
+
+    def log_guest_entry_revoke(action)
+      Logs::EventLog.create(
+        acting_user: user, community: user.community,
+        subject: 'revoke_guest_entry',
         ref_id: self[:id], ref_type: 'Logs::EntryRequest',
         data: {
           action: action,

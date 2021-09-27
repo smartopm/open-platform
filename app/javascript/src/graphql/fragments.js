@@ -98,6 +98,7 @@ export const EntryRequestFragment = {
       startTime
       endsAt
       startsAt
+      isGuest
       grantor {
         name
       }

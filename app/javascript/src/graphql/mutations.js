@@ -238,6 +238,7 @@ export const EntryRequestCreate = gql`
     $temperature: String
     $occursOn: [String!]
     $visitEndDate: String
+    $isGuest: Boolean
   ) {
     result: entryRequestCreate(
       name: $name
@@ -255,6 +256,7 @@ export const EntryRequestCreate = gql`
       temperature: $temperature
       occursOn: $occursOn
       visitEndDate: $visitEndDate
+      isGuest: $isGuest
     ) {
       entryRequest {
         ...EntryRequestFields

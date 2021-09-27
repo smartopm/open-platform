@@ -85,6 +85,7 @@ RSpec.describe Mutations::EntryRequest do
 
   describe 'updating an entry request' do
     let!(:user) { create(:user_with_community) }
+    let!(:random_user) { create(:user_with_community) }
     let!(:admin) { create(:admin_user, community_id: user.community_id) }
     let!(:entry_request) { user.entry_requests.create(name: 'Mark Percival', reason: 'Visiting') }
 
@@ -120,6 +121,18 @@ RSpec.describe Mutations::EntryRequest do
       expect(result['errors']).to be_nil
     end
 
+    it 'updates entry request when current user is owner' do
+      variables = { id: entry_request.id, email: 'sample@gmail.com' }
+      result = DoubleGdpSchema.execute(query,
+                                       variables: variables,
+                                       context: {
+                                         current_user: user,
+                                         site_community: user.community,
+                                       }).as_json
+      expect(result.dig('data', 'result', 'entryRequest', 'id')).not_to be_nil
+      expect(result.dig('data', 'result', 'entryRequest', 'email')).not_to be_nil
+    end
+
     it 'returns anauthorized for non allowed users' do
       variables = {
         id: entry_request.id,
@@ -128,8 +141,8 @@ RSpec.describe Mutations::EntryRequest do
       }
       result = DoubleGdpSchema.execute(query, variables: variables,
                                               context: {
-                                                current_user: user,
-                                                site_community: user.community,
+                                                current_user: random_user,
+                                                site_community: random_user.community,
                                               }).as_json
       expect(result.dig('data', 'result', 'entryRequest', 'id')).to be_nil
       expect(result['errors']).not_to be_nil

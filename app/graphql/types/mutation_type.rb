@@ -20,6 +20,7 @@ module Types
     field :entry_request_acknowledge, mutation: Mutations::EntryRequest::EntryRequestAcknowledge
     field :entry_request_note, mutation: Mutations::EntryRequest::EntryRequestNote
     field :send_guest_qr_code, mutation: Mutations::EntryRequest::SendQrCode
+    field :guest_entry_request_revoke, mutation: Mutations::EntryRequest::GuestEntryRequestRevoke
 
     # User login
     field :login_phone_start, mutation: Mutations::Login::LoginPhoneStart

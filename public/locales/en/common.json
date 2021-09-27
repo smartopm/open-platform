@@ -48,6 +48,7 @@
     "action_note": "Type action note here",
     "search_user": "Search User",
     "search_tasks": "Search Tasks",
+    "search_guests": "Search guest list",
     "search": "Search",
     "add_note": "Add your notes here",
     "note_due_date": "Pick a due date for this todo",
@@ -89,6 +90,7 @@
     "close": "Close",
     "creating_plan": "Creating a Plan ...",
     "invite_guest": "Invite Guest",
+    "new_guest": "New Guest",
     "invite_another_guest": "Invite Another Guest"
   },
   "misc": {
@@ -275,6 +277,9 @@
     "showroom": "Showroom",
     "search": "Search",
     "my_profile": "My Profile",
+    "guest_list": "Guest List",
+    "revoke_access": "Revoke Access",
+    "more_details": "More Details",
     "logout": "Logout",
     "user_journey_stats": "User Journey Stats",
     "edit": "Edit",

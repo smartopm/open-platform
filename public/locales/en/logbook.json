@@ -35,7 +35,10 @@
     "success_message": "Success: Access {{action}} successfully",
     "registered_guest_updated": "Success: Registered Guest successfully updated",
     "registered_guest_created": "Success: Registered Guest successfully created",
+    "guest_entry_created_successful": "Success: Guest added to guest list successfully",
+    "guest_entry_updated_successful": "Success: Guest list entry updated to successfully",
     "granted": "granted",
+    "revoked": "revoked",
     "denied": "denied",
     "add_observation": "Add Observation",
     "granted_access_by": "Granted access by",
@@ -100,10 +103,14 @@
     "expired": "Expired",
     "ends_on_date": "Ends on {{date}}",
     "start_of_visit": "Start of visit {{date}}",
+    "ends_on_date_time": "Ends on {{date}}, {{time}}",
+    "start_on_date_time": "Start on {{date}}, {{time}}",
     "visit_time": "Visit time {{startTime}} - {{endTime}}",
     "repeats_on": "Repeats on",
     "repeats_until": "Repeats Until",
-    "update_guest": "Update Guest"
+    "update_guest": "Update Guest",
+    "host": "Host",
+    "revoked": "Revoked"
   },
   "date_picker": {
     "ok_label": "Ok",
@@ -112,5 +119,13 @@
   },
   "errors": {
     "required_field": "{{fieldName}} is Required"
+    },
+  "guest": {
+    "guest_name": "Guest Name",
+    "start_of_visit": "Start of Visit",
+    "end_of_visit": "End of Visit",
+    "validity": "validity",
+    "access_time": "Access Time",
+    "access_action": "Access Action"
     }
 }

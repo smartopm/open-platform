@@ -18,6 +18,22 @@ RSpec.describe Types::Queries::EntryRequest do
       GQL
     end
 
+    let(:guest_list_entry) do
+      <<~GQL
+        query guestListEntry(
+          $id: ID!
+        ) {
+          guestListEntry(id: $id) {
+            id
+            name
+            revokedAt
+            revoked
+            active
+            }
+          }
+      GQL
+    end
+
     let(:entry_requests_query) do
       %(query {
         entryRequests {
@@ -46,6 +62,29 @@ RSpec.describe Types::Queries::EntryRequest do
         })
     end
 
+    let(:scheduled_guest_list_query) do
+      %(query {
+        scheduledGuestList {
+          id
+          name
+          user {
+            id
+            name
+            imageUrl
+            avatarUrl
+          }
+          occursOn
+          visitEndDate
+          visitationDate
+          endTime
+          startTime
+          revokedAt
+          revoked
+          active
+        }
+        })
+    end
+
     it 'should retrieve one entry_request' do
       entry_request = current_user.entry_requests.create(reason: 'Visiting',
                                                          name: 'Visitor Joe', nrc: '012345')
@@ -59,6 +98,40 @@ RSpec.describe Types::Queries::EntryRequest do
                                                             }).as_json
       expect(result.dig('data', 'entryRequest').length).to eql 1
       expect(result.dig('data', 'entryRequest', 'id')).to eql entry_request.id
+    end
+
+    it 'should retrieve one guest list entry request' do
+      entry_request = current_user.entry_requests.create(reason: 'Visiting',
+                                                         name: 'Visitor Joe',
+                                                         nrc: '012345',
+                                                         is_guest: true)
+      variables = {
+        id: entry_request.id,
+      }
+      result = DoubleGdpSchema.execute(guest_list_entry, variables: variables,
+                                                         context: {
+                                                           current_user: current_user,
+                                                           site_community: current_user.community,
+                                                         }).as_json
+      expect(result.dig('data', 'guestListEntry', 'name')).to eql 'Visitor Joe'
+      expect(result.dig('data', 'guestListEntry', 'id')).to eql entry_request.id
+    end
+
+    it 'should raise unauthorized if current user is missing' do
+      entry_request = current_user.entry_requests.create(reason: 'Visiting',
+                                                         name: 'Visitor Joe',
+                                                         nrc: '012345',
+                                                         is_guest: true)
+      variables = {
+        id: entry_request.id,
+      }
+      result = DoubleGdpSchema.execute(guest_list_entry, variables: variables,
+                                                         context: {
+                                                           current_user: nil,
+                                                           site_community: current_user.community,
+                                                         }).as_json
+      expect(result.dig('errors', 0, 'message')).to include 'Unauthorized'
+      expect(result.dig('data', 'guestListEntry')).to be_nil
     end
 
     it 'should retrieve list of entry_request' do
@@ -129,11 +202,32 @@ RSpec.describe Types::Queries::EntryRequest do
       expect(result.dig('data', 'scheduledRequests').length).to eq 2
     end
 
-    it 'should not retrieve list of registered guests' do
-      # 2.times do
-      #   current_user.entry_requests.create(reason: 'Visiting',name: 'Visitor Joe', nrc: '012345',
-      #                                      visitation_date: Time.zone.now)
-      # end
+    it 'should retrieve list of guest list entries' do
+      2.times do
+        admin.entry_requests.create(reason: 'Visiting', name: 'Visitor Joe', nrc: '012345',
+                                    visitation_date: Time.zone.now, is_guest: true)
+      end
+      result = DoubleGdpSchema.execute(scheduled_guest_list_query, context: {
+                                         current_user: admin,
+                                         site_community: current_user.community,
+                                       }).as_json
+      expect(result.dig('data', 'scheduledGuestList').length).to eql 2
+    end
+
+    it 'should raise unauthorized if current user is missing' do
+      2.times do
+        admin.entry_requests.create(reason: 'Visiting', name: 'Visitor Joe', nrc: '012345',
+                                    visitation_date: Time.zone.now, is_guest: true)
+      end
+      result = DoubleGdpSchema.execute(scheduled_guest_list_query, context: {
+                                         current_user: nil,
+                                         site_community: current_user.community,
+                                       }).as_json
+      expect(result.dig('errors', 0, 'message')).to include 'Unauthorized'
+      expect(result.dig('data', 'scheduledGuestList')).to be_nil
+    end
+
+    it 'should not retrieve list of registered guests when authentication is missing' do
       result = DoubleGdpSchema.execute(scheduledRequests_query, context: {
                                          current_user: current_user,
                                          site_community: current_user.community,

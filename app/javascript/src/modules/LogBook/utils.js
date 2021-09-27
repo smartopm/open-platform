@@ -38,6 +38,10 @@ export function checkRequests(req, translate, tz) {
   const endTime = updateDateWithTime(new Date(), req.endsAt || req.endTime, tz)
 
   const dayOfTheWeek = getWeekDay(timeNow);
+  if(req.revoked){
+    return { title: translate('guest_book.revoked'), color: '#BA000D', valid: false };
+
+  }
 
   if (req.occursOn.length) {
     if (!timeNow.isSameOrBefore(moment.tz(req.visitEndDate, tz), 'day')) {

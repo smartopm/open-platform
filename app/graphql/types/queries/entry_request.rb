@@ -11,6 +11,11 @@ module Types::Queries::EntryRequest
       argument :id, GraphQL::Types::ID, required: true
     end
 
+    field :guest_list_entry, Types::EntryRequestType, null: true do
+      description 'Get an entry request for guest list'
+      argument :id, GraphQL::Types::ID, required: true
+    end
+
     # Get a entry logs for a user
     field :entry_requests, [Types::EntryRequestType], null: true do
       description 'Get a list of entry request'
@@ -24,12 +29,28 @@ module Types::Queries::EntryRequest
       argument :query, String, required: false
       argument :scope, Integer, required: false
     end
+
+    field :scheduled_guest_list, [Types::EntryRequestType], null: true do
+      description 'Get a list of scheduled entry requests'
+      argument :offset, Integer, required: false
+      argument :limit, Integer, required: false
+      argument :query, String, required: false
+    end
   end
 
   def entry_request(id:)
     raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') unless admin_or_security_guard
 
     context[:site_community].entry_requests.find(id)
+  end
+
+  def guest_list_entry(id:)
+    raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') unless context[:current_user]
+
+    context[:site_community].entry_requests
+                            .where(
+                              user: context[:current_user], is_guest: true,
+                            ).find(id)
   end
 
   def entry_requests
@@ -55,6 +76,22 @@ module Types::Queries::EntryRequest
   end
   # rubocop:enable Metrics/AbcSize
 
+  # rubocop:disable Metrics/AbcSize
+  def scheduled_guest_list(offset: 0, limit: 50, query: nil)
+    raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') unless context[:current_user]
+
+    context[:site_community]
+      .entry_requests
+      .where(user: context[:current_user], is_guest: true)
+      .where.not(visitation_date: nil)
+      .includes(:user)
+      .search(query)
+      .limit(limit).offset(offset)
+      .unscope(:order)
+      .order(created_at: :desc)
+  end
+  # rubocop:enable Metrics/AbcSize
+
   private
 
   def handle_search(entry_requests, query)
@@ -68,6 +105,6 @@ module Types::Queries::EntryRequest
   end
 
   def admin_or_security_guard
-    context[:current_user].admin? || context[:current_user].security_guard?
+    context[:current_user]&.admin? || context[:current_user]&.security_guard?
   end
 end

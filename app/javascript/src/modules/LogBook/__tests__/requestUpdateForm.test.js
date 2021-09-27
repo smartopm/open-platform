@@ -32,6 +32,8 @@ describe('RequestUpdate Component ', () => {
           createdAt: '2020-10-15T09:31:02Z',
           updatedAt: '2020-10-15T09:31:06Z',
           grantedAt: '2020-10-15T09:31:06Z',
+          revokedAt: '2020-10-15T09:31:06Z',
+          isGuest: true,
           guard: {
             name: 'Some User Name',
             id: '162f7517-7cc8-42f9-b2d0-a83a16d59569',
@@ -103,8 +105,8 @@ describe('RequestUpdate Component ', () => {
         expect(container.queryByTestId('entry_user_grant').textContent).toContain(
           'logbook:logbook.grant'
         );
-        expect(container.queryByTestId('entry_user_grant_request').textContent).toContain(
-          'misc.log_new_entry'
+        expect(container.queryByTestId('entry_user_grant').textContent).toContain(
+          'logbook:logbook.grant'
         );
         expect(container.queryByTestId('entry_user_grant')).not.toBeDisabled();
         expect(container.queryByTestId('entry_user_deny').textContent).toContain(

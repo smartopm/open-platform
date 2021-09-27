@@ -20,14 +20,9 @@ import {
 import { Spinner } from '../../../shared/Loading';
 import { isTimeValid, getWeekDay } from '../../../utils/dateutil';
 import { objectAccessor } from '../../../utils/helpers';
-import {
-  userState,
-  userType,
-  communityVisitingHours,
-  defaultBusinessReasons
-} from '../../../utils/constants';
-import { ModalDialog, ReasonInputModal } from '../../../components/Dialog';
 import { dateToString, dateTimeToString } from '../../../components/DateContainer';
+import { userState, userType, communityVisitingHours, defaultBusinessReasons } from '../../../utils/constants'
+import { ModalDialog, ReasonInputModal } from "../../../components/Dialog"
 import { Context } from '../../../containers/Provider/AuthStateProvider';
 import EntryNoteDialog from '../../../shared/dialogs/EntryNoteDialog';
 import CenteredContent from '../../../components/CenteredContent';
@@ -42,36 +37,31 @@ import QRCodeConfirmation from './QRCodeConfirmation';
 
 
 const initialState = {
-  name: '',
-  phoneNumber: '',
-  nrc: '',
-  vehiclePlate: '',
-  reason: '',
-  business: '',
-  state: '',
-  userType: '',
-  expiresAt: '',
-  email: '',
-  companyName: '',
-  temperature: '',
-  loaded: false,
-  occursOn: [],
-  visitationDate: null,
-  visitEndDate: null,
-  startsAt: new Date(),
-  endsAt: new Date()
-};
+    name: '',
+    phoneNumber: '',
+    nrc: '',
+    vehiclePlate: '',
+    reason: '',
+    business: '',
+    state: '',
+    userType: '',
+    expiresAt: '',
+    email: '',
+    companyName: '',
+    temperature: '',
+    loaded: false,
+    occursOn: [],
+    visitationDate: null,
+    visitEndDate: null,
+    startsAt: new Date(),
+    endsAt: new Date(),
+    isGuest: false
+}
 
-export default function RequestUpdate({
-  id,
-  previousRoute,
-  isGuestRequest,
-  tabValue,
-  isScannedRequest
-}) {
-  const history = useHistory();
-  const authState = useContext(Context);
-  const isFromLogs = previousRoute === 'logs' || false;
+export default function RequestUpdate({ id, previousRoute,guestListRequest, isGuestRequest, tabValue, isScannedRequest }) {
+  const history = useHistory()
+  const authState = useContext(Context)
+  const isFromLogs = previousRoute === 'logs' ||  false
   const [loadRequest, { data }] = useLazyQuery(EntryRequestQuery, {
     variables: { id }
   });
@@ -102,18 +92,16 @@ export default function RequestUpdate({
     isSubmitting: false
   });
   const [formData, setFormData] = useState(initialState);
-  const requiredFields =
-    authState?.user?.community?.communityRequiredFields?.manualEntryRequestForm ||
-    defaultRequiredFields;
   const { t } = useTranslation(['common', 'logbook']);
   const [isReasonModalOpen, setReasonModal] = useState(false);
   const [isQrModalOpen, setQrModal] = useState(false);
   const [qrCodeEmail, setQrCodeEmail] = useState('');
   const [guestRequest, setGuestRequest] = useState(null);
+  const requiredFields = authState?.user?.community?.communityRequiredFields?.manualEntryRequestForm || defaultRequiredFields
 
   useEffect(() => {
-    if (id) {
-      loadRequest({ variables: { id } });
+    if (id!== 'new-guest-entry' && id !== null && id !== 'undefined') {
+      loadRequest({ variables: { id } })
     }
   }, [id, loadRequest]);
 
@@ -235,13 +223,14 @@ export default function RequestUpdate({
     history.push(`/entry_logs?tab=${tabValue}`);
   }
 
-  function handleCreateRequest() {
+  
+  function handleCreateRequest({guestListRequest: _guestListRequest}) {
     const otherFormData = {
       ...formData,
       // return reason if not other
-      reason: formData.business || formData.reason
-    };
-
+      reason: formData.business || formData.reason,
+      isGuest: !!_guestListRequest
+    }
     return (
       createEntryRequest({ variables: otherFormData })
         // eslint-disable-next-line no-shadow
@@ -256,7 +245,13 @@ export default function RequestUpdate({
             setGuestRequest(data.result.entryRequest);
             setQrModal(true);
           }
-          return data.result.entryRequest.id;
+          setRequestId(data.result.entryRequest.id)
+          if(data.result.entryRequest.isGuest){
+            return history.push('/guest-list')
+          }
+          history.push(`/entry_logs?tab=${tabValue}`)
+
+          return data.result.entryRequest.id
         })
         .catch(err => {
           setDetails({ ...observationDetails, isError: true, message: err.message });
@@ -271,13 +266,19 @@ export default function RequestUpdate({
     };
     setLoading(true);
     updateRequest({ variables: { id, ...otherFormData } })
-      .then(() => {
+      // eslint-disable-next-line no-shadow
+      .then((data) => {
         setLoading(false);
         setDetails({
           ...observationDetails,
           message: t('logbook:logbook.registered_guest_updated')
         });
-        history.push(`/entry_logs?tab=${tabValue}`);
+        setDetails({ ...observationDetails, message: t('logbook:logbook.registered_guest_updated') });
+        if(data.data.result.entryRequest.isGuest){
+          history.push('/guest-list')
+          return
+        }
+        history.push(`/entry_logs?tab=${tabValue}`)
       })
       .catch(error => {
         setLoading(false);
@@ -388,7 +389,7 @@ export default function RequestUpdate({
         handleUpdateRequest();
         break;
       case 'create':
-        handleCreateRequest();
+        handleCreateRequest({guestListRequest})
         break;
       default:
         break;
@@ -448,7 +449,17 @@ export default function RequestUpdate({
     setReasonModal(!isReasonModalOpen);
   }
 
-  const observationAction = observationNote ? 'Save' : 'Skip';
+  const observationAction = observationNote ? 'Save' : 'Skip'
+
+  function closeForm({id: _id, guestListRequest: _guestListRequest}){
+
+    if(_id === 'new-guest-entry' || _guestListRequest ){
+      history.push({pathname: '/guest-list'})
+      return 
+    }
+    history.push('/entry_logs?tab=2&offset=0')
+  }
+
 
   return (
     <>
@@ -468,6 +479,7 @@ export default function RequestUpdate({
           />
         </div>
       </ReasonInputModal>
+
       <QRCodeConfirmation
         open={isQrModalOpen}
         guestEmail={formData.email}
@@ -490,16 +502,16 @@ export default function RequestUpdate({
         name={formData.name}
       >
         {modalAction === 'grant' && !checkTimeIsValid() && (
-          <div>
-            <p>
-              {t('logbook:logbook.today_is', {
-                day: getWeekDay(date),
-                time: dateTimeToString(date)
-              })}
-            </p>
-            <p>{t('logbook:logbook.beyond_time')}</p>
-          </div>
-        )}
+        <div>
+          <p>
+            {t('logbook:logbook.today_is', {
+              day: getWeekDay(date),
+              time: dateTimeToString(date)
+            })}
+          </p>
+          <p>{t('logbook:logbook.beyond_time')}</p>
+        </div>
+      )}
       </ModalDialog>
 
       {/* Observation note goes here */}
@@ -507,365 +519,371 @@ export default function RequestUpdate({
         open={isObservationOpen}
         handleDialogStatus={() => setIsObservationOpen(!isObservationOpen)}
         observationHandler={{
-          value: observationNote,
-          handleChange: value => setObservationNote(value)
-        }}
+        value: observationNote,
+        handleChange: value => setObservationNote(value)
+      }}
       >
         {observationDetails.loading ? (
           <Spinner />
-        ) : (
-          <CenteredContent>
-            <Button
-              onClick={() => handleSaveObservation('/scan')}
-              variant="outlined"
-              className={css(styles.observationButton)}
-              color="primary"
-              fullWidth
-            >
-              {t('logbook:observations.skip_scan_next_entry', { action: observationAction })}
-            </Button>
-            <Button
-              onClick={() => handleSaveObservation('/request')}
-              variant="outlined"
-              className={`${css(styles.observationButton)} save_and_record_other`}
-              color="primary"
-              fullWidth
-            >
-              {t('logbook:observations.skip_record_manual_entry', { action: observationAction })}
-            </Button>
-            <Button
-              onClick={() => history.push('/')}
-              variant="contained"
-              className={css(styles.observationButton)}
-              color="primary"
-              fullWidth
-            >
-              {t('logbook:observations.close_go_dashboard')}
-            </Button>
-          </CenteredContent>
-        )}
+      ) : (
+        <CenteredContent>
+          <Button
+            onClick={() => handleSaveObservation('/scan')}
+            variant="outlined"
+            className={css(styles.observationButton)}
+            color="primary"
+            fullWidth
+          >
+            {t('logbook:observations.skip_scan_next_entry', { action: observationAction })}
+          </Button>
+          <Button
+            onClick={() => handleSaveObservation('/request')}
+            variant="outlined"
+            className={`${css(styles.observationButton)} save_and_record_other`}
+            color="primary"
+            fullWidth
+          >
+            {t('logbook:observations.skip_record_manual_entry', { action: observationAction })}
+          </Button>
+          <Button
+            onClick={() => history.push('/')}
+            variant="contained"
+            className={css(styles.observationButton)}
+            color="primary"
+            fullWidth
+          >
+            {t('logbook:observations.close_go_dashboard')}
+          </Button>
+        </CenteredContent>
+      )}
       </EntryNoteDialog>
 
       <div className="container">
-        {observationDetails.scanLoading ? (
-          <Spinner />
-        ) : (
-          <form>
-            {isFromLogs && (
-              <div className="form-group">
-                <label className="bmd-label-static" htmlFor="date" data-testid="submitted_date">
-                  {t('logbook:logbook.date_time_submitted')}
-                </label>
-                <TextField
-                  className="form-control"
-                  type="text"
-                  value={
-                    formData.grantor
-                      ? `${dateToString(formData.createdAt)} at ${dateTimeToString(
-                          formData.createdAt
-                        )}`
-                      : ''
-                  }
-                  disabled
-                  name="date"
-                  required
-                />
-              </div>
-            )}
-            <div className="form-group">
-              <label className="bmd-label-static" htmlFor="_name">
-                {t('logbook:log_title.guard')}
-              </label>
-              <TextField
-                className="form-control"
-                type="text"
-                value={formData.grantor?.name || authState.user.name}
-                disabled
-                name="name"
-                required
-              />
-            </div>
-            <div className="form-group">
-              <label className="bmd-label-static" htmlFor="_name">
-                {t('form_fields.full_name')}
-              </label>
-              <TextField
-                className="form-control"
-                type="text"
-                value={formData.name}
-                onChange={handleInputChange}
-                name="name"
-                inputProps={{ 'data-testid': 'entry_user_name' }}
-                error={
-                  inputValidationMsg.isError && requiredFields.includes('name') && !formData.name
-                }
-                helperText={
-                  inputValidationMsg.isError &&
-                  requiredFields.includes('name') &&
-                  !formData.name &&
-                  t('logbook:errors.required_field', { fieldName: 'Name' })
-                }
-              />
-            </div>
-            <div className="form-group">
-              <label className="bmd-label-static" htmlFor="_name">
-                {t('form_fields.email')}
-              </label>
-              <TextField
-                className="form-control"
-                name="email"
-                type="email"
-                onChange={handleInputChange}
-                value={formData.email}
-                inputProps={{ 'data-testid': 'email' }}
-              />
-            </div>
-            <div className="form-group">
-              <label className="bmd-label-static" htmlFor="nrc">
-                {t('form_fields.nrc')}
-              </label>
-              <TextField
-                className="form-control"
-                type="text"
-                value={formData.nrc || ''}
-                onChange={handleInputChange}
-                name="nrc"
-                inputProps={{ 'data-testid': 'entry_user_nrc' }}
-                error={
-                  inputValidationMsg.isError && requiredFields.includes('nrc') && !formData.nrc
-                }
-                helperText={
-                  inputValidationMsg.isError &&
-                  requiredFields.includes('nrc') &&
-                  !formData.nrc &&
-                  t('logbook:errors.required_field', { fieldName: 'ID' })
-                }
-              />
-            </div>
-            <div className="form-group">
-              <label className="bmd-label-static" htmlFor="phoneNumber">
-                {t('form_fields.phone_number')}
-              </label>
-              <TextField
-                className="form-control"
-                type="text"
-                value={formData.phoneNumber || ''}
-                onChange={handleInputChange}
-                name="phoneNumber"
-                inputProps={{ 'data-testid': 'entry_user_phone' }}
-                error={
-                  inputValidationMsg.isError &&
-                  requiredFields.includes('phoneNumber') &&
-                  !formData.phoneNumber
-                }
-                helperText={
-                  inputValidationMsg.isError &&
-                  requiredFields.includes('phoneNumber') &&
-                  !formData.phoneNumber &&
-                  t('logbook:errors.required_field', { fieldName: 'Phone Number' })
-                }
-              />
-            </div>
-            {previousRoute === 'enroll' && (
-              <>
-                <div className="form-group">
-                  <TextField
-                    id="userType"
-                    select
-                    label={t('form_fields.user_type')}
-                    value={formData.userType || ''}
-                    onChange={handleInputChange}
-                    margin="normal"
-                    name="userType"
-                    className={`${css(styles.selectInput)}`}
-                  >
-                    {Object.entries(userType).map(([key, val]) => (
-                      <MenuItem key={key} value={key}>
-                        {val}
-                      </MenuItem>
-                    ))}
-                  </TextField>
-                </div>
-                <div className="form-group">
-                  <TextField
-                    id="state"
-                    select
-                    label={t('form_fields.state')}
-                    value={formData.state || ''}
-                    onChange={handleInputChange}
-                    margin="normal"
-                    name="state"
-                    className={`${css(styles.selectInput)}`}
-                  >
-                    {Object.entries(userState).map(([key, val]) => (
-                      <MenuItem key={key} value={key}>
-                        {val}
-                      </MenuItem>
-                    ))}
-                  </TextField>
-                </div>
-
-                <div className="form-group">
-                  <div className="form-group">
-                    <label className="bmd-label-static" htmlFor="expiresAt">
-                      {t('misc.expiration_date')}
-                    </label>
-                    {/* Todo: This should be replaced by a date picker */}
-                    <input
-                      className="form-control"
-                      name="expiresAt"
-                      type="text"
-                      pattern="([12]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]))"
-                      placeholder="YYYYY-MM-DD"
-                      defaultValue={formData.expiresAt || 'YYYYY-MM-DD'}
-                      onChange={handleInputChange}
-                      title={t('errors.date_error')}
-                    />
-                  </div>
-                </div>
-              </>
-            )}
-
-            <div className="form-group">
-              <label className="bmd-label-static" htmlFor="vehicle">
-                {t('form_fields.vehicle_plate_number')}
-              </label>
-              <TextField
-                className="form-control"
-                type="text"
-                onChange={handleInputChange}
-                value={formData.vehiclePlate || ''}
-                name="vehiclePlate"
-                inputProps={{ 'data-testid': 'entry_user_vehicle' }}
-                error={
-                  inputValidationMsg.isError &&
-                  requiredFields.includes('vehiclePlate') &&
-                  !formData.vehiclePlate
-                }
-                helperText={
-                  inputValidationMsg.isError &&
-                  requiredFields.includes('vehiclePlate') &&
-                  !formData.vehiclePlate &&
-                  t('logbook:errors.required_field', { fieldName: 'Vehicle Plate Number' })
-                }
-              />
-            </div>
-            <div className="form-group">
-              <label className="bmd-label-static" htmlFor="companyName">
-                {t('form_fields.company_name')}
-              </label>
-              <TextField
-                className="form-control"
-                type="text"
-                name="companyName"
-                value={formData.companyName || ''}
-                onChange={handleInputChange}
-                inputProps={{ 'data-testid': 'companyName' }}
-                error={
-                  inputValidationMsg.isError &&
-                  requiredFields.includes('companyName') &&
-                  !formData.companyName
-                }
-                helperText={
-                  inputValidationMsg.isError &&
-                  requiredFields.includes('companyName') &&
-                  !formData.companyName &&
-                  t('logbook:errors.required_field', { fieldName: 'Company Name' })
-                }
-              />
-            </div>
+        <form>
+          {isFromLogs && (
+          <div className="form-group">
+            <label className="bmd-label-static" htmlFor="date" data-testid="submitted_date">
+              {t('logbook:logbook.date_time_submitted')}
+            </label>
+            <TextField
+              className="form-control"
+              type="text"
+              value={
+                formData.grantor
+                  ? `${dateToString(formData.createdAt)} at ${dateTimeToString(
+                      formData.createdAt
+                    )}`
+                  : ''
+              }
+              disabled
+              name="date"
+              required
+            />
+          </div>
+        )}
+          <div className="form-group">
+            <label className="bmd-label-static" htmlFor="_name">
+              {t('logbook:log_title.guard')}
+            </label>
+            <TextField
+              className="form-control"
+              type="text"
+              value={formData.grantor?.name || authState.user.name}
+              disabled
+              name="name"
+              required
+            />
+          </div>
+          <div className="form-group">
+            <label className="bmd-label-static" htmlFor="_name">
+              {t('form_fields.full_name')}
+            </label>
+            <TextField
+              className="form-control"
+              type="text"
+              value={formData.name}
+              onChange={handleInputChange}
+              name="name"
+              inputProps={{ 'data-testid': 'entry_user_name' }}
+              error={inputValidationMsg.isError && requiredFields.includes('name') && !formData.name}
+              helperText={inputValidationMsg.isError &&
+              requiredFields.includes('name') &&
+              !formData.name &&
+              t('logbook:errors.required_field', { fieldName: 'Name' })}
+            />
+          </div>
+          <div className="form-group">
+            <label className="bmd-label-static" htmlFor="_name">
+              {t('form_fields.email')}
+            </label>
+            <TextField
+              className="form-control"
+              name="email"
+              type="email"
+              onChange={handleInputChange}
+              value={formData.email}
+              inputProps={{ 'data-testid': 'email' }}
+            />
+          </div>
+          <div className="form-group">
+            <label className="bmd-label-static" htmlFor="nrc">
+              {t('form_fields.nrc')}
+            </label>
+            <TextField
+              className="form-control"
+              type="text"
+              value={formData.nrc || ''}
+              onChange={handleInputChange}
+              name="nrc"
+              inputProps={{ 'data-testid': 'entry_user_nrc' }}
+              error={inputValidationMsg.isError &&
+              requiredFields.includes('nrc') &&
+              !formData.nrc}
+              helperText={inputValidationMsg.isError &&
+              requiredFields.includes('nrc') &&
+              !formData.nrc &&
+              t('logbook:errors.required_field', { fieldName: 'ID' })}
+            />
+          </div>
+          <div className="form-group">
+            <label className="bmd-label-static" htmlFor="phoneNumber">
+              {t('form_fields.phone_number')}
+            </label>
+            <TextField
+              className="form-control"
+              type="text"
+              value={formData.phoneNumber || ''}
+              onChange={handleInputChange}
+              name="phoneNumber"
+              inputProps={{ 'data-testid': 'entry_user_phone' }}
+              error={inputValidationMsg.isError &&
+              requiredFields.includes('phoneNumber') &&
+              !formData.phoneNumber}
+              helperText={inputValidationMsg.isError &&
+              requiredFields.includes('phoneNumber') &&
+              !formData.phoneNumber &&
+              t('logbook:errors.required_field', { fieldName: 'Phone Number' })}
+            />
+          </div>
+          {previousRoute === 'enroll' && (
+          <>
             <div className="form-group">
               <TextField
-                id="reason"
+                id="userType"
                 select
-                label={t('logbook:logbook.visiting_reason')}
-                name="reason"
-                value={formData.reason || ''}
+                label={t('form_fields.user_type')}
+                value={formData.userType || ''}
                 onChange={handleInputChange}
-                className={`${css(styles.selectInput)} visiting_reason`}
-                inputProps={{ 'data-testid': 'entry_user_visit' }}
-                error={
-                  inputValidationMsg.isError &&
-                  requiredFields.includes('reason') &&
-                  !formData.reason
-                }
-                helperText={
-                  inputValidationMsg.isError &&
-                  requiredFields.includes('reason') &&
-                  !formData.reason
-                    ? t('logbook:errors.required_field', { fieldName: 'Reason' })
-                    : formData.business
-                }
+                margin="normal"
+                name="userType"
+                className={`${css(styles.selectInput)}`}
               >
-                {Object.keys(defaultBusinessReasons).map(_reason => (
-                  <MenuItem key={_reason} value={_reason}>
-                    {t(`logbook:business_reasons.${_reason}`) ||
-                      objectAccessor(defaultBusinessReasons, _reason)}
+                {Object.entries(userType).map(([key, val]) => (
+                  <MenuItem key={key} value={key}>
+                    {val}
+                  </MenuItem>
+                ))}
+              </TextField>
+            </div>
+            <div className="form-group">
+              <TextField
+                id="state"
+                select
+                label={t('form_fields.state')}
+                value={formData.state || ''}
+                onChange={handleInputChange}
+                margin="normal"
+                name="state"
+                className={`${css(styles.selectInput)}`}
+              >
+                {Object.entries(userState).map(([key, val]) => (
+                  <MenuItem key={key} value={key}>
+                    {val}
                   </MenuItem>
                 ))}
               </TextField>
             </div>
 
-            {// TODO: Find better ways to disable specific small feature per community
-            !reqId && authState.user.community.name !== 'Ciudad Morazán' && !isGuestRequest && (
+            <div className="form-group">
               <div className="form-group">
-                <TextField
+                <label className="bmd-label-static" htmlFor="expiresAt">
+                  {t('misc.expiration_date')}
+                </label>
+                {/* Todo: This should be replaced by a date picker */}
+                <input
                   className="form-control"
+                  name="expiresAt"
                   type="text"
-                  label="Temperature(°C)"
-                  value={formData.temperature}
+                  pattern="([12]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]))"
+                  placeholder="YYYYY-MM-DD"
+                  defaultValue={formData.expiresAt || 'YYYYY-MM-DD'}
                   onChange={handleInputChange}
-                  name="temperature"
-                  inputProps={{ 'data-testid': 'temperature' }}
-                  style={{ width: 200 }}
+                  title={t('errors.date_error')}
                 />
               </div>
-            )}
+            </div>
+          </>
+        )}
 
-            {/* This should only show for registered users */}
-            {isGuestRequest && (
-              <GuestTime
-                days={formData.occursOn}
-                userData={formData}
-                handleChange={handleInputChange}
-                handleChangeOccurrence={handleChangeOccurrence}
+          <div className="form-group">
+            <label className="bmd-label-static" htmlFor="vehicle">
+              {t('form_fields.vehicle_plate_number')}
+            </label>
+            <TextField
+              className="form-control"
+              type="text"
+              onChange={handleInputChange}
+              value={formData.vehiclePlate || ''}
+              name="vehiclePlate"
+              inputProps={{ 'data-testid': 'entry_user_vehicle' }}
+              error={inputValidationMsg.isError &&
+              requiredFields.includes('vehiclePlate') &&
+              !formData.vehiclePlate}
+              helperText={inputValidationMsg.isError &&
+              requiredFields.includes('vehiclePlate') &&
+              !formData.vehiclePlate &&
+              t('logbook:errors.required_field', { fieldName: 'Vehicle Plate Number' })}
+            />
+          </div>
+          <div className="form-group">
+            <label className="bmd-label-static" htmlFor="companyName">
+              {t('form_fields.company_name')}
+            </label>
+            <TextField
+              className="form-control"
+              type="text"
+              name="companyName"
+              value={formData.companyName || ''}
+              onChange={handleInputChange}
+              inputProps={{ 'data-testid': 'companyName' }}
+              error={inputValidationMsg.isError &&
+                  requiredFields.includes('companyName') &&
+                  !formData.companyName}
+              helperText={inputValidationMsg.isError &&
+                  requiredFields.includes('companyName') &&
+                  !formData.companyName &&
+                  t('logbook:errors.required_field', { fieldName: 'Company Name' })}
+            />
+          </div>
+          <div className="form-group">
+            <TextField
+              id="reason"
+              select
+              label={t('logbook:logbook.visiting_reason')}
+              name="reason"
+              value={formData.reason || ''}
+              onChange={handleInputChange}
+              className={`${css(styles.selectInput)} visiting_reason`}
+              inputProps={{ 'data-testid': 'entry_user_visit' }}
+              error={inputValidationMsg.isError &&
+              requiredFields.includes('reason') &&
+              (!formData.reason)}
+              helperText={inputValidationMsg.isError &&
+              requiredFields.includes('reason') &&
+              !formData.reason ?
+              t('logbook:errors.required_field', { fieldName: 'Reason' }) : formData.business}
+            >
+              {
+              Object.keys(defaultBusinessReasons).map(_reason => (
+                <MenuItem key={_reason} value={_reason}>
+                  {t(`logbook:business_reasons.${_reason}`) || objectAccessor(defaultBusinessReasons, _reason)}
+                </MenuItem>
+                ))
+            }
+            </TextField>
+          </div>
+
+          {
+          // TODO: Find better ways to disable specific small feature per community
+          !reqId && authState.user.community.name !== 'Ciudad Morazán' && !isGuestRequest && (
+            <div className="form-group">
+              <TextField
+                className="form-control"
+                type="text"
+                label="Temperature(°C)"
+                value={formData.temperature}
+                onChange={handleInputChange}
+                name="temperature"
+                inputProps={{ 'data-testid': 'temperature' }}
+                style={{ width: 200 }}
               />
-            )}
+            </div>
+          )
+        }
 
-            {isGuestRequest && !id && (
-              <div className="row justify-content-center align-items-center ">
+          {/* This should only show for registered users */}
+          {
+          isGuestRequest && (
+            <GuestTime
+              days={formData.occursOn}
+              userData={formData}
+              handleChange={handleInputChange}
+              handleChangeOccurrence={handleChangeOccurrence}
+            />
+          )
+        }
+          <div className=" d-flex row justify-content-center ">
+          
+            <Button
+              variant="contained"
+              aria-label="guest_cancel"
+              color="secondary"
+              onClick={() => closeForm({id, guestListRequest})}
+              className={`${css(styles.cancelGuestButton)}`}
+              data-testid="cancel_update_guest_btn"
+            >
+              {t('common:form_actions.cancel')}
+            </Button>
+
+
+
+            { id !== 'new-guest-entry' && id !== null && id !== 'undefined' && previousRoute !== 'enroll' && (
+            <Button
+              variant="contained"
+              className={`${css(styles.inviteGuestButton)}`}
+              data-testid="entry_user_grant_request"
+              onClick={event => handleModal(event, 'update')}
+              disabled={isLoading}
+              startIcon={isLoading && <Spinner />}
+              color="primary"
+            >
+              {isLoading ? ` ${t('form_actions.submitting')} ...` : ` ${t('logbook:guest_book.update_guest')} `}
+            </Button>
+              )} 
+
+
+            { 
+               id === 'new-guest-entry' && (
+               <Button
+                 variant="contained"
+                 className={`${css(styles.inviteGuestButton)}`}
+                 data-testid="submit_button"
+                 onClick={event => handleModal(event, 'create')}
+                 disabled={isLoading}
+                 startIcon={isLoading && <Spinner />}
+                 color="primary"
+               >
+                 {isLoading ? ` ${t('form_actions.submitting')} ...` : ` ${t('form_actions.invite_guest')} `}
+               </Button>
+              )
+            }  
+
+            { 
+              isGuestRequest && !id && (
                 <Button
                   variant="contained"
                   className={`${css(styles.inviteGuestButton)}`}
+                  data-testid="submit_button"
                   onClick={event => handleModal(event, 'create')}
                   disabled={isLoading}
                   startIcon={isLoading && <Spinner />}
                   color="primary"
-                  data-testid="submit_button"
                 >
-                  {isLoading
-                    ? ` ${t('form_actions.submitting')} ...`
-                    : ` ${t('form_actions.invite_guest')} `}
+                  {isLoading ? ` ${t('form_actions.submitting')} ...` : ` ${t('form_actions.invite_guest')} `}
                 </Button>
-              </div>
-            )}
+              )
+        }
 
-            <br />
-            {previousRoute !== 'enroll' && id && (
-              <Button
-                variant="contained"
-                onClick={event => handleModal(event, isGuestRequest ? 'update' : 'grant')}
-                className={css(styles.grantButton)}
-                disabled={isLoading}
-                data-testid="entry_user_grant_request"
-                startIcon={isLoading && <Spinner />}
-              >
-                {isGuestRequest ? t('logbook:guest_book.update_guest') : t('misc.log_new_entry')}
-              </Button>
-            )}
-
-            <br />
-            <br />
             {previousRoute === 'enroll' ? (
               <>
                 <div className="row justify-content-center align-items-center">
@@ -878,68 +896,85 @@ export default function RequestUpdate({
                     startIcon={isLoading && <Spinner />}
                   >
                     {isLoading
-                      ? `${t('logbook:logbook.enrolling')} ...`
-                      : ` ${t('logbook:logbook.enroll')}`}
+                  ? `${t('logbook:logbook.enrolling')} ...`
+                  : ` ${t('logbook:logbook.enroll')}`}
                   </Button>
                 </div>
               </>
-            ) : !/logs|enroll|guests/.test(previousRoute) && !tabValue ? (
-              <>
-                <Grid container direction="row" justify="flex-start" spacing={2}>
-                  <Grid item>
-                    <Button
-                      variant="contained"
-                      onClick={event => handleModal(event, 'grant')}
-                      className={css(styles.grantButton)}
-                      disabled={isLoading}
-                      data-testid="entry_user_grant"
-                      startIcon={isLoading && <Spinner />}
-                    >
-                      {t('logbook:logbook.grant')}
-                    </Button>
-                  </Grid>
-                  <Grid item>
-                    <Button
-                      variant="contained"
-                      onClick={handleDenyRequest}
-                      className={css(styles.denyButton)}
-                      disabled={isLoading}
-                      data-testid="entry_user_deny"
-                      startIcon={isLoading && <Spinner />}
-                    >
-                      {t('logbook:logbook.deny')}
-                    </Button>
-                  </Grid>
-                </Grid>
-                <br />
-                <Grid container direction="row" justify="flex-start">
-                  <Grid item>
-                    <a
-                      href={`tel:${authState.user.community.securityManager}`}
-                      className={` ${css(styles.callButton)}`}
-                      data-testid="entry_user_call_mgr"
-                    >
-                      <CallIcon />
-                      {' '}
-                      <p style={{ margin: '-28px 30px' }}>{t('logbook:logbook.call_manager')}</p>
-                    </a>
-                  </Grid>
-                </Grid>
-              </>
-            ) : (
-              <span />
-            )}
-          </form>
+
+          
+        ) : !/logs|enroll|guests/.test(previousRoute) && !tabValue && !guestListRequest? (
+          <>
+            <br />
+            <br />
+            <Grid>
+              <Grid item>
+                <Button
+                  variant="contained"
+                  onClick={event => handleModal(event, 'grant')}
+                  className={css(styles.grantButton)}
+                  disabled={isLoading}
+                  data-testid="entry_user_grant"
+                  startIcon={isLoading && <Spinner />}
+                >
+
+                  {
+                    t('logbook:logbook.grant')
+                  }
+                </Button>
+              </Grid>
+              <br />
+              <Grid item>
+                <Button
+                  variant="contained"
+                  onClick={handleDenyRequest}
+                  className={css(styles.denyButton)}
+                  disabled={isLoading}
+                  data-testid="entry_user_deny"
+                  startIcon={isLoading && <Spinner />}
+                >
+                  {
+                    t('logbook:logbook.deny')
+                  }
+                </Button>
+              </Grid>
+            </Grid>
+            <br />
+            <Grid>
+              <Grid item>
+                <a
+                  href={`tel:${authState.user.community.securityManager}`}
+                  className={` ${css(styles.callButton)}`}
+                  data-testid="entry_user_call_mgr"
+                >
+                  <CallIcon />
+                  {' '}
+                  <p style={{ margin: '-28px 30px' }}>{t('logbook:logbook.call_manager')}</p>
+                </a>
+              </Grid>
+            </Grid>
+
+          </>
+        ) : (
+          <span />
         )}
+          </div>
+          <br />
+
+          <br />
+          <br />
+        </form>
       </div>
     </>
-  );
+ );
 }
+
 
 RequestUpdate.defaultProps = {
   id: null,
   previousRoute: '',
-  tabValue: null
+  tabValue: null,
+  guestListRequest: null
 };
 
 RequestUpdate.propTypes = {
@@ -947,8 +982,10 @@ RequestUpdate.propTypes = {
   previousRoute: PropTypes.string,
   isGuestRequest: PropTypes.bool.isRequired,
   isScannedRequest: PropTypes.bool.isRequired,
-  tabValue: PropTypes.string
+  tabValue: PropTypes.string,
+  guestListRequest: PropTypes.bool
 };
+
 
 const styles = StyleSheet.create({
   selectInput: {
@@ -960,21 +997,61 @@ const styles = StyleSheet.create({
   },
   denyButton: {
     backgroundColor: '#C31515',
-    color: '#FFFFFF'
+    color: '#FFFFFF',
+    width: '100%',
+    boxShadow: 'none',
+    marginTop: 50,
+    alignItems: 'center',
+    height: 50,
+    '@media (min-device-width: 320px) and (max-device-height: 568px)' : {
+      width: '50%',
+      height: 30
+    
+    }
   },
   callButton: {
     color: '#66A59A',
     textTransform: 'unset',
-    textDecoration: 'none'
+    textDecoration: 'none',
+    width: '20%',
+    boxShadow: 'none',
+    marginTop: 50,
+    alignItems: 'center',
+    height: 50,
+    '@media (min-device-width: 320px) and (max-device-height: 568px)' : {
+      width: '50%',
+      height: 30
+    
+    }
   },
   observationButton: {
     margin: 5
   },
   inviteGuestButton: {
-    width: '75%',
+    width: '20%',
     boxShadow: 'none',
-    marginTop: 60,
+    marginTop: 50,
+    alignItems: 'center',
     height: 50,
-    color: '#FFFFFF'
+    color: '#FFFFFF',
+    '@media (min-device-width: 320px) and (max-device-height: 568px)' : {
+      width: '50%',
+      height: 30
+    
+    }
+  },
+  cancelGuestButton: {
+    width: '20%',
+    boxShadow: 'none',
+    marginRight: '15vw',
+    alignItems: 'center',
+    marginTop: 50,
+    color: "#FFFFFF",
+
+    '@media (min-device-width: 320px) and (max-device-height: 568px)' : {
+      height: 30
+    
+    }
+  },
   }
-});
+);
