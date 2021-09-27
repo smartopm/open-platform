@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# require 'sms'
+require 'host_env'
 
 module ActionFlows
   module Actions
@@ -21,15 +21,33 @@ module ActionFlows
       end
 
       def self.execute_action(data, field_config)
-        author = Users::User.find(data[:task_assign_author_id]).name
         assign_user = Users::User.find(data[:task_assign_user_id])
-        message = "Task '#{data[:task_assign_body]}' was assigned to you"
-        msg = "#{author} just assigned a task '#{data[:task_assign_body]}' to #{assign_user.name}"
+        author_msg = generate_message(data, assign_user)
+        assignee_msg = generate_assignee_msg(data, assign_user)
 
         hash = action_flow_fields(data, field_config)
 
-        ::Sms.send(assign_user.phone_number, message) unless assign_user.phone_number.nil?
-        ::Sms.send(hash[:phone_number], msg)
+        ::Sms.send(assign_user.phone_number, author_msg) unless assign_user.phone_number.nil?
+        ::Sms.send(hash[:phone_number], assignee_msg)
+      end
+
+      def self.generate_url(user, task_id)
+        "https://#{HostEnv.base_url(user.community)}/tasks/#{task_id}"
+      end
+
+      def self.generate_message(data, assign_user)
+        <<~HEREDOC
+          Task '#{data[:task_assign_body]}' was assigned to you
+          #{generate_url(assign_user, data[:task_assign_note_id])}
+        HEREDOC
+      end
+
+      def self.generate_assignee_msg(data, assign_user)
+        author = Users::User.find(data[:task_assign_author_id]).name
+        <<~HEREDOC
+          #{author} just assigned a task '#{data[:task_assign_body]}'
+          to #{assign_user.name} #{generate_url(assign_user, data[:task_assign_note_id])}
+        HEREDOC
       end
 
       def self.action_flow_fields(data, field_config)
