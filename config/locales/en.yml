@@ -371,6 +371,7 @@ en:
       payment_not_found: Payment not found
   general:
     thanks_for_using_our_app: Thank you for using our app, kindly use this link to give us feedback %{feedback_link}
+    task_reminder: REMINDER, Please complete your task before/by the due date (%{due_date}). Check out your task on %{task_link}. Thanks, %{community_name} 
   response:
     failed: failed
     success: success
