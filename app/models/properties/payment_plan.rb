@@ -4,7 +4,6 @@ module Properties
   # rubocop:disable Metrics/ClassLength
   # PaymentPlan
   class PaymentPlan < ApplicationRecord
-
     include SearchCop
 
     search_scope :search do
@@ -12,10 +11,6 @@ module Properties
       attributes name: ['user.name']
       attributes land_parcel: ['land_parcel.parcel_number']
       attributes plot_type: ['land_parcel.parcel_type']
-    end
-
-    search_scope :search_by_numbers do
-      attributes :owing_amount, :installments_due
     end
 
     belongs_to :user, class_name: 'Users::User'
@@ -176,7 +171,7 @@ module Properties
     #
     # @return [Float]
     def total_payments
-      plan_payments.not_cancelled.sum(:amount)
+      plan_value - pending_balance
     end
 
     # Returns end date for plan statement
@@ -184,6 +179,15 @@ module Properties
     # @return [DateTime]
     def end_date
       plan_duration.last.to_date
+    end
+
+    # Returns plan status based on owing amount if active
+    #
+    # @return [String]
+    def plan_status
+      return status unless status.eql?('active')
+
+      owing_amount.positive? ? 'behind' : 'on_track'
     end
 
     private

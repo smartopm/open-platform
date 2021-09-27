@@ -45,8 +45,6 @@ import { CommunityPlansQuery } from '../graphql/payment_query';
 export function PlansList({
   matches,
   currencyData,
-  communityPlansLoading,
-  // communityPlansData,
   setDisplaySubscriptionPlans,
   setMessage,
   setAlertOpen
@@ -101,7 +99,7 @@ export function PlansList({
   ];
 
   function formattedCsvData(csvData) {
-    return csvData.map(val =>({
+    return csvData?.map(val =>({
       ...val, formattedStartDate: dateToString(val.startDate, 'MM-DD-YYYY'), formattedEndDate: dateToString(val.endDate, 'MM-DD-YYYY') 
     }))
   }
@@ -145,7 +143,7 @@ export function PlansList({
     fetchPolicy: 'cache-and-network'
   });
 
-  const communityPlans = communityPlansData?.communityPaymentPlans?.sort((a,b) => b.owingAmount - a.owingAmount)
+  const communityPlans = communityPlansData?.communityPaymentPlans;
 
   function paginatePlans(action) {
     if (action === 'prev') {
@@ -170,6 +168,7 @@ export function PlansList({
 
   return (
     <div>
+      {loading && <Spinner />}
       <Fab color="primary" variant="extended" className={classes.download} data-testid="csv-fab">
         <CSVLink
           data={formattedCsvData(communityPlans) || []}
@@ -177,7 +176,7 @@ export function PlansList({
           headers={csvHeaders}
           filename={`payment-plans-data-${dateToString(new Date())}.csv`}
         >
-          {communityPlansLoading ? <Spinner /> : t('actions.download_csv')}
+          {loading ? <Spinner /> : t('actions.download_csv')}
         </CSVLink>
       </Fab>
       <ActionDialog
@@ -188,11 +187,6 @@ export function PlansList({
         handleOnSave={sendPaymentReminderMail}
         disableActionBtn={mutationLoading}
       />
-      {/* {communityPlansLoading ? (
-      {console.log(searchQuery)}
-      {error && (
-        <p>{formatError(error.message)}</p>
-      )} */}
       <SearchInput
         title={t('common:misc.plans')}
         searchValue={searchValue}
@@ -545,13 +539,6 @@ PlansList.propTypes = {
     currency: PropTypes.string,
     locale: PropTypes.string
   }).isRequired,
-  communityPlansLoading: PropTypes.bool.isRequired,
-  // communityPlans: PropTypes.arrayOf(
-  //   PropTypes.shape({
-  //     id: PropTypes.string,
-  //     status: PropTypes.string
-  //   })
-  // ),
   setDisplaySubscriptionPlans: PropTypes.func.isRequired,
   setMessage: PropTypes.func.isRequired,
   setAlertOpen: PropTypes.func.isRequired,

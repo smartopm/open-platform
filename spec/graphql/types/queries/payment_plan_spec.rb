@@ -110,13 +110,14 @@ RSpec.describe Types::Queries::Payment do
 
     let(:community_payment_plans) do
       <<~GQL
-        query communityPaymentPlans {
-          communityPaymentPlans {
+        query communityPaymentPlans($query: String) {
+          communityPaymentPlans(query: $query) {
             totalPayments
             expectedPayments
             owingAmount
             installmentsDue
             outstandingDays
+            planStatus
           }
         }
       GQL
@@ -316,7 +317,8 @@ RSpec.describe Types::Queries::Payment do
 
     describe '#community_payment_plans' do
       context 'when current user is admin' do
-        it "returns list of community's active payment plans" do
+        before { payment_plan.update(pending_balance: 700) }
+        it "returns list of community's payment plans" do
           result = DoubleGdpSchema.execute(community_payment_plans,
                                            context: {
                                              current_user: admin,
@@ -329,6 +331,34 @@ RSpec.describe Types::Queries::Payment do
           expect(payment_plan_result['owingAmount']).to eql 100.0
           expect(payment_plan_result['installmentsDue']).to eql 1
           expect(payment_plan_result['outstandingDays']).to eql 31
+          expect(payment_plan_result['planStatus']).to eql 'behind'
+        end
+
+        it "returns list of community's payment plans based on filter" do
+          variables = { query: 'owing_amount > 50.0' }
+          result = DoubleGdpSchema.execute(community_payment_plans,
+                                           variables: variables,
+                                           context: {
+                                             current_user: admin,
+                                             site_community: community,
+                                           }).as_json
+          expect(result.dig('data', 'communityPaymentPlans').size).to eql 1
+          payment_plan_result = result.dig('data', 'communityPaymentPlans', 0)
+          expect(payment_plan_result['owingAmount']).to eql 100.0
+          expect(payment_plan_result['planStatus']).to eql 'behind'
+        end
+
+        it "returns list of community's payment plans based on filter" do
+          variables = { query: 'plan_status : completed' }
+          result = DoubleGdpSchema.execute(community_payment_plans,
+                                           variables: variables,
+                                           context: {
+                                             current_user: admin,
+                                             site_community: community,
+                                           }).as_json
+          expect(result.dig('data', 'communityPaymentPlans').size).to eql 1
+          payment_plan_result = result.dig('data', 'communityPaymentPlans', 0)
+          expect(payment_plan_result['planStatus']).to eql 'completed'
         end
       end
 

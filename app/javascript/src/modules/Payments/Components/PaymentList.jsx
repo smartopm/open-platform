@@ -422,8 +422,6 @@ export default function PaymentList({ currencyData }) {
           <PlansList
             matches={matches}
             currencyData={currencyData}
-            // communityPlansLoading={communityPlansLoading}
-            // communityPlans={communityPlansData?.communityPaymentPlans?.sort((a,b) => b.owingAmount - a.owingAmount)}
             setDisplaySubscriptionPlans={setDisplaySubscriptionPlans}
             setMessage={setMessage}
             setAlertOpen={setAlertOpen}

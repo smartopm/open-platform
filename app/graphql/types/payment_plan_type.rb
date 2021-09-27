@@ -57,14 +57,5 @@ module Types
     def paid_payments_exists
       object.plan_payments.exists?(status: :paid)
     end
-
-    # Returns plan status based on owing amount if active
-    #
-    # @return [String]
-    def plan_status
-      return object.status unless object.status.eql?('active')
-
-      object.owing_amount.positive? ? 'behind' : 'on track'
-    end
   end
 end

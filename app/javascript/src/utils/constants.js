@@ -1,5 +1,6 @@
 // values that can be reused across the codebase
 import MaterialConfig from 'react-awesome-query-builder/lib/config/material'
+import { toTitleCase } from './helpers';
 
 export const filterUserByLoggedin = {
   log_from: 'login after',
@@ -141,10 +142,10 @@ export const paymentType = {
   cash: 'Cash'
 };
 export const planType = {
-  'all': 'All',
-  'cancelled': 'Cancelled',
-  'behind': 'Behind',
-  'on_track': 'On Track'
+  'cancelled': 'cancelled',
+  'behind': 'behind',
+  'on_track': 'on_track',
+  'completed': 'completed'
 };
 
 export const paymentStatusColor = {
@@ -466,7 +467,8 @@ export const dateWidget = {
       createdDate: {
         label: 'Created Date',
         type: 'date',
-        valueSources: ['value']
+        valueSources: ['value'],
+        excludeOperators: ['less', 'greater']
       },
       amount: {
         label: 'Payment Amount',
@@ -491,7 +493,7 @@ export const dateWidget = {
         valueSources: ['value'],
         fieldSettings: {
           listValues: Object.entries(planType).map(([key, val]) => {
-            return { value: key, title: val }
+            return { value: key, title: toTitleCase(val) }
           })
         }
       },
@@ -499,13 +501,13 @@ export const dateWidget = {
         label: 'Amount Owed',
         type: 'number',
         valueSources: ['value'],
-        excludeOperators: ['not_equal']
+        excludeOperators: ['not_equal', 'between']
       },
       installmentsDue: {
         label: 'Due Installments',
         type: 'number',
         valueSources: ['value'],
-        excludeOperators: ['not_equal']
+        excludeOperators: ['not_equal', 'between']
       }
     }
   }
@@ -592,7 +594,7 @@ export const entryLogsQueryBuilderInitialValue = {
   }
 }
   export const planFilterFields = {
-    status: 'status',
+    status: 'plan_status',
     amountOwned: 'owing_amount',
     installmentsDue: 'installments_due'
   }

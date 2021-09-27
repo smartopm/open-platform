@@ -7,7 +7,7 @@ import { IconButton } from '@material-ui/core';
 import { MoreHorizOutlined } from '@material-ui/icons';
 import PaymentSlider from './PaymentSlider';
 import Label from '../../../shared/label/Label';
-import { capitalize, objectAccessor } from '../../../utils/helpers';
+import { toTitleCase, objectAccessor } from '../../../utils/helpers';
 import MenuList from '../../../shared/MenuList';
 
 export default function PlanListItem({ data, currencyData, menuData }) {
@@ -15,7 +15,7 @@ export default function PlanListItem({ data, currencyData, menuData }) {
 
   const colors = {
     cancelled: '#e74540',
-    'on track': '#00a98b',
+    on_track: '#00a98b',
     behind: '#eea92d',
     completed: '#29ec47'
   };
@@ -42,7 +42,7 @@ export default function PlanListItem({ data, currencyData, menuData }) {
           <PaymentSlider data={data} currencyData={currencyData} />
         </Grid>
         <Grid item xs={12} sm={2} data-testid='label'>
-          <Label title={capitalize(data.planStatus || '')} color={objectAccessor(colors, data.planStatus)} />
+          <Label title={toTitleCase(data.planStatus || '')} color={objectAccessor(colors, data.planStatus)} />
         </Grid>
         <Grid item xs={12} sm={1} data-testid="menu">
           {menuData?.userType === 'admin' && data.planStatus === 'behind' && (

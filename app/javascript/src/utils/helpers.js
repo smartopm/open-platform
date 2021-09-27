@@ -481,7 +481,7 @@ export function handleQueryOnChange(selectedOptions, filterFields) {
             value = dateToString(value)
           }
 
-          return `${property} ${operator} "${value}"`
+          return `${property} ${operator} ${value}`
         })
         .join(` ${conjugate} `)
       return queryy

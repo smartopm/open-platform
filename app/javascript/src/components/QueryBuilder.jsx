@@ -41,16 +41,20 @@ export default function QueryBuilder({
         ...builderConfig.operators.not_equal,
         label: 'Is Not'
       },
+      between: {
         ...builderConfig.operators.between,
         label: 'Between'
       }, 
       less: {
+        ...builderConfig.operators.less,
+        label: 'Less Than'
       },
       greater: {
         ...builderConfig.operators.greater,
-        label: 'Greater'
+        label: 'Greater Than'
       }
     }
+  }
 
   const initialValue =
     initialQueryValue && Object.keys(initialQueryValue).length > 0
