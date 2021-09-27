@@ -22,13 +22,13 @@ module ActionFlows
 
       def self.execute_action(data, field_config)
         assign_user = Users::User.find(data[:task_assign_user_id])
-        message = generate_message(data, assign_user)
-        msg = generate_assignee_msg(data, assign_user)
+        author_msg = generate_message(data, assign_user)
+        assignee_msg = generate_assignee_msg(data, assign_user)
 
         hash = action_flow_fields(data, field_config)
 
-        ::Sms.send(assign_user.phone_number, message) unless assign_user.phone_number.nil?
-        ::Sms.send(hash[:phone_number], msg)
+        ::Sms.send(assign_user.phone_number, author_msg) unless assign_user.phone_number.nil?
+        ::Sms.send(hash[:phone_number], assignee_msg)
       end
 
       def self.generate_url(user, task_id)
