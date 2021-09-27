@@ -33,8 +33,6 @@ describe('RequestUpdate Component ', () => {
           updatedAt: '2020-10-15T09:31:06Z',
           grantedAt: '2020-10-15T09:31:06Z',
           revokedAt: '2020-10-15T09:31:06Z',
-          email: "sample@gmail.com",
-          grantor: null,
           isGuest: true,
           guard: {
             name: 'Some User Name',
