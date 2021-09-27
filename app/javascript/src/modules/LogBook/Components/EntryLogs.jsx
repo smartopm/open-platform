@@ -2,7 +2,6 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable react/jsx-one-expression-per-line */
-import moment from 'moment-timezone'
 import React, { useState, Fragment, useContext, useEffect } from 'react';
 import { useMutation, useQuery } from 'react-apollo';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
@@ -267,16 +266,6 @@ export function IndexComponent({
       return visitorName.toLowerCase().includes(searchTerm.toLowerCase());
     });
 
-  const activeEvents = filteredEvents && filteredEvents.filter(log => {
-    let endTime
-    if (log.entryRequest?.visitEndDate) {
-      endTime = log.entryRequest.visitEndDate
-    } else {
-      endTime = log.entryRequest?.endsAt || log.entryRequest?.endTime
-    }
-    return moment().isBefore(endTime)
-  });
-
   let observationLogs;
   if (tabValue === 3) {
     observationLogs = data?.result?.reduce((groups, log) => {
@@ -375,7 +364,7 @@ export function IndexComponent({
           <>
             {data && (
               <VisitEntryLogs
-                eventLogs={activeEvents}
+                eventLogs={filteredEvents}
                 authState={authState}
                 routeToAction={routeToAction}
                 handleAddObservation={handleAddObservation}
@@ -430,7 +419,7 @@ export function IndexComponent({
           limit={limit}
           active={offset >= 1}
           handlePageChange={paginate}
-          count={activeEvents?.length}
+          count={filteredEvents?.length}
         />
       </CenteredContent>
       <Footer position="3vh" />

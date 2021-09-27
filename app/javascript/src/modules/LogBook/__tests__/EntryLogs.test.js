@@ -105,56 +105,6 @@ describe('EntryLogs Component', () => {
     fireEvent.change(container.queryByLabelText('simple tabs example'))
   });
 
-  it('does not render expired visit logs', () => {
-    const dataMock = {
-      result: [
-        {
-          "id": "02b656be-00b3-4bc2-90a4-0d86d2b72d2a",
-          "createdAt": "2021-09-22T13:57:55+02:00",
-          "refId": "eedf3caf-13a1-4d5b-ac9a-22dd99a64bb2",
-          "refType": "Logs::EntryRequest",
-          "subject": "visitor_entry",
-          "sentence": "Admin User granted Test Guest for entry.",
-          "data": {
-              "action": "granted",
-              "ref_name": "Test Guest",
-              "type": "admin"
-          },
-          "actingUser": {
-              "name": "Admin User",
-              "id": "bdf23d62-071c-4fdf-8ee5-7add18236090"
-          },
-          "entryRequest": {
-              "reason": "client",
-              "id": "eedf3caf-13a1-4d5b-ac9a-22dd99a64bb2",
-              "grantedState": 1,
-              "grantedAt": "2021-09-22T13:57:55+02:00",
-              "name": "Test Guest",
-              "startsAt": "2021-09-23T09:49:14+02:00",
-              "endsAt": "2021-09-23T13:00:14+02:00",
-              "visitationDate": "2021-09-23T09:50:00+02:00"
-          },
-          "user": null
-        }
-      ]
-    }
-
-    props.data = dataMock;
-
-    render(
-      <MockedProvider>
-        <MockedThemeProvider>
-          <BrowserRouter>
-            <Context.Provider value={userMock}>
-              <IndexComponent {...props} />
-            </Context.Provider>
-          </BrowserRouter>
-        </MockedThemeProvider>
-      </MockedProvider>
-    );
-    expect(screen.queryByTestId('visitor_name')).not.toBeInTheDocument();
-  });
-
   it('renders active visit logs', () => {
     const dataMock = {
       result: [
