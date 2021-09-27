@@ -53,7 +53,7 @@ module Logs
     end
 
     def revoke!(revoker)
-      update(
+      update!(
         revoker_id: revoker.id,
         entry_request_state: 1,
         revoked_at: Time.zone.now,

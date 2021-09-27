@@ -25,17 +25,25 @@ module Mutations
 
       def resolve(vals)
         entry_request = context[:site_community].entry_requests.find(vals.delete(:id))
-        raise GraphQL::ExecutionError, I18n.t('errors.not_found') unless entry_request
-
         return { entry_request: entry_request } if entry_request.update!(vals)
 
         raise GraphQL::ExecutionError, entry_request.errors.full_messages
       end
 
-      def authorized?(_vals)
-        return true if context[:current_user]&.role?(%i[security_guard admin])
+      def authorized?(vals)
+        entry_request = Logs::EntryRequest.find_by(id: vals[:id])
+        raise_entry_request_not_found_error(entry_request)
+        return true if context[:current_user]&.role?(%i[security_guard admin]) ||
+                       entry_request.user_id.eql?(context[:current_user].id)
 
         raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
+      end
+
+      # @return [GraphQL::ExecutionError]
+      def raise_entry_request_not_found_error(entry_request)
+        return if entry_request
+
+        raise GraphQL::ExecutionError, I18n.t('errors.entry_request.not_found')
       end
     end
   end
