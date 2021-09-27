@@ -104,7 +104,8 @@ export function PlansList({
     }))
   }
 
-  function handleMenuClose() {
+  function handleMenuClose(e) {
+    e.stopPropagation()
     setAnchorEl(null);
     setPaymentPlan(null);
   }
