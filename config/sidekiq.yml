@@ -21,7 +21,7 @@
     args: [['Nkwashi','Ciudad Morazán']]
     description: "Check critical business activities and send alert to slack"
   task_reminder:
-    cron: '00 10 * * 1,4 Africa/Lusaka'
+    cron: '00 16 * * 1,4 Africa/Lusaka'
     class: TaskReminderJob
     args: ['automated']
     description: "This reminds users twice a week to perform the tasks assigned to them"
