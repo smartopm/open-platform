@@ -67,7 +67,6 @@ export default function Guest({guestListEntry, handleGuestDetails, handleGuestRe
 
 
 export function renderGuestData(guestListEntry, menuData, translate) {
-  console.log("Guest list", guestListEntry)
   return [
     {
       'Guest Name': (
