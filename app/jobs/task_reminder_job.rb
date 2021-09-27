@@ -15,7 +15,7 @@ class TaskReminderJob < ApplicationJob
     if job_type.eql?('manual')
       send_email_reminder(assigned_note)
     else
-      Notes::Note.where(completed: false).find_each do |note|
+      Notes::Note.includes(assignee_notes: :user).where(completed: false).find_each do |note|
         note.assignee_notes.each do |note_assignee|
           send_email_reminder(note_assignee)
           send_sms_reminder(note_assignee)
