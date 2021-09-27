@@ -3,11 +3,11 @@
 /* eslint-disable no-use-before-define */
 import React, { useState, useEffect, useContext } from 'react';
 import { useMutation, useLazyQuery } from 'react-apollo';
-import { TextField, MenuItem, Button , Grid } from '@material-ui/core';
+import { TextField, MenuItem, Button, Grid } from '@material-ui/core';
 import { StyleSheet, css } from 'aphrodite';
-import { useHistory} from 'react-router';
+import { useHistory } from 'react-router';
 import { useTranslation } from 'react-i18next';
-import PropTypes from 'prop-types'
+import PropTypes from 'prop-types';
 import CallIcon from '@material-ui/icons/Call';
 import { EntryRequestQuery } from '../../../graphql/queries';
 import {
@@ -17,87 +17,173 @@ import {
   UpdateLogMutation,
   EntryRequestCreate
 } from '../../../graphql/mutations';
-import { Spinner } from "../../../shared/Loading";
+import { Spinner } from '../../../shared/Loading';
 import { isTimeValid, getWeekDay } from '../../../utils/dateutil';
-import { objectAccessor } from '../../../utils/helpers'
-import { userState, userType, communityVisitingHours, defaultBusinessReasons } from '../../../utils/constants'
-import { ModalDialog, ReasonInputModal } from "../../../components/Dialog"
-import { dateToString, dateTimeToString } from "../../../components/DateContainer";
+import { objectAccessor } from '../../../utils/helpers';
+import {
+  userState,
+  userType,
+  communityVisitingHours,
+  defaultBusinessReasons
+} from '../../../utils/constants';
+import { ModalDialog, ReasonInputModal } from '../../../components/Dialog';
+import { dateToString, dateTimeToString } from '../../../components/DateContainer';
 import { Context } from '../../../containers/Provider/AuthStateProvider';
 import EntryNoteDialog from '../../../shared/dialogs/EntryNoteDialog';
 import CenteredContent from '../../../components/CenteredContent';
-import AddObservationNoteMutation, { EntryRequestUpdateMutation } from '../graphql/logbook_mutations';
-import MessageAlert from '../../../components/MessageAlert'
-import { checkInValidRequiredFields, defaultRequiredFields } from '../utils';
+import AddObservationNoteMutation, {
+  EntryRequestUpdateMutation,
+  SendGuestQrCodeMutation
+} from '../graphql/logbook_mutations';
+import MessageAlert from '../../../components/MessageAlert';
+import { checkInValidRequiredFields, defaultRequiredFields , checkRequests } from '../utils';
 import GuestTime from './GuestTime';
+import QRCodeConfirmation from './QRCodeConfirmation';
+
 
 const initialState = {
-    name: '',
-    phoneNumber: '',
-    nrc: '',
-    vehiclePlate: '',
-    reason: '',
-    business: '',
-    state: '',
-    userType: '',
-    expiresAt: '',
-    email: '',
-    companyName: '',
-    temperature: '',
-    loaded: false,
-    occursOn: [],
-    visitationDate: null,
-    visitEndDate: null,
-    startsAt: new Date(),
-    endsAt: new Date(),
-}
+  name: '',
+  phoneNumber: '',
+  nrc: '',
+  vehiclePlate: '',
+  reason: '',
+  business: '',
+  state: '',
+  userType: '',
+  expiresAt: '',
+  email: '',
+  companyName: '',
+  temperature: '',
+  loaded: false,
+  occursOn: [],
+  visitationDate: null,
+  visitEndDate: null,
+  startsAt: new Date(),
+  endsAt: new Date()
+};
 
-export default function RequestUpdate({ id, previousRoute, isGuestRequest, tabValue }) {
-  const history = useHistory()
-  const authState = useContext(Context)
-  const isFromLogs = previousRoute === 'logs' ||  false
+export default function RequestUpdate({
+  id,
+  previousRoute,
+  isGuestRequest,
+  tabValue,
+  isScannedRequest
+}) {
+  const history = useHistory();
+  const authState = useContext(Context);
+  const isFromLogs = previousRoute === 'logs' || false;
   const [loadRequest, { data }] = useLazyQuery(EntryRequestQuery, {
     variables: { id }
   });
-  const [createEntryRequest] = useMutation(EntryRequestCreate)
+  const [createEntryRequest] = useMutation(EntryRequestCreate);
+  const [sendGuestQrCode] = useMutation(SendGuestQrCodeMutation);
   const [grantEntry] = useMutation(EntryRequestGrant);
   const [denyEntry] = useMutation(EntryRequestDeny);
-  const [updateRequest] = useMutation(EntryRequestUpdateMutation)
-  const [createUser] = useMutation(CreateUserMutation)
-  const [updateLog] = useMutation(UpdateLogMutation)
-  const [addObservationNote] = useMutation(AddObservationNoteMutation)
-  const [isLoading, setLoading] = useState(false)
-  const [isModalOpen, setModal] = useState(false)
-  const [modalAction, setModalAction] = useState('')
+  const [updateRequest] = useMutation(EntryRequestUpdateMutation);
+  const [createUser] = useMutation(CreateUserMutation);
+  const [updateLog] = useMutation(UpdateLogMutation);
+  const [addObservationNote] = useMutation(AddObservationNoteMutation);
+  const [isLoading, setLoading] = useState(false);
+  const [isModalOpen, setModal] = useState(false);
+  const [modalAction, setModalAction] = useState('');
   const [date] = useState(new Date());
-  const [isClicked, setIsClicked] = useState(false)
-  const [isObservationOpen, setIsObservationOpen] = useState(false)
-  const [observationNote, setObservationNote] = useState("")
-  const [reqId, setRequestId] = useState(id)
-  const [observationDetails, setDetails] = useState({ isError: false, message: '', loading: false })
-  const [inputValidationMsg, setInputValidationMsg] = useState({ isError: false, isSubmitting: false })
+  const [isClicked, setIsClicked] = useState(false);
+  const [isObservationOpen, setIsObservationOpen] = useState(false);
+  const [observationNote, setObservationNote] = useState('');
+  const [reqId, setRequestId] = useState(id);
+  const [observationDetails, setDetails] = useState({
+    isError: false,
+    message: '',
+    loading: false,
+    scanLoading: false
+  });
+  const [inputValidationMsg, setInputValidationMsg] = useState({
+    isError: false,
+    isSubmitting: false
+  });
   const [formData, setFormData] = useState(initialState);
-  const requiredFields = authState?.user?.community?.communityRequiredFields?.manualEntryRequestForm || defaultRequiredFields
-  const { t } = useTranslation(['common', 'logbook'])
-  const [isReasonModalOpen, setReasonModal] = useState(false)
+  const requiredFields =
+    authState?.user?.community?.communityRequiredFields?.manualEntryRequestForm ||
+    defaultRequiredFields;
+  const { t } = useTranslation(['common', 'logbook']);
+  const [isReasonModalOpen, setReasonModal] = useState(false);
+  const [isQrModalOpen, setQrModal] = useState(false);
+  const [qrCodeEmail, setQrCodeEmail] = useState('');
+  const [guestRequest, setGuestRequest] = useState(null);
 
   useEffect(() => {
     if (id) {
-      loadRequest({ variables: { id } })
+      loadRequest({ variables: { id } });
     }
-  }, [id, loadRequest])
+  }, [id, loadRequest]);
 
   useEffect(() => {
     if (formData.reason === 'other') {
-      setReasonModal(true)
+      setReasonModal(true);
     }
-  }, [formData.reason, id])
+  }, [formData.reason, id]);
 
+  useEffect(() => {
+    if (formData.loaded && isScannedRequest) {
+      const requestValidity = checkRequests(formData, t, authState?.user?.community?.timezone);
+      if (requestValidity.valid) {
+        grantEntry({ variables: { id: formData.id } })
+          .then(() => {
+            setDetails({
+              ...observationDetails,
+              isError: false,
+              scanLoading: true,
+              message: t('logbook:logbook.success_message', {
+                action: t('logbook:logbook.granted')
+              })
+            });
+            setTimeout(() => {
+              setDetails({
+                ...observationDetails,
+                isError: false,
+                scanLoading: false,
+                message: ''
+              });
+              history.push(`/entry_logs?tab=2`);
+            }, 1000);
+          })
+          .catch(err => {
+            setDetails({
+              ...observationDetails,
+              isError: true,
+              scanLoading: true,
+              message: err.message
+            });
+            setTimeout(() => {
+              setDetails({
+                ...observationDetails,
+                isError: false,
+                scanLoading: false,
+                message: ''
+              });
+              history.push(`/entry_logs?tab=2`);
+            }, 1000);
+          });
+      } else {
+        setDetails({
+          ...observationDetails,
+          isError: true,
+          scanLoading: true,
+          message: requestValidity.title
+        });
+        setTimeout(() => {
+          setDetails({ ...observationDetails, isError: false, scanLoading: false, message: '' });
+          history.push(`/entry_logs?tab=2`);
+        }, 1000);
+      }
+    }
+  }, [formData.loaded]);
 
   // Data is loaded, so set the initialState, but only once
   if (!formData.loaded && data && id) {
     setFormData({ ...data.result, loaded: true });
   }
+
   function handleInputChange(e) {
     const { name, value } = e.target;
     setFormData({
@@ -106,58 +192,92 @@ export default function RequestUpdate({ id, previousRoute, isGuestRequest, tabVa
     });
     // if a different reason is picked then reset the other reason
     if (name === 'reason' && formData.business) {
-      setFormData({ ...formData, business: '' })
+      setFormData({ ...formData, business: '' });
     }
   }
 
-  function handleChangeOccurrence(day){
-    if(formData.occursOn.includes(day)){
-      const leftDays = formData.occursOn.filter(d => d !== day)
+  function sendQrCode(requestId, guestEmail) {
+    sendGuestQrCode({
+      variables: {
+        id: requestId,
+        guestEmail
+      }
+    })
+      .then(() => {
+        setDetails({
+          ...observationDetails,
+          message: t('qrcode_confirmation.qr_code_sent')
+        });
+        setTimeout(() => closeQrModal(), 100);
+      })
+      .catch(error => {
+        setDetails({ ...observationDetails, isError: true, message: error.message });
+      });
+  }
+
+  function handleChangeOccurrence(day) {
+    if (formData.occursOn.includes(day)) {
+      const leftDays = formData.occursOn.filter(d => d !== day);
       setFormData({
         ...formData,
         occursOn: leftDays
       });
-      return
+      return;
     }
     setFormData({
       ...formData,
-      occursOn: [ ...formData.occursOn, day]
+      occursOn: [...formData.occursOn, day]
     });
   }
 
-  function handleCreateRequest() {
+  function closeQrModal() {
+    setQrModal(false);
+    history.push(`/entry_logs?tab=${tabValue}`);
+  }
 
+  function handleCreateRequest() {
     const otherFormData = {
       ...formData,
       // return reason if not other
-      reason: formData.business || formData.reason,
-    }
+      reason: formData.business || formData.reason
+    };
 
-      return createEntryRequest({ variables: otherFormData })
-      // eslint-disable-next-line no-shadow
+    return (
+      createEntryRequest({ variables: otherFormData })
+        // eslint-disable-next-line no-shadow
         .then(({ data }) => {
-          setRequestId(data.result.entryRequest.id)
+          setRequestId(data.result.entryRequest.id);
           if (isGuestRequest) {
-            history.push(`/entry_logs?tab=${tabValue}`)
+            setDetails({
+              ...observationDetails,
+              isError: false,
+              message: t('logbook:logbook.registered_guest_created')
+            });
+            setGuestRequest(data.result.entryRequest);
+            setQrModal(true);
           }
-          return data.result.entryRequest.id
+          return data.result.entryRequest.id;
         })
         .catch(err => {
           setDetails({ ...observationDetails, isError: true, message: err.message });
-        });
+        })
+    );
   }
 
   function handleUpdateRequest() {
     const otherFormData = {
       ...formData,
-      reason: formData.business || formData.reason,
+      reason: formData.business || formData.reason
     };
     setLoading(true);
     updateRequest({ variables: { id, ...otherFormData } })
       .then(() => {
         setLoading(false);
-        setDetails({ ...observationDetails, message: t('logbook:logbook.registered_guest_updated') });
-        history.push(`/entry_logs?tab=${tabValue}`)
+        setDetails({
+          ...observationDetails,
+          message: t('logbook:logbook.registered_guest_updated')
+        });
+        history.push(`/entry_logs?tab=${tabValue}`);
       })
       .catch(error => {
         setLoading(false);
@@ -166,44 +286,51 @@ export default function RequestUpdate({ id, previousRoute, isGuestRequest, tabVa
   }
 
   function handleGrantRequest() {
-    setLoading(true)
-    setModal(false)
+    setLoading(true);
+    setModal(false);
     handleCreateRequest()
       .then(requestId => grantEntry({ variables: { id: requestId } }))
       .then(() => {
-        setDetails({ ...observationDetails, isError: false, message: t('logbook:logbook.success_message', { action: t('logbook:logbook.granted') }) })
-        setIsObservationOpen(true)
-        setLoading(false)
+        setDetails({
+          ...observationDetails,
+          isError: false,
+          message: t('logbook:logbook.success_message', { action: t('logbook:logbook.granted') })
+        });
+        setIsObservationOpen(true);
+        setLoading(false);
       })
-      .catch((error) => {
-        setLoading(false)
-        setDetails({ ...observationDetails, isError: true, message: error.message })
+      .catch(error => {
+        setLoading(false);
+        setDetails({ ...observationDetails, isError: true, message: error.message });
       });
   }
 
   function handleDenyRequest() {
-    const isAnyInvalid = checkInValidRequiredFields(formData, requiredFields)
-    if(isAnyInvalid){
-      setInputValidationMsg({ isError: true })
-      return
+    const isAnyInvalid = checkInValidRequiredFields(formData, requiredFields);
+    if (isAnyInvalid) {
+      setInputValidationMsg({ isError: true });
+      return;
     }
-    setIsClicked(!isClicked)
-    setLoading(true)
+    setIsClicked(!isClicked);
+    setLoading(true);
     handleCreateRequest()
       .then(requestId => denyEntry({ variables: { id: requestId } }))
       .then(() => {
-        setDetails({ ...observationDetails, message: t('logbook:logbook.success_message', { action: t('logbook:logbook.denied')}) })
-        setIsObservationOpen(true)
-        setLoading(false)
+        setDetails({
+          ...observationDetails,
+          message: t('logbook:logbook.success_message', { action: t('logbook:logbook.denied') })
+        });
+        setIsObservationOpen(true);
+        setLoading(false);
       })
-      .catch((error) => {
-        setLoading(false)
-        setDetails({ ...observationDetails, isError: true, message: error.message })
+      .catch(error => {
+        setLoading(false);
+        setDetails({ ...observationDetails, isError: true, message: error.message });
       });
   }
 
   function handleEnrollUser() {
-    setLoading(true)
+    setLoading(true);
     createUser({
       variables: {
         name: formData.name,
@@ -216,96 +343,113 @@ export default function RequestUpdate({ id, previousRoute, isGuestRequest, tabVa
         vehicle: formData.vehiclePlate
       }
     })
-      .then((response) => {
+      .then(response => {
         updateLog({
           variables: {
             refId: id
           }
         }).then(() => {
-          setLoading(false)
-          setDetails({ ...observationDetails, message: t('logbook:logbook.user_enrolled') })
-          history.push(`/user/${response.data.result.user.id}`)
-        })
+          setLoading(false);
+          setDetails({ ...observationDetails, message: t('logbook:logbook.user_enrolled') });
+          history.push(`/user/${response.data.result.user.id}`);
+        });
       })
-      .catch((err) => {
-        setLoading(false)
-        setDetails({ ...observationDetails, isError: true, message: err.message })
-      })
+      .catch(err => {
+        setLoading(false);
+        setDetails({ ...observationDetails, isError: true, message: err.message });
+      });
   }
 
   function handleModal(_event, type) {
-    const isAnyInvalid = checkInValidRequiredFields(formData, requiredFields)
-    if(isAnyInvalid ){
-      setInputValidationMsg({ isError: true })
-      return
+    const isAnyInvalid = checkInValidRequiredFields(formData, requiredFields);
+    if (isAnyInvalid) {
+      setInputValidationMsg({ isError: true });
+      return;
     }
     if (isGuestRequest && !formData.visitationDate) {
-      setDetails({ ...observationDetails, isError: true, message: t('logbook:logbook.visit_end_error') });
-      return
+      setDetails({
+        ...observationDetails,
+        isError: true,
+        message: t('logbook:logbook.visit_end_error')
+      });
+      return;
     }
 
     switch (type) {
       case 'grant':
-        setModalAction('grant')
-        setModal(!isModalOpen)
+        setModalAction('grant');
+        setModal(!isModalOpen);
         break;
       case 'deny':
-        setModalAction('deny')
-        setModal(!isModalOpen)
+        setModalAction('deny');
+        setModal(!isModalOpen);
         break;
       case 'update':
-        handleUpdateRequest()
+        handleUpdateRequest();
         break;
       case 'create':
-        handleCreateRequest()
+        handleCreateRequest();
         break;
       default:
         break;
     }
   }
 
-  function resetForm(to){
-    setFormData(initialState)
-    setObservationNote("")
-    setRequestId("")
-    setIsObservationOpen(false)
-    setModal(false)
-    history.push(to)
+  function resetForm(to) {
+    setFormData(initialState);
+    setObservationNote('');
+    setRequestId('');
+    setIsObservationOpen(false);
+    setModal(false);
+    history.push(to);
   }
 
-  function handleSaveObservation(to){
+  function handleSaveObservation(to) {
     // we are skipping the observation notes
-    if(!observationNote) {
-      resetForm(to)
-      return
+    if (!observationNote) {
+      resetForm(to);
+      return;
     }
-    setDetails({ ...observationDetails, loading: true })
-    addObservationNote({ variables: { id: reqId, note: observationNote, refType: 'Logs::EntryRequest'} })
+    setDetails({ ...observationDetails, loading: true });
+    addObservationNote({
+      variables: { id: reqId, note: observationNote, refType: 'Logs::EntryRequest' }
+    })
       .then(() => {
-        setDetails({ ...observationDetails, loading: false, isError: false, message: t('logbook:observations.created_observation') })
-        resetForm(to)
+        setDetails({
+          ...observationDetails,
+          loading: false,
+          isError: false,
+          message: t('logbook:observations.created_observation')
+        });
+        resetForm(to);
       })
       .catch(error => {
-        setDetails({ ...observationDetails, loading: false, isError: true, message: error.message })
-      })
+        setDetails({
+          ...observationDetails,
+          loading: false,
+          isError: true,
+          message: error.message
+        });
+      });
   }
-  function checkTimeIsValid(){
-    const communityName = authState.user.community.name
-    const accessor = communityName.toLowerCase()
-    const visitingHours = objectAccessor(communityVisitingHours, accessor)
+  function checkTimeIsValid() {
+    const communityName = authState.user.community.name;
+    const accessor = communityName.toLowerCase();
+    const visitingHours = objectAccessor(communityVisitingHours, accessor);
 
-    return isTimeValid({ date, visitingHours })
+    return isTimeValid({ date, visitingHours });
   }
 
-  function handleAddOtherReason(){
+  function handleAddOtherReason() {
     if (!formData.business) {
-      setInputValidationMsg({ isError: true })
-      return
+      setInputValidationMsg({ isError: true });
+      return;
     }
-    setReasonModal(!isReasonModalOpen)
+    setReasonModal(!isReasonModalOpen);
   }
 
-  const observationAction = observationNote ? 'Save' : 'Skip'
+  const observationAction = observationNote ? 'Save' : 'Skip';
+
   return (
     <>
       <ReasonInputModal
@@ -324,7 +468,14 @@ export default function RequestUpdate({ id, previousRoute, isGuestRequest, tabVa
           />
         </div>
       </ReasonInputModal>
-
+      <QRCodeConfirmation
+        open={isQrModalOpen}
+        guestEmail={formData.email}
+        closeModal={closeQrModal}
+        emailHandler={{ value: qrCodeEmail, handleEmailChange: setQrCodeEmail }}
+        sendQrCode={sendQrCode}
+        guestRequest={guestRequest}
+      />
       <MessageAlert
         type={!observationDetails.isError ? 'success' : 'error'}
         message={observationDetails.message}
@@ -396,242 +547,266 @@ export default function RequestUpdate({ id, previousRoute, isGuestRequest, tabVa
       </EntryNoteDialog>
 
       <div className="container">
-        <form>
-          {isFromLogs && (
+        {observationDetails.scanLoading ? (
+          <Spinner />
+        ) : (
+          <form>
+            {isFromLogs && (
+              <div className="form-group">
+                <label className="bmd-label-static" htmlFor="date" data-testid="submitted_date">
+                  {t('logbook:logbook.date_time_submitted')}
+                </label>
+                <TextField
+                  className="form-control"
+                  type="text"
+                  value={
+                    formData.grantor
+                      ? `${dateToString(formData.createdAt)} at ${dateTimeToString(
+                          formData.createdAt
+                        )}`
+                      : ''
+                  }
+                  disabled
+                  name="date"
+                  required
+                />
+              </div>
+            )}
             <div className="form-group">
-              <label className="bmd-label-static" htmlFor="date" data-testid="submitted_date">
-                {t('logbook:logbook.date_time_submitted')}
+              <label className="bmd-label-static" htmlFor="_name">
+                {t('logbook:log_title.guard')}
               </label>
               <TextField
                 className="form-control"
                 type="text"
-                value={
-                  formData.grantor
-                    ? `${dateToString(formData.createdAt)} at ${dateTimeToString(
-                        formData.createdAt
-                      )}`
-                    : ''
-                }
+                value={formData.grantor?.name || authState.user.name}
                 disabled
-                name="date"
+                name="name"
                 required
               />
             </div>
-          )}
-          <div className="form-group">
-            <label className="bmd-label-static" htmlFor="_name">
-              {t('logbook:log_title.guard')}
-            </label>
-            <TextField
-              className="form-control"
-              type="text"
-              value={formData.grantor?.name || authState.user.name}
-              disabled
-              name="name"
-              required
-            />
-          </div>
-          <div className="form-group">
-            <label className="bmd-label-static" htmlFor="_name">
-              {t('form_fields.full_name')}
-            </label>
-            <TextField
-              className="form-control"
-              type="text"
-              value={formData.name}
-              onChange={handleInputChange}
-              name="name"
-              inputProps={{ 'data-testid': 'entry_user_name' }}
-              error={inputValidationMsg.isError && requiredFields.includes('name') && !formData.name}
-              helperText={inputValidationMsg.isError &&
-                requiredFields.includes('name') &&
-                !formData.name &&
-                t('logbook:errors.required_field', { fieldName: 'Name' })}
-            />
-          </div>
-          <div className="form-group">
-            <label className="bmd-label-static" htmlFor="_name">
-              {t('form_fields.email')}
-            </label>
-            <TextField
-              className="form-control"
-              name="email"
-              type="email"
-              onChange={handleInputChange}
-              value={formData.email}
-              inputProps={{ 'data-testid': 'email' }}
-            />
-          </div>
-          <div className="form-group">
-            <label className="bmd-label-static" htmlFor="nrc">
-              {t('form_fields.nrc')}
-            </label>
-            <TextField
-              className="form-control"
-              type="text"
-              value={formData.nrc || ''}
-              onChange={handleInputChange}
-              name="nrc"
-              inputProps={{ 'data-testid': 'entry_user_nrc' }}
-              error={inputValidationMsg.isError &&
-                requiredFields.includes('nrc') &&
-                !formData.nrc}
-              helperText={inputValidationMsg.isError &&
-                requiredFields.includes('nrc') &&
-                !formData.nrc &&
-                t('logbook:errors.required_field', { fieldName: 'ID' })}
-            />
-          </div>
-          <div className="form-group">
-            <label className="bmd-label-static" htmlFor="phoneNumber">
-              {t('form_fields.phone_number')}
-            </label>
-            <TextField
-              className="form-control"
-              type="text"
-              value={formData.phoneNumber || ''}
-              onChange={handleInputChange}
-              name="phoneNumber"
-              inputProps={{ 'data-testid': 'entry_user_phone' }}
-              error={inputValidationMsg.isError &&
-                requiredFields.includes('phoneNumber') &&
-                !formData.phoneNumber}
-              helperText={inputValidationMsg.isError &&
-                requiredFields.includes('phoneNumber') &&
-                !formData.phoneNumber &&
-                t('logbook:errors.required_field', { fieldName: 'Phone Number' })}
-            />
-          </div>
-          {previousRoute === 'enroll' && (
-            <>
-              <div className="form-group">
-                <TextField
-                  id="userType"
-                  select
-                  label={t('form_fields.user_type')}
-                  value={formData.userType || ''}
-                  onChange={handleInputChange}
-                  margin="normal"
-                  name="userType"
-                  className={`${css(styles.selectInput)}`}
-                >
-                  {Object.entries(userType).map(([key, val]) => (
-                    <MenuItem key={key} value={key}>
-                      {val}
-                    </MenuItem>
-                  ))}
-                </TextField>
-              </div>
-              <div className="form-group">
-                <TextField
-                  id="state"
-                  select
-                  label={t('form_fields.state')}
-                  value={formData.state || ''}
-                  onChange={handleInputChange}
-                  margin="normal"
-                  name="state"
-                  className={`${css(styles.selectInput)}`}
-                >
-                  {Object.entries(userState).map(([key, val]) => (
-                    <MenuItem key={key} value={key}>
-                      {val}
-                    </MenuItem>
-                  ))}
-                </TextField>
-              </div>
-
-              <div className="form-group">
+            <div className="form-group">
+              <label className="bmd-label-static" htmlFor="_name">
+                {t('form_fields.full_name')}
+              </label>
+              <TextField
+                className="form-control"
+                type="text"
+                value={formData.name}
+                onChange={handleInputChange}
+                name="name"
+                inputProps={{ 'data-testid': 'entry_user_name' }}
+                error={
+                  inputValidationMsg.isError && requiredFields.includes('name') && !formData.name
+                }
+                helperText={
+                  inputValidationMsg.isError &&
+                  requiredFields.includes('name') &&
+                  !formData.name &&
+                  t('logbook:errors.required_field', { fieldName: 'Name' })
+                }
+              />
+            </div>
+            <div className="form-group">
+              <label className="bmd-label-static" htmlFor="_name">
+                {t('form_fields.email')}
+              </label>
+              <TextField
+                className="form-control"
+                name="email"
+                type="email"
+                onChange={handleInputChange}
+                value={formData.email}
+                inputProps={{ 'data-testid': 'email' }}
+              />
+            </div>
+            <div className="form-group">
+              <label className="bmd-label-static" htmlFor="nrc">
+                {t('form_fields.nrc')}
+              </label>
+              <TextField
+                className="form-control"
+                type="text"
+                value={formData.nrc || ''}
+                onChange={handleInputChange}
+                name="nrc"
+                inputProps={{ 'data-testid': 'entry_user_nrc' }}
+                error={
+                  inputValidationMsg.isError && requiredFields.includes('nrc') && !formData.nrc
+                }
+                helperText={
+                  inputValidationMsg.isError &&
+                  requiredFields.includes('nrc') &&
+                  !formData.nrc &&
+                  t('logbook:errors.required_field', { fieldName: 'ID' })
+                }
+              />
+            </div>
+            <div className="form-group">
+              <label className="bmd-label-static" htmlFor="phoneNumber">
+                {t('form_fields.phone_number')}
+              </label>
+              <TextField
+                className="form-control"
+                type="text"
+                value={formData.phoneNumber || ''}
+                onChange={handleInputChange}
+                name="phoneNumber"
+                inputProps={{ 'data-testid': 'entry_user_phone' }}
+                error={
+                  inputValidationMsg.isError &&
+                  requiredFields.includes('phoneNumber') &&
+                  !formData.phoneNumber
+                }
+                helperText={
+                  inputValidationMsg.isError &&
+                  requiredFields.includes('phoneNumber') &&
+                  !formData.phoneNumber &&
+                  t('logbook:errors.required_field', { fieldName: 'Phone Number' })
+                }
+              />
+            </div>
+            {previousRoute === 'enroll' && (
+              <>
                 <div className="form-group">
-                  <label className="bmd-label-static" htmlFor="expiresAt">
-                    {t('misc.expiration_date')}
-                  </label>
-                  {/* Todo: This should be replaced by a date picker */}
-                  <input
-                    className="form-control"
-                    name="expiresAt"
-                    type="text"
-                    pattern="([12]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]))"
-                    placeholder="YYYYY-MM-DD"
-                    defaultValue={formData.expiresAt || 'YYYYY-MM-DD'}
+                  <TextField
+                    id="userType"
+                    select
+                    label={t('form_fields.user_type')}
+                    value={formData.userType || ''}
                     onChange={handleInputChange}
-                    title={t('errors.date_error')}
-                  />
+                    margin="normal"
+                    name="userType"
+                    className={`${css(styles.selectInput)}`}
+                  >
+                    {Object.entries(userType).map(([key, val]) => (
+                      <MenuItem key={key} value={key}>
+                        {val}
+                      </MenuItem>
+                    ))}
+                  </TextField>
                 </div>
-              </div>
-            </>
-          )}
+                <div className="form-group">
+                  <TextField
+                    id="state"
+                    select
+                    label={t('form_fields.state')}
+                    value={formData.state || ''}
+                    onChange={handleInputChange}
+                    margin="normal"
+                    name="state"
+                    className={`${css(styles.selectInput)}`}
+                  >
+                    {Object.entries(userState).map(([key, val]) => (
+                      <MenuItem key={key} value={key}>
+                        {val}
+                      </MenuItem>
+                    ))}
+                  </TextField>
+                </div>
 
-          <div className="form-group">
-            <label className="bmd-label-static" htmlFor="vehicle">
-              {t('form_fields.vehicle_plate_number')}
-            </label>
-            <TextField
-              className="form-control"
-              type="text"
-              onChange={handleInputChange}
-              value={formData.vehiclePlate || ''}
-              name="vehiclePlate"
-              inputProps={{ 'data-testid': 'entry_user_vehicle' }}
-              error={inputValidationMsg.isError &&
-                requiredFields.includes('vehiclePlate') &&
-                !formData.vehiclePlate}
-              helperText={inputValidationMsg.isError &&
-                requiredFields.includes('vehiclePlate') &&
-                !formData.vehiclePlate &&
-                t('logbook:errors.required_field', { fieldName: 'Vehicle Plate Number' })}
-            />
-          </div>
-          <div className="form-group">
-            <label className="bmd-label-static" htmlFor="companyName">
-              {t('form_fields.company_name')}
-            </label>
-            <TextField
-              className="form-control"
-              type="text"
-              name="companyName"
-              value={formData.companyName || ''}
-              onChange={handleInputChange}
-              inputProps={{ 'data-testid': 'companyName' }}
-              error={inputValidationMsg.isError &&
-                    requiredFields.includes('companyName') &&
-                    !formData.companyName}
-              helperText={inputValidationMsg.isError &&
-                    requiredFields.includes('companyName') &&
-                    !formData.companyName &&
-                    t('logbook:errors.required_field', { fieldName: 'Company Name' })}
-            />
-          </div>
-          <div className="form-group">
-            <TextField
-              id="reason"
-              select
-              label={t('logbook:logbook.visiting_reason')}
-              name="reason"
-              value={formData.reason || ''}
-              onChange={handleInputChange}
-              className={`${css(styles.selectInput)} visiting_reason`}
-              inputProps={{ 'data-testid': 'entry_user_visit' }}
-              error={inputValidationMsg.isError &&
-                requiredFields.includes('reason') &&
-                (!formData.reason)}
-              helperText={inputValidationMsg.isError &&
-                requiredFields.includes('reason') &&
-                !formData.reason ?
-                t('logbook:errors.required_field', { fieldName: 'Reason' }) : formData.business}
-            >
-              {
-                Object.keys(defaultBusinessReasons).map(_reason => (
+                <div className="form-group">
+                  <div className="form-group">
+                    <label className="bmd-label-static" htmlFor="expiresAt">
+                      {t('misc.expiration_date')}
+                    </label>
+                    {/* Todo: This should be replaced by a date picker */}
+                    <input
+                      className="form-control"
+                      name="expiresAt"
+                      type="text"
+                      pattern="([12]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]))"
+                      placeholder="YYYYY-MM-DD"
+                      defaultValue={formData.expiresAt || 'YYYYY-MM-DD'}
+                      onChange={handleInputChange}
+                      title={t('errors.date_error')}
+                    />
+                  </div>
+                </div>
+              </>
+            )}
+
+            <div className="form-group">
+              <label className="bmd-label-static" htmlFor="vehicle">
+                {t('form_fields.vehicle_plate_number')}
+              </label>
+              <TextField
+                className="form-control"
+                type="text"
+                onChange={handleInputChange}
+                value={formData.vehiclePlate || ''}
+                name="vehiclePlate"
+                inputProps={{ 'data-testid': 'entry_user_vehicle' }}
+                error={
+                  inputValidationMsg.isError &&
+                  requiredFields.includes('vehiclePlate') &&
+                  !formData.vehiclePlate
+                }
+                helperText={
+                  inputValidationMsg.isError &&
+                  requiredFields.includes('vehiclePlate') &&
+                  !formData.vehiclePlate &&
+                  t('logbook:errors.required_field', { fieldName: 'Vehicle Plate Number' })
+                }
+              />
+            </div>
+            <div className="form-group">
+              <label className="bmd-label-static" htmlFor="companyName">
+                {t('form_fields.company_name')}
+              </label>
+              <TextField
+                className="form-control"
+                type="text"
+                name="companyName"
+                value={formData.companyName || ''}
+                onChange={handleInputChange}
+                inputProps={{ 'data-testid': 'companyName' }}
+                error={
+                  inputValidationMsg.isError &&
+                  requiredFields.includes('companyName') &&
+                  !formData.companyName
+                }
+                helperText={
+                  inputValidationMsg.isError &&
+                  requiredFields.includes('companyName') &&
+                  !formData.companyName &&
+                  t('logbook:errors.required_field', { fieldName: 'Company Name' })
+                }
+              />
+            </div>
+            <div className="form-group">
+              <TextField
+                id="reason"
+                select
+                label={t('logbook:logbook.visiting_reason')}
+                name="reason"
+                value={formData.reason || ''}
+                onChange={handleInputChange}
+                className={`${css(styles.selectInput)} visiting_reason`}
+                inputProps={{ 'data-testid': 'entry_user_visit' }}
+                error={
+                  inputValidationMsg.isError &&
+                  requiredFields.includes('reason') &&
+                  !formData.reason
+                }
+                helperText={
+                  inputValidationMsg.isError &&
+                  requiredFields.includes('reason') &&
+                  !formData.reason
+                    ? t('logbook:errors.required_field', { fieldName: 'Reason' })
+                    : formData.business
+                }
+              >
+                {Object.keys(defaultBusinessReasons).map(_reason => (
                   <MenuItem key={_reason} value={_reason}>
-                    {t(`logbook:business_reasons.${_reason}`) || objectAccessor(defaultBusinessReasons, _reason)}
+                    {t(`logbook:business_reasons.${_reason}`) ||
+                      objectAccessor(defaultBusinessReasons, _reason)}
                   </MenuItem>
-                  ))
-              }
-            </TextField>
-          </div>
+                ))}
+              </TextField>
+            </div>
 
-          {
-            // TODO: Find better ways to disable specific small feature per community
+            {// TODO: Find better ways to disable specific small feature per community
             !reqId && authState.user.community.name !== 'Ciudad Morazán' && !isGuestRequest && (
               <div className="form-group">
                 <TextField
@@ -645,23 +820,19 @@ export default function RequestUpdate({ id, previousRoute, isGuestRequest, tabVa
                   style={{ width: 200 }}
                 />
               </div>
-            )
-          }
+            )}
 
-          {/* This should only show for registered users */}
-          {
-            isGuestRequest && (
+            {/* This should only show for registered users */}
+            {isGuestRequest && (
               <GuestTime
                 days={formData.occursOn}
                 userData={formData}
                 handleChange={handleInputChange}
                 handleChangeOccurrence={handleChangeOccurrence}
               />
-            )
-          }
+            )}
 
-          {
-            isGuestRequest && !id && (
+            {isGuestRequest && !id && (
               <div className="row justify-content-center align-items-center ">
                 <Button
                   variant="contained"
@@ -672,101 +843,94 @@ export default function RequestUpdate({ id, previousRoute, isGuestRequest, tabVa
                   color="primary"
                   data-testid="submit_button"
                 >
-                  {isLoading ? ` ${t('form_actions.submitting')} ...` : ` ${t('form_actions.invite_guest')} `}
-                </Button>
-              </div>
-            )
-          }
-
-          <br />
-          {previousRoute !== 'enroll' && id && (
-          <Button
-            variant="contained"
-            onClick={event => handleModal(event, isGuestRequest ? 'update' : 'grant')}
-            className={css(styles.grantButton)}
-            disabled={isLoading}
-            data-testid="entry_user_grant_request"
-            startIcon={isLoading && <Spinner />}
-          >
-            {
-              isGuestRequest ? t('logbook:guest_book.update_guest') : t('misc.log_new_entry')
-            }
-          </Button>
-          )}
-
-          <br />
-          <br />
-          {previousRoute === 'enroll' ? (
-            <>
-              <div className="row justify-content-center align-items-center">
-                <Button
-                  variant="contained"
-                  onClick={handleEnrollUser}
-                  className={css(styles.grantButton)}
-                  data-testid="entry_user_enroll"
-                  disabled={isLoading}
-                  startIcon={isLoading && <Spinner />}
-                >
                   {isLoading
-                    ? `${t('logbook:logbook.enrolling')} ...`
-                    : ` ${t('logbook:logbook.enroll')}`}
+                    ? ` ${t('form_actions.submitting')} ...`
+                    : ` ${t('form_actions.invite_guest')} `}
                 </Button>
               </div>
-            </>
-          ) : !/logs|enroll|guests/.test(previousRoute) && !tabValue ? (
-            <>
-              <Grid container direction="row" justify="flex-start" spacing={2}>
-                <Grid item>
+            )}
+
+            <br />
+            {previousRoute !== 'enroll' && id && (
+              <Button
+                variant="contained"
+                onClick={event => handleModal(event, isGuestRequest ? 'update' : 'grant')}
+                className={css(styles.grantButton)}
+                disabled={isLoading}
+                data-testid="entry_user_grant_request"
+                startIcon={isLoading && <Spinner />}
+              >
+                {isGuestRequest ? t('logbook:guest_book.update_guest') : t('misc.log_new_entry')}
+              </Button>
+            )}
+
+            <br />
+            <br />
+            {previousRoute === 'enroll' ? (
+              <>
+                <div className="row justify-content-center align-items-center">
                   <Button
                     variant="contained"
-                    onClick={event => handleModal(event, 'grant')}
+                    onClick={handleEnrollUser}
                     className={css(styles.grantButton)}
+                    data-testid="entry_user_enroll"
                     disabled={isLoading}
-                    data-testid="entry_user_grant"
                     startIcon={isLoading && <Spinner />}
                   >
-
-                    {
-                      t('logbook:logbook.grant')
-                    }
+                    {isLoading
+                      ? `${t('logbook:logbook.enrolling')} ...`
+                      : ` ${t('logbook:logbook.enroll')}`}
                   </Button>
+                </div>
+              </>
+            ) : !/logs|enroll|guests/.test(previousRoute) && !tabValue ? (
+              <>
+                <Grid container direction="row" justify="flex-start" spacing={2}>
+                  <Grid item>
+                    <Button
+                      variant="contained"
+                      onClick={event => handleModal(event, 'grant')}
+                      className={css(styles.grantButton)}
+                      disabled={isLoading}
+                      data-testid="entry_user_grant"
+                      startIcon={isLoading && <Spinner />}
+                    >
+                      {t('logbook:logbook.grant')}
+                    </Button>
+                  </Grid>
+                  <Grid item>
+                    <Button
+                      variant="contained"
+                      onClick={handleDenyRequest}
+                      className={css(styles.denyButton)}
+                      disabled={isLoading}
+                      data-testid="entry_user_deny"
+                      startIcon={isLoading && <Spinner />}
+                    >
+                      {t('logbook:logbook.deny')}
+                    </Button>
+                  </Grid>
                 </Grid>
-                <Grid item>
-                  <Button
-                    variant="contained"
-                    onClick={handleDenyRequest}
-                    className={css(styles.denyButton)}
-                    disabled={isLoading}
-                    data-testid="entry_user_deny"
-                    startIcon={isLoading && <Spinner />}
-                  >
-                    {
-                      t('logbook:logbook.deny')
-                    }
-                  </Button>
+                <br />
+                <Grid container direction="row" justify="flex-start">
+                  <Grid item>
+                    <a
+                      href={`tel:${authState.user.community.securityManager}`}
+                      className={` ${css(styles.callButton)}`}
+                      data-testid="entry_user_call_mgr"
+                    >
+                      <CallIcon />
+                      {' '}
+                      <p style={{ margin: '-28px 30px' }}>{t('logbook:logbook.call_manager')}</p>
+                    </a>
+                  </Grid>
                 </Grid>
-              </Grid>
-              <br />
-              <Grid container direction="row" justify="flex-start">
-                <Grid item>
-                  <a
-                    href={`tel:${authState.user.community.securityManager}`}
-                    className={` ${css(styles.callButton)}`}
-                    data-testid="entry_user_call_mgr"
-                  >
-                    <CallIcon />
-                    {' '}
-                    <p style={{ margin: '-28px 30px' }}>{t('logbook:logbook.call_manager')}</p>
-                  </a>
-                </Grid>
-              </Grid>
-            </>
-          ) : (
-            <span />
-          )}
-
-
-        </form>
+              </>
+            ) : (
+              <span />
+            )}
+          </form>
+        )}
       </div>
     </>
   );
@@ -775,28 +939,28 @@ export default function RequestUpdate({ id, previousRoute, isGuestRequest, tabVa
 RequestUpdate.defaultProps = {
   id: null,
   previousRoute: '',
-  tabValue: null,
-}
+  tabValue: null
+};
 
 RequestUpdate.propTypes = {
   id: PropTypes.string,
   previousRoute: PropTypes.string,
   isGuestRequest: PropTypes.bool.isRequired,
-  tabValue: PropTypes.string,
-}
-
+  isScannedRequest: PropTypes.bool.isRequired,
+  tabValue: PropTypes.string
+};
 
 const styles = StyleSheet.create({
   selectInput: {
     width: '100%'
   },
   grantButton: {
-    backgroundColor: "#66A59A",
-    color: "#FFFFFF"
+    backgroundColor: '#66A59A',
+    color: '#FFFFFF'
   },
   denyButton: {
-    backgroundColor: "#C31515",
-    color: "#FFFFFF"
+    backgroundColor: '#C31515',
+    color: '#FFFFFF'
   },
   callButton: {
     color: '#66A59A',
@@ -804,13 +968,13 @@ const styles = StyleSheet.create({
     textDecoration: 'none'
   },
   observationButton: {
-    margin: 5,
+    margin: 5
   },
   inviteGuestButton: {
     width: '75%',
     boxShadow: 'none',
     marginTop: 60,
     height: 50,
-    color: "#FFFFFF"
-  },
+    color: '#FFFFFF'
+  }
 });

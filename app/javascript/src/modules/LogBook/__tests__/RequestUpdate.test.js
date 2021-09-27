@@ -8,6 +8,7 @@ import { Context } from '../../../containers/Provider/AuthStateProvider';
 import { createClient } from '../../../utils/apollo';
 import RequestUpdate from '../Components/RequestUpdate';
 import RequestUpdatePage from '../Components/RequestUpdatePage';
+import MockedThemeProvider from '../../__mocks__/mock_theme';
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
 describe('RequestUpdate main page', () => {
@@ -18,24 +19,26 @@ describe('RequestUpdate main page', () => {
       userType: 'client',
       expiresAt: null,
       community: {
-        supportName: "Support Officer"
+        supportName: 'Support Officer'
       }
     }
   };
-it('renders the RequestUpdate page correctly', async () => {
+  it('renders the RequestUpdate page correctly', async () => {
     await act(async () => {
       render(
         <ApolloProvider client={createClient}>
           <Context.Provider value={data}>
             <MockedProvider>
               <BrowserRouter>
-                <RequestUpdate id="23942342dsd" />
+                <MockedThemeProvider>
+                  <RequestUpdate id="23942342dsd" />
+                </MockedThemeProvider>
               </BrowserRouter>
             </MockedProvider>
           </Context.Provider>
         </ApolloProvider>
-        );
-      });
+      );
+    });
   });
   it('renders the RequestUpdate page correctly', async () => {
     await act(async () => {
@@ -44,12 +47,14 @@ it('renders the RequestUpdate page correctly', async () => {
           <Context.Provider value={data}>
             <MockedProvider>
               <BrowserRouter>
-                <RequestUpdatePage />
+                <MockedThemeProvider>
+                  <RequestUpdatePage />
+                </MockedThemeProvider>
               </BrowserRouter>
             </MockedProvider>
           </Context.Provider>
         </ApolloProvider>
-        );
-      });
+      );
+    });
   });
 });
