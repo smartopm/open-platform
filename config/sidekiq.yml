@@ -25,7 +25,8 @@
     class: TaskReminderJob
     args: ['automated']
     description: "This reminds users twice a week to perform the tasks assigned to them"
-  # renew_payment_plans:
-  #   cron: '0 0 * * * Africa/Lusaka'
-  #   class: PlanRenewalJob
-  #   description: "Create new payment plans based on subscription plans"
+  renew_payment_plans:
+    cron: '00 7 * * * Africa/Lusaka'
+    class: PlanRenewalJob
+    args: [false]
+    description: "Create new payment plans based on subscription plans"
