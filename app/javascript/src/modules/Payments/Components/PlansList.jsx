@@ -203,7 +203,7 @@ export function PlansList({
           position: 'absolute',
           zIndex: 1,
           marginTop: '-2px',
-          marginLeft: matches ? '-100px' : '-50px',
+          marginLeft: matches ? '-350px' : '-50px',
           display: displayBuilder
         }}
       >

@@ -211,8 +211,8 @@ const useStyles = makeStyles(() => ({
     marginBottom: '10px'
   },
   history: {
-    marginLeft: '-35px',
-    marginBottom: '-30px',
+    marginLeft: '-40px',
+    marginBottom: '-35px',
     textAlign: 'center',
     display: 'flex'
   },
