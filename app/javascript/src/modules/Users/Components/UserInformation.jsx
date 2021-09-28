@@ -282,7 +282,8 @@ const User = PropTypes.shape({
   accounts: PropTypes.arrayOf(PropTypes.object),
   formUsers: PropTypes.arrayOf(PropTypes.object),
   community: PropTypes.shape({
-    features: PropTypes.arrayOf(PropTypes.string),
+    // eslint-disable-next-line react/forbid-prop-types
+    features: PropTypes.object,
     securityManager: PropTypes.string
   })
 });

@@ -19,7 +19,8 @@ const userMock = {
         wpLink: "http://link.com",
         menuItems: [
           { menu_link: 'http://some-link.com', menu_name: 'Custom Menu', display_on: ['Menu', 'Dashboard'] },
-        ]
+        ],
+        features: {}
       }
     }
   };

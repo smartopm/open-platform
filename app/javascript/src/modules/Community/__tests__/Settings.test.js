@@ -58,7 +58,8 @@ describe('Community settings page ', () => {
         taxIdNo: '',
       },
       smsPhoneNumbers: ["+254724821901", "+254723456789"],
-      emergencyCallNumber: "+94848584844"
+      emergencyCallNumber: "+94848584844",
+      features: { LogBook: { features: []} }
     };
 
     const communityMutationMock = {
@@ -106,7 +107,8 @@ describe('Community settings page ', () => {
             taxIdNo: '',
           },
           smsPhoneNumbers: ["+254724821901", "+254723456789"],
-          emergencyCallNumber: "+94848584844"
+          emergencyCallNumber: "+94848584844",
+          features: { LogBook: { features: []} }
         }
       },
       result: {

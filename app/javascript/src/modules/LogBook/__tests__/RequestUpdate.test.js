@@ -19,7 +19,8 @@ describe('RequestUpdate main page', () => {
       userType: 'client',
       expiresAt: null,
       community: {
-        supportName: 'Support Officer'
+        supportName: 'Support Officer',
+        features: {LogBook: { features: [] }}
       }
     }
   };

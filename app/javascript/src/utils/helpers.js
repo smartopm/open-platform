@@ -497,8 +497,11 @@ export function handleQueryOnChange(selectedOptions, filterFields) {
  * @description checks if a module is in accepted features of a community
  */
 export function checkAllowedCommunityFeatures(features, module){
-  if(!features || !features.length || !module) return false
-  return new Set(features).has(module)
+  if(!features || !module) return false
+  const featureList = Object.keys(features)
+
+  if (!featureList.length) return false
+  return new Set(featureList).has(module)
 }
 
 /**

@@ -177,7 +177,7 @@ export function MainNav({ authState }) {
               menuItems={modulesWithCommMenu}
               userType={authState.user.userType}
               direction="left"
-              communityFeatures={authState.user?.community.features || []}
+              communityFeatures={Object.keys(authState.user?.community.features || [])}
               drawerOpen={drawerOpen}
             />
           </Drawer>

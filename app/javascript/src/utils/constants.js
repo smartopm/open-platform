@@ -664,3 +664,8 @@ export const entryLogsQueryBuilderInitialValue = {
     'resident',
     'custodian'
   ];
+
+  // Single place to manage list of specific community features to exclude
+  export const CommunityFeaturesWhiteList = {
+    denyGateAccessButton: 'Deny Gate Access Button'
+  }

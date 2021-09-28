@@ -35,6 +35,10 @@
       "select_template": "Select Template",
       "behind": "Behind",
       "status": "Status",
-      "notification_templates": "Notification Templates"
+      "notification_templates": "Notification Templates",
+      "gate_access_settings_header": "Gate Access Settings",
+      "banking_details": "Banking Details",
+      "hide_deny_gate_access_button": "Hide Deny Access Button"
+
     }
 }

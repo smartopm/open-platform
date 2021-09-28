@@ -2,7 +2,7 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import React, { useEffect, useState } from 'react';
 import Typography from '@material-ui/core/Typography';
-import { Button, TextField, MenuItem, Container, Grid, IconButton } from '@material-ui/core';
+import { Button, TextField, MenuItem, Container, Grid, IconButton, FormControlLabel, Checkbox } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { DeleteOutline } from '@material-ui/icons';
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
@@ -15,7 +15,7 @@ import DynamicContactFields from './DynamicContactFields';
 import MessageAlert from '../../../components/MessageAlert';
 import { useFileUpload } from '../../../graphql/useFileUpload';
 import ImageCropper from './ImageCropper';
-import { currencies, locales, languages } from '../../../utils/constants';
+import { currencies, locales, languages, CommunityFeaturesWhiteList } from '../../../utils/constants';
 import ImageAuth from '../../../shared/ImageAuth';
 import { formatError, objectAccessor } from '../../../utils/helpers';
 import { Spinner } from '../../../shared/Loading';
@@ -69,6 +69,8 @@ export default function CommunitySettings({ data, token, refetch }) {
     taxIdNo: data.bankingDetails?.taxIdNo || ''
   };
 
+  const features = data?.features || {}
+
   const quickLinksDisplayOptions = ['Dashboard', 'Menu'];
   const roleOptions = ['admin', 'client', 'resident'];
 
@@ -100,6 +102,7 @@ export default function CommunitySettings({ data, token, refetch }) {
   const [hasQuickLinksSettingChanged, setHasQuickLinksSettingChanged] = useState(false);
   const [smsPhoneNumbers, setSMSPhoneNumbers] = useState(data?.smsPhoneNumbers?.join(',') || '');
   const [emergencyCallNumber, setEmergencyCallNumber] = useState(data?.emergencyCallNumber || '');
+  const [communityFeatures, setCommunityFeatures] = useState(features)
   const { t } = useTranslation(['community', 'common']);
   const { onChange, signedBlobId } = useFileUpload({
     client: useApolloClient()
@@ -231,6 +234,22 @@ export default function CommunitySettings({ data, token, refetch }) {
     setMenuItemOptions([...values]);
   }
 
+  function handleDenyAccessButtonChange(e, moduleName){
+    const subFeatures = communityFeatures[String(moduleName)]?.features
+    if(!subFeatures) return;
+
+    if(e.target.checked) {
+      if(!subFeatures.includes(CommunityFeaturesWhiteList.denyGateAccessButton)) {
+        communityFeatures[String(moduleName)].features.push(CommunityFeaturesWhiteList.denyGateAccessButton)
+        setCommunityFeatures({ ...communityFeatures })
+      }
+    } else if(subFeatures.includes(CommunityFeaturesWhiteList.denyGateAccessButton)) {
+        const updatedSubFeatures =  communityFeatures[String(moduleName)].features.filter(v => v !== CommunityFeaturesWhiteList.denyGateAccessButton)
+        communityFeatures[String(moduleName)].features = updatedSubFeatures
+        setCommunityFeatures({ ...communityFeatures })
+      }
+  }
+
   function onInputChange(file) {
     setFileName(file.name);
     // convert image file to base64 string
@@ -310,7 +329,8 @@ export default function CommunitySettings({ data, token, refetch }) {
         themeColors,
         bankingDetails,
         smsPhoneNumbers: smsPhoneNumbers.split(/[ ,]+/).filter(Boolean),
-        emergencyCallNumber
+        emergencyCallNumber,
+        features: communityFeatures
       }
     })
       .then(() => {
@@ -663,7 +683,7 @@ export default function CommunitySettings({ data, token, refetch }) {
         </TextField>
         <br />
         <br />
-        <Typography variant="h6">Banking Details</Typography>
+        <Typography variant="h6">{t('community.banking_details')}</Typography>
         <TextField
           label={t('community.account_name')}
           value={bankingDetails.accountName}
@@ -762,6 +782,26 @@ export default function CommunitySettings({ data, token, refetch }) {
         />
       </div>
 
+      <br />
+      <Typography variant="h6">{t('community.gate_access_settings_header')}</Typography>
+      <Grid container spacing={3}>
+        <Grid item xs={12} sm={3} className={classes.checkBox}>
+          <Typography>{t('community.hide_deny_gate_access_button')}</Typography>
+        </Grid>
+        <Grid item xs={12} sm={9}>
+          <FormControlLabel
+            control={(
+              <Checkbox
+                checked={communityFeatures[String('LogBook')]?.features.includes(CommunityFeaturesWhiteList.denyGateAccessButton)}
+                onChange={(e) => handleDenyAccessButtonChange(e, 'LogBook')}
+                name="disable-deny-gate-access"
+                data-testid="disable_deny_gate_access"
+                color="primary"
+              />
+          )}
+          />
+        </Grid>
+      </Grid>
       <br />
 
       <Typography variant="h6">{t('community.sms_phone_numbers_header')}</Typography>
@@ -901,7 +941,9 @@ CommunitySettings.propTypes = {
       taxIdNo: PropTypes.string
     }),
     emergencyCallNumber: PropTypes.string,
-    smsPhoneNumbers: PropTypes.arrayOf(PropTypes.string)
+    smsPhoneNumbers: PropTypes.arrayOf(PropTypes.string),
+    // eslint-disable-next-line react/forbid-prop-types
+    features: PropTypes.object
   }).isRequired,
   token: PropTypes.string.isRequired,
   refetch: PropTypes.func.isRequired

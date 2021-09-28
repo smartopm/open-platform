@@ -21,7 +21,7 @@ import { Spinner } from '../../../shared/Loading';
 import { isTimeValid, getWeekDay } from '../../../utils/dateutil';
 import { objectAccessor } from '../../../utils/helpers';
 import { dateToString, dateTimeToString } from '../../../components/DateContainer';
-import { userState, userType, communityVisitingHours, defaultBusinessReasons } from '../../../utils/constants'
+import { userState, userType, communityVisitingHours, defaultBusinessReasons, CommunityFeaturesWhiteList } from '../../../utils/constants'
 import { ModalDialog, ReasonInputModal } from "../../../components/Dialog"
 import { Context } from '../../../containers/Provider/AuthStateProvider';
 import EntryNoteDialog from '../../../shared/dialogs/EntryNoteDialog';
@@ -34,7 +34,7 @@ import MessageAlert from '../../../components/MessageAlert';
 import { checkInValidRequiredFields, defaultRequiredFields , checkRequests } from '../utils';
 import GuestTime from './GuestTime';
 import QRCodeConfirmation from './QRCodeConfirmation';
-
+import FeatureCheck from '../../Features';
 
 const initialState = {
     name: '',
@@ -924,20 +924,22 @@ export default function RequestUpdate({ id, previousRoute,guestListRequest, isGu
                 </Button>
               </Grid>
               <br />
-              <Grid item>
-                <Button
-                  variant="contained"
-                  onClick={handleDenyRequest}
-                  className={css(styles.denyButton)}
-                  disabled={isLoading}
-                  data-testid="entry_user_deny"
-                  startIcon={isLoading && <Spinner />}
-                >
-                  {
-                    t('logbook:logbook.deny')
-                  }
-                </Button>
-              </Grid>
+              <FeatureCheck features={authState?.user?.community?.features} name="LogBook" subFeature={CommunityFeaturesWhiteList.denyGateAccessButton}>
+                <Grid item>
+                  <Button
+                    variant="contained"
+                    onClick={handleDenyRequest}
+                    className={css(styles.denyButton)}
+                    disabled={isLoading}
+                    data-testid="entry_user_deny"
+                    startIcon={isLoading && <Spinner />}
+                  >
+                    {
+                      t('logbook:logbook.deny')
+                    }
+                  </Button>
+                </Grid>
+              </FeatureCheck>
             </Grid>
             <br />
             <Grid>

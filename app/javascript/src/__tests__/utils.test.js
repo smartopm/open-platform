@@ -180,7 +180,7 @@ describe('array methods', () => {
   })
 
   it('should check if x belongs to array', () => {
-    const features = ['a', 'b']
+    const features = { a: { features: [] }, b: { features: [] } }
     expect(checkAllowedCommunityFeatures(features, 'b')).toBe(true)
     expect(checkAllowedCommunityFeatures(features, 'x')).toBe(false)
     expect(checkAllowedCommunityFeatures(features, 'a')).toBe(true)

@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# rubocop:disable Metrics/BlockLength
 desc 'update community with specific features'
 task update_community_features: :environment do
   puts 'updating community ....'
@@ -17,11 +18,22 @@ task update_community_features: :environment do
     'Logout', 'Labels'
   ]
 
-  Community.all.each do |comm|
-    if comm.name == 'Ciudad Morazán'
-      comm.update!(features: mc_features)
-    else
-      comm.update!(features: all_features)
+  ActiveRecord::Base.transaction do
+    Community.all.each do |comm|
+      features = {}
+      if comm.name == 'Ciudad Morazán'
+        mc_features.each do |key|
+          features[key] = { features: [] }
+        end
+      else
+        all_features.each do |key|
+          features[key] = { features: [] }
+        end
+      end
+
+      comm.update!(features: features)
     end
+    puts 'Done'
   end
 end
+# rubocop:enable Metrics/BlockLength
