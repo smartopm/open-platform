@@ -159,6 +159,7 @@ module Types::Queries::PaymentPlan
     split_query = query&.split(' ')
     if query_for_filter?(split_query)
       method, operator, value = split_query
+      value = value.gsub("'", '')
       value = value.to_f unless method.eql?('plan_status')
       plans.select { |plan| plan.public_send(method).public_send(get_operator(operator), value) }
     else

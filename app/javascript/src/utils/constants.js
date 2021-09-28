@@ -467,8 +467,7 @@ export const dateWidget = {
       createdDate: {
         label: 'Created Date',
         type: 'date',
-        valueSources: ['value'],
-        excludeOperators: ['less', 'greater']
+        valueSources: ['value']
       },
       amount: {
         label: 'Payment Amount',
