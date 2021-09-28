@@ -68,7 +68,7 @@ export default function FormContextProvider({ children }) {
 
     // eslint-disable-next-line no-unreachable
     const fileSignType = formData.filter(item => item.fieldType === 'signature')[0];
-    const filledInProperties = extractValidFormPropertyValue(formProperties)
+    const filledInProperties = extractValidFormPropertyValue(formProperties, 'submit')
 
     // get signedBlobId as value and attach it to the form_property_id
     if (formState.signed && signature.signedBlobId) {

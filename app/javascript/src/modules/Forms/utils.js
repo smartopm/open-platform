@@ -84,16 +84,17 @@ export function nonNullValues(item){
 /**
  *
  * @param {object} formProperties
+ * @param {String} type This is the type of action we are trying, whether just extracting or submitting 
  * @description removes the field name from a property so focus on groupingId and value
  * @returns {[object]}
  */
-export function extractValidFormPropertyValue(formProperties) {
+export function extractValidFormPropertyValue(formProperties, type="extract") {
   if(!Object.keys(formProperties).length) return []
   return Object.entries(formProperties)
     .map(([, prop]) => {
       if(prop.type === 'checkbox') {
         return {
-          value: Object.keys(prop.value).join(', '),
+          value: type === 'extract' ? Object.keys(prop.value).join(', ') : prop.value,
           form_property_id: prop.form_property_id,
         }
       }
