@@ -79,6 +79,7 @@ es:
           post_read_to_sentence: La publicación %{post_id} fue leída por %{acting_user_name}
           post_shared_to_sentence: La publicación %{post_id} fue compartida por %{acting_user_name}
           ref_user_name: User(%{ref_id}) eliminado
+          revoke_entry_to_sentence: "%{acting_user_name}%{action} para %{visitor_name}."
           shift_end_to_sentence: Turno de %{ref_user_name} fue terminado por %{acting_user_name}
           showroom_entry_to_sentence: 'Usuario %{name} fue registrado en la sala de
             exposición '
@@ -399,6 +400,8 @@ es:
     wallet:
       funds_not_sufficient: El monto asignado no es suficiente para el pago
   general:
+    task_reminder: RECORDATORIO, Por favor complete su tarea antes/a la fecha de finalización
+      (%{due_date}). Revise su tarea en %{task_link}. Gracias, %{community_name}
     thanks_for_using_our_app: Gracias por usar nuestra aplicación, por favor use este
       enlace para darnos su opinión %{feedback_link}
   response:
