@@ -58,7 +58,7 @@ const initialState = {
     isGuest: false
 }
 
-export default function RequestUpdate({ id, previousRoute,guestListRequest, isGuestRequest, tabValue, isScannedRequest }) {
+export default function RequestUpdate({ id, previousRoute, guestListRequest, isGuestRequest, tabValue, isScannedRequest }) {
   const history = useHistory()
   const authState = useContext(Context)
   const isFromLogs = previousRoute === 'logs' ||  false
@@ -96,7 +96,7 @@ export default function RequestUpdate({ id, previousRoute,guestListRequest, isGu
   const [isReasonModalOpen, setReasonModal] = useState(false);
   const [isQrModalOpen, setQrModal] = useState(false);
   const [qrCodeEmail, setQrCodeEmail] = useState('');
-  const [guestRequest, setGuestRequest] = useState(null);
+  const [guestRequest, setGuestRequest] = useState({ id: '' });
   const requiredFields = authState?.user?.community?.communityRequiredFields?.manualEntryRequestForm || defaultRequiredFields
 
   useEffect(() => {
@@ -220,38 +220,36 @@ export default function RequestUpdate({ id, previousRoute,guestListRequest, isGu
 
   function closeQrModal() {
     setQrModal(false);
-    history.push(`/entry_logs?tab=${tabValue}`);
+    if (guestListRequest) {
+       history.push('/guest-list')
+    } else {
+      history.push(`/entry_logs?tab=${tabValue}`);
+    }
   }
-
   
-  function handleCreateRequest({guestListRequest: _guestListRequest}) {
+  function handleCreateRequest() {
     const otherFormData = {
       ...formData,
       // return reason if not other
       reason: formData.business || formData.reason,
-      isGuest: !!_guestListRequest
+      isGuest: guestListRequest
     }
     return (
       createEntryRequest({ variables: otherFormData })
-        // eslint-disable-next-line no-shadow
-        .then(({ data }) => {
-          setRequestId(data.result.entryRequest.id);
+        // eslint-disable-next-line consistent-return
+        .then((response) => {
+          setRequestId(response.data.result.entryRequest.id);
           if (isGuestRequest) {
             setDetails({
               ...observationDetails,
               isError: false,
               message: t('logbook:logbook.registered_guest_created')
             });
-            setGuestRequest(data.result.entryRequest);
+            setGuestRequest(response.data.result.entryRequest);
             setQrModal(true);
-          }
-          setRequestId(data.result.entryRequest.id)
-          if(data.result.entryRequest.isGuest){
-            return history.push('/guest-list')
-          }
-          history.push(`/entry_logs?tab=${tabValue}`)
-
-          return data.result.entryRequest.id
+            return false
+          } 
+          return response.data.result.entryRequest.id
         })
         .catch(err => {
           setDetails({ ...observationDetails, isError: true, message: err.message });
@@ -389,7 +387,7 @@ export default function RequestUpdate({ id, previousRoute,guestListRequest, isGu
         handleUpdateRequest();
         break;
       case 'create':
-        handleCreateRequest({guestListRequest})
+        handleCreateRequest()
         break;
       default:
         break;
@@ -451,9 +449,9 @@ export default function RequestUpdate({ id, previousRoute,guestListRequest, isGu
 
   const observationAction = observationNote ? 'Save' : 'Skip'
 
-  function closeForm({id: _id, guestListRequest: _guestListRequest}){
+  function closeForm({id: _id}){
 
-    if(_id === 'new-guest-entry' || _guestListRequest ){
+    if(_id === 'new-guest-entry' || guestListRequest ){
       history.push({pathname: '/guest-list'})
       return 
     }
@@ -828,7 +826,7 @@ export default function RequestUpdate({ id, previousRoute,guestListRequest, isGu
               variant="contained"
               aria-label="guest_cancel"
               color="secondary"
-              onClick={() => closeForm({id, guestListRequest})}
+              onClick={() => closeForm({id})}
               className={`${css(styles.cancelGuestButton)}`}
               data-testid="cancel_update_guest_btn"
             >
@@ -976,7 +974,7 @@ RequestUpdate.defaultProps = {
   id: null,
   previousRoute: '',
   tabValue: null,
-  guestListRequest: null
+  guestListRequest: false
 };
 
 RequestUpdate.propTypes = {

@@ -11,6 +11,7 @@ export default function GuestUpdate() {
           id={guestListEntryId}
           isGuestRequest
           guestListRequest
+          isScannedRequest={false}
         />
       </div>
     </>
