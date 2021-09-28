@@ -47,7 +47,7 @@ describe('Login screen', () => {
               primaryColor: "#FFFFFF",
               secondaryColor: "#FFFFFF"
             },
-            features: [],
+            features: { Dashboard: { features: [] }},
             securityManager: '000000',
           }
         }

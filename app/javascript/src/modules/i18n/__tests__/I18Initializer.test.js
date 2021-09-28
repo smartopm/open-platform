@@ -36,7 +36,7 @@ describe('I18n Initializer component', () => {
             tagline: 'This is a tagline for this community',
             logoUrl: '',
             language: 'en-US',
-            features: []
+            features: { Dashboard: { features: [] }}
           }
         }
       }
