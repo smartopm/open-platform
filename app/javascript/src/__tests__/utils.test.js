@@ -179,13 +179,22 @@ describe('array methods', () => {
     expect(objectAccessor([], 'b')).toBeUndefined()
   })
 
-  it('should check if x belongs to array', () => {
+  it('should return false if feature is not allowed', () => {
+    const features = { a: { features: [] }, b: { features: [] } }
+    expect(checkAllowedCommunityFeatures(features, 'x')).toBe(false)
+  })
+  it('should return true if feature is allowed', () => {
     const features = { a: { features: [] }, b: { features: [] } }
     expect(checkAllowedCommunityFeatures(features, 'b')).toBe(true)
-    expect(checkAllowedCommunityFeatures(features, 'x')).toBe(false)
     expect(checkAllowedCommunityFeatures(features, 'a')).toBe(true)
-    expect(checkAllowedCommunityFeatures([], 'a')).toBe(false)
+  })
+
+  it('should return false if features and module is undefined', () => {
     expect(checkAllowedCommunityFeatures()).toBe(false)
+  })
+
+  it('should return false if list of features is empty', () => {
+    expect(checkAllowedCommunityFeatures([], 'a')).toBe(false)
   })
 })
 

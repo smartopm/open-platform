@@ -193,6 +193,7 @@ describe('Community settings page ', () => {
     expect(container.queryByTestId('emergencyCallNumber')).toBeInTheDocument();
     expect(container.queryByTestId('payment_reminder_template')).toBeInTheDocument();
     expect(container.queryByTestId('plan_status')).toBeInTheDocument();
+    expect(container.queryByTestId('disable_deny_gate_access')).toBeInTheDocument();
 
 
     fireEvent.select(container.queryByTestId('locale'), { target: { value: 'en-US' } });
