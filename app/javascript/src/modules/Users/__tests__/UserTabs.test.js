@@ -26,7 +26,12 @@ describe('component that with styled tabs', () => {
       user: {
         userType: 'admin',
         community: {
-          features: ["Tasks", "Messages", "Payments", "Properties"]
+          features: {
+            Tasks: { features: [] },
+            Messages: { features: [] },
+            Payments: { features: [] },
+            Properties: { features: []}
+          }
         }
       }
     };
@@ -58,7 +63,12 @@ describe('component that with styled tabs', () => {
       user: {
         userType: 'client',
         community: {
-          features: ["Tasks", "Messages", "Payments", "Properties"]
+          features: {
+            Tasks: { features: [] },
+            Messages: { features: [] },
+            Payments: { features: [] },
+            Properties: { features: []}
+          }
         }
       }
     };
@@ -94,7 +104,12 @@ describe('component that with styled tabs', () => {
         user: {
           userType: 'admin',
           community: {
-            features: ["Tasks", "Messages", "Payments", "Properties"]
+            features: {
+              Tasks: { features: [] },
+              Messages: { features: [] },
+              Payments: { features: [] },
+              Properties: { features: []}
+            }
           }
         }
       };

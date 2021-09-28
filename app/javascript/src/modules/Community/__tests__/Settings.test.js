@@ -58,7 +58,8 @@ describe('Community settings page ', () => {
         taxIdNo: '',
       },
       smsPhoneNumbers: ["+254724821901", "+254723456789"],
-      emergencyCallNumber: "+94848584844"
+      emergencyCallNumber: "+94848584844",
+      features: { LogBook: { features: []} }
     };
 
     const communityMutationMock = {
@@ -106,7 +107,8 @@ describe('Community settings page ', () => {
             taxIdNo: '',
           },
           smsPhoneNumbers: ["+254724821901", "+254723456789"],
-          emergencyCallNumber: "+94848584844"
+          emergencyCallNumber: "+94848584844",
+          features: { LogBook: { features: []} }
         }
       },
       result: {
@@ -191,6 +193,7 @@ describe('Community settings page ', () => {
     expect(container.queryByTestId('emergencyCallNumber')).toBeInTheDocument();
     expect(container.queryByTestId('payment_reminder_template')).toBeInTheDocument();
     expect(container.queryByTestId('plan_status')).toBeInTheDocument();
+    expect(container.queryByTestId('disable_deny_gate_access')).toBeInTheDocument();
 
 
     fireEvent.select(container.queryByTestId('locale'), { target: { value: 'en-US' } });

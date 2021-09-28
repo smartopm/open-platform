@@ -98,7 +98,13 @@ class Community < ApplicationRecord
   end
 
   def add_default_community_features
-    self.features = COMMUNITY_FEATURES if new_record?
+    return unless new_record?
+
+    features = {}
+    COMMUNITY_FEATURES.each do |key|
+      features[key] = { features: [] }
+    end
+    self.features = features
   end
 
   # TODO: refactor this function and remove linter errors

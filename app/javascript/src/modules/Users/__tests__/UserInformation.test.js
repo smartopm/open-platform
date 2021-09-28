@@ -44,7 +44,12 @@ describe("User information component loads",()=>{
             userType : "admin",
             community: {
               currency: 'zambian_kwacha',
-              features: ["Tasks", "Messages", "Payments", "Properties"]
+              features: {
+                Tasks: { features: [] },
+                Messages: { features: [] },
+                Payments: { features: [] },
+                Properties: { features: []}
+              }
             }
         }
     }

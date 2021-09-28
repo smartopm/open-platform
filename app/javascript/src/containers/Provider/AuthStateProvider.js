@@ -57,6 +57,7 @@ const QUERY = gql`
         communityRequiredFields
         smsPhoneNumbers
         emergencyCallNumber
+        features
       }
     }
   }

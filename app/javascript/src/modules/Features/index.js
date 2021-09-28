@@ -8,14 +8,29 @@
  * @param {string} props.name - The name of the feature.
  * @param {Node} props.children - The children component to render if this feature is enabled
  */
-function FeatureCheck({ features, name, children }) {
-  const isEnabled = new Set(features).has(name);
+function FeatureCheck({ features, name, children, subFeature }) {
+  if (!features || !name) return null;
+
+  if(subFeature) {
+    const subFeatureList = features[String(name)]?.features || [];
+    const isDisabled = new Set(subFeatureList).has(subFeature);
+
+    // Don't render subFeatures contained in the list
+    if (isDisabled) {
+      return null;
+    }
+  
+    return children;
+  }
+
+  const isEnabled = new Set(Object.keys(features)).has(name);
 
   if (isEnabled) {
     return children;
   }
 
   return null;
+
 }
 
 export default FeatureCheck;

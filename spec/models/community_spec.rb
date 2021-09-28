@@ -109,4 +109,13 @@ RSpec.describe Community, type: :model do
       community.notify_slack('Helloo')
     end
   end
+
+  describe 'callbacks' do
+    it { is_expected.to callback(:add_default_community_features).after(:initialize) }
+    it '#add_default_community_features' do
+      new_community = create(:community)
+      expect(new_community.features).to_not be_nil
+      expect(new_community.features['Dashboard']).to_not be_nil
+    end
+  end
 end
