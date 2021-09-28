@@ -5,6 +5,8 @@ require 'rails_helper'
 RSpec.describe Forms::Form, type: :model do
   describe 'form crud' do
     let!(:current_user) { create(:user_with_community, user_type: 'admin') }
+    let!(:community) { create(:community) }
+    let!(:different_community_user) { create(:admin_user, community: community) }
     let(:form) { create(:form, community_id: current_user.community_id) }
 
     it 'should create a form record' do
@@ -14,6 +16,34 @@ RSpec.describe Forms::Form, type: :model do
       )
       expect(current_user.community.forms.length).to eql 1
       expect(current_user.community.forms.last.name).to eql 'Form Name'
+    end
+
+    it 'should create a form record with a name similar to a deleted one' do
+      form_one = current_user.community.forms.create!(
+        name: 'Form Name',
+        expires_at: (rand * 10).to_i.day.from_now,
+      )
+      form_one.update!(status: 2)
+      current_user.community.forms.create!(
+        name: 'Form Name',
+        expires_at: (rand * 10).to_i.day.from_now,
+      )
+      expect(current_user.community.forms.count).to eql 1
+      expect(current_user.community.forms.first.name).to eql 'Form Name'
+    end
+
+    it 'should create a form record with same name if different communities' do
+      current_user.community.forms.create!(
+        name: 'Form Name',
+        expires_at: (rand * 10).to_i.day.from_now,
+      )
+      different_community_user.community.forms.create!(
+        name: 'Form Name',
+        expires_at: (rand * 10).to_i.day.from_now,
+      )
+      expect(current_user.community.forms.count).to eql 1
+      expect(different_community_user.community.forms.count).to eql 1
+      expect(Forms::Form.count).to eql 2
     end
 
     it 'should update a form record' do
