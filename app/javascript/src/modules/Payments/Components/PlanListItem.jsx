@@ -3,6 +3,7 @@ import Grid from '@material-ui/core/Grid';
 import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import Typography from '@material-ui/core/Typography';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { Link } from 'react-router-dom';
 import Hidden from '@material-ui/core/Hidden';
 import Avatar from '@material-ui/core/Avatar';
@@ -20,8 +21,9 @@ import { dateToString } from '../../../components/DateContainer';
 
 export default function PlanListItem({ data, currencyData, menuData }) {
   const classes = useStyles();
-  const [open, setOpen] = useState(false)
+  const [open, setOpen] = useState(false);
   const { t } = useTranslation('payment');
+  const matches = useMediaQuery('(max-width:600px)');
 
   const colors = {
     cancelled: '#e74540',
@@ -40,13 +42,9 @@ export default function PlanListItem({ data, currencyData, menuData }) {
     return 'on track';
   }
 
-  function handleCardClick() {
-    setOpen(!open);
-  }
-
   return (
     <>
-      <Grid container spacing={2} className={classes.container} onClick={() => handleCardClick()}>
+      <Grid container spacing={2} className={classes.container}>
         <Grid item xs={6} sm={2} data-testid="landparcel" className={classes.bottom}>
           <Typography className={classes.weight} variant="caption">
             {data?.landParcel?.parcelNumber}
@@ -57,17 +55,6 @@ export default function PlanListItem({ data, currencyData, menuData }) {
           <Typography className={classes.weight} variant="caption">
             {data?.planType}
           </Typography>
-          {/* <br /> */}
-          {/* <Hidden smDown>
-            <div style={{textAlign: 'center'}}>
-              <IconButton
-                aria-controls="drop-down"
-                aria-haspopup="true"
-              >
-                {open ? <KeyboardArrowDownIcon /> : <KeyboardArrowRightIcon />}
-              </IconButton>
-            </div>
-          </Hidden> */}
         </Grid>
         <Hidden smUp>
           <Grid
@@ -103,16 +90,6 @@ export default function PlanListItem({ data, currencyData, menuData }) {
         <Grid item xs={12} sm={2} data-testid='label'>
           <Label title={toTitleCase(data.planStatus || '')} color={objectAccessor(colors, data.planStatus)} />
         </Grid>
-        {/* <Hidden smUp>
-          <Grid item xs={12} style={{textAlign: 'center', marginTop: '-25px'}}>
-            <IconButton
-              aria-controls="drop-down"
-              aria-haspopup="true"
-            >
-              {open ? <KeyboardArrowDownIcon /> : <KeyboardArrowRightIcon />}
-            </IconButton>
-          </Grid>
-        </Hidden> */}
         <Hidden smDown>
           <Grid item xs={12} sm={1} data-testid="menu">
             {menuData?.userType === 'admin' && planStatus(data) === 'behind' && (
@@ -135,39 +112,85 @@ export default function PlanListItem({ data, currencyData, menuData }) {
             />
           </Grid>
         </Hidden>
-        <Grid item xs={4} sm={2} data-testid='history' className={classes.history}>
-          <div className={classes.view}>
-            <Typography className={classes.typography}>VIEW HISTORY</Typography>
+        <Grid
+          item
+          xs={6}
+          sm={2}
+          data-testid="history"
+          className={!matches ? classes.history : classes.historyMobile}
+        >
+          <Grid
+            className={!matches ? classes.view : classes.viewMobile}
+            onClick={() => setOpen(!open)}
+          >
+            <Typography className={!matches ? classes.typography : classes.typoMobile}>
+              VIEW HISTORY
+            </Typography>
             <span className={classes.arrow}>
               {open ? <KeyboardArrowDownIcon /> : <KeyboardArrowRightIcon />}
             </span>
-          </div>
+          </Grid>
         </Grid>
         {open && (
-          <Grid container className={classes.details}>
-            <Grid item xs={12} md={3} data-testid="plot_user_info">
-              <Link
-                to={`/user/${data?.user.id}?tab=Plans`}
-                style={{ textDecoration: 'none', color: 'inherit' }}
-              >
-                <div style={{ display: 'flex' }}>
-                  <Avatar src={data?.user.imageUrl} alt="avatar-image" />
-                  <Typography style={{ margin: '7px', fontSize: '12px' }}>
-                    <Text color="primary" content={data?.user.name} />
-                  </Typography>
-                </div>
-              </Link>
+          <>
+            <Grid container className={classes.details}>
+              <Grid item xs={12} md={3} data-testid="plot_user_info">
+                <Link
+                  to={`/user/${data?.user.id}?tab=Plans`}
+                  style={{ textDecoration: 'none', color: 'inherit' }}
+                >
+                  <div style={{ display: 'flex' }}>
+                    <Avatar src={data?.user.imageUrl} alt="avatar-image" />
+                    <Typography style={{ margin: '7px', fontSize: '12px' }}>
+                      <Text color="primary" content={data?.user.name} />
+                    </Typography>
+                  </div>
+                </Link>
+              </Grid>
+              <Grid item xs={12} md={3} data-testid="start-date">
+                {!matches ? (
+                  <Text content={`${t('misc.starts_on')}: ${dateToString(data.startDate)}`} />
+                ) : (
+                  <Grid container>
+                    <Grid item xs={6}>
+                      <Text content={`${t('misc.starts_on')}:`} />
+                    </Grid>
+                    <Grid item xs={6} className={classes.detailsMobile}>
+                      <Text content={`${dateToString(data.startDate)}`} />
+                    </Grid>
+                  </Grid>
+                )}
+              </Grid>
+              <Grid item xs={12} md={3} data-testid="start-date">
+                {!matches ? (
+                  <Text content={`${t('misc.ends_on')}: ${dateToString(data.endDate)}`} />
+                ) : (
+                  <Grid container>
+                    <Grid item xs={6}>
+                      <Text content={`${t('misc.ends_on')}:`} />
+                    </Grid>
+                    <Grid item xs={6} className={classes.detailsMobile}>
+                      <Text content={`${dateToString(data.endDate)}`} />
+                    </Grid>
+                  </Grid>
+                )}
+              </Grid>
+              <Grid item xs={12} md={3} data-testid="start-date">
+                {!matches ? (
+                  <Text content={`${t('misc.plan_values')}: ${formatMoney(currencyData, data?.planValue)}`} />
+                ) : (
+                  <Grid container>
+                    <Grid item xs={6}>
+                      <Text content={`${t('misc.plan_values')}:`} />
+                    </Grid>
+                    <Grid item xs={6} className={classes.detailsMobile}>
+                      <Text content={`${formatMoney(currencyData, data?.planValue)}`} />
+                    </Grid>
+                  </Grid>
+                )}
+              </Grid>
             </Grid>
-            <Grid item xs={6} md={3} data-testid="start-date">
-              <Text content={`${t('misc.starts_on')}: ${dateToString(data.startDate)}`} />
-            </Grid>
-            <Grid item xs={6} md={3} data-testid="start-date">
-              <Text content={`${t('misc.ends_on')}: ${dateToString(data.endDate)}`} />
-            </Grid>
-            <Grid item xs={6} md={3} data-testid="start-date">
-              <Text content={`${t('misc.plan_values')}: ${formatMoney(currencyData, data?.planValue)}`} />
-            </Grid>
-          </Grid>
+          </>
         )}
       </Grid>
     </>
@@ -191,22 +214,37 @@ const useStyles = makeStyles(() => ({
     marginLeft: '-35px',
     marginBottom: '-30px',
     textAlign: 'center',
-    display: 'flex',
-    fontSize: '8px'
+    display: 'flex'
+  },
+  historyMobile: {
+    marginLeft: '-17px',
+    marginBottom: '-17px',
+    textAlign: 'center'
   },
   view: {
-    background: '#E6E7E8', 
-    display: 'flex', 
+    background: '#E6E7E8',
+    display: 'flex',
     padding: '5px 15px 0 15px'
+  },
+  viewMobile: {
+    background: '#E6E7E8',
+    display: 'flex',
+    padding: '10px 15px 0 15px'
   },
   typography: {
     fontSize: '10px'
+  },
+  typoMobile: {
+    fontSize: '9px'
   },
   arrow: {
     marginTop: '-5px'
   },
   details: {
-    marginTop: '30px'
+    marginTop: '50px'
+  },
+  detailsMobile: {
+    textAlign: 'right'
   }
 }));
 
