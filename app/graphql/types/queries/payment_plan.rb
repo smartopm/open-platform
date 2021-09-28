@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 # Payment queries
+# rubocop:disable Metrics/ModuleLength
 module Types::Queries::PaymentPlan
   extend ActiveSupport::Concern
 
@@ -26,6 +27,7 @@ module Types::Queries::PaymentPlan
 
     field :community_payment_plans, [Types::PaymentPlanType], null: true do
       description 'returns all payment plans for community'
+      argument :query, String, required: false
     end
   end
 
@@ -79,12 +81,13 @@ module Types::Queries::PaymentPlan
   # Returns list of all communiy's payment plans
   #
   # @return [Array<PaymentPlan>]
-  def community_payment_plans
+  def community_payment_plans(query: nil)
     raise_unauthorized_error
 
-    Properties::PaymentPlan.joins(:land_parcel).where(
+    plans = Properties::PaymentPlan.includes(:land_parcel, :user).where(
       land_parcels: { community_id: context[:site_community].id },
     ).order(:status)
+    filtered_plans(plans, query).sort_by { |plan| [(plan.owing_amount * -1), plan.status] }
   end
 
   private
@@ -148,5 +151,43 @@ module Types::Queries::PaymentPlan
       unallocated_amount: available_amount - debit_amount,
     }
   end
+
+  # Returns filtered payment plans based on query
+  #
+  # @return [Array<PaymentPlan>]
+  def filtered_plans(plans, query)
+    split_query = query&.split(' ')
+    if query_for_filter?(split_query)
+      method, operator, value = split_query
+      value = value.gsub("'", '')
+      value = value.to_f unless method.eql?('plan_status')
+      plans.select { |plan| plan.public_send(method).public_send(get_operator(operator), value) }
+    else
+      plans.search(query)
+    end
+  end
+
+  # Returns true/false if query is for filter
+  # * Checks if query is in the format: 'field operator value'
+  #
+  # @return [Boolean]
+  def query_for_filter?(split_query)
+    return false if split_query&.size != 3
+
+    methods = %w[owing_amount installments_due plan_status]
+    operators = %w[< > :]
+
+    return true if methods.include?(split_query[0]) && operators.include?(split_query[1])
+  end
+
+  # Returns the operator
+  #
+  # @return [String]
+  def get_operator(operator)
+    return operator unless operator.eql?(':')
+
+    '=='
+  end
   # rubocop:enable Metrics/MethodLength
 end
+# rubocop:enable Metrics/ModuleLength

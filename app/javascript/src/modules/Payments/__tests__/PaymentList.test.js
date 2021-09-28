@@ -75,7 +75,7 @@ describe('Payment List Item Component', () => {
     }
   }
 ];
-  it('should render the invoice item component', async () => {
+  it('should render the payment item component', async () => {
     const container = render(
       <Context.Provider value={userMock}>
         <MockedProvider mocks={mocks} addTypename={false}>
@@ -99,20 +99,23 @@ describe('Payment List Item Component', () => {
         expect(container.queryAllByTestId('simple-tab-0')).toHaveLength(1);
         expect(container.queryAllByTestId('simple-tab-1')).toHaveLength(1);
       },
-      { timeout: 100 }
+      { timeout: 200 }
     );
 
-    const filterClick = container.getByTestId('filter');
+    const filterClick = container.getAllByTestId('filter')[0];
     fireEvent.click(filterClick);
     expect(container.queryByText('Client Name')).toBeInTheDocument();
 
-    const searchInput = container.queryByTestId('search');
+    const searchInput = container.queryAllByTestId('search')[0];
     fireEvent.change(searchInput, { target: { value: 'text' } });
     expect(searchInput.value).toBe('text');
 
     const planTabClick = container.getByTestId('simple-tab-1');
     fireEvent.click(planTabClick);
     expect(loader.queryAllByTestId('loader')[0]).toBeInTheDocument();
+
+    fireEvent.click(container.getAllByTestId('filter')[1]);
+    expect(container.queryByText('Plan Status')).toBeInTheDocument();
   });
 
   it('should check if renderPayment works as expected', () => {

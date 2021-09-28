@@ -21,8 +21,8 @@ describe('Payments Component', () => {
 
     expect(container.queryByText('Client Name')).toBeInTheDocument()
     expect(container.queryAllByText('search.search_for')[0]).toBeInTheDocument()
-    expect(container.queryByText('common:misc.add_filter')).toBeInTheDocument()
-    expect(container.queryByText('Add group')).toBeInTheDocument()
+    expect(container.queryAllByText('common:misc.add_filter')[0]).toBeInTheDocument()
+    expect(container.queryAllByText('Add group')[0]).toBeInTheDocument()
     expect(container.queryAllByText('misc.previous')[0]).toBeInTheDocument()
     expect(container.queryAllByText('misc.next')[0]).toBeInTheDocument()
   });

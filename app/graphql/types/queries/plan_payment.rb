@@ -41,7 +41,7 @@ module Types::Queries::PlanPayment
     context[:site_community].plan_payments
                             .exluding_general_payments
                             .send(search_method, filtered_query(query))
-                            .eager_load(:user, :payment_plan)
+                            .includes(:user, :user_transaction, payment_plan: :land_parcel)
                             .order(created_at: :desc)
                             .limit(limit).offset(offset)
   end

@@ -1,5 +1,6 @@
 // values that can be reused across the codebase
 import MaterialConfig from 'react-awesome-query-builder/lib/config/material'
+import { toTitleCase } from './helpers';
 
 export const filterUserByLoggedin = {
   log_from: 'login after',
@@ -139,6 +140,12 @@ export const paymentType = {
   'bank_transfer/eft': 'Bank Transfer/EFT',
   pos: 'Point of Sale',
   cash: 'Cash'
+};
+export const planType = {
+  'cancelled': 'cancelled',
+  'behind': 'behind',
+  'on_track': 'on_track',
+  'completed': 'completed'
 };
 
 export const paymentStatusColor = {
@@ -476,6 +483,44 @@ export const dateWidget = {
     widgets: dateWidget
   }
 
+  export const planQueryBuilderConfig = {
+    ...InitialConfig,
+    fields: {
+      status: {
+        label: 'Plan Status',
+        type: 'select',
+        valueSources: ['value'],
+        fieldSettings: {
+          listValues: Object.entries(planType).map(([key, val]) => {
+            return { value: key, title: toTitleCase(val) }
+          })
+        }
+      },
+      planType: {
+        label: 'Plan Type',
+        type: 'select',
+        valueSources: ['value'],
+        fieldSettings: {
+        listValues: Object.entries(subscriptionPlanType).map(([key, val]) => {
+            return { value: key, title: toTitleCase(val) }
+          })
+        }
+      },
+      amountOwned: {
+        label: 'Amount Owed',
+        type: 'number',
+        valueSources: ['value'],
+        excludeOperators: ['not_equal', 'between']
+      },
+      installmentsDue: {
+        label: 'Due Installments',
+        type: 'number',
+        valueSources: ['value'],
+        excludeOperators: ['not_equal', 'between']
+      }
+    }
+  }
+
   export const paymentQueryBuilderInitialValue = {
     // Just any random UUID
     id: '76a8a9ba-0123-3344-c56d-b16e532c8cd0',
@@ -493,6 +538,24 @@ export const dateWidget = {
       }
     }
   }
+
+export const planQueryBuilderInitialValue = {
+  // Just any random UUID
+  id: '76a8a9ba-0123-3344-c56d-b16e532c8cd0',
+  type: 'group',
+  children1: {
+    '98a8a9ba-0123-4456-b89a-b16e721c8cd0': {
+      type: 'rule',
+      properties: {
+        field: 'status',
+          operator: 'select_equals',
+          value: ['all'],
+          valueSrc: ['value'],
+          valueType: ['select']
+      },
+    }
+  }
+}
 
 export const paymentFilterFields = {
     clientName: 'user',
@@ -539,6 +602,12 @@ export const entryLogsQueryBuilderInitialValue = {
     }
   }
 }
+  export const planFilterFields = {
+    status: 'plan_status',
+    amountOwned: 'owing_amount',
+    installmentsDue: 'installments_due',
+    planType: 'plan_type'
+  }
 
   export const propertyQueryBuilderConfig = {
     ...InitialConfig,

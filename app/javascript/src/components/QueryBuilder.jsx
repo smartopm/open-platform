@@ -44,6 +44,14 @@ export default function QueryBuilder({
       between: {
         ...builderConfig.operators.between,
         label: 'Between'
+      }, 
+      less: {
+        ...builderConfig.operators.less,
+        label: 'Less Than'
+      },
+      greater: {
+        ...builderConfig.operators.greater,
+        label: 'Greater Than'
       }
     }
   }
