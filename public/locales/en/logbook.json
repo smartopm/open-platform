@@ -55,6 +55,7 @@
   "log_title": {
     "visitor": "Visitor",
     "guard": "Guard",
+    "host": "Host",
     "nrc": "NRC",
     "vehicle": "Vehicle",
     "reason": "Reason",
