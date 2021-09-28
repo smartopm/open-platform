@@ -583,7 +583,7 @@ export default function RequestUpdate({ id, previousRoute,guestListRequest, isGu
         )}
           <div className="form-group">
             <label className="bmd-label-static" htmlFor="_name">
-              {t('logbook:log_title.guard')}
+              {authState?.user?.userType === 'security_guard' ? t('logbook:log_title.guard') : t('logbook:log_title.host') }
             </label>
             <TextField
               className="form-control"
@@ -1004,25 +1004,25 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     height: 50,
     '@media (min-device-width: 320px) and (max-device-height: 568px)' : {
+      height: 30,
       width: '50%',
-      height: 30
     
-    }
+    },
   },
   callButton: {
     color: '#66A59A',
     textTransform: 'unset',
     textDecoration: 'none',
-    width: '20%',
+    width: '40%',
     boxShadow: 'none',
     marginTop: 50,
     alignItems: 'center',
     height: 50,
     '@media (min-device-width: 320px) and (max-device-height: 568px)' : {
+      height: 30,
       width: '50%',
-      height: 30
     
-    }
+    },
   },
   observationButton: {
     margin: 5
@@ -1034,11 +1034,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     height: 50,
     color: '#FFFFFF',
+
     '@media (min-device-width: 320px) and (max-device-height: 568px)' : {
+      height: 30,
       width: '50%',
-      height: 30
     
-    }
+    }, 
   },
   cancelGuestButton: {
     width: '20%',
@@ -1049,9 +1050,10 @@ const styles = StyleSheet.create({
     color: "#FFFFFF",
 
     '@media (min-device-width: 320px) and (max-device-height: 568px)' : {
-      height: 30
+      height: 30,
+      width: '30%',
     
-    }
+    },    
   },
   }
 );
