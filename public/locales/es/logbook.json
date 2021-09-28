@@ -65,6 +65,7 @@
     "date": "Fecha",
     "description": "Descripción",
     "guard": "Guardia de seguridad",
+    "host": "Anfitrión",
     "nrc": "Tarjeta de Identidad",
     "qr_timestamp": "Codigo QR",
     "reason": "Motivo",
