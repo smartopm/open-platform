@@ -16,7 +16,6 @@ import SignaturePad from './FormProperties/SignaturePad';
 import FormPropertyAction from './FormPropertyAction';
 import { FormContext } from '../Context';
 import { convertBase64ToFile, objectAccessor } from '../../../utils/helpers';
-import { dateToString } from '../../../components/DateContainer';
 import { checkRequiredFormPropertyIsFilled } from '../utils';
 
 export default function RenderForm({ formPropertiesData, formId, refetch, editMode, categoryId }) {
@@ -56,7 +55,7 @@ export default function RenderForm({ formPropertiesData, formId, refetch, editMo
     setFormProperties({
       ...formProperties,
       [property.fieldName]: {
-        value: dateToString(date, 'YYYY-MM-DD HH:mm'),
+        value: date,
         form_property_id: property.id
       }
     });
