@@ -131,6 +131,7 @@ const AllEventLogs = (history, match) => {
     // reset pagination after changing the tab
     history.push(`/entry_logs?tab=${newValue}&offset=${0}`);
   }
+
   return (
     <IndexComponent
       data={data}
@@ -140,7 +141,7 @@ const AllEventLogs = (history, match) => {
       handleLimit={handleLimit}
       limit={limit}
       scope={scope}
-      searchTerm={dbcSearchTerm}
+      searchTerm={searchTerm}
       searchQuery={searchQuery}
       handleSearch={handleSearch}
       toggleFilterMenu={toggleFilterMenu}
@@ -324,7 +325,7 @@ export function IndexComponent({
         <SearchInput
           title={objectAccessor(searchPlaceholder, tabValue)}
           searchValue={searchTerm}
-          filterRequired
+          filterRequired={tabValue === 2}
           handleSearch={handleSearch}
           handleFilter={toggleFilterMenu}
           handleClear={handleSearchClear}

@@ -570,17 +570,25 @@ export const paymentFilterFields = {
   }
 
 export const entryLogsFilterFields = {
-  endTime: 'ends_at'
+  endTime: 'ends_at',
+  visitEndDate: 'visit_end_date'
 }
 
 export const entryLogsQueryBuilderConfig = {
   ...InitialConfig,
   fields: {
     endTime: {
+      ...InitialConfig.widgets.datetime,
       label: 'Visit End Time',
+      timeFormat: "HH:mm",
+      dateFormat: "YYYY.MM.DD HH:mm",
+      valueFormat: "HH:mm",
+    },
+    visitEndDate: {
+      label: 'Visit End Date',
       type: 'date',
-      valueSources: ['value']
-    }
+      valueSources: ['value'],
+    },
   },
   widgets: dateWidget
 }

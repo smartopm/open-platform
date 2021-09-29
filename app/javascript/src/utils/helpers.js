@@ -2,7 +2,6 @@
 import dompurify from 'dompurify';
 import { useLocation } from 'react-router';
 import { dateToString } from '../components/DateContainer';
-
 // keep string methods [helpers]
 
 /**
@@ -460,34 +459,47 @@ export function handleQueryOnChange(selectedOptions, filterFields) {
     const andConjugate = selectedOptions.logic?.and
     const orConjugate = selectedOptions.logic?.or
     const availableConjugate = andConjugate || orConjugate
+    const dateFields = [
+      'created_at',
+      'due_date',
+      'ends_at',
+      'visit_end_date'
+    ];
     if (availableConjugate) {
       const conjugate = andConjugate ? 'AND' : 'OR'
-      const queryy = availableConjugate
+      const query = availableConjugate
         .map(option => {
           let operator = Object.keys(option)[0]
-          // skipped nested object accessor here until fully tested
-          // eslint-disable-next-line security/detect-object-injection
           const property = operator === '<=' ? filterFields[option[operator][1].var] : filterFields[option[operator][0].var];
           let value = objectAccessor(option, operator)[1]
 
-          if(property === 'created_at' && operator === '<='){
-            const start_date = dateToString(objectAccessor(option, operator)[0]);
-            const end_date = dateToString(objectAccessor(option, operator)[2]);
+          if(dateFields.includes(property) && operator === '<=') {
+            const start_date = formatDateFields(property, objectAccessor(option, operator)[0])
+            const end_date = formatDateFields(property, objectAccessor(option, operator)[2])
 
-            return `created_at >= ${start_date} AND created_at <= ${end_date}`
+            return `${property} >= "${start_date}" AND ${property} <= "${end_date}"`
           }
           if (operator === '==') operator = ':'
-          if (property === 'created_at' || property === 'due_date' || property === 'ends_at') {
-            value = dateToString(value)
+          if (dateFields.includes(property)) {
+            value = formatDateFields(property, value);
           }
 
           return `${property} ${operator} '${value}'`
         })
         .join(` ${conjugate} `)
-      return queryy
+      return query
     }
   }
 }
+
+export function formatDateFields(property, value) {
+  if (property === 'ends_at') {
+    value = dateToString(value, 'YYYY-MM-DD HH:mm');
+  } else {
+    value = dateToString(value);
+  }
+  return value;
+};
 
 /**
  *

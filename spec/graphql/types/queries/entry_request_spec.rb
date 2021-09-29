@@ -179,15 +179,15 @@ RSpec.describe Types::Queries::EntryRequest do
       ).to be_nil
     end
 
-    it 'searches with end_time and ends_at' do
-      variables = { query: 'ends_at : 2021-09-23' }
+    it 'searches by end_time and ends_at' do
+      variables = { query: "ends_at : '2021-09-23 14:00'" }
       current_user.entry_requests.create(
         reason: 'Visiting', name: 'Visitor Jane', nrc: '012345',
-        visitation_date: Time.zone.now, ends_at: '2021-09-23T11:00:19+02:00'
+        visitation_date: Time.zone.now, ends_at: '2021-09-23T16:00:00+02:00'
       )
       current_user.entry_requests.create(
         reason: 'Visiting', name: 'Visitor John', nrc: '012345',
-        visitation_date: Time.zone.now, end_time: '2021-09-23 12:00'
+        visitation_date: Time.zone.now, end_time: '2021-09-23 14:00'
       )
 
       result = DoubleGdpSchema.execute(
@@ -200,6 +200,66 @@ RSpec.describe Types::Queries::EntryRequest do
       ).as_json
 
       expect(result.dig('data', 'scheduledRequests').length).to eq 2
+    end
+
+    it 'searches by ends_at not equal to date' do
+      variables = { query: "ends_at != '2021-09-23 18:52'" }
+      current_user.entry_requests.create(
+        reason: 'Visiting', name: 'Visitor Jane', nrc: '012345',
+        visitation_date: Time.zone.now, ends_at: '2021-09-28T20:52:00+02:00'
+      )
+      current_user.entry_requests.create(
+        reason: 'Visiting', name: 'Visitor Mary', nrc: '012345',
+        visitation_date: Time.zone.now, end_time: '2021-09-28 12:00',
+        visit_end_date: '2021-09-28T11:00:19+02:00'
+      )
+      current_user.entry_requests.create(
+        reason: 'Visiting', name: 'Visitor John', nrc: '012345',
+        visitation_date: Time.zone.now, end_time: '2021-09-23 18:52'
+      )
+
+      result = DoubleGdpSchema.execute(
+        scheduledRequests_query,
+        variables: variables,
+        context: {
+          current_user: admin,
+          site_community: current_user.community,
+        },
+      ).as_json
+
+      expect(result.dig('data', 'scheduledRequests').length).to eq 2
+      expect(result.dig('data', 'scheduledRequests')
+        .find { |visitor| visitor['name'] == 'Visitor John' }).to be_nil
+    end
+
+    it 'searches by ends_at date range' do
+      variables = { query: "ends_at >= '2021-09-25 00:45' AND ends_at <= '2021-09-29 12:00'" }
+      current_user.entry_requests.create(
+        reason: 'Visiting', name: 'Visitor Jane', nrc: '012345',
+        visitation_date: Time.zone.now, ends_at: '2021-09-25T11:00:19+02:00'
+      )
+      current_user.entry_requests.create(
+        reason: 'Visiting', name: 'Visitor Mary', nrc: '012345',
+        visitation_date: Time.zone.now, ends_at: '2021-09-29T09:00:19+02:00'
+      )
+      current_user.entry_requests.create(
+        reason: 'Visiting', name: 'Visitor John', nrc: '012345',
+        visitation_date: Time.zone.now, ends_at: '2021-09-30T11:00:19+02:00'
+      )
+
+      result = DoubleGdpSchema.execute(
+        scheduledRequests_query,
+        variables: variables,
+        context: {
+          current_user: admin,
+          site_community: current_user.community,
+        },
+      ).as_json
+
+      expect(result.dig('data', 'scheduledRequests').length).to eq 2
+      expect(
+        result['data']['scheduledRequests'].find { |guest| guest['name'] == 'Visitor John' },
+      ).to be_nil
     end
 
     it 'should retrieve list of guest list entries' do
