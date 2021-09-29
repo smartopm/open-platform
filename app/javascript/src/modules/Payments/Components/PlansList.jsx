@@ -78,7 +78,7 @@ export function PlansList({
     anchorEl,
     open: anchorElOpen,
     userType: authState?.user?.userType,
-    handleClose: () => handleMenuClose()
+    handleClose: (e) => handleMenuClose(e)
   }
 
   const csvHeaders = [
@@ -104,7 +104,8 @@ export function PlansList({
     }))
   }
 
-  function handleMenuClose() {
+  function handleMenuClose(e) {
+    e.stopPropagation()
     setAnchorEl(null);
     setPaymentPlan(null);
   }
@@ -202,7 +203,7 @@ export function PlansList({
           position: 'absolute',
           zIndex: 1,
           marginTop: '-2px',
-          marginLeft: matches ? '-100px' : '-50px',
+          marginLeft: matches ? '-350px' : '-50px',
           display: displayBuilder
         }}
       >
