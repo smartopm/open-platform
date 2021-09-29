@@ -32,18 +32,32 @@ RSpec.describe Forms::Form, type: :model do
       expect(current_user.community.forms.first.name).to eql 'Form Name'
     end
 
-    it 'should create a form record with same name if different communities' do
+    it 'should create a form record with a name similar to a deleted one' do
+      form_one = current_user.community.forms.create!(
+        name: 'Form Name',
+        expires_at: (rand * 10).to_i.day.from_now,
+      )
+      form_one.update!(status: 2)
       current_user.community.forms.create!(
         name: 'Form Name',
         expires_at: (rand * 10).to_i.day.from_now,
       )
-      different_community_user.community.forms.create!(
+      expect(current_user.community.forms.count).to eql 1
+      expect(current_user.community.forms.first.name).to eql 'Form Name'
+    end
+
+    it 'should validate case sensitive' do
+      current_user.community.forms.create!(
         name: 'Form Name',
         expires_at: (rand * 10).to_i.day.from_now,
       )
-      expect(current_user.community.forms.count).to eql 1
-      expect(different_community_user.community.forms.count).to eql 1
-      expect(Forms::Form.count).to eql 2
+      another_form = current_user.community.forms.new(
+        name: 'form name',
+        expires_at: (rand * 10).to_i.day.from_now,
+      )
+      another_form.save
+      expect(another_form.errors.full_messages[0]).to eql 'Name has already been taken'
+      expect(Forms::Form.count).to eql 1
     end
 
     it 'should update a form record' do
