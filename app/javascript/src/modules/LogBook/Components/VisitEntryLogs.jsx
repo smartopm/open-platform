@@ -22,7 +22,7 @@ export default function VisitEntryLogs({
 
   function enrollUser(event) {
     return history.push({
-      pathname: `/request/${event.refId}`,
+      pathname: `/request/${event.refId}?tabValue=0`,
       state: { from: 'enroll', offset: logDetails.offset }
     });
   }
