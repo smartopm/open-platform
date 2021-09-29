@@ -8,7 +8,7 @@ import { Link } from 'react-router-dom';
 import Hidden from '@material-ui/core/Hidden';
 import Avatar from '@material-ui/core/Avatar';
 import { makeStyles } from '@material-ui/core/styles';
-import { IconButton } from '@material-ui/core';
+import { Checkbox, IconButton } from '@material-ui/core';
 import { MoreHorizOutlined } from '@material-ui/icons';
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
@@ -19,7 +19,7 @@ import MenuList from '../../../shared/MenuList';
 import Text from '../../../shared/Text';
 import { dateToString } from '../../../components/DateContainer';
 
-export default function PlanListItem({ data, currencyData, menuData }) {
+export default function PlanListItem({ data, currencyData, menuData, selectedPlans, handlePlansSelect }) {
   const classes = useStyles();
   const [open, setOpen] = useState(false);
   const { t } = useTranslation('payment');
@@ -45,6 +45,14 @@ export default function PlanListItem({ data, currencyData, menuData }) {
   return (
     <>
       <Grid container spacing={2} className={classes.container}>
+      <Checkbox
+          checked={Boolean(selectedPlans?.find(obj => obj.paymentPlanId === data?.id && obj.userId === data?.user?.id))}
+          onChange={() => handlePlansSelect(data.id, data.user.id)}
+          name="includeReplyLink"
+          data-testid="reply_link"
+          color="primary"
+          style={{padding: '0px', marginRight: '15px'}}
+        />
         <Grid item xs={6} sm={2} data-testid="landparcel" className={classes.bottom}>
           <Typography className={classes.weight} variant="caption">
             {data?.landParcel?.parcelNumber}

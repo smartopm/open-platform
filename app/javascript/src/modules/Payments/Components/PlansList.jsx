@@ -1,7 +1,7 @@
 /* eslint-disable no-nested-ternary */
 import React, { useState, useContext } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Grid, Typography, IconButton, Fab } from '@material-ui/core';
+import { Grid, Typography, IconButton, Fab, Button, Checkbox, Select, MenuItem } from '@material-ui/core';
 import { MoreHorizOutlined } from '@material-ui/icons';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
@@ -40,6 +40,7 @@ import {
   planFilterFields
 } from '../../../utils/constants';
 import { CommunityPlansQuery } from '../graphql/payment_query';
+import EmailIcon from '@material-ui/icons/Email';
 
 
 export function PlansList({
@@ -64,6 +65,9 @@ export function PlansList({
   const anchorElOpen = Boolean(anchorEl);
   const [displayBuilder, setDisplayBuilder] = useState('none');
   const [searchQuery, setSearchQuery] = useState('');
+  const [selectedPlans, setSelectedPlans] = useState([]);
+  const [checkbox, setCheckbox] = useState(false);
+  const [selectDropdown, setSelectDropdown] = useState('');
 
   const menuList = [
     {
@@ -117,16 +121,24 @@ export function PlansList({
   }
 
   function handleAfterMutation() {
+    setPaymentPlan(null);
     setMutationLoading(false);
     setAlertOpen(true);
     setConfirmationModalOpen(false);
     setAnchorEl(null);
+    clearSelection();
   }
 
   function sendPaymentReminderMail() {
+    let variables;
+    if (paymentPlan){
+      variables = [{userId: paymentPlan?.user.id, paymentPlanId: paymentPlan.id}];
+    }else{
+      variables = selectedPlans;
+    }
     setMutationLoading(true);
     createPaymentRemider({
-      variables: {userId: paymentPlan?.user.id, paymentPlanId: paymentPlan.id}
+      variables: {paymentReminderFields: variables}
     })
     .then(() => {
       setMessage({ isError: false, detail: t('misc.email_sent') });
@@ -147,6 +159,9 @@ export function PlansList({
   const communityPlans = communityPlansData?.communityPaymentPlans;
 
   function paginatePlans(action) {
+    if(checkbox && selectDropdown != 'all_filtered'){
+      clearSelection();
+    }
     if (action === 'prev') {
       if (offset < limit) return;
       setOffset(offset - limit);
@@ -165,6 +180,41 @@ export function PlansList({
 
   function queryOnChange(selectedOptions) {
     setSearchQuery(handleQueryOnChange(selectedOptions, planFilterFields));
+  }
+
+  function handlePlansSelect(planId, userId) {
+    const index = selectedPlans.findIndex(obj => obj.paymentPlanId === planId && obj.userId === userId);
+    if (index !== -1) {
+      setSelectedPlans([...selectedPlans.slice(0, index), ...selectedPlans.slice(index + 1)]);
+    } else {
+      setSelectedPlans([...selectedPlans, {paymentPlanId: planId, userId: userId}]);
+    }
+  }
+
+  function clearSelection(){
+    setCheckbox(false);
+    setSelectDropdown('none');
+    setSelectedPlans([]);
+  }
+
+  function handleSelectOptionAndCheckBox(event) {
+    if(!checkbox){
+      setCheckbox(true);
+      setSelectedPlans([]);
+      if(event.target.value === 'all_filtered'){
+        setSelectDropdown('all_filtered');
+        communityPlans.map(plan => {
+          selectedPlans.push({paymentPlanId: plan?.id, userId: plan?.user?.id});
+        })
+      }else{
+        setSelectDropdown('all_on_the_page');
+        communityPlans.slice(offset, offset + limit).map(plan => {
+          selectedPlans.push({paymentPlanId: plan?.id, userId: plan?.user?.id});
+        })
+      }
+    }else{
+      clearSelection();
+    }
   }
 
   return (
@@ -262,6 +312,48 @@ export function PlansList({
                   </div>
                 </div>
               </div>
+              <div style={{ marginLeft:'43px', marginBottom: '10px' }}>
+                <Grid item style={{ display: 'flex' }}>
+                  <Grid>
+                    <Checkbox
+                      checked={checkbox}
+                      onChange={handleSelectOptionAndCheckBox}
+                      name="includeReplyLink"
+                      data-testid="reply_link"
+                      color="primary"
+                      style={{ padding: '0px', marginRight: '15px' }}
+                    />
+                  </Grid>
+                    <Typography> 
+                      {' '}
+                      {t('common:misc.select')}
+                      {' '}
+                    </Typography>
+                    <Grid>
+                      <Select
+                        labelId="user-action-select"
+                        id="user-action-select"
+                        value={selectDropdown}
+                        onChange={handleSelectOptionAndCheckBox}
+                        style={{ height: '23px', marginLeft: '10px' }}
+                      >
+                        <MenuItem value="all_on_the_page">{t('common:misc.all_this_page')}</MenuItem>
+                        <MenuItem disabled={!searchQuery} value="all_filtered">{'All filtered'}</MenuItem>
+                        <MenuItem value="none">{t('common:misc.none')}</MenuItem>
+                      </Select>
+                    </Grid>
+                    </Grid>
+                    {selectedPlans.length > 0 && (
+                      <Button
+                      onClick={() => setConfirmationModalOpen(true)}
+                      color="primary"
+                      startIcon={<EmailIcon fontSize="large" />}
+                      style={{ textTransform: 'none' }}
+                    >
+                      {t('misc.send_payment_reminder')}
+                    </Button>
+                  )}
+              </div>
             </div>
             {communityPlans?.slice(offset, limit + offset - 1).map(plan => (
               <div
@@ -269,7 +361,13 @@ export function PlansList({
                 style={matches ? {} : { marginTop: '30px' }}
                 key={plan.id}
               >
-                <PlanListItem data={plan} currencyData={currencyData} menuData={menuData} />
+               <PlanListItem 
+                data={plan}
+                currencyData={currencyData}
+                menuData={menuData}
+                selectedPlans={selectedPlans}
+                handlePlansSelect={handlePlansSelect}
+              />
               </div>
             ))}
           </div>
