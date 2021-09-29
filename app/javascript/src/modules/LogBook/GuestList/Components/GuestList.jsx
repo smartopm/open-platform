@@ -2,14 +2,9 @@
 import React, { useState, useEffect, useContext } from 'react';
 import {
   Fab,
-  InputBase,
-  Divider,
-  IconButton,
   Grid,
 } from '@material-ui/core';
-import FilterListIcon from '@material-ui/icons/FilterList';
 import { StyleSheet, css } from 'aphrodite';
-import { makeStyles } from '@material-ui/core/styles';
 import { useMutation, useLazyQuery } from 'react-apollo';
 import { useHistory } from 'react-router';
 import { useTranslation } from 'react-i18next';
@@ -24,7 +19,6 @@ import MessageAlert from '../../../../components/MessageAlert'
 import Guest from './Guest';
 
 export default function GuestList() {
-  const classes = useStyles();
   const limit = 50;
   const [offset, setOffset] = useState(0);
   const history = useHistory();
@@ -94,30 +88,6 @@ export default function GuestList() {
           handleClose={() => setMessage({ ...message, detail: '' })}
         />
         <> 
-      
-          <div className={classes.root}>
-            <>
-              <InputBase
-                data-testid="search_guest_input"
-                className={classes.input}
-                type="text"
-                placeholder={t('common:form_placeholders.search_guests')}
-                inputProps={{ 'aria-label': 'search guests' }}
-              />
-              <Divider className={classes.divider} orientation="vertical" />
-              <IconButton
-                data-testid="toggle_filter_btn"
-                type="submit"
-                className={classes.iconButton}
-                aria-label="search"
-              >
-                <FilterListIcon />
-              </IconButton>
-              <div style={{ margin: '10px 19px 10px 0' }}>
-                {t('common:misc.filter')}
-              </div>
-            </>
-          </div>
           <div
             style={{
             display: 'flex',
@@ -175,31 +145,6 @@ export default function GuestList() {
     </>
   );
 }
-
-const useStyles = makeStyles(theme => ({
-  root: {
-    padding: '2px 4px',
-    display: 'flex',
-    alignItems: 'right',
-    width: '100%',
-    overflowX: 'auto'
-  },
-  formControl: {
-    minWidth: 160,
-    maxWidth: 300
-  },
-  iconButton: {
-    padding: 10
-  },
-  divider: {
-    height: 28,
-    margin: 4
-  },
-  input: {
-    marginLeft: theme.spacing(1),
-    flex: 1
-  }
-}));
 
 const styles = StyleSheet.create({
   taskButton: {

@@ -8,7 +8,7 @@ export default function GuestUpdate() {
     <>
       <div className="container">
         <RequestUpdate
-          id={guestListEntryId}
+          id={guestListEntryId === "new-guest-entry" ? null : guestListEntryId}
           isGuestRequest
           guestListRequest
           isScannedRequest={false}

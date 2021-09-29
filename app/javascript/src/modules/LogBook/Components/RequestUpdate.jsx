@@ -98,6 +98,7 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
   const [qrCodeEmail, setQrCodeEmail] = useState('');
   const [guestRequest, setGuestRequest] = useState({ id: '' });
   const requiredFields = authState?.user?.community?.communityRequiredFields?.manualEntryRequestForm || defaultRequiredFields
+  const showCancelBtn = previousRoute || tabValue || !!guestListRequest
 
   useEffect(() => {
     if (id!== 'new-guest-entry' && id !== null && id !== 'undefined') {
@@ -265,14 +266,14 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
     setLoading(true);
     updateRequest({ variables: { id, ...otherFormData } })
       // eslint-disable-next-line no-shadow
-      .then((data) => {
+      .then(() => {
         setLoading(false);
         setDetails({
           ...observationDetails,
           message: t('logbook:logbook.registered_guest_updated')
         });
         setDetails({ ...observationDetails, message: t('logbook:logbook.registered_guest_updated') });
-        if(data.data.result.entryRequest.isGuest){
+        if(guestListRequest){
           history.push('/guest-list')
           return
         }
@@ -821,7 +822,8 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
           )
         }
           <div className=" d-flex row justify-content-center ">
-          
+            {
+            showCancelBtn &&  (
             <Button
               variant="contained"
               aria-label="guest_cancel"
@@ -832,39 +834,9 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
             >
               {t('common:form_actions.cancel')}
             </Button>
-
-
-
-            { id !== 'new-guest-entry' && id !== null && id !== 'undefined' && previousRoute !== 'enroll' && (
-            <Button
-              variant="contained"
-              className={`${css(styles.inviteGuestButton)}`}
-              data-testid="entry_user_grant_request"
-              onClick={event => handleModal(event, 'update')}
-              disabled={isLoading}
-              startIcon={isLoading && <Spinner />}
-              color="primary"
-            >
-              {isLoading ? ` ${t('form_actions.submitting')} ...` : ` ${t('logbook:guest_book.update_guest')} `}
-            </Button>
-              )} 
-
-
-            { 
-               id === 'new-guest-entry' && (
-               <Button
-                 variant="contained"
-                 className={`${css(styles.inviteGuestButton)}`}
-                 data-testid="submit_button"
-                 onClick={event => handleModal(event, 'create')}
-                 disabled={isLoading}
-                 startIcon={isLoading && <Spinner />}
-                 color="primary"
-               >
-                 {isLoading ? ` ${t('form_actions.submitting')} ...` : ` ${t('form_actions.invite_guest')} `}
-               </Button>
-              )
-            }  
+          )
+          }
+  
 
             { 
               isGuestRequest && !id && (
@@ -881,6 +853,21 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
                 </Button>
               )
         }
+
+            {previousRoute !== 'enroll' && id && (
+            <Button
+              variant="contained"
+              onClick={event => handleModal(event, isGuestRequest ? 'update' : 'grant')}
+              className={css(styles.grantButton)}
+              disabled={isLoading}
+              data-testid="entry_user_grant_request"
+              startIcon={isLoading && <Spinner />}
+            >
+              {
+              isGuestRequest ? t('logbook:guest_book.update_guest') : t('misc.log_new_entry')
+            }
+            </Button>
+          )}
 
             {previousRoute === 'enroll' ? (
               <>
@@ -905,7 +892,10 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
           <>
             <br />
             <br />
-            <Grid>
+            <br />
+            <br />
+
+            <Grid container item xs={4} justify="center" spacing={4}>
               <Grid item>
                 <Button
                   variant="contained"
@@ -938,22 +928,21 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
                   </Button>
                 </Grid>
               </FeatureCheck>
-            </Grid>
-            <br />
-            <Grid>
-              <Grid item>
-                <a
-                  href={`tel:${authState.user.community.securityManager}`}
-                  className={` ${css(styles.callButton)}`}
-                  data-testid="entry_user_call_mgr"
-                >
-                  <CallIcon />
-                  {' '}
-                  <p style={{ margin: '-28px 30px' }}>{t('logbook:logbook.call_manager')}</p>
-                </a>
+              <Grid>
+                <Grid item>
+                  <a
+                    href={`tel:${authState.user.community.securityManager}`}
+                    className={` ${css(styles.callButton)}`}
+                    data-testid="entry_user_call_mgr"
+                  >
+                    <CallIcon style={{ marginTop: '72px' }} />
+                    {' '}
+                    <p style={{ margin: '-30px 30px' }}>{t('logbook:logbook.call_manager')}</p>
+                  </a>
+                </Grid>
               </Grid>
             </Grid>
-
+            <br />
           </>
         ) : (
           <span />
@@ -993,16 +982,17 @@ const styles = StyleSheet.create({
   },
   grantButton: {
     backgroundColor: '#66A59A',
-    color: '#FFFFFF'
+    color: '#FFFFFF',
+    height: 40,
+    marginTop: 50
   },
   denyButton: {
     backgroundColor: '#C31515',
     color: '#FFFFFF',
-    width: '100%',
     boxShadow: 'none',
     marginTop: 50,
+    width: '50%',
     alignItems: 'center',
-    height: 50,
     '@media (min-device-width: 320px) and (max-device-height: 568px)' : {
       height: 30,
       width: '50%',
@@ -1013,9 +1003,8 @@ const styles = StyleSheet.create({
     color: '#66A59A',
     textTransform: 'unset',
     textDecoration: 'none',
-    width: '40%',
+    width: '100%',
     boxShadow: 'none',
-    marginTop: 50,
     alignItems: 'center',
     height: 50,
     '@media (min-device-width: 320px) and (max-device-height: 568px)' : {
@@ -1024,6 +1013,20 @@ const styles = StyleSheet.create({
     
     },
   },
+    enrollButton: {
+    backgroundColor: '#66A59A',
+    color: '#FFFFFF',
+    width: '60%',
+    boxShadow: 'none',
+    marginRight: '15vw',
+    alignItems: 'center',
+    '@media (min-device-width: 320px) and (max-device-height: 568px)' : {
+      height: 30,
+      width: '100%',
+    
+    }, 
+  },
+
   observationButton: {
     margin: 5
   },
