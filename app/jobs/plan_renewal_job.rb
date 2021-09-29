@@ -21,12 +21,7 @@ class PlanRenewalJob < ApplicationJob
       community = payment_plan.user.community
       next_plan_start_date = payment_plan.next_plan_start_date
 
-      if Properties::PaymentPlan.find_by(
-        user_id: payment_plan.user.id,
-        renewable: true,
-        plan_type: payment_plan.plan_type,
-        start_date: next_plan_start_date,
-      ).present?
+      if Properties::PaymentPlan.find_by(renewed_plan_id: payment_plan.id).present?
         Rails.logger.info "Payment-plan #{payment_plan.id} has already been renewed for this period"
         next
       end
