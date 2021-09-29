@@ -76,7 +76,8 @@
     "expected_monthly_payment": "Expected Monthly Payment",
     "total_balance_remaining": "Total Balance Remaining",
     "currency": "Currency",
-    "plot_plan_no": "Plot/Plan No."
+    "plot_plan_no": "Plot/Plan No.",
+    "send_payment_reminder": "Send Payment Reminder"
   },
   "table_headers": {
     "receipt_number": "Receipt Number",
