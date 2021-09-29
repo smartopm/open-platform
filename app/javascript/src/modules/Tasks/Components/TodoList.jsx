@@ -28,7 +28,7 @@ import Paginate from '../../../components/Paginate';
 import CenteredContent from '../../../components/CenteredContent';
 import Task from './Task';
 import TaskDashboard from './TaskDashboard';
-import { futureDateAndTimeToString } from '../../../components/DateContainer';
+import { futureDateAndTimeToString, dateToString } from '../../../components/DateContainer';
 import DatePickerDialog from '../../../components/DatePickerDialog';
 import Loading from '../../../shared/Loading';
 import QueryBuilder from '../../../components/QueryBuilder';
@@ -78,8 +78,8 @@ export default function TodoList({
   const [checkedOptions, setCheckOptions] = useState('none')
   const taskQuery = {
     completedTasks: 'completed: true',
-    tasksDueIn10Days: `due_date <= '${futureDateAndTimeToString(10)}' AND completed: false`,
-    tasksDueIn30Days: `due_date <= '${futureDateAndTimeToString(30)}' AND completed: false`,
+    tasksDueIn10Days: `due_date >= '${dateToString(new Date())}' AND due_date <= '${futureDateAndTimeToString(10)}' AND completed: false`,
+    tasksDueIn30Days: `due_date >= '${dateToString(new Date())}' AND due_date <= '${futureDateAndTimeToString(30)}' AND completed: false`,
     tasksOpen: 'completed: false',
     tasksOpenAndOverdue: `due_date <= '${futureDateAndTimeToString(0)}' AND completed: false`,
     tasksWithNoDueDate: 'due_date:nil',
