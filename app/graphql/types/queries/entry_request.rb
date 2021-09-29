@@ -94,15 +94,30 @@ module Types::Queries::EntryRequest
 
   private
 
+  # rubocop:disable Metrics/MethodLength,  Metrics/AbcSize
   def handle_search(entry_requests, query)
     # Support legacy ends_at field for search
     # Also search by visit_end_date to find re-ocurring visits
-    if query.match(/ends_at/)
-      end_time = query.split('ends_at :')[1].strip
-      query += " or end_time: #{end_time} or visit_end_date: #{end_time}"
+    if query.match(/ends_at/) && !query.match(/>=/)
+      # rubocop:disable Style/CaseLikeIf
+      if query.match(/!=/)
+        end_time = query.split('!=')[1].strip
+        query += " or end_time != #{end_time} or visit_end_date != #{end_time}"
+      elsif query.match(/>/)
+        end_time = query.split('>')[1].strip
+        query += " or end_time > #{end_time} or visit_end_date > #{end_time}"
+      elsif query.match(/</)
+        end_time = query.split('<')[1].strip
+        query += " or end_time < #{end_time} or visit_end_date < #{end_time}"
+      else
+        end_time = query.split('ends_at :')[1].strip
+        query += " or end_time: #{end_time} or visit_end_date: #{end_time}"
+      end
+      # rubocop:enable Style/CaseLikeIf
     end
     entry_requests.search(query)
   end
+  # rubocop:enable Metrics/MethodLength,  Metrics/AbcSize
 
   def admin_or_security_guard
     context[:current_user]&.admin? || context[:current_user]&.security_guard?
