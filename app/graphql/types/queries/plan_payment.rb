@@ -111,7 +111,7 @@ module Types::Queries::PlanPayment
     end_date = get_date(split_query.last)
     return query if end_date.nil?
 
-    split_query[-1] = (end_date + 1.day).to_s
+    split_query[-1] = end_date.to_datetime.end_of_day.to_s
     split_query.join(' ')
   end
 
