@@ -98,6 +98,7 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
   const [qrCodeEmail, setQrCodeEmail] = useState('');
   const [guestRequest, setGuestRequest] = useState({ id: '' });
   const requiredFields = authState?.user?.community?.communityRequiredFields?.manualEntryRequestForm || defaultRequiredFields
+  const showCancelBtn = tabValue ? true: !!guestListRequest
 
   useEffect(() => {
     if (id!== 'new-guest-entry' && id !== null && id !== 'undefined') {
@@ -821,7 +822,8 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
           )
         }
           <div className=" d-flex row justify-content-center ">
-          
+            {
+            showCancelBtn &&  (
             <Button
               variant="contained"
               aria-label="guest_cancel"
@@ -832,8 +834,8 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
             >
               {t('common:form_actions.cancel')}
             </Button>
-
-
+)
+          }
 
             { id !== 'new-guest-entry' && id !== null && id !== 'undefined' && previousRoute !== 'enroll' && (
             <Button
@@ -905,6 +907,7 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
           <>
             <br />
             <br />
+            <br />
             <Grid>
               <Grid item>
                 <Button
@@ -938,22 +941,21 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
                   </Button>
                 </Grid>
               </FeatureCheck>
-            </Grid>
-            <br />
-            <Grid>
-              <Grid item>
-                <a
-                  href={`tel:${authState.user.community.securityManager}`}
-                  className={` ${css(styles.callButton)}`}
-                  data-testid="entry_user_call_mgr"
-                >
-                  <CallIcon />
-                  {' '}
-                  <p style={{ margin: '-28px 30px' }}>{t('logbook:logbook.call_manager')}</p>
-                </a>
+              <Grid>
+                <Grid item>
+                  <a
+                    href={`tel:${authState.user.community.securityManager}`}
+                    className={` ${css(styles.callButton)}`}
+                    data-testid="entry_user_call_mgr"
+                  >
+                    <CallIcon style={{ marginTop: '50px' }} />
+                    {' '}
+                    <p style={{ margin: '-30px 30px' }}>{t('logbook:logbook.call_manager')}</p>
+                  </a>
+                </Grid>
               </Grid>
             </Grid>
-
+            <br />
           </>
         ) : (
           <span />
@@ -998,6 +1000,20 @@ const styles = StyleSheet.create({
   denyButton: {
     backgroundColor: '#C31515',
     color: '#FFFFFF',
+    boxShadow: 'none',
+    marginTop: 30,
+    width: '50%',
+    alignItems: 'center',
+    '@media (min-device-width: 320px) and (max-device-height: 568px)' : {
+      height: 30,
+      width: '50%',
+    
+    },
+  },
+  callButton: {
+    color: '#66A59A',
+    textTransform: 'unset',
+    textDecoration: 'none',
     width: '100%',
     boxShadow: 'none',
     marginTop: 50,
@@ -1009,21 +1025,21 @@ const styles = StyleSheet.create({
     
     },
   },
-  callButton: {
-    color: '#66A59A',
-    textTransform: 'unset',
-    textDecoration: 'none',
-    width: '40%',
+    enrollButton: {
+    backgroundColor: '#66A59A',
+    color: '#FFFFFF',
+    width: '60%',
     boxShadow: 'none',
-    marginTop: 50,
+    marginRight: '15vw',
     alignItems: 'center',
-    height: 50,
+    marginTop: 50,
     '@media (min-device-width: 320px) and (max-device-height: 568px)' : {
       height: 30,
-      width: '50%',
+      width: '100%',
     
-    },
+    }, 
   },
+
   observationButton: {
     margin: 5
   },
