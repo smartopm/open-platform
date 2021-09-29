@@ -45,7 +45,7 @@ export default function PaymentPlanModal({
   const { t } = useTranslation(['payment', 'common']);
   const [landParcel, setLandParcel] = useState("");
   const [frequency, setFrequency] = useState(2);
-  const coOwnersIds = [];
+  const [coOwnersIds, setCoOwnersIds] = useState([]);
   const [createPaymentPlan] = useMutation(PaymentPlanCreateMutation);
   const [inputValue, setInputValues] = useState(initialPlanState);
   const [isError, setIsError] = useState(false);
@@ -66,9 +66,9 @@ export default function PaymentPlanModal({
   function handleCoOwners(accountUserId) {
     const index = coOwnersIds.indexOf(accountUserId);
     if (index === -1) {
-      coOwnersIds.push(accountUserId);
+      setCoOwnersIds([...coOwnersIds, accountUserId]);
     } else {
-      coOwnersIds.splice(index, 1);
+      setCoOwnersIds([...coOwnersIds.slice(0, index), ...coOwnersIds.slice(index + 1)]);
     }
   }
 
@@ -139,7 +139,7 @@ export default function PaymentPlanModal({
 
   function confirmSubmission(event) {
     event.preventDefault();
-    if (!inputValue.installmentAmount || !inputValue.duration || !landParcelId || frequency === null) {
+    if (!inputValue.installmentAmount || !inputValue.duration || !landParcelId || frequency === null || !inputValue.planType) {
       setIsError(true);
       return;
     }
@@ -306,6 +306,8 @@ export default function PaymentPlanModal({
           }}
           required
           select
+          error={isError && !inputValue.planType}
+          helperText={isError && inputValue.planType === '' && t('errors.plan_type_required')}
         >
           {Object.entries(subscriptionPlanType)?.map(([key, value]) => (
             <MenuItem key={key} value={value}>
@@ -351,7 +353,12 @@ export default function PaymentPlanModal({
           </Typography>
         )}
         {landParcel?.accounts?.length > 1 && (
-          <CoOwners landParcel={landParcel} userId={userId} handleCoOwners={handleCoOwners} />
+          <CoOwners
+            landParcel={landParcel}
+            userId={userId}
+            handleCoOwners={handleCoOwners}
+            coOwnersIds={coOwnersIds}
+          />
         )}
         {inputValue.duration && inputValue.installmentAmount && (
           <>
@@ -372,7 +379,7 @@ export default function PaymentPlanModal({
   );
 }
 
-export function CoOwners({ landParcel, userId, handleCoOwners }) {
+export function CoOwners({ landParcel, userId, handleCoOwners, coOwnersIds }) {
   const { t } = useTranslation('common');
   return (
     <>
@@ -389,6 +396,7 @@ export function CoOwners({ landParcel, userId, handleCoOwners }) {
                     <Checkbox
                       name="coOwner"
                       color="primary"
+                      checked={coOwnersIds.includes(account.userId)}
                       value={account.userId}
                       onChange={() => handleCoOwners(account.userId)}
                       inputProps={{ 'aria-label': 'primary checkbox' }}
@@ -480,7 +488,8 @@ CoOwners.propTypes = {
     ).isRequired
   }).isRequired,
   userId: PropTypes.string.isRequired,
-  handleCoOwners: PropTypes.func.isRequired
+  handleCoOwners: PropTypes.func.isRequired,
+  coOwnersIds: PropTypes.arrayOf(PropTypes.string).isRequired
 };
 
 FrequencyButton.propTypes = {

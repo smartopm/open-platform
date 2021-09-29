@@ -75,6 +75,7 @@ describe('It should test the CoOwners component', () => {
           landParcel={landParcel}
           userId='jhouytre-09uol'
           handleCoOwners={jest.fn}
+          coOwnersIds={[]}
         />
       </BrowserRouter>
     );
