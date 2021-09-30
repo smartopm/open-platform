@@ -1,7 +1,7 @@
 {
   "misc": {
     "published_form": "Successfully published the form",
-    "are_you_sure_to_publish": "Are you sure to publish this form",
+    "are_you_sure_to_publish": "Are you sure you are ready to publish this form?",
     "publish_ing_form": "Publishing the form ...",
     "form": "form",
     "updates": "updates",
@@ -13,7 +13,7 @@
     "limit_1_response": "Limit to 1 response",
     "form_expiry_date": "Form Expiry Date",
     "form_action_success": "Successfully {{status}} the form",
-    "form_confirm_message": "Are you sure to {{actionType}} this form",
+    "form_confirm_message": "Are you sure you are ready to {{actionType}} this form?",
     "attachments": "Attachments",
     "signature": "Signature",
     "deleted_form_property": "Successfully deleted form property",
