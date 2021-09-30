@@ -27,7 +27,13 @@
     "security/detect-non-literal-regexp": 2,
     "security/detect-unsafe-regex": 2,
     "arrow-body-style": 0,
-    "react/jsx-curly-newline": 0
+    "react/jsx-curly-newline": 0,
+    "max-lines": 1,
+    "max-len": 1,
+    "max-nested-callbacks": 1,
+    "max-params": 1,
+    "complexity": 1,
+    "max-statements": 1
   },
   "env": {
     "browser": true,
