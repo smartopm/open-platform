@@ -21,17 +21,17 @@ describe("Support card loads component", () => {
       </BrowserRouter>
     )
     expect(container.queryByText(/Nkwashi/i)).toBeInTheDocument()
-    expect(container.queryByText(/registration kiosk at the showroom/i)).toBeInTheDocument()
+    expect(container.queryByText(/partnership.registration_kiosk/i)).toBeInTheDocument()
     expect(container.queryByText('support@doublegdp.com')).toBeInTheDocument()
-    expect(container.queryByText('Sales Support')).toBeInTheDocument()
-    expect(container.queryByText('Customer Care')).toBeInTheDocument()
+    expect(container.queryByText('misc.sales_support')).toBeInTheDocument()
+    expect(container.queryByText('misc.customer_care')).toBeInTheDocument()
     expect(container.queryByText('+260 966 194383')).toBeInTheDocument()
     expect(container.queryByText('+2347065834175')).toBeInTheDocument()
-    expect(container.queryByText('Support Chat')).toBeInTheDocument()
-    expect(container.queryByText('Pay With Mobile Money')).toBeInTheDocument()
-    expect(container.queryByText('Pay With Mobile Money')).not.toBeDisabled()
-    expect(container.queryByText('Privacy and Terms of Service')).toBeInTheDocument()
-    expect(container.queryByText('Privacy and Terms of Service')).not.toBeDisabled()
+    expect(container.queryByText('buttons.support_chat')).toBeInTheDocument()
+    expect(container.queryByText('buttons.pay_with_mobile_money')).toBeInTheDocument()
+    expect(container.queryByText('buttons.pay_with_mobile_money')).not.toBeDisabled()
+    expect(container.queryByText('buttons.privacy_and_terms')).toBeInTheDocument()
+    expect(container.queryByText('buttons.privacy_and_terms')).not.toBeDisabled()
   })
 
   it('should render not render Pay with Mobile Money for CM community', () => {
@@ -61,7 +61,7 @@ describe("Support card loads component", () => {
       </BrowserRouter>
     )
 
-    expect(container.queryByText('Contacts not available at the moment')).toBeInTheDocument()
+    expect(container.queryByText(('misc.contacts_not_available'))).toBeInTheDocument()
   })
 })
 
