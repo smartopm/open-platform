@@ -1,12 +1,22 @@
 /* eslint-disable no-nested-ternary */
 import React, { useState, useContext } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Grid, Typography, IconButton, Fab, Button, Checkbox, Select, MenuItem } from '@material-ui/core';
+import {
+  Grid,
+  Typography,
+  IconButton,
+  Fab,
+  Button,
+  Checkbox,
+  Select,
+  MenuItem
+} from '@material-ui/core';
 import { MoreHorizOutlined } from '@material-ui/icons';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
-import { useMutation , useQuery } from 'react-apollo';
+import { useMutation, useQuery } from 'react-apollo';
 import { CSVLink } from 'react-csv';
+import EmailIcon from '@material-ui/icons/Email';
 import DataList from '../../../shared/list/DataList';
 import useDebounce from '../../../utils/useDebounce';
 import {
@@ -40,8 +50,6 @@ import {
   planFilterFields
 } from '../../../utils/constants';
 import { CommunityPlansQuery } from '../graphql/payment_query';
-import EmailIcon from '@material-ui/icons/Email';
-
 
 export function PlansList({
   matches,
@@ -49,7 +57,7 @@ export function PlansList({
   setDisplaySubscriptionPlans,
   setMessage,
   setAlertOpen
-}){
+}) {
   const { t } = useTranslation(['payment', 'common']);
   const [searchValue, setSearchValue] = useState('');
   const debouncedValue = useDebounce(searchValue, 500);
@@ -67,7 +75,7 @@ export function PlansList({
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedPlans, setSelectedPlans] = useState([]);
   const [checkbox, setCheckbox] = useState(false);
-  const [selectDropdown, setSelectDropdown] = useState('');
+  const [selectDropdown, setSelectDropdown] = useState('none');
 
   const menuList = [
     {
@@ -75,15 +83,15 @@ export function PlansList({
       isAdmin: true,
       handleClick: () => setConfirmationModalOpen(true)
     }
-  ]
+  ];
   const menuData = {
     menuList,
     handleMenuClick,
     anchorEl,
     open: anchorElOpen,
     userType: authState?.user?.userType,
-    handleClose: (e) => handleMenuClose(e)
-  }
+    handleClose: e => handleMenuClose(e)
+  };
 
   const csvHeaders = [
     { label: 'Parcel Type', key: 'landParcel.parcelType' },
@@ -103,13 +111,15 @@ export function PlansList({
   ];
 
   function formattedCsvData(csvData) {
-    return csvData?.map(val =>({
-      ...val, formattedStartDate: dateToString(val.startDate, 'MM-DD-YYYY'), formattedEndDate: dateToString(val.endDate, 'MM-DD-YYYY') 
-    }))
+    return csvData?.map(val => ({
+      ...val,
+      formattedStartDate: dateToString(val.startDate, 'MM-DD-YYYY'),
+      formattedEndDate: dateToString(val.endDate, 'MM-DD-YYYY')
+    }));
   }
 
   function handleMenuClose(e) {
-    e.stopPropagation()
+    e.stopPropagation();
     setAnchorEl(null);
     setPaymentPlan(null);
   }
@@ -131,25 +141,25 @@ export function PlansList({
 
   function sendPaymentReminderMail() {
     let variables;
-    if (paymentPlan){
-      variables = [{userId: paymentPlan?.user.id, paymentPlanId: paymentPlan.id}];
-    }else{
+    if (paymentPlan) {
+      variables = [{ userId: paymentPlan?.user.id, paymentPlanId: paymentPlan.id }];
+    } else {
       variables = selectedPlans;
     }
     setMutationLoading(true);
     createPaymentRemider({
-      variables: {paymentReminderFields: variables}
+      variables: { paymentReminderFields: variables }
     })
-    .then(() => {
-      setMessage({ isError: false, detail: t('misc.email_sent') });
-      handleAfterMutation();
-    })
-    .catch(error => {
-      setMessage({ isError: true, detail: formatError(error.message) });
-      handleAfterMutation();
-    })
+      .then(() => {
+        setMessage({ isError: false, detail: t('misc.email_sent') });
+        handleAfterMutation();
+      })
+      .catch(error => {
+        setMessage({ isError: true, detail: formatError(error.message) });
+        handleAfterMutation();
+      });
   }
-  
+
   const { loading, data: communityPlansData } = useQuery(CommunityPlansQuery, {
     variables: { query: debouncedValue || searchQuery },
     errorPolicy: 'all',
@@ -159,7 +169,7 @@ export function PlansList({
   const communityPlans = communityPlansData?.communityPaymentPlans;
 
   function paginatePlans(action) {
-    if(checkbox && selectDropdown != 'all_filtered'){
+    if (checkbox && selectDropdown !== 'all_filtered') {
       clearSelection();
     }
     if (action === 'prev') {
@@ -183,38 +193,45 @@ export function PlansList({
   }
 
   function handlePlansSelect(planId, userId) {
-    const index = selectedPlans.findIndex(obj => obj.paymentPlanId === planId && obj.userId === userId);
+    const index = selectedPlans.findIndex(
+      obj => obj.paymentPlanId === planId && obj.userId === userId
+    );
     if (index !== -1) {
       setSelectedPlans([...selectedPlans.slice(0, index), ...selectedPlans.slice(index + 1)]);
     } else {
-      setSelectedPlans([...selectedPlans, {paymentPlanId: planId, userId: userId}]);
+      setSelectedPlans([...selectedPlans, { paymentPlanId: planId, userId }]);
     }
   }
 
-  function clearSelection(){
+  function clearSelection() {
     setCheckbox(false);
     setSelectDropdown('none');
     setSelectedPlans([]);
   }
 
   function handleSelectOptionAndCheckBox(event) {
-    if(!checkbox){
+    if (!checkbox) {
       setCheckbox(true);
       setSelectedPlans([]);
-      if(event.target.value === 'all_filtered'){
+      if (event.target.value === 'all_filtered') {
+        const plans = []
         setSelectDropdown('all_filtered');
-        communityPlans.map(plan => {
-          selectedPlans.push({paymentPlanId: plan?.id, userId: plan?.user?.id});
-        })
-      }else{
+        communityPlans.map(plan => plans.push({ paymentPlanId: plan?.id, userId: plan?.user?.id }))
+        setSelectedPlans(plans)
+      } else {
         setSelectDropdown('all_on_the_page');
-        communityPlans.slice(offset, offset + limit).map(plan => {
-          selectedPlans.push({paymentPlanId: plan?.id, userId: plan?.user?.id});
-        })
+        const plans = []
+        communityPlans.slice(offset, offset + limit).map(plan => plans.push({ paymentPlanId: plan?.id, userId: plan?.user?.id }))
+        setSelectedPlans(plans)
       }
-    }else{
+    } else {
       clearSelection();
     }
+  }
+
+  function handleSearchClear() {
+    setSearchValue('');
+    clearSelection()
   }
 
   return (
@@ -233,7 +250,9 @@ export function PlansList({
       <ActionDialog
         open={confirmationModalOpen}
         type="confirm"
-        message={t('misc.email_confirmation', { parcel_number: paymentPlan?.landParcel?.parcelNumber })}
+        message={t('misc.email_confirmation', {
+          parcel_number: paymentPlan?.landParcel?.parcelNumber
+        })}
         handleClose={() => setConfirmationModalOpen(false)}
         handleOnSave={sendPaymentReminderMail}
         disableActionBtn={mutationLoading}
@@ -243,7 +262,7 @@ export function PlansList({
         searchValue={searchValue}
         handleSearch={event => setSearchValue(event.target.value)}
         handleFilter={toggleFilterMenu}
-        handleClear={() => setSearchValue('')}
+        handleClear={() => handleSearchClear()}
       />
       <Grid
         container
@@ -312,23 +331,35 @@ export function PlansList({
                   </div>
                 </div>
               </div>
-              <div style={{ marginLeft:'43px', marginBottom: '10px' }}>
-                <Grid item style={{ display: 'flex' }}>
-                  <Grid>
-                    <Checkbox
-                      checked={checkbox}
-                      onChange={handleSelectOptionAndCheckBox}
-                      name="includeReplyLink"
-                      data-testid="reply_link"
-                      color="primary"
-                      style={{ padding: '0px', marginRight: '15px' }}
-                    />
-                  </Grid>
-                    <Typography> 
+              <Grid container>
+                {checkbox && selectedPlans.length > 0 && (
+                  <Grid xs={12} className={matches && classes.filterCount} data-testid='plan_count'>
+                    <Typography variant='body2'> 
                       {' '}
-                      {t('common:misc.select')}
+                      {t('misc.plan_count', {count: `${selectedPlans.length}`})}
                       {' '}
                     </Typography>
+                  </Grid>
+                )}
+                <Grid item xs={12} sm={6} className={matches ? classes.checkBox : classes.checkBoxMobile}>
+                  <Grid container>
+                    <Grid>
+                      <Checkbox
+                        checked={checkbox}
+                        onChange={handleSelectOptionAndCheckBox}
+                        name="plan_check_box"
+                        data-testid="plan_ckeck_box"
+                        color="primary"
+                        style={{ padding: '0px', marginRight: '15px' }}
+                      />
+                    </Grid>
+                    <Grid>
+                      <Typography> 
+                        {' '}
+                        {t('common:misc.select')}
+                        {' '}
+                      </Typography>
+                    </Grid>
                     <Grid>
                       <Select
                         labelId="user-action-select"
@@ -338,13 +369,14 @@ export function PlansList({
                         style={{ height: '23px', marginLeft: '10px' }}
                       >
                         <MenuItem value="all_on_the_page">{t('common:misc.all_this_page')}</MenuItem>
-                        <MenuItem disabled={!searchQuery} value="all_filtered">{'All filtered'}</MenuItem>
+                        <MenuItem disabled={!searchQuery && !searchValue} value="all_filtered">
+                          All filtered
+                        </MenuItem>
                         <MenuItem value="none">{t('common:misc.none')}</MenuItem>
                       </Select>
                     </Grid>
-                    </Grid>
                     {selectedPlans.length > 0 && (
-                      <Button
+                    <Button
                       onClick={() => setConfirmationModalOpen(true)}
                       color="primary"
                       startIcon={<EmailIcon fontSize="large" />}
@@ -352,8 +384,10 @@ export function PlansList({
                     >
                       {t('misc.send_payment_reminder')}
                     </Button>
-                  )}
-              </div>
+                    )}
+                  </Grid>
+                </Grid>
+              </Grid>
             </div>
             {communityPlans?.slice(offset, limit + offset - 1).map(plan => (
               <div
@@ -361,13 +395,13 @@ export function PlansList({
                 style={matches ? {} : { marginTop: '30px' }}
                 key={plan.id}
               >
-               <PlanListItem 
-                data={plan}
-                currencyData={currencyData}
-                menuData={menuData}
-                selectedPlans={selectedPlans}
-                handlePlansSelect={handlePlansSelect}
-              />
+                <PlanListItem
+                  data={plan}
+                  currencyData={currencyData}
+                  menuData={menuData}
+                  selectedPlans={selectedPlans}
+                  handlePlansSelect={handlePlansSelect}
+                />
               </div>
             ))}
           </div>
@@ -626,6 +660,15 @@ const useStyles = makeStyles(() => ({
   },
   body: {
     padding: '0 2%'
+  },
+  checkBox: {
+    margin: '0 0 20px 20px'
+  },
+  checkBoxMobile: {
+    margin: '10px 0 -10px 0'
+  },
+  filterCount: {
+    margin: '-10px 0 10px 20px'
   }
 }));
 
@@ -637,8 +680,8 @@ PlansList.propTypes = {
   }).isRequired,
   setDisplaySubscriptionPlans: PropTypes.func.isRequired,
   setMessage: PropTypes.func.isRequired,
-  setAlertOpen: PropTypes.func.isRequired,
-}
+  setAlertOpen: PropTypes.func.isRequired
+};
 
 SubscriptionPlans.propTypes = {
   matches: PropTypes.bool.isRequired,

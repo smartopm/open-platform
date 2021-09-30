@@ -79,6 +79,7 @@ describe('Plans List Item Component', () => {
 
     expect(loader.queryAllByTestId('loader')[0]).toBeInTheDocument();
     expect(container.queryByTestId('csv-fab')).toBeInTheDocument();
+    // expect(container.queryByTestId('plan_check_box')).toBeInTheDocument();
   });
 
   it('should render the subscription plans component', async () => {

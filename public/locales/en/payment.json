@@ -77,7 +77,8 @@
     "total_balance_remaining": "Total Balance Remaining",
     "currency": "Currency",
     "plot_plan_no": "Plot/Plan No.",
-    "send_payment_reminder": "Send Payment Reminder"
+    "send_payment_reminder": "Send Payment Reminder",
+    "plan_count": "Showing {{count}} results"
   },
   "table_headers": {
     "receipt_number": "Receipt Number",

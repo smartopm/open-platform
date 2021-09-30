@@ -45,29 +45,36 @@ export default function PlanListItem({ data, currencyData, menuData, selectedPla
   return (
     <>
       <Grid container spacing={2} className={classes.container}>
-      <Checkbox
-          checked={Boolean(selectedPlans?.find(obj => obj.paymentPlanId === data?.id && obj.userId === data?.user?.id))}
-          onChange={() => handlePlansSelect(data.id, data.user.id)}
-          name="includeReplyLink"
-          data-testid="reply_link"
-          color="primary"
-          style={{padding: '0px', marginRight: '15px'}}
-        />
-        <Grid item xs={6} sm={2} data-testid="landparcel" className={classes.bottom}>
-          <Typography className={classes.weight} variant="caption">
-            {data?.landParcel?.parcelNumber}
-          </Typography>
-          {' '}
-          -
-          {' '}
-          <Typography className={classes.weight} variant="caption">
-            {data?.planType}
-          </Typography>
+        <Grid item xs={8} sm={2} data-testid="landparcel" className={classes.bottom}>
+          <Grid container spacing={1}>
+            <Grid item sm={2}>
+              <Checkbox
+                checked={Boolean(selectedPlans?.find(obj => obj.paymentPlanId === data?.id && obj.userId === data?.user?.id))}
+                onChange={() => handlePlansSelect(data.id, data.user.id)}
+                name="includeReplyLink"
+                data-testid="reply_link"
+                color="primary"
+                style={{padding: '0px', marginRight: '15px'}}
+              />
+            </Grid>
+            <Grid item sm={10}>
+              <Typography className={classes.weight} variant="caption">
+                {data?.landParcel?.parcelNumber}
+              </Typography>
+              {' '}
+              -
+              {' '}
+              <Typography className={classes.weight} variant="caption">
+                {data?.planType}
+              </Typography>
+            </Grid>
+          </Grid>
+          
         </Grid>
         <Hidden smUp>
           <Grid
             item
-            xs={6}
+            xs={4}
             sm={1}
             data-testid="menu"
             style={{ textAlign: 'right', marginTop: '-10px' }}
@@ -256,7 +263,13 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
+PlanListItem.defaultProps = {
+  selectedPlans: []
+}
+
 PlanListItem.propTypes = {
+  selectedPlans: PropTypes.arrayOf(PropTypes.object),
+  handlePlansSelect: PropTypes.func.isRequired,
   data: PropTypes.shape({
     id: PropTypes.string,
     planType: PropTypes.string,
