@@ -55,7 +55,7 @@ const LogBooks = {
   },
   name: t => t('misc.log_book'),
   featureName: 'LogBook',
-  accessibleBy: ['admin', 'security_guard', 'custodian'],
+  accessibleBy: ['admin', 'security_guard'],
 };
 
 
@@ -69,6 +69,6 @@ export default {
   },
   name: t => t('misc.log_book'),
   featureName: 'LogBook',
-  accessibleBy: ['admin', 'security_guard', 'custodian'],
+  accessibleBy: ['admin', 'security_guard'],
   subMenu: [LogBooks, GuestsList]
 };
