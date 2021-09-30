@@ -4,7 +4,7 @@ import PeopleIcon from '@material-ui/icons/People';
 import EntryLogs from './Components/EntryLogs';
 import GuestList from './GuestList/Components/GuestList'
 import GuestUpdate from './GuestList/containers/GuestUpdate'
-import { siteManagers } from '../../utils/constants';
+import { guestListUsers } from '../../utils/constants';
 
 import RequestUpdate from './Components/RequestUpdate';
 
@@ -19,7 +19,7 @@ const GuestsList =  {
   },
   name: t => t('menu.guest_list'),
   featureName: 'Guest List',
-  accessibleBy: siteManagers,
+  accessibleBy: guestListUsers,
 
   subRoutes: [
     {
@@ -29,7 +29,7 @@ const GuestsList =  {
         component: GuestUpdate
       },
       name: 'GuestUpdate',
-      accessibleBy: siteManagers
+      accessibleBy: guestListUsers
     },
     {
       routeProps: {
@@ -38,7 +38,7 @@ const GuestsList =  {
         component: RequestUpdate
       },
       name: 'RequestUpdate',
-      accessibleBy: siteManagers
+      accessibleBy: guestListUsers
     }
   ]
 
@@ -69,6 +69,6 @@ export default {
   },
   name: t => t('misc.log_book'),
   featureName: 'LogBook',
-  accessibleBy: ['admin', 'security_guard'],
+  accessibleBy: ['admin', 'security_guard', 'resident', 'client', 'custodian'],
   subMenu: [LogBooks, GuestsList]
 };
