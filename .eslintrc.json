@@ -14,7 +14,8 @@
     "plugin:react/recommended",
     "prettier",
     "plugin:react-hooks/recommended",
-    "plugin:security/recommended"
+    "plugin:security/recommended",
+    "plugin:jest/recommended"
   ],
   "rules": {
     "comma-dangle": 0,
@@ -33,7 +34,12 @@
     "max-nested-callbacks": 1,
     "max-params": 1,
     "complexity": 1,
-    "max-statements": 1
+    "max-statements": 1,
+    "jest/no-disabled-tests": 1,
+    "jest/no-focused-tests": 2,
+    "jest/no-identical-title": 2,
+    "jest/prefer-to-have-length": 1,
+    "jest/valid-expect": 2
   },
   "env": {
     "browser": true,
