@@ -6,6 +6,7 @@ import WhatsAppIcon from '@material-ui/icons/WhatsApp';
 import PhoneIcon from '@material-ui/icons/Phone';
 import { useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import { useTranslation } from 'react-i18next';
 import { objectAccessor } from '../../../utils/helpers';
 
 const icons = {
@@ -43,6 +44,7 @@ export default function SupportCard({ handleSendMessage, user }) {
   // eslint-disable-next-line no-use-before-define
   const classes = useStyles();
   const history = useHistory();
+  const { t } = useTranslation('support_contact');
 
   function supports() {
     let result = handlePopulateSupports([], [], 'supportNumber', 'phone');
@@ -86,33 +88,27 @@ export default function SupportCard({ handleSendMessage, user }) {
   return (
     <>
       <div className="justify-content-center align-items-center container">
-        <Typography paragraph variant="body1" color="textSecondary">
-          {`${user?.community?.name}
-          partners with DoubleGDP on this mobile app to better connect
-          with clients and residents, and to deliver efficient and responsive
-          public services. Today we have digital IDs to make gate access faster,
-  easier, and more secure than paper logs. We also have ${
-    user?.community?.name === 'Nkwashi'
-      ? 'registration kiosk at the showroom'
-      : 'incident management'
-  } and support desk functionality to ensure your
-          queries are answered to your satisfaction${
+        <Typography paragraph variant="body1" color="textSecondary" data-testid="new">
+          {`${user?.community?.name} ${t('partnership.about_app_1')} ${t('partnership.about_app_2')} ${
+            user?.community?.name === 'Nkwashi'
+              ? t('partnership.registration_kiosk')
+              : t('partnership.incident_management')
+          }  ${t('partnership.about_app_3')}${
             user?.community?.name === 'Nkwashi'
               ? ''
-              : ', and are continually adding new features based on your requests'
+              : t('partnership.adding_more_features')
           }.`}
         </Typography>
 
         <Typography variant="body1" color="textSecondary" component="p" align="center">
-          We love receiving questions and feedback. You can contact us through any of the following
-          channels:
+          {t('partnership.feedback_and_contact')}
         </Typography>
       </div>
       <div className="justify-content-center align-items-center container">
         <Grid container spacing={3}>
           <Grid item xs={12} sm={6}>
             <Typography variant="h6" align="center" gutterBottom color="textSecondary">
-              Sales Support
+              {t('misc.sales_support')}
             </Typography>
             {supports().sales.length ? (
               supports().sales.map(support => (
@@ -120,13 +116,13 @@ export default function SupportCard({ handleSendMessage, user }) {
               ))
             ) : (
               <Typography paragraph variant="body1" color="textSecondary" align="center">
-                Contacts not available at the moment
+                {t('misc.contacts_not_available')}
               </Typography>
             )}
           </Grid>
           <Grid item xs={12} sm={6}>
             <Typography variant="h6" align="center" gutterBottom color="textSecondary">
-              Customer Care
+              {t('misc.customer_care')}
             </Typography>
 
             {supports().customerCare.length ? (
@@ -135,7 +131,7 @@ export default function SupportCard({ handleSendMessage, user }) {
               ))
             ) : (
               <Typography paragraph variant="body1" color="textSecondary" align="center">
-                Contacts not available at the moment
+                {t('misc.contacts_not_available')}
               </Typography>
             )}
           </Grid>
@@ -148,7 +144,7 @@ export default function SupportCard({ handleSendMessage, user }) {
             onClick={handleSendMessage}
             className={classes.chatButton}
           >
-            Support Chat
+            {t('buttons.support_chat')}
           </Button>
         </Grid>
 
@@ -161,7 +157,7 @@ export default function SupportCard({ handleSendMessage, user }) {
               onClick={() => history.push('/mobile_money')}
               className={classes.chatButton}
             >
-              Pay With Mobile Money
+              {t('buttons.pay_with_mobile_money')}
             </Button>
           </Grid>
         )}
@@ -174,7 +170,7 @@ export default function SupportCard({ handleSendMessage, user }) {
               onClick={() => history.push('/feedback')}
               className={classes.chatButton}
             >
-              Feedback
+              {t('buttons.feedback')}
             </Button>
           </Grid>
         )}
@@ -187,7 +183,7 @@ export default function SupportCard({ handleSendMessage, user }) {
               onClick={() => history.push('/map')}
               className={classes.chatButton}
             >
-              Explore
+              {t('buttons.explore')}
             </Button>
           </Grid>
         ) : null}
@@ -204,7 +200,7 @@ export default function SupportCard({ handleSendMessage, user }) {
             style={{ fontSize: 14 }}
             className={classes.chatButton}
           >
-            Privacy and Terms of Service
+            {t('buttons.privacy_and_terms')}
           </Button>
         </Grid>
       </div>

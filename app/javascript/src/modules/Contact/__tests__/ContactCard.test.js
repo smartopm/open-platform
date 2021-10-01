@@ -71,7 +71,7 @@ describe('Contact page', () => {
       </BrowserRouter>
     )
     const payWithMoMo = getAllByTestId('pwmm')
-    expect(payWithMoMo[0].textContent).toContain('Pay With Mobile Money')
+    expect(payWithMoMo[0].textContent).toContain('buttons.pay_with_mobile_money')
   })
 
   it('clicks privacy and terms of service', () => {
@@ -85,7 +85,7 @@ describe('Contact page', () => {
       </BrowserRouter>
     )
     const tos = getByTestId('tos')
-    expect(tos.textContent).toContain('Privacy and Terms of Service')
+    expect(tos.textContent).toContain('buttons.privacy_and_terms')
   })
 
   afterEach(cleanup)
