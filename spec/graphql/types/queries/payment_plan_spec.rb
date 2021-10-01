@@ -330,7 +330,7 @@ RSpec.describe Types::Queries::Payment do
           expect(payment_plan_result['expectedPayments']).to eql 600.0
           expect(payment_plan_result['owingAmount']).to eql 100.0
           expect(payment_plan_result['installmentsDue']).to eql 1
-          expect(payment_plan_result['outstandingDays']).to eql 31
+          expect(payment_plan_result['outstandingDays']).to eql payment_plan.outstanding_days
           expect(payment_plan_result['planStatus']).to eql 'behind'
         end
 
