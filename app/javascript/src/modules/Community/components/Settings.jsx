@@ -234,17 +234,19 @@ export default function CommunitySettings({ data, token, refetch }) {
     setMenuItemOptions([...values]);
   }
 
-  function handleDenyAccessButtonChange(e, moduleName){
+  function handleModuleFeatures(e, moduleName, feature){
     const subFeatures = communityFeatures[String(moduleName)]?.features
     if(!subFeatures) return;
 
     if(e.target.checked) {
-      if(!subFeatures.includes(CommunityFeaturesWhiteList.denyGateAccessButton)) {
-        communityFeatures[String(moduleName)].features.push(CommunityFeaturesWhiteList.denyGateAccessButton)
+      if(!subFeatures.includes(objectAccessor(CommunityFeaturesWhiteList, feature))) {
+        communityFeatures[String(moduleName)].features.push(objectAccessor(CommunityFeaturesWhiteList, feature))
         setCommunityFeatures({ ...communityFeatures })
       }
-    } else if(subFeatures.includes(CommunityFeaturesWhiteList.denyGateAccessButton)) {
-        const updatedSubFeatures =  communityFeatures[String(moduleName)].features.filter(v => v !== CommunityFeaturesWhiteList.denyGateAccessButton)
+    } else if(subFeatures.includes(objectAccessor(CommunityFeaturesWhiteList, feature))) {
+        const updatedSubFeatures =  communityFeatures[String(moduleName)].features.filter(v =>
+          v !== objectAccessor(CommunityFeaturesWhiteList, feature)
+        )
         communityFeatures[String(moduleName)].features = updatedSubFeatures
         setCommunityFeatures({ ...communityFeatures })
       }
@@ -793,9 +795,30 @@ export default function CommunitySettings({ data, token, refetch }) {
             control={(
               <Checkbox
                 checked={communityFeatures[String('LogBook')]?.features.includes(CommunityFeaturesWhiteList.denyGateAccessButton)}
-                onChange={(e) => handleDenyAccessButtonChange(e, 'LogBook')}
+                onChange={(e) => handleModuleFeatures(e, 'LogBook', 'denyGateAccessButton')}
                 name="disable-deny-gate-access"
                 data-testid="disable_deny_gate_access"
+                color="primary"
+              />
+          )}
+          />
+        </Grid>
+      </Grid>
+      <br />
+
+      <Typography variant="h6">{t('community.tasks_settings')}</Typography>
+      <Grid container spacing={3}>
+        <Grid item xs={12} sm={3} className={classes.checkBox}>
+          <Typography>{t('community.enable_auomated_reminders')}</Typography>
+        </Grid>
+        <Grid item xs={12} sm={9}>
+          <FormControlLabel
+            control={(
+              <Checkbox
+                checked={communityFeatures[String('Tasks')]?.features.includes(CommunityFeaturesWhiteList.automatedTaskReminders)}
+                onChange={(e) => handleModuleFeatures(e, 'Tasks', 'automatedTaskReminders')}
+                name="enable_automated_task_reminders"
+                data-testid="enable_automated_task_reminders"
                 color="primary"
               />
           )}
