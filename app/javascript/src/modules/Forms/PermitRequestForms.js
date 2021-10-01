@@ -12,7 +12,8 @@ export default {
     component: CommunityForms
   },
   styleProps: {
-    icon: <DescriptionIcon />
+    icon: <DescriptionIcon />,
+    className: 'permit-request-form-menu-item'
   },
   name: t => t('menu.request_forms'),
   featureName: 'Forms',

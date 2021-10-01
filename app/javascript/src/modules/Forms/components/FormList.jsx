@@ -114,7 +114,7 @@ export default function FormLinkList({ userType, community }) {
                 <Grid item xs={2}>
                   {userType === 'admin' && (
                     <IconButton
-                      className={css(styles.menuButton)}
+                      className={`${css(styles.menuButton)} form-menu-open-btn`}
                       aria-label={`more-${form.name}`}
                       aria-controls="long-menu"
                       aria-haspopup="true"
@@ -144,8 +144,8 @@ export default function FormLinkList({ userType, community }) {
         ))
       : (
         <CenteredContent>
-          <Typography>
-            {t('misc.no_forms')}
+          <Typography data-testid='no-form-available'>
+            {t('common:misc.no_forms')}
           </Typography>
         </CenteredContent>
     )}
@@ -155,8 +155,9 @@ export default function FormLinkList({ userType, community }) {
         <FloatButton
           title={t('actions.create_a_form')}
           handleClick={() => setOpen(!open)}
+          otherClassNames='new-permit-request-form-btn'
         />
-      )}
+      )} 
     </div>
   )
 }
@@ -238,6 +239,7 @@ export function FormMenu({ formId, formName, anchorEl, handleClose, open, refetc
         <div>
           <MenuItem
             id="edit_button"
+            className="edit-form-btn"
             key="edit_form"
             onClick={routeToEdit}
           >
@@ -346,10 +348,11 @@ export function FormDialog({actionType, form, formMutation, open, setOpen, messa
             />
 
             <SwitchInput
-              name="multipleSubmissionsAllowed"
+              name="previewable"
               label={t('misc.previewable')}
               value={preview}
               handleChange={event => setPreview(event.target.checked)}
+              className="form-previewbale-switch-btn"
             />
           </div>
           <div>
