@@ -24,12 +24,12 @@ export function SupportContact({ classes, support }) {
   const number = support.contact.replace(/\s/g, '');
   const whatsappLink = `https://api.whatsapp.com/send?phone=${number}`;
   const link = `${
-    support.type === 'whatsapp' ? whatsappLink : `${linkType[support.type]}:${number}`
+    support.type === 'whatsapp' ? whatsappLink : `${objectAccessor(linkType, support.type)}:${number}`
   }`;
 
   return (
     <Grid container direction="row" className={classes.root}>
-      <Grid item>{icons[support.type]}</Grid>
+      <Grid item>{objectAccessor(icons, support.type)}</Grid>
 
       <Grid item>
         <Typography className={classes.pos} color="textSecondary">
