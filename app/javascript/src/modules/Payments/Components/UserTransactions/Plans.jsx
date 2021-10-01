@@ -237,19 +237,19 @@ export default function PaymentPlans({ userId, user, userData }) {
                 refetch={refetch}
                 balanceRefetch={balanceRefetch}
               />
-              <CenteredContent>
-                <Paginate
-                  offSet={offset}
-                  limit={limit}
-                  active={offset >= 1}
-                  handlePageChange={paginate}
-                  count={data?.userPlansWithPayments?.length}
-                />
-              </CenteredContent>
             </div>
           ) : (
             <CenteredContent><div data-testid='no-plan-available'>{t('errors.no_plan_available')}</div></CenteredContent>
           )}
+          <CenteredContent>
+            <Paginate
+              offSet={offset}
+              limit={limit}
+              active={offset >= 1}
+              handlePageChange={paginate}
+              count={data?.userPlansWithPayments?.length}
+            />
+          </CenteredContent>
         </>
       )}
     </div>
