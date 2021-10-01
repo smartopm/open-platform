@@ -22,6 +22,7 @@ export default function FormPropertySelector({
         label={label}
         name={name}
         required
+        className="form-property-field-type-select-input"
       >
         {Object.entries(options).map(([key]) => (
           <MenuItem key={key} value={key}>

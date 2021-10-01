@@ -11,7 +11,7 @@ import PropTypes from 'prop-types'
  * @description basic switch component 
  * @returns {Node}
  */
-export default function SwitchInput({ name, label, value, required, handleChange, labelPlacement }) {
+export default function SwitchInput({ name, label, value, required, handleChange, labelPlacement, className }) {
   return (
     <FormControlLabel
       labelPlacement={labelPlacement}
@@ -23,6 +23,7 @@ export default function SwitchInput({ name, label, value, required, handleChange
           name={name}
           color="primary"
           required={required}
+          className={className}
         />
       )}
       label={label}
@@ -32,7 +33,8 @@ export default function SwitchInput({ name, label, value, required, handleChange
 
 SwitchInput.defaultProps = {
   labelPlacement: 'start',
-  required: false
+  required: false,
+  className: ''
 }
 
 SwitchInput.propTypes = {
@@ -41,5 +43,6 @@ SwitchInput.propTypes = {
   labelPlacement: PropTypes.string,
   value: PropTypes.bool.isRequired,
   required: PropTypes.bool,
-  handleChange: PropTypes.func.isRequired
+  handleChange: PropTypes.func.isRequired,
+  className: PropTypes.string,
 }

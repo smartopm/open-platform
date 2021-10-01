@@ -36,7 +36,8 @@ export default {
     component: <span />
   },
   styleProps: {
-    icon: <GroupIcon />
+    icon: <GroupIcon />,
+    className: 'community-menu-item'
   },
   name: t => t('menu.community'),
   featureName: 'Community',

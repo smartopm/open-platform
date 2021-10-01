@@ -161,6 +161,7 @@ export default function FormPropertyCreateForm({ formId, refetch, propertyId, ca
           onChange={handlePropertyValueChange}
           name="fieldName"
           style={{ width: '100%' }}
+          className="form-property-field-name-txt-input"
           inputProps={{ 'data-testid': 'field_name' }}
           margin="normal"
           autoFocus={process.env.NODE_ENV !== 'test'}
@@ -203,6 +204,7 @@ export default function FormPropertyCreateForm({ formId, refetch, propertyId, ca
             label={t('form_fields.required_field')}
             value={propertyData.required}
             handleChange={handleRadioChange}
+            className="form-property-required-field-switch-btn"
           />
           <SwitchInput
             name="adminUse"
@@ -227,6 +229,7 @@ export default function FormPropertyCreateForm({ formId, refetch, propertyId, ca
             variant="outlined"
             type="submit"
             color="primary"
+            data-testid="form_property_action_btn"
             disabled={isLoading}
             startIcon={isLoading && <Spinner />}
           >
