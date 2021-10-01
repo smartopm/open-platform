@@ -1,3 +1,4 @@
+/* eslint-disable jest/expect-expect */
 import React from 'react';
 import { act, render } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
@@ -24,7 +25,7 @@ describe('RequestUpdate main page', () => {
       }
     }
   };
-  it('renders the RequestUpdate page correctly', async () => {
+  it('renders the RequestUpdate Component correctly', async () => {
     await act(async () => {
       render(
         <ApolloProvider client={createClient}>

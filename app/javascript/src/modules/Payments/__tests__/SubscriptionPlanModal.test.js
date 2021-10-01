@@ -19,7 +19,7 @@ describe('It should test the subscription plan modal component', () => {
 
   const handleModalClose = jest.fn()
 
-  it('it should render test the subscription plan modal', async () => {
+  it('should render test the subscription plan modal', async () => {
     const mock = [{
       request: {
         query: SubscriptionPlanUpdate,

@@ -33,7 +33,7 @@ describe('Land Property Component', () => {
       },
       result: { data: { PropertyCreate: { landParcel: { id: "7867943" } } } },
     }
-  it('it should render add property form', async () => {
+  it('should render add property form', async () => {
       const refetch = jest.fn()
     const container = render(
       <MockedProvider mocks={[mocks]} addTypename={false}>
@@ -93,7 +93,7 @@ describe('Land Property Component', () => {
       fireEvent.click(container.queryByTestId('dialog_cancel'))
   })
 
-  it('it should render property form with error', async () => {
+  it('should render property form with error', async () => {
     const errorMocks =
     {
       request: {

@@ -29,7 +29,7 @@ describe('It should test the transaction detail modal component', () => {
     }
   }
 
-  it('it should render transaction detail modal', () => {
+  it('should render transaction detail modal', () => {
     const container = render(
       <MockedProvider>
         <BrowserRouter>

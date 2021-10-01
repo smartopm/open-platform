@@ -11,7 +11,7 @@ describe('Task card to display metrics', () => {
     isCurrent: true
   }
 
-  it('It should render the component with no errors', () => {
+  it('should render the component with no errors', () => {
     const {getByText, getByTestId} = render(<TaskStatCard {...props} />)
     expect(getByText('Tasks with date')).toBeInTheDocument()
     expect(getByTestId('task_count').textContent).toContain("3")

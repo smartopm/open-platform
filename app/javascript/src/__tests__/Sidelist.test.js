@@ -18,7 +18,7 @@ describe('Sidelist component', () => {
     }
   };
 
-  it('should contain required list ', () => {
+  it('should contain required list', () => {
     const { getByText } = render(
       <MockedProvider>
         <BrowserRouter>
@@ -34,7 +34,7 @@ describe('Sidelist component', () => {
     expect(getByText('Jetro')).toBeInTheDocument();
   });
 
-  it('should not show search and scan when it is not admin', () => {
+  it('should not show search and scan when it is a client', () => {
     const moreProps = {
       toggleDrawer: jest.fn(),
       user: {
@@ -58,7 +58,7 @@ describe('Sidelist component', () => {
     expect(container.queryByText('Logout')).toBeInTheDocument();
   });
 
-  it('should not show search and scan when it is not admin', () => {
+  it('should not show search and scan when it is a resident', () => {
     const props = {
       toggleDrawer: jest.fn(),
       user: {

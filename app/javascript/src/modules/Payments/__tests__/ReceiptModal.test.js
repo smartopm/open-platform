@@ -26,7 +26,7 @@ describe('It should test the payment receipt modal component', () => {
 
   const handleModalClose = jest.fn;
 
-  it('it should render payment receipt modal', () => {
+  it('should render payment receipt modal', () => {
     const container = render(
       <BrowserRouter>
         <MockedProvider>

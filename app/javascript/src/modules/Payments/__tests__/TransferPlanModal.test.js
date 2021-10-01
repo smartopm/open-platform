@@ -14,7 +14,7 @@ describe('It should test the transfer plan modal component', () => {
     status: 'paid'
   }];
 
-  it('it should render transfer plan modal', () => {
+  it('should render transfer plan modal', () => {
     const container = render(
       <BrowserRouter>
         <MockedProvider>

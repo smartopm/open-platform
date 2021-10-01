@@ -37,7 +37,7 @@ describe('UserPrint Detail component', () => {
     expect(container.queryByText('Client')).toBeInTheDocument();
     expect(container.queryByText('Exp: Never')).toBeInTheDocument();
   });
-it('renders id card page ', () => {
+it('renders id card page', () => {
     const matchProps = {
         params: { id: "59927651-9bb4-4e47-8afe-0989d03d210d"}
     }

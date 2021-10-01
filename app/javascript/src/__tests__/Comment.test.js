@@ -22,7 +22,7 @@ describe('It should test the comment component', () => {
     }
   ]
 
-  it('it should render with no error', () => {
+  it('should render with no error', () => {
      const container = render(
        <BrowserRouter>
          <MockedProvider>
