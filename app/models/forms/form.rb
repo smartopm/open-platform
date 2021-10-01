@@ -11,7 +11,10 @@ module Forms
     has_many :form_users, dependent: :destroy
     has_many :categories, dependent: :destroy
 
-    validates :name, presence: true, uniqueness: { scope: :community_id }
+    validates :name, presence: true,
+                     uniqueness: { scope: :community_id,
+                                   case_sensitive: false,
+                                   conditions: -> { where.not(status: 2) } }
 
     default_scope { where.not(status: 2) }
 

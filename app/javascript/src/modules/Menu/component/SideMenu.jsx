@@ -137,6 +137,7 @@ const SideMenu = ({ toggleDrawer, menuItems, userType, direction, communityFeatu
                           key={item.name(t)}
                           onClick={event => routeTo(event, item)}
                           selected={pathname === item.routeProps.path}
+                          className={item.styleProps?.className}
                         >
                           <ListItemText
                             primary={item.name(t)}

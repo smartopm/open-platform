@@ -173,6 +173,7 @@ export default function Form({ editMode, formId }) {
             aria-label="form_submit"
             style={{ marginTop: '25px' }}
             onClick={() => formSubmit(formData)}
+            data-testid="submit_form_btn"
           >
             {t('common:form_actions.submit')}
           </Button>

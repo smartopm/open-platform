@@ -74,6 +74,7 @@ export default function FormOptionInput({ options, setOptions, label }) {
               variant="outlined"
               size="small"
               style={{ width: 300 }}
+              className={`form-property-field-type-option-txt-input-${i}`}
               value={objectAccessor(options, i)?.info || value}
               onChange={event => handleOptionChange(event, i)}
               margin="normal"
@@ -87,7 +88,7 @@ export default function FormOptionInput({ options, setOptions, label }) {
           </IconButton>
         </div>
       ))}
-      <IconButton onClick={handleAddOption} aria-label="add" style={{ marginLeft: -15 }}>
+      <IconButton onClick={handleAddOption} aria-label="add" style={{ marginLeft: -15 }} className="form-property-field-type-option-add-btn">
         <AddCircleOutline />
         <Typography color="primary" style={{ marginLeft: 10 }} data-testid="add_type">
           {t('form_actions.add_type', { label })}

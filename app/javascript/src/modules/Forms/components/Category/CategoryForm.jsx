@@ -148,6 +148,7 @@ export default function CategoryForm({ data, close, formData, refetchCategories 
           onChange={handleChange}
           name="fieldName"
           style={{ width: '100%' }}
+          className="form-category-name-txt-input"
           inputProps={{ 'data-testid': 'name' }}
           margin="dense"
           autoFocus={process.env.NODE_ENV !== 'test'}
@@ -161,6 +162,7 @@ export default function CategoryForm({ data, close, formData, refetchCategories 
           onChange={handleChange}
           name="description"
           style={{ width: '100%' }}
+          className="form-category-description-txt-input"
           inputProps={{ 'data-testid': 'description' }}
           margin="dense"
           required
@@ -242,6 +244,7 @@ export default function CategoryForm({ data, close, formData, refetchCategories 
           onChange={handleChange}
           name="renderedText"
           style={{ width: '100%' }}
+          className="form-category-rendered-txt-input"
           inputProps={{ 'data-testid': 'rendered_text' }}
           helperText={t('form_fields.rendered_text_helper')}
           margin="dense"
@@ -255,6 +258,7 @@ export default function CategoryForm({ data, close, formData, refetchCategories 
             label={t('form_fields.header_visible')}
             value={categoryData.headerVisible || false}
             handleChange={handleRadioChange}
+            className="form-category-header-visible-switch-btn"
           />
           <SwitchInput
             name="general"

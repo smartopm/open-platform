@@ -39,7 +39,7 @@ module Types::Queries::EntryRequest
   end
 
   def entry_request(id:)
-    raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') unless admin_or_security_guard
+    raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') unless can_view_entry_request
 
     context[:site_community].entry_requests.find(id)
   end
@@ -121,5 +121,12 @@ module Types::Queries::EntryRequest
 
   def admin_or_security_guard
     context[:current_user]&.admin? || context[:current_user]&.security_guard?
+  end
+
+  def can_view_entry_request
+    current_user = context[:current_user]
+    current_user&.admin? || current_user&.client? ||
+      current_user&.resident? || current_user&.custodian? ||
+      current_user&.security_guard?
   end
 end
