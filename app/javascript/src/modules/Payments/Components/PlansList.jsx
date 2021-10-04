@@ -160,7 +160,7 @@ export function PlansList({
       });
   }
 
-  const { loading, data: communityPlansData } = useQuery(CommunityPlansQuery, {
+  const { loading, error, data: communityPlansData } = useQuery(CommunityPlansQuery, {
     variables: { query: debouncedValue || searchQuery },
     errorPolicy: 'all',
     fetchPolicy: 'cache-and-network'
@@ -189,6 +189,7 @@ export function PlansList({
   }
 
   function queryOnChange(selectedOptions) {
+    clearSelection();
     setSearchQuery(handleQueryOnChange(selectedOptions, planFilterFields));
   }
 
@@ -234,6 +235,8 @@ export function PlansList({
     clearSelection()
   }
 
+  if (error) return <div>{console.log(error)}</div>
+
   return (
     <div>
       {loading && <Spinner />}
@@ -250,7 +253,9 @@ export function PlansList({
       <ActionDialog
         open={confirmationModalOpen}
         type="confirm"
-        message={t('misc.email_confirmation', {
+        message={selectedPlans.length > 0 && !paymentPlan ? t('misc.plan_reminder_confirmation', {
+          planCount: selectedPlans.length
+        }) : t('misc.email_confirmation', {
           parcel_number: paymentPlan?.landParcel?.parcelNumber
         })}
         handleClose={() => setConfirmationModalOpen(false)}
@@ -281,9 +286,9 @@ export function PlansList({
           builderConfig={planQueryBuilderConfig}
           initialQueryValue={planQueryBuilderInitialValue}
           addRuleLabel={t('common:misc.add_filter')}
-          multiple={false}
         />
       </Grid>
+      {console.log(communityPlans)}
       {loading ? (
         <Spinner />
       ) : communityPlans?.length === 0 ? (
@@ -333,7 +338,7 @@ export function PlansList({
               </div>
               <Grid container>
                 {checkbox && selectedPlans.length > 0 && (
-                  <Grid xs={12} className={matches && classes.filterCount} data-testid='plan_count'>
+                  <Grid item xs={12} className={matches && classes.filterCount} data-testid='plan_count'>
                     <Typography variant='body2'> 
                       {' '}
                       {t('misc.plan_count', {count: `${selectedPlans.length}`})}
