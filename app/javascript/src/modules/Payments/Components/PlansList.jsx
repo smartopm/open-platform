@@ -160,7 +160,7 @@ export function PlansList({
       });
   }
 
-  const { loading, error, data: communityPlansData } = useQuery(CommunityPlansQuery, {
+  const { loading, data: communityPlansData } = useQuery(CommunityPlansQuery, {
     variables: { query: debouncedValue || searchQuery },
     errorPolicy: 'all',
     fetchPolicy: 'cache-and-network'
@@ -235,8 +235,6 @@ export function PlansList({
     clearSelection()
   }
 
-  if (error) return <div>{console.log(error)}</div>
-
   return (
     <div>
       {loading && <Spinner />}
@@ -288,7 +286,6 @@ export function PlansList({
           addRuleLabel={t('common:misc.add_filter')}
         />
       </Grid>
-      {console.log(communityPlans)}
       {loading ? (
         <Spinner />
       ) : communityPlans?.length === 0 ? (
@@ -353,7 +350,7 @@ export function PlansList({
                         checked={checkbox}
                         onChange={handleSelectOptionAndCheckBox}
                         name="plan_check_box"
-                        data-testid="plan_ckeck_box"
+                        inputProps={{ 'data-testid': 'plan_check_box' }}
                         color="primary"
                         style={{ padding: '0px', marginRight: '15px' }}
                       />
@@ -386,6 +383,7 @@ export function PlansList({
                       color="primary"
                       startIcon={<EmailIcon fontSize="large" />}
                       style={{ textTransform: 'none' }}
+                      data-testid='send_payment_button'
                     >
                       {t('misc.send_payment_reminder')}
                     </Button>
