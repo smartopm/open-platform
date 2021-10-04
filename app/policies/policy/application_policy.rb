@@ -9,7 +9,7 @@ module Policy
     # rubocop:disable Layout/LineLength
     # Food for thought, think of a resource. only the owner can update in the future.
     # We can capture the curent user and curent record and return true or false
-    def initialize(user, record)
+    def initialize(user = nil, record = nil)
       @user = user
       @record = record
       @permission_list = {

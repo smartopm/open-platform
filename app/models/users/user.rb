@@ -370,6 +370,10 @@ module Users
       end
     end
 
+    def valid_roles
+      VALID_USER_TYPES
+    end
+
     def role_name
       return '' unless self[:user_type]
 
