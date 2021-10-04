@@ -64,7 +64,7 @@ RSpec.describe Mutations::Comment do
 
     it 'should allow attaching images to a comment' do
       file = fixture_file_upload(Rails.root.join('public/apple-touch-icon.png'), 'image/png')
-      image_blob = ActiveStorage::Blob.create_after_upload!(
+      image_blob = ActiveStorage::Blob.create_and_upload!(
         io: file,
         filename: 'test.jpg',
         content_type: 'image/jpg',
