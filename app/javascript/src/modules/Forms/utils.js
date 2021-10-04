@@ -217,7 +217,7 @@ export function checkRequiredFormPropertyIsFilled(property, formData){
 
         if(['date', 'time', 'datetime'].includes(property.fieldType)){
           const fieldValue = formData?.filledInProperties.find(filledProp => property.id === filledProp.form_property_id)?.value
-          return (!fieldValue || isNaN(Date.parse(fieldValue)))
+          return (!fieldValue || Number.isNaN(Date.parse(fieldValue)))
         }
 
         return (
