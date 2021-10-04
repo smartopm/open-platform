@@ -235,7 +235,7 @@ export default function CommunitySettings({ data, token, refetch }) {
   }
 
   function handleDenyAccessButtonChange(e, moduleName){
-    const subFeatures = communityFeatures[String(moduleName)]?.features
+    const subFeatures = objectAccessor(communityFeatures, moduleName)?.features
     if(!subFeatures) return;
 
     if(e.target.checked) {
@@ -244,7 +244,7 @@ export default function CommunitySettings({ data, token, refetch }) {
         setCommunityFeatures({ ...communityFeatures })
       }
     } else if(subFeatures.includes(CommunityFeaturesWhiteList.denyGateAccessButton)) {
-        const updatedSubFeatures =  communityFeatures[String(moduleName)].features.filter(v => v !== CommunityFeaturesWhiteList.denyGateAccessButton)
+        const updatedSubFeatures = objectAccessor(communityFeatures, moduleName).features.filter(v => v !== CommunityFeaturesWhiteList.denyGateAccessButton)
         communityFeatures[String(moduleName)].features = updatedSubFeatures
         setCommunityFeatures({ ...communityFeatures })
       }
@@ -792,7 +792,7 @@ export default function CommunitySettings({ data, token, refetch }) {
           <FormControlLabel
             control={(
               <Checkbox
-                checked={communityFeatures[String('LogBook')]?.features.includes(CommunityFeaturesWhiteList.denyGateAccessButton)}
+                checked={objectAccessor(communityFeatures, 'LogBook')?.features.includes(CommunityFeaturesWhiteList.denyGateAccessButton)}
                 onChange={(e) => handleDenyAccessButtonChange(e, 'LogBook')}
                 name="disable-deny-gate-access"
                 data-testid="disable_deny_gate_access"

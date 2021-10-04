@@ -23,7 +23,7 @@ import {
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import { useTheme } from '@material-ui/styles';
 import { useTranslation } from 'react-i18next';
-import PhoneInput from 'react-phone-input-2'
+import PhoneInput from 'react-phone-input-2';
 import DatePickerDialog from '../../components/DatePickerDialog';
 import { UserChip } from '../../modules/Tasks/Components/UserChip';
 import {
@@ -37,7 +37,13 @@ import {
 // from a different module
 import { EmailTemplatesQuery } from '../../modules/Emails/graphql/email_queries';
 import QueryBuilder from '../../components/QueryBuilder';
-import { titleize, capitalize, sentencizeAction, objectAccessor } from '../../utils/helpers';
+import {
+  titleize,
+  capitalize,
+  sentencizeAction,
+  objectAccessor,
+  setObjectValue
+} from '../../utils/helpers';
 import { dateWidget, NotesCategories, defaultBusinessReasons } from '../../utils/constants';
 import UserAutoResult from '../../shared/UserAutoResult';
 
@@ -56,7 +62,7 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
   const [selectedDate, setDate] = useState(new Date());
   const [assignees, setAssignees] = useState([]);
   const theme = useTheme();
-  const { t } = useTranslation(['actionflow', 'common'])
+  const { t } = useTranslation(['actionflow', 'common']);
 
   const [loadLabelsLite, { data: labelsLiteData }] = useLazyQuery(LabelsQuery, {
     fetchPolicy: 'cache-and-network'
@@ -83,9 +89,13 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
     if (isEdit()) {
       setData(selectedActionFlow);
 
-      const actionFieldsValues = {};
+      let actionFieldsValues = {};
       Object.entries(selectedActionFlow.eventAction.action_fields).forEach(([key, val]) => {
-        actionFieldsValues[key] = val.value.includes('_') ? titleize(val.value) : val.value;
+        actionFieldsValues = setObjectValue(
+          actionFieldsValues,
+          key,
+          val.value.includes('_') ? titleize(val.value) : val.value
+        );
       });
       setMetaData(actionFieldsValues);
       loadLabelsLite();
@@ -99,7 +109,7 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedActionFlow]);
 
-  const ruleFieldsConfig = {};
+  let ruleFieldsConfig = {};
 
   if (ruleFieldsData.data) {
     ruleFieldsData.data.ruleFields.forEach(field => {
@@ -136,11 +146,11 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
       } else if (field === 'visit_request_reason') {
         addQuerySelectMenu(field, defaultBusinessReasons);
       } else {
-        ruleFieldsConfig[field] = {
+        ruleFieldsConfig = setObjectValue(ruleFieldsConfig, field, {
           label: titleize(field),
           type: 'text',
           valueSources: ['value']
-        };
+        });
       }
     });
   }
@@ -153,7 +163,7 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
   };
 
   function addQuerySelectMenu(field, options) {
-    ruleFieldsConfig[field] = {
+    ruleFieldsConfig = setObjectValue(ruleFieldsConfig, field, {
       label: titleize(field),
       type: 'select',
       valueSources: ['value'],
@@ -162,15 +172,15 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
           return { value: key, title: val };
         })
       }
-    };
+    });
   }
 
   function addQueryDateInput(field) {
-    ruleFieldsConfig[field] = {
+    ruleFieldsConfig = setObjectValue(ruleFieldsConfig, field, {
       label: titleize(field),
       type: 'datetime',
       valueSources: ['value']
-    };
+    });
   }
 
   function handleInputChange(event) {
@@ -212,7 +222,7 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
   }
 
   function handlePhoneNumberInput(event) {
-    const { name, value } = event
+    const { name, value } = event;
     setMetaData({
       ...metaData,
       [name]: value
@@ -285,7 +295,9 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
           color: theme.palette.primary.main
         }}
       >
-        {isEdit() ? t('actionflow:form_actions.edit_workflow') : t('actionflow:form_actions.new_workflow')}
+        {isEdit()
+          ? t('actionflow:form_actions.edit_workflow')
+          : t('actionflow:form_actions.new_workflow')}
       </DialogTitle>
       <DialogContent>
         <TextField
@@ -344,7 +356,9 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
         <FormControl fullWidth>
           {data.eventType && actionData.data && (
             <>
-              <InputLabel id="select-action">{t('actionflow:form_fields.select_action')}</InputLabel>
+              <InputLabel id="select-action">
+                {t('actionflow:form_fields.select_action')}
+              </InputLabel>
               <Select
                 labelId="select-action"
                 id="select-action"
@@ -372,7 +386,7 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
               return (
                 <FormControl fullWidth>
                   <InputLabel id={`select-${actionField.name}`}>
-                    {t('actionflow:form_actions.select', {name: capitalize(actionField.name)})}
+                    {t('actionflow:form_actions.select', { name: capitalize(actionField.name) })}
                   </InputLabel>
                   <Select
                     labelId={`select-${actionField.name}`}
@@ -395,7 +409,7 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
               return (
                 <FormControl fullWidth>
                   <InputLabel id={`select-${actionField.name}`}>
-                    {t('actionflow:form_actions.select', {name: capitalize(actionField.name)})}
+                    {t('actionflow:form_actions.select', { name: capitalize(actionField.name) })}
                   </InputLabel>
                   <Select
                     labelId={`select-${actionField.name}`}
@@ -448,7 +462,7 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
               return (
                 <FormControl fullWidth>
                   <InputLabel id={`select-${actionField.name}`}>
-                    {t('actionflow:form_actions.select', {name: capitalize(actionField.name)})}
+                    {t('actionflow:form_actions.select', { name: capitalize(actionField.name) })}
                   </InputLabel>
                   <Select
                     labelId={`select-${actionField.name}`}
@@ -473,7 +487,8 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
                   <FormHelperText>{t('actionflow:form_fields.pick_date')}</FormHelperText>
                   <DatePickerDialog
                     handleDateChange={date =>
-                      handleDateChange({ name: actionField.name, value: date })}
+                      handleDateChange({ name: actionField.name, value: date })
+                    }
                     selectedDate={selectedDate}
                   />
                 </FormControl>
@@ -483,7 +498,7 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
               return (
                 <PhoneInput
                   value={metaData.phone_number || ''}
-                  inputStyle={{ width: "100%" }}
+                  inputStyle={{ width: '100%' }}
                   enableSearch
                   inputProps={{
                     name: 'phoneNumber',
@@ -491,7 +506,7 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
                     'data-testId': 'primary_phone'
                   }}
                   placeholder={t('common:form_placeholders.phone_number')}
-                  onChange={value => handlePhoneNumberInput({name: actionField.name, value})}
+                  onChange={value => handlePhoneNumberInput({ name: actionField.name, value })}
                   preferredCountries={['hn', 'zm', 'ng', 'in', 'us']}
                 />
               );

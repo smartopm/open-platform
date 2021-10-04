@@ -127,7 +127,7 @@ export default function ConfirmCodeScreen({ match }) {
               // eslint-disable-next-line jsx-a11y/no-autofocus
               autoFocus
               // eslint-disable-next-line security/detect-object-injection
-              ref={elementsRef.current[item]}
+              ref={objectAccessor(elementsRef.current, item)}
               className={`${css(styles.newInput)} code-input-${index}`}
               onChange={() =>
                 item < 6

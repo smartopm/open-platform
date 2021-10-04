@@ -23,7 +23,7 @@ module Forms
     }
 
     scope :by_role, lambda { |user_type|
-      where("'#{user_type}' = ANY(roles) OR cardinality(roles) = 0") if user_type != 'admin'
+      where('? = ANY(roles) OR cardinality(roles) = 0', user_type) if user_type != 'admin'
     }
 
     enum status: { draft: 0, published: 1, deleted: 2, deprecated: 3 }
