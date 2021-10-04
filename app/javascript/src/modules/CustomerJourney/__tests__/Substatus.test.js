@@ -9,7 +9,7 @@ import { Spinner } from '../../../shared/Loading';
 import StatusCount from '../../../shared/Status';
 
 describe('Substatus component', () => {
-  it('should render the substatus modal ', async () => {
+  it('should render the substatus modal', async () => {
     const statusMock = {
       request: {
         query: SubStatusQuery

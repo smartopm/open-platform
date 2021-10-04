@@ -25,7 +25,7 @@ describe('It tests the business directory list', () => {
         userType: 'admin',
         refetch: jest.fn()
     }
-    it('It should render business category', async () => {
+    it('should render business category', async () => {
         const container = render(
           <BrowserRouter>
             <MockedProvider mocks={[]}>

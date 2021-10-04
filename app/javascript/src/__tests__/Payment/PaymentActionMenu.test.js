@@ -6,7 +6,7 @@ import '@testing-library/jest-dom/extend-expect'
 import ActionMenu from '../../modules/Payments/Components/PaymentActionMenu'
 
 describe('Payment Action Menu', () => {
-  it('it should include payment action menu', () => {
+  it('should include payment action menu', () => {
     const container = render(
       <MockedProvider>
         <BrowserRouter>

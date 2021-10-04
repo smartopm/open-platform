@@ -5,7 +5,7 @@ import { BrowserRouter } from 'react-router-dom/';
 import { MockedProvider } from '@apollo/react-testing';
 import Homepage from '../components/HomePage';
 
-describe('HomePage component ', () => {
+describe('HomePage component', () => {
   const adminAuthState = {
     loaded: true,
     loggedIn: true,

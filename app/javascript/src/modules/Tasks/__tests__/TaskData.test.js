@@ -8,7 +8,7 @@ import TodoItem from '../Components/TodoItem'
 import MockedThemeProvider from '../../__mocks__/mock_theme'
 import t from '../../__mocks__/t'
 
-describe('Task Data components ', () => {
+describe('Task Data components', () => {
   it('should render proper the link to user component', () => {
     const container = render(
       <BrowserRouter>

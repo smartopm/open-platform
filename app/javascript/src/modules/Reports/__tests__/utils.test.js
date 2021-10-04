@@ -35,7 +35,7 @@ describe('Utils Component', () => {
     expect(formatCellData(data[1], translate)).toBe('-');
     expect(formatCellData(data[3], translate)).toBe('Keating Constructions');
   });
-  it('it should check for extra shifts', () => {
+  it('should check for extra shifts', () => {
     const extras = [
       ['2021-08-09T07:50:00.000Z', '2021-08-09T09:00:25.573Z'],
       ['2021-08-09T08:55:00.000Z', '2021-08-09T09:30:25.573Z'],
@@ -51,7 +51,7 @@ describe('Utils Component', () => {
       ]
     )
   });
-  it('it count total numbers of extra hours', () => {
+  it('count total numbers of extra hours', () => {
     // countExtraHours
     const otherHoras = [
       ['2021-08-09T07:50:00.000Z', '2021-08-09T09:00:25.573Z'],
@@ -62,7 +62,7 @@ describe('Utils Component', () => {
     const xtra = checkExtraShifts(otherHoras)
     expect(countExtraHours(xtra)).toBe(4)
   });
-  it('it should properly format start and exit shifts ', () => {
+  it('should properly format start and exit shifts', () => {
     // formatShifts
     const start = [
       {id: "dae23e16-cd96-405d", value: "2021-08-09T07:50:00.000Z", order: "6", fieldName: "Hora Entrada*",},

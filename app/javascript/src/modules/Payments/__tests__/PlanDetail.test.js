@@ -24,7 +24,7 @@ describe('It should test the plan detail modal component', () => {
     }
   }
 
-  it('it should render plan detail modal', () => {
+  it('should render plan detail modal', () => {
     const container = render(
       <MockedProvider>
         <BrowserRouter>

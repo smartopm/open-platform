@@ -36,6 +36,6 @@ describe('Comment Card Component', () => {
 
     const re = /a-z/g
     const updateItemWithDate = container.getAllByText(''.replace(re, date))
-    expect(updateItemWithDate.length).not.toBe(0)
+    expect(updateItemWithDate).not.toHaveLength(0)
   })
 })

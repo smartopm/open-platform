@@ -58,7 +58,7 @@ describe('It should test the plan statement modal component', () => {
 
   const handleModalClose = jest.fn();
 
-  it('it should render plan statement modal', () => {
+  it('should render plan statement modal', () => {
     const container = render(
       <BrowserRouter>
         <MockedProvider>

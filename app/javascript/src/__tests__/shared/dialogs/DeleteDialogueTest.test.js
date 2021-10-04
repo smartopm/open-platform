@@ -5,7 +5,7 @@ import DeleteDialogue from '../../../shared/dialogs/DeleteDialogue'
 import { Spinner } from '../../../shared/Loading';
 
 describe('It should render the dialog box for delete', () => {
-    it('It should render with dialog', () => {
+    it('should render with dialog', () => {
       const container = render(
         <DeleteDialogue
           open
@@ -20,7 +20,7 @@ describe('It should render the dialog box for delete', () => {
       expect(container.queryByTestId('delete_dialog')).toBeInTheDocument()
       expect(container.queryByTestId('confirm_action')).toBeInTheDocument()
     });
-    it('It should render loader when confirm action is clicked', () => {
+    it('should render loader when confirm action is clicked', () => {
       const container = render(
         <DeleteDialogue
           open

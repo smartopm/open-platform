@@ -9,7 +9,7 @@ describe('test the datatabe', () => {
         columns: ['Name', 'Code'],
         sticky: true
     }
-    it('It should render', () => {
+    it('should render', () => {
 
         const wrapper = mount(<DataTable {...dataProps} />)
         expect(wrapper.find('div')).toBeTruthy()

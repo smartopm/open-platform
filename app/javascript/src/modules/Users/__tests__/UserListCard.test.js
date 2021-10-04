@@ -34,7 +34,7 @@ describe('It displays the user list and interactions', () => {
     offset: 0,
     selectCheckBox: false
   }
-  it('it mounts component without error', () => {
+  it('mounts component without error', () => {
     const container = render(
       <MockedProvider mocks={[]}>
         <BrowserRouter>

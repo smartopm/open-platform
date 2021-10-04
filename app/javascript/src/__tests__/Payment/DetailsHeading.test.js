@@ -4,7 +4,7 @@ import '@testing-library/jest-dom/extend-expect';
 import DetailHeading from '../../shared/DetailHeading';
 
 describe('It should test the detail heading component', () => {
-  it('it should render detail heading', () => {
+  it('should render detail heading', () => {
     const container = render(<DetailHeading title="Heading" />);
     expect(container.queryByText('Heading')).toBeInTheDocument();
   });
