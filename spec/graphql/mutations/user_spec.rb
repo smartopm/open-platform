@@ -587,7 +587,7 @@ RSpec.describe Mutations::User do
 
     it 'should allow authorized users to attach avatars and documents to new users' do
       file = fixture_file_upload(Rails.root.join('public/apple-touch-icon.png'), 'image/png')
-      avatar_blob = ActiveStorage::Blob.create_after_upload!(
+      avatar_blob = ActiveStorage::Blob.create_and_upload!(
         io: file,
         filename: 'test.jpg',
         content_type: 'image/jpg',
@@ -613,7 +613,7 @@ RSpec.describe Mutations::User do
 
     it 'should allow authorized users to attach avatars and documents' do
       file = fixture_file_upload(Rails.root.join('public/apple-touch-icon.png'), 'image/png')
-      avatar_blob = ActiveStorage::Blob.create_after_upload!(
+      avatar_blob = ActiveStorage::Blob.create_and_upload!(
         io: file,
         filename: 'test.jpg',
         content_type: 'image/jpg',
