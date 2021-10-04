@@ -15,7 +15,7 @@ class DoubleGdpSchema < GraphQL::Schema
   end
 
   rescue_from(Users::User::ExpiredSignature,
-              ) do |_err, _obj, _args, _ctx, _field|
+              Users::User::DecodeError) do |_err, _obj, _args, _ctx, _field|
     # Raise a graphql-friendly error with a custom message
     raise GraphQL::ExecutionError, 'Invalid or expired auth token'
   end

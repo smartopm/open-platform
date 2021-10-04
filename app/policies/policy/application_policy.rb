@@ -18,8 +18,5 @@ module Policy
     end
 
     # rubocop:enable Layout/LineLength
-    def permission?
-      raise NotImplementedError, 'Not allowed to call this method'
-    end
   end
 end

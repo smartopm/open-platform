@@ -380,4 +380,4 @@ en:
     category_deleted: Category deleted successfully
     email_not_sent: Email was not sent
   permission:
-    bad_query: Bad query
+    bad_query: Bad query, invalid role or module
