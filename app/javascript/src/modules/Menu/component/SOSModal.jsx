@@ -29,13 +29,18 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: "2px",
     height: "90%",
     overflow: "auto",
+    userSelect: 'none',
+    "-webkit-user-select": " none",
+    "-webkit-touch-callout": " none",
+    "-ms-user-select": " none",
+    "-moz-user-select": "none",
     '@media (min-device-width: 320px) and (max-device-height: 568px)' : {
       width: 380,
       height: "100%",
     } ,
 
     '@media (min-device-width: 414px) and (max-device-height: 736px)' : {
-      height: "100%",
+      height: "100%"
     },
 
     '@media (min-device-width: 375px) and (max-device-height: 667px) and (orientation: portrait)' : {
@@ -194,8 +199,13 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     alignItems: "center",
     overflow:'scroll',
-    justifyContent: "center"
-  }
+    justifyContent: "center",
+    userSelect: 'none',
+    "-webkit-user-select": " none",
+    "-webkit-touch-callout": " none",
+    "-ms-user-select": " none",
+    "-moz-user-select": "none",
+  },
 }));
 
 
