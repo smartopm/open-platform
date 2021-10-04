@@ -22,7 +22,7 @@ describe('It tests the business profile page', () => {
       status: 'verified'
     }
   };
-  it('It should check all profile properties', () => {
+  it('should check all profile properties', () => {
     window.open = jest.fn();
     let container;
     act(() => {

@@ -6,7 +6,7 @@ import { BrowserRouter } from 'react-router-dom/';
 import ArrowBack from '../component/BackArrow';
 
 describe('It should test the ArrowBack component', () => {
-  it('it should render ArrowBack', () => {
+  it('should render ArrowBack', () => {
     const container = render(
       <BrowserRouter>
         <MockedProvider>
@@ -18,7 +18,7 @@ describe('It should test the ArrowBack component', () => {
     expect(container.queryByTestId('arrow')).toBeInTheDocument();
   });
 
-  it('it should not render ArrowBack', () => {
+  it('should not render ArrowBack', () => {
     const container = render(
       <BrowserRouter>
         <MockedProvider>

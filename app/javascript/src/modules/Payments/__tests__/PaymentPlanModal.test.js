@@ -28,7 +28,7 @@ describe('It should test the payment plan modal component', () => {
     }
   }];
 
-  it('it should render payment modal', async () => {
+  it('should render payment modal', async () => {
     const container = render(
       <BrowserRouter>
         <MockedProvider mocks={mock}>

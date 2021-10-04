@@ -9,7 +9,7 @@ import PostsList from '../Components/PostList'
 
 jest.mock('../../../utils/customHooks')
 
-describe("Posts List Component ",() => {
+describe("Posts List Component",() => {
   useFetch.mockReturnValue({
     error: null,
     data: {

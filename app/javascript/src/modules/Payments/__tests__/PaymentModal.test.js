@@ -19,7 +19,7 @@ describe('It should test the payment modal component', () => {
     parcelNumber: 'ho2ij3'
   }]
 
-  it('it should render payment modal', async () => {
+  it('should render payment modal', async () => {
     const mock = [{
       request: {
         query: UserLandParcels,
@@ -78,7 +78,7 @@ describe('Test Payment Details Screen', () => {
     transactionNumber: 'R45F112',
     pastPayment: true
   }
-  it('it should render payment details ', () => {
+  it('should render payment details', () => {
     const container = render(
       <PaymentDetails inputValue={inputValue} totalAmount="200" currencyData={currency} />
     )

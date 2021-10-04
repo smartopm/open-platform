@@ -7,7 +7,7 @@ import { Context } from '../../../containers/Provider/AuthStateProvider';
 import userMock from '../../../__mocks__/userMock';
 
 describe('Shows the google form links', () => {
-  it('It should render with no errors', () => {
+  it('should render with no errors', () => {
     const container = render(
       <Context.Provider values={userMock}>
         <FormLinks community="Nkwashi" />
@@ -19,7 +19,7 @@ describe('Shows the google form links', () => {
     expect(container.queryByTestId('forms-link-building-permit')).toBeInTheDocument();
   });
 
-  it('It should click link and open new tab', () => {
+  it('should click link and open new tab', () => {
     window.open = jest.fn();
     const container = render(
       <Context.Provider values={userMock}>

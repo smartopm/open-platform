@@ -30,7 +30,7 @@ describe('It should test the plan item list item component', () => {
     handleClose: () => jest.fn
   }
 
-  it('it should render plan item list component', () => {
+  it('should render plan item list component', () => {
     const container = render(
       <MockedProvider>
         <BrowserRouter>

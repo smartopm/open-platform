@@ -128,7 +128,7 @@ describe('sanitize GraphQL errors', () => {
 })
 
 describe('array methods', () => {
-  it('should return an inverted array ', () => {
+  it('should return an inverted array', () => {
     const arr = [1, 2, 3, 4, 5]
     const arr2 = [...arr] // since splice mutate the original array, good to copy for us to better tests other cases
     expect(invertArray(arr, 0, 1)).toStrictEqual([2, 1, 3, 4, 5])
@@ -248,7 +248,7 @@ describe('locales', () => {
   })
 })
 
-describe('everything else ', () => {
+describe('everything else', () => {
   it('ifNotTest should always return false because it is run in test env', () => {
     expect(ifNotTest()).toBe(false)
   })

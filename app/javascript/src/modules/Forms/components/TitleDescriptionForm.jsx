@@ -33,6 +33,7 @@ export default function TitleDescriptionForm({ formTitle, formDescription, save,
           name={t('form_fields.title')}
           label={t('form_fields.misc_title', { type: titleize(type)})}
           style={{ width: '100%' }}
+          className='form-title-txt-input'
           placeholder={t('form_placeholders.type_title')}
           onChange={(e) => setTitle(e.target.value)}
           value={title}
@@ -49,6 +50,7 @@ export default function TitleDescriptionForm({ formTitle, formDescription, save,
           name={t('form_fields.description')}
           label={t('form_fields.misc_description', { type: titleize(type)})}
           style={{ width: '100%' }}
+          className='form-description-txt-input'
           placeholder={t('form_placeholders.type_description')}
           onChange={(e) => setDescription(e.target.value)}
           value={description}
@@ -82,7 +84,7 @@ export default function TitleDescriptionForm({ formTitle, formDescription, save,
               color="primary"
               disabled={data.loading}
               aria-label={`${type}_submit`}
-              className={`${css(discussStyles.submitBtn)}`}
+              className={`${css(discussStyles.submitBtn)} submit-form-btn`}
             >
               {t('form_actions.submit')}
             </Button>

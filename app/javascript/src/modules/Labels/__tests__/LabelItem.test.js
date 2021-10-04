@@ -6,7 +6,7 @@ import '@testing-library/jest-dom/extend-expect';
 import LabelItem from '../Components/LabelItem';
 
 describe('Label Item Component', () => {
-  it('it should include the label details ', () => {
+  it('should include the label details', () => {
     const props = {
       label: {
         id: '2b3f902b-eb44',

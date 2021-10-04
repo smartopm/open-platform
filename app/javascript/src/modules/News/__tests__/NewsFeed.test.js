@@ -17,7 +17,7 @@ describe('Details page for news post content', () => {
     }
   ]
 
-  it('it should include the post details ', () => {
+  it('should include the post details', () => {
     const container = render(<PostItemGrid data={response} />)
     expect(container.queryByText('Test title')).toBeInTheDocument()
     expect(container.queryByTestId('recent_news')).toBeInTheDocument()
@@ -26,7 +26,7 @@ describe('Details page for news post content', () => {
     expect(container.queryAllByTestId('tile_image')[1]).toHaveAttribute('src', 'https://placeholder.com/2342')
   })
     
-  it('it should not display anything when no data is available ', () => {
+  it('should not display anything when no data is available', () => {
     const container = render(<PostItemGrid data={[]} />)
     expect(container.queryByText('Test title')).not.toBeInTheDocument()
     expect(container.queryByText('Test Another title')).not.toBeInTheDocument()

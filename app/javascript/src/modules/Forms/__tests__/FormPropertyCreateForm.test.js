@@ -89,7 +89,7 @@ describe('Form that creates other forms component', () => {
       }
     }
   };
-  it('it should render with no errors and should update the form property', async () => {
+  it('should render with no errors and should update the form property', async () => {
     const closeMock = jest.fn();
     const refetchMock = jest.fn();
     const container = render(
@@ -104,11 +104,11 @@ describe('Form that creates other forms component', () => {
       </MockedProvider>
     );
     expect(container.queryByText('form_fields.field_name')).toBeInTheDocument();
-    expect(container.queryAllByText('form_fields.field_type').length).toBe(2);
+    expect(container.queryAllByText('form_fields.field_type')).toHaveLength(2);
     expect(container.queryByText('form_fields.required_field')).toBeInTheDocument();
     expect(container.queryByText('form_fields.admins_only')).toBeInTheDocument();
     expect(container.queryByText('actions.update_property')).toBeInTheDocument();
-    expect(container.queryAllByText('form_fields.order_number').length).toBe(2);
+    expect(container.queryAllByText('form_fields.order_number')).toHaveLength(2);
 
     expect(container.queryByTestId('form_property_submit')).toBeInTheDocument();
 

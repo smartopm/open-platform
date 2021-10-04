@@ -10,6 +10,7 @@ export default function TextInput({id, handleValue, properties, value, editable,
         id={id}
         label={properties.fieldName}
         style={{ width: '100%' }}
+        className={`form-txt-input-property-${properties.fieldName}`}
         defaultValue={value}
         onChange={handleValue}
         margin="dense"

@@ -14,7 +14,7 @@ describe('Text component', () => {
         expect(container.queryByText('This is typography the text to be render')).toBeInTheDocument()
     })
 
-    it('should not show the hidden text ', () => {
+    it('should not show the hidden text', () => {
         const container = render(<HiddenText title="This is typography the text to be render" />)
         expect(container.queryByText('This is typography the text to be render')).toBeNull()
     })

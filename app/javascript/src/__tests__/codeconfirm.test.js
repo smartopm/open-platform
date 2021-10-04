@@ -17,7 +17,7 @@ describe('Code Confirmation Screen', () => {
       </MockedProvider>
     </MemoryRouter>
   )
-  it('renders and has a paragraph element ', () => {
+  it('renders and has a paragraph element', () => {
     expect(wrapper.find('p')).toHaveLength(1)
   })
   it('contains a button', () => {

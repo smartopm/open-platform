@@ -59,7 +59,7 @@ describe('Home Guard page', () => {
     });
   });
 
-  it('should check for errors occured when fetching ', async () => {
+  it('should check for errors occured when fetching', async () => {
     const mocks = [
         {
           request: {

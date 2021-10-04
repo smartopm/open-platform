@@ -9,7 +9,7 @@ import { EmailTemplatesQuery } from '../../Emails/graphql/email_queries';
 
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
-describe('Community settings page ', () => {
+describe('Community settings page', () => {
   it('should have input field and a remove button', async () => {
     const data = {
       supportNumber: [

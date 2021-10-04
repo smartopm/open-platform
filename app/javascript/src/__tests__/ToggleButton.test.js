@@ -9,7 +9,7 @@ import ToggleButton, { MultipleToggler } from "../components/Campaign/ToggleButt
 describe('It should render the toggle button delete', () => {
   const mock = jest.fn()
  
-  it('It should render toggle button', () => {
+  it('should render toggle button', () => {
     const container = render(
       <ToggleButton
         type='draft'
@@ -27,7 +27,7 @@ describe('It should render the toggle button delete', () => {
     expect(mock).toBeCalled()
   });
 
-  it('It should render multiple toggle button', () => {
+  it('should render multiple toggle button', () => {
     const container = render(
       <MultipleToggler
         type='plots'

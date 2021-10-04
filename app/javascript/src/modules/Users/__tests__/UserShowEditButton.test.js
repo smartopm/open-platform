@@ -8,7 +8,7 @@ import UserShow from '../Containers/UserShow'
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn())
 describe('Renders UserShow and edit button', () => {
   let wrapper
-  it('It should render component', () => {
+  it('should render component', () => {
     act(() => {
       wrapper = mount(
         <MemoryRouter>

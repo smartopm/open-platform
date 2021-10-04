@@ -7,7 +7,7 @@ import '@testing-library/jest-dom/extend-expect'
 import CreatePointOfInterest from '../../components/LandParcels/CreatePointOfInterest'
 
 describe('Create Point of Interest Component', () => {
-  it('it should render add new point of interest form', () => {
+  it('should render add new point of interest form', () => {
     const refetch = jest.fn()
     const container = render(
       <MockedProvider>

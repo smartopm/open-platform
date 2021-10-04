@@ -26,7 +26,7 @@ describe('UserId Detail component', () => {
     expect(container.queryByTestId('visiting_hours').textContent).toMatch(/Monday - Friday: 8:00 - 16:00/gi)
   });
 
-  it('should hide visiting hours for CM ', () => {
+  it('should hide visiting hours for CM', () => {
     const container = render(<UserIDDetail data={data} communityName='Ciudad Morazán' />);
     expect(container.queryByText('Another somebody')).toBeInTheDocument();
     expect(container.queryByText('client')).toBeInTheDocument();
@@ -39,7 +39,7 @@ describe('UserId Detail component', () => {
   });
 
 //   test the mother component here
-it('renders id card page ', () => {
+it('renders id card page', () => {
     const container = render(
       <MockedProvider>
         <BrowserRouter>
