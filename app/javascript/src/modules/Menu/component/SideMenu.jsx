@@ -196,7 +196,7 @@ const styles = StyleSheet.create({
   },
   sidenav: {
     width: 260,
-    marginBottom: '40px'
+    marginBottom: '50px'
   },
   userInfo: {
     marginTop: 55
