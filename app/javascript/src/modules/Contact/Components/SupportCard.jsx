@@ -89,11 +89,11 @@ export default function SupportCard({ handleSendMessage, user }) {
     <>
       <div className="justify-content-center align-items-center container">
         <Typography paragraph variant="body1" color="textSecondary" data-testid="new">
-          {`${user?.community?.name} ${t('partnership.about_app_1')} ${t('partnership.about_app_2')} ${
+          {`${user?.community?.name} ${t('partnership.about_app_partnership')} ${t('partnership.about_app_gate_access')} ${
             user?.community?.name === 'Nkwashi'
               ? t('partnership.registration_kiosk')
               : t('partnership.incident_management')
-          }  ${t('partnership.about_app_3')}${
+          }  ${t('partnership.about_app_support_desk')}${
             user?.community?.name === 'Nkwashi'
               ? ''
               : t('partnership.adding_more_features')
