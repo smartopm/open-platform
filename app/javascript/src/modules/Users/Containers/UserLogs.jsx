@@ -1,20 +1,20 @@
 import React, { useState } from 'react';
 import { useQuery } from 'react-apollo';
+import PropTypes from 'prop-types'
 import Loading from '../../../shared/Loading';
 import { AllEventLogsForUserQuery } from '../../../graphql/queries';
 import ErrorPage from '../../../components/Error';
-import UserLog from '../Components/UserLog'
+import UserLog from '../Components/UserLog';
 
-export default ({ history, match }) => {
+export default function UserLogs({ history, match }){
   const subjects = null;
-  return AllEventLogs(history, match, subjects);
+  return <AllEventLogs history={history} match={match} subjects={subjects} />;
 };
 
-// Todo: Find the total number of AllEventLogs
 const limit = 50;
-const AllEventLogs = (history, match, subjects) => {
+export function AllEventLogs({ history, match, subjects }){
   const [offset, setOffset] = useState(0);
-  const userId = match.params.id || null;
+  const userId = match.params?.id || null;
   const { loading, error, data } = useQuery(AllEventLogsForUserQuery, {
     variables: { subject: subjects, userId, offset, limit },
     fetchPolicy: 'cache-and-network'
@@ -42,3 +42,20 @@ const AllEventLogs = (history, match, subjects) => {
     />
   );
 };
+
+const props = {
+  history: PropTypes.func.isRequired,
+  match: PropTypes.shape({
+    params: PropTypes.shape({ id: '2342321' })
+  }).isRequired,
+}
+
+UserLogs.propTypes = props
+
+AllEventLogs.propTypes = {
+  ...props,
+  subjects: PropTypes.string
+}
+AllEventLogs.defaultProps = {
+  subjects: null
+}
