@@ -400,9 +400,12 @@ module Users
 
     def create_new_phone_token
       token = (Array.new(PHONE_TOKEN_LEN) { SecureRandom.random_number(10) }).join('')
-      update(phone_token: token,
-             phone_token_expires_at: PHONE_TOKEN_EXPIRATION_MINUTES.minutes.from_now)
-      token
+      return token if update(
+        phone_token: token,
+        phone_token_expires_at: PHONE_TOKEN_EXPIRATION_MINUTES.minutes.from_now,
+      )
+
+      nil
     end
 
     def domain
@@ -428,6 +431,8 @@ module Users
       raise UserError, 'No phone number to send one time code to' unless self[:phone_number]
 
       token = create_new_phone_token
+      raise UserError, 'Token generation failed' if token.blank?
+
       Rails.logger.info "Sending #{token} to #{self[:phone_number]}"
       Sms.send(self[:phone_number], "Your code is #{token}")
       # Send number via Nexmo
@@ -437,6 +442,8 @@ module Users
       raise UserError, 'No phone number to send one time code to' unless self[:phone_number]
 
       token = create_new_phone_token
+      raise UserError, 'Token generation failed' if token.blank?
+
       url = "https://#{HostEnv.base_url(community)}/l/#{self[:id]}/#{token}"
       msg = "Your login link for #{community.name} is #{url}"
       Rails.logger.info "Sending '#{msg}' to #{self[:phone_number]}"

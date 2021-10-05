@@ -253,6 +253,32 @@ RSpec.describe Users::User, type: :model do
       expect { @user.verify_phone_token!(token) }
         .to raise_exception(Users::User::PhoneTokenResultExpired)
     end
+
+    it 'should send phone token via sms if token generation is successful' do
+      expect(Sms).to receive(:send)
+      @user.send_phone_token
+    end
+
+    it 'should raise error if token generation is not successful' do
+      allow(@user).to receive(:create_new_phone_token).and_return(nil)
+
+      expect do
+        @user.send_phone_token
+      end.to raise_error(Users::User::UserError)
+    end
+
+    it 'should send one time login via sms if token generation is successful' do
+      expect(Sms).to receive(:send)
+      @user.send_one_time_login
+    end
+
+    it 'should raise error if token generation is not successful' do
+      allow(@user).to receive(:create_new_phone_token).and_return(nil)
+
+      expect do
+        @user.send_one_time_login
+      end.to raise_error(Users::User::UserError)
+    end
   end
 
   describe 'User state, type and roles' do
