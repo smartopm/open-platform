@@ -22,16 +22,13 @@ module Types::Queries::Permission
       raise GraphQL::ExecutionError,
             I18n.t('errors.unauthorized')
     end
-    raise GraphQL::ExecutionError, I18n.t('permission.bad_query') unless valid_params(params)
+    raise GraphQL::ExecutionError, I18n.t('permission.bad_query') unless valid_params?(params)
 
     ::Policy::ApplicationPolicy
       .new.permission_list[params[:module].to_sym][params[:role].to_sym][:permissions]
   end
 
-  def valid_params(query_params)
-    return true if VALID_ROLES.include?(query_params[:role]) &&
-                   VALID_MODULES.include?(query_params[:module])
-
-    false
+  def valid_params?(query_params)
+    VALID_ROLES.include?(query_params[:role]) && VALID_MODULES.include?(query_params[:module])
   end
 end
