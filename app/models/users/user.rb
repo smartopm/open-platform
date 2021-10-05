@@ -369,7 +369,7 @@ module Users
         self[:user_type] == user_type
       end
     end
-    
+
     def role_name
       return '' unless self[:user_type]
 
