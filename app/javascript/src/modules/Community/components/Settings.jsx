@@ -240,14 +240,14 @@ export default function CommunitySettings({ data, token, refetch }) {
 
     if(e.target.checked) {
       if(!subFeatures.includes(objectAccessor(CommunityFeaturesWhiteList, feature))) {
-        communityFeatures[String(moduleName)].features.push(objectAccessor(CommunityFeaturesWhiteList, feature))
+        objectAccessor(communityFeatures, String(moduleName)).features.push(objectAccessor(CommunityFeaturesWhiteList, feature))
         setCommunityFeatures({ ...communityFeatures })
       }
     } else if(subFeatures.includes(objectAccessor(CommunityFeaturesWhiteList, feature))) {
         const updatedSubFeatures =  objectAccessor(communityFeatures, moduleName).features.filter(v =>
           v !== objectAccessor(CommunityFeaturesWhiteList, feature)
         )
-        communityFeatures[String(moduleName)].features = updatedSubFeatures
+        objectAccessor(communityFeatures, String(moduleName)).features = updatedSubFeatures
         setCommunityFeatures({ ...communityFeatures })
       }
   }
@@ -794,7 +794,7 @@ export default function CommunitySettings({ data, token, refetch }) {
           <FormControlLabel
             control={(
               <Checkbox
-                checked={communityFeatures[String('LogBook')]?.features.includes(CommunityFeaturesWhiteList.denyGateAccessButton)}
+                checked={objectAccessor(communityFeatures, String('LogBook'))?.features.includes(CommunityFeaturesWhiteList.denyGateAccessButton)}
                 onChange={(e) => handleModuleFeatures(e, 'LogBook', 'denyGateAccessButton')}
                 name="disable-deny-gate-access"
                 data-testid="disable_deny_gate_access"
@@ -815,7 +815,7 @@ export default function CommunitySettings({ data, token, refetch }) {
           <FormControlLabel
             control={(
               <Checkbox
-                checked={communityFeatures[String('Tasks')]?.features.includes(CommunityFeaturesWhiteList.automatedTaskReminders)}
+                checked={objectAccessor(communityFeatures, String('Tasks'))?.features.includes(CommunityFeaturesWhiteList.automatedTaskReminders)}
                 onChange={(e) => handleModuleFeatures(e, 'Tasks', 'automatedTaskReminders')}
                 name="enable_automated_task_reminders"
                 data-testid="enable_automated_task_reminders"
