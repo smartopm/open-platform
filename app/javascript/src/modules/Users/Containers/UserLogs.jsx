@@ -44,9 +44,11 @@ export function AllEventLogs({ history, match, subjects }){
 };
 
 const props = {
-  history: PropTypes.func.isRequired,
+  history: PropTypes.shape({
+    push: PropTypes.fund,
+  }).isRequired,
   match: PropTypes.shape({
-    params: PropTypes.shape({ id: '2342321' })
+    params: PropTypes.shape({ id: PropTypes.string })
   }).isRequired,
 }
 

@@ -375,7 +375,9 @@ const SOSModal=({open, setOpen, location, authState})=> {
     }).isRequired,
     location: PropTypes.shape({
       loaded: PropTypes.bool,
-      error: PropTypes.string,
+      error: PropTypes.shape({
+        message: PropTypes.string
+      }),
       coordinates: PropTypes.shape({
         lat: PropTypes.string,
         lng: PropTypes.string
