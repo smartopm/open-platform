@@ -1,12 +1,11 @@
 import React, { useContext } from 'react';
-import { useLocation } from 'react-router';
+import PropTypes from 'prop-types'
 import { Context } from '../../../containers/Provider/AuthStateProvider';
 import UserForm from '../Components/UserForm';
 
-export default function FormContainer() {
-  const { state, pathname } = useLocation();
-  const previousRoute = state && state.from;
-  const isFromRef = previousRoute === 'ref' || false;
+export default function UserEdit({ location }) {
+  const { pathname } = location
+  const isFromRef = pathname.includes('/referral');
   const isEditing = pathname.includes('edit');
   const authState = useContext(Context);
   const isAdmin = authState.user.userType === 'admin';
@@ -14,4 +13,8 @@ export default function FormContainer() {
   return <UserForm isEditing={isEditing} isFromRef={isFromRef} isAdmin={isAdmin} />;
 }
 
-FormContainer.displayName = 'UserForm';
+UserEdit.propTypes = {
+  location: PropTypes.shape({
+    pathname: PropTypes.string
+  }).isRequired
+}

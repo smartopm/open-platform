@@ -20,7 +20,6 @@ import UserShow from '../src/modules/Users/Containers/UserShow';
 import IDCard from '../src/containers/IdCard';
 import EntryLogs from '../src/modules/LogBook/Components/EntryLogs';
 import EventLogs from '../src/modules/LogBook/Components/EventLogs';
-import UserEdit from '../src/modules/Users/Containers/UserEdit'
 import Loading from '../src/shared/Loading';
 import '../src/modules/i18n';
 import Map from '../src/containers/Map';
@@ -296,7 +295,6 @@ const App = () => {
                                   />
                                   <Route path="/feedbacks" component={FeedbackPage} />
                                   <Route path="/event_logs" component={EventLogs} />
-                                  <Route path="/new/user" exact component={UserEdit} />
                                   <Route path="/comments" exact component={CommentsPage} />
                                   <Route path="/visit_request" component={RequestUpdate} />
                                 </Switch>

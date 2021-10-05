@@ -24,12 +24,18 @@ describe('UserEdit page', () => {
     }
   };
   it('renders UserEdit correctly', () => {
+    const locationMock = {
+      state: {
+        from: 'logs'
+      },
+      pathname: 'edit'
+    }
     render(
       <ApolloProvider client={createClient}>
         <Context.Provider value={data}>
           <MockedProvider mocks={[]} addTypename={false}>
             <BrowserRouter>
-              <UserEdit />
+              <UserEdit location={locationMock} />
             </BrowserRouter>
           </MockedProvider>
         </Context.Provider>
