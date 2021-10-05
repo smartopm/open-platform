@@ -68,6 +68,16 @@ export default function Avatar({ imageUrl, user, style, searchedUser }) {
       />
     );
   }
+  if (!imageUrl) {
+    return (
+      <img
+        src={safeAvatarLink({ imageUrl: '/images/default_avatar.svg' })}
+        className={css(objectAccessor(imageStyles, style))}
+        alt="avatar for the user"
+        data-testid="searched_default_user_avatar"
+      />
+    )
+  }
   return (
     <img
       src={safeAvatarLink({ user, imageUrl })}
