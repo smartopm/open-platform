@@ -26,10 +26,10 @@ RSpec.describe Mutations::PaymentPlan::PaymentReminderCreate do
     context 'when current user is an admin' do
       it 'sends payment reminder email to the users' do
         variables = {
-          paymentReminderFields:[{
+          paymentReminderFields: [{
             userId: user.id,
-            paymentPlanId: payment_plan.id
-          }]
+            paymentPlanId: payment_plan.id,
+          }],
         }
         result = DoubleGdpSchema.execute(payment_reminder_mutation, variables: variables,
                                                                     context: {
@@ -44,10 +44,10 @@ RSpec.describe Mutations::PaymentPlan::PaymentReminderCreate do
     context 'when user id is invalid' do
       it 'raises user does not exists error' do
         variables = {
-          paymentReminderFields:[{
+          paymentReminderFields: [{
             userId: 'zzzyyy111',
-            paymentPlanId: payment_plan.id
-          }]
+            paymentPlanId: payment_plan.id,
+          }],
         }
         result = DoubleGdpSchema.execute(payment_reminder_mutation, variables: variables,
                                                                     context: {
@@ -61,11 +61,11 @@ RSpec.describe Mutations::PaymentPlan::PaymentReminderCreate do
     context 'when payment plan id is invalid' do
       it 'raise plan not found error' do
         variables = {
-          paymentReminderFields:[{
+          paymentReminderFields: [{
             userId: user.id,
-            paymentPlanId: 'zzzyy111'
-        }]
-      }
+            paymentPlanId: 'zzzyy111',
+          }],
+        }
         result = DoubleGdpSchema.execute(payment_reminder_mutation, variables: variables,
                                                                     context: {
                                                                       current_user: admin,
@@ -80,8 +80,8 @@ RSpec.describe Mutations::PaymentPlan::PaymentReminderCreate do
         variables = {
           paymentReminderFields: [{
             userId: user.id,
-            paymentPlanId: payment_plan.id
-          }]
+            paymentPlanId: payment_plan.id,
+          }],
         }
         result = DoubleGdpSchema.execute(payment_reminder_mutation, variables: variables,
                                                                     context: {
