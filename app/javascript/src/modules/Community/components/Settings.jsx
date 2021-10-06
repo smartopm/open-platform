@@ -17,7 +17,7 @@ import { useFileUpload } from '../../../graphql/useFileUpload';
 import ImageCropper from './ImageCropper';
 import { currencies, locales, languages, CommunityFeaturesWhiteList } from '../../../utils/constants';
 import ImageAuth from '../../../shared/ImageAuth';
-import { formatError, objectAccessor, setObjectValue } from '../../../utils/helpers';
+import { formatError, objectAccessor } from '../../../utils/helpers';
 import { Spinner } from '../../../shared/Loading';
 import ColorPicker from './ColorPicker';
 import { validateThemeColor } from '../helpers';
@@ -247,7 +247,7 @@ export default function CommunitySettings({ data, token, refetch }) {
         const updatedSubFeatures =  objectAccessor(communityFeatures, moduleName).features.filter(v =>
           v !== objectAccessor(CommunityFeaturesWhiteList, feature)
         )
-        setObjectValue(communityFeatures, 'features', updatedSubFeatures)
+        objectAccessor(communityFeatures, String(moduleName)).features = updatedSubFeatures
         setCommunityFeatures({ ...communityFeatures })
       }
   }
