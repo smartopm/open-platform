@@ -460,7 +460,8 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
   }
 
   function disableEdit() {
-    if(isGuestRequest && formData?.user && authState?.user?.id !== formData.user.id)
+    if(authState?.user?.userType !== 'admin' && isGuestRequest && formData?.user &&
+        authState?.user?.id !== formData.user.id)
       return true;
     return false;
   }
@@ -884,7 +885,8 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
               )
         }
 
-            {((previousRoute !== 'enroll' && id) && (!isGuestRequest || authState?.user?.id === formData?.user?.id)) && (
+            {((previousRoute !== 'enroll' && id) && (authState?.user?.userType === 'admin' ||
+              !isGuestRequest || authState?.user?.id === formData?.user?.id)) && (
               <Button
                 variant="contained"
                 onClick={event => handleModal(event, isGuestRequest ? 'update' : 'grant')}

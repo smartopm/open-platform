@@ -35,7 +35,7 @@ module Mutations
         raise_entry_request_not_found_error(entry_request)
 
         is_authorized = if entry_request.is_guest
-                          current_user_is_host(entry_request)
+                          current_user_is_host(entry_request) || context[:current_user].admin?
                         elsif context[:current_user]&.role?(%i[security_guard admin]) ||
                               current_user_is_host(entry_request)
                           true
