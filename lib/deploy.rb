@@ -9,10 +9,13 @@ class Deploy
 
   def self.create_tag!
     tag_name = new_tag_name
+    message = tag_message
+    return if message.empty?
+
     response = HTTParty.post("#{BASE_URL}/repository/tags",
                              body: {
                                tag_name: tag_name,
-                               message: tag_message,
+                               message: message,
                                ref: 'master',
                              }.to_json,
                              headers: {
