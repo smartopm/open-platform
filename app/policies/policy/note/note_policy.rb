@@ -9,7 +9,10 @@ module Policy
       def permission?(permission)
         return false if user.nil?
 
-        permission_list[:note][user.user_type.to_sym][:permissions].include? permission
+        user_permissions = permission_list.dig(:note, user.user_type.to_sym, :permissions)
+        return false if user_permissions.nil?
+
+        user_permissions.include?(permission.to_s)
       end
     end
   end
