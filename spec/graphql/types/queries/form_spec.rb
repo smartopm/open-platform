@@ -211,10 +211,10 @@ RSpec.describe Types::Queries::Form do
         formId: form.id,
       }
       result = DoubleGdpSchema.execute(form_property_query, variables: variables,
-                                                              context: {
-                                                                current_user: current_user,
-                                                                site_community: community,
-                                                              }).as_json
+                                                            context: {
+                                                              current_user: current_user,
+                                                              site_community: community,
+                                                            }).as_json
       expect(result['errors']).to be_nil
       expect(result.dig('data', 'formProperty', 'id')).to eql form_property_text.id
     end
@@ -225,10 +225,10 @@ RSpec.describe Types::Queries::Form do
         formId: form.id,
       }
       result = DoubleGdpSchema.execute(form_property_query, variables: variables,
-                                                              context: {
-                                                                current_user: nil,
-                                                                site_community: community,
-                                                              }).as_json
+                                                            context: {
+                                                              current_user: nil,
+                                                              site_community: community,
+                                                            }).as_json
       expect(result['errors']).to_not be_nil
       expect(result.dig('data', 'formProperty', 'id')).to be_nil
     end
