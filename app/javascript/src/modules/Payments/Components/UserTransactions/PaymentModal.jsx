@@ -23,6 +23,7 @@ import DatePickerDialog from '../../../../components/DatePickerDialog';
 import useDebounce from '../../../../utils/useDebounce';
 import UserAutoResult from '../../../../shared/UserAutoResult';
 import SwitchInput from '../../../Forms/components/FormProperties/SwitchInput';
+import { dateToString } from '../../../../components/DateContainer';
 
 const initialValues = {
   transactionType: '',
@@ -430,6 +431,9 @@ export default function PaymentModal({
                     </Typography>
                     <Typography className={classes.plotNo}>
                       {plan?.landParcel?.parcelNumber.toUpperCase()}
+                    </Typography>
+                    <Typography className={classes.plotNoTitle}>
+                      {`${t('common:table_headers.start_date')}: ${dateToString(plan?.startDate)}`}
                     </Typography>
                     <Typography className={classes.plotNoTitle}>
                       {t('table_headers.remaining_balance', {
