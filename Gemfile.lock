@@ -503,6 +503,7 @@ DEPENDENCIES
   graphiql-rails
   graphql (= 1.11.6)
   graphql-guard
+  httparty
   jbuilder (~> 2.7)
   json_logic
   jwt
