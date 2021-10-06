@@ -7,6 +7,7 @@ class DeployJob < ApplicationJob
   queue_as :default
 
   def perform
+    return unless Rails.env.production?
     Deploy.create_tag!
   end
 end

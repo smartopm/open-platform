@@ -5,6 +5,7 @@ require 'rails_helper'
 RSpec.describe DeployJob, type: :job do
   describe '#perform_later' do
     before do
+      Rails.env.stub(production?: true)
       ActiveJob::Base.queue_adapter = :test
     end
     after do
