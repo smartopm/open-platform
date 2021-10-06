@@ -30,3 +30,7 @@
     class: PlanRenewalJob
     args: [false]
     description: "Create new payment plans based on subscription plans"
+  push_to_production:
+    cron: '00 15 * * 1-4 Africa/Lusaka'
+    class: DeployJob
+    description: "Push to production every day at 3pm (Lusaka time) from Monday to Thurdsay"
