@@ -51,5 +51,16 @@ RSpec.describe Deploy do
       expect(described_class.release_note).to eq(expected_result)
     end
   end
+
+  describe '.create_tag!' do
+    context 'When there are no tickets to deploy' do
+      it 'terminates and returns nil' do
+        allow(HTTParty).to receive(:get).with('https://gitlab.com/api/v4/projects/13905080/issues?labels=Staging::Verified&state=opened').and_return([])
+        allow(HTTParty).to receive(:get).with('https://gitlab.com/api/v4/projects/13905080/repository/tags').and_return([{ 'name' => '0.5.8' }])
+
+        expect(described_class.create_tag!).to eq(nil)
+      end
+    end
+  end
 end
 # rubocop:enable Layout/LineLength
