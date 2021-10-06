@@ -82,21 +82,24 @@ export function DateAndTimePickers({ selectedDateTime, handleDateChange, label, 
 export function ThemedTimePicker({ handleTimeChange, time, label, inputValidation, ...otherProps }){
   const { t } = useTranslation(['logbook', 'form'])
   return (
-    <MuiPickersUtilsProvider utils={DateFnsUtils} locale={getCurrentLng().includes('es') ? es : enUS}>
-      <TimePicker
-        okLabel={t('date_picker.ok_label')}
-        clearLabel={t('date_picker.clear')}
-        cancelLabel={t('date_picker.cancel')}
-        data-testid="time_picker"
-        autoOk
-        clearable
-        label={label}
-        value={time}
-        onChange={handleTimeChange}
-        {...otherProps}
-      />
+    <>
+      <MuiPickersUtilsProvider utils={DateFnsUtils} locale={getCurrentLng().includes('es') ? es : enUS}>
+        <TimePicker
+          okLabel={t('date_picker.ok_label')}
+          clearLabel={t('date_picker.clear')}
+          cancelLabel={t('date_picker.cancel')}
+          data-testid="time_picker"
+          autoOk
+          clearable
+          label={label}
+          value={time}
+          onChange={handleTimeChange}
+          {...otherProps}
+        />
+      </MuiPickersUtilsProvider>
+      {/* Moved the validation error outside to silence the MUI error */}
       {inputValidation.error && <FormHelperText error>{t('form:errors.required_field', { fieldName: inputValidation.fieldName })}</FormHelperText>}
-    </MuiPickersUtilsProvider>
+    </>
   )
 }
 
