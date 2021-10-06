@@ -259,7 +259,15 @@ RSpec.describe Users::User, type: :model do
       @user.send_phone_token
     end
 
-    it 'should raise error if token generation is not successful' do
+    it 'should UserError raise error if no phone number' do
+      @user.phone_number = nil
+
+      expect do
+        @user.send_phone_token
+      end.to raise_error(Users::User::UserError)
+    end
+
+    it 'should TokenGenerationFailed raise error if token generation is not successful' do
       allow(@user).to receive(:create_new_phone_token).and_return(nil)
 
       expect do
@@ -272,11 +280,46 @@ RSpec.describe Users::User, type: :model do
       @user.send_one_time_login
     end
 
-    it 'should raise error if token generation is not successful' do
+    it 'should UserError raise error if no phone number' do
+      @user.phone_number = nil
+
+      expect do
+        @user.send_one_time_login
+      end.to raise_error(Users::User::UserError)
+    end
+
+    it 'should raise TokenGenerationFailed error if token generation is not successful' do
       allow(@user).to receive(:create_new_phone_token).and_return(nil)
 
       expect do
         @user.send_one_time_login
+      end.to raise_error(Users::User::TokenGenerationFailed)
+    end
+
+    it 'should send one time login via email if token generation is successful' do
+      create(:email_template, community: @user.community, name: 'one_time_login_template', tag: 'system')
+      expect(EmailMsg).to receive(:send_mail_from_db)
+      @user.send_one_time_login_email
+    end
+
+    it 'should not send one time login via email if no email template is found' do
+      expect(EmailMsg).not_to receive(:send_mail_from_db)
+      @user.send_one_time_login_email
+    end
+
+    it 'should UserError raise error if no email' do
+      @user.email = nil
+
+      expect do
+        @user.send_one_time_login_email
+      end.to raise_error(Users::User::UserError)
+    end
+
+    it 'should raise TokenGenerationFailed error if token generation is not successful' do
+      allow(@user).to receive(:create_new_phone_token).and_return(nil)
+
+      expect do
+        @user.send_one_time_login_email
       end.to raise_error(Users::User::TokenGenerationFailed)
     end
   end

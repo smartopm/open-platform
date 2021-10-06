@@ -40,6 +40,7 @@ export default function LoginScreen() {
   const { state } = useLocation()
   const history = useHistory()
   const { t } = useTranslation(['login', 'common'])
+  const [userLogin, setUserLogin] = useState({ email: '', phone: ''})
 
   const communityName = communityData?.currentCommunity?.name || 'Double GDP'
   const communitySupportEmail = (communityData?.currentCommunity?.supportEmail
@@ -70,9 +71,9 @@ export default function LoginScreen() {
   }
 
   function loginWithPhone(event, type = 'input') {
-
+    console.log('phone Login', userLogin)
     // submit on both click and Enter Key pressed
-    if (event.keyCode === 13 || type === 'btnClick') {
+    // if (event.keyCode === 13 || type === 'btnClick') {
       setIsLoading(true)
       loginPhoneStart({
         variables: { phoneNumber: phoneNumber.trim() }
@@ -94,8 +95,13 @@ export default function LoginScreen() {
           setError(err.message.replace(/GraphQL error:/, ""))
           setIsLoading(false)
         })
-    }
+    // }
   }
+
+  function loginWithEmail(){
+    console.log('email login', userLogin)
+  }
+
   useEffect(() => {
     // check if user is logged in
     const token = getAuthToken()
@@ -125,6 +131,23 @@ export default function LoginScreen() {
       'emailWindow'
     )
     setOpen(!open)
+  }
+
+  function handleUserLogin(event, type = 'input'){
+    // submit on both click and Enter Key pressed
+    if (event.keyCode === 13 || type === 'btnClick') {
+      if(userLogin.email) {
+        // handle login with email
+        loginWithEmail()
+        return
+      }
+  
+      if(userLogin.phone) {
+        // handle login with phone
+        loginWithPhone()
+        return
+      }
+    }
   }
 
   return (
@@ -166,14 +189,16 @@ export default function LoginScreen() {
         >
 
           <PhoneInput
-            value={phoneNumber}
+            // value={phoneNumber}
+            value={userLogin.phone}
             containerStyle={{ width: "55%" }}
             inputClass="phone-login-input"
             inputStyle={{ width: "100%", height: 51 }}
             country={extractCountry(communityData?.currentCommunity?.locale)}
             enableSearch
             placeholder={t('common:form_placeholders.phone_number')}
-            onChange={value => setPhoneNumber(value)}
+            // onChange={value => setPhoneNumber(value)}
+            onChange={value => setUserLogin({phone: value, email: '' })}
             preferredCountries={['hn', 'zm', 'ng', 'in', 'us']}
           />
         </div>
@@ -188,7 +213,8 @@ export default function LoginScreen() {
             variant="contained"
             color="primary"
             className={`${css(styles.getStartedButton)} enz-lg-btn next-btn`}
-            onClick={event => loginWithPhone(event, 'btnClick')}
+            // onClick={event => loginWithPhone(event, 'btnClick')}
+            onClick={event => handleUserLogin(event, 'btnClick')}
             disabled={isLoading}
           >
             {isLoading ? (
@@ -213,6 +239,20 @@ export default function LoginScreen() {
         </div>
 
         <div className="container">
+          <div className="d-flex row justify-content-center ">
+            <TextField
+              value={userLogin.email}
+              variant="outlined"
+              margin="normal"
+              type="email"
+              fullWidth
+              name="email_login"
+              label="Login with Email"
+              onChange={event => setUserLogin({email: event.target.value, phone: '' })}
+            />
+          </div>
+          <br />
+          <br />
           <div className="d-flex row justify-content-center ">
             <Button
               href="/login_oauth"
