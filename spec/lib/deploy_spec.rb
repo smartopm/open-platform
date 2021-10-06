@@ -1,0 +1,37 @@
+# frozen_string_literal: true
+
+require 'rails_helper'
+require 'deploy'
+
+# rubocop:disable Layout/LineLength
+RSpec.describe Deploy do
+  describe '.increment_version' do
+    it 'returns a new version number' do
+      expect(described_class.increment_version('1.4.9')).to eq('1.5.0')
+      expect(described_class.increment_version('1.5.0')).to eq('1.5.1')
+    end
+  end
+
+  describe '.tag_message' do
+    it 'returns a string list of issues' do
+      allow(HTTParty).to receive(:get).with(any_args).and_return([
+                                                                   { 'iid' => 1, 'title' => 'Issue One', 'web_url' => 'https://gitlab.com/project/issues/1' },
+                                                                   { 'iid' => 2, 'title' => 'Issue Two', 'web_url' => 'https://gitlab.com/project/issues/2' },
+                                                                 ])
+
+      expected_string = "1 https://gitlab.com/project/issues/1 Issue One    \n2 https://gitlab.com/project/issues/2 Issue Two    \n"
+      expect(described_class.tag_message).to eq(expected_string)
+    end
+  end
+
+  describe '.new_tag_name' do
+    it 'returns a new tag name to use' do
+      allow(HTTParty).to receive(:get).with(any_args).and_return([
+                                                                   { 'name' => '0.5.5' },
+                                                                 ])
+
+      expect(described_class.new_tag_name).to eq('0.5.6')
+    end
+  end
+end
+# rubocop:enable Layout/LineLength

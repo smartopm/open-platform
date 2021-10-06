@@ -1,43 +1,46 @@
 # frozen_string_literal: true
 
-# Push to prod 🚀
+# Push to prod
+# rubocop:disable Layout/LineLength
+# rubocop:disable Metrics/MethodLength
 class Deploy
-  TOKEN = ENV["GITLAB_TOKEN"]
-  BASE_URL = "https://gitlab.com/api/v4/projects/25486737"
+  TOKEN = ENV['GITLAB_TOKEN']
+  BASE_URL = 'https://gitlab.com/api/v4/projects/25486737'
 
   def self.create_tag!
     tag_name = new_tag_name
-    response = HTTParty.post("#{BASE_URL}/repository/tags", body: {
-                tag_name: tag_name,
-                message: tag_message,
-                ref: "master"
-              }.to_json,
-              headers: {
-                'Content-Type' => 'application/json',
-                'Accept' => 'application/json',
-                "Authorization" => "Bearer #{TOKEN}"
-              })
+    response = HTTParty.post("#{BASE_URL}/repository/tags",
+                             body: {
+                               tag_name: tag_name,
+                               message: tag_message,
+                               ref: 'master',
+                             }.to_json,
+                             headers: {
+                               'Content-Type' => 'application/json',
+                               'Accept' => 'application/json',
+                               'Authorization' => "Bearer #{TOKEN}",
+                             })
 
     if response.code == 201
-      puts "Successfully created #{tag_name}, you can verify me here https://gitlab.com/doublegdp/app/-/tags/#{tag_name}"
+      Rails.logger.info "Successfully created #{tag_name}, you can verify me here https://gitlab.com/doublegdp/app/-/tags/#{tag_name}"
     else
-      puts "Error: #{response.message}"
+      Rails.logger.error "Error: #{response.message}"
     end
-  rescue => e
-    puts "ooops  #{e}"
+  rescue StandardError => e
+    Rails.logger.error "ooops  #{e}"
   end
 
   def self.new_tag_name
-    response ||= HTTParty.get("#{BASE_URL}/repository/tags")
-    increment_version(response.first["name"])
+    response = HTTParty.get("#{BASE_URL}/repository/tags")
+    increment_version(response.first['name'])
   end
 
   def self.tag_message
     verified_issues = HTTParty.get("#{BASE_URL}/issues?labels=Staging::Verified&state=opened")
     message = verified_issues.map do |issue|
-        "#{issue["iid"]} #{issue["web_url"]} #{issue["title"]}    \n"
+      "#{issue['iid']} #{issue['web_url']} #{issue['title']}    \n"
     end
-    message.join("")
+    message.join('')
   end
 
   def self.increment_version(version)
@@ -52,3 +55,5 @@ class Deploy
     [major, minor, patch].join('.')
   end
 end
+# rubocop:enable Layout/LineLength
+# rubocop:enable Metrics/MethodLength
