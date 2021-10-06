@@ -23,7 +23,7 @@ class Deploy
 
     if response.code == 201
       create_release!(tag_name)
-      Rails.logger.info "Successfully created #{tag_name}, you can verify me here https://gitlab.com/doublegdp/app/-/tags/#{tag_name}"
+      Rails.logger.info "Successfully created #{tag_name}, you can verify the release here https://gitlab.com/doublegdp/app/-/releases/#{tag_name}"
     else
       Rails.logger.error "Error: #{response.message}"
     end
