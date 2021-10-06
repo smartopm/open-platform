@@ -22,7 +22,7 @@ describe('Should render Guest Time Component', () => {
           userData={userData}
           handleChange={change}
           handleChangeOccurrence={handleDays}
-          disableEdit={jest.fn}
+          disableEdit={jest.fn()}
         />
       </MockedThemeProvider>
     );

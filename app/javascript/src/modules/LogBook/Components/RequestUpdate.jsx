@@ -600,7 +600,7 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
             />
           </div>
         )}
-          {formData.user && (
+          {isGuestRequest && formData.user && (
           <div className="form-group">
             <label className="bmd-label-static" htmlFor="_name">
               {t('logbook:log_title.host')}
