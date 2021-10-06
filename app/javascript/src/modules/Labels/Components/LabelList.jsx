@@ -1,4 +1,3 @@
-/* eslint-disable max-statements */
 import React, { useState } from 'react';
 import { useQuery } from 'react-apollo';
 import useMediaQuery from '@material-ui/core/useMediaQuery';

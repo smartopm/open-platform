@@ -25,7 +25,7 @@ describe('Label List Component', () => {
               userCount: 1
             },
             {
-              id: '2b3f902b-eb44-42a1-b2f3',
+              id: '2b3f902b-eb44-42a1-b2f',
               shortDesc: 'com_news_email',
               color: '#fff',
               description: 'this',
@@ -46,17 +46,17 @@ describe('Label List Component', () => {
     expect(loader.queryAllByTestId('loader')[0]).toBeInTheDocument();
     await waitFor(
       () => {
-        expect(container.queryByText('table_headers.labels')).toBeInTheDocument();
-        expect(container.queryByText('table_headers.labels_description')).toBeInTheDocument();
-        expect(container.queryByText('table_headers.labels_total_no_of_users')).toBeInTheDocument();
+        expect(container.queryByText('common:table_headers.labels')).toBeInTheDocument();
+        expect(container.queryByText('common:table_headers.labels_description')).toBeInTheDocument();
+        expect(container.queryByText('common:table_headers.labels_total_no_of_users')).toBeInTheDocument();
         expect(container.queryByText('com_news_sms')).toBeInTheDocument();
         expect(container.queryByText('com_news_email')).toBeInTheDocument();
-        expect(container.queryAllByTestId('label-title')).toHaveLength(2);
+        expect(container.queryAllByTestId('short_desc')).toHaveLength(2);
         expect(container.queryByTestId('prev-btn')).toHaveTextContent('misc.previous');
         expect(container.queryByTestId('prev-btn')).toBeDisabled();
         expect(container.queryByTestId('next-btn')).toHaveTextContent('misc.next');
       },
-      { timeout: 100 }
+      { timeout: 200 }
     );
   });
 });

@@ -24,10 +24,10 @@ describe('Label Item Component', () => {
     );
     expect(container.queryByText('com_news_sms')).toBeInTheDocument();
     expect(container.queryByText('10')).toBeInTheDocument();
-    expect(container.queryByTestId('label-title')).toHaveTextContent('com_news_sms');
+    expect(container.queryByTestId('short_desc')).toHaveTextContent('com_news_sms');
 
-    fireEvent.click(container.queryByTestId('label_icon'))
+    fireEvent.click(container.queryByTestId('label-menu'))
     expect(container.queryByText('menu.delete')).toBeInTheDocument();
-    fireEvent.click(container.queryByTestId('label-title'))
+    fireEvent.click(container.queryByTestId('short_desc'))
   });
 });

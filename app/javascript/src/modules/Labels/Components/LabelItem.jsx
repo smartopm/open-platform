@@ -30,43 +30,46 @@ export default function LabelItem({ label, userType, refetch }) {
   ];
 
   const menuData = {
-    handleClick: (event) => setAnchorEl(event.currentTarget),
+    handleClick: event => setAnchorEl(event.currentTarget),
     anchorEl,
     open: anchorElOpen,
     handleClose: () => setAnchorEl(null),
-    refetch,
-    userType
+    refetch
   };
   return (
     <>
       <div className={classes.planList}>
-        <DataList keys={labelsHeader} data={renderLabels(label, menuData)} hasHeader={false} />
+        <DataList
+          keys={labelsHeader}
+          data={renderLabels(label, menuData, userType)}
+          hasHeader={false}
+        />
       </div>
     </>
   );
 }
 
-export function renderLabels(label, menuData) {
+export function renderLabels(label, menuData, userType) {
   return [
     {
       Labels: (
-        <Grid item xs={12} md={2} data-testid="plan_type">
+        <Grid item xs={12} md={2} data-testid="short_desc">
           <Label color={label.color} title={label.shortDesc} />
         </Grid>
       ),
       'No of Users': (
-        <Grid item xs={12} md={2} data-testid="start_date">
+        <Grid item xs={12} md={2} data-testid="user_count">
           <Text content={label.userCount} />
         </Grid>
       ),
       Description: (
-        <Grid item xs={12} md={2} data-testid="end_date">
+        <Grid item xs={12} md={2} data-testid="description">
           <Text content={label.description} />
         </Grid>
       ),
       Menu: (
         <Grid item xs={12} md={1} data-testid="menu">
-          {menuData.userType === 'admin' && (
+          {userType === 'admin' && (
             <>
               <IconButton
                 aria-controls="sub-menu"
