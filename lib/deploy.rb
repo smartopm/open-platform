@@ -22,6 +22,7 @@ class Deploy
                              })
 
     if response.code == 201
+      create_release!(tag_name)
       Rails.logger.info "Successfully created #{tag_name}, you can verify me here https://gitlab.com/doublegdp/app/-/tags/#{tag_name}"
     else
       Rails.logger.error "Error: #{response.message}"
@@ -36,11 +37,36 @@ class Deploy
   end
 
   def self.tag_message
-    verified_issues = HTTParty.get("#{BASE_URL}/issues?labels=Staging::Verified&state=opened")
-    message = verified_issues.map do |issue|
+    @verified_issues = HTTParty.get("#{BASE_URL}/issues?labels=Staging::Verified&state=opened")
+    message = @verified_issues.map do |issue|
       "#{issue['iid']} #{issue['web_url']} #{issue['title']}    \n"
     end
     message.join('')
+  end
+
+  def self.create_release!(name)
+    HTTParty.post("#{BASE_URL}/releases",
+                  body: {
+                    name: name,
+                    tag_name: name,
+                    description: release_note,
+                  }.to_json,
+                  headers: {
+                    'Content-Type' => 'application/json',
+                    'Accept' => 'application/json',
+                    'Authorization' => "Bearer #{TOKEN}",
+                  })
+  end
+
+  def self.release_note
+    description = "| Issue ID | URL | Title |\n"
+    description += "|----------|-------|-------|\n"
+    result = @verified_issues.map do |issue|
+      "|#{issue['iid']}|#{issue['web_url']}|#{issue['title']}|\n"
+    end
+    description += result.join('')
+
+    description
   end
 
   def self.increment_version(version)

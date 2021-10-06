@@ -8,6 +8,7 @@ class DeployJob < ApplicationJob
 
   def perform
     return unless Rails.env.production?
+
     Deploy.create_tag!
   end
 end

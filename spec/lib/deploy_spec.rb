@@ -33,5 +33,23 @@ RSpec.describe Deploy do
       expect(described_class.new_tag_name).to eq('0.5.6')
     end
   end
+
+  describe '.release_note' do
+    it 'returns a formatted release note' do
+      response = [
+        { 'iid' => 1, 'title' => 'Issue One', 'web_url' => 'https://gitlab.com/project/issues/1' },
+        { 'iid' => 2, 'title' => 'Issue Two', 'web_url' => 'https://gitlab.com/project/issues/2' },
+      ]
+      allow(HTTParty).to receive(:get).with(any_args).and_return(response)
+
+      expected_result = "| Issue ID | URL | Title |\n"
+      expected_result += "|----------|-------|-------|\n"
+      mapped_issues = response.map do |issue|
+        "|#{issue['iid']}|#{issue['web_url']}|#{issue['title']}|\n"
+      end
+      expected_result += mapped_issues.join('')
+      expect(described_class.release_note).to eq(expected_result)
+    end
+  end
 end
 # rubocop:enable Layout/LineLength
