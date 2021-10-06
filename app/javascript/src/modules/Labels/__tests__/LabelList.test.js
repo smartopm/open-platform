@@ -56,7 +56,7 @@ describe('Label List Component', () => {
         expect(container.queryByTestId('prev-btn')).toBeDisabled();
         expect(container.queryByTestId('next-btn')).toHaveTextContent('misc.next');
       },
-      { timeout: 200 }
+      { timeout: 100 }
     );
   });
 });
