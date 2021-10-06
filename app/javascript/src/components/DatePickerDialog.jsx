@@ -79,7 +79,7 @@ export function DateAndTimePickers({ selectedDateTime, handleDateChange, label, 
 }
 
 
-export function ThemedTimePicker({ handleTimeChange, time, label, inputValidation, ...otherProps }){
+export function ThemedTimePicker({ handleTimeChange, time, label, inputValidation, disabled, ...otherProps }){
   const { t } = useTranslation(['logbook', 'form'])
   return (
     <MuiPickersUtilsProvider utils={DateFnsUtils} locale={getCurrentLng().includes('es') ? es : enUS}>
@@ -93,6 +93,7 @@ export function ThemedTimePicker({ handleTimeChange, time, label, inputValidatio
         label={label}
         value={time}
         onChange={handleTimeChange}
+        disabled={disabled}
         {...otherProps}
       />
       {inputValidation.error && <FormHelperText error>{t('form:errors.required_field', { fieldName: inputValidation.fieldName })}</FormHelperText>}
@@ -118,7 +119,8 @@ ThemedTimePicker.defaultProps = {
   inputValidation: {
     error: false,
     fieldName: '',
-  }
+  },
+  disabled: false
 }
 
 DatePickerDialog.propTypes = {
@@ -139,5 +141,6 @@ ThemedTimePicker.propTypes = {
   inputValidation: PropTypes.shape({
     error: PropTypes.bool,
     fieldName: PropTypes.string,
-  })
+  }),
+  disabled: PropTypes.bool
 }

@@ -34,13 +34,13 @@ describe('RequestUpdate Component', () => {
           grantedAt: '2020-10-15T09:31:06Z',
           revokedAt: '2020-10-15T09:31:06Z',
           isGuest: true,
-          guard: {
-            name: 'Some User Name',
-            id: '162f7517-7cc8-42f9-b2d0-a83a16d59569',
-            __typename: 'User'
-          },
           grantor: {
             name: 'Some guard',
+            __typename: 'User'
+          },
+          user: {
+            id: 'a54d6184-b10e-4865-bee7-7957701d423d',
+            name: 'John',
             __typename: 'User'
           },
           occursOn: ["monday"],
@@ -179,9 +179,10 @@ describe('RequestUpdate Component', () => {
       </MockedProvider>
     );
     await waitFor(() => {
+      console.log(container.getAllByTestId('entry_user_grant_request'));
       expect(container.queryByText('form_fields.full_name')).toBeInTheDocument();
       expect(container.queryByTestId('entry_user_call_mgr')).not.toBeInTheDocument()
-      expect(container.queryByTestId('entry_user_grant_request').textContent).toContain(
+      expect(container.queryByTestId('entry_user_grant_request').textContent).toBe(
         'logbook:guest_book.update_guest'
       );
       expect(container.queryByTestId('entry_user_grant')).not.toBeInTheDocument()
