@@ -229,7 +229,7 @@ export default function ReceiptDetail({ paymentData, currencyData, planDetail })
                 {t('misc.total_balance_remaining')}
               </Grid>
               <Grid item xs={4} className={classes.title} style={{ textAlign: 'right' }}>
-                {formatMoney(currencyData, (paymentData.currentPlotPendingBalance || planDetail?.currentPlotPendingBalance))}
+                {formatMoney(currencyData, (paymentData.currentPlotPendingBalance || planDetail?.currentPlotPendingBalance || 0.0))}
               </Grid>
             </Grid>
             <Grid container spacing={1}>

@@ -332,6 +332,18 @@ export function objectAccessor(object, key) {
 
 /**
  *
+ * @param {object} object
+ * @param {String} key
+ * @param {String} value
+ * @description set a value in object or an array purposely to reduce the "Code Injection" vulnerabilities
+ */
+export function setObjectValue(object, key, value) {
+	object[key] = value
+	return object
+}
+
+/**
+ *
  * @param {String} str snake_case string
  * @return {String} camelCase string
  * @description converts a snake_case string to a camelCase by finding words that start with _ or -

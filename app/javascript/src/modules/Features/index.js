@@ -1,3 +1,5 @@
+import { objectAccessor } from '../../utils/helpers';
+
 /**
  * Checks if the feature is enabled and returns the passed children
  *
@@ -12,14 +14,14 @@ function FeatureCheck({ features, name, children, subFeature }) {
   if (!features || !name) return null;
 
   if(subFeature) {
-    const subFeatureList = features[String(name)]?.features || [];
+    const subFeatureList = objectAccessor(features, name)?.features || [];
     const isDisabled = new Set(subFeatureList).has(subFeature);
 
     // Don't render subFeatures contained in the list
     if (isDisabled) {
       return null;
     }
-  
+
     return children;
   }
 

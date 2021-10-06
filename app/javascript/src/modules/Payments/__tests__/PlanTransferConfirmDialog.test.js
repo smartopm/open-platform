@@ -24,7 +24,7 @@ describe('It should test the plan transfer confirm modal component', () => {
     }
   }
 
-  it('it should render test the plan transfer confirm modal', async () => {
+  it('should render test the plan transfer confirm modal', async () => {
     const mock = [{
       request: {
         query: TransferPaymentPlanMutation,

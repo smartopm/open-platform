@@ -10,7 +10,7 @@ describe('Testing the posts Card', () => {
     subTitle: 'Test content for the Nkwashi news'
   };
 
-  it('it should always render', () => {
+  it('should always render', () => {
     const container = render(<PostItem {...data} />);
     expect(container.queryByText('Test title')).toBeTruthy();
     expect(container.queryByText('Test content for the Nkwashi news')).toBeTruthy();

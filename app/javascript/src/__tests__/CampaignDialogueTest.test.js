@@ -13,7 +13,7 @@ describe('It should render the dialog box for delete', () => {
       handleDelete={jest.fn()}
     />
   )
-  it('It should render with dialog', () => {
+  it('should render with dialog', () => {
     expect(container.queryByText('Delete Campaign')).toBeInTheDocument()
   });
 });

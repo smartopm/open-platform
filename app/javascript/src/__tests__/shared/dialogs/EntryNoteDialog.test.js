@@ -4,7 +4,7 @@ import '@testing-library/jest-dom/extend-expect'
 import EntryNoteDialog from '../../../shared/dialogs/EntryNoteDialog'
 
 describe('It should render the entry note dialog', () => {
-    it('It should render with dialog', () => {
+    it('should render with dialog', () => {
         const mock = jest.fn()
       const container = render(
         <EntryNoteDialog

@@ -18,7 +18,7 @@ describe('It should render the dialog for user search', () => {
         Test Dialogue
       </CustomizedDialogs>
     )
-    it('It should render with dialog', () => {
+    it('should render with dialog', () => {
         expect(container.queryByTestId('custom-dialog-button')).toBeNull()
     });
 });

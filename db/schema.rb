@@ -2,15 +2,15 @@
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
 #
-# This file is the source Rails uses to define your schema when running `rails
-# db:schema:load`. When creating a new database, `rails db:schema:load` tends to
+# This file is the source Rails uses to define your schema when running `bin/rails
+# db:schema:load`. When creating a new database, `bin/rails db:schema:load` tends to
 # be faster and is potentially less error prone than running all of your
 # migrations from scratch. Old migrations may fail to apply correctly if those
 # migrations use external dependencies or application code.
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_09_28_123954) do
+ActiveRecord::Schema.define(version: 2021_09_30_181825) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -66,7 +66,14 @@ ActiveRecord::Schema.define(version: 2021_09_28_123954) do
     t.bigint "byte_size", null: false
     t.string "checksum", null: false
     t.datetime "created_at", null: false
+    t.string "service_name", null: false
     t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
+  end
+
+  create_table "active_storage_variant_records", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "blob_id", null: false
+    t.string "variation_digest", null: false
+    t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
 
   create_table "activity_logs", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -287,12 +294,12 @@ ActiveRecord::Schema.define(version: 2021_09_28_123954) do
     t.string "occurs_on", default: [], array: true
     t.datetime "visit_end_date"
     t.string "email"
+    t.datetime "starts_at"
+    t.datetime "ends_at"
     t.boolean "is_guest", default: false
     t.integer "entry_request_state", default: 0
     t.uuid "revoker_id"
     t.datetime "revoked_at"
-    t.datetime "starts_at"
-    t.datetime "ends_at"
   end
 
   create_table "event_logs", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -815,6 +822,8 @@ ActiveRecord::Schema.define(version: 2021_09_28_123954) do
   add_foreign_key "accounts", "communities"
   add_foreign_key "accounts", "users"
   add_foreign_key "action_flows", "communities"
+  add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "activity_points", "users"
   add_foreign_key "assignee_notes", "notes"
   add_foreign_key "assignee_notes", "users"

@@ -8,7 +8,7 @@ import { AuthStateProvider } from '../../../containers/Provider/AuthStateProvide
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
 describe('UserForm Component', () => {
-  it('it should render correct with form properties when creating and editing', async () => {
+  it('should render correct with form properties when creating and editing', async () => {
     const props = { isEditing: true, isFromRef: false };
     const container = render(
       <MockedProvider mocks={[]}>

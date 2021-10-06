@@ -38,6 +38,7 @@ describe('UsersImport component', () => {
     const inputEl = container.queryByTestId('csv-input')
     Object.defineProperty(inputEl, 'files', { value: [file] })
     fireEvent.drop(inputEl)
+    // eslint-disable-next-line jest/valid-expect
     await waitFor(() => expect(FileReader).toHaveBeenCalled, { timeout: 10 })
   })
 

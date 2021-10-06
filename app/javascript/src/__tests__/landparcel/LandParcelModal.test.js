@@ -10,7 +10,7 @@ import LandParcelModal from '../../components/LandParcels/LandParcelModal'
 
 jest.mock('leaflet-draw')
 describe('Land Property Modal Component', () => {
-  it('it should render tabs', () => {
+  it('should render tabs', () => {
     const props = {
       open: true,
       handleClose: jest.fn,
@@ -43,7 +43,7 @@ describe('Land Property Modal Component', () => {
     expect(container.queryByTestId("owner")).toBeDefined();
   })
 
-  it('it should not allow adding new items if in "details" mode until edit-btn is clicked', () => {
+  it('should not allow adding new items if in "details" mode until edit-btn is clicked', () => {
     const props = {
       open: true,
       handleClose: jest.fn,
@@ -223,7 +223,7 @@ describe('Land Property Modal Component', () => {
     expect(container.getAllByText(('misc.merge_plot_to_remove'))[0]).toBeInTheDocument()
   });
 
-  it('it should render new house dialog', () => {
+  it('should render new house dialog', () => {
     const props = {
       open: true,
       handleClose: jest.fn,

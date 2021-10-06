@@ -70,6 +70,18 @@ RSpec.describe Types::Queries::Form do
       GQL
     end
 
+    let(:form_property_query) do
+      <<~GQL
+        query formProperty (
+          $formId: ID!, $formPropertyId: ID!
+        ) {
+          formProperty(formId: $formId, formPropertyId: $formPropertyId) {
+            id
+          }
+        }
+      GQL
+    end
+
     let(:form_user_query) do
       <<~GQL
         query formUser ($userId: ID!, $formUserId: ID!) {
@@ -192,6 +204,35 @@ RSpec.describe Types::Queries::Form do
       expect(result.dig('data', 'formProperties', 1, 'id')).to eql form_property_date.id
     end
 
+    it 'should retrieve a form property by form id and it\'s form_property_id' do
+      community = current_user.community
+      variables = {
+        formPropertyId: form_property_text.id,
+        formId: form.id,
+      }
+      result = DoubleGdpSchema.execute(form_property_query, variables: variables,
+                                                              context: {
+                                                                current_user: current_user,
+                                                                site_community: community,
+                                                              }).as_json
+      expect(result['errors']).to be_nil
+      expect(result.dig('data', 'formProperty', 'id')).to eql form_property_text.id
+    end
+    it 'should throw an error when retrieving a form property without a user' do
+      community = current_user.community
+      variables = {
+        formPropertyId: form_property_text.id,
+        formId: form.id,
+      }
+      result = DoubleGdpSchema.execute(form_property_query, variables: variables,
+                                                              context: {
+                                                                current_user: nil,
+                                                                site_community: community,
+                                                              }).as_json
+      expect(result['errors']).to_not be_nil
+      expect(result.dig('data', 'formProperty', 'id')).to be_nil
+    end
+
     it 'should retrieve form user y form user id' do
       variables = { userId: current_user.id, formUserId: form_user.id }
       result = DoubleGdpSchema.execute(form_user_query, variables: variables,
@@ -200,6 +241,16 @@ RSpec.describe Types::Queries::Form do
                                                           site_community: current_user.community,
                                                         }).as_json
       expect(result.dig('data', 'formUser', 'id')).to eql form_user.id
+    end
+
+    it 'should not retrieve form user when not authorized' do
+      variables = { userId: current_user.id, formUserId: form_user.id }
+      result = DoubleGdpSchema.execute(form_user_query, variables: variables,
+                                                        context: {
+                                                          current_user: nil,
+                                                          site_community: current_user.community,
+                                                        }).as_json
+      expect(result.dig('errors', 0, 'message')).to eql 'Unauthorized'
     end
 
     context 'when current user is not an admin' do
@@ -241,6 +292,16 @@ RSpec.describe Types::Queries::Form do
         expect(form_entries['formUsers'][0]['user']['name']).to eql 'John Test'
       end
 
+      it 'returns no form found when wrong form is provided' do
+        variables = { formId: SecureRandom.uuid, query: 'John' }
+        result = DoubleGdpSchema.execute(form_entries_query, variables: variables,
+                                                             context: {
+                                                               current_user: admin,
+                                                               site_community: admin.community,
+                                                             }).as_json
+        expect(result.dig('errors', 0, 'message')).to eql 'Form not found'
+      end
+
       context 'when form entries are searched by status' do
         it 'returns list of all form users associated with that status' do
           variables = { formId: form.id, query: 'approved' }
@@ -271,6 +332,18 @@ RSpec.describe Types::Queries::Form do
           expect(user_property['value']).to eql 'name'
           expect(user_property['formProperty']['fieldName']).to eql form_property_text.field_name
           expect(user_property['formProperty']['category']['fieldName']).to eql category.field_name
+        end
+
+        it 'returns Unauthorized when no user for form user properties' do
+          variables = { userId: current_user.id, formUserId: form_user.id }
+          result = DoubleGdpSchema.execute(form_user_properties_query,
+                                           variables: variables,
+                                           context: {
+                                             current_user: nil,
+                                             site_community: admin.community,
+                                           }).as_json
+          expect(result['errors']).to_not be_nil
+          expect(result.dig('errors', 0, 'message')).to eql 'Unauthorized'
         end
       end
 

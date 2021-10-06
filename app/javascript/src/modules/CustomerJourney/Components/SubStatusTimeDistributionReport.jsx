@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { ListItemText, ListItemSecondaryAction, ListItem, List, makeStyles, useTheme } from '@material-ui/core';
 import { userSubStatusDurationLookup } from '../../../utils/constants';
-import { toCamelCase } from '../../../utils/helpers';
+import { toCamelCase, objectAccessor } from '../../../utils/helpers';
 
 export default function SubStatusTimeDistributionReport({ userSubStatus, subStatusDistributionData }) {
   const classes = useStyles();
@@ -26,7 +26,7 @@ export default function SubStatusTimeDistributionReport({ userSubStatus, subStat
                   <ListItem style={{ height: 16, cursor: 'pointer' }}>
                     <ListItemText primary={duration} />
                     <ListItemSecondaryAction>
-                      {data[String(toCamelCase(userSubStatusKey))][String(durationLookupKey)] || 0}
+                      {objectAccessor(objectAccessor(data, toCamelCase(userSubStatusKey)), durationLookupKey) || 0}
                     </ListItemSecondaryAction>
                   </ListItem>
                 </List>

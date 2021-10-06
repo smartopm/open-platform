@@ -27,7 +27,7 @@ describe('It should test the user label component', () => {
         }]
 
 
-    it('It should render component', () => {
+    it('should render component', () => {
 
         const container = render(
           // eslint-disable-next-line react/jsx-filename-extension
@@ -40,7 +40,7 @@ describe('It should test the user label component', () => {
         expect(container.queryByTestId("chip-label")).toBeDefined();
     })
 
-    it('it should display the chip', async () => {
+    it('should display the chip', async () => {
         const container = render(
           <MockedProvider mocks={mockData} addTypename={false}>
             <BrowserRouter>

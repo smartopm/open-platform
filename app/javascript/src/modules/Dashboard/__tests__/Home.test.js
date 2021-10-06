@@ -81,6 +81,6 @@ describe('Client home page', () => {
     );
     const quickLinks = screen.queryAllByTestId('link-button');
     expect(quickLinks[0]).toBeInTheDocument();
-    expect(quickLinks.length).toEqual(1);
+    expect(quickLinks).toHaveLength(1);
   });
 });

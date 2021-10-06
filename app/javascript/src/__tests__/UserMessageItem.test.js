@@ -33,7 +33,7 @@ describe('user message item component', () => {
     expect(props.name).toBe(data.name);
     expect(props.clientNumber).toBe(data.clientNumber);
   });
-  it('should include an image tag for the user avata', () => {
+  it('should include an image tag for the user avatar', () => {
     expect(messageItem.find('img')).toBeTruthy();
   });
   it('message owner should contain children of spans', () => {
@@ -56,7 +56,7 @@ describe('user message item component', () => {
       '<a href="https://app.doublegdp.com/news/posts/survey/">https://app.doublegdp.com/news/posts/survey/</a>'
     );
   });
-  it('message should include a linked url address', () => {
+  it('message should include a linked email address', () => {
     expect(
       messageItem
         .find('.nz_msg')
@@ -67,7 +67,7 @@ describe('user message item component', () => {
   it('displayes not seen if message not seen yet by the user', () => {
     expect(messageItem.find('.nz_read').text()).toBe('common:misc.not_read');
   });
-  it('It should display SMS tag ', () => {
+  it('should display SMS tag', () => {
     expect(
       messageItem
         .find('.nz_msg_tag')
@@ -131,7 +131,7 @@ describe('check route', () => {
   it('should know when it is being used on nkwashi news posts', () => {
     expect(checkRoute(location3)).toBe('is_post');
   });
-  it('should know when it is being used on nkwashi news posts', () => {
+  it('should know when it is being used on message list', () => {
     expect(checkRoute(location4)).toBe('is_message');
   });
 });

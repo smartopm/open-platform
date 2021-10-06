@@ -7,7 +7,7 @@ import Users from '../Containers/Users'
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn())
 
-describe("UserPage Component ",() => {
+describe("UserPage Component",() => {
   const adminAuthState = {
     loaded: true,
     loggedIn: true,

@@ -3,7 +3,7 @@ import { fireEvent, render } from '@testing-library/react'
 import '@testing-library/jest-dom/extend-expect'
 import DynamicContactFields from '../components/DynamicContactFields'
 
-describe('Dynamic Fields ', () => {
+describe('Dynamic Fields', () => {
   it('should have input field and a remove button', () => {
     const onChangeMock = jest.fn()
     const onRemoveMock = jest.fn()

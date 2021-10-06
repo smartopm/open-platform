@@ -10,7 +10,7 @@ import userMock from '../../../__mocks__/userMock';
 import { Context } from '../../../containers/Provider/AuthStateProvider';
 import { EntryRequestUpdateMutation } from '../graphql/logbook_mutations';
 
-describe('RequestUpdate Component ', () => {
+describe('RequestUpdate Component', () => {
   const mocks = {
     request: {
       query: EntryRequestQuery,

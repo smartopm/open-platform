@@ -26,7 +26,7 @@ describe('It should test the plan mobile datalist component', () => {
     }
   ]
 
-  it('it should render plan mobile datalist', () => {
+  it('should render plan mobile datalist', () => {
     const container = render(
       <MockedProvider>
         <BrowserRouter>
@@ -42,7 +42,7 @@ describe('It should test the plan mobile datalist component', () => {
     expect(container.getByTestId("content")).toBeInTheDocument()
   });
 
-  it('it should render Payment mobile datalist', () => {
+  it('should render Payment mobile datalist', () => {
     const container = render(
       <MockedProvider>
         <BrowserRouter>
@@ -58,7 +58,7 @@ describe('It should test the plan mobile datalist component', () => {
     expect(container.getByTestId("content")).toBeInTheDocument()
   });
 
-  it('it should render Transaction mobile datalist', () => {
+  it('should render Transaction mobile datalist', () => {
     const container = render(
       <MockedProvider>
         <BrowserRouter>

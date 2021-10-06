@@ -452,7 +452,7 @@ RSpec.describe Mutations::LandParcel do
 
     it 'attach image and return the land parcel' do
       file = fixture_file_upload(Rails.root.join('public/apple-touch-icon.png'), 'image/png')
-      image_blob = ActiveStorage::Blob.create_after_upload!(
+      image_blob = ActiveStorage::Blob.create_and_upload!(
         io: file,
         filename: 'test.jpg',
         content_type: 'image/jpg',
@@ -477,7 +477,7 @@ RSpec.describe Mutations::LandParcel do
 
     it 'raises an error if current-user is non-admin' do
       file = fixture_file_upload(Rails.root.join('public/apple-touch-icon.png'), 'image/png')
-      image_blob = ActiveStorage::Blob.create_after_upload!(
+      image_blob = ActiveStorage::Blob.create_and_upload!(
         io: file,
         filename: 'test.jpg',
         content_type: 'image/jpg',

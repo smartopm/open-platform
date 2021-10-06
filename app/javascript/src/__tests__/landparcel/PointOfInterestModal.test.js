@@ -7,7 +7,7 @@ import '@testing-library/jest-dom/extend-expect'
 import PointOfInterestModal from '../../components/LandParcels/PointOfInterestModal'
 
 describe('Point Of Interest Modal Component', () => {
-  it('it should render correctly', async () => {
+  it('should render correctly', async () => {
     const props = {
       open: true,
       handleClose: jest.fn(),

@@ -28,7 +28,7 @@ describe('It should test the payment slider component', () => {
     }
   }
 
-  it('it should render payment slider component', () => {
+  it('should render payment slider component', () => {
     const container = render(
       <MockedProvider>
         <BrowserRouter>
@@ -45,7 +45,7 @@ describe('It should test the payment slider component', () => {
     expect(container.getByTestId("owing")).toBeInTheDocument();
   });
 
-  it('it should not render owing slider component', () => {
+  it('should not render owing slider component', () => {
     const container = render(
       <MockedProvider>
         <BrowserRouter>

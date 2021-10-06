@@ -39,7 +39,7 @@ describe('Support main page', () => {
     }))
 
     await waitFor(() => {
-      expect(container.queryByText('Sales Support')).toBeInTheDocument()
+      expect(container.queryByText('misc.sales_support')).toBeInTheDocument()
     }, 50);
   });
 });

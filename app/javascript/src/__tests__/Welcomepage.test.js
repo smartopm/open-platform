@@ -58,7 +58,7 @@ describe('component that centers divs', () => {
       'https://nkwashi.com/wp-content/uploads/2017/02/home-hero.jpg'
     );
   });
-  it('The first image should have a proper alternative text ', () => {
+  it('The first image should have a proper alternative text', () => {
     // we could get the path but don't have to
     const container = render(<Welcome />);
     expect(container.container.getElementsByTagName('img')[0]).toHaveAttribute(
@@ -66,21 +66,21 @@ describe('component that centers divs', () => {
       'Nkwashi logo with title'
     );
   });
-  it('should have a main nkwashi logo ', () => {
+  it('should have a main nkwashi logo', () => {
     const container = render(<Welcome />);
     expect(container.queryByTestId('nkwashi_logo')).toHaveAttribute('alt', 'community logo');
   });
-  it('should have a footer thebe logo ', () => {
+  it('should have a footer thebe logo', () => {
     const container = render(<Welcome />);
     expect(container.queryByTestId('thebe_logo')).toHaveAttribute('alt', 'thebe logo');
   });
-  it('should have copyright text ', () => {
+  it('should have copyright text', () => {
     const container = render(<Welcome />);
     expect(container.queryByTestId('copyright_text').textContent).toContain(
       '©2017. Thebe Investment Management Limited. All Rights Reserved'
     );
   });
-  it('should have social links ', () => {
+  it('should have social links', () => {
     const container = render(<Welcome />);
     expect(container.queryByTestId('ld_follow')).toHaveAttribute(
       'href',

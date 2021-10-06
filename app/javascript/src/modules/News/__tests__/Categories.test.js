@@ -7,7 +7,7 @@ import  { useFetch }  from '../../../utils/customHooks'
 
 jest.mock('../../../utils/customHooks')
 
-describe("Categories Component ",() => {
+describe("Categories Component",() => {
   useFetch.mockReturnValue({
     error: null,
     data: {
