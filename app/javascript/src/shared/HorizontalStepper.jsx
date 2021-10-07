@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
 import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
 import StepButton from '@material-ui/core/StepButton';
@@ -50,22 +49,21 @@ function VideoCapture() {
   return <p>Capture my face with a video</p>;
 }
 
-export default function HStepper(){
-  return <HorizontalStepper />
-}
-export function HorizontalStepper({ steps }) {
+export default function HorizontalStepper({ steps }) {
   const [activeStep, setActiveStep] = useState(0);
   const listOfSteps = steps(handleNext);
   const validSteps = Boolean(listOfSteps?.length)
 
-  const handleNext = () => {
+  function handleNext (){
     const newActiveStep = activeStep + 1;
     setActiveStep(newActiveStep);
   };
 
-  const handleStep = (step) => () => {
-    setActiveStep(step);
-  };
+  function handleStep(step){
+    return () => {
+      setActiveStep(step)
+    }
+  }
 
   return (
     <div>
@@ -80,7 +78,7 @@ export function HorizontalStepper({ steps }) {
         ))}
       </Stepper>
       <br />
-      {validSteps && steps(handleNext)[activeStep].component}
+      {validSteps && steps(handleNext)[Number(activeStep)].component}
     </div>
   );
 }
