@@ -60,6 +60,7 @@ RSpec.describe TaskReminderJob, type: :job do
     end
 
     it 'invokes EmailMsg and SMS' do
+      community.update(features: { 'Tasks' => { 'features' => ['Automated Task Reminders'] } })
       template = Notifications::EmailTemplate.system_emails
                                              .create!(
                                                name: 'task_reminder_template',

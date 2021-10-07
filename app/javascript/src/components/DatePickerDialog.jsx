@@ -79,7 +79,7 @@ export function DateAndTimePickers({ selectedDateTime, handleDateChange, label, 
 }
 
 
-export function ThemedTimePicker({ handleTimeChange, time, label, inputValidation, ...otherProps }){
+export function ThemedTimePicker({ handleTimeChange, time, label, inputValidation, disabled, ...otherProps }){
   const { t } = useTranslation(['logbook', 'form'])
   return (
     <>
@@ -121,7 +121,8 @@ ThemedTimePicker.defaultProps = {
   inputValidation: {
     error: false,
     fieldName: '',
-  }
+  },
+  disabled: false
 }
 
 DatePickerDialog.propTypes = {
@@ -142,5 +143,6 @@ ThemedTimePicker.propTypes = {
   inputValidation: PropTypes.shape({
     error: PropTypes.bool,
     fieldName: PropTypes.string,
-  })
+  }),
+  disabled: PropTypes.bool
 }

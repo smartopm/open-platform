@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import DatePickerDialog, { ThemedTimePicker } from '../../../components/DatePickerDialog';
 
-export default function GuestTime({ userData, handleChange, handleChangeOccurrence }) {
+export default function GuestTime({ userData, handleChange, handleChangeOccurrence, disableEdit }) {
   const { t } = useTranslation(['logbook', 'common', 'days']);
   return (
     <>
@@ -13,6 +13,7 @@ export default function GuestTime({ userData, handleChange, handleChangeOccurren
         handleDateChange={date => handleChange({ target: { name: 'visitationDate', value: date } })}
         label={t('common:misc.day_of_visit')}
         inputProps={{ 'data-testid': 'day_of_visit_input' }}
+        disabled={disableEdit()}
       />
 
       <div>
@@ -21,6 +22,7 @@ export default function GuestTime({ userData, handleChange, handleChangeOccurren
           handleTimeChange={date => handleChange({ target: { name: 'startsAt', value: date } })}
           label={t('common:misc.start_time')}
           inputProps={{ 'data-testid': 'start_time_input' }}
+          disabled={disableEdit()}
         />
         <span style={{ marginLeft: 20 }}>
           <ThemedTimePicker
@@ -28,6 +30,7 @@ export default function GuestTime({ userData, handleChange, handleChangeOccurren
             handleTimeChange={date => handleChange({ target: { name: 'endsAt', value: date } })}
             label={t('common:misc.end_time')}
             inputProps={{ 'data-testid': 'end_time_input' }}
+            disabled={disableEdit()}
           />
         </span>
       </div>
@@ -42,6 +45,7 @@ export default function GuestTime({ userData, handleChange, handleChangeOccurren
           component="span"
           onClick={() => handleChangeOccurrence(key)}
           data-testid="week_days"
+          disabled={disableEdit()}
         >
           <Avatar style={{ backgroundColor: new Set(userData.occursOn).has(key) ? '#009CFF' : '#ADA7A7' }}>
             {value.charAt(0)}
@@ -73,4 +77,5 @@ GuestTime.propTypes = {
   }).isRequired,
   handleChange: PropTypes.func.isRequired,
   handleChangeOccurrence: PropTypes.func.isRequired,
+  disableEdit: PropTypes.func.isRequired
 };
