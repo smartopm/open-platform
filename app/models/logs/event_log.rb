@@ -4,6 +4,8 @@ module Logs
   # rubocop:disable Metrics/ClassLength
   # A list of all activity for a particular community
   class EventLog < ApplicationRecord
+    has_many_attached :images
+
     belongs_to :community
     belongs_to :acting_user, optional: true, class_name: 'Users::User'
     belongs_to :ref, polymorphic: true, optional: true
@@ -19,6 +21,16 @@ module Logs
     scope :post_read_by_acting_user, lambda { |user|
       where(acting_user: user, community: user.community, subject: 'post_read')
     }
+
+    IMAGE_ATTACHMENTS = {
+      attached_images: :images,
+    }.freeze
+
+    def attach_images(vals)
+      IMAGE_ATTACHMENTS.each_pair do |key, attr|
+        send(attr).attach(vals[key]) if vals[key]
+      end
+    end
 
     VALID_SUBJECTS = %w[user_entry visitor_entry user_login user_switch user_enrolled
                         user_active user_feedback showroom_entry user_update user_temp
