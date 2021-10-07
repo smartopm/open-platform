@@ -3,8 +3,8 @@ import { render, waitFor, fireEvent, within } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import userEvent from '@testing-library/user-event'
 import { MockedProvider } from '@apollo/react-testing';
-import CreateLabel from '../../components/CreateLabel';
-import { LabelCreate }from '../../graphql/mutations';
+import CreateLabel from '../Components/CreateLabel';
+import { LabelCreate }from '../../../graphql/mutations';
 
 describe('Create Label Component', () => {
   const data = {
