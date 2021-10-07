@@ -59,6 +59,7 @@ export default function GuestTime({ userData, handleChange, handleChangeOccurren
           label={t('guest_book.repeats_until')}
           inputProps={{ 'data-testid': 'repeats_until_input' }}
           disablePastDate
+          disabled={disableEdit()}
         />
       )}
     </>

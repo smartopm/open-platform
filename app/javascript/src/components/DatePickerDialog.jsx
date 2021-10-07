@@ -14,7 +14,7 @@ import { es, enUS } from "date-fns/locale";
 import { checkPastDate } from "../utils/dateutil"
 import { getCurrentLng } from '../modules/i18n/util';
 
-export default function DatePickerDialog({ selectedDate, handleDateChange, label, width, required, inputProps, disablePastDate, inputVariant, styles, inputValidation, ...others }) {
+export default function DatePickerDialog({ selectedDate, handleDateChange, label, width, required, inputProps, disablePastDate, inputVariant, styles, inputValidation, disabled, ...others }) {
   const { t } = useTranslation(['logbook', 'form'])
     return (
       <MuiPickersUtilsProvider utils={DateFnsUtils} locale={getCurrentLng().includes('es') ? es : enUS}>
@@ -43,6 +43,7 @@ export default function DatePickerDialog({ selectedDate, handleDateChange, label
           {...inputValidation}
           helperText={inputValidation.error && t('form:errors.required_field', { fieldName: inputValidation.fieldName })}
           {...others}
+          disabled={disabled}
         />
       </MuiPickersUtilsProvider>
     );
@@ -105,7 +106,8 @@ DatePickerDialog.defaultProps = {
   inputValidation: {
     error: false,
     fieldName: '',
-  }
+  },
+  disabled: false
 }
 
 DateAndTimePickers.defaultProps = {
@@ -127,7 +129,8 @@ DatePickerDialog.propTypes = {
   inputValidation: PropTypes.shape({
     error: PropTypes.bool,
     fieldName: PropTypes.string,
-  })
+  }),
+  disabled: PropTypes.bool
 }
 
 DateAndTimePickers.propTypes = {
