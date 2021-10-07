@@ -16,7 +16,7 @@ module Types
     field :data, GraphQL::Types::JSON, null: true
     field :sentence, String, null: true
     field :source, String, null: true
-    field :image_url, GraphQL::Types::JSON, null: true
+    field :image_urls, GraphQL::Types::JSON, null: true
 
     def sentence
       object.to_sentence
@@ -34,7 +34,7 @@ module Types
       object.ref
     end
 
-    def image_url
+    def image_urls
       return nil unless object.images.attached?
 
       image_attached = []
