@@ -2,6 +2,7 @@
 
 module Types
   # MutationType
+  # rubocop: disable Metrics/ClassLength
   class MutationType < Types::BaseObject
     field :activity_log_add, mutation: Mutations::ActivityLog::Add
     field :activity_log_update_log, mutation: Mutations::ActivityLog::UpdateLog
@@ -160,4 +161,5 @@ module Types
     # substatus_logs
     field :substatus_log_update, mutation: Mutations::SubstatusLog::SubstatusLogUpdate
   end
+  # rubocop: enable Metrics/ClassLength
 end

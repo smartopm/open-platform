@@ -457,6 +457,8 @@ module Users
       url
     end
 
+    # rubocop:disable Metrics/MethodLength
+    # rubocop:disable Metrics/AbcSize
     def send_one_time_login_email
       raise UserError, 'No Email to send one time code to' unless self[:email]
 
@@ -465,17 +467,19 @@ module Users
       
       url = "https://#{HostEnv.base_url(community)}/l/#{self[:id]}/#{token}"
       msg = "Your login link for #{community.name} is #{url}"
-      
+
       template = community.email_templates
       &.system_emails
       &.find_by(name: 'one_time_login_template')
       return unless template
-      
+
       template_data = [{ key: '%one_time_login%', value: msg }]
       Rails.logger.info "Sending '#{msg}' to #{self[:email]}"
       EmailMsg.send_mail_from_db(self[:email], template, template_data)
       url
     end
+    # rubocop:enable Metrics/AbcSize
+    # rubocop:enable Metrics/MethodLength
 
     def role?(roles)
       user_type = self[:user_type]

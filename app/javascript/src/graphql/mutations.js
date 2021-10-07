@@ -289,9 +289,19 @@ export const EntryRequestDeny = gql`
   ${EntryRequestFragment.publicFields}
 `
 
-export const loginPhone = gql`
+export const loginPhoneMutation = gql`
   mutation loginPhoneStart($phoneNumber: String) {
     loginPhoneStart(phoneNumber: $phoneNumber) {
+      user {
+        id
+      }
+    }
+  }
+`
+
+export const loginEmailMutation = gql`
+  mutation loginEmail($email: String) {
+    loginEmail(email: $email) {
       user {
         id
       }

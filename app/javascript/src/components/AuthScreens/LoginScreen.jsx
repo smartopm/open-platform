@@ -16,19 +16,20 @@ import { useMutation, useQuery } from 'react-apollo'
 import ReactGA from 'react-ga'
 import { useTranslation } from 'react-i18next'
 import FacebookIcon from '@material-ui/icons/Facebook'
+import ArrowForwardIcon from '@material-ui/icons//ArrowForward';
 import PhoneInput from 'react-phone-input-2'
 import { getAuthToken } from '../../utils/apollo'
 import { ModalDialog } from '../Dialog'
 import GoogleIcon from '../../../../assets/images/google_icon.svg'
-import { loginPhone } from '../../graphql/mutations'
+import { loginPhoneMutation, loginEmailMutation } from '../../graphql/mutations'
 import { CurrentCommunityQuery } from '../../modules/Community/graphql/community_query'
 import { Spinner } from '../../shared/Loading'
 import { extractCountry } from '../../utils/helpers'
 
 export default function LoginScreen() {
   const { data: communityData, loading } = useQuery(CurrentCommunityQuery)
-  const [phoneNumber, setPhoneNumber] = useState('')
-  const [loginPhoneStart] = useMutation(loginPhone)
+  const [loginPhoneStart] = useMutation(loginPhoneMutation)
+  const [loginEmail] = useMutation(loginEmailMutation)
   const [open, setOpen] = useState(false)
   const [username, setUsername] = useState('')
   const [phone, setPhone] = useState('')
@@ -41,6 +42,7 @@ export default function LoginScreen() {
   const history = useHistory()
   const { t } = useTranslation(['login', 'common'])
   const [userLogin, setUserLogin] = useState({ email: '', phone: ''})
+  const [emailLoginSent, setEmailLoginSet] = useState(false)
 
   const communityName = communityData?.currentCommunity?.name || 'Double GDP'
   const communitySupportEmail = (communityData?.currentCommunity?.supportEmail
@@ -70,13 +72,10 @@ export default function LoginScreen() {
     }
   }
 
-  function loginWithPhone(event, type = 'input') {
-    console.log('phone Login', userLogin)
-    // submit on both click and Enter Key pressed
-    // if (event.keyCode === 13 || type === 'btnClick') {
+  function loginWithPhone() {
       setIsLoading(true)
       loginPhoneStart({
-        variables: { phoneNumber: phoneNumber.trim() }
+        variables: { phoneNumber: userLogin.phone.trim() }
       })
         .then(({ data }) => {
           setIsLoading(false)
@@ -86,7 +85,7 @@ export default function LoginScreen() {
           history.push({
             pathname: `/code/${  data.loginPhoneStart.user.id}`,
             state: {
-              phoneNumber,
+              phoneNumber: userLogin.phone,
               from: `${!state ? '/' : state.from.pathname}`
             }
           })
@@ -95,11 +94,21 @@ export default function LoginScreen() {
           setError(err.message.replace(/GraphQL error:/, ""))
           setIsLoading(false)
         })
-    // }
   }
 
   function loginWithEmail(){
-    console.log('email login', userLogin)
+    setIsLoading(true)
+      loginEmail({
+        variables: { email: userLogin.email.trim() }
+      })
+        .then(() => {
+          setIsLoading(false)
+          setEmailLoginSet(true)
+        })
+        .catch(err => {
+          setError(err.message.replace(/GraphQL error:/, ""))
+          setIsLoading(false)
+        })
   }
 
   useEffect(() => {
@@ -139,13 +148,11 @@ export default function LoginScreen() {
       if(userLogin.email) {
         // handle login with email
         loginWithEmail()
-        return
       }
   
       if(userLogin.phone) {
         // handle login with phone
         loginWithPhone()
-        return
       }
     }
   }
@@ -189,7 +196,6 @@ export default function LoginScreen() {
         >
 
           <PhoneInput
-            // value={phoneNumber}
             value={userLogin.phone}
             containerStyle={{ width: "55%" }}
             inputClass="phone-login-input"
@@ -197,7 +203,6 @@ export default function LoginScreen() {
             country={extractCountry(communityData?.currentCommunity?.locale)}
             enableSearch
             placeholder={t('common:form_placeholders.phone_number')}
-            // onChange={value => setPhoneNumber(value)}
             onChange={value => setUserLogin({phone: value, email: '' })}
             preferredCountries={['hn', 'zm', 'ng', 'in', 'us']}
           />
@@ -210,17 +215,19 @@ export default function LoginScreen() {
           )}`}
         >
           <Button
+            data-testid="login-btn"
             variant="contained"
             color="primary"
+            style={((!userLogin.email && !userLogin.phone) || isLoading || emailLoginSent) ? {}: { backgroundColor: '#ff8000' }}
+            endIcon={<ArrowForwardIcon />}
             className={`${css(styles.getStartedButton)} enz-lg-btn next-btn`}
-            // onClick={event => loginWithPhone(event, 'btnClick')}
             onClick={event => handleUserLogin(event, 'btnClick')}
-            disabled={isLoading}
+            disabled={(!userLogin.email && !userLogin.phone) || isLoading || emailLoginSent}
           >
             {isLoading ? (
               <CircularProgress size={25} color="primary" />
             ) : (
-              <span>{t('login.login_button_text')}</span>
+              <span>{emailLoginSent ? 'Check your email to continue with Login' : t('login.login_button_text')}</span>
               )}
           </Button>
         </div>
@@ -247,6 +254,8 @@ export default function LoginScreen() {
               type="email"
               fullWidth
               name="email_login"
+              data-testid="email_text_input"
+              placeholder={t('common:form_placeholders.email')}
               label="Login with Email"
               onChange={event => setUserLogin({email: event.target.value, phone: '' })}
             />
@@ -293,7 +302,7 @@ export default function LoginScreen() {
         className="row justify-content-center align-items-center"
       >
         <p style={{ marginTop: '1%' }}>
-          <Button size="medium" id="trigger-modal-dialog" onClick={handleModal} style={{ textTransform: 'none'}}>
+          <Button size="medium" id="trigger-modal-dialog" data-testid="trouble-logging-in-btn" onClick={handleModal} style={{ textTransform: 'none'}}>
             <u>
               <strong>{t('login.request_account')}</strong>
             </u>
@@ -382,6 +391,7 @@ export default function LoginScreen() {
           <Select
             labelId="demo-simple-select-outlined-label"
             id="demo-simple-select-outlined"
+            data-testid="interest"
             value={interest}
             onChange={event => setInterest(event.target.value)}
             label="interest"
@@ -402,6 +412,7 @@ export default function LoginScreen() {
           <Select
             labelId="demo-simple-select-outlined-label"
             id="demo-simple-select-outlined"
+            data-testid="impact"
             value={impact}
             onChange={event => setImpact(event.target.value)}
             label="impact"

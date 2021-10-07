@@ -4,9 +4,15 @@ require 'rails_helper'
 
 RSpec.describe Mutations::User do
   describe 'start the auth process' do
-    let!(:user) { create(:user_with_community, email: 'user1@example.com', user_type: 'admin', provider: nil) }
+    let!(:user) do
+      create(:user_with_community, email: 'user1@example.com',
+                                   user_type: 'admin', provider: nil)
+    end
     let!(:another_user) { create(:user_with_community, email: 'user2@example.com', provider: nil) }
-    let!(:oauth_user) { create(:user_with_community, email: 'user3@example.com', user_type: 'admin', provider: 'google') }
+    let!(:oauth_user) do
+      create(:user_with_community, email: 'user3@example.com',
+                                   user_type: 'admin', provider: 'google')
+    end
 
     let(:query) do
       <<~GQL

@@ -11,7 +11,7 @@ import { StyleSheet, css } from 'aphrodite'
 import { Link, useLocation, Redirect } from 'react-router-dom'
 import { useMutation, useQuery } from 'react-apollo'
 import { useTranslation } from 'react-i18next'
-import { loginPhoneConfirmCode, loginPhone } from '../../graphql/mutations'
+import { loginPhoneConfirmCode, loginPhoneMutation } from '../../graphql/mutations'
 import { Context as AuthStateContext } from '../../containers/Provider/AuthStateProvider'
 import useTimer from '../../utils/customHooks'
 import { CurrentCommunityQuery } from '../../modules/Community/graphql/community_query'
@@ -25,7 +25,7 @@ export default function ConfirmCodeScreen({ match }) {
   const authState = useContext(AuthStateContext)
   const { id } = match.params
   const [loginPhoneComplete] = useMutation(loginPhoneConfirmCode)
-  const [resendCodeToPhone] = useMutation(loginPhone)
+  const [resendCodeToPhone] = useMutation(loginPhoneMutation)
   const { data: communityData, loading } = useQuery(CurrentCommunityQuery)
   const [error, setError] = useState(null)
   const [msg, setMsg] = useState(null)

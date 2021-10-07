@@ -297,7 +297,9 @@ RSpec.describe Users::User, type: :model do
     end
 
     it 'should send one time login via email if token generation is successful' do
-      create(:email_template, community: @user.community, name: 'one_time_login_template', tag: 'system')
+      create(:email_template, community: @user.community,
+                              name: 'one_time_login_template', tag: 'system')
+
       expect(EmailMsg).to receive(:send_mail_from_db)
       @user.send_one_time_login_email
     end
