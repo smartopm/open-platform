@@ -4,12 +4,16 @@ import PropTypes from 'prop-types'
 import { FormControl, InputLabel, MenuItem, Select } from '@material-ui/core'
 import { EmailTemplatesQuery } from '../graphql/email_queries'
 import { Spinner } from '../../../shared/Loading'
+import CenteredContent from '../../../components/CenteredContent'
+import { formatError } from '../../../utils/helpers'
 
 export default function TemplateList({ value, handleValue, isRequired }) {
   const { loading, error, data } = useQuery(EmailTemplatesQuery)
 
   if (loading) return <Spinner />
-  if (error) return error.message
+  if (error) {
+    return <CenteredContent><p data-testid="error_section">{formatError(error.message)}</p></CenteredContent>
+  }
   return (
     <FormControl style={{ width: '100%' }}>
       <InputLabel>Select a template</InputLabel>

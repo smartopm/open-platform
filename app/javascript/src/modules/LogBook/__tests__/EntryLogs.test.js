@@ -35,7 +35,7 @@ describe('EntryLogs Component', () => {
         <MockedThemeProvider>
           <BrowserRouter>
             <Context.Provider value={userMock}>
-              <EntryLogs match={{ params: { id: '123' } }} />
+              <EntryLogs match={{ params: { id: '123' } }} history={{ push: jest.fn() }} />
             </Context.Provider>
           </BrowserRouter>
         </MockedThemeProvider>
@@ -103,6 +103,9 @@ describe('EntryLogs Component', () => {
     expect(container.queryByLabelText('simple tabs example')).toBeInTheDocument()
 
     fireEvent.change(container.queryByLabelText('simple tabs example'))
+
+    fireEvent.click(container.queryByTestId('next-btn'))
+    expect(props.paginate).toBeCalled()
   });
 
   it('renders active visit logs', () => {

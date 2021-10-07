@@ -305,7 +305,7 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
             inputProps={{
               name: 'phoneNumber',
               required: true,
-              'data-testId': 'primary_phone'
+              'data-testid': 'primary_phone'
             }}
             placeholder={t('common:form_placeholders.phone_number')}
             onChange={value => setData({...data, phoneNumber: value})}

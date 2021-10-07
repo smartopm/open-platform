@@ -34,14 +34,14 @@ import CenteredContent from '../../../components/CenteredContent';
 import Paginate from '../../../components/Paginate';
 import GuestBook from './GuestBook';
 
-export default ({ history, match }) => AllEventLogs(history, match);
+export default function EntryLogs({ history, match }){
+  return <AllEventLogs history={history} match={match} />
+}
 
-// Todo: Find the total number of allEventLogs
-const initialLimit = 20;
-const AllEventLogs = (history, match) => {
+const limit = 20;
+function AllEventLogs({ history, match }){
   const subjects = ['user_entry', 'visitor_entry', 'user_temp'];
   const [offset, setOffset] = useState(0);
-  const [limit, setLimit] = useState(initialLimit);
   const [searchTerm, setSearchTerm] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
   const [scope, setScope] = useState(7);
@@ -108,10 +108,6 @@ const AllEventLogs = (history, match) => {
     }
   }
 
-  function handleLimit() {
-    setLimit(1000);
-  }
-
   function handleSearch(event) {
     setSearchTerm(event.target.value);
   }
@@ -138,8 +134,6 @@ const AllEventLogs = (history, match) => {
       paginate={paginate}
       offset={offset}
       router={history}
-      handleLimit={handleLimit}
-      limit={limit}
       scope={scope}
       searchTerm={searchTerm}
       searchQuery={searchQuery}
@@ -161,7 +155,6 @@ export function IndexComponent({
   router,
   paginate,
   offset,
-  limit,
   searchTerm,
   scope,
   searchQuery,

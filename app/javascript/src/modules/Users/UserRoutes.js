@@ -24,6 +24,16 @@ const routes = [
   },
   {
     routeProps: {
+      path: '/new/user',
+      component: UserEdit,
+      exact: true,
+  },
+    accessibleBy: allUserTypes,
+    name: 'user_edit',
+    featureName: 'Users'
+  },
+  {
+    routeProps: {
       path: '/user/:id/logs',
       component: UserLogs,
       exact: true,
