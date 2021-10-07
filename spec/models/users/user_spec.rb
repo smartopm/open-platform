@@ -264,7 +264,7 @@ RSpec.describe Users::User, type: :model do
 
       expect do
         @user.send_phone_token
-      end.to raise_error(Users::User::UserError)
+      end.to raise_error(Users::User::TokenGenerationFailed)
     end
 
     it 'should send one time login via sms if token generation is successful' do
@@ -277,7 +277,7 @@ RSpec.describe Users::User, type: :model do
 
       expect do
         @user.send_one_time_login
-      end.to raise_error(Users::User::UserError)
+      end.to raise_error(Users::User::TokenGenerationFailed)
     end
   end
 
