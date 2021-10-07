@@ -286,6 +286,8 @@ en:
       message: Default Campaign Message
       name: Default Campaign Name
   errors:
+    general:
+      model_not_found: '%{model} not found'
     action_flow:
       invalid_action_name: Invalid action name
       invalid_event_type: Invalid event type
@@ -362,6 +364,8 @@ en:
       not_found_with_id: Could not find User %{user_id}
       update_failed: Failed to migrate the user details
       does_not_exist: User does not exists
+      invalid_expired_token: Invalid or expired phone token
+      token_generation_failed: Oops!! Login attempt could not be completed at this time. Try again!
     user_form_property:
       not_found: User form property not found
     visibility: You do not have permission to access %{field}
