@@ -102,6 +102,10 @@ export const EntryRequestFragment = {
       grantor {
         name
       }
+      user {
+        id
+        name
+      }
     }
   `
 }

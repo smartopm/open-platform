@@ -18,7 +18,12 @@ describe('Should render Guest Time Component', () => {
     }
     const container = render(
       <MockedThemeProvider>
-        <GuestTime userData={userData} handleChange={change} handleChangeOccurrence={handleDays} />
+        <GuestTime
+          userData={userData}
+          handleChange={change}
+          handleChangeOccurrence={handleDays}
+          disableEdit={jest.fn()}
+        />
       </MockedThemeProvider>
     );
 

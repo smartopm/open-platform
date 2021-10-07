@@ -459,6 +459,12 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
     history.push('/entry_logs?tab=2&offset=0')
   }
 
+  function disableEdit() {
+    if(authState?.user?.userType !== 'admin' && isGuestRequest && formData?.user &&
+        authState?.user?.id !== formData.user.id)
+      return true;
+    return false;
+  }
 
   return (
     <>
@@ -494,7 +500,7 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
         handleClose={() => setDetails({ ...observationDetails, message: '' })}
       />
       <ModalDialog
-        handleClose={handleModal}
+        handleClose={() => setModal(false)}
         handleConfirm={handleGrantRequest}
         open={isModalOpen}
         action={t(`logbook:access_actions.${modalAction}`)}
@@ -580,19 +586,34 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
             />
           </div>
         )}
+          {formData.grantor && (
           <div className="form-group">
             <label className="bmd-label-static" htmlFor="_name">
-              {authState?.user?.userType === 'security_guard' ? t('logbook:log_title.guard') : t('logbook:log_title.host') }
+              {t('logbook:log_title.guard')}
             </label>
             <TextField
               className="form-control"
               type="text"
-              value={formData.grantor?.name || authState.user.name}
+              value={formData.grantor?.name}
               disabled
               name="name"
-              required
             />
           </div>
+        )}
+          {isGuestRequest && formData.user && (
+          <div className="form-group">
+            <label className="bmd-label-static" htmlFor="_name">
+              {t('logbook:log_title.host')}
+            </label>
+            <TextField
+              className="form-control"
+              type="text"
+              value={formData.user?.name}
+              disabled
+              name="name"
+            />
+          </div>
+        )}
           <div className="form-group">
             <label className="bmd-label-static" htmlFor="_name">
               {t('form_fields.full_name')}
@@ -609,6 +630,7 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
               requiredFields.includes('name') &&
               !formData.name &&
               t('logbook:errors.required_field', { fieldName: 'Name' })}
+              disabled={disableEdit()}
             />
           </div>
           <div className="form-group">
@@ -622,6 +644,7 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
               onChange={handleInputChange}
               value={formData.email}
               inputProps={{ 'data-testid': 'email' }}
+              disabled={disableEdit()}
             />
           </div>
           <div className="form-group">
@@ -642,6 +665,7 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
               requiredFields.includes('nrc') &&
               !formData.nrc &&
               t('logbook:errors.required_field', { fieldName: 'ID' })}
+              disabled={disableEdit()}
             />
           </div>
           <div className="form-group">
@@ -662,6 +686,7 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
               requiredFields.includes('phoneNumber') &&
               !formData.phoneNumber &&
               t('logbook:errors.required_field', { fieldName: 'Phone Number' })}
+              disabled={disableEdit()}
             />
           </div>
           {previousRoute === 'enroll' && (
@@ -718,6 +743,7 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
                   defaultValue={formData.expiresAt || 'YYYYY-MM-DD'}
                   onChange={handleInputChange}
                   title={t('errors.date_error')}
+                  disabled={disableEdit()}
                 />
               </div>
             </div>
@@ -742,6 +768,7 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
               requiredFields.includes('vehiclePlate') &&
               !formData.vehiclePlate &&
               t('logbook:errors.required_field', { fieldName: 'Vehicle Plate Number' })}
+              disabled={disableEdit()}
             />
           </div>
           <div className="form-group">
@@ -762,6 +789,7 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
                   requiredFields.includes('companyName') &&
                   !formData.companyName &&
                   t('logbook:errors.required_field', { fieldName: 'Company Name' })}
+              disabled={disableEdit()}
             />
           </div>
           <div className="form-group">
@@ -781,6 +809,7 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
               requiredFields.includes('reason') &&
               !formData.reason ?
               t('logbook:errors.required_field', { fieldName: 'Reason' }) : formData.business}
+              disabled={disableEdit()}
             >
               {
               Object.keys(defaultBusinessReasons).map(_reason => (
@@ -818,6 +847,8 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
               userData={formData}
               handleChange={handleInputChange}
               handleChangeOccurrence={handleChangeOccurrence}
+              authState={authState}
+              disableEdit={disableEdit}
             />
           )
         }
@@ -854,19 +885,20 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
               )
         }
 
-            {previousRoute !== 'enroll' && id && (
-            <Button
-              variant="contained"
-              onClick={event => handleModal(event, isGuestRequest ? 'update' : 'grant')}
-              className={css(styles.grantButton)}
-              disabled={isLoading}
-              data-testid="entry_user_grant_request"
-              startIcon={isLoading && <Spinner />}
-            >
-              {
-              isGuestRequest ? t('logbook:guest_book.update_guest') : t('misc.log_new_entry')
-            }
-            </Button>
+            {((previousRoute !== 'enroll' && id) && (authState?.user?.userType === 'admin' ||
+              !isGuestRequest || authState?.user?.id === formData?.user?.id)) && (
+              <Button
+                variant="contained"
+                onClick={event => handleModal(event, isGuestRequest ? 'update' : 'grant')}
+                className={css(styles.grantButton)}
+                disabled={isLoading}
+                data-testid="entry_user_grant_request"
+                startIcon={isLoading && <Spinner />}
+              >
+                {
+                  isGuestRequest ? t('logbook:guest_book.update_guest') : t('misc.log_new_entry')
+                }
+              </Button>
           )}
 
             {previousRoute === 'enroll' ? (
