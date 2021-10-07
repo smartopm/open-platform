@@ -40,13 +40,11 @@ export const TransferPaymentPlanMutation = gql`
 `;
 
 export const PaymentReminderMutation = gql`
-  mutation paymentReminderCreate(
-    $userId: ID!
-    $paymentPlanId: ID!
-  ) {
+mutation paymentReminderCreate(
+  $paymentReminderFields: [PaymentReminderInput!]!
+) {
     paymentReminderCreate(
-      userId: $userId
-      paymentPlanId: $paymentPlanId
+      paymentReminderFields: $paymentReminderFields
     ) {
       message
     }

@@ -12,12 +12,10 @@ RSpec.describe Mutations::PaymentPlan::PaymentReminderCreate do
     let(:payment_reminder_mutation) do
       <<~GQL
         mutation paymentReminderCreate(
-            $userId: ID!
-            $paymentPlanId: ID!
+          $paymentReminderFields: [PaymentReminderInput!]!
         ) {
             paymentReminderCreate(
-              userId: $userId
-              paymentPlanId: $paymentPlanId
+              paymentReminderFields: $paymentReminderFields
             ) {
             message
           }
@@ -28,8 +26,10 @@ RSpec.describe Mutations::PaymentPlan::PaymentReminderCreate do
     context 'when current user is an admin' do
       it 'sends payment reminder email to the users' do
         variables = {
-          userId: user.id,
-          paymentPlanId: payment_plan.id,
+          paymentReminderFields: [{
+            userId: user.id,
+            paymentPlanId: payment_plan.id,
+          }],
         }
         result = DoubleGdpSchema.execute(payment_reminder_mutation, variables: variables,
                                                                     context: {
@@ -44,8 +44,10 @@ RSpec.describe Mutations::PaymentPlan::PaymentReminderCreate do
     context 'when user id is invalid' do
       it 'raises user does not exists error' do
         variables = {
-          userId: 'zzzyyy111',
-          paymentPlanId: payment_plan.id,
+          paymentReminderFields: [{
+            userId: 'zzzyyy111',
+            paymentPlanId: payment_plan.id,
+          }],
         }
         result = DoubleGdpSchema.execute(payment_reminder_mutation, variables: variables,
                                                                     context: {
@@ -59,8 +61,10 @@ RSpec.describe Mutations::PaymentPlan::PaymentReminderCreate do
     context 'when payment plan id is invalid' do
       it 'raise plan not found error' do
         variables = {
-          userId: user.id,
-          paymentPlanId: 'zzzyy111',
+          paymentReminderFields: [{
+            userId: user.id,
+            paymentPlanId: 'zzzyy111',
+          }],
         }
         result = DoubleGdpSchema.execute(payment_reminder_mutation, variables: variables,
                                                                     context: {
@@ -74,8 +78,10 @@ RSpec.describe Mutations::PaymentPlan::PaymentReminderCreate do
     context 'when current user is not an admin' do
       it 'raises unauthorized error' do
         variables = {
-          userId: user.id,
-          paymentPlanId: payment_plan.id,
+          paymentReminderFields: [{
+            userId: user.id,
+            paymentPlanId: payment_plan.id,
+          }],
         }
         result = DoubleGdpSchema.execute(payment_reminder_mutation, variables: variables,
                                                                     context: {
