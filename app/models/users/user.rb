@@ -149,6 +149,7 @@ module Users
 
     class PhoneTokenResultInvalid < StandardError; end
     class PhoneTokenResultExpired < StandardError; end
+    class TokenGenerationFailed < StandardError; end
 
     ATTACHMENTS = {
       avatar_blob_id: :avatar,
@@ -431,7 +432,7 @@ module Users
       raise UserError, 'No phone number to send one time code to' unless self[:phone_number]
 
       token = create_new_phone_token
-      raise UserError, 'Token generation failed' if token.blank?
+      raise TokenGenerationFailed, 'Token generation failed' if token.blank?
 
       Rails.logger.info "Sending #{token} to #{self[:phone_number]}"
       Sms.send(self[:phone_number], "Your code is #{token}")
@@ -442,7 +443,7 @@ module Users
       raise UserError, 'No phone number to send one time code to' unless self[:phone_number]
 
       token = create_new_phone_token
-      raise UserError, 'Token generation failed' if token.blank?
+      raise TokenGenerationFailed, 'Token generation failed' if token.blank?
 
       url = "https://#{HostEnv.base_url(community)}/l/#{self[:id]}/#{token}"
       msg = "Your login link for #{community.name} is #{url}"

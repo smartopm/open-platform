@@ -20,6 +20,12 @@ class DoubleGdpSchema < GraphQL::Schema
     raise GraphQL::ExecutionError, 'Invalid or expired auth token'
   end
 
+  rescue_from(Users::User::TokenGenerationFailed) do |_err, _obj, _args, _ctx, _field|
+    # Raise a graphql-friendly error with a custom message
+    raise GraphQL::ExecutionError,
+          'Oops!! Login attempt could not be completed at this time. Try again!'
+  end
+
   rescue_from(ActiveRecord::RecordNotFound) do |err|
     # Raise a graphql-friendly error with a custom message
     raise GraphQL::ExecutionError, "#{err.model} not found"
