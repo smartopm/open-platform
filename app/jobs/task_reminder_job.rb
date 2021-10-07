@@ -15,10 +15,17 @@ class TaskReminderJob < ApplicationJob
     if job_type.eql?('manual')
       send_email_reminder(assigned_note)
     else
-      Notes::Note.includes(assignee_notes: :user).where(completed: false).find_each do |note|
-        note.assignee_notes.each do |note_assignee|
-          send_email_reminder(note_assignee)
-          send_sms_reminder(note_assignee)
+      Community.find_each do |community|
+        next unless task_reminder_enabled(community)
+
+        community_notes = community.notes.joins(:assignee_notes)
+                                   .includes(assignee_notes: :user)
+                                   .where(completed: false).distinct
+        community_notes.find_each do |note|
+          note.assignee_notes.each do |note_assignee|
+            send_email_reminder(note_assignee)
+            send_sms_reminder(note_assignee)
+          end
         end
       end
     end
@@ -48,10 +55,14 @@ class TaskReminderJob < ApplicationJob
     return if number.blank?
 
     note_id = note_assignee.note_id
-    due_date = note_assignee.note.due_date.to_date.to_s
+    due_date = note_assignee.note.due_date&.to_date.to_s
     task_link = "#{HostEnv.base_url(user.community)}/tasks/#{note_id}"
     Sms.send(number, I18n.t('general.task_reminder', due_date: due_date, task_link: task_link,
                                                      community_name: user.community.name))
+  end
+
+  def task_reminder_enabled(community)
+    community.features&.dig('Tasks', 'features')&.include?('Automated Task Reminders')
   end
   # rubocop:enable Metrics/AbcSize
   # rubocop:enable Metrics/MethodLength

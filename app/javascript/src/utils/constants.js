@@ -752,5 +752,6 @@ export const entryLogsQueryBuilderInitialValue = {
 
   // Single place to manage list of specific community features to exclude
   export const CommunityFeaturesWhiteList = {
-    denyGateAccessButton: 'Deny Gate Access Button'
+    denyGateAccessButton: 'Deny Gate Access Button',
+    automatedTaskReminders: 'Automated Task Reminders'
   }

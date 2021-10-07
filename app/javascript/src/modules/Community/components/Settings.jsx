@@ -234,18 +234,20 @@ export default function CommunitySettings({ data, token, refetch }) {
     setMenuItemOptions([...values]);
   }
 
-  function handleDenyAccessButtonChange(e, moduleName){
-    const subFeatures = objectAccessor(communityFeatures, moduleName)?.features
+  function handleModuleFeatures(e, moduleName, feature){
+    const subFeatures = objectAccessor(communityFeatures, moduleName)?.features;
     if(!subFeatures) return;
 
     if(e.target.checked) {
-      if(!subFeatures.includes(CommunityFeaturesWhiteList.denyGateAccessButton)) {
-        communityFeatures[String(moduleName)].features.push(CommunityFeaturesWhiteList.denyGateAccessButton)
+      if(!subFeatures.includes(objectAccessor(CommunityFeaturesWhiteList, feature))) {
+        objectAccessor(communityFeatures, String(moduleName)).features.push(objectAccessor(CommunityFeaturesWhiteList, feature))
         setCommunityFeatures({ ...communityFeatures })
       }
-    } else if(subFeatures.includes(CommunityFeaturesWhiteList.denyGateAccessButton)) {
-        const updatedSubFeatures = objectAccessor(communityFeatures, moduleName).features.filter(v => v !== CommunityFeaturesWhiteList.denyGateAccessButton)
-        communityFeatures[String(moduleName)].features = updatedSubFeatures
+    } else if(subFeatures.includes(objectAccessor(CommunityFeaturesWhiteList, feature))) {
+        const updatedSubFeatures =  objectAccessor(communityFeatures, moduleName).features.filter(v =>
+          v !== objectAccessor(CommunityFeaturesWhiteList, feature)
+        )
+        objectAccessor(communityFeatures, String(moduleName)).features = updatedSubFeatures
         setCommunityFeatures({ ...communityFeatures })
       }
   }
@@ -531,7 +533,7 @@ export default function CommunitySettings({ data, token, refetch }) {
                   options={roleOptions}
                   type="chip"
                   handleOnChange={event => handleMenuItemChange(event, i)}
-                  selectedOptions={objectAccessor(objectAccessor(menuItemOptions, i), 'roles')}
+                  selectedOptions={objectAccessor(objectAccessor(menuItemOptions, i), 'roles') || []}
                 />
                 <span className={classes.menuItemRight}>
                   <MultiSelect
@@ -539,7 +541,7 @@ export default function CommunitySettings({ data, token, refetch }) {
                     fieldName="display_on"
                     options={quickLinksDisplayOptions}
                     handleOnChange={event => handleMenuItemChange(event, i)}
-                    selectedOptions={objectAccessor(objectAccessor(menuItemOptions, i), 'display_on')}
+                    selectedOptions={objectAccessor(objectAccessor(menuItemOptions, i), 'display_on') || []}
                   />
                 </span>
               </div>
@@ -792,10 +794,31 @@ export default function CommunitySettings({ data, token, refetch }) {
           <FormControlLabel
             control={(
               <Checkbox
-                checked={objectAccessor(communityFeatures, 'LogBook')?.features.includes(CommunityFeaturesWhiteList.denyGateAccessButton)}
-                onChange={(e) => handleDenyAccessButtonChange(e, 'LogBook')}
+                checked={objectAccessor(communityFeatures, String('LogBook'))?.features.includes(CommunityFeaturesWhiteList.denyGateAccessButton)}
+                onChange={(e) => handleModuleFeatures(e, 'LogBook', 'denyGateAccessButton')}
                 name="disable-deny-gate-access"
                 data-testid="disable_deny_gate_access"
+                color="primary"
+              />
+          )}
+          />
+        </Grid>
+      </Grid>
+      <br />
+
+      <Typography variant="h6">{t('community.tasks_settings')}</Typography>
+      <Grid container spacing={3}>
+        <Grid item xs={12} sm={3} className={classes.checkBox}>
+          <Typography>{t('community.enable_auomated_reminders')}</Typography>
+        </Grid>
+        <Grid item xs={12} sm={9}>
+          <FormControlLabel
+            control={(
+              <Checkbox
+                checked={objectAccessor(communityFeatures, String('Tasks'))?.features.includes(CommunityFeaturesWhiteList.automatedTaskReminders)}
+                onChange={(e) => handleModuleFeatures(e, 'Tasks', 'automatedTaskReminders')}
+                name="enable_automated_task_reminders"
+                data-testid="enable_automated_task_reminders"
                 color="primary"
               />
           )}
