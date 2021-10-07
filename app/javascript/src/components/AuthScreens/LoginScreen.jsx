@@ -8,7 +8,8 @@ import {
   Divider,
   FormControl,
   MenuItem,
-  InputLabel
+  InputLabel,
+  Grid
 } from '@material-ui/core'
 import { StyleSheet, css } from 'aphrodite'
 import { useHistory, useLocation, Link } from 'react-router-dom'
@@ -16,7 +17,10 @@ import { useMutation, useQuery } from 'react-apollo'
 import ReactGA from 'react-ga'
 import { useTranslation } from 'react-i18next'
 import FacebookIcon from '@material-ui/icons/Facebook'
-import ArrowForwardIcon from '@material-ui/icons//ArrowForward';
+import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
+import EmailIcon from '@material-ui/icons/Email';
+import IconButton from "@material-ui/core/IconButton";
+import InputAdornment from "@material-ui/core/InputAdornment";
 import PhoneInput from 'react-phone-input-2'
 import { getAuthToken } from '../../utils/apollo'
 import { ModalDialog } from '../Dialog'
@@ -184,30 +188,91 @@ export default function LoginScreen() {
 
           <br />
           <br />
-          <Typography color="textSecondary" variant="body2">
-            {t('login.login_text')}
-            :
-          </Typography>
         </div>
-        <div
-          className={`${css(
-            styles.phoneNumberInput
-          )} row justify-content-center align-items-center`}
-        >
+        <Grid container>
+          <Grid item xs={5}>
+            <Typography color="textSecondary" variant="body2">{t('login.login_text')}</Typography>
+            <div
+              className={`${css(
+                  styles.phoneNumberInput
+                )}`}
+            >
 
-          <PhoneInput
-            value={userLogin.phone}
-            containerStyle={{ width: "55%" }}
-            inputClass="phone-login-input"
-            inputStyle={{ width: "100%", height: 51 }}
-            country={extractCountry(communityData?.currentCommunity?.locale)}
-            enableSearch
-            placeholder={t('common:form_placeholders.phone_number')}
-            onChange={value => setUserLogin({phone: value, email: '' })}
-            preferredCountries={['hn', 'zm', 'ng', 'in', 'us']}
-          />
-        </div>
-
+              <PhoneInput
+                value={userLogin.phone}
+                containerStyle={{ width: "55%" }}
+                inputClass="phone-login-input"
+                inputStyle={{ width: "100%", height: 51 }}
+                country={extractCountry(communityData?.currentCommunity?.locale)}
+                enableSearch
+                placeholder={t('common:form_placeholders.phone_number')}
+                onChange={value => setUserLogin({phone: value, email: '' })}
+                preferredCountries={['hn', 'zm', 'ng', 'in', 'us']}
+              />
+            </div>
+          </Grid>
+          <Grid item xs={1}>
+            <Divider
+              style={{ width: '1px', height: '40%', backgroundColor: 'grey',  marginLeft: '2em' }}
+            />
+            {' '}
+            <p style={{ marginLeft: '1.4em', marginTop: '0.2em', marginBottom: '0.2em' }}>{t('common:misc:or')}</p>
+            {' '}
+            <Divider
+              style={{ width: '1px', height: '40%', backgroundColor: 'grey',  marginLeft: '2em' }}
+            />
+          </Grid>
+          <Grid item xs={5}>
+            <div className="flex align-items-center">
+              <TextField
+                value={userLogin.email}
+                variant="outlined"
+                margin="normal"
+                type="email"
+                name="email_login"
+                data-testid="email_text_input"
+                placeholder={t('login.login_email')}
+                onChange={event => setUserLogin({email: event.target.value, phone: '' })}
+                InputProps={{
+                        startAdornment: (
+                          <InputAdornment position="start">
+                            <IconButton>
+                              <EmailIcon />
+                            </IconButton>
+                          </InputAdornment>
+                        )
+                      }}
+              />
+              <Button
+                href="/fb_oauth"
+                variant="outlined"
+                startIcon={<FacebookIcon />}
+                style={{
+                      backgroundColor: 'white',
+                      textTransform: 'none',
+                      color: '#3b5998',
+                    }}
+                size="large"
+              >
+                {t('login.login_facebook')}
+              </Button>
+              <br />
+              <Button
+                href="/login_oauth"
+                style={{
+                      backgroundColor: 'white',
+                      textTransform: 'none'
+                    }}
+                variant="outlined"
+                startIcon={<img src={GoogleIcon} alt="google-icon" />}
+                className="google-sign-in-btn"
+                size="large"
+              >
+                {t('login.login_google')}
+              </Button>
+            </div>
+          </Grid>
+        </Grid>
         {error && <p className=" text-center text-danger">{error}</p>}
         <div
           className={`row justify-content-center align-items-center ${css(
@@ -227,73 +292,11 @@ export default function LoginScreen() {
             {isLoading ? (
               <CircularProgress size={25} color="primary" />
             ) : (
-              <span>{emailLoginSent ? 'Check your email to continue with Login' : t('login.login_button_text')}</span>
+              <span>{emailLoginSent ? t('login.email_otp_text') : t('login.login_button_text')}</span>
               )}
           </Button>
         </div>
-
         <br />
-        <div className="d-flex row justify-content-center align-items-center">
-          <Divider
-            style={{ width: '24%', height: 1, backgroundColor: 'grey' }}
-          />
-          {' '}
-          <p style={{ margin: 10 }}>{t('common:misc:or')}</p>
-          {' '}
-          <Divider
-            style={{ width: '24%', height: 1, backgroundColor: 'grey' }}
-          />
-        </div>
-
-        <div className="container">
-          <div className="d-flex row justify-content-center ">
-            <TextField
-              value={userLogin.email}
-              variant="outlined"
-              margin="normal"
-              type="email"
-              fullWidth
-              name="email_login"
-              data-testid="email_text_input"
-              placeholder={t('common:form_placeholders.email')}
-              label="Login with Email"
-              onChange={event => setUserLogin({email: event.target.value, phone: '' })}
-            />
-          </div>
-          <br />
-          <br />
-          <div className="d-flex row justify-content-center ">
-            <Button
-              href="/login_oauth"
-              style={{
-                backgroundColor: 'white',
-                textTransform: 'none'
-              }}
-              variant="contained"
-              startIcon={<img src={GoogleIcon} alt="google-icon" />}
-              className="google-sign-in-btn"
-            >
-              {t('login.login_google')}
-            </Button>
-          </div>
-          <br />
-          <br />
-          <div className="d-flex row justify-content-center ">
-            <Button
-              href="/fb_oauth"
-              variant="contained"
-              startIcon={<FacebookIcon />}
-              style={{
-                backgroundColor: 'white',
-                textTransform: 'none',
-                color: '#3b5998'
-              }}
-            >
-              {t('login.login_facebook')}
-            </Button>
-          </div>
-          <br />
-        </div>
       </div>
 
       <div

@@ -64,7 +64,7 @@ describe('Login Screen', () => {
       </MockedProvider>
       )
 
-    expect(loginWrapper.queryByText('login.login_text:')).toBeInTheDocument()
+    expect(loginWrapper.queryByText('login.login_text')).toBeInTheDocument()
     expect(loginWrapper.queryByTestId('tagline')).toBeInTheDocument()
     expect(loginWrapper.getByPlaceholderText('common:form_placeholders.phone_number')).toBeInTheDocument()
     expect(loginWrapper.queryByTestId('email_text_input')).toBeInTheDocument()
@@ -82,10 +82,10 @@ describe('Login Screen', () => {
     });
     expect(loginWrapper.getByPlaceholderText('common:form_placeholders.phone_number').value).toBe('12345');
 
-    fireEvent.change(loginWrapper.getByPlaceholderText('common:form_placeholders.email'), {
+    fireEvent.change(loginWrapper.getByPlaceholderText('login.login_email'), {
       target: { value: 'example@example.com' }
     });
-    expect(loginWrapper.getByPlaceholderText('common:form_placeholders.email').value).toBe('example@example.com');
+    expect(loginWrapper.getByPlaceholderText('login.login_email').value).toBe('example@example.com');
 
     fireEvent.click(loginWrapper.queryByTestId('trouble-logging-in-btn'));
 
