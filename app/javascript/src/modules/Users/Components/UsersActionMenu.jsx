@@ -12,7 +12,7 @@ import LabelIcon from '@material-ui/icons/Label'
 import { useTranslation } from 'react-i18next'
 import { useTheme } from '@material-ui/styles'
 import { CustomizedDialogs, ActionDialog } from '../../../components/Dialog'
-import CreateLabel from '../../../components/CreateLabel'
+import CreateLabel from '../../Labels/Components/CreateLabel'
 import CampaignIcon from '../../../components/Campaign/CampaignIcon'
 import MessageAlert from '../../../components/MessageAlert';
 // TODO: @olivier ==> Find a way to reuse this for other similar actions like we have on tasks
