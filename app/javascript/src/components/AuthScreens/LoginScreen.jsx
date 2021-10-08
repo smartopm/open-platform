@@ -173,7 +173,7 @@ export default function LoginScreen() {
         </nav>
 )
       }
-      <div className="container ">
+      <div className="container">
         <div
           className={`justify-content-center align-items-center ${css(
             styles.welcomeContainer
@@ -189,7 +189,7 @@ export default function LoginScreen() {
           <br />
           <br />
         </div>
-        <Grid container>
+        <Grid container className="justify-content-center">
           <Grid item xs={12} md={5}>
             <Typography color="textSecondary" variant="body2">{t('login.login_text')}</Typography>
             <div
