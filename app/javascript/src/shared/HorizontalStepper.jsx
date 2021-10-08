@@ -19,18 +19,16 @@ export default function HorizontalStepper({ steps }) {
       setActiveStep(step);
     };
   }
-
   return (
     <div>
       <Stepper nonLinear activeStep={activeStep}>
-        {validSteps &&
+        {listOfSteps?.length > 1 &&
           listOfSteps.map((step, index) => (
             <Step key={step.title}>
               <StepButton onClick={handleStep(index)} />
             </Step>
           ))}
       </Stepper>
-      <br />
       {validSteps && steps(handleNext)[Number(activeStep)].component}
     </div>
   );

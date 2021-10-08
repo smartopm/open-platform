@@ -1,19 +1,26 @@
-import React from 'react'
-import MenuBookIcon from '@material-ui/icons/MenuBook';
 import GuestValidate from './Containers/GuestValidate';
+import RequestUpdatePage from '../Components/RequestUpdatePage';
+import { guestListUsers } from '../../../utils/constants';
 
-
-const GuestsValidateRoutes= {
-  routeProps: {
-    path: '/guest_validate',
-    component: GuestValidate
+const GuestsValidatorRoutes = [
+  {
+    routeProps: {
+      path: '/request/:id?/:logs?',
+      component: GuestValidate,
+    },
+    name: 'Request Details',
+    featureName: 'LogBook',
+    accessibleBy: guestListUsers,
   },
-  styleProps: {
-    icon: <MenuBookIcon />
+  {
+    routeProps: {
+      path: '/visit_request',
+      component: RequestUpdatePage,
+    },
+    name: 'Visit Request',
+    featureName: 'LogBook',
+    accessibleBy: guestListUsers,
   },
-  name: t => t('misc.validate'),
-  featureName: 'LogBook',
-  accessibleBy: ['admin', 'security_guard'],
-};
+];
 
-export default GuestsValidateRoutes;
+export default GuestsValidatorRoutes;

@@ -4,9 +4,8 @@ import { useParamsQuery } from '../../../utils/helpers';
 import RequestUpdate from './RequestUpdate';
 
 export default function RequestUpdatePage() {
-  const { id } = useParams();
+  const { id, logs } = useParams();
   const { state } = useLocation();
-  const { logs } = useParams();
   const query = useParamsQuery();
   const requestType = query.get('type');
   const isGuestRequest = requestType === 'guest';
