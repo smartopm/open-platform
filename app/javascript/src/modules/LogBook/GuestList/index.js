@@ -1,9 +1,9 @@
 import React from 'react';
+import PeopleIcon from '@material-ui/icons/People';
 import { guestListUsers } from '../../../utils/constants';
 import RequestUpdate from '../Components/RequestUpdate';
 import GuestList from './Components/GuestList';
 import GuestUpdate from './containers/GuestUpdate';
-import PeopleIcon from '@material-ui/icons/People';
 
 
 // TODO: routes should be changed to _ instead of -
