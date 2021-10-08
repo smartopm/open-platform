@@ -21,11 +21,11 @@ export default function HorizontalStepper({ steps }) {
   }
   return (
     <div>
-      <Stepper nonLinear activeStep={activeStep}>
+      <Stepper nonLinear activeStep={activeStep} data-testid="stepper_container">
         {listOfSteps?.length > 1 &&
           listOfSteps.map((step, index) => (
             <Step key={step.title}>
-              <StepButton onClick={handleStep(index)} />
+              <StepButton onClick={handleStep(index)} data-testid="step_button" />
             </Step>
           ))}
       </Stepper>
