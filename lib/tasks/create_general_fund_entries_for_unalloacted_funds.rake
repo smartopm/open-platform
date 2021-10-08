@@ -6,14 +6,15 @@ namespace :db do
     ActiveRecord::Base.transaction do
       Payments::Transaction.accepted.find_each do |transaction|
         payments_amount = transaction.plan_payments.paid.sum(:amount)
-        next if transaction.amount.eql?(payments_amount)
+        unallocated_amount = transaction.amount - payments_amount
+        next unless unallocated_amount.positive?
 
         user = transaction.user
-        amount = transaction.amount - payments_amount
-        user.general_payment_plan.plan_payments.create!(amount: amount,
+        user.general_payment_plan.plan_payments.create!(amount: unallocated_amount,
                                                         user_id: user.id,
                                                         community_id: user.community_id,
-                                                        transaction_id: transaction.id)
+                                                        transaction_id: transaction.id,
+                                                        status: :paid)
         puts "Created general fund entry for user #{user.name} id: #{user.id}, " \
         "transaction_id: #{transaction.id}"
       end
