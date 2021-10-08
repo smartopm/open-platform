@@ -464,7 +464,7 @@ module Users
 
       token = create_new_phone_token
       raise TokenGenerationFailed, 'Token generation failed' if token.blank?
-      
+
       url = "https://#{HostEnv.base_url(community)}/l/#{self[:id]}/#{token}"
       msg = "Your login link for #{community.name} is #{url}"
 
