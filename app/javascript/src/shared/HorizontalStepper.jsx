@@ -3,6 +3,7 @@ import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
 import StepButton from '@material-ui/core/StepButton';
 import PropTypes from 'prop-types';
+import { objectAccessor } from '../utils/helpers';
 
 export default function HorizontalStepper({ steps }) {
   const [activeStep, setActiveStep] = useState(0);
@@ -19,6 +20,7 @@ export default function HorizontalStepper({ steps }) {
       setActiveStep(step);
     };
   }
+
   return (
     <div>
       <Stepper nonLinear activeStep={activeStep} data-testid="stepper_container">
@@ -29,7 +31,7 @@ export default function HorizontalStepper({ steps }) {
             </Step>
           ))}
       </Stepper>
-      {validSteps && steps(handleNext)[Number(activeStep)].component}
+      {validSteps && objectAccessor(steps(handleNext), activeStep).component}
     </div>
   );
 }
