@@ -15,6 +15,8 @@ class TaskReminderJob < ApplicationJob
     if job_type.eql?('manual')
       send_email_reminder(assigned_note)
     else
+      return unless Rails.env.production?
+
       Community.find_each do |community|
         next unless task_reminder_enabled(community)
 
