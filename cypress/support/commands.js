@@ -57,3 +57,10 @@ Cypress.Commands.add("addFormProperty", (fieldName, fieldType, isRequired, optio
   cy.get('[data-testid=form_property_action_btn]').click();
   cy.wait(2000);
 })
+
+Cypress.Commands.add("visitMainMenu", (menuItem) => {
+  cy.get('.left-menu-collapsible').click();
+  cy.wait(1000);
+  cy.get(`${menuItem}}`).click();
+  cy.wait(1000);
+})

@@ -30,10 +30,7 @@ describe('Payment', () => {
     cy.login('2348167740149');
 
     // Go to user's page
-    cy.get('.left-menu-collapsible').click();
-    cy.wait(1000);
-    cy.get('.my-profile-menu-item').click();
-    cy.wait(1000);
+    cy.visitMainMenu('.my-profile-menu-item')
     cy.get('.right-menu-drawer').click();
     cy.wait(1000);
     cy.get('.right-menu-payment-item').click();
