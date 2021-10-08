@@ -68,7 +68,7 @@ describe('Login Screen', () => {
     expect(loginWrapper.queryByTestId('tagline')).toBeInTheDocument()
     expect(loginWrapper.getByPlaceholderText('common:form_placeholders.phone_number')).toBeInTheDocument()
     expect(loginWrapper.queryByTestId('email_text_input')).toBeInTheDocument()
-    expect(loginWrapper.queryByText('common:misc:or')).toBeInTheDocument()
+    expect(loginWrapper.queryAllByText('common:misc:or').length).toBeGreaterThan(0)
     expect(loginWrapper.queryByText('login.login_google')).toBeInTheDocument()
     expect(loginWrapper.queryByText('login.login_facebook')).toBeInTheDocument()
     expect(loginWrapper.queryByText('login.login_button_text')).toBeInTheDocument()

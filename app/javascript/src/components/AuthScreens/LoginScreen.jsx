@@ -190,17 +190,16 @@ export default function LoginScreen() {
           <br />
         </div>
         <Grid container>
-          <Grid item xs={5}>
+          <Grid item xs={12} md={5}>
             <Typography color="textSecondary" variant="body2">{t('login.login_text')}</Typography>
             <div
               className={`${css(
                   styles.phoneNumberInput
                 )}`}
             >
-
               <PhoneInput
                 value={userLogin.phone}
-                containerStyle={{ width: "55%" }}
+                containerStyle={{ width: "100%" }}
                 inputClass="phone-login-input"
                 inputStyle={{ width: "100%", height: 51 }}
                 country={extractCountry(communityData?.currentCommunity?.locale)}
@@ -211,22 +210,28 @@ export default function LoginScreen() {
               />
             </div>
           </Grid>
-          <Grid item xs={1}>
-            <Divider
-              style={{ width: '1px', height: '40%', backgroundColor: 'grey',  marginLeft: '2em' }}
-            />
-            {' '}
-            <p style={{ marginLeft: '1.4em', marginTop: '0.2em', marginBottom: '0.2em' }}>{t('common:misc:or')}</p>
-            {' '}
-            <Divider
-              style={{ width: '1px', height: '40%', backgroundColor: 'grey',  marginLeft: '2em' }}
-            />
+          <Grid item xs={12} md={1}>
+            <div className={`${css(styles.verticalDivider)}`}>
+              <Divider className={`${css(styles.verticalDividerLine)}`} />
+              {' '}
+              <p style={{ marginLeft: '1.4em', marginTop: '0.2em', marginBottom: '0.2em' }}>{t('common:misc:or')}</p>
+              {' '}
+              <Divider className={`${css(styles.verticalDividerLine)}`} />
+            </div>
+            <div className={`${css(styles.horizontalDivider)}`}>
+              <Divider className={`${css(styles.horizontalDividerLine)}`} />
+              {' '}
+              <p style={{ margin: '0.5em' }}>{t('common:misc:or')}</p>
+              {' '}
+              <Divider className={`${css(styles.horizontalDividerLine)}`} />
+            </div>
           </Grid>
-          <Grid item xs={5}>
+          <Grid item xs={12} md={3}>
             <div className="flex align-items-center">
               <TextField
                 value={userLogin.email}
                 variant="outlined"
+                fullWidth
                 margin="normal"
                 type="email"
                 name="email_login"
@@ -243,30 +248,25 @@ export default function LoginScreen() {
                         )
                       }}
               />
+              <br />
               <Button
                 href="/fb_oauth"
                 variant="outlined"
                 startIcon={<FacebookIcon />}
-                style={{
-                      backgroundColor: 'white',
-                      textTransform: 'none',
-                      color: '#3b5998',
-                    }}
                 size="large"
+                fullWidth
+                className={`${css(styles.facebookOAuthButton )}`}
               >
                 {t('login.login_facebook')}
               </Button>
               <br />
               <Button
                 href="/login_oauth"
-                style={{
-                      backgroundColor: 'white',
-                      textTransform: 'none'
-                    }}
                 variant="outlined"
                 startIcon={<img src={GoogleIcon} alt="google-icon" />}
-                className="google-sign-in-btn"
+                className={`${css(styles.googleOAuthButton )} google-sign-in-btn`}
                 size="large"
+                fullWidth
               >
                 {t('login.login_google')}
               </Button>
@@ -466,12 +466,17 @@ const styles = StyleSheet.create({
     color: 'white'
   },
   phoneNumberInput: {
-    marginTop: 30
+    marginTop: '0.5em'
   },
-  googleLink: {
-    margin: 40,
-    marginBottom: 47,
-    textDecoration: 'none'
+  facebookOAuthButton: {
+    backgroundColor: 'white',
+    textTransform: 'none',
+    color: '#3b5998',
+  },
+  googleOAuthButton: {
+    backgroundColor: 'white',
+    textTransform: 'none',
+    marginTop: '0.5em',
   },
   "[type='number']": {
     fontSize: 30
@@ -493,5 +498,52 @@ const styles = StyleSheet.create({
   loginInput: {
     width: '55%',
     marginLeft: 100
+  },
+  verticalDivider: {
+    height: '100%',
+    '@media (min-device-width: 320px) and (max-device-height: 568px)' : {
+      display: "none",
+     } ,
+ 
+     '@media (min-device-width: 414px) and (max-device-height: 736px)' : {
+       display: "none",
+     },
+ 
+     '@media (min-device-width: 375px) and (max-device-height: 667px) and (orientation: portrait)' : {
+       display: "none",
+     },
+     '@media  (min-device-width: 360px) and (max-device-height: 640px)' : {
+       display: "none",
+     }
+  },
+  horizontalDivider: {
+    display: 'none',
+    justifyContent: 'center',
+    alignItems: 'center',
+    '@media (min-device-width: 320px) and (max-device-height: 568px)' : {
+     display: "flex",
+    } ,
+
+    '@media (min-device-width: 414px) and (max-device-height: 736px)' : {
+      display: "flex",
+    },
+
+    '@media (min-device-width: 375px) and (max-device-height: 667px) and (orientation: portrait)' : {
+      display: "flex",
+    },
+    '@media  (min-device-width: 360px) and (max-device-height: 640px)' : {
+      display: "flex",
+    }
+  },
+  horizontalDividerLine: {
+    width: '40%',
+    height: '1px',
+    backgroundColor: 'grey' 
+  },
+  verticalDividerLine: {
+    width: '1px',
+    height: '40%',
+    backgroundColor: 'grey',
+    marginLeft: '2em' 
   }
 })
