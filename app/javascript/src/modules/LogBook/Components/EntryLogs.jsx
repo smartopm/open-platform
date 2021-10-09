@@ -297,6 +297,7 @@ export function IndexComponent({
           value: observationNote,
           handleChange: value => setObservationNote(value)
         }}
+        token={authState.token}
       >
         {observationDetails.loading ? (
           <Spinner />

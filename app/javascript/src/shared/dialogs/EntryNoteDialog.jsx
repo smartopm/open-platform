@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
 import { makeStyles } from '@material-ui/core/styles';
@@ -9,20 +9,47 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import Typography from '@material-ui/core/Typography';
+import { useApolloClient } from 'react-apollo';
 import useDialogStyles from './dialogStyles';
-import ImageUploader from '../ImageUploader';
+import ImageUploader from '../imageUpload/ImageUploader';
+import ImageUploadPreview from '../imageUpload/ImageUploadPreview';
+import { useFileUpload } from '../../graphql/useFileUpload';
 
 export default function EntryNoteDialog({
   open,
   handleDialogStatus,
   observationHandler,
+  token,
   children
 }) {
   const classes = useDialogStyles();
   const styles = useStyles();
   const { t } = useTranslation('logbook');
+  const [imageUrls, setImageUrls] = useState([])
+  const [blobIds, setBlobIds] = useState([])
+
+  const { onChange, signedBlobId, url } = useFileUpload({
+    client: useApolloClient()
+  });
+  
+
+  function handleChange(img) {
+    onChange(img)
+  }
+
+  useEffect(() => {
+    if (url) {
+      setImageUrls([...imageUrls, url])
+    }
+    if (signedBlobId) {
+      setBlobIds([...blobIds, signedBlobId])
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [url, signedBlobId]);
+
   return (
     <>
+      {console.log(blobIds)}
       <Dialog
         fullWidth
         open={open}
@@ -54,8 +81,21 @@ export default function EntryNoteDialog({
           <Grid container className={styles.upload}>
             <Grid item sm={8}>Do you have any images you will like to add?</Grid>
             <Grid item sm={4} className={styles.uploadButton}>
-              <ImageUploader />
+              <ImageUploader 
+                handleChange={handleChange}
+                buttonText='Upload Image'
+                style={{background: '#CACACA'}}
+              />
             </Grid>
+            {imageUrls.length > 0 && (
+              <ImageUploadPreview 
+                imageUrls={imageUrls} 
+                token={token}
+                sm={6}
+                xs={12}
+                style={{padding: '10px'}}
+              />
+            )}
           </Grid>
         </DialogContent>
         <DialogActions>{children}</DialogActions>
@@ -75,6 +115,7 @@ const useStyles = makeStyles(() => ({
 
 EntryNoteDialog.propTypes = {
   open: PropTypes.bool.isRequired,
+  token: PropTypes.string.isRequired,
   observationHandler: PropTypes.shape({
     value: PropTypes.string,
     handleChange: PropTypes.func
