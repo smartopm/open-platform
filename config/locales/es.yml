@@ -329,6 +329,8 @@ es:
       not_found: Formulario de Propiedad no encontrado
     form:
       not_found: Formulario no encontrado
+    general:
+      model_not_found: "%{model} no encontrado"
     invalid_argument_value: Valor de argumento no válido
     invalid_value: Valor no válido
     invoice:
@@ -388,10 +390,13 @@ es:
       not_found: Formulario de usuario de propiedad  no encontrada
     user:
       does_not_exist: El usuario no existe
+      invalid_expired_token: Token de teléfono inválido o expirado
       merge_failed: Union Fallida
       not_found: Esta cuenta no existe. Envíe una solicitud para crear una cuenta
         o utilice la información de cuenta correcta para iniciar sesión
       not_found_with_id: No se puede encontrar al Usuario %{user_id}
+      token_generation_failed: "¡Lo sentimos! Su intento de acceso no pudo ser completado
+        en este momento. ¡Inténtelo de nuevo!"
       update_failed: Fallo al migrar los detalles del usuario
     visibility: Usted no tiene permiso para acceder %{field}
     wallet_transaction:
