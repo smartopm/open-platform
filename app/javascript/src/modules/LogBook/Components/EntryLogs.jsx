@@ -5,10 +5,10 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable react/jsx-one-expression-per-line */
 import React, { useState, Fragment, useContext, useEffect } from 'react';
-import { useMutation, useQuery } from 'react-apollo';
+import { useMutation, useQuery, useApolloClient } from 'react-apollo';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { useTranslation } from 'react-i18next';
-import { Button, Grid, useTheme, makeStyles } from '@material-ui/core';
+import { Button, Grid, useTheme, makeStyles, TextField, Typography } from '@material-ui/core';
 import SearchInput from '../../../shared/search/SearchInput';
 import Loading, { Spinner } from '../../../shared/Loading';
 import { AllEventLogsQuery } from '../../../graphql/queries';
@@ -35,6 +35,10 @@ import VisitEntryLogs from './VisitEntryLogs';
 import CenteredContent from '../../../components/CenteredContent';
 import Paginate from '../../../components/Paginate';
 import GuestBook from './GuestBook';
+import { CustomizedDialogs } from '../../../components/Dialog';
+import ImageUploader from '../../../shared/imageUpload/ImageUploader';
+import ImageUploadPreview from '../../../shared/imageUpload/ImageUploadPreview';
+import { useFileUpload } from '../../../graphql/useFileUpload';
 
 export default ({ history, match }) => AllEventLogs(history, match);
 
@@ -191,6 +195,12 @@ export function IndexComponent({
   const theme = useTheme();
   const matches = useMediaQuery(theme.breakpoints.up('sm'));
   const classes = useStyles();
+  const [imageUrls, setImageUrls] = useState([])
+  const [blobIds, setBlobIds] = useState([])
+
+  const { onChange, signedBlobId, url } = useFileUpload({
+    client: useApolloClient()
+  });
 
   function routeToAction(eventLog) {
     if (eventLog.refType === 'Logs::EntryRequest') {
@@ -218,6 +228,10 @@ export function IndexComponent({
     handleSaveObservation(eventLog, logType);
   }
 
+  function handleChange(img) {
+    onChange(img)
+  }
+
   function handleAddObservation(log) {
     setClickedEvent({ refId: log.refId, refType: log.refType });
     setIsObservationOpen(true);
@@ -231,7 +245,8 @@ export function IndexComponent({
         note: observationNote || exitNote,
         id: log.refId,
         refType: log.refType,
-        eventLogId: log.id
+        eventLogId: log.id,
+        attachedImages: blobIds
       }
     })
       .then(() => {
@@ -262,6 +277,16 @@ export function IndexComponent({
       });
   }
 
+  useEffect(() => {
+    if (url) {
+      setImageUrls([...imageUrls, url])
+    }
+    if (signedBlobId) {
+      setBlobIds([...blobIds, signedBlobId])
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [url, signedBlobId]);
+
   const filteredEvents =
     data?.result &&
     data.result.filter(log => {
@@ -284,46 +309,53 @@ export function IndexComponent({
 
   return (
     <div>
+      {console.log(data)}
       <MessageAlert
         type={!observationDetails.isError ? 'success' : 'error'}
         message={observationDetails.message}
         open={!!observationDetails.message}
         handleClose={() => setDetails({ ...observationDetails, message: '' })}
       />
-      <EntryNoteDialog
+      <CustomizedDialogs
         open={isObservationOpen}
-        handleDialogStatus={() => setIsObservationOpen(!isObservationOpen)}
-        observationHandler={{
-          value: observationNote,
-          handleChange: value => setObservationNote(value)
-        }}
-        token={authState.token}
+        handleModal={() => setIsObservationOpen(false)}
+        dialogHeader={t('observations.observation_title')}
+        handleBatchFilter={() => handleSaveObservation()}
+        disableActionBtn={observationDetails.loading}
       >
-        {observationDetails.loading ? (
-          <Spinner />
-        ) : (
-          <>
-            <Button
-              onClick={() => setIsObservationOpen(false)}
-              color="secondary"
-              variant="outlined"
-              data-testid="cancel"
-            >
-              {t('common:form_actions.cancel')}
-            </Button>
-            <Button
-              onClick={() => handleSaveObservation()}
-              color="primary"
-              variant="contained"
-              data-testid="save"
-              style={{ color: 'white' }}
-              autoFocus
-            >
-              {t('common:form_actions.save')}
-            </Button>
-          </>
-        )}
-      </EntryNoteDialog>
+        <Typography gutterBottom>{t('observations.add_your_observation')}</Typography>
+        <TextField
+          id="outlined-multiline-static"
+          rows={6}
+          variant="outlined"
+          value={observationNote}
+          onChange={event => setObservationNote(event.target.value)}
+          inputProps={{
+              'data-testid': 'entry-dialog-field'
+            }}
+          multiline
+          fullWidth
+        />
+        <Grid container className={classes.container}>
+          <Grid item sm={8}>Do you have any images you will like to add?</Grid>
+          <Grid item sm={4} className={classes.uploadButton}>
+            <ImageUploader 
+              handleChange={handleChange}
+              buttonText='Upload Image'
+              style={{background: '#CACACA'}}
+            />
+          </Grid>
+          {imageUrls.length > 0 && (
+          <ImageUploadPreview 
+            imageUrls={imageUrls} 
+            token={authState.token}
+            sm={6}
+            xs={12}
+            style={{padding: '10px'}}
+          />
+            )}
+        </Grid>
+      </CustomizedDialogs>
       <div className="container">
         <SearchInput
           title={objectAccessor(searchPlaceholder, tabValue)}
@@ -454,5 +486,11 @@ const useStyles = makeStyles(theme => ({
     [theme.breakpoints.up('lg')]: {
       marginLeft: '-23%',
     }
+  },
+  container: {
+    marginTop: '20px'
+  },
+  uploadButton: {
+    textAlign: 'right'
   }
 }));

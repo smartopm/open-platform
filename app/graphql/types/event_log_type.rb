@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'host_env'
+
 module Types
   # ActivityLogType
   class EventLogType < Types::BaseObject
@@ -38,7 +40,7 @@ module Types
       return nil unless object.images.attached?
 
       image_attached = []
-      base_url = HostEnv.base_url(object)
+      base_url = HostEnv.base_url(object.community)
 
       object.images.each do |img|
         path = Rails.application.routes.url_helpers.rails_blob_path(img)

@@ -78,7 +78,7 @@ export default function EntryNoteDialog({
             multiline
             fullWidth
           />
-          <Grid container className={styles.upload}>
+          {/* <Grid container className={styles.upload}>
             <Grid item sm={8}>Do you have any images you will like to add?</Grid>
             <Grid item sm={4} className={styles.uploadButton}>
               <ImageUploader 
@@ -96,7 +96,7 @@ export default function EntryNoteDialog({
                 style={{padding: '10px'}}
               />
             )}
-          </Grid>
+          </Grid> */}
         </DialogContent>
         <DialogActions>{children}</DialogActions>
       </Dialog>
