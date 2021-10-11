@@ -27,15 +27,15 @@ const taskUpdatePermissions = [
 
 const currentModule = 'note'
 
-function taskUpdate() {
-  <AccessCheck module={currentModule} allowedPermissions={taskUpdatePermissions}>
+function RenderTaskUpdate() {
+  return <AccessCheck module={currentModule} allowedPermissions={taskUpdatePermissions}>
     <TaskUpdate />
   </AccessCheck>
 }
 
 
-function tasks() {
-  <AccessCheck module={currentModule} allowedPermissions={tasksPermissions}>
+function RenderTasks() {
+  return <AccessCheck module={currentModule} allowedPermissions={tasksPermissions}>
     <Tasks />
   </AccessCheck>
 }
@@ -45,7 +45,7 @@ export default {
   routeProps: {
     path: '/tasks',
     exact: true,
-    render: tasks
+    component: RenderTasks
   },
   name: t => t ('misc.tasks'),
   featureName: 'Tasks',
@@ -57,7 +57,7 @@ export default {
       routeProps: {
         path: '/tasks/:taskId',
         exact: true,
-        render: taskUpdate
+        component: RenderTaskUpdate
       },
       name: 'Task Update',
       accessibleBy: siteManagers,
@@ -66,7 +66,7 @@ export default {
       routeProps: {
         path: '/my_tasks',
         exact: true,
-        render: tasks
+        render: RenderTasks
       },
       name: 'My Tasks',
       accessibleBy: siteManagers,
