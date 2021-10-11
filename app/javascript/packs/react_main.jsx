@@ -336,10 +336,6 @@ const App = () => {
                               {/* Guard home is somehow kinda special leaving it now */}
                               <Route path="/guard_home" component={GuardHome} />
                               {/* Guard home ends */}
-                              <Route
-                                path="/request/:id?/:logs?"
-                                component={RequestUpdate}
-                              />
                               <Route path="/feedback" component={Feedback} />
                               <Route
                                 path="/feedback_success"
