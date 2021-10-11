@@ -27,18 +27,18 @@ const taskUpdatePermissions = [
 
 const currentModule = 'note'
 
-const taskUpdate = () => (
+function taskUpdate() {
   <AccessCheck module={currentModule} allowedPermissions={taskUpdatePermissions}>
     <TaskUpdate />
   </AccessCheck>
-)
+}
 
 
-const tasks = () => (
+function tasks() {
   <AccessCheck module={currentModule} allowedPermissions={tasksPermissions}>
     <Tasks />
   </AccessCheck>
-)
+}
 
 
 export default {
