@@ -201,7 +201,7 @@ export default function LoginScreen() {
                 value={userLogin.phone}
                 containerStyle={{ width: "100%" }}
                 inputClass="phone-login-input"
-                inputStyle={{ width: "100%", height: 51 }}
+                inputStyle={{ width: "100%", height: "4em" }}
                 country={extractCountry(communityData?.currentCommunity?.locale)}
                 enableSearch
                 placeholder={t('common:form_placeholders.phone_number')}
@@ -214,28 +214,28 @@ export default function LoginScreen() {
             <div className={`${css(styles.verticalDivider)}`}>
               <Divider className={`${css(styles.verticalDividerLine)}`} />
               {' '}
-              <p style={{ marginLeft: '1.4em', marginTop: '0.2em', marginBottom: '0.2em' }}>{t('common:misc:or')}</p>
+              <p style={{ marginLeft: '40%', marginTop: '0.2em', marginBottom: '0.2em' }}>{t('common:misc:or')}</p>
               {' '}
               <Divider className={`${css(styles.verticalDividerLine)}`} />
             </div>
             <div className={`${css(styles.horizontalDivider)}`}>
               <Divider className={`${css(styles.horizontalDividerLine)}`} />
               {' '}
-              <p style={{ margin: '0.5em' }}>{t('common:misc:or')}</p>
+              <p style={{  marginTop: '4%', marginLeft: '0.2em', marginRight: '0.2em' }}>{t('common:misc:or')}</p>
               {' '}
               <Divider className={`${css(styles.horizontalDividerLine)}`} />
             </div>
           </Grid>
           <Grid item xs={12} md={3}>
-            <div className="flex align-items-center">
+            <div className={`flex align-items-center ${css(styles.socialLoginSection )}`}>
               <TextField
                 value={userLogin.email}
                 variant="outlined"
                 fullWidth
-                margin="normal"
                 type="email"
                 name="email_login"
                 data-testid="email_text_input"
+                className={`${css(styles.emailLoginTextField )}`}
                 placeholder={t('login.login_email')}
                 onChange={event => setUserLogin({email: event.target.value, phone: '' })}
                 InputProps={{
@@ -468,15 +468,38 @@ const styles = StyleSheet.create({
   phoneNumberInput: {
     marginTop: '0.5em'
   },
+  socialLoginSection: {
+    marginTop: '1.6em',
+    '@media (min-device-width: 320px) and (max-device-height: 568px)' : {
+      marginTop: 0,
+     } ,
+ 
+     '@media (min-device-width: 414px) and (max-device-height: 736px)' : {
+       marginTop: 0,
+     },
+ 
+     '@media (min-device-width: 375px) and (max-device-height: 667px) and (orientation: portrait)' : {
+       marginTop: 0,
+     },
+     '@media  (min-device-width: 360px) and (max-device-height: 640px)' : {
+       marginTop: 0,
+     }
+  },
+  emailLoginTextField:{
+    height: '4em'
+  },
   facebookOAuthButton: {
     backgroundColor: 'white',
     textTransform: 'none',
     color: '#3b5998',
+    marginTop: '0.07em',
+    height: '4em'
   },
   googleOAuthButton: {
     backgroundColor: 'white',
     textTransform: 'none',
     marginTop: '0.5em',
+    height: '4em'
   },
   "[type='number']": {
     fontSize: 30
@@ -538,12 +561,12 @@ const styles = StyleSheet.create({
   horizontalDividerLine: {
     width: '40%',
     height: '1px',
-    backgroundColor: 'grey' 
+    backgroundColor: 'grey' ,
   },
   verticalDividerLine: {
     width: '1px',
     height: '40%',
     backgroundColor: 'grey',
-    marginLeft: '2em' 
+    marginLeft: '50%' 
   }
 })
