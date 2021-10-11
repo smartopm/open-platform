@@ -21,6 +21,7 @@ export default {
     'prospective_client',
     'contractor',
     'resident',
-    'visitor'
+    'visitor',
+    'site_worker'
   ]
 };

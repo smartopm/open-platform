@@ -11,7 +11,8 @@ import { Collapse } from '@material-ui/core';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 import { useTranslation } from 'react-i18next';
-import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider';
+import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider'; 
+import { objectAccessor } from '../../../utils/helpers';
 
 const SideMenu = ({ toggleDrawer, menuItems, userType, direction, communityFeatures }) => {
   const authState = useContext(AuthStateContext);
@@ -83,12 +84,28 @@ const SideMenu = ({ toggleDrawer, menuItems, userType, direction, communityFeatu
   }
 
   function checkMenuAccessibility(menuItem){
+    // no need for the check when all modules switch to using permissions
+    if(menuItem.moduleName !== undefined){
+      const modulePermissions = objectAccessor(authState.user?.permissions, menuItem.moduleName)
+      return modulePermissions?.permissions?.includes('can_see_menu_item')
+    }
+
     if(typeof menuItem.accessibleBy === 'function'){
       const ctx = createMenuContext(menuItem.featureName)
       return menuItem.accessibleBy(ctx).includes(userType)
     }
 
     return menuItem.accessibleBy.includes(userType)
+  }
+
+
+  function checkSubMenuAccessibility(subMenuItem){
+    // no need for the check when all modules switch to using permissions
+    if(subMenuItem.moduleName !== undefined){
+      const modulePermissions = objectAccessor(authState.user?.permissions, subMenuItem.moduleName)
+      return modulePermissions?.permissions?.includes('can_see_menu_item')
+    }
+      return subMenuItem.accessibleBy.includes(userType)
   }
 
   return (
@@ -131,7 +148,7 @@ const SideMenu = ({ toggleDrawer, menuItems, userType, direction, communityFeatu
                <List component="div" disablePadding>
                  { menuItem.subMenu &&
                     menuItem.subMenu.map(item =>
-                      communityFeatures.includes(item.featureName) && item.accessibleBy.includes(userType) ? (
+                      communityFeatures.includes(item.featureName) && checkSubMenuAccessibility(item) ? (
                         <ListItem
                           button
                           key={item.name(t)}
