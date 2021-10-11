@@ -1,74 +1,35 @@
-import React from 'react'
+import React from 'react';
 import MenuBookIcon from '@material-ui/icons/MenuBook';
-import PeopleIcon from '@material-ui/icons/People';
 import EntryLogs from './Components/EntryLogs';
-import GuestList from './GuestList/Components/GuestList'
-import GuestUpdate from './GuestList/containers/GuestUpdate'
+// logbook submodules
+import GuestsList from './GuestList';
+import GuestsValidateRoutes from './GuestVerification';
 import { guestListUsers } from '../../utils/constants';
-
-import RequestUpdate from './Components/RequestUpdate';
-
-
-const GuestsList =  {
-  routeProps: {
-    path: '/guest-list',
-    component: GuestList
-  },
-  styleProps: {
-    icon: <PeopleIcon />
-  },
-  name: t => t('menu.guest_list'),
-  featureName: 'Guest List',
-  accessibleBy: guestListUsers,
-
-  subRoutes: [
-    {
-      routeProps: {
-        path: '/guest-list/:guestListEntryId',
-        exact: true,
-        component: GuestUpdate
-      },
-      name: 'GuestUpdate',
-      accessibleBy: guestListUsers
-    },
-    {
-      routeProps: {
-        path: '/guest-list/new-guest-entry',
-        exact: true,
-        component: RequestUpdate
-      },
-      name: 'RequestUpdate',
-      accessibleBy: guestListUsers
-    }
-  ]
-
-};
-
 
 const LogBooks = {
   routeProps: {
     path: '/entry_logs',
-    component: EntryLogs
+    component: EntryLogs,
   },
   styleProps: {
-    icon: <MenuBookIcon />
+    icon: <MenuBookIcon />,
   },
-  name: t => t('misc.log_book'),
+  name: (t) => t('misc.log_book'),
   featureName: 'LogBook',
   accessibleBy: ['admin', 'security_guard'],
+  subRoutes: [...GuestsValidateRoutes],
 };
-
 
 export default {
   routeProps: {
     path: '/entry_logs',
-    component: EntryLogs
+    component: EntryLogs,
   },
   styleProps: {
-    icon: <MenuBookIcon />
+    icon: <MenuBookIcon />,
   },
-  name: t => t('misc.log_book'),
+  name: (t) => t('misc.log_book'),
   featureName: 'LogBook',
-  accessibleBy: ['admin', 'security_guard', 'resident', 'client', 'custodian'],
-  subMenu: [LogBooks, GuestsList]
+  accessibleBy: guestListUsers,
+  subMenu: [LogBooks, GuestsList],
 };

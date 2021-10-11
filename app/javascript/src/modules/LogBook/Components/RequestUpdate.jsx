@@ -227,14 +227,16 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
       history.push(`/entry_logs?tab=${tabValue}`);
     }
   }
-  
+
   function handleCreateRequest() {
     const otherFormData = {
       ...formData,
       // return reason if not other
       reason: formData.business || formData.reason,
-      isGuest: guestListRequest
+      isGuest: guestListRequest,
+      visitationDate: previousRoute !== 'entry_logs' ? formData.visitationDate : null
     }
+
     return (
       createEntryRequest({ variables: otherFormData })
         // eslint-disable-next-line consistent-return
@@ -249,7 +251,7 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
             setGuestRequest(response.data.result.entryRequest);
             setQrModal(true);
             return false
-          } 
+          }
           return response.data.result.entryRequest.id
         })
         .catch(err => {
@@ -454,7 +456,7 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
 
     if(_id === 'new-guest-entry' || guestListRequest ){
       history.push({pathname: '/guest-list'})
-      return 
+      return
     }
     history.push('/entry_logs?tab=2&offset=0')
   }
@@ -867,9 +869,9 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
             </Button>
           )
           }
-  
 
-            { 
+
+            {
               isGuestRequest && !id && (
                 <Button
                   variant="contained"
@@ -919,7 +921,7 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
                 </div>
               </>
 
-          
+
         ) : !/logs|enroll|guests/.test(previousRoute) && !tabValue && !guestListRequest? (
           <>
             <br />
@@ -1028,7 +1030,7 @@ const styles = StyleSheet.create({
     '@media (min-device-width: 320px) and (max-device-height: 568px)' : {
       height: 30,
       width: '50%',
-    
+
     },
   },
   callButton: {
@@ -1042,7 +1044,7 @@ const styles = StyleSheet.create({
     '@media (min-device-width: 320px) and (max-device-height: 568px)' : {
       height: 30,
       width: '50%',
-    
+
     },
   },
     enrollButton: {
@@ -1055,8 +1057,8 @@ const styles = StyleSheet.create({
     '@media (min-device-width: 320px) and (max-device-height: 568px)' : {
       height: 30,
       width: '100%',
-    
-    }, 
+
+    },
   },
 
   observationButton: {
@@ -1073,8 +1075,8 @@ const styles = StyleSheet.create({
     '@media (min-device-width: 320px) and (max-device-height: 568px)' : {
       height: 30,
       width: '50%',
-    
-    }, 
+
+    },
   },
   cancelGuestButton: {
     width: '20%',
@@ -1087,8 +1089,8 @@ const styles = StyleSheet.create({
     '@media (min-device-width: 320px) and (max-device-height: 568px)' : {
       height: 30,
       width: '30%',
-    
-    },    
+
+    },
   },
   }
 );

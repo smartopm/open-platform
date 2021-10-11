@@ -169,7 +169,7 @@ export function renderGuest(guest, classes, grantAccess, isMobile, loadingStatus
         <Grid item xs={12} md={1} data-testid="access_actions">
           <CenteredContent>
             <Button
-              disabled={!checkRequests(guest, translate, tz).valid || loadingStatus.loading && loadingStatus.currentId}
+              disabled={!checkRequests(guest, translate, tz).valid || loadingStatus.loading && Boolean(loadingStatus.currentId)}
               variant={isMobile ? "contained" : "text"}
               onClick={event => grantAccess(event, guest)}
               disableElevation
