@@ -193,7 +193,7 @@ export function IndexComponent({
   const [imageUrls, setImageUrls] = useState([])
   const [blobIds, setBlobIds] = useState([])
 
-  const { onChange, signedBlobId, url, status } = useFileUpload({
+  const { onChange, signedBlobId, url } = useFileUpload({
     client: useApolloClient(),
     maxSize: 1000
   });
@@ -308,7 +308,6 @@ export function IndexComponent({
 
   return (
     <div>
-      {console.log(status)}
       <MessageAlert
         type={!observationDetails.isError ? 'success' : 'error'}
         message={observationDetails.message}
