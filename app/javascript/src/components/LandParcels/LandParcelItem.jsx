@@ -20,11 +20,11 @@ export default function ParcelItem({ parcel, onParcelClick, onAddHouseClick }) {
   const [anchorEl, setAnchorEl] = useState(null)
   const anchorElOpen = Boolean(anchorEl)
   const menuList = [
-    { content: 'Edit Property', isAdmin: true, color: '', handleClick: () => onParcelClick(parcel)}
+    { content: 'Edit Property', isAdmin: true, color: '', handleClick: (e) => { onParcelClick(parcel); handleClose(e) }}
   ]
   if(parcel && parcel.objectType !== 'house') {
     menuList.unshift(
-      { content: 'Add House', isAdmin: true, color: '', handleClick: () => onAddHouseClick(parcel)}
+      { content: 'Add House', isAdmin: true, color: '', handleClick: (e) => { onAddHouseClick(parcel); handleClose(e) }}
     )
   }
   const menuData = {
@@ -102,7 +102,7 @@ export default function ParcelItem({ parcel, onParcelClick, onAddHouseClick }) {
           <IconButton
             aria-controls="simple-menu"
             aria-haspopup="true"
-            data-testid="receipt-menu"
+            data-testid="edit_property_menu"
             onClick={(event) => menuData.handlePropertyMenu(event)}
           >
             <MoreHorizOutlined />

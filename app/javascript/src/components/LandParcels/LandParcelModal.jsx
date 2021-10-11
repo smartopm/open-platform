@@ -545,7 +545,7 @@ export default function LandParcelModal({
                       onChange={event => onChangeOwnershipField(event, index)}
                         // eslint-disable-next-line no-unused-vars
                       onKeyDown={(_e) => userSearch(index)}
-                      className="property-owner-name-txt-input"
+                      className={`property-owner-name-txt-input-${index}`}
                     />
                     )}
                 />
@@ -558,9 +558,8 @@ export default function LandParcelModal({
                   label={t('property:form_fields.address')}
                   onChange={event => onChangeOwnershipField(event, index)}
                   name="address"
-                  className={classes.textField}
                   style={{ marginBottom: '15px' }}
-                  className="property-owner-address-txt-input"
+                  className={`property-owner-address-txt-input-${index} ${classes.textField}`}
                 />
               </div>
               <div className={classes.removeIcon}>
