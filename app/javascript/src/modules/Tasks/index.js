@@ -28,16 +28,20 @@ const taskUpdatePermissions = [
 const currentModule = 'note'
 
 function RenderTaskUpdate() {
-  return <AccessCheck module={currentModule} allowedPermissions={taskUpdatePermissions}>
-    <TaskUpdate />
-  </AccessCheck>
+  return (
+    <AccessCheck module={currentModule} allowedPermissions={taskUpdatePermissions}>
+      <TaskUpdate />
+    </AccessCheck>
+)
 }
 
 
 function RenderTasks() {
-  return <AccessCheck module={currentModule} allowedPermissions={tasksPermissions}>
-    <Tasks />
-  </AccessCheck>
+  return (
+    <AccessCheck module={currentModule} allowedPermissions={tasksPermissions}>
+      <Tasks />
+    </AccessCheck>
+)
 }
 
 
