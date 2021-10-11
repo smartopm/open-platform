@@ -1,31 +1,4 @@
-/**
- * Creat 2 users
- * Login in as user1
- * Go to Properties
- * No property available should exist
- * Click create new Property
- * Add user1 
- * Save
- * Property should exist
- * Edit  property & add user2 as owners
- * Visit user 2 profile - Users -> John Doe
- * No payment plan available for user 2
- * Go to user 1 profile -> Go to payments tab
- * Pending balance should be 0 for user 1
- * Click new payment plan button
- * Choose the co-owned plot
- * Choose user 2 as co-owner
- * Save
- * Go to user payments page
- * Pending balance should change
- * Go to Users page
- * Select user2 -  Go to their profile
- * Open Payments
- * Payment plan should exist
- * No Pending balance should exist
- * Click view details
- * Co-owners section should contain user 2
- */
+/* eslint-disable no-undef */
 
 describe('Properties & Co-ownership Payment Plan', () => {
   it('creates a co-owned property and a payment plan ', () => {
