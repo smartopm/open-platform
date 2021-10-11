@@ -47,7 +47,7 @@ module Types
         image_attached << "https://#{base_url}#{path}"
       end
 
-      image_attached      
+      image_attached
     end
   end
 end

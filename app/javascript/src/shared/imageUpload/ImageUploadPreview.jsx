@@ -8,7 +8,7 @@ export default function ImageUploadPreview({ imageUrls, token, sm, xs, style }) 
     <>
       <Grid container>
         {imageUrls.map((img) => (
-          <Grid item sm={sm} xs={xs} key={img} style={style}>
+          <Grid item sm={sm} xs={xs} key={img} style={style} data-testid='upload_preview'>
             <ImageAuth
               imageLink={img}
               token={token}

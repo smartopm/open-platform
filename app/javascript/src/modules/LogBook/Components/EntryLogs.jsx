@@ -1,5 +1,3 @@
-/* eslint-disable complexity */
-/* eslint-disable max-statements */
 /* eslint-disable react/prop-types */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
@@ -431,7 +429,7 @@ export function IndexComponent({
                   groupedDate={groupedDate}
                   eventLogs={objectAccessor(observationLogs, groupedDate)}
                   routeToEntry={routeToAction}
-                  token={authState.token}
+                  token={authState?.token}
                 />
               ))}
           </>

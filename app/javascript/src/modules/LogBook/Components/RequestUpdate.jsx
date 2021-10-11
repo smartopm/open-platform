@@ -1,9 +1,8 @@
-/* eslint-disable */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 /* eslint-disable no-nested-ternary */
 /* eslint-disable no-use-before-define */
 import React, { useState, useEffect, useContext } from 'react';
-import { useMutation, useLazyQuery } from 'react-apollo';
+import { useMutation, useLazyQuery, useApolloClient } from 'react-apollo';
 import { TextField, MenuItem, Button, Grid } from '@material-ui/core';
 import { StyleSheet, css } from 'aphrodite';
 import { useHistory } from 'react-router';
@@ -23,7 +22,7 @@ import { isTimeValid, getWeekDay } from '../../../utils/dateutil';
 import { objectAccessor } from '../../../utils/helpers';
 import { dateToString, dateTimeToString } from '../../../components/DateContainer';
 import { userState, userType, communityVisitingHours, defaultBusinessReasons, CommunityFeaturesWhiteList } from '../../../utils/constants'
-import { ModalDialog, ReasonInputModal, CustomizedDialogs } from "../../../components/Dialog"
+import { ModalDialog, ReasonInputModal } from "../../../components/Dialog"
 import { Context } from '../../../containers/Provider/AuthStateProvider';
 import EntryNoteDialog from '../../../shared/dialogs/EntryNoteDialog';
 import CenteredContent from '../../../components/CenteredContent';
@@ -36,6 +35,7 @@ import { checkInValidRequiredFields, defaultRequiredFields , checkRequests } fro
 import GuestTime from './GuestTime';
 import QRCodeConfirmation from './QRCodeConfirmation';
 import FeatureCheck from '../../Features';
+import { useFileUpload } from '../../../graphql/useFileUpload';
 
 const initialState = {
     name: '',
@@ -430,7 +430,7 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
     }
     setDetails({ ...observationDetails, loading: true });
     addObservationNote({
-      variables: { id: reqId, note: observationNote, refType: 'Logs::EntryRequest' }
+      variables: { id: reqId, note: observationNote, refType: 'Logs::EntryRequest', attachedImages: blobIds }
     })
       .then(() => {
         setDetails({

@@ -57,8 +57,8 @@ export default function EntryNoteDialog({
             fullWidth
           />
           <Grid container className={styles.upload}>
-            <Grid item sm={8}>Do you have any images you will like to add?</Grid>
-            <Grid item sm={4} className={styles.uploadButton}>
+            <Grid item sm={8} data-testid='upload_label'>Do you have any images you will like to add?</Grid>
+            <Grid item sm={4} className={styles.uploadButton} data-testid='upload_button'>
               <ImageUploader 
                 handleChange={imageOnchange}
                 buttonText='Upload Image'
@@ -91,9 +91,13 @@ const useStyles = makeStyles(() => ({
   }
 }))
 
+EntryNoteDialog.defaultProps = {
+  token: ''
+}
+
 EntryNoteDialog.propTypes = {
   open: PropTypes.bool.isRequired,
-  token: PropTypes.string.isRequired,
+  token: PropTypes.string,
   observationHandler: PropTypes.shape({
     value: PropTypes.string,
     handleChange: PropTypes.func
