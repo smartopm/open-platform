@@ -22,14 +22,16 @@ export default function ImageUploadPreview({ imageUrls, token, sm, xs, style }) 
 }
 
 ImageUploadPreview.defaultProps = {
-  style: {}
+  style: {},
+  sm: 12,
+  xs: 12
 }
 
 ImageUploadPreview.propTypes = {
   token: PropTypes.string.isRequired,
   imageUrls: PropTypes.arrayOf(PropTypes.string).isRequired,
-  sm: PropTypes.number.isRequired,
-  xs: PropTypes.number.isRequired,
+  sm: PropTypes.number,
+  xs: PropTypes.number,
   // eslint-disable-next-line react/forbid-prop-types
   style: PropTypes.object
 };

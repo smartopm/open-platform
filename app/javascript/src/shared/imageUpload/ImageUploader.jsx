@@ -7,7 +7,7 @@ export default function ImageUploader({ handleChange, buttonText, style }) {
     <>
       <Button
         variant="contained"
-        data-testid="save"
+        data-testid="upload_button"
         style={style}
         component="label"
       >
