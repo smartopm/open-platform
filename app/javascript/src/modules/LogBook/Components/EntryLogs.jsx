@@ -8,7 +8,7 @@ import React, { useState, Fragment, useContext, useEffect } from 'react';
 import { useMutation, useQuery, useApolloClient } from 'react-apollo';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { useTranslation } from 'react-i18next';
-import { Button, Grid, useTheme, makeStyles, TextField, Typography } from '@material-ui/core';
+import { Button, Grid, useTheme, makeStyles } from '@material-ui/core';
 import SearchInput from '../../../shared/search/SearchInput';
 import Loading, { Spinner } from '../../../shared/Loading';
 import { AllEventLogsQuery } from '../../../graphql/queries';
@@ -35,9 +35,6 @@ import VisitEntryLogs from './VisitEntryLogs';
 import CenteredContent from '../../../components/CenteredContent';
 import Paginate from '../../../components/Paginate';
 import GuestBook from './GuestBook';
-import { CustomizedDialogs } from '../../../components/Dialog';
-import ImageUploader from '../../../shared/imageUpload/ImageUploader';
-import ImageUploadPreview from '../../../shared/imageUpload/ImageUploadPreview';
 import { useFileUpload } from '../../../graphql/useFileUpload';
 
 export default ({ history, match }) => AllEventLogs(history, match);
@@ -228,10 +225,6 @@ export function IndexComponent({
     handleSaveObservation(eventLog, logType);
   }
 
-  function handleChange(img) {
-    onChange(img)
-  }
-
   function handleAddObservation(log) {
     setClickedEvent({ refId: log.refId, refType: log.refType });
     setIsObservationOpen(true);
@@ -263,6 +256,7 @@ export function IndexComponent({
         setClickedEvent({ refId: '', refType: '' });
         refetch();
         setIsObservationOpen(false);
+        setImageUrls([]);
       })
       .catch(error => {
         setDetails({
@@ -274,6 +268,7 @@ export function IndexComponent({
         // reset state in case it errs and user chooses a different log
         setObservationNote('');
         setClickedEvent({ refId: '', refType: '' });
+        setImageUrls([]);
       });
   }
 
@@ -307,55 +302,54 @@ export function IndexComponent({
     }, {});
   }
 
+  function handleCancelClose() {
+    setIsObservationOpen(false);
+    setImageUrls([]);
+  }
+
   return (
     <div>
-      {console.log(data)}
       <MessageAlert
         type={!observationDetails.isError ? 'success' : 'error'}
         message={observationDetails.message}
         open={!!observationDetails.message}
         handleClose={() => setDetails({ ...observationDetails, message: '' })}
       />
-      <CustomizedDialogs
+      <EntryNoteDialog
         open={isObservationOpen}
-        handleModal={() => setIsObservationOpen(false)}
-        dialogHeader={t('observations.observation_title')}
-        handleBatchFilter={() => handleSaveObservation()}
-        disableActionBtn={observationDetails.loading}
+        handleDialogStatus={() => setIsObservationOpen(!isObservationOpen)}
+        observationHandler={{
+          value: observationNote,
+          handleChange: value => setObservationNote(value)
+        }}
+        imageOnchange={(img) => onChange(img)}
+        imageUrls={imageUrls}
       >
-        <Typography gutterBottom>{t('observations.add_your_observation')}</Typography>
-        <TextField
-          id="outlined-multiline-static"
-          rows={6}
-          variant="outlined"
-          value={observationNote}
-          onChange={event => setObservationNote(event.target.value)}
-          inputProps={{
-              'data-testid': 'entry-dialog-field'
-            }}
-          multiline
-          fullWidth
-        />
-        <Grid container className={classes.container}>
-          <Grid item sm={8}>Do you have any images you will like to add?</Grid>
-          <Grid item sm={4} className={classes.uploadButton}>
-            <ImageUploader 
-              handleChange={handleChange}
-              buttonText='Upload Image'
-              style={{background: '#CACACA'}}
-            />
-          </Grid>
-          {imageUrls.length > 0 && (
-          <ImageUploadPreview 
-            imageUrls={imageUrls} 
-            token={authState.token}
-            sm={6}
-            xs={12}
-            style={{padding: '10px'}}
-          />
-            )}
-        </Grid>
-      </CustomizedDialogs>
+        {observationDetails.loading ? (
+          <Spinner />
+        ) : (
+          <>
+            <Button
+              onClick={() => handleCancelClose()}
+              color="secondary"
+              variant="outlined"
+              data-testid="cancel"
+            >
+              {t('common:form_actions.cancel')}
+            </Button>
+            <Button
+              onClick={() => handleSaveObservation()}
+              color="primary"
+              variant="contained"
+              data-testid="save"
+              style={{ color: 'white' }}
+              autoFocus
+            >
+              {t('common:form_actions.save')}
+            </Button>
+          </>
+        )}
+      </EntryNoteDialog>
       <div className="container">
         <SearchInput
           title={objectAccessor(searchPlaceholder, tabValue)}
@@ -437,6 +431,7 @@ export function IndexComponent({
                   groupedDate={groupedDate}
                   eventLogs={objectAccessor(observationLogs, groupedDate)}
                   routeToEntry={routeToAction}
+                  token={authState.token}
                 />
               ))}
           </>

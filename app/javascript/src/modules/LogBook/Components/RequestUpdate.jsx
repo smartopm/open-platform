@@ -1,3 +1,4 @@
+/* eslint-disable */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 /* eslint-disable no-nested-ternary */
 /* eslint-disable no-use-before-define */
@@ -22,7 +23,7 @@ import { isTimeValid, getWeekDay } from '../../../utils/dateutil';
 import { objectAccessor } from '../../../utils/helpers';
 import { dateToString, dateTimeToString } from '../../../components/DateContainer';
 import { userState, userType, communityVisitingHours, defaultBusinessReasons, CommunityFeaturesWhiteList } from '../../../utils/constants'
-import { ModalDialog, ReasonInputModal } from "../../../components/Dialog"
+import { ModalDialog, ReasonInputModal, CustomizedDialogs } from "../../../components/Dialog"
 import { Context } from '../../../containers/Provider/AuthStateProvider';
 import EntryNoteDialog from '../../../shared/dialogs/EntryNoteDialog';
 import CenteredContent from '../../../components/CenteredContent';
@@ -99,6 +100,12 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
   const [guestRequest, setGuestRequest] = useState({ id: '' });
   const requiredFields = authState?.user?.community?.communityRequiredFields?.manualEntryRequestForm || defaultRequiredFields
   const showCancelBtn = previousRoute || tabValue || !!guestListRequest
+  const [imageUrls, setImageUrls] = useState([])
+  const [blobIds, setBlobIds] = useState([])
+
+  const { onChange, signedBlobId, url } = useFileUpload({
+    client: useApolloClient()
+  });
 
   useEffect(() => {
     if (id!== 'new-guest-entry' && id !== null && id !== 'undefined') {
@@ -111,6 +118,16 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
       setReasonModal(true);
     }
   }, [formData.reason, id]);
+
+  useEffect(() => {
+    if (url) {
+      setImageUrls([...imageUrls, url])
+    }
+    if (signedBlobId) {
+      setBlobIds([...blobIds, signedBlobId])
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [url, signedBlobId]);
 
   useEffect(() => {
     if (formData.loaded && isScannedRequest) {
@@ -401,6 +418,7 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
     setRequestId('');
     setIsObservationOpen(false);
     setModal(false);
+    setImageUrls([]);
     history.push(to);
   }
 
@@ -520,7 +538,9 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
         observationHandler={{
         value: observationNote,
         handleChange: value => setObservationNote(value)
-      }}
+        }}
+        imageOnchange={(img) => onChange(img)}
+        imageUrls={imageUrls}
       >
         {observationDetails.loading ? (
           <Spinner />

@@ -11,11 +11,20 @@ import { isToday } from 'date-fns';
 import DividerWithText from '../../../shared/DividerWithText';
 import { dateTimeToString, dateToString } from '../../../components/DateContainer';
 import { titleize } from '../../../utils/helpers';
+import { DetailsDialog } from '../../../components/Dialog';
+import ImageUploadPreview from '../../../shared/imageUpload/ImageUploadPreview';
 
-export default function GroupedObservations({ groupedDate, eventLogs, routeToEntry }) {
+export default function GroupedObservations({ groupedDate, eventLogs, routeToEntry, token }) {
   const classes = useStyles();
   const [collapsed, setCollapsed] = useState(false);
+  const [imageOpen, setImageOpen] = useState(false);
+  const [id, setId] = useState('')
   const { t } = useTranslation(['logbook', 'common']);
+
+  function handleClick(logId) {
+    setImageOpen(true)
+    setId(logId)
+  }
 
   return (
     <div style={{ fontSize: '14px' }}>
@@ -104,6 +113,30 @@ export default function GroupedObservations({ groupedDate, eventLogs, routeToEnt
                   <Divider orientation="vertical" flexItem className={classes.verticalDivider} />
                 </Grid>
                 <Grid item>{dateTimeToString(eventLog.createdAt)}</Grid>
+                {eventLog.imageUrls && (
+                  <>
+                    <Grid item style={{ maxWidth: '2px', margin: '0 12px' }}>
+                      <Divider orientation="vertical" flexItem className={classes.verticalDivider} />
+                    </Grid>
+                    <Grid item>
+                      <Typography onClick={() => handleClick(eventLog.id)} className={classes.imagesButton} color='primary'>images</Typography>
+                    </Grid>
+                    {imageOpen && (
+                      <DetailsDialog
+                        open={eventLog.id === id && imageOpen}
+                        handleClose={() => setImageOpen(false)}
+                        title='Attached Images'
+                      >
+                        <ImageUploadPreview 
+                          imageUrls={eventLog.imageUrls}
+                          token={token}
+                          sm={6}
+                          xs={12}
+                        />
+                      </DetailsDialog>
+                    )}
+                  </>
+                )}
               </Grid>
             </Grid>
           </div>
@@ -119,6 +152,10 @@ const useStyles = makeStyles(() => ({
   verticalDivider: {
     height: '16px',
     marginTop: '2px'
+  },
+  imagesButton: {
+    fontSize: '14px',
+    cursor: 'pointer'
   }
 }));
 
@@ -130,5 +167,6 @@ GroupedObservations.propTypes = {
       createdAt: PropTypes.string
     })
   ).isRequired,
-  routeToEntry: PropTypes.func.isRequired
+  routeToEntry: PropTypes.func.isRequired,
+  token: PropTypes.string.isRequired
 };
