@@ -1,6 +1,6 @@
 /* eslint-disable max-statements */
 import React, { useState, useEffect } from 'react';
-import { Button , Typography } from '@material-ui/core';
+import { Button, Typography } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import VideoRecorder from 'react-video-recorder';
 import { makeStyles } from '@material-ui/core/styles';
@@ -101,28 +101,35 @@ export default function VideoCapture({ handleNext }) {
   return (
     <div className={classes.root}>
       <Typography variant="h6">{t('logbook:video_recording.add_video_text')}</Typography>
-      <Typography className={classes.title}>{t('logbook:video_recording.create_video_text')}</Typography>
-      <div className={classes.greyText}>
+      <Typography className={classes.title}>
+        {t('logbook:video_recording.create_video_text')}
+      </Typography>
+      <div className={classes.greyText} data-testid="be-sure-txt">
         {t('logbook:video_recording.sure')}
         :
       </div>
-      <div className={classes.greyText}>
+      <div className={classes.greyText} data-testid="well-lit-txt">
         1. 
         {' '}
         {t('logbook:video_recording.well_lit_area')}
       </div>
-      <div className={classes.greyText}>
-        2.
-        {t('logbook:video_recording.listen_to_counter')} 
+      <div className={classes.greyText} data-testid="listen-to-counter-txt">
+        2. 
+        {' '}
+        {t('logbook:video_recording.listen_to_counter')}
       </div>
-      <div className={classes.greyText}>
+      <div className={classes.greyText} data-testid="direction-txt">
         3. 
         {' '}
         {t('logbook:video_recording.instruction_on_direction')}
       </div>
 
       <div className={classes.counter}>
-        <Typography variant="h5">{`0${counter} ${t('common:misc.seconds')}`}</Typography>
+        <Typography variant="h5" data-testid="seconds-txt">
+          {`0${counter} ${t(
+          'common:misc.seconds'
+        )}`}
+        </Typography>
         {recordingInstruction}
       </div>
       <div className={classes.videoArea}>
@@ -139,7 +146,7 @@ export default function VideoCapture({ handleNext }) {
       </div>
       <div className={classes.continueButton}>
         {recordingCompleted && (
-          <Button onClick={onContinue} color="primary">
+          <Button onClick={onContinue} color="primary" data-testid="continue-btn">
             {t('common:menu.continue')}
           </Button>
         )}
