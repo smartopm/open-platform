@@ -22,6 +22,7 @@ RSpec.describe TaskReminderJob, type: :job do
   end
   let!(:assignee_note) { create(:assignee_note, user: admin, note: note) }
 
+  before { Rails.env.stub(production?: true) }
   describe '#perform' do
     before do
       ActiveJob::Base.queue_adapter = :test
