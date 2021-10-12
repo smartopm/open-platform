@@ -205,6 +205,11 @@ module Users
       find_by(phone_number: phone_number)
     end
 
+    def self.find_any_via_email(email)
+      # exclude users authenticated via any oAuth provider
+      find_by(email: email, provider: nil)
+    end
+
     # We may want to do a bit more work here massaing the number entered
     def find_via_phone_number(phone_number)
       community.users.find_by(phone_number: phone_number)
@@ -453,6 +458,30 @@ module Users
       Sms.send(self[:phone_number], msg)
       url
     end
+
+    # rubocop:disable Metrics/MethodLength
+    # rubocop:disable Metrics/AbcSize
+    def send_one_time_login_email
+      raise UserError, 'No Email to send one time code to' unless self[:email]
+
+      token = create_new_phone_token
+      raise TokenGenerationFailed, 'Token generation failed' if token.blank?
+
+      url = "https://#{HostEnv.base_url(community)}/l/#{self[:id]}/#{token}"
+      msg = "Your login link for #{community.name} is #{url}"
+
+      template = community.email_templates
+      &.system_emails
+      &.find_by(name: 'one_time_login_template')
+      return unless template
+
+      template_data = [{ key: '%one_time_login%', value: msg }]
+      Rails.logger.info "Sending '#{msg}' to #{self[:email]}"
+      EmailMsg.send_mail_from_db(self[:email], template, template_data)
+      url
+    end
+    # rubocop:enable Metrics/AbcSize
+    # rubocop:enable Metrics/MethodLength
 
     def role?(roles)
       user_type = self[:user_type]
