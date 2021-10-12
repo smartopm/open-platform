@@ -341,8 +341,16 @@ RSpec.describe Mutations::EntryRequest do
 
     let(:query) do
       <<~GQL
-        mutation addObservationNote($id: ID, $note: String, $refType: String, $eventLogId: ID, $attachedImages: JSON) {
-          entryRequestNote(id: $id, note: $note, refType: $refType, eventLogId: $eventLogId, attachedImages: $attachedImages) {
+        mutation addObservationNote($id: ID, 
+        $note: String, 
+        $refType: String, 
+        $eventLogId: ID, 
+        $attachedImages: JSON) {
+          entryRequestNote(id: $id, 
+          note: $note, 
+          refType: $refType, 
+          eventLogId: $eventLogId, 
+          attachedImages: $attachedImages) {
             event {
               id
               data
@@ -360,7 +368,7 @@ RSpec.describe Mutations::EntryRequest do
         id: entry_request.id,
         note: 'The vehicle was too noisy',
         refType: 'Logs::EntryRequest',
-        attachedImages: [image]
+        attachedImages: [image],
       }
       result = DoubleGdpSchema.execute(query, variables: variables,
                                               context: {
