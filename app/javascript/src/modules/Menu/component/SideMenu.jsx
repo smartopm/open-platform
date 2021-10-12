@@ -11,7 +11,9 @@ import { Collapse } from '@material-ui/core';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 import { useTranslation } from 'react-i18next';
-import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider';
+import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider'; 
+import { objectAccessor } from '../../../utils/helpers';
+import checkSubMenuAccessibility from '../utils';
 
 const SideMenu = ({ toggleDrawer, menuItems, userType, direction, communityFeatures }) => {
   const authState = useContext(AuthStateContext);
@@ -83,6 +85,12 @@ const SideMenu = ({ toggleDrawer, menuItems, userType, direction, communityFeatu
   }
 
   function checkMenuAccessibility(menuItem){
+    // no need for the check when all modules switch to using permissions
+    if(menuItem.moduleName !== undefined){
+      const modulePermissions = objectAccessor(authState.user?.permissions, menuItem.moduleName)
+      return modulePermissions?.permissions?.includes('can_see_menu_item')
+    }
+
     if(typeof menuItem.accessibleBy === 'function'){
       const ctx = createMenuContext(menuItem.featureName)
       return menuItem.accessibleBy(ctx).includes(userType)
@@ -131,7 +139,7 @@ const SideMenu = ({ toggleDrawer, menuItems, userType, direction, communityFeatu
                <List component="div" disablePadding>
                  { menuItem.subMenu &&
                     menuItem.subMenu.map(item =>
-                      communityFeatures.includes(item.featureName) && item.accessibleBy.includes(userType) ? (
+                      communityFeatures.includes(item.featureName) && checkSubMenuAccessibility({authState, subMenuItem: item}) ? (
                         <ListItem
                           button
                           key={item.name(t)}

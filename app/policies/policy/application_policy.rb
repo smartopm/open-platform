@@ -9,6 +9,7 @@ module Policy
     attr_reader :user, :record, :permission_list
 
     PERMISSIONS = YAML.load_file("#{::Rails.root}/app/policies/permissions.yml")
+
     # Food for thought, think of a resource.
     # only the owner can update in the future.
     # We can capture the curent user and curent record and return true or false

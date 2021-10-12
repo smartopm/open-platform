@@ -49,6 +49,7 @@ module Types
                                                                              user: :id }
     field :ext_ref_id, String, null: true, visible: { roles: %i[admin], user: :id }
     field :payment_plan, Boolean, null: false
+    field :permissions, GraphQL::Types::JSON, null: true
 
     def avatar_url
       return nil unless object.avatar.attached?
@@ -70,6 +71,11 @@ module Types
 
     def payment_plan
       object.payment_plans.active.present? || object.plan_payments.present?
+    end
+
+    def permissions
+      ::Policy::ApplicationPolicy
+        .new.permission_list[object.user_type.to_sym]
     end
   end
 end

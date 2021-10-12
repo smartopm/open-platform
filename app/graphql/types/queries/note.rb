@@ -219,7 +219,7 @@ module Types::Queries::Note
            ::Policy::Note::NotePolicy.new(
              current_user, nil
            ).permission?(
-             :can_get_user_tasks,
+             :can_get_own_tasks,
            )
       raise GraphQL::ExecutionError,
             I18n.t('errors.unauthorized')

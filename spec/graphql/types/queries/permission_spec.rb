@@ -18,7 +18,7 @@ RSpec.describe Types::Queries::Permission do
     end
 
     let(:permissions_object) do
-      { note: { admin: { permissions: %i[can_create_note can_update_note] } } }
+      { admin: { note: { permissions: %i[can_create_note can_update_note] } } }
     end
 
     before do
