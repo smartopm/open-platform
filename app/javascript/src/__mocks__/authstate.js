@@ -17,7 +17,16 @@ const authState = {
     imageUrl: 'image.jpg',
     name: 'John Doctor',
     phoneNumber: '260971500000',
-    userType: 'admin'
+    userType: 'admin',
+    permissions: {
+      note: {
+        permissions: [
+        'can_see_menu_item',
+        'can_create_note',
+        'can_get_task_count'
+      ]
+      }
+    }
   }
 };
 export default authState;

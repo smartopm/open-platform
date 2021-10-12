@@ -8,6 +8,7 @@ import { Context } from '../../../containers/Provider/AuthStateProvider';
 import { createClient } from '../../../utils/apollo';
 import { SideMenu } from '../index';
 import modules from '../..';
+import authState from '../../../__mocks__/authstate';
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
 describe('Side Nav component', () => {
@@ -66,7 +67,7 @@ describe('Side Nav component', () => {
 
     const container = render(
       <ApolloProvider client={createClient}>
-        <Context.Provider value={data}>
+        <Context.Provider value={authState}>
           <MockedProvider>
             <BrowserRouter>
               <SideMenu
