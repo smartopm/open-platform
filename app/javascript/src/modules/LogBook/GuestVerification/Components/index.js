@@ -2,9 +2,14 @@
 // If there is only one step, it won't show the stepper
 import React from 'react';
 import GuestForm from './GuestForm';
+import VideoCapture from './VideoCapture';
 
 export default function steps(handleNext) {
   return [
+    {
+      title: 'Capture Video',
+      component: <VideoCapture handleNext={handleNext} />,
+    },
     {
       title: 'Guest Form',
       component: <GuestForm handleNext={handleNext} />,
