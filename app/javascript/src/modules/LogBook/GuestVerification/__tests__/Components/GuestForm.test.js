@@ -8,6 +8,7 @@ import { Context } from '../../../../../containers/Provider/AuthStateProvider';
 import MockedThemeProvider from '../../../../__mocks__/mock_theme';
 import userMock from '../../../../../__mocks__/userMock'
 
+jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn())
 describe('Guest Form component', () => {
   it('should render correctly', () => {
     const container = render(
