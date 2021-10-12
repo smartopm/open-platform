@@ -83,6 +83,7 @@ export const AllEventLogsQuery = gql`
       subject
       sentence
       data
+      imageUrls
       actingUser {
         name
         id

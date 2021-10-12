@@ -6,6 +6,9 @@ import EntryNoteDialog from '../../../shared/dialogs/EntryNoteDialog'
 describe('It should render the entry note dialog', () => {
     it('should render with dialog', () => {
         const mock = jest.fn()
+        const imageUrls = [
+          'dummy_link.jpg'
+        ]
       const container = render(
         <EntryNoteDialog
           open
@@ -14,6 +17,9 @@ describe('It should render the entry note dialog', () => {
               handleChange: mock
           }}
           handleDialogStatus={jest.fn()}
+          imageOnchange={jest.fn()}
+          token='thyhubiuwe'
+          imageUrls={imageUrls}
         >
           <p>
             Some text child of entry note
@@ -25,5 +31,7 @@ describe('It should render the entry note dialog', () => {
       expect(container.queryAllByText('observations.add_your_observation')[0]).toBeInTheDocument()
       expect(container.queryAllByTestId('entry-dialog-field')[0]).toBeInTheDocument()
       expect(container.queryByText('Some text child of entry note')).toBeInTheDocument()
+      expect(container.queryByTestId('upload_label')).toBeInTheDocument()
+      expect(container.queryAllByTestId('upload_button')[0]).toBeInTheDocument()
     });
 });

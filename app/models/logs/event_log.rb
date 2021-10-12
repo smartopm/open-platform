@@ -4,6 +4,8 @@ module Logs
   # rubocop:disable Metrics/ClassLength
   # A list of all activity for a particular community
   class EventLog < ApplicationRecord
+    has_many_attached :images
+
     belongs_to :community
     belongs_to :acting_user, optional: true, class_name: 'Users::User'
     belongs_to :ref, polymorphic: true, optional: true

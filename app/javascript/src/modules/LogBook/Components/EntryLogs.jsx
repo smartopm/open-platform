@@ -3,7 +3,7 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable react/jsx-one-expression-per-line */
 import React, { useState, Fragment, useContext, useEffect } from 'react';
-import { useMutation, useQuery } from 'react-apollo';
+import { useMutation, useQuery, useApolloClient } from 'react-apollo';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { useTranslation } from 'react-i18next';
 import { Button, Grid, useTheme, makeStyles } from '@material-ui/core';
@@ -33,6 +33,7 @@ import VisitEntryLogs from './VisitEntryLogs';
 import CenteredContent from '../../../components/CenteredContent';
 import Paginate from '../../../components/Paginate';
 import GuestBook from './GuestBook';
+import { useFileUpload } from '../../../graphql/useFileUpload';
 
 export default function EntryLogs({ history, match }){
   return <AllEventLogs history={history} match={match} />
@@ -182,6 +183,13 @@ export function IndexComponent({
   const theme = useTheme();
   const matches = useMediaQuery(theme.breakpoints.up('sm'));
   const classes = useStyles();
+  const [imageUrls, setImageUrls] = useState([])
+  const [blobIds, setBlobIds] = useState([])
+
+  const { onChange, signedBlobId, url } = useFileUpload({
+    client: useApolloClient(),
+    maxSize: 1000
+  });
 
   function routeToAction(eventLog) {
     if (eventLog.refType === 'Logs::EntryRequest') {
@@ -222,7 +230,8 @@ export function IndexComponent({
         note: observationNote || exitNote,
         id: log.refId,
         refType: log.refType,
-        eventLogId: log.id
+        eventLogId: log.id,
+        attachedImages: blobIds
       }
     })
       .then(() => {
@@ -239,6 +248,7 @@ export function IndexComponent({
         setClickedEvent({ refId: '', refType: '' });
         refetch();
         setIsObservationOpen(false);
+        setImageUrls([]);
       })
       .catch(error => {
         setDetails({
@@ -250,8 +260,19 @@ export function IndexComponent({
         // reset state in case it errs and user chooses a different log
         setObservationNote('');
         setClickedEvent({ refId: '', refType: '' });
+        setImageUrls([]);
       });
   }
+
+  useEffect(() => {
+    if (url) {
+      setImageUrls([...imageUrls, url])
+    }
+    if (signedBlobId) {
+      setBlobIds([...blobIds, signedBlobId])
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [url, signedBlobId]);
 
   const filteredEvents =
     data?.result &&
@@ -273,6 +294,11 @@ export function IndexComponent({
     }, {});
   }
 
+  function handleCancelClose() {
+    setIsObservationOpen(false);
+    setImageUrls([]);
+  }
+
   return (
     <div>
       <MessageAlert
@@ -288,13 +314,15 @@ export function IndexComponent({
           value: observationNote,
           handleChange: value => setObservationNote(value)
         }}
+        imageOnchange={(img) => onChange(img)}
+        imageUrls={imageUrls}
       >
         {observationDetails.loading ? (
           <Spinner />
         ) : (
           <>
             <Button
-              onClick={() => setIsObservationOpen(false)}
+              onClick={() => handleCancelClose()}
               color="secondary"
               variant="outlined"
               data-testid="cancel"
@@ -395,6 +423,7 @@ export function IndexComponent({
                   groupedDate={groupedDate}
                   eventLogs={objectAccessor(observationLogs, groupedDate)}
                   routeToEntry={routeToAction}
+                  token={authState?.token}
                 />
               ))}
           </>
@@ -444,5 +473,11 @@ const useStyles = makeStyles(theme => ({
     [theme.breakpoints.up('lg')]: {
       marginLeft: '-23%',
     }
+  },
+  container: {
+    marginTop: '20px'
+  },
+  uploadButton: {
+    textAlign: 'right'
   }
 }));

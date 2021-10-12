@@ -8,6 +8,7 @@ module Mutations
       argument :event_log_id, ID, required: false
       argument :ref_type, String, required: false
       argument :note, String, required: false
+      argument :attached_images, GraphQL::Types::JSON, required: false
 
       field :event, Types::EventLogType, null: true
 
@@ -26,6 +27,7 @@ module Mutations
           update_prev_log(vals[:event_log_id], vals[:note])
 
           evt = context[:current_user].generate_events('observation_log', log, note: vals[:note])
+          evt.images.attach(vals[:attached_images]) if vals[:attached_images].present?
           raise GraphQL::ExecutionError, evt.errors.full_messages if evt.blank?
 
           { event: evt }

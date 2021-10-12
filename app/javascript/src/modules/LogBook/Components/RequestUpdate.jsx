@@ -2,7 +2,7 @@
 /* eslint-disable no-nested-ternary */
 /* eslint-disable no-use-before-define */
 import React, { useState, useEffect, useContext } from 'react';
-import { useMutation, useLazyQuery } from 'react-apollo';
+import { useMutation, useLazyQuery, useApolloClient } from 'react-apollo';
 import { TextField, MenuItem, Button, Grid } from '@material-ui/core';
 import { StyleSheet, css } from 'aphrodite';
 import { useHistory } from 'react-router';
@@ -35,6 +35,7 @@ import { checkInValidRequiredFields, defaultRequiredFields , checkRequests } fro
 import GuestTime from './GuestTime';
 import QRCodeConfirmation from './QRCodeConfirmation';
 import FeatureCheck from '../../Features';
+import { useFileUpload } from '../../../graphql/useFileUpload';
 
 const initialState = {
     name: '',
@@ -99,6 +100,13 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
   const [guestRequest, setGuestRequest] = useState({ id: '' });
   const requiredFields = authState?.user?.community?.communityRequiredFields?.manualEntryRequestForm || defaultRequiredFields
   const showCancelBtn = previousRoute || tabValue || !!guestListRequest
+  const [imageUrls, setImageUrls] = useState([])
+  const [blobIds, setBlobIds] = useState([])
+
+  const { onChange, signedBlobId, url } = useFileUpload({
+    client: useApolloClient(),
+    maxSize: 1000
+  });
 
   useEffect(() => {
     if (id!== 'new-guest-entry' && id !== null && id !== 'undefined') {
@@ -111,6 +119,16 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
       setReasonModal(true);
     }
   }, [formData.reason, id]);
+
+  useEffect(() => {
+    if (url) {
+      setImageUrls([...imageUrls, url])
+    }
+    if (signedBlobId) {
+      setBlobIds([...blobIds, signedBlobId])
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [url, signedBlobId]);
 
   useEffect(() => {
     if (formData.loaded && isScannedRequest) {
@@ -403,6 +421,7 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
     setRequestId('');
     setIsObservationOpen(false);
     setModal(false);
+    setImageUrls([]);
     history.push(to);
   }
 
@@ -414,7 +433,7 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
     }
     setDetails({ ...observationDetails, loading: true });
     addObservationNote({
-      variables: { id: reqId, note: observationNote, refType: 'Logs::EntryRequest' }
+      variables: { id: reqId, note: observationNote, refType: 'Logs::EntryRequest', attachedImages: blobIds }
     })
       .then(() => {
         setDetails({
@@ -528,7 +547,9 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
         observationHandler={{
         value: observationNote,
         handleChange: value => setObservationNote(value)
-      }}
+        }}
+        imageOnchange={(img) => onChange(img)}
+        imageUrls={imageUrls}
       >
         {observationDetails.loading ? (
           <Spinner />

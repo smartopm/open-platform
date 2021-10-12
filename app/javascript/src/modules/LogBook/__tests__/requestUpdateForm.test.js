@@ -10,6 +10,7 @@ import userMock from '../../../__mocks__/userMock';
 import { Context } from '../../../containers/Provider/AuthStateProvider';
 import { EntryRequestUpdateMutation } from '../graphql/logbook_mutations';
 
+jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
 describe('RequestUpdate Component', () => {
   const mocks = {
     request: {
