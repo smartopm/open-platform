@@ -183,6 +183,8 @@ module Users
     def self.from_omniauth(auth, site_community)
       # Either create a User record or update it based on the provider (Google) and the UID
       user = find_or_initialize_from_oauth(auth, site_community)
+      return user unless user.new_record?
+
       OAUTH_FIELDS_MAP.each_key do |param|
         user[param] = OAUTH_FIELDS_MAP[param][auth]
       end

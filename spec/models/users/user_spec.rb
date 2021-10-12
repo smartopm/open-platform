@@ -205,18 +205,17 @@ RSpec.describe Users::User, type: :model do
       expect(user.community.name).to eql('Nkwashi')
     end
 
-    it 'should update an existing user' do
+    it 'should not update an existing user from oauth providers' do
       Users::User.from_omniauth(auth_obj, community)
       auth_obj.info.name = 'Mark Percival'
       auth_obj.info.image = 'https://newprofile.com/pic.png'
       Users::User.from_omniauth(auth_obj, community)
       users = Users::User.where(uid: auth_obj.uid, provider: auth_obj.provider).all
       expect(users.length).to be 1
-      expect(users[0].name).to eq 'Mark Percival'
-      expect(users[0].image_url).to eq 'https://newprofile.com/pic.png'
+      expect(users[0].name).to eq 'Mark'
+      expect(users[0].image_url).to eq 'https://mypic.com/image.png'
       expect(users[0].oauth_expires).to be true
-      # TODO: Remove this once we fix hardcoding
-      expect(users[0].community).to_not be_nil
+      expect(users[0].community).to eq community
     end
   end
 
