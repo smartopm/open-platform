@@ -227,7 +227,7 @@ export default function LoginScreen() {
             </div>
           </Grid>
           <Grid item xs={12} md={3}>
-            <div className={`flex align-items-center ${css(styles.socialLoginSection )}`}>
+            <div className={`${css(styles.socialLoginSection )}`}>
               <TextField
                 value={userLogin.email}
                 variant="outlined"
@@ -248,22 +248,20 @@ export default function LoginScreen() {
                         )
                       }}
               />
-              <br />
               <Button
                 href="/fb_oauth"
                 variant="outlined"
-                startIcon={<FacebookIcon />}
+                startIcon={<FacebookIcon className={`${css(styles.socialLoginButtonIcons )}`} />}
                 size="large"
                 fullWidth
                 className={`${css(styles.facebookOAuthButton )}`}
               >
                 {t('login.login_facebook')}
               </Button>
-              <br />
               <Button
                 href="/login_oauth"
                 variant="outlined"
-                startIcon={<img src={GoogleIcon} alt="google-icon" />}
+                startIcon={<img src={GoogleIcon} alt="google-icon" className={`${css(styles.socialLoginButtonIcons )}`} />}
                 className={`${css(styles.googleOAuthButton )} google-sign-in-btn`}
                 size="large"
                 fullWidth
@@ -469,6 +467,10 @@ const styles = StyleSheet.create({
     marginTop: '0.5em'
   },
   socialLoginSection: {
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'space-evenly',
+    alignItems: 'center',
     marginTop: '1.6em',
     '@media (min-device-width: 320px) and (max-device-height: 568px)' : {
       marginTop: 0,
@@ -486,20 +488,27 @@ const styles = StyleSheet.create({
      }
   },
   emailLoginTextField:{
-    height: '4em'
+    height: '4em',
   },
   facebookOAuthButton: {
     backgroundColor: 'white',
     textTransform: 'none',
     color: '#3b5998',
-    marginTop: '0.07em',
-    height: '4em'
+    height: '4em',
+    display: 'flex',
+    justifyContent: 'left',
   },
   googleOAuthButton: {
     backgroundColor: 'white',
     textTransform: 'none',
     marginTop: '0.5em',
-    height: '4em'
+    height: '4em',
+    display: 'flex',
+    justifyContent: 'left',
+  },
+  socialLoginButtonIcons: {
+    marginLeft: '0.5em',
+    marginRight: '0.5em'
   },
   "[type='number']": {
     fontSize: 30
