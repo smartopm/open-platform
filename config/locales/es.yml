@@ -320,6 +320,8 @@ es:
       phone: Teléfono duplicado
     email_template:
       not_found: Plantilla no encontrada
+    email:
+      found_blank: El correo electrónico no puede quedar en blanco
     entry_request:
       empty_note: La nota no puede estar vacía
       not_found: Solicitud de ingreso no encontrada
