@@ -70,7 +70,7 @@ export default {
       routeProps: {
         path: '/my_tasks',
         exact: true,
-        render: RenderTasks
+        component: RenderTasks
       },
       name: 'My Tasks',
       accessibleBy: siteManagers,
