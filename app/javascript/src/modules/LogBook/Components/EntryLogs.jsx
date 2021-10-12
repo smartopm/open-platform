@@ -187,8 +187,7 @@ export function IndexComponent({
   const [blobIds, setBlobIds] = useState([])
 
   const { onChange, signedBlobId, url } = useFileUpload({
-    client: useApolloClient(),
-    maxSize: 1000
+    client: useApolloClient()
   });
 
   function routeToAction(eventLog) {
