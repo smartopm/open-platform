@@ -35,36 +35,6 @@ describe('Side Nav component', () => {
   }
 
   it('should render proper the sidenav menu', async () => {
-    const data = {
-      user: {
-        id: 'a54d6184-b10e-4865-bee7-7957701d423d',
-        name: 'Another somebodyy',
-        userType: 'admin',
-        expiresAt: null,
-        community: {
-          features: {Tasks: { features: [] }},
-          name: 'City',
-          logoUrl: 'http://image.jpg',
-          smsPhoneNumbers: ["+254724821901", "+154724582391"],
-          emergencyCallNumber: "254724821901",
-        },
-        permissions: {
-          note: {
-            permissions: [
-            'can_see_menu_item',
-            'can_create_note',
-            'can_get_task_count',
-            'can_get_task_stats',
-            'can_get_own_tasks',
-            'can_fetch_task_histories',
-            'can_fetch_task_comments',
-            'can_fetch_flagged_notes',
-          ]
-          }
-        }
-      }
-    };
-
     const container = render(
       <ApolloProvider client={createClient}>
         <Context.Provider value={authState}>
@@ -73,7 +43,7 @@ describe('Side Nav component', () => {
               <SideMenu
                 toggleDrawer={handleDrawerToggle}
                 menuItems={modules}
-                userType={data.user.userType}
+                userType={authState.user.userType}
                 communityFeatures={Object.keys(features)}
                 mobileOpen={false}
                 direction="left"

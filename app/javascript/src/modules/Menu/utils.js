@@ -16,8 +16,6 @@ import { objectAccessor } from "../../utils/helpers"
       return modulePermissions?.permissions?.includes('can_see_menu_item')
     }
 
-
-    console.log("Mutuba")
     return subMenuItem.accessibleBy.includes(authState.user?.userType)
 
   }
