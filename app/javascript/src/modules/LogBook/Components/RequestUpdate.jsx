@@ -1,3 +1,4 @@
+/* eslint-disable */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 /* eslint-disable no-nested-ternary */
 /* eslint-disable no-use-before-define */
