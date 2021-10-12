@@ -5,19 +5,20 @@ import PropTypes from 'prop-types';
 import VideoRecorder from 'react-video-recorder';
 import { makeStyles } from '@material-ui/core/styles';
 import { useApolloClient } from 'react-apollo';
+import { useTranslation } from 'react-i18next';
 import LeftArrow from '../../../../../../assets/images/left-arrow.svg';
 import RightArrow from '../../../../../../assets/images/right-arrow.svg';
 import Person from '../../../../../../assets/images/default_avatar.svg';
 import { useFileUpload } from '../../../../graphql/useFileUpload';
 
-
-
 export default function VideoCapture({ handleNext }) {
   const [counter, setCounter] = useState(0);
   const [recordingBegin, setRecordingBegin] = useState(false);
   const [recordingCompleted, setRecordingCompleted] = useState(false);
-  const [recordingInstruction, setRecordingInstruction] = useState(faceToTheLeft());
   const classes = useStyles();
+  const { t } = useTranslation(['common', 'logbook']);
+  const [recordingInstruction, setRecordingInstruction] = useState(faceToTheLeft());
+
   // eslint-disable-next-line no-unused-vars
   const { onChange, signedBlobId } = useFileUpload({
     client: useApolloClient()
@@ -36,7 +37,7 @@ export default function VideoCapture({ handleNext }) {
   function faceToTheLeft() {
     return (
       <>
-        <Typography variant="h5">Face to the left</Typography>
+        <Typography variant="h5">{t('logbook:video_recording.face_left')}</Typography>
         <img src={LeftArrow} alt="left-arrow" style={{ width: '20px', height: '20px' }} />
       </>
     );
@@ -45,7 +46,7 @@ export default function VideoCapture({ handleNext }) {
   function faceToTheRight() {
     return (
       <>
-        <Typography variant="h5">Face to the right</Typography>
+        <Typography variant="h5">{t('logbook:video_recording.face_right')}</Typography>
         <img src={RightArrow} alt="right-arrow" style={{ width: '20px', height: '20px' }} />
       </>
     );
@@ -54,14 +55,14 @@ export default function VideoCapture({ handleNext }) {
   function faceForward() {
     return (
       <>
-        <Typography variant="h5">Face forward</Typography>
+        <Typography variant="h5">{t('logbook:video_recording.face_forward')}</Typography>
         <img src={Person} alt="person" style={{ width: '24px', height: '24px' }} />
       </>
     );
   }
 
   function recordingDone() {
-    return <Typography variant="h5">Done</Typography>;
+    return <Typography variant="h5">{t('common:misc.done')}</Typography>;
   }
 
   function beep() {
@@ -99,20 +100,29 @@ export default function VideoCapture({ handleNext }) {
 
   return (
     <div className={classes.root}>
-      <Typography variant="h6">Add a Video with your phone</Typography>
-      <Typography className={classes.title}>Create a video to your profile</Typography>
-      <div className={classes.greyText}>Be sure:</div>
+      <Typography variant="h6">{t('logbook:video_recording.add_video_text')}</Typography>
+      <Typography className={classes.title}>{t('logbook:video_recording.create_video_text')}</Typography>
       <div className={classes.greyText}>
-        1. You are in a well lit area and your face is clearly visible
+        {t('logbook:video_recording.sure')}
+        :
       </div>
-      <div className={classes.greyText}>2. Listen to the counter for a chime on when to turn </div>
       <div className={classes.greyText}>
-        3. You will be facing forward for 10 seconds, then turn to the left and then to the right.
-        The counter will chime each time.
+        1. 
+        {' '}
+        {t('logbook:video_recording.well_lit_area')}
+      </div>
+      <div className={classes.greyText}>
+        2.
+        {t('logbook:video_recording.listen_to_counter')} 
+      </div>
+      <div className={classes.greyText}>
+        3. 
+        {' '}
+        {t('logbook:video_recording.instruction_on_direction')}
       </div>
 
       <div className={classes.counter}>
-        <Typography variant="h5">{`0${counter} seconds`}</Typography>
+        <Typography variant="h5">{`0${counter} ${t('common:misc.seconds')}`}</Typography>
         {recordingInstruction}
       </div>
       <div className={classes.videoArea}>
@@ -130,7 +140,7 @@ export default function VideoCapture({ handleNext }) {
       <div className={classes.continueButton}>
         {recordingCompleted && (
           <Button onClick={onContinue} color="primary">
-            continue
+            {t('common:menu.continue')}
           </Button>
         )}
       </div>
