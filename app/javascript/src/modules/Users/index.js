@@ -19,7 +19,8 @@ export default {
     component: Users
   },
   styleProps: {
-    icon: <PersonIcon />
+    icon: <PersonIcon />,
+    className: 'users-menu-item'
   },
   name: t => t('misc.users'),
 

@@ -57,3 +57,51 @@ Cypress.Commands.add("addFormProperty", (fieldName, fieldType, isRequired, optio
   cy.get('[data-testid=form_property_action_btn]').click();
   cy.wait(2000);
 })
+
+Cypress.Commands.add("visitMainMenu", (menuItem) => {
+  cy.get('.left-menu-collapsible').click();
+  cy.wait(1000);
+  cy.get(`${menuItem}`).click();
+  cy.wait(1000);
+  cy.get('.left-menu-collapsible').click();
+  cy.wait(1000);
+})
+
+Cypress.Commands.add("myProfile", () => {
+  cy.visitMainMenu('.my-profile-menu-item')
+})
+
+Cypress.Commands.add("visitUserProfile", (user) => {
+  cy.visitMainMenu('.users-menu-item')
+  cy.wait(1000);
+  cy.contains(`${user}`).click();
+  cy.wait(1000);
+})
+
+Cypress.Commands.add("visitUserMenu", (menuItem) => {
+  cy.get('.right-menu-drawer').click();
+  cy.wait(1000);
+  cy.get(`${menuItem}`).click();
+  cy.wait(1000);
+})
+
+Cypress.Commands.add("addNewPaymentPlanFromUserProfile", ({ duration, amount, type, plot, coOwner }) => {
+  cy.get('.new-payment-plan-btn').click();
+  cy.wait(1000);
+  cy.get('.plan-duration-txt-input').type(duration);
+  cy.get('.plan-amount-txt-input').type(amount);
+  cy.get('.plan-type-select-input').click();
+  cy.get(`[data-value=${type}]`).click();
+  cy.get('.plan-plot-select-input').click();
+  cy.contains(plot).click();
+  cy.wait(1000);
+
+  if(coOwner) {
+    // TODO: Add ability to choose multiple co-owners
+   cy.contains(coOwner).click();
+  }
+
+   // Save Payment plan
+   cy.get('[data-testid=custom-dialog-button]').click();
+   cy.wait(2000);
+})

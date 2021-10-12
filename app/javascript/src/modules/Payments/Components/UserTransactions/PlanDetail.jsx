@@ -204,7 +204,7 @@ export default function PlanDetail({
               <Grid item xs={6}>
                 <Typography className={classes.fieldTitle}>{t('table_headers.co_owners')}</Typography>
               </Grid>
-              <Grid item xs={6} className={classes.fieldContent}>
+              <Grid item xs={6} className={`${classes.fieldContent} plan-detail-co-owner`}>
                 {handleCoOwners() || '-'}
               </Grid>
             </Grid>

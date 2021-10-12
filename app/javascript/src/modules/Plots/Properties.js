@@ -10,7 +10,8 @@ export default {
     component: LandParcelPage
   },
   styleProps: {
-    icon: <HomeWorkIcon />
+    icon: <HomeWorkIcon />,
+    className: 'properties-menu-item'
   },
   name: t => t('misc.properties'),
   featureName: 'Properties',

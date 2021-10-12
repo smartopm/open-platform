@@ -74,7 +74,7 @@ export default function CreateLandParcel({ refetch, selectedLandParcel, newHouse
       <Button
         variant="contained"
         color="primary"
-        className={classes.parcelButton}
+        className={`${classes.parcelButton} new-property-btn`}
         onClick={openNewParcelModal}
         data-testid="parcel-button"
       >

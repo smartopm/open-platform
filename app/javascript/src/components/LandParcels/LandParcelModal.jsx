@@ -355,6 +355,7 @@ export default function LandParcelModal({
               value={parcelNumber}
               onChange={e => setParcelNumber(e.target.value)}
               required
+              className="property-parcel-number-txt-input"
             />
             <TextField
               margin="dense"
@@ -364,6 +365,7 @@ export default function LandParcelModal({
               type="text"
               value={address1}
               onChange={e => setAddress1(e.target.value)}
+              className="property-address1-txt-input"
             />
             <TextField
               margin="dense"
@@ -373,6 +375,7 @@ export default function LandParcelModal({
               type="text"
               value={address2}
               onChange={e => setAddress2(e.target.value)}
+              className="property-address2-txt-input"
             />
             <TextField
               margin="dense"
@@ -382,6 +385,7 @@ export default function LandParcelModal({
               type="text"
               value={city}
               onChange={e => setCity(e.target.value)}
+              className="property-city-txt-input"
             />
             <TextField
               margin="dense"
@@ -403,6 +407,7 @@ export default function LandParcelModal({
               inputProps={{ 'data-testid': 'country', readOnly: isFormReadOnly }}
               value={country}
               onChange={e => setCountry(e.target.value)}
+              className="property-country-txt-input"
             />
             <TextField
               margin="dense"
@@ -415,6 +420,7 @@ export default function LandParcelModal({
               type="text"
               value={parcelType}
               onChange={e => setParcelType(e.target.value)}
+              className="property-parcel-type-txt-input"
             />
             <TextField
               margin="dense"
@@ -427,6 +433,7 @@ export default function LandParcelModal({
               type="number"
               value={postalCode}
               onChange={e => setPostalCode(e.target.value)}
+              className="property-postal-code-txt-input"
             />
             {modalType === 'new_house' && (
               <>
@@ -538,6 +545,7 @@ export default function LandParcelModal({
                       onChange={event => onChangeOwnershipField(event, index)}
                         // eslint-disable-next-line no-unused-vars
                       onKeyDown={(_e) => userSearch(index)}
+                      className={`property-owner-name-txt-input-${index}`}
                     />
                     )}
                 />
@@ -550,8 +558,8 @@ export default function LandParcelModal({
                   label={t('property:form_fields.address')}
                   onChange={event => onChangeOwnershipField(event, index)}
                   name="address"
-                  className={classes.textField}
                   style={{ marginBottom: '15px' }}
+                  className={`property-owner-address-txt-input-${index} ${classes.textField}`}
                 />
               </div>
               <div className={classes.removeIcon}>

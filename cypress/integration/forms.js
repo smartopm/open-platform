@@ -16,10 +16,7 @@ describe('Custom Forms', () => {
     cy.login('2348167740149');
 
     // Go to Permits & Request Forms
-    cy.get('.left-menu-collapsible').click();
-    cy.wait(1000);
-    cy.get('.community-menu-item').click();
-    cy.wait(1000);
+    cy.visitMainMenu('.community-menu-item')
     cy.get('.permit-request-form-menu-item').click();
     cy.wait(1000);
     
