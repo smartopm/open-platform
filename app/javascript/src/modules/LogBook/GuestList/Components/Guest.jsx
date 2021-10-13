@@ -83,7 +83,7 @@ export function renderGuestData(guestListEntry, menuData, translate) {
         <Grid item xs={12} sm={2} md={2} style={{fontSize: '12px'}} data-testid="start_of_visit">
           <Box sx={{ textOverflow: 'wrap' }}>
             <Text 
-              content={translate('logbook:guest_book.start_on_date_time', { date: dateToString(guestListEntry.startsAt), time: dateTimeToString(guestListEntry.startsAt) })}
+              content={translate('logbook:guest_book.start_on_date_time', { date: dateToString(guestListEntry.visitationDate), time: dateTimeToString(guestListEntry.startsAt) })}
             />
           </Box>
         </Grid>
@@ -93,7 +93,7 @@ export function renderGuestData(guestListEntry, menuData, translate) {
       'End of Visit': (
         <Grid item xs={12} sm={2} md={2} style={{fontSize: '12px'}} data-testid="end_of_visit">
           <Text 
-            content={guestListEntry.endsAt ? translate('logbook:guest_book.ends_on_date_time', { date: dateToString(guestListEntry.endsAt), time: dateTimeToString(guestListEntry.endsAt)  }) : '-'} 
+            content={guestListEntry.endsAt ? translate('logbook:guest_book.ends_on_date_time', { date: dateToString(guestListEntry.visitationDate), time: dateTimeToString(guestListEntry.endsAt)  }) : '-'} 
           />
         </Grid>
       ),
