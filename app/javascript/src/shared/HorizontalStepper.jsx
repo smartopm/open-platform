@@ -1,13 +1,15 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
 import StepButton from '@material-ui/core/StepButton';
 import PropTypes from 'prop-types';
 import { objectAccessor } from '../utils/helpers';
+import { Context } from '../containers/Provider/AuthStateProvider';
 
 export default function HorizontalStepper({ steps }) {
   const [activeStep, setActiveStep] = useState(0);
-  const listOfSteps = steps(handleNext);
+  const authState = useContext(Context)
+  const listOfSteps = steps(handleNext, authState.user.community.name);
   const validSteps = Boolean(listOfSteps?.length);
 
   function handleNext() {

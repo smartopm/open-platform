@@ -2,6 +2,8 @@ import React from 'react';
 import { fireEvent, render } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import HorizontalStepper from '../../shared/HorizontalStepper';
+import { Context } from '../../containers/Provider/AuthStateProvider';
+import userMock from '../../__mocks__/userMock';
 
 describe('HorizontalStepper component', () => {
   const steps = jest.fn(() => [
@@ -22,14 +24,22 @@ describe('HorizontalStepper component', () => {
     },
   ]);
   it('should not show step buttons when its just one step', () => {
-    const container = render(<HorizontalStepper steps={steps} />);
+    const container = render(
+      <Context.Provider value={userMock}>
+        <HorizontalStepper steps={steps} />
+      </Context.Provider>
+    );
     expect(container.queryByTestId('stepper_container')).toBeInTheDocument();
     expect(container.queryByTestId('step_button')).not.toBeInTheDocument();
     expect(container.queryByText('First Step Contents')).toBeInTheDocument();
   });
 
   it('should show all steps correctly', () => {
-    const container = render(<HorizontalStepper steps={manySteps} />);
+    const container = render(
+      <Context.Provider value={userMock}>
+        <HorizontalStepper steps={manySteps} />
+      </Context.Provider>
+    );
     expect(container.queryAllByTestId('step_button')[0]).toBeInTheDocument();
     expect(container.queryAllByTestId('step_button')).toHaveLength(2);
     expect(container.queryByText('First Step Contents')).toBeInTheDocument();
@@ -40,7 +50,5 @@ describe('HorizontalStepper component', () => {
     // clicking the step should take you to that step's content
     fireEvent.click(container.queryAllByTestId('step_button')[0])
     expect(container.queryByText('First Step Contents')).toBeInTheDocument();
-
-
   });
 });

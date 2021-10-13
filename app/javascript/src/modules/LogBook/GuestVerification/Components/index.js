@@ -3,11 +3,16 @@
 import React from 'react';
 import GuestForm from './GuestForm';
 
-export default function steps(handleNext) {
-  return [
+export default function steps(handleNext, communityName) {
+  const verificationSteps = [
     {
       title: 'Guest Form',
       component: <GuestForm handleNext={handleNext} />,
     },
-  ];
+  ]
+  // hardcoding this for now before we make this a community setting
+  if(communityName === 'Nkwashi'){
+    return verificationSteps.slice(0, 1)
+  }
+  return verificationSteps
 }
