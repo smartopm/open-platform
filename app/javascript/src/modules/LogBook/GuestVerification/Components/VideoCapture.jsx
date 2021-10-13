@@ -21,7 +21,7 @@ export default function VideoCapture({ handleNext }) {
   const classes = useStyles();
   const { t } = useTranslation(['common', 'logbook']);
   const { id } = useParams();
-  const [recordingInstruction, setRecordingInstruction] = useState(faceToTheLeft());
+  const [recordingInstruction, setRecordingInstruction] = useState(videoDirection(t).left);
   const [updateRequest] = useMutation(EntryRequestUpdateMutation);
   const [errorDetails, setDetails] = useState({
     isError: false,
@@ -40,39 +40,8 @@ export default function VideoCapture({ handleNext }) {
 
   function onStartAgain() {
     setCounter(0);
-    setRecordingInstruction(faceToTheLeft());
+    setRecordingInstruction(videoDirection(t).left);
     setRecordingBegin(false);
-  }
-
-  function faceToTheLeft() {
-    return (
-      <>
-        <Typography variant="h5">{t('logbook:video_recording.face_left')}</Typography>
-        <img src={LeftArrow} alt="left-arrow" style={{ width: '20px', height: '20px' }} />
-      </>
-    );
-  }
-
-  function faceToTheRight() {
-    return (
-      <>
-        <Typography variant="h5">{t('logbook:video_recording.face_right')}</Typography>
-        <img src={RightArrow} alt="right-arrow" style={{ width: '20px', height: '20px' }} />
-      </>
-    );
-  }
-
-  function faceForward() {
-    return (
-      <>
-        <Typography variant="h5">{t('logbook:video_recording.face_forward')}</Typography>
-        <img src={Person} alt="person" style={{ width: '24px', height: '24px' }} />
-      </>
-    );
-  }
-
-  function recordingDone() {
-    return <Typography variant="h5">{t('common:misc.done')}</Typography>;
   }
 
   function beep() {
@@ -90,13 +59,13 @@ export default function VideoCapture({ handleNext }) {
 
     if (counter === 2) {
       beep();
-      setRecordingInstruction(faceForward());
+      setRecordingInstruction(videoDirection(t).forward);
     } else if (counter === 4) {
       beep();
-      setRecordingInstruction(faceToTheRight());
+      setRecordingInstruction(videoDirection(t).right);
     } else if (counter === 6) {
       beep();
-      setRecordingInstruction(recordingDone());
+      setRecordingInstruction(videoDirection(t).done);
       setRecordingCompleted(true);
     }
   }, [counter, recordingBegin]);
@@ -176,6 +145,55 @@ export default function VideoCapture({ handleNext }) {
       </div>
     </div>
   );
+}
+
+export function videoDirection(t) {
+  return {
+    left: (
+      <>
+        <Typography variant="h5" data-testid="face-left-txt">
+          {t('logbook:video_recording.face_left')}
+        </Typography>
+        <img
+          src={LeftArrow}
+          alt="left-arrow"
+          style={{ width: '20px', height: '20px' }}
+          data-testid="face-left-img"
+        />
+      </>
+    ),
+    right: (
+      <>
+        <Typography variant="h5" data-testid="face-right-txt">
+          {t('logbook:video_recording.face_right')}
+        </Typography>
+        <img
+          src={RightArrow}
+          alt="right-arrow"
+          style={{ width: '20px', height: '20px' }}
+          data-testid="face-right-img"
+        />
+      </>
+    ),
+    forward: (
+      <>
+        <Typography variant="h5" data-testid="face-forward-txt">
+          {t('logbook:video_recording.face_forward')}
+        </Typography>
+        <img
+          src={Person}
+          alt="person"
+          style={{ width: '24px', height: '24px' }}
+          data-testid="face-forward-img"
+        />
+      </>
+    ),
+    done: (
+      <Typography variant="h5" data-testid="done-txt">
+        {t('common:misc.done')}
+      </Typography>
+    )
+  };
 }
 
 const useStyles = makeStyles(() => ({
