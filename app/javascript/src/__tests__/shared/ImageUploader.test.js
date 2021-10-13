@@ -4,7 +4,7 @@ import ImageUploader from '../../shared/imageUpload/ImageUploader';
 
 describe('Image Uploader', () => {
   it('should render image uploader component', () => {
-    const btn = render(<ImageUploader handleChange={jest.fn()} buttonText="button" />);
+    const btn = render(<ImageUploader handleChange={jest.fn()} buttonText="button" useDefaultIcon />);
     expect(btn.queryByTestId('upload_button').textContent).toContain('button');
   });
 });
