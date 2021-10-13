@@ -1,4 +1,4 @@
-/* eslint-disable react/prop-types */
+/* eslint-disable */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable react/jsx-one-expression-per-line */
@@ -186,7 +186,7 @@ export function IndexComponent({
   const [imageUrls, setImageUrls] = useState([])
   const [blobIds, setBlobIds] = useState([])
 
-  const { onChange, signedBlobId, url } = useFileUpload({
+  const { onChange, signedBlobId, url, status } = useFileUpload({
     client: useApolloClient()
   });
 
@@ -221,6 +221,11 @@ export function IndexComponent({
     setIsObservationOpen(true);
   }
 
+  function resetImageData() {
+    setImageUrls([]);
+    setBlobIds([]);
+  }
+
   function handleSaveObservation(log = clickedEvent, type) {
     setDetails({ ...observationDetails, loading: true });
     const exitNote = 'Exited';
@@ -247,7 +252,7 @@ export function IndexComponent({
         setClickedEvent({ refId: '', refType: '' });
         refetch();
         setIsObservationOpen(false);
-        setImageUrls([]);
+        resetImageData()
       })
       .catch(error => {
         setDetails({
@@ -259,7 +264,7 @@ export function IndexComponent({
         // reset state in case it errs and user chooses a different log
         setObservationNote('');
         setClickedEvent({ refId: '', refType: '' });
-        setImageUrls([]);
+        resetImageData()
       });
   }
 
@@ -295,7 +300,7 @@ export function IndexComponent({
 
   function handleCancelClose() {
     setIsObservationOpen(false);
-    setImageUrls([]);
+    resetImageData()
   }
 
   return (
@@ -315,6 +320,7 @@ export function IndexComponent({
         }}
         imageOnchange={(img) => onChange(img)}
         imageUrls={imageUrls}
+        status={status}
       >
         {observationDetails.loading ? (
           <Spinner />

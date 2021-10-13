@@ -122,7 +122,7 @@ const useFileUpload = ({ client: apolloClient, maxSize }) => {
     // }
     try {
       const options = {
-        maxSizeMB: 0.2,
+        maxSizeMB: 0.1,
         useWebWorker: true
       }
       const compressedFile = await imageCompression(file, options);
