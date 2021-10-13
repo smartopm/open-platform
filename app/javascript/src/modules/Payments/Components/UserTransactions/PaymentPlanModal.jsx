@@ -39,7 +39,8 @@ export default function PaymentPlanModal({
   paymentPlansRefetch,
   landParcelsData,
   setMessage,
-  openAlertMessage
+  openAlertMessage,
+  balanceRefetch
 }) {
   const [landParcelId, setLandParcelId] = useState('');
   const { t } = useTranslation(['payment', 'common']);
@@ -50,6 +51,7 @@ export default function PaymentPlanModal({
   const [inputValue, setInputValues] = useState(initialPlanState);
   const [isError, setIsError] = useState(false);
   const [renewable, setRenewable] = useState(true);
+  const [mutationLoading, setMutationLoading] = useState(false);
 
   function handleInputChange(event) {
     const { name, value } = event.target;
@@ -135,6 +137,7 @@ export default function PaymentPlanModal({
     setInputValues(initialPlanState);
     setFrequency(2);
     setRenewable(true);
+    setMutationLoading(false);
   }
 
   function confirmSubmission(event) {
@@ -148,6 +151,7 @@ export default function PaymentPlanModal({
   }
 
   function handleSubmit() {
+    setMutationLoading(true);
     createPaymentPlan({
       variables: {
         userId,
@@ -169,6 +173,7 @@ export default function PaymentPlanModal({
         setMessage({ isError: false, detail: 'Successfuly created payment plan' });
         openAlertMessage();
         handleModalClose();
+        balanceRefetch();
       })
       .catch(err => {
         setMessage({ isError: true, detail: formatError(err.message) });
@@ -183,6 +188,7 @@ export default function PaymentPlanModal({
       dialogHeader={t('misc.create_a_plan')}
       subHeader={t('misc.create_a_payment_plan')}
       handleBatchFilter={confirmSubmission}
+      disableActionBtn={mutationLoading}
     >
       <>
         <TextField
@@ -473,7 +479,8 @@ PaymentPlanModal.propTypes = {
     )
   }),
   setMessage: PropTypes.func.isRequired,
-  openAlertMessage: PropTypes.func.isRequired
+  openAlertMessage: PropTypes.func.isRequired,
+  balanceRefetch: PropTypes.func.isRequired
 };
 
 CoOwners.propTypes = {

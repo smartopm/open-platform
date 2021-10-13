@@ -34,8 +34,9 @@ describe('It should test the payment plan modal component', () => {
         <MockedProvider mocks={mock}>
           <PaymentPlanModal
             open
-            handleModalClose={jest.fn}
+            handleModalClose={jest.fn()}
             userData={userMock.user}
+            balanceRefetch={jest.fn()}
           />
         </MockedProvider>
       </BrowserRouter>
@@ -74,7 +75,7 @@ describe('It should test the CoOwners component', () => {
         <CoOwners
           landParcel={landParcel}
           userId='jhouytre-09uol'
-          handleCoOwners={jest.fn}
+          handleCoOwners={jest.fn()}
           coOwnersIds={[]}
         />
       </BrowserRouter>
