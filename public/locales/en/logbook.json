@@ -138,6 +138,7 @@
       "instruction_on_direction": "You will be facing forward for 2 seconds, then turn to the left and then to the right. The counter will chime each time.",
       "face_left": "Face to the left",
       "face_right": "Face to the right",
-      "face_forward": "Face forward"
+      "face_forward": "Face forward",
+      "video_recorded": "Video recorded successfully"
     }
 }

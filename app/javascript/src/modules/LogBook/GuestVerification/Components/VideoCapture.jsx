@@ -2,14 +2,17 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Typography } from '@material-ui/core';
 import PropTypes from 'prop-types';
+import { useParams } from 'react-router-dom';
 import VideoRecorder from 'react-video-recorder';
 import { makeStyles } from '@material-ui/core/styles';
-import { useApolloClient } from 'react-apollo';
+import { useApolloClient, useMutation } from 'react-apollo';
 import { useTranslation } from 'react-i18next';
 import LeftArrow from '../../../../../../assets/images/left-arrow.svg';
 import RightArrow from '../../../../../../assets/images/right-arrow.svg';
 import Person from '../../../../../../assets/images/default_avatar.svg';
 import { useFileUpload } from '../../../../graphql/useFileUpload';
+import { EntryRequestUpdateMutation } from '../../graphql/logbook_mutations';
+import MessageAlert from '../../../../components/MessageAlert';
 
 export default function VideoCapture({ handleNext }) {
   const [counter, setCounter] = useState(0);
@@ -17,7 +20,13 @@ export default function VideoCapture({ handleNext }) {
   const [recordingCompleted, setRecordingCompleted] = useState(false);
   const classes = useStyles();
   const { t } = useTranslation(['common', 'logbook']);
+  const { id } = useParams();
   const [recordingInstruction, setRecordingInstruction] = useState(faceToTheLeft());
+  const [updateRequest] = useMutation(EntryRequestUpdateMutation);
+  const [errorDetails, setDetails] = useState({
+    isError: false,
+    message: ''
+  });
 
   // eslint-disable-next-line no-unused-vars
   const { onChange, signedBlobId } = useFileUpload({
@@ -25,13 +34,14 @@ export default function VideoCapture({ handleNext }) {
   });
 
   function onVideoComplete(videoBlob) {
-    onChange(videoBlob);
     setRecordingBegin(false);
+    onChange(videoBlob);
   }
 
   function onStartAgain() {
     setCounter(0);
     setRecordingInstruction(faceToTheLeft());
+    setRecordingBegin(false);
   }
 
   function faceToTheLeft() {
@@ -66,9 +76,8 @@ export default function VideoCapture({ handleNext }) {
   }
 
   function beep() {
-    // maybe we can put this in our on wordpress site?
     const audio = new Audio(
-      'https://media.geeksforgeeks.org/wp-content/uploads/20190531135120/beep.mp3'
+      'https://doublegdp-import-files.s3.eu-central-1.amazonaws.com/beep.mp3'
     );
     audio.play();
   }
@@ -93,13 +102,28 @@ export default function VideoCapture({ handleNext }) {
   }, [counter, recordingBegin]);
 
   function onContinue() {
-    // Send a mutation request to attach the signedBlobId to the entry-request,
-    // then move to the next step
-    handleNext();
+    updateRequest({ variables: { id, videoBlobId: signedBlobId } })
+      .then(() => {
+        setDetails({
+          ...errorDetails,
+          message: t('logbook:video_recording.video_recorded'),
+          isError: false
+        });
+        handleNext();
+      })
+      .catch(error => {
+        setDetails({ ...errorDetails, isError: true, message: error.message });
+      });
   }
 
   return (
     <div className={classes.root}>
+      <MessageAlert
+        type={!errorDetails.isError ? 'success' : 'error'}
+        message={errorDetails.message}
+        open={!!errorDetails.message}
+        handleClose={() => setDetails({ ...errorDetails, message: '' })}
+      />
       <Typography variant="h6">{t('logbook:video_recording.add_video_text')}</Typography>
       <Typography className={classes.title}>
         {t('logbook:video_recording.create_video_text')}
@@ -126,9 +150,7 @@ export default function VideoCapture({ handleNext }) {
 
       <div className={classes.counter}>
         <Typography variant="h5" data-testid="seconds-txt">
-          {`0${counter} ${t(
-          'common:misc.seconds'
-        )}`}
+          {`0${counter} ${t('common:misc.seconds')}`}
         </Typography>
         {recordingInstruction}
       </div>
@@ -138,6 +160,7 @@ export default function VideoCapture({ handleNext }) {
           onStartRecording={() => setRecordingBegin(true)}
           onStopReplaying={onStartAgain}
           timeLimit={6000}
+          mimeType="video/webm"
           showReplayControls
           countdownTime={0}
           isReplayVideoMuted
