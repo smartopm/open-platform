@@ -105,9 +105,9 @@ export function renderGuestData(guestListEntry, menuData, translate) {
         </Grid>
       ),
       Menu: (
-        <Grid item xs={12} sm={2} md={1} data-testid="menu">
-          <Box className={css(styles.menuStyles)}  >
-          {
+        <Grid item xs={12} sm={2} md={1} className="my-button" data-testid="menu">
+          <Box className={css(styles.menuStyles)}>
+            {
             guestListEntry.active ? (
               <IconButton
                 aria-controls="simple-menu"
@@ -119,14 +119,14 @@ export function renderGuestData(guestListEntry, menuData, translate) {
               </IconButton>
             ): ''
           }
-          <MenuList
-            open={menuData.open}
-            anchorEl={menuData.anchorEl}
-            handleClose={menuData.handleClose}
-            list={guestListEntry.active ? menuData.menuList : []}
-          />
+            <MenuList
+              open={menuData.open}
+              anchorEl={menuData.anchorEl}
+              handleClose={menuData.handleClose}
+              list={guestListEntry.active ? menuData.menuList : []}
+            />
           
-        </Box>
+          </Box>
         </Grid>
       )
     }
@@ -153,10 +153,12 @@ Guest.propTypes = {
 
 const styles = StyleSheet.create({
   menuStyles: {
-    paddingLeft: '50px',
+    paddingLeft: '3rem',
     '@media (min-device-width: 320px) and (max-device-height: 568px)' : {
-      padding: '0',
+        paddingRight: 0,
+        marginRight: 0,
+        paddingLeft: 0
     },
-  },
+  }
   }
 );
