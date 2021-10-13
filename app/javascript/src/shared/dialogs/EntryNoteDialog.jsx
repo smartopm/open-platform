@@ -63,6 +63,7 @@ export default function EntryNoteDialog({
                 handleChange={imageOnchange}
                 buttonText='Upload Image'
                 style={{background: '#CACACA'}}
+                useDefaultIcon
               />
             </Grid>
             {imageUrls.length > 0 && (
@@ -70,8 +71,9 @@ export default function EntryNoteDialog({
                 imageUrls={imageUrls} 
                 token={token}
                 sm={6}
-                xs={12}
+                xs={6}
                 style={{padding: '10px'}}
+                imgHeight={300}
               />
             )}
           </Grid>

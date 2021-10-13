@@ -14,9 +14,5 @@ export default function steps(handleNext) {
       title: 'Id Capture',
       component: <IdCapture handleNext={handleNext} />,
     },
-    {
-      title: 'Guest Form',
-      component: <GuestForm handleNext={handleNext} />,
-    },
   ];
 }
