@@ -57,11 +57,11 @@ export default function EntryNoteDialog({
             fullWidth
           />
           <Grid container className={styles.upload}>
-            <Grid item sm={8} data-testid='upload_label'>Do you have any images you will like to add?</Grid>
+            <Grid item sm={8} data-testid='upload_label'>{t('observations.upload_label')}</Grid>
             <Grid item sm={4} className={styles.uploadButton} data-testid='upload_button'>
               <ImageUploader 
                 handleChange={imageOnchange}
-                buttonText='Upload Image'
+                buttonText={t('observations.upload_image')}
                 style={{background: '#CACACA'}}
                 useDefaultIcon
               />

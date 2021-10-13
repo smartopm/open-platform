@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useApolloClient } from 'react-apollo';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
+import { useTranslation } from 'react-i18next';
 import { Button, Grid, Typography, makeStyles, Paper } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import PropTypes from 'prop-types'
@@ -19,6 +20,7 @@ export default function IDCapture({ handleNext }) {
   const [backBlobId, setBackBlobId] = useState('');
   const authState = useContext(AuthStateContext);
   const matches = useMediaQuery('(max-width:600px)');
+  const { t } = useTranslation('logbook');
 
   const { onChange, signedBlobId, url } = useFileUpload({
     client: useApolloClient()
@@ -52,7 +54,7 @@ export default function IDCapture({ handleNext }) {
   return (
     <Grid container>
       <Grid item xs={12} className={classes.body}>
-        <Typography variant='h6' className={classes.header} data-testid='add_photo'>Add a photo of your ID with your phone</Typography>
+        <Typography variant='h6' className={classes.header} data-testid='add_photo'>{t('logbook.add_a_photo')}</Typography>
       </Grid>
       <Grid item xs={12}>
         <Grid container>
@@ -61,14 +63,14 @@ export default function IDCapture({ handleNext }) {
           )}
           <Grid item xs={6} sm={2} data-testid='instructions'>
             <ul>
-              <li><Typography>Use portrait orientation</Typography></li>
-              <li><Typography>Turn off your camera flash</Typography></li>
+              <li><Typography>{t('logbook.portrait')}</Typography></li>
+              <li><Typography>{t('logbook.off_camera')}</Typography></li>
             </ul>
           </Grid>
           <Grid item xs={6} sm={6}>
             <ul>
-              <li><Typography>Use a dark background</Typography></li>
-              <li><Typography>Take photo on a flat surface</Typography></li>
+              <li><Typography>{t('logbook.dark_background')}</Typography></li>
+              <li><Typography>{t('logbook.flat_surface')}</Typography></li>
             </ul>
           </Grid>
         </Grid>
@@ -79,14 +81,14 @@ export default function IDCapture({ handleNext }) {
           handleChange={(img) => onChange(img)} 
           token={authState.token}
           imageUrl={frontImageUrl}
-          type='Front'
+          type={t('logbook.front')}
         />
         <ImageArea 
           handleClick={() => setUploadType('back')} 
           handleChange={(img) => onChange(img)} 
           token={authState.token}
           imageUrl={backImageUrl}
-          type='Back' 
+          type={t('logbook.back')} 
         />
       </Grid>
       <Grid item xs={12} className={classes.body} data-testid='next_button'>
