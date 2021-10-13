@@ -4,13 +4,13 @@ import { useTranslation } from 'react-i18next';
 import { Grid, IconButton, Typography } from '@material-ui/core';
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 import Box from '@material-ui/core/Box';
+import { StyleSheet, css } from 'aphrodite';
 import {checkRequests} from '../../utils'
 import { dateToString, dateTimeToString } from '../../../../components/DateContainer';
 import Label from '../../../../shared/label/Label';
 import DataList from '../../../../shared/list/DataList';
 import MenuList from '../../../../shared/MenuList'
 import Text from '../../../../shared/Text';
-
 
 
 
@@ -29,7 +29,7 @@ export default function Guest({guestListEntry, handleGuestDetails, handleGuestRe
     { title:  'Start of Visit', col: 4, value: t('guest.start_of_visit')},
     { title:  "End of Visit", col: 4, value: t('guest.end_of_visit') },
     { title:  "validity" , col: 1, value: t('guest.validity')},
-    { title: 'Menu', col: 2 }
+    { title: 'Menu', col: 4 }
   ]
 
   const menuData = {
@@ -91,7 +91,7 @@ export function renderGuestData(guestListEntry, menuData, translate) {
 
 
       'End of Visit': (
-        <Grid item xs={12} sm={2} md={2} style={{fontSize: '12px'}} data-testid="end_of_visit">
+        <Grid item xs={12} sm={4} md={2} style={{fontSize: '12px'}} data-testid="end_of_visit">
           <Text 
             content={guestListEntry.endsAt ? translate('logbook:guest_book.ends_on_date_time', { date: dateToString(guestListEntry.endsAt), time: dateTimeToString(guestListEntry.endsAt)  }) : '-'} 
           />
@@ -105,7 +105,8 @@ export function renderGuestData(guestListEntry, menuData, translate) {
         </Grid>
       ),
       Menu: (
-        <Grid item xs={12} sm={2} md={2} style={{ textAlign: 'center'}} data-testid="menu">
+        <Grid item xs={12} sm={2} md={1} data-testid="menu">
+          <Box className={css(styles.menuStyles)}  >
           {
             guestListEntry.active ? (
               <IconButton
@@ -116,7 +117,7 @@ export function renderGuestData(guestListEntry, menuData, translate) {
               >
                 <MoreHorizIcon />
               </IconButton>
-): ''
+            ): ''
           }
           <MenuList
             open={menuData.open}
@@ -124,6 +125,8 @@ export function renderGuestData(guestListEntry, menuData, translate) {
             handleClose={menuData.handleClose}
             list={guestListEntry.active ? menuData.menuList : []}
           />
+          
+        </Box>
         </Grid>
       )
     }
@@ -147,3 +150,13 @@ Guest.propTypes = {
     })
   }).isRequired
 }
+
+const styles = StyleSheet.create({
+  menuStyles: {
+    paddingLeft: '50px',
+    '@media (min-device-width: 320px) and (max-device-height: 568px)' : {
+      padding: '0',
+    },
+  },
+  }
+);
