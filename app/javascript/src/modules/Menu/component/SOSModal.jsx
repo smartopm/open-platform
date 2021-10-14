@@ -294,12 +294,18 @@ const SOSModal=({open, setOpen, location, authState})=> {
   });
   
   useEffect(() => {
+    let timer;
    if(counter >= 0) {
      if(counter < 3) {
-      setTimeout(() => { setCounter(counter + 1)}, 1000)
+      timer = setTimeout(() => { setCounter(counter + 1)}, 1000)
      }
    }
-  }, [counter])
+
+   if(panicButtonPressed || panicButtonMessage.isError){
+     setCounter(-1)
+     clearTimeout(timer)
+   }
+  }, [counter, panicButtonPressed, panicButtonMessage])
 
   const classes = useStyles();
 
@@ -349,7 +355,7 @@ const SOSModal=({open, setOpen, location, authState})=> {
                   {' '}
                   {t('panic_alerts.for_3_seconds')}
                 </p>
-                {(counter >= 0 && !panicButtonMessage.isError) 
+                {((counter >= 0 && counter < 3) && !panicButtonMessage.isError) 
                   ? <h1 className={classes.digitInSeconds}>{Number(counter + 1)}</h1>
                   : <p className={classes.info}>{t('panic_alerts.info')}</p>
                   }
