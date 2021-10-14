@@ -51,6 +51,7 @@ export const EntryRequestUpdateMutation = gql`
       entryRequest {
         id
         isGuest
+        videoUrl
       }
     }
   }

@@ -102,17 +102,17 @@ export default function VideoCapture({ handleNext }) {
         :
       </div>
       <div className={classes.greyText} data-testid="well-lit-txt">
-        1. 
+        1.
         {' '}
         {t('logbook:video_recording.well_lit_area')}
       </div>
       <div className={classes.greyText} data-testid="listen-to-counter-txt">
-        2. 
+        2.
         {' '}
         {t('logbook:video_recording.listen_to_counter')}
       </div>
       <div className={classes.greyText} data-testid="direction-txt">
-        3. 
+        3.
         {' '}
         {t('logbook:video_recording.instruction_on_direction')}
       </div>
