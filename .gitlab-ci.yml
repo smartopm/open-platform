@@ -78,6 +78,10 @@ test:rspec:
     expire_in: 24 hours
   cache:
     policy: pull-push
+  except:
+    - tags
+    - schedules
+
 
 test:jest:
   extends: .base_db
@@ -92,6 +96,9 @@ test:jest:
       - "coverage/"
     name: "Jest $CI_PIPELINE_ID Coverage Report"
     expire_in: 24 hours
+  except:
+    - tags
+    - schedules
 
 cypress:
   image: docker:latest
@@ -114,7 +121,7 @@ cypress:
   only:
     - master
 
-auto:deploy:
+start_prod_push:
   only:
     - schedules
   script:
