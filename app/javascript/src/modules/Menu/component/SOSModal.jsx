@@ -90,6 +90,10 @@ const useStyles = makeStyles((theme) => ({
     fontSize: "17px",
   },
 
+  callLink:{
+    color: '#ffffff'
+  },
+
   digitInSeconds:{
     fontWeight: "bold",
     fontSize: "94px",
@@ -322,8 +326,8 @@ const SOSModal=({open, setOpen, location, authState})=> {
     >
       <div className={classes.paper}>
         <div className={classes.CloseIcon}>
-          <p>
-            <a href={`tel: ${authState.user?.community.emergencyCallNumber}`}>
+          <p >
+            <a className={classes.callLink} href={`tel: ${authState.user?.community.emergencyCallNumber}`}>
               {t('panic_alerts.click_to_call')}
               {' '}
               {authState.user?.community.emergencyCallNumber}
