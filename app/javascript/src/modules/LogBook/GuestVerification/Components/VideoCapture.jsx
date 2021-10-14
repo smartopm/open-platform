@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Button, Typography } from '@material-ui/core';
 import PropTypes from 'prop-types';
-import { useParams } from 'react-router-dom';
 import VideoRecorder from 'react-video-recorder';
 import { makeStyles } from '@material-ui/core/styles';
 import { useApolloClient, useMutation } from 'react-apollo';
@@ -12,6 +11,7 @@ import Person from '../../../../../../assets/images/default_avatar.svg';
 import { useFileUpload } from '../../../../graphql/useFileUpload';
 import { EntryRequestUpdateMutation } from '../../graphql/logbook_mutations';
 import MessageAlert from '../../../../components/MessageAlert';
+import { EntryRequestContext } from '../Context';
 
 export default function VideoCapture({ handleNext }) {
   const [counter, setCounter] = useState(0);
@@ -19,7 +19,7 @@ export default function VideoCapture({ handleNext }) {
   const [recordingCompleted, setRecordingCompleted] = useState(false);
   const classes = useStyles();
   const { t } = useTranslation(['common', 'logbook']);
-  const { id } = useParams();
+  const requestContext = useContext(EntryRequestContext)
   const [recordingInstruction, setRecordingInstruction] = useState(videoDirection(t).left);
   const [updateRequest] = useMutation(EntryRequestUpdateMutation);
   const [errorDetails, setDetails] = useState({
@@ -69,7 +69,7 @@ export default function VideoCapture({ handleNext }) {
   }, [counter, recordingBegin]);
 
   function onContinue() {
-    updateRequest({ variables: { id, videoBlobId: signedBlobId } })
+    updateRequest({ variables: { id: requestContext.request.id, videoBlobId: signedBlobId } })
       .then(() => {
         setDetails({
           ...errorDetails,

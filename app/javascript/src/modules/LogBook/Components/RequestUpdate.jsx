@@ -37,6 +37,7 @@ import GuestTime from './GuestTime';
 import QRCodeConfirmation from './QRCodeConfirmation';
 import FeatureCheck from '../../Features';
 import { useFileUpload } from '../../../graphql/useFileUpload';
+import { EntryRequestContext } from '../GuestVerification/Context';
 
 const initialState = {
     name: '',
@@ -63,6 +64,7 @@ const initialState = {
 export default function RequestUpdate({ id, previousRoute, guestListRequest, isGuestRequest, tabValue, isScannedRequest }) {
   const history = useHistory()
   const authState = useContext(Context)
+  const requestContext = useContext(EntryRequestContext)
   const isFromLogs = previousRoute === 'logs' ||  false
   const [loadRequest, { data }] = useLazyQuery(EntryRequestQuery, {
     variables: { id }
@@ -103,6 +105,7 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
   const showCancelBtn = previousRoute || tabValue || !!guestListRequest
   const [imageUrls, setImageUrls] = useState([])
   const [blobIds, setBlobIds] = useState([])
+
 
   const { onChange, signedBlobId, url } = useFileUpload({
     client: useApolloClient(),
@@ -261,6 +264,7 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
         // eslint-disable-next-line consistent-return
         .then((response) => {
           setRequestId(response.data.result.entryRequest.id);
+          requestContext.updateRequest({ ...requestContext.request, id: response.data.result.entryRequest.id })
           if (isGuestRequest) {
             setDetails({
               ...observationDetails,
