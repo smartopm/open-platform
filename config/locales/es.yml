@@ -248,7 +248,7 @@ es:
           attributes:
             phone_number:
               invalid_length: debe tener una longitud válida
-              invalid_phone_number: solo puede contener 0-9, '-', '+' y espacio
+              invalid_phone_number: sólo puede contener 0-9, '-', '+' y espacio
     models:
       action_flows/action_flow: Flujos de acción
       business: Empresa
@@ -392,7 +392,7 @@ es:
       not_found: Formulario de usuario de propiedad  no encontrada
     user:
       does_not_exist: El usuario no existe
-      invalid_expired_token: Token de teléfono inválido o expirado
+      invalid_expired_token: Token de teléfono inválido o vencido
       merge_failed: Union Fallida
       not_found: Esta cuenta no existe. Envíe una solicitud para crear una cuenta
         o utilice la información de cuenta correcta para iniciar sesión
