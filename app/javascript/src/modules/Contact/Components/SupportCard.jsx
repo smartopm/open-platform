@@ -194,7 +194,7 @@ export default function SupportCard({ handleSendMessage, user }) {
             color="primary"
             onClick={() =>
               window.open(
-                'https://docs.google.com/document/d/1u740OKrB8jpK5pMZt-dVS3Xh4iMc9paAAVhZNldi3CQ/edit?ts=5fdd2107',
+                'https://handbook.doublegdp.com/Product/#platform-policies',
                 '_blank'
               )}
             style={{ fontSize: 14 }}
