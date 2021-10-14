@@ -122,10 +122,13 @@ cypress:
     - master
 
 start_prod_push:
+  extends: .base_db
   only:
     - schedules
   script:
-    - echo "Testing Gitlab Scheduler!!!"
+    - echo "Creating tag..."
+    - bundle exec rake deploy:create_tag
+    - echo "Tag created"
 
 staging:appdeploy:
   stage: staging
