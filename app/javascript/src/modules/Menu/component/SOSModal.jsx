@@ -326,7 +326,7 @@ const SOSModal=({open, setOpen, location, authState})=> {
     >
       <div className={classes.paper}>
         <div className={classes.CloseIcon}>
-          <p >
+          <p>
             <a className={classes.callLink} href={`tel: ${authState.user?.community.emergencyCallNumber}`}>
               {t('panic_alerts.click_to_call')}
               {' '}
