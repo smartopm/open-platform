@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'host_env'
+
 module Types
   # EntryRequestType
   class EntryRequestType < Types::BaseObject
@@ -34,6 +36,7 @@ module Types
     field :entry_request_state, Integer, null: true
     field :active, Boolean, null: true
     field :revoked, Boolean, null: true
+    field :video_url, String, null: true
 
     def active
       object.active?
@@ -41,6 +44,18 @@ module Types
 
     def revoked
       object.revoked?
+    end
+
+    def video_url
+      return nil unless object.video.attached?
+
+      host_url(object.video)
+    end
+
+    def host_url(type)
+      base_url = HostEnv.base_url(object.user.community)
+      path = Rails.application.routes.url_helpers.rails_blob_path(type)
+      "https://#{base_url}#{path}"
     end
   end
 end

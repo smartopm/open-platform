@@ -19,7 +19,7 @@ export default function steps(handleNext, communityName, isNewGuest) {
     {
       title: 'Capture Video',
       component: <VideoCapture handleNext={handleNext} />
-    },
+    }
   ];
   // hardcoding this for now before we make this a community setting
   if (communityName === 'Nkwashi' || !isNewGuest) {
