@@ -2,17 +2,22 @@
 // If there is only one step, it won't show the stepper
 import React from 'react';
 import GuestForm from './GuestForm';
+import VideoCapture from './VideoCapture';
 
 export default function steps(handleNext, communityName) {
   const verificationSteps = [
     {
       title: 'Guest Form',
-      component: <GuestForm handleNext={handleNext} />,
+      component: <GuestForm handleNext={handleNext} />
     },
-  ]
+    {
+      title: 'Capture Video',
+      component: <VideoCapture handleNext={handleNext} />
+    }
+  ];
   // hardcoding this for now before we make this a community setting
-  if(communityName === 'Nkwashi'){
-    return verificationSteps.slice(0, 1)
+  if (communityName !== 'Nkwashi') {
+    return verificationSteps.slice(0, 1);
   }
-  return verificationSteps
+  return verificationSteps;
 }
