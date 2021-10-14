@@ -45,6 +45,7 @@ class PlanRenewalJob < ApplicationJob
           new_payment_plan.total_amount = sub_plan.amount * payment_plan.duration
           new_payment_plan.save!
           payment_plan.update!(renewed_plan_id: new_payment_plan.id)
+          send_plan_renewal_email(payment_plan)
         end
       else
         Rails.logger.info "No active subscription-plan found for payment-plan: #{payment_plan.id}"
@@ -55,4 +56,13 @@ class PlanRenewalJob < ApplicationJob
   # rubocop:enable Metrics/AbcSize
   # rubocop:enable Metrics/BlockLength
   # rubocop:enable Style/OptionalBooleanParameter
+
+  def send_plan_renewal_email(payment_plan)
+    user = payment_plan.user
+    email_template = user.community.email_templates.find_by(name: 'Project Panther')
+    template_data = [
+      { key: '%end_date%', value: payment_plan.end_date },
+    ]
+    EmailMsg.send_mail_from_db(user.email, email_template, template_data)
+  end
 end
