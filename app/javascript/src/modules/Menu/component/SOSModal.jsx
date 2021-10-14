@@ -295,7 +295,9 @@ const SOSModal=({open, setOpen, location, authState})=> {
   
   useEffect(() => {
    if(counter >= 0) {
-    counter < 3 && setTimeout(() => { setCounter(counter + 1)}, 1000)
+     if(counter < 3) {
+      setTimeout(() => { setCounter(counter + 1)}, 1000)
+     }
    }
   }, [counter])
 
@@ -322,7 +324,7 @@ const SOSModal=({open, setOpen, location, authState})=> {
               {authState.user?.community.emergencyCallNumber}
             </a>
           </p>
-          <CloseIcon onClick={resetSOSModalState} />
+          <CloseIcon onClick={resetSOSModalState} data-testid="sos-modal-close-btn"/>
         </div>
         <MessageAlert
           type={panicButtonMessage.isError ? 'error' : 'success'}

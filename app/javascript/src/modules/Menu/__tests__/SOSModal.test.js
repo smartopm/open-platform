@@ -35,7 +35,14 @@ describe('SOSModal component', () => {
     );
 
     expect(container.queryByTestId('sos-modal')).toBeInTheDocument();
-    expect(container.queryByTestId('sos-modal').textContent).toContain('panic_alerts.press_for_3_seconds');
+    expect(container.queryByTestId('sos-modal-close-btn')).toBeInTheDocument();
+    expect(container.queryByTestId('sos-modal').textContent).toContain('panic_alerts.click_to_call');
+    expect(container.queryByTestId('sos-modal').textContent).toContain('panic_alerts.sos_disclaimer_header');
+    expect(container.queryByTestId('sos-modal').textContent).toContain('panic_alerts.sos_disclaimer_body');
+    expect(container.queryByTestId('sos-modal').textContent).toContain('panic_alerts.press_and_hold');
+    expect(container.queryByTestId('sos-modal').textContent).toContain('panic_alerts.for_3_seconds');
+    expect(container.queryByTestId('sos-modal-panic-button')).toBeInTheDocument();
+    expect(container.queryByTestId('sos-modal-panic-button').textContent).toContain('panic_alerts.sos');
   });
 
 });
