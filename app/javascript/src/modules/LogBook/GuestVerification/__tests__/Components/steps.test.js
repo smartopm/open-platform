@@ -13,6 +13,6 @@ describe('steps should return according to the community', () => {
     };
     const handleNextMock = jest.fn();
     const guestSteps = steps(handleNextMock, communityMock.user.community);
-    expect(guestSteps).toHaveLength(1);
+    expect(guestSteps).toHaveLength(3);
   });
 });
