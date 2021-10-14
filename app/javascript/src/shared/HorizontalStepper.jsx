@@ -3,14 +3,20 @@ import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
 import StepButton from '@material-ui/core/StepButton';
 import PropTypes from 'prop-types';
-import { objectAccessor } from '../utils/helpers';
+import { useLocation, useParams } from 'react-router-dom';
+import { objectAccessor, useParamsQuery } from '../utils/helpers';
 import { Context } from '../containers/Provider/AuthStateProvider';
 
 export default function HorizontalStepper({ steps }) {
   const [activeStep, setActiveStep] = useState(0);
   const authState = useContext(Context)
+  const query = useParamsQuery();
+  const { pathname } = useLocation()
+  const { id } = useParams()
+  const requestType = query.get('type');
+  const isNewGuestRequest = pathname.includes('visit_request') && requestType === 'guest' || !id
   const communityName = authState.user.community.name
-  const listOfSteps = steps(handleNext, communityName);
+  const listOfSteps = steps(handleNext, communityName, isNewGuestRequest);
   const validSteps = Boolean(listOfSteps?.length);
 
   function handleNext() {
@@ -33,7 +39,7 @@ export default function HorizontalStepper({ steps }) {
             </Step>
           ))}
       </Stepper>
-      {validSteps && objectAccessor(steps(handleNext, communityName), activeStep).component}
+      {validSteps && objectAccessor(listOfSteps, activeStep).component}
     </div>
   );
 }

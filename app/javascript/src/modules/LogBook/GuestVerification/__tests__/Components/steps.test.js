@@ -12,7 +12,8 @@ describe('steps should return according to the community', () => {
       }
     };
     const handleNextMock = jest.fn();
-    const guestSteps = steps(handleNextMock, communityMock.user.community.name);
+    const isGuest = true
+    const guestSteps = steps(handleNextMock, communityMock.user.community.name, isGuest);
     expect(guestSteps).toHaveLength(1);
   });
   it('should only return all the steps for other communities', () => {
@@ -24,7 +25,7 @@ describe('steps should return according to the community', () => {
       }
     };
     const handleNextMock = jest.fn();
-    const guestSteps = steps(handleNextMock, communityMock.user.community.name);
+    const guestSteps = steps(handleNextMock, communityMock.user.community.name, false);
     expect(guestSteps).toHaveLength(3);
   });
 });
