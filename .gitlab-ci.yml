@@ -114,6 +114,12 @@ cypress:
   only:
     - master
 
+auto:deploy:
+  only:
+    - schedules
+  script:
+    - echo "Testing Gitlab Scheduler!!!"
+
 staging:appdeploy:
   stage: staging
   allow_failure: false
