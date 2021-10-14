@@ -60,6 +60,10 @@ class PlanRenewalJob < ApplicationJob
   def send_plan_renewal_email(payment_plan)
     user = payment_plan.user
     email_template = user.community.email_templates.find_by(name: 'Project Panther')
+    if user.email.blank? || email_template.nil?
+      Rails.logger.info "Email or Template was not found for plan: #{payment_plan.id}"
+      return
+    end
     template_data = [
       { key: '%end_date%', value: payment_plan.end_date },
     ]

@@ -19,6 +19,7 @@ RSpec.describe PlanRenewalJob, type: :job do
   let!(:email_template) do
     create(:email_template, name: 'Project Panther', community_id: community.id)
   end
+  let!(:template_data) { [{ key: '%end_date%', value: payment_plan.end_date }] }
 
   before do
     ActiveJob::Base.queue_adapter = :test
@@ -35,13 +36,11 @@ RSpec.describe PlanRenewalJob, type: :job do
       end.to have_enqueued_job
     end
     it 'creates a new payment plan and invokes EmailMsg' do
-      template_data = [
-        { key: '%end_date%', value: payment_plan.end_date },
-      ]
       expect(Properties::PaymentPlan.count).to eql 1
       expect(EmailMsg).to receive(:send_mail_from_db).with(
         user.email, email_template, template_data
       )
+
       perform_enqueued_jobs { described_class.perform_later(false) }
       expect(Properties::PaymentPlan.count).to eql 2
     end
@@ -49,6 +48,19 @@ RSpec.describe PlanRenewalJob, type: :job do
       expect { perform_enqueued_jobs { described_class.perform_later(true) } }.to(
         change { Properties::PaymentPlan.count }.by(0),
       )
+    end
+
+    context 'when email is not present' do
+      before { user.update(email: '') }
+      it 'does not invokes EmailMsg' do
+        expect(Properties::PaymentPlan.count).to eql 1
+        expect(EmailMsg).not_to receive(:send_mail_from_db).with(
+          user.email, email_template, template_data
+        )
+
+        perform_enqueued_jobs { described_class.perform_later(false) }
+        expect(Properties::PaymentPlan.count).to eql 2
+      end
     end
   end
 end
