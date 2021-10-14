@@ -301,11 +301,10 @@ const SOSModal=({open, setOpen, location, authState})=> {
      }
    }
 
-   if(panicButtonPressed || panicButtonMessage.isError){
-     setCounter(-1)
+   return function(){
      clearTimeout(timer)
    }
-  }, [counter, panicButtonPressed, panicButtonMessage])
+  }, [counter])
 
   const classes = useStyles();
 
