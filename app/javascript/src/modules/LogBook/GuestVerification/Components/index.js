@@ -3,6 +3,7 @@
 import React from 'react';
 import GuestForm from './GuestForm';
 import VideoCapture from './VideoCapture';
+import IdCapture from './IdCapture';
 
 export default function steps(handleNext, communityName) {
   const verificationSteps = [
@@ -11,9 +12,13 @@ export default function steps(handleNext, communityName) {
       component: <GuestForm handleNext={handleNext} />
     },
     {
+      title: 'Id Capture',
+      component: <IdCapture handleNext={handleNext} />,
+    },
+    {
       title: 'Capture Video',
       component: <VideoCapture handleNext={handleNext} />
-    }
+    },
   ];
   // hardcoding this for now before we make this a community setting
   if (communityName !== 'Nkwashi') {

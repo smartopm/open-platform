@@ -50,7 +50,14 @@
     "other_reason": "Other visiting reason",
     "visit_scheduled": "Visit scheduled for: {{date}} at {{time}}",
     "no_invited_guests": "No invited guests",
-    "visit_end_error": "Visitation dates are required"
+    "visit_end_error": "Visitation dates are required",
+    "add_a_photo": "Add a photo of your ID with your phone",
+    "portrait": "Use portrait orientation",
+    "off_camera": "Turn off your camera flash",
+    "dark_background": "Use a dark background",
+    "flat_surface": "Take photo on a flat surface",
+    "front": "Front",
+    "back": "Back"
   },
   "log_title": {
     "visitor": "Visitor",
@@ -87,7 +94,9 @@
     "skip_scan_next_entry": "{{action}} & Scan Next Entry",
     "created_observation": "Observation note successfully added",
     "add_your_observation": "Do you have any observations you'd like to add?",
-    "created_observation_exit": "Observation exit has been logged successfully"
+    "created_observation_exit": "Observation exit has been logged successfully",
+    "upload_label": "Do you have any images you will like to add?",
+    "upload_image": "Upload Image"
   },
   "qrcode_confirmation": {
     "title": "Access QR Code",
