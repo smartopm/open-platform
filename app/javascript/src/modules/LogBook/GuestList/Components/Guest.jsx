@@ -93,7 +93,7 @@ export function renderGuestData(guestListEntry, menuData, translate) {
       'End of Visit': (
         <Grid item xs={12} sm={2} md={2} style={{fontSize: '12px'}} data-testid="end_of_visit">
           <Text 
-            content={guestListEntry.endsAt ? translate('logbook:guest_book.ends_on_date_time', { date: dateToString(guestListEntry.visitationDate), time: dateTimeToString(guestListEntry.endsAt)  }) : '-'} 
+            content={guestListEntry.visitEndDate ? translate('logbook:guest_book.ends_on_date_time', { date: dateToString(guestListEntry.visitEndDate), time: dateTimeToString(guestListEntry.endsAt) }) : translate('logbook:guest_book.ends_on_date_time', { date: dateToString(guestListEntry.visitationDate), time: dateTimeToString(guestListEntry.endsAt) })} 
           />
         </Grid>
       ),
