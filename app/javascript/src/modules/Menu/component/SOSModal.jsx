@@ -324,7 +324,7 @@ const SOSModal=({open, setOpen, location, authState})=> {
               {authState.user?.community.emergencyCallNumber}
             </a>
           </p>
-          <CloseIcon onClick={resetSOSModalState} data-testid="sos-modal-close-btn"/>
+          <CloseIcon onClick={resetSOSModalState} data-testid="sos-modal-close-btn" />
         </div>
         <MessageAlert
           type={panicButtonMessage.isError ? 'error' : 'success'}
