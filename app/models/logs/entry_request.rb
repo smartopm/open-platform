@@ -7,6 +7,7 @@ module Logs
   # Record of visitor entries to a community
   class EntryRequest < ApplicationRecord
     has_one_attached :video
+    has_many_attached :images
     include SearchCop
 
     belongs_to :user, class_name: 'Users::User'

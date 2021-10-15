@@ -37,6 +37,7 @@ module Types
     field :active, Boolean, null: true
     field :revoked, Boolean, null: true
     field :video_url, String, null: true
+    field :image_urls, [String], null: true
 
     def active
       object.active?
@@ -50,6 +51,16 @@ module Types
       return nil unless object.video.attached?
 
       host_url(object.video)
+    end
+
+    def image_urls
+      return nil unless object.images.attached?
+
+      images = []
+      object.images.each do |img|
+        images << host_url(img)
+      end
+      images
     end
 
     def host_url(type)
