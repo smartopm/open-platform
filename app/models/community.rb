@@ -145,6 +145,13 @@ class Community < ApplicationRecord
   # rubocop:enable Metrics/AbcSize
   # rubocop:enable Metrics/PerceivedComplexity
 
+  # rubocop:disable Layout/LineLength
+  def craft_am_safe_sms(**params)
+    message = "Emergency SOS #{params[:current_user].name} is safe and has cancelled need for emergency support."
+    send_sms(message)
+  end
+  # rubocop:enable Layout/LineLength
+
   def send_sms(message)
     sms_phone_numbers.each  do |sms_phone_number|
       Rails.logger.info "Sending #{sms_phone_number}"
