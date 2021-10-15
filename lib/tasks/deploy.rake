@@ -2,7 +2,7 @@
 
 namespace :deploy do
   desc 'Start auto deploy'
-  task create_tag: :environment do
-    DeployJob.perform_now
+  task :create_tag, %i[gitlab_token] => :environment do |_t, args|
+    DeployJob.perform_now(args.gitlab_token)
   end
 end

@@ -127,7 +127,7 @@ start_prod_push:
     - schedules
   script:
     - echo "Creating tag..."
-    - bundle exec rake deploy:create_tag
+    - bundle exec rake deploy:create_tag[$GITLAB_TOKEN]
     - echo "Tag created"
 
 staging:appdeploy:
