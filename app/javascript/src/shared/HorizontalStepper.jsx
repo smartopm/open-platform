@@ -1,21 +1,12 @@
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
 import StepButton from '@material-ui/core/StepButton';
 import PropTypes from 'prop-types';
-import { useLocation, useParams } from 'react-router-dom';
-import { objectAccessor, useParamsQuery } from '../utils/helpers';
-import { Context } from '../containers/Provider/AuthStateProvider';
+import { objectAccessor } from '../utils/helpers';
 
-export default function HorizontalStepper({ steps }) {
+export default function HorizontalStepper({ steps, communityName, isNewGuestRequest }) {
   const [activeStep, setActiveStep] = useState(0);
-  const authState = useContext(Context)
-  const query = useParamsQuery();
-  const { pathname } = useLocation()
-  const { id } = useParams()
-  const requestType = query.get('type');
-  const isNewGuestRequest = pathname.includes('visit_request') && requestType === 'guest' || !id
-  const communityName = authState.user.community.name
   const listOfSteps = steps(handleNext, communityName, isNewGuestRequest);
   const validSteps = Boolean(listOfSteps?.length);
 
@@ -50,4 +41,6 @@ HorizontalStepper.defaultProps = {
 
 HorizontalStepper.propTypes = {
   steps: PropTypes.func,
+  communityName: PropTypes.string.isRequired,
+  isNewGuestRequest: PropTypes.bool.isRequired,
 };
