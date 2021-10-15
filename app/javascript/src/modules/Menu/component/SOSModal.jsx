@@ -228,6 +228,7 @@ const SOSModal=({open, setOpen, location, authState})=> {
   
   const callback = () => {
     setPanicButtonPressed(true)
+    console.log("I am in the callback")
     if (location.loaded && !location.error){
       const googleMapUrl = `https://www.google.com/maps/search/?api=1&query=${location.coordinates.lat},${location.coordinates.lng}`
       communityEmergency({ variables: { googleMapUrl } }).then(()=>{
@@ -303,6 +304,7 @@ const SOSModal=({open, setOpen, location, authState})=> {
   }
 
   const handleLongPressStart = () => {
+    console.log("Have been long pressed")
     setPanicAlertOpen(false);
     setPanicButtonMessage({ isError: false, detail: '' });
     setCounter(0)

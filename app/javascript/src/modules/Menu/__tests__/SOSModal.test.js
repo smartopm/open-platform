@@ -1,5 +1,6 @@
 import React from 'react';
-import { render, fireEvent } from '@testing-library/react';
+import { act } from "react-dom/test-utils";
+import { render, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { createMuiTheme, ThemeProvider } from '@material-ui/core';
 import { BrowserRouter } from 'react-router-dom';
@@ -11,7 +12,6 @@ describe('SOSModal component', () => {
   jest.useFakeTimers();
   const bind = jest.fn()
   const setOpen = jest.fn()
-  const callback = jest.fn()
   const theme = createMuiTheme();
   const mockGeolocation = {
     getCurrentPosition: jest.fn()
@@ -25,7 +25,7 @@ describe('SOSModal component', () => {
   };
   global.navigator.geolocation = mockGeolocation;
 
-  it('should render properly the sos modal', () => {
+  it('should render properly the sos modal', async() => {
     const container = render(
       <ThemeProvider theme={theme}>
         <MockedProvider>
@@ -36,6 +36,8 @@ describe('SOSModal component', () => {
       </ThemeProvider>
     );
 
+    await waitFor(() => {
+
     expect(container.queryByTestId('sos-modal')).toBeInTheDocument();
     expect(container.queryByTestId('sos-modal-close-btn')).toBeInTheDocument();
     expect(container.queryByTestId('sos-modal').textContent).toContain('panic_alerts.click_to_call');
@@ -44,11 +46,32 @@ describe('SOSModal component', () => {
     expect(container.queryByTestId('sos-modal').textContent).toContain('panic_alerts.press_and_hold');
     expect(container.queryByTestId('sos-modal').textContent).toContain('panic_alerts.for_3_seconds');
     expect(container.queryByTestId('sos-modal-panic-button')).toBeInTheDocument();
+    expect(container.queryByTestId('sos-modal-panic-button').textContent).toContain('panic_alerts.sos');  
+    })  
+  });
+
+
+  it('should render properly the sos modal and transition after 3 sec long press', async() => {
+    const container = render(
+      <ThemeProvider theme={theme}>
+        <MockedProvider>
+          <BrowserRouter>
+            <SOSModal open setOpen={setOpen} location={mockGeolocation} {...{ authState }} />
+          </BrowserRouter>
+        </MockedProvider>
+      </ThemeProvider>
+    );
+    expect(container.queryByTestId('sos-modal').textContent).toContain('panic_alerts.for_3_seconds');
+    expect(container.queryByTestId('sos-modal-panic-button')).toBeInTheDocument();
     expect(container.queryByTestId('sos-modal-panic-button').textContent).toContain('panic_alerts.sos');
 
-    fireEvent.click(container.queryByTestId('sos-modal-panic-button'))
-    jest.advanceTimersByTime(4000);
-    // expect(container.queryByTestId('sos-modal-iam-safe-button')).toBeInTheDocument();
+    act(() => {
+    fireEvent.mouseDown(container.queryByTestId('sos-modal-panic-button'))
+    jest.advanceTimersByTime(3000);
+    });
+    await waitFor(() => {
+      expect(container.queryByTestId('sos-modal-iam-safe-button')).toBeInTheDocument();
+    });
     
   });
 
