@@ -7,6 +7,7 @@ import { BrowserRouter } from 'react-router-dom';
 import { MockedProvider } from '@apollo/react-testing';
 import SOSModal from '../component/SOSModal';
 import authState from '../../../__mocks__/authstate';
+import {CancelCommunityEmergencyMutation} from '../graphql/sos_mutation';
 
 describe('SOSModal component', () => {
   jest.useFakeTimers();
@@ -73,6 +74,57 @@ describe('SOSModal component', () => {
       expect(container.queryByTestId('sos-modal-iam-safe-button')).toBeInTheDocument();
     });
     
+  });
+
+  it('should render properly the sos modal and feedback message after iam safe button is pressed', async() => {
+    const mocks = [
+      {
+        request: {
+          query: CancelCommunityEmergencyMutation,
+          variables: {}
+        },
+        result: {
+          data: {
+            communityEmergencyCancel: {
+              success: true,
+            }
+          }
+        }
+      },
+    ]
+    const container = render(
+      <ThemeProvider theme={theme}>
+        <MockedProvider mocks={mocks} addTypename={false}>
+          <BrowserRouter>
+            <SOSModal open setOpen={setOpen} location={mockGeolocation} {...{ authState }} />
+          </BrowserRouter>
+        </MockedProvider>
+      </ThemeProvider>
+    );
+    expect(container.queryByTestId('sos-modal').textContent).toContain('panic_alerts.for_3_seconds');
+    expect(container.queryByTestId('sos-modal-panic-button')).toBeInTheDocument();
+    expect(container.queryByTestId('sos-modal-panic-button').textContent).toContain('panic_alerts.sos');
+
+    act(() => {
+    fireEvent.mouseDown(container.queryByTestId('sos-modal-panic-button'))
+    jest.advanceTimersByTime(3000);
+    });
+    await waitFor(() => {
+      expect(container.queryByTestId('sos-modal-iam-safe-button')).toBeInTheDocument();
+
+      // Click I am Safe Button
+      fireEvent.click(container.queryByTestId('sos-modal-iam-safe-button'))
+    });
+  
+    act(() => {
+    jest.advanceTimersByTime(3000);
+    });
+    await waitFor(() => {
+      expect(container.queryByTestId('sos-modal-iam-safe-body')).toBeInTheDocument();
+      expect(container.queryByTestId('sos-modal-iam-safe-body').textContent).toContain('panic_alerts.am_safe_feedback_header');
+      expect(container.queryByTestId('sos-modal-iam-safe-body').textContent).toContain('panic_alerts.am_safe_feedback_body');
+    });
+
   });
 
 });
