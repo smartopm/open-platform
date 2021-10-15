@@ -95,10 +95,6 @@ export default function VideoCapture({ handleNext }) {
       <Typography className={classes.title}>
         {t('logbook:video_recording.create_video_text')}
       </Typography>
-      <div className={classes.greyText} data-testid="be-sure-txt">
-        {t('logbook:video_recording.sure')}
-        :
-      </div>
       <div className={classes.greyText} data-testid="well-lit-txt">
         1.
         {' '}

@@ -141,8 +141,7 @@
     "video_recording": {
       "add_video_text": "Add a Video with your phone",
       "create_video_text": "Create a video to your profile",
-      "sure": "Be sure",
-      "well_lit_area": "You are in a well lit area and your face is clearly visible",
+      "well_lit_area": "Be sure You are in a well lit area and your face is clearly visible",
       "listen_to_counter": "Listen to the counter for a chime on when to turn",
       "instruction_on_direction": "You will be facing forward for 2 seconds, then turn to the left and then to the right. The counter will chime each time.",
       "face_left": "Face to the left",
