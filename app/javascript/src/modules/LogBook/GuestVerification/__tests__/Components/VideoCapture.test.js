@@ -26,7 +26,6 @@ describe('Video Capture component', () => {
     expect(container.queryByText('logbook:video_recording.face_left')).toBeInTheDocument();
     expect(container.queryByText('logbook:video_recording.add_video_text')).toBeInTheDocument();
     expect(container.queryByText('logbook:video_recording.create_video_text')).toBeInTheDocument();
-    expect(container.queryByTestId('be-sure-txt')).toBeInTheDocument();
     expect(container.queryByTestId('well-lit-txt')).toBeInTheDocument();
     expect(container.queryByTestId('listen-to-counter-txt')).toBeInTheDocument();
     expect(container.queryByTestId('direction-txt')).toBeInTheDocument();
