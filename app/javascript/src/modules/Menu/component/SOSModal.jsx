@@ -265,7 +265,7 @@ const SOSModal=({open, setOpen, location, authState})=> {
 
   const cancelCommunityEmergency = () => {
     setPanicButtonPressed(true)
-    communityEmergencyCancel({ variables: { } }).then(()=>{
+    communityEmergencyCancel().then(()=>{
         setPanicButtonMessage({
           isError: false,
           detail: t('panic_alerts.cancel_emergency_success_alert')
