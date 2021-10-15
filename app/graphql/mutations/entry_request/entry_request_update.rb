@@ -21,6 +21,7 @@ module Mutations
       argument :occurs_on, [String], required: false
       argument :visit_end_date, String, required: false
       argument :video_blob_id, String, required: false
+      argument :image_blob_ids, [String], required: false
 
       field :entry_request, Types::EntryRequestType, null: true
 
@@ -29,6 +30,7 @@ module Mutations
 
         if entry_request.update(vals.except(:video_blob_id))
           entry_request.video.attach(vals[:video_blob_id]) if vals[:video_blob_id]
+          entry_request.images.attach(vals[:image_blob_ids]) if vals[:image_blob_ids].present?
 
           return { entry_request: entry_request }
         end

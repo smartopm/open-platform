@@ -29,6 +29,7 @@ export const EntryRequestUpdateMutation = gql`
     $occursOn: [String!]
     $visitEndDate: String
     $videoBlobId: String
+    $imageBlobIds: [String]
   ) {
     result: entryRequestUpdate(
       id: $id
@@ -47,6 +48,7 @@ export const EntryRequestUpdateMutation = gql`
       occursOn: $occursOn
       visitEndDate: $visitEndDate
       videoBlobId: $videoBlobId
+      imageBlobIds: $imageBlobIds
     ) {
       entryRequest {
         id
