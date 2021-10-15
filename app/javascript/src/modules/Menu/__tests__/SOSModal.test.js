@@ -1,5 +1,5 @@
 import React from 'react';
-import { render } from '@testing-library/react';
+import { render, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { createMuiTheme, ThemeProvider } from '@material-ui/core';
 import { BrowserRouter } from 'react-router-dom';
@@ -8,8 +8,10 @@ import SOSModal from '../component/SOSModal';
 import authState from '../../../__mocks__/authstate';
 
 describe('SOSModal component', () => {
+  jest.useFakeTimers();
   const bind = jest.fn()
   const setOpen = jest.fn()
+  const callback = jest.fn()
   const theme = createMuiTheme();
   const mockGeolocation = {
     getCurrentPosition: jest.fn()
@@ -43,6 +45,11 @@ describe('SOSModal component', () => {
     expect(container.queryByTestId('sos-modal').textContent).toContain('panic_alerts.for_3_seconds');
     expect(container.queryByTestId('sos-modal-panic-button')).toBeInTheDocument();
     expect(container.queryByTestId('sos-modal-panic-button').textContent).toContain('panic_alerts.sos');
+
+    fireEvent.click(container.queryByTestId('sos-modal-panic-button'))
+    jest.advanceTimersByTime(4000);
+    // expect(container.queryByTestId('sos-modal-iam-safe-button')).toBeInTheDocument();
+    
   });
 
 });

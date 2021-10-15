@@ -12,7 +12,7 @@ import Button from '@material-ui/core/Button';
 import PanicButtonSVG from './PanicButtonSVG';
 import MessageAlert from '../../../components/MessageAlert';
 import { formatError } from '../../../utils/helpers';
-import {CommunityEmergencyMutation} from '../graphql/sos_mutation';
+import {CommunityEmergencyMutation, CancelCommunityEmergencyMutation} from '../graphql/sos_mutation';
 import userProps from '../../../shared/types/user'; 
 
 const useStyles = makeStyles((theme) => ({
@@ -222,6 +222,7 @@ const SOSModal=({open, setOpen, location, authState})=> {
   const [iamSafeButtonPressed, setIamSafeButtonPressed] = useState(false);
   const [counter, setCounter] = useState(-1);
   const [communityEmergency] = useMutation(CommunityEmergencyMutation)
+  const [communityEmergencyCancel] = useMutation(CancelCommunityEmergencyMutation)
 
   const { t } = useTranslation('panic_alerts')
   
@@ -261,6 +262,24 @@ const SOSModal=({open, setOpen, location, authState})=> {
 
   };
 
+
+  const cancelCommunityEmergency = () => {
+    setPanicButtonPressed(true)
+    communityEmergencyCancel({ variables: { } }).then(()=>{
+        setPanicButtonMessage({
+          isError: false,
+          detail: t('panic_alerts.cancel_emergency_success_alert')
+        });
+        setPanicAlertOpen(true);
+      })
+      .catch(error => {
+        setPanicButtonMessage({ isError: true, detail: formatError(error.message) });
+        setPanicAlertOpen(true);
+        setPanicButtonPressed(false)
+      }) 
+
+  };
+
   const showPanicAlert = ()=> {
     setPanicButtonMessage({ isError: true, detail: t('panic_alerts.panic_error_alert') });
     setPanicAlertOpen(true);
@@ -279,6 +298,7 @@ const SOSModal=({open, setOpen, location, authState})=> {
 
   const handleIamSafeButtonClick = () => {
     setIamSafeButtonPressed(true);
+    cancelCommunityEmergency()
     setPanicButtonPressed(false)
   }
 
@@ -390,7 +410,7 @@ const SOSModal=({open, setOpen, location, authState})=> {
 )}
 
         {iamSafeButtonPressed && !panicButtonMessage.isError && (
-        <div className={classes.feedbackContents}>
+        <div className={classes.feedbackContents} data-testid="sos-modal-iam-safe-body">
           <h4 className={classes.header}>{t('panic_alerts.am_safe_feedback_header')}</h4>
           <p className={classes.feedbackInfo}>
             {t('panic_alerts.am_safe_feedback_body')}

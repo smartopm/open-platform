@@ -2,6 +2,7 @@
     "panic_alerts": {
       "panic_error_alert": "Sorry, emergency not triggered. You need to long press the button for 3 seconds",
       "panic_success_alert": "A message has been sent to the security team.",
+      "cancel_emergency_success_alert": "You have successfully cancelled emergency request",
       "header": "KEEP CALM!",
       "info": "After pressing SOS, notifications will be sent out to our administrators and a member of our security team will speak to you.",
       "user_location_heeader": "Estimated current location ",
