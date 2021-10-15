@@ -4,7 +4,7 @@
 # rubocop:disable Layout/LineLength
 # rubocop:disable Metrics/MethodLength
 class Deploy
-  BASE_URL = 'https://gitlab.com/api/v4/projects/25486737'
+  BASE_URL = 'https://gitlab.com/api/v4/projects/13905080'
 
   def self.create_tag!(gitlab_token)
     tag_name = new_tag_name
