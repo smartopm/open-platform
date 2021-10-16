@@ -9,6 +9,7 @@ import ImageArea from '../../../../shared/imageUpload/ImageArea'
 import { useFileUpload } from '../../../../graphql/useFileUpload';
 import { EntryRequestUpdateMutation } from '../../graphql/logbook_mutations';
 import { EntryRequestContext } from '../Context';
+import MessageAlert from '../../../../components/MessageAlert';
 
 export default function IDCapture({ handleNext }) {
   const [frontImageUrl, setFrontImageUrl] = useState('');
@@ -39,12 +40,11 @@ export default function IDCapture({ handleNext }) {
           message: t('image_capture.image_captured'),
           isError: false
         });
-        // handleNext();
+        handleNext();
       })
       .catch(error => {
         setDetails({ ...errorDetails, isError: true, message: error.message });
       });
-    handleNext()
   }
 
   useEffect(() => {
@@ -69,49 +69,57 @@ export default function IDCapture({ handleNext }) {
 
   const classes = useStyles();
   return (
-    <Grid container>
-      <Grid item xs={12} className={classes.body}>
-        <Typography variant='h6' className={classes.header} data-testid='add_photo'>{t('image_capture.add_a_photo')}</Typography>
-      </Grid>
-      <Grid item xs={12}>
-        <Grid container>
-          {!matches && (
+    <>
+      <MessageAlert
+        type={!errorDetails.isError ? 'success' : 'error'}
+        message={errorDetails.message}
+        open={!!errorDetails.message}
+        handleClose={() => setDetails({ ...errorDetails, message: '' })}
+      />
+      <Grid container>
+        <Grid item xs={12} className={classes.body}>
+          <Typography variant='h6' className={classes.header} data-testid='add_photo'>{t('image_capture.add_a_photo')}</Typography>
+        </Grid>
+        <Grid item xs={12}>
+          <Grid container>
+            {!matches && (
             <Grid sm={4} />
           )}
-          <Grid item xs={6} sm={2} data-testid='instructions'>
-            <ul>
-              <li><Typography>{t('image_capture.portrait')}</Typography></li>
-              <li><Typography>{t('image_capture.off_camera')}</Typography></li>
-            </ul>
-          </Grid>
-          <Grid item xs={6} sm={6}>
-            <ul>
-              <li><Typography>{t('image_capture.dark_background')}</Typography></li>
-              <li><Typography>{t('image_capture.flat_surface')}</Typography></li>
-            </ul>
+            <Grid item xs={6} sm={2} data-testid='instructions'>
+              <ul>
+                <li><Typography>{t('image_capture.portrait')}</Typography></li>
+                <li><Typography>{t('image_capture.off_camera')}</Typography></li>
+              </ul>
+            </Grid>
+            <Grid item xs={6} sm={6}>
+              <ul>
+                <li><Typography>{t('image_capture.dark_background')}</Typography></li>
+                <li><Typography>{t('image_capture.flat_surface')}</Typography></li>
+              </ul>
+            </Grid>
           </Grid>
         </Grid>
+        <Grid container alignItems="center" justifyContent="center" direction="row" data-testid='upload_area'>
+          <ImageArea
+            handleClick={() => setUploadType('front')}
+            handleChange={(img) => onChange(img)}
+            token={authState.token}
+            imageUrl={frontImageUrl}
+            type={t('image_capture.front')}
+          />
+          <ImageArea
+            handleClick={() => setUploadType('back')}
+            handleChange={(img) => onChange(img)}
+            token={authState.token}
+            imageUrl={backImageUrl}
+            type={t('image_capture.back')}
+          />
+        </Grid>
+        <Grid item xs={12} className={classes.body} data-testid='next_button'>
+          <Button variant='contained' color='primary' onClick={handleContinue}>{t('continue')}</Button>
+        </Grid>
       </Grid>
-      <Grid container alignItems="center" justifyContent="center" direction="row" data-testid='upload_area'>
-        <ImageArea
-          handleClick={() => setUploadType('front')}
-          handleChange={(img) => onChange(img)}
-          token={authState.token}
-          imageUrl={frontImageUrl}
-          type={t('image_capture.front')}
-        />
-        <ImageArea
-          handleClick={() => setUploadType('back')}
-          handleChange={(img) => onChange(img)}
-          token={authState.token}
-          imageUrl={backImageUrl}
-          type={t('image_capture.back')}
-        />
-      </Grid>
-      <Grid item xs={12} className={classes.body} data-testid='next_button'>
-        <Button variant='contained' color='primary' onClick={handleContinue}>{t('continue')}</Button>
-      </Grid>
-    </Grid>
+    </>
   );
 }
 
