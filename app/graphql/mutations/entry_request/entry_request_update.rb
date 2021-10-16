@@ -28,7 +28,7 @@ module Mutations
       def resolve(vals)
         entry_request = context[:site_community].entry_requests.find(vals.delete(:id))
 
-        if entry_request.update(vals.except(:video_blob_id))
+        if entry_request.update(vals.except(:video_blob_id, :image_blob_ids))
           entry_request.video.attach(vals[:video_blob_id]) if vals[:video_blob_id]
           entry_request.images.attach(vals[:image_blob_ids]) if vals[:image_blob_ids].present?
 

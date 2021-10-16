@@ -29,7 +29,7 @@ export const EntryRequestUpdateMutation = gql`
     $occursOn: [String!]
     $visitEndDate: String
     $videoBlobId: String
-    $imageBlobIds: [String]
+    $imageBlobIds: [String!]
   ) {
     result: entryRequestUpdate(
       id: $id

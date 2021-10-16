@@ -39,7 +39,7 @@ export default function IDCapture({ handleNext }) {
           message: t('image_capture.image_captured'),
           isError: false
         });
-        handleNext();
+        // handleNext();
       })
       .catch(error => {
         setDetails({ ...errorDetails, isError: true, message: error.message });
