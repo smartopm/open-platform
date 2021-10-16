@@ -149,8 +149,8 @@
       "off_camera": "Turn off your camera flash",
       "dark_background": "Use a dark background",
       "flat_surface": "Take photo on a flat surface",
-      "front": "Front",
-      "back": "Back",
+      "front": "Upload Front",
+      "back": "Upload Back",
       "image_captured": "image captured successfully"
     }
 

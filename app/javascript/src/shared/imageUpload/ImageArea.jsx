@@ -12,7 +12,7 @@ export default function ImageArea({ handleClick, handleChange, imageUrl, token, 
   return (
     <Grid item xs={12} sm={6} className={classes.imageGrid} data-testid="image_area">
       <Paper elevation={0} className={classes.imageArea} style={{ height: '300px' }}>
-        <Grid container alignItems="center" justifyContent="center" direction="row">
+        <Grid container alignItems="center" justify="center" direction="row">
           {imageUrl && (
             <ImageUploadPreview
               imageUrls={[imageUrl]}
@@ -62,7 +62,7 @@ const useStyles = makeStyles(() => ({
 ImageArea.propTypes = {
   handleClick: PropTypes.func.isRequired,
   handleChange: PropTypes.func.isRequired,
-  imageUrl: PropTypes.func.isRequired,
-  token: PropTypes.func.isRequired,
-  type: PropTypes.func.isRequired
+  imageUrl: PropTypes.string.isRequired,
+  token: PropTypes.string.isRequired,
+  type: PropTypes.string.isRequired
 };

@@ -83,7 +83,7 @@ export default function IDCapture({ handleNext }) {
         <Grid item xs={12}>
           <Grid container>
             {!matches && (
-            <Grid sm={4} />
+            <Grid sm={4} item />
           )}
             <Grid item xs={6} sm={2} data-testid='instructions'>
               <ul>
@@ -99,7 +99,7 @@ export default function IDCapture({ handleNext }) {
             </Grid>
           </Grid>
         </Grid>
-        <Grid container alignItems="center" justifyContent="center" direction="row" data-testid='upload_area'>
+        <Grid container alignItems="center" justify="center" direction="row" data-testid='upload_area'>
           <ImageArea
             handleClick={() => setUploadType('front')}
             handleChange={(img) => onChange(img)}
