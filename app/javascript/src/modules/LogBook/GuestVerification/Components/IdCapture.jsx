@@ -1,16 +1,14 @@
-/* eslint-disable no-unused-vars */
-/* eslint-disable max-statements */
 import React, { useState, useEffect, useContext } from 'react';
-import { useApolloClient } from 'react-apollo';
+import { useApolloClient, useMutation } from 'react-apollo';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { useTranslation } from 'react-i18next';
-import { Button, Grid, Typography, makeStyles, Paper } from '@material-ui/core';
-import AddIcon from '@material-ui/icons/Add';
+import { Button, Grid, Typography, makeStyles } from '@material-ui/core';
 import PropTypes from 'prop-types'
 import { Context as AuthStateContext } from '../../../../containers/Provider/AuthStateProvider';
-import ImageUploader from '../../../../shared/imageUpload/ImageUploader'
-import ImageUploadPreview from '../../../../shared/imageUpload/ImageUploadPreview'
+import ImageArea from '../../../../shared/imageUpload/ImageArea'
 import { useFileUpload } from '../../../../graphql/useFileUpload';
+import { EntryRequestUpdateMutation } from '../../graphql/logbook_mutations';
+import { EntryRequestContext } from '../Context';
 
 export default function IDCapture({ handleNext }) {
   const [frontImageUrl, setFrontImageUrl] = useState('');
@@ -19,15 +17,33 @@ export default function IDCapture({ handleNext }) {
   const [frontBlobId, setFrontBlobId] = useState('');
   const [backBlobId, setBackBlobId] = useState('');
   const authState = useContext(AuthStateContext);
+  const requestContext = useContext(EntryRequestContext)
   const matches = useMediaQuery('(max-width:600px)');
   const { t } = useTranslation('logbook');
-
+  const [updateRequest] = useMutation(EntryRequestUpdateMutation);
+  const [errorDetails, setDetails] = useState({
+    isError: false,
+    message: ''
+  });
   const { onChange, signedBlobId, url } = useFileUpload({
     client: useApolloClient()
   });
 
   function handleContinue() {
-    // const blobIds = [frontBlobId, backBlobId]
+    const blobIds = [frontBlobId, backBlobId]
+
+    updateRequest({ variables: { id: requestContext.request.id, imageBlobIds: blobIds } })
+      .then(() => {
+        setDetails({
+          ...errorDetails,
+          message: t('image_capture.image_captured'),
+          isError: false
+        });
+        handleNext();
+      })
+      .catch(error => {
+        setDetails({ ...errorDetails, isError: true, message: error.message });
+      });
     handleNext()
   }
 
@@ -50,11 +66,12 @@ export default function IDCapture({ handleNext }) {
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [url, signedBlobId]);
+
   const classes = useStyles();
   return (
     <Grid container>
       <Grid item xs={12} className={classes.body}>
-        <Typography variant='h6' className={classes.header} data-testid='add_photo'>{t('logbook.add_a_photo')}</Typography>
+        <Typography variant='h6' className={classes.header} data-testid='add_photo'>{t('image_capture.add_a_photo')}</Typography>
       </Grid>
       <Grid item xs={12}>
         <Grid container>
@@ -63,14 +80,14 @@ export default function IDCapture({ handleNext }) {
           )}
           <Grid item xs={6} sm={2} data-testid='instructions'>
             <ul>
-              <li><Typography>{t('logbook.portrait')}</Typography></li>
-              <li><Typography>{t('logbook.off_camera')}</Typography></li>
+              <li><Typography>{t('image_capture.portrait')}</Typography></li>
+              <li><Typography>{t('image_capture.off_camera')}</Typography></li>
             </ul>
           </Grid>
           <Grid item xs={6} sm={6}>
             <ul>
-              <li><Typography>{t('logbook.dark_background')}</Typography></li>
-              <li><Typography>{t('logbook.flat_surface')}</Typography></li>
+              <li><Typography>{t('image_capture.dark_background')}</Typography></li>
+              <li><Typography>{t('image_capture.flat_surface')}</Typography></li>
             </ul>
           </Grid>
         </Grid>
@@ -81,54 +98,21 @@ export default function IDCapture({ handleNext }) {
           handleChange={(img) => onChange(img)}
           token={authState.token}
           imageUrl={frontImageUrl}
-          type={t('logbook.front')}
+          type={t('image_capture.front')}
         />
         <ImageArea
           handleClick={() => setUploadType('back')}
           handleChange={(img) => onChange(img)}
           token={authState.token}
           imageUrl={backImageUrl}
-          type={t('logbook.back')}
+          type={t('image_capture.back')}
         />
       </Grid>
       <Grid item xs={12} className={classes.body} data-testid='next_button'>
-        <Button variant='contained' color='primary' onClick={handleContinue}>continue</Button>
+        <Button variant='contained' color='primary' onClick={handleContinue}>{t('continue')}</Button>
       </Grid>
     </Grid>
   );
-}
-
-export function ImageArea({ handleClick, handleChange, imageUrl, token, type }) {
-  const classes = useStyles();
-  return (
-    <Grid item xs={12} sm={6} className={classes.imageGrid} data-testid='image_area'>
-      <Paper elevation={0} className={classes.imageArea} style={{height: '300px'}}>
-        <Grid container alignItems="center" justifyContent="center" direction="row">
-          {imageUrl && (
-            <ImageUploadPreview
-              imageUrls={[imageUrl]}
-              token={token}
-              imgHeight={250}
-              style={{textAlign: 'center'}}
-            />
-          )}
-          {!imageUrl && (
-            <Grid style={{height: 250}} />
-          )}
-          <Grid item xs={12} onClick={handleClick} style={{textAlign: 'center'}}>
-            <Grid container>
-              <Grid item xs={6} style={{textAlign: 'right', paddingTop: '8px'}}>
-                <Typography variant='h6'>{type}</Typography>
-              </Grid>
-              <Grid item xs={6} style={{textAlign: 'left'}}>
-                <ImageUploader icon={<AddIcon />} handleChange={handleChange} />
-              </Grid>
-            </Grid>
-          </Grid>
-        </Grid>
-      </Paper>
-    </Grid>
-  )
 }
 
 const useStyles = makeStyles(() => ({
@@ -138,12 +122,6 @@ const useStyles = makeStyles(() => ({
   header: {
     fontWeight: 'bold'
   },
-  imageArea: {
-    border: '1px dotted #D0D0D0'
-  },
-  imageGrid: {
-    padding: '20px 30px'
-  }
 }))
 
 IDCapture.propTypes = {
@@ -152,12 +130,4 @@ IDCapture.propTypes = {
    * This component is a placeholder
    */
   handleNext: PropTypes.func.isRequired
-}
-
-ImageArea.propTypes = {
-  handleClick: PropTypes.func.isRequired,
-  handleChange: PropTypes.func.isRequired,
-  imageUrl: PropTypes.func.isRequired,
-  token: PropTypes.func.isRequired,
-  type: PropTypes.func.isRequired,
 }

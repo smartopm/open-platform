@@ -51,13 +51,7 @@
     "visit_scheduled": "Visit scheduled for: {{date}} at {{time}}",
     "no_invited_guests": "No invited guests",
     "visit_end_error": "Visitation dates are required",
-    "add_a_photo": "Add a photo of your ID with your phone",
-    "portrait": "Use portrait orientation",
-    "off_camera": "Turn off your camera flash",
-    "dark_background": "Use a dark background",
-    "flat_surface": "Take photo on a flat surface",
-    "front": "Front",
-    "back": "Back"
+    "continue": "Continue"
   },
   "log_title": {
     "visitor": "Visitor",
@@ -148,5 +142,16 @@
       "face_right": "Face to the right",
       "face_forward": "Face forward",
       "video_recorded": "Video recorded successfully"
+    },
+    "image_capture": {
+      "add_a_photo": "Add a photo of your ID with your phone",
+      "portrait": "Use portrait orientation",
+      "off_camera": "Turn off your camera flash",
+      "dark_background": "Use a dark background",
+      "flat_surface": "Take photo on a flat surface",
+      "front": "Front",
+      "back": "Back",
+      "image_captured": "image captured successfully"
     }
+
 }

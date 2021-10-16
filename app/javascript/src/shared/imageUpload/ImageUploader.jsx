@@ -8,7 +8,7 @@ export default function ImageUploader({ handleChange, buttonText, style, icon, u
     <>
       {!useDefaultIcon ? (
         <>
-          <IconButton 
+          <IconButton
             component="label"
             data-testid="upload_button"
           >
@@ -23,7 +23,6 @@ export default function ImageUploader({ handleChange, buttonText, style, icon, u
         </>
       ) : (
         <Button
-          variant="contained"
           data-testid="upload_button"
           style={style}
           component="label"
