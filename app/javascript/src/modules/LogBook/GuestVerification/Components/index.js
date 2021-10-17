@@ -22,7 +22,7 @@ export default function steps(handleNext, communityName, isNewGuest) {
     }
   ];
   // hardcoding this for now before we make this a community setting
-  if (communityName !== 'Nkwashi' || !isNewGuest) {
+  if (communityName === 'Nkwashi' || !isNewGuest) {
     return verificationSteps.slice(0, 1);
   }
   return verificationSteps;
