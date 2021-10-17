@@ -1,6 +1,5 @@
 import React from 'react'
 import { Button, IconButton } from '@material-ui/core';
-
 import PropTypes from 'prop-types';
 
 export default function ImageUploader({ handleChange, buttonText, style, icon, useDefaultIcon }) {
@@ -10,7 +9,7 @@ export default function ImageUploader({ handleChange, buttonText, style, icon, u
         <>
           <IconButton
             component="label"
-            data-testid="upload_button"
+            data-testid="upload_button_icon"
           >
             {icon}
             <input
