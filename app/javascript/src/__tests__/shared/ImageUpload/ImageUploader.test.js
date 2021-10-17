@@ -1,6 +1,6 @@
 import React from 'react';
 import { render } from '@testing-library/react';
-import ImageUploader from '../../shared/imageUpload/ImageUploader';
+import ImageUploader from '../../../shared/imageUpload/ImageUploader';
 
 describe('Image Uploader', () => {
   it('should render image uploader component', () => {

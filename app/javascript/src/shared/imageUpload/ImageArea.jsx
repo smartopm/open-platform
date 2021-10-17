@@ -21,12 +21,12 @@ export default function ImageArea({ handleClick, handleChange, imageUrl, token, 
               style={{ textAlign: 'center' }}
             />
           )}
-          {!imageUrl && <Grid style={{ height: 250 }} />}
+          {!imageUrl && <Grid data-testid="empty_grid" style={{ height: 250 }} />}
 
           <Grid item xs={12} onClick={handleClick} style={{ textAlign: 'center' }}>
             <Grid container alignItems="center">
               {!imageUrl && (
-                <Grid item xs={12} style={{ textAlign: 'right', paddingTop: '8px' }}>
+                <Grid item xs={12} style={{ textAlign: 'right', paddingTop: '8px' }} data-testid="skeleton_section">
                   <CenteredContent>
                     <Skeleton animation={false} variant="rect" width={320} height={200} />
                   </CenteredContent>
@@ -59,10 +59,14 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
+ImageArea.defaultProps = {
+  imageUrl: null
+}
+
 ImageArea.propTypes = {
   handleClick: PropTypes.func.isRequired,
   handleChange: PropTypes.func.isRequired,
-  imageUrl: PropTypes.string.isRequired,
+  imageUrl: PropTypes.string,
   token: PropTypes.string.isRequired,
   type: PropTypes.string.isRequired
 };
