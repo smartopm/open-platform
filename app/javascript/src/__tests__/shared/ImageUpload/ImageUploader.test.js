@@ -19,6 +19,6 @@ describe('Image Uploader', () => {
         icon={<i>icon</i>}
       />
     );
-    expect(btn.queryByTestId('upload_button_icon')).toBeInTheDocument()
+    expect(btn.queryByTestId('upload_button_icon')).toBeInTheDocument();
   });
 });
