@@ -96,7 +96,6 @@ describe('Properties & Co-ownership Payment Plan', () => {
     })
     
     // Verify Pending Balance & Payment plan is updated for Primary Owner  (User 1)
-    cy.reload()
     cy.get('[data-testid=no-plan-available]').should('not.exist');
     cy.contains('Total Balance').should('exist');
     cy.contains('- K 6000').should('exist');

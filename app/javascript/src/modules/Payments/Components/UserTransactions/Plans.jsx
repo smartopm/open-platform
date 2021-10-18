@@ -220,6 +220,7 @@ export default function PaymentPlans({ userId, user, userData }) {
                     landParcelsData={landParcelsData}
                     setMessage={setMessage}
                     openAlertMessage={() => setAlertOpen(true)}
+                    balanceRefetch={balanceRefetch}
                   />
                 )}
               </div>
