@@ -126,7 +126,7 @@ export default function PaymentPlans({ userId, user, userData }) {
           userId={userId}
         />
       )}
-      {subtab === 'Transactions' ? (
+      {subtab === 'Transactions' && user.userType === 'admin' ? (
         transLoading ? (
           <Spinner />
         ) : (

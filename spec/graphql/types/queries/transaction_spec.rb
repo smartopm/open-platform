@@ -152,11 +152,22 @@ RSpec.describe Types::Queries::Transaction do
     end
 
     describe '#payment_accounting_stats' do
+      context 'when current user is not an admin' do
+        it 'raises unauthorized error' do
+          result = DoubleGdpSchema.execute(payment_stat_query,
+                                           context: {
+                                             current_user: user,
+                                             site_community: community,
+                                           })
+          expect(result.dig('errors', 0, 'message')).to eql 'Unauthorized'
+        end
+      end
+
       context 'when query is fetched' do
         it 'returns the transaction accounting stats' do
           result = DoubleGdpSchema.execute(payment_stat_query,
                                            context: {
-                                             current_user: user,
+                                             current_user: admin,
                                              site_community: community,
                                            })
           payment_stats = result.dig('data', 'paymentAccountingStats', 0)
