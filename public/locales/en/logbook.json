@@ -144,14 +144,14 @@
       "video_recorded": "Video recorded successfully"
     },
     "image_capture": {
-      "add_a_photo": "Add a photo of your ID with your phone",
+      "add_a_photo": "Add a photo of ID with your phone",
       "portrait": "Use portrait orientation",
       "off_camera": "Turn off your camera flash",
       "dark_background": "Use a dark background",
       "flat_surface": "Take photo on a flat surface",
       "front": "Upload Front",
       "back": "Upload Back",
-      "image_captured": "image captured successfully",
+      "image_captured": "Images added successfully",
       "next_step": "Next",
       "save_my_id": "Save My ID"
     }

@@ -61,7 +61,7 @@ const initialState = {
     isGuest: false
 }
 
-export default function RequestUpdate({ id, previousRoute, guestListRequest, isGuestRequest, tabValue, isScannedRequest }) {
+export default function RequestUpdate({ id, previousRoute, guestListRequest, isGuestRequest, tabValue, isScannedRequest, handleNext }) {
   const history = useHistory()
   const authState = useContext(Context)
   const requestContext = useContext(EntryRequestContext)
@@ -243,11 +243,7 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
 
   function closeQrModal() {
     setQrModal(false);
-    if (guestListRequest) {
-       history.push('/guest-list')
-    } else {
-      history.push(`/entry_logs?tab=${tabValue}`);
-    }
+    handleNext()
   }
 
   function handleCreateRequest() {
@@ -298,11 +294,7 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
           message: t('logbook:logbook.registered_guest_updated')
         });
         setDetails({ ...observationDetails, message: t('logbook:logbook.registered_guest_updated') });
-        if(guestListRequest){
-          history.push('/guest-list')
-          return
-        }
-        history.push(`/entry_logs?tab=${tabValue}`)
+        handleNext()
       })
       .catch(error => {
         setLoading(false);
@@ -1023,7 +1015,8 @@ RequestUpdate.defaultProps = {
   id: null,
   previousRoute: '',
   tabValue: null,
-  guestListRequest: false
+  guestListRequest: false,
+  handleNext: () => {}
 };
 
 RequestUpdate.propTypes = {
@@ -1032,7 +1025,8 @@ RequestUpdate.propTypes = {
   isGuestRequest: PropTypes.bool.isRequired,
   isScannedRequest: PropTypes.bool.isRequired,
   tabValue: PropTypes.string,
-  guestListRequest: PropTypes.bool
+  guestListRequest: PropTypes.bool,
+  handleNext: PropTypes.bool,
 };
 
 
