@@ -48,7 +48,13 @@ describe('Plans List Item Component', () => {
       landParcel: {
         parcelNumber: 'Plot01',
         parcelType: 'basic'
-      }
+      },
+      planPayments: [{
+        amount: 100.0,
+        status: 'paid',
+        createdAt: "2020-11-13T10:53:16Z",
+        receiptNumber: 'MI131'
+      }]
     }
   ]
 

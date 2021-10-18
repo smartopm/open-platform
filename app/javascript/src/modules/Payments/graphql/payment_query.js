@@ -251,6 +251,12 @@ export const CommunityPlansQuery = gql`
         parcelNumber
         parcelType
       }
+      planPayments{
+        amount
+        status
+        createdAt
+        receiptNumber
+      }
     }
   }
 `

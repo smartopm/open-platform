@@ -12,7 +12,9 @@
     "export_data": "Export Data",
     "save_csv": "Save CSV",
     "edit_subscription_plan": "Edit plan",
-    "edit_plan_settings": "Edit Plan Settings"
+    "edit_plan_settings": "Edit Plan Settings",
+    "view_history": "VIEW HISTORY",
+    "view_all_subscription_plans": "View All Subscription Plans"
   },
   "misc": {
     "active": "Active",
@@ -79,7 +81,8 @@
     "plot_plan_no": "Plot/Plan No.",
     "send_payment_reminder": "Send Payment Reminder",
     "plan_count": "Showing {{count}} results",
-    "plan_reminder_confirmation": "You are about to send an email to owners of {{planCount}} selected plans"
+    "plan_reminder_confirmation": "You are about to send an email to owners of {{planCount}} selected plans",
+    "no_payments_made": "No payments have been made yet"
   },
   "table_headers": {
     "receipt_number": "Receipt Number",

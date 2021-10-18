@@ -14,7 +14,7 @@ import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
 import PaymentSlider from './PaymentSlider';
 import Label from '../../../shared/label/Label';
-import { toTitleCase, objectAccessor, formatMoney } from '../../../utils/helpers';
+import { toTitleCase, objectAccessor, formatMoney, InvoiceStatusColor } from '../../../utils/helpers';
 import MenuList from '../../../shared/MenuList';
 import Text from '../../../shared/Text';
 import { dateToString } from '../../../components/DateContainer';
@@ -22,7 +22,7 @@ import { dateToString } from '../../../components/DateContainer';
 export default function PlanListItem({ data, currencyData, menuData, selectedPlans, handlePlansSelect }) {
   const classes = useStyles();
   const [open, setOpen] = useState(false);
-  const { t } = useTranslation('payment');
+  const { t } = useTranslation(['payment','common']);
   const matches = useMediaQuery('(max-width:600px)');
 
   const colors = {
@@ -31,16 +31,6 @@ export default function PlanListItem({ data, currencyData, menuData, selectedPla
     behind: '#eea92d',
     completed: '#29ec47'
   };
-
-  function planStatus(plan) {
-    if (plan.status !== 'active') {
-      return plan.status;
-    }
-    if (plan.owingAmount > 0) {
-      return 'behind';
-    }
-    return 'on track';
-  }
 
   return (
     <>
@@ -79,7 +69,7 @@ export default function PlanListItem({ data, currencyData, menuData, selectedPla
             data-testid="menu"
             style={{ textAlign: 'right', marginTop: '-10px' }}
           >
-            {menuData?.userType === 'admin' && planStatus(data) === 'behind' && (
+            {menuData?.userType === 'admin' && data?.planStatus === 'behind' && (
               <IconButton
                 aria-controls="simple-menu"
                 aria-haspopup="true"
@@ -107,7 +97,7 @@ export default function PlanListItem({ data, currencyData, menuData, selectedPla
         </Grid>
         <Hidden smDown>
           <Grid item xs={12} sm={1} data-testid="menu">
-            {menuData?.userType === 'admin' && planStatus(data) === 'behind' && (
+            {menuData?.userType === 'admin' && data?.planStatus === 'behind' && (
               <IconButton
                 aria-controls="simple-menu"
                 aria-haspopup="true"
@@ -137,9 +127,10 @@ export default function PlanListItem({ data, currencyData, menuData, selectedPla
           <Grid
             className={!matches ? classes.view : classes.viewMobile}
             onClick={() => setOpen(!open)}
+            data-testid='view-history'
           >
             <Typography className={!matches ? classes.typography : classes.typoMobile}>
-              VIEW HISTORY
+              {t('actions.view_history')}
             </Typography>
             <span className={classes.arrow}>
               {open ? <KeyboardArrowDownIcon /> : <KeyboardArrowRightIcon />}
@@ -205,6 +196,22 @@ export default function PlanListItem({ data, currencyData, menuData, selectedPla
                 )}
               </Grid>
             </Grid>
+            {(data?.planPayments?.length > 0) ? (
+              data?.planPayments?.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+              .map(payment => (
+                <PaymentItem
+                  key={payment.id}
+                  payment={payment}
+                  matches={matches}
+                  currencyData={currencyData}
+                  t={t}
+                />
+              ))
+            ) : (
+              <Grid container className={classes.details}>
+                <Text content={t('misc.no_payments_made')} />
+              </Grid>
+            )}
           </>
         )}
       </Grid>
@@ -212,6 +219,60 @@ export default function PlanListItem({ data, currencyData, menuData, selectedPla
   );
 }
 
+export function PaymentItem({payment, matches, currencyData, t}) {
+  const classes = useStyles();
+  return (
+    <>
+      <Grid container className={classes.details}>
+        <Grid item xs={12} md={3} data-testid="payment-date">
+          {!matches ? (
+            <Text content={`${t('common:table_headers.payment_date')}: ${dateToString(payment.createdAt)}`} />
+        ) : (
+          <Grid container>
+            <Grid item xs={6}>
+              <Text content={`${t('common:table_headers.payment_date')}:`} />
+            </Grid>
+            <Grid item xs={6} className={classes.detailsMobile}>
+              <Text content={`${dateToString(payment.createdAt)}`} />
+            </Grid>
+          </Grid>
+        )}
+        </Grid>
+        <Grid item xs={12} md={3} data-testid="receipt-number">
+          {!matches ? (
+            <Text content={`${t('table_headers.receipt_number')}: ${payment.receiptNumber}`} />
+        ) : (
+          <Grid container>
+            <Grid item xs={6}>
+              <Text content={`${t('table_headers.receipt_number')}:`} />
+            </Grid>
+            <Grid item xs={6} className={classes.detailsMobile}>
+              <Text content={payment.receiptNumber} />
+            </Grid>
+          </Grid>
+        )}
+        </Grid>
+        <Grid item xs={12} md={3} data-testid="amount-paid">
+          {!matches ? (
+            <Text content={`${t('table_headers.amount_paid')}: ${formatMoney(currencyData, payment.amount)}`} />
+        ) : (
+          <Grid container>
+            <Grid item xs={6}>
+              <Text content={`${t('table_headers.amount_paid')}:`} />
+            </Grid>
+            <Grid item xs={6} className={classes.detailsMobile}>
+              <Text content={formatMoney(currencyData, payment.amount)} />
+            </Grid>
+          </Grid>
+        )}
+        </Grid>
+        <Grid item xs={12} sm={2} data-testid='payment-status'>
+          <Label title={toTitleCase(payment.status)} color={objectAccessor(InvoiceStatusColor, payment.status)} />
+        </Grid>
+      </Grid>
+    </>
+  );
+}
 const useStyles = makeStyles(() => ({
   container: {
     backgroundColor: 'white',
@@ -285,7 +346,13 @@ PlanListItem.propTypes = {
     landParcel: PropTypes.shape({
       parcelNumber: PropTypes.string,
       parcelType: PropTypes.string
-    })
+    }),
+    planPayments: PropTypes.arrayOf(PropTypes.shape({
+      amount: PropTypes.number,
+      receiptNumber: PropTypes.string,
+      createdAt: PropTypes.string,
+      status: PropTypes.string
+    }))
   }).isRequired,
   currencyData: PropTypes.shape({
     currency: PropTypes.string,
@@ -306,3 +373,18 @@ PlanListItem.propTypes = {
     )
   }).isRequired
 };
+
+PaymentItem.propTypes = {
+  payment: PropTypes.shape({
+    amount: PropTypes.number.isRequired,
+    receiptNumber: PropTypes.string.isRequired,
+    status: PropTypes.string.isRequired,
+    createdAt: PropTypes.string.isRequired
+  }).isRequired,
+  matches: PropTypes.bool.isRequired,
+  t: PropTypes.func.isRequired,
+  currencyData: PropTypes.shape({
+    currency: PropTypes.string,
+    locale: PropTypes.string
+  }).isRequired
+}
