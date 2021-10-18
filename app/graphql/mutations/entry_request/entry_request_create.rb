@@ -40,9 +40,12 @@ module Mutations
 
       # Verifies if current user admin or security guard.
       def authorized?(_vals)
-        if context[:current_user]&.role?(%i[security_guard admin custodian client resident])
-          return true
-        end
+        return true if ::Policy::ApplicationPolicy.new(
+          context[:current_user], nil
+        ).permission?(
+          module: :entry_request,
+          permission: :can_create_entry_request
+        ) || context[:current_user]&.role?(%i[security_guard admin custodian client resident])
 
         raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
       end

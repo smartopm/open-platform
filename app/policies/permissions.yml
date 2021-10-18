@@ -27,6 +27,20 @@ admin:
       - can_fetch_accounting_stats
       - can_fetch_transaction_summary
       - can_fetch_user_transactions
+  entry_request:
+    permissions:
+      - can_see_menu_item 
+      - can_create_entry_request
+      - can_update_entry_request
+      - can_update_guest_entry_request
+      - can_deny_entry
+      - can_grant_entry
+      - can_add_entry_request_note
+      - can_revoke_entry_request
+      - can_view_entry_requests
+      - can_view_entry_request
+
+
 contractor:
   note:
     permissions:
@@ -65,6 +79,14 @@ custodian:
       - can_get_task_count
       - can_get_task_stats
       - can_get_own_tasks
+
+  entry_request:
+    permissions:
+      - can_see_menu_item 
+      - can_create_entry_request
+      - can_update_entry_request
+      - can_revoke_entry_request
+      - can_view_entry_request
 security_guard:
   note:
     permissions:
@@ -84,6 +106,17 @@ security_guard:
       - can_get_task_count
       - can_get_task_stats
       - can_get_own_tasks
+  entry_request:
+    permissions:
+      - can_see_menu_item 
+      - can_create_entry_request
+      - can_update_entry_request
+      - can_deny_entry
+      - can_grant_entry
+      - can_add_entry_request_note
+      - can_revoke_entry_request
+      - can_view_entry_requests
+      - can_view_entry_request
 
 site_worker:
   note:
@@ -107,12 +140,18 @@ visitor:
   note:
     permissions:
 resident:
-  note:
+  entry_request:
     permissions:
+      - can_see_menu_item 
+      - can_create_entry_request
+      - can_view_entry_request
 prospective_client:
   note:
     permissions: 
 client:
-  note:
+  entry_request:
     permissions:
+      - can_see_menu_item 
+      - can_create_entry_request
+      - can_view_entry_request
     
