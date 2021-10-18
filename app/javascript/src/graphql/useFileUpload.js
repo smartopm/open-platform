@@ -1,6 +1,7 @@
 /* eslint-disable */
 import { useReducer, useEffect } from 'react'
 import { FileChecksum } from '@rails/activestorage/src/file_checksum'
+import imageCompression from 'browser-image-compression';
 
 import { CreateUpload } from './mutations'
 import ImageResize from '../utils/imageResizer'
@@ -115,11 +116,22 @@ const useFileUpload = ({ client: apolloClient, maxSize }) => {
   const [state, dispatch] = useReducer(reducer, initialState)
   maxSize = maxSize || 500
 
-  const onChange = (file) => {
+  const onChange = async (file) => {
     // if (e.target.files.length) {
     //   const file = e.target.files[0]
     // }
-    startUpload(file)
+    try {
+      const options = {
+        maxSizeMB: 0.1,
+        useWebWorker: true
+      }
+      const compressedFile = await imageCompression(file, options);
+      startUpload(compressedFile)
+    } catch (error) {
+      dispatch({
+        status: STATE.ERROR
+      })
+    }
   }
 
   const startUpload = file => {
