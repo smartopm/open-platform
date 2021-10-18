@@ -10,6 +10,7 @@ import { useFileUpload } from '../../../../graphql/useFileUpload';
 import { EntryRequestUpdateMutation } from '../../graphql/logbook_mutations';
 import { EntryRequestContext } from '../Context';
 import MessageAlert from '../../../../components/MessageAlert';
+import CenteredContent from '../../../../components/CenteredContent';
 
 export default function IDCapture({ handleNext }) {
   const [frontImageUrl, setFrontImageUrl] = useState('');
@@ -40,7 +41,6 @@ export default function IDCapture({ handleNext }) {
           message: t('image_capture.image_captured'),
           isError: false
         });
-        handleNext();
       })
       .catch(error => {
         setDetails({ ...errorDetails, isError: true, message: error.message });
@@ -68,7 +68,7 @@ export default function IDCapture({ handleNext }) {
   }, [url, signedBlobId]);
 
   const classes = useStyles();
-  const images = requestContext.guest.imageUrls;
+  const images = requestContext.guest?.imageUrls;
 
   return (
     <>
@@ -131,11 +131,27 @@ export default function IDCapture({ handleNext }) {
             type={t('image_capture.back')}
           />
         </Grid>
-        <Grid item xs={12} className={classes.body} data-testid="next_button">
-          <Button variant="contained" color="primary" onClick={handleContinue}>
-            {t('continue')}
+
+        <CenteredContent>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleContinue}
+            disabled={!backImageUrl || !frontImageUrl}
+            data-testid="save_and_next"
+          >
+            {t('save_my_id')}
           </Button>
-        </Grid>
+          <Button
+            className={classes.skipToNextBtn}
+            variant="contained"
+            onClick={handleNext}
+            color="secondary"
+            data-testid="skip_next"
+          >
+            {t('next_step')}
+          </Button>
+        </CenteredContent>
       </Grid>
     </>
   );
@@ -147,6 +163,9 @@ const useStyles = makeStyles(() => ({
   },
   header: {
     fontWeight: 'bold'
+  },
+  skipToNextBtn: {
+    marginLeft: 30
   }
 }));
 

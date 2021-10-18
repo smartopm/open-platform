@@ -151,7 +151,9 @@
       "flat_surface": "Take photo on a flat surface",
       "front": "Upload Front",
       "back": "Upload Back",
-      "image_captured": "image captured successfully"
+      "image_captured": "image captured successfully",
+      "next_step": "Next",
+      "save_my_id": "Save My ID"
     }
 
 }

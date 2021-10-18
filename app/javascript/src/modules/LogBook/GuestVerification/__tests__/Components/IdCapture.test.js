@@ -7,24 +7,28 @@ import IdCapture from '../../Components/IdCapture';
 import { Context } from '../../../../../containers/Provider/AuthStateProvider';
 import MockedThemeProvider from '../../../../__mocks__/mock_theme';
 import userMock from '../../../../../__mocks__/userMock'
+import EntryRequestContextProvider from '../../Context';
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
 describe('Id Capture component', () => {
   it('should render correctly', () => {
     const container = render(
-      <Context.Provider value={userMock}>
-        <MockedProvider>
-          <BrowserRouter>
+      <BrowserRouter>
+        <EntryRequestContextProvider value={{ guest: { imageUrls: [] } }}>
+          <MockedProvider>
             <MockedThemeProvider>
-              <IdCapture />
+              <Context.Provider value={userMock}>
+                <IdCapture handleNext={jest.fn()} />
+              </Context.Provider>
             </MockedThemeProvider>
-          </BrowserRouter>
-        </MockedProvider>
-      </Context.Provider>
+          </MockedProvider>
+        </EntryRequestContextProvider>
+      </BrowserRouter>
     );
     expect(container.queryByTestId('add_photo')).toBeInTheDocument();
     expect(container.queryByTestId('upload_area')).toBeInTheDocument();
-    expect(container.queryByTestId('next_button')).toBeInTheDocument();
+    expect(container.queryByTestId('save_and_next')).toBeInTheDocument();
+    expect(container.queryByTestId('skip_next')).toBeInTheDocument();
     expect(container.queryByTestId('instructions')).toBeInTheDocument();
   });
 });
