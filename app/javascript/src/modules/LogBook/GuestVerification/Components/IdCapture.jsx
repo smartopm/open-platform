@@ -3,9 +3,9 @@ import { useApolloClient, useMutation } from 'react-apollo';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { useTranslation } from 'react-i18next';
 import { Button, Grid, Typography, makeStyles } from '@material-ui/core';
-import PropTypes from 'prop-types'
+import PropTypes from 'prop-types';
 import { Context as AuthStateContext } from '../../../../containers/Provider/AuthStateProvider';
-import ImageArea from '../../../../shared/imageUpload/ImageArea'
+import ImageArea from '../../../../shared/imageUpload/ImageArea';
 import { useFileUpload } from '../../../../graphql/useFileUpload';
 import { EntryRequestUpdateMutation } from '../../graphql/logbook_mutations';
 import { EntryRequestContext } from '../Context';
@@ -18,7 +18,7 @@ export default function IDCapture({ handleNext }) {
   const [frontBlobId, setFrontBlobId] = useState('');
   const [backBlobId, setBackBlobId] = useState('');
   const authState = useContext(AuthStateContext);
-  const requestContext = useContext(EntryRequestContext)
+  const requestContext = useContext(EntryRequestContext);
   const matches = useMediaQuery('(max-width:600px)');
   const { t } = useTranslation('logbook');
   const [updateRequest] = useMutation(EntryRequestUpdateMutation);
@@ -31,7 +31,7 @@ export default function IDCapture({ handleNext }) {
   });
 
   function handleContinue() {
-    const blobIds = [frontBlobId, backBlobId]
+    const blobIds = [frontBlobId, backBlobId];
 
     updateRequest({ variables: { id: requestContext.request.id, imageBlobIds: blobIds } })
       .then(() => {
@@ -50,24 +50,26 @@ export default function IDCapture({ handleNext }) {
   useEffect(() => {
     if (url) {
       if (uploadType === 'front') {
-        setFrontImageUrl(url)
+        setFrontImageUrl(url);
       }
       if (uploadType === 'back') {
-        setBackImageUrl(url)
+        setBackImageUrl(url);
       }
     }
     if (signedBlobId) {
       if (uploadType === 'front') {
-        setFrontBlobId(signedBlobId)
+        setFrontBlobId(signedBlobId);
       }
       if (uploadType === 'back') {
-        setBackBlobId(signedBlobId)
+        setBackBlobId(signedBlobId);
       }
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [url, signedBlobId]);
 
   const classes = useStyles();
+  const images = requestContext.guest.imageUrls;
+
   return (
     <>
       <MessageAlert
@@ -78,45 +80,61 @@ export default function IDCapture({ handleNext }) {
       />
       <Grid container>
         <Grid item xs={12} className={classes.body}>
-          <Typography variant='h6' className={classes.header} data-testid='add_photo'>{t('image_capture.add_a_photo')}</Typography>
+          <Typography variant="h6" className={classes.header} data-testid="add_photo">
+            {t('image_capture.add_a_photo')}
+          </Typography>
         </Grid>
         <Grid item xs={12}>
           <Grid container>
-            {!matches && (
-            <Grid sm={4} item />
-          )}
-            <Grid item xs={6} sm={2} data-testid='instructions'>
+            {!matches && <Grid sm={4} item />}
+            <Grid item xs={6} sm={2} data-testid="instructions">
               <ul>
-                <li><Typography>{t('image_capture.portrait')}</Typography></li>
-                <li><Typography>{t('image_capture.off_camera')}</Typography></li>
+                <li>
+                  <Typography>{t('image_capture.portrait')}</Typography>
+                </li>
+                <li>
+                  <Typography>{t('image_capture.off_camera')}</Typography>
+                </li>
               </ul>
             </Grid>
             <Grid item xs={6} sm={6}>
               <ul>
-                <li><Typography>{t('image_capture.dark_background')}</Typography></li>
-                <li><Typography>{t('image_capture.flat_surface')}</Typography></li>
+                <li>
+                  <Typography>{t('image_capture.dark_background')}</Typography>
+                </li>
+                <li>
+                  <Typography>{t('image_capture.flat_surface')}</Typography>
+                </li>
               </ul>
             </Grid>
           </Grid>
         </Grid>
-        <Grid container alignItems="center" justify="center" direction="row" data-testid='upload_area'>
+        <Grid
+          container
+          alignItems="center"
+          justify="center"
+          direction="row"
+          data-testid="upload_area"
+        >
           <ImageArea
             handleClick={() => setUploadType('front')}
-            handleChange={(img) => onChange(img)}
+            handleChange={img => onChange(img)}
             token={authState.token}
-            imageUrl={frontImageUrl}
+            imageUrl={frontImageUrl || (images && images[0])}
             type={t('image_capture.front')}
           />
           <ImageArea
             handleClick={() => setUploadType('back')}
-            handleChange={(img) => onChange(img)}
+            handleChange={img => onChange(img)}
             token={authState.token}
-            imageUrl={backImageUrl}
+            imageUrl={backImageUrl || (images && images[1])}
             type={t('image_capture.back')}
           />
         </Grid>
-        <Grid item xs={12} className={classes.body} data-testid='next_button'>
-          <Button variant='contained' color='primary' onClick={handleContinue}>{t('continue')}</Button>
+        <Grid item xs={12} className={classes.body} data-testid="next_button">
+          <Button variant="contained" color="primary" onClick={handleContinue}>
+            {t('continue')}
+          </Button>
         </Grid>
       </Grid>
     </>
@@ -129,8 +147,8 @@ const useStyles = makeStyles(() => ({
   },
   header: {
     fontWeight: 'bold'
-  },
-}))
+  }
+}));
 
 IDCapture.propTypes = {
   /**
@@ -138,4 +156,4 @@ IDCapture.propTypes = {
    * This component is a placeholder
    */
   handleNext: PropTypes.func.isRequired
-}
+};

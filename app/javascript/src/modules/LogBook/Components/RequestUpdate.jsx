@@ -6,7 +6,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import { useMutation, useLazyQuery, useApolloClient } from 'react-apollo';
 import { TextField, MenuItem, Button, Grid } from '@material-ui/core';
 import { StyleSheet, css } from 'aphrodite';
-import { useHistory } from 'react-router';
+import { useHistory } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import CallIcon from '@material-ui/icons/Call';
