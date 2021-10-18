@@ -128,7 +128,9 @@ const useFileUpload = ({ client: apolloClient, maxSize }) => {
       const compressedFile = await imageCompression(file, options);
       startUpload(compressedFile)
     } catch (error) {
-      console.log(error);
+      dispatch({
+        status: STATE.ERROR
+      })
     }
   }
 
