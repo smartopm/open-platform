@@ -5,7 +5,7 @@ import GuestForm from './GuestForm';
 import VideoCapture from './VideoCapture';
 import IdCapture from './IdCapture';
 
-export default function steps(handleNext, communityName, isNewGuest) {
+export default function steps(handleNext, communityName) {
 
   const verificationSteps = [
     {
@@ -22,7 +22,7 @@ export default function steps(handleNext, communityName, isNewGuest) {
     }
   ];
   // hardcoding this for now before we make this a community setting
-  if (communityName !== 'Nkwashi' || !isNewGuest) {
+  if (communityName !== 'Nkwashi') {
     return verificationSteps.slice(0, 1);
   }
   return verificationSteps;

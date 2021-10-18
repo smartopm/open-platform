@@ -30,7 +30,6 @@ describe('HorizontalStepper component', () => {
       <HorizontalStepper
         steps={steps}
         communityName="Nkwashi"
-        isNewGuestRequest
       />
     );
     expect(container.queryByTestId('stepper_container')).toBeInTheDocument();
@@ -43,7 +42,6 @@ describe('HorizontalStepper component', () => {
       <HorizontalStepper
         steps={manySteps}
         communityName="CM"
-        isNewGuestRequest={false}
       />
     );
     expect(container.queryAllByTestId('step_button')[0]).toBeInTheDocument();

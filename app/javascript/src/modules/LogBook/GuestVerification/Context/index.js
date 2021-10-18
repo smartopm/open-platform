@@ -1,6 +1,6 @@
 import React, { createContext, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { useParams } from 'react-router-dom';
+import { useParams } from 'react-router';
 import { useLazyQuery } from 'react-apollo';
 import { GuestEntryQuery } from '../../graphql/guestbook_queries';
 
