@@ -140,7 +140,7 @@ export default function IDCapture({ handleNext }) {
             disabled={!backImageUrl || !frontImageUrl}
             data-testid="save_and_next"
           >
-            {t('save_my_id')}
+            {t('image_capture.save_my_id')}
           </Button>
           <Button
             className={classes.skipToNextBtn}
@@ -149,7 +149,7 @@ export default function IDCapture({ handleNext }) {
             color="secondary"
             data-testid="skip_next"
           >
-            {t('next_step')}
+            {t('image_capture.next_step')}
           </Button>
         </CenteredContent>
       </Grid>
@@ -170,9 +170,5 @@ const useStyles = makeStyles(() => ({
 }));
 
 IDCapture.propTypes = {
-  /**
-   * This if invoked in the Horizontal stepper, it will move to next step
-   * This component is a placeholder
-   */
   handleNext: PropTypes.func.isRequired
 };
