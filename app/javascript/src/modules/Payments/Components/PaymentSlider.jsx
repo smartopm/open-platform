@@ -1,3 +1,4 @@
+/* eslint-disable complexity */
 import React from 'react';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
@@ -139,22 +140,24 @@ export default function PaymentSlider({ data, currencyData }) {
             <div style={{ width: checkOwingPercentage() }} data-testid="owing">
               <div className={classes.expectedPayment}> </div>
               {data?.owingAmount < data?.planValue ? (
-                <div className={classes.bodySecond}>
-                  <Typography> </Typography>
-                  <div
-                    className={classes.amountDue}
-                    style={
+                matches && ( 
+                  <div className={classes.bodySecond}>
+                    <Typography> </Typography>
+                    <div
+                      className={classes.amountDue}
+                      style={
                       checkValuePercentage()
                         ? { marginTop: '10px', marginLeft: '-50px' }
                         : { marginTop: '10px' }
                     }
-                  >
-                    <Typography variant="caption">{t('misc.due')}</Typography>
-                    <Typography variant="caption" align="center">
-                      {formatMoney(currencyData, data?.expectedPayments)}
-                    </Typography>
+                    >
+                      <Typography variant="caption">{t('misc.due')}</Typography>
+                      <Typography variant="caption" align="center">
+                        {formatMoney(currencyData, data?.expectedPayments)}
+                      </Typography>
+                    </div>
                   </div>
-                </div>
+                )
               ) : (
                 <div className={classes.spaceBetween}>
                   <Typography> </Typography>
