@@ -12,6 +12,10 @@ export default function HorizontalStepper({ steps, communityName }) {
 
   function handleNext() {
     const newActiveStep = activeStep + 1;
+    if (listOfSteps.length <= 1) {
+      setActiveStep(activeStep);
+      return
+    }
     setActiveStep(newActiveStep);
   }
 

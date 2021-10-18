@@ -4,10 +4,10 @@ import '@testing-library/jest-dom/extend-expect';
 import HorizontalStepper from '../../shared/HorizontalStepper';
 
 describe('HorizontalStepper component', () => {
-  const steps = jest.fn(() => [
+  const steps = jest.fn(next => [
     {
       title: 'First Step',
-      component: <p>First Step Contents</p>
+      component: <button type="button" onClick={next} data-testid="only_step">First Step Contents</button>
     }
   ]);
 
@@ -34,6 +34,8 @@ describe('HorizontalStepper component', () => {
     );
     expect(container.queryByTestId('stepper_container')).toBeInTheDocument();
     expect(container.queryByTestId('step_button')).not.toBeInTheDocument();
+    expect(container.queryByText('First Step Contents')).toBeInTheDocument();
+    fireEvent.click(container.queryByTestId('only_step'));
     expect(container.queryByText('First Step Contents')).toBeInTheDocument();
   });
 
