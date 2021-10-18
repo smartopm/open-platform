@@ -122,9 +122,6 @@ const useFileUpload = ({ client: apolloClient, maxSize }) => {
       return startUpload(file);
     }
     
-    // if (e.target.files.length) {
-    //   const file = e.target.files[0]
-    // }
     try {
       const options = {
         maxSizeMB: 0.1,
