@@ -18,5 +18,14 @@ module Policy
       @record = record
       @permission_list = PERMISSIONS.deep_transform_keys!(&:to_sym)
     end
+
+    def permission?(module_name, permission)
+      return false if user.nil?
+
+      user_permissions = permission_list.dig(user.user_type.to_sym, module_name, :permissions)
+      return false if user_permissions.nil?
+
+      user_permissions.include?(permission.to_s)
+    end
   end
 end
