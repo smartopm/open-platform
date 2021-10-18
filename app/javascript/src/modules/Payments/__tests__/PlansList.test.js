@@ -50,6 +50,7 @@ describe('Plans List Item Component', () => {
         parcelType: 'basic'
       },
       planPayments: [{
+        id: '5d0d8051-2510-567a-886a-89945dasd4',
         amount: 100.0,
         status: 'paid',
         createdAt: "2020-11-13T10:53:16Z",
