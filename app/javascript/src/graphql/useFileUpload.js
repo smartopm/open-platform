@@ -117,6 +117,11 @@ const useFileUpload = ({ client: apolloClient, maxSize }) => {
   maxSize = maxSize || 500
 
   const onChange = async (file) => {
+    const checkFileType = file['type'].split('/')[0] === 'image'
+    if (!checkFileType) {
+      return startUpload(file);
+    }
+    
     // if (e.target.files.length) {
     //   const file = e.target.files[0]
     // }
