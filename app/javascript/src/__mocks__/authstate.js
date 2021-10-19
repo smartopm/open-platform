@@ -28,11 +28,7 @@ const authState = {
       },
       gate_access: {
         permissions: ['can_see_menu_item']
-      },
-      guest_list: {
-        permissions:['can_see_menu_item']
       }
-   
     }
   }
 };

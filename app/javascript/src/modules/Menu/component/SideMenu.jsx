@@ -98,7 +98,6 @@ const SideMenu = ({ toggleDrawer, menuItems, userType, direction, communityFeatu
 
     return menuItem.accessibleBy.includes(userType)
   }
-  console.log("Mutuba", menuItems)
 
   return (
     <div
