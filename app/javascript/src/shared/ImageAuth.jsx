@@ -33,6 +33,7 @@ export default function ImageAuth({ imageLink, token, className, type, alt, styl
     fetchData()
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
   if(isLoading) return <Spinner />
   if(!imageLink || isError) return <span />
   if (type === 'image') {

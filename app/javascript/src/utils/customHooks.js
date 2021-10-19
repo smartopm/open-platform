@@ -52,29 +52,33 @@ export function useWindowDimensions() {
 
 
 /**
- * 
+ *
  * @param {string} url API endpoint to fetch from
  * @param {object} options include headers and http method here [GET, POST, ...]
  * @returns {object} response and error
- * 
+ *
  */
-export function useFetch(url) {
+export function useFetch(url, options) {
   const [response, setData] = useState({});
   const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false)
 
   useEffect(() => {
     const fetchData = async () => {
+      setLoading(true)
       try {
-        const result = await fetch(url);
+        const result = await fetch(url, options);
         const json = await result.json();
         setData(json);
+        setLoading(false)
       } catch (error) {
         setError(error);
+        setLoading(false)
       }
     };
     fetchData();
   }, [url]);
-  return { response, error };
+  return { response, error, loading };
 }
 
 export function useScript(src) {
