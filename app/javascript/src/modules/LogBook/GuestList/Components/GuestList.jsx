@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Fab,
   Grid,
@@ -8,7 +8,6 @@ import { StyleSheet, css } from 'aphrodite';
 import { useMutation, useLazyQuery } from 'react-apollo';
 import { useHistory } from 'react-router';
 import { useTranslation } from 'react-i18next';
-import { Context as AuthStateContext } from '../../../../containers/Provider/AuthStateProvider';
 import {formatError} from '../../../../utils/helpers'
 import { GuestListEntriesQuery } from '../../graphql/guest_list_queries'
 import GuestEntryRequestRevoke  from '../graphql/mutations'
@@ -24,7 +23,6 @@ export default function GuestList() {
   const history = useHistory();
   const [loadingStatus, setLoading] = useState({ loading: false });
   const [message, setMessage] = useState({ isError: false, detail: ''});
-  const authState = useContext(AuthStateContext);
 
   const { t } = useTranslation('logbook');
   const [revokeEntry] = useMutation(GuestEntryRequestRevoke);
@@ -45,7 +43,7 @@ export default function GuestList() {
 
   const handleGuestRevoke = ({guestListEntryId})=>{
     setLoading({...loadingStatus, loading: true});    
-    revokeEntry({ variables: { id: guestListEntryId, userId: authState?.user?.id } })
+    revokeEntry({ variables: { id: guestListEntryId} })
       .then(() => {
         setMessage({
           isError: false,

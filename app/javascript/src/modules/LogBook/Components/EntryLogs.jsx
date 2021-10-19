@@ -7,6 +7,7 @@ import { useMutation, useQuery, useApolloClient } from 'react-apollo';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { useTranslation } from 'react-i18next';
 import { Button, Grid, useTheme, makeStyles } from '@material-ui/core';
+import { useHistory, useParams } from 'react-router-dom';
 import SearchInput from '../../../shared/search/SearchInput';
 import Loading, { Spinner } from '../../../shared/Loading';
 import { AllEventLogsQuery } from '../../../graphql/queries';
@@ -35,12 +36,11 @@ import Paginate from '../../../components/Paginate';
 import GuestBook from './GuestBook';
 import { useFileUpload } from '../../../graphql/useFileUpload';
 
-export default function EntryLogs({ history, match }){
-  return <AllEventLogs history={history} match={match} />
-}
 
 const limit = 20;
-function AllEventLogs({ history, match }){
+export default function AllEventLogs(){
+  const history = useHistory()
+  const { userId }  = useParams()
   const subjects = ['user_entry', 'visitor_entry', 'user_temp'];
   const [offset, setOffset] = useState(0);
   const [searchTerm, setSearchTerm] = useState('');
@@ -52,7 +52,7 @@ function AllEventLogs({ history, match }){
   const [value, setvalue] = useState(Number(tabValue) || 0);
   const dbcSearchTerm = useDebounce(searchTerm, 500);
 
-  const refId = match.params.userId || null;
+  const refId = userId || null;
 
   useEffect(() => {
     setSearchTerm(dbcSearchTerm);
