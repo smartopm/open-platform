@@ -49,7 +49,10 @@ module Mutations
       # rubocop:enable Metrics/AbcSize
       # Verifies if current user is admin or not.
       def authorized?(_vals)
-        return true if context[:current_user]&.admin?
+        return true if ::Policy::ApplicationPolicy.new(
+          context[:current_user], nil
+        ).permission?(module: :transaction, permission: 'can_create_transaction') ||
+                       context[:current_user]&.admin?
 
         raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
       end

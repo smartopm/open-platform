@@ -20,6 +20,13 @@ admin:
 
   payment:
     permissions:
+  transaction:
+    permissions:
+      - can_create_transaction
+      - can_revert_transaction
+      - can_fetch_accounting_stats
+      - can_fetch_transaction_summary
+      - can_fetch_user_transactions
 contractor:
   note:
     permissions:
@@ -87,7 +94,6 @@ site_worker:
       - can_set_note_reminder
       - can_assign_note
       - can_bulk_assign_note
-      - can_create_note_comment
       - can_create_note_comment
       - can_update_note_comment
       - can_fetch_flagged_notes

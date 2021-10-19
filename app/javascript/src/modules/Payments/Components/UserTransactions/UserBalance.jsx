@@ -4,7 +4,7 @@ import useMediaQuery from '@material-ui/core/useMediaQuery';
 import PropTypes from 'prop-types';
 import { Typography, Fab } from '@material-ui/core';
 import { useTranslation } from 'react-i18next';
-import { formatMoney } from '../../../../utils/helpers';
+import { formatMoney, objectAccessor } from '../../../../utils/helpers';
 import { currencies } from '../../../../utils/constants';
 import { Context as AuthStateContext } from '../../../../containers/Provider/AuthStateProvider';
 import PaymentModal from './PaymentModal';
@@ -76,7 +76,7 @@ export default function Balance({
           </div>
         )}
       </div>
-      {authState.user?.userType === 'admin' && (
+      {objectAccessor(authState.user?.permissions, 'transaction')?.permissions?.includes('can_create_transaction') && (
         <div>
           <Fab
             color="primary"
