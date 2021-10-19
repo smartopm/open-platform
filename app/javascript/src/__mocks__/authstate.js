@@ -25,7 +25,14 @@ const authState = {
         'can_create_note',
         'can_get_task_count'
       ]
+      },
+      gate_access: {
+        permissions: ['can_see_menu_item']
+      },
+      guest_list: {
+        permissions:['can_see_menu_item']
       }
+   
     }
   }
 };

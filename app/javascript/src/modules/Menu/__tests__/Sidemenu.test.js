@@ -25,6 +25,7 @@ describe('Side Nav component', () => {
     Properties: { features: [] },
     Users: { features: [] },
     LogBook: { features: [] },
+    'Guest List': { features: [] },
     'Action Flows': { features: [] },
     Campaigns: { features: [] },
     Business: { features: [] },
