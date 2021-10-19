@@ -120,7 +120,7 @@ module Types::Queries::Form
 
   # rubocop:disable Metrics/MethodLength
   def form_user_properties(user_id:, form_user_id:)
-    unless context[:current_user]&.admin? || context[:current_user]&.id.eql?(user_id)
+    unless permissions_check? || context[:current_user]&.id.eql?(user_id)
       raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
     end
 
@@ -129,7 +129,12 @@ module Types::Queries::Form
   end
 
   def form_submissions(start_date:, end_date:)
-    unless context[:current_user]&.admin?
+    unless ::Policy::ApplicationPolicy.new(
+      context[:current_user], nil
+    ).permission?(
+      module: :forms,
+      permission: :can_view_form_form_submissions,
+    ) || context[:current_user]&.admin?
       raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
     end
 
@@ -176,7 +181,12 @@ module Types::Queries::Form
   #
   # @return [GraphQL::ExecutionError]
   def raise_unauthorized_error
-    return if context[:current_user]&.admin?
+    return true if ::Policy::ApplicationPolicy.new(
+      context[:current_user], nil
+    ).permission?(
+      module: :forms,
+      permission: :can_view_form_entries,
+    ) || context[:current_user]&.admin?
 
     raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
   end
@@ -190,6 +200,15 @@ module Types::Queries::Form
     return if form.present?
 
     raise GraphQL::ExecutionError, I18n.t('errors.form.not_found')
+  end
+
+  def permissions_check?
+    ::Policy::ApplicationPolicy.new(
+      context[:current_user], nil
+    ).permission?(
+      module: :forms,
+      permission: :can_view_form_user_properties,
+    ) || context[:current_user]&.admin?
   end
 
   # Returns query by concatinating status and created at

@@ -62,6 +62,9 @@ admin:
       - can_update_form_user_status
       - can_create_user_form_properties
       - can_update_user_form_properties
+      - can_view_form_entries
+      - can_view_form_form_submissions
+      - can_view_form_user_properties
       - can_fill_a_form
       - can_edit_a_form
       - can_view_own_forms  
