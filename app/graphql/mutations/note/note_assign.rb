@@ -40,7 +40,7 @@ module Mutations
                        ::Policy::ApplicationPolicy.new(
                          context[:current_user], nil
                        ).permission?(
-                         :note, :can_assign_note
+                         module: :note, permission: :can_assign_note,
                        )
 
         raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')

@@ -100,7 +100,7 @@ module Types::Queries::Transaction
   def validate_user_permissions_for_transactions(permission)
     unless ::Policy::ApplicationPolicy.new(
       context[:current_user], nil
-    ).permission?(:transaction, permission) || context[:current_user]&.admin?
+    ).permission?(module: :transaction, permission: permission) || context[:current_user]&.admin?
       raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
     end
   end

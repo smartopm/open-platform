@@ -21,7 +21,9 @@ module Mutations
       def authorized?(_vals)
         return true if ::Policy::ApplicationPolicy.new(
           context[:current_user], nil
-        ).permission?(:transaction, :can_revert_transaction) || context[:current_user]&.admin?
+        ).permission?(
+          module: :transaction, permission: :can_revert_transaction,
+        ) || context[:current_user]&.admin?
 
         raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
       end

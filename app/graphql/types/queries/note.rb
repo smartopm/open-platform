@@ -79,7 +79,7 @@ module Types::Queries::Note
            ::Policy::ApplicationPolicy.new(
              current_user, nil
            ).permission?(
-             :note, :can_fetch_flagged_notes
+             module: :note, permission: :can_fetch_flagged_notes,
            )
       raise GraphQL::ExecutionError,
             I18n.t('errors.unauthorized')
@@ -117,7 +117,7 @@ module Types::Queries::Note
            ::Policy::ApplicationPolicy.new(
              current_user, nil
            ).permission?(
-             :note, :can_fetch_task_by_id
+             module: :note, permission: :can_fetch_task_by_id,
            )
       raise GraphQL::ExecutionError,
             I18n.t('errors.unauthorized')
@@ -135,7 +135,7 @@ module Types::Queries::Note
            ::Policy::ApplicationPolicy.new(
              current_user, nil
            ).permission?(
-             :note, :can_fetch_task_comments
+             module: :note, permission: :can_fetch_task_comments,
            )
       raise GraphQL::ExecutionError,
             I18n.t('errors.unauthorized')
@@ -149,7 +149,7 @@ module Types::Queries::Note
            ::Policy::ApplicationPolicy.new(
              current_user, nil
            ).permission?(
-             :note, :can_fetch_task_histories
+             module: :note, permission: :can_fetch_task_histories,
            )
       raise GraphQL::ExecutionError,
             I18n.t('errors.unauthorized')
@@ -167,7 +167,7 @@ module Types::Queries::Note
            ::Policy::ApplicationPolicy.new(
              current_user, nil
            ).permission?(
-             :note, :can_get_task_count
+             module: :note, permission: :can_get_task_count,
            )
       raise GraphQL::ExecutionError,
             I18n.t('errors.unauthorized')
@@ -183,7 +183,7 @@ module Types::Queries::Note
            ::Policy::ApplicationPolicy.new(
              current_user, nil
            ).permission?(
-             :note, :can_get_task_stats
+             module: :note, permission: :can_get_task_stats,
            )
       raise GraphQL::ExecutionError,
             I18n.t('errors.unauthorized')
@@ -219,7 +219,7 @@ module Types::Queries::Note
            ::Policy::ApplicationPolicy.new(
              current_user, nil
            ).permission?(
-             :note, :can_get_own_tasks
+             module: :note, permission: :can_get_own_tasks,
            )
       raise GraphQL::ExecutionError,
             I18n.t('errors.unauthorized')

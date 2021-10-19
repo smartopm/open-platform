@@ -27,7 +27,7 @@ module Mutations
         return true if ::Policy::ApplicationPolicy.new(
           context[:current_user], nil
         ).permission?(
-          :note, :can_create_note
+          module: :note, permission: :can_create_note,
         ) || context[:current_user]&.site_manager?
 
         raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
