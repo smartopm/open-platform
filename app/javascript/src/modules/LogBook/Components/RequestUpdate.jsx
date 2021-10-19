@@ -1,3 +1,4 @@
+/* eslint-disable */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 /* eslint-disable no-nested-ternary */
 /* eslint-disable no-use-before-define */
@@ -5,7 +6,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import { useMutation, useLazyQuery, useApolloClient } from 'react-apollo';
 import { TextField, MenuItem, Button, Grid } from '@material-ui/core';
 import { StyleSheet, css } from 'aphrodite';
-import { useHistory } from 'react-router';
+import { useHistory } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import CallIcon from '@material-ui/icons/Call';
@@ -36,6 +37,7 @@ import GuestTime from './GuestTime';
 import QRCodeConfirmation from './QRCodeConfirmation';
 import FeatureCheck from '../../Features';
 import { useFileUpload } from '../../../graphql/useFileUpload';
+import { EntryRequestContext } from '../GuestVerification/Context';
 
 const initialState = {
     name: '',
@@ -59,9 +61,10 @@ const initialState = {
     isGuest: false
 }
 
-export default function RequestUpdate({ id, previousRoute, guestListRequest, isGuestRequest, tabValue, isScannedRequest }) {
+export default function RequestUpdate({ id, previousRoute, guestListRequest, isGuestRequest, tabValue, isScannedRequest, handleNext }) {
   const history = useHistory()
   const authState = useContext(Context)
+  const requestContext = useContext(EntryRequestContext)
   const isFromLogs = previousRoute === 'logs' ||  false
   const [loadRequest, { data }] = useLazyQuery(EntryRequestQuery, {
     variables: { id }
@@ -102,6 +105,7 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
   const showCancelBtn = previousRoute || tabValue || !!guestListRequest
   const [imageUrls, setImageUrls] = useState([])
   const [blobIds, setBlobIds] = useState([])
+
 
   const { onChange, signedBlobId, url } = useFileUpload({
     client: useApolloClient(),
@@ -239,11 +243,7 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
 
   function closeQrModal() {
     setQrModal(false);
-    if (guestListRequest) {
-       history.push('/guest-list')
-    } else {
-      history.push(`/entry_logs?tab=${tabValue}`);
-    }
+    handleNext()
   }
 
   function handleCreateRequest() {
@@ -260,6 +260,7 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
         // eslint-disable-next-line consistent-return
         .then((response) => {
           setRequestId(response.data.result.entryRequest.id);
+          requestContext.updateRequest({ ...requestContext.request, id: response.data.result.entryRequest.id })
           if (isGuestRequest) {
             setDetails({
               ...observationDetails,
@@ -293,11 +294,7 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
           message: t('logbook:logbook.registered_guest_updated')
         });
         setDetails({ ...observationDetails, message: t('logbook:logbook.registered_guest_updated') });
-        if(guestListRequest){
-          history.push('/guest-list')
-          return
-        }
-        history.push(`/entry_logs?tab=${tabValue}`)
+        handleNext()
       })
       .catch(error => {
         setLoading(false);
@@ -1018,7 +1015,8 @@ RequestUpdate.defaultProps = {
   id: null,
   previousRoute: '',
   tabValue: null,
-  guestListRequest: false
+  guestListRequest: false,
+  handleNext: () => {}
 };
 
 RequestUpdate.propTypes = {
@@ -1027,7 +1025,8 @@ RequestUpdate.propTypes = {
   isGuestRequest: PropTypes.bool.isRequired,
   isScannedRequest: PropTypes.bool.isRequired,
   tabValue: PropTypes.string,
-  guestListRequest: PropTypes.bool
+  guestListRequest: PropTypes.bool,
+  handleNext: PropTypes.bool,
 };
 
 

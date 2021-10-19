@@ -9,6 +9,8 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import Typography from '@material-ui/core/Typography';
+import { Box, IconButton } from '@material-ui/core';
+import CloseIcon from '@material-ui/icons/Close';
 import useDialogStyles from './dialogStyles';
 import ImageUploader from '../imageUpload/ImageUploader';
 import ImageUploadPreview from '../imageUpload/ImageUploadPreview';
@@ -42,7 +44,14 @@ export default function EntryNoteDialog({
           className={classes.title}
           data-testid="entry-dialog-title"
         >
-          {t('observations.observation_title')}
+          <Box display="flex" alignItems="center">
+            <Box flexGrow={1}>{t('observations.observation_title')}</Box>
+            <Box>
+              <IconButton data-testid="entry-dialog-close-icon" onClick={handleDialogStatus}>
+                <CloseIcon />
+              </IconButton>
+            </Box>
+          </Box>
         </DialogTitle>
         <DialogContent dividers>
           <Typography gutterBottom>{t('observations.add_your_observation')}</Typography>
@@ -59,21 +68,23 @@ export default function EntryNoteDialog({
             fullWidth
           />
           <Grid container className={styles.upload}>
-            <Grid item sm={8} data-testid='upload_label'>Do you have any images you will like to add?</Grid>
+            <Grid item sm={8} data-testid='upload_label'>{t('observations.upload_label')}</Grid>
             <Grid item sm={4} className={styles.uploadButton} data-testid='upload_button'>
-              <ImageUploader 
+              <ImageUploader
                 handleChange={imageOnchange}
-                buttonText='Upload Image'
+                buttonText={t('observations.upload_image')}
                 style={{background: '#CACACA'}}
+                useDefaultIcon
               />
             </Grid>
             {imageUrls.length > 0 && (
-              <ImageUploadPreview 
-                imageUrls={imageUrls} 
+              <ImageUploadPreview
+                imageUrls={imageUrls}
                 token={token}
                 sm={6}
-                xs={12}
+                xs={6}
                 style={{padding: '10px'}}
+                imgHeight={300}
               />
             )}
             {status !== 'INIT' && status !== 'DONE' && <Spinner />}
@@ -85,7 +96,7 @@ export default function EntryNoteDialog({
   );
 }
 
-const useStyles = makeStyles(() => ({ 
+const useStyles = makeStyles(() => ({
   upload: {
     marginTop: '20px'
   },
