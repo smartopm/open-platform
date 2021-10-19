@@ -61,6 +61,18 @@
     "start_of_visit": "Inicio de Visita",
     "validity": "validez"
   },
+  "image_capture": {
+    "add_a_photo": "Agregue una foto de tu ID con tu teléfono ",
+    "back": "Subir de nuevo",
+    "dark_background": "Use un fondo oscuro",
+    "flat_surface": "Tome una foto sobre una superficie plana",
+    "front": "Cargar Frente",
+    "image_captured": "Imágenes agregadas exitosamente",
+    "next_step": "Siguiente",
+    "off_camera": "Apague el flash de la cámara ",
+    "portrait": "Use orientación vertical",
+    "save_my_id": "Salvar mi ID"
+  },
   "log_title": {
     "date": "Fecha",
     "description": "Descripción",
@@ -81,6 +93,7 @@
     "all_visits": "Todas las visitas",
     "beyond_time": "La hora actual está fuera de las horas normales de visita. ¿Estás seguro de que deseas continuar?",
     "call_manager": "Llamar al Supervisor",
+    "continue": "Continuar",
     "data_time_submitted": "Fecha y Hora Ingresada",
     "date_of_visit": "Fecha de visita",
     "denied": "Rechazado",
@@ -136,7 +149,9 @@
     "created_observation_exit": "La observación de salida se ha registrado correctamente",
     "observation_title": "Observaciones",
     "skip_record_manual_entry": "{{action}} y Ingresar Manualmente",
-    "skip_scan_next_entry": "{{action}} y Escanear proximo ingreso"
+    "skip_scan_next_entry": "{{action}} y Escanear proximo ingreso",
+    "upload_image": "Subir Imagen ",
+    "upload_label": "¿Tiene alguna imagen que le gustaría agregar?"
   },
   "qrcode_confirmation": {
     "dont_send": "No enviar",
@@ -145,5 +160,16 @@
     "send": "Enviar",
     "send_qr_code": "Enviar Código QR a",
     "title": "Código de Acceso QR"
+  },
+  "video_recording": {
+    "add_video_text": "Agrega un video con tu teléfono",
+    "create_video_text": "Crear un video de su cara",
+    "face_forward": "Cara hacia el frente",
+    "face_left": "Cara a la izquierda",
+    "face_right": "Cara a la derecha",
+    "instruction_on_direction": "Estará mirando hacia adelante durante 2 segundos, luego gire a la izquierda y luego a la derecha. El contador sonará cada vez.",
+    "listen_to_counter": "Escuche el contador para la señal de cuándo girar ",
+    "video_recorded": "Grabación de video exitoso",
+    "well_lit_area": "Asegúrese de estar en un área bien iluminada y su rostro sea claramente visible"
   }
 }
