@@ -55,6 +55,7 @@ class Community < ApplicationRecord
     'Nkwashi': ['doublegdp.com', 'thebe-im.com'],
     'DoubleGDP': ['doublegdp.com'],
     'Ciudad Morazán': ['doublegdp.com'],
+    'Tilisi': ['doublegdp.com'],
     'DAST': ['doublegdp.com'],
   }.freeze
 
