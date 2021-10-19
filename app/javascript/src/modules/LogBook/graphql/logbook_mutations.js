@@ -14,7 +14,7 @@ export default AddObservationNoteMutation;
 export const EntryRequestUpdateMutation = gql`
   mutation EntryRequestUpdateMutation(
     $id: ID!
-    $name: String
+    $name: String!
     $email: String
     $reason: String
     $vehiclePlate: String
@@ -28,8 +28,6 @@ export const EntryRequestUpdateMutation = gql`
     $temperature: String
     $occursOn: [String!]
     $visitEndDate: String
-    $videoBlobId: String
-    $imageBlobIds: [String!]
   ) {
     result: entryRequestUpdate(
       id: $id
@@ -47,13 +45,10 @@ export const EntryRequestUpdateMutation = gql`
       temperature: $temperature
       occursOn: $occursOn
       visitEndDate: $visitEndDate
-      videoBlobId: $videoBlobId
-      imageBlobIds: $imageBlobIds
     ) {
       entryRequest {
         id
         isGuest
-        videoUrl
       }
     }
   }

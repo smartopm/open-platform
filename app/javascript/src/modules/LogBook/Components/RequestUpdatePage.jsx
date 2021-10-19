@@ -1,10 +1,9 @@
 import React from 'react';
-import { useLocation, useParams } from 'react-router-dom';
-import PropTypes from 'prop-types';
+import { useLocation, useParams } from 'react-router';
 import { useParamsQuery } from '../../../utils/helpers';
 import RequestUpdate from './RequestUpdate';
 
-export default function RequestUpdatePage({ handleNext }) {
+export default function RequestUpdatePage() {
   const { id, logs } = useParams();
   const { state } = useLocation();
   const query = useParamsQuery();
@@ -21,16 +20,6 @@ export default function RequestUpdatePage({ handleNext }) {
       tabValue={tabValue}
       isGuestRequest={isGuestRequest}
       isScannedRequest={isScannedRequest}
-      handleNext={handleNext}
     />
   );
-}
-
-
-RequestUpdatePage.defaultProps = {
-  handleNext: () => {}
-}
-
-RequestUpdatePage.propTypes = {
-  handleNext: PropTypes.func,
 }

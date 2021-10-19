@@ -5,17 +5,13 @@ import StepButton from '@material-ui/core/StepButton';
 import PropTypes from 'prop-types';
 import { objectAccessor } from '../utils/helpers';
 
-export default function HorizontalStepper({ steps, communityName }) {
+export default function HorizontalStepper({ steps }) {
   const [activeStep, setActiveStep] = useState(0);
-  const listOfSteps = steps(handleNext, communityName);
+  const listOfSteps = steps(handleNext);
   const validSteps = Boolean(listOfSteps?.length);
 
   function handleNext() {
     const newActiveStep = activeStep + 1;
-    if (listOfSteps.length <= 1) {
-      setActiveStep(activeStep);
-      return
-    }
     setActiveStep(newActiveStep);
   }
 
@@ -24,6 +20,7 @@ export default function HorizontalStepper({ steps, communityName }) {
       setActiveStep(step);
     };
   }
+
   return (
     <div>
       <Stepper nonLinear activeStep={activeStep} data-testid="stepper_container">
@@ -34,7 +31,7 @@ export default function HorizontalStepper({ steps, communityName }) {
             </Step>
           ))}
       </Stepper>
-      {validSteps && objectAccessor(listOfSteps, activeStep).component}
+      {validSteps && objectAccessor(steps(handleNext), activeStep).component}
     </div>
   );
 }
@@ -45,5 +42,4 @@ HorizontalStepper.defaultProps = {
 
 HorizontalStepper.propTypes = {
   steps: PropTypes.func,
-  communityName: PropTypes.string.isRequired,
 };
