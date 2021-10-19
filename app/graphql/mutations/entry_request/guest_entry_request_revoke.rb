@@ -38,7 +38,7 @@ module Mutations
           context[:current_user], nil
         ).permission?(
           module: :entry_request,
-          permission: :can_revoke_entry_request
+          permission: :can_revoke_entry_request,
         )
       end
 

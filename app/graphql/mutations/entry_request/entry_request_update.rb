@@ -63,7 +63,7 @@ module Mutations
           context[:current_user], nil
         ).permission?(
           module: :entry_request,
-          permission: :can_update_guest_entry_request
+          permission: :can_update_guest_entry_request,
         )
       end
 
@@ -72,7 +72,7 @@ module Mutations
           context[:current_user], nil
         ).permission?(
           module: :entry_request,
-          permission: :can_update_entry_request
+          permission: :can_update_entry_request,
         )
       end
     end

@@ -135,7 +135,7 @@ module Types::Queries::EntryRequest
       context[:current_user], nil
     ).permission?(
       module: :entry_request,
-      permission: :can_view_entry_request
+      permission: :can_view_entry_request,
     )
   end
 
@@ -144,7 +144,7 @@ module Types::Queries::EntryRequest
       context[:current_user], nil
     ).permission?(
       module: :entry_request,
-      permission: :can_view_entry_requests
+      permission: :can_view_entry_requests,
     )
   end
   # rubocop:enable Metrics/ModuleLength

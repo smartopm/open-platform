@@ -29,7 +29,7 @@ module Mutations
           context[:current_user], nil
         ).permission?(
           module: :entry_request,
-          permission: :can_grant_entry
+          permission: :can_grant_entry,
         ) || context[:current_user]&.role?(%i[security_guard admin])
 
         raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')

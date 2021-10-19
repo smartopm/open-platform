@@ -44,7 +44,7 @@ module Mutations
           context[:current_user], nil
         ).permission?(
           module: :entry_request,
-          permission: :can_create_entry_request
+          permission: :can_create_entry_request,
         ) || context[:current_user]&.role?(%i[security_guard admin custodian client resident])
 
         raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
