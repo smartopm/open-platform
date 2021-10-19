@@ -153,7 +153,7 @@ export default function LoginScreen() {
         // handle login with email
         loginWithEmail()
       }
-  
+
       if(userLogin.phone) {
         // handle login with phone
         loginWithPhone()
@@ -206,7 +206,7 @@ export default function LoginScreen() {
                 enableSearch
                 placeholder={t('common:form_placeholders.phone_number')}
                 onChange={value => setUserLogin({phone: value, email: '' })}
-                preferredCountries={['hn', 'zm', 'ng', 'in', 'us']}
+                preferredCountries={['hn', 'ke', 'zm', 'ng', 'in', 'us']}
               />
             </div>
           </Grid>
@@ -475,11 +475,11 @@ const styles = StyleSheet.create({
     '@media (min-device-width: 320px) and (max-device-height: 568px)' : {
       marginTop: 0,
      } ,
- 
+
      '@media (min-device-width: 414px) and (max-device-height: 736px)' : {
        marginTop: 0,
      },
- 
+
      '@media (min-device-width: 375px) and (max-device-height: 667px) and (orientation: portrait)' : {
        marginTop: 0,
      },
@@ -536,11 +536,11 @@ const styles = StyleSheet.create({
     '@media (min-device-width: 320px) and (max-device-height: 568px)' : {
       display: "none",
      } ,
- 
+
      '@media (min-device-width: 414px) and (max-device-height: 736px)' : {
        display: "none",
      },
- 
+
      '@media (min-device-width: 375px) and (max-device-height: 667px) and (orientation: portrait)' : {
        display: "none",
      },
@@ -576,6 +576,6 @@ const styles = StyleSheet.create({
     width: '1px',
     height: '40%',
     backgroundColor: 'grey',
-    marginLeft: '50%' 
+    marginLeft: '50%'
   }
 })
