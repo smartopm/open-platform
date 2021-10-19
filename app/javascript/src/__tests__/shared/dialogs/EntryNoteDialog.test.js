@@ -33,7 +33,6 @@ describe('It should render the entry note dialog', () => {
       expect(container.queryAllByTestId('entry-dialog-field')[0]).toBeInTheDocument()
       expect(container.queryByText('Some text child of entry note')).toBeInTheDocument()
       expect(container.queryByTestId('upload_label')).toBeInTheDocument()
-      expect(container.queryByTestId('entry-dialog-close-icon')).toBeInTheDocument()
       expect(container.queryAllByTestId('upload_button')[0]).toBeInTheDocument()
     });
 });

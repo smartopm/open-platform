@@ -99,35 +99,6 @@ RSpec.describe Mutations::Business do
         expect(result.dig('data', 'businessDelete', 'businessDelete')).to eql true
         expect(result['errors']).to be_nil
       end
-
-      it 'returns authorized if there is no current user' do
-        variables = {
-          id: user_business.id,
-        }
-
-        result = DoubleGdpSchema.execute(query, variables: variables,
-                                                context: {
-                                                  current_user: nil,
-                                                }).as_json
-
-        expect(result.dig('data', 'businessDelete')).to be_nil
-        expect(result['errors']).to_not be_nil
-      end
-
-      it 'returns error when provided wrong id' do
-        variables = {
-          id: SecureRandom.uuid,
-        }
-
-        result = DoubleGdpSchema.execute(query, variables: variables,
-                                                context: {
-                                                  current_user: current_user,
-                                                  site_community: current_user.community,
-                                                }).as_json
-
-        expect(result.dig('data', 'businessDelete')).to be_nil
-        expect(result['errors']).to_not be_nil
-      end
     end
   end
 end

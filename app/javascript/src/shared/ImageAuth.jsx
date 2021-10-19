@@ -5,7 +5,7 @@ import { useWindowDimensions } from '../utils/customHooks'
 import { Spinner } from './Loading'
 
 // we might need to have some loading functionality or image placeholder(skeleton)
-export default function ImageAuth({ imageLink, token, className, type, alt, style }) {
+export default function ImageAuth({ imageLink, token, className, type, alt }) {
     const [response, setData] = useState('')
     const { width } = useWindowDimensions()
     const [isError, setError] = useState(false)
@@ -36,7 +36,7 @@ export default function ImageAuth({ imageLink, token, className, type, alt, styl
   if(isLoading) return <Spinner />
   if(!imageLink || isError) return <span />
   if (type === 'image') {
-    return <img data-testid="authenticated_image" src={response.url} style={style} className={className} alt={alt} />
+    return <img data-testid="authenticated_image" src={response.url} className={className} alt={alt} />
   }
   if (type === 'imageAvatar') {
     return <Avatar alt={alt} src={response.url}  />
@@ -47,8 +47,7 @@ export default function ImageAuth({ imageLink, token, className, type, alt, styl
 ImageAuth.defaultProps = {
   className: 'img-responsive img-thumbnail',
   type: 'image',
-  alt: 'authenticated link',
-  style: {}
+  alt: 'authenticated link'
 }
 
 ImageAuth.propTypes = {
@@ -56,8 +55,6 @@ ImageAuth.propTypes = {
   token: PropTypes.string.isRequired,
   type: PropTypes.string,
   alt: PropTypes.string,
-  // eslint-disable-next-line react/forbid-prop-types
-  style: PropTypes.object,
   className: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
 }
 

@@ -1,4 +1,5 @@
 import GuestValidate from './Containers/GuestValidate';
+import RequestUpdatePage from '../Components/RequestUpdatePage';
 import { guestListUsers } from '../../../utils/constants';
 
 const GuestsValidatorRoutes = [
@@ -14,7 +15,7 @@ const GuestsValidatorRoutes = [
   {
     routeProps: {
       path: '/visit_request',
-      component: GuestValidate,
+      component: RequestUpdatePage,
     },
     name: 'Visit Request',
     featureName: 'LogBook',

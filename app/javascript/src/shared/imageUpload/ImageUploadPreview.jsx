@@ -3,7 +3,7 @@ import Grid from '@material-ui/core/Grid';
 import PropTypes from 'prop-types';
 import ImageAuth from '../ImageAuth';
 
-export default function ImageUploadPreview({ imageUrls, token, sm, xs, style, imgHeight }) {
+export default function ImageUploadPreview({ imageUrls, token, sm, xs, style }) {
   return (
     <>
       <Grid container>
@@ -12,7 +12,7 @@ export default function ImageUploadPreview({ imageUrls, token, sm, xs, style, im
             <ImageAuth
               imageLink={img}
               token={token}
-              style={{height: imgHeight}}
+              className="img-responsive img-thumbnail"
             />
           </Grid>
       ))}
@@ -24,8 +24,7 @@ export default function ImageUploadPreview({ imageUrls, token, sm, xs, style, im
 ImageUploadPreview.defaultProps = {
   style: {},
   sm: 12,
-  xs: 12,
-  imgHeight: 300
+  xs: 12
 }
 
 ImageUploadPreview.propTypes = {
@@ -33,7 +32,6 @@ ImageUploadPreview.propTypes = {
   imageUrls: PropTypes.arrayOf(PropTypes.string).isRequired,
   sm: PropTypes.number,
   xs: PropTypes.number,
-  imgHeight: PropTypes.number,
   // eslint-disable-next-line react/forbid-prop-types
   style: PropTypes.object
 };
