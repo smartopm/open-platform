@@ -17,7 +17,6 @@ admin:
       - can_get_task_count
       - can_get_task_stats
       - can_get_own_tasks
-
   payment:
     permissions:
   transaction:
@@ -27,6 +26,27 @@ admin:
       - can_fetch_accounting_stats
       - can_fetch_transaction_summary
       - can_fetch_user_transactions
+  entry_request:
+    permissions:
+      - can_see_menu_item 
+      - can_access_guest_list
+      - can_access_logbook 
+      - can_access_guest_list
+      - can_create_entry_request
+      - can_update_entry_request
+      - can_update_guest_entry_request
+      - can_deny_entry
+      - can_grant_entry
+      - can_add_entry_request_note
+      - can_view_entry_requests
+      - can_view_entry_request
+      - can_revoke_entry_request
+  gate_access:
+    permissions:
+      - can_see_menu_item
+  guest_list:
+    permissions:
+      - can_see_menu_item 
 contractor:
   note:
     permissions:
@@ -65,6 +85,20 @@ custodian:
       - can_get_task_count
       - can_get_task_stats
       - can_get_own_tasks
+  gate_access:
+    permissions:
+      - can_see_menu_item 
+  entry_request:
+    permissions:
+      - can_access_guest_list
+      - can_create_entry_request
+      - can_update_entry_request
+      - can_view_entry_requests
+      - can_view_entry_request
+      - can_revoke_entry_request
+  guest_list:
+    permissions:
+      - can_see_menu_item 
 security_guard:
   note:
     permissions:
@@ -84,7 +118,20 @@ security_guard:
       - can_get_task_count
       - can_get_task_stats
       - can_get_own_tasks
-
+  entry_request:
+    permissions:
+      - can_see_menu_item 
+      - can_access_logbook
+      - can_create_entry_request
+      - can_update_entry_request
+      - can_deny_entry
+      - can_grant_entry
+      - can_add_entry_request_note
+      - can_view_entry_requests
+      - can_view_entry_request
+  gate_access:
+    permissions:
+      - can_see_menu_item 
 site_worker:
   note:
     permissions:
@@ -107,12 +154,36 @@ visitor:
   note:
     permissions:
 resident:
-  note:
+  gate_access:
     permissions:
+      - can_see_menu_item
+  entry_request:
+    permissions:
+      - can_access_guest_list
+      - can_create_entry_request
+      - can_update_entry_request
+      - can_view_entry_requests
+      - can_view_entry_request
+  guest_list:
+    permissions:
+      - can_see_menu_item 
 prospective_client:
   note:
     permissions: 
 client:
-  note:
+  gate_access:
     permissions:
+      - can_see_menu_item
+  entry_request:
+    permissions:
+      - can_access_guest_list 
+      - can_create_entry_request
+      - can_update_entry_request
+      - can_view_entry_requests
+      - can_view_entry_request 
+      - can_revoke_entry_request
+  guest_list:
+    permissions:
+      - can_see_menu_item 
+
     

@@ -87,7 +87,9 @@ RSpec.describe Mutations::EntryRequest do
     let!(:user) { create(:user_with_community) }
     let!(:random_user) { create(:user_with_community) }
     let!(:admin) { create(:admin_user, community_id: user.community_id) }
-    let!(:entry_request) { user.entry_requests.create(name: 'Mark Percival', reason: 'Visiting') }
+    let!(:entry_request) do
+      user.entry_requests.create(name: 'Mark Percival', reason: 'Visiting', is_guest: true)
+    end
 
     let(:query) do
       <<~GQL

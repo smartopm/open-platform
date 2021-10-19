@@ -4,32 +4,56 @@ import EntryLogs from './Components/EntryLogs';
 // logbook submodules
 import GuestsList from './GuestList';
 import GuestsValidateRoutes from './GuestVerification';
-import { guestListUsers } from '../../utils/constants';
+import AccessCheck from '../Permissions/Components/AccessCheck';
+
+const logBookPermissions = ['can_access_logbook'];
+
+const gateAccessPermissions = ['can_see_menu_item'];
+
+const currentModule = 'entry_request'
+
+function GateAccessIcon() {
+  return (
+    <AccessCheck module={currentModule} allowedPermissions={gateAccessPermissions}>
+      <EntryLogs />
+    </AccessCheck>
+)
+}
+
+function RenderLogBook() {
+  return (
+    <AccessCheck module={currentModule} allowedPermissions={logBookPermissions}>
+      <EntryLogs />
+    </AccessCheck>
+)
+}
 
 const LogBooks = {
   routeProps: {
     path: '/entry_logs',
-    component: EntryLogs,
+    component: RenderLogBook
   },
   styleProps: {
     icon: <MenuBookIcon />,
   },
   name: (t) => t('misc.log_book'),
   featureName: 'LogBook',
-  accessibleBy: ['admin', 'security_guard'],
+  accessibleBy: [],
+  moduleName: currentModule,
   subRoutes: [...GuestsValidateRoutes],
 };
 
 export default {
   routeProps: {
     path: '/entry_logs',
-    component: EntryLogs,
+    component: GateAccessIcon,
   },
   styleProps: {
     icon: <MenuBookIcon />,
   },
   name: (t) => t('misc.log_book'),
   featureName: 'LogBook',
-  accessibleBy: guestListUsers,
+  moduleName: 'gate_access',
+  accessibleBy: [],
   subMenu: [LogBooks, GuestsList],
 };

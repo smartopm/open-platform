@@ -697,10 +697,16 @@ export const entryLogsQueryBuilderInitialValue = {
     'site_worker'
   ]
 
+  export const gateAccessUsers = [
+    'admin',
+    'security_guard',
+    'client',
+    'custodian',
+    'resident'
+  ]
 
   export const guestListUsers = [
     'admin',
-    'security_guard',
     'client',
     'custodian',
     'resident'

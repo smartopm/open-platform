@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# rubocop:disable Metrics/ModuleLength
 # Queries module for breaking out queries
 module Types::Queries::EntryRequest
   extend ActiveSupport::Concern
@@ -54,15 +55,20 @@ module Types::Queries::EntryRequest
   end
 
   def entry_requests
-    raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') unless admin_or_security_guard
+    unless admin_or_security_guard || permissions_check
+      raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
+    end
 
     context[:site_community].entry_requests.where(community_id: context[:current_user].community_id)
   end
 
   # check if we need to allow residents to see all scheduled requests
   # rubocop:disable Metrics/AbcSize
+  # rubocop:disable Metrics/MethodLength
   def scheduled_requests(offset: 0, limit: 50, query: nil, scope: nil)
-    raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') unless admin_or_security_guard
+    unless admin_or_security_guard || permissions_check?
+      raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
+    end
 
     entry_requests = context[:site_community].entry_requests.where.not(visitation_date: nil)
                                              .includes(:user)
@@ -75,6 +81,7 @@ module Types::Queries::EntryRequest
     entry_requests
   end
   # rubocop:enable Metrics/AbcSize
+  # rubocop:enable Metrics/MethodLength
 
   # rubocop:disable Metrics/AbcSize
   def scheduled_guest_list(offset: 0, limit: 50, query: nil)
@@ -125,8 +132,22 @@ module Types::Queries::EntryRequest
 
   def can_view_entry_request
     current_user = context[:current_user]
-    current_user&.admin? || current_user&.client? ||
-      current_user&.resident? || current_user&.custodian? ||
-      current_user&.security_guard?
+    ::Policy::ApplicationPolicy.new(
+      context[:current_user], nil
+    ).permission?(
+      module: :entry_request,
+      permission: :can_view_entry_request,
+    ) || current_user&.admin? || current_user&.client? || current_user&.resident? ||
+      current_user&.custodian? || current_user&.security_guard?
   end
+
+  def permissions_check?
+    ::Policy::ApplicationPolicy.new(
+      context[:current_user], nil
+    ).permission?(
+      module: :entry_request,
+      permission: :can_view_entry_requests,
+    )
+  end
+  # rubocop:enable Metrics/ModuleLength
 end
