@@ -46,7 +46,25 @@ admin:
       - can_see_menu_item
   guest_list:
     permissions:
-      - can_see_menu_item 
+      - can_see_menu_item
+  forms:
+    permissions:
+      - can_create_category
+      - can_update_category
+      - can_delete_category
+      - can_create_form
+      - can_update_form
+      - can_create_form_properties
+      - can_update_form_properties
+      - can_delete_form_properties
+      - can_create_form_user
+      - can_update_form_user
+      - can_update_form_user_status
+      - can_create_user_form_properties
+      - can_update_user_form_properties
+      - can_fill_a_form
+      - can_edit_a_form
+      - can_view_own_forms  
 contractor:
   note:
     permissions:

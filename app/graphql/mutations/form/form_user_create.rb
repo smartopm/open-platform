@@ -61,7 +61,7 @@ module Mutations
       end
 
       def authorized?(vals)
-        return true if context[:current_user]&.admin? ||
+        return true if permissions_checks? ||
                        context[:current_user]&.id.eql?(vals[:user_id])
 
         raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
@@ -77,6 +77,15 @@ module Mutations
 
         raise GraphQL::ExecutionError,
               I18n.t('errors.form.not_found')
+      end
+
+      def permissions_checks?
+        ::Policy::ApplicationPolicy.new(
+          context[:current_user], nil
+        ).permission?(
+          module: :forms,
+          permission: :can_create_form_user,
+        ) || context[:current_user]&.admin?
       end
 
       # Raises GraphQL execution error if form is already submitted once by the user
