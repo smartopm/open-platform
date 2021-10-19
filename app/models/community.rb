@@ -47,7 +47,7 @@ class Community < ApplicationRecord
   belongs_to :sub_administrator, class_name: 'Users::User', optional: true
   has_many :time_sheets, class_name: 'Users::TimeSheet', dependent: :destroy
 
-  VALID_CURRENCIES = %w[zambian_kwacha honduran_lempira].freeze
+  VALID_CURRENCIES = %w[zambian_kwacha honduran_lempira kenyan_shilling].freeze
 
   validates :currency, inclusion: { in: VALID_CURRENCIES, allow_nil: false }
 
