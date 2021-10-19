@@ -64,7 +64,7 @@ module Mutations
         ).permission?(
           module: :entry_request,
           permission: :can_update_guest_entry_request,
-        )
+        ) || context[:current_user].admin?
       end
 
       def permissions_check?
@@ -73,7 +73,7 @@ module Mutations
         ).permission?(
           module: :entry_request,
           permission: :can_update_entry_request,
-        )
+        ) || context[:current_user]&.role?(%i[security_guard admin])
       end
     end
   end

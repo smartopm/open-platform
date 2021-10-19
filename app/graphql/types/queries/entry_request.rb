@@ -131,12 +131,14 @@ module Types::Queries::EntryRequest
   end
 
   def can_view_entry_request
+    current_user = context[:current_user]
     ::Policy::ApplicationPolicy.new(
       context[:current_user], nil
     ).permission?(
       module: :entry_request,
       permission: :can_view_entry_request,
-    )
+    ) || current_user&.admin? || current_user&.client? || current_user&.resident? ||
+      current_user&.custodian? || current_user&.security_guard?
   end
 
   def permissions_check?
