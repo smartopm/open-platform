@@ -302,6 +302,21 @@ es:
     default:
       message: Mensaje de campaña predeterminado
       name: Mensaje de campaña predeterminado
+  emergency_sos:
+    am_safe_message: Emergencia SOS %{user_name} está bien y ha cancelado la solicitud
+      de ayuda.
+    contact_not_found: y no tiene un número de contacto en nuestro sistema.
+    from_location_message: de este lugar aproximado %{google_map_url}
+    location_and_contact_not_found: y no tiene una ubicación aproximada ni un número
+      de contacto en nuestro sistema.
+    location_not_found: y no tiene una ubicación aproximada en nuestro sistema
+    reached_on_message: y seguramente puede ser localizable al %{phone_number}.
+    receiving_message: Usted está recibiendo este mensaje como parte de equipo de
+      respuesta de emergencia por %{name}. Por favor confirme que la persona está
+      bien y que la emergencia está resuelta, luego marque la tarea como completada
+      %{task_url}
+    user_initiated_message: Emergencia SOS %{user_name} ha iniciado una solicitud
+      de ayuda de emergencia
   errors:
     action_flow:
       invalid_action_name: Nombre de acción no válido
