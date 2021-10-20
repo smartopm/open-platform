@@ -121,7 +121,7 @@ describe('Should render Guest Book Component', () => {
 
     const endVisit = render(guestView['End of Visit']);
     expect(endVisit.queryByTestId('end_of_visit')).toBeInTheDocument();
-    expect(endVisit.queryByTestId('end_of_visit').textContent).toContain('-');
+    expect(endVisit.queryByTestId('end_of_visit').textContent).toContain('Translated text');
 
     const accessTime = render(guestView['Access Time']);
     expect(accessTime.queryByTestId('access_time')).toBeInTheDocument();

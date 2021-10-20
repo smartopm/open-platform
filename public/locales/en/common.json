@@ -234,7 +234,8 @@
     "activate": "Activate",
     "web": "Web",
     "phone": "Phone",
-    "signature": "Signature"
+    "signature": "Signature",
+    "seconds": "seconds"
   },
   "menu": {
     "invoice": "Invoice",

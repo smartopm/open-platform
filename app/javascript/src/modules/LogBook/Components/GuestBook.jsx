@@ -143,7 +143,7 @@ export function renderGuest(guest, classes, grantAccess, isMobile, loadingStatus
       'End of Visit': (
         <Grid item xs={12} md={2} data-testid="end_of_visit">
           <Text
-            content={guest.visitEndDate ? translate('guest_book.ends_on_date', { date: dateToString(guest.visitEndDate) }) : '-'}
+            content={guest.visitEndDate ? translate('guest_book.ends_on_date', { date: dateToString(guest.visitEndDate) }) : translate('guest_book.ends_on_date', { date: dateToString(guest.visitationDate) })}
             className={classes.text}
           />
         </Grid>

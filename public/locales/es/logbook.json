@@ -8,7 +8,7 @@
     "client": "Cliente",
     "other": "Otro",
     "passing_through": "Pase temporario",
-    "prospective_client": "Futuro cliente",
+    "prospective_client": "Futuro Cliente",
     "sales": "Persona de ventas",
     "working": "Trabajando"
   },
@@ -28,10 +28,10 @@
   },
   "entry_reason": [
     "Cliente",
-    "Futuro cliente",
+    "Futuro Cliente",
     "Trabajando",
-    "Persona de ventas",
-    "Pase temporario",
+    "Ventas",
+    "Pasando",
     "Otro"
   ],
   "errors": {
@@ -40,7 +40,7 @@
   "guest_book": {
     "ends_on_date": "Termina el ‪{{date}}‬",
     "ends_on_date_time": "Termina en ‪{{date}}‬,‪ ‪{{time}}‬",
-    "expired": "Expiró",
+    "expired": "Vencido",
     "host": "Anfitrión ",
     "invalid_now": "Ahora invalido",
     "invalid_today": "No Habilitado Hoy",
@@ -50,7 +50,7 @@
     "start_of_visit": "Inicio de visita ‪{{date}}‬",
     "start_on_date_time": "Inicia en ‪{{date}}‬, ‪{{time}}‬",
     "update_guest": "Actualizar Invitado",
-    "valid": "Valido",
+    "valid": "Válido",
     "visit_time": "Tiempo de visita ‪{{startTime}}‬ - ‪{{endTime}}‬"
   },
   "guest": {
