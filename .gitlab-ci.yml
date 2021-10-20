@@ -78,6 +78,10 @@ test:rspec:
     expire_in: 24 hours
   cache:
     policy: pull-push
+  except:
+    - tags
+    - schedules
+
 
 test:jest:
   extends: .base_db
@@ -92,6 +96,9 @@ test:jest:
       - "coverage/"
     name: "Jest $CI_PIPELINE_ID Coverage Report"
     expire_in: 24 hours
+  except:
+    - tags
+    - schedules
 
 cypress:
   image: docker:latest
@@ -113,6 +120,15 @@ cypress:
     expire_in: 24 hours
   only:
     - master
+
+start_prod_push:
+  extends: .base_db
+  only:
+    - schedules
+  script:
+    - echo "Creating tag..."
+    - bundle exec rake deploy:create_tag[$GITLAB_TOKEN]
+    - echo "Tag created"
 
 staging:appdeploy:
   stage: staging
