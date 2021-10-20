@@ -440,7 +440,7 @@ export default function UserPaymentPlanItem({
                   renderPlan(
                     plan,
                     currencyData,
-                    currentUser.userType,
+                    currentUser,
                     {
                       handleMenu: event => handleOpenDateMenu(event, plan.id),
                       loading: details.isLoading,
@@ -459,7 +459,7 @@ export default function UserPaymentPlanItem({
                   renderPlan(
                     plan,
                     currencyData,
-                    currentUser.userType,
+                    currentUser,
                     {
                       handleMenu: event => handleOpenDateMenu(event, plan.id),
                       loading: details.isLoading
@@ -530,7 +530,7 @@ export default function UserPaymentPlanItem({
 export function renderPlan(
   plan,
   currencyData,
-  userType,
+  currentUser,
   { handleMenu, loading, planList },
   menuData,
   t
@@ -602,15 +602,15 @@ export function renderPlan(
       <Grid item xs={12} md={2}>
         <Button
           aria-controls="set-payment-date-menu"
-          variant={userType === 'admin' ? 'outlined' : 'text'}
+          variant={objectAccessor(currentUser?.permissions, 'payment_plan')?.permissions?.includes('can_update_payment_day') ? 'outlined' : 'text'}
           aria-haspopup="true"
           data-testid="menu"
-          disabled={userType !== 'admin'}
+          disabled={!objectAccessor(currentUser?.permissions, 'payment_plan')?.permissions?.includes('can_update_payment_day')}
           onClick={handleMenu}
         >
           {loading && <Spinner />}
 
-          {!loading && userType === 'admin' ? (
+          {!loading && objectAccessor(currentUser?.permissions, 'payment_plan')?.permissions?.includes('can_update_payment_day') ? (
             <span>
               <EditIcon fontSize="small" style={{ marginBottom: -4 }} />
               {`   ${suffixedNumber(plan.paymentDay)}`}
@@ -624,7 +624,7 @@ export function renderPlan(
     ),
     Menu: (
       <Grid item xs={12} md={1} data-testid="menu">
-        {userType === 'admin' && (
+        {objectAccessor(currentUser?.permissions, 'payment_plan')?.permissions?.includes('can_view_menu_list') && (
           <>
             <IconButton
               aria-controls="simple-menu"
@@ -715,7 +715,10 @@ UserPaymentPlanItem.propTypes = {
   }).isRequired,
   userId: PropTypes.string.isRequired,
   currentUser: PropTypes.shape({
-    userType: PropTypes.string
+    userType: PropTypes.string,
+    permissions: PropTypes.shape({
+      payment_plan: PropTypes.arrayOf()
+    })
   }).isRequired,
   refetch: PropTypes.func.isRequired,
   balanceRefetch: PropTypes.func.isRequired
