@@ -23,7 +23,6 @@ module Types::Queries::PlanPayment
     end
   end
 
-  # rubocop:disable Metrics/MethodLength
   # Returns list of all payments
   #
   # @param query [String]
@@ -32,9 +31,7 @@ module Types::Queries::PlanPayment
   #
   # @return [Array<PlanPaymentType>]
   def payments_list(query: nil, limit: 100, offset: 0)
-    unless context[:current_user]&.admin?
-      raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
-    end
+    raise_unauthorized_error_for_plan_payments(:can_fetch_payments_list)
 
     search_method = 'search'
     search_method = 'search_by_numbers' if query_is_number?(query)
@@ -45,7 +42,6 @@ module Types::Queries::PlanPayment
                             .order(created_at: :desc)
                             .limit(limit).offset(offset)
   end
-  # rubocop:enable Metrics/MethodLength
 
   # Payment's receipt details.
   #
@@ -53,6 +49,8 @@ module Types::Queries::PlanPayment
   #
   # @return [PlanPayment]
   def payment_receipt(id:)
+    raise_unauthorized_error_for_plan_payments(:can_fetch_payment_receipt)
+
     payment = context[:site_community].plan_payments.find_by(id: id)
     raise_payment_not_found_error(payment)
 
@@ -62,6 +60,8 @@ module Types::Queries::PlanPayment
   # rubocop:disable Metrics/AbcSize
   # rubocop:disable Metrics/MethodLength
   def payment_stat_details(query:)
+    raise_unauthorized_error_for_plan_payments(:can_fetch_payment_stat_details)
+
     payments = context[:site_community].plan_payments
                                        .exluding_general_payments
                                        .not_cancelled
@@ -84,6 +84,18 @@ module Types::Queries::PlanPayment
   # rubocop:enable Metrics/MethodLength
 
   private
+
+  # Raises GraphQL execution error if user is unauthorized.
+  #
+  # @return [GraphQL::ExecutionError]
+  def raise_unauthorized_error_for_plan_payments(permission)
+    return if ::Policy::ApplicationPolicy.new(
+      context[:current_user], nil
+    ).permission?(module: :plan_payment, permission: permission) ||
+              context[:current_user]&.admin?
+
+    raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
+  end
 
   # Raises GraphQL execution error if payment does not exist.
   #

@@ -4,7 +4,7 @@
 module Types::Queries::Permission
   extend ActiveSupport::Concern
   VALID_ROLES = Users::User::VALID_USER_TYPES
-  VALID_MODULES = %w[user note payment payment_plan post action_flow activity_log business
+  VALID_MODULES = %w[user note plan_payment payment_plan post action_flow activity_log business
                      campaign comment community contact_info discussion email_template
                      entry_request feedback form invoice label land_parcel login
                      message settings showroom subscription_plan substatus_log
