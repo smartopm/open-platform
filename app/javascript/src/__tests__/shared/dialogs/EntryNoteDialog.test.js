@@ -19,6 +19,7 @@ describe('It should render the entry note dialog', () => {
           handleDialogStatus={jest.fn()}
           imageOnchange={jest.fn()}
           imageUrls={imageUrls}
+          status='INIT'
         >
           <p>
             Some text child of entry note

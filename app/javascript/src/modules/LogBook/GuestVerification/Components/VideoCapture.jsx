@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Button, Typography } from '@material-ui/core';
-import PropTypes from 'prop-types';
 import VideoRecorder from 'react-video-recorder';
 import { makeStyles } from '@material-ui/core/styles';
 import { useApolloClient, useMutation } from 'react-apollo';
@@ -13,23 +12,25 @@ import { EntryRequestUpdateMutation } from '../../graphql/logbook_mutations';
 import MessageAlert from '../../../../components/MessageAlert';
 import { EntryRequestContext } from '../Context';
 import Video from '../../../../shared/Video';
+import { Spinner } from '../../../../shared/Loading';
 
-export default function VideoCapture({ handleNext }) {
+export default function VideoCapture() {
   const [counter, setCounter] = useState(0);
   const [recordingBegin, setRecordingBegin] = useState(false);
   const [recordingCompleted, setRecordingCompleted] = useState(false);
   const classes = useStyles();
   const { t } = useTranslation(['common', 'logbook']);
-  const requestContext = useContext(EntryRequestContext)
+  const requestContext = useContext(EntryRequestContext);
   const [recordingInstruction, setRecordingInstruction] = useState(videoDirection(t).left);
   const [updateRequest] = useMutation(EntryRequestUpdateMutation);
   const [errorDetails, setDetails] = useState({
     isError: false,
     message: ''
   });
-  const [recorded, setIsRecorded] = useState(Boolean(requestContext.guest.videoUrl))
+  console.log(requestContext)
+  const [recorded, setIsRecorded] = useState(Boolean(requestContext.guest?.videoUrl))
 
-  const { onChange, signedBlobId } = useFileUpload({
+  const { onChange, signedBlobId, status } = useFileUpload({
     client: useApolloClient()
   });
 
@@ -42,6 +43,7 @@ export default function VideoCapture({ handleNext }) {
     setCounter(0);
     setRecordingInstruction(videoDirection(t).left);
     setRecordingBegin(false);
+    setRecordingCompleted(false);
   }
 
   function beep() {
@@ -78,7 +80,6 @@ export default function VideoCapture({ handleNext }) {
           message: t('logbook:video_recording.video_recorded'),
           isError: false
         });
-        handleNext();
       })
       .catch(error => {
         setDetails({ ...errorDetails, isError: true, message: error.message });
@@ -121,9 +122,9 @@ export default function VideoCapture({ handleNext }) {
       </div>
       {
         recorded
-        ? <Video src={requestContext.guest.videoUrl} />
+        ? <Video src={requestContext.guest?.videoUrl} />
         : (
-          <div className={classes.videoArea}>
+          <div className={classes.videoArea} data-testid="video_recorder">
             <VideoRecorder
               onRecordingComplete={onVideoComplete}
               onStartRecording={() => setRecordingBegin(true)}
@@ -140,14 +141,15 @@ export default function VideoCapture({ handleNext }) {
       }
 
       <div className={classes.continueButton}>
-        {recordingCompleted && (
+        {status === 'FILE_UPLOAD' && <Spinner />}
+        {recordingCompleted && status === 'DONE' && (
           <Button onClick={onContinue} color="primary" data-testid="continue-btn">
-            {t('common:menu.continue')}
+            {t('logbook:video_recording.save_video')}
           </Button>
         )}
         {
-          requestContext.guest.videoUrl && (
-            <Button onClick={() => setIsRecorded(!recorded)} color="primary" data-testid="continue-btn">
+          requestContext.guest?.videoUrl && (
+            <Button onClick={() => setIsRecorded(!recorded)} color="primary" data-testid="re_record_video_btn">
               {recorded ? t('logbook:video_recording.re_record_video') : t('form_actions.cancel')}
             </Button>
           )
@@ -232,7 +234,3 @@ const useStyles = makeStyles(() => ({
     marginTop: '40px'
   }
 }));
-
-VideoCapture.propTypes = {
-  handleNext: PropTypes.func.isRequired
-};

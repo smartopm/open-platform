@@ -1,7 +1,7 @@
 // The file should be moved to shared directory
 
 import React from 'react';
-import { act, render } from '@testing-library/react';
+import { act, render, waitFor } from '@testing-library/react';
 import ImageAuth from '../../shared/ImageAuth';
 import '@testing-library/jest-dom/extend-expect';
 import { Spinner } from '../../shared/Loading';
@@ -16,6 +16,8 @@ describe('ImageAuth Component', () => {
     });
     const loader = render(<Spinner />);
 
-    expect(loader.queryAllByTestId('loader')[0]).toBeInTheDocument();
+    await waitFor(() => {
+      expect(loader.queryAllByTestId('loader')[0]).toBeInTheDocument();
+    }, 10)
   });
 });

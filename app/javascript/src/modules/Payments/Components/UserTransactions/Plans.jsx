@@ -126,7 +126,8 @@ export default function PaymentPlans({ userId, user, userData }) {
           userId={userId}
         />
       )}
-      {subtab === 'Transactions' ? (
+      {subtab === 'Transactions' &&
+       objectAccessor(user?.permissions, 'transaction')?.permissions?.includes('can_fetch_user_transactions') ? (
         transLoading ? (
           <Spinner />
         ) : (
@@ -220,6 +221,7 @@ export default function PaymentPlans({ userId, user, userData }) {
                     landParcelsData={landParcelsData}
                     setMessage={setMessage}
                     openAlertMessage={() => setAlertOpen(true)}
+                    balanceRefetch={balanceRefetch}
                   />
                 )}
               </div>
@@ -267,6 +269,9 @@ PaymentPlans.propTypes = {
   user: PropTypes.shape({
     id: PropTypes.string,
     userType: PropTypes.string,
+    permissions: PropTypes.shape({
+      transaction: PropTypes.arrayOf()
+    }),
     community: PropTypes.shape({
       imageUrl: PropTypes.string,
       name: PropTypes.string,

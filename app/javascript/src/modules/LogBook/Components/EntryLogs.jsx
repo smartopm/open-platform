@@ -7,6 +7,7 @@ import { useMutation, useQuery, useApolloClient } from 'react-apollo';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { useTranslation } from 'react-i18next';
 import { Button, Grid, useTheme, makeStyles } from '@material-ui/core';
+import { useHistory, useParams } from 'react-router-dom';
 import SearchInput from '../../../shared/search/SearchInput';
 import Loading, { Spinner } from '../../../shared/Loading';
 import { AllEventLogsQuery } from '../../../graphql/queries';
@@ -35,12 +36,11 @@ import Paginate from '../../../components/Paginate';
 import GuestBook from './GuestBook';
 import { useFileUpload } from '../../../graphql/useFileUpload';
 
-export default function EntryLogs({ history, match }){
-  return <AllEventLogs history={history} match={match} />
-}
 
 const limit = 20;
-function AllEventLogs({ history, match }){
+export default function AllEventLogs(){
+  const history = useHistory()
+  const { userId }  = useParams()
   const subjects = ['user_entry', 'visitor_entry', 'user_temp'];
   const [offset, setOffset] = useState(0);
   const [searchTerm, setSearchTerm] = useState('');
@@ -52,7 +52,7 @@ function AllEventLogs({ history, match }){
   const [value, setvalue] = useState(Number(tabValue) || 0);
   const dbcSearchTerm = useDebounce(searchTerm, 500);
 
-  const refId = match.params.userId || null;
+  const refId = userId || null;
 
   useEffect(() => {
     setSearchTerm(dbcSearchTerm);
@@ -186,9 +186,8 @@ export function IndexComponent({
   const [imageUrls, setImageUrls] = useState([])
   const [blobIds, setBlobIds] = useState([])
 
-  const { onChange, signedBlobId, url } = useFileUpload({
-    client: useApolloClient(),
-    maxSize: 1000
+  const { onChange, signedBlobId, url, status } = useFileUpload({
+    client: useApolloClient()
   });
 
   function routeToAction(eventLog) {
@@ -222,6 +221,11 @@ export function IndexComponent({
     setIsObservationOpen(true);
   }
 
+  function resetImageData() {
+    setImageUrls([]);
+    setBlobIds([]);
+  }
+
   function handleSaveObservation(log = clickedEvent, type) {
     setDetails({ ...observationDetails, loading: true });
     const exitNote = 'Exited';
@@ -248,7 +252,7 @@ export function IndexComponent({
         setClickedEvent({ refId: '', refType: '' });
         refetch();
         setIsObservationOpen(false);
-        setImageUrls([]);
+        resetImageData()
       })
       .catch(error => {
         setDetails({
@@ -260,7 +264,7 @@ export function IndexComponent({
         // reset state in case it errs and user chooses a different log
         setObservationNote('');
         setClickedEvent({ refId: '', refType: '' });
-        setImageUrls([]);
+        resetImageData()
       });
   }
 
@@ -296,7 +300,7 @@ export function IndexComponent({
 
   function handleCancelClose() {
     setIsObservationOpen(false);
-    setImageUrls([]);
+    resetImageData()
   }
 
   return (
@@ -316,6 +320,7 @@ export function IndexComponent({
         }}
         imageOnchange={(img) => onChange(img)}
         imageUrls={imageUrls}
+        status={status}
       >
         {observationDetails.loading ? (
           <Spinner />

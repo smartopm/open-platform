@@ -58,7 +58,8 @@ RSpec.describe Types::Queries::Balance do
           payment_plan.save
           user.general_payment_plan.plan_payments.create!(transaction_id: transaction.id,
                                                           community_id: community.id,
-                                                          user_id: user.id, amount: 500.0)
+                                                          user_id: user.id, amount: 500.0,
+                                                          status: 'paid')
         end
         it 'should retrieve balance and pending balance of user' do
           variables = {

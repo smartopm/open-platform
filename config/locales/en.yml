@@ -387,3 +387,12 @@ en:
     email_not_sent: Email was not sent
   permission:
     bad_query: Bad query, invalid role or module
+  emergency_sos:
+    am_safe_message: Emergency SOS %{user_name} is safe and has cancelled need for emergency support.
+    contact_not_found: and do not have a contact number in our system.
+    from_location_message: from this approximate location %{google_map_url}
+    location_not_found: and do not have approximate location in our system
+    location_and_contact_not_found: and do not have approximate location and a contact number in our system.
+    reached_on_message: and can likely be reached on %{phone_number}.
+    receiving_message: You are receiving this message as you are a member of the emergency escalation team for %{name}. Please confirm the person is safe and the emergency is resolved, then mark as complete %{task_url}
+    user_initiated_message: Emergency SOS %{user_name} has initiated an emergency support request 

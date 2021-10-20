@@ -39,6 +39,7 @@ export default function IDCapture({ handleNext }) {
           message: t('image_capture.image_captured'),
           isError: false
         });
+        handleNext()
       })
       .catch(error => {
         setDetails({ ...errorDetails, isError: true, message: error.message });
@@ -142,6 +143,7 @@ export default function IDCapture({ handleNext }) {
             className={classes.skipToNextBtn}
             variant="contained"
             onClick={handleNext}
+            disabled={!images}
             color="secondary"
             data-testid="skip_next"
           >

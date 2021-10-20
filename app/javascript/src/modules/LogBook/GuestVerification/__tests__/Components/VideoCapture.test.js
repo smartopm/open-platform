@@ -31,6 +31,8 @@ describe('Video Capture component', () => {
     expect(container.queryByTestId('direction-txt')).toBeInTheDocument();
     expect(container.queryByTestId('seconds-txt')).toBeInTheDocument();
     expect(container.queryByTestId('continue-btn')).not.toBeInTheDocument();
+    expect(container.queryByTestId('re_record_video_btn')).not.toBeInTheDocument();
+    expect(container.queryByTestId('video_recorder')).toBeInTheDocument();
   });
 });
 

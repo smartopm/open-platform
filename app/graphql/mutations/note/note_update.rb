@@ -41,10 +41,10 @@ module Mutations
 
       # Verifies if current user is admin or not.
       def authorized?(_vals)
-        return true if ::Policy::Note::NotePolicy.new(
+        return true if ::Policy::ApplicationPolicy.new(
           context[:current_user], nil
         ).permission?(
-          :can_update_note,
+          module: :note, permission: :can_update_note,
         ) || context[:current_user]&.site_manager?
 
         raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')

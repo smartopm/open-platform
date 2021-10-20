@@ -25,6 +25,7 @@ export default function Video({ src }) {
         width={matches ? "100%" : "60%"}
         controls
         src={response.url}
+        data-testid="video_component"
       >
         {t('errors.flashlight_not_supported')}
       </video>

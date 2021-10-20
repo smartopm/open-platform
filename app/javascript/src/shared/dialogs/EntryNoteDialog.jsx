@@ -14,6 +14,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import useDialogStyles from './dialogStyles';
 import ImageUploader from '../imageUpload/ImageUploader';
 import ImageUploadPreview from '../imageUpload/ImageUploadPreview';
+import { Spinner } from '../Loading';
 
 export default function EntryNoteDialog({
   open,
@@ -21,7 +22,8 @@ export default function EntryNoteDialog({
   observationHandler,
   imageOnchange,
   imageUrls,
-  children
+  children,
+  status
 }) {
   const classes = useDialogStyles();
   const styles = useStyles();
@@ -83,6 +85,7 @@ export default function EntryNoteDialog({
                 imgHeight={300}
               />
             )}
+            {status !== 'INIT' && status !== 'DONE' && <Spinner />}
           </Grid>
         </DialogContent>
         <DialogActions>{children}</DialogActions>
@@ -109,5 +112,6 @@ EntryNoteDialog.propTypes = {
   handleDialogStatus: PropTypes.func.isRequired,
   children: PropTypes.node.isRequired,
   imageOnchange: PropTypes.func.isRequired,
-  imageUrls: PropTypes.arrayOf(PropTypes.string).isRequired
+  imageUrls: PropTypes.arrayOf(PropTypes.string).isRequired,
+  status: PropTypes.string.isRequired
 };

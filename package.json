@@ -1,6 +1,9 @@
 {
   "name": "DoubleGDP",
   "private": true,
+  "engines": {
+    "node": "12.x"
+  },
   "scripts": {
     "lint": "eslint app/javascript/src --ext .js --ext .jsx app/javascript/packs/react_main.jsx",
     "test": "NODE_ENV=test jest",
@@ -31,6 +34,7 @@
     "babel-plugin-transform-react-remove-prop-types": "^0.4.24",
     "babel-runtime": "^6.26.0",
     "bootstrap": "^4.3.1",
+    "browser-image-compression": "^1.0.16",
     "date-fns": "^2.11.1",
     "dompurify": "^2.0.12",
     "enzyme": "^3.10.0",
@@ -120,6 +124,6 @@
     }
   },
   "lint-staged": {
-    "*.{js,jsx}": "eslint --cache --fix"
+    "src/*.{js,jsx}": "eslint --cache --fix"
   }
 }

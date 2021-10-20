@@ -47,7 +47,7 @@ class Community < ApplicationRecord
   belongs_to :sub_administrator, class_name: 'Users::User', optional: true
   has_many :time_sheets, class_name: 'Users::TimeSheet', dependent: :destroy
 
-  VALID_CURRENCIES = %w[zambian_kwacha honduran_lempira].freeze
+  VALID_CURRENCIES = %w[zambian_kwacha honduran_lempira kenyan_shilling].freeze
 
   validates :currency, inclusion: { in: VALID_CURRENCIES, allow_nil: false }
 
@@ -55,6 +55,7 @@ class Community < ApplicationRecord
     'Nkwashi': ['doublegdp.com', 'thebe-im.com'],
     'DoubleGDP': ['doublegdp.com'],
     'Ciudad Morazán': ['doublegdp.com'],
+    'Tilisi': ['doublegdp.com'],
     'DAST': ['doublegdp.com'],
   }.freeze
 
@@ -107,43 +108,43 @@ class Community < ApplicationRecord
     self.features = features
   end
 
-  # TODO: refactor this function and remove linter errors
-  # rubocop:disable Layout/LineLength
   # rubocop:disable Metrics/MethodLength
-  # rubocop:disable Metrics/CyclomaticComplexity
   # rubocop:disable Metrics/AbcSize
-  # rubocop:disable Metrics/PerceivedComplexity
   def craft_sms(**params)
     raise CommunityError, 'No phone numbers to send sms to' if sms_phone_numbers.blank?
 
     task_url = "https://#{HostEnv.base_url(self)}/tasks/#{params[:note_id]}"
-    if params[:current_user].phone_number.present? && params[:google_map_url]
+    user_initiated_message = I18n.t('emergency_sos.user_initiated_message',
+                                    user_name: params[:current_user].name)
+    from_location_message = I18n.t('emergency_sos.from_location_message',
+                                   google_map_url: params[:google_map_url])
+    can_be_reached_on_message = I18n.t('emergency_sos.reached_on_message',
+                                       phone_number: params[:current_user].phone_number)
 
-      message = "Emergency SOS #{params[:current_user].name} has initiated an emergency support request rom this approximate #{params[:google_map_url]} and can likely be reached on #{params[:current_user].phone_number}."
+    if params[:current_user].phone_number.present?
+      message = if params[:google_map_url].present?
+                  "#{user_initiated_message} #{from_location_message} #{can_be_reached_on_message}"
+                else
+                  "#{user_initiated_message} #{I18n.t('emergency_sos.location_not_found')} " \
+                  "#{can_be_reached_on_message}"
+                end
+    elsif params[:google_map_url].present?
+      message = "#{user_initiated_message} #{from_location_message} " \
+                "#{I18n.t('emergency_sos.contact_not_found')}"
+    else
+      message = "#{user_initiated_message} " \
+                "#{I18n.t('emergency_sos.location_and_contact_not_found')}"
     end
-
-    if params[:current_user].phone_number.present? && params[:google_map_url].nil?
-
-      message =  "Emergency SOS #{params[:current_user].name} has initiated an emergency support request and do not have approximate location in our system and can likely be reached on #{params[:current_user].phone_number}."
-
-    end
-
-    if params[:google_map_url] && params[:current_user].phone_number.blank?
-      message =  "Emergency SOS #{params[:current_user].name} has initiated an emergency support request from this approximate location #{params[:google_map_url]} and do not have a contact number in our system."
-    end
-
-    if params[:google_map_url].nil? && params[:current_user].phone_number.blank?
-      message =  "Emergency SOS #{params[:current_user].name} has initiated an emergency support request and do not have approximate location a contact number in our system."
-    end
-    message += " You are receiving this message as you are a member of the emergency escalation team for #{name}. Please confirm the person is safe and the emergency is resolved, then mark as complete #{task_url}"
+    message += " #{I18n.t('emergency_sos.receiving_message', name: name, task_url: task_url)}"
     send_sms(message)
   end
-
-  # rubocop:enable Layout/LineLength
   # rubocop:enable Metrics/MethodLength
-  # rubocop:enable Metrics/CyclomaticComplexity
   # rubocop:enable Metrics/AbcSize
-  # rubocop:enable Metrics/PerceivedComplexity
+
+  def craft_am_safe_sms(**params)
+    message = I18n.t('emergency_sos.am_safe_message', user_name: params[:current_user].name)
+    send_sms(message)
+  end
 
   def send_sms(message)
     sms_phone_numbers.each  do |sms_phone_number|
