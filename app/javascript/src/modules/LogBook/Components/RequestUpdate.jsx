@@ -1026,7 +1026,7 @@ RequestUpdate.propTypes = {
   isScannedRequest: PropTypes.bool.isRequired,
   tabValue: PropTypes.string,
   guestListRequest: PropTypes.bool,
-  handleNext: PropTypes.bool,
+  handleNext: PropTypes.func,
 };
 
 
