@@ -6,7 +6,15 @@ import { makeStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import ImageAuth from '../ImageAuth';
 
-export default function ImageUploadPreview({ imageUrls, token, sm, xs, style, imgHeight, closeButtonData }) {
+export default function ImageUploadPreview({
+  imageUrls,
+  token,
+  sm,
+  xs,
+  style,
+  imgHeight,
+  closeButtonData
+}) {
   const classes = useStyles();
   return (
     <>
@@ -25,12 +33,17 @@ export default function ImageUploadPreview({ imageUrls, token, sm, xs, style, im
               <IconButton
                 className={classes.iconButton}
                 onClick={() => closeButtonData.handleCloseButton(img)}
-                data-testid='image_close'
+                data-testid="image_close"
               >
                 <CloseIcon className={classes.closeButton} />
               </IconButton>
             )}
-            <ImageAuth imageLink={img} token={token} style={{height: imgHeight}} className="img-responsive img-thumbnail" />
+            <ImageAuth
+              imageLink={img}
+              token={token}
+              style={{ height: imgHeight }}
+              className="img-responsive img-thumbnail"
+            />
           </Grid>
         ))}
       </Grid>
@@ -48,7 +61,7 @@ const useStyles = makeStyles(() => ({
     position: 'absolute'
   },
   closeButton: {
-    height: '40px', 
+    height: '40px',
     width: '40px'
   }
 }));
