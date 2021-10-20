@@ -12,7 +12,7 @@ import { useFileUpload } from '../../../../graphql/useFileUpload';
 import { EntryRequestUpdateMutation } from '../../graphql/logbook_mutations';
 import MessageAlert from '../../../../components/MessageAlert';
 import { EntryRequestContext } from '../Context';
-import VideoAuth from '../../../../shared/VideoAuth';
+import Video from '../../../../shared/Video';
 
 export default function VideoCapture({ handleNext }) {
   const [counter, setCounter] = useState(0);
@@ -27,6 +27,7 @@ export default function VideoCapture({ handleNext }) {
     isError: false,
     message: ''
   });
+  const [recorded, setIsRecorded] = useState(Boolean(requestContext.guest.videoUrl))
 
   const { onChange, signedBlobId } = useFileUpload({
     client: useApolloClient()
@@ -118,26 +119,39 @@ export default function VideoCapture({ handleNext }) {
         </Typography>
         {recordingInstruction}
       </div>
-      <VideoAuth src="https://olivier.dgdp.site/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaEpJaWs1WXpnek5qazNaaTB3WmpBeExUUXpNalF0T0RKa01DMDNNREJoTTJNNU1UZzBNV01HT2daRlZBPT0iLCJleHAiOm51bGwsInB1ciI6ImJsb2JfaWQifX0=--a266e44122d9c5fae49ca04080119f1a439b1cdf/unknown.webm" />
-      <div className={classes.videoArea}>
-        {/* <VideoRecorder
-          onRecordingComplete={onVideoComplete}
-          onStartRecording={() => setRecordingBegin(true)}
-          onStopReplaying={onStartAgain}
-          timeLimit={6000}
-          mimeType="video/webm"
-          showReplayControls
-          countdownTime={0}
-          isReplayVideoMuted
-          replayVideoAutoplayAndLoopOff
-        /> */}
-      </div>
+      {
+        recorded
+        ? <Video src={requestContext.guest.videoUrl} />
+        : (
+          <div className={classes.videoArea}>
+            <VideoRecorder
+              onRecordingComplete={onVideoComplete}
+              onStartRecording={() => setRecordingBegin(true)}
+              onStopReplaying={onStartAgain}
+              timeLimit={6000}
+              mimeType="video/webm"
+              showReplayControls
+              countdownTime={0}
+              isReplayVideoMuted
+              replayVideoAutoplayAndLoopOff
+            />
+          </div>
+        )
+      }
+
       <div className={classes.continueButton}>
         {recordingCompleted && (
           <Button onClick={onContinue} color="primary" data-testid="continue-btn">
             {t('common:menu.continue')}
           </Button>
         )}
+        {
+          requestContext.guest.videoUrl && (
+            <Button onClick={() => setIsRecorded(!recorded)} color="primary" data-testid="continue-btn">
+              {recorded ? t('logbook:video_recording.re_record_video') : t('form_actions.cancel')}
+            </Button>
+          )
+        }
       </div>
     </div>
   );

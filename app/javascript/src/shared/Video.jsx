@@ -6,7 +6,7 @@ import { Context } from '../containers/Provider/AuthStateProvider';
 import { useFetchMedia } from '../utils/customHooks';
 import CenteredContent from '../components/CenteredContent';
 
-export default function VideoAuth({ src }) {
+export default function Video({ src }) {
   const authState = useContext(Context);
   const matches = useMediaQuery('(max-width:600px)')
   const { t } = useTranslation(['common'])
@@ -32,6 +32,6 @@ export default function VideoAuth({ src }) {
   );
 }
 
-VideoAuth.propTypes = {
+Video.propTypes = {
   src: PropTypes.string.isRequired
 };
