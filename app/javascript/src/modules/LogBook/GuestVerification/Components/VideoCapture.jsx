@@ -27,7 +27,7 @@ export default function VideoCapture() {
     isError: false,
     message: ''
   });
-  console.log(requestContext)
+
   const [recorded, setIsRecorded] = useState(Boolean(requestContext.guest?.videoUrl))
 
   const { onChange, signedBlobId, status } = useFileUpload({
