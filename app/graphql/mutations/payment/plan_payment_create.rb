@@ -36,7 +36,7 @@ module Mutations
       def authorized?(_vals)
         return true if ::Policy::ApplicationPolicy.new(
           context[:current_user], nil
-        ).permission?(admin: true, module: :plan_payment, permission: :can_create_plan_payment)
+        ).persmission?(admin: true, module: :plan_payment, permission: :can_create_plan_payment)
 
         raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
       end
