@@ -58,28 +58,55 @@ export function useWindowDimensions() {
  * @returns {object} response and error
  *
  */
-export function useFetch(url, options) {
+export function useFetch(url) {
   const [response, setData] = useState({});
   const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(false)
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const result = await fetch(url);
+        const json = await result.json();
+        setData(json);
+      } catch (error) {
+        setError(error);
+      }
+    };
+    fetchData();
+  }, [url]);
+  return { response, error };
+}
+
+
+/**
+ * This is similar to the useFetch, only that the response in here does not need to be converted to json
+ * @param {String} url
+ * @returns
+ */
+export function useFetchMedia(url, options) {
+  const [response, setData] = useState({});
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true)
       try {
-        const result = await fetch(url, options);
-        const json = await result.json();
-        setData(json);
+        const result = await fetch(url, options)
+        setData(result)
         setLoading(false)
-      } catch (error) {
-        setError(error);
+      } catch (err) {
+        setError(err)
         setLoading(false)
       }
-    };
-    fetchData();
-  }, [url]);
+    }
+    fetchData()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
   return { response, error, loading };
 }
+
+
 
 export function useScript(src) {
   // Keep track of script status ("idle", "loading", "ready", "error")

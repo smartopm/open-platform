@@ -12,6 +12,7 @@ import { useFileUpload } from '../../../../graphql/useFileUpload';
 import { EntryRequestUpdateMutation } from '../../graphql/logbook_mutations';
 import MessageAlert from '../../../../components/MessageAlert';
 import { EntryRequestContext } from '../Context';
+import VideoAuth from '../../../../shared/VideoAuth';
 
 export default function VideoCapture({ handleNext }) {
   const [counter, setCounter] = useState(0);
@@ -117,8 +118,9 @@ export default function VideoCapture({ handleNext }) {
         </Typography>
         {recordingInstruction}
       </div>
+      <VideoAuth src="https://olivier.dgdp.site/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaEpJaWs1WXpnek5qazNaaTB3WmpBeExUUXpNalF0T0RKa01DMDNNREJoTTJNNU1UZzBNV01HT2daRlZBPT0iLCJleHAiOm51bGwsInB1ciI6ImJsb2JfaWQifX0=--a266e44122d9c5fae49ca04080119f1a439b1cdf/unknown.webm" />
       <div className={classes.videoArea}>
-        <VideoRecorder
+        {/* <VideoRecorder
           onRecordingComplete={onVideoComplete}
           onStartRecording={() => setRecordingBegin(true)}
           onStopReplaying={onStartAgain}
@@ -128,7 +130,7 @@ export default function VideoCapture({ handleNext }) {
           countdownTime={0}
           isReplayVideoMuted
           replayVideoAutoplayAndLoopOff
-        />
+        /> */}
       </div>
       <div className={classes.continueButton}>
         {recordingCompleted && (

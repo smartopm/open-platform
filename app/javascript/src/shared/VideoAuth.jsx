@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import { Context } from '../containers/Provider/AuthStateProvider';
-import { useFetch } from '../utils/customHooks';
+import { useFetchMedia } from '../utils/customHooks';
 
 export default function VideoAuth({ src }) {
   const authState = useContext(Context);
@@ -11,12 +11,11 @@ export default function VideoAuth({ src }) {
       Authorization: `Bearer ${authState.token}`
     }
   };
-  const { loading, response } = useFetch(src, options);
+  const { response, } = useFetchMedia(src, options);
 
-  console.log(response)
   return (
     // eslint-disable-next-line jsx-a11y/media-has-caption
-    <video width="620" controls src="">
+    <video width="100%" controls src={response.url}>
       Your browser is not supported
     </video>
   );
