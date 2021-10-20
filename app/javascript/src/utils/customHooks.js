@@ -1,4 +1,3 @@
-/* eslint-disable */
 import { useState, useEffect } from 'react'
 
 /**
@@ -15,6 +14,7 @@ export default function useTimer(initialTime, delay) {
     const intervalId = setInterval(() => {
       setTime(time - 1)
     }, delay)
+    // eslint-disable-next-line consistent-return
     return () => clearInterval(intervalId)
   }, [delay, time])
 
@@ -68,8 +68,8 @@ export function useFetch(url) {
         const result = await fetch(url);
         const json = await result.json();
         setData(json);
-      } catch (error) {
-        setError(error);
+      } catch (err) {
+        setError(err);
       }
     };
     fetchData();
@@ -154,6 +154,7 @@ export function useScript(src) {
       script.addEventListener("load", setStateFromEvent);
       script.addEventListener("error", setStateFromEvent);
       // Remove event listeners on cleanup
+      // eslint-disable-next-line consistent-return
       return () => {
         if (script) {
           script.removeEventListener("load", setStateFromEvent);
