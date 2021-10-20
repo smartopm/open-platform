@@ -141,7 +141,7 @@ const useFileUpload = ({ client: apolloClient, maxSize }) => {
       next: STATE.FILE_RESIZE,
       current: STATE.FILE_INIT,
       file: file,
-      filename: file.name
+      filename: file.name || "unknown.webm"
     })
   }
 

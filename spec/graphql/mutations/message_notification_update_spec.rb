@@ -25,5 +25,15 @@ RSpec.describe Mutations::Message do
       expect(result.dig('data', 'messageNotificationUpdate', 'success')).to eql true
       expect(result['errors']).to be_nil
     end
+
+    it 'returns an error when not authorized' do
+      result = DoubleGdpSchema.execute(query,
+                                       context: {
+                                         current_user: nil,
+                                       }).as_json
+
+      expect(result.dig('data', 'messageNotificationUpdate')).to be_nil
+      expect(result.dig('errors', 0, 'message')).to include 'Unauthorized'
+    end
   end
 end

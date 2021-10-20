@@ -20,14 +20,27 @@ module Mutations
       argument :temperature, String, required: false
       argument :occurs_on, [String], required: false
       argument :visit_end_date, String, required: false
+      argument :video_blob_id, String, required: false
+      argument :image_blob_ids, [String], required: false
 
       field :entry_request, Types::EntryRequestType, null: true
 
       def resolve(vals)
         entry_request = context[:site_community].entry_requests.find(vals.delete(:id))
-        return { entry_request: entry_request } if entry_request.update!(vals)
+
+        if entry_request.update(vals.except(:video_blob_id, :image_blob_ids))
+          add_attachments(entry_request, vals)
+          return { entry_request: entry_request }
+        end
 
         raise GraphQL::ExecutionError, entry_request.errors.full_messages
+      end
+
+      def add_attachments(entry_request, vals)
+        return if entry_request.nil?
+
+        entry_request.video.attach(vals[:video_blob_id]) if vals[:video_blob_id]
+        entry_request.images.attach(vals[:image_blob_ids]) if vals[:image_blob_ids].present?
       end
 
       def authorized?(vals)
