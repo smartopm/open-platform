@@ -59,6 +59,10 @@ describe('Render Payment Plan Item', () => {
             'can_update_payment_day',
             'can_view_menu_list'
           ]
+        }, plan_payment: {
+          permissions: [
+          'can_view_menu_list'
+          ]
         }
       }
     };
