@@ -314,7 +314,6 @@ export default function FormUpdate({ formUserId, userId, authState }) {
               <ImageAuth
                 type={formPropertiesData.fileType?.split('/')[0]}
                 imageLink={formPropertiesData.imageUrl}
-                token={authState.token}
               />
             </>
           )}
@@ -332,7 +331,7 @@ export default function FormUpdate({ formUserId, userId, authState }) {
             <>
               {t('misc.signature')}
               <br />
-              <ImageAuth imageLink={formPropertiesData.imageUrl} token={authState.token} />
+              <ImageAuth imageLink={formPropertiesData.imageUrl} />
             </>
           )}
           <SignaturePad
@@ -499,6 +498,5 @@ FormUpdate.propTypes = {
   formUserId: PropTypes.string.isRequired,
   authState: PropTypes.shape({
     user: PropTypes.shape({ userType: PropTypes.string }),
-    token: PropTypes.string
   }).isRequired
 };

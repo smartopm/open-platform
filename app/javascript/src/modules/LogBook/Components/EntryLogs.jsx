@@ -423,7 +423,6 @@ export function IndexComponent({
                   groupedDate={groupedDate}
                   eventLogs={objectAccessor(observationLogs, groupedDate)}
                   routeToEntry={routeToAction}
-                  token={authState?.token}
                 />
               ))}
           </>

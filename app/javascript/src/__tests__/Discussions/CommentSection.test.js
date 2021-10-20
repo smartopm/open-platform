@@ -65,7 +65,6 @@ describe('Main Discussion Comment Section', () => {
       user: {
         userType: 'admin'
       },
-      token: '98374r8sjduhr8234ruiweufr823rsdbfnu3r4'
     };
     // mock react router and add tests
     // or find where the comments is being used and pass the id as a prop instead of direct access

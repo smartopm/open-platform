@@ -3,7 +3,7 @@ import Grid from '@material-ui/core/Grid';
 import PropTypes from 'prop-types';
 import ImageAuth from '../ImageAuth';
 
-export default function ImageUploadPreview({ imageUrls, token, sm, xs, style, imgHeight }) {
+export default function ImageUploadPreview({ imageUrls, sm, xs, style, imgHeight }) {
   return (
     <>
       <Grid container>
@@ -11,7 +11,6 @@ export default function ImageUploadPreview({ imageUrls, token, sm, xs, style, im
           <Grid item sm={sm} xs={xs} key={img} style={style} data-testid='upload_preview'>
             <ImageAuth
               imageLink={img}
-              token={token}
               style={{height: imgHeight}}
             />
           </Grid>
@@ -29,7 +28,6 @@ ImageUploadPreview.defaultProps = {
 }
 
 ImageUploadPreview.propTypes = {
-  token: PropTypes.string.isRequired,
   imageUrls: PropTypes.arrayOf(PropTypes.string).isRequired,
   sm: PropTypes.number,
   xs: PropTypes.number,

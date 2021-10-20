@@ -27,7 +27,7 @@ import { AdminUsersQuery } from '../../Users/graphql/user_query';
 import MultiSelect from '../../../shared/MultiSelect';
 import { EmailTemplatesQuery } from '../../Emails/graphql/email_queries';
 
-export default function CommunitySettings({ data, token, refetch }) {
+export default function CommunitySettings({ data, refetch }) {
   const numbers = {
     phone_number: '',
     category: ''
@@ -383,7 +383,6 @@ export default function CommunitySettings({ data, token, refetch }) {
       <div className={classes.avatar}>
         <ImageAuth
           imageLink={data.imageUrl}
-          token={token}
           className="img-responsive img-thumbnail"
           style={{ height: '70px', width: '70px' }}
         />
@@ -970,7 +969,6 @@ CommunitySettings.propTypes = {
     // eslint-disable-next-line react/forbid-prop-types
     features: PropTypes.object
   }).isRequired,
-  token: PropTypes.string.isRequired,
   refetch: PropTypes.func.isRequired
 };
 

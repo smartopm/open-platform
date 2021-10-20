@@ -16,7 +16,6 @@ describe('Image Area component', () => {
               handleClick={jest.fn()}
               handleChange={jest.fn()}
               imageUrl="file.jpg"
-              token="sample_token"
               type="front"
             />
           </MockedThemeProvider>

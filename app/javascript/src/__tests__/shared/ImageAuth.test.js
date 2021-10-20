@@ -10,7 +10,6 @@ describe('ImageAuth Component', () => {
   it('should render image or text', async () => {
     const props = {
       imageLink: 'http://image.url',
-      token: '9234jsdnfsjd2-232ds'
     };
     await act(async () => {
       render(<ImageAuth {...props} />);

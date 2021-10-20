@@ -85,7 +85,7 @@ export function useFetch(url) {
  */
 export function useFetchMedia(url, options) {
   const [response, setData] = useState({});
-  const [error, setError] = useState(null);
+  const [isError, setError] = useState(false);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -95,15 +95,15 @@ export function useFetchMedia(url, options) {
         const result = await fetch(url, options)
         setData(result)
         setLoading(false)
-      } catch (err) {
-        setError(err)
+      } catch (_err) {
+        setError(true)
         setLoading(false)
       }
     }
     fetchData()
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
-  return { response, error, loading };
+  return { response, isError, loading };
 }
 
 

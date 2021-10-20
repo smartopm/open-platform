@@ -1,40 +1,23 @@
-import React, { useState, useEffect } from 'react'
+import React, { useContext } from 'react'
 import PropTypes from 'prop-types'
 import Avatar from '@material-ui/core/Avatar'
-import { useWindowDimensions } from '../utils/customHooks'
+import { useFetchMedia, useWindowDimensions } from '../utils/customHooks'
 import { Spinner } from './Loading'
+import { Context } from '../containers/Provider/AuthStateProvider'
 
-// we might need to have some loading functionality or image placeholder(skeleton)
-export default function ImageAuth({ imageLink, token, className, type, alt, style }) {
-    const [response, setData] = useState('')
+export default function ImageAuth({ imageLink, className, type, alt, style }) {
+    const authState = useContext(Context)
     const { width } = useWindowDimensions()
-    const [isError, setError] = useState(false)
-    const [isLoading, setLoading] = useState(false)
-
-  const options = {
-    method: 'GET',
-    headers: {
-      Authorization: `Bearer ${token}`
-    }
-  }
-
-  useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true)
-      try {
-        const result = await fetch(imageLink, options)
-        setData(result)
-        setLoading(false)
-      } catch (err) {
-        setError(true)
-        setLoading(false)
+    const options = {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${authState.token}`
       }
     }
-    fetchData()
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+    const { response, isError, loading } = useFetchMedia(imageLink, options)
 
-  if(isLoading) return <Spinner />
+
+  if(loading) return <Spinner />
   if(!imageLink || isError) return <span />
   if (type === 'image') {
     return <img data-testid="authenticated_image" src={response.url} style={style} className={className} alt={alt} />
@@ -54,7 +37,6 @@ ImageAuth.defaultProps = {
 
 ImageAuth.propTypes = {
   imageLink: PropTypes.string.isRequired,
-  token: PropTypes.string.isRequired,
   type: PropTypes.string,
   alt: PropTypes.string,
   // eslint-disable-next-line react/forbid-prop-types

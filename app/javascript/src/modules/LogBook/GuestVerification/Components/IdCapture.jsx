@@ -4,7 +4,6 @@ import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { useTranslation } from 'react-i18next';
 import { Button, Grid, Typography, makeStyles } from '@material-ui/core';
 import PropTypes from 'prop-types';
-import { Context as AuthStateContext } from '../../../../containers/Provider/AuthStateProvider';
 import ImageArea from '../../../../shared/imageUpload/ImageArea';
 import { useFileUpload } from '../../../../graphql/useFileUpload';
 import { EntryRequestUpdateMutation } from '../../graphql/logbook_mutations';
@@ -18,7 +17,6 @@ export default function IDCapture({ handleNext }) {
   const [uploadType, setUploadType] = useState('');
   const [frontBlobId, setFrontBlobId] = useState('');
   const [backBlobId, setBackBlobId] = useState('');
-  const authState = useContext(AuthStateContext);
   const requestContext = useContext(EntryRequestContext);
   const matches = useMediaQuery('(max-width:600px)');
   const { t } = useTranslation('logbook');
@@ -119,14 +117,12 @@ export default function IDCapture({ handleNext }) {
           <ImageArea
             handleClick={() => setUploadType('front')}
             handleChange={img => onChange(img)}
-            token={authState.token}
             imageUrl={frontImageUrl || (images && images[0])}
             type={t('image_capture.front')}
           />
           <ImageArea
             handleClick={() => setUploadType('back')}
             handleChange={img => onChange(img)}
-            token={authState.token}
             imageUrl={backImageUrl || (images && images[1])}
             type={t('image_capture.back')}
           />
