@@ -12,6 +12,7 @@ import { useFileUpload } from '../../../../graphql/useFileUpload';
 import { EntryRequestUpdateMutation } from '../../graphql/logbook_mutations';
 import MessageAlert from '../../../../components/MessageAlert';
 import { EntryRequestContext } from '../Context';
+import { Spinner } from '../../../../shared/Loading';
 
 export default function VideoCapture({ handleNext }) {
   const [counter, setCounter] = useState(0);
@@ -19,7 +20,7 @@ export default function VideoCapture({ handleNext }) {
   const [recordingCompleted, setRecordingCompleted] = useState(false);
   const classes = useStyles();
   const { t } = useTranslation(['common', 'logbook']);
-  const requestContext = useContext(EntryRequestContext)
+  const requestContext = useContext(EntryRequestContext);
   const [recordingInstruction, setRecordingInstruction] = useState(videoDirection(t).left);
   const [updateRequest] = useMutation(EntryRequestUpdateMutation);
   const [errorDetails, setDetails] = useState({
@@ -27,7 +28,7 @@ export default function VideoCapture({ handleNext }) {
     message: ''
   });
 
-  const { onChange, signedBlobId } = useFileUpload({
+  const { onChange, signedBlobId, status } = useFileUpload({
     client: useApolloClient()
   });
 
@@ -40,6 +41,7 @@ export default function VideoCapture({ handleNext }) {
     setCounter(0);
     setRecordingInstruction(videoDirection(t).left);
     setRecordingBegin(false);
+    setRecordingCompleted(false);
   }
 
   function beep() {
@@ -96,17 +98,17 @@ export default function VideoCapture({ handleNext }) {
         {t('logbook:video_recording.create_video_text')}
       </Typography>
       <div className={classes.greyText} data-testid="well-lit-txt">
-        1.
+        1. 
         {' '}
         {t('logbook:video_recording.well_lit_area')}
       </div>
       <div className={classes.greyText} data-testid="listen-to-counter-txt">
-        2.
+        2. 
         {' '}
         {t('logbook:video_recording.listen_to_counter')}
       </div>
       <div className={classes.greyText} data-testid="direction-txt">
-        3.
+        3. 
         {' '}
         {t('logbook:video_recording.instruction_on_direction')}
       </div>
@@ -131,7 +133,8 @@ export default function VideoCapture({ handleNext }) {
         />
       </div>
       <div className={classes.continueButton}>
-        {recordingCompleted && (
+        {status === 'FILE_UPLOAD' && <Spinner />}
+        {recordingCompleted && status === 'DONE' && (
           <Button onClick={onContinue} color="primary" data-testid="continue-btn">
             {t('common:menu.continue')}
           </Button>
