@@ -13,6 +13,7 @@ export default function ImageUploadPreview({
   xs,
   style,
   imgHeight,
+  imgWidth,
   closeButtonData
 }) {
   const classes = useStyles();
@@ -41,7 +42,7 @@ export default function ImageUploadPreview({
             <ImageAuth
               imageLink={img}
               token={token}
-              style={{ height: imgHeight }}
+              style={{ height: imgHeight, width: imgWidth }}
               className="img-responsive img-thumbnail"
             />
           </Grid>
@@ -70,7 +71,8 @@ ImageUploadPreview.defaultProps = {
   style: {},
   sm: 12,
   xs: 12,
-  imgHeight: 300,
+  imgHeight: '300px',
+  imgWidth: '100%',
   closeButtonData: {
     closeButton: false,
     handleCloseButton: () => {}
@@ -82,7 +84,8 @@ ImageUploadPreview.propTypes = {
   imageUrls: PropTypes.arrayOf(PropTypes.string).isRequired,
   sm: PropTypes.number,
   xs: PropTypes.number,
-  imgHeight: PropTypes.number,
+  imgHeight: PropTypes.string,
+  imgWidth: PropTypes.string,
   // eslint-disable-next-line react/forbid-prop-types
   style: PropTypes.object,
   closeButtonData: PropTypes.shape({

@@ -83,9 +83,9 @@ export default function EntryNoteDialog({
                 imageUrls={imageUrls}
                 token={token}
                 sm={6}
-                xs={6}
+                xs={12}
                 style={{padding: '10px'}}
-                imgHeight={300}
+                imgHeight='300px'
                 closeButtonData={closeButtonData}
               />
             )}
