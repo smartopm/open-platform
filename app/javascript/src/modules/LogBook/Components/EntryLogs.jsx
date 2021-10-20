@@ -226,6 +226,12 @@ export function IndexComponent({
     setBlobIds([]);
   }
 
+  function handleCloseButton(imgUrl) {
+    const images = [...imageUrls]
+    const filteredImages = images.filter((img) => img !== imgUrl)
+    setImageUrls(filteredImages)
+  }
+
   function handleSaveObservation(log = clickedEvent, type) {
     setDetails({ ...observationDetails, loading: true });
     const exitNote = 'Exited';
@@ -321,6 +327,10 @@ export function IndexComponent({
         imageOnchange={(img) => onChange(img)}
         imageUrls={imageUrls}
         status={status}
+        closeButtonData={{
+          closeButton: true,
+          handleCloseButton
+        }}
       >
         {observationDetails.loading ? (
           <Spinner />

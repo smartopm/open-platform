@@ -24,15 +24,12 @@ export default function EntryNoteDialog({
   imageOnchange,
   imageUrls,
   children,
-  status
+  status,
+  closeButtonData
 }) {
   const classes = useDialogStyles();
   const styles = useStyles();
   const { t } = useTranslation('logbook');
-
-  function handleCloseButton(imgUrl) {
-    console.log(imgUrl)
-  }
 
   return (
     <>
@@ -89,10 +86,7 @@ export default function EntryNoteDialog({
                 xs={6}
                 style={{padding: '10px'}}
                 imgHeight={300}
-                closeButtonData={{
-                  closeButton: true,
-                  handleCloseButton
-                }}
+                closeButtonData={closeButtonData}
               />
             )}
             {status !== 'INIT' && status !== 'DONE' && <Spinner />}
@@ -128,5 +122,7 @@ EntryNoteDialog.propTypes = {
   children: PropTypes.node.isRequired,
   imageOnchange: PropTypes.func.isRequired,
   imageUrls: PropTypes.arrayOf(PropTypes.string).isRequired,
-  status: PropTypes.string.isRequired
+  status: PropTypes.string.isRequired,
+  // eslint-disable-next-line react/forbid-prop-types
+  closeButtonData: PropTypes.object.isRequired
 };
