@@ -69,7 +69,7 @@ export default function IDCapture({ handleNext }) {
   }, [url, signedBlobId]);
 
   const classes = useStyles();
-  const images = requestContext.guest?.imageUrls;
+  const images = requestContext.request?.imageUrls;
 
   return (
     <>

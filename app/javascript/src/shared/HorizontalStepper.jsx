@@ -2,8 +2,10 @@ import React, { useState } from 'react';
 import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
 import StepButton from '@material-ui/core/StepButton';
+import Button from '@material-ui/core/Button';
 import PropTypes from 'prop-types';
 import { objectAccessor } from '../utils/helpers';
+import CenteredContent from '../components/CenteredContent';
 
 export default function HorizontalStepper({ steps, communityName }) {
   const [activeStep, setActiveStep] = useState(0);
@@ -35,6 +37,9 @@ export default function HorizontalStepper({ steps, communityName }) {
           ))}
       </Stepper>
       {validSteps && objectAccessor(listOfSteps, activeStep).component}
+      <CenteredContent>
+        <Button>Next</Button>
+      </CenteredContent>
     </div>
   );
 }

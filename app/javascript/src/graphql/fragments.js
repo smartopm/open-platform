@@ -106,6 +106,8 @@ export const EntryRequestFragment = {
         id
         name
       }
+      videoUrl
+      imageUrls
     }
   `
 }

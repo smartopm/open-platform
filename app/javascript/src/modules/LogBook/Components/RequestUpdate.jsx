@@ -38,28 +38,9 @@ import QRCodeConfirmation from './QRCodeConfirmation';
 import FeatureCheck from '../../Features';
 import { useFileUpload } from '../../../graphql/useFileUpload';
 import { EntryRequestContext } from '../GuestVerification/Context';
+import { initialRequestState } from '../GuestVerification/constants'
 
-const initialState = {
-    name: '',
-    phoneNumber: '',
-    nrc: '',
-    vehiclePlate: '',
-    reason: '',
-    business: '',
-    state: '',
-    userType: '',
-    expiresAt: '',
-    email: '',
-    companyName: '',
-    temperature: '',
-    loaded: false,
-    occursOn: [],
-    visitationDate: null,
-    visitEndDate: null,
-    startsAt: new Date(),
-    endsAt: new Date(),
-    isGuest: false
-}
+
 
 export default function RequestUpdate({ id, previousRoute, guestListRequest, isGuestRequest, tabValue, isScannedRequest, handleNext }) {
   const history = useHistory()
@@ -95,7 +76,7 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
     isError: false,
     isSubmitting: false
   });
-  const [formData, setFormData] = useState(initialState);
+  const [formData, setFormData] = useState(initialRequestState);
   const { t } = useTranslation(['common', 'logbook']);
   const [isReasonModalOpen, setReasonModal] = useState(false);
   const [isQrModalOpen, setQrModal] = useState(false);
@@ -105,7 +86,6 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
   const showCancelBtn = previousRoute || tabValue || !!guestListRequest
   const [imageUrls, setImageUrls] = useState([])
   const [blobIds, setBlobIds] = useState([])
-
 
   const { onChange, signedBlobId, url } = useFileUpload({
     client: useApolloClient(),
@@ -190,10 +170,13 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
     }
   }, [formData.loaded]);
 
-  // Data is loaded, so set the initialState, but only once
-  if (!formData.loaded && data && id) {
-    setFormData({ ...data.result, loaded: true });
-  }
+  useEffect(() => {
+    // Data is loaded, so set the initialState, but only once
+    if (requestContext.request?.id) {
+      setFormData({ ...requestContext.request });
+    }
+  }, [requestContext.request])
+
 
   function handleInputChange(e) {
     const { name, value } = e.target;
@@ -413,7 +396,7 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
   }
 
   function resetForm(to) {
-    setFormData(initialState);
+    setFormData(initialRequestState);
     setObservationNote('');
     setRequestId('');
     setIsObservationOpen(false);

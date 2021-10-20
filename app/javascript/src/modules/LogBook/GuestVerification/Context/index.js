@@ -2,24 +2,27 @@ import React, { createContext, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useParams } from 'react-router';
 import { useLazyQuery } from 'react-apollo';
-import { GuestEntryQuery } from '../../graphql/guestbook_queries';
+import { initialRequestState } from '../constants';
+import { EntryRequestQuery } from '../../../../graphql/queries';
 
 export const EntryRequestContext = createContext({});
 
 export default function EntryRequestContextProvider({ children }) {
   const { id } = useParams();
-  const initialRequest = { id };
-  const [request, updateRequest] = useState(initialRequest);
-  const [loadEntry, { data }] = useLazyQuery(GuestEntryQuery)
+  const [request, updateRequest] = useState({ ...initialRequestState, id });
+  const [loadEntry, { data }] = useLazyQuery(EntryRequestQuery)
 
   useEffect(() => {
     if (id) {
       loadEntry({ variables: { id } })
     }
-  }, [id, loadEntry])
+  if (data && id) {
+    updateRequest({ ...data.result });
+  }
+  }, [id, loadEntry, data])
 
   return (
-    <EntryRequestContext.Provider value={{ request, updateRequest, guest: data?.entryRequest }}>
+    <EntryRequestContext.Provider value={{ request, updateRequest }}>
       {children}
     </EntryRequestContext.Provider>
   );
