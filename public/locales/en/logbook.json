@@ -141,7 +141,8 @@
       "face_left": "Face to the left",
       "face_right": "Face to the right",
       "face_forward": "Face forward",
-      "video_recorded": "Video recorded successfully"
+      "video_recorded": "Video recorded successfully",
+      "save_video": "Save video"
     },
     "image_capture": {
       "add_a_photo": "Add a photo of ID with your phone",

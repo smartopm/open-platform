@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Button, Typography } from '@material-ui/core';
-import PropTypes from 'prop-types';
 import VideoRecorder from 'react-video-recorder';
 import { makeStyles } from '@material-ui/core/styles';
 import { useApolloClient, useMutation } from 'react-apollo';
@@ -14,7 +13,7 @@ import MessageAlert from '../../../../components/MessageAlert';
 import { EntryRequestContext } from '../Context';
 import { Spinner } from '../../../../shared/Loading';
 
-export default function VideoCapture({ handleNext }) {
+export default function VideoCapture() {
   const [counter, setCounter] = useState(0);
   const [recordingBegin, setRecordingBegin] = useState(false);
   const [recordingCompleted, setRecordingCompleted] = useState(false);
@@ -78,7 +77,6 @@ export default function VideoCapture({ handleNext }) {
           message: t('logbook:video_recording.video_recorded'),
           isError: false
         });
-        handleNext();
       })
       .catch(error => {
         setDetails({ ...errorDetails, isError: true, message: error.message });
@@ -98,17 +96,17 @@ export default function VideoCapture({ handleNext }) {
         {t('logbook:video_recording.create_video_text')}
       </Typography>
       <div className={classes.greyText} data-testid="well-lit-txt">
-        1. 
+        1.
         {' '}
         {t('logbook:video_recording.well_lit_area')}
       </div>
       <div className={classes.greyText} data-testid="listen-to-counter-txt">
-        2. 
+        2.
         {' '}
         {t('logbook:video_recording.listen_to_counter')}
       </div>
       <div className={classes.greyText} data-testid="direction-txt">
-        3. 
+        3.
         {' '}
         {t('logbook:video_recording.instruction_on_direction')}
       </div>
@@ -136,7 +134,7 @@ export default function VideoCapture({ handleNext }) {
         {status === 'FILE_UPLOAD' && <Spinner />}
         {recordingCompleted && status === 'DONE' && (
           <Button onClick={onContinue} color="primary" data-testid="continue-btn">
-            {t('common:menu.continue')}
+            {t('logbook:video_recording.save_video')}
           </Button>
         )}
       </div>
@@ -219,7 +217,3 @@ const useStyles = makeStyles(() => ({
     marginTop: '40px'
   }
 }));
-
-VideoCapture.propTypes = {
-  handleNext: PropTypes.func.isRequired
-};
