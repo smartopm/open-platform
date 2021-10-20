@@ -133,7 +133,7 @@ export default function IDCapture({ handleNext }) {
             variant="contained"
             color="primary"
             onClick={handleContinue}
-            disabled={!backImageUrl || !frontImageUrl}
+            disabled={!backBlobId || !frontBlobId}
             data-testid="save_and_next"
           >
             {t('image_capture.save_my_id')}
