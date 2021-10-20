@@ -29,8 +29,15 @@ admin:
       - can_update_payment_day
       - can_update_payment_plan
       - can_view_menu_list
-  payment:
+  plan_payment:
     permissions:
+      - can_access_all_payments
+      - can_cancel_plan_payment
+      - can_create_plan_payment
+      - can_fetch_payment_receipt
+      - can_fetch_payment_stat_details
+      - can_fetch_payments_list
+      - can_view_menu_list
   transaction:
     permissions:
       - can_create_transaction
