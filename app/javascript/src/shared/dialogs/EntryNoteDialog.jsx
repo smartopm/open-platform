@@ -30,6 +30,10 @@ export default function EntryNoteDialog({
   const styles = useStyles();
   const { t } = useTranslation('logbook');
 
+  function handleCloseButton(imgUrl) {
+    console.log(imgUrl)
+  }
+
   return (
     <>
       <Dialog
@@ -85,6 +89,10 @@ export default function EntryNoteDialog({
                 xs={6}
                 style={{padding: '10px'}}
                 imgHeight={300}
+                closeButtonData={{
+                  closeButton: true,
+                  handleCloseButton
+                }}
               />
             )}
             {status !== 'INIT' && status !== 'DONE' && <Spinner />}
@@ -103,11 +111,11 @@ const useStyles = makeStyles(() => ({
   uploadButton: {
     textAlign: 'right'
   }
-}))
+}));
 
 EntryNoteDialog.defaultProps = {
   token: ''
-}
+};
 
 EntryNoteDialog.propTypes = {
   open: PropTypes.bool.isRequired,
