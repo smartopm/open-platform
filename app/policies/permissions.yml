@@ -21,13 +21,13 @@ admin:
     permissions:
       - can_cancel_payment_plan
       - can_create_payment_plan
-      - can_update_payment_day
       - can_fetch_community_payment_plans
       - can_fetch_plan_statement
       - can_fetch_user_payment_plans
-      - can_update_payment_plan
       - can_send_payment_reminder
       - can_transfer_payment_plan
+      - can_update_payment_day
+      - can_update_payment_plan
       - can_view_menu_list
   payment:
     permissions:
