@@ -124,6 +124,6 @@
     }
   },
   "lint-staged": {
-    "src/*.{js,jsx}": "eslint --cache --fix"
+    "app/javascript/src/**/*.{js,jsx}": "eslint --cache --fix"
   }
 }
