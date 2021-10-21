@@ -161,14 +161,31 @@ module Types::Queries::PaymentPlan
   def filtered_plans(plans, query)
     split_query = query&.split(' ')
     if query_for_filter?(split_query)
-      method, operator, value = split_query
-      value = value.gsub("'", '')
-      value = value.to_f unless method.eql?('plan_status')
-      plans.select { |plan| plan.public_send(method).public_send(get_operator(operator), value) }
+      selected_plans(plans, split_query)
     else
       plans.search(query)
     end
   end
+
+  # rubocop:disable Metrics/AbcSize
+  # Returns selected plans by using the instance methods
+  #
+  # @return [Array<PaymentPlan>]
+  def selected_plans(plans, split_query)
+    method, operator, value = split_query
+    value = value.gsub("'", '')
+    value = value.to_f unless method.eql?('plan_status')
+
+    if method.eql?('plan_status') && value.eql?('upcoming')
+      plans.select do |plan|
+        plan.upcoming_installment_due_date >= Time.zone.today &&
+          plan.upcoming_installment_due_date <= 30.days.from_now.to_date
+      end
+    else
+      plans.select { |plan| plan.public_send(method).public_send(get_operator(operator), value) }
+    end
+  end
+  # rubocop:enable Metrics/AbcSize
 
   # Returns true/false if query is for filter
   # * Checks if query is in the format: 'field operator value'

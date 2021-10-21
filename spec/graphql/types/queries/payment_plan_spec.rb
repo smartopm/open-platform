@@ -360,6 +360,17 @@ RSpec.describe Types::Queries::Payment do
           payment_plan_result = result.dig('data', 'communityPaymentPlans', 0)
           expect(payment_plan_result['planStatus']).to eql 'completed'
         end
+
+        it "returns list of community's payment plans based on filter" do
+          variables = { query: 'plan_status : upcoming' }
+          result = DoubleGdpSchema.execute(community_payment_plans,
+                                           variables: variables,
+                                           context: {
+                                             current_user: admin,
+                                             site_community: community,
+                                           }).as_json
+          expect(result.dig('data', 'communityPaymentPlans').size).to eql 0
+        end
       end
 
       context 'when current user is not an admin' do
