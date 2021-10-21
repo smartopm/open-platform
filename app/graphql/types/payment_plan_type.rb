@@ -35,6 +35,7 @@ module Types
     field :installments_due, Integer, null: true
     field :outstanding_days, Integer, null: true
     field :plan_status, String, null: true
+    field :upcoming_installment_due_date, GraphQL::Types::ISO8601DateTime, null: true
 
     # Returns total amount paid for plan statement
     #

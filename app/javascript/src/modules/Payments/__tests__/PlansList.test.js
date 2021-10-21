@@ -39,6 +39,7 @@ describe('Plans List Item Component', () => {
       planValue: 5000,
       planStatus: 'active',
       installmentAmount: 2000,
+      upcomingInstallmentDueDate: "2021-11-13T10:53:16Z",
       user: {
         id: '5d0d8051-2510-567a-886a-48bbfa9f6423',
         name: 'John Doe',
