@@ -1,7 +1,6 @@
 import React from 'react';
 import DescriptionIcon from '@material-ui/icons/Description';
 import CommunityForms from './containers/FormLinks';
-// import { allUserTypes } from '../../utils/constants';
 import AccessCheck from '../Permissions/Components/AccessCheck';
 
 // This is a concept of a module that has different types like forms,
