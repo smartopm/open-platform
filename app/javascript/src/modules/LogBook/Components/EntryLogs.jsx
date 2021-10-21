@@ -275,14 +275,12 @@ export function IndexComponent({
   }
 
   useEffect(() => {
-    if (url) {
+    if (status === 'DONE') {
       setImageUrls([...imageUrls, url])
-    }
-    if (signedBlobId) {
       setBlobIds([...blobIds, signedBlobId])
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [url, signedBlobId]);
+  }, [status]);
 
   const filteredEvents =
     data?.result &&
@@ -319,7 +317,7 @@ export function IndexComponent({
       />
       <EntryNoteDialog
         open={isObservationOpen}
-        handleDialogStatus={() => setIsObservationOpen(!isObservationOpen)}
+        handleDialogStatus={() => handleCancelClose()}
         observationHandler={{
           value: observationNote,
           handleChange: value => setObservationNote(value)

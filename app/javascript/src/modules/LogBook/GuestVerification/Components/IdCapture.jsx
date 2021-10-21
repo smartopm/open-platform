@@ -25,7 +25,7 @@ export default function IDCapture({ handleNext }) {
     isError: false,
     message: ''
   });
-  const { onChange, signedBlobId, url } = useFileUpload({
+  const { onChange, signedBlobId, url, status } = useFileUpload({
     client: useApolloClient()
   });
 
@@ -47,24 +47,18 @@ export default function IDCapture({ handleNext }) {
   }
 
   useEffect(() => {
-    if (url) {
+    if (status === 'DONE') {
       if (uploadType === 'front') {
         setFrontImageUrl(url);
-      }
-      if (uploadType === 'back') {
-        setBackImageUrl(url);
-      }
-    }
-    if (signedBlobId) {
-      if (uploadType === 'front') {
         setFrontBlobId(signedBlobId);
       }
       if (uploadType === 'back') {
+        setBackImageUrl(url);
         setBackBlobId(signedBlobId);
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [url, signedBlobId]);
+  }, [status]);
 
   const classes = useStyles();
   const images = requestContext.guest?.imageUrls;
