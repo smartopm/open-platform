@@ -24,7 +24,8 @@ export default function EntryNoteDialog({
   imageOnchange,
   imageUrls,
   children,
-  status
+  status,
+  closeButtonData
 }) {
   const classes = useDialogStyles();
   const styles = useStyles();
@@ -82,9 +83,10 @@ export default function EntryNoteDialog({
                 imageUrls={imageUrls}
                 token={token}
                 sm={6}
-                xs={6}
+                xs={12}
                 style={{padding: '10px'}}
-                imgHeight={300}
+                imgHeight='300px'
+                closeButtonData={closeButtonData}
               />
             )}
             {status !== 'INIT' && status !== 'DONE' && <Spinner />}
@@ -103,11 +105,15 @@ const useStyles = makeStyles(() => ({
   uploadButton: {
     textAlign: 'right'
   }
-}))
+}));
 
 EntryNoteDialog.defaultProps = {
-  token: ''
-}
+  token: '',
+  closeButtonData: {
+    closeButton: false,
+    handleCloseButton: () => {}
+  }
+};
 
 EntryNoteDialog.propTypes = {
   open: PropTypes.bool.isRequired,
@@ -120,5 +126,9 @@ EntryNoteDialog.propTypes = {
   children: PropTypes.node.isRequired,
   imageOnchange: PropTypes.func.isRequired,
   imageUrls: PropTypes.arrayOf(PropTypes.string).isRequired,
-  status: PropTypes.string.isRequired
+  status: PropTypes.string.isRequired,
+  closeButtonData: PropTypes.shape({
+    closeButton: PropTypes.bool,
+    handleCloseButton: PropTypes.func
+  })
 };

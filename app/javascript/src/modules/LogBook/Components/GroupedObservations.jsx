@@ -132,7 +132,7 @@ export default function GroupedObservations({ groupedDate, eventLogs, routeToEnt
                           token={token}
                           sm={6}
                           xs={6}
-                          imgHeight={300}
+                          imgHeight='300px'
                         />
                       </DetailsDialog>
                     )}
