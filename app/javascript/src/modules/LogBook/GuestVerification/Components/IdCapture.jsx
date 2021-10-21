@@ -27,7 +27,7 @@ export default function IDCapture({ handleNext }) {
     isError: false,
     message: ''
   });
-  const { onChange, signedBlobId, url } = useFileUpload({
+  const { onChange, signedBlobId, url, status } = useFileUpload({
     client: useApolloClient()
   });
 
@@ -123,6 +123,7 @@ export default function IDCapture({ handleNext }) {
             token={authState.token}
             imageUrl={frontImageUrl || (images && images[0])}
             type={t('image_capture.front')}
+            status={status}
           />
           <ImageArea
             handleClick={() => setUploadType('back')}
@@ -130,6 +131,7 @@ export default function IDCapture({ handleNext }) {
             token={authState.token}
             imageUrl={backImageUrl || (images && images[1])}
             type={t('image_capture.back')}
+            status={status}
           />
         </Grid>
 

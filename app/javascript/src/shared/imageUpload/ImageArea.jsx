@@ -7,7 +7,7 @@ import ImageUploadPreview from './ImageUploadPreview';
 import ImageUploader from './ImageUploader';
 import CenteredContent from '../../components/CenteredContent';
 
-export default function ImageArea({ handleClick, handleChange, imageUrl, token, type }) {
+export default function ImageArea({ handleClick, handleChange, imageUrl, token, type, status }) {
   const classes = useStyles();
   return (
     <Grid item xs={12} sm={6} className={classes.imageGrid} data-testid="image_area">
@@ -19,6 +19,7 @@ export default function ImageArea({ handleClick, handleChange, imageUrl, token, 
               token={token}
               imgHeight='250px'
               style={{ textAlign: 'center' }}
+              status={status}
             />
           )}
           {!imageUrl && <Grid data-testid="empty_grid" style={{ height: 250 }} />}
@@ -68,5 +69,6 @@ ImageArea.propTypes = {
   handleChange: PropTypes.func.isRequired,
   imageUrl: PropTypes.string,
   token: PropTypes.string.isRequired,
-  type: PropTypes.string.isRequired
+  type: PropTypes.string.isRequired,
+  status: PropTypes.string.isRequired
 };
