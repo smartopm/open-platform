@@ -62,6 +62,8 @@ pages:
           - public
     only:
       - master
+    except:
+      - schedules
 
 test:rspec:
   extends: .base_db
@@ -120,6 +122,8 @@ cypress:
     expire_in: 24 hours
   only:
     - master
+  except:
+    - schedules
 
 start_prod_push:
   extends: .base_db
@@ -148,6 +152,8 @@ staging:appdeploy:
     url: https://double-gdp-staging.herokuapp.com/
   only:
     - master
+  except:
+    - schedules
 
 dev:deploy:
   stage: staging
@@ -168,6 +174,8 @@ dev:deploy:
     url: https://double-gdp-dev.herokuapp.com/
   only:
     - master
+  except:
+    - schedules
 
 production:
   stage: deploy
