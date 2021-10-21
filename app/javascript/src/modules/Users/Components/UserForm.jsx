@@ -224,7 +224,7 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
           <div className="form-group">
             <div style={{ width: 200, height: 'auto' }}>
               {status === 'INIT' && !userImage && data.dataLoaded && (
-                <ImageAuth imageLink={data.avatarUrl} token={authState.token} />
+                <ImageAuth imageLink={data.avatarUrl} />
               )}
             </div>
 

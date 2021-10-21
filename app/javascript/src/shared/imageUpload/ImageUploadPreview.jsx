@@ -8,7 +8,6 @@ import ImageAuth from '../ImageAuth';
 
 export default function ImageUploadPreview({
   imageUrls,
-  token,
   sm,
   xs,
   style,
@@ -41,7 +40,6 @@ export default function ImageUploadPreview({
             )}
             <ImageAuth
               imageLink={img}
-              token={token}
               style={{ height: imgHeight, width: imgWidth }}
               className="img-responsive img-thumbnail"
             />
@@ -80,7 +78,6 @@ ImageUploadPreview.defaultProps = {
 };
 
 ImageUploadPreview.propTypes = {
-  token: PropTypes.string.isRequired,
   imageUrls: PropTypes.arrayOf(PropTypes.string).isRequired,
   sm: PropTypes.number,
   xs: PropTypes.number,

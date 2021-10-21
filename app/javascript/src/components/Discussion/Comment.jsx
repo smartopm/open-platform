@@ -103,14 +103,12 @@ export default function Comments({ comments, refetch, discussionId }) {
           comments.length >= 1 ? comments.map((comment) => (
             <CommentSection
               key={comment.id}
-              token={authState.token}
               data={{
                 isAdmin: authState.user.userType === 'admin',
                 createdAt: comment.createdAt,
                 comment: comment.content,
                 imageUrl: comment.imageUrl,
                 user: comment.user,
-                token: authState.token
               }}
               handleDeleteComment={() => handleDeleteClick(comment.id)}
             />
@@ -157,7 +155,6 @@ export function CommentSection({ data, handleDeleteComment }) {
               data.imageUrl && (
                 <ImageAuth
                   imageLink={data.imageUrl}
-                  token={data.token}
                   className="img-responsive img-thumbnail"
                 />
               )
@@ -289,7 +286,6 @@ CommentSection.propTypes = {
     comment: PropTypes.string.isRequired,
     isAdmin: PropTypes.bool,
     imageUrl: PropTypes.string.isRequired,
-    token: PropTypes.string.isRequired,
   }).isRequired,
   handleDeleteComment: PropTypes.func.isRequired,
 }

@@ -20,7 +20,6 @@ export default function EntryNoteDialog({
   open,
   handleDialogStatus,
   observationHandler,
-  token,
   imageOnchange,
   imageUrls,
   children,
@@ -81,7 +80,6 @@ export default function EntryNoteDialog({
             {imageUrls.length > 0 && (
               <ImageUploadPreview
                 imageUrls={imageUrls}
-                token={token}
                 sm={6}
                 xs={12}
                 style={{padding: '10px'}}
@@ -108,7 +106,6 @@ const useStyles = makeStyles(() => ({
 }));
 
 EntryNoteDialog.defaultProps = {
-  token: '',
   closeButtonData: {
     closeButton: false,
     handleCloseButton: () => {}
@@ -117,7 +114,6 @@ EntryNoteDialog.defaultProps = {
 
 EntryNoteDialog.propTypes = {
   open: PropTypes.bool.isRequired,
-  token: PropTypes.string,
   observationHandler: PropTypes.shape({
     value: PropTypes.string,
     handleChange: PropTypes.func

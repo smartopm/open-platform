@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import PropTypes from 'prop-types'
+import PropTypes from 'prop-types';
 import { StyleSheet, css } from 'aphrodite';
 import { Typography } from '@material-ui/core';
 import ImageAuth from './ImageAuth';
@@ -30,7 +30,6 @@ export default function CommunityName({ authState, logoStyles }) {
     <Link to="/" style={{ textDecoration: 'none' }}>
       <ImageAuth
         imageLink={authState.user?.community.imageUrl}
-        token={authState.token}
         className={logoStyles.logo ? css(logoStyles.logo) : css(styles.logo)}
       />
     </Link>
@@ -41,22 +40,20 @@ CommunityName.defaultProps = {
   logoStyles: {
     logo: null
   }
-}
+};
 
 CommunityName.propTypes = {
-  authState: PropTypes.shape({ 
-      id: PropTypes.string,
-      user: userProps,
-      community: PropTypes.shape({
-          name: PropTypes.string,
-          logoUrl: PropTypes.string
-      }),
-      token: PropTypes.string,
-   }).isRequired,
-   logoStyles: PropTypes.shape({
-     logo: PropTypes.shape({
-     })
-   })
+  authState: PropTypes.shape({
+    id: PropTypes.string,
+    user: userProps,
+    community: PropTypes.shape({
+      name: PropTypes.string,
+      logoUrl: PropTypes.string
+    })
+  }).isRequired,
+  logoStyles: PropTypes.shape({
+    logo: PropTypes.shape({})
+  })
 };
 
 const styles = StyleSheet.create({

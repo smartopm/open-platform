@@ -142,6 +142,7 @@
       "face_right": "Face to the right",
       "face_forward": "Face forward",
       "video_recorded": "Video recorded successfully",
+      "re_record_video": "Re-record the video",
       "save_video": "Save video"
     },
     "image_capture": {

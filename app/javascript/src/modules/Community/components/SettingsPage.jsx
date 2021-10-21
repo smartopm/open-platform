@@ -1,13 +1,11 @@
-import React, { useContext } from 'react'
+import React from 'react'
 import {  useQuery } from 'react-apollo'
 import CommunitySettingsPage from './Settings'
-import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider'
 import { Spinner } from '../../../shared/Loading'
 import ErrorPage from '../../../components/Error'
 import { CurrentCommunityQuery } from '../graphql/community_query'
 
 export default function CommunitySettings(){
-  const authState = useContext(AuthStateContext)
   const { data, error, loading, refetch } = useQuery(CurrentCommunityQuery, {
     fetchPolicy: 'network-only',
     errorPolicy: 'all'
@@ -18,7 +16,7 @@ export default function CommunitySettings(){
   return (
     <>
       <div className="container">
-        <CommunitySettingsPage data={data.currentCommunity} token={authState.token} refetch={refetch} />
+        <CommunitySettingsPage data={data.currentCommunity} refetch={refetch} />
       </div>
     </>
   )
