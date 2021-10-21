@@ -49,24 +49,18 @@ export default function IDCapture({ handleNext }) {
   }
 
   useEffect(() => {
-    if (url) {
+    if (status === 'DONE') {
       if (uploadType === 'front') {
         setFrontImageUrl(url);
-      }
-      if (uploadType === 'back') {
-        setBackImageUrl(url);
-      }
-    }
-    if (signedBlobId) {
-      if (uploadType === 'front') {
         setFrontBlobId(signedBlobId);
       }
       if (uploadType === 'back') {
+        setBackImageUrl(url);
         setBackBlobId(signedBlobId);
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [url, signedBlobId]);
+  }, [status]);
 
   const classes = useStyles();
   const images = requestContext.guest?.imageUrls;
@@ -123,7 +117,6 @@ export default function IDCapture({ handleNext }) {
             token={authState.token}
             imageUrl={frontImageUrl || (images && images[0])}
             type={t('image_capture.front')}
-            status={status}
           />
           <ImageArea
             handleClick={() => setUploadType('back')}
@@ -131,7 +124,6 @@ export default function IDCapture({ handleNext }) {
             token={authState.token}
             imageUrl={backImageUrl || (images && images[1])}
             type={t('image_capture.back')}
-            status={status}
           />
         </Grid>
 

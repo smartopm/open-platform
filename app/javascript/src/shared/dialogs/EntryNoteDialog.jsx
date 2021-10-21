@@ -87,7 +87,6 @@ export default function EntryNoteDialog({
                 style={{padding: '10px'}}
                 imgHeight='300px'
                 closeButtonData={closeButtonData}
-                status={status}
               />
             )}
             {status !== 'INIT' && status !== 'DONE' && <Spinner />}

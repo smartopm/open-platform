@@ -14,13 +14,11 @@ export default function ImageUploadPreview({
   style,
   imgHeight,
   imgWidth,
-  closeButtonData,
-  status
+  closeButtonData
 }) {
   const classes = useStyles();
   return (
     <>
-      {status === 'DONE' && (
       <Grid container>
         {imageUrls.map(img => (
           <Grid
@@ -33,14 +31,14 @@ export default function ImageUploadPreview({
             data-testid="upload_preview"
           >
             {closeButtonData.closeButton && (
-            <IconButton
-              className={classes.iconButton}
-              onClick={() => closeButtonData.handleCloseButton(img)}
-              data-testid="image_close"
-            >
-              <CloseIcon className={classes.closeButton} />
-            </IconButton>
-          )}
+              <IconButton
+                className={classes.iconButton}
+                onClick={() => closeButtonData.handleCloseButton(img)}
+                data-testid="image_close"
+              >
+                <CloseIcon className={classes.closeButton} />
+              </IconButton>
+            )}
             <ImageAuth
               imageLink={img}
               token={token}
@@ -48,9 +46,8 @@ export default function ImageUploadPreview({
               className="img-responsive img-thumbnail"
             />
           </Grid>
-      ))}
+        ))}
       </Grid>
-    )}
     </>
   );
 }
@@ -76,7 +73,6 @@ ImageUploadPreview.defaultProps = {
   xs: 12,
   imgHeight: '300px',
   imgWidth: '100%',
-  status: 'DONE',
   closeButtonData: {
     closeButton: false,
     handleCloseButton: () => {}
@@ -92,7 +88,6 @@ ImageUploadPreview.propTypes = {
   imgWidth: PropTypes.string,
   // eslint-disable-next-line react/forbid-prop-types
   style: PropTypes.object,
-  status: PropTypes.string,
   closeButtonData: PropTypes.shape({
     closeButton: PropTypes.bool,
     handleCloseButton: PropTypes.func
