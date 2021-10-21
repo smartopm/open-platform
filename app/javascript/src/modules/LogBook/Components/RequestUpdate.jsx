@@ -107,9 +107,8 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
   const [blobIds, setBlobIds] = useState([])
 
 
-  const { onChange, signedBlobId, url } = useFileUpload({
-    client: useApolloClient(),
-    maxSize: 1000
+  const { onChange, signedBlobId, url, status } = useFileUpload({
+    client: useApolloClient()
   });
 
   useEffect(() => {
@@ -125,14 +124,12 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
   }, [formData.reason, id]);
 
   useEffect(() => {
-    if (url) {
+    if (status === 'DONE') {
       setImageUrls([...imageUrls, url])
-    }
-    if (signedBlobId) {
       setBlobIds([...blobIds, signedBlobId])
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [url, signedBlobId]);
+  }, [status]);
 
   useEffect(() => {
     if (formData.loaded && isScannedRequest) {
