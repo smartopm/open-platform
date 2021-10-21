@@ -9,15 +9,12 @@ module Mutations
       field :message, String, null: false
 
       def resolve(vals)
+        reminder_details = []
         vals[:payment_reminder_fields].each do |reminder_input|
-          user = context[:site_community].users.find_by(id: reminder_input[:user_id])
-          raise_user_not_found_error(user)
-
-          payment_plan = user.payment_plans.find_by(id: reminder_input[:payment_plan_id])
-          raise_plan_not_found_error(payment_plan)
-
-          PaymentReminderJob.perform_later(user, payment_plan)
+          reminder_details << { user_id: reminder_input[:user_id],
+                                payment_plan_id: reminder_input[:payment_plan_id] }
         end
+        PaymentReminderJob.perform_later(context[:site_community], reminder_details)
 
         { message: 'Sucess' }
       end
