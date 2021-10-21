@@ -173,14 +173,14 @@ export default function PaymentPlans({ userId, user, userData }) {
                 <Typography className={matches ? classes.plan : classes.planMobile}>
                   {t('common:misc.plans')}
                 </Typography>
-                {user.userType === 'admin' && (
-                  <div
-                    style={
+                <div
+                  style={
                       matches
                         ? { display: 'flex', width: '100%', justifyContent: 'flex-end' }
                         : { display: 'flex' }
                     }
-                  >
+                >
+                  {objectAccessor(user?.permissions, 'payment_plan')?.permissions?.includes('can_create_payment_plan') && (
                     <div style={{ margin: '0 10px 10px 0', fontSize: '10px' }}>
                       <ButtonComponent
                         color="primary"
@@ -192,6 +192,8 @@ export default function PaymentPlans({ userId, user, userData }) {
                         className='new-payment-plan-btn'
                       />
                     </div>
+                   )}
+                  {objectAccessor(user?.permissions, 'transaction')?.permissions?.includes('can_fetch_user_transactions') && (
                     <div>
                       <ButtonComponent
                         color="default"
@@ -202,8 +204,8 @@ export default function PaymentPlans({ userId, user, userData }) {
                         style={matches ? {} : {fontSize: '10px'}}
                       />
                     </div>
-                  </div>
-                )}
+                   )}
+                </div>
                 <MessageAlert
                   type={message.isError ? 'error' : 'success'}
                   message={message.detail}

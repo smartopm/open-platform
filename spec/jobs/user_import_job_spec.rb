@@ -29,6 +29,16 @@ RSpec.describe UserImportJob, type: :job do
 
       expect(Users::User.count).to eql(prev_user_count + 2)
     end
+
+    it 'should not create users if no contact info is supplied' do
+      csv_string = "Name,Email primary,Phone number primary,Phone number secondary 1,Phone number secondary 2,User type,Labels,State,Expiration date,Notes on client\nThomas Shalongolo,sha@gmail.com,+234970013360,,,Prospective Client,Residency program Waitlist;Some other label,valid,,some notes here\nJide Babs,,,,,Prospective Client,Residency program Waitlist;Some other label,pending,,some notes here"
+      prev_user_count = Users::User.count
+      ActiveJob::Base.queue_adapter.perform_enqueued_jobs = true
+
+      UserImportJob.perform_later(csv_string, 'A File.csv', user)
+
+      expect(Users::User.count).to eql(prev_user_count)
+    end
   end
 end
 # rubocop:enable Layout/LineLength

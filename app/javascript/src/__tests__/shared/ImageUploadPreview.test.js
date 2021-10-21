@@ -1,9 +1,9 @@
 import React from 'react';
 import { render, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect'
-import ImageUploadPreview from '../../../shared/imageUpload/ImageUploadPreview';
+import ImageUploadPreview from '../../shared/imageUpload/ImageUploadPreview';
 
-describe('Image Upload Preview', () => {
+describe('Image Uploader', () => {
   const imageUrls = ['test.jpd']
   const closeButtonData = {
     closeButton: true,

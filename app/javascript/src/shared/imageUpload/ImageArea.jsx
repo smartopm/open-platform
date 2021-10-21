@@ -16,7 +16,7 @@ export default function ImageArea({ handleClick, handleChange, imageUrl, type })
           {imageUrl && (
             <ImageUploadPreview
               imageUrls={[imageUrl]}
-              imgHeight={250}
+              imgHeight='250px'
               style={{ textAlign: 'center' }}
             />
           )}

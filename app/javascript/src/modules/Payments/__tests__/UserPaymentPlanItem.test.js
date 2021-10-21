@@ -51,6 +51,17 @@ describe('Render Payment Plan Item', () => {
       result: { data: { paymentDayUpdate: { paymentPlan: { id: plan.id } } } }
     };
     const refetch = jest.fn();
+    const currentUser =  {
+      userType: 'admin',
+      permissions: {
+        payment_plan: {
+          permissions: [
+            'can_update_payment_day',
+            'can_view_menu_list'
+          ]
+        }
+      }
+    };
     const container = render(
       <MockedProvider mocks={[requestMock]} addTypename={false}>
         <BrowserRouter>
@@ -58,7 +69,7 @@ describe('Render Payment Plan Item', () => {
             plans={plans}
             currencyData={currency}
             userId={user.userId}
-            currentUser={{ userType: 'admin' }}
+            currentUser={currentUser}
             refetch={refetch}
             walletRefetch={() => {}}
           />
