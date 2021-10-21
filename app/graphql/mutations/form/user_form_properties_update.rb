@@ -23,10 +23,10 @@ module Mutations
         return true if ::Policy::ApplicationPolicy.new(
           context[:current_user], nil
         ).permission?(
+          admin: true,
           module: :forms,
           permission: :can_update_user_form_properties,
-        ) || context[:current_user]&.admin?
-        return true if context[:current_user]&.admin?
+        )
 
         raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
       end

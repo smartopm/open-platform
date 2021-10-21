@@ -91,7 +91,13 @@ module Types::Queries::Form
   end
 
   def form_user(user_id:, form_user_id:)
-    unless context[:current_user]&.admin? || context[:current_user]&.id.eql?(user_id)
+    unless ::Policy::ApplicationPolicy.new(
+      context[:current_user], nil
+    ).permission?(
+      admin: true,
+      module: :forms,
+      permission: :can_view_form_user,
+    ) || context[:current_user]&.id.eql?(user_id)
       raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
     end
 
@@ -132,9 +138,10 @@ module Types::Queries::Form
     unless ::Policy::ApplicationPolicy.new(
       context[:current_user], nil
     ).permission?(
+      admin: true,
       module: :forms,
       permission: :can_view_form_form_submissions,
-    ) || context[:current_user]&.admin?
+    )
       raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
     end
 
@@ -184,9 +191,10 @@ module Types::Queries::Form
     return true if ::Policy::ApplicationPolicy.new(
       context[:current_user], nil
     ).permission?(
+      admin: true,
       module: :forms,
       permission: :can_view_form_entries,
-    ) || context[:current_user]&.admin?
+    )
 
     raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
   end
@@ -206,9 +214,10 @@ module Types::Queries::Form
     ::Policy::ApplicationPolicy.new(
       context[:current_user], nil
     ).permission?(
+      admin: true,
       module: :forms,
       permission: :can_view_form_user_properties,
-    ) || context[:current_user]&.admin?
+    )
   end
 
   # Returns query by concatinating status and created at

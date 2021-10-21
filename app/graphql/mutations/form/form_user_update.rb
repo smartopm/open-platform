@@ -59,9 +59,10 @@ module Mutations
         ::Policy::ApplicationPolicy.new(
           context[:current_user], nil
         ).permission?(
+          admin: true,
           module: :forms,
           permission: :can_update_form_user,
-        ) || context[:current_user]&.admin?
+        )
       end
     end
   end

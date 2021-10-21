@@ -69,7 +69,8 @@ admin:
       - can_fill_a_form
       - can_edit_a_form
       - can_view_own_forms
-      - can_access_forms  
+      - can_access_forms
+      - can_view_form_user  
 contractor:
   note:
     permissions:

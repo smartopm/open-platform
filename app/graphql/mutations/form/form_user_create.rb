@@ -83,9 +83,10 @@ module Mutations
         ::Policy::ApplicationPolicy.new(
           context[:current_user], nil
         ).permission?(
+          admin: true,
           module: :forms,
           permission: :can_create_form_user,
-        ) || context[:current_user]&.admin?
+        )
       end
 
       # Raises GraphQL execution error if form is already submitted once by the user
