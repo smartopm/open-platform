@@ -189,6 +189,15 @@ module Properties
       owing_amount.positive? ? 'behind' : 'on_track'
     end
 
+    # Returns upcoming installment due date
+    #
+    # @return [DateTime]
+    def upcoming_installment_due_date
+      return end_date if plan_status.eql?('completed')
+
+      start_date + frequency_based_duration(paid_installments + 1) - 1.day
+    end
+
     private
 
     # Assigns pending balance(product of installmemt amount & duration).

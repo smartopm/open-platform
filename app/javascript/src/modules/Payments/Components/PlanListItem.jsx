@@ -70,7 +70,7 @@ export default function PlanListItem({ data, currencyData, menuData, selectedPla
             data-testid="menu"
             style={{ textAlign: 'right', marginTop: '-10px' }}
           >
-            {menuData?.userType === 'admin' && data?.planStatus === 'behind' && (
+            {(data?.planStatus === 'behind' || data?.planStatus === 'on_track') && (
               <IconButton
                 aria-controls="simple-menu"
                 aria-haspopup="true"
@@ -98,7 +98,7 @@ export default function PlanListItem({ data, currencyData, menuData, selectedPla
         </Grid>
         <Hidden smDown>
           <Grid item xs={12} sm={1} data-testid="menu">
-            {menuData?.userType === 'admin' && data?.planStatus === 'behind' && (
+            {(data?.planStatus === 'behind' || data?.planStatus === 'on_track') && (
               <IconButton
                 aria-controls="simple-menu"
                 aria-haspopup="true"
