@@ -49,6 +49,7 @@ admin:
       - can_see_menu_item
   forms:
     permissions:
+      - can_see_menu_item
       - can_create_category
       - can_update_category
       - can_delete_category
@@ -67,7 +68,8 @@ admin:
       - can_view_form_user_properties
       - can_fill_a_form
       - can_edit_a_form
-      - can_view_own_forms  
+      - can_view_own_forms
+      - can_access_forms  
 contractor:
   note:
     permissions:
@@ -87,6 +89,10 @@ contractor:
       - can_get_task_count
       - can_get_task_stats
       - can_get_own_tasks
+  forms:
+    permissions:
+      - can_see_menu_item
+      - can_access_forms
 custodian:
   note:
     permissions:
@@ -119,7 +125,11 @@ custodian:
       - can_revoke_entry_request
   guest_list:
     permissions:
-      - can_see_menu_item 
+      - can_see_menu_item
+  forms:
+    permissions:
+      - can_see_menu_item
+      - can_access_forms 
 security_guard:
   note:
     permissions:
@@ -152,7 +162,11 @@ security_guard:
       - can_view_entry_request
   gate_access:
     permissions:
-      - can_see_menu_item 
+      - can_see_menu_item
+  forms:
+    permissions:
+      - can_see_menu_item
+      - can_access_forms 
 site_worker:
   note:
     permissions:
@@ -171,6 +185,10 @@ site_worker:
       - can_get_task_count
       - can_get_task_stats
       - can_get_own_tasks
+  forms:
+    permissions:
+      - can_see_menu_item
+      - can_access_forms
 visitor:
   note:
     permissions:
@@ -188,9 +206,17 @@ resident:
   guest_list:
     permissions:
       - can_see_menu_item 
+  forms:
+    permissions:
+      - can_see_menu_item
+      - can_access_forms
 prospective_client:
   note:
-    permissions: 
+    permissions:
+  forms:
+    permissions:
+      - can_see_menu_item
+      - can_access_forms
 client:
   gate_access:
     permissions:
@@ -206,5 +232,9 @@ client:
   guest_list:
     permissions:
       - can_see_menu_item 
+  forms:
+    permissions:
+      - can_see_menu_item
+      - can_access_forms
 
     
