@@ -252,12 +252,14 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
       visitationDate: previousRoute !== 'entry_logs' ? formData.visitationDate : null
     }
 
+    setLoading(true)
     return (
       createEntryRequest({ variables: otherFormData })
         // eslint-disable-next-line consistent-return
         .then((response) => {
           setRequestId(response.data.result.entryRequest.id);
           requestContext.updateRequest({ ...requestContext.request, id: response.data.result.entryRequest.id })
+          setLoading(false)
           if (isGuestRequest) {
             setDetails({
               ...observationDetails,
@@ -271,6 +273,7 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
           return response.data.result.entryRequest.id
         })
         .catch(err => {
+          setLoading(false)
           setDetails({ ...observationDetails, isError: true, message: err.message });
         })
     );
