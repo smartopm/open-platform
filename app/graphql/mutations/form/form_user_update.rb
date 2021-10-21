@@ -38,7 +38,7 @@ module Mutations
       end
 
       def authorized?(vals)
-        return true if context[:current_user]&.admin? ||
+        return true if permissions_checks? ||
                        context[:current_user]&.id.eql?(vals[:user_id])
 
         raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
@@ -53,6 +53,16 @@ module Mutations
         return if property
 
         raise GraphQL::ExecutionError, I18n.t('errors.user_form_property.not_found')
+      end
+
+      def permissions_checks?
+        ::Policy::ApplicationPolicy.new(
+          context[:current_user], nil
+        ).permission?(
+          admin: true,
+          module: :forms,
+          permission: :can_update_form_user,
+        )
       end
     end
   end
