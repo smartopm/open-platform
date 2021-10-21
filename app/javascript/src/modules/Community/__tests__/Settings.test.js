@@ -191,11 +191,12 @@ describe('Community settings page', () => {
     expect(container.queryByTestId('taxIdNo')).toBeInTheDocument();
     expect(container.queryByTestId('smsPhoneNumber')).toBeInTheDocument();
     expect(container.queryByTestId('emergencyCallNumber')).toBeInTheDocument();
-    expect(container.queryByTestId('payment_reminder_template')).toBeInTheDocument();
-    expect(container.queryByTestId('plan_status')).toBeInTheDocument();
+    expect(container.queryByTestId('payment_reminder_template_behind')).toBeInTheDocument();
+    expect(container.queryByTestId('plan_status_behind')).toBeInTheDocument();
+    expect(container.queryByTestId('payment_reminder_template_upcoming')).toBeInTheDocument();
+    expect(container.queryByTestId('plan_status_upcoming')).toBeInTheDocument();
     expect(container.queryByTestId('disable_deny_gate_access')).toBeInTheDocument();
     expect(container.queryByTestId('enable_automated_task_reminders')).toBeInTheDocument();
-
 
     fireEvent.select(container.queryByTestId('locale'), { target: { value: 'en-US' } });
     expect(container.queryByTestId('locale').value).toBe('en-US');
