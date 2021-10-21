@@ -108,7 +108,11 @@ const useStyles = makeStyles(() => ({
 }));
 
 EntryNoteDialog.defaultProps = {
-  token: ''
+  token: '',
+  closeButtonData: {
+    closeButton: false,
+    handleCloseButton: () => {}
+  }
 };
 
 EntryNoteDialog.propTypes = {
@@ -123,6 +127,8 @@ EntryNoteDialog.propTypes = {
   imageOnchange: PropTypes.func.isRequired,
   imageUrls: PropTypes.arrayOf(PropTypes.string).isRequired,
   status: PropTypes.string.isRequired,
-  // eslint-disable-next-line react/forbid-prop-types
-  closeButtonData: PropTypes.object.isRequired
+  closeButtonData: PropTypes.shape({
+    closeButton: PropTypes.bool,
+    handleCloseButton: PropTypes.func
+  })
 };
