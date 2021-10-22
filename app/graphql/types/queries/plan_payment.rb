@@ -91,8 +91,7 @@ module Types::Queries::PlanPayment
   def raise_unauthorized_error_for_plan_payments(permission)
     return if ::Policy::ApplicationPolicy.new(
       context[:current_user], nil
-    ).permission?(module: :plan_payment, permission: permission) ||
-              context[:current_user]&.admin?
+    ).permission?(admin: true, module: :plan_payment, permission: permission)
 
     raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
   end
