@@ -17,9 +17,72 @@ admin:
       - can_get_task_count
       - can_get_task_stats
       - can_get_own_tasks
-
+  payment_plan:
+    permissions:
+      - can_cancel_payment_plan
+      - can_create_payment_plan
+      - can_fetch_community_payment_plans
+      - can_fetch_plan_statement
+      - can_fetch_user_payment_plans
+      - can_send_payment_reminder
+      - can_transfer_payment_plan
+      - can_update_payment_day
+      - can_update_payment_plan
+      - can_view_menu_list
   payment:
     permissions:
+  transaction:
+    permissions:
+      - can_create_transaction
+      - can_revert_transaction
+      - can_fetch_accounting_stats
+      - can_fetch_transaction_summary
+      - can_fetch_user_transactions
+  entry_request:
+    permissions:
+      - can_see_menu_item 
+      - can_access_guest_list
+      - can_access_logbook 
+      - can_access_guest_list
+      - can_create_entry_request
+      - can_update_entry_request
+      - can_update_guest_entry_request
+      - can_deny_entry
+      - can_grant_entry
+      - can_add_entry_request_note
+      - can_view_entry_requests
+      - can_view_entry_request
+      - can_revoke_entry_request
+  gate_access:
+    permissions:
+      - can_see_menu_item
+  guest_list:
+    permissions:
+      - can_see_menu_item
+  form:
+    permissions:
+      - can_see_menu_item
+      - can_create_category
+      - can_update_category
+      - can_delete_category
+      - can_create_form
+      - can_update_form
+      - can_create_form_properties
+      - can_update_form_properties
+      - can_delete_form_properties
+      - can_create_form_user
+      - can_update_form_user
+      - can_update_form_user_status
+      - can_create_user_form_properties
+      - can_update_user_form_properties
+      - can_view_form_entries
+      - can_view_form_form_submissions
+      - can_view_form_user_properties
+      - can_fill_a_form
+      - can_edit_a_form
+      - can_view_own_forms
+      - can_access_forms
+      - can_view_form_user  
 contractor:
   note:
     permissions:
@@ -39,6 +102,10 @@ contractor:
       - can_get_task_count
       - can_get_task_stats
       - can_get_own_tasks
+  form:
+    permissions:
+      - can_see_menu_item
+      - can_access_forms
 custodian:
   note:
     permissions:
@@ -58,6 +125,24 @@ custodian:
       - can_get_task_count
       - can_get_task_stats
       - can_get_own_tasks
+  gate_access:
+    permissions:
+      - can_see_menu_item 
+  entry_request:
+    permissions:
+      - can_access_guest_list
+      - can_create_entry_request
+      - can_update_entry_request
+      - can_view_entry_requests
+      - can_view_entry_request
+      - can_revoke_entry_request
+  guest_list:
+    permissions:
+      - can_see_menu_item
+  form:
+    permissions:
+      - can_see_menu_item
+      - can_access_forms 
 security_guard:
   note:
     permissions:
@@ -77,7 +162,24 @@ security_guard:
       - can_get_task_count
       - can_get_task_stats
       - can_get_own_tasks
-
+  entry_request:
+    permissions:
+      - can_see_menu_item 
+      - can_access_logbook
+      - can_create_entry_request
+      - can_update_entry_request
+      - can_deny_entry
+      - can_grant_entry
+      - can_add_entry_request_note
+      - can_view_entry_requests
+      - can_view_entry_request
+  gate_access:
+    permissions:
+      - can_see_menu_item
+  form:
+    permissions:
+      - can_see_menu_item
+      - can_access_forms 
 site_worker:
   note:
     permissions:
@@ -88,7 +190,6 @@ site_worker:
       - can_assign_note
       - can_bulk_assign_note
       - can_create_note_comment
-      - can_create_note_comment
       - can_update_note_comment
       - can_fetch_flagged_notes
       - can_fetch_task_by_id
@@ -97,16 +198,56 @@ site_worker:
       - can_get_task_count
       - can_get_task_stats
       - can_get_own_tasks
+  forms:
+    permissions:
+      - can_see_menu_item
+      - can_access_forms
 visitor:
   note:
     permissions:
 resident:
-  note:
+  gate_access:
     permissions:
+      - can_see_menu_item
+  entry_request:
+    permissions:
+      - can_access_guest_list
+      - can_create_entry_request
+      - can_update_entry_request
+      - can_view_entry_requests
+      - can_view_entry_request
+  guest_list:
+    permissions:
+      - can_see_menu_item 
+  form:
+    permissions:
+      - can_see_menu_item
+      - can_access_forms
 prospective_client:
   note:
-    permissions: 
-client:
-  note:
     permissions:
+  form:
+    permissions:
+      - can_see_menu_item
+      - can_access_forms
+client:
+  gate_access:
+    permissions:
+      - can_see_menu_item
+  entry_request:
+    permissions:
+      - can_access_guest_list 
+      - can_create_entry_request
+      - can_update_entry_request
+      - can_view_entry_requests
+      - can_view_entry_request 
+      - can_revoke_entry_request
+  guest_list:
+    permissions:
+      - can_see_menu_item 
+  form:
+    permissions:
+      - can_see_menu_item
+      - can_access_forms
+
     

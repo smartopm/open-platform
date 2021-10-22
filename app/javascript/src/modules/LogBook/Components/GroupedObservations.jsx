@@ -14,7 +14,7 @@ import { titleize } from '../../../utils/helpers';
 import { DetailsDialog } from '../../../components/Dialog';
 import ImageUploadPreview from '../../../shared/imageUpload/ImageUploadPreview';
 
-export default function GroupedObservations({ groupedDate, eventLogs, routeToEntry, token }) {
+export default function GroupedObservations({ groupedDate, eventLogs, routeToEntry }) {
   const classes = useStyles();
   const [collapsed, setCollapsed] = useState(false);
   const [imageOpen, setImageOpen] = useState(false);
@@ -127,12 +127,11 @@ export default function GroupedObservations({ groupedDate, eventLogs, routeToEnt
                         handleClose={() => setImageOpen(false)}
                         title='Attached Images'
                       >
-                        <ImageUploadPreview 
+                        <ImageUploadPreview
                           imageUrls={eventLog.imageUrls}
-                          token={token}
                           sm={6}
                           xs={6}
-                          imgHeight={300}
+                          imgHeight='300px'
                         />
                       </DetailsDialog>
                     )}
@@ -169,5 +168,4 @@ GroupedObservations.propTypes = {
     })
   ).isRequired,
   routeToEntry: PropTypes.func.isRequired,
-  token: PropTypes.string.isRequired
 };

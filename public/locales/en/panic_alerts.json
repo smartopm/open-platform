@@ -2,16 +2,23 @@
     "panic_alerts": {
       "panic_error_alert": "Sorry, emergency not triggered. You need to long press the button for 3 seconds",
       "panic_success_alert": "A message has been sent to the security team.",
+      "cancel_emergency_success_alert": "You have successfully cancelled emergency request",
       "header": "KEEP CALM!",
       "info": "After pressing SOS, notifications will be sent out to our administrators and a member of our security team will speak to you.",
       "user_location_heeader": "Estimated current location ",
       "user_location": "1562 Pablano Street",
-      "sos_disclaimer": "* Only use this service incase of extreme emergency. Please use customer support or incident report form for non-emergencies",
-      "sos_feedback": "Please stand by, we are currently requesting for help",
+      "sos_disclaimer_header": "FOR URGENT SAFETY ONLY.",
+      "sos_disclaimer_body": "Please use customer support or incident report form for non-emergencies.",
+      "sos_feedback_header": "  PLEASE STAND BY",
+      "sos_feedback_body": "Your Request for help has been submitted to our administrators and a member of our security team will speak to you soon.",
       "click_to_call": "CALL",
       "am_safe": "I'm safe ",
+      "am_safe_feedback_header": "WE'RE GLAD YOU'RE SAFE!",
+      "am_safe_feedback_body": "We will let our administrators and our security team know your updated status.",
       "user_message": "has initiated an emergency support request. Please confirm the person is safe and the emergency is resolved.",
       "sos": "SOS",
-      "press_for_3_seconds": "Press for 3 seconds"
+      "press_and_hold": "Press SOS button and Hold",
+      "press_for_3_seconds": "Press for 3 seconds",
+      "for_3_seconds": "for 3 seconds"
     }
 }

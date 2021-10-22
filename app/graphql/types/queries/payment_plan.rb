@@ -52,7 +52,7 @@ module Types::Queries::PaymentPlan
   #
   # @return [Hash]
   def payment_plan_statement(payment_plan_id:)
-    raise_unauthorized_error
+    raise_unauthorized_error_for_payment_plans(:can_fetch_plan_statement)
 
     payment_plan = Properties::PaymentPlan.find_by(id: payment_plan_id)
     raise_payment_plan_not_found_error(payment_plan)
@@ -71,7 +71,7 @@ module Types::Queries::PaymentPlan
   #
   # @return [Array<PaymentPlan>]
   def user_payment_plans(user_id: nil, offset: 0, limit: 10)
-    raise_unauthorized_error
+    raise_unauthorized_error_for_payment_plans(:can_fetch_user_payment_plans)
 
     user = context[:site_community].users.find_by(id: user_id)
     user.payment_plans.includes(:land_parcel).where.not(pending_balance: 0).limit(limit)
@@ -82,9 +82,9 @@ module Types::Queries::PaymentPlan
   #
   # @return [Array<PaymentPlan>]
   def community_payment_plans(query: nil)
-    raise_unauthorized_error
+    raise_unauthorized_error_for_payment_plans(:can_fetch_community_payment_plans)
 
-    plans = Properties::PaymentPlan.includes(:land_parcel, :user).where(
+    plans = Properties::PaymentPlan.includes(:land_parcel, :user, :plan_payments).where(
       land_parcels: { community_id: context[:site_community].id },
     ).order(:status)
     filtered_plans(plans, query).sort_by { |plan| [(plan.owing_amount * -1), plan.status] }
@@ -95,8 +95,11 @@ module Types::Queries::PaymentPlan
   # Raises GraphQL execution error if user is unauthorized.
   #
   # @return [GraphQL::ExecutionError]
-  def raise_unauthorized_error
-    return if context[:current_user]&.admin?
+  def raise_unauthorized_error_for_payment_plans(permission)
+    return if ::Policy::ApplicationPolicy.new(
+      context[:current_user], nil
+    ).permission?(module: :payment_plan, permission: permission) ||
+              context[:current_user]&.admin?
 
     raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
   end

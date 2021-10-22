@@ -14,15 +14,17 @@ import CloseIcon from '@material-ui/icons/Close';
 import useDialogStyles from './dialogStyles';
 import ImageUploader from '../imageUpload/ImageUploader';
 import ImageUploadPreview from '../imageUpload/ImageUploadPreview';
+import { Spinner } from '../Loading';
 
 export default function EntryNoteDialog({
   open,
   handleDialogStatus,
   observationHandler,
-  token,
   imageOnchange,
   imageUrls,
-  children
+  children,
+  status,
+  closeButtonData
 }) {
   const classes = useDialogStyles();
   const styles = useStyles();
@@ -78,13 +80,14 @@ export default function EntryNoteDialog({
             {imageUrls.length > 0 && (
               <ImageUploadPreview
                 imageUrls={imageUrls}
-                token={token}
                 sm={6}
-                xs={6}
+                xs={12}
                 style={{padding: '10px'}}
-                imgHeight={300}
+                imgHeight='300px'
+                closeButtonData={closeButtonData}
               />
             )}
+            {status !== 'INIT' && status !== 'DONE' && <Spinner />}
           </Grid>
         </DialogContent>
         <DialogActions>{children}</DialogActions>
@@ -100,15 +103,17 @@ const useStyles = makeStyles(() => ({
   uploadButton: {
     textAlign: 'right'
   }
-}))
+}));
 
 EntryNoteDialog.defaultProps = {
-  token: ''
-}
+  closeButtonData: {
+    closeButton: false,
+    handleCloseButton: () => {}
+  }
+};
 
 EntryNoteDialog.propTypes = {
   open: PropTypes.bool.isRequired,
-  token: PropTypes.string,
   observationHandler: PropTypes.shape({
     value: PropTypes.string,
     handleChange: PropTypes.func
@@ -116,5 +121,10 @@ EntryNoteDialog.propTypes = {
   handleDialogStatus: PropTypes.func.isRequired,
   children: PropTypes.node.isRequired,
   imageOnchange: PropTypes.func.isRequired,
-  imageUrls: PropTypes.arrayOf(PropTypes.string).isRequired
+  imageUrls: PropTypes.arrayOf(PropTypes.string).isRequired,
+  status: PropTypes.string.isRequired,
+  closeButtonData: PropTypes.shape({
+    closeButton: PropTypes.bool,
+    handleCloseButton: PropTypes.func
+  })
 };

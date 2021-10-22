@@ -4,7 +4,6 @@ import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { useTranslation } from 'react-i18next';
 import { Button, Grid, Typography, makeStyles } from '@material-ui/core';
 import PropTypes from 'prop-types';
-import { Context as AuthStateContext } from '../../../../containers/Provider/AuthStateProvider';
 import ImageArea from '../../../../shared/imageUpload/ImageArea';
 import { useFileUpload } from '../../../../graphql/useFileUpload';
 import { EntryRequestUpdateMutation } from '../../graphql/logbook_mutations';
@@ -18,7 +17,6 @@ export default function IDCapture({ handleNext }) {
   const [uploadType, setUploadType] = useState('');
   const [frontBlobId, setFrontBlobId] = useState('');
   const [backBlobId, setBackBlobId] = useState('');
-  const authState = useContext(AuthStateContext);
   const requestContext = useContext(EntryRequestContext);
   const matches = useMediaQuery('(max-width:600px)');
   const { t } = useTranslation('logbook');
@@ -27,7 +25,7 @@ export default function IDCapture({ handleNext }) {
     isError: false,
     message: ''
   });
-  const { onChange, signedBlobId, url } = useFileUpload({
+  const { onChange, signedBlobId, url, status } = useFileUpload({
     client: useApolloClient()
   });
 
@@ -49,24 +47,18 @@ export default function IDCapture({ handleNext }) {
   }
 
   useEffect(() => {
-    if (url) {
+    if (status === 'DONE') {
       if (uploadType === 'front') {
         setFrontImageUrl(url);
-      }
-      if (uploadType === 'back') {
-        setBackImageUrl(url);
-      }
-    }
-    if (signedBlobId) {
-      if (uploadType === 'front') {
         setFrontBlobId(signedBlobId);
       }
       if (uploadType === 'back') {
+        setBackImageUrl(url);
         setBackBlobId(signedBlobId);
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [url, signedBlobId]);
+  }, [status]);
 
   const classes = useStyles();
   const images = requestContext.request?.imageUrls;
@@ -120,14 +112,12 @@ export default function IDCapture({ handleNext }) {
           <ImageArea
             handleClick={() => setUploadType('front')}
             handleChange={img => onChange(img)}
-            token={authState.token}
             imageUrl={frontImageUrl || (images && images[0])}
             type={t('image_capture.front')}
           />
           <ImageArea
             handleClick={() => setUploadType('back')}
             handleChange={img => onChange(img)}
-            token={authState.token}
             imageUrl={backImageUrl || (images && images[1])}
             type={t('image_capture.back')}
           />
@@ -138,7 +128,7 @@ export default function IDCapture({ handleNext }) {
             variant="contained"
             color="primary"
             onClick={handleContinue}
-            disabled={!backImageUrl || !frontImageUrl}
+            disabled={!backBlobId || !frontBlobId}
             data-testid="save_and_next"
           >
             {t('image_capture.save_my_id')}

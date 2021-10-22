@@ -3,8 +3,8 @@ import { EntryRequestFragment } from '../../../../graphql/fragments'
 
 
 const GuestEntryRequestRevoke = gql`
-  mutation GuestEntryRequestRevokeMutation($id: ID!, $userId: ID!) {
-    result: guestEntryRequestRevoke(id: $id, userId: $userId) {
+  mutation GuestEntryRequestRevokeMutation($id: ID!) {
+    result: guestEntryRequestRevoke(id: $id) {
       entryRequest {
         ...EntryRequestFields
       }

@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
+import Grid from '@material-ui/core/Grid';
 import { formatMoney } from '../../../utils/helpers';
 import CenteredContent from '../../../components/CenteredContent';
 
@@ -80,7 +81,7 @@ export default function PaymentSlider({ data, currencyData }) {
               </div>
             </CenteredContent>
           ) : (
-            <div className={classes.owing}>
+            <Grid>
               <Typography variant="caption" style={{ marginRight: '2px' }}>
                 {t('misc.owed')}
               </Typography>
@@ -88,10 +89,15 @@ export default function PaymentSlider({ data, currencyData }) {
                 {formatMoney(currencyData, data?.owingAmount)}
                 {','}
               </Typography>
+              <Typography variant="caption" style={{ marginRight: '2px' }}>{t('misc.due')}</Typography>
+              <Typography variant="caption" align="center" style={{ marginRight: '2px' }}>
+                {formatMoney(currencyData, data?.expectedPayments)}
+                {','}
+              </Typography>
               <Typography variant="caption">
                 {`${data?.installmentsDue} ${t('misc.installments')}`}
               </Typography>
-            </div>
+            </Grid>
           )}
         </div>
       )}
@@ -139,22 +145,24 @@ export default function PaymentSlider({ data, currencyData }) {
             <div style={{ width: checkOwingPercentage() }} data-testid="owing">
               <div className={classes.expectedPayment}> </div>
               {data?.owingAmount < data?.planValue ? (
-                <div className={classes.bodySecond}>
-                  <Typography> </Typography>
-                  <div
-                    className={classes.amountDue}
-                    style={
+                !matches && ( 
+                  <div className={classes.bodySecond}>
+                    <Typography> </Typography>
+                    <div
+                      className={classes.amountDue}
+                      style={
                       checkValuePercentage()
                         ? { marginTop: '10px', marginLeft: '-50px' }
                         : { marginTop: '10px' }
                     }
-                  >
-                    <Typography variant="caption">{t('misc.due')}</Typography>
-                    <Typography variant="caption" align="center">
-                      {formatMoney(currencyData, data?.expectedPayments)}
-                    </Typography>
+                    >
+                      <Typography variant="caption">{t('misc.due')}</Typography>
+                      <Typography variant="caption" align="center">
+                        {formatMoney(currencyData, data?.expectedPayments)}
+                      </Typography>
+                    </div>
                   </div>
-                </div>
+                )
               ) : (
                 <div className={classes.spaceBetween}>
                   <Typography> </Typography>

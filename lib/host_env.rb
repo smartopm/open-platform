@@ -12,6 +12,8 @@ class HostEnv
         return 'demo.doublegdp.com'
       when 'Ciudad Morazán'
         return 'morazancity.doublegdp.com'
+      when 'Tilisi'
+        return 'tilisi.doublegdp.com'
       else
         return ENV['HOST']
       end

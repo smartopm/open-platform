@@ -1,13 +1,11 @@
-import React, { useState, useContext } from 'react'
+import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import { Drawer, List, ListItem, ListItemText, GridList, GridListTile, ListSubheader } from '@material-ui/core';
 import { useTranslation } from 'react-i18next';
-import { Context } from '../../containers/Provider/AuthStateProvider'
 import ImageAuth from '../../shared/ImageAuth'
 import { CustomizedDialogs } from '../Dialog'
 
 export default function PointOfInterestDrawerDialog({ anchor, children, open, onClose, imageData, selectedPoi }){
-  const authState = useContext(Context)
   const [imageDialogOpen, setImageDialogOpen] = useState(false)
   const { t } = useTranslation('property');
   function handleImageDialogClose(){
@@ -34,9 +32,8 @@ export default function PointOfInterestDrawerDialog({ anchor, children, open, on
               <ImageAuth
                 key={url}
                 imageLink={url}
-                token={authState.token}
                 className="img-responsive img-thumbnail"
-              /> 
+              />
             </GridListTile>
           ))}
         </GridList>

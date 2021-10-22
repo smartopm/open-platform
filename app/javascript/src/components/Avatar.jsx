@@ -1,10 +1,9 @@
 /* eslint-disable no-use-before-define */
-import React, { useContext } from 'react';
+import React from 'react';
 import { StyleSheet, css } from 'aphrodite';
 import PropTypes from 'prop-types';
 import { forceLinkHttps, objectAccessor } from '../utils/helpers';
 import ImageAuth from '../shared/ImageAuth';
-import { Context } from '../containers/Provider/AuthStateProvider';
 
 export function safeAvatarLink({ imageUrl, user }) {
   if (user?.avatarUrl || user?.imageUrl) {
@@ -14,7 +13,6 @@ export function safeAvatarLink({ imageUrl, user }) {
 }
 
 export default function Avatar({ imageUrl, user, style, searchedUser }) {
-  const { token } = useContext(Context);
   const imageStyles = {
     small: styles.avatarSmall,
     medium: styles.avatarMedium,
@@ -27,7 +25,6 @@ export default function Avatar({ imageUrl, user, style, searchedUser }) {
     return (
       <ImageAuth
         imageLink={safeAvatarLink({ imageUrl: searchedUser.avatarUrl})}
-        token={token}
         className={css(objectAccessor(imageStyles, style))}
         alt="avatar for the user"
       />
@@ -62,7 +59,6 @@ export default function Avatar({ imageUrl, user, style, searchedUser }) {
     return (
       <ImageAuth
         imageLink={safeAvatarLink({ imageUrl, user })}
-        token={token}
         className={css(objectAccessor(imageStyles, style))}
         alt="avatar for the user"
       />

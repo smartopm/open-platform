@@ -215,7 +215,6 @@ export default function RenderForm({ formPropertiesData, formId, refetch, editMo
             <ImageAuth
               type={uploadedFile.contentType.split('/')[0]}
               imageLink={uploadedFile.url}
-              token={authState.token}
             />
           )
         )}

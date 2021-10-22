@@ -325,7 +325,7 @@ export function PlansList({
                     <ButtonComponent
                       color="default"
                       variant="outlined"
-                      buttonText="View All Subscription Plans"
+                      buttonText={t('actions.view_all_subscription_plans')}
                       handleClick={() => setDisplaySubscriptionPlans(true)}
                       size="small"
                       style={matches ? {} : { fontSize: '10px' }}
@@ -545,7 +545,7 @@ export function SubscriptionPlans({
                     <ButtonComponent
                       color="default"
                       variant="outlined"
-                      buttonText="View All Plans"
+                      buttonText={t('actions.view_all_plans')}
                       handleClick={() => setDisplaySubscriptionPlans(false)}
                       size="small"
                       style={matches ? {} : { fontSize: '10px' }}

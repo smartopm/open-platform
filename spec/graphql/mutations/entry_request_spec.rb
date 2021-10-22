@@ -87,7 +87,9 @@ RSpec.describe Mutations::EntryRequest do
     let!(:user) { create(:user_with_community) }
     let!(:random_user) { create(:user_with_community) }
     let!(:admin) { create(:admin_user, community_id: user.community_id) }
-    let!(:entry_request) { user.entry_requests.create(name: 'Mark Percival', reason: 'Visiting') }
+    let!(:entry_request) do
+      user.entry_requests.create(name: 'Mark Percival', reason: 'Visiting', is_guest: true)
+    end
 
     let(:query) do
       <<~GQL
@@ -341,12 +343,21 @@ RSpec.describe Mutations::EntryRequest do
 
     let(:query) do
       <<~GQL
-        mutation addObservationNote($id: ID, $note: String, $refType: String, $eventLogId: ID) {
-          entryRequestNote(id: $id, note: $note, refType: $refType, eventLogId: $eventLogId) {
+        mutation addObservationNote($id: ID, 
+        $note: String, 
+        $refType: String, 
+        $eventLogId: ID, 
+        $attachedImages: JSON) {
+          entryRequestNote(id: $id, 
+          note: $note, 
+          refType: $refType, 
+          eventLogId: $eventLogId, 
+          attachedImages: $attachedImages) {
             event {
               id
               data
-              refType
+              refType,
+              imageUrls
             }
           }
         }
@@ -354,10 +365,12 @@ RSpec.describe Mutations::EntryRequest do
     end
 
     it 'adds a note to an entry request' do
+      image = Rack::Test::UploadedFile.new('spec/support/test_image.png', 'image/png')
       variables = {
         id: entry_request.id,
         note: 'The vehicle was too noisy',
         refType: 'Logs::EntryRequest',
+        attachedImages: [image],
       }
       result = DoubleGdpSchema.execute(query, variables: variables,
                                               context: {

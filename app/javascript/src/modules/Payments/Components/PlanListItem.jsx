@@ -18,11 +18,12 @@ import { toTitleCase, objectAccessor, formatMoney } from '../../../utils/helpers
 import MenuList from '../../../shared/MenuList';
 import Text from '../../../shared/Text';
 import { dateToString } from '../../../components/DateContainer';
+import PaymentItem from './PaymentItem';
 
 export default function PlanListItem({ data, currencyData, menuData, selectedPlans, handlePlansSelect }) {
   const classes = useStyles();
   const [open, setOpen] = useState(false);
-  const { t } = useTranslation('payment');
+  const { t } = useTranslation(['payment','common']);
   const matches = useMediaQuery('(max-width:600px)');
 
   const colors = {
@@ -31,16 +32,6 @@ export default function PlanListItem({ data, currencyData, menuData, selectedPla
     behind: '#eea92d',
     completed: '#29ec47'
   };
-
-  function planStatus(plan) {
-    if (plan.status !== 'active') {
-      return plan.status;
-    }
-    if (plan.owingAmount > 0) {
-      return 'behind';
-    }
-    return 'on track';
-  }
 
   return (
     <>
@@ -79,7 +70,7 @@ export default function PlanListItem({ data, currencyData, menuData, selectedPla
             data-testid="menu"
             style={{ textAlign: 'right', marginTop: '-10px' }}
           >
-            {menuData?.userType === 'admin' && planStatus(data) === 'behind' && (
+            {menuData?.userType === 'admin' && data?.planStatus === 'behind' && (
               <IconButton
                 aria-controls="simple-menu"
                 aria-haspopup="true"
@@ -107,7 +98,7 @@ export default function PlanListItem({ data, currencyData, menuData, selectedPla
         </Grid>
         <Hidden smDown>
           <Grid item xs={12} sm={1} data-testid="menu">
-            {menuData?.userType === 'admin' && planStatus(data) === 'behind' && (
+            {menuData?.userType === 'admin' && data?.planStatus === 'behind' && (
               <IconButton
                 aria-controls="simple-menu"
                 aria-haspopup="true"
@@ -137,9 +128,10 @@ export default function PlanListItem({ data, currencyData, menuData, selectedPla
           <Grid
             className={!matches ? classes.view : classes.viewMobile}
             onClick={() => setOpen(!open)}
+            data-testid='view-history'
           >
             <Typography className={!matches ? classes.typography : classes.typoMobile}>
-              VIEW HISTORY
+              {t('actions.view_history')}
             </Typography>
             <span className={classes.arrow}>
               {open ? <KeyboardArrowDownIcon /> : <KeyboardArrowRightIcon />}
@@ -205,6 +197,22 @@ export default function PlanListItem({ data, currencyData, menuData, selectedPla
                 )}
               </Grid>
             </Grid>
+            {(data?.planPayments?.length > 0) ? (
+              data?.planPayments?.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+              .map(payment => (
+                <PaymentItem
+                  key={payment.id}
+                  payment={payment}
+                  matches={matches}
+                  currencyData={currencyData}
+                  t={t}
+                />
+              ))
+            ) : (
+              <Grid container className={classes.details}>
+                <Text content={t('misc.no_payments_made')} />
+              </Grid>
+            )}
           </>
         )}
       </Grid>
@@ -285,7 +293,13 @@ PlanListItem.propTypes = {
     landParcel: PropTypes.shape({
       parcelNumber: PropTypes.string,
       parcelType: PropTypes.string
-    })
+    }),
+    planPayments: PropTypes.arrayOf(PropTypes.shape({
+      amount: PropTypes.number,
+      receiptNumber: PropTypes.string,
+      createdAt: PropTypes.string,
+      status: PropTypes.string
+    }))
   }).isRequired,
   currencyData: PropTypes.shape({
     currency: PropTypes.string,

@@ -123,6 +123,7 @@ module Types
     # community
     field :community_update, mutation: Mutations::Community::CommunityUpdate
     field :community_emergency, mutation: Mutations::Community::CommunityEmergency
+    field :community_emergency_cancel, mutation: Mutations::Community::CommunityEmergencyCancel
 
     # contact_info
     field :contact_info_delete, mutation: Mutations::ContactInfo::Delete
@@ -139,7 +140,6 @@ module Types
     field :payment_plan_create, mutation: Mutations::PaymentPlan::PaymentPlanCreate
     field :payment_plan_cancel, mutation: Mutations::PaymentPlan::PaymentPlanCancel
     field :payment_plan_update, mutation: Mutations::PaymentPlan::PaymentPlanUpdate
-    field :payment_day_update, mutation: Mutations::PaymentPlan::PaymentDayUpdate
     field :transfer_payment_plan, mutation: Mutations::PaymentPlan::TransferPaymentPlan
     field :payment_reminder_create, mutation: Mutations::PaymentPlan::PaymentReminderCreate
 

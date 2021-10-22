@@ -8,3 +8,11 @@ export const CommunityEmergencyMutation = gql`
         }
     }
 `;
+
+export const CancelCommunityEmergencyMutation = gql`
+    mutation communityEmergencyCancel{
+        communityEmergencyCancel{
+        success
+        }
+    }
+`;

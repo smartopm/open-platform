@@ -11,7 +11,7 @@ namespace :import do
 
     system_email_templates = [
       {
-        name: 'welcome_template',
+        name: 'welcome',
         subject: "Welcome To #{community.name}",
       },
       {
@@ -41,6 +41,10 @@ namespace :import do
       {
         name: 'form_update_submit_template',
         subject: 'A form submission has been updated',
+      },
+      {
+        name: 'one_time_login_template',
+        subject: 'One Time Login',
       },
     ]
 

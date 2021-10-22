@@ -267,7 +267,8 @@ export const formStatus = {
 
 export const currencies = {
   zambian_kwacha: 'ZMW',
-  honduran_lempira: 'HNL'
+  honduran_lempira: 'HNL',
+  kenyan_shilling: 'KES'
 };
 export const locales = [
   'en-IN',
@@ -276,6 +277,7 @@ export const locales = [
   'en-US',
   'en-ZM',
   'es-HN',
+  'en-KE'
 ]
 export const languages = {
   'English': 'en-US',
@@ -697,10 +699,16 @@ export const entryLogsQueryBuilderInitialValue = {
     'site_worker'
   ]
 
+  export const gateAccessUsers = [
+    'admin',
+    'security_guard',
+    'client',
+    'custodian',
+    'resident'
+  ]
 
   export const guestListUsers = [
     'admin',
-    'security_guard',
     'client',
     'custodian',
     'resident'

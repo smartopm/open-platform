@@ -16,6 +16,7 @@ const initialState = {
   member: null,
   members: [],
   loggedIn: false,
+  token: null
 };
 
 const QUERY = gql`
