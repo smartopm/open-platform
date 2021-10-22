@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { useState } from 'react';
 import Grid from '@material-ui/core/Grid';
 import { useTranslation } from 'react-i18next';
@@ -19,6 +20,7 @@ import MenuList from '../../../shared/MenuList';
 import Text from '../../../shared/Text';
 import { dateToString } from '../../../components/DateContainer';
 import PaymentItem from './PaymentItem';
+import CenteredContent from '../../../components/CenteredContent'
 
 export default function PlanListItem({ data, currencyData, menuData, selectedPlans, handlePlansSelect }) {
   const classes = useStyles();
@@ -35,9 +37,10 @@ export default function PlanListItem({ data, currencyData, menuData, selectedPla
 
   return (
     <>
+      {console.log(data)}
       <Grid container spacing={2} className={classes.container}>
         <Grid item xs={8} sm={2} data-testid="landparcel" className={classes.bottom}>
-          <Grid container spacing={1}>
+          <Grid container spacing={2}>
             <Grid item sm={2}>
               <Checkbox
                 checked={Boolean(selectedPlans?.find(obj => obj.paymentPlanId === data?.id && obj.userId === data?.user?.id))}
@@ -60,7 +63,6 @@ export default function PlanListItem({ data, currencyData, menuData, selectedPla
               </Typography>
             </Grid>
           </Grid>
-          
         </Grid>
         <Hidden smUp>
           <Grid
@@ -90,13 +92,13 @@ export default function PlanListItem({ data, currencyData, menuData, selectedPla
             />
           </Grid>
         </Hidden>
-        <Grid item xs={12} sm={7} data-testid="payment-slider">
+        <Grid item xs={12} sm={6} data-testid="payment-slider">
           <PaymentSlider data={data} currencyData={currencyData} />
         </Grid>
         <Grid item xs={12} sm={2} data-testid='label'>
           <Label title={toTitleCase(data.planStatus || '')} color={objectAccessor(colors, data.planStatus)} />
         </Grid>
-        <Hidden smDown>
+        <Hidden xsDown>
           <Grid item xs={12} sm={1} data-testid="menu">
             {(data?.planStatus === 'behind' || data?.planStatus === 'on_track') && (
               <IconButton
@@ -138,6 +140,20 @@ export default function PlanListItem({ data, currencyData, menuData, selectedPla
             </span>
           </Grid>
         </Grid>
+        {data?.planStatus !== 'behind' && (
+          <Grid
+            item
+            xs={6}
+            sm={10}
+            data-testid="due-date"
+          >
+            <CenteredContent>
+              <Typography className={classes.weight}>
+                {t('misc.payment_due_date', {date: dateToString(data?.upcomingInstallmentDueDate)})}
+              </Typography>
+            </CenteredContent>
+          </Grid>
+        )}
         {open && (
           <>
             <Grid container className={classes.details}>
@@ -234,14 +250,10 @@ const useStyles = makeStyles(() => ({
     marginBottom: '10px'
   },
   history: {
-    marginLeft: '-40px',
-    marginBottom: '-35px',
     textAlign: 'center',
     display: 'flex'
   },
   historyMobile: {
-    marginLeft: '-17px',
-    marginBottom: '-17px',
     textAlign: 'center'
   },
   view: {
