@@ -44,7 +44,7 @@ module Mutations
                        ::Policy::ApplicationPolicy.new(
                          context[:current_user], nil
                        ).permission?(
-                         module: :note, permission: 'can_set_note_reminder',
+                         module: :note, permission: :can_set_note_reminder,
                        )
 
         raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
