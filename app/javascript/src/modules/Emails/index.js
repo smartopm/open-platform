@@ -4,7 +4,7 @@ import MailTemplateList from './components/MailTemplateList';
 import AccessCheck from '../Permissions/Components/AccessCheck';
 
 
-const MailTemplateListPermissions = ['can_access_email_template', ];
+const MailTemplateListPermissions = ['can_create_email_template', 'can_view_email_templates'];
 const currentModule = 'email_template'
 
 function renderMailTemplateList() {
