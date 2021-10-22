@@ -84,7 +84,6 @@ RSpec.describe Types::Queries::EmailTemplate do
       expect(result.dig('errors', 0, 'message')).to include 'Unauthorized'
     end
 
-
     it 'should raise 404, not found if template does not exist' do
       result = DoubleGdpSchema.execute(email_template,
                                        variables: { id: SecureRandom.urlsafe_base64(9) },
