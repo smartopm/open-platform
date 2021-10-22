@@ -1,4 +1,3 @@
-/* eslint-disable */
 import React, { useState } from 'react';
 import Grid from '@material-ui/core/Grid';
 import { useTranslation } from 'react-i18next';
@@ -37,7 +36,6 @@ export default function PlanListItem({ data, currencyData, menuData, selectedPla
 
   return (
     <>
-      {console.log(data)}
       <Grid container spacing={2} className={classes.container}>
         <Grid item xs={8} sm={2} data-testid="landparcel" className={classes.bottom}>
           <Grid container spacing={2}>
@@ -92,7 +90,7 @@ export default function PlanListItem({ data, currencyData, menuData, selectedPla
             />
           </Grid>
         </Hidden>
-        <Grid item xs={12} sm={6} data-testid="payment-slider">
+        <Grid item xs={12} sm={7} data-testid="payment-slider">
           <PaymentSlider data={data} currencyData={currencyData} />
         </Grid>
         <Grid item xs={12} sm={2} data-testid='label'>
@@ -140,7 +138,7 @@ export default function PlanListItem({ data, currencyData, menuData, selectedPla
             </span>
           </Grid>
         </Grid>
-        {data?.planStatus !== 'behind' && (
+        {data?.planStatus === 'on_track' && (
           <Grid
             item
             xs={6}
@@ -150,6 +148,9 @@ export default function PlanListItem({ data, currencyData, menuData, selectedPla
             <CenteredContent>
               <Typography className={classes.weight}>
                 {t('misc.payment_due_date', {date: dateToString(data?.upcomingInstallmentDueDate)})}
+              </Typography>
+              <Typography className={classes.weight} style={{marginLeft: '10px'}}>
+                {t('misc.installment_amount', {amount: formatMoney(currencyData, data?.installmentAmount)})}
               </Typography>
             </CenteredContent>
           </Grid>
@@ -296,6 +297,8 @@ PlanListItem.propTypes = {
     planStatus: PropTypes.string,
     endDate: PropTypes.string,
     startDate: PropTypes.string,
+    upcomingInstallmentDueDate: PropTypes.string,
+    installmentAmount: PropTypes.string,
     planValue: PropTypes.number,
     user: PropTypes.shape({
       id: PropTypes.string,

@@ -8,7 +8,7 @@ import PlanListItem from '../Components/PlanListItem'
 describe('It should test the plan item list item component', () => {
   const data = {
     planType: 'basic',
-    status: 'behind',
+    status: 'on_track',
     upcomingInstallmentDueDate: '2021-01-01',
     landParcel: {
       parcelNumber: 'test123',
