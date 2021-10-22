@@ -140,11 +140,11 @@ export default function IDCapture({ handleNext }) {
           </Button>
           <Button
             className={classes.skipToNextBtn}
-            variant="contained"
             onClick={requestContext.grantAccess}
             disabled={!requestContext.request.id}
-            color="secondary"
+            color="primary"
             data-testid="skip_next"
+            startIcon={requestContext.request.isLoading && <Spinner />}
           >
             grant
           </Button>

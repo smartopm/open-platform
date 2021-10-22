@@ -813,23 +813,21 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
                 <Button
                   variant="contained"
                   onClick={event => handleModal(event, 'create')}
-                  className={css(styles.grantButton)}
+                  color="primary"
                   disabled={isLoading}
                   data-testid="entry_user_grant"
                   startIcon={isLoading && <Spinner />}
                 >
-
                   Next
                 </Button>
               </Grid>
               <Grid item>
                 <Button
-                  variant="contained"
                   onClick={event => handleModal(event, 'grant')}
-                  className={css(styles.grantButton)}
                   disabled={!requestContext.request.id}
                   data-testid="entry_user_grant"
                   startIcon={isLoading && <Spinner />}
+                  color="primary"
                 >
 
                   {
