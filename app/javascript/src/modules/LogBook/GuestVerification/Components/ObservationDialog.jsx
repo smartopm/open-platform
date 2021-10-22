@@ -135,12 +135,6 @@ export default function ObservationDialog() {
   );
 }
 
-// ObservationDialog.propTypes = {
-//   observationDetails: PropTypes.shape({
-//     isObservationOpen: PropTypes.bool,
-//   }).isRequired
-// };
-
 const styles = StyleSheet.create({
   observationButton: {
     margin: 5
