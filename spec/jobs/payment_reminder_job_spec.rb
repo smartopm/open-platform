@@ -11,10 +11,17 @@ RSpec.describe PaymentReminderJob, type: :job do
     create(:payment_plan, user: user, land_parcel: land_parcel,
                           start_date: Time.zone.today - 6.months)
   end
+  let!(:other_payment_plan) do
+    create(:payment_plan, user: user, land_parcel: land_parcel,
+                          start_date: Time.zone.today)
+  end
   let!(:template) do
     create(:email_template, name: 'payment_reminder_template', community: community)
   end
-  let!(:payment_reminder_fields) { [{ user_id: user.id, payment_plan_id: payment_plan.id }] }
+  let!(:payment_reminder_fields) do
+    [{ user_id: user.id, payment_plan_id: payment_plan.id },
+     { user_id: user.id, payment_plan_id: other_payment_plan.id }]
+  end
 
   describe '#perform' do
     before do

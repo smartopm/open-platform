@@ -28,26 +28,6 @@ module Mutations
 
         raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
       end
-
-      private
-
-      # Raises GraphQL execution error if user does not exists.
-      #
-      # @return [GraphQL::ExecutionError]
-      def raise_user_not_found_error(user)
-        return if user
-
-        raise GraphQL::ExecutionError, I18n.t('errors.user.does_not_exist')
-      end
-
-      # Raises GraphQL execution error if payment plan does not exist.
-      #
-      # @return [GraphQL::ExecutionError]
-      def raise_plan_not_found_error(payment_plan)
-        return if payment_plan
-
-        raise GraphQL::ExecutionError, I18n.t('errors.payment_plan.not_found')
-      end
     end
   end
 end
