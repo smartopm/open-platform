@@ -84,6 +84,19 @@ RSpec.describe Types::Queries::EmailTemplate do
       expect(result.dig('errors', 0, 'message')).to include 'Unauthorized'
     end
 
+
+    it 'should raise 404, not found if template does not exist' do
+      result = DoubleGdpSchema.execute(email_template,
+                                       variables: { id: SecureRandom.urlsafe_base64(9) },
+                                       context: {
+                                         current_user: admin,
+                                         site_community: current_user.community,
+                                       }).as_json
+
+      expect(result.dig('data', 'emailTemplate')).to be_nil
+      expect(result.dig('errors', 0, 'message')).to include 'Notifications::EmailTemplate not found'
+    end
+
     it 'should raise unauthorized error if user is not an admin' do
       result = DoubleGdpSchema.execute(email_template,
                                        variables: { id: comm_templates.id },
@@ -125,6 +138,17 @@ RSpec.describe Types::Queries::EmailTemplate do
                                        }).as_json
       expect(result.dig('data', 'emailTemplateVariables')).to eql ['variable']
       expect(result.dig('errors', 0, 'message')).to be_nil
+    end
+
+    it 'should return unauthorized when not admin' do
+      result = DoubleGdpSchema.execute(email_template_variables,
+                                       variables: { id: comm_templates.id },
+                                       context: {
+                                         current_user: another_user,
+                                         site_community: current_user.community,
+                                       }).as_json
+      expect(result.dig('data', 'emailTemplates')).to be_nil
+      expect(result.dig('errors', 0, 'message')).to include 'Unauthorized'
     end
   end
 end
