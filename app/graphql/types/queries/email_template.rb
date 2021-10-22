@@ -50,7 +50,7 @@ module Types::Queries::EmailTemplate
     permission = :can_view_email_template_variables
     unless ::Policy::ApplicationPolicy.new(
       context[:current_user], nil
-    ).permission?(module: :email_template, permission: permission)
+    ).permission?(admin: true, module: :email_template, permission: permission)
       raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
     end
 

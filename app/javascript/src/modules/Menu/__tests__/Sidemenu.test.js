@@ -33,6 +33,7 @@ describe('Side Nav component', () => {
     Labels: { features: [] },
     News: { features: [] },
     Tasks: { features: []},
+    'Email Templates': { features: [] }
   }
 
   it('should render proper the sidenav menu', async () => {
@@ -76,9 +77,10 @@ describe('Side Nav component', () => {
     expect(container.queryByText('misc.labels')).toBeInTheDocument();
     expect(container.queryByText('misc.discussions')).toBeInTheDocument();
     expect(container.queryByText('misc.tasks')).toBeInTheDocument();
+    expect(container.queryByText('menu.email_templates')).toBeInTheDocument();
   });
 
-  it('should not render tasks submenu item when user does not have permissions', async () => {
+  it('should not render submenu items when user does not have required permissions', async () => {
     const data = {
       user: {
         id: 'a54d6184-b10e-4865-bee7-7957701d423d',
@@ -94,15 +96,10 @@ describe('Side Nav component', () => {
         },
         permissions: {
           note: {
-            permissions: [
-            'can_create_note',
-            'can_get_task_count',
-            'can_get_task_stats',
-            'can_get_own_tasks',
-            'can_fetch_task_histories',
-            'can_fetch_task_comments',
-            'can_fetch_flagged_notes',
-          ]
+            permissions: []
+          },
+          email_template: {
+            permissions: []
           }
         }
       }
@@ -132,5 +129,6 @@ describe('Side Nav component', () => {
     // toggle the menu and make sure new menus will show
     fireEvent.click(container.queryByText('menu.community'));
     expect(container.queryByText('misc.tasks')).not.toBeInTheDocument()
+    expect(container.queryByText('menu.email_templates')).not.toBeInTheDocument()
   });
 });
