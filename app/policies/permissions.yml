@@ -82,7 +82,12 @@ admin:
       - can_edit_a_form
       - can_view_own_forms
       - can_access_forms
-      - can_view_form_user  
+      - can_view_form_user
+  subscription_plan:
+    permissions:
+      - can_create_subscription_plan
+      - can_update_subscription_plan
+      - can_fetch_subscription_plans
 contractor:
   note:
     permissions:

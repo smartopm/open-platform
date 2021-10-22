@@ -163,7 +163,7 @@ export function PlansList({
   const { loading, data: communityPlansData } = useQuery(CommunityPlansQuery, {
     variables: { query: debouncedValue || searchQuery },
     errorPolicy: 'all',
-    fetchPolicy: 'cache-and-network'
+    fetchPolicy: 'cache-first'
   });
 
   const communityPlans = communityPlansData?.communityPaymentPlans;
