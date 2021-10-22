@@ -38,6 +38,7 @@ admin:
       - can_fetch_payment_stat_details
       - can_fetch_payments_list
       - can_view_menu_list
+      - can_see_menu_item
   transaction:
     permissions:
       - can_create_transaction
