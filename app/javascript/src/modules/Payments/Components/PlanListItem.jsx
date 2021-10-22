@@ -142,14 +142,14 @@ export default function PlanListItem({ data, currencyData, menuData, selectedPla
           <Grid
             item
             xs={6}
-            sm={10}
+            sm={7}
             data-testid="due-date"
           >
             <CenteredContent>
-              <Typography className={classes.weight}>
+              <Typography variant='caption'>
                 {t('misc.payment_due_date', {date: dateToString(data?.upcomingInstallmentDueDate)})}
               </Typography>
-              <Typography className={classes.weight} style={{marginLeft: '10px'}}>
+              <Typography variant='caption' style={!matches ? {marginLeft: '10px'} : {}}>
                 {t('misc.installment_amount', {amount: formatMoney(currencyData, data?.installmentAmount)})}
               </Typography>
             </CenteredContent>
