@@ -29,8 +29,6 @@ export default function VideoCapture() {
     message: ''
   });
 
-  // const [recorded, setIsRecorded] = useState(Boolean(requestContext.guest?.videoUrl))
-
   const { onChange, signedBlobId, status } = useFileUpload({
     client: useApolloClient()
   });
@@ -160,13 +158,6 @@ export default function VideoCapture() {
             grant
           </Button>
         </CenteredContent>
-        {/* {
-          requestContext.guest?.videoUrl && (
-            <Button onClick={() => setIsRecorded(!recorded)} color="primary" data-testid="re_record_video_btn">
-              {recorded ? t('logbook:video_recording.re_record_video') : t('form_actions.cancel')}
-            </Button>
-          )
-        } */}
       </div>
     </div>
   );
