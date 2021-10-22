@@ -803,12 +803,7 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
 
         ) : !/logs|enroll|guests/.test(previousRoute) && !tabValue && !guestListRequest? (
           <>
-            <br />
-            <br />
-            <br />
-            <br />
-
-            <Grid container item xs={4} justify="center" spacing={4}>
+            <Grid container justify="center" spacing={4} className={css(styles.grantSection)}>
               <Grid item>
                 <Button
                   variant="contained"
@@ -836,8 +831,8 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
                 </Button>
               </Grid>
               <br />
-              <FeatureCheck features={authState?.user?.community?.features} name="LogBook" subFeature={CommunityFeaturesWhiteList.denyGateAccessButton}>
-                <Grid item>
+              <Grid item>
+                <FeatureCheck features={authState?.user?.community?.features} name="LogBook" subFeature={CommunityFeaturesWhiteList.denyGateAccessButton}>
                   <Button
                     variant="contained"
                     onClick={handleDenyRequest}
@@ -850,20 +845,17 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
                       t('logbook:logbook.deny')
                     }
                   </Button>
-                </Grid>
-              </FeatureCheck>
-              <Grid>
-                <Grid item>
-                  <a
-                    href={`tel:${authState.user.community.securityManager}`}
-                    className={` ${css(styles.callButton)}`}
-                    data-testid="entry_user_call_mgr"
-                  >
-                    <CallIcon style={{ marginTop: '72px' }} />
-                    {' '}
-                    <p style={{ margin: '-30px 30px' }}>{t('logbook:logbook.call_manager')}</p>
-                  </a>
-                </Grid>
+                </FeatureCheck>
+              </Grid>
+              <Grid item>
+                <a
+                  href={`tel:${authState.user.community.securityManager}`}
+                  className={css(styles.callButton)}
+                  data-testid="entry_user_call_mgr"
+                >
+                  <CallIcon className={css(styles.callIcon)} />
+                  <span>{t('logbook:logbook.call_manager')}</span>
+                </a>
               </Grid>
             </Grid>
             <br />
@@ -872,10 +864,6 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
           <span />
         )}
           </div>
-          <br />
-
-          <br />
-          <br />
         </form>
       </div>
     </>
@@ -912,6 +900,9 @@ const styles = StyleSheet.create({
     height: 40,
     marginTop: 50
   },
+  grantSection: {
+    marginTop: 40
+  },
   denyButton: {
     backgroundColor: '#C31515',
     color: '#FFFFFF',
@@ -919,42 +910,33 @@ const styles = StyleSheet.create({
     marginTop: 50,
     width: '50%',
     alignItems: 'center',
-    '@media (min-device-width: 320px) and (max-device-height: 568px)' : {
+    '@media (min-device-width: 320px) and (max-device-height: 568px)': {
       height: 30,
-      width: '50%',
-
-    },
+      width: '50%'
+    }
   },
   callButton: {
     color: '#66A59A',
     textTransform: 'unset',
     textDecoration: 'none',
-    width: '100%',
     boxShadow: 'none',
     alignItems: 'center',
-    height: 50,
-    '@media (min-device-width: 320px) and (max-device-height: 568px)' : {
-      height: 30,
-      width: '50%',
-
-    },
+    display: 'flex'
   },
-    enrollButton: {
+  callIcon: {
+    marginRight: 7
+  },
+  enrollButton: {
     backgroundColor: '#66A59A',
     color: '#FFFFFF',
     width: '60%',
     boxShadow: 'none',
     marginRight: '15vw',
     alignItems: 'center',
-    '@media (min-device-width: 320px) and (max-device-height: 568px)' : {
+    '@media (min-device-width: 320px) and (max-device-height: 568px)': {
       height: 30,
-      width: '100%',
-
-    },
-  },
-
-  observationButton: {
-    margin: 5
+      width: '100%'
+    }
   },
   inviteGuestButton: {
     width: '20%',
@@ -964,11 +946,10 @@ const styles = StyleSheet.create({
     height: 50,
     color: '#FFFFFF',
 
-    '@media (min-device-width: 320px) and (max-device-height: 568px)' : {
+    '@media (min-device-width: 320px) and (max-device-height: 568px)': {
       height: 30,
-      width: '50%',
-
-    },
+      width: '50%'
+    }
   },
   cancelGuestButton: {
     width: '20%',
@@ -976,13 +957,11 @@ const styles = StyleSheet.create({
     marginRight: '15vw',
     alignItems: 'center',
     marginTop: 50,
-    color: "#FFFFFF",
+    color: '#FFFFFF',
 
-    '@media (min-device-width: 320px) and (max-device-height: 568px)' : {
+    '@media (min-device-width: 320px) and (max-device-height: 568px)': {
       height: 30,
-      width: '30%',
-
-    },
-  },
+      width: '30%'
+    }
   }
-);
+});

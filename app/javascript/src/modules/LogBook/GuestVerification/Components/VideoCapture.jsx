@@ -155,6 +155,7 @@ export default function VideoCapture() {
             color="primary"
             data-testid="continue-btn"
             disabled={!requestContext.request.id}
+            startIcon={requestContext.request.isLoading && <Spinner />}
           >
             grant
           </Button>
