@@ -1,9 +1,11 @@
-/* eslint-disable */
+/* eslint-disable max-lines */
+/* eslint-disable max-statements */
+/* eslint-disable complexity */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 /* eslint-disable no-nested-ternary */
 /* eslint-disable no-use-before-define */
 import React, { useState, useEffect, useContext } from 'react';
-import { useMutation, useApolloClient } from 'react-apollo';
+import { useMutation } from 'react-apollo';
 import { TextField, MenuItem, Button, Grid } from '@material-ui/core';
 import { StyleSheet, css } from 'aphrodite';
 import { useHistory } from 'react-router-dom';
@@ -24,9 +26,7 @@ import { dateToString, dateTimeToString } from '../../../components/DateContaine
 import { userState, userType, communityVisitingHours, defaultBusinessReasons, CommunityFeaturesWhiteList } from '../../../utils/constants'
 import { ModalDialog, ReasonInputModal } from "../../../components/Dialog"
 import { Context } from '../../../containers/Provider/AuthStateProvider';
-import EntryNoteDialog from '../../../shared/dialogs/EntryNoteDialog';
-import CenteredContent from '../../../components/CenteredContent';
-import AddObservationNoteMutation, {
+import {
   EntryRequestUpdateMutation,
   SendGuestQrCodeMutation
 } from '../graphql/logbook_mutations';
@@ -35,9 +35,9 @@ import { checkInValidRequiredFields, defaultRequiredFields , checkRequests } fro
 import GuestTime from './GuestTime';
 import QRCodeConfirmation from './QRCodeConfirmation';
 import FeatureCheck from '../../Features';
-import { useFileUpload } from '../../../graphql/useFileUpload';
 import { EntryRequestContext } from '../GuestVerification/Context';
 import { initialRequestState } from '../GuestVerification/constants'
+
 
 
 
@@ -53,14 +53,11 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
   const [updateRequest] = useMutation(EntryRequestUpdateMutation);
   const [createUser] = useMutation(CreateUserMutation);
   const [updateLog] = useMutation(UpdateLogMutation);
-  const [addObservationNote] = useMutation(AddObservationNoteMutation);
   const [isLoading, setLoading] = useState(false);
   const [isModalOpen, setModal] = useState(false);
   const [modalAction, setModalAction] = useState('');
   const [date] = useState(new Date());
   const [isClicked, setIsClicked] = useState(false);
-  const [isObservationOpen, setIsObservationOpen] = useState(false);
-  const [observationNote, setObservationNote] = useState('');
   const [reqId, setRequestId] = useState(id);
   const [observationDetails, setDetails] = useState({
     isError: false,
@@ -80,13 +77,6 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
   const [guestRequest, setGuestRequest] = useState({ id: '' });
   const requiredFields = authState?.user?.community?.communityRequiredFields?.manualEntryRequestForm || defaultRequiredFields
   const showCancelBtn = previousRoute || tabValue || !!guestListRequest
-  const [imageUrls, setImageUrls] = useState([])
-  const [blobIds, setBlobIds] = useState([])
-
-
-  const { onChange, signedBlobId, url, status } = useFileUpload({
-    client: useApolloClient()
-  });
 
 
   useEffect(() => {
@@ -95,13 +85,6 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
     }
   }, [formData.reason, id]);
 
-  useEffect(() => {
-    if (status === 'DONE') {
-      setImageUrls([...imageUrls, url])
-      setBlobIds([...blobIds, signedBlobId])
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [status]);
 
   useEffect(() => {
     if (formData.loaded && isScannedRequest) {
@@ -227,13 +210,19 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
       visitationDate: previousRoute !== 'entry_logs' ? formData.visitationDate : null
     }
 
+    if(requestContext.request.id){
+      handleNext()
+    }
+
     setLoading(true)
     return (
       createEntryRequest({ variables: otherFormData })
         // eslint-disable-next-line consistent-return
         .then((response) => {
           setRequestId(response.data.result.entryRequest.id);
-          requestContext.updateRequest({ ...requestContext.request, id: response.data.result.entryRequest.id })
+          requestContext.updateRequest({
+              ...requestContext.request, id: response.data.result.entryRequest.id
+             })
           setLoading(false)
           if (isGuestRequest) {
             setDetails({
@@ -245,6 +234,7 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
             setQrModal(true);
             return false
           }
+          handleNext()
           return response.data.result.entryRequest.id
         })
         .catch(err => {
@@ -277,25 +267,7 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
       });
   }
 
-  function handleGrantRequest() {
-    setLoading(true);
-    setModal(false);
-    handleCreateRequest()
-      .then(requestId => grantEntry({ variables: { id: requestId } }))
-      .then(() => {
-        setDetails({
-          ...observationDetails,
-          isError: false,
-          message: t('logbook:logbook.success_message', { action: t('logbook:logbook.granted') })
-        });
-        setIsObservationOpen(true);
-        setLoading(false);
-      })
-      .catch(error => {
-        setLoading(false);
-        setDetails({ ...observationDetails, isError: true, message: error.message });
-      });
-  }
+
 
   function handleDenyRequest() {
     const isAnyInvalid = checkInValidRequiredFields(formData, requiredFields);
@@ -312,7 +284,6 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
           ...observationDetails,
           message: t('logbook:logbook.success_message', { action: t('logbook:logbook.denied') })
         });
-        setIsObservationOpen(true);
         setLoading(false);
       })
       .catch(error => {
@@ -387,44 +358,6 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
     }
   }
 
-  function resetForm(to) {
-    setFormData(initialRequestState);
-    setObservationNote('');
-    setRequestId('');
-    setIsObservationOpen(false);
-    setModal(false);
-    setImageUrls([]);
-    history.push(to);
-  }
-
-  function handleSaveObservation(to) {
-    // we are skipping the observation notes
-    if (!observationNote) {
-      resetForm(to);
-      return;
-    }
-    setDetails({ ...observationDetails, loading: true });
-    addObservationNote({
-      variables: { id: reqId, note: observationNote, refType: 'Logs::EntryRequest', attachedImages: blobIds }
-    })
-      .then(() => {
-        setDetails({
-          ...observationDetails,
-          loading: false,
-          isError: false,
-          message: t('logbook:observations.created_observation')
-        });
-        resetForm(to);
-      })
-      .catch(error => {
-        setDetails({
-          ...observationDetails,
-          loading: false,
-          isError: true,
-          message: error.message
-        });
-      });
-  }
   function checkTimeIsValid() {
     const communityName = authState.user.community.name;
     const accessor = communityName.toLowerCase();
@@ -441,7 +374,6 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
     setReasonModal(!isReasonModalOpen);
   }
 
-  const observationAction = observationNote ? 'Save' : 'Skip'
 
   function closeForm({id: _id}){
 
@@ -494,7 +426,7 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
       />
       <ModalDialog
         handleClose={() => setModal(false)}
-        handleConfirm={handleGrantRequest}
+        handleConfirm={requestContext.grantAccess}
         open={isModalOpen}
         action={t(`logbook:access_actions.${modalAction}`)}
         name={formData.name}
@@ -511,53 +443,6 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
         </div>
       )}
       </ModalDialog>
-
-      {/* Observation note goes here */}
-      <EntryNoteDialog
-        open={isObservationOpen}
-        handleDialogStatus={() => setIsObservationOpen(!isObservationOpen)}
-        observationHandler={{
-        value: observationNote,
-        handleChange: value => setObservationNote(value)
-        }}
-        imageOnchange={(img) => onChange(img)}
-        imageUrls={imageUrls}
-        status={status}
-      >
-        {observationDetails.loading ? (
-          <Spinner />
-      ) : (
-        <CenteredContent>
-          <Button
-            onClick={() => handleSaveObservation('/scan')}
-            variant="outlined"
-            className={css(styles.observationButton)}
-            color="primary"
-            fullWidth
-          >
-            {t('logbook:observations.skip_scan_next_entry', { action: observationAction })}
-          </Button>
-          <Button
-            onClick={() => handleSaveObservation('/request')}
-            variant="outlined"
-            className={`${css(styles.observationButton)} save_and_record_other`}
-            color="primary"
-            fullWidth
-          >
-            {t('logbook:observations.skip_record_manual_entry', { action: observationAction })}
-          </Button>
-          <Button
-            onClick={() => history.push('/')}
-            variant="contained"
-            className={css(styles.observationButton)}
-            color="primary"
-            fullWidth
-          >
-            {t('logbook:observations.close_go_dashboard')}
-          </Button>
-        </CenteredContent>
-      )}
-      </EntryNoteDialog>
 
       <div className="container">
         <form>
@@ -927,9 +812,22 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
               <Grid item>
                 <Button
                   variant="contained"
-                  onClick={event => handleModal(event, 'grant')}
+                  onClick={event => handleModal(event, 'create')}
                   className={css(styles.grantButton)}
                   disabled={isLoading}
+                  data-testid="entry_user_grant"
+                  startIcon={isLoading && <Spinner />}
+                >
+
+                  Next
+                </Button>
+              </Grid>
+              <Grid item>
+                <Button
+                  variant="contained"
+                  onClick={event => handleModal(event, 'grant')}
+                  className={css(styles.grantButton)}
+                  disabled={!requestContext.request.id}
                   data-testid="entry_user_grant"
                   startIcon={isLoading && <Spinner />}
                 >

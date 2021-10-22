@@ -25,4 +25,6 @@ export const initialRequestState = {
     videoBlobId: '',
     frontImageBlobId: '',
     backImageBlobId: '',
+    isLoading: false,
+    isObservationOpen: false
 }
