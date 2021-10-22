@@ -3,14 +3,13 @@
 /* eslint-disable no-nested-ternary */
 /* eslint-disable no-use-before-define */
 import React, { useState, useEffect, useContext } from 'react';
-import { useMutation, useLazyQuery, useApolloClient } from 'react-apollo';
+import { useMutation, useApolloClient } from 'react-apollo';
 import { TextField, MenuItem, Button, Grid } from '@material-ui/core';
 import { StyleSheet, css } from 'aphrodite';
 import { useHistory } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import CallIcon from '@material-ui/icons/Call';
-import { EntryRequestQuery } from '../../../graphql/queries';
 import {
   EntryRequestGrant,
   EntryRequestDeny,
@@ -47,9 +46,6 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
   const authState = useContext(Context)
   const requestContext = useContext(EntryRequestContext)
   const isFromLogs = previousRoute === 'logs' ||  false
-  const [loadRequest, { data }] = useLazyQuery(EntryRequestQuery, {
-    variables: { id }
-  });
   const [createEntryRequest] = useMutation(EntryRequestCreate);
   const [sendGuestQrCode] = useMutation(SendGuestQrCodeMutation);
   const [grantEntry] = useMutation(EntryRequestGrant);
@@ -92,11 +88,6 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
     client: useApolloClient()
   });
 
-  useEffect(() => {
-    if (id!== 'new-guest-entry' && id !== null && id !== 'undefined') {
-      loadRequest({ variables: { id } })
-    }
-  }, [id, loadRequest]);
 
   useEffect(() => {
     if (formData.reason === 'other') {

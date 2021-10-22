@@ -8,18 +8,18 @@ import { EntryRequestQuery } from '../../../../graphql/queries';
 export const EntryRequestContext = createContext({});
 
 export default function EntryRequestContextProvider({ children }) {
-  const { id } = useParams();
+  const { id, guestListEntryId } = useParams();
   const [request, updateRequest] = useState({ ...initialRequestState, id });
   const [loadEntry, { data }] = useLazyQuery(EntryRequestQuery)
 
   useEffect(() => {
-    if (id) {
-      loadEntry({ variables: { id } })
+    if (id || guestListEntryId) {
+      loadEntry({ variables: { id: id || guestListEntryId } })
     }
-  if (data && id) {
+  if (data) {
     updateRequest({ ...data.result });
   }
-  }, [id, loadEntry, data])
+  }, [id, loadEntry, data, guestListEntryId])
 
   return (
     <EntryRequestContext.Provider value={{ request, updateRequest }}>
