@@ -5,7 +5,7 @@ import CustomStepper from './CustomStepper';
 
 export default function HorizontalStepper({ steps, communityName }) {
   const [activeStep, setActiveStep] = useState(0);
-  const listOfSteps = steps(handleNext, handleGrant, communityName);
+  const listOfSteps = steps(handleNext, communityName);
   const validSteps = Boolean(listOfSteps?.length);
 
   function handleNext() {
@@ -15,10 +15,6 @@ export default function HorizontalStepper({ steps, communityName }) {
       return
     }
     setActiveStep(newActiveStep);
-  }
-
-  function handleGrant(){
-    console.log('granting access')
   }
 
   function handleStep(step) {

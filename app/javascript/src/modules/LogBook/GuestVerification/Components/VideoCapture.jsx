@@ -13,6 +13,7 @@ import MessageAlert from '../../../../components/MessageAlert';
 import { EntryRequestContext } from '../Context';
 import Video from '../../../../shared/Video';
 import { Spinner } from '../../../../shared/Loading';
+import CenteredContent from '../../../../components/CenteredContent';
 
 export default function VideoCapture() {
   const [counter, setCounter] = useState(0);
@@ -28,7 +29,7 @@ export default function VideoCapture() {
     message: ''
   });
 
-  const [recorded, setIsRecorded] = useState(Boolean(requestContext.guest?.videoUrl))
+  // const [recorded, setIsRecorded] = useState(Boolean(requestContext.guest?.videoUrl))
 
   const { onChange, signedBlobId, status } = useFileUpload({
     client: useApolloClient()
@@ -121,7 +122,7 @@ export default function VideoCapture() {
         {recordingInstruction}
       </div>
       {
-        recorded
+        requestContext.guest?.videoUrl
         ? <Video src={requestContext.guest?.videoUrl} />
         : (
           <div className={classes.videoArea} data-testid="video_recorder">
@@ -142,18 +143,29 @@ export default function VideoCapture() {
 
       <div className={classes.continueButton}>
         {status === 'FILE_UPLOAD' && <Spinner />}
-        {recordingCompleted && status === 'DONE' && (
+        <CenteredContent>
+
+          {recordingCompleted && status === 'DONE' && (
           <Button onClick={onContinue} color="primary" data-testid="continue-btn">
             {t('logbook:video_recording.save_video')}
           </Button>
         )}
-        {
+          <Button
+            onClick={requestContext.grantAccess}
+            color="primary"
+            data-testid="continue-btn"
+            disabled={!requestContext.request.id}
+          >
+            grant
+          </Button>
+        </CenteredContent>
+        {/* {
           requestContext.guest?.videoUrl && (
             <Button onClick={() => setIsRecorded(!recorded)} color="primary" data-testid="re_record_video_btn">
               {recorded ? t('logbook:video_recording.re_record_video') : t('form_actions.cancel')}
             </Button>
           )
-        }
+        } */}
       </div>
     </div>
   );

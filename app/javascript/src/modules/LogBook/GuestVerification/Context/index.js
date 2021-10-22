@@ -10,19 +10,25 @@ export const EntryRequestContext = createContext({});
 export default function EntryRequestContextProvider({ children }) {
   const { id, guestListEntryId } = useParams();
   const [request, updateRequest] = useState({ ...initialRequestState, id });
-  const [loadEntry, { data }] = useLazyQuery(EntryRequestQuery)
+  const [loadEntry, { data }] = useLazyQuery(EntryRequestQuery);
 
   useEffect(() => {
     if (id || guestListEntryId) {
-      loadEntry({ variables: { id: id || guestListEntryId } })
+      loadEntry({ variables: { id: id || guestListEntryId } });
     }
-  if (data) {
-    updateRequest({ ...data.result });
+    if (data) {
+      updateRequest({ ...data.result });
+    }
+  }, [id, loadEntry, data, guestListEntryId]);
+
+  function handleGrantAccess() {
+    console.log('granting access ....');
   }
-  }, [id, loadEntry, data, guestListEntryId])
 
   return (
-    <EntryRequestContext.Provider value={{ request, updateRequest }}>
+    <EntryRequestContext.Provider
+      value={{ request, updateRequest, grantAccess: handleGrantAccess }}
+    >
       {children}
     </EntryRequestContext.Provider>
   );

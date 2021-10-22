@@ -522,6 +522,7 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
         }}
         imageOnchange={(img) => onChange(img)}
         imageUrls={imageUrls}
+        status={status}
       >
         {observationDetails.loading ? (
           <Spinner />
