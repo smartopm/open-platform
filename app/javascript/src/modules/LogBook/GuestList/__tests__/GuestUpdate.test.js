@@ -25,24 +25,26 @@ describe('RequestUpdate main page', () => {
     }
   };
 it('renders the RequestUpdate page correctly', async () => {
-    await act(async () => {
-      render(
-        <ApolloProvider client={createClient}>
-          <Context.Provider value={data}>
-            <MockedProvider>
-              <BrowserRouter>
-                <MockedThemeProvider>
-                  <EntryRequestContext.Provider value={{ request: { id: "23942342dsd" } }}>
-                    <RequestUpdate id="23942342dsd" />
-                  </EntryRequestContext.Provider>
-                </MockedThemeProvider>
-              </BrowserRouter>
-            </MockedProvider>
-          </Context.Provider>
-        </ApolloProvider>
-      );
-      });
+  await act(async () => {
+    render(
+      <ApolloProvider client={createClient}>
+        <Context.Provider value={data}>
+          <MockedProvider>
+            <BrowserRouter>
+              <MockedThemeProvider>
+                <EntryRequestContext.Provider
+                  value={{ request: { id: '23942342dsd' }, grantAccess: jest.fn() }}
+                >
+                  <RequestUpdate id="23942342dsd" isScannedRequest={false} isGuestRequest />
+                </EntryRequestContext.Provider>
+              </MockedThemeProvider>
+            </BrowserRouter>
+          </MockedProvider>
+        </Context.Provider>
+      </ApolloProvider>
+    );
   });
+});
   it('renders the GuestUpdate page correctly', async () => {
     await act(async () => {
       render(

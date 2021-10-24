@@ -69,7 +69,10 @@ describe('RequestUpdate Component', () => {
           <MockedThemeProvider>
             <Context.Provider value={userMock}>
               <EntryRequestContext.Provider
-                value={{ request: { id: '3c2f8ee2-598b-437c-b217-3e4c0f86c761' } }}
+                value={{
+                  request: { id: '3c2f8ee2-598b-437c-b217-3e4c0f86c761' },
+                  grantAccess: jest.fn()
+                }}
               >
                 <RequestUpdate
                   id="3c2f8ee2-598b-437c-b217-3e4c0f86c761"
@@ -180,7 +183,8 @@ describe('RequestUpdate Component', () => {
                   request: {
                     id: '3c2f8ee2-598b-437c-b217-3e4c0f86c761',
                     user: { id: 'a54d6184-b10e-4865-bee7-7957701d423d' }
-                  }
+                  },
+                  grantAccess: jest.fn()
                 }}
               >
                 <RequestUpdate
@@ -222,7 +226,10 @@ describe('RequestUpdate Component', () => {
           <MockedThemeProvider>
             <Context.Provider value={userMock}>
               <EntryRequestContext.Provider
-                value={{ request: { id: '3c2f8ee2-598b-437c-b217-3e4c0f86c761' } }}
+                value={{
+                  request: { id: '3c2f8ee2-598b-437c-b217-3e4c0f86c761' },
+                  grantAccess: jest.fn()
+                }}
               >
                 <RequestUpdate
                   id="3c2f8ee2-598b-437c-b217-3e4c0f86c761"

@@ -22,7 +22,7 @@ describe('RequestUpdate main page', () => {
       expiresAt: null,
       community: {
         supportName: 'Support Officer',
-        features: {LogBook: { features: [] }}
+        features: { LogBook: { features: [] } }
       }
     }
   };
@@ -34,7 +34,12 @@ describe('RequestUpdate main page', () => {
             <MockedProvider>
               <BrowserRouter>
                 <MockedThemeProvider>
-                  <EntryRequestContext.Provider value={{ request: { id: "23942342dsd" } }}>
+                  <EntryRequestContext.Provider
+                    value={{
+                      request: { id: '23942342dsd' },
+                      grantAccess: jest.fn()
+                    }}
+                  >
                     <RequestUpdate id="23942342dsd" isScannedRequest={false} isGuestRequest />
                   </EntryRequestContext.Provider>
                 </MockedThemeProvider>
@@ -53,7 +58,12 @@ describe('RequestUpdate main page', () => {
             <MockedProvider>
               <BrowserRouter>
                 <MockedThemeProvider>
-                  <EntryRequestContext.Provider value={{ request: { id: "23942342dsd" } }}>
+                  <EntryRequestContext.Provider
+                    value={{
+                      request: { id: '23942342dsd' },
+                      grantAccess: jest.fn()
+                    }}
+                  >
                     <RequestUpdatePage />
                   </EntryRequestContext.Provider>
                 </MockedThemeProvider>

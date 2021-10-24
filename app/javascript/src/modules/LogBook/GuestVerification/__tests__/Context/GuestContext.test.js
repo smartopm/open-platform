@@ -10,7 +10,6 @@ describe('EntryRequest Context', () => {
   const mockParams = {
     id: '/123',
   }
-  // Mocking or spying on route related stuff doesn't work with react-router-dom
   beforeEach(() => {
     jest.spyOn(routeData, 'useParams').mockReturnValue(mockParams)
   });
