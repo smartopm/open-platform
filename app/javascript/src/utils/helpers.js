@@ -408,6 +408,7 @@ export function getHexColor (range) {
     currency: currencyData?.currency,
   })?.format(amount);
   return formatted;
+  return 10
  }
 
  /**

@@ -40,7 +40,6 @@ import { initialRequestState } from '../GuestVerification/constants'
 
 
 
-
 export default function RequestUpdate({ id, previousRoute, guestListRequest, isGuestRequest, tabValue, isScannedRequest, handleNext }) {
   const history = useHistory()
   const authState = useContext(Context)
@@ -145,7 +144,7 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
   useEffect(() => {
     // Data is loaded, so set the initialState, but only once
     if (requestContext.request?.id) {
-      setFormData({ ...requestContext.request });
+      setFormData({ ...formData, ...requestContext.request });
     }
   }, [requestContext.request])
 
@@ -390,7 +389,6 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
       return true;
     return false;
   }
-
   return (
     <>
       <ReasonInputModal
@@ -765,7 +763,6 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
                 </Button>
               )
         }
-
             {((previousRoute !== 'enroll' && id) && (authState?.user?.userType === 'admin' ||
               !isGuestRequest || authState?.user?.id === formData?.user?.id)) && (
               <Button
@@ -810,10 +807,12 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
                   onClick={event => handleModal(event, 'create')}
                   color="primary"
                   disabled={isLoading}
-                  data-testid="entry_user_grant"
+                  data-testid="entry_user_next"
                   startIcon={isLoading && <Spinner />}
                 >
-                  Next
+                  {
+                    t('logbook:logbook.next_step')
+                  }
                 </Button>
               </Grid>
               <Grid item>

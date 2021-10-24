@@ -2,7 +2,7 @@
   "name": "DoubleGDP",
   "private": true,
   "engines": {
-    "node": "12.x"
+    "node": "14.x"
   },
   "scripts": {
     "lint": "eslint app/javascript/src --ext .js --ext .jsx app/javascript/packs/react_main.jsx",
