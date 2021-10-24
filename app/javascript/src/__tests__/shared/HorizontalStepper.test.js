@@ -2,6 +2,7 @@ import React from 'react';
 import { fireEvent, render } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import HorizontalStepper from '../../shared/HorizontalStepper';
+import CustomStepper from '../../shared/CustomStepper';
 
 describe('HorizontalStepper component', () => {
   const steps = jest.fn(next => [
@@ -57,4 +58,20 @@ describe('HorizontalStepper component', () => {
     fireEvent.click(container.queryAllByTestId('step_button')[0]);
     expect(container.queryByText('First Step Contents')).toBeInTheDocument();
   });
+
+  it('should render the custom stepper', () => {
+    const container = render(
+      <CustomStepper
+        steps={manySteps()}
+        activeStep={1}
+        handleStep={jest.fn()}
+      >
+        <p>This is some child</p>
+      </CustomStepper>
+    );
+
+    expect(container.queryAllByTestId('step_button')[0]).toBeInTheDocument();
+    expect(container.queryAllByTestId('step_button')).toHaveLength(2);
+    expect(container.queryByText('This is some child')).toBeInTheDocument();
+  })
 });
