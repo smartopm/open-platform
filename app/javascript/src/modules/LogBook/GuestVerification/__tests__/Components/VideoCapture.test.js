@@ -4,10 +4,10 @@ import '@testing-library/jest-dom/extend-expect';
 import { BrowserRouter } from 'react-router-dom';
 import { MockedProvider } from '@apollo/react-testing';
 import VideoCapture, { videoDirection } from '../../Components/VideoCapture';
-
 import { Context } from '../../../../../containers/Provider/AuthStateProvider';
 import MockedThemeProvider from '../../../../__mocks__/mock_theme';
 import userMock from '../../../../../__mocks__/userMock';
+import { EntryRequestContext } from '../../Context';
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
 describe('Video Capture component', () => {
@@ -17,7 +17,9 @@ describe('Video Capture component', () => {
         <MockedProvider>
           <BrowserRouter>
             <MockedThemeProvider>
-              <VideoCapture handleNext={() => {}} />
+              <EntryRequestContext.Provider value={{ request: { id: 'somew2923' } }}>
+                <VideoCapture handleNext={() => {}} />
+              </EntryRequestContext.Provider>
             </MockedThemeProvider>
           </BrowserRouter>
         </MockedProvider>
@@ -31,6 +33,7 @@ describe('Video Capture component', () => {
     expect(container.queryByTestId('direction-txt')).toBeInTheDocument();
     expect(container.queryByTestId('seconds-txt')).toBeInTheDocument();
     expect(container.queryByTestId('continue-btn')).not.toBeInTheDocument();
+    expect(container.queryByTestId('grant_btn')).toBeInTheDocument();
     expect(container.queryByTestId('re_record_video_btn')).not.toBeInTheDocument();
     expect(container.queryByTestId('video_recorder')).toBeInTheDocument();
   });

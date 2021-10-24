@@ -151,7 +151,7 @@ export default function VideoCapture() {
           <Button
             onClick={requestContext.grantAccess}
             color="primary"
-            data-testid="continue-btn"
+            data-testid="grant_btn"
             disabled={!requestContext.request.id}
             startIcon={requestContext.request.isLoading && <Spinner />}
           >
