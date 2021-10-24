@@ -33,7 +33,7 @@ describe('RequestUpdate main page', () => {
             <MockedProvider>
               <BrowserRouter>
                 <MockedThemeProvider>
-                  <RequestUpdate id="23942342dsd" />
+                  <RequestUpdate id="23942342dsd" isScannedRequest={false} isGuestRequest />
                 </MockedThemeProvider>
               </BrowserRouter>
             </MockedProvider>
