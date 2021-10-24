@@ -11,6 +11,7 @@ import { useFileUpload } from '../../../../graphql/useFileUpload';
 import { EntryRequestContext } from '../Context';
 import MessageAlert from '../../../../components/MessageAlert';
 import AddObservationNoteMutation from '../../graphql/logbook_mutations';
+import { initialRequestState } from '../constants';
 
 export default function ObservationDialog() {
   const history = useHistory();
@@ -38,7 +39,7 @@ export default function ObservationDialog() {
 
   function resetForm(to) {
     setObservationNote('');
-    updateRequest({ ...request, isObservationOpen: false });
+    updateRequest({ ...initialRequestState, isObservationOpen: false });
     setImageUrls([]);
     history.push(to);
   }
