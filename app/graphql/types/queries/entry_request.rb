@@ -96,11 +96,9 @@ module Types::Queries::EntryRequest
       .entry_requests
       .where(user: context[:current_user], is_guest: true)
       .where.not(visitation_date: nil)
-      .includes(:user)
-      .search(query)
+      .includes(:user).search(query)
       .limit(limit).offset(offset)
-      .unscope(:order)
-      .order(created_at: :desc)
+      .unscope(:order).order(created_at: :desc)
       .with_attached_images
       .with_attached_video
   end
