@@ -1,10 +1,11 @@
 import React from 'react';
-import { render, fireEvent } from '@testing-library/react';
+import { render, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import routeData, { MemoryRouter } from 'react-router';
 import { MockedProvider } from '@apollo/react-testing';
 import { EntryRequestContext } from '../../Context';
 import ObservationDialog from '../../Components/ObservationDialog';
+import AddObservationNoteMutation from '../../../graphql/logbook_mutations';
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
 describe('Observation Dialog component', () => {
@@ -14,14 +15,29 @@ describe('Observation Dialog component', () => {
   beforeEach(() => {
     jest.spyOn(routeData, 'useHistory').mockReturnValue(mockHistory);
   });
-  it('should render correctly', () => {
+  it('should render correctly', async () => {
+    const mocks = [
+      {
+        request: {
+          query: AddObservationNoteMutation,
+          variables: {
+            id: 'someids',
+            note: 'This is an observation',
+            refType: 'Logs::EntryRequest',
+            attachedImages: []
+          }
+        },
+        result: { data: { entryRequestNote: { event: { id: 'someids' } } } }
+      }
+    ];
     const container = render(
       <MemoryRouter>
-        <MockedProvider>
+        <MockedProvider mocks={mocks} addTypename={false}>
           <EntryRequestContext.Provider
             value={{
               request: {
-                isObservationOpen: true
+                isObservationOpen: true,
+                id: 'someids'
               },
               observationDetails: {
                 isError: false,
@@ -43,10 +59,14 @@ describe('Observation Dialog component', () => {
     fireEvent.click(container.queryByTestId('close_go_dashboard'));
     expect(mockHistory.push).toBeCalled();
 
-    fireEvent.click(container.queryByTestId('save_and_record_other'));
-    expect(mockHistory.push).toBeCalled();
-
     fireEvent.click(container.queryByTestId('skip_and_scan'));
     expect(mockHistory.push).toBeCalled();
+
+    fireEvent.click(container.queryByTestId('save_and_record_other'));
+
+    await waitFor(() => {
+      expect(container.queryByText('Success')).toBeInTheDocument();
+      expect(mockHistory.push).toBeCalled();
+    }, 10);
   });
 });
