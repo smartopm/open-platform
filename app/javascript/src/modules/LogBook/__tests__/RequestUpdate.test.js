@@ -35,7 +35,7 @@ describe('RequestUpdate main page', () => {
               <BrowserRouter>
                 <MockedThemeProvider>
                   <EntryRequestContext.Provider value={{ request: { id: "23942342dsd" } }}>
-                    <RequestUpdate id="23942342dsd" />
+                    <RequestUpdate id="23942342dsd" isScannedRequest={false} isGuestRequest />
                   </EntryRequestContext.Provider>
                 </MockedThemeProvider>
               </BrowserRouter>
@@ -53,7 +53,9 @@ describe('RequestUpdate main page', () => {
             <MockedProvider>
               <BrowserRouter>
                 <MockedThemeProvider>
-                  <RequestUpdatePage />
+                  <EntryRequestContext.Provider value={{ request: { id: "23942342dsd" } }}>
+                    <RequestUpdatePage />
+                  </EntryRequestContext.Provider>
                 </MockedThemeProvider>
               </BrowserRouter>
             </MockedProvider>
