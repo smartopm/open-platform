@@ -106,6 +106,7 @@ export default function ObservationDialog() {
               variant="outlined"
               className={css(styles.observationButton)}
               color="primary"
+              data-testid="skip_and_scan"
               fullWidth
             >
               {t('observations.skip_scan_next_entry', { action: observationAction })}
@@ -115,6 +116,7 @@ export default function ObservationDialog() {
               variant="outlined"
               className={`${css(styles.observationButton)} save_and_record_other`}
               color="primary"
+              data-testid="save_and_record_other"
               fullWidth
             >
               {t('observations.skip_record_manual_entry', { action: observationAction })}
@@ -124,6 +126,7 @@ export default function ObservationDialog() {
               variant="contained"
               className={css(styles.observationButton)}
               color="primary"
+              data-testid="close_go_dashboard"
               fullWidth
             >
               {t('observations.close_go_dashboard')}
