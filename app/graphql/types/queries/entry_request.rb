@@ -59,7 +59,10 @@ module Types::Queries::EntryRequest
       raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
     end
 
-    context[:site_community].entry_requests.where(community_id: context[:current_user].community_id)
+    context[:site_community].entry_requests
+                            .where(community_id: context[:current_user].community_id)
+                            .with_attached_images
+                            .with_attached_video
   end
 
   # check if we need to allow residents to see all scheduled requests
@@ -76,6 +79,8 @@ module Types::Queries::EntryRequest
                                              .offset(offset)
                                              .unscope(:order)
                                              .order(created_at: :desc)
+                                             .with_attached_images
+                                             .with_attached_video
     entry_requests = handle_search(entry_requests, query) if query
     entry_requests = entry_requests.by_end_time(scope.to_i.days.ago) if scope
     entry_requests
@@ -96,6 +101,8 @@ module Types::Queries::EntryRequest
       .limit(limit).offset(offset)
       .unscope(:order)
       .order(created_at: :desc)
+      .with_attached_images
+      .with_attached_video
   end
   # rubocop:enable Metrics/AbcSize
 
