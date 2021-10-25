@@ -130,6 +130,7 @@ admin:
 =======
   user:
     permissions:
+      - can_see_menu_item
       - can_update_user_details
       - can_merge_users
       - can_import_users
