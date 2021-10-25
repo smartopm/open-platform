@@ -30,6 +30,9 @@ const authState = {
       },
       land_parcel: {
         permissions: ['can_see_menu_item']
+      },
+      plan_payment: {
+        permissions: ['can_see_menu_item']
       }
     }
   }
