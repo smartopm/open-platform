@@ -87,8 +87,7 @@ admin:
     permissions:
       - can_create_subscription_plan
       - can_update_subscription_plan
-      - can_fetch_subscription_plans
-      - can_view_form_user  
+      - can_fetch_subscription_plans 
   email_template:
     permissions:
       - can_see_menu_item
@@ -98,7 +97,20 @@ admin:
       - can_view_email_template_variables
       - can_view_email_templates
       - can_view_email_template
-
+  land_parcel:
+    permissions:
+      - can_create_land_parcel
+      - can_fetch_house
+      - can_fetch_land_parcel
+      - can_fetch_land_parcels
+      - can_fetch_land_parcels_with_plans
+      - can_merge_land_parcels
+      - can_update_land_parcel
+      - can_view_all_land_parcels
+      - can_create_point_of_interest
+      - can_create_point_of_interest_image
+      - can_delete_point_of_interest
+      - can_see_menu_item
 contractor:
   note:
     permissions:

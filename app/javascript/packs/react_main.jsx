@@ -299,8 +299,9 @@ const App = () => {
                                   checkAllowedCommunityFeatures (
                                     user.community.features,
                                     module.featureName
-                                  ) &&
-                                  module.accessibleBy.includes (user.userType)
+                                  ) && (module.moduleName !== undefined ||
+                                      module.accessibleBy.includes (user.userType)
+                                  )
                                 ) {
                                   return (
                                     <Route
