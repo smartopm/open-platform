@@ -27,6 +27,9 @@ const authState = {
       },
       email_template: {
         permissions: ['can_see_menu_item']
+      },
+      land_parcel: {
+        permissions: ['can_see_menu_item']
       }
     }
   }
