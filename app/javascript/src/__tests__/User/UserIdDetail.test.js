@@ -18,21 +18,21 @@ describe('UserId Detail component', () => {
     const container = render(<UserIDDetail data={data} communityName='Nkwashi' />);
     expect(container.queryByText('Another somebody')).toBeInTheDocument();
     expect(container.queryByText('client')).toBeInTheDocument();
-    expect(container.queryByText('Please note the main gate visiting hours:')).toBeInTheDocument();
-    expect(container.queryByText('Expiration: Never')).toBeInTheDocument();
-    expect(container.queryByText('This "QR Code" is a unique identifier for your Nkwashi account and can be used at the main gate instead of writing your contact information manually. Our goal is to provide fast, easy and secure access.')).toBeInTheDocument();
-    expect(container.queryByTestId('visiting_hours').textContent).toContain('Sunday: Off')
-    expect(container.queryByTestId('visiting_hours').textContent).toContain('Saturday: 8:00 - 12:00')
-    expect(container.queryByTestId('visiting_hours').textContent).toMatch(/Monday - Friday: 8:00 - 16:00/gi)
+    expect(container.queryByText('misc.visiting_hours')).toBeInTheDocument();
+    expect(container.queryByText('common:misc.expiration: Never')).toBeInTheDocument();
+    expect(container.queryByText('qr_code.message')).toBeInTheDocument();
+    expect(container.queryByTestId('visiting_hours').textContent).toContain('days:days.sunday: misc.off')
+    expect(container.queryByTestId('visiting_hours').textContent).toContain('days:days.saturday: 8:00 - 12:00')
+    expect(container.queryByTestId('visiting_hours').textContent).toMatch('days:days.monday -days:days.friday: 8:00 - 16:00');
   });
 
   it('should hide visiting hours for CM', () => {
     const container = render(<UserIDDetail data={data} communityName='Ciudad Morazán' />);
     expect(container.queryByText('Another somebody')).toBeInTheDocument();
     expect(container.queryByText('client')).toBeInTheDocument();
-    expect(container.queryByText('Expiration: Never')).toBeInTheDocument();
+    expect(container.queryByText('common:misc.expiration: Never')).toBeInTheDocument();
     expect(container.queryByText('Please note the main gate visiting hours:')).not.toBeInTheDocument();
-    expect(container.queryByText('This "QR Code" is a unique identifier for your Ciudad Morazán account and can be used at the main gate instead of writing your contact information manually. Our goal is to provide fast, easy and secure access.')).toBeInTheDocument();
+    expect(container.queryByText('qr_code.message')).toBeInTheDocument();
     expect(container.queryByTestId('visiting_hours')).toBeNull()
     expect(container.queryByTestId('visiting_hours')).toBeNull()
     expect(container.queryByTestId('visiting_hours')).toBeNull()
