@@ -142,10 +142,11 @@ export const paymentType = {
   cash: 'Cash'
 };
 export const planType = {
-  'cancelled': 'cancelled',
   'behind': 'behind',
   'on_track': 'on_track',
-  'completed': 'completed'
+  'upcoming': 'upcoming',
+  'completed': 'completed',
+  'cancelled': 'cancelled'
 };
 
 export const paymentStatusColor = {

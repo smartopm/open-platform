@@ -8,6 +8,9 @@ import PlanListItem from '../Components/PlanListItem'
 describe('It should test the plan item list item component', () => {
   const data = {
     planType: 'basic',
+    status: 'on_track',
+    planStatus: 'on_track',
+    upcomingInstallmentDueDate: '2021-01-01',
     landParcel: {
       parcelNumber: 'test123',
       parcelType: 'basic'
@@ -55,6 +58,7 @@ describe('It should test the plan item list item component', () => {
     expect(container.getByTestId("landparcel")).toBeInTheDocument();
     expect(container.getByTestId("payment-slider")).toBeInTheDocument();
     expect(container.getByTestId("label")).toBeInTheDocument();
+    expect(container.getByTestId("due-date")).toBeInTheDocument();
     const viewHistory = container.getByTestId('view-history');
     expect(viewHistory).toBeInTheDocument();
     fireEvent.click(viewHistory);
