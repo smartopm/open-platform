@@ -19,7 +19,7 @@ import MenuList from '../../../shared/MenuList';
 import Text from '../../../shared/Text';
 import { dateToString } from '../../../components/DateContainer';
 import PaymentItem from './PaymentItem';
-import CenteredContent from '../../../components/CenteredContent'
+import CenteredContent from '../../../shared/CenteredContent';
 
 export default function PlanListItem({ data, currencyData, menuData, selectedPlans, handlePlansSelect }) {
   const classes = useStyles();

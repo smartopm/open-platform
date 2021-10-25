@@ -43,6 +43,10 @@ RSpec.describe Types::Queries::Payment do
                             payment_plan_id: another_payment_plan.id,
                             amount: 700, manual_receipt_number: '12301', status: 'cancelled')
     end
+    let(:other_payment_plan) do
+      create(:payment_plan, user: user, land_parcel: land_parcel,
+                            start_date: Time.zone.today)
+    end
     let(:user_plans_with_payments) do
       <<~GQL
         query UserPlansWithPayments($userId: ID!) {
@@ -317,14 +321,17 @@ RSpec.describe Types::Queries::Payment do
 
     describe '#community_payment_plans' do
       context 'when current user is admin' do
-        before { payment_plan.update(pending_balance: 700) }
+        before do
+          payment_plan.update(pending_balance: 700)
+          other_payment_plan
+        end
         it "returns list of community's payment plans" do
           result = DoubleGdpSchema.execute(community_payment_plans,
                                            context: {
                                              current_user: admin,
                                              site_community: community,
                                            }).as_json
-          expect(result.dig('data', 'communityPaymentPlans').size).to eql 2
+          expect(result.dig('data', 'communityPaymentPlans').size).to eql 3
           payment_plan_result = result.dig('data', 'communityPaymentPlans', 0)
           expect(payment_plan_result['totalPayments']).to eql 500.0
           expect(payment_plan_result['expectedPayments']).to eql 600.0
@@ -369,7 +376,9 @@ RSpec.describe Types::Queries::Payment do
                                              current_user: admin,
                                              site_community: community,
                                            }).as_json
-          expect(result.dig('data', 'communityPaymentPlans').size).to eql 0
+          expect(result.dig('data', 'communityPaymentPlans').size).to eql 1
+          payment_plan_result = result.dig('data', 'communityPaymentPlans', 0)
+          expect(payment_plan_result['planStatus']).to eql 'on_track'
         end
       end
 
