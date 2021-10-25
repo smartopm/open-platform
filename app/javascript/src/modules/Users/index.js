@@ -4,18 +4,26 @@ import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import Users from './Containers/Users';
 import UserShow from './Containers/UserShow';
-import { allUserTypes } from '../../utils/constants';
 import AccessCheck from '../Permissions/Components/AccessCheck';
 
 
 const currentModule = 'user'
 
 const userPermissions = ['can_access_all_users'];
+const profilePermissions = ['can_view_own_profile'];
 
 function RenderUsers() {
   return (
     <AccessCheck module={currentModule} allowedPermissions={userPermissions}>
       <Users />
+    </AccessCheck>
+)
+}
+
+function RenderUserProfile() {
+  return (
+    <AccessCheck module={currentModule} allowedPermissions={profilePermissions}>
+      <UserShow />
     </AccessCheck>
 )
 }
@@ -47,7 +55,7 @@ export default {
 export const Profile = {
   routeProps: {
     path: '/myprofile',
-    component: UserShow
+    component: RenderUserProfile
   },
   styleProps: {
     icon: <AccountCircleIcon />,
@@ -55,18 +63,20 @@ export const Profile = {
   },
   name: t => t('menu.my_profile'),
   featureName: 'Profile',
-  accessibleBy: allUserTypes
+  moduleName: 'profile',
+  accessibleBy: []
 }
 
 export const Logout = {
   routeProps: {
     path: '/logout',
-    component: UserShow
+    component: RenderUserProfile
   },
   styleProps: {
     icon: <ExitToAppIcon />
   },
   name: t => t('menu.logout'),
   featureName: 'Logout',
-  accessibleBy: allUserTypes
+  moduleName: 'logout',
+  accessibleBy: []
 }

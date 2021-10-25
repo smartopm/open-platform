@@ -4,7 +4,7 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import { StyleSheet, css } from 'aphrodite';
 import Tooltip from '@material-ui/core/Tooltip';
-import { useParams } from 'react-router';
+import { useParams } from 'react-router-dom';
 import { useMutation } from 'react-apollo';
 import { SendOneTimePasscode } from '../graphql/mutations';
 import { formatError } from '../utils/helpers';
