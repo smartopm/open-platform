@@ -9,6 +9,7 @@ import { createClient } from '../../../../utils/apollo'
 import GuestUpdate from '../containers/GuestUpdate';
 import RequestUpdate from '../../Components/RequestUpdate';
 import MockedThemeProvider from '../../../__mocks__/mock_theme';
+import { EntryRequestContext } from '../../GuestVerification/Context';
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
 describe('RequestUpdate main page', () => {
@@ -31,7 +32,9 @@ it('renders the RequestUpdate page correctly', async () => {
             <MockedProvider>
               <BrowserRouter>
                 <MockedThemeProvider>
-                  <RequestUpdate id="23942342dsd" />
+                  <EntryRequestContext.Provider>
+                    <RequestUpdate id="23942342dsd" />
+                  </EntryRequestContext.Provider>
                 </MockedThemeProvider>
               </BrowserRouter>
             </MockedProvider>
@@ -48,7 +51,9 @@ it('renders the RequestUpdate page correctly', async () => {
             <MockedProvider>
               <BrowserRouter>
                 <MockedThemeProvider>
-                  <GuestUpdate />
+                  <EntryRequestContext.Provider>
+                    <GuestUpdate />
+                  </EntryRequestContext.Provider>
                 </MockedThemeProvider>
               </BrowserRouter>
             </MockedProvider>
