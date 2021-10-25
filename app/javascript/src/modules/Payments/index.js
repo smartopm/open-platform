@@ -23,7 +23,7 @@ export default {
   styleProps: {
     icon: <CreditCardIcon />
   },
-  accessibleBy: ['admin'],
+  accessibleBy: [],
   moduleName: currentModule,
   name: t => t('menu.payment', { count: 0 }),
   featureName: 'Payments'
