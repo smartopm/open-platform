@@ -9,6 +9,7 @@ describe('It should test the plan item list item component', () => {
   const data = {
     planType: 'basic',
     status: 'on_track',
+    planStatus: 'on_track',
     upcomingInstallmentDueDate: '2021-01-01',
     landParcel: {
       parcelNumber: 'test123',
