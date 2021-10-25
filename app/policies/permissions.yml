@@ -88,6 +88,17 @@ admin:
       - can_create_subscription_plan
       - can_update_subscription_plan
       - can_fetch_subscription_plans
+      - can_view_form_user  
+  email_template:
+    permissions:
+      - can_see_menu_item
+      - can_access_email_template
+      - can_create_email_template
+      - can_update_email_template
+      - can_view_email_template_variables
+      - can_view_email_templates
+      - can_view_email_template
+
 contractor:
   note:
     permissions:
