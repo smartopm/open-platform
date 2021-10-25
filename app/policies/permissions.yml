@@ -31,7 +31,6 @@ admin:
       - can_view_menu_list
   plan_payment:
     permissions:
-      - can_see_menu_item
       - can_access_all_payments
       - can_cancel_plan_payment
       - can_create_plan_payment
