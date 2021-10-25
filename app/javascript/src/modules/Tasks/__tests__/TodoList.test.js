@@ -6,6 +6,7 @@ import TodoList from '../Components/TodoList'
 import { flaggedNotes } from '../../../graphql/queries'
 import { TaskStatsQuery } from '../graphql/task_queries'
 import { Context } from '../../../containers/Provider/AuthStateProvider'
+import userMock from '../../../__mocks__/userMock';
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn())
 const mck = jest.fn()
@@ -16,18 +17,6 @@ const props = {
   selectedDate: new Date(Date.now()).toISOString(),
   handleDateChange: mck,
   location: 'tasks'
-}
-
-// this should be moved to a an outside mock
-const user = {
-  user: {
-    community: {
-      themeColors: {
-        primaryColor: "#nnn",
-        secondaryColor: "#nnn"
-      }
-    }
-  }
 }
 
 const mocks = [
@@ -80,7 +69,7 @@ const mocks = [
 describe('Test the Todo page', () => {
   it('Mount the Todo component', () => {
     const container = render(
-      <Context.Provider value={user}>
+      <Context.Provider value={userMock}>
         <MockedProvider mocks={mocks} addTypename={false}>
           <BrowserRouter>
             <TodoList {...props} />
@@ -93,13 +82,11 @@ describe('Test the Todo page', () => {
     expect(container.queryByTestId('todo-container')).toBeTruthy()
     expect(container.queryByTestId('search_input')).toBeTruthy()
     expect(container.queryByTestId('toggle_filter_btn')).toBeTruthy()
-    
-   
   })
 
   it('renders task form modal', () => {
     const container = render(
-      <Context.Provider value={user}>
+      <Context.Provider value={userMock}>
         <MockedProvider mocks={mocks} addTypename={false}>
           <BrowserRouter>
             <TodoList {...props} />
@@ -110,7 +97,7 @@ describe('Test the Todo page', () => {
 
     const createTaskBtn = container.queryByText('common:form_actions.create_task')
     fireEvent.click(createTaskBtn)
-    
+
     expect(container.queryByText('task.task_body_label')).toBeTruthy()
     expect(container.queryByText('task.task_description_label')).toBeTruthy()
     expect(container.queryByText('task.task_type_label')).toBeTruthy()

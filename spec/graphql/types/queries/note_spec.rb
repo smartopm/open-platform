@@ -33,7 +33,7 @@ RSpec.describe Types::Queries::Note do
     let!(:third_note) do
       admin.notes.create!(
         body: 'Note body',
-        description: 'Test task',
+        description: 'Test parent task 1',
         user_id: site_worker.id,
         category: 'emergency',
         flagged: true,
@@ -45,7 +45,7 @@ RSpec.describe Types::Queries::Note do
     let!(:fourth_note) do
       admin.notes.create!(
         body: 'Note body',
-        description: 'Test task',
+        description: 'Test parent task 2',
         user_id: site_worker.id,
         category: 'emergency',
         flagged: true,
@@ -115,19 +115,49 @@ RSpec.describe Types::Queries::Note do
 
     let(:flagged_notes_query) do
       <<~GQL
-        query flaggedNotes($query: String){
-          flaggedNotes(query: $query){
-            category
-            description
-            flagged
-            body
-            createdAt
-            userId
-            user {
-                name
-                id
+        query flaggedNotes($query: String) {
+          flaggedNotes(query: $query) {
+            #{task_fragment}
+            subTasks {
+              #{task_fragment}
+              subTasks {
+                #{task_fragment}
+                subTasks {
+                  #{task_fragment}
+                }
+              }
             }
           }
+        }
+      GQL
+    end
+
+    let(:task_fragment) do
+      <<~GQL
+        body
+        createdAt
+        id
+        completed
+        category
+        description
+        dueDate
+        user {
+          id
+          name
+          imageUrl
+        }
+        author {
+          id
+          name
+        }
+        assignees {
+          id
+          name
+          imageUrl
+        }
+        assigneeNotes {
+          userId
+          reminderTime
         }
       GQL
     end
@@ -162,6 +192,89 @@ RSpec.describe Types::Queries::Note do
                                          site_community: site_worker.community,
                                        }).as_json
       expect(result.dig('data', 'flaggedNotes').length).to eql 2
+    end
+
+    describe 'sub tasks' do
+      let!(:first_sub_task) do
+        admin.notes.create!(
+          body: 'Subtask body',
+          description: 'Subtask 1',
+          user_id: site_worker.id,
+          category: 'other',
+          flagged: true,
+          community_id: site_worker.community_id,
+          author_id: site_worker.id,
+          due_date: Time.zone.today,
+          parent_note_id: third_note.id,
+        )
+      end
+
+      let!(:second_sub_task) do
+        admin.notes.create!(
+          body: 'Subtask body',
+          description: 'Subtask 2',
+          user_id: site_worker.id,
+          category: 'other',
+          flagged: true,
+          community_id: site_worker.community_id,
+          author_id: site_worker.id,
+          due_date: Time.zone.today,
+          parent_note_id: fourth_note.id,
+        )
+      end
+
+      let!(:third_sub_task) do
+        admin.notes.create!(
+          body: 'Subtask body',
+          description: 'Subtask 3',
+          user_id: site_worker.id,
+          category: 'other',
+          flagged: true,
+          community_id: site_worker.community_id,
+          author_id: site_worker.id,
+          due_date: Time.zone.today,
+          parent_note_id: first_sub_task.id,
+        )
+      end
+
+      let!(:fourth_sub_task) do
+        admin.notes.create!(
+          body: 'Subtask body',
+          description: 'Subtask 4',
+          user_id: site_worker.id,
+          category: 'other',
+          flagged: true,
+          community_id: site_worker.community_id,
+          author_id: site_worker.id,
+          due_date: Time.zone.today,
+          parent_note_id: third_sub_task.id,
+        )
+      end
+
+      it 'retrieves tasks and their sub tasks' do
+        result = DoubleGdpSchema.execute(flagged_notes_query, context: {
+                                           current_user: site_worker,
+                                           site_community: site_worker.community,
+                                         }).as_json
+
+        expect(result.dig('data', 'flaggedNotes').length).to eql 6
+        expect(result.dig('data', 'flaggedNotes')
+                     .select { |task| task['subTasks'].present? }.size).to eq(4)
+      end
+
+      it 'retrieves nested sub tasks up to 3 levels deep' do
+        result = DoubleGdpSchema.execute(flagged_notes_query, context: {
+                                           current_user: site_worker,
+                                           site_community: site_worker.community,
+                                         }).as_json
+
+        parent_task = result.dig('data', 'flaggedNotes')
+                            .find { |task| task['description'] == 'Test parent task 1' }
+        expect(parent_task).not_to be_nil
+        expect(
+          parent_task['subTasks'][0]['subTasks'][0]['subTasks'][0]['description'],
+        ).to eq('Subtask 4')
+      end
     end
 
     it 'should retrieve list of flagged notes without due date' do

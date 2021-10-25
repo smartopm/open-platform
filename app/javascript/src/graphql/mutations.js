@@ -325,8 +325,26 @@ export const switchGuards = gql`
   }
 `
 export const CreateNote = gql`
-  mutation noteCreate($userId: ID, $body: String!, $flagged: Boolean, $completed: Boolean, $due: String, $category: String, $description: String) {
-    noteCreate(userId: $userId, body: $body, flagged: $flagged, completed: $completed, dueDate: $due, category: $category, description: $description) {
+  mutation noteCreate(
+    $userId: ID
+    $body: String!
+    $flagged: Boolean
+    $completed: Boolean
+    $due: String
+    $category: String
+    $description: String
+    $parentNoteId: ID
+    ) {
+    noteCreate(
+      userId: $userId
+      body: $body
+      flagged: $flagged
+      completed: $completed
+      dueDate: $due
+      category: $category
+      description: $description
+      parentNoteId: $parentNoteId
+      ) {
       note {
         body
         id

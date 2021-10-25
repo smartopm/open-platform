@@ -3,17 +3,17 @@
 require 'rails_helper'
 
 RSpec.describe Notes::Note, type: :model do
-  describe 'note crud' do
-    let!(:current_user) { create(:user_with_community, user_type: 'admin') }
-    let!(:admin) { create(:admin_user, community_id: current_user.community_id) }
-    let!(:admin_note) do
-      admin.notes.create(
-        body: 'This is a note',
-        user_id: current_user.id,
-        community_id: current_user.community_id,
-      )
-    end
+  let(:current_user) { create(:user_with_community, user_type: 'admin') }
+  let(:admin) { create(:admin_user, community_id: current_user.community_id) }
+  let(:admin_note) do
+    create(:note,
+           body: 'This is a note',
+           user_id: current_user.id,
+           author_id: admin.id,
+           community_id: current_user.community_id)
+  end
 
+  describe 'note crud' do
     it 'should let an admin create a note for a user' do
       current_user.notes.create(author_id: admin.id, body: 'Test Note')
       expect(current_user.notes.length).to eql 1
@@ -35,6 +35,7 @@ RSpec.describe Notes::Note, type: :model do
     it { is_expected.to have_db_column(:flagged).of_type(:boolean) }
     it { is_expected.to have_db_column(:completed).of_type(:boolean) }
     it { is_expected.to have_db_column(:due_date).of_type(:datetime) }
+    it { is_expected.to have_db_column(:parent_note_id).of_type(:uuid) }
   end
 
   describe 'associations' do
@@ -51,19 +52,31 @@ RSpec.describe Notes::Note, type: :model do
         .dependent(:destroy)
     end
     it { is_expected.to have_many(:note_histories).dependent(:destroy) }
+    it { is_expected.to have_many(:sub_notes).class_name('Notes::Note').dependent(:destroy) }
   end
 
-  describe 'search scope' do
-    let!(:current_user) { create(:user_with_community, user_type: 'admin') }
-    let!(:admin) { create(:admin_user, community_id: current_user.community_id) }
-    let!(:admin_note) do
-      admin.notes.create(
-        body: 'This is a note',
+  describe 'sub_notes' do
+    before do
+      @sub_note = admin.notes.create!(
+        body: 'This is a sub note',
         user_id: current_user.id,
         community_id: current_user.community_id,
+        parent_note_id: admin_note.id,
+        author_id: admin.id,
       )
     end
 
+    it 'creates a sub_note' do
+      expect(@sub_note.parent_note).to eq(admin_note)
+    end
+
+    it 'creates uses `sub_task` alias' do
+      expect { admin_note.sub_tasks }.not_to raise_error
+      expect(admin_note.sub_tasks).to eq(admin_note.sub_notes)
+    end
+  end
+
+  describe 'search scope' do
     it 'should allow search by user' do
       notes = described_class.search_user("user: #{admin.name}")
       expect(notes).not_to be_nil

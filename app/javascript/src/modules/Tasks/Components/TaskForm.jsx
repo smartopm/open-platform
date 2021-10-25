@@ -24,7 +24,7 @@ const initialData = {
   user: '',
   userId: ''
 }
-export default function TaskForm({ close, refetch, users, assignUser}) {
+export default function TaskForm({ close, refetch, users, assignUser, parentTaskId }) {
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
   const [error, setErrorMessage] = useState('')
@@ -46,7 +46,8 @@ export default function TaskForm({ close, refetch, users, assignUser}) {
         due: selectedDate ? selectedDate.toISOString() : null,
         category: taskType,
         flagged: true,
-        userId: userData.userId
+        userId: userData.userId,
+        parentNoteId: parentTaskId,
       }
     })
       .then(({ data }) => {
@@ -167,12 +168,14 @@ export default function TaskForm({ close, refetch, users, assignUser}) {
 }
 
 TaskForm.defaultProps = {
-  users: []
+  users: [],
+  parentTaskId: ''
 }
 
 TaskForm.propTypes = {
   users: PropTypes.arrayOf(PropTypes.string),
   close: PropTypes.func.isRequired,
   refetch: PropTypes.func.isRequired,
-  assignUser: PropTypes.func.isRequired
+  assignUser: PropTypes.func.isRequired,
+  parentTaskId: PropTypes.string
 }

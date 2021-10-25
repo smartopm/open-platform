@@ -82,7 +82,7 @@ return [
       <IconButton
         aria-controls="simple-menu"
         aria-haspopup="true"
-        data-testid="email-template-menu"
+        data-testid="todo-menu"
         onClick={(event) => menuData.handleTodoMenu(event)}
       >
         <MoreHorizIcon />
