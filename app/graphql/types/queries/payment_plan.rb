@@ -168,6 +168,8 @@ module Types::Queries::PaymentPlan
   end
 
   # rubocop:disable Metrics/AbcSize
+  # rubocop:disable Metrics/CyclomaticComplexity
+  # rubocop:disable Metrics/PerceivedComplexity
   # Returns selected plans by using the instance methods
   #
   # @return [Array<PaymentPlan>]
@@ -178,7 +180,8 @@ module Types::Queries::PaymentPlan
 
     if method.eql?('plan_status') && value.eql?('upcoming')
       plans.select do |plan|
-        plan.upcoming_installment_due_date >= Time.zone.today &&
+        plan.plan_status.eql?('on_track') &&
+          plan.upcoming_installment_due_date >= Time.zone.today &&
           plan.upcoming_installment_due_date <= 30.days.from_now.to_date
       end
     else
@@ -186,6 +189,8 @@ module Types::Queries::PaymentPlan
     end
   end
   # rubocop:enable Metrics/AbcSize
+  # rubocop:enable Metrics/CyclomaticComplexity
+  # rubocop:enable Metrics/PerceivedComplexity
 
   # Returns true/false if query is for filter
   # * Checks if query is in the format: 'field operator value'
