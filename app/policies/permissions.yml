@@ -119,6 +119,7 @@ admin:
       - can_create_point_of_interest_image
       - can_delete_point_of_interest
       - can_see_menu_item
+<<<<<<< HEAD
     timesheet:
       permissions:
         - can_fetch_time_sheet_logs
@@ -126,6 +127,15 @@ admin:
         - can_fetch_user_last_shift
         - can_access_all_timesheets
         - can_see_menu_item
+=======
+  user:
+    permissions:
+      - can_update_user_details
+      - can_merge_users
+      - can_import_users
+      - can_send_one_time_login
+      - can_access_all_users
+>>>>>>> add permissions to the user module
 contractor:
   note:
     permissions:
@@ -277,6 +287,9 @@ resident:
     permissions:
       - can_see_menu_item
       - can_access_forms
+  user:
+    permissions:
+      - can_send_one_time_login
 prospective_client:
   note:
     permissions:
@@ -303,5 +316,8 @@ client:
     permissions:
       - can_see_menu_item
       - can_access_forms
+  user:
+    permissions:
+      - can_send_one_time_login
 
     

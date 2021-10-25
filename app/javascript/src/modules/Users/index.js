@@ -5,6 +5,20 @@ import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import Users from './Containers/Users';
 import UserShow from './Containers/UserShow';
 import { allUserTypes } from '../../utils/constants';
+import AccessCheck from '../Permissions/Components/AccessCheck';
+
+
+const currentModule = 'user'
+
+const userPermissions = ['can_access_all_users'];
+
+function RenderUsers() {
+  return (
+    <AccessCheck module={currentModule} allowedPermissions={userPermissions}>
+      <Users />
+    </AccessCheck>
+)
+}
 
 // for nested links, I think these will likely be on the user
 // we can have a to prop and substitute once we are on the right menu
@@ -16,16 +30,16 @@ import { allUserTypes } from '../../utils/constants';
 export default {
   routeProps: {
     path: '/users',
-    component: Users
+    component: RenderUsers
   },
   styleProps: {
     icon: <PersonIcon />,
     className: 'users-menu-item'
   },
   name: t => t('misc.users'),
-
+  moduleName: currentModule,
   featureName: 'Users',
-  accessibleBy: ['admin']
+  accessibleBy: []
 };
 
 // temporarily export the user profile page here, these will be part of the core user module
