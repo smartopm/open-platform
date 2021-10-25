@@ -318,6 +318,7 @@ module Users
         completed: vals[:completed] || false,
         due_date: vals[:due_date],
         form_user_id: vals[:form_user_id],
+        parent_note_id: vals[:parent_note_id],
       )
     end
 

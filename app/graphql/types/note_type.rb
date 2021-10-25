@@ -18,5 +18,7 @@ module Types
     field :created_at, GraphQL::Types::ISO8601DateTime, null: false
     field :updated_at, GraphQL::Types::ISO8601DateTime, null: false
     field :due_date, GraphQL::Types::ISO8601DateTime, null: true
+    field :parent_note, Types::NoteType, null: true
+    field :sub_tasks, [Types::NoteType], null: true
   end
 end

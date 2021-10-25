@@ -12,13 +12,13 @@ module Mutations
       argument :flagged, Boolean, required: false
       argument :completed, Boolean, required: false
       argument :due_date, String, required: false
+      argument :parent_note_id, ID, required: false
 
       field :note, Types::NoteType, null: true
 
       def resolve(id:, **attributes)
         note = context[:site_community].notes.find(id)
         raise_note_not_found_error(note)
-
         updates_hash = record_attributes(attributes, note)
         raise GraphQL::ExecutionError, note.errors.full_messages unless note.update!(attributes)
 

@@ -11,6 +11,7 @@ export default function TodoItem({
   isSelected,
   handleTaskDetails,
   handleCompleteNote,
+  handleAddSubTask,
   headers,
 }) {
   const [anchorEl, setAnchorEl] = useState(null)
@@ -18,6 +19,7 @@ export default function TodoItem({
   const { t } = useTranslation('common')
   const menuList = [
     { content: t('menu.edit_task'), isAdmin: true, handleClick: () => handleTaskDetails({id: task.id}) },
+    { content: t('menu.add_subtask'), isAdmin: true, handleClick: () => handleAddSubTask({id: task.id }) },
     { content: t('menu.leave_a_comment'), isAdmin: true, handleClick: () => handleTaskDetails({id: task.id, comment: true }) },
     { content: task.completed ? t('menu.mark_incomplete') : t('menu.mark_complete'), isAdmin: true, handleClick: () => handleCompleteNote(task.id, task.completed) },
   ];
@@ -76,4 +78,5 @@ TodoItem.propTypes = {
   handleTaskDetails: PropTypes.func.isRequired,
   handleCompleteNote: PropTypes.func.isRequired,
   headers: PropTypes.arrayOf(PropTypes.object).isRequired,
+  handleAddSubTask: PropTypes.func.isRequired
 }
