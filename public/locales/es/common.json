@@ -123,6 +123,7 @@
   },
   "menu": {
     "add_note": "Agrega tus notas aquí",
+    "add_subtask": "Agregar Sub-tarea",
     "balance": "Balance",
     "call": "Llamada",
     "cancel_invoice": "Cancelar Factura",
