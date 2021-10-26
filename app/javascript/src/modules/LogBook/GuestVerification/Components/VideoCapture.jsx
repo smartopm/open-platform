@@ -79,6 +79,7 @@ export default function VideoCapture() {
           message: t('logbook:video_recording.video_recorded'),
           isError: false
         });
+        requestContext.updateRequest({ ...requestContext.request, videoBlobId:  signedBlobId})
       })
       .catch(error => {
         setDetails({ ...errorDetails, isError: true, message: error.message });
@@ -120,8 +121,8 @@ export default function VideoCapture() {
         {recordingInstruction}
       </div>
       {
-        requestContext.guest?.videoUrl
-        ? <Video src={requestContext.guest?.videoUrl} />
+        requestContext.request?.videoUrl
+        ? <Video src={requestContext.request?.videoUrl} />
         : (
           <div className={classes.videoArea} data-testid="video_recorder">
             <VideoRecorder

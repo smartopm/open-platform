@@ -41,6 +41,7 @@ export default function IDCapture({ handleNext }) {
           message: t('image_capture.image_captured'),
           isError: false
         });
+        requestContext.updateRequest({ ...requestContext.request, frontImageBlobId:  frontBlobId})
         setLoading(false)
         handleNext()
       })

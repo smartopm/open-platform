@@ -143,13 +143,8 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
 
   useEffect(() => {
     // Data is loaded, so set the initialState, but only once
-    if (requestContext.request?.id && communityName !== 'Nkwashi') {
-      console.log('not nkwashi')
+    if (requestContext.request?.id) {
       setFormData({ ...formData, ...requestContext.request });
-
-    } else if (isGuestRequest || showCancelBtn) {
-      setFormData({ ...formData, ...requestContext.request });
-      console.log(' isGuestRequest')
     }
   }, [requestContext.request])
 
@@ -245,8 +240,11 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
           requestContext.updateRequest({
             ...requestContext.request, id: response.data.result.entryRequest.id
            })
+           return response.data.result.entryRequest.id
+        })
+        .then(response => {
           handleNext()
-          return response.data.result.entryRequest.id
+          return response
         })
         .catch(err => {
           setLoading(false)

@@ -29,8 +29,14 @@ export default function EntryRequestContextProvider({ children }) {
     if (data) {
       updateRequest({ ...request, ...data.result });
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [loadEntry, data, request.id]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    loadEntry,
+    data,
+    request.id,
+    request.frontImageBlobId,
+    request.videoBlobId
+  ]);
 
   function handleGrantAccess(requestId = id) {
     updateRequest({ ...request, isLoading: true });
