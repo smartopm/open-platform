@@ -32,9 +32,9 @@ export default function EntryRequestContextProvider({ children }) {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loadEntry, data, request.id]);
 
-  function handleGrantAccess() {
+  function handleGrantAccess(requestId = id) {
     updateRequest({ ...request, isLoading: true });
-    grantEntry({ variables: { id: request.id } })
+    grantEntry({ variables: { id: request.id || requestId } })
       .then(() => {
         setDetails({
           ...observationDetails,

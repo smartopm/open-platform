@@ -143,8 +143,13 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
 
   useEffect(() => {
     // Data is loaded, so set the initialState, but only once
-    if (requestContext.request?.id) {
+    if (requestContext.request?.id && communityName !== 'Nkwashi') {
+      console.log('not nkwashi')
       setFormData({ ...formData, ...requestContext.request });
+
+    } else if (isGuestRequest || showCancelBtn) {
+      setFormData({ ...formData, ...requestContext.request });
+      console.log(' isGuestRequest')
     }
   }, [requestContext.request])
 
@@ -198,7 +203,8 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
   function closeQrModal() {
     setQrModal(false);
     if (guestListRequest) {
-      return history.push('/guest-list')
+      history.push('/guest-list')
+      return
     }
     handleNext(true)
   }
@@ -211,8 +217,7 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
       isGuest: guestListRequest,
       visitationDate: previousRoute !== 'entry_logs' ? formData.visitationDate : null
     }
-
-    if(requestContext.request.id){
+    if(requestContext.request.id && communityName !== 'Nkwashi'){
       handleNext()
     }
 
@@ -222,9 +227,6 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
         // eslint-disable-next-line consistent-return
         .then((response) => {
           setRequestId(response.data.result.entryRequest.id);
-          requestContext.updateRequest({
-              ...requestContext.request, id: response.data.result.entryRequest.id
-             })
           setLoading(false)
           if (isGuestRequest) {
             setDetails({
@@ -236,6 +238,13 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
             setQrModal(true);
             return false
           }
+          // hardcoding this for now before we make this a community setting
+          if (communityName === 'Nkwashi') {
+            return requestContext.grantAccess(response.data.result.entryRequest.id)
+          }
+          requestContext.updateRequest({
+            ...requestContext.request, id: response.data.result.entryRequest.id
+           })
           handleNext()
           return response.data.result.entryRequest.id
         })
@@ -393,6 +402,7 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
       return true;
     return false;
   }
+  const communityName = authState.user.community.name
   return (
     <>
       <ReasonInputModal
@@ -428,7 +438,7 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
       />
       <ModalDialog
         handleClose={() => setModal(false)}
-        handleConfirm={requestContext.grantAccess}
+        handleConfirm={() => requestContext.grantAccess()}
         open={isModalOpen}
         action={t(`logbook:access_actions.${modalAction}`)}
         name={formData.name}
