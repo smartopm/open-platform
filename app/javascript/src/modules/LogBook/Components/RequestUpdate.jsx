@@ -143,7 +143,7 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
 
   useEffect(() => {
     // Data is loaded, so set the initialState, but only once
-    if ((requestContext.request?.id) && communityName !== 'Nkwashi') {
+    if (requestContext.request?.id) {
       return setFormData({ ...formData, ...requestContext.request });
     }
     return setFormData({ ...initialRequestState });
