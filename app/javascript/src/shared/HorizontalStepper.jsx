@@ -1,17 +1,20 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
+import { useHistory } from 'react-router-dom';
 import { objectAccessor } from '../utils/helpers';
 import CustomStepper from './CustomStepper';
 
 export default function HorizontalStepper({ steps, communityName }) {
   const [activeStep, setActiveStep] = useState(0);
+  const history = useHistory()
   const listOfSteps = steps(handleNext, communityName);
   const validSteps = Boolean(listOfSteps?.length);
 
-  function handleNext() {
+  function handleNext(isGuest=false) {
     const newActiveStep = activeStep + 1;
-    if (listOfSteps.length <= 1) {
-      setActiveStep(activeStep);
+
+    if (listOfSteps.length <= 1 && isGuest) {
+      history.push('/entry_logs?tab=2&offset=0')
       return
     }
     setActiveStep(newActiveStep);

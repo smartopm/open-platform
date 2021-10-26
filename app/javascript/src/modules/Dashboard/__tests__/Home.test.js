@@ -65,12 +65,20 @@ describe('Client home page', () => {
       },
     ]
 
-    authState.user.userType = 'client';
-    authState.user.community.menuItems = menuItems;
-
+    const updatedAuth = {
+      ...authState,
+      user: {
+        ...authState.user,
+        userType: "client",
+        community: {
+          ...authState.user.community,
+          menuItems
+        }
+      }
+    }
     render(
       <ApolloProvider client={createClient}>
-        <Context.Provider value={authState}>
+        <Context.Provider value={updatedAuth}>
           <MockedProvider mocks={[]} addTypename={false}>
             <BrowserRouter>
               <Home />

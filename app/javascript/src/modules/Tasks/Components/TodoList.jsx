@@ -1,3 +1,6 @@
+/* eslint-disable max-lines */
+/* eslint-disable max-statements */
+/* eslint-disable complexity */
 /* eslint-disable react/prop-types */
 import React, { useState, useEffect } from 'react';
 import {
@@ -67,6 +70,7 @@ export default function TodoList({
   const [filterQuery, setFilterQuery] = useState('');
   const [searchInputQuery, setSearchInputQuery] = useState('');
   const { taskId } = useParams();
+  const [parentTaskId, setParentTaskId] = useState('');
   const history = useHistory();
   const [userNameSearchTerm, setUserNameSearchTerm] = useState('');
   const [searchText, setSearchText] = useState('');
@@ -216,6 +220,11 @@ export default function TodoList({
         setLoadingAssignee(false);
       })
       .catch(err => setMessage(err.message));
+  }
+
+  function handleAddSubTask({ id }) {
+    setParentTaskId(id);
+    openModal();
   }
 
   function handleCompleteNote(noteId, completed) {
@@ -458,6 +467,7 @@ export default function TodoList({
                 close={() => setModalOpen(!open)}
                 assignUser={assignUnassignUser}
                 users={liteData?.usersLite}
+                parentTaskId={parentTaskId}
               />
             ) : // eslint-disable-next-line no-nested-ternary
             !taskData ? (
@@ -588,6 +598,7 @@ export default function TodoList({
                     isSelected={checkedOptions === 'all'}
                     handleTaskDetails={handleTaskDetails}
                     handleCompleteNote={handleCompleteNote}
+                    handleAddSubTask={handleAddSubTask}
                     headers={taskHeader}
                   />
                 ))}

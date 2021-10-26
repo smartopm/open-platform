@@ -53,7 +53,9 @@ it('renders the RequestUpdate page correctly', async () => {
             <MockedProvider>
               <BrowserRouter>
                 <MockedThemeProvider>
-                  <GuestUpdate />
+                  <EntryRequestContext.Provider>
+                    <GuestUpdate />
+                  </EntryRequestContext.Provider>
                 </MockedThemeProvider>
               </BrowserRouter>
             </MockedProvider>

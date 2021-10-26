@@ -24,10 +24,15 @@ module Notes
     belongs_to :user, class_name: 'Users::User'
     belongs_to :author, class_name: 'Users::User'
     belongs_to :form_user, class_name: 'Forms::FormUser', optional: true
+    belongs_to :parent_note, class_name: 'Notes::Note', optional: true
     has_many :assignee_notes, dependent: :destroy
     has_many :assignees, through: :assignee_notes, source: :user
     has_many :note_comments, class_name: 'Comments::NoteComment', dependent: :destroy
     has_many :note_histories, dependent: :destroy
+    has_many :sub_notes, class_name: 'Notes::Note',
+                         foreign_key: 'parent_note_id',
+                         dependent: :destroy,
+                         inverse_of: :parent_note
 
     after_create :log_create_event
     after_update :log_update_event
@@ -48,6 +53,7 @@ module Notes
 
     VALID_CATEGORY = %w[call email text message to_do form emergency other].freeze
     validates :category, inclusion: { in: VALID_CATEGORY, allow_nil: true }
+    alias sub_tasks sub_notes
 
     def assign_or_unassign_user(user_id)
       a_notes = assignee_notes.find_by(user_id: user_id)

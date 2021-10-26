@@ -241,6 +241,7 @@ export const CommunityPlansQuery = gql`
       owingAmount
       planStatus
       installmentAmount
+      upcomingInstallmentDueDate
       user{
         id
         name

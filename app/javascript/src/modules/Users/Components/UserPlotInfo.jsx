@@ -11,7 +11,7 @@ import { dateToString } from '../../../components/DateContainer';
 import UserPlotMap from './UserPlotMap';
 import { objectAccessor } from '../../../utils/helpers';
 
-export default function UserPlotInfo({ account, userId, userName, currentUserType }) {
+export default function UserPlotInfo({ account, userId, userName, currentUser }) {
   const [plotNumber, setPlotNumber] = useState([]);
   const { t } = useTranslation(['users', 'common'])
   const classes = useStyles();
@@ -51,7 +51,7 @@ export default function UserPlotInfo({ account, userId, userName, currentUserTyp
 
   return (
     <>
-      {currentUserType === 'admin' && (
+      {objectAccessor(currentUser?.permissions, 'land_parcel')?.permissions?.includes('can_create_land_parcel') && (
         <Fab color="primary" variant="extended" className={classes.plot} onClick={() => handlePlotCreteClick()} data-testid='add-plot'>
           {t("common:misc.new_property")}
         </Fab>
@@ -156,5 +156,9 @@ UserPlotInfo.propTypes = {
   ),
   userId: PropTypes.string.isRequired,
   userName: PropTypes.string.isRequired,
-  currentUserType: PropTypes.string.isRequired
+  currentUser: PropTypes.shape({
+    permissions: PropTypes.shape({
+      land_parcel: PropTypes.arrayOf()
+    })
+  }).isRequired
 };

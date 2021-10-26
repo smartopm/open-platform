@@ -169,6 +169,8 @@
     "face_right": "Cara a la derecha",
     "instruction_on_direction": "Estará mirando hacia adelante durante 2 segundos, luego gire a la izquierda y luego a la derecha. El contador sonará cada vez.",
     "listen_to_counter": "Escuche el contador para la señal de cuándo girar ",
+    "re_record_video": "Re-grabar el video",
+    "save_video": "Guardar video",
     "video_recorded": "Grabación de video exitoso",
     "well_lit_area": "Asegúrese de estar en un área bien iluminada y su rostro sea claramente visible"
   }

@@ -13,7 +13,8 @@
     "invalid_color_code": "El código de color del tema no es válido",
     "no_changes": "No se realizaron cambios",
     "no_user_selected": "Tienes que seleccionar un usuario",
-    "user_name_search_not_found": "{{username}} usuario no encontrado"
+    "user_name_search_not_found": "{{username}} usuario no encontrado",
+    "video_not_supported": "Este navegador no admite video"
   },
   "form_actions": {
     "add_type": "Agregar {{label}}",

@@ -1,14 +1,22 @@
 import React from 'react';
 import { fireEvent, render } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
+import routeData, { MemoryRouter } from 'react-router';
 import HorizontalStepper from '../../shared/HorizontalStepper';
 import CustomStepper from '../../shared/CustomStepper';
 
 describe('HorizontalStepper component', () => {
+  const mockHistory = {
+    push: jest.fn()
+  };
+  beforeEach(() => {
+    jest.spyOn(routeData, 'useHistory').mockReturnValue(mockHistory);
+  });
+
   const steps = jest.fn(next => [
     {
       title: 'First Step',
-      component: <button type="button" onClick={next} data-testid="only_step">First Step Contents</button>
+      component: <button type="button" onClick={() => next(true)} data-testid="only_step">First Step Contents</button>
     }
   ]);
 
@@ -28,24 +36,29 @@ describe('HorizontalStepper component', () => {
   ]);
   it('should not show step buttons when its just one step', () => {
     const container = render(
-      <HorizontalStepper
-        steps={steps}
-        communityName="Nkwashi"
-      />
+      <MemoryRouter>
+        <HorizontalStepper
+          steps={steps}
+          communityName="Nkwashi"
+        />
+      </MemoryRouter>
     );
     expect(container.queryByTestId('stepper_container')).toBeInTheDocument();
     expect(container.queryByTestId('step_button')).not.toBeInTheDocument();
     expect(container.queryByText('First Step Contents')).toBeInTheDocument();
     fireEvent.click(container.queryByTestId('only_step'));
     expect(container.queryByText('First Step Contents')).toBeInTheDocument();
+    expect(mockHistory.push).toBeCalled()
   });
 
   it('should show all steps correctly', () => {
     const container = render(
-      <HorizontalStepper
-        steps={manySteps}
-        communityName="CM"
-      />
+      <MemoryRouter>
+        <HorizontalStepper
+          steps={manySteps}
+          communityName="CM"
+        />
+      </MemoryRouter>
     );
     expect(container.queryAllByTestId('step_button')[0]).toBeInTheDocument();
     expect(container.queryAllByTestId('step_button')).toHaveLength(2);

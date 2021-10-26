@@ -50,9 +50,7 @@ module Types::Queries::LandParcel
   # rubocop:enable Metrics/BlockLength
 
   def fetch_land_parcel(query: nil, offset: 0, limit: 100)
-    unless context[:current_user]&.admin?
-      raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
-    end
+    raise_unauthorized_error_for_land_parcels(:can_fetch_land_parcels)
 
     context[:site_community].land_parcels
                             .search(query)
@@ -65,20 +63,19 @@ module Types::Queries::LandParcel
   def user_land_parcels(user_id:)
     raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') if context[:current_user].blank?
 
-    context[:site_community].users.find_by(id: user_id).land_parcels.includes(:accounts)
+    user = verified_user(user_id)
+    user.land_parcels.includes(:accounts)
   end
 
   def user_land_parcel_with_plan(user_id:)
-    raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') if context[:current_user].blank?
+    raise_unauthorized_error_for_land_parcels(:can_fetch_land_parcels_with_plans)
 
     user = context[:site_community].users.find_by(id: user_id)
     user.payment_plans.includes(:land_parcel).where.not(pending_balance: 0)
   end
 
   def land_parcel(id:)
-    unless context[:current_user].admin?
-      raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
-    end
+    raise_unauthorized_error_for_land_parcels(:can_fetch_land_parcel)
 
     parcel = context[:site_community].land_parcels
                                      .includes(accounts: :user, payment_plans:
@@ -101,9 +98,7 @@ module Types::Queries::LandParcel
   end
 
   def fetch_house(offset: 0, limit: 100)
-    unless context[:current_user]&.admin?
-      raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
-    end
+    raise_unauthorized_error_for_land_parcels(:can_fetch_house)
 
     context[:site_community].land_parcels
                             .where(object_type: 'house')
@@ -149,6 +144,18 @@ module Types::Queries::LandParcel
     end
 
     { geom: parcel[:geom], long_x: parcel[:long_x], lat_y: parcel[:lat_y] }
+  end
+
+  def raise_unauthorized_error_for_land_parcels(permission)
+    return if ::Policy::ApplicationPolicy.new(
+      context[:current_user], nil
+    ).permission?(
+      admin: true,
+      module: :land_parcel,
+      permission: permission,
+    )
+
+    raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
   end
 end
 # rubocop:enable Metrics/ModuleLength

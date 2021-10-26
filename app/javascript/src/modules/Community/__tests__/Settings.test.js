@@ -142,7 +142,7 @@ describe('Community settings page', () => {
     };
     const refetchMock = jest.fn();
     const container = render(
-      <MockedProvider mocks={[communityMutationMock, templateMock]}>
+      <MockedProvider mocks={[communityMutationMock, templateMock]} addTypename={false}>
         <MockedThemeProvider>
           <CommunitySettings data={data} token="374857uwehfsdf232" refetch={refetchMock} />
         </MockedThemeProvider>
@@ -191,11 +191,18 @@ describe('Community settings page', () => {
     expect(container.queryByTestId('taxIdNo')).toBeInTheDocument();
     expect(container.queryByTestId('smsPhoneNumber')).toBeInTheDocument();
     expect(container.queryByTestId('emergencyCallNumber')).toBeInTheDocument();
-    expect(container.queryByTestId('payment_reminder_template')).toBeInTheDocument();
-    expect(container.queryByTestId('plan_status')).toBeInTheDocument();
+    expect(container.queryByTestId('payment_reminder_template_behind')).toBeInTheDocument();
+    expect(container.queryByTestId('plan_status_behind')).toBeInTheDocument();
+    expect(container.queryByTestId('payment_reminder_template_upcoming')).toBeInTheDocument();
+    expect(container.queryByTestId('plan_status_upcoming')).toBeInTheDocument();
     expect(container.queryByTestId('disable_deny_gate_access')).toBeInTheDocument();
     expect(container.queryByTestId('enable_automated_task_reminders')).toBeInTheDocument();
 
+    fireEvent.select(container.queryByTestId('payment_reminder_template_behind'), { target: { value: 'payment_reminder_template' } });
+    expect(container.queryByTestId('payment_reminder_template_behind').value).toBe('payment_reminder_template');
+
+    fireEvent.select(container.queryByTestId('payment_reminder_template_upcoming'), { target: { value: 'payment_reminder_template' } });
+    expect(container.queryByTestId('payment_reminder_template_upcoming').value).toBe('payment_reminder_template');
 
     fireEvent.select(container.queryByTestId('locale'), { target: { value: 'en-US' } });
     expect(container.queryByTestId('locale').value).toBe('en-US');

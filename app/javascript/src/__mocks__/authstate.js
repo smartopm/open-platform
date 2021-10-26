@@ -20,13 +20,18 @@ const authState = {
     userType: 'admin',
     permissions: {
       note: {
-        permissions: [
-        'can_see_menu_item',
-        'can_create_note',
-        'can_get_task_count'
-      ]
+        permissions: ['can_see_menu_item']
       },
       gate_access: {
+        permissions: ['can_see_menu_item']
+      },
+      email_template: {
+        permissions: ['can_see_menu_item']
+      },
+      land_parcel: {
+        permissions: ['can_see_menu_item']
+      },
+      plan_payment: {
         permissions: ['can_see_menu_item']
       }
     }

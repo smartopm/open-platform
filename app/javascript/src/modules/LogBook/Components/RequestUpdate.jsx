@@ -197,7 +197,10 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
 
   function closeQrModal() {
     setQrModal(false);
-    handleNext()
+    if (guestListRequest) {
+      return history.push('/guest-list')
+    }
+    handleNext(true)
   }
 
   function handleCreateRequest() {
@@ -258,7 +261,7 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
           message: t('logbook:logbook.registered_guest_updated')
         });
         setDetails({ ...observationDetails, message: t('logbook:logbook.registered_guest_updated') });
-        handleNext()
+        handleNext(true)
       })
       .catch(error => {
         setLoading(false);
@@ -374,13 +377,14 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
   }
 
 
+  // TODO: needs refactor
   function closeForm({id: _id}){
 
     if(_id === 'new-guest-entry' || guestListRequest ){
       history.push({pathname: '/guest-list'})
       return
     }
-    history.push('/entry_logs?tab=2&offset=0')
+    history.push(`/entry_logs?tab=${tabValue}&offset=0`)
   }
 
   function disableEdit() {

@@ -294,6 +294,7 @@
     "edit_payment": "Edit Payment",
     "revert_transaction": "Revert Transaction",
     "edit_task": "Edit Task",
+    "add_subtask": "Add Subtask",
     "leave_a_comment": "Leave a comment",
     "mark_complete": "Mark as Complete",
     "mark_incomplete": "Mark as Incomplete",

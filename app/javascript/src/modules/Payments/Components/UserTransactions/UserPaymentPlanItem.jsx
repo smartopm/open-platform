@@ -501,7 +501,7 @@ export default function UserPaymentPlanItem({
                           <DataList
                             keys={paymentHeader}
                             data={[
-                              renderPayments(pay, currencyData, currentUser.userType, menuData)
+                              renderPayments(pay, currencyData, currentUser, menuData)
                             ]}
                             hasHeader={false}
                             clickable
@@ -512,7 +512,7 @@ export default function UserPaymentPlanItem({
                       ) : (
                         <PaymentMobileDataList
                           keys={paymentHeader}
-                          data={[renderPayments(pay, currencyData, currentUser.userType, menuData)]}
+                          data={[renderPayments(pay, currencyData, currentUser, menuData)]}
                           clickable
                           handleClick={() => transactionDetailOpen(pay)}
                         />
@@ -649,7 +649,7 @@ export function renderPlan(
   };
 }
 
-export function renderPayments(pay, currencyData, userType, menuData) {
+export function renderPayments(pay, currencyData, currentUser, menuData) {
   return {
     'Payment Date': (
       <Grid item xs={12} md={2} data-testid="payment-date">
@@ -676,7 +676,7 @@ export function renderPayments(pay, currencyData, userType, menuData) {
     ),
     Menu: (
       <Grid item xs={12} md={1} data-testid="menu">
-        {userType === 'admin' && pay.status !== 'cancelled' && (
+        {objectAccessor(currentUser?.permissions, 'plan_payment')?.permissions?.includes('can_view_menu_list') && (
           <IconButton
             aria-controls="simple-menu"
             aria-haspopup="true"

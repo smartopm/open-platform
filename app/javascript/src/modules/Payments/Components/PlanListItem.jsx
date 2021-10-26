@@ -19,6 +19,7 @@ import MenuList from '../../../shared/MenuList';
 import Text from '../../../shared/Text';
 import { dateToString } from '../../../components/DateContainer';
 import PaymentItem from './PaymentItem';
+import CenteredContent from '../../../shared/CenteredContent';
 
 export default function PlanListItem({ data, currencyData, menuData, selectedPlans, handlePlansSelect }) {
   const classes = useStyles();
@@ -37,7 +38,7 @@ export default function PlanListItem({ data, currencyData, menuData, selectedPla
     <>
       <Grid container spacing={2} className={classes.container}>
         <Grid item xs={8} sm={2} data-testid="landparcel" className={classes.bottom}>
-          <Grid container spacing={1}>
+          <Grid container spacing={2}>
             <Grid item sm={2}>
               <Checkbox
                 checked={Boolean(selectedPlans?.find(obj => obj.paymentPlanId === data?.id && obj.userId === data?.user?.id))}
@@ -60,7 +61,6 @@ export default function PlanListItem({ data, currencyData, menuData, selectedPla
               </Typography>
             </Grid>
           </Grid>
-          
         </Grid>
         <Hidden smUp>
           <Grid
@@ -70,7 +70,7 @@ export default function PlanListItem({ data, currencyData, menuData, selectedPla
             data-testid="menu"
             style={{ textAlign: 'right', marginTop: '-10px' }}
           >
-            {menuData?.userType === 'admin' && data?.planStatus === 'behind' && (
+            {(data?.planStatus === 'behind' || data?.planStatus === 'on_track') && (
               <IconButton
                 aria-controls="simple-menu"
                 aria-haspopup="true"
@@ -96,9 +96,9 @@ export default function PlanListItem({ data, currencyData, menuData, selectedPla
         <Grid item xs={12} sm={2} data-testid='label'>
           <Label title={toTitleCase(data.planStatus || '')} color={objectAccessor(colors, data.planStatus)} />
         </Grid>
-        <Hidden smDown>
+        <Hidden xsDown>
           <Grid item xs={12} sm={1} data-testid="menu">
-            {menuData?.userType === 'admin' && data?.planStatus === 'behind' && (
+            {(data?.planStatus === 'behind' || data?.planStatus === 'on_track') && (
               <IconButton
                 aria-controls="simple-menu"
                 aria-haspopup="true"
@@ -138,6 +138,23 @@ export default function PlanListItem({ data, currencyData, menuData, selectedPla
             </span>
           </Grid>
         </Grid>
+        {data?.planStatus === 'on_track' && (
+          <Grid
+            item
+            xs={6}
+            sm={7}
+            data-testid="due-date"
+          >
+            <CenteredContent>
+              <Typography variant='caption'>
+                {t('misc.payment_due_date', {date: dateToString(data?.upcomingInstallmentDueDate)})}
+              </Typography>
+              <Typography variant='caption' style={!matches ? {marginLeft: '10px'} : {}}>
+                {t('misc.installment_amount', {amount: formatMoney(currencyData, data?.installmentAmount)})}
+              </Typography>
+            </CenteredContent>
+          </Grid>
+        )}
         {open && (
           <>
             <Grid container className={classes.details}>
@@ -234,14 +251,10 @@ const useStyles = makeStyles(() => ({
     marginBottom: '10px'
   },
   history: {
-    marginLeft: '-40px',
-    marginBottom: '-35px',
     textAlign: 'center',
     display: 'flex'
   },
   historyMobile: {
-    marginLeft: '-17px',
-    marginBottom: '-17px',
     textAlign: 'center'
   },
   view: {
@@ -284,6 +297,8 @@ PlanListItem.propTypes = {
     planStatus: PropTypes.string,
     endDate: PropTypes.string,
     startDate: PropTypes.string,
+    upcomingInstallmentDueDate: PropTypes.string,
+    installmentAmount: PropTypes.string,
     planValue: PropTypes.number,
     user: PropTypes.shape({
       id: PropTypes.string,
