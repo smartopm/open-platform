@@ -2,5 +2,12 @@
   "scan": {
     "torch": "Toggle Torch",
     "button_key": "Button Key"
+  },
+  "qr_code": {
+    "message": "This \"QR Code\" is a unique identifier for your {{communityName}} account and can be used at the main gate instead of writing your contact information manually. Our goal is to provide fast, easy and secure access."
+  },
+  "misc": {
+    "visiting_hours": "Please note the main gate visiting hours:",
+    "off": "Off"
   }
 }

@@ -5,6 +5,7 @@ import { useQuery } from 'react-apollo'
 import { QRCode } from 'react-qr-svg'
 import { Typography } from '@material-ui/core'
 import EmojiObjectsOutlinedIcon from '@material-ui/icons/EmojiObjectsOutlined'
+import { useTranslation } from 'react-i18next';
 import Loading from '../shared/Loading'
 import DateUtil from '../utils/dateutil'
 import { UserQuery } from '../graphql/queries'
@@ -33,6 +34,7 @@ export default function IdCardPage(){
 }
 
 export function UserIDDetail({ data, communityName }) {
+  const { t } = useTranslation(['scan', 'days', 'common']);
   return (
     <div>
      
@@ -51,7 +53,8 @@ export function UserIDDetail({ data, communityName }) {
           </div>
           <div className="d-flex justify-content-center">
             <div className="expires">
-              Expiration:
+              {t('common:misc.expiration')}
+              :
               {' '}
               {DateUtil.isExpired(data.user.expiresAt) ? (
                 <span className="text-danger">Already Expired</span>
@@ -93,12 +96,7 @@ export function UserIDDetail({ data, communityName }) {
                 variant="body2"
                 style={{ fontSize: 13 }}
               >
-                This &quot;QR Code&quot; is a unique identifier for your 
-                {' '}
-                {`${communityName} `}
-                account and can be used at the main gate instead of writing your
-                contact information manually. Our goal is to provide fast, easy
-                and secure access.
+                {t('qr_code.message', {communityName})}
               </Typography>
             </div>
           </div>
@@ -107,25 +105,31 @@ export function UserIDDetail({ data, communityName }) {
           {communityName && communityName !== 'Ciudad Morazán' ? (
             <div className="d-flex justify-content-center">
               <p>
-                <u>Please note the main gate visiting hours:</u> 
+                <u>{t('misc.visiting_hours')}</u>
                 {' '}
                 <br />
                 <br />
                 <span data-testid="visiting_hours">
                   {' '}
-                  Monday - Friday:
+                  {t('days:days.monday')}
+                  {' '}
+                  -
+                  {t('days:days.friday')}
+                  :
                   {' '}
                   <b>8:00 - 16:00</b> 
                   {' '}
                   <br />
-                  Saturday: 
+                  {t('days:days.saturday')}
+                  :
                   {' '}
                   <b>8:00 - 12:00</b> 
                   {' '}
                   <br />
-                  Sunday: 
+                  {t('days:days.sunday')}
+                  :
                   {' '}
-                  <b>Off</b> 
+                  <b>{t('misc.off')}</b>
                   {' '}
                   <br />
                 </span>

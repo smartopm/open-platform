@@ -21,7 +21,7 @@ import {
 } from '../../../graphql/mutations';
 import { Spinner } from '../../../shared/Loading';
 import { isTimeValid, getWeekDay } from '../../../utils/dateutil';
-import { objectAccessor } from '../../../utils/helpers';
+import { objectAccessor, validateEmail } from '../../../utils/helpers';
 import { dateToString, dateTimeToString } from '../../../components/DateContainer';
 import { userState, userType, communityVisitingHours, defaultBusinessReasons, CommunityFeaturesWhiteList } from '../../../utils/constants'
 import { ModalDialog, ReasonInputModal } from "../../../components/Dialog"
@@ -69,12 +69,14 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
     isSubmitting: false
   });
   const [formData, setFormData] = useState(initialRequestState);
-  const { t } = useTranslation(['common', 'logbook']);
+
+  const { t } = useTranslation(['common', 'logbook', 'discussion']);
   const [isReasonModalOpen, setReasonModal] = useState(false);
   const [isQrModalOpen, setQrModal] = useState(false);
   const [qrCodeEmail, setQrCodeEmail] = useState('');
   const [guestRequest, setGuestRequest] = useState({ id: '' });
   const requiredFields = authState?.user?.community?.communityRequiredFields?.manualEntryRequestForm || defaultRequiredFields
+  const [emailError, setEmailError] = useState(false);
   const showCancelBtn = previousRoute || tabValue || !!guestListRequest
 
 
@@ -336,12 +338,24 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
       });
   }
 
+  function isEmailValid() {
+    return formData?.email === '' ? true : validateEmail(formData.email);
+  }
+
   function handleModal(_event, type) {
     const isAnyInvalid = checkInValidRequiredFields(formData, requiredFields);
     if (isAnyInvalid) {
       setInputValidationMsg({ isError: true });
       return;
     }
+
+    if(!isEmailValid()) {
+      setEmailError(true);
+      return;
+    }
+    setEmailError(false);
+
+
     if (isGuestRequest && !formData.visitationDate) {
       setDetails({
         ...observationDetails,
@@ -540,6 +554,8 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
               value={formData.email}
               inputProps={{ 'data-testid': 'email' }}
               disabled={disableEdit()}
+              error={emailError}
+              helperText={emailError && !isEmailValid() && t('discussion:helper_text.invalid_email')}
             />
           </div>
           <div className="form-group">
