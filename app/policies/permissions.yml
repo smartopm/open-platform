@@ -125,6 +125,7 @@ admin:
         - can_fetch_user_time_sheet_logs
         - can_fetch_user_last_shift
         - can_access_all_timesheets
+        - can_see_menu_item
 contractor:
   note:
     permissions:
@@ -192,6 +193,7 @@ custodian:
       - can_fetch_user_time_sheet_logs
       - can_fetch_user_last_shift
       - can_access_all_timesheets
+      - can_see_menu_item
 security_guard:
   note:
     permissions:
