@@ -131,7 +131,7 @@ admin:
       - can_update_user_details
       - can_merge_users
       - can_import_users
-      - one_time_login
+      - can_send_one_time_login
       - can_access_all_users
       - can_view_own_profile
       - can_edit_own_profile
