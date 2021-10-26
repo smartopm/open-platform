@@ -46,7 +46,7 @@ module Mutations
         ).permission?(
           admin: true,
           module: :user,
-          permission: :one_time_login,
+          permission: :can_merge_users,
         )
       end
     end

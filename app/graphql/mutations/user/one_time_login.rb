@@ -25,7 +25,7 @@ module Mutations
           context[:current_user], nil
         ).permission?(
           module: :user,
-          permission: :can_send_one_time_login,
+          permission: :one_time_login,
         ) || context[:current_user].role?(%i[admin client resident])
 
         raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
