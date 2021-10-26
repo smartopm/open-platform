@@ -243,7 +243,9 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
            return response.data.result.entryRequest.id
         })
         .then(response => {
-          handleNext()
+          if (communityName !== 'Nkwashi') {
+            handleNext()
+          }
           return response
         })
         .catch(err => {
@@ -823,24 +825,28 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
                   startIcon={isLoading && <Spinner />}
                 >
                   {
-                    t('logbook:logbook.next_step')
+                    communityName === 'Nkwashi' ? t('logbook:logbook.grant') : t('logbook:logbook.next_step')
                   }
                 </Button>
               </Grid>
-              <Grid item>
-                <Button
-                  onClick={event => handleModal(event, 'grant')}
-                  disabled={!requestContext.request.id}
-                  data-testid="entry_user_grant"
-                  startIcon={isLoading && <Spinner />}
-                  color="primary"
-                >
+              {
+                communityName !== 'Nkwashi' && (
+                  <Grid item>
+                    <Button
+                      onClick={event => handleModal(event, 'grant')}
+                      disabled={!requestContext.request.id}
+                      data-testid="entry_user_grant"
+                      startIcon={isLoading && <Spinner />}
+                      color="primary"
+                    >
 
-                  {
+                      {
                     t('logbook:logbook.grant')
                   }
-                </Button>
-              </Grid>
+                    </Button>
+                  </Grid>
+                )
+              }
               <br />
               <Grid item>
                 <FeatureCheck features={authState?.user?.community?.features} name="LogBook" subFeature={CommunityFeaturesWhiteList.denyGateAccessButton}>
