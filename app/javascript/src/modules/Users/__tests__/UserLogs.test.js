@@ -60,6 +60,6 @@ describe('UserLogs', () => {
 
     await waitFor(() => {
       expect(getByText('I am testing this again')).toBeInTheDocument()
-    })
+    },20)
   });
 });

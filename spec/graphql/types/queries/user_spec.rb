@@ -45,9 +45,13 @@ RSpec.describe Types::Queries::User do
              user_type: 'visitor',
              community_id: current_user.community_id)
     end
-    let!(:admin) { create(:admin_user, community_id: current_user.community_id, email: 'ab@dc.ef') }
+    let!(:admin) do
+      create(:admin_user, community_id: current_user.community_id,
+                          email: 'ab@dc.ef', state: 'valid')
+    end
     let!(:another_admin) do
-      create(:admin_user, community_id: current_user.community_id, email: 'cd@dc.ef')
+      create(:admin_user, community_id: current_user.community_id,
+                          email: 'cd@dc.ef', state: 'valid')
     end
 
     let(:query) do
@@ -101,6 +105,17 @@ RSpec.describe Types::Queries::User do
           }
       })
     end
+
+    let(:admins_users_query) do
+      %(
+        query adminUsers{
+          adminUsers {
+            id
+            name
+          }
+      })
+    end
+
     let(:active_plan_query) do
       %(
         query plans {
@@ -124,6 +139,34 @@ RSpec.describe Types::Queries::User do
       expect(result.dig('data', 'usersLite', 0, 'id')).to_not be_nil
       expect(result.dig('data', 'usersLite', 0, 'name')).to_not be_nil
       expect(result.dig('data', 'usersLite').length).to eql 2 # only one admin
+    end
+
+    it 'admin_users query' do
+      result = DoubleGdpSchema.execute(admins_users_query,
+                                       context: { current_user: admin,
+                                                  site_community: admin.community }).as_json
+      expect(result.dig('data', 'adminUsers', 0, 'id')).to_not be_nil
+      expect(result.dig('data', 'adminUsers', 0, 'name')).to_not be_nil
+      expect(result.dig('data', 'adminUsers').length).to eql 2 # admin with valid state
+    end
+
+    it 'admin_users query returns unauthorised if current user is not admin' do
+      result = DoubleGdpSchema.execute(admins_users_query,
+                                       context: { current_user: current_user,
+                                                  site_community: admin.community }).as_json
+      expect(result['errors']).to_not be_nil
+      expect(result['errors'][0]['message']).to eql 'Unauthorized'
+    end
+
+    it 'returns unauthorized when invalid current user' do
+      variables = {
+        query: 'user_type: admin',
+      }
+      result = DoubleGdpSchema.execute(admins_query,
+                                       variables: variables,
+                                       context: { current_user: current_user }).as_json
+      expect(result['errors']).to_not be_nil
+      expect(result['errors'][0]['message']).to eql 'Unauthorized'
     end
 
     it 'returns limited number of users if limit is supplied' do
@@ -324,6 +367,18 @@ RSpec.describe Types::Queries::User do
                                        context: {
                                          current_user: nil,
                                        }).as_json
+      expect(result['errors'][0]['message']).to eql 'Unauthorized'
+    end
+
+    it 'returns unauthorized when current user not an admin' do
+      variables = {
+        query: 'ab@dc.ef',
+      }
+      result = DoubleGdpSchema.execute(users_query, variables: variables,
+                                                    context: {
+                                                      current_user: current_user,
+                                                    }).as_json
+      expect(result['errors']).to_not be_nil
       expect(result['errors'][0]['message']).to eql 'Unauthorized'
     end
   end

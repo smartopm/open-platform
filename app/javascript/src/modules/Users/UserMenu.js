@@ -17,8 +17,6 @@ import React from 'react';
 import { allUserTypes } from '../../utils/constants';
 import { checkAccessibilityForUserType as handler } from '../../utils/helpers'
 
-// const logBookPermissions = ['can_access_logbook'];
-
 const userMenus = [
   {
     routeProps: {
