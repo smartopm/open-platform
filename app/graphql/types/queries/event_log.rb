@@ -40,6 +40,7 @@ module Types::Queries::EventLog
                                                  ref: %i[users entry_requests some_undefined])
                             .where(query)
                             .limit(limit).offset(offset)
+                            .with_attached_images
   end
   # rubocop:enable Metrics/ParameterLists
 

@@ -10,6 +10,7 @@ import { createClient } from '../../../utils/apollo';
 import RequestUpdate from '../Components/RequestUpdate';
 import RequestUpdatePage from '../Components/RequestUpdatePage';
 import MockedThemeProvider from '../../__mocks__/mock_theme';
+import { EntryRequestContext } from '../GuestVerification/Context';
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
 describe('RequestUpdate main page', () => {
@@ -21,7 +22,7 @@ describe('RequestUpdate main page', () => {
       expiresAt: null,
       community: {
         supportName: 'Support Officer',
-        features: {LogBook: { features: [] }}
+        features: { LogBook: { features: [] } }
       }
     }
   };
@@ -33,7 +34,14 @@ describe('RequestUpdate main page', () => {
             <MockedProvider>
               <BrowserRouter>
                 <MockedThemeProvider>
-                  <RequestUpdate id="23942342dsd" isScannedRequest={false} isGuestRequest />
+                  <EntryRequestContext.Provider
+                    value={{
+                      request: { id: '23942342dsd' },
+                      grantAccess: jest.fn()
+                    }}
+                  >
+                    <RequestUpdate id="23942342dsd" isScannedRequest={false} isGuestRequest />
+                  </EntryRequestContext.Provider>
                 </MockedThemeProvider>
               </BrowserRouter>
             </MockedProvider>
@@ -50,7 +58,14 @@ describe('RequestUpdate main page', () => {
             <MockedProvider>
               <BrowserRouter>
                 <MockedThemeProvider>
-                  <RequestUpdatePage />
+                  <EntryRequestContext.Provider
+                    value={{
+                      request: { id: '23942342dsd' },
+                      grantAccess: jest.fn()
+                    }}
+                  >
+                    <RequestUpdatePage />
+                  </EntryRequestContext.Provider>
                 </MockedThemeProvider>
               </BrowserRouter>
             </MockedProvider>

@@ -13,6 +13,7 @@ import MessageAlert from '../../../../components/MessageAlert';
 import { EntryRequestContext } from '../Context';
 import Video from '../../../../shared/Video';
 import { Spinner } from '../../../../shared/Loading';
+import CenteredContent from '../../../../components/CenteredContent';
 
 export default function VideoCapture() {
   const [counter, setCounter] = useState(0);
@@ -27,8 +28,6 @@ export default function VideoCapture() {
     isError: false,
     message: ''
   });
-
-  const [recorded, setIsRecorded] = useState(Boolean(requestContext.guest?.videoUrl))
 
   const { onChange, signedBlobId, status } = useFileUpload({
     client: useApolloClient()
@@ -80,6 +79,7 @@ export default function VideoCapture() {
           message: t('logbook:video_recording.video_recorded'),
           isError: false
         });
+        requestContext.updateRequest({ ...requestContext.request, videoBlobId:  signedBlobId})
       })
       .catch(error => {
         setDetails({ ...errorDetails, isError: true, message: error.message });
@@ -121,8 +121,8 @@ export default function VideoCapture() {
         {recordingInstruction}
       </div>
       {
-        recorded
-        ? <Video src={requestContext.guest?.videoUrl} />
+        requestContext.request?.videoUrl
+        ? <Video src={requestContext.request?.videoUrl} />
         : (
           <div className={classes.videoArea} data-testid="video_recorder">
             <VideoRecorder
@@ -142,18 +142,23 @@ export default function VideoCapture() {
 
       <div className={classes.continueButton}>
         {status === 'FILE_UPLOAD' && <Spinner />}
-        {recordingCompleted && status === 'DONE' && (
+        <CenteredContent>
+
+          {recordingCompleted && status === 'DONE' && (
           <Button onClick={onContinue} color="primary" data-testid="continue-btn">
             {t('logbook:video_recording.save_video')}
           </Button>
         )}
-        {
-          requestContext.guest?.videoUrl && (
-            <Button onClick={() => setIsRecorded(!recorded)} color="primary" data-testid="re_record_video_btn">
-              {recorded ? t('logbook:video_recording.re_record_video') : t('form_actions.cancel')}
-            </Button>
-          )
-        }
+          <Button
+            onClick={requestContext.grantAccess}
+            color="primary"
+            data-testid="grant_btn"
+            disabled={!requestContext.request.id}
+            startIcon={requestContext.request.isLoading && <Spinner />}
+          >
+            grant
+          </Button>
+        </CenteredContent>
       </div>
     </div>
   );

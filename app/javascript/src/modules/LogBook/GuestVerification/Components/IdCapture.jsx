@@ -10,6 +10,7 @@ import { EntryRequestUpdateMutation } from '../../graphql/logbook_mutations';
 import { EntryRequestContext } from '../Context';
 import MessageAlert from '../../../../components/MessageAlert';
 import CenteredContent from '../../../../components/CenteredContent';
+import { Spinner } from '../../../../shared/Loading';
 
 export default function IDCapture({ handleNext }) {
   const [frontImageUrl, setFrontImageUrl] = useState('');
@@ -17,6 +18,7 @@ export default function IDCapture({ handleNext }) {
   const [uploadType, setUploadType] = useState('');
   const [frontBlobId, setFrontBlobId] = useState('');
   const [backBlobId, setBackBlobId] = useState('');
+  const [loading, setLoading] = useState(false);
   const requestContext = useContext(EntryRequestContext);
   const matches = useMediaQuery('(max-width:600px)');
   const { t } = useTranslation('logbook');
@@ -31,7 +33,7 @@ export default function IDCapture({ handleNext }) {
 
   function handleContinue() {
     const blobIds = [frontBlobId, backBlobId];
-
+    setLoading(true)
     updateRequest({ variables: { id: requestContext.request.id, imageBlobIds: blobIds } })
       .then(() => {
         setDetails({
@@ -39,10 +41,13 @@ export default function IDCapture({ handleNext }) {
           message: t('image_capture.image_captured'),
           isError: false
         });
+        requestContext.updateRequest({ ...requestContext.request, frontImageBlobId:  frontBlobId})
+        setLoading(false)
         handleNext()
       })
       .catch(error => {
         setDetails({ ...errorDetails, isError: true, message: error.message });
+        setLoading(false)
       });
   }
 
@@ -61,7 +66,7 @@ export default function IDCapture({ handleNext }) {
   }, [status]);
 
   const classes = useStyles();
-  const images = requestContext.guest?.imageUrls;
+  const images = requestContext.request.imageUrls;
 
   return (
     <>
@@ -128,20 +133,21 @@ export default function IDCapture({ handleNext }) {
             variant="contained"
             color="primary"
             onClick={handleContinue}
-            disabled={!backBlobId || !frontBlobId}
+            disabled={(!backBlobId || !frontBlobId) && !images}
             data-testid="save_and_next"
+            startIcon={loading && <Spinner />}
           >
-            {t('image_capture.save_my_id')}
+            {t('image_capture.next_step')}
           </Button>
           <Button
             className={classes.skipToNextBtn}
-            variant="contained"
-            onClick={handleNext}
-            disabled={!images}
-            color="secondary"
+            onClick={requestContext.grantAccess}
+            disabled={!requestContext.request.id}
+            color="primary"
             data-testid="skip_next"
+            startIcon={requestContext.request.isLoading && <Spinner />}
           >
-            {t('image_capture.next_step')}
+            {t('logbook.grant')}
           </Button>
         </CenteredContent>
       </Grid>
@@ -162,5 +168,5 @@ const useStyles = makeStyles(() => ({
 }));
 
 IDCapture.propTypes = {
-  handleNext: PropTypes.func.isRequired
+  handleNext: PropTypes.func.isRequired,
 };

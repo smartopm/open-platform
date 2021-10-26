@@ -28,7 +28,7 @@ module Mutations
       def resolve(vals)
         entry_request = context[:site_community].entry_requests.find(vals.delete(:id))
 
-        if entry_request.update(vals.except(:video_blob_id, :image_blob_ids))
+        if entry_request.update(vals.except(:video_blob_id, :image_blob_ids, :temperature))
           add_attachments(entry_request, vals)
           return { entry_request: entry_request }
         end

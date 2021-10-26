@@ -6,7 +6,7 @@ import EntryRequestContextProvider from '../../GuestVerification/Context';
 export default function GuestUpdate() {
   const { guestListEntryId } = useParams()
   return (
-    <>
+    <EntryRequestContextProvider>
       <div className="container">
         <EntryRequestContextProvider>
           <RequestUpdate
@@ -17,6 +17,6 @@ export default function GuestUpdate() {
           />
         </EntryRequestContextProvider>
       </div>
-    </>
+    </EntryRequestContextProvider>
   )
 }

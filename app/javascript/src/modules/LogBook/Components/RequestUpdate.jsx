@@ -1,16 +1,17 @@
-/* eslint-disable */
+/* eslint-disable max-lines */
+/* eslint-disable max-statements */
+/* eslint-disable complexity */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 /* eslint-disable no-nested-ternary */
 /* eslint-disable no-use-before-define */
 import React, { useState, useEffect, useContext } from 'react';
-import { useMutation, useLazyQuery, useApolloClient } from 'react-apollo';
+import { useMutation } from 'react-apollo';
 import { TextField, MenuItem, Button, Grid } from '@material-ui/core';
 import { StyleSheet, css } from 'aphrodite';
 import { useHistory } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import CallIcon from '@material-ui/icons/Call';
-import { EntryRequestQuery } from '../../../graphql/queries';
 import {
   EntryRequestGrant,
   EntryRequestDeny,
@@ -25,9 +26,7 @@ import { dateToString, dateTimeToString } from '../../../components/DateContaine
 import { userState, userType, communityVisitingHours, defaultBusinessReasons, CommunityFeaturesWhiteList } from '../../../utils/constants'
 import { ModalDialog, ReasonInputModal } from "../../../components/Dialog"
 import { Context } from '../../../containers/Provider/AuthStateProvider';
-import EntryNoteDialog from '../../../shared/dialogs/EntryNoteDialog';
-import CenteredContent from '../../../components/CenteredContent';
-import AddObservationNoteMutation, {
+import {
   EntryRequestUpdateMutation,
   SendGuestQrCodeMutation
 } from '../graphql/logbook_mutations';
@@ -36,39 +35,16 @@ import { checkInValidRequiredFields, defaultRequiredFields , checkRequests } fro
 import GuestTime from './GuestTime';
 import QRCodeConfirmation from './QRCodeConfirmation';
 import FeatureCheck from '../../Features';
-import { useFileUpload } from '../../../graphql/useFileUpload';
 import { EntryRequestContext } from '../GuestVerification/Context';
+import { initialRequestState } from '../GuestVerification/constants'
 
-const initialState = {
-    name: '',
-    phoneNumber: '',
-    nrc: '',
-    vehiclePlate: '',
-    reason: '',
-    business: '',
-    state: '',
-    userType: '',
-    expiresAt: '',
-    email: '',
-    companyName: '',
-    temperature: '',
-    loaded: false,
-    occursOn: [],
-    visitationDate: null,
-    visitEndDate: null,
-    startsAt: new Date(),
-    endsAt: new Date(),
-    isGuest: false
-}
+
 
 export default function RequestUpdate({ id, previousRoute, guestListRequest, isGuestRequest, tabValue, isScannedRequest, handleNext }) {
   const history = useHistory()
   const authState = useContext(Context)
   const requestContext = useContext(EntryRequestContext)
   const isFromLogs = previousRoute === 'logs' ||  false
-  const [loadRequest, { data }] = useLazyQuery(EntryRequestQuery, {
-    variables: { id }
-  });
   const [createEntryRequest] = useMutation(EntryRequestCreate);
   const [sendGuestQrCode] = useMutation(SendGuestQrCodeMutation);
   const [grantEntry] = useMutation(EntryRequestGrant);
@@ -76,14 +52,11 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
   const [updateRequest] = useMutation(EntryRequestUpdateMutation);
   const [createUser] = useMutation(CreateUserMutation);
   const [updateLog] = useMutation(UpdateLogMutation);
-  const [addObservationNote] = useMutation(AddObservationNoteMutation);
   const [isLoading, setLoading] = useState(false);
   const [isModalOpen, setModal] = useState(false);
   const [modalAction, setModalAction] = useState('');
   const [date] = useState(new Date());
   const [isClicked, setIsClicked] = useState(false);
-  const [isObservationOpen, setIsObservationOpen] = useState(false);
-  const [observationNote, setObservationNote] = useState('');
   const [reqId, setRequestId] = useState(id);
   const [observationDetails, setDetails] = useState({
     isError: false,
@@ -95,27 +68,17 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
     isError: false,
     isSubmitting: false
   });
-  const [formData, setFormData] = useState(initialState);
+  const [formData, setFormData] = useState(initialRequestState);
+
   const { t } = useTranslation(['common', 'logbook', 'discussion']);
   const [isReasonModalOpen, setReasonModal] = useState(false);
   const [isQrModalOpen, setQrModal] = useState(false);
   const [qrCodeEmail, setQrCodeEmail] = useState('');
   const [guestRequest, setGuestRequest] = useState({ id: '' });
   const requiredFields = authState?.user?.community?.communityRequiredFields?.manualEntryRequestForm || defaultRequiredFields
-  const showCancelBtn = previousRoute || tabValue || !!guestListRequest
-  const [imageUrls, setImageUrls] = useState([])
-  const [blobIds, setBlobIds] = useState([])
   const [emailError, setEmailError] = useState(false);
+  const showCancelBtn = previousRoute || tabValue || !!guestListRequest
 
-  const { onChange, signedBlobId, url, status } = useFileUpload({
-    client: useApolloClient()
-  });
-
-  useEffect(() => {
-    if (id!== 'new-guest-entry' && id !== null && id !== 'undefined') {
-      loadRequest({ variables: { id } })
-    }
-  }, [id, loadRequest]);
 
   useEffect(() => {
     if (formData.reason === 'other') {
@@ -123,13 +86,6 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
     }
   }, [formData.reason, id]);
 
-  useEffect(() => {
-    if (status === 'DONE') {
-      setImageUrls([...imageUrls, url])
-      setBlobIds([...blobIds, signedBlobId])
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [status]);
 
   useEffect(() => {
     if (formData.loaded && isScannedRequest) {
@@ -187,10 +143,15 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
     }
   }, [formData.loaded]);
 
-  // Data is loaded, so set the initialState, but only once
-  if (!formData.loaded && data && id) {
-    setFormData({ ...data.result, loaded: true });
-  }
+  useEffect(() => {
+    // Data is loaded, so set the initialState, but only once
+    if (requestContext.request?.id) {
+      return setFormData({ ...formData, ...requestContext.request });
+    }
+    return setFormData({ ...initialRequestState });
+
+  }, [requestContext.request])
+
 
   function handleInputChange(e) {
     const { name, value } = e.target;
@@ -241,7 +202,8 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
   function closeQrModal() {
     setQrModal(false);
     if (guestListRequest) {
-      return history.push('/guest-list')
+      history.push('/guest-list')
+      return
     }
     handleNext(true)
   }
@@ -254,6 +216,9 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
       isGuest: guestListRequest,
       visitationDate: previousRoute !== 'entry_logs' ? formData.visitationDate : null
     }
+    if(requestContext.request.id && communityName !== 'Nkwashi'){
+      handleNext()
+    }
 
     setLoading(true)
     return (
@@ -261,7 +226,6 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
         // eslint-disable-next-line consistent-return
         .then((response) => {
           setRequestId(response.data.result.entryRequest.id);
-          requestContext.updateRequest({ ...requestContext.request, id: response.data.result.entryRequest.id })
           setLoading(false)
           if (isGuestRequest) {
             setDetails({
@@ -273,7 +237,20 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
             setQrModal(true);
             return false
           }
-          return response.data.result.entryRequest.id
+          // hardcoding this for now before we make this a community setting
+          if (communityName === 'Nkwashi') {
+            return requestContext.grantAccess(response.data.result.entryRequest.id)
+          }
+          requestContext.updateRequest({
+            ...requestContext.request, id: response.data.result.entryRequest.id
+           })
+           return response.data.result.entryRequest.id
+        })
+        .then(response => {
+          if (communityName !== 'Nkwashi') {
+            handleNext()
+          }
+          return response
         })
         .catch(err => {
           setLoading(false)
@@ -305,25 +282,7 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
       });
   }
 
-  function handleGrantRequest() {
-    setLoading(true);
-    setModal(false);
-    handleCreateRequest()
-      .then(requestId => grantEntry({ variables: { id: requestId } }))
-      .then(() => {
-        setDetails({
-          ...observationDetails,
-          isError: false,
-          message: t('logbook:logbook.success_message', { action: t('logbook:logbook.granted') })
-        });
-        setIsObservationOpen(true);
-        setLoading(false);
-      })
-      .catch(error => {
-        setLoading(false);
-        setDetails({ ...observationDetails, isError: true, message: error.message });
-      });
-  }
+
 
   function handleDenyRequest() {
     const isAnyInvalid = checkInValidRequiredFields(formData, requiredFields);
@@ -340,7 +299,6 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
           ...observationDetails,
           message: t('logbook:logbook.success_message', { action: t('logbook:logbook.denied') })
         });
-        setIsObservationOpen(true);
         setLoading(false);
       })
       .catch(error => {
@@ -394,9 +352,9 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
     if(!isEmailValid()) {
       setEmailError(true);
       return;
-    }else{
-      setEmailError(false);
     }
+    setEmailError(false);
+
 
     if (isGuestRequest && !formData.visitationDate) {
       setDetails({
@@ -427,44 +385,6 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
     }
   }
 
-  function resetForm(to) {
-    setFormData(initialState);
-    setObservationNote('');
-    setRequestId('');
-    setIsObservationOpen(false);
-    setModal(false);
-    setImageUrls([]);
-    history.push(to);
-  }
-
-  function handleSaveObservation(to) {
-    // we are skipping the observation notes
-    if (!observationNote) {
-      resetForm(to);
-      return;
-    }
-    setDetails({ ...observationDetails, loading: true });
-    addObservationNote({
-      variables: { id: reqId, note: observationNote, refType: 'Logs::EntryRequest', attachedImages: blobIds }
-    })
-      .then(() => {
-        setDetails({
-          ...observationDetails,
-          loading: false,
-          isError: false,
-          message: t('logbook:observations.created_observation')
-        });
-        resetForm(to);
-      })
-      .catch(error => {
-        setDetails({
-          ...observationDetails,
-          loading: false,
-          isError: true,
-          message: error.message
-        });
-      });
-  }
   function checkTimeIsValid() {
     const communityName = authState.user.community.name;
     const accessor = communityName.toLowerCase();
@@ -481,7 +401,6 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
     setReasonModal(!isReasonModalOpen);
   }
 
-  const observationAction = observationNote ? 'Save' : 'Skip'
 
   // TODO: needs refactor
   function closeForm({id: _id}){
@@ -499,7 +418,7 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
       return true;
     return false;
   }
-
+  const communityName = authState.user.community.name
   return (
     <>
       <ReasonInputModal
@@ -535,7 +454,7 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
       />
       <ModalDialog
         handleClose={() => setModal(false)}
-        handleConfirm={handleGrantRequest}
+        handleConfirm={() => requestContext.grantAccess()}
         open={isModalOpen}
         action={t(`logbook:access_actions.${modalAction}`)}
         name={formData.name}
@@ -552,52 +471,6 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
         </div>
       )}
       </ModalDialog>
-
-      {/* Observation note goes here */}
-      <EntryNoteDialog
-        open={isObservationOpen}
-        handleDialogStatus={() => setIsObservationOpen(!isObservationOpen)}
-        observationHandler={{
-        value: observationNote,
-        handleChange: value => setObservationNote(value)
-        }}
-        imageOnchange={(img) => onChange(img)}
-        imageUrls={imageUrls}
-      >
-        {observationDetails.loading ? (
-          <Spinner />
-      ) : (
-        <CenteredContent>
-          <Button
-            onClick={() => handleSaveObservation('/scan')}
-            variant="outlined"
-            className={css(styles.observationButton)}
-            color="primary"
-            fullWidth
-          >
-            {t('logbook:observations.skip_scan_next_entry', { action: observationAction })}
-          </Button>
-          <Button
-            onClick={() => handleSaveObservation('/request')}
-            variant="outlined"
-            className={`${css(styles.observationButton)} save_and_record_other`}
-            color="primary"
-            fullWidth
-          >
-            {t('logbook:observations.skip_record_manual_entry', { action: observationAction })}
-          </Button>
-          <Button
-            onClick={() => history.push('/')}
-            variant="contained"
-            className={css(styles.observationButton)}
-            color="primary"
-            fullWidth
-          >
-            {t('logbook:observations.close_go_dashboard')}
-          </Button>
-        </CenteredContent>
-      )}
-      </EntryNoteDialog>
 
       <div className="container">
         <form>
@@ -922,7 +795,6 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
                 </Button>
               )
         }
-
             {((previousRoute !== 'enroll' && id) && (authState?.user?.userType === 'admin' ||
               !isGuestRequest || authState?.user?.id === formData?.user?.id)) && (
               <Button
@@ -960,30 +832,42 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
 
         ) : !/logs|enroll|guests/.test(previousRoute) && !tabValue && !guestListRequest? (
           <>
-            <br />
-            <br />
-            <br />
-            <br />
-
-            <Grid container item xs={4} justify="center" spacing={4}>
+            <Grid container justify="center" spacing={4} className={css(styles.grantSection)}>
               <Grid item>
                 <Button
                   variant="contained"
-                  onClick={event => handleModal(event, 'grant')}
-                  className={css(styles.grantButton)}
+                  onClick={event => handleModal(event, 'create')}
+                  color="primary"
                   disabled={isLoading}
-                  data-testid="entry_user_grant"
+                  data-testid="entry_user_next"
                   startIcon={isLoading && <Spinner />}
                 >
-
                   {
-                    t('logbook:logbook.grant')
+                    communityName === 'Nkwashi' ? t('logbook:logbook.grant') : t('logbook:logbook.next_step')
                   }
                 </Button>
               </Grid>
+              {
+                communityName !== 'Nkwashi' && (
+                  <Grid item>
+                    <Button
+                      onClick={event => handleModal(event, 'grant')}
+                      disabled={!requestContext.request.id}
+                      data-testid="entry_user_grant"
+                      startIcon={isLoading && <Spinner />}
+                      color="primary"
+                    >
+
+                      {
+                    t('logbook:logbook.grant')
+                  }
+                    </Button>
+                  </Grid>
+                )
+              }
               <br />
-              <FeatureCheck features={authState?.user?.community?.features} name="LogBook" subFeature={CommunityFeaturesWhiteList.denyGateAccessButton}>
-                <Grid item>
+              <Grid item>
+                <FeatureCheck features={authState?.user?.community?.features} name="LogBook" subFeature={CommunityFeaturesWhiteList.denyGateAccessButton}>
                   <Button
                     variant="contained"
                     onClick={handleDenyRequest}
@@ -996,20 +880,17 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
                       t('logbook:logbook.deny')
                     }
                   </Button>
-                </Grid>
-              </FeatureCheck>
-              <Grid>
-                <Grid item>
-                  <a
-                    href={`tel:${authState.user.community.securityManager}`}
-                    className={` ${css(styles.callButton)}`}
-                    data-testid="entry_user_call_mgr"
-                  >
-                    <CallIcon style={{ marginTop: '72px' }} />
-                    {' '}
-                    <p style={{ margin: '-30px 30px' }}>{t('logbook:logbook.call_manager')}</p>
-                  </a>
-                </Grid>
+                </FeatureCheck>
+              </Grid>
+              <Grid item>
+                <a
+                  href={`tel:${authState.user.community.securityManager}`}
+                  className={css(styles.callButton)}
+                  data-testid="entry_user_call_mgr"
+                >
+                  <CallIcon className={css(styles.callIcon)} />
+                  <span>{t('logbook:logbook.call_manager')}</span>
+                </a>
               </Grid>
             </Grid>
             <br />
@@ -1018,10 +899,6 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
           <span />
         )}
           </div>
-          <br />
-
-          <br />
-          <br />
         </form>
       </div>
     </>
@@ -1058,6 +935,9 @@ const styles = StyleSheet.create({
     height: 40,
     marginTop: 50
   },
+  grantSection: {
+    marginTop: 40
+  },
   denyButton: {
     backgroundColor: '#C31515',
     color: '#FFFFFF',
@@ -1065,42 +945,33 @@ const styles = StyleSheet.create({
     marginTop: 50,
     width: '50%',
     alignItems: 'center',
-    '@media (min-device-width: 320px) and (max-device-height: 568px)' : {
+    '@media (min-device-width: 320px) and (max-device-height: 568px)': {
       height: 30,
-      width: '50%',
-
-    },
+      width: '50%'
+    }
   },
   callButton: {
     color: '#66A59A',
     textTransform: 'unset',
     textDecoration: 'none',
-    width: '100%',
     boxShadow: 'none',
     alignItems: 'center',
-    height: 50,
-    '@media (min-device-width: 320px) and (max-device-height: 568px)' : {
-      height: 30,
-      width: '50%',
-
-    },
+    display: 'flex'
   },
-    enrollButton: {
+  callIcon: {
+    marginRight: 7
+  },
+  enrollButton: {
     backgroundColor: '#66A59A',
     color: '#FFFFFF',
     width: '60%',
     boxShadow: 'none',
     marginRight: '15vw',
     alignItems: 'center',
-    '@media (min-device-width: 320px) and (max-device-height: 568px)' : {
+    '@media (min-device-width: 320px) and (max-device-height: 568px)': {
       height: 30,
-      width: '100%',
-
-    },
-  },
-
-  observationButton: {
-    margin: 5
+      width: '100%'
+    }
   },
   inviteGuestButton: {
     width: '20%',
@@ -1110,11 +981,10 @@ const styles = StyleSheet.create({
     height: 50,
     color: '#FFFFFF',
 
-    '@media (min-device-width: 320px) and (max-device-height: 568px)' : {
+    '@media (min-device-width: 320px) and (max-device-height: 568px)': {
       height: 30,
-      width: '50%',
-
-    },
+      width: '50%'
+    }
   },
   cancelGuestButton: {
     width: '20%',
@@ -1122,13 +992,11 @@ const styles = StyleSheet.create({
     marginRight: '15vw',
     alignItems: 'center',
     marginTop: 50,
-    color: "#FFFFFF",
+    color: '#FFFFFF',
 
-    '@media (min-device-width: 320px) and (max-device-height: 568px)' : {
+    '@media (min-device-width: 320px) and (max-device-height: 568px)': {
       height: 30,
-      width: '30%',
-
-    },
-  },
+      width: '30%'
+    }
   }
-);
+});

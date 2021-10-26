@@ -13,7 +13,7 @@ export default function steps(handleNext, communityName) {
     },
     {
       title: 'Id Capture',
-      component: <IdCapture handleNext={handleNext} />,
+      component: <IdCapture handleNext={handleNext} />
     },
     {
       title: 'Capture Video',

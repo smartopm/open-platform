@@ -29,7 +29,6 @@ export default function EntryNoteDialog({
   const classes = useDialogStyles();
   const styles = useStyles();
   const { t } = useTranslation('logbook');
-
   return (
     <>
       <Dialog
