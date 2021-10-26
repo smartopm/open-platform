@@ -55,7 +55,7 @@ module Types::Queries::EntryRequest
   end
 
   def entry_requests
-    unless admin_or_security_guard || permissions_check
+    unless admin_or_security_guard || entry_request_permissions_check
       raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
     end
 
@@ -69,7 +69,7 @@ module Types::Queries::EntryRequest
   # rubocop:disable Metrics/AbcSize
   # rubocop:disable Metrics/MethodLength
   def scheduled_requests(offset: 0, limit: 50, query: nil, scope: nil)
-    unless admin_or_security_guard || permissions_check?
+    unless admin_or_security_guard || entry_request_permissions_check?
       raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
     end
 
@@ -146,7 +146,7 @@ module Types::Queries::EntryRequest
       current_user&.custodian? || current_user&.security_guard?
   end
 
-  def permissions_check?
+  def entry_request_permissions_check?
     ::Policy::ApplicationPolicy.new(
       context[:current_user], nil
     ).permission?(

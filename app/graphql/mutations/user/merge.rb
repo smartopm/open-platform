@@ -46,7 +46,7 @@ module Mutations
         ).permission?(
           admin: true,
           module: :user,
-          permission: :can_send_one_time_login,
+          permission: :one_time_login,
         )
       end
     end

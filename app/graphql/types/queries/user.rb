@@ -195,7 +195,7 @@ module Types::Queries::User
   end
 
   def users_count(query: nil)
-    raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') unless permissions_check?
+    raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') unless user_permissions_check?
 
     allowed_users = Users::User.allowed_users(context[:current_user])
     if query.present? && query.include?('date_filter')
@@ -212,7 +212,7 @@ module Types::Queries::User
     ).permission?(
       admin: true,
       module: :user,
-      permission: :can_get_resident_count,
+      permission: :can_get_substatus_count,
     )
       raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
     end
@@ -229,7 +229,7 @@ module Types::Queries::User
     ).permission?(
       admin: true,
       module: :user,
-      permission: :can_view_residents,
+      permission: :can_get_substatus_distribution,
     )
       raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
     end
@@ -257,7 +257,7 @@ module Types::Queries::User
     context[:site_community].users.where(user_type: 'admin', state: 'valid')
   end
 
-  def permissions_check?
+  def user_permissions_check?
     ::Policy::ApplicationPolicy.new(
       context[:current_user], nil
     ).permission?(

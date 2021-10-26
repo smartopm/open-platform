@@ -131,8 +131,25 @@ admin:
       - can_update_user_details
       - can_merge_users
       - can_import_users
-      - can_send_one_time_login
+      - one_time_login
       - can_access_all_users
+      - can_view_own_profile
+      - can_edit_own_profile
+      - can_get_substatus_count
+      - can_get_substatus_distribution
+      - can_view_admin_users
+      - can_get_user_count
+      - can_get_users
+      - can_get_users_lite
+  profile:
+    permissions:
+      - can_see_menu_item
+  logout:
+    permissions:
+      - can_see_menu_item
+  communication:
+    permissions:
+      - can_see_menu_item
 contractor:
   note:
     permissions:
@@ -287,6 +304,14 @@ resident:
   user:
     permissions:
       - can_send_one_time_login
+      - can_view_own_profile
+      - can_edit_own_profile
+  profile:
+    permissions:
+      - can_see_menu_item
+  logout:
+    permissions:
+      - can_see_menu_item
 prospective_client:
   note:
     permissions:
@@ -316,5 +341,13 @@ client:
   user:
     permissions:
       - can_send_one_time_login
+      - can_view_own_profile
+      - can_edit_own_profile
+  profile:
+    permissions:
+      - can_see_menu_item
+  logout:
+    permissions:
+      - can_see_menu_item
 
     
