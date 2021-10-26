@@ -146,7 +146,7 @@ export default function IDCapture({ handleNext }) {
             data-testid="skip_next"
             startIcon={requestContext.request.isLoading && <Spinner />}
           >
-            grant
+            {t('logbook.grant')}
           </Button>
         </CenteredContent>
       </Grid>
