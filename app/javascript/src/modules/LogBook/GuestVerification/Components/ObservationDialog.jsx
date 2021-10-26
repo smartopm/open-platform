@@ -35,7 +35,7 @@ export default function ObservationDialog() {
       setImageUrls([...imageUrls, url]);
       setBlobIds([...blobIds, signedBlobId]);
     }
-  }, [blobIds, imageUrls, signedBlobId, status, url]);
+  }, [status]);
 
   function resetForm(to) {
     setObservationNote('');
@@ -77,6 +77,12 @@ export default function ObservationDialog() {
       });
   }
 
+  function handleCloseButton(imgUrl){
+    const images = [...imageUrls]
+    const filteredImages = images.filter((img) => img !== imgUrl)
+    setImageUrls(filteredImages)
+  }
+
   return (
     <>
       <MessageAlert
@@ -97,6 +103,10 @@ export default function ObservationDialog() {
         imageOnchange={img => onChange(img)}
         imageUrls={imageUrls}
         status={status}
+        closeButtonData={{
+          closeButton: true,
+          handleCloseButton
+        }}
       >
         {isLoading ? (
           <Spinner />
