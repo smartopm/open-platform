@@ -141,6 +141,7 @@ admin:
       - can_get_user_count
       - can_get_users
       - can_get_users_lite
+      - can_see_menu_item
   profile:
     permissions:
       - can_see_menu_item
