@@ -248,7 +248,7 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
            return response.data.result.entryRequest.id
         })
         .then(response => {
-          if (communityName !== 'Nkwashi' && type === 'grant') {
+          if (communityName !== 'Nkwashi' && type !== 'grant') {
             handleNext()
           }
           return response
