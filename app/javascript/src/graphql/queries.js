@@ -483,9 +483,11 @@ export const ParcelsQuery = gql`
         endDate
         planType
         user{
+          id
           name
         }
         planPayments{
+          id
           status
           amount
         }
@@ -528,9 +530,11 @@ export const HouseQuery = gql`
         endDate
         planType
         user{
+          id
           name
         }
         planPayments{
+          id
           status
           amount
         }
