@@ -160,10 +160,24 @@ export function TaskDataList({
            <>
              <Typography variant="body2" component="span">{t('task.assigned_to')}</Typography>
              <div className={classes.taskAssigneesAvatar}>
-               {task.assignees.map(user => (
+               {/* Restrict to 2 users */}
+               {task.assignees.slice(0, 2).map(user => (
                  <LinkToUserAvatar key={user.id} user={user} />
                 ))}
              </div>
+             <div style={{ width: '20%' }}>
+                {task.assignees.length > 2 && (
+                  <IconButton
+                    aria-controls="more-assignees"
+                    aria-haspopup="true"
+                    data-testid="more-assignees"
+                    size="small"
+                    style={{ padding: 0, margin: 0, fontSize: '8px', color: '#000000', opacity: '0.2' }}
+                  >
+                      <MoreHorizIcon />
+                  </IconButton>
+                )}
+            </div>
            </>
           )
           : <Typography variant="body2" component="span">{t('task.no_assignee')}</Typography>}
@@ -171,16 +185,7 @@ export function TaskDataList({
      </div>
      <div className={classes.section3} data-testid="task_details_section">
        <div className={classes.taskCreated}>
-         <div style={{ width: '79%', lineHeight: 0}}>
-           <Typography variant="body2" component="span" data-testid="created_by">
-             {t('task.created')}
-             {' '}
-             <DateContainer date={task.createdAt} />
-           </Typography>
-         </div>
-         <div>
-           <LinkToUserAvatar user={task.author} />
-         </div>
+        <div style={{ width: '79%' }}/>
        </div>
        <div className={classes.icons}>
          <IconButton
@@ -294,23 +299,24 @@ const useStyles = makeStyles(() => ({
     textOverflow: 'ellipsis'
   },
   section2: {
-    width: '27%',
+    width: '33%',
     display: 'flex',
     alignItems: 'center',
   },
   taskAssignees: {
     display: 'flex',
     alignItems: 'center',
-    width: '45%',
+    width: '50%',
+    justifyContent: 'space-between',
   },
   taskAssigneesAvatar: {
     display: 'flex',
-    width: '37%',
-    justifyContent: 'space-between'
+    width: '28%',
+    justifyContent: 'space-between',
   },
   section3: {
     display: 'flex',
-    width: '35%',
+    width: '28%',
     alignItems: 'center',
   },
   section4: {
@@ -321,7 +327,7 @@ const useStyles = makeStyles(() => ({
   taskCreated: {
     display: 'flex',
     alignItems: 'center',
-    width: '45%'
+    width: '45%',
   },
   icons: {
     display: 'flex',
