@@ -115,7 +115,7 @@ export default function TodoList({
   });
 
   // eslint-disable-next-line no-nested-ternary
-  const qr = query.length
+  const qr = query && query.length
     ? query
     : location === 'my_tasks'
     ? `assignees: '${currentUser.name}'`
