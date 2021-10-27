@@ -45,29 +45,44 @@ const mocks = [
       variables: {
         offset: 0,
         limit: 50,
-        query: ''
+        query: `assignees: ${userMock?.user.name} AND completed: false`
       }
     },
     result: {
-     flaggedNotes: [{
-      body: 'Note example',
-      id: '23',
-      createdAt: new Date('2020-08-01'),
-      author: {
-        name: 'John Doe'
-      },
-      user: {
-        name: 'somebody'
-      },
-      assignees: [{ name: 'Tester', id: '93sd45435' }],
-      assigneeNotes: []
-     }]
+     flaggedNotes: [
+      {
+        body: 'Task example',
+        id: '23',
+        createdAt: new Date('2020-08-01'),
+        author: {
+          name: 'Johnsc',
+          id: '23453435',
+          imageUrl: '',
+          avatarUrl: ''
+        },
+        user: {
+          name: 'somebody'
+        },
+        assignees: [
+          {
+            name: 'Tester',
+            id: '93sd45435',
+            imageUrl: '',
+            avatarUrl: ''
+          }
+        ],
+        assigneeNotes: [],
+        subTasks: [],
+        completed: false,
+        parentNote: null
+      }
+     ]
     }
   }
 ]
 
 describe('Test the Todo page', () => {
-  it('Mount the Todo component', () => {
+  it('Mount the Todo component', async () => {
     const container = render(
       <Context.Provider value={userMock}>
         <MockedProvider mocks={mocks} addTypename={false}>
@@ -77,7 +92,8 @@ describe('Test the Todo page', () => {
         </MockedProvider>
       </Context.Provider>
     )
-    expect(container.queryByText('task.click_a_card_to_filter')).toBeTruthy()
+
+    await expect(container.findByText(/Task example/)).toBeTruthy()
     expect(container.queryByTestId('create_task_btn')).toBeTruthy()
     expect(container.queryByTestId('todo-container')).toBeTruthy()
     expect(container.queryByTestId('search_input')).toBeTruthy()

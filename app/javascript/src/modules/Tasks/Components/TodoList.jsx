@@ -541,17 +541,17 @@ export default function TodoList({
             <CenteredContent>
               <Paginate offSet={offset} limit={limit} active={offset >= 1} handlePageChange={paginate} />
             </CenteredContent>
-            <Fab
-              variant="extended"
-              onClick={openModal}
-              color="primary"
-              className={`${css(styles.taskButton)} `}
-              data-testid="create_task_btn"
-            >
-              <AddIcon />
-            </Fab>
           </>
         )}
+        <Fab
+          variant="extended"
+          onClick={openModal}
+          color="primary"
+          className={`${css(styles.taskButton)} `}
+          data-testid="create_task_btn"
+        >
+          <AddIcon />
+        </Fab>
       </div>
     </>
   );
