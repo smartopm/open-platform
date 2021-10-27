@@ -44,7 +44,9 @@ describe('Plans List Item Component', () => {
         id: '5d0d8051-2510-567a-886a-48bbfa9f6423',
         name: 'John Doe',
         imageUrl: 'http://host.com/image.jpg',
-        email: 'email@email.com'
+        email: 'email@email.com',
+        extRefId: '79821',
+        phoneNumber: '9988776655'
       },
       landParcel: {
         parcelNumber: 'Plot01',
