@@ -192,7 +192,6 @@ export function TaskDataList({
            aria-controls="task-subtasks-icon"
            aria-haspopup="true"
            data-testid="task_subtasks"
-           size="small"
          >
            <AccountTreeIcon fontSize="small" color="primary" />
            <span style={{ fontSize: '14px'}}>{task?.subTasks?.length}</span>
@@ -200,7 +199,6 @@ export function TaskDataList({
          <IconButton
            aria-controls="task-comment-icon"
            aria-haspopup="true"
-           size="small"
            data-testid="task_comments"
          >
            <QuestionAnswerIcon fontSize="small" color="primary" />
@@ -209,7 +207,6 @@ export function TaskDataList({
          <IconButton
            aria-controls="task-attach-file-icon"
            aria-haspopup="true"
-           size="small"
            data-testid="task_attach_file"
          >
            <AttachFileIcon fontSize="small" color="disabled" />
@@ -327,13 +324,13 @@ const useStyles = makeStyles(() => ({
   taskCreated: {
     display: 'flex',
     alignItems: 'center',
-    width: '45%',
+    width: '43%',
   },
   icons: {
     display: 'flex',
     alignItems: 'center',
-    width: '30%',
-    justifyContent: 'space-between'
+    width: '45%',
+    justifyContent: 'space-evenly',
   },
   completed: {
     backgroundColor: '#4caf50',
