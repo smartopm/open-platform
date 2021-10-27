@@ -5,13 +5,13 @@ export default function Label({ color, title }) {
   return (
     <p
       style={{
-        textAlign: 'center',
-        background: color,
-        padding: '9px',
-        color: 'white',
-        borderRadius: '15px',
-        fontSize: '12px',
-        width: '100%'
+       textAlign: 'center',
+       background: color,
+       padding: '9px',
+       color: 'white',
+       borderRadius: '15px',
+       fontSize: '12px',
+       width: '100%'
       }}
       className='custom-label'
     >
@@ -22,5 +22,5 @@ export default function Label({ color, title }) {
 
 Label.propTypes = {
   color: PropTypes.string.isRequired,
-  title: PropTypes.string.isRequired
+  title: PropTypes.string.isRequired,
 };

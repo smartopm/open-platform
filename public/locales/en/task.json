@@ -1,5 +1,6 @@
 {
   "task": {
+    "quick_search": "Quick Search",
     "my_tasks": "My Tasks",
     "tasks_due_in_10_days": "Tasks due in 10 days",
     "tasks_due_in_30_days": "Tasks due in 30 days",
@@ -9,7 +10,7 @@
     "total_forms_open": "Total Forms Open",
     "tasks_open": "Tasks Open",
     "tasks_completed": "Tasks Completed",
-    "click_a_card_to_filter": "Click a card above to filter",
+    "click_a_card_to_filter": "Click to filter",
     "task_modal_detail_text": "Task Detail Page",
     "task_modal_create_text": "Create a task",
     "task_body_label": "Task Body",
@@ -32,6 +33,10 @@
     "history_update_body": "updated the body of the task",
     "history_update_attribute": "changed {{attribute}} from {{initialValue}} to {{updatedValue}}",
     "history_update_no_data": "No update available",
-    "update_successful": "Task updated successfully"
+    "update_successful": "Task updated successfully",
+    "created": "Created",
+    "assigned_to": "Assigned to",
+    "due_date": "Due Date: ",
+    "no_assignee": "No Assignee"
   }
 }

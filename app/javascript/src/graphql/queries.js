@@ -167,6 +167,15 @@ export const flaggedNotes = gql`
   query GetTodos($offset: Int, $limit: Int, $query: String) {
     flaggedNotes(offset: $offset, limit: $limit, query: $query) {
       ...NoteFields
+      subTasks {
+        ...NoteFields
+        subTasks {
+          ...NoteFields
+          subTasks {
+            ...NoteFields
+          }
+        }
+      }
     }
   }
   ${NotesFragment.note}
