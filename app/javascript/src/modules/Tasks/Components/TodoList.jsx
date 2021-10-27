@@ -576,6 +576,7 @@ const useStyles = makeStyles(() => ({
 const styles = StyleSheet.create({
   taskButton: {
     height: 51,
+    width: 51,
     boxShadow: 'none',
     position: 'fixed',
     top: 60,
