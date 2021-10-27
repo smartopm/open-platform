@@ -43,7 +43,8 @@ module Mutations
           flagged: true, due_date: (Time.zone.today + 1).to_s,
           author: context[:current_user], user: context[:current_user],
           community: context[:site_community],
-          assignees: context[:site_community].users.where(user_type: %w[security_guard custodian])
+          assignees: context[:site_community].users.where(user_type: %w[security_guard custodian]),
+          completed: false
         )
       end
       # rubocop:enable Metrics/AbcSize
