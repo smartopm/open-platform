@@ -54,6 +54,7 @@ export const EntryRequestUpdateMutation = gql`
         id
         isGuest
         videoUrl
+        imageUrls
       }
     }
   }

@@ -44,7 +44,7 @@ export default function IDCapture({ handleNext }) {
 
     setLoading(true);
     updateRequest({ variables: { id: requestContext.request.id, imageBlobIds: blobIds } })
-      .then(() => {
+      .then(({data}) => {
         setDetails({
           ...errorDetails,
           message: t('image_capture.image_captured'),
@@ -52,7 +52,7 @@ export default function IDCapture({ handleNext }) {
         });
         requestContext.updateRequest({
           ...requestContext.request,
-          imageBlobIds: signedBlobId
+          imageUrls: data.result.entryRequest.imageUrls
         });
         setLoading(false);
         // handleNext();
