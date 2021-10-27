@@ -119,6 +119,13 @@ admin:
       - can_create_point_of_interest_image
       - can_delete_point_of_interest
       - can_see_menu_item
+    timesheet:
+      permissions:
+        - can_fetch_time_sheet_logs
+        - can_fetch_user_time_sheet_logs
+        - can_fetch_user_last_shift
+        - can_access_all_timesheets
+        - can_see_menu_item
 contractor:
   note:
     permissions:
@@ -178,7 +185,15 @@ custodian:
   form:
     permissions:
       - can_see_menu_item
-      - can_access_forms 
+      - can_access_forms
+  timesheet:
+    permissions:
+      - can_manage_shift
+      - can_fetch_time_sheet_logs
+      - can_fetch_user_time_sheet_logs
+      - can_fetch_user_last_shift
+      - can_access_all_timesheets
+      - can_see_menu_item
 security_guard:
   note:
     permissions:
@@ -215,7 +230,10 @@ security_guard:
   form:
     permissions:
       - can_see_menu_item
-      - can_access_forms 
+      - can_access_forms
+  timesheet:
+    permissions:
+      - can_fetch_user_time_sheet_logs
 site_worker:
   note:
     permissions:

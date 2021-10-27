@@ -157,5 +157,23 @@ RSpec.describe Types::Queries::TimeSheet do
       expect(result.dig('errors', 0, 'message')).to be_nil
       expect(result.dig('data', 'userLastShift')).not_to be_nil
     end
+
+    context 'when current user is not an admin' do
+      it 'raises unauthorized error for user_last_shift_query' do
+        result = DoubleGdpSchema.execute(user_last_shift, context: {
+                                           current_user: user1,
+                                           site_community: custodian.community,
+                                         }).as_json
+        expect(result.dig('errors', 0, 'message')).to eql 'Unauthorized'
+      end
+
+      it 'raises unauthorized error time_sheet_logs_query' do
+        result = DoubleGdpSchema.execute(query, context: {
+                                           current_user: user1,
+                                           site_community: custodian.community,
+                                         }).as_json
+        expect(result.dig('errors', 0, 'message')).to eql 'Unauthorized'
+      end
+    end
   end
 end

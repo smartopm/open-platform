@@ -33,6 +33,9 @@ const authState = {
       },
       plan_payment: {
         permissions: ['can_see_menu_item']
+      },
+      timesheet: {
+        permissions: ['can_see_menu_item']
       }
     }
   }
