@@ -4,6 +4,7 @@ import React from 'react';
 import GuestForm from './GuestForm';
 import VideoCapture from './VideoCapture';
 import IdCapture from './IdCapture';
+import RequestConfirmation from './RequestConfirmation';
 
 export default function steps(handleNext, communityName) {
   const verificationSteps = [
@@ -18,11 +19,15 @@ export default function steps(handleNext, communityName) {
     {
       title: 'Capture Video',
       component: <VideoCapture handleNext={handleNext} />
+    },
+    {
+      title: 'Review and Confirmation',
+      component: <RequestConfirmation handleNext={handleNext} />
     }
   ];
   // hardcoding this for now before we make this a community setting
-  if (communityName === 'Nkwashi') {
-    return verificationSteps.slice(0, 1);
-  }
+  // if (communityName === 'Nkwashi') {
+  //   return verificationSteps.slice(0, 1);
+  // }
   return verificationSteps;
 }
