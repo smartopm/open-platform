@@ -10,11 +10,11 @@ describe('Manual Gate Access', () => {
           community_id: res1.body.id,
         })
       })
-  
+
       // Login: Security Guard
       cy.login('2347065834175')
       cy.visit('/request')
-  
+
       // Fill in the manual entry request form
       cy.get('[data-testid=entry_user_name]').type('Test Manual User')
       cy.get('[data-testid=email]').type('email@test.com')
@@ -27,10 +27,9 @@ describe('Manual Gate Access', () => {
 
       // grant access
       cy.wait(500)
-      cy.get('[data-testid=entry_user_grant]').click()
-      cy.get('.confirm_grant').click()
+      cy.get('[data-testid=entry_user_next]').click()
       cy.wait(2000);
-      // Add an observation 
+      // Add an observation
       cy.get('[data-testid=entry-dialog-field]').type('Observation example')
       cy.get('.save_and_record_other').click()
 
@@ -42,4 +41,3 @@ describe('Manual Gate Access', () => {
       cy.get('.exit_note').should('contain', 'Observation example')
     })
   })
-  

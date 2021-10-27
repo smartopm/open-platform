@@ -72,6 +72,9 @@ export default function VideoCapture() {
   }, [counter, recordingBegin]);
 
   function onContinue() {
+    if(!signedBlobId) {
+      return
+    }
     updateRequest({ variables: { id: requestContext.request.id, videoBlobId: signedBlobId } })
       .then(() => {
         setDetails({
@@ -149,15 +152,19 @@ export default function VideoCapture() {
             {t('logbook:video_recording.save_video')}
           </Button>
         )}
-          <Button
-            onClick={requestContext.grantAccess}
-            color="primary"
-            data-testid="grant_btn"
-            disabled={!requestContext.request.id}
-            startIcon={requestContext.request.isLoading && <Spinner />}
-          >
-            grant
-          </Button>
+          {
+            !requestContext.isGuestRequest && (
+              <Button
+                onClick={requestContext.grantAccess}
+                color="primary"
+                data-testid="grant_btn"
+                disabled={!requestContext.request.id}
+                startIcon={requestContext.request.isLoading && <Spinner />}
+              >
+                grant
+              </Button>
+            )
+          }
         </CenteredContent>
       </div>
     </div>

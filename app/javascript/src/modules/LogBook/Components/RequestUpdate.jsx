@@ -941,14 +941,6 @@ const styles = StyleSheet.create({
   denyButton: {
     backgroundColor: '#C31515',
     color: '#FFFFFF',
-    boxShadow: 'none',
-    marginTop: 50,
-    width: '50%',
-    alignItems: 'center',
-    '@media (min-device-width: 320px) and (max-device-height: 568px)': {
-      height: 30,
-      width: '50%'
-    }
   },
   callButton: {
     color: '#66A59A',

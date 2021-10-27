@@ -36,8 +36,9 @@ export default function IDCapture({ handleNext }) {
   function handleContinue() {
     const blobIds = [frontBlobId, backBlobId];
 
-    if(images){
+    if(images || !blobIds){
       handleNext()
+      return
     }
 
     setLoading(true)
@@ -146,16 +147,20 @@ export default function IDCapture({ handleNext }) {
           >
             {t('image_capture.next_step')}
           </Button>
-          <Button
-            className={classes.skipToNextBtn}
-            onClick={requestContext.grantAccess}
-            disabled={!requestContext.request.id}
-            color="primary"
-            data-testid="skip_next"
-            startIcon={requestContext.request.isLoading && <Spinner />}
-          >
-            {t('logbook.grant')}
-          </Button>
+          {
+            !requestContext.isGuestRequest && (
+              <Button
+                className={classes.skipToNextBtn}
+                onClick={requestContext.grantAccess}
+                disabled={!requestContext.request.id}
+                color="primary"
+                data-testid="skip_next"
+                startIcon={requestContext.request.isLoading && <Spinner />}
+              >
+                {t('logbook.grant')}
+              </Button>
+            )
+          }
         </CenteredContent>
       </Grid>
     </>
