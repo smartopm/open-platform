@@ -247,6 +247,8 @@ export const CommunityPlansQuery = gql`
         name
         imageUrl
         email
+        extRefId
+        phoneNumber
       }
       landParcel{
         parcelNumber
