@@ -125,6 +125,8 @@ export default function TodoList({
     // eslint-disable-next-line no-nested-ternary
     filterQuery ? `AND ${filterQuery}` : searchInputQuery ? `AND ${searchInputQuery}` : ''
   }`
+
+  console.log('joinedTaskQuery:', joinedTaskQuery)
   const [
     loadTasks,
     { loading: isLoading, error: tasksError, data, refetch, called }
@@ -136,6 +138,8 @@ export default function TodoList({
     },
     fetchPolicy: 'network-only'
   });
+  console.log('Data: ====>', data)
+  console.log('Error: ==>', tasksError)
   const [assignUserToNote] = useMutation(AssignUser);
   const [taskUpdate] = useMutation(UpdateNote)
   const [bulkUpdate] = useMutation(TaskBulkUpdateMutation)
