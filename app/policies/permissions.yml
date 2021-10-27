@@ -119,13 +119,13 @@ admin:
       - can_create_point_of_interest_image
       - can_delete_point_of_interest
       - can_see_menu_item
-    timesheet:
-      permissions:
-        - can_fetch_time_sheet_logs
-        - can_fetch_user_time_sheet_logs
-        - can_fetch_user_last_shift
-        - can_access_all_timesheets
-        - can_see_menu_item
+  timesheet:
+    permissions:
+      - can_fetch_time_sheet_logs
+      - can_fetch_user_time_sheet_logs
+      - can_fetch_user_last_shift
+      - can_access_all_timesheets
+      - can_see_menu_item
   user:
     permissions:
       - can_update_user_details
@@ -141,6 +141,7 @@ admin:
       - can_get_user_count
       - can_get_users
       - can_get_users_lite
+      - can_see_menu_item
   profile:
     permissions:
       - can_see_menu_item
