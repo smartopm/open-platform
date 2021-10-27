@@ -21,7 +21,12 @@ module Mutations
       end
 
       def authorized?(_vals)
-        return true if context[:current_user].role?(%i[admin client resident])
+        return true if ::Policy::ApplicationPolicy.new(
+          context[:current_user], nil
+        ).permission?(
+          module: :user,
+          permission: :can_send_one_time_login,
+        ) || context[:current_user].role?(%i[admin client resident])
 
         raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
       end

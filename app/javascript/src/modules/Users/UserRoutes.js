@@ -1,4 +1,5 @@
 // These are exportable routes to clean up the route file
+import React from 'react'
 import UserShow from './Containers/UserShow';
 import UserEdit from './Containers/UserEdit';
 import UserLogs from './Containers/UserLogs';
@@ -8,48 +9,88 @@ import OTPFeedbackScreen from '../../containers/OTPScreen';
 import UserActions from './Components/UserActions'
 import Preferences from '../Preferences/Components/Notifications'
 import { allUserTypes } from '../../utils/constants';
+import AccessCheck from '../Permissions/Components/AccessCheck';
 
 // name in here is only used as key in routes, make sure it is unique
+
+
+const user = { module: 'user' }
+
+const entryRequest = { module: 'entry_request' }
+
+const editProfilePermissions = ['can_edit_own_profile'];
+
+const logBookPermissions = ['can_access_logbook'];
+
+const otpPermissions = ['can_send_one_time_login']
+
+function RenderUserEdit() {
+  return (
+    <AccessCheck module={user.module} allowedPermissions={editProfilePermissions}>
+      <UserEdit />
+    </AccessCheck>
+)
+}
+
+function RenderOTPFeedbackScreen() {
+  return (
+    <AccessCheck module={user.module} allowedPermissions={otpPermissions}>
+      <OTPFeedbackScreen />
+    </AccessCheck>
+)
+}
+
+function RenderLogBook() {
+  return (
+    <AccessCheck module={entryRequest.module} allowedPermissions={logBookPermissions}>
+      <UserLogs />
+    </AccessCheck>
+)
+}
 
 const routes = [
   {
     routeProps: {
       path: '/user/:id/edit',
-      component: UserEdit,
+      component: RenderUserEdit,
       exact: true,
     },
-    accessibleBy: allUserTypes,
+    accessibleBy: [],
     name: 'user_edit',
+    moduleName: "user",
     featureName: 'Users'
   },
   {
     routeProps: {
       path: '/new/user',
-      component: UserEdit,
+      component: RenderUserEdit,
       exact: true,
   },
-    accessibleBy: allUserTypes,
+    accessibleBy: [],
     name: 'user_edit',
-    featureName: 'Users'
+    moduleName: "user",
+    featureName: 'Users',
   },
   {
     routeProps: {
       path: '/user/:id/logs',
-      component: UserLogs,
+      component: RenderLogBook,
       exact: true,
     },
-    accessibleBy: ['admin'],
+    accessibleBy: allUserTypes,
     name: 'user_logs',
+    moduleName: "user",
     featureName: 'Users'
   },
   {
     routeProps: {
       path: '/user/:id/otp',
-      component: OTPFeedbackScreen,
+      component: RenderOTPFeedbackScreen,
       exact: true
     },
-    accessibleBy: ['admin'],
+    accessibleBy: [],
     name: 'user_otp',
+    moduleName: "user",
     featureName: 'Users'
   },
   {

@@ -3,16 +3,16 @@ import { render, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { BrowserRouter } from 'react-router-dom/';
 import { MockedProvider } from '@apollo/react-testing';
+import ReactRouter from 'react-router'
 import UserLogs, { AllEventLogs } from '../Containers/UserLogs';
 import { AllEventLogsForUserQuery } from '../../../graphql/queries';
 
 describe('UserLogs', () => {
+  jest.spyOn(ReactRouter, 'useParams').mockReturnValue({ id: '5gh673' });
   const props = {
     history: {},
-    match: { params: { id: '5gh673' } },
     subjects: null
   };
-
   const logsMock = {
     request: {
       query: AllEventLogsForUserQuery,
@@ -42,9 +42,9 @@ describe('UserLogs', () => {
 
   it('should render the component', () => {
     render(
-      <MockedProvider mocks={[]}>
+      <MockedProvider>
         <BrowserRouter>
-          <UserLogs {...props} />
+          <UserLogs />
         </BrowserRouter>
       </MockedProvider>
     );
@@ -57,8 +57,9 @@ describe('UserLogs', () => {
         </BrowserRouter>
       </MockedProvider>
     );
+
     await waitFor(() => {
       expect(getByText('I am testing this again')).toBeInTheDocument()
-    }, 20)
+    },20)
   });
 });

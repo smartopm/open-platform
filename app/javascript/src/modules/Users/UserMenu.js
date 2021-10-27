@@ -25,7 +25,8 @@ const userMenus = [
     },
     name: t => t('menu.communication'),
     featureName: 'Messages',
-    accessibleBy: ['admin']
+    moduleName: 'communication',
+    accessibleBy: []
   },
   {
     routeProps: {
@@ -34,7 +35,8 @@ const userMenus = [
     },
     name: t => t('menu.note', { count: 0 }),
     featureName: 'Tasks',
-    accessibleBy: ['admin']
+    moduleName: 'note',
+    accessibleBy: []
   },
   {
     routeProps: {
@@ -52,7 +54,8 @@ const userMenus = [
     },
     name: t => t('menu.form', { count: 0 }),
     featureName: 'Forms',
-    accessibleBy: ctx => handler({ userTypes: allUserTypes, ctx }),
+    moduleName: 'form',
+    accessibleBy: [],
   },
   {
     routeProps: {
@@ -82,7 +85,8 @@ const userMenus = [
     },
     name: t => t('menu.merge_user'),
     featureName: 'Users',
-    accessibleBy: ['admin']
+    moduleName: 'user',
+    accessibleBy: []
   },
   {
     routeProps: {
@@ -91,7 +95,8 @@ const userMenus = [
     },
     name: t => t('menu.user_logs'),
     featureName: 'LogBook',
-    accessibleBy: ctx => handler({ userTypes: ['admin', 'security_guard'], ctx }),
+    moduleName: 'entry_request',
+    accessibleBy: [],
   },
   {
     routeProps: {
@@ -100,7 +105,8 @@ const userMenus = [
     },
     name: t => t('menu.user_edit'),
     featureName: 'Users',
-    accessibleBy: ctx => handler({ userTypes: allUserTypes, ctx })
+    moduleName: 'user',
+    accessibleBy: []
   },
   {
     routeProps: {
@@ -109,7 +115,8 @@ const userMenus = [
     },
     name: t => t('menu.print_id'),
     featureName: 'Users',
-    accessibleBy: allUserTypes
+    moduleName: 'user',
+    accessibleBy: []
   },
   {
     routeProps: {
@@ -136,7 +143,8 @@ const userMenus = [
     },
     name: t => t('menu.send_otp'),
     featureName: 'Users',
-    accessibleBy: ['admin']
+    moduleName: 'user',
+    accessibleBy: []
   }
 ];
 

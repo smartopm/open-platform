@@ -36,6 +36,9 @@ const authState = {
       },
       timesheet: {
         permissions: ['can_see_menu_item']
+      },
+     user: {
+        permissions: ['can_see_menu_item']
       }
     }
   }

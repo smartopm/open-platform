@@ -126,7 +126,7 @@ module Types::Queries::Form
 
   # rubocop:disable Metrics/MethodLength
   def form_user_properties(user_id:, form_user_id:)
-    unless permissions_check? || context[:current_user]&.id.eql?(user_id)
+    unless form_permissions_check? || context[:current_user]&.id.eql?(user_id)
       raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
     end
 
@@ -210,7 +210,7 @@ module Types::Queries::Form
     raise GraphQL::ExecutionError, I18n.t('errors.form.not_found')
   end
 
-  def permissions_check?
+  def form_permissions_check?
     ::Policy::ApplicationPolicy.new(
       context[:current_user], nil
     ).permission?(

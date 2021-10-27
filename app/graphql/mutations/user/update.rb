@@ -124,7 +124,7 @@ module Mutations
         check_params(Mutations::User::Create::ALLOWED_PARAMS_FOR_ROLES, vals)
         user_record = Users::User.find(vals[:id])
         current_user = context[:current_user]
-        unless current_user.admin? || own_user?(vals)
+        unless permissions_checks? || own_user?(vals)
           raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
         end
         unless user_record.community_id == current_user.community_id
@@ -132,6 +132,16 @@ module Mutations
         end
 
         true
+      end
+
+      def permissions_checks?
+        ::Policy::ApplicationPolicy.new(
+          context[:current_user], nil
+        ).permission?(
+          admin: true,
+          module: :user,
+          permission: :can_update_user_details,
+        )
       end
     end
     # rubocop: enable Metrics/ClassLength

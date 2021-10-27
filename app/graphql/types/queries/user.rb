@@ -87,8 +87,16 @@ module Types::Queries::User
   # rubocop:disable Metrics/MethodLength
   # rubocop:disable Metrics/AbcSize
   def users(offset: 0, limit: 50, query: nil)
-    adm = context[:current_user]
-    raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') unless adm.present? && adm.admin?
+    unless ::Policy::ApplicationPolicy.new(
+      context[:current_user], nil
+    ).permission?(
+      admin: true,
+      module: :user,
+      permission: :can_get_users,
+    )
+      raise GraphQL::ExecutionError,
+            I18n.t('errors.unauthorized')
+    end
 
     if query.present? && query.include?('date_filter')
       Users::User.allowed_users(context[:current_user])
@@ -106,7 +114,9 @@ module Types::Queries::User
                  .offset(offset).with_attached_avatar
     end
   end
+  # rubocop:enable Metrics/MethodLength
 
+  # rubocop:disable Metrics/MethodLength
   def user_search(query: '', offset: 0, limit: 50)
     raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') unless context[:current_user]
 
@@ -148,7 +158,12 @@ module Types::Queries::User
   # rubocop:disable Metrics/MethodLength
   def users_lite(offset: 0, limit: 50, query: nil)
     current = context[:current_user]
-    unless current.site_manager? || current.site_worker?
+    unless ::Policy::ApplicationPolicy.new(
+      context[:current_user], nil
+    ).permission?(
+      module: :user,
+      permission: :can_get_users_lite,
+    ) || current.site_manager? || current.site_worker?
       raise GraphQL::ExecutionError,
             I18n.t('errors.unauthorized')
     end
@@ -180,8 +195,7 @@ module Types::Queries::User
   end
 
   def users_count(query: nil)
-    adm = context[:current_user]
-    raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') unless adm.present? && adm.admin?
+    raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') unless user_permissions_check?
 
     allowed_users = Users::User.allowed_users(context[:current_user])
     if query.present? && query.include?('date_filter')
@@ -191,8 +205,15 @@ module Types::Queries::User
     end
   end
 
+  # rubocop:disable Metrics/MethodLength
   def substatus_query
-    unless context[:current_user]&.admin?
+    unless ::Policy::ApplicationPolicy.new(
+      context[:current_user], nil
+    ).permission?(
+      admin: true,
+      module: :user,
+      permission: :can_get_substatus_count,
+    )
       raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
     end
 
@@ -200,9 +221,16 @@ module Types::Queries::User
     residents_count = users.where(user_type: :resident).count
     users.group(:sub_status).count.merge(residents_count: residents_count)
   end
+  # rubocop:enable Metrics/MethodLength
 
   def substatus_distribution_query
-    unless context[:current_user]&.admin?
+    unless ::Policy::ApplicationPolicy.new(
+      context[:current_user], nil
+    ).permission?(
+      admin: true,
+      module: :user,
+      permission: :can_get_substatus_distribution,
+    )
       raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
     end
 
@@ -216,11 +244,27 @@ module Types::Queries::User
   end
 
   def admin_users
-    unless context[:current_user]&.admin?
+    unless ::Policy::ApplicationPolicy.new(
+      context[:current_user], nil
+    ).permission?(
+      admin: true,
+      module: :user,
+      permission: :can_view_admin_users,
+    )
       raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
     end
 
     context[:site_community].users.where(user_type: 'admin', state: 'valid')
+  end
+
+  def user_permissions_check?
+    ::Policy::ApplicationPolicy.new(
+      context[:current_user], nil
+    ).permission?(
+      admin: true,
+      module: :user,
+      permission: :can_get_user_count,
+    )
   end
 end
 # rubocop:enable Metrics/ModuleLength
