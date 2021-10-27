@@ -161,7 +161,7 @@ export default function VideoCapture() {
                 disabled={!requestContext.request.id}
                 startIcon={requestContext.request.isLoading && <Spinner />}
               >
-                grant
+                {t('logbook:logbook.grant')}
               </Button>
             )
           }
