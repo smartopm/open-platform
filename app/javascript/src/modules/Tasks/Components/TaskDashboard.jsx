@@ -104,7 +104,7 @@ export function TaskQuickSearch({ filterTasks }){
   return (
     <>
       <ButtonGroup color="primary" ref={anchorRef} aria-label="outlined primary button group split button">
-        <Button onClick={handleClick}>{!selectedKey ?  t('task.quick_search') : objectAccessor(tiles, selectedKey)}</Button>
+        <Button onClick={handleClick} disabled={!selectedKey}>{!selectedKey ?  t('task.quick_search') : objectAccessor(tiles, selectedKey)}</Button>
         <Button
           color="primary"
           size="small"
