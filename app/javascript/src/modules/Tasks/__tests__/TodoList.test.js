@@ -54,7 +54,7 @@ const mocks = [
       id: '23',
       createdAt: new Date('2020-08-01'),
       author: {
-        name: 'Johnsc'
+        name: 'John Doe'
       },
       user: {
         name: 'somebody'
@@ -78,7 +78,7 @@ describe('Test the Todo page', () => {
       </Context.Provider>
     )
     expect(container.queryByText('task.click_a_card_to_filter')).toBeTruthy()
-    expect(container.queryByText('common:form_actions.create_task')).toBeTruthy()
+    expect(container.queryByTestId('create_task_btn')).toBeTruthy()
     expect(container.queryByTestId('todo-container')).toBeTruthy()
     expect(container.queryByTestId('search_input')).toBeTruthy()
     expect(container.queryByTestId('toggle_filter_btn')).toBeTruthy()
@@ -95,7 +95,7 @@ describe('Test the Todo page', () => {
       </Context.Provider>
     )
 
-    const createTaskBtn = container.queryByText('common:form_actions.create_task')
+    const createTaskBtn = container.queryByTestId('create_task_btn')
     fireEvent.click(createTaskBtn)
 
     expect(container.queryByText('task.task_body_label')).toBeTruthy()

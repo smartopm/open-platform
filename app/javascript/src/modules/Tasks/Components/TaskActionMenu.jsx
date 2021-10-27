@@ -1,12 +1,27 @@
 // This is the top menu for bulk operations
 
-import React from 'react';
-import { Grid, Select, MenuItem, Typography, Button, Checkbox } from '@material-ui/core';
+import React, { useState, useRef } from 'react';
+import {
+  Grid,
+  Select,
+  MenuItem,
+  Typography,
+  Button,
+  Checkbox,
+  ButtonGroup,
+  ClickAwayListener,
+  Grow,
+  Paper,
+  Popper,
+  MenuList,
+} from '@material-ui/core';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
+import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next'
 import { Spinner } from '../../../shared/Loading';
+import { objectAccessor } from '../../../utils/helpers';
 
 export default function TaskActionMenu({
   currentTile,
@@ -80,6 +95,125 @@ export default function TaskActionMenu({
   );
 }
 
+export function TaskQuickAction({ 
+  currentTile,
+  checkedOptions,
+  handleCheckOptions,
+ }){
+  const [open, setOpen] = useState(false);
+  const [selectedKey, setSelectedKey] = useState('');
+  const anchorRef = useRef(null);
+  const { t } = useTranslation('common')
+  const options = {
+    all: t('misc.all'),
+    'all_on_the_page': t('misc.all_this_page'),
+    none: t('misc.none')
+  }
+
+  const handleToggle = () => {
+    setOpen((prevOpen) => !prevOpen);
+  };
+
+  const handleClose = (event) => {
+    if (anchorRef.current && anchorRef.current.contains(event.target)) {
+      return;
+    }
+
+    setOpen(false);
+  };
+
+  function handleMenuItemClick(key){
+    setSelectedKey(key)
+    setOpen(false);
+    handleCheckOptions(key)
+  }
+
+  return (
+    <div style={{ marginRight: '0.9rem' }}>
+      <ButtonGroup color="primary" ref={anchorRef} aria-label="outlined primary button group split button">
+        <Button>
+          {(checkedOptions === 'none')
+          ? t('misc.select')
+          :  objectAccessor(options, selectedKey)}
+        </Button>
+        <Button
+          color="primary"
+          size="small"
+          aria-controls={open ? 'split-button-menu' : undefined}
+          aria-expanded={open ? 'true' : undefined}
+          aria-label="select merge strategy"
+          aria-haspopup="menu"
+          onClick={handleToggle}
+        >
+          <ArrowDropDownIcon />
+        </Button>
+      </ButtonGroup>
+      <Popper open={open} anchorEl={anchorRef.current} transition>
+        {({ TransitionProps, placement }) => (
+          <Grow
+            {...TransitionProps}
+            style={{
+                transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom',
+              }}
+          >
+            <Paper>
+              <ClickAwayListener onClickAway={handleClose}>
+                <MenuList id="split-button-menu" data-testid="select_option">
+                  {currentTile && (Object.entries(options).map(([key, val]) => (
+                    <MenuItem
+                      key={key}
+                      selected={key === selectedKey}
+                      onClick={() => handleMenuItemClick(key)}
+                      value={key}
+                    >
+                      {val}
+                    </MenuItem>
+                    )))}
+                </MenuList>
+              </ClickAwayListener>
+            </Paper>
+          </Grow>
+          )}
+      </Popper>
+    </div>
+  )
+}
+
+export function TaskBulkUpdateAction({ 
+  checkedOptions,
+  bulkUpdating,
+  handleBulkUpdate,
+  currentTile,
+  selectedTasks
+}){
+  const { t } = useTranslation('common')
+
+  return (
+    <>
+      {(checkedOptions !== 'none' || selectedTasks.length > 0) && (
+      <Grid item style={{ marginLeft: '20px', marginTop: '-4px' }}>
+        {bulkUpdating ? (
+          <Spinner />
+          ) : (
+            <Button
+              onClick={handleBulkUpdate}
+              color="primary"
+              startIcon={
+                currentTile === 'completedTasks' ? <CheckCircleOutlineIcon /> : <CheckCircleIcon />
+              }
+              style={{ textTransform: 'none' }}
+              disabled={bulkUpdating}
+              data-testid="bulk_update"
+            >
+              {`${currentTile === 'completedTasks' ? t('form_actions.note_incomplete') : t('form_actions.note_complete')} `}
+            </Button>
+          )}
+      </Grid>
+      )}
+    </>
+  )
+}
+
 TaskActionMenu.propTypes = {
     currentTile: PropTypes.string.isRequired,
     setSelectAllOption: PropTypes.func.isRequired,
@@ -90,3 +224,19 @@ TaskActionMenu.propTypes = {
     bulkUpdating: PropTypes.bool.isRequired,
     handleBulkUpdate: PropTypes.func.isRequired
 }
+
+
+TaskQuickAction.propTypes = {
+  currentTile: PropTypes.string.isRequired,
+  checkedOptions: PropTypes.string.isRequired,
+  handleCheckOptions: PropTypes.func.isRequired,
+}
+
+TaskBulkUpdateAction.propTypes = {
+  currentTile: PropTypes.string.isRequired,
+  selectedTasks: PropTypes.arrayOf(PropTypes.string).isRequired,
+  checkedOptions: PropTypes.string.isRequired,
+  bulkUpdating: PropTypes.bool.isRequired,
+  handleBulkUpdate: PropTypes.func.isRequired
+}
+

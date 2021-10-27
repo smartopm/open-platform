@@ -14,6 +14,7 @@ export function safeAvatarLink({ imageUrl, user }) {
 
 export default function Avatar({ imageUrl, user, style, searchedUser }) {
   const imageStyles = {
+    xSmall: styles.extraSmall,
     small: styles.avatarSmall,
     medium: styles.avatarMedium,
     big: styles.avatarBig
@@ -108,6 +109,11 @@ Avatar.propTypes = {
 };
 
 const styles = StyleSheet.create({
+  extraSmall: {
+    width: '20px',
+    height: '20px',
+    borderRadius: '10px'
+  },
   avatarSmall: {
     width: '40px',
     height: '40px',

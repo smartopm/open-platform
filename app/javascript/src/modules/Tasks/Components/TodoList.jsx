@@ -8,43 +8,40 @@ import {
   Dialog,
   DialogTitle,
   DialogContent,
-  InputBase,
-  Divider,
   IconButton,
   Grid,
-  Button,
+  TextField,
+  InputAdornment,
+  Typography,
 } from '@material-ui/core';
+import AddIcon from '@material-ui/icons/Add'
 import FilterListIcon from '@material-ui/icons/FilterList';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
+import SearchIcon from '@material-ui/icons/Search'
 import MaterialConfig from 'react-awesome-query-builder/lib/config/material';
 import { StyleSheet, css } from 'aphrodite';
-import { makeStyles, useTheme } from '@material-ui/core/styles';
-import { useMutation, useLazyQuery, useQuery } from 'react-apollo';
+import { makeStyles } from '@material-ui/core/styles';
+import { useMutation, useLazyQuery } from 'react-apollo';
 import { useParams, useHistory } from 'react-router';
 import { useTranslation } from 'react-i18next';
-import { UsersLiteQuery, flaggedNotes, TaskQuery } from '../../../graphql/queries';
-import { TaskStatsQuery } from '../graphql/task_queries'
+import { UsersLiteQuery, flaggedNotes } from '../../../graphql/queries';
 import { AssignUser, UpdateNote } from '../../../graphql/mutations';
 import TaskForm from './TaskForm';
 import ErrorPage from '../../../components/Error';
 import Paginate from '../../../components/Paginate';
 import CenteredContent from '../../../components/CenteredContent';
-import Task from './Task';
-import TaskDashboard from './TaskDashboard';
+import { TaskQuickSearch } from './TaskDashboard';
 import { futureDateAndTimeToString, dateToString } from '../../../components/DateContainer';
 import DatePickerDialog from '../../../components/DatePickerDialog';
-import Loading from '../../../shared/Loading';
+import { Spinner } from '../../../shared/Loading';
 import QueryBuilder from '../../../components/QueryBuilder';
 import { ModalDialog } from '../../../components/Dialog';
 import { formatError, pluralizeCount, objectAccessor } from '../../../utils/helpers';
 import useDebounce from '../../../utils/useDebounce';
-import ListHeaders from '../../../shared/list/ListHeader';
 import MessageAlert from '../../../components/MessageAlert';
 import { TaskBulkUpdateMutation } from '../graphql/task_mutation';
-import TaskActionMenu from './TaskActionMenu';
+import { TaskBulkUpdateAction, TaskQuickAction } from './TaskActionMenu';
 import TodoItem from './TodoItem';
 
-// component needs a redesign both implementation and UI
 export default function TodoList({
   isDialogOpen,
   handleModal,
@@ -57,11 +54,8 @@ export default function TodoList({
   const classes = useStyles();
   const limit = 50;
   const [offset, setOffset] = useState(0);
-  const [loaded, setLoadingAssignee] = useState(false);
   const [open, setModalOpen] = useState(false);
   const [filterOpen, setOpenFilter] = useState(false);
-  const [isAssignTaskOpen, setAutoCompleteOpen] = useState(false);
-  const [loadingMutation, setMutationLoading] = useState(false);
   const [message, setMessage] = useState('');
   const [query, setQuery] = useState('');
   const [currentTile, setCurrentTile] = useState('');
@@ -76,8 +70,6 @@ export default function TodoList({
   const [searchText, setSearchText] = useState('');
   const debouncedSearchText = useDebounce(searchText, 500);
   const debouncedFilterInputText = useDebounce(userNameSearchTerm, 500);
-  const theme = useTheme();
-  const matches = useMediaQuery(theme.breakpoints.up('sm'));
   const [isSuccessAlert, setIsSuccessAlert] = useState(false);
   const [checkedOptions, setCheckOptions] = useState('none')
   const taskQuery = {
@@ -117,17 +109,9 @@ export default function TodoList({
     history.push(`/tasks/${id}${comment ? '?comment=true' : ''}`);
   }
 
-  const taskCountData = useQuery(TaskStatsQuery);
-
-  const [loadAssignees, { loading, data: liteData }] = useLazyQuery(UsersLiteQuery, {
+  const [loadAssignees, { data: liteData }] = useLazyQuery(UsersLiteQuery, {
     variables: { query: 'user_type:admin OR user_type:custodian OR user_type:security_guard OR user_type:contractor OR user_type:site_worker'},
     errorPolicy: 'all'
-  });
-
-  const [loadTask, { loading: taskLoading, data: taskData }] = useLazyQuery(TaskQuery, {
-    variables: { taskId },
-    errorPolicy: 'all'
-    // fetchPolicy: 'cache-and-network'
   });
 
   // eslint-disable-next-line no-nested-ternary
@@ -162,7 +146,7 @@ export default function TodoList({
 
   useEffect(() => {
     // only fetch admins when the  modal is opened or when the select is triggered
-    if (open || filterOpen || isAssignTaskOpen) {
+    if (open || filterOpen) {
       loadAssignees();
     }
     // load tasks on runtime when we are on my task page from notification
@@ -170,22 +154,7 @@ export default function TodoList({
       loadTasks();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [open, loadAssignees, filterOpen, isAssignTaskOpen, location]);
-
-  useEffect(() => {
-    if (taskId) {
-      loadTask();
-      setModalOpen(true);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [taskId]);
-
-  useEffect(() => {
-    if (taskCountData) {
-      taskCountData.refetch();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [location]);
+  }, [open, loadAssignees, filterOpen, location]);
 
   useEffect(() => {
     if (debouncedFilterInputText) {
@@ -202,22 +171,14 @@ export default function TodoList({
 
   function handleRefetch() {
     refetch();
-    taskCountData.refetch();
   }
 
-  // unassign the user if already assigned
-  function handleDelete(userId, noteId) {
-    return assignUnassignUser(noteId, userId);
-  }
   function assignUnassignUser(noteId, userId) {
-    setLoadingAssignee(true);
     assignUserToNote({ variables: { noteId, userId } })
       .then(() => {
         if (called) {
           refetch();
         }
-        taskCountData.refetch();
-        setLoadingAssignee(false);
       })
       .catch(err => setMessage(err.message));
   }
@@ -228,8 +189,6 @@ export default function TodoList({
   }
 
   function handleCompleteNote(noteId, completed) {
-    setMutationLoading(true);
-
     taskUpdate({
       variables: { id: noteId, completed: !completed }
     })
@@ -237,13 +196,10 @@ export default function TodoList({
         setMessage(`Task has been successfully marked as ${completed ? 'incomplete': 'complete'}`);
         setIsSuccessAlert(true);
         refetch()
-        taskCountData.refetch()
-        setMutationLoading(false)
       })
       .catch(err => {
         setMessage(formatError(err.message))
         setIsSuccessAlert(false);
-        setMutationLoading(false)
       })
   }
 
@@ -263,11 +219,6 @@ export default function TodoList({
     setQuery(objectAccessor(taskQuery, key));
     // show tasks when a filter has been applied, we might have to move this to useEffect
     loadTasks();
-  }
-
-  function closeAndExit() {
-    setModalOpen(false);
-    history.replace('/tasks');
   }
 
   function inputToSearch(e) {
@@ -386,9 +337,8 @@ export default function TodoList({
     }
   }
 
-  function handleCheckOptions(event){
-    setCheckOptions(event.target.value)
-    const option = event.target.value
+  function handleCheckOptions(option){
+    setCheckOptions(option)
     switch (option) {
       case 'all':
        return setSelected([])
@@ -460,75 +410,63 @@ export default function TodoList({
             </CenteredContent>
           </DialogTitle>
           <DialogContent>
-            {// eslint-disable-next-line no-nested-ternary
-            !taskId ? (
-              <TaskForm
-                refetch={handleRefetch}
-                close={() => setModalOpen(!open)}
-                assignUser={assignUnassignUser}
-                users={liteData?.usersLite}
-                parentTaskId={parentTaskId}
-              />
-            ) : // eslint-disable-next-line no-nested-ternary
-            !taskData ? (
-              t('common:misc.no_task')
-            ) : (
-              <>
-                <Task
-                  key={taskData.task.id}
-                  note={taskData.task}
-                  message={message}
-                  users={liteData?.usersLite || []}
-                  handleCompleteNote={handleCompleteNote}
-                  assignUnassignUser={assignUnassignUser}
-                  loaded={loaded}
-                  handleDelete={handleDelete}
-                  handleModal={handleModal}
-                  loading={loading}
-                  loadingMutation={loadingMutation}
-                  handleOpenTaskAssign={() => setAutoCompleteOpen(!isAssignTaskOpen)}
-                  isAssignTaskOpen={isAssignTaskOpen}
-                  currentUser={currentUser}
-                />
-                <CenteredContent>
-                  <Button
-                    variant="outlined"
-                    color="primary"
-                    aria-label="task_submit"
-                    onClick={closeAndExit}
-                  >
-                    Close
-                  </Button>
-                </CenteredContent>
-              </>
-            )
-}
+            <TaskForm
+              refetch={handleRefetch}
+              close={() => setModalOpen(!open)}
+              assignUser={assignUnassignUser}
+              users={liteData?.usersLite}
+              parentTaskId={parentTaskId}
+            />
           </DialogContent>
         </Dialog>
-
         <div className={classes.root}>
           <>
-            <InputBase
-              data-testid="search_input"
-              className={classes.input}
-              type="text"
-              placeholder={t('common:form_placeholders.search_tasks')}
-              onChange={inputToSearch}
-              value={searchText}
-              inputProps={{ 'aria-label': 'search tasks' }}
-            />
-            <Divider className={classes.divider} orientation="vertical" />
-            <IconButton
-              data-testid="toggle_filter_btn"
-              type="submit"
-              className={classes.iconButton}
-              aria-label="search"
-              onClick={toggleFilterMenu}
-            >
-              <FilterListIcon />
-            </IconButton>
-            <div style={{ margin: '10px 19px 10px 0' }}>
-              {filterCount ? `${filterCount} ${pluralizeCount(filterCount, 'Filter')}` : t('common:misc.filter')}
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-around'}}>
+              <TaskQuickAction
+                currentTile={currentTile}
+                setSelectAllOption={setSelectAllOption}
+                selectedTasks={selectedTasks}
+                taskListIds={taskListIds}
+                checkedOptions={checkedOptions}
+                handleCheckOptions={handleCheckOptions}
+                bulkUpdating={bulkUpdating}
+                handleBulkUpdate={handleBulkUpdate}
+              />
+              <TaskQuickSearch filterTasks={handleTaskFilter} />
+            </div>
+            <div style={{ width: '43%', display: 'flex', alignItems: 'center'}}>
+              <TextField
+                data-testid="search_input"
+                className={`border ${classes.input}`}
+                onChange={inputToSearch}
+                value={searchText}
+                label={t('common:form_placeholders.search_tasks')}
+                variant="outlined"
+                margin="dense"
+                style={{ width: '89%' }}
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <IconButton>
+                        <SearchIcon />
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                  'aria-label': 'search tasks'
+                }}
+              />
+              <IconButton
+                data-testid="toggle_filter_btn"
+                type="submit"
+                className={classes.iconButton}
+                aria-label="search"
+                onClick={toggleFilterMenu}
+              >
+                <FilterListIcon />
+              </IconButton>
+              <Typography>
+                {filterCount ? `${filterCount} ${pluralizeCount(filterCount, 'Filter')}` : t('common:misc.filter')}
+              </Typography>
             </div>
           </>
         </div>
@@ -560,35 +498,21 @@ export default function TodoList({
           </Grid>
         </div>
         <br />
-        {isLoading || taskLoading ? (
-          <Loading />
+        {isLoading ? (
+          <Spinner />
         ) : (
           <>
-            <Grid container spacing={3}>
-              <TaskDashboard
-                taskData={taskCountData}
-                filterTasks={handleTaskFilter}
-                currentTile={currentTile}
-              />
-            </Grid>
-
             <br />
-
-            { /* Use the action menu here */ }
-            <TaskActionMenu
-              currentTile={currentTile}
-              setSelectAllOption={setSelectAllOption}
-              selectedTasks={selectedTasks}
-              taskListIds={taskListIds}
+            <br />
+            <TaskBulkUpdateAction
               checkedOptions={checkedOptions}
-              handleCheckOptions={handleCheckOptions}
               bulkUpdating={bulkUpdating}
               handleBulkUpdate={handleBulkUpdate}
+              selectedTasks={selectedTasks}
+              currentTile={currentTile}
             />
-            <br />
             {data?.flaggedNotes.length ? (
               <div>
-                {matches && <ListHeaders headers={taskHeader} />}
                 {data?.flaggedNotes.map(task => (
                   <TodoItem
                     key={task.id}
@@ -617,7 +541,7 @@ export default function TodoList({
               className={`${css(styles.taskButton)} `}
               data-testid="create_task_btn"
             >
-              {t('common:form_actions.create_task')}
+              <AddIcon />
             </Fab>
           </>
         )}
@@ -626,28 +550,26 @@ export default function TodoList({
   );
 }
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles(() => ({
   root: {
     padding: '2px 4px',
     display: 'flex',
     alignItems: 'right',
+    justifyContent: 'space-between',
     width: '100%',
-    overflowX: 'auto'
+    overflowX: 'auto',
   },
   formControl: {
     minWidth: 160,
     maxWidth: 300
   },
   iconButton: {
-    padding: 10
   },
   divider: {
     height: 28,
     margin: 4
   },
   input: {
-    marginLeft: theme.spacing(1),
-    flex: 1
   }
 }));
 
@@ -656,9 +578,8 @@ const styles = StyleSheet.create({
     height: 51,
     boxShadow: 'none',
     position: 'fixed',
-    bottom: 20,
-    right: 57,
-    marginLeft: '30%',
+    top: 60,
+    right: 11,
     color: '#FFFFFF'
   }
 });

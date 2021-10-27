@@ -38,13 +38,26 @@ describe('Task Data components', () => {
       id: '23',
       createdAt: new Date('2020-08-01'),
       author: {
-        name: 'Johnsc'
+        name: 'Johnsc',
+        id: '23453435',
+        imageUrl: '',
+        avatarUrl: ''
       },
       user: {
         name: 'somebody'
       },
-      assignees: [{ name: 'Tester', id: '93sd45435' }],
-      assigneeNotes: []
+      assignees: [
+        {
+          name: 'Tester',
+          id: '93sd45435',
+          imageUrl: '',
+          avatarUrl: ''
+        }
+      ],
+      assigneeNotes: [],
+      subTasks: [],
+      completed: false,
+      parentNote: null
     }
 
   it('should render proper the link to user component', () => {
@@ -71,19 +84,23 @@ describe('Task Data components', () => {
               handleTaskDetails={() => {}}
               handleCompleteNote={() => {}}
               handleAddSubTask={jest.fn()}
-              headers={taskHeader}
             />
           </MockedThemeProvider>
         </MockedProvider>
       </BrowserRouter>
     )
 
-    expect(container.getByTestId("subject")).toBeInTheDocument()
-    expect(container.getByTestId("task")).toBeInTheDocument()
-    expect(container.getByTestId("createdby")).toBeInTheDocument()
-    expect(container.getByTestId("duedate")).toBeInTheDocument()
-    expect(container.getByTestId("assignee")).toBeInTheDocument()
-    expect(container.getByTestId("menu")).toBeInTheDocument()
+    expect(container.getByTestId("task-select-action")).toBeInTheDocument()
+    expect(container.getByTestId("task_body_section")).toBeInTheDocument()
+    expect(container.getByTestId("task_body")).toBeInTheDocument()
+    expect(container.getByTestId("task_due_date")).toBeInTheDocument()
+    expect(container.getByTestId("task_assignee_section")).toBeInTheDocument()
+    expect(container.getByTestId("task_assignee")).toBeInTheDocument()
+    expect(container.getByTestId("created_by")).toBeInTheDocument()
+    expect(container.getByTestId("task_subtasks")).toBeInTheDocument()
+    expect(container.getByTestId("task_comments")).toBeInTheDocument()
+    expect(container.getByTestId("task_details_section")).toBeInTheDocument()
+    expect(container.getByTestId("task_menu_section")).toBeInTheDocument()
   });
 
   it('renders task menu options', () => {
@@ -99,14 +116,14 @@ describe('Task Data components', () => {
               handleTaskDetails={() => {}}
               handleCompleteNote={() => {}}
               handleAddSubTask={jest.fn()}
-              headers={taskHeader}
+              taskHeader={taskHeader}
             />
           </MockedThemeProvider>
         </MockedProvider>
       </BrowserRouter>
     );
 
-    const menuButton = screen.getByTestId('todo-menu');
+    const menuButton = screen.getByTestId('task-item-menu');
     expect(menuButton).toBeInTheDocument();
     fireEvent.click(menuButton);
 

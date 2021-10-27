@@ -131,15 +131,21 @@ export const NotesFragment = {
       author {
         id
         name
+        imageUrl
+        avatarUrl
       }
       assignees {
         id
         name
         imageUrl
+        avatarUrl
       }
       assigneeNotes{
         userId
         reminderTime
+      }
+      parentNote {
+        id
       }
     }
   `
