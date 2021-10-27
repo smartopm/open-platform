@@ -31,8 +31,15 @@ export default function IDCapture({ handleNext }) {
     client: useApolloClient()
   });
 
+  const images = requestContext.request.imageUrls;
+
   function handleContinue() {
     const blobIds = [frontBlobId, backBlobId];
+
+    if(images){
+      handleNext()
+    }
+
     setLoading(true)
     updateRequest({ variables: { id: requestContext.request.id, imageBlobIds: blobIds } })
       .then(() => {
@@ -66,7 +73,7 @@ export default function IDCapture({ handleNext }) {
   }, [status]);
 
   const classes = useStyles();
-  const images = requestContext.request.imageUrls;
+
 
   return (
     <>
