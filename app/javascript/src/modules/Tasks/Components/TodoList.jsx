@@ -167,6 +167,13 @@ export default function TodoList({
       setSearchInputQuery(`user: '${debouncedSearchText}'`);
       loadTasks();
     }
+
+    if (!query && !debouncedFilterInputText && !debouncedSearchText) {
+      // Default to my tasks filter
+      setQuery(objectAccessor(taskQuery, 'myOpenTasks'));
+      loadTasks();
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debouncedFilterInputText, debouncedSearchText, loadTasks]);
 
   function handleRefetch() {
@@ -528,7 +535,7 @@ export default function TodoList({
                 ))}
               </div>
             ) : (
-              <CenteredContent>{t('task.click_a_card_to_filter')}</CenteredContent>
+              <CenteredContent>{t('task.no_tasks')}</CenteredContent>
             )}
             <br />
             <CenteredContent>

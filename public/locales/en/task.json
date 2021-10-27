@@ -11,6 +11,7 @@
     "tasks_open": "Tasks Open",
     "tasks_completed": "Tasks Completed",
     "click_a_card_to_filter": "Click to filter",
+    "no_tasks": "No tasks",
     "task_modal_detail_text": "Task Detail Page",
     "task_modal_create_text": "Create a task",
     "task_body_label": "Task Body",
