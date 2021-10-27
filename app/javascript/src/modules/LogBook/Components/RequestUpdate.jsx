@@ -248,7 +248,7 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
            return response.data.result.entryRequest.id
         })
         .then(response => {
-          if (communityName !== 'Nkwashi') {
+          if (communityName !== 'Nkwashi' && type === 'grant') {
             handleNext()
           }
           return response
@@ -842,12 +842,39 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
                   color="primary"
                   variant="contained"
                 >
-
                   {
                     t('logbook:logbook.grant')
                   }
                 </Button>
               </Grid>
+
+              <br />
+              <FeatureCheck features={authState?.user?.community?.features} name="LogBook" subFeature={CommunityFeaturesWhiteList.denyGateAccessButton}>
+                <Grid item>
+                  <Button
+                    variant="contained"
+                    onClick={handleDenyRequest}
+                    className={css(styles.denyButton)}
+                    disabled={isLoading}
+                    data-testid="entry_user_deny"
+                    startIcon={isLoading && <Spinner />}
+                  >
+                    {
+                      t('logbook:logbook.deny')
+                    }
+                  </Button>
+                </Grid>
+                <Grid item>
+                  <a
+                    href={`tel:${authState.user.community.securityManager}`}
+                    className={css(styles.callButton)}
+                    data-testid="entry_user_call_mgr"
+                  >
+                    <CallIcon className={css(styles.callIcon)} />
+                    <span>{t('logbook:logbook.call_manager')}</span>
+                  </a>
+                </Grid>
+              </FeatureCheck>
               {
                 communityName !== 'Nkwashi'  && (
                   <Grid item>
@@ -865,33 +892,6 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
                   </Grid>
                 )
               }
-              <br />
-              <Grid item>
-                <FeatureCheck features={authState?.user?.community?.features} name="LogBook" subFeature={CommunityFeaturesWhiteList.denyGateAccessButton}>
-                  <Button
-                    variant="contained"
-                    onClick={handleDenyRequest}
-                    className={css(styles.denyButton)}
-                    disabled={isLoading}
-                    data-testid="entry_user_deny"
-                    startIcon={isLoading && <Spinner />}
-                  >
-                    {
-                      t('logbook:logbook.deny')
-                    }
-                  </Button>
-                </FeatureCheck>
-              </Grid>
-              <Grid item>
-                <a
-                  href={`tel:${authState.user.community.securityManager}`}
-                  className={css(styles.callButton)}
-                  data-testid="entry_user_call_mgr"
-                >
-                  <CallIcon className={css(styles.callIcon)} />
-                  <span>{t('logbook:logbook.call_manager')}</span>
-                </a>
-              </Grid>
             </Grid>
             <br />
           </>
