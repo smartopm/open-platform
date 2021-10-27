@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, } from '@testing-library/react';
+import { render, waitFor} from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { BrowserRouter } from 'react-router-dom';
 import { ApolloProvider } from 'react-apollo';
@@ -27,7 +27,8 @@ describe('Todo list main page', () => {
       }
     }
   };
-  it('renders the todo list page correctly',  () => {
+
+  it('renders the todo list page correctly',  async () => {
     const mocks = [
       {
         request: {
@@ -68,8 +69,10 @@ describe('Todo list main page', () => {
       expect(container.queryByTestId('toggle_filter_btn')).toBeInTheDocument();
       expect(container.queryByTestId('filter_container')).toBeInTheDocument();
       expect(container.queryByTestId('create_task_btn')).toBeInTheDocument();
-      expect(container.queryByTestId('prev-btn')).toBeInTheDocument();
-      expect(container.queryByTestId('next-btn')).toBeInTheDocument();
       expect(container.queryByLabelText('search tasks')).toBeInTheDocument();
+      await waitFor(() => {
+        expect(container.queryByTestId('prev-btn')).toBeInTheDocument();
+        expect(container.queryByTestId('next-btn')).toBeInTheDocument();
+      })
   });
 });
