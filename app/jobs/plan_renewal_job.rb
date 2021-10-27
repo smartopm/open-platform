@@ -43,6 +43,7 @@ class PlanRenewalJob < ApplicationJob
           new_payment_plan.plan_type = sub_plan.plan_type
           new_payment_plan.installment_amount = sub_plan.amount
           new_payment_plan.total_amount = sub_plan.amount * payment_plan.duration
+          new_payment_plan.status = :active
           new_payment_plan.save!
           payment_plan.update!(renewed_plan_id: new_payment_plan.id)
           send_plan_renewal_email(payment_plan)
