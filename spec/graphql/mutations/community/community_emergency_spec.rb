@@ -33,6 +33,8 @@ RSpec.describe Mutations::Community::CommunityEmergency do
 
       expect(result.dig('data', 'communityEmergency', 'success')).to_not be_nil
       expect(result.dig('data', 'communityEmergency', 'success')).to eq true
+      expect(Notes::Note.count).to eq 1
+      expect(Notes::Note.first.completed).to eq false
       expect(result['errors']).to be_nil
     end
 
