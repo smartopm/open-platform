@@ -96,7 +96,6 @@ describe('Task Data components', () => {
     expect(container.getByTestId("task_due_date")).toBeInTheDocument()
     expect(container.getByTestId("task_assignee_section")).toBeInTheDocument()
     expect(container.getByTestId("task_assignee")).toBeInTheDocument()
-    expect(container.getByTestId("created_by")).toBeInTheDocument()
     expect(container.getByTestId("task_subtasks")).toBeInTheDocument()
     expect(container.getByTestId("task_comments")).toBeInTheDocument()
     expect(container.getByTestId("task_details_section")).toBeInTheDocument()
