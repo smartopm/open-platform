@@ -166,18 +166,18 @@ export function TaskDataList({
                 ))}
              </div>
              <div style={{ width: '20%' }}>
-                {task.assignees.length > 2 && (
-                  <IconButton
-                    aria-controls="more-assignees"
-                    aria-haspopup="true"
-                    data-testid="more-assignees"
-                    size="small"
-                    style={{ padding: 0, margin: 0, fontSize: '8px', color: '#000000', opacity: '0.2' }}
-                  >
-                      <MoreHorizIcon />
-                  </IconButton>
+               {task.assignees.length > 2 && (
+               <IconButton
+                 aria-controls="more-assignees"
+                 aria-haspopup="true"
+                 data-testid="more-assignees"
+                 size="small"
+                 style={{ padding: 0, margin: 0, fontSize: '8px', color: '#000000', opacity: '0.2' }}
+               >
+                 <MoreHorizIcon />
+               </IconButton>
                 )}
-            </div>
+             </div>
            </>
           )
           : <Typography variant="body2" component="span">{t('task.no_assignee')}</Typography>}
@@ -185,7 +185,7 @@ export function TaskDataList({
      </div>
      <div className={classes.section3} data-testid="task_details_section">
        <div className={classes.taskCreated}>
-        <div style={{ width: '79%' }}/>
+         <div style={{ width: '79%' }} />
        </div>
        <div className={classes.icons}>
          <IconButton
