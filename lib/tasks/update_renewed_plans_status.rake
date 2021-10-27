@@ -2,7 +2,7 @@
 
 namespace :db do
   desc 'Update renewed plans status from completed to active'
-  task renewed_plans_status: :environment do
+  task update_renewed_plans_status: :environment do
     ActiveRecord::Base.transaction do
       plans = Properties::PaymentPlan.where(status: :completed).where.not(pending_balance: 0)
       plans_count = plans.count
