@@ -14,9 +14,9 @@ import AccessCheck from '../Permissions/Components/AccessCheck';
 // name in here is only used as key in routes, make sure it is unique
 
 
-const userModule = 'user'
+const user = { module: 'user' }
 
-const entryRequestModule = 'entry_request'
+const entryRequest = { module: 'entry_request' }
 
 const editProfilePermissions = ['can_edit_own_profile'];
 
@@ -26,7 +26,7 @@ const otpPermissions = ['can_send_one_time_login']
 
 function RenderUserEdit() {
   return (
-    <AccessCheck module={userModule} allowedPermissions={editProfilePermissions}>
+    <AccessCheck module={user.module} allowedPermissions={editProfilePermissions}>
       <UserEdit />
     </AccessCheck>
 )
@@ -34,7 +34,7 @@ function RenderUserEdit() {
 
 function RenderOTPFeedbackScreen() {
   return (
-    <AccessCheck module={userModule} allowedPermissions={otpPermissions}>
+    <AccessCheck module={user.module} allowedPermissions={otpPermissions}>
       <OTPFeedbackScreen />
     </AccessCheck>
 )
@@ -42,7 +42,7 @@ function RenderOTPFeedbackScreen() {
 
 function RenderLogBook() {
   return (
-    <AccessCheck module={entryRequestModule} allowedPermissions={logBookPermissions}>
+    <AccessCheck module={entryRequest.module} allowedPermissions={logBookPermissions}>
       <UserLogs />
     </AccessCheck>
 )

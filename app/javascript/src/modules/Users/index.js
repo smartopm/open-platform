@@ -6,15 +6,14 @@ import Users from './Containers/Users';
 import UserShow from './Containers/UserShow';
 import AccessCheck from '../Permissions/Components/AccessCheck';
 
-
-const currentModule = 'user'
+const user = { module: 'user' }
 
 const userPermissions = ['can_access_all_users'];
 const profilePermissions = ['can_view_own_profile'];
 
 function RenderUsers() {
   return (
-    <AccessCheck module={currentModule} allowedPermissions={userPermissions}>
+    <AccessCheck module={user.module} allowedPermissions={userPermissions}>
       <Users />
     </AccessCheck>
 )
@@ -22,7 +21,7 @@ function RenderUsers() {
 
 function RenderUserProfile() {
   return (
-    <AccessCheck module={currentModule} allowedPermissions={profilePermissions}>
+    <AccessCheck module={user.module} allowedPermissions={profilePermissions}>
       <UserShow />
     </AccessCheck>
 )
@@ -45,7 +44,7 @@ export default {
     className: 'users-menu-item'
   },
   name: t => t('misc.users'),
-  moduleName: currentModule,
+  moduleName: user.module,
   featureName: 'Users',
   accessibleBy: []
 };
