@@ -6,11 +6,15 @@ import { useTranslation } from 'react-i18next';
 import { initialRequestState } from '../constants';
 import { EntryRequestQuery } from '../../../../graphql/queries';
 import { EntryRequestGrant } from '../../../../graphql/mutations';
+import { useParamsQuery } from '../../../../utils/helpers';
 
 export const EntryRequestContext = createContext({});
 
 export default function EntryRequestContextProvider({ children }) {
   const { id, guestListEntryId } = useParams();
+  const query = useParamsQuery();
+  const requestType = query.get('type');
+  const isGuestRequest = requestType === 'guest';
   const [request, updateRequest] = useState({ ...initialRequestState, id: id || guestListEntryId });
   const [loadEntry, { data }] = useLazyQuery(EntryRequestQuery);
   const [grantEntry] = useMutation(EntryRequestGrant);
@@ -62,7 +66,8 @@ export default function EntryRequestContextProvider({ children }) {
         updateRequest,
         grantAccess: handleGrantAccess,
         observationDetails,
-        setDetails
+        setDetails,
+        isGuestRequest
       }}
     >
       {children}

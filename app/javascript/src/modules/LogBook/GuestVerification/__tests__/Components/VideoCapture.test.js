@@ -17,7 +17,7 @@ describe('Video Capture component', () => {
         <MockedProvider>
           <BrowserRouter>
             <MockedThemeProvider>
-              <EntryRequestContext.Provider value={{ request: { id: 'somew2923' } }}>
+              <EntryRequestContext.Provider value={{ request: { id: 'somew2923' }, isGuestRequest: false }}>
                 <VideoCapture handleNext={() => {}} />
               </EntryRequestContext.Provider>
             </MockedThemeProvider>

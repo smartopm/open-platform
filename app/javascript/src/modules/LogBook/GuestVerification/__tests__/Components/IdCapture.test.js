@@ -30,6 +30,7 @@ describe('Id Capture component', () => {
     expect(container.queryByTestId('upload_area')).toBeInTheDocument();
     expect(container.queryByTestId('save_and_next')).toBeInTheDocument();
     expect(container.queryByTestId('skip_next')).toBeInTheDocument();
+    expect(container.queryByTestId('skip_next')).toBeDisabled();
     expect(container.queryByTestId('instructions')).toBeInTheDocument();
   });
 });

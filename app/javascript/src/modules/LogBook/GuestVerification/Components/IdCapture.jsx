@@ -31,8 +31,16 @@ export default function IDCapture({ handleNext }) {
     client: useApolloClient()
   });
 
+  const images = requestContext.request.imageUrls;
+
   function handleContinue() {
     const blobIds = [frontBlobId, backBlobId];
+
+    if(images || !blobIds){
+      handleNext()
+      return
+    }
+
     setLoading(true)
     updateRequest({ variables: { id: requestContext.request.id, imageBlobIds: blobIds } })
       .then(() => {
@@ -66,7 +74,7 @@ export default function IDCapture({ handleNext }) {
   }, [status]);
 
   const classes = useStyles();
-  const images = requestContext.request.imageUrls;
+
 
   return (
     <>
@@ -139,16 +147,20 @@ export default function IDCapture({ handleNext }) {
           >
             {t('image_capture.next_step')}
           </Button>
-          <Button
-            className={classes.skipToNextBtn}
-            onClick={requestContext.grantAccess}
-            disabled={!requestContext.request.id}
-            color="primary"
-            data-testid="skip_next"
-            startIcon={requestContext.request.isLoading && <Spinner />}
-          >
-            {t('logbook.grant')}
-          </Button>
+          {
+            !requestContext.isGuestRequest && (
+              <Button
+                className={classes.skipToNextBtn}
+                onClick={requestContext.grantAccess}
+                disabled={!requestContext.request.id}
+                color="primary"
+                data-testid="skip_next"
+                startIcon={requestContext.request.isLoading && <Spinner />}
+              >
+                {t('logbook.grant')}
+              </Button>
+            )
+          }
         </CenteredContent>
       </Grid>
     </>
