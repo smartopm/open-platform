@@ -208,7 +208,7 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
     handleNext(true)
   }
 
-  function handleCreateRequest() {
+  function handleCreateRequest(type='create') {
     const otherFormData = {
       ...formData,
       // return reason if not other
@@ -238,7 +238,8 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
             return false
           }
           // hardcoding this for now before we make this a community setting
-          if (communityName === 'Nkwashi') {
+          if (communityName === 'Nkwashi' || type === 'grant') {
+            setModal(!isModalOpen);
             return requestContext.grantAccess(response.data.result.entryRequest.id)
           }
           requestContext.updateRequest({
@@ -378,7 +379,7 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
         handleUpdateRequest();
         break;
       case 'create':
-        handleCreateRequest()
+        handleCreateRequest('create')
         break;
       default:
         break;
@@ -454,7 +455,7 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
       />
       <ModalDialog
         handleClose={() => setModal(false)}
-        handleConfirm={() => requestContext.grantAccess()}
+        handleConfirm={() => handleCreateRequest('grant')}
         open={isModalOpen}
         action={t(`logbook:access_actions.${modalAction}`)}
         name={formData.name}
@@ -835,32 +836,31 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
             <Grid container justify="center" spacing={4} className={css(styles.grantSection)}>
               <Grid item>
                 <Button
-                  variant="contained"
-                  onClick={event => handleModal(event, 'create')}
-                  color="primary"
-                  disabled={isLoading}
-                  data-testid="entry_user_next"
+                  onClick={event => handleModal(event, 'grant')}
+                  data-testid="entry_user_grant"
                   startIcon={isLoading && <Spinner />}
+                  color="primary"
+                  variant="contained"
                 >
+
                   {
-                    communityName === 'Nkwashi' ? t('logbook:logbook.grant') : t('logbook:logbook.next_step')
+                    t('logbook:logbook.grant')
                   }
                 </Button>
               </Grid>
               {
-                communityName !== 'Nkwashi' && (
+                communityName !== 'Nkwashi'  && (
                   <Grid item>
                     <Button
-                      onClick={event => handleModal(event, 'grant')}
-                      disabled={!requestContext.request.id}
-                      data-testid="entry_user_grant"
-                      startIcon={isLoading && <Spinner />}
+                      onClick={event => handleModal(event, 'create')}
                       color="primary"
+                      disabled={isLoading}
+                      data-testid="entry_user_next"
+                      startIcon={isLoading && <Spinner />}
                     >
-
                       {
-                    t('logbook:logbook.grant')
-                  }
+                      t('logbook:logbook.next_step')
+                    }
                     </Button>
                   </Grid>
                 )
