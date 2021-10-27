@@ -55,7 +55,7 @@ export default function IDCapture({ handleNext }) {
           imageUrls: data.result.entryRequest.imageUrls
         });
         setLoading(false);
-        // handleNext();
+        handleNext();
       })
       .catch(error => {
         setDetails({ ...errorDetails, isError: true, message: error.message });
@@ -138,7 +138,6 @@ export default function IDCapture({ handleNext }) {
             type={t('image_capture.back')}
           />
         </Grid>
-        {requestContext.request?.imageUrls && <Typography>Hello You</Typography>}
         <CenteredContent>
           <Button
             variant="contained"
