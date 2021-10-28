@@ -1,4 +1,4 @@
-admin: 
+admin:
   note:
     permissions:
       - can_create_note
@@ -48,9 +48,9 @@ admin:
       - can_fetch_user_transactions
   entry_request:
     permissions:
-      - can_see_menu_item 
+      - can_see_menu_item
       - can_access_guest_list
-      - can_access_logbook 
+      - can_access_logbook
       - can_access_guest_list
       - can_create_entry_request
       - can_update_entry_request
@@ -95,7 +95,7 @@ admin:
     permissions:
       - can_create_subscription_plan
       - can_update_subscription_plan
-      - can_fetch_subscription_plans 
+      - can_fetch_subscription_plans
   email_template:
     permissions:
       - can_see_menu_item
@@ -142,6 +142,7 @@ admin:
       - can_get_users
       - can_get_users_lite
       - can_see_menu_item
+      - can_invite_user
   profile:
     permissions:
       - can_see_menu_item
@@ -154,7 +155,7 @@ admin:
 contractor:
   note:
     permissions:
-      - can_see_menu_item 
+      - can_see_menu_item
       - can_create_note
       - can_update_note
       - can_set_note_reminder
@@ -195,7 +196,7 @@ custodian:
       - can_get_own_tasks
   gate_access:
     permissions:
-      - can_see_menu_item 
+      - can_see_menu_item
   entry_request:
     permissions:
       - can_access_guest_list
@@ -240,7 +241,7 @@ security_guard:
       - can_get_own_tasks
   entry_request:
     permissions:
-      - can_see_menu_item 
+      - can_see_menu_item
       - can_access_logbook
       - can_create_entry_request
       - can_update_entry_request
@@ -262,7 +263,7 @@ security_guard:
 site_worker:
   note:
     permissions:
-      - can_see_menu_item 
+      - can_see_menu_item
       - can_create_note
       - can_update_note
       - can_set_note_reminder
@@ -297,7 +298,7 @@ resident:
       - can_view_entry_request
   guest_list:
     permissions:
-      - can_see_menu_item 
+      - can_see_menu_item
   form:
     permissions:
       - can_see_menu_item
@@ -326,15 +327,15 @@ client:
       - can_see_menu_item
   entry_request:
     permissions:
-      - can_access_guest_list 
+      - can_access_guest_list
       - can_create_entry_request
       - can_update_entry_request
       - can_view_entry_requests
-      - can_view_entry_request 
+      - can_view_entry_request
       - can_revoke_entry_request
   guest_list:
     permissions:
-      - can_see_menu_item 
+      - can_see_menu_item
   form:
     permissions:
       - can_see_menu_item
@@ -351,4 +352,3 @@ client:
     permissions:
       - can_see_menu_item
 
-    

@@ -629,6 +629,12 @@ module Users
       payment_plans.unscope(where: :status).general.first.presence || create_general_plan
     end
 
+    def invite_user(user_id)
+      return unless user_id
+
+      visitors.create!(visitor_id: user_id)
+    end
+
     private
 
     def phone_number_valid?

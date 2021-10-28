@@ -12,6 +12,7 @@ module Types
     field :user_merge, mutation: Mutations::User::Merge
     field :create_upload, mutation: Mutations::Upload::CreateAttachment
     field :users_import, mutation: Mutations::User::Import
+    field :invite_user, mutation: Mutations::User::Invite
 
     # Entry Requests
     field :entry_request_create, mutation: Mutations::EntryRequest::EntryRequestCreate

@@ -302,6 +302,7 @@ en:
     duplicate:
       email: Duplicate email
       phone: Duplicate phone
+      guest: Duplicate Guest
     email_template:
       not_found: Template not found
     entry_request:
@@ -378,7 +379,7 @@ en:
       payment_not_found: Payment not found
   general:
     thanks_for_using_our_app: Thank you for using our app, kindly use this link to give us feedback %{feedback_link}
-    task_reminder: REMINDER, Please complete your task before/by the due date (%{due_date}). Check out your task on %{task_link}. Thanks, %{community_name} 
+    task_reminder: REMINDER, Please complete your task before/by the due date (%{due_date}). Check out your task on %{task_link}. Thanks, %{community_name}
   response:
     failed: failed
     success: success
@@ -395,4 +396,4 @@ en:
     location_and_contact_not_found: and do not have approximate location and a contact number in our system.
     reached_on_message: and can likely be reached on %{phone_number}.
     receiving_message: You are receiving this message as you are a member of the emergency escalation team for %{name}. Please confirm the person is safe and the emergency is resolved, then mark as complete %{task_url}
-    user_initiated_message: Emergency SOS %{user_name} has initiated an emergency support request 
+    user_initiated_message: Emergency SOS %{user_name} has initiated an emergency support request
