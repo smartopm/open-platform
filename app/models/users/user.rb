@@ -105,6 +105,9 @@ module Users
     has_many :plan_ownerships, class_name: 'Properties::PlanOwnership', dependent: :destroy
     has_many :co_owned_plans, class_name: 'Properties::PaymentPlan', through: :plan_ownerships,
                               source: :payment_plan
+
+    has_many :visitors, class_name: 'Logs::Invite', foreign_key: :host_id
+    has_many :hosts, class_name: 'Logs::Invite', foreign_key: :visitor_id
     has_one_attached :avatar
     has_one_attached :document
 
