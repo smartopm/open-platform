@@ -11,6 +11,7 @@ module Mutations
         def resolve(id:)
           user = context[:site_community].users.find(id)
           raise GraphQL::ExecutionError, I18n.t('errors.not_found') unless user
+          raise GraphQL::ExecutionError, I18n.t('errors.entry_request.not_found') unless user.request
 
           begin
             host = context[:current_user]

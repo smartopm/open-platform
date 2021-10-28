@@ -106,8 +106,8 @@ module Users
     has_many :co_owned_plans, class_name: 'Properties::PaymentPlan', through: :plan_ownerships,
                               source: :payment_plan
 
-    has_many :guests, class_name: 'Logs::Invite', foreign_key: :host_id, dependent: :destroy
-    has_many :hosts, class_name: 'Logs::Invite', foreign_key: :guest_id, dependent: :destroy
+    has_one :request, class_name: 'Logs::EntryRequest', foreign_key: :guest_id
+    has_many :invites, class_name: 'Logs::Invite', foreign_key: :host_id, dependent: :destroy
     has_one_attached :avatar
     has_one_attached :document
 
@@ -632,7 +632,7 @@ module Users
     def invite_guest(user_id)
       return unless user_id
 
-      guests.create!(guest_id: user_id)
+      invites.create!(guest_id: user_id)
     end
 
     private

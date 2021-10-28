@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_10_28_094305) do
+ActiveRecord::Schema.define(version: 2021_10_28_194538) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -300,6 +300,7 @@ ActiveRecord::Schema.define(version: 2021_10_28_094305) do
     t.integer "entry_request_state", default: 0
     t.uuid "revoker_id"
     t.datetime "revoked_at"
+    t.uuid "guest_id"
   end
 
   create_table "entry_times", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -314,6 +315,7 @@ ActiveRecord::Schema.define(version: 2021_10_28_094305) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["community_id"], name: "index_entry_times_on_community_id"
+    t.index ["visitable_id", "visitable_type"], name: "index_entry_times_on_visitable_id_and_visitable_type", unique: true
   end
 
   create_table "event_logs", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|

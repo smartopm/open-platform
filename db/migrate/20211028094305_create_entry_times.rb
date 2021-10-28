@@ -12,5 +12,6 @@ class CreateEntryTimes < ActiveRecord::Migration[6.1]
 
       t.timestamps
     end
+    add_index :entry_times, [:visitable_id, :visitable_type], :unique => true
   end
 end
