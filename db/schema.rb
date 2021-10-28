@@ -400,10 +400,8 @@ ActiveRecord::Schema.define(version: 2021_10_28_094305) do
     t.uuid "host_id"
     t.uuid "guest_id"
     t.datetime "revoked_at"
-    t.uuid "community_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["community_id"], name: "index_invites_on_community_id"
     t.index ["host_id", "guest_id"], name: "index_invites_on_host_id_and_guest_id", unique: true
   end
 
@@ -878,7 +876,6 @@ ActiveRecord::Schema.define(version: 2021_10_28_094305) do
   add_foreign_key "forms", "communities"
   add_foreign_key "import_logs", "communities"
   add_foreign_key "import_logs", "users"
-  add_foreign_key "invites", "communities"
   add_foreign_key "invoices", "communities"
   add_foreign_key "invoices", "land_parcels"
   add_foreign_key "invoices", "payment_plans"

@@ -4,7 +4,6 @@ class CreateInvites < ActiveRecord::Migration[6.1]
       t.uuid :host_id
       t.uuid :guest_id
       t.datetime :revoked_at
-      t.references :community, type: :uuid, null: false, foreign_key: true
 
       t.timestamps
     end
