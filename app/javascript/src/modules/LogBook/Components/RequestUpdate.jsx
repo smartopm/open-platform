@@ -340,11 +340,7 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
   }
 
   function isEmailValid() {
-    if (formData?.email === '' || formData?.email === null || formData?.email === undefined){
-      return true;
-    }
-
-    return validateEmail(formData.email);
+    return !formData?.email ? true : validateEmail(formData.email);
   }
 
   function handleModal(_event, type) {
