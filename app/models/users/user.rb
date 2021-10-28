@@ -106,8 +106,11 @@ module Users
     has_many :co_owned_plans, class_name: 'Properties::PaymentPlan', through: :plan_ownerships,
                               source: :payment_plan
 
-    has_one :request, class_name: 'Logs::EntryRequest', foreign_key: :guest_id
-    has_many :invites, class_name: 'Logs::Invite', foreign_key: :host_id, dependent: :destroy
+    # TODO: find more about the inverse_of association and if we really need that
+    has_one :request, class_name: 'Logs::EntryRequest', foreign_key: :guest_id,
+                      dependent: :destroy, inverse_of: 'guests'
+    has_many :invites, class_name: 'Logs::Invite', foreign_key: :host_id,
+                       dependent: :destroy, inverse_of: 'guests'
     has_one_attached :avatar
     has_one_attached :document
 
@@ -632,8 +635,7 @@ module Users
     def invite_guest(user_id)
       return unless user_id
 
-      invite = invites.create(guest_id: user_id)
-      invite
+      invites.create(guest_id: user_id)
     end
 
     private
