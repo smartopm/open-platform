@@ -8,6 +8,8 @@ import { Context } from '../../../containers/Provider/AuthStateProvider';
 import { createClient } from '../../../utils/apollo';
 import Todo from '../containers/Todo';
 import { TaskStatsQuery } from '../graphql/task_queries';
+import { flaggedNotes } from '../../../graphql/queries';
+import { taskMock } from './TodoList.test';
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
 
@@ -50,7 +52,22 @@ describe('Todo list main page', () => {
             }
           }
         }
-      }
+      },
+        {
+          request: {
+            query: flaggedNotes,
+            variables: {
+              offset: 0,
+              limit: 50,
+              query: 'assignees: Another somebodyy AND completed: false '
+            }
+          },
+          result: {
+           flaggedNotes: [
+            taskMock
+           ]
+          }
+        }
     ];
 
 

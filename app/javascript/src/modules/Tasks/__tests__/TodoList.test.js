@@ -18,7 +18,8 @@ const props = {
   location: 'tasks'
 }
 
-const task = {
+// TODO: move this out of the test file  and add ids in each nested query
+export const taskMock = {
   body: 'Task example',
   id: '23',
   createdAt: new Date('2020-08-01'),
@@ -111,7 +112,7 @@ const mocks = [
     },
     result: {
      flaggedNotes: [
-      task
+      taskMock
      ]
     }
   }
