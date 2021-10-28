@@ -19,7 +19,7 @@ describe('UserId Detail component', () => {
     expect(container.queryByText('Another somebody')).toBeInTheDocument();
     expect(container.queryByText('client')).toBeInTheDocument();
     expect(container.queryByText('misc.visiting_hours')).toBeInTheDocument();
-    expect(container.queryByText('common:misc.expiration: Never')).toBeInTheDocument();
+    expect(container.queryByText('common:misc.expiration: misc.never')).toBeInTheDocument();
     expect(container.queryByText('qr_code.message')).toBeInTheDocument();
     expect(container.queryByTestId('visiting_hours').textContent).toContain('days:days.sunday: misc.off')
     expect(container.queryByTestId('visiting_hours').textContent).toContain('days:days.saturday: 8:00 - 12:00')
@@ -30,7 +30,7 @@ describe('UserId Detail component', () => {
     const container = render(<UserIDDetail data={data} communityName='Ciudad Morazán' />);
     expect(container.queryByText('Another somebody')).toBeInTheDocument();
     expect(container.queryByText('client')).toBeInTheDocument();
-    expect(container.queryByText('common:misc.expiration: Never')).toBeInTheDocument();
+    expect(container.queryByText('common:misc.expiration: misc.never')).toBeInTheDocument();
     expect(container.queryByText('Please note the main gate visiting hours:')).not.toBeInTheDocument();
     expect(container.queryByText('qr_code.message')).toBeInTheDocument();
     expect(container.queryByTestId('visiting_hours')).toBeNull()

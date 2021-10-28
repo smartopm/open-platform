@@ -235,7 +235,8 @@
     "web": "Web",
     "phone": "Phone",
     "signature": "Signature",
-    "seconds": "seconds"
+    "seconds": "seconds",
+    "never": "Never"
   },
   "menu": {
     "invoice": "Invoice",
