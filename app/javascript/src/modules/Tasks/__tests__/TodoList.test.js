@@ -1,3 +1,4 @@
+/* eslint-disable import/prefer-default-export */
 import React from 'react'
 import { MockedProvider } from '@apollo/react-testing'
 import { BrowserRouter } from 'react-router-dom/cjs/react-router-dom.min'
@@ -19,6 +20,7 @@ const props = {
 }
 
 // TODO: move this out of the test file  and add ids in each nested query
+// eslint-disable-next-line jest/no-export
 export const taskMock = {
   body: 'Task example',
   id: '23',
