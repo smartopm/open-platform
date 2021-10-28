@@ -632,7 +632,8 @@ module Users
     def invite_guest(user_id)
       return unless user_id
 
-      invites.create!(guest_id: user_id)
+      invite = invites.create(guest_id: user_id)
+      invite
     end
 
     private
