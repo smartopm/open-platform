@@ -58,7 +58,7 @@ describe('date container component', () => {
     expect(DateUtils.formatDate(date)).toContain('2020-06-11')
   })
   it('should return never when date is null', () => {
-    expect(DateUtils.formatDate()).toContain('Never')
+    expect(DateUtils.formatDate()).toContain('misc.never')
   })
   it('should append time to the date', () => {
     const date1 = new Date('2021-09-07T15:39:00.000Z')

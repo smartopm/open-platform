@@ -57,7 +57,7 @@ export function UserIDDetail({ data, communityName }) {
               :
               {' '}
               {DateUtil.isExpired(data.user.expiresAt) ? (
-                <span className="text-danger">Already Expired</span>
+                <span className="text-danger">{t('common:misc.already_expired')}</span>
               ) : (
                 DateUtil.formatDate(data.user.expiresAt)
               )}
