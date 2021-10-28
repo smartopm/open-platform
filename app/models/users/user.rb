@@ -106,8 +106,8 @@ module Users
     has_many :co_owned_plans, class_name: 'Properties::PaymentPlan', through: :plan_ownerships,
                               source: :payment_plan
 
-    has_many :visitors, class_name: 'Logs::Invite', foreign_key: :host_id
-    has_many :hosts, class_name: 'Logs::Invite', foreign_key: :visitor_id
+    has_many :guests, class_name: 'Logs::Invite', foreign_key: :host_id, dependent: :destroy
+    has_many :hosts, class_name: 'Logs::Invite', foreign_key: :guest_id, dependent: :destroy
     has_one_attached :avatar
     has_one_attached :document
 
@@ -629,10 +629,10 @@ module Users
       payment_plans.unscope(where: :status).general.first.presence || create_general_plan
     end
 
-    def invite_user(user_id)
+    def invite_guest(user_id)
       return unless user_id
 
-      visitors.create!(visitor_id: user_id)
+      visitors.create!(guest_id: user_id)
     end
 
     private

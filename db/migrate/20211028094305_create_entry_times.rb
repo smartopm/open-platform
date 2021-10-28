@@ -8,6 +8,7 @@ class CreateEntryTimes < ActiveRecord::Migration[6.1]
       t.string :occurs_on, default: [], array: true
       t.uuid :visitable_id
       t.string :visitable_type
+      t.references :community, type: :uuid, null: false, foreign_key: true
 
       t.timestamps
     end

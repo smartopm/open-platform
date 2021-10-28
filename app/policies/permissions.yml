@@ -142,7 +142,7 @@ admin:
       - can_get_users
       - can_get_users_lite
       - can_see_menu_item
-      - can_invite_user
+      - can_invite_guest
   profile:
     permissions:
       - can_see_menu_item

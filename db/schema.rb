@@ -310,8 +310,10 @@ ActiveRecord::Schema.define(version: 2021_10_28_094305) do
     t.string "occurs_on", default: [], array: true
     t.uuid "visitable_id"
     t.string "visitable_type"
+    t.uuid "community_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.index ["community_id"], name: "index_entry_times_on_community_id"
   end
 
   create_table "event_logs", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -396,11 +398,13 @@ ActiveRecord::Schema.define(version: 2021_10_28_094305) do
 
   create_table "invites", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "host_id"
-    t.uuid "visitor_id"
+    t.uuid "guest_id"
     t.datetime "revoked_at"
+    t.uuid "community_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["host_id", "visitor_id"], name: "index_invites_on_host_id_and_visitor_id", unique: true
+    t.index ["community_id"], name: "index_invites_on_community_id"
+    t.index ["host_id", "guest_id"], name: "index_invites_on_host_id_and_guest_id", unique: true
   end
 
   create_table "invoices", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -864,6 +868,7 @@ ActiveRecord::Schema.define(version: 2021_10_28_094305) do
   add_foreign_key "discussions", "communities"
   add_foreign_key "discussions", "users"
   add_foreign_key "email_templates", "communities"
+  add_foreign_key "entry_times", "communities"
   add_foreign_key "feedbacks", "communities"
   add_foreign_key "form_properties", "categories"
   add_foreign_key "form_properties", "forms"
@@ -873,6 +878,7 @@ ActiveRecord::Schema.define(version: 2021_10_28_094305) do
   add_foreign_key "forms", "communities"
   add_foreign_key "import_logs", "communities"
   add_foreign_key "import_logs", "users"
+  add_foreign_key "invites", "communities"
   add_foreign_key "invoices", "communities"
   add_foreign_key "invoices", "land_parcels"
   add_foreign_key "invoices", "payment_plans"

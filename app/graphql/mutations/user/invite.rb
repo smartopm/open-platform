@@ -14,7 +14,7 @@ module Mutations
 
           begin
             host = context[:current_user]
-            return { success: true } if host.invite_user(user.id)
+            return { success: true } if host.invite_guest(user.id)
           rescue ActiveRecord::RecordNotUnique
             raise GraphQL::ExecutionError, I18n.t('errors.duplicate.guest')
           end
@@ -27,7 +27,7 @@ module Mutations
             ).permission?(
               admin: true,
               module: :user,
-              permission: :can_invite_user,
+              permission: :can_invite_guest,
             )
 
             raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
