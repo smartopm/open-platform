@@ -238,9 +238,8 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
             return false
           }
           // hardcoding this for now before we make this a community setting
-          if (communityName === 'Nkwashi' || type === 'grant') {
-            setModal(!isModalOpen);
-            return requestContext.grantAccess(response.data.result.entryRequest.id)
+          if ((communityName === 'Nkwashi' && type !==  'deny') || type === 'grant') {
+             return requestContext.grantAccess(response.data.result.entryRequest.id)
           }
           requestContext.updateRequest({
             ...requestContext.request, id: response.data.result.entryRequest.id
@@ -293,8 +292,8 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
     }
     setIsClicked(!isClicked);
     setLoading(true);
-    handleCreateRequest()
-      .then(requestId => denyEntry({ variables: { id: requestId } }))
+    handleCreateRequest('deny')
+    .then(requestId => denyEntry({ variables: { id: requestId } }))
       .then(() => {
         setDetails({
           ...observationDetails,
@@ -368,8 +367,7 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
 
     switch (type) {
       case 'grant':
-        setModalAction('grant');
-        setModal(!isModalOpen);
+        handleCreateRequest('grant')
         break;
       case 'deny':
         setModalAction('deny');
