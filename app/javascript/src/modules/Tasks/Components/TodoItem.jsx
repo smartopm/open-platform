@@ -51,6 +51,7 @@ export default function TodoItem({
   function handleClose(event) {
     event.stopPropagation()
     setAnchorEl(null)
+    setSelectedTask(null);
   }
 
   return (

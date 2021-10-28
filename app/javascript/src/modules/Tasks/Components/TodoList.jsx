@@ -125,6 +125,7 @@ export default function TodoList({
     // eslint-disable-next-line no-nested-ternary
     filterQuery ? `AND ${filterQuery}` : searchInputQuery ? `AND ${searchInputQuery}` : ''
   }`
+
   const [
     loadTasks,
     { loading: isLoading, error: tasksError, data, refetch, called }
@@ -136,6 +137,7 @@ export default function TodoList({
     },
     fetchPolicy: 'network-only'
   });
+
   const [assignUserToNote] = useMutation(AssignUser);
   const [taskUpdate] = useMutation(UpdateNote)
   const [bulkUpdate] = useMutation(TaskBulkUpdateMutation)
@@ -167,6 +169,13 @@ export default function TodoList({
       setSearchInputQuery(`user: '${debouncedSearchText}'`);
       loadTasks();
     }
+
+    if (!query && !debouncedFilterInputText && !debouncedSearchText) {
+      // Default to my tasks filter
+      setQuery(objectAccessor(taskQuery, 'myOpenTasks'));
+      loadTasks();
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debouncedFilterInputText, debouncedSearchText, loadTasks]);
 
   function handleRefetch() {
@@ -528,23 +537,23 @@ export default function TodoList({
                 ))}
               </div>
             ) : (
-              <CenteredContent>{t('task.click_a_card_to_filter')}</CenteredContent>
+              <CenteredContent>{t('task.no_tasks')}</CenteredContent>
             )}
             <br />
             <CenteredContent>
               <Paginate offSet={offset} limit={limit} active={offset >= 1} handlePageChange={paginate} />
             </CenteredContent>
-            <Fab
-              variant="extended"
-              onClick={openModal}
-              color="primary"
-              className={`${css(styles.taskButton)} `}
-              data-testid="create_task_btn"
-            >
-              <AddIcon />
-            </Fab>
           </>
         )}
+        <Fab
+          variant="extended"
+          onClick={openModal}
+          color="primary"
+          className={`${css(styles.taskButton)} `}
+          data-testid="create_task_btn"
+        >
+          <AddIcon />
+        </Fab>
       </div>
     </>
   );
@@ -576,6 +585,7 @@ const useStyles = makeStyles(() => ({
 const styles = StyleSheet.create({
   taskButton: {
     height: 51,
+    width: 51,
     boxShadow: 'none',
     position: 'fixed',
     top: 60,
