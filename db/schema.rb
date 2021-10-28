@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_10_19_105727) do
+ActiveRecord::Schema.define(version: 2021_10_28_094305) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -302,6 +302,18 @@ ActiveRecord::Schema.define(version: 2021_10_19_105727) do
     t.datetime "revoked_at"
   end
 
+  create_table "entry_times", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.datetime "visitation_date"
+    t.datetime "visit_end_date"
+    t.datetime "starts_at"
+    t.datetime "ends_at"
+    t.string "occurs_on", default: [], array: true
+    t.uuid "visitable_id"
+    t.string "visitable_type"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
   create_table "event_logs", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "community_id"
     t.uuid "acting_user_id"
@@ -380,6 +392,15 @@ ActiveRecord::Schema.define(version: 2021_10_19_105727) do
     t.datetime "updated_at", precision: 6, null: false
     t.index ["community_id"], name: "index_import_logs_on_community_id"
     t.index ["user_id"], name: "index_import_logs_on_user_id"
+  end
+
+  create_table "invites", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "host_id"
+    t.uuid "visitor_id"
+    t.datetime "revoked_at"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["host_id", "visitor_id"], name: "index_invites_on_host_id_and_visitor_id", unique: true
   end
 
   create_table "invoices", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
