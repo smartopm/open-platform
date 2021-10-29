@@ -13,6 +13,7 @@ import CenteredContent from '../../../../components/CenteredContent';
 import ImageUploadPreview from '../../../../shared/imageUpload/ImageUploadPreview';
 import { EntryRequestUpdateMutation } from '../../graphql/logbook_mutations';
 import MessageAlert from '../../../../components/MessageAlert';
+import { checkUserInformation, checkInfo }  from '../utils'
 
 export default function RequestConfirmation({ handleGotoStep }) {
   const requestContext = useContext(EntryRequestContext);
@@ -25,21 +26,6 @@ export default function RequestConfirmation({ handleGotoStep }) {
     isError: false,
     message: ''
   });
-  function checkUserInformation() {
-    const info = req.name || req.email || req.phoneNumber;
-    if (info) {
-      return true;
-    }
-    return false;
-  }
-
-  function checkInfo() {
-    const info = req.name || req.email || req.phoneNumber || req.imageUrls || req.videoUrl;
-    if (info) {
-      return true;
-    }
-    return false;
-  }
 
   function handleEdit(stepNumber) {
     requestContext.updateRequest({
@@ -77,7 +63,7 @@ export default function RequestConfirmation({ handleGotoStep }) {
         handleClose={() => setDetails({ ...errorDetails, message: '' })}
       />
       <Grid container style={!matches ? { padding: '0 300px' } : { padding: '20px' }}>
-        {checkInfo() ? (
+        {checkInfo(req) ? (
           <Grid item xs={12} sm={12} style={{ marginBottom: '20px' }}>
             <Typography variant="h6" style={{ fontWeight: 'bold' }}>
               {t('review_screen.review_title')}
@@ -87,7 +73,7 @@ export default function RequestConfirmation({ handleGotoStep }) {
         ) : (
           <CenteredContent>{t('review_screen.no_review')}</CenteredContent>
         )}
-        {checkUserInformation() && (
+        {checkUserInformation(req) && (
           <>
             <Grid item xs={6} data-testid="user-info">
               <Typography style={{ fontWeight: 600 }}>{t('review_screen.user_information')}</Typography>
@@ -208,7 +194,7 @@ export default function RequestConfirmation({ handleGotoStep }) {
             </Grid>
           </>
         )}
-        {checkInfo() && (
+        {checkInfo(req) && (
           <Grid item xs={12} style={{ textAlign: 'center', marginTop: '40px' }}>
             <Button
               disabled={loading}

@@ -238,7 +238,7 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
             return false
           }
           // hardcoding this for now before we make this a community setting
-          if (communityName === 'Nkwashi') {
+          if ((communityName === 'Nkwashi' && type !==  'deny') || type === 'grant') {
             return requestContext.grantAccess(response.data.result.entryRequest.id)
           }
           requestContext.updateRequest({
