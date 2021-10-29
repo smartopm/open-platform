@@ -1,6 +1,6 @@
-import checkSubMenuAccessibility from '../utils'
+import checkSubMenuAccessibility, {canAccessSOS } from '../utils'
 import authState from '../../../__mocks__/authstate';
-import {canAccessSOS } from '../utils'
+
 describe('Menu items check', () => {
 
   const subMenuItem = {
