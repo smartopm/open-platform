@@ -18,7 +18,7 @@ module Mutations
         ActiveRecord::Base.transaction do
           source_payment_plan.lock!
           destination_payment_plan.lock!
-          destination_payment_plan.transfer_payments(source_payment_plan)
+          destination_payment_plan.process_transfer(source_payment_plan)
           return { payment_plan: destination_payment_plan.reload } if source_payment_plan.cancel!
 
           raise GraphQL::ExecutionError, source_payment_plan.errors.full_messages

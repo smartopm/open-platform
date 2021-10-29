@@ -109,13 +109,23 @@ module Properties
     # @param [PaymentPlan] plan
     #
     # @return [void]
-    def transfer_payments(plan)
+    def process_transfer(plan)
       plan.plan_payments.paid.order(amount: :asc).each do |payment|
-        payment.note = "Migrated to plan #{payment_plan_name} Id - #{id}"
-        payment.status = :cancelled
-        payment.save!
-        create_new_payment(plan, payment)
+        transfer_payment(plan, payment)
       end
+    end
+
+    # Transfers individual payment
+    #
+    # @param [PaymentPlan] plan
+    # @param [PlanPayment] payment
+    #
+    # @return [Boolean]
+    def transfer_payment(plan, payment)
+      payment.note = "Migrated to plan #{payment_plan_name} Id - #{id}"
+      payment.status = :cancelled
+      payment.save!
+      create_new_payment(plan, payment)
     end
 
     # Returns PaymentPlan name by concatenating parcel number and start date.

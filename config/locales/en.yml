@@ -346,6 +346,8 @@ en:
       found_blank: Email cannot be blank
     plan_payment:
       not_found: Payment not found
+      cannot_transfer_cancelled_payment: Transfer of cancelled payment cannot be done
+      cannot_transfer_to_cancelled_plan: Transfer of payment cannot be made to a cancelled payment plan. Please try transferring to other plans
     post_tag:
       not_found: Tag not found
     receipt_number:

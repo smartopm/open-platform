@@ -136,6 +136,7 @@ module Types
     # payments
     field :plan_payment_cancel, mutation: Mutations::Payment::PlanPaymentCancel
     field :plan_payment_create, mutation: Mutations::Payment::PlanPaymentCreate
+    field :transfer_plan_payment, mutation: Mutations::Payment::TransferPlanPayment
 
     # payment_plan
     field :payment_plan_create, mutation: Mutations::PaymentPlan::PaymentPlanCreate
