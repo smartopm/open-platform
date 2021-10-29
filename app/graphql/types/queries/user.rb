@@ -278,7 +278,7 @@ module Types::Queries::User
                .where(user_type: 'visitor')
                .search_guest(query)
                .order(name: :asc)
-               .limit(2).with_attached_avatar
+               .limit(1).with_attached_avatar
   end
 
   def user_permissions_check?

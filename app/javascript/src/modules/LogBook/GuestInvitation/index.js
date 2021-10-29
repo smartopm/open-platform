@@ -1,12 +1,11 @@
-/* eslint-disable react/display-name */
-import React from 'react'
+import GuestSearch from './Components/GuestSearch';
 import InvitedGuests from './Components/InvitedGuests';
 
 const GuestInvitationRoutes = [
   {
     routeProps: {
-      path: '/invite/:id?/:logs?',
-      component: () => <h4>Invite me</h4>,
+      path: '/guests/invite',
+      component: GuestSearch,
     },
     name: 'Request Details',
     featureName: 'LogBook',
