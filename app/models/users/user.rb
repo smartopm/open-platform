@@ -46,6 +46,10 @@ module Users
       attributes :name, :phone_number, :user_type, :email, :sub_status
     end
 
+    search_scope :search_guest do
+      attributes :phone_number, :email
+    end
+
     scope :allowed_users, lambda { |current_user|
       policy = ::Policy::User::UserPolicy.new(current_user, nil)
       allowed_user_types = policy.roles_user_can_see
@@ -108,9 +112,9 @@ module Users
 
     # TODO: find more about the inverse_of association and if we really need that
     has_one :request, class_name: 'Logs::EntryRequest', foreign_key: :guest_id,
-                      dependent: :destroy, inverse_of: 'guests'
+                      dependent: :destroy, inverse_of: 'guest'
     has_many :invites, class_name: 'Logs::Invite', foreign_key: :host_id,
-                       dependent: :destroy, inverse_of: 'guests'
+                       dependent: :destroy, inverse_of: 'guest'
     has_one_attached :avatar
     has_one_attached :document
 

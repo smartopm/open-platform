@@ -141,6 +141,7 @@ admin:
       - can_get_user_count
       - can_get_users
       - can_get_users_lite
+      - can_search_guests
       - can_see_menu_item
       - can_invite_guest
   profile:

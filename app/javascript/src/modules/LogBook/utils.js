@@ -68,3 +68,12 @@ export function checkRequests(req, translate, tz) {
     }
     return { title: translate('guest_book.invalid_today'), color: '#E74540', valid: false };
 }
+
+
+export function resolveUserOrGuest(request){
+  if (!request) {
+    return null
+  }
+  const user =  request.user || request.guest
+  return user
+}

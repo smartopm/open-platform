@@ -37,6 +37,13 @@ module Types::Queries::EntryRequest
       argument :limit, Integer, required: false
       argument :query, String, required: false
     end
+
+    field :invited_guest_list, [Types::EntryRequestType], null: true do
+      description 'Get a list of scheduled entry requests'
+      argument :offset, Integer, required: false
+      argument :limit, Integer, required: false
+      argument :query, String, required: false
+    end
   end
 
   def entry_request(id:)
@@ -103,6 +110,15 @@ module Types::Queries::EntryRequest
       .with_attached_video
   end
   # rubocop:enable Metrics/AbcSize
+
+  def invited_guest_list(offset: 0, limit: 50, query: nil)
+    raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') unless context[:current_user]
+    context[:site_community].entry_requests
+        .where.not(guest_id: nil)
+        .with_attached_images
+        .with_attached_video
+  end
+
 
   private
 

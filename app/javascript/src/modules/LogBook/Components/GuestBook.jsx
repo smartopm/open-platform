@@ -12,14 +12,15 @@ import DataList from '../../../shared/list/DataList';
 import Text from '../../../shared/Text';
 import { GuestEntriesQuery } from '../graphql/guestbook_queries';
 import Label from '../../../shared/label/Label';
-import { checkRequests } from '../utils';
+import { checkRequests, resolveUserOrGuest } from '../utils';
 import Avatar from '../../../components/Avatar';
 import { EntryRequestGrant } from '../../../graphql/mutations';
 import { Spinner } from '../../../shared/Loading';
 import MessageAlert from '../../../components/MessageAlert';
 import { Context } from '../../../containers/Provider/AuthStateProvider';
 
-export default function GuestBook({ tabValue, handleAddObservation, offset, limit, query, scope }) {
+export default function GuestBook({
+  tabValue, handleAddObservation, offset, limit, query, scope, invitedGuests }) {
   const { t } = useTranslation('logbook');
   const history = useHistory();
   const classes = useStyles();
@@ -50,6 +51,7 @@ export default function GuestBook({ tabValue, handleAddObservation, offset, limi
     }
   }, [tabValue, loadGuests, query, offset]);
 
+
   function handleGrantAccess(event, user){
       event.stopPropagation()
     setLoading({ loading: true, currentId: user.id });
@@ -73,6 +75,8 @@ export default function GuestBook({ tabValue, handleAddObservation, offset, limi
         setLoading({ ...loadingStatus, loading: false });
       });
   }
+  const guests = invitedGuests.length ? invitedGuests : data?.scheduledRequests
+
   return (
     <>
       <MessageAlert
@@ -83,8 +87,8 @@ export default function GuestBook({ tabValue, handleAddObservation, offset, limi
       />
 
       {guestsLoading && <Spinner />}
-      {data?.scheduledRequests?.length > 0
-        ? data?.scheduledRequests?.map(guest => (
+      {guests?.length > 0
+        ? guests?.map(guest => (
           <DataList
             key={guest.id}
             keys={entriesHeaders}
@@ -113,15 +117,16 @@ export function renderGuest(guest, classes, grantAccess, isMobile, loadingStatus
         <Grid item xs={12} md={4} data-testid="guest_name">
           <Grid container spacing={1} className={classes.userDetail}>
             <Grid item xs={2} sm={2}>
-              <Avatar imageUrl={guest.user.imageUrl} user={guest.user} alt="avatar-image" />
+              {/* change this */}
+              <Avatar imageUrl={resolveUserOrGuest(guest)?.imageUrl} user={resolveUserOrGuest(guest)} alt="avatar-image" />
             </Grid>
             <Grid item xs={6} sm={10}>
               <Typography color="primary">
                 {guest.name}
               </Typography>
               <b>Host: </b>
-              <Link to={`/user/${guest.user.id}`}>
-                <Text content={guest.user.name}  />
+              <Link to={`/user/${resolveUserOrGuest(guest)?.id}`}>
+                <Text content={resolveUserOrGuest(guest)?.name}  />
               </Link>
             </Grid>
             <Grid item xs={4} style={{ paddingRight: 16 }}>
@@ -209,14 +214,20 @@ const useStyles = makeStyles({
 });
 
 GuestBook.defaultProps = {
-  scope: null
+  scope: null,
+  invitedGuests: [],
+  tabValue: 0,
+  offset: 0,
+  limit: 20,
+  query: ''
 }
 
 GuestBook.propTypes = {
-  tabValue: PropTypes.number.isRequired,
-  offset: PropTypes.number.isRequired,
-  limit: PropTypes.number.isRequired,
+  tabValue: PropTypes.number,
+  offset: PropTypes.number,
+  limit: PropTypes.number,
   handleAddObservation: PropTypes.func.isRequired,
-  query: PropTypes.string.isRequired,
+  query: PropTypes.string,
   scope: PropTypes.number,
+  invitedGuests: PropTypes.arrayOf(PropTypes.object)
 };

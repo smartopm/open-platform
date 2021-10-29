@@ -24,6 +24,11 @@ module Logs
       attributes :name, :phone_number, :visitation_date, :visit_end_date, :starts_at, :ends_at,
                  :end_time
     end
+
+    search_scope :search_guest do
+      attributes guest: ['guest.phone_number', 'guest.email', ]
+    end
+
     scope :by_end_time, lambda { |date|
       where('(visit_end_date IS NOT NULL and visit_end_date > ?)
       OR (visit_end_date IS NULL AND (ends_at > ? OR end_time > ?))', date, date, date)

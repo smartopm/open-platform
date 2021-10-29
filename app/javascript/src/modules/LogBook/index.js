@@ -5,6 +5,7 @@ import EntryLogs from './Components/EntryLogs';
 import GuestsList from './GuestList';
 import GuestsValidateRoutes from './GuestVerification';
 import AccessCheck from '../Permissions/Components/AccessCheck';
+import GuestInvitationRoutes from './GuestInvitation';
 
 const logBookPermissions = ['can_access_logbook'];
 
@@ -40,7 +41,7 @@ const LogBooks = {
   featureName: 'LogBook',
   accessibleBy: [],
   moduleName: currentModule,
-  subRoutes: [...GuestsValidateRoutes],
+  subRoutes: [...GuestsValidateRoutes, ...GuestInvitationRoutes],
 };
 
 export default {

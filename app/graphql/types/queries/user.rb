@@ -73,6 +73,11 @@ module Types::Queries::User
     field :admin_users, [Types::UserType], null: true do
       description 'Get a list of all admin users'
     end
+
+    field :search_guests, [Types::UserType], null: true do
+      argument :query, String, required: true
+      description 'Get a list of visitors to be invited'
+    end
   end
   # rubocop:enable Metrics/BlockLength
 
@@ -255,6 +260,25 @@ module Types::Queries::User
     end
 
     context[:site_community].users.where(user_type: 'admin', state: 'valid')
+  end
+
+  def search_guests(query: nil)
+    current = context[:current_user]
+    unless ::Policy::ApplicationPolicy.new(
+      context[:current_user], nil
+    ).permission?(
+      module: :user,
+      permission: :can_search_guests,
+    ) || current.site_manager? || current.site_worker?
+      raise GraphQL::ExecutionError,
+            I18n.t('errors.unauthorized')
+    end
+
+    Users::User.allowed_users(context[:current_user])
+               .where(user_type: 'visitor')
+               .search_guest(query)
+               .order(name: :asc)
+               .limit(2).with_attached_avatar
   end
 
   def user_permissions_check?
