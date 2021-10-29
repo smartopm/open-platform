@@ -4,7 +4,7 @@ require 'rails_helper'
 
 RSpec.describe Mutations::Community::CommunityEmergency do
   describe 'creating sos ticket for current user' do
-    let!(:user) { create(:user_with_community) }
+    let!(:resident) { create(:resident) }
     let!(:guard) { create(:security_guard) }
 
     let(:create_sos_ticket) do
@@ -27,8 +27,8 @@ RSpec.describe Mutations::Community::CommunityEmergency do
       }
       result = DoubleGdpSchema.execute(create_sos_ticket, variables: variables,
                                                           context: {
-                                                            current_user: user,
-                                                            site_community: user.community,
+                                                            current_user: resident,
+                                                            site_community: resident.community,
                                                           }).as_json
 
       expect(result.dig('data', 'communityEmergency', 'success')).to_not be_nil
@@ -44,7 +44,7 @@ RSpec.describe Mutations::Community::CommunityEmergency do
       }
       result = DoubleGdpSchema.execute(create_sos_ticket, variables: variables,
                                                           context: {
-                                                            site_community: user.community,
+                                                            site_community: resident.community,
                                                           }).as_json
 
       expect(result.dig('data', 'communityEmergency', 'success')).to be_nil

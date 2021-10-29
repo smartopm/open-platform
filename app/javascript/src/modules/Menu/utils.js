@@ -6,6 +6,7 @@ import { objectAccessor } from "../../utils/helpers"
  * * @param {Object} authState
  * @returns {boolean}
  */
+ const sos = { module: 'sos' }
 
   export default function checkSubMenuAccessibility( {authState, subMenuItem}){
     if (!authState || !subMenuItem) return false;
@@ -18,4 +19,14 @@ import { objectAccessor } from "../../utils/helpers"
 
     return subMenuItem.accessibleBy.includes(authState.user?.userType)
 
+  }
+
+
+  export function canAccessSOS({authState}){
+    if (!authState) return false;
+    const modulePermissions = objectAccessor(authState.user?.permissions, sos.module)
+    if (modulePermissions === undefined){
+      return false
+    }
+    return modulePermissions?.permissions?.includes('can_access_sos')
   }
