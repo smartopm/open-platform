@@ -1,7 +1,9 @@
-import { Grid, Container } from '@material-ui/core';
+import { Grid, Container, Button } from '@material-ui/core';
 import React, { useEffect, useState } from 'react';
 import { useLazyQuery } from 'react-apollo';
 import { useTranslation } from 'react-i18next';
+import AddIcon from '@material-ui/icons/Add';
+import CenteredContent from '../../../../shared/CenteredContent';
 import DataList from '../../../../shared/list/DataList';
 import { Spinner } from '../../../../shared/Loading';
 import SearchInput from '../../../../shared/search/SearchInput';
@@ -36,7 +38,7 @@ export default function GuestSearch() {
     <Container maxWidth="md">
       <Grid container>
         <Grid item xs={6} />
-        <Grid item sm={12} md={6}>
+        <Grid item sm={12} xs={12} md={6}>
           <SearchInput
             title="Guests"
             filterRequired={false}
@@ -50,17 +52,25 @@ export default function GuestSearch() {
       <br />
       {loading && <Spinner />}
       {!loading &&
-          !error &&
-          data?.searchGuests?.map(guest => (
-            <DataList
-              key={guest.id}
-              keys={entriesHeaders}
-              data={RenderGuest(guest, inviteGuest, t)}
-              hasHeader={false}
-              clickable={false}
-              defaultView={false}
-            />
-          ))}
+        !error &&
+        data?.searchGuests?.map(guest => (
+          <DataList
+            key={guest.id}
+            keys={entriesHeaders}
+            data={RenderGuest(guest, inviteGuest, t)}
+            hasHeader={false}
+            clickable={false}
+            defaultView={false}
+          />
+        ))}
+
+      {!data?.searchGuests && (
+        <CenteredContent>
+          <Button variant="contained" color="primary" startIcon={<AddIcon />}>
+            Invite Guest
+          </Button>
+        </CenteredContent>
+      )}
     </Container>
   );
 }
