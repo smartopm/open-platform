@@ -1,3 +1,4 @@
+/* eslint-disable complexity */
 import React, { useState, useEffect, useContext } from 'react';
 import { useApolloClient, useMutation } from 'react-apollo';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
@@ -36,26 +37,29 @@ export default function IDCapture({ handleNext }) {
   function handleContinue() {
     const blobIds = [frontBlobId, backBlobId];
 
-    if(images || !blobIds){
-      handleNext()
-      return
+    if (images || !blobIds) {
+      handleNext();
+      return;
     }
 
-    setLoading(true)
+    setLoading(true);
     updateRequest({ variables: { id: requestContext.request.id, imageBlobIds: blobIds } })
-      .then(() => {
+      .then(({data}) => {
         setDetails({
           ...errorDetails,
           message: t('image_capture.image_captured'),
           isError: false
         });
-        requestContext.updateRequest({ ...requestContext.request, frontImageBlobId:  frontBlobId})
-        setLoading(false)
-        handleNext()
+        requestContext.updateRequest({
+          ...requestContext.request,
+          imageUrls: data.result.entryRequest.imageUrls
+        });
+        setLoading(false);
+        handleNext();
       })
       .catch(error => {
         setDetails({ ...errorDetails, isError: true, message: error.message });
-        setLoading(false)
+        setLoading(false);
       });
   }
 
@@ -74,7 +78,6 @@ export default function IDCapture({ handleNext }) {
   }, [status]);
 
   const classes = useStyles();
-
 
   return (
     <>
@@ -135,7 +138,6 @@ export default function IDCapture({ handleNext }) {
             type={t('image_capture.back')}
           />
         </Grid>
-
         <CenteredContent>
           <Button
             variant="contained"
@@ -147,20 +149,18 @@ export default function IDCapture({ handleNext }) {
           >
             {t('image_capture.next_step')}
           </Button>
-          {
-            !requestContext.isGuestRequest && (
-              <Button
-                className={classes.skipToNextBtn}
-                onClick={requestContext.grantAccess}
-                disabled={!requestContext.request.id}
-                color="primary"
-                data-testid="skip_next"
-                startIcon={requestContext.request.isLoading && <Spinner />}
-              >
-                {t('logbook.grant')}
-              </Button>
-            )
-          }
+          {!requestContext.isGuestRequest && (
+            <Button
+              className={classes.skipToNextBtn}
+              onClick={requestContext.grantAccess}
+              disabled={!requestContext.request.id}
+              color="primary"
+              data-testid="skip_next"
+              startIcon={requestContext.request.isLoading && <Spinner />}
+            >
+              {t('logbook.grant')}
+            </Button>
+          )}
         </CenteredContent>
       </Grid>
     </>
@@ -180,5 +180,5 @@ const useStyles = makeStyles(() => ({
 }));
 
 IDCapture.propTypes = {
-  handleNext: PropTypes.func.isRequired,
+  handleNext: PropTypes.func.isRequired
 };

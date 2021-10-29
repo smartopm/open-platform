@@ -24,5 +24,7 @@ export const initialRequestState = {
     frontImageBlobId: '',
     backImageBlobId: '',
     isLoading: false,
-    isObservationOpen: false
+    isObservationOpen: false,
+    status: 'pending',
+    isEdit: false
 }

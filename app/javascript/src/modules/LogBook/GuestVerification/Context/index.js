@@ -38,7 +38,6 @@ export default function EntryRequestContextProvider({ children }) {
     loadEntry,
     data,
     request.id,
-    request.frontImageBlobId,
     request.videoBlobId
   ]);
 
