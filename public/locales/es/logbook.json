@@ -162,6 +162,24 @@
     "send_qr_code": "Enviar Código QR a",
     "title": "Código de Acceso QR"
   },
+  "review_screen": {
+    "company_name": "Nombre de la Compañía:",
+    "edit": "Editar",
+    "email": "Correo electrónico:",
+    "id_back": "REVERSO DEL ID",
+    "id_front": "FRENTE DEL ID",
+    "name": "Nombre:",
+    "no_review": "Por favor complete los pasos anteriores",
+    "photo_id": "Fotografía de Identificación",
+    "primary": "Teléfono Principal:",
+    "review_sub_title": "Por favor revise y presione enviar para completar",
+    "review_title": "Revisión y Confirmación",
+    "submit": "Enviar",
+    "success_message": "Detalles Enviados Correctamente",
+    "user_information": "Información del Usuario",
+    "vehicle_number": "Número de Vehículo:",
+    "video_id": "Identificación de Video"
+  },
   "video_recording": {
     "add_video_text": "Agrega un video con tu teléfono",
     "create_video_text": "Crear un video de su cara",
