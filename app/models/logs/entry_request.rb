@@ -17,6 +17,7 @@ module Logs
 
     before_validation :attach_community
     validates :name, presence: true
+    enum status: { pending: 0, approved: 1 }
 
     default_scope { order(created_at: :asc) }
     search_scope :search do

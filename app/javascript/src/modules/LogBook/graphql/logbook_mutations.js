@@ -30,6 +30,7 @@ export const EntryRequestUpdateMutation = gql`
     $visitEndDate: String
     $videoBlobId: String
     $imageBlobIds: [String!]
+    $status: String
   ) {
     result: entryRequestUpdate(
       id: $id
@@ -49,12 +50,14 @@ export const EntryRequestUpdateMutation = gql`
       visitEndDate: $visitEndDate
       videoBlobId: $videoBlobId
       imageBlobIds: $imageBlobIds
+      status: $status
     ) {
       entryRequest {
         id
         isGuest
         videoUrl
         imageUrls
+        status
       }
     }
   }
