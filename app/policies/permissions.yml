@@ -151,6 +151,17 @@ admin:
   communication:
     permissions:
       - can_see_menu_item
+  label:
+    permissions:
+      - can_create_label
+      - can_delete_label
+      - can_merge_labels
+      - can_update_label
+      - can_create_user_label
+      - can_update_user_label
+      - can_fetch_all_labels
+      - can_fetch_label_users
+      - can_see_menu_item
 contractor:
   note:
     permissions:

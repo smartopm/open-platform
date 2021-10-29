@@ -26,19 +26,32 @@ module Types::Queries::Label
   end
 
   def labels(offset: 0, limit: 50)
-    raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') if context[:current_user].blank?
+    unless ::Policy::ApplicationPolicy.new(
+      context[:current_user], nil
+    ).permission?(
+      admin: true,
+      module: :label,
+      permission: :can_fetch_all_labels,
+    )
+      raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
+    end
 
     Labels::Label.with_users_count(context[:site_community].id, limit, offset)
   end
 
   def user_labels(user_id:)
-    raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') if context[:current_user].blank?
-
-    context[:site_community].users.find(user_id)&.labels&.all
+    user = verified_user(user_id)
+    user.labels
   end
 
   def label_users(labels:)
-    unless context[:current_user].admin?
+    unless ::Policy::ApplicationPolicy.new(
+      context[:current_user], nil
+    ).permission?(
+      admin: true,
+      module: :label,
+      permission: :can_fetch_label_users,
+    )
       raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
     end
 

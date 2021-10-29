@@ -63,7 +63,7 @@ RSpec.describe Types::Queries::Label do
 
     it 'should retrieve list of labels' do
       result = DoubleGdpSchema.execute(labels_query, context: {
-                                         current_user: current_user,
+                                         current_user: admin,
                                          site_community: current_user.community,
                                        }).as_json
       expect(result.dig('data', 'labels').length).to eql 5

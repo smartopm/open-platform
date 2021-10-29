@@ -39,6 +39,9 @@ const authState = {
       },
      user: {
         permissions: ['can_see_menu_item']
+      },
+      label: {
+        permissions: ['can_see_menu_item']
       }
     }
   }
