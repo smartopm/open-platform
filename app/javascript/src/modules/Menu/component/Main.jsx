@@ -24,8 +24,9 @@ import Loading from '../../../shared/Loading';
 import SOSModal from './SOSModal';
 import useGeoLocation from '../../../hooks/useGeoLocation'
 import { filterQuickLinksByRole } from '../../Dashboard/utils';
-import { allUserTypes, sosAllowedUsers } from '../../../utils/constants';
+import { allUserTypes } from '../../../utils/constants';
 import BackArrow from './BackArrow';
+import { canAccessSOS } from '../utils';
 
 const drawerWidth = 260;
 
@@ -138,7 +139,7 @@ export function MainNav({ authState }) {
           
           {matches && <BackArrow path={path} />}
           
-          {sosAllowedUsers.includes(authState?.user?.userType?.toLowerCase())
+          {canAccessSOS({authState})
            && communityHasEmergencyNumber && communityHasEmergencySMSNumber
            && <SvgIcon component={SOSIcon} viewBox="0 0 384 512" setOpen={setOpen} data-testid="sos-icon" />}
 

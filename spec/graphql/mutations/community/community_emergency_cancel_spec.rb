@@ -5,6 +5,7 @@ require 'rails_helper'
 RSpec.describe Mutations::Community::CommunityEmergencyCancel do
   describe 'cancelling an emergency request' do
     let!(:user) { create(:user_with_community) }
+    let!(:resident) { create(:resident) }
 
     let(:cancel_emergency) do
       <<~GQL
@@ -21,24 +22,23 @@ RSpec.describe Mutations::Community::CommunityEmergencyCancel do
     end
 
     it 'sned cancel emergency sms notification' do
-      variables = {}
-      result = DoubleGdpSchema.execute(cancel_emergency, variables: variables,
-                                                         context: {
-                                                           current_user: user,
-                                                           site_community: user.community,
-                                                         }).as_json
+      result = DoubleGdpSchema.execute(cancel_emergency,
+                                       context: {
+                                         current_user: resident,
+                                         site_community: resident.community,
+                                       }).as_json
 
       expect(result.dig('data', 'communityEmergencyCancel', 'success')).to_not be_nil
       expect(result.dig('data', 'communityEmergencyCancel', 'success')).to eq true
       expect(result['errors']).to be_nil
     end
 
-    it 'throws unauthorized error when no authorization is not provided' do
-      variables = {}
-      result = DoubleGdpSchema.execute(cancel_emergency, variables: variables,
-                                                         context: {
-                                                           site_community: user.community,
-                                                         }).as_json
+    it 'throws unauthorized error when current user has no permissions' do
+      result = DoubleGdpSchema.execute(cancel_emergency,
+                                       context: {
+                                         current_user: user,
+                                         site_community: user.community,
+                                       }).as_json
 
       expect(result.dig('data', 'communityEmergencyCancel', 'success')).to be_nil
       expect(result.dig('errors', 0, 'message')).to eql 'Unauthorized'

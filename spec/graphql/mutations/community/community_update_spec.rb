@@ -4,8 +4,8 @@ require 'rails_helper'
 
 RSpec.describe Mutations::Community::CommunityUpdate do
   describe 'updating a community' do
-    let!(:user) { create(:user_with_community) }
-    let!(:admin) { create(:admin_user, community_id: user.community_id) }
+    let!(:resident) { create(:resident) }
+    let!(:admin) { create(:admin_user, community_id: resident.community_id) }
 
     let(:update_community) do
       <<~GQL
@@ -40,7 +40,7 @@ RSpec.describe Mutations::Community::CommunityUpdate do
       result = DoubleGdpSchema.execute(update_community, variables: variables,
                                                          context: {
                                                            current_user: admin,
-                                                           site_community: user.community,
+                                                           site_community: resident.community,
                                                          }).as_json
 
       expect(result.dig('data', 'communityUpdate', 'community', 'id')).to_not be_nil
@@ -67,8 +67,8 @@ RSpec.describe Mutations::Community::CommunityUpdate do
       }
       result = DoubleGdpSchema.execute(update_community, variables: variables,
                                                          context: {
-                                                           current_user: user,
-                                                           site_community: user.community,
+                                                           current_user: resident,
+                                                           site_community: resident.community,
                                                          }).as_json
       expect(result.dig('data', 'communityUpdate', 'community', 'id')).to be_nil
       expect(result.dig('errors', 0, 'message')).to eql 'Unauthorized'
