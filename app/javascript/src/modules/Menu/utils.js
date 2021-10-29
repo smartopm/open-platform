@@ -25,8 +25,6 @@ import { objectAccessor } from "../../utils/helpers"
   export function canAccessSOS({authState}){
     if (!authState) return false;
     const modulePermissions = objectAccessor(authState.user?.permissions, sos.module)
-    if (modulePermissions === undefined){
-      return false
-    }
+    if (!modulePermissions) return false;
     return modulePermissions?.permissions?.includes('can_access_sos')
   }
