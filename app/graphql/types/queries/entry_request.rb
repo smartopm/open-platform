@@ -115,6 +115,7 @@ module Types::Queries::EntryRequest
     raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') unless context[:current_user]
     context[:site_community].entry_requests
         .where.not(guest_id: nil)
+        .search(query)
         .with_attached_images
         .with_attached_video
   end

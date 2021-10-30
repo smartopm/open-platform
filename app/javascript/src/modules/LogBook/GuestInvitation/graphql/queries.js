@@ -3,8 +3,8 @@
 import gql from 'graphql-tag';
 
 export const InvitedGuestsQuery = gql`
-  query invitedGuests {
-    invitedGuestList {
+  query invitedGuests($query: String) {
+    invitedGuestList (query: $query){
       id
       name
       guest {
