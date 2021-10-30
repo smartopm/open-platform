@@ -41,7 +41,7 @@ export default function DatePickerDialog({ selectedDate, handleDateChange, label
                         'aria-label': 'change date'
                     }}
           {...inputValidation}
-          helperText={inputValidation.error && t('form:errors.required_field', { fieldName: inputValidation.fieldName })}
+          helperText={inputValidation.error && t('form:errors.required_field', { name: inputValidation.fieldName })}
           {...others}
           disabled={disabled}
         />
@@ -72,7 +72,7 @@ export function DateAndTimePickers({ selectedDateTime, handleDateChange, label, 
         helperText={pastDate
           ? t('form:errors.date_time_in_the_future')
           : inputValidation.error
-            ? t('form:errors.required_field', { fieldName: inputValidation.fieldName })
+            ? t('form:errors.required_field', { name: inputValidation.fieldName })
             : ''}
       />
     </MuiPickersUtilsProvider>
@@ -99,7 +99,7 @@ export function ThemedTimePicker({ handleTimeChange, time, label, inputValidatio
         />
       </MuiPickersUtilsProvider>
       {/* Moved the validation error outside to silence the MUI error */}
-      {inputValidation.error && <FormHelperText error>{t('form:errors.required_field', { fieldName: inputValidation.fieldName })}</FormHelperText>}
+      {inputValidation.error && <FormHelperText error>{t('form:errors.required_field', { name: inputValidation.fieldName })}</FormHelperText>}
     </>
   )
 }

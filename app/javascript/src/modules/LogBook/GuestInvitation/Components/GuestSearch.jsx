@@ -10,6 +10,8 @@ import SearchInput from '../../../../shared/search/SearchInput';
 import useDebounce from '../../../../utils/useDebounce';
 import { SearchGuestsQuery } from '../graphql/queries';
 import RenderGuest from './GuestUser';
+import CustomDialog from '../../../../shared/dialogs/CustomDialog';
+import GuestInviteForm from './GuestInviteForm';
 
 export default function GuestSearch() {
   const [searchValue, setSearchValue] = useState('');
@@ -35,23 +37,37 @@ export default function GuestSearch() {
   function inviteGuest() {}
 
   return (
-    <Container maxWidth="md">
-      <Grid container>
-        <Grid item xs={6} />
-        <Grid item sm={12} xs={12} md={6}>
-          <SearchInput
-            title="Guests"
-            filterRequired={false}
-            searchValue={searchValue}
-            handleSearch={event => setSearchValue(event.target.value)}
-            handleClear={() => setSearchValue('')}
-          />
+    <>
+      <CustomDialog
+        title="Invite Guest"
+        open
+        actions={(
+          <CenteredContent>
+            <Button variant="contained" color="primary">
+              Invite Guest
+            </Button>
+          </CenteredContent>
+      )}
+      >
+        <GuestInviteForm />
+      </CustomDialog>
+      <Container maxWidth="md">
+        <Grid container>
+          <Grid item xs={6} />
+          <Grid item sm={12} xs={12} md={6}>
+            <SearchInput
+              title="Guests"
+              filterRequired={false}
+              searchValue={searchValue}
+              handleSearch={event => setSearchValue(event.target.value)}
+              handleClear={() => setSearchValue('')}
+            />
+          </Grid>
         </Grid>
-      </Grid>
-      <br />
-      <br />
-      {loading && <Spinner />}
-      {!loading &&
+        <br />
+        <br />
+        {loading && <Spinner />}
+        {!loading &&
         !error &&
         data?.searchGuests?.map(guest => (
           <DataList
@@ -64,13 +80,14 @@ export default function GuestSearch() {
           />
         ))}
 
-      {!data?.searchGuests && (
+        {!data?.searchGuests && (
         <CenteredContent>
           <Button variant="contained" color="primary" startIcon={<AddIcon />}>
             Invite Guest
           </Button>
         </CenteredContent>
       )}
-    </Container>
+      </Container>
+    </>
   );
 }

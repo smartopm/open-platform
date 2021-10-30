@@ -538,7 +538,7 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
               helperText={inputValidationMsg.isError &&
               requiredFields.includes('name') &&
               !formData.name &&
-              t('logbook:errors.required_field', { fieldName: 'Name' })}
+              t('logbook:errors.required_field', { name: 'Name' })}
               disabled={disableEdit()}
             />
           </div>
@@ -575,7 +575,7 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
               helperText={inputValidationMsg.isError &&
               requiredFields.includes('nrc') &&
               !formData.nrc &&
-              t('logbook:errors.required_field', { fieldName: 'ID' })}
+              t('logbook:errors.required_field', { name: 'ID' })}
               disabled={disableEdit()}
             />
           </div>
@@ -596,7 +596,7 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
               helperText={inputValidationMsg.isError &&
               requiredFields.includes('phoneNumber') &&
               !formData.phoneNumber &&
-              t('logbook:errors.required_field', { fieldName: 'Phone Number' })}
+              t('logbook:errors.required_field', { name: 'Phone Number' })}
               disabled={disableEdit()}
             />
           </div>
@@ -678,7 +678,7 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
               helperText={inputValidationMsg.isError &&
               requiredFields.includes('vehiclePlate') &&
               !formData.vehiclePlate &&
-              t('logbook:errors.required_field', { fieldName: 'Vehicle Plate Number' })}
+              t('logbook:errors.required_field', { name: 'Vehicle Plate Number' })}
               disabled={disableEdit()}
             />
           </div>
@@ -699,7 +699,7 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
               helperText={inputValidationMsg.isError &&
                   requiredFields.includes('companyName') &&
                   !formData.companyName &&
-                  t('logbook:errors.required_field', { fieldName: 'Company Name' })}
+                  t('logbook:errors.required_field', { name: 'Company Name' })}
               disabled={disableEdit()}
             />
           </div>
@@ -719,7 +719,7 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
               helperText={inputValidationMsg.isError &&
               requiredFields.includes('reason') &&
               !formData.reason ?
-              t('logbook:errors.required_field', { fieldName: 'Reason' }) : formData.business}
+              t('logbook:errors.required_field', { name: 'Reason' }) : formData.business}
               disabled={disableEdit()}
             >
               {

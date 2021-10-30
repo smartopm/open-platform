@@ -15,7 +15,8 @@ export default function GuestTime({ userData, handleChange, handleChangeOccurren
         inputProps={{ 'data-testid': 'day_of_visit_input' }}
         disabled={disableEdit()}
       />
-
+      <br />
+      <br />
       <div>
         <ThemedTimePicker
           time={userData.startsAt || userData.startTime}
