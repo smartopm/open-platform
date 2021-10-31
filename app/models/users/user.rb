@@ -263,7 +263,7 @@ module Users
     end
 
     def process_referral(enrolled_user, data)
-      return unless user_type != 'admin'
+      return if %w[visitor admin].include?(user_type)
 
       generate_events('user_referred', enrolled_user, data)
       referral_todo(enrolled_user)
@@ -636,10 +636,11 @@ module Users
       payment_plans.unscope(where: :status).general.first.presence || create_general_plan
     end
 
-    def invite_guest(user_id)
-      return unless user_id
+    def invite_guest(guest_id)
+      return unless guest_id
 
-      invites.create(guest_id: user_id)
+      invited_user =  Logs::Invite.create!(host_id: id, guest_id: guest_id)
+      invited_user
     end
 
     private

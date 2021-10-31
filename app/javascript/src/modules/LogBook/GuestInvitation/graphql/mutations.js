@@ -1,15 +1,32 @@
-import gql from 'graphql-tag'
-import { EntryRequestFragment } from '../../../../graphql/fragments'
+import gql from 'graphql-tag';
 
-
-const GuestEntryRequestRevoke = gql`
-  mutation GuestEntryRequestRevokeMutation($id: ID!) {
-    result: guestEntryRequestRevoke(id: $id) {
-      entryRequest {
-        ...EntryRequestFields
+const EntryTimeCreateMutation = gql`
+  mutation entryTimeCreate(
+    $guestId: ID
+    $name: String!
+    $email: String
+    $phoneNumber: String!
+    $visitationDate: String!
+    $startsAt: String
+    $endsAt: String
+    $occursOn: [String!]
+    $visitEndDate: String
+  ) {
+    entryTimeCreate(
+      guestId: $guestId
+      name: $name
+      email: $email
+      phoneNumber: $phoneNumber
+      visitationDate: $visitationDate
+      startsAt: $startsAt
+      endsAt: $endsAt
+      occursOn: $occursOn
+      visitEndDate: $visitEndDate
+    ) {
+      entryTime {
+        id
       }
     }
   }
-  ${EntryRequestFragment.publicFields}
-`
-export default GuestEntryRequestRevoke;
+`;
+export default EntryTimeCreateMutation;

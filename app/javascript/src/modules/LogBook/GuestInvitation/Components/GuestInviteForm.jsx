@@ -1,10 +1,15 @@
-import { TextField } from '@material-ui/core';
+import { Button, TextField } from '@material-ui/core';
 import React, { useState } from 'react';
+import { useMutation } from 'react-apollo';
+import CenteredContent from '../../../../shared/CenteredContent';
 import GuestTime from '../../Components/GuestTime';
 import { initialRequestState } from '../../GuestVerification/constants';
+import EntryTimeCreateMutation from '../graphql/mutations';
+import { Spinner } from '../../../../shared/Loading';
 
 export default function GuestInviteForm() {
   const [guestData, setGuestData] = useState(initialRequestState);
+  const [createInvitation] = useMutation(EntryTimeCreateMutation);
 
   function handleInputChange(event) {
     const { name, value } = event.target;
@@ -14,10 +19,33 @@ export default function GuestInviteForm() {
     });
   }
 
-  function handleChangeOccurrence(){
+  function handleChangeOccurrence() {}
 
+  async function handleInviteGuest() {
+    // enroll user as a visitor
+    // create a request for that user
+    // then invite them
+    setGuestData({ ...guestData, isLoading: true });
+    try {
+      await createInvitation({
+        variables: {
+          guestId: guestData.guestId,
+          name: guestData.name,
+          email: guestData.email,
+          phoneNumber: guestData.phoneNumber,
+          visitationDate: guestData.visitationDate,
+          startsAt: guestData.startsAt,
+          endsAt: guestData.endsAt,
+          occursOn: guestData.occursOn,
+          visitEndDate: guestData.visitEndDate
+        }
+      });
+      setGuestData({ ...guestData, isLoading: false });
+    } catch (error) {
+      console.log(error);
+      setGuestData({ ...guestData, isLoading: false });
+    }
   }
-
   return (
     <>
       <TextField
@@ -30,6 +58,7 @@ export default function GuestInviteForm() {
         name="name"
         inputProps={{ 'data-testid': 'guest_entry_name' }}
         margin="normal"
+        required
       />
       <TextField
         className="form-control"
@@ -38,7 +67,7 @@ export default function GuestInviteForm() {
         value={guestData.email}
         label="Email"
         onChange={handleInputChange}
-        name="name"
+        name="email"
         inputProps={{ 'data-testid': 'guest_entry_email' }}
         margin="normal"
       />
@@ -58,8 +87,21 @@ export default function GuestInviteForm() {
         userData={guestData}
         handleChange={handleInputChange}
         handleChangeOccurrence={handleChangeOccurrence}
-        disableEdit={() => {}}
       />
+
+      <br />
+      <br />
+
+      <CenteredContent>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={handleInviteGuest}
+          startIcon={guestData.isLoading && <Spinner />}
+        >
+          Invite Guest
+        </Button>
+      </CenteredContent>
     </>
   );
 }

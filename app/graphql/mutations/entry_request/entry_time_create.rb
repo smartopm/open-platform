@@ -4,7 +4,10 @@ module Mutations
   module EntryRequest
     # Create a new entry time
     class EntryTimeCreate < BaseMutation
-      argument :guest_id, ID, required: true
+      argument :guest_id, ID, required: false
+      argument :name, String, required: true
+      argument :phone_number, String, required: true
+      argument :email, String, required: false
       argument :visitation_date, String, required: true
       argument :starts_at, String, required: false
       argument :ends_at, String, required: false
@@ -15,11 +18,14 @@ module Mutations
 
       # rubocop:disable Metrics/AbcSize
       def resolve(vals)
-        user = context[:site_community].users.find(vals[:guest_id])
-        raise GraphQL::ExecutionError, I18n.t('errors.not_found') unless user
 
         ActiveRecord::Base.transaction do
-          invite = context[:current_user].invite_guest(user.id)
+          user = context[:site_community].users.find_by(id: vals[:guest_id])
+
+          guest = check_or_create_guest(vals, user)
+          request = generate_request(vals, guest)
+          invite = context[:current_user].invite_guest(guest.id)
+
           entry_time = generate_entry_time(vals.except(:guest_id), invite)
           return { entry_time: entry_time } if entry_time
 
@@ -27,16 +33,40 @@ module Mutations
           raise GraphQL::ExecutionError, I18n.t('errors.duplicate.guest')
         end
 
-        raise GraphQL::ExecutionError, user.errors.full_messages
+        # raise GraphQL::ExecutionError, entry_time.errors.full_messages
       end
       # rubocop:enable Metrics/AbcSize
 
       def generate_entry_time(vals, invite)
         context[:site_community].entry_times.create!(
-          **vals,
+          visitation_date: vals[:visitation_date],
+          starts_at: vals[:starts_at],
+          ends_at: vals[:ends_at],
+          occurs_on: vals[:occurs_on],
+          visit_end_date: vals[:visit_end_date],
           visitable_id: invite.id,
           visitable_type: 'Logs::Invite',
         )
+      end
+
+      def generate_request(vals, guest)
+        request = context[:current_user].entry_requests.create!(
+          guest_id: guest.id,
+          **vals
+        )
+        request
+      end
+
+      def check_or_create_guest(vals, user)
+        return user unless user.nil?
+
+        visitor = context[:current_user].enroll_user(
+          name: vals[:name],
+          phone_number: vals[:phone_number],
+          email: vals[:email],
+          user_type: 'visitor'
+        )
+        visitor
       end
 
       # Verifies if current user admin or security guard.

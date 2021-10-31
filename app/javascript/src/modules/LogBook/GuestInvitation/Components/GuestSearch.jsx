@@ -41,13 +41,6 @@ export default function GuestSearch() {
       <CustomDialog
         title="Invite Guest"
         open
-        actions={(
-          <CenteredContent>
-            <Button variant="contained" color="primary">
-              Invite Guest
-            </Button>
-          </CenteredContent>
-      )}
       >
         <GuestInviteForm />
       </CustomDialog>

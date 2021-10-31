@@ -37,11 +37,14 @@ export default function CustomDialog({ open, handleDialogStatus, children, actio
   );
 }
 
+CustomDialog.defaultProps = {
+    actions: null
+}
 
 CustomDialog.propTypes = {
   open: PropTypes.bool.isRequired,
   title: PropTypes.string.isRequired,
   handleDialogStatus: PropTypes.func.isRequired,
-  actions: PropTypes.node.isRequired,
+  actions: PropTypes.node,
   children: PropTypes.node.isRequired
 };

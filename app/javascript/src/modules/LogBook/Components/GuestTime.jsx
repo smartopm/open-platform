@@ -67,6 +67,9 @@ export default function GuestTime({ userData, handleChange, handleChangeOccurren
   );
 }
 
+GuestTime.defaultProps = {
+  disableEdit: () => {}
+}
 GuestTime.propTypes = {
   userData: PropTypes.shape({
     visitEndDate: PropTypes.oneOfType([PropTypes.string, PropTypes.instanceOf(Date)]),
@@ -79,5 +82,5 @@ GuestTime.propTypes = {
   }).isRequired,
   handleChange: PropTypes.func.isRequired,
   handleChangeOccurrence: PropTypes.func.isRequired,
-  disableEdit: PropTypes.func.isRequired
+  disableEdit: PropTypes.func
 };
