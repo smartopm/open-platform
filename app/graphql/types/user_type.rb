@@ -50,7 +50,7 @@ module Types
     field :ext_ref_id, String, null: true, visible: { roles: %i[admin], user: :id }
     field :payment_plan, Boolean, null: false
     field :permissions, GraphQL::Types::JSON, null: true
-    field :invites, Types::InviteType, null: true, visible: { roles: %i[admin], user: :id }
+    field :invites, [Types::InviteType], null: true, visible: { roles: %i[admin], user: :id }
 
     def avatar_url
       return nil unless object.avatar.attached?
