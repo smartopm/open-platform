@@ -3,7 +3,7 @@
 module Mutations
   module EntryRequest
     # Create a new entry time
-    class EntryTimeCreate < BaseMutation
+    class InvitationCreate < BaseMutation
       argument :guest_id, ID, required: false
       argument :name, String, required: false
       argument :phone_number, String, required: false

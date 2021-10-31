@@ -5,12 +5,12 @@ import PropTypes from 'prop-types'
 import CenteredContent from '../../../../shared/CenteredContent';
 import GuestTime from '../../Components/GuestTime';
 import { initialRequestState } from '../../GuestVerification/constants';
-import EntryTimeCreateMutation from '../graphql/mutations';
+import InvitationCreateMutation from '../graphql/mutations';
 import { Spinner } from '../../../../shared/Loading';
 
 export default function GuestInviteForm({ guest }) {
   const [guestData, setGuestData] = useState(initialRequestState);
-  const [createInvitation] = useMutation(EntryTimeCreateMutation);
+  const [createInvitation] = useMutation(InvitationCreateMutation);
 
   function handleInputChange(event) {
     const { name, value } = event.target;

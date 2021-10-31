@@ -1,7 +1,7 @@
 import gql from 'graphql-tag';
 
-const EntryTimeCreateMutation = gql`
-  mutation entryTimeCreate(
+const InvitationCreateMutation = gql`
+  mutation invitationCreate(
     $guestId: ID
     $name: String
     $email: String
@@ -12,7 +12,7 @@ const EntryTimeCreateMutation = gql`
     $occursOn: [String!]
     $visitEndDate: String
   ) {
-    entryTimeCreate(
+    invitationCreate(
       guestId: $guestId
       name: $name
       email: $email
@@ -29,4 +29,4 @@ const EntryTimeCreateMutation = gql`
     }
   }
 `;
-export default EntryTimeCreateMutation;
+export default InvitationCreateMutation;
