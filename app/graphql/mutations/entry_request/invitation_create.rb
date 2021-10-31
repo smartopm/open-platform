@@ -16,13 +16,12 @@ module Mutations
 
       field :entry_time, Types::EntryTimeType, null: true
 
-      # rubocop:disable Metrics/AbcSize
       def resolve(vals)
         ActiveRecord::Base.transaction do
           user = context[:site_community].users.find_by(id: vals[:guest_id])
 
           guest = check_or_create_guest(vals, user)
-          request = generate_request(vals, guest)
+          generate_request(vals, guest)
           invite = context[:current_user].invite_guest(guest.id)
 
           entry_time = generate_entry_time(vals.except(:guest_id), invite)
@@ -34,7 +33,6 @@ module Mutations
 
         # raise GraphQL::ExecutionError, entry_time.errors.full_messages
       end
-      # rubocop:enable Metrics/AbcSize
 
       def generate_entry_time(vals, invite)
         return if invite.nil?
@@ -56,23 +54,21 @@ module Mutations
         req = context[:current_user].entry_requests.find_by(guest_id: guest.id)
         return req unless req.nil?
 
-        request = context[:current_user].entry_requests.create!(
+        context[:current_user].entry_requests.create!(
           guest_id: guest.id,
-          **vals
+          **vals,
         )
-        request
       end
 
       def check_or_create_guest(vals, user)
         return user unless user.nil?
 
-        visitor = context[:current_user].enroll_user(
+        context[:current_user].enroll_user(
           name: vals[:name],
           phone_number: vals[:phone_number],
           email: vals[:email],
-          user_type: 'visitor'
+          user_type: 'visitor',
         )
-        visitor
       end
 
       # Verifies if current user admin or security guard.

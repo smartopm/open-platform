@@ -262,6 +262,8 @@ module Types::Queries::User
     context[:site_community].users.where(user_type: 'admin', state: 'valid')
   end
 
+  # rubocop:disable Metrics/AbcSize:
+  # rubocop:disable Metrics/MethodLength
   def search_guests(query: nil)
     current = context[:current_user]
     unless ::Policy::ApplicationPolicy.new(
@@ -273,6 +275,8 @@ module Types::Queries::User
       raise GraphQL::ExecutionError,
             I18n.t('errors.unauthorized')
     end
+    # rubocop:enable Metrics/MethodLength
+    # rubocop:enable Metrics/AbcSize
 
     Users::User.allowed_users(context[:current_user])
                .where(user_type: 'visitor')

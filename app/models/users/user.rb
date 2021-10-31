@@ -639,8 +639,7 @@ module Users
     def invite_guest(guest_id)
       return unless guest_id
 
-      invited_user =  Logs::Invite.create!(host_id: id, guest_id: guest_id)
-      invited_user
+      Logs::Invite.create!(host_id: id, guest_id: guest_id)
     end
 
     private

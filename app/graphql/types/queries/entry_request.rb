@@ -4,7 +4,7 @@
 # Queries module for breaking out queries
 module Types::Queries::EntryRequest
   extend ActiveSupport::Concern
-
+  # rubocop:disable Metrics/BlockLength
   included do
     # Get a entry logs for a user
     field :entry_request, Types::EntryRequestType, null: true do
@@ -45,6 +45,7 @@ module Types::Queries::EntryRequest
       argument :query, String, required: false
     end
   end
+  # rubocop:enable Metrics/BlockLength
 
   def entry_request(id:)
     raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') unless can_view_entry_request
@@ -113,13 +114,13 @@ module Types::Queries::EntryRequest
 
   def invited_guest_list(offset: 0, limit: 50, query: nil)
     raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') unless context[:current_user]
-    context[:site_community].entry_requests
-        .where.not(guest_id: nil)
-        .search(query)
-        .with_attached_images
-        .with_attached_video
-  end
 
+    context[:site_community].entry_requests
+                            .where.not(guest_id: nil)
+                            .search(query).limit(limit).offset(offset)
+                            .with_attached_images
+                            .with_attached_video
+  end
 
   private
 

@@ -26,7 +26,7 @@ module Logs
     end
 
     search_scope :search_guest do
-      attributes guest: ['guest.phone_number', 'guest.email', ]
+      attributes guest: ['guest.phone_number', 'guest.email']
     end
 
     scope :by_end_time, lambda { |date|
