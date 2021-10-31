@@ -15,6 +15,8 @@ import GuestInviteForm from './GuestInviteForm';
 
 export default function GuestSearch() {
   const [searchValue, setSearchValue] = useState('');
+  const [dialogOpen, setDialogOpen] = useState(false)
+  const [guest, setGuest] = useState({ id: '', name: '', email: '', phoneNumber: '' })
   const debouncedValue = useDebounce(searchValue, 500);
   const [loadGuest, { data, loading, error }] = useLazyQuery(SearchGuestsQuery, {
     variables: { query: debouncedValue },
@@ -34,15 +36,19 @@ export default function GuestSearch() {
     }
   }, [debouncedValue]);
 
-  function inviteGuest() {}
+  function inviteGuest(guestUser) {
+    setGuest(guestUser)
+    setDialogOpen(true)
+  }
 
   return (
     <>
       <CustomDialog
         title="Invite Guest"
-        open
+        open={dialogOpen}
+        handleDialogStatus={() => setDialogOpen(!dialogOpen)}
       >
-        <GuestInviteForm />
+        <GuestInviteForm guest={guest} />
       </CustomDialog>
       <Container maxWidth="md">
         <Grid container>
@@ -62,11 +68,11 @@ export default function GuestSearch() {
         {loading && <Spinner />}
         {!loading &&
         !error &&
-        data?.searchGuests?.map(guest => (
+        data?.searchGuests?.map(guestData => (
           <DataList
-            key={guest.id}
+            key={guestData.id}
             keys={entriesHeaders}
-            data={RenderGuest(guest, inviteGuest, t)}
+            data={RenderGuest(guestData, inviteGuest, t)}
             hasHeader={false}
             clickable={false}
             defaultView={false}
@@ -75,8 +81,13 @@ export default function GuestSearch() {
 
         {!data?.searchGuests && (
         <CenteredContent>
-          <Button variant="contained" color="primary" startIcon={<AddIcon />}>
-            Invite Guest
+          <Button
+            variant="contained"
+            color="primary"
+            startIcon={<AddIcon />}
+            onClick={() => setDialogOpen(true)}
+          >
+            Invite New Guest
           </Button>
         </CenteredContent>
       )}

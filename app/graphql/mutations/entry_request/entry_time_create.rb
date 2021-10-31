@@ -5,8 +5,8 @@ module Mutations
     # Create a new entry time
     class EntryTimeCreate < BaseMutation
       argument :guest_id, ID, required: false
-      argument :name, String, required: true
-      argument :phone_number, String, required: true
+      argument :name, String, required: false
+      argument :phone_number, String, required: false
       argument :email, String, required: false
       argument :visitation_date, String, required: true
       argument :starts_at, String, required: false
@@ -18,7 +18,6 @@ module Mutations
 
       # rubocop:disable Metrics/AbcSize
       def resolve(vals)
-
         ActiveRecord::Base.transaction do
           user = context[:site_community].users.find_by(id: vals[:guest_id])
 
@@ -38,6 +37,8 @@ module Mutations
       # rubocop:enable Metrics/AbcSize
 
       def generate_entry_time(vals, invite)
+        return if invite.nil?
+
         context[:site_community].entry_times.create!(
           visitation_date: vals[:visitation_date],
           starts_at: vals[:starts_at],
@@ -50,6 +51,11 @@ module Mutations
       end
 
       def generate_request(vals, guest)
+        return if guest.nil?
+
+        req = context[:current_user].entry_requests.find_by(guest_id: guest.id)
+        return req unless req.nil?
+
         request = context[:current_user].entry_requests.create!(
           guest_id: guest.id,
           **vals

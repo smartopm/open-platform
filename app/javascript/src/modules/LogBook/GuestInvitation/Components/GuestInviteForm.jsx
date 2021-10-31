@@ -1,13 +1,14 @@
 import { Button, TextField } from '@material-ui/core';
 import React, { useState } from 'react';
 import { useMutation } from 'react-apollo';
+import PropTypes from 'prop-types'
 import CenteredContent from '../../../../shared/CenteredContent';
 import GuestTime from '../../Components/GuestTime';
 import { initialRequestState } from '../../GuestVerification/constants';
 import EntryTimeCreateMutation from '../graphql/mutations';
 import { Spinner } from '../../../../shared/Loading';
 
-export default function GuestInviteForm() {
+export default function GuestInviteForm({ guest }) {
   const [guestData, setGuestData] = useState(initialRequestState);
   const [createInvitation] = useMutation(EntryTimeCreateMutation);
 
@@ -29,10 +30,10 @@ export default function GuestInviteForm() {
     try {
       await createInvitation({
         variables: {
-          guestId: guestData.guestId,
-          name: guestData.name,
-          email: guestData.email,
-          phoneNumber: guestData.phoneNumber,
+          guestId: guest?.id,
+          name: guestData.name || guest.name,
+          email: guestData.email || guest.email,
+          phoneNumber: guestData.phoneNumber || guest.phoneNumber,
           visitationDate: guestData.visitationDate,
           startsAt: guestData.startsAt,
           endsAt: guestData.endsAt,
@@ -48,40 +49,47 @@ export default function GuestInviteForm() {
   }
   return (
     <>
-      <TextField
-        className="form-control"
-        variant="outlined"
-        type="text"
-        value={guestData.name}
-        label="Name"
-        onChange={handleInputChange}
-        name="name"
-        inputProps={{ 'data-testid': 'guest_entry_name' }}
-        margin="normal"
-        required
-      />
-      <TextField
-        className="form-control"
-        variant="outlined"
-        type="email"
-        value={guestData.email}
-        label="Email"
-        onChange={handleInputChange}
-        name="email"
-        inputProps={{ 'data-testid': 'guest_entry_email' }}
-        margin="normal"
-      />
-      <TextField
-        className="form-control"
-        variant="outlined"
-        type="text"
-        value={guestData.phoneNumber}
-        label="Phone"
-        onChange={handleInputChange}
-        name="phoneNumber"
-        inputProps={{ 'data-testid': 'guest_entry_phone_number' }}
-        margin="normal"
-      />
+      {
+      !guest?.id && (
+        <>
+          <TextField
+            className="form-control"
+            variant="outlined"
+            type="text"
+            value={guestData.name}
+            label="Name"
+            onChange={handleInputChange}
+            name="name"
+            inputProps={{ 'data-testid': 'guest_entry_name' }}
+            margin="normal"
+            required
+          />
+          <TextField
+            className="form-control"
+            variant="outlined"
+            type="email"
+            value={guestData.email}
+            label="Email"
+            onChange={handleInputChange}
+            name="email"
+            inputProps={{ 'data-testid': 'guest_entry_email' }}
+            margin="normal"
+          />
+          <TextField
+            className="form-control"
+            variant="outlined"
+            type="text"
+            value={guestData.phoneNumber}
+            label="Phone"
+            onChange={handleInputChange}
+            name="phoneNumber"
+            inputProps={{ 'data-testid': 'guest_entry_phone_number' }}
+            margin="normal"
+          />
+          <br />
+        </>
+      )
+    }
       <GuestTime
         days={guestData.occursOn}
         userData={guestData}
@@ -89,7 +97,6 @@ export default function GuestInviteForm() {
         handleChangeOccurrence={handleChangeOccurrence}
       />
 
-      <br />
       <br />
 
       <CenteredContent>
@@ -104,4 +111,13 @@ export default function GuestInviteForm() {
       </CenteredContent>
     </>
   );
+}
+
+GuestInviteForm.propTypes = {
+  guest: PropTypes.shape({
+    id: PropTypes.string,
+    name: PropTypes.string,
+    email: PropTypes.string,
+    phoneNumber: PropTypes.string,
+  }).isRequired
 }
