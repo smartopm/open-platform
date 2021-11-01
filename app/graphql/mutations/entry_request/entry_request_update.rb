@@ -48,13 +48,9 @@ module Mutations
       def remove_attachments(entry_request, vals)
         return if entry_request.nil?
 
-        if vals[:video_blob_id] && entry_request.video.attached?
-          entry_request.video.purge
-        end
+        entry_request.video.purge if vals[:video_blob_id] && entry_request.video.attached?
 
-        if vals[:image_blob_ids] && entry_request.images.attached?
-          entry_request.images.purge
-        end
+        entry_request.images.purge if vals[:image_blob_ids] && entry_request.images.attached?
       end
 
       def authorized?(vals)
