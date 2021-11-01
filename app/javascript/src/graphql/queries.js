@@ -99,7 +99,6 @@ export const AllEventLogsQuery = gql`
         visitationDate
         visitEndDate
         grantor {
-          id
           name
         }
       }
