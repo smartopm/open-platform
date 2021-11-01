@@ -23,7 +23,7 @@ describe('It tests the business directory list', () => {
                 }
             ]
         },
-        authState: authState,
+        authState,
         refetch: jest.fn()
     }
     it('should render business category', async () => {
