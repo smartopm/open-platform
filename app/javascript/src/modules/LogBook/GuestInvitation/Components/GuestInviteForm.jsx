@@ -118,6 +118,7 @@ export default function GuestInviteForm({ guest }) {
           variant="contained"
           color="primary"
           onClick={handleInviteGuest}
+          data-testid="invite_button"
           startIcon={guestData.isLoading && <Spinner />}
         >
           Invite Guest
