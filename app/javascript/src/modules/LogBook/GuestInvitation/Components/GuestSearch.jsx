@@ -1,4 +1,4 @@
-import { Grid, Container, Button } from '@material-ui/core';
+import { Grid, Container, Button, Typography } from '@material-ui/core';
 import React, { useEffect, useState } from 'react';
 import { useLazyQuery } from 'react-apollo';
 import { useTranslation } from 'react-i18next';
@@ -79,7 +79,18 @@ export default function GuestSearch() {
           />
         ))}
 
-        {!data?.searchGuests && (
+        {
+          debouncedValue && !loading && !data?.searchGuests?.length && (
+            <CenteredContent>
+              <Typography gutterBottom variant="subtitle1">
+                {`No results were found for ${searchValue} `}
+              </Typography>
+            </CenteredContent>
+          )
+        }
+        <br />
+
+        {!data?.searchGuests?.length && (
         <CenteredContent>
           <Button
             variant="contained"
