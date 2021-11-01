@@ -83,6 +83,7 @@ export default function IDCapture({ handleNext }) {
 
   return (
     <>
+      {console.log(requestContext.request.isEdit)}
       <MessageAlert
         type={!errorDetails.isError ? 'success' : 'error'}
         message={errorDetails.message}
@@ -146,7 +147,7 @@ export default function IDCapture({ handleNext }) {
             color="primary"
             onClick={handleContinue}
             disabled={(!backBlobId || !frontBlobId) && !images}
-            data-testid="save_and_next"
+            data-testid={requestContext.request.isEdit ? "update" : "save_and_next"}
             startIcon={loading && <Spinner />}
           >
             {requestContext.request.isEdit  ? t('image_capture.update') : t('image_capture.next_step')}

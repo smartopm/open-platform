@@ -176,7 +176,10 @@
       "video_id": "Video ID",
       "submit": "Submit",
       "vehicle_number": "Vehicle Number:",
-      "company_name": "Company Name:"
+      "company_name": "Company Name:",
+      "no_image": "No Images Attached",
+      "add": "Add",
+      "no_video": "No Video Attached"
     }
 
 }
