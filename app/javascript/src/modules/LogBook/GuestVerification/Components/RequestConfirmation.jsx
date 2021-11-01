@@ -152,7 +152,7 @@ export default function RequestConfirmation({ handleGotoStep }) {
             <Grid item xs={6}>
               <ImageUploadPreview
                 imageUrls={[requestContext.request?.imageUrls[0]]}
-                imgHeight="200px"
+                imgHeight="100px"
                 xs={12}
                 sm={6}
                 style={{ textAlign: 'center' }}
@@ -161,7 +161,7 @@ export default function RequestConfirmation({ handleGotoStep }) {
             <Grid item xs={6}>
               <ImageUploadPreview
                 imageUrls={[requestContext.request?.imageUrls[1]]}
-                imgHeight="200px"
+                imgHeight="100px"
                 xs={12}
                 sm={6}
                 style={{ textAlign: 'center' }}

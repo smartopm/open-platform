@@ -37,7 +37,7 @@ export default function IDCapture({ handleNext }) {
   function handleContinue() {
     const blobIds = [frontBlobId, backBlobId];
 
-    if (images || !blobIds) {
+    if ((!requestContext.request.isEdit && images) || !blobIds) {
       handleNext();
       return;
     }
@@ -47,7 +47,7 @@ export default function IDCapture({ handleNext }) {
       .then(({data}) => {
         setDetails({
           ...errorDetails,
-          message: t('image_capture.image_captured'),
+          message: requestContext.request.isEdit ? "Images successfully updated" : t('image_capture.image_captured'),
           isError: false
         });
         requestContext.updateRequest({
@@ -55,7 +55,9 @@ export default function IDCapture({ handleNext }) {
           imageUrls: data.result.entryRequest.imageUrls
         });
         setLoading(false);
-        handleNext();
+        if (!requestContext.request.isEdit) {
+          handleNext();
+        }
       })
       .catch(error => {
         setDetails({ ...errorDetails, isError: true, message: error.message });
@@ -147,9 +149,9 @@ export default function IDCapture({ handleNext }) {
             data-testid="save_and_next"
             startIcon={loading && <Spinner />}
           >
-            {t('image_capture.next_step')}
+            {requestContext.request.isEdit  ? t('image_capture.update') : t('image_capture.next_step')}
           </Button>
-          {!requestContext.isGuestRequest && (
+          {!requestContext.isGuestRequest && !requestContext.request.isEdit && (
             <Button
               className={classes.skipToNextBtn}
               onClick={requestContext.grantAccess}

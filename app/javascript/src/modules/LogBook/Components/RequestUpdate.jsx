@@ -267,14 +267,20 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
     setLoading(true);
     updateRequest({ variables: { id, ...otherFormData } })
       // eslint-disable-next-line no-shadow
-      .then(() => {
+      .then((response) => {
         setLoading(false);
         setDetails({
           ...observationDetails,
           message: t('logbook:logbook.registered_guest_updated')
         });
         setDetails({ ...observationDetails, message: t('logbook:logbook.registered_guest_updated') });
-        handleNext(true)
+        const res = response.data.result.entryRequest
+        requestContext.updateRequest({
+          ...requestContext.request, ...res
+         })
+        if (!requestContext.request.isEdit) {
+          handleNext(true)
+        }
       })
       .catch(error => {
         setLoading(false);
@@ -834,34 +840,36 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
             <Grid container justify="center" spacing={4} className={css(styles.grantSection)}>
               <Grid item>
                 <Button
-                  onClick={event => handleModal(event, 'grant')}
+                  onClick={event => handleModal(event, requestContext.request.isEdit ? 'update' : 'grant')}
                   data-testid="entry_user_grant"
                   startIcon={isLoading && <Spinner />}
                   color="primary"
                   variant="contained"
                 >
                   {
-                    t('logbook:logbook.grant')
+                    requestContext.request.isEdit ? t('logbook:image_capture.update') : t('logbook:logbook.grant')
                   }
                 </Button>
               </Grid>
 
               <br />
               <FeatureCheck features={authState?.user?.community?.features} name="LogBook" subFeature={CommunityFeaturesWhiteList.denyGateAccessButton}>
-                <Grid item>
-                  <Button
-                    variant="contained"
-                    onClick={handleDenyRequest}
-                    className={css(styles.denyButton)}
-                    disabled={isLoading}
-                    data-testid="entry_user_deny"
-                    startIcon={isLoading && <Spinner />}
-                  >
-                    {
+                {!requestContext.request.isEdit && (
+                  <Grid item>
+                    <Button
+                      variant="contained"
+                      onClick={handleDenyRequest}
+                      className={css(styles.denyButton)}
+                      disabled={isLoading}
+                      data-testid="entry_user_deny"
+                      startIcon={isLoading && <Spinner />}
+                    >
+                      {
                       t('logbook:logbook.deny')
                     }
-                  </Button>
-                </Grid>
+                    </Button>
+                  </Grid>
+                )}
                 <Grid item>
                   <a
                     href={`tel:${authState.user.community.securityManager}`}

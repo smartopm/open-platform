@@ -144,7 +144,8 @@
       "face_forward": "Face forward",
       "video_recorded": "Video recorded successfully",
       "re_record_video": "Re-record the video",
-      "save_video": "Save video"
+      "save_video": "Save video",
+      "retake": "Retake video"
     },
     "image_capture": {
       "add_a_photo": "Add a photo of ID with your phone",
@@ -156,7 +157,8 @@
       "back": "Upload Back",
       "image_captured": "Images added successfully",
       "next_step": "Next",
-      "save_my_id": "Save My ID"
+      "save_my_id": "Save My ID",
+      "update": "Update"
     },
     "review_screen": {
       "success_message": "Details Submtted Successfully",

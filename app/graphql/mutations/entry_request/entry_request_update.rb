@@ -30,6 +30,7 @@ module Mutations
         entry_request = context[:site_community].entry_requests.find(vals.delete(:id))
 
         if entry_request.update(vals.except(:video_blob_id, :image_blob_ids, :temperature))
+          remove_attachments(entry_request, vals)
           add_attachments(entry_request, vals)
           return { entry_request: entry_request }
         end
@@ -42,6 +43,18 @@ module Mutations
 
         entry_request.video.attach(vals[:video_blob_id]) if vals[:video_blob_id]
         entry_request.images.attach(vals[:image_blob_ids]) if vals[:image_blob_ids].present?
+      end
+
+      def remove_attachments(entry_request, vals)
+        return if entry_request.nil?
+
+        if vals[:video_blob_id] && entry_request.video.attached?
+          entry_request.video.purge
+        end
+
+        if vals[:image_blob_ids] && entry_request.images.attached?
+          entry_request.images.purge
+        end
       end
 
       def authorized?(vals)
