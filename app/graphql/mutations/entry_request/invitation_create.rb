@@ -43,8 +43,11 @@ module Mutations
         invitation = context[:current_user].invitees.find_by(id: invite.id)
 
         unless invitation.entry_time.nil?
-          return invitation.entry_time if invitation.entry_time.update!(vals)
+          invitation.entry_time.update!(vals)
+          return invitation.entry_time
         end
+
+        return invitation.entry_time.update!(vals) unless invitation.entry_time.nil?
 
         context[:site_community].entry_times.create!(
           visitation_date: vals[:visitation_date],
