@@ -21,7 +21,6 @@ export default function InvitedGuests() {
   });
 
   function handleAddObservation() {}
-
   return (
     <Container maxWidth="xl">
       <Grid container>

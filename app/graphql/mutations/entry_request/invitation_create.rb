@@ -16,6 +16,8 @@ module Mutations
 
       field :entry_time, Types::EntryTimeType, null: true
 
+      # rubocop:disable Metrics/AbcSize
+      # rubocop:disable Metrics/MethodLength
       def resolve(vals)
         ActiveRecord::Base.transaction do
           user = context[:site_community].users.find_by(id: vals[:guest_id])
@@ -24,9 +26,9 @@ module Mutations
           request = generate_request(vals, guest)
           invite = context[:current_user].invite_guest(guest.id)
 
-          entry_time = generate_entry_time(vals.except(:guest_id, :name, :phone_number, :email), invite)
+          entry = generate_entry_time(vals.except(:guest_id, :name, :phone_number, :email), invite)
           GuestQrCodeJob.perform_now(context[:current_user], guest.email, request, 'verify')
-          return { entry_time: entry_time } if entry_time
+          return { entry_time: entry } if entry
 
         rescue ActiveRecord::RecordNotUnique
           raise GraphQL::ExecutionError, I18n.t('errors.duplicate.guest')
@@ -54,6 +56,8 @@ module Mutations
           visitable_type: 'Logs::Invite',
         )
       end
+      # rubocop:enable Metrics/AbcSize
+      # rubocop:enable Metrics/MethodLength
 
       def generate_request(vals, guest)
         return if guest.nil?
