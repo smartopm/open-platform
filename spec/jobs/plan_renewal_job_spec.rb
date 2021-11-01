@@ -9,7 +9,7 @@ RSpec.describe PlanRenewalJob, type: :job do
   let!(:payment_plan) do
     create(:payment_plan, land_parcel_id: land_parcel.id, user_id: user.id, plot_balance: 0,
                           installment_amount: 100, start_date: 10.months.ago, frequency: 'monthly',
-                          renewable: true)
+                          renewable: true, status: :completed)
   end
 
   let!(:subscription_plan) do
@@ -43,6 +43,7 @@ RSpec.describe PlanRenewalJob, type: :job do
 
       perform_enqueued_jobs { described_class.perform_later(false) }
       expect(Properties::PaymentPlan.count).to eql 2
+      expect(Properties::PaymentPlan.order(:created_at).last.status).to eql 'active'
     end
     it 'does not create a new plan for dry run' do
       expect { perform_enqueued_jobs { described_class.perform_later(true) } }.to(

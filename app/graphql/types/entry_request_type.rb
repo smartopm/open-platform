@@ -39,6 +39,7 @@ module Types
     field :revoked, Boolean, null: true
     field :video_url, String, null: true
     field :image_urls, [String], null: true
+    field :status, String, null: true
 
     def active
       object.active?

@@ -98,6 +98,9 @@ export const AllEventLogsQuery = gql`
         endsAt
         visitationDate
         visitEndDate
+        grantor {
+          name
+        }
       }
       user {
         id
@@ -483,9 +486,11 @@ export const ParcelsQuery = gql`
         endDate
         planType
         user{
+          id
           name
         }
         planPayments{
+          id
           status
           amount
         }
@@ -528,9 +533,11 @@ export const HouseQuery = gql`
         endDate
         planType
         user{
+          id
           name
         }
         planPayments{
+          id
           status
           amount
         }

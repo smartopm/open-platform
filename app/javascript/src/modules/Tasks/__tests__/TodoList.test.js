@@ -1,10 +1,10 @@
+/* eslint-disable import/prefer-default-export */
 import React from 'react'
 import { MockedProvider } from '@apollo/react-testing'
 import { BrowserRouter } from 'react-router-dom/cjs/react-router-dom.min'
-import { render, fireEvent } from '@testing-library/react'
+import { render, fireEvent, screen } from '@testing-library/react'
 import TodoList from '../Components/TodoList'
 import { flaggedNotes } from '../../../graphql/queries'
-import { TaskStatsQuery } from '../graphql/task_queries'
 import { Context } from '../../../containers/Provider/AuthStateProvider'
 import userMock from '../../../__mocks__/userMock';
 
@@ -19,56 +19,110 @@ const props = {
   location: 'tasks'
 }
 
-const mocks = [
-  {
-    request: {
-      query: TaskStatsQuery,
-      variables: { }
-    },
-    result: {
-      taskStats: {
-        completedTasks: 22,
-        tasksDueIn10Days: 7,
-        tasksDueIn30Days: 7,
-        tasksOpen: 8,
-        tasksOpenAndOverdue: 4,
-        overdueTasks: 4,
-        tasksWithNoDueDate: 6,
-        myOpenTasks: 2,
-        totalCallsOpen: 2
-      }
-    }
+// TODO: move this out of the test file  and add ids in each nested query
+// eslint-disable-next-line jest/no-export
+export const taskMock = {
+  body: 'Task example',
+  id: '23',
+  createdAt: new Date('2020-08-01'),
+  author: {
+    name: 'Johnsc',
+    id: '23453435',
+    imageUrl: '',
+    avatarUrl: ''
   },
+  user: {
+    name: 'somebody'
+  },
+  assignees: [
+    {
+      name: 'Tester',
+      id: '93sd45435',
+      imageUrl: '',
+      avatarUrl: ''
+    }
+  ],
+  assigneeNotes: [],
+  completed: false,
+  parentNote: null,
+  subtasks: [
+    {
+      body: 'Task example',
+      id: '23',
+      createdAt: new Date('2020-08-01'),
+      author: {
+        name: 'Johnsc',
+        id: '23453435',
+        imageUrl: '',
+        avatarUrl: ''
+      },
+      user: {
+        name: 'somebody'
+      },
+      assignees: [
+        {
+          name: 'Tester',
+          id: '93sd45435',
+          imageUrl: '',
+          avatarUrl: ''
+        }
+      ],
+      assigneeNotes: [],
+      completed: false,
+      parentNote: null,
+      subTasks: [
+        {
+          body: 'Task example',
+            id: '23',
+            createdAt: new Date('2020-08-01'),
+            author: {
+              name: 'Johnsc',
+              id: '23453435',
+              imageUrl: '',
+              avatarUrl: ''
+            },
+            user: {
+              name: 'somebody'
+            },
+            assignees: [
+              {
+                name: 'Tester',
+                id: '93sd45435',
+                imageUrl: '',
+                avatarUrl: ''
+              }
+            ],
+            assigneeNotes: [],
+            completed: false,
+            parentNote: null,
+            subTasks: [],
+        }
+      ]
+    }
+  ]
+};
+
+const mocks = [
   {
     request: {
       query: flaggedNotes,
       variables: {
         offset: 0,
         limit: 50,
-        query: ''
+        query: 'assignees: Tester AND completed: false'
       }
     },
     result: {
-     flaggedNotes: [{
-      body: 'Note example',
-      id: '23',
-      createdAt: new Date('2020-08-01'),
-      author: {
-        name: 'John Doe'
-      },
-      user: {
-        name: 'somebody'
-      },
-      assignees: [{ name: 'Tester', id: '93sd45435' }],
-      assigneeNotes: []
-     }]
+     flaggedNotes: [
+      taskMock
+     ]
     }
   }
 ]
 
 describe('Test the Todo page', () => {
   it('Mount the Todo component', () => {
-    const container = render(
+    render(
       <Context.Provider value={userMock}>
         <MockedProvider mocks={mocks} addTypename={false}>
           <BrowserRouter>
@@ -77,15 +131,15 @@ describe('Test the Todo page', () => {
         </MockedProvider>
       </Context.Provider>
     )
-    expect(container.queryByText('task.click_a_card_to_filter')).toBeTruthy()
-    expect(container.queryByTestId('create_task_btn')).toBeTruthy()
-    expect(container.queryByTestId('todo-container')).toBeTruthy()
-    expect(container.queryByTestId('search_input')).toBeTruthy()
-    expect(container.queryByTestId('toggle_filter_btn')).toBeTruthy()
+
+    expect(screen.queryByTestId('create_task_btn')).toBeTruthy()
+    expect(screen.queryByTestId('todo-container')).toBeTruthy()
+    expect(screen.queryByTestId('search_input')).toBeTruthy()
+    expect(screen.queryByTestId('toggle_filter_btn')).toBeTruthy()
   })
 
   it('renders task form modal', () => {
-    const container = render(
+    render(
       <Context.Provider value={userMock}>
         <MockedProvider mocks={mocks} addTypename={false}>
           <BrowserRouter>
@@ -95,12 +149,12 @@ describe('Test the Todo page', () => {
       </Context.Provider>
     )
 
-    const createTaskBtn = container.queryByTestId('create_task_btn')
+    const createTaskBtn = screen.queryByTestId('create_task_btn')
     fireEvent.click(createTaskBtn)
 
-    expect(container.queryByText('task.task_body_label')).toBeTruthy()
-    expect(container.queryByText('task.task_description_label')).toBeTruthy()
-    expect(container.queryByText('task.task_type_label')).toBeTruthy()
-    expect(container.queryByText('common:form_placeholders.note_due_date')).toBeTruthy()
+    expect(screen.queryByText('task.task_body_label')).toBeTruthy()
+    expect(screen.queryByText('task.task_description_label')).toBeTruthy()
+    expect(screen.queryByText('task.task_type_label')).toBeTruthy()
+    expect(screen.queryByText('common:form_placeholders.note_due_date')).toBeTruthy()
   });
 })

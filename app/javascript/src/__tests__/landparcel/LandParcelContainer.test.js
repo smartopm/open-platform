@@ -90,7 +90,7 @@ describe('Land Property Page', () => {
         expect(container.queryByText("232")).toBeInTheDocument()
         expect(container.queryByText("232 Street Av")).toBeInTheDocument()
       },
-      { timeout: 100 }
+      { timeout: 10 }
     );
   });
 });

@@ -13,6 +13,10 @@ include:
   - template: Security/SAST.gitlab-ci.yml
   - template: DAST.gitlab-ci.yml
 
+semgrep-sast:
+  variables:
+    SAST_ANALYZER_IMAGE_TAG: "2.13.3"
+
 .default-cache: &default-cache
   cache:
     key:
@@ -45,7 +49,6 @@ include:
     - curl -o- -L https://yarnpkg.com/install.sh | bash
     - export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
     - yarn install
-
 
 pages:
     stage: staging

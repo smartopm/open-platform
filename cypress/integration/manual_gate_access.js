@@ -27,7 +27,7 @@ describe('Manual Gate Access', () => {
 
       // grant access
       cy.wait(500)
-      cy.get('[data-testid=entry_user_next]').click()
+      cy.get('[data-testid=entry_user_grant]').click()
       cy.wait(2000);
       // Add an observation
       cy.get('[data-testid=entry-dialog-field]').type('Observation example')

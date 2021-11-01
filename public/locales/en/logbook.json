@@ -157,6 +157,24 @@
       "image_captured": "Images added successfully",
       "next_step": "Next",
       "save_my_id": "Save My ID"
+    },
+    "review_screen": {
+      "success_message": "Details Submtted Successfully",
+      "review_title": "Review and Confirmation",
+      "review_sub_title": "Please review and press submit to complete",
+      "no_review": "Please fill out the previous steps",
+      "user_information": "User Information",
+      "edit": "Edit",
+      "name": "Name:",
+      "email": "Email:",
+      "primary": "Primary Phone:",
+      "photo_id": "Photo ID",
+      "id_front": "ID FRONT",
+      "id_back": "ID BACK",
+      "video_id": "Video ID",
+      "submit": "Submit",
+      "vehicle_number": "Vehicle Number:",
+      "company_name": "Company Name:"
     }
 
 }

@@ -209,7 +209,7 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
     handleNext(true)
   }
 
-  function handleCreateRequest() {
+  function handleCreateRequest(type='create') {
     const otherFormData = {
       ...formData,
       // return reason if not other
@@ -239,7 +239,7 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
             return false
           }
           // hardcoding this for now before we make this a community setting
-          if (communityName === 'Nkwashi') {
+          if ((communityName === 'Nkwashi' && type !==  'deny') || type === 'grant') {
             return requestContext.grantAccess(response.data.result.entryRequest.id)
           }
           requestContext.updateRequest({
@@ -248,7 +248,7 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
            return response.data.result.entryRequest.id
         })
         .then(response => {
-          if (communityName !== 'Nkwashi') {
+          if (communityName !== 'Nkwashi' && type !== 'grant') {
             handleNext()
           }
           return response
@@ -293,8 +293,8 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
     }
     setIsClicked(!isClicked);
     setLoading(true);
-    handleCreateRequest()
-      .then(requestId => denyEntry({ variables: { id: requestId } }))
+    handleCreateRequest('deny')
+    .then(requestId => denyEntry({ variables: { id: requestId } }))
       .then(() => {
         setDetails({
           ...observationDetails,
@@ -340,7 +340,7 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
   }
 
   function isEmailValid() {
-    return formData?.email === '' ? true : validateEmail(formData.email);
+    return !formData?.email ? true : validateEmail(formData.email);
   }
 
   function handleModal(_event, type) {
@@ -368,8 +368,7 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
 
     switch (type) {
       case 'grant':
-        setModalAction('grant');
-        setModal(!isModalOpen);
+        handleCreateRequest('grant')
         break;
       case 'deny':
         setModalAction('deny');
@@ -379,7 +378,7 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
         handleUpdateRequest();
         break;
       case 'create':
-        handleCreateRequest()
+        handleCreateRequest('create')
         break;
       default:
         break;
@@ -455,7 +454,7 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
       />
       <ModalDialog
         handleClose={() => setModal(false)}
-        handleConfirm={() => requestContext.grantAccess()}
+        handleConfirm={() => handleCreateRequest('grant')}
         open={isModalOpen}
         action={t(`logbook:access_actions.${modalAction}`)}
         name={formData.name}
@@ -836,39 +835,21 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
             <Grid container justify="center" spacing={4} className={css(styles.grantSection)}>
               <Grid item>
                 <Button
-                  variant="contained"
-                  onClick={event => handleModal(event, 'create')}
-                  color="primary"
-                  disabled={isLoading}
-                  data-testid="entry_user_next"
+                  onClick={event => handleModal(event, 'grant')}
+                  data-testid="entry_user_grant"
                   startIcon={isLoading && <Spinner />}
+                  color="primary"
+                  variant="contained"
                 >
                   {
-                    communityName === 'Nkwashi' ? t('logbook:logbook.grant') : t('logbook:logbook.next_step')
+                    t('logbook:logbook.grant')
                   }
                 </Button>
               </Grid>
-              {
-                communityName !== 'Nkwashi' && (
-                  <Grid item>
-                    <Button
-                      onClick={event => handleModal(event, 'grant')}
-                      disabled={!requestContext.request.id}
-                      data-testid="entry_user_grant"
-                      startIcon={isLoading && <Spinner />}
-                      color="primary"
-                    >
 
-                      {
-                    t('logbook:logbook.grant')
-                  }
-                    </Button>
-                  </Grid>
-                )
-              }
               <br />
-              <Grid item>
-                <FeatureCheck features={authState?.user?.community?.features} name="LogBook" subFeature={CommunityFeaturesWhiteList.denyGateAccessButton}>
+              <FeatureCheck features={authState?.user?.community?.features} name="LogBook" subFeature={CommunityFeaturesWhiteList.denyGateAccessButton}>
+                <Grid item>
                   <Button
                     variant="contained"
                     onClick={handleDenyRequest}
@@ -881,18 +862,35 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
                       t('logbook:logbook.deny')
                     }
                   </Button>
-                </FeatureCheck>
-              </Grid>
-              <Grid item>
-                <a
-                  href={`tel:${authState.user.community.securityManager}`}
-                  className={css(styles.callButton)}
-                  data-testid="entry_user_call_mgr"
-                >
-                  <CallIcon className={css(styles.callIcon)} />
-                  <span>{t('logbook:logbook.call_manager')}</span>
-                </a>
-              </Grid>
+                </Grid>
+                <Grid item>
+                  <a
+                    href={`tel:${authState.user.community.securityManager}`}
+                    className={css(styles.callButton)}
+                    data-testid="entry_user_call_mgr"
+                  >
+                    <CallIcon className={css(styles.callIcon)} />
+                    <span>{t('logbook:logbook.call_manager')}</span>
+                  </a>
+                </Grid>
+              </FeatureCheck>
+              {
+                communityName !== 'Nkwashi'  && (
+                  <Grid item>
+                    <Button
+                      onClick={event => handleModal(event, 'create')}
+                      color="primary"
+                      disabled={isLoading}
+                      data-testid="entry_user_next"
+                      startIcon={isLoading && <Spinner />}
+                    >
+                      {
+                      t('logbook:logbook.next_step')
+                    }
+                    </Button>
+                  </Grid>
+                )
+              }
             </Grid>
             <br />
           </>

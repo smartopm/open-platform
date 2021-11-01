@@ -108,7 +108,8 @@ EntryNoteDialog.defaultProps = {
   closeButtonData: {
     closeButton: false,
     handleCloseButton: () => {}
-  }
+  },
+  status: 'INIT'
 };
 
 EntryNoteDialog.propTypes = {
@@ -121,7 +122,7 @@ EntryNoteDialog.propTypes = {
   children: PropTypes.node.isRequired,
   imageOnchange: PropTypes.func.isRequired,
   imageUrls: PropTypes.arrayOf(PropTypes.string).isRequired,
-  status: PropTypes.string.isRequired,
+  status: PropTypes.string,
   closeButtonData: PropTypes.shape({
     closeButton: PropTypes.bool,
     handleCloseButton: PropTypes.func

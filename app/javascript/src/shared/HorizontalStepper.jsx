@@ -7,7 +7,7 @@ import CustomStepper from './CustomStepper';
 export default function HorizontalStepper({ steps, communityName }) {
   const [activeStep, setActiveStep] = useState(0);
   const history = useHistory()
-  const listOfSteps = steps(handleNext, communityName);
+  const listOfSteps = steps(handleNext, handleGotoStep, communityName);
   const validSteps = Boolean(listOfSteps?.length);
 
   function handleNext(isGuest=false) {
@@ -18,6 +18,10 @@ export default function HorizontalStepper({ steps, communityName }) {
       return
     }
     setActiveStep(newActiveStep);
+  }
+
+  function handleGotoStep(stepNumber) {
+    setActiveStep(stepNumber);
   }
 
   function handleStep(step) {

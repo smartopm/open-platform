@@ -22,6 +22,7 @@ module Mutations
       argument :visit_end_date, String, required: false
       argument :video_blob_id, String, required: false
       argument :image_blob_ids, [String], required: false
+      argument :status, String, required: false
 
       field :entry_request, Types::EntryRequestType, null: true
 

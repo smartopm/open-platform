@@ -153,6 +153,26 @@ admin:
   communication:
     permissions:
       - can_see_menu_item
+  label:
+    permissions:
+      - can_create_label
+      - can_delete_label
+      - can_merge_labels
+      - can_update_label
+      - can_create_user_label
+      - can_update_user_label
+      - can_fetch_all_labels
+      - can_fetch_label_users
+      - can_see_menu_item
+  community:
+    permissions:
+      - can_see_menu_item
+      - can_update_community_details
+  sos:
+    permissions:
+      - can_access_sos
+      - can_raise_sos
+      - can_cancel_sos
 contractor:
   note:
     permissions:
@@ -176,6 +196,9 @@ contractor:
     permissions:
       - can_see_menu_item
       - can_access_forms
+  profile:
+    permissions:
+      - can_see_menu_item
 custodian:
   note:
     permissions:
@@ -221,6 +244,14 @@ custodian:
       - can_fetch_user_last_shift
       - can_access_all_timesheets
       - can_see_menu_item
+  profile:
+    permissions:
+      - can_see_menu_item
+  sos:
+    permissions:
+      - can_access_sos
+      - can_raise_sos
+      - can_cancel_sos
 security_guard:
   note:
     permissions:
@@ -261,6 +292,14 @@ security_guard:
   timesheet:
     permissions:
       - can_fetch_user_time_sheet_logs
+  profile:
+    permissions:
+      - can_see_menu_item
+  sos:
+    permissions:
+      - can_access_sos
+      - can_raise_sos
+      - can_cancel_sos
 site_worker:
   note:
     permissions:
@@ -283,9 +322,15 @@ site_worker:
     permissions:
       - can_see_menu_item
       - can_access_forms
+  profile:
+    permissions:
+      - can_see_menu_item
 visitor:
   note:
     permissions:
+  profile:
+    permissions:
+      - can_see_menu_item
 resident:
   gate_access:
     permissions:
@@ -315,6 +360,11 @@ resident:
   logout:
     permissions:
       - can_see_menu_item
+  sos:
+    permissions:
+      - can_access_sos
+      - can_initiate_sos
+      - can_cancel_sos
 prospective_client:
   note:
     permissions:
@@ -322,6 +372,9 @@ prospective_client:
     permissions:
       - can_see_menu_item
       - can_access_forms
+  profile:
+    permissions:
+      - can_see_menu_item
 client:
   gate_access:
     permissions:
