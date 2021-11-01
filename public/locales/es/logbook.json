@@ -35,7 +35,7 @@
     "Otro"
   ],
   "errors": {
-    "required_field": "‪{{name}}‬ es Requerido"
+    "required_field": "‪{{fieldName}}‬ es Requerido"
   },
   "guest_book": {
     "ends_on_date": "Termina el ‪{{date}}‬",

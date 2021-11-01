@@ -53,7 +53,7 @@
   },
   "errors": {
     "no_forms": "No Forms to submit",
-    "required_field": "{{name}} is Required",
+    "required_field": "{{fieldName}} is Required",
     "admins_only": "For Admins Only",
     "required_field_for_admins_only": "{{fieldName}} is Required. For Admins only",
     "date_time_in_the_future": "Please select a date and time in the future"

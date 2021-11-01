@@ -123,7 +123,7 @@
     "cancel": "Cancel"
   },
   "errors": {
-    "required_field": "{{name}} is Required"
+    "required_field": "{{fieldName}} is Required"
     },
   "guest": {
     "guest_name": "Guest Name",

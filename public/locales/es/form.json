@@ -25,7 +25,7 @@
     "admins_only": "Sólo para Admins",
     "date_time_in_the_future": "Por favor seleccione un fecha y hora en el futuro",
     "no_forms": "No hay formularios para enviar",
-    "required_field": "‪{{name}}‬ es Requerido",
+    "required_field": "‪{{fieldName}}‬ es Requerido",
     "required_field_for_admins_only": "‪{{fieldName}}‬ es Requerido. Sólo para Admins"
   },
   "field_types": {
