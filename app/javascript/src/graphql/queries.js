@@ -98,6 +98,10 @@ export const AllEventLogsQuery = gql`
         endsAt
         visitationDate
         visitEndDate
+        grantor {
+          id
+          name
+        }
       }
       user {
         id

@@ -71,7 +71,10 @@ describe('EntryLogs Component', () => {
           grantedAt: '2021-07-02T11:19:27+02:00',
           name: 'HU',
           startsAt: '2021-07-02T11:19:27+02:00',
-          visitationDate: '2021-07-02T11:19:27+02:00'
+          visitationDate: '2021-07-02T11:19:27+02:00',
+          grantor: {
+            name: 'John Doe'
+          }
         }
       }]
     }
@@ -95,7 +98,7 @@ describe('EntryLogs Component', () => {
     expect(container.queryByTestId('entry_time')).toBeInTheDocument();
     expect(container.queryByTestId('entry_date')).toBeInTheDocument();
     expect(container.queryByTestId('entry_reason').textContent).toContain('sales');
-    expect(container.queryByTestId('acting_user').textContent).toContain('X User');
+    expect(container.queryByTestId('acting_user').textContent).toContain('John Doe');
     expect(container.queryByText('common:misc.more_details')).toBeInTheDocument();
     expect(container.queryAllByText('logbook.add_observation')[0]).toBeInTheDocument();
     expect(container.queryByText('logbook.log_exit')).toBeInTheDocument();
