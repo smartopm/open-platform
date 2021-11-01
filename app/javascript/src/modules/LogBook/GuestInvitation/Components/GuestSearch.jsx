@@ -15,8 +15,8 @@ import GuestInviteForm from './GuestInviteForm';
 
 export default function GuestSearch() {
   const [searchValue, setSearchValue] = useState('');
-  const [dialogOpen, setDialogOpen] = useState(false)
-  const [guest, setGuest] = useState({ id: '', name: '', email: '', phoneNumber: '' })
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [guest, setGuest] = useState({ id: '', name: '', email: '', phoneNumber: '' });
   const debouncedValue = useDebounce(searchValue, 500);
   const [loadGuest, { data, loading, error }] = useLazyQuery(SearchGuestsQuery, {
     variables: { query: debouncedValue },
@@ -37,8 +37,8 @@ export default function GuestSearch() {
   }, [debouncedValue]);
 
   function inviteGuest(guestUser) {
-    setGuest(guestUser)
-    setDialogOpen(true)
+    setGuest(guestUser);
+    setDialogOpen(true);
   }
 
   return (
@@ -67,41 +67,40 @@ export default function GuestSearch() {
         <br />
         {loading && <Spinner />}
         {!loading &&
-        !error &&
-        data?.searchGuests?.map(guestData => (
-          <DataList
-            key={guestData.id}
-            keys={entriesHeaders}
-            data={RenderGuest(guestData, inviteGuest, t)}
-            hasHeader={false}
-            clickable={false}
-            defaultView={false}
-          />
-        ))}
+          !error &&
+          data?.searchGuests?.map(guestData => (
+            <DataList
+              key={guestData.id}
+              keys={entriesHeaders}
+              data={RenderGuest(guestData, inviteGuest, t)}
+              hasHeader={false}
+              clickable={false}
+              defaultView={false}
+            />
+          ))}
 
-        {
-          debouncedValue && !loading && !data?.searchGuests?.length && (
-            <CenteredContent>
-              <Typography gutterBottom variant="subtitle1">
-                {`No results were found for ${searchValue} `}
-              </Typography>
-            </CenteredContent>
-          )
-        }
+        {debouncedValue && !loading && !data?.searchGuests?.length && (
+          <CenteredContent>
+            <Typography gutterBottom variant="subtitle1">
+              {`No results were found for ${searchValue} `}
+            </Typography>
+          </CenteredContent>
+        )}
         <br />
 
         {!data?.searchGuests?.length && (
-        <CenteredContent>
-          <Button
-            variant="contained"
-            color="primary"
-            startIcon={<AddIcon />}
-            onClick={() => setDialogOpen(true)}
-          >
-            Invite New Guest
-          </Button>
-        </CenteredContent>
-      )}
+          <CenteredContent>
+            <Button
+              variant="contained"
+              color="primary"
+              data-testid="invite_btn"
+              startIcon={<AddIcon />}
+              onClick={() => setDialogOpen(true)}
+            >
+              Invite New Guest
+            </Button>
+          </CenteredContent>
+        )}
       </Container>
     </>
   );

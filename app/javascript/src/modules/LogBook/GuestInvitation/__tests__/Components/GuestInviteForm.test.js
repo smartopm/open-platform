@@ -7,12 +7,12 @@ import '@testing-library/jest-dom/extend-expect';
 import InvitationCreateMutation from '../../graphql/mutations';
 
 describe('Guest Invitation Form', () => {
-    const mockHistory = {
-        push: jest.fn()
-      };
-      beforeEach(() => {
-        jest.spyOn(routeData, 'useHistory').mockReturnValue(mockHistory);
-      });
+  const mockHistory = {
+    push: jest.fn()
+  };
+  beforeEach(() => {
+    jest.spyOn(routeData, 'useHistory').mockReturnValue(mockHistory);
+  });
 
   it('should render the invitation form', async () => {
     const guest = {
@@ -63,31 +63,26 @@ describe('Guest Invitation Form', () => {
     const name = getByTestId('guest_entry_name');
     const email = getByTestId('guest_entry_email');
     const phoneNumber = getByTestId('guest_entry_phone_number');
+
     expect(name).toBeInTheDocument();
     expect(email).toBeInTheDocument();
     expect(phoneNumber).toBeInTheDocument();
     expect(getByTestId('invite_button')).toBeInTheDocument();
 
-    fireEvent.change(name, {
-      target: { value: 'Some random name' }
-    });
+    fireEvent.change(name, { target: { value: 'Some random name' } });
     expect(name.value).toBe('Some random name');
 
-    fireEvent.change(email, {
-      target: { value: 'Some@random.name' }
-    });
+    fireEvent.change(email, { target: { value: 'Some@random.name' } });
     expect(email.value).toBe('Some@random.name');
 
-    fireEvent.change(phoneNumber, {
-      target: { value: '090909090' }
-    });
+    fireEvent.change(phoneNumber, { target: { value: '090909090' } });
     expect(phoneNumber.value).toBe('090909090');
 
-    fireEvent.click(getByTestId('invite_button'))
+    fireEvent.click(getByTestId('invite_button'));
 
     await waitFor(() => {
-        expect(queryByText('Successfully invited a guest')).toBeInTheDocument();
-        expect(mockHistory.push).toBeCalled();
-    }, 500)
+      expect(queryByText('Successfully invited a guest')).toBeInTheDocument();
+      expect(mockHistory.push).toBeCalled();
+    }, 500);
   });
 });
