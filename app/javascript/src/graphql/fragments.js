@@ -141,6 +141,7 @@ export const NotesFragment = {
         avatarUrl
       }
       assigneeNotes{
+        id
         userId
         reminderTime
       }

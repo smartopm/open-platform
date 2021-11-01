@@ -100,7 +100,7 @@ module Types::Queries::Note
 
     return notes if notes.nil?
 
-    notes.includes(:assignees, :author, :user, :assignee_notes)
+    notes.includes(:sub_notes, :assignees, :author, :user, :assignee_notes)
          .for_site_manager(current_user)
          .where(flagged: true)
          .order(completed: :desc, created_at: :desc)
