@@ -164,6 +164,9 @@ admin:
     permissions:
       - can_see_menu_item
       - can_update_community_details
+  community_settings:
+    permissions:
+      - can_see_menu_item
   sos:
     permissions:
       - can_access_sos
@@ -178,6 +181,12 @@ admin:
   comment:
     permissions:
       - can_fetch_all_comments
+  business:
+    permissions:
+      - can_see_menu_item
+      - can_access_business
+      - can_create_business
+      - can_delete_business
 contractor:
   note:
     permissions:
@@ -207,6 +216,12 @@ contractor:
   discussion:
     permissions:
       - can_access_all_discussions
+  business:
+    permissions:
+      - can_see_menu_item
+      - can_access_business
+  community:
+    permissions:
       - can_see_menu_item
 custodian:
   note:
@@ -261,6 +276,9 @@ custodian:
       - can_access_sos
       - can_raise_sos
       - can_cancel_sos
+  community:
+    permissions:
+      - can_see_menu_item
 security_guard:
   note:
     permissions:
@@ -309,6 +327,9 @@ security_guard:
       - can_access_sos
       - can_raise_sos
       - can_cancel_sos
+  community:
+    permissions:
+      - can_see_menu_item
 site_worker:
   note:
     permissions:
@@ -334,10 +355,16 @@ site_worker:
   profile:
     permissions:
       - can_see_menu_item
+  community:
+    permissions:
+      - can_see_menu_item
 visitor:
   note:
     permissions:
   profile:
+    permissions:
+      - can_see_menu_item
+  community:
     permissions:
       - can_see_menu_item
 resident:
@@ -377,6 +404,12 @@ resident:
   discussion:
     permissions:
       - can_access_all_discussions
+  business:
+    permissions:
+      - can_see_menu_item
+      - can_access_business
+  community:
+    permissions:
       - can_see_menu_item
 prospective_client:
   note:
@@ -391,6 +424,12 @@ prospective_client:
   discussion:
     permissions:
       - can_access_all_discussions
+  business:
+    permissions:
+      - can_see_menu_item
+      - can_access_business
+  community:
+    permissions:
       - can_see_menu_item
 client:
   gate_access:
@@ -425,6 +464,12 @@ client:
   discussion:
     permissions:
       - can_access_all_discussions
+  business:
+    permissions:
+      - can_see_menu_item
+      - can_access_business
+  community:
+    permissions:
       - can_see_menu_item
 
     

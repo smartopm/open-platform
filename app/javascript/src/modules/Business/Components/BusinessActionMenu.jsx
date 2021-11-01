@@ -6,12 +6,13 @@ import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import BusinessDeleteDialogue from '../../../shared/dialogs/DeleteDialogue';
 import { DeleteBusiness } from '../graphql/business_mutations';
+import { canDeleteBusiness } from '../utils';
 
 export default function BusinessActionMenu({
   data,
   anchorEl,
   handleClose,
-  userType,
+  authState,
   open,
   linkStyles,
   refetch
@@ -45,7 +46,7 @@ export default function BusinessActionMenu({
       }}
     >
       <div>
-        {userType === 'admin' && (
+        {canDeleteBusiness({authState}) && (
           <>
             <MenuItem
               id="delete_button"

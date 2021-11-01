@@ -22,8 +22,9 @@ import BusinessActionMenu from './BusinessActionMenu'
 import { businessCategories } from '../../../utils/constants'
 import CenteredContent from '../../../components/CenteredContent'
 import BusinessForm from './BusinessForm'
+import {canDeleteBusiness, canCreateBusiness} from '../utils'
 
-export default function BusinessList({ businessData, userType, refetch }) {
+export default function BusinessList({ businessData, authState, refetch }) {
   const [anchorEl, setAnchorEl] = useState(null)
   const [modalOpen, setModalOpen] = useState(false)
   const { t } = useTranslation('common')
@@ -102,7 +103,7 @@ export default function BusinessList({ businessData, userType, refetch }) {
               </Box>
               <Divider variant="middle" />
             </Link>
-            {userType === 'admin' && (
+            {canDeleteBusiness({authState}) && (
               <IconButton
                 aria-label={`more-${business.name}`}
                 aria-controls="long-menu"
@@ -115,7 +116,7 @@ export default function BusinessList({ businessData, userType, refetch }) {
               </IconButton>
             )}
             <BusinessActionMenu
-              userType={userType}
+              authState={authState}
               data={business}
               anchorEl={anchorEl}
               handleClose={handleClose}
@@ -128,7 +129,7 @@ export default function BusinessList({ businessData, userType, refetch }) {
         ))}
       </List>
 
-      {userType === 'admin' && (
+      {canCreateBusiness({authState}) && (
         <Fab
           variant="extended"
           onClick={openModal}
