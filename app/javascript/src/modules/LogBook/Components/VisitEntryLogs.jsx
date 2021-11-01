@@ -90,7 +90,7 @@ export default function VisitEntryLogs({
           <div className="row justify-content-between">
             <div className="col-xs-8">
               <span className={css(styles.subTitle)} data-testid="acting_user">
-                {event.actingUser && event.actingUser.name}
+                {event.entryRequest?.grantor && event.entryRequest?.grantor?.name}
               </span>
             </div>
             <div className="col-xs-4">
