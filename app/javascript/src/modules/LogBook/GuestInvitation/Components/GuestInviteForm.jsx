@@ -2,14 +2,19 @@ import { Button, TextField } from '@material-ui/core';
 import React, { useState } from 'react';
 import { useMutation } from 'react-apollo';
 import PropTypes from 'prop-types'
+import { useHistory } from 'react-router-dom';
 import CenteredContent from '../../../../shared/CenteredContent';
 import GuestTime from '../../Components/GuestTime';
 import { initialRequestState } from '../../GuestVerification/constants';
 import InvitationCreateMutation from '../graphql/mutations';
 import { Spinner } from '../../../../shared/Loading';
+import MessageAlert from '../../../../components/MessageAlert';
+import { formatError } from '../../../../utils/helpers';
 
 export default function GuestInviteForm({ guest }) {
+  const history = useHistory()
   const [guestData, setGuestData] = useState(initialRequestState);
+  const [details, setDetails] = useState({ message: '', isError: false })
   const [createInvitation] = useMutation(InvitationCreateMutation);
 
   function handleInputChange(event) {
@@ -42,13 +47,21 @@ export default function GuestInviteForm({ guest }) {
         }
       });
       setGuestData({ ...guestData, isLoading: false });
+      setDetails({ ...details, message: 'Successfully invited a guest' })
+      setTimeout(() => history.push('/logbook/guests'), 500)
     } catch (error) {
-      console.log(error);
       setGuestData({ ...guestData, isLoading: false });
+      setDetails({ ...details, message: formatError(error.message), isError: true })
     }
   }
   return (
     <>
+      <MessageAlert
+        type={!details.isError ? 'success' : 'error'}
+        message={details.message}
+        open={!!details.message}
+        handleClose={() => setDetails({ ...details, message: '' })}
+      />
       {
       !guest?.id && (
         <>

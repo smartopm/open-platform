@@ -17,7 +17,7 @@ export default function InvitedGuests() {
   const debouncedValue = useDebounce(searchValue, 500);
   const { data, loading, error } = useQuery(InvitedGuestsQuery, {
       variables: { query: debouncedValue },
-    fetchPolicy: 'cache-and-network'
+    fetchPolicy: 'network-only'
   });
 
   function handleAddObservation() {}
@@ -26,7 +26,7 @@ export default function InvitedGuests() {
     <Container maxWidth="xl">
       <Grid container>
         <Grid item xs={6} />
-        <Grid item sm={12} md={6}>
+        <Grid item sm={12} xs={12} md={6}>
           <SearchInput
             title="Guests"
             filterRequired={false}
@@ -47,7 +47,7 @@ export default function InvitedGuests() {
       ) : (
         <CenteredContent>{formatError(error?.message)}</CenteredContent>
       )}
-      <FloatButton title="Invite a Guest" handleClick={() => history.push(`/guests/invite`)} />
+      <FloatButton title="Invite a Guest" handleClick={() => history.push('/logbook/guests/invite')} />
     </Container>
   );
 }

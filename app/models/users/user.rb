@@ -639,6 +639,9 @@ module Users
     def invite_guest(guest_id)
       return unless guest_id
 
+      invite = invites.find_by(guest_id: guest_id)
+      return invite unless invite.nil?
+
       Logs::Invite.create!(host_id: id, guest_id: guest_id)
     end
 

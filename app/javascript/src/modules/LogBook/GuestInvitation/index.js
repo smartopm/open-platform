@@ -4,7 +4,7 @@ import InvitedGuests from './Components/InvitedGuests';
 const GuestInvitationRoutes = [
   {
     routeProps: {
-      path: '/guests/invite',
+      path: '/logbook/guests/invite',
       component: GuestSearch,
     },
     name: 'Request Details',
@@ -13,7 +13,7 @@ const GuestInvitationRoutes = [
   },
   {
     routeProps: {
-      path: '/guests',
+      path: '/logbook/guests',
       component: InvitedGuests,
     },
     name: 'Visit Request',

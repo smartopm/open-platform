@@ -24,7 +24,7 @@ module Mutations
           generate_request(vals, guest)
           invite = context[:current_user].invite_guest(guest.id)
 
-          entry_time = generate_entry_time(vals.except(:guest_id), invite)
+          entry_time = generate_entry_time(vals.except(:guest_id, :name, :phone_number, :email), invite)
           return { entry_time: entry_time } if entry_time
 
         rescue ActiveRecord::RecordNotUnique
@@ -36,6 +36,12 @@ module Mutations
 
       def generate_entry_time(vals, invite)
         return if invite.nil?
+
+        invitation = context[:current_user].invites.find_by(id: invite.id)
+
+        unless invitation.entry_time.nil?
+          return invitation.entry_time if invitation.entry_time.update!(vals)
+        end
 
         context[:site_community].entry_times.create!(
           visitation_date: vals[:visitation_date],
@@ -56,7 +62,7 @@ module Mutations
 
         context[:current_user].entry_requests.create!(
           guest_id: guest.id,
-          **vals,
+          **vals.except(:guest_id), # specify only the fields we need here
         )
       end
 
