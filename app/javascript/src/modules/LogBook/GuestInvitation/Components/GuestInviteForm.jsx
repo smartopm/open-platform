@@ -54,6 +54,7 @@ export default function GuestInviteForm({ guest }) {
       setDetails({ ...details, message: formatError(error.message), isError: true })
     }
   }
+
   return (
     <>
       <MessageAlert

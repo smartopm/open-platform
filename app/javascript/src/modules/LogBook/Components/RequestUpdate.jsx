@@ -169,7 +169,8 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
     sendGuestQrCode({
       variables: {
         id: requestId,
-        guestEmail
+        guestEmail,
+        qrType: 'scan'
       }
     })
       .then(() => {

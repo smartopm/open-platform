@@ -113,7 +113,9 @@ module Users
     # TODO: find more about the inverse_of association and if we really need that
     has_one :request, class_name: 'Logs::EntryRequest', foreign_key: :guest_id,
                       dependent: :destroy, inverse_of: 'guest'
-    has_many :invites, class_name: 'Logs::Invite', foreign_key: :host_id,
+    has_many :invites, class_name: 'Logs::Invite', foreign_key: :guest_id,
+                       dependent: :destroy, inverse_of: 'guest'
+    has_many :invitees, class_name: 'Logs::Invite', foreign_key: :host_id,
                        dependent: :destroy, inverse_of: 'guest'
     has_one_attached :avatar
     has_one_attached :document
@@ -243,7 +245,7 @@ module Users
         enrolled_user.send(attr).attach(vals[key]) if vals[key]
       end
       data = { ref_name: enrolled_user.name, note: '', type: enrolled_user.user_type }
-      return enrolled_user unless enrolled_user.save
+      return enrolled_user unless enrolled_user.save!
 
       record_secondary_info(enrolled_user, vals[:secondary_info])
       generate_events('user_enrolled', enrolled_user, data)
@@ -639,7 +641,7 @@ module Users
     def invite_guest(guest_id)
       return unless guest_id
 
-      invite = invites.find_by(guest_id: guest_id)
+      invite = invitees.find_by(guest_id: guest_id)
       return invite unless invite.nil?
 
       Logs::Invite.create!(host_id: id, guest_id: guest_id)

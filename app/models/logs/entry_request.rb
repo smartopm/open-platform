@@ -15,7 +15,6 @@ module Logs
     belongs_to :grantor, class_name: 'Users::User', optional: true
     belongs_to :revoker, class_name: 'Users::User', optional: true
     belongs_to :guest, class_name: 'Users::User', optional: true
-    has_one :entry_time, as: :visitable, dependent: :destroy
 
     before_validation :attach_community
     validates :name, presence: true

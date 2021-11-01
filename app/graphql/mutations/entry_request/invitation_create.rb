@@ -21,10 +21,11 @@ module Mutations
           user = context[:site_community].users.find_by(id: vals[:guest_id])
 
           guest = check_or_create_guest(vals, user)
-          generate_request(vals, guest)
+          request = generate_request(vals, guest)
           invite = context[:current_user].invite_guest(guest.id)
 
           entry_time = generate_entry_time(vals.except(:guest_id, :name, :phone_number, :email), invite)
+          GuestQrCodeJob.perform_now(context[:current_user], guest.email, request, 'verify')
           return { entry_time: entry_time } if entry_time
 
         rescue ActiveRecord::RecordNotUnique
@@ -37,7 +38,7 @@ module Mutations
       def generate_entry_time(vals, invite)
         return if invite.nil?
 
-        invitation = context[:current_user].invites.find_by(id: invite.id)
+        invitation = context[:current_user].invitees.find_by(id: invite.id)
 
         unless invitation.entry_time.nil?
           return invitation.entry_time if invitation.entry_time.update!(vals)
@@ -57,7 +58,7 @@ module Mutations
       def generate_request(vals, guest)
         return if guest.nil?
 
-        req = context[:current_user].entry_requests.find_by(guest_id: guest.id)
+        req = context[:site_community].entry_requests.find_by(guest_id: guest.id)
         return req unless req.nil?
 
         context[:current_user].entry_requests.create!(

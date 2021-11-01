@@ -8,13 +8,13 @@ require 'host_env'
 class GuestQrCodeJob < ApplicationJob
   queue_as :default
 
-  def perform(current_user, guest_email, entry_req)
+  def perform(current_user, guest_email, entry_req, type)
     template = current_user.community.email_templates.find_by(name: 'Guest QR Code')
     return unless template
 
     base_url = HostEnv.base_url(current_user.community)
     qr_code_url = 'https://api.qrserver.com/v1/create-qr-code/' \
-                  "?data=#{CGI.escape("https://#{base_url}/request/#{entry_req.id}?type=scan")}&size=256x256"
+                  "?data=#{CGI.escape("https://#{base_url}/request/#{entry_req.id}?type=#{type}")}&size=256x256"
 
     template_data = [
       { key: '%community_name%', value: current_user.community.name },
