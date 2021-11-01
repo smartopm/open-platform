@@ -83,7 +83,6 @@ export default function IDCapture({ handleNext }) {
 
   return (
     <>
-      {console.log(requestContext.request.isEdit)}
       <MessageAlert
         type={!errorDetails.isError ? 'success' : 'error'}
         message={errorDetails.message}
