@@ -158,7 +158,8 @@
       "image_captured": "Images added successfully",
       "next_step": "Next",
       "save_my_id": "Save My ID",
-      "update": "Update"
+      "update": "Update",
+      "image_updated": "Images successfully updated"
     },
     "review_screen": {
       "success_message": "Details Submtted Successfully",

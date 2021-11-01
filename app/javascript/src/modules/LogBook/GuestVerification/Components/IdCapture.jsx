@@ -44,10 +44,12 @@ export default function IDCapture({ handleNext }) {
 
     setLoading(true);
     updateRequest({ variables: { id: requestContext.request.id, imageBlobIds: blobIds } })
-      .then(({data}) => {
+      .then(({ data }) => {
         setDetails({
           ...errorDetails,
-          message: requestContext.request.isEdit ? "Images successfully updated" : t('image_capture.image_captured'),
+          message: requestContext.request.isEdit
+            ? t('image_capture.image_updated')
+            : t('image_capture.image_captured'),
           isError: false
         });
         requestContext.updateRequest({
@@ -146,10 +148,12 @@ export default function IDCapture({ handleNext }) {
             color="primary"
             onClick={handleContinue}
             disabled={(!backBlobId || !frontBlobId) && !images}
-            data-testid={requestContext.request.isEdit ? "update" : "save_and_next"}
+            data-testid={requestContext.request.isEdit ? 'update' : 'save_and_next'}
             startIcon={loading && <Spinner />}
           >
-            {requestContext.request.isEdit  ? t('image_capture.update') : t('image_capture.next_step')}
+            {requestContext.request.isEdit
+              ? t('image_capture.update')
+              : t('image_capture.next_step')}
           </Button>
           {!requestContext.isGuestRequest && !requestContext.request.isEdit && (
             <Button
