@@ -53,6 +53,7 @@ export default function RequestConfirmation({ handleGotoStep }) {
         setLoading(false);
       })
       .catch(error => {
+        console.log(error)
         setDetails({ ...errorDetails, isError: true, message: error.message });
         setLoading(false);
       });
@@ -183,7 +184,7 @@ export default function RequestConfirmation({ handleGotoStep }) {
                 </Grid>
               </>
         ) : (
-          <Grid item xs={12}>
+          <Grid item xs={12} data-testid='no-image'>
             <Typography>{t('review_screen.no_image')}</Typography>
           </Grid>
         )}
@@ -211,7 +212,7 @@ export default function RequestConfirmation({ handleGotoStep }) {
                 <Video src={requestContext.request?.videoUrl} />
               </Grid>
             ) : (
-              <Grid item xs={12}>
+              <Grid item xs={12} data-testid='no-video'>
                 <Typography>{t('review_screen.no_video')}</Typography>
               </Grid>
             )}
