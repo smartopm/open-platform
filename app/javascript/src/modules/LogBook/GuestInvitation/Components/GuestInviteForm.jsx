@@ -25,12 +25,26 @@ export default function GuestInviteForm({ guest }) {
     });
   }
 
-  function handleChangeOccurrence() {}
+  function handleChangeOccurrence(day) {
+    if (guestData.occursOn.includes(day)) {
+      const leftDays = guestData.occursOn.filter(d => d !== day);
+      setGuestData({
+        ...guestData,
+        occursOn: leftDays
+      });
+      return;
+    }
+    setGuestData({
+      ...guestData,
+      occursOn: [...guestData.occursOn, day]
+    });
+  }
 
   async function handleInviteGuest() {
     // enroll user as a visitor
     // create a request for that user
     // then invite them
+    // TODO:  add validation
     setGuestData({ ...guestData, isLoading: true });
     try {
       await createInvitation({
@@ -100,7 +114,6 @@ export default function GuestInviteForm({ guest }) {
             inputProps={{ 'data-testid': 'guest_entry_phone_number' }}
             margin="normal"
           />
-          <br />
         </>
       )
     }
