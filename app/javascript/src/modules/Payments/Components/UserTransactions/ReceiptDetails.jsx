@@ -183,7 +183,7 @@ export default function ReceiptDetail({ paymentData, currencyData, planDetail })
                         '-'}
               </Grid>
             </Grid>
-
+            {authState.user.userType === 'admin' && (
             <Grid container spacing={1}>
               <Grid item xs={12} style={{ color: '#9B9B9B' }}>
                 {t('common:misc.signature')}
@@ -200,6 +200,7 @@ export default function ReceiptDetail({ paymentData, currencyData, planDetail })
                 </div>
               </Grid>
             </Grid>
+            )}
           </Grid>
           <Grid item xs={5}>
             <Grid container spacing={1}>
