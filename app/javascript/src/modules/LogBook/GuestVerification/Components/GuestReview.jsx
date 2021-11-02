@@ -53,7 +53,6 @@ export default function RequestConfirmation({ handleGotoStep }) {
         setLoading(false);
       })
       .catch(error => {
-        console.log(error)
         setDetails({ ...errorDetails, isError: true, message: error.message });
         setLoading(false);
       });
