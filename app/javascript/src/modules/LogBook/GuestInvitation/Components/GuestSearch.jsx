@@ -1,6 +1,6 @@
 import { Grid, Container, Button, Typography } from '@material-ui/core';
-import React, { useEffect, useState } from 'react';
-import { useLazyQuery } from 'react-apollo';
+import React, { useState } from 'react';
+import { useQuery } from 'react-apollo';
 import { useTranslation } from 'react-i18next';
 import AddIcon from '@material-ui/icons/Add';
 import CenteredContent from '../../../../shared/CenteredContent';
@@ -18,23 +18,18 @@ export default function GuestSearch() {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [guest, setGuest] = useState({ id: '', name: '', email: '', phoneNumber: '' });
   const debouncedValue = useDebounce(searchValue, 500);
-  const [loadGuest, { data, loading, error }] = useLazyQuery(SearchGuestsQuery, {
+  const { data, loading, error } = useQuery(SearchGuestsQuery, {
     variables: { query: debouncedValue },
     fetchPolicy: 'network-only'
   });
   const { t } = useTranslation('common');
+
 
   const entriesHeaders = [
     { title: 'Avatar', col: 1, value: t('guest.guest_name') },
     { title: 'GuestName', col: 4, value: t('guest.guest_name') },
     { title: 'Action', col: 4, value: t('guest.access_action') }
   ];
-
-  useEffect(() => {
-    if (debouncedValue) {
-      loadGuest();
-    }
-  }, [debouncedValue]);
 
   function inviteGuest(guestUser) {
     setGuest(guestUser);
@@ -67,7 +62,7 @@ export default function GuestSearch() {
         <br />
         {loading && <Spinner />}
         {!loading &&
-          !error &&
+          !error && searchValue &&
           data?.searchGuests?.map(guestData => (
             <DataList
               key={guestData.id}
@@ -88,14 +83,14 @@ export default function GuestSearch() {
         )}
         <br />
 
-        {!data?.searchGuests?.length && (
+        {(!data || !searchValue) && (
           <CenteredContent>
             <Button
               variant="contained"
               color="primary"
               data-testid="invite_btn"
               startIcon={<AddIcon />}
-              onClick={() => setDialogOpen(true)}
+              onClick={() => inviteGuest(null)}
             >
               Invite New Guest
             </Button>

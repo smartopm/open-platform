@@ -75,7 +75,7 @@ module Types::Queries::User
     end
 
     field :search_guests, [Types::UserType], null: true do
-      argument :query, String, required: true
+      argument :query, String, required: false
       description 'Get a list of visitors to be invited'
     end
   end

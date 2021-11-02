@@ -127,6 +127,9 @@ export default function GuestInviteForm({ guest }) {
     </>
   );
 }
+GuestInviteForm.defaultProps = {
+  guest: null
+}
 
 GuestInviteForm.propTypes = {
   guest: PropTypes.shape({
@@ -134,5 +137,5 @@ GuestInviteForm.propTypes = {
     name: PropTypes.string,
     email: PropTypes.string,
     phoneNumber: PropTypes.string,
-  }).isRequired
+  })
 }

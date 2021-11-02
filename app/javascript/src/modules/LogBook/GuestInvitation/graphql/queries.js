@@ -26,7 +26,7 @@ export const InvitedGuestsQuery = gql`
 `;
 
 export const SearchGuestsQuery = gql`
-  query searchGuest($query: String!) {
+  query searchGuest($query: String) {
     searchGuests(query: $query) {
       id
       name
