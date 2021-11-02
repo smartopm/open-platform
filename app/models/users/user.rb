@@ -114,9 +114,9 @@ module Users
     has_one :request, class_name: 'Logs::EntryRequest', foreign_key: :guest_id,
                       dependent: :destroy, inverse_of: 'guest'
     has_many :invites, class_name: 'Logs::Invite', foreign_key: :guest_id,
-                       dependent: :destroy, inverse_of: 'guest'
+                       dependent: :destroy
     has_many :invitees, class_name: 'Logs::Invite', foreign_key: :host_id,
-                        dependent: :destroy, inverse_of: 'guest'
+                        dependent: :destroy
     has_one_attached :avatar
     has_one_attached :document
 

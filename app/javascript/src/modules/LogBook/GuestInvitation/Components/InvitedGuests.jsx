@@ -4,25 +4,39 @@ import { useQuery } from 'react-apollo';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router';
 import FloatButton from '../../../../components/FloatButton';
-import CenteredContent from '../../../../shared/CenteredContent';
+import DataList from '../../../../shared/list/DataList';
 import { Spinner } from '../../../../shared/Loading';
 import SearchInput from '../../../../shared/search/SearchInput';
-import { formatError } from '../../../../utils/helpers';
 import useDebounce from '../../../../utils/useDebounce';
-import GuestBook from '../../Components/GuestBook';
-import { InvitedGuestsQuery } from '../graphql/queries';
+import { MyInvitedGuestsQuery } from '../graphql/queries';
+import RenderMyGuest from './RenderMyGuest';
 
+// WIP ==> refactor to use cards instead of datalist
 export default function InvitedGuests() {
   const history = useHistory();
   const [searchValue, setSearchValue] = useState('');
   const debouncedValue = useDebounce(searchValue, 500);
-  const { data, loading, error } = useQuery(InvitedGuestsQuery, {
-      variables: { query: debouncedValue },
+  const { data, loading } = useQuery(MyInvitedGuestsQuery, {
+    variables: { query: debouncedValue },
     fetchPolicy: 'network-only'
   });
-  const { t } = useTranslation('logbook')
+  const { t } = useTranslation('logbook');
 
-  function handleAddObservation() {}
+  const entriesHeaders = [
+    { title: 'Guest Name', col: 4, value: t('guest.guest_name') },
+    { title: 'Start of Visit', col: 2, value: t('guest.start_of_visit') },
+    { title: 'End of Visit', col: 2, value: t('guest.end_of_visit') },
+    { title: 'Access Time', col: 1, value: t('guest.access_time') },
+    { title: 'Status', col: 1, value: t('guest.validity') },
+    { title: 'validity', col: 1, value: t('guest.validity') },
+    { title: 'Access Action', col: 1, value: t('guest.access_action') }
+  ];
+
+  function handleGrantAccess() {}
+  const loadingStatus = {
+    loading: false,
+    currentId: null
+  };
   return (
     <Container maxWidth="xl">
       <Grid container>
@@ -40,15 +54,21 @@ export default function InvitedGuests() {
       <br />
       <br />
       {loading && <Spinner />}
-      {!error && !loading ? (
-        <GuestBook
-          handleAddObservation={handleAddObservation}
-          invitedGuests={data?.invitedGuestList}
+
+      {data?.myGuests?.map(invite => (
+        <DataList
+          key={invite.id}
+          keys={entriesHeaders}
+          data={RenderMyGuest(invite, handleGrantAccess, false, loadingStatus, t, 'Africa/Lusaka')}
+          hasHeader={false}
+          clickable={false}
+          defaultView={false}
         />
-      ) : (
-        <CenteredContent>{formatError(error?.message)}</CenteredContent>
-      )}
-      <FloatButton title={t('guest.invite_guest')} handleClick={() => history.push('/logbook/guests/invite')} />
+      ))}
+      <FloatButton
+        title={t('guest.invite_guest')}
+        handleClick={() => history.push('/logbook/guests/invite')}
+      />
     </Container>
   );
 }

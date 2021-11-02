@@ -78,6 +78,11 @@ module Types::Queries::User
       argument :query, String, required: false
       description 'Get a list of visitors to be invited'
     end
+
+    field :my_guests, [Types::InviteType], null: true do
+      argument :query, String, required: false
+      description 'Get a list of visitors that I invited'
+    end
   end
   # rubocop:enable Metrics/BlockLength
 
@@ -284,6 +289,22 @@ module Types::Queries::User
                .order(name: :asc)
                .limit(1).with_attached_avatar
   end
+
+  def my_guests(query: nil)
+    unless ::Policy::ApplicationPolicy.new(
+      context[:current_user], nil
+    ).permission?(
+      admin: true,
+      module: :user,
+      permission: :can_view_guests,
+    )
+      raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
+    end
+    context[:current_user].invitees
+                          .includes(:guest, :host, :entry_time)
+                          .search(query)
+  end
+
 
   def user_permissions_check?
     ::Policy::ApplicationPolicy.new(

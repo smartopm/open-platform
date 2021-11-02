@@ -9,5 +9,6 @@ module Types
     field :host_id, ID, null: true
     field :guest_id, ID, null: true
     field :entry_time, Types::EntryTimeType, null: true
+    field :guest, Types::UserType, null: true
   end
 end
