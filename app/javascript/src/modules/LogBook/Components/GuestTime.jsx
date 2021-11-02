@@ -7,7 +7,7 @@ import DatePickerDialog, { ThemedTimePicker } from '../../../components/DatePick
 export default function GuestTime({ userData, handleChange, handleChangeOccurrence, disableEdit }) {
   const { t } = useTranslation(['logbook', 'common', 'days']);
   return (
-    <Grid container direction="row" spacing={4}>
+    <Grid container direction="row" spacing={2}>
       <Grid item xs={12}>
         <DatePickerDialog
           selectedDate={userData.visitationDate}
@@ -15,6 +15,7 @@ export default function GuestTime({ userData, handleChange, handleChangeOccurren
           label={t('common:misc.day_of_visit')}
           inputProps={{ 'data-testid': 'day_of_visit_input' }}
           disabled={disableEdit()}
+          inputVariant="outlined"
         />
         <br />
       </Grid>
@@ -25,6 +26,8 @@ export default function GuestTime({ userData, handleChange, handleChangeOccurren
           label={t('common:misc.start_time')}
           inputProps={{ 'data-testid': 'start_time_input' }}
           disabled={disableEdit()}
+          inputVariant="outlined"
+          fullWidth
         />
       </Grid>
       <Grid item xs={6}>
@@ -34,6 +37,8 @@ export default function GuestTime({ userData, handleChange, handleChangeOccurren
           label={t('common:misc.end_time')}
           inputProps={{ 'data-testid': 'end_time_input' }}
           disabled={disableEdit()}
+          inputVariant="outlined"
+          fullWidth
         />
       </Grid>
       <Grid item xs={12} md={6}>
@@ -64,6 +69,7 @@ export default function GuestTime({ userData, handleChange, handleChangeOccurren
           inputProps={{ 'data-testid': 'repeats_until_input' }}
           disablePastDate
           disabled={disableEdit()}
+          inputVariant="outlined"
         />
       )}
       </Grid>
