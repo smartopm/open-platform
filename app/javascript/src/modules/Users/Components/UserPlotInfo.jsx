@@ -158,7 +158,9 @@ UserPlotInfo.propTypes = {
   userName: PropTypes.string.isRequired,
   currentUser: PropTypes.shape({
     permissions: PropTypes.shape({
-      land_parcel: PropTypes.arrayOf()
+      land_parcel: PropTypes.shape({
+        permissions: PropTypes.arrayOf(PropTypes.string)
+      })
     })
   }).isRequired
 };
