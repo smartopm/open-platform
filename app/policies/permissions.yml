@@ -61,6 +61,7 @@ admin:
       - can_view_entry_requests
       - can_view_entry_request
       - can_revoke_entry_request
+      - can_invite_guest
   gate_access:
     permissions:
       - can_see_menu_item
@@ -229,6 +230,7 @@ custodian:
       - can_view_entry_requests
       - can_view_entry_request
       - can_revoke_entry_request
+      - can_invite_guest
   guest_list:
     permissions:
       - can_see_menu_item
@@ -252,6 +254,9 @@ custodian:
       - can_access_sos
       - can_raise_sos
       - can_cancel_sos
+  user:
+    permissions:
+      - can_search_guests
 security_guard:
   note:
     permissions:
@@ -282,6 +287,7 @@ security_guard:
       - can_add_entry_request_note
       - can_view_entry_requests
       - can_view_entry_request
+      - can_invite_guest
   gate_access:
     permissions:
       - can_see_menu_item
@@ -300,6 +306,9 @@ security_guard:
       - can_access_sos
       - can_raise_sos
       - can_cancel_sos
+  user:
+    permissions:
+      - can_search_guests
 site_worker:
   note:
     permissions:
@@ -342,6 +351,7 @@ resident:
       - can_update_entry_request
       - can_view_entry_requests
       - can_view_entry_request
+      - can_invite_guest
   guest_list:
     permissions:
       - can_see_menu_item
@@ -354,6 +364,7 @@ resident:
       - can_send_one_time_login
       - can_view_own_profile
       - can_edit_own_profile
+      - can_search_guests
   profile:
     permissions:
       - can_see_menu_item
@@ -387,6 +398,7 @@ client:
       - can_view_entry_requests
       - can_view_entry_request
       - can_revoke_entry_request
+      - can_invite_guest
   guest_list:
     permissions:
       - can_see_menu_item
@@ -399,6 +411,7 @@ client:
       - can_send_one_time_login
       - can_view_own_profile
       - can_edit_own_profile
+      - can_search_guests
   profile:
     permissions:
       - can_see_menu_item

@@ -113,7 +113,9 @@ module Types::Queries::EntryRequest
   # rubocop:enable Metrics/AbcSize
 
   def invited_guest_list(offset: 0, limit: 50, query: nil)
-    raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') unless context[:current_user]
+    unless admin_or_security_guard || entry_request_permissions_check?
+      raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
+    end
 
     context[:site_community].entry_requests
                             .where.not(guest_id: nil)
