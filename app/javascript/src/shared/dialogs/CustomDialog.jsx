@@ -12,7 +12,7 @@ export default function CustomDialog({ open, handleDialogStatus, children, actio
     <>
       <Dialog
         fullWidth
-        maxWidth="lg"
+        maxWidth="md"
         open={open}
         onClose={handleDialogStatus}
         aria-labelledby="custom-dialog-title"

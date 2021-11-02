@@ -107,7 +107,6 @@ export default function GuestInviteForm({ guest }) {
       {!guest?.id && (
         <>
           <TextField
-            className="form-control"
             variant="outlined"
             type="text"
             value={guestData.name}
@@ -116,11 +115,11 @@ export default function GuestInviteForm({ guest }) {
             name="name"
             inputProps={{ 'data-testid': 'guest_entry_name' }}
             margin="normal"
+            fullWidth
             required
             {...validate('name')}
           />
           <TextField
-            className="form-control"
             variant="outlined"
             type="email"
             value={guestData.email}
@@ -130,9 +129,10 @@ export default function GuestInviteForm({ guest }) {
             inputProps={{ 'data-testid': 'guest_entry_email' }}
             margin="normal"
             {...validate('email')}
+            fullWidth
+            required
           />
           <TextField
-            className="form-control"
             variant="outlined"
             type="text"
             value={guestData.phoneNumber}
@@ -142,6 +142,8 @@ export default function GuestInviteForm({ guest }) {
             inputProps={{ 'data-testid': 'guest_entry_phone_number' }}
             margin="normal"
             {...validate('phoneNumber')}
+            fullWidth
+            required
           />
         </>
       )}
