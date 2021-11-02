@@ -17,9 +17,9 @@ describe('Guest Invitation Form', () => {
   it('should render the invitation form', async () => {
     const guest = {
       id: null,
-      name: '',
-      email: '',
-      phoneNumber: '',
+      name: '342',
+      email: '232',
+      phoneNumber: '232',
       visitationDate: null,
       startsAt: null,
       endsAt: null,
@@ -52,7 +52,7 @@ describe('Guest Invitation Form', () => {
         }
       }
     };
-    const { getByTestId, queryByText } = render(
+    const { getByTestId, queryAllByText } = render(
       <MemoryRouter>
         <MockedProvider mocks={[createInviteMock]} addTypename={false}>
           <GuestInviteForm guest={guest} />
@@ -81,8 +81,9 @@ describe('Guest Invitation Form', () => {
     fireEvent.click(getByTestId('invite_button'));
 
     await waitFor(() => {
-      expect(queryByText('Successfully invited a guest')).toBeInTheDocument();
-      expect(mockHistory.push).toBeCalled();
-    }, 500);
+      expect(queryAllByText('logbook:errors.required_field')[0]).toBeInTheDocument();
+      expect(queryAllByText('logbook:errors.required_field')).toHaveLength(3);
+      expect(mockHistory.push).not.toBeCalled(); // due to failure in validation
+    }, 10);
   });
 });

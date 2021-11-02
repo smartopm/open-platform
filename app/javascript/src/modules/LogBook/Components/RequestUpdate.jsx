@@ -215,7 +215,8 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
       // return reason if not other
       reason: formData.business || formData.reason,
       isGuest: guestListRequest,
-      visitationDate: previousRoute !== 'entry_logs' ? formData.visitationDate : null
+      visitationDate: previousRoute !== 'entry_logs' ? formData.visitationDate : null,
+      startsAt: formData.startsAt || new Date() // initial value is null
     }
     if(requestContext.request.id && communityName !== 'Nkwashi'){
       handleNext()

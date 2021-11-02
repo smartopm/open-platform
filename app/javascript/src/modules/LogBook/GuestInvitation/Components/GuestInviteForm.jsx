@@ -48,7 +48,7 @@ export default function GuestInviteForm({ guest }) {
     });
   }
 
-  async function handleInviteGuest() {
+   function handleInviteGuest() {
     // enroll user as a visitor
     // create a request for that user
     // then invite them
@@ -58,27 +58,29 @@ export default function GuestInviteForm({ guest }) {
       return;
     }
     setGuestData({ ...guestData, isLoading: true });
-    try {
-      await createInvitation({
-        variables: {
-          guestId: guest?.id,
-          name: guestData.name || guest.name,
-          email: guestData.email || guest.email,
-          phoneNumber: guestData.phoneNumber || guest.phoneNumber,
-          visitationDate: guestData.visitationDate,
-          startsAt: guestData.startsAt,
-          endsAt: guestData.endsAt,
-          occursOn: guestData.occursOn,
-          visitEndDate: guestData.visitEndDate
-        }
+
+    createInvitation({
+      variables: {
+        guestId: guest?.id,
+        name: guestData.name || guest.name,
+        email: guestData.email || guest.email,
+        phoneNumber: guestData.phoneNumber || guest.phoneNumber,
+        visitationDate: guestData.visitationDate,
+        startsAt: guestData.startsAt,
+        endsAt: guestData.endsAt,
+        occursOn: guestData.occursOn,
+        visitEndDate: guestData.visitEndDate
+      }
+    })
+      .then(() => {
+        setGuestData({ ...guestData, isLoading: false });
+        setDetails({ ...details, message: t('guest.guest_invited') });
+        setTimeout(() => history.push('/logbook/guests'), 500);
+      })
+      .catch(error => {
+        setGuestData({ ...guestData, isLoading: false });
+        setDetails({ ...details, message: formatError(error.message), isError: true });
       });
-      setGuestData({ ...guestData, isLoading: false });
-      setDetails({ ...details, message: t('guest.guest_invited') });
-      setTimeout(() => history.push('/logbook/guests'), 500);
-    } catch (error) {
-      setGuestData({ ...guestData, isLoading: false });
-      setDetails({ ...details, message: formatError(error.message), isError: true });
-    }
   }
 
   // Fixes the eslint maximum complexity issue
