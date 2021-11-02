@@ -7,8 +7,6 @@ describe('Floating Button', () => {
     const mock = jest.fn();
     const btn = render(<FloatingButton data-testid="float-btn" color="primary" handleClick={mock} />);
 
-    screen.debug()
-  
     expect(btn.queryByTestId('float-btn')).toBeTruthy();
 
     fireEvent.click(btn.queryByTestId('float-btn'))
