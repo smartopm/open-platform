@@ -15,7 +15,7 @@ import { paymentType } from '../../../../utils/constants';
 import { Context as AuthStateContext } from '../../../../containers/Provider/AuthStateProvider';
 import CommunityName from '../../../../shared/CommunityName';
 
-export default function ReceiptDetail({ paymentData, currencyData, planDetail }) {
+export default function ReceiptDetail({ paymentData, currencyData }) {
   const signRef = useRef(null);
   const classes = useStyles();
   const matches = useMediaQuery('(max-width:600px)');
@@ -27,7 +27,7 @@ export default function ReceiptDetail({ paymentData, currencyData, planDetail })
       <CommunityName authState={authState} logoStyles={logoStyles} />
       <Typography className={classes.receiptNumber}>
         {t('misc.receipt_#')}
-        {paymentData?.receiptNumber || planDetail?.receiptNumber}
+        {paymentData?.receiptNumber}
       </Typography>
       <div>
         <Grid container>
@@ -159,14 +159,14 @@ export default function ReceiptDetail({ paymentData, currencyData, planDetail })
           <Divider className={classes.divider} />
           <Grid container spacing={1}>
             <Grid item xs={4} className={classes.title}>
-              {paymentData?.paymentPlan?.landParcel?.parcelNumber || planDetail?.paymentPlan?.landParcel?.parcelNumber}
+              {paymentData?.paymentPlan?.landParcel?.parcelNumber}
             </Grid>
             <Grid item xs={4} className={classes.title} style={{ textAlign: 'center' }}>
               {objectAccessor(paymentType, paymentData.source) ||
                       objectAccessor(paymentType, paymentData?.userTransaction?.source)}
             </Grid>
             <Grid item xs={4} className={classes.title} style={{ textAlign: 'right' }}>
-              {formatMoney(currencyData, (planDetail?.amount || paymentData?.amount))}
+              {formatMoney(currencyData, (paymentData?.amount))}
             </Grid>
           </Grid>
         </div>
@@ -208,7 +208,7 @@ export default function ReceiptDetail({ paymentData, currencyData, planDetail })
                 {t('misc.expected_monthly_payment')}
               </Grid>
               <Grid item xs={4} data-testid="expected-monthly-amount" className={classes.title} style={{ textAlign: 'right' }}>
-                {formatMoney(currencyData, (paymentData?.paymentPlan?.installmentAmount || planDetail?.paymentPlan?.installmentAmount))}
+                {formatMoney(currencyData, paymentData?.paymentPlan?.installmentAmount)}
               </Grid>
             </Grid>
             <Grid container spacing={1}>
@@ -222,7 +222,7 @@ export default function ReceiptDetail({ paymentData, currencyData, planDetail })
                 className={classes.title}
                 style={{ textAlign: 'right' }}
               >
-                {formatMoney(currencyData, (planDetail?.amount || paymentData?.amount))}
+                {formatMoney(currencyData, paymentData?.amount)}
               </Grid>
             </Grid>
             <Grid container spacing={1}>
@@ -230,7 +230,7 @@ export default function ReceiptDetail({ paymentData, currencyData, planDetail })
                 {t('misc.total_balance_remaining')}
               </Grid>
               <Grid item xs={4} className={classes.title} style={{ textAlign: 'right' }}>
-                {formatMoney(currencyData, (paymentData.currentPlotPendingBalance || planDetail?.currentPlotPendingBalance || 0.0))}
+                {formatMoney(currencyData, paymentData.currentPlotPendingBalance)}
               </Grid>
             </Grid>
             <Grid container spacing={1}>
@@ -342,25 +342,10 @@ const logoStyles = StyleSheet.create({
 });
 
 ReceiptDetail.defaultProps = {
-  paymentData: {},
-  planDetail: {}
+  paymentData: {}
 };
 
 ReceiptDetail.propTypes = {
-  planDetail: PropTypes.shape({
-    id: PropTypes.string,
-    amount: PropTypes.number,
-    receiptNumber: PropTypes.string,
-    currentPlotPendingBalance: PropTypes.number,
-    paymentPlan: PropTypes.shape({
-      id: PropTypes.string,
-      installmentAmount: PropTypes.number,
-      landParcel: PropTypes.shape({
-        id: PropTypes.string,
-        parcelNumber: PropTypes.string
-      })
-    })
-  }),
   paymentData: PropTypes.shape({
     id: PropTypes.string,
     source: PropTypes.string,
