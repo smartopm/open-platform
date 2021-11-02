@@ -10,6 +10,7 @@ import UserActions from './Components/UserActions'
 import Preferences from '../Preferences/Components/Notifications'
 import { allUserTypes } from '../../utils/constants';
 import AccessCheck from '../Permissions/Components/AccessCheck';
+import LogBook from '../LogBook/Components/LogBook'
 
 // name in here is only used as key in routes, make sure it is unique
 
@@ -139,6 +140,15 @@ const routes = [
     accessibleBy: allUserTypes,
     name: 'Preferences',
     featureName: 'Preferences'
+  },
+  {
+    routeProps: {
+      path: '/logbook',
+      component: LogBook
+    },
+    accessibleBy: allUserTypes,
+    name: 'log_book',
+    featureName: 'LogBook'
   }
 ];
 
