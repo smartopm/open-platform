@@ -177,6 +177,9 @@ admin:
       - can_update_discussion
       - can_access_all_discussions
       - can_see_menu_item
+  comment:
+    permissions:
+      - can_fetch_all_comments
 contractor:
   note:
     permissions:
