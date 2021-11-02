@@ -414,7 +414,6 @@ export function IndexComponent({
           {data && data.result.map(user => <LogView key={user.id} user={user} />)}
         </TabPanel>
         <TabPanel value={tabValue} index={2}>
-          { console.log(tabValue) }
           <GuestBook
             tabValue={tabValue}
             handleAddObservation={handleAddObservation}
