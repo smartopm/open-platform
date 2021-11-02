@@ -5,7 +5,7 @@ import { objectAccessor } from "../../utils/helpers"
  * @returns {boolean}
  */
  const business = { module: 'business' }
-  export function canCreateBusiness({authState}){
+  export function canCreateBusiness(authState){
     if (!authState) return false;
     const modulePermissions = objectAccessor(authState.user?.permissions, business.module)
     if (!modulePermissions) return false;
@@ -13,7 +13,7 @@ import { objectAccessor } from "../../utils/helpers"
   }
 
 
-  export function canDeleteBusiness({authState}){
+  export function canDeleteBusiness(authState){
     if (!authState) return false;
     const modulePermissions = objectAccessor(authState.user?.permissions, business.module)
     if (!modulePermissions) return false;

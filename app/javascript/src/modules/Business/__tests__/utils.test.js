@@ -28,20 +28,20 @@ describe('Create Business UI accessiblity check', () => {
 
 
   it('returns true if user has all allowed permissions to create business', () => {
-    const createBusiness = canCreateBusiness({authState});
+    const createBusiness = canCreateBusiness(authState);
 
     expect(createBusiness).toEqual(true);
   });
 
   it('returns false if user does not have permissions', () => {
-    const createBusiness = canCreateBusiness({authState: authStateWithoutPermissions});
+    const createBusiness = canCreateBusiness(authStateWithoutPermissions);
 
     expect(createBusiness).toEqual(false);
   });
 
   describe('when missing params', () => {
     it('handles missing authState prop', () => {
-      const createBusiness = canCreateBusiness({});
+      const createBusiness = canCreateBusiness();
 
       expect(createBusiness).toEqual(false);
     });
@@ -76,20 +76,20 @@ describe('Delete Business UI accessiblity check', () => {
   
   
     it('returns true if user has all allowed permissions to delete business', () => {
-      const deleteBusiness = canDeleteBusiness({authState});
+      const deleteBusiness = canDeleteBusiness(authState);
   
       expect(deleteBusiness).toEqual(true);
     });
   
     it('returns false if user does not have permissions', () => {
-      const deleteBusiness = canDeleteBusiness({authState: authStateWithoutPermissions});
+      const deleteBusiness = canDeleteBusiness(authStateWithoutPermissions);
   
       expect(deleteBusiness).toEqual(false);
     });
   
     describe('when missing params', () => {
       it('handles missing authState prop', () => {
-        const deleteBusiness = canDeleteBusiness({});
+        const deleteBusiness = canDeleteBusiness();
   
         expect(deleteBusiness).toEqual(false);
       });

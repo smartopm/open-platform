@@ -103,7 +103,7 @@ export default function BusinessList({ businessData, authState, refetch }) {
               </Box>
               <Divider variant="middle" />
             </Link>
-            {canDeleteBusiness({authState}) && (
+            {canDeleteBusiness(authState) && (
               <IconButton
                 aria-label={`more-${business.name}`}
                 aria-controls="long-menu"
@@ -129,7 +129,7 @@ export default function BusinessList({ businessData, authState, refetch }) {
         ))}
       </List>
 
-      {canCreateBusiness({authState}) && (
+      {canCreateBusiness(authState) && (
         <Fab
           variant="extended"
           onClick={openModal}
