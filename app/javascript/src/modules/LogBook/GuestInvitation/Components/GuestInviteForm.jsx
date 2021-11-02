@@ -53,7 +53,7 @@ export default function GuestInviteForm({ guest }) {
     // create a request for that user
     // then invite them
     const isAnyInvalid = checkInValidRequiredFields(guestData, requiredFields);
-    if (isAnyInvalid) {
+    if (isAnyInvalid && !guest?.id) {
       setInputValidationMsg({ isError: true });
       return;
     }

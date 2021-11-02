@@ -66,7 +66,7 @@ describe('Invited Guests Component', () => {
 
     expect(search).toBeInTheDocument();
 
-    expect(queryByText('Invite a Guest')).toBeInTheDocument();
+    expect(queryByText('guest.invite_guest')).toBeInTheDocument();
 
     await waitFor(() => {
       expect(queryAllByText('Test two')[0]).toBeInTheDocument();
