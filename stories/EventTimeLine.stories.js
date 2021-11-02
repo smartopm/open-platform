@@ -1,6 +1,6 @@
 import React from 'react'
 import { startOfToday, startOfWeek, startOfYesterday } from 'date-fns'
-import EventTimeLine from '../app/javascript/src/components/TimeLine'
+import EventTimeLine from '../app/javascript/src/shared/TimeLine'
 
 export default {
   title: 'Components/EventTimeLine',

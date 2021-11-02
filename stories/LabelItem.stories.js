@@ -1,5 +1,5 @@
 import React from 'react'
-import LabelItem from '../app/javascript/src/components/Label/LabelItem'
+import LabelItem from '../app/javascript/src/modules/Labels/Components/LabelItem'
 
 export default {
     title: 'Label/LabelItem',

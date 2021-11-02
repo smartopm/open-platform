@@ -39,16 +39,16 @@ services:
       - .:/myapp
     ports:
       - 3035:3035
-  # storybook:
-  #   image: doublegdp_rails:latest
-  #   command: bash -c "npm run storybook"
-  #   cpu_shares: 75
-  #   env_file:
-  #     - '.env.docker'
-  #   volumes:
-  #     - .:/myapp
-  #   ports:
-  #     - 6006:6006
+  storybook:
+    image: doublegdp_rails:latest
+    command: bash -c "npm run storybook"
+    cpu_shares: 75
+    env_file:
+      - '.env.docker'
+    volumes:
+      - .:/myapp
+    ports:
+      - 6006:6006
   rails_worker:
     image: doublegdp_rails:latest
     command: bash -c "bundle exec sidekiq"

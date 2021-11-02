@@ -17,7 +17,7 @@ export default function Tag({ tag, handleTagOpen }){
   Tag.defaultProps = {
     handleTagOpen: () => false
   }
-  
+
   Tag.propTypes = {
     tag:  PropTypes.string.isRequired,
     handleTagOpen: PropTypes.func,
@@ -30,4 +30,3 @@ const useStyles = makeStyles({
       marginLeft: '10px'
     }
   })
-  
