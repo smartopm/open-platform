@@ -1,11 +1,9 @@
 import React from 'react';
-import { withDesign } from 'storybook-addon-designs';
 import { Typography } from '@material-ui/core';
 
 export default {
   title: 'Components',
-  component: Typography,
-  decorators: [withDesign]
+  component: Typography
 };
 
 export const Colors = () => <Typography>Colors</Typography>;
