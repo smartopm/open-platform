@@ -25,6 +25,7 @@ export default function RenderGuest(guest, inviteGuest, translate) {
           <CenteredContent>
             <Button
               variant="contained"
+              color="primary"
               onClick={() => inviteGuest(guest)}
               disableElevation
               data-testid="grant_access_btn"

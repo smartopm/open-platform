@@ -22,6 +22,7 @@ export const defaultRequiredFields = ['name', 'phoneNumber', 'nrc', 'vehiclePlat
  * @param {String} tz
  * @returns
  */
+// eslint-disable-next-line complexity
 export function checkRequests(req, translate, tz) {
   /**
    * moved the conversion here because:

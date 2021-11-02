@@ -1,7 +1,7 @@
 import { Button, TextField } from '@material-ui/core';
 import React, { useState } from 'react';
 import { useMutation } from 'react-apollo';
-import PropTypes from 'prop-types'
+import PropTypes from 'prop-types';
 import { useHistory } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import CenteredContent from '../../../../shared/CenteredContent';
@@ -10,14 +10,20 @@ import { initialRequestState } from '../../GuestVerification/constants';
 import InvitationCreateMutation from '../graphql/mutations';
 import { Spinner } from '../../../../shared/Loading';
 import MessageAlert from '../../../../components/MessageAlert';
-import { formatError } from '../../../../utils/helpers';
+import { capitalize, formatError, objectAccessor } from '../../../../utils/helpers';
+import { checkInValidRequiredFields } from '../../utils';
+import { invitationRequiredFields as requiredFields } from '../constants';
 
 export default function GuestInviteForm({ guest }) {
-  const history = useHistory()
+  const history = useHistory();
   const [guestData, setGuestData] = useState(initialRequestState);
-  const [details, setDetails] = useState({ message: '', isError: false })
+  const [details, setDetails] = useState({ message: '', isError: false });
   const [createInvitation] = useMutation(InvitationCreateMutation);
-  const { t } = useTranslation(['logbook', 'common'])
+  const { t } = useTranslation(['logbook', 'common']);
+  const [validation, setInputValidationMsg] = useState({
+    isError: false,
+    isSubmitting: false
+  });
 
   function handleInputChange(event) {
     const { name, value } = event.target;
@@ -46,7 +52,11 @@ export default function GuestInviteForm({ guest }) {
     // enroll user as a visitor
     // create a request for that user
     // then invite them
-    // TODO:  add validation
+    const isAnyInvalid = checkInValidRequiredFields(guestData, requiredFields);
+    if (isAnyInvalid) {
+      setInputValidationMsg({ isError: true });
+      return;
+    }
     setGuestData({ ...guestData, isLoading: true });
     try {
       await createInvitation({
@@ -63,14 +73,27 @@ export default function GuestInviteForm({ guest }) {
         }
       });
       setGuestData({ ...guestData, isLoading: false });
-      setDetails({ ...details, message: t('guest.guest_invited') })
-      setTimeout(() => history.push('/logbook/guests'), 500)
+      setDetails({ ...details, message: t('guest.guest_invited') });
+      setTimeout(() => history.push('/logbook/guests'), 500);
     } catch (error) {
       setGuestData({ ...guestData, isLoading: false });
-      setDetails({ ...details, message: formatError(error.message), isError: true })
+      setDetails({ ...details, message: formatError(error.message), isError: true });
     }
   }
 
+  // Fixes the eslint maximum complexity issue
+  function validate(field) {
+    const props = {
+      error:
+        validation.isError && requiredFields.includes(field) && !objectAccessor(guestData, field),
+      helperText:
+        validation.isError &&
+        requiredFields.includes(field) &&
+        !objectAccessor(guestData, field) &&
+        t('logbook:errors.required_field', { fieldName: capitalize(field) })
+    };
+    return props;
+  }
   return (
     <>
       <MessageAlert
@@ -79,8 +102,7 @@ export default function GuestInviteForm({ guest }) {
         open={!!details.message}
         handleClose={() => setDetails({ ...details, message: '' })}
       />
-      {
-      !guest?.id && (
+      {!guest?.id && (
         <>
           <TextField
             className="form-control"
@@ -93,6 +115,7 @@ export default function GuestInviteForm({ guest }) {
             inputProps={{ 'data-testid': 'guest_entry_name' }}
             margin="normal"
             required
+            {...validate('name')}
           />
           <TextField
             className="form-control"
@@ -104,6 +127,7 @@ export default function GuestInviteForm({ guest }) {
             name="email"
             inputProps={{ 'data-testid': 'guest_entry_email' }}
             margin="normal"
+            {...validate('email')}
           />
           <TextField
             className="form-control"
@@ -115,10 +139,10 @@ export default function GuestInviteForm({ guest }) {
             name="phoneNumber"
             inputProps={{ 'data-testid': 'guest_entry_phone_number' }}
             margin="normal"
+            {...validate('phoneNumber')}
           />
         </>
-      )
-    }
+      )}
       <GuestTime
         days={guestData.occursOn}
         userData={guestData}
@@ -144,13 +168,13 @@ export default function GuestInviteForm({ guest }) {
 }
 GuestInviteForm.defaultProps = {
   guest: null
-}
+};
 
 GuestInviteForm.propTypes = {
   guest: PropTypes.shape({
     id: PropTypes.string,
     name: PropTypes.string,
     email: PropTypes.string,
-    phoneNumber: PropTypes.string,
+    phoneNumber: PropTypes.string
   })
-}
+};
