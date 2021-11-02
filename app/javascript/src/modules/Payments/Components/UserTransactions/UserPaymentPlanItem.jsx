@@ -717,7 +717,9 @@ UserPaymentPlanItem.propTypes = {
   currentUser: PropTypes.shape({
     userType: PropTypes.string,
     permissions: PropTypes.shape({
-      payment_plan: PropTypes.arrayOf()
+      payment_plan: PropTypes.shape({
+        permissions: PropTypes.arrayOf(PropTypes.string)
+      })
     })
   }).isRequired,
   refetch: PropTypes.func.isRequired,

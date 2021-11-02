@@ -36,39 +36,12 @@ RSpec.describe Types::Queries::Comment do
             }
         })
     end
-    let(:discussions_query) do
-      %(query {
-              discussions {
-                  id
-                  title
-                  postId
-                }
-        })
-    end
 
-    let(:discussion_post_query) do
-      %(query {
-          postDiscussion(postId:"#{user_discussion.post_id}") {
-            title
-            postId
-            id
-          }
-        })
-    end
     let(:discussion_comments_query) do
       %(query {
             discussComments(id: "#{user_discussion.id}") {
               content
               discussionId
-              id
-            }
-        })
-    end
-
-    let(:discussion_query) do
-      %(query {
-            discussion(id: "#{user_discussion.id}") {
-              title
               id
             }
         })
@@ -94,33 +67,6 @@ RSpec.describe Types::Queries::Comment do
       expect(result.dig('data', 'postComments', 0, 'discussionId')).to eql user_discussion.id
       expect(result.dig('data', 'postComments', 0, 'content')).to eql 'This is an awesome comment'
       expect(result.dig('data', 'postComments', 0, 'user', 'id')).to eql current_user.id
-    end
-
-    it 'should retrieve list of discussions' do
-      result = DoubleGdpSchema.execute(discussions_query,
-                                       context: {
-                                         current_user: current_user,
-                                         site_community: current_user.community,
-                                       }).as_json
-      expect(result.dig('data', 'discussions').length).to eql 1
-      expect(result.dig('data', 'discussions', 0, 'id')).to eql another_user_discussion.id
-      expect(result.dig('data', 'discussions', 0, 'postId')).to be_nil
-      expect(result.dig('data', 'discussions', 0, 'title')).to include 'Community Discussion'
-    end
-
-    it 'should retrieve a discussion for a post id' do
-      result = DoubleGdpSchema.execute(discussion_post_query,
-                                       context: { current_user: current_user }).as_json
-      expect(result.dig('data', 'postDiscussion', 'id')).to eql user_discussion.id
-      expect(result.dig('data', 'postDiscussion', 'postId')).to eql '20'
-      expect(result.dig('data', 'postDiscussion', 'title')).to include 'Community Discussion'
-    end
-
-    it 'should retrieve single discussion' do
-      result = DoubleGdpSchema.execute(discussion_query,
-                                       context: { current_user: current_user }).as_json
-      expect(result.dig('data', 'discussion', 'id')).to eql user_discussion.id
-      expect(result.dig('data', 'discussion', 'title')).to include 'Community Discussion'
     end
 
     it 'should retrieve list of all comments' do

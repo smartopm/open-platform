@@ -45,6 +45,9 @@ const authState = {
       },
       sos: {
         permissions: ['can_access_sos']
+      },
+      discussion: {
+        permissions: ['can_see_menu_item']
       }
     }
   }

@@ -171,6 +171,15 @@ admin:
       - can_access_sos
       - can_raise_sos
       - can_cancel_sos
+  discussion:
+    permissions:
+      - can_create_discussion
+      - can_update_discussion
+      - can_access_all_discussions
+      - can_see_menu_item
+  comment:
+    permissions:
+      - can_fetch_all_comments
 contractor:
   note:
     permissions:
@@ -196,6 +205,10 @@ contractor:
       - can_access_forms
   profile:
     permissions:
+      - can_see_menu_item
+  discussion:
+    permissions:
+      - can_access_all_discussions
       - can_see_menu_item
 custodian:
   note:
@@ -363,6 +376,10 @@ resident:
       - can_access_sos
       - can_initiate_sos
       - can_cancel_sos
+  discussion:
+    permissions:
+      - can_access_all_discussions
+      - can_see_menu_item
 prospective_client:
   note:
     permissions:
@@ -372,6 +389,10 @@ prospective_client:
       - can_access_forms
   profile:
     permissions:
+      - can_see_menu_item
+  discussion:
+    permissions:
+      - can_access_all_discussions
       - can_see_menu_item
 client:
   gate_access:
@@ -402,6 +423,10 @@ client:
       - can_see_menu_item
   logout:
     permissions:
+      - can_see_menu_item
+  discussion:
+    permissions:
+      - can_access_all_discussions
       - can_see_menu_item
 
     
