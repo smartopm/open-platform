@@ -46,7 +46,7 @@ export default function BusinessActionMenu({
       }}
     >
       <div>
-        {canDeleteBusiness({authState}) && (
+        {canDeleteBusiness(authState) && (
           <>
             <MenuItem
               id="delete_button"
