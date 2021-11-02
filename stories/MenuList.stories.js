@@ -1,6 +1,6 @@
 import React from 'react'
 import MenuItem from '@material-ui/core/MenuItem'
-import MenuList from '../app/javascript/src/components/Payments/PaymentActionMenu'
+import MenuList from '../app/javascript/src/modules/Payments/Components/PaymentActionMenu'
 
 export default {
   title: 'Components/Payments/ActionMenu',
