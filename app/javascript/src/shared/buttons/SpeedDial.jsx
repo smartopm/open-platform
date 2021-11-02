@@ -1,16 +1,20 @@
 import React from 'react'
 import SpeedDial from '@material-ui/lab/SpeedDial';
+import makeStyles from '@material-ui/core/styles/makeStyles';
 import SpeedDialIcon from '@material-ui/lab/SpeedDialIcon';
 import SpeedDialAction from '@material-ui/lab/SpeedDialAction';
+import CloseIcon from '@material-ui/icons/Close';
+import AddIcon from '@material-ui/icons/Add';
 
-export default function SpeedDialButton() {
+export default function SpeedDialButton({ open, handleClose, handleOpen, direction, actions }) {
+  const classes = useStyles();
+
   return (
-    <>
+    <div className={classes.wrapper}>
       <SpeedDial
         ariaLabel="SpeedDial example"
         className={classes.speedDial}
-        hidden={hidden}
-        icon={<SpeedDialIcon />}
+        icon={actions.length ? <SpeedDialIcon data-testid="speed_dial_icon" openIcon={<CloseIcon data-testid="close_icon"  />} /> : <AddIcon data-testid="add_icon" />}
         onClose={handleClose}
         onOpen={handleOpen}
         open={open}
@@ -23,8 +27,26 @@ export default function SpeedDialButton() {
             tooltipTitle={action.name}
             onClick={handleClose}
           />
-          ))}
+        ))}
       </SpeedDial>
-    </>
+    </div>
   )
 }
+
+const useStyles = makeStyles((theme) => ({
+  wrapper: {
+    position: 'relative',
+    transform: 'translateZ(0px)'
+  },
+  speedDial: {
+    position: 'absolute',
+    '&.MuiSpeedDial-directionUp, &.MuiSpeedDial-directionLeft': {
+      bottom: theme.spacing(2),
+      right: theme.spacing(2),
+    },
+    '&.MuiSpeedDial-directionDown, &.MuiSpeedDial-directionRight': {
+      top: theme.spacing(2),
+      left: theme.spacing(2),
+    },
+  },
+}));

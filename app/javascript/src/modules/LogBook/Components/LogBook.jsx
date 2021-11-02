@@ -1,13 +1,12 @@
-import React, { useState } from 'react'
-import makeStyles from '@material-ui/core/styles/makeStyles';
+import React, { useState } from 'react';
 import Typography from '@material-ui/core/Typography';
+import makeStyles from '@material-ui/core/styles/makeStyles';
 import Grid from '@material-ui/core/Grid';
-import FileCopyIcon from '@material-ui/icons/FileCopyOutlined';
-import SaveIcon from '@material-ui/icons/Save';
 import { StyledTabs, StyledTab, TabPanel, a11yProps } from '../../../components/Tabs';
 import { useParamsQuery } from '../../../utils/helpers';
 import LogEvents from './LogEvents'
 import VisitView from './VisitView'
+import SpeedDial from '../../../shared/buttons/SpeedDial';
 
 export default function LogBook() {
   // function handleChange(_event, newValue) {
@@ -16,41 +15,34 @@ export default function LogBook() {
   //   // reset pagination after changing the tab
   //   history.push(`/entry_logs?tab=${newValue}&offset=${0}`);
   // }
-  const actions = [
-    { icon: <FileCopyIcon />, name: 'Copy' },
-    { icon: <SaveIcon />, name: 'Save' },
-  ];
   const path = useParamsQuery();
   const tabValue = path.get('tab');
   const [value, setvalue] = useState(Number(tabValue) || 0);
   const classes = useStyles();
-  const [direction, setDirection] = React.useState('down');
-  const [open, setOpen] = React.useState(false);
-  const [hidden, setHidden] = React.useState(false);
-
-  const handleDirectionChange = (event) => {
-    setDirection(event.target.value);
-  };
-
-  const handleHiddenChange = (event) => {
-    setHidden(event.target.checked);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
-  const handleOpen = () => {
-    setOpen(true);
-  };
+  const [open, setOpen] = useState(false);
+  const actions = [
+    { icon: <FileCopyIcon />, name: 'Copy' },
+    { icon: <SaveIcon />, name: 'Save' },
+  ];
   return (
     <>
-      <Grid container>
+      <Grid container className={classes.container}>
         <Grid item sm={6}>
-          <Typography variant='h5'>Log Book</Typography>
+          <Typography variant='h4'>Log Book</Typography>
         </Grid>
         <Grid item sm={6}>
-          
+          <Grid container>
+            <Grid item sm={9} />
+            <Grid item sm={3}>
+              <SpeedDial
+                open={open}
+                handleClose={() => setOpen(false)}
+                handleOpen={() => setOpen(true)}
+                direction='down'
+                actions={actions}
+              />
+            </Grid>
+          </Grid>
         </Grid>
       </Grid>
       <StyledTabs
@@ -74,28 +66,8 @@ export default function LogBook() {
   )
 }
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    // transform: 'translateZ(0px)',
-    // flexGrow: 1,
-  },
-  exampleWrapper: {
-    // position: 'relative',
-    // marginTop: theme.spacing(3),
-    // height: 380,
-  },
-  radioGroup: {
-    margin: theme.spacing(1, 0),
-  },
-  // speedDial: {
-  //   // position: 'absolute',
-  //   '&.MuiSpeedDial-directionUp, &.MuiSpeedDial-directionLeft': {
-  //     bottom: theme.spacing(2),
-  //     right: theme.spacing(2),
-  //   },
-  //   '&.MuiSpeedDial-directionDown, &.MuiSpeedDial-directionRight': {
-  //     top: theme.spacing(2),
-  //     left: theme.spacing(2),
-  //   },
-  // },
+const useStyles = makeStyles(() => ({
+  container: {
+    margin: "50px  20px 50px 50px"
+  }
 }));
