@@ -22,7 +22,7 @@ export default function GuestSearch() {
     variables: { query: debouncedValue },
     fetchPolicy: 'network-only'
   });
-  const { t } = useTranslation('common');
+  const { t } = useTranslation(['common', 'logbook']);
 
 
   const entriesHeaders = [
@@ -39,7 +39,7 @@ export default function GuestSearch() {
   return (
     <>
       <CustomDialog
-        title="Invite Guest"
+        title={t('logbook:guest.invite_guest')}
         open={dialogOpen}
         handleDialogStatus={() => setDialogOpen(!dialogOpen)}
       >
@@ -50,7 +50,7 @@ export default function GuestSearch() {
           <Grid item xs={6} />
           <Grid item sm={12} xs={12} md={6}>
             <SearchInput
-              title="Guests"
+              title={t('logbook:guest.guests')}
               filterRequired={false}
               searchValue={searchValue}
               handleSearch={event => setSearchValue(event.target.value)}
@@ -77,7 +77,7 @@ export default function GuestSearch() {
         {debouncedValue && !loading && !data?.searchGuests?.length && (
           <CenteredContent>
             <Typography gutterBottom variant="subtitle1">
-              {`No results were found for ${searchValue} `}
+              {t('errors.no_result_found', { searchValue })}
             </Typography>
           </CenteredContent>
         )}
@@ -92,7 +92,7 @@ export default function GuestSearch() {
               startIcon={<AddIcon />}
               onClick={() => inviteGuest(null)}
             >
-              Invite New Guest
+              {t('logbook:guest.invite_new_guest')}
             </Button>
           </CenteredContent>
         )}

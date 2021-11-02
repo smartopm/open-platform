@@ -27,7 +27,7 @@
     "enroll": "Enroll User",
     "enrolling": "Enrolling",
     "grant": "Grant",
-    "next_step":"Next",
+    "next_step": "Next",
     "granting": "Granting",
     "deny": "Deny",
     "call_manager": "Call Manager",
@@ -124,57 +124,60 @@
   },
   "errors": {
     "required_field": "{{fieldName}} is Required"
-    },
+  },
   "guest": {
     "guest_name": "Guest Name",
     "start_of_visit": "Start of Visit",
     "end_of_visit": "End of Visit",
     "validity": "validity",
     "access_time": "Access Time",
-    "access_action": "Access Action"
-    },
-    "video_recording": {
-      "add_video_text": "Add a Video with your phone",
-      "create_video_text": "Create a video to your profile",
-      "well_lit_area": "Be sure You are in a well lit area and your face is clearly visible",
-      "listen_to_counter": "Listen to the counter for a chime on when to turn",
-      "instruction_on_direction": "You will be facing forward for 2 seconds, then turn to the left and then to the right. The counter will chime each time.",
-      "face_left": "Face to the left",
-      "face_right": "Face to the right",
-      "face_forward": "Face forward",
-      "video_recorded": "Video recorded successfully",
-      "re_record_video": "Re-record the video",
-      "save_video": "Save video"
-    },
-    "image_capture": {
-      "add_a_photo": "Add a photo of ID with your phone",
-      "portrait": "Use portrait orientation",
-      "off_camera": "Turn off your camera flash",
-      "dark_background": "Use a dark background",
-      "flat_surface": "Take photo on a flat surface",
-      "front": "Upload Front",
-      "back": "Upload Back",
-      "image_captured": "Images added successfully",
-      "next_step": "Next",
-      "save_my_id": "Save My ID"
-    },
-    "review_screen": {
-      "success_message": "Details Submtted Successfully",
-      "review_title": "Review and Confirmation",
-      "review_sub_title": "Please review and press submit to complete",
-      "no_review": "Please fill out the previous steps",
-      "user_information": "User Information",
-      "edit": "Edit",
-      "name": "Name:",
-      "email": "Email:",
-      "primary": "Primary Phone:",
-      "photo_id": "Photo ID",
-      "id_front": "ID FRONT",
-      "id_back": "ID BACK",
-      "video_id": "Video ID",
-      "submit": "Submit",
-      "vehicle_number": "Vehicle Number:",
-      "company_name": "Company Name:"
-    }
-
+    "access_action": "Access Action",
+    "invite_guest": "Invite Guest",
+    "invite_new_guest": "Invite new guest",
+    "guest_invited": "Successfully invited a guest",
+    "guests": "Guests"
+  },
+  "video_recording": {
+    "add_video_text": "Add a Video with your phone",
+    "create_video_text": "Create a video to your profile",
+    "well_lit_area": "Be sure You are in a well lit area and your face is clearly visible",
+    "listen_to_counter": "Listen to the counter for a chime on when to turn",
+    "instruction_on_direction": "You will be facing forward for 2 seconds, then turn to the left and then to the right. The counter will chime each time.",
+    "face_left": "Face to the left",
+    "face_right": "Face to the right",
+    "face_forward": "Face forward",
+    "video_recorded": "Video recorded successfully",
+    "re_record_video": "Re-record the video",
+    "save_video": "Save video"
+  },
+  "image_capture": {
+    "add_a_photo": "Add a photo of ID with your phone",
+    "portrait": "Use portrait orientation",
+    "off_camera": "Turn off your camera flash",
+    "dark_background": "Use a dark background",
+    "flat_surface": "Take photo on a flat surface",
+    "front": "Upload Front",
+    "back": "Upload Back",
+    "image_captured": "Images added successfully",
+    "next_step": "Next",
+    "save_my_id": "Save My ID"
+  },
+  "review_screen": {
+    "success_message": "Details Submtted Successfully",
+    "review_title": "Review and Confirmation",
+    "review_sub_title": "Please review and press submit to complete",
+    "no_review": "Please fill out the previous steps",
+    "user_information": "User Information",
+    "edit": "Edit",
+    "name": "Name:",
+    "email": "Email:",
+    "primary": "Primary Phone:",
+    "photo_id": "Photo ID",
+    "id_front": "ID FRONT",
+    "id_back": "ID BACK",
+    "video_id": "Video ID",
+    "submit": "Submit",
+    "vehicle_number": "Vehicle Number:",
+    "company_name": "Company Name:"
+  }
 }

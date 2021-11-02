@@ -1,6 +1,7 @@
 import { Container, Grid } from '@material-ui/core';
 import React, { useState } from 'react';
 import { useQuery } from 'react-apollo';
+import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router';
 import FloatButton from '../../../../components/FloatButton';
 import CenteredContent from '../../../../shared/CenteredContent';
@@ -19,6 +20,7 @@ export default function InvitedGuests() {
       variables: { query: debouncedValue },
     fetchPolicy: 'network-only'
   });
+  const { t } = useTranslation('logbook')
 
   function handleAddObservation() {}
   return (
@@ -46,7 +48,7 @@ export default function InvitedGuests() {
       ) : (
         <CenteredContent>{formatError(error?.message)}</CenteredContent>
       )}
-      <FloatButton title="Invite a Guest" handleClick={() => history.push('/logbook/guests/invite')} />
+      <FloatButton title={t('guest.invite_guest')} handleClick={() => history.push('/logbook/guests/invite')} />
     </Container>
   );
 }

@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { useMutation } from 'react-apollo';
 import PropTypes from 'prop-types'
 import { useHistory } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import CenteredContent from '../../../../shared/CenteredContent';
 import GuestTime from '../../Components/GuestTime';
 import { initialRequestState } from '../../GuestVerification/constants';
@@ -16,6 +17,7 @@ export default function GuestInviteForm({ guest }) {
   const [guestData, setGuestData] = useState(initialRequestState);
   const [details, setDetails] = useState({ message: '', isError: false })
   const [createInvitation] = useMutation(InvitationCreateMutation);
+  const { t } = useTranslation(['logbook', 'common'])
 
   function handleInputChange(event) {
     const { name, value } = event.target;
@@ -61,7 +63,7 @@ export default function GuestInviteForm({ guest }) {
         }
       });
       setGuestData({ ...guestData, isLoading: false });
-      setDetails({ ...details, message: 'Successfully invited a guest' })
+      setDetails({ ...details, message: t('guest.guest_invited') })
       setTimeout(() => history.push('/logbook/guests'), 500)
     } catch (error) {
       setGuestData({ ...guestData, isLoading: false });
@@ -85,7 +87,7 @@ export default function GuestInviteForm({ guest }) {
             variant="outlined"
             type="text"
             value={guestData.name}
-            label="Name"
+            label={t('common:form_fields.full_name')}
             onChange={handleInputChange}
             name="name"
             inputProps={{ 'data-testid': 'guest_entry_name' }}
@@ -97,7 +99,7 @@ export default function GuestInviteForm({ guest }) {
             variant="outlined"
             type="email"
             value={guestData.email}
-            label="Email"
+            label={t('common:form_fields.email')}
             onChange={handleInputChange}
             name="email"
             inputProps={{ 'data-testid': 'guest_entry_email' }}
@@ -108,7 +110,7 @@ export default function GuestInviteForm({ guest }) {
             variant="outlined"
             type="text"
             value={guestData.phoneNumber}
-            label="Phone"
+            label={t('common:form_fields.phone_number')}
             onChange={handleInputChange}
             name="phoneNumber"
             inputProps={{ 'data-testid': 'guest_entry_phone_number' }}
@@ -134,7 +136,7 @@ export default function GuestInviteForm({ guest }) {
           data-testid="invite_button"
           startIcon={guestData.isLoading && <Spinner />}
         >
-          Invite Guest
+          {t('guest.invite_guest')}
         </Button>
       </CenteredContent>
     </>
