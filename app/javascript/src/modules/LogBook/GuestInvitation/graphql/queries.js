@@ -2,28 +2,6 @@
 
 import gql from 'graphql-tag';
 
-export const InvitedGuestsQuery = gql`
-  query invitedGuests($query: String) {
-    invitedGuestList (query: $query){
-      id
-      name
-      guest {
-        id
-        name
-        imageUrl
-        avatarUrl
-      }
-      occursOn
-      visitEndDate
-      visitationDate
-      endTime
-      startTime
-      endsAt
-      startsAt
-      revoked
-    }
-  }
-`;
 
 export const MyInvitedGuestsQuery = gql`
     query guests($query: String){
