@@ -83,7 +83,7 @@ export default function GuestSearch() {
         )}
         <br />
 
-        {(!data || !searchValue) && (
+        {(!data?.searchGuests?.length || !searchValue) && (
           <CenteredContent>
             <Button
               variant="contained"
