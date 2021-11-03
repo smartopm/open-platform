@@ -68,10 +68,12 @@
     "flat_surface": "Tome una foto sobre una superficie plana",
     "front": "Cargar Frente",
     "image_captured": "Imágenes agregadas exitosamente",
+    "image_updated": "Imágenes actualizadas exitosamente. ",
     "next_step": "Siguiente",
     "off_camera": "Apague el flash de la cámara ",
     "portrait": "Use orientación vertical",
-    "save_my_id": "Salvar mi ID"
+    "save_my_id": "Salvar mi ID",
+    "update": "Actualizar"
   },
   "log_title": {
     "date": "Fecha",
@@ -163,13 +165,16 @@
     "title": "Código de Acceso QR"
   },
   "review_screen": {
+    "add": "Agregar",
     "company_name": "Nombre de la Compañía:",
     "edit": "Editar",
     "email": "Correo electrónico:",
     "id_back": "REVERSO DEL ID",
     "id_front": "FRENTE DEL ID",
     "name": "Nombre:",
+    "no_image": "No se han adjuntado imágenes",
     "no_review": "Por favor complete los pasos anteriores",
+    "no_video": "No se ha adjuntado video",
     "photo_id": "Fotografía de Identificación",
     "primary": "Teléfono Principal:",
     "review_sub_title": "Por favor revise y presione enviar para completar",
@@ -189,6 +194,7 @@
     "instruction_on_direction": "Estará mirando hacia adelante durante 2 segundos, luego gire a la izquierda y luego a la derecha. El contador sonará cada vez.",
     "listen_to_counter": "Escuche el contador para la señal de cuándo girar ",
     "re_record_video": "Re-grabar el video",
+    "retake": "Volver a tomar el video",
     "save_video": "Guardar video",
     "video_recorded": "Grabación de video exitoso",
     "well_lit_area": "Asegúrese de estar en un área bien iluminada y su rostro sea claramente visible"
