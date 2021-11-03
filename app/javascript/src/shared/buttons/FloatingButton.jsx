@@ -11,7 +11,7 @@ export default function FloatingButton({ variant, color, handleClick, size, ...o
       <Fab
         {...otherProps}
         variant={variant}
-        onClick={() => handleClick()}
+        onClick={handleClick}
         color={color}
         size={size}
         className={classes.root}
