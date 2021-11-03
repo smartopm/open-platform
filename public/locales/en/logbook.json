@@ -136,7 +136,7 @@
     "invite_new_guest": "Invite new guest",
     "guest_invited": "Successfully invited a guest",
     "guests": "Guests"
-  },
+    },
   "video_recording": {
     "add_video_text": "Add a Video with your phone",
     "create_video_text": "Create a video to your profile",
@@ -148,7 +148,8 @@
     "face_forward": "Face forward",
     "video_recorded": "Video recorded successfully",
     "re_record_video": "Re-record the video",
-    "save_video": "Save video"
+    "save_video": "Save video",
+    "retake": "Retake video"
   },
   "image_capture": {
     "add_a_photo": "Add a photo of ID with your phone",
@@ -160,7 +161,9 @@
     "back": "Upload Back",
     "image_captured": "Images added successfully",
     "next_step": "Next",
-    "save_my_id": "Save My ID"
+    "save_my_id": "Save My ID",
+    "update": "Update",
+    "image_updated": "Images successfully updated"
   },
   "review_screen": {
     "success_message": "Details Submtted Successfully",
@@ -178,6 +181,9 @@
     "video_id": "Video ID",
     "submit": "Submit",
     "vehicle_number": "Vehicle Number:",
-    "company_name": "Company Name:"
+    "company_name": "Company Name:",
+    "no_image": "No Images Attached",
+    "add": "Add",
+    "no_video": "No Video Attached"
   }
 }

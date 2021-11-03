@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
-import React from 'react'
+import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { useQuery } from 'react-apollo';
 import PropTypes from 'prop-types';
@@ -9,18 +9,18 @@ import GridList from '@material-ui/core/GridList';
 import GridListTile from '@material-ui/core/GridListTile';
 import Typography from '@material-ui/core/Typography';
 import { useHistory } from 'react-router-dom';
-import { useTranslation } from 'react-i18next'
+import { useTranslation } from 'react-i18next';
 import { Spinner } from '../../../../shared/Loading';
 import CenteredContent from '../../../../components/CenteredContent';
 import { formatError, formatMoney, objectAccessor } from '../../../../utils/helpers';
-import EmptyCard from '../../../../shared/EmptyCard'
+import EmptyCard from '../../../../shared/EmptyCard';
 import { currencies } from '../../../../utils/constants';
 import { UserPlans } from '../../../Payments/graphql/payment_query';
 
 export default function PlotDetailCard({ authState }) {
-  const matches = useMediaQuery('(max-width:600px)')
+  const matches = useMediaQuery('(max-width:600px)');
   const currency = objectAccessor(currencies, authState?.community?.currency) || '';
-  const currencyData = { currency, locale: authState?.community?.locale }
+  const currencyData = { currency, locale: authState?.community?.locale };
   const { loading, data, error } = useQuery(UserPlans, {
     variables: {
       userId: authState.id
@@ -30,33 +30,68 @@ export default function PlotDetailCard({ authState }) {
   });
   const history = useHistory();
   const classes = useStyles();
-  const { t } = useTranslation(['dashboard', 'common', 'payment'])
+  const { t } = useTranslation(['dashboard', 'common', 'payment']);
 
   if (error) {
     return <CenteredContent>{formatError(error.message)}</CenteredContent>;
   }
   return (
     <div>
-      {loading ? <Spinner /> : (
+      {loading ? (
+        <Spinner />
+      ) : (
         <div>
-          <Typography data-testid='plot' style={matches ? {margin: '20px 0 10px 20px', fontWeight: 500, fontSize: '14px', color: '#141414'} : {margin: '40px 0 20px 79px', fontWeight: 500, fontSize: '22px', color: '#141414'}}>{t('dashboard.plot_detail', { count: 0 })}</Typography>
+          <Typography
+            data-testid="plot"
+            style={
+              matches
+                ? {
+                    margin: '20px 0 10px 20px',
+                    fontWeight: 500,
+                    fontSize: '14px',
+                    color: '#141414'
+                  }
+                : {
+                    margin: '40px 0 20px 79px',
+                    fontWeight: 500,
+                    fontSize: '22px',
+                    color: '#141414'
+                  }
+            }
+          >
+            {t('dashboard.plot_detail', { count: 0 })}
+          </Typography>
           <div>
             {data?.userPlansWithPayments?.length > 0 ? (
-              <div className={classes.root} style={matches ? {marginLeft: '20px'} : {marginLeft: '79px', marginBottom: '40px'}}>
+              <div
+                className={classes.root}
+                style={
+                  matches ? { marginLeft: '20px' } : { marginLeft: '79px', marginBottom: '40px' }
+                }
+              >
                 <GridList className={classes.gridList} cols={matches ? 1 : 3.5}>
-                  {data?.userPlansWithPayments?.map((plan) => (
+                  {data?.userPlansWithPayments?.map(plan => (
                     <GridListTile key={plan.id}>
-                      <div className={matches? classes.gridTileMobile : classes.gridTile} onClick={() => history.push(`/user/${authState.id}?tab=Plans`)}>
+                      <div
+                        className={matches ? classes.gridTileMobile : classes.gridTile}
+                        onClick={() => history.push(`/user/${authState.id}?tab=Plans`)}
+                      >
                         <div>
                           <Typography className={matches ? classes.plotMobile : classes.plot}>
-                            {t('dashboard.plot')}
+                            {t('dashboard.plot')} 
                             {' '}
                             {plan.landParcel.parcelNumber}
                           </Typography>
                         </div>
                         <div>
-                          <Typography className={matches ? classes.balanceMobile : classes.balance}>{formatMoney(currencyData, plan.pendingBalance)}</Typography>
-                          <Typography className={matches ? classes.balanceTextMobile : classes.balanceText}>{t('payment:table_headers.balance_due')}</Typography>
+                          <Typography className={matches ? classes.balanceMobile : classes.balance}>
+                            {formatMoney(currencyData, plan.pendingBalance)}
+                          </Typography>
+                          <Typography
+                            className={matches ? classes.balanceTextMobile : classes.balanceText}
+                          >
+                            {t('payment:table_headers.balance_due')}
+                          </Typography>
                         </div>
                       </div>
                     </GridListTile>
@@ -64,21 +99,24 @@ export default function PlotDetailCard({ authState }) {
                 </GridList>
               </div>
             ) : (
-              <EmptyCard title={t('dashboard.no_plots_available')} subtitle={t('dashboard.plots_appear_here')} />
+              <EmptyCard
+                title={t('dashboard.no_plots_available')}
+                subtitle={t('dashboard.plots_appear_here')}
+              />
             )}
           </div>
         </div>
       )}
     </div>
-  )
+  );
 }
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   root: {
     display: 'flex',
     flexWrap: 'wrap',
     justifyContent: 'space-around',
-    overflow: 'hidden',
+    overflow: 'hidden'
   },
   gridList: {
     flexWrap: 'nowrap',
@@ -90,7 +128,6 @@ const useStyles = makeStyles((theme) => ({
     padding: '20px',
     backgroundColor: theme.palette.background.paper,
     height: '178px',
-    width: '304px',
     justifyContent: 'space-between',
     cursor: 'pointer',
     overflow: 'hidden',

@@ -4,7 +4,7 @@ import React from 'react';
 import GuestForm from './GuestForm';
 import VideoCapture from './VideoCapture';
 import IdCapture from './IdCapture';
-import RequestConfirmation from './RequestConfirmation';
+import GuestReview from './GuestReview';
 
 export default function steps(handleNext, handleGotoStep, communityName) {
   const verificationSteps = [
@@ -22,7 +22,7 @@ export default function steps(handleNext, handleGotoStep, communityName) {
     },
     {
       title: 'Review and Confirmation',
-      component: <RequestConfirmation handleNext={handleNext} handleGotoStep={handleGotoStep} />
+      component: <GuestReview handleNext={handleNext} handleGotoStep={handleGotoStep} />
     }
   ];
   // hardcoding this for now before we make this a community setting

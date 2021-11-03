@@ -34,10 +34,8 @@ admin:
       - can_access_all_payments
       - can_cancel_plan_payment
       - can_create_plan_payment
-      - can_fetch_payment_receipt
       - can_fetch_payment_stat_details
       - can_fetch_payments_list
-      - can_view_menu_list
       - can_see_menu_item
   transaction:
     permissions:
@@ -169,11 +167,29 @@ admin:
     permissions:
       - can_see_menu_item
       - can_update_community_details
+  community_settings:
+    permissions:
+      - can_see_menu_item
   sos:
     permissions:
       - can_access_sos
       - can_raise_sos
       - can_cancel_sos
+  discussion:
+    permissions:
+      - can_create_discussion
+      - can_update_discussion
+      - can_access_all_discussions
+      - can_see_menu_item
+  comment:
+    permissions:
+      - can_fetch_all_comments
+  business:
+    permissions:
+      - can_see_menu_item
+      - can_access_business
+      - can_create_business
+      - can_delete_business
 contractor:
   note:
     permissions:
@@ -198,6 +214,16 @@ contractor:
       - can_see_menu_item
       - can_access_forms
   profile:
+    permissions:
+      - can_see_menu_item
+  discussion:
+    permissions:
+      - can_access_all_discussions
+  business:
+    permissions:
+      - can_see_menu_item
+      - can_access_business
+  community:
     permissions:
       - can_see_menu_item
 custodian:
@@ -257,6 +283,9 @@ custodian:
   user:
     permissions:
       - can_search_guests
+  community:
+    permissions:
+      - can_see_menu_item
 security_guard:
   note:
     permissions:
@@ -309,6 +338,9 @@ security_guard:
   user:
     permissions:
       - can_search_guests
+  community:
+    permissions:
+      - can_see_menu_item
 site_worker:
   note:
     permissions:
@@ -334,10 +366,16 @@ site_worker:
   profile:
     permissions:
       - can_see_menu_item
+  community:
+    permissions:
+      - can_see_menu_item
 visitor:
   note:
     permissions:
   profile:
+    permissions:
+      - can_see_menu_item
+  community:
     permissions:
       - can_see_menu_item
 resident:
@@ -377,6 +415,16 @@ resident:
       - can_access_sos
       - can_initiate_sos
       - can_cancel_sos
+  discussion:
+    permissions:
+      - can_access_all_discussions
+  business:
+    permissions:
+      - can_see_menu_item
+      - can_access_business
+  community:
+    permissions:
+      - can_see_menu_item
 prospective_client:
   note:
     permissions:
@@ -385,6 +433,16 @@ prospective_client:
       - can_see_menu_item
       - can_access_forms
   profile:
+    permissions:
+      - can_see_menu_item
+  discussion:
+    permissions:
+      - can_access_all_discussions
+  business:
+    permissions:
+      - can_see_menu_item
+      - can_access_business
+  community:
     permissions:
       - can_see_menu_item
 client:
@@ -419,6 +477,16 @@ client:
     permissions:
       - can_see_menu_item
   logout:
+    permissions:
+      - can_see_menu_item
+  discussion:
+    permissions:
+      - can_access_all_discussions
+  business:
+    permissions:
+      - can_see_menu_item
+      - can_access_business
+  community:
     permissions:
       - can_see_menu_item
 

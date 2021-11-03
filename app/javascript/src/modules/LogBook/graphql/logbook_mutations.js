@@ -58,6 +58,13 @@ export const EntryRequestUpdateMutation = gql`
         videoUrl
         imageUrls
         status
+        name
+        email
+        nrc
+        phoneNumber
+        vehiclePlate
+        companyName
+        reason
       }
     }
   }

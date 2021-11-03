@@ -29,6 +29,7 @@ module Types
     include Types::Queries::PlanPayment
     include Types::Queries::SubscriptionPlan
     include Types::Queries::Permission
+    include Types::Queries::Discussion
 
     # Add root-level fields here.
     # They will be entry points for queries on your schema.

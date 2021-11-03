@@ -16,7 +16,7 @@ const user = {
 }
 
 addDecorator(story => (
-  <ThemeProvider theme={theme}>
+  <ThemeProvider theme={theme(null)}>
     <ApolloProvider>
       <BrowserRouter>
         <Context.Provider value={user}>{story()}</Context.Provider>

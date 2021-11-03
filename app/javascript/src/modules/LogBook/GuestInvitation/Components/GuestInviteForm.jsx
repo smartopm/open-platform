@@ -10,7 +10,7 @@ import { initialRequestState } from '../../GuestVerification/constants';
 import InvitationCreateMutation from '../graphql/mutations';
 import { Spinner } from '../../../../shared/Loading';
 import MessageAlert from '../../../../components/MessageAlert';
-import { capitalize, formatError, objectAccessor } from '../../../../utils/helpers';
+import { capitalize, formatError, objectAccessor, validateEmail } from '../../../../utils/helpers';
 import { checkInValidRequiredFields } from '../../utils';
 import { invitationRequiredFields as requiredFields } from '../constants';
 
@@ -19,7 +19,7 @@ export default function GuestInviteForm({ guest }) {
   const [guestData, setGuestData] = useState(initialRequestState);
   const [details, setDetails] = useState({ message: '', isError: false });
   const [createInvitation] = useMutation(InvitationCreateMutation);
-  const { t } = useTranslation(['logbook', 'common']);
+  const { t } = useTranslation(['logbook', 'common', 'discussion']);
   const [validation, setInputValidationMsg] = useState({
     isError: false,
     isSubmitting: false
@@ -54,9 +54,14 @@ export default function GuestInviteForm({ guest }) {
     // then invite them
     const isAnyInvalid = checkInValidRequiredFields(guestData, requiredFields);
     if (isAnyInvalid && !guest?.id) {
-      setInputValidationMsg({ isError: true });
+       setInputValidationMsg({ isError: true });
       return;
     }
+    if (!validateEmail(guestData.email)) {
+      setDetails({ ...details, message: t('discussion:helper_text.invalid_email'), isError: true });
+      return 
+    }
+  
     setGuestData({ ...guestData, isLoading: true });
 
     createInvitation({

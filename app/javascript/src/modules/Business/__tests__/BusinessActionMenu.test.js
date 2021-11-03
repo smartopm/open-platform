@@ -5,6 +5,7 @@ import { BrowserRouter } from 'react-router-dom'
 import { MockedProvider } from '@apollo/react-testing'
 import BusinessActionMenu from '../Components/BusinessActionMenu'
 import { DeleteBusiness } from '../graphql/business_mutations'
+import authState from '../../../__mocks__/authstate';
 
 describe('business action menu component', () => {
   it('show correct action menu', async () => {
@@ -33,7 +34,7 @@ describe('business action menu component', () => {
             data={props.data}
             anchorEl={null}
             handleClose={handleClose}
-            userType={props.userType}
+            authState={authState}
             refetch={refetch}
             open
           />

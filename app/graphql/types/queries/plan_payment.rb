@@ -14,6 +14,7 @@ module Types::Queries::PlanPayment
     end
     field :payment_receipt, Types::PlanPaymentType, null: true do
       description 'Fetches payment receipt details'
+      argument :user_id, GraphQL::Types::ID, required: true
       argument :id, GraphQL::Types::ID, required: true
     end
 
@@ -48,10 +49,9 @@ module Types::Queries::PlanPayment
   # @param id [String]
   #
   # @return [PlanPayment]
-  def payment_receipt(id:)
-    raise_unauthorized_error_for_plan_payments(:can_fetch_payment_receipt)
-
-    payment = context[:site_community].plan_payments.find_by(id: id)
+  def payment_receipt(user_id:, id:)
+    user = verified_user(user_id)
+    payment = user.plan_payments.find_by(id: id)
     raise_payment_not_found_error(payment)
 
     payment

@@ -8,7 +8,6 @@ import Labels from '../Labels';
 import Campaigns from '../Campaigns';
 import PermitRequestForms from '../Forms/PermitRequestForms';
 import Emails from '../Emails';
-import { allUserTypes } from '../../utils/constants';
 import CommunitySettings from './components/SettingsPage';
 import Tasks from '../Tasks'
 import Contact from '../Contact'
@@ -27,7 +26,8 @@ const Settings =   {
   },
   name: t => t('menu.settings'),
   featureName: 'Community',
-  accessibleBy: ['admin'],
+  moduleName: 'community_settings',
+  accessibleBy: [],
 }
 
 export default {
@@ -41,6 +41,7 @@ export default {
   },
   name: t => t('menu.community'),
   featureName: 'Community',
-  accessibleBy: allUserTypes,
+  moduleName: 'community',
+  accessibleBy: [],
   subMenu: [News, Message, Discussions, Campaigns , Labels, Tasks, Business, PermitRequestForms, Report, Emails, Settings, Contact, Referral, Showroom]
 };

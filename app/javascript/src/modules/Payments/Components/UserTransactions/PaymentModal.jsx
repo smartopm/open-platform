@@ -224,7 +224,7 @@ export default function PaymentModal({
         walletRefetch();
         transRefetch();
         paymentPlansRefetch();
-        setPaymentData(res.data.transactionCreate.transaction);
+        setPaymentData(res.data.transactionCreate.transaction.planPayments[0]);
         setInputValue(initialValues);
         setPromptOpen(!!userId);
         setIsConfirm(false);
