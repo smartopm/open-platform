@@ -55,7 +55,7 @@ describe('User balance Component', () => {
       () => {
         expect(container.queryByText('common:misc.total_balance')).toBeInTheDocument();
         expect(container.queryByText('common:misc.total_transactions')).toBeInTheDocument();
-        expect(container.queryByText('common:misc.unallocated_funds')).toBeInTheDocument();
+        expect(container.queryByText('common:misc.general_funds')).toBeInTheDocument();
       },
       { timeout: 300 }
     );
