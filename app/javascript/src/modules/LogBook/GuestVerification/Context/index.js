@@ -66,7 +66,8 @@ export default function EntryRequestContextProvider({ children }) {
         grantAccess: handleGrantAccess,
         observationDetails,
         setDetails,
-        isGuestRequest
+        isGuestRequest,
+        requestType
       }}
     >
       {children}

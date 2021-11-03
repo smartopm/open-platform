@@ -37,7 +37,7 @@ export default function InvitedGuests() {
   ];
 
   function handleViewGuest(invite) {
-    history.push(`/request/${invite.guest.request.id}`);
+    history.push(`/request/${invite.guest.request.id}?type=view`);
   }
 
   return (
