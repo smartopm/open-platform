@@ -71,14 +71,6 @@ export const UserPlans = gql`
         amount
         status
         receiptNumber
-        paymentPlan {
-          id
-          pendingBalance
-          landParcel {
-            id
-            parcelNumber
-          }
-        }
         userTransaction {
           id
           source
