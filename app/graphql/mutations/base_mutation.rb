@@ -45,6 +45,5 @@ module Mutations
 
       raise GraphQL::ExecutionError, I18n.t('errors.duplicate.email')
     end
-
   end
 end

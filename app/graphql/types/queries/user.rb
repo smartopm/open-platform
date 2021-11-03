@@ -300,11 +300,11 @@ module Types::Queries::User
     )
       raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
     end
+
     context[:current_user].invitees
                           .includes(:guest, :host, :entry_time)
                           .search(query)
   end
-
 
   def user_permissions_check?
     ::Policy::ApplicationPolicy.new(
