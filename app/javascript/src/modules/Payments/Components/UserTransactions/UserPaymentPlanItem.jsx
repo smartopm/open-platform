@@ -89,7 +89,7 @@ export default function UserPaymentPlanItem({
   const anchorElOpen = Boolean(anchor);
   const planAnchorElOpen = Boolean(planAnchor);
   const [loadReceiptDetails, { loading, error, data }] = useLazyQuery(ReceiptPayment, {
-    variables: { id: transactionId },
+    variables: { userId, id: transactionId },
     fetchPolicy: 'no-cache',
     errorPolicy: 'all'
   });
@@ -122,7 +122,7 @@ export default function UserPaymentPlanItem({
   const menuList = [
     {
       content: t('common:menu.view_receipt'),
-      isAdmin: true,
+      isAdmin: false,
       handleClick: event => handleClick(event)
     }
   ];
@@ -231,6 +231,7 @@ export default function UserPaymentPlanItem({
   }
 
   function transactionDetailOpen(trans) {
+    if (currentUser.userType !== 'admin') return;
     setTransData(trans);
     setTransDetailOpen(true);
   }
@@ -504,7 +505,7 @@ export default function UserPaymentPlanItem({
                               renderPayments(pay, currencyData, currentUser, menuData)
                             ]}
                             hasHeader={false}
-                            clickable
+                            clickable={currentUser.userType === 'admin'}
                             handleClick={() => transactionDetailOpen(pay)}
                             color
                           />
@@ -676,7 +677,7 @@ export function renderPayments(pay, currencyData, currentUser, menuData) {
     ),
     Menu: (
       <Grid item xs={12} md={1} data-testid="menu">
-        {objectAccessor(currentUser?.permissions, 'plan_payment')?.permissions?.includes('can_view_menu_list') && (
+        {pay.status === 'paid' && (
           <IconButton
             aria-controls="simple-menu"
             aria-haspopup="true"
@@ -717,7 +718,9 @@ UserPaymentPlanItem.propTypes = {
   currentUser: PropTypes.shape({
     userType: PropTypes.string,
     permissions: PropTypes.shape({
-      payment_plan: PropTypes.arrayOf()
+      payment_plan: PropTypes.shape({
+        permissions: PropTypes.arrayOf(PropTypes.string)
+      })
     })
   }).isRequired,
   refetch: PropTypes.func.isRequired,

@@ -54,8 +54,8 @@ RSpec.describe Types::Queries::PlanPayment do
 
     let(:payment_receipt) do
       <<~GQL
-        query paymentReceipt($id: ID!){
-          paymentReceipt(id: $id) {
+        query paymentReceipt($userId: ID!, $id: ID!){
+          paymentReceipt(userId: $userId, id: $id) {
             amount
             status
             createdAt
@@ -232,7 +232,7 @@ RSpec.describe Types::Queries::PlanPayment do
     describe '#payment_receipt' do
       context 'when payment id is invalid' do
         it 'raises transaction not found error' do
-          variables = { id: '1234' }
+          variables = { userId: user.id, id: '1234' }
           result = DoubleGdpSchema.execute(payment_receipt,
                                            variables: variables,
                                            context: {
@@ -247,7 +247,7 @@ RSpec.describe Types::Queries::PlanPayment do
         before { payment_plan.update(pending_balance: 1200) }
 
         it 'return payment receipt details' do
-          variables = { id: plan_payment.id }
+          variables = { userId: user.id, id: plan_payment.id }
           result = DoubleGdpSchema.execute(payment_receipt,
                                            variables: variables,
                                            context: {

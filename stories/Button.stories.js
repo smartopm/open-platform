@@ -21,16 +21,34 @@ Primary.args = {
   primary: true,
   label: 'Button',
 };
+Primary.parameters = {
+  design: {
+    type: 'figma',
+    url: 'https://www.figma.com/file/oUdEdIbcdU4XXeroWiquw4/Design-System-Repo?node-id=2%3A4'
+  }
+};
 
 export const FloatingButton = FloatBtnTemplate.bind({});
 FloatingButton.args = {
   title: 'I am a fab',
   handleClick: () => {},
 };
+FloatingButton.parameters = {
+  design: {
+    type: 'figma',
+    url: 'https://www.figma.com/file/oUdEdIbcdU4XXeroWiquw4/Design-System-Repo?node-id=2%3A4'
+  }
+};
 
 export const Secondary = Template.bind({});
 Secondary.args = {
   label: 'Button',
+};
+Secondary.parameters = {
+  design: {
+    type: 'figma',
+    url: 'https://www.figma.com/file/oUdEdIbcdU4XXeroWiquw4/Design-System-Repo?node-id=2%3A4'
+  }
 };
 
 export const Large = Template.bind({});
@@ -38,9 +56,21 @@ Large.args = {
   size: 'large',
   label: 'Button',
 };
+Large.parameters = {
+  design: {
+    type: 'figma',
+    url: 'https://www.figma.com/file/oUdEdIbcdU4XXeroWiquw4/Design-System-Repo?node-id=2%3A4'
+  }
+};
 
 export const Small = Template.bind({});
 Small.args = {
   size: 'small',
   label: 'Button',
+};
+Small.parameters = {
+  design: {
+    type: 'figma',
+    url: 'https://www.figma.com/file/oUdEdIbcdU4XXeroWiquw4/Design-System-Repo?node-id=2%3A4'
+  }
 };

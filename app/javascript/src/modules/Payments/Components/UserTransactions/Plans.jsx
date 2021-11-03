@@ -272,7 +272,9 @@ PaymentPlans.propTypes = {
     id: PropTypes.string,
     userType: PropTypes.string,
     permissions: PropTypes.shape({
-      transaction: PropTypes.arrayOf()
+      transaction: PropTypes.shape({
+        permissions: PropTypes.arrayOf(PropTypes.string)
+      })
     }),
     community: PropTypes.shape({
       imageUrl: PropTypes.string,

@@ -13,7 +13,7 @@ import CenteredContent from '../../../../components/CenteredContent';
 import ImageUploadPreview from '../../../../shared/imageUpload/ImageUploadPreview';
 import { EntryRequestUpdateMutation } from '../../graphql/logbook_mutations';
 import MessageAlert from '../../../../components/MessageAlert';
-import { checkUserInformation, checkInfo }  from '../utils'
+import { checkUserInformation, checkInfo } from '../utils';
 
 export default function RequestConfirmation({ handleGotoStep }) {
   const requestContext = useContext(EntryRequestContext);
@@ -28,31 +28,34 @@ export default function RequestConfirmation({ handleGotoStep }) {
   });
 
   function handleEdit(stepNumber) {
-    requestContext.updateRequest({
-      ...requestContext.request,
-      isEdit: 'true'
-    });
-    handleGotoStep(stepNumber)
+    if (requestContext.request?.imageUrls) {
+      requestContext.updateRequest({
+        ...requestContext.request,
+        isEdit: true
+      });
+    }
+    handleGotoStep(stepNumber);
   }
 
   function handleSubmit() {
     setLoading(true);
-    updateRequest({ variables: { id: req.id, status: "approved" } }).then(({ data }) => {
-      setDetails({
-        ...errorDetails,
-        message: t('review_screen.success_message'),
-        isError: false
+    updateRequest({ variables: { id: req.id, status: 'approved' } })
+      .then(({ data }) => {
+        setDetails({
+          ...errorDetails,
+          message: t('review_screen.success_message'),
+          isError: false
+        });
+        requestContext.updateRequest({
+          ...requestContext.request,
+          status: data.result.entryRequest.status
+        });
+        setLoading(false);
+      })
+      .catch(error => {
+        setDetails({ ...errorDetails, isError: true, message: error.message });
+        setLoading(false);
       });
-      requestContext.updateRequest({
-        ...requestContext.request,
-        status: data.result.entryRequest.status
-      });
-      setLoading(false);
-    })
-    .catch(error => {
-      setDetails({ ...errorDetails, isError: true, message: error.message });
-      setLoading(false);
-    });
   }
   return (
     <>
@@ -76,13 +79,15 @@ export default function RequestConfirmation({ handleGotoStep }) {
         {checkUserInformation(req) && (
           <>
             <Grid item xs={6} data-testid="user-info">
-              <Typography style={{ fontWeight: 600 }}>{t('review_screen.user_information')}</Typography>
+              <Typography style={{ fontWeight: 600 }}>
+                {t('review_screen.user_information')}
+              </Typography>
             </Grid>
             <Grid item xs={6} style={{ textAlign: 'right' }} data-testid="edit-info">
               <Button onClick={() => handleEdit(0)}>{t('review_screen.edit')}</Button>
             </Grid>
             <Grid item xs={12}>
-              <Grid container spacing={1} data-testid='user-details'>
+              <Grid container spacing={1} data-testid="user-details">
                 <Grid item xs={5}>
                   <Typography>{t('review_screen.name')}</Typography>
                 </Grid>
@@ -140,45 +145,53 @@ export default function RequestConfirmation({ handleGotoStep }) {
           </>
         )}
 
-        {
-        requestContext.request?.imageUrls && (
+        {checkInfo(req) && (
           <>
-            <Grid item xs={6} style={{ marginTop: '20px' }} data-testid='image-area'>
+            <Grid item xs={6} style={{ marginTop: '20px' }} data-testid="image-area">
               <Typography style={{ fontWeight: 600 }}>{t('review_screen.photo_id')}</Typography>
             </Grid>
             <Grid item xs={6} style={{ textAlign: 'right', marginTop: '20px' }}>
-              <Button onClick={() => handleEdit(1)}>{t('review_screen.edit')}</Button>
+              <Button onClick={() => handleEdit(1)}>
+                {requestContext.request?.imageUrls ? t('review_screen.edit') : t('review_screen.add')}
+              </Button>
             </Grid>
-            <Grid item xs={6}>
-              <ImageUploadPreview
-                imageUrls={[requestContext.request?.imageUrls[0]]}
-                imgHeight="200px"
-                xs={12}
-                sm={6}
-                style={{ textAlign: 'center' }}
-              />
-            </Grid>
-            <Grid item xs={6}>
-              <ImageUploadPreview
-                imageUrls={[requestContext.request?.imageUrls[1]]}
-                imgHeight="200px"
-                xs={12}
-                sm={6}
-                style={{ textAlign: 'center' }}
-              />
-            </Grid>
-            <Grid item xs={6} style={!matches ? {} : { textAlign: 'center' }}>
-              <Typography>{t('review_screen.id_front')}</Typography>
-            </Grid>
-            <Grid item xs={6} style={!matches ? {} : { textAlign: 'center' }}>
-              <Typography>{t('review_screen.id_back')}</Typography>
-            </Grid>
+            {requestContext.request?.imageUrls ? (
+              <>
+                <Grid item xs={6}>
+                  <ImageUploadPreview
+                    imageUrls={[requestContext.request?.imageUrls[0]]}
+                    imgHeight="100px"
+                    xs={12}
+                    sm={6}
+                    style={{ textAlign: 'center' }}
+                  />
+                </Grid>
+                <Grid item xs={6}>
+                  <ImageUploadPreview
+                    imageUrls={[requestContext.request?.imageUrls[1]]}
+                    imgHeight="100px"
+                    xs={12}
+                    sm={6}
+                    style={{ textAlign: 'center' }}
+                  />
+                </Grid>
+                <Grid item xs={6} style={!matches ? {} : { textAlign: 'center' }}>
+                  <Typography>{t('review_screen.id_front')}</Typography>
+                </Grid>
+                <Grid item xs={6} style={!matches ? {} : { textAlign: 'center' }}>
+                  <Typography>{t('review_screen.id_back')}</Typography>
+                </Grid>
+              </>
+        ) : (
+          <Grid item xs={12} data-testid='no-image'>
+            <Typography>{t('review_screen.no_image')}</Typography>
+          </Grid>
+        )}
           </>
         )}
-
-        {requestContext.request?.videoUrl && (
+        {checkInfo(req) && (
           <>
-            <Grid item xs={6} style={{ marginTop: '20px' }} data-testid='video-area'>
+            <Grid item xs={6} style={{ marginTop: '20px' }} data-testid="video-area">
               <Typography style={{ fontWeight: 600 }}>{t('review_screen.video_id')}</Typography>
             </Grid>
             <Grid
@@ -187,11 +200,21 @@ export default function RequestConfirmation({ handleGotoStep }) {
               onClick={() => handleEdit(2)}
               style={{ textAlign: 'right', marginTop: '20px' }}
             >
-              <Button>{t('review_screen.edit')}</Button>
+              <Button>
+                {requestContext.request?.videoUrl
+                  ? t('review_screen.edit')
+                  : t('review_screen.add')}
+              </Button>
             </Grid>
-            <Grid item xs={6} sm={6}>
-              <Video src={requestContext.request?.videoUrl} />
-            </Grid>
+            {requestContext.request?.videoUrl ? (
+              <Grid item xs={6} sm={6}>
+                <Video src={requestContext.request?.videoUrl} />
+              </Grid>
+            ) : (
+              <Grid item xs={12} data-testid='no-video'>
+                <Typography>{t('review_screen.no_video')}</Typography>
+              </Grid>
+            )}
           </>
         )}
         {checkInfo(req) && (
@@ -201,7 +224,7 @@ export default function RequestConfirmation({ handleGotoStep }) {
               onClick={() => handleSubmit()}
               color="primary"
               variant="contained"
-              data-testid='submit'
+              data-testid="submit"
             >
               {t('review_screen.submit')}
             </Button>

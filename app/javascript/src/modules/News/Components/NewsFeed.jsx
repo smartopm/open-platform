@@ -86,6 +86,8 @@ export function PostItemGrid({ data }) {
 }
 
 export default function NewsFeed({ wordpressEndpoint }) {
+  if (!wordpressEndpoint) return null;
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   const { response, error } = useFetch(`${wordpressEndpoint}/posts`);
   if (error) {
     return (

@@ -18,6 +18,7 @@ import CenteredContent from '../../../../components/CenteredContent';
 export default function VideoCapture() {
   const [counter, setCounter] = useState(0);
   const [recordingBegin, setRecordingBegin] = useState(false);
+  const [retakeVideo, setRetakeVideo] = useState(false);
   const [recordingCompleted, setRecordingCompleted] = useState(false);
   const classes = useStyles();
   const { t } = useTranslation(['common', 'logbook']);
@@ -124,7 +125,7 @@ export default function VideoCapture() {
         {recordingInstruction}
       </div>
       {
-        requestContext.request?.videoUrl
+        requestContext.request?.videoUrl && !retakeVideo
         ? <Video src={requestContext.request?.videoUrl} />
         : (
           <div className={classes.videoArea} data-testid="video_recorder">
@@ -153,7 +154,7 @@ export default function VideoCapture() {
           </Button>
         )}
           {
-            !requestContext.isGuestRequest && (
+            !requestContext.isGuestRequest && !requestContext.request.isEdit && (
               <Button
                 onClick={requestContext.grantAccess}
                 color="primary"
@@ -165,6 +166,18 @@ export default function VideoCapture() {
               </Button>
             )
           }
+          {requestContext.request.isEdit && (
+            <>
+              <Button
+                onClick={() => setRetakeVideo(true)}
+                color="primary"
+                data-testid="retake_video_btn"
+                disabled={!requestContext.request.id}
+              >
+                {t('logbook:video_recording.retake')}
+              </Button>
+            </>
+          )}
         </CenteredContent>
       </div>
     </div>

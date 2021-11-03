@@ -96,6 +96,9 @@ describe('Side Nav component', () => {
           emergencyCallNumber: "254724821901",
         },
         permissions: {
+          community: {
+            permissions: ['can_see_menu_item']
+          },
           note: {
             permissions: []
           },

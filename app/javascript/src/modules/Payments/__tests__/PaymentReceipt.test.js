@@ -5,6 +5,8 @@ import { MockedProvider } from '@apollo/react-testing';
 import { BrowserRouter } from 'react-router-dom/';
 import PaymentReceipt from '../Components/UserTransactions/PaymentReceipt';
 import currency from '../../../__mocks__/currency';
+import { Context } from '../../../containers/Provider/AuthStateProvider';
+import authState from '../../../__mocks__/authstate';
 
 jest.mock('react-signature-canvas');
 describe('It should test the payment receipt modal component', () => {
@@ -67,14 +69,16 @@ describe('It should test the payment receipt modal component', () => {
   it('should render payment receipt modal', () => {
     const container = render(
       <BrowserRouter>
-        <MockedProvider>
-          <PaymentReceipt
-            open={open}
-            paymentData={paymentData}
-            handleClose={handleModalClose}
-            currencyData={currency}
-          />
-        </MockedProvider>
+        <Context.Provider value={authState}>
+          <MockedProvider>
+            <PaymentReceipt
+              open={open}
+              paymentData={paymentData}
+              handleClose={handleModalClose}
+              currencyData={currency}
+            />
+          </MockedProvider>
+        </Context.Provider>
       </BrowserRouter>
     );
 

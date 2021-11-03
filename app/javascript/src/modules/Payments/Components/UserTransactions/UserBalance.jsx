@@ -68,7 +68,7 @@ export default function Balance({
             }
           >
             <Typography variant={matches ? 'caption' : 'subtitle1'}>
-              {t('common:misc.unallocated_funds')}
+              {t('common:misc.general_funds')}
             </Typography>
             <Typography variant={matches ? 'body2' : 'h5'} color="primary">
               {formatMoney(currencyData, balanceData?.balance)}
