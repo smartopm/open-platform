@@ -17,7 +17,7 @@ export default function Businesses() {
    
     return (
       <>
-        <Business businessData={data} refetch={refetch} userType={authState.user.userType} />
+        <Business businessData={data} refetch={refetch} authState={authState} />
       </>
     )
 }
