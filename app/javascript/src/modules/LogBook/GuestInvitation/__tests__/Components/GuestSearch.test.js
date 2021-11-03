@@ -1,5 +1,5 @@
 import React from 'react';
-import { fireEvent, render } from '@testing-library/react';
+import { fireEvent, render, waitFor } from '@testing-library/react';
 import { MockedProvider } from '@apollo/react-testing';
 import '@testing-library/jest-dom/extend-expect';
 import { SearchGuestsQuery } from '../../graphql/queries';
@@ -42,7 +42,9 @@ describe('Guest Search Component', () => {
 
     fireEvent.click(inviteBtn)
 
-    expect(queryAllByText('Invite Guest')[0]).toBeInTheDocument()
-    expect(getByTestId('guest_entry_name')).toBeInTheDocument(); // check if we can see the form after clicking the button
+    await waitFor(() => {
+      expect(queryAllByText('logbook:guest.invite_guest')[0]).toBeInTheDocument()
+      expect(getByTestId('guest_entry_name')).toBeInTheDocument(); // check if we can see the form after clicking the button
+    }, 10)
   });
 });
