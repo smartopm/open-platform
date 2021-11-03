@@ -1,5 +1,5 @@
 /* eslint-disable max-statements */
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import { useQuery, useApolloClient, useMutation } from 'react-apollo';
@@ -20,6 +20,7 @@ import EntryNoteDialog from '../../../shared/dialogs/EntryNoteDialog';
 import { useFileUpload } from '../../../graphql/useFileUpload';
 import { Spinner } from '../../../shared/Loading';
 import AddObservationNoteMutation from '../graphql/logbook_mutations';
+import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider';
 
 const limit = 20;
 export default function LogBook() {
@@ -29,6 +30,7 @@ export default function LogBook() {
   //   // reset pagination after changing the tab
   //   history.push(`/entry_logs?tab=${newValue}&offset=${0}`);
   // }
+  const authState = useContext(AuthStateContext);
   const { t } = useTranslation(['logbook', 'common', 'dashboard']);
   const [displayBuilder, setDisplayBuilder] = useState('none');
   const path = useParamsQuery();
@@ -69,7 +71,7 @@ export default function LogBook() {
 
   const logsQuery = {
     0: subjects,
-    1: 'visit_request',
+    1: 'visit_request'
   };
 
   const { loading, error, data, refetch } = useQuery(AllEventLogsQuery, {
@@ -123,6 +125,16 @@ export default function LogBook() {
     } else {
       setDisplayBuilder('');
     }
+  }
+
+  function handleExitEvent(eventLog, logType) {
+    setClickedEvent(eventLog);
+    handleSaveObservation(eventLog, logType);
+  }
+
+  function handleAddObservation(log) {
+    setClickedEvent({ refId: log.refId, refType: log.refType });
+    setIsObservationOpen(true);
   }
 
   function handleSaveObservation(log = clickedEvent, type) {
@@ -260,7 +272,15 @@ export default function LogBook() {
             </Grid>
           </Grid>
           <TabPanel value={value} index={0}>
-            <LogEvents data={data?.result} loading={loading} error={error} refetch={refetch} />
+            <LogEvents
+              data={data?.result}
+              loading={loading}
+              error={error}
+              refetch={refetch}
+              userType={authState.user.userType}
+              handleExitEvent={handleExitEvent}
+              handleAddObservation={handleAddObservation}
+            />
           </TabPanel>
           <TabPanel value={value} index={1}>
             <VisitView />

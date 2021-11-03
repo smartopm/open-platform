@@ -1,3 +1,4 @@
+/* eslint-disable complexity */
 import React, { useState } from 'react';
 import IconButton from '@material-ui/core/IconButton';
 import Grid from '@material-ui/core/Grid';
@@ -9,18 +10,88 @@ import { dateTimeToString, dateToString } from '../../../components/DateContaine
 import Label from '../../../shared/label/Label';
 import { toTitleCase, objectAccessor } from '../../../utils/helpers';
 import { LogLabelColors } from '../../../utils/constants';
-import Card from '../../../shared/Card'
+import Card from '../../../shared/Card';
 import { DetailsDialog } from '../../../components/Dialog';
 import ImageUploadPreview from '../../../shared/imageUpload/ImageUploadPreview';
+import MenuList from '../../../shared/MenuList';
 
-export default function LogEvents({ data, loading, error, refetch }) {
+export default function LogEvents({
+  data,
+  loading,
+  error,
+  refetch,
+  userType,
+  handleExitEvent,
+  handleAddObservation
+}) {
   const [imageOpen, setImageOpen] = useState(false);
-  const [id, setId] = useState('')
+  const [id, setId] = useState('');
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [eventData, setEventData] = useState({});
+  const open = Boolean(anchorEl);
 
   function handleClick(logId) {
-    setId(logId)
-    setImageOpen(true)
+    setId(logId);
+    setImageOpen(true);
   }
+
+  function exitEvent() {
+    handleExitEvent(eventData, 'exit');
+    setAnchorEl(null);
+  }
+
+  const menuList = [
+    {
+      content: 'Log Exit',
+      isAdmin: true,
+      handleClick: () => exitEvent()
+    },
+    {
+      content: 'Grant Access',
+      isAdmin: true,
+      handleClick: () => {}
+    },
+    {
+      content: 'Block',
+      isAdmin: true,
+      handleClick: () => {}
+    },
+    {
+      content: 'Add Observation',
+      isAdmin: true,
+      handleClick: () => handleAddObservation(eventData)
+    },
+    {
+      content: 'User details',
+      isAdmin: true,
+      handleClick: () => {}
+    },
+    {
+      content: 'Print Scan',
+      isAdmin: true,
+      handleClick: () => {}
+    }
+  ];
+
+  function handleMenu(event, entry) {
+    event.stopPropagation();
+    setAnchorEl(event.currentTarget);
+    setEventData(entry);
+  }
+
+  function handleMenuClose(event) {
+    event.stopPropagation();
+    setAnchorEl(null);
+  }
+
+  const menuData = {
+    menuList,
+    handleMenu,
+    anchorEl,
+    open,
+    userType,
+    handleClose: event => handleMenuClose(event)
+  };
   return (
     <>
       {console.log(data)}
@@ -44,58 +115,51 @@ export default function LogEvents({ data, loading, error, refetch }) {
                         </Grid>
                       </Grid>
                     </>
-                ) : (
-                  <Typography color='textSecondary'>{entry.data?.note}</Typography>
-                )}
+                  ) : (
+                    <Typography color="textSecondary">{entry.data?.note}</Typography>
+                  )}
                 </Grid>
                 <Grid item sm={6} style={{ paddingTop: '7px' }}>
                   <Grid container spacing={1}>
                     <Grid item sm={3}>
-                      <Typography color='textSecondary'>{dateToString(entry.createdAt)}</Typography>
+                      <Typography color="textSecondary">{dateToString(entry.createdAt)}</Typography>
                     </Grid>
                     <Grid item sm={2}>
-                      <Typography color='textSecondary'>{dateTimeToString(entry.createdAt)}</Typography>
+                      <Typography color="textSecondary">
+                        {dateTimeToString(entry.createdAt)}
+                      </Typography>
                     </Grid>
                     <Grid item sm={7}>
                       <Grid container spacing={1}>
                         {entry.entryRequest?.grantor && entry.data.note !== 'Exited' && (
-                        <Grid item sm={6}>
-                          <Label
-                            title='Granted Access'
-                            color="#77B08A"
-                          />
-                        </Grid>
+                          <Grid item sm={6}>
+                            <Label title="Granted Access" color="#77B08A" />
+                          </Grid>
                         )}
                         {entry.data.note === 'Exited' && (
-                        <Grid item sm={6}>
-                          <Label
-                            title='Exit Logged'
-                            color="#C4584F"
-                          />
-                        </Grid>
+                          <Grid item sm={6}>
+                            <Label title="Exit Logged" color="#C4584F" />
+                          </Grid>
                         )}
                         {entry.subject === 'observation_log' && (
-                        <Grid item sm={5}>
-                          <Label
-                            title='Observation'
-                            color="#EBC64F"
-                          />
-                        </Grid>
-                      )}
+                          <Grid item sm={5}>
+                            <Label title="Observation" color="#EBC64F" />
+                          </Grid>
+                        )}
                         {entry.imageUrls && (
-                        <Grid item sm={1}>
-                          <IconButton color='primary' onClick={() => handleClick(entry.id)}>
-                            <PhotoIcon />
-                          </IconButton>
-                        </Grid>
-                      )}
+                          <Grid item sm={1}>
+                            <IconButton color="primary" onClick={() => handleClick(entry)}>
+                              <PhotoIcon />
+                            </IconButton>
+                          </Grid>
+                        )}
                         {entry.entryRequest && entry.data.note !== 'Exited' && (
-                        <Grid item sm={6}>
-                          <Label
-                            title={toTitleCase(entry.entryRequest?.reason)}
-                            color={objectAccessor(LogLabelColors, entry.entryRequest?.reason)}
-                          />
-                        </Grid>
+                          <Grid item sm={6}>
+                            <Label
+                              title={toTitleCase(entry.entryRequest?.reason)}
+                              color={objectAccessor(LogLabelColors, entry.entryRequest?.reason)}
+                            />
+                          </Grid>
                         )}
                       </Grid>
                     </Grid>
@@ -105,12 +169,18 @@ export default function LogEvents({ data, loading, error, refetch }) {
                   <IconButton
                     aria-controls="sub-menu"
                     aria-haspopup="true"
-                    // data-testid="subscription-plan-menu"
-                    // dataid={subscription.id}
-                    onClick={() => {}}
+                    dataid={entry.id}
+                    onClick={event => menuData.handleMenu(event, entry)}
                   >
                     <MoreVertOutlined />
                   </IconButton>
+                  <MenuList
+                    open={menuData?.open && menuData?.anchorEl?.getAttribute('dataid') === entry.id}
+                    anchorEl={menuData?.anchorEl}
+                    userType={menuData?.userType}
+                    handleClose={menuData?.handleClose}
+                    list={menuData?.menuList}
+                  />
                 </Grid>
               </Grid>
             </Card>
@@ -118,14 +188,9 @@ export default function LogEvents({ data, loading, error, refetch }) {
               <DetailsDialog
                 open={entry.id === id && imageOpen}
                 handleClose={() => setImageOpen(false)}
-                title='Attached Images'
+                title="Attached Images"
               >
-                <ImageUploadPreview
-                  imageUrls={entry.imageUrls}
-                  sm={6}
-                  xs={6}
-                  imgHeight='300px'
-                />
+                <ImageUploadPreview imageUrls={entry.imageUrls} sm={6} xs={6} imgHeight="300px" />
               </DetailsDialog>
             )}
           </>
