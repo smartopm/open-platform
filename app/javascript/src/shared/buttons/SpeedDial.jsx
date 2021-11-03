@@ -25,7 +25,7 @@ export default function SpeedDialButton({ open, handleClose, handleOpen, directi
             key={action.name}
             icon={action.icon}
             tooltipTitle={action.name}
-            onClick={handleClose}
+            onClick={action.handleClick}
           />
         ))}
       </SpeedDial>
@@ -36,7 +36,8 @@ export default function SpeedDialButton({ open, handleClose, handleOpen, directi
 const useStyles = makeStyles((theme) => ({
   wrapper: {
     position: 'relative',
-    transform: 'translateZ(0px)'
+    transform: 'translateZ(0px)',
+    height: 200
   },
   speedDial: {
     position: 'absolute',
