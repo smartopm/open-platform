@@ -1,11 +1,11 @@
-import { Container, Grid, makeStyles } from '@material-ui/core';
+import { Container, Grid, makeStyles, Typography } from '@material-ui/core';
 import { useTheme } from '@material-ui/styles';
 import React, { useContext, useState } from 'react';
 import { useQuery } from 'react-apollo';
 import { useTranslation } from 'react-i18next';
-import { useHistory } from 'react-router';
-import FloatButton from '../../../../components/FloatButton';
+import { useHistory } from 'react-router-dom';
 import { Context } from '../../../../containers/Provider/AuthStateProvider';
+import CustomSpeedDial from '../../../../shared/buttons/SpeedDial';
 import DataList from '../../../../shared/list/DataList';
 import { Spinner } from '../../../../shared/Loading';
 import SearchInput from '../../../../shared/search/SearchInput';
@@ -21,11 +21,11 @@ export default function InvitedGuests() {
     variables: { query: debouncedValue },
     fetchPolicy: 'network-only'
   });
-  const { t } = useTranslation('logbook');
-  const classes = useStyles()
-  const authState = useContext(Context)
-  const { timezone } = authState.user.community
-  const theme = useTheme()
+  const { t } = useTranslation(['logbook', 'common']);
+  const classes = useStyles();
+  const authState = useContext(Context);
+  const { timezone } = authState.user.community;
+  const theme = useTheme();
 
   const entriesHeaders = [
     { title: 'Guest Name', col: 3, value: t('guest.guest_name') },
@@ -33,15 +33,26 @@ export default function InvitedGuests() {
     { title: 'End of Visit', col: 2, value: t('guest.end_of_visit') },
     { title: 'Access Time', col: 1, value: t('guest.access_time') },
     { title: 'status', col: 1, value: t('guest.validity') },
-    { title: 'validity', col: 1, value: t('guest.validity') },
+    { title: 'validity', col: 1, value: t('guest.validity') }
   ];
 
-  function handleViewGuest(invite){
-    history.push(`/request/${invite.guest.request.id}`)
+  function handleViewGuest(invite) {
+    history.push(`/request/${invite.guest.request.id}`);
   }
 
   return (
     <Container maxWidth="xl">
+      <Grid container>
+        <Grid item xs={6}>
+          <Typography variant="h4">{t('common:menu.guest_list')}</Typography>
+        </Grid>
+        <Grid item xs={3}>
+          <CustomSpeedDial actions={[]} handleAction={() => history.push('/logbook/guests/invite')} />
+        </Grid>
+      </Grid>
+
+      <br />
+      <br />
       <Grid container>
         <Grid item xs={6} />
         <Grid item sm={12} xs={12} md={6}>
@@ -62,22 +73,16 @@ export default function InvitedGuests() {
         <DataList
           key={invite.id}
           keys={entriesHeaders}
-          data={RenderMyGuest(invite, t, timezone, {classes, theme})}
+          data={RenderMyGuest(invite, t, timezone, { classes, theme })}
           hasHeader={false}
           defaultView={false}
           handleClick={() => handleViewGuest(invite)}
           clickable
-
         />
       ))}
-      <FloatButton
-        title={t('guest.invite_guest')}
-        handleClick={() => history.push('/logbook/guests/invite')}
-      />
     </Container>
   );
 }
-
 
 const useStyles = makeStyles({
   text: {
