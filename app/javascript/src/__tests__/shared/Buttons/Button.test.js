@@ -1,6 +1,6 @@
 import React from 'react';
 import { fireEvent, render } from '@testing-library/react';
-import ButtonComponent from '../../shared/buttons/Button';
+import ButtonComponent from '../../../shared/buttons/Button';
 
 describe('AddmoreButton', () => {
   it('should render the add more button', () => {
