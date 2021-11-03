@@ -390,6 +390,10 @@ RSpec.describe Types::Queries::User do
       @admin_user = create(:user_with_community,
                            user_type: 'admin',
                            community_id: @user.community_id)
+      @visitor = create(:user_with_community,
+                        user_type: 'visitor',
+                        email: 'visiting@admin.com',
+                        community_id: @user.community_id)
       @current_user = @admin_user
 
       @query =
@@ -400,6 +404,34 @@ RSpec.describe Types::Queries::User do
             userType
           }
         })
+
+      @guest_search_query =
+        %(
+          query searchGuest($query: String) {
+            searchGuests(query: $query) {
+              id
+              name
+              email
+              imageUrl
+              avatarUrl
+            }
+          }
+        )
+
+      @my_guest_search_query =
+        %(
+          query guests($query: String){
+            myGuests(query: $query) {
+              id
+              guest {
+                id
+                name
+                imageUrl
+                avatarUrl
+              }
+            }
+          }
+        )
     end
 
     it 'returns user who matches the query ' do
@@ -425,9 +457,43 @@ RSpec.describe Types::Queries::User do
       expect(result.dig('data', 'userSearch')[0]['name']).to eql 'Doe Test'
     end
 
+    it 'searches visitors' do
+      result = DoubleGdpSchema.execute(@guest_search_query, context: {
+                                         current_user: @current_user,
+                                       },
+                                                            variables: {
+                                                              query: 'visiting@admin.com',
+                                                            }).as_json
+
+      expect(result.dig('data', 'searchGuests').length).to eql 1
+      expect(result.dig('data', 'searchGuests')[0]['name']).to eql 'Mark Test'
+    end
+
+    it 'searches for guests I invited' do
+      result = DoubleGdpSchema.execute(@my_guest_search_query, context: {
+                                         current_user: @current_user,
+                                       },
+                                                               variables: {
+                                                                 query: 'visiting@admin.com',
+                                                               }).as_json
+
+      expect(result.dig('data', 'myGuests').length).to eql 0
+    end
+
     it 'should fail if no logged in' do
       result = DoubleGdpSchema.execute(@query, context: { current_user: nil }).as_json
       expect(result.dig('data', 'userSearch')).to be_nil
+    end
+
+    it ' guest_search_query should fail if no logged in' do
+      result = DoubleGdpSchema.execute(@guest_search_query, context: { current_user: nil }).as_json
+      expect(result.dig('data', 'searchGuests')).to be_nil
+    end
+
+    it ' guest_search_query should fail if no logged in' do
+      result = DoubleGdpSchema.execute(@my_guest_search_query, context:
+                                                { current_user: nil }).as_json
+      expect(result.dig('data', 'myGuests')).to be_nil
     end
   end
 

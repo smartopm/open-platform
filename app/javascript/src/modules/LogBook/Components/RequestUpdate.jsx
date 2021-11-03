@@ -203,7 +203,7 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
   function closeQrModal() {
     setQrModal(false);
     if (guestListRequest) {
-      history.push('/guest-list')
+      history.push('/logbook/guests')
       return
     }
     handleNext(true)
@@ -406,7 +406,7 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
   function closeForm({id: _id}){
 
     if(_id === 'new-guest-entry' || guestListRequest ){
-      history.push({pathname: '/guest-list'})
+      history.push({pathname: '/logbook/guests'})
       return
     }
     history.push(`/entry_logs?tab=${tabValue}&offset=0`)

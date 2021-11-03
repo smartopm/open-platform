@@ -19,6 +19,6 @@ RSpec.describe Logs::EntryTime, type: :model do
 
   describe 'associations' do
     it { is_expected.to belong_to(:community) }
-    it { is_expected.to belong_to(:visitable)}
+    it { is_expected.to belong_to(:visitable) }
   end
 end

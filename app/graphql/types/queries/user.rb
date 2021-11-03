@@ -276,7 +276,7 @@ module Types::Queries::User
     ).permission?(
       module: :user,
       permission: :can_search_guests,
-    ) || current.site_manager? || current.site_worker?
+    ) || current&.site_manager? || current&.site_worker?
       raise GraphQL::ExecutionError,
             I18n.t('errors.unauthorized')
     end
