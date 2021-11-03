@@ -1,9 +1,11 @@
 import { Container, Grid, makeStyles } from '@material-ui/core';
-import React, { useState } from 'react';
+import { useTheme } from '@material-ui/styles';
+import React, { useContext, useState } from 'react';
 import { useQuery } from 'react-apollo';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router';
 import FloatButton from '../../../../components/FloatButton';
+import { Context } from '../../../../containers/Provider/AuthStateProvider';
 import DataList from '../../../../shared/list/DataList';
 import { Spinner } from '../../../../shared/Loading';
 import SearchInput from '../../../../shared/search/SearchInput';
@@ -21,6 +23,9 @@ export default function InvitedGuests() {
   });
   const { t } = useTranslation('logbook');
   const classes = useStyles()
+  const authState = useContext(Context)
+  const { timezone } = authState.user.community
+  const theme = useTheme()
 
   const entriesHeaders = [
     { title: 'Guest Name', col: 3, value: t('guest.guest_name') },
@@ -30,6 +35,10 @@ export default function InvitedGuests() {
     { title: 'status', col: 1, value: t('guest.validity') },
     { title: 'validity', col: 1, value: t('guest.validity') },
   ];
+
+  function handleViewGuest(invite){
+    history.push(`/request/${invite.guest.request.id}`)
+  }
 
   return (
     <Container maxWidth="xl">
@@ -53,10 +62,12 @@ export default function InvitedGuests() {
         <DataList
           key={invite.id}
           keys={entriesHeaders}
-          data={RenderMyGuest(invite, t, 'Africa/Lusaka', classes)}
+          data={RenderMyGuest(invite, t, timezone, {classes, theme})}
           hasHeader={false}
-          clickable={false}
           defaultView={false}
+          handleClick={() => handleViewGuest(invite)}
+          clickable
+
         />
       ))}
       <FloatButton
@@ -71,6 +82,7 @@ export default function InvitedGuests() {
 const useStyles = makeStyles({
   text: {
     fontSize: 14,
-    paddingLeft: 16
+    paddingLeft: 16,
+    textTransform: 'none'
   }
 });

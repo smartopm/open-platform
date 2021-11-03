@@ -1,21 +1,26 @@
 import React from 'react';
 import { Grid } from '@material-ui/core';
-import { Link } from 'react-router-dom';
 import { dateToString, dateTimeToString } from '../../../../components/DateContainer';
 import Text from '../../../../shared/Text';
 import Label from '../../../../shared/label/Label';
 import { checkRequests } from '../../utils';
 import Avatar from '../../../../components/Avatar';
 
-export default function RenderMyGuest(invite, translate, tz, classes) {
+/**
+ *
+ * @param {{}} invite
+ * @param {() => ''} translate
+ * @param {() => {}} tz
+ * @param {{ classes: {}, theme: {} }} styles
+ * @returns
+ */
+export default function RenderMyGuest(invite, translate, tz, styles) {
   return [
     {
       'Guest Name': (
         <Grid item xs={6} md={3} data-testid="guest_name">
           <Avatar imageUrl={invite.guest.imageUrl} user={invite.guest} alt="avatar-image" />
-          <Link to={`/user/${invite.guest?.id}`}>
-            <Text content={invite.guest?.name} className={classes.text} />
-          </Link>
+          <Text content={invite.guest?.name} className={styles.classes.text} />
         </Grid>
       ),
       'Start of Visit': (
@@ -24,7 +29,7 @@ export default function RenderMyGuest(invite, translate, tz, classes) {
             content={translate('guest_book.start_of_visit', {
               date: dateToString(invite.entryTime.visitationDate)
             })}
-            className={classes.text}
+            className={styles.classes.text}
           />
         </Grid>
       ),
@@ -40,7 +45,7 @@ export default function RenderMyGuest(invite, translate, tz, classes) {
                     date: dateToString(invite.entryTime.visitationDate)
                   })
             }
-            className={classes.text}
+            className={styles.classes.text}
           />
         </Grid>
       ),
@@ -51,7 +56,7 @@ export default function RenderMyGuest(invite, translate, tz, classes) {
               startTime: dateTimeToString(invite.entryTime.startsAt),
               endTime: dateTimeToString(invite.entryTime.endsAt)
             })}
-            className={classes.text}
+            className={styles.classes.text}
           />
         </Grid>
       ),
@@ -59,7 +64,11 @@ export default function RenderMyGuest(invite, translate, tz, classes) {
         <Grid item xs={6} md={1} data-testid="status">
           <Label
             title={invite.guest.request.status === 'pending' ? 'Pending' : 'Approved'}
-            color={invite.guest.request.status === 'pending' ? 'blue' : 'green'}
+            color={
+              invite.guest.request.status === 'pending'
+                ? styles.theme.palette.secondary.main
+                : styles.theme.palette.primary.main
+            }
           />
         </Grid>
       ),
@@ -74,5 +83,3 @@ export default function RenderMyGuest(invite, translate, tz, classes) {
     }
   ];
 }
-
-

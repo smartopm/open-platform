@@ -21,8 +21,6 @@ module Mutations
       def resolve(vals)
         ActiveRecord::Base.transaction do
           user = context[:site_community].users.find_by(id: vals[:guest_id])
-          raise_duplicate_email_error(vals[:email])
-          raise_duplicate_number_error(vals[:phone_number])
 
           guest = check_or_create_guest(vals, user)
           request = generate_request(vals, guest)
@@ -35,8 +33,6 @@ module Mutations
         rescue ActiveRecord::RecordNotUnique
           raise GraphQL::ExecutionError, I18n.t('errors.duplicate.guest')
         end
-
-        # raise GraphQL::ExecutionError, entry_time.errors.full_messages
       end
 
       def generate_entry_time(vals, invite)
@@ -72,13 +68,17 @@ module Mutations
 
         context[:current_user].entry_requests.create!(
           guest_id: guest.id,
-          **vals.except(:guest_id), # specify only the fields we need here
+          name: vals[:name],
+          phone_number: vals[:phone_number],
+          email: vals[:email],
         )
       end
 
-      # TODO: find out how to re-use validation in create mutation
       def check_or_create_guest(vals, user)
         return user unless user.nil?
+
+        raise_duplicate_email_error(vals[:email])
+        raise_duplicate_number_error(vals[:phone_number])
 
         context[:current_user].enroll_user(
           name: vals[:name],

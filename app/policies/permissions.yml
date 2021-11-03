@@ -365,6 +365,7 @@ resident:
       - can_view_own_profile
       - can_edit_own_profile
       - can_search_guests
+      - can_view_guests
   profile:
     permissions:
       - can_see_menu_item
@@ -399,6 +400,7 @@ client:
       - can_view_entry_request
       - can_revoke_entry_request
       - can_invite_guest
+
   guest_list:
     permissions:
       - can_see_menu_item
@@ -412,6 +414,7 @@ client:
       - can_view_own_profile
       - can_edit_own_profile
       - can_search_guests
+      - can_view_guests
   profile:
     permissions:
       - can_see_menu_item
