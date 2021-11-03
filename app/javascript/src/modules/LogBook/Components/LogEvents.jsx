@@ -94,15 +94,15 @@ export default function LogEvents({
   };
   return (
     <>
-      {console.log(data)}
+      {/* {console.log(data)} */}
       {loading ? (
         <Spinner />
       ) : (
         data.map(entry => (
           <>
             <Card key={entry.id}>
-              <Grid container>
-                <Grid item sm={5}>
+              <Grid container spacing={1}>
+                <Grid item sm={4}>
                   {entry.entryRequest ? (
                     <>
                       <Typography color="primary">{entry.entryRequest?.name}</Typography>
@@ -114,22 +114,23 @@ export default function LogEvents({
                           <Typography color="secondary">{entry.actingUser.name}</Typography>
                         </Grid>
                       </Grid>
+                      <Typography color="textSecondary">{entry.data?.note}</Typography>
                     </>
                   ) : (
                     <Typography color="textSecondary">{entry.data?.note}</Typography>
                   )}
                 </Grid>
-                <Grid item sm={6} style={{ paddingTop: '7px' }}>
+                <Grid item sm={7} style={{ paddingTop: '7px' }}>
                   <Grid container spacing={1}>
-                    <Grid item sm={3}>
+                    <Grid item sm={2} style={{ paddingTop: '15px' }}>
                       <Typography color="textSecondary">{dateToString(entry.createdAt)}</Typography>
                     </Grid>
-                    <Grid item sm={2}>
+                    <Grid item sm={1} style={{ paddingTop: '15px' }}>
                       <Typography color="textSecondary">
                         {dateTimeToString(entry.createdAt)}
                       </Typography>
                     </Grid>
-                    <Grid item sm={7}>
+                    <Grid item sm={9}>
                       <Grid container spacing={1}>
                         {entry.entryRequest?.grantor && entry.data.note !== 'Exited' && (
                           <Grid item sm={6}>
@@ -148,7 +149,7 @@ export default function LogEvents({
                         )}
                         {entry.imageUrls && (
                           <Grid item sm={1}>
-                            <IconButton color="primary" onClick={() => handleClick(entry)}>
+                            <IconButton color="primary" onClick={() => handleClick(entry.id)}>
                               <PhotoIcon />
                             </IconButton>
                           </Grid>

@@ -9,7 +9,7 @@ import makeStyles from '@material-ui/core/styles/makeStyles';
 import SpeedDialIcon from '@material-ui/lab/SpeedDialIcon';
 import Grid from '@material-ui/core/Grid';
 import { StyledTabs, StyledTab, TabPanel, a11yProps } from '../../../components/Tabs';
-import { useParamsQuery, objectAccessor } from '../../../utils/helpers';
+import { useParamsQuery, objectAccessor, handleQueryOnChange } from '../../../utils/helpers';
 import LogEvents from './LogEvents';
 import VisitView from './VisitView';
 import SpeedDial from '../../../shared/buttons/SpeedDial';
@@ -21,15 +21,15 @@ import { useFileUpload } from '../../../graphql/useFileUpload';
 import { Spinner } from '../../../shared/Loading';
 import AddObservationNoteMutation from '../graphql/logbook_mutations';
 import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider';
+import QueryBuilder from '../../../components/QueryBuilder';
+import {
+  entryLogsFilterFields,
+  entryLogsQueryBuilderConfig,
+  entryLogsQueryBuilderInitialValue,
+} from '../../../utils/constants';
 
 const limit = 20;
 export default function LogBook() {
-  // function handleChange(_event, newValue) {
-  //   setvalue(newValue);
-  //   setSearchTerm('');
-  //   // reset pagination after changing the tab
-  //   history.push(`/entry_logs?tab=${newValue}&offset=${0}`);
-  // }
   const authState = useContext(AuthStateContext);
   const { t } = useTranslation(['logbook', 'common', 'dashboard']);
   const [displayBuilder, setDisplayBuilder] = useState('none');
@@ -41,6 +41,7 @@ export default function LogBook() {
   const [open, setOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const dbcSearchTerm = useDebounce(searchTerm, 500);
+  const [searchQuery, setSearchQuery] = useState('');
   const subjects = ['user_entry', 'visitor_entry', 'user_temp', 'observation_log'];
   const [offset, setOffset] = useState(0);
   const refId = userId || null;
@@ -49,6 +50,7 @@ export default function LogBook() {
   const [blobIds, setBlobIds] = useState([]);
   const [isObservationOpen, setIsObservationOpen] = useState(false);
   const [clickedEvent, setClickedEvent] = useState({ refId: '', refType: '' });
+  const [scope, setScope] = useState(7);
   const [observationDetails, setDetails] = useState({
     isError: false,
     message: '',
@@ -90,6 +92,13 @@ export default function LogBook() {
     client: useApolloClient()
   });
 
+  function handleChange(_event, newValue) {
+    setvalue(newValue);
+    setSearchTerm('');
+    // reset pagination after changing the tab
+    history.push(`/logbook?tab=${newValue}&offset=${0}`);
+  }
+
   function handleSearch(event) {
     setSearchTerm(event.target.value);
   }
@@ -106,6 +115,11 @@ export default function LogBook() {
   function handleCancelClose() {
     setIsObservationOpen(false);
     resetImageData();
+  }
+
+  function queryOnChange(selectedOptions) {
+    setSearchQuery(handleQueryOnChange(selectedOptions, entryLogsFilterFields));
+    setScope(null)
   }
 
   function handleCloseButton(imgUrl) {
@@ -250,17 +264,17 @@ export default function LogBook() {
         <Grid item sm={11}>
           <Typography variant="h4">Log Book</Typography>
           <Grid container>
-            <Grid item sm="6">
+            <Grid item sm={6}>
               <StyledTabs
                 value={value}
-                onChange={(_event, newValue) => setvalue(newValue)}
                 aria-label="simple tabs example"
+                onChange={handleChange}
               >
                 <StyledTab label="LOG VIEW" {...a11yProps(0)} />
                 <StyledTab label="VISIT VIEW" {...a11yProps(1)} />
               </StyledTabs>
             </Grid>
-            <Grid iteem sm={5}>
+            <Grid item sm={5}>
               <SearchInput
                 title={objectAccessor(searchPlaceholder, value)}
                 searchValue={searchTerm}
@@ -269,6 +283,21 @@ export default function LogBook() {
                 handleFilter={toggleFilterMenu}
                 handleClear={handleSearchClear}
               />
+              <Grid
+                container
+                justify="flex-end"
+                className={classes.filter}
+                style={{
+                  display: displayBuilder
+                }}
+              >
+                <QueryBuilder
+                  handleOnChange={queryOnChange}
+                  builderConfig={entryLogsQueryBuilderConfig}
+                  initialQueryValue={entryLogsQueryBuilderInitialValue}
+                  addRuleLabel={t('common:misc.add_filter')}
+                />
+              </Grid>
             </Grid>
           </Grid>
           <TabPanel value={value} index={0}>
@@ -283,7 +312,14 @@ export default function LogBook() {
             />
           </TabPanel>
           <TabPanel value={value} index={1}>
-            <VisitView />
+            <VisitView
+              tabValue={tabValue}
+              handleAddObservation={handleAddObservation}
+              offset={offset}
+              limit={limit}
+              query={`${searchTerm} ${searchQuery}`}
+              scope={scope}
+            />
           </TabPanel>
         </Grid>
         <Grid item sm={1}>
