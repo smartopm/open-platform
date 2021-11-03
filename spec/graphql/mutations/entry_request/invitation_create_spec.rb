@@ -79,7 +79,7 @@ RSpec.describe Mutations::EntryRequest::InvitationCreate do
         it 'returns an error when an email aready exist' do
           variables = {
             name: 'John Doe',
-            email: 'user@admin.com',
+            email: 'u@admin.com',
             phoneNumber: '9019201920319',
             visitationDate: '2021-10-10',
           }

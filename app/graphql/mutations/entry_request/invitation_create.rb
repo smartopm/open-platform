@@ -22,9 +22,6 @@ module Mutations
         ActiveRecord::Base.transaction do
           user = context[:site_community].users.find_by(id: vals[:guest_id])
 
-          raise_duplicate_email_error(vals[:email])
-          raise_duplicate_number_error(vals[:phone_number])
-
           guest = check_or_create_guest(vals, user)
           request = generate_request(vals, guest)
           invite = context[:current_user].invite_guest(guest.id)
@@ -77,6 +74,9 @@ module Mutations
 
       def check_or_create_guest(vals, user)
         return user unless user.nil?
+
+        raise_duplicate_email_error(vals[:email])
+        raise_duplicate_number_error(vals[:phone_number])
 
         context[:current_user].enroll_user(
           name: vals[:name],

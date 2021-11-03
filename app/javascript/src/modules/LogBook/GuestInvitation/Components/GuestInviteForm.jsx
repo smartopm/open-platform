@@ -57,11 +57,11 @@ export default function GuestInviteForm({ guest }) {
        setInputValidationMsg({ isError: true });
       return;
     }
-    if (!validateEmail(guestData.email)) {
+    if (!validateEmail(guestData.email) && !guest?.id) {
       setDetails({ ...details, message: t('discussion:helper_text.invalid_email'), isError: true });
-      return 
+      return
     }
-  
+
     setGuestData({ ...guestData, isLoading: true });
 
     createInvitation({
