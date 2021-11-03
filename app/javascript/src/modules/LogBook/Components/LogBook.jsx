@@ -9,7 +9,7 @@ import makeStyles from '@material-ui/core/styles/makeStyles';
 import SpeedDialIcon from '@material-ui/lab/SpeedDialIcon';
 import Grid from '@material-ui/core/Grid';
 import { StyledTabs, StyledTab, TabPanel, a11yProps } from '../../../components/Tabs';
-import { useParamsQuery } from '../../../utils/helpers';
+import { useParamsQuery, objectAccessor } from '../../../utils/helpers';
 import LogEvents from './LogEvents';
 import VisitView from './VisitView';
 import SpeedDial from '../../../shared/buttons/SpeedDial';
@@ -30,6 +30,7 @@ export default function LogBook() {
   //   history.push(`/entry_logs?tab=${newValue}&offset=${0}`);
   // }
   const { t } = useTranslation(['logbook', 'common', 'dashboard']);
+  const [displayBuilder, setDisplayBuilder] = useState('none');
   const path = useParamsQuery();
   const tabValue = path.get('tab');
   const { userId } = useParams();
@@ -66,14 +67,19 @@ export default function LogBook() {
     }
   ];
 
+  const logsQuery = {
+    0: subjects,
+    1: 'visit_request',
+  };
+
   const { loading, error, data, refetch } = useQuery(AllEventLogsQuery, {
     variables: {
-      subject: subjects,
+      subject: objectAccessor(logsQuery, value),
       refId,
       refType: null,
       offset,
       limit,
-      name: ''
+      name: value !== 1 ? dbcSearchTerm : ''
     },
     fetchPolicy: 'cache-and-network'
   });
@@ -104,6 +110,19 @@ export default function LogBook() {
     const images = [...imageUrls];
     const filteredImages = images.filter(img => img !== imgUrl);
     setImageUrls(filteredImages);
+  }
+
+  const searchPlaceholder = {
+    0: t('logbook.log_view'),
+    1: t('logbook.visit_view')
+  };
+
+  function toggleFilterMenu() {
+    if (displayBuilder === '') {
+      setDisplayBuilder('none');
+    } else {
+      setDisplayBuilder('');
+    }
   }
 
   function handleSaveObservation(log = clickedEvent, type) {
@@ -231,11 +250,11 @@ export default function LogBook() {
             </Grid>
             <Grid iteem sm={5}>
               <SearchInput
-                title="search Logs"
+                title={objectAccessor(searchPlaceholder, value)}
                 searchValue={searchTerm}
-                // filterRequired={tabValue === 2}
+                filterRequired={tabValue === 1}
                 handleSearch={handleSearch}
-                // handleFilter={toggleFilterMenu}
+                handleFilter={toggleFilterMenu}
                 handleClear={handleSearchClear}
               />
             </Grid>

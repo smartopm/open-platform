@@ -52,7 +52,9 @@
     "visit_scheduled": "Visit scheduled for: {{date}} at {{time}}",
     "no_invited_guests": "No invited guests",
     "visit_end_error": "Visitation dates are required",
-    "continue": "Continue"
+    "continue": "Continue",
+    "log_view": "Log View",
+    "visit_view": "Visit View"
   },
   "log_title": {
     "visitor": "Visitor",
