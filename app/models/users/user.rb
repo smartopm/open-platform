@@ -111,12 +111,14 @@ module Users
                               source: :payment_plan
 
     # TODO: find more about the inverse_of association and if we really need that
+    # rubocop:disable Rails/InverseOf
     has_one :request, class_name: 'Logs::EntryRequest', foreign_key: :guest_id,
-                      dependent: :destroy, inverse_of: 'guest'
+                      dependent: :destroy
     has_many :invites, class_name: 'Logs::Invite', foreign_key: :guest_id,
                        dependent: :destroy
     has_many :invitees, class_name: 'Logs::Invite', foreign_key: :host_id,
                         dependent: :destroy
+    # rubocop:enable Rails/InverseOf
     has_one_attached :avatar
     has_one_attached :document
 
