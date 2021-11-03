@@ -36,8 +36,6 @@ export default function EmailBuilderDialog() {
   const history = useHistory()
   const status = useScript('https://editor.unlayer.com/embed.js');
   const { unlayer } = window;
-
-
   const { data: templateData } = useQuery(
     EmailTemplateQuery,
     {
@@ -46,6 +44,7 @@ export default function EmailBuilderDialog() {
       fetchPolicy: 'cache-and-network'
     }
   );
+  const [emailSubject, setEmailSubject] = useState(templateData?.emailTemplate?.subject || '');
 
   function handleClose(){
     history.push('/mail_templates')
@@ -59,7 +58,7 @@ export default function EmailBuilderDialog() {
     setMessage({ ...message, loading: true });
     unlayer.exportHtml(data => {
       updateEmailTemplate({
-        variables: { id: emailId, body: data.html, data }
+        variables: { id: emailId, body: data.html, data, subject: (emailSubject || templateData?.emailTemplate?.subject) }
       })
         .then(() => {
           setMessage({ ...message, isError: false, detail: t('email.email_updated'), loading: false});
@@ -105,6 +104,11 @@ export default function EmailBuilderDialog() {
     })
   }
 
+  function updateEmailSubject(details) {
+    setEmailSubject(details?.subject);
+    handleDetailsDialog();
+  }
+
   useEffect(() => {
     if(status === 'ready'){
       initializeUnLayer();
@@ -122,8 +126,14 @@ export default function EmailBuilderDialog() {
       <EmailDetailsDialog
         open={detailsOpen}
         handleClose={handleDetailsDialog}
-        handleSave={saveTemplate}
+        handleSave={emailId ? updateEmailSubject : saveTemplate}
         loading={message.loading}
+        dialogHeader={emailId ? t('email.subject_update_header') : t('email.template_create_header')}
+        initialData={{
+          name: templateData?.emailTemplate?.name || '',
+          subject: emailSubject || templateData?.emailTemplate?.subject || ''
+        }}
+        action={emailId ? 'update' : 'create'}
       />
       <MessageAlert
         type={message.isError ? 'error' : 'success'}
@@ -137,16 +147,25 @@ export default function EmailBuilderDialog() {
             <IconButton edge="start" data-testid="close_btn" onClick={handleClose} aria-label="close">
               <CloseIcon />
             </IconButton>
-
-            <Button
-              style={{ marginLeft: '85vw' }}
-              autoFocus
-              onClick={emailId ?  updateTemplate : handleDetailsDialog}
-              disabled={message.loading}
-              data-testid="submit_btn"
-            >
-              {`${message.loading ? t('common:form_actions.saving') : emailId ? t('common:form_actions.update') :  t('common:form_actions.save')}`}
-            </Button>
+            <div style={{ marginLeft: '80vw' }}>
+              {emailId && (
+              <Button
+                onClick={handleDetailsDialog}
+                disabled={message.loading}
+                data-testid="edit_subject_btn"
+              >
+                {t('email.edit_subject')}
+              </Button>
+            )}
+              <Button
+                autoFocus
+                onClick={emailId ?  updateTemplate : handleDetailsDialog}
+                disabled={message.loading}
+                data-testid="submit_btn"
+              >
+                {`${message.loading ? t('common:form_actions.saving') : emailId ? t('common:form_actions.update') :  t('common:form_actions.save')}`}
+              </Button>
+            </div>
           </Toolbar>
         </AppBar>
         <div id="email-editor-container" style={{ minHeight: '700px', minWidth: '1024px'}} />
