@@ -6,12 +6,11 @@ import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import { Context } from '../../../../containers/Provider/AuthStateProvider';
 import CustomSpeedDial from '../../../../shared/buttons/SpeedDial';
-import DataList from '../../../../shared/list/DataList';
 import { Spinner } from '../../../../shared/Loading';
 import SearchInput from '../../../../shared/search/SearchInput';
 import useDebounce from '../../../../utils/useDebounce';
 import { MyInvitedGuestsQuery } from '../graphql/queries';
-import RenderMyGuest from './RenderMyGuest';
+import GuestCard from './GuestCard';
 
 export default function InvitedGuests() {
   const history = useHistory();
@@ -26,19 +25,6 @@ export default function InvitedGuests() {
   const authState = useContext(Context);
   const { timezone } = authState.user.community;
   const theme = useTheme();
-
-  const entriesHeaders = [
-    { title: 'Guest Name', col: 3, value: t('guest.guest_name') },
-    { title: 'Start of Visit', col: 2, value: t('guest.start_of_visit') },
-    { title: 'End of Visit', col: 2, value: t('guest.end_of_visit') },
-    { title: 'Access Time', col: 1, value: t('guest.access_time') },
-    { title: 'status', col: 1, value: t('guest.validity') },
-    { title: 'validity', col: 1, value: t('guest.validity') }
-  ];
-
-  function handleViewGuest(invite) {
-    history.push(`/request/${invite.guest.request.id}?type=view`);
-  }
 
   return (
     <Container maxWidth="xl">
@@ -70,14 +56,12 @@ export default function InvitedGuests() {
       {loading && <Spinner />}
 
       {data?.myGuests?.map(invite => (
-        <DataList
+        <GuestCard
           key={invite.id}
-          keys={entriesHeaders}
-          data={RenderMyGuest(invite, t, timezone, { classes, theme })}
-          hasHeader={false}
-          defaultView={false}
-          handleClick={() => handleViewGuest(invite)}
-          clickable
+          invite={invite}
+          translate={t}
+          tz={timezone}
+          styles={{ classes, theme }}
         />
       ))}
     </Container>
@@ -89,5 +73,10 @@ const useStyles = makeStyles({
     fontSize: 14,
     paddingLeft: 16,
     textTransform: 'none'
-  }
+  },
+  card: {
+    borderRadius: 4,
+    margin: 8,
+    cursor: 'pointer',
+}
 });
