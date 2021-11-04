@@ -1,7 +1,6 @@
 import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import Card from '@material-ui/core/Card';
-import Chip from '@material-ui/core/Chip';
 import PropTypes from 'prop-types';
 import CardContent from '@material-ui/core/CardContent';
 import { useHistory } from 'react-router';
@@ -9,6 +8,7 @@ import { dateToString, dateTimeToString } from '../../../../components/DateConta
 import Text from '../../../../shared/Text';
 import { checkRequests } from '../../utils';
 import Avatar from '../../../../components/Avatar';
+import Label from '../../../../shared/label/Label';
 
 export default function GuestListCard({ invite, translate, tz, styles }) {
     const history = useHistory()
@@ -56,24 +56,19 @@ export default function GuestListCard({ invite, translate, tz, styles }) {
             />
           </Grid>
           <Grid item xs={6} sm={4} lg={1}>
-            <Chip
-              label={invite.guest.request.status === 'pending' ? 'Pending' : 'Approved'}
-              style={{
-                backgroundColor:
+            <Label
+              title={invite.guest.request.status === 'pending' ? 'Pending' : 'Approved'}
+              color={
                   invite.guest.request.status === 'pending'
                     ? styles.theme.palette.info.main
                     : styles.theme.palette.success.main
-              }}
+              }
             />
           </Grid>
           <Grid item xs={6} sm={4} lg={1}>
-            <Chip
-              label={checkRequests(invite.entryTime, translate, tz).title}
-              style={{
-                backgroundColor: checkRequests(invite.entryTime, translate, tz).valid
-                  ? styles.theme.palette.info.main
-                  : styles.theme.palette.error.main
-              }}
+            <Label
+              title={checkRequests(invite.entryTime, translate, tz).title}
+              color={checkRequests(invite.entryTime, translate, tz).color}
             />
           </Grid>
         </Grid>

@@ -54,7 +54,6 @@ export default function GuestSearch() {
         </Grid>
         <br />
         <br />
-        {loading && <Spinner />}
         {!loading &&
           !error && searchValue &&
           data?.searchGuests?.map(guestData => (
@@ -89,6 +88,7 @@ export default function GuestSearch() {
             </Button>
           </CenteredContent>
         )}
+        {loading && <Spinner />}
       </Container>
     </>
   );
