@@ -1,4 +1,4 @@
-import { Container, Grid, makeStyles, Typography } from '@material-ui/core';
+import { Container, Grid, Typography } from '@material-ui/core';
 import { useTheme } from '@material-ui/styles';
 import React, { useContext, useState } from 'react';
 import { useQuery } from 'react-apollo';
@@ -10,7 +10,8 @@ import { Spinner } from '../../../../shared/Loading';
 import SearchInput from '../../../../shared/search/SearchInput';
 import useDebounce from '../../../../utils/useDebounce';
 import { MyInvitedGuestsQuery } from '../graphql/queries';
-import GuestCard from './GuestCard';
+import { useStyles } from '../styles';
+import GuestListCard from './GuestListCard';
 
 export default function InvitedGuests() {
   const history = useHistory();
@@ -56,7 +57,7 @@ export default function InvitedGuests() {
       {loading && <Spinner />}
 
       {data?.myGuests?.map(invite => (
-        <GuestCard
+        <GuestListCard
           key={invite.id}
           invite={invite}
           translate={t}
@@ -67,16 +68,3 @@ export default function InvitedGuests() {
     </Container>
   );
 }
-
-const useStyles = makeStyles({
-  text: {
-    fontSize: 14,
-    paddingLeft: 16,
-    textTransform: 'none'
-  },
-  card: {
-    borderRadius: 4,
-    margin: 8,
-    cursor: 'pointer',
-}
-});

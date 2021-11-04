@@ -4,14 +4,14 @@ import { useQuery } from 'react-apollo';
 import { useTranslation } from 'react-i18next';
 import AddIcon from '@material-ui/icons/Add';
 import CenteredContent from '../../../../shared/CenteredContent';
-import DataList from '../../../../shared/list/DataList';
 import { Spinner } from '../../../../shared/Loading';
 import SearchInput from '../../../../shared/search/SearchInput';
 import useDebounce from '../../../../utils/useDebounce';
 import { SearchGuestsQuery } from '../graphql/queries';
-import RenderGuest from './GuestUser';
 import CustomDialog from '../../../../shared/dialogs/CustomDialog';
 import GuestInviteForm from './GuestInviteForm';
+import GuestSearchCard from './GuestSearchCard';
+import { useStyles } from '../styles';
 
 export default function GuestSearch() {
   const [searchValue, setSearchValue] = useState('');
@@ -23,13 +23,7 @@ export default function GuestSearch() {
     fetchPolicy: 'network-only'
   });
   const { t } = useTranslation(['common', 'logbook']);
-
-
-  const entriesHeaders = [
-    { title: 'Avatar', col: 1, value: t('guest.guest_name') },
-    { title: 'GuestName', col: 4, value: t('guest.guest_name') },
-    { title: 'Action', col: 4, value: t('guest.access_action') }
-  ];
+  const classes = useStyles()
 
   function inviteGuest(guestUser) {
     setGuest(guestUser);
@@ -64,13 +58,12 @@ export default function GuestSearch() {
         {!loading &&
           !error && searchValue &&
           data?.searchGuests?.map(guestData => (
-            <DataList
+            <GuestSearchCard
               key={guestData.id}
-              keys={entriesHeaders}
-              data={RenderGuest(guestData, inviteGuest, t)}
-              hasHeader={false}
-              clickable={false}
-              defaultView={false}
+              guest={guestData}
+              translate={t}
+              styles={classes}
+              handInviteGuest={inviteGuest}
             />
           ))}
 

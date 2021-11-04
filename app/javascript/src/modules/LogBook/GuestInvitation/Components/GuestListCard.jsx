@@ -10,7 +10,7 @@ import Text from '../../../../shared/Text';
 import { checkRequests } from '../../utils';
 import Avatar from '../../../../components/Avatar';
 
-export default function GuestCard({ invite, translate, tz, styles }) {
+export default function GuestListCard({ invite, translate, tz, styles }) {
     const history = useHistory()
     function handleViewGuest() {
         history.push(`/request/${invite.guest.request.id}?type=view`);
@@ -84,7 +84,7 @@ export default function GuestCard({ invite, translate, tz, styles }) {
 
 
 
-GuestCard.propTypes = {
+GuestListCard.propTypes = {
   invite: PropTypes.shape({
     entryTime: PropTypes.shape({
       startsAt: PropTypes.string,
