@@ -187,6 +187,15 @@ admin:
       - can_access_business
       - can_create_business
       - can_delete_business
+  campaign:
+    permissions:
+      - can_see_menu_item
+      - can_access_campaign
+      - can_create_campaign
+      - can_delete_campaign
+      - can_create_campaign_through_users
+      - can_remove_campaign_label
+      - can_update_campaign
 contractor:
   note:
     permissions:
