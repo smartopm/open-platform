@@ -37,7 +37,7 @@ export function UserIDDetail({ data, communityName }) {
   const { t } = useTranslation(['scan', 'days', 'common']);
   return (
     <div>
-     
+
       <div className="row justify-content-center">
         <div className="card id_card_box col-10 col-sm-10 col-md-6">
           <div
@@ -96,13 +96,15 @@ export function UserIDDetail({ data, communityName }) {
                 variant="body2"
                 style={{ fontSize: 13 }}
               >
-                {t('qr_code.message', {communityName})}
+                {
+                  communityName === 'Tilisi' ? t('qr_code.tilisi_message', {communityName}) : t('qr_code.message', {communityName})
+                }
               </Typography>
             </div>
           </div>
 
           {/* check the time and advise the user */}
-          {communityName && communityName !== 'Ciudad Morazán' ? (
+          {communityName && communityName !== 'Ciudad Morazán' && communityName !== 'Tilisi' ? (
             <div className="d-flex justify-content-center">
               <p>
                 <u>{t('misc.visiting_hours')}</u>
@@ -117,13 +119,13 @@ export function UserIDDetail({ data, communityName }) {
                   {t('days:days.friday')}
                   :
                   {' '}
-                  <b>8:00 - 16:00</b> 
+                  <b>8:00 - 16:00</b>
                   {' '}
                   <br />
                   {t('days:days.saturday')}
                   :
                   {' '}
-                  <b>8:00 - 12:00</b> 
+                  <b>8:00 - 12:00</b>
                   {' '}
                   <br />
                   {t('days:days.sunday')}
