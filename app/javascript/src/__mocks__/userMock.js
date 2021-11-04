@@ -20,7 +20,8 @@ const userMock = {
         menuItems: [
           { menu_link: 'http://some-link.com', menu_name: 'Custom Menu', display_on: ['Menu', 'Dashboard'] },
         ],
-        features: {}
+        features: {},
+        timezone: 'Africa/Maputo'
       }
     }
   };

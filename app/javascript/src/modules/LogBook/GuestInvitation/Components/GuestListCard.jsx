@@ -76,6 +76,12 @@ export default function GuestListCard({ invite, translate, tz, styles }) {
   );
 }
 
+GuestListCard.defaultProps = {
+  styles: {
+    classes: {}
+  }
+}
+
 GuestListCard.propTypes = {
   invite: PropTypes.shape({
     entryTime: PropTypes.shape({
@@ -103,11 +109,7 @@ GuestListCard.propTypes = {
         error: PropTypes.shape({ main: PropTypes.string })
       })
     }),
-    classes: PropTypes.shape({
-      // eslint-disable-next-line react/forbid-prop-types
-      text: PropTypes.object,
-      // eslint-disable-next-line react/forbid-prop-types
-      card: PropTypes.object
-    })
-  }).isRequired
+    // eslint-disable-next-line react/forbid-prop-types
+    classes: PropTypes.object
+  })
 };
