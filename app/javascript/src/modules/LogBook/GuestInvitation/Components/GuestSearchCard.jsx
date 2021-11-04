@@ -14,10 +14,10 @@ export default function GuestSearchCard({ guest, translate, styles, handInviteGu
     <Card className={styles.card}>
       <CardContent>
         <Grid container direction="row" justify="center" alignItems="center" spacing={2}>
-          <Grid item xs={2}>
+          <Grid item xs={2} data-testid="guest_avatar">
             <Avatar imageUrl={guest.imageUrl} user={guest} alt="avatar-image" />
           </Grid>
-          <Grid item xs={5}>
+          <Grid item xs={5} data-testid="guest_name">
             <Link to={`/user/${guest.id}`}>
               <Text content={guest.name} />
             </Link>
@@ -29,7 +29,7 @@ export default function GuestSearchCard({ guest, translate, styles, handInviteGu
                 color="primary"
                 onClick={() => handInviteGuest(guest)}
                 disableElevation
-                data-testid="grant_access_btn"
+                data-testid="invite_guest_btn"
               >
                 {translate('form_actions.invite_guest')}
               </Button>

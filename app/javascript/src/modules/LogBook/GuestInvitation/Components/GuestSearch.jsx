@@ -83,6 +83,7 @@ export default function GuestSearch() {
               data-testid="invite_btn"
               startIcon={<AddIcon />}
               onClick={() => inviteGuest(null)}
+              disableElevation
             >
               {t('logbook:guest.invite_new_guest')}
             </Button>
