@@ -29,7 +29,7 @@ export default function GuestList() {
 
   const [loadGuestListEntries, { data, loading: guestsLoading, refetch }] = useLazyQuery(GuestListEntriesQuery, {
       variables: { offset, limit },
-      fetchPolicy: "cache-and-network"
+      fetchPolicy: "network-only"
   });
 
   useEffect(() => {
