@@ -51,8 +51,12 @@ module Notes
                                end
                              }
 
-    VALID_CATEGORY = %w[call email text message to_do form emergency other].freeze
+    VALID_CATEGORY = %w[call email text message to_do form emergency template other].freeze
     validates :category, inclusion: { in: VALID_CATEGORY, allow_nil: true }
+    validates :name, presence: true,
+                     uniqueness: { scope: :community_id,
+                                   case_sensitive: false,
+                                   conditions: -> { where(category: 'template') } }
     alias sub_tasks sub_notes
 
     def assign_or_unassign_user(user_id)
