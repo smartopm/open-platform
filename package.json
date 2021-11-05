@@ -6,7 +6,7 @@
   },
   "scripts": {
     "lint": "eslint app/javascript/src --ext .js --ext .jsx app/javascript/packs/react_main.jsx",
-    "test": "NODE_ENV=test jest",
+    "test": "NODE_ENV=test jest app/javascript/src/modules/Community/__tests__/Settings.test.js",
     "format": "prettier --no-semi --single-quote --write app/javascript/src/**/*.jsx",
     "storybook": "start-storybook -p 6006 --no-dll --quiet",
     "build-storybook": "build-storybook --no-dll"

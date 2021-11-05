@@ -41,7 +41,7 @@ describe('Community settings page', () => {
         { menu_link: 'http://some-link.com', menu_name: 'Custom Menu', display_on: ['Menu'], roles: ['admin'] },
       ],
       templates: {},
-      subAdministrator: { id: '123df', name: 'User Name' },
+      subAdministrator: {},
       logoUrl: null,
       locale: 'en-US',
       currency: 'honduran_lempira',
@@ -92,7 +92,7 @@ describe('Community settings page', () => {
           logoUrl: '',
           wpLink: '',
           securityManager: '',
-          subAdministratorId: '123df',
+          subAdministratorId: '',
           themeColors: { primaryColor: '#69ABA4', secondaryColor: '#cf5628' },
           bankingDetails: {
             bankName: 'Test bank name',
@@ -163,7 +163,6 @@ describe('Community settings page', () => {
     expect(container.queryAllByLabelText('common:form_fields.email')).toHaveLength(2);
     expect(container.queryByLabelText('common:form_fields.phone_number')).toBeInTheDocument();
     expect(container.queryByLabelText('WhatsApp')).toBeInTheDocument();
-    expect(container.queryByText('community.set_sub_administrator')).toBeInTheDocument();
     expect(container.queryByText('community.sms_phone_numbers')).not.toBeDisabled();
     expect(container.queryByText('community.emergency_call_number')).not.toBeDisabled();
     expect(container.queryByText('community.sms_phone_numbers_header')).toBeInTheDocument();
@@ -198,10 +197,10 @@ describe('Community settings page', () => {
     expect(container.queryByTestId('disable_deny_gate_access')).toBeInTheDocument();
     expect(container.queryByTestId('enable_automated_task_reminders')).toBeInTheDocument();
 
-    fireEvent.select(container.queryByTestId('payment_reminder_template_behind'), { target: { value: 'payment_reminder_template' } });
+    fireEvent.change(container.queryByTestId('payment_reminder_template_behind'), { target: { value: 'payment_reminder_template' } });
     expect(container.queryByTestId('payment_reminder_template_behind').value).toBe('payment_reminder_template');
 
-    fireEvent.select(container.queryByTestId('payment_reminder_template_upcoming'), { target: { value: 'payment_reminder_template' } });
+    fireEvent.change(container.queryByTestId('payment_reminder_template_upcoming'), { target: { value: 'payment_reminder_template' } });
     expect(container.queryByTestId('payment_reminder_template_upcoming').value).toBe('payment_reminder_template');
 
     fireEvent.select(container.queryByTestId('locale'), { target: { value: 'en-US' } });

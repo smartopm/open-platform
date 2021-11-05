@@ -2,7 +2,16 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import React, { useEffect, useState } from 'react';
 import Typography from '@material-ui/core/Typography';
-import { Button, TextField, MenuItem, Container, Grid, IconButton, FormControlLabel, Checkbox } from '@material-ui/core';
+import {
+  Button,
+  TextField,
+  MenuItem,
+  Container,
+  Grid,
+  IconButton,
+  FormControlLabel,
+  Checkbox
+} from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { DeleteOutline } from '@material-ui/icons';
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
@@ -15,7 +24,12 @@ import DynamicContactFields from './DynamicContactFields';
 import MessageAlert from '../../../components/MessageAlert';
 import { useFileUpload } from '../../../graphql/useFileUpload';
 import ImageCropper from './ImageCropper';
-import { currencies, locales, languages, CommunityFeaturesWhiteList } from '../../../utils/constants';
+import {
+  currencies,
+  locales,
+  languages,
+  CommunityFeaturesWhiteList
+} from '../../../utils/constants';
 import ImageAuth from '../../../shared/ImageAuth';
 import { formatError, objectAccessor } from '../../../utils/helpers';
 import { Spinner } from '../../../shared/Loading';
@@ -69,7 +83,7 @@ export default function CommunitySettings({ data, refetch }) {
     taxIdNo: data.bankingDetails?.taxIdNo || ''
   };
 
-  const features = data?.features || {}
+  const features = data?.features || {};
 
   const quickLinksDisplayOptions = ['Dashboard', 'Menu'];
   const roleOptions = ['admin', 'client', 'resident'];
@@ -80,8 +94,12 @@ export default function CommunitySettings({ data, refetch }) {
   const [whatsappOptions, setWhatsappOptions] = useState([whatsapps]);
   const [socialLinkOptions, setSocialLinkOptions] = useState([socialLinks]);
   const [menuItemOptions, setMenuItemOptions] = useState([menuItems]);
-  const [behindTemplate, setBehindTemplate] = useState(data?.templates?.payment_reminder_template_behind);
-  const [upcomingTemplate, setUpcomingTemplate] = useState(data?.templates?.payment_reminder_template_upcoming);
+  const [behindTemplate, setBehindTemplate] = useState(
+    data?.templates?.payment_reminder_template_behind || ''
+  );
+  const [upcomingTemplate, setUpcomingTemplate] = useState(
+    data?.templates?.payment_reminder_template_upcoming || ''
+  );
   const [templateOptions, setTemplateOptions] = useState(data?.templates || {});
   const [themeColors, setThemeColor] = useState(theme);
   const [bankingDetails, setBankingDetails] = useState(banking);
@@ -103,7 +121,7 @@ export default function CommunitySettings({ data, refetch }) {
   const [hasQuickLinksSettingChanged, setHasQuickLinksSettingChanged] = useState(false);
   const [smsPhoneNumbers, setSMSPhoneNumbers] = useState(data?.smsPhoneNumbers?.join(',') || '');
   const [emergencyCallNumber, setEmergencyCallNumber] = useState(data?.emergencyCallNumber || '');
-  const [communityFeatures, setCommunityFeatures] = useState(features)
+  const [communityFeatures, setCommunityFeatures] = useState(features);
   const { t } = useTranslation(['community', 'common']);
   const { onChange, signedBlobId } = useFileUpload({
     client: useApolloClient()
@@ -179,7 +197,7 @@ export default function CommunitySettings({ data, refetch }) {
   }
 
   function handleMenuItemChange(event, index) {
-    setHasQuickLinksSettingChanged(true)
+    setHasQuickLinksSettingChanged(true);
     updateOptions(index, { [event.target.name]: event.target.value }, menuItemOptions, 'menu_link');
   }
 
@@ -235,22 +253,24 @@ export default function CommunitySettings({ data, refetch }) {
     setMenuItemOptions([...values]);
   }
 
-  function handleModuleFeatures(e, moduleName, feature){
+  function handleModuleFeatures(e, moduleName, feature) {
     const subFeatures = objectAccessor(communityFeatures, moduleName)?.features;
-    if(!subFeatures) return;
+    if (!subFeatures) return;
 
-    if(e.target.checked) {
-      if(!subFeatures.includes(objectAccessor(CommunityFeaturesWhiteList, feature))) {
-        objectAccessor(communityFeatures, String(moduleName)).features.push(objectAccessor(CommunityFeaturesWhiteList, feature))
-        setCommunityFeatures({ ...communityFeatures })
+    if (e.target.checked) {
+      if (!subFeatures.includes(objectAccessor(CommunityFeaturesWhiteList, feature))) {
+        objectAccessor(communityFeatures, String(moduleName)).features.push(
+          objectAccessor(CommunityFeaturesWhiteList, feature)
+        );
+        setCommunityFeatures({ ...communityFeatures });
       }
-    } else if(subFeatures.includes(objectAccessor(CommunityFeaturesWhiteList, feature))) {
-        const updatedSubFeatures =  objectAccessor(communityFeatures, moduleName).features.filter(v =>
-          v !== objectAccessor(CommunityFeaturesWhiteList, feature)
-        )
-        objectAccessor(communityFeatures, String(moduleName)).features = updatedSubFeatures
-        setCommunityFeatures({ ...communityFeatures })
-      }
+    } else if (subFeatures.includes(objectAccessor(CommunityFeaturesWhiteList, feature))) {
+      const updatedSubFeatures = objectAccessor(communityFeatures, moduleName).features.filter(
+        v => v !== objectAccessor(CommunityFeaturesWhiteList, feature)
+      );
+      objectAccessor(communityFeatures, String(moduleName)).features = updatedSubFeatures;
+      setCommunityFeatures({ ...communityFeatures });
+    }
   }
 
   function onInputChange(file) {
@@ -296,14 +316,20 @@ export default function CommunitySettings({ data, refetch }) {
     localStorage.setItem('default-language', selectedLanguage);
   }
 
-  function handleTemplates(event){
-    if(event.target.name === 'behindTemplate'){
+  function handleTemplates(event) {
+    if (event.target.name === 'behindTemplate') {
       setBehindTemplate(event.target.value);
-      setTemplateOptions({...templateOptions, payment_reminder_template_behind: event.target.value});
-    }else{
+      setTemplateOptions({
+        ...templateOptions,
+        payment_reminder_template_behind: event.target.value
+      });
+    } else {
       setUpcomingTemplate(event.target.value);
-      setTemplateOptions({...templateOptions, payment_reminder_template_upcoming: event.target.value});
-    } 
+      setTemplateOptions({
+        ...templateOptions,
+        payment_reminder_template_upcoming: event.target.value
+      });
+    }
   }
 
   function updateCommunity() {
@@ -350,7 +376,10 @@ export default function CommunitySettings({ data, refetch }) {
         setAlertOpen(true);
         setCallMutation(false);
         // only reload if the primary color has changed
-        if ((themeColors.primaryColor !== data.themeColors?.primaryColor) || (hasQuickLinksSettingChanged)) {
+        if (
+          themeColors.primaryColor !== data.themeColors?.primaryColor ||
+          hasQuickLinksSettingChanged
+        ) {
           window.location.reload();
         }
         refetch();
@@ -538,7 +567,9 @@ export default function CommunitySettings({ data, refetch }) {
                   options={roleOptions}
                   type="chip"
                   handleOnChange={event => handleMenuItemChange(event, i)}
-                  selectedOptions={objectAccessor(objectAccessor(menuItemOptions, i), 'roles') || []}
+                  selectedOptions={
+                    objectAccessor(objectAccessor(menuItemOptions, i), 'roles') || []
+                  }
                 />
                 <span className={classes.menuItemRight}>
                   <MultiSelect
@@ -546,7 +577,9 @@ export default function CommunitySettings({ data, refetch }) {
                     fieldName="display_on"
                     options={quickLinksDisplayOptions}
                     handleOnChange={event => handleMenuItemChange(event, i)}
-                    selectedOptions={objectAccessor(objectAccessor(menuItemOptions, i), 'display_on') || []}
+                    selectedOptions={
+                      objectAccessor(objectAccessor(menuItemOptions, i), 'display_on') || []
+                    }
                   />
                 </span>
               </div>
@@ -586,22 +619,24 @@ export default function CommunitySettings({ data, refetch }) {
         style={{ width: '100%' }}
         required
       />
-      <TextField
-        style={{ width: '300px' }}
-        label={t('community.set_sub_administrator')}
-        value={subAdministratorId}
-        onChange={event => setSubAdministrator(event.target.value)}
-        name="subAdministrator"
-        margin="normal"
-        inputProps={{ 'data-testid': 'subAdministrator' }}
-        select
-      >
-        {adminUsersData?.adminUsers?.map(admin => (
-          <MenuItem key={admin.id} value={admin.id}>
-            {admin.name}
-          </MenuItem>
-        ))}
-      </TextField>
+      {!!adminUsersData?.adminUsers?.length && (
+        <TextField
+          style={{ width: '300px' }}
+          label={t('community.set_sub_administrator')}
+          value={subAdministratorId}
+          onChange={event => setSubAdministrator(event.target.value)}
+          name="subAdministrator"
+          margin="normal"
+          inputProps={{ 'data-testid': 'subAdministrator' }}
+          select
+        >
+          {adminUsersData?.adminUsers?.map(admin => (
+            <MenuItem key={admin.id} value={admin.id}>
+              {admin.name}
+            </MenuItem>
+          ))}
+        </TextField>
+      )}
       <br />
       <br />
 
@@ -799,13 +834,15 @@ export default function CommunitySettings({ data, refetch }) {
           <FormControlLabel
             control={(
               <Checkbox
-                checked={objectAccessor(communityFeatures, String('LogBook'))?.features.includes(CommunityFeaturesWhiteList.denyGateAccessButton)}
-                onChange={(e) => handleModuleFeatures(e, 'LogBook', 'denyGateAccessButton')}
+                checked={objectAccessor(communityFeatures, String('LogBook'))?.features.includes(
+                  CommunityFeaturesWhiteList.denyGateAccessButton
+                )}
+                onChange={e => handleModuleFeatures(e, 'LogBook', 'denyGateAccessButton')}
                 name="disable-deny-gate-access"
                 data-testid="disable_deny_gate_access"
                 color="primary"
               />
-          )}
+            )}
           />
         </Grid>
       </Grid>
@@ -820,13 +857,15 @@ export default function CommunitySettings({ data, refetch }) {
           <FormControlLabel
             control={(
               <Checkbox
-                checked={objectAccessor(communityFeatures, String('Tasks'))?.features.includes(CommunityFeaturesWhiteList.automatedTaskReminders)}
-                onChange={(e) => handleModuleFeatures(e, 'Tasks', 'automatedTaskReminders')}
+                checked={objectAccessor(communityFeatures, String('Tasks'))?.features.includes(
+                  CommunityFeaturesWhiteList.automatedTaskReminders
+                )}
+                onChange={e => handleModuleFeatures(e, 'Tasks', 'automatedTaskReminders')}
                 name="enable_automated_task_reminders"
                 data-testid="enable_automated_task_reminders"
                 color="primary"
               />
-          )}
+            )}
           />
         </Grid>
       </Grid>
@@ -884,7 +923,7 @@ export default function CommunitySettings({ data, refetch }) {
             aria-label="behind"
             value={t('community.behind')}
             name="duration"
-            style={{ width: '200px'}}
+            style={{ width: '200px' }}
             InputProps={{
               disableUnderline: true,
               'data-testid': 'plan_status_behind'
@@ -900,12 +939,12 @@ export default function CommunitySettings({ data, refetch }) {
             onChange={handleTemplates}
             name="behindTemplate"
             inputProps={{
-                'data-testid': 'payment_reminder_template_behind'
+              'data-testid': 'payment_reminder_template_behind'
             }}
             style={{ width: '200px', marginLeft: '40px' }}
             select
           >
-            {emailTemplatesData?.emailTemplates?.map((template) => (
+            {emailTemplatesData?.emailTemplates?.map(template => (
               <MenuItem key={template.id} value={template?.id}>
                 {template?.name}
               </MenuItem>
@@ -920,7 +959,7 @@ export default function CommunitySettings({ data, refetch }) {
             aria-label="upcoming"
             value={t('community.upcoming')}
             name="duration"
-            style={{ width: '200px'}}
+            style={{ width: '200px' }}
             InputProps={{
               disableUnderline: true,
               'data-testid': 'plan_status_upcoming'
@@ -936,12 +975,12 @@ export default function CommunitySettings({ data, refetch }) {
             onChange={handleTemplates}
             name="upcomingTemplate"
             inputProps={{
-                'data-testid': 'payment_reminder_template_upcoming'
+              'data-testid': 'payment_reminder_template_upcoming'
             }}
             style={{ width: '200px', marginLeft: '40px' }}
             select
           >
-            {emailTemplatesData?.emailTemplates?.map((template) => (
+            {emailTemplatesData?.emailTemplates?.map(template => (
               <MenuItem key={template.id} value={template?.id}>
                 {template?.name}
               </MenuItem>
