@@ -1,7 +1,10 @@
+/* eslint-disable max-lines */
 /* eslint-disable max-statements */
 import React, { useState, useEffect, useContext } from 'react';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
+import Hidden from '@material-ui/core/Hidden';
 import { useQuery, useApolloClient, useMutation } from 'react-apollo';
 import { useTranslation } from 'react-i18next';
 import { useParams, useHistory } from 'react-router-dom';
@@ -53,6 +56,7 @@ export default function LogBook() {
   const [isObservationOpen, setIsObservationOpen] = useState(false);
   const [clickedEvent, setClickedEvent] = useState({ refId: '', refType: '' });
   const [scope, setScope] = useState(7);
+  const matches = useMediaQuery('(max-width:600px)');
   const [observationDetails, setDetails] = useState({
     isError: false,
     message: '',
@@ -279,10 +283,10 @@ export default function LogBook() {
         )}
       </EntryNoteDialog>
       <Grid container className={classes.container}>
-        <Grid item sm={11}>
-          <Typography variant="h4">Log Book</Typography>
+        <Grid item md={11}>
           <Grid container>
-            <Grid item sm={6}>
+            <Grid item md={12} xs={8}><Typography variant="h4">Log Book</Typography></Grid>
+            <Grid item md={6}>
               <StyledTabs
                 value={value}
                 aria-label="simple tabs example"
@@ -292,7 +296,7 @@ export default function LogBook() {
                 <StyledTab label="VISIT VIEW" {...a11yProps(1)} />
               </StyledTabs>
             </Grid>
-            <Grid item sm={5}>
+            <Grid item xs={12} md={5} style={matches ? {marginTop: '10px'} : {}}>
               <SearchInput
                 title={objectAccessor(searchPlaceholder, value)}
                 searchValue={searchTerm}
@@ -341,15 +345,17 @@ export default function LogBook() {
             />
           </TabPanel>
         </Grid>
-        <Grid item sm={1}>
-          <SpeedDial
-            open={open}
-            handleClose={() => setOpen(false)}
-            handleOpen={() => setOpen(true)}
-            direction="down"
-            actions={actions}
-          />
-        </Grid>
+        <Hidden xsDown>
+          <Grid item md={1}>
+            <SpeedDial
+              open={open}
+              handleClose={() => setOpen(false)}
+              handleOpen={() => setOpen(true)}
+              direction="down"
+              actions={actions}
+            />
+          </Grid>
+        </Hidden>
       </Grid>
       <CenteredContent>
         <Paginate

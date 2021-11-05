@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import IconButton from '@material-ui/core/IconButton';
 import Grid from '@material-ui/core/Grid';
+import Hidden from '@material-ui/core/Hidden';
 import { Link } from 'react-router-dom';
 import Typography from '@material-ui/core/Typography';
 import MoreVertOutlined from '@material-ui/icons/MoreVertOutlined';
@@ -16,6 +17,7 @@ import { DetailsDialog } from '../../../components/Dialog';
 import ImageUploadPreview from '../../../shared/imageUpload/ImageUploadPreview';
 import MenuList from '../../../shared/MenuList';
 import Text from '../../../shared/Text';
+import CenteredContent from '../../../components/CenteredContent';
 
 export default function LogEvents({
   data,
@@ -103,7 +105,7 @@ export default function LogEvents({
           <>
             <Card key={entry.id}>
               <Grid container spacing={1}>
-                <Grid item md={4}>
+                <Grid item md={4} xs={8}>
                   {entry.entryRequest ? (
                     <>
                       <Typography variant='caption' color="primary">
@@ -121,6 +123,25 @@ export default function LogEvents({
                     <Typography variant='caption' color="textSecondary">{entry.data?.note}</Typography>
                   )}
                 </Grid>
+                <Hidden smUp>
+                  <Grid item md={1} xs={4} style={{textAlign: 'right'}}>
+                    <IconButton
+                      aria-controls="sub-menu"
+                      aria-haspopup="true"
+                      dataid={entry.id}
+                      onClick={event => menuData.handleMenu(event, entry)}
+                    >
+                      <MoreVertOutlined />
+                    </IconButton>
+                    <MenuList
+                      open={menuData?.open && menuData?.anchorEl?.getAttribute('dataid') === entry.id}
+                      anchorEl={menuData?.anchorEl}
+                      userType={menuData?.userType}
+                      handleClose={menuData?.handleClose}
+                      list={menuData?.menuList}
+                    />
+                  </Grid>
+                </Hidden>
                 <Grid item md={7} style={{ paddingTop: '7px' }}>
                   <Grid container spacing={1}>
                     <Grid item md={2} style={{ paddingTop: '15px' }}>
@@ -167,25 +188,30 @@ export default function LogEvents({
                     </Grid>
                   </Grid>
                 </Grid>
-                <Grid item md={1}>
-                  <IconButton
-                    aria-controls="sub-menu"
-                    aria-haspopup="true"
-                    dataid={entry.id}
-                    onClick={event => menuData.handleMenu(event, entry)}
-                  >
-                    <MoreVertOutlined />
-                  </IconButton>
-                  <MenuList
-                    open={menuData?.open && menuData?.anchorEl?.getAttribute('dataid') === entry.id}
-                    anchorEl={menuData?.anchorEl}
-                    userType={menuData?.userType}
-                    handleClose={menuData?.handleClose}
-                    list={menuData?.menuList}
-                  />
-                </Grid>
+                <Hidden xsDown>
+                  <Grid item md={1}>
+                    <IconButton
+                      aria-controls="sub-menu"
+                      aria-haspopup="true"
+                      dataid={entry.id}
+                      onClick={event => menuData.handleMenu(event, entry)}
+                    >
+                      <MoreVertOutlined />
+                    </IconButton>
+                    <MenuList
+                      open={menuData?.open && menuData?.anchorEl?.getAttribute('dataid') === entry.id}
+                      anchorEl={menuData?.anchorEl}
+                      userType={menuData?.userType}
+                      handleClose={menuData?.handleClose}
+                      list={menuData?.menuList}
+                    />
+                  </Grid>
+                </Hidden>
               </Grid>
             </Card>
+            {data?.length === 0 && (
+              <CenteredContent>No logs available</CenteredContent>
+            )}
             {imageOpen && (
               <DetailsDialog
                 open={entry.id === id && imageOpen}
