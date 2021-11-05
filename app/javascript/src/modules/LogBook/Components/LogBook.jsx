@@ -27,6 +27,8 @@ import {
   entryLogsQueryBuilderConfig,
   entryLogsQueryBuilderInitialValue,
 } from '../../../utils/constants';
+import CenteredContent from '../../../components/CenteredContent';
+import Paginate from '../../../components/Paginate';
 
 const limit = 20;
 export default function LogBook() {
@@ -128,6 +130,15 @@ export default function LogBook() {
     setImageUrls(filteredImages);
   }
 
+  function paginate(action) {
+    if (action === 'prev') {
+      if (offset < limit) return;
+      history.push(`/logbook?tab=${value}&offset=${offset - limit}`);
+    } else if (action === 'next') {
+      history.push(`/logbook?tab=${value}&offset=${offset + limit}`);
+    }
+  }
+
   const searchPlaceholder = {
     0: t('logbook.log_view'),
     1: t('logbook.visit_view')
@@ -206,6 +217,13 @@ export default function LogBook() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [query]);
+
+  const filteredEvents =
+  data?.result &&
+  data.result.filter(log => {
+    const visitorName = log.data.ref_name || log.data.visitor_name || log.data.name || '';
+    return visitorName.toLowerCase().includes(searchTerm.toLowerCase());
+  });
 
   useEffect(() => {
     if (status === 'DONE') {
@@ -333,6 +351,15 @@ export default function LogBook() {
           />
         </Grid>
       </Grid>
+      <CenteredContent>
+        <Paginate
+          offSet={offset}
+          limit={limit}
+          active={offset >= 1}
+          handlePageChange={paginate}
+          count={filteredEvents?.length}
+        />
+      </CenteredContent>
     </>
   );
 }
