@@ -205,7 +205,7 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
       history.push('/guest-list')
       return
     }
-    handleNext(true)
+    handleNext(true, '/entry_logs?tab=2&offset=0')
   }
 
   function handleCreateRequest(type='create') {
@@ -274,7 +274,7 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
           message: t('logbook:logbook.registered_guest_updated')
         });
         setDetails({ ...observationDetails, message: t('logbook:logbook.registered_guest_updated') });
-        handleNext(true)
+        handleNext(true, '/entry_logs?tab=2&offset=0')
       })
       .catch(error => {
         setLoading(false);

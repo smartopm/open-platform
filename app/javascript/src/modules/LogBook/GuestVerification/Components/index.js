@@ -26,8 +26,8 @@ export default function steps(handleNext, handleGotoStep, communityName) {
     }
   ];
   // hardcoding this for now before we make this a community setting
-  if (communityName === 'Nkwashi') {
-    return verificationSteps.slice(0, 1);
-  }
+  // if (communityName === 'Nkwashi') {
+  //   return verificationSteps.slice(0, 1);
+  // }
   return verificationSteps;
 }
