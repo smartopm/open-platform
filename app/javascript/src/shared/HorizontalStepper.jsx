@@ -6,7 +6,7 @@ import CustomStepper from './CustomStepper';
 
 export default function HorizontalStepper({ steps, communityName }) {
   const params = useParamsQuery();
-  const currentStep = parseInt(params.get('step'), 10);
+  const currentStep = parseInt(params.get('step'), 10) || 0;
   const history = useHistory();
   const listOfSteps = steps(handleNext, handleGotoStep, communityName);
   const validSteps = Boolean(listOfSteps?.length);
