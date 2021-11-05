@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useLazyQuery, useMutation } from 'react-apollo';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import { Link } from 'react-router-dom';
@@ -36,6 +37,7 @@ export default function VisitView({
   const [grantEntry] = useMutation(EntryRequestGrant);
   const [message, setMessage] = useState({ isError: false, detail: '' });
   const history = useHistory();
+  const matches = useMediaQuery('(max-width:800px)');
 
   function handleGrantAccess(event, user) {
     event.stopPropagation();
@@ -92,7 +94,7 @@ export default function VisitView({
             clickData={{ clickable: true, handleClick: () => handleCardClick(visit) }}
           >
             <Grid container spacing={1}>
-              <Grid item md={1}>
+              <Grid item md={1} xs={3}>
                 <Avatar
                   variant="square"
                   src={visit.user.imageUrl}
@@ -100,7 +102,7 @@ export default function VisitView({
                   style={{ height: '100%', width: '100%' }}
                 />
               </Grid>
-              <Grid item md={3}>
+              <Grid item md={3} xs={9}>
                 <Typography variant="caption" color="primary">
                   {visit.name}
                 </Typography>
@@ -110,17 +112,17 @@ export default function VisitView({
                   <Text color="secondary" content={visit.user.name} />
                 </Link>
               </Grid>
-              <Grid item md={2} style={{ paddingTop: '15px' }}>
+              <Grid item md={2} xs={6} style={!matches ? { paddingTop: '15px' } : {}}>
                 <Typography variant="caption">
                   {`Start of visit ${dateToString(visit.startsAt)}`}
                 </Typography>
               </Grid>
-              <Grid item md={2} style={{ paddingTop: '15px' }}>
+              <Grid item md={2} xs={6} style={!matches ? { paddingTop: '15px' } : {}}>
                 <Typography variant="caption">
                   {`Start of visit ${dateToString(visit.endsAt)}`}
                 </Typography>
               </Grid>
-              <Grid item md={2} style={{ paddingTop: '15px' }}>
+              <Grid item md={2} xs={6} style={!matches ? { paddingTop: '15px' } : {}}>
                 <Typography variant="caption">
                   {`Visit Time ${dateTimeToString(
                     visit.startsAt || visit.startTime
@@ -133,7 +135,7 @@ export default function VisitView({
                   width="70%"
                 />
               </Grid>
-              <Grid item md={2} style={{ paddingTop: '8px' }}>
+              <Grid item md={2} xs={12} style={!matches ? { paddingTop: '8px' } : {}}>
                 <Button
                   disabled={
                     !checkRequests(visit, t, timeZone).valid ||

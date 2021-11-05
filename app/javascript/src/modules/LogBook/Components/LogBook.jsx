@@ -56,7 +56,7 @@ export default function LogBook() {
   const [isObservationOpen, setIsObservationOpen] = useState(false);
   const [clickedEvent, setClickedEvent] = useState({ refId: '', refType: '' });
   const [scope, setScope] = useState(7);
-  const matches = useMediaQuery('(max-width:600px)');
+  const matches = useMediaQuery('(max-width:800px)');
   const [observationDetails, setDetails] = useState({
     isError: false,
     message: '',
@@ -282,8 +282,8 @@ export default function LogBook() {
           </>
         )}
       </EntryNoteDialog>
-      <Grid container className={classes.container}>
-        <Grid item md={11}>
+      <Grid container className={matches ?  classes.containerMobile : classes.container}>
+        <Grid item md={11} xs={12}>
           <Grid container>
             <Grid item md={12} xs={8}><Typography variant="h4">Log Book</Typography></Grid>
             <Grid item md={6}>
@@ -346,7 +346,7 @@ export default function LogBook() {
           </TabPanel>
         </Grid>
         <Hidden xsDown>
-          <Grid item md={1}>
+          <Grid item md={1} xs={1}>
             <SpeedDial
               open={open}
               handleClose={() => setOpen(false)}
@@ -373,5 +373,8 @@ export default function LogBook() {
 const useStyles = makeStyles(() => ({
   container: {
     padding: '50px  20px 50px 50px'
+  },
+  containerMobile: {
+    padding: '10px'
   }
 }));

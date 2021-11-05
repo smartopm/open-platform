@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import IconButton from '@material-ui/core/IconButton';
 import Grid from '@material-ui/core/Grid';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 import Hidden from '@material-ui/core/Hidden';
 import { Link } from 'react-router-dom';
 import Typography from '@material-ui/core/Typography';
@@ -33,6 +34,7 @@ export default function LogEvents({
   const [anchorEl, setAnchorEl] = useState(null);
   const [eventData, setEventData] = useState({});
   const open = Boolean(anchorEl);
+  const matches = useMediaQuery('(max-width:800px)');
 
   function handleClick(logId) {
     setId(logId);
@@ -123,7 +125,7 @@ export default function LogEvents({
                     <Typography variant='caption' color="textSecondary">{entry.data?.note}</Typography>
                   )}
                 </Grid>
-                <Hidden smUp>
+                <Hidden mdUp>
                   <Grid item md={1} xs={4} style={{textAlign: 'right'}}>
                     <IconButton
                       aria-controls="sub-menu"
@@ -142,17 +144,17 @@ export default function LogEvents({
                     />
                   </Grid>
                 </Hidden>
-                <Grid item md={7} style={{ paddingTop: '7px' }}>
+                <Grid item md={7} xs={12} style={!matches ? { paddingTop: '7px' } : {}}>
                   <Grid container spacing={1}>
-                    <Grid item md={2} style={{ paddingTop: '15px' }}>
+                    <Grid item md={2} style={!matches ? { paddingTop: '15px' } : {}}>
                       <Typography variant='caption' color="textSecondary">{dateToString(entry.createdAt)}</Typography>
                     </Grid>
-                    <Grid item md={1} style={{ paddingTop: '15px' }}>
+                    <Grid item md={1} style={!matches ? { paddingTop: '15px' } : {}}>
                       <Typography variant='caption' color="textSecondary">
                         {dateTimeToString(entry.createdAt)}
                       </Typography>
                     </Grid>
-                    <Grid item md={9}>
+                    <Grid item md={9} xs={12}>
                       <Grid container spacing={1}>
                         {entry.entryRequest?.grantor && entry.data.note !== 'Exited' && (
                           <Grid item md={6}>
@@ -188,7 +190,7 @@ export default function LogEvents({
                     </Grid>
                   </Grid>
                 </Grid>
-                <Hidden xsDown>
+                <Hidden mdDown>
                   <Grid item md={1}>
                     <IconButton
                       aria-controls="sub-menu"
