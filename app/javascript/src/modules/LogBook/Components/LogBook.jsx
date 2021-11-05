@@ -300,7 +300,7 @@ export default function LogBook() {
               <SearchInput
                 title={objectAccessor(searchPlaceholder, value)}
                 searchValue={searchTerm}
-                filterRequired={tabValue === 1}
+                filterRequired={value === 1}
                 handleSearch={handleSearch}
                 handleFilter={toggleFilterMenu}
                 handleClear={handleSearchClear}
@@ -335,7 +335,7 @@ export default function LogBook() {
           </TabPanel>
           <TabPanel pad value={value} index={1}>
             <VisitView
-              tabValue={tabValue}
+              tabValue={value}
               handleAddObservation={handleAddObservation}
               offset={offset}
               limit={limit}

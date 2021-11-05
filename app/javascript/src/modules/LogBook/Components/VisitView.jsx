@@ -72,7 +72,7 @@ export default function VisitView({
   }
 
   useEffect(() => {
-    if (tabValue === '1') {
+    if (tabValue === 1) {
       loadGuests();
     }
   }, [tabValue, loadGuests, query, offset]);
