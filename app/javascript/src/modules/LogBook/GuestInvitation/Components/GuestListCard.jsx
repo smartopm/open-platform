@@ -16,9 +16,9 @@ export default function GuestListCard({ invite, translate, tz, styles }) {
     history.push(`/request/${invite.guest.request.id}?type=view`);
   }
   return (
-    <Card className={styles.classes?.card} onClick={handleViewGuest} data-testid="guest_card">
+    <Card className={styles.classes?.card} onClick={handleViewGuest} data-testid="guest_card" elevation={0}>
       <CardContent>
-        <Grid container direction="row" justify="center" alignItems="center" spacing={2}>
+        <Grid container direction="row" spacing={2}>
           <Grid item xs={6} sm={4} lg={3} data-testid="guest_info">
             <Avatar imageUrl={invite.guest.imageUrl} user={invite.guest} alt="avatar-image" />
             <Text content={invite.guest?.name} className={styles.classes?.text} />

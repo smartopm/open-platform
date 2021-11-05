@@ -10,6 +10,7 @@ export const useStyles = makeStyles({
   card: {
     borderRadius: 4,
     margin: 8,
-    cursor: 'pointer'
+    cursor: 'pointer',
+    border: '1px solid #E0E0E0'
   }
 });

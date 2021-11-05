@@ -39,10 +39,12 @@ export default function GuestSearch() {
       >
         <GuestInviteForm guest={guest} />
       </CustomDialog>
-      <Container maxWidth="md">
-        <Grid container>
-          <Grid item xs={6} />
-          <Grid item sm={12} xs={12} md={6}>
+      <Container maxWidth="xl">
+        <Grid container spacing={2}>
+          <Grid item xs={12} sm={6}>
+            <Typography variant="h4">{t('common:menu.guest_list')}</Typography>
+          </Grid>
+          <Grid item sm={6} xs={12} md={6}>
             <SearchInput
               title={t('logbook:guest.guests')}
               filterRequired={false}

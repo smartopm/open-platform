@@ -11,9 +11,9 @@ import CenteredContent from '../../../../shared/CenteredContent';
 
 export default function GuestSearchCard({ guest, translate, styles, handInviteGuest }) {
   return (
-    <Card className={styles.card}>
+    <Card className={styles.card} elevation={0}>
       <CardContent>
-        <Grid container direction="row" justify="center" alignItems="center" spacing={2}>
+        <Grid container direction="row" justify="flex-end" alignItems="center" spacing={2}>
           <Grid item xs={2} data-testid="guest_avatar">
             <Avatar imageUrl={guest.imageUrl} user={guest} alt="avatar-image" />
           </Grid>
