@@ -71,14 +71,6 @@ export const UserPlans = gql`
         amount
         status
         receiptNumber
-        paymentPlan {
-          id
-          pendingBalance
-          landParcel {
-            id
-            parcelNumber
-          }
-        }
         userTransaction {
           id
           source
@@ -128,8 +120,8 @@ export const PlansPaymentsQuery = gql`
 `
 
 export const ReceiptPayment = gql`
-  query PaymentReceipt($id: ID!) {
-    paymentReceipt(id: $id) {
+  query PaymentReceipt($userId: ID!, $id: ID!) {
+    paymentReceipt(userId: $userId, id: $id) {
       id
       amount
       receiptNumber

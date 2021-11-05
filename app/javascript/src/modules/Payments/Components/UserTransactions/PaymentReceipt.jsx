@@ -7,7 +7,7 @@ import { dateToString } from '../../../../components/DateContainer';
 export default function PaymentReceipt({ paymentData, open, handleClose, currencyData }) {
   function printReceipt() {
     document.title = `${paymentData?.user?.name}-${paymentData?.planPayments ? paymentData?.planPayments[0]?.receiptNumber :
-      paymentData.receiptNumber}-${dateToString(paymentData.createdAt)}`;
+      paymentData?.receiptNumber}-${dateToString(paymentData?.createdAt)}`;
     window.print();
   }
 
@@ -21,23 +21,10 @@ export default function PaymentReceipt({ paymentData, open, handleClose, currenc
           actionText="Print"
           handleSubmit={printReceipt}
         >
-          {paymentData?.planPayments?.length ? (
-            paymentData.planPayments.map(pay => (
-              <div key={pay.id} style={{marginBottom: '400px'}}>
-                <ReceiptDetail 
-                  paymentData={paymentData} 
-                  currencyData={currencyData}
-                  planDetail={pay}  
-                />
-              </div>
-            ))
-          ) : (
-            <ReceiptDetail 
-              paymentData={paymentData} 
-              currencyData={currencyData}  
-            />
-          )}
-          
+          <ReceiptDetail
+            paymentData={paymentData}
+            currencyData={currencyData}
+          />
         </FullScreenDialog>
       </div>
     </>

@@ -45,6 +45,26 @@ const authState = {
       },
       sos: {
         permissions: ['can_access_sos']
+      },
+      discussion: {
+        permissions: ['can_see_menu_item']
+      },
+      community: {
+        permissions: ['can_see_menu_item']
+      },
+      community_settings: {
+        permissions: ['can_see_menu_item']
+      },
+      business: {
+        permissions: [
+          'can_see_menu_item',
+          'can_access_business',
+          'can_create_business',
+          'can_delete_business'
+        ]
+      },
+      campaign: {
+        permissions: ['can_see_menu_item']
       }
     }
   }

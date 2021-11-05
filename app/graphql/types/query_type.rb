@@ -29,6 +29,7 @@ module Types
     include Types::Queries::PlanPayment
     include Types::Queries::SubscriptionPlan
     include Types::Queries::Permission
+    include Types::Queries::Discussion
 
     # Add root-level fields here.
     # They will be entry points for queries on your schema.
@@ -65,7 +66,15 @@ module Types
     end
 
     def campaigns(offset: 0, limit: 50)
-      raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') unless current_user&.admin?
+      unless ::Policy::ApplicationPolicy.new(
+        context[:current_user], nil
+      ).permission?(
+        admin: true,
+        module: :campaign,
+        permission: :can_list_campaigns,
+      )
+        raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
+      end
 
       context[:site_community].campaigns.existing.offset(offset).limit(limit)
     end
@@ -76,7 +85,15 @@ module Types
     end
 
     def campaign(id:)
-      raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') unless current_user&.admin?
+      unless ::Policy::ApplicationPolicy.new(
+        context[:current_user], nil
+      ).permission?(
+        admin: true,
+        module: :campaign,
+        permission: :can_get_campaign_details,
+      )
+        raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
+      end
 
       context[:site_community].campaigns.find_by(id: id)
     end

@@ -294,12 +294,12 @@ ActiveRecord::Schema.define(version: 2021_10_28_093133) do
     t.string "occurs_on", default: [], array: true
     t.datetime "visit_end_date"
     t.string "email"
-    t.datetime "starts_at"
-    t.datetime "ends_at"
     t.boolean "is_guest", default: false
     t.integer "entry_request_state", default: 0
     t.uuid "revoker_id"
     t.datetime "revoked_at"
+    t.datetime "starts_at"
+    t.datetime "ends_at"
     t.integer "status", default: 0
   end
 

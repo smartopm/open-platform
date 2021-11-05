@@ -236,7 +236,8 @@
     "phone": "Phone",
     "signature": "Signature",
     "seconds": "seconds",
-    "never": "Never"
+    "never": "Never",
+    "general_funds": "General Funds"
   },
   "menu": {
     "invoice": "Invoice",

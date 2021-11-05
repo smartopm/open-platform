@@ -40,10 +40,11 @@ module Types::Queries::PaymentPlan
   # @return [Array<PaymentPlan>]
   def user_plans_with_payments(user_id: nil, offset: 0, limit: 10)
     user = verified_user(user_id)
-    Properties::PaymentPlan.left_joins(:plan_ownerships).includes(:plan_payments).where(
-      'payment_plans.user_id = ? or plan_ownerships.user_id = ?', user.id,
-      user.id
-    ).distinct.order(created_at: :desc).offset(offset).limit(limit)
+    Properties::PaymentPlan.left_joins(:plan_ownerships).includes(:land_parcel, plan_payments:
+      :user_transaction).where(
+        'payment_plans.user_id = ? or plan_ownerships.user_id = ?', user.id,
+        user.id
+      ).distinct.order(created_at: :desc).offset(offset).limit(limit)
   end
 
   # Statement details of payment plan
