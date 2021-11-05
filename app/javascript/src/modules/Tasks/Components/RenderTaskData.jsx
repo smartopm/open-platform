@@ -138,6 +138,7 @@ export function TaskDataList({
          color="primary"
          data-testid="task-select-action"
          size="small"
+         key={task.id}
        />
        <Typography variant="body2" data-testid="task_body" component="p" className={classes.taskBody}>
          <span
@@ -253,7 +254,6 @@ const Task = {
   })),
   subTasks: PropTypes.arrayOf(PropTypes.object),
   dueDate:  PropTypes.string,
-  createdAt: PropTypes.instanceOf(Date)
 }
 
 TaskDataList.propTypes ={

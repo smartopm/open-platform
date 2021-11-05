@@ -13,8 +13,8 @@ const EmailTemplatesMutation = gql`
 export default EmailTemplatesMutation;
 
 export const EmailUpdateMutation = gql`
-mutation updateTemplate($id: ID!, $body: String!, $data: JSON!) {
-  emailTemplateUpdate(id: $id, body: $body, data: $data) {
+mutation updateTemplate($id: ID!, $body: String!, $data: JSON!, $subject: String!) {
+  emailTemplateUpdate(id: $id, body: $body, data: $data, subject: $subject) {
     emailTemplate {
       id
     }

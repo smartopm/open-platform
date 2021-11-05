@@ -62,6 +62,9 @@ const authState = {
           'can_create_business',
           'can_delete_business'
         ]
+      },
+      campaign: {
+        permissions: ['can_see_menu_item']
       }
     }
   }

@@ -4,7 +4,6 @@
 /* eslint-disable react/prop-types */
 import React, { useState, useEffect } from 'react';
 import {
-  Fab,
   Dialog,
   DialogTitle,
   DialogContent,
@@ -14,11 +13,9 @@ import {
   InputAdornment,
   Typography,
 } from '@material-ui/core';
-import AddIcon from '@material-ui/icons/Add'
 import FilterListIcon from '@material-ui/icons/FilterList';
 import SearchIcon from '@material-ui/icons/Search'
 import MaterialConfig from 'react-awesome-query-builder/lib/config/material';
-import { StyleSheet, css } from 'aphrodite';
 import { makeStyles } from '@material-ui/core/styles';
 import { useMutation, useLazyQuery } from 'react-apollo';
 import { useParams, useHistory } from 'react-router';
@@ -41,6 +38,7 @@ import MessageAlert from '../../../components/MessageAlert';
 import { TaskBulkUpdateMutation } from '../graphql/task_mutation';
 import { TaskBulkUpdateAction, TaskQuickAction } from './TaskActionMenu';
 import TodoItem from './TodoItem';
+import FloatingButton from '../../../shared/buttons/FloatingButton';
 
 export default function TodoList({
   isDialogOpen,
@@ -135,7 +133,7 @@ export default function TodoList({
       limit,
       query: joinedTaskQuery
     },
-    fetchPolicy: 'network-only'
+    fetchPolicy: 'cache-and-network'
   });
 
   const [assignUserToNote] = useMutation(AssignUser);
@@ -545,15 +543,12 @@ export default function TodoList({
             </CenteredContent>
           </>
         )}
-        <Fab
+        <FloatingButton
           variant="extended"
-          onClick={openModal}
+          handleClick={openModal}
           color="primary"
-          className={`${css(styles.taskButton)} `}
           data-testid="create_task_btn"
-        >
-          <AddIcon />
-        </Fab>
+        />
       </div>
     </>
   );
@@ -581,15 +576,3 @@ const useStyles = makeStyles(() => ({
   input: {
   }
 }));
-
-const styles = StyleSheet.create({
-  taskButton: {
-    height: 51,
-    width: 51,
-    boxShadow: 'none',
-    position: 'fixed',
-    top: 60,
-    right: 11,
-    color: '#FFFFFF'
-  }
-});
