@@ -284,7 +284,7 @@ module Types::Queries::User
 
     Users::User.allowed_users(context[:current_user])
                .where(user_type: 'visitor')
-               .search_guest(query)
+               .search_guest("name='#{query}' OR email='#{query}' OR phone_number='#{query}'")
                .order(name: :asc)
                .limit(1).with_attached_avatar
   end

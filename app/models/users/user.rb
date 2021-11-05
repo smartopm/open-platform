@@ -47,7 +47,7 @@ module Users
     end
 
     search_scope :search_guest do
-      attributes :phone_number, :email
+      attributes :phone_number, :email, :name
     end
 
     scope :allowed_users, lambda { |current_user|
