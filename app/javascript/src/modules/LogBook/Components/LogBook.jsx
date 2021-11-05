@@ -197,6 +197,8 @@ export default function LogBook() {
     setSearchTerm(dbcSearchTerm);
   }, [dbcSearchTerm]);
 
+  const query = useParamsQuery();
+
   useEffect(() => {
     const offsetParams = query.get('offset');
     if (offsetParams) {
@@ -212,8 +214,6 @@ export default function LogBook() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status]);
-
-  const query = useParamsQuery();
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -300,7 +300,7 @@ export default function LogBook() {
               </Grid>
             </Grid>
           </Grid>
-          <TabPanel value={value} index={0}>
+          <TabPanel pad value={value} index={0}>
             <LogEvents
               data={data?.result}
               loading={loading}
@@ -311,7 +311,7 @@ export default function LogBook() {
               handleAddObservation={handleAddObservation}
             />
           </TabPanel>
-          <TabPanel value={value} index={1}>
+          <TabPanel pad value={value} index={1}>
             <VisitView
               tabValue={tabValue}
               handleAddObservation={handleAddObservation}
@@ -319,6 +319,7 @@ export default function LogBook() {
               limit={limit}
               query={`${searchTerm} ${searchQuery}`}
               scope={scope}
+              timeZone={authState.user.community.timezone}
             />
           </TabPanel>
         </Grid>

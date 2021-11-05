@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import IconButton from '@material-ui/core/IconButton';
 import Grid from '@material-ui/core/Grid';
+import { Link } from 'react-router-dom';
 import Typography from '@material-ui/core/Typography';
 import MoreVertOutlined from '@material-ui/icons/MoreVertOutlined';
 import PhotoIcon from '@material-ui/icons/Photo';
@@ -14,6 +15,7 @@ import Card from '../../../shared/Card';
 import { DetailsDialog } from '../../../components/Dialog';
 import ImageUploadPreview from '../../../shared/imageUpload/ImageUploadPreview';
 import MenuList from '../../../shared/MenuList';
+import Text from '../../../shared/Text';
 
 export default function LogEvents({
   data,
@@ -93,8 +95,7 @@ export default function LogEvents({
     handleClose: event => handleMenuClose(event)
   };
   return (
-    <>
-      {/* {console.log(data)} */}
+    <div style={{marginTop: '20px'}}>
       {loading ? (
         <Spinner />
       ) : (
@@ -102,60 +103,60 @@ export default function LogEvents({
           <>
             <Card key={entry.id}>
               <Grid container spacing={1}>
-                <Grid item sm={4}>
+                <Grid item md={4}>
                   {entry.entryRequest ? (
                     <>
-                      <Typography color="primary">{entry.entryRequest?.name}</Typography>
-                      <Grid container spacing={1}>
-                        <Grid item sm={2}>
-                          <Typography>Host:</Typography>
-                        </Grid>
-                        <Grid item sm={10}>
-                          <Typography color="secondary">{entry.actingUser.name}</Typography>
-                        </Grid>
-                      </Grid>
-                      <Typography color="textSecondary">{entry.data?.note}</Typography>
+                      <Typography variant='caption' color="primary">
+                        {entry.entryRequest?.name}
+                      </Typography>
+                      <br />
+                      <Typography variant='caption'>Host: </Typography>
+                      <Link to={`/user/${entry.actingUser.id}`}>
+                        <Text color='secondary' content={entry.actingUser.name}  />
+                      </Link>
+                      <br />
+                      <Typography variant='caption' color="textSecondary">{entry.data?.note}</Typography>
                     </>
                   ) : (
-                    <Typography color="textSecondary">{entry.data?.note}</Typography>
+                    <Typography variant='caption' color="textSecondary">{entry.data?.note}</Typography>
                   )}
                 </Grid>
-                <Grid item sm={7} style={{ paddingTop: '7px' }}>
+                <Grid item md={7} style={{ paddingTop: '7px' }}>
                   <Grid container spacing={1}>
-                    <Grid item sm={2} style={{ paddingTop: '15px' }}>
-                      <Typography color="textSecondary">{dateToString(entry.createdAt)}</Typography>
+                    <Grid item md={2} style={{ paddingTop: '15px' }}>
+                      <Typography variant='caption' color="textSecondary">{dateToString(entry.createdAt)}</Typography>
                     </Grid>
-                    <Grid item sm={1} style={{ paddingTop: '15px' }}>
-                      <Typography color="textSecondary">
+                    <Grid item md={1} style={{ paddingTop: '15px' }}>
+                      <Typography variant='caption' color="textSecondary">
                         {dateTimeToString(entry.createdAt)}
                       </Typography>
                     </Grid>
-                    <Grid item sm={9}>
+                    <Grid item md={9}>
                       <Grid container spacing={1}>
                         {entry.entryRequest?.grantor && entry.data.note !== 'Exited' && (
-                          <Grid item sm={6}>
+                          <Grid item md={6}>
                             <Label title="Granted Access" color="#77B08A" />
                           </Grid>
                         )}
                         {entry.data.note === 'Exited' && (
-                          <Grid item sm={6}>
+                          <Grid item md={6}>
                             <Label title="Exit Logged" color="#C4584F" />
                           </Grid>
                         )}
                         {entry.subject === 'observation_log' && (
-                          <Grid item sm={5}>
+                          <Grid item md={5}>
                             <Label title="Observation" color="#EBC64F" />
                           </Grid>
                         )}
                         {entry.imageUrls && (
-                          <Grid item sm={1}>
+                          <Grid item md={1}>
                             <IconButton color="primary" onClick={() => handleClick(entry.id)}>
                               <PhotoIcon />
                             </IconButton>
                           </Grid>
                         )}
                         {entry.entryRequest && entry.data.note !== 'Exited' && (
-                          <Grid item sm={6}>
+                          <Grid item md={6}>
                             <Label
                               title={toTitleCase(entry.entryRequest?.reason)}
                               color={objectAccessor(LogLabelColors, entry.entryRequest?.reason)}
@@ -166,7 +167,7 @@ export default function LogEvents({
                     </Grid>
                   </Grid>
                 </Grid>
-                <Grid item sm={1}>
+                <Grid item md={1}>
                   <IconButton
                     aria-controls="sub-menu"
                     aria-haspopup="true"
@@ -197,6 +198,6 @@ export default function LogEvents({
           </>
         ))
       )}
-    </>
+    </div>
   );
 }
