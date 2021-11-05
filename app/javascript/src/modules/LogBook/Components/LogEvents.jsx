@@ -27,7 +27,9 @@ export default function LogEvents({
   refetch,
   userType,
   handleExitEvent,
-  handleAddObservation
+  handleAddObservation,
+  routeToAction,
+  enrollUser
 }) {
   const [imageOpen, setImageOpen] = useState(false);
   const [id, setId] = useState('');
@@ -50,34 +52,47 @@ export default function LogEvents({
     {
       content: 'Log Exit',
       isAdmin: true,
+      show: eventData.data?.note !== 'Exited',
       handleClick: () => exitEvent()
     },
     {
       content: 'Grant Access',
       isAdmin: true,
-      handleClick: () => {}
-    },
-    {
-      content: 'Block',
-      isAdmin: true,
-      handleClick: () => {}
+      show: !eventData.entryRequest?.grantor,
+      handleClick: () => routeToAction(eventData)
     },
     {
       content: 'Add Observation',
       isAdmin: true,
+      show: true,
       handleClick: () => handleAddObservation(eventData)
     },
     {
-      content: 'User details',
+      content: 'View Details',
       isAdmin: true,
-      handleClick: () => {}
+      show: true,
+      handleClick: () => routeToAction(eventData)
+    },
+    {
+      content: 'Enroll User',
+      isAdmin: true,
+      show: true,
+      handleClick: () => enrollUser(eventData)
     },
     {
       content: 'Print Scan',
       isAdmin: true,
+      show: true,
+      color: '#818188',
       handleClick: () => {}
     }
   ];
+
+  function handleMenuList(list) {
+    const listData = []
+    list.map(menu => menu.show && listData.push(menu))
+    return listData
+  }
 
   function handleMenu(event, entry) {
     event.stopPropagation();
@@ -140,7 +155,7 @@ export default function LogEvents({
                       anchorEl={menuData?.anchorEl}
                       userType={menuData?.userType}
                       handleClose={menuData?.handleClose}
-                      list={menuData?.menuList}
+                      list={handleMenuList(menuData?.menuList)}
                     />
                   </Grid>
                 </Hidden>
@@ -205,7 +220,7 @@ export default function LogEvents({
                       anchorEl={menuData?.anchorEl}
                       userType={menuData?.userType}
                       handleClose={menuData?.handleClose}
-                      list={menuData?.menuList}
+                      list={handleMenuList(menuData?.menuList)}
                     />
                   </Grid>
                 </Hidden>

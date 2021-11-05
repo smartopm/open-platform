@@ -208,6 +208,28 @@ export default function LogBook() {
       });
   }
 
+  function routeToAction(eventLog) {
+    if (eventLog.refType === 'Logs::EntryRequest') {
+      history.push({
+        pathname: `/request/${eventLog.refId}`,
+        state: { from: 'entry_logs', offset }
+      });
+    }
+    if (eventLog.refType === 'Users::User') {
+      history.push({
+        pathname: `/user/${eventLog.refId}`,
+        state: { from: 'entry_logs', offset }
+      });
+    }
+  }
+
+  function enrollUser(event) {
+    return history.push({
+      pathname: `/request/${event.refId}?tabValue=0`,
+      state: { from: 'enroll', offset }
+    });
+  }
+
   useEffect(() => {
     setSearchTerm(dbcSearchTerm);
   }, [dbcSearchTerm]);
@@ -331,6 +353,8 @@ export default function LogBook() {
               userType={authState.user.userType}
               handleExitEvent={handleExitEvent}
               handleAddObservation={handleAddObservation}
+              routeToAction={routeToAction}
+              enrollUser={enrollUser}
             />
           </TabPanel>
           <TabPanel pad value={value} index={1}>
