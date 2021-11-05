@@ -8,6 +8,7 @@ require 'host_env'
 class GuestQrCodeJob < ApplicationJob
   queue_as :default
 
+  # rubocop:disable Metrics/MethodLength
   def perform(current_user, guest_email, entry_req)
     template = current_user.community.email_templates.find_by(name: 'Guest QR Code')
     return unless template
@@ -25,5 +26,6 @@ class GuestQrCodeJob < ApplicationJob
 
     EmailMsg.send_mail_from_db(guest_email, template, template_data)
   end
+  # rubocop:enable Metrics/MethodLength
 end
 # rubocop:enable Layout/LineLength
