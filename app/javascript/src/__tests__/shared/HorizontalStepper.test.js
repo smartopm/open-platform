@@ -66,10 +66,13 @@ describe('HorizontalStepper component', () => {
     expect(container.queryByText('Other Step Contents')).not.toBeInTheDocument();
     // click to move to next step
     fireEvent.click(container.queryByTestId('first_step'));
-    expect(container.queryByText('Other Step Contents')).toBeInTheDocument();
+    expect(mockHistory.push).toBeCalled()
+    expect(mockHistory.push).toBeCalledWith({"search": "?step=1"})
+
     // clicking the step should take you to that step's content
     fireEvent.click(container.queryAllByTestId('step_button')[0]);
-    expect(container.queryByText('First Step Contents')).toBeInTheDocument();
+    expect(mockHistory.push).toBeCalled()
+    expect(mockHistory.push).toBeCalledWith({"search": "?step=1"})
   });
 
   it('should render the custom stepper', () => {

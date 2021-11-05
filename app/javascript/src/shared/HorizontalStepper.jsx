@@ -11,6 +11,12 @@ export default function HorizontalStepper({ steps, communityName }) {
   const listOfSteps = steps(handleNext, handleGotoStep, communityName);
   const validSteps = Boolean(listOfSteps?.length);
 
+  /**
+   * Goes to the next step in the current stepper
+   * @param {Boolean} isGuest
+   * @param {String} to
+   * @returns
+   */
   function handleNext(isGuest = false, to = '') {
     const newActiveStep = currentStep + 1;
 
