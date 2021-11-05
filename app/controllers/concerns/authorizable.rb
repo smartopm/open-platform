@@ -64,6 +64,10 @@ module Authorizable
     }
   end
 
+  def current_user
+    auth_context(request)[:current_user]
+  end
+
   private
 
   def bearer_token(request)
