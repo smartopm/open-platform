@@ -67,12 +67,12 @@ export default function LogBook() {
   const actions = [
     {
       icon: <SpeedDialIcon />,
-      name: 'New Invite',
+      name: t('logbook.new_invite'),
       handleClick: () => history.push(`/visit_request/?tab=2&type=guest`)
     },
     {
       icon: <SpeedDialIcon />,
-      name: 'Add Observation',
+      name: t('logbook.add_observation'),
       handleClick: () => setIsObservationOpen(true)
     }
   ];
@@ -307,15 +307,15 @@ export default function LogBook() {
       <Grid container className={matches ?  classes.containerMobile : classes.container}>
         <Grid item md={11} xs={12}>
           <Grid container>
-            <Grid item md={12} xs={8}><Typography variant="h4">Log Book</Typography></Grid>
+            <Grid item md={12} xs={8}><Typography variant="h4">{t('logbook.log_book')}</Typography></Grid>
             <Grid item md={6}>
               <StyledTabs
                 value={value}
                 aria-label="simple tabs example"
                 onChange={handleChange}
               >
-                <StyledTab label="LOG VIEW" {...a11yProps(0)} />
-                <StyledTab label="VISIT VIEW" {...a11yProps(1)} />
+                <StyledTab label={t('logbook.log_view')} {...a11yProps(0)} />
+                <StyledTab label={t('logbook.visit_view')} {...a11yProps(1)} />
               </StyledTabs>
             </Grid>
             <Grid item xs={12} md={5} style={matches ? {marginTop: '10px'} : {}}>
@@ -348,7 +348,7 @@ export default function LogBook() {
             <LogEvents
               data={data?.result}
               loading={loading}
-              error={error}
+              error={error.message}
               refetch={refetch}
               userType={authState.user.userType}
               handleExitEvent={handleExitEvent}

@@ -1,4 +1,5 @@
-import React from 'react'
+import React from 'react';
+import PropTypes from 'prop-types';
 import SpeedDial from '@material-ui/lab/SpeedDial';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import SpeedDialIcon from '@material-ui/lab/SpeedDialIcon';
@@ -20,7 +21,7 @@ export default function SpeedDialButton({ open, handleClose, handleOpen, directi
         open={open}
         direction={direction}
       >
-        {actions.map((action) => (
+        {actions.map(action => (
           <SpeedDialAction
             key={action.name}
             icon={action.icon}
@@ -30,10 +31,10 @@ export default function SpeedDialButton({ open, handleClose, handleOpen, directi
         ))}
       </SpeedDial>
     </div>
-  )
+  );
 }
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   wrapper: {
     position: 'relative',
     transform: 'translateZ(0px)',
@@ -43,11 +44,23 @@ const useStyles = makeStyles((theme) => ({
     position: 'absolute',
     '&.MuiSpeedDial-directionUp, &.MuiSpeedDial-directionLeft': {
       bottom: theme.spacing(2),
-      right: theme.spacing(2),
+      right: theme.spacing(2)
     },
     '&.MuiSpeedDial-directionDown, &.MuiSpeedDial-directionRight': {
       top: theme.spacing(2),
-      left: theme.spacing(2),
-    },
-  },
+      left: theme.spacing(2)
+    }
+  }
 }));
+
+SpeedDialButton.propTypes = {
+  actions: PropTypes.arrayOf(
+    PropTypes.shape({
+      name: PropTypes.string
+    })
+  ).isRequired,
+  open: PropTypes.bool.isRequired,
+  handleClose: PropTypes.func.isRequired,
+  handleOpen: PropTypes.func.isRequired,
+  direction: PropTypes.string.isRequired
+};

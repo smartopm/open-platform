@@ -1,5 +1,6 @@
 /* eslint-disable complexity */
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import IconButton from '@material-ui/core/IconButton';
 import Grid from '@material-ui/core/Grid';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
@@ -24,7 +25,6 @@ export default function LogEvents({
   data,
   loading,
   error,
-  refetch,
   userType,
   handleExitEvent,
   handleAddObservation,
@@ -115,6 +115,9 @@ export default function LogEvents({
   };
   return (
     <div style={{marginTop: '20px'}}>
+      {error && (
+        <CenteredContent>{error}</CenteredContent>
+      )}
       {loading ? (
         <Spinner />
       ) : (
@@ -244,3 +247,20 @@ export default function LogEvents({
     </div>
   );
 }
+
+LogEvents.defaultProps = {
+  error: ''
+}
+
+LogEvents.propTypes = {
+  data: PropTypes.arrayOf(PropTypes.shape({
+    id: PropTypes.string
+  })).isRequired,
+  loading: PropTypes.bool.isRequired,
+  userType: PropTypes.string.isRequired,
+  handleAddObservation: PropTypes.func.isRequired,
+  handleExitEvent: PropTypes.func.isRequired,
+  routeToAction: PropTypes.func.isRequired,
+  enrollUser: PropTypes.func.isRequired,
+  error: PropTypes.string
+};

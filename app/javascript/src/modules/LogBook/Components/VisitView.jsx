@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
 import { useLazyQuery, useMutation } from 'react-apollo';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router';
@@ -78,13 +79,15 @@ export default function VisitView({
   }, [tabValue, loadGuests, query, offset]);
   return (
     <div style={{ marginTop: '20px' }}>
+      {error && (
+        <CenteredContent>error.message</CenteredContent>
+      )}
       <MessageAlert
         type={message.isError ? 'error' : 'success'}
         message={message.detail}
         open={!!message.detail}
         handleClose={() => setMessage({ ...message, detail: '' })}
       />
-      {error && console.log(error.message)}
       {guestsLoading ? (
         <Spinner />
       ) : (
@@ -107,7 +110,10 @@ export default function VisitView({
                   {visit.name}
                 </Typography>
                 <br />
-                <Typography variant="caption">Host: </Typography>
+                <Typography variant="caption">
+                  {t('logbook:logbook.host')}
+                  {' '}
+                </Typography>
                 <Link to={`/user/${visit.user.id}`}>
                   <Text color="secondary" content={visit.user.name} />
                 </Link>
@@ -160,7 +166,16 @@ export default function VisitView({
       {data?.scheduledRequests.length === 0 && (
         <CenteredContent>No visits available</CenteredContent>
       )}
-      <p>{console.log(data?.scheduledRequests)}</p>
     </div>
   );
 }
+
+VisitView.propTypes = {
+  tabValue: PropTypes.number.isRequired,
+  offset: PropTypes.number.isRequired,
+  limit: PropTypes.number.isRequired,
+  handleAddObservation: PropTypes.func.isRequired,
+  query: PropTypes.string.isRequired,
+  scope: PropTypes.number.isRequired,
+  timeZone: PropTypes.string.isRequired
+};

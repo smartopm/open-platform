@@ -54,7 +54,9 @@
     "visit_end_error": "Visitation dates are required",
     "continue": "Continue",
     "log_view": "Log View",
-    "visit_view": "Visit View"
+    "visit_view": "Visit View",
+    "log_book": "Log Book",
+    "host": "Host:"
   },
   "log_title": {
     "visitor": "Visitor",
