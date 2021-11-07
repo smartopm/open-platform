@@ -348,7 +348,7 @@ export default function LogBook() {
             <LogEvents
               data={data?.result}
               loading={loading}
-              error={error.message}
+              error={error?.message}
               refetch={refetch}
               userType={authState.user.userType}
               handleExitEvent={handleExitEvent}

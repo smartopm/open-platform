@@ -1,6 +1,7 @@
 /* eslint-disable complexity */
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
+import { useTranslation } from 'react-i18next';
 import IconButton from '@material-ui/core/IconButton';
 import Grid from '@material-ui/core/Grid';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
@@ -37,6 +38,7 @@ export default function LogEvents({
   const [eventData, setEventData] = useState({});
   const open = Boolean(anchorEl);
   const matches = useMediaQuery('(max-width:800px)');
+  const { t } = useTranslation('logbook');
 
   function handleClick(logId) {
     setId(logId);
@@ -48,39 +50,47 @@ export default function LogEvents({
     setAnchorEl(null);
   }
 
+  function handleObservation(evt) {
+    handleAddObservation(evt);
+    setAnchorEl(null);
+  }
+
   const menuList = [
     {
-      content: 'Log Exit',
+      content: t('logbook.exit_log'),
       isAdmin: true,
-      show: eventData.data?.note !== 'Exited',
+      show: Boolean(eventData.entryRequest?.grantor) && eventData.data?.note !== 'Exited',
       handleClick: () => exitEvent()
     },
     {
-      content: 'Grant Access',
+      content: t('access_actions.grant_access'),
       isAdmin: true,
-      show: !eventData.entryRequest?.grantor,
+      show:
+        Boolean(eventData.entryRequest) &&
+        Boolean(!eventData.entryRequest?.grantor) &&
+        eventData.data?.note !== 'Exited',
       handleClick: () => routeToAction(eventData)
     },
     {
-      content: 'Add Observation',
+      content: t('logbook.add_observation'),
       isAdmin: true,
-      show: true,
-      handleClick: () => handleAddObservation(eventData)
+      show: Boolean(!eventData.data?.note),
+      handleClick: () => handleObservation(eventData)
     },
     {
-      content: 'View Details',
+      content: t('logbook.view_details'),
       isAdmin: true,
       show: true,
       handleClick: () => routeToAction(eventData)
     },
     {
-      content: 'Enroll User',
+      content: t('logbook.enroll_user'),
       isAdmin: true,
       show: true,
       handleClick: () => enrollUser(eventData)
     },
     {
-      content: 'Print Scan',
+      content: t('logbook.print_scan'),
       isAdmin: true,
       show: true,
       color: '#818188',
@@ -89,9 +99,9 @@ export default function LogEvents({
   ];
 
   function handleMenuList(list) {
-    const listData = []
-    list.map(menu => menu.show && listData.push(menu))
-    return listData
+    const listData = [];
+    list.map(menu => menu.show && listData.push(menu));
+    return listData;
   }
 
   function handleMenu(event, entry) {
@@ -114,10 +124,8 @@ export default function LogEvents({
     handleClose: event => handleMenuClose(event)
   };
   return (
-    <div style={{marginTop: '20px'}}>
-      {error && (
-        <CenteredContent>{error}</CenteredContent>
-      )}
+    <div style={{ marginTop: '20px' }}>
+      {error && <CenteredContent>{error}</CenteredContent>}
       {loading ? (
         <Spinner />
       ) : (
@@ -128,23 +136,30 @@ export default function LogEvents({
                 <Grid item md={4} xs={8}>
                   {entry.entryRequest ? (
                     <>
-                      <Typography variant='caption' color="primary">
+                      <Typography variant="caption" color="primary">
                         {entry.entryRequest?.name}
                       </Typography>
                       <br />
-                      <Typography variant='caption'>Host: </Typography>
+                      <Typography variant="caption">
+                        {t('logbook.host')}
+                        {' '}
+                      </Typography>
                       <Link to={`/user/${entry.actingUser.id}`}>
-                        <Text color='secondary' content={entry.actingUser.name}  />
+                        <Text color="secondary" content={entry.actingUser.name} />
                       </Link>
                       <br />
-                      <Typography variant='caption' color="textSecondary">{entry.data?.note}</Typography>
+                      <Typography variant="caption" color="textSecondary">
+                        {entry.data?.note}
+                      </Typography>
                     </>
                   ) : (
-                    <Typography variant='caption' color="textSecondary">{entry.data?.note}</Typography>
+                    <Typography variant="caption" color="textSecondary">
+                      {entry.data?.note}
+                    </Typography>
                   )}
                 </Grid>
                 <Hidden mdUp>
-                  <Grid item md={1} xs={4} style={{textAlign: 'right'}}>
+                  <Grid item md={1} xs={4} style={{ textAlign: 'right' }}>
                     <IconButton
                       aria-controls="sub-menu"
                       aria-haspopup="true"
@@ -154,7 +169,9 @@ export default function LogEvents({
                       <MoreVertOutlined />
                     </IconButton>
                     <MenuList
-                      open={menuData?.open && menuData?.anchorEl?.getAttribute('dataid') === entry.id}
+                      open={
+                        menuData?.open && menuData?.anchorEl?.getAttribute('dataid') === entry.id
+                      }
                       anchorEl={menuData?.anchorEl}
                       userType={menuData?.userType}
                       handleClose={menuData?.handleClose}
@@ -165,10 +182,12 @@ export default function LogEvents({
                 <Grid item md={7} xs={12} style={!matches ? { paddingTop: '7px' } : {}}>
                   <Grid container spacing={1}>
                     <Grid item md={2} style={!matches ? { paddingTop: '15px' } : {}}>
-                      <Typography variant='caption' color="textSecondary">{dateToString(entry.createdAt)}</Typography>
+                      <Typography variant="caption" color="textSecondary">
+                        {dateToString(entry.createdAt)}
+                      </Typography>
                     </Grid>
                     <Grid item md={1} style={!matches ? { paddingTop: '15px' } : {}}>
-                      <Typography variant='caption' color="textSecondary">
+                      <Typography variant="caption" color="textSecondary">
                         {dateTimeToString(entry.createdAt)}
                       </Typography>
                     </Grid>
@@ -176,17 +195,17 @@ export default function LogEvents({
                       <Grid container spacing={1}>
                         {entry.entryRequest?.grantor && entry.data.note !== 'Exited' && (
                           <Grid item md={6}>
-                            <Label title="Granted Access" color="#77B08A" />
+                            <Label title={t('logbook.granted_access')} color="#77B08A" />
                           </Grid>
                         )}
                         {entry.data.note === 'Exited' && (
                           <Grid item md={6}>
-                            <Label title="Exit Logged" color="#C4584F" />
+                            <Label title={t('logbook.exit_logged')} color="#C4584F" />
                           </Grid>
                         )}
                         {entry.subject === 'observation_log' && (
                           <Grid item md={5}>
-                            <Label title="Observation" color="#EBC64F" />
+                            <Label title={t('logbook.observation')} color="#EBC64F" />
                           </Grid>
                         )}
                         {entry.imageUrls && (
@@ -219,7 +238,9 @@ export default function LogEvents({
                       <MoreVertOutlined />
                     </IconButton>
                     <MenuList
-                      open={menuData?.open && menuData?.anchorEl?.getAttribute('dataid') === entry.id}
+                      open={
+                        menuData?.open && menuData?.anchorEl?.getAttribute('dataid') === entry.id
+                      }
                       anchorEl={menuData?.anchorEl}
                       userType={menuData?.userType}
                       handleClose={menuData?.handleClose}
@@ -229,9 +250,7 @@ export default function LogEvents({
                 </Hidden>
               </Grid>
             </Card>
-            {data?.length === 0 && (
-              <CenteredContent>No logs available</CenteredContent>
-            )}
+            {data?.length === 0 && <CenteredContent>{t('logbook.no_logs')}</CenteredContent>}
             {imageOpen && (
               <DetailsDialog
                 open={entry.id === id && imageOpen}
@@ -250,12 +269,14 @@ export default function LogEvents({
 
 LogEvents.defaultProps = {
   error: ''
-}
+};
 
 LogEvents.propTypes = {
-  data: PropTypes.arrayOf(PropTypes.shape({
-    id: PropTypes.string
-  })).isRequired,
+  data: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.string
+    })
+  ).isRequired,
   loading: PropTypes.bool.isRequired,
   userType: PropTypes.string.isRequired,
   handleAddObservation: PropTypes.func.isRequired,

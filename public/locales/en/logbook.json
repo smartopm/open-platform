@@ -56,7 +56,12 @@
     "log_view": "Log View",
     "visit_view": "Visit View",
     "log_book": "Log Book",
-    "host": "Host:"
+    "host": "Host:",
+    "exit_log": "Exit Log",
+    "view_details": "View Details",
+    "exit_logged": "Exit Logged",
+    "observation": "Observation",
+    "no_logs": "No Logs Available"
   },
   "log_title": {
     "visitor": "Visitor",
