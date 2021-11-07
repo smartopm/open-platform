@@ -143,7 +143,7 @@ const routes = [
   },
   {
     routeProps: {
-      path: '/logbook',
+      path: '/log_book',
       component: LogBook
     },
     accessibleBy: allUserTypes,
