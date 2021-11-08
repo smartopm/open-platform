@@ -11,9 +11,9 @@ export default function SpeedDialButton({ open, handleClose, handleOpen, directi
   const classes = useStyles();
 
   return (
-    <div className={classes.wrapper}>
+    <div className={classes.wrapper} data-testid='speed-dial'>
       <SpeedDial
-        ariaLabel="SpeedDial example"
+        ariaLabel="SpeedDial"
         className={classes.speedDial}
         icon={actions.length ? <SpeedDialIcon data-testid="speed_dial_icon" openIcon={<CloseIcon data-testid="close_icon"  />} /> : <AddIcon data-testid="add_icon" />}
         onClose={handleClose}

@@ -12,6 +12,7 @@ export default function CardComponent({ children, clickData }) {
         elevation={0}
         className={clickData?.clickable ? classes.cardClickable : classes.card}
         onClick={clickData?.clickable ? () =>  clickData?.handleClick() : null}
+        data-testid='card'
       >
         <CardContent style={{padding: '10px'}}>
           {children}
