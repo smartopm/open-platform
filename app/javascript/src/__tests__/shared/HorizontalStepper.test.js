@@ -6,6 +6,7 @@ import HorizontalStepper from '../../shared/HorizontalStepper';
 import CustomStepper from '../../shared/CustomStepper';
 
 describe('HorizontalStepper component', () => {
+  // mocks
   const mockHistory = {
     push: jest.fn()
   };
