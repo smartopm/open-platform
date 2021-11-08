@@ -120,7 +120,6 @@ export default function VisitView({
               <Grid item md={2} xs={6} style={!matches ? { paddingTop: '15px' } : {}}>
                 <Typography variant="caption">
                   {t('guest_book.start_of_visit', { date: dateToString(visit.visitationDate) })}
-                  {/* {`Start of visit ${dateToString(visit.startsAt)}`} */}
                 </Typography>
               </Grid>
               <Grid item md={2} xs={6} style={!matches ? { paddingTop: '15px' } : {}}>
@@ -128,7 +127,6 @@ export default function VisitView({
                   {visit.visitEndDate
                     ? t('guest_book.ends_on_date', { date: dateToString(visit.visitEndDate) })
                     : t('guest_book.ends_on_date', { date: dateToString(visit.visitationDate) })}
-                  {/* {`Start of visit ${dateToString(visit.endsAt)}`} */}
                 </Typography>
               </Grid>
               <Grid item md={2} xs={6} style={!matches ? { paddingTop: '15px' } : {}}>
@@ -169,9 +167,6 @@ export default function VisitView({
       ) : (
         <CenteredContent>{t('logbook.no_invited_guests')}</CenteredContent>
       )}
-      {/* {!guestsLoading && data?.scheduledRequests.length === 0 && (
-        <CenteredContent>{t('logbook.no_invited_guests')}</CenteredContent>
-      )} */}
     </div>
   );
 }
