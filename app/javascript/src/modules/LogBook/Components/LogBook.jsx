@@ -4,7 +4,6 @@ import React, { useState, useEffect, useContext } from 'react';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
-import Hidden from '@material-ui/core/Hidden';
 import { useQuery, useApolloClient, useMutation } from 'react-apollo';
 import { useTranslation } from 'react-i18next';
 import { useParams, useHistory } from 'react-router-dom';
@@ -305,7 +304,7 @@ export default function LogBook() {
         )}
       </EntryNoteDialog>
       <Grid container className={matches ?  classes.containerMobile : classes.container}>
-        <Grid item md={11} xs={12}>
+        <Grid item md={11} xs={11}>
           <Grid container>
             <Grid item md={12} xs={8}><Typography variant="h4">{t('logbook.log_book')}</Typography></Grid>
             <Grid item md={6}>
@@ -369,17 +368,15 @@ export default function LogBook() {
             />
           </TabPanel>
         </Grid>
-        <Hidden xsDown>
-          <Grid item md={1} xs={1}>
-            <SpeedDial
-              open={open}
-              handleClose={() => setOpen(false)}
-              handleOpen={() => setOpen(true)}
-              direction="down"
-              actions={actions}
-            />
-          </Grid>
-        </Hidden>
+        <Grid item md={1} xs={1}>
+          <SpeedDial
+            open={open}
+            handleClose={() => setOpen(false)}
+            handleOpen={() => setOpen(true)}
+            direction="down"
+            actions={actions}
+          />
+        </Grid>
       </Grid>
       <CenteredContent>
         <Paginate
@@ -399,6 +396,6 @@ const useStyles = makeStyles(() => ({
     padding: '50px  20px 50px 50px'
   },
   containerMobile: {
-    padding: '10px'
+    padding: '10px 0 10px 30px'
   }
 }));
