@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 /* eslint-disable max-lines */
 /* eslint-disable max-statements */
 import React, { useState, useEffect, useContext } from 'react';
@@ -34,47 +35,45 @@ import Paginate from '../../../components/Paginate';
 
 const limit = 20;
 export default function LogBook() {
-  const authState = useContext(AuthStateContext);
-  const { t } = useTranslation(['logbook', 'common', 'dashboard']);
+  const history = useHistory()
+  const { userId }  = useParams()
+  const subjects = ['user_entry', 'visitor_entry', 'user_temp', 'observation_log'];
+  const [offset, setOffset] = useState(0);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [scope, setScope] = useState(7);
   const [displayBuilder, setDisplayBuilder] = useState('none');
   const path = useParamsQuery();
   const tabValue = path.get('tab');
-  const { userId } = useParams();
   const [value, setvalue] = useState(Number(tabValue) || 0);
-  const classes = useStyles();
-  const [open, setOpen] = useState(false);
-  const [searchTerm, setSearchTerm] = useState('');
   const dbcSearchTerm = useDebounce(searchTerm, 500);
-  const [searchQuery, setSearchQuery] = useState('');
-  const subjects = ['user_entry', 'visitor_entry', 'user_temp', 'observation_log'];
-  const [offset, setOffset] = useState(0);
+
   const refId = userId || null;
-  const history = useHistory();
-  const [imageUrls, setImageUrls] = useState([]);
-  const [blobIds, setBlobIds] = useState([]);
-  const [isObservationOpen, setIsObservationOpen] = useState(false);
-  const [clickedEvent, setClickedEvent] = useState({ refId: '', refType: '' });
-  const [scope, setScope] = useState(7);
-  const matches = useMediaQuery('(max-width:800px)');
-  const [observationDetails, setDetails] = useState({
-    isError: false,
-    message: '',
-    loading: false
-  });
-  const [observationNote, setObservationNote] = useState('');
-  const [addObservationNote] = useMutation(AddObservationNoteMutation);
-  const actions = [
-    {
-      icon: <SpeedDialIcon />,
-      name: t('logbook.new_invite'),
-      handleClick: () => history.push(`/visit_request/?tab=2&type=guest`)
-    },
-    {
-      icon: <SpeedDialIcon />,
-      name: t('logbook.add_observation'),
-      handleClick: () => setIsObservationOpen(true)
+
+  useEffect(() => {
+    setSearchTerm(dbcSearchTerm);
+  }, [dbcSearchTerm]);
+
+  const query = useParamsQuery();
+
+  useEffect(() => {
+    const offsetParams = query.get('offset');
+    if (offsetParams) {
+      setOffset(Number(offsetParams));
     }
-  ];
+  }, [query]);
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, [offset]);
+
+  function toggleFilterMenu() {
+    if (displayBuilder === '') {
+      setDisplayBuilder('none');
+    } else {
+      setDisplayBuilder('');
+    }
+  }
 
   const logsQuery = {
     0: subjects,
@@ -88,50 +87,10 @@ export default function LogBook() {
       refType: null,
       offset,
       limit,
-      name: value !== 1 ? dbcSearchTerm : ''
+      name: value !== 2 ? dbcSearchTerm : ''
     },
     fetchPolicy: 'cache-and-network'
   });
-
-  const { onChange, signedBlobId, url, status } = useFileUpload({
-    client: useApolloClient()
-  });
-
-  function handleChange(_event, newValue) {
-    setvalue(newValue);
-    setSearchTerm('');
-    // reset pagination after changing the tab
-    history.push(`/log_book?tab=${newValue}&offset=${0}`);
-  }
-
-  function handleSearch(event) {
-    setSearchTerm(event.target.value);
-  }
-
-  function handleSearchClear() {
-    setSearchTerm('');
-  }
-
-  function resetImageData() {
-    setImageUrls([]);
-    setBlobIds([]);
-  }
-
-  function handleCancelClose() {
-    setIsObservationOpen(false);
-    resetImageData();
-  }
-
-  function queryOnChange(selectedOptions) {
-    setSearchQuery(handleQueryOnChange(selectedOptions, entryLogsFilterFields));
-    setScope(null)
-  }
-
-  function handleCloseButton(imgUrl) {
-    const images = [...imageUrls];
-    const filteredImages = images.filter(img => img !== imgUrl);
-    setImageUrls(filteredImages);
-  }
 
   function paginate(action) {
     if (action === 'prev') {
@@ -142,18 +101,137 @@ export default function LogBook() {
     }
   }
 
-  const searchPlaceholder = {
-    0: t('logbook.log_view'),
-    1: t('logbook.visit_view')
-  };
+  function handleSearch(event) {
+    setSearchTerm(event.target.value);
+  }
 
-  function toggleFilterMenu() {
-    if (displayBuilder === '') {
-      setDisplayBuilder('none');
-    } else {
-      setDisplayBuilder('');
+  function handleSearchClear() {
+    setSearchTerm('');
+  }
+
+  function queryOnChange(selectedOptions) {
+    setSearchQuery(handleQueryOnChange(selectedOptions, entryLogsFilterFields));
+    setScope(null)
+  }
+
+  function handleChange(_event, newValue) {
+    setvalue(newValue);
+    setSearchTerm('');
+    // reset pagination after changing the tab
+    history.push(`/log_book?tab=${newValue}&offset=${0}`);
+  }
+  return (
+    <IndexComponent
+      data={data}
+      paginate={paginate}
+      offset={offset}
+      router={history}
+      scope={scope}
+      searchTerm={searchTerm}
+      searchQuery={searchQuery}
+      handleSearch={handleSearch}
+      toggleFilterMenu={toggleFilterMenu}
+      handleSearchClear={handleSearchClear}
+      displayBuilder={displayBuilder}
+      queryOnChange={queryOnChange}
+      handleTabValue={handleChange}
+      tabValue={value}
+      loading={loading}
+      refetch={refetch}
+      error={error?.message}
+    />
+  );
+}
+
+const useStyles = makeStyles(() => ({
+  container: {
+    padding: '50px  20px 50px 50px'
+  },
+  containerMobile: {
+    padding: '10px 0 10px 30px'
+  }
+}));
+
+export function IndexComponent({
+  data,
+  router,
+  paginate,
+  offset,
+  searchTerm,
+  scope,
+  searchQuery,
+  handleSearch,
+  toggleFilterMenu,
+  handleSearchClear,
+  displayBuilder,
+  queryOnChange,
+  tabValue,
+  handleTabValue,
+  loading,
+  refetch,
+  error
+}) {
+  const authState = useContext(AuthStateContext);
+  const { t } = useTranslation(['logbook', 'common', 'dashboard']);
+  const [open, setOpen] = useState(false);
+  const [isObservationOpen, setIsObservationOpen] = useState(false);
+  const [observationNote, setObservationNote] = useState('');
+  const [clickedEvent, setClickedEvent] = useState({ refId: '', refType: '' });
+  const [observationDetails, setDetails] = useState({
+    isError: false,
+    message: '',
+    loading: false
+  });
+  const [addObservationNote] = useMutation(AddObservationNoteMutation);
+  const matches = useMediaQuery('(max-width:800px)');
+  const classes = useStyles();
+  const [imageUrls, setImageUrls] = useState([])
+  const [blobIds, setBlobIds] = useState([])
+
+  const { onChange, signedBlobId, url, status } = useFileUpload({
+    client: useApolloClient()
+  });
+
+  const actions = [
+    {
+      icon: <SpeedDialIcon />,
+      name: t('logbook.new_invite'),
+      handleClick: () => router.push(`/visit_request/?tab=2&type=guest`)
+    },
+    {
+      icon: <SpeedDialIcon />,
+      name: t('logbook.add_observation'),
+      handleClick: () => setIsObservationOpen(true)
+    }
+  ];
+
+  function routeToAction(eventLog) {
+    if (eventLog.refType === 'Logs::EntryRequest') {
+      router.push({
+        pathname: `/request/${eventLog.refId}`,
+        state: { from: 'entry_logs', offset }
+      });
+    }
+    if (eventLog.refType === 'Users::User') {
+      router.push({
+        pathname: `/user/${eventLog.refId}`,
+        state: { from: 'entry_logs', offset }
+      });
     }
   }
+
+  function enrollUser(event) {
+    return router.push({
+      pathname: `/request/${event.refId}?tabValue=0`,
+      state: { from: 'enroll', offset }
+    });
+  }
+  const searchPlaceholder = {
+    0: t('logbook.all_visits'),
+    1: t('logbook.new_visits'),
+    2: t('logbook.registered_guests'),
+    3: t('logbook.observations')
+  };
 
   function handleExitEvent(eventLog, logType) {
     setClickedEvent(eventLog);
@@ -163,6 +241,17 @@ export default function LogBook() {
   function handleAddObservation(log) {
     setClickedEvent({ refId: log.refId, refType: log.refType });
     setIsObservationOpen(true);
+  }
+
+  function resetImageData() {
+    setImageUrls([]);
+    setBlobIds([]);
+  }
+
+  function handleCloseButton(imgUrl) {
+    const images = [...imageUrls]
+    const filteredImages = images.filter((img) => img !== imgUrl)
+    setImageUrls(filteredImages)
   }
 
   function handleSaveObservation(log = clickedEvent, type) {
@@ -191,7 +280,7 @@ export default function LogBook() {
         setClickedEvent({ refId: '', refType: '' });
         refetch();
         setIsObservationOpen(false);
-        resetImageData();
+        resetImageData()
       })
       .catch(err => {
         setDetails({
@@ -203,64 +292,30 @@ export default function LogBook() {
         // reset state in case it errs and user chooses a different log
         setObservationNote('');
         setClickedEvent({ refId: '', refType: '' });
-        resetImageData();
+        resetImageData()
       });
   }
-
-  function routeToAction(eventLog) {
-    if (eventLog.refType === 'Logs::EntryRequest') {
-      history.push({
-        pathname: `/request/${eventLog.refId}`,
-        state: { from: 'entry_logs', offset }
-      });
-    }
-    if (eventLog.refType === 'Users::User') {
-      history.push({
-        pathname: `/user/${eventLog.refId}`,
-        state: { from: 'entry_logs', offset }
-      });
-    }
-  }
-
-  function enrollUser(event) {
-    return history.push({
-      pathname: `/request/${event.refId}?tabValue=0`,
-      state: { from: 'enroll', offset }
-    });
-  }
-
-  useEffect(() => {
-    setSearchTerm(dbcSearchTerm);
-  }, [dbcSearchTerm]);
-
-  const query = useParamsQuery();
-
-  useEffect(() => {
-    const offsetParams = query.get('offset');
-    if (offsetParams) {
-      setOffset(Number(offsetParams));
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [query]);
-
-  const filteredEvents =
-  data?.result &&
-  data.result.filter(log => {
-    const visitorName = log.data.ref_name || log.data.visitor_name || log.data.name || '';
-    return visitorName.toLowerCase().includes(searchTerm.toLowerCase());
-  });
 
   useEffect(() => {
     if (status === 'DONE') {
-      setImageUrls([...imageUrls, url]);
-      setBlobIds([...blobIds, signedBlobId]);
+      setImageUrls([...imageUrls, url])
+      setBlobIds([...blobIds, signedBlobId])
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status]);
 
-  useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }, [offset]);
+  const filteredEvents =
+    data?.result &&
+    data.result.filter(log => {
+      const visitorName = log.data.ref_name || log.data.visitor_name || log.data.name || '';
+      return visitorName.toLowerCase().includes(searchTerm.toLowerCase());
+    });
+
+  function handleCancelClose() {
+    setIsObservationOpen(false);
+    resetImageData()
+  }
+
   return (
     <>
       <EntryNoteDialog
@@ -309,9 +364,9 @@ export default function LogBook() {
             <Grid item md={12} xs={8}><Typography variant="h4">{t('logbook.log_book')}</Typography></Grid>
             <Grid item md={6}>
               <StyledTabs
-                value={value}
+                value={tabValue}
                 aria-label="simple tabs example"
-                onChange={handleChange}
+                onChange={handleTabValue}
               >
                 <StyledTab label={t('logbook.log_view')} {...a11yProps(0)} />
                 <StyledTab label={t('logbook.visit_view')} {...a11yProps(1)} />
@@ -319,9 +374,9 @@ export default function LogBook() {
             </Grid>
             <Grid item xs={12} md={5} style={matches ? {marginTop: '10px'} : {}}>
               <SearchInput
-                title={objectAccessor(searchPlaceholder, value)}
+                title={objectAccessor(searchPlaceholder, tabValue)}
                 searchValue={searchTerm}
-                filterRequired={value === 1}
+                filterRequired={tabValue === 1}
                 handleSearch={handleSearch}
                 handleFilter={toggleFilterMenu}
                 handleClear={handleSearchClear}
@@ -343,11 +398,11 @@ export default function LogBook() {
               </Grid>
             </Grid>
           </Grid>
-          <TabPanel pad value={value} index={0}>
+          <TabPanel pad value={tabValue} index={0}>
             <LogEvents
               data={data?.result}
               loading={loading}
-              error={error?.message}
+              error={error}
               refetch={refetch}
               userType={authState.user.userType}
               handleExitEvent={handleExitEvent}
@@ -356,9 +411,9 @@ export default function LogBook() {
               enrollUser={enrollUser}
             />
           </TabPanel>
-          <TabPanel pad value={value} index={1}>
+          <TabPanel pad value={tabValue} index={1}>
             <VisitView
-              tabValue={value}
+              tabValue={tabValue}
               handleAddObservation={handleAddObservation}
               offset={offset}
               limit={limit}
@@ -390,12 +445,3 @@ export default function LogBook() {
     </>
   );
 }
-
-const useStyles = makeStyles(() => ({
-  container: {
-    padding: '50px  20px 50px 50px'
-  },
-  containerMobile: {
-    padding: '10px 0 10px 30px'
-  }
-}));
