@@ -11,6 +11,7 @@ import { TaskDataList } from './RenderTaskData'
 
 export default function TodoItem({
   task,
+  query,
   handleChange,
   selectedTasks,
   isSelected,
@@ -54,9 +55,16 @@ export default function TodoItem({
     setSelectedTask(null);
   }
 
+  function renderSubtaskAsParent(taskItem) {
+    if (query?.includes('assignees')) {
+      return true;
+    }
+    return !taskItem?.parentNote;
+  }
+
   return (
     <>
-      {!task?.parentNote && (
+      {renderSubtaskAsParent(task) && (
         <Accordion key={task.id} className={classes.accordion}>
           <AccordionSummary className={classes.accordionHeader}>
             <TaskDataList
@@ -123,8 +131,13 @@ const Task = {
   subTasks: PropTypes.arrayOf(PropTypes.object)
 }
 
+TodoItem.defaultProps = {
+  query: ''
+}
+
 TodoItem.propTypes = {
   task: PropTypes.shape(Task).isRequired,
+  query: PropTypes.string,
   handleChange: PropTypes.func.isRequired,
   selectedTasks: PropTypes.arrayOf(PropTypes.string).isRequired,
   isSelected: PropTypes.bool.isRequired,

@@ -102,6 +102,33 @@ describe('Task Data components', () => {
     expect(container.getByTestId("task_menu_section")).toBeInTheDocument()
   });
 
+  it('applies filter without error', () => {
+    render(
+      <BrowserRouter>
+        <MockedProvider>
+          <MockedThemeProvider>
+            <TodoItem
+              task={task}
+              query='assignees: John Doe'
+              handleChange={() => {}}
+              selectedTasks={[]}
+              isSelected={false}
+              handleTaskDetails={() => {}}
+              handleCompleteNote={() => {}}
+              handleAddSubTask={jest.fn()}
+            />
+          </MockedThemeProvider>
+        </MockedProvider>
+      </BrowserRouter>
+    )
+
+    expect(screen.getByTestId("task-select-action")).toBeInTheDocument();
+    expect(screen.getByTestId("task_body_section")).toBeInTheDocument();
+    expect(screen.getByTestId("task_body")).toBeInTheDocument();
+    expect(screen.getByTestId("task_assignee_section")).toBeInTheDocument();
+    expect(screen.getByTestId("task_assignee")).toBeInTheDocument();
+  });
+
   it('renders task menu options', () => {
     render(
       <BrowserRouter>
