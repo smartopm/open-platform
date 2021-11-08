@@ -1,3 +1,4 @@
+/* eslint-disable no-nested-ternary */
 /* eslint-disable complexity */
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
@@ -126,10 +127,9 @@ export default function LogEvents({
   return (
     <div style={{ marginTop: '20px' }} data-testid='card'>
       {error && <CenteredContent>{error}</CenteredContent>}
-      {data?.length === 0 && <CenteredContent data-testid='no-logs'>{t('logbook.no_logs')}</CenteredContent>}
       {loading ? (
         <Spinner />
-      ) : (
+      ) : data?.length > 0 ? (
         data.map(entry => (
           <>
             <Card key={entry.id}>
@@ -263,6 +263,8 @@ export default function LogEvents({
             )}
           </>
         ))
+      ) : (
+        <CenteredContent data-testid='no-logs'>{t('logbook.no_logs')}</CenteredContent>
       )}
     </div>
   );

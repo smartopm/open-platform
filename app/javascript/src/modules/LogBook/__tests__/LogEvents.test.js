@@ -1,5 +1,5 @@
 import React from 'react';
-import { fireEvent, render, screen } from '@testing-library/react';
+import { render } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { BrowserRouter } from 'react-router-dom/';
 import { MockedProvider } from '@apollo/react-testing';
@@ -12,23 +12,6 @@ jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
 describe('Log Events Component', () => {
   const endTime = new Date();
   endTime.setHours(endTime.getHours() + 1);
-
-  // const props = {
-  //   router: {
-  //     push: jest.fn()
-  //   },
-  //   paginate: jest.fn(),
-  //   offset: 0,
-  //   limit: 20,
-  //   searchTerm: '',
-  //   searchQuery: '',
-  //   handleSearch: jest.fn(),
-  //   queryOnChange: jest.fn(),
-  //   tabValue: 1,
-  //   handleTabValue: jest.fn(),
-  //   loading: false,
-  //   refetch: jest.fn()
-  // };
 
   const data = [
     {
