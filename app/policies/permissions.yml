@@ -143,6 +143,7 @@ admin:
       - can_search_guests
       - can_see_menu_item
       - can_invite_guest
+      - can_create_user
   profile:
     permissions:
       - can_see_menu_item

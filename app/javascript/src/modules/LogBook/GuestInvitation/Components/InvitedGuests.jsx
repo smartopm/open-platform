@@ -4,6 +4,7 @@ import React, { useContext, useState } from 'react';
 import { useQuery } from 'react-apollo';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
+import CenteredContent from '../../../../components/CenteredContent';
 import { Context } from '../../../../containers/Provider/AuthStateProvider';
 import CustomSpeedDial from '../../../../shared/buttons/SpeedDial';
 import { Spinner } from '../../../../shared/Loading';
@@ -56,7 +57,7 @@ export default function InvitedGuests() {
       <br />
       {loading && <Spinner />}
 
-      {data?.myGuests?.map(invite => (
+      {data?.myGuests.length ? data?.myGuests?.map(invite => (
         <GuestListCard
           key={invite.id}
           invite={invite}
@@ -64,7 +65,7 @@ export default function InvitedGuests() {
           tz={timezone}
           styles={{ classes, theme }}
         />
-      ))}
+      )) : !loading && <CenteredContent>{t('logbook.no_invited_guests')}</CenteredContent>}
     </Container>
   );
 }

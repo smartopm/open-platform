@@ -37,6 +37,7 @@ import QRCodeConfirmation from './QRCodeConfirmation';
 import FeatureCheck from '../../Features';
 import { EntryRequestContext } from '../GuestVerification/Context';
 import { initialRequestState } from '../GuestVerification/constants'
+import AccessCheck from '../../Permissions/Components/AccessCheck';
 
 
 export default function RequestUpdate({ id, previousRoute, guestListRequest, isGuestRequest, tabValue, isScannedRequest, handleNext }) {
@@ -77,7 +78,6 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
   const requiredFields = authState?.user?.community?.communityRequiredFields?.manualEntryRequestForm || defaultRequiredFields
   const [emailError, setEmailError] = useState(false);
   const showCancelBtn = previousRoute || tabValue || !!guestListRequest
-
 
   useEffect(() => {
     if (formData.reason === 'other') {
@@ -772,54 +772,22 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
           {/* TODO: as we are slowly deprecating these actions, we should arrange them properly */}
           <div className=" d-flex row justify-content-center ">
             {
-            showCancelBtn &&  (
-            <Button
-              variant="contained"
-              aria-label="guest_cancel"
-              color="secondary"
-              onClick={() => closeForm({id})}
-              className={`${css(styles.cancelGuestButton)}`}
-              data-testid="cancel_update_guest_btn"
-            >
-              {t('common:form_actions.cancel')}
-            </Button>
-          )
+            showCancelBtn && Number(tabValue) !== 2 &&
+            (
+              <Button
+                variant="contained"
+                aria-label="guest_cancel"
+                color="secondary"
+                onClick={() => closeForm({id})}
+                className={`${css(styles.cancelGuestButton)}`}
+                data-testid="cancel_update_guest_btn"
+              >
+                {t('common:form_actions.cancel')}
+              </Button>
+            )
           }
-
-
-            {
-              isGuestRequest && !id && (
-                <Button
-                  variant="contained"
-                  className={`${css(styles.inviteGuestButton)}`}
-                  data-testid="submit_button"
-                  onClick={event => handleModal(event, 'create')}
-                  disabled={isLoading}
-                  startIcon={isLoading && <Spinner />}
-                  color="primary"
-                >
-                  {isLoading ? ` ${t('form_actions.submitting')} ...` : ` ${t('form_actions.invite_guest')} `}
-                </Button>
-              )
-        }
-            {((previousRoute !== 'enroll' && id) && (authState?.user?.userType === 'admin' ||
-              !isGuestRequest || authState?.user?.id === formData?.user?.id)) &&  requestContext.requestType !== 'view' && (
-                <Button
-                  variant="contained"
-                  onClick={event => handleModal(event, isGuestRequest ? 'update' : 'grant')}
-                  className={css(styles.grantButton)}
-                  disabled={isLoading}
-                  data-testid="entry_user_grant_request"
-                  startIcon={isLoading && <Spinner />}
-                >
-                  {
-                    isGuestRequest ? t('logbook:guest_book.update_guest') : t('misc.log_new_entry')
-                  }
-                </Button>
-          )}
-
             {previousRoute === 'enroll' ? (
-              <>
+              <AccessCheck module="user" allowedPermissions={['can_create_user']}>
                 <div className="row justify-content-center align-items-center">
                   <Button
                     variant="contained"
@@ -834,44 +802,65 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
                   : ` ${t('logbook:logbook.enroll')}`}
                   </Button>
                 </div>
-              </>
+              </AccessCheck>
 
 
-        ) : !/logs|enroll|guests/.test(previousRoute) && !tabValue && !guestListRequest? (
+        ) : !/logs|enroll/.test(previousRoute) && tabValue !== 2 ? (
           <>
             <Grid container justify="center" spacing={4} className={css(styles.grantSection)}>
-              <Grid item>
-                <Button
-                  onClick={event => handleModal(event, requestContext.request.isEdit || requestContext.requestType === 'view' ? 'update' : 'grant')}
-                  data-testid="entry_user_grant"
-                  startIcon={isLoading && <Spinner />}
-                  color="primary"
-                  variant="contained"
-                >
-                  {
-                    requestContext.request.isEdit || requestContext.requestType === 'view' ? t('logbook:image_capture.update') : t('logbook:logbook.grant')
-                  }
-                </Button>
-              </Grid>
+              <AccessCheck module="entry_request" allowedPermissions={['can_grant_entry']}>
+                <Grid item>
+                  <Button
+                    onClick={event => handleModal(event, 'grant')}
+                    data-testid="entry_user_update"
+                    startIcon={isLoading && <Spinner />}
+                    color="primary"
+                    variant="contained"
+                  >
+                    {
+                      t('logbook:logbook.grant')
+                    }
+                  </Button>
+                </Grid>
+              </AccessCheck>
+              <AccessCheck module="entry_request" allowedPermissions={['can_update_entry_request']}>
+                <Grid item>
+                  <Button
+                    onClick={event => handleModal(event, 'update')}
+                    data-testid="entry_user_grant"
+                    startIcon={isLoading && <Spinner />}
+                    color="primary"
+                    variant="contained"
+                  >
+                    {
+                      t('logbook:image_capture.update')
+                    }
+                  </Button>
+                </Grid>
+              </AccessCheck>
 
               <br />
               <FeatureCheck features={authState?.user?.community?.features} name="LogBook" subFeature={CommunityFeaturesWhiteList.denyGateAccessButton}>
                 {!requestContext.request.isEdit && (
-                  <Grid item>
-                    <Button
-                      variant="contained"
-                      onClick={handleDenyRequest}
-                      className={css(styles.denyButton)}
-                      disabled={isLoading}
-                      data-testid="entry_user_deny"
-                      startIcon={isLoading && <Spinner />}
-                    >
-                      {
+                  <AccessCheck module="entry_request" allowedPermissions={['can_grant_entry']}>
+                    <Grid item>
+                      <Button
+                        variant="contained"
+                        onClick={handleDenyRequest}
+                        className={css(styles.denyButton)}
+                        disabled={isLoading}
+                        data-testid="entry_user_deny"
+                        startIcon={isLoading && <Spinner />}
+                      >
+                        {
                       t('logbook:logbook.deny')
                     }
-                    </Button>
-                  </Grid>
+                      </Button>
+                    </Grid>
+                  </AccessCheck>
                 )}
+              </FeatureCheck>
+              <AccessCheck module="entry_request" allowedPermissions={['can_update_entry']}>
                 <Grid item>
                   <a
                     href={`tel:${authState.user.community.securityManager}`}
@@ -882,24 +871,27 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
                     <span>{t('logbook:logbook.call_manager')}</span>
                   </a>
                 </Grid>
-              </FeatureCheck>
-              {
-                communityName !== 'Nkwashi'  && (
-                  <Grid item>
-                    <Button
-                      onClick={event => handleModal(event, 'create')}
-                      color="primary"
-                      disabled={isLoading}
-                      data-testid="entry_user_next"
-                      startIcon={isLoading && <Spinner />}
-                    >
-                      {
-                        t('logbook:logbook.next_step')
-                      }
-                    </Button>
-                  </Grid>
+              </AccessCheck>
+              <AccessCheck module="entry_request" allowedPermissions={['can_update_entry_request']}>
+                {
+                  communityName !== 'Nkwashi'  && (
+                    <Grid item>
+                      <Button
+                        onClick={event => handleModal(event, 'create')}
+                        color="primary"
+                        disabled={isLoading}
+                        data-testid="entry_user_next"
+                        startIcon={isLoading && <Spinner />}
+                      >
+                        {
+                          t('logbook:logbook.next_step')
+                        }
+                      </Button>
+                    </Grid>
                 )
               }
+              </AccessCheck>
+
             </Grid>
             <br />
           </>
