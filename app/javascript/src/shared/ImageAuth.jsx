@@ -18,7 +18,9 @@ export default function ImageAuth({ imageLink, className, type, alt, style }) {
 
 
   if(loading) return <Spinner />
-  if(!imageLink || isError) return <span />
+  if(!imageLink || isError) {
+    return <Avatar alt="avatar" src="/images/default_avatar.svg" />
+  }
   if (type === 'image') {
     return <img data-testid="authenticated_image" src={response.url} style={style} className={className} alt={alt} />
   }
@@ -43,4 +45,3 @@ ImageAuth.propTypes = {
   style: PropTypes.object,
   className: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
 }
-
