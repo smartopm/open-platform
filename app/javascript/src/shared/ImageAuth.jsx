@@ -19,7 +19,14 @@ export default function ImageAuth({ imageLink, className, type, alt, style }) {
 
   if(loading) return <Spinner />
   if(!imageLink || isError) {
-    return <Avatar alt="avatar" src="/images/default_avatar.svg" />
+   return (
+     <img
+       src='/images/default_avatar.svg'
+       className={className}
+       alt={alt}
+       data-testid="default_avatar"
+     />
+   )
   }
   if (type === 'image') {
     return <img data-testid="authenticated_image" src={response.url} style={style} className={className} alt={alt} />
