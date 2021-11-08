@@ -12,7 +12,7 @@ export function safeAvatarLink({ imageUrl, user }) {
   return forceLinkHttps(imageUrl);
 }
 
-export default function Avatar({ imageUrl, user, style, searchedUser }) {
+export default function Avatar({ imageUrl, user, style, searchedUser, alt }) {
   const imageStyles = {
     xSmall: styles.extraSmall,
     small: styles.avatarSmall,
@@ -27,7 +27,7 @@ export default function Avatar({ imageUrl, user, style, searchedUser }) {
       <ImageAuth
         imageLink={safeAvatarLink({ imageUrl: searchedUser.avatarUrl})}
         className={css(objectAccessor(imageStyles, style))}
-        alt="avatar for the user"
+        alt={alt}
       />
     );
   }
@@ -37,7 +37,7 @@ export default function Avatar({ imageUrl, user, style, searchedUser }) {
       <img
         src={safeAvatarLink({ imageUrl: searchedUser.imageUrl})}
         className={css(objectAccessor(imageStyles, style))}
-        alt="avatar for the user"
+        alt={alt}
         data-testid="searched_auth_user_avatar"
       />
     );
@@ -50,7 +50,7 @@ export default function Avatar({ imageUrl, user, style, searchedUser }) {
       <img
         src={safeAvatarLink({ imageUrl: '/images/default_avatar.svg' })}
         className={css(objectAccessor(imageStyles, style))}
-        alt="avatar for the user"
+        alt={alt}
         data-testid="searched_default_user_avatar"
       />
     );
@@ -61,7 +61,7 @@ export default function Avatar({ imageUrl, user, style, searchedUser }) {
       <ImageAuth
         imageLink={safeAvatarLink({ imageUrl, user })}
         className={css(objectAccessor(imageStyles, style))}
-        alt="avatar for the user"
+        alt={alt}
       />
     );
   }
@@ -70,7 +70,7 @@ export default function Avatar({ imageUrl, user, style, searchedUser }) {
       <img
         src={safeAvatarLink({ imageUrl: '/images/default_avatar.svg' })}
         className={css(objectAccessor(imageStyles, style))}
-        alt="avatar for the user"
+        alt={alt}
         data-testid="searched_default_user_avatar"
       />
     )
@@ -79,7 +79,7 @@ export default function Avatar({ imageUrl, user, style, searchedUser }) {
     <img
       src={safeAvatarLink({ user, imageUrl })}
       className={css(objectAccessor(imageStyles, style))}
-      alt="avatar for the user"
+      alt={alt}
       data-testid="user_avatar"
     />
   );
@@ -93,6 +93,7 @@ Avatar.defaultProps = {
   imageUrl: '/images/default_avatar.svg',
   style: 'small',
   searchedUser: null,
+  alt: '',
 };
 
 Avatar.propTypes = {
@@ -102,6 +103,7 @@ Avatar.propTypes = {
     avatarUrl: PropTypes.string
   }),
   style: PropTypes.string,
+  alt: PropTypes.string,
   searchedUser: PropTypes.shape({
     imageUrl: PropTypes.string,
     avatarUrl: PropTypes.string
