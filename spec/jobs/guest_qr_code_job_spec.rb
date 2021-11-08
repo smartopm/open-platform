@@ -35,10 +35,12 @@ RSpec.describe GuestQrCodeJob, type: :job do
       base_url = HostEnv.base_url(user.community)
       qr_code_url = 'https://api.qrserver.com/v1/create-qr-code/' \
                     "?data=#{CGI.escape("https://#{base_url}/request/#{entry_req.id}?type=scan")}&size=256x256"
+      request_url = "https://#{base_url}/request/#{entry_req.id}"
 
       template_data = [
         { key: '%community_name%', value: user.community.name },
         { key: '%qr_code_image%', value: "<img src=#{qr_code_url} />" },
+        { key: '%request_url%', value: "<a href=#{request_url}>#{request_url}</a>" },
       ]
       expect(EmailMsg).to receive(:send_mail_from_db).with('email@gmail.com', template, template_data)
       perform_enqueued_jobs { described_class.perform_later(user, 'email@gmail.com', entry_req) }
