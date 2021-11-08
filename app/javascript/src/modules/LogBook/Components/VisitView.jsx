@@ -1,3 +1,4 @@
+/* eslint-disable no-nested-ternary */
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useLazyQuery, useMutation } from 'react-apollo';
@@ -79,9 +80,7 @@ export default function VisitView({
   }, [tabValue, loadGuests, query, offset]);
   return (
     <div style={{ marginTop: '20px' }}>
-      {error && (
-        <CenteredContent>error.message</CenteredContent>
-      )}
+      {error && <CenteredContent>error.message</CenteredContent>}
       <MessageAlert
         type={message.isError ? 'error' : 'success'}
         message={message.detail}
@@ -90,7 +89,7 @@ export default function VisitView({
       />
       {guestsLoading ? (
         <Spinner />
-      ) : (
+      ) : data?.scheduledRequests.length > 0 ? (
         data?.scheduledRequests.map(visit => (
           <Card
             key={visit.id}
@@ -120,19 +119,24 @@ export default function VisitView({
               </Grid>
               <Grid item md={2} xs={6} style={!matches ? { paddingTop: '15px' } : {}}>
                 <Typography variant="caption">
-                  {`Start of visit ${dateToString(visit.startsAt)}`}
+                  {t('guest_book.start_of_visit', { date: dateToString(visit.visitationDate) })}
+                  {/* {`Start of visit ${dateToString(visit.startsAt)}`} */}
                 </Typography>
               </Grid>
               <Grid item md={2} xs={6} style={!matches ? { paddingTop: '15px' } : {}}>
                 <Typography variant="caption">
-                  {`Start of visit ${dateToString(visit.endsAt)}`}
+                  {visit.visitEndDate
+                    ? t('guest_book.ends_on_date', { date: dateToString(visit.visitEndDate) })
+                    : t('guest_book.ends_on_date', { date: dateToString(visit.visitationDate) })}
+                  {/* {`Start of visit ${dateToString(visit.endsAt)}`} */}
                 </Typography>
               </Grid>
               <Grid item md={2} xs={6} style={!matches ? { paddingTop: '15px' } : {}}>
                 <Typography variant="caption">
-                  {`Visit Time ${dateTimeToString(
-                    visit.startsAt || visit.startTime
-                  )} - ${dateTimeToString(visit.endsAt || visit.endTime)}`}
+                  {t('guest_book.visit_time', {
+                    startTime: dateTimeToString(visit.startsAt || visit.startTime),
+                    endTime: dateTimeToString(visit.endsAt || visit.endTime)
+                  })}
                 </Typography>
                 <br />
                 <Label
@@ -162,10 +166,12 @@ export default function VisitView({
             </Grid>
           </Card>
         ))
+      ) : (
+        <CenteredContent>{t('logbook.no_invited_guests')}</CenteredContent>
       )}
-      {data?.scheduledRequests.length === 0 && (
-        <CenteredContent>No visits available</CenteredContent>
-      )}
+      {/* {!guestsLoading && data?.scheduledRequests.length === 0 && (
+        <CenteredContent>{t('logbook.no_invited_guests')}</CenteredContent>
+      )} */}
     </div>
   );
 }
