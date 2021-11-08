@@ -41,7 +41,8 @@ module Forms
         assignees: user.community.sub_administrator_id,
       }
 
-      if form.name == 'DRC Project Review Process'
+      allowed_community = %w[DoubleGDP Tilisi].include?(form.community.name)
+      if allowed_community && form.name == 'DRC Project Review Process'
         return TaskCreate.new_from_template(task_params, form.community)
       end
 
