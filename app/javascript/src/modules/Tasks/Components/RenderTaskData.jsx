@@ -34,6 +34,7 @@ export function LinkToUserAvatar({ user }) {
         imageUrl={user.avatarUrl || user.imageUrl}
         customStyle={{cursor: 'pointer',display: 'inline'}}
         size="xSmall"
+        altText=""
       />
     </Link>
   );
@@ -310,6 +311,7 @@ const useStyles = makeStyles(() => ({
     display: 'flex',
     width: '28%',
     justifyContent: 'space-between',
+    fontSize: '10px'
   },
   section3: {
     display: 'flex',

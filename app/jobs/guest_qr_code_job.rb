@@ -15,13 +15,16 @@ class GuestQrCodeJob < ApplicationJob
     base_url = HostEnv.base_url(current_user.community)
     qr_code_url = 'https://api.qrserver.com/v1/create-qr-code/' \
                   "?data=#{CGI.escape("https://#{base_url}/request/#{entry_req.id}?type=#{type}")}&size=256x256"
+    request_url = "https://#{base_url}/request/#{entry_req.id}"
 
     template_data = [
       { key: '%community_name%', value: current_user.community.name },
       { key: '%qr_code_image%', value: "<img src=#{qr_code_url} />" },
+      { key: '%request_url%', value: "<a href=#{request_url}>#{request_url}</a>" },
     ]
 
     EmailMsg.send_mail_from_db(guest_email, template, template_data)
   end
+  # rubocop:enable Metrics/MethodLength
 end
 # rubocop:enable Layout/LineLength
