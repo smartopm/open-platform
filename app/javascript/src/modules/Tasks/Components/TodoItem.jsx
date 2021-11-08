@@ -160,6 +160,6 @@ const useStyles = makeStyles(() => ({
     height: '60px',
     backgroundColor: '#ececea',
     marginLeft: '32px',
-    marginBottom: '72px',
+    marginBottom: '8px',
   }
 }));

@@ -41,6 +41,10 @@ module Forms
         assignees: user.community.sub_administrator_id,
       }
 
+      if form.name == 'DRC Project Review Process'
+        return TaskCreate.new_from_template(task_params, form.community)
+      end
+
       TaskCreate.new_from_action(task_params)
     end
     # rubocop:enable Metrics/AbcSize
