@@ -205,7 +205,9 @@ module Types::Queries::User
   end
 
   def users_count(query: nil)
-    raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') unless user_permissions_check?
+    unless user_permissions_check?('can_get_user_count')
+      raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
+    end
 
     allowed_users = Users::User.allowed_users(context[:current_user])
     if query.present? && query.include?('date_filter')
@@ -268,35 +270,23 @@ module Types::Queries::User
   end
 
   # rubocop:disable Metrics/MethodLength
-  # rubocop:disable Metrics/AbcSize
   def search_guests(query: nil)
     current = context[:current_user]
-    unless ::Policy::ApplicationPolicy.new(
-      context[:current_user], nil
-    ).permission?(
-      module: :user,
-      permission: :can_search_guests,
-    ) || current&.site_manager? || current&.site_worker?
+    unless user_permissions_check?('can_search_guests') ||
+           current&.site_manager? || current&.site_worker?
       raise GraphQL::ExecutionError,
             I18n.t('errors.unauthorized')
     end
-    # rubocop:enable Metrics/AbcSize
-
     Users::User.allowed_users(context[:current_user])
                .where(user_type: 'visitor')
                .search_guest("name='#{query}' OR email='#{query}' OR phone_number='#{query}'")
                .order(name: :asc)
                .limit(1).with_attached_avatar
   end
+  # rubocop:enable Metrics/MethodLength
 
   def my_guests(query: nil)
-    unless ::Policy::ApplicationPolicy.new(
-      context[:current_user], nil
-    ).permission?(
-      admin: true,
-      module: :user,
-      permission: :can_view_guests,
-    )
+    unless user_permissions_check?('can_view_guests')
       raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
     end
 
@@ -304,15 +294,14 @@ module Types::Queries::User
                           .includes(:guest, :host, :entry_time)
                           .search(query)
   end
-  # rubocop:enable Metrics/MethodLength
 
-  def user_permissions_check?
+  def user_permissions_check?(permission)
     ::Policy::ApplicationPolicy.new(
       context[:current_user], nil
     ).permission?(
       admin: true,
       module: :user,
-      permission: :can_get_user_count,
+      permission: permission.to_sym,
     )
   end
 end
