@@ -93,7 +93,7 @@ describe('LogBook Component', () => {
       </MockedProvider>
     );
 
-    expect(container.queryByTestId('card')).toBeInTheDocument();
+    expect(container.queryAllByTestId('card')[0]).toBeInTheDocument();
     expect(container.queryByTestId('name')).toBeInTheDocument();
     expect(container.queryByTestId('acting-user')).toBeInTheDocument();
     expect(container.queryByTestId('note')).toBeInTheDocument();

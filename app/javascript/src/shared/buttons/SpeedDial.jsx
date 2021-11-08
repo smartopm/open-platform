@@ -7,17 +7,35 @@ import SpeedDialAction from '@material-ui/lab/SpeedDialAction';
 import CloseIcon from '@material-ui/icons/Close';
 import AddIcon from '@material-ui/icons/Add';
 
-export default function SpeedDialButton({ open, handleClose, handleOpen, direction, actions }) {
+export default function SpeedDialButton({
+  open,
+  handleClose,
+  handleOpen,
+  direction,
+  actions,
+  handleAction
+}) {
   const classes = useStyles();
 
   return (
-    <div className={classes.wrapper} data-testid='speed-dial'>
+    <div className={classes.wrapper} style={actions.length > 0 ? {height: 200} : {}} data-testid="speed-dial">
       <SpeedDial
         ariaLabel="SpeedDial"
         className={classes.speedDial}
-        icon={actions.length ? <SpeedDialIcon data-testid="speed_dial_icon" openIcon={<CloseIcon data-testid="close_icon"  />} /> : <AddIcon data-testid="add_icon" />}
+        data-testid="speed_dial_btn"
+        icon={
+          actions.length ? (
+            <SpeedDialIcon
+              data-testid="speed_dial_icon"
+              openIcon={<CloseIcon data-testid="close_icon" />}
+            />
+          ) : (
+            <AddIcon data-testid="add_icon" />
+          )
+        }
         onClose={handleClose}
         onOpen={handleOpen}
+        onClick={actions.length === 0 ? handleAction : null}
         open={open}
         direction={direction}
       >
@@ -27,6 +45,7 @@ export default function SpeedDialButton({ open, handleClose, handleOpen, directi
             icon={action.icon}
             tooltipTitle={action.name}
             onClick={action.handleClick}
+            data-testid="speed_dial_action"
           />
         ))}
       </SpeedDial>
@@ -37,8 +56,7 @@ export default function SpeedDialButton({ open, handleClose, handleOpen, directi
 const useStyles = makeStyles(theme => ({
   wrapper: {
     position: 'relative',
-    transform: 'translateZ(0px)',
-    height: 200
+    transform: 'translateZ(0px)'
   },
   speedDial: {
     position: 'absolute',
@@ -53,14 +71,21 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
+SpeedDialButton.defaultProps = {
+  actions: [],
+  direction: '',
+  handleAction: () => {}
+};
+
 SpeedDialButton.propTypes = {
   actions: PropTypes.arrayOf(
     PropTypes.shape({
       name: PropTypes.string
     })
-  ).isRequired,
+  ),
   open: PropTypes.bool.isRequired,
   handleClose: PropTypes.func.isRequired,
   handleOpen: PropTypes.func.isRequired,
-  direction: PropTypes.string.isRequired
+  direction: PropTypes.string,
+  handleAction: PropTypes.func
 };

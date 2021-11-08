@@ -26,8 +26,5 @@ describe('Speed dial component', () => {
     expect(btn.queryAllByTestId('speed_dial_action')[0]).toBeInTheDocument();
     expect(btn.queryByTestId('close_icon')).toBeInTheDocument();
     expect(btn.queryByTestId('speed_dial_icon')).toBeInTheDocument();
-
-    fireEvent.click(btn.queryByTestId('speed_dial_btn'));
-    expect(mock).toBeCalled();
   });
 });

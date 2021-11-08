@@ -30,11 +30,11 @@ export default function InvitedGuests() {
   return (
     <Container maxWidth="xl">
       <Grid container>
-        <Grid item xs={6}>
+        <Grid item xs={6} sm={11}>
           <Typography variant="h4">{t('common:menu.guest_list')}</Typography>
         </Grid>
-        <Grid item xs={3} data-testid="speed_dial_add_guest">
-          <CustomSpeedDial actions={[]} handleAction={() => history.push('/logbook/guests/invite')} />
+        <Grid item xs={3} sm={1} data-testid="speed_dial_add_guest">
+          <CustomSpeedDial handleAction={() => history.push('/logbook/guests/invite')} />
         </Grid>
       </Grid>
 
