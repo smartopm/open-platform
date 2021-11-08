@@ -523,6 +523,7 @@ export default function TodoList({
                 {data?.flaggedNotes.map(task => (
                   <TodoItem
                     key={task.id}
+                    query={joinedTaskQuery}
                     task={task}
                     handleChange={handleChange}
                     selectedTasks={selectedTasks}
