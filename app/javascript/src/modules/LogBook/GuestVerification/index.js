@@ -9,7 +9,7 @@ const GuestsValidatorRoutes = [
     },
     name: 'Request Details',
     featureName: 'LogBook',
-    accessibleBy: guestListUsers,
+    accessibleBy: [...guestListUsers, 'visitor'],
   },
   {
     routeProps: {
