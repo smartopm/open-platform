@@ -402,7 +402,8 @@
     "no_changes": "No Changes Made",
     "user_name_search_not_found": "{{username}} not found in users",
     "invalid_color_code": "The theme color code is invalid",
-    "no_user_selected": "You have to select a user"
+    "no_user_selected": "You have to select a user",
+    "no_result_found": "No results were found for {{searchValue}}"
   },
   "dialogs": {
     "dialog_action": "Are you sure you want to {{action}} this {{title}}?",

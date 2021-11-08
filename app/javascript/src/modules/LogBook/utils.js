@@ -22,6 +22,7 @@ export const defaultRequiredFields = ['name', 'phoneNumber', 'nrc', 'vehiclePlat
  * @param {String} tz
  * @returns
  */
+// eslint-disable-next-line complexity
 export function checkRequests(req, translate, tz) {
   /**
    * moved the conversion here because:
@@ -67,4 +68,13 @@ export function checkRequests(req, translate, tz) {
       return { title: translate('guest_book.invalid_now'), color: '#E74540', valid: false };
     }
     return { title: translate('guest_book.invalid_today'), color: '#E74540', valid: false };
+}
+
+
+export function resolveUserOrGuest(request){
+  if (!request) {
+    return null
+  }
+  const user =  request.user || request.guest
+  return user
 }

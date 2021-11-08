@@ -1,10 +1,9 @@
 import React from 'react';
 import MenuBookIcon from '@material-ui/icons/MenuBook';
 import EntryLogs from './Components/EntryLogs';
-// logbook submodules
-import GuestsList from './GuestList';
 import GuestsValidateRoutes from './GuestVerification';
 import AccessCheck from '../Permissions/Components/AccessCheck';
+import GuestInvitationRoutes from './GuestInvitation';
 
 const logBookPermissions = ['can_access_logbook'];
 
@@ -55,5 +54,5 @@ export default {
   featureName: 'LogBook',
   moduleName: 'gate_access',
   accessibleBy: [],
-  subMenu: [LogBooks, GuestsList],
+  subMenu: [LogBooks, GuestInvitationRoutes],
 };

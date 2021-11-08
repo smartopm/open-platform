@@ -21,6 +21,7 @@ module Mutations
       argument :occurs_on, [String], required: false
       argument :visit_end_date, String, required: false
       argument :is_guest, Boolean, required: false
+      argument :guest_id, ID, required: false
 
       field :entry_request, Types::EntryRequestType, null: true
 

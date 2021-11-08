@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_10_28_093133) do
+ActiveRecord::Schema.define(version: 2021_10_28_194538) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -298,9 +298,25 @@ ActiveRecord::Schema.define(version: 2021_10_28_093133) do
     t.integer "entry_request_state", default: 0
     t.uuid "revoker_id"
     t.datetime "revoked_at"
+    t.uuid "guest_id"
     t.datetime "starts_at"
     t.datetime "ends_at"
     t.integer "status", default: 0
+  end
+
+  create_table "entry_times", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.datetime "visitation_date"
+    t.datetime "visit_end_date"
+    t.datetime "starts_at"
+    t.datetime "ends_at"
+    t.string "occurs_on", default: [], array: true
+    t.uuid "visitable_id"
+    t.string "visitable_type"
+    t.uuid "community_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["community_id"], name: "index_entry_times_on_community_id"
+    t.index ["visitable_id", "visitable_type"], name: "index_entry_times_on_visitable_id_and_visitable_type", unique: true
   end
 
   create_table "event_logs", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -381,6 +397,15 @@ ActiveRecord::Schema.define(version: 2021_10_28_093133) do
     t.datetime "updated_at", precision: 6, null: false
     t.index ["community_id"], name: "index_import_logs_on_community_id"
     t.index ["user_id"], name: "index_import_logs_on_user_id"
+  end
+
+  create_table "invites", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "host_id"
+    t.uuid "guest_id"
+    t.datetime "revoked_at"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["host_id", "guest_id"], name: "index_invites_on_host_id_and_guest_id", unique: true
   end
 
   create_table "invoices", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -844,6 +869,7 @@ ActiveRecord::Schema.define(version: 2021_10_28_093133) do
   add_foreign_key "discussions", "communities"
   add_foreign_key "discussions", "users"
   add_foreign_key "email_templates", "communities"
+  add_foreign_key "entry_times", "communities"
   add_foreign_key "feedbacks", "communities"
   add_foreign_key "form_properties", "categories"
   add_foreign_key "form_properties", "forms"

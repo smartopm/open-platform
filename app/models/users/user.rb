@@ -46,6 +46,10 @@ module Users
       attributes :name, :phone_number, :user_type, :email, :sub_status
     end
 
+    search_scope :search_guest do
+      attributes :phone_number, :email, :name
+    end
+
     scope :allowed_users, lambda { |current_user|
       policy = ::Policy::User::UserPolicy.new(current_user, nil)
       allowed_user_types = policy.roles_user_can_see
@@ -105,6 +109,16 @@ module Users
     has_many :plan_ownerships, class_name: 'Properties::PlanOwnership', dependent: :destroy
     has_many :co_owned_plans, class_name: 'Properties::PaymentPlan', through: :plan_ownerships,
                               source: :payment_plan
+
+    # TODO: find more about the inverse_of association and if we really need that
+    # rubocop:disable Rails/InverseOf
+    has_one :request, class_name: 'Logs::EntryRequest', foreign_key: :guest_id,
+                      dependent: :destroy
+    has_many :invites, class_name: 'Logs::Invite', foreign_key: :guest_id,
+                       dependent: :destroy
+    has_many :invitees, class_name: 'Logs::Invite', foreign_key: :host_id,
+                        dependent: :destroy
+    # rubocop:enable Rails/InverseOf
     has_one_attached :avatar
     has_one_attached :document
 
@@ -253,7 +267,7 @@ module Users
     end
 
     def process_referral(enrolled_user, data)
-      return unless user_type != 'admin'
+      return if %w[visitor admin].include?(user_type)
 
       generate_events('user_referred', enrolled_user, data)
       referral_todo(enrolled_user)
@@ -624,6 +638,15 @@ module Users
     # @return [Properties::PaymentPlan]
     def general_payment_plan
       payment_plans.unscope(where: :status).general.first.presence || create_general_plan
+    end
+
+    def invite_guest(guest_id)
+      return unless guest_id
+
+      invite = invitees.find_by(guest_id: guest_id)
+      return invite unless invite.nil?
+
+      Logs::Invite.create!(host_id: id, guest_id: guest_id)
     end
 
     private

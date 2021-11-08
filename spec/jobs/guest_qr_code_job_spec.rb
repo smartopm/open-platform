@@ -43,7 +43,7 @@ RSpec.describe GuestQrCodeJob, type: :job do
         { key: '%request_url%', value: "<a href=#{request_url}>#{request_url}</a>" },
       ]
       expect(EmailMsg).to receive(:send_mail_from_db).with('email@gmail.com', template, template_data)
-      perform_enqueued_jobs { described_class.perform_later(user, 'email@gmail.com', entry_req) }
+      perform_enqueued_jobs { described_class.perform_later(user, 'email@gmail.com', entry_req, 'scan') }
     end
   end
 end

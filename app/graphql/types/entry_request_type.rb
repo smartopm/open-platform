@@ -8,6 +8,7 @@ module Types
     field :id, ID, null: false
     field :user, Types::UserType, null: false
     field :grantor, Types::UserType, null: true
+    field :guest, Types::UserType, null: true
     field :name, String, null: true
     field :email, String, null: true
     field :nrc, String, null: true

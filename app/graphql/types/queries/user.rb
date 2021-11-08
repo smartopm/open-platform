@@ -73,6 +73,16 @@ module Types::Queries::User
     field :admin_users, [Types::UserType], null: true do
       description 'Get a list of all admin users'
     end
+
+    field :search_guests, [Types::UserType], null: true do
+      argument :query, String, required: false
+      description 'Get a list of visitors to be invited'
+    end
+
+    field :my_guests, [Types::InviteType], null: true do
+      argument :query, String, required: false
+      description 'Get a list of visitors that I invited'
+    end
   end
   # rubocop:enable Metrics/BlockLength
 
@@ -256,6 +266,45 @@ module Types::Queries::User
 
     context[:site_community].users.where(user_type: 'admin', state: 'valid')
   end
+
+  # rubocop:disable Metrics/MethodLength
+  # rubocop:disable Metrics/AbcSize
+  def search_guests(query: nil)
+    current = context[:current_user]
+    unless ::Policy::ApplicationPolicy.new(
+      context[:current_user], nil
+    ).permission?(
+      module: :user,
+      permission: :can_search_guests,
+    ) || current&.site_manager? || current&.site_worker?
+      raise GraphQL::ExecutionError,
+            I18n.t('errors.unauthorized')
+    end
+    # rubocop:enable Metrics/AbcSize
+
+    Users::User.allowed_users(context[:current_user])
+               .where(user_type: 'visitor')
+               .search_guest("name='#{query}' OR email='#{query}' OR phone_number='#{query}'")
+               .order(name: :asc)
+               .limit(1).with_attached_avatar
+  end
+
+  def my_guests(query: nil)
+    unless ::Policy::ApplicationPolicy.new(
+      context[:current_user], nil
+    ).permission?(
+      admin: true,
+      module: :user,
+      permission: :can_view_guests,
+    )
+      raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
+    end
+
+    context[:current_user].invitees
+                          .includes(:guest, :host, :entry_time)
+                          .search(query)
+  end
+  # rubocop:enable Metrics/MethodLength
 
   def user_permissions_check?
     ::Policy::ApplicationPolicy.new(

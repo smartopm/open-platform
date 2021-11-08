@@ -15,7 +15,7 @@ export const initialRequestState = {
     temperature: '',
     loaded: false,
     occursOn: [],
-    visitationDate: null,
+    visitationDate: new Date(),
     visitEndDate: null,
     startsAt: new Date(),
     endsAt: new Date(),

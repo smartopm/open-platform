@@ -40,7 +40,7 @@ export default function DatePickerDialog({ selectedDate, handleDateChange, label
           KeyboardButtonProps={{
                         'aria-label': 'change date'
                     }}
-          {...inputValidation}
+          // {...inputValidation}
           helperText={inputValidation.error && t('form:errors.required_field', { fieldName: inputValidation.fieldName })}
           {...others}
           disabled={disabled}

@@ -4,7 +4,6 @@
 # Queries module for breaking out queries
 module Types::Queries::EntryRequest
   extend ActiveSupport::Concern
-
   included do
     # Get a entry logs for a user
     field :entry_request, Types::EntryRequestType, null: true do
@@ -38,7 +37,6 @@ module Types::Queries::EntryRequest
       argument :query, String, required: false
     end
   end
-
   def entry_request(id:)
     raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') unless can_view_entry_request
 

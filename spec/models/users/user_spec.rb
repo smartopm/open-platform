@@ -558,4 +558,18 @@ RSpec.describe Users::User, type: :model do
       end
     end
   end
+
+  describe '#invite_guest' do
+    let!(:user) { create(:user_with_community) }
+    let!(:resident) { create(:user_with_community, user_type: 'resident') }
+
+    it 'creates an invite' do
+      expect(resident.invitees.count).to eq(0)
+      resident.invite_guest(nil)
+      expect(resident.invitees.count).to eq(0)
+      # invite a guest
+      resident.invite_guest(user.id)
+      expect(resident.invitees.count).to eq(1)
+    end
+  end
 end

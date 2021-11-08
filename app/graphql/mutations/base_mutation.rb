@@ -31,5 +31,19 @@ module Mutations
         raise MutationArgumentError, 'Unauthorized Arguments' if values.key?(key)
       end
     end
+
+    def raise_duplicate_number_error(phone_number)
+      user = context[:current_user].find_via_phone_number(phone_number)
+      return if user.nil?
+
+      raise GraphQL::ExecutionError, I18n.t('errors.duplicate.phone')
+    end
+
+    def raise_duplicate_email_error(email)
+      user = context[:site_community].users.find_any_via_email(email)
+      return if user.nil?
+
+      raise GraphQL::ExecutionError, I18n.t('errors.duplicate.email')
+    end
   end
 end

@@ -39,7 +39,6 @@ import { EntryRequestContext } from '../GuestVerification/Context';
 import { initialRequestState } from '../GuestVerification/constants'
 
 
-
 export default function RequestUpdate({ id, previousRoute, guestListRequest, isGuestRequest, tabValue, isScannedRequest, handleNext }) {
   const history = useHistory()
   const authState = useContext(Context)
@@ -169,7 +168,8 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
     sendGuestQrCode({
       variables: {
         id: requestId,
-        guestEmail
+        guestEmail,
+        qrType: 'scan'
       }
     })
       .then(() => {
@@ -202,7 +202,7 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
   function closeQrModal() {
     setQrModal(false);
     if (guestListRequest) {
-      history.push('/guest-list')
+      history.push('/logbook/guests')
       return
     }
     handleNext(true)
@@ -214,7 +214,7 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
       // return reason if not other
       reason: formData.business || formData.reason,
       isGuest: guestListRequest,
-      visitationDate: previousRoute !== 'entry_logs' ? formData.visitationDate : null
+      visitationDate: previousRoute !== 'entry_logs' ? formData.visitationDate : null,
     }
     if(requestContext.request.id && communityName !== 'Nkwashi'){
       handleNext()
@@ -411,7 +411,7 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
   function closeForm({id: _id}){
 
     if(_id === 'new-guest-entry' || guestListRequest ){
-      history.push({pathname: '/guest-list'})
+      history.push({pathname: '/logbook/guests'})
       return
     }
     history.push(`/entry_logs?tab=${tabValue}&offset=0`)
@@ -768,6 +768,8 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
             />
           )
         }
+
+          {/* TODO: as we are slowly deprecating these actions, we should arrange them properly */}
           <div className=" d-flex row justify-content-center ">
             {
             showCancelBtn &&  (
@@ -801,19 +803,19 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
               )
         }
             {((previousRoute !== 'enroll' && id) && (authState?.user?.userType === 'admin' ||
-              !isGuestRequest || authState?.user?.id === formData?.user?.id)) && (
-              <Button
-                variant="contained"
-                onClick={event => handleModal(event, isGuestRequest ? 'update' : 'grant')}
-                className={css(styles.grantButton)}
-                disabled={isLoading}
-                data-testid="entry_user_grant_request"
-                startIcon={isLoading && <Spinner />}
-              >
-                {
-                  isGuestRequest ? t('logbook:guest_book.update_guest') : t('misc.log_new_entry')
-                }
-              </Button>
+              !isGuestRequest || authState?.user?.id === formData?.user?.id)) &&  requestContext.requestType !== 'view' && (
+                <Button
+                  variant="contained"
+                  onClick={event => handleModal(event, isGuestRequest ? 'update' : 'grant')}
+                  className={css(styles.grantButton)}
+                  disabled={isLoading}
+                  data-testid="entry_user_grant_request"
+                  startIcon={isLoading && <Spinner />}
+                >
+                  {
+                    isGuestRequest ? t('logbook:guest_book.update_guest') : t('misc.log_new_entry')
+                  }
+                </Button>
           )}
 
             {previousRoute === 'enroll' ? (
@@ -840,14 +842,14 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
             <Grid container justify="center" spacing={4} className={css(styles.grantSection)}>
               <Grid item>
                 <Button
-                  onClick={event => handleModal(event, requestContext.request.isEdit ? 'update' : 'grant')}
+                  onClick={event => handleModal(event, requestContext.request.isEdit || requestContext.requestType === 'view' ? 'update' : 'grant')}
                   data-testid="entry_user_grant"
                   startIcon={isLoading && <Spinner />}
                   color="primary"
                   variant="contained"
                 >
                   {
-                    requestContext.request.isEdit ? t('logbook:image_capture.update') : t('logbook:logbook.grant')
+                    requestContext.request.isEdit || requestContext.requestType === 'view' ? t('logbook:image_capture.update') : t('logbook:logbook.grant')
                   }
                 </Button>
               </Grid>
@@ -892,8 +894,8 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
                       startIcon={isLoading && <Spinner />}
                     >
                       {
-                      t('logbook:logbook.next_step')
-                    }
+                        t('logbook:logbook.next_step')
+                      }
                     </Button>
                   </Grid>
                 )

@@ -1,5 +1,5 @@
 import React from 'react';
-import { IconButton, Avatar, Typography } from '@material-ui/core';
+import { IconButton, Avatar, Typography, Grid } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import DatePickerDialog, { ThemedTimePicker } from '../../../components/DatePickerDialog';
@@ -7,52 +7,61 @@ import DatePickerDialog, { ThemedTimePicker } from '../../../components/DatePick
 export default function GuestTime({ userData, handleChange, handleChangeOccurrence, disableEdit }) {
   const { t } = useTranslation(['logbook', 'common', 'days']);
   return (
-    <>
-      <DatePickerDialog
-        selectedDate={userData.visitationDate}
-        handleDateChange={date => handleChange({ target: { name: 'visitationDate', value: date } })}
-        label={t('common:misc.day_of_visit')}
-        inputProps={{ 'data-testid': 'day_of_visit_input' }}
-        disabled={disableEdit()}
-      />
-
-      <div>
+    <Grid container direction="row" spacing={2}>
+      <Grid item xs={12}>
+        <DatePickerDialog
+          selectedDate={userData.visitationDate}
+          handleDateChange={date => handleChange({ target: { name: 'visitationDate', value: date } })}
+          label={t('common:misc.day_of_visit')}
+          inputProps={{ 'data-testid': 'day_of_visit_input' }}
+          disabled={disableEdit()}
+          inputVariant="outlined"
+        />
+        <br />
+      </Grid>
+      <Grid item xs={6}>
         <ThemedTimePicker
           time={userData.startsAt || userData.startTime}
           handleTimeChange={date => handleChange({ target: { name: 'startsAt', value: date } })}
           label={t('common:misc.start_time')}
           inputProps={{ 'data-testid': 'start_time_input' }}
           disabled={disableEdit()}
+          inputVariant="outlined"
+          fullWidth
         />
-        <span style={{ marginLeft: 20 }}>
-          <ThemedTimePicker
-            time={userData.endsAt || userData.endTime}
-            handleTimeChange={date => handleChange({ target: { name: 'endsAt', value: date } })}
-            label={t('common:misc.end_time')}
-            inputProps={{ 'data-testid': 'end_time_input' }}
-            disabled={disableEdit()}
-          />
-        </span>
-      </div>
-
-      <br />
-      <Typography gutterBottom data-testid="guest_repeats_on">{t('guest_book.repeats_on')}</Typography>
-      {Object.entries(t('days:days', { returnObjects: true })).map(([key, value]) => (
-        <IconButton
-          key={key}
-          color="primary"
-          aria-label="choose day of week"
-          component="span"
-          onClick={() => handleChangeOccurrence(key)}
-          data-testid="week_days"
+      </Grid>
+      <Grid item xs={6}>
+        <ThemedTimePicker
+          time={userData.endsAt || userData.endTime}
+          handleTimeChange={date => handleChange({ target: { name: 'endsAt', value: date } })}
+          label={t('common:misc.end_time')}
+          inputProps={{ 'data-testid': 'end_time_input' }}
           disabled={disableEdit()}
-        >
-          <Avatar style={{ backgroundColor: new Set(userData.occursOn).has(key) ? '#009CFF' : '#ADA7A7' }}>
-            {value.charAt(0)}
-          </Avatar>
-        </IconButton>
-      ))}
-      {Boolean(userData.occursOn.length) && (
+          inputVariant="outlined"
+          fullWidth
+        />
+      </Grid>
+      <Grid item xs={12} md={6}>
+        <Typography gutterBottom data-testid="guest_repeats_on">{t('guest_book.repeats_on')}</Typography>
+        {Object.entries(t('days:days', { returnObjects: true })).map(([key, value]) => (
+          <IconButton
+            key={key}
+            color="primary"
+            aria-label="choose day of week"
+            component="span"
+            onClick={() => handleChangeOccurrence(key)}
+            data-testid="week_days"
+            disabled={disableEdit()}
+          >
+            <Avatar style={{ backgroundColor: new Set(userData.occursOn).has(key) ? '#009CFF' : '#ADA7A7' }}>
+              {value.charAt(0)}
+            </Avatar>
+          </IconButton>
+        ))}
+
+      </Grid>
+      <Grid item xs={12} md={6}>
+        {Boolean(userData.occursOn.length) && (
         <DatePickerDialog
           selectedDate={userData.visitEndDate}
           handleDateChange={date => handleChange({ target: { name: 'visitEndDate', value: date } })}
@@ -60,12 +69,17 @@ export default function GuestTime({ userData, handleChange, handleChangeOccurren
           inputProps={{ 'data-testid': 'repeats_until_input' }}
           disablePastDate
           disabled={disableEdit()}
+          inputVariant="outlined"
         />
       )}
-    </>
+      </Grid>
+    </Grid>
   );
 }
 
+GuestTime.defaultProps = {
+  disableEdit: () => {}
+}
 GuestTime.propTypes = {
   userData: PropTypes.shape({
     visitEndDate: PropTypes.oneOfType([PropTypes.string, PropTypes.instanceOf(Date)]),
@@ -78,5 +92,5 @@ GuestTime.propTypes = {
   }).isRequired,
   handleChange: PropTypes.func.isRequired,
   handleChangeOccurrence: PropTypes.func.isRequired,
-  disableEdit: PropTypes.func.isRequired
+  disableEdit: PropTypes.func
 };

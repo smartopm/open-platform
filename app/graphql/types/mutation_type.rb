@@ -20,6 +20,7 @@ module Types
     field :entry_request_deny, mutation: Mutations::EntryRequest::EntryRequestDeny
     field :entry_request_acknowledge, mutation: Mutations::EntryRequest::EntryRequestAcknowledge
     field :entry_request_note, mutation: Mutations::EntryRequest::EntryRequestNote
+    field :invitation_create, mutation: Mutations::EntryRequest::InvitationCreate
     field :send_guest_qr_code, mutation: Mutations::EntryRequest::SendQrCode
     field :guest_entry_request_revoke, mutation: Mutations::EntryRequest::GuestEntryRequestRevoke
 
