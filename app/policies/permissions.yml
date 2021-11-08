@@ -384,6 +384,13 @@ visitor:
   profile:
     permissions:
       - can_see_menu_item
+  entry_request:
+    permissions:
+      - can_update_entry_request
+  user:
+    permissions:
+      - can_view_own_profile
+      - can_edit_own_profile
   community:
     permissions:
       - can_see_menu_item
