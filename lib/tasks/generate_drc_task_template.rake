@@ -79,13 +79,6 @@ task :generate_drc_task_template, %i[author_email] => :environment do |_t, args|
     },
   ]
 
-  # Check DrC template does not exist
-  drc_template.each do |task|
-    abort('DRC template already exist') if community.notes
-                                                    .find_by(body: task[:parentTask])
-                                                    .present?
-  end
-
   ActiveRecord::Base.transaction do
     drc_template.reverse.each do |t|
       # create parent task
