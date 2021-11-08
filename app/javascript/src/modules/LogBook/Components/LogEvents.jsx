@@ -124,8 +124,9 @@ export default function LogEvents({
     handleClose: event => handleMenuClose(event)
   };
   return (
-    <div style={{ marginTop: '20px' }}>
+    <div style={{ marginTop: '20px' }} data-testid='card'>
       {error && <CenteredContent>{error}</CenteredContent>}
+      {data?.length === 0 && <CenteredContent data-testid='no-logs'>{t('logbook.no_logs')}</CenteredContent>}
       {loading ? (
         <Spinner />
       ) : (
@@ -136,7 +137,7 @@ export default function LogEvents({
                 <Grid item md={4} xs={8}>
                   {entry.entryRequest ? (
                     <>
-                      <Typography variant="caption" color="primary">
+                      <Typography variant="caption" color="primary" data-testid='name'>
                         {entry.entryRequest?.name}
                       </Typography>
                       <br />
@@ -144,11 +145,11 @@ export default function LogEvents({
                         {t('logbook.host')}
                         {' '}
                       </Typography>
-                      <Link to={`/user/${entry.actingUser.id}`}>
+                      <Link to={`/user/${entry.actingUser.id}`} data-testid='acting-user'>
                         <Text color="secondary" content={entry.actingUser.name} />
                       </Link>
                       <br />
-                      <Typography variant="caption" color="textSecondary">
+                      <Typography variant="caption" color="textSecondary" data-testid='note'>
                         {entry.data?.note}
                       </Typography>
                     </>
@@ -182,7 +183,7 @@ export default function LogEvents({
                 <Grid item md={7} xs={12} style={!matches ? { paddingTop: '7px' } : {}}>
                   <Grid container spacing={1}>
                     <Grid item md={2} style={!matches ? { paddingTop: '15px' } : {}}>
-                      <Typography variant="caption" color="textSecondary">
+                      <Typography variant="caption" color="textSecondary" data-testid='created-at'>
                         {dateToString(entry.createdAt)}
                       </Typography>
                     </Grid>
@@ -194,7 +195,7 @@ export default function LogEvents({
                     <Grid item md={9} xs={12}>
                       <Grid container spacing={1}>
                         {entry.entryRequest?.grantor && entry.data.note !== 'Exited' && (
-                          <Grid item md={6}>
+                          <Grid item md={6} data-testid='granted-access'>
                             <Label title={t('logbook.granted_access')} color="#77B08A" />
                           </Grid>
                         )}
@@ -204,12 +205,12 @@ export default function LogEvents({
                           </Grid>
                         )}
                         {entry.subject === 'observation_log' && (
-                          <Grid item md={5}>
+                          <Grid item md={5} data-testid='observation'>
                             <Label title={t('logbook.observation')} color="#EBC64F" />
                           </Grid>
                         )}
                         {entry.imageUrls && (
-                          <Grid item md={1}>
+                          <Grid item md={1} data-testid='image-area'>
                             <IconButton color="primary" onClick={() => handleClick(entry.id)}>
                               <PhotoIcon />
                             </IconButton>
@@ -234,6 +235,7 @@ export default function LogEvents({
                       aria-haspopup="true"
                       dataid={entry.id}
                       onClick={event => menuData.handleMenu(event, entry)}
+                      data-testid='menu-list'
                     >
                       <MoreVertOutlined />
                     </IconButton>
@@ -250,7 +252,6 @@ export default function LogEvents({
                 </Hidden>
               </Grid>
             </Card>
-            {data?.length === 0 && <CenteredContent>{t('logbook.no_logs')}</CenteredContent>}
             {imageOpen && (
               <DetailsDialog
                 open={entry.id === id && imageOpen}

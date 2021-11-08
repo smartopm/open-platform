@@ -102,7 +102,7 @@ export default function LogBook() {
     setvalue(newValue);
     setSearchTerm('');
     // reset pagination after changing the tab
-    history.push(`/logbook?tab=${newValue}&offset=${0}`);
+    history.push(`/log_book?tab=${newValue}&offset=${0}`);
   }
 
   function handleSearch(event) {
@@ -137,9 +137,9 @@ export default function LogBook() {
   function paginate(action) {
     if (action === 'prev') {
       if (offset < limit) return;
-      history.push(`/logbook?tab=${value}&offset=${offset - limit}`);
+      history.push(`/log_book?tab=${value}&offset=${offset - limit}`);
     } else if (action === 'next') {
-      history.push(`/logbook?tab=${value}&offset=${offset + limit}`);
+      history.push(`/log_book?tab=${value}&offset=${offset + limit}`);
     }
   }
 
