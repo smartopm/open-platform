@@ -130,12 +130,18 @@ export function TaskDataList({
   const classes = useStyles();
   const { t } = useTranslation('task')
 
+  // This is not working as expected yet.
+  function handleCheckbox(event, currentTask) {
+    event.stopPropagation();
+    handleChange(currentTask.id)
+  }
+
  return (
    <div className={classes.taskListContainer}>
      <div className={classes.section1} data-testid="task_body_section">
        <Checkbox
          checked={selectedTasks.includes(task.id) || isSelected}
-         onChange={() => handleChange(task.id)}
+         onChange={(event) => handleCheckbox(event, task)}
          inputProps={{ 'aria-label': 'primary checkbox' }}
          color="primary"
          data-testid="task-select-action"
