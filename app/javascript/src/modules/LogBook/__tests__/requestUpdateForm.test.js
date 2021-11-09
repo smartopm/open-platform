@@ -6,10 +6,10 @@ import { MockedProvider } from '@apollo/react-testing';
 import { EntryRequestQuery } from '../../../graphql/queries';
 import RequestUpdate from '../Components/RequestUpdate';
 import MockedThemeProvider from '../../__mocks__/mock_theme';
-import userMock from '../../../__mocks__/userMock';
 import { Context } from '../../../containers/Provider/AuthStateProvider';
 import { EntryRequestUpdateMutation } from '../graphql/logbook_mutations';
 import { EntryRequestContext } from '../GuestVerification/Context';
+import authState from '../../../__mocks__/authstate';
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
 describe('RequestUpdate Component', () => {
@@ -67,7 +67,7 @@ describe('RequestUpdate Component', () => {
       <MockedProvider mocks={[mocks]} addTypename>
         <BrowserRouter>
           <MockedThemeProvider>
-            <Context.Provider value={userMock}>
+            <Context.Provider value={authState}>
               <EntryRequestContext.Provider
                 value={{
                   request: { id: '3c2f8ee2-598b-437c-b217-3e4c0f86c761' },
@@ -111,9 +111,6 @@ describe('RequestUpdate Component', () => {
           target: { value: 'ABT' }
         });
         expect(container.queryByTestId('entry_user_vehicle').value).toBe('ABT');
-        expect(container.queryByTestId('entry_user_grant').textContent).toContain(
-          'logbook:logbook.grant'
-        );
         expect(container.queryByTestId('entry_user_grant').textContent).toContain(
           'logbook:logbook.grant'
         );
@@ -177,7 +174,7 @@ describe('RequestUpdate Component', () => {
       <MockedProvider mocks={[mocks, updateMock]} addTypename>
         <BrowserRouter>
           <MockedThemeProvider>
-            <Context.Provider value={userMock}>
+            <Context.Provider value={authState}>
               <EntryRequestContext.Provider
                 value={{
                   request: {
@@ -202,17 +199,12 @@ describe('RequestUpdate Component', () => {
     );
     await waitFor(() => {
       expect(container.queryByText('form_fields.full_name')).toBeInTheDocument();
-      expect(container.queryByTestId('entry_user_call_mgr')).not.toBeInTheDocument();
-      expect(container.queryByTestId('entry_user_grant_request').textContent).toBe(
-        'logbook:guest_book.update_guest'
-      );
-      expect(container.queryByTestId('entry_user_grant')).not.toBeInTheDocument();
+      expect(container.queryByTestId('entry_user_call_mgr')).toBeInTheDocument();
+      expect(container.queryByTestId('entry_user_grant')).toBeInTheDocument();
       expect(container.queryByTestId('guest_repeats_on')).toBeInTheDocument();
       expect(container.queryByTestId('guest_repeats_on').textContent).toContain(
         'guest_book.repeats_on'
       );
-
-      fireEvent.click(container.queryByTestId('entry_user_grant_request'));
     }, 50);
   });
 
@@ -220,11 +212,20 @@ describe('RequestUpdate Component', () => {
     const previousRoute = 'enroll';
     const isGuestRequest = false;
     const isScannedRequest = false;
+    const permissions = ['can_create_user'];
+    const user = {
+      ...authState,
+      user: {
+        ...authState.user,
+        // modify current permission
+        permissions: { ...authState.user.permissions, user: { permissions } }
+      }
+    };
     const container = render(
       <MockedProvider mocks={[mocks]} addTypename>
         <BrowserRouter>
           <MockedThemeProvider>
-            <Context.Provider value={userMock}>
+            <Context.Provider value={user}>
               <EntryRequestContext.Provider
                 value={{
                   request: { id: '3c2f8ee2-598b-437c-b217-3e4c0f86c761' },

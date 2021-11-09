@@ -7,7 +7,7 @@ import permissionsCheck from '../utils';
 export default function AccessCheck({ allowedPermissions, children, module }) {
   const authState = useContext(AuthStateContext);
   const permissions = authState.user?.permissions;
-  const modulePerms = objectAccessor(permissions, module);
+  const modulePerms = objectAccessor(permissions, module) || [];
   const hasPermissions = permissionsCheck(modulePerms.permissions, allowedPermissions);
 
   if (hasPermissions) {

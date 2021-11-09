@@ -812,7 +812,7 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
                 <Grid item>
                   <Button
                     onClick={event => handleModal(event, 'grant')}
-                    data-testid="entry_user_update"
+                    data-testid="entry_user_grant"
                     startIcon={isLoading && <Spinner />}
                     color="primary"
                     variant="contained"
@@ -827,7 +827,7 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
                 <Grid item>
                   <Button
                     onClick={event => handleModal(event, 'update')}
-                    data-testid="entry_user_grant"
+                    data-testid="entry_user_update"
                     startIcon={isLoading && <Spinner />}
                     color="primary"
                     variant="contained"
@@ -860,7 +860,7 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
                   </AccessCheck>
                 )}
               </FeatureCheck>
-              <AccessCheck module="entry_request" allowedPermissions={['can_update_entry']}>
+              <AccessCheck module="entry_request" allowedPermissions={['can_grant_entry']}>
                 <Grid item>
                   <a
                     href={`tel:${authState.user.community.securityManager}`}
