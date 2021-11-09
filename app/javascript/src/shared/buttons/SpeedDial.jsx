@@ -55,11 +55,12 @@ export default function SpeedDialButton({
 
 const useStyles = makeStyles(theme => ({
   wrapper: {
-    position: 'relative',
+    position: 'fixed',
     transform: 'translateZ(0px)'
   },
   speedDial: {
     position: 'absolute',
+    zIndex: '1000',
     '&.MuiSpeedDial-directionUp, &.MuiSpeedDial-directionLeft': {
       bottom: theme.spacing(2),
       right: theme.spacing(2)

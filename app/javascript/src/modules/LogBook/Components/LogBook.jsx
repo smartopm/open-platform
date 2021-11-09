@@ -6,6 +6,7 @@ import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { useQuery, useApolloClient, useMutation } from 'react-apollo';
+import Hidden from '@material-ui/core/Hidden';
 import { useTranslation } from 'react-i18next';
 import { useParams, useHistory } from 'react-router-dom';
 import makeStyles from '@material-ui/core/styles/makeStyles';
@@ -142,15 +143,6 @@ export default function LogBook() {
     />
   );
 }
-
-const useStyles = makeStyles(() => ({
-  container: {
-    padding: '50px  20px 50px 50px'
-  },
-  containerMobile: {
-    padding: '10px 0 10px 30px'
-  }
-}));
 
 export function IndexComponent({
   data,
@@ -361,7 +353,18 @@ export function IndexComponent({
       <Grid container className={matches ?  classes.containerMobile : classes.container}>
         <Grid item md={11} xs={11}>
           <Grid container>
-            <Grid item md={12} xs={8}><Typography variant="h4">{t('logbook.log_book')}</Typography></Grid>
+            <Grid item md={12} xs={10}><Typography variant="h4">{t('logbook.log_book')}</Typography></Grid>
+            <Hidden mdUp>
+              <Grid item md={1} xs={2}>
+                <SpeedDial
+                  open={open}
+                  handleClose={() => setOpen(false)}
+                  handleOpen={() => setOpen(true)}
+                  direction="down"
+                  actions={actions}
+                />
+              </Grid>
+            </Hidden>
             <Grid item md={6}>
               <StyledTabs
                 value={tabValue}
@@ -372,7 +375,7 @@ export function IndexComponent({
                 <StyledTab label={t('logbook.visit_view')} {...a11yProps(1)} />
               </StyledTabs>
             </Grid>
-            <Grid item xs={12} md={5} style={matches ? {marginTop: '10px'} : {}}>
+            <Grid item xs={10} md={5} style={matches ? {marginTop: '10px'} : {}}>
               <SearchInput
                 title={objectAccessor(searchPlaceholder, tabValue)}
                 searchValue={searchTerm}
@@ -423,15 +426,17 @@ export function IndexComponent({
             />
           </TabPanel>
         </Grid>
-        <Grid item md={1} xs={1}>
-          <SpeedDial
-            open={open}
-            handleClose={() => setOpen(false)}
-            handleOpen={() => setOpen(true)}
-            direction="down"
-            actions={actions}
-          />
-        </Grid>
+        <Hidden mdDown>
+          <Grid item md={1} xs={1}>
+            <SpeedDial
+              open={open}
+              handleClose={() => setOpen(false)}
+              handleOpen={() => setOpen(true)}
+              direction="down"
+              actions={actions}
+            />
+          </Grid>
+        </Hidden>
       </Grid>
       <CenteredContent>
         <Paginate
@@ -445,3 +450,12 @@ export function IndexComponent({
     </>
   );
 }
+
+const useStyles = makeStyles(() => ({
+  container: {
+    padding: '32px  20px 50px 50px'
+  },
+  containerMobile: {
+    padding: '10px 0 10px 30px'
+  }
+}));

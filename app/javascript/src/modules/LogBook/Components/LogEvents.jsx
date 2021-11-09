@@ -166,6 +166,7 @@ export default function LogEvents({
                       aria-haspopup="true"
                       dataid={entry.id}
                       onClick={event => menuData.handleMenu(event, entry)}
+                      data-testid='menu-list'
                     >
                       <MoreVertOutlined />
                     </IconButton>
@@ -229,7 +230,7 @@ export default function LogEvents({
                   </Grid>
                 </Grid>
                 <Hidden mdDown>
-                  <Grid item md={1}>
+                  <Grid item md={1} style={{textAlign: 'right'}}>
                     <IconButton
                       aria-controls="sub-menu"
                       aria-haspopup="true"

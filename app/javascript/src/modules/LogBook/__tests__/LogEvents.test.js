@@ -1,5 +1,5 @@
 import React from 'react';
-import { render } from '@testing-library/react';
+import { render, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { BrowserRouter } from 'react-router-dom/';
 import { MockedProvider } from '@apollo/react-testing';
@@ -49,6 +49,10 @@ describe('Log Events Component', () => {
     }
   ]
 
+  const actions = jest.fn()
+  const enroll = jest.fn()
+  const logExit = jest.fn()
+
   it('renders log event component', () => {
     const container = render(
       <MockedProvider>
@@ -59,10 +63,10 @@ describe('Log Events Component', () => {
                 data={data}
                 loading={false}
                 userType='admin'
-                handleExitEvent={jest.fn()}
+                handleExitEvent={logExit}
                 handleAddObservation={jest.fn()}
-                routeToAction={jest.fn()}
-                enrollUser={jest.fn}
+                routeToAction={actions}
+                enrollUser={enroll}
               />
             </Context.Provider>
           </BrowserRouter>
@@ -70,12 +74,28 @@ describe('Log Events Component', () => {
       </MockedProvider>
     );
 
-    expect(container.queryByTestId('card')).toBeInTheDocument();
+    expect(container.queryAllByTestId('card')[0]).toBeInTheDocument();
     expect(container.queryByTestId('name')).toBeInTheDocument();
     expect(container.queryByTestId('acting-user')).toBeInTheDocument();
     expect(container.queryByTestId('note')).toBeInTheDocument();
     expect(container.queryByTestId('created-at')).toBeInTheDocument();
     expect(container.queryByTestId('image-area')).toBeInTheDocument();
+    expect(container.queryByTestId('menu-list')).toBeInTheDocument();
+
+    fireEvent.click(container.queryByTestId('menu-list'))
+    expect(container.queryByText('logbook.view_details')).toBeInTheDocument();
+    expect(container.queryByText('logbook.enroll_user')).toBeInTheDocument();
+    expect(container.queryByText('logbook.print_scan')).toBeInTheDocument();
+    expect(container.queryByText('logbook.exit_log')).toBeInTheDocument();
+
+    fireEvent.click(container.queryByText('logbook.view_details'))
+    expect(actions).toBeCalled()
+
+    fireEvent.click(container.queryByText('logbook.enroll_user'))
+    expect(enroll).toBeCalled()
+
+    fireEvent.click(container.queryByText('logbook.exit_log'))
+    expect(logExit).toBeCalled()
   });
   
   it('renders no logs when data is empty', () => {
