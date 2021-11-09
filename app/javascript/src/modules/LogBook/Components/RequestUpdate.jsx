@@ -823,21 +823,25 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
                   </Button>
                 </Grid>
               </AccessCheck>
-              <AccessCheck module="entry_request" allowedPermissions={['can_update_entry_request']}>
-                <Grid item>
-                  <Button
-                    onClick={event => handleModal(event, 'update')}
-                    data-testid="entry_user_update"
-                    startIcon={isLoading && <Spinner />}
-                    color="primary"
-                    variant="contained"
-                  >
-                    {
-                      t('logbook:image_capture.update')
-                    }
-                  </Button>
-                </Grid>
-              </AccessCheck>
+              {
+                Boolean(id || requestContext.request.id) && (
+                  <AccessCheck module="entry_request" allowedPermissions={['can_update_entry_request']}>
+                    <Grid item>
+                      <Button
+                        onClick={event => handleModal(event, 'update')}
+                        data-testid="entry_user_update"
+                        startIcon={isLoading && <Spinner />}
+                        color="primary"
+                        variant="contained"
+                      >
+                        {
+                          t('logbook:image_capture.update')
+                        }
+                      </Button>
+                    </Grid>
+                  </AccessCheck>
+                      )
+                }
 
               <br />
               <FeatureCheck features={authState?.user?.community?.features} name="LogBook" subFeature={CommunityFeaturesWhiteList.denyGateAccessButton}>
