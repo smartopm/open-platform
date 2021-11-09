@@ -59,7 +59,8 @@ describe('Community settings page', () => {
       },
       smsPhoneNumbers: ["+254724821901", "+254723456789"],
       emergencyCallNumber: "+94848584844",
-      features: { LogBook: { features: []} }
+      features: { LogBook: { features: []} },
+      themeColors: { primaryColor: '#69ABA4', secondaryColor: '#cf5628' }
     };
 
     const communityMutationMock = {
@@ -114,7 +115,9 @@ describe('Community settings page', () => {
       result: {
         data: {
           communityUpdate: {
-            id: '11cdad78-5a04-4026-828c-17290a2c44b6'
+            community: {
+              id: '11cdad78-5a04-4026-828c-17290a2c44b6'
+            }
           }
         }
       }
