@@ -269,21 +269,16 @@ module Types::Queries::User
     context[:site_community].users.where(user_type: 'admin', state: 'valid')
   end
 
-  # rubocop:disable Metrics/MethodLength
   def search_guests(query: nil)
-    current = context[:current_user]
-    unless user_permissions_check?('can_search_guests') ||
-           current&.site_manager? || current&.site_worker?
+    unless user_permissions_check?('can_search_guests')
       raise GraphQL::ExecutionError,
             I18n.t('errors.unauthorized')
     end
-    Users::User.allowed_users(context[:current_user])
-               .where(user_type: 'visitor')
-               .search_guest("name='#{query}' OR email='#{query}' OR phone_number='#{query}'")
-               .order(name: :asc)
-               .limit(1).with_attached_avatar
+    users = context[:site_community].users
+    users.where(user_type: 'visitor')
+         .search_guest("name='#{query}' OR email='#{query}' OR phone_number='#{query}'")
+         .limit(1).with_attached_avatar
   end
-  # rubocop:enable Metrics/MethodLength
 
   def my_guests(query: nil)
     unless user_permissions_check?('can_view_guests')

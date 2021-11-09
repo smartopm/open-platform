@@ -36,7 +36,6 @@ export const SearchGuestsQuery = gql`
     searchGuests(query: $query) {
       id
       name
-      email
       imageUrl
       avatarUrl
     }
