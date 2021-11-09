@@ -12,6 +12,7 @@ export default function CardComponent({ children, clickData }) {
         elevation={0}
         className={clickData?.clickable ? classes.cardClickable : classes.card}
         onClick={clickData?.clickable ? () =>  clickData?.handleClick() : null}
+        variant='outlined'
         data-testid='card'
       >
         <CardContent style={{padding: '10px'}}>
@@ -24,10 +25,10 @@ export default function CardComponent({ children, clickData }) {
 
 const useStyles = makeStyles(() => ({ 
   card: {
-    border: '1px solid #E0E0E0', marginBottom: '10px'
+    marginBottom: '10px'
   },
-  cardClickable: {
-    border: '1px solid #E0E0E0', marginBottom: '10px',
+  cardClickable: { 
+    marginBottom: '10px',
     cursor: "pointer"
   }
 }))

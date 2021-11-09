@@ -131,128 +131,126 @@ export default function LogEvents({
         <Spinner />
       ) : data?.length > 0 ? (
         data.map(entry => (
-          <>
-            <Card key={entry.id}>
-              <Grid container spacing={1}>
-                <Grid item md={4} xs={8}>
-                  {entry.entryRequest ? (
-                    <>
-                      <Typography variant="caption" color="primary" data-testid='name'>
-                        {entry.entryRequest?.name}
-                      </Typography>
-                      <br />
-                      <Typography variant="caption">
-                        {t('logbook.host')}
-                        {' '}
-                      </Typography>
-                      <Link to={`/user/${entry.actingUser.id}`} data-testid='acting-user'>
-                        <Text color="secondary" content={entry.actingUser.name} />
-                      </Link>
-                      <br />
-                      <Typography variant="caption" color="textSecondary" data-testid='note'>
-                        {entry.data?.note}
-                      </Typography>
-                    </>
+          <Card key={entry.id}>
+            <Grid container spacing={1}>
+              <Grid item md={4} xs={8}>
+                {entry.entryRequest ? (
+                  <>
+                    <Typography variant="caption" color="primary" data-testid='name'>
+                      {entry.entryRequest?.name}
+                    </Typography>
+                    <br />
+                    <Typography variant="caption">
+                      {t('logbook.host')}
+                      {' '}
+                    </Typography>
+                    <Link to={`/user/${entry.actingUser.id}`} data-testid='acting-user'>
+                      <Text color="secondary" content={entry.actingUser.name} />
+                    </Link>
+                    <br />
+                    <Typography variant="caption" color="textSecondary" data-testid='note'>
+                      {entry.data?.note}
+                    </Typography>
+                  </>
                   ) : (
                     <Typography variant="caption" color="textSecondary">
                       {entry.data?.note}
                     </Typography>
                   )}
-                </Grid>
-                <Hidden mdUp>
-                  <Grid item md={1} xs={4} style={{ textAlign: 'right' }}>
-                    <IconButton
-                      aria-controls="sub-menu"
-                      aria-haspopup="true"
-                      dataid={entry.id}
-                      onClick={event => menuData.handleMenu(event, entry)}
-                      data-testid='menu-list'
-                    >
-                      <MoreVertOutlined />
-                    </IconButton>
-                    <MenuList
-                      open={
-                        menuData?.open && menuData?.anchorEl?.getAttribute('dataid') === entry.id
-                      }
-                      anchorEl={menuData?.anchorEl}
-                      userType={menuData?.userType}
-                      handleClose={menuData?.handleClose}
-                      list={handleMenuList(menuData?.menuList)}
-                    />
-                  </Grid>
-                </Hidden>
-                <Grid item md={7} xs={12} style={!matches ? { paddingTop: '7px' } : {}}>
-                  <Grid container spacing={1}>
-                    <Grid item md={2} style={!matches ? { paddingTop: '15px' } : {}}>
-                      <Typography variant="caption" color="textSecondary" data-testid='created-at'>
-                        {dateToString(entry.createdAt)}
-                      </Typography>
-                    </Grid>
-                    <Grid item md={1} style={!matches ? { paddingTop: '15px' } : {}}>
-                      <Typography variant="caption" color="textSecondary">
-                        {dateTimeToString(entry.createdAt)}
-                      </Typography>
-                    </Grid>
-                    <Grid item md={9} xs={12}>
-                      <Grid container spacing={1}>
-                        {entry.entryRequest?.grantor && entry.data.note !== 'Exited' && (
-                          <Grid item md={6} data-testid='granted-access'>
-                            <Label title={t('logbook.granted_access')} color="#77B08A" />
-                          </Grid>
-                        )}
-                        {entry.data.note === 'Exited' && (
-                          <Grid item md={6}>
-                            <Label title={t('logbook.exit_logged')} color="#C4584F" />
-                          </Grid>
-                        )}
-                        {entry.subject === 'observation_log' && (
-                          <Grid item md={5} data-testid='observation'>
-                            <Label title={t('logbook.observation')} color="#EBC64F" />
-                          </Grid>
-                        )}
-                        {entry.imageUrls && (
-                          <Grid item md={1} data-testid='image-area'>
-                            <IconButton color="primary" onClick={() => handleClick(entry.id)}>
-                              <PhotoIcon />
-                            </IconButton>
-                          </Grid>
-                        )}
-                        {entry.entryRequest && entry.data.note !== 'Exited' && (
-                          <Grid item md={6}>
-                            <Label
-                              title={toTitleCase(entry.entryRequest?.reason)}
-                              color={objectAccessor(LogLabelColors, entry.entryRequest?.reason)}
-                            />
-                          </Grid>
-                        )}
-                      </Grid>
-                    </Grid>
-                  </Grid>
-                </Grid>
-                <Hidden mdDown>
-                  <Grid item md={1} style={{textAlign: 'right'}}>
-                    <IconButton
-                      aria-controls="sub-menu"
-                      aria-haspopup="true"
-                      dataid={entry.id}
-                      onClick={event => menuData.handleMenu(event, entry)}
-                      data-testid='menu-list'
-                    >
-                      <MoreVertOutlined />
-                    </IconButton>
-                    <MenuList
-                      open={
-                        menuData?.open && menuData?.anchorEl?.getAttribute('dataid') === entry.id
-                      }
-                      anchorEl={menuData?.anchorEl}
-                      userType={menuData?.userType}
-                      handleClose={menuData?.handleClose}
-                      list={handleMenuList(menuData?.menuList)}
-                    />
-                  </Grid>
-                </Hidden>
               </Grid>
-            </Card>
+              <Hidden mdUp>
+                <Grid item md={1} xs={4} style={{ textAlign: 'right' }}>
+                  <IconButton
+                    aria-controls="sub-menu"
+                    aria-haspopup="true"
+                    dataid={entry.id}
+                    onClick={event => menuData.handleMenu(event, entry)}
+                    data-testid='menu-list'
+                  >
+                    <MoreVertOutlined />
+                  </IconButton>
+                  <MenuList
+                    open={
+                        menuData?.open && menuData?.anchorEl?.getAttribute('dataid') === entry.id
+                      }
+                    anchorEl={menuData?.anchorEl}
+                    userType={menuData?.userType}
+                    handleClose={menuData?.handleClose}
+                    list={handleMenuList(menuData?.menuList)}
+                  />
+                </Grid>
+              </Hidden>
+              <Grid item md={7} xs={12} style={!matches ? { paddingTop: '7px' } : {}}>
+                <Grid container spacing={1}>
+                  <Grid item md={2} style={!matches ? { paddingTop: '15px' } : {}}>
+                    <Typography variant="caption" color="textSecondary" data-testid='created-at'>
+                      {dateToString(entry.createdAt)}
+                    </Typography>
+                  </Grid>
+                  <Grid item md={1} style={!matches ? { paddingTop: '15px' } : {}}>
+                    <Typography variant="caption" color="textSecondary">
+                      {dateTimeToString(entry.createdAt)}
+                    </Typography>
+                  </Grid>
+                  <Grid item md={9} xs={12}>
+                    <Grid container spacing={1}>
+                      {entry.entryRequest?.grantor && entry.data.note !== 'Exited' && (
+                      <Grid item md={6} data-testid='granted-access'>
+                        <Label title={t('logbook.granted_access')} color="#77B08A" />
+                      </Grid>
+                        )}
+                      {entry.data.note === 'Exited' && (
+                      <Grid item md={6}>
+                        <Label title={t('logbook.exit_logged')} color="#C4584F" />
+                      </Grid>
+                        )}
+                      {entry.subject === 'observation_log' && (
+                      <Grid item md={5} data-testid='observation'>
+                        <Label title={t('logbook.observation')} color="#EBC64F" />
+                      </Grid>
+                        )}
+                      {entry.imageUrls && (
+                      <Grid item md={1} data-testid='image-area'>
+                        <IconButton color="primary" onClick={() => handleClick(entry.id)}>
+                          <PhotoIcon />
+                        </IconButton>
+                      </Grid>
+                        )}
+                      {entry.entryRequest && entry.data.note !== 'Exited' && (
+                      <Grid item md={6}>
+                        <Label
+                          title={toTitleCase(entry.entryRequest?.reason)}
+                          color={objectAccessor(LogLabelColors, entry.entryRequest?.reason)}
+                        />
+                      </Grid>
+                        )}
+                    </Grid>
+                  </Grid>
+                </Grid>
+              </Grid>
+              <Hidden mdDown>
+                <Grid item md={1} style={{textAlign: 'right'}}>
+                  <IconButton
+                    aria-controls="sub-menu"
+                    aria-haspopup="true"
+                    dataid={entry.id}
+                    onClick={event => menuData.handleMenu(event, entry)}
+                    data-testid='menu-list'
+                  >
+                    <MoreVertOutlined />
+                  </IconButton>
+                  <MenuList
+                    open={
+                        menuData?.open && menuData?.anchorEl?.getAttribute('dataid') === entry.id
+                      }
+                    anchorEl={menuData?.anchorEl}
+                    userType={menuData?.userType}
+                    handleClose={menuData?.handleClose}
+                    list={handleMenuList(menuData?.menuList)}
+                  />
+                </Grid>
+              </Hidden>
+            </Grid>
             {imageOpen && (
               <DetailsDialog
                 open={entry.id === id && imageOpen}
@@ -262,7 +260,7 @@ export default function LogEvents({
                 <ImageUploadPreview imageUrls={entry.imageUrls} sm={6} xs={6} imgHeight="300px" />
               </DetailsDialog>
             )}
-          </>
+          </Card>
         ))
       ) : (
         <CenteredContent data-testid='no-logs'>{t('logbook.no_logs')}</CenteredContent>
