@@ -14,6 +14,7 @@ import { EntryRequestContext } from '../Context';
 import Video from '../../../../shared/Video';
 import { Spinner } from '../../../../shared/Loading';
 import CenteredContent from '../../../../components/CenteredContent';
+import AccessCheck from '../../../Permissions/Components/AccessCheck';
 
 export default function VideoCapture() {
   const [counter, setCounter] = useState(0);
@@ -155,19 +156,21 @@ export default function VideoCapture() {
         )}
           {
             !requestContext.isGuestRequest && !requestContext.request.isEdit && (
-              <Button
-                onClick={requestContext.grantAccess}
-                color="primary"
-                data-testid="grant_btn"
-                disabled={!requestContext.request.id}
-                startIcon={requestContext.request.isLoading && <Spinner />}
-              >
-                {t('logbook:logbook.grant')}
-              </Button>
+              <AccessCheck module="entry_request" allowedPermissions={['can_grant_entry']}>
+                <Button
+                  onClick={requestContext.grantAccess}
+                  color="primary"
+                  data-testid="grant_btn"
+                  disabled={!requestContext.request.id}
+                  startIcon={requestContext.request.isLoading && <Spinner />}
+                >
+                  {t('logbook:logbook.grant')}
+                </Button>
+              </AccessCheck>
             )
           }
           {requestContext.request.isEdit && (
-            <>
+            <AccessCheck module="entry_request" allowedPermissions={['can_update_entry_request']}>
               <Button
                 onClick={() => setRetakeVideo(true)}
                 color="primary"
@@ -176,7 +179,7 @@ export default function VideoCapture() {
               >
                 {t('logbook:video_recording.retake')}
               </Button>
-            </>
+            </AccessCheck>
           )}
         </CenteredContent>
       </div>
