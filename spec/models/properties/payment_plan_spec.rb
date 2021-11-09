@@ -231,6 +231,18 @@ RSpec.describe Properties::PaymentPlan, type: :model do
               expect(other_general_payment.reload.status).to eql 'cancelled'
             end
           end
+
+          context 'when plan status is not active' do
+            before do
+              other_general_payment
+              plan.status = 'cancelled'
+              plan.save!
+            end
+
+            it 'does not allocates general fund' do
+              expect(plan.pending_balance.to_f).to eql 1200.0
+            end
+          end
         end
       end
     end

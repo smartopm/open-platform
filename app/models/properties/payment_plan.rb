@@ -362,7 +362,7 @@ module Properties
     #
     # @return [void]
     def allocate_general_funds
-      return if user.payment_plans.general_plans.nil?
+      return if !status.eql?('active') || user.payment_plans.general_plans.nil?
 
       payments = user.general_payment_plan.plan_payments.paid.order(:amount)
       payments.each do |payment|
