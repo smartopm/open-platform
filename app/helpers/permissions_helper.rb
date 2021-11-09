@@ -4,7 +4,7 @@
 # accessed by ::PermissionsHelper
 module PermissionsHelper
   def allowed?(**args)
-    is_admin = args[:admin]
+    is_admin = args[:admin] # other cases could be false and nil 
     ::Policy::ApplicationPolicy.new(
       context[:current_user], nil
     ).permission?(

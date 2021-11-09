@@ -21,6 +21,8 @@ module Policy
 
     def permission?(**args)
       # pass  args[:admin] as admin: true IFF only admin is permotted to perform the action
+      # args[:admin] == true check ensures that a check for admin is only when admin: true
+      # other cases could be false and nil
       return false if user.nil?
 
       current_module = args[:module]
