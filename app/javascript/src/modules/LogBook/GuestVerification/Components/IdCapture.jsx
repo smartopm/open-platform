@@ -12,6 +12,7 @@ import { EntryRequestContext } from '../Context';
 import MessageAlert from '../../../../components/MessageAlert';
 import CenteredContent from '../../../../components/CenteredContent';
 import { Spinner } from '../../../../shared/Loading';
+import AccessCheck from '../../../Permissions/Components/AccessCheck';
 
 export default function IDCapture({ handleNext }) {
   const [frontImageUrl, setFrontImageUrl] = useState('');
@@ -143,29 +144,33 @@ export default function IDCapture({ handleNext }) {
           />
         </Grid>
         <CenteredContent>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={handleContinue}
-            disabled={(!backBlobId || !frontBlobId) && !images}
-            data-testid={requestContext.request.isEdit ? 'update' : 'save_and_next'}
-            startIcon={loading && <Spinner />}
-          >
-            {requestContext.request.isEdit
-              ? t('image_capture.update')
-              : t('image_capture.next_step')}
-          </Button>
-          {!requestContext.isGuestRequest && !requestContext.request.isEdit && (
+          <AccessCheck module="entry_request" allowedPermissions={['can_update_entry_request']}>
             <Button
-              className={classes.skipToNextBtn}
-              onClick={requestContext.grantAccess}
-              disabled={!requestContext.request.id}
+              variant="contained"
               color="primary"
-              data-testid="skip_next"
-              startIcon={requestContext.request.isLoading && <Spinner />}
+              onClick={handleContinue}
+              disabled={(!backBlobId || !frontBlobId) && !images}
+              data-testid={requestContext.request.isEdit ? 'update' : 'save_and_next'}
+              startIcon={loading && <Spinner />}
             >
-              {t('logbook.grant')}
+              {requestContext.request.isEdit
+                ? t('image_capture.update')
+                : t('image_capture.next_step')}
             </Button>
+          </AccessCheck>
+          {!requestContext.isGuestRequest && !requestContext.request.isEdit && (
+            <AccessCheck module="entry_request" allowedPermissions={['can_grant_entry']}>
+              <Button
+                className={classes.skipToNextBtn}
+                onClick={requestContext.grantAccess}
+                disabled={!requestContext.request.id}
+                color="primary"
+                data-testid="skip_next"
+                startIcon={requestContext.request.isLoading && <Spinner />}
+              >
+                {t('logbook.grant')}
+              </Button>
+            </AccessCheck>
           )}
         </CenteredContent>
       </Grid>

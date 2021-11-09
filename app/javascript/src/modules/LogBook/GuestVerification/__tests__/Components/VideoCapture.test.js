@@ -6,14 +6,14 @@ import { MockedProvider } from '@apollo/react-testing';
 import VideoCapture, { videoDirection } from '../../Components/VideoCapture';
 import { Context } from '../../../../../containers/Provider/AuthStateProvider';
 import MockedThemeProvider from '../../../../__mocks__/mock_theme';
-import userMock from '../../../../../__mocks__/userMock';
 import { EntryRequestContext } from '../../Context';
+import authState from '../../../../../__mocks__/authstate';
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
 describe('Video Capture component', () => {
   it('should render correctly', () => {
     const container = render(
-      <Context.Provider value={userMock}>
+      <Context.Provider value={authState}>
         <MockedProvider>
           <BrowserRouter>
             <MockedThemeProvider>

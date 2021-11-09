@@ -808,21 +808,6 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
         ) : !/logs|enroll/.test(previousRoute) && tabValue !== 2 ? (
           <>
             <Grid container justify="center" spacing={4} className={css(styles.grantSection)}>
-              <AccessCheck module="entry_request" allowedPermissions={['can_grant_entry']}>
-                <Grid item>
-                  <Button
-                    onClick={event => handleModal(event, 'grant')}
-                    data-testid="entry_user_grant"
-                    startIcon={isLoading && <Spinner />}
-                    color="primary"
-                    variant="contained"
-                  >
-                    {
-                      t('logbook:logbook.grant')
-                    }
-                  </Button>
-                </Grid>
-              </AccessCheck>
               {
                 Boolean(id || requestContext.request.id) && (
                   <AccessCheck module="entry_request" allowedPermissions={['can_update_entry_request']}>
@@ -842,10 +827,27 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
                   </AccessCheck>
                       )
                 }
+              <AccessCheck module="entry_request" allowedPermissions={['can_grant_entry']}>
+                <Grid item>
+                  <Button
+                    onClick={event => handleModal(event, 'grant')}
+                    data-testid="entry_user_grant"
+                    startIcon={isLoading && <Spinner />}
+                    color="primary"
+                    variant="contained"
+                  >
+                    {
+                      t('logbook:logbook.grant')
+                    }
+                  </Button>
+                </Grid>
+              </AccessCheck>
+
 
               <br />
               <FeatureCheck features={authState?.user?.community?.features} name="LogBook" subFeature={CommunityFeaturesWhiteList.denyGateAccessButton}>
-                {!requestContext.request.isEdit && (
+                <>
+                  {!requestContext.request.isEdit && (
                   <AccessCheck module="entry_request" allowedPermissions={['can_grant_entry']}>
                     <Grid item>
                       <Button
@@ -863,19 +865,20 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
                     </Grid>
                   </AccessCheck>
                 )}
+                  <AccessCheck module="entry_request" allowedPermissions={['can_grant_entry']}>
+                    <Grid item>
+                      <a
+                        href={`tel:${authState.user.community.securityManager}`}
+                        className={css(styles.callButton)}
+                        data-testid="entry_user_call_mgr"
+                      >
+                        <CallIcon className={css(styles.callIcon)} />
+                        <span>{t('logbook:logbook.call_manager')}</span>
+                      </a>
+                    </Grid>
+                  </AccessCheck>
+                </>
               </FeatureCheck>
-              <AccessCheck module="entry_request" allowedPermissions={['can_grant_entry']}>
-                <Grid item>
-                  <a
-                    href={`tel:${authState.user.community.securityManager}`}
-                    className={css(styles.callButton)}
-                    data-testid="entry_user_call_mgr"
-                  >
-                    <CallIcon className={css(styles.callIcon)} />
-                    <span>{t('logbook:logbook.call_manager')}</span>
-                  </a>
-                </Grid>
-              </AccessCheck>
               <AccessCheck module="entry_request" allowedPermissions={['can_update_entry_request']}>
                 {
                   communityName !== 'Nkwashi'  && (

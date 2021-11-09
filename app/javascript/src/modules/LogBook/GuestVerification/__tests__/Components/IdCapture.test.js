@@ -6,16 +6,16 @@ import { ApolloProvider } from 'react-apollo';
 import IdCapture from '../../Components/IdCapture';
 import { Context } from '../../../../../containers/Provider/AuthStateProvider';
 import MockedThemeProvider from '../../../../__mocks__/mock_theme';
-import userMock from '../../../../../__mocks__/userMock'
 import EntryRequestContextProvider from '../../Context';
 import { createClient } from '../../../../../utils/apollo';
+import authState from '../../../../../__mocks__/authstate';
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
 describe('Id Capture component', () => {
   it('should render correctly', () => {
     const container = render(
       <BrowserRouter>
-        <Context.Provider value={userMock}>
+        <Context.Provider value={authState}>
           <ApolloProvider client={createClient}>
             <MockedThemeProvider>
               <EntryRequestContextProvider value={{ request: { imageUrls: [] } }}>
