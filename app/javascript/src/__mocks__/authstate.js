@@ -20,7 +20,7 @@ const authState = {
     userType: 'admin',
     permissions: {
       note: {
-        permissions: ['can_see_menu_item']
+        permissions: ['can_see_menu_item', 'can_get_user_tasks', 'can_fetch_task_by_id']
       },
       gate_access: {
         permissions: ['can_see_menu_item']
@@ -65,7 +65,10 @@ const authState = {
       },
       campaign: {
         permissions: ['can_see_menu_item']
-      }
+      },
+      entry_request: {
+        permissions: ['can_grant_entry', 'can_update_entry_request']
+      },
     }
   }
 };

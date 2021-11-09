@@ -460,6 +460,7 @@ RSpec.describe Types::Queries::User do
     it 'searches visitors' do
       result = DoubleGdpSchema.execute(@guest_search_query, context: {
                                          current_user: @current_user,
+                                         site_community: @current_user.community,
                                        },
                                                             variables: {
                                                               query: 'visiting@admin.com',

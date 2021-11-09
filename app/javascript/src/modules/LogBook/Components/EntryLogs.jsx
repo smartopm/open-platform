@@ -444,7 +444,7 @@ export function IndexComponent({
         authState.user.userType === 'admin' && (
           <FloatButton
             title={t('logbook.new_invite')}
-            handleClick={() => router.push(`/visit_request/?tab=2&type=guest`)}
+            handleClick={() => router.push(`/logbook/guests/invite`)}
           />
         )}
       </div>
