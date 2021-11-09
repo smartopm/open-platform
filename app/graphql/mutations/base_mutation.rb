@@ -4,6 +4,7 @@ module Mutations
   # Our BaseMutation Parent Class
   class BaseMutation < GraphQL::Schema::Mutation
     class MutationArgumentError < GraphQL::ExecutionError; end
+    include ::PermissionsHelper
 
     private
 
