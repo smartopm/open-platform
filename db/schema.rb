@@ -298,10 +298,10 @@ ActiveRecord::Schema.define(version: 2021_10_28_194538) do
     t.integer "entry_request_state", default: 0
     t.uuid "revoker_id"
     t.datetime "revoked_at"
-    t.uuid "guest_id"
     t.datetime "starts_at"
     t.datetime "ends_at"
     t.integer "status", default: 0
+    t.uuid "guest_id"
   end
 
   create_table "entry_times", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
