@@ -21,6 +21,15 @@ export const defaultBusinessReasons = {
   other: 'Other',
 };
 
+export const LogLabelColors = {
+  client: '#254881',
+  prospective_client: '#3493FB',
+  sales: '#B2D0DC',
+  working: '#608DBE',
+  passing_through: '#608DBE',
+  other: '#608DBE',
+}
+
 export const requiredFields = ['userType', 'phoneNumber', 'name', 'email'];
 
 export const userType = {

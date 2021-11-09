@@ -69,13 +69,6 @@ export default function EditModal({ open, handleClose, data, refetch, type }) {
     setDescription(data.description);
   }
 
-  function handleMessageAlertClose(_event, reason) {
-    if (reason === 'clickaway') {
-      return;
-    }
-    setMessageAlert('');
-  }
-
   useEffect(() => {
     setDefaultValues();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -86,7 +79,7 @@ export default function EditModal({ open, handleClose, data, refetch, type }) {
         type={isSuccessAlert ? 'success' : 'error'}
         message={messageAlert}
         open={!!messageAlert}
-        handleClose={handleMessageAlertClose}
+        handleClose={() => setMessageAlert('')}
       />
       <CustomizedDialogs
         open={open}
