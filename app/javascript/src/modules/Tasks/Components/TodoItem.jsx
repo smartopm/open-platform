@@ -11,6 +11,7 @@ import {
 } from '@material-ui/core';
 import { TaskDataList } from './RenderTaskData'
 import FileUploader from './FileUploader';
+import { objectAccessor } from '../../../utils/helpers';
 
 export default function TodoItem({
   task,
@@ -26,7 +27,7 @@ export default function TodoItem({
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = useState(null)
   const [selectedTask, setSelectedTask] = useState(null)
-  const [subTasksOpen, openSubTasks] = useState(false)
+  const [subTasksOpen, setSubTasksOpen] = useState({})
   const anchorElOpen = Boolean(anchorEl)
   const { t } = useTranslation('common')
 
@@ -76,8 +77,11 @@ export default function TodoItem({
     return !taskItem?.parentNote;
   }
 
-  function toggleSubTasks() {
-    openSubTasks(!subTasksOpen)
+  function toggleSubTasks(subTask) {
+    setSubTasksOpen({
+      ...subTasksOpen,
+      [subTask.id]: (!objectAccessor(subTasksOpen, subTask.id))
+    })
   }
 
   return (
@@ -99,7 +103,7 @@ export default function TodoItem({
             <AccordionDetails className={classes.child}>
                 {task?.subTasks?.map((firstLevelSubTask) => (
                   <>
-                    <div className={classes.levelOne} key={firstLevelSubTask.id} onClick={toggleSubTasks}>
+                    <div className={classes.levelOne} key={firstLevelSubTask.id} onClick={() => toggleSubTasks(firstLevelSubTask)}>
                       <TaskDataList
                         key={firstLevelSubTask.id}
                         task={firstLevelSubTask}
@@ -110,7 +114,7 @@ export default function TodoItem({
                         menuData={menuData}
                       />
                     </div>
-                    {firstLevelSubTask?.subTasks?.length > 0 && subTasksOpen && (
+                    {firstLevelSubTask?.subTasks?.length > 0 && objectAccessor(subTasksOpen, firstLevelSubTask.id) && (
                       <>
                           {firstLevelSubTask?.subTasks?.map((secondLevelSubTask) => (
                             <div className={classes.levelTwo} key={secondLevelSubTask.id}>
