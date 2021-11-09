@@ -58,16 +58,21 @@ export function checkRequests(req, translate, tz) {
     }
     return { title: translate('guest_book.invalid_today'), color: '#E74540', valid: false };
   }
-    // is today the right date
-    if (moment.tz(req.visitationDate, tz).isSame(timeNow, 'day')) {
-      if (
-        timeNow.isSameOrAfter(moment.tz(startTime, tz)) && timeNow.isSameOrBefore(moment.tz(endTime, tz))
-      ) {
-        return { title: translate('guest_book.valid'), color: '#00A98B', valid: true };
-      }
-      return { title: translate('guest_book.invalid_now'), color: '#E74540', valid: false };
+  // visit date has passed
+  if(timeNow.isAfter(moment.tz(req.visitationDate, tz), 'day')){
+    return { title: translate('guest_book.expired'), color: '#DA1414', valid: false };
+  }
+  // is today the right date
+  if (moment.tz(req.visitationDate, tz).isSame(timeNow, 'day')) {
+    if (
+      timeNow.isSameOrAfter(moment.tz(startTime, tz)) && timeNow.isSameOrBefore(moment.tz(endTime, tz))
+    ) {
+      return { title: translate('guest_book.valid'), color: '#00A98B', valid: true };
     }
-    return { title: translate('guest_book.invalid_today'), color: '#E74540', valid: false };
+    return { title: translate('guest_book.invalid_now'), color: '#E74540', valid: false };
+  }
+
+  return { title: translate('guest_book.invalid_today'), color: '#E74540', valid: false };
 }
 
 

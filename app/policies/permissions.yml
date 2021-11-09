@@ -168,6 +168,7 @@ admin:
     permissions:
       - can_see_menu_item
       - can_update_community_details
+      - can_view_community_details
   community_settings:
     permissions:
       - can_see_menu_item

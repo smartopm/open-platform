@@ -16,12 +16,7 @@ module Mutations
       end
 
       def authorized?
-        return true if ::Policy::ApplicationPolicy.new(
-          context[:current_user], nil
-        ).permission?(
-          module: :sos,
-          permission: :can_cancel_sos,
-        )
+        return true if allowed?(module: :sos, permission: :can_cancel_sos)
 
         raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
       end
