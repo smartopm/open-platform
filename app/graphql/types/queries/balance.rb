@@ -56,7 +56,7 @@ module Types::Queries::Balance
   #
   # @return [Float]
   def general_fund_balance(user)
-    return 0 if user.payment_plans.unscope(where: :status).general.first.nil?
+    return 0 if user.payment_plans.general_plans.nil?
 
     user.general_payment_plan.plan_payments.paid.sum(:amount)
   end

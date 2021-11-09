@@ -623,7 +623,7 @@ module Users
     #
     # @return [Properties::PaymentPlan]
     def general_payment_plan
-      payment_plans.unscope(where: :status).general.first.presence || create_general_plan
+      payment_plans.general_plans.first.presence || create_general_plan
     end
 
     private

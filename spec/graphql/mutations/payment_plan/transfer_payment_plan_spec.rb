@@ -112,6 +112,7 @@ RSpec.describe Mutations::PaymentPlan::TransferPaymentPlan do
                 automatedReceiptNumber
                 manualReceiptNumber
                 status
+                createdAt
               }
             }
           }
@@ -196,6 +197,9 @@ RSpec.describe Mutations::PaymentPlan::TransferPaymentPlan do
             expect(plan_result['planPayments'].size).to eql 1
             expect(plan_result['planPayments'][0]['amount']).to eql 400.0
             expect(plan_result['planPayments'][0]['manualReceiptNumber']).to eql 'MI13977-1'
+            expect(
+              plan_result['planPayments'][0]['createdAt'].to_date,
+            ).to eql other_plan_payment.created_at.to_date
             expect(
               plan_result['planPayments'][0]['automatedReceiptNumber'],
             ).to eql "#{plan_payment.reload.automated_receipt_number}-1"
