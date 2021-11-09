@@ -239,6 +239,7 @@ RSpec.describe Types::QueryType do
         user_id: current_user.id,
         author_id: admin.id,
         flagged: false,
+        category: 'call',
       )
     end
     let!(:other_notes) do
@@ -249,6 +250,7 @@ RSpec.describe Types::QueryType do
         flagged: true,
         due_date: -10.days.from_now,
         completed: false,
+        category: 'call',
       )
     end
     let!(:admin_tasks) do
@@ -260,6 +262,7 @@ RSpec.describe Types::QueryType do
         community_id: admin.community_id,
         due_date: -10.days.from_now,
         completed: false,
+        category: 'call',
       )
     end
 
@@ -378,6 +381,7 @@ RSpec.describe Types::QueryType do
         community_id: admin.community_id,
         due_date: 10.days.from_now,
         completed: false,
+        category: 'call',
       )
 
       variables = {
