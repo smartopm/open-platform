@@ -29,7 +29,7 @@ module Mutations
       field :community, Types::CommunityType, null: true
 
       def resolve(vals)
-        community = context[:site_community].update(vals.except(:imagcan_performe_blob_id))
+        community = context[:site_community].update(vals.except(:image_blob_id))
 
         context[:site_community].attach_image(vals) if vals[:image_blob_id].present?
 

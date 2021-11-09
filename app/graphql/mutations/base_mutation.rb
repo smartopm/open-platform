@@ -6,7 +6,6 @@ module Mutations
     class MutationArgumentError < GraphQL::ExecutionError; end
     include ::PermissionsHelper
 
-
     private
 
     def ensure_logged_in
