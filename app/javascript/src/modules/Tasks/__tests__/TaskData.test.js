@@ -57,7 +57,17 @@ describe('Task Data components', () => {
       assigneeNotes: [],
       subTasks: [],
       completed: false,
-      parentNote: null
+      parentNote: null,
+      documents: [
+        {
+          id: 'a6428125-1527-4001-ab9c-60a13584d1a4',
+          name: 'documents',
+          record_type: 'Notes::Note',
+          record_id: '302df8c3-27bb-4175-adc1-43857e972eb4',
+          blob_id: '21b8b3d1-40fa-4f9d-a7ac-721ce6e7f772',
+          created_at: '2021-11-02T13:37:26.664+02:00'
+      },
+      ]
     }
 
   it('should render proper the link to user component', () => {
@@ -154,11 +164,35 @@ describe('Task Data components', () => {
     fireEvent.click(menuButton);
 
     expect(screen.getByText('menu.edit_task')).toBeInTheDocument();
+    expect(screen.getByText('menu.upload_document')).toBeInTheDocument();
     expect(screen.getByText('menu.add_subtask')).toBeInTheDocument();
     expect(screen.getByText('menu.leave_a_comment')).toBeInTheDocument();
     expect(screen.getByText('menu.mark_complete')).toBeInTheDocument();
   });
 
+  it('renders attachment icon', () => {
+    render(
+      <BrowserRouter>
+        <MockedProvider>
+          <MockedThemeProvider>
+            <TodoItem
+              task={task}
+              handleChange={() => {}}
+              selectedTasks={[]}
+              isSelected={false}
+              handleTaskDetails={() => {}}
+              handleCompleteNote={() => {}}
+              handleAddSubTask={jest.fn()}
+              taskHeader={taskHeader}
+            />
+          </MockedThemeProvider>
+        </MockedProvider>
+      </BrowserRouter>
+    );
+
+    expect(screen.getByTestId('task_attach_file')).toBeInTheDocument();
+    expect(screen.getByTestId('file_attachments_total')).toHaveTextContent('1');
+  });
 
   it('should check if renderTaskData has correct property names', () => {
     const results = renderTaskData({

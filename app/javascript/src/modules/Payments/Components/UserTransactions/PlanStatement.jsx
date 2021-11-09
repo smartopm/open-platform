@@ -185,19 +185,14 @@ export default function PaymentStatement({ data, open, handleClose, currencyData
                     style={{ fontWeight: 700, color: '#2D2D2D' }}
                   >
                     {t('table_headers.installment_amount')}
-                  </Grid>
-                  <Grid
-                    item
-                    xs={matches ? 1 : 2}
-                    className={matches ? classes.titleMobile : classes.title}
-                    key="number_of_installements"
-                    style={{ fontWeight: 700, color: '#2D2D2D' }}
-                  >
+                    {' '}
+                    /
+                    {' '} 
                     {t('table_headers.no_of_installments')}
                   </Grid>
                   <Grid
                     item
-                    xs={1}
+                    xs={2}
                     className={matches ? classes.titleMobile : classes.title}
                     key="debit"
                     style={{ fontWeight: 700, color: '#2D2D2D' }}
@@ -206,7 +201,7 @@ export default function PaymentStatement({ data, open, handleClose, currencyData
                   </Grid>
                   <Grid
                     item
-                    xs={1}
+                    xs={2}
                     className={matches ? classes.titleMobile : classes.title}
                     key="balance"
                     style={{ fontWeight: 700, color: '#2D2D2D' }}
@@ -249,14 +244,16 @@ export default function PaymentStatement({ data, open, handleClose, currencyData
                         className={matches ? classes.titleMobile : classes.title}
                       >
                         {formatMoney(currencyData, plan.installmentAmount)}
-                      </Grid>
-                      <Grid item xs={matches ? 1 : 2} className={matches ? classes.titleMobile : classes.title}>
+                        {' '}
+                        /
+                        {' '}
                         {plan.settledInstallments}
+
                       </Grid>
-                      <Grid item xs={1} className={matches ? classes.titleMobile : classes.title}>
+                      <Grid item xs={2} className={matches ? classes.titleMobile : classes.title}>
                         {formatMoney(currencyData, plan.debitAmount)}
                       </Grid>
-                      <Grid item xs={1} className={matches ? classes.titleMobile : classes.title}>
+                      <Grid item xs={2} className={matches ? classes.titleMobile : classes.title}>
                         {formatMoney(currencyData, plan.unallocatedAmount)}
                       </Grid>
                     </Grid>

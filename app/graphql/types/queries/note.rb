@@ -103,6 +103,7 @@ module Types::Queries::Note
     notes.includes(:sub_notes, :assignees, :assignee_notes)
          .for_site_manager(current_user)
          .where(flagged: true)
+         .where.not(category: 'template')
          .order(completed: :desc, created_at: :desc)
          .limit(limit).offset(offset)
   end

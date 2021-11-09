@@ -122,6 +122,7 @@ return [
 export function TaskDataList({
   task,
   handleChange,
+  handleFileInputChange,
   selectedTasks,
   isSelected,
   menuData,
@@ -129,7 +130,7 @@ export function TaskDataList({
   const classes = useStyles();
   const { t } = useTranslation('task')
 
- return ( 
+ return (
    <div className={classes.taskListContainer}>
      <div className={classes.section1} data-testid="task_body_section">
        <Checkbox
@@ -207,12 +208,20 @@ export function TaskDataList({
            <span style={{ fontSize: '14px'}}>0</span>
          </IconButton>
          <IconButton
+           key={task.id}
            aria-controls="task-attach-file-icon"
            aria-haspopup="true"
            data-testid="task_attach_file"
+           component="label"
          >
+           <input
+             hidden
+             type="file"
+             onChange={(event) => handleFileInputChange(event, task)}
+             id='task-attach-file'
+           />
            <AttachFileIcon fontSize="small" color="disabled" />
-           <span style={{ fontSize: '14px'}}>0</span>
+           <span style={{ fontSize: '14px'}} data-testid="file_attachments_total">{task.documents?.length}</span>
          </IconButton>
        </div>
      </div>
@@ -262,6 +271,7 @@ TaskDataList.propTypes ={
   handleChange: PropTypes.func.isRequired,
   selectedTasks: PropTypes.arrayOf(PropTypes.string).isRequired,
   isSelected: PropTypes.bool.isRequired,
+  handleFileInputChange: PropTypes.func.isRequired,
   // eslint-disable-next-line react/forbid-prop-types
   menuData: PropTypes.object.isRequired,
 }

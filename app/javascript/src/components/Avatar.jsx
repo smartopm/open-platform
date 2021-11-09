@@ -12,6 +12,11 @@ export function safeAvatarLink({ imageUrl, user }) {
   return forceLinkHttps(imageUrl);
 }
 
+const handleImgError = (e) => {
+  e.target.onerror = null;
+  e.target.src = '/images/default_avatar.svg';
+}
+
 export default function Avatar({ imageUrl, user, style, searchedUser, alt }) {
   const imageStyles = {
     xSmall: styles.extraSmall,
@@ -37,6 +42,7 @@ export default function Avatar({ imageUrl, user, style, searchedUser, alt }) {
       <img
         src={safeAvatarLink({ imageUrl: searchedUser.imageUrl})}
         className={css(objectAccessor(imageStyles, style))}
+        onError={(e) => handleImgError(e)}
         alt={alt}
         data-testid="searched_auth_user_avatar"
       />
@@ -81,6 +87,7 @@ export default function Avatar({ imageUrl, user, style, searchedUser, alt }) {
       className={css(objectAccessor(imageStyles, style))}
       alt={alt}
       data-testid="user_avatar"
+      onError={(e) => handleImgError(e)}
     />
   );
 }

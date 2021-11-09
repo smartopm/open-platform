@@ -76,6 +76,17 @@ RSpec.describe Notes::Note, type: :model do
     end
   end
 
+  describe 'attachments' do
+    it 'accepts file attachments' do
+      admin_note.documents.attach(
+        io: File.open(Rails.root.join('spec/support/test_image.png')),
+        filename: 'test_image.png',
+      )
+
+      expect(admin_note.documents.all.size).to eql(1)
+    end
+  end
+
   describe 'search scope' do
     it 'should allow search by user' do
       notes = described_class.search_user("user: #{admin.name}")

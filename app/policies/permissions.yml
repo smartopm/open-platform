@@ -236,6 +236,9 @@ contractor:
   community:
     permissions:
       - can_see_menu_item
+  logout:
+    permissions:
+      - can_see_menu_item
 custodian:
   note:
     permissions:
@@ -296,6 +299,9 @@ custodian:
   community:
     permissions:
       - can_see_menu_item
+  logout:
+    permissions:
+      - can_see_menu_item
 security_guard:
   note:
     permissions:
@@ -351,6 +357,9 @@ security_guard:
   community:
     permissions:
       - can_see_menu_item
+  logout:
+    permissions:
+      - can_see_menu_item
 site_worker:
   note:
     permissions:
@@ -379,6 +388,9 @@ site_worker:
   community:
     permissions:
       - can_see_menu_item
+  logout:
+    permissions:
+      - can_see_menu_item
 visitor:
   note:
     permissions:
@@ -393,6 +405,9 @@ visitor:
       - can_view_own_profile
       - can_edit_own_profile
   community:
+    permissions:
+      - can_see_menu_item
+  logout:
     permissions:
       - can_see_menu_item
 resident:
@@ -460,6 +475,9 @@ prospective_client:
       - can_see_menu_item
       - can_access_business
   community:
+    permissions:
+      - can_see_menu_item
+  logout:
     permissions:
       - can_see_menu_item
 client:

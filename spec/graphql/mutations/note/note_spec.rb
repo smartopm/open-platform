@@ -12,8 +12,22 @@ RSpec.describe Mutations::Note do
   end
   let(:create_query) do
     <<~GQL
-      mutation CreateNote($userId: ID!, $body: String!, $category: String, $parentNoteId: ID, $flagged: Boolean) {
-        result:  noteCreate(userId: $userId, body:$body, category: $category, flagged: $flagged, parentNoteId: $parentNoteId){
+      mutation CreateNote(
+        $userId: ID!,
+        $body: String!,
+        $category: String,
+        $parentNoteId: ID,
+        $flagged: Boolean,
+        $attachedDocuments: JSON,
+        ) {
+        result:  noteCreate(
+          userId: $userId,
+          body:$body,
+          category: $category,
+          flagged: $flagged,
+          parentNoteId: $parentNoteId,
+          attachedDocuments: $attachedDocuments,
+          ){
           note {
               id
               body
@@ -49,28 +63,6 @@ RSpec.describe Mutations::Note do
       expect(result.dig('data', 'result', 'note', 'id')).not_to be_nil
       expect(result.dig('data', 'result', 'note', 'category')).to eql 'email'
       expect(result['errors']).to be_nil
-    end
-
-    it 'creates sub task' do
-      variables = {
-        userId: user.id,
-        body: 'A sub task',
-        category: 'other',
-        flagged: true,
-        parentNoteId: user_note.id,
-      }
-
-      result = DoubleGdpSchema.execute(
-        create_query,
-        variables: variables,
-        context: {
-          current_user: admin,
-          site_community: user.community,
-        },
-      ).as_json
-
-      expect(result.dig('data', 'result', 'note', 'id')).not_to be_nil
-      expect(user_note.sub_tasks.first.id).to eq(result.dig('data', 'result', 'note', 'id'))
     end
 
     it 'returns a created note with category when current user is a site worker' do
@@ -154,6 +146,30 @@ RSpec.describe Mutations::Note do
       expect(Notes::NoteHistory.count).to eql 1
       expect(result['errors']).to be_nil
     end
+
+    describe 'tasks' do
+      it 'creates sub task' do
+        variables = {
+          userId: user.id,
+          body: 'A sub task',
+          category: 'other',
+          flagged: true,
+          parentNoteId: user_note.id,
+        }
+
+        result = DoubleGdpSchema.execute(
+          create_query,
+          variables: variables,
+          context: {
+            current_user: admin,
+            site_community: user.community,
+          },
+        ).as_json
+
+        expect(result.dig('data', 'result', 'note', 'id')).not_to be_nil
+        expect(user_note.sub_tasks.first.id).to eq(result.dig('data', 'result', 'note', 'id'))
+      end
+    end
   end
 
   describe('update note') do
@@ -166,6 +182,7 @@ RSpec.describe Mutations::Note do
           $completed: Boolean
           $dueDate: String
           $parentNoteId: ID
+          $documentBlobId: String
         ) {
           noteUpdate(
             id: $id
@@ -174,6 +191,7 @@ RSpec.describe Mutations::Note do
             completed: $completed
             dueDate: $dueDate
             parentNoteId: $parentNoteId
+            documentBlobId: $documentBlobId
           ) {
             note {
               flagged
@@ -189,22 +207,24 @@ RSpec.describe Mutations::Note do
       GQL
     end
 
-    it 'updates a note' do
+    before do
       variables = {
         userId: user.id,
         body: 'A note about the user',
       }
-      result = DoubleGdpSchema.execute(create_query, variables: variables,
-                                                     context: {
-                                                       current_user: admin,
-                                                       site_community: user.community,
-                                                     }).as_json
+      @create_result = DoubleGdpSchema.execute(create_query, variables: variables,
+                                                             context: {
+                                                               current_user: admin,
+                                                               site_community: user.community,
+                                                             }).as_json
+    end
 
-      expect(result.dig('data', 'result', 'note', 'id')).not_to be_nil
-      expect(result['errors']).to be_nil
+    it 'updates a note' do
+      expect(@create_result.dig('data', 'result', 'note', 'id')).not_to be_nil
+      expect(@create_result['errors']).to be_nil
 
       variable_updates = {
-        id: result.dig('data', 'result', 'note', 'id'),
+        id: @create_result.dig('data', 'result', 'note', 'id'),
         body: 'A modified note about the user',
       }
 
@@ -266,6 +286,28 @@ RSpec.describe Mutations::Note do
 
       expect(result.dig('data', 'noteUpdate', 'note', 'id')).not_to be_nil
       expect(result.dig('data', 'noteUpdate', 'note', 'parentNote')['id']).to eq(other_user_note.id)
+    end
+
+    it 'adds attachments to note' do
+      upload = ActiveStorage::Blob.create_and_upload!(
+        io: File.open(Rails.root.join('spec/support/test_image.png')),
+        filename: 'test_image.png',
+        content_type: 'image/png',
+      )
+
+      variables = {
+        id: @create_result.dig('data', 'result', 'note', 'id'),
+        body: 'Updated note',
+        documentBlobId: upload.signed_id,
+      }
+      result = DoubleGdpSchema.execute(update_query, variables: variables,
+                                                     context: {
+                                                       current_user: admin,
+                                                       site_community: user.community,
+                                                     }).as_json
+
+      expect(result.dig('data', 'noteUpdate', 'note', 'id')).not_to be_nil
+      expect(result['errors']).to be_nil
     end
   end
 end

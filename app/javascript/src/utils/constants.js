@@ -188,7 +188,8 @@ export const NotesCategories = {
   email: 'Email',
   to_do: 'To-Do',
   form: 'Form',
-  emergency: 'Emergency SOS'
+  emergency: 'Emergency SOS',
+  template: 'DRC Process Template'
 };
 
 export const businessCategories = {

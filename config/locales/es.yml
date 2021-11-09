@@ -332,6 +332,7 @@ es:
       not_found: Comentario no encontrado
     duplicate:
       email: Correo electronico duplicado
+      guest: Duplicar Invitado
       phone: Teléfono duplicado
     email_template:
       not_found: Plantilla no encontrada

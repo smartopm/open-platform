@@ -205,7 +205,7 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
       history.push('/logbook/guests')
       return
     }
-    handleNext(true)
+    handleNext(true, '/entry_logs?tab=2&offset=0')
   }
 
   function handleCreateRequest(type='create') {
@@ -279,7 +279,7 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
           ...requestContext.request, ...res
          })
         if (!requestContext.request.isEdit) {
-          handleNext(true)
+          handleNext(true, '/entry_logs?tab=2&offset=0')
         }
       })
       .catch(error => {

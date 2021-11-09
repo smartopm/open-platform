@@ -149,6 +149,7 @@ export const NotesFragment = {
       parentNote {
         id
       }
+      documents
     }
   `
 }

@@ -1,7 +1,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { useMutation } from 'react-apollo'
-import { useTranslation } from 'react-i18next'; 
+import { useTranslation } from 'react-i18next';
 // eslint-disable-next-line import/no-unresolved
 import { useLongPress } from 'use-long-press';
 import PropTypes from 'prop-types'
@@ -13,7 +13,7 @@ import PanicButtonSVG from './PanicButtonSVG';
 import MessageAlert from '../../../components/MessageAlert';
 import { formatError } from '../../../utils/helpers';
 import {CommunityEmergencyMutation, CancelCommunityEmergencyMutation} from '../graphql/sos_mutation';
-import userProps from '../../../shared/types/user'; 
+import userProps from '../../../shared/types/user';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -58,7 +58,7 @@ const useStyles = makeStyles((theme) => ({
     '@media (min-device-width: 414px) and (max-device-height: 736px)' : {
       marginTop: "1px",
     },
-   
+
     '@media  (min-device-width: 360px) and (max-device-height: 640px)' : {
       marginTop: "2px"
     }
@@ -77,7 +77,7 @@ const useStyles = makeStyles((theme) => ({
     '@media (min-device-width: 414px) and (max-device-height: 736px)' : {
       marginTop: "6rem"
     },
-   
+
     '@media  (min-device-width: 360px) and (max-device-height: 640px)' : {
       marginTop: "6rem"
     }
@@ -115,10 +115,10 @@ const useStyles = makeStyles((theme) => ({
     '@media  (min-device-width: 360px) and (max-device-height: 640px)' : {
       fontSize: "1.2rem",
     }
-   
+
 },
 
-  
+
   CloseIcon: {
     color: "#fff",
     display: 'flex',
@@ -197,9 +197,9 @@ const useStyles = makeStyles((theme) => ({
     '@media  (min-device-width: 360px) and (max-device-height: 640px)' : {
       marginTop: "3rem"
     }
-   
+
   },
-  
+
   modal: {
     display: "flex",
     alignItems: "center",
@@ -225,7 +225,7 @@ const SOSModal=({open, setOpen, location, authState})=> {
   const [communityEmergencyCancel] = useMutation(CancelCommunityEmergencyMutation)
 
   const { t } = useTranslation('panic_alerts')
-  
+
   const callback = () => {
     setPanicButtonPressed(true)
     if (location.loaded && !location.error){
@@ -241,7 +241,7 @@ const SOSModal=({open, setOpen, location, authState})=> {
         setPanicButtonMessage({ isError: true, detail: formatError(error.message) });
         setPanicAlertOpen(true);
         setPanicButtonPressed(false)
-      }) 
+      })
 
     }
     else{
@@ -256,8 +256,8 @@ const SOSModal=({open, setOpen, location, authState})=> {
         setPanicButtonMessage({ isError: true, detail: formatError(error.message) });
         setPanicAlertOpen(true);
         setPanicButtonPressed(false)
-      }) 
-      
+      })
+
     }
 
   };
@@ -276,7 +276,7 @@ const SOSModal=({open, setOpen, location, authState})=> {
         setPanicButtonMessage({ isError: true, detail: formatError(error.message) });
         setPanicAlertOpen(true);
         setPanicButtonPressed(false)
-      }) 
+      })
 
   };
 
@@ -316,7 +316,7 @@ const SOSModal=({open, setOpen, location, authState})=> {
     detect: 'both',
     onStart: () => handleLongPressStart()
   });
-  
+
   useEffect(() => {
     let timer;
    if(counter >= 0) {
@@ -367,18 +367,18 @@ const SOSModal=({open, setOpen, location, authState})=> {
             <div>
               <div className={classes.contents}>
                 <h4 className={classes.header}>{t('panic_alerts.sos_disclaimer_header')}</h4>
-                <p> 
+                <p>
                   {' '}
                   {t('panic_alerts.sos_disclaimer_body')}
                 </p>
                 <br />
                 <br />
                 <h4 className={classes.header}>{t('panic_alerts.press_and_hold')}</h4>
-                <p> 
+                <p>
                   {' '}
                   {t('panic_alerts.for_3_seconds')}
                 </p>
-                {((counter >= 0 && counter < 3) && !panicButtonMessage.isError) 
+                {((counter >= 0 && counter < 3) && !panicButtonMessage.isError)
                   ? <h1 className={classes.digitInSeconds}>{Number(counter + 1)}</h1>
                   : <p className={classes.info}>{t('panic_alerts.info')}</p>
                   }
@@ -437,8 +437,8 @@ const SOSModal=({open, setOpen, location, authState})=> {
         message: PropTypes.string
       }),
       coordinates: PropTypes.shape({
-        lat: PropTypes.string,
-        lng: PropTypes.string
+        lat: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+        lng: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
       })
     }).isRequired
 

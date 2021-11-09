@@ -320,8 +320,9 @@ module Users
     end
 
     # rubocop:disable Metrics/MethodLength
+    # rubocop:disable Metrics/AbcSize
     def generate_note(vals)
-      community.notes.create(
+      note = community.notes.create(
         # give the note to the author if no other user
         user_id: vals[:user_id] || self[:id],
         body: vals[:body],
@@ -334,7 +335,10 @@ module Users
         form_user_id: vals[:form_user_id],
         parent_note_id: vals[:parent_note_id],
       )
+      note.documents.attach(vals[:attached_documents]) if vals[:attached_documents]
+      note
     end
+    # rubocop:enable Metrics/AbcSize
 
     def manage_shift(target_user_id, event_tag)
       user = find_a_user(target_user_id)
