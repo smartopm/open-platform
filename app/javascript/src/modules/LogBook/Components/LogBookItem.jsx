@@ -197,7 +197,6 @@ export default function LogBookItem({
 
   return (
     <>
-      {console.log(data)}
       <EntryNoteDialog
         open={isObservationOpen}
         handleDialogStatus={() => handleCancelClose()}
