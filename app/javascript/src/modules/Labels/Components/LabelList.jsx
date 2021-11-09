@@ -63,6 +63,7 @@ export default function LabelList({ userType }) {
           buttonText={t('label.create_label')}
           handleClick={() => setOpen(true)}
           size="large"
+          data-testid='button'
         />
         <EditModal open={open} handleClose={() => setOpen(false)} refetch={refetch} type="new" />
       </div>

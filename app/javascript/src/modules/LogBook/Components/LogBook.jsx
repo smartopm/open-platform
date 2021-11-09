@@ -117,7 +117,6 @@ export default function LogBook() {
       loading={loading}
       refetch={refetch}
       error={error?.message}
-      
     />
   );
 }
