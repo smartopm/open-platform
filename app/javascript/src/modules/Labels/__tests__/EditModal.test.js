@@ -1,5 +1,6 @@
 import React from 'react';
 import { render, act, fireEvent, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event'
 import { BrowserRouter } from 'react-router-dom/';
 import { MockedProvider } from '@apollo/react-testing';
 import '@testing-library/jest-dom/extend-expect';
@@ -74,13 +75,13 @@ describe('Comment Edit Field Component', () => {
     expect(color).toBeInTheDocument();
 
     await act(async () => {
-      fireEvent.change(title, { target: { value: 'title' } });
+      userEvent.type(title, 'title');
       expect(title.value).toBe('title');
 
-      fireEvent.change(description, { target: { value: 'description' } });
+      userEvent.type(description, 'description');
       expect(description.value).toBe('description');
 
-      fireEvent.change(color, { target: { value: 'color' } });
+      userEvent.type(color, 'color');
       expect(color.value).toBe('color');
 
       const button = container.queryByTestId('custom-dialog-button');
@@ -190,6 +191,67 @@ describe('Comment Edit Field Component', () => {
       await waitFor(
         () => {
           expect(container.queryByText('label.label_created')).toBeInTheDocument();
+        },
+        { timeout: 100 }
+      );
+    });
+  });
+
+  it('render with  create label error', async () => {
+    const errorMocks = {
+      request: {
+        query: LabelCreate,
+        variables: { shortDesc: '', description: '', color: '' }
+      },
+      result: {
+        data: {
+          labelCreate: {
+            label: { id: '6a7e722a-9bd5-48d4-aaf7-f3285ccff4', __typename: 'typename' },
+            __typename: 'typename'
+          }
+        }
+      }
+    };
+    const container = render(
+      <MockedProvider mocks={[errorMocks]}>
+        <BrowserRouter>
+          <EditModal
+            open={open}
+            data={data}
+            handleClose={jest.fn()}
+            refetch={jest.fn}
+            type="edit"
+          />
+        </BrowserRouter>
+      </MockedProvider>
+    );
+
+    const title = container.queryByTestId('title');
+    const description = container.queryByTestId('description');
+    const color = container.queryByTestId('color');
+
+    expect(title).toBeInTheDocument();
+    expect(description).toBeInTheDocument();
+    expect(color).toBeInTheDocument();
+
+    await act(async () => {
+      fireEvent.change(title, { target: { value: 'title' } });
+      expect(title.value).toBe('title');
+
+      fireEvent.change(description, { target: { value: 'description' } });
+      expect(description.value).toBe('description');
+
+      fireEvent.change(color, { target: { value: 'color' } });
+      expect(color.value).toBe('color');
+
+      const button = container.queryByTestId('custom-dialog-button');
+      fireEvent.click(button);
+      const loader = render(<Spinner />);
+      expect(loader.queryAllByTestId('loader')[0]).toBeInTheDocument();
+
+      await waitFor(
+        () => {
+          expect(container.queryByText('Delete Campaign')).not.toBeInTheDocument();
         },
         { timeout: 100 }
       );
