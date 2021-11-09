@@ -102,7 +102,8 @@ module Types::Queries::Note
 
     notes.includes(:assignees, :author, :user, :assignee_notes)
          .for_site_manager(current_user)
-         .where(flagged: true, category: %w[call email text message to_do form emergency other])
+         .where(flagged: true)
+         .where.not(category: 'template')
          .order(completed: :desc, created_at: :desc)
          .limit(limit).offset(offset)
   end
