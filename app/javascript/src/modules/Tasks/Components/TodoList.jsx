@@ -17,11 +17,12 @@ import FilterListIcon from '@material-ui/icons/FilterList';
 import SearchIcon from '@material-ui/icons/Search'
 import MaterialConfig from 'react-awesome-query-builder/lib/config/material';
 import { makeStyles } from '@material-ui/core/styles';
-import { useMutation, useLazyQuery } from 'react-apollo';
+import { useMutation, useLazyQuery, useApolloClient } from 'react-apollo';
 import { useParams, useHistory } from 'react-router';
 import { useTranslation } from 'react-i18next';
 import { UsersLiteQuery, flaggedNotes } from '../../../graphql/queries';
 import { AssignUser, UpdateNote } from '../../../graphql/mutations';
+import { useFileUpload } from '../../../graphql/useFileUpload';
 import TaskForm from './TaskForm';
 import ErrorPage from '../../../components/Error';
 import Paginate from '../../../components/Paginate';
@@ -82,6 +83,7 @@ export default function TodoList({
     totalFormsOpen: 'category: form AND completed: false'
   };
   const [selectedTasks, setSelected] = useState([]);
+  const [selectedTask, setSelectedTask] = useState(null);
   const [bulkUpdating, setBulkUpdating] = useState(false)
   const { t } = useTranslation(['task', 'common'])
 
@@ -93,6 +95,10 @@ export default function TodoList({
     { title: 'Assignees',value: t('common:table_headers.assignees'), col: 2 },
     { title: 'Menu', value: t('common:table_headers.menu'), col: 1 }
   ];
+
+  const { onChange, signedBlobId, status } = useFileUpload({
+    client: useApolloClient()
+  });
 
   function handleChange(selectedId) {
     if (selectedTasks.includes(selectedId)) {
@@ -180,6 +186,18 @@ export default function TodoList({
     refetch();
   }
 
+  useEffect(() => {
+    if(status === 'DONE') {
+      taskUpdate({variables: {  id: selectedTask.id, documentBlobId: signedBlobId}})
+      .then(() => {
+        refetch();
+      })
+      .catch((error) => {
+        setMessage(formatError(error.message));
+      });
+    }
+  }, [status, selectedTask,signedBlobId, taskUpdate, refetch]);
+
   function assignUnassignUser(noteId, userId) {
     assignUserToNote({ variables: { noteId, userId } })
       .then(() => {
@@ -193,6 +211,11 @@ export default function TodoList({
   function handleAddSubTask({ id }) {
     setParentTaskId(id);
     openModal();
+  }
+
+  function handleUploadDocument(event, todoItem) {
+    onChange(event.target.files[0]);
+    setSelectedTask(todoItem);
   }
 
   function handleCompleteNote(noteId, completed) {
@@ -531,6 +554,7 @@ export default function TodoList({
                     handleTaskDetails={handleTaskDetails}
                     handleCompleteNote={handleCompleteNote}
                     handleAddSubTask={handleAddSubTask}
+                    handleUploadDocument={handleUploadDocument}
                     headers={taskHeader}
                   />
                 ))}
