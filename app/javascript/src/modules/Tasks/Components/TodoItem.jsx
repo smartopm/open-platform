@@ -8,6 +8,7 @@ import {
   AccordionDetails,
 } from '@material-ui/core';
 import { TaskDataList } from './RenderTaskData'
+import FileUploader from './FileUploader';
 
 export default function TodoItem({
   task,
@@ -18,6 +19,7 @@ export default function TodoItem({
   handleTaskDetails,
   handleCompleteNote,
   handleAddSubTask,
+  handleUploadDocument,
 }) {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = useState(null)
@@ -28,6 +30,10 @@ export default function TodoItem({
   const menuList = [
   { content: t('menu.edit_task'), isAdmin: true, handleClick: () =>  handleTaskDetails({id: selectedTask.id}) },
     { content: t('menu.add_subtask'), isAdmin: true, handleClick: () => handleAddSubTask({id: selectedTask.id }) },
+    {
+      content: <FileUploader handleFileInputChange={handleFileInputChange} />,
+      isAdmin: true, handleClick: () => {}
+    },
     { content: t('menu.leave_a_comment'), isAdmin: true, handleClick: () => handleTaskDetails({id: selectedTask.id, comment: true }) },
     { content: (selectedTask && selectedTask.completed) ? t('menu.mark_incomplete') : t('menu.mark_complete'),
       isAdmin: true,
@@ -55,6 +61,11 @@ export default function TodoItem({
     setSelectedTask(null);
   }
 
+  function handleFileInputChange(event, taskToAttach = null) {
+    handleUploadDocument(event, selectedTask || taskToAttach);
+    handleClose(event);
+  }
+
   function renderSubtaskAsParent(taskItem) {
     if (query?.includes('assignees')) {
       return true;
@@ -71,6 +82,7 @@ export default function TodoItem({
               key={task.id}
               task={task}
               handleChange={handleChange}
+              handleFileInputChange={handleFileInputChange}
               selectedTasks={selectedTasks}
               isSelected={isSelected}
               menuData={menuData}
@@ -85,6 +97,7 @@ export default function TodoItem({
                         key={firstLevelSubTask.id}
                         task={firstLevelSubTask}
                         handleChange={handleChange}
+                        handleFileInputChange={handleFileInputChange}
                         selectedTasks={selectedTasks}
                         isSelected={isSelected}
                         menuData={menuData}
@@ -98,6 +111,7 @@ export default function TodoItem({
                                 key={secondLevelSubTask.id}
                                 task={secondLevelSubTask}
                                 handleChange={handleChange}
+                                handleFileInputChange={handleFileInputChange}
                                 selectedTasks={selectedTasks}
                                 isSelected={isSelected}
                                 menuData={menuData}
@@ -143,7 +157,8 @@ TodoItem.propTypes = {
   isSelected: PropTypes.bool.isRequired,
   handleTaskDetails: PropTypes.func.isRequired,
   handleCompleteNote: PropTypes.func.isRequired,
-  handleAddSubTask: PropTypes.func.isRequired
+  handleAddSubTask: PropTypes.func.isRequired,
+  handleUploadDocument: PropTypes.func.isRequired,
 }
 
 const useStyles = makeStyles(() => ({

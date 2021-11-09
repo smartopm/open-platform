@@ -20,5 +20,6 @@ module Types
     field :due_date, GraphQL::Types::ISO8601DateTime, null: true
     field :parent_note, Types::NoteType, null: true
     field :sub_tasks, [Types::NoteType], null: true
+    field :documents, [GraphQL::Types::JSON], null: true
   end
 end

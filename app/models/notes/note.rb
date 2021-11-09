@@ -33,6 +33,7 @@ module Notes
                          foreign_key: 'parent_note_id',
                          dependent: :destroy,
                          inverse_of: :parent_note
+    has_many_attached :documents, dependent: :destroy
 
     after_create :log_create_event
     after_update :log_update_event
