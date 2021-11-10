@@ -38,23 +38,23 @@ export default function TaskDocuments({ documents }) {
     <>
       {documents?.length ? (
         <List>
-          <Typography variant="h6">
+          <Typography variant="h6" data-testid="documents_title">
             {t('document.documents')}
           </Typography>
           <br />
-          <Divider variant="middle" />
+          <Divider variant="middle" data-testid="opening_divider" />
           {documents.map(doc => (
             <Fragment key={doc.id}>
               <ListItem>
                 <ListItemText
                   disableTypography
                   primary={(
-                    <Typography variant="body1" color="primary" style={{ fontWeight: 700 }}>
+                    <Typography variant="body1" color="primary" style={{ fontWeight: 700 }} data-testid="filename">
                       {doc.filename}
                     </Typography>
                   )}
                   secondary={(
-                    <Typography component="span" variant="body2">
+                    <Typography component="span" variant="body2" data-testid="uploaded_at">
                       {`${t('document.uploaded_at')}: ${dateToString(doc.created_at)}`}
                     </Typography>
                   )}
@@ -63,6 +63,7 @@ export default function TaskDocuments({ documents }) {
                   <IconButton
                     edge="end"
                     aria-label="more_details"
+                    data-testid="more_details"
                     onClick={event => handleOpenMenu(event, doc)}
                   >
                     <MoreVertIcon />
@@ -70,13 +71,13 @@ export default function TaskDocuments({ documents }) {
                 </ListItemSecondaryAction>
               </ListItem>
 
-              <Divider variant="middle" />
+              <Divider variant="middle" data-testid="closing_divider" />
             </Fragment>
           ))}
         </List>
       ) : (
         <CenteredContent>
-          <Typography>{t('document.no_documents')}</Typography>
+          <Typography data-testid="no_documents">{t('document.no_documents')}</Typography>
         </CenteredContent>
       )}
       <Menu
@@ -85,6 +86,7 @@ export default function TaskDocuments({ documents }) {
         open={menuOpen}
         onClose={() => setAnchorEl(null)}
         keepMounted={false}
+        data-testid="more_details_menu"
       >
         <MenuItem id="download_button" key="download" onClick={handleDownload}>
           <a
