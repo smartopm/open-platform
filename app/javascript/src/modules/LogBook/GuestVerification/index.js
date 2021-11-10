@@ -1,24 +1,46 @@
+import React from 'react'
 import GuestValidate from './Containers/GuestValidate';
-import { guestListUsers } from '../../../utils/constants';
+import AccessCheck from '../../Permissions/Components/AccessCheck';
+
+const guestValidatePermissions = ['can_go_through_guest_verification'];
+const guestCreatePermissions = ['can_access_guest_list']; 
+
+const currentModule = 'entry_request'
+
+function RenderGuestValidate() {
+  return (
+    <AccessCheck module={currentModule} allowedPermissions={guestValidatePermissions}>
+      <GuestValidate />
+    </AccessCheck>
+)
+}
+
+function RenderGuestCreate() {
+  return (
+    <AccessCheck module={currentModule} allowedPermissions={guestCreatePermissions}>
+      <GuestValidate />
+    </AccessCheck>
+)
+}
 
 const GuestsValidatorRoutes = [
   {
     routeProps: {
       path: '/request/:id?/:logs?',
-      component: GuestValidate,
+      component: RenderGuestValidate,
     },
     name: 'Request Details',
     featureName: 'LogBook',
-    accessibleBy: [...guestListUsers, 'visitor'],
+    accessibleBy: [],
   },
   {
     routeProps: {
       path: '/visit_request',
-      component: GuestValidate,
+      component: RenderGuestCreate,
     },
     name: 'Visit Request',
     featureName: 'LogBook',
-    accessibleBy: guestListUsers,
+    accessibleBy: [],
   },
 ];
 
