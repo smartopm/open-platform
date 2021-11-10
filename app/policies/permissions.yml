@@ -401,6 +401,7 @@ visitor:
   entry_request:
     permissions:
       - can_update_entry_request
+      - can_view_entry_request
   user:
     permissions:
       - can_view_own_profile
