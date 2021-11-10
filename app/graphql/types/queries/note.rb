@@ -106,6 +106,7 @@ module Types::Queries::Note
          .where.not(category: 'template')
          .order(completed: :desc, created_at: :desc)
          .limit(limit).offset(offset)
+         .with_attached_documents
   end
   # rubocop:enable Metrics/CyclomaticComplexity
   # rubocop:enable Metrics/PerceivedComplexity
