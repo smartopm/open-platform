@@ -78,12 +78,13 @@ module Mutations
         raise_duplicate_email_error(vals[:email])
         raise_duplicate_number_error(vals[:phone_number])
 
-        context[:current_user].enroll_user(
-          name: vals[:name],
-          phone_number: vals[:phone_number],
-          email: vals[:email],
-          user_type: 'visitor',
+        enrolled_user = context[:current_user].enroll_user(
+          name: vals[:name], phone_number: vals[:phone_number],
+          email: vals[:email], user_type: 'visitor'
         )
+        return enrolled_user if enrolled_user.persisted?
+
+        raise GraphQL::ExecutionError, enrolled_user.errors.full_messages&.join(', ')
       end
 
       # Verifies if current user admin or security guard.
