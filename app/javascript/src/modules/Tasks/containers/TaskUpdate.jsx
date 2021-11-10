@@ -1,12 +1,13 @@
 import React, { useContext } from 'react'
 import {  useParams } from 'react-router-dom'
 import { useQuery, useMutation } from 'react-apollo'
-import { TaskQuery, UsersLiteQuery, HistoryQuery } from '../../../graphql/queries'
+import { UsersLiteQuery, HistoryQuery } from '../../../graphql/queries'
 import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider'
 import Loading from '../../../shared/Loading'
 import ErrorPage from '../../../components/Error'
 import TaskUpdateForm from '../Components/TaskUpdateForm'
 import { AssignUser } from '../../../graphql/mutations'
+import { TaskQuery } from '../graphql/task_queries'
 
 export default function TaskUpdate() {
   const { taskId } = useParams()

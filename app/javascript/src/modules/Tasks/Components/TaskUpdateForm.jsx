@@ -1,3 +1,6 @@
+/* eslint-disable complexity */
+/* eslint-disable max-statements */
+/* eslint-disable max-lines */
 /* eslint-disable react/jsx-props-no-spreading */
 /* eslint-disable no-use-before-define */
 import React, { useState, useEffect } from 'react'
@@ -470,7 +473,7 @@ export default function TaskForm({
         )}
       </form>
 
-      <TaskDocuments documents={data.documents} />
+      <TaskDocuments documents={data.attachments} />
     </>
   )
 }

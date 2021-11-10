@@ -14,10 +14,10 @@ import { dateToString } from '../../../components/DateContainer';
 export default function TaskDocuments({ documents }) {
   return (
     <List>
-      {documents.map(doc => (
+      {documents.map((doc) => (
         <ListItem key={doc.id}>
           <ListItemText
-            primary={doc.name}
+            primary={doc.filename}
             secondary={(
               <>
                 <Typography
@@ -47,7 +47,7 @@ TaskDocuments.propTypes = {
   documents: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.string,
-      name: PropTypes.string
+      filename: PropTypes.string,
     })
-  ).isRequired
+  ).isRequired,
 };

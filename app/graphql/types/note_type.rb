@@ -22,7 +22,7 @@ module Types
     field :parent_note, Types::NoteType, null: true
     field :sub_tasks, [Types::NoteType], null: true
     field :documents, [GraphQL::Types::JSON], null: true
-    field :document_urls, [String], null: true
+    field :attachments, [GraphQL::Types::JSON], null: true
 
     def host_url(type)
       base_url = HostEnv.base_url(object.community)
@@ -30,12 +30,13 @@ module Types
       "https://#{base_url}#{path}"
     end
 
-    def document_urls
+    def attachments
       return nil unless object.documents.attached?
 
       urls = []
       object.documents.each do |doc|
-        urls << host_url(doc)
+        file = { id: doc.id, filename: doc.blob.filename(), url: host_url(doc) }
+        urls << file
       end
       urls
     end
