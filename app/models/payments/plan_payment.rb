@@ -55,6 +55,13 @@ module Payments
       manual_receipt_number.presence || automated_receipt_number
     end
 
+    # Return manual receipt number without the prefix MI
+    #
+    # @return [String]
+    def manual_receipt_number_without_prefix
+      manual_receipt_number&.split('MI')
+    end
+
     private
 
     def add_prefix_for_manual_receipt_number
