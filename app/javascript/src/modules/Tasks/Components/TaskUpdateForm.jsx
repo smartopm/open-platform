@@ -45,7 +45,7 @@ import { UsersLiteQuery } from '../../../graphql/queries';
 import useDebounce from '../../../utils/useDebounce';
 import UserAutoResult from '../../../shared/UserAutoResult';
 import TaskDocuments from './TaskDocuments'
-
+import TaskInfoTop from './TaskInfoTop';
 
 
 const initialData = {
@@ -123,12 +123,12 @@ export default function TaskForm({
       })
   }
 
-  function updateTask() {
+  function updateTask(newDueDate) {
     taskUpdate({
       variables: {
         id: data.id,
         body: title,
-        dueDate: selectedDate,
+        dueDate: newDueDate || selectedDate,
         description,
         category: taskType,
         flagged: true,
@@ -208,6 +208,12 @@ export default function TaskForm({
   function isCurrentUserAnAssignee() {
     return data.assignees.find(assignee => assignee.id === currentUser.id)
   }
+
+  function setDueDate(date) {
+    setDate(date)
+    updateTask(date)
+  }
+
 
   useEffect(() => {
     setDefaultData()
@@ -473,6 +479,18 @@ export default function TaskForm({
         )}
       </form>
 
+      <TaskInfoTop
+        users={users}
+        data={data}
+        setDate={setDueDate}
+        selectedDate={selectedDate}
+        assignUser={assignUser}
+        autoCompleteOpen={autoCompleteOpen}
+        handleOpenAutoComplete={handleOpenAutoComplete}
+        liteData={liteData}
+        setSearchUser={setSearchUser}
+        searchUser={searchUser}
+      />
       <TaskDocuments documents={data.attachments} />
     </>
   )

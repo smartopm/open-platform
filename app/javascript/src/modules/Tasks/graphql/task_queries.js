@@ -46,6 +46,10 @@ export const TaskQuery = gql`
         userId
         reminderTime
       }
+      parentNote {
+        id
+        body
+      }
       attachments
     }
   }
