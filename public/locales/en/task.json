@@ -39,5 +39,11 @@
     "assigned_to": "Assigned to",
     "due_date": "Due Date: ",
     "no_assignee": "No Assignee"
+  },
+  "document": {
+    "uploaded_at": "Uploaded at",
+    "download": "Download",
+    "no_documents": "No documents attached",
+    "documents": "Documents"
   }
 }
