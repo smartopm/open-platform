@@ -198,6 +198,12 @@ export default function PaymentModal({
     handleModalClose();
   }
 
+  function handlePaymentData(payments) {
+    /* It filters out the payments made for plan and excludes the payment made for general fund */
+    const planPayments = payments.filter(payment => payment.paymentPlan)
+    setPaymentData(planPayments[0]);
+  }
+
   function handleSubmit(event) {
     event.preventDefault();
     setMutationStatus(true);
@@ -224,7 +230,7 @@ export default function PaymentModal({
         walletRefetch();
         transRefetch();
         paymentPlansRefetch();
-        setPaymentData(res.data.transactionCreate.transaction.planPayments[0]);
+        handlePaymentData(res.data.transactionCreate.transaction.planPayments);
         setInputValue(initialValues);
         setPromptOpen(!!userId);
         setIsConfirm(false);
