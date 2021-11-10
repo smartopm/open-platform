@@ -336,6 +336,7 @@ security_guard:
       - can_view_entry_requests
       - can_view_entry_request
       - can_invite_guest
+      - can_go_through_guest_verification
   gate_access:
     permissions:
       - can_see_menu_item
