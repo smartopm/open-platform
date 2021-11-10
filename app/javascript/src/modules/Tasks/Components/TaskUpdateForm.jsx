@@ -41,6 +41,7 @@ import { dateToString, dateTimeToString } from '../../../components/DateContaine
 import { UsersLiteQuery } from '../../../graphql/queries';
 import useDebounce from '../../../utils/useDebounce';
 import UserAutoResult from '../../../shared/UserAutoResult';
+import TaskDocuments from './TaskDocuments'
 
 
 
@@ -81,6 +82,7 @@ export default function TaskForm({
     setType(value)
   }
 
+  console.log(data)
   const [anchorEl, setAnchorEl] = useState(null)
   const open = Boolean(anchorEl)
 
@@ -422,7 +424,7 @@ export default function TaskForm({
                         {...params}
                         variant="standard"
                         label={t('task.task_assignee_label')}
-                        placeholder={t('task.task_search_placeholder')} 
+                        placeholder={t('task.task_search_placeholder')}
                         onChange={event => setSearchUser(event.target.value)}
                         onKeyDown={() => searchUser()}
                       />
@@ -467,6 +469,8 @@ export default function TaskForm({
   <TaskUpdateList data={historyData} />
         )}
       </form>
+
+      <TaskDocuments documents={data.documents} />
     </>
   )
 }
