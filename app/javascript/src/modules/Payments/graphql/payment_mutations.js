@@ -35,6 +35,7 @@ mutation PaymentCreate(
         amount
         receiptNumber
         createdAt
+        currentPlotPendingBalance
         community {
           name
           logoUrl
