@@ -26,5 +26,9 @@ describe('Editable Field component', () => {
     expect(wrapper.queryByTestId('update_btn').textContent).toContain('update me');
     fireEvent.click(wrapper.queryByTestId('update_btn'))
     expect(updateMock).toBeCalled()
+
+    fireEvent.mouseLeave(wrapper.queryByTestId('editable_field_section'))
+    // the update button should not be visible when we exit the description section
+    expect(wrapper.queryByTestId('edit_action')).not.toBeInTheDocument();
   });
 });

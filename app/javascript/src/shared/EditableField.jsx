@@ -18,6 +18,12 @@ export default function EditableField({ value, setValue, action }) {
   function handleMouseInAndOut() {
     setMouseOver(!mouseOver);
   }
+
+  // Avoid always showing the update button after editing
+  function handleOutsideClick(){
+      setIsEditMode(false);
+  }
+
   function handleClick() {
     setIsEditMode(true);
     setMouseOver(false);
@@ -25,7 +31,7 @@ export default function EditableField({ value, setValue, action }) {
   const classes = useStyles();
 
   return (
-    <Grid container spacing={5}>
+    <Grid container onMouseLeave={handleOutsideClick} data-testid="editable_field_section">
       <Grid item xs={10}>
         <TextField
           name="email"
@@ -36,7 +42,6 @@ export default function EditableField({ value, setValue, action }) {
           disabled={!isEditMode}
           className={classes.textField}
           onMouseEnter={handleMouseInAndOut}
-          onMouseLeave={handleMouseInAndOut}
           multiline
           rowsMax={2}
           style={{ width: '100%' }}

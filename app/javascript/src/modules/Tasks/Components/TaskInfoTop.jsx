@@ -193,7 +193,7 @@ export default function TaskInfoTop({
         </Grid>
 
         {data.description && (
-          <>
+          <Grid container>
             <Typography variant="body1" className={classes.title}>
               {t('common:form_fields.description')}
             </Typography>
@@ -212,7 +212,7 @@ export default function TaskInfoTop({
                 </Button>
               )}
             />
-          </>
+          </Grid>
         )}
       </Grid>
     </>
