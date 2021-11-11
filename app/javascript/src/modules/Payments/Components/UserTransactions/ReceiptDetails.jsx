@@ -24,7 +24,7 @@ export default function ReceiptDetail({ paymentData, currencyData, planDetail })
   const { t } = useTranslation(['payment', 'common']);
 
   return (
-    <div className="print" style={matches ? {} : { margin: '80px 284px' }}>
+    <div className="print" style={matches ? {} : { margin: '0 284px' }}>
       <CommunityName authState={authState} logoStyles={logoStyles} />
       <Typography className={classes.receiptNumber}>
         {t('misc.receipt_#')}
@@ -54,7 +54,9 @@ export default function ReceiptDetail({ paymentData, currencyData, planDetail })
                 {t('common:table_headers.date')}
               </Grid>
               <Grid item xs={8} className={classes.title}>
-                {paymentData.createdAt && dateToString(paymentData.createdAt)}
+                {paymentData.createdAt
+                  ? dateToString(paymentData.createdAt)
+                  : dateToString(planDetail.createdAt)}
               </Grid>
             </Grid>
             <Grid container spacing={1}>
@@ -170,7 +172,7 @@ export default function ReceiptDetail({ paymentData, currencyData, planDetail })
             </Grid>
             <Grid item xs={4} className={classes.title} style={{ textAlign: 'center' }}>
               {objectAccessor(paymentType, paymentData.source) ||
-                objectAccessor(paymentType, paymentData?.userTransaction?.source)}
+                objectAccessor(paymentType, planDetail?.userTransaction?.source)}
             </Grid>
             <Grid item xs={4} className={classes.title} style={{ textAlign: 'right' }}>
               {formatMoney(currencyData, planDetail?.amount || paymentData?.amount)}
@@ -372,6 +374,7 @@ ReceiptDetail.defaultProps = {
 ReceiptDetail.propTypes = {
   planDetail: PropTypes.shape({
     id: PropTypes.string,
+    createdAt: PropTypes.string,
     amount: PropTypes.number,
     receiptNumber: PropTypes.string,
     currentPlotPendingBalance: PropTypes.number,
@@ -391,6 +394,7 @@ ReceiptDetail.propTypes = {
     }),
     userTransaction: PropTypes.shape({
       id: PropTypes.string,
+      source: PropTypes.string,
       depositor: PropTypes.shape({
         id: PropTypes.string,
         name: PropTypes.string

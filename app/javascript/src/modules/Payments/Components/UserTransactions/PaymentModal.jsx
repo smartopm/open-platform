@@ -201,7 +201,7 @@ export default function PaymentModal({
   function handlePaymentData(payments) {
     /* It filters out the payments made for plan and excludes the payment made for general fund */
     const planPayments = payments.filter(payment => payment.paymentPlan)
-    setPaymentData(planPayments[0]);
+    setPaymentData({planPayments});
   }
 
   function handleSubmit(event) {
@@ -230,8 +230,7 @@ export default function PaymentModal({
         walletRefetch();
         transRefetch();
         paymentPlansRefetch();
-        console.log(res.data.transactionCreate.transaction)
-        setPaymentData(res.data.transactionCreate.transaction);
+        handlePaymentData(res.data.transactionCreate.transaction.planPayments);
         setInputValue(initialValues);
         setPromptOpen(!!userId);
         setIsConfirm(false);
