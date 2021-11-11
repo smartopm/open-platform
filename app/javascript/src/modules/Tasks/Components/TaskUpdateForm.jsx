@@ -2,12 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
-import {
-  Button,
-  Grid,
-  Snackbar,
-  Typography,
-} from '@material-ui/core';
+import { Button, Grid, Snackbar, Typography } from '@material-ui/core';
 import { useMutation, useLazyQuery } from 'react-apollo';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
@@ -37,7 +32,6 @@ export default function TaskForm({
   currentUser,
   historyData,
   historyRefetch,
-  authState,
   taskId
 }) {
   const [title, setTitle] = useState('');
@@ -67,7 +61,6 @@ export default function TaskForm({
   const [searchedUser, setSearchUser] = useState('');
   const debouncedValue = useDebounce(searchedUser, 500);
 
-
   const [searchUser, { data: liteData }] = useLazyQuery(UsersLiteQuery, {
     variables: {
       query:
@@ -79,7 +72,6 @@ export default function TaskForm({
     errorPolicy: 'all',
     fetchPolicy: 'no-cache'
   });
-
 
   function handleTaskComplete() {
     // call the mutation with just the complete status
@@ -96,7 +88,6 @@ export default function TaskForm({
         setErrorMessage(err);
       });
   }
-
 
   function updateTask(newDueDate) {
     taskUpdate({
@@ -239,7 +230,7 @@ export default function TaskForm({
         />
 
         {type === 'task' ? (
-          <>
+          <Grid item md={7}>
             <TaskInfoTop
               users={users}
               data={data}
@@ -271,15 +262,13 @@ export default function TaskForm({
               }
             />
 
-            <TaskComment authState={authState} taskId={taskId} />
+            <TaskComment taskId={taskId} />
             <TaskDocuments documents={data.attachments} />
-          </>
+          </Grid>
         ) : (
           <TaskUpdateList data={historyData} />
-          )}
+        )}
       </form>
-
-
     </>
   );
 }
@@ -288,7 +277,6 @@ TaskForm.defaultProps = {
   users: [],
   data: {},
   historyData: [],
-  authState: {},
   taskId: ''
 };
 TaskForm.propTypes = {
@@ -305,7 +293,5 @@ TaskForm.propTypes = {
     })
   ),
   historyRefetch: PropTypes.func.isRequired,
-  // eslint-disable-next-line react/forbid-prop-types
-  authState: PropTypes.object,
   taskId: PropTypes.string
 };

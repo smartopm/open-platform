@@ -48,7 +48,6 @@ export default function TaskUpdate() {
         currentUser={authState.user}
         historyData={taskHistoryData?.taskHistories}
         historyRefetch={historyRefetch}
-        authState={authState}
         taskId={taskId}
       />
     </Container>
