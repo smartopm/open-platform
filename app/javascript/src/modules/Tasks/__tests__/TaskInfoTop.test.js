@@ -76,5 +76,8 @@ describe('Top part of the task form component', () => {
     expect(container2.queryByText('some description')).toBeInTheDocument();
     expect(container2.queryByText('some body')).toBeInTheDocument();
     expect(container2.queryByText('some parent body')).toBeInTheDocument();
+
+    expect(container2.queryByTestId('editable_description')).toBeInTheDocument();
+
   });
 });

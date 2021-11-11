@@ -1,49 +1,26 @@
-/* eslint-disable complexity */
 /* eslint-disable max-statements */
-/* eslint-disable max-lines */
-/* eslint-disable react/jsx-props-no-spreading */
-/* eslint-disable no-use-before-define */
 import React, { useState, useEffect } from 'react';
-import TextField from '@material-ui/core/TextField';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Checkbox from '@material-ui/core/Checkbox';
 import {
   Button,
-  FormHelperText,
-  MenuItem,
-  Select,
   Grid,
-  InputLabel,
-  FormControl,
   Snackbar,
-  Chip,
   Typography,
-  FormControlLabel,
-  Checkbox,
-  Tooltip
 } from '@material-ui/core';
 import { useMutation, useLazyQuery } from 'react-apollo';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
-import AddCircleIcon from '@material-ui/icons/AddCircle';
-import EditIcon from '@material-ui/icons/Edit';
-import Visibility from '@material-ui/icons/Visibility';
-import CancelIcon from '@material-ui/icons/Cancel';
 import AlarmIcon from '@material-ui/icons/Alarm';
-import Autocomplete from '@material-ui/lab/Autocomplete';
-import DatePickerDialog from '../../../components/DatePickerDialog';
-import CenteredContent from '../../../components/CenteredContent';
 import { UpdateNote } from '../../../graphql/mutations';
 import { TaskReminderMutation } from '../graphql/task_reminder_mutation';
-import { UserChip } from './UserChip';
-import { NotesCategories } from '../../../utils/constants';
 import Toggler from '../../../components/Campaign/ToggleButton';
-import { sanitizeText, pluralizeCount } from '../../../utils/helpers';
 import RemindMeLaterMenu from './RemindMeLaterMenu';
 import TaskUpdateList from './TaskUpdateList';
 import TaskComment from './TaskComment';
 import { dateToString, dateTimeToString } from '../../../components/DateContainer';
 import { UsersLiteQuery } from '../../../graphql/queries';
 import useDebounce from '../../../utils/useDebounce';
-import UserAutoResult from '../../../shared/UserAutoResult';
 import TaskDocuments from './TaskDocuments';
 import TaskInfoTop from './TaskInfoTop';
 
@@ -65,7 +42,7 @@ export default function TaskForm({
 }) {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
-  const [error, setErrorMessage] = useState('');
+  const [, setErrorMessage] = useState('');
   const [taskType, setTaskType] = useState('');
   const [selectedDate, setDate] = useState(new Date());
   const [taskStatus, setTaskStatus] = useState(false);
@@ -76,7 +53,6 @@ export default function TaskForm({
   const [autoCompleteOpen, setOpen] = useState(false);
   const [setReminder] = useMutation(TaskReminderMutation);
   const [reminderTime, setReminderTime] = useState(null);
-  const [mode, setMode] = useState('preview');
   const { t } = useTranslation(['task', 'common']);
 
   const [type, setType] = useState('task');
@@ -91,7 +67,6 @@ export default function TaskForm({
   const [searchedUser, setSearchUser] = useState('');
   const debouncedValue = useDebounce(searchedUser, 500);
 
-  const allowedAssignees = ['admin', 'custodian', 'security_guard', 'contractor', 'site_worker'];
 
   const [searchUser, { data: liteData }] = useLazyQuery(UsersLiteQuery, {
     variables: {
@@ -105,11 +80,6 @@ export default function TaskForm({
     fetchPolicy: 'no-cache'
   });
 
-  function handleSubmit(event) {
-    event.preventDefault();
-    setLoadingStatus(true);
-    updateTask();
-  }
 
   function handleTaskComplete() {
     // call the mutation with just the complete status
@@ -127,6 +97,7 @@ export default function TaskForm({
       });
   }
 
+
   function updateTask(newDueDate) {
     taskUpdate({
       variables: {
@@ -140,7 +111,6 @@ export default function TaskForm({
       }
     })
       .then(() => {
-        setLoadingStatus(false);
         setUpdated(true);
         refetch();
         historyRefetch();
@@ -230,7 +200,7 @@ export default function TaskForm({
           setTaskReminder={setTaskReminder}
         />
       </Grid>
-      <form onSubmit={handleSubmit}>
+      <form>
         {isCurrentUserAnAssignee() && (
           <Button
             color="primary"
@@ -282,6 +252,25 @@ export default function TaskForm({
               setSearchUser={setSearchUser}
               searchUser={searchUser}
             />
+            {/* TODO: move this to the above component */}
+            <FormControlLabel
+              control={(
+                <Checkbox
+                  disabled={loading}
+                  checked={taskStatus}
+                  onChange={handleTaskComplete}
+                  name="mark_task_complete"
+                  color="primary"
+                  data-testid="mark_task_complete_checkbox"
+                />
+              )}
+              label={
+                !taskStatus
+                  ? t('common:form_actions.note_complete')
+                  : t('common:form_actions.note_incomplete')
+              }
+            />
+
             <TaskComment authState={authState} taskId={taskId} />
             <TaskDocuments documents={data.attachments} />
           </>
