@@ -79,7 +79,7 @@ export default function TaskInfoTop({
           <Link color="inherit" to="/tasks">
             {t('task.my_tasks')}
           </Link>
-          <Typography gutterBottom color="textPrimary">
+          <Typography gutterBottom color="textPrimary" style={{marginTop: '4px'}}>
             {t('task.task_details_text')}
           </Typography>
         </Breadcrumbs>
@@ -203,10 +203,12 @@ export default function TaskInfoTop({
               action={(
                 <Button
                   variant="outlined"
+                  color="primary"
                   disabled={loading}
                   data-testid="edit_action_btn"
                   onClick={updateDescription}
                   startIcon={loading && <Spinner />}
+                  style={{marginTop: '10px'}}
                 >
                   {t('common:form_actions.update')}
                 </Button>
