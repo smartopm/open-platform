@@ -340,7 +340,7 @@ export default function LogBookItem({
 
 const useStyles = makeStyles(() => ({
   container: {
-    padding: '32px  20px 50px 50px'
+    padding: '0 20px 50px 50px'
   },
   containerMobile: {
     padding: '10px 0 10px 30px'
