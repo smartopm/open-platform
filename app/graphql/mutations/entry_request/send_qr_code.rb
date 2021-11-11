@@ -13,7 +13,11 @@ module Mutations
         entry_request = Logs::EntryRequest.find(vals[:id])
         raise GraphQL::ExecutionError, I18n.t('errors.not_found') unless entry_request
 
-        GuestQrCodeJob.perform_now(context[:current_user], vals[:guest_email], entry_request)
+        GuestQrCodeJob.perform_now(
+          community: context[:site_community],
+          contact_info: { email: vals[:guest_email] },
+          entry_request: entry_request,
+        )
 
         { message: 'success' }
       end
