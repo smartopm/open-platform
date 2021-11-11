@@ -22,13 +22,16 @@ RSpec.describe GuestQrCodeJob, type: :job do
 
     it 'enqueues the job' do
       expect do
-        described_class.perform_later(user, 'email@gmail.com', entry_req)
+        described_class.perform_later(community: user.community,
+                                      contact_info: { email: 'email@gmail.com' }, entry_request: entry_req)
       end.to have_enqueued_job
     end
 
     it 'enqueues job with matched arguments' do
-      described_class.perform_later(user, 'email@gmail.com', entry_req)
-      expect(GuestQrCodeJob).to have_been_enqueued.with(user, 'email@gmail.com', entry_req)
+      described_class.perform_later(community: user.community,
+                                    contact_info: { email: 'email@gmail.com' }, entry_request: entry_req)
+      expect(GuestQrCodeJob).to have_been_enqueued.with(community: user.community,
+                                                        contact_info: { email: 'email@gmail.com' }, entry_request: entry_req)
     end
 
     it 'invokes EmailMsg' do
@@ -43,7 +46,10 @@ RSpec.describe GuestQrCodeJob, type: :job do
         { key: '%request_url%', value: "<a href=#{request_url}>#{request_url}</a>" },
       ]
       expect(EmailMsg).to receive(:send_mail_from_db).with('email@gmail.com', template, template_data)
-      perform_enqueued_jobs { described_class.perform_later(user, 'email@gmail.com', entry_req, 'scan') }
+      perform_enqueued_jobs do
+        described_class.perform_later(community: user.community,
+                                      contact_info: { email: 'email@gmail.com' }, entry_request: entry_req, type: 'scan')
+      end
     end
   end
 end
