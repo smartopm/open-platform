@@ -17,7 +17,8 @@ const data = {
     { name: 'another_user', id: '983y7r2' }
   ],
   assigneeNotes: [],
-  completed: false
+  completed: false,
+  attachments: []
 }
 const props = {
   data,
@@ -58,10 +59,11 @@ describe('task form component', () => {
 
     expect(container.queryByText('common:form_actions.note_complete')).toBeInTheDocument()
     expect(container.queryByText('common:form_actions.note_complete')).not.toBeDisabled()
-    expect(container.queryByText('tolulope O.')).toBeInTheDocument()
-    expect(container.queryByText('another_user')).toBeInTheDocument()
+    expect(container.queryAllByText('tolulope O.')[0]).toBeInTheDocument()
+    expect(container.queryAllByText('another_user')[0]).toBeInTheDocument()
     expect(container.queryByText('task.task_user_label')).toBeInTheDocument()
-    expect(container.queryAllByTestId('user_chip')).toHaveLength(3)
+    // needs to be updated
+    expect(container.queryAllByTestId('user_chip')).toHaveLength(5)
     expect(container.queryByTestId('mark_task_complete_checkbox')).toBeInTheDocument()
     expect(container.queryByText('task.task_body_label')).toBeInTheDocument() // for the toggler
     expect(submitBtn.textContent).toContain('common:form_actions.update_task')
@@ -85,7 +87,7 @@ describe('task form component', () => {
         </MockedProvider>
       )
     })
-    
+
     const reminderBtn = container.queryByText('task.reminder_text')
     expect(reminderBtn).toBeInTheDocument()
 
@@ -107,7 +109,7 @@ describe('task form component', () => {
         </MockedProvider>
       )
     })
-    
+
     expect(container.queryByText(/comments/i)).toBeTruthy()
   });
 })

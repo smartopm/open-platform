@@ -3,8 +3,8 @@
 /* eslint-disable max-lines */
 /* eslint-disable react/jsx-props-no-spreading */
 /* eslint-disable no-use-before-define */
-import React, { useState, useEffect } from 'react'
-import TextField from '@material-ui/core/TextField'
+import React, { useState, useEffect } from 'react';
+import TextField from '@material-ui/core/TextField';
 import {
   Button,
   FormHelperText,
@@ -18,40 +18,39 @@ import {
   Typography,
   FormControlLabel,
   Checkbox,
-  Tooltip,
-} from '@material-ui/core'
-import { useMutation, useLazyQuery } from 'react-apollo'
-import PropTypes from 'prop-types'
+  Tooltip
+} from '@material-ui/core';
+import { useMutation, useLazyQuery } from 'react-apollo';
+import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
-import AddCircleIcon from '@material-ui/icons/AddCircle'
-import EditIcon from '@material-ui/icons/Edit'
+import AddCircleIcon from '@material-ui/icons/AddCircle';
+import EditIcon from '@material-ui/icons/Edit';
 import Visibility from '@material-ui/icons/Visibility';
-import CancelIcon from '@material-ui/icons/Cancel'
-import AlarmIcon from '@material-ui/icons/Alarm'
-import Autocomplete from '@material-ui/lab/Autocomplete'
-import DatePickerDialog from '../../../components/DatePickerDialog'
-import CenteredContent from '../../../components/CenteredContent'
-import { UpdateNote } from '../../../graphql/mutations'
-import { TaskReminderMutation } from '../graphql/task_reminder_mutation'
-import { UserChip } from './UserChip'
-import { NotesCategories } from '../../../utils/constants'
-import Toggler from '../../../components/Campaign/ToggleButton'
-import { sanitizeText, pluralizeCount } from '../../../utils/helpers'
-import RemindMeLaterMenu from './RemindMeLaterMenu'
-import TaskUpdateList from './TaskUpdateList'
-import TaskComment from './TaskComment'
-import { dateToString, dateTimeToString } from '../../../components/DateContainer'
+import CancelIcon from '@material-ui/icons/Cancel';
+import AlarmIcon from '@material-ui/icons/Alarm';
+import Autocomplete from '@material-ui/lab/Autocomplete';
+import DatePickerDialog from '../../../components/DatePickerDialog';
+import CenteredContent from '../../../components/CenteredContent';
+import { UpdateNote } from '../../../graphql/mutations';
+import { TaskReminderMutation } from '../graphql/task_reminder_mutation';
+import { UserChip } from './UserChip';
+import { NotesCategories } from '../../../utils/constants';
+import Toggler from '../../../components/Campaign/ToggleButton';
+import { sanitizeText, pluralizeCount } from '../../../utils/helpers';
+import RemindMeLaterMenu from './RemindMeLaterMenu';
+import TaskUpdateList from './TaskUpdateList';
+import TaskComment from './TaskComment';
+import { dateToString, dateTimeToString } from '../../../components/DateContainer';
 import { UsersLiteQuery } from '../../../graphql/queries';
 import useDebounce from '../../../utils/useDebounce';
 import UserAutoResult from '../../../shared/UserAutoResult';
-import TaskDocuments from './TaskDocuments'
+import TaskDocuments from './TaskDocuments';
 import TaskInfoTop from './TaskInfoTop';
-
 
 const initialData = {
   user: '',
   userId: ''
-}
+};
 
 export default function TaskForm({
   users,
@@ -62,65 +61,70 @@ export default function TaskForm({
   historyData,
   historyRefetch,
   authState,
-  taskId,
+  taskId
 }) {
-  const [title, setTitle] = useState('')
-  const [description, setDescription] = useState('')
-  const [error, setErrorMessage] = useState('')
-  const [taskType, setTaskType] = useState('')
-  const [selectedDate, setDate] = useState(new Date())
-  const [taskStatus, setTaskStatus] = useState(false)
-  const [loading, setLoadingStatus] = useState(false)
-  const [userData, setData] = useState(initialData)
-  const [taskUpdate] = useMutation(UpdateNote)
-  const [updated, setUpdated] = useState(false)
-  const [autoCompleteOpen, setOpen] = useState(false)
-  const [setReminder] = useMutation(TaskReminderMutation)
-  const [reminderTime, setReminderTime] = useState(null)
-  const [mode, setMode] = useState('preview')
-  const { t } = useTranslation(['task', 'common'])
+  const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
+  const [error, setErrorMessage] = useState('');
+  const [taskType, setTaskType] = useState('');
+  const [selectedDate, setDate] = useState(new Date());
+  const [taskStatus, setTaskStatus] = useState(false);
+  const [loading, setLoadingStatus] = useState(false);
+  const [userData, setData] = useState(initialData);
+  const [taskUpdate] = useMutation(UpdateNote);
+  const [updated, setUpdated] = useState(false);
+  const [autoCompleteOpen, setOpen] = useState(false);
+  const [setReminder] = useMutation(TaskReminderMutation);
+  const [reminderTime, setReminderTime] = useState(null);
+  const [mode, setMode] = useState('preview');
+  const { t } = useTranslation(['task', 'common']);
 
-  const [type, setType] = useState('task')
+  const [type, setType] = useState('task');
   const handleType = (_event, value) => {
-    setType(value)
-  }
+    setType(value);
+  };
 
-  console.log(data)
-  const [anchorEl, setAnchorEl] = useState(null)
-  const open = Boolean(anchorEl)
+  const [anchorEl, setAnchorEl] = useState(null);
+  const open = Boolean(anchorEl);
 
   // Todo: figure out why reusing the customautocomplete component does not work for task update
   const [searchedUser, setSearchUser] = useState('');
   const debouncedValue = useDebounce(searchedUser, 500);
 
-  const allowedAssignees = ["admin", "custodian", "security_guard", "contractor", "site_worker" ]
+  const allowedAssignees = ['admin', 'custodian', 'security_guard', 'contractor', 'site_worker'];
 
   const [searchUser, { data: liteData }] = useLazyQuery(UsersLiteQuery, {
-    variables: { query: debouncedValue.length > 0 ? debouncedValue : 'user_type:admin OR user_type:custodian OR user_type:security_guard OR user_type:contractor', limit: 10 },
+    variables: {
+      query:
+        debouncedValue.length > 0
+          ? debouncedValue
+          : 'user_type:admin OR user_type:custodian OR user_type:security_guard OR user_type:contractor',
+      limit: 10
+    },
     errorPolicy: 'all',
     fetchPolicy: 'no-cache'
   });
 
   function handleSubmit(event) {
-    event.preventDefault()
-    setLoadingStatus(true)
-    updateTask()
+    event.preventDefault();
+    setLoadingStatus(true);
+    updateTask();
   }
 
   function handleTaskComplete() {
     // call the mutation with just the complete status
-    setLoadingStatus(true)
+    setLoadingStatus(true);
     taskUpdate({
       variables: { id: data.id, completed: !taskStatus }
     })
       .then(() => {
-        setLoadingStatus(false)
-        setUpdated(true)
-        refetch()
+        setLoadingStatus(false);
+        setUpdated(true);
+        refetch();
       })
       .catch(err => {
-        setErrorMessage(err)
-      })
+        setErrorMessage(err);
+      });
   }
 
   function updateTask(newDueDate) {
@@ -136,35 +140,35 @@ export default function TaskForm({
       }
     })
       .then(() => {
-        setLoadingStatus(false)
-        setUpdated(true)
-        refetch()
-        historyRefetch()
+        setLoadingStatus(false);
+        setUpdated(true);
+        refetch();
+        historyRefetch();
       })
       .catch(err => {
-        setErrorMessage(err)
-      })
+        setErrorMessage(err);
+      });
   }
 
   function setDefaultData() {
-    setTitle(data.body)
-    setTaskType(data.category)
-    setTaskStatus(data.completed)
-    setDescription(data.description)
-    setDate(data.dueDate)
+    setTitle(data.body);
+    setTaskType(data.category);
+    setTaskStatus(data.completed);
+    setDescription(data.description);
+    setDate(data.dueDate);
     setData({
       user: data.user.name,
       userId: data.user.id,
       imageUrl: data.user.imageUrl
-    })
+    });
   }
 
   function handleOpenAutoComplete() {
-    setOpen(!autoCompleteOpen)
+    setOpen(!autoCompleteOpen);
   }
 
   function timeFormat(time) {
-    return `${dateToString(time)}, ${dateTimeToString(time)}`
+    return `${dateToString(time)}, ${dateTimeToString(time)}`;
   }
 
   function setTaskReminder(hour) {
@@ -172,53 +176,48 @@ export default function TaskForm({
       variables: { noteId: data.id, hour }
     })
       .then(() => {
-        handleClose()
-        const timeScheduled = new Date(
-          Date.now() + hour * 60 * 60000
-        ).toISOString()
-        setReminderTime(timeFormat(timeScheduled))
+        handleClose();
+        const timeScheduled = new Date(Date.now() + hour * 60 * 60000).toISOString();
+        setReminderTime(timeFormat(timeScheduled));
       })
-      .catch(err => setErrorMessage(err))
+      .catch(err => setErrorMessage(err));
   }
 
   function currentActiveReminder() {
-    const assignedNote = data.assigneeNotes
-      .find(assigneeNote => assigneeNote.userId === currentUser.id)
+    const assignedNote = data.assigneeNotes.find(
+      assigneeNote => assigneeNote.userId === currentUser.id
+    );
 
-    const timeScheduled = reminderTime || assignedNote?.reminderTime
-    let formattedTime = null
-    if (
-      timeScheduled &&
-      new Date(timeScheduled).getTime() > new Date().getTime()
-    ) {
-      formattedTime = timeFormat(timeScheduled)
+    const timeScheduled = reminderTime || assignedNote?.reminderTime;
+    let formattedTime = null;
+    if (timeScheduled && new Date(timeScheduled).getTime() > new Date().getTime()) {
+      formattedTime = timeFormat(timeScheduled);
     }
 
-    return formattedTime
+    return formattedTime;
   }
 
   function handleOpenMenu(event) {
-    setAnchorEl(event.currentTarget)
+    setAnchorEl(event.currentTarget);
   }
 
   function handleClose() {
-    setAnchorEl(null)
+    setAnchorEl(null);
   }
 
   function isCurrentUserAnAssignee() {
-    return data.assignees.find(assignee => assignee.id === currentUser.id)
+    return data.assignees.find(assignee => assignee.id === currentUser.id);
   }
 
   function setDueDate(date) {
-    setDate(date)
-    updateTask(date)
+    setDate(date);
+    updateTask(date);
   }
 
-
   useEffect(() => {
-    setDefaultData()
+    setDefaultData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, []);
 
   return (
     <>
@@ -245,10 +244,7 @@ export default function TaskForm({
         )}
         {isCurrentUserAnAssignee() && currentActiveReminder() && (
           <>
-            <Typography
-              variant="subtitle1"
-              style={{ margin: '5px 5px 10px 0', float: 'right' }}
-            >
+            <Typography variant="subtitle1" style={{ margin: '5px 5px 10px 0', float: 'right' }}>
               {currentActiveReminder()}
             </Typography>
             <AlarmIcon style={{ float: 'right', marginTop: '5px' }} />
@@ -275,15 +271,16 @@ export default function TaskForm({
         {type === 'task' ? (
           <>
             <br />
-            <div style={{
-            display: 'inline-flex',
-            margin: '5px 0 10px 0'
-          }}
+            <div
+              style={{
+                display: 'inline-flex',
+                margin: '5px 0 10px 0'
+              }}
             >
               <FormHelperText
                 style={{
-                margin: '4px 4px 0 0',
-              }}
+                  margin: '4px 4px 0 0'
+                }}
               >
                 {t('task.task_body_label')}
               </FormHelperText>
@@ -291,10 +288,10 @@ export default function TaskForm({
                 <Visibility
                   data-testid="preview_task_body_btn"
                   style={{
-                  cursor: 'pointer',
-                  margin: '5px 6px 0 0',
-                  fontSize: 17
-                }}
+                    cursor: 'pointer',
+                    margin: '5px 6px 0 0',
+                    fontSize: 17
+                  }}
                   onClick={() => setMode('preview')}
                 />
               </Tooltip>
@@ -302,45 +299,45 @@ export default function TaskForm({
                 <EditIcon
                   data-testid="edit_task_body_btn"
                   style={{
-                  cursor: 'pointer',
-                  margin: '5px 6px 0 0',
-                  fontSize: 17
-                }}
+                    cursor: 'pointer',
+                    margin: '5px 6px 0 0',
+                    fontSize: 17
+                  }}
                   color="primary"
                   onClick={() => setMode('edit')}
                 />
               </Tooltip>
             </div>
             {mode === 'preview' && (
-            <p>
-              <span
-              // eslint-disable-next-line react/no-danger
-                dangerouslySetInnerHTML={{
-                __html: sanitizeText(title)
-              }}
-              />
-            </p>
-)}
+              <p>
+                <span
+                  // eslint-disable-next-line react/no-danger
+                  dangerouslySetInnerHTML={{
+                    __html: sanitizeText(title)
+                  }}
+                />
+              </p>
+            )}
             {mode === 'edit' && (
-            <TextField
-              name="task_body"
-              placeholder={t('common:form_placeholders.note_body')}
-              style={{ width: '100%' }}
-              onChange={e => setTitle(e.target.value)}
-              value={title}
-              multiline
-              fullWidth
-              rows={2}
-              margin="normal"
-              inputProps={{
-              'aria-label': 'task_body'
-            }}
-              InputLabelProps={{
-              shrink: true
-            }}
-              required
-            />
-)}
+              <TextField
+                name="task_body"
+                placeholder={t('common:form_placeholders.note_body')}
+                style={{ width: '100%' }}
+                onChange={e => setTitle(e.target.value)}
+                value={title}
+                multiline
+                fullWidth
+                rows={2}
+                margin="normal"
+                inputProps={{
+                  'aria-label': 'task_body'
+                }}
+                InputLabelProps={{
+                  shrink: true
+                }}
+                required
+              />
+            )}
 
             <TextField
               name="task_description"
@@ -354,11 +351,11 @@ export default function TaskForm({
               rows={2}
               margin="normal"
               inputProps={{
-            'aria-label': 'task_description'
-          }}
+                'aria-label': 'task_description'
+              }}
               InputLabelProps={{
-            shrink: true
-          }}
+                shrink: true
+              }}
             />
             <br />
             <FormControl fullWidth>
@@ -374,7 +371,7 @@ export default function TaskForm({
                   <MenuItem key={key} value={key}>
                     {val}
                   </MenuItem>
-            ))}
+                ))}
               </Select>
             </FormControl>
             <br />
@@ -413,22 +410,24 @@ export default function TaskForm({
                   icon={autoCompleteOpen ? <CancelIcon /> : <AddCircleIcon />}
                   onClick={event => handleOpenAutoComplete(event, data.id)}
                 />
-                {autoCompleteOpen &&(
+                {autoCompleteOpen && (
                   <Autocomplete
                     disablePortal
                     id={data.id}
                     options={liteData?.usersLite || users}
-                    ListboxProps={{ style: { maxHeight: "20rem" }}}
+                    ListboxProps={{ style: { maxHeight: '20rem' } }}
                     renderOption={option => <UserAutoResult user={option} />}
                     name="assignees"
                     onChange={(_evt, value) => {
-                      if(!value) {
-                        return
+                      if (!value) {
+                        return;
                       }
-                      assignUser(data.id, value.id)
+                      assignUser(data.id, value.id);
                     }}
-                    getOptionLabel={(option) => allowedAssignees.includes(option.userType) ? option.name : ''}
-                    renderInput={(params) => (
+                    getOptionLabel={option =>
+                      allowedAssignees.includes(option.userType) ? option.name : ''
+                    }
+                    renderInput={params => (
                       <TextField
                         {...params}
                         variant="standard"
@@ -437,10 +436,9 @@ export default function TaskForm({
                         onChange={event => setSearchUser(event.target.value)}
                         onKeyDown={() => searchUser()}
                       />
-                  )}
+                    )}
                   />
                 )}
-
               </div>
             </FormControl>
             <br />
@@ -455,8 +453,12 @@ export default function TaskForm({
                   color="primary"
                   data-testid="mark_task_complete_checkbox"
                 />
-          )}
-              label={!taskStatus ? t('common:form_actions.note_complete') : t('common:form_actions.note_incomplete')}
+              )}
+              label={
+                !taskStatus
+                  ? t('common:form_actions.note_complete')
+                  : t('common:form_actions.note_incomplete')
+              }
             />
             <br />
             <CenteredContent>
@@ -468,14 +470,16 @@ export default function TaskForm({
                 aria-label="task_submit"
                 disableElevation
               >
-                {loading ? t('common:form_actions.updating_task') : t('common:form_actions.update_task')}
+                {loading
+                  ? t('common:form_actions.updating_task')
+                  : t('common:form_actions.update_task')}
               </Button>
             </CenteredContent>
             <p className="text-center">{Boolean(error.length) && error}</p>
             <TaskComment authState={authState} taskId={taskId} />
           </>
-) : (
-  <TaskUpdateList data={historyData} />
+        ) : (
+          <TaskUpdateList data={historyData} />
         )}
       </form>
 
@@ -493,7 +497,7 @@ export default function TaskForm({
       />
       <TaskDocuments documents={data.attachments} />
     </>
-  )
+  );
 }
 
 TaskForm.defaultProps = {
@@ -501,8 +505,8 @@ TaskForm.defaultProps = {
   data: {},
   historyData: [],
   authState: {},
-  taskId: '',
-}
+  taskId: ''
+};
 TaskForm.propTypes = {
   users: PropTypes.arrayOf(PropTypes.object),
   // eslint-disable-next-line react/forbid-prop-types
@@ -511,11 +515,13 @@ TaskForm.propTypes = {
   refetch: PropTypes.func.isRequired,
   // eslint-disable-next-line react/forbid-prop-types
   currentUser: PropTypes.object.isRequired,
-  historyData: PropTypes.arrayOf(PropTypes.shape({
-    id: PropTypes.string
-  })),
+  historyData: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.string
+    })
+  ),
   historyRefetch: PropTypes.func.isRequired,
   // eslint-disable-next-line react/forbid-prop-types
   authState: PropTypes.object,
-  taskId: PropTypes.string,
-}
+  taskId: PropTypes.string
+};
