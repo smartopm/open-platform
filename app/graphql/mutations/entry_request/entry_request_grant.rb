@@ -22,15 +22,9 @@ module Mutations
         end
       end
 
-      # TODO: Better auth here
-      # Verifies if current user is present or not.
+      # Verifies if current user can perform current action
       def authorized?(_vals)
-        return true if ::Policy::ApplicationPolicy.new(
-          context[:current_user], nil
-        ).permission?(
-          module: :entry_request,
-          permission: :can_grant_entry,
-        ) || context[:current_user]&.role?(%i[security_guard admin])
+        return true if allowed?(module: :entry_request, permission: :can_grant_entry)
 
         raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
       end

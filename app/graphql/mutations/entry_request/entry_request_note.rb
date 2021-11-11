@@ -48,12 +48,7 @@ module Mutations
 
       # Verifies if current user is present or not.
       def authorized?(_vals)
-        return true if ::Policy::ApplicationPolicy.new(
-          context[:current_user], nil
-        ).permission?(
-          module: :entry_request,
-          permission: :can_add_entry_request_note,
-        ) || context[:current_user]&.role?(%i[security_guard admin])
+        return true if allowed?(module: :entry_request, permission: :can_add_entry_request_note)
 
         raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
       end

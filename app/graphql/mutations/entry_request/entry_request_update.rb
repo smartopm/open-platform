@@ -57,11 +57,10 @@ module Mutations
         entry_request = Logs::EntryRequest.find_by(id: vals[:id])
         raise_entry_request_not_found_error(entry_request)
 
-        is_authorized = if entry_request.is_guest
-                          admin_permissions_check || current_user_is_host(entry_request)
-                        elsif permissions_check?
-                          true
-                        end
+        is_authorized = current_user_is_host(entry_request) ||
+                        allowed?(module: :entry_request,
+                                 permission: :can_update_guest_entry_request)
+
         return true if is_authorized
 
         raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
@@ -79,24 +78,6 @@ module Mutations
       # @return [Boolean]
       def current_user_is_host(entry_request)
         return true if entry_request.user_id.eql?(context[:current_user].id)
-      end
-
-      def admin_permissions_check
-        ::Policy::ApplicationPolicy.new(
-          context[:current_user], nil
-        ).permission?(
-          module: :entry_request,
-          permission: :can_update_guest_entry_request,
-        ) || context[:current_user].admin?
-      end
-
-      def permissions_check?
-        ::Policy::ApplicationPolicy.new(
-          context[:current_user], nil
-        ).permission?(
-          module: :entry_request,
-          permission: :can_update_entry_request,
-        ) || context[:current_user]&.role?(%i[security_guard admin])
       end
     end
   end
