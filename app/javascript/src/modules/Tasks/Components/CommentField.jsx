@@ -3,7 +3,6 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
-import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import { useMutation } from 'react-apollo';
 import Button from '@material-ui/core/Button';
@@ -11,7 +10,6 @@ import CommentCard from './CommentCard';
 import { TaskComment } from '../../../graphql/mutations';
 
 export default function CommentTextField({ data, refetch, taskId }) {
-  const classes = useStyles();
   const [commentCreate] = useMutation(TaskComment);
   const [body, setBody] = useState('');
   const [error, setErrorMessage] = useState('');
@@ -36,11 +34,11 @@ export default function CommentTextField({ data, refetch, taskId }) {
   return (
     <>
       <form style={{ display: 'flex' }} onSubmit={handleSubmit}>
-        <div className={classes.root} style={{ display: 'flex' }}>
+        <div style={{ display: 'flex', width: '100%', margin: '0 10px' }}>
           <TextField
             fullWidth
             id="standard-full-width"
-            style={{ width: '46vw' }}
+            style={{ marginRight: '10px' }}
             placeholder={t('common:misc.type_comment')}
             value={body}
             onChange={e => setBody(e.target.value)}
@@ -59,7 +57,7 @@ export default function CommentTextField({ data, refetch, taskId }) {
             type="submit"
             disabled={!body.length}
             data-testid="share"
-            style={{ width: '110px', height: '56px', marginTop: '8px' }}
+            style={{ height: '56px', marginTop: '15px' }}
           >
             {t('misc.comment')}
           </Button>
@@ -70,26 +68,6 @@ export default function CommentTextField({ data, refetch, taskId }) {
     </>
   );
 }
-
-const useStyles = makeStyles(theme => ({
-  root: {
-    '& .MuiTextField-root': {
-      margin: theme.spacing(1)
-    },
-    '& .MuiOutlinedInput-root': {
-      borderRadius: '10px'
-    },
-    '& .MuiButton-contained': {
-      width: 100,
-      marginLeft: '8px',
-      color: 'white'
-    },
-    '& .Mui-disabled': {
-      color: 'white',
-      border: '2px white solid'
-    }
-  }
-}));
 
 CommentTextField.defaultProps = {
   data: {},
