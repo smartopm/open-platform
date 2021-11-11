@@ -230,7 +230,8 @@ export default function PaymentModal({
         walletRefetch();
         transRefetch();
         paymentPlansRefetch();
-        handlePaymentData(res.data.transactionCreate.transaction.planPayments);
+        console.log(res.data.transactionCreate.transaction)
+        setPaymentData(res.data.transactionCreate.transaction);
         setInputValue(initialValues);
         setPromptOpen(!!userId);
         setIsConfirm(false);
@@ -275,6 +276,7 @@ export default function PaymentModal({
 
   return (
     <>
+      {console.log(paymentData)}
       <MessageAlert
         type={isSuccessAlert ? 'success' : 'error'}
         message={messageAlert}
