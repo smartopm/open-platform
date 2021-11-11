@@ -10,7 +10,7 @@ import { initialRequestState } from '../../GuestVerification/constants';
 import InvitationCreateMutation from '../graphql/mutations';
 import { Spinner } from '../../../../shared/Loading';
 import MessageAlert from '../../../../components/MessageAlert';
-import { capitalize, formatError, objectAccessor, validateEmail } from '../../../../utils/helpers';
+import { capitalize, formatError, objectAccessor } from '../../../../utils/helpers';
 import { checkInValidRequiredFields } from '../../utils';
 import { invitationRequiredFields as requiredFields } from '../constants';
 
@@ -74,7 +74,7 @@ export default function GuestInviteForm({ guest }) {
     })
       .then(() => {
         setGuestData({ ...guestData, isLoading: false });
-        setDetails({ ...details, message: t('guest.guest_invited') });
+        setDetails({ ...details, isError: false, message: t('guest.guest_invited') });
         setTimeout(() => history.push('/logbook/guests'), 500);
       })
       .catch(error => {
