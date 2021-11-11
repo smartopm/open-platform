@@ -69,10 +69,10 @@ export default function CommentCard({ data, refetch }) {
           keepMounted={false}
           data-testid="more_details_menu"
         >
-          <MenuItem id="edit_button" key="edit" onClick={() => editClick(currentComment)}>
+          <MenuItem id="edit_button" data-testid="edit" key="edit" onClick={() => editClick(currentComment)}>
             {t('common:menu.edit')}
           </MenuItem>
-          <MenuItem id="delete_button" key="delete" onClick={() => deleteClick(currentComment)}>
+          <MenuItem id="delete_button" data-testid="delete" key="delete" onClick={() => deleteClick(currentComment)}>
             {t('common:menu.delete')}
           </MenuItem>
         </Menu>
@@ -93,8 +93,8 @@ export default function CommentCard({ data, refetch }) {
                         <Typography
                           component="span"
                           variant="body2"
-                          data-testid="uploaded_at"
                           style={{ color: '#575757' }}
+                          data-testid="comment-body"
                         >
                           {dateToString(com.createdAt)}
                           {' '}
