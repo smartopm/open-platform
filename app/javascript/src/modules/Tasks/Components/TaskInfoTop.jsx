@@ -4,6 +4,7 @@ import {
   Grid,
   Chip,
   Typography,
+  Breadcrumbs,
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { useHistory } from 'react-router';
@@ -13,10 +14,12 @@ import AddCircleIcon from '@material-ui/icons/AddCircle';
 import CancelIcon from '@material-ui/icons/Cancel';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import moment from 'moment-timezone'
+import { Link } from 'react-router-dom';
 import DatePickerDialog from '../../../components/DatePickerDialog';
 import { UserChip } from './UserChip';
 import { sanitizeText } from '../../../utils/helpers';
 import UserAutoResult from '../../../shared/UserAutoResult';
+import { dateToString } from '../../../components/DateContainer';
 
 export default function TaskInfoTop({
   users,
@@ -43,16 +46,13 @@ export default function TaskInfoTop({
 
   return (
     <Grid item md={7}>
-      <Typography
-        style={{ color: '#00000099' }}
-        data-testid="task-details-breadcrumb"
-        variant="caption"
-      >
-        {t('task.my_tasks')}
-        {' '}
-        /
-        {t('task.task_details_text')}
-      </Typography>
+      <Breadcrumbs aria-label="breadcrumb" data-testid="task-details-breadcrumb">
+        <Link color="inherit" to="/tasks">
+          {t('task.my_tasks')}
+        </Link>
+        <Typography gutterBottom color="textPrimary">{t('task.task_details_text')}</Typography>
+      </Breadcrumbs>
+
       <Typography variant="h6" style={{ color: '#575757' }}>
         <span
           // eslint-disable-next-line react/no-danger
@@ -76,9 +76,9 @@ export default function TaskInfoTop({
           />
         </Typography>
       )}
-      <Grid container style={{ marginTop: '10px' }}>
+      <Grid container>
         <Grid item xs={6} md={4}>
-          <Typography style={{ marginTop: '21px' }}>{t('task.due_date_text')}</Typography>
+          <Typography variant="body1" style={{ marginTop: '21px' }} className={classes.title}>{t('task.due_date_text')}</Typography>
         </Grid>
         <Grid item xs={6} md={4}>
           <DatePickerDialog
@@ -89,18 +89,18 @@ export default function TaskInfoTop({
         </Grid>
       </Grid>
 
-      {/* <Grid container>
+      <Grid container className={classes.inlineContainer}>
         <Grid item xs={6} md={4}>
-          <Typography>Date Assigned</Typography>
+          <Typography variant="body1" className={classes.title} data-testid="date_created_title">{t('task.date_created')}</Typography>
         </Grid>
         <Grid item xs={6} md={4}>
-          <Typography>0000-00-00</Typography>
+          <Typography data-testid="date_created">{dateToString(data.createdAt)}</Typography>
         </Grid>
-      </Grid> */}
+      </Grid>
 
-      <Grid container style={{ padding: '10px 0' }}>
+      <Grid container className={classes.inlineContainer}>
         <Grid item xs={4}>
-          <Typography style={{ marginTop: '6px' }}>{t('task.assigned_to_txt')}</Typography>
+          <Typography variant="body1" className={classes.title}>{t('task.assigned_to_txt')}</Typography>
         </Grid>
         <Grid item xs={8}>
           {data.assignees.map(user => (
@@ -161,17 +161,17 @@ export default function TaskInfoTop({
         </Grid>
       </Grid> */}
       {
-  data.description && (
-  <Grid container style={{ padding: '5px 0 25px 0' }}>
-    <Grid item xs={12}>
-      <Typography>{t('common:form_fields.description')}</Typography>
-      <Typography style={{ color: '#575757' }} variant="body2">
-        {data.description}
-      </Typography>
-    </Grid>
-  </Grid>
-  )
-}
+        data.description && (
+        <Grid container style={{ padding: '5px 0 25px 0' }}>
+          <Grid item xs={12}>
+            <Typography variant="body1" className={classes.title}>{t('common:form_fields.description')}</Typography>
+            <Typography style={{ color: '#575757' }} variant="body2">
+              {data.description}
+            </Typography>
+          </Grid>
+        </Grid>
+        )
+      }
     </Grid>
   );
 }
@@ -182,6 +182,12 @@ const useStyles = makeStyles({
     '& a': {
       textDecoration: 'none'
     }
+  },
+  title: {
+    fontWeight: 500
+  },
+  inlineContainer: {
+    padding: '10px 0'
   }
 });
 

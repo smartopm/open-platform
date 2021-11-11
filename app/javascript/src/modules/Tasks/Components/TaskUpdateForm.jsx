@@ -270,232 +270,27 @@ export default function TaskForm({
 
         {type === 'task' ? (
           <>
-            <br />
-            <div
-              style={{
-                display: 'inline-flex',
-                margin: '5px 0 10px 0'
-              }}
-            >
-              <FormHelperText
-                style={{
-                  margin: '4px 4px 0 0'
-                }}
-              >
-                {t('task.task_body_label')}
-              </FormHelperText>
-              <Tooltip title={t('task.toggle_preview_tooltip')}>
-                <Visibility
-                  data-testid="preview_task_body_btn"
-                  style={{
-                    cursor: 'pointer',
-                    margin: '5px 6px 0 0',
-                    fontSize: 17
-                  }}
-                  onClick={() => setMode('preview')}
-                />
-              </Tooltip>
-              <Tooltip title={t('task.toggle_edit_tooltip')}>
-                <EditIcon
-                  data-testid="edit_task_body_btn"
-                  style={{
-                    cursor: 'pointer',
-                    margin: '5px 6px 0 0',
-                    fontSize: 17
-                  }}
-                  color="primary"
-                  onClick={() => setMode('edit')}
-                />
-              </Tooltip>
-            </div>
-            {mode === 'preview' && (
-              <p>
-                <span
-                  // eslint-disable-next-line react/no-danger
-                  dangerouslySetInnerHTML={{
-                    __html: sanitizeText(title)
-                  }}
-                />
-              </p>
-            )}
-            {mode === 'edit' && (
-              <TextField
-                name="task_body"
-                placeholder={t('common:form_placeholders.note_body')}
-                style={{ width: '100%' }}
-                onChange={e => setTitle(e.target.value)}
-                value={title}
-                multiline
-                fullWidth
-                rows={2}
-                margin="normal"
-                inputProps={{
-                  'aria-label': 'task_body'
-                }}
-                InputLabelProps={{
-                  shrink: true
-                }}
-                required
-              />
-            )}
-
-            <TextField
-              name="task_description"
-              label={t('task.task_description_label')}
-              placeholder={t('common:form_placeholders.note_description')}
-              style={{ width: '100%' }}
-              onChange={e => setDescription(e.target.value)}
-              value={description || ''}
-              multiline
-              fullWidth
-              rows={2}
-              margin="normal"
-              inputProps={{
-                'aria-label': 'task_description'
-              }}
-              InputLabelProps={{
-                shrink: true
-              }}
+            <TaskInfoTop
+              users={users}
+              data={data}
+              setDate={setDueDate}
+              selectedDate={selectedDate}
+              assignUser={assignUser}
+              autoCompleteOpen={autoCompleteOpen}
+              handleOpenAutoComplete={handleOpenAutoComplete}
+              liteData={liteData}
+              setSearchUser={setSearchUser}
+              searchUser={searchUser}
             />
-            <br />
-            <FormControl fullWidth>
-              <InputLabel id="taskType">{t('task.task_type_label')}</InputLabel>
-              <Select
-                id="taskType"
-                value={taskType}
-                onChange={event => setTaskType(event.target.value)}
-                name="taskType"
-                fullWidth
-              >
-                {Object.entries(NotesCategories).map(([key, val]) => (
-                  <MenuItem key={key} value={key}>
-                    {val}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-            <br />
-            <FormHelperText>{t('task.task_user_label')}</FormHelperText>
-            <UserChip
-              user={{
-                name: userData.user,
-                id: userData.userId,
-                imageUrl: userData.imageUrl
-              }}
-            />
-            <br />
-            <div>
-              <FormHelperText>{t('common:form_placeholders.note_due_date')}</FormHelperText>
-              <DatePickerDialog
-                handleDateChange={date => setDate(date)}
-                selectedDate={selectedDate}
-              />
-            </div>
-            <FormControl fullWidth>
-              <FormHelperText>{pluralizeCount(data?.assignees.length, 'Assignee')}</FormHelperText>
-              <div>
-                {data.assignees.map(user => (
-                  <UserChip
-                    key={user.id}
-                    user={user}
-                    size="medium"
-                    onDelete={() => assignUser(data.id, user.id)}
-                  />
-                ))}
-                <Chip
-                  key={data.id}
-                  variant="outlined"
-                  label={autoCompleteOpen ? t('task.chip_close') : t('task.chip_add_assignee')}
-                  size="medium"
-                  icon={autoCompleteOpen ? <CancelIcon /> : <AddCircleIcon />}
-                  onClick={event => handleOpenAutoComplete(event, data.id)}
-                />
-                {autoCompleteOpen && (
-                  <Autocomplete
-                    disablePortal
-                    id={data.id}
-                    options={liteData?.usersLite || users}
-                    ListboxProps={{ style: { maxHeight: '20rem' } }}
-                    renderOption={option => <UserAutoResult user={option} />}
-                    name="assignees"
-                    onChange={(_evt, value) => {
-                      if (!value) {
-                        return;
-                      }
-                      assignUser(data.id, value.id);
-                    }}
-                    getOptionLabel={option =>
-                      allowedAssignees.includes(option.userType) ? option.name : ''
-                    }
-                    renderInput={params => (
-                      <TextField
-                        {...params}
-                        variant="standard"
-                        label={t('task.task_assignee_label')}
-                        placeholder={t('task.task_search_placeholder')}
-                        onChange={event => setSearchUser(event.target.value)}
-                        onKeyDown={() => searchUser()}
-                      />
-                    )}
-                  />
-                )}
-              </div>
-            </FormControl>
-            <br />
-            <br />
-            <FormControlLabel
-              control={(
-                <Checkbox
-                  disabled={loading}
-                  checked={taskStatus}
-                  onChange={handleTaskComplete}
-                  name="mark_task_complete"
-                  color="primary"
-                  data-testid="mark_task_complete_checkbox"
-                />
-              )}
-              label={
-                !taskStatus
-                  ? t('common:form_actions.note_complete')
-                  : t('common:form_actions.note_incomplete')
-              }
-            />
-            <br />
-            <CenteredContent>
-              <Button
-                variant="contained"
-                type="submit"
-                color="primary"
-                disabled={loading}
-                aria-label="task_submit"
-                disableElevation
-              >
-                {loading
-                  ? t('common:form_actions.updating_task')
-                  : t('common:form_actions.update_task')}
-              </Button>
-            </CenteredContent>
-            <p className="text-center">{Boolean(error.length) && error}</p>
             <TaskComment authState={authState} taskId={taskId} />
+            <TaskDocuments documents={data.attachments} />
           </>
         ) : (
           <TaskUpdateList data={historyData} />
-        )}
+          )}
       </form>
 
-      <TaskInfoTop
-        users={users}
-        data={data}
-        setDate={setDueDate}
-        selectedDate={selectedDate}
-        assignUser={assignUser}
-        autoCompleteOpen={autoCompleteOpen}
-        handleOpenAutoComplete={handleOpenAutoComplete}
-        liteData={liteData}
-        setSearchUser={setSearchUser}
-        searchUser={searchUser}
-      />
-      <TaskDocuments documents={data.attachments} />
+
     </>
   );
 }

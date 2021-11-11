@@ -41,7 +41,8 @@
     "created": "Created",
     "assigned_to": "Assigned to",
     "due_date": "Due Date: ",
-    "no_assignee": "No Assignee"
+    "no_assignee": "No Assignee",
+    "date_created": "Date Created"
   },
   "document": {
     "uploaded_at": "Uploaded at",

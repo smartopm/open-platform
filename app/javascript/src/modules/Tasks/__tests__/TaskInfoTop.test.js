@@ -44,6 +44,8 @@ describe('Top part of the task form component', () => {
     );
 
     expect(container.getByTestId('task-details-breadcrumb')).toBeInTheDocument();
+    expect(container.getByTestId('date_created_title')).toBeInTheDocument();
+    expect(container.getByTestId('date_created')).toBeInTheDocument();
     expect(container.queryByText('task.due_date_text')).toBeInTheDocument();
     expect(container.queryByText('task.assigned_to_txt')).toBeInTheDocument();
     expect(container.queryByText('task.chip_add_assignee')).toBeInTheDocument();
