@@ -14,7 +14,7 @@ import MoreVertIcon from '@material-ui/icons/MoreVert';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import { dateToString } from '../../../components/DateContainer';
-import CenteredContent from '../../../components/CenteredContent';
+import CenteredContent from '../../../shared/CenteredContent';
 
 export default function TaskDocuments({ documents }) {
   const [anchorEl, setAnchorEl] = useState(null);
