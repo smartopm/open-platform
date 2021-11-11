@@ -275,7 +275,6 @@ export default function PaymentModal({
 
   return (
     <>
-      {console.log(paymentData)}
       <MessageAlert
         type={isSuccessAlert ? 'success' : 'error'}
         message={messageAlert}
