@@ -1,9 +1,10 @@
 import React from 'react';
 import { BrowserRouter } from 'react-router-dom/cjs/react-router-dom.min';
-import { render } from '@testing-library/react';
+import { render, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { MockedProvider } from '@apollo/react-testing';
 import TaskInfoTop from '../Components/TaskInfoTop';
+import { UpdateNote } from '../../../graphql/mutations';
 
 const data = {
   id: '6v2y3etyu2g3eu2',
@@ -53,7 +54,8 @@ describe('Top part of the task form component', () => {
     expect(container.queryByText('common:form_fields.description')).not.toBeInTheDocument();
     expect(container.queryByText('task.chip_close')).not.toBeInTheDocument();
     expect(container.queryByText('task.task_assignee_label')).not.toBeInTheDocument();
-
+  });
+  it('shows the descripton', async () => {
     const newProps = {
       ...props,
       data: {
@@ -64,8 +66,29 @@ describe('Top part of the task form component', () => {
       },
       autoCompleteOpen: true,
     };
+    const updateMock = {
+      request: {
+        query: UpdateNote,
+        variables: { id: newProps.data.id, description: newProps.data.description }
+      },
+      result: {
+        data: {
+          noteUpdate: {
+            note: {
+              id: data.id,
+              flagged: true,
+              body: "some parent body",
+              dueDate: "",
+              parentNote:  {
+                id: "1234"
+              }
+            }
+          }
+        }
+      }
+    }
     const container2 = render(
-      <MockedProvider>
+      <MockedProvider mocks={[updateMock]} addTypename={false}>
         <BrowserRouter>
           <TaskInfoTop {...newProps} />
         </BrowserRouter>
@@ -79,5 +102,19 @@ describe('Top part of the task form component', () => {
 
     expect(container2.queryByTestId('editable_description')).toBeInTheDocument();
 
-  });
+    // show the edit button and click on update button to trigger the mutation
+    fireEvent.mouseEnter(container2.queryByTestId('editable_description'))
+    expect(container2.queryByTestId('edit_icon')).toBeInTheDocument();
+
+    fireEvent.click(container2.queryByTestId('edit_icon'))
+    expect(container2.queryByTestId('edit_action')).toBeInTheDocument();
+
+    fireEvent.click(container2.queryByTestId('edit_action_btn'))
+    expect(container2.queryByTestId('edit_action_btn')).toBeDisabled();
+    expect(container2.queryByTestId('edit_action_btn').textContent).toContain('common:form_actions.update');
+
+    await waitFor(() => {
+      expect(container2.queryByText('task.update_successful')).toBeInTheDocument();
+    }, 10)
+  })
 });

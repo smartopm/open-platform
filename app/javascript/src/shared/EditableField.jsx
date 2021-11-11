@@ -29,7 +29,7 @@ export default function EditableField({ value, setValue, action }) {
       <Grid item xs={10}>
         <TextField
           name="email"
-          defaultValue={value}
+          value={value}
           margin="normal"
           fullWidth
           onChange={handleChange}
@@ -47,7 +47,7 @@ export default function EditableField({ value, setValue, action }) {
             'data-testid':'editable_description',
             endAdornment: mouseOver && (
               <InputAdornment position="end">
-                <IconButton onClick={handleClick}>
+                <IconButton onClick={handleClick} data-testid="edit_icon">
                   <Edit />
                 </IconButton>
               </InputAdornment>
@@ -56,7 +56,7 @@ export default function EditableField({ value, setValue, action }) {
         />
       </Grid>
       {isEditMode && (
-        <Grid item xs={2}>
+        <Grid item xs={2} data-testid="edit_action">
           {action}
         </Grid>
       )}

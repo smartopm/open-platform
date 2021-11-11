@@ -50,7 +50,6 @@ export default function TaskInfoTop({
     event.preventDefault();
     history.push(`/tasks/${parent.id}`);
   }
-
   // shamelessly update here to manager loaders properly
   function updateDescription() {
     setLoadingStatus(true);
@@ -204,6 +203,8 @@ export default function TaskInfoTop({
               action={(
                 <Button
                   variant="outlined"
+                  disabled={loading}
+                  data-testid="edit_action_btn"
                   onClick={updateDescription}
                   startIcon={loading && <Spinner />}
                 >
