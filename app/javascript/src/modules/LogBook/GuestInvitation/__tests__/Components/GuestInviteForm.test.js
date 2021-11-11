@@ -82,7 +82,7 @@ describe('Guest Invitation Form', () => {
 
     await waitFor(() => {
       expect(queryAllByText('logbook:errors.required_field')[0]).toBeInTheDocument();
-      expect(queryAllByText('logbook:errors.required_field')).toHaveLength(3);
+      expect(queryAllByText('logbook:errors.required_field')).toHaveLength(2);
       expect(mockHistory.push).not.toBeCalled(); // due to failure in validation
     }, 10);
   });
