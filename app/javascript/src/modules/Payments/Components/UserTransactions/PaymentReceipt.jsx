@@ -26,8 +26,7 @@ export default function PaymentReceipt({ paymentData, open, handleClose, currenc
               <div key={pay.id} style={{paddingBottom: '250px'}}>
                 <ReceiptDetail 
                   paymentData={pay} 
-                  currencyData={currencyData}
-                  // planDetail={pay}  
+                  currencyData={currencyData} 
                 />
               </div>
             ))
