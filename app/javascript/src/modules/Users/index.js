@@ -72,8 +72,7 @@ export const Logout = {
     component: RenderUserProfile
   },
   styleProps: {
-    icon: <ExitToAppIcon />,
-    className: 'logout-menu-item'
+    icon: <ExitToAppIcon />
   },
   name: t => t('menu.logout'),
   featureName: 'Logout',
