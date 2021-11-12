@@ -228,7 +228,7 @@ export default function LogEvents({
                   </Grid>
                 </Grid>
               </Grid>
-              <Hidden mdDown>
+              <Hidden smDown>
                 <Grid item md={1} style={{textAlign: 'right'}}>
                   <IconButton
                     aria-controls="sub-menu"

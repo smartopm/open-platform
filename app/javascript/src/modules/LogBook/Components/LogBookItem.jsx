@@ -9,7 +9,8 @@ import { useApolloClient, useMutation } from 'react-apollo';
 import Hidden from '@material-ui/core/Hidden';
 import { useTranslation } from 'react-i18next';
 import makeStyles from '@material-ui/core/styles/makeStyles';
-import SpeedDialIcon from '@material-ui/lab/SpeedDialIcon';
+import PersonIcon from '@material-ui/icons/Person';
+import VisibilityIcon from '@material-ui/icons/Visibility';
 import Grid from '@material-ui/core/Grid';
 import { StyledTabs, StyledTab, TabPanel, a11yProps } from '../../../components/Tabs';
 import LogEvents from './LogEvents';
@@ -73,12 +74,12 @@ export default function LogBookItem({
 
   const actions = [
     {
-      icon: <SpeedDialIcon />,
+      icon: <PersonIcon />,
       name: t('logbook.new_invite'),
       handleClick: () => router.push(`/logbook/guests/invite`)
     },
     {
-      icon: <SpeedDialIcon />,
+      icon: <VisibilityIcon />,
       name: t('logbook.add_observation'),
       handleClick: () => setIsObservationOpen(true)
     }
@@ -240,8 +241,8 @@ export default function LogBookItem({
       <Grid container className={matches ?  classes.containerMobile : classes.container}>
         <Grid item md={11} xs={11}>
           <Grid container>
-            <Grid item md={12} xs={8}><Typography variant="h4">{t('logbook.log_book')}</Typography></Grid>
-            <Hidden mdUp>
+            <Grid item md={11} xs={10}><Typography variant="h4">{t('logbook.log_book')}</Typography></Grid>
+            <Hidden smUp>
               <Grid item md={1} xs={2}>
                 <SpeedDial
                   open={open}
@@ -313,7 +314,7 @@ export default function LogBookItem({
             />
           </TabPanel>
         </Grid>
-        <Hidden mdDown>
+        <Hidden xsDown>
           <Grid item md={1} xs={1}>
             <SpeedDial
               open={open}

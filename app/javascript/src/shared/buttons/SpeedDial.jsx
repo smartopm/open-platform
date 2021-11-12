@@ -20,7 +20,7 @@ export default function SpeedDialButton({
   const matches = useMediaQuery('(max-width:800px)');
 
   return (
-    <div className={classes.wrapper} style={actions.length > 0 ? {height: 200} : {}} data-testid="speed-dial">
+    <div className={classes.wrapper} data-testid="speed-dial">
       <SpeedDial
         ariaLabel="SpeedDial"
         className={classes.speedDial}
