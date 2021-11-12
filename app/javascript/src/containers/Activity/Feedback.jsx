@@ -10,6 +10,7 @@ import ThumbUpIcon from '@material-ui/icons/ThumbUp';
 import IconButton from '@material-ui/core/IconButton';
 import { useMutation } from 'react-apollo';
 import { Button, CircularProgress, TextField } from '@material-ui/core';
+import { useTranslation } from 'react-i18next';
 import { createFeedback } from '../../graphql/mutations';
 
 const redLike = 'rgb(299, 63, 69)';
@@ -44,7 +45,7 @@ export function Feedback(props) {
   const [feedback, setFeedback] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [feedbackCreate] = useMutation(createFeedback);
-
+  const { t } = useTranslation(['feedback', 'common']);
   function handleThumbDown() {
     setTextAreaOpen(!isTextAreaOpen);
   }
@@ -115,7 +116,7 @@ export function Feedback(props) {
           <form data-testid="feedback-form">
             <div className="form-group">
               <label htmlFor="feedback">
-                We value your feedback. Do you have a suggestion on how we can improve?
+                {t('feedback.value_your_feedback')}
               </label>
               <br />
               <TextField
@@ -134,7 +135,7 @@ export function Feedback(props) {
               onClick={handleSkipReview}
               color="secondary"
             >
-              Skip
+              {t('actions.skip')}
             </Button>
             <Button
               variant="outlined"
@@ -142,7 +143,7 @@ export function Feedback(props) {
               onClick={handleSubmitFeedback}
               color="primary"
             >
-              Submit
+              {t('common:form_actions.submit')}
             </Button>
           </form>
         )}
