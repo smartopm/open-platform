@@ -60,7 +60,8 @@ describe('Community settings page', () => {
       smsPhoneNumbers: ["+254724821901", "+254723456789"],
       emergencyCallNumber: "+94848584844",
       features: { LogBook: { features: []} },
-      themeColors: { primaryColor: '#69ABA4', secondaryColor: '#cf5628' }
+      themeColors: { primaryColor: '#69ABA4', secondaryColor: '#cf5628' },
+      imageUrl: 'https://some-image.png'
     };
 
     const communityMutationMock = {
@@ -193,9 +194,13 @@ describe('Community settings page', () => {
     expect(container.queryByTestId('taxIdNo')).toBeInTheDocument();
     expect(container.queryByTestId('smsPhoneNumber')).toBeInTheDocument();
     expect(container.queryByTestId('emergencyCallNumber')).toBeInTheDocument();
-    expect(container.queryByTestId('payment_reminder_template_behind')).toBeInTheDocument();
+
+    await waitFor(() => {
+      expect(container.queryByTestId('payment_reminder_template_behind')).toBeInTheDocument();
+      expect(container.queryByTestId('payment_reminder_template_upcoming')).toBeInTheDocument();
+    }, 10)
+
     expect(container.queryByTestId('plan_status_behind')).toBeInTheDocument();
-    expect(container.queryByTestId('payment_reminder_template_upcoming')).toBeInTheDocument();
     expect(container.queryByTestId('plan_status_upcoming')).toBeInTheDocument();
     expect(container.queryByTestId('disable_deny_gate_access')).toBeInTheDocument();
     expect(container.queryByTestId('enable_automated_task_reminders')).toBeInTheDocument();
@@ -206,40 +211,40 @@ describe('Community settings page', () => {
     fireEvent.change(container.queryByTestId('payment_reminder_template_upcoming'), { target: { value: 'payment_reminder_template' } });
     expect(container.queryByTestId('payment_reminder_template_upcoming').value).toBe('payment_reminder_template');
 
-    fireEvent.select(container.queryByTestId('locale'), { target: { value: 'en-US' } });
+    fireEvent.change(container.queryByTestId('locale'), { target: { value: 'en-US' } });
     expect(container.queryByTestId('locale').value).toBe('en-US');
 
-    fireEvent.select(container.queryByTestId('currency'), { target: { value: 'zambian_kwacha' } });
+    fireEvent.change(container.queryByTestId('currency'), { target: { value: 'zambian_kwacha' } });
     expect(container.queryByTestId('currency').value).toBe('zambian_kwacha');
 
-    fireEvent.select(container.queryByTestId('accountName'), { target: { value: 'Thebe' } });
+    fireEvent.change(container.queryByTestId('accountName'), { target: { value: 'Thebe' } });
     expect(container.queryByTestId('accountName').value).toBe('Thebe');
 
-    fireEvent.select(container.queryByTestId('accountNo'), { target: { value: '1234' } });
+    fireEvent.change(container.queryByTestId('accountNo'), { target: { value: '1234' } });
     expect(container.queryByTestId('accountNo').value).toBe('1234');
 
-    fireEvent.select(container.queryByTestId('bankName'), { target: { value: 'UBA' } });
+    fireEvent.change(container.queryByTestId('bankName'), { target: { value: 'UBA' } });
     expect(container.queryByTestId('bankName').value).toBe('UBA');
 
-    fireEvent.select(container.queryByTestId('branch'), { target: { value: 'LU' } });
+    fireEvent.change(container.queryByTestId('branch'), { target: { value: 'LU' } });
     expect(container.queryByTestId('branch').value).toBe('LU');
 
-    fireEvent.select(container.queryByTestId('swiftCode'), { target: { value: 'xyz' } });
+    fireEvent.change(container.queryByTestId('swiftCode'), { target: { value: 'xyz' } });
     expect(container.queryByTestId('swiftCode').value).toBe('xyz');
 
-    fireEvent.select(container.queryByTestId('sortCode'), { target: { value: '067' } });
+    fireEvent.change(container.queryByTestId('sortCode'), { target: { value: '067' } });
     expect(container.queryByTestId('sortCode').value).toBe('067');
 
-    fireEvent.select(container.queryByTestId('address'), { target: { value: '11 Sub' } });
+    fireEvent.change(container.queryByTestId('address'), { target: { value: '11 Sub' } });
     expect(container.queryByTestId('address').value).toBe('11 Sub');
 
-    fireEvent.select(container.queryByTestId('city'), { target: { value: 'woodlands' } });
+    fireEvent.change(container.queryByTestId('city'), { target: { value: 'woodlands' } });
     expect(container.queryByTestId('city').value).toBe('woodlands');
 
-    fireEvent.select(container.queryByTestId('country'), { target: { value: 'zambia' } });
+    fireEvent.change(container.queryByTestId('country'), { target: { value: 'zambia' } });
     expect(container.queryByTestId('country').value).toBe('zambia');
 
-    fireEvent.select(container.queryByTestId('taxIdNo'), { target: { value: '432' } });
+    fireEvent.change(container.queryByTestId('taxIdNo'), { target: { value: '432' } });
     expect(container.queryByTestId('taxIdNo').value).toBe('432');
 
     fireEvent.click(container.queryByTestId('email_click'));
@@ -276,7 +281,7 @@ describe('Community settings page', () => {
 
     expect(container.queryByTestId('update_community')).toBeDisabled();
 
-    fireEvent.select(container.queryByTestId('emergencyCallNumber'), { target: { value: '+94848584844' } });
+    fireEvent.change(container.queryByTestId('emergencyCallNumber'), { target: { value: '+94848584844' } });
     expect(container.queryByTestId('emergencyCallNumber').value).toBe('+94848584844');
 
     await waitFor(() => {

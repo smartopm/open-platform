@@ -930,26 +930,28 @@ export default function CommunitySettings({ data, refetch }) {
             }}
             disabled
           />
-          <TextField
-            margin="normal"
-            id="payment-reminder-behind"
-            aria-label="payment reminder behind"
-            label={t('community.select_template')}
-            value={behindTemplate}
-            onChange={handleTemplates}
-            name="behindTemplate"
-            inputProps={{
-              'data-testid': 'payment_reminder_template_behind'
-            }}
-            style={{ width: '200px', marginLeft: '40px' }}
-            select
-          >
-            {emailTemplatesData?.emailTemplates?.map(template => (
-              <MenuItem key={template.id} value={template?.id}>
-                {template?.name}
-              </MenuItem>
-            ))}
-          </TextField>
+          {!!emailTemplatesData?.emailTemplates?.length && (
+            <TextField
+              margin="normal"
+              id="payment-reminder-behind"
+              aria-label="payment reminder behind"
+              label={t('community.select_template')}
+              value={behindTemplate}
+              onChange={handleTemplates}
+              name="behindTemplate"
+              inputProps={{
+                'data-testid': 'payment_reminder_template_behind'
+              }}
+              style={{ width: '200px', marginLeft: '40px' }}
+              select
+            >
+              {emailTemplatesData?.emailTemplates?.map(template => (
+                <MenuItem key={template.id} value={template?.id}>
+                  {template?.name}
+                </MenuItem>
+              ))}
+            </TextField>
+          )}
         </div>
         <div style={{ display: 'flex', flexDirection: 'row', margin: '10px 0' }}>
           <TextField
@@ -966,26 +968,28 @@ export default function CommunitySettings({ data, refetch }) {
             }}
             disabled
           />
-          <TextField
-            margin="normal"
-            id="payment-reminder-upcoming"
-            aria-label="payment reminder upcoming"
-            label={t('community.select_template')}
-            value={upcomingTemplate}
-            onChange={handleTemplates}
-            name="upcomingTemplate"
-            inputProps={{
-              'data-testid': 'payment_reminder_template_upcoming'
-            }}
-            style={{ width: '200px', marginLeft: '40px' }}
-            select
-          >
-            {emailTemplatesData?.emailTemplates?.map(template => (
-              <MenuItem key={template.id} value={template?.id}>
-                {template?.name}
-              </MenuItem>
-            ))}
-          </TextField>
+          {!!emailTemplatesData?.emailTemplates?.length && (
+            <TextField
+              margin="normal"
+              id="payment-reminder-upcoming"
+              aria-label="payment reminder upcoming"
+              label={t('community.select_template')}
+              value={upcomingTemplate}
+              onChange={handleTemplates}
+              name="upcomingTemplate"
+              inputProps={{
+                'data-testid': 'payment_reminder_template_upcoming'
+              }}
+              style={{ width: '200px', marginLeft: '40px' }}
+              select
+            >
+              {emailTemplatesData?.emailTemplates?.map(template => (
+                <MenuItem key={template.id} value={template?.id}>
+                  {template?.name}
+                </MenuItem>
+              ))}
+            </TextField>
+          )}
         </div>
       </div>
 
