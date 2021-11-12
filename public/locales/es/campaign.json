@@ -1,0 +1,35 @@
+{
+  "actions": {
+    "create_campaign": "Crear campaña",
+    "delete_campaign": "Borrar campaña ",
+    "update_campaign": "Actualizar campaña"
+  },
+  "campaign": {
+    "draft": "Borrador",
+    "more_details": "Más detalles",
+    "scheduled_date": "Fecha programada",
+    "scheduled_time": "Hora programada",
+    "status": "Estado",
+    "success": "Exito Total",
+    "total_clicked": "total de clics",
+    "total_scheduled": "Total programado",
+    "total_sent": "Total enviado"
+  },
+  "form_fields": {
+    "assign_label": "Asignar etiqueta",
+    "campaign_name": "Nombre de la campaña",
+    "campaign_type": "Tipo de campaña",
+    "email": "Correo electrónico",
+    "message": "Mensaje",
+    "reply_link": "Incluir enlace de respuesta",
+    "sms": "SMS",
+    "user_id_list": "Lista de usuarios"
+  },
+  "message": {
+    "sure_to_delete": "¿Estás seguro de que deseas eliminar esta campaña?"
+  },
+  "misc": {
+    "no": "No",
+    "yes": "Si"
+  }
+}
