@@ -27,10 +27,6 @@ describe('It should test the payment receipt modal component', () => {
         parcelNumber: 'P4444'
       }
     },
-    // planPayments: [{
-    //   id: '27397iy2gr',
-      
-    // }],
     user: {
       id: 'ui3iiui3',
       name: 'some name',
