@@ -28,6 +28,15 @@ describe('Should render Guest Book Component', () => {
               imageUrl: 'https://lh3.googleusercontent.com',
               avatarUrl: null
             },
+            accessHours: [
+              {
+                visitEndDate: null,
+                visitationDate: '2021-08-20T10:51:00+02:00',
+                endsAt: '2021-10-31 22:51',
+                startsAt: '2021-10-31 02:51',
+                occursOn: []
+              }
+            ],
             occursOn: [],
             visitEndDate: null,
             visitationDate: '2021-08-20T10:51:00+02:00',
@@ -35,6 +44,7 @@ describe('Should render Guest Book Component', () => {
             startTime: '2021-10-31 02:51',
             endsAt: '2021-10-31 22:51',
             startsAt: '2021-10-31 02:51',
+            exitedAt: '2021-10-31 22:51',
             revoked: true
           },
           {
@@ -46,6 +56,15 @@ describe('Should render Guest Book Component', () => {
               imageUrl: 'https://lh3.googleusercontent.com/a-/',
               avatarUrl: null
             },
+            accessHours: [
+              {
+                visitEndDate: null,
+                visitationDate: '2021-08-20T10:51:00+02:00',
+                endsAt: '2021-10-31 22:51',
+                startsAt: '2021-10-31 02:51',
+                occursOn: []
+              }
+            ],
             occursOn: [],
             visitEndDate: null,
             visitationDate: '2021-08-31T10:20:21+02:00',
@@ -53,6 +72,7 @@ describe('Should render Guest Book Component', () => {
             startTime: '2021-10-31 02:51',
             endsAt: '2021-10-31 22:51',
             startsAt: '2021-10-31 02:51',
+            exitedAt: '2021-10-31 22:51',
             revoked: false
           }
         ]
@@ -67,7 +87,14 @@ describe('Should render Guest Book Component', () => {
         <MockedProvider mocks={[mocks]} addTypename={false}>
           <BrowserRouter>
             <MockedThemeProvider>
-              <GuestBook tabValue={2} handleAddObservation={observe} offset={0} limit={50} query="" scope={null} />
+              <GuestBook
+                tabValue={2}
+                handleAddObservation={observe}
+                offset={0}
+                limit={50}
+                query=""
+                scope={null}
+              />
             </MockedThemeProvider>
           </BrowserRouter>
         </MockedProvider>

@@ -128,7 +128,7 @@ export default function VisitView({
                 <Typography variant="caption">
                   {
                   visit.exitedAt
-                    ? t('guest_book.exited_at', { time: dateToString(visit.exitedAt, 'YYYY-MM-DD hh:mm') })
+                    ? t('guest_book.exited_at', { time: dateToString(visit.exitedAt, 'YYYY-MM-DD HH:mm') })
                     : '-'
                 }
                 </Typography>
