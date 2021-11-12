@@ -110,6 +110,12 @@ phrase:
         locale_id: 5c6c3e050e8493da0e428087555a7b00
         tags: support-contact
         update_translations: true
+    - file: ./public/locales/en/campaign.json
+      params:
+        file_format: i18next
+        locale_id: 5c6c3e050e8493da0e428087555a7b00
+        tags: campaign
+        update_translations: true
     - file: ./config/locales/en.yml
       params:
         file_format: yml
@@ -171,6 +177,11 @@ phrase:
         file_format: i18next
         locale_id: fa26b7d00b593c4578f0e9749221cace
         tags: support-contact
+    - file: ./public/locales/es/campaign.json
+      params:
+        file_format: i18next
+        locale_id: fa26b7d00b593c4578f0e9749221cace
+        tags: campaign
     - file: ./config/locales/es.yml
       params:
         file_format: yml
@@ -258,6 +269,11 @@ phrase:
         file_format: i18next
         locale_id: fa26b7d00b593c4578f0e9749221cace
         tags: support-contact
+    - file: ./public/locales/es/campaign.json
+      params:
+        file_format: i18next
+        locale_id: fa26b7d00b593c4578f0e9749221cace
+        tags: campaign
     - file: ./config/locales/es.yml
       params:
         file_format: yml
