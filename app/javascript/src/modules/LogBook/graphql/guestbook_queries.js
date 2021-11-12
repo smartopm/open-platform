@@ -14,6 +14,13 @@ export const GuestEntriesQuery = gql`
         imageUrl
         avatarUrl
       }
+      accessHours {
+        occursOn
+        visitEndDate
+        visitationDate
+        endsAt
+        startsAt
+      }
       occursOn
       visitEndDate
       visitationDate

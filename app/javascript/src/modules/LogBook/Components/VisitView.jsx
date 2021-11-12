@@ -13,11 +13,11 @@ import Avatar from '@material-ui/core/Avatar';
 import { GuestEntriesQuery } from '../graphql/guestbook_queries';
 import { Spinner } from '../../../shared/Loading';
 import Card from '../../../shared/Card';
-import { dateTimeToString, dateToString } from '../../../components/DateContainer';
+import { dateToString } from '../../../components/DateContainer';
 import Label from '../../../shared/label/Label';
 import Text from '../../../shared/Text';
 import CenteredContent from '../../../components/CenteredContent';
-import { checkRequests } from '../utils';
+import { IsAnyRequestValid } from '../utils';
 import { EntryRequestGrant } from '../../../graphql/mutations';
 import MessageAlert from '../../../components/MessageAlert';
 
@@ -78,6 +78,8 @@ export default function VisitView({
       loadGuests();
     }
   }, [tabValue, loadGuests, query, offset]);
+
+
   return (
     <div style={{ marginTop: '20px' }}>
       {error && <CenteredContent>error.message</CenteredContent>}
@@ -122,31 +124,31 @@ export default function VisitView({
                   {t('guest_book.start_of_visit', { date: dateToString(visit.visitationDate) })}
                 </Typography>
               </Grid>
-              <Grid item md={2} xs={6} style={!matches ? { paddingTop: '15px' } : {}}>
+              {/* <Grid item md={2} xs={6} style={!matches ? { paddingTop: '15px' } : {}}>
                 <Typography variant="caption">
                   {visit.visitEndDate
                     ? t('guest_book.ends_on_date', { date: dateToString(visit.visitEndDate) })
                     : t('guest_book.ends_on_date', { date: dateToString(visit.visitationDate) })}
                 </Typography>
-              </Grid>
+              </Grid> */}
               <Grid item md={2} xs={6} style={!matches ? { paddingTop: '15px' } : {}}>
-                <Typography variant="caption">
+                {/* <Typography variant="caption">
                   {t('guest_book.visit_time', {
-                    startTime: dateTimeToString(visit.startsAt || visit.startTime),
-                    endTime: dateTimeToString(visit.endsAt || visit.endTime)
+                    startTime: dateTimeToString(findClosestEntry(visit.accessHours, timeZone)?.startsAt),
+                    endTime: dateTimeToString(findClosestEntry(visit.accessHours, timeZone)?.endsAt)
                   })}
-                </Typography>
+                </Typography> */}
                 <br />
                 <Label
-                  title={checkRequests(visit, t, timeZone).title}
-                  color={checkRequests(visit, t, timeZone).color}
+                  title={IsAnyRequestValid(visit.accessHours, t, timeZone) ? t('guest_book.valid') : t('guest_book.invalid_now')}
+                  color={IsAnyRequestValid(visit.accessHours, t, timeZone) ? '#00A98B' : '#E74540'}
                   width="70%"
                 />
               </Grid>
               <Grid item md={2} xs={12} style={!matches ? { paddingTop: '8px' } : {}}>
                 <Button
                   disabled={
-                    !checkRequests(visit, t, timeZone).valid ||
+                    !IsAnyRequestValid(visit.accessHours, t, timeZone) ||
                     (loadingStatus.loading && Boolean(loadingStatus.currentId))
                   }
                   variant="contained"
