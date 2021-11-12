@@ -11,7 +11,7 @@ import t from '../../__mocks__/t'
 describe('Task Data components', () => {
   const menuData = {
     menuList: [
-      { content: t('menu.edit_task'), isAdmin: true, handleClick: jest.fn() },
+      { content: t('menu.open_task_details'), isAdmin: true, handleClick: jest.fn() },
       { content: t('menu.add_subtask'), isAdmin: true, handleClick: jest.fn() },
       { content: t('menu.leave_a_comment'), isAdmin: true, handleClick: jest.fn() },
       { content: t('menu.mark_complete'), isAdmin: true, handleClick: jest.fn() },
@@ -163,7 +163,7 @@ describe('Task Data components', () => {
     expect(menuButton).toBeInTheDocument();
     fireEvent.click(menuButton);
 
-    expect(screen.getByText('menu.edit_task')).toBeInTheDocument();
+    expect(screen.getByText('menu.open_task_details')).toBeInTheDocument();
     expect(screen.getByText('menu.upload_document')).toBeInTheDocument();
     expect(screen.getByText('menu.add_subtask')).toBeInTheDocument();
     expect(screen.getByText('menu.leave_a_comment')).toBeInTheDocument();

@@ -32,7 +32,7 @@ export default function TodoItem({
   const { t } = useTranslation('common')
 
   const menuList = [
-  { content: t('menu.edit_task'), isAdmin: true, handleClick: () =>  handleTaskDetails({id: selectedTask.id}) },
+  { content: t('menu.open_task_details'), isAdmin: true, handleClick: () =>  handleTaskDetails({id: selectedTask.id}) },
     { content: t('menu.add_subtask'), isAdmin: true, handleClick: () => handleAddSubTask({id: selectedTask.id }) },
     {
       content: <FileUploader handleFileInputChange={handleFileInputChange} />,
