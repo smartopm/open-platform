@@ -7,6 +7,7 @@ import {
   Button, TextField, Chip, Snackbar, MenuItem, FormControlLabel, Checkbox
 } from '@material-ui/core'
 import { makeStyles } from '@material-ui/styles'
+import { useTranslation } from 'react-i18next';
 import { DateAndTimePickers } from './DatePickerDialog'
 import {
   CampaignCreate,
@@ -45,7 +46,7 @@ export default function CampaignForm({
   const { id } = useParams() // will only exist on campaign update
   const [formData, setFormData] = useState(initData)
   const [campaignType, setCampaignType] = useState('draft')
-
+  const { t } = useTranslation('campaign');
   const classes = useStyles();
   const handleCampaignType = (_event, newCampaignType) => {
     setCampaignType(newCampaignType);
@@ -158,7 +159,7 @@ export default function CampaignForm({
           }}
         />
         <TextField
-          label="Campaign Type"
+          label={t('form_fields.campaign_type')}
           name="campaignType"
           required
           className="form-control"
@@ -168,12 +169,12 @@ export default function CampaignForm({
           inputProps={{ 'data-testid': 'campaign_type' }}
           select
         >
-          <MenuItem value="sms">SMS</MenuItem>
-          <MenuItem value="email">Email</MenuItem>
+          <MenuItem value="sms">{t('form_fields.sms')}</MenuItem>
+          <MenuItem value="email">{t('form_fields.email')}</MenuItem>
         </TextField>
 
         <TextField
-          label="Campaign Name"
+          label={t('form_fields.campaign_name')}
           name="name"
           required
           className="form-control"
@@ -183,7 +184,7 @@ export default function CampaignForm({
           inputProps={{ 'data-testid': 'campaign_name' }}
         />
         <TextField
-          label="Message"
+          label={t('form_fields.message')}
           name="message"
           rows={2}
           multiline
@@ -204,7 +205,7 @@ export default function CampaignForm({
           </>
         )}
         <TextField
-          label="User ID List"
+          label={t('form_fields.user_id_list')}
           rows={5}
           multiline
           required={campaignType === 'scheduled'}
@@ -244,7 +245,7 @@ export default function CampaignForm({
         <br />
         <div>
           <DateAndTimePickers
-            label="Batch Time"
+            label={t('form_fields.batch_time')}
             required={campaignType === 'scheduled'}
             selectedDateTime={formData.batchTime}
             handleDateChange={handleDateChange}
@@ -262,7 +263,7 @@ export default function CampaignForm({
                 color="primary"
               />
           )}
-            label="Include reply link"
+            label={t('form_fields.reply_link')}
           />
         </div>
         <div className="d-flex row justify-content-center">
@@ -274,7 +275,7 @@ export default function CampaignForm({
             className={`${classes.getStartedButton} enz-lg-btn`}
             color="primary"
           >
-            <span>{id ? 'Update Campaign' : 'Create Campaign'}</span>
+            <span>{id ? t('actions.update_campaign') : t('actions.create_campaign')}</span>
           </Button>
         </div>
         <br />

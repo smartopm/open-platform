@@ -143,6 +143,26 @@ RSpec.describe Mutations::EntryRequest::InvitationCreate do
           expect(result.dig('errors', 0, 'message')).to be_nil
         end
       end
+
+      context 'when user with same email exits but with different case' do
+        it 'raises email has already been taken error' do
+          variables = {
+            name: 'John Doe',
+            email: 'U@ADmin.com',
+            phoneNumber: '9019201920319',
+            visitationDate: '2021-10-10',
+          }
+
+          result = DoubleGdpSchema.execute(invitation_create_mutation,
+                                           variables: variables,
+                                           context: {
+                                             current_user: admin,
+                                             site_community: community,
+                                           }).as_json
+          expect(result.dig('data', 'invitationCreate', 'entryTime', 'id')).to be_nil
+          expect(result.dig('errors', 0, 'message')).to eql 'Email has already been taken'
+        end
+      end
     end
 
     describe '#authorized?' do

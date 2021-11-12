@@ -10,7 +10,7 @@ import { initialRequestState } from '../../GuestVerification/constants';
 import InvitationCreateMutation from '../graphql/mutations';
 import { Spinner } from '../../../../shared/Loading';
 import MessageAlert from '../../../../components/MessageAlert';
-import { capitalize, formatError, objectAccessor, validateEmail } from '../../../../utils/helpers';
+import { capitalize, formatError, objectAccessor } from '../../../../utils/helpers';
 import { checkInValidRequiredFields } from '../../utils';
 import { invitationRequiredFields as requiredFields } from '../constants';
 
@@ -57,18 +57,13 @@ export default function GuestInviteForm({ guest }) {
        setInputValidationMsg({ isError: true });
       return;
     }
-    if (!validateEmail(guestData.email) && !guest?.id) {
-      setDetails({ ...details, message: t('discussion:helper_text.invalid_email'), isError: true });
-      return
-    }
-
     setGuestData({ ...guestData, isLoading: true });
 
     createInvitation({
       variables: {
         guestId: guest?.id,
         name: guestData.name || guest.name,
-        email: guestData.email || guest.email,
+        email: guestData?.email || guest?.email,
         phoneNumber: guestData.phoneNumber || guest.phoneNumber,
         visitationDate: guestData.visitationDate,
         startsAt: guestData.startsAt,
@@ -79,7 +74,7 @@ export default function GuestInviteForm({ guest }) {
     })
       .then(() => {
         setGuestData({ ...guestData, isLoading: false });
-        setDetails({ ...details, message: t('guest.guest_invited') });
+        setDetails({ ...details, isError: false, message: t('guest.guest_invited') });
         setTimeout(() => history.push('/logbook/guests'), 500);
       })
       .catch(error => {
@@ -126,19 +121,6 @@ export default function GuestInviteForm({ guest }) {
           />
           <TextField
             variant="outlined"
-            type="email"
-            value={guestData.email}
-            label={t('common:form_fields.email')}
-            onChange={handleInputChange}
-            name="email"
-            inputProps={{ 'data-testid': 'guest_entry_email' }}
-            margin="normal"
-            {...validate('email')}
-            fullWidth
-            required
-          />
-          <TextField
-            variant="outlined"
             type="text"
             value={guestData.phoneNumber}
             label={t('common:form_fields.phone_number')}
@@ -150,6 +132,19 @@ export default function GuestInviteForm({ guest }) {
             fullWidth
             required
           />
+          <TextField
+            variant="outlined"
+            type="email"
+            value={guestData.email}
+            label={t('common:form_fields.email')}
+            onChange={handleInputChange}
+            name="email"
+            inputProps={{ 'data-testid': 'guest_entry_email' }}
+            margin="normal"
+            {...validate('email')}
+            fullWidth
+          />
+
         </>
       )}
       <GuestTime

@@ -47,9 +47,9 @@ describe('campaign action menu component', () => {
     )
     expect(container.getByTestId("deleteIcon")).toBeInTheDocument()
     fireEvent.click(container.getByTestId("deleteIcon"))
-    expect(container.getByText("Delete Campaign")).toBeInTheDocument()
+    expect(container.getByText("actions.delete_campaign")).toBeInTheDocument()
     fireEvent.click(container.getByTestId("no"))
-    expect(container.queryByText("Delete Campaign")).not.toBeInTheDocument()
+    expect(container.queryByText("actions.delete_campaign")).not.toBeInTheDocument()
     fireEvent.click(container.getByTestId("deleteIcon"))
     fireEvent.click(container.getByTestId("yes"))
 
@@ -59,7 +59,7 @@ describe('campaign action menu component', () => {
     
     await waitFor(
       () => {
-        expect(container.queryByText("Delete Campaign")).not.toBeInTheDocument()
+        expect(container.queryByText("actions.delete_campaign")).not.toBeInTheDocument()
       },
       { timeout: 300 }
     );

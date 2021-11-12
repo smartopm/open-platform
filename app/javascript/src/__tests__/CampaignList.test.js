@@ -56,7 +56,7 @@ describe('Campaign List page', () => {
     await waitFor(() => expect(container.queryByTestId('c_name')).toHaveTextContent('Important'), { timeout: 10 })
     await waitFor(() => {
       const btn = container.queryByTestId('more_details_btn')
-      expect(btn).toHaveTextContent('More Details')
+      expect(btn).toHaveTextContent('campaign.more_details')
     }, { timeout: 10 }
     )
   })

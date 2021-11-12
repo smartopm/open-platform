@@ -423,6 +423,8 @@ es:
     wallet:
       funds_not_sufficient: El monto asignado no es suficiente para el pago
   general:
+    guest_invite_message: Utilice el enlace de invitación %{invite_link} para acceder
+      a la plataforma. Gracias, %{community_name}
     task_reminder: RECORDATORIO, Por favor complete su tarea antes/a la fecha de finalización
       (%{due_date}). Revise su tarea en %{task_link}. Gracias, %{community_name}
     thanks_for_using_our_app: Gracias por usar nuestra aplicación, por favor use este

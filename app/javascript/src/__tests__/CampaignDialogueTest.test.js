@@ -14,6 +14,6 @@ describe('It should render the dialog box for delete', () => {
     />
   )
   it('should render with dialog', () => {
-    expect(container.queryByText('Delete Campaign')).toBeInTheDocument()
+    expect(container.queryByText('actions.delete_campaign')).toBeInTheDocument()
   });
 });

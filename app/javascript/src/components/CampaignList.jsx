@@ -9,6 +9,7 @@ import { useHistory } from 'react-router-dom'
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import Link from '@material-ui/core/Link';
+import { useTranslation } from 'react-i18next';
 import { allCampaigns } from '../graphql/queries'
 import Loading from "../shared/Loading"
 import ErrorPage from "./Error"
@@ -25,6 +26,8 @@ export default function CampaignList() {
     variables: { limit, offset },
     fetchPolicy: 'cache-and-network'
   })
+  const { t } = useTranslation(['campaign', 'common']);
+
   function routeToAction(_event, id) {
     return history.push(`/campaign/${id}`)
   }
@@ -75,9 +78,13 @@ export default function CampaignList() {
                     <Grid item container direction="row">
                       <Grid item>
                         <Typography className={css(style.subTitle)}>
-                          <strong>Status: </strong>
+                          <strong>
+                            {t('campaign.status')}
+                            :
+                            {' '}
+                          </strong>
                           {' '}
-                          Draft
+                          {t('campaign.draft')}
                         </Typography>
                       </Grid>
                     </Grid>
@@ -90,10 +97,18 @@ export default function CampaignList() {
                     variant="body2"
                     gutterBottom
                   >
-                    <strong>Scheduled Date: </strong>
+                    <strong>
+                      {t('campaign.scheduled_date')}
+                      :
+                      {' '}
+                    </strong>
                     {dateToString(camp.batchTime)}
                     {' '}
-                    <strong>Scheduled Time: </strong>
+                    <strong>
+                      {t('campaign.scheduled_time')}
+                      :
+                      {' '}
+                    </strong>
                     {dateTimeToString(camp.batchTime)}
                   </Typography>
                     )}
@@ -103,28 +118,32 @@ export default function CampaignList() {
                   <Grid item container direction="row" spacing={2}>
                     <Grid item>
                       <Typography className={css(style.subTitle)}>
-                        Total Scheduled:
+                        {t('campaign.total_scheduled')}
+                        :
                         {' '}
                         {camp.campaignMetrics.totalScheduled}
                       </Typography>
                     </Grid>
                     <Grid item>
                       <Typography className={css(style.subTitle)}>
-                        Total Sent:
+                        {t('campaign.total_sent')}
+                        :
                         {' '}
                         {camp.campaignMetrics.totalSent}
                       </Typography>
                     </Grid>
                     <Grid item>
                       <Typography className={css(style.subTitle)}>
-                        Total Clicked:
+                        {t('campaign.total_clicked')}
+                        :
                         {' '}
                         {camp.campaignMetrics.totalClicked}
                       </Typography>
                     </Grid>
                     <Grid item>
                       <Typography className={css(style.subTitle)}>
-                        Success:
+                        {t('campaign.success')}
+                        :
                         {' '}
                         {String(parseInt(
                         (100 * camp.campaignMetrics.totalClicked) /
@@ -150,7 +169,7 @@ export default function CampaignList() {
                       style={{ cursor: 'pointer'}}
                       onClick={event => routeToAction(event, camp.id)}
                     >
-                      More Details
+                      {t('campaign.more_details')}
                     </Link>
                   </Typography>
                   {(camp.status === "draft" || camp.status === "scheduled") && (
@@ -189,7 +208,7 @@ export default function CampaignList() {
       >
         <AddIcon />
         {' '}
-        Create
+        {t('common:menu.create')}
       </Fab>
     </div>
   )

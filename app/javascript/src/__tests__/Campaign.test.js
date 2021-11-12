@@ -49,7 +49,7 @@ describe('Campaign page', () => {
         </BrowserRouter>
       </MockedProvider>
     )
-    expect(getByText('Message')).toBeInTheDocument()
+    expect(getByText('form_fields.message')).toBeInTheDocument()
   })
   it('should render input elements', () => {
     const { getByText } = render(
@@ -59,9 +59,9 @@ describe('Campaign page', () => {
         </BrowserRouter>
       </MockedProvider>
     )
-    expect(getByText('Message')).toBeInTheDocument()
-    expect(getByText('Campaign Name')).toBeInTheDocument()
-    expect(getByText('User ID List')).toBeInTheDocument()
+    expect(getByText('form_fields.message')).toBeInTheDocument()
+    expect(getByText('form_fields.campaign_name')).toBeInTheDocument()
+    expect(getByText('form_fields.user_id_list')).toBeInTheDocument()
   })
   it('should not render form when user is not admin', () => {
     const residentAuthState = {
@@ -88,8 +88,8 @@ describe('Campaign page', () => {
       </MockedProvider>
     )
     expect(container.queryByText('Tasks')).toBeNull()
-    expect(container.queryByText('Campaign Name')).toBeNull()
-    expect(container.queryByText('User ID List')).toBeNull()
+    expect(container.queryByText('form_fields.campaign_name')).toBeNull()
+    expect(container.queryByText('form_fields.user_id_list')).toBeNull()
   })
 
   it('should allow campain name inputs', () => {

@@ -27,7 +27,12 @@ module Mutations
           invite = context[:current_user].invite_guest(guest.id)
 
           entry = generate_entry_time(vals.except(:guest_id, :name, :phone_number, :email), invite)
-          GuestQrCodeJob.perform_now(context[:current_user], guest.email, request, 'verify')
+          GuestQrCodeJob.perform_now(
+            community: context[:site_community],
+            contact_info: { email: guest.email, phone_number: guest.phone_number },
+            entry_request: request,
+            type: 'verify',
+          )
           return { entry_time: entry } if entry
 
         rescue ActiveRecord::RecordNotUnique
@@ -78,12 +83,13 @@ module Mutations
         raise_duplicate_email_error(vals[:email])
         raise_duplicate_number_error(vals[:phone_number])
 
-        context[:current_user].enroll_user(
-          name: vals[:name],
-          phone_number: vals[:phone_number],
-          email: vals[:email],
-          user_type: 'visitor',
+        enrolled_user = context[:current_user].enroll_user(
+          name: vals[:name], phone_number: vals[:phone_number],
+          email: vals[:email], user_type: 'visitor'
         )
+        return enrolled_user if enrolled_user.persisted?
+
+        raise GraphQL::ExecutionError, enrolled_user.errors.full_messages&.join(', ')
       end
 
       # Verifies if current user admin or security guard.

@@ -288,6 +288,7 @@ module Types::Queries::User
     context[:current_user].invitees
                           .includes(:guest, :host, :entry_time)
                           .search(query)
+                          .order(created_at: :desc)
   end
 
   def user_permissions_check?(permission)
