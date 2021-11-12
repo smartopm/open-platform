@@ -48,7 +48,7 @@ module Mutations
 
       # Verifies if current user is present or not.
       def authorized?(_vals)
-        return true if allowed?(module: :entry_request, permission: :can_add_entry_request_note)
+        return true if permitted?(module: :entry_request, permission: :can_add_entry_request_note)
 
         raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
       end

@@ -29,7 +29,7 @@ module Mutations
       # rubocop:enable Layout/LineLength
 
       def authorized?(_vals)
-        return true if allowed?(module: :sos, permission: :can_initiate_sos)
+        return true if permitted?(module: :sos, permission: :can_initiate_sos)
 
         raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
       end

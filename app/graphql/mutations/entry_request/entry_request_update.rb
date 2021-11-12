@@ -57,9 +57,9 @@ module Mutations
         entry_request = Logs::EntryRequest.find_by(id: vals[:id])
         raise_entry_request_not_found_error(entry_request)
 
-        return true if current_user_is_host(entry_request) ||
-                       allowed?(module: :entry_request,
-                                permission: :can_update_guest_entry_request)
+        return true if current_user_is_host?(entry_request) ||
+                       permitted?(module: :entry_request,
+                                  permission: :can_update_guest_entry_request)
 
         raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
       end
@@ -74,7 +74,7 @@ module Mutations
       # Returns true if current user is the host of entry request
       #
       # @return [Boolean]
-      def current_user_is_host(entry_request)
+      def current_user_is_host?(entry_request)
         return true if entry_request.user_id.eql?(context[:current_user].id)
       end
     end

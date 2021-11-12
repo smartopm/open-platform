@@ -21,7 +21,9 @@ module Mutations
       def authorized?(vals)
         entry_request = Logs::EntryRequest.find_by(id: vals[:id])
         raise_entry_request_not_found_error(entry_request)
-        return true if permissions_check? || current_user_is_owner(entry_request)
+        return true if permitted?(module: :entry_request,
+                                  permission: :can_revoke_entry_request) ||
+                       current_user_is_owner(entry_request)
 
         raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
       end
@@ -34,12 +36,7 @@ module Mutations
       end
 
       def permissions_check?
-        ::Policy::ApplicationPolicy.new(
-          context[:current_user], nil
-        ).permission?(
-          module: :entry_request,
-          permission: :can_revoke_entry_request,
-        )
+        permitted?(module: :entry_request, permission: :can_revoke_entry_request)
       end
 
       def current_user_is_owner(entry_request)

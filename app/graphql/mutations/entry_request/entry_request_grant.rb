@@ -24,7 +24,7 @@ module Mutations
 
       # Verifies if current user can perform current action
       def authorized?(_vals)
-        return true if allowed?(module: :entry_request, permission: :can_grant_entry)
+        return true if permitted?(module: :entry_request, permission: :can_grant_entry)
 
         raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
       end

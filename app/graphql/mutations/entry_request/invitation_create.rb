@@ -89,7 +89,7 @@ module Mutations
 
       # Verifies if current user admin or security guard.
       def authorized?(_vals)
-        return true if allowed?(module: :entry_request, permission: :can_invite_guest)
+        return true if permitted?(module: :entry_request, permission: :can_invite_guest)
 
         raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
       end
