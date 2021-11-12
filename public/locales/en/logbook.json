@@ -124,7 +124,8 @@
     "repeats_until": "Repeats Until",
     "update_guest": "Update Guest",
     "host": "Host",
-    "revoked": "Revoked"
+    "revoked": "Revoked",
+    "exited_at": "Exited at {{time}}"
   },
   "date_picker": {
     "ok_label": "Ok",

@@ -29,6 +29,7 @@ export const GuestEntriesQuery = gql`
       endsAt
       startsAt
       revoked
+      exitedAt
     }
   }
 `;

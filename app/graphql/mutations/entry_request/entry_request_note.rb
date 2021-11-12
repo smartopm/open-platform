@@ -25,7 +25,7 @@ module Mutations
             community_id: context[:site_community].id,
           )
           update_prev_log(vals[:event_log_id], vals[:note])
-
+          update_request(vals[:id], vals[:note])
           evt = context[:current_user].generate_events('observation_log', log, note: vals[:note])
           evt.images.attach(vals[:attached_images]) if vals[:attached_images].present?
           raise GraphQL::ExecutionError, evt.errors.full_messages if evt.blank?
@@ -45,6 +45,16 @@ module Mutations
         event.data['exited'] = true
         event.save!
       end
+
+      def update_request(req_id, note)
+        return unless note.eql?('Exited')
+
+        request = context[:site_community].entry_requests.find_by(id: req_id)
+        return if request.nil?
+
+        request.update!(exited_at: Time.now.in_time_zone(context[:site_community].timezone))
+      end
+
 
       # Verifies if current user is present or not.
       def authorized?(_vals)

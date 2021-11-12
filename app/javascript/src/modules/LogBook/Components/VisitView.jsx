@@ -124,21 +124,16 @@ export default function VisitView({
                   {t('guest_book.start_of_visit', { date: dateToString(visit.visitationDate) })}
                 </Typography>
               </Grid>
-              {/* <Grid item md={2} xs={6} style={!matches ? { paddingTop: '15px' } : {}}>
-                <Typography variant="caption">
-                  {visit.visitEndDate
-                    ? t('guest_book.ends_on_date', { date: dateToString(visit.visitEndDate) })
-                    : t('guest_book.ends_on_date', { date: dateToString(visit.visitationDate) })}
-                </Typography>
-              </Grid> */}
               <Grid item md={2} xs={6} style={!matches ? { paddingTop: '15px' } : {}}>
-                {/* <Typography variant="caption">
-                  {t('guest_book.visit_time', {
-                    startTime: dateTimeToString(findClosestEntry(visit.accessHours, timeZone)?.startsAt),
-                    endTime: dateTimeToString(findClosestEntry(visit.accessHours, timeZone)?.endsAt)
-                  })}
-                </Typography> */}
-                <br />
+                <Typography variant="caption">
+                  {
+                  visit.exitedAt
+                    ? t('guest_book.exited_at', { time: dateToString(visit.exitedAt, 'YYYY-MM-DD hh:mm') })
+                    : '-'
+                }
+                </Typography>
+              </Grid>
+              <Grid item md={2} xs={6} style={!matches ? { paddingTop: '15px' } : {}}>
                 <Label
                   title={IsAnyRequestValid(visit.accessHours, t, timeZone) ? t('guest_book.valid') : t('guest_book.invalid_now')}
                   color={IsAnyRequestValid(visit.accessHours, t, timeZone) ? '#00A98B' : '#E74540'}
