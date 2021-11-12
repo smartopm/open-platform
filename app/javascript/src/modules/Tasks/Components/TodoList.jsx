@@ -33,7 +33,7 @@ import DatePickerDialog from '../../../components/DatePickerDialog';
 import { Spinner } from '../../../shared/Loading';
 import QueryBuilder from '../../../components/QueryBuilder';
 import { ModalDialog } from '../../../components/Dialog';
-import { formatError, pluralizeCount, objectAccessor } from '../../../utils/helpers';
+import { formatError, pluralizeCount, objectAccessor, useParamsQuery } from '../../../utils/helpers';
 import useDebounce from '../../../utils/useDebounce';
 import MessageAlert from '../../../components/MessageAlert';
 import { TaskBulkUpdateMutation } from '../graphql/task_mutation';
@@ -86,6 +86,9 @@ export default function TodoList({
   const [selectedTask, setSelectedTask] = useState(null);
   const [bulkUpdating, setBulkUpdating] = useState(false)
   const { t } = useTranslation(['task', 'common'])
+
+  const path = useParamsQuery('')
+  const taskURLFilter = path.get('filter');
 
   const taskHeader = [
     { title: 'Select', col: 1 },
@@ -174,7 +177,15 @@ export default function TodoList({
       loadTasks();
     }
 
-    if (!query && !debouncedFilterInputText && !debouncedSearchText) {
+    // TODO: Remove this quick fix after we move a modularized dashboard for each logged in user 
+    if(taskURLFilter) {
+      if(taskURLFilter in taskQuery){
+        setQuery(objectAccessor(taskQuery, taskURLFilter));
+        loadTasks();
+      }
+    }
+
+    if (!query && !debouncedFilterInputText && !debouncedSearchText && !taskURLFilter) {
       // Default to my tasks filter
       setQuery(objectAccessor(taskQuery, 'myOpenTasks'));
       loadTasks();
@@ -249,6 +260,7 @@ export default function TodoList({
     setQuery(objectAccessor(taskQuery, key));
     // show tasks when a filter has been applied, we might have to move this to useEffect
     loadTasks();
+    history.push(`/tasks?filter=${key}`)
   }
 
   function inputToSearch(e) {

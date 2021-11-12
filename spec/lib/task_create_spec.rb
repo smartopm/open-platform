@@ -190,5 +190,163 @@ RSpec.describe TaskCreate do
       expect(sub_sub_task[:flagged]).to be(true)
       expect(sub_sub_task[:author_id]).to eq(template_author.id)
     end
+
+    it 'should assign a single user to sub-sub task when template has assignee' do
+      template_author = create(:user_with_community, community_id: user.community_id)
+      assignee = create(:user_with_community, community_id: user.community_id)
+
+      form_task_params = {
+        body: 'Task Triggered from Form',
+        category: 'form',
+        description: 'Description',
+        flagged: true,
+        due_date: nil,
+        user_id: user.id,
+        author_id: user.id,
+      }
+
+      parent_template_task = template_author.community.notes.create!(
+        body: 'Template 1',
+        description: 'Template 1 Description',
+        category: 'template',
+        flagged: true,
+        user_id: template_author.id,
+        author_id: template_author.id,
+        parent_note_id: nil,
+      )
+
+      # Create 2 subtasks
+      2.times do |i|
+        sub_task = template_author.community.notes.create!(
+          body: "Sub Task #{i}",
+          description: "Template Sub task Description #{i}",
+          category: 'template',
+          flagged: true,
+          user_id: template_author.id,
+          author_id: template_author.id,
+          parent_note_id: parent_template_task[:id],
+        )
+
+        # assign user to template
+        sub_task.assignee_notes.create!(user_id: assignee[:id])
+      end
+
+      # execute action
+      TaskCreate.new_from_template(form_task_params, user.community)
+
+      sub_task = user.community.notes.find_by(body: 'Template 1')
+      sub_sub_task = user.community.notes.find_by(body: 'Sub Task 1')
+      expect(sub_sub_task[:parent_note_id]).to eq(sub_task.id)
+      expect(sub_sub_task[:author_id]).to eq(template_author.id)
+
+      assigned_note = sub_sub_task.assignee_notes.find_by(user_id: assignee[:id])
+      expect(assigned_note).not_to be_nil
+    end
+
+    it 'should assign multiple users to sub-sub task when template has assignee' do
+      template_author = create(:user_with_community, community_id: user.community_id)
+      assignee1 = create(:user_with_community, community_id: user.community_id)
+      assignee2 = create(:user_with_community, community_id: user.community_id)
+
+      form_task_params = {
+        body: 'Task Triggered from Form',
+        category: 'form',
+        description: 'Description',
+        flagged: true,
+        due_date: nil,
+        user_id: user.id,
+        author_id: user.id,
+      }
+
+      parent_template_task = template_author.community.notes.create!(
+        body: 'Template 1',
+        description: 'Template 1 Description',
+        category: 'template',
+        flagged: true,
+        user_id: template_author.id,
+        author_id: template_author.id,
+        parent_note_id: nil,
+      )
+
+      # Create 2 subtasks
+      2.times do |i|
+        sub_task = template_author.community.notes.create!(
+          body: "Sub Task #{i}",
+          description: "Template Sub task Description #{i}",
+          category: 'template',
+          flagged: true,
+          user_id: template_author.id,
+          author_id: template_author.id,
+          parent_note_id: parent_template_task[:id],
+        )
+
+        # assign users to template
+        sub_task.assignee_notes.create!(user_id: assignee1[:id])
+        sub_task.assignee_notes.create!(user_id: assignee2[:id])
+      end
+
+      # execute action
+      TaskCreate.new_from_template(form_task_params, user.community)
+
+      sub_task = user.community.notes.find_by(body: 'Template 1')
+      sub_sub_task = user.community.notes.find_by(body: 'Sub Task 1')
+      expect(sub_sub_task[:parent_note_id]).to eq(sub_task.id)
+      expect(sub_sub_task[:author_id]).to eq(template_author.id)
+
+      assigned_note1 = sub_sub_task.assignee_notes.find_by(user_id: assignee1[:id])
+      expect(assigned_note1).not_to be_nil
+
+      assigned_note2 = sub_sub_task.assignee_notes.find_by(user_id: assignee2[:id])
+      expect(assigned_note2).not_to be_nil
+    end
+
+    it 'should not assign a user to sub-sub task when template has no assignee' do
+      template_author = create(:user_with_community, community_id: user.community_id)
+      assignee = create(:user_with_community, community_id: user.community_id)
+
+      form_task_params = {
+        body: 'Task Triggered from Form',
+        category: 'form',
+        description: 'Description',
+        flagged: true,
+        due_date: nil,
+        user_id: user.id,
+        author_id: user.id,
+      }
+
+      parent_template_task = template_author.community.notes.create!(
+        body: 'Template 1',
+        description: 'Template 1 Description',
+        category: 'template',
+        flagged: true,
+        user_id: template_author.id,
+        author_id: template_author.id,
+        parent_note_id: nil,
+      )
+
+      # Create 2 subtasks
+      2.times do |i|
+        template_author.community.notes.create!(
+          body: "Sub Task #{i}",
+          description: "Template Sub task Description #{i}",
+          category: 'template',
+          flagged: true,
+          user_id: template_author.id,
+          author_id: template_author.id,
+          parent_note_id: parent_template_task[:id],
+        )
+      end
+
+      # execute action
+      TaskCreate.new_from_template(form_task_params, user.community)
+
+      sub_task = user.community.notes.find_by(body: 'Template 1')
+      sub_sub_task = user.community.notes.find_by(body: 'Sub Task 1')
+      expect(sub_sub_task[:parent_note_id]).to eq(sub_task.id)
+      expect(sub_sub_task[:author_id]).to eq(template_author.id)
+
+      assigned_note = sub_sub_task.assignee_notes.find_by(user_id: assignee[:id])
+      expect(assigned_note).to be_nil
+    end
   end
 end
