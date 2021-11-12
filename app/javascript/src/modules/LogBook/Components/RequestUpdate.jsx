@@ -32,7 +32,6 @@ import {
 } from '../graphql/logbook_mutations';
 import MessageAlert from '../../../components/MessageAlert';
 import { checkInValidRequiredFields, defaultRequiredFields , checkRequests } from '../utils';
-import GuestTime from './GuestTime';
 import QRCodeConfirmation from './QRCodeConfirmation';
 import FeatureCheck from '../../Features';
 import { EntryRequestContext } from '../GuestVerification/Context';
@@ -182,21 +181,6 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
       .catch(error => {
         setDetails({ ...observationDetails, isError: true, message: error.message });
       });
-  }
-
-  function handleChangeOccurrence(day) {
-    if (formData.occursOn.includes(day)) {
-      const leftDays = formData.occursOn.filter(d => d !== day);
-      setFormData({
-        ...formData,
-        occursOn: leftDays
-      });
-      return;
-    }
-    setFormData({
-      ...formData,
-      occursOn: [...formData.occursOn, day]
-    });
   }
 
   function closeQrModal() {
@@ -752,20 +736,6 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
                 style={{ width: 200 }}
               />
             </div>
-          )
-        }
-
-          {/* This should only show for registered users */}
-          {
-          isGuestRequest && (
-            <GuestTime
-              days={formData.occursOn}
-              userData={formData}
-              handleChange={handleInputChange}
-              handleChangeOccurrence={handleChangeOccurrence}
-              authState={authState}
-              disableEdit={disableEdit}
-            />
           )
         }
 
