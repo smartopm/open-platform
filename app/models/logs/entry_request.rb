@@ -131,6 +131,16 @@ module Logs
       # rubocop:enable Layout/LineLength
     end
 
+    def access_hours
+      invites = Logs::Invite.where(guest_id: self.guest_id)
+      hours = []
+      invites.find_each do |invite|
+        hours << invite.entry_time
+      end
+      hours
+    end
+
+
     private
 
     # Assigns community id of user.

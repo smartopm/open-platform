@@ -78,3 +78,13 @@ export function resolveUserOrGuest(request){
   const user =  request.user || request.guest
   return user
 }
+
+/**
+ * check if any entry is valid
+ * @param {[object]} entries
+ */
+export function IsAnyRequestValid(entries, t, tz){
+  return entries.some(entry => {
+     return checkRequests(entry, t, tz).valid
+  })
+}
