@@ -4,11 +4,12 @@ import Autocomplete from '@material-ui/lab/Autocomplete'
 import { TextField, Chip } from '@material-ui/core'
 import { useQuery } from 'react-apollo'
 import { LabelsQuery } from '../graphql/queries'
+import { useTranslation } from 'react-i18next';
 
 export default function CampaignLabels({ handleLabelSelect, handleDelete }) {
     const { data } = useQuery(LabelsQuery)
     const [chipData, setChipData] = useState([])
-
+    const { t } = useTranslation('campaign');
     function handleChipDelete(chipId) {
         setChipData(chipData.filter(e => e.id !== chipId))
     }
@@ -45,7 +46,7 @@ export default function CampaignLabels({ handleLabelSelect, handleDelete }) {
                     renderInput={params => (
                         <TextField
                             {...params}
-                            label="Assign Label"
+                            label={t('form_fields.assign_label')}
                             style={{ width: "100%" }}
                         />
                     )}

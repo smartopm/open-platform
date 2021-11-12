@@ -7,12 +7,14 @@ import {
   DialogContent,
   DialogTitle
 } from '@material-ui/core'
+import { useTranslation } from 'react-i18next';
 
 export default function DeleteDialogueBox({
   handleClose,
   handleDelete,
   open
 }) {
+  const { t } = useTranslation('campaign');
   return (
     <>
       <Dialog
@@ -22,17 +24,17 @@ export default function DeleteDialogueBox({
         aria-describedby="alert-dialog-description"
       >
         <DialogTitle id="alert-dialog-title">
-          Delete Campaign
+          {t('actions.delete_campaign')}
         </DialogTitle>
         <DialogContent>
-          Are you sure you want to delete this campaign?
+          {t('message.sure_to_delete')}
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose} color="secondary" data-testid='no'>
-            No
+            {t('misc.no')}
           </Button>
           <Button onClick={handleDelete} color="primary" data-testid='yes' autoFocus>
-            Yes
+            {t('misc.yes')}
           </Button>
         </DialogActions>
       </Dialog>
