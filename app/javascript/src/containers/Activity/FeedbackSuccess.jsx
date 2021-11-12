@@ -5,7 +5,8 @@ import { withStyles } from "@material-ui/core/styles";
 import CheckIcon from '@material-ui/icons/Check';
 import IconButton from "@material-ui/core/IconButton";
 import { Redirect } from "react-router-dom";
-import useTimer from '../../utils/customHooks'
+import { useTranslation } from 'react-i18next';
+import useTimer from '../../utils/customHooks';
 
 const styles = theme => ({
     checkedIcon: {
@@ -23,14 +24,15 @@ const styles = theme => ({
 
 export function FeedbackSuccess(props) {
     const { classes } = props;
-    const time = useTimer(10, 1000)
+    const time = useTimer(10, 1000);
+    const { t } = useTranslation('feedback');
 
     if (time === 0) {
         return <Redirect to="/" />;
     }
     return (
       <div className={`container ${css(style.feedbackPage)}`}>
-        <p className='text-center' data-testid='feedback-txt'>Thank you for your feedback</p>
+        <p className='text-center' data-testid='feedback-txt'>{t('feedback.thankyou_for_feedback')}</p>
         <div className="row justify-content-around">
           <div className="">
             <IconButton className={classes.checkedIcon} aria-label="Check Icon">

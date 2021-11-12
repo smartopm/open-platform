@@ -18,6 +18,6 @@ describe('Feedback Component', () => {
       </MockedProvider>
     );
 
-    expect(container.queryByTestId('feedback-txt').textContent).toContain('Thank you for your feedback');
+    expect(container.queryByTestId('feedback-txt').textContent).toContain('feedback.thankyou_for_feedback');
   });
 });

@@ -1,0 +1,17 @@
+{
+  "feedback": {
+    "value_your_feedback": "We value your feedback. Do you have a suggestion on how we can improve?",
+    "thankyou_for_feedback": "Thank you for your feedback"
+  },
+  "actions": {
+    "skip": "Skip",
+    "submit": "Submit" 
+  },
+  "misc": {
+    "gave_thumbs": "gave a thumbs",
+    "up": "Up",
+    "down": "Down",
+    "on": "on",
+    "review": "Review"
+  }
+}
