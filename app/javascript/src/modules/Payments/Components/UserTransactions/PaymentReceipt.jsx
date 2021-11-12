@@ -25,9 +25,9 @@ export default function PaymentReceipt({ paymentData, open, handleClose, currenc
             paymentData?.planPayments.map(pay => (
               <div key={pay.id} style={{paddingBottom: '250px'}}>
                 <ReceiptDetail 
-                  paymentData={paymentData} 
+                  paymentData={pay} 
                   currencyData={currencyData}
-                  planDetail={pay}  
+                  // planDetail={pay}  
                 />
               </div>
             ))
