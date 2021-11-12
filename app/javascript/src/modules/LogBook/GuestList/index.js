@@ -45,7 +45,6 @@ const GuestsList = {
   },
   styleProps: {
     icon: <PeopleIcon />,
-    className: 'guest-list-menu-item'
   },
   name: (t) => t('menu.guest_list'),
   featureName: 'Guest List',

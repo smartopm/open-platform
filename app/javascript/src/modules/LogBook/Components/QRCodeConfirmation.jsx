@@ -40,7 +40,7 @@ export default function QRCodeConfirmation({
         <DialogContent dividers>
           {guestEmail ? (
             <>
-              <Typography gutterBottom className="confirm-send-qrcode">{`${t('qrcode_confirmation.send_qr_code')}:`}</Typography>
+              <Typography gutterBottom>{`${t('qrcode_confirmation.send_qr_code')}:`}</Typography>
               <Grid className={classes.emailGrid}>
                 <EmailIcon color="primary" />
                 <Typography className={classes.emailText} data-testid="guest-email">
@@ -50,7 +50,7 @@ export default function QRCodeConfirmation({
             </>
           ) : (
             <>
-              <Typography gutterBottom className={`${classes.newEmail} qrcode-enter-email-text`}>
+              <Typography gutterBottom className={classes.newEmail}>
                 {`${t('qrcode_confirmation.enter_email_text')}`}
               </Typography>
               <TextField

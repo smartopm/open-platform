@@ -105,11 +105,7 @@ export default function GuestBook({
               }
           />
           ))
-        : !guestsLoading && (
-        <CenteredContent>
-          <Typography data-testid="no-invited-guests-available">{t('logbook.no_invited_guests')}</Typography>
-        </CenteredContent>
-)}
+        : !guestsLoading && <CenteredContent>{t('logbook.no_invited_guests')}</CenteredContent>}
     </>
   );
 }
