@@ -27,7 +27,7 @@ import TaskForm from './TaskForm';
 import ErrorPage from '../../../components/Error';
 import Paginate from '../../../components/Paginate';
 import CenteredContent from '../../../components/CenteredContent';
-import { TaskQuickSearch } from './TaskDashboard';
+import TaskQuickSearch from './TaskQuickSearch';
 import { futureDateAndTimeToString, dateToString } from '../../../components/DateContainer';
 import DatePickerDialog from '../../../components/DatePickerDialog';
 import { Spinner } from '../../../shared/Loading';
@@ -180,6 +180,7 @@ export default function TodoList({
     // TODO: Remove this quick fix after we move a modularized dashboard for each logged in user 
     if(taskURLFilter) {
       if(taskURLFilter in taskQuery){
+        setCurrentTile(taskURLFilter);
         setQuery(objectAccessor(taskQuery, taskURLFilter));
         loadTasks();
       }
@@ -474,7 +475,7 @@ export default function TodoList({
                 bulkUpdating={bulkUpdating}
                 handleBulkUpdate={handleBulkUpdate}
               />
-              <TaskQuickSearch filterTasks={handleTaskFilter} />
+              <TaskQuickSearch filterTasks={handleTaskFilter} currentTile={currentTile} />
             </div>
             <div style={{ width: '43%', display: 'flex', alignItems: 'center'}}>
               <TextField
