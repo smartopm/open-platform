@@ -77,8 +77,11 @@ const useStyles = makeStyles(theme => ({
 
 SpeedDialButton.defaultProps = {
   actions: [],
-  direction: '',
-  handleAction: () => {}
+  direction: 'down',
+  handleAction: () => {},
+  open: false,
+  handleClose: () => {},
+  handleOpen: () => {},
 };
 
 SpeedDialButton.propTypes = {
@@ -87,9 +90,9 @@ SpeedDialButton.propTypes = {
       name: PropTypes.string
     })
   ),
-  open: PropTypes.bool.isRequired,
-  handleClose: PropTypes.func.isRequired,
-  handleOpen: PropTypes.func.isRequired,
+  open: PropTypes.bool,
+  handleClose: PropTypes.func,
+  handleOpen: PropTypes.func,
   direction: PropTypes.string,
   handleAction: PropTypes.func
 };
