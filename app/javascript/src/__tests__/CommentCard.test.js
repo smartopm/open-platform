@@ -31,21 +31,21 @@ describe('Comment Card Component', () => {
         </BrowserRouter>
       </MockedProvider>
     )
-    
-    expect(container.queryByText('name')).toBeInTheDocument();
-    expect(container.queryByText('body')).toBeInTheDocument();
+
+    expect(container.getByTestId('comment-body')).toBeInTheDocument();
+    fireEvent.click(container.getByTestId('more_details'))
     const edit = container.queryByTestId('edit')
-    const deleteButton = container.queryByTestId('deleteButton')
+    const deleteButton = container.queryByTestId('delete')
     expect(edit).toBeInTheDocument();
     expect(deleteButton).toBeInTheDocument();
-    
+
     fireEvent.click(edit)
     const cancel = container.queryByTestId('cancel')
     expect(cancel).toBeInTheDocument();
     fireEvent.click(cancel)
     expect(cancel).not.toBeInTheDocument();
 
-    fireEvent.click(container.queryByTestId('deleteButton'))
+    fireEvent.click(container.queryByTestId('delete'))
     expect(container.queryByText('Are you sure you want to delete your comment?')).toBeInTheDocument();
     fireEvent.click(container.queryByTestId('cancel-delete'))
     expect(container.queryByText('Are you sure you want to delete your comment?')).not.toBeInTheDocument();

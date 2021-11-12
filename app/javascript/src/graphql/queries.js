@@ -751,6 +751,9 @@ export const messageCountQuery = gql`
   }
 `
 
+/**
+ * @deprecated in favor of modules/tasks/graphql/task_queries.js
+ */
 export const TaskQuery = gql`
   query taskDetail($taskId: ID!) {
     task(taskId: $taskId) {

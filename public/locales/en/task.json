@@ -2,6 +2,9 @@
   "task": {
     "quick_search": "Quick Search",
     "my_tasks": "My Tasks",
+    "task_details_text": "Task Details",
+    "due_date_text": "Due Date",
+    "assigned_to_txt": "Assigned To",
     "tasks_due_in_10_days": "Tasks due in 10 days",
     "tasks_due_in_30_days": "Tasks due in 30 days",
     "overdue_tasks": "Overdue Tasks",
@@ -38,6 +41,13 @@
     "created": "Created",
     "assigned_to": "Assigned to",
     "due_date": "Due Date: ",
-    "no_assignee": "No Assignee"
+    "no_assignee": "No Assignee",
+    "date_created": "Date Created"
+  },
+  "document": {
+    "uploaded_at": "Uploaded at",
+    "download": "Download",
+    "no_documents": "No documents attached",
+    "documents": "Documents"
   }
 }

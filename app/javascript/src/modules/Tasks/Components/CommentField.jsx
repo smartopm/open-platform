@@ -1,89 +1,80 @@
 /* eslint-disable react/forbid-prop-types */
 /* eslint-disable no-use-before-define */
-import React, { useState } from 'react'
-import Avatar from '@material-ui/core/Avatar';
-import PropTypes from 'prop-types'
+import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
-import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
-import { useMutation } from 'react-apollo'
+import { useMutation } from 'react-apollo';
 import Button from '@material-ui/core/Button';
-import CommentCard from './CommentCard'
-import { TaskComment } from '../../../graphql/mutations'
+import CommentCard from './CommentCard';
+import { TaskComment } from '../../../graphql/mutations';
 
-export default function CommentTextField({ data, refetch, authState, taskId }) {
-  const classes = useStyles();
-  const [commentCreate] = useMutation(TaskComment)
-  const [body, setBody] = useState('')
-  const [error, setErrorMessage] = useState('')
-  const { t } = useTranslation('common')
+export default function CommentTextField({ data, refetch, taskId }) {
+  const [commentCreate] = useMutation(TaskComment);
+  const [body, setBody] = useState('');
+  const [error, setErrorMessage] = useState('');
+  const { t } = useTranslation('common');
 
   function handleSubmit(event) {
     event.preventDefault();
-    commentCreate({ variables: {
-      noteId: taskId,
-      body
-    }}).then(() => {
-      setBody('')
-      refetch()
-    }).catch((err) => {
-      setErrorMessage(err)
+    commentCreate({
+      variables: {
+        noteId: taskId,
+        body
+      }
     })
+      .then(() => {
+        setBody('');
+        refetch();
+      })
+      .catch(err => {
+        setErrorMessage(err);
+      });
   }
-  return(
+  return (
     <>
       <form style={{ display: 'flex' }} onSubmit={handleSubmit}>
-        <Avatar style={{ marginTop: '7px' }} src={authState.user.imageUrl} alt="avatar-image" />
-        <div className={classes.root} style={{ display: 'flex', flexDirection: 'column' }}>
+        <div style={{ display: 'flex', width: '100%', margin: '0 10px' }}>
           <TextField
+            fullWidth
+            id="standard-full-width"
+            style={{ marginRight: '10px' }}
+            placeholder={t('common:misc.type_comment')}
             value={body}
-            multiline
-            id="outlined-size-small"
-            variant="outlined"
-            size="small"
             onChange={e => setBody(e.target.value)}
+            multiline
+            rows={1}
+            margin="normal"
+            variant="outlined"
+            InputLabelProps={{
+              shrink: true
+            }}
             inputProps={{ 'data-testid': 'body_input' }}
           />
-          <Button variant="contained" color="primary" type="submit" disabled={!body.length} data-testid='share'>{t('misc.share')}</Button>
+          <Button
+            variant="outlined"
+            color="primary"
+            type="submit"
+            disabled={!body.length}
+            data-testid="share"
+            style={{ height: '56px', marginTop: '15px' }}
+          >
+            {t('misc.comment')}
+          </Button>
         </div>
       </form>
       <CommentCard data={data} refetch={refetch} />
-      <p className="text-center">
-        {Boolean(error.length) && error}
-      </p>
+      <p className="text-center">{Boolean(error.length) && error}</p>
     </>
-  )
+  );
 }
-
-const useStyles = makeStyles((theme) => ({
-  root: {
-    width: '70%',
-    '& .MuiTextField-root': {
-      margin: theme.spacing(1)
-    },
-    '& .MuiOutlinedInput-root': {
-      borderRadius: '10px'
-    },
-    '& .MuiButton-contained': {
-      width: 100,
-      marginLeft: '8px',
-      color: "white"
-    },
-    '& .Mui-disabled': {
-      color: 'white',
-      border: '2px white solid'
-    }
-  }
-}));
 
 CommentTextField.defaultProps = {
   data: {},
-  authState: {},
   taskId: ''
- }
- CommentTextField.propTypes = {
-   data: PropTypes.object,
-   authState: PropTypes.object,
-   refetch: PropTypes.func.isRequired,
-   taskId: PropTypes.string,
- }
+};
+CommentTextField.propTypes = {
+  data: PropTypes.object,
+  refetch: PropTypes.func.isRequired,
+  taskId: PropTypes.string
+};

@@ -1,134 +1,147 @@
 /* eslint-disable import/no-cycle */
 /* eslint-disable no-use-before-define */
-import React, { useState } from 'react';
-import Card from '@material-ui/core/Card';
+import React, { Fragment, useState } from 'react';
+import {
+  IconButton,
+  List,
+  ListItem,
+  ListItemSecondaryAction,
+  ListItemText,
+  Menu,
+  MenuItem
+} from '@material-ui/core';
 import Avatar from '@material-ui/core/Avatar';
-import PropTypes from 'prop-types'
+import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
-import CardContent from '@material-ui/core/CardContent';
-import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
-import CardActions from '@material-ui/core/CardActions';
-import Button from '@material-ui/core/Button';
-import TaskDelete from './TaskDelete'
-import EditField from './TaskCommentEdit'
-import DateContainer from '../../../components/DateContainer'
+import MoreVertIcon from '@material-ui/icons/MoreVert';
+import TaskDelete from './TaskDelete';
+import EditField from './TaskCommentEdit';
+import { dateToString } from '../../../components/DateContainer';
 
 export default function CommentCard({ data, refetch }) {
-  const classes = useStyles();
-  const [open, setOpen] = useState(false) 
-  const [editId, setEditId] = useState(null)
-  const [edit, setEdit] = useState(false)
-  const [id, setId] = useState(null)
-  const [imageUrl, setImageUrl] = useState(null)
-  const [name, setName] = useState(null)
-  const [body, setBody] = useState(null)
-  const { t } = useTranslation('common')
+  const [open, setOpen] = useState(false);
+  const [editId, setEditId] = useState(null);
+  const [edit, setEdit] = useState(false);
+  const [id, setId] = useState(null);
+  const [imageUrl, setImageUrl] = useState(null);
+  const [name, setName] = useState(null);
+  const [body, setBody] = useState(null);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [currentComment, setCurrentComment] = useState('');
+  const menuOpen = Boolean(anchorEl);
+
+  const { t } = useTranslation('common');
 
   function handleClose() {
-    setEdit(false)
-    setEditId(null)
+    setEdit(false);
+    setEditId(null);
   }
 
-  function deleteClick(event) {
-    setId(event.currentTarget.getAttribute('id'))
-    setImageUrl(event.currentTarget.getAttribute('image'))
-    setName(event.currentTarget.getAttribute('name'))
-    setBody(event.currentTarget.getAttribute('body'))
-    setOpen(true)
+  function deleteClick(comment) {
+    setId(comment.id);
+    setImageUrl(comment.user.imageUrl);
+    setName(comment.user.name);
+    setBody(comment.body);
+    setOpen(true);
+    setAnchorEl(null);
   }
 
-  return(
+  function editClick(comment) {
+    setEditId(comment.id);
+    setAnchorEl(null);
+  }
+
+  function handleOpenMenu(event, comment) {
+    event.stopPropagation();
+    setAnchorEl(event.currentTarget);
+    setCurrentComment(comment);
+  }
+
+  return (
     <>
-      {data?.taskComments?.map((com) => (
-        <Card style={{ display: 'flex' }} className={classes.root} key={com.id}>
-          {!edit && editId !== com.id && <Avatar src={com.user.imageUrl} alt="avatar-image" style={{ marginTop: '7px' }} />}
-          <div style={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
-            {!edit && editId !== com.id && ( 
-            <CardContent>
-              <div style={{ display: 'flex' }}>
-                <Typography className={classes.title} gutterBottom data-testid='user-name'>
-                  {com.user.name}
-                </Typography>
-                <span 
-                  data-testid="delete_icon" 
-                  className={classes.itemAction}
-                >
-                  <DateContainer date={com.createdAt} />
-                </span>
-              </div>
-              <Typography variant="caption" component="h2">
-                {com.body}
-              </Typography>
-            </CardContent>
-            )}
-            {(!edit && editId !== com.id) && (
-            <CardActions color="primary">
-              <Button
-                size="small"
-                color="primary"
-                onClick={() => setEditId(com.id)}
-                data-testid='edit'
-              >
-                {t('menu.edit')}
-              </Button>
-              {' '}
-              |
-              <Button
-                size="small"
-                color="secondary"
-                id={com.id}
-                name={com.user.name}
-                image={com.user.imageUrl} 
-                body={com.body}
-                onClick={(event) => deleteClick(event)}
-                data-testid='deleteButton'
-              >
-                {t('menu.delete')}
-              </Button>
-            </CardActions>
-            )}
-            {editId === com.id  && <EditField handleClose={handleClose} data={com} refetch={refetch} />}
-          </div>
-        </Card>
-      ))}
+      <>
+        <Menu
+          id={`comment-menu-${currentComment.id}`}
+          anchorEl={anchorEl}
+          open={menuOpen}
+          onClose={() => setAnchorEl(null)}
+          keepMounted={false}
+          data-testid="more_details_menu"
+        >
+          <MenuItem id="edit_button" data-testid="edit" key="edit" onClick={() => editClick(currentComment)}>
+            {t('common:menu.edit')}
+          </MenuItem>
+          <MenuItem id="delete_button" data-testid="delete" key="delete" onClick={() => deleteClick(currentComment)}>
+            {t('common:menu.delete')}
+          </MenuItem>
+        </Menu>
+        <List>
+          {data?.taskComments?.map(com => (
+            <Fragment key={com.id}>
+              {!edit && editId !== com.id && (
+                <ListItem>
+                  <ListItemText
+                    disableTypography
+                    secondary={(
+                      <div style={{ display: 'flex' }}>
+                        <Avatar
+                          src={com.user.imageUrl}
+                          alt="avatar-image"
+                          style={{ margin: '-7px 10px 0 0' }}
+                        />
+                        <Typography
+                          component="span"
+                          variant="body2"
+                          style={{ color: '#575757' }}
+                          data-testid="comment-body"
+                        >
+                          {dateToString(com.createdAt)}
+                          {' '}
+                          {com.body}
+                        </Typography>
+                      </div>
+                    )}
+                  />
+                  <ListItemSecondaryAction>
+                    <IconButton
+                      edge="end"
+                      aria-label="more_details"
+                      data-testid="more_details"
+                      onClick={event => handleOpenMenu(event, com)}
+                    >
+                      <MoreVertIcon />
+                    </IconButton>
+                  </ListItemSecondaryAction>
+                </ListItem>
+              )}
+              {editId === com.id && (
+                <EditField handleClose={handleClose} data={com} refetch={refetch} />
+              )}
+            </Fragment>
+          ))}
+        </List>
+      </>
       {open && (
-      <TaskDelete
-        open={open}
-        handleClose={() => setOpen(false)} 
-        id={id}
-        name={name}
-        imageUrl={imageUrl} 
-        refetch={refetch}
-        body={body}
-      />
-    )}
+        <TaskDelete
+          open={open}
+          handleClose={() => setOpen(false)}
+          id={id}
+          name={name}
+          imageUrl={imageUrl}
+          refetch={refetch}
+          body={body}
+        />
+      )}
     </>
-  )
+  );
 }
-
-const useStyles = makeStyles({
-  root: {
-    padding: '10px 20px 10px 20px',
-    borderRadius: '0 10px 10px 50px',
-    backgroundColor: '#f8f8f9',
-    marginBottom: '10px'
-  },
-  title: {
-    fontSize: 14,
-    fontWeight: 'bold'
-  },
-  itemAction: {
-    marginLeft: 'auto',
-    order: 2
-  }
-});
 
 CommentCard.defaultProps = {
   data: {}
- }
- CommentCard.propTypes = {
-   // eslint-disable-next-line react/forbid-prop-types
-   data: PropTypes.object,
-   refetch: PropTypes.func.isRequired
- }
+};
+CommentCard.propTypes = {
+  // eslint-disable-next-line react/forbid-prop-types
+  data: PropTypes.object,
+  refetch: PropTypes.func.isRequired
+};

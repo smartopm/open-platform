@@ -1,12 +1,14 @@
 import React, { useContext } from 'react'
 import {  useParams } from 'react-router-dom'
 import { useQuery, useMutation } from 'react-apollo'
-import { TaskQuery, UsersLiteQuery, HistoryQuery } from '../../../graphql/queries'
+import { Container } from '@material-ui/core'
+import { UsersLiteQuery, HistoryQuery } from '../../../graphql/queries'
 import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider'
 import Loading from '../../../shared/Loading'
 import ErrorPage from '../../../components/Error'
 import TaskUpdateForm from '../Components/TaskUpdateForm'
 import { AssignUser } from '../../../graphql/mutations'
+import { TaskQuery } from '../graphql/task_queries'
 
 export default function TaskUpdate() {
   const { taskId } = useParams()
@@ -37,20 +39,17 @@ export default function TaskUpdate() {
   if (error) return <ErrorPage title={error.message} />
 
   return (
-    <>
-      <div className="container">
-        <TaskUpdateForm
-          data={data?.task}
-          refetch={refetch}
-          users={liteData?.usersLite}
-          assignUser={assignUnassignUser}
-          currentUser={authState.user}
-          historyData={taskHistoryData?.taskHistories}
-          historyRefetch={historyRefetch}
-          authState={authState}
-          taskId={taskId}
-        />
-      </div>
-    </>
+    <Container maxWidth="xl">
+      <TaskUpdateForm
+        data={data?.task}
+        refetch={refetch}
+        users={liteData?.usersLite}
+        assignUser={assignUnassignUser}
+        currentUser={authState.user}
+        historyData={taskHistoryData?.taskHistories}
+        historyRefetch={historyRefetch}
+        taskId={taskId}
+      />
+    </Container>
   )
 }

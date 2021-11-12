@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'host_env'
+
 module Types
   # NoteType
   class NoteType < Types::BaseObject
@@ -21,5 +23,24 @@ module Types
     field :parent_note, Types::NoteType, null: true
     field :sub_tasks, [Types::NoteType], null: true
     field :documents, [GraphQL::Types::JSON], null: true
+    field :attachments, [GraphQL::Types::JSON], null: true
+
+    # move this in a shareable place
+    def host_url(type)
+      base_url = HostEnv.base_url(object.community)
+      path = Rails.application.routes.url_helpers.rails_blob_path(type)
+      "https://#{base_url}#{path}"
+    end
+
+    def attachments
+      return nil unless object.documents.attached?
+
+      urls = []
+      object.documents.each do |doc|
+        file = { id: doc.id, filename: doc.blob.filename, url: host_url(doc) }
+        urls << file
+      end
+      urls
+    end
   end
 end
