@@ -28,7 +28,7 @@ export default function TaskDashboard({ taskData, filterTasks, currentTile }) {
     tasksOpenAndOverdue: t('task.overdue_tasks'),
     tasksWithNoDueDate: t('task.tasks_with_no_due_date'),
     totalCallsOpen: t('task.total_calls_open'),
-    totalFormsOpen: t('task.total_forms_open'),
+    processes: t('task.total_forms_open'),
     tasksOpen: t('task.tasks_open'),
     completedTasks: t('task.tasks_completed')
   });
@@ -73,7 +73,7 @@ export function TaskQuickSearch({ filterTasks }){
     tasksOpenAndOverdue: t('task.overdue_tasks'),
     tasksWithNoDueDate: t('task.tasks_with_no_due_date'),
     totalCallsOpen: t('task.total_calls_open'),
-    totalFormsOpen: t('task.total_forms_open'),
+    processes: t('task.total_forms_open'),
     tasksOpen: t('task.tasks_open'),
     completedTasks: t('task.tasks_completed')
   });
@@ -158,7 +158,7 @@ TaskDashboard.propTypes = {
         tasksOpenAndOverdue: PropTypes.number,
         tasksWithNoDueDate: PropTypes.number,
         totalCallsOpen: PropTypes.number,
-        totalFormsOpen: PropTypes.number,
+        processes: PropTypes.number,
         tasksOpen: PropTypes.number,
         completedTasks: PropTypes.number
       })

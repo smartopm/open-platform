@@ -80,14 +80,14 @@ export default function TodoList({
     tasksWithNoDueDate: 'due_date:nil',
     myOpenTasks: `assignees: ${currentUser?.name} AND completed: false`,
     totalCallsOpen: 'category: call AND completed: false',
-    totalFormsOpen: 'category: form AND completed: false'
+    processes: 'category: form AND completed: false'
   };
   const [selectedTasks, setSelected] = useState([]);
   const [selectedTask, setSelectedTask] = useState(null);
   const [bulkUpdating, setBulkUpdating] = useState(false)
   const { t } = useTranslation(['task', 'common'])
 
-  const path = useParamsQuery('')
+  const path = useParamsQuery()
   const taskURLFilter = path.get('filter');
 
   const taskHeader = [

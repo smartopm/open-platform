@@ -34,6 +34,8 @@ task update_drc_template_assignees: :environment do
           assignees: ['victor@doublegdp.com'] },
         { title: 'Overall gross buildable area, height and site controls (in line with the relevant Tilisi master plan)',
           assignees: ['victor+2@doublegdp.com'] },
+        { title: 'Pedestrian and vehicular access and circulation',
+          assignees: ['victor+2@doublegdp.com'] },
         { title: 'Access to buildings, targeted number of parking bays and adherence to lines of no access',
           assignees: ['victor+1@doublegdp.com', 'victor+2@doublegdp.com'] },
         { title: 'Details on site storm water attenuation measures',
