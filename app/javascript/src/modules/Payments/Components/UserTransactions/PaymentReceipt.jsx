@@ -21,10 +21,21 @@ export default function PaymentReceipt({ paymentData, open, handleClose, currenc
           actionText="Print"
           handleSubmit={printReceipt}
         >
-          <ReceiptDetail
-            paymentData={paymentData}
-            currencyData={currencyData}
-          />
+          {paymentData?.planPayments?.length ? (
+            paymentData?.planPayments.map(pay => (
+              <div key={pay.id} style={{paddingBottom: '250px'}}>
+                <ReceiptDetail 
+                  paymentData={pay} 
+                  currencyData={currencyData} 
+                />
+              </div>
+            ))
+          ) : (
+            <ReceiptDetail 
+              paymentData={paymentData} 
+              currencyData={currencyData}  
+            />
+          )}
         </FullScreenDialog>
       </div>
     </>

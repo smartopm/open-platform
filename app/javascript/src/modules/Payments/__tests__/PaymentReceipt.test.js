@@ -18,18 +18,15 @@ describe('It should test the payment receipt modal component', () => {
     chequeNumber: '111123',
     transactionNumber: '257439',
     createdAt: '2020-12-28',
-    planPayments: [{
-      id: '27397iy2gr',
-      receiptNumber: 't1234',
-      currentPlotPendingBalance: 2000,
-      paymentPlan: {
-        id: 'y738o48r093',
-        landParcel: {
-          id: '3iu73u4ri3h',
-          parcelNumber: 'P4444'
-        }
+    receiptNumber: 't1234',
+    currentPlotPendingBalance: 2000,
+    paymentPlan: {
+      id: 'y738o48r093',
+      landParcel: {
+        id: '3iu73u4ri3h',
+        parcelNumber: 'P4444'
       }
-    }],
+    },
     user: {
       id: 'ui3iiui3',
       name: 'some name',

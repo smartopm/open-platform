@@ -1,3 +1,4 @@
+/* eslint-disable complexity */
 import React, { useRef, useContext } from 'react';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import Grid from '@material-ui/core/Grid';
@@ -8,10 +9,9 @@ import Divider from '@material-ui/core/Divider';
 import { StyleSheet } from 'aphrodite';
 import { useTranslation } from 'react-i18next';
 import SignaturePad from '../../../Forms/components/FormProperties/SignaturePad';
-import { formatMoney , objectAccessor, capitalize } from '../../../../utils/helpers';
+import { formatMoney, objectAccessor, capitalize } from '../../../../utils/helpers';
 import { dateToString } from '../../../../components/DateContainer';
 import { paymentType } from '../../../../utils/constants';
-
 import { Context as AuthStateContext } from '../../../../containers/Provider/AuthStateProvider';
 import CommunityName from '../../../../shared/CommunityName';
 
@@ -23,7 +23,7 @@ export default function ReceiptDetail({ paymentData, currencyData }) {
   const { t } = useTranslation(['payment', 'common']);
 
   return (
-    <div className="print" style={matches ? {} : { margin: '80px 284px' }}>
+    <div className="print" style={matches ? {} : { margin: '0 284px' }}>
       <CommunityName authState={authState} logoStyles={logoStyles} />
       <Typography className={classes.receiptNumber}>
         {t('misc.receipt_#')}
@@ -69,13 +69,14 @@ export default function ReceiptDetail({ paymentData, currencyData }) {
                 {t('common:table_headers.plot_number')}
               </Grid>
               <Grid item xs={8} className={classes.title}>
-                {paymentData?.paymentPlan?.landParcel?.parcelType && paymentData?.paymentPlan?.landParcel?.parcelType}
+                {paymentData?.paymentPlan?.landParcel?.parcelType &&
+                  paymentData?.paymentPlan?.landParcel?.parcelType}
                 {' '}
                 {paymentData?.paymentPlan?.landParcel?.parcelNumber}
               </Grid>
             </Grid>
           </Grid>
-          <Grid item xs={6} style={{textAlign: 'right'}}>
+          <Grid item xs={6} style={{ textAlign: 'right' }}>
             <Grid container spacing={1}>
               <Grid item xs={12} className={classes.title} data-testid="account-name">
                 {paymentData?.community?.bankingDetails?.accountName || 'N/A'}
@@ -83,7 +84,7 @@ export default function ReceiptDetail({ paymentData, currencyData }) {
             </Grid>
             <Grid container spacing={1}>
               <Grid item xs={12} className={classes.title} data-testid="tax-id-no">
-                TPIN:
+                TPIN: 
                 {' '}
                 {paymentData?.community?.bankingDetails?.taxIdNo || 'N/A'}
               </Grid>
@@ -108,8 +109,8 @@ export default function ReceiptDetail({ paymentData, currencyData }) {
                 {t('common:form_fields.email')}
                 {': '}
                 {paymentData?.community?.supportEmail
-                      // eslint-disable-next-line react/prop-types
-                        ?.find(({ category }) => category === 'bank')?.email || 'N/A'}
+                  // eslint-disable-next-line react/prop-types
+                  ?.find(({ category }) => category === 'bank')?.email || 'N/A'}
               </Grid>
             </Grid>
             <Grid container spacing={1}>
@@ -117,8 +118,8 @@ export default function ReceiptDetail({ paymentData, currencyData }) {
                 {t('common:misc.web')}
                 {' '}
                 {paymentData?.community?.socialLinks
-                       // eslint-disable-next-line react/prop-types
-                        ?.find(({ category }) => category === 'website')?.social_link || 'N/A'}
+                  // eslint-disable-next-line react/prop-types
+                  ?.find(({ category }) => category === 'website')?.social_link || 'N/A'}
               </Grid>
             </Grid>
             <Grid container spacing={1}>
@@ -126,8 +127,8 @@ export default function ReceiptDetail({ paymentData, currencyData }) {
                 {t('common:misc.phone')}
                 {': '}
                 {paymentData?.community?.supportNumber
-                      // eslint-disable-next-line react/prop-types
-                        ?.find(({ category }) => category === 'bank')?.phone_number || 'N/A'}
+                  // eslint-disable-next-line react/prop-types
+                  ?.find(({ category }) => category === 'bank')?.phone_number || 'N/A'}
               </Grid>
             </Grid>
           </Grid>
@@ -162,11 +163,10 @@ export default function ReceiptDetail({ paymentData, currencyData }) {
               {paymentData?.paymentPlan?.landParcel?.parcelNumber}
             </Grid>
             <Grid item xs={4} className={classes.title} style={{ textAlign: 'center' }}>
-              {objectAccessor(paymentType, paymentData.source) ||
-                      objectAccessor(paymentType, paymentData?.userTransaction?.source)}
+              {objectAccessor(paymentType, paymentData?.userTransaction?.source)}
             </Grid>
             <Grid item xs={4} className={classes.title} style={{ textAlign: 'right' }}>
-              {formatMoney(currencyData, (paymentData?.amount))}
+              {formatMoney(currencyData, paymentData?.amount)}
             </Grid>
           </Grid>
         </div>
@@ -179,27 +179,27 @@ export default function ReceiptDetail({ paymentData, currencyData }) {
               </Grid>
               <Grid item xs={9} data-testid="cashier-name" style={{ fontWeight: 700 }}>
                 {paymentData?.depositor?.name ||
-                        paymentData?.userTransaction?.depositor?.name ||
-                        '-'}
+                  paymentData?.userTransaction?.depositor?.name ||
+                  '-'}
               </Grid>
             </Grid>
             {authState.user.userType === 'admin' && (
-            <Grid container spacing={1}>
-              <Grid item xs={12} style={{ color: '#9B9B9B' }}>
-                {t('common:misc.signature')}
+              <Grid container spacing={1}>
+                <Grid item xs={12} style={{ color: '#9B9B9B' }}>
+                  {t('common:misc.signature')}
+                </Grid>
+                <Grid item xs={11}>
+                  <div style={{ borderStyle: 'solid', borderColor: '#ccc', height: '110px' }}>
+                    <SignaturePad
+                      key={paymentData.id}
+                      detail={{ type: 'signature', status: '' }}
+                      signRef={signRef}
+                      onEnd={() => {}}
+                      label=""
+                    />
+                  </div>
+                </Grid>
               </Grid>
-              <Grid item xs={11}>
-                <div style={{ borderStyle: 'solid', borderColor: '#ccc', height: '110px' }}>
-                  <SignaturePad
-                    key={paymentData.id}
-                    detail={{ type: 'signature', status: '' }}
-                    signRef={signRef}
-                    onEnd={() => {}}
-                    label=""
-                  />
-                </div>
-              </Grid>
-            </Grid>
             )}
           </Grid>
           <Grid item xs={5}>
@@ -207,7 +207,13 @@ export default function ReceiptDetail({ paymentData, currencyData }) {
               <Grid item xs={8} className={classes.title}>
                 {t('misc.expected_monthly_payment')}
               </Grid>
-              <Grid item xs={4} data-testid="expected-monthly-amount" className={classes.title} style={{ textAlign: 'right' }}>
+              <Grid
+                item
+                xs={4}
+                data-testid="expected-monthly-amount"
+                className={classes.title}
+                style={{ textAlign: 'right' }}
+              >
                 {formatMoney(currencyData, paymentData?.paymentPlan?.installmentAmount)}
               </Grid>
             </Grid>
@@ -230,7 +236,7 @@ export default function ReceiptDetail({ paymentData, currencyData }) {
                 {t('misc.total_balance_remaining')}
               </Grid>
               <Grid item xs={4} className={classes.title} style={{ textAlign: 'right' }}>
-                {formatMoney(currencyData, paymentData.currentPlotPendingBalance)}
+                {formatMoney(currencyData, paymentData.currentPlotPendingBalance || 0.0)}
               </Grid>
             </Grid>
             <Grid container spacing={1}>
@@ -239,15 +245,15 @@ export default function ReceiptDetail({ paymentData, currencyData }) {
               </Grid>
               <Grid item xs={4} className={classes.title} style={{ textAlign: 'right' }}>
                 {paymentData?.community?.currency === 'zambian_kwacha'
-                        ? 'ZMW (K)'
-                        : paymentData?.community?.currency}
+                  ? 'ZMW (K)'
+                  : paymentData?.community?.currency}
               </Grid>
             </Grid>
           </Grid>
         </Grid>
 
         <div style={{ marginTop: '60px' }}>
-          <b style={{ fontSize: '16px' }}>{t('misc.banking_details')}</b>
+          <b style={{ fontSize: '16px' }}>{t('misc.banking_details')}</b> 
           {' '}
           <br />
           <Grid container spacing={1}>
@@ -301,7 +307,7 @@ export default function ReceiptDetail({ paymentData, currencyData }) {
         </div>
       </div>
     </div>
-  )
+  );
 }
 
 const useStyles = makeStyles({
@@ -376,23 +382,29 @@ ReceiptDetail.propTypes = {
         branch: PropTypes.string,
         swiftCode: PropTypes.string,
         sortCode: PropTypes.string,
-        address:PropTypes.string,
+        address: PropTypes.string,
         city: PropTypes.string,
         country: PropTypes.string,
-        taxIdNo: PropTypes.string,
+        taxIdNo: PropTypes.string
       }),
-      socialLinks: PropTypes.arrayOf(PropTypes.shape({
-        category: PropTypes.string,
-        social_link: PropTypes.string
-      })),
-      supportEmail: PropTypes.arrayOf(PropTypes.shape({
-        category: PropTypes.string,
-        email: PropTypes.string
-      })),
-      supportNumber: PropTypes.arrayOf(PropTypes.shape({
-        category: PropTypes.string,
-        phone_no: PropTypes.string
-      })),
+      socialLinks: PropTypes.arrayOf(
+        PropTypes.shape({
+          category: PropTypes.string,
+          social_link: PropTypes.string
+        })
+      ),
+      supportEmail: PropTypes.arrayOf(
+        PropTypes.shape({
+          category: PropTypes.string,
+          email: PropTypes.string
+        })
+      ),
+      supportNumber: PropTypes.arrayOf(
+        PropTypes.shape({
+          category: PropTypes.string,
+          phone_no: PropTypes.string
+        })
+      )
     }),
     user: PropTypes.shape({
       id: PropTypes.string,
