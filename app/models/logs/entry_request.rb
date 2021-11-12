@@ -132,14 +132,13 @@ module Logs
     end
 
     def access_hours
-      invites = Logs::Invite.where(guest_id: self.guest_id)
+      invites = Logs::Invite.where(guest_id: guest_id)
       hours = []
       invites.find_each do |invite|
         hours << invite.entry_time
       end
       hours
     end
-
 
     private
 

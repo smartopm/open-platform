@@ -55,7 +55,6 @@ module Mutations
         request.update!(exited_at: Time.now.in_time_zone(context[:site_community].timezone))
       end
 
-
       # Verifies if current user is present or not.
       def authorized?(_vals)
         return true if ::Policy::ApplicationPolicy.new(
