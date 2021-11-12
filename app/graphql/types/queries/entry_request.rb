@@ -53,7 +53,7 @@ module Types::Queries::EntryRequest
   end
 
   def entry_requests
-    unless admin_or_security_guard? || can_view_entry_requests?
+    unless can_view_entry_requests?
       raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
     end
 
@@ -67,7 +67,7 @@ module Types::Queries::EntryRequest
   # rubocop:disable Metrics/AbcSize
   # rubocop:disable Metrics/MethodLength
   def scheduled_requests(offset: 0, limit: 50, query: nil, scope: nil)
-    unless admin_or_security_guard? || can_view_entry_requests?
+    unless can_view_entry_requests?
       raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
     end
 
@@ -128,10 +128,6 @@ module Types::Queries::EntryRequest
     entry_requests.search(query)
   end
   # rubocop:enable Metrics/MethodLength,  Metrics/AbcSize
-
-  def admin_or_security_guard?
-    context[:current_user]&.admin? || context[:current_user]&.security_guard?
-  end
 
   def can_view_entry_request?
     permitted?(module: :entry_request, permission: :can_view_entry_request)
