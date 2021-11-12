@@ -240,7 +240,7 @@ export default function LogBookItem({
       <Grid container className={matches ?  classes.containerMobile : classes.container}>
         <Grid item md={11} xs={11}>
           <Grid container>
-            <Grid item md={12} xs={10}><Typography variant="h4">{t('logbook.log_book')}</Typography></Grid>
+            <Grid item md={12} xs={8}><Typography variant="h4">{t('logbook.log_book')}</Typography></Grid>
             <Hidden mdUp>
               <Grid item md={1} xs={2}>
                 <SpeedDial

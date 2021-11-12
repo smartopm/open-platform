@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import SpeedDial from '@material-ui/lab/SpeedDial';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import SpeedDialIcon from '@material-ui/lab/SpeedDialIcon';
 import SpeedDialAction from '@material-ui/lab/SpeedDialAction';
@@ -16,6 +17,7 @@ export default function SpeedDialButton({
   handleAction
 }) {
   const classes = useStyles();
+  const matches = useMediaQuery('(max-width:800px)');
 
   return (
     <div className={classes.wrapper} style={actions.length > 0 ? {height: 200} : {}} data-testid="speed-dial">
@@ -46,6 +48,7 @@ export default function SpeedDialButton({
             tooltipTitle={action.name}
             onClick={action.handleClick}
             data-testid="speed_dial_action"
+            tooltipOpen={matches}
           />
         ))}
       </SpeedDial>
