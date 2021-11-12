@@ -13,7 +13,7 @@ describe('Should render Visit View Component', () => {
   const mocks = {
     request: {
       query: GuestEntriesQuery,
-      variables: { offset: 0, limit: 50, query: '', scope: null }
+      variables: { offset: 0, limit: 50, query: '', scope: 2 }
     },
     result: {
       data: {
@@ -27,6 +27,15 @@ describe('Should render Visit View Component', () => {
               imageUrl: 'https://lh3.googleusercontent.com',
               avatarUrl: null
             },
+            accessHours: [
+              {
+                visitEndDate: null,
+                visitationDate: '2021-08-20T10:51:00+02:00',
+                endsAt: '2021-10-31 22:51',
+                startsAt: '2021-10-31 02:51',
+                occursOn: [],
+              }
+            ],
             occursOn: [],
             visitEndDate: null,
             visitationDate: '2021-08-20T10:51:00+02:00',
@@ -34,6 +43,7 @@ describe('Should render Visit View Component', () => {
             startTime: '2021-10-31 02:51',
             endsAt: '2021-10-31 22:51',
             startsAt: '2021-10-31 02:51',
+            exitedAt: '2021-10-31 22:51',
             revoked: true
           },
           {
@@ -45,6 +55,15 @@ describe('Should render Visit View Component', () => {
               imageUrl: 'https://lh3.googleusercontent.com/a-/',
               avatarUrl: null
             },
+            accessHours: [
+              {
+                visitEndDate: null,
+                visitationDate: '2021-08-20T10:51:00+02:00',
+                endsAt: '2021-10-31 22:51',
+                startsAt: '2021-10-31 02:51',
+                occursOn: [],
+              }
+            ],
             occursOn: [],
             visitEndDate: null,
             visitationDate: '2021-08-31T10:20:21+02:00',
@@ -52,6 +71,7 @@ describe('Should render Visit View Component', () => {
             startTime: '2021-10-31 02:51',
             endsAt: '2021-10-31 22:51',
             startsAt: '2021-10-31 02:51',
+            exitedAt: '2021-10-31 22:51',
             revoked: false
           }
         ]
@@ -65,13 +85,14 @@ describe('Should render Visit View Component', () => {
         <MockedProvider mocks={[mocks]} addTypename={false}>
           <BrowserRouter>
             <MockedThemeProvider>
-              <VisitView 
-                tabValue={1} 
-                handleAddObservation={jest.fn()} 
+              <VisitView
+                tabValue={1}
+                handleAddObservation={jest.fn()}
                 offset={0}
-                limit={50} 
-                query="" 
-                scope={null}
+                limit={50}
+                query=""
+                scope={2}
+                timeZone="Africa/Maputo"
               />
             </MockedThemeProvider>
           </BrowserRouter>
@@ -87,8 +108,7 @@ describe('Should render Visit View Component', () => {
       expect(getByText('Js sdd')).toBeInTheDocument();
       expect(getByText('Js user x')).toBeInTheDocument();
       expect(getAllByText('guest_book.start_of_visit')[0]).toBeInTheDocument();
-      expect(getAllByText('guest_book.visit_time')[0]).toBeInTheDocument();
-      expect(getAllByText('guest_book.visit_time')[0]).toBeInTheDocument();
+      expect(getAllByText('guest_book.exited_at')[0]).toBeInTheDocument();
       expect(getAllByTestId('grant_access_btn')[0]).toBeInTheDocument();
       expect(getAllByTestId('grant_access_btn')[0].textContent).toContain(
         'access_actions.grant_access'
