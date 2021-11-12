@@ -263,7 +263,7 @@ export default function LogBookItem({
                 <StyledTab label={t('logbook.visit_view')} {...a11yProps(1)} />
               </StyledTabs>
             </Grid>
-            <Grid item xs={10} md={5} style={matches ? {marginTop: '10px'} : {}}>
+            <Grid item xs={10} md={6} style={matches ? {marginTop: '10px'} : {}}>
               <SearchInput
                 title={objectAccessor(searchPlaceholder, tabValue)}
                 searchValue={searchTerm}
