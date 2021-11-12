@@ -439,6 +439,7 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
             value={formData.business}
             onChange={event => setFormData({ ...formData, business: event.target.value })}
             placeholder={t('logbook:logbook.other_reason')}
+            inputProps={{ 'data-testid': 'other_reason_business' }}
           />
         </div>
       </ReasonInputModal>

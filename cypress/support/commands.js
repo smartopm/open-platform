@@ -34,6 +34,10 @@ Cypress.Commands.add("login", (phoneNumber) => {
   })
 })
 
+Cypress.Commands.add("logout", () => {
+  cy.visit('/logout')
+})
+
 Cypress.Commands.add("addFormProperty", (fieldName, fieldType, isRequired, options = []) => {
   cy.get('.form-property-field-name-txt-input').type(fieldName);
   cy.get('.form-property-field-type-select-input').click();
@@ -58,9 +62,13 @@ Cypress.Commands.add("addFormProperty", (fieldName, fieldType, isRequired, optio
   cy.wait(2000);
 })
 
-Cypress.Commands.add("visitMainMenu", (menuItem) => {
+Cypress.Commands.add("visitMainMenu", (menuItem, parentMenuItem = undefined) => {
   cy.get('.left-menu-collapsible').click();
   cy.wait(1000);
+  if(parentMenuItem) {
+    cy.get(`${parentMenuItem}`).click();
+    cy.wait(1000);
+  }
   cy.get(`${menuItem}`).click();
   cy.wait(1000);
   cy.get('.left-menu-collapsible').click();

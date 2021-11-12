@@ -34,6 +34,7 @@ const LogBooks = {
   },
   styleProps: {
     icon: <MenuBookIcon />,
+    className: 'logbook-menu-item'
   },
   name: (t) => t('misc.log_book'),
   featureName: 'LogBook',
@@ -49,6 +50,7 @@ export default {
   },
   styleProps: {
     icon: <MenuBookIcon />,
+    className: 'logbook-parent-menu-item'
   },
   name: (t) => t('misc.log_book'),
   featureName: 'LogBook',
