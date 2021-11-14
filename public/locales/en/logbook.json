@@ -61,7 +61,9 @@
     "view_details": "View Details",
     "exit_logged": "Exit Logged",
     "observation": "Observation",
-    "no_logs": "No Logs Available"
+    "no_logs": "No Logs Available",
+    "old_switch": "switch to old screen",
+    "new_switch": "switch to new screen"
   },
   "log_title": {
     "visitor": "Visitor",

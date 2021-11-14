@@ -6,6 +6,7 @@ import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { useApolloClient, useMutation } from 'react-apollo';
+import { Link } from 'react-router-dom';
 import Hidden from '@material-ui/core/Hidden';
 import { useTranslation } from 'react-i18next';
 import makeStyles from '@material-ui/core/styles/makeStyles';
@@ -30,6 +31,7 @@ import {
 import CenteredContent from '../../../components/CenteredContent';
 import Paginate from '../../../components/Paginate';
 import { objectAccessor } from '../../../utils/helpers';
+import Text from '../../../shared/Text';
 
 const limit = 20;
 export default function LogBookItem({
@@ -241,7 +243,7 @@ export default function LogBookItem({
       <Grid container className={matches ?  classes.containerMobile : classes.container}>
         <Grid item md={11} xs={11}>
           <Grid container>
-            <Grid item md={11} xs={10}><Typography variant="h4">{t('logbook.log_book')}</Typography></Grid>
+            <Grid item md={9} xs={10}><Typography variant="h4">{t('logbook.log_book')}</Typography></Grid>
             <Hidden smUp>
               <Grid item md={1} xs={2}>
                 <SpeedDial
@@ -253,6 +255,11 @@ export default function LogBookItem({
                 />
               </Grid>
             </Hidden>
+            <Grid item md={3} xs={10} style={!matches ? {textAlign: 'right'} : {}}>
+              <Link to='/entry_logs'>
+                <Text color="secondary" content={t('logbook.old_switch')} />
+              </Link>
+            </Grid>
             <Grid item md={6}>
               <StyledTabs
                 value={tabValue}

@@ -158,26 +158,28 @@ export default function LogEvents({
                   </Typography>
                 )}
               </Grid>
-              <Hidden mdUp>
-                <Grid item md={1} xs={4} style={{ textAlign: 'right' }}>
-                  <IconButton
-                    aria-controls="sub-menu"
-                    aria-haspopup="true"
-                    dataid={entry.id}
-                    onClick={event => menuData.handleMenu(event, entry)}
-                    data-testid="menu-list"
-                  >
-                    <MoreVertOutlined />
-                  </IconButton>
-                  <MenuList
-                    open={menuData?.open && menuData?.anchorEl?.getAttribute('dataid') === entry.id}
-                    anchorEl={menuData?.anchorEl}
-                    userType={menuData?.userType}
-                    handleClose={menuData?.handleClose}
-                    list={handleMenuList(menuData?.menuList)}
-                  />
-                </Grid>
-              </Hidden>
+              {Boolean(entry.entryRequest) && (
+                <Hidden mdUp>
+                  <Grid item md={1} xs={4} style={{ textAlign: 'right' }}>
+                    <IconButton
+                      aria-controls="sub-menu"
+                      aria-haspopup="true"
+                      dataid={entry.id}
+                      onClick={event => menuData.handleMenu(event, entry)}
+                      data-testid="menu-list"
+                    >
+                      <MoreVertOutlined />
+                    </IconButton>
+                    <MenuList
+                      open={menuData?.open && menuData?.anchorEl?.getAttribute('dataid') === entry.id}
+                      anchorEl={menuData?.anchorEl}
+                      userType={menuData?.userType}
+                      handleClose={menuData?.handleClose}
+                      list={handleMenuList(menuData?.menuList)}
+                    />
+                  </Grid>
+                </Hidden>
+              )}
               <Grid item md={7} xs={12} style={!matches ? { paddingTop: '7px' } : {}}>
                 <Grid container spacing={1}>
                   <Grid item md={2} style={!matches ? { paddingTop: '15px' } : {}}>
@@ -241,26 +243,28 @@ export default function LogEvents({
                   </Grid>
                 </Grid>
               </Grid>
-              <Hidden smDown>
-                <Grid item md={1} style={{ textAlign: 'right' }}>
-                  <IconButton
-                    aria-controls="sub-menu"
-                    aria-haspopup="true"
-                    dataid={entry.id}
-                    onClick={event => menuData.handleMenu(event, entry)}
-                    data-testid="menu-list"
-                  >
-                    <MoreVertOutlined />
-                  </IconButton>
-                  <MenuList
-                    open={menuData?.open && menuData?.anchorEl?.getAttribute('dataid') === entry.id}
-                    anchorEl={menuData?.anchorEl}
-                    userType={menuData?.userType}
-                    handleClose={menuData?.handleClose}
-                    list={handleMenuList(menuData?.menuList)}
-                  />
-                </Grid>
-              </Hidden>
+              {Boolean(entry.entryRequest) && (
+                <Hidden smDown>
+                  <Grid item md={1} style={{ textAlign: 'right' }}>
+                    <IconButton
+                      aria-controls="sub-menu"
+                      aria-haspopup="true"
+                      dataid={entry.id}
+                      onClick={event => menuData.handleMenu(event, entry)}
+                      data-testid="menu-list"
+                    >
+                      <MoreVertOutlined />
+                    </IconButton>
+                    <MenuList
+                      open={menuData?.open && menuData?.anchorEl?.getAttribute('dataid') === entry.id}
+                      anchorEl={menuData?.anchorEl}
+                      userType={menuData?.userType}
+                      handleClose={menuData?.handleClose}
+                      list={handleMenuList(menuData?.menuList)}
+                    />
+                  </Grid>
+                </Hidden>
+              )}
             </Grid>
             {imageOpen && (
               <DetailsDialog
