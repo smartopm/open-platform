@@ -245,12 +245,6 @@ export function TaskDataList({
        >
          <MoreVertIcon />
        </IconButton>
-       <MenuList
-         open={menuData.open}
-         anchorEl={menuData.anchorEl}
-         handleClose={menuData.handleClose}
-         list={menuData.menuList}
-       />
      </div>
    </div>
   )
