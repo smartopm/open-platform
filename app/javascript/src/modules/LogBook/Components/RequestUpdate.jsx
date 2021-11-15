@@ -107,7 +107,7 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
                 scanLoading: false,
                 message: ''
               });
-              history.push(`/entry_logs?tab=2`);
+              history.push(`/log_book?tab=1`);
             }, 1000);
           })
           .catch(err => {
@@ -124,7 +124,7 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
                 scanLoading: false,
                 message: ''
               });
-              history.push(`/entry_logs?tab=2`);
+              history.push(`/log_book?tab=1`);
             }, 1000);
           });
       } else {
@@ -136,7 +136,7 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
         });
         setTimeout(() => {
           setDetails({ ...observationDetails, isError: false, scanLoading: false, message: '' });
-          history.push(`/entry_logs?tab=2`);
+          history.push(`/log_book?tab=1`);
         }, 1000);
       }
     }
@@ -205,7 +205,7 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
       history.push('/logbook/guests')
       return
     }
-    handleNext(true, '/entry_logs?tab=2&offset=0')
+    handleNext(true, '/log_book?tab=1&offset=0')
   }
 
   function handleCreateRequest(type='create') {
@@ -279,7 +279,7 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
           ...requestContext.request, ...res
          })
         if (!requestContext.request.isEdit) {
-          handleNext(true, '/entry_logs?tab=2&offset=0')
+          handleNext(true, '/log_book?tab=1&offset=0')
         }
       })
       .catch(error => {
@@ -414,7 +414,7 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
       history.push({pathname: '/logbook/guests'})
       return
     }
-    history.push(`/entry_logs?tab=${tabValue}&offset=0`)
+    history.push(`/log_book?tab=${tabValue}&offset=0`)
   }
 
   function disableEdit() {

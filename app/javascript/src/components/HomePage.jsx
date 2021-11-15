@@ -174,7 +174,7 @@ export default function Homepage({ authState, quickLinks }) {
     {
       card_id: 13,
       title: t('common:misc.log_book'),
-      path: '/entry_logs',
+      path: '/log_book',
 
       icon: <LogIcon color="primary" fontSize="large" />,
       access: ['security_guard', 'admin']
