@@ -36,6 +36,7 @@ module Mutations
       # rubocop:enable Metrics/AbcSize
       # rubocop:enable Metrics/MethodLength
 
+      # TODO: Find out if we still need this
       def update_prev_log(event_id, note)
         return unless note.eql?('Exited')
 
@@ -52,7 +53,7 @@ module Mutations
         request = context[:site_community].entry_requests.find_by(id: req_id)
         return if request.nil?
 
-        request.update!(exited_at: Time.now.in_time_zone(context[:site_community].timezone))
+        request.update!(exited_at: Time.zone.now)
       end
 
       # Verifies if current user is present or not.

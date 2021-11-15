@@ -119,4 +119,31 @@ RSpec.describe Logs::EntryRequest, type: :model do
       entry_request.send_feedback_link('+2347084123467')
     end
   end
+
+  describe '#access_hours' do
+    let!(:user) { create(:user_with_community) }
+    let!(:admin) { create(:admin_user, community_id: user.community_id) }
+    let!(:visitor) { create(:user, community_id: user.community_id, user_type: 'visitor') }
+    let!(:entry_request) do
+      admin.entry_requests.create(name: 'Mark Percival', reason: 'Visiting',
+                                  guest_id: visitor.id)
+    end
+    let!(:invite) { admin.invite_guest(visitor.id) }
+    let!(:entry_time) do
+      user.community.entry_times.create(
+        visitation_date: '2021-11-16 10:02:25',
+        starts_at: '2021-11-16 10:02:25',
+        ends_at: '2021-11-16 12:02:25',
+        occurs_on: [],
+        visit_end_date: nil,
+        visitable_id: invite.id,
+        visitable_type: 'Logs::Invite',
+      )
+    end
+
+    it 'returns the access hours for entry request' do
+      expect(entry_request.access_hours).to_not be_nil
+      expect(entry_request.access_hours.length).to eql 1
+    end
+  end
 end
