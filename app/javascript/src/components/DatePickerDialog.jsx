@@ -90,7 +90,6 @@ export function ThemedTimePicker({ handleTimeChange, time, label, inputValidatio
           clearLabel={t('date_picker.clear')}
           cancelLabel={t('date_picker.cancel')}
           data-testid="time_picker"
-          autoOk
           clearable
           label={label}
           value={time}
