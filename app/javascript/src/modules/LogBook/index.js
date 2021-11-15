@@ -29,7 +29,7 @@ function RenderLogBook() {
 
 const LogBooks = {
   routeProps: {
-    path: '/log_book',
+    path: '/logbook',
     component: RenderLogBook
   },
   styleProps: {
@@ -44,7 +44,7 @@ const LogBooks = {
 
 export default {
   routeProps: {
-    path: '/entry_logs',
+    path: '/logbook',
     component: GateAccessIcon,
   },
   styleProps: {

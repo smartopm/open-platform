@@ -358,7 +358,7 @@ export function IndexComponent({
       </EntryNoteDialog>
       <div className="container">
         <Grid style={{textAlign: 'right', paddingBottom: '10px'}}>
-          <Link to='/log_book'>
+          <Link to='/logbook'>
             <Text color="secondary" content={t('logbook.new_switch')} />
           </Link>
         </Grid>

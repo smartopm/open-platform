@@ -91,7 +91,7 @@ export default function LogBookItem({
     if (eventLog.refType === 'Logs::EntryRequest') {
       router.push({
         pathname: `/request/${eventLog.refId}`,
-        state: { from: 'entry_logs', offset }
+        state: { from: 'entry_logs', tabValue, offset }
       });
     }
     if (eventLog.refType === 'Users::User') {
