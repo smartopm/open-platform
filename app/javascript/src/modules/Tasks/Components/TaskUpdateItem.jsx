@@ -8,7 +8,7 @@ export default function TaskUpdateItem({ user, content, icon, date }) {
 
   return(
     <>
-      <div style={{display: 'flex', alignItems: 'center', marginTop: '2px' }}>
+      <div style={{display: 'flex', alignItems: 'center', margin: '8px 0' }}>
         {icon}
         <Typography variant="body2" style={{ marginLeft: '12px' }}>
           <b>
