@@ -1,8 +1,8 @@
-import { checkInValidRequiredFields, checkRequests, isNotValidCheck } from '../utils';
+import { checkInValidRequiredFields, checkRequests, findClosestEntry, IsAnyRequestValid, isNotValidCheck } from '../utils';
 
 describe('logbook utils', () => {
   const tz = 'Africa/Lusaka'
-  it('check required', () => {
+  it('checks required fields', () => {
     const initialState = {
       name: '',
       phoneNumber: '',
@@ -40,7 +40,7 @@ describe('logbook utils', () => {
     expect(validityCheck2.title).toEqual('invalid')
   })
 
-  it('return true for a valid guest', () => {
+  it('returns true for a valid guest', () => {
     jest.useFakeTimers('modern')
     jest.setSystemTime(new Date('2021-05-20 12:51'))
 
@@ -94,5 +94,42 @@ describe('logbook utils', () => {
     const translate = jest.fn(() => 'valid')
     const validity2 = checkRequests(req2, translate, tz)
     expect(validity2.valid).toBe(true)
+  })
+
+  it('checks if any of the entries is valid', () => {
+    jest.useFakeTimers('modern')
+    jest.setSystemTime(new Date('2021-05-20 13:00'))
+
+    const entries = [
+      {
+        visitEndDate: '2021-08-01T16:21:10.731Z',
+        visitationDate: '2021-04-20T19:40:00.000Z',
+        endsAt: '2021-05-20T13:51:00.000Z',
+        startsAt: '2021-05-20T12:51:00.000Z',
+        occursOn: [],
+      },
+      // this is the only valid and the closest to today [2021-05-20 13:00]
+      {
+        visitEndDate: '2021-08-01T16:21:10.731Z',
+        visitationDate: '2021-05-20T10:40:00.000Z',
+        endsAt: '2021-05-21T13:51:00.000Z',
+        startsAt: '2021-05-20T12:51:00.000Z',
+        occursOn: [],
+      },
+      {
+        visitEndDate: '2021-08-01T16:21:10.731Z',
+        visitationDate: '2020-03-20T10:40:00.000Z',
+        endsAt: '2021-05-20T13:51:00.000Z',
+        startsAt: '2021-05-20T12:51:00.000Z',
+        occursOn: [],
+      },
+    ]
+    const translate = jest.fn(() => 'valid')
+    const validity2 = IsAnyRequestValid(entries, translate, tz)
+    expect(validity2).toBe(true)
+
+    // check the closest date
+    const closestDate = findClosestEntry(entries, tz)
+    expect(closestDate.visitationDate).toEqual('2021-05-20T10:40:00.000Z')
   })
 });

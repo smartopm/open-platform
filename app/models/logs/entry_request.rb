@@ -129,6 +129,15 @@ module Logs
       Sms.send(number, I18n.t('general.thanks_for_using_our_app', feedback_link: feedback_link))
     end
 
+    def access_hours
+      invites = Logs::Invite.where(guest_id: guest_id)
+      hours = []
+      invites.find_each do |invite|
+        hours << invite.entry_time
+      end
+      hours
+    end
+
     private
 
     # Assigns community id of user.

@@ -9,7 +9,7 @@
     "temperature_recorded": "Temperature Recorded",
     "print_scan": "Print Scan",
     "digital_scan": "Digital Scan",
-    "all_visits": "All Visits",
+    "all_visits": "All Logs",
     "new_visits": "New Visits",
     "upcoming_visits": "Upcoming Visits",
     "registered_guests": "Registered Guests",
@@ -124,7 +124,8 @@
     "repeats_until": "Repeats Until",
     "update_guest": "Update Guest",
     "host": "Host",
-    "revoked": "Revoked"
+    "revoked": "Revoked",
+    "exited_at": "Exited at {{time}}"
   },
   "date_picker": {
     "ok_label": "Ok",

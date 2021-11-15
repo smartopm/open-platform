@@ -1,3 +1,7 @@
+/**
+ * use authstate.js instead of this
+ * @deprecated in favour of ./authstate.js it seems most update to date with permissions
+ */
 const userMock = {
     user: {
       id: 'a54d6184-b10e-4865-bee7-7957701d423d',

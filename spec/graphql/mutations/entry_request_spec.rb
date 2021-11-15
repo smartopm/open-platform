@@ -343,21 +343,25 @@ RSpec.describe Mutations::EntryRequest do
 
     let(:query) do
       <<~GQL
-        mutation addObservationNote($id: ID, 
-        $note: String, 
-        $refType: String, 
-        $eventLogId: ID, 
+        mutation addObservationNote($id: ID,
+        $note: String,
+        $refType: String,
+        $eventLogId: ID,
         $attachedImages: JSON) {
-          entryRequestNote(id: $id, 
-          note: $note, 
-          refType: $refType, 
-          eventLogId: $eventLogId, 
+          entryRequestNote(id: $id,
+          note: $note,
+          refType: $refType,
+          eventLogId: $eventLogId,
           attachedImages: $attachedImages) {
             event {
               id
               data
               refType,
               imageUrls
+              entryRequest {
+                id
+                exitedAt
+              }
             }
           }
         }
@@ -430,6 +434,24 @@ RSpec.describe Mutations::EntryRequest do
       expect(result['errors']).not_to be_nil
       expect(result.dig('data', 'entryRequestNote', 'event', 'id')).to be_nil
       expect(result.dig('errors', 0, 'message')).to include 'cannot be empty'
+    end
+
+    it 'updates a request with an exited_at when it\'s an exit note' do
+      variables = {
+        id: entry_request.id,
+        note: 'Exited',
+        refType: 'Logs::EntryRequest',
+      }
+      expect(entry_request.exited_at).to be_nil
+      result = DoubleGdpSchema.execute(query, variables: variables,
+                                              context: {
+                                                current_user: guard,
+                                                site_community: guard.community,
+                                              }).as_json
+      expect(result['errors']).to be_nil
+      expect(result.dig('data', 'entryRequestNote', 'event', 'id')).to_not be_nil
+      expect(result.dig('data', 'entryRequestNote', 'event', 'entryRequest',
+                        'exitedAt')).to_not be_nil
     end
 
     it 'returns Unauthorized for non admin and security_guard' do

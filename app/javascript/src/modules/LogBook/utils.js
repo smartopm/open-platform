@@ -78,3 +78,24 @@ export function resolveUserOrGuest(request){
   const user =  request.user || request.guest
   return user
 }
+
+/**
+ * check if any entry is valid
+ * @param {[object]} entries
+ */
+export function IsAnyRequestValid(entries, t, tz) {
+  return entries.some(entry => {
+     return checkRequests(entry, t, tz).valid
+  })
+}
+
+
+export function findClosestEntry(entries, tz) {
+  const timeNow = moment.tz(tz);
+  return entries.sort((entry1, entry2) => {
+    const diffEntry1 = Math.abs(new Date(timeNow) - new Date(entry1.visitationDate));
+    const diffEntry2 = Math.abs(new Date(timeNow) - new Date(entry2.visitationDate));
+
+    return diffEntry1 - diffEntry2;
+  })[0];
+}

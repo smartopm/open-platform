@@ -201,10 +201,6 @@ describe('RequestUpdate Component', () => {
       expect(container.queryByText('form_fields.full_name')).toBeInTheDocument();
       expect(container.queryByTestId('entry_user_call_mgr')).toBeInTheDocument();
       expect(container.queryByTestId('entry_user_grant')).toBeInTheDocument();
-      expect(container.queryByTestId('guest_repeats_on')).toBeInTheDocument();
-      expect(container.queryByTestId('guest_repeats_on').textContent).toContain(
-        'guest_book.repeats_on'
-      );
     }, 50);
   });
 
