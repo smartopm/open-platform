@@ -140,7 +140,10 @@ export default function LogEvents({
                       {entry.entryRequest?.name}
                     </Typography>
                     <br />
-                    <Typography variant="caption">{t('logbook.host')} </Typography>
+                    <Typography variant="caption">
+                      {t('logbook.host')}
+                      {' '}
+                    </Typography>
                     <Link to={`/user/${entry.actingUser.id}`} data-testid="acting-user">
                       <Text color="secondary" content={entry.actingUser.name} />
                     </Link>
