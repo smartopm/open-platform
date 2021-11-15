@@ -108,7 +108,7 @@ RSpec.describe Logs::EntryRequest, type: :model do
   describe '#send_feedback_link' do
     let!(:user) { create(:user_with_community) }
     let!(:admin) { create(:admin_user, community_id: user.community_id) }
-    let!(:entry_request) { admin.entry_requests.create(name: 'Mark Percival', reason: 'Visiting') }
+    let!(:entry_request) { admin.entry_requests.create(name: 'Test User', reason: 'Visiting') }
 
     it 'sends feedback as sms' do
       feedback_link = "https://#{ENV['HOST']}/feedback"
@@ -125,7 +125,7 @@ RSpec.describe Logs::EntryRequest, type: :model do
     let!(:admin) { create(:admin_user, community_id: user.community_id) }
     let!(:visitor) { create(:user, community_id: user.community_id, user_type: 'visitor') }
     let!(:entry_request) do
-      admin.entry_requests.create(name: 'Mark Percival', reason: 'Visiting',
+      admin.entry_requests.create(name: 'Test User', reason: 'Visiting',
                                   guest_id: visitor.id)
     end
     let!(:invite) { admin.invite_guest(visitor.id) }
