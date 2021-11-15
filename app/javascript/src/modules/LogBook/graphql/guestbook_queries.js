@@ -11,7 +11,10 @@ export const GuestEntriesQuery = gql`
       user {
         id
         name
-        imageUrl
+      }
+      guest {
+        id
+        name
         avatarUrl
       }
       accessHours {

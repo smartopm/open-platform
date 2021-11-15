@@ -13,7 +13,7 @@ import SpeedDialIcon from '@material-ui/lab/SpeedDialIcon';
 import Grid from '@material-ui/core/Grid';
 import { StyledTabs, StyledTab, TabPanel, a11yProps } from '../../../components/Tabs';
 import LogEvents from './LogEvents';
-import VisitView from './VisitView';
+// import VisitView from './VisitView';
 import SpeedDial from '../../../shared/buttons/SpeedDial';
 import SearchInput from '../../../shared/search/SearchInput';
 import EntryNoteDialog from '../../../shared/dialogs/EntryNoteDialog';
@@ -29,6 +29,7 @@ import {
 import CenteredContent from '../../../components/CenteredContent';
 import Paginate from '../../../components/Paginate';
 import { objectAccessor } from '../../../utils/helpers';
+import GuestsView from './GuestsView';
 
 const limit = 20;
 export default function LogBookItem({
@@ -107,8 +108,8 @@ export default function LogBookItem({
   }
   const searchPlaceholder = {
     0: t('logbook.all_visits'),
-    1: t('logbook.registered_guests'),
-    2: t('logbook.new_visits'),
+    1: t('guest.guests'),
+    2: t('logbook.visit_view'),
     3: t('logbook.observations')
   };
 
@@ -259,7 +260,8 @@ export default function LogBookItem({
                 onChange={handleTabValue}
               >
                 <StyledTab label={t('logbook.log_view')} {...a11yProps(0)} />
-                <StyledTab label={t('logbook.visit_view')} {...a11yProps(1)} />
+                <StyledTab label={t('guest.guests')} {...a11yProps(1)} />
+                <StyledTab label={t('logbook.visit_view')} {...a11yProps(2)} />
               </StyledTabs>
             </Grid>
             <Grid item xs={10} md={5} style={matches ? {marginTop: '10px'} : {}}>
@@ -302,7 +304,18 @@ export default function LogBookItem({
             />
           </TabPanel>
           <TabPanel pad value={tabValue} index={1}>
-            <VisitView
+            <GuestsView
+              tabValue={tabValue}
+              handleAddObservation={handleAddObservation}
+              offset={offset}
+              limit={limit}
+              query={`${searchTerm} ${searchQuery}`}
+              scope={scope}
+              timeZone={authState.user.community.timezone}
+            />
+          </TabPanel>
+          <TabPanel pad value={tabValue} index={2}>
+            <GuestsView
               tabValue={tabValue}
               handleAddObservation={handleAddObservation}
               offset={offset}
