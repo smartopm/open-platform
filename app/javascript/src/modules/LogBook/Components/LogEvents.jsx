@@ -140,10 +140,7 @@ export default function LogEvents({
                       {entry.entryRequest?.name}
                     </Typography>
                     <br />
-                    <Typography variant="caption">
-                      {t('logbook.host')}
-                      {' '}
-                    </Typography>
+                    <Typography variant="caption">{t('logbook.host')} </Typography>
                     <Link to={`/user/${entry.actingUser.id}`} data-testid="acting-user">
                       <Text color="secondary" content={entry.actingUser.name} />
                     </Link>
@@ -171,7 +168,9 @@ export default function LogEvents({
                       <MoreVertOutlined />
                     </IconButton>
                     <MenuList
-                      open={menuData?.open && menuData?.anchorEl?.getAttribute('dataid') === entry.id}
+                      open={
+                        menuData?.open && menuData?.anchorEl?.getAttribute('dataid') === entry.id
+                      }
                       anchorEl={menuData?.anchorEl}
                       userType={menuData?.userType}
                       handleClose={menuData?.handleClose}
@@ -182,58 +181,49 @@ export default function LogEvents({
               )}
               <Grid item md={7} xs={12} style={!matches ? { paddingTop: '7px' } : {}}>
                 <Grid container spacing={1}>
-                  <Grid item md={2} style={!matches ? { paddingTop: '15px' } : {}}>
+                  <Grid item sm={2} md={3} style={!matches ? { paddingTop: '15px' } : {}}>
                     <Typography variant="caption" color="textSecondary" data-testid="created-at">
                       {dateToString(entry.createdAt)}
                     </Typography>
                   </Grid>
-                  <Grid item md={1} style={!matches ? { paddingTop: '15px' } : {}}>
+                  <Grid item sm={1} md={2} style={!matches ? { paddingTop: '15px' } : {}}>
                     <Typography variant="caption" color="textSecondary">
                       {dateTimeToString(entry.createdAt)}
                     </Typography>
                   </Grid>
-                  <Grid item md={9} xs={12}>
+                  <Grid item md={7} xs={12}>
                     <Grid container>
                       {entry.entryRequest?.grantor && entry.data.note !== 'Exited' && (
-                        <Grid item md={3} data-testid="granted-access">
-                          <Chip
-                            label={t('logbook.granted_access')}
-                            style={{ background: '#77B08A', color: 'white' }}
-                          />
-                        </Grid>
+                        <Chip
+                          data-testid="granted-access"
+                          label={t('logbook.granted_access')}
+                          style={{ background: '#77B08A', color: 'white' }}
+                        />
                       )}
                       {entry.data.note === 'Exited' && (
-                        <Grid item md={3}>
-                          <Chip
-                            label={t('logbook.exit_logged')}
-                            style={{ background: '#C4584F', color: 'white' }}
-                          />
-                        </Grid>
+                        <Chip
+                          label={t('logbook.exit_logged')}
+                          style={{ background: '#C4584F', color: 'white' }}
+                        />
                       )}
                       {entry.subject === 'observation_log' && (
-                        <Grid item md={3} data-testid="observation">
-                          <Chip
-                            label={t('logbook.observation')}
-                            style={{ background: '#EBC64F', color: 'white' }}
-                          />
-                        </Grid>
+                        <Chip
+                          label={t('logbook.observation')}
+                          style={{ background: '#EBC64F', color: 'white' }}
+                          data-testid="observation"
+                        />
                       )}
                       {entry.entryRequest && entry.data.note !== 'Exited' && (
-                        <Grid item md={3}>
-                          <Chip
-                            label={toTitleCase(entry.entryRequest?.reason)}
-                            style={{
-                              background: objectAccessor(
-                                LogLabelColors,
-                                entry.entryRequest?.reason
-                              ),
-                              color: 'white'
-                            }}
-                          />
-                        </Grid>
+                        <Chip
+                          label={toTitleCase(entry.entryRequest?.reason)}
+                          style={{
+                            background: objectAccessor(LogLabelColors, entry.entryRequest?.reason),
+                            color: 'white'
+                          }}
+                        />
                       )}
                       {entry.imageUrls && (
-                        <Grid item md={1} data-testid="image-area">
+                        <Grid item sm={1} md={1} data-testid="image-area">
                           <IconButton color="primary" onClick={() => handleClick(entry.id)}>
                             <PhotoIcon />
                           </IconButton>
@@ -256,7 +246,9 @@ export default function LogEvents({
                       <MoreVertOutlined />
                     </IconButton>
                     <MenuList
-                      open={menuData?.open && menuData?.anchorEl?.getAttribute('dataid') === entry.id}
+                      open={
+                        menuData?.open && menuData?.anchorEl?.getAttribute('dataid') === entry.id
+                      }
                       anchorEl={menuData?.anchorEl}
                       userType={menuData?.userType}
                       handleClose={menuData?.handleClose}
