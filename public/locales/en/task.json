@@ -49,5 +49,8 @@
     "download": "Download",
     "no_documents": "No documents attached",
     "documents": "Documents"
+  },
+  "history": {
+    "updates": "Updates"
   }
 }

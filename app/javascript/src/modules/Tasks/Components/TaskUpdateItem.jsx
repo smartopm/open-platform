@@ -2,15 +2,15 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import Divider from '@material-ui/core/Divider';
-import Typography from '@material-ui/core/Typography';
+import { Typography } from '@material-ui/core';
 
 export default function TaskUpdateItem({ user, content, icon, date }) {
 
   return(
     <>
-      <div style={{display: 'flex'}}>
+      <div style={{display: 'flex', alignItems: 'center', marginTop: '2px' }}>
         {icon}
-        <Typography variant="body2" style={{marginTop: '10px', marginLeft: '12px'}}>
+        <Typography variant="body2" style={{ marginLeft: '12px' }}>
           <b>
             {user}
           </b>
