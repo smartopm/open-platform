@@ -40,8 +40,8 @@ module Mutations
 
       # Verifies if current user is admin or not.
       def authorized?(_vals)
-        return true if allowed?(admin: true, module: :community,
-                                permission: :can_update_community_details)
+        return true if permitted?(admin: true, module: :community,
+                                  permission: :can_update_community_details)
 
         raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
       end
