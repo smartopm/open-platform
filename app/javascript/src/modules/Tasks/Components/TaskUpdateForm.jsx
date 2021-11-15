@@ -9,7 +9,6 @@ import { useTranslation } from 'react-i18next';
 import AlarmIcon from '@material-ui/icons/Alarm';
 import { UpdateNote } from '../../../graphql/mutations';
 import { TaskReminderMutation } from '../graphql/task_reminder_mutation';
-// import Toggler from '../../../components/Campaign/ToggleButton';
 import RemindMeLaterMenu from './RemindMeLaterMenu';
 import TaskUpdateList from './TaskUpdateList';
 import TaskComment from './TaskComment';
@@ -48,11 +47,6 @@ export default function TaskForm({
   const [setReminder] = useMutation(TaskReminderMutation);
   const [reminderTime, setReminderTime] = useState(null);
   const { t } = useTranslation(['task', 'common']);
-
-  // const [type, setType] = useState('task');
-  // const handleType = (_event, value) => {
-  //   setType(value);
-  // };
 
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
