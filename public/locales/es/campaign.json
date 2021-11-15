@@ -17,6 +17,7 @@
   },
   "form_fields": {
     "assign_label": "Asignar etiqueta",
+    "batch_time": "Tiempo de Lote",
     "campaign_name": "Nombre de la campaña",
     "campaign_type": "Tipo de campaña",
     "email": "Correo electrónico",
