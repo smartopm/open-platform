@@ -147,7 +147,7 @@ const useStyles = makeStyles({
   icon: {
     padding: '4px',
     marginBottom: '10px',
-    fontSize: '40px',
+    fontSize: '32px',
     border: '2px solid #dad9d9',
     color: '#dad9d9',
     borderRadius: '50%'
