@@ -1,10 +1,12 @@
 /* eslint-disable react/prop-types */
-import React, { useContext } from 'react'
+import React, { useContext, useState } from 'react'
 import { useQuery } from 'react-apollo'
 import { QRCode } from 'react-qr-svg'
+import { Button } from '@material-ui/core';
+import { useTranslation } from 'react-i18next';
+import domtoimage from 'dom-to-image';
 import Loading from '../shared/Loading'
 import DateUtil from '../utils/dateutil'
-
 import { UserQuery } from '../graphql/queries'
 import ErrorPage from '../components/Error'
 import CommunityName from '../shared/CommunityName'
@@ -45,7 +47,28 @@ function toTitleCase(str) {
 }
 
 export function UserPrintDetail({ data }) {
-  const authState = useContext(Context)
+  const authState = useContext(Context);
+  const { t } = useTranslation('common');
+  const [downloading, setDownloading] = useState(false);
+
+  function downloadId() {
+    setDownloading(true);
+    const node = document.getElementById('idCard');
+    domtoimage.toPng(node)
+      .then(function (dataUrl) {
+          const a = document.createElement('a');
+          a.setAttribute('href', dataUrl);
+          a.setAttribute('download', 'ID-n.jpeg');
+          a.innerHTML = 'Download';
+          a.click();
+          setDownloading(false);
+      })
+      .catch(function (error) {
+          console.error('ID downlod error', error);
+          setDownloading(false);
+      });
+  }
+
   return (
     <div>
       <div className="row justify-content-center">
@@ -71,7 +94,8 @@ export function UserPrintDetail({ data }) {
           </div>
           <div className="d-flex justify-content-center">
             <div className="expires">
-              Exp: 
+              {t('misc.exp')}
+              :
               {' '}
               {expiresAtStr(data.user.expiresAt)}
             </div>
@@ -84,6 +108,16 @@ export function UserPrintDetail({ data }) {
             />
           </div>
         </div>
+      </div>
+      <div style={{display: 'flex', justifyContent: 'center', marginTop: '5px'}}>
+        <Button
+          onClick={downloadId}
+          color='primary'
+          variant='contained'
+          disabled={downloading}
+        >
+          {t('misc.download_id')}
+        </Button>
       </div>
     </div>
   )

@@ -237,7 +237,9 @@
     "signature": "Signature",
     "seconds": "seconds",
     "never": "Never",
-    "general_funds": "General Funds"
+    "general_funds": "General Funds",
+    "exp": "Exp",
+    "download_id": "Download ID"
   },
   "menu": {
     "invoice": "Invoice",

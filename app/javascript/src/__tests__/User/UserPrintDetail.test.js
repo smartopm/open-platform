@@ -35,7 +35,7 @@ describe('UserPrint Detail component', () => {
 
     expect(container.queryByText('Another somebodyy')).toBeInTheDocument();
     expect(container.queryByText('Client')).toBeInTheDocument();
-    expect(container.queryByText('Exp: Never')).toBeInTheDocument();
+    expect(container.queryByText('misc.exp: Never')).toBeInTheDocument();
   });
 it('renders id card page', () => {
     const matchProps = {
