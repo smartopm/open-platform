@@ -260,7 +260,7 @@ export default function LogBookItem({
                 <Text color="secondary" content={t('logbook.old_switch')} />
               </Link>
             </Grid>
-            <Grid item md={6}>
+            <Grid item xs={12} md={6}>
               <StyledTabs
                 value={tabValue}
                 aria-label="simple tabs example"
@@ -270,7 +270,7 @@ export default function LogBookItem({
                 <StyledTab label={t('logbook.visit_view')} {...a11yProps(1)} />
               </StyledTabs>
             </Grid>
-            <Grid item xs={10} md={6} style={matches ? {marginTop: '10px'} : {}}>
+            <Grid item xs={6} md={6} style={matches ? {marginTop: '10px'} : {}}>
               <SearchInput
                 title={objectAccessor(searchPlaceholder, tabValue)}
                 searchValue={searchTerm}

@@ -30,7 +30,8 @@ function RenderLogBook() {
 const LogBooks = {
   routeProps: {
     path: '/logbook',
-    component: RenderLogBook
+    component: RenderLogBook,
+    exact: true,
   },
   styleProps: {
     icon: <MenuBookIcon />,
@@ -46,6 +47,7 @@ export default {
   routeProps: {
     path: '/logbook',
     component: GateAccessIcon,
+    exact: true
   },
   styleProps: {
     icon: <MenuBookIcon />,
