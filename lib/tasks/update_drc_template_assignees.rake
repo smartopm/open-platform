@@ -4,7 +4,7 @@
 # rubocop:disable Layout/LineLength:
 desc 'Update Assignees on DRC Task Template'
 task update_drc_template_assignees: :environment do
-  community = Community.find_by(name: 'DoubleGDP')
+  community = Community.find_by(name: 'Tilisi')
   abort('DoubleGDP community is needed') if community.blank?
 
   ordered_list_of_subtask_assignees = [
