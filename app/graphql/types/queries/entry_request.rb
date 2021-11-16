@@ -113,7 +113,7 @@ module Types::Queries::EntryRequest
       .where.not(granted_at: nil, granted_state: 2)
       .includes(:user).search(query)
       .limit(limit).offset(offset)
-      .unscope(:order).order(created_at: :desc)
+      .unscope(:order).order(granted_at: :desc)
       .with_attached_images
       .with_attached_video
   end
