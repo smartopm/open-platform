@@ -74,9 +74,9 @@ export default function LogBook() {
   function paginate(action) {
     if (action === 'prev') {
       if (offset < limit) return;
-      history.push(`/log_book?tab=${value}&offset=${offset - limit}`);
+      history.push(`/logbook?tab=${value}&offset=${offset - limit}`);
     } else if (action === 'next') {
-      history.push(`/log_book?tab=${value}&offset=${offset + limit}`);
+      history.push(`/logbook?tab=${value}&offset=${offset + limit}`);
     }
   }
 
@@ -97,7 +97,7 @@ export default function LogBook() {
     setvalue(newValue);
     setSearchTerm('');
     // reset pagination after changing the tab
-    history.push(`/log_book?tab=${newValue}&offset=${0}`);
+    history.push(`/logbook?tab=${newValue}&offset=${0}`);
   }
   return (
     <LogBookItem

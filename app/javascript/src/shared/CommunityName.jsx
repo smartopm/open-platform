@@ -6,14 +6,14 @@ import { Typography } from '@material-ui/core';
 import ImageAuth from './ImageAuth';
 import userProps from './types/user';
 
-// TODO: This component needs to be revisited
 export default function CommunityName({ authState, logoStyles }) {
-  if (authState.id && authState.community) {
-    if (authState.community.logoUrl) {
+  if (authState && authState.user?.community) {
+    const { community } = authState.user;
+    if (community.imageUrl) {
       return (
-        <Link to="/">
-          <img
-            src={authState.community.logoUrl}
+        <Link to="/" style={{ textDecoration: 'none' }}>
+          <ImageAuth
+            imageLink={community.imageUrl}
             className={logoStyles.logo ? css(logoStyles.logo) : css(styles.logo)}
             alt="community logo"
           />
@@ -22,18 +22,11 @@ export default function CommunityName({ authState, logoStyles }) {
     }
     return (
       <Link to="/" style={{ textDecoration: 'none' }}>
-        <Typography color="primary">{authState.community.name}</Typography>
+        <Typography color="primary">{community.name}</Typography>
       </Link>
     );
-  }
-  return (
-    <Link to="/" style={{ textDecoration: 'none' }}>
-      <ImageAuth
-        imageLink={authState.user?.community.imageUrl}
-        className={logoStyles.logo ? css(logoStyles.logo) : css(styles.logo)}
-      />
-    </Link>
-  );
+  };
+  return null;
 }
 
 CommunityName.defaultProps = {
