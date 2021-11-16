@@ -38,7 +38,7 @@ export default function SpeedDialButton({
         onClose={handleClose}
         onOpen={handleOpen}
         onClick={actions.length === 0 ? handleAction : null}
-        open={open}
+        open={matches || open}
         direction={direction}
       >
         {actions.map(action => (
@@ -48,7 +48,6 @@ export default function SpeedDialButton({
             tooltipTitle={action.name}
             onClick={action.handleClick}
             data-testid="speed_dial_action"
-            tooltipOpen={matches}
           />
         ))}
       </SpeedDial>

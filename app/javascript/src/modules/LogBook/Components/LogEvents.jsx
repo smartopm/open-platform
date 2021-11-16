@@ -200,19 +200,19 @@ export default function LogEvents({
                         <Chip
                           data-testid="granted-access"
                           label={t('logbook.granted_access')}
-                          style={{ background: '#77B08A', color: 'white' }}
+                          style={{ background: '#77B08A', color: 'white', marginRight: '16px' }}
                         />
                       )}
                       {entry.data.note === 'Exited' && (
                         <Chip
                           label={t('logbook.exit_logged')}
-                          style={{ background: '#C4584F', color: 'white' }}
+                          style={{ background: '#C4584F', color: 'white', marginRight: '16px' }}
                         />
                       )}
                       {entry.subject === 'observation_log' && (
                         <Chip
                           label={t('logbook.observation')}
-                          style={{ background: '#EBC64F', color: 'white' }}
+                          style={{ background: '#EBC64F', color: 'white', marginRight: '16px' }}
                           data-testid="observation"
                         />
                       )}
