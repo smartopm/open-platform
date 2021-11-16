@@ -18,6 +18,7 @@ import Text from '../../../shared/Text';
 import { IsAnyRequestValid } from '../utils';
 import CenteredContent from '../../../shared/CenteredContent';
 import { formatError } from '../../../utils/helpers';
+import useLogbookStyles from '../styles';
 
 export default function VisitView({
   tabValue,
@@ -39,6 +40,7 @@ export default function VisitView({
   const [currentId, setCurrentId] = useState(null);
   const history = useHistory();
   const matches = useMediaQuery('(max-width:800px)');
+  const classes = useLogbookStyles();
 
   function handleCardClick(visit) {
     history.push({
@@ -83,8 +85,8 @@ export default function VisitView({
           >
             <Grid container spacing={1}>
               <Grid item md={1} xs={3}>
-                <Avatar src="/images/default_avatar.svg" alt={visit.guest?.name} variant="square">
-                  {visit.guest?.name.charAt(0)}
+                <Avatar alt={visit.guest?.name} className={classes.avatar} variant="square">
+                  {visit.name.charAt(0)}
                 </Avatar>
               </Grid>
               <Grid item md={3} xs={9}>
@@ -100,17 +102,27 @@ export default function VisitView({
                   <Text color="secondary" content={visit.user.name} />
                 </Link>
               </Grid>
-              <Grid item md={2} xs={6} style={!matches ? { paddingTop: '15px' } : {}} data-testid="entered_at">
+              <Grid
+                item
+                md={2}
+                xs={6}
+                style={!matches ? { paddingTop: '15px' } : {}}
+                data-testid="entered_at"
+              >
                 <Typography variant="caption">
                   {t('guest_book.entered_at', {
                     time: dateToString(visit.grantedAt, 'YYYY-MM-DD HH:mm')
                   })}
                 </Typography>
               </Grid>
-              <Grid item md={3} xs={6} style={!matches ? { paddingTop: '15px' } : {}} data-testid="exited_at">
-                {currentId === visit.id && observationDetails.loading ? (
-                  <Spinner />
-                ) : visit.exitedAt ? (
+              <Grid
+                item
+                md={3}
+                xs={6}
+                style={!matches ? { paddingTop: '15px' } : {}}
+                data-testid="exited_at"
+              >
+                {visit.exitedAt ? (
                   <Typography variant="caption">
                     {t('guest_book.exited_at', {
                       time: dateToString(visit.exitedAt, 'YYYY-MM-DD HH:mm')
@@ -120,7 +132,11 @@ export default function VisitView({
                   <Button
                     color="primary"
                     data-testid="log_exit"
+                    variant="outlined"
                     disabled={currentId === visit.id && observationDetails.loading}
+                    startIcon={
+                      currentId === visit.id && observationDetails.loading ? <Spinner /> : null
+                    }
                     onClick={event => handleExit(event, visit.id)}
                   >
                     {t('logbook.log_exit')}

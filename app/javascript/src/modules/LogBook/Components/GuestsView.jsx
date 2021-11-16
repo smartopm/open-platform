@@ -21,6 +21,7 @@ import { EntryRequestGrant } from '../../../graphql/mutations';
 import MessageAlert from '../../../components/MessageAlert';
 import CenteredContent from '../../../shared/CenteredContent';
 import { formatError } from '../../../utils/helpers';
+import useLogbookStyles from '../styles';
 
 export default function GuestsView({
   tabValue,
@@ -42,6 +43,7 @@ export default function GuestsView({
   const [message, setMessage] = useState({ isError: false, detail: '' });
   const history = useHistory();
   const matches = useMediaQuery('(max-width:800px)');
+  const classes = useLogbookStyles()
 
   function handleGrantAccess(event, user) {
     event.stopPropagation();
@@ -100,8 +102,8 @@ export default function GuestsView({
           >
             <Grid container spacing={1}>
               <Grid item md={1} xs={3}>
-                <Avatar src="/images/default_avatar.svg" alt={visit.guest?.name} variant="square">
-                  {visit.guest?.name.charAt(0)}
+                <Avatar alt={visit.guest?.name} className={classes.avatar} variant="square">
+                  {visit.name.charAt(0)}
                 </Avatar>
               </Grid>
               <Grid item md={3} xs={9}>
