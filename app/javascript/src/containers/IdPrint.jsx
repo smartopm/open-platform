@@ -58,13 +58,13 @@ export function UserPrintDetail({ data }) {
       .then(function (dataUrl) {
           const a = document.createElement('a');
           a.setAttribute('href', dataUrl);
-          a.setAttribute('download', 'ID-n.jpeg');
+          a.setAttribute('download', 'ID.png');
           a.innerHTML = 'Download';
           a.click();
           setDownloading(false);
       })
       .catch(function (error) {
-          console.error('ID downlod error', error);
+          console.error('ID download error', error);
           setDownloading(false);
       });
   }
@@ -83,25 +83,26 @@ export function UserPrintDetail({ data }) {
           >
             <CommunityName authState={authState} />
           </div>
-          <div
-            className="d-flex justify-content-center"
-            style={{ marginTop: '1.5em' }}
-          >
-            <div className="member_type">{toTitleCase(data.user.userType)}</div>
-          </div>
-          <div className="d-flex justify-content-center">
+          <div>
             <h1 style={{ fontWeight: '800' }}>{data.user.name}</h1>
           </div>
-          <div className="d-flex justify-content-center">
-            <div className="expires">
+          <div>
+            <div>
+              {t('misc.role')}
+              :
+              {' '}
+              {toTitleCase(data.user.userType)}
+            </div>
+          </div>
+          <div>
+            <div className="expires" style={{marginBottom: '5px'}}>
               {t('misc.exp')}
               :
               {' '}
               {expiresAtStr(data.user.expiresAt)}
             </div>
           </div>
-
-          <div className="d-flex justify-content-center qr_code">
+          <div>
             <QRCode
               style={{ width: 256 }}
               value={qrCodeAddress(data.user.id)}
@@ -115,6 +116,7 @@ export function UserPrintDetail({ data }) {
           color='primary'
           variant='contained'
           disabled={downloading}
+          data-testid="download_button"
         >
           {t('misc.download_id')}
         </Button>
