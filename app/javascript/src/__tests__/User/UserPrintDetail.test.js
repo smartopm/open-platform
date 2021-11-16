@@ -1,5 +1,5 @@
 import React from 'react';
-import { render } from '@testing-library/react';
+import { fireEvent, render } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { BrowserRouter } from 'react-router-dom';
 import { MockedProvider } from '@apollo/react-testing';
@@ -34,8 +34,11 @@ describe('UserPrint Detail component', () => {
     })
 
     expect(container.queryByText('Another somebodyy')).toBeInTheDocument();
-    expect(container.queryByText('Client')).toBeInTheDocument();
+    expect(container.queryByText('misc.role: Client')).toBeInTheDocument();
     expect(container.queryByText('misc.exp: Never')).toBeInTheDocument();
+    expect(container.getByTestId('download_button')).toBeInTheDocument();
+    const button = container.getByTestId('download_button');
+    fireEvent.click(button);
   });
 it('renders id card page', () => {
     const matchProps = {

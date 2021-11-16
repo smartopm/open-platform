@@ -358,6 +358,8 @@ security_guard:
   user:
     permissions:
       - can_search_guests
+      - can_view_own_profile
+      - can_edit_own_profile
   community:
     permissions:
       - can_see_menu_item
