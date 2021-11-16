@@ -1,10 +1,12 @@
 /* eslint-disable react/prop-types */
-import React, { useContext } from 'react'
+import React, { useContext, useState } from 'react'
 import { useQuery } from 'react-apollo'
 import { QRCode } from 'react-qr-svg'
+import { Button } from '@material-ui/core';
+import { useTranslation } from 'react-i18next';
+import domtoimage from 'dom-to-image';
 import Loading from '../shared/Loading'
 import DateUtil from '../utils/dateutil'
-
 import { UserQuery } from '../graphql/queries'
 import ErrorPage from '../components/Error'
 import CommunityName from '../shared/CommunityName'
@@ -45,7 +47,28 @@ function toTitleCase(str) {
 }
 
 export function UserPrintDetail({ data }) {
-  const authState = useContext(Context)
+  const authState = useContext(Context);
+  const { t } = useTranslation('common');
+  const [downloading, setDownloading] = useState(false);
+
+  function downloadId() {
+    setDownloading(true);
+    const node = document.getElementById('idCard');
+    domtoimage.toPng(node)
+      .then(function (dataUrl) {
+          const a = document.createElement('a');
+          a.setAttribute('href', dataUrl);
+          a.setAttribute('download', 'ID.png');
+          a.innerHTML = 'Download';
+          a.click();
+          setDownloading(false);
+      })
+      .catch(function (error) {
+          console.error('ID download error', error);
+          setDownloading(false);
+      });
+  }
+
   return (
     <div>
       <div className="row justify-content-center">
@@ -60,30 +83,43 @@ export function UserPrintDetail({ data }) {
           >
             <CommunityName authState={authState} />
           </div>
-          <div
-            className="d-flex justify-content-center"
-            style={{ marginTop: '1.5em' }}
-          >
-            <div className="member_type">{toTitleCase(data.user.userType)}</div>
-          </div>
-          <div className="d-flex justify-content-center">
+          <div>
             <h1 style={{ fontWeight: '800' }}>{data.user.name}</h1>
           </div>
-          <div className="d-flex justify-content-center">
-            <div className="expires">
-              Exp: 
+          <div>
+            <div>
+              {t('misc.role')}
+              :
+              {' '}
+              {toTitleCase(data.user.userType)}
+            </div>
+          </div>
+          <div>
+            <div className="expires" style={{marginBottom: '5px'}}>
+              {t('misc.exp')}
+              :
               {' '}
               {expiresAtStr(data.user.expiresAt)}
             </div>
           </div>
-
-          <div className="d-flex justify-content-center qr_code">
+          <div>
             <QRCode
               style={{ width: 256 }}
               value={qrCodeAddress(data.user.id)}
             />
           </div>
         </div>
+      </div>
+      <div style={{display: 'flex', justifyContent: 'center', marginTop: '5px'}}>
+        <Button
+          onClick={downloadId}
+          color='primary'
+          variant='contained'
+          disabled={downloading}
+          data-testid="download_button"
+        >
+          {t('misc.download_id')}
+        </Button>
       </div>
     </div>
   )
