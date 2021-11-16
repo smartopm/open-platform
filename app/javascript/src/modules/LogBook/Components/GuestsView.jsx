@@ -20,6 +20,7 @@ import { findClosestEntry, IsAnyRequestValid } from '../utils';
 import { EntryRequestGrant } from '../../../graphql/mutations';
 import MessageAlert from '../../../components/MessageAlert';
 import CenteredContent from '../../../shared/CenteredContent';
+import { formatError } from '../../../utils/helpers';
 
 export default function GuestsView({
   tabValue,
@@ -34,6 +35,7 @@ export default function GuestsView({
     variables: { offset, limit, query, scope },
     fetchPolicy: 'cache-and-network'
   });
+
   const { t } = useTranslation('logbook');
   const [loadingStatus, setLoading] = useState({ loading: false, currentId: '' });
   const [grantEntry] = useMutation(EntryRequestGrant);
@@ -81,7 +83,7 @@ export default function GuestsView({
 
   return (
     <div style={{ marginTop: '20px' }}>
-      {error && <CenteredContent>{error.message}</CenteredContent>}
+      {error && <CenteredContent>{formatError(error.message)}</CenteredContent>}
       <MessageAlert
         type={message.isError ? 'error' : 'success'}
         message={message.detail}
