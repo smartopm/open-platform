@@ -448,11 +448,6 @@ export default function CommunitySettings({ data, refetch }) {
               />
             </FormControl>
           </div>
-          {/* <Checkbox
-            checked={checked}
-            onChange={handleChange}
-            inputProps={{ 'aria-label': 'primary checkbox' }}
-          /> */}
         </div>
       </div>
       <div style={{ position: 'relative' }}>
