@@ -40,6 +40,7 @@
   "guest_book": {
     "ends_on_date": "Termina el ‪{{date}}‬",
     "ends_on_date_time": "Termina en ‪{{date}}‬,‪ ‪{{time}}‬",
+    "exited_at": "Salió a las ‪{{time}}‬",
     "expired": "Vencido",
     "host": "Anfitrión ",
     "invalid_now": "Ahora invalido",
