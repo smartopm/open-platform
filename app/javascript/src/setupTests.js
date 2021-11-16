@@ -1,7 +1,7 @@
 /* eslint-disable */
 // Enzyme setup
 import { configure } from 'enzyme'
-import Adapter from 'enzyme-adapter-react-16'
+import Adapter from '@wojtekmaj/enzyme-adapter-react-17'
 import * as Aphrodite from 'aphrodite'
 import * as AphroditeNoImportant from 'aphrodite/no-important'
 import { JSDOM } from 'jsdom'
