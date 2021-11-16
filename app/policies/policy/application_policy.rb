@@ -24,6 +24,8 @@ module Policy
       return false if user.nil?
 
       current_module = args[:module]
+
+      # user_permissions = Permission.find_by(module: current_module.to_s, role: user.role).permissions
       user_permissions = permission_list.dig(user.user_type.to_sym, current_module, :permissions)
       user_permissions&.include?(args[:permission].to_s) ||
         (args[:admin] && user&.admin?)

@@ -88,6 +88,7 @@ module Users
                       }
 
     belongs_to :community
+    belongs_to :role, optional: true
     has_many :entry_requests, class_name: 'Logs::EntryRequest', dependent: :destroy
     has_many :granted_entry_requests, class_name: 'Logs::EntryRequest', foreign_key: :grantor_id,
                                       dependent: :destroy, inverse_of: :user
