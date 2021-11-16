@@ -41,6 +41,7 @@
       "banking_details": "Banking Details",
       "hide_deny_gate_access_button": "Hide Deny Access Button",
       "tasks_settings": "Tasks Settings",
-      "enable_auomated_reminders": "Enable Automated Task Reminders"
+      "enable_auomated_reminders": "Enable Automated Task Reminders",
+      "crop_image": "click to crop image"
     }
 }

@@ -444,7 +444,7 @@ export default function CommunitySettings({ data, refetch }) {
             <FormControl component="fieldset" className={classes.formControl}>
               <FormControlLabel
                 control={<Checkbox color='primary' checked={cropImage} onChange={() => setCropImage(!cropImage)} name="crop" />}
-                label="click to crop image"
+                label={t('community.crop_image')}
               />
             </FormControl>
           </div>
