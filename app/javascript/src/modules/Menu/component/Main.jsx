@@ -136,9 +136,9 @@ export function MainNav({ authState }) {
               <MenuIcon />
             )}
           </IconButton>
-          
+
           {matches && <BackArrow path={path} />}
-          
+
           {canAccessSOS({authState})
            && communityHasEmergencyNumber && communityHasEmergencySMSNumber
            && <SvgIcon component={SOSIcon} viewBox="0 0 384 512" setOpen={setOpen} data-testid="sos-icon" />}

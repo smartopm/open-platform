@@ -21,10 +21,10 @@ export default function ImageAuth({ imageLink, className, type, alt, style }) {
   if(!imageLink || isError) {
    return (
      <img
-       src='/images/default_avatar.svg'
+       src=''
        className={className}
        alt={alt}
-       data-testid="default_avatar"
+       data-testid="default_image"
      />
    )
   }
