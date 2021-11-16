@@ -8,7 +8,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import { useMutation } from 'react-apollo';
 import { TextField, MenuItem, Button, Grid } from '@material-ui/core';
 import { StyleSheet, css } from 'aphrodite';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import CallIcon from '@material-ui/icons/Call';
@@ -42,6 +42,7 @@ import AccessCheck from '../../Permissions/Components/AccessCheck';
 export default function RequestUpdate({ id, previousRoute, guestListRequest, isGuestRequest, tabValue, isScannedRequest, handleNext }) {
   const history = useHistory()
   const authState = useContext(Context)
+  const { state } = useLocation()
   const requestContext = useContext(EntryRequestContext)
   const isFromLogs = previousRoute === 'logs' ||  false
   const [createEntryRequest] = useMutation(EntryRequestCreate);
@@ -106,7 +107,7 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
                 scanLoading: false,
                 message: ''
               });
-              history.push(`/entry_logs?tab=2`);
+              history.push(`/logbook?tab=1`);
             }, 1000);
           })
           .catch(err => {
@@ -123,7 +124,7 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
                 scanLoading: false,
                 message: ''
               });
-              history.push(`/entry_logs?tab=2`);
+              history.push(`/logbook?tab=1`);
             }, 1000);
           });
       } else {
@@ -135,7 +136,7 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
         });
         setTimeout(() => {
           setDetails({ ...observationDetails, isError: false, scanLoading: false, message: '' });
-          history.push(`/entry_logs?tab=2`);
+          history.push(`/logbook?tab=1`);
         }, 1000);
       }
     }
@@ -189,7 +190,7 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
       history.push('/logbook/guests')
       return
     }
-    handleNext(true, '/entry_logs?tab=2&offset=0')
+    handleNext(true, '/logbook?tab=1&offset=0')
   }
 
   function handleCreateRequest(type='create') {
@@ -263,7 +264,7 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
           ...requestContext.request, ...res
          })
         if (!requestContext.request.isEdit) {
-          handleNext(true, '/entry_logs?tab=2&offset=0')
+          handleNext(true, '/logbook?tab=1&offset=0')
         }
       })
       .catch(error => {
@@ -398,7 +399,7 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
       history.push({pathname: '/logbook/guests'})
       return
     }
-    history.push(`/entry_logs?tab=${tabValue}&offset=0`)
+    history.push(`/logbook?tab=${state.tabValue}&offset=${state.offset}`)
   }
 
   function disableEdit() {

@@ -6,10 +6,12 @@ import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { useApolloClient, useMutation } from 'react-apollo';
+import { Link } from 'react-router-dom';
 import Hidden from '@material-ui/core/Hidden';
 import { useTranslation } from 'react-i18next';
 import makeStyles from '@material-ui/core/styles/makeStyles';
-import SpeedDialIcon from '@material-ui/lab/SpeedDialIcon';
+import PersonIcon from '@material-ui/icons/Person';
+import VisibilityIcon from '@material-ui/icons/Visibility';
 import Grid from '@material-ui/core/Grid';
 import { StyledTabs, StyledTab, TabPanel, a11yProps } from '../../../components/Tabs';
 import LogEvents from './LogEvents';
@@ -29,6 +31,7 @@ import {
 import CenteredContent from '../../../components/CenteredContent';
 import Paginate from '../../../components/Paginate';
 import { objectAccessor } from '../../../utils/helpers';
+import Text from '../../../shared/Text';
 
 const limit = 20;
 export default function LogBookItem({
@@ -73,12 +76,12 @@ export default function LogBookItem({
 
   const actions = [
     {
-      icon: <SpeedDialIcon />,
+      icon: <PersonIcon />,
       name: t('logbook.new_invite'),
       handleClick: () => router.push(`/logbook/guests/invite`)
     },
     {
-      icon: <SpeedDialIcon />,
+      icon: <VisibilityIcon />,
       name: t('logbook.add_observation'),
       handleClick: () => setIsObservationOpen(true)
     }
@@ -88,7 +91,7 @@ export default function LogBookItem({
     if (eventLog.refType === 'Logs::EntryRequest') {
       router.push({
         pathname: `/request/${eventLog.refId}`,
-        state: { from: 'entry_logs', offset }
+        state: { from: 'entry_logs', tabValue, offset }
       });
     }
     if (eventLog.refType === 'Users::User') {
@@ -240,8 +243,8 @@ export default function LogBookItem({
       <Grid container className={matches ?  classes.containerMobile : classes.container}>
         <Grid item md={11} xs={11}>
           <Grid container>
-            <Grid item md={12} xs={10}><Typography variant="h4">{t('logbook.log_book')}</Typography></Grid>
-            <Hidden mdUp>
+            <Grid item md={9} xs={10}><Typography variant="h4">{t('logbook.log_book')}</Typography></Grid>
+            <Hidden smUp>
               <Grid item md={1} xs={2}>
                 <SpeedDial
                   open={open}
@@ -252,7 +255,12 @@ export default function LogBookItem({
                 />
               </Grid>
             </Hidden>
-            <Grid item md={6}>
+            <Grid item md={3} xs={10} style={!matches ? {textAlign: 'right'} : {}}>
+              <Link to='/entry_logs'>
+                <Text color="secondary" content={t('logbook.old_switch')} />
+              </Link>
+            </Grid>
+            <Grid item xs={12} md={6}>
               <StyledTabs
                 value={tabValue}
                 aria-label="simple tabs example"
@@ -262,7 +270,7 @@ export default function LogBookItem({
                 <StyledTab label={t('logbook.visit_view')} {...a11yProps(1)} />
               </StyledTabs>
             </Grid>
-            <Grid item xs={10} md={5} style={matches ? {marginTop: '10px'} : {}}>
+            <Grid item xs={10} md={6} style={matches ? {marginTop: '20px'} : {}}>
               <SearchInput
                 title={objectAccessor(searchPlaceholder, tabValue)}
                 searchValue={searchTerm}
@@ -313,7 +321,7 @@ export default function LogBookItem({
             />
           </TabPanel>
         </Grid>
-        <Hidden mdDown>
+        <Hidden xsDown>
           <Grid item md={1} xs={1}>
             <SpeedDial
               open={open}
@@ -340,7 +348,7 @@ export default function LogBookItem({
 
 const useStyles = makeStyles(() => ({
   container: {
-    padding: '32px  20px 50px 50px'
+    padding: '0 20px 50px 50px'
   },
   containerMobile: {
     padding: '10px 0 10px 30px'

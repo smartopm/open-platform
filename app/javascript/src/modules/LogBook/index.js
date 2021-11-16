@@ -1,6 +1,6 @@
 import React from 'react';
 import MenuBookIcon from '@material-ui/icons/MenuBook';
-import EntryLogs from './Components/EntryLogs';
+import LogBook from './Components/LogBook';
 import GuestsValidateRoutes from './GuestVerification';
 import AccessCheck from '../Permissions/Components/AccessCheck';
 import GuestInvitationRoutes from './GuestInvitation';
@@ -14,7 +14,7 @@ const currentModule = 'entry_request'
 function GateAccessIcon() {
   return (
     <AccessCheck module={currentModule} allowedPermissions={gateAccessPermissions}>
-      <EntryLogs />
+      <LogBook />
     </AccessCheck>
 )
 }
@@ -22,15 +22,16 @@ function GateAccessIcon() {
 function RenderLogBook() {
   return (
     <AccessCheck module={currentModule} allowedPermissions={logBookPermissions}>
-      <EntryLogs />
+      <LogBook />
     </AccessCheck>
 )
 }
 
 const LogBooks = {
   routeProps: {
-    path: '/entry_logs',
-    component: RenderLogBook
+    path: '/logbook',
+    component: RenderLogBook,
+    exact: true,
   },
   styleProps: {
     icon: <MenuBookIcon />,
@@ -44,8 +45,9 @@ const LogBooks = {
 
 export default {
   routeProps: {
-    path: '/entry_logs',
+    path: '/logbook',
     component: GateAccessIcon,
+    exact: true
   },
   styleProps: {
     icon: <MenuBookIcon />,

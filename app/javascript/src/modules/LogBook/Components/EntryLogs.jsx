@@ -7,7 +7,7 @@ import { useMutation, useQuery, useApolloClient } from 'react-apollo';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { useTranslation } from 'react-i18next';
 import { Button, Grid, useTheme, makeStyles } from '@material-ui/core';
-import { useHistory, useParams } from 'react-router-dom';
+import { useHistory, useParams, Link } from 'react-router-dom';
 import SearchInput from '../../../shared/search/SearchInput';
 import Loading, { Spinner } from '../../../shared/Loading';
 import { AllEventLogsQuery } from '../../../graphql/queries';
@@ -35,6 +35,7 @@ import CenteredContent from '../../../components/CenteredContent';
 import Paginate from '../../../components/Paginate';
 import GuestBook from './GuestBook';
 import { useFileUpload } from '../../../graphql/useFileUpload';
+import Text from '../../../shared/Text';
 
 
 const limit = 20;
@@ -356,6 +357,11 @@ export function IndexComponent({
         )}
       </EntryNoteDialog>
       <div className="container">
+        <Grid style={{textAlign: 'right', paddingBottom: '10px'}}>
+          <Link to='/logbook'>
+            <Text color="secondary" content={t('logbook.new_switch')} />
+          </Link>
+        </Grid>
         <SearchInput
           title={objectAccessor(searchPlaceholder, tabValue)}
           searchValue={searchTerm}
