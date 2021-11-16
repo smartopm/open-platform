@@ -106,7 +106,7 @@ export default function VisitView({
                   })}
                 </Typography>
               </Grid>
-              <Grid item md={2} xs={6} style={!matches ? { paddingTop: '15px' } : {}}>
+              <Grid item md={3} xs={6} style={!matches ? { paddingTop: '15px' } : {}}>
                 {currentId === visit.id && observationDetails.loading ? (
                   <Spinner />
                 ) : visit.exitedAt ? (
@@ -125,7 +125,7 @@ export default function VisitView({
                   </Button>
                 )}
               </Grid>
-              <Grid item md={2} xs={6} style={!matches ? { paddingTop: '15px' } : {}}>
+              <Grid item md={3} xs={6} style={!matches ? { paddingTop: '15px' } : {}}>
                 <Label
                   title={
                     IsAnyRequestValid(visit.accessHours, t, timeZone)

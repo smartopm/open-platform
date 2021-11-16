@@ -69,6 +69,7 @@ RSpec.describe Logs::EntryRequest, type: :model do
       expect(@entry_request.pending?).to be false
       expect(@entry_request.denied?).to be false
       expect(@entry_request.granted?).to be true
+      expect(@entry_request.exited_at).to be_nil
       expect(@entry_request.grantor_id).to eql @admin.id
       expect(Logs::EventLog.where(ref_id: @entry_request.id).count).to eql 1
     end
