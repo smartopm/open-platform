@@ -25,8 +25,11 @@ describe('Should render Guest Book Component', () => {
             user: {
               id: '162f7517',
               name: 'Js user x',
-              imageUrl: 'https://lh3.googleusercontent.com',
-              avatarUrl: null
+            },
+            guest: {
+              id: '162f7517',
+              name: 'Js user x',
+              avatarUrl: 'https://lh3.googleusercontent.com',
             },
             accessHours: [
               {
@@ -53,8 +56,11 @@ describe('Should render Guest Book Component', () => {
             user: {
               id: '162f7517-69',
               name: 'Js sdd',
-              imageUrl: 'https://lh3.googleusercontent.com/a-/',
-              avatarUrl: null
+            },
+            guest: {
+              id: '162f7517',
+              name: 'Js user x',
+              avatarUrl: 'https://lh3.googleusercontent.com',
             },
             accessHours: [
               {
