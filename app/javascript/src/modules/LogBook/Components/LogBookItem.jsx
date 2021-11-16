@@ -3,15 +3,15 @@
 import React, { useContext, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import Typography from '@material-ui/core/Typography';
-import Button from '@material-ui/core/Button';
+import Button from '@mui/material/Button';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { useApolloClient, useMutation } from 'react-apollo';
 import { Link } from 'react-router-dom';
 import Hidden from '@material-ui/core/Hidden';
 import { useTranslation } from 'react-i18next';
 import makeStyles from '@material-ui/core/styles/makeStyles';
-import PersonIcon from '@material-ui/icons/Person';
-import VisibilityIcon from '@material-ui/icons/Visibility';
+import PersonIcon from '@mui/icons-material/Person';
+import VisibilityIcon from '@mui/icons-material/Visibility';
 import Grid from '@material-ui/core/Grid';
 import { StyledTabs, StyledTab, TabPanel, a11yProps } from '../../../components/Tabs';
 import LogEvents from './LogEvents';
