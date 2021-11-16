@@ -13,7 +13,6 @@ import SpeedDialIcon from '@material-ui/lab/SpeedDialIcon';
 import Grid from '@material-ui/core/Grid';
 import { StyledTabs, StyledTab, TabPanel, a11yProps } from '../../../components/Tabs';
 import LogEvents from './LogEvents';
-// import VisitView from './VisitView';
 import SpeedDial from '../../../shared/buttons/SpeedDial';
 import SearchInput from '../../../shared/search/SearchInput';
 import EntryNoteDialog from '../../../shared/dialogs/EntryNoteDialog';
@@ -30,6 +29,7 @@ import CenteredContent from '../../../components/CenteredContent';
 import Paginate from '../../../components/Paginate';
 import { objectAccessor } from '../../../utils/helpers';
 import GuestsView from './GuestsView';
+import VisitView from './VisitView';
 
 const limit = 20;
 export default function LogBookItem({
@@ -109,7 +109,7 @@ export default function LogBookItem({
   const searchPlaceholder = {
     0: t('logbook.all_visits'),
     1: t('guest.guests'),
-    2: t('logbook.visit_view'),
+    2: t('logbook.visits'),
     3: t('logbook.observations')
   };
 
@@ -315,7 +315,7 @@ export default function LogBookItem({
             />
           </TabPanel>
           <TabPanel pad value={tabValue} index={2}>
-            <GuestsView
+            <VisitView
               tabValue={tabValue}
               handleAddObservation={handleAddObservation}
               offset={offset}

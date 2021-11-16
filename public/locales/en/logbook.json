@@ -125,7 +125,9 @@
     "update_guest": "Update Guest",
     "host": "Host",
     "revoked": "Revoked",
-    "exited_at": "Exited at {{time}}"
+    "exited_at": "Exited at {{time}}",
+    "entered_at": "Entered at {{time}}",
+    "visits": "Visits"
   },
   "date_picker": {
     "ok_label": "Ok",

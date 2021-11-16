@@ -37,6 +37,33 @@ export const GuestEntriesQuery = gql`
   }
 `;
 
+export const CurrentGuestEntriesQuery = gql`
+  query CurrentGuests($offset: Int, $limit: Int, $query: String) {
+    currentGuests(offset: $offset, limit: $limit, query: $query) {
+      id
+      name
+      user {
+        id
+        name
+      }
+      guest {
+        id
+        name
+        imageUrl
+      }
+      accessHours {
+        occursOn
+        visitEndDate
+        visitationDate
+        endsAt
+        startsAt
+      }
+      exitedAt
+      grantedAt
+    }
+  }
+`;
+
 export const GuestEntryQuery = gql`
   query EntryRequest($id: ID!) {
     entryRequest(id: $id) {
