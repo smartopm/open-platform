@@ -30,8 +30,10 @@ import Paginate from '../../../components/Paginate';
 import { objectAccessor } from '../../../utils/helpers';
 import GuestsView from './GuestsView';
 import VisitView from './VisitView';
+import MessageAlert from '../../../components/MessageAlert';
 
 const limit = 20;
+// TODO: reduce the amount of props passed down here, it is hard to keep track
 export default function LogBookItem({
   data,
   router,
@@ -60,7 +62,8 @@ export default function LogBookItem({
   const [observationDetails, setDetails] = useState({
     isError: false,
     message: '',
-    loading: false
+    loading: false,
+    refetch: false
   });
   const [addObservationNote] = useMutation(AddObservationNoteMutation);
   const matches = useMediaQuery('(max-width:800px)');
@@ -151,6 +154,7 @@ export default function LogBookItem({
           ...observationDetails,
           loading: false,
           isError: false,
+          refetch: true,
           message:
             type === 'exit'
               ? t('logbook:observations.created_observation_exit')
@@ -196,8 +200,19 @@ export default function LogBookItem({
     resetImageData()
   }
 
+  function handleCloseAlert(){
+    // clear and allow visit view to properly refetch
+    setDetails({ ...observationDetails, message: '', refetch: false })
+  }
+
   return (
     <>
+      <MessageAlert
+        type={!observationDetails.isError ? 'success' : 'error'}
+        message={observationDetails.message}
+        open={!!observationDetails.message}
+        handleClose={handleCloseAlert}
+      />
       <EntryNoteDialog
         open={isObservationOpen}
         handleDialogStatus={() => handleCancelClose()}
@@ -317,12 +332,13 @@ export default function LogBookItem({
           <TabPanel pad value={tabValue} index={2}>
             <VisitView
               tabValue={tabValue}
-              handleAddObservation={handleAddObservation}
+              handleAddObservation={handleExitEvent}
               offset={offset}
               limit={limit}
               query={`${searchTerm} ${searchQuery}`}
               scope={scope}
               timeZone={authState.user.community.timezone}
+              observationDetails={observationDetails}
             />
           </TabPanel>
         </Grid>
