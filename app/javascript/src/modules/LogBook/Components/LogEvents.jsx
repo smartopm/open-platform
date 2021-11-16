@@ -56,6 +56,11 @@ export default function LogEvents({
     setAnchorEl(null);
   }
 
+  function checkVisitorsName(entry) {
+    const visitorName = entry.data.ref_name || entry.data.visitor_name || entry.data.name;
+    return !!visitorName
+  }
+
   const menuList = [
     {
       content: t('logbook.exit_log'),
@@ -153,12 +158,22 @@ export default function LogEvents({
                     </Typography>
                   </>
                 ) : (
-                  <Typography variant="caption" color="textSecondary">
-                    {entry.data?.note}
-                  </Typography>
+                  <>
+                    {checkVisitorsName(entry) && (
+                      <>
+                        <Link to={`/user/${entry.actingUser.id}`} data-testid="acting-user">
+                          <Text color="secondary" content={entry.data.ref_name || entry.data.visitor_name || entry.data.name} />
+                        </Link>
+                        <br />
+                      </>
+                    )}
+                    <Typography variant="caption" color="textSecondary">
+                      {entry.data?.note}
+                    </Typography>
+                  </>
                 )}
               </Grid>
-              {Boolean(entry.entryRequest) && (
+              {(Boolean(entry.entryRequest) || entry.subject === 'user_temp') && (
                 <Hidden mdUp>
                   <Grid item md={1} xs={4} style={{ textAlign: 'right' }}>
                     <IconButton
@@ -196,6 +211,13 @@ export default function LogEvents({
                   </Grid>
                   <Grid item md={7} xs={12}>
                     <Grid container>
+                      {(entry.subject === 'user_entry' || entry.subject === 'user_temp' || entry.subject === 'visitor_entry')  && (
+                      <Chip
+                        data-testid="user-entry"
+                        label={t('logbook.user_entry')}
+                        style={{ background: '#D1D229', color: 'white', marginRight: '16px' }}
+                      />
+                      )}
                       {entry.entryRequest?.grantor && entry.data.note !== 'Exited' && (
                         <Chip
                           data-testid="granted-access"
@@ -236,7 +258,7 @@ export default function LogEvents({
                   </Grid>
                 </Grid>
               </Grid>
-              {Boolean(entry.entryRequest) && (
+              {(Boolean(entry.entryRequest) || entry.subject === 'user_temp')  && (
                 <Hidden smDown>
                   <Grid item md={1} style={{ textAlign: 'right' }}>
                     <IconButton
