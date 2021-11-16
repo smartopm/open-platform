@@ -12,6 +12,7 @@ import {
 import { TaskDataList } from './RenderTaskData'
 import FileUploader from './FileUploader';
 import { objectAccessor } from '../../../utils/helpers';
+import MenuList from '../../../shared/MenuList'
 
 export default function TodoItem({
   task,
@@ -137,6 +138,12 @@ export default function TodoItem({
           )}
         </Accordion>
       )}
+      <MenuList
+        open={menuData.open}
+        anchorEl={menuData.anchorEl}
+        handleClose={menuData.handleClose}
+        list={menuData.menuList}
+      />
     </>
   );
 }
