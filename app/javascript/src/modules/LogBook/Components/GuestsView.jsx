@@ -1,4 +1,3 @@
-/* eslint-disable complexity */
 /* eslint-disable no-nested-ternary */
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
@@ -99,11 +98,7 @@ export default function GuestsView({
           >
             <Grid container spacing={1}>
               <Grid item md={1} xs={3}>
-                <Avatar
-                  src={visit.guest?.imageUrl}
-                  alt={visit.guest?.name}
-                  variant="square"
-                >
+                <Avatar src="/images/default_avatar.svg" alt={visit.guest?.name} variant="square">
                   {visit.guest?.name.charAt(0)}
                 </Avatar>
               </Grid>
