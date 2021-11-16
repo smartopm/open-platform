@@ -17,6 +17,7 @@ import Label from '../../../shared/label/Label';
 import Text from '../../../shared/Text';
 import { IsAnyRequestValid } from '../utils';
 import CenteredContent from '../../../shared/CenteredContent';
+import { formatError } from '../../../utils/helpers';
 
 export default function VisitView({
   tabValue,
@@ -71,7 +72,7 @@ export default function VisitView({
 
   return (
     <div style={{ marginTop: '20px' }}>
-      {error && <CenteredContent>{error.message}</CenteredContent>}
+      {error && <CenteredContent>{formatError(error.message)}</CenteredContent>}
       {guestsLoading ? (
         <Spinner />
       ) : data?.currentGuests.length > 0 ? (
@@ -99,14 +100,14 @@ export default function VisitView({
                   <Text color="secondary" content={visit.user.name} />
                 </Link>
               </Grid>
-              <Grid item md={2} xs={6} style={!matches ? { paddingTop: '15px' } : {}}>
+              <Grid item md={2} xs={6} style={!matches ? { paddingTop: '15px' } : {}} data-testid="entered_at">
                 <Typography variant="caption">
                   {t('guest_book.entered_at', {
                     time: dateToString(visit.grantedAt, 'YYYY-MM-DD HH:mm')
                   })}
                 </Typography>
               </Grid>
-              <Grid item md={3} xs={6} style={!matches ? { paddingTop: '15px' } : {}}>
+              <Grid item md={3} xs={6} style={!matches ? { paddingTop: '15px' } : {}} data-testid="exited_at">
                 {currentId === visit.id && observationDetails.loading ? (
                   <Spinner />
                 ) : visit.exitedAt ? (
@@ -118,6 +119,7 @@ export default function VisitView({
                 ) : (
                   <Button
                     color="primary"
+                    data-testid="log_exit"
                     disabled={currentId === visit.id && observationDetails.loading}
                     onClick={event => handleExit(event, visit.id)}
                   >

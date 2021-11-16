@@ -1,7 +1,7 @@
 import React from 'react';
-import { render, waitFor } from '@testing-library/react';
+import { fireEvent, render, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
-import { BrowserRouter } from 'react-router-dom';
+import routeData, { MemoryRouter } from 'react-router';
 import { MockedProvider } from '@apollo/react-testing';
 import MockedThemeProvider from '../../__mocks__/mock_theme';
 import GuestsView from '../Components/GuestsView';
@@ -10,6 +10,13 @@ import { Context } from '../../../containers/Provider/AuthStateProvider';
 import userMock from '../../../__mocks__/userMock';
 
 describe('Should render Guests View Component', () => {
+  const mockHistory = {
+    push: jest.fn()
+  };
+  beforeEach(() => {
+    jest.spyOn(routeData, 'useHistory').mockReturnValue(mockHistory);
+  });
+
   const mocks = {
     request: {
       query: GuestEntriesQuery,
@@ -102,7 +109,7 @@ describe('Should render Guests View Component', () => {
     const { getAllByText, getAllByTestId, getByText } = render(
       <Context.Provider value={userMock}>
         <MockedProvider mocks={[mocks]} addTypename={false}>
-          <BrowserRouter>
+          <MemoryRouter>
             <MockedThemeProvider>
               <GuestsView
                 tabValue={1}
@@ -114,7 +121,7 @@ describe('Should render Guests View Component', () => {
                 timeZone="Africa/Maputo"
               />
             </MockedThemeProvider>
-          </BrowserRouter>
+          </MemoryRouter>
         </MockedProvider>
       </Context.Provider>
     );
@@ -132,14 +139,17 @@ describe('Should render Guests View Component', () => {
         'access_actions.grant_access'
       );
       expect(getAllByTestId('grant_access_btn')[0]).toBeDisabled();
-    }, 50);
+
+      fireEvent.click(getAllByTestId('card')[0]);
+      expect(mockHistory.push).toBeCalled();
+    }, 10);
   });
 
   it('should render error if something went wrong', async () => {
     const { getByText } = render(
       <Context.Provider value={userMock}>
         <MockedProvider mocks={[errorMock]} addTypename={false}>
-          <BrowserRouter>
+          <MemoryRouter>
             <MockedThemeProvider>
               <GuestsView
                 tabValue={1}
@@ -151,7 +161,7 @@ describe('Should render Guests View Component', () => {
                 timeZone="Africa/Maputo"
               />
             </MockedThemeProvider>
-          </BrowserRouter>
+          </MemoryRouter>
         </MockedProvider>
       </Context.Provider>
     );

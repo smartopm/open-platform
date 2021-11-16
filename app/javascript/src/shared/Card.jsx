@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import CardContent from '@material-ui/core/CardContent';
 import { makeStyles } from '@material-ui/core/styles';
 
+// TODO: match file name with the component name
 export default function CardComponent({ children, clickData }) {
   const classes = useStyles();
   return (
@@ -23,11 +24,11 @@ export default function CardComponent({ children, clickData }) {
   )
 }
 
-const useStyles = makeStyles(() => ({ 
+const useStyles = makeStyles(() => ({
   card: {
     marginBottom: '10px'
   },
-  cardClickable: { 
+  cardClickable: {
     marginBottom: '10px',
     cursor: "pointer"
   }
