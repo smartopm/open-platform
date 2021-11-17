@@ -131,6 +131,7 @@ export default function LogEvents({
   };
   return (
     <div style={{ marginTop: '20px' }} data-testid="card">
+      {console.log(data)}
       {error && <CenteredContent>{error}</CenteredContent>}
       {loading ? (
         <Spinner />
@@ -211,7 +212,7 @@ export default function LogEvents({
                   </Grid>
                   <Grid item md={7} xs={12}>
                     <Grid container>
-                      {(entry.subject === 'user_entry' || entry.subject === 'user_temp' || entry.subject === 'visitor_entry')  && (
+                      {(entry.subject === 'user_entry' || entry.subject === 'user_temp') && (
                       <Chip
                         data-testid="user-entry"
                         label={t('logbook.user_entry')}
