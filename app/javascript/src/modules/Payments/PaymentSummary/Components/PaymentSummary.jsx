@@ -18,10 +18,10 @@ import authStateProps from '../../../../shared/types/authState';
 
 
 const paymentCardContent = {
-  today: 'Total amount in payment today',
-  oneWeek: 'Total amount in payment this week',
-  oneMonth: 'Total amount in payment this month',
-  overOneMonth: 'Total amount in payment this year'
+  today: 'Total amount paid today',
+  oneWeek: 'Total amount paid in the past 7 days',
+  oneMonth: 'Total amount paid in past 30 days',
+  overOneMonth: 'Total amount paid in this year'
 }
 
 export default function PaymentSummary({ authState, translate }) {
