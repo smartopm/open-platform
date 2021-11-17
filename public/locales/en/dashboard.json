@@ -16,7 +16,7 @@
     "payment": {
       "today": "Total amount paid today",
       "oneWeek": "Total amount paid in the past 7 days",
-      "oneMonth": "Total amount paid in past 30 days",
+      "oneMonth": "Total amount paid in the past 30 days",
       "overOneMonth": "Total amount paid in this year"
     },
     "invoice": {
