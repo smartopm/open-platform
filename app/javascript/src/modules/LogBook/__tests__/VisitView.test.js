@@ -47,6 +47,7 @@ describe('Should render Visits View Component', () => {
               }
             ],
             grantedAt: '2021-10-31 02:51',
+            status: 'pending',
             exitedAt: null
           }
         ]
@@ -103,6 +104,8 @@ describe('Should render Visits View Component', () => {
       expect(getByTestId('entered_at')).toBeInTheDocument();
       expect(getByTestId('exited_at')).toBeInTheDocument();
       expect(getByTestId('log_exit')).toBeInTheDocument();
+      expect(getByTestId('request_status')).toBeInTheDocument();
+      expect(getByTestId('request_status').textContent).toContain('Pending');
       expect(getByTestId('log_exit')).not.toBeDisabled();
 
       fireEvent.click(getByTestId('log_exit'));

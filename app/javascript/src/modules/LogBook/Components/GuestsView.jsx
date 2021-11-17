@@ -9,7 +9,7 @@ import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import { Link } from 'react-router-dom';
 import Typography from '@material-ui/core/Typography';
-import { Avatar } from '@material-ui/core';
+import { Avatar, useTheme } from '@material-ui/core';
 import { GuestEntriesQuery } from '../graphql/guestbook_queries';
 import { Spinner } from '../../../shared/Loading';
 import Card from '../../../shared/Card';
@@ -44,6 +44,7 @@ export default function GuestsView({
   const history = useHistory();
   const matches = useMediaQuery('(max-width:800px)');
   const classes = useLogbookStyles()
+  const theme = useTheme();
 
   function handleGrantAccess(event, user) {
     event.stopPropagation();
@@ -100,7 +101,7 @@ export default function GuestsView({
             key={visit.id}
             clickData={{ clickable: true, handleClick: () => handleCardClick(visit) }}
           >
-            <Grid container spacing={1}>
+            <Grid container>
               <Grid item md={2} xs={4}>
                 <Avatar alt={visit.guest?.name} className={classes.avatar} variant="square">
                   {visit.name.charAt(0)}
@@ -118,6 +119,17 @@ export default function GuestsView({
                 <Link to={`/user/${visit.user.id}`}>
                   <Text color="secondary" content={visit.user.name} />
                 </Link>
+                <div style={{ paddingTop: '15px' }} data-testid="request_status">
+                  <Label
+                    title={visit.status === 'approved' ? 'Approved' : 'Pending'}
+                    color={
+                      visit.status === 'approved'
+                      ? theme.palette.success.main
+                      : theme.palette.info.main
+                    }
+                    width="50%"
+                  />
+                </div>
               </Grid>
               <Grid item md={2} xs={6} style={!matches ? { paddingTop: '15px' } : {}}>
                 <Typography variant="caption">

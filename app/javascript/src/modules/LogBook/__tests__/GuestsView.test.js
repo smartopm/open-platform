@@ -46,6 +46,7 @@ describe('Should render Guests View Component', () => {
                 occursOn: []
               }
             ],
+            status: "approved",
             occursOn: [],
             visitEndDate: null,
             visitationDate: '2021-08-20T10:51:00+02:00',
@@ -77,6 +78,7 @@ describe('Should render Guests View Component', () => {
                 occursOn: []
               }
             ],
+            status: "approved",
             occursOn: [],
             visitEndDate: null,
             visitationDate: '2021-08-31T10:20:21+02:00',
@@ -133,6 +135,8 @@ describe('Should render Guests View Component', () => {
       expect(getByText('X Name')).toBeInTheDocument();
       expect(getByText('Js sdd')).toBeInTheDocument();
       expect(getByText('Js user x')).toBeInTheDocument();
+      expect(getAllByTestId('request_status')[0]).toBeInTheDocument();
+      expect(getAllByTestId('request_status')[0].textContent).toContain('Approved');
       expect(getAllByText('guest_book.start_of_visit')[0]).toBeInTheDocument();
       expect(getAllByTestId('grant_access_btn')[0]).toBeInTheDocument();
       expect(getAllByTestId('grant_access_btn')[0].textContent).toContain(
