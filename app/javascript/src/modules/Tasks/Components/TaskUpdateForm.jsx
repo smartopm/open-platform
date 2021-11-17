@@ -9,7 +9,6 @@ import { useTranslation } from 'react-i18next';
 import AlarmIcon from '@material-ui/icons/Alarm';
 import { UpdateNote } from '../../../graphql/mutations';
 import { TaskReminderMutation } from '../graphql/task_reminder_mutation';
-import Toggler from '../../../components/Campaign/ToggleButton';
 import RemindMeLaterMenu from './RemindMeLaterMenu';
 import TaskUpdateList from './TaskUpdateList';
 import TaskComment from './TaskComment';
@@ -48,11 +47,6 @@ export default function TaskForm({
   const [setReminder] = useMutation(TaskReminderMutation);
   const [reminderTime, setReminderTime] = useState(null);
   const { t } = useTranslation(['task', 'common']);
-
-  const [type, setType] = useState('task');
-  const handleType = (_event, value) => {
-    setType(value);
-  };
 
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
@@ -220,54 +214,42 @@ export default function TaskForm({
           message={t('task.update_successful')}
         />
 
-        <Toggler
-          type={type}
-          handleType={handleType}
-          data={{
-            type: 'task',
-            antiType: 'updates'
-          }}
-        />
-
-        {type === 'task' ? (
-          <Grid item md={7}>
-            <TaskInfoTop
-              users={users}
-              data={data}
-              setDate={setDueDate}
-              selectedDate={selectedDate}
-              assignUser={assignUser}
-              autoCompleteOpen={autoCompleteOpen}
-              handleOpenAutoComplete={handleOpenAutoComplete}
-              liteData={liteData}
-              setSearchUser={setSearchUser}
-              searchUser={searchUser}
-            />
-            {/* TODO: move this to the above component */}
-            <FormControlLabel
-              control={(
-                <Checkbox
-                  disabled={loading}
-                  checked={taskStatus}
-                  onChange={handleTaskComplete}
-                  name="mark_task_complete"
-                  color="primary"
-                  data-testid="mark_task_complete_checkbox"
-                />
+        <Grid item md={7}>
+          <TaskInfoTop
+            users={users}
+            data={data}
+            setDate={setDueDate}
+            selectedDate={selectedDate}
+            assignUser={assignUser}
+            autoCompleteOpen={autoCompleteOpen}
+            handleOpenAutoComplete={handleOpenAutoComplete}
+            liteData={liteData}
+            setSearchUser={setSearchUser}
+            searchUser={searchUser}
+          />
+          {/* TODO: move this to the above component */}
+          <FormControlLabel
+            control={(
+              <Checkbox
+                disabled={loading}
+                checked={taskStatus}
+                onChange={handleTaskComplete}
+                name="mark_task_complete"
+                color="primary"
+                data-testid="mark_task_complete_checkbox"
+              />
               )}
-              label={
+            label={
                 !taskStatus
                   ? t('common:form_actions.note_complete')
                   : t('common:form_actions.note_incomplete')
               }
-            />
+          />
 
-            <TaskComment taskId={taskId} />
-            <TaskDocuments documents={data.attachments} />
-          </Grid>
-        ) : (
+          <TaskComment taskId={taskId} />
+          <TaskDocuments documents={data.attachments} />
           <TaskUpdateList data={historyData} />
-        )}
+        </Grid>
       </form>
     </>
   );

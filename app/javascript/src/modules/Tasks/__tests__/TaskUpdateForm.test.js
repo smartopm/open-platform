@@ -27,7 +27,7 @@ const props = {
   users: [],
   currentUser: { name: 'tester', id: '6523gvhvg' },
   historyData: [
-    { action: 'create', noteEntityType: 'Comments::NoteComment', user: { name: 'name' } }
+    { action: 'create', noteEntityType: 'Comments::NoteComment', user: { name: 'name' }, createdAt: new Date() }
   ],
   historyRefetch: jest.fn(),
   authState: {},
@@ -46,9 +46,6 @@ describe('task form component', () => {
       );
     });
 
-    const taskBtn = container.queryByLabelText('task');
-    const updatesBtn = container.queryByLabelText('updates');
-
     expect(container.queryByText('common:form_actions.note_complete')).toBeInTheDocument();
     expect(container.queryByText('common:form_actions.note_complete')).not.toBeDisabled();
     expect(container.queryAllByText('tolulope O.')[0]).toBeInTheDocument();
@@ -56,8 +53,6 @@ describe('task form component', () => {
     // needs to be updated
     expect(container.queryAllByTestId('user_chip')).toHaveLength(2);
     expect(container.queryByTestId('mark_task_complete_checkbox')).toBeInTheDocument();
-    expect(taskBtn).not.toBeNull();
-    expect(updatesBtn).not.toBeNull();
   });
 
   it('should render the remind-me-later button if current user is an assignee', async () => {
