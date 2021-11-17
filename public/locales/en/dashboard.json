@@ -14,10 +14,10 @@
     "need_help_to_next_journey": "I need help in moving to the next stage",
     "make_new_payment": "Record New Payment",
     "payment": {
-      "today": "Total amount in payment today",
-      "oneWeek": "Total amount in payment this week",
-      "oneMonth": "Total amount in payment this month",
-      "overOneMonth": "Total amount in payment this year"
+      "today": "Total amount paid today",
+      "oneWeek": "Total amount paid in the past 7 days",
+      "oneMonth": "Total amount paid in the past 30 days",
+      "overOneMonth": "Total amount paid in this year"
     },
     "invoice": {
       "today": "Total invoices due today",
