@@ -303,7 +303,7 @@ RSpec.describe Types::Queries::EntryRequest do
       3.times do
         admin.entry_requests.create(reason: 'Visiting', name: 'Visitor Joe', nrc: '012345',
                                     visitation_date: Time.zone.now, granted_at: Time.zone.now,
-                                    granted_state: 2)
+                                    granted_state: 1, guest_id: admin.id)
       end
       result = DoubleGdpSchema.execute(current_guest_list_query, context: {
                                          current_user: admin,
