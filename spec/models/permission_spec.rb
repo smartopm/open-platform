@@ -3,5 +3,21 @@
 require 'rails_helper'
 
 RSpec.describe Permission, type: :model do
-  pending "add some examples to (or delete) #{__FILE__}"
+  let!(:role) { create(:role, name: 'admin') }
+  # describe 'crud' do
+  #   it 'should allow to create a role' do
+  #     Permission.create(role: role, module: 'entry_request', permissions: %w[can_invite_guest])
+  #     expect(Permission.all.length).to eql 1
+  #   end
+  # end
+  describe 'associations' do
+    let!(:permission) do
+      create(:permission, module: 'note',
+                          role: role,
+                          permissions: %w[can_create_note])
+    end
+
+    it { should belong_to(:role) }
+  end
 end
+  
