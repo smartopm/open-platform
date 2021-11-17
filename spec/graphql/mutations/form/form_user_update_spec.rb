@@ -4,9 +4,20 @@ require 'rails_helper'
 
 RSpec.describe Mutations::Form::FormUserUpdate do
   describe 'update mutation for forms' do
-    let!(:current_user) { create(:user_with_community) }
-    let!(:another_user) { create(:user, community_id: current_user.community_id) }
-    let!(:admin) { create(:admin_user, community_id: current_user.community_id) }
+    let!(:admin_role) { create(:role, name: 'admin') }
+    let!(:resident_role) { create(:role, name: 'resident') }
+    let!(:permission) do
+      create(:permission, module: 'forms',
+                          role: admin_role,
+                          permissions: %w[can_update_form_user])
+    end
+
+    let!(:current_user) { create(:user_with_community, role: resident_role) }
+    let!(:admin) { create(:admin_user, community_id: current_user.community_id, role: admin_role) }
+    let!(:another_user) do
+      create(:user, community_id: current_user.community_id,
+                    role: resident_role)
+    end
     let!(:form) { create(:form, community_id: current_user.community_id) }
     let!(:form_property) { create(:form_property, form: form, field_type: 'text') }
     let!(:form_user) do

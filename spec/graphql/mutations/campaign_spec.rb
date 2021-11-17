@@ -3,7 +3,14 @@
 require 'rails_helper'
 RSpec.describe Mutations::Campaign do
   describe 'creating a Campaign' do
-    let!(:current_user) { create(:user_with_community, user_type: 'admin') }
+    let!(:admin_role) { create(:role, name: 'admin') }
+    let!(:permission) do
+      create(:permission, module: 'campaign',
+                          role: admin_role,
+                          permissions: %w[can_create_campaign])
+    end
+
+    let!(:current_user) { create(:user_with_community, user_type: 'admin', role: admin_role) }
     let!(:community) { current_user.community }
     let(:query) do
       <<~GQL
@@ -133,7 +140,14 @@ RSpec.describe Mutations::Campaign do
   end
 
   describe 'create campaign through users' do
-    let!(:current_user) { create(:user_with_community, user_type: 'admin') }
+    let!(:admin_role) { create(:role, name: 'admin') }
+    let!(:permission) do
+      create(:permission, module: 'campaign',
+                          role: admin_role,
+                          permissions: %w[can_create_campaign_through_users can_create_campaign])
+    end
+
+    let!(:current_user) { create(:user_with_community, user_type: 'admin', role: admin_role) }
     let!(:user1) { create(:user_with_community) }
     let!(:user2) { create(:user_with_community) }
     let(:query) do
@@ -193,7 +207,14 @@ RSpec.describe Mutations::Campaign do
   end
 
   describe 'updating a Campaign' do
-    let!(:current_user) { create(:user_with_community, user_type: 'admin') }
+    let!(:admin_role) { create(:role, name: 'admin') }
+    let!(:permission) do
+      create(:permission, module: 'campaign',
+                          role: admin_role,
+                          permissions: %w[can_update_campaign can_remove_campaign_label])
+    end
+
+    let!(:current_user) { create(:user_with_community, user_type: 'admin', role: admin_role) }
     let!(:campaign) do
       current_user.community.campaigns.create(name: 'Test Campaign',
                                               message: 'Visiting',
@@ -279,7 +300,14 @@ RSpec.describe Mutations::Campaign do
   end
 
   describe 'deleting a Campaign' do
-    let!(:current_user) { create(:user_with_community, user_type: 'admin') }
+    let!(:admin_role) { create(:role, name: 'admin') }
+    let!(:permission) do
+      create(:permission, module: 'campaign',
+                          role: admin_role,
+                          permissions: %w[can_delete_campaign can_remove_campaign_label])
+    end
+
+    let!(:current_user) { create(:user_with_community, user_type: 'admin', role: admin_role) }
     let!(:campaign_for_delete) do
       current_user.community.campaigns.create(name: 'Campaign For Delete',
                                               message: 'Mark Deleted',

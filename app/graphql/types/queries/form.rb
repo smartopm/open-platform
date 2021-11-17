@@ -95,7 +95,7 @@ module Types::Queries::Form
       context[:current_user], nil
     ).permission?(
       admin: true,
-      module: :forms,
+      module: :form,
       permission: :can_view_form_user,
     ) || context[:current_user]&.id.eql?(user_id)
       raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
@@ -139,7 +139,7 @@ module Types::Queries::Form
       context[:current_user], nil
     ).permission?(
       admin: true,
-      module: :forms,
+      module: :form,
       permission: :can_view_form_form_submissions,
     )
       raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
@@ -192,7 +192,7 @@ module Types::Queries::Form
       context[:current_user], nil
     ).permission?(
       admin: true,
-      module: :forms,
+      module: :form,
       permission: :can_view_form_entries,
     )
 
@@ -215,7 +215,7 @@ module Types::Queries::Form
       context[:current_user], nil
     ).permission?(
       admin: true,
-      module: :forms,
+      module: :form,
       permission: :can_view_form_user_properties,
     )
   end

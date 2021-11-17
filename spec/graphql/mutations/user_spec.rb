@@ -153,7 +153,14 @@ RSpec.describe Mutations::User do
   end
 
   describe 'update pending user' do
-    let!(:current_user) { create(:user_with_community, user_type: 'admin') }
+    let!(:admin_role) { create(:role, name: 'admin') }
+    let!(:permission) do
+      create(:permission, module: 'user',
+                          role: admin_role,
+                          permissions: %w[can_update_user_details])
+    end
+    let!(:current_user) { create(:admin_user, role: admin_role) }
+
     let!(:pending_user) { create(:pending_user, community_id: current_user.community_id) }
 
     let(:query) do
@@ -240,11 +247,25 @@ RSpec.describe Mutations::User do
   end
 
   describe 'updating a user' do
-    let!(:admin) { create(:admin_user) }
+    let!(:admin_role) { create(:role, name: 'admin') }
+    let!(:security_guard_role) { create(:role, name: 'security_guard') }
+    let!(:client_role) { create(:role, name: 'client') }
+    let!(:permission) do
+      create(:permission, module: 'user',
+                          role: admin_role,
+                          permissions: %w[can_update_user_details])
+    end
+    let!(:admin) { create(:admin_user, role: admin_role) }
     let!(:user) { create(:user_with_community) }
-    let!(:security_guard) { create(:security_guard, community_id: admin.community_id) }
+    let!(:security_guard) do
+      create(:security_guard, community_id: admin.community_id,
+                              role: security_guard_role)
+    end
     let!(:pending_user) { create(:pending_user, community_id: admin.community_id) }
-    let!(:client) { create(:pending_user, community_id: admin.community_id, user_type: 'client') }
+    let!(:client) do
+      create(:pending_user, community_id: admin.community_id,
+                            user_type: 'client', role: client_role)
+    end
 
     let(:query) do
       <<~GQL
@@ -435,7 +456,14 @@ RSpec.describe Mutations::User do
     end
 
     describe 'substatus change log' do
-      let(:current_user) { create(:admin_user, community_id: user.community.id) }
+      let!(:admin_role) { create(:role, name: 'admin') }
+      let!(:permission) do
+        create(:permission, module: 'user',
+                            role: admin_role,
+                            permissions: %w[can_update_user_details])
+      end
+      let!(:current_user) { create(:admin_user, community_id: user.community.id, role: admin_role) }
+
       let(:variables) do
         {
           id: user.id,
@@ -528,7 +556,14 @@ RSpec.describe Mutations::User do
   end
 
   describe 'creating avatars and adding them to the user' do
-    let!(:admin) { create(:admin_user) }
+    let!(:admin_role) { create(:role, name: 'admin') }
+    let!(:permission) do
+      create(:permission, module: 'user',
+                          role: admin_role,
+                          permissions: %w[can_update_user_details])
+    end
+    let!(:admin) { create(:admin_user, role: admin_role) }
+
     let!(:pending_user) { create(:pending_user, community_id: admin.community_id) }
 
     let(:create_query) do
@@ -635,7 +670,14 @@ RSpec.describe Mutations::User do
     end
   end
   describe 'sending a user a one time passcode' do
-    let!(:admin) { create(:admin_user) }
+    let!(:admin_role) { create(:role, name: 'admin') }
+    let!(:permission) do
+      create(:permission, module: 'user',
+                          role: admin_role,
+                          permissions: %w[can_update_user_details])
+    end
+    let!(:admin) { create(:admin_user, role: admin_role) }
+
     let!(:non_admin) { create(:user, community_id: admin.community_id) }
     let!(:resident) { create(:user, community_id: admin.community_id) }
 

@@ -177,7 +177,7 @@ admin:
   sos:
     permissions:
       - can_access_sos
-      - can_raise_sos
+      - can_initiate_sos
       - can_cancel_sos
   discussion:
     permissions:
@@ -252,7 +252,6 @@ custodian:
       - can_assign_note
       - can_bulk_assign_note
       - can_create_note_comment
-      - can_create_note_comment
       - can_update_note_comment
       - can_fetch_flagged_notes
       - can_fetch_task_by_id
@@ -295,7 +294,7 @@ custodian:
   sos:
     permissions:
       - can_access_sos
-      - can_raise_sos
+      - can_initiate_sos
       - can_cancel_sos
   user:
     permissions:
@@ -354,7 +353,7 @@ security_guard:
   sos:
     permissions:
       - can_access_sos
-      - can_raise_sos
+      - can_initiate_sos
       - can_cancel_sos
   user:
     permissions:
@@ -534,4 +533,3 @@ client:
   community:
     permissions:
       - can_see_menu_item
-

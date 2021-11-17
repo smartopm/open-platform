@@ -4,9 +4,17 @@ require 'rails_helper'
 
 RSpec.describe Mutations::EntryRequest::EntryRequestCreate do
   describe 'revoke an entry request' do
-    let!(:user) { create(:user_with_community) }
+    let!(:admin_role) { create(:role, name: 'admin') }
+    let!(:visitor_role) { create(:role, name: 'visitor') }
+    let!(:permission) do
+      create(:permission, module: 'entry_request',
+                          role: admin_role,
+                          permissions: %w[can_create_entry_request])
+    end
+
+    let!(:user) { create(:user_with_community, role: visitor_role) }
+    let!(:admin) { create(:admin_user, community_id: user.community_id, role: admin_role) }
     let!(:community) { user.community }
-    let!(:admin) { create(:admin_user, community_id: user.community_id) }
 
     let(:entry_request_create_mutation) do
       <<~GQL

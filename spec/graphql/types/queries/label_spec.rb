@@ -4,9 +4,19 @@ require 'rails_helper'
 
 RSpec.describe Types::Queries::Label do
   describe 'label queries' do
-    let!(:current_user) { create(:user_with_community) }
-    let!(:admin) { create(:admin_user, community_id: current_user.community_id) }
-    let!(:user2) { create(:user, community_id: current_user.community_id) }
+    let!(:admin_role) { create(:role, name: 'admin') }
+    let!(:visitor_role) { create(:role, name: 'visitor') }
+    let!(:permission) do
+      create(:permission, module: 'label',
+                          role: admin_role,
+                          permissions: %w[can_fetch_all_labels can_fetch_label_users])
+    end
+
+    let!(:current_user) { create(:user_with_community, role: visitor_role) }
+    let!(:admin) { create(:admin_user, community_id: current_user.community_id, role: admin_role) }
+
+    let!(:admin) { create(:admin_user, community_id: current_user.community_id, role: admin_role) }
+    let!(:user2) { create(:user, community_id: current_user.community_id, role: visitor_role) }
 
     # create a label for the user
     let!(:first_label) do

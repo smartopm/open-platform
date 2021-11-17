@@ -4,8 +4,27 @@ require 'rails_helper'
 
 RSpec.describe Types::Queries::Note do
   describe 'note queries' do
-    let!(:site_worker) { create(:site_worker) }
-    let!(:admin) { create(:admin_user, community_id: site_worker.community_id) }
+    let!(:admin_role) { create(:role, name: 'admin') }
+    let!(:site_worker_role) { create(:role, name: 'site_worker') }
+    let!(:permission) do
+      create(:permission, module: 'note',
+                          role: admin_role,
+                          permissions: %w[
+                            can_fetch_task_comments can_fetch_flagged_notes
+                            can_fetch_task_by_id can_fetch_task_histories
+                            can_get_task_count can_get_task_stats can_get_own_tasks
+                          ])
+    end
+    let!(:site_worker_permission) do
+      create(:permission, module: 'note',
+                          role: site_worker_role,
+                          permissions: %w[can_fetch_task_comments can_fetch_flagged_notes
+                                          can_fetch_task_by_id can_fetch_task_histories
+                                          can_get_task_count can_get_task_stats can_get_own_tasks])
+    end
+    let!(:admin) { create(:admin_user, role: admin_role) }
+    let!(:site_worker) { create(:site_worker, role: site_worker_role) }
+
     let!(:first_note) do
       admin.notes.create!(
         body: 'Note body',

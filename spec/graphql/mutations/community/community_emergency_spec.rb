@@ -4,8 +4,12 @@ require 'rails_helper'
 
 RSpec.describe Mutations::Community::CommunityEmergency do
   describe 'creating sos ticket for current user' do
-    let!(:resident) { create(:resident) }
-    let!(:guard) { create(:security_guard) }
+    let!(:role) { create(:role, name: 'resident') }
+    let!(:resident) { create(:resident, role: role) }
+    let!(:permission) do
+      create(:permission, module: 'sos',
+                          role: role, permissions: ['can_initiate_sos'])
+    end
 
     let(:create_sos_ticket) do
       <<~GQL

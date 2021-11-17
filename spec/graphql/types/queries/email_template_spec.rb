@@ -4,9 +4,18 @@ require 'rails_helper'
 
 RSpec.describe Types::Queries::EmailTemplate do
   describe 'EmailTemplate queries' do
-    let!(:current_user) { create(:user_with_community) }
-    let!(:another_user) { create(:user_with_community) }
-    let!(:admin) { create(:admin_user, community_id: current_user.community_id) }
+    let!(:admin_role) { create(:role, name: 'admin') }
+    let!(:visitor_role) { create(:role, name: 'visitor') }
+    let!(:permission) do
+      create(:permission, module: 'email_template',
+                          role: admin_role,
+                          permissions: %w[can_view_email_templates can_view_email_template])
+    end
+
+    let!(:current_user) { create(:user_with_community, role: visitor_role) }
+    let!(:admin) { create(:admin_user, community_id: current_user.community_id, role: admin_role) }
+
+    let!(:another_user) { create(:user_with_community, role: visitor_role) }
     let!(:comm_templates) do
       current_user.community.email_templates.create(
         name: 'welcome',

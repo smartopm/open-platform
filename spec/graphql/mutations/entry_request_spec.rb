@@ -4,9 +4,16 @@ require 'rails_helper'
 
 RSpec.describe Mutations::EntryRequest do
   describe 'creating an entry request' do
-    let!(:user) { create(:user_with_community) }
-    let!(:admin) { create(:admin_user, community_id: user.community_id) }
-    let!(:contractor) { create(:contractor, community_id: user.community_id) }
+    let!(:admin_role) { create(:role, name: 'admin') }
+    let!(:visitor_role) { create(:role, name: 'visitor') }
+    let!(:permission) do
+      create(:permission, module: 'entry_request',
+                          role: admin_role,
+                          permissions: %w[can_create_entry_request])
+    end
+
+    let!(:user) { create(:user_with_community, role: visitor_role) }
+    let!(:admin) { create(:admin_user, community_id: user.community_id, role: admin_role) }
 
     let(:query) do
       <<~GQL
@@ -84,9 +91,18 @@ RSpec.describe Mutations::EntryRequest do
   end
 
   describe 'updating an entry request' do
-    let!(:user) { create(:user_with_community) }
-    let!(:random_user) { create(:user_with_community) }
-    let!(:admin) { create(:admin_user, community_id: user.community_id) }
+    let!(:admin_role) { create(:role, name: 'admin') }
+    let!(:visitor_role) { create(:role, name: 'visitor') }
+    let!(:permission) do
+      create(:permission, module: 'entry_request',
+                          role: admin_role,
+                          permissions: %w[can_update_entry_request])
+    end
+
+    let!(:user) { create(:user_with_community, role: visitor_role) }
+    let!(:admin) { create(:admin_user, community_id: user.community_id, role: admin_role) }
+
+    let!(:random_user) { create(:user_with_community, role: visitor_role) }
     let!(:entry_request) do
       user.entry_requests.create(name: 'Mark Percival', reason: 'Visiting', is_guest: true)
     end
@@ -167,8 +183,17 @@ RSpec.describe Mutations::EntryRequest do
   end
 
   describe 'denying an entry request' do
-    let!(:user) { create(:user_with_community) }
-    let!(:admin) { create(:admin_user, community_id: user.community_id) }
+    let!(:admin_role) { create(:role, name: 'admin') }
+    let!(:visitor_role) { create(:role, name: 'visitor') }
+    let!(:permission) do
+      create(:permission, module: 'entry_request',
+                          role: admin_role,
+                          permissions: %w[can_deny_entry])
+    end
+
+    let!(:user) { create(:user_with_community, role: visitor_role) }
+    let!(:admin) { create(:admin_user, community_id: user.community_id, role: admin_role) }
+
     let!(:entry_request) { admin.entry_requests.create(name: 'Mark Percival', reason: 'Visiting') }
 
     let(:query) do
@@ -236,9 +261,18 @@ RSpec.describe Mutations::EntryRequest do
   end
 
   describe 'granting an entry request' do
-    let!(:user) { create(:user_with_community) }
-    let!(:another_user) { create(:user, community_id: user.community_id) }
-    let!(:admin) { create(:admin_user, community_id: user.community_id) }
+    let!(:admin_role) { create(:role, name: 'admin') }
+    let!(:visitor_role) { create(:role, name: 'visitor') }
+    let!(:permission) do
+      create(:permission, module: 'entry_request',
+                          role: admin_role,
+                          permissions: %w[can_grant_entry])
+    end
+
+    let!(:user) { create(:user_with_community, role: visitor_role) }
+    let!(:admin) { create(:admin_user, community_id: user.community_id, role: admin_role) }
+
+    let!(:another_user) { create(:user, community_id: user.community_id, role: visitor_role) }
     let!(:entry_request) { admin.entry_requests.create(name: 'Mark Percival', reason: 'Visiting') }
     let!(:event) do
       user.generate_events('visitor_entry', entry_request)
@@ -333,8 +367,22 @@ RSpec.describe Mutations::EntryRequest do
   end
 
   describe 'adding an observation note to an entry request' do
-    let!(:user) { create(:user_with_community) }
-    let!(:guard) { create(:security_guard, community_id: user.community_id) }
+    let!(:contractor_role) { create(:role, name: 'contractor') }
+    let!(:guard_role) { create(:role, name: 'security_guard') }
+    let!(:visitor_role) { create(:role, name: 'visitor') }
+    let!(:permission) do
+      create(:permission, module: 'entry_request',
+                          role: guard_role,
+                          permissions: %w[can_add_entry_request_note])
+    end
+
+    let!(:user) { create(:user_with_community, role: visitor_role) }
+    let!(:contractor) do
+      create(:admin_user, community_id: user.community_id,
+                          role: contractor_role)
+    end
+
+    let!(:guard) { create(:security_guard, community_id: user.community_id, role: guard_role) }
     let!(:contractor) { create(:contractor, community_id: user.community_id) }
     let!(:entry_request) { guard.entry_requests.create(name: 'Mark Percival', reason: 'Visiting') }
     let!(:event) do

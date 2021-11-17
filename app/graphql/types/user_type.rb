@@ -80,5 +80,10 @@ module Types
       ::Policy::ApplicationPolicy
         .new.permission_list[object.user_type.to_sym]
     end
+
+    # def permissions
+    #   ::Policy::ApplicationPolicy
+    #     .new(context[:current_user], nil).permission_list
+    # end
   end
 end

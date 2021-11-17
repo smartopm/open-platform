@@ -4,11 +4,22 @@ require 'rails_helper'
 
 RSpec.describe Mutations::EntryRequest::InvitationCreate do
   describe 'create an invitation for a guest' do
-    let!(:user) { create(:user_with_community) }
+    let!(:admin_role) { create(:role, name: 'admin') }
+    let!(:prospective_client_role) { create(:role, name: 'prospective_client') }
+    let!(:visitor_role) { create(:role, name: 'visitor') }
+    let!(:permission) do
+      create(:permission, module: 'entry_request',
+                          role: admin_role,
+                          permissions: %w[can_invite_guest])
+    end
+
+    let!(:user) { create(:user_with_community, role: prospective_client_role) }
+    let!(:admin) { create(:admin_user, community_id: user.community_id, role: admin_role) }
+
     let!(:community) { user.community }
-    let!(:admin) { create(:admin_user, community_id: user.community_id) }
     let!(:visitor) do
-      create(:user, user_type: 'visitor', email: 'u@admin.com', community_id: user.community_id)
+      create(:user, user_type: 'visitor', email: 'u@admin.com',
+                    community_id: user.community_id, role: visitor_role)
     end
     let!(:entry_request) do
       community.entry_requests.create!(name: 'John Doe', reason: 'Visiting',
