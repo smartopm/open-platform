@@ -15,7 +15,6 @@ import VisibilityIcon from '@material-ui/icons/Visibility';
 import Grid from '@material-ui/core/Grid';
 import { StyledTabs, StyledTab, TabPanel, a11yProps } from '../../../components/Tabs';
 import LogEvents from './LogEvents';
-import VisitView from './VisitView';
 import SpeedDial from '../../../shared/buttons/SpeedDial';
 import SearchInput from '../../../shared/search/SearchInput';
 import EntryNoteDialog from '../../../shared/dialogs/EntryNoteDialog';
@@ -28,12 +27,16 @@ import {
   entryLogsQueryBuilderConfig,
   entryLogsQueryBuilderInitialValue,
 } from '../../../utils/constants';
-import CenteredContent from '../../../components/CenteredContent';
 import Paginate from '../../../components/Paginate';
 import { objectAccessor } from '../../../utils/helpers';
+import GuestsView from './GuestsView';
+import VisitView from './VisitView';
+import MessageAlert from '../../../components/MessageAlert';
 import Text from '../../../shared/Text';
+import CenteredContent from '../../../shared/CenteredContent';
 
 const limit = 20;
+// TODO: reduce the amount of props passed down here, it is hard to keep track
 export default function LogBookItem({
   data,
   router,
@@ -62,7 +65,8 @@ export default function LogBookItem({
   const [observationDetails, setDetails] = useState({
     isError: false,
     message: '',
-    loading: false
+    loading: false,
+    refetch: false
   });
   const [addObservationNote] = useMutation(AddObservationNoteMutation);
   const matches = useMediaQuery('(max-width:800px)');
@@ -110,8 +114,8 @@ export default function LogBookItem({
   }
   const searchPlaceholder = {
     0: t('logbook.all_visits'),
-    1: t('logbook.registered_guests'),
-    2: t('logbook.new_visits'),
+    1: t('guest.guests'),
+    2: t('logbook.visits'),
     3: t('logbook.observations')
   };
 
@@ -153,6 +157,7 @@ export default function LogBookItem({
           ...observationDetails,
           loading: false,
           isError: false,
+          refetch: true,
           message:
             type === 'exit'
               ? t('logbook:observations.created_observation_exit')
@@ -198,8 +203,19 @@ export default function LogBookItem({
     resetImageData()
   }
 
+  function handleCloseAlert(){
+    // clear and allow visit view to properly refetch
+    setDetails({ ...observationDetails, message: '', refetch: false })
+  }
+
   return (
     <>
+      <MessageAlert
+        type={!observationDetails.isError ? 'success' : 'error'}
+        message={observationDetails.message}
+        open={!!observationDetails.message}
+        handleClose={handleCloseAlert}
+      />
       <EntryNoteDialog
         open={isObservationOpen}
         handleDialogStatus={() => handleCancelClose()}
@@ -267,7 +283,8 @@ export default function LogBookItem({
                 onChange={handleTabValue}
               >
                 <StyledTab label={t('logbook.log_view')} {...a11yProps(0)} />
-                <StyledTab label={t('logbook.visit_view')} {...a11yProps(1)} />
+                <StyledTab label={t('guest.guests')} {...a11yProps(1)} />
+                <StyledTab label={t('logbook.visit_view')} {...a11yProps(2)} />
               </StyledTabs>
             </Grid>
             <Grid item xs={10} md={6} style={matches ? {marginTop: '20px'} : {}}>
@@ -310,7 +327,7 @@ export default function LogBookItem({
             />
           </TabPanel>
           <TabPanel pad value={tabValue} index={1}>
-            <VisitView
+            <GuestsView
               tabValue={tabValue}
               handleAddObservation={handleAddObservation}
               offset={offset}
@@ -318,6 +335,18 @@ export default function LogBookItem({
               query={`${searchTerm} ${searchQuery}`}
               scope={scope}
               timeZone={authState.user.community.timezone}
+            />
+          </TabPanel>
+          <TabPanel pad value={tabValue} index={2}>
+            <VisitView
+              tabValue={tabValue}
+              handleAddObservation={handleExitEvent}
+              offset={offset}
+              limit={limit}
+              query={`${searchTerm} ${searchQuery}`}
+              scope={scope}
+              timeZone={authState.user.community.timezone}
+              observationDetails={observationDetails}
             />
           </TabPanel>
         </Grid>

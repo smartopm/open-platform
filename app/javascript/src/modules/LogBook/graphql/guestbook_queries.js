@@ -11,7 +11,10 @@ export const GuestEntriesQuery = gql`
       user {
         id
         name
-        imageUrl
+      }
+      guest {
+        id
+        name
         avatarUrl
       }
       accessHours {
@@ -30,6 +33,33 @@ export const GuestEntriesQuery = gql`
       startsAt
       revoked
       exitedAt
+    }
+  }
+`;
+
+export const CurrentGuestEntriesQuery = gql`
+  query CurrentGuests($offset: Int, $limit: Int, $query: String) {
+    currentGuests(offset: $offset, limit: $limit, query: $query) {
+      id
+      name
+      user {
+        id
+        name
+      }
+      guest {
+        id
+        name
+        imageUrl
+      }
+      accessHours {
+        occursOn
+        visitEndDate
+        visitationDate
+        endsAt
+        startsAt
+      }
+      exitedAt
+      grantedAt
     }
   }
 `;

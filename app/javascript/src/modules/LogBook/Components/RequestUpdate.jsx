@@ -743,7 +743,7 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
           {/* TODO: as we are slowly deprecating these actions, we should arrange them properly */}
           <div className=" d-flex row justify-content-center ">
             {
-            showCancelBtn && Number(tabValue) !== 2 &&
+            showCancelBtn && !Number(tabValue) &&
             (
               <Button
                 variant="contained"

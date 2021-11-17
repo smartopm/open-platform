@@ -1,20 +1,26 @@
 import React from 'react';
 import { fireEvent, render, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
-import { BrowserRouter } from 'react-router-dom';
+import routeData, { MemoryRouter } from 'react-router';
 import { MockedProvider } from '@apollo/react-testing';
 import MockedThemeProvider from '../../__mocks__/mock_theme';
-import GuestBook, { renderGuest } from '../Components/GuestBook';
+import GuestsView from '../Components/GuestsView';
 import { GuestEntriesQuery } from '../graphql/guestbook_queries';
 import { Context } from '../../../containers/Provider/AuthStateProvider';
 import userMock from '../../../__mocks__/userMock';
 
-// TODO: @olivier add proper timers to test more date related things
-describe('Should render Guest Book Component', () => {
+describe('Should render Guests View Component', () => {
+  const mockHistory = {
+    push: jest.fn()
+  };
+  beforeEach(() => {
+    jest.spyOn(routeData, 'useHistory').mockReturnValue(mockHistory);
+  });
+
   const mocks = {
     request: {
       query: GuestEntriesQuery,
-      variables: { offset: 0, limit: 50, query: '', scope: null }
+      variables: { offset: 0, limit: 50, query: '', scope: 2 }
     },
     result: {
       data: {
@@ -24,12 +30,12 @@ describe('Should render Guest Book Component', () => {
             name: 'Test another',
             user: {
               id: '162f7517',
-              name: 'Js user x',
+              name: 'Js user x'
             },
             guest: {
               id: '162f7517',
               name: 'Js user x',
-              avatarUrl: 'https://lh3.googleusercontent.com',
+              avatarUrl: 'https://lh3.googleusercontent.com'
             },
             accessHours: [
               {
@@ -55,12 +61,12 @@ describe('Should render Guest Book Component', () => {
             name: 'X Name',
             user: {
               id: '162f7517-69',
-              name: 'Js sdd',
+              name: 'Js sdd'
             },
             guest: {
               id: '162f7517',
               name: 'Js user x',
-              avatarUrl: 'https://lh3.googleusercontent.com',
+              avatarUrl: 'https://lh3.googleusercontent.com'
             },
             accessHours: [
               {
@@ -86,23 +92,36 @@ describe('Should render Guest Book Component', () => {
     }
   };
 
+  const errorMock = {
+    request: {
+      query: GuestEntriesQuery,
+      variables: { offset: 0, limit: 50, query: '', scope: 2 }
+    },
+    result: {
+      data: {
+        scheduledRequests: null
+      }
+    },
+    error: new Error('Something wrong happened')
+  };
+
   it('should render proper data', async () => {
-    const observe = jest.fn();
     const { getAllByText, getAllByTestId, getByText } = render(
       <Context.Provider value={userMock}>
         <MockedProvider mocks={[mocks]} addTypename={false}>
-          <BrowserRouter>
+          <MemoryRouter>
             <MockedThemeProvider>
-              <GuestBook
-                tabValue={2}
-                handleAddObservation={observe}
+              <GuestsView
+                tabValue={1}
+                handleAddObservation={jest.fn()}
                 offset={0}
                 limit={50}
                 query=""
-                scope={null}
+                scope={2}
+                timeZone="Africa/Maputo"
               />
             </MockedThemeProvider>
-          </BrowserRouter>
+          </MemoryRouter>
         </MockedProvider>
       </Context.Provider>
     );
@@ -115,62 +134,40 @@ describe('Should render Guest Book Component', () => {
       expect(getByText('Js sdd')).toBeInTheDocument();
       expect(getByText('Js user x')).toBeInTheDocument();
       expect(getAllByText('guest_book.start_of_visit')[0]).toBeInTheDocument();
-      expect(getAllByText('guest_book.visit_time')[0]).toBeInTheDocument();
-      expect(getAllByText('guest_book.visit_time')[0]).toBeInTheDocument();
       expect(getAllByTestId('grant_access_btn')[0]).toBeInTheDocument();
       expect(getAllByTestId('grant_access_btn')[0].textContent).toContain(
         'access_actions.grant_access'
       );
+      expect(getAllByTestId('grant_access_btn')[0]).toBeDisabled();
 
-      fireEvent.click(getAllByTestId('grant_access_btn')[0]);
-      // Jest taking too long after fixing timers
-      // expect(observe).toBeCalled() // since it is expired
-    }, 50);
+      fireEvent.click(getAllByTestId('card')[0]);
+      expect(mockHistory.push).toBeCalled();
+    }, 10);
   });
 
-  it('should render the guest function properly', () => {
-    // This is a good option to set specific date but apollo doesnt like it much in the first test case above
-    jest.useFakeTimers('modern');
-    jest.setSystemTime(new Date('2021-05-20 12:51'));
-    const classes = {};
-    const grantedAccess = jest.fn();
-    const translate = jest.fn(() => 'Translated text');
-    //   Since this is a mere function, we individually render every property's component
-    const guestView = renderGuest(
-      mocks.result.data.scheduledRequests[0],
-      classes,
-      grantedAccess,
-      false,
-      { loading: false },
-      translate
-    )[0];
-    const guestNameContainer = render(<BrowserRouter>{guestView['Guest Name']}</BrowserRouter>);
-    expect(guestNameContainer.queryByTestId('guest_name')).toBeInTheDocument();
-    expect(guestNameContainer.queryByTestId('guest_name').textContent).toContain('Test another');
-
-    const startVisit = render(guestView['Start of Visit']);
-    expect(startVisit.queryByTestId('start_of_visit')).toBeInTheDocument();
-    expect(startVisit.queryByTestId('start_of_visit').textContent).toContain('Translated text');
-
-    const endVisit = render(guestView['End of Visit']);
-    expect(endVisit.queryByTestId('end_of_visit')).toBeInTheDocument();
-    expect(endVisit.queryByTestId('end_of_visit').textContent).toContain('Translated text');
-
-    const accessTime = render(guestView['Access Time']);
-    expect(accessTime.queryByTestId('access_time')).toBeInTheDocument();
-    expect(accessTime.queryByTestId('access_time').textContent).toContain('Translated text');
-
-    const validity = render(guestView.validity);
-    expect(validity.queryByTestId('validity')).toBeInTheDocument();
-    expect(validity.queryByTestId('validity').textContent).toContain('Translated text');
-
-    const accessAction = render(guestView['Access Action']);
-    expect(accessAction.queryByTestId('access_actions')).toBeInTheDocument();
-    expect(accessAction.queryByTestId('grant_access_btn')).toBeInTheDocument();
-    expect(accessAction.queryByTestId('grant_access_btn')).toBeDisabled();
-    expect(accessAction.queryByTestId('grant_access_btn').textContent).toContain('Translated text');
-
-    fireEvent.click(accessAction.queryByTestId('grant_access_btn'));
-    expect(grantedAccess).not.toBeCalled();
+  it('should render error if something went wrong', async () => {
+    const { getByText } = render(
+      <Context.Provider value={userMock}>
+        <MockedProvider mocks={[errorMock]} addTypename={false}>
+          <MemoryRouter>
+            <MockedThemeProvider>
+              <GuestsView
+                tabValue={1}
+                handleAddObservation={jest.fn()}
+                offset={0}
+                limit={50}
+                query=""
+                scope={2}
+                timeZone="Africa/Maputo"
+              />
+            </MockedThemeProvider>
+          </MemoryRouter>
+        </MockedProvider>
+      </Context.Provider>
+    );
+    await waitFor(() => {
+      expect(getByText('Something wrong happened')).toBeInTheDocument();
+      expect(getByText('logbook.no_invited_guests')).toBeInTheDocument();
+    }, 10);
   });
 });

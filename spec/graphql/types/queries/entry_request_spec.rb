@@ -84,6 +84,18 @@ RSpec.describe Types::Queries::EntryRequest do
         }
         })
     end
+    let(:current_guest_list_query) do
+      %(query {
+        currentGuests {
+          id
+          name
+          guest {
+            id
+            name
+          }
+        }
+        })
+    end
 
     it 'should retrieve one entry_request' do
       entry_request = current_user.entry_requests.create(reason: 'Visiting',
@@ -285,6 +297,32 @@ RSpec.describe Types::Queries::EntryRequest do
                                        }).as_json
       expect(result.dig('errors', 0, 'message')).to include 'Unauthorized'
       expect(result.dig('data', 'scheduledGuestList')).to be_nil
+    end
+
+    it 'should retrieve list of current guests' do
+      3.times do
+        admin.entry_requests.create(reason: 'Visiting', name: 'Visitor Joe', nrc: '012345',
+                                    visitation_date: Time.zone.now, granted_at: Time.zone.now,
+                                    granted_state: 2)
+      end
+      result = DoubleGdpSchema.execute(current_guest_list_query, context: {
+                                         current_user: admin,
+                                         site_community: current_user.community,
+                                       }).as_json
+      expect(result.dig('data', 'currentGuests').length).to eql 3
+    end
+    it 'should return an error when not properly authenticated' do
+      2.times do
+        admin.entry_requests.create(reason: 'Visiting', name: 'Visitor Joe', nrc: '012345',
+                                    visitation_date: Time.zone.now, granted_at: Time.zone.now,
+                                    granted_state: 2)
+      end
+      result = DoubleGdpSchema.execute(current_guest_list_query, context: {
+                                         current_user: nil,
+                                         site_community: current_user.community,
+                                       }).as_json
+      expect(result.dig('errors', 0, 'message')).to include 'Unauthorized'
+      expect(result.dig('data', 'currentGuests')).to be_nil
     end
 
     it 'should not retrieve list of registered guests when authentication is missing' do

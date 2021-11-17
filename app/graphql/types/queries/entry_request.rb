@@ -1,8 +1,11 @@
 # frozen_string_literal: true
 
 # Queries module for breaking out queries
+# rubocop:disable Metrics/ModuleLength
 module Types::Queries::EntryRequest
   extend ActiveSupport::Concern
+
+  # rubocop:disable Metrics/BlockLength
   included do
     # Get a entry logs for a user
     field :entry_request, Types::EntryRequestType, null: true do
@@ -35,7 +38,16 @@ module Types::Queries::EntryRequest
       argument :limit, Integer, required: false
       argument :query, String, required: false
     end
+
+    field :current_guests, [Types::EntryRequestType], null: true do
+      description 'Get a list of guests who\'ve been granted access'
+      argument :offset, Integer, required: false
+      argument :limit, Integer, required: false
+      argument :query, String, required: false
+    end
   end
+  # rubocop:enable Metrics/BlockLength
+
   def entry_request(id:)
     raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') unless can_view_entry_request?
 
@@ -97,6 +109,19 @@ module Types::Queries::EntryRequest
   end
   # rubocop:enable Metrics/AbcSize
 
+  def current_guests(offset: 0, limit: 50, query: nil)
+    raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') unless can_view_entry_requests?
+
+    context[:site_community]
+      .entry_requests
+      .where.not(granted_at: nil, granted_state: 2)
+      .includes(:user).search(query)
+      .limit(limit).offset(offset)
+      .unscope(:order).order(granted_at: :desc)
+      .with_attached_images
+      .with_attached_video
+  end
+
   private
 
   # rubocop:disable Metrics/MethodLength,  Metrics/AbcSize
@@ -132,3 +157,4 @@ module Types::Queries::EntryRequest
     permitted?(module: :entry_request, permission: :can_view_entry_requests)
   end
 end
+# rubocop:enable Metrics/ModuleLength:

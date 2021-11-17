@@ -55,7 +55,8 @@ export default function LogBook() {
 
   const logsQuery = {
     0: subjects,
-    1: 'visit_request'
+    1: 'visit_request',
+    2: 'visit_request',
   };
 
   const { loading, error, data, refetch } = useQuery(AllEventLogsQuery, {

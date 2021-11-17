@@ -48,6 +48,7 @@ module Logs
         grantor_id: grantor.id,
         granted_state: 1,
         granted_at: Time.zone.now,
+        exited_at: nil,
       )
       log_entry_start('granted')
     end

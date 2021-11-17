@@ -91,6 +91,7 @@ export function IsAnyRequestValid(entries, t, tz) {
 
 
 export function findClosestEntry(entries, tz) {
+  if(!entries || !entries.length) return []
   const timeNow = moment.tz(tz);
   return entries.sort((entry1, entry2) => {
     const diffEntry1 = Math.abs(new Date(timeNow) - new Date(entry1.visitationDate));

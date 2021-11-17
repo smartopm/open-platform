@@ -119,16 +119,18 @@
     "invalid_today": "Invalid today",
     "expired": "Expired",
     "ends_on_date": "Ends on {{date}}",
-    "start_of_visit": "Start on {{date}}",
+    "start_of_visit": "Starts on {{date}}",
     "ends_on_date_time": "Ends on {{date}}, {{time}}",
-    "start_on_date_time": "Start on {{date}}, {{time}}",
+    "start_on_date_time": "Starts on {{date}}, {{time}}",
     "visit_time": "Time {{startTime}} - {{endTime}}",
     "repeats_on": "Repeats on",
     "repeats_until": "Repeats Until",
     "update_guest": "Update Guest",
     "host": "Host",
     "revoked": "Revoked",
-    "exited_at": "Exited at {{time}}"
+    "exited_at": "Exited at {{time}}",
+    "entered_at": "Entered at {{time}}",
+    "visits": "Visits"
   },
   "date_picker": {
     "ok_label": "Ok",

@@ -19,6 +19,9 @@ import { Spinner } from '../../../shared/Loading';
 import MessageAlert from '../../../components/MessageAlert';
 import { Context } from '../../../containers/Provider/AuthStateProvider';
 
+/**
+ * @deprecated
+ */
 export default function GuestBook({
   tabValue, handleAddObservation, offset, limit, query, scope, invitedGuests }) {
   const { t } = useTranslation('logbook');
@@ -35,7 +38,6 @@ export default function GuestBook({
       variables: { offset, limit, query, scope },
       fetchPolicy: "cache-and-network"
   });
-
   const entriesHeaders = [
     { title: 'Guest Name', col: 4, value: t('guest.guest_name') },
     { title: 'Start of Visit', col: 2, value: t('guest.start_of_visit') },

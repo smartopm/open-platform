@@ -124,12 +124,18 @@ describe('logbook utils', () => {
         occursOn: [],
       },
     ]
+    const nullEntries = null
+    const emptyEntries = []
     const translate = jest.fn(() => 'valid')
     const validity2 = IsAnyRequestValid(entries, translate, tz)
     expect(validity2).toBe(true)
 
     // check the closest date
     const closestDate = findClosestEntry(entries, tz)
+    const anotherClosestDate = findClosestEntry(nullEntries, tz)
+    const anotherClosestDate2 = findClosestEntry(emptyEntries, tz)
     expect(closestDate.visitationDate).toEqual('2021-05-20T10:40:00.000Z')
+    expect(anotherClosestDate).toEqual([])
+    expect(anotherClosestDate2).toEqual([])
   })
 });

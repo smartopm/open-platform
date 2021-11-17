@@ -1,69 +1,46 @@
 /* eslint-disable no-nested-ternary */
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { useLazyQuery, useMutation } from 'react-apollo';
+import { useLazyQuery } from 'react-apollo';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import Grid from '@material-ui/core/Grid';
-import Button from '@material-ui/core/Button';
 import { Link } from 'react-router-dom';
 import Typography from '@material-ui/core/Typography';
-import Avatar from '@material-ui/core/Avatar';
-import { GuestEntriesQuery } from '../graphql/guestbook_queries';
+import { Avatar, Button } from '@material-ui/core';
+import { CurrentGuestEntriesQuery } from '../graphql/guestbook_queries';
 import { Spinner } from '../../../shared/Loading';
 import Card from '../../../shared/Card';
 import { dateToString } from '../../../components/DateContainer';
 import Label from '../../../shared/label/Label';
 import Text from '../../../shared/Text';
-import CenteredContent from '../../../components/CenteredContent';
 import { IsAnyRequestValid } from '../utils';
-import { EntryRequestGrant } from '../../../graphql/mutations';
-import MessageAlert from '../../../components/MessageAlert';
+import CenteredContent from '../../../shared/CenteredContent';
+import { formatError } from '../../../utils/helpers';
+import useLogbookStyles from '../styles';
 
 export default function VisitView({
   tabValue,
-  handleAddObservation,
-  offset,
   limit,
   query,
-  scope,
-  timeZone
+  offset,
+  timeZone,
+  handleAddObservation,
+  observationDetails
 }) {
-  const [loadGuests, { data, loading: guestsLoading, error }] = useLazyQuery(GuestEntriesQuery, {
-    variables: { offset, limit, query, scope },
-    fetchPolicy: 'cache-and-network'
-  });
+  const [loadGuests, { data, loading: guestsLoading, refetch, error }] = useLazyQuery(
+    CurrentGuestEntriesQuery,
+    {
+      variables: { offset, limit, query },
+      fetchPolicy: 'cache-and-network'
+    }
+  );
   const { t } = useTranslation('logbook');
-  const [loadingStatus, setLoading] = useState({ loading: false, currentId: '' });
-  const [grantEntry] = useMutation(EntryRequestGrant);
-  const [message, setMessage] = useState({ isError: false, detail: '' });
+  const [currentId, setCurrentId] = useState(null);
   const history = useHistory();
   const matches = useMediaQuery('(max-width:800px)');
-
-  function handleGrantAccess(event, user) {
-    event.stopPropagation();
-    setLoading({ loading: true, currentId: user.id });
-    // handling compatibility with event log
-    const log = {
-      refId: user.id,
-      refType: 'Logs::EntryRequest'
-    };
-
-    grantEntry({ variables: { id: user.id } })
-      .then(() => {
-        setMessage({
-          isError: false,
-          detail: t('logbook:logbook.success_message', { action: t('logbook:logbook.granted') })
-        });
-        setLoading({ ...loadingStatus, loading: false });
-        handleAddObservation(log);
-      })
-      .catch(err => {
-        setMessage({ isError: true, detail: err.message });
-        setLoading({ ...loadingStatus, loading: false });
-      });
-  }
+  const classes = useLogbookStyles();
 
   function handleCardClick(visit) {
     history.push({
@@ -73,38 +50,44 @@ export default function VisitView({
     });
   }
 
+  function handleExit(event, visitId) {
+    event.stopPropagation();
+    const log = {
+      refId: visitId,
+      refType: 'Logs::EntryRequest'
+    };
+    setCurrentId(visitId);
+    handleAddObservation(log, 'exit');
+  }
+
   useEffect(() => {
-    if (tabValue === 1) {
+    if (observationDetails.refetch && tabValue === 2) {
+      refetch();
+    }
+  }, [observationDetails.refetch, refetch, tabValue]);
+
+  useEffect(() => {
+    if (tabValue === 2) {
       loadGuests();
     }
   }, [tabValue, loadGuests, query, offset]);
 
-
   return (
     <div style={{ marginTop: '20px' }}>
-      {error && <CenteredContent>error.message</CenteredContent>}
-      <MessageAlert
-        type={message.isError ? 'error' : 'success'}
-        message={message.detail}
-        open={!!message.detail}
-        handleClose={() => setMessage({ ...message, detail: '' })}
-      />
+      {error && <CenteredContent>{formatError(error.message)}</CenteredContent>}
       {guestsLoading ? (
         <Spinner />
-      ) : data?.scheduledRequests.length > 0 ? (
-        data?.scheduledRequests.map(visit => (
+      ) : data?.currentGuests.length > 0 ? (
+        data?.currentGuests.map(visit => (
           <Card
             key={visit.id}
             clickData={{ clickable: true, handleClick: () => handleCardClick(visit) }}
           >
             <Grid container spacing={1}>
               <Grid item md={1} xs={3}>
-                <Avatar
-                  variant="square"
-                  src={visit.user.imageUrl}
-                  alt="user-image"
-                  style={{ height: '100%', width: '100%' }}
-                />
+                <Avatar alt={visit.guest?.name} className={classes.avatar} variant="square">
+                  {visit.name.charAt(0)}
+                </Avatar>
               </Grid>
               <Grid item md={3} xs={9}>
                 <Typography variant="caption" color="primary">
@@ -119,44 +102,57 @@ export default function VisitView({
                   <Text color="secondary" content={visit.user.name} />
                 </Link>
               </Grid>
-              <Grid item md={2} xs={6} style={!matches ? { paddingTop: '15px' } : {}}>
+              <Grid
+                item
+                md={2}
+                xs={6}
+                style={!matches ? { paddingTop: '15px' } : {}}
+                data-testid="entered_at"
+              >
                 <Typography variant="caption">
-                  {t('guest_book.start_of_visit', { date: dateToString(visit.visitationDate) })}
+                  {t('guest_book.entered_at', {
+                    time: dateToString(visit.grantedAt, 'YYYY-MM-DD HH:mm')
+                  })}
                 </Typography>
               </Grid>
-              <Grid item md={2} xs={6} style={!matches ? { paddingTop: '15px' } : {}}>
-                <Typography variant="caption">
-                  {
-                  visit.exitedAt
-                    ? t('guest_book.exited_at', { time: dateToString(visit.exitedAt, 'YYYY-MM-DD HH:mm') })
-                    : '-'
-                }
-                </Typography>
+              <Grid
+                item
+                md={3}
+                xs={6}
+                style={!matches ? { paddingTop: '15px' } : {}}
+                data-testid="exited_at"
+              >
+                {visit.exitedAt ? (
+                  <Typography variant="caption">
+                    {t('guest_book.exited_at', {
+                      time: dateToString(visit.exitedAt, 'YYYY-MM-DD HH:mm')
+                    })}
+                  </Typography>
+                ) : (
+                  <Button
+                    color="primary"
+                    data-testid="log_exit"
+                    variant="outlined"
+                    disabled={currentId === visit.id && observationDetails.loading}
+                    startIcon={
+                      currentId === visit.id && observationDetails.loading ? <Spinner /> : null
+                    }
+                    onClick={event => handleExit(event, visit.id)}
+                  >
+                    {t('logbook.log_exit')}
+                  </Button>
+                )}
               </Grid>
-              <Grid item md={2} xs={6} style={!matches ? { paddingTop: '15px' } : {}}>
+              <Grid item md={3} xs={6} style={!matches ? { paddingTop: '15px' } : {}}>
                 <Label
-                  title={IsAnyRequestValid(visit.accessHours, t, timeZone) ? t('guest_book.valid') : t('guest_book.invalid_now')}
+                  title={
+                    IsAnyRequestValid(visit.accessHours, t, timeZone)
+                      ? t('guest_book.valid')
+                      : t('guest_book.invalid_now')
+                  }
                   color={IsAnyRequestValid(visit.accessHours, t, timeZone) ? '#00A98B' : '#E74540'}
                   width="70%"
                 />
-              </Grid>
-              <Grid item md={2} xs={12} style={!matches ? { paddingTop: '8px' } : {}}>
-                <Button
-                  disabled={
-                    !IsAnyRequestValid(visit.accessHours, t, timeZone) ||
-                    (loadingStatus.loading && Boolean(loadingStatus.currentId))
-                  }
-                  variant="contained"
-                  onClick={event => handleGrantAccess(event, visit)}
-                  disableElevation
-                  startIcon={
-                    loadingStatus.loading && loadingStatus.currentId === visit.id && <Spinner />
-                  }
-                  data-testid="grant_access_btn"
-                  fullWidth
-                >
-                  {t('access_actions.grant_access')}
-                </Button>
               </Grid>
             </Grid>
           </Card>
@@ -172,8 +168,11 @@ VisitView.propTypes = {
   tabValue: PropTypes.number.isRequired,
   offset: PropTypes.number.isRequired,
   limit: PropTypes.number.isRequired,
-  handleAddObservation: PropTypes.func.isRequired,
   query: PropTypes.string.isRequired,
-  scope: PropTypes.number.isRequired,
-  timeZone: PropTypes.string.isRequired
+  timeZone: PropTypes.string.isRequired,
+  handleAddObservation: PropTypes.func.isRequired,
+  observationDetails: PropTypes.shape({
+    loading: PropTypes.bool,
+    refetch: PropTypes.bool
+  }).isRequired
 };

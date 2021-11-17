@@ -1,31 +1,41 @@
 import React from 'react';
-import { fireEvent, render, waitFor } from '@testing-library/react';
+import { render, waitFor, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
-import { BrowserRouter } from 'react-router-dom';
+import routeData, { MemoryRouter } from 'react-router';
 import { MockedProvider } from '@apollo/react-testing';
 import MockedThemeProvider from '../../__mocks__/mock_theme';
 import VisitView from '../Components/VisitView';
-import { GuestEntriesQuery } from '../graphql/guestbook_queries';
+import { CurrentGuestEntriesQuery } from '../graphql/guestbook_queries';
 import { Context } from '../../../containers/Provider/AuthStateProvider';
-import userMock from '../../../__mocks__/userMock';
+import authState from '../../../__mocks__/authstate';
 
-describe('Should render Visit View Component', () => {
+describe('Should render Visits View Component', () => {
+  const mockHistory = {
+    push: jest.fn()
+  };
+  beforeEach(() => {
+    jest.spyOn(routeData, 'useHistory').mockReturnValue(mockHistory);
+  });
+
   const mocks = {
     request: {
-      query: GuestEntriesQuery,
-      variables: { offset: 0, limit: 50, query: '', scope: 2 }
+      query: CurrentGuestEntriesQuery,
+      variables: { offset: 0, limit: 50, query: '' }
     },
     result: {
       data: {
-        scheduledRequests: [
+        currentGuests: [
           {
             id: 'a91dbad4-eeb4',
             name: 'Test another',
             user: {
               id: '162f7517',
+              name: 'Js user x'
+            },
+            guest: {
+              id: '162f7517',
               name: 'Js user x',
-              imageUrl: 'https://lh3.googleusercontent.com',
-              avatarUrl: null
+              imageUrl: 'https://lh3.googleusercontent.com'
             },
             accessHours: [
               {
@@ -33,69 +43,53 @@ describe('Should render Visit View Component', () => {
                 visitationDate: '2021-08-20T10:51:00+02:00',
                 endsAt: '2021-10-31 22:51',
                 startsAt: '2021-10-31 02:51',
-                occursOn: [],
+                occursOn: []
               }
             ],
-            occursOn: [],
-            visitEndDate: null,
-            visitationDate: '2021-08-20T10:51:00+02:00',
-            endTime: '2021-10-31 22:51',
-            startTime: '2021-10-31 02:51',
-            endsAt: '2021-10-31 22:51',
-            startsAt: '2021-10-31 02:51',
-            exitedAt: '2021-10-31 22:51',
-            revoked: true
-          },
-          {
-            id: '696d857',
-            name: 'X Name',
-            user: {
-              id: '162f7517-69',
-              name: 'Js sdd',
-              imageUrl: 'https://lh3.googleusercontent.com/a-/',
-              avatarUrl: null
-            },
-            accessHours: [
-              {
-                visitEndDate: null,
-                visitationDate: '2021-08-20T10:51:00+02:00',
-                endsAt: '2021-10-31 22:51',
-                startsAt: '2021-10-31 02:51',
-                occursOn: [],
-              }
-            ],
-            occursOn: [],
-            visitEndDate: null,
-            visitationDate: '2021-08-31T10:20:21+02:00',
-            endTime: '2021-10-31 22:51',
-            startTime: '2021-10-31 02:51',
-            endsAt: '2021-10-31 22:51',
-            startsAt: '2021-10-31 02:51',
-            exitedAt: '2021-10-31 22:51',
-            revoked: false
+            grantedAt: '2021-10-31 02:51',
+            exitedAt: null
           }
         ]
       }
     }
   };
 
+  const errorMock = {
+    request: {
+      query: CurrentGuestEntriesQuery,
+      variables: { offset: 0, limit: 50, query: '' }
+    },
+    result: {
+      data: {
+        currentGuests: null
+      }
+    },
+    error: new Error('Something wrong happened')
+  };
+
+  const props = {
+    handleAddObservation: jest.fn(),
+    observationDetails: {
+      loading: false,
+      refetch: false
+    }
+  };
   it('should render proper data', async () => {
-    const { getAllByText, getAllByTestId, getByText } = render(
-      <Context.Provider value={userMock}>
+    const { getByTestId, getByText } = render(
+      <Context.Provider value={authState}>
         <MockedProvider mocks={[mocks]} addTypename={false}>
-          <BrowserRouter>
+          <MemoryRouter>
             <MockedThemeProvider>
               <VisitView
-                tabValue={1}
-                handleAddObservation={jest.fn()}
+                tabValue={2}
                 offset={0}
                 limit={50}
                 query=""
-                scope={2}
                 timeZone="Africa/Maputo"
+                {...props}
               />
             </MockedThemeProvider>
-          </BrowserRouter>
+          </MemoryRouter>
         </MockedProvider>
       </Context.Provider>
     );
@@ -104,19 +98,43 @@ describe('Should render Visit View Component', () => {
 
     await waitFor(() => {
       expect(getByText('Test another')).toBeInTheDocument();
-      expect(getByText('X Name')).toBeInTheDocument();
-      expect(getByText('Js sdd')).toBeInTheDocument();
       expect(getByText('Js user x')).toBeInTheDocument();
-      expect(getAllByText('guest_book.start_of_visit')[0]).toBeInTheDocument();
-      expect(getAllByText('guest_book.exited_at')[0]).toBeInTheDocument();
-      expect(getAllByTestId('grant_access_btn')[0]).toBeInTheDocument();
-      expect(getAllByTestId('grant_access_btn')[0].textContent).toContain(
-        'access_actions.grant_access'
-      );
+      expect(getByText('logbook:logbook.host')).toBeInTheDocument();
+      expect(getByTestId('entered_at')).toBeInTheDocument();
+      expect(getByTestId('exited_at')).toBeInTheDocument();
+      expect(getByTestId('log_exit')).toBeInTheDocument();
+      expect(getByTestId('log_exit')).not.toBeDisabled();
 
-      fireEvent.click(getAllByTestId('grant_access_btn')[0]);
-      // Jest taking too long after fixing timers
-      // expect(observe).toBeCalled() // since it is expired
-    }, 50);
+      fireEvent.click(getByTestId('log_exit'));
+      expect(props.handleAddObservation).toBeCalled();
+
+      fireEvent.click(getByTestId('card'));
+      expect(mockHistory.push).toBeCalled();
+    }, 10);
+  });
+
+  it('should render error if something went wrong', async () => {
+    const { getByText } = render(
+      <Context.Provider value={authState}>
+        <MemoryRouter>
+          <MockedProvider mocks={[errorMock]} addTypename={false}>
+            <MockedThemeProvider>
+              <VisitView
+                tabValue={2}
+                offset={0}
+                limit={50}
+                query=""
+                timeZone="Africa/Maputo"
+                {...props}
+              />
+            </MockedThemeProvider>
+          </MockedProvider>
+        </MemoryRouter>
+      </Context.Provider>
+    );
+    await waitFor(() => {
+      expect(getByText('Something wrong happened')).toBeInTheDocument();
+      expect(getByText('logbook.no_invited_guests')).toBeInTheDocument();
+    }, 10);
   });
 });

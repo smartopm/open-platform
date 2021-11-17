@@ -2,8 +2,7 @@ import React from 'react';
 import { StyleSheet, css } from 'aphrodite';
 import { withStyles } from '@material-ui/styles';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import CenteredContent from '../components/CenteredContent';
-
+import CenteredContent from './CenteredContent';
 /**
  *
  * @deprecated use Spinner instead because it does not break the whole page
