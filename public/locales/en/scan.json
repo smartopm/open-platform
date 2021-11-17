@@ -9,6 +9,7 @@
   },
   "misc": {
     "visiting_hours": "Please note the main gate visiting hours:",
-    "off": "Off"
+    "off": "Off",
+    "decoding": "Decoding..."
   }
 }
