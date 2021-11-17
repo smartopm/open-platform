@@ -2,6 +2,7 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import React, { useEffect, useState } from 'react';
 import Typography from '@material-ui/core/Typography';
+import FormControl from '@material-ui/core/FormControl';
 import {
   Button,
   TextField,
@@ -87,6 +88,7 @@ export default function CommunitySettings({ data, refetch }) {
 
   const quickLinksDisplayOptions = ['Dashboard', 'Menu'];
   const roleOptions = ['admin', 'client', 'resident'];
+  const [cropImage, setCropImage] = useState(false)
 
   const [communityUpdate] = useMutation(CommunityUpdateMutation);
   const [numberOptions, setNumberOptions] = useState([numbers]);
@@ -301,15 +303,19 @@ export default function CommunitySettings({ data, refetch }) {
   }
 
   function uploadLogo(img) {
-    onChange(img);
+    onChange(img, false);
     setShowCropper(false);
     setMessage({ isError: false, detail: t('community.logo_updated') });
     setAlertOpen(true);
   }
 
   function selectLogoOnchange(img) {
-    onInputChange(img);
-    setShowCropper(true);
+    if (!cropImage) {
+      uploadLogo(img)
+    } else {
+      onInputChange(img);
+      setShowCropper(true);
+    }
   }
 
   function setLanguageInLocalStorage(selectedLanguage) {
@@ -433,6 +439,14 @@ export default function CommunitySettings({ data, refetch }) {
                 accept="image/*"
               />
             </Button>
+          </div>
+          <div>
+            <FormControl component="fieldset" className={classes.formControl}>
+              <FormControlLabel
+                control={<Checkbox color='primary' checked={cropImage} onChange={() => setCropImage(!cropImage)} name="crop" />}
+                label={t('community.crop_image')}
+              />
+            </FormControl>
           </div>
         </div>
       </div>
