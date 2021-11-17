@@ -131,7 +131,6 @@ export default function LogEvents({
   };
   return (
     <div style={{ marginTop: '20px' }} data-testid="card">
-      {console.log(data)}
       {error && <CenteredContent>{error}</CenteredContent>}
       {loading ? (
         <Spinner />
