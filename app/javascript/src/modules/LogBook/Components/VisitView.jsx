@@ -84,7 +84,7 @@ export default function VisitView({
             key={visit.id}
             clickData={{ clickable: true, handleClick: () => handleCardClick(visit) }}
           >
-            <Grid container spacing={2}>
+            <Grid container spacing={1}>
               <Grid item md={2} xs={4}>
                 <Avatar alt={visit.guest?.name} className={classes.avatar} variant="square">
                   {visit.name.charAt(0)}
