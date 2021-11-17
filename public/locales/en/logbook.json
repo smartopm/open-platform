@@ -63,7 +63,8 @@
     "observation": "Observation",
     "no_logs": "No Logs Available",
     "old_switch": "switch to old screen",
-    "new_switch": "switch to new screen"
+    "new_switch": "switch to new screen",
+    "user_entry": "User Entry"
   },
   "log_title": {
     "visitor": "Visitor",
