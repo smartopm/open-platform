@@ -81,7 +81,7 @@ export default function QRScan() {
   return (
     <div>
       {scanned ? (
-        <h1 className="text-center">Decoding...</h1>
+        <h1 className="text-center">{t('misc.decoding')}</h1>
       ) : (
           <>
             <video
