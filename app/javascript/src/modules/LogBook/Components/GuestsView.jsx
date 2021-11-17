@@ -101,12 +101,12 @@ export default function GuestsView({
             clickData={{ clickable: true, handleClick: () => handleCardClick(visit) }}
           >
             <Grid container spacing={1}>
-              <Grid item md={1} xs={4}>
+              <Grid item md={2} xs={4}>
                 <Avatar alt={visit.guest?.name} className={classes.avatar} variant="square">
                   {visit.name.charAt(0)}
                 </Avatar>
               </Grid>
-              <Grid item md={3} xs={8}>
+              <Grid item md={2} xs={8}>
                 <Typography variant="caption" color="primary">
                   {visit.name}
                 </Typography>
