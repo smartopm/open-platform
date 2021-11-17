@@ -161,7 +161,7 @@ RSpec.describe Types::Queries::EntryRequest do
     it 'should retrieve list of registered guests' do
       2.times do
         current_user.entry_requests.create(reason: 'Visiting', name: 'Visitor Joe', nrc: '012345',
-                                           visitation_date: Time.zone.now)
+                                           visitation_date: Time.zone.now, guest_id: admin.id)
       end
       result = DoubleGdpSchema.execute(scheduledRequests_query, context: {
                                          current_user: admin,
@@ -173,11 +173,11 @@ RSpec.describe Types::Queries::EntryRequest do
     it 'retrieves list of registered guests by end_time scope' do
       2.times do
         current_user.entry_requests.create(reason: 'Visiting', name: 'Visitor Joe', nrc: '012345',
-                                           visitation_date: Time.zone.now,
+                                           visitation_date: Time.zone.now, guest_id: admin.id,
                                            ends_at: Time.zone.now + 1.hour)
       end
       current_user.entry_requests.create(reason: 'client', name: 'Jane Doe', nrc: '012345',
-                                         visitation_date: 8.days.ago,
+                                         visitation_date: 8.days.ago, guest_id: admin.id,
                                          ends_at: 8.days.ago)
 
       result = DoubleGdpSchema.execute(scheduledRequests_query, variables: { scope: 7 }, context: {
@@ -199,7 +199,7 @@ RSpec.describe Types::Queries::EntryRequest do
       )
       current_user.entry_requests.create(
         reason: 'Visiting', name: 'Visitor John', nrc: '012345',
-        visitation_date: Time.zone.now, end_time: '2021-09-23 14:00'
+        visitation_date: Time.zone.now, end_time: '2021-09-23 14:00', guest_id: admin.id
       )
 
       result = DoubleGdpSchema.execute(
@@ -211,23 +211,23 @@ RSpec.describe Types::Queries::EntryRequest do
         },
       ).as_json
 
-      expect(result.dig('data', 'scheduledRequests').length).to eq 2
+      expect(result.dig('data', 'scheduledRequests').length).to eq 1
     end
 
     it 'searches by ends_at not equal to date' do
       variables = { query: "ends_at != '2021-09-23 18:52'" }
       current_user.entry_requests.create(
-        reason: 'Visiting', name: 'Visitor Jane', nrc: '012345',
+        reason: 'Visiting', name: 'Visitor Jane', nrc: '012345', guest_id: admin.id,
         visitation_date: Time.zone.now, ends_at: '2021-09-28T20:52:00+02:00'
       )
       current_user.entry_requests.create(
         reason: 'Visiting', name: 'Visitor Mary', nrc: '012345',
         visitation_date: Time.zone.now, end_time: '2021-09-28 12:00',
-        visit_end_date: '2021-09-28T11:00:19+02:00'
+        visit_end_date: '2021-09-28T11:00:19+02:00', guest_id: admin.id
       )
       current_user.entry_requests.create(
         reason: 'Visiting', name: 'Visitor John', nrc: '012345',
-        visitation_date: Time.zone.now, end_time: '2021-09-23 18:52'
+        visitation_date: Time.zone.now, end_time: '2021-09-23 18:52', guest_id: admin.id
       )
 
       result = DoubleGdpSchema.execute(
@@ -247,15 +247,15 @@ RSpec.describe Types::Queries::EntryRequest do
     it 'searches by ends_at date range' do
       variables = { query: "ends_at >= '2021-09-25 00:45' AND ends_at <= '2021-09-29 12:00'" }
       current_user.entry_requests.create(
-        reason: 'Visiting', name: 'Visitor Jane', nrc: '012345',
+        reason: 'Visiting', name: 'Visitor Jane', nrc: '012345', guest_id: admin.id,
         visitation_date: Time.zone.now, ends_at: '2021-09-25T11:00:19+02:00'
       )
       current_user.entry_requests.create(
-        reason: 'Visiting', name: 'Visitor Mary', nrc: '012345',
+        reason: 'Visiting', name: 'Visitor Mary', nrc: '012345', guest_id: admin.id,
         visitation_date: Time.zone.now, ends_at: '2021-09-29T09:00:19+02:00'
       )
       current_user.entry_requests.create(
-        reason: 'Visiting', name: 'Visitor John', nrc: '012345',
+        reason: 'Visiting', name: 'Visitor John', nrc: '012345', guest_id: admin.id,
         visitation_date: Time.zone.now, ends_at: '2021-09-30T11:00:19+02:00'
       )
 
@@ -303,7 +303,7 @@ RSpec.describe Types::Queries::EntryRequest do
       3.times do
         admin.entry_requests.create(reason: 'Visiting', name: 'Visitor Joe', nrc: '012345',
                                     visitation_date: Time.zone.now, granted_at: Time.zone.now,
-                                    granted_state: 2)
+                                    granted_state: 1, guest_id: admin.id)
       end
       result = DoubleGdpSchema.execute(current_guest_list_query, context: {
                                          current_user: admin,
