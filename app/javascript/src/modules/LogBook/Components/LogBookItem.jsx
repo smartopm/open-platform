@@ -115,7 +115,7 @@ export default function LogBookItem({
   const searchPlaceholder = {
     0: t('logbook.all_visits'),
     1: t('guest.guests'),
-    2: t('logbook.visits'),
+    2: t('guest_book.visits'),
     3: t('logbook.observations')
   };
 

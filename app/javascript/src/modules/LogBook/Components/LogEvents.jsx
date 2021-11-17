@@ -146,8 +146,7 @@ export default function LogEvents({
                     </Typography>
                     <br />
                     <Typography variant="caption">
-                      {t('logbook.host')}
-                      {' '}
+                      {`${t('log_title.guard')}: `}
                     </Typography>
                     <Link to={`/user/${entry.actingUser.id}`} data-testid="acting-user">
                       <Text color="secondary" content={entry.actingUser.name} />
