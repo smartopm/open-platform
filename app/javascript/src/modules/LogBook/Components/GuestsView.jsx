@@ -9,12 +9,11 @@ import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import { Link } from 'react-router-dom';
 import Typography from '@material-ui/core/Typography';
-import { Avatar, useTheme } from '@material-ui/core';
+import { Avatar, Chip } from '@material-ui/core';
 import { GuestEntriesQuery } from '../graphql/guestbook_queries';
 import { Spinner } from '../../../shared/Loading';
 import Card from '../../../shared/Card';
 import { dateTimeToString, dateToString } from '../../../components/DateContainer';
-import Label from '../../../shared/label/Label';
 import Text from '../../../shared/Text';
 import { findClosestEntry, IsAnyRequestValid } from '../utils';
 import { EntryRequestGrant } from '../../../graphql/mutations';
@@ -43,8 +42,7 @@ export default function GuestsView({
   const [message, setMessage] = useState({ isError: false, detail: '' });
   const history = useHistory();
   const matches = useMediaQuery('(max-width:800px)');
-  const classes = useLogbookStyles()
-  const theme = useTheme();
+  const classes = useLogbookStyles();
 
   function handleGrantAccess(event, user) {
     event.stopPropagation();
@@ -86,7 +84,9 @@ export default function GuestsView({
 
   return (
     <div style={{ marginTop: '20px' }}>
-      {error && <CenteredContent>{formatError(error.message)}</CenteredContent>}
+      {error && !data?.scheduledRequests.length && (
+        <CenteredContent>{formatError(error.message)}</CenteredContent>
+      )}
       <MessageAlert
         type={message.isError ? 'error' : 'success'}
         message={message.detail}
@@ -120,20 +120,20 @@ export default function GuestsView({
                   <Text color="secondary" content={visit.user.name} />
                 </Link>
                 <div style={{ paddingTop: '15px' }} data-testid="request_status">
-                  <Label
-                    title={visit.status === 'approved' ? 'Approved' : 'Pending'}
-                    color={
-                      visit.status === 'approved'
-                      ? theme.palette.success.main
-                      : theme.palette.info.main
-                    }
-                    width="50%"
+                  <Chip
+                    data-testid="user-entry"
+                    label={visit.status === 'approved' ? 'Approved' : 'Pending'}
+                    color={visit.status === 'approved' ? 'primary' : 'secondary'}
                   />
                 </div>
               </Grid>
               <Grid item md={2} xs={6} style={!matches ? { paddingTop: '15px' } : {}}>
                 <Typography variant="caption">
-                  {t('guest_book.start_of_visit', { date: dateToString(findClosestEntry(visit.accessHours, timeZone)?.visitationDate) })}
+                  {t('guest_book.start_of_visit', {
+                    date: dateToString(
+                      findClosestEntry(visit.accessHours, timeZone)?.visitationDate
+                    )
+                  })}
                 </Typography>
               </Grid>
               <Grid item md={2} xs={6} style={!matches ? { paddingTop: '15px' } : {}}>
@@ -142,21 +142,24 @@ export default function GuestsView({
                     startTime: dateTimeToString(
                       findClosestEntry(visit.accessHours, timeZone)?.startsAt
                     ),
-                    endTime: dateTimeToString(
-                      findClosestEntry(visit.accessHours, timeZone)?.endsAt
-                    )
+                    endTime: dateTimeToString(findClosestEntry(visit.accessHours, timeZone)?.endsAt)
                   })}
                 </Typography>
               </Grid>
               <Grid item md={2} xs={6} style={!matches ? { paddingTop: '15px' } : {}}>
-                <Label
-                  title={
+                <Chip
+                  label={
                     IsAnyRequestValid(visit.accessHours, t, timeZone)
                       ? t('guest_book.valid')
                       : t('guest_book.invalid_now')
                   }
-                  color={IsAnyRequestValid(visit.accessHours, t, timeZone) ? '#00A98B' : '#E74540'}
-                  width="70%"
+                  style={{
+                    background: IsAnyRequestValid(visit.accessHours, t, timeZone)
+                      ? '#00A98B'
+                      : '#E74540',
+                    color: 'white',
+                    marginRight: '16px'
+                  }}
                 />
               </Grid>
               <Grid item md={2} xs={12} style={!matches ? { paddingTop: '8px' } : {}}>
