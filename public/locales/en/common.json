@@ -422,5 +422,27 @@
     "FILE_UPLOAD": "Uploading to the server ...",
     "DONE": "Picture Successfully Uploaded ",
     "ERROR": "An error happened while uploading, try again"
+  },
+  "user_states": {
+    "valid": "Valid",
+    "pending": "Pending",
+    "banned": "Not Allowed",
+    "expired": "Expired"
+  },
+  "user_reasons": {
+    "visiting": "Visiting",
+    "residing": "Residing",
+    "working": "Working",
+    "passing_through": "Passing through",
+    "other": "Other"
+  },
+  "user_sub_status": {
+    "plots_fully_purchased": "Plots Fully Purchased",
+    "eligible_to_start_construction": "Eligible to start Construction",
+    "floor_plan_purchased": "Floor Plan Purchased",
+    "building_permit_approved": "Building Permit Approved",
+    "construction_in_progress": "Construction in Progress",
+    "construction_completed": "Construction Completed",
+    "construction_in_progress_self_build": "Construction in Progress (Self Build)"
   }
 }
