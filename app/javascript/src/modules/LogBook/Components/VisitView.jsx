@@ -85,7 +85,7 @@ export default function VisitView({
           >
             <Grid container spacing={1}>
               <Grid item md={2} xs={4}>
-                <Avatar alt={visit.guest?.name} className={classes.avatar} variant="square">
+                <Avatar alt={visit.name} className={classes.avatar} variant="square">
                   {visit.name.charAt(0)}
                 </Avatar>
               </Grid>
@@ -95,7 +95,7 @@ export default function VisitView({
                 </Typography>
                 <br />
                 <Typography variant="caption">
-                  {t('logbook:logbook.host')}
+                  {visit.guestId ? t('logbook:logbook.host'): t('logbook:log_title.guard')}
                   {' '}
                 </Typography>
                 <Link to={`/user/${visit.user.id}`}>
