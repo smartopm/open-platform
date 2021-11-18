@@ -40,6 +40,7 @@
   "guest_book": {
     "ends_on_date": "Termina el ‪{{date}}‬",
     "ends_on_date_time": "Termina en ‪{{date}}‬,‪ ‪{{time}}‬",
+    "entered_at": "Entró a ‪{{time}}‬",
     "exited_at": "Salió a las ‪{{time}}‬",
     "expired": "Vencido",
     "host": "Anfitrión ",
@@ -52,7 +53,8 @@
     "start_on_date_time": "Inicia en ‪{{date}}‬, ‪{{time}}‬",
     "update_guest": "Actualizar Invitado",
     "valid": "Válido",
-    "visit_time": "Tiempo de visita ‪{{startTime}}‬ - ‪{{endTime}}‬"
+    "visit_time": "Tiempo de visita ‪{{startTime}}‬ - ‪{{endTime}}‬",
+    "visits": "Visitas"
   },
   "guest": {
     "access_action": "Acción de Acceso",
@@ -96,6 +98,7 @@
     "visitor": "Visita"
   },
   "logbook": {
+    "acting_user": "Usuario interino",
     "add_observation": "Agregar Observaciones",
     "all_visits": "Todas las visitas",
     "beyond_time": "La hora actual está fuera de las horas normales de visita. ¿Estás seguro de que deseas continuar?",
@@ -155,6 +158,7 @@
     "today_is": "Hoy es {{date}}, {{time}}",
     "upcoming_visits": "Próximas visitas",
     "user_enrolled": "El usuario fue registrado con exito",
+    "user_entry": "Entrada de Usuario",
     "view_details": "Ver Detalles",
     "visit_end_error": "Días de visita son requeridos",
     "visit_scheduled": "Visita programada para: {{date}} a las {{time}}",
