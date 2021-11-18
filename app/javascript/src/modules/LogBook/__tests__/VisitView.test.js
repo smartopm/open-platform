@@ -47,7 +47,8 @@ describe('Should render Visits View Component', () => {
               }
             ],
             grantedAt: '2021-10-31 02:51',
-            exitedAt: null
+            exitedAt: null,
+            guestId: "92839182"
           }
         ]
       }
