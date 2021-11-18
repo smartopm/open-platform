@@ -59,7 +59,7 @@ module Mutations
 
         return true if current_user_is_host?(entry_request) ||
                        permitted?(module: :entry_request,
-                                  permission: :can_update_guest_entry_request)
+                                  permission: :can_update_entry_request)
 
         raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
       end

@@ -18,9 +18,6 @@ RSpec.describe Types::Queries::User do
                           role: admin_role,
                           permissions: %w[can_view_admin_users])
     end
-
-    # let!(:user) { create(:user_with_community, role: resident_role) }
-    # let!(:admin) { create(:admin_user, community_id: user.community_id, role: admin_role) }
     let!(:current_user) { create(:user_with_community, user_type: 'client', role: client_role) }
     let!(:another_user) do
       create(:user_with_community,
