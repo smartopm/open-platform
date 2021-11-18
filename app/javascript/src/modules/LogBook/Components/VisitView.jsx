@@ -95,7 +95,7 @@ export default function VisitView({
                 </Typography>
                 <br />
                 <Typography variant="caption">
-                  {t('logbook:logbook.host')}
+                  {visit.guestId ? t('logbook:logbook.host'): t('logbook:log_title.guard')}
                   {' '}
                 </Typography>
                 <Link to={`/user/${visit.user.id}`}>

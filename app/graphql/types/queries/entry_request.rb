@@ -79,7 +79,7 @@ module Types::Queries::EntryRequest
     raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') unless can_view_entry_requests?
 
     entry_requests = context[:site_community].entry_requests.where.not(guest_id: nil)
-                                             .includes(:user)
+                                             .includes(:user, :guest)
                                              .limit(limit)
                                              .offset(offset)
                                              .unscope(:order)
@@ -114,7 +114,6 @@ module Types::Queries::EntryRequest
     context[:site_community]
       .entry_requests
       .where(granted_state: 1)
-      .where.not(guest_id: nil)
       .includes(:user).search(query)
       .limit(limit).offset(offset)
       .unscope(:order).order(granted_at: :desc)
