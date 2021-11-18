@@ -114,7 +114,7 @@ module Types::Queries::EntryRequest
     context[:site_community]
       .entry_requests
       .where(granted_state: 1)
-      .includes(:user).search(query)
+      .includes(:user, :guest).search(query)
       .limit(limit).offset(offset)
       .unscope(:order).order(granted_at: :desc)
       .with_attached_images
