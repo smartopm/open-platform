@@ -148,6 +148,9 @@ GEM
     bootsnap (1.9.1)
       msgpack (~> 1.0)
     builder (3.2.4)
+    bullet (6.1.5)
+      activesupport (>= 3.0.0)
+      uniform_notifier (~> 1.11)
     byebug (11.1.3)
     capybara (3.35.3)
       addressable
@@ -308,6 +311,8 @@ GEM
     racc (1.5.2)
     racc (1.5.2-java)
     rack (2.2.3)
+    rack-mini-profiler (2.3.3)
+      rack (>= 1.2.0)
     rack-proxy (0.7.0)
       rack
     rack-test (1.1.0)
@@ -458,6 +463,7 @@ GEM
     tzinfo-data (1.2021.2)
       tzinfo (>= 1.0.0)
     unicode-display_width (1.8.0)
+    uniform_notifier (1.14.2)
     warden (1.2.9)
       rack (>= 2.0.9)
     web-console (4.1.0)
@@ -495,6 +501,7 @@ DEPENDENCIES
   aws-sdk-s3
   barnes
   bootsnap (>= 1.4.2)
+  bullet
   byebug
   capybara (>= 2.15)
   devise!
@@ -518,6 +525,7 @@ DEPENDENCIES
   pg (~> 1.1.4)
   pronto (~> 0.11.0)
   puma (~> 5)
+  rack-mini-profiler
   rails (= 6.1.4.1)
   rails-controller-testing
   repost

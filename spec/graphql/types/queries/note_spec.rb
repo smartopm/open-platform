@@ -194,6 +194,17 @@ RSpec.describe Types::Queries::Note do
       expect(result.dig('data', 'flaggedNotes').length).to eql 2
     end
 
+    it 'returns empty array if no flagged notes exits' do
+      site_worker.community.notes.where(flagged: true).destroy_all
+      result = DoubleGdpSchema.execute(flagged_notes_query, context: {
+                                         current_user: site_worker,
+                                         site_community: site_worker.community,
+                                       }).as_json
+
+      expect(result['errors']).to be_nil
+      expect(result.dig('data', 'flaggedNotes').length).to eql 0
+    end
+
     describe 'sub tasks' do
       let!(:first_sub_task) do
         admin.notes.create!(
