@@ -534,15 +534,25 @@ RSpec.describe Users::User, type: :model do
   describe '#send_email_msg' do
     let!(:user) { create(:user_with_community) }
     let!(:email_template) do
-      create(:email_template, community: user.community, name: 'welcome')
+      create(:email_template, community: user.community, name: 'Generic Template')
     end
 
     context 'when welcome template is available' do
       it 'fires EmailMsg.send_mail_from_db' do
+        email_title = I18n.t('email_template.welcome_email.title',
+                             community_name: user.community.name)
+        email_subject = I18n.t('email_template.welcome_email.subject',
+                               community_name: user.community.name)
         expect(EmailMsg).to receive(:send_mail_from_db).with(
           user.email,
           email_template,
-          [{ key: '%login_url%', value: '' }],
+          [
+            { key: '%action_url%', value: HostEnv.base_url(user.community) || '' },
+            { key: '%action%', value: I18n.t('email_template.welcome_email.action') },
+            { key: '%body%', value: I18n.t('email_template.welcome_email.body') },
+            { key: '%title%', value: email_title },
+          ],
+          email_subject,
         )
         user.send_email_msg
       end

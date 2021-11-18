@@ -563,17 +563,24 @@ module Users
       ).uniq
     end
 
-    # rubocop:enable Metrics/MethodLength
-    # rubocop:enable Metrics/AbcSize
     def send_email_msg
       return if self[:email].nil?
 
-      template = community.email_templates.find_by(name: 'welcome')
+      template = community.email_templates.find_by(name: 'Generic Template')
       return unless template
 
-      template_data = [{ key: '%login_url%', value: HostEnv.base_url(community) || '' }]
-      EmailMsg.send_mail_from_db(self[:email], template, template_data)
+      email_title = I18n.t('email_template.welcome_email.title', community_name: community.name)
+      email_subject = I18n.t('email_template.welcome_email.subject', community_name: community.name)
+      template_data = [
+        { key: '%action_url%', value: HostEnv.base_url(community) || '' },
+        { key: '%action%', value: I18n.t('email_template.welcome_email.action') },
+        { key: '%body%', value: I18n.t('email_template.welcome_email.body') },
+        { key: '%title%', value: email_title },
+      ]
+      EmailMsg.send_mail_from_db(self[:email], template, template_data, email_subject)
     end
+    # rubocop:enable Metrics/MethodLength
+    # rubocop:enable Metrics/AbcSize
 
     # catch exceptions in here to be caught in the mutation
     def merge_user(dup_id)
