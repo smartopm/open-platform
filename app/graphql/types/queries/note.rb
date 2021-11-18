@@ -71,9 +71,6 @@ module Types::Queries::Note
   end
 
   # rubocop:disable Metrics/MethodLength
-  # rubocop:disable Metrics/AbcSize
-  # rubocop:disable Metrics/CyclomaticComplexity
-  # rubocop:disable Metrics/PerceivedComplexity
   def flagged_notes(offset: 0, limit: 50, query: nil)
     unless current_user&.site_manager? ||
            ::Policy::ApplicationPolicy.new(
@@ -85,33 +82,13 @@ module Types::Queries::Note
             I18n.t('errors.unauthorized')
     end
 
-    search_method = 'search'
-    if query&.include?('assignees')
-      search_method = 'search_assignee'
-    elsif query&.include?('user')
-      search_method = 'search_user'
-    end
+    notes = flagged_notes_query(query)
 
-    notes = if query&.include?('due_date:nil')
-              context[:site_community].notes.where(due_date: nil)
-            else
-              context[:site_community].notes.send(search_method, query)
-            end
-
-    return notes if notes.nil?
-
-    notes.includes(:sub_notes, :assignees, :assignee_notes)
-         .for_site_manager(current_user)
-         .where(flagged: true)
-         .where.not(category: 'template')
-         .order(completed: :desc, created_at: :desc)
-         .limit(limit).offset(offset)
-         .with_attached_documents
+    notes
+      .for_site_manager(current_user)
+      .limit(limit).offset(offset)
   end
-  # rubocop:enable Metrics/CyclomaticComplexity
-  # rubocop:enable Metrics/PerceivedComplexity
   # rubocop:enable Metrics/MethodLength
-  # rubocop:enable Metrics/AbcSize
 
   # rubocop:disable  Metrics/MethodLength
   def task(task_id:)
@@ -233,5 +210,55 @@ module Types::Queries::Note
                           .limit(5)
   end
   # rubocop:enable Metrics/MethodLength
+
+  private
+
+  # rubocop:disable Metrics/MethodLength
+  def flagged_notes_query(query)
+    search = search_method(query)
+
+    notes = if query&.include?('due_date:nil')
+              tasks_query.where(due_date: nil)
+            else
+              tasks_query.send(search, query)
+            end
+
+    if search == 'search_assignee'
+      notes = notes
+              .includes(
+                parent_note: [
+                  { user: [:avatar_attachment] },
+                  :author,
+                  :sub_notes,
+                  :assignees,
+                  :assignee_notes,
+                  :documents_attachments,
+                ],
+              )
+    end
+    notes
+  end
+  # rubocop:enable Metrics/MethodLength
+
+  def tasks_query
+    context[:site_community]
+      .notes
+      .includes({ user: [:avatar_attachment] }, :author, :sub_notes, :assignees, :assignee_notes)
+      .includes(:parent_note)
+      .where(flagged: true)
+      .where.not(category: 'template')
+      .order(completed: :desc, created_at: :desc)
+      .with_attached_documents
+  end
+
+  def search_method(query)
+    if query&.include?('assignees')
+      'search_assignee'
+    elsif query&.include?('user')
+      'search_user'
+    else
+      'search'
+    end
+  end
 end
 # rubocop:enable Metrics/ModuleLength

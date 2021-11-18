@@ -4,7 +4,10 @@ require 'rails_helper'
 require 'host_env'
 
 RSpec.describe HostEnv do
-  before { ENV.stub(:[]).with('APP_ENV').and_return('production') }
+  before do
+    ENV.stub(:[]).with('BULLET_DEBUG').and_return(false)
+    ENV.stub(:[]).with('APP_ENV').and_return('production')
+  end
   let!(:community1) do
     create(:community, name: 'DoubleGDP')
   end

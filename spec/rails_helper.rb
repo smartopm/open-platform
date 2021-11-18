@@ -64,6 +64,18 @@ RSpec.configure do |config|
   config.include ModelSpecHelper
   config.include ActiveJob::TestHelper
 
+  # Configure bullet for tests
+  if Bullet.enable?
+    config.before(:each) do
+      Bullet.start_request
+    end
+
+    config.after(:each) do
+      Bullet.perform_out_of_channel_notifications if Bullet.notification?
+      Bullet.end_request
+    end
+  end
+
   # If you're not using ActiveRecord, or you'd prefer not to run each of your
   # examples within a transaction, remove the following line or assign false
   # instead of true.
