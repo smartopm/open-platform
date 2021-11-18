@@ -6,6 +6,7 @@ module Types
   # EntryRequestType
   class EntryRequestType < Types::BaseObject
     field :id, ID, null: false
+    field :guest_id, ID, null: true
     field :user, Types::UserType, null: false
     field :grantor, Types::UserType, null: true
     field :guest, Types::UserType, null: true

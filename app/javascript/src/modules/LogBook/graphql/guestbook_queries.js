@@ -62,6 +62,7 @@ export const CurrentGuestEntriesQuery = gql`
       exitedAt
       grantedAt
       status
+      guestId
     }
   }
 `;

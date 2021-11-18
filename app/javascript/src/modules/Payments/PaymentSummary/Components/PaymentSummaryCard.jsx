@@ -41,12 +41,12 @@ export default function PaymentSummaryCard({ value, title, handleClick, currency
 
 const useStyles = makeStyles(() => ({
   currency: {
-    fontSize: '20px',
+    fontSize: '24px',
     fontWeight: 600,
     color: '#141414'
   },
   title: {
-    fontSize: '14px',
+    fontSize: '16px',
     fontWeight: 400,
     color: '#575757'
   }

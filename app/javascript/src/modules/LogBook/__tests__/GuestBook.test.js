@@ -49,7 +49,8 @@ describe('Should render Guest Book Component', () => {
             endsAt: '2021-10-31 22:51',
             startsAt: '2021-10-31 02:51',
             exitedAt: '2021-10-31 22:51',
-            revoked: true
+            revoked: true,
+            guestId: null
           },
           {
             id: '696d857',
@@ -81,7 +82,8 @@ describe('Should render Guest Book Component', () => {
             endsAt: '2021-10-31 22:51',
             startsAt: '2021-10-31 02:51',
             exitedAt: '2021-10-31 22:51',
-            revoked: false
+            revoked: false,
+            guestId: null
           }
         ]
       }
