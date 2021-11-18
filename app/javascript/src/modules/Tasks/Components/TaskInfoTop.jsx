@@ -192,30 +192,28 @@ export default function TaskInfoTop({
           </Grid>
         </Grid>
 
-        {data.description && (
-          <Grid container>
-            <Typography variant="body1" className={classes.title}>
-              {t('common:form_fields.description')}
-            </Typography>
-            <EditableField
-              value={description}
-              setValue={setDescription}
-              action={(
-                <Button
-                  variant="outlined"
-                  color="primary"
-                  disabled={loading}
-                  data-testid="edit_action_btn"
-                  onClick={updateDescription}
-                  startIcon={loading && <Spinner />}
-                  style={{marginTop: '10px'}}
-                >
-                  {t('common:form_actions.update')}
-                </Button>
-              )}
-            />
-          </Grid>
-        )}
+        <Grid container>
+          <Typography variant="body1" className={classes.title}>
+            {t('common:form_fields.description')}
+          </Typography>
+          <EditableField
+            value={description}
+            setValue={setDescription}
+            action={(
+              <Button
+                variant="outlined"
+                color="primary"
+                disabled={loading}
+                data-testid="edit_action_btn"
+                onClick={updateDescription}
+                startIcon={loading && <Spinner />}
+                style={{marginTop: '10px'}}
+              >
+                {t('common:form_actions.update')}
+              </Button>
+            )}
+          />
+        </Grid>
       </Grid>
     </>
   );
