@@ -54,5 +54,11 @@
   },
   "history": {
     "updates": "Updates"
+  },
+  "sub_task": {
+    "sub_tasks": "Sub Tasks",
+    "see_more": "See More",
+    "no_sub_tasks": "No Sub Tasks",
+    "due": "due: "
   }
 }

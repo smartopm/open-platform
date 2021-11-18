@@ -13,13 +13,14 @@ import { UsersLiteQuery } from '../../../graphql/queries';
 import useDebounce from '../../../utils/useDebounce';
 import TaskDocuments from './TaskDocuments';
 import TaskInfoTop from './TaskInfoTop';
+import TaskSubTask from './TaskSubTask';
 
 const initialData = {
   user: '',
   userId: ''
 };
 
-export default function TaskForm({
+export default function TaskUpdateForm({
   users,
   data,
   assignUser,
@@ -222,6 +223,12 @@ export default function TaskForm({
             isAssignee={isCurrentUserAnAssignee}
             activeReminder={currentActiveReminder()}
           />
+          <TaskSubTask
+            taskId={taskId}
+            users={users}
+            assignUser={assignUser}
+            refetch={refetch}
+          />
           <TaskComment taskId={taskId} />
           <TaskDocuments documents={data.attachments} />
           <TaskUpdateList data={historyData} />
@@ -231,13 +238,13 @@ export default function TaskForm({
   );
 }
 
-TaskForm.defaultProps = {
+TaskUpdateForm.defaultProps = {
   users: [],
   data: {},
   historyData: [],
   taskId: ''
 };
-TaskForm.propTypes = {
+TaskUpdateForm.propTypes = {
   users: PropTypes.arrayOf(PropTypes.object),
   // eslint-disable-next-line react/forbid-prop-types
   data: PropTypes.object,
