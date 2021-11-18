@@ -26,7 +26,6 @@ module Policy
 
       current_module = args[:module]
       result = Permission.find_by(module: current_module.to_s, role: user.role)
-
       return false if result.nil?
 
       user_permissions = result.permissions

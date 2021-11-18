@@ -378,7 +378,7 @@ RSpec.describe Mutations::EntryRequest do
 
     let!(:user) { create(:user_with_community, role: visitor_role) }
     let!(:contractor) do
-      create(:admin_user, community_id: user.community_id,
+      create(:contractor, community_id: user.community_id,
                           role: contractor_role)
     end
 

@@ -68,7 +68,7 @@ admin:
   guest_list:
     permissions:
       - can_see_menu_item
-  form:
+  forms:
     permissions:
       - can_see_menu_item
       - can_create_category
@@ -222,7 +222,7 @@ contractor:
       - can_get_task_count
       - can_get_task_stats
       - can_get_own_tasks
-  form:
+  forms:
     permissions:
       - can_see_menu_item
       - can_access_forms
@@ -276,7 +276,7 @@ custodian:
   guest_list:
     permissions:
       - can_see_menu_item
-  form:
+  forms:
     permissions:
       - can_see_menu_item
       - can_access_forms
@@ -340,7 +340,7 @@ security_guard:
   gate_access:
     permissions:
       - can_see_menu_item
-  form:
+  forms:
     permissions:
       - can_see_menu_item
       - can_access_forms
@@ -434,7 +434,7 @@ resident:
   guest_list:
     permissions:
       - can_see_menu_item
-  form:
+  forms:
     permissions:
       - can_see_menu_item
       - can_access_forms
@@ -469,7 +469,7 @@ resident:
 prospective_client:
   note:
     permissions:
-  form:
+  forms:
     permissions:
       - can_see_menu_item
       - can_access_forms
@@ -506,7 +506,7 @@ client:
   guest_list:
     permissions:
       - can_see_menu_item
-  form:
+  forms:
     permissions:
       - can_see_menu_item
       - can_access_forms

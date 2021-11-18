@@ -7,7 +7,7 @@ RSpec.describe Types::Queries::Form do
     let!(:admin_role) { create(:role, name: 'admin') }
     let!(:visitor_role) { create(:role, name: 'visitor') }
     let!(:permission) do
-      create(:permission, module: 'form',
+      create(:permission, module: 'forms',
                           role: admin_role,
                           permissions: %w[
                             can_view_own_forms can_access_forms
