@@ -100,22 +100,25 @@ export default function TaskSubTask({ taskId, users, assignUser }) {
           />
         </DialogContent>
       </Dialog>
+      <Grid container className={classes.header} >
+        <Grid item md={11} xs={11} >
+          <Typography variant="h6" data-testid="sub_tasks_header">
+            {t('task:sub_task.sub_tasks')}
+          </Typography>
+        </Grid>
+        <Grid item md={1} xs={1} className={classes.addSubTask}>
+          <IconButton
+            edge="end"
+            onClick={handleAddSubTask}
+            size="small"
+            data-testid="add_sub_task_icon"
+          >
+            <AddIcon />
+          </IconButton>
+        </Grid>
+      </Grid>
       {data?.taskSubTasks?.length ? (
         <Grid container style={{ alignItems: 'center' }}>
-          <Grid item md={11} xs={11} style={matches ? { marginBottom: '8px' } : {}}>
-            <Typography variant="h6" data-testid="sub_tasks_header">
-              {t('task:sub_task.sub_tasks')}
-            </Typography>
-          </Grid>
-          <Grid item md={1} xs={1} style={{ display: 'flex', justifyContent: 'end'}}>
-            <IconButton
-              edge="end"
-              onClick={handleAddSubTask}
-              size="small"
-            >
-              <AddIcon />
-            </IconButton>
-          </Grid>
           <Grid item md={12} xs={12} style={{ marginBottom: '5px'}}><Divider /></Grid>
           {data.taskSubTasks.map(task => (
             <Fragment key={task.id}>
@@ -237,20 +240,28 @@ TaskSubTask.propTypes = {
 };
 
 const useStyles = makeStyles(() => ({
+  header: {
+    alignItems: 'center',
+    marginBottom: '8px' 
+  },
+  addSubTask: {
+    display: 'flex',
+    justifyContent: 'end'
+  },
   details: {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-evenly'
   },
   taskBody: {
-    maxWidth: '73ch',
+    maxWidth: '53ch',
     overflow: 'hidden',
     whiteSpace: 'nowrap',
     textOverflow: 'ellipsis',
     paddingLeft: '6px'
   },
   taskBodyMobile: {
-    maxWidth: '53ch',
+    maxWidth: '33ch',
     overflow: 'hidden',
     whiteSpace: 'nowrap',
     textOverflow: 'ellipsis',
@@ -278,6 +289,6 @@ const useStyles = makeStyles(() => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'start',
-    paddingLeft: '5px'
+    paddingLeft: '8px'
   },
 }));
