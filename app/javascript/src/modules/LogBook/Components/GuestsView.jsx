@@ -9,7 +9,7 @@ import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import { Link } from 'react-router-dom';
 import Typography from '@material-ui/core/Typography';
-import { Avatar, Chip } from '@material-ui/core';
+import { Avatar, Chip, useTheme } from '@material-ui/core';
 import { GuestEntriesQuery } from '../graphql/guestbook_queries';
 import { Spinner } from '../../../shared/Loading';
 import Card from '../../../shared/Card';
@@ -43,6 +43,7 @@ export default function GuestsView({
   const history = useHistory();
   const matches = useMediaQuery('(max-width:800px)');
   const classes = useLogbookStyles();
+  const theme = useTheme()
 
   function handleGrantAccess(event, user) {
     event.stopPropagation();
@@ -155,8 +156,8 @@ export default function GuestsView({
                   }
                   style={{
                     background: IsAnyRequestValid(visit.accessHours, t, timeZone)
-                      ? '#00A98B'
-                      : '#E74540',
+                      ? theme.palette.success.main
+                      : theme.palette.error.main,
                     color: 'white',
                     marginRight: '16px'
                   }}

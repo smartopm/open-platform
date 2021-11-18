@@ -105,6 +105,7 @@ describe('Should render Visits View Component', () => {
       expect(getByTestId('entered_at')).toBeInTheDocument();
       expect(getByTestId('exited_at')).toBeInTheDocument();
       expect(getByTestId('log_exit')).toBeInTheDocument();
+      expect(getByTestId('guest_validity')).toBeInTheDocument();
       expect(getByTestId('request_status')).toBeInTheDocument();
       expect(getByTestId('request_status').textContent).toContain('Pending');
       expect(getByTestId('log_exit')).not.toBeDisabled();

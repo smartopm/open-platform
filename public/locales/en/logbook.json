@@ -131,7 +131,8 @@
     "revoked": "Revoked",
     "exited_at": "Exited at {{time}}",
     "entered_at": "Entered at {{time}}",
-    "visits": "Visits"
+    "visits": "Visits",
+    "manual_entry": "Manual entry"
   },
   "date_picker": {
     "ok_label": "Ok",
