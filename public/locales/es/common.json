@@ -433,6 +433,28 @@
     "FILE_UPLOAD": "Subiendo al servidor ...",
     "INIT": "Iniciando la carga"
   },
+  "user_reasons": {
+    "other": "Otro",
+    "passing_through": "De paso",
+    "residing": "Residente",
+    "visiting": "Visitando",
+    "working": "Trabajando"
+  },
+  "user_states": {
+    "banned": "No Permitido",
+    "expired": "Expirado",
+    "pending": "Pendiente",
+    "valid": "Válido"
+  },
+  "user_sub_status": {
+    "building_permit_approved": "Permiso de Construcción Aprobado",
+    "construction_completed": "Construcción Completada",
+    "construction_in_progress": "Construcción en Progreso",
+    "construction_in_progress_self_build": "Construcción en Proceso (Autoconstrucción) ",
+    "eligible_to_start_construction": "Elegible Para Comenzar la Construcción",
+    "floor_plan_purchased": "Plan de Planta Adquirido",
+    "plots_fully_purchased": "Lotes Comprados en su Totalidad"
+  },
   "user_types": {
     "admin": "Administrador",
     "client": "Cliente",
