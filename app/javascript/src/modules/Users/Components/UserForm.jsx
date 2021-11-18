@@ -393,9 +393,9 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
                     inputProps={{ 'aria-label': 'requestReason' }}
                     className={`${css(styles.selectInput)}`}
                   >
-                    {reasons.map(reason => (
-                      <MenuItem key={reason} value={reason}>
-                        {reason}
+                    {Object.keys(reasons).map(key => (
+                      <MenuItem key={key} value={key}>
+                        {t(`user_reasons.${key}`)}
                       </MenuItem>
                     ))}
                   </TextField>
@@ -413,9 +413,9 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
                     required
                     className={`${css(styles.selectInput)}`}
                   >
-                    {Object.entries(userType).map(([key, val]) => (
+                    {Object.keys(userType).map(key => (
                       <MenuItem key={key} value={key}>
-                        {val}
+                        {t(`user_types.${key}`)}
                       </MenuItem>
                     ))}
                   </TextField>
@@ -433,9 +433,9 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
                     inputProps={{ 'aria-label': 'state' }}
                     className={`${css(styles.selectInput)}`}
                   >
-                    {Object.entries(userState).map(([key, val]) => (
+                    {Object.keys(userState).map(key => (
                       <MenuItem key={key} value={key}>
-                        {val}
+                        {t(`user_states.${key}`)}
                       </MenuItem>
                     ))}
                   </TextField>
@@ -455,9 +455,9 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
                     <MenuItem key="none" value={null}>
                       {t('misc.none')}
                     </MenuItem>
-                    {Object.entries(userSubStatus).map(([key, val]) => (
+                    {Object.keys(userSubStatus).map(key => (
                       <MenuItem key={key} value={key}>
-                        {val}
+                        {t(`user_sub_status.${key}`)}
                       </MenuItem>
                     ))}
                   </TextField>
