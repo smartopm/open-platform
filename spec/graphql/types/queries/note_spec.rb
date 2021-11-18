@@ -162,6 +162,25 @@ RSpec.describe Types::Queries::Note do
       GQL
     end
 
+    let(:note_sub_tasks_query) do
+      %(query($taskId: ID!) {
+        taskSubTasks(taskId: $taskId) {
+          category
+          description
+          flagged
+          body
+          createdAt
+          user {
+            name
+            id
+          }
+          parentNote {
+            id
+          }
+        }
+      })
+    end
+
     let(:note_count) do
       %(query {
             myTasksCount
@@ -205,7 +224,7 @@ RSpec.describe Types::Queries::Note do
       expect(result.dig('data', 'flaggedNotes').length).to eql 0
     end
 
-    describe 'sub tasks' do
+    context 'sub tasks' do
       let!(:first_sub_task) do
         admin.notes.create!(
           body: 'Subtask body',
@@ -315,6 +334,30 @@ RSpec.describe Types::Queries::Note do
                                          site_community: site_worker.community,
                                        }).as_json
       expect(result.dig('data', 'task')).not_to be_empty
+    end
+
+    it 'should retrieve sub tasks of a parent note' do
+      admin.notes.create!(
+        body: 'Subtask body',
+        description: 'Subtask 1',
+        user_id: site_worker.id,
+        category: 'other',
+        flagged: true,
+        community_id: site_worker.community_id,
+        author_id: site_worker.id,
+        due_date: Time.zone.today,
+        parent_note_id: third_note.id,
+      )
+
+      variables = {
+        taskId: third_note.id,
+      }
+      result = DoubleGdpSchema.execute(note_sub_tasks_query, context: {
+                                         current_user: site_worker,
+                                         site_community: site_worker.community,
+                                       }, variables: variables).as_json
+      expect(result.dig('data', 'taskSubTasks')).not_to be_empty
+      expect(result.dig('data', 'taskSubTasks', 0, 'parentNote', 'id')).to eq third_note.id
     end
 
     it 'should raise unauthorised error if request does not have a current user' do
