@@ -100,8 +100,8 @@ export default function TaskSubTask({ taskId, users, assignUser }) {
           />
         </DialogContent>
       </Dialog>
-      <Grid container className={classes.header} >
-        <Grid item md={11} xs={11} >
+      <Grid container className={classes.header}>
+        <Grid item md={11} xs={11}>
           <Typography variant="h6" data-testid="sub_tasks_header">
             {t('task:sub_task.sub_tasks')}
           </Typography>
