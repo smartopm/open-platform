@@ -39,11 +39,12 @@ export default function ObservationDialog() {
 
   function resetForm(to) {
     setObservationNote('');
-    updateRequest({ ...initialRequestState, isObservationOpen: false });
+    updateRequest({ ...initialRequestState, isObservationOpen: false, observed: true });
     setImageUrls([]);
     history.push(to);
   }
 
+  // console.log(request)
   function handleSaveObservation(to) {
     if (!observationNote) {
       resetForm(to);
@@ -82,6 +83,7 @@ export default function ObservationDialog() {
     const filteredImages = images.filter((img) => img !== imgUrl)
     setImageUrls(filteredImages)
   }
+
 
   return (
     <>

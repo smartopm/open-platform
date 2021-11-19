@@ -44,13 +44,18 @@ export default function EntryRequestContextProvider({ children }) {
   function handleGrantAccess(requestId = id) {
     updateRequest({ ...request, isLoading: true });
     grantEntry({ variables: { id: request.id || requestId } })
-      .then(() => {
+      .then(({ data: { result } }) => {
         setDetails({
           ...observationDetails,
           isError: false,
           message: t('logbook.success_message', { action: t('logbook.granted') })
         });
-        updateRequest({ ...request, isLoading: false, isObservationOpen: true });
+        updateRequest({
+          ...request,
+          id: result.entryRequest.id,
+          isLoading: false,
+          isObservationOpen: true
+        });
       })
       .catch(error => {
         updateRequest({ ...request, isLoading: false });
