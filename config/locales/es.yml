@@ -302,6 +302,16 @@ es:
     default:
       message: Mensaje de campaña predeterminado
       name: Mensaje de campaña predeterminado
+  email_template:
+    welcome_email:
+      action: INICIAR
+      body: Estamos construyendo un mejor lugar para vivir, trabajar y jugar.<br/><br/>Y
+        es impulsado por una aplicación móvil que nos ayudará<br/>a conectar con residentes,
+        acelerar el crecimiento, y brindar<br/>servicios públicos responsables.<br/><br/>Este
+        es un correo electrónico automático para confirmar que su cuenta ha sido creada.
+        ¿Te gustaría ver más?
+      subject: Bienvenido a %{community_name}
+      title: Bienvenido</b><br/> a la comunidad en línea de %{community_name}
   emergency_sos:
     am_safe_message: Emergencia SOS %{user_name} está bien y ha cancelado la solicitud
       de ayuda.
