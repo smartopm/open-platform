@@ -398,3 +398,9 @@ en:
     reached_on_message: and can likely be reached on %{phone_number}.
     receiving_message: You are receiving this message as you are a member of the emergency escalation team for %{name}. Please confirm the person is safe and the emergency is resolved, then mark as complete %{task_url}
     user_initiated_message: Emergency SOS %{user_name} has initiated an emergency support request
+  email_template:
+    welcome_email:
+      title: Welcome</b> <br /> to the %{community_name} online community
+      body: We're building a better place to live, work and play.<br/><br/>And it's powered by a mobile app that will help us<br/>connect with residents, accelerate growth, and deliver<br/>responsive public services.<br/><br/>This is an automated email to confirm that your account<br/>just got created. Would you like to see more?
+      action: GET STARTED
+      subject: Welcome To %{community_name}

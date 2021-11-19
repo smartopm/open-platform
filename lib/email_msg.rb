@@ -32,7 +32,7 @@ class EmailMsg
   # We should rename this to send_mail by the time we get rid of the send_mail() above
   # rubocop:disable Metrics/MethodLength
   # rubocop:disable Metrics/AbcSize
-  def self.send_mail_from_db(user_email, template, template_data = [{}])
+  def self.send_mail_from_db(user_email, template, template_data = [{}], email_subject = nil)
     return if Rails.env.test?
     raise EmailMsgError, 'Email & Template must be provided' if user_email.blank? || template.blank?
 
@@ -41,7 +41,7 @@ class EmailMsg
     personalization = Personalization.new
     personalization.add_to(SendGrid::Email.new(email: user_email))
     template_data.each { |data| personalization.add_substitution(Substitution.new(data)) }
-    personalization.subject = template.subject
+    personalization.subject = email_subject || template.subject
     mail.add_personalization(personalization)
     mail.add_content(Content.new(type: 'text/html', value: template.body))
     client.mail._('send').post(request_body: mail.to_json)
