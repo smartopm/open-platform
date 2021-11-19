@@ -360,6 +360,19 @@ RSpec.describe Types::Queries::Note do
       expect(result.dig('data', 'taskSubTasks', 0, 'parentNote', 'id')).to eq third_note.id
     end
 
+    it 'should raise unautorised error/
+      for retrieve comments when current user is nil' do
+      variables = {
+        taskId: third_note.id,
+      }
+      result = DoubleGdpSchema.execute(note_sub_tasks_query, context: {
+                                         current_user: nil,
+                                         site_community: site_worker.community,
+                                       }, variables: variables).as_json
+      expect(result.dig('errors', 0, 'message'))
+        .to include('Must be logged in to perform this action')
+    end
+
     it 'should raise unauthorised error if request does not have a current user' do
       result = DoubleGdpSchema.execute(note_query, context: {
                                          site_community: site_worker.community,
