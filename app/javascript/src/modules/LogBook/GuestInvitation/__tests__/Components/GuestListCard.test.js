@@ -3,6 +3,7 @@ import { fireEvent, render } from '@testing-library/react';
 import routeData, { MemoryRouter } from 'react-router';
 import GuestListCard from '../../Components/GuestListCard';
 import '@testing-library/jest-dom/extend-expect';
+import MockedThemeProvider from '../../../../__mocks__/mock_theme';
 
 describe('Render Guest List Card Component', () => {
   const mockHistory = {
@@ -22,7 +23,8 @@ describe('Render Guest List Card Component', () => {
         request: {
           id: '2acd2ecc-7ff2-4e93-a0fe-329468b2e420',
           status: 'pending',
-          revoked: false
+          revoked: false,
+          name: "Test two"
         }
       },
       entryTime: {
@@ -37,10 +39,11 @@ describe('Render Guest List Card Component', () => {
     const t = jest.fn(() => 'translated');
     const container = render(
       <MemoryRouter>
-        <GuestListCard
-          invite={guest}
-          translate={t}
-          styles={{
+        <MockedThemeProvider>
+          <GuestListCard
+            invite={guest}
+            translate={t}
+            styles={{
             theme: {
               palette: {
                 info: { main: 'sdasd' }
@@ -48,8 +51,9 @@ describe('Render Guest List Card Component', () => {
               success: { main: 'sdasd' }
             }
           }}
-          tz="Africa/Cairo"
-        />
+            tz="Africa/Cairo"
+          />
+        </MockedThemeProvider>
       </MemoryRouter>
     );
 

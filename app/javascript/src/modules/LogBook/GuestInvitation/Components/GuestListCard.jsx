@@ -9,19 +9,24 @@ import Text from '../../../../shared/Text';
 import { checkRequests } from '../../utils';
 import Avatar from '../../../../components/Avatar';
 import Label from '../../../../shared/label/Label';
+import useLogbookStyles from '../../styles';
 
 export default function GuestListCard({ invite, translate, tz, styles }) {
   const history = useHistory();
+  const classes = useLogbookStyles()
   function handleViewGuest() {
     history.push(`/request/${invite.guest.request.id}?type=view`);
   }
+
   return (
     <Card variant="outlined" className={styles.classes?.card} onClick={handleViewGuest} data-testid="guest_card" elevation={0}>
       <CardContent>
         <Grid container direction="row" spacing={2}>
           <Grid item xs={6} sm={4} lg={3} data-testid="guest_info">
-            <Avatar imageUrl={invite.guest.imageUrl} user={invite.guest} alt="avatar-image" />
-            <Text content={invite.guest?.name} className={styles.classes?.text} />
+            <Avatar alt={invite.guest?.request?.name} className={classes.avatar} variant="square">
+              {invite.guest?.request?.name?.charAt(0)}
+            </Avatar>
+            <Text content={invite.guest?.request?.name} className={styles.classes?.text} />
           </Grid>
           <Grid item xs={6} sm={4} lg={3} data-testid="start_of_visit">
             <Text
@@ -93,7 +98,8 @@ GuestListCard.propTypes = {
     guest: PropTypes.shape({
       request: PropTypes.shape({
         status: PropTypes.string,
-        id: PropTypes.string
+        id: PropTypes.string,
+        name: PropTypes.string,
       }),
       imageUrl: PropTypes.string,
       name: PropTypes.string

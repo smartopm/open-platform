@@ -10,10 +10,9 @@ export const MyInvitedGuestsQuery = gql`
         guest {
           id
           name
-          imageUrl
-          avatarUrl
           request {
             id
+            name
             status
             revoked
           }

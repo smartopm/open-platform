@@ -17,7 +17,19 @@ export function theme(communityThemeColor) {
       },
       secondary: {
         main: themeColor.secondaryColor
-      }
+      },
+      success: {
+        main: '#67B388'
+      },
+      warning: {
+        main: '#F3D158'
+      },
+      error: {
+        main: '#D15249'
+      },
+      info: {
+        main: '#598EC1'
+      },
     },
     overrides: {
       MuiPickersToolbar: {

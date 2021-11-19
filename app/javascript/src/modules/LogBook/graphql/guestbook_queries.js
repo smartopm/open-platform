@@ -24,6 +24,8 @@ export const GuestEntriesQuery = gql`
         endsAt
         startsAt
       }
+      status
+      exitedAt
       occursOn
       visitEndDate
       visitationDate
@@ -32,7 +34,6 @@ export const GuestEntriesQuery = gql`
       endsAt
       startsAt
       revoked
-      exitedAt
     }
   }
 `;
@@ -60,6 +61,7 @@ export const CurrentGuestEntriesQuery = gql`
       }
       exitedAt
       grantedAt
+      status
       guestId
     }
   }

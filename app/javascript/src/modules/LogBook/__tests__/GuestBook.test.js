@@ -40,6 +40,7 @@ describe('Should render Guest Book Component', () => {
                 occursOn: []
               }
             ],
+            status: "pending",
             occursOn: [],
             visitEndDate: null,
             visitationDate: '2021-08-20T10:51:00+02:00',
@@ -72,6 +73,7 @@ describe('Should render Guest Book Component', () => {
                 occursOn: []
               }
             ],
+            status: "pending",
             occursOn: [],
             visitEndDate: null,
             visitationDate: '2021-08-31T10:20:21+02:00',

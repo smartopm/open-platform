@@ -33,12 +33,11 @@ describe('Invited Guests Component', () => {
               guest: {
                 id: '1388d45c-5279-4e90-9815-8ab33c49d382',
                 name: 'Test two',
-                imageUrl: null,
-                avatarUrl: null,
                 request: {
                   id: '2acd2ecc-7ff2-4e93-a0fe-329468b2e420',
                   status: 'pending',
-                  revoked: false
+                  revoked: false,
+                  name: 'Test two',
                 }
               },
               entryTime: {

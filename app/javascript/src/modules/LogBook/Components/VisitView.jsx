@@ -8,12 +8,11 @@ import useMediaQuery from '@material-ui/core/useMediaQuery';
 import Grid from '@material-ui/core/Grid';
 import { Link } from 'react-router-dom';
 import Typography from '@material-ui/core/Typography';
-import { Avatar, Button } from '@material-ui/core';
+import { Avatar, Button, Chip, useTheme } from '@material-ui/core';
 import { CurrentGuestEntriesQuery } from '../graphql/guestbook_queries';
 import { Spinner } from '../../../shared/Loading';
 import Card from '../../../shared/Card';
 import { dateToString } from '../../../components/DateContainer';
-import Label from '../../../shared/label/Label';
 import Text from '../../../shared/Text';
 import { IsAnyRequestValid } from '../utils';
 import CenteredContent from '../../../shared/CenteredContent';
@@ -41,6 +40,7 @@ export default function VisitView({
   const history = useHistory();
   const matches = useMediaQuery('(max-width:800px)');
   const classes = useLogbookStyles();
+  const theme = useTheme()
 
   function handleCardClick(visit) {
     history.push({
@@ -101,6 +101,13 @@ export default function VisitView({
                 <Link to={`/user/${visit.user.id}`}>
                   <Text color="secondary" content={visit.user.name} />
                 </Link>
+                <div style={{ paddingTop: '15px' }} data-testid="request_status">
+                  <Chip
+                    data-testid="user-entry"
+                    label={visit.status === 'approved' ? 'Approved' : 'Pending'}
+                    color={visit.status === 'approved' ? 'primary' : 'secondary'}
+                  />
+                </div>
               </Grid>
               <Grid
                 item
@@ -144,15 +151,33 @@ export default function VisitView({
                 )}
               </Grid>
               <Grid item md={3} xs={6} style={!matches ? { paddingTop: '15px' } : {}}>
-                <Label
-                  title={
-                    IsAnyRequestValid(visit.accessHours, t, timeZone)
-                      ? t('guest_book.valid')
-                      : t('guest_book.invalid_now')
-                  }
-                  color={IsAnyRequestValid(visit.accessHours, t, timeZone) ? '#00A98B' : '#E74540'}
-                  width="70%"
-                />
+                {
+                  visit.guestId
+                  ? (
+                    <Chip
+                      label={
+                        IsAnyRequestValid(visit.accessHours, t, timeZone)
+                          ? t('guest_book.valid')
+                          : t('guest_book.invalid_now')
+                      }
+                      style={{
+                        background: IsAnyRequestValid(visit.accessHours, t, timeZone)
+                          ? theme.palette.success.main
+                          : theme.palette.error.main,
+                        color: 'white',
+                        marginRight: '16px'
+                      }}
+                      data-testid="guest_validity"
+                    />
+                  )
+                  : (
+                    <Chip
+                      label={t('guest_book.manual_entry')}
+                      style={{ backgroundColor: theme.palette.warning.main, color: 'white', }}
+                      data-testid="manual_entry"
+                    />
+                  )
+                }
               </Grid>
             </Grid>
           </Card>
