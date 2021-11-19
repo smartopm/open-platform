@@ -50,8 +50,8 @@ describe('Top part of the task form component', () => {
     expect(container.queryByText('task.due_date_text')).toBeInTheDocument();
     expect(container.queryByText('task.assigned_to_txt')).toBeInTheDocument();
     expect(container.queryByText('task.chip_add_assignee')).toBeInTheDocument();
+    expect(container.queryByText('common:form_fields.description')).toBeInTheDocument();
 
-    expect(container.queryByText('common:form_fields.description')).not.toBeInTheDocument();
     expect(container.queryByText('task.chip_close')).not.toBeInTheDocument();
     expect(container.queryByText('task.task_assignee_label')).not.toBeInTheDocument();
   });

@@ -9,24 +9,18 @@ import PropTypes from 'prop-types';
 
 export default function EditableField({ value, setValue, action }) {
   const [isEditMode, setIsEditMode] = useState(false);
-  const [mouseOver, setMouseOver] = useState(false);
 
   function handleChange(event) {
     setValue(event.target.value);
   }
 
-  function handleMouseInAndOut() {
-    setMouseOver(!mouseOver);
-  }
-
   // Avoid always showing the update button after editing
-  function handleOutsideClick(){
-      setIsEditMode(false);
+  function handleOutsideClick() {
+    setIsEditMode(false);
   }
 
   function handleClick() {
     setIsEditMode(true);
-    setMouseOver(false);
   }
   const classes = useStyles();
 
@@ -41,16 +35,15 @@ export default function EditableField({ value, setValue, action }) {
           onChange={handleChange}
           disabled={!isEditMode}
           className={classes.textField}
-          onMouseEnter={handleMouseInAndOut}
           multiline
-          rowsMax={2}
+          rows={1}
           style={{ width: '100%' }}
           InputProps={{
             classes: {
               disabled: classes.disabled
             },
-            'data-testid':'editable_description',
-            endAdornment: mouseOver && (
+            'data-testid': 'editable_description',
+            endAdornment: (
               <InputAdornment position="end">
                 <IconButton onClick={handleClick} data-testid="edit_icon">
                   <Edit />
