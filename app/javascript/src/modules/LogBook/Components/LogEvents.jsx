@@ -21,7 +21,7 @@ import { DetailsDialog } from '../../../components/Dialog';
 import ImageUploadPreview from '../../../shared/imageUpload/ImageUploadPreview';
 import MenuList from '../../../shared/MenuList';
 import Text from '../../../shared/Text';
-import CenteredContent from '../../../components/CenteredContent';
+import CenteredContent from '../../../shared/CenteredContent';
 
 export default function LogEvents({
   data,
@@ -56,9 +56,10 @@ export default function LogEvents({
     setAnchorEl(null);
   }
 
+  // TODO: move this to a util file
   function checkVisitorsName(entry) {
     const visitorName = entry.data.ref_name || entry.data.visitor_name || entry.data.name;
-    return !!visitorName
+    return !!visitorName;
   }
 
   const menuList = [
@@ -137,6 +138,7 @@ export default function LogEvents({
       ) : data?.length > 0 ? (
         data.map(entry => (
           <Card key={entry.id}>
+
             <Grid container spacing={1}>
               <Grid item md={4} xs={8}>
                 {entry.entryRequest ? (
@@ -145,32 +147,32 @@ export default function LogEvents({
                       {entry.entryRequest?.name}
                     </Typography>
                     <br />
-                    <Typography variant="caption">
-                      {`${t('log_title.guard')}: `}
-                    </Typography>
-                    <Link to={`/user/${entry.actingUser.id}`} data-testid="acting-user">
-                      <Text color="secondary" content={entry.actingUser.name} />
-                    </Link>
-                    <br />
-                    <Typography variant="caption" color="textSecondary" data-testid="note">
-                      {entry.data?.note}
-                    </Typography>
                   </>
                 ) : (
                   <>
                     {checkVisitorsName(entry) && (
                       <>
-                        <Link to={`/user/${entry.actingUser.id}`} data-testid="acting-user">
+                        <Link to={`/user/${entry.refId || entry.actingUser.id}`} data-testid="visitor_name">
                           <Text color="secondary" content={entry.data.ref_name || entry.data.visitor_name || entry.data.name} />
                         </Link>
                         <br />
                       </>
                     )}
-                    <Typography variant="caption" color="textSecondary">
-                      {entry.data?.note}
-                    </Typography>
                   </>
                 )}
+
+                <>
+                  <Typography variant="caption" data-testid="acting_guard_title">
+                    {`${t('log_title.guard')}: `}
+                  </Typography>
+                  <Link to={`/user/${entry.actingUser.id}`} data-testid="acting_user_name">
+                    <Text color="secondary" content={entry.actingUser.name} />
+                  </Link>
+                  <br />
+                  <Typography variant="caption" color="textSecondary" data-testid="observation_note">
+                    {entry.data?.note}
+                  </Typography>
+                </>
               </Grid>
               {(Boolean(entry.entryRequest) || entry.subject === 'user_temp') && (
                 <Hidden mdUp>
