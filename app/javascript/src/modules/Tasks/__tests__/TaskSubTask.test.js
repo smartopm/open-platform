@@ -1,5 +1,5 @@
 import React from 'react'
-import { render, act } from '@testing-library/react'
+import { render, act, screen } from '@testing-library/react'
 import '@testing-library/jest-dom/extend-expect'
 import { BrowserRouter } from 'react-router-dom/'
 import { MockedProvider } from '@apollo/react-testing'
@@ -37,6 +37,7 @@ describe('TaskSubTask Component', () => {
         </MockedProvider>
       )})
 
+    screen.debug()
     expect(container.queryByTestId('sub_tasks_header')).toBeInTheDocument();
     expect(container.queryByTestId('add_sub_task_icon')).toBeInTheDocument();
     expect(container.queryByText('task:sub_task.sub_tasks')).toBeInTheDocument();
