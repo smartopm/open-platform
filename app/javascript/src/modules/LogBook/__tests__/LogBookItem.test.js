@@ -1,5 +1,5 @@
 import React from 'react';
-import { fireEvent, render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { BrowserRouter } from 'react-router-dom/';
 import { MockedProvider } from '@apollo/react-testing';
@@ -27,10 +27,13 @@ describe('LogBook Component', () => {
     tabValue: 1,
     handleTabValue: jest.fn(),
     loading: false,
-    refetch: jest.fn()
+    refetch: jest.fn(),
+    toggleFilterMenu: jest.fn(),
+    handleSearchClear: jest.fn(),
+    displayBuilder: "none"
   };
 
-  it('renders data successfully', () => {
+  it('renders data successfully', async () => {
     const dataMock = [{
         id: 'aa796e02-88b4-4d31-a988-047e5b2e8193',
         createdAt: '2021-07-04T19:03:30+02:00',
@@ -68,29 +71,30 @@ describe('LogBook Component', () => {
         <MockedThemeProvider>
           <BrowserRouter>
             <Context.Provider value={userMock}>
-              <LogBookItem {...props} />
+              <LogBookItem {...props} scope={2} />
             </Context.Provider>
           </BrowserRouter>
         </MockedThemeProvider>
       </MockedProvider>
     );
+    await waitFor(() => {
+      expect(container.queryAllByTestId('card')[0]).toBeInTheDocument();
+      expect(container.queryByTestId('name')).toBeInTheDocument();
+      expect(container.queryByTestId('acting_guard_title')).toBeInTheDocument();
+      expect(container.queryByTestId('observation_note')).toBeInTheDocument();
+      expect(container.queryByTestId('created-at')).toBeInTheDocument();
+      expect(container.queryByText('misc.previous')).toBeInTheDocument();
+      expect(container.queryByText('misc.next')).toBeInTheDocument();
+      expect(container.queryByLabelText('simple tabs example')).toBeInTheDocument()
 
-    expect(container.queryAllByTestId('card')[0]).toBeInTheDocument();
-    expect(container.queryByTestId('name')).toBeInTheDocument();
-    expect(container.queryByTestId('acting-user')).toBeInTheDocument();
-    expect(container.queryByTestId('note')).toBeInTheDocument();
-    expect(container.queryByTestId('created-at')).toBeInTheDocument();
-    expect(container.queryByText('misc.previous')).toBeInTheDocument();
-    expect(container.queryByText('misc.next')).toBeInTheDocument();
-    expect(container.queryByLabelText('simple tabs example')).toBeInTheDocument()
+      fireEvent.change(container.queryByLabelText('simple tabs example'))
 
-    fireEvent.change(container.queryByLabelText('simple tabs example'))
-
-    fireEvent.click(container.queryByTestId('next-btn'))
-    expect(props.paginate).toBeCalled()
+      fireEvent.click(container.queryByTestId('next-btn'))
+      expect(props.paginate).toBeCalled()
+    })
   });
 
-  it('renders active visit logs', () => {
+  it('renders active visit logs', async () => {
     const dataMock = [
         {
           "id": "02b656be-00b3-4bc2-90a4-0d86d2b72d2a",
@@ -129,16 +133,18 @@ describe('LogBook Component', () => {
         <MockedThemeProvider>
           <BrowserRouter>
             <Context.Provider value={userMock}>
-              <LogBookItem {...props} />
+              <LogBookItem {...props} scope={2} />
             </Context.Provider>
           </BrowserRouter>
         </MockedThemeProvider>
       </MockedProvider>
     );
-    expect(screen.queryByTestId('name').textContent).toContain('Test Guest');
+    await waitFor(() => {
+      expect(screen.queryByTestId('name').textContent).toContain('Test Guest');
+    })
   });
 
-  it('renders active visit logs by visitEndDate', () => {
+  it('renders active visit logs by visitEndDate', async () => {
     const visitEndDate = new Date();
     visitEndDate.setDate(visitEndDate.getDate() + 5)
 
@@ -181,12 +187,14 @@ describe('LogBook Component', () => {
         <MockedThemeProvider>
           <BrowserRouter>
             <Context.Provider value={userMock}>
-              <LogBookItem {...props} />
+              <LogBookItem {...props} scope={2} />
             </Context.Provider>
           </BrowserRouter>
         </MockedThemeProvider>
       </MockedProvider>
     );
-    expect(screen.queryByTestId('name').textContent).toContain('Test Guest');
+    await waitFor(() => {
+      expect(screen.queryByTestId('name').textContent).toContain('Test Guest');
+    })
   });
 });
