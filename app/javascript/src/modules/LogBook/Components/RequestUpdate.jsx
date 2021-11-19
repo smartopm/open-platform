@@ -142,10 +142,9 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
     }
   }, [formData.loaded]);
 
-  console.log(requestContext.request)
   useEffect(() => {
     // Data is loaded, so set the initialState, but only once
-    if (requestContext.request?.id && requestContext.request?.observed) {
+    if (requestContext.request?.id && !requestContext.request?.observed) {
       return setFormData({ ...formData, ...requestContext.request });
     }
     return setFormData({ ...initialRequestState });
