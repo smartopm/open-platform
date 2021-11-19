@@ -10,7 +10,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
+<<<<<<< HEAD
 ActiveRecord::Schema.define(version: 2021_11_24_093931) do
+=======
+ActiveRecord::Schema.define(version: 2021_11_19_054520) do
+>>>>>>> refactor migration files
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -609,9 +613,9 @@ ActiveRecord::Schema.define(version: 2021_11_24_093931) do
   end
 
   create_table "permissions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.uuid "role_id", null: false
     t.string "module"
     t.json "permissions"
+    t.uuid "role_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["module", "role_id"], name: "index_permissions_on_module_and_role_id", unique: true

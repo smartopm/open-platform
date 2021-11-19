@@ -1,4 +1,4 @@
-class CreateAppRoles < ActiveRecord::Migration[6.1]
+class CreateUserRoles < ActiveRecord::Migration[6.1]
   def change
     create_table :roles, id: :uuid do |t|
       t.string :name
@@ -6,5 +6,6 @@ class CreateAppRoles < ActiveRecord::Migration[6.1]
 
       t.timestamps
     end
+    add_index :roles, [:name, :community_id], :unique => true
   end
 end

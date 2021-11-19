@@ -1,6 +1,3 @@
-# frozen_string_literal: true
-
-# Role model
 class Role < ApplicationRecord
   belongs_to :community, optional: true
 
