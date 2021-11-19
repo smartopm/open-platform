@@ -1,3 +1,6 @@
+# frozen_string_literal: true
+
+# Permission class
 class Role < ApplicationRecord
   belongs_to :community, optional: true
 
