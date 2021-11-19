@@ -217,6 +217,7 @@ export default function LogEvents({
                         data-testid="user-entry"
                         label={t('logbook.user_entry')}
                         style={{ background: '#D1D229', color: 'white', marginRight: '16px' }}
+                        size="small"
                       />
                       )}
                       {entry.entryRequest?.grantor && entry.data.note !== 'Exited' && (
@@ -224,12 +225,14 @@ export default function LogEvents({
                           data-testid="granted-access"
                           label={t('logbook.granted_access')}
                           style={{ background: '#77B08A', color: 'white', marginRight: '16px' }}
+                          size="small"
                         />
                       )}
                       {entry.data.note === 'Exited' && (
                         <Chip
                           label={t('logbook.exit_logged')}
                           style={{ background: '#C4584F', color: 'white', marginRight: '16px' }}
+                          size="small"
                         />
                       )}
                       {entry.subject === 'observation_log' && (
@@ -237,6 +240,7 @@ export default function LogEvents({
                           label={t('logbook.observation')}
                           style={{ background: '#EBC64F', color: 'white', marginRight: '16px' }}
                           data-testid="observation"
+                          size="small"
                         />
                       )}
                       {entry.entryRequest && entry.data.note !== 'Exited' && (
@@ -246,6 +250,7 @@ export default function LogEvents({
                             background: objectAccessor(LogLabelColors, entry.entryRequest?.reason),
                             color: 'white'
                           }}
+                          size="small"
                         />
                       )}
                       {entry.imageUrls && (

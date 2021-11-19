@@ -101,11 +101,12 @@ export default function VisitView({
                 <Link to={`/user/${visit.user.id}`}>
                   <Text color="secondary" content={visit.user.name} />
                 </Link>
-                <div style={{ paddingTop: '15px' }} data-testid="request_status">
+                <div style={{ paddingTop: '7px' }} data-testid="request_status">
                   <Chip
                     data-testid="user-entry"
                     label={visit.status === 'approved' ? 'Approved' : 'Pending'}
                     color={visit.status === 'approved' ? 'primary' : 'secondary'}
+                    size="small"
                   />
                 </div>
               </Grid>
@@ -168,6 +169,7 @@ export default function VisitView({
                         marginRight: '16px'
                       }}
                       data-testid="guest_validity"
+                      size="small"
                     />
                   )
                   : (
@@ -175,6 +177,7 @@ export default function VisitView({
                       label={t('guest_book.manual_entry')}
                       style={{ backgroundColor: theme.palette.warning.main, color: 'white', }}
                       data-testid="manual_entry"
+                      size="small"
                     />
                   )
                 }

@@ -120,11 +120,12 @@ export default function GuestsView({
                 <Link to={`/user/${visit.user.id}`}>
                   <Text color="secondary" content={visit.user.name} />
                 </Link>
-                <div style={{ paddingTop: '15px' }} data-testid="request_status">
+                <div style={{ paddingTop: '7px' }} data-testid="request_status">
                   <Chip
                     data-testid="user-entry"
                     label={visit.status === 'approved' ? 'Approved' : 'Pending'}
                     color={visit.status === 'approved' ? 'primary' : 'secondary'}
+                    size="small"
                   />
                 </div>
               </Grid>
@@ -161,6 +162,7 @@ export default function GuestsView({
                     color: 'white',
                     marginRight: '16px'
                   }}
+                  size="small"
                 />
               </Grid>
               <Grid item md={2} xs={12} style={!matches ? { paddingTop: '8px' } : {}}>
