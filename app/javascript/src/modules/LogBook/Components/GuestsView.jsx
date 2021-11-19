@@ -169,14 +169,14 @@ export default function GuestsView({
                     !IsAnyRequestValid(visit.accessHours, t, timeZone) ||
                     (loadingStatus.loading && Boolean(loadingStatus.currentId))
                   }
-                  variant="contained"
+                  variant="outlined"
+                  color="primary"
                   onClick={event => handleGrantAccess(event, visit)}
                   disableElevation
                   startIcon={
                     loadingStatus.loading && loadingStatus.currentId === visit.id && <Spinner />
                   }
                   data-testid="grant_access_btn"
-                  fullWidth
                 >
                   {t('access_actions.grant_access')}
                 </Button>
