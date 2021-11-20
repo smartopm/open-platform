@@ -113,6 +113,7 @@ export default function TaskInfoTop({
             onClick={event => menuData.handleTaskInfoMenu(event)}
             size="small"
             data-testid="task-info-menu"
+            color="primary"
           >
             <MoreVertIcon />
           </IconButton>
