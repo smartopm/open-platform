@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import TextField from '@material-ui/core/TextField';
-import { Grid, Chip, Typography, Breadcrumbs, Button } from '@material-ui/core';
+import { Grid, Chip, Typography, Breadcrumbs, Button, IconButton } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { useHistory } from 'react-router';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
 import CancelIcon from '@material-ui/icons/Cancel';
+import MoreVertIcon from '@material-ui/icons/MoreVert';
+import AlarmIcon from '@material-ui/icons/Alarm';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import moment from 'moment-timezone';
 import { Link } from 'react-router-dom';
@@ -20,6 +22,7 @@ import EditableField from '../../../shared/EditableField';
 import { UpdateNote } from '../../../graphql/mutations';
 import { Spinner } from '../../../shared/Loading';
 import MessageAlert from '../../../components/MessageAlert';
+import MenuList from '../../../shared/MenuList';
 
 export default function TaskInfoTop({
   users,
@@ -31,7 +34,10 @@ export default function TaskInfoTop({
   handleOpenAutoComplete,
   liteData,
   setSearchUser,
-  searchUser
+  searchUser,
+  menuData,
+  isAssignee,
+  activeReminder,
 }) {
   const { t } = useTranslation(['task', 'common']);
   const classes = useStyles();
@@ -74,39 +80,62 @@ export default function TaskInfoTop({
         open={!!updateDetails.message}
         handleClose={() => setUpdateDetails({ ...updateDetails, message: '' })}
       />
-      <Grid item md={7}>
-        <Breadcrumbs aria-label="breadcrumb" data-testid="task-details-breadcrumb">
-          <Link color="inherit" to="/tasks">
-            {t('task.my_tasks')}
-          </Link>
-          <Typography gutterBottom color="textPrimary" style={{marginTop: '4px'}}>
-            {t('task.task_details_text')}
-          </Typography>
-        </Breadcrumbs>
-
-        <Typography variant="h6" style={{ color: '#575757' }}>
-          <span
-            // eslint-disable-next-line react/no-danger
-            dangerouslySetInnerHTML={{
-              __html: sanitizeText(data.body)
-            }}
-          />
-        </Typography>
-        {data.parentNote && (
-          <Typography
-            variant="body2"
-            color="primary"
-            onClick={event => openParentLink(event, data.parentNote)}
-            className={classes.parentTask}
-          >
+      <MenuList
+        open={menuData.open}
+        anchorEl={menuData.anchorEl}
+        handleClose={menuData.handleClose}
+        list={menuData.menuList}
+      />
+      <Grid container>
+        <Grid item md={12} xs={12}>
+          <Breadcrumbs aria-label="breadcrumb" data-testid="task-details-breadcrumb">
+            <Link color="inherit" to="/tasks">
+              {t('task.my_tasks')}
+            </Link>
+            <Typography gutterBottom color="textPrimary" style={{marginTop: '4px'}}>
+              {t('task.task_details_text')}
+            </Typography>
+          </Breadcrumbs>
+        </Grid>
+        <Grid item md={11} xs={11}>
+          <Typography variant="h6" style={{ color: '#575757' }}>
             <span
               // eslint-disable-next-line react/no-danger
               dangerouslySetInnerHTML={{
-                __html: sanitizeText(data.parentNote.body)
+                __html: sanitizeText(data.body)
               }}
             />
           </Typography>
-        )}
+        </Grid>
+        <Grid item md={1} xs={1}>
+          <IconButton
+            edge="end"
+            onClick={event => menuData.handleTaskInfoMenu(event)}
+            size="small"
+            data-testid="task-info-menu"
+          >
+            <MoreVertIcon />
+          </IconButton>
+        </Grid>
+        <Grid item md={12} xs={12}>
+          {data.parentNote && (
+            <Typography
+              variant="body2"
+              color="primary"
+              onClick={event => openParentLink(event, data.parentNote)}
+              className={classes.parentTask}
+            >
+              <span
+                // eslint-disable-next-line react/no-danger
+                dangerouslySetInnerHTML={{
+                  __html: sanitizeText(data.parentNote.body)
+                }}
+              />
+            </Typography>
+            )}
+        </Grid>
+      </Grid>
+      <Grid item md={7}>
         <Grid container>
           <Grid item xs={6} md={4}>
             <Typography variant="body1" style={{ marginTop: '21px' }} className={classes.title}>
@@ -124,6 +153,27 @@ export default function TaskInfoTop({
             />
           </Grid>
         </Grid>
+
+        {isAssignee() && (
+        <Grid container className={classes.inlineContainer}>
+          <Grid item xs={6} md={4}>
+            <Typography variant="body1" className={classes.title} data-testid="active-reminder">
+              {t('task.active_reminder')}
+            </Typography>
+          </Grid>
+          <Grid item xs={6} md={4} style={{ display: 'flex', justifyContent: 'space-between' }}>
+            {activeReminder
+                ? (
+                  <>
+                    <AlarmIcon />
+                    <Typography variant="subtitle1">{activeReminder}</Typography>
+                  </>
+                ) : (
+                  <Typography variant="subtitle1">{t('task.none')}</Typography>
+                )}
+          </Grid>
+        </Grid>
+        )}
 
         <Grid container className={classes.inlineContainer}>
           <Grid item xs={6} md={4}>
@@ -240,7 +290,8 @@ TaskInfoTop.defaultProps = {
   users: [],
   data: {},
   liteData: {},
-  selectedDate: null
+  selectedDate: null,
+  activeReminder: null,
 };
 TaskInfoTop.propTypes = {
   users: PropTypes.arrayOf(PropTypes.object),
@@ -254,5 +305,22 @@ TaskInfoTop.propTypes = {
   setSearchUser: PropTypes.func.isRequired,
   searchUser: PropTypes.func.isRequired,
   autoCompleteOpen: PropTypes.bool.isRequired,
-  selectedDate: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.string])
+  selectedDate: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.string]),
+  activeReminder: PropTypes.string,
+  isAssignee: PropTypes.func.isRequired,
+  menuData: PropTypes.shape({
+    handleTaskInfoMenu: PropTypes.func.isRequired,
+    open: PropTypes.bool,
+    anchorEl: PropTypes.shape({
+      getAttribute: PropTypes.func
+    }),
+    handleClose: PropTypes.func,
+    menuList: PropTypes.arrayOf(
+      PropTypes.shape({
+        content: PropTypes.string,
+        isAdmin: PropTypes.bool,
+        handleClick: PropTypes.func
+      })
+    )
+  }).isRequired
 };

@@ -1,15 +1,11 @@
 /* eslint-disable max-statements */
 import React, { useState, useEffect } from 'react';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
-import { Button, Grid, Snackbar, Typography } from '@material-ui/core';
+import { Grid, Snackbar } from '@material-ui/core';
 import { useMutation, useLazyQuery } from 'react-apollo';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
-import AlarmIcon from '@material-ui/icons/Alarm';
 import { UpdateNote } from '../../../graphql/mutations';
 import { TaskReminderMutation } from '../graphql/task_reminder_mutation';
-import RemindMeLaterMenu from './RemindMeLaterMenu';
 import TaskUpdateList from './TaskUpdateList';
 import TaskComment from './TaskComment';
 import { dateToString, dateTimeToString } from '../../../components/DateContainer';
@@ -39,7 +35,6 @@ export default function TaskForm({
   const [taskType, setTaskType] = useState('');
   const [selectedDate, setDate] = useState(new Date());
   const [taskStatus, setTaskStatus] = useState(false);
-  const [loading, setLoadingStatus] = useState(false);
   const [userData, setData] = useState(initialData);
   const [taskUpdate] = useMutation(UpdateNote);
   const [updated, setUpdated] = useState(false);
@@ -49,7 +44,7 @@ export default function TaskForm({
   const { t } = useTranslation(['task', 'common']);
 
   const [anchorEl, setAnchorEl] = useState(null);
-  const open = Boolean(anchorEl);
+  const anchorElOpen = Boolean(anchorEl);
 
   // Todo: figure out why reusing the customautocomplete component does not work for task update
   const [searchedUser, setSearchUser] = useState('');
@@ -67,14 +62,36 @@ export default function TaskForm({
     fetchPolicy: 'no-cache'
   });
 
+  const menuData = {
+    menuList: getMenuList(),
+    anchorEl,
+    handleTaskInfoMenu,
+    open: anchorElOpen,
+    handleClose,
+  }
+
+  function getMenuList(){
+    const defaultMenuItems = [
+      { content:!taskStatus
+        ? t('common:form_actions.note_complete')
+        : t('common:form_actions.note_incomplete'), isAdmin: false, handleClick: () =>  handleTaskComplete() },
+    ]
+
+    if(!isCurrentUserAnAssignee()) return defaultMenuItems
+
+    return [
+      ...defaultMenuItems,
+      { content: t('task:task.task_reminder_in_1_hr'), isAdmin: false, handleClick: () =>  setTaskReminder(1) },
+      { content: t('task:task.task_reminder_in_24_hr'), isAdmin: false, handleClick: () =>  setTaskReminder(24) },
+      { content: t('task:task.task_reminder_in_72_hr'), isAdmin: false, handleClick: () =>  setTaskReminder(72) },
+    ]
+  }
+
   function handleTaskComplete() {
-    // call the mutation with just the complete status
-    setLoadingStatus(true);
     taskUpdate({
       variables: { id: data.id, completed: !taskStatus }
     })
       .then(() => {
-        setLoadingStatus(false);
         setUpdated(true);
         refetch();
       })
@@ -134,6 +151,8 @@ export default function TaskForm({
         handleClose();
         const timeScheduled = new Date(Date.now() + hour * 60 * 60000).toISOString();
         setReminderTime(timeFormat(timeScheduled));
+        setUpdated(true);
+        refetch();
       })
       .catch(err => setErrorMessage(err));
   }
@@ -152,7 +171,8 @@ export default function TaskForm({
     return formattedTime;
   }
 
-  function handleOpenMenu(event) {
+  function handleTaskInfoMenu(event) {
+    event.stopPropagation()
     setAnchorEl(event.currentTarget);
   }
 
@@ -176,35 +196,7 @@ export default function TaskForm({
 
   return (
     <>
-      <Grid>
-        <RemindMeLaterMenu
-          taskId={data.id}
-          anchorEl={anchorEl}
-          handleClose={handleClose}
-          open={open}
-          setTaskReminder={setTaskReminder}
-        />
-      </Grid>
       <form>
-        {isCurrentUserAnAssignee() && (
-          <Button
-            color="primary"
-            style={{
-              float: 'right'
-            }}
-            onClick={handleOpenMenu}
-          >
-            {currentActiveReminder() ? t('task.change_reminder_text') : t('task.reminder_text')}
-          </Button>
-        )}
-        {isCurrentUserAnAssignee() && currentActiveReminder() && (
-          <>
-            <Typography variant="subtitle1" style={{ margin: '5px 5px 10px 0', float: 'right' }}>
-              {currentActiveReminder()}
-            </Typography>
-            <AlarmIcon style={{ float: 'right', marginTop: '5px' }} />
-          </>
-        )}
         <Snackbar
           open={updated}
           autoHideDuration={3000}
@@ -226,26 +218,10 @@ export default function TaskForm({
             liteData={liteData}
             setSearchUser={setSearchUser}
             searchUser={searchUser}
+            menuData={menuData}
+            isAssignee={isCurrentUserAnAssignee}
+            activeReminder={currentActiveReminder()}
           />
-          {/* TODO: move this to the above component */}
-          <FormControlLabel
-            control={(
-              <Checkbox
-                disabled={loading}
-                checked={taskStatus}
-                onChange={handleTaskComplete}
-                name="mark_task_complete"
-                color="primary"
-                data-testid="mark_task_complete_checkbox"
-              />
-              )}
-            label={
-                !taskStatus
-                  ? t('common:form_actions.note_complete')
-                  : t('common:form_actions.note_incomplete')
-              }
-          />
-
           <TaskComment taskId={taskId} />
           <TaskDocuments documents={data.attachments} />
           <TaskUpdateList data={historyData} />
