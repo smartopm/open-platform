@@ -112,6 +112,7 @@ export default function TaskSubTask({ taskId, users, assignUser }) {
             onClick={handleAddSubTask}
             size="small"
             data-testid="add_sub_task_icon"
+            color="primary"
           >
             <AddIcon />
           </IconButton>
@@ -149,30 +150,48 @@ export default function TaskSubTask({ taskId, users, assignUser }) {
                     </Typography>
                   </Grid>
                   <Grid item md={4} xs={4} className={matches ? classes.iconsMobile : classes.icons}>
-                    <IconButton
-                      aria-controls="task-subtasks-icon"
-                      data-testid="task_subtasks_count"
-                      size="small"
-                    >
-                      <AccountTreeIcon fontSize="small" color={task?.subTasks?.length ? 'primary': 'disabled'} />
-                      <span style={{ fontSize: '14px'}}>{task?.subTasks?.length || 0}</span>
-                    </IconButton>
-                    <IconButton
-                      aria-controls="task-comment-icon"
-                      data-testid="task_comments_count"
-                      size="small"
-                    >
-                      <QuestionAnswerIcon fontSize="small" color="disabled" />
-                      <span style={{ fontSize: '14px'}}>0</span>
-                    </IconButton>
-                    <IconButton
-                      key={task.id}
-                      aria-controls="task-attach-file-icon"
-                      size="small"
-                    >
-                      <AttachFileIcon fontSize="small" color={task?.documents?.length ? 'primary': 'disabled'} />
-                      <span style={{ fontSize: '14px'}} data-testid="file_attachments_total">{task.documents?.length}</span>
-                    </IconButton>
+                    <Grid container>
+                      <Grid item md={8}>
+                        <IconButton
+                          aria-controls="task-subtasks-icon"
+                          data-testid="task_subtasks_count"
+                          size="small"
+                        >
+                          <AccountTreeIcon fontSize="small" color={task?.subTasks?.length ? 'primary': 'disabled'} />
+                        </IconButton>
+                      </Grid>
+                      <Grid item md={4}>
+                        <span style={{ fontSize: '14px'}}>{task?.subTasks?.length || 0}</span>
+                      </Grid>
+                    </Grid>
+                    <Grid container>
+                      <Grid item md={8}>
+                        <IconButton
+                          aria-controls="task-comment-icon"
+                          data-testid="task_comments_count"
+                          size="small"
+                        >
+                          <QuestionAnswerIcon fontSize="small" color="disabled" />
+                        </IconButton>
+                      </Grid>
+                      <Grid item md={4}>
+                        <span style={{ fontSize: '14px'}}>0</span>
+                      </Grid>
+                    </Grid>
+                    <Grid container>
+                      <Grid item md={8}>
+                        <IconButton
+                          key={task.id}
+                          aria-controls="task-attach-file-icon"
+                          size="small"
+                        >
+                          <AttachFileIcon fontSize="small" color={task?.documents?.length ? 'primary': 'disabled'} />
+                        </IconButton>
+                      </Grid>
+                      <Grid item={6}>
+                        <span style={{fontSize: '14px'}} data-testid="file_attachments_total">{task.documents?.length}</span>
+                      </Grid>
+                    </Grid>
                   </Grid>
                   <Grid item md={3} xs={3} className={classes.status}>
                     {task.completed
@@ -184,13 +203,14 @@ export default function TaskSubTask({ taskId, users, assignUser }) {
                       edge="end"
                       onClick={event => handleOpenMenu(event, task)}
                       size="small"
+                      color="primary"
                     >
                       <MoreVertIcon />
                     </IconButton>
                   </Grid>
                 </Grid>
               </Grid>
-              <Grid item md={12} xs={12} style={{ marginBottom: '5px'}}><Divider data-testid="closing_divider" /></Grid>
+              <Grid item md={12} xs={12} style={{ marginTop: '5px', marginBottom: '5px' }}><Divider data-testid="closing_divider" /></Grid>
             </Fragment>
           ))}
           <Grid item md={12} xs={12}>
