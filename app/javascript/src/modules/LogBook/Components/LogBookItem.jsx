@@ -291,7 +291,8 @@ export default function LogBookItem({
               <SearchInput
                 title={objectAccessor(searchPlaceholder, tabValue)}
                 searchValue={searchTerm}
-                filterRequired={tabValue === 1}
+                // temporarily disabling filter until we have proper scope from entry_times table
+                filterRequired={false}
                 handleSearch={handleSearch}
                 handleFilter={toggleFilterMenu}
                 handleClear={handleSearchClear}

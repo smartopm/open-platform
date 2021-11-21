@@ -265,7 +265,7 @@ export default function LogEvents({
                         </Grid>
                         )}
                       <Grid item>
-                        {entry.entryRequest && entry.data.note !== 'Exited' && (
+                        {entry.entryRequest && entry.data.note !== 'Exited' && entry.entryRequest?.reason && (
                           <Tooltip title={toTitleCase(entry.entryRequest?.reason)} arrow>
                             <Chip
                               label={truncateString(toTitleCase(entry.entryRequest?.reason), 20)}
