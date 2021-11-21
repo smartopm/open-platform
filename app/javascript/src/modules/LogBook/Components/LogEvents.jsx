@@ -235,35 +235,35 @@ export default function LogEvents({
                         </Grid>
                       )}
 
-                      <Grid item>
-                        {entry.entryRequest?.grantor && entry.data.note !== 'Exited' && (
+                      {entry.entryRequest?.grantor && entry.data.note !== 'Exited' && (
+                        <Grid item>
                           <Chip
                             data-testid="granted-access"
                             label={t('logbook.granted_access')}
                             style={{ background: '#77B08A', color: 'white' }}
                             size="small"
                           />
+                        </Grid>
                         )}
-                      </Grid>
-                      <Grid item>
-                        {entry.data.note === 'Exited' && (
+                      {entry.data.note === 'Exited' && (
+                        <Grid item>
                           <Chip
                             label={t('logbook.exit_logged')}
                             style={{ background: '#C4584F', color: 'white' }}
                             size="small"
                           />
+                        </Grid>
                         )}
-                      </Grid>
-                      <Grid item>
-                        {entry.subject === 'observation_log' && (
+                      {entry.subject === 'observation_log' && entry.data.note !== 'Exited' && (
+                        <Grid item>
                           <Chip
                             label={t('logbook.observation')}
                             style={{ background: '#EBC64F', color: 'white' }}
                             data-testid="observation"
                             size="small"
                           />
+                        </Grid>
                         )}
-                      </Grid>
                       <Grid item>
                         {entry.entryRequest && entry.data.note !== 'Exited' && (
                           <Tooltip title={toTitleCase(entry.entryRequest?.reason)} arrow>

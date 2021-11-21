@@ -43,8 +43,8 @@ RSpec.describe Types::Queries::EntryRequest do
     end
 
     let(:scheduledRequests_query) do
-      %(query ($offset: Int, $limit: Int, $query: String, $scope: Int){
-        scheduledRequests(offset: $offset, limit: $limit, query: $query, scope: $scope) {
+      %(query ($offset: Int, $limit: Int, $query: String){
+        scheduledRequests(offset: $offset, limit: $limit, query: $query) {
           id
           name
           user {
@@ -170,7 +170,8 @@ RSpec.describe Types::Queries::EntryRequest do
       expect(result.dig('data', 'scheduledRequests').length).to eql 2
     end
 
-    it 'retrieves list of registered guests by end_time scope' do
+    # Skipping this test because the implementation has changed, this scope is currently N/A
+    xit 'retrieves list of registered guests by end_time scope' do
       2.times do
         current_user.entry_requests.create(reason: 'Visiting', name: 'Visitor Joe', nrc: '012345',
                                            visitation_date: Time.zone.now, guest_id: admin.id,

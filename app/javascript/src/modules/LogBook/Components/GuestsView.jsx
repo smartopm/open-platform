@@ -3,11 +3,10 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useLazyQuery, useMutation } from 'react-apollo';
 import { useTranslation } from 'react-i18next';
-import { useHistory } from 'react-router';
+import { useHistory } from 'react-router-dom';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
-import { Link } from 'react-router-dom';
 import Typography from '@material-ui/core/Typography';
 import { Avatar, Chip, useTheme } from '@material-ui/core';
 import { GuestEntriesQuery } from '../graphql/guestbook_queries';
@@ -28,11 +27,10 @@ export default function GuestsView({
   offset,
   limit,
   query,
-  scope,
   timeZone
 }) {
   const [loadGuests, { data, loading: guestsLoading, error }] = useLazyQuery(GuestEntriesQuery, {
-    variables: { offset, limit, query, scope },
+    variables: { offset, limit, query },
     fetchPolicy: 'cache-and-network'
   });
 
@@ -77,6 +75,11 @@ export default function GuestsView({
     });
   }
 
+  function handleViewUser(event, user){
+    event.stopPropagation()
+    history.push(`/user/${user.id}`)
+  }
+
   useEffect(() => {
     if (tabValue === 1) {
       loadGuests();
@@ -103,12 +106,12 @@ export default function GuestsView({
             clickData={{ clickable: true, handleClick: () => handleCardClick(visit) }}
           >
             <Grid container spacing={1}>
-              <Grid item md={2} xs={4}>
+              <Grid item md={2} xs={5}>
                 <Avatar alt={visit.guest?.name} className={classes.avatar} variant="square">
                   {visit.name.charAt(0)}
                 </Avatar>
               </Grid>
-              <Grid item md={2} xs={8}>
+              <Grid item md={2} xs={7}>
                 <Typography variant="caption" color="primary">
                   {visit.name}
                 </Typography>
@@ -117,9 +120,12 @@ export default function GuestsView({
                   {t('logbook:logbook.host')}
                   {' '}
                 </Typography>
-                <Link to={`/user/${visit.user.id}`}>
-                  <Text color="secondary" content={visit.user.name} />
-                </Link>
+                <Text
+                  color="secondary"
+                  content={visit.user.name}
+                  data-testid="user_name"
+                  onClick={event => handleViewUser(event, visit.user)}
+                />
                 <div style={{ paddingTop: '7px' }} data-testid="request_status">
                   <Chip
                     data-testid="user-entry"
@@ -199,6 +205,5 @@ GuestsView.propTypes = {
   limit: PropTypes.number.isRequired,
   handleAddObservation: PropTypes.func.isRequired,
   query: PropTypes.string.isRequired,
-  scope: PropTypes.number.isRequired,
   timeZone: PropTypes.string.isRequired
 };

@@ -20,7 +20,7 @@ describe('Should render Guests View Component', () => {
   const mocks = {
     request: {
       query: GuestEntriesQuery,
-      variables: { offset: 0, limit: 50, query: '', scope: 2 }
+      variables: { offset: 0, limit: 50, query: ''}
     },
     result: {
       data: {
@@ -97,7 +97,7 @@ describe('Should render Guests View Component', () => {
   const errorMock = {
     request: {
       query: GuestEntriesQuery,
-      variables: { offset: 0, limit: 50, query: '', scope: 2 }
+      variables: { offset: 0, limit: 50, query: '' }
     },
     result: {
       data: {
@@ -119,7 +119,6 @@ describe('Should render Guests View Component', () => {
                 offset={0}
                 limit={50}
                 query=""
-                scope={2}
                 timeZone="Africa/Maputo"
               />
             </MockedThemeProvider>
@@ -143,9 +142,14 @@ describe('Should render Guests View Component', () => {
         'access_actions.grant_access'
       );
       expect(getAllByTestId('grant_access_btn')[0]).toBeDisabled();
+      expect(getAllByTestId('user_name')[0]).toBeInTheDocument();
 
       fireEvent.click(getAllByTestId('card')[0]);
       expect(mockHistory.push).toBeCalled();
+
+      fireEvent.click(getAllByTestId('user_name')[0]);
+      expect(mockHistory.push).toBeCalled();
+      expect(mockHistory.push).toBeCalledWith('/user/162f7517'); // check if it routes to the user page
     }, 10);
   });
 
@@ -161,7 +165,6 @@ describe('Should render Guests View Component', () => {
                 offset={0}
                 limit={50}
                 query=""
-                scope={2}
                 timeZone="Africa/Maputo"
               />
             </MockedThemeProvider>

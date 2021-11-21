@@ -115,6 +115,10 @@ describe('Should render Visits View Component', () => {
 
       fireEvent.click(getByTestId('card'));
       expect(mockHistory.push).toBeCalled();
+
+      fireEvent.click(getByTestId('user_name'));
+      expect(mockHistory.push).toBeCalled();
+      expect(mockHistory.push).toBeCalledWith('/user/162f7517'); // check if it routes to the user page
     }, 10);
   });
 
