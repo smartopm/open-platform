@@ -205,12 +205,12 @@ export default function LogEvents({
               )}
               <Grid item md={7} xs={12} style={!matches ? { paddingTop: '7px' } : {}}>
                 <Grid container spacing={1}>
-                  <Grid item sm={4} md={2} style={!matches ? { paddingTop: '15px' } : {}}>
+                  <Grid item sm={2} md={3} style={!matches ? { paddingTop: '15px' } : {}}>
                     <Typography variant="caption" color="textSecondary" data-testid="created-at">
                       {dateToString(entry.createdAt)}
                     </Typography>
                   </Grid>
-                  <Grid item sm={4} md={2} style={!matches ? { paddingTop: '15px' } : {}}>
+                  <Grid item sm={1} md={2} style={!matches ? { paddingTop: '15px' } : {}}>
                     <Typography variant="caption" color="textSecondary">
                       {dateTimeToString(entry.createdAt)}
                     </Typography>
