@@ -69,7 +69,7 @@ export default function LogBookItem({
     refetch: false
   });
   const [addObservationNote] = useMutation(AddObservationNoteMutation);
-  const matches = useMediaQuery('(max-width:800px)');
+  const matches = useMediaQuery('(max-width:1000px)');
   const classes = useStyles();
   const [imageUrls, setImageUrls] = useState([])
   const [blobIds, setBlobIds] = useState([])
