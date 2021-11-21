@@ -12,9 +12,10 @@ import { Link } from 'react-router-dom';
 import Typography from '@material-ui/core/Typography';
 import MoreVertOutlined from '@material-ui/icons/MoreVertOutlined';
 import PhotoIcon from '@material-ui/icons/Photo';
+import { Tooltip } from '@material-ui/core';
 import { Spinner } from '../../../shared/Loading';
 import { dateTimeToString, dateToString } from '../../../components/DateContainer';
-import { toTitleCase, objectAccessor } from '../../../utils/helpers';
+import { toTitleCase, objectAccessor, truncateString } from '../../../utils/helpers';
 import { LogLabelColors } from '../../../utils/constants';
 import Card from '../../../shared/Card';
 import { DetailsDialog } from '../../../components/Dialog';
@@ -138,7 +139,6 @@ export default function LogEvents({
       ) : data?.length > 0 ? (
         data.map(entry => (
           <Card key={entry.id}>
-
             <Grid container spacing={1}>
               <Grid item md={4} xs={8}>
                 {entry.entryRequest ? (
@@ -152,8 +152,16 @@ export default function LogEvents({
                   <>
                     {checkVisitorsName(entry) && (
                       <>
-                        <Link to={`/user/${entry.refId || entry.actingUser.id}`} data-testid="visitor_name">
-                          <Text color="secondary" content={entry.data.ref_name || entry.data.visitor_name || entry.data.name} />
+                        <Link
+                          to={`/user/${entry.refId || entry.actingUser.id}`}
+                          data-testid="visitor_name"
+                        >
+                          <Text
+                            color="secondary"
+                            content={
+                              entry.data.ref_name || entry.data.visitor_name || entry.data.name
+                            }
+                          />
                         </Link>
                         <br />
                       </>
@@ -169,7 +177,11 @@ export default function LogEvents({
                     <Text color="secondary" content={entry.actingUser.name} />
                   </Link>
                   <br />
-                  <Typography variant="caption" color="textSecondary" data-testid="observation_note">
+                  <Typography
+                    variant="caption"
+                    color="textSecondary"
+                    data-testid="observation_note"
+                  >
                     {entry.data?.note}
                   </Typography>
                 </>
@@ -200,59 +212,75 @@ export default function LogEvents({
               )}
               <Grid item md={7} xs={12} style={!matches ? { paddingTop: '7px' } : {}}>
                 <Grid container spacing={1}>
-                  <Grid item sm={2} md={3} style={!matches ? { paddingTop: '15px' } : {}}>
+                  <Grid item sm={4} md={2} style={!matches ? { paddingTop: '15px' } : {}}>
                     <Typography variant="caption" color="textSecondary" data-testid="created-at">
                       {dateToString(entry.createdAt)}
                     </Typography>
                   </Grid>
-                  <Grid item sm={1} md={2} style={!matches ? { paddingTop: '15px' } : {}}>
+                  <Grid item sm={4} md={2} style={!matches ? { paddingTop: '15px' } : {}}>
                     <Typography variant="caption" color="textSecondary">
                       {dateTimeToString(entry.createdAt)}
                     </Typography>
                   </Grid>
                   <Grid item md={7} xs={12}>
-                    <Grid container>
-                      {(entry.subject === 'user_entry' || entry.subject === 'user_temp') && (
-                      <Chip
-                        data-testid="user-entry"
-                        label={t('logbook.user_entry')}
-                        style={{ background: '#D1D229', color: 'white', marginRight: '16px' }}
-                        size="small"
-                      />
+                    <Grid container spacing={1}>
+                      {entry.subject === 'user_entry' && (
+                        <Grid item>
+                          <Chip
+                            data-testid="user-entry"
+                            label={t('logbook.user_granted_access')}
+                            style={{ background: '#77B08A', color: 'white' }}
+                            size="small"
+                          />
+                        </Grid>
                       )}
-                      {entry.entryRequest?.grantor && entry.data.note !== 'Exited' && (
-                        <Chip
-                          data-testid="granted-access"
-                          label={t('logbook.granted_access')}
-                          style={{ background: '#77B08A', color: 'white', marginRight: '16px' }}
-                          size="small"
-                        />
-                      )}
-                      {entry.data.note === 'Exited' && (
-                        <Chip
-                          label={t('logbook.exit_logged')}
-                          style={{ background: '#C4584F', color: 'white', marginRight: '16px' }}
-                          size="small"
-                        />
-                      )}
-                      {entry.subject === 'observation_log' && (
-                        <Chip
-                          label={t('logbook.observation')}
-                          style={{ background: '#EBC64F', color: 'white', marginRight: '16px' }}
-                          data-testid="observation"
-                          size="small"
-                        />
-                      )}
-                      {entry.entryRequest && entry.data.note !== 'Exited' && (
-                        <Chip
-                          label={toTitleCase(entry.entryRequest?.reason)}
-                          style={{
-                            background: objectAccessor(LogLabelColors, entry.entryRequest?.reason),
-                            color: 'white'
-                          }}
-                          size="small"
-                        />
-                      )}
+
+                      <Grid item>
+                        {entry.entryRequest?.grantor && entry.data.note !== 'Exited' && (
+                          <Chip
+                            data-testid="granted-access"
+                            label={t('logbook.granted_access')}
+                            style={{ background: '#77B08A', color: 'white' }}
+                            size="small"
+                          />
+                        )}
+                      </Grid>
+                      <Grid item>
+                        {entry.data.note === 'Exited' && (
+                          <Chip
+                            label={t('logbook.exit_logged')}
+                            style={{ background: '#C4584F', color: 'white' }}
+                            size="small"
+                          />
+                        )}
+                      </Grid>
+                      <Grid item>
+                        {entry.subject === 'observation_log' && (
+                          <Chip
+                            label={t('logbook.observation')}
+                            style={{ background: '#EBC64F', color: 'white' }}
+                            data-testid="observation"
+                            size="small"
+                          />
+                        )}
+                      </Grid>
+                      <Grid item>
+                        {entry.entryRequest && entry.data.note !== 'Exited' && (
+                          <Tooltip title={toTitleCase(entry.entryRequest?.reason)} arrow>
+                            <Chip
+                              label={truncateString(toTitleCase(entry.entryRequest?.reason), 20)}
+                              style={{
+                                background: objectAccessor(
+                                  LogLabelColors,
+                                  entry.entryRequest?.reason
+                                ),
+                                color: 'white'
+                              }}
+                              size="small"
+                            />
+                          </Tooltip>
+                        )}
+                      </Grid>
                       {entry.imageUrls && (
                         <Grid item sm={1} md={1} data-testid="image-area">
                           <IconButton color="primary" onClick={() => handleClick(entry.id)}>
@@ -264,7 +292,7 @@ export default function LogEvents({
                   </Grid>
                 </Grid>
               </Grid>
-              {(Boolean(entry.entryRequest) || entry.subject === 'user_temp')  && (
+              {(Boolean(entry.entryRequest) || entry.subject === 'user_temp') && (
                 <Hidden smDown>
                   <Grid item md={1} style={{ textAlign: 'right' }}>
                     <IconButton
