@@ -36,6 +36,8 @@ RSpec.describe Logs::EntryRequest, type: :model do
     it { is_expected.to belong_to(:community) }
     it { is_expected.to belong_to(:grantor).class_name('Users::User').optional }
     it { is_expected.to belong_to(:revoker).class_name('Users::User').optional }
+    it { is_expected.to have_many(:invites).dependent(:destroy) }
+    it { is_expected.to have_many(:entry_times).through(:invites) }
   end
 
   describe 'Basic usage' do
@@ -129,7 +131,7 @@ RSpec.describe Logs::EntryRequest, type: :model do
       admin.entry_requests.create(name: 'Test User', reason: 'Visiting',
                                   guest_id: visitor.id)
     end
-    let!(:invite) { admin.invite_guest(visitor.id) }
+    let!(:invite) { admin.invite_guest(visitor.id, entry_request.id) }
     let!(:entry_time) do
       user.community.entry_times.create(
         visitation_date: '2021-11-16 10:02:25',

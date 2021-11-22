@@ -24,7 +24,7 @@ module Mutations
 
           guest = check_or_create_guest(vals, user)
           request = generate_request(vals, guest)
-          invite = context[:current_user].invite_guest(guest.id)
+          invite = context[:current_user].invite_guest(guest.id, request.id)
 
           entry = generate_entry_time(vals.except(:guest_id, :name, :phone_number, :email), invite)
           GuestQrCodeJob.perform_now(

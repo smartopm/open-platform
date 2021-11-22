@@ -572,13 +572,17 @@ RSpec.describe Users::User, type: :model do
   describe '#invite_guest' do
     let!(:user) { create(:user_with_community) }
     let!(:resident) { create(:user_with_community, user_type: 'resident') }
+    let!(:entry_request) do
+      create(:entry_request, name: 'Test User', reason: 'Visiting', user: user,
+                             guest: resident)
+    end
 
     it 'creates an invite' do
       expect(resident.invitees.count).to eq(0)
-      resident.invite_guest(nil)
+      resident.invite_guest(nil, nil)
       expect(resident.invitees.count).to eq(0)
       # invite a guest
-      resident.invite_guest(user.id)
+      resident.invite_guest(user.id, entry_request.id)
       expect(resident.invitees.count).to eq(1)
     end
   end
