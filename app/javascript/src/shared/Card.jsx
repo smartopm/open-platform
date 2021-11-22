@@ -5,7 +5,7 @@ import CardContent from '@material-ui/core/CardContent';
 import { makeStyles } from '@material-ui/core/styles';
 
 // TODO: match file name with the component name
-export default function CardComponent({ children, clickData }) {
+export default function CardComponent({ children, clickData, styles }) {
   const classes = useStyles();
   return (
     <>
@@ -13,6 +13,7 @@ export default function CardComponent({ children, clickData }) {
         elevation={0}
         className={clickData?.clickable ? classes.cardClickable : classes.card}
         onClick={clickData?.clickable ? () =>  clickData?.handleClick() : null}
+        style={styles}
         variant='outlined'
         data-testid='card'
       >

@@ -462,32 +462,33 @@ export default function TodoList({
             />
           </DialogContent>
         </Dialog>
-        <div className={classes.root}>
-          <>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-around'}}>
-              <TaskQuickAction
-                currentTile={currentTile}
-                setSelectAllOption={setSelectAllOption}
-                selectedTasks={selectedTasks}
-                taskListIds={taskListIds}
-                checkedOptions={checkedOptions}
-                handleCheckOptions={handleCheckOptions}
-                bulkUpdating={bulkUpdating}
-                handleBulkUpdate={handleBulkUpdate}
-              />
-              <TaskQuickSearch filterTasks={handleTaskFilter} currentTile={currentTile} />
-            </div>
-            <div style={{ width: '43%', display: 'flex', alignItems: 'center'}}>
-              <TextField
-                data-testid="search_input"
-                className={`border ${classes.input}`}
-                onChange={inputToSearch}
-                value={searchText}
-                label={t('common:form_placeholders.search_tasks')}
-                variant="outlined"
-                margin="dense"
-                style={{ width: '89%' }}
-                InputProps={{
+        <Grid container spacing={1}>
+          <Grid item md={2} xs={5}>
+            <TaskQuickAction
+              currentTile={currentTile}
+              setSelectAllOption={setSelectAllOption}
+              selectedTasks={selectedTasks}
+              taskListIds={taskListIds}
+              checkedOptions={checkedOptions}
+              handleCheckOptions={handleCheckOptions}
+              bulkUpdating={bulkUpdating}
+              handleBulkUpdate={handleBulkUpdate}
+            />
+          </Grid>
+          <Grid item md={4} xs={7}>
+            <TaskQuickSearch filterTasks={handleTaskFilter} currentTile={currentTile} />
+          </Grid>
+          <Grid item md={4} xs={8}>
+            <TextField
+              data-testid="search_input"
+              className={`border ${classes.input}`}
+              onChange={inputToSearch}
+              value={searchText}
+              label={t('common:form_placeholders.search_tasks')}
+              variant="outlined"
+              margin="dense"
+              style={{ width: '89%' }}
+              InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
                       <IconButton>
@@ -497,7 +498,10 @@ export default function TodoList({
                   ),
                   'aria-label': 'search tasks'
                 }}
-              />
+            />
+          </Grid> 
+          <Grid item md={1} xs={4}>
+            <div style={{display: 'flex'}}>
               <IconButton
                 data-testid="toggle_filter_btn"
                 type="submit"
@@ -507,12 +511,12 @@ export default function TodoList({
               >
                 <FilterListIcon />
               </IconButton>
-              <Typography>
+              <Typography style={{marginTop: '10px'}}>
                 {filterCount ? `${filterCount} ${pluralizeCount(filterCount, 'Filter')}` : t('common:misc.filter')}
               </Typography>
             </div>
-          </>
-        </div>
+          </Grid>
+        </Grid>
         <div
           style={{
             display: 'flex',
@@ -545,8 +549,6 @@ export default function TodoList({
           <Spinner />
         ) : (
           <>
-            <br />
-            <br />
             <TaskBulkUpdateAction
               checkedOptions={checkedOptions}
               bulkUpdating={bulkUpdating}
