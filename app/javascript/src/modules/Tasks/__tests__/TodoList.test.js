@@ -7,7 +7,7 @@ import TodoList from '../Components/TodoList'
 import { flaggedNotes } from '../../../graphql/queries'
 import { Context } from '../../../containers/Provider/AuthStateProvider'
 import userMock from '../../../__mocks__/userMock';
-import taskMock from '../../../__mocks__/taskMock';
+import taskMock from '../__mocks__/taskMock';
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn())
 const mck = jest.fn()

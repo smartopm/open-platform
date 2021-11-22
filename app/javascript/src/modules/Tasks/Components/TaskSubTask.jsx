@@ -195,8 +195,8 @@ export default function TaskSubTask({ taskId, users, assignUser }) {
                   </Grid>
                   <Grid item md={3} xs={3} className={classes.status}>
                     {task.completed
-                    ? <Chip size="small" label="Complete" className={classes.completed} />
-                    : <Chip size="small" label="Open" className={classes.open} />}
+                    ? <Chip size="small" label={t('task.complete')} className={classes.completed} />
+                    : <Chip size="small" label={t('task.open')} className={classes.open} />}
                   </Grid>
                   <Grid item md={1} xs={1}>
                     <IconButton

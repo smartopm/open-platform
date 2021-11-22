@@ -5,7 +5,7 @@ import { BrowserRouter } from 'react-router-dom/'
 import { MockedProvider } from '@apollo/react-testing'
 import TaskSubTask from '../Components/TaskSubTask'
 import { SubTasksQuery } from '../graphql/task_queries'
-import taskMock from '../../../__mocks__/taskMock';
+import taskMock from '../__mocks__/taskMock';
 
 describe('TaskSubTask Component', () => {
   const subTaskMock = [
