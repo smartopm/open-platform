@@ -444,8 +444,8 @@ module Users
 
     def ensure_default_state_and_type
       # TODO(Nurudeen): Move these to DB level as default values
-      self[:state] ||= 'pending'
-      self[:user_type] ||= 'visitor'
+      self.state ||= 'pending'
+      self.user_type ||= 'visitor'
       self.role ||= Role.find_by(name: 'visitor')
     end
 

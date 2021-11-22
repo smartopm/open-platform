@@ -39,7 +39,7 @@ const authState = {
         permissions: ['can_see_menu_item']
       },
       {   module: 'user',
-          permissions: ['can_see_menu_item']
+          permissions: ['can_see_menu_item', 'can_create_user']
       },
       { module: 'label',
         permissions: ['can_see_menu_item']
