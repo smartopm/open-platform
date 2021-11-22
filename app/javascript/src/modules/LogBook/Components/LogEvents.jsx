@@ -216,52 +216,62 @@ export default function LogEvents({
                     </Typography>
                   </Grid>
                   <Grid item md={7} xs={12}>
-                    <Grid container style={{paddingTop: '10px'}}>
+                    <Grid container spacing={1} style={{paddingTop: '10px'}}>
                       {entry.subject === 'user_entry' && (
-                      <Chip
-                        data-testid="user-entry"
-                        label={t('logbook.user_granted_access')}
-                        style={{ background: '#77B08A', color: 'white', marginRight: '16px' }}
-                        size="small"
-                      />
+                        <Grid item>
+                          <Chip
+                            data-testid="user-entry"
+                            label={t('logbook.user_granted_access')}
+                            style={{ background: '#77B08A', color: 'white', marginRight: '16px' }}
+                            size="small"
+                          />
+                        </Grid>
                       )}
                       {entry.entryRequest?.grantor && entry.subject === 'visitor_entry' && entry.data.note !== 'Exited' && (
-                        <Chip
-                          data-testid="granted-access"
-                          label={t('logbook.granted_access')}
-                          style={{ background: '#77B08A', color: 'white', marginRight: '16px' }}
-                          size="small"
-                        />
+                        <Grid item>
+                          <Chip
+                            data-testid="granted-access"
+                            label={t('logbook.granted_access')}
+                            style={{ background: '#77B08A', color: 'white', marginRight: '16px' }}
+                            size="small"
+                          />
+                        </Grid>
                       )}
                       {entry.data.note === 'Exited' && (
-                        <Chip
-                          label={t('logbook.exit_logged')}
-                          style={{ background: '#C4584F', color: 'white', marginRight: '16px' }}
-                          size="small"
-                        />
+                        <Grid item>
+                          <Chip
+                            label={t('logbook.exit_logged')}
+                            style={{ background: '#C4584F', color: 'white', marginRight: '16px' }}
+                            size="small"
+                          />
+                        </Grid>
                       )}
                       {entry.subject === 'observation_log' && entry.data.note !== 'Exited' && (
-                        <Chip
-                          label={t('logbook.observation')}
-                          style={{ background: '#EBC64F', color: 'white', marginRight: '16px' }}
-                          data-testid="observation"
-                          size="small"
-                        />
+                        <Grid item>
+                          <Chip
+                            label={t('logbook.observation')}
+                            style={{ background: '#EBC64F', color: 'white', marginRight: '16px' }}
+                            data-testid="observation"
+                            size="small"
+                          />
+                        </Grid>
                       )}
                       {entry.entryRequest?.reason && entry.subject === 'visitor_entry' && entry.data.note !== 'Exited' && (
-                        <Tooltip title={toTitleCase(entry.entryRequest?.reason)} arrow>
-                          <Chip
-                            label={truncateString(toTitleCase(entry.entryRequest?.reason), 20)}
-                            style={{
+                        <Grid item>
+                          <Tooltip title={toTitleCase(entry.entryRequest?.reason)} arrow>
+                            <Chip
+                              label={truncateString(toTitleCase(entry.entryRequest?.reason), 20)}
+                              style={{
                             background: objectAccessor(
                               LogLabelColors,
                               entry.entryRequest?.reason
                             ),
                             color: 'white'
                           }}
-                            size="small"
-                          />
-                        </Tooltip>
+                              size="small"
+                            />
+                          </Tooltip>
+                        </Grid>
                       )}
                       {entry.imageUrls && (
                         <Grid item sm={1} md={1} data-testid="image-area" style={{marginTop: '-10px'}}>
