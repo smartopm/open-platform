@@ -133,7 +133,9 @@
     "exited_at": "Exited at {{time}}",
     "entered_at": "Entered at {{time}}",
     "visits": "Visits",
-    "manual_entry": "Manual entry"
+    "manual_entry": "Manual entry",
+    "pending": "Pending",
+    "approved": "Approved"
   },
   "date_picker": {
     "ok_label": "Ok",

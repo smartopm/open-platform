@@ -111,7 +111,7 @@ export default function VisitView({
                 <div style={{ paddingTop: '7px' }} data-testid="request_status">
                   <Chip
                     data-testid="user-entry"
-                    label={visit.status === 'approved' ? 'Approved' : 'Pending'}
+                    label={visit.status === 'approved' ? t('guest_book.approved') : t('guest_book.pending')}
                     color={visit.status === 'approved' ? 'primary' : 'secondary'}
                     size="small"
                   />
