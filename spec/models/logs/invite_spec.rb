@@ -9,11 +9,13 @@ RSpec.describe Logs::Invite, type: :model do
     it { is_expected.to have_db_column(:id).of_type(:uuid) }
     it { is_expected.to have_db_column(:host_id).of_type(:uuid) }
     it { is_expected.to have_db_column(:guest_id).of_type(:uuid) }
+    it { is_expected.to have_db_column(:entry_request_id).of_type(:uuid) }
   end
 
   describe 'associations' do
     it { is_expected.to belong_to(:host).class_name('Users::User') }
     it { is_expected.to belong_to(:guest).class_name('Users::User') }
     it { is_expected.to have_one(:entry_time).dependent(:destroy) }
+    it { is_expected.to belong_to(:entry_request) }
   end
 end
