@@ -30,7 +30,7 @@ export default function EntryRequestContextProvider({ children }) {
     if (request.id) {
       loadEntry({ variables: { id: request.id } });
     }
-    if (data) {
+    if (data && !request.observed) {
       updateRequest({ ...request, ...data.result });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -51,11 +51,13 @@ export default function EntryRequestContextProvider({ children }) {
           message: t('logbook.success_message', { action: t('logbook.granted') })
         });
         updateRequest({
-          ...request,
-          id: result.entryRequest.id,
+          ...initialRequestState,
+          id: "",
+          requestId: result.entryRequest.id,
           isLoading: false,
           isObservationOpen: true
         });
+
       })
       .catch(error => {
         updateRequest({ ...request, isLoading: false });

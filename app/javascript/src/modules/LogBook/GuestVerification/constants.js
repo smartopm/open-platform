@@ -27,5 +27,6 @@ export const initialRequestState = {
     isObservationOpen: false,
     status: 'pending',
     isEdit: false,
-    observed: false
+    observed: false,
+    requestId: ''
 }

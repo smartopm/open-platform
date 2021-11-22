@@ -144,7 +144,7 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
 
   useEffect(() => {
     // Data is loaded, so set the initialState, but only once
-    if (requestContext.request?.id && !requestContext.request?.observed) {
+    if (requestContext.request?.id) {
       return setFormData({ ...formData, ...requestContext.request });
     }
     return setFormData({ ...initialRequestState });
@@ -780,7 +780,7 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
           <>
             <Grid container justify="center" spacing={4} className={css(styles.grantSection)}>
               {
-                Boolean(id || requestContext.request.id) && (
+                Boolean(id || requestContext.request.id ) && (
                   <AccessCheck module="entry_request" allowedPermissions={['can_update_entry_request']}>
                     <Grid item>
                       <Button
