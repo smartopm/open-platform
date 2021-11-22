@@ -340,6 +340,8 @@ en:
       not_found: Payment Plan not found
       plan_already_exist: Payment Plan for this landparcel already exist
       transfer_can_not_be_processed: The payment plan and all its payments have already been cancelled, the transfer cannot be processed
+      cannot_allocate_funds: Funds can only be allocated to active payment plans
+      general_funds_does_not_exist: The user does not have general funds to allocate it to a payment plan
     phone_number:
       found_blank: Phone number cannot be blank
     email:

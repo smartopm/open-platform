@@ -29,6 +29,7 @@ admin:
       - can_update_payment_day
       - can_update_payment_plan
       - can_view_menu_list
+      - can_allocate_general_funds
   plan_payment:
     permissions:
       - can_access_all_payments
