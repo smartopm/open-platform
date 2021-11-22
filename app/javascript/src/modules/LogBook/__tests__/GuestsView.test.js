@@ -135,7 +135,7 @@ describe('Should render Guests View Component', () => {
       expect(getByText('Js sdd')).toBeInTheDocument();
       expect(getByText('Js user x')).toBeInTheDocument();
       expect(getAllByTestId('request_status')[0]).toBeInTheDocument();
-      expect(getAllByTestId('request_status')[0].textContent).toContain('Approved');
+      expect(getAllByTestId('request_status')[0].textContent).toContain('guest_book.approved');
       expect(getAllByText('guest_book.start_of_visit')[0]).toBeInTheDocument();
       expect(getAllByTestId('grant_access_btn')[0]).toBeInTheDocument();
       expect(getAllByTestId('grant_access_btn')[0].textContent).toContain(
