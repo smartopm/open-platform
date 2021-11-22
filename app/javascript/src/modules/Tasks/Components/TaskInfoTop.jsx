@@ -12,6 +12,7 @@ import AlarmIcon from '@material-ui/icons/Alarm';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import moment from 'moment-timezone';
 import { Link } from 'react-router-dom';
+import Edit from '@material-ui/icons/Edit';
 import { useMutation } from 'react-apollo';
 import DatePickerDialog from '../../../components/DatePickerDialog';
 import { UserChip } from './UserChip';
@@ -37,7 +38,7 @@ export default function TaskInfoTop({
   searchUser,
   menuData,
   isAssignee,
-  activeReminder,
+  activeReminder
 }) {
   const { t } = useTranslation(['task', 'common']);
   const classes = useStyles();
@@ -45,6 +46,8 @@ export default function TaskInfoTop({
   const [description, setDescription] = useState(data.description);
   const [taskUpdate] = useMutation(UpdateNote);
   const [loading, setLoadingStatus] = useState(false);
+  const [body, setBody] = useState(data.body);
+  const [editingBody, setEditingBody] = useState(false);
   const [updateDetails, setUpdateDetails] = useState({
     isError: false,
     message: ''
@@ -57,14 +60,15 @@ export default function TaskInfoTop({
     history.push(`/tasks/${parent.id}`);
   }
 
-  function updateDescription() {
+  function updateTask(property, value) {
     setLoadingStatus(true);
     taskUpdate({
-      variables: { id: data.id, description }
+      variables: { id: data.id, [property]: value }
     })
       .then(() => {
         setLoadingStatus(false);
         setUpdateDetails({ isError: false, message: t('task.update_successful') });
+        if (property === 'body') setEditingBody(false);
       })
       .catch(err => {
         setLoadingStatus(false);
@@ -92,21 +96,64 @@ export default function TaskInfoTop({
             <Link color="inherit" to="/tasks">
               {t('task.my_tasks')}
             </Link>
-            <Typography gutterBottom color="textPrimary" style={{marginTop: '4px'}}>
+            <Typography gutterBottom color="textPrimary" style={{ marginTop: '4px' }}>
               {t('task.task_details_text')}
             </Typography>
           </Breadcrumbs>
         </Grid>
-        <Grid item md={11} xs={11}>
-          <Typography variant="h6" style={{ color: '#575757' }}>
-            <span
-              // eslint-disable-next-line react/no-danger
-              dangerouslySetInnerHTML={{
-                __html: sanitizeText(data.body)
+        <Grid item md={9} xs={9}>
+          {editingBody ? (
+            <TextField
+              name="body"
+              value={body}
+              margin="normal"
+              fullWidth
+              onChange={event => setBody(event.target.value)}
+              multiline
+              rows={4}
+              style={{ width: '100%' }}
+              inputProps={{
+                'data-testid': 'editable_body'
               }}
             />
-          </Typography>
+          ) : (
+            <Typography variant="h6" style={{ color: '#575757' }}>
+              <span
+                // eslint-disable-next-line react/no-danger
+                dangerouslySetInnerHTML={{
+                  __html: sanitizeText(body)
+                }}
+              />
+            </Typography>
+          )}
         </Grid>
+        {!editingBody && (
+          <Grid item xs={2} data-testid="edit_body_action">
+            <IconButton
+              onClick={() => setEditingBody(true)}
+              data-testid="edit_body_icon"
+              style={{ marginTop: '-6px' }}
+              color="primary"
+            >
+              <Edit />
+            </IconButton>
+          </Grid>
+        )}
+        {editingBody && (
+          <Grid item xs={2} data-testid="edit_action">
+            <Button
+              variant="outlined"
+              color="primary"
+              disabled={loading}
+              data-testid="edit_body_action_btn"
+              onClick={() => updateTask('body', body)}
+              startIcon={loading && <Spinner />}
+              style={{ marginTop: '70px' }}
+            >
+              {t('common:form_actions.update')}
+            </Button>
+          </Grid>
+        )}
         <Grid item md={1} xs={1}>
           <IconButton
             edge="end"
@@ -133,7 +180,7 @@ export default function TaskInfoTop({
                 }}
               />
             </Typography>
-            )}
+          )}
         </Grid>
       </Grid>
       <Grid item md={7}>
@@ -156,24 +203,23 @@ export default function TaskInfoTop({
         </Grid>
 
         {isAssignee() && (
-        <Grid container className={classes.inlineContainer}>
-          <Grid item xs={6} md={4}>
-            <Typography variant="body1" className={classes.title} data-testid="active-reminder">
-              {t('task.active_reminder')}
-            </Typography>
+          <Grid container className={classes.inlineContainer}>
+            <Grid item xs={6} md={4}>
+              <Typography variant="body1" className={classes.title} data-testid="active-reminder">
+                {t('task.active_reminder')}
+              </Typography>
+            </Grid>
+            <Grid item xs={6} md={4} style={{ display: 'flex', justifyContent: 'space-between' }}>
+              {activeReminder ? (
+                <>
+                  <AlarmIcon />
+                  <Typography variant="subtitle1">{activeReminder}</Typography>
+                </>
+              ) : (
+                <Typography variant="subtitle1">{t('task.none')}</Typography>
+              )}
+            </Grid>
           </Grid>
-          <Grid item xs={6} md={4} style={{ display: 'flex', justifyContent: 'space-between' }}>
-            {activeReminder
-                ? (
-                  <>
-                    <AlarmIcon />
-                    <Typography variant="subtitle1">{activeReminder}</Typography>
-                  </>
-                ) : (
-                  <Typography variant="subtitle1">{t('task.none')}</Typography>
-                )}
-          </Grid>
-        </Grid>
         )}
 
         <Grid container className={classes.inlineContainer}>
@@ -256,9 +302,9 @@ export default function TaskInfoTop({
                 color="primary"
                 disabled={loading}
                 data-testid="edit_action_btn"
-                onClick={updateDescription}
+                onClick={() => updateTask('description', description)}
                 startIcon={loading && <Spinner />}
-                style={{marginTop: '10px'}}
+                style={{ marginTop: '10px' }}
               >
                 {t('common:form_actions.update')}
               </Button>
@@ -290,7 +336,7 @@ TaskInfoTop.defaultProps = {
   data: {},
   liteData: {},
   selectedDate: null,
-  activeReminder: null,
+  activeReminder: null
 };
 TaskInfoTop.propTypes = {
   users: PropTypes.arrayOf(PropTypes.object),
