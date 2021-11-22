@@ -126,7 +126,7 @@ export default function LogEvents({
   };
   return (
     <div style={{ marginTop: '20px' }} data-testid="card">
-      {error && <CenteredContent>{error}</CenteredContent>}
+      {error && !data?.length && <CenteredContent>{error}</CenteredContent>}
       {loading ? (
         <Spinner />
       ) : data?.length > 0 ? (
@@ -217,11 +217,11 @@ export default function LogEvents({
                   </Grid>
                   <Grid item md={7} xs={12}>
                     <Grid container style={{paddingTop: '10px'}}>
-                      {(entry.subject === 'user_entry' || entry.subject === 'user_temp') && (
+                      {entry.subject === 'user_entry' && (
                       <Chip
                         data-testid="user-entry"
-                        label={t('logbook.user_entry')}
-                        style={{ background: '#D1D229', color: 'white', marginRight: '16px' }}
+                        label={t('logbook.user_granted_access')}
+                        style={{ background: '#77B08A', color: 'white', marginRight: '16px' }}
                         size="small"
                       />
                       )}
@@ -240,7 +240,7 @@ export default function LogEvents({
                           size="small"
                         />
                       )}
-                      {entry.subject === 'observation_log' && (
+                      {entry.subject === 'observation_log' && entry.data.note !== 'Exited' && (
                         <Chip
                           label={t('logbook.observation')}
                           style={{ background: '#EBC64F', color: 'white', marginRight: '16px' }}
