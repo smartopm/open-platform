@@ -143,7 +143,7 @@ export default function TaskSubTask({ taskId, users, assignUser }) {
               </Grid>
               <Grid item md={5} xs={12} className={classes.details}>
                 <Grid container>
-                  <Grid item md={4} xs={8} style={matches ? {paddingLeft: '1.7rem', alignItems: 'center'} : {}}>
+                  <Grid item md={4} xs={8} style={matches ? {paddingLeft: '1.7rem', alignItems: 'center'} : { display: 'flex', alignItems: 'center' }}>
                     <Typography variant="body2" component="span">
                       {t('task:sub_task.due')}
                       {task.dueDate ? dateToString(task.dueDate) : 'Never '}
@@ -155,13 +155,13 @@ export default function TaskSubTask({ taskId, users, assignUser }) {
                         <IconButton
                           aria-controls="task-subtasks-icon"
                           data-testid="task_subtasks_count"
-                          size="small"
+                          size="medium"
                         >
                           <AccountTreeIcon fontSize="small" color={task?.subTasks?.length ? 'primary': 'disabled'} />
                         </IconButton>
                       </Grid>
-                      <Grid item md={4}>
-                        <span style={{ fontSize: '14px'}}>{task?.subTasks?.length || 0}</span>
+                      <Grid item md={4} className={classes.iconItem}>
+                        <span>{task?.subTasks?.length || 0}</span>
                       </Grid>
                     </Grid>
                     <Grid container>
@@ -169,13 +169,13 @@ export default function TaskSubTask({ taskId, users, assignUser }) {
                         <IconButton
                           aria-controls="task-comment-icon"
                           data-testid="task_comments_count"
-                          size="small"
+                          size="medium"
                         >
                           <QuestionAnswerIcon fontSize="small" color="disabled" />
                         </IconButton>
                       </Grid>
-                      <Grid item md={4}>
-                        <span style={{ fontSize: '14px'}}>0</span>
+                      <Grid item md={4} className={classes.iconItem}>
+                        <span>0</span>
                       </Grid>
                     </Grid>
                     <Grid container>
@@ -183,13 +183,13 @@ export default function TaskSubTask({ taskId, users, assignUser }) {
                         <IconButton
                           key={task.id}
                           aria-controls="task-attach-file-icon"
-                          size="small"
+                          size="medium"
                         >
                           <AttachFileIcon fontSize="small" color={task?.documents?.length ? 'primary': 'disabled'} />
                         </IconButton>
                       </Grid>
-                      <Grid item={6}>
-                        <span style={{fontSize: '14px'}} data-testid="file_attachments_total">{task.documents?.length}</span>
+                      <Grid item={4} className={classes.iconItem}>
+                        <span data-testid="file_attachments_total">{task.documents?.length}</span>
                       </Grid>
                     </Grid>
                   </Grid>
@@ -198,7 +198,7 @@ export default function TaskSubTask({ taskId, users, assignUser }) {
                     ? <Chip size="small" label={t('task.complete')} className={classes.completed} />
                     : <Chip size="small" label={t('task.open')} className={classes.open} />}
                   </Grid>
-                  <Grid item md={1} xs={1}>
+                  <Grid item md={1} xs={1} className={classes.menu}>
                     <IconButton
                       edge="end"
                       onClick={event => handleOpenMenu(event, task)}
@@ -305,10 +305,20 @@ const useStyles = makeStyles(() => ({
     display: 'flex',
     justifyContent: 'space-between'
   },
+  iconItem: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    fontSize: '14px',
+  },
   status: {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'start',
-    paddingLeft: '8px'
+    paddingLeft: '20px'
   },
+  menu: {
+    display: 'flex',
+    alignItems: 'center'
+  }
 }));
