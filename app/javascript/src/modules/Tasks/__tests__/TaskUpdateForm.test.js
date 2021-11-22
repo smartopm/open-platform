@@ -52,7 +52,6 @@ describe('task form component', () => {
     expect(container.queryAllByText('another_user')[0]).toBeInTheDocument();
     // needs to be updated
     expect(container.queryAllByTestId('user_chip')).toHaveLength(2);
-    expect(container.queryByTestId('mark_task_complete_checkbox')).toBeInTheDocument();
   });
 
   it('should render the remind-me-later button if current user is an assignee', async () => {
@@ -71,14 +70,15 @@ describe('task form component', () => {
       );
     });
 
-    const reminderBtn = container.queryByText('task.reminder_text');
-    expect(reminderBtn).toBeInTheDocument();
+    const taskInfoMenu = container.queryByTestId('task-info-menu');
+    expect(taskInfoMenu).toBeInTheDocument();
 
-    fireEvent.click(reminderBtn);
+    fireEvent.click(taskInfoMenu);
 
-    expect(container.queryByText('task.task_reminder_in_1_hr')).toBeInTheDocument();
-    expect(container.queryByText('task.task_reminder_in_24_hr')).toBeInTheDocument();
-    expect(container.queryByText('task.task_reminder_in_72_hr')).toBeInTheDocument();
+    expect(container.queryByText('common:form_actions.note_complete')).toBeInTheDocument();
+    expect(container.queryByText('task:task.task_reminder_in_1_hr')).toBeInTheDocument();
+    expect(container.queryByText('task:task.task_reminder_in_24_hr')).toBeInTheDocument();
+    expect(container.queryByText('task:task.task_reminder_in_72_hr')).toBeInTheDocument();
   });
 
   it('should render task comments section', async () => {
