@@ -9,7 +9,7 @@ RSpec.describe Mutations::Note do
   let!(:permission) do
     create(:permission, module: 'note',
                         role: admin_role,
-                        permissions: %w[can_create_note])
+                        permissions: %w[can_create_note can_assign_note can_update_note ])
   end
   let!(:site_worker_permission) do
     create(:permission, module: 'note',

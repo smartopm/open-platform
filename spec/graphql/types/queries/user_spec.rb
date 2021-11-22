@@ -16,7 +16,7 @@ RSpec.describe Types::Queries::User do
     let!(:permission) do
       create(:permission, module: 'user',
                           role: admin_role,
-                          permissions: %w[can_view_admin_users])
+                          permissions: %w[can_view_admin_users can_get_users_lite])
     end
     let!(:current_user) { create(:user_with_community, user_type: 'client', role: client_role) }
     let!(:another_user) do

@@ -91,7 +91,6 @@ module Authorizable
   end
 
   def user_role_exists?(user)
-    byebug
     community_role = Role.find_by(name: user.role.name,
                                   community_id: @site_community.id)
     global_role = Role.find_by(name: user.role.name, community_id: nil)

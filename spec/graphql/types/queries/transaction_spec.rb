@@ -18,8 +18,6 @@ RSpec.describe Types::Queries::Transaction do
     let!(:admin) { create(:admin_user, community_id: user.community_id, role: admin_role) }
 
     let!(:community) { create(:community, timezone: 'Africa/Lusaka') }
-    # let!(:user) { create(:user, community_id: community.id) }
-    # let!(:admin) { create(:admin_user, community_id: community.id) }
     let!(:land_parcel) do
       create(:land_parcel, community_id: community.id,
                            parcel_number: 'Plot01')

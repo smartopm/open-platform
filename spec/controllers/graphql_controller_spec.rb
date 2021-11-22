@@ -4,7 +4,8 @@ require 'rails_helper'
 
 RSpec.describe GraphqlController, type: :controller do
   before do
-    @user = FactoryBot.create(:user_with_community, phone_number: '14048675309')
+    @admin_role = FactoryBot.create(:role, name: 'admin') 
+    @user = FactoryBot.create(:user_with_community, phone_number: '14048675309', role: @admin_role)
     @user.community.update(name: 'Nkwashi')
     authenticate @user
     @request.host = 'test.dgdp.site'
