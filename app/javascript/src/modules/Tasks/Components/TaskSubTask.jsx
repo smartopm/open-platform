@@ -120,10 +120,10 @@ export default function TaskSubTask({ taskId, users, assignUser }) {
       </Grid>
       {data?.taskSubTasks?.length ? (
         <Grid container style={{ alignItems: 'center' }}>
-          <Grid item md={12} xs={12} style={{ marginBottom: '5px'}}><Divider /></Grid>
+          <Grid item md={12} xs={12} style={{ marginBottom: '2px'}}><Divider /></Grid>
           {data.taskSubTasks.map(task => (
             <Fragment key={task.id}>
-              <Grid item md={7} xs={12} style={{ display: 'flex', alignItems: 'center' }}>
+              <Grid item md={6} xs={12} style={{ display: 'flex', alignItems: 'center' }}>
                 <Checkbox
                   inputProps={{ 'aria-label': 'primary checkbox' }}
                   color="primary"
@@ -141,9 +141,9 @@ export default function TaskSubTask({ taskId, users, assignUser }) {
                   {task.body}
                 </Typography>
               </Grid>
-              <Grid item md={5} xs={12} className={classes.details}>
+              <Grid item md={6} xs={12} className={classes.details}>
                 <Grid container>
-                  <Grid item md={4} xs={8} style={matches ? {paddingLeft: '1.7rem', alignItems: 'center'} : { display: 'flex', alignItems: 'center' }}>
+                  <Grid item md={4} xs={8} style={matches ? {paddingLeft: '1.7rem', alignItems: 'center'} : { display: 'flex', alignItems: 'center', justifyContent: 'end' }}>
                     <Typography variant="body2" component="span">
                       {t('task:sub_task.due')}
                       {task.dueDate ? dateToString(task.dueDate) : 'Never '}
@@ -210,7 +210,7 @@ export default function TaskSubTask({ taskId, users, assignUser }) {
                   </Grid>
                 </Grid>
               </Grid>
-              <Grid item md={12} xs={12} style={{ marginTop: '5px', marginBottom: '5px' }}><Divider data-testid="closing_divider" /></Grid>
+              <Grid item md={12} xs={12} style={{ marginTop: '2px', marginBottom: '2px' }}><Divider data-testid="closing_divider" /></Grid>
             </Fragment>
           ))}
           <Grid item md={12} xs={12}>
@@ -271,14 +271,14 @@ const useStyles = makeStyles(() => ({
   details: {
     display: 'flex',
     alignItems: 'center',
-    justifyContent: 'space-evenly'
+    justifyContent: 'space-evenly',
   },
   taskBody: {
     maxWidth: '53ch',
     overflow: 'hidden',
     whiteSpace: 'nowrap',
     textOverflow: 'ellipsis',
-    paddingLeft: '6px'
+    paddingLeft: '3px'
   },
   taskBodyMobile: {
     maxWidth: '33ch',
@@ -303,7 +303,7 @@ const useStyles = makeStyles(() => ({
   },
   icons: {
     display: 'flex',
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
   },
   iconItem: {
     display: 'flex',
@@ -314,11 +314,11 @@ const useStyles = makeStyles(() => ({
   status: {
     display: 'flex',
     alignItems: 'center',
-    justifyContent: 'start',
-    paddingLeft: '20px'
+    justifyContent: 'center',
   },
   menu: {
     display: 'flex',
-    alignItems: 'center'
+    alignItems: 'center',
+    justifyContent: 'end',
   }
 }));
