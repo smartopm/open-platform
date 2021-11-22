@@ -53,6 +53,7 @@ module Types
     field :invites, [Types::InviteType], null: true, visible: { roles: %i[admin], user: :id }
     field :invitees, [Types::InviteType], null: true, visible: { roles: %i[admin], user: :id }
     field :request, Types::EntryRequestType, null: true
+    field :community_roles, GraphQL::Types::JSON, null: true
 
     def avatar_url
       return nil unless object.avatar.attached?
@@ -76,14 +77,18 @@ module Types
       object.payment_plans.active.present? || object.plan_payments.present?
     end
 
-    def permissions
-      ::Policy::ApplicationPolicy
-        .new.permission_list[object.user_type.to_sym]
+    def community_roles
+      result = {}
+      roles = Role.where(community_id: nil).pluck(:name)
+      roles.concat(Role.where(community_id: context[:site_community].id).pluck(:name))
+      roles.each do |role|
+        result[role] = role.capitalize.gsub('_', ' ')
+      end
+      result
     end
 
-    # def permissions
-    #   ::Policy::ApplicationPolicy
-    #     .new(context[:current_user], nil).permission_list
-    # end
+    def permissions
+      Permission.where(role: context[:user_role])
+    end
   end
 end

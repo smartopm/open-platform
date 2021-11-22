@@ -48,6 +48,7 @@ RSpec.describe Mutations::EntryRequest::EntryRequestGrant do
                                            variables: variables,
                                            context: {
                                              current_user: admin,
+                                             user_role: admin.role
                                            }).as_json
 
           expect(result.dig('data', 'result', 'entryRequest', 'id')).not_to be_nil
@@ -63,6 +64,7 @@ RSpec.describe Mutations::EntryRequest::EntryRequestGrant do
                                            variables: variables,
                                            context: {
                                              current_user: admin,
+                                             user_role: admin.role
                                            }).as_json
           expect(result.dig('data', 'result')).to be_nil
           expect(result.dig('errors', 0, 'message')).to eql 'EntryRequest not found'
@@ -79,6 +81,7 @@ RSpec.describe Mutations::EntryRequest::EntryRequestGrant do
                                            context: {
                                              current_user: user,
                                              site_community: community,
+                                             user_role: user.role
                                            }).as_json
           expect(result.dig('errors', 0, 'message')).to eql 'Unauthorized'
         end

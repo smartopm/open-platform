@@ -34,6 +34,7 @@ RSpec.describe Mutations::ActivityLog::Add do
       result = DoubleGdpSchema.execute(query, variables: variables,
                                               context: {
                                                 current_user: user,
+                                                user_role: user.role
                                               }).as_json
       expect(result['errors']).to be_nil
       expect(result.dig('data', 'activityLogAdd', 'eventLog', 'id')).not_to be_nil
@@ -49,6 +50,7 @@ RSpec.describe Mutations::ActivityLog::Add do
       result = DoubleGdpSchema.execute(
         query, variables: variables, context: {
           current_user: other_community_user,
+          user_role: other_community_user.role
         }
       ).as_json
       expect(result.dig('data', 'activityLogAdd', 'eventLog', 'id')).not_to be_nil
@@ -63,6 +65,7 @@ RSpec.describe Mutations::ActivityLog::Add do
       result = DoubleGdpSchema.execute(
         query, variables: variables, context: {
           current_user: user,
+          user_role: user.role
         }
       ).as_json
 

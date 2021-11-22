@@ -39,6 +39,7 @@ RSpec.describe Mutations::EmailTemplate::TemplateCreate do
                                                           context: {
                                                             current_user: admin,
                                                             site_community: user.community,
+                                                            user_role: admin.role
                                                           }).as_json
       expect(result.dig('data', 'emailTemplateCreate', 'emailTemplate', 'id')).not_to be_nil
       expect(result.dig('data', 'emailTemplateCreate', 'emailTemplate', 'name')).to eql 'welcome'
@@ -56,6 +57,7 @@ RSpec.describe Mutations::EmailTemplate::TemplateCreate do
                                                           context: {
                                                             current_user: user,
                                                             site_community: user.community,
+                                                            user_role: user.role
                                                           }).as_json
       expect(result.dig('data', 'emailTemplateCreate', 'emailTemplate', 'id')).to be_nil
       expect(result.dig('errors', 0, 'message')).to include 'Unauthorized'
@@ -71,6 +73,7 @@ RSpec.describe Mutations::EmailTemplate::TemplateCreate do
                                                           context: {
                                                             current_user: user,
                                                             site_community: user.community,
+                                                            user_role: user.role
                                                           }).as_json
       expect(result.dig('data', 'emailTemplateCreate', 'emailTemplate', 'id')).to be_nil
       expect(result.dig('errors', 0, 'message')).to include 'String! was provided invalid value'

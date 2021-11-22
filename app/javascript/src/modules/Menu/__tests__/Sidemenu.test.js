@@ -95,17 +95,20 @@ describe('Side Nav component', () => {
           smsPhoneNumbers: ["+254724821901", "+154724582391"],
           emergencyCallNumber: "254724821901",
         },
-        permissions: {
-          community: {
-            permissions: ['can_see_menu_item']
-          },
-          note: {
-            permissions: []
-          },
-          email_template: {
-            permissions: []
-          }
-        }
+        permissions: [          
+            {
+              module: "community",
+              permissions: ['can_see_menu_item']
+            },
+            {
+              module: "note",
+              permissions: []
+            },
+            {
+              module: "email_template",
+              permissions: []
+            },
+            ]
       }
     };
 

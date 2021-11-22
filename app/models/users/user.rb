@@ -150,7 +150,8 @@ module Users
     has_paper_trail
 
     VALID_USER_TYPES = %w[security_guard admin resident contractor
-                          prospective_client client visitor custodian site_worker].freeze
+                          prospective_client client visitor
+                          custodian site_worker site_manager].freeze
     VALID_STATES = %w[valid pending banned expired].freeze
     DEFAULT_PREFERENCE = %w[com_news_sms com_news_email weekly_point_reminder_email].freeze
 
@@ -165,6 +166,7 @@ module Users
     }
 
     validates :user_type, inclusion: { in: VALID_USER_TYPES, allow_nil: true }
+    # validates :role, presence: true
     validates :state, inclusion: { in: VALID_STATES, allow_nil: true }
     validates :sub_status, inclusion: { in: sub_statuses.keys, allow_nil: true }
     validates :name, presence: true
@@ -444,6 +446,7 @@ module Users
       # TODO(Nurudeen): Move these to DB level as default values
       self[:state] ||= 'pending'
       self[:user_type] ||= 'visitor'
+      self.role ||= Role.find_by(name: 'visitor')
     end
 
     def create_new_phone_token

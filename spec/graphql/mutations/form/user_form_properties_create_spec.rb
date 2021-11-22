@@ -44,6 +44,7 @@ RSpec.describe Mutations::Form::UserFormPropertiesCreate do
                                                  context: {
                                                    current_user: admin,
                                                    site_community: user.community,
+                                                   user_role: admin.role
                                                  }).as_json
       expect(
         result.dig('data', 'userFormPropertiesCreate', 'userFormProperty', 'id'),
@@ -61,6 +62,7 @@ RSpec.describe Mutations::Form::UserFormPropertiesCreate do
                                                  context: {
                                                    current_user: another_user,
                                                    site_community: another_user.community,
+                                                   user_role: another.role
                                                  }).as_json
       expect(result.dig('errors', 0, 'message')).to eql 'Unauthorized'
     end

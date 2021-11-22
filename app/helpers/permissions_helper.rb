@@ -9,6 +9,7 @@ module PermissionsHelper
       context[:current_user], nil
     ).permission?(
       admin: is_admin,
+      role: context[:user_role],
       module: args[:module],
       permission: args[:permission],
     )

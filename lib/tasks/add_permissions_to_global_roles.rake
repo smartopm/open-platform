@@ -4,7 +4,7 @@ require 'yaml'
 # rubocop:disable Metrics/BlockLength
 namespace :db do
   desc 'Add permissions to role based on yml file'
-  task add_permissions_to_role: :environment do
+  task add_permissions_to_global_roles: :environment do
     ActiveRecord::Base.transaction do
       permissions = YAML.load_file("#{::Rails.root}/app/policies/permissions.yml")
       permission_list = permissions.deep_transform_keys!(&:to_sym)

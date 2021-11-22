@@ -33,6 +33,7 @@ const QUERY = gql`
       subStatus
       paymentPlan
       permissions
+      communityRoles
       community {
         id
         name

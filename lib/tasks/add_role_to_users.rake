@@ -6,12 +6,12 @@ namespace :db do
     ActiveRecord::Base.transaction do
       roles_hash = {}
       Role.find_each do |role|
-        role_name = role.name.to_sym
-        roles_hash[role_name] = role.id
+        name = role.name
+        roles_hash[name] = role.id
       end
       Users::User.find_in_batches do |users|
         users.each do |user|
-          user.update(role_id: roles_hash[user.user_type.to_sym])
+          user.update(role_id: roles_hash[user.user_type])
         end
       end
       puts 'Updated user types to roles'

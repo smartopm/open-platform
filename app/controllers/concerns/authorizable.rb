@@ -31,7 +31,6 @@ module Authorizable
                        'tilisi.doublegdp.com' => 'Tilisi',
                        'dev.dgdp.site' => 'DoubleGDP',
                        'double-gdp-dev.herokuapp.com' => 'DAST' }
-
     if ['dgdp.site', 'rails'].include?(request.domain) && request.subdomain != 'dev'
       @site_community = Community.find_by(name: 'Nkwashi')
     else
@@ -56,11 +55,13 @@ module Authorizable
 
     user = @site_community.users.find_via_auth_token(token, @site_community)
 
+    user_role_exists?(user)
     log_active_user(user)
     {
       current_user: user,
       site_community: @site_community,
       site_hostname: current_hostname,
+      user_role: @user_role,
     }
   end
 
@@ -87,5 +88,14 @@ module Authorizable
 
   def log_cache_key(user)
     "us-#{user.id}"
+  end
+
+  def user_role_exists?(user)
+    byebug
+    community_role = Role.find_by(name: user.role.name,
+                                  community_id: @site_community.id)
+    global_role = Role.find_by(name: user.role.name, community_id: nil)
+    @user_role = community_role || global_role
+    redirect_to '/hold' unless community_role || global_role
   end
 end

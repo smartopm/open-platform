@@ -19,44 +19,44 @@ const authState = {
     name: 'John Doctor',
     phoneNumber: '260971500000',
     userType: 'admin',
-    permissions: {
-      note: {
+    permissions: [
+      { module: 'note',
         permissions: ['can_see_menu_item', 'can_get_user_tasks', 'can_fetch_task_by_id']
       },
-      gate_access: {
+      { module: 'gate_access',
         permissions: ['can_see_menu_item']
       },
-      email_template: {
+      { module: 'email_template',
         permissions: ['can_see_menu_item']
       },
-      land_parcel: {
+      { module: 'land_parcel',
         permissions: ['can_see_menu_item']
       },
-      plan_payment: {
+      { module: 'plan_payment',
         permissions: ['can_see_menu_item']
       },
-      timesheet: {
+      { module: 'timesheet',
         permissions: ['can_see_menu_item']
       },
-      user: {
+      {   module: 'user',
           permissions: ['can_see_menu_item']
       },
-      label: {
+      { module: 'label',
         permissions: ['can_see_menu_item']
       },
-      sos: {
+      { module: 'sos',
         permissions: ['can_access_sos']
       },
-      discussion: {
+      { module: 'discussion',
         permissions: ['can_see_menu_item']
       },
-      community: {
+      { module: 'community',
         permissions: ['can_see_menu_item']
       },
-      community_settings: {
+      { module: 'community_settings',
         permissions: ['can_see_menu_item']
       },
-      business: {
+      { module: 'business',
         permissions: [
           'can_see_menu_item',
           'can_access_business',
@@ -64,13 +64,15 @@ const authState = {
           'can_delete_business'
         ]
       },
-      campaign: {
+      { module: 'campaign',
         permissions: ['can_see_menu_item']
       },
-      entry_request: {
+      { module: 'entry_request',
         permissions: ['can_grant_entry', 'can_update_entry_request']
       },
-    }
+    ]
+
+    
   }
 };
 export default authState;

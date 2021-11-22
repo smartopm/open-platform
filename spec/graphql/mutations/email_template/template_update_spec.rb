@@ -47,6 +47,7 @@ RSpec.describe Mutations::EmailTemplate::TemplateUpdate do
                                                           context: {
                                                             current_user: admin,
                                                             site_community: user.community,
+                                                            user_role: admin.role
                                                           }).as_json
       expect(result.dig('data', 'emailTemplateUpdate', 'emailTemplate', 'id')).not_to be_nil
       expect(result.dig('data', 'emailTemplateUpdate', 'emailTemplate', 'name')).to eql 'W Again'
@@ -65,6 +66,7 @@ RSpec.describe Mutations::EmailTemplate::TemplateUpdate do
                                                           context: {
                                                             current_user: user,
                                                             site_community: user.community,
+                                                            user_role: user.role
                                                           }).as_json
       expect(result.dig('data', 'emailTemplateUpdate', 'emailTemplate', 'id')).to be_nil
       expect(result.dig('errors', 0, 'message')).to include 'Unauthorized'
@@ -81,6 +83,7 @@ RSpec.describe Mutations::EmailTemplate::TemplateUpdate do
                                                           context: {
                                                             current_user: user,
                                                             site_community: user.community,
+                                                            user_role: user.role
                                                           }).as_json
       expect(result.dig('data', 'emailTemplateUpdate', 'emailTemplate', 'id')).to be_nil
       expect(result.dig('errors', 0, 'message')).to include 'String! was provided invalid value'
@@ -98,6 +101,7 @@ RSpec.describe Mutations::EmailTemplate::TemplateUpdate do
                                                           context: {
                                                             current_user: admin,
                                                             site_community: user.community,
+                                                            user_role: admin.role
                                                           }).as_json
       expect(result.dig('data', 'emailTemplateUpdate', 'emailTemplate', 'id')).to be_nil
       expect(result.dig('errors', 0, 'message')).to include 'Template not found'

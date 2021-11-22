@@ -52,6 +52,7 @@ RSpec.describe Mutations::Form::FormCreate do
                                                    context: {
                                                      current_user: admin,
                                                      site_community: community,
+                                                     user_role: admin.role
                                                    }).as_json
         expect(result.dig('errors', 0, 'message')).to eql 'Category not found'
       end
@@ -68,6 +69,7 @@ RSpec.describe Mutations::Form::FormCreate do
                                                    context: {
                                                      current_user: admin,
                                                      site_community: community,
+                                                     user_role: admin.role
                                                    }).as_json
         expect(result.dig('errors', 0, 'message')).to be_nil
         expect(result.dig('data', 'categoryDelete', 'message')).to eql 'Category deleted '\
@@ -84,6 +86,7 @@ RSpec.describe Mutations::Form::FormCreate do
                                                    context: {
                                                      current_user: admin,
                                                      site_community: community,
+                                                     user_role: admin.role
                                                    }).as_json
         expect(result.dig('errors', 0, 'message')).to be_nil
         expect(result.dig('data', 'categoryDelete', 'message')).to eql 'Category deleted '\
@@ -104,6 +107,7 @@ RSpec.describe Mutations::Form::FormCreate do
                                                    context: {
                                                      current_user: admin,
                                                      site_community: community,
+                                                     user_role: admin.role
                                                    }).as_json
         expect(result.dig('errors', 0, 'message')).to be_nil
         expect(result.dig('data', 'categoryDelete', 'message')).to eql 'New version created'
@@ -122,6 +126,7 @@ RSpec.describe Mutations::Form::FormCreate do
                                                    context: {
                                                      current_user: admin,
                                                      site_community: community,
+                                                     user_role: admin.role
                                                    }).as_json
         expect(result.dig('errors', 0, 'message')).to be_nil
         expect(result.dig('data', 'categoryDelete', 'message')).to eql 'New version created'
@@ -142,6 +147,7 @@ RSpec.describe Mutations::Form::FormCreate do
                                                    context: {
                                                      current_user: user,
                                                      site_community: community,
+                                                     user_role: user.role
                                                    }).as_json
         expect(result.dig('errors', 0, 'message')).to eql 'Unauthorized'
       end

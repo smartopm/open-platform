@@ -78,6 +78,7 @@ RSpec.describe Mutations::EntryRequest::InvitationCreate do
                                            context: {
                                              current_user: admin,
                                              site_community: community,
+                                             user_role: admin.role
                                            }).as_json
           expect(result.dig('data', 'invitationCreate', 'entryTime', 'id')).not_to be_nil
           expect(community.entry_times.count).to eql 1
@@ -100,6 +101,7 @@ RSpec.describe Mutations::EntryRequest::InvitationCreate do
                                            context: {
                                              current_user: admin,
                                              site_community: community,
+                                             user_role: admin.role
                                            }).as_json
           expect(result.dig('data', 'invitationCreate', 'entryTime', 'id')).to be_nil
         end
@@ -121,6 +123,7 @@ RSpec.describe Mutations::EntryRequest::InvitationCreate do
                                            context: {
                                              current_user: admin,
                                              site_community: community,
+                                             user_role: admin.role
                                            }).as_json
           expect(result.dig('data', 'invitationCreate', 'entryTime', 'id')).not_to be_nil
           # it should just update existing records
@@ -146,6 +149,7 @@ RSpec.describe Mutations::EntryRequest::InvitationCreate do
                                            context: {
                                              current_user: admin,
                                              site_community: community,
+                                             user_role: admin.role
                                            }).as_json
           expect(result.dig('data', 'invitationCreate', 'entryTime', 'id')).not_to be_nil
           expect(community.users.count).to eql 3
@@ -169,6 +173,7 @@ RSpec.describe Mutations::EntryRequest::InvitationCreate do
                                            context: {
                                              current_user: admin,
                                              site_community: community,
+                                             user_role: admin.role
                                            }).as_json
           expect(result.dig('data', 'invitationCreate', 'entryTime', 'id')).to be_nil
           expect(result.dig('errors', 0, 'message')).to eql 'Email has already been taken'
@@ -211,6 +216,7 @@ RSpec.describe Mutations::EntryRequest::InvitationCreate do
                                            context: {
                                              current_user: user,
                                              site_community: community,
+                                             user_role: user.role
                                            }).as_json
           expect(result.dig('errors', 0, 'message')).to eql 'Unauthorized'
         end

@@ -48,6 +48,7 @@ RSpec.describe Mutations::Form::UserFormPropertiesUpdate do
                                                  context: {
                                                    current_user: admin,
                                                    site_community: admin.community,
+                                                   user_role: admin.role
                                                  }).as_json
 
       expect(result['errors']).to be_nil
@@ -68,6 +69,7 @@ RSpec.describe Mutations::Form::UserFormPropertiesUpdate do
                                                  context: {
                                                    current_user: another_user,
                                                    site_community: another_user.community,
+                                                   user_role: another_user.role
                                                  }).as_json
       expect(result.dig('errors', 0, 'message')).to eql 'Unauthorized'
     end

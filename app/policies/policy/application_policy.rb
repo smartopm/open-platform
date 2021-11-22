@@ -6,7 +6,7 @@ require 'yaml'
 module Policy
   # class ApplicationPolicy
   class ApplicationPolicy
-    attr_reader :user, :record, :permission_list
+    attr_reader :user, :record, :permission_list, :permissions
 
     PERMISSIONS = YAML.load_file("#{::Rails.root}/app/policies/permissions.yml")
 
@@ -17,15 +17,13 @@ module Policy
       @user = user
       @record = record
       @permission_list = PERMISSIONS.deep_transform_keys!(&:to_sym)
-      # @permission_list = Permission.where(role: user.role)
     end
 
     def permission?(**args)
-      # pass  args[:admin] as admin: true IFF only admin is permotted to perform the action
-      return false if user.nil?
+      return false if user.nil? || args[:role].nil?
 
       current_module = args[:module]
-      result = Permission.find_by(module: current_module.to_s, role: user.role)
+      result = Permission.find_by(module: current_module.to_s, role: args[:role])
       return false if result.nil?
 
       user_permissions = result.permissions
