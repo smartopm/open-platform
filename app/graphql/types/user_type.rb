@@ -88,7 +88,7 @@ module Types
     end
 
     def permissions
-      Permission.where(role: context[:user_role])
+      Permission.where(role: context[:current_user].role)
     end
   end
 end

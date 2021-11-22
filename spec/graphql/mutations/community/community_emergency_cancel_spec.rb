@@ -31,7 +31,7 @@ RSpec.describe Mutations::Community::CommunityEmergencyCancel do
                                        context: {
                                          current_user: resident,
                                          site_community: resident.community,
-                                         user_role: resident.role
+                                         user_role: resident.role,
                                        }).as_json
 
       expect(result.dig('data', 'communityEmergencyCancel', 'success')).to_not be_nil
@@ -44,7 +44,7 @@ RSpec.describe Mutations::Community::CommunityEmergencyCancel do
                                        context: {
                                          current_user: user,
                                          site_community: user.community,
-                                         user_role: user.role
+                                         user_role: user.role,
                                        }).as_json
 
       expect(result.dig('data', 'communityEmergencyCancel', 'success')).to be_nil

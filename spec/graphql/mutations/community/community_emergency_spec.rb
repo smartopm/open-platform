@@ -33,7 +33,7 @@ RSpec.describe Mutations::Community::CommunityEmergency do
                                                           context: {
                                                             current_user: resident,
                                                             site_community: resident.community,
-                                                            user_role: resident.role
+                                                            user_role: resident.role,
                                                           }).as_json
 
       expect(result.dig('data', 'communityEmergency', 'success')).to_not be_nil
@@ -50,7 +50,7 @@ RSpec.describe Mutations::Community::CommunityEmergency do
       result = DoubleGdpSchema.execute(create_sos_ticket, variables: variables,
                                                           context: {
                                                             site_community: resident.community,
-                                                            user_role: resident.role
+                                                            user_role: resident.role,
                                                           }).as_json
 
       expect(result.dig('data', 'communityEmergency', 'success')).to be_nil

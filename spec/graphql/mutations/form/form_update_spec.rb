@@ -58,7 +58,7 @@ RSpec.describe Mutations::Form::FormUpdate do
                                                  context: {
                                                    current_user: admin,
                                                    site_community: user.community,
-                                                   user_role: admin.role
+                                                   user_role: admin.role,
                                                  }).as_json
       form_result = result.dig('data', 'formUpdate', 'form')
       expect(form_result['name']).to eql 'Updated Name'
@@ -78,7 +78,7 @@ RSpec.describe Mutations::Form::FormUpdate do
                                                  context: {
                                                    current_user: admin,
                                                    site_community: user.community,
-                                                   user_role: admin.role
+                                                   user_role: admin.role,
                                                  }).as_json
       expect(result.dig('data', 'formUpdate', 'form', 'id')).to_not be_nil
       expect(result['errors']).to be_nil
@@ -94,7 +94,7 @@ RSpec.describe Mutations::Form::FormUpdate do
                                                  context: {
                                                    current_user: user,
                                                    site_community: user.community,
-                                                   user_role: user.role
+                                                   user_role: user.role,
                                                  }).as_json
       expect(result.dig('errors', 0, 'message')).to eql 'Unauthorized'
     end

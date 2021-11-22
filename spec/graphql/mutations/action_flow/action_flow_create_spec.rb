@@ -50,7 +50,7 @@ RSpec.describe Mutations::ActionFlow::ActionFlowCreate do
                                                  context: {
                                                    current_user: admin,
                                                    site_community: user.community,
-                                                   user_role: admin.role
+                                                   user_role: admin.role,
                                                  }).as_json
 
       expect(result.dig('data', 'actionFlowCreate', 'actionFlow', 'description')).to eq('Just a flow')
@@ -63,7 +63,7 @@ RSpec.describe Mutations::ActionFlow::ActionFlowCreate do
                                                  context: {
                                                    current_user: user,
                                                    site_community: user.community,
-                                                   user_role: user.role
+                                                   user_role: user.role,
                                                  }).as_json
       expect(result.dig('data', 'actionFlowCreate', 'actionFlow', 'description')).to be_nil
       expect(result.dig('errors', 0, 'message')).to eql 'Unauthorized'
@@ -75,7 +75,7 @@ RSpec.describe Mutations::ActionFlow::ActionFlowCreate do
                                                  context: {
                                                    current_user: admin,
                                                    site_community: user.community,
-                                                   user_role: admin.role
+                                                   user_role: admin.role,
                                                  }).as_json
       expect(result.dig('data', 'actionFlowCreate', 'actionFlow', 'description')).to be_nil
       expect(JSON.parse(result.dig('errors', 0, 'message'))[0]).to eql 'Event type is not included in the list'

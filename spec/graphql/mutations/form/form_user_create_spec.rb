@@ -63,7 +63,7 @@ RSpec.describe Mutations::Form::FormUserCreate do
                                                          context: {
                                                            current_user: admin,
                                                            site_community: current_user.community,
-                                                           user_role: admin.role
+                                                           user_role: admin.role,
                                                          }).as_json
 
         expect(first_result.dig('data', 'formUserCreate', 'formUser', 'id')).not_to be_nil
@@ -75,7 +75,7 @@ RSpec.describe Mutations::Form::FormUserCreate do
                                                           context: {
                                                             current_user: admin,
                                                             site_community: current_user.community,
-                                                            user_role: admin.role
+                                                            user_role: admin.role,
                                                           }).as_json
         expect(second_result.dig('errors', 0, 'message'))
           .to eql "You've already responded to this form. You can only fill out this form " \
@@ -105,7 +105,7 @@ RSpec.describe Mutations::Form::FormUserCreate do
                                                          context: {
                                                            current_user: admin,
                                                            site_community: current_user.community,
-                                                           user_role: admin.role
+                                                           user_role: admin.role,
                                                          }).as_json
 
         expect(first_result.dig('data', 'formUserCreate', 'formUser', 'id')).not_to be_nil
@@ -117,7 +117,7 @@ RSpec.describe Mutations::Form::FormUserCreate do
                                                           context: {
                                                             current_user: admin,
                                                             site_community: current_user.community,
-                                                            user_role: admin.role
+                                                            user_role: admin.role,
                                                           }).as_json
         expect(second_result.dig('data', 'formUserCreate', 'formUser', 'id')).not_to be_nil
         expect(second_result.dig('data', 'formUserCreate', 'formUser', 'form', 'id')).to eql form.id
@@ -144,7 +144,7 @@ RSpec.describe Mutations::Form::FormUserCreate do
                                                  context: {
                                                    current_user: admin,
                                                    site_community: current_user.community,
-                                                   user_role: admin.role
+                                                   user_role: admin.role,
                                                  }).as_json
       expect(result.dig('errors', 0, 'message')).to eql 'Form not found'
     end
@@ -167,7 +167,7 @@ RSpec.describe Mutations::Form::FormUserCreate do
                                                  context: {
                                                    current_user: another_user,
                                                    site_community: current_user.community,
-                                                   user_role: another_user.role
+                                                   user_role: another_user.role,
                                                  }).as_json
       expect(result.dig('errors', 0, 'message')).to eql 'Unauthorized'
     end

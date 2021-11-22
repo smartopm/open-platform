@@ -61,7 +61,6 @@ module Authorizable
       current_user: user,
       site_community: @site_community,
       site_hostname: current_hostname,
-      user_role: @user_role,
     }
   end
 
@@ -94,7 +93,6 @@ module Authorizable
     community_role = Role.find_by(name: user.role.name,
                                   community_id: @site_community.id)
     global_role = Role.find_by(name: user.role.name, community_id: nil)
-    @user_role = community_role || global_role
     redirect_to '/hold' unless community_role || global_role
   end
 end

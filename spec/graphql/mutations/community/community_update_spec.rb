@@ -47,7 +47,7 @@ RSpec.describe Mutations::Community::CommunityUpdate do
                                                          context: {
                                                            current_user: admin,
                                                            site_community: resident.community,
-                                                           user_role: admin.role
+                                                           user_role: admin.role,
                                                          }).as_json
 
       expect(result.dig('data', 'communityUpdate', 'community', 'id')).to_not be_nil
@@ -76,7 +76,7 @@ RSpec.describe Mutations::Community::CommunityUpdate do
                                                          context: {
                                                            current_user: resident,
                                                            site_community: resident.community,
-                                                           user_role: resident.role
+                                                           user_role: resident.role,
                                                          }).as_json
       expect(result.dig('data', 'communityUpdate', 'community', 'id')).to be_nil
       expect(result.dig('errors', 0, 'message')).to eql 'Unauthorized'

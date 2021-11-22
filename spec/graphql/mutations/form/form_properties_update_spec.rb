@@ -73,7 +73,7 @@ RSpec.describe Mutations::Form::FormPropertiesUpdate do
                                                    context: {
                                                      current_user: admin,
                                                      site_community: user.community,
-                                                     user_role: admin.role
+                                                     user_role: admin.role,
                                                    }).as_json
         expect(
           result.dig('data', 'formPropertiesUpdate', 'formProperty', 'fieldName'),
@@ -98,7 +98,7 @@ RSpec.describe Mutations::Form::FormPropertiesUpdate do
                                                    context: {
                                                      current_user: admin,
                                                      site_community: user.community,
-                                                     user_role: admin.role
+                                                     user_role: admin.role,
                                                    }).as_json
         expect(
           result.dig('data', 'formPropertiesUpdate', 'message'),
@@ -125,7 +125,7 @@ RSpec.describe Mutations::Form::FormPropertiesUpdate do
                                                    context: {
                                                      current_user: admin,
                                                      site_community: user.community,
-                                                     user_role: admin.role
+                                                     user_role: admin.role,
                                                    }).as_json
         expect(result['error']).to be_nil
         expect(category.form_properties.reload.count).to eql 0
@@ -143,7 +143,7 @@ RSpec.describe Mutations::Form::FormPropertiesUpdate do
                                                  context: {
                                                    current_user: user,
                                                    site_community: user.community,
-                                                   user_role: user.role
+                                                   user_role: user.role,
                                                  }).as_json
       expect(result.dig('errors', 0, 'message')).to eql 'Unauthorized'
     end

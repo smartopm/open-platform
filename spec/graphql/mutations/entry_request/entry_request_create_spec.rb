@@ -47,7 +47,7 @@ RSpec.describe Mutations::EntryRequest::EntryRequestCreate do
                                            variables: variables,
                                            context: {
                                              current_user: admin,
-                                             user_role: admin.role
+                                             user_role: admin.role,
                                            }).as_json
           expect(result.dig('data', 'result', 'entryRequest', 'id')).not_to be_nil
           expect(result.dig('data', 'result', 'entryRequest', 'reason')).to eq 'Visiting'
@@ -64,7 +64,7 @@ RSpec.describe Mutations::EntryRequest::EntryRequestCreate do
                                            context: {
                                              current_user: user,
                                              site_community: community,
-                                             user_role: user.role
+                                             user_role: user.role,
                                            }).as_json
           expect(result.dig('errors', 0, 'message')).to eql 'Unauthorized'
         end

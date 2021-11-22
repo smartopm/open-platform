@@ -48,7 +48,7 @@ RSpec.describe Mutations::EntryRequest::EntryRequestDeny do
                                            variables: variables,
                                            context: {
                                              current_user: admin,
-                                             user_role: admin.role
+                                             user_role: admin.role,
                                            }).as_json
           expect(result.dig('data', 'result', 'entryRequest', 'id')).not_to be_nil
           expect(result.dig('data', 'result', 'entryRequest', 'grantedState')).to eql 2
@@ -63,7 +63,7 @@ RSpec.describe Mutations::EntryRequest::EntryRequestDeny do
                                            variables: variables,
                                            context: {
                                              current_user: admin,
-                                             user_role: admin.role
+                                             user_role: admin.role,
                                            }).as_json
           expect(result.dig('data', 'result')).to be_nil
           expect(result.dig('errors', 0, 'message')).to eql 'Logs::EntryRequest not found'
@@ -80,7 +80,7 @@ RSpec.describe Mutations::EntryRequest::EntryRequestDeny do
                                            context: {
                                              current_user: user,
                                              site_community: community,
-                                             user_role: user.role
+                                             user_role: user.role,
                                            }).as_json
           expect(result.dig('errors', 0, 'message')).to eql 'Unauthorized'
         end
