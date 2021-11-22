@@ -36,9 +36,8 @@ describe('Should render Visits View Component', () => {
             guest: {
               id: '162f7517',
               name: 'Js user x',
-              imageUrl: 'https://lh3.googleusercontent.com'
             },
-            accessHours: [
+            entryTimes: [
               {
                 visitEndDate: null,
                 visitationDate: '2021-08-20T10:51:00+02:00',

@@ -165,12 +165,12 @@ export default function VisitView({
                   ? (
                     <Chip
                       label={
-                        IsAnyRequestValid(visit.accessHours, t, timeZone)
+                        IsAnyRequestValid(visit.entryTimes, t, timeZone)
                           ? t('guest_book.valid')
                           : t('guest_book.invalid_now')
                       }
                       style={{
-                        background: IsAnyRequestValid(visit.accessHours, t, timeZone)
+                        background: IsAnyRequestValid(visit.entryTimes, t, timeZone)
                           ? theme.palette.success.main
                           : theme.palette.error.main,
                         color: 'white',

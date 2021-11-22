@@ -142,7 +142,7 @@ export default function GuestsView({
                 <Typography variant="caption">
                   {t('guest_book.start_of_visit', {
                     date: dateToString(
-                      findClosestEntry(visit.accessHours, timeZone)?.visitationDate
+                      findClosestEntry(visit.entryTimes, timeZone)?.visitationDate
                     )
                   })}
                 </Typography>
@@ -151,21 +151,21 @@ export default function GuestsView({
                 <Typography variant="caption">
                   {t('guest_book.visit_time', {
                     startTime: dateTimeToString(
-                      findClosestEntry(visit.accessHours, timeZone)?.startsAt
+                      findClosestEntry(visit.entryTimes, timeZone)?.startsAt
                     ),
-                    endTime: dateTimeToString(findClosestEntry(visit.accessHours, timeZone)?.endsAt)
+                    endTime: dateTimeToString(findClosestEntry(visit.entryTimes, timeZone)?.endsAt)
                   })}
                 </Typography>
               </Grid>
               <Grid item md={2} xs={6} style={!matches ? { paddingTop: '15px' } : {}}>
                 <Chip
                   label={
-                    IsAnyRequestValid(visit.accessHours, t, timeZone)
+                    IsAnyRequestValid(visit.entryTimes, t, timeZone)
                       ? t('guest_book.valid')
                       : t('guest_book.invalid_now')
                   }
                   style={{
-                    background: IsAnyRequestValid(visit.accessHours, t, timeZone)
+                    background: IsAnyRequestValid(visit.entryTimes, t, timeZone)
                       ? theme.palette.success.main
                       : theme.palette.error.main,
                     color: 'white',
@@ -177,7 +177,7 @@ export default function GuestsView({
               <Grid item md={2} xs={12} style={!matches ? { paddingTop: '8px' } : {}}>
                 <Button
                   disabled={
-                    !IsAnyRequestValid(visit.accessHours, t, timeZone) ||
+                    !IsAnyRequestValid(visit.entryTimes, t, timeZone) ||
                     (loadingStatus.loading && Boolean(loadingStatus.currentId))
                   }
                   variant="outlined"

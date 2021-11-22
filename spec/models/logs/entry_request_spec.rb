@@ -141,10 +141,5 @@ RSpec.describe Logs::EntryRequest, type: :model do
         visitable_type: 'Logs::Invite',
       )
     end
-
-    it 'returns the access hours for entry request' do
-      expect(entry_request.access_hours).to_not be_nil
-      expect(entry_request.access_hours.length).to eql 1
-    end
   end
 end

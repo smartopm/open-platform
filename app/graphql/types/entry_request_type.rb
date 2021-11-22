@@ -41,7 +41,7 @@ module Types
     field :video_url, String, null: true
     field :image_urls, [String], null: true
     field :status, String, null: true
-    field :access_hours, [Types::EntryTimeType], null: true
+    field :entry_times, [Types::EntryTimeType], null: true
     field :exited_at, GraphQL::Types::ISO8601DateTime, null: true
 
     def active
