@@ -79,7 +79,7 @@ module Types::Queries::EntryRequest
     raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') unless can_view_entry_requests?
 
     entry_requests = context[:site_community].entry_requests.where.not(guest_id: nil)
-                                             .includes(:user, :guest)
+                                             .includes(:user, :guest, :entry_times, :invites)
                                              .limit(limit)
                                              .offset(offset)
                                              .unscope(:order)
@@ -114,11 +114,9 @@ module Types::Queries::EntryRequest
     context[:site_community]
       .entry_requests
       .where(granted_state: 1)
-      .includes(:user, :guest).search(query)
+      .includes(:user, :guest, :entry_times, :invites).search(query)
       .limit(limit).offset(offset)
       .unscope(:order).order(granted_at: :desc)
-      .with_attached_images
-      .with_attached_video
   end
   # rubocop:enable Metrics/AbcSize
 
