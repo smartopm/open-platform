@@ -21,7 +21,7 @@ RSpec.describe Mutations::Note::NoteCommentCreate do
     let!(:user) { create(:user_with_community) }
     let!(:admin) { create(:admin_user, community_id: user.community_id, role: admin_role) }
 
-    let!(:another_user) { create(:user_with_community, role: custodian_role) }
+    let!(:another_user) { create(:store_custodian, role: custodian_role) }
     let!(:site_worker) do
       create(:site_worker, community_id: another_user.community_id,
                            role: site_worker_role)

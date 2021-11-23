@@ -233,8 +233,6 @@ RSpec.describe Types::QueryType do
 
   describe 'To-dos and notes in general' do
     let!(:admin_role) { create(:role, name: 'admin') }
-    # let!(:resident_role) { create(:role, name: 'resident') }
-    # let!(:site_worker_role) { create(:role, name: 'site_worker') }
     let!(:permission) do
       create(:permission, module: 'note',
                           role: admin_role,

@@ -143,8 +143,10 @@ module Users
     has_one_attached :avatar
     has_one_attached :document
 
-    before_save :ensure_default_state_and_type
+    before_save :add_default_state_type_and_role
     after_create :send_email_msg
+    after_create :add_notification_preference
+    after_update :update_user_role
 
     # Track changes to the User
     has_paper_trail
@@ -176,7 +178,6 @@ module Users
       allow_nil: true,
     }
     validate :phone_number_valid?
-    after_create :add_notification_preference
     after_update :update_associated_accounts_details, if: -> { saved_changes.key?('name') }
 
     devise :omniauthable, omniauth_providers: %i[google_oauth2 facebook]
@@ -443,11 +444,12 @@ module Users
       self[:expires_at] < Time.zone.now
     end
 
-    def ensure_default_state_and_type
+    def add_default_state_type_and_role
       # TODO(Nurudeen): Move these to DB level as default values
       self.state ||= 'pending'
       self.user_type ||= 'visitor'
-      self.role ||= Role.find_by(name: 'visitor')
+      community_role = Role.find_by(name: self.user_type, community_id: community_id)
+      self.role = (community_role || Role.find_by(name: self.user_type, community_id: nil))
     end
 
     def create_new_phone_token
@@ -683,6 +685,13 @@ module Users
       return invite unless invite.nil?
 
       Logs::Invite.create!(host_id: id, guest_id: guest_id)
+    end
+
+    # needed to ensure a user update request updates a user role too
+    # not needed when we start using DB based roles fully
+    def update_user_role
+      community_role = Role.find_by(name: self.user_type, community_id: community_id)
+      self.role = (community_role || Role.find_by(name: self.user_type, community_id: nil))
     end
 
     private
