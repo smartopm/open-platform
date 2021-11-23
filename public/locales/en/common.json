@@ -334,7 +334,9 @@
     "security_guard": "Security Guard",
     "resident": "Resident",
     "contractor": "Contractor",
-    "site_worker": "Site Worker"
+    "site_worker": "Site Worker",
+    "site_manager": "Site Manager",
+    "security_supervisor": "Security  Supervisor"
   },
   "table_headers": {
     "date_created": "Date Created",
