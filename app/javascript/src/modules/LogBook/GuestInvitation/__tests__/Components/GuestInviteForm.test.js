@@ -67,7 +67,6 @@ describe('Guest Invitation Form', () => {
     const name = getByTestId('guest_entry_name');
     const email = getByTestId('guest_entry_email');
     const phoneNumber = getByTestId('guest_entry_phone_number');
-    const toggler = getByTestId('guest_entry_phone_number_toggle');
 
     expect(name).toBeInTheDocument();
     expect(email).toBeInTheDocument();
@@ -80,12 +79,10 @@ describe('Guest Invitation Form', () => {
     fireEvent.change(email, { target: { value: 'Some@random.name' } });
     expect(email.value).toBe('Some@random.name');
 
+    expect(phoneNumber).not.toBeDisabled()
     fireEvent.change(phoneNumber, { target: { value: '090909090' } });
     expect(phoneNumber.value).toBe('090909090');
 
-    expect(phoneNumber).not.toBeDisabled()
-    fireEvent.click(toggler)
-    expect(phoneNumber).toBeDisabled()
 
     fireEvent.click(getByTestId('invite_button'));
 

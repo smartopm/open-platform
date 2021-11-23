@@ -17,7 +17,7 @@ class Notify
     end
 
     def send_sms(phone_number, sms_body)
-      return if phone_number.blank? || sms_body.blank? || phone_number.start_with?('99999')
+      return if phone_number.blank? || sms_body.blank?
 
       Sms.send(phone_number, sms_body)
     end

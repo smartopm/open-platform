@@ -1,4 +1,4 @@
-import { Button, FormControlLabel, Switch, TextField } from '@material-ui/core';
+import { Button, TextField } from '@material-ui/core';
 import React, { useContext, useState } from 'react';
 import { useMutation } from 'react-apollo';
 import PropTypes from 'prop-types';
@@ -22,7 +22,6 @@ export default function GuestInviteForm({ guest }) {
   const authState = useContext(Context)
   const [guestData, setGuestData] = useState(initialRequestState);
   const [phoneNumber, setPhoneNumber] = useState('')
-  const [hasPhoneNumber, setHasPhoneNumber] = useState(true)
   const [details, setDetails] = useState({ message: '', isError: false });
   const [createInvitation] = useMutation(InvitationCreateMutation);
   const { t } = useTranslation(['logbook', 'common', 'discussion']);
@@ -63,10 +62,6 @@ export default function GuestInviteForm({ guest }) {
     if (isAnyInvalid && !guest?.id) {
        setInputValidationMsg({ isError: true });
       return;
-    }
-    if(hasPhoneNumber && !phoneNumber && !guest?.id){
-      setDetails({ ...details, message: t('errors.required_field', { fieldName: t('common:form_fields.phone_number') }), isError: true });
-      return
     }
     setGuestData({ ...guestData, isLoading: true });
 
@@ -140,24 +135,7 @@ export default function GuestInviteForm({ guest }) {
             placeholder={t('common:form_placeholders.phone_number')}
             onChange={value => setPhoneNumber(value)}
             preferredCountries={['hn', 'ke', 'zm', 'ng', 'in', 'us']}
-            disabled={!hasPhoneNumber}
             inputProps={{ 'data-testid': 'guest_entry_phone_number' }}
-          />
-          <FormControlLabel
-            className={classes.invitePhoneNumberCheck}
-            control={(
-              <Switch
-                checked={!hasPhoneNumber}
-                onChange={event => setHasPhoneNumber(!event.target.checked)}
-                color="primary"
-                inputProps={{
-                    'aria-label': 'toggle if user has phone number',
-                    'data-testid': 'guest_entry_phone_number_toggle'
-                  }}
-              />
-              )}
-            label={t('guest_book.phone_number_not_available')}
-
           />
           <TextField
             variant="outlined"

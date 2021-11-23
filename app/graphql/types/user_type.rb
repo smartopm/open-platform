@@ -80,11 +80,5 @@ module Types
       ::Policy::ApplicationPolicy
         .new.permission_list[object.user_type.to_sym]
     end
-
-    # avoid sending fake_number to the f.e
-    def phone_number
-      return if object.phone_number.nil?
-      return nil if object.phone_number.start_with?('99999')
-    end
   end
 end

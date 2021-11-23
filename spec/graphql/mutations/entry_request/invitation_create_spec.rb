@@ -181,7 +181,6 @@ RSpec.describe Mutations::EntryRequest::InvitationCreate do
                                            }).as_json
           expect(result.dig('data', 'invitationCreate', 'entryTime', 'id')).to_not be_nil
           expect(result.dig('errors', 0, 'message')).to be_nil
-          expect(community.users.find_by(name: 'John Doe Invited').phone_number).to include '99999'
           expect(community.users.find_by(name: 'John Doe Invited').user_type).to eql 'visitor'
         end
       end

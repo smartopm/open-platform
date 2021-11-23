@@ -70,10 +70,8 @@ module Mutations
         req = context[:site_community].entry_requests.find_by(guest_id: guest.id)
         return req unless req.nil?
 
-        phone_number = vals[:phone_number] || ''
         context[:current_user].entry_requests.create!(
           guest_id: guest.id,
-          phone_number: phone_number,
           **vals.except(:guest_id, :phone_number),
         )
       end
@@ -84,9 +82,8 @@ module Mutations
         raise_duplicate_email_error(vals[:email])
         raise_duplicate_number_error(vals[:phone_number])
 
-        phone_number = vals[:phone_number] || generate_fake_number
         enrolled_user = context[:current_user].enroll_user(
-          name: vals[:name], phone_number: phone_number,
+          name: vals[:name], phone_number: vals[:phone_number],
           email: vals[:email], user_type: 'visitor'
         )
         return enrolled_user if enrolled_user.persisted?
@@ -94,12 +91,6 @@ module Mutations
         raise GraphQL::ExecutionError, enrolled_user.errors.full_messages&.join(', ')
       end
       # rubocop:enable Metrics/AbcSize
-
-      def generate_fake_number
-        identifier = '99999'
-        random_number = 10.times.map { rand(10) }.join
-        "#{identifier}-#{random_number}"
-      end
 
       # Verifies if current user admin or security guard.
       def authorized?(_vals)
