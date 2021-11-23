@@ -140,12 +140,18 @@ export default function LogBookItem({
     setImageUrls(filteredImages)
   }
 
+  // eslint-disable-next-line consistent-return
   function handleSaveObservation(log = clickedEvent, type) {
-    setDetails({ ...observationDetails, loading: true });
     const exitNote = 'Exited';
-    addObservationNote({
+    if(type !== 'exit' && !observationNote) {
+      setIsObservationOpen(false);
+      return
+    }
+    setDetails({ ...observationDetails, loading: true });
+
+     addObservationNote({
       variables: {
-        note: observationNote || exitNote,
+        note: type === 'exit' ? exitNote : observationNote,
         id: log.refId,
         refType: log.refType,
         eventLogId: log.id,

@@ -99,7 +99,7 @@ export default function VisitView({
                 </Typography>
                 <br />
                 <Typography variant="caption">
-                  {visit.guestId ? t('logbook:logbook.host'): t('logbook:log_title.guard')}
+                  {`${visit.guestId ? t('logbook:logbook.host'): t('logbook:log_title.guard')}: `}
                   {' '}
                 </Typography>
                 <Text
