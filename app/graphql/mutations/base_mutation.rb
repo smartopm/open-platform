@@ -34,6 +34,8 @@ module Mutations
     end
 
     def raise_duplicate_number_error(phone_number)
+      return unless phone_number
+
       user = context[:current_user].find_via_phone_number(phone_number)
       return if user.nil?
 

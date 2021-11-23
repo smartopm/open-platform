@@ -64,7 +64,7 @@ export default function GuestInviteForm({ guest }) {
        setInputValidationMsg({ isError: true });
       return;
     }
-    if(hasPhoneNumber && !phoneNumber){
+    if(hasPhoneNumber && !phoneNumber && !guest?.id){
       setDetails({ ...details, message: t('errors.required_field', { fieldName: t('common:form_fields.phone_number') }), isError: true });
       return
     }
@@ -73,9 +73,9 @@ export default function GuestInviteForm({ guest }) {
     createInvitation({
       variables: {
         guestId: guest?.id,
-        name: guestData.name || guest.name,
+        name: guestData.name.trim() || guest.name,
         email: guestData?.email || guest?.email,
-        phoneNumber: phoneNumber || guest.phoneNumber,
+        phoneNumber: phoneNumber || guest?.phoneNumber,
         visitationDate: guestData.visitationDate,
         startsAt: guestData.startsAt,
         endsAt: guestData.endsAt,
@@ -141,6 +141,7 @@ export default function GuestInviteForm({ guest }) {
             onChange={value => setPhoneNumber(value)}
             preferredCountries={['hn', 'ke', 'zm', 'ng', 'in', 'us']}
             disabled={!hasPhoneNumber}
+            inputProps={{ 'data-testid': 'guest_entry_phone_number' }}
           />
           <FormControlLabel
             className={classes.invitePhoneNumberCheck}
@@ -151,11 +152,11 @@ export default function GuestInviteForm({ guest }) {
                 color="primary"
                 inputProps={{
                     'aria-label': 'toggle if user has phone number',
-                    'data-testid': 'guest_entry_phone_number'
+                    'data-testid': 'guest_entry_phone_number_toggle'
                   }}
               />
               )}
-            label="Phone number not available"
+            label={t('guest_book.phone_number_not_available')}
 
           />
           <TextField

@@ -135,7 +135,8 @@
     "visits": "Visits",
     "manual_entry": "Manual entry",
     "pending": "Pending",
-    "approved": "Approved"
+    "approved": "Approved",
+    "phone_number_not_available": "Phone number not available"
   },
   "date_picker": {
     "ok_label": "Ok",

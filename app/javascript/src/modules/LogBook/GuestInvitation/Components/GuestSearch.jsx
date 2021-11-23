@@ -19,7 +19,7 @@ export default function GuestSearch() {
   const [guest, setGuest] = useState({ id: '', name: '', email: '', phoneNumber: '' });
   const debouncedValue = useDebounce(searchValue, 500);
   const { data, loading, error } = useQuery(SearchGuestsQuery, {
-    variables: { query: debouncedValue },
+    variables: { query: debouncedValue.trim() },
     fetchPolicy: 'network-only'
   });
   const { t } = useTranslation(['common', 'logbook']);
