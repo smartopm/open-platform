@@ -33,6 +33,7 @@
     "category": "Category",
     "display_condition": "Display Condition - Optional",
     "upload_file": "Upload File",
+    "download_file": "Download File",
     "file_uploaded": "File Uploaded",
     "select_roles": "Select roles"
   },
