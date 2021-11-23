@@ -109,7 +109,7 @@ module Properties
     # @param [PaymentPlan] plan
     #
     # @return [void]
-    def process_transfer(plan)
+    def transfer_payments(plan)
       plan.plan_payments.paid.order(amount: :asc).each do |payment|
         transfer_payment(plan, payment)
       end

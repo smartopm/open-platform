@@ -14,7 +14,8 @@
     "edit_subscription_plan": "Edit plan",
     "edit_plan_settings": "Edit Plan Settings",
     "view_history": "VIEW HISTORY",
-    "view_all_subscription_plans": "View All Subscription Plans"
+    "view_all_subscription_plans": "View All Subscription Plans",
+    "transfer_payment": "Transfer Payment"
   },
   "misc": {
     "active": "Active",

@@ -252,7 +252,7 @@ RSpec.describe Properties::PaymentPlan, type: :model do
     describe '#transfer_payments' do
       before do
         plan_payment
-        new_payment_plan.process_transfer(payment_plan)
+        new_payment_plan.transfer_payments(payment_plan)
         plan_payment.reload
       end
 

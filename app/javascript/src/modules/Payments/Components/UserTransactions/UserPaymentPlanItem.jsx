@@ -124,6 +124,11 @@ export default function UserPaymentPlanItem({
       content: t('common:menu.view_receipt'),
       isAdmin: false,
       handleClick: event => handleClick(event)
+    },
+    {
+      content: t('actions.transfer_payment'),
+      isAdmin: true,
+      handleClick: event => handleConfirmPlanTransferClick(event)
     }
   ];
 
