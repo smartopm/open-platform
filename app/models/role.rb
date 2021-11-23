@@ -2,7 +2,7 @@
 
 # Permission class
 class Role < ApplicationRecord
-  has_many :permissions
+  has_many :permissions, dependent: :destroy
   belongs_to :community, optional: true
 
   validates :name, presence: true,

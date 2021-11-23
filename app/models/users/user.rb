@@ -146,7 +146,6 @@ module Users
     before_save :add_default_state_type_and_role
     after_create :send_email_msg
     after_create :add_notification_preference
-    after_update :update_user_role
 
     # Track changes to the User
     has_paper_trail
@@ -685,13 +684,6 @@ module Users
       return invite unless invite.nil?
 
       Logs::Invite.create!(host_id: id, guest_id: guest_id)
-    end
-
-    # needed to ensure a user update request updates a user role too
-    # not needed when we start using DB based roles fully
-    def update_user_role
-      community_role = Role.find_by(name: self.user_type, community_id: community_id)
-      self.role = (community_role || Role.find_by(name: self.user_type, community_id: nil))
     end
 
     private
