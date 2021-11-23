@@ -25,40 +25,40 @@ module Mutations
 
       # Verifies if current user is admin or not.
       def authorized?(_vals)
-        return true if ::Policy::ApplicationPolicy.new(
-          context[:current_user], nil
-        ).permission?(admin: true, module: :plan_payment, permission: :can_transfer_plan_payment)
+        return true if permitted?(module: :plan_payment, permission: :can_transfer_plan_payment)
 
         raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
       end
 
       private
 
-      # rubocop:disable Style/GuardClause
       # Raises error if plan payment is not present or if payment is cancelled
       #
       # @return [GraphQL::ExecutionError]
       def raise_payment_related_error(payment)
+        error_message = ''
         if payment.nil?
-          raise GraphQL::ExecutionError, I18n.t('errors.plan_payment.not_found')
+          error_message = I18n.t('errors.plan_payment.not_found')
         elsif payment.status.eql?('cancelled')
-          raise GraphQL::ExecutionError,
-                I18n.t('errors.plan_payment.cannot_transfer_cancelled_payment')
+          error_message = I18n.t('errors.plan_payment.cannot_transfer_cancelled_payment')
         end
+
+        raise GraphQL::ExecutionError, error_message if error_message.present?
       end
 
       # Raises GraphQL execution payment plan does not exist.
       #
       # @return [GraphQL::ExecutionError]
       def raise_payment_plan_related_error(payment_plan)
+        error_message = ''
         if payment_plan.blank?
-          raise GraphQL::ExecutionError, I18n.t('errors.payment_plan.not_found')
-        elsif payment_plan.cancelled?
-          raise GraphQL::ExecutionError,
-                I18n.t('errors.plan_payment.cannot_transfer_to_cancelled_plan')
+          error_message = I18n.t('errors.payment_plan.not_found')
+        elsif !payment_plan.active?
+          error_message = I18n.t('errors.plan_payment.cannot_transfer_to_non_active_plan')
         end
+
+        raise GraphQL::ExecutionError, error_message if error_message.present?
       end
-      # rubocop:enable Style/GuardClause
     end
   end
 end

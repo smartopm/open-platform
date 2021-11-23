@@ -41,7 +41,6 @@ export default function PlanTransferConfirmDialog({
   function handleSubmit(e) {
     e.preventDefault();
     setMutationStatus(true);
-    console.log("IN THE METHOD", transferType);
     if(transferType === 'plan'){
       processPlanTransfer();
     }else if(transferType === 'payment'){

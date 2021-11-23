@@ -108,7 +108,7 @@ RSpec.describe Mutations::PaymentPlan::TransferPaymentPlan do
                                              site_community: community,
                                            }).as_json
           expect(result.dig('errors', 0, 'message')).to eql 'Transfer of payment cannot be made' \
-                    ' to a cancelled payment plan. Please try transferring to other plans'
+                    ' to non-active payment plan. Please try transferring to other plans'
         end
       end
 
