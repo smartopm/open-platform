@@ -44,7 +44,9 @@
     "assigned_to": "Assigned to",
     "due_date": "Due Date: ",
     "no_assignee": "No Assignee",
-    "date_created": "Date Created"
+    "date_created": "Date Created",
+    "complete": "Complete",
+    "open": "Open"
   },
   "document": {
     "uploaded_at": "Uploaded at",
@@ -54,5 +56,11 @@
   },
   "history": {
     "updates": "Updates"
+  },
+  "sub_task": {
+    "sub_tasks": "Sub Tasks",
+    "see_more": "See More",
+    "no_sub_tasks": "No Sub Tasks",
+    "due": "due: "
   }
 }

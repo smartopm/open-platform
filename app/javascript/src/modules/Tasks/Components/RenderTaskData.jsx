@@ -233,8 +233,8 @@ export function TaskDataList({
      </div>
      <div className={classes.section4} data-testid="task_menu_section">
        {task.completed
-        ? <Chip size="small" label="Complete" className={classes.completed} />
-        : <Chip size="small" label="Open" className={classes.open} />}
+        ? <Chip size="small" label={t('task.complete')} className={classes.completed} />
+        : <Chip size="small" label={t('task.open')} className={classes.open} />}
        <IconButton
          aria-controls="simple-menu"
          aria-haspopup="true"

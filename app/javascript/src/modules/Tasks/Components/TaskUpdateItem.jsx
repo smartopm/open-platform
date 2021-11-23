@@ -21,7 +21,7 @@ export default function TaskUpdateItem({ user, content, icon, date }) {
           {date}
         </Typography>
       </div>
-      <Divider orientation="vertical" />
+      <Divider orientation="vertical" data-testid="history_update_divider" />
     </>
   )
 }

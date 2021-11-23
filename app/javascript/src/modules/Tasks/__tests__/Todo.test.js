@@ -9,7 +9,8 @@ import { createClient } from '../../../utils/apollo';
 import Todo from '../containers/Todo';
 import { TaskStatsQuery } from '../graphql/task_queries';
 import { flaggedNotes } from '../../../graphql/queries';
-import { taskMock } from './TodoList.test';
+import taskMock from '../__mocks__/taskMock';
+
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
 
