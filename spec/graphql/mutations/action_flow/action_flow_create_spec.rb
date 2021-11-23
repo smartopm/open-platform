@@ -5,8 +5,18 @@ require 'rails_helper'
 # rubocop:disable Layout/LineLength
 RSpec.describe Mutations::ActionFlow::ActionFlowCreate do
   describe 'create actionflows' do
-    let!(:user) { create(:user_with_community) }
-    let!(:admin) { create(:admin_user, community_id: user.community_id) }
+    let!(:admin_role) { create(:role, name: 'admin') }
+    let!(:resident_role) { create(:role, name: 'resident') }
+    let!(:permission) do
+      create(:permission, module: 'action_flow',
+                          role: admin_role,
+                          permissions: %w[can_create_action_flow])
+    end
+    let!(:user) { create(:user_with_community, role: resident_role) }
+    let!(:admin) do
+      create(:admin_user, community_id: user.community_id,
+                          role: admin_role)
+    end
 
     let(:mutation) do
       <<~GQL

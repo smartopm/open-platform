@@ -214,6 +214,19 @@ admin:
     permissions:
       - can_access_dashboard
       - can_see_menu_item
+  activity_log:
+    permissions:
+      - can_update_activity_log
+  action_flow:
+    permissions:
+      - can_create_action_flow
+      - can_update_action_flow
+      - can_delete_action_flow
+      - can_get_action_flow_list
+      - can_get_action_flow_rule_fields
+      - can_get_action_flow_events
+      - can_get_action_flow_actions
+      - can_get_action_flow_action_fields
 contractor:
   note:
     permissions:
