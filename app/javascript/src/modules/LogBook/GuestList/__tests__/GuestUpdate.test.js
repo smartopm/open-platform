@@ -18,9 +18,15 @@ describe('RequestUpdate main page', () => {
       id: 'a54d6184-b10e-4865-bee7-7957701d423d',
       name: 'Another somebodyy',
       userType: 'client',
+      permissions: [
+        { module: 'entry_request',
+          permissions: ['can_grant_entry', 'can_update_entry_request']
+        },
+      ],
       expiresAt: null,
       community: {
-        supportName: "Support Officer"
+        supportName: 'Support Officer',
+        features: { LogBook: { features: [] } }
       }
     }
   };
