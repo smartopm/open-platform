@@ -39,7 +39,8 @@ CardComponent.defaultProps = {
   clickData: {
     clickable: false,
     handleClick: () => {}
-  }
+  },
+  styles: {}
 }
 
 CardComponent.propTypes = {
@@ -47,5 +48,7 @@ CardComponent.propTypes = {
   clickData: PropTypes.shape({
     clickable: PropTypes.bool,
     handleClick: PropTypes.func
-  })
+  }),
+  // eslint-disable-next-line react/forbid-prop-types
+  styles: PropTypes.object
 };
