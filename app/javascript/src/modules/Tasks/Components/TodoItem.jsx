@@ -4,7 +4,6 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import { makeStyles } from '@material-ui/core/styles';
-import { Accordion, AccordionSummary, AccordionDetails } from '@material-ui/core';
 import { TaskDataList } from './RenderTaskData';
 import FileUploader from './FileUploader';
 import { objectAccessor } from '../../../utils/helpers';
@@ -155,42 +154,6 @@ export default function TodoItem({
             )}
         </>
       ))}
-      {/* {task?.subTasks?.length > 0 && (
-            <AccordionDetails className={classes.child}>
-                {task?.subTasks?.map((firstLevelSubTask) => (
-                  <>
-                    <div className={classes.levelOne} key={firstLevelSubTask.id} onClick={() => toggleSubTasks(firstLevelSubTask)}>
-                      <TaskDataList
-                        key={firstLevelSubTask.id}
-                        task={firstLevelSubTask}
-                        handleChange={handleChange}
-                        handleFileInputChange={handleFileInputChange}
-                        selectedTasks={selectedTasks}
-                        isSelected={isSelected}
-                        menuData={menuData}
-                      />
-                    </div>
-                    {firstLevelSubTask?.subTasks?.length > 0 && objectAccessor(subTasksOpen, firstLevelSubTask.id) && (
-                      <>
-                          {firstLevelSubTask?.subTasks?.map((secondLevelSubTask) => (
-                            <div className={classes.levelTwo} key={secondLevelSubTask.id}>
-                              <TaskDataList
-                                key={secondLevelSubTask.id}
-                                task={secondLevelSubTask}
-                                handleChange={handleChange}
-                                handleFileInputChange={handleFileInputChange}
-                                selectedTasks={selectedTasks}
-                                isSelected={isSelected}
-                                menuData={menuData}
-                              />
-                            </div>
-                          ))}
-                      </>
-                    )}
-                  </>
-                ))}
-            </AccordionDetails>
-          )} */}
       <MenuList
         open={menuData.open}
         anchorEl={menuData.anchorEl}
