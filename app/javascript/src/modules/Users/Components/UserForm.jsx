@@ -77,7 +77,7 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
     client: useApolloClient()
   });
   const [userImage, setUserImage] = React.useState(null);
-  const communityRoles = authState?.user?.communityRoles
+  const communityRoles = authState?.user?.roles
 
   function uploadUserImage(image) {
     setUserImage(URL.createObjectURL(image));
@@ -413,8 +413,8 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
                     required
                     className={`${css(styles.selectInput)}`}
                   >
-                    {communityRoles &&
-                    Object.keys(communityRoles).map(key => (
+                  {communityRoles &&
+                   communityRoles.map(key => (
                       <MenuItem key={key} value={key}>
                         {t(`user_types.${key}`)}
                       </MenuItem>

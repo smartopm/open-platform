@@ -2,6 +2,7 @@
 
 # Permission class
 class Role < ApplicationRecord
+  has_many :permissions
   belongs_to :community, optional: true
 
   validates :name, presence: true,

@@ -49,11 +49,11 @@ module Types
                                                                              user: :id }
     field :ext_ref_id, String, null: true, visible: { roles: %i[admin], user: :id }
     field :payment_plan, Boolean, null: false
-    field :permissions, GraphQL::Types::JSON, null: true
+    field :permissions, [Types::PermissionType], null: false
     field :invites, [Types::InviteType], null: true, visible: { roles: %i[admin], user: :id }
     field :invitees, [Types::InviteType], null: true, visible: { roles: %i[admin], user: :id }
     field :request, Types::EntryRequestType, null: true
-    field :community_roles, GraphQL::Types::JSON, null: true
+    field :roles, GraphQL::Types::JSON, null: true
 
     def avatar_url
       return nil unless object.avatar.attached?
@@ -77,17 +77,12 @@ module Types
       object.payment_plans.active.present? || object.plan_payments.present?
     end
 
-    def community_roles
-      result = {}
-      roles = Role.where(community_id: [nil, context[:site_community].id]).pluck(:name)
-      roles.each do |role|
-        result[role] = role.capitalize.gsub('_', ' ')
-      end
-      result
+    def roles
+      Role.where(community_id: [nil, context[:site_community].id]).pluck(:name)
     end
 
     def permissions
-      Permission.where(role: context[:current_user].role)
+      context[:current_user].role.permissions
     end
   end
 end

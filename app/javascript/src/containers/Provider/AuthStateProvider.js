@@ -32,8 +32,11 @@ const QUERY = gql`
       avatarUrl
       subStatus
       paymentPlan
-      permissions
-      communityRoles
+      permissions{
+        module
+        permissions
+      }
+      roles
       community {
         id
         name

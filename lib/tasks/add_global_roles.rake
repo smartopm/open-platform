@@ -5,7 +5,7 @@ namespace :db do
   task add_global_roles: :environment do
     ActiveRecord::Base.transaction do
       global_roles = %w[security_guard admin resident
-                        contractorvprospective_client
+                        contractor prospective_client
                         client visitor custodian site_worker]
       global_roles.each do |name|
         role = Role.where(name: name).first_or_initialize
