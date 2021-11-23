@@ -64,13 +64,14 @@ export default function UserPaymentPlanItem({
   const [anchorEl, setAnchorEl] = useState(null);
   const [anchor, setAnchor] = useState(null);
   const [planAnchor, setPlanAnchor] = useState(null);
-  const [transactionId, setTransactionId] = useState('');
+  const [paymentId, setPaymentId] = useState('');
   const [planId, setPlanId] = useState('');
   const [receiptOpen, setReceiptOpen] = useState(false);
   const [transDetailOpen, setTransDetailOpen] = useState(false);
   const [transData, setTransData] = useState({});
   const [planDetailOpen, setPlanDetailOpen] = useState(false);
   const [planData, setPlanData] = useState({});
+  const [paymentData, setPaymentData] = useState({});
   const [statementOpen, setStatementOpen] = useState(false);
   const [details, setPlanDetails] = useState({
     isLoading: false,
@@ -82,6 +83,7 @@ export default function UserPaymentPlanItem({
   const [TransferPlanModalOpen, setTransferPlanModalOpen] = useState(false);
   const [isSuccessAlert, setIsSuccessAlert] = useState(false);
   const [messageAlert, setMessageAlert] = useState('');
+  const [transferType, setTransferType] = useState('');
   const [updatePaymentPlan] = useMutation(PaymentPlanUpdateMutation);
   const [cancelPaymentPlan] = useMutation(PaymentPlanCancelMutation);
   const validDays = [...Array(28).keys()];
@@ -89,7 +91,7 @@ export default function UserPaymentPlanItem({
   const anchorElOpen = Boolean(anchor);
   const planAnchorElOpen = Boolean(planAnchor);
   const [loadReceiptDetails, { loading, error, data }] = useLazyQuery(ReceiptPayment, {
-    variables: { userId, id: transactionId },
+    variables: { userId, id: paymentId },
     fetchPolicy: 'no-cache',
     errorPolicy: 'all'
   });
@@ -128,7 +130,7 @@ export default function UserPaymentPlanItem({
     {
       content: t('actions.transfer_payment'),
       isAdmin: true,
-      handleClick: event => handleConfirmPlanTransferClick(event)
+      handleClick: event => handleConfirmPlanTransferClick(event, 'payment')
     }
   ];
 
@@ -156,7 +158,7 @@ export default function UserPaymentPlanItem({
     {
       content: t('common:menu.transfer_payment_plan'),
       isAdmin: true,
-      handleClick: event => handleConfirmPlanTransferClick(event)
+      handleClick: event => handleConfirmPlanTransferClick(event, 'plan')
     }
   ];
 
@@ -230,8 +232,9 @@ export default function UserPaymentPlanItem({
     history.push(`?tab=Plans&subtab=Transactions&id=${planId}`);
   }
 
-  function handleConfirmPlanTransferClick(event) {
+  function handleConfirmPlanTransferClick(event, transferObject) {
     event.stopPropagation();
+    setTransferType(transferObject);
     setTransferPlanModalOpen(true);
   }
 
@@ -246,10 +249,11 @@ export default function UserPaymentPlanItem({
     setPlanDetailOpen(true);
   }
 
-  function handleTransactionMenu(event, payId) {
+  function handleTransactionMenu(event, pay) {
     event.stopPropagation();
     setAnchor(event.currentTarget);
-    setTransactionId(payId);
+    setPaymentId(pay.id);
+    setPaymentData(pay)
   }
 
   function handlePlanMenu(event, plan) {
@@ -376,6 +380,9 @@ export default function UserPaymentPlanItem({
         refetch={refetch}
         balanceRefetch={balanceRefetch}
         currencyData={currencyData}
+        transferType={transferType}
+        paymentId={paymentId}
+        paymentData={paymentData}
       />
       {error && <CenteredContent>{error.message}</CenteredContent>}
       {statementError && <CenteredContent>{statementError.message}</CenteredContent>}
@@ -688,7 +695,7 @@ export function renderPayments(pay, currencyData, currentUser, menuData) {
             aria-haspopup="true"
             data-testid="pay-menu"
             dataid={pay.id}
-            onClick={event => menuData.handleTransactionMenu(event, pay.id)}
+            onClick={event => menuData.handleTransactionMenu(event, pay)}
           >
             <MoreHorizOutlined />
           </IconButton>

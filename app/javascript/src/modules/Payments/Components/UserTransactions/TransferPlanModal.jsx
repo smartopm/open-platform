@@ -25,7 +25,10 @@ export default function TransferPlanModal({
   refetch,
   balanceRefetch,
   planData,
-  currencyData
+  currencyData,
+  transferType,
+  paymentId,
+  paymentData
 }) {
   const [acceptanceCheckbox, setAcceptanceCheckbox] = useState(false);
   const [destinationPlanId, setDestinationPlanId] = useState('');
@@ -101,25 +104,28 @@ export default function TransferPlanModal({
       <PlanTransferConfirmDialog
         open={confirmTransferPlanOpen}
         handleClose={handleTransferPlanClose}
-        PaymentData={planPaymentSummaryDetail()}
+        paymentsSummary={planPaymentSummaryDetail()}
         paymentPlanId={paymentPlanId}
         destinationPlanId={destinationPlanId}
         handleModalClose={handleModalClose}
         refetch={refetch}
         balanceRefetch={balanceRefetch}
+        transferType={transferType}
+        paymentId={paymentId}
+        paymentAmount={formatMoney(currencyData, paymentData?.amount)}
       />
       <CustomizedDialogs
         open={open}
         handleModal={handleModalClose}
-        dialogHeader={t('common:menu.transfer_plan')}
+        dialogHeader={transferType === 'plan' ? t('common:menu.transfer_plan') : t('common:menu.transfer_payment')}
         handleBatchFilter={handleTransferPlanSubmit}
-        saveAction={t('common:menu.transfer_plan')}
+        saveAction={transferType === 'plan' ? t('common:menu.transfer_plan') : t('common:menu.transfer_payment')}
         cancelAction={t('common:misc.close')}
         disableActionBtn={!canSubmit}
       >
         <div>
           <Typography paragraph variant="h6" color="textPrimary" data-testid='title'>
-            {t('common:misc.select_transfer_plan')}
+            {transferType === 'plan' ? t('common:misc.select_transfer_plan') : t('common:misc.select_plan_for_payment_transfer')}
           </Typography>
           <div
             className={classes.content}
@@ -128,11 +134,12 @@ export default function TransferPlanModal({
           >
             <PaymentPlansForTransferPlan
               data={data}
-              sourcePlanId={paymentPlanId}
+              sourcePlanId={transferType === 'plan' ? paymentPlanId : paymentData?.paymentPlan?.id}
               destinationPlanId={destinationPlanId}
               handleRadioChange={handleRadioChange}
               acceptanceCheckbox={acceptanceCheckbox}
               handleAcceptanceCheckChange={handleAcceptanceCheckChange}
+              transferType={transferType}
             />
           </div>
         </div>
@@ -147,7 +154,8 @@ export function PaymentPlansForTransferPlan({
   sourcePlanId,
   handleRadioChange,
   acceptanceCheckbox,
-  handleAcceptanceCheckChange
+  handleAcceptanceCheckChange,
+  transferType
 }) {
   const filteredPaymentPlans = data?.userLandParcelWithPlan?.filter(
     plan => plan.id !== sourcePlanId
@@ -189,7 +197,7 @@ export function PaymentPlansForTransferPlan({
                   name="acceptanceCheckbox"
                 />
           )}
-              label={t('common:misc.transfer_plan_acceptance')}
+              label={transferType === 'plan' ? t('common:misc.transfer_plan_acceptance'):  t('common:misc.transfer_payment_acceptance')}
               labelPlacement="end"
             />
           </FormGroup>
@@ -222,6 +230,14 @@ TransferPlanModal.propTypes = {
     currency: PropTypes.string,
     locale: PropTypes.string
   }).isRequired,
+  transferType: PropTypes.string.isRequired,
+  paymentId: PropTypes.string.isRequired,
+  paymentData: PropTypes.shape({
+    amount: PropTypes.number,
+    paymentPlan: PropTypes.shape({
+      id: PropTypes.string
+    })
+  }).isRequired
 };
 
 PaymentPlansForTransferPlan.defaultProps = {
@@ -242,7 +258,8 @@ PaymentPlansForTransferPlan.propTypes = {
   destinationPlanId: PropTypes.string.isRequired,
   handleRadioChange: PropTypes.func.isRequired,
   acceptanceCheckbox: PropTypes.bool.isRequired,
-  handleAcceptanceCheckChange: PropTypes.func.isRequired
+  handleAcceptanceCheckChange: PropTypes.func.isRequired,
+  transferType: PropTypes.string.isRequired
 };
 
 const useStyles = makeStyles(() => ({

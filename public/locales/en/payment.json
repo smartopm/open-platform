@@ -85,7 +85,8 @@
     "plan_reminder_confirmation": "You are about to send an email to owners of {{planCount}} selected plans",
     "no_payments_made": "No payments have been made yet",
     "payment_due_date": "Next Payment Due: {{date}}",
-    "installment_amount": "Installment Amount: {{amount}}"
+    "installment_amount": "Installment Amount: {{amount}}",
+    "payment_transferred_successfully": "Payment transferred successfully"
   },
   "table_headers": {
     "receipt_number": "Receipt Number",
