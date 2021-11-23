@@ -113,6 +113,7 @@ RSpec.describe Mutations::PaymentPlan::TransferPaymentPlan do
       end
 
       context 'when payment amount is less or equal than pending balance of desyination plan' do
+        before { payment_plan.update(pending_balance: 1000.0) }
         it 'transfers the payment to the destination plan' do
           variables = {
             paymentId: plan_payment.id,
@@ -130,11 +131,15 @@ RSpec.describe Mutations::PaymentPlan::TransferPaymentPlan do
           expect(new_payment.status).to eql 'paid'
           expect(new_payment.amount.to_f).to eql 200.0
           expect(new_payment.manual_receipt_number).to eql 'MI13975'
+          expect(payment_plan.reload.pending_balance.to_f).to eql 1200.0
         end
       end
 
       context 'when payment amount is more than the pending balance of destination plan' do
-        before { other_payment_plan.update(pending_balance: 100) }
+        before do
+          other_payment_plan.update(pending_balance: 100)
+          payment_plan.update(pending_balance: 1000.0)
+        end
         it 'transfers the payment to the destination plan and allocates the additional amount to
         general fund' do
           variables = {
@@ -157,11 +162,15 @@ RSpec.describe Mutations::PaymentPlan::TransferPaymentPlan do
           expect(general_payment.status).to eql 'paid'
           expect(general_payment.amount.to_f).to eql 100.0
           expect(general_payment.manual_receipt_number).to eql 'MI13975-2'
+          expect(payment_plan.reload.pending_balance.to_f).to eql 1200.0
         end
       end
 
       context 'when destination plan pending balance is 0' do
-        before { other_payment_plan.update(pending_balance: 0) }
+        before do
+          other_payment_plan.update(pending_balance: 0)
+          payment_plan.update(pending_balance: 1000.0)
+        end
         it 'transfers the payment amount to the general fund' do
           variables = {
             paymentId: plan_payment.id,
@@ -179,6 +188,7 @@ RSpec.describe Mutations::PaymentPlan::TransferPaymentPlan do
           expect(general_payment.status).to eql 'paid'
           expect(general_payment.amount.to_f).to eql 200.0
           expect(general_payment.manual_receipt_number).to eql 'MI13975'
+          expect(payment_plan.reload.pending_balance.to_f).to eql 1200.0
         end
       end
     end
