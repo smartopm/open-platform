@@ -414,11 +414,12 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
                     className={`${css(styles.selectInput)}`}
                   >
                     {communityRoles &&
-                    Object.entries(communityRoles).map(([key, val]) => (
+                    Object.keys(communityRoles).map(key => (
                       <MenuItem key={key} value={key}>
                         {t(`user_types.${key}`)}
                       </MenuItem>
                     ))}
+
                   </TextField>
                 </div>
 
