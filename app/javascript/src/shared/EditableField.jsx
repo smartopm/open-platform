@@ -45,7 +45,7 @@ export default function EditableField({ value, setValue, action }) {
             'data-testid': 'editable_description',
             endAdornment: (
               <InputAdornment position="end">
-                <IconButton onClick={handleClick} data-testid="edit_icon">
+                <IconButton onClick={handleClick} data-testid="edit_icon" color="primary">
                   <Edit />
                 </IconButton>
               </InputAdornment>
