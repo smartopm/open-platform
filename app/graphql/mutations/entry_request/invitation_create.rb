@@ -63,6 +63,7 @@ module Mutations
         )
       end
       # rubocop:enable Metrics/MethodLength
+      # rubocop:enable Metrics/AbcSize
 
       def generate_request(vals, guest)
         return if guest.nil?
@@ -90,7 +91,6 @@ module Mutations
 
         raise GraphQL::ExecutionError, enrolled_user.errors.full_messages&.join(', ')
       end
-      # rubocop:enable Metrics/AbcSize
 
       # Verifies if current user admin or security guard.
       def authorized?(_vals)
