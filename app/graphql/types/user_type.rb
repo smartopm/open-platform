@@ -79,8 +79,7 @@ module Types
 
     def community_roles
       result = {}
-      roles = Role.where(community_id: nil).pluck(:name)
-      roles.concat(Role.where(community_id: context[:site_community].id).pluck(:name))
+      roles = Role.where(community_id: [nil, context[:site_community].id]).pluck(:name)
       roles.each do |role|
         result[role] = role.capitalize.gsub('_', ' ')
       end
