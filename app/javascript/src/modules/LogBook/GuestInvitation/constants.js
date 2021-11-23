@@ -1,4 +1,4 @@
 /* eslint-disable import/prefer-default-export */
 
 
-export const invitationRequiredFields = ['name', 'phoneNumber'];
+export const invitationRequiredFields = ['name'];
