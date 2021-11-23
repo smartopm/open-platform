@@ -55,7 +55,7 @@ module Authorizable
 
     user = @site_community.users.find_via_auth_token(token, @site_community)
 
-    user_role_exists?(user)
+    check_user_role(user)
     log_active_user(user)
     {
       current_user: user,
@@ -89,7 +89,7 @@ module Authorizable
     "us-#{user.id}"
   end
 
-  def user_role_exists?(user)
+  def check_user_role(user)
     community_role = Role.find_by(name: user.role.name,
                                   community_id: @site_community.id)
     global_role = Role.find_by(name: user.role.name, community_id: nil)
