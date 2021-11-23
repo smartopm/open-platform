@@ -10,7 +10,7 @@ RSpec.describe Mutations::Campaign do
                           permissions: %w[can_create_campaign])
     end
 
-    let!(:current_user) { create(:user_with_community, user_type: 'admin', role: admin_role) }
+    let!(:current_user) { create(:admin_user, user_type: 'admin', role: admin_role) }
     let!(:community) { current_user.community }
     let(:query) do
       <<~GQL
@@ -208,13 +208,15 @@ RSpec.describe Mutations::Campaign do
 
   describe 'updating a Campaign' do
     let!(:admin_role) { create(:role, name: 'admin') }
+    let!(:site_worker_role) { create(:role, name: 'site_worker') }
     let!(:permission) do
       create(:permission, module: 'campaign',
                           role: admin_role,
                           permissions: %w[can_update_campaign can_remove_campaign_label])
     end
 
-    let!(:current_user) { create(:user_with_community, user_type: 'admin', role: admin_role) }
+    let!(:current_user) { create(:admin_user, user_type: 'admin', role: admin_role) }
+    let!(:user) { create(:site_worker, user_type: 'site_worker', role: site_worker_role) }
     let!(:campaign) do
       current_user.community.campaigns.create(name: 'Test Campaign',
                                               message: 'Visiting',
@@ -297,17 +299,37 @@ RSpec.describe Mutations::Campaign do
       expect(other_result.dig('data', 'campaignLabelRemove', 'campaign', 'id')).not_to be_nil
       expect(other_result['errors']).to be_nil
     end
+
+    it 'it returns an error when a user is unauthorised' do
+      variables = {
+        id: campaign.id,
+        name: 'This is a Campaign Update',
+        message: 'Visiting Update',
+        labels: 'label 3',
+      }
+      result = DoubleGdpSchema.execute(query, variables: variables,
+                                              context: {
+                                                current_user: user,
+                                                site_community: current_user.community,
+                                              }).as_json
+      expect(result.dig('data', 'campaignUpdate', 'campaign', 'id')).to be_nil
+      expect(result.dig('data', 'campaignUpdate', 'campaign', 'name')).to be_nil
+      expect(result.dig('data', 'campaignUpdate', 'campaign', 'userId')).to be_nil
+      expect(result.dig('errors', 0, 'message')).to include 'Unauthorized'
+    end
   end
 
   describe 'deleting a Campaign' do
     let!(:admin_role) { create(:role, name: 'admin') }
+    let!(:site_worker_role) { create(:role, name: 'site_worker') }
     let!(:permission) do
       create(:permission, module: 'campaign',
                           role: admin_role,
                           permissions: %w[can_delete_campaign can_remove_campaign_label])
     end
 
-    let!(:current_user) { create(:user_with_community, user_type: 'admin', role: admin_role) }
+    let!(:current_user) { create(:admin_user, user_type: 'admin', role: admin_role) }
+    let!(:user) { create(:site_worker, user_type: 'site_worker', role: site_worker_role) }
     let!(:campaign_for_delete) do
       current_user.community.campaigns.create(name: 'Campaign For Delete',
                                               message: 'Mark Deleted',
@@ -343,6 +365,17 @@ RSpec.describe Mutations::Campaign do
       expect(result.dig('data', 'campaignDelete', 'campaign', 'id')).to eql campaign_for_delete.id
       expect(result.dig('data', 'campaignDelete', 'campaign', 'status')).to eql 'deleted'
       expect(result['errors']).to be_nil
+    end
+
+    it 'returns un authorised if user is not to see campaign' do
+      variables = { id: campaign_for_delete.id }
+      result = DoubleGdpSchema.execute(delete_query, variables: variables,
+                                                     context: {
+                                                       current_user: user,
+                                                       site_community: current_user.community,
+                                                     }).as_json
+      expect(result['errors']).not_to be_nil
+      expect(result.dig('errors', 0, 'message')).to include 'Unauthorized'
     end
   end
 end

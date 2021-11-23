@@ -110,7 +110,6 @@ export default function LoginScreen() {
           setEmailLoginSet(true)
         })
         .catch(err => {
-          console.log("Mutuba")
           setError(err.message.replace(/GraphQL error:/, ""))
           setIsLoading(false)
         })
