@@ -4,6 +4,8 @@ import { MockedProvider } from '@apollo/react-testing';
 import '@testing-library/jest-dom/extend-expect';
 import { SearchGuestsQuery } from '../../graphql/queries';
 import GuestSearch from '../../Components/GuestSearch';
+import { Context } from '../../../../../containers/Provider/AuthStateProvider';
+import userMock from '../../../../../__mocks__/authstate';
 
 describe('Guest Search Component', () => {
   it('should render the guest search component', async () => {
@@ -28,7 +30,9 @@ describe('Guest Search Component', () => {
 
     const { getByTestId, queryAllByText } = render(
       <MockedProvider mocks={[GuestQuery]} addTypename={false}>
-        <GuestSearch />
+        <Context.Provider value={userMock}>
+          <GuestSearch />
+        </Context.Provider>
       </MockedProvider>
     );
 
