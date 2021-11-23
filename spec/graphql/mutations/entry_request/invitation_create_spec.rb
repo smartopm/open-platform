@@ -163,6 +163,27 @@ RSpec.describe Mutations::EntryRequest::InvitationCreate do
           expect(result.dig('errors', 0, 'message')).to eql 'Email has already been taken'
         end
       end
+
+      context 'when user has no email or phone number' do
+        it 'it should create an invitation with a fake number' do
+          variables = {
+            name: 'John Doe Invited',
+            email: nil,
+            phoneNumber: nil,
+            visitationDate: '2021-10-10',
+          }
+
+          result = DoubleGdpSchema.execute(invitation_create_mutation,
+                                           variables: variables,
+                                           context: {
+                                             current_user: admin,
+                                             site_community: community,
+                                           }).as_json
+          expect(result.dig('data', 'invitationCreate', 'entryTime', 'id')).to_not be_nil
+          expect(result.dig('errors', 0, 'message')).to be_nil
+          expect(community.users.find_by(name: 'John Doe Invited').user_type).to eql 'visitor'
+        end
+      end
     end
 
     describe '#authorized?' do
