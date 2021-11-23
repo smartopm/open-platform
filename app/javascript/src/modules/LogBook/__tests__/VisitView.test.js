@@ -101,7 +101,7 @@ describe('Should render Visits View Component', () => {
     await waitFor(() => {
       expect(getByText('Test another')).toBeInTheDocument();
       expect(getByText('Js user x')).toBeInTheDocument();
-      expect(getByText('logbook:logbook.host')).toBeInTheDocument();
+      expect(getByText('logbook:logbook.host:')).toBeInTheDocument();
       expect(getByTestId('entered_at')).toBeInTheDocument();
       expect(getByTestId('exited_at')).toBeInTheDocument();
       expect(getByTestId('log_exit')).toBeInTheDocument();
