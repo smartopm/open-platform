@@ -433,7 +433,8 @@ module Users
     end
 
     def pending?
-      self[:state] == 'pending'
+      # self[:state] == 'pending'
+      state == 'pending'
     end
 
     def expired?

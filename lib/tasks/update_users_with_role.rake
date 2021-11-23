@@ -2,7 +2,7 @@
 
 namespace :db do
   desc 'Add role to user based on existing user type'
-  task add_role_to_users: :environment do
+  task update_users_with_role: :environment do
     ActiveRecord::Base.transaction do
       roles_hash = {}
       Role.find_each do |role|
