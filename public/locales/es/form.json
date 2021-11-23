@@ -87,6 +87,7 @@
     "created_form_property": "Se agregó correctamente un campo en el formulario",
     "deleted_form_property": "Formulario de Propiedad eliminada correctamente",
     "display_condition": "Condición de visualización: opcional",
+    "download_file": "Descargar Archivo",
     "file_uploaded": "Archivo cargado",
     "form": "Formulario",
     "form_action_success": "El Formulario {{status}} con éxito",
