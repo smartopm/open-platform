@@ -331,6 +331,11 @@ const Task = {
   dueDate: PropTypes.string
 };
 
+TaskDataList.defaultProps = {
+  clickable: false,
+  handleClick: null,
+  styles: {},
+}
 TaskDataList.propTypes = {
   task: PropTypes.shape(Task).isRequired,
   handleChange: PropTypes.func.isRequired,
@@ -338,7 +343,11 @@ TaskDataList.propTypes = {
   isSelected: PropTypes.bool.isRequired,
   handleFileInputChange: PropTypes.func.isRequired,
   // eslint-disable-next-line react/forbid-prop-types
-  menuData: PropTypes.object.isRequired
+  menuData: PropTypes.object.isRequired,
+  clickable: PropTypes.bool,
+  handleClick: PropTypes.func,
+  // eslint-disable-next-line react/forbid-prop-types
+  styles: PropTypes.object,
 };
 LinkToUser.propTypes = {
   userId: PropTypes.string.isRequired,
