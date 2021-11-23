@@ -780,7 +780,7 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
           <>
             <Grid container justify="center" spacing={4} className={css(styles.grantSection)}>
               {
-                Boolean(id || requestContext.request.id) && (
+                Boolean(id || requestContext.request.id ) && (
                   <AccessCheck module="entry_request" allowedPermissions={['can_update_entry_request']}>
                     <Grid item>
                       <Button

@@ -39,7 +39,7 @@ export default function ObservationDialog() {
 
   function resetForm(to) {
     setObservationNote('');
-    updateRequest({ ...initialRequestState, isObservationOpen: false });
+    updateRequest({ ...initialRequestState, isObservationOpen: false, observed: true });
     setImageUrls([]);
     history.push(to);
   }
@@ -52,7 +52,7 @@ export default function ObservationDialog() {
     setIsLoading(true);
     addObservationNote({
       variables: {
-        id: request.id,
+        id: request.requestId,
         note: observationNote,
         refType: 'Logs::EntryRequest',
         attachedImages: blobIds
@@ -123,7 +123,7 @@ export default function ObservationDialog() {
               {t('observations.skip_scan_next_entry', { action: observationAction })}
             </Button>
             <Button
-              onClick={() => handleSaveObservation('/request')}
+              onClick={() => handleSaveObservation('/request?step=0')}
               variant="outlined"
               className={`${css(styles.observationButton)} save_and_record_other`}
               color="primary"

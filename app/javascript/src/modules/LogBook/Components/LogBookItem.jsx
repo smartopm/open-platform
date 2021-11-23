@@ -69,7 +69,7 @@ export default function LogBookItem({
     refetch: false
   });
   const [addObservationNote] = useMutation(AddObservationNoteMutation);
-  const matches = useMediaQuery('(max-width:800px)');
+  const matches = useMediaQuery('(max-width:1000px)');
   const classes = useStyles();
   const [imageUrls, setImageUrls] = useState([])
   const [blobIds, setBlobIds] = useState([])
@@ -258,7 +258,7 @@ export default function LogBookItem({
       </EntryNoteDialog>
       <Grid container className={matches ?  classes.containerMobile : classes.container}>
         <Grid item md={11} xs={11}>
-          <Grid container>
+          <Grid container spacing={1}>
             <Grid item md={9} xs={10}><Typography variant="h4">{t('logbook.log_book')}</Typography></Grid>
             <Hidden smUp>
               <Grid item md={1} xs={2}>
@@ -276,7 +276,7 @@ export default function LogBookItem({
                 <Text color="secondary" content={t('logbook.old_switch')} />
               </Link>
             </Grid>
-            <Grid item xs={12} md={6}>
+            <Grid item xs={12} md={7} lg={6}>
               <StyledTabs
                 value={tabValue}
                 aria-label="simple tabs example"
@@ -287,11 +287,12 @@ export default function LogBookItem({
                 <StyledTab label={t('logbook.visit_view')} {...a11yProps(2)} />
               </StyledTabs>
             </Grid>
-            <Grid item xs={10} md={6} style={matches ? {marginTop: '20px'} : {}}>
+            <Grid item xs={10} md={5} lg={6} style={matches ? {marginTop: '20px'} : {}}>
               <SearchInput
                 title={objectAccessor(searchPlaceholder, tabValue)}
                 searchValue={searchTerm}
-                filterRequired={tabValue === 1}
+                // temporarily disabling filter until we have proper scope from entry_times table
+                filterRequired={false}
                 handleSearch={handleSearch}
                 handleFilter={toggleFilterMenu}
                 handleClear={handleSearchClear}

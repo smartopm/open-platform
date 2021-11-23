@@ -23,7 +23,7 @@ import { Context } from '../../../containers/Provider/AuthStateProvider';
  * @deprecated
  */
 export default function GuestBook({
-  tabValue, handleAddObservation, offset, limit, query, scope, invitedGuests }) {
+  tabValue, handleAddObservation, offset, limit, query, invitedGuests }) {
   const { t } = useTranslation('logbook');
   const history = useHistory();
   const classes = useStyles();
@@ -35,7 +35,7 @@ export default function GuestBook({
   const authState = useContext(Context)
 
   const [loadGuests, { data, loading: guestsLoading }] = useLazyQuery(GuestEntriesQuery, {
-      variables: { offset, limit, query, scope },
+      variables: { offset, limit, query },
       fetchPolicy: "cache-and-network"
   });
   const entriesHeaders = [
@@ -216,7 +216,6 @@ const useStyles = makeStyles({
 });
 
 GuestBook.defaultProps = {
-  scope: null,
   invitedGuests: [],
   tabValue: 0,
   offset: 0,
@@ -230,6 +229,5 @@ GuestBook.propTypes = {
   limit: PropTypes.number,
   handleAddObservation: PropTypes.func.isRequired,
   query: PropTypes.string,
-  scope: PropTypes.number,
   invitedGuests: PropTypes.arrayOf(PropTypes.object)
 };
