@@ -23,6 +23,7 @@ import ImageUploadPreview from '../../../shared/imageUpload/ImageUploadPreview';
 import MenuList from '../../../shared/MenuList';
 import Text from '../../../shared/Text';
 import CenteredContent from '../../../shared/CenteredContent';
+import ActingUserName from './ActingUser';
 
 export default function LogEvents({
   data,
@@ -163,12 +164,7 @@ export default function LogEvents({
                 )}
 
                 <>
-                  <Typography variant="caption" data-testid="acting_guard_title">
-                    {`${entry.entryRequest?.guestId ? t('logbook:logbook.host'): t('logbook:log_title.guard')}: `}
-                  </Typography>
-                  <Link to={`/user/${entry.actingUser.id}`} data-testid="acting_user_name">
-                    <Text color="secondary" content={entry.actingUser.name} />
-                  </Link>
+                  <ActingUserName entry={entry} t={t} />
                   <br />
                   <Typography
                     variant="caption"

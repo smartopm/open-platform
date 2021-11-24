@@ -101,6 +101,7 @@ export const AllEventLogsQuery = gql`
         guestId
         grantor {
           name
+          id
         }
       }
       user {
