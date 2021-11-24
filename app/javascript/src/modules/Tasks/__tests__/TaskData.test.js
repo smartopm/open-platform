@@ -107,7 +107,6 @@ describe('Task Data components', () => {
     expect(container.getByTestId("task_subtasks")).toBeInTheDocument()
     expect(container.getByTestId("task_comments")).toBeInTheDocument()
     expect(container.getByTestId("task_details_section")).toBeInTheDocument()
-    // expect(container.getByTestId("task_menu_section")).toBeInTheDocument()
   });
 
   it('applies filter without error', () => {
@@ -133,7 +132,6 @@ describe('Task Data components', () => {
     expect(screen.getByTestId("task-select-action")).toBeInTheDocument();
     expect(screen.getByTestId("task_body_section")).toBeInTheDocument();
     expect(screen.getByTestId("task_body")).toBeInTheDocument();
-    // expect(screen.getByTestId("task_assignee_section")).toBeInTheDocument();
     expect(screen.getByTestId("task_assignee")).toBeInTheDocument();
   });
 
