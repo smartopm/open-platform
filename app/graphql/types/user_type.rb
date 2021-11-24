@@ -72,10 +72,5 @@ module Types
     def permissions
       context[:current_user].role.permissions
     end
-
-    # def permissions
-    #   ::Policy::ApplicationPolicy
-    #     .new(context[:current_user], nil).permission_list
-    # end
   end
 end

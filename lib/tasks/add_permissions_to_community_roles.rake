@@ -47,6 +47,7 @@ namespace :db do
             else
               Permission.create(role: role, module: role_module, permissions: role_permissions)
             end
+            Permission.create(role: role, module: role_module, permissions: role_permissions)
           end
         end
       end
