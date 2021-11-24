@@ -126,7 +126,7 @@ module Properties
       payment.status = :cancelled
       payment.save!
       create_new_payment(plan, payment)
-      plan.update!(pending_balance: plan.pending_balance + payment.amount)
+      plan.update_pending_balance(payment.amount, :revert)
     end
 
     # Returns PaymentPlan name by concatenating parcel number and start date.
