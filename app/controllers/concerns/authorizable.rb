@@ -90,9 +90,8 @@ module Authorizable
   end
 
   def check_user_role(user)
-    community_role = Role.find_by(name: user.role.name,
-                                  community_id: @site_community.id)
-    global_role = Role.find_by(name: user.role.name, community_id: nil)
-    redirect_to '/hold' unless community_role || global_role
+    return if Role.exists?(name: user.role.name, community_id: ["id", nil])
+
+    redirect_to '/hold'
   end
 end
