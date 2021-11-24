@@ -206,7 +206,7 @@ export function TaskDataList({
           {task.assignees.length > 0 ? (
             <Grid container>
               <Grid item md={6} xs={6}>
-                <Typography variant="body2" component="span" style={{ fontSize: '0.8rem'}}>{t('task.assigned_to')}</Typography>
+                <Typography variant={matches ? 'caption' : 'body2'} component="span">{t('task.assigned_to')}</Typography>
               </Grid>
               {/* Restrict to 2 users */}
               {task.assignees.slice(0, 2).map(user => (
