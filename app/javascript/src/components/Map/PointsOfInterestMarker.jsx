@@ -83,7 +83,7 @@ const styles = StyleSheet.create({
 PointsOfInterestMarker.defaultProps = {
   markerProps: {}
  }
- 
+
  PointsOfInterestMarker.propTypes = {
   markerProps: PropTypes.shape({
       geoLongX: PropTypes.number,

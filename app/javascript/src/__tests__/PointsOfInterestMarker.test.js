@@ -5,7 +5,7 @@ import { act, render } from '@testing-library/react'
 import PointsOfInterestMarker from '../components/Map/PointsOfInterestMarker'
 
 jest.mock('react-leaflet')
-describe('<PointsOfInterestMarker />', () => {
+describe.skip('<PointsOfInterestMarker />', () => {
   const markerProps = {
       poiName: 'University',
       iconUrl: '',
@@ -13,7 +13,7 @@ describe('<PointsOfInterestMarker />', () => {
       geoLatY: -15.5096758256,
       geomType: 'Polygon'
     }
-  
+
   it('should render marker correctly', async () => {
     let container;
     await act(async () => {
