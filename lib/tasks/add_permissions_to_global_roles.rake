@@ -20,7 +20,12 @@ namespace :db do
         valid_modules.each do |valid_module|
           role_permissions = permission_list.dig(role.name.to_sym,
                                                  valid_module.to_sym, :permissions)
-          if role_permissions
+          next unless role_permissions
+
+          permission = Permission.find_by(role: role, module: valid_module)
+          if permission
+            Permission.update(role: role, module: valid_module, permissions: role_permissions)
+          else
             Permission.create(role: role, module: valid_module, permissions: role_permissions)
           end
         end

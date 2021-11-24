@@ -5,5 +5,3 @@ FactoryBot.define do
     role
   end
 end
-
-#   Permission.create(role: role, module: valid_module, permissions: role_permissions )

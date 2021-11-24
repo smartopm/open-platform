@@ -327,9 +327,9 @@ RSpec.describe Users::User, type: :model do
 
   describe 'User state, type and roles' do
     before :each do
-      FactoryBot.create(:role, name: 'visitor')
-      FactoryBot.create(:role, name: 'admin')
-      @user = FactoryBot.create(:user_with_community, phone_number: '14157351116')
+      create(:role, name: 'visitor')
+      create(:role, name: 'admin')
+      @user = create(:user_with_community, phone_number: '14157351116')
     end
 
     it 'without a state/type it should be pending and visitor' do

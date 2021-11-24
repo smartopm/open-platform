@@ -44,8 +44,9 @@ namespace :db do
             permission = Permission.find_by(role: role, module: role_module)
             if permission
               Permission.update(role: role, module: role_module, permissions: role_permissions)
+            else
+              Permission.create(role: role, module: role_module, permissions: role_permissions)
             end
-            Permission.create(role: role, module: role_module, permissions: role_permissions)
           end
         end
       end
