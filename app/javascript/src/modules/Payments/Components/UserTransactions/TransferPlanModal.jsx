@@ -107,7 +107,6 @@ export default function TransferPlanModal({
         paymentsSummary={planPaymentSummaryDetail()}
         paymentPlanId={paymentPlanId}
         destinationPlanId={destinationPlanId}
-        handleModalClose={handleModalClose}
         refetch={refetch}
         balanceRefetch={balanceRefetch}
         transferType={transferType}

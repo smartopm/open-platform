@@ -190,6 +190,11 @@ export default function UserPaymentPlanItem({
     setConfirmPlanCancelOpen(true);
   }
 
+  function handleTransferPlanModalClose() {
+    setTransferPlanModalOpen(false)
+    setAnchor(null);
+  }
+
   function handleCancelPlan(event) {
     event.stopPropagation();
     handleCloseConfirmModal();
@@ -373,7 +378,7 @@ export default function UserPaymentPlanItem({
       />
       <TransferPlanModal
         open={TransferPlanModalOpen}
-        handleModalClose={() => setTransferPlanModalOpen(!TransferPlanModalOpen)}
+        handleModalClose={handleTransferPlanModalClose}
         planData={planData}
         userId={userId}
         paymentPlanId={planId}
