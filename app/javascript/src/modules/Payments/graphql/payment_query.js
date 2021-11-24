@@ -81,6 +81,9 @@ export const UserPlans = gql`
             name
           }
         }
+        paymentPlan {
+          id
+        }
       }
     }
   }
