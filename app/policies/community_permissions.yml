@@ -23,6 +23,7 @@ Ciudad Morazán:
       permissions:
         - can_view_own_profile
         - can_edit_own_profile
+        - can_view_guests
     logout:
       permissions:
         - can_see_menu_item
