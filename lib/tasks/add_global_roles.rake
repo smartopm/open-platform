@@ -8,7 +8,7 @@ namespace :db do
                         contractor prospective_client
                         client visitor custodian site_worker]
       global_roles.each do |name|
-        role = Role.where(name: name).first_or_initialize
+        role = Role.where(name: name, community_id: nil).first_or_initialize
         next if role.persisted?
 
         role.save!

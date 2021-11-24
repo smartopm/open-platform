@@ -152,7 +152,8 @@ module Users
 
     VALID_USER_TYPES = %w[security_guard admin resident contractor
                           prospective_client client visitor
-                          custodian site_worker site_manager].freeze
+                          custodian site_worker site_manager
+                          security_supervisor].freeze
     VALID_STATES = %w[valid pending banned expired].freeze
     DEFAULT_PREFERENCE = %w[com_news_sms com_news_email weekly_point_reminder_email].freeze
 
@@ -167,7 +168,6 @@ module Users
     }
 
     validates :user_type, inclusion: { in: VALID_USER_TYPES, allow_nil: true }
-    # validates :role, presence: true
     validates :state, inclusion: { in: VALID_STATES, allow_nil: true }
     validates :sub_status, inclusion: { in: sub_statuses.keys, allow_nil: true }
     validates :name, presence: true
@@ -215,7 +215,7 @@ module Users
       security_guard: { except: %i[state user_type] },
     }.freeze
 
-    SITE_MANAGERS = %w[security_guard contractor custodian admin].freeze
+    SITE_MANAGERS = %w[security_guard contractor custodian admin site_manager].freeze
 
     def self.from_omniauth(auth, site_community)
       # Either create a User record or update it based on the provider (Google) and the UID
@@ -472,10 +472,11 @@ module Users
       return unless %w[google_oauth2 facebook].include?(self[:provider])
 
       if site_community.domain_admin?(domain)
-        update(community_id: site_community.id, user_type: 'admin')
+        update(community_id: site_community.id, user_type: 'admin',
+               role: Role.find_by(name: 'admin'))
       else
         update(community_id: site_community.id,
-               user_type: 'visitor',
+               user_type: 'visitor', role: Role.find_by(name: 'visitor'),
                expires_at: Time.current)
       end
     end

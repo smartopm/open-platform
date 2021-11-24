@@ -78,11 +78,18 @@ module Types
     end
 
     def roles
-      Role.where(community_id: [nil, context[:site_community].id]).pluck(:name)
+      Role.where(community_id: [nil, context[:site_community].id]).pluck(:name).uniq
     end
 
     def permissions
-      context[:current_user].role.permissions
+      community_id = context[:site_community].id
+      community_role = Role.find_by(name: context[:current_user].role.name,
+                                    community_id: community_id)
+      role = (community_role || Role.find_by(
+        name: context[:current_user].role.name, community_id: nil,
+      )
+             )
+      role.permissions
     end
   end
 end

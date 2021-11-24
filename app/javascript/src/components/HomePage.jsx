@@ -65,7 +65,9 @@ export default function Homepage({ authState, quickLinks }) {
         'contractor',
         'resident',
         'visitor',
-        'site_worker'
+        'site_worker',
+        'site_manager',
+        'security_supervisor'
       ]
     },
     {

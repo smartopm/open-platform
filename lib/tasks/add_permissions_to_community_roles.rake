@@ -21,7 +21,6 @@ namespace :db do
                          message settings showroom subscription_plan substatus_log
                          temparature timesheet transaction upload user gate_access
                          guest_list profile logout communication community_settings sos].freeze
-
       communities = permission_list.keys
       communities.each do |community_name|
         next unless valid_community_names.include? community_name
@@ -31,17 +30,22 @@ namespace :db do
 
         community_roles = community_permissions.keys
         community_roles.each do |community_role|
-          role = Role.where(name: community_role,
-                            community_id: community_hash[community_name]).first_or_initialize
-          role.save! unless role.persisted?
+          role = Role.find_by(name: community_role,
+                              community_id: community_hash[community_name]) ||
+                 Role.create!(name: community_role,
+                              community_id: community_hash[community_name])
           role_modules = community_permissions[role.name].keys
           role_modules.each do |role_module|
             next unless valid_modules.include?(role_module)
 
             role_permissions = community_permissions.dig(role.name, role_module, 'permissions')
-            if role_permissions
-              Permission.create(role: role, module: role_module, permissions: role_permissions)
+            next unless role_permissions
+
+            permission = Permission.find_by(role: role, module: role_module)
+            if permission
+              Permission.update(role: role, module: role_module, permissions: role_permissions)
             end
+            Permission.create(role: role, module: role_module, permissions: role_permissions)
           end
         end
       end
