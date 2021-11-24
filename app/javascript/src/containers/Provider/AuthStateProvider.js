@@ -36,7 +36,6 @@ const QUERY = gql`
         module
         permissions
       }
-      roles
       community {
         id
         name
@@ -64,6 +63,7 @@ const QUERY = gql`
         smsPhoneNumbers
         emergencyCallNumber
         features
+        roles
       }
     }
   }

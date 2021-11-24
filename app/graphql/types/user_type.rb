@@ -53,7 +53,6 @@ module Types
     field :invites, [Types::InviteType], null: true, visible: { roles: %i[admin], user: :id }
     field :invitees, [Types::InviteType], null: true, visible: { roles: %i[admin], user: :id }
     field :request, Types::EntryRequestType, null: true
-    field :roles, GraphQL::Types::JSON, null: true
 
     def avatar_url
       return nil unless object.avatar.attached?
@@ -75,10 +74,6 @@ module Types
 
     def payment_plan
       object.payment_plans.active.present? || object.plan_payments.present?
-    end
-
-    def roles
-      Role.where(community_id: [nil, context[:site_community].id]).pluck(:name).uniq
     end
 
     def permissions
