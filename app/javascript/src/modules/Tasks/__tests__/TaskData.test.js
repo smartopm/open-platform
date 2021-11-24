@@ -103,8 +103,6 @@ describe('Task Data components', () => {
     expect(container.getByTestId("task-select-action")).toBeInTheDocument()
     expect(container.getByTestId("task_body_section")).toBeInTheDocument()
     expect(container.getByTestId("task_body")).toBeInTheDocument()
-    expect(container.getByTestId("task_due_date")).toBeInTheDocument()
-    // expect(container.getByTestId("task_assignee_section")).toBeInTheDocument()
     expect(container.getByTestId("task_assignee")).toBeInTheDocument()
     expect(container.getByTestId("task_subtasks")).toBeInTheDocument()
     expect(container.getByTestId("task_comments")).toBeInTheDocument()

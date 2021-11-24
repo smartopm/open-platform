@@ -148,7 +148,7 @@ export function TaskDataList({
   return (
     <Card clickData={{clickable, handleClick}} styles={styles} contentStyles={{ padding: '4px' }}>
       <Grid container>
-        <Grid item md={5} xs={8} style={{ display: 'flex', alignItems: 'center' }}>
+        <Grid item md={5} xs={8} style={{ display: 'flex', alignItems: 'center' }} data-testid="task_body_section">
           <Checkbox
             checked={selectedTasks.includes(task.id) || isSelected}
             onChange={event => handleCheckbox(event, task)}
@@ -289,7 +289,7 @@ export function TaskDataList({
             </Grid>
           </Grid>
         </Grid>
-        <Grid item md={1} style={{ display: 'flex', alignItems: 'center', justifyContent: 'end'}}>
+        <Grid item md={1} style={{ display: 'flex', alignItems: 'center', justifyContent: 'end'}} data-testid="task_menu_section">
           <Hidden smDown>
             {task.completed
               ? <Chip size="small" label={t('task.complete')} className={classes.completed} /> 
