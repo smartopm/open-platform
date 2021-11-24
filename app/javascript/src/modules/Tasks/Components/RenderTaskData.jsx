@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-// import useMediaQuery from '@material-ui/core/useMediaQuery';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { Checkbox, Grid, IconButton, Typography, Chip } from '@material-ui/core';
 import Hidden from '@material-ui/core/Hidden';
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
@@ -137,7 +137,7 @@ export function TaskDataList({
 }) {
   const classes = useStyles();
   const { t } = useTranslation('task');
-  // const matches = useMediaQuery('(max-width:1000px)');
+  const matches = useMediaQuery('(max-width:800px)');
 
   // This is not working as expected yet.
   function handleCheckbox(event, currentTask) {
@@ -146,9 +146,9 @@ export function TaskDataList({
   }
 
   return (
-    <Card clickData={{clickable, handleClick}} styles={styles}>
-      <Grid container spacing={1}>
-        <Grid item md={1} xs={2} data-testid="task_body_section">
+    <Card clickData={{clickable, handleClick}} styles={styles} contentStyles={{ padding: '4px' }}>
+      <Grid container>
+        <Grid item md={5} xs={8} style={{ display: 'flex', alignItems: 'center' }}>
           <Checkbox
             checked={selectedTasks.includes(task.id) || isSelected}
             onChange={event => handleCheckbox(event, task)}
@@ -157,14 +157,13 @@ export function TaskDataList({
             data-testid="task-select-action"
             size="small"
             key={task.id}
+            style={{ padding: 0 }}
           />
-        </Grid>
-        <Grid item md={2} xs={5}>
           <Typography
             variant="body2"
             data-testid="task_body"
             component="p"
-            className={classes.taskBody}
+            className={matches ? classes.taskBodyMobile : classes.taskBody}
           >
             <span
             // eslint-disable-next-line react/no-danger
@@ -175,16 +174,14 @@ export function TaskDataList({
           </Typography>
         </Grid>
         <Hidden mdUp>
-          <Grid item md={1} xs={3} style={{paddingTop: '10px', textAlign: 'right'}}>
-            {task.completed ? (
-              <Chip size="small" label="Complete" className={classes.completed} />
-        ) : (
-          <Chip size="small" label="Open" className={classes.open} />
-        )}
+          <Grid item md={1} xs={3} style={{display: 'flex', alignItems: 'center' }}>
+            {task.completed
+            ? <Chip size="small" label={t('task.complete')} className={classes.completed} />
+            : <Chip size="small" label={t('task.open')} className={classes.open} />}
           </Grid>
         </Hidden>
         <Hidden mdUp>
-          <Grid item md={1} xs={2} style={{textAlign: 'right', paddingTop: '8px'}}>
+          <Grid item md={1} xs={1} style={{display: 'flex', alignItems: 'center', justifyContent: 'end'}}>
             <IconButton
               aria-controls="simple-menu"
               aria-haspopup="true"
@@ -197,79 +194,84 @@ export function TaskDataList({
             </IconButton>
           </Grid>
         </Hidden>
-        <Grid item data-testid="task_due_date" md={2} xs={12} style={{paddingTop: '10px'}}>
-          <Typography variant="body2" component="span">
-            {t('task.due_date')}
-            {task.dueDate ? dateToString(task.dueDate) : 'Never '}
-          </Typography>
-        </Grid>
-        <Grid item md={2} xs={6} data-testid="task_assignee">
+        <Hidden smDown>
+          <Grid item data-testid="task_due_date" md={2} xs={12} style={{ display: 'flex', alignItems: 'center', }}>
+            <Typography variant="body2" component="span">
+              {t('task.due_date')}
+              {task.dueDate ? dateToString(task.dueDate) : 'Never '}
+            </Typography>
+          </Grid>
+        </Hidden>
+        <Grid item md={2} xs={6} data-testid="task_assignee" style={{ display: 'flex', alignItems: 'center' }}>
           {task.assignees.length > 0 ? (
-            <>
-              <Typography variant="body2">
-                {t('task.assigned_to')}
-              </Typography>
+            <Grid container>
+              <Grid item md={6} xs={6}>
+                <Typography variant="body2" component="span">{t('task.assigned_to')}</Typography>
+              </Grid>
               {/* Restrict to 2 users */}
-              <div style={{display: 'flex'}}>
-                {task.assignees.slice(0, 2).map(user => (
+              {task.assignees.slice(0, 2).map(user => (
+                <Grid item md={2} xs={2} key={user.id}>
                   <LinkToUserAvatar key={user.id} user={user} />
+                </Grid>
                 ))}
-                <div>
-                  {task.assignees.length > 2 && (
-                  <IconButton
-                    aria-controls="more-assignees"
-                    aria-haspopup="true"
-                    data-testid="more-assignees"
-                    size="small"
-                    style={{
+              <Grid item md={2} xs={1}>
+                {task.assignees.length > 2 && (
+                <IconButton
+                  aria-controls="more-assignees"
+                  aria-haspopup="true"
+                  data-testid="more-assignees"
+                  size="small"
+                  style={{
                       padding: 0,
                       margin: 0,
                       fontSize: '8px',
                       color: '#000000',
                       opacity: '0.2'
                     }}
-                  >
-                    <MoreHorizIcon />
-                  </IconButton>
+                >
+                  <MoreHorizIcon />
+                </IconButton>
                 )}
-                </div>
-              </div>
-            </>
+              </Grid>
+            </Grid>
           ) : (
             <Typography variant="body2">
               {t('task.no_assignee')}
             </Typography>
           )}
         </Grid>
-        <Grid item data-testid="task_details_section" md={3} xs={6}>
-          <Grid container>
-            <Grid item md={4}>
+        <Grid item data-testid="task_details_section" md={2} xs={6}>
+          <Grid container style={{ display: 'flex', justifyContent: 'center' }}>
+            <Grid item md={2} xs={2}>
               <IconButton
                 aria-controls="task-subtasks-icon"
                 aria-haspopup="true"
                 data-testid="task_subtasks"
+                size="medium"
               >
                 <AccountTreeIcon fontSize="small" color="primary" />
-                <span style={{ fontSize: '14px' }}>{task?.subTasks?.length}</span>
               </IconButton>
             </Grid>
-            <Grid item md={4}>
+            <Grid item md={1} xs={2} className={classes.iconItem}><span>{task?.subTasks?.length}</span></Grid>
+            <Grid item md={2} xs={2}>
               <IconButton
                 aria-controls="task-comment-icon"
                 aria-haspopup="true"
                 data-testid="task_comments"
+                size="medium"
               >
                 <QuestionAnswerIcon fontSize="small" color="primary" />
-                <span style={{ fontSize: '14px' }}>0</span>
               </IconButton>
             </Grid>
-            <Grid item md={4}>
+            <Grid md={1} xs={2} className={classes.iconItem}><span>0</span></Grid>
+            <Grid item md={2} xs={2}>
               <IconButton
                 key={task.id}
                 aria-controls="task-attach-file-icon"
                 aria-haspopup="true"
                 data-testid="task_attach_file"
                 component="label"
+                size="medium"
               >
                 <input
                   hidden
@@ -278,24 +280,22 @@ export function TaskDataList({
                   id="task-attach-file"
                 />
                 <AttachFileIcon fontSize="small" color="disabled" />
-                <span style={{ fontSize: '14px' }} data-testid="file_attachments_total">
-                  {task.documents?.length}
-                </span>
               </IconButton>
+            </Grid>
+            <Grid item md={1} xs={2} className={classes.iconItem}>
+              <span data-testid="file_attachments_total">
+                {task.documents?.length}
+              </span>
             </Grid>
           </Grid>
         </Grid>
-        <Hidden smDown>
-          <Grid item md={1} style={{paddingTop: '10px'}}>
-            {task.completed ? (
-              <Chip size="small" label="Complete" className={classes.completed} />
-        ) : (
-          <Chip size="small" label="Open" className={classes.open} />
-        )}
-          </Grid>
-        </Hidden>
-        <Hidden smDown>
-          <Grid item md={1} style={{textAlign: 'right', paddingTop: '8px'}}>
+        <Grid item md={1} style={{ display: 'flex', alignItems: 'center', justifyContent: 'end'}}>
+          <Hidden smDown>
+            {task.completed
+              ? <Chip size="small" label={t('task.complete')} className={classes.completed} /> 
+              : <Chip size="small" label={t('task.open')} className={classes.open} />}
+          </Hidden>
+          <Hidden smDown>
             <IconButton
               aria-controls="simple-menu"
               aria-haspopup="true"
@@ -306,8 +306,8 @@ export function TaskDataList({
             >
               <MoreVertIcon />
             </IconButton>
-          </Grid>
-        </Hidden>
+          </Hidden>
+        </Grid>
       </Grid>
     </Card>
   );
@@ -363,61 +363,31 @@ LinkToUserAvatar.propTypes = {
 };
 
 const useStyles = makeStyles(() => ({
-  taskListContainer: {
-    display: 'flex',
-    alignItems: 'center',
-    width: '100%',
-    height: '60px'
-  },
-  section1: {
-    display: 'flex',
-    alignItems: 'center',
-    width: '30%'
-  },
   taskBody: {
-    maxWidth: '36ch',
+    maxWidth: '53ch',
     overflow: 'hidden',
     whiteSpace: 'nowrap',
     textOverflow: 'ellipsis',
-    paddingTop: '10px'
+    paddingLeft: '3px'
   },
-  section2: {
-    width: '33%',
-    display: 'flex',
-    alignItems: 'center'
-  },
-  // taskAssignees: {
-  //   display: 'flex',
-  //   alignItems: 'center',
-  //   width: '50%',
-  //   justifyContent: 'space-between'
-  // },
-  // taskAssigneesAvatar: {
-  //   display: 'flex',
-  //   width: '28%',
-  //   justifyContent: 'space-between',
-  //   fontSize: '10px'
-  // },
-  section3: {
-    display: 'flex',
-    width: '28%',
-    alignItems: 'center'
-  },
-  section4: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'end'
-  },
-  taskCreated: {
-    display: 'flex',
-    alignItems: 'center',
-    width: '43%'
+  taskBodyMobile: {
+    maxWidth: '21ch',
+    overflow: 'hidden',
+    whiteSpace: 'nowrap',
+    textOverflow: 'ellipsis',
+    paddingLeft: '3px'
   },
   icons: {
     display: 'flex',
     alignItems: 'center',
     width: '45%',
     justifyContent: 'space-evenly'
+  },
+  iconItem: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    fontSize: '14px',
   },
   completed: {
     backgroundColor: '#4caf50',
