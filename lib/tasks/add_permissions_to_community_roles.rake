@@ -17,7 +17,7 @@ namespace :db do
       permission_list = permissions.deep_transform_keys!(&:to_s)
       valid_modules = %w[user note plan_payment payment_plan post action_flow activity_log business
                          campaign comment community contact_info discussion email_template
-                         entry_request feedback form invoice label land_parcel login
+                         entry_request feedback forms invoice label land_parcel login
                          message settings showroom subscription_plan substatus_log
                          temparature timesheet transaction upload user gate_access
                          guest_list profile logout communication community_settings sos].freeze
