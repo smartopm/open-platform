@@ -90,7 +90,8 @@ module Authorizable
   end
 
   def check_user_role(user)
-    return if Role.exists?(name: user.role.name, community_id: ['id', nil])
+    return if Role.exists?(name: user.role.name,
+                           community_id: [nil, @site_community.id])
 
     redirect_to '/hold'
   end
