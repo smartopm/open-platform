@@ -206,7 +206,9 @@ export function TaskDataList({
           {task.assignees.length > 0 ? (
             <Grid container>
               <Grid item md={6} xs={6}>
-                <Typography variant={matches ? 'caption' : 'body2'} component="span">{t('task.assigned_to')}</Typography>
+                <Typography variant={matches ? 'caption' : 'body2'} component="span" style={matches ? { paddingLeft: '3px'} : {}}>
+                  {t('task.assigned_to')}
+                </Typography>
               </Grid>
               {/* Restrict to 2 users */}
               {task.assignees.slice(0, 2).map(user => (
@@ -263,7 +265,7 @@ export function TaskDataList({
                 <QuestionAnswerIcon fontSize="small" color="primary" />
               </IconButton>
             </Grid>
-            <Grid md={1} xs={2} className={classes.iconItem}><span>0</span></Grid>
+            <Grid item md={1} xs={2} className={classes.iconItem}><span>0</span></Grid>
             <Grid item md={2} xs={2}>
               <IconButton
                 key={task.id}
