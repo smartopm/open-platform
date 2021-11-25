@@ -1,91 +1,85 @@
 /* eslint-disable react/prop-types */
-import React, { useContext, useState } from 'react'
-import { useQuery } from 'react-apollo'
-import { QRCode } from 'react-qr-svg'
+import React, { useContext, useState, useRef, useCallback } from 'react';
+import { useQuery } from 'react-apollo';
+import { QRCode } from 'react-qr-svg';
 import { Button, Typography } from '@material-ui/core';
 import { useTranslation } from 'react-i18next';
-import domtoimage from 'dom-to-image';
-import Loading from '../shared/Loading'
-import { UserQuery } from '../graphql/queries'
-import ErrorPage from '../components/Error'
-import CommunityName from '../shared/CommunityName'
-import { Context } from './Provider/AuthStateProvider'
+import { toPng } from 'html-to-image';
+import Loading, { Spinner } from '../shared/Loading';
+import { UserQuery } from '../graphql/queries';
+import ErrorPage from '../components/Error';
+import CommunityName from '../shared/CommunityName';
+import { Context } from './Provider/AuthStateProvider';
 import CenteredContent from '../shared/CenteredContent';
 
-
 function qrCodeAddress(userId) {
-  const timestamp = Date.now()
-  const linkUrl = `${window.location.protocol}//${window.location.hostname}/user/${userId}/${timestamp}`
-  return linkUrl
+  const timestamp = Date.now();
+  const linkUrl = `${window.location.protocol}//${window.location.hostname}/user/${userId}/${timestamp}`;
+  return linkUrl;
 }
 
+export default function IdPrintPage({ match }) {
+  const { id } = match.params;
+  const { loading, error, data } = useQuery(UserQuery, { variables: { id } });
 
-export default function IdPrintPage({ match }){
-  const {id} = match.params
-  const { loading, error, data } = useQuery(UserQuery, { variables: { id } })
+  if (loading) return <Loading />;
+  if (error) return <ErrorPage title={error.message} />;
 
-  if (loading) return <Loading />
-  if (error) return <ErrorPage title={error.message} />
-
-  return <UserPrintDetail data={data} />
+  return <UserPrintDetail data={data} />;
 }
 
 export function UserPrintDetail({ data }) {
   const authState = useContext(Context);
   const { t } = useTranslation('common');
   const [downloading, setDownloading] = useState(false);
+  const ref = useRef(null);
 
-  function downloadId() {
+  const onButtonClick = useCallback(() => {
+    if (ref.current === null) {
+      return;
+    }
+
     setDownloading(true);
-    const node = document.getElementById('idCard');
-    domtoimage.toPng(node)
-      .then(function (dataUrl) {
-          const a = document.createElement('a');
-          a.setAttribute('href', dataUrl);
-          a.setAttribute('download', 'ID.png');
-          a.innerHTML = 'Download';
-          a.click();
-          setDownloading(false);
+    toPng(ref.current)
+      .then(dataUrl => {
+        const link = document.createElement('a');
+        link.download = 'my_id.png';
+        link.href = dataUrl;
+        link.click();
+        setDownloading(false);
       })
-      .catch(function (error) {
-          console.error('ID download error', error);
-          setDownloading(false);
+      .catch(err => {
+        console.log(err);
+        setDownloading(false);
       });
-  }
+  }, [ref]);
 
   return (
-    <div>
+    <>
       <div className="row justify-content-center">
-        <div
-          id="idCard"
-          className="card id_card_box"
-          style={{ width: '325px' }}
-        >
+        <div id="idCard" className="card id_card_box" style={{ width: '325px' }} ref={ref}>
           <CenteredContent>
             <CommunityName authState={authState} />
           </CenteredContent>
-          <CenteredContent>
+          <div style={{ display: 'flex', justifyContent: 'center', whiteSpace: 'nowrap' }}>
             <Typography component="h1">{data.user.name}</Typography>
-          </CenteredContent>
-          <div>
-            <QRCode
-              style={{ width: 256 }}
-              value={qrCodeAddress(data.user.id)}
-            />
           </div>
+          <QRCode style={{ width: 256 }} value={qrCodeAddress(data.user.id)} />
         </div>
       </div>
-      <div style={{display: 'flex', justifyContent: 'center', marginTop: '5px'}}>
+      <br />
+      <CenteredContent>
         <Button
-          onClick={downloadId}
-          color='primary'
-          variant='contained'
+          onClick={onButtonClick}
+          color="primary"
+          variant="contained"
           disabled={downloading}
           data-testid="download_button"
+          startIcon={downloading && <Spinner />}
         >
           {t('misc.download_id')}
         </Button>
-      </div>
-    </div>
-  )
+      </CenteredContent>
+    </>
+  );
 }
