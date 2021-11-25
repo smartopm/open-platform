@@ -42,7 +42,7 @@ module Forms
       }
 
       allowed_community = %w[DoubleGDP Tilisi].include?(form.community.name)
-      if allowed_community && form.name == 'DRC Project Review Process'
+      if allowed_community && form.name == 'DRC Project Review Process V2'
         return TaskCreate.new_from_template(task_params, form.community)
       end
 
