@@ -738,10 +738,11 @@ UserPaymentPlanItem.propTypes = {
   userId: PropTypes.string.isRequired,
   currentUser: PropTypes.shape({
     userType: PropTypes.string,
-    permissions: PropTypes.shape({
+    permissions: PropTypes.arrayOf({
       payment_plan: PropTypes.shape({
         permissions: PropTypes.arrayOf(PropTypes.string)
-      })
+      }),
+      find: PropTypes.func
     })
   }).isRequired,
   refetch: PropTypes.func.isRequired,

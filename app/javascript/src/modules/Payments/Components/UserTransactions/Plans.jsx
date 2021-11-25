@@ -280,7 +280,8 @@ PaymentPlans.propTypes = {
     permissions: PropTypes.arrayOf({
       transaction: PropTypes.shape({
         permissions: PropTypes.arrayOf(PropTypes.string)
-      })
+      }),
+      find: PropTypes.func
     }),
     community: PropTypes.shape({
       imageUrl: PropTypes.string,
