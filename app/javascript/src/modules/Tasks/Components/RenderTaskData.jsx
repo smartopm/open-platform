@@ -109,6 +109,7 @@ export default function renderTaskData({
             aria-haspopup="true"
             data-testid="todo-menu"
             onClick={event => menuData.handleTodoMenu(event)}
+            color="primary"
           >
             <MoreHorizIcon />
           </IconButton>
@@ -189,6 +190,7 @@ export function TaskDataList({
               dataid={task.id}
               onClick={event => menuData.handleTodoMenu(event, task)}
               size="small"
+              color="primary"
             >
               <MoreVertIcon />
             </IconButton>
@@ -251,7 +253,7 @@ export function TaskDataList({
                 data-testid="task_subtasks"
                 size="medium"
               >
-                <AccountTreeIcon fontSize="small" color="primary" />
+                <AccountTreeIcon fontSize="small" color={task?.subTasks?.length ? 'primary': 'disabled'} />
               </IconButton>
             </Grid>
             <Grid item md={1} xs={2} className={classes.iconItem}><span>{task?.subTasks?.length}</span></Grid>
@@ -262,7 +264,7 @@ export function TaskDataList({
                 data-testid="task_comments"
                 size="medium"
               >
-                <QuestionAnswerIcon fontSize="small" color="primary" />
+                <QuestionAnswerIcon fontSize="small" color="disabled" />
               </IconButton>
             </Grid>
             <Grid item md={1} xs={2} className={classes.iconItem}><span>0</span></Grid>
@@ -281,7 +283,7 @@ export function TaskDataList({
                   onChange={event => handleFileInputChange(event, task)}
                   id="task-attach-file"
                 />
-                <AttachFileIcon fontSize="small" color="disabled" />
+                <AttachFileIcon fontSize="small" color={task?.documents?.length ? 'primary': 'disabled'} />
               </IconButton>
             </Grid>
             <Grid item md={1} xs={2} className={classes.iconItem}>
@@ -305,6 +307,7 @@ export function TaskDataList({
               dataid={task.id}
               onClick={event => menuData.handleTodoMenu(event, task)}
               size="small"
+              color="primary"
             >
               <MoreVertIcon />
             </IconButton>
