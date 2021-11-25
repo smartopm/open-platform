@@ -70,6 +70,12 @@ export default function PaymentPlans({ userId, user, userData }) {
   const currency = objectAccessor(currencies, user.community.currency) || '';
   const { locale } = user.community;
   const currencyData = { currency, locale };
+  
+  const userTransactionPermissions = user?.permissions.find(permissionObject => permissionObject.module === 'transaction')
+  const canFetchUserTransactions = userTransactionPermissions? userTransactionPermissions.permissions.includes('can_fetch_user_transactions'): false
+
+  const userPaymentPlanPermissions = user?.permissions.find(permissionObject => permissionObject.module === 'payment_plan')
+  const canCreatePaymentPlan = userPaymentPlanPermissions? userPaymentPlanPermissions.permissions.includes('can_create_payment_plan'): false
 
   const [
     loadBalance,
@@ -127,7 +133,7 @@ export default function PaymentPlans({ userId, user, userData }) {
         />
       )}
       {subtab === 'Transactions' &&
-       objectAccessor(user?.permissions, 'transaction')?.permissions?.includes('can_fetch_user_transactions') ? (
+       canFetchUserTransactions ? (
         transLoading ? (
           <Spinner />
         ) : (
@@ -180,7 +186,7 @@ export default function PaymentPlans({ userId, user, userData }) {
                         : { display: 'flex' }
                     }
                 >
-                  {objectAccessor(user?.permissions, 'payment_plan')?.permissions?.includes('can_create_payment_plan') && (
+                  {canCreatePaymentPlan && (
                     <div style={{ margin: '0 10px 10px 0', fontSize: '10px' }}>
                       <ButtonComponent
                         color="primary"
@@ -193,7 +199,7 @@ export default function PaymentPlans({ userId, user, userData }) {
                       />
                     </div>
                    )}
-                  {objectAccessor(user?.permissions, 'transaction')?.permissions?.includes('can_fetch_user_transactions') && (
+                  {canFetchUserTransactions && (
                     <div>
                       <ButtonComponent
                         color="default"

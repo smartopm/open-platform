@@ -11,14 +11,29 @@ describe('Payment', () => {
           permissions: ['can_see_menu_item'],
           role_id: roleRes.body.id,
         })
+
         cy.factory('permission', {
-          module: 'plan_payment',
-          permissions: ['can_see_menu_item', 'can_access_all_payments', 'can_create_plan_payment'],
+          module: 'payment_plan',
+          permissions: ['can_view_menu_list', 'can_create_payment_plan'],
           role_id: roleRes.body.id,
         })
+
+        cy.factory('permission', {
+          module: 'plan_payment',
+          permissions: ['can_see_menu_item', 'can_access_all_payments',
+                        'can_create_plan_payment', 'can_fetch_payments_list'],
+          role_id: roleRes.body.id,
+        })
+
         cy.factory('permission', {
           module: 'transaction',
-          permissions: ['can_create_transaction', 'can_fetch_accounting_stats', 'can_fetch_transaction_summary'],
+          permissions: ['can_create_transaction', 'can_fetch_user_transactions'],
+          role_id: roleRes.body.id,
+        })
+
+        cy.factory('permission', {
+          module: 'land_parcel',
+          permissions: ['can_fetch_land_parcels_with_plans'],
           role_id: roleRes.body.id,
         })
 
