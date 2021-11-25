@@ -51,4 +51,18 @@ mutation paymentReminderCreate(
   }
 `;
 
+export const TransferPaymentMutation = gql`
+  mutation transferPlanPayment(
+    $paymentId: ID!
+    $destinationPlanId: ID!
+  ) {
+    transferPlanPayment(paymentId: $paymentId, destinationPlanId: $destinationPlanId) {
+      payment {
+        id
+      }
+    }
+  }
+`;
+
+
 export default PaymentPlanUpdateMutation;

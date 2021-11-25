@@ -2,7 +2,6 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import React, { useEffect, useState } from 'react';
 import Typography from '@material-ui/core/Typography';
-import FormControl from '@material-ui/core/FormControl';
 import {
   Button,
   TextField,
@@ -24,7 +23,6 @@ import { CommunityUpdateMutation } from '../graphql/community_mutations';
 import DynamicContactFields from './DynamicContactFields';
 import MessageAlert from '../../../components/MessageAlert';
 import { useFileUpload } from '../../../graphql/useFileUpload';
-import ImageCropper from './ImageCropper';
 import {
   currencies,
   locales,
@@ -88,7 +86,6 @@ export default function CommunitySettings({ data, refetch }) {
 
   const quickLinksDisplayOptions = ['Dashboard', 'Menu'];
   const roleOptions = ['admin', 'client', 'resident'];
-  const [cropImage, setCropImage] = useState(false)
 
   const [communityUpdate] = useMutation(CommunityUpdateMutation);
   const [numberOptions, setNumberOptions] = useState([numbers]);
@@ -108,9 +105,6 @@ export default function CommunitySettings({ data, refetch }) {
   const [message, setMessage] = useState({ isError: false, detail: '' });
   const [alertOpen, setAlertOpen] = useState(false);
   const [mutationLoading, setCallMutation] = useState(false);
-  const [blob, setBlob] = useState(null);
-  const [inputImg, setInputImg] = useState('');
-  const [fileName, setFileName] = useState('');
   const [currency, setCurrency] = useState('');
   const [tagline, setTagline] = useState(data?.tagline || '');
   const [logoUrl, setLogoUrl] = useState(data?.logoUrl || '');
@@ -119,7 +113,6 @@ export default function CommunitySettings({ data, refetch }) {
   const [subAdministratorId, setSubAdministrator] = useState(data?.subAdministrator?.id || '');
   const [locale, setLocale] = useState('en-ZM');
   const [language, setLanguage] = useState('en-US');
-  const [showCropper, setShowCropper] = useState(false);
   const [hasQuickLinksSettingChanged, setHasQuickLinksSettingChanged] = useState(false);
   const [smsPhoneNumbers, setSMSPhoneNumbers] = useState(data?.smsPhoneNumbers?.join(',') || '');
   const [emergencyCallNumber, setEmergencyCallNumber] = useState(data?.emergencyCallNumber || '');
@@ -142,10 +135,6 @@ export default function CommunitySettings({ data, refetch }) {
 
   function handleAddNumberOption() {
     setNumberOptions([...numberOptions, numbers]);
-  }
-
-  function getBlob(blobb) {
-    setBlob(blobb);
   }
 
   // function handleQuicklyDisplay(event) {
@@ -276,14 +265,27 @@ export default function CommunitySettings({ data, refetch }) {
   }
 
   function onInputChange(file) {
-    setFileName(file.name);
     // convert image file to base64 string
     const reader = new FileReader();
 
     reader.addEventListener(
       'load',
       () => {
-        setInputImg(reader.result);
+        const image = new Image();
+        image.src = reader.result;
+        image.addEventListener(
+          'load',
+          // eslint-disable-next-line consistent-return
+          () => {
+            if(image.height > 40 || image.width > 150) {
+              setMessage({ isError: true, detail: t('community.upload_error') });
+              setAlertOpen(true);
+              return false
+            } 
+            uploadLogo(file);
+          },
+          false
+        );
       },
       false
     );
@@ -304,18 +306,8 @@ export default function CommunitySettings({ data, refetch }) {
 
   function uploadLogo(img) {
     onChange(img, false);
-    setShowCropper(false);
     setMessage({ isError: false, detail: t('community.logo_updated') });
     setAlertOpen(true);
-  }
-
-  function selectLogoOnchange(img) {
-    if (!cropImage) {
-      uploadLogo(img)
-    } else {
-      onInputChange(img);
-      setShowCropper(true);
-    }
   }
 
   function setLanguageInLocalStorage(selectedLanguage) {
@@ -435,31 +427,13 @@ export default function CommunitySettings({ data, refetch }) {
               <input
                 type="file"
                 hidden
-                onChange={event => selectLogoOnchange(event.target.files[0])}
+                onChange={event => onInputChange(event.target.files[0])}
                 accept="image/*"
               />
             </Button>
           </div>
-          <div>
-            <FormControl component="fieldset" className={classes.formControl}>
-              <FormControlLabel
-                control={<Checkbox color='primary' checked={cropImage} onChange={() => setCropImage(!cropImage)} name="crop" />}
-                label={t('community.crop_image')}
-              />
-            </FormControl>
-          </div>
         </div>
       </div>
-      <div style={{ position: 'relative' }}>
-        {showCropper && inputImg && (
-          <ImageCropper getBlob={getBlob} inputImg={inputImg} fileName={fileName} />
-        )}
-      </div>
-      {showCropper && blob && (
-        <Button variant="contained" style={{ margin: '10px' }} onClick={() => uploadLogo(blob)}>
-          Upload
-        </Button>
-      )}
       <div className={classes.information} style={{ marginTop: '40px' }}>
         <Typography variant="h6">{t('community.support_contact')}</Typography>
         <Typography variant="caption">{t('community.make_changes_support_contact')}</Typography>

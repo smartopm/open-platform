@@ -8,11 +8,11 @@ import currency from '../../../__mocks__/currency';
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
 describe('It should test the transfer plan modal component', () => {
-  const planData = [{
+  const planData = {
     amount: 1000,
     id: 'u3290u3u',
     status: 'paid'
-  }];
+  };
 
   it('should render transfer plan modal', () => {
     const container = render(
@@ -27,6 +27,9 @@ describe('It should test the transfer plan modal component', () => {
             balanceRefetch={jest.fn}
             planData={planData}
             currencyData={currency}
+            transferType='plan'
+            paymentId='sda5s5ss'
+            paymentData={{}}
           />
         </MockedProvider>
       </BrowserRouter>

@@ -14,7 +14,8 @@
     "edit_subscription_plan": "Edit plan",
     "edit_plan_settings": "Edit Plan Settings",
     "view_history": "VIEW HISTORY",
-    "view_all_subscription_plans": "View All Subscription Plans"
+    "view_all_subscription_plans": "View All Subscription Plans",
+    "transfer_payment": "Transfer Payment"
   },
   "misc": {
     "active": "Active",
@@ -84,7 +85,8 @@
     "plan_reminder_confirmation": "You are about to send an email to owners of {{planCount}} selected plans",
     "no_payments_made": "No payments have been made yet",
     "payment_due_date": "Next Payment Due: {{date}}",
-    "installment_amount": "Installment Amount: {{amount}}"
+    "installment_amount": "Installment Amount: {{amount}}",
+    "payment_transferred_successfully": "Payment transferred successfully"
   },
   "table_headers": {
     "receipt_number": "Receipt Number",
