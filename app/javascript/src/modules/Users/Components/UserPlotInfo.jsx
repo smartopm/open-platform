@@ -48,7 +48,7 @@ export default function UserPlotInfo({ account, userId, userName, currentUser })
     }
     return [];
   }
-  const landParcelPermissions = currentUser?.permissions.find(permissionObject => permissionObject.module === 'land_parcel')
+  const landParcelPermissions = currentUser?.permissions?.find(permissionObject => permissionObject.module === 'land_parcel')
   const canCreateLandParcel = landParcelPermissions? landParcelPermissions.permissions.includes('can_create_land_parcel'): false
 
   return (

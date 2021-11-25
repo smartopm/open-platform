@@ -53,18 +53,20 @@ describe('Render Payment Plan Item', () => {
     const refetch = jest.fn();
     const currentUser =  {
       userType: 'admin',
-      permissions: {
-        payment_plan: {
-          permissions: [
+      permissions: [
+          {  
+            module: 'payment_plan',
+            permissions: [
             'can_update_payment_day',
-            'can_view_menu_list'
-          ]
-        }, plan_payment: {
+            'can_view_menu_list']
+          },  
+          { 
+          module: 'plan_payment',
           permissions: [
           'can_view_menu_list'
           ]
-        }
-      }
+          }
+      ]
     };
     const container = render(
       <MockedProvider mocks={[requestMock]} addTypename={false}>

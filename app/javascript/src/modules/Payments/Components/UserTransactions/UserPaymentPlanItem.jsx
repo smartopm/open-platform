@@ -566,7 +566,7 @@ export function renderPlan(
     planMenuList.push({ ...obj });
   });
 
-  const paymentPlanPermissions = currentUser?.permissions.find(permissionObject => permissionObject.module === 'payment_plan')
+  const paymentPlanPermissions = currentUser?.permissions?.find(permissionObject => permissionObject.module === 'payment_plan')
   const canViewMenuList = paymentPlanPermissions? paymentPlanPermissions.permissions.includes('can_view_menu_list'): false
   const canUpdatePaymentDay = paymentPlanPermissions? paymentPlanPermissions.permissions.includes('can_update_payment_day'): false
 

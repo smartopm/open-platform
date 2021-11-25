@@ -9,7 +9,12 @@ const authState = {
       menuItems: [{ menu_link: 'https://some-link', menu_name: 'Custom Menu', display_on: ['Dashboard'], roles: ['admin', 'client'] }],
       smsPhoneNumbers: ["+254724821901", "+154724582391"],
       emergencyCallNumber: "254724821901",
-      features: {},
+      features: {
+        Tasks: { features: [] },
+        Messages: { features: [] },
+        Payments: { features: [] },
+        Properties: { features: []}
+      },
       imageUrl: 'http://image.jpg'
     },
     email: 'user@community.co',
@@ -69,6 +74,15 @@ const authState = {
       },
       { module: 'entry_request',
         permissions: ['can_grant_entry', 'can_update_entry_request']
+      },
+      { module: 'transaction',
+        permissions: ['can_fetch_user_transactions']
+      },
+      { module: 'payment_plan',
+        permissions: ['can_update_payment_day', 'can_view_menu_list', 'can_create_payment_plan']
+      },
+      { module: 'plan_payment',
+        permissions: ['can_view_menu_list']
       },
     ]
 
