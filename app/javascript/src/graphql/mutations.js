@@ -268,7 +268,7 @@ export const EntryRequestCreate = gql`
 
 // Reduce the returned response load
 export const EntryRequestGrant = gql`
-  mutation EntryRequestGrantMutation($id: ID!) {
+  mutation EntryRequestGrantAccessMutation($id: ID!) {
     result: entryRequestGrant(id: $id) {
       entryRequest {
         ...EntryRequestFields
