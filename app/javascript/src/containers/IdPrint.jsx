@@ -2,25 +2,16 @@
 import React, { useContext, useState } from 'react'
 import { useQuery } from 'react-apollo'
 import { QRCode } from 'react-qr-svg'
-import { Button } from '@material-ui/core';
+import { Button, Typography } from '@material-ui/core';
 import { useTranslation } from 'react-i18next';
 import domtoimage from 'dom-to-image';
 import Loading from '../shared/Loading'
-import DateUtil from '../utils/dateutil'
 import { UserQuery } from '../graphql/queries'
 import ErrorPage from '../components/Error'
 import CommunityName from '../shared/CommunityName'
 import { Context } from './Provider/AuthStateProvider'
+import CenteredContent from '../shared/CenteredContent';
 
-function expiresAtStr(datetime) {
-  if (datetime) {
-    const date = DateUtil.fromISO8601(datetime)
-    return (
-      `${date.getFullYear()  }-${  date.getMonth() + 1  }-${  date.getDate()}`
-    )
-  }
-  return 'Never'
-}
 
 function qrCodeAddress(userId) {
   const timestamp = Date.now()
@@ -37,13 +28,6 @@ export default function IdPrintPage({ match }){
   if (error) return <ErrorPage title={error.message} />
 
   return <UserPrintDetail data={data} />
-}
-
-function toTitleCase(str) {
-// eslint-disable-next-line
-  return str.replace(/\w\S*/g, function (txt) {
-    return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase()
-  })
 }
 
 export function UserPrintDetail({ data }) {
@@ -77,31 +61,12 @@ export function UserPrintDetail({ data }) {
           className="card id_card_box"
           style={{ width: '325px' }}
         >
-          <div
-            className="d-flex justify-content-center"
-            style={{ marginTop: '1.75em' }}
-          >
+          <CenteredContent>
             <CommunityName authState={authState} />
-          </div>
-          <div>
-            <h1 style={{ fontWeight: '800' }}>{data.user.name}</h1>
-          </div>
-          <div>
-            <div>
-              {t('misc.role')}
-              :
-              {' '}
-              {toTitleCase(data.user.userType)}
-            </div>
-          </div>
-          <div>
-            <div className="expires" style={{marginBottom: '5px'}}>
-              {t('misc.exp')}
-              :
-              {' '}
-              {expiresAtStr(data.user.expiresAt)}
-            </div>
-          </div>
+          </CenteredContent>
+          <CenteredContent>
+            <Typography component="h1">{data.user.name}</Typography>
+          </CenteredContent>
           <div>
             <QRCode
               style={{ width: 256 }}
