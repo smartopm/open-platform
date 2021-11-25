@@ -146,6 +146,7 @@ admin:
       - can_see_menu_item
       - can_invite_guest
       - can_create_user
+      - can_view_guests
   profile:
     permissions:
       - can_see_menu_item
@@ -360,6 +361,7 @@ security_guard:
       - can_search_guests
       - can_view_own_profile
       - can_edit_own_profile
+      - can_view_guests
   community:
     permissions:
       - can_see_menu_item

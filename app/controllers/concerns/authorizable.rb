@@ -55,7 +55,7 @@ module Authorizable
 
     user = @site_community.users.find_via_auth_token(token, @site_community)
 
-    check_user_role(user)
+    # check_user_role(user)
     log_active_user(user)
     {
       current_user: user,
