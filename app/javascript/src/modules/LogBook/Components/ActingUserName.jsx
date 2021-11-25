@@ -5,22 +5,20 @@ import PropTypes from 'prop-types';
 import Text from '../../../shared/Text';
 
 export default function ActingUserName({ entry, t }) {
-  //   const user = entry.entryRequest?.grantor ? entry.entryRequest?.grantor : entry.actingUser;
   const user =
     // eslint-disable-next-line no-nested-ternary
-    entry.data.note === 'Exited'
+    entry.data?.note === 'Exited'
       ? entry.actingUser
       : entry.entryRequest?.grantor
       ? entry.entryRequest?.grantor
       : entry.actingUser;
-
   return (
     <>
       <Typography variant="caption" data-testid="acting_guard_title">
         {`${t('logbook:log_title.guard')}: `}
       </Typography>
-      <Link to={`/user/${user.id}`} data-testid="acting_user_name">
-        <Text color="secondary" content={user.name} />
+      <Link to={`/user/${user?.id}`} data-testid="acting_user_name">
+        <Text color="secondary" content={user?.name} />
       </Link>
     </>
   );

@@ -23,7 +23,7 @@ import ImageUploadPreview from '../../../shared/imageUpload/ImageUploadPreview';
 import MenuList from '../../../shared/MenuList';
 import Text from '../../../shared/Text';
 import CenteredContent from '../../../shared/CenteredContent';
-import ActingUserName from './ActingUser';
+import ActingUserName from './ActingUserName';
 
 export default function LogEvents({
   data,
