@@ -305,11 +305,10 @@ es:
   email_template:
     welcome_email:
       action: INICIAR
-      body: Estamos construyendo un mejor lugar para vivir, trabajar y jugar.<br/><br/>Y
-        es impulsado por una aplicación móvil que nos ayudará<br/>a conectar con residentes,
-        acelerar el crecimiento, y brindar<br/>servicios públicos responsables.<br/><br/>Este
-        es un correo electrónico automático para confirmar que su cuenta ha sido creada.
-        ¿Te gustaría ver más?
+      body: Ciudad Morazán está construyendo un mejor lugar para vivir.<br/><br/>Esta
+        Aplicación nos ayudará a conectar con<br/>residentes, acelerar el crecimiento,
+        y brindar<br/>servicios públicos efectivamente.<br/><br/>Su usuario ha sido
+        creado en nuestra Aplicación. Presione aquí para ver más.
       subject: Bienvenido a %{community_name}
       title: Bienvenido</b><br/> a la comunidad en línea de %{community_name}
   emergency_sos:
@@ -392,6 +391,11 @@ es:
     phone_number:
       found_blank: El número de teléfono no puede estar en blanco
     plan_payment:
+      cannot_transfer_cancelled_payment: No se puede realizar la transferencia del
+        pago cancelado
+      cannot_transfer_to_non_active_plan: La transferencia de pago de pago no se puede
+        realizar aun plan de pago que no está activo. Por favor intente transferir
+        a otros planes
       not_found: Pago no encontrado
     post_tag:
       not_found: Etiqueta no encontrada
