@@ -9,7 +9,7 @@ describe('Custom Forms', () => {
         cy.factory('permission', {
           module: 'forms',
           permissions: ['can_access_forms', 
-          'can_see_menu_item', 'can_create_category', 'can_create_form', 'can_view_form_entries', 'can_view_form_form_submissions', 'can_create_form_properties', 'can_fill_a_form'],
+          'can_see_menu_item', 'can_create_form', 'can_fill_a_form'],
           role_id: roleRes.body.id,
         })
         cy.factory('permission', {
