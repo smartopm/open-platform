@@ -52,7 +52,10 @@ export default function GuestsView({
       refType: 'Logs::EntryRequest'
     };
 
-    grantEntry({ variables: { id: user.id } })
+    grantEntry({
+      variables: { id: user.id },
+      fetchPolicy: "no-cache"
+     })
       .then(() => {
         setMessage({
           isError: false,
