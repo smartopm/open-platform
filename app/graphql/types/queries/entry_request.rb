@@ -97,7 +97,7 @@ module Types::Queries::EntryRequest
       .entry_requests
       .where(user: context[:current_user], is_guest: true)
       .where.not(visitation_date: nil)
-      .includes(:user).search(query)
+      .includes(:user).search(or: [{ query: (query || '.') }, { name: { matches: query } }])
       .limit(limit).offset(offset)
       .unscope(:order).order(created_at: :desc)
       .with_attached_images
@@ -110,7 +110,7 @@ module Types::Queries::EntryRequest
     context[:site_community]
       .entry_requests
       .where(granted_state: 1)
-      .includes(:user, :guest).search(query)
+      .includes(:user, :guest).search(or: [{ query: (query || '.') }, { name: { matches: query } }])
       .limit(limit).offset(offset)
       .unscope(:order).order(granted_at: :desc)
       .with_attached_images
@@ -141,7 +141,7 @@ module Types::Queries::EntryRequest
       end
       # rubocop:enable Style/CaseLikeIf
     end
-    entry_requests.search(query)
+    entry_requests.search(or: [{ query: (query || '.') }, { name: { matches: query } }])
   end
   # rubocop:enable Metrics/MethodLength,  Metrics/AbcSize
 

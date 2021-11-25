@@ -384,29 +384,29 @@ RSpec.describe Types::Queries::User do
   end
 
   describe 'user_search' do
-    before :each do
-      @user = create(:user_with_community, name: 'Joe Test')
-      @user2 = create(:user_with_community, name: 'Doe Test', community: @user.community)
-      @admin_user = create(:user_with_community,
-                           user_type: 'admin',
-                           community_id: @user.community_id)
-      @visitor = create(:user_with_community,
-                        user_type: 'visitor',
-                        email: 'visiting@admin.com',
-                        community_id: @user.community_id)
-      @current_user = @admin_user
+    let!(:user) { create(:user_with_community, name: 'Jose') }
+    let!(:user2) { create(:user_with_community, name: 'Josè', community: user.community) }
+    let!(:admin_user) do
+      create(:user_with_community, name: 'Joe Test', user_type: 'admin',
+                                   community_id: user.community_id)
+    end
+    let!(:visitor) do
+      create(:user_with_community, user_type: 'visitor', email: 'visiting@admin.com',
+                                   community_id: user.community_id)
+    end
 
-      @query =
-        %(query($query: String!) {
+    let(:query) do
+      %(query($query: String!) {
           userSearch(query: $query) {
             id
             name
             userType
           }
         })
+    end
 
-      @guest_search_query =
-        %(
+    let(:guest_search_query) do
+      %(
           query searchGuest($query: String) {
             searchGuests(query: $query) {
               id
@@ -417,9 +417,10 @@ RSpec.describe Types::Queries::User do
             }
           }
         )
+    end
 
-      @my_guest_search_query =
-        %(
+    let(:my_guest_search_query) do
+      %(
           query guests($query: String){
             myGuests(query: $query) {
               id
@@ -434,76 +435,88 @@ RSpec.describe Types::Queries::User do
         )
     end
 
+    context 'when users are present with special characters' do
+      it 'returns the list of users with name matching with normal and special character' do
+        result = DoubleGdpSchema.execute(query, context: {
+                                           current_user: admin_user,
+                                           site_community: admin_user.community,
+                                         }, variables: { query: 'Jose' }).as_json
+        user_data = result.dig('data', 'userSearch')
+        expect(result.dig('data', 'userSearch').length).to eql 2
+        expect(%w[Jose Josè]).to include(user_data[0]['name'])
+        expect(%w[Jose Josè]).to include(user_data[1]['name'])
+      end
+    end
+
     it 'returns user who matches the query ' do
-      result = DoubleGdpSchema.execute(@query, context: {
-                                         current_user: @current_user,
+      result = DoubleGdpSchema.execute(query, context: {
+                                         current_user: admin_user,
                                        },
-                                               variables: { query: 'Joe' }).as_json
+                                              variables: { query: 'Joe' }).as_json
 
       expect(result.dig('data', 'userSearch').length).to eql 1
       expect(result.dig('data', 'userSearch')[0]['name']).to eql 'Joe Test'
     end
 
     it 'searches by contact info' do
-      @user2.contact_infos.create(contact_type: 'phone', info: '09056783452')
-      result = DoubleGdpSchema.execute(@query, context: {
-                                         current_user: @current_user,
+      admin_user.contact_infos.create(contact_type: 'phone', info: '09056783452')
+      result = DoubleGdpSchema.execute(query, context: {
+                                         current_user: admin_user,
                                        },
-                                               variables: {
-                                                 query: 'contact_info: 09056783452',
-                                               }).as_json
+                                              variables: {
+                                                query: 'contact_info: 09056783452',
+                                              }).as_json
 
       expect(result.dig('data', 'userSearch').length).to eql 1
-      expect(result.dig('data', 'userSearch')[0]['name']).to eql 'Doe Test'
+      expect(result.dig('data', 'userSearch')[0]['name']).to eql 'Joe Test'
     end
 
     it 'searches visitors' do
-      result = DoubleGdpSchema.execute(@guest_search_query, context: {
-                                         current_user: @current_user,
-                                         site_community: @current_user.community,
+      result = DoubleGdpSchema.execute(guest_search_query, context: {
+                                         current_user: admin_user,
+                                         site_community: admin_user.community,
                                        },
-                                                            variables: {
-                                                              query: 'visiting@admin.com',
-                                                            }).as_json
+                                                           variables: {
+                                                             query: 'visiting@admin.com',
+                                                           }).as_json
 
       expect(result.dig('data', 'searchGuests').length).to eql 1
       expect(result.dig('data', 'searchGuests')[0]['name']).to eql 'Mark Test'
     end
 
     it 'searches for guests I invited' do
-      result = DoubleGdpSchema.execute(@my_guest_search_query, context: {
-                                         current_user: @current_user,
+      result = DoubleGdpSchema.execute(my_guest_search_query, context: {
+                                         current_user: admin_user,
                                        },
-                                                               variables: {
-                                                                 query: 'visiting@admin.com',
-                                                               }).as_json
+                                                              variables: {
+                                                                query: 'visiting@admin.com',
+                                                              }).as_json
 
       expect(result.dig('data', 'myGuests').length).to eql 0
     end
 
     it 'should fail if no logged in' do
-      result = DoubleGdpSchema.execute(@query, context: { current_user: nil }).as_json
+      result = DoubleGdpSchema.execute(query, context: { current_user: nil }).as_json
       expect(result.dig('data', 'userSearch')).to be_nil
     end
 
     it ' guest_search_query should fail if no logged in' do
-      result = DoubleGdpSchema.execute(@guest_search_query, context: { current_user: nil }).as_json
+      result = DoubleGdpSchema.execute(guest_search_query, context: { current_user: nil }).as_json
       expect(result.dig('data', 'searchGuests')).to be_nil
     end
 
     it ' guest_search_query should fail if no logged in' do
-      result = DoubleGdpSchema.execute(@my_guest_search_query, context:
+      result = DoubleGdpSchema.execute(my_guest_search_query, context:
                                                 { current_user: nil }).as_json
       expect(result.dig('data', 'myGuests')).to be_nil
     end
   end
 
   describe 'user_activity_point' do
-    before :each do
-      @user = create(:user_with_community)
-      @activity_point = create(:activity_point, user: @user, article_read: 2, referral: 10)
-      @query =
-        %(query userActivityPoint {
+    let!(:user) { create(:user_with_community) }
+    let!(:activity_point) { create(:activity_point, user: user, article_read: 2, referral: 10) }
+    let(:query) do
+      %(query userActivityPoint {
           userActivityPoint {
             userId
             total
@@ -517,11 +530,11 @@ RSpec.describe Types::Queries::User do
     end
 
     it "returns user's current activity point" do
-      result = DoubleGdpSchema.execute(@query, context: {
-                                         current_user: @user,
+      result = DoubleGdpSchema.execute(query, context: {
+                                         current_user: user,
                                        }).as_json
 
-      expect(result.dig('data', 'userActivityPoint', 'userId')).to eq(@user.id)
+      expect(result.dig('data', 'userActivityPoint', 'userId')).to eq(user.id)
       expect(result.dig('data', 'userActivityPoint', 'total')).to eq(12)
       expect(result.dig('data', 'userActivityPoint', 'articleRead')).to eq(2)
       expect(result.dig('data', 'userActivityPoint', 'articleShared')).to eq(0)
@@ -531,7 +544,7 @@ RSpec.describe Types::Queries::User do
     end
 
     it "returns 'unauthorized' if user is not logged in" do
-      result = DoubleGdpSchema.execute(@query, context: {
+      result = DoubleGdpSchema.execute(query, context: {
                                          current_user: nil,
                                        }).as_json
 
@@ -540,13 +553,13 @@ RSpec.describe Types::Queries::User do
     end
 
     it "creates a new empty user's activity point if there's no current one" do
-      @activity_point.update!(created_at: 10.days.ago)
+      activity_point.update!(created_at: 10.days.ago)
       prev_activtity_point_count = Users::ActivityPoint.count
-      result = DoubleGdpSchema.execute(@query, context: {
-                                         current_user: @user,
+      result = DoubleGdpSchema.execute(query, context: {
+                                         current_user: user,
                                        }).as_json
 
-      expect(result.dig('data', 'userActivityPoint', 'userId')).to eq(@user.id)
+      expect(result.dig('data', 'userActivityPoint', 'userId')).to eq(user.id)
       expect(result.dig('data', 'userActivityPoint', 'total')).to eq(0)
       expect(result.dig('data', 'userActivityPoint', 'articleRead')).to eq(0)
       expect(result.dig('data', 'userActivityPoint', 'articleShared')).to eq(0)
