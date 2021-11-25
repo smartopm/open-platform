@@ -7,29 +7,41 @@ describe('Properties & Co-ownership Payment Plan', () => {
       cy.factory('role', {
         name: 'admin',
       }).then(roleRes =>{
-
         cy.factory('permission', {
           module: 'land_parcel',
           permissions: ['can_see_menu_item', 'can_fetch_land_parcels',
-           'can_view_all_land_parcels', 'can_create_land_parcel',
-            'can_update_land_parcel', 'can_fetch_house', 'can_merge_land_parcels'],
+                        'can_view_all_land_parcels', 'can_create_land_parcel',
+                        'can_fetch_house'],
           role_id: roleRes.body.id,
         })
-
+        cy.factory('permission', {
+          module: 'payment_plan',
+          permissions: ['can_view_menu_list', 'can_create_payment_plan'],
+          role_id: roleRes.body.id,
+        })
         cy.factory('permission', {
           module: 'user',
-          permissions: ['can_get_users_lite', 'can_see_menu_item', 
-                        'can_get_users', 'can_view_admin_users', 
-                        'can_update_user_details'],
+          permissions: ['can_get_users_lite', 'can_see_menu_item',, 
+                        'can_get_users', 'can_view_admin_users',
+                        'can_access_all_users'],
           role_id: roleRes.body.id,
         })
         cy.factory('permission', {
           module: 'transaction',
-          permissions: ['can_fetch_transaction_summary', 'can_fetch_user_transactions'],
+          permissions: ['can_fetch_transaction_summary',
+                        'can_fetch_user_transactions'],
           role_id: roleRes.body.id,
         })
-
-        
+        cy.factory('permission', {
+          module: 'label',
+          permissions: ['can_fetch_all_labels'],
+          role_id: roleRes.body.id,
+        })
+        cy.factory('permission', {
+          module: 'profile',
+          permissions: ['can_see_menu_item'],
+          role_id: roleRes.body.id,
+        })
         cy.factory('admin_user', {
           name: 'Larry Bird',
           phone_number: '2348167740149',

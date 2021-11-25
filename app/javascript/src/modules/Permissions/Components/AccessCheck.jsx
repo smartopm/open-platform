@@ -4,7 +4,6 @@ import { Context as AuthStateContext } from '../../../containers/Provider/AuthSt
 import permissionsCheck from '../utils';
 
 export default function AccessCheck({ allowedPermissions, children, module }) {
-  console.log("Mutuba", allowedPermissions, module)
   const authState = useContext(AuthStateContext);
   const userPermissionsModule = authState.user?.permissions.find(permissionObject => permissionObject.module === module);
   if (userPermissionsModule === undefined){

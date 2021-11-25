@@ -277,7 +277,7 @@ PaymentPlans.propTypes = {
   user: PropTypes.shape({
     id: PropTypes.string,
     userType: PropTypes.string,
-    permissions: PropTypes.shape({
+    permissions: PropTypes.arrayOf({
       transaction: PropTypes.shape({
         permissions: PropTypes.arrayOf(PropTypes.string)
       })
