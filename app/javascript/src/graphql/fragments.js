@@ -101,6 +101,7 @@ export const EntryRequestFragment = {
       isGuest
       status
       grantor {
+        id
         name
       }
       user {
