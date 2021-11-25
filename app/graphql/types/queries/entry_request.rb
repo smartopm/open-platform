@@ -87,7 +87,6 @@ module Types::Queries::EntryRequest
     entry_requests = handle_search(entry_requests, query) if query
     entry_requests
   end
-  # rubocop:enable Metrics/MethodLength
 
   # rubocop:disable Metrics/AbcSize
   def scheduled_guest_list(offset: 0, limit: 50, query: nil)
@@ -97,7 +96,8 @@ module Types::Queries::EntryRequest
       .entry_requests
       .where(user: context[:current_user], is_guest: true)
       .where.not(visitation_date: nil)
-      .includes(:user).search(or: [{ query: (query || '.') }, { name: { matches: query } }])
+      .includes(:user)
+      .search(or: [{ query: (query.presence || '.') }, { name: { matches: query } }])
       .limit(limit).offset(offset)
       .unscope(:order).order(created_at: :desc)
       .with_attached_images
@@ -110,7 +110,8 @@ module Types::Queries::EntryRequest
     context[:site_community]
       .entry_requests
       .where(granted_state: 1)
-      .includes(:user, :guest).search(or: [{ query: (query || '.') }, { name: { matches: query } }])
+      .includes(:user, :guest)
+      .search(or: [{ query: (query.presence || '.') }, { name: { matches: query } }])
       .limit(limit).offset(offset)
       .unscope(:order).order(granted_at: :desc)
       .with_attached_images
@@ -120,7 +121,7 @@ module Types::Queries::EntryRequest
 
   private
 
-  # rubocop:disable Metrics/MethodLength,  Metrics/AbcSize
+  # rubocop:disable Metrics/AbcSize
   def handle_search(entry_requests, query)
     # Support legacy ends_at field for search
     # Also search by visit_end_date to find re-ocurring visits
@@ -141,7 +142,7 @@ module Types::Queries::EntryRequest
       end
       # rubocop:enable Style/CaseLikeIf
     end
-    entry_requests.search(or: [{ query: (query || '.') }, { name: { matches: query } }])
+    entry_requests.search(or: [{ query: (query.presence || '.') }, { name: { matches: query } }])
   end
   # rubocop:enable Metrics/MethodLength,  Metrics/AbcSize
 
