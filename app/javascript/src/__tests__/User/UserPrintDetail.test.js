@@ -1,5 +1,5 @@
 import React from 'react';
-import { fireEvent, render, waitFor } from '@testing-library/react';
+import { render, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { BrowserRouter } from 'react-router-dom';
 import { MockedProvider } from '@apollo/react-testing';
@@ -39,8 +39,6 @@ describe('UserPrint Detail component', () => {
       expect(container.getByTestId('error')).toBeInTheDocument();
       expect(container.getByTestId('error').textContent).toBe("");
       expect(container.queryByTestId('download_button').textContent).toContain('misc.download_id');
-      const button = container.getByTestId('download_button');
-      fireEvent.click(button);
     })
   });
 it('renders id card page', async () => {
