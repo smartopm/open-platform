@@ -3,7 +3,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import Typography from '@mui/material/Typography';
-import Button from '@mui/material/Button';
+import Button from '@material-ui/core/Button';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useApolloClient, useMutation } from 'react-apollo';
 import { Link } from 'react-router-dom';
