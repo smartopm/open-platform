@@ -81,8 +81,10 @@ describe('Comment Edit Field Component', () => {
       userEvent.type(description, 'description');
       expect(description.value).toBe('Thisdescription');
 
-      userEvent.type(color, 'color');
-      expect(color.value).toBe('#fff');
+      fireEvent.change(color, {
+        target: { value: '#fff' }
+      })
+      expect(color.value).toBe('#fff')
 
       const button = container.queryByTestId('custom-dialog-button');
       fireEvent.click(button);
