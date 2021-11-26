@@ -82,8 +82,9 @@ export function UserPrintDetail({ data }) {
           {t('misc.download_id')}
         </Button>
       </CenteredContent>
-
-      {error && <Typography data-testid="error" color="error">{error}</Typography>}
+      <CenteredContent>
+        <Typography data-testid="error" color="error">{error}</Typography>
+      </CenteredContent>
     </>
   );
 }
