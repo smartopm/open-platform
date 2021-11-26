@@ -45,6 +45,7 @@
     "babel-runtime": "^6.26.0",
     "bootstrap": "^4.3.1",
     "browser-image-compression": "^1.0.16",
+    "core-js": "^3.19.1",
     "date-fns": "^2.11.1",
     "dom-to-image": "^2.6.0",
     "dompurify": "^2.0.12",
@@ -86,6 +87,7 @@
     "react-signature-canvas": "^1.0.3",
     "react-video-recorder": "^3.19.1",
     "recharts": "^2.0.6",
+    "regenerator-runtime": "^0.13.9",
     "styled-components": "^5.3.1",
     "use-long-press": "^1.1.1"
   },
