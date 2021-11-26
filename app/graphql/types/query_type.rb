@@ -128,7 +128,7 @@ module Types
       user = Users::User.allowed_users(context[:current_user]).find_by(id: user_id)
       return user if user.present?
 
-      raise GraphQL::ExecutionError, I18n.t('errors.user.not_found')
+      raise GraphQL::ExecutionError, I18n.t('errors.user.does_not_exist')
     end
   end
 end

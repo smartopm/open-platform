@@ -29,6 +29,11 @@ module Types::Queries::PaymentPlan
       description 'returns all payment plans for community'
       argument :query, String, required: false
     end
+
+    field :user_general_plan, Types::PaymentPlanType, null: true do
+      description 'returns general plan for user'
+      argument :user_id, GraphQL::Types::ID, required: true
+    end
   end
 
   # Returns list of user's all payment plans with payments
@@ -89,6 +94,14 @@ module Types::Queries::PaymentPlan
       land_parcels: { community_id: context[:site_community].id },
     ).order(:status)
     filtered_plans(plans, query).sort_by { |plan| [(plan.owing_amount * -1), plan.status] }
+  end
+
+  # Returns user's general payment plan
+  #
+  # @return PaymentPlan
+  def user_general_plan(user_id: nil)
+    user = verified_user(user_id)
+    user.payment_plans.general_plans.includes(plan_payments: :user_transaction).first
   end
 
   private
