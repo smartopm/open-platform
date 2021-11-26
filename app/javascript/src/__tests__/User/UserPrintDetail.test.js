@@ -1,10 +1,10 @@
 import React from 'react';
-import { fireEvent, render } from '@testing-library/react';
+import { fireEvent, render, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { BrowserRouter } from 'react-router-dom';
 import { MockedProvider } from '@apollo/react-testing';
 import { act } from 'react-dom/test-utils';
-import IdPrintPage, { UserPrintDetail } from '../../containers/IdPrint';
+import IdPrintPage, { qrCodeAddress, UserPrintDetail } from '../../containers/IdPrint';
 import { Context } from '../../containers/Provider/AuthStateProvider';
 import userMock from '../../__mocks__/userMock';
 
@@ -18,9 +18,9 @@ describe('UserPrint Detail component', () => {
       expiresAt: null
     }
   };
-  it('should render correctly', () => {
+  it('should render correctly', async () => {
     let container;
-    
+
     act(() => {
       container = render(
         <Context.Provider value={userMock}>
@@ -33,12 +33,14 @@ describe('UserPrint Detail component', () => {
       );
     })
 
-    expect(container.queryByText('Another somebodyy')).toBeInTheDocument();
-    expect(container.queryByText('misc.role: Client')).toBeInTheDocument();
-    expect(container.queryByText('misc.exp: Never')).toBeInTheDocument();
-    expect(container.getByTestId('download_button')).toBeInTheDocument();
-    const button = container.getByTestId('download_button');
-    fireEvent.click(button);
+    await waitFor(() => {
+      expect(container.queryByText('Another somebodyy')).toBeInTheDocument();
+      expect(container.getByTestId('download_button')).toBeInTheDocument();
+      expect(container.getByTestId('error')).not.toBeInTheDocument();
+      expect(container.queryByTestId('download_button').textContent).toContain('misc.download_id');
+      const button = container.getByTestId('download_button');
+      fireEvent.click(button);
+    })
   });
 it('renders id card page', () => {
     const matchProps = {
@@ -53,4 +55,11 @@ it('renders id card page', () => {
     );
     expect(container.queryByTestId('loader')).toBeInTheDocument();
   });
+
+  it('test for the qr code helper', () => {
+    jest.useFakeTimers('modern');
+    jest.setSystemTime(new Date('2021-01-01 01:00'));
+    const link = qrCodeAddress('somefsuhdw83928329')
+    expect(link).toContain("http://localhost/user/somefsuhdw83928329/1609462800000")
+  })
 });

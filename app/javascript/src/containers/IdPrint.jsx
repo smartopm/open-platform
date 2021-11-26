@@ -12,7 +12,7 @@ import CommunityName from '../shared/CommunityName';
 import { Context } from './Provider/AuthStateProvider';
 import CenteredContent from '../shared/CenteredContent';
 
-function qrCodeAddress(userId) {
+export function qrCodeAddress(userId) {
   const timestamp = Date.now();
   const linkUrl = `${window.location.protocol}//${window.location.hostname}/user/${userId}/${timestamp}`;
   return linkUrl;
@@ -32,6 +32,7 @@ export function UserPrintDetail({ data }) {
   const authState = useContext(Context);
   const { t } = useTranslation('common');
   const [downloading, setDownloading] = useState(false);
+  const [error, setError] = useState(null)
   const ref = useRef(null);
 
   const onButtonClick = useCallback(() => {
@@ -48,8 +49,8 @@ export function UserPrintDetail({ data }) {
         link.click();
         setDownloading(false);
       })
-      .catch(err => {
-        console.log(err);
+      .catch(() => {
+        setError(t('errors.something_wrong_qr_code'))
         setDownloading(false);
       });
   }, [ref]);
@@ -64,6 +65,7 @@ export function UserPrintDetail({ data }) {
           <div style={{ display: 'flex', justifyContent: 'center', whiteSpace: 'nowrap' }}>
             <Typography component="h1">{data.user.name}</Typography>
           </div>
+          <br />
           <QRCode style={{ width: 256 }} value={qrCodeAddress(data.user.id)} />
         </div>
       </div>
@@ -80,6 +82,8 @@ export function UserPrintDetail({ data }) {
           {t('misc.download_id')}
         </Button>
       </CenteredContent>
+
+      {error && <Typography data-testid="error" color="error">{error}</Typography>}
     </>
   );
 }
