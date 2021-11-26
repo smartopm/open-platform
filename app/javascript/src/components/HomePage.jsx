@@ -195,7 +195,7 @@ export default function Homepage({ authState, quickLinks }) {
       path: `/timesheet/${authState.user.id}`,
 
       icon: <PlaylistAddCheckIcon color="primary" fontSize="large" />,
-      access: ['contractor', 'site_worker']
+      access: ['contractor', 'site_worker', 'site_manager']
     },
     {
       card_id: 17,
@@ -209,7 +209,7 @@ export default function Homepage({ authState, quickLinks }) {
           </div>
         </a>
       ),
-      access: ['contractor', 'site_worker']
+      access: ['contractor', 'site_worker', 'site_manager']
     },
     {
       title: t('common:misc.discussions'),
@@ -224,7 +224,8 @@ export default function Homepage({ authState, quickLinks }) {
         'contractor',
         'resident',
         'visitor',
-        'site_worker'
+        'site_worker',
+        'site_manager'
       ]
     },
 

@@ -24,6 +24,9 @@ Ciudad Morazán:
         - can_view_own_profile
         - can_edit_own_profile
         - can_view_guests
+    discussion:
+      permissions:
+        - can_access_all_discussions
     logout:
       permissions:
         - can_see_menu_item
@@ -35,6 +38,9 @@ Ciudad Morazán:
       permissions:
         - can_view_own_profile
         - can_edit_own_profile
+    discussion:
+      permissions:
+        - can_access_all_discussions
     logout:
       permissions:
         - can_see_menu_item

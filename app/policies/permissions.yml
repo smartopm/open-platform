@@ -396,6 +396,9 @@ site_worker:
   community:
     permissions:
       - can_see_menu_item
+  discussion:
+    permissions:
+      - can_access_all_discussions
   logout:
     permissions:
       - can_see_menu_item

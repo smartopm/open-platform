@@ -32,7 +32,7 @@ module Authorizable
                        'dev.dgdp.site' => 'DoubleGDP',
                        'double-gdp-dev.herokuapp.com' => 'DAST' }
     if ['dgdp.site', 'rails'].include?(request.domain) && request.subdomain != 'dev'
-      @site_community = Community.find_by(name: 'Nkwashi')
+      @site_community = Community.find_by(name: 'Ciudad Morazán')
     else
       dom = "#{request.subdomain}.#{request.domain}"
       @site_community = Community.find_by(name: community_list[dom])
