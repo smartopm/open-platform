@@ -2,16 +2,16 @@
 /* eslint-disable max-statements */
 import React, { useContext, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import Typography from '@material-ui/core/Typography';
+import Typography from '@mui/material/Typography';
 import Button from '@material-ui/core/Button';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import { useApolloClient, useMutation } from 'react-apollo';
 import { Link } from 'react-router-dom';
 import Hidden from '@material-ui/core/Hidden';
 import { useTranslation } from 'react-i18next';
 import makeStyles from '@material-ui/core/styles/makeStyles';
-import PersonIcon from '@material-ui/icons/Person';
-import VisibilityIcon from '@material-ui/icons/Visibility';
+import PersonIcon from '@mui/icons-material/Person';
+import VisibilityIcon from '@mui/icons-material/Visibility';
 import Grid from '@material-ui/core/Grid';
 import { StyledTabs, StyledTab, TabPanel, a11yProps } from '../../../components/Tabs';
 import LogEvents from './LogEvents';
@@ -226,41 +226,41 @@ export default function LogBookItem({
         open={isObservationOpen}
         handleDialogStatus={() => handleCancelClose()}
         observationHandler={{
-          value: observationNote,
-          handleChange: val => setObservationNote(val)
-        }}
+        value: observationNote,
+        handleChange: val => setObservationNote(val)
+      }}
         imageOnchange={img => onChange(img)}
         imageUrls={imageUrls}
         status={status}
         closeButtonData={{
-          closeButton: true,
-          handleCloseButton
-        }}
+        closeButton: true,
+        handleCloseButton
+      }}
       >
         {observationDetails.loading ? (
           <Spinner />
-        ) : (
-          <>
-            <Button
-              onClick={() => handleCancelClose()}
-              color="secondary"
-              variant="outlined"
-              data-testid="cancel"
-            >
-              {t('common:form_actions.cancel')}
-            </Button>
-            <Button
-              onClick={() => handleSaveObservation()}
-              color="primary"
-              variant="contained"
-              data-testid="save"
-              style={{ color: 'white' }}
-              autoFocus
-            >
-              {t('common:form_actions.save')}
-            </Button>
-          </>
-        )}
+      ) : (
+        <>
+          <Button
+            onClick={() => handleCancelClose()}
+            color="secondary"
+            variant="outlined"
+            data-testid="cancel"
+          >
+            {t('common:form_actions.cancel')}
+          </Button>
+          <Button
+            onClick={() => handleSaveObservation()}
+            color="primary"
+            variant="contained"
+            data-testid="save"
+            style={{ color: 'white' }}
+            autoFocus
+          >
+            {t('common:form_actions.save')}
+          </Button>
+        </>
+      )}
       </EntryNoteDialog>
       <Grid container className={matches ?  classes.containerMobile : classes.container}>
         <Grid item md={11} xs={11}>
@@ -305,11 +305,11 @@ export default function LogBookItem({
               />
               <Grid
                 container
-                justify="flex-end"
+                justifyContent="flex-end"
                 className={classes.filter}
                 style={{
-                  display: displayBuilder
-                }}
+                display: displayBuilder
+              }}
               >
                 <QueryBuilder
                   handleOnChange={queryOnChange}
@@ -379,7 +379,7 @@ export default function LogBookItem({
         />
       </CenteredContent>
     </>
-  );
+);
 }
 
 const useStyles = makeStyles(() => ({

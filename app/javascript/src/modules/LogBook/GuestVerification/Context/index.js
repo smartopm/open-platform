@@ -43,7 +43,10 @@ export default function EntryRequestContextProvider({ children }) {
 
   function handleGrantAccess(requestId = id) {
     updateRequest({ ...request, isLoading: true });
-    grantEntry({ variables: { id: request.id || requestId } })
+    grantEntry({
+      variables: { id: request.id || requestId },
+      fetchPolicy: "no-cache"
+     })
       .then(({ data: { result } }) => {
         setDetails({
           ...observationDetails,
