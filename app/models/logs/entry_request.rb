@@ -24,6 +24,11 @@ module Logs
     search_scope :search do
       attributes :name, :phone_number, :visitation_date, :visit_end_date, :starts_at, :ends_at,
                  :end_time
+
+      generator :matches do |column_name, raw_value|
+        pattern = "#{raw_value}%"
+        "unaccent(LOWER(#{column_name})) LIKE unaccent(LOWER(#{quote pattern}))"
+      end
     end
 
     search_scope :search_guest do

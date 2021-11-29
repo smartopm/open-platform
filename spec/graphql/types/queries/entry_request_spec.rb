@@ -5,7 +5,16 @@ require 'rails_helper'
 RSpec.describe Types::Queries::EntryRequest do
   describe 'entry_request queries' do
     let!(:current_user) { create(:user_with_community) }
-    let!(:admin) { create(:admin_user, community_id: current_user.community_id) }
+    let!(:community) { current_user.community }
+    let!(:admin) { create(:admin_user, community_id: community.id) }
+    let(:guest) do
+      create(:entry_request, user: admin, name: 'Jose', is_guest: true,
+                             community: community, visitation_date: Time.zone.today)
+    end
+    let(:another_guest) do
+      create(:entry_request, user: admin, name: 'Josè', is_guest: true,
+                             community: community, visitation_date: Time.zone.today)
+    end
     let(:entry_request_query) do
       <<~GQL
         query entryRequest(
@@ -63,8 +72,8 @@ RSpec.describe Types::Queries::EntryRequest do
     end
 
     let(:scheduled_guest_list_query) do
-      %(query {
-        scheduledGuestList {
+      %(query($offset: Int, $limit: Int, $query: String) {
+        scheduledGuestList(offset: $offset, limit: $limit, query: $query) {
           id
           name
           user {
@@ -285,6 +294,27 @@ RSpec.describe Types::Queries::EntryRequest do
                                          site_community: current_user.community,
                                        }).as_json
       expect(result.dig('data', 'scheduledGuestList').length).to eql 2
+    end
+
+    context 'when guest are present with special characters' do
+      before do
+        guest
+        another_guest
+      end
+
+      it 'returns the list of guests with name matching with normal and special characters' do
+        variables = { query: 'Jose' }
+        result = DoubleGdpSchema.execute(scheduled_guest_list_query,
+                                         variables: variables,
+                                         context: {
+                                           current_user: admin,
+                                           site_community: community,
+                                         }).as_json
+        expect(result.dig('data', 'scheduledGuestList').length).to eql 2
+        guest_data = result.dig('data', 'scheduledGuestList')
+        expect(%w[Jose Josè]).to include(guest_data[0]['name'])
+        expect(%w[Jose Josè]).to include(guest_data[1]['name'])
+      end
     end
 
     it 'should raise unauthorized if current user is missing' do

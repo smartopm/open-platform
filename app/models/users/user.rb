@@ -24,6 +24,11 @@ module Users
     search_scope :search do
       attributes :name, :phone_number, :user_type, :email, :sub_status, :ext_ref_id
       attributes labels: ['labels.short_desc']
+
+      generator :matches do |column_name, raw_value|
+        pattern = "#{raw_value}%"
+        "unaccent(LOWER(#{column_name})) LIKE unaccent(LOWER(#{quote pattern}))"
+      end
     end
 
     search_scope :heavy_search do
@@ -31,6 +36,11 @@ module Users
       attributes labels: ['labels.short_desc']
       attributes date_filter: ['acting_event_log.created_at']
       scope { joins(:acting_event_log).eager_load(:labels) }
+
+      generator :matches do |column_name, raw_value|
+        pattern = "#{raw_value}%"
+        "unaccent(LOWER(#{column_name})) LIKE unaccent(LOWER(#{quote pattern}))"
+      end
     end
 
     search_scope :plot_number do
@@ -44,10 +54,20 @@ module Users
 
     search_scope :search_lite do
       attributes :name, :phone_number, :user_type, :email, :sub_status
+
+      generator :matches do |column_name, raw_value|
+        pattern = "#{raw_value}%"
+        "unaccent(LOWER(#{column_name})) LIKE unaccent(LOWER(#{quote pattern}))"
+      end
     end
 
     search_scope :search_guest do
       attributes :phone_number, :email, :name
+
+      generator :matches do |column_name, raw_value|
+        pattern = "#{raw_value}%"
+        "unaccent(LOWER(#{column_name})) LIKE unaccent(LOWER(#{quote pattern}))"
+      end
     end
 
     scope :allowed_users, lambda { |current_user|
