@@ -44,6 +44,10 @@ module Types::Queries::EntryRequest
       argument :limit, Integer, required: false
       argument :query, String, required: false
     end
+
+    field :community_people_statistics, Types::PeopleStatisticType, null: true do
+      description 'Get statistics about people who are in the community'
+    end
   end
   # rubocop:enable Metrics/BlockLength
 
@@ -119,6 +123,14 @@ module Types::Queries::EntryRequest
   end
   # rubocop:enable Metrics/AbcSize
 
+  def community_people_statistics
+    {
+      people_present: people_present(context[:site_community]),
+      people_entered: people_entered(context[:site_community]),
+      people_exited: people_exited(context[:site_community]),
+    }
+  end
+
   private
 
   # rubocop:disable Metrics/AbcSize
@@ -145,6 +157,26 @@ module Types::Queries::EntryRequest
     entry_requests.search(or: [{ query: (query.presence || '.') }, { name: { matches: query } }])
   end
   # rubocop:enable Metrics/MethodLength,  Metrics/AbcSize
+
+  def people_present(community)
+    community.entry_requests.where.not(exited_at: nil).count
+  end
+
+  def people_entered(community)
+    community.entry_requests.where('granted_at >= ? AND granted_at <= ?', start_time, end_time)
+  end
+
+  def people_exited(community)
+    community.entry_requests.where('exited_at >= ? AND exited_at <= ?', start_time, end_time)
+  end
+
+  def start_time
+    Time.zone.now.to_datetime.beginning_of_day.to_s
+  end
+
+  def end_time
+    Time.zone.now.to_datetime.end_of_day.to_s
+  end
 
   def can_view_entry_request?
     permitted?(module: :entry_request, permission: :can_view_entry_request)
