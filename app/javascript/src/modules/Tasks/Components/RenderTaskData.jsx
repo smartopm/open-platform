@@ -1,8 +1,10 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { Checkbox, Grid, IconButton, Typography, Chip } from '@material-ui/core';
+import Hidden from '@material-ui/core/Hidden';
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
-import MoreVertIcon from '@material-ui/icons/MoreVert'
+import MoreVertIcon from '@material-ui/icons/MoreVert';
 import AccountTreeIcon from '@material-ui/icons/AccountTree';
 import QuestionAnswerIcon from '@material-ui/icons/QuestionAnswer';
 import AttachFileIcon from '@material-ui/icons/AttachFile';
@@ -11,15 +13,19 @@ import PropTypes from 'prop-types';
 import { useTheme, makeStyles } from '@material-ui/styles';
 import { removeNewLines, sanitizeText } from '../../../utils/helpers';
 import DateContainer, { dateToString } from '../../../components/DateContainer';
-import MenuList from '../../../shared/MenuList'
+import MenuList from '../../../shared/MenuList';
 import UserAvatar from '../../Users/Components/UserAvatar';
+import Card from '../../../shared/Card';
 
 // TODO: Put in a more shareable directory
 export function LinkToUser({ userId, name }) {
-  const theme = useTheme()
+  const theme = useTheme();
   return (
     <Typography gutterBottom>
-      <Link style={{ textDecoration: 'none', fontSize: '12px', color: theme.palette.primary.main }} to={`/user/${userId}`}>
+      <Link
+        style={{ textDecoration: 'none', fontSize: '12px', color: theme.palette.primary.main }}
+        to={`/user/${userId}`}
+      >
         {name}
       </Link>
     </Typography>
@@ -28,15 +34,14 @@ export function LinkToUser({ userId, name }) {
 
 export function LinkToUserAvatar({ user }) {
   return (
-    <Link to={`/user/${user.id}`}>
-      <UserAvatar
-        searchedUser={user}
-        imageUrl={user.avatarUrl || user.imageUrl}
-        customStyle={{cursor: 'pointer',display: 'inline'}}
-        size="xSmall"
-        altText=""
-      />
-    </Link>
+    <UserAvatar
+      searchedUser={user}
+      imageUrl={user.avatarUrl || user.imageUrl}
+      customStyle={{ cursor: 'pointer', display: 'inline' }}
+      size="xSmall"
+      altText=""
+      pathname={`/user/${user.id}`}
+    />
   );
 }
 
@@ -52,71 +57,72 @@ export default function renderTaskData({
   handleChange,
   selectedTasks,
   isSelected,
-  menuData,
+  menuData
 }) {
-return [
-  {
-  Select: (
-    <Grid item xs={12} sm={2} data-testid="subject">
-      <Checkbox
-        checked={selectedTasks.includes(task.id) || isSelected}
-        onChange={() => handleChange(task.id)}
-        inputProps={{ 'aria-label': 'primary checkbox' }}
-        color="primary"
-      />
-    </Grid>
-  ),
-  Task: (
-    <Grid item xs={12} sm={2} data-testid="task">
-      <Typography variant="caption" gutterBottom>
-        <span
-          style={{ whiteSpace: 'pre-line' }}
-          // eslint-disable-next-line react/no-danger
-          dangerouslySetInnerHTML={{
-            __html: sanitizeText(removeNewLines(task.body))
-          }}
-        />
-      </Typography>
-    </Grid>
-  ),
-  'Created By': (
-    <Grid item xs={12} sm={2} data-testid="createdby">
-      <LinkToUser name={task.author.name} userId={task.author.id} />
-      <DateContainer date={task.createdAt} />
-    </Grid>
-  ),
-  Duedate: (
-    <Grid item xs={12} sm={2} style={{fontSize: '12px'}} data-testid="duedate">
-      {task.dueDate ? dateToString(task.dueDate) : ' Never '}
-    </Grid>
-  ),
-  Assignees: (
-    <Grid item xs={12} sm={2} data-testid="assignee">
-      {task.assignees.map(user => (
-        <LinkToUser key={user.id} name={user.name} userId={user.id} />
-      ))}
-    </Grid>
-  ),
-  Menu: (
-    <Grid item xs={12} sm={1} data-testid="menu">
-      <IconButton
-        aria-controls="simple-menu"
-        aria-haspopup="true"
-        data-testid="todo-menu"
-        onClick={(event) => menuData.handleTodoMenu(event)}
-      >
-        <MoreHorizIcon />
-      </IconButton>
-      <MenuList
-        open={menuData.open}
-        anchorEl={menuData.anchorEl}
-        handleClose={menuData.handleClose}
-        list={menuData.menuList}
-      />
-    </Grid>
-  )
-}
-];
+  return [
+    {
+      Select: (
+        <Grid item xs={12} sm={2} data-testid="subject">
+          <Checkbox
+            checked={selectedTasks.includes(task.id) || isSelected}
+            onChange={() => handleChange(task.id)}
+            inputProps={{ 'aria-label': 'primary checkbox' }}
+            color="primary"
+          />
+        </Grid>
+      ),
+      Task: (
+        <Grid item xs={12} sm={2} data-testid="task">
+          <Typography variant="caption" gutterBottom>
+            <span
+              style={{ whiteSpace: 'pre-line' }}
+              // eslint-disable-next-line react/no-danger
+              dangerouslySetInnerHTML={{
+                __html: sanitizeText(removeNewLines(task.body))
+              }}
+            />
+          </Typography>
+        </Grid>
+      ),
+      'Created By': (
+        <Grid item xs={12} sm={2} data-testid="createdby">
+          <LinkToUser name={task.author.name} userId={task.author.id} />
+          <DateContainer date={task.createdAt} />
+        </Grid>
+      ),
+      Duedate: (
+        <Grid item xs={12} sm={2} style={{ fontSize: '12px' }} data-testid="duedate">
+          {task.dueDate ? dateToString(task.dueDate) : ' Never '}
+        </Grid>
+      ),
+      Assignees: (
+        <Grid item xs={12} sm={2} data-testid="assignee">
+          {task.assignees.map(user => (
+            <LinkToUser key={user.id} name={user.name} userId={user.id} />
+          ))}
+        </Grid>
+      ),
+      Menu: (
+        <Grid item xs={12} sm={1} data-testid="menu">
+          <IconButton
+            aria-controls="simple-menu"
+            aria-haspopup="true"
+            data-testid="todo-menu"
+            onClick={event => menuData.handleTodoMenu(event)}
+            color="primary"
+          >
+            <MoreHorizIcon />
+          </IconButton>
+          <MenuList
+            open={menuData.open}
+            anchorEl={menuData.anchorEl}
+            handleClose={menuData.handleClose}
+            list={menuData.menuList}
+          />
+        </Grid>
+      )
+    }
+  ];
 }
 
 export function TaskDataList({
@@ -126,128 +132,190 @@ export function TaskDataList({
   selectedTasks,
   isSelected,
   menuData,
-}){
+  clickable,
+  handleClick,
+  styles
+}) {
   const classes = useStyles();
-  const { t } = useTranslation('task')
+  const { t } = useTranslation('task');
+  const matches = useMediaQuery('(max-width:800px)');
 
   // This is not working as expected yet.
   function handleCheckbox(event, currentTask) {
     event.stopPropagation();
-    handleChange(currentTask.id)
+    handleChange(currentTask.id);
   }
 
- return (
-   <div className={classes.taskListContainer}>
-     <div className={classes.section1} data-testid="task_body_section">
-       <Checkbox
-         checked={selectedTasks.includes(task.id) || isSelected}
-         onChange={(event) => handleCheckbox(event, task)}
-         inputProps={{ 'aria-label': 'primary checkbox' }}
-         color="primary"
-         data-testid="task-select-action"
-         size="small"
-         key={task.id}
-       />
-       <Typography variant="body2" data-testid="task_body" component="p" className={classes.taskBody}>
-         <span
-              // eslint-disable-next-line react/no-danger
-           dangerouslySetInnerHTML={{
-                __html: sanitizeText(removeNewLines(task.body))
-              }}
-         />
-       </Typography>
-     </div>
-     <div className={classes.section2} data-testid="task_assignee_section">
-       <div data-testid="task_due_date" style={{ width: '50%'}}>
-         <Typography variant="body2" component="span">
-           {t('task.due_date')}
-           {task.dueDate ? dateToString(task.dueDate) : 'Never '}
-         </Typography>
-       </div>
-       <div className={classes.taskAssignees} data-testid="task_assignee">
-         {(task.assignees.length > 0) ? (
-           <>
-             <Typography variant="body2" component="span">{t('task.assigned_to')}</Typography>
-             <div className={classes.taskAssigneesAvatar}>
-               {/* Restrict to 2 users */}
-               {task.assignees.slice(0, 2).map(user => (
-                 <LinkToUserAvatar key={user.id} user={user} />
+  return (
+    <Card clickData={{clickable, handleClick}} styles={styles} contentStyles={{ padding: '4px' }}>
+      <Grid container>
+        <Grid item md={5} xs={8} style={{ display: 'flex', alignItems: 'center' }} data-testid="task_body_section">
+          <Checkbox
+            checked={selectedTasks.includes(task.id) || isSelected}
+            onChange={event => handleCheckbox(event, task)}
+            inputProps={{ 'aria-label': 'primary checkbox' }}
+            color="primary"
+            data-testid="task-select-action"
+            size="small"
+            key={task.id}
+            style={{ padding: 0 }}
+          />
+          <Typography
+            variant="body2"
+            data-testid="task_body"
+            component="p"
+            className={matches ? classes.taskBodyMobile : classes.taskBody}
+          >
+            <span
+            // eslint-disable-next-line react/no-danger
+              dangerouslySetInnerHTML={{
+              __html: sanitizeText(removeNewLines(task.body))
+            }}
+            />
+          </Typography>
+        </Grid>
+        <Hidden mdUp>
+          <Grid item md={1} xs={3} style={{display: 'flex', alignItems: 'center' }}>
+            {task.completed
+            ? <Chip size="small" label={t('task.complete')} className={classes.completed} />
+            : <Chip size="small" label={t('task.open')} className={classes.open} />}
+          </Grid>
+        </Hidden>
+        <Hidden mdUp>
+          <Grid item md={1} xs={1} style={{display: 'flex', alignItems: 'center', justifyContent: 'end'}}>
+            <IconButton
+              aria-controls="simple-menu"
+              aria-haspopup="true"
+              data-testid="task-item-menu"
+              dataid={task.id}
+              onClick={event => menuData.handleTodoMenu(event, task)}
+              size="small"
+              color="primary"
+            >
+              <MoreVertIcon />
+            </IconButton>
+          </Grid>
+        </Hidden>
+        <Hidden smDown>
+          <Grid item data-testid="task_due_date" md={2} xs={12} style={{ display: 'flex', alignItems: 'center', }}>
+            <Typography variant="body2" component="span">
+              {t('task.due_date')}
+              {task.dueDate ? dateToString(task.dueDate) : 'Never '}
+            </Typography>
+          </Grid>
+        </Hidden>
+        <Grid item md={2} xs={6} data-testid="task_assignee" style={{ display: 'flex', alignItems: 'center' }}>
+          {task.assignees.length > 0 ? (
+            <Grid container>
+              <Grid item md={6} xs={6}>
+                <Typography variant={matches ? 'caption' : 'body2'} component="span" style={matches ? { paddingLeft: '3px'} : {}}>
+                  {t('task.assigned_to')}
+                </Typography>
+              </Grid>
+              {/* Restrict to 2 users */}
+              {task.assignees.slice(0, 2).map(user => (
+                <Grid item md={2} xs={2} key={user.id}>
+                  <LinkToUserAvatar key={user.id} user={user} />
+                </Grid>
                 ))}
-             </div>
-             <div style={{ width: '20%' }}>
-               {task.assignees.length > 2 && (
-               <IconButton
-                 aria-controls="more-assignees"
-                 aria-haspopup="true"
-                 data-testid="more-assignees"
-                 size="small"
-                 style={{ padding: 0, margin: 0, fontSize: '8px', color: '#000000', opacity: '0.2' }}
-               >
-                 <MoreHorizIcon />
-               </IconButton>
+              <Grid item md={2} xs={1}>
+                {task.assignees.length > 2 && (
+                <IconButton
+                  aria-controls="more-assignees"
+                  aria-haspopup="true"
+                  data-testid="more-assignees"
+                  size="small"
+                  style={{
+                      padding: 0,
+                      margin: 0,
+                      fontSize: '8px',
+                      color: '#000000',
+                      opacity: '0.2'
+                    }}
+                >
+                  <MoreHorizIcon />
+                </IconButton>
                 )}
-             </div>
-           </>
-          )
-          : <Typography variant="body2" component="span">{t('task.no_assignee')}</Typography>}
-       </div>
-     </div>
-     <div className={classes.section3} data-testid="task_details_section">
-       <div className={classes.taskCreated}>
-         <div style={{ width: '79%' }} />
-       </div>
-       <div className={classes.icons}>
-         <IconButton
-           aria-controls="task-subtasks-icon"
-           aria-haspopup="true"
-           data-testid="task_subtasks"
-         >
-           <AccountTreeIcon fontSize="small" color="primary" />
-           <span style={{ fontSize: '14px'}}>{task?.subTasks?.length}</span>
-         </IconButton>
-         <IconButton
-           aria-controls="task-comment-icon"
-           aria-haspopup="true"
-           data-testid="task_comments"
-         >
-           <QuestionAnswerIcon fontSize="small" color="primary" />
-           <span style={{ fontSize: '14px'}}>0</span>
-         </IconButton>
-         <IconButton
-           key={task.id}
-           aria-controls="task-attach-file-icon"
-           aria-haspopup="true"
-           data-testid="task_attach_file"
-           component="label"
-         >
-           <input
-             hidden
-             type="file"
-             onChange={(event) => handleFileInputChange(event, task)}
-             id='task-attach-file'
-           />
-           <AttachFileIcon fontSize="small" color="disabled" />
-           <span style={{ fontSize: '14px'}} data-testid="file_attachments_total">{task.documents?.length}</span>
-         </IconButton>
-       </div>
-     </div>
-     <div className={classes.section4} data-testid="task_menu_section">
-       {task.completed
-        ? <Chip size="small" label={t('task.complete')} className={classes.completed} />
-        : <Chip size="small" label={t('task.open')} className={classes.open} />}
-       <IconButton
-         aria-controls="simple-menu"
-         aria-haspopup="true"
-         data-testid="task-item-menu"
-         dataid={task.id}
-         onClick={(event) => menuData.handleTodoMenu(event, task)}
-         size="small"
-       >
-         <MoreVertIcon />
-       </IconButton>
-     </div>
-   </div>
-  )
+              </Grid>
+            </Grid>
+          ) : (
+            <Typography variant="body2">
+              {t('task.no_assignee')}
+            </Typography>
+          )}
+        </Grid>
+        <Grid item data-testid="task_details_section" md={2} xs={6}>
+          <Grid container style={{ display: 'flex', justifyContent: 'center' }}>
+            <Grid item md={2} xs={2}>
+              <IconButton
+                aria-controls="task-subtasks-icon"
+                aria-haspopup="true"
+                data-testid="task_subtasks"
+                size="medium"
+              >
+                <AccountTreeIcon fontSize="small" color={task?.subTasks?.length ? 'primary': 'disabled'} />
+              </IconButton>
+            </Grid>
+            <Grid item md={1} xs={2} className={classes.iconItem}><span>{task?.subTasks?.length}</span></Grid>
+            <Grid item md={2} xs={2}>
+              <IconButton
+                aria-controls="task-comment-icon"
+                aria-haspopup="true"
+                data-testid="task_comments"
+                size="medium"
+              >
+                <QuestionAnswerIcon fontSize="small" color="disabled" />
+              </IconButton>
+            </Grid>
+            <Grid item md={1} xs={2} className={classes.iconItem}><span>0</span></Grid>
+            <Grid item md={2} xs={2}>
+              <IconButton
+                key={task.id}
+                aria-controls="task-attach-file-icon"
+                aria-haspopup="true"
+                data-testid="task_attach_file"
+                component="label"
+                size="medium"
+              >
+                <input
+                  hidden
+                  type="file"
+                  onChange={event => handleFileInputChange(event, task)}
+                  id="task-attach-file"
+                />
+                <AttachFileIcon fontSize="small" color={task?.documents?.length ? 'primary': 'disabled'} />
+              </IconButton>
+            </Grid>
+            <Grid item md={1} xs={2} className={classes.iconItem}>
+              <span data-testid="file_attachments_total">
+                {task.documents?.length}
+              </span>
+            </Grid>
+          </Grid>
+        </Grid>
+        <Grid item md={1} style={{ display: 'flex', alignItems: 'center', justifyContent: 'end'}} data-testid="task_menu_section">
+          <Hidden smDown>
+            {task.completed
+              ? <Chip size="small" label={t('task.complete')} className={classes.completed} /> 
+              : <Chip size="small" label={t('task.open')} className={classes.open} />}
+          </Hidden>
+          <Hidden smDown>
+            <IconButton
+              aria-controls="simple-menu"
+              aria-haspopup="true"
+              data-testid="task-item-menu"
+              dataid={task.id}
+              onClick={event => menuData.handleTodoMenu(event, task)}
+              size="small"
+              color="primary"
+            >
+              <MoreVertIcon />
+            </IconButton>
+          </Hidden>
+        </Grid>
+      </Grid>
+    </Card>
+  );
 }
 
 const Task = {
@@ -256,17 +324,24 @@ const Task = {
   completed: PropTypes.bool,
   author: PropTypes.shape({
     name: PropTypes.string,
-    id: PropTypes.string,
+    id: PropTypes.string
   }),
-  assignees: PropTypes.arrayOf(PropTypes.shape({
-    id: PropTypes.string,
-    name: PropTypes.string,
-  })),
+  assignees: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.string,
+      name: PropTypes.string
+    })
+  ),
   subTasks: PropTypes.arrayOf(PropTypes.object),
-  dueDate:  PropTypes.string,
-}
+  dueDate: PropTypes.string
+};
 
-TaskDataList.propTypes ={
+TaskDataList.defaultProps = {
+  clickable: false,
+  handleClick: null,
+  styles: {},
+}
+TaskDataList.propTypes = {
   task: PropTypes.shape(Task).isRequired,
   handleChange: PropTypes.func.isRequired,
   selectedTasks: PropTypes.arrayOf(PropTypes.string).isRequired,
@@ -274,7 +349,11 @@ TaskDataList.propTypes ={
   handleFileInputChange: PropTypes.func.isRequired,
   // eslint-disable-next-line react/forbid-prop-types
   menuData: PropTypes.object.isRequired,
-}
+  clickable: PropTypes.bool,
+  handleClick: PropTypes.func,
+  // eslint-disable-next-line react/forbid-prop-types
+  styles: PropTypes.object,
+};
 LinkToUser.propTypes = {
   userId: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired
@@ -284,65 +363,36 @@ LinkToUserAvatar.propTypes = {
   user: PropTypes.shape({
     id: PropTypes.string,
     avatarUrl: PropTypes.string,
-    imageUrl: PropTypes.string,
-  }).isRequired,
+    imageUrl: PropTypes.string
+  }).isRequired
 };
 
 const useStyles = makeStyles(() => ({
-  taskListContainer: {
-    display: 'flex',
-    alignItems: 'center',
-    width: '100%',
-    height: '60px',
-  },
-  section1: {
-    display: 'flex',
-    alignItems: 'center',
-    width: '30%',
-  },
   taskBody: {
-    maxWidth: '36ch',
+    maxWidth: '53ch',
     overflow: 'hidden',
     whiteSpace: 'nowrap',
-    textOverflow: 'ellipsis'
+    textOverflow: 'ellipsis',
+    paddingLeft: '3px'
   },
-  section2: {
-    width: '33%',
-    display: 'flex',
-    alignItems: 'center',
-  },
-  taskAssignees: {
-    display: 'flex',
-    alignItems: 'center',
-    width: '50%',
-    justifyContent: 'space-between',
-  },
-  taskAssigneesAvatar: {
-    display: 'flex',
-    width: '28%',
-    justifyContent: 'space-between',
-    fontSize: '10px'
-  },
-  section3: {
-    display: 'flex',
-    width: '28%',
-    alignItems: 'center',
-  },
-  section4: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'end',
-  },
-  taskCreated: {
-    display: 'flex',
-    alignItems: 'center',
-    width: '43%',
+  taskBodyMobile: {
+    maxWidth: '21ch',
+    overflow: 'hidden',
+    whiteSpace: 'nowrap',
+    textOverflow: 'ellipsis',
+    paddingLeft: '3px'
   },
   icons: {
     display: 'flex',
     alignItems: 'center',
     width: '45%',
-    justifyContent: 'space-evenly',
+    justifyContent: 'space-evenly'
+  },
+  iconItem: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    fontSize: '14px',
   },
   completed: {
     backgroundColor: '#4caf50',

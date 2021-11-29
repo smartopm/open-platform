@@ -8,13 +8,13 @@ import { useHistory } from 'react-router';
 import Avatar from '../../../components/Avatar';
 import { Context } from '../../../containers/Provider/AuthStateProvider';
 
-export default function UserAvatar({ imageUrl, customStyle, searchedUser, size, altText }) {
+export default function UserAvatar({ imageUrl, customStyle, searchedUser, size, altText, pathname }) {
   const classes = useStyles();
   const history = useHistory()
   const matches = useMediaQuery('(max-width:600px)')
   const authState = useContext(Context)
   return (
-    <div className={matches ? classes.avatarMobile : (customStyle || classes.avatar)} onClick={() => history.push({pathname: '/user/settings'})}>
+    <div className={matches ? (customStyle || classes.avatarMobile) : (customStyle || classes.avatar)} onClick={() => history.push({pathname})} style={{cursor: 'pointer'}}>
       <Avatar data-testid='avatar' alt={altText} imageUrl={imageUrl} user={authState.user} searchedUser={searchedUser} style={size} />
     </div>
   )
@@ -44,7 +44,8 @@ UserAvatar.defaultProps = {
   customStyle: null,
   searchedUser: null,
   size: 'small',
-  altText: ''
+  altText: '',
+  pathname: '/user/settings'
 };
 UserAvatar.propTypes = {
   imageUrl: PropTypes.string.isRequired,
@@ -53,4 +54,5 @@ UserAvatar.propTypes = {
   searchedUser: PropTypes.object,
   size: PropTypes.string,
   altText: PropTypes.string,
+  pathname: PropTypes.string
 };
