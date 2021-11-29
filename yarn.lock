@@ -7658,11 +7658,6 @@ dom-serializer@^1.0.1, dom-serializer@~1.2.0:
     domhandler "^4.0.0"
     entities "^2.0.0"
 
-dom-to-image@^2.6.0:
-  version "2.6.0"
-  resolved "https://registry.yarnpkg.com/dom-to-image/-/dom-to-image-2.6.0.tgz#8a503608088c87b1c22f9034ae032e1898955867"
-  integrity sha1-ilA2CAiMh7HCL5A0rgMuGJiVWGc=
-
 dom-walk@^0.1.0:
   version "0.1.2"
   resolved "https://registry.yarnpkg.com/dom-walk/-/dom-walk-0.1.2.tgz#0c548bef048f4d1f2a97249002236060daa3fd84"
@@ -9772,6 +9767,11 @@ html-tags@^3.1.0:
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/html-tags/-/html-tags-3.1.0.tgz#7b5e6f7e665e9fb41f30007ed9e0d41e97fb2140"
   integrity sha512-1qYz89hW3lFDEazhjW0yVAV87lw8lVkrJocr72XmBkMKsoSVJCQx3W8BXsC7hO2qAt8BoVjYjtAcZ9perqGnNg==
+
+html-to-image@^1.9.0:
+  version "1.9.0"
+  resolved "https://registry.yarnpkg.com/html-to-image/-/html-to-image-1.9.0.tgz#cb49bf9f4b37376771c85cfdd65863ae9420b268"
+  integrity sha512-9gaDCIYg62Ek07F2pBk76AHgYZ2gxq2YALU7rK3gNCqXuhu6cWzsOQqM7qGbjZiOzxGzrU1deDqZpAod2NEwbA==
 
 html-void-elements@^1.0.0:
   version "1.0.5"
