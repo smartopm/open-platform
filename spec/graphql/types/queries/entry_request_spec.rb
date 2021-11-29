@@ -7,15 +7,17 @@ RSpec.describe Types::Queries::EntryRequest do
     let!(:community) { current_user.community }
     let(:guest) do
       create(:entry_request, user: admin, name: 'Jose', is_guest: true,
-                             community: community, visitation_date: Time.zone.today)
+                             community: community, visitation_date: Time.zone.today,
+                             granted_at: Time.zone.today)
     end
     let!(:visitor) do
       create(:user_with_community, user_type: 'visitor', email: 'visiting@admin.com',
                                    community_id: admin.community_id, role: visitor_role)
     end
     let(:another_guest) do
-      create(:entry_request, user: admin, name: 'Josè', is_guest: true, guest_id: visitor.id,
-                             community: community, visitation_date: Time.zone.today)
+      create(:entry_request, user: admin, name: 'Josè', is_guest: true,
+                             community: community, visitation_date: Time.zone.today,
+                             granted_at: Time.zone.today, exited_at: Time.zone.today)
     end
 
     let!(:admin_role) { create(:role, name: 'admin') }
@@ -145,6 +147,22 @@ RSpec.describe Types::Queries::EntryRequest do
           }
         }
         })
+    end
+
+    let(:community_people_statistics_query) do
+      <<~GQL
+        query communityPeopleStatistics {
+          communityPeopleStatistics {
+            peoplePresent
+            peopleEntered {
+              id
+            }
+            peopleExited {
+              id
+            }
+          }
+        }
+      GQL
     end
 
     it 'should retrieve one entry_request' do
@@ -394,6 +412,25 @@ RSpec.describe Types::Queries::EntryRequest do
                                        }).as_json
       expect(result.dig('errors', 0, 'message')).to include 'Unauthorized'
       expect(result.dig('data', 'scheduledRequests')).to be_nil
+    end
+
+    describe '#community_people_statistics' do
+      context 'when current user is verified' do
+        before do
+          guest
+          another_guest
+        end
+        it 'returns statistics for the community' do
+          result = DoubleGdpSchema.execute(community_people_statistics_query, context: {
+                                             current_user: admin,
+                                             site_community: current_user.community,
+                                           }).as_json
+          data = result.dig('data', 'communityPeopleStatistics')
+          expect(data['peoplePresent']).to eql 1
+          expect(data['peopleEntered'].count).to eql 2
+          expect(data['peopleExited'].count).to eql 1
+        end
+      end
     end
   end
 end
