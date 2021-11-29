@@ -14,6 +14,7 @@
     "no_changes": "No se realizaron cambios",
     "no_result_found": "No se encontraron resultados para ‪{{searchValue}}‬",
     "no_user_selected": "Tienes que seleccionar un usuario",
+    "something_wrong_qr_code": "Se produjo un error al tratar de descargar el Código QR",
     "user_name_search_not_found": "{{username}} usuario no encontrado",
     "video_not_supported": "Este navegador no admite video"
   },
