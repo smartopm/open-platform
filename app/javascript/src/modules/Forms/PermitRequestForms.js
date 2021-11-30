@@ -8,7 +8,7 @@ import AccessCheck from '../Permissions/Components/AccessCheck';
 // a module can exist outside and be imported and exported here
 const CommunityFormsPermissions = ['can_access_forms'];
 
-const currentModule = 'form'
+const currentModule = 'forms'
 
 function RenderCommunityForms() {
   return (

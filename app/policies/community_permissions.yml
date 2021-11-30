@@ -1,0 +1,46 @@
+# Community permissions
+Ciudad Morazán:
+  site_manager:
+    gate_access:
+      permissions:
+        - can_see_menu_item
+    profile:
+      permissions:
+        - can_see_menu_item
+    entry_request:
+      permissions:
+        - can_access_guest_list
+        - can_create_entry_request
+        - can_update_entry_request
+        - can_view_entry_requests
+        - can_view_entry_request
+        - can_invite_guest
+        - can_go_through_guest_verification
+    guest_list:
+      permissions:
+        - can_see_menu_item
+    user:
+      permissions:
+        - can_view_own_profile
+        - can_edit_own_profile
+        - can_view_guests
+    discussion:
+      permissions:
+        - can_access_all_discussions
+    logout:
+      permissions:
+        - can_see_menu_item
+  site_worker:
+    profile:
+      permissions:
+        - can_see_menu_item
+    user:
+      permissions:
+        - can_view_own_profile
+        - can_edit_own_profile
+    discussion:
+      permissions:
+        - can_access_all_discussions
+    logout:
+      permissions:
+        - can_see_menu_item

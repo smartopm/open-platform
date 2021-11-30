@@ -4,8 +4,16 @@ require 'rails_helper'
 
 RSpec.describe Mutations::SubscriptionPlan::SubscriptionPlanCreate do
   describe 'create  a subscription plan' do
-    let!(:user) { create(:user_with_community) }
-    let!(:admin) { create(:admin_user, community_id: user.community.id) }
+    let!(:admin_role) { create(:role, name: 'admin') }
+    let!(:resident_role) { create(:role, name: 'resident') }
+    let!(:permission) do
+      create(:permission, module: 'subscription_plan',
+                          role: admin_role,
+                          permissions: %w[can_create_subscription_plan])
+    end
+
+    let!(:user) { create(:user_with_community, role: resident_role) }
+    let!(:admin) { create(:admin_user, community_id: user.community_id, role: admin_role) }
 
     let(:sub_plan_mutation) do
       <<~GQL

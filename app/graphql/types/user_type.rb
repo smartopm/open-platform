@@ -49,7 +49,7 @@ module Types
                                                                              user: :id }
     field :ext_ref_id, String, null: true, visible: { roles: %i[admin], user: :id }
     field :payment_plan, Boolean, null: false
-    field :permissions, GraphQL::Types::JSON, null: true
+    field :permissions, [Types::PermissionType], null: false
     field :invites, [Types::InviteType], null: true, visible: { roles: %i[admin], user: :id }
     field :invitees, [Types::InviteType], null: true, visible: { roles: %i[admin], user: :id }
     field :request, Types::EntryRequestType, null: true
@@ -77,8 +77,7 @@ module Types
     end
 
     def permissions
-      ::Policy::ApplicationPolicy
-        .new.permission_list[object.user_type.to_sym]
+      context[:current_user].role.permissions
     end
   end
 end

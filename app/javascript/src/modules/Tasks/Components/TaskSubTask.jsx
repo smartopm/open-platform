@@ -217,7 +217,7 @@ export default function TaskSubTask({ taskId, users, assignUser }) {
             {data.taskSubTasks.length >= limit && (
               <>
                 {loading
-                ? <Spinner /> 
+                ? <Spinner />
                 : (
                   <Button onClick={fetchMoreSubTasks} className={classes.fetchMore}>
                     <Typography variant="body2">{t('task:sub_task.see_more')}</Typography>
@@ -229,9 +229,7 @@ export default function TaskSubTask({ taskId, users, assignUser }) {
           </Grid>
         </Grid>
       ) : (
-        <CenteredContent>
-          <Typography data-testid="no_subtasks">{t('task:sub_task.no_sub_tasks')}</Typography>
-        </CenteredContent>
+        <Typography data-testid="no_subtasks">{t('task:sub_task.no_sub_tasks')}</Typography>
       )}
       <Menu
         id={`kabab-menu-${selectedSubTask?.id}`}
@@ -262,7 +260,7 @@ TaskSubTask.propTypes = {
 const useStyles = makeStyles(() => ({
   header: {
     alignItems: 'center',
-    marginBottom: '8px' 
+    marginBottom: '8px'
   },
   addSubTask: {
     display: 'flex',

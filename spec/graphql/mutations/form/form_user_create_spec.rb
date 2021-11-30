@@ -4,9 +4,23 @@ require 'rails_helper'
 
 RSpec.describe Mutations::Form::FormUserCreate do
   describe 'create for forms' do
-    let!(:current_user) { create(:user_with_community) }
-    let!(:another_user) { create(:user, community_id: current_user.community_id) }
-    let!(:admin) { create(:admin_user, community_id: current_user.community_id) }
+    let!(:admin_role) { create(:role, name: 'admin') }
+    let!(:resident_role) { create(:role, name: 'resident') }
+    let!(:permission) do
+      create(:permission, module: 'forms',
+                          role: admin_role,
+                          permissions: %w[can_create_form_user])
+    end
+
+    let!(:current_user) { create(:user_with_community, role: resident_role) }
+
+    let!(:another_user) do
+      create(:user, community_id:
+       current_user.community_id, role: resident_role)
+    end
+
+    let!(:admin) { create(:admin_user, community_id: current_user.community_id, role: admin_role) }
+
     let!(:form) do
       create(:form, community_id: current_user.community_id,
                     multiple_submissions_allowed: false)
@@ -49,6 +63,7 @@ RSpec.describe Mutations::Form::FormUserCreate do
                                                          context: {
                                                            current_user: admin,
                                                            site_community: current_user.community,
+                                                           user_role: admin.role,
                                                          }).as_json
 
         expect(first_result.dig('data', 'formUserCreate', 'formUser', 'id')).not_to be_nil
@@ -60,6 +75,7 @@ RSpec.describe Mutations::Form::FormUserCreate do
                                                           context: {
                                                             current_user: admin,
                                                             site_community: current_user.community,
+                                                            user_role: admin.role,
                                                           }).as_json
         expect(second_result.dig('errors', 0, 'message'))
           .to eql "You've already responded to this form. You can only fill out this form " \
@@ -89,6 +105,7 @@ RSpec.describe Mutations::Form::FormUserCreate do
                                                          context: {
                                                            current_user: admin,
                                                            site_community: current_user.community,
+                                                           user_role: admin.role,
                                                          }).as_json
 
         expect(first_result.dig('data', 'formUserCreate', 'formUser', 'id')).not_to be_nil
@@ -100,6 +117,7 @@ RSpec.describe Mutations::Form::FormUserCreate do
                                                           context: {
                                                             current_user: admin,
                                                             site_community: current_user.community,
+                                                            user_role: admin.role,
                                                           }).as_json
         expect(second_result.dig('data', 'formUserCreate', 'formUser', 'id')).not_to be_nil
         expect(second_result.dig('data', 'formUserCreate', 'formUser', 'form', 'id')).to eql form.id
@@ -126,6 +144,7 @@ RSpec.describe Mutations::Form::FormUserCreate do
                                                  context: {
                                                    current_user: admin,
                                                    site_community: current_user.community,
+                                                   user_role: admin.role,
                                                  }).as_json
       expect(result.dig('errors', 0, 'message')).to eql 'Form not found'
     end
@@ -148,6 +167,7 @@ RSpec.describe Mutations::Form::FormUserCreate do
                                                  context: {
                                                    current_user: another_user,
                                                    site_community: current_user.community,
+                                                   user_role: another_user.role,
                                                  }).as_json
       expect(result.dig('errors', 0, 'message')).to eql 'Unauthorized'
     end

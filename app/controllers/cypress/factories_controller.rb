@@ -6,6 +6,8 @@ unless Rails.env.production?
   require Rails.root.join('spec/factories/properties/account.rb')
   require Rails.root.join('spec/factories/properties/land_parcel_account.rb')
   require Rails.root.join('spec/factories/properties/land_parcel.rb')
+  require Rails.root.join('spec/factories/role.rb')
+  require Rails.root.join('spec/factories/permission.rb')
 end
 
 # Cypress support to seed data
@@ -42,6 +44,9 @@ class Cypress::FactoriesController < ApplicationController
       :user_id,
       :land_parcel_id,
       :account_id,
+      :module,
+      :role_id,
+      permissions: [],
     ).to_h
   end
   # rubocop:enable Metrics/MethodLength

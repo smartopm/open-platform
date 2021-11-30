@@ -63,3 +63,12 @@ export const SubTasksQuery = gql`
   }
   ${NotesFragment.note}
 `
+
+export const TaskDocumentsQuery = gql`
+  query taskDetail($taskId: ID!) {
+    task(taskId: $taskId) {
+      id
+      attachments
+    }
+  }
+`

@@ -88,6 +88,7 @@ module Users
                       }
 
     belongs_to :community
+    belongs_to :role, optional: true
     has_many :entry_requests, class_name: 'Logs::EntryRequest', dependent: :destroy
     has_many :granted_entry_requests, class_name: 'Logs::EntryRequest', foreign_key: :grantor_id,
                                       dependent: :destroy, inverse_of: :user
@@ -142,14 +143,16 @@ module Users
     has_one_attached :avatar
     has_one_attached :document
 
-    before_save :ensure_default_state_and_type
+    before_save :add_default_state_type_and_role
     after_create :send_email_msg
+    after_create :add_notification_preference
 
     # Track changes to the User
     has_paper_trail
 
     VALID_USER_TYPES = %w[security_guard admin resident contractor
-                          prospective_client client visitor custodian site_worker].freeze
+                          prospective_client client visitor
+                          custodian site_worker site_manager].freeze
     VALID_STATES = %w[valid pending banned expired].freeze
     DEFAULT_PREFERENCE = %w[com_news_sms com_news_email weekly_point_reminder_email].freeze
 
@@ -173,7 +176,6 @@ module Users
       allow_nil: true,
     }
     validate :phone_number_valid?
-    after_create :add_notification_preference
     after_update :update_associated_accounts_details, if: -> { saved_changes.key?('name') }
 
     devise :omniauthable, omniauth_providers: %i[google_oauth2 facebook]
@@ -212,7 +214,7 @@ module Users
       security_guard: { except: %i[state user_type] },
     }.freeze
 
-    SITE_MANAGERS = %w[security_guard contractor custodian admin].freeze
+    SITE_MANAGERS = %w[security_guard contractor custodian admin site_manager].freeze
 
     def self.from_omniauth(auth, site_community)
       # Either create a User record or update it based on the provider (Google) and the UID
@@ -430,7 +432,7 @@ module Users
     end
 
     def pending?
-      self[:state] == 'pending'
+      state == 'pending'
     end
 
     def expired?
@@ -439,10 +441,12 @@ module Users
       self[:expires_at] < Time.zone.now
     end
 
-    def ensure_default_state_and_type
+    def add_default_state_type_and_role
       # TODO(Nurudeen): Move these to DB level as default values
-      self[:state] ||= 'pending'
-      self[:user_type] ||= 'visitor'
+      self.state ||= 'pending'
+      self.user_type ||= 'visitor'
+      community_role = Role.find_by(name: self.user_type, community_id: community_id)
+      self.role = (community_role || Role.find_by(name: self.user_type, community_id: nil))
     end
 
     def create_new_phone_token
@@ -466,10 +470,11 @@ module Users
       return unless %w[google_oauth2 facebook].include?(self[:provider])
 
       if site_community.domain_admin?(domain)
-        update(community_id: site_community.id, user_type: 'admin')
+        update(community_id: site_community.id, user_type: 'admin',
+               role: Role.find_by(name: 'admin'))
       else
         update(community_id: site_community.id,
-               user_type: 'visitor',
+               user_type: 'visitor', role: Role.find_by(name: 'visitor'),
                expires_at: Time.current)
       end
     end

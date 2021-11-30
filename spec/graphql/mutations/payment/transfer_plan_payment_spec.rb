@@ -4,9 +4,17 @@ require 'rails_helper'
 
 RSpec.describe Mutations::PaymentPlan::TransferPaymentPlan do
   describe 'Transfers Plan Payment' do
-    let!(:user) { create(:user_with_community) }
+    let!(:admin_role) { create(:role, name: 'admin') }
+    let!(:resident_role) { create(:role, name: 'resident') }
+    let!(:permission) do
+      create(:permission, module: 'plan_payment',
+                          role: admin_role,
+                          permissions: %w[can_transfer_plan_payment])
+    end
+
+    let!(:user) { create(:user_with_community, role: resident_role) }
+    let!(:admin) { create(:admin_user, community_id: user.community_id, role: admin_role) }
     let!(:community) { user.community }
-    let!(:admin) { create(:admin_user, community_id: community.id) }
     let!(:land_parcel) { create(:land_parcel, community_id: community.id) }
     let!(:other_land_parcel) { create(:land_parcel, community_id: community.id) }
     let!(:payment_plan) do

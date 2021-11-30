@@ -4,8 +4,16 @@ require 'rails_helper'
 
 RSpec.describe Mutations::Form::FormCreate do
   describe 'create for forms' do
-    let!(:user) { create(:user_with_community) }
-    let!(:admin) { create(:admin_user, community_id: user.community_id) }
+    let!(:admin_role) { create(:role, name: 'admin') }
+    let!(:resident_role) { create(:role, name: 'resident') }
+    let!(:permission) do
+      create(:permission, module: 'forms',
+                          role: admin_role,
+                          permissions: %w[can_create_form])
+    end
+
+    let!(:user) { create(:user_with_community, role: resident_role) }
+    let!(:admin) { create(:admin_user, community_id: user.community_id, role: admin_role) }
 
     let(:mutation) do
       <<~GQL
@@ -50,6 +58,7 @@ RSpec.describe Mutations::Form::FormCreate do
                                                    context: {
                                                      current_user: admin,
                                                      site_community: user.community,
+                                                     user_role: admin.role,
                                                    }).as_json
         expect(Logs::EventLog.count).to eql 1
         expect(Logs::EventLog.first.subject).to include 'form_create'
@@ -76,6 +85,7 @@ RSpec.describe Mutations::Form::FormCreate do
                                                    context: {
                                                      current_user: user,
                                                      site_community: user.community,
+                                                     user_role: user.role,
                                                    }).as_json
         expect(result.dig('data', 'formCreate', 'form', 'id')).to be_nil
         expect(result.dig('errors', 0, 'message')).to eql 'Unauthorized'

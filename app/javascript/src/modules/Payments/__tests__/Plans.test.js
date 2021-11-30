@@ -9,6 +9,7 @@ import TransactionQuery, { UserPlans } from '../graphql/payment_query'
 import { Spinner } from '../../../shared/Loading';
 import { AuthStateProvider } from '../../../containers/Provider/AuthStateProvider';
 import { generateId } from '../../../utils/helpers';
+import authState from '../../../__mocks__/authstate';
 
 describe('Plan List Component', () => {
   it('should render the Plans list component', async () => {
@@ -118,15 +119,7 @@ describe('Plan List Component', () => {
         }
       }
     };
-
-    const user = {
-      id: '939453bef34-f3',
-      community: {
-        currency: 'zambian_kwacha',
-        locale: 'en-ZM'
-      }
-    };
-
+    
     const userData = {
       name: 'some name'
     }
@@ -138,7 +131,7 @@ describe('Plan List Component', () => {
       >
         <AuthStateProvider>
           <BrowserRouter>
-            <UserPlan userId={userId} user={user} userData={userData} tab='Plans' />
+            <UserPlan userId={userId} user={authState.user} userData={userData} tab='Plans' />
           </BrowserRouter>
         </AuthStateProvider>
       </MockedProvider>

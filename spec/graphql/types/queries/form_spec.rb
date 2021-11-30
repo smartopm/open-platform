@@ -4,8 +4,24 @@ require 'rails_helper'
 
 RSpec.describe Types::Queries::Form do
   describe 'Form queries' do
-    let!(:admin) { create(:admin_user, community_id: current_user.community_id) }
-    let!(:current_user) { create(:user_with_community, name: 'John Test') }
+    let!(:admin_role) { create(:role, name: 'admin') }
+    let!(:visitor_role) { create(:role, name: 'visitor') }
+    let!(:permission) do
+      create(:permission, module: 'forms',
+                          role: admin_role,
+                          permissions: %w[
+                            can_view_own_forms can_access_forms
+                            can_view_own_forms can_view_form_user
+                            can_view_form_user_properties
+                            can_view_form_form_submissions can_view_form_entries
+                          ])
+    end
+
+    let!(:current_user) { create(:user_with_community, name: 'John Test', role: visitor_role) }
+    let!(:admin) { create(:admin_user, community_id: current_user.community_id, role: admin_role) }
+
+    # let!(:admin) { create(:admin_user, community_id: current_user.community_id) }
+    # let!(:current_user) { create(:user_with_community, name: 'John Test') }
     let!(:form) do
       create(:form, community_id: current_user.community_id, status: :published,
                     roles: %w[client resident])

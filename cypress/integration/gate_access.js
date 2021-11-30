@@ -2,21 +2,56 @@
 
 describe('Gate Access', () => {
   it('allows security guards to record entry logs', () => {
-    cy.factory('community', { name: 'Nkwashi' }).then((res1) => {
-      cy.factory('admin_user', {
-        name: 'An Admin User',
-        phone_number: '2348167740149',
-        email: 'adminuser@gmail.com',
-        state: 'valid',
-        community_id: res1.body.id
+    cy.factory('community', { name: 'Nkwashi' }).then((commRes) => {
+      cy.factory('role', {
+        name: 'security_guard',
+      }).then((guardRes) =>{
+        cy.factory('permission', {
+          module: 'entry_request',
+          permissions: ['can_access_logbook', 'can_see_menu_item',
+                        'can_search_guests'],
+          role_id: guardRes.body.id,
+        })
+        cy.factory('permission', {
+          module: 'user',
+          permissions: ['can_view_guests'],
+          role_id: guardRes.body.id,
+        })
       })
-
-      cy.factory('security_guard', {
-        name: 'A Guard',
-        phone_number: '2347065834175',
-        email: 'guard.dgdp@gmail.com',
-        community_id: res1.body.id,
-      })
+      cy.factory('role', {
+        name: 'admin',
+      }).then(roleRes =>{
+        cy.factory('permission', {
+          module: 'entry_request',
+          permissions: ['can_access_logbook', 
+          'can_see_menu_item', 'can_search_guests'],
+          role_id: roleRes.body.id,
+        })
+        cy.factory('permission', {
+          module: 'gate_access',
+          permissions: ['can_see_menu_item'],
+          role_id: roleRes.body.id,
+        })
+        cy.factory('permission', {
+          module: 'user',
+          permissions: ['can_view_guests'],
+          role_id: roleRes.body.id,
+        })
+        cy.factory('admin_user', {
+          name: 'An Admin User',
+          phone_number: '2348167740149',
+          email: 'adminuser@gmail.com',
+          state: 'valid',
+          community_id: commRes.body.id
+        })  
+        cy.factory('security_guard', {
+          name: 'A Guard',
+          phone_number: '2347065834175',
+          email: 'guard.dgdp@gmail.com',
+          community_id: commRes.body.id,
+        })
+      }
+      )
     })
 
     // Login: Security Guard

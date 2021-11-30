@@ -4,8 +4,17 @@ require 'rails_helper'
 
 RSpec.describe Mutations::Transaction::TransactionRevert do
   describe 'revert a transaction' do
-    let!(:user) { create(:user_with_community) }
-    let!(:admin) { create(:admin_user, community_id: user.community.id) }
+    let!(:admin_role) { create(:role, name: 'admin') }
+    let!(:resident_role) { create(:role, name: 'resident') }
+    let!(:permission) do
+      create(:permission, module: 'transaction',
+                          role: admin_role,
+                          permissions: %w[can_revert_transaction])
+    end
+
+    let!(:user) { create(:user_with_community, role: resident_role) }
+    let!(:admin) { create(:admin_user, community_id: user.community_id, role: admin_role) }
+
     let(:community) { user.community }
     let!(:land_parcel) { create(:land_parcel, community_id: community.id) }
     let(:payment_plan) do

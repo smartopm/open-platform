@@ -4,8 +4,16 @@ require 'rails_helper'
 
 RSpec.describe Types::Queries::SubscriptionPlan do
   describe 'SubscriptionPlan queries' do
-    let!(:current_user) { create(:user_with_community) }
-    let!(:admin) { create(:admin_user, community_id: current_user.community_id) }
+    let!(:admin_role) { create(:role, name: 'admin') }
+    let!(:visitor_role) { create(:role, name: 'visitor') }
+    let!(:permission) do
+      create(:permission, module: 'subscription_plan',
+                          role: admin_role,
+                          permissions: %w[can_fetch_subscription_plans])
+    end
+
+    let!(:current_user) { create(:user_with_community, role: visitor_role) }
+    let!(:admin) { create(:admin_user, community_id: current_user.community_id, role: admin_role) }
     let!(:subscription_plan) do
       create(:subscription_plan, community_id: current_user.community_id,
                                  amount: 500_000)

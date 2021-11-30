@@ -4,11 +4,26 @@ require 'rails_helper'
 
 RSpec.describe Types::Queries::LandParcel do
   describe 'parcel queries' do
-    let!(:current_user) { create(:user_with_community) }
-    let!(:another_user) { create(:user_with_community) }
+    let!(:admin_role) { create(:role, name: 'admin') }
+    let!(:visitor_role) { create(:role, name: 'visitor') }
+    let!(:permission) do
+      create(:permission, module: 'land_parcel',
+                          role: admin_role,
+                          permissions: %w[
+                            can_view_all_land_parcels can_fetch_land_parcels_with_plans
+                            can_fetch_land_parcels can_fetch_land_parcel can_fetch_house
+                          ])
+    end
+
+    let!(:current_user) { create(:user_with_community, role: visitor_role) }
+    let!(:another_user) { create(:user_with_community, role: visitor_role) }
+    let!(:admin_user) do
+      create(:admin_user, community_id: current_user.community_id,
+                          role: admin_role)
+    end
+
     let!(:community) { current_user.community }
     let!(:another_community) { another_user.community }
-    let!(:admin_user) { create(:admin_user, community_id: community.id) }
     let!(:account) { create(:account, user: current_user, community: community) }
     let!(:land_parcel) do
       current_user.community.land_parcels.create(address1: 'This address',

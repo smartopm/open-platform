@@ -4,9 +4,18 @@ require 'rails_helper'
 
 RSpec.describe Mutations::Form::UserFormPropertiesCreate do
   describe 'creates user form property' do
-    let!(:user) { create(:user_with_community) }
-    let!(:another_user) { create(:user_with_community) }
-    let!(:admin) { create(:admin_user, community_id: user.community_id) }
+    let!(:admin_role) { create(:role, name: 'admin') }
+    let!(:resident_role) { create(:role, name: 'resident') }
+    let!(:permission) do
+      create(:permission, module: 'forms',
+                          role: admin_role,
+                          permissions: %w[can_create_user_form_properties])
+    end
+
+    let!(:user) { create(:user_with_community, role: resident_role) }
+    let!(:admin) { create(:admin_user, community_id: user.community_id, role: admin_role) }
+
+    let!(:another_user) { create(:user_with_community,  role: resident_role) }
     let!(:form) { create(:form, community_id: user.community_id) }
     let!(:form_property) { create(:form_property, form: form, field_type: 'text') }
     let!(:form_user) do

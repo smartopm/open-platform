@@ -68,7 +68,7 @@ admin:
   guest_list:
     permissions:
       - can_see_menu_item
-  form:
+  forms:
     permissions:
       - can_see_menu_item
       - can_create_category
@@ -146,6 +146,7 @@ admin:
       - can_see_menu_item
       - can_invite_guest
       - can_create_user
+      - can_view_guests
   profile:
     permissions:
       - can_see_menu_item
@@ -177,7 +178,7 @@ admin:
   sos:
     permissions:
       - can_access_sos
-      - can_raise_sos
+      - can_initiate_sos
       - can_cancel_sos
   discussion:
     permissions:
@@ -222,7 +223,7 @@ contractor:
       - can_get_task_count
       - can_get_task_stats
       - can_get_own_tasks
-  form:
+  forms:
     permissions:
       - can_see_menu_item
       - can_access_forms
@@ -252,7 +253,6 @@ custodian:
       - can_assign_note
       - can_bulk_assign_note
       - can_create_note_comment
-      - can_create_note_comment
       - can_update_note_comment
       - can_fetch_flagged_notes
       - can_fetch_task_by_id
@@ -277,7 +277,7 @@ custodian:
   guest_list:
     permissions:
       - can_see_menu_item
-  form:
+  forms:
     permissions:
       - can_see_menu_item
       - can_access_forms
@@ -295,7 +295,7 @@ custodian:
   sos:
     permissions:
       - can_access_sos
-      - can_raise_sos
+      - can_initiate_sos
       - can_cancel_sos
   user:
     permissions:
@@ -341,7 +341,7 @@ security_guard:
   gate_access:
     permissions:
       - can_see_menu_item
-  form:
+  forms:
     permissions:
       - can_see_menu_item
       - can_access_forms
@@ -354,13 +354,14 @@ security_guard:
   sos:
     permissions:
       - can_access_sos
-      - can_raise_sos
+      - can_initiate_sos
       - can_cancel_sos
   user:
     permissions:
       - can_search_guests
       - can_view_own_profile
       - can_edit_own_profile
+      - can_view_guests
   community:
     permissions:
       - can_see_menu_item
@@ -395,6 +396,9 @@ site_worker:
   community:
     permissions:
       - can_see_menu_item
+  discussion:
+    permissions:
+      - can_access_all_discussions
   logout:
     permissions:
       - can_see_menu_item
@@ -435,7 +439,7 @@ resident:
   guest_list:
     permissions:
       - can_see_menu_item
-  form:
+  forms:
     permissions:
       - can_see_menu_item
       - can_access_forms
@@ -470,7 +474,7 @@ resident:
 prospective_client:
   note:
     permissions:
-  form:
+  forms:
     permissions:
       - can_see_menu_item
       - can_access_forms
@@ -507,7 +511,7 @@ client:
   guest_list:
     permissions:
       - can_see_menu_item
-  form:
+  forms:
     permissions:
       - can_see_menu_item
       - can_access_forms
@@ -534,4 +538,3 @@ client:
   community:
     permissions:
       - can_see_menu_item
-

@@ -4,8 +4,16 @@ require 'rails_helper'
 
 RSpec.describe Mutations::Form::FormPropertiesDelete do
   describe 'deletes form property' do
-    let!(:user) { create(:user_with_community) }
-    let!(:admin) { create(:admin_user, community_id: user.community_id) }
+    let!(:admin_role) { create(:role, name: 'admin') }
+    let!(:resident_role) { create(:role, name: 'resident') }
+    let!(:permission) do
+      create(:permission, module: 'forms',
+                          role: admin_role,
+                          permissions: %w[can_delete_form_properties])
+    end
+
+    let!(:user) { create(:user_with_community, role: resident_role) }
+    let!(:admin) { create(:admin_user, community_id: user.community_id, role: admin_role) }
     let!(:form) { create(:form, community_id: user.community_id) }
     let!(:category) { create(:category, form: form, field_name: 'Business Info') }
     let!(:form_property) do
@@ -41,6 +49,7 @@ RSpec.describe Mutations::Form::FormPropertiesDelete do
                                                    context: {
                                                      current_user: admin,
                                                      site_community: user.community,
+                                                     user_role: admin.role,
                                                    }).as_json
         expect(result.dig('data', 'formPropertiesDelete', 'formProperty', 'id')).not_to be_nil
         expect(form.form_properties.count).to eql 0
@@ -62,6 +71,7 @@ RSpec.describe Mutations::Form::FormPropertiesDelete do
                                                    context: {
                                                      current_user: admin,
                                                      site_community: user.community,
+                                                     user_role: admin.role,
                                                    }).as_json
         expect(result.dig('data', 'formPropertiesDelete', 'formProperty', 'id')).to be_nil
         expect(Forms::Form.count).to eql(previous_form_count + 1)
@@ -82,6 +92,7 @@ RSpec.describe Mutations::Form::FormPropertiesDelete do
                                                  context: {
                                                    current_user: user,
                                                    site_community: user.community,
+                                                   user_role: user.role,
                                                  }).as_json
       expect(result.dig('data', 'formPropertiesDelete', 'form', 'id')).to be_nil
       expect(result.dig('errors', 0, 'message')).to eql 'Unauthorized'

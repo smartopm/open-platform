@@ -12,7 +12,6 @@ import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 import { useTranslation } from 'react-i18next';
 import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider'; 
-import { objectAccessor } from '../../../utils/helpers';
 import checkSubMenuAccessibility from '../utils';
 
 const SideMenu = ({ toggleDrawer, menuItems, userType, direction, communityFeatures }) => {
@@ -87,8 +86,11 @@ const SideMenu = ({ toggleDrawer, menuItems, userType, direction, communityFeatu
   function checkMenuAccessibility(menuItem){
     // no need for the check when all modules switch to using permissions
     if(menuItem.moduleName !== undefined){
-      const modulePermissions = objectAccessor(authState.user?.permissions, menuItem.moduleName)
-      return modulePermissions?.permissions?.includes('can_see_menu_item')
+      const userPermissionsModule = authState.user?.permissions.find(permissionObject => permissionObject.module === menuItem.moduleName)
+      if(userPermissionsModule === undefined ){
+        return false
+      } 
+      return userPermissionsModule?.permissions.includes('can_see_menu_item')
     }
 
     if(typeof menuItem.accessibleBy === 'function'){

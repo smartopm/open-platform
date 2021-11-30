@@ -9,7 +9,12 @@ const authState = {
       menuItems: [{ menu_link: 'https://some-link', menu_name: 'Custom Menu', display_on: ['Dashboard'], roles: ['admin', 'client'] }],
       smsPhoneNumbers: ["+254724821901", "+154724582391"],
       emergencyCallNumber: "254724821901",
-      features: {},
+      features: {
+        Tasks: { features: [] },
+        Messages: { features: [] },
+        Payments: { features: [] },
+        Properties: { features: []}
+      },
       imageUrl: 'http://image.jpg'
     },
     email: 'user@community.co',
@@ -19,44 +24,44 @@ const authState = {
     name: 'John Doctor',
     phoneNumber: '260971500000',
     userType: 'admin',
-    permissions: {
-      note: {
+    permissions: [
+      { module: 'note',
         permissions: ['can_see_menu_item', 'can_get_user_tasks', 'can_fetch_task_by_id']
       },
-      gate_access: {
+      { module: 'gate_access',
         permissions: ['can_see_menu_item']
       },
-      email_template: {
+      { module: 'email_template',
         permissions: ['can_see_menu_item']
       },
-      land_parcel: {
+      { module: 'land_parcel',
         permissions: ['can_see_menu_item']
       },
-      plan_payment: {
+      { module: 'plan_payment',
         permissions: ['can_see_menu_item']
       },
-      timesheet: {
+      { module: 'timesheet',
         permissions: ['can_see_menu_item']
       },
-      user: {
-          permissions: ['can_see_menu_item']
+      {   module: 'user',
+          permissions: ['can_see_menu_item', 'can_create_user']
       },
-      label: {
+      { module: 'label',
         permissions: ['can_see_menu_item']
       },
-      sos: {
+      { module: 'sos',
         permissions: ['can_access_sos']
       },
-      discussion: {
+      { module: 'discussion',
         permissions: ['can_see_menu_item']
       },
-      community: {
+      { module: 'community',
         permissions: ['can_see_menu_item']
       },
-      community_settings: {
+      { module: 'community_settings',
         permissions: ['can_see_menu_item']
       },
-      business: {
+      { module: 'business',
         permissions: [
           'can_see_menu_item',
           'can_access_business',
@@ -64,13 +69,24 @@ const authState = {
           'can_delete_business'
         ]
       },
-      campaign: {
+      { module: 'campaign',
         permissions: ['can_see_menu_item']
       },
-      entry_request: {
+      { module: 'entry_request',
         permissions: ['can_grant_entry', 'can_update_entry_request']
       },
-    }
+      { module: 'transaction',
+        permissions: ['can_fetch_user_transactions']
+      },
+      { module: 'payment_plan',
+        permissions: ['can_update_payment_day', 'can_view_menu_list', 'can_create_payment_plan']
+      },
+      { module: 'plan_payment',
+        permissions: ['can_view_menu_list']
+      },
+    ]
+
+    
   }
 };
 export default authState;

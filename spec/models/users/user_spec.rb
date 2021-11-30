@@ -327,12 +327,21 @@ RSpec.describe Users::User, type: :model do
 
   describe 'User state, type and roles' do
     before :each do
-      @user = FactoryBot.create(:user_with_community, phone_number: '14157351116')
+      create(:role, name: 'visitor')
+      create(:role, name: 'admin')
+      @user = create(:user_with_community, phone_number: '14157351116')
     end
 
     it 'without a state/type it should be pending and visitor' do
       expect(@user.pending?).to be true
       expect(@user.user_type).to eq('visitor')
+      expect(@user.role.name).to eq('visitor')
+    end
+
+    it 'updates user_type alongside role' do
+      @user.update(user_type: 'admin')
+      expect(@user.user_type).to eq('admin')
+      expect(@user.role.name).to eq('admin')
     end
 
     it 'Roles should have a human name' do
