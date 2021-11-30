@@ -89,6 +89,34 @@ export const UserPlans = gql`
   }
 `
 
+export const GeneralPlanQuery = gql`
+  query generalPlan($userId: ID!) {
+    userGeneralPlan(userId: $userId) {
+      id
+      generalPayments
+      planPayments {
+        id
+        createdAt
+        amount
+        status
+        receiptNumber
+        userTransaction {
+          id
+          source
+          transactionNumber
+          allocatedAmount
+          depositor {
+            id
+            name
+          }
+        }
+        paymentPlan {
+          id
+        }
+      }
+    }
+  }
+`
 
 export const PlansPaymentsQuery = gql`
   query allPayments($limit: Int, $offset: Int, $query: String) {

@@ -10,17 +10,18 @@ import { Typography } from '@material-ui/core';
 import UserPaymentPlanItem from './UserPaymentPlanItem';
 import Balance from './UserBalance';
 import { UserLandParcels, UserBalance } from '../../../../graphql/queries';
-import DepositQuery, { UserPlans } from '../../graphql/payment_query';
+import DepositQuery, { UserPlans, GeneralPlanQuery } from '../../graphql/payment_query';
 import { Spinner } from '../../../../shared/Loading';
 import { formatError, useParamsQuery, objectAccessor } from '../../../../utils/helpers';
 import { currencies } from '../../../../utils/constants';
-import CenteredContent from '../../../../components/CenteredContent';
+import CenteredContent from '../../../../shared/CenteredContent';
 import Paginate from '../../../../components/Paginate';
 import ListHeader from '../../../../shared/list/ListHeader';
 import ButtonComponent from '../../../../shared/buttons/Button';
 import Transactions from './Transactions';
 import PaymentPlanModal from './PaymentPlanModal';
 import MessageAlert from '../../../../components/MessageAlert';
+import GeneralPlanList from './GeneralPlanList'
 
 export default function PaymentPlans({ userId, user, userData }) {
   const { t } = useTranslation(['payment', 'common']);
@@ -48,6 +49,12 @@ export default function PaymentPlans({ userId, user, userData }) {
   const [filtering, setFiltering] = useState(false);
   const [loadPlans, { loading, error, data, refetch }] = useLazyQuery(UserPlans, {
     variables: { userId, limit, offset },
+    fetchPolicy: 'no-cache',
+    errorPolicy: 'all'
+  });
+
+  const [loadGeneralPlans, { error: genError, data: genData }] = useLazyQuery(GeneralPlanQuery, {
+    variables: { userId },
     fetchPolicy: 'no-cache',
     errorPolicy: 'all'
   });
@@ -105,6 +112,7 @@ export default function PaymentPlans({ userId, user, userData }) {
     loadLandParcels();
   }
   useEffect(() => {
+    loadGeneralPlans();
     loadTransactions();
     loadPlans();
     loadBalance();
@@ -116,6 +124,8 @@ export default function PaymentPlans({ userId, user, userData }) {
     return <CenteredContent>{formatError(balanceError.message)}</CenteredContent>;
   if (transError && !transData)
     return <CenteredContent>{formatError(transError.message)}</CenteredContent>;
+    if (genError && !genData)
+    return <CenteredContent>{formatError(genError.message)}</CenteredContent>;
 
   return (
     <div>
@@ -233,6 +243,13 @@ export default function PaymentPlans({ userId, user, userData }) {
                   />
                 )}
               </div>
+              {genData?.userGeneralPlan && (
+                <GeneralPlanList 
+                  data={genData?.userGeneralPlan}
+                  currencyData={currencyData}
+                  currentUser={user}
+                />
+              )}
               {matches && <ListHeader headers={planHeader} color />}
             </div>
           </div>
@@ -246,6 +263,7 @@ export default function PaymentPlans({ userId, user, userData }) {
                 userId={userId}
                 refetch={refetch}
                 balanceRefetch={balanceRefetch}
+                
               />
             </div>
           ) : (
