@@ -34,7 +34,7 @@ export default function CommentTextField({ data, refetch, taskId }) {
   }
   return (
     <>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} style={{ marginBottom: 0}}>
         <Grid container>
           <Grid item md={10} xs={8} style={{ paddingRight: '10px'}}>
             <TextField
@@ -69,7 +69,7 @@ export default function CommentTextField({ data, refetch, taskId }) {
         </Grid>
       </form>
       <CommentCard data={data} refetch={refetch} />
-      <p className="text-center">{Boolean(error.length) && error}</p>
+      { Boolean(error.length) && (<p className="text-center">{error}</p>)}
     </>
   );
 }
