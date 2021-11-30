@@ -1,6 +1,7 @@
 /* eslint-disable max-statements */
 import React, { useState, useEffect } from 'react';
 import { Grid, Snackbar } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
 import { useMutation, useLazyQuery } from 'react-apollo';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
@@ -43,6 +44,7 @@ export default function TaskUpdateForm({
   const [setReminder] = useMutation(TaskReminderMutation);
   const [reminderTime, setReminderTime] = useState(null);
   const { t } = useTranslation(['task', 'common']);
+  const classes = useStyles();
 
   const [anchorEl, setAnchorEl] = useState(null);
   const anchorElOpen = Boolean(anchorEl);
@@ -208,35 +210,51 @@ export default function TaskUpdateForm({
         />
 
         <Grid item md={7}>
-          <TaskInfoTop
-            users={users}
-            data={data}
-            setDate={setDueDate}
-            selectedDate={selectedDate}
-            assignUser={assignUser}
-            autoCompleteOpen={autoCompleteOpen}
-            handleOpenAutoComplete={handleOpenAutoComplete}
-            liteData={liteData}
-            setSearchUser={setSearchUser}
-            searchUser={searchUser}
-            menuData={menuData}
-            isAssignee={isCurrentUserAnAssignee}
-            activeReminder={currentActiveReminder()}
-          />
-          <TaskSubTask
-            taskId={taskId}
-            users={users}
-            assignUser={assignUser}
-            refetch={refetch}
-          />
-          <TaskComment taskId={taskId} />
-          <TaskDocuments documents={data.attachments} />
-          <TaskUpdateList data={historyData} />
+          <div className={classes.section} data-testid="task-info-section">
+            <TaskInfoTop
+              users={users}
+              data={data}
+              setDate={setDueDate}
+              selectedDate={selectedDate}
+              assignUser={assignUser}
+              autoCompleteOpen={autoCompleteOpen}
+              handleOpenAutoComplete={handleOpenAutoComplete}
+              liteData={liteData}
+              setSearchUser={setSearchUser}
+              searchUser={searchUser}
+              menuData={menuData}
+              isAssignee={isCurrentUserAnAssignee}
+              activeReminder={currentActiveReminder()}
+            />
+          </div>
+          <div className={classes.section} data-testid="task-subtasks-section">
+            <TaskSubTask
+              taskId={taskId}
+              users={users}
+              assignUser={assignUser}
+              refetch={refetch}
+            />
+          </div>
+          <div className={classes.section} data-testid="task-comments-section">
+            <TaskComment taskId={taskId} />
+          </div>
+          <div className={classes.section} data-testid="task-documents-section">
+            <TaskDocuments taskId={taskId} />
+          </div>
+          <div className={classes.section} data-testid="task-updates-section">
+            <TaskUpdateList data={historyData} />
+          </div>
         </Grid>
       </form>
     </>
   );
 }
+
+const useStyles = makeStyles(() => ({
+  section: {
+    marginBottom: '32px'
+  }
+}));
 
 TaskUpdateForm.defaultProps = {
   users: [],

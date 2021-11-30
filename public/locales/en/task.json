@@ -51,8 +51,9 @@
   "document": {
     "uploaded_at": "Uploaded at",
     "download": "Download",
-    "no_documents": "No documents attached",
-    "documents": "Documents"
+    "no_documents": "Add a document",
+    "documents": "Documents",
+    "upload_error": "Document could not be uploaded"
   },
   "history": {
     "updates": "Updates"
@@ -60,7 +61,7 @@
   "sub_task": {
     "sub_tasks": "Sub Tasks",
     "see_more": "See More",
-    "no_sub_tasks": "No Sub Tasks",
+    "no_sub_tasks": "Add a subtask",
     "due": "due: "
   }
 }
