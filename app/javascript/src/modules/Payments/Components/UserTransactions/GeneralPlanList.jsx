@@ -1,3 +1,4 @@
+/* eslint-disable max-statements */
 import React, { useState } from 'react';
 import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core/styles';
@@ -19,6 +20,7 @@ import PaymentReceipt from './PaymentReceipt';
 
 export default function GeneralPlanList({ data, currencyData, currentUser }) {
   const [paymentOpen, setPaymentOpen] = useState(false);
+  const [anchorEl, setAnchorEl] = useState(null);
   const classes = useStyles();
   const { t } = useTranslation(['payment', 'common']);
   const [receiptOpen, setReceiptOpen] = useState(false);
@@ -26,6 +28,7 @@ export default function GeneralPlanList({ data, currencyData, currentUser }) {
   const [anchor, setAnchor] = useState(null);
   const matches = useMediaQuery('(max-width:600px)');
   const anchorElOpen = Boolean(anchor);
+  const open = Boolean(anchorEl);
   const paymentHeader = [
     { title: 'Payment Date', value: t('common:table_headers.payment_date'), col: 2 },
     { title: 'Payment Type', value: t('common:table_headers.payment_type'), col: 2 },
@@ -41,6 +44,19 @@ export default function GeneralPlanList({ data, currencyData, currentUser }) {
     }
   ];
 
+  const planMenuList = [
+    {
+      content: t('common:menu.view_statement'),
+      isAdmin: true,
+      handleClick: event => handlePlanClick(event)
+    },
+    {
+      content: t('common:menu.allocate_funds'),
+      isAdmin: true,
+      handleClick: event => handleCancelPlanClick(event)
+    }
+  ];
+
   const menuData = {
     menuList,
     handleTransactionMenu,
@@ -49,6 +65,19 @@ export default function GeneralPlanList({ data, currencyData, currentUser }) {
     userType: currentUser.userType,
     handleClose: event => handlePaymentMenuClose(event)
   };
+
+  // const planMenuData = {
+  //   menuList: planMenuList,
+  //   handlePlanMenu,
+  //   anchorEl: planAnchor,
+  //   open: planAnchorElOpen,
+  //   userType: currentUser.userType,
+  //   handleClose: event => handlePlanListClose(event)
+  // };
+  function handlePlanListClose(event) {
+    event.stopPropagation();
+    setAnchorEl(null);
+  }
 
   function handleClick(event) {
     event.stopPropagation();
@@ -73,6 +102,11 @@ export default function GeneralPlanList({ data, currencyData, currentUser }) {
     setReceiptOpen(false);
     setAnchor(null);
   }
+
+  function handlePlanMenu(event) {
+    event.stopPropagation();
+    setAnchorEl(event.currentTarget);
+  }
   return (
     <>
       {console.log(paymentData)}
@@ -92,12 +126,19 @@ export default function GeneralPlanList({ data, currencyData, currentUser }) {
               aria-controls="simple-menu"
               aria-haspopup="true"
               data-testid="plan-menu"
-              // onClick={event => menuData.handleTodoMenu(event)}
+              onClick={event => handlePlanMenu(event)}
               color="primary"
             >
               <MoreVertIcon />
             </IconButton>
           </Grid>
+          <MenuList
+            open={open}
+            anchorEl={anchorEl}
+            userType={currentUser.userType}
+            handleClose={event => handlePlanListClose(event)}
+            list={planMenuList}
+          />
         </Grid>
       </Card>
       <div style={{ marginBottom: '20px' }}>

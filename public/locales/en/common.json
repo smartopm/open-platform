@@ -323,7 +323,8 @@
     "transfer_plan": "Transfer Plan",
     "transfer_payment": "Transfer Payment",
     "continue": "Continue",
-    "transferring": "Transferring ..."
+    "transferring": "Transferring ...",
+    "allocate_funds": "Allocate Funds"
   },
   "user_types": {
     "admin": "Admin",
