@@ -17,6 +17,7 @@ import { IsAnyRequestValid } from '../utils';
 import CenteredContent from '../../../shared/CenteredContent';
 import { formatError } from '../../../utils/helpers';
 import useLogbookStyles from '../styles';
+import LogbookStats from './LogbookStats';
 
 export default function VisitView({
   tabValue,
@@ -78,6 +79,7 @@ export default function VisitView({
 
   return (
     <div style={{ marginTop: '20px' }}>
+      <LogbookStats tabValue={tabValue} shouldRefetch={observationDetails.refetch} />
       {error && <CenteredContent>{formatError(error.message)}</CenteredContent>}
       {guestsLoading ? (
         <Spinner />
