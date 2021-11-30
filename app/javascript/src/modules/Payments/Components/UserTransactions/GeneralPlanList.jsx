@@ -17,9 +17,11 @@ import { invoiceStatus } from '../../../../utils/constants';
 import MenuList from '../../../../shared/MenuList';
 import { PaymentMobileDataList } from './PaymentMobileDataList';
 import PaymentReceipt from './PaymentReceipt';
+import StatementPlan from './PlanStatement';
 
 export default function GeneralPlanList({ data, currencyData, currentUser }) {
   const [paymentOpen, setPaymentOpen] = useState(false);
+  const [statementOpen, setStatementOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const classes = useStyles();
   const { t } = useTranslation(['payment', 'common']);
@@ -66,14 +68,18 @@ export default function GeneralPlanList({ data, currencyData, currentUser }) {
     handleClose: event => handlePaymentMenuClose(event)
   };
 
-  // const planMenuData = {
-  //   menuList: planMenuList,
-  //   handlePlanMenu,
-  //   anchorEl: planAnchor,
-  //   open: planAnchorElOpen,
-  //   userType: currentUser.userType,
-  //   handleClose: event => handlePlanListClose(event)
-  // };
+  const statementData = {
+    statements: data?.planPayments.map(res => ({
+      paymentDate: res.createdAt,
+      amountPaid: res.amount,
+      receiptNumber: res.receiptNumber
+    })),
+    paymentPlan: {
+      user: data?.planPayments[0].user,
+      landParcel: { community: data?.planPayments[0].community }
+    }
+  };
+
   function handlePlanListClose(event) {
     event.stopPropagation();
     setAnchorEl(null);
@@ -81,7 +87,6 @@ export default function GeneralPlanList({ data, currencyData, currentUser }) {
 
   function handleClick(event) {
     event.stopPropagation();
-    // loadReceiptDetails();
     setReceiptOpen(true);
     setAnchor(null);
   }
@@ -89,8 +94,7 @@ export default function GeneralPlanList({ data, currencyData, currentUser }) {
   function handleTransactionMenu(event, pay) {
     event.stopPropagation();
     setAnchor(event.currentTarget);
-    // setPaymentId(pay.id);
-    setPaymentData(pay)
+    setPaymentData(pay);
   }
 
   function handlePaymentMenuClose(event) {
@@ -106,6 +110,12 @@ export default function GeneralPlanList({ data, currencyData, currentUser }) {
   function handlePlanMenu(event) {
     event.stopPropagation();
     setAnchorEl(event.currentTarget);
+  }
+
+  function handlePlanClick(event) {
+    event.stopPropagation();
+    setStatementOpen(true);
+    setAnchorEl(null);
   }
   return (
     <>
@@ -179,6 +189,12 @@ export default function GeneralPlanList({ data, currencyData, currentUser }) {
         handleClose={() => handleReceiptClose()}
         currencyData={currencyData}
       />
+      <StatementPlan
+        open={statementOpen}
+        handleClose={() => setStatementOpen(false)}
+        data={statementData}
+        currencyData={currencyData}
+      />
     </>
   );
 }
@@ -217,7 +233,7 @@ export function renderPayments(pay, currencyData, currentUser, menuData) {
             data-testid="pay-menu"
             dataid={pay.id}
             onClick={event => menuData.handleTransactionMenu(event, pay)}
-            color='primary'
+            color="primary"
           >
             <MoreVertIcon />
           </IconButton>
