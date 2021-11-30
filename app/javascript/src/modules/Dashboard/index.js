@@ -23,6 +23,7 @@ export default {
     'resident',
     'visitor',
     'site_worker',
-    'site_manager'
+    'site_manager',
+    'security_supervisor'
   ]
 };
