@@ -8,16 +8,13 @@ namespace :db do
       name = role.name
       roles_hash[name] = role.id
     end
-    Users::User.where(role_id: nil)
-               .find_each do |users|
-      users.each do |user|
-        next if user.role_id.present?
+    Users::User.where(role_id: nil).find_each do |user|
+      next if user.role_id.present?
 
-        user.update!(role_id: roles_hash[user.user_type])
-        puts "Updated user: #{user.id}"
-      end
-      puts 'A thousand records updated'
+      user.update!(role_id: roles_hash[user.user_type])
+      puts "Updated user: #{user.id}"
     end
+    puts 'A thousand records updated'
     puts 'Updated user types to roles'
   end
 rescue StandardError => e
