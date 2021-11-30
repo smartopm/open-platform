@@ -9,11 +9,12 @@ namespace :db do
       roles_hash[name] = role.id
     end
     Users::User.where(role_id: nil)
-               .find_in_each do |users|
+               .find_each do |users|
       users.each do |user|
         next if user.role_id.present?
 
         user.update!(role_id: roles_hash[user.user_type])
+        puts "Updated user: #{user.id}"
       end
       puts 'A thousand records updated'
     end
