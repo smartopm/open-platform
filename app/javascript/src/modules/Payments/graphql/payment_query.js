@@ -110,8 +110,17 @@ export const GeneralPlanQuery = gql`
             name
           }
         }
-        paymentPlan {
+        user {
           id
+          name
+          extRefId
+        }
+        community {
+          bankingDetails
+          currency
+          supportEmail
+          socialLinks
+          supportNumber
         }
       }
     }

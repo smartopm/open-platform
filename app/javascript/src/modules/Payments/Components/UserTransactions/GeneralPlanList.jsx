@@ -4,7 +4,6 @@ import { makeStyles } from '@material-ui/core/styles';
 import { useTranslation } from 'react-i18next';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import IconButton from '@material-ui/core/IconButton';
-import MoreHorizOutlined from '@material-ui/icons/MoreHorizOutlined';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import Card from '../../../../shared/Card';
 import { formatMoney, objectAccessor, InvoiceStatusColor } from '../../../../utils/helpers';
@@ -16,15 +15,17 @@ import Label from '../../../../shared/label/Label';
 import { invoiceStatus } from '../../../../utils/constants';
 import MenuList from '../../../../shared/MenuList';
 import { PaymentMobileDataList } from './PaymentMobileDataList';
+import PaymentReceipt from './PaymentReceipt';
 
 export default function GeneralPlanList({ data, currencyData, currentUser }) {
   const [paymentOpen, setPaymentOpen] = useState(false);
   const classes = useStyles();
   const { t } = useTranslation(['payment', 'common']);
   const [receiptOpen, setReceiptOpen] = useState(false);
-  const anchorElOpen = Boolean(anchor);
+  const [paymentData, setPaymentData] = useState({});
   const [anchor, setAnchor] = useState(null);
   const matches = useMediaQuery('(max-width:600px)');
+  const anchorElOpen = Boolean(anchor);
   const paymentHeader = [
     { title: 'Payment Date', value: t('common:table_headers.payment_date'), col: 2 },
     { title: 'Payment Type', value: t('common:table_headers.payment_type'), col: 2 },
@@ -56,31 +57,35 @@ export default function GeneralPlanList({ data, currencyData, currentUser }) {
     setAnchor(null);
   }
 
-  function handleTransactionMenu(event) {
+  function handleTransactionMenu(event, pay) {
     event.stopPropagation();
     setAnchor(event.currentTarget);
     // setPaymentId(pay.id);
-    // setPaymentData(pay)
+    setPaymentData(pay)
   }
 
   function handlePaymentMenuClose(event) {
     event.stopPropagation();
     setAnchor(null);
   }
+
+  function handleReceiptClose() {
+    setReceiptOpen(false);
+    setAnchor(null);
+  }
   return (
     <>
-      {console.log(data)}
-      <Card clickData={{ clickable: true, handleClick: () => setPaymentOpen(!paymentOpen) }}>
+      {console.log(paymentData)}
+      <Card
+        clickData={{ clickable: true, handleClick: () => setPaymentOpen(!paymentOpen) }}
+        styles={{ backgroundColor: '#FDFDFD' }}
+      >
         <Grid container>
           <Grid item md={2} style={{ marginTop: '10px' }}>
             General Funds
           </Grid>
           <Grid item md={9} style={{ marginTop: '10px' }}>
-            {`Balance/Amount ${formatMoney(
-            currencyData,
-            data?.generalPayments
-          )}`}
-
+            {`Balance/Amount ${formatMoney(currencyData, data?.generalPayments)}`}
           </Grid>
           <Grid item md={1} style={{ textAlign: 'right' }}>
             <IconButton
@@ -95,37 +100,44 @@ export default function GeneralPlanList({ data, currencyData, currentUser }) {
           </Grid>
         </Grid>
       </Card>
-      <div style={{marginBottom: '20px'}}>
+      <div style={{ marginBottom: '20px' }}>
         {!matches && paymentOpen && (
           <div className={classes.paymentList}>
             <ListHeader headers={paymentHeader} color />
           </div>
         )}
-        {paymentOpen && data.planPayments
-        ?.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-        .map(
-          pay =>
-            (currentUser.userType === 'admin' || pay?.status !== 'cancelled') && (
-              <div key={pay.id}>
-                {!matches ? (
-                  <div className={classes.paymentList}>
-                    <DataList
-                      keys={paymentHeader}
-                      data={[renderPayments(pay, currencyData, currentUser, menuData)]}
-                      hasHeader={false}
-                      color
-                    />
+        {paymentOpen &&
+          data.planPayments
+            ?.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+            .map(
+              pay =>
+                (currentUser.userType === 'admin' || pay?.status !== 'cancelled') && (
+                  <div key={pay.id}>
+                    {!matches ? (
+                      <div className={classes.paymentList}>
+                        <DataList
+                          keys={paymentHeader}
+                          data={[renderPayments(pay, currencyData, currentUser, menuData)]}
+                          hasHeader={false}
+                          color
+                        />
+                      </div>
+                    ) : (
+                      <PaymentMobileDataList
+                        keys={paymentHeader}
+                        data={[renderPayments(pay, currencyData, currentUser, menuData)]}
+                      />
+                    )}
                   </div>
-                ) : (
-                  <PaymentMobileDataList
-                    keys={paymentHeader}
-                    data={[renderPayments(pay, currencyData, currentUser, menuData)]}
-                  />
-                )}
-              </div>
-            )
-        )}
+                )
+            )}
       </div>
+      <PaymentReceipt
+        paymentData={paymentData}
+        open={receiptOpen}
+        handleClose={() => handleReceiptClose()}
+        currencyData={currencyData}
+      />
     </>
   );
 }
@@ -164,8 +176,9 @@ export function renderPayments(pay, currencyData, currentUser, menuData) {
             data-testid="pay-menu"
             dataid={pay.id}
             onClick={event => menuData.handleTransactionMenu(event, pay)}
+            color='primary'
           >
-            <MoreHorizOutlined />
+            <MoreVertIcon />
           </IconButton>
         )}
         <MenuList
