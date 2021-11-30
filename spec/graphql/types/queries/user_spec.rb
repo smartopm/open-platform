@@ -416,7 +416,7 @@ RSpec.describe Types::Queries::User do
     let!(:user2) { create(:user_with_community, name: 'Josè', community: user.community) }
     let!(:admin_user) do
       create(:user_with_community, name: 'Joe Test', user_type: 'admin',
-                                  role: admin_role, community_id: user.community_id)
+                                   role: admin_role, community_id: user.community_id)
     end
     let!(:visitor) do
       create(:user_with_community, user_type: 'visitor', email: 'visiting@admin.com',

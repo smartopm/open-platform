@@ -14,7 +14,6 @@ RSpec.describe Types::Queries::EntryRequest do
                              community: community, visitation_date: Time.zone.today)
     end
 
-
     let!(:admin_role) { create(:role, name: 'admin') }
     let!(:visitor_role) { create(:role, name: 'visitor') }
     let!(:permission) do
