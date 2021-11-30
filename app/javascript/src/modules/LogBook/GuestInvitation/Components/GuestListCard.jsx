@@ -85,7 +85,7 @@ export default function GuestListCard({ invite, translate, tz, styles }) {
               }
               style={{
                 background: checkRequests(invite.entryTime, translate, tz).valid
-                  ? styles.theme.palette.success.main
+                  ? styles.theme.palette.success?.main
                   : styles.theme.palette.error?.main,
                 color: 'white',
               }}
