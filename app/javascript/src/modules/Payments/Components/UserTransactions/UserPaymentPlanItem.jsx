@@ -566,6 +566,10 @@ export function renderPlan(
     planMenuList.push({ ...obj });
   });
 
+  const paymentPlanPermissions = currentUser?.permissions?.find(permissionObject => permissionObject.module === 'payment_plan')
+  const canViewMenuList = paymentPlanPermissions? paymentPlanPermissions.permissions.includes('can_view_menu_list'): false
+  const canUpdatePaymentDay = paymentPlanPermissions? paymentPlanPermissions.permissions.includes('can_update_payment_day'): false
+
   return {
     'Plot Number': (
       <Grid item xs={12} md={2} data-testid="plot-number">
@@ -620,15 +624,15 @@ export function renderPlan(
       <Grid item xs={12} md={2}>
         <Button
           aria-controls="set-payment-date-menu"
-          variant={objectAccessor(currentUser?.permissions, 'payment_plan')?.permissions?.includes('can_update_payment_day') ? 'outlined' : 'text'}
+          variant={canUpdatePaymentDay ? 'outlined' : 'text'}
           aria-haspopup="true"
           data-testid="menu"
-          disabled={!objectAccessor(currentUser?.permissions, 'payment_plan')?.permissions?.includes('can_update_payment_day')}
+          disabled={!canUpdatePaymentDay}
           onClick={handleMenu}
         >
           {loading && <Spinner />}
 
-          {!loading && objectAccessor(currentUser?.permissions, 'payment_plan')?.permissions?.includes('can_update_payment_day') ? (
+          {!loading && canUpdatePaymentDay ? (
             <span>
               <EditIcon fontSize="small" style={{ marginBottom: -4 }} />
               {`   ${suffixedNumber(plan.paymentDay)}`}
@@ -642,7 +646,7 @@ export function renderPlan(
     ),
     Menu: (
       <Grid item xs={12} md={1} data-testid="menu">
-        {objectAccessor(currentUser?.permissions, 'payment_plan')?.permissions?.includes('can_view_menu_list') && (
+        {canViewMenuList && (
           <>
             <IconButton
               aria-controls="simple-menu"
@@ -734,10 +738,11 @@ UserPaymentPlanItem.propTypes = {
   userId: PropTypes.string.isRequired,
   currentUser: PropTypes.shape({
     userType: PropTypes.string,
-    permissions: PropTypes.shape({
+    permissions: PropTypes.arrayOf({
       payment_plan: PropTypes.shape({
         permissions: PropTypes.arrayOf(PropTypes.string)
-      })
+      }),
+      find: PropTypes.func
     })
   }).isRequired,
   refetch: PropTypes.func.isRequired,

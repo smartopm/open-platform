@@ -3,10 +3,14 @@
 require 'rails_helper'
 
 RSpec.describe GraphqlController, type: :controller do
+  let!(:visitor_role) { create(:role, name: 'visitor') }
+  let!(:user) do
+    create(:user_with_community,
+           phone_number: '14048675309', role: visitor_role)
+  end
   before do
-    @user = FactoryBot.create(:user_with_community, phone_number: '14048675309')
-    @user.community.update(name: 'Nkwashi')
-    authenticate @user
+    user.community.update(name: 'Nkwashi')
+    authenticate user
     @request.host = 'test.dgdp.site'
   end
 
@@ -16,12 +20,12 @@ RSpec.describe GraphqlController, type: :controller do
         operationName: 'User',
         query: 'query User($id: ID!) {user(id: $id){id}}',
         variables: {
-          id: @user.id,
+          id: user.id,
         },
       }
       body = JSON.parse(response.body)
       expect(response).to have_http_status(:success)
-      expect(body.dig('data', 'user', 'id')).to eql @user.id
+      expect(body.dig('data', 'user', 'id')).to eql user.id
     end
   end
 end

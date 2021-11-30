@@ -4,7 +4,7 @@ import useMediaQuery from '@material-ui/core/useMediaQuery';
 import PropTypes from 'prop-types';
 import { Typography, Fab } from '@material-ui/core';
 import { useTranslation } from 'react-i18next';
-import { formatMoney, objectAccessor } from '../../../../utils/helpers';
+import { formatMoney } from '../../../../utils/helpers';
 import { currencies } from '../../../../utils/constants';
 import { Context as AuthStateContext } from '../../../../containers/Provider/AuthStateProvider';
 import PaymentModal from './PaymentModal';
@@ -27,6 +27,8 @@ export default function Balance({
   const currency = currencies[user.community.currency] || '';
   const { locale } = user.community;
   const currencyData = { currency, locale };
+  const userTransactionPermissions = authState.user?.permissions.find(permissionObject => permissionObject.module === 'transaction')
+  const canCreateTransactions = userTransactionPermissions? userTransactionPermissions.permissions.includes('can_create_transaction'): false
 
   return (
     <div>
@@ -76,7 +78,7 @@ export default function Balance({
           </div>
         )}
       </div>
-      {objectAccessor(authState.user?.permissions, 'transaction')?.permissions?.includes('can_create_transaction') && (
+      {canCreateTransactions && (
         <div>
           <Fab
             color="primary"

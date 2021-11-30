@@ -32,7 +32,10 @@ const QUERY = gql`
       avatarUrl
       subStatus
       paymentPlan
-      permissions
+      permissions{
+        module
+        permissions
+      }
       community {
         id
         name
@@ -60,6 +63,7 @@ const QUERY = gql`
         smsPhoneNumbers
         emergencyCallNumber
         features
+        roles
       }
     }
   }

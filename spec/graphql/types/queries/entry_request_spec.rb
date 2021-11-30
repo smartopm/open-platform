@@ -4,9 +4,7 @@ require 'rails_helper'
 
 RSpec.describe Types::Queries::EntryRequest do
   describe 'entry_request queries' do
-    let!(:current_user) { create(:user_with_community) }
     let!(:community) { current_user.community }
-    let!(:admin) { create(:admin_user, community_id: community.id) }
     let(:guest) do
       create(:entry_request, user: admin, name: 'Jose', is_guest: true,
                              community: community, visitation_date: Time.zone.today)
@@ -15,6 +13,18 @@ RSpec.describe Types::Queries::EntryRequest do
       create(:entry_request, user: admin, name: 'Josè', is_guest: true,
                              community: community, visitation_date: Time.zone.today)
     end
+
+    let!(:admin_role) { create(:role, name: 'admin') }
+    let!(:visitor_role) { create(:role, name: 'visitor') }
+    let!(:permission) do
+      create(:permission, module: 'entry_request',
+                          role: admin_role,
+                          permissions: %w[can_view_entry_requests can_view_entry_request])
+    end
+
+    let!(:current_user) { create(:user_with_community, role: visitor_role) }
+    let!(:admin) { create(:admin_user, community_id: current_user.community_id, role: admin_role) }
+
     let(:entry_request_query) do
       <<~GQL
         query entryRequest(

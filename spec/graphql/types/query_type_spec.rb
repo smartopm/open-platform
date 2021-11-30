@@ -5,7 +5,9 @@ require 'rails_helper'
 RSpec.describe Types::QueryType do
   describe 'event logs query' do
     before :each do
-      @current_user = create(:security_guard)
+      @guard_role = create(:role, name: 'security_guard')
+      @current_user = create(:security_guard, role: @guard_role)
+
       @user = create(:user, community: @current_user.community)
       3.times do
         Logs::EventLog.create(
@@ -230,7 +232,16 @@ RSpec.describe Types::QueryType do
   # TODO: add more tests cases
 
   describe 'To-dos and notes in general' do
-    let!(:admin) { create(:user_with_community, user_type: 'admin') }
+    let!(:admin_role) { create(:role, name: 'admin') }
+    let!(:permission) do
+      create(:permission, module: 'note',
+                          role: admin_role,
+                          permissions: %w[can_get_task_count can_get_task_stats
+                                          can_fetch_flagged_notes can_fetch_task_histories
+                                          can_fetch_task_comments can_fetch_task_by_id ])
+    end
+
+    let!(:admin) { create(:user_with_community, user_type: 'admin', role: admin_role) }
     let!(:current_user) { create(:user, community_id: admin.community_id) }
     let!(:searchable_user) { create(:user, name: 'Henry Tim', community_id: admin.community_id) }
     let!(:notes) do

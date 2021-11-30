@@ -4,50 +4,72 @@ require 'rails_helper'
 
 RSpec.describe Types::Queries::User do
   describe 'user' do
-    let!(:current_user) { create(:user_with_community, user_type: 'client') }
+    let!(:admin_role) { create(:role, name: 'admin') }
+    let!(:resident_role) { create(:role, name: 'resident') }
+    let!(:client_role) { create(:role, name: 'client') }
+    let!(:prospective_client_role) { create(:role, name: 'prospective_client') }
+
+    let!(:custodian_role) { create(:role, name: 'custodian') }
+    let!(:security_guard_role) { create(:role, name: 'security_guard') }
+    let!(:contractor_role) { create(:role, name: 'contractor') }
+    let!(:visitor_role) { create(:role, name: 'visitor') }
+    let!(:permission) do
+      create(:permission, module: 'user',
+                          role: admin_role,
+                          permissions: %w[can_view_admin_users can_get_users_lite])
+    end
+    let!(:current_user) { create(:user_with_community, user_type: 'client', role: client_role) }
     let!(:another_user) do
       create(:user_with_community,
              user_type: 'client',
-             community_id: current_user.community_id)
+             community_id: current_user.community_id,
+             role: client_role)
     end
     let!(:prospective_client) do
       create(:user_with_community,
              user_type: 'prospective_client',
-             community_id: current_user.community_id)
+             community_id: current_user.community_id,
+             role: prospective_client_role)
     end
     let!(:client) do
       create(:user_with_community,
              user_type: 'client',
-             community_id: current_user.community_id)
+             community_id: current_user.community_id,
+             role: client_role)
     end
     let!(:custodian) do
       create(:user_with_community,
              user_type: 'custodian',
-             community_id: current_user.community_id)
+             community_id: current_user.community_id,
+             role: custodian_role)
     end
     let!(:security_guard) do
       create(:user_with_community,
              user_type: 'security_guard',
-             community_id: current_user.community_id)
+             community_id: current_user.community_id,
+             role: security_guard_role)
     end
     let!(:contractor) do
       create(:user_with_community,
              user_type: 'contractor',
-             community_id: current_user.community_id)
+             community_id: current_user.community_id,
+             role: contractor_role)
     end
     let!(:resident) do
       create(:user_with_community,
              user_type: 'resident',
-             community_id: current_user.community_id)
+             community_id: current_user.community_id,
+             role: resident_role)
     end
     let!(:visitor) do
       create(:user_with_community,
              user_type: 'visitor',
-             community_id: current_user.community_id)
+             community_id: current_user.community_id,
+             role: visitor_role)
     end
     let!(:admin) do
       create(:admin_user, community_id: current_user.community_id,
-                          email: 'ab@dc.ef', state: 'valid')
+                          email: 'ab@dc.ef', state: 'valid', role: admin_role)
     end
     let!(:another_admin) do
       create(:admin_user, community_id: current_user.community_id,
@@ -384,11 +406,17 @@ RSpec.describe Types::Queries::User do
   end
 
   describe 'user_search' do
+    let!(:admin_role) { create(:role, name: 'admin') }
+    let!(:permission) do
+      create(:permission, module: 'user',
+                          role: admin_role,
+                          permissions: %w[can_search_guests])
+    end
     let!(:user) { create(:user_with_community, name: 'Jose') }
     let!(:user2) { create(:user_with_community, name: 'Josè', community: user.community) }
     let!(:admin_user) do
       create(:user_with_community, name: 'Joe Test', user_type: 'admin',
-                                   community_id: user.community_id)
+                                   role: admin_role, community_id: user.community_id)
     end
     let!(:visitor) do
       create(:user_with_community, user_type: 'visitor', email: 'visiting@admin.com',
@@ -513,7 +541,8 @@ RSpec.describe Types::Queries::User do
   end
 
   describe 'user_activity_point' do
-    let!(:user) { create(:user_with_community) }
+    let!(:visitor_role) { create(:role, name: 'visitor') }
+    let!(:user) { create(:user_with_community, role: visitor_role) }
     let!(:activity_point) { create(:activity_point, user: user, article_read: 2, referral: 10) }
     let(:query) do
       %(query userActivityPoint {
@@ -571,10 +600,19 @@ RSpec.describe Types::Queries::User do
   end
 
   describe 'users_count' do
-    let!(:admin_user) { create(:admin_user) }
+    let!(:admin_role) { create(:role, name: 'admin') }
+    let!(:client_role) { create(:role, name: 'client') }
+    let!(:permission) do
+      create(:permission, module: 'user',
+                          role: admin_role,
+                          permissions: %w[can_get_user_count can_get_users])
+    end
+
+    let!(:admin_user) { create(:admin_user, role: admin_role) }
     let!(:client_user) do
       create(:user_with_community, user_type: 'client',
-                                   community: admin_user.community)
+                                   community: admin_user.community,
+                                   role: client_role)
     end
     let!(:resident) do
       create(:user_with_community, user_type: 'resident',

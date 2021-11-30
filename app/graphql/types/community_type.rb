@@ -30,6 +30,7 @@ module Types
     field :sms_phone_numbers, [String, { null: true }], null: true
     field :emergency_call_number, String, null: true
     field :templates, GraphQL::Types::JSON, null: true
+    field :roles, [String, { null: true }], null: true
 
     def image_url
       return nil unless object.image.attached?
@@ -37,6 +38,10 @@ module Types
       base_url = HostEnv.base_url(object)
       path = Rails.application.routes.url_helpers.rails_blob_path(object.image)
       "https://#{base_url}#{path}"
+    end
+
+    def roles
+      Role.where(community_id: [nil, context[:site_community].id]).pluck(:name).uniq
     end
   end
 end

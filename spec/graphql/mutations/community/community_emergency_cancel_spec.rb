@@ -5,7 +5,12 @@ require 'rails_helper'
 RSpec.describe Mutations::Community::CommunityEmergencyCancel do
   describe 'cancelling an emergency request' do
     let!(:user) { create(:user_with_community) }
-    let!(:resident) { create(:resident) }
+    let!(:role) { create(:role, name: 'resident') }
+    let!(:resident) { create(:resident, role: role) }
+    let!(:permission) do
+      create(:permission, module: 'sos',
+                          role: role, permissions: ['can_cancel_sos'])
+    end
 
     let(:cancel_emergency) do
       <<~GQL
@@ -26,6 +31,7 @@ RSpec.describe Mutations::Community::CommunityEmergencyCancel do
                                        context: {
                                          current_user: resident,
                                          site_community: resident.community,
+                                         user_role: resident.role,
                                        }).as_json
 
       expect(result.dig('data', 'communityEmergencyCancel', 'success')).to_not be_nil
@@ -38,6 +44,7 @@ RSpec.describe Mutations::Community::CommunityEmergencyCancel do
                                        context: {
                                          current_user: user,
                                          site_community: user.community,
+                                         user_role: user.role,
                                        }).as_json
 
       expect(result.dig('data', 'communityEmergencyCancel', 'success')).to be_nil

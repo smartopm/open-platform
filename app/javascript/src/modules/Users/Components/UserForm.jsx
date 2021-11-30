@@ -14,8 +14,7 @@ import {
   reasons,
   requiredFields,
   userState,
-  userSubStatus,
-  userType
+  userSubStatus
 } from '../../../utils/constants';
 import DatePickerDialog from '../../../components/DatePickerDialog';
 import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider';
@@ -78,6 +77,7 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
     client: useApolloClient()
   });
   const [userImage, setUserImage] = React.useState(null);
+  const communityRoles = authState?.user?.community?.roles
 
   function uploadUserImage(image) {
     setUserImage(URL.createObjectURL(image));
@@ -413,11 +413,13 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
                     required
                     className={`${css(styles.selectInput)}`}
                   >
-                    {Object.keys(userType).map(key => (
-                      <MenuItem key={key} value={key}>
-                        {t(`user_types.${key}`)}
-                      </MenuItem>
+                    {communityRoles &&
+                   communityRoles.map(key => (
+                     <MenuItem key={key} value={key}>
+                       {t(`user_types.${key}`)}
+                     </MenuItem>
                     ))}
+
                   </TextField>
                 </div>
 

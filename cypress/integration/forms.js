@@ -2,14 +2,30 @@
 
 describe('Custom Forms', () => {
   it('should submit a custom form', () => {
-    cy.factory('community', { name: 'Nkwashi' }).then((communityResponse) => {
-      cy.factory('admin_user', {
-        name: 'An Admin User',
-        phone_number: '2348167740149',
-        email: 'adminuser@gmail.com',
-        state: 'valid',
-        community_id: communityResponse.body.id,
-      })
+    cy.factory('community', { name: 'Nkwashi' }).then((commRes) => {
+      cy.factory('role', {
+        name: 'admin',
+      }).then(roleRes =>{
+        cy.factory('permission', {
+          module: 'forms',
+          permissions: ['can_access_forms', 
+          'can_see_menu_item', 'can_create_form', 'can_fill_a_form'],
+          role_id: roleRes.body.id,
+        })
+        cy.factory('permission', {
+          module: 'community',
+          permissions: ['can_see_menu_item'],
+          role_id: roleRes.body.id,
+        })
+        cy.factory('admin_user', {
+          name: 'An Admin User',
+          phone_number: '2348167740149',
+          email: 'adminuser@gmail.com',
+          state: 'valid',
+          community_id: commRes.body.id
+        })  
+      }
+      )
     })
 
     // Login: Admin

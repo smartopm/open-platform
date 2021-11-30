@@ -33,6 +33,7 @@ RSpec.describe Mutations::EntryRequest::SendQrCode do
                                            context: {
                                              current_user: admin,
                                              site_community: community,
+                                             user_role: admin.role,
                                            }).as_json
 
           expect(result.dig('data', 'result', 'message')).to eq('success')
@@ -46,6 +47,7 @@ RSpec.describe Mutations::EntryRequest::SendQrCode do
                                            variables: variables,
                                            context: {
                                              current_user: admin,
+                                             user_role: admin.role,
                                            }).as_json
           expect(result.dig('data', 'result')).to be_nil
           expect(result.dig('errors', 0, 'message')).to eql 'Logs::EntryRequest not found'

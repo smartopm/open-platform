@@ -5,8 +5,16 @@ require 'rails_helper'
 # rubocop:disable Layout/LineLength
 RSpec.describe Mutations::User::Import do
   describe 'Import' do
-    let!(:non_admin) { create(:user_with_community) }
-    let!(:user) { create(:admin_user, community_id: non_admin.community_id) }
+    let!(:admin_role) { create(:role, name: 'admin') }
+    let!(:resident_role) { create(:role, name: 'resident') }
+    let!(:permission) do
+      create(:permission, module: 'user',
+                          role: admin_role,
+                          permissions: %w[can_import_users])
+    end
+
+    let!(:non_admin) { create(:user_with_community, role: resident_role) }
+    let!(:user) { create(:admin_user, community_id: non_admin.community_id, role: admin_role) }
 
     let(:query) do
       <<~GQL

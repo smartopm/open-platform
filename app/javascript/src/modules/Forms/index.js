@@ -4,7 +4,7 @@ import DescriptionIcon from '@material-ui/icons/Description';
 // There are 2 different types of forms
 // forms for the user and forms where admin manages and creates form
 // It would be nice to name them differently
-const currentModule = 'form'
+const currentModule = 'forms'
 
 export default {
   routeProps: {
