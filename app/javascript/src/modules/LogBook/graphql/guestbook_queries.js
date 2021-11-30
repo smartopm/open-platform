@@ -83,3 +83,12 @@ export const GuestEntryQuery = gql`
     }
   }
 `;
+
+
+export const LogbookStatsQuery = gql`
+query stats {
+  communityPeopleStatistics {
+    peoplePresent
+  }
+}
+`

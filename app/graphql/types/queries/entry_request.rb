@@ -166,7 +166,9 @@ module Types::Queries::EntryRequest
   # rubocop:enable Metrics/MethodLength,  Metrics/AbcSize
 
   def people_present(community)
-    community.entry_requests.where.not(exited_at: nil).count
+    community.entry_requests.where(exited_at: nil)
+             .where('granted_at >= ? AND granted_at <= ?', start_time, end_time)
+             .count
   end
 
   def people_entered(community)
