@@ -100,3 +100,9 @@ export function findClosestEntry(entries, tz) {
     return diffEntry1 - diffEntry2;
   })[0];
 }
+
+
+export function accessibleMenus(menus){
+  if(!menus || !menus.length) return []
+  return menus.map(menu => menu.isVisible)
+}
