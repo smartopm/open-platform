@@ -111,3 +111,14 @@ export function accessibleMenus(menus){
   if(!menus || !menus.length) return []
   return menus.filter(menu => menu.isVisible)
 }
+
+
+/**
+ * find and return if a name is available from an event
+ * @param {object} entry
+ * @returns boolean
+ */
+export function checkVisitorsName(entry) {
+  const visitorName = entry.data.ref_name || entry.data.visitor_name || entry.data.name;
+  return !!visitorName;
+}

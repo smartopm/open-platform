@@ -4,7 +4,8 @@ import {
   findClosestEntry,
   IsAnyRequestValid,
   isNotValidCheck,
-  accessibleMenus
+  accessibleMenus,
+  checkVisitorsName
 } from '../utils';
 
 describe('logbook utils', () => {
@@ -165,4 +166,30 @@ describe('logbook utils', () => {
       }
     ]);
   });
+  it('returns true if user name from an event is available', () => {
+    const entry1 = {
+      data: {
+        ref_name: 'Joe ref_name'
+      }
+    }
+    const entry2 = {
+      data: {
+        visitor_name: 'Joe visitor'
+      }
+    }
+    const entry3 = {
+      data: {
+        name: 'Joe name'
+      }
+    }
+    const entry4 = {
+      data: {
+        somesome: 'Joe somesome'
+      }
+    }
+    expect(checkVisitorsName(entry1)).toBe(true)
+    expect(checkVisitorsName(entry2)).toBe(true)
+    expect(checkVisitorsName(entry3)).toBe(true)
+    expect(checkVisitorsName(entry4)).toBe(false)
+  })
 });

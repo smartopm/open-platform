@@ -24,6 +24,7 @@ import MenuList from '../../../shared/MenuList';
 import Text from '../../../shared/Text';
 import CenteredContent from '../../../shared/CenteredContent';
 import ActingUserName from './ActingUserName';
+import { accessibleMenus, checkVisitorsName } from '../utils';
 
 export default function LogEvents({
   data,
@@ -58,23 +59,17 @@ export default function LogEvents({
     setAnchorEl(null);
   }
 
-  // TODO: move this to a util file
-  function checkVisitorsName(entry) {
-    const visitorName = entry.data.ref_name || entry.data.visitor_name || entry.data.name;
-    return !!visitorName;
-  }
-
   const menuList = [
     {
       content: t('logbook.exit_log'),
-      show: Boolean(eventData.entryRequest?.grantor) && eventData.data?.note !== 'Exited' && eventData.subject !== 'observation_log',
+      isVisible: Boolean(eventData.entryRequest?.grantor) && eventData.data?.note !== 'Exited' && eventData.subject !== 'observation_log',
       isAdmin: false,
       handleClick: () => exitEvent()
     },
     {
       content: t('access_actions.grant_access'),
       isAdmin: false,
-      show:
+      isVisible:
         Boolean(eventData.entryRequest) &&
         Boolean(!eventData.entryRequest?.grantor) &&
         eventData.data?.note !== 'Exited',
@@ -83,28 +78,22 @@ export default function LogEvents({
     {
       content: t('logbook.add_observation'),
       isAdmin: false,
-      show: Boolean(!eventData.data?.note),
+      isVisible: Boolean(!eventData.data?.note),
       handleClick: () => handleObservation(eventData)
     },
     {
       content: t('logbook.view_details'),
       isAdmin: false,
-      show: true,
+      isVisible: true,
       handleClick: () => routeToAction(eventData)
     },
     {
       content: t('logbook.enroll_user'),
       isAdmin: true,
-      show: true,
+      isVisible: true,
       handleClick: () => enrollUser(eventData)
     }
   ];
-
-  function handleMenuList(list) {
-    const listData = [];
-    list.map(menu => menu.show && listData.push(menu));
-    return listData;
-  }
 
   function handleMenu(event, entry) {
     event.stopPropagation();
@@ -194,7 +183,7 @@ export default function LogEvents({
                       anchorEl={menuData?.anchorEl}
                       userType={menuData?.userType}
                       handleClose={menuData?.handleClose}
-                      list={handleMenuList(menuData?.menuList)}
+                      list={accessibleMenus(menuData?.menuList)}
                     />
                   </Grid>
                 </Hidden>
@@ -299,7 +288,7 @@ export default function LogEvents({
                       anchorEl={menuData?.anchorEl}
                       userType={menuData?.userType}
                       handleClose={menuData?.handleClose}
-                      list={handleMenuList(menuData?.menuList)}
+                      list={accessibleMenus(menuData?.menuList)}
                     />
                   </Grid>
                 </Hidden>
