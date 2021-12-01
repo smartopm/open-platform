@@ -102,7 +102,12 @@ export function findClosestEntry(entries, tz) {
 }
 
 
+/**
+ * return only menu items that should be visible to current user
+ * @param {[object]} menus
+ * @returns []
+ */
 export function accessibleMenus(menus){
   if(!menus || !menus.length) return []
-  return menus.map(menu => menu.isVisible)
+  return menus.filter(menu => menu.isVisible)
 }

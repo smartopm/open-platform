@@ -371,7 +371,7 @@ export default function LogBookItem({
               handleClose={() => setOpen(false)}
               handleOpen={() => setOpen(true)}
               direction="down"
-              actions={actions}
+              actions={accessibleMenus(actions)}
             />
           </Grid>
         </Hidden>
