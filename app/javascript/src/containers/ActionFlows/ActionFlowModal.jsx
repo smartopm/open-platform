@@ -94,7 +94,7 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
         actionFieldsValues = setObjectValue(
           actionFieldsValues,
           key,
-          val.value.includes('_') ? titleize(val.value) : val.value
+          val.type === "variable" ? titleize(val.value) : val.value
         );
       });
       setMetaData(actionFieldsValues);
