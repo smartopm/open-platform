@@ -53,7 +53,7 @@ export default function PaymentPlans({ userId, user, userData }) {
     errorPolicy: 'all'
   });
 
-  const [loadGeneralPlans, { error: genError, data: genData }] = useLazyQuery(GeneralPlanQuery, {
+  const [loadGeneralPlans, { error: genError, data: genData, refetch: genRefetch }] = useLazyQuery(GeneralPlanQuery, {
     variables: { userId },
     fetchPolicy: 'no-cache',
     errorPolicy: 'all'
@@ -139,6 +139,7 @@ export default function PaymentPlans({ userId, user, userData }) {
           balanceData={balanceData?.userBalance}
           balanceRefetch={balanceRefetch}
           transRefetch={transRefetch}
+          genRefetch={genRefetch}
           userId={userId}
         />
       )}
@@ -240,14 +241,19 @@ export default function PaymentPlans({ userId, user, userData }) {
                     setMessage={setMessage}
                     openAlertMessage={() => setAlertOpen(true)}
                     balanceRefetch={balanceRefetch}
+                    genRefetch={genRefetch}
                   />
                 )}
               </div>
-              {genData?.userGeneralPlan && (
+              {genData?.userGeneralPlan.generalPayments > 0 && (
                 <GeneralPlanList 
                   data={genData?.userGeneralPlan}
                   currencyData={currencyData}
                   currentUser={user}
+                  userId={userId}
+                  balanceRefetch={balanceRefetch}
+                  genRefetch={genRefetch}
+                  paymentPlansRefetch={refetch}
                 />
               )}
               {matches && <ListHeader headers={planHeader} color />}

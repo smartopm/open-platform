@@ -18,10 +18,20 @@ import MenuList from '../../../../shared/MenuList';
 import { PaymentMobileDataList } from './PaymentMobileDataList';
 import PaymentReceipt from './PaymentReceipt';
 import StatementPlan from './PlanStatement';
+import AllocatePlanModal from './AllocatePlanModal';
 
-export default function GeneralPlanList({ data, currencyData, currentUser }) {
+export default function GeneralPlanList({
+  data,
+  currencyData,
+  currentUser,
+  userId,
+  balanceRefetch,
+  genRefetch,
+  paymentPlansRefetch
+}) {
   const [paymentOpen, setPaymentOpen] = useState(false);
   const [statementOpen, setStatementOpen] = useState(false);
+  const [openAllocateModal, setOpenAllocateModal] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const classes = useStyles();
   const { t } = useTranslation(['payment', 'common']);
@@ -55,7 +65,7 @@ export default function GeneralPlanList({ data, currencyData, currentUser }) {
     {
       content: t('common:menu.allocate_funds'),
       isAdmin: true,
-      handleClick: event => handleCancelPlanClick(event)
+      handleClick: event => handleAllocateFunds(event)
     }
   ];
 
@@ -75,10 +85,15 @@ export default function GeneralPlanList({ data, currencyData, currentUser }) {
       receiptNumber: res.receiptNumber
     })),
     paymentPlan: {
-      user: data?.planPayments[0].user,
-      landParcel: { community: data?.planPayments[0].community }
+      user: data?.planPayments[0]?.user,
+      landParcel: { community: data?.planPayments[0]?.community }
     }
   };
+
+  function handleAllocateFunds(event) {
+    event.stopPropagation();
+    setOpenAllocateModal(true);
+  }
 
   function handlePlanListClose(event) {
     event.stopPropagation();
@@ -126,7 +141,7 @@ export default function GeneralPlanList({ data, currencyData, currentUser }) {
       >
         <Grid container>
           <Grid item md={2} style={{ marginTop: '10px' }}>
-            General Funds
+            {t('common:misc.general_funds')}
           </Grid>
           <Grid item md={9} style={{ marginTop: '10px' }}>
             {`Balance/Amount ${formatMoney(currencyData, data?.generalPayments)}`}
@@ -194,6 +209,14 @@ export default function GeneralPlanList({ data, currencyData, currentUser }) {
         handleClose={() => setStatementOpen(false)}
         data={statementData}
         currencyData={currencyData}
+      />
+      <AllocatePlanModal
+        open={openAllocateModal}
+        handleClose={() => setOpenAllocateModal(false)}
+        userId={userId}
+        balanceRefetch={balanceRefetch}
+        genRefetch={genRefetch}
+        paymentPlansRefetch={paymentPlansRefetch}
       />
     </>
   );

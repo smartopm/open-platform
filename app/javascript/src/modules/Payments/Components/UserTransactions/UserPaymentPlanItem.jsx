@@ -17,7 +17,7 @@ import {
   MenuItem,
   IconButton
 } from '@material-ui/core';
-import { MoreHorizOutlined } from '@material-ui/icons';
+import MoreVertIcon from '@material-ui/icons/MoreVert';
 import EditIcon from '@material-ui/icons/Edit';
 import DataList from '../../../../shared/list/DataList';
 import { dateToString } from '../../../../components/DateContainer';
@@ -654,8 +654,9 @@ export function renderPlan(
               data-testid="plan-menu"
               dataid={plan.id}
               onClick={event => menuData.handlePlanMenu(event, plan)}
+              color='primary'
             >
-              <MoreHorizOutlined />
+              <MoreVertIcon />
             </IconButton>
             <MenuList
               open={menuData?.open && menuData?.anchorEl?.getAttribute('dataid') === plan.id}
@@ -705,8 +706,9 @@ export function renderPayments(pay, currencyData, currentUser, menuData) {
             data-testid="pay-menu"
             dataid={pay.id}
             onClick={event => menuData.handleTransactionMenu(event, pay)}
+            color='primary'
           >
-            <MoreHorizOutlined />
+            <MoreVertIcon />
           </IconButton>
         )}
         <MenuList

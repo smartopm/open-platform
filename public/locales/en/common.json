@@ -244,7 +244,10 @@
     "general_funds": "General Funds",
     "exp": "Exp",
     "download_id": "Download ID",
-    "role": "Role"
+    "role": "Role",
+    "allocating_message": "I accept that by clicking the allocate button the general fund will be allocated to the selected plan",
+    "allocate_select": "Select the plan you want to allocate the general fund",
+    "allocating_success": "General funds successfully allocated"
   },
   "menu": {
     "invoice": "Invoice",
@@ -324,7 +327,10 @@
     "transfer_payment": "Transfer Payment",
     "continue": "Continue",
     "transferring": "Transferring ...",
-    "allocate_funds": "Allocate Funds"
+    "allocate_funds": "Allocate Funds",
+    "allocating": "Allocating...",
+    "allocate_plan": "Allocate Plan",
+    "allocate": "Allocate"
   },
   "user_types": {
     "admin": "Admin",

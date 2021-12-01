@@ -1,0 +1,133 @@
+import React, { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next';
+import { useLazyQuery, useMutation } from 'react-apollo';
+import FormGroup from '@material-ui/core/FormGroup';
+import Typography from '@material-ui/core/Typography';
+import FormControl from '@material-ui/core/FormControl';
+import RadioGroup from '@material-ui/core/RadioGroup';
+import Checkbox from '@material-ui/core/Checkbox';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Radio from '@material-ui/core/Radio';
+import { CustomizedDialogs } from '../../../../components/Dialog';
+import { UserLandParcelWithPlan } from '../../../../graphql/queries';
+import { dateToString } from '../../../../components/DateContainer';
+import { Spinner } from '../../../../shared/Loading';
+import { AllocateGeneralFunds } from '../../graphql/payment_plan_mutations';
+import { formatError } from '../../../../utils/helpers';
+import MessageAlert from '../../../../components/MessageAlert';
+
+export default function AllocatePlanModal({ 
+  open,
+  handleClose,
+  userId,
+  balanceRefetch,
+  genRefetch,
+  paymentPlansRefetch
+}) {
+  const { t } = useTranslation(['common', 'payment']);
+  const [paymentPlanId, setPaymentPlanId] = useState('');
+  const [acceptanceCheckbox, setAcceptanceCheckbox] = useState(false)
+  const [isSuccessAlert, setIsSuccessAlert] = useState(false);
+  const [messageAlert, setMessageAlert] = useState('');
+  const [mutationLoading, setMutationStatus] = useState(false);
+  const [loadPaymentPlans, { loading, data }] = useLazyQuery(UserLandParcelWithPlan, {
+    variables: { userId },
+    errorPolicy: 'all',
+    fetchPolicy: 'cache-and-network'
+  });
+
+  const [alllocatFunds] = useMutation(AllocateGeneralFunds);
+
+  useEffect(() => {
+    if (open) {
+      loadPaymentPlans({ variables: { userId }, errorPolicy: 'all', fetchPolicy: 'no-cache' });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open]);
+
+  function handleSubmit() {
+    setMutationStatus(true);
+    alllocatFunds({
+      variables: { paymentPlanId }
+    })
+    .then(() => {
+      setMessageAlert(t('common:misc.allocating_success'));
+      setIsSuccessAlert(true);
+      handleClose();
+      paymentPlansRefetch();
+      balanceRefetch();
+      genRefetch();
+      setMutationStatus(false);
+    })
+    .catch(err => {
+      setMessageAlert(formatError(err.message));
+      setIsSuccessAlert(false);
+      handleClose();
+      setMutationStatus(false);
+    });
+  }
+
+  if (loading) return <Spinner />;
+
+  return (
+    <>
+      {console.log(data)}
+      <MessageAlert
+        type={isSuccessAlert ? 'success' : 'error'}
+        message={messageAlert}
+        open={!!messageAlert}
+        handleClose={() => setMessageAlert('')}
+      />
+      <CustomizedDialogs
+        open={open}
+        handleModal={handleClose}
+        dialogHeader={t('common:menu.allocate_plan')}
+        handleBatchFilter={handleSubmit}
+        saveAction={mutationLoading ? t('common:menu.allocating') : t('common:menu.allocate')}
+        cancelAction={t('common:misc.close')}
+        disableActionBtn={!acceptanceCheckbox || mutationLoading || !paymentPlanId}
+      >
+        <Typography paragraph color="textPrimary" data-testid='title'>
+          {t('common:misc.allocate_select')}
+        </Typography>
+        <FormControl component="fieldset">
+          <RadioGroup
+            aria-label="allocatePlanId"
+            name="allocatePlanId"
+            value={paymentPlanId}
+            onChange={(event) => setPaymentPlanId(event.target.value)}
+          >
+            {data?.userLandParcelWithPlan.map(plan => (
+              <FormControlLabel
+                key={plan.id}
+                checked={paymentPlanId === plan.id}
+                value={plan.id}
+                control={<Radio />}
+                label={`${plan?.landParcel?.parcelNumber} - ${dateToString(plan?.startDate)}`}
+              />
+          ))}
+          </RadioGroup>
+        </FormControl>
+
+        <div
+          style={{marginTop: '25%'}}
+          color="textPrimary"
+        >
+          <FormGroup row>
+            <FormControlLabel
+              control={(
+                <Checkbox
+                  checked={acceptanceCheckbox}
+                  onChange={() => setAcceptanceCheckbox(!acceptanceCheckbox)}
+                  name="acceptanceCheckbox"
+                />
+          )}
+              label={t('common:misc.allocating_message')}
+              labelPlacement="end"
+            />
+          </FormGroup>
+        </div>
+      </CustomizedDialogs>
+    </>
+  )
+}
