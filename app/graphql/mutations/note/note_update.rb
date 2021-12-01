@@ -18,6 +18,7 @@ module Mutations
       field :note, Types::NoteType, null: true
 
       # rubocop:disable Metrics/AbcSize
+      # rubocop:disable Metrics/MethodLength
       def resolve(id:, **attributes)
         note = context[:site_community].notes.find(id)
         raise_note_not_found_error(note)
@@ -37,6 +38,7 @@ module Mutations
         { note: note }
       end
       # rubocop:enable Metrics/AbcSize
+      # rubocop:enable Metrics/MethodLength
 
       def record_attributes(attributes, note)
         updates_hash = {}
