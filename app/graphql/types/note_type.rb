@@ -43,6 +43,9 @@ module Types
           filename: doc.blob.filename,
           url: host_url(doc),
           created_at: doc.created_at,
+          uploaded_by: ActiveStorage::Attachment.find_by(
+            blob_id: doc.blob_id, record_type: 'Users::User'
+          )&.record&.name
         }
         urls << file
       end

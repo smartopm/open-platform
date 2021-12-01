@@ -27,7 +27,10 @@ module Mutations
           raise GraphQL::ExecutionError, note.errors.full_messages
         end
 
-        attach_document(note, attributes[:document_blob_id]) if attributes[:document_blob_id]
+        if attributes[:document_blob_id]
+          attach_document(note, attributes[:document_blob_id])
+          attach_document(context[:current_user], attributes[:document_blob_id])
+        end
 
         updates_hash = record_attributes(update_attributes, note)
         note.record_note_history(context[:current_user], updates_hash)
