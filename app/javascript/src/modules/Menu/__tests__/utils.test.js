@@ -27,15 +27,12 @@ describe('Menu items check', () => {
         smsPhoneNumbers: ["+254724821901", "+154724582391"],
         emergencyCallNumber: "254724821901",
       },
-      permissions: {
-        note: {
-          permissions: [
-          'can_create_note',
-          'can_get_task_count',
-
-        ]
-        }
-      }
+      permissions: [          
+         {
+           module: "note",
+           permissions: ['can_create_note', 'can_get_task_count']
+          },
+         ]
     }
   };
 
@@ -90,14 +87,12 @@ describe('SOS feature accessiblity check', () => {
         smsPhoneNumbers: ["+254724821901", "+154724582391"],
         emergencyCallNumber: "254724821901",
       },
-      permissions: {
-        note: {
-          permissions: [
-          'can_create_note',
-          'can_get_task_count'
+      permissions: [          
+        {
+          module: "note",
+          permissions: ['can_create_note', 'can_get_task_count']
+         },
         ]
-        }
-      }
     }
   };
 

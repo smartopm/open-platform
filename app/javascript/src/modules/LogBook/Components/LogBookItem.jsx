@@ -344,7 +344,7 @@ export default function LogBookItem({
               handleAddObservation={handleAddObservation}
               offset={offset}
               limit={limit}
-              query={`${searchTerm} ${searchQuery}`}
+              query={!searchTerm.length ? '' : `${searchTerm} ${searchQuery}`}
               scope={scope}
               timeZone={authState.user.community.timezone}
             />
@@ -355,7 +355,7 @@ export default function LogBookItem({
               handleAddObservation={handleExitEvent}
               offset={offset}
               limit={limit}
-              query={`${searchTerm} ${searchQuery}`}
+              query={!searchTerm.length ? '' : `${searchTerm} ${searchQuery}`}
               scope={scope}
               timeZone={authState.user.community.timezone}
               observationDetails={observationDetails}

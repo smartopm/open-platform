@@ -35,6 +35,9 @@ module Mutations
         custodian: { except: %i[state user_type phone_number email] },
         prospective_client: { except: %i[state user_type phone_number email] },
         visitor: { except: %i[state user_type phone_number email] },
+        site_manager: { except: %i[state user_type phone_number email] },
+        security_supervisor: { except: %i[state user_type phone_number email] },
+
       }.freeze
 
       def resolve(vals)

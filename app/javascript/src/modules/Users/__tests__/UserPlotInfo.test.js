@@ -41,24 +41,26 @@ describe('User Plot Info Page', () => {
     userName:'some name',
     userId: 'bwekwjkewj',
     userType: 'admin',
-    permissions: {
-      land_parcel: {
-        permissions: [
-          'can_create_land_parcel'
-        ]
-      }
-    }
+    permissions: [
+        {
+          module: 'land_parcel',
+          permissions: [
+            'can_create_land_parcel'
+          ]
+        }
+    ]
   }
 
   const nonAdminMock = {
     userName:'some name',
     userId: 'bwekwjkewj',
     userType: 'admin',
-    permissions: {
-      land_parcel: {
-        permissions: []
-      }
-    }
+    permissions: [
+        { 
+          module: 'land_parcel',
+          permissions: []
+        }
+    ]
   }
 
   it('should include this type of a plot', () => {

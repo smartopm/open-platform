@@ -1,4 +1,3 @@
-import { objectAccessor } from "../../utils/helpers"
 
 /**
  *
@@ -13,8 +12,11 @@ import { objectAccessor } from "../../utils/helpers"
 
     // no need for the check when all modules switch to using permissions
     if(subMenuItem.moduleName !== undefined){
-      const modulePermissions = objectAccessor(authState.user?.permissions, subMenuItem.moduleName)
-      return modulePermissions?.permissions?.includes('can_see_menu_item')
+      const userPermissionsModule = authState.user?.permissions.find(permissionObject => permissionObject.module === subMenuItem.moduleName)
+      if(userPermissionsModule === undefined ){
+        return false
+      } 
+      return userPermissionsModule?.permissions.includes('can_see_menu_item')
     }
 
     return subMenuItem.accessibleBy.includes(authState.user?.userType)
@@ -24,7 +26,10 @@ import { objectAccessor } from "../../utils/helpers"
 
   export function canAccessSOS({authState}){
     if (!authState) return false;
-    const modulePermissions = objectAccessor(authState.user?.permissions, sos.module)
-    if (!modulePermissions) return false;
-    return modulePermissions?.permissions?.includes('can_access_sos')
+
+    const userPermissionsModule = authState.user?.permissions.find(permissionObject => permissionObject.module === sos.module)
+    if(userPermissionsModule === undefined ){
+      return false
+    } 
+    return userPermissionsModule?.permissions.includes('can_access_sos')
   }

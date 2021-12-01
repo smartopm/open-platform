@@ -4,8 +4,14 @@ require 'rails_helper'
 
 RSpec.describe Mutations::Community::CommunityUpdate do
   describe 'updating a community' do
-    let!(:resident) { create(:resident) }
-    let!(:admin) { create(:admin_user, community_id: resident.community_id) }
+    let!(:admin_role) { create(:role, name: 'admin') }
+    let!(:resident_role) { create(:role, name: 'resident') }
+    let!(:admin) { create(:admin_user, community_id: resident.community_id, role: admin_role) }
+    let!(:resident) { create(:resident, role: resident_role) }
+    let!(:community_admin_permission) do
+      create(:permission, module: 'community',
+                          role: admin_role, permissions: ['can_update_community_details'])
+    end
 
     let(:update_community) do
       <<~GQL
@@ -41,6 +47,7 @@ RSpec.describe Mutations::Community::CommunityUpdate do
                                                          context: {
                                                            current_user: admin,
                                                            site_community: resident.community,
+                                                           user_role: admin.role,
                                                          }).as_json
 
       expect(result.dig('data', 'communityUpdate', 'community', 'id')).to_not be_nil
@@ -69,6 +76,7 @@ RSpec.describe Mutations::Community::CommunityUpdate do
                                                          context: {
                                                            current_user: resident,
                                                            site_community: resident.community,
+                                                           user_role: resident.role,
                                                          }).as_json
       expect(result.dig('data', 'communityUpdate', 'community', 'id')).to be_nil
       expect(result.dig('errors', 0, 'message')).to eql 'Unauthorized'

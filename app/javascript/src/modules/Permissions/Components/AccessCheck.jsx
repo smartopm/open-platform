@@ -1,14 +1,16 @@
 import { useContext } from 'react';
 import PropTypes from 'prop-types';
 import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider';
-import { objectAccessor } from '../../../utils/helpers';
 import permissionsCheck from '../utils';
 
 export default function AccessCheck({ allowedPermissions, children, module }) {
   const authState = useContext(AuthStateContext);
-  const permissions = authState.user?.permissions;
-  const modulePerms = objectAccessor(permissions, module) || [];
-  const hasPermissions = permissionsCheck(modulePerms.permissions, allowedPermissions);
+  const userPermissionsModule = authState.user?.permissions.find(permissionObject => permissionObject.module === module);
+  if (userPermissionsModule === undefined){
+    return null;
+  }
+
+  const hasPermissions = permissionsCheck(userPermissionsModule.permissions, allowedPermissions);
 
   if (hasPermissions) {
     return children;

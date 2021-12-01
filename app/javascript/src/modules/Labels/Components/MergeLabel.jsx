@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
-import { useQuery, useMutation } from 'react-apollo';
+import { useMutation, useLazyQuery } from 'react-apollo';
 import Typography from '@material-ui/core/Typography';
 import { CustomizedDialogs } from '../../../components/Dialog';
 import { LabelsQuery } from '../../../graphql/queries';
@@ -13,7 +13,7 @@ import ErrorPage from '../../../components/Error';
 export default function MergeLabel({ open, handleClose, mergeData, refetch }) {
   const [labelValue, setLabelValue] = useState('');
   const [err, setErr] = useState(null);
-  const { error, data } = useQuery(LabelsQuery);
+  const [getLabels, { data, error }] = useLazyQuery(LabelsQuery);
   const [mergeLabel] = useMutation(LabelMerge);
   const { t } = useTranslation(['label', 'common']);
 
@@ -32,6 +32,10 @@ export default function MergeLabel({ open, handleClose, mergeData, refetch }) {
       })
       .catch(eror => setErr(eror.message));
   };
+
+  useEffect(() => {
+    getLabels();
+  }, []);
 
   if (error) {
     return <ErrorPage title={error.message} />;

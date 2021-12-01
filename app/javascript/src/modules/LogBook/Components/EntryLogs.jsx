@@ -425,7 +425,7 @@ export function IndexComponent({
             handleAddObservation={handleAddObservation}
             offset={offset}
             limit={limit}
-            query={`${searchTerm} ${searchQuery}`}
+            query={!searchTerm.length ? '' : `${searchTerm} ${searchQuery}`}
             scope={scope}
           />
         </TabPanel>

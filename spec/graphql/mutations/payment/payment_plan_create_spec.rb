@@ -4,10 +4,18 @@ require 'rails_helper'
 
 RSpec.describe Mutations::PaymentPlan::PaymentPlanCreate do
   describe 'create for payment' do
-    let!(:user) { create(:user_with_community) }
-    let!(:another_user) { create(:user_with_community) }
+    let!(:admin_role) { create(:role, name: 'admin') }
+    let!(:resident_role) { create(:role, name: 'resident') }
+    let!(:permission) do
+      create(:permission, module: 'payment_plan',
+                          role: admin_role,
+                          permissions: %w[can_create_payment_plan])
+    end
+
+    let!(:user) { create(:user_with_community, role: resident_role) }
+    let!(:admin) { create(:admin_user, community_id: user.community_id, role: admin_role) }
+    let!(:another_user) { create(:user_with_community, role: resident_role) }
     let!(:community) { user.community }
-    let!(:admin) { create(:admin_user, community_id: community.id) }
     let!(:land_parcel) { create(:land_parcel, community_id: community.id) }
     let(:payment_plan_mutation) do
       <<~GQL

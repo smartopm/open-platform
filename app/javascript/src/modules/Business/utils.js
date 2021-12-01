@@ -1,4 +1,4 @@
-import { objectAccessor } from "../../utils/helpers"
+// import { objectAccessor } from "../../utils/helpers"
 
 /**
  * * @param {Object} authState
@@ -7,15 +7,20 @@ import { objectAccessor } from "../../utils/helpers"
  const business = { module: 'business' }
   export function canCreateBusiness(authState){
     if (!authState) return false;
-    const modulePermissions = objectAccessor(authState.user?.permissions, business.module)
-    if (!modulePermissions) return false;
-    return modulePermissions?.permissions?.includes('can_create_business')
+    const userPermissionsModule = authState.user?.permissions.find(permissionObject => permissionObject.module === business.module);
+    if (!userPermissionsModule){
+      return false;
+    }
+    return userPermissionsModule?.permissions?.includes('can_create_business')
   }
 
 
   export function canDeleteBusiness(authState){
     if (!authState) return false;
-    const modulePermissions = objectAccessor(authState.user?.permissions, business.module)
-    if (!modulePermissions) return false;
-    return modulePermissions?.permissions?.includes('can_delete_business')
+
+    const userPermissionsModule = authState.user?.permissions.find(permissionObject => permissionObject.module === business.module);
+    if (!userPermissionsModule){
+      return false;
+    }
+    return userPermissionsModule?.permissions?.includes('can_delete_business')
   }

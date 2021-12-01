@@ -19,6 +19,7 @@ describe('Form that creates other forms component', () => {
           id: '5290d212-edf8-4c1e-a20b',
           fieldName: 'Last Name',
           fieldType: 'text',
+          groupingId: "6789-tyu4762",
           fieldValue: [
             {
               value: '',
@@ -46,6 +47,11 @@ describe('Form that creates other forms component', () => {
             id: '5290d212-edf8-4c1e-a20b',
             __typename: 'FormProperties'
           },
+          newFormVersion: {
+            id: "542781-e6sf6",
+            __typename: 'Forms'
+          },
+          message: "",
           __typename: 'FormPropertiesDeletePayload'
         }
       }
@@ -61,6 +67,7 @@ describe('Form that creates other forms component', () => {
           propertyId={mocks.request.variables.formPropertyId}
           formId={mocks.request.variables.formId}
           refetch={refetchMock}
+          categoryId=""
           editMode
         />
       </MockedProvider>

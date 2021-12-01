@@ -4,9 +4,20 @@ require 'rails_helper'
 
 RSpec.describe Types::Queries::Transaction do
   describe 'Transaction queries' do
+    let!(:admin_role) { create(:role, name: 'admin') }
+    let!(:resident_role) { create(:role, name: 'resident') }
+    let!(:permission) do
+      create(:permission, module: 'transaction',
+                          role: admin_role,
+                          permissions: %w[can_fetch_accounting_stats
+                                          can_fetch_transaction_summary
+                                          can_fetch_user_transactions])
+    end
+
+    let!(:user) { create(:user_with_community, role: resident_role) }
+    let!(:admin) { create(:admin_user, community_id: user.community_id, role: admin_role) }
+
     let!(:community) { create(:community, timezone: 'Africa/Lusaka') }
-    let!(:user) { create(:user, community_id: community.id) }
-    let!(:admin) { create(:admin_user, community_id: community.id) }
     let!(:land_parcel) do
       create(:land_parcel, community_id: community.id,
                            parcel_number: 'Plot01')

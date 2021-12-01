@@ -22,6 +22,7 @@ export default {
     'contractor',
     'resident',
     'visitor',
-    'site_worker'
+    'site_worker',
+    'site_manager'
   ]
 };
