@@ -57,6 +57,9 @@ export default function LogBookItem({
   error
 }) {
   const authState = useContext(AuthStateContext);
+  const permissions = authState.user?.permissions;
+  const modulePerms = objectAccessor(permissions, 'logbook') || [];
+  console.log(modulePerms)
   const { t } = useTranslation(['logbook', 'common', 'dashboard']);
   const [open, setOpen] = useState(false);
   const [isObservationOpen, setIsObservationOpen] = useState(false);
@@ -82,12 +85,14 @@ export default function LogBookItem({
     {
       icon: <PersonIcon />,
       name: t('logbook.new_invite'),
-      handleClick: () => router.push(`/logbook/guests/invite`)
+      handleClick: () => router.push(`/logbook/guests/invite`),
+      isVisible: false
     },
     {
       icon: <VisibilityIcon />,
       name: t('logbook.add_observation'),
-      handleClick: () => setIsObservationOpen(true)
+      handleClick: () => setIsObservationOpen(true),
+      isVisible: false
     }
   ];
 
