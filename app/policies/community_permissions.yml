@@ -58,6 +58,10 @@ Ciudad Morazán:
     timesheet:
       permissions:
         - can_fetch_user_time_sheet_logs
+    dashboard:
+      permissions:
+        - can_access_dashboard
+        - can_see_menu_item
     logout:
       permissions:
         - can_see_menu_item
@@ -88,6 +92,10 @@ Ciudad Morazán:
     discussion:
       permissions:
         - can_access_all_discussions
+    dashboard:
+      permissions:
+        - can_access_dashboard
+        - can_see_menu_item
     logout:
       permissions:
         - can_see_menu_item
@@ -102,6 +110,10 @@ Ciudad Morazán:
     discussion:
       permissions:
         - can_access_all_discussions
+    dashboard:
+      permissions:
+        - can_access_dashboard
+        - can_see_menu_item
     logout:
       permissions:
         - can_see_menu_item

@@ -204,6 +204,10 @@ admin:
       - can_create_campaign_through_users
       - can_remove_campaign_label
       - can_update_campaign
+  dashboard:
+    permissions:
+      - can_access_dashboard
+      - can_see_menu_item
 contractor:
   note:
     permissions:
@@ -303,6 +307,10 @@ custodian:
   community:
     permissions:
       - can_see_menu_item
+  dashboard:
+    permissions:
+      - can_access_dashboard
+      - can_see_menu_item
   logout:
     permissions:
       - can_see_menu_item
@@ -365,6 +373,10 @@ security_guard:
   community:
     permissions:
       - can_see_menu_item
+  dashboard:
+    permissions:
+      - can_access_dashboard
+      - can_see_menu_item
   logout:
     permissions:
       - can_see_menu_item
@@ -399,6 +411,10 @@ site_worker:
   discussion:
     permissions:
       - can_access_all_discussions
+  dashboard:
+    permissions:
+      - can_access_dashboard
+      - can_see_menu_item
   logout:
     permissions:
       - can_see_menu_item
@@ -419,6 +435,10 @@ visitor:
       - can_edit_own_profile
   community:
     permissions:
+      - can_see_menu_item
+  dashboard:
+    permissions:
+      - can_access_dashboard
       - can_see_menu_item
   logout:
     permissions:
@@ -452,6 +472,10 @@ resident:
       - can_view_guests
   profile:
     permissions:
+      - can_see_menu_item
+  dashboard:
+    permissions:
+      - can_access_dashboard
       - can_see_menu_item
   logout:
     permissions:
@@ -490,6 +514,10 @@ prospective_client:
       - can_access_business
   community:
     permissions:
+      - can_see_menu_item
+  dashboard:
+    permissions:
+      - can_access_dashboard
       - can_see_menu_item
   logout:
     permissions:
@@ -538,3 +566,7 @@ client:
   community:
     permissions:
       - can_see_menu_item
+  dashboard:
+    permissions:
+      - can_see_menu_item
+      - can_access_dashboard
