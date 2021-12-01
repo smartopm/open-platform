@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next';
+import PropTypes from 'prop-types';
 import { useLazyQuery, useMutation } from 'react-apollo';
 import FormGroup from '@material-ui/core/FormGroup';
 import Typography from '@material-ui/core/Typography';
@@ -71,7 +72,6 @@ export default function AllocatePlanModal({
 
   return (
     <>
-      {console.log(data)}
       <MessageAlert
         type={isSuccessAlert ? 'success' : 'error'}
         message={messageAlert}
@@ -131,3 +131,18 @@ export default function AllocatePlanModal({
     </>
   )
 }
+
+AllocatePlanModal.defaultProps = {
+  genRefetch: () => {},
+  paymentPlansRefetch: () => {},
+  balanceRefetch: () => {}
+}
+
+AllocatePlanModal.propTypes = {
+  userId: PropTypes.string.isRequired,
+  open: PropTypes.bool.isRequired,
+  handleClose: PropTypes.func.isRequired,
+  genRefetch: PropTypes.func,
+  paymentPlansRefetch: PropTypes.func,
+  balanceRefetch: PropTypes.func
+};

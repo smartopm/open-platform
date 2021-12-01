@@ -1,6 +1,7 @@
 /* eslint-disable max-statements */
 import React, { useState } from 'react';
 import Grid from '@material-ui/core/Grid';
+import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import { useTranslation } from 'react-i18next';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
@@ -134,7 +135,6 @@ export default function GeneralPlanList({
   }
   return (
     <>
-      {console.log(paymentData)}
       <Card
         clickData={{ clickable: true, handleClick: () => setPaymentOpen(!paymentOpen) }}
         styles={{ backgroundColor: '#FDFDFD' }}
@@ -183,7 +183,7 @@ export default function GeneralPlanList({
                       <div className={classes.paymentList}>
                         <DataList
                           keys={paymentHeader}
-                          data={[renderPayments(pay, currencyData, currentUser, menuData)]}
+                          data={[renderPayments(pay, currencyData, menuData)]}
                           hasHeader={false}
                           color
                         />
@@ -191,7 +191,7 @@ export default function GeneralPlanList({
                     ) : (
                       <PaymentMobileDataList
                         keys={paymentHeader}
-                        data={[renderPayments(pay, currencyData, currentUser, menuData)]}
+                        data={[renderPayments(pay, currencyData, menuData)]}
                       />
                     )}
                   </div>
@@ -222,7 +222,7 @@ export default function GeneralPlanList({
   );
 }
 
-export function renderPayments(pay, currencyData, currentUser, menuData) {
+export function renderPayments(pay, currencyData, menuData) {
   return {
     'Payment Date': (
       <Grid item xs={12} md={2} data-testid="payment-date">
@@ -279,3 +279,27 @@ const useStyles = makeStyles(() => ({
     backgroundColor: '#FDFDFD'
   }
 }));
+
+GeneralPlanList.defaultProps = {
+  genRefetch: () => {},
+  paymentPlansRefetch: () => {},
+  balanceRefetch: () => {}
+}
+
+GeneralPlanList.propTypes = {
+  data: PropTypes.shape({
+    generalPayments: PropTypes.number,
+    planPayments: PropTypes.arrayOf(PropTypes.shape)
+  }).isRequired,
+  currencyData: PropTypes.shape({
+    currency: PropTypes.string,
+    locale: PropTypes.string
+  }).isRequired,
+  userId: PropTypes.string.isRequired,
+  currentUser: PropTypes.shape({
+    userType: PropTypes.string,
+  }).isRequired,
+  genRefetch: PropTypes.func,
+  paymentPlansRefetch: PropTypes.func,
+  balanceRefetch: PropTypes.func
+};
