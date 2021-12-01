@@ -52,8 +52,8 @@ export default function AllocatePlanModal({
       variables: { paymentPlanId }
     })
     .then(() => {
-      setMessageAlert(t('common:misc.allocating_success'));
       setIsSuccessAlert(true);
+      setMessageAlert(t('common:misc.allocating_success'));
       handleClose();
       paymentPlansRefetch();
       balanceRefetch();
@@ -95,12 +95,14 @@ export default function AllocatePlanModal({
             aria-label="allocatePlanId"
             name="allocatePlanId"
             value={paymentPlanId}
+            data-testid='radio-group'
             onChange={(event) => setPaymentPlanId(event.target.value)}
           >
             {data?.userLandParcelWithPlan.map(plan => (
               <FormControlLabel
                 key={plan.id}
                 checked={paymentPlanId === plan.id}
+                data-testid={plan.id}
                 value={plan.id}
                 control={<Radio />}
                 label={`${plan?.landParcel?.parcelNumber} - ${dateToString(plan?.startDate)}`}
@@ -119,6 +121,7 @@ export default function AllocatePlanModal({
                 <Checkbox
                   checked={acceptanceCheckbox}
                   onChange={() => setAcceptanceCheckbox(!acceptanceCheckbox)}
+                  data-testid='confirmation'
                   name="acceptanceCheckbox"
                 />
           )}

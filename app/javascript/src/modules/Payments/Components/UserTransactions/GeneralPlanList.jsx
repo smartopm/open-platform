@@ -139,12 +139,13 @@ export default function GeneralPlanList({
       <Card
         clickData={{ clickable: true, handleClick: () => setPaymentOpen(!paymentOpen) }}
         styles={{ backgroundColor: '#FDFDFD' }}
+        data-testid='card'
       >
         <Grid container>
-          <Grid item md={2} xs={4} style={{ marginTop: '10px' }}>
+          <Grid item md={2} xs={4} style={{ marginTop: '10px' }} data-testid='title'>
             {t('common:misc.general_funds')}
           </Grid>
-          <Grid item md={9} xs={6} style={{ marginTop: '10px' }}>
+          <Grid item md={9} xs={6} style={{ marginTop: '10px' }} data-testid='amount'>
             {`Balance/Amount ${formatMoney(currencyData, data?.generalPayments)}`}
           </Grid>
           <Grid item md={1} xs={2} style={{ textAlign: 'right' }}>
@@ -236,7 +237,7 @@ export function renderPayments(pay, currencyData, menuData) {
       </Grid>
     ),
     Amount: (
-      <Grid item xs={12} md={2} data-testid="amount">
+      <Grid item xs={12} md={2} data-testid="pay-amount">
         <Text content={formatMoney(currencyData, pay.amount)} />
       </Grid>
     ),
