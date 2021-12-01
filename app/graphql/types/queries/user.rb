@@ -116,7 +116,6 @@ module Types::Queries::User
                  .limit(limit)
                  .offset(offset)
                  .with_attached_avatar
-                 .with_attached_document
     else
       Users::User.allowed_users(context[:current_user])
                  .eager_load(:labels)
@@ -125,7 +124,6 @@ module Types::Queries::User
                  .limit(limit)
                  .offset(offset)
                  .with_attached_avatar
-                 .with_attached_document
     end
   end
   # rubocop:enable Metrics/MethodLength
@@ -155,7 +153,6 @@ module Types::Queries::User
                  .limit(limit)
                  .offset(offset)
                  .with_attached_avatar
-                 .with_attached_document
     else
       Users::User.allowed_users(context[:current_user])
                  .send(search_method, query)
@@ -163,7 +160,6 @@ module Types::Queries::User
                  .limit(limit)
                  .offset(offset)
                  .with_attached_avatar
-                 .with_attached_document
     end
   end
   # rubocop:enable Metrics/MethodLength
@@ -206,7 +202,6 @@ module Types::Queries::User
                .limit(limit)
                .offset(offset)
                .with_attached_avatar
-               .with_attached_document
   end
   # rubocop:enable Metrics/MethodLength
   # rubocop:enable Metrics/AbcSize
@@ -300,7 +295,7 @@ module Types::Queries::User
     users = context[:site_community].users
     users.where(user_type: 'visitor')
          .search_guest(or: [{ query: (query.presence || '.') }, { name: { matches: query } }])
-         .limit(1).with_attached_avatar.with_attached_document
+         .limit(1).with_attached_avatar
   end
 
   def my_guests(query: nil)

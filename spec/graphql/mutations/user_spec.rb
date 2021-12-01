@@ -613,7 +613,6 @@ RSpec.describe Mutations::User do
             user {
               id
               avatarUrl
-              documentUrl
             }
           }
         }

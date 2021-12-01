@@ -29,7 +29,7 @@ module Mutations
 
         if attributes[:document_blob_id]
           attach_document(note, attributes[:document_blob_id])
-          attach_document(context[:current_user], attributes[:document_blob_id])
+          context[:current_user].note_documents.attach(attributes[:document_blob_id])
         end
 
         updates_hash = record_attributes(update_attributes, note)

@@ -141,7 +141,7 @@ module Users
                         dependent: :destroy
     # rubocop:enable Rails/InverseOf
     has_one_attached :avatar
-    has_many_attached :documents
+    has_many_attached :note_documents
 
     before_save :add_default_state_type_and_role
     after_create :send_email_msg
