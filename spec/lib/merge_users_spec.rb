@@ -15,8 +15,8 @@ RSpec.describe MergeUsers do
 
   let!(:user) { create(:user_with_community) }
   let!(:community) { user.community }
-  let!(:duplicate_user) { create(:user, community: community, name: 'John Doe') }
-  let!(:other_user) { create(:user, community: community, name: 'John Doe') }
+  let!(:duplicate_user) { create(:user, community: community, name: 'John Doe', role: user.role) }
+  let!(:other_user) { create(:user, community: community, name: 'John Doe', role: user.role) }
   let!(:activity_point) { create(:activity_point, user: user, article_read: 2, referral: 10) }
 
   let!(:note) { create(:note, user: user, author: user) }

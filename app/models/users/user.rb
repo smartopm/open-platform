@@ -88,7 +88,7 @@ module Users
                       }
 
     belongs_to :community
-    belongs_to :role, optional: true
+    belongs_to :role
     has_many :entry_requests, class_name: 'Logs::EntryRequest', dependent: :destroy
     has_many :granted_entry_requests, class_name: 'Logs::EntryRequest', foreign_key: :grantor_id,
                                       dependent: :destroy, inverse_of: :user
@@ -442,11 +442,13 @@ module Users
     end
 
     def add_default_state_type_and_role
+      # ap "INSIDE METHOD"
       # TODO(Nurudeen): Move these to DB level as default values
       self.state ||= 'pending'
       self.user_type ||= 'visitor'
       community_role = Role.find_by(name: self.user_type, community_id: community_id)
       self.role = (community_role || Role.find_by(name: self.user_type, community_id: nil))
+      # ap self.role.name
     end
 
     def create_new_phone_token

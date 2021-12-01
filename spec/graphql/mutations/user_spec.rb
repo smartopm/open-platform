@@ -4,9 +4,9 @@ require 'rails_helper'
 
 RSpec.describe Mutations::User do
   describe 'create pending member' do
-    let!(:current_user) { create(:user_with_community, user_type: 'security_guard') }
-    let!(:user) { create(:user_with_community, user_type: 'client') }
-    let!(:admin_user) { create(:user_with_community, user_type: 'admin') }
+    let!(:current_user) { create(:security_guard) }
+    let!(:user) { create(:client, community: current_user.community) }
+    let!(:admin_user) { create(:admin_user, community: current_user.community) }
 
     let(:query) do
       <<~GQL

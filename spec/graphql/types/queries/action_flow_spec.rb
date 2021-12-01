@@ -5,7 +5,7 @@ require 'rails_helper'
 RSpec.describe Types::Queries::ActionFlow do
   describe 'actionflow queries' do
     let!(:current_user) { create(:user_with_community) }
-    let!(:admin) { create(:user_with_community, user_type: 'admin') }
+    let!(:admin) { create(:admin_user, community: current_user.community) }
 
     let(:events_query) do
       %(query {

@@ -5,7 +5,8 @@ require 'rails_helper'
 RSpec.describe Types::Queries::Message do
   describe 'message' do
     let!(:current_user) { create(:user_with_community) }
-    let!(:another_user) { create(:user_with_community, community_id: current_user.community_id) }
+    let!(:role) { current_user.role }
+    let!(:another_user) { create(:user, community_id: current_user.community_id, role: role) }
     let!(:admin) { create(:admin_user, community_id: current_user.community_id) }
     let!(:campaign) { create(:campaign, community_id: current_user.community_id) }
     # admin sends a message to current_user

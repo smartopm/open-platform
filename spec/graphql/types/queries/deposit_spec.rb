@@ -4,8 +4,8 @@ require 'rails_helper'
 
 RSpec.describe Types::Queries::Deposit do
   describe 'Deposit queries' do
-    let!(:user) { create(:user_with_community, user_type: 'admin') }
-    let!(:another_user) { create(:user_with_community) }
+    let!(:user) { create(:admin_user) }
+    let!(:another_user) { create(:user, community: user.community) }
     let!(:wallet_transaction) do
       create(:wallet_transaction, user: user, community: user.community)
     end

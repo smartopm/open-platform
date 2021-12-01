@@ -4,7 +4,7 @@ require 'rails_helper'
 
 RSpec.describe Mutations::User do
   describe 'start the auth process' do
-    let!(:user) { create(:user_with_community, phone_number: '123456789', user_type: 'admin') }
+    let!(:user) { create(:admin_user, phone_number: '123456789') }
     let!(:another_user) { create(:user_with_community, phone_number: '0101010101') }
 
     let(:query) do

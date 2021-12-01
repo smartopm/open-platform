@@ -14,5 +14,6 @@ FactoryBot.define do
         primaryColor: '#cf5628', secondaryColor: '#cf5628'
       }
     end
+    timezone { 'Africa/Lusaka' }
   end
 end
