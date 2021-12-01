@@ -8,10 +8,13 @@ RSpec.describe Mutations::User do
       create(:user_with_community, email: 'user1@example.com',
                                    user_type: 'admin', provider: nil)
     end
-    let!(:another_user) { create(:user_with_community, email: 'user2@example.com', provider: nil) }
+    let!(:another_user) do
+      create(:user, email: 'user2@example.com', provider: nil, community: user.community,
+              role: user.role)
+    end
     let!(:oauth_user) do
-      create(:user_with_community, email: 'user3@example.com',
-                                   user_type: 'admin', provider: 'google')
+      create(:user, email: 'user3@example.com',
+              user_type: 'admin', provider: 'google', community: user.community, role: user.role)
     end
 
     let(:query) do

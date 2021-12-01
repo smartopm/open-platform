@@ -3,11 +3,9 @@
 require 'rails_helper'
 
 RSpec.describe Logs::EventLog, type: :model do
-  before :each do
-    @community = create(:community)
-    @user = create(:user, community_id: @community.id)
-    @security_guard = create(:security_guard, community_id: @community.id)
-  end
+  let!(:community) { create(:community) }
+  let!(:user) { create(:user, community_id: community.id) }
+  let!(:security_guard) { create(:security_guard, community_id: community.id) }
 
   describe 'Associations' do
     it { is_expected.to belong_to(:community) }
@@ -21,22 +19,22 @@ RSpec.describe Logs::EventLog, type: :model do
     it 'should ignore if already logged activity in the past 24 hours' do
       Logs::EventLog.create(
         subject: 'user_login',
-        acting_user: @user,
-        community: @user.community,
+        acting_user: user,
+        community: user.community,
         created_at: 16.hours.ago,
       )
-      Logs::EventLog.log_user_activity_daily(@user)
+      Logs::EventLog.log_user_activity_daily(user)
       expect(Logs::EventLog.where(
-        acting_user: @user,
+        acting_user: user,
         subject: 'user_active',
       ).count).to eql 0
     end
 
     it 'should only log once every 24 hours' do
-      Logs::EventLog.log_user_activity_daily(@user)
-      Logs::EventLog.log_user_activity_daily(@user)
+      Logs::EventLog.log_user_activity_daily(user)
+      Logs::EventLog.log_user_activity_daily(user)
       expect(Logs::EventLog.where(
-        acting_user: @user,
+        acting_user: user,
         subject: 'user_active',
       ).count).to eql 1
     end
@@ -44,9 +42,6 @@ RSpec.describe Logs::EventLog, type: :model do
 
   describe '.post_read_by_acting_user' do
     it 'returns post-read logs by a user' do
-      user = FactoryBot.create(:user_with_community)
-      community = user.community
-
       log1 = create(:event_log, acting_user: user, community: community, subject: 'post_read')
       log2 = create(:event_log, acting_user: user, community: community, subject: 'user_login')
       log3 = create(:event_log, acting_user: user, community: community, subject: 'post_read')
@@ -60,8 +55,6 @@ RSpec.describe Logs::EventLog, type: :model do
 
   describe '.post_read_to_sentence' do
     it 'returns a description for post_read event' do
-      user = create(:user_with_community)
-      community = user.community
       log = create(:event_log, acting_user: user, community: community,
                                subject: 'post_read', data: { post_id: 11 })
 
@@ -71,8 +64,6 @@ RSpec.describe Logs::EventLog, type: :model do
 
   describe '.post_shared_to_sentence' do
     it 'returns a description for post_shared event' do
-      user = create(:user_with_community)
-      community = user.community
       log = create(:event_log, acting_user: user, community: community,
                                subject: 'post_shared', data: { post_id: 11 })
 

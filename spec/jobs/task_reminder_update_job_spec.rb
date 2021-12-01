@@ -4,7 +4,8 @@ require 'rails_helper'
 
 RSpec.describe TaskReminderUpdateJob, type: :job do
   let!(:user) { create(:user_with_community) }
-  let!(:another_user) { create(:user_with_community) }
+  let!(:community) { user.community }
+  let!(:another_user) { create(:user, community: community, role: user.role) }
   let!(:admin) { create(:admin_user, community_id: user.community_id) }
   let!(:note) { create(:note, user: user, author: another_user) }
   let!(:assignee_note) { admin.assignee_notes.create!(note: note) }

@@ -5,7 +5,7 @@ require 'rails_helper'
 RSpec.describe Types::Queries::Business do
   describe 'business queries' do
     let!(:current_user) { create(:user_with_community) }
-    let!(:user2) { create(:user, community_id: current_user.community_id) }
+    let!(:user2) { create(:user, community: current_user.community, role: current_user.role) }
 
     # create a business for the user
     let!(:user_business) do

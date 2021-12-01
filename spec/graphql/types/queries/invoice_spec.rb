@@ -4,8 +4,8 @@ require 'rails_helper'
 
 RSpec.describe Types::Queries::Invoice do
   describe 'Invoice queries' do
-    let!(:user) { create(:user_with_community, user_type: 'admin') }
-    let!(:another_user) { create(:user_with_community) }
+    let!(:user) { create(:admin_user, user_type: 'admin') }
+    let!(:another_user) { create(:user, community: user.community) }
     let!(:land_parcel) { create(:land_parcel, community_id: user.community_id) }
     let!(:wallet_transaction) do
       create(:wallet_transaction, user: user,

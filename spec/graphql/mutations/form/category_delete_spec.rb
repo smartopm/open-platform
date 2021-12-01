@@ -12,8 +12,10 @@ RSpec.describe Mutations::Form::FormCreate do
                           permissions: %w[can_delete_category])
     end
 
-    let!(:user) { create(:user_with_community, role: resident_role) }
-    let!(:admin) { create(:admin_user, community_id: user.community_id, role: admin_role) }
+    let!(:user) { create(:user_with_community, user_type: 'resident', role: resident_role) }
+    let!(:admin) do
+      create(:user, user_type: 'admin', community_id: user.community_id, role: admin_role)
+    end
 
     let!(:community) { user.community }
     let!(:form) { create(:form, community: community) }
@@ -23,7 +25,9 @@ RSpec.describe Mutations::Form::FormCreate do
       create(:form_property, form: form, field_type: 'text', category: category,
                              field_name: 'Select Business')
     end
-    let(:form_user) { create(:form_user, form: form, user: user, status: :approved) }
+    let(:form_user) do
+      create(:form_user, form: form, user: user, status: :approved, status_updated_by: admin)
+    end
 
     let(:mutation) do
       <<~GQL

@@ -13,11 +13,10 @@ RSpec.describe Types::Queries::Transaction do
                                           can_fetch_transaction_summary
                                           can_fetch_user_transactions])
     end
-
-    let!(:user) { create(:user_with_community, role: resident_role) }
+    let!(:user) { create(:user_with_community) }
     let!(:admin) { create(:admin_user, community_id: user.community_id, role: admin_role) }
 
-    let!(:community) { create(:community, timezone: 'Africa/Lusaka') }
+    let!(:community) { user.community }
     let!(:land_parcel) do
       create(:land_parcel, community_id: community.id,
                            parcel_number: 'Plot01')

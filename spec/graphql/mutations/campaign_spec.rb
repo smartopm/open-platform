@@ -148,8 +148,8 @@ RSpec.describe Mutations::Campaign do
     end
 
     let!(:current_user) { create(:user_with_community, user_type: 'admin', role: admin_role) }
-    let!(:user1) { create(:user_with_community) }
-    let!(:user2) { create(:user_with_community) }
+    let!(:user1) { create(:user, community: current_user.community) }
+    let!(:user2) { create(:user, community: current_user.community, role: user1.role) }
     let(:query) do
       <<~GQL
         mutation campaignCreateThroughUsers(

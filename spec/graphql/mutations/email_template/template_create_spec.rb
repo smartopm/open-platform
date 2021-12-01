@@ -12,8 +12,10 @@ RSpec.describe Mutations::EmailTemplate::TemplateCreate do
                           permissions: %w[can_create_email_template])
     end
 
-    let!(:user) { create(:user_with_community, role: resident_role) }
-    let!(:admin) { create(:admin_user, community_id: user.community_id, role: admin_role) }
+    let!(:user) { create(:user_with_community, user_type: 'resident', role: resident_role) }
+    let!(:admin) do
+      create(:admin_user, user_type: 'admin', community_id: user.community_id, role: admin_role)
+    end
 
     let(:template_mutation) do
       <<~GQL

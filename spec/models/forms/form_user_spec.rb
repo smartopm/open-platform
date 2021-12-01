@@ -23,7 +23,7 @@ RSpec.describe Forms::FormUser, type: :model do
   describe '#create_form_task' do
     let!(:user) { create(:admin_user) }
     let!(:form) { create(:form, community: user.community) }
-    let!(:form_user) { create(:form_user, form: form, user: user) }
+    let!(:form_user) { create(:form_user, form: form, user: user, status_updated_by: user) }
 
     it 'creates a task' do
       previous_notes_count = Notes::Note.count
