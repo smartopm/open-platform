@@ -66,7 +66,7 @@ export default function LogBook() {
       refType: null,
       offset,
       limit,
-      name: value !== 2 ? dbcSearchTerm : ''
+      name: value !== 2 ? dbcSearchTerm.trim() : ''
     },
     fetchPolicy: 'cache-and-network'
   });

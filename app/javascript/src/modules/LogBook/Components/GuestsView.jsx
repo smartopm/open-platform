@@ -30,7 +30,7 @@ export default function GuestsView({
   timeZone
 }) {
   const [loadGuests, { data, loading: guestsLoading, error }] = useLazyQuery(GuestEntriesQuery, {
-    variables: { offset, limit, query },
+    variables: { offset, limit, query: query.trim() },
     fetchPolicy: 'cache-and-network'
   });
 
