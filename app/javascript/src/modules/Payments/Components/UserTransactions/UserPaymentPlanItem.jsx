@@ -698,7 +698,7 @@ export function renderPayments(pay, currencyData, currentUser, menuData) {
       </Grid>
     ),
     Menu: (
-      <Grid item xs={12} md={1} data-testid="menu">
+      <Grid item xs={12} md={1} data-testid="menu" style={{textAlign: 'right'}}>
         {pay.status === 'paid' && (
           <IconButton
             aria-controls="simple-menu"
