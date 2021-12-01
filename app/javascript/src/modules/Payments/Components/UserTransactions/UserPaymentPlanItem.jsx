@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import { useMutation, useLazyQuery } from 'react-apollo';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles, useTheme } from '@material-ui/core/styles';
 import { useHistory } from 'react-router-dom';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
@@ -87,7 +87,8 @@ export default function UserPaymentPlanItem({
   const [updatePaymentPlan] = useMutation(PaymentPlanUpdateMutation);
   const [cancelPaymentPlan] = useMutation(PaymentPlanCancelMutation);
   const validDays = [...Array(28).keys()];
-  const matches = useMediaQuery('(max-width:600px)');
+  const theme = useTheme();
+  const matches = useMediaQuery(theme.breakpoints.up('md'));
   const anchorElOpen = Boolean(anchor);
   const planAnchorElOpen = Boolean(planAnchor);
   const [loadReceiptDetails, { loading, error, data }] = useLazyQuery(ReceiptPayment, {
@@ -451,7 +452,7 @@ export default function UserPaymentPlanItem({
             data-testid="summary"
             className={classes.accordion}
           >
-            {matches ? (
+            {!matches ? (
               <PlanMobileDataList
                 keys={planHeader}
                 data={[
@@ -499,12 +500,12 @@ export default function UserPaymentPlanItem({
                 <div>
                   <Typography
                     color="primary"
-                    className={!matches ? classes.payment : classes.paymentMobile}
+                    className={matches ? classes.payment : classes.paymentMobile}
                   >
                     {t('common:menu.payment_plural')}
                   </Typography>
                   <div className={classes.paymentList}>
-                    {!matches && <ListHeader headers={paymentHeader} color />}
+                    {matches && <ListHeader headers={paymentHeader} color />}
                   </div>
                 </div>
               )}
@@ -514,7 +515,7 @@ export default function UserPaymentPlanItem({
                 pay =>
                   (currentUser.userType === 'admin' || pay?.status !== 'cancelled') && (
                     <div key={pay.id}>
-                      {!matches ? (
+                      {matches ? (
                         <div className={classes.paymentList}>
                           <DataList
                             keys={paymentHeader}

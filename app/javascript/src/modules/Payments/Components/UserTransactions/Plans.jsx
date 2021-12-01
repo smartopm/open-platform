@@ -41,7 +41,7 @@ export default function PaymentPlans({ userId, user, userData }) {
   const limit = 10;
   const page = path.get('page');
   const theme = useTheme();
-  const matches = useMediaQuery(theme.breakpoints.up('sm'));
+  const matches = useMediaQuery(theme.breakpoints.up('md'));
   const [offset, setOffset] = useState(Number(page) || 0);
   const [planModalOpen, setPlanModalOpen] = useState(false);
   const [message, setMessage] = useState({ isError: false, detail: '' });

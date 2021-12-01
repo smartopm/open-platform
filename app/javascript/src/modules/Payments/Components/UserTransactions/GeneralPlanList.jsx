@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import Grid from '@material-ui/core/Grid';
 import PropTypes from 'prop-types';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles, useTheme } from '@material-ui/core/styles';
 import { useTranslation } from 'react-i18next';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import IconButton from '@material-ui/core/IconButton';
@@ -39,7 +39,8 @@ export default function GeneralPlanList({
   const [receiptOpen, setReceiptOpen] = useState(false);
   const [paymentData, setPaymentData] = useState({});
   const [anchor, setAnchor] = useState(null);
-  const matches = useMediaQuery('(max-width:600px)');
+  const theme = useTheme();
+  const matches = useMediaQuery(theme.breakpoints.up('md'));
   const anchorElOpen = Boolean(anchor);
   const open = Boolean(anchorEl);
   const paymentHeader = [
@@ -140,13 +141,13 @@ export default function GeneralPlanList({
         styles={{ backgroundColor: '#FDFDFD' }}
       >
         <Grid container>
-          <Grid item md={2} style={{ marginTop: '10px' }}>
+          <Grid item md={2} xs={4} style={{ marginTop: '10px' }}>
             {t('common:misc.general_funds')}
           </Grid>
-          <Grid item md={9} style={{ marginTop: '10px' }}>
+          <Grid item md={9} xs={6} style={{ marginTop: '10px' }}>
             {`Balance/Amount ${formatMoney(currencyData, data?.generalPayments)}`}
           </Grid>
-          <Grid item md={1} style={{ textAlign: 'right' }}>
+          <Grid item md={1} xs={2} style={{ textAlign: 'right' }}>
             <IconButton
               aria-controls="simple-menu"
               aria-haspopup="true"
@@ -167,7 +168,7 @@ export default function GeneralPlanList({
         </Grid>
       </Card>
       <div style={{ marginBottom: '20px' }}>
-        {!matches && paymentOpen && (
+        {matches && paymentOpen && (
           <div className={classes.paymentList}>
             <ListHeader headers={paymentHeader} color />
           </div>
@@ -179,7 +180,7 @@ export default function GeneralPlanList({
               pay =>
                 (currentUser.userType === 'admin' || pay?.status !== 'cancelled') && (
                   <div key={pay.id}>
-                    {!matches ? (
+                    {matches ? (
                       <div className={classes.paymentList}>
                         <DataList
                           keys={paymentHeader}
