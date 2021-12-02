@@ -4,9 +4,15 @@ require 'rails_helper'
 
 RSpec.describe Mutations::PaymentPlan::AllocateGeneralFunds do
   describe 'Allocate general funds' do
+    let!(:admin_role) { create(:role, name: 'admin') }
+    let!(:permission) do
+      create(:permission, module: 'payment_plan',
+                          role: admin_role,
+                          permissions: %w[can_allocate_general_funds])
+    end
     let!(:user) { create(:user_with_community) }
     let!(:community) { user.community }
-    let!(:admin) { create(:admin_user, community_id: community.id) }
+    let!(:admin) { create(:admin_user, community_id: community.id, role: admin_role) }
     let!(:account) { create(:account, user_id: user.id, community_id: community.id) }
     let!(:land_parcel) { create(:land_parcel, community_id: community.id) }
     let!(:payment_plan) do
