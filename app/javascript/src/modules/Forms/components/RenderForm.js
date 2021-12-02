@@ -1,5 +1,9 @@
+/* eslint-disable max-lines */
+/* eslint-disable complexity */
 import React, { Fragment, useRef, useContext } from 'react';
 import { Grid } from '@material-ui/core';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
+import { makeStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import DatePickerDialog, {
   DateAndTimePickers,
@@ -19,6 +23,8 @@ import { convertBase64ToFile, objectAccessor } from '../../../utils/helpers';
 import { checkRequiredFormPropertyIsFilled } from '../utils';
 
 export default function RenderForm({ formPropertiesData, formId, refetch, editMode, categoryId }) {
+  const classes = useStyles();
+  const matches = useMediaQuery('(max-width:600px)');
   const signRef = useRef(null);
   const authState = useContext(Context);
   const {
@@ -212,10 +218,12 @@ export default function RenderForm({ formPropertiesData, formId, refetch, editMo
           <Spinner />
         ) : (
           !!uploadedFile && (
-            <ImageAuth
-              type={uploadedFile.contentType.split('/')[0]}
-              imageLink={uploadedFile.url}
-            />
+            <div className={matches ? classes.filePreviewMobile : classes.filePreview}>
+              <ImageAuth
+                type={uploadedFile.contentType.split('/')[0]}
+                imageLink={uploadedFile.url}
+              />
+            </div>
           )
         )}
       </Grid>
@@ -319,6 +327,23 @@ export default function RenderForm({ formPropertiesData, formId, refetch, editMo
   };
   return <>{objectAccessor(fields, formPropertiesData.fieldType)}</>;
 }
+
+const useStyles = makeStyles(() => ({
+  filePreview: {
+    maxWidth: '50%',
+    '& iframe': {
+      height: '400px',
+      width: '600px'
+    }
+  },
+  filePreviewMobile: {
+    maxWidth: '80%',
+    '& iframe': {
+      height: '300px',
+      width: '300px'
+    }
+  }
+}));
 
 RenderForm.propTypes = {
   formId: PropTypes.string.isRequired,
