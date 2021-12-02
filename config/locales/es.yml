@@ -379,9 +379,13 @@ es:
     payment_plan:
       amount_greater_than_pending_balance: La cantidad no puede ser mayor que el saldo
         pendiente del plan
+      cannot_allocate_funds: Los fondos sólo pueden ser asignados a planes de pago
+        activos
       cannot_transfer_to_cancelled_plan: No se puede transferir el plan a un plan
         de pago cancelado. Intente transferir a otros planes
       does_not_exist_for_property: El plan de pago no existe para la propiedad seleccionada
+      general_funds_does_not_exist: El usuario no dispone de fondos generales para
+        destinarlo a un plan de pago
       have_zero_pending_balance: El saldo pendiente es 0 para el plan de pago de la
         propiedad seleccionada
       not_found: Plan de Pago no encontrado
