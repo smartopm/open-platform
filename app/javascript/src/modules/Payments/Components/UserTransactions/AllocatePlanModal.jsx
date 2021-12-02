@@ -16,6 +16,7 @@ import { Spinner } from '../../../../shared/Loading';
 import { AllocateGeneralFunds } from '../../graphql/payment_plan_mutations';
 import { formatError } from '../../../../utils/helpers';
 import MessageAlert from '../../../../components/MessageAlert';
+import CenteredContent from '../../../../shared/CenteredContent';
 
 export default function AllocatePlanModal({ 
   open,
@@ -81,55 +82,61 @@ export default function AllocatePlanModal({
       <CustomizedDialogs
         open={open}
         handleModal={handleClose}
-        dialogHeader={t('common:menu.allocate_plan')}
+        dialogHeader={t('common:menu.allocate_funds')}
         handleBatchFilter={handleSubmit}
         saveAction={mutationLoading ? t('common:menu.allocating') : t('common:menu.allocate')}
         cancelAction={t('common:misc.close')}
         disableActionBtn={!acceptanceCheckbox || mutationLoading || !paymentPlanId}
       >
-        <Typography paragraph color="textPrimary" data-testid='title'>
-          {t('common:misc.allocate_select')}
-        </Typography>
-        <FormControl component="fieldset">
-          <RadioGroup
-            aria-label="allocatePlanId"
-            name="allocatePlanId"
-            value={paymentPlanId}
-            data-testid='radio-group'
-            onChange={(event) => setPaymentPlanId(event.target.value)}
-          >
-            {data?.userLandParcelWithPlan.map(plan => (
-              <FormControlLabel
-                key={plan.id}
-                checked={paymentPlanId === plan.id}
-                data-testid={plan.id}
-                value={plan.id}
-                control={<Radio />}
-                label={`${plan?.landParcel?.parcelNumber} - ${dateToString(plan?.startDate)}`}
-              />
+        {data?.userLandParcelWithPlan?.length > 0 ? (
+          <>
+            <Typography paragraph color="textPrimary" data-testid='title'>
+              {t('common:misc.allocate_select')}
+            </Typography>
+            <FormControl component="fieldset">
+              <RadioGroup
+                aria-label="allocatePlanId"
+                name="allocatePlanId"
+                value={paymentPlanId}
+                data-testid='radio-group'
+                onChange={(event) => setPaymentPlanId(event.target.value)}
+              >
+                {data?.userLandParcelWithPlan.map(plan => (
+                  <FormControlLabel
+                    key={plan.id}
+                    checked={paymentPlanId === plan.id}
+                    data-testid={plan.id}
+                    value={plan.id}
+                    control={<Radio />}
+                    label={`${plan?.landParcel?.parcelNumber} - ${dateToString(plan?.startDate)}`}
+                  />
           ))}
-          </RadioGroup>
-        </FormControl>
+              </RadioGroup>
+            </FormControl>
 
-        <div
-          style={{marginTop: '25%'}}
-          color="textPrimary"
-        >
-          <FormGroup row>
-            <FormControlLabel
-              control={(
-                <Checkbox
-                  checked={acceptanceCheckbox}
-                  onChange={() => setAcceptanceCheckbox(!acceptanceCheckbox)}
-                  data-testid='confirmation'
-                  name="acceptanceCheckbox"
-                />
+            <div
+              style={{marginTop: '25%'}}
+              color="textPrimary"
+            >
+              <FormGroup row>
+                <FormControlLabel
+                  control={(
+                    <Checkbox
+                      checked={acceptanceCheckbox}
+                      onChange={() => setAcceptanceCheckbox(!acceptanceCheckbox)}
+                      data-testid='confirmation'
+                      name="acceptanceCheckbox"
+                    />
           )}
-              label={t('common:misc.allocating_message')}
-              labelPlacement="end"
-            />
-          </FormGroup>
-        </div>
+                  label={t('common:misc.allocating_message')}
+                  labelPlacement="end"
+                />
+              </FormGroup>
+            </div>
+          </>
+        ) : (
+          <CenteredContent>{t('common:misc.no_allocating')}</CenteredContent>
+        )}
       </CustomizedDialogs>
     </>
   )

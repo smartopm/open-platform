@@ -113,9 +113,11 @@ export default function PaymentPlans({ userId, user, userData }) {
   }
   useEffect(() => {
     loadGeneralPlans();
-    loadTransactions();
     loadPlans();
     loadBalance();
+    if (subtab === 'Transactions') {
+      loadTransactions();
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -245,7 +247,7 @@ export default function PaymentPlans({ userId, user, userData }) {
                   />
                 )}
               </div>
-              {genData?.userGeneralPlan.generalPayments > 0 && (
+              {Boolean(genData?.userGeneralPlan?.generalPayments) && genData?.userGeneralPlan?.generalPayments > 0 && (
                 <GeneralPlanList 
                   data={genData?.userGeneralPlan}
                   currencyData={currencyData}
