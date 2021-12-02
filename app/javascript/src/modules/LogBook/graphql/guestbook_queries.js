@@ -16,7 +16,7 @@ export const GuestEntriesQuery = gql`
         id
         name
       }
-      entryTimes {
+      closestEntryTime {
         occursOn
         visitEndDate
         visitationDate
