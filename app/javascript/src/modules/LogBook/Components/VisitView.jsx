@@ -14,7 +14,7 @@ import { Spinner } from '../../../shared/Loading';
 import Card from '../../../shared/Card';
 import { dateToString } from '../../../components/DateContainer';
 import Text from '../../../shared/Text';
-import { IsAnyRequestValid } from '../utils';
+import { checkRequests } from '../utils';
 import CenteredContent from '../../../shared/CenteredContent';
 import { formatError } from '../../../utils/helpers';
 import useLogbookStyles from '../styles';
@@ -165,12 +165,12 @@ export default function VisitView({
                   ? (
                     <Chip
                       label={
-                        IsAnyRequestValid(visit.entryTimes, t, timeZone)
+                        checkRequests(visit.closestEntryTime, t, timeZone).valid
                           ? t('guest_book.valid')
                           : t('guest_book.invalid_now')
                       }
                       style={{
-                        background: IsAnyRequestValid(visit.entryTimes, t, timeZone)
+                        background: checkRequests(visit.closestEntryTime, t, timeZone).valid
                           ? theme.palette.success.main
                           : theme.palette.error.main,
                         color: 'white',

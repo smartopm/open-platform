@@ -35,7 +35,7 @@ describe('Should render Visits View Component', () => {
             },
             guest: {
               id: '162f7517',
-              name: 'Js user x',
+              name: 'Js user x'
             },
             entryTimes: [
               {
@@ -46,6 +46,13 @@ describe('Should render Visits View Component', () => {
                 occursOn: []
               }
             ],
+            closestEntryTime: {
+              visitEndDate: null,
+              visitationDate: '2021-08-20T10:51:00+02:00',
+              endsAt: '2021-10-31 22:51',
+              startsAt: '2021-10-31 02:51',
+              occursOn: []
+            },
             grantedAt: '2021-10-31 02:51',
             status: 'pending',
             exitedAt: null,
