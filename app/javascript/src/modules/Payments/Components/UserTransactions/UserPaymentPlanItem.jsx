@@ -646,7 +646,7 @@ export function renderPlan(
       </Grid>
     ),
     Menu: (
-      <Grid item xs={12} md={1} data-testid="menu">
+      <Grid item xs={12} md={1} data-testid="menu" style={{textAlign: 'right'}}>
         {canViewMenuList && (
           <>
             <IconButton
