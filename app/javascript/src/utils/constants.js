@@ -706,7 +706,8 @@ export const entryLogsQueryBuilderInitialValue = {
     'visitor',
     'custodian',
     'site_worker',
-    'site_manager'
+    'site_manager',
+    'security_supervisor'
   ];
 
   export const siteManagers = [

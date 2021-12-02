@@ -84,6 +84,9 @@ const authState = {
       { module: 'plan_payment',
         permissions: ['can_view_menu_list']
       },
+      { module: 'dashboard',
+        permissions: ['can_access_dashboard', 'can_see_menu_item']
+      },
     ]
 
     
