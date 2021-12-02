@@ -32,10 +32,16 @@ module ActionFlows
       def preload_data(eventlog)
         note = eventlog.ref_type.constantize.find eventlog.ref_id
         assignees_email = note.assignees.map(&:email).join(',')
+        note_history = note.note_histories.order(:created_at).last
         load_data(
           { 'Note' => note },
           'assignees_emails' => assignees_email,
           'url' => "https://#{HostEnv.base_url(eventlog.community)}/tasks/#{note.id}",
+          'updated_by' => note_history.user.name,
+          'updated_field' => note_history.attr_changed,
+          'updated_date' => note_history.created_at.strftime("%Y-%m-%d"),
+          'new_updated_value' => note.send(note_history.attr_changed)&.to_s&.truncate_words(5),
+          'due_at' => (note.due_date&.strftime("%Y-%m-%d") || 'Never')
         )
       end
     end

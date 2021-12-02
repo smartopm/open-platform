@@ -30,6 +30,11 @@ module ActionFlows
           { 'NoteComment' => note_comment },
           'assignees_emails' => assignees_email,
           'url' => "https://#{HostEnv.base_url(eventlog.community)}/tasks/#{note_comment.note.id}",
+          'user' => note_comment.user.name,
+          'due_at' => (note_comment.note.due_date&.strftime("%Y-%m-%d") || 'Never'),
+          'updated_date' => eventlog.created_at.strftime("%Y-%m-%d"),
+          'note_body' => note_comment.note.body,
+          'new_body' => note_comment.body.truncate_words(5),
         )
       end
     end

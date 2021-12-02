@@ -12,7 +12,7 @@ module ActionFieldsFetchable
 
     vars_in_field_value = field_value.scan(/%([a-zA-Z_]*?)%/i).flatten.uniq
     if vars_in_field_value.present?
-      vars_in_field_value.each { |var| field_value.gsub!("%#{var}%", data[var.to_sym]) }
+      vars_in_field_value.each { |var| field_value.gsub!("%#{var}%", data[var.to_sym].to_s) }
     end
 
     field_value
