@@ -19,13 +19,15 @@ module Mutations
         user = Users::User.find(user_id)
         raise_user_not_found_error(user)
 
-        associate_with_entry_request(user)
-        event_log = instantiate_event_log(user, note, timestamp, digital, subject)
+        ActiveRecord::Base.transaction do
+          associate_with_entry_request(user)
+          event_log = instantiate_event_log(user, note, timestamp, digital, subject)
 
-        send_notifications(user)
-        return { event_log: event_log, user: user } if event_log.save
+          # send_notifications(user)
+          return { event_log: event_log, user: user } if event_log.save
 
-        raise GraphQL::ExecutionError, event_log.errors.full_messages
+          raise GraphQL::ExecutionError, event_log.errors.full_messages
+        end
       end
 
       def instantiate_event_log(user, note, timestamp, digital, subject)
@@ -48,14 +50,15 @@ module Mutations
       # if an entry exist mark it as granted_access
       # avoid duplicate events
       def associate_with_entry_request(user)
+        grantor = context[:current_user]
         req = context[:site_community].entry_requests.find_by(guest_id: user.id)
-        return req.grant!(context[:current_user], 'no_event') if req.present?
+        return req.grant!(grantor, 'no_event') if req.present?
 
-        context[:current_user].entry_requests.create!(
+        grantor.entry_requests.create!(
           name: user.name,
           guest_id: user.id,
           granted_at: Time.zone.now,
-          grantor: context[:current_user],
+          grantor_id: grantor.id,
           granted_state: 1,
         )
       end
