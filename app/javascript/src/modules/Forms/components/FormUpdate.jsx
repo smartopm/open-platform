@@ -350,12 +350,12 @@ export default function FormUpdate({ formUserId, userId, authState }) {
             <Grid item xs={12}>
               <div>
                 {formPropertiesData.imageUrl && (
-                  <>
+                  <div className={matches ? classes.filePreviewMobile : classes.filePreview}>
                     <ImageAuth
                       type={formPropertiesData.fileType?.split('/')[0]}
                       imageLink={formPropertiesData.imageUrl}
                     />
-                  </>
+                  </div>
                 )}
               </div>
             </Grid>
@@ -537,6 +537,20 @@ const useStyles = makeStyles(() => ({
   },
   downloadButtonMobile: {
     marginTop: '-12px'
+  },
+  filePreview: {
+    maxWidth: '50%',
+    '& iframe': {
+      height: '400px',
+      width: '600px'
+    }
+  },
+  filePreviewMobile: {
+    maxWidth: '80%',
+    '& iframe': {
+      height: '300px',
+      width: '300px'
+    }
   }
 }));
 
