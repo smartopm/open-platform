@@ -56,25 +56,29 @@ export default function ReceiptDetail({ paymentData, currencyData }) {
                 {paymentData.createdAt && dateToString(paymentData.createdAt)}
               </Grid>
             </Grid>
-            <Grid container spacing={1}>
-              <Grid item xs={4} className={classes.title}>
-                {t('common:table_headers.payment_plan')}
+            {paymentData?.paymentPlan?.landParcel?.parcelNumber && (
+              <Grid container spacing={1}>
+                <Grid item xs={4} className={classes.title}>
+                  {t('common:table_headers.payment_plan')}
+                </Grid>
+                <Grid item xs={8} className={classes.title}>
+                  {capitalize(t('misc.lease'))}
+                </Grid>
               </Grid>
-              <Grid item xs={8} className={classes.title}>
-                {capitalize(t('misc.lease'))}
-              </Grid>
-            </Grid>
-            <Grid container spacing={1}>
-              <Grid item xs={4} className={classes.title}>
-                {t('common:table_headers.plot_number')}
-              </Grid>
-              <Grid item xs={8} className={classes.title}>
-                {paymentData?.paymentPlan?.landParcel?.parcelType &&
+            )}
+            {paymentData?.paymentPlan?.landParcel?.parcelNumber && (
+              <Grid container spacing={1}>
+                <Grid item xs={4} className={classes.title}>
+                  {t('common:table_headers.plot_number')}
+                </Grid>
+                <Grid item xs={8} className={classes.title}>
+                  {paymentData?.paymentPlan?.landParcel?.parcelType &&
                   paymentData?.paymentPlan?.landParcel?.parcelType}
-                {' '}
-                {paymentData?.paymentPlan?.landParcel?.parcelNumber}
+                  {' '}
+                  {paymentData?.paymentPlan?.landParcel?.parcelNumber}
+                </Grid>
               </Grid>
-            </Grid>
+            )}
           </Grid>
           <Grid item xs={6} style={{ textAlign: 'right' }}>
             <Grid container spacing={1}>
@@ -160,7 +164,7 @@ export default function ReceiptDetail({ paymentData, currencyData }) {
           <Divider className={classes.divider} />
           <Grid container spacing={1}>
             <Grid item xs={4} className={classes.title}>
-              {paymentData?.paymentPlan?.landParcel?.parcelNumber}
+              {paymentData?.paymentPlan?.landParcel?.parcelNumber || 'General Plan'}
             </Grid>
             <Grid item xs={4} className={classes.title} style={{ textAlign: 'center' }}>
               {objectAccessor(paymentType, paymentData?.userTransaction?.source)}
@@ -203,20 +207,22 @@ export default function ReceiptDetail({ paymentData, currencyData }) {
             )}
           </Grid>
           <Grid item xs={5}>
-            <Grid container spacing={1}>
-              <Grid item xs={8} className={classes.title}>
-                {t('misc.expected_monthly_payment')}
+            {paymentData?.paymentPlan?.landParcel?.parcelNumber && (
+              <Grid container spacing={1}>
+                <Grid item xs={8} className={classes.title}>
+                  {t('misc.expected_monthly_payment')}
+                </Grid>
+                <Grid
+                  item
+                  xs={4}
+                  data-testid="expected-monthly-amount"
+                  className={classes.title}
+                  style={{ textAlign: 'right' }}
+                >
+                  {formatMoney(currencyData, paymentData?.paymentPlan?.installmentAmount)}
+                </Grid>
               </Grid>
-              <Grid
-                item
-                xs={4}
-                data-testid="expected-monthly-amount"
-                className={classes.title}
-                style={{ textAlign: 'right' }}
-              >
-                {formatMoney(currencyData, paymentData?.paymentPlan?.installmentAmount)}
-              </Grid>
-            </Grid>
+            )}
             <Grid container spacing={1}>
               <Grid item xs={8} className={classes.title}>
                 {t('table_headers.total_paid')}
@@ -231,14 +237,16 @@ export default function ReceiptDetail({ paymentData, currencyData }) {
                 {formatMoney(currencyData, paymentData?.amount)}
               </Grid>
             </Grid>
-            <Grid container spacing={1}>
-              <Grid item xs={8} className={classes.title}>
-                {t('misc.total_balance_remaining')}
+            {paymentData?.paymentPlan?.landParcel?.parcelNumber && (
+              <Grid container spacing={1}>
+                <Grid item xs={8} className={classes.title}>
+                  {t('misc.total_balance_remaining')}
+                </Grid>
+                <Grid item xs={4} className={classes.title} style={{ textAlign: 'right' }}>
+                  {formatMoney(currencyData, paymentData.currentPlotPendingBalance || 0.0)}
+                </Grid>
               </Grid>
-              <Grid item xs={4} className={classes.title} style={{ textAlign: 'right' }}>
-                {formatMoney(currencyData, paymentData.currentPlotPendingBalance || 0.0)}
-              </Grid>
-            </Grid>
+            )}
             <Grid container spacing={1}>
               <Grid item xs={8} className={classes.title}>
                 {t('misc.currency')}

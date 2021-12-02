@@ -139,6 +139,22 @@ RSpec.describe Types::Queries::Payment do
       GQL
     end
 
+    let(:user_general_plan) do
+      <<~GQL
+        query userGeneralPlan($userId: ID!) {
+          userGeneralPlan(userId: $userId) {
+            id
+            status
+            planPayments {
+              id
+              status
+              amount
+            }
+          }
+        }
+      GQL
+    end
+
     describe '#user_plans_with_payments' do
       context 'when current user is not an admin and user is not same as current user' do
         it 'raises unauthorized error' do
@@ -402,6 +418,50 @@ RSpec.describe Types::Queries::Payment do
                                              site_community: community,
                                            }).as_json
           expect(result.dig('errors', 0, 'message')).to eql 'Unauthorized'
+        end
+      end
+    end
+
+    describe '#user_general_plan' do
+      context 'when user id is not valid' do
+        it 'raises unauthorized error' do
+          variables = { userId: '9364178cd' }
+          result = DoubleGdpSchema.execute(user_general_plan,
+                                           variables: variables,
+                                           context: {
+                                             current_user: admin,
+                                             site_community: community,
+                                           }).as_json
+          expect(result.dig('errors', 0, 'message')).to eql 'User does not exists'
+        end
+      end
+
+      context 'when user does not have a general plan' do
+        it 'returns empty result' do
+          variables = { userId: non_admin.id }
+          result = DoubleGdpSchema.execute(user_general_plan,
+                                           variables: variables,
+                                           context: {
+                                             current_user: admin,
+                                             site_community: community,
+                                           }).as_json
+          expect(result.dig('data', 'userGeneralPlan')).to be_nil
+        end
+      end
+
+      context 'when user has a general plan' do
+        before { non_admin.general_payment_plan }
+
+        it 'return the general plan for the user' do
+          variables = { userId: non_admin.id }
+          result = DoubleGdpSchema.execute(user_general_plan,
+                                           variables: variables,
+                                           context: {
+                                             current_user: admin,
+                                             site_community: community,
+                                           }).as_json
+          expect(result.dig('data', 'userGeneralPlan', 'id')).to_not be_nil
+          expect(result.dig('data', 'userGeneralPlan', 'status')).to eql 'general'
         end
       end
     end
