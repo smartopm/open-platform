@@ -4,6 +4,7 @@
 module ActionFieldsFetchable
   extend ActiveSupport::Concern
 
+  # rubocop:disable Metrics/AbcSize
   def self.process_vars(field, data, field_config)
     return unless field_config[field]
 
@@ -17,4 +18,5 @@ module ActionFieldsFetchable
 
     field_value
   end
+  # rubocop:enable Metrics/AbcSize
 end

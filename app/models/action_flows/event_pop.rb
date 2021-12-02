@@ -27,7 +27,7 @@ module ActionFlows
         'updated_field' => '',
         'updated_date' => '',
         'new_updated_value' => '',
-        'due_at' => ''
+        'due_at' => '',
       },
       'NoteComment' => {
         'id' => '',
@@ -87,7 +87,7 @@ module ActionFlows
         'updated_by' => '',
         'updated_date' => '',
         'due_at' => '',
-        'url' => ''
+        'url' => '',
       },
     }.freeze
 
