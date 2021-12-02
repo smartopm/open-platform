@@ -30,7 +30,7 @@ export default function VisitView({
   const [loadGuests, { data, loading: guestsLoading, refetch, error }] = useLazyQuery(
     CurrentGuestEntriesQuery,
     {
-      variables: { offset, limit, query },
+      variables: { offset, limit, query: query.trim() },
       fetchPolicy: 'cache-and-network'
     }
   );
