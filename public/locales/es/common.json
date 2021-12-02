@@ -467,6 +467,8 @@
     "prospective_client": "Futuro Cliente",
     "resident": "Residente",
     "security_guard": "Guardia de Seguridad",
+    "security_supervisor": "Supervisor de Seguridad",
+    "site_manager": "Gerente de Sitio",
     "site_worker": "Trabajador de Sitio",
     "visitor": "Visitante"
   }
