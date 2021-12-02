@@ -44,26 +44,19 @@ module Mutations
         Sms.send(number, I18n.t('general.thanks_for_using_our_app', feedback_link: feedback_link))
       end
 
+      # create an entry if it doesnt exit
+      # if an entry exist mark it as granted_access
+      # avoid duplicate events
       def associate_with_entry_request(user)
-        # create an entry if it doesnt exit
-        # if an entry exist mark it as granted_access
-        # avoid duplicate events
         req = context[:site_community].entry_requests.find_by(guest_id: user.id)
-        if req.present?
-          return req.update!(
-            grantor_id: grantor.id,
-            granted_state: 1,
-            granted_at: Time.zone.now,
-            exited_at: nil,
-          )
-        end
+        return req.grant!(context[:current_user], 'no_event') if req.present?
 
         context[:current_user].entry_requests.create!(
           name: user.name,
           guest_id: user.id,
           granted_at: Time.zone.now,
           grantor: context[:current_user],
-          granted_state: 1
+          granted_state: 1,
         )
       end
 
