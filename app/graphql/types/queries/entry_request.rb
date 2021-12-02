@@ -76,7 +76,8 @@ module Types::Queries::EntryRequest
   def scheduled_requests(offset: 0, limit: 50, query: nil)
     raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') unless can_view_entry_requests?
 
-    entry_requests = context[:site_community].entry_requests.where.not(guest_id: nil)
+    # entry_requests = context[:site_community].entry_requests.where.not(guest_id: nil).where.not(visitation_date: nil)
+    entry_requests = context[:site_community].entry_requests.where("guest_id IS NOT NULL AND visitation_date IS NOT NULL")
                                              .includes(:user, :guest)
                                              .limit(limit)
                                              .offset(offset)

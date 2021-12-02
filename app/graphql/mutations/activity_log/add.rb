@@ -19,6 +19,7 @@ module Mutations
         user = Users::User.find(user_id)
         raise_user_not_found_error(user)
 
+        associate_with_entry_request(user)
         event_log = instantiate_event_log(user, note, timestamp, digital, subject)
 
         send_notifications(user)
@@ -41,6 +42,29 @@ module Mutations
 
         # disabled rubocop to keep the structure of the message
         Sms.send(number, I18n.t('general.thanks_for_using_our_app', feedback_link: feedback_link))
+      end
+
+      def associate_with_entry_request(user)
+        # create an entry if it doesnt exit
+        # if an entry exist mark it as granted_access
+        # avoid duplicate events
+        req = context[:site_community].entry_requests.find_by(guest_id: user.id)
+        if req.present?
+          return req.update!(
+            grantor_id: grantor.id,
+            granted_state: 1,
+            granted_at: Time.zone.now,
+            exited_at: nil,
+          )
+        end
+
+        context[:current_user].entry_requests.create!(
+          name: user.name,
+          guest_id: user.id,
+          granted_at: Time.zone.now,
+          grantor: context[:current_user],
+          granted_state: 1
+        )
       end
 
       # TODO: Better auth here
