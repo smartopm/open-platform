@@ -151,9 +151,7 @@ export function MainNav({ authState }) {
           <UserActionOptions />
           <NotificationBell user={authState.user} />
           {matches ? (
-            <div>
-              <CommunityName authState={authState} />
-            </div>
+            <CommunityName authState={authState} />
           ) : (
             <CenteredContent>
               <CommunityName authState={authState} />

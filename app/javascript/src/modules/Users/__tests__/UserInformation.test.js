@@ -5,6 +5,7 @@ import { BrowserRouter } from 'react-router-dom/'
 import { MockedProvider } from '@apollo/react-testing'
 import UserInformation from '../Components/UserInformation'
 import MockedThemeProvider from '../../__mocks__/mock_theme'
+import authState from '../../../__mocks__/authstate';
 
 describe("User information component loads",()=>{
     const data = {
@@ -39,20 +40,6 @@ describe("User information component loads",()=>{
         }]
       }
     }
-    const authstate = {
-        user:{
-            userType : "admin",
-            community: {
-              currency: 'zambian_kwacha',
-              features: {
-                Tasks: { features: [] },
-                Messages: { features: [] },
-                Payments: { features: [] },
-                Properties: { features: []}
-              }
-            }
-        }
-    }
     it('should render user name on contacts tab', async ()=>{
       const mock = jest.fn()
       const routeMock = {
@@ -64,7 +51,7 @@ describe("User information component loads",()=>{
               <MockedThemeProvider>
                 <UserInformation
                   data={data}
-                  authState={authstate}
+                  authState={authState}
                   accountData={accountData}
                   parcelData={parcelData}
                   onLogEntry={mock}

@@ -220,14 +220,18 @@
     "option_with_count": "option {{id}}",
     "close": "close",
     "transfer_plan_acceptance": "I accept that by clicking the transfer button, this plan will be cancelled and all payments will be migrated to the new plan.",
+    "transfer_payment_acceptance": "I accept that by clicking the transfer button, this payment will be cancelled and the payment will be migrated to the new plan.",
     "no_property_found_for_plan_transfer": "There are no payment plans other than the payment plan that you wish to transfer. Please create new payment plan to transfer payments.",
     "plan_transferred_successfully": "Your plan has been successfully transferred to {{paymentPlanName}}.",
     "plan_transfer_confirmation_message_1": "Your plan has a total of",
     "plan_transfer_confirmation_message_2": "payments with a total value of",
     "plan_transfer_confirmation_message_3": "By transferring your plan, you will be transferring all payments associated to this plan. Click the 'Continue' button to transfer plan",
+    "payment_transfer_confirmation_message_1": "You are about to transfer payment of amount",
+    "payment_transfer_confirmation_message_2": "to the selected plan. Click the 'Continue' button to transfer payment" ,
     "select_frequency": "Please select frequency",
     "select_plan_type": "Please select a plan type",
     "select_transfer_plan": "Select the Plan you want to migrate this plan to?",
+    "select_plan_for_payment_transfer": "Select the Plan you want to migrate this payment to?",
     "plan_frequency": "Plan Frequency",
     "image_uploaded": "Image uploaded",
     "new_plan": "New Plan",
@@ -317,6 +321,7 @@
     "view_transactions": "View Transactions",
     "transfer_payment_plan": "Transfer Plan",
     "transfer_plan": "Transfer Plan",
+    "transfer_payment": "Transfer Payment",
     "continue": "Continue",
     "transferring": "Transferring ..."
   },
@@ -329,7 +334,9 @@
     "security_guard": "Security Guard",
     "resident": "Resident",
     "contractor": "Contractor",
-    "site_worker": "Site Worker"
+    "site_worker": "Site Worker",
+    "site_manager": "Site Manager",
+    "security_supervisor": "Security Supervisor"
   },
   "table_headers": {
     "date_created": "Date Created",
@@ -408,7 +415,8 @@
     "user_name_search_not_found": "{{username}} not found in users",
     "invalid_color_code": "The theme color code is invalid",
     "no_user_selected": "You have to select a user",
-    "no_result_found": "No results were found for {{searchValue}}"
+    "no_result_found": "No results were found for {{searchValue}}",
+    "something_wrong_qr_code": "Something went wrong while downloading QR Code"
   },
   "dialogs": {
     "dialog_action": "Are you sure you want to {{action}} this {{title}}?",

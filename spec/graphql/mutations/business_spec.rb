@@ -4,8 +4,18 @@ require 'rails_helper'
 
 RSpec.describe Mutations::Business do
   describe 'creating a business' do
-    let!(:current_user) { create(:user_with_community, user_type: 'admin') }
-    let!(:non_admin) { create(:user_with_community, user_type: 'resident') }
+    let!(:resident_role) { create(:role, name: 'resident') }
+    let!(:admin_role) { create(:role, name: 'admin') }
+    let!(:resident) { create(:resident, role: resident_role) }
+    let!(:permission) do
+      create(:permission, module: 'business',
+                          role: admin_role,
+                          permissions: %w[can_create_business can_delete_business])
+    end
+
+    let!(:current_user) { create(:user_with_community, user_type: 'admin', role: admin_role) }
+
+    let!(:non_admin) { create(:user_with_community, user_type: 'resident', role: resident_role) }
     # using a few fields to test since there is a lot
     let(:query) do
       <<~GQL
@@ -63,8 +73,6 @@ RSpec.describe Mutations::Business do
       expect(result.dig('errors', 0, 'message')).to include 'Unauthorized'
     end
     describe 'creating a business' do
-      let!(:current_user) { create(:user_with_community, user_type: 'admin') }
-
       # create a business for the user
       let!(:user_business) do
         create(:business, user_id: current_user.id, community_id: current_user.community_id,

@@ -4,11 +4,22 @@ require 'rails_helper'
 
 RSpec.describe Mutations::EntryRequest::InvitationCreate do
   describe 'create an invitation for a guest' do
-    let!(:user) { create(:user_with_community) }
+    let!(:admin_role) { create(:role, name: 'admin') }
+    let!(:prospective_client_role) { create(:role, name: 'prospective_client') }
+    let!(:visitor_role) { create(:role, name: 'visitor') }
+    let!(:permission) do
+      create(:permission, module: 'entry_request',
+                          role: admin_role,
+                          permissions: %w[can_invite_guest])
+    end
+
+    let!(:user) { create(:user_with_community, role: prospective_client_role) }
+    let!(:admin) { create(:admin_user, community_id: user.community_id, role: admin_role) }
+
     let!(:community) { user.community }
-    let!(:admin) { create(:admin_user, community_id: user.community_id) }
     let!(:visitor) do
-      create(:user, user_type: 'visitor', email: 'u@admin.com', community_id: user.community_id)
+      create(:user, user_type: 'visitor', email: 'u@admin.com',
+                    community_id: user.community_id, role: visitor_role)
     end
     let!(:entry_request) do
       community.entry_requests.create!(name: 'John Doe', reason: 'Visiting',
@@ -67,6 +78,7 @@ RSpec.describe Mutations::EntryRequest::InvitationCreate do
                                            context: {
                                              current_user: admin,
                                              site_community: community,
+                                             user_role: admin.role,
                                            }).as_json
           expect(result.dig('data', 'invitationCreate', 'entryTime', 'id')).not_to be_nil
           expect(community.entry_times.count).to eql 1
@@ -89,6 +101,7 @@ RSpec.describe Mutations::EntryRequest::InvitationCreate do
                                            context: {
                                              current_user: admin,
                                              site_community: community,
+                                             user_role: admin.role,
                                            }).as_json
           expect(result.dig('data', 'invitationCreate', 'entryTime', 'id')).to be_nil
         end
@@ -110,6 +123,7 @@ RSpec.describe Mutations::EntryRequest::InvitationCreate do
                                            context: {
                                              current_user: admin,
                                              site_community: community,
+                                             user_role: admin.role,
                                            }).as_json
           expect(result.dig('data', 'invitationCreate', 'entryTime', 'id')).not_to be_nil
           # it should just update existing records
@@ -135,6 +149,7 @@ RSpec.describe Mutations::EntryRequest::InvitationCreate do
                                            context: {
                                              current_user: admin,
                                              site_community: community,
+                                             user_role: admin.role,
                                            }).as_json
           expect(result.dig('data', 'invitationCreate', 'entryTime', 'id')).not_to be_nil
           expect(community.users.count).to eql 3
@@ -158,9 +173,31 @@ RSpec.describe Mutations::EntryRequest::InvitationCreate do
                                            context: {
                                              current_user: admin,
                                              site_community: community,
+                                             user_role: admin.role,
                                            }).as_json
           expect(result.dig('data', 'invitationCreate', 'entryTime', 'id')).to be_nil
           expect(result.dig('errors', 0, 'message')).to eql 'Email has already been taken'
+        end
+      end
+
+      context 'when user has no email or phone number' do
+        it 'it should create an invitation with a fake number' do
+          variables = {
+            name: 'John Doe Invited',
+            email: nil,
+            phoneNumber: nil,
+            visitationDate: '2021-10-10',
+          }
+
+          result = DoubleGdpSchema.execute(invitation_create_mutation,
+                                           variables: variables,
+                                           context: {
+                                             current_user: admin,
+                                             site_community: community,
+                                           }).as_json
+          expect(result.dig('data', 'invitationCreate', 'entryTime', 'id')).to_not be_nil
+          expect(result.dig('errors', 0, 'message')).to be_nil
+          expect(community.users.find_by(name: 'John Doe Invited').user_type).to eql 'visitor'
         end
       end
     end
@@ -179,6 +216,7 @@ RSpec.describe Mutations::EntryRequest::InvitationCreate do
                                            context: {
                                              current_user: user,
                                              site_community: community,
+                                             user_role: user.role,
                                            }).as_json
           expect(result.dig('errors', 0, 'message')).to eql 'Unauthorized'
         end

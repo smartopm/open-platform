@@ -109,6 +109,7 @@ export default function CommentCard({ data, refetch }) {
                       aria-label="more_details"
                       data-testid="more_details"
                       onClick={event => handleOpenMenu(event, com)}
+                      size="small"
                     >
                       <MoreVertIcon />
                     </IconButton>

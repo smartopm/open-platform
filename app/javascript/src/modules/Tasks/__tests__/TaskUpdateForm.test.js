@@ -1,9 +1,11 @@
 import React from 'react';
 import { BrowserRouter } from 'react-router-dom/cjs/react-router-dom.min';
-import { act, render, fireEvent } from '@testing-library/react';
+import { act, render, fireEvent, screen } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { MockedProvider } from '@apollo/react-testing';
 import TaskUpdateForm from '../Components/TaskUpdateForm';
+
+jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
 
 const data = {
   id: '6v2y3etyu2g3eu2',
@@ -18,7 +20,8 @@ const data = {
   ],
   assigneeNotes: [],
   completed: false,
-  attachments: []
+  attachments: [],
+  description: 'A description',
 };
 const props = {
   data,
@@ -31,8 +34,9 @@ const props = {
   ],
   historyRefetch: jest.fn(),
   authState: {},
-  taskId: ''
+  taskId: 'abc123'
 };
+
 describe('task form component', () => {
   it('should render and have editable fields', async () => {
     let container;
@@ -52,7 +56,6 @@ describe('task form component', () => {
     expect(container.queryAllByText('another_user')[0]).toBeInTheDocument();
     // needs to be updated
     expect(container.queryAllByTestId('user_chip')).toHaveLength(2);
-    expect(container.queryByTestId('mark_task_complete_checkbox')).toBeInTheDocument();
   });
 
   it('should render the remind-me-later button if current user is an assignee', async () => {
@@ -71,28 +74,32 @@ describe('task form component', () => {
       );
     });
 
-    const reminderBtn = container.queryByText('task.reminder_text');
-    expect(reminderBtn).toBeInTheDocument();
+    const taskInfoMenu = container.queryByTestId('task-info-menu');
+    expect(taskInfoMenu).toBeInTheDocument();
 
-    fireEvent.click(reminderBtn);
+    fireEvent.click(taskInfoMenu);
 
-    expect(container.queryByText('task.task_reminder_in_1_hr')).toBeInTheDocument();
-    expect(container.queryByText('task.task_reminder_in_24_hr')).toBeInTheDocument();
-    expect(container.queryByText('task.task_reminder_in_72_hr')).toBeInTheDocument();
+    expect(container.queryByText('common:form_actions.note_complete')).toBeInTheDocument();
+    expect(container.queryByText('task:task.task_reminder_in_1_hr')).toBeInTheDocument();
+    expect(container.queryByText('task:task.task_reminder_in_24_hr')).toBeInTheDocument();
+    expect(container.queryByText('task:task.task_reminder_in_72_hr')).toBeInTheDocument();
   });
 
-  it('should render task comments section', async () => {
-    let container;
-    await act(async () => {
-      container = render(
+  describe('Task detail sections', () => {
+    it('renders page sections', async () => {
+      render(
         <MockedProvider>
           <BrowserRouter>
             <TaskUpdateForm {...props} />
           </BrowserRouter>
         </MockedProvider>
       );
-    });
 
-    expect(container.queryByText(/comments/i)).toBeTruthy();
+      expect(await screen.findByTestId("task-info-section")).toBeInTheDocument();
+      expect(await screen.findByTestId("task-subtasks-section")).toBeInTheDocument();
+      expect(await screen.findByTestId("task-comments-section")).toBeInTheDocument();
+      expect(await screen.findByTestId("task-documents-section")).toBeInTheDocument();
+      expect(await screen.findByTestId("task-updates-section")).toBeInTheDocument();
+    });
   });
 });

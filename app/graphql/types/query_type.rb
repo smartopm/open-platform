@@ -28,7 +28,6 @@ module Types
     include Types::Queries::PaymentPlan
     include Types::Queries::PlanPayment
     include Types::Queries::SubscriptionPlan
-    include Types::Queries::Permission
     include Types::Queries::Discussion
 
     # Add root-level fields here.

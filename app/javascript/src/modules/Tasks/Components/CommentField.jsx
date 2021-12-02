@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import TextField from '@material-ui/core/TextField';
 import { useMutation } from 'react-apollo';
 import Button from '@material-ui/core/Button';
+import { Grid } from '@material-ui/core';
 import CommentCard from './CommentCard';
 import { TaskComment } from '../../../graphql/mutations';
 
@@ -33,38 +34,42 @@ export default function CommentTextField({ data, refetch, taskId }) {
   }
   return (
     <>
-      <form style={{ display: 'flex' }} onSubmit={handleSubmit}>
-        <div style={{ display: 'flex', width: '100%', margin: '0 10px' }}>
-          <TextField
-            fullWidth
-            id="standard-full-width"
-            style={{ marginRight: '10px' }}
-            placeholder={t('common:misc.type_comment')}
-            value={body}
-            onChange={e => setBody(e.target.value)}
-            multiline
-            rows={1}
-            margin="normal"
-            variant="outlined"
-            InputLabelProps={{
-              shrink: true
-            }}
-            inputProps={{ 'data-testid': 'body_input' }}
-          />
-          <Button
-            variant="outlined"
-            color="primary"
-            type="submit"
-            disabled={!body.length}
-            data-testid="share"
-            style={{ height: '56px', marginTop: '15px' }}
-          >
-            {t('misc.comment')}
-          </Button>
-        </div>
+      <form onSubmit={handleSubmit} style={{ marginBottom: 0}}>
+        <Grid container>
+          <Grid item md={10} xs={8} style={{ paddingRight: '10px'}}>
+            <TextField
+              fullWidth
+              id="standard-full-width"
+              style={{ margin: 0 }}
+              placeholder={t('common:misc.type_comment')}
+              value={body}
+              onChange={e => setBody(e.target.value)}
+              multiline
+              rows={1}
+              margin="normal"
+              variant="outlined"
+              InputLabelProps={{
+                  shrink: true
+                }}
+              inputProps={{ 'data-testid': 'body_input' }}
+            />
+          </Grid>
+          <Grid item md={2} xs={4}>
+            <Button
+              variant="outlined"
+              color="primary"
+              type="submit"
+              disabled={!body.length}
+              data-testid="share"
+              style={{ height: '56px' }}
+            >
+              {t('misc.comment')}
+            </Button>
+          </Grid>
+        </Grid>
       </form>
       <CommentCard data={data} refetch={refetch} />
-      <p className="text-center">{Boolean(error.length) && error}</p>
+      { Boolean(error.length) && (<p className="text-center">{error}</p>)}
     </>
   );
 }

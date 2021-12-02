@@ -51,6 +51,6 @@ CommunityName.propTypes = {
 
 const styles = StyleSheet.create({
   logo: {
-    height: '25px'
+    marginTop: '-10px'
   }
 });

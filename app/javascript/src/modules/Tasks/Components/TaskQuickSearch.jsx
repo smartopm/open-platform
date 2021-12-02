@@ -10,6 +10,7 @@ import {
   MenuList,
 } from '@material-ui/core'
 import PropTypes from 'prop-types'
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import { useTranslation } from 'react-i18next';
 import { objectAccessor } from '../../../utils/helpers'
@@ -18,6 +19,7 @@ export default function TaskQuickSearch({ filterTasks, currentTile }){
   const [open, setOpen] = useState(false);
   const anchorRef = useRef(null);
   const { t } = useTranslation('task')
+  const matches = useMediaQuery('(max-width:800px)');
 
   const tiles = Object.freeze({
     myOpenTasks: t('task.my_tasks'),
@@ -56,7 +58,7 @@ export default function TaskQuickSearch({ filterTasks, currentTile }){
   return (
     <>
       <ButtonGroup color="primary" ref={anchorRef} aria-label="outlined primary button group split button">
-        <Button onClick={handleClick} disabled={!currentTile}>{!currentTile ?  t('task.quick_search') : objectAccessor(tiles, currentTile)}</Button>
+        <Button onClick={handleClick} disabled={!currentTile} style={matches ? {fontSize: '9px'} : {}}>{!currentTile ?  t('task.quick_search') : objectAccessor(tiles, currentTile)}</Button>
         <Button
           color="primary"
           size="small"

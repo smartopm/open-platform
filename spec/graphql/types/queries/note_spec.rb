@@ -4,8 +4,27 @@ require 'rails_helper'
 
 RSpec.describe Types::Queries::Note do
   describe 'note queries' do
-    let!(:site_worker) { create(:site_worker) }
-    let!(:admin) { create(:admin_user, community_id: site_worker.community_id) }
+    let!(:admin_role) { create(:role, name: 'admin') }
+    let!(:site_worker_role) { create(:role, name: 'site_worker') }
+    let!(:permission) do
+      create(:permission, module: 'note',
+                          role: admin_role,
+                          permissions: %w[
+                            can_fetch_task_comments can_fetch_flagged_notes
+                            can_fetch_task_by_id can_fetch_task_histories
+                            can_get_task_count can_get_task_stats can_get_own_tasks
+                          ])
+    end
+    let!(:site_worker_permission) do
+      create(:permission, module: 'note',
+                          role: site_worker_role,
+                          permissions: %w[can_fetch_task_comments can_fetch_flagged_notes
+                                          can_fetch_task_by_id can_fetch_task_histories
+                                          can_get_task_count can_get_task_stats can_get_own_tasks])
+    end
+    let!(:admin) { create(:admin_user, role: admin_role) }
+    let!(:site_worker) { create(:site_worker, role: site_worker_role) }
+
     let!(:first_note) do
       admin.notes.create!(
         body: 'Note body',
@@ -162,6 +181,25 @@ RSpec.describe Types::Queries::Note do
       GQL
     end
 
+    let(:note_sub_tasks_query) do
+      %(query($taskId: ID!) {
+        taskSubTasks(taskId: $taskId) {
+          category
+          description
+          flagged
+          body
+          createdAt
+          user {
+            name
+            id
+          }
+          parentNote {
+            id
+          }
+        }
+      })
+    end
+
     let(:note_count) do
       %(query {
             myTasksCount
@@ -205,7 +243,7 @@ RSpec.describe Types::Queries::Note do
       expect(result.dig('data', 'flaggedNotes').length).to eql 0
     end
 
-    describe 'sub tasks' do
+    context 'sub tasks' do
       let!(:first_sub_task) do
         admin.notes.create!(
           body: 'Subtask body',
@@ -315,6 +353,43 @@ RSpec.describe Types::Queries::Note do
                                          site_community: site_worker.community,
                                        }).as_json
       expect(result.dig('data', 'task')).not_to be_empty
+    end
+
+    it 'should retrieve sub tasks of a parent note' do
+      admin.notes.create!(
+        body: 'Subtask body',
+        description: 'Subtask 1',
+        user_id: site_worker.id,
+        category: 'other',
+        flagged: true,
+        community_id: site_worker.community_id,
+        author_id: site_worker.id,
+        due_date: Time.zone.today,
+        parent_note_id: third_note.id,
+      )
+
+      variables = {
+        taskId: third_note.id,
+      }
+      result = DoubleGdpSchema.execute(note_sub_tasks_query, context: {
+                                         current_user: site_worker,
+                                         site_community: site_worker.community,
+                                       }, variables: variables).as_json
+      expect(result.dig('data', 'taskSubTasks')).not_to be_empty
+      expect(result.dig('data', 'taskSubTasks', 0, 'parentNote', 'id')).to eq third_note.id
+    end
+
+    it 'should raise unautorised error/
+      for retrieve comments when current user is nil' do
+      variables = {
+        taskId: third_note.id,
+      }
+      result = DoubleGdpSchema.execute(note_sub_tasks_query, context: {
+                                         current_user: nil,
+                                         site_community: site_worker.community,
+                                       }, variables: variables).as_json
+      expect(result.dig('errors', 0, 'message'))
+        .to include('Must be logged in to perform this action')
     end
 
     it 'should raise unauthorised error if request does not have a current user' do

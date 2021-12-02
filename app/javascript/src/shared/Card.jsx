@@ -5,7 +5,7 @@ import CardContent from '@material-ui/core/CardContent';
 import { makeStyles } from '@material-ui/core/styles';
 
 // TODO: match file name with the component name
-export default function CardComponent({ children, clickData }) {
+export default function CardComponent({ children, clickData, styles, contentStyles }) {
   const classes = useStyles();
   return (
     <>
@@ -13,10 +13,11 @@ export default function CardComponent({ children, clickData }) {
         elevation={0}
         className={clickData?.clickable ? classes.cardClickable : classes.card}
         onClick={clickData?.clickable ? () =>  clickData?.handleClick() : null}
+        style={styles}
         variant='outlined'
         data-testid='card'
       >
-        <CardContent style={{padding: '10px'}}>
+        <CardContent style={contentStyles}>
           {children}
         </CardContent>
       </Card>
@@ -38,7 +39,9 @@ CardComponent.defaultProps = {
   clickData: {
     clickable: false,
     handleClick: () => {}
-  }
+  },
+  styles: {},
+  contentStyles: { padding: '10px' },
 }
 
 CardComponent.propTypes = {
@@ -46,5 +49,9 @@ CardComponent.propTypes = {
   clickData: PropTypes.shape({
     clickable: PropTypes.bool,
     handleClick: PropTypes.func
-  })
+  }),
+  // eslint-disable-next-line react/forbid-prop-types
+  styles: PropTypes.object,
+  // eslint-disable-next-line react/forbid-prop-types
+  contentStyles: PropTypes.object
 };

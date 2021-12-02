@@ -3,9 +3,28 @@
 require 'rails_helper'
 
 RSpec.describe Mutations::Note do
-  let(:user) { create(:user_with_community) }
-  let(:admin) { create(:admin_user, community_id: user.community_id) }
-  let(:site_worker) { create(:site_worker, community_id: user.community_id) }
+  let!(:admin_role) { create(:role, name: 'admin') }
+  let!(:resident_role) { create(:role, name: 'resident') }
+  let!(:site_worker_role) { create(:role, name: 'site_worker') }
+  let!(:permission) do
+    create(:permission, module: 'note',
+                        role: admin_role,
+                        permissions: %w[can_create_note can_assign_note can_update_note])
+  end
+  let!(:site_worker_permission) do
+    create(:permission, module: 'note',
+                        role: site_worker_role,
+                        permissions: %w[can_create_note can_assign_note])
+  end
+
+  let!(:user) { create(:user_with_community, role: resident_role) }
+  let!(:admin) { create(:admin_user, community_id: user.community_id, role: admin_role) }
+
+  let!(:site_worker) do
+    create(:site_worker, community_id: user.community_id,
+                         role: site_worker_role)
+  end
+
   let(:user_note) do
     create(:note, community_id: user.community_id,
                   user_id: user.id, author_id: admin.id)

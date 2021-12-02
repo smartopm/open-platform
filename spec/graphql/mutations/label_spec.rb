@@ -4,8 +4,17 @@ require 'rails_helper'
 
 RSpec.describe Mutations::Label do
   describe 'creating a Label' do
-    let!(:user) { create(:user_with_community) }
-    let!(:admin) { create(:admin_user, community_id: user.community_id) }
+    let!(:admin_role) { create(:role, name: 'admin') }
+    let!(:resident_role) { create(:role, name: 'resident') }
+    let!(:permission) do
+      create(:permission, module: 'label',
+                          role: admin_role,
+                          permissions: %w[can_create_label])
+    end
+
+    let!(:admin) { create(:admin_user, role: admin_role) }
+
+    let!(:user) { create(:user_with_community, role: resident_role) }
     let(:query) do
       <<~GQL
         mutation {
@@ -50,10 +59,18 @@ RSpec.describe Mutations::Label do
   end
 
   describe 'creating a user label' do
+    let!(:admin_role) { create(:role, name: 'admin') }
+    let!(:resident_role) { create(:role, name: 'resident') }
+    let!(:permission) do
+      create(:permission, module: 'label',
+                          role: admin_role,
+                          permissions: %w[can_create_user_label can_create_label])
+    end
+
     let!(:user) { create(:user_with_community) }
     let!(:user2) { create(:user_with_community) }
-    let!(:admin) { create(:admin_user, community_id: user.community_id) }
-    let!(:admin2) { create(:admin_user, community_id: user2.community_id) }
+    let!(:admin) { create(:admin_user, community_id: user.community_id, role: admin_role) }
+    let!(:admin2) { create(:admin_user, community_id: user2.community_id, role: admin_role) }
 
     let!(:first_label) do
       create(:label, community_id: user.community_id)
@@ -115,9 +132,16 @@ RSpec.describe Mutations::Label do
   end
   # unassign a label from a user
   describe 'unassign a label from a user' do
-    let!(:user) { create(:user_with_community) }
-    let!(:admin) { create(:admin_user, community_id: user.community_id) }
-    let!(:user2) { create(:user, community_id: user.community_id) }
+    let!(:admin_role) { create(:role, name: 'admin') }
+    let!(:resident_role) { create(:role, name: 'resident') }
+    let!(:permission) do
+      create(:permission, module: 'label',
+                          role: admin_role,
+                          permissions: %w[can_update_label can_create_label])
+    end
+    let!(:user) { create(:user_with_community, role: resident_role) }
+    let!(:admin) { create(:admin_user, community_id: user.community_id, role: admin_role) }
+    let!(:user2) { create(:user, community_id: user.community_id, role: resident_role) }
 
     # create a label for the user
     let!(:first_label) do
@@ -187,8 +211,15 @@ RSpec.describe Mutations::Label do
   end
 
   describe 'creating a Label' do
-    let!(:user) { create(:user_with_community) }
-    let!(:admin) { create(:admin_user, community_id: user.community_id) }
+    let!(:admin_role) { create(:role, name: 'admin') }
+    let!(:resident_role) { create(:role, name: 'resident') }
+    let!(:permission) do
+      create(:permission, module: 'label',
+                          role: admin_role,
+                          permissions: %w[can_update_label can_create_label])
+    end
+    let!(:user) { create(:user_with_community, role: resident_role) }
+    let!(:admin) { create(:admin_user, community_id: user.community_id, role: admin_role) }
     let!(:label) { create(:label, community_id: user.community_id) }
 
     let(:query) do
@@ -223,8 +254,15 @@ RSpec.describe Mutations::Label do
   end
 
   describe 'deleting a Label' do
-    let!(:user) { create(:user_with_community) }
-    let!(:admin) { create(:admin_user, community_id: user.community_id) }
+    let!(:admin_role) { create(:role, name: 'admin') }
+    let!(:resident_role) { create(:role, name: 'resident') }
+    let!(:permission) do
+      create(:permission, module: 'label',
+                          role: admin_role,
+                          permissions: %w[can_update_label can_delete_label])
+    end
+    let!(:user) { create(:user_with_community, role: resident_role) }
+    let!(:admin) { create(:admin_user, community_id: user.community_id, role: admin_role) }
     let!(:label) { create(:label, community_id: user.community_id) }
 
     let(:query) do
@@ -257,8 +295,16 @@ RSpec.describe Mutations::Label do
   end
 
   describe 'merging a two Labels' do
-    let!(:user) { create(:user_with_community) }
-    let!(:admin) { create(:admin_user, community_id: user.community_id) }
+    let!(:admin_role) { create(:role, name: 'admin') }
+    let!(:resident_role) { create(:role, name: 'resident') }
+    let!(:permission) do
+      create(:permission, module: 'label',
+                          role: admin_role,
+                          permissions: %w[can_merge_labels can_delete_label])
+    end
+    let!(:user) { create(:user_with_community, role: resident_role) }
+    let!(:admin) { create(:admin_user, community_id: user.community_id, role: admin_role) }
+
     let!(:f_label) { create(:label, community_id: user.community_id) }
     let!(:s_label) { create(:label, community_id: user.community_id) }
 

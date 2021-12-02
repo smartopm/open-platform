@@ -7,6 +7,7 @@ import TodoList from '../Components/TodoList'
 import { flaggedNotes } from '../../../graphql/queries'
 import { Context } from '../../../containers/Provider/AuthStateProvider'
 import userMock from '../../../__mocks__/userMock';
+import taskMock from '../__mocks__/taskMock';
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn())
 const mck = jest.fn()
@@ -18,89 +19,6 @@ const props = {
   handleDateChange: mck,
   location: 'tasks'
 }
-
-// TODO: move this out of the test file  and add ids in each nested query
-// eslint-disable-next-line jest/no-export
-export const taskMock = {
-  body: 'Task example',
-  id: '23',
-  createdAt: new Date('2020-08-01'),
-  author: {
-    name: 'Johnsc',
-    id: '23453435',
-    imageUrl: '',
-    avatarUrl: ''
-  },
-  user: {
-    name: 'somebody'
-  },
-  assignees: [
-    {
-      name: 'Tester',
-      id: '93sd45435',
-      imageUrl: '',
-      avatarUrl: ''
-    }
-  ],
-  assigneeNotes: [],
-  completed: false,
-  parentNote: null,
-  subtasks: [
-    {
-      body: 'Task example',
-      id: '23',
-      createdAt: new Date('2020-08-01'),
-      author: {
-        name: 'Johnsc',
-        id: '23453435',
-        imageUrl: '',
-        avatarUrl: ''
-      },
-      user: {
-        name: 'somebody'
-      },
-      assignees: [
-        {
-          name: 'Tester',
-          id: '93sd45435',
-          imageUrl: '',
-          avatarUrl: ''
-        }
-      ],
-      assigneeNotes: [],
-      completed: false,
-      parentNote: null,
-      subTasks: [
-        {
-          body: 'Task example',
-            id: '23',
-            createdAt: new Date('2020-08-01'),
-            author: {
-              name: 'Johnsc',
-              id: '23453435',
-              imageUrl: '',
-              avatarUrl: ''
-            },
-            user: {
-              name: 'somebody'
-            },
-            assignees: [
-              {
-                name: 'Tester',
-                id: '93sd45435',
-                imageUrl: '',
-                avatarUrl: ''
-              }
-            ],
-            assigneeNotes: [],
-            completed: false,
-            parentNote: null,
-            subTasks: [],
-        }
-      ]
-    }
-  ]
-};
 
 const mocks = [
   {

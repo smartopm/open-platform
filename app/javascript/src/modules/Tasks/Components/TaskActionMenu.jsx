@@ -15,6 +15,7 @@ import {
   Popper,
   MenuList,
 } from '@material-ui/core';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
@@ -104,6 +105,7 @@ export function TaskQuickAction({
   const [selectedKey, setSelectedKey] = useState('');
   const anchorRef = useRef(null);
   const { t } = useTranslation('common')
+  const matches = useMediaQuery('(max-width:800px)');
   const options = {
     all: t('misc.all'),
     'all_on_the_page': t('misc.all_this_page'),
@@ -131,7 +133,7 @@ export function TaskQuickAction({
   return (
     <div style={{ marginRight: '0.9rem' }}>
       <ButtonGroup color="primary" ref={anchorRef} aria-label="outlined primary button group split button">
-        <Button>
+        <Button style={matches ? {fontSize: '9px'} : {}}>
           {(checkedOptions === 'none')
           ? t('misc.select')
           :  objectAccessor(options, selectedKey)}

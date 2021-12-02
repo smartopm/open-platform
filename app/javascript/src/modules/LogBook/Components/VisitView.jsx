@@ -3,10 +3,9 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useLazyQuery } from 'react-apollo';
 import { useTranslation } from 'react-i18next';
-import { useHistory } from 'react-router';
+import { useHistory } from 'react-router-dom';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import Grid from '@material-ui/core/Grid';
-import { Link } from 'react-router-dom';
 import Typography from '@material-ui/core/Typography';
 import { Avatar, Button, Chip, useTheme } from '@material-ui/core';
 import { CurrentGuestEntriesQuery } from '../graphql/guestbook_queries';
@@ -31,7 +30,7 @@ export default function VisitView({
   const [loadGuests, { data, loading: guestsLoading, refetch, error }] = useLazyQuery(
     CurrentGuestEntriesQuery,
     {
-      variables: { offset, limit, query },
+      variables: { offset, limit, query: query.trim() },
       fetchPolicy: 'cache-and-network'
     }
   );
@@ -60,6 +59,11 @@ export default function VisitView({
     handleAddObservation(log, 'exit');
   }
 
+  function handleViewUser(event, user){
+    event.stopPropagation()
+    history.push(`/user/${user.id}`)
+  }
+
   useEffect(() => {
     if (observationDetails.refetch && tabValue === 2) {
       refetch();
@@ -84,28 +88,32 @@ export default function VisitView({
             clickData={{ clickable: true, handleClick: () => handleCardClick(visit) }}
           >
             <Grid container spacing={1}>
-              <Grid item md={2} xs={4}>
+              <Grid item md={2} xs={5}>
                 <Avatar alt={visit.name} className={classes.avatar} variant="square">
                   {visit.name.charAt(0)}
                 </Avatar>
               </Grid>
-              <Grid item md={2} xs={8}>
+              <Grid item md={2} xs={7}>
                 <Typography variant="caption" color="primary">
                   {visit.name}
                 </Typography>
                 <br />
                 <Typography variant="caption">
-                  {visit.guestId ? t('logbook:logbook.host'): t('logbook:log_title.guard')}
+                  {`${visit.guestId ? t('logbook:logbook.host'): t('logbook:log_title.guard')}: `}
                   {' '}
                 </Typography>
-                <Link to={`/user/${visit.user.id}`}>
-                  <Text color="secondary" content={visit.user.name} />
-                </Link>
-                <div style={{ paddingTop: '15px' }} data-testid="request_status">
+                <Text
+                  color="secondary"
+                  content={visit.user.name}
+                  data-testid="user_name"
+                  onClick={event => handleViewUser(event, visit.user)}
+                />
+                <div style={{ paddingTop: '7px' }} data-testid="request_status">
                   <Chip
                     data-testid="user-entry"
-                    label={visit.status === 'approved' ? 'Approved' : 'Pending'}
+                    label={visit.status === 'approved' ? t('guest_book.approved') : t('guest_book.pending')}
                     color={visit.status === 'approved' ? 'primary' : 'secondary'}
+                    size="small"
                   />
                 </div>
               </Grid>
@@ -168,6 +176,7 @@ export default function VisitView({
                         marginRight: '16px'
                       }}
                       data-testid="guest_validity"
+                      size="small"
                     />
                   )
                   : (
@@ -175,6 +184,7 @@ export default function VisitView({
                       label={t('guest_book.manual_entry')}
                       style={{ backgroundColor: theme.palette.warning.main, color: 'white', }}
                       data-testid="manual_entry"
+                      size="small"
                     />
                   )
                 }

@@ -17,7 +17,6 @@ export default function UploadField({ detail, upload, editable, uploaded }) {
         >
           {`${detail.label || ''} ${detail.required ? '*' : ''}`}
         </FormHelperText>
-        <br />
         <input
           type="file"
           name={`image-${detail.label}`}

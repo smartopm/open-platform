@@ -12,6 +12,11 @@ module Logs
 
     search_scope :search do
       attributes guest: ['guest.phone_number', 'guest.email', 'guest.name']
+
+      generator :matches do |column_name, raw_value|
+        pattern = "#{raw_value}%"
+        "unaccent(LOWER(#{column_name})) LIKE unaccent(LOWER(#{quote pattern}))"
+      end
     end
   end
 end

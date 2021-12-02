@@ -208,20 +208,11 @@ describe('RequestUpdate Component', () => {
     const previousRoute = 'enroll';
     const isGuestRequest = false;
     const isScannedRequest = false;
-    const permissions = ['can_create_user'];
-    const user = {
-      ...authState,
-      user: {
-        ...authState.user,
-        // modify current permission
-        permissions: { ...authState.user.permissions, user: { permissions } }
-      }
-    };
     const container = render(
       <MockedProvider mocks={[mocks]} addTypename>
         <BrowserRouter>
           <MockedThemeProvider>
-            <Context.Provider value={user}>
+            <Context.Provider value={authState}>
               <EntryRequestContext.Provider
                 value={{
                   request: { id: '3c2f8ee2-598b-437c-b217-3e4c0f86c761' },

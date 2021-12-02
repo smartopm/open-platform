@@ -42,12 +42,14 @@ describe('It should test the plan transfer confirm modal component', () => {
           <PlanTransferConfirmModal
             open
             handleClose={jest.fn}
-            PaymentData={PaymentData}
+            paymentsSummary={PaymentData}
             paymentPlanId='12345'
             destinationPlanId='67890'
             refetch={jest.fn}
             balanceRefetch={jest.fn}
             handleModal={jest.fn}
+            paymentId='dssdok74123'
+            transferType='plan'
           />
         </MockedProvider>
       </BrowserRouter>

@@ -2,16 +2,16 @@
 /* eslint-disable max-statements */
 import React, { useContext, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import Typography from '@material-ui/core/Typography';
+import Typography from '@mui/material/Typography';
 import Button from '@material-ui/core/Button';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import { useApolloClient, useMutation } from 'react-apollo';
 import { Link } from 'react-router-dom';
 import Hidden from '@material-ui/core/Hidden';
 import { useTranslation } from 'react-i18next';
 import makeStyles from '@material-ui/core/styles/makeStyles';
-import PersonIcon from '@material-ui/icons/Person';
-import VisibilityIcon from '@material-ui/icons/Visibility';
+import PersonIcon from '@mui/icons-material/Person';
+import VisibilityIcon from '@mui/icons-material/Visibility';
 import Grid from '@material-ui/core/Grid';
 import { StyledTabs, StyledTab, TabPanel, a11yProps } from '../../../components/Tabs';
 import LogEvents from './LogEvents';
@@ -34,6 +34,8 @@ import VisitView from './VisitView';
 import MessageAlert from '../../../components/MessageAlert';
 import Text from '../../../shared/Text';
 import CenteredContent from '../../../shared/CenteredContent';
+import { accessibleMenus } from '../utils'
+
 
 const limit = 20;
 // TODO: reduce the amount of props passed down here, it is hard to keep track
@@ -57,6 +59,9 @@ export default function LogBookItem({
   error
 }) {
   const authState = useContext(AuthStateContext);
+  const allUserPermissions = authState.user?.permissions || [];
+  const modulePerms = allUserPermissions.find(mod => mod.module === 'entry_request')?.permissions;
+  const permissions = new Set(modulePerms)
   const { t } = useTranslation(['logbook', 'common', 'dashboard']);
   const [open, setOpen] = useState(false);
   const [isObservationOpen, setIsObservationOpen] = useState(false);
@@ -69,7 +74,7 @@ export default function LogBookItem({
     refetch: false
   });
   const [addObservationNote] = useMutation(AddObservationNoteMutation);
-  const matches = useMediaQuery('(max-width:800px)');
+  const matches = useMediaQuery('(max-width:1000px)');
   const classes = useStyles();
   const [imageUrls, setImageUrls] = useState([])
   const [blobIds, setBlobIds] = useState([])
@@ -82,12 +87,14 @@ export default function LogBookItem({
     {
       icon: <PersonIcon />,
       name: t('logbook.new_invite'),
-      handleClick: () => router.push(`/logbook/guests/invite`)
+      handleClick: () => router.push(`/logbook/guests/invite`),
+      isVisible: permissions.has('can_invite_guest')
     },
     {
       icon: <VisibilityIcon />,
       name: t('logbook.add_observation'),
-      handleClick: () => setIsObservationOpen(true)
+      handleClick: () => setIsObservationOpen(true),
+      isVisible: permissions.has('can_add_entry_request_note')
     }
   ];
 
@@ -140,12 +147,18 @@ export default function LogBookItem({
     setImageUrls(filteredImages)
   }
 
+  // eslint-disable-next-line consistent-return
   function handleSaveObservation(log = clickedEvent, type) {
-    setDetails({ ...observationDetails, loading: true });
     const exitNote = 'Exited';
-    addObservationNote({
+    if(type !== 'exit' && !observationNote) {
+      setIsObservationOpen(false);
+      return
+    }
+    setDetails({ ...observationDetails, loading: true });
+
+     addObservationNote({
       variables: {
-        note: observationNote || exitNote,
+        note: type === 'exit' ? exitNote : observationNote,
         id: log.refId,
         refType: log.refType,
         eventLogId: log.id,
@@ -220,45 +233,45 @@ export default function LogBookItem({
         open={isObservationOpen}
         handleDialogStatus={() => handleCancelClose()}
         observationHandler={{
-          value: observationNote,
-          handleChange: val => setObservationNote(val)
-        }}
+        value: observationNote,
+        handleChange: val => setObservationNote(val)
+      }}
         imageOnchange={img => onChange(img)}
         imageUrls={imageUrls}
         status={status}
         closeButtonData={{
-          closeButton: true,
-          handleCloseButton
-        }}
+        closeButton: true,
+        handleCloseButton
+      }}
       >
         {observationDetails.loading ? (
           <Spinner />
-        ) : (
-          <>
-            <Button
-              onClick={() => handleCancelClose()}
-              color="secondary"
-              variant="outlined"
-              data-testid="cancel"
-            >
-              {t('common:form_actions.cancel')}
-            </Button>
-            <Button
-              onClick={() => handleSaveObservation()}
-              color="primary"
-              variant="contained"
-              data-testid="save"
-              style={{ color: 'white' }}
-              autoFocus
-            >
-              {t('common:form_actions.save')}
-            </Button>
-          </>
-        )}
+      ) : (
+        <>
+          <Button
+            onClick={() => handleCancelClose()}
+            color="secondary"
+            variant="outlined"
+            data-testid="cancel"
+          >
+            {t('common:form_actions.cancel')}
+          </Button>
+          <Button
+            onClick={() => handleSaveObservation()}
+            color="primary"
+            variant="contained"
+            data-testid="save"
+            style={{ color: 'white' }}
+            autoFocus
+          >
+            {t('common:form_actions.save')}
+          </Button>
+        </>
+      )}
       </EntryNoteDialog>
       <Grid container className={matches ?  classes.containerMobile : classes.container}>
         <Grid item md={11} xs={11}>
-          <Grid container>
+          <Grid container spacing={1}>
             <Grid item md={9} xs={10}><Typography variant="h4">{t('logbook.log_book')}</Typography></Grid>
             <Hidden smUp>
               <Grid item md={1} xs={2}>
@@ -267,7 +280,7 @@ export default function LogBookItem({
                   handleClose={() => setOpen(false)}
                   handleOpen={() => setOpen(true)}
                   direction="down"
-                  actions={actions}
+                  actions={accessibleMenus(actions)}
                 />
               </Grid>
             </Hidden>
@@ -276,7 +289,7 @@ export default function LogBookItem({
                 <Text color="secondary" content={t('logbook.old_switch')} />
               </Link>
             </Grid>
-            <Grid item xs={12} md={6}>
+            <Grid item xs={12} md={7} lg={6}>
               <StyledTabs
                 value={tabValue}
                 aria-label="simple tabs example"
@@ -287,22 +300,23 @@ export default function LogBookItem({
                 <StyledTab label={t('logbook.visit_view')} {...a11yProps(2)} />
               </StyledTabs>
             </Grid>
-            <Grid item xs={10} md={6} style={matches ? {marginTop: '20px'} : {}}>
+            <Grid item xs={10} md={5} lg={6} style={matches ? {marginTop: '20px'} : {}}>
               <SearchInput
                 title={objectAccessor(searchPlaceholder, tabValue)}
                 searchValue={searchTerm}
-                filterRequired={tabValue === 1}
+                // temporarily disabling filter until we have proper scope from entry_times table
+                filterRequired={false}
                 handleSearch={handleSearch}
                 handleFilter={toggleFilterMenu}
                 handleClear={handleSearchClear}
               />
               <Grid
                 container
-                justify="flex-end"
+                justifyContent="flex-end"
                 className={classes.filter}
                 style={{
-                  display: displayBuilder
-                }}
+                display: displayBuilder
+              }}
               >
                 <QueryBuilder
                   handleOnChange={queryOnChange}
@@ -332,7 +346,7 @@ export default function LogBookItem({
               handleAddObservation={handleAddObservation}
               offset={offset}
               limit={limit}
-              query={`${searchTerm} ${searchQuery}`}
+              query={!searchTerm.length ? '' : `${searchTerm} ${searchQuery}`}
               scope={scope}
               timeZone={authState.user.community.timezone}
             />
@@ -343,7 +357,7 @@ export default function LogBookItem({
               handleAddObservation={handleExitEvent}
               offset={offset}
               limit={limit}
-              query={`${searchTerm} ${searchQuery}`}
+              query={!searchTerm.length ? '' : `${searchTerm} ${searchQuery}`}
               scope={scope}
               timeZone={authState.user.community.timezone}
               observationDetails={observationDetails}
@@ -357,7 +371,7 @@ export default function LogBookItem({
               handleClose={() => setOpen(false)}
               handleOpen={() => setOpen(true)}
               direction="down"
-              actions={actions}
+              actions={accessibleMenus(actions)}
             />
           </Grid>
         </Hidden>
@@ -372,7 +386,7 @@ export default function LogBookItem({
         />
       </CenteredContent>
     </>
-  );
+);
 }
 
 const useStyles = makeStyles(() => ({

@@ -62,8 +62,8 @@ module Mutations
           visitable_type: 'Logs::Invite',
         )
       end
-      # rubocop:enable Metrics/AbcSize
       # rubocop:enable Metrics/MethodLength
+      # rubocop:enable Metrics/AbcSize
 
       def generate_request(vals, guest)
         return if guest.nil?
@@ -73,7 +73,7 @@ module Mutations
 
         context[:current_user].entry_requests.create!(
           guest_id: guest.id,
-          **vals.except(:guest_id),
+          **vals.except(:guest_id, :phone_number),
         )
       end
 

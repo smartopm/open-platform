@@ -1,5 +1,6 @@
 /* eslint-disable import/prefer-default-export */
 import gql from 'graphql-tag';
+import { NotesFragment } from '../../../graphql/fragments';
 
 export const TaskStatsQuery = gql`
   {
@@ -50,6 +51,23 @@ export const TaskQuery = gql`
         id
         body
       }
+      attachments
+    }
+  }
+`
+export const SubTasksQuery = gql`
+  query subTasks($taskId: ID!, $offset: Int, $limit: Int) {
+    taskSubTasks(taskId: $taskId, offset: $offset, limit: $limit) {
+      ...NoteFields
+    }
+  }
+  ${NotesFragment.note}
+`
+
+export const TaskDocumentsQuery = gql`
+  query taskDetail($taskId: ID!) {
+    task(taskId: $taskId) {
+      id
       attachments
     }
   }

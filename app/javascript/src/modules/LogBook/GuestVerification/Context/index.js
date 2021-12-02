@@ -30,7 +30,7 @@ export default function EntryRequestContextProvider({ children }) {
     if (request.id) {
       loadEntry({ variables: { id: request.id } });
     }
-    if (data) {
+    if (data && !request.observed) {
       updateRequest({ ...request, ...data.result });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -43,14 +43,24 @@ export default function EntryRequestContextProvider({ children }) {
 
   function handleGrantAccess(requestId = id) {
     updateRequest({ ...request, isLoading: true });
-    grantEntry({ variables: { id: request.id || requestId } })
-      .then(() => {
+    grantEntry({
+      variables: { id: request.id || requestId },
+      fetchPolicy: "no-cache"
+     })
+      .then(({ data: { result } }) => {
         setDetails({
           ...observationDetails,
           isError: false,
           message: t('logbook.success_message', { action: t('logbook.granted') })
         });
-        updateRequest({ ...request, isLoading: false, isObservationOpen: true });
+        updateRequest({
+          ...initialRequestState,
+          id: "",
+          requestId: result.entryRequest.id,
+          isLoading: false,
+          isObservationOpen: true
+        });
+
       })
       .catch(error => {
         updateRequest({ ...request, isLoading: false });

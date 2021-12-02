@@ -38,6 +38,7 @@
     "required_field": "‪{{fieldName}}‬ es Requerido"
   },
   "guest_book": {
+    "approved": "Aprobado",
     "ends_on_date": "Termina el ‪{{date}}‬",
     "ends_on_date_time": "Termina en ‪{{date}}‬,‪ ‪{{time}}‬",
     "entered_at": "Entró a ‪{{time}}‬",
@@ -47,6 +48,8 @@
     "invalid_now": "Ahora invalido",
     "invalid_today": "No Habilitado Hoy",
     "manual_entry": "Registro Manual",
+    "pending": "Pendiente",
+    "phone_number_not_available": "Número de teléfono no disponible",
     "repeats_on": "Se repite",
     "repeats_until": "Se repite hasta",
     "revoked": "Revocado",
@@ -160,6 +163,7 @@
     "upcoming_visits": "Próximas visitas",
     "user_enrolled": "El usuario fue registrado con exito",
     "user_entry": "Entrada de Usuario",
+    "user_granted_access": "Acceso Concedido al Usuario",
     "view_details": "Ver Detalles",
     "visit_end_error": "Días de visita son requeridos",
     "visit_scheduled": "Visita programada para: {{date}} a las {{time}}",

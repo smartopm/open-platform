@@ -4,8 +4,19 @@ require 'rails_helper'
 
 RSpec.describe Types::Queries::Comment do
   describe 'comment queries' do
-    let!(:current_user) { create(:user_with_community) }
-    let!(:admin_user) { create(:admin_user, community_id: current_user.community.id) }
+    let!(:admin_role) { create(:role, name: 'admin') }
+    let!(:permission) do
+      create(:permission, module: 'comment',
+                          role: admin_role,
+                          permissions: %w[can_fetch_all_comments])
+    end
+
+    let!(:current_user) { create(:user_with_community, user_type: 'admin', role: admin_role) }
+
+    let!(:admin_user) do
+      create(:admin_user, community_id: current_user.community.id,
+                          role: admin_role)
+    end
     let!(:user_discussion) do
       create(:discussion, user_id: current_user.id, status: 'valid',
                           community_id: current_user.community_id, post_id: '20')

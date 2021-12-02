@@ -6,6 +6,21 @@ import { MockedProvider } from '@apollo/react-testing';
 import TaskInfoTop from '../Components/TaskInfoTop';
 import { UpdateNote } from '../../../graphql/mutations';
 
+const menuList = [
+  {
+    content: ('payment.misc.payment_reminder'),
+    isAdmin: true,
+    handleClick: () => jest.fn()
+  }
+]
+const menuData = {
+  menuList,
+  handleTaskInfoMenu: jest.fn(),
+  anchorEl: null,
+  open: false,
+  handleClose: jest.fn()
+}
+
 const data = {
   id: '6v2y3etyu2g3eu2',
   user: {
@@ -31,7 +46,10 @@ const props = {
   liteData: {},
   setSearchUser: jest.fn(),
   searchUser: jest.fn(),
-  selectedDate: new Date()
+  selectedDate: new Date(),
+  menuData,
+  isAssignee: jest.fn().mockResolvedValue(true),
+  activeReminder: ''
 };
 
 describe('Top part of the task form component', () => {
@@ -45,17 +63,27 @@ describe('Top part of the task form component', () => {
     );
 
     expect(container.getByTestId('task-details-breadcrumb')).toBeInTheDocument();
-    expect(container.getByTestId('date_created_title')).toBeInTheDocument();
-    expect(container.getByTestId('date_created')).toBeInTheDocument();
     expect(container.queryByText('task.due_date_text')).toBeInTheDocument();
+    expect(props.isAssignee).toHaveBeenCalled();
+    expect(container.getByTestId('active-reminder')).toBeInTheDocument();
+    expect(container.queryByText('task.active_reminder')).toBeInTheDocument();
+    expect(container.queryByText('task.none')).toBeInTheDocument();
+    expect(container.getByTestId('date_created')).toBeInTheDocument();
+    expect(container.queryByText('task.task_details_text')).toBeInTheDocument();
     expect(container.queryByText('task.assigned_to_txt')).toBeInTheDocument();
     expect(container.queryByText('task.chip_add_assignee')).toBeInTheDocument();
     expect(container.queryByText('common:form_fields.description')).toBeInTheDocument();
 
     expect(container.queryByText('task.chip_close')).not.toBeInTheDocument();
     expect(container.queryByText('task.task_assignee_label')).not.toBeInTheDocument();
+
+    const taskInfoMenu = container.getByTestId('task-info-menu')
+    expect(taskInfoMenu).toBeInTheDocument();
+
+    fireEvent.click(taskInfoMenu);
+    expect(props.menuData.handleTaskInfoMenu).toHaveBeenCalled();
   });
-  it('shows the descripton', async () => {
+  it('shows the description', async () => {
     const newProps = {
       ...props,
       data: {
@@ -101,7 +129,8 @@ describe('Top part of the task form component', () => {
     expect(container2.queryByText('some parent body')).toBeInTheDocument();
 
     expect(container2.queryByTestId('editable_description')).toBeInTheDocument();
-
+    expect(container2.queryByTestId('edit_body_icon')).toBeInTheDocument();
+  
     // show the edit button and click on update button to trigger the mutation
     fireEvent.mouseEnter(container2.queryByTestId('editable_description'))
     expect(container2.queryByTestId('edit_icon')).toBeInTheDocument();
@@ -112,6 +141,14 @@ describe('Top part of the task form component', () => {
     fireEvent.click(container2.queryByTestId('edit_action_btn'))
     expect(container2.queryByTestId('edit_action_btn')).toBeDisabled();
     expect(container2.queryByTestId('edit_action_btn').textContent).toContain('common:form_actions.update');
+
+    fireEvent.click(container2.queryByTestId('edit_body_icon'))
+    expect(container2.queryByTestId('editable_body')).toBeInTheDocument();
+    expect(container2.queryByTestId('edit_body_action_btn')).toBeInTheDocument();
+
+    const bodyInput = container2.queryByTestId('editable_body')
+    fireEvent.change(bodyInput, { target: { value: 'Body changed' } })
+    expect(bodyInput.value).toBe('Body changed')
 
     await waitFor(() => {
       expect(container2.queryByText('task.update_successful')).toBeInTheDocument();

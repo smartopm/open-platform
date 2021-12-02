@@ -32,15 +32,22 @@ module Types
       "https://#{base_url}#{path}"
     end
 
+    # rubocop:disable Metrics/MethodLength
     def attachments
       return nil unless object.documents.attached?
 
       urls = []
-      object.documents.each do |doc|
-        file = { id: doc.id, filename: doc.blob.filename, url: host_url(doc) }
+      object.documents.order(created_at: 'desc').each do |doc|
+        file = {
+          id: doc.id,
+          filename: doc.blob.filename,
+          url: host_url(doc),
+          created_at: doc.created_at,
+        }
         urls << file
       end
       urls
     end
+    # rubocop:enable Metrics/MethodLength
   end
 end

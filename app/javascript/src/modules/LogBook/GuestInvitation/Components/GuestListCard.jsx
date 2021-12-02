@@ -4,22 +4,28 @@ import Card from '@material-ui/core/Card';
 import PropTypes from 'prop-types';
 import CardContent from '@material-ui/core/CardContent';
 import { useHistory } from 'react-router';
+import { Chip } from '@material-ui/core';
 import { dateToString, dateTimeToString } from '../../../../components/DateContainer';
 import Text from '../../../../shared/Text';
 import { checkRequests } from '../../utils';
 import Avatar from '../../../../components/Avatar';
-import Label from '../../../../shared/label/Label';
 import useLogbookStyles from '../../styles';
 
 export default function GuestListCard({ invite, translate, tz, styles }) {
   const history = useHistory();
-  const classes = useLogbookStyles()
+  const classes = useLogbookStyles();
   function handleViewGuest() {
     history.push(`/request/${invite.guest.request.id}?type=view`);
   }
 
   return (
-    <Card variant="outlined" className={styles.classes?.card} onClick={handleViewGuest} data-testid="guest_card" elevation={0}>
+    <Card
+      variant="outlined"
+      className={styles.classes?.card}
+      onClick={handleViewGuest}
+      data-testid="guest_card"
+      elevation={0}
+    >
       <CardContent>
         <Grid container direction="row" spacing={2}>
           <Grid item xs={6} sm={4} lg={3} data-testid="guest_info">
@@ -60,19 +66,31 @@ export default function GuestListCard({ invite, translate, tz, styles }) {
             />
           </Grid>
           <Grid item xs={6} sm={4} lg={1} data-testid="status">
-            <Label
-              title={invite.guest.request.status === 'pending' ? 'Pending' : 'Approved'}
-              color={
-                invite.guest.request.status === 'pending'
-                  ? styles.theme.palette.info.main
-                  : styles.theme.palette.success.main
+            <Chip
+              label={
+                invite.guest.request.status === 'approved'
+                  ? translate('guest_book.approved')
+                  : translate('guest_book.pending')
               }
+              color={invite.guest.request.status === 'approved' ? 'primary' : 'secondary'}
+              size="small"
             />
           </Grid>
           <Grid item xs={6} sm={4} lg={1} data-testid="validity">
-            <Label
-              title={checkRequests(invite.entryTime, translate, tz).title}
-              color={checkRequests(invite.entryTime, translate, tz).color}
+            <Chip
+              label={
+                checkRequests(invite.entryTime, translate, tz).valid
+                  ? translate('guest_book.valid')
+                  : translate('guest_book.invalid_now')
+              }
+              style={{
+                background: checkRequests(invite.entryTime, translate, tz).valid
+                  ? styles.theme.palette.success?.main
+                  : styles.theme.palette.error?.main,
+                color: 'white',
+              }}
+              data-testid="guest_validity"
+              size="small"
             />
           </Grid>
         </Grid>
@@ -85,7 +103,7 @@ GuestListCard.defaultProps = {
   styles: {
     classes: {}
   }
-}
+};
 
 GuestListCard.propTypes = {
   invite: PropTypes.shape({
@@ -99,7 +117,7 @@ GuestListCard.propTypes = {
       request: PropTypes.shape({
         status: PropTypes.string,
         id: PropTypes.string,
-        name: PropTypes.string,
+        name: PropTypes.string
       }),
       imageUrl: PropTypes.string,
       name: PropTypes.string

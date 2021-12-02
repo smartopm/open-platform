@@ -29,7 +29,6 @@ module Types::Queries::EntryRequest
       argument :offset, Integer, required: false
       argument :limit, Integer, required: false
       argument :query, String, required: false
-      argument :scope, Integer, required: false
     end
 
     field :scheduled_guest_list, [Types::EntryRequestType], null: true do
@@ -73,9 +72,8 @@ module Types::Queries::EntryRequest
   end
 
   # check if we need to allow residents to see all scheduled requests
-  # rubocop:disable Metrics/AbcSize
   # rubocop:disable Metrics/MethodLength
-  def scheduled_requests(offset: 0, limit: 50, query: nil, scope: nil)
+  def scheduled_requests(offset: 0, limit: 50, query: nil)
     raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') unless can_view_entry_requests?
 
     entry_requests = context[:site_community].entry_requests.where.not(guest_id: nil)
@@ -87,11 +85,8 @@ module Types::Queries::EntryRequest
                                              .with_attached_images
                                              .with_attached_video
     entry_requests = handle_search(entry_requests, query) if query
-    entry_requests = entry_requests.by_end_time(scope.to_i.days.ago) if scope
     entry_requests
   end
-  # rubocop:enable Metrics/AbcSize
-  # rubocop:enable Metrics/MethodLength
 
   # rubocop:disable Metrics/AbcSize
   def scheduled_guest_list(offset: 0, limit: 50, query: nil)
@@ -101,7 +96,9 @@ module Types::Queries::EntryRequest
       .entry_requests
       .where(user: context[:current_user], is_guest: true)
       .where.not(visitation_date: nil)
-      .includes(:user).search(query)
+      .includes(:user)
+      .search(or: [{ query: (query.presence&.strip || '.') },
+                   { name: { matches: query&.strip } }])
       .limit(limit).offset(offset)
       .unscope(:order).order(created_at: :desc)
       .with_attached_images
@@ -114,7 +111,8 @@ module Types::Queries::EntryRequest
     context[:site_community]
       .entry_requests
       .where(granted_state: 1)
-      .includes(:user, :guest, :entry_times, :invites).search(query)
+      .includes(:user, :guest, :entry_times, :invites)
+      .search(or: [{ query: (query.presence || '.') }, { name: { matches: query } }])
       .limit(limit).offset(offset)
       .unscope(:order).order(granted_at: :desc)
   end
@@ -122,7 +120,9 @@ module Types::Queries::EntryRequest
 
   private
 
-  # rubocop:disable Metrics/MethodLength,  Metrics/AbcSize
+  # rubocop:disable Metrics/AbcSize
+  # rubocop:disable Metrics/CyclomaticComplexity
+  # rubocop:disable Metrics/PerceivedComplexity
   def handle_search(entry_requests, query)
     # Support legacy ends_at field for search
     # Also search by visit_end_date to find re-ocurring visits
@@ -142,8 +142,11 @@ module Types::Queries::EntryRequest
         query += " or end_time: #{end_time} or visit_end_date: #{end_time}"
       end
       # rubocop:enable Style/CaseLikeIf
+      # rubocop:enable Metrics/CyclomaticComplexity
+      # rubocop:enable Metrics/PerceivedComplexity
     end
-    entry_requests.search(query)
+    entry_requests.search(or: [{ query: (query.presence&.strip || '.') },
+                               { name: { matches: query&.strip } }])
   end
   # rubocop:enable Metrics/MethodLength,  Metrics/AbcSize
 

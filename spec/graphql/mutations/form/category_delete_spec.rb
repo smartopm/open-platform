@@ -4,9 +4,18 @@ require 'rails_helper'
 
 RSpec.describe Mutations::Form::FormCreate do
   describe 'create categories' do
-    let!(:user) { create(:user_with_community) }
+    let!(:admin_role) { create(:role, name: 'admin') }
+    let!(:resident_role) { create(:role, name: 'resident') }
+    let!(:permission) do
+      create(:permission, module: 'forms',
+                          role: admin_role,
+                          permissions: %w[can_delete_category])
+    end
+
+    let!(:user) { create(:user_with_community, role: resident_role) }
+    let!(:admin) { create(:admin_user, community_id: user.community_id, role: admin_role) }
+
     let!(:community) { user.community }
-    let!(:admin) { create(:admin_user, community: community) }
     let!(:form) { create(:form, community: community) }
     let!(:category) { create(:category, form: form, general: true) }
     let!(:other_category) { create(:category, form: form, general: true) }
@@ -43,6 +52,7 @@ RSpec.describe Mutations::Form::FormCreate do
                                                    context: {
                                                      current_user: admin,
                                                      site_community: community,
+                                                     user_role: admin.role,
                                                    }).as_json
         expect(result.dig('errors', 0, 'message')).to eql 'Category not found'
       end
@@ -59,6 +69,7 @@ RSpec.describe Mutations::Form::FormCreate do
                                                    context: {
                                                      current_user: admin,
                                                      site_community: community,
+                                                     user_role: admin.role,
                                                    }).as_json
         expect(result.dig('errors', 0, 'message')).to be_nil
         expect(result.dig('data', 'categoryDelete', 'message')).to eql 'Category deleted '\
@@ -75,6 +86,7 @@ RSpec.describe Mutations::Form::FormCreate do
                                                    context: {
                                                      current_user: admin,
                                                      site_community: community,
+                                                     user_role: admin.role,
                                                    }).as_json
         expect(result.dig('errors', 0, 'message')).to be_nil
         expect(result.dig('data', 'categoryDelete', 'message')).to eql 'Category deleted '\
@@ -95,6 +107,7 @@ RSpec.describe Mutations::Form::FormCreate do
                                                    context: {
                                                      current_user: admin,
                                                      site_community: community,
+                                                     user_role: admin.role,
                                                    }).as_json
         expect(result.dig('errors', 0, 'message')).to be_nil
         expect(result.dig('data', 'categoryDelete', 'message')).to eql 'New version created'
@@ -113,6 +126,7 @@ RSpec.describe Mutations::Form::FormCreate do
                                                    context: {
                                                      current_user: admin,
                                                      site_community: community,
+                                                     user_role: admin.role,
                                                    }).as_json
         expect(result.dig('errors', 0, 'message')).to be_nil
         expect(result.dig('data', 'categoryDelete', 'message')).to eql 'New version created'
@@ -133,6 +147,7 @@ RSpec.describe Mutations::Form::FormCreate do
                                                    context: {
                                                      current_user: user,
                                                      site_community: community,
+                                                     user_role: user.role,
                                                    }).as_json
         expect(result.dig('errors', 0, 'message')).to eql 'Unauthorized'
       end

@@ -4,8 +4,17 @@ require 'rails_helper'
 
 RSpec.describe Mutations::Form::FormPropertiesCreate do
   describe 'creates form property' do
-    let!(:user) { create(:user_with_community) }
-    let!(:admin) { create(:admin_user, community_id: user.community_id) }
+    let!(:admin_role) { create(:role, name: 'admin') }
+    let!(:resident_role) { create(:role, name: 'resident') }
+    let!(:permission) do
+      create(:permission, module: 'forms',
+                          role: admin_role,
+                          permissions: %w[can_create_form_properties])
+    end
+
+    let!(:user) { create(:user_with_community, role: resident_role) }
+    let!(:admin) { create(:admin_user, community_id: user.community_id, role: admin_role) }
+
     let!(:form) { create(:form, community_id: user.community_id) }
     let!(:category) { create(:category, form: form, field_name: 'info') }
     let!(:other_category) { create(:category, form: form, field_name: 'personal info') }
@@ -59,6 +68,7 @@ RSpec.describe Mutations::Form::FormPropertiesCreate do
                                                    context: {
                                                      current_user: admin,
                                                      site_community: user.community,
+                                                     user_role: admin.role,
                                                    }).as_json
         expect(result['errors']).to be_nil
         property_result = result.dig('data', 'formPropertiesCreate', 'formProperty')
@@ -81,6 +91,7 @@ RSpec.describe Mutations::Form::FormPropertiesCreate do
                                                    context: {
                                                      current_user: admin,
                                                      site_community: user.community,
+                                                     user_role: admin.role,
                                                    }).as_json
         expect(result.dig('errors', 0, 'message')).to eql 'Forms::Form not found'
       end
@@ -99,6 +110,7 @@ RSpec.describe Mutations::Form::FormPropertiesCreate do
                                                    context: {
                                                      current_user: admin,
                                                      site_community: user.community,
+                                                     user_role: admin.role,
                                                    }).as_json
         expect(result.dig('errors', 0, 'message')).to eql 'Category not found'
       end
@@ -117,6 +129,7 @@ RSpec.describe Mutations::Form::FormPropertiesCreate do
                                                    context: {
                                                      current_user: user,
                                                      site_community: user.community,
+                                                     user_role: user.role,
                                                    }).as_json
         expect(result.dig('data', 'formPropertiesCreate', 'form', 'id')).to be_nil
         expect(result.dig('errors', 0, 'message')).to eql 'Unauthorized'

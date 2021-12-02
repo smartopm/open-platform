@@ -100,13 +100,13 @@ describe('Should render Visits View Component', () => {
     await waitFor(() => {
       expect(getByText('Test another')).toBeInTheDocument();
       expect(getByText('Js user x')).toBeInTheDocument();
-      expect(getByText('logbook:logbook.host')).toBeInTheDocument();
+      expect(getByText('logbook:logbook.host:')).toBeInTheDocument();
       expect(getByTestId('entered_at')).toBeInTheDocument();
       expect(getByTestId('exited_at')).toBeInTheDocument();
       expect(getByTestId('log_exit')).toBeInTheDocument();
       expect(getByTestId('guest_validity')).toBeInTheDocument();
       expect(getByTestId('request_status')).toBeInTheDocument();
-      expect(getByTestId('request_status').textContent).toContain('Pending');
+      expect(getByTestId('request_status').textContent).toContain('guest_book.pending');
       expect(getByTestId('log_exit')).not.toBeDisabled();
 
       fireEvent.click(getByTestId('log_exit'));
@@ -114,6 +114,10 @@ describe('Should render Visits View Component', () => {
 
       fireEvent.click(getByTestId('card'));
       expect(mockHistory.push).toBeCalled();
+
+      fireEvent.click(getByTestId('user_name'));
+      expect(mockHistory.push).toBeCalled();
+      expect(mockHistory.push).toBeCalledWith('/user/162f7517'); // check if it routes to the user page
     }, 10);
   });
 

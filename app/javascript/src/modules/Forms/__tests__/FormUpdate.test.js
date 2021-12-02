@@ -1,5 +1,5 @@
 import React from 'react'
-import { render, waitFor } from '@testing-library/react'
+import { render, waitFor, screen } from '@testing-library/react'
 import '@testing-library/jest-dom/extend-expect'
 import { MockedProvider } from '@apollo/react-testing'
 import { BrowserRouter } from 'react-router-dom'
@@ -10,34 +10,39 @@ import FormUpdate from '../components/FormUpdate'
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn())
 
 describe('Form Component', () => {
-  it('should render form without error', async () => {
-    const formUserMocks = {
-      request: {
-        query: FormUserQuery,
-        variables: {
-          userId: '162f7517-7cc8-42f9-b2d0-a83a16d59569',
-          formUserId: 'caea7b44-ee95-42a6-a42f-3e530432172e',
-        }
-      },
-      result: {
-        data: {
-          formUser: {
-            id: "162f7517-7cc8-398542-b2d0-384sds",
-            status: "pending",
-            form: {
-              id: "caea7b44-ee95-42a6-a42f-3e530432172e",
-              name: "Test Form",
-              description: "Some description"
-            },
-            statusUpdatedBy: {
-              id: "162f7517-7cc8-398542-b2d0-a83569",
-              name: "Olivier JM Maniraho",
-            },
-            updatedAt: "2020-11-05T11:25:07Z"
-          }
+  const formUserMocks = {
+    request: {
+      query: FormUserQuery,
+      variables: {
+        userId: '162f7517-7cc8-42f9-b2d0-a83a16d59569',
+        formUserId: 'caea7b44-ee95-42a6-a42f-3e530432172e',
+      }
+    },
+    result: {
+      data: {
+        formUser: {
+          id: "162f7517-7cc8-398542-b2d0-384sds",
+          status: "pending",
+          form: {
+            id: "caea7b44-ee95-42a6-a42f-3e530432172e",
+            name: "Test Form",
+            description: "Some description"
+          },
+          statusUpdatedBy: {
+            id: "162f7517-7cc8-398542-b2d0-a83569",
+            name: "Olivier JM Maniraho",
+          },
+          updatedAt: "2020-11-05T11:25:07Z"
         }
       }
     }
+  };
+
+  const authState = {
+    user: { userType: 'admin' },
+  };
+
+  it('should render form without error', async () => {
     const mocks = {
       request: {
         query: UserFormPropertiesQuery,
@@ -158,10 +163,7 @@ describe('Form Component', () => {
           ]
         }
       }
-    }
-    const authState = {
-      user: { userType: 'admin' },
-    }
+    };
     const container = render(
       <MockedProvider mocks={[mocks, formUserMocks]} addTypename={false}>
         <BrowserRouter>
@@ -172,8 +174,8 @@ describe('Form Component', () => {
           />
         </BrowserRouter>
       </MockedProvider>
-    )
-    const loader = render(<Loading />)
+    );
+    const loader = render(<Loading />);
 
     expect(loader.queryAllByTestId('loader')[0]).toBeInTheDocument()
     await waitFor(
@@ -191,6 +193,7 @@ describe('Form Component', () => {
         expect(
           container.queryAllByTestId('attachment-name')[0]
           ).toHaveTextContent('Image 1')
+        expect(container.queryByText('form:misc.download_file')).toBeInTheDocument()
         expect(container.queryByLabelText('Yes')).toBeInTheDocument()
         expect(container.queryByLabelText('No')).toBeInTheDocument()
         expect(container.queryByTestId('radio_field_name')).toBeInTheDocument()
@@ -201,4 +204,55 @@ describe('Form Component', () => {
       { timeout: 50 }
     )
   })
+
+  it('does not render download buton when there is no attachment', async () => {
+    const mocks = {
+      request: {
+        query: UserFormPropertiesQuery,
+        variables: {
+          formUserId: 'caea7b44-ee95-42a6-a42f-3e530432172e',
+          userId: "162f7517-7cc8-42f9-b2d0-a83a16d59569"
+        }
+      },
+      result: {
+        data: {
+          formUserProperties: [
+            {
+              formProperty: {
+                fieldName: 'Attach a file here',
+                fieldType: 'file_upload',
+                fieldValue: null,
+                id: '3145c47e-1234-47b0-9dac-dc723d2e',
+                groupingId: '3145c47e-1279-47',
+                adminUse: false,
+                order: '5'
+              },
+              value: null,
+              imageUrl: null,
+              fileType: null
+            }
+          ]
+        }
+      }
+    };
+
+    render(
+      <MockedProvider mocks={[mocks, formUserMocks]} addTypename={false}>
+        <BrowserRouter>
+          <FormUpdate
+            formUserId="caea7b44-ee95-42a6-a42f-3e530432172e"
+            userId="162f7517-7cc8-42f9-b2d0-a83a16d59569"
+            authState={authState}
+          />
+        </BrowserRouter>
+      </MockedProvider>
+    );
+
+    await waitFor(() => {
+      expect(
+        screen.queryAllByTestId('attachment-name')[0]
+        ).toHaveTextContent('Attach a file here')
+      expect(screen.queryByText('form:misc.download_file')).not.toBeInTheDocument();
+    });
+  });
 })

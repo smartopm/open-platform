@@ -64,13 +64,14 @@ export default function UserPaymentPlanItem({
   const [anchorEl, setAnchorEl] = useState(null);
   const [anchor, setAnchor] = useState(null);
   const [planAnchor, setPlanAnchor] = useState(null);
-  const [transactionId, setTransactionId] = useState('');
+  const [paymentId, setPaymentId] = useState('');
   const [planId, setPlanId] = useState('');
   const [receiptOpen, setReceiptOpen] = useState(false);
   const [transDetailOpen, setTransDetailOpen] = useState(false);
   const [transData, setTransData] = useState({});
   const [planDetailOpen, setPlanDetailOpen] = useState(false);
   const [planData, setPlanData] = useState({});
+  const [paymentData, setPaymentData] = useState({});
   const [statementOpen, setStatementOpen] = useState(false);
   const [details, setPlanDetails] = useState({
     isLoading: false,
@@ -82,6 +83,7 @@ export default function UserPaymentPlanItem({
   const [TransferPlanModalOpen, setTransferPlanModalOpen] = useState(false);
   const [isSuccessAlert, setIsSuccessAlert] = useState(false);
   const [messageAlert, setMessageAlert] = useState('');
+  const [transferType, setTransferType] = useState('');
   const [updatePaymentPlan] = useMutation(PaymentPlanUpdateMutation);
   const [cancelPaymentPlan] = useMutation(PaymentPlanCancelMutation);
   const validDays = [...Array(28).keys()];
@@ -89,7 +91,7 @@ export default function UserPaymentPlanItem({
   const anchorElOpen = Boolean(anchor);
   const planAnchorElOpen = Boolean(planAnchor);
   const [loadReceiptDetails, { loading, error, data }] = useLazyQuery(ReceiptPayment, {
-    variables: { userId, id: transactionId },
+    variables: { userId, id: paymentId },
     fetchPolicy: 'no-cache',
     errorPolicy: 'all'
   });
@@ -124,6 +126,11 @@ export default function UserPaymentPlanItem({
       content: t('common:menu.view_receipt'),
       isAdmin: false,
       handleClick: event => handleClick(event)
+    },
+    {
+      content: t('actions.transfer_payment'),
+      isAdmin: true,
+      handleClick: event => handleConfirmPlanTransferClick(event, 'payment')
     }
   ];
 
@@ -151,7 +158,7 @@ export default function UserPaymentPlanItem({
     {
       content: t('common:menu.transfer_payment_plan'),
       isAdmin: true,
-      handleClick: event => handleConfirmPlanTransferClick(event)
+      handleClick: event => handleConfirmPlanTransferClick(event, 'plan')
     }
   ];
 
@@ -181,6 +188,11 @@ export default function UserPaymentPlanItem({
   function handleCancelPlanClick(event) {
     event.stopPropagation();
     setConfirmPlanCancelOpen(true);
+  }
+
+  function handleTransferPlanModalClose() {
+    setTransferPlanModalOpen(false)
+    setAnchor(null);
   }
 
   function handleCancelPlan(event) {
@@ -225,8 +237,9 @@ export default function UserPaymentPlanItem({
     history.push(`?tab=Plans&subtab=Transactions&id=${planId}`);
   }
 
-  function handleConfirmPlanTransferClick(event) {
+  function handleConfirmPlanTransferClick(event, transferObject) {
     event.stopPropagation();
+    setTransferType(transferObject);
     setTransferPlanModalOpen(true);
   }
 
@@ -241,10 +254,11 @@ export default function UserPaymentPlanItem({
     setPlanDetailOpen(true);
   }
 
-  function handleTransactionMenu(event, payId) {
+  function handleTransactionMenu(event, pay) {
     event.stopPropagation();
     setAnchor(event.currentTarget);
-    setTransactionId(payId);
+    setPaymentId(pay.id);
+    setPaymentData(pay)
   }
 
   function handlePlanMenu(event, plan) {
@@ -364,13 +378,16 @@ export default function UserPaymentPlanItem({
       />
       <TransferPlanModal
         open={TransferPlanModalOpen}
-        handleModalClose={() => setTransferPlanModalOpen(!TransferPlanModalOpen)}
+        handleModalClose={handleTransferPlanModalClose}
         planData={planData}
         userId={userId}
         paymentPlanId={planId}
         refetch={refetch}
         balanceRefetch={balanceRefetch}
         currencyData={currencyData}
+        transferType={transferType}
+        paymentId={paymentId}
+        paymentData={paymentData}
       />
       {error && <CenteredContent>{error.message}</CenteredContent>}
       {statementError && <CenteredContent>{statementError.message}</CenteredContent>}
@@ -549,6 +566,10 @@ export function renderPlan(
     planMenuList.push({ ...obj });
   });
 
+  const paymentPlanPermissions = currentUser?.permissions?.find(permissionObject => permissionObject.module === 'payment_plan')
+  const canViewMenuList = paymentPlanPermissions? paymentPlanPermissions.permissions.includes('can_view_menu_list'): false
+  const canUpdatePaymentDay = paymentPlanPermissions? paymentPlanPermissions.permissions.includes('can_update_payment_day'): false
+
   return {
     'Plot Number': (
       <Grid item xs={12} md={2} data-testid="plot-number">
@@ -603,15 +624,15 @@ export function renderPlan(
       <Grid item xs={12} md={2}>
         <Button
           aria-controls="set-payment-date-menu"
-          variant={objectAccessor(currentUser?.permissions, 'payment_plan')?.permissions?.includes('can_update_payment_day') ? 'outlined' : 'text'}
+          variant={canUpdatePaymentDay ? 'outlined' : 'text'}
           aria-haspopup="true"
           data-testid="menu"
-          disabled={!objectAccessor(currentUser?.permissions, 'payment_plan')?.permissions?.includes('can_update_payment_day')}
+          disabled={!canUpdatePaymentDay}
           onClick={handleMenu}
         >
           {loading && <Spinner />}
 
-          {!loading && objectAccessor(currentUser?.permissions, 'payment_plan')?.permissions?.includes('can_update_payment_day') ? (
+          {!loading && canUpdatePaymentDay ? (
             <span>
               <EditIcon fontSize="small" style={{ marginBottom: -4 }} />
               {`   ${suffixedNumber(plan.paymentDay)}`}
@@ -625,7 +646,7 @@ export function renderPlan(
     ),
     Menu: (
       <Grid item xs={12} md={1} data-testid="menu">
-        {objectAccessor(currentUser?.permissions, 'payment_plan')?.permissions?.includes('can_view_menu_list') && (
+        {canViewMenuList && (
           <>
             <IconButton
               aria-controls="simple-menu"
@@ -683,7 +704,7 @@ export function renderPayments(pay, currencyData, currentUser, menuData) {
             aria-haspopup="true"
             data-testid="pay-menu"
             dataid={pay.id}
-            onClick={event => menuData.handleTransactionMenu(event, pay.id)}
+            onClick={event => menuData.handleTransactionMenu(event, pay)}
           >
             <MoreHorizOutlined />
           </IconButton>
@@ -717,10 +738,11 @@ UserPaymentPlanItem.propTypes = {
   userId: PropTypes.string.isRequired,
   currentUser: PropTypes.shape({
     userType: PropTypes.string,
-    permissions: PropTypes.shape({
+    permissions: PropTypes.arrayOf({
       payment_plan: PropTypes.shape({
         permissions: PropTypes.arrayOf(PropTypes.string)
-      })
+      }),
+      find: PropTypes.func
     })
   }).isRequired,
   refetch: PropTypes.func.isRequired,

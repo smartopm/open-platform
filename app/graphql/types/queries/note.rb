@@ -53,6 +53,13 @@ module Types::Queries::Note
     field :user_tasks, [Types::NoteType], null: false do
       description 'Returns Takes for a specific user'
     end
+
+    field :task_sub_tasks, [Types::NoteType], null: false do
+      description 'Returns a list subtasks for one task'
+      argument :task_id, GraphQL::Types::ID, required: true
+      argument :limit, Integer, required: false
+      argument :offset, Integer, required: false
+    end
   end
   # rubocop:enable Metrics/BlockLength
 
@@ -209,6 +216,29 @@ module Types::Queries::Note
                           .order(created_at: :desc)
                           .limit(5)
   end
+  # rubocop:enable Metrics/MethodLength
+
+  # rubocop:disable Metrics/MethodLength
+  # rubocop:disable Metrics/AbcSize
+  def task_sub_tasks(task_id:, limit: 3, offset: 0)
+    unless current_user&.site_manager? ||
+           ::Policy::ApplicationPolicy.new(
+             current_user, nil
+           ).permission?(
+             module: :note, permission: :can_fetch_task_by_id,
+           )
+      raise GraphQL::ExecutionError,
+            I18n.t('errors.unauthorized')
+    end
+
+    context[:site_community].notes.find(task_id)
+                            .sub_tasks
+                            .eager_load(:assignee_notes, :assignees, :author, :user)
+                            .order(created_at: :asc)
+                            .limit(limit).offset(offset)
+                            .with_attached_documents
+  end
+  # rubocop:enable Metrics/AbcSize
   # rubocop:enable Metrics/MethodLength
 
   private

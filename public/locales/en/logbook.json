@@ -56,7 +56,7 @@
     "log_view": "Log View",
     "visit_view": "Visit View",
     "log_book": "Log Book",
-    "host": "Host:",
+    "host": "Host",
     "acting_user": "Acting user",
     "exit_log": "Exit Log",
     "view_details": "View Details",
@@ -65,7 +65,8 @@
     "no_logs": "No Logs Available",
     "old_switch": "switch to old screen",
     "new_switch": "switch to new screen",
-    "user_entry": "User Entry"
+    "user_entry": "User Entry",
+    "user_granted_access": "User Granted Access"
   },
   "log_title": {
     "visitor": "Visitor",
@@ -132,7 +133,10 @@
     "exited_at": "Exited at {{time}}",
     "entered_at": "Entered at {{time}}",
     "visits": "Visits",
-    "manual_entry": "Manual entry"
+    "manual_entry": "Manual entry",
+    "pending": "Pending",
+    "approved": "Approved",
+    "phone_number_not_available": "Phone number not available"
   },
   "date_picker": {
     "ok_label": "Ok",

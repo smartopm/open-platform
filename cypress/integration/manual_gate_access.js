@@ -2,12 +2,34 @@
 
 describe('Manual Gate Access', () => {
     it('allows security guards to record manual entries', () => {
-      cy.factory('community', { name: 'Nkwashi' }).then((res1) => {
-        cy.factory('security_guard', {
-          name: 'A Guard',
-          phone_number: '2347065834175',
-          email: 'guard.dgdp@gmail.com',
-          community_id: res1.body.id,
+      cy.factory('community', { name: 'Nkwashi' }).then((commRes) => {
+        cy.factory('role', {
+          name: 'security_guard',
+        }).then((guardRes) =>{
+          cy.factory('permission', {
+            module: 'entry_request',
+            permissions: ['can_access_logbook', 'can_see_menu_item',
+                          'can_go_through_guest_verification', 'can_grant_entry',
+                          'can_create_entry_request', 'can_add_entry_request_note'],
+            role_id: guardRes.body.id,
+          })
+          cy.factory('permission', {
+            module: 'user',
+            permissions: ['can_view_guests'],
+            role_id: guardRes.body.id,
+          })
+          cy.factory('permission', {
+            module: 'gate_access',
+            permissions: ['can_see_menu_item'],
+            role_id: guardRes.body.id,
+          })
+
+          cy.factory('security_guard', {
+            name: 'A Guard',
+            phone_number: '2347065834175',
+            email: 'guard.dgdp@gmail.com',
+            community_id: commRes.body.id,
+          })
         })
       })
 

@@ -10,11 +10,12 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_11_22_103723) do
+ActiveRecord::Schema.define(version: 2021_11_24_093931) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
+  enable_extension "unaccent"
   enable_extension "uuid-ossp"
 
   create_table "accounts", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -609,6 +610,16 @@ ActiveRecord::Schema.define(version: 2021_11_22_103723) do
     t.index ["user_id"], name: "index_payments_on_user_id"
   end
 
+  create_table "permissions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "module"
+    t.json "permissions"
+    t.uuid "role_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["module", "role_id"], name: "index_permissions_on_module_and_role_id", unique: true
+    t.index ["role_id"], name: "index_permissions_on_role_id"
+  end
+
   create_table "plan_ownerships", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "user_id", null: false
     t.uuid "payment_plan_id", null: false
@@ -655,6 +666,15 @@ ActiveRecord::Schema.define(version: 2021_11_22_103723) do
     t.uuid "community_id"
     t.index ["community_id"], name: "index_post_tags_on_community_id"
     t.index ["name"], name: "index_post_tags_on_name", unique: true
+  end
+
+  create_table "roles", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "name"
+    t.uuid "community_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["community_id"], name: "index_roles_on_community_id"
+    t.index ["name", "community_id"], name: "index_roles_on_name_and_community_id", unique: true
   end
 
   create_table "showrooms", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -788,8 +808,10 @@ ActiveRecord::Schema.define(version: 2021_11_22_103723) do
     t.string "address"
     t.uuid "latest_substatus_id"
     t.string "ext_ref_id"
+    t.uuid "role_id"
     t.index ["community_id", "email"], name: "index_users_on_community_id_and_email", unique: true
     t.index ["latest_substatus_id"], name: "index_users_on_latest_substatus_id"
+    t.index ["role_id"], name: "index_users_on_role_id"
     t.index ["sub_status"], name: "index_users_on_sub_status"
     t.index ["uid", "provider", "community_id"], name: "index_users_on_uid_and_provider_and_community_id", unique: true
   end
@@ -907,6 +929,7 @@ ActiveRecord::Schema.define(version: 2021_11_22_103723) do
   add_foreign_key "payments", "communities"
   add_foreign_key "payments", "invoices"
   add_foreign_key "payments", "users"
+  add_foreign_key "permissions", "roles"
   add_foreign_key "plan_ownerships", "payment_plans"
   add_foreign_key "plan_ownerships", "users"
   add_foreign_key "plan_payments", "communities"
@@ -916,6 +939,7 @@ ActiveRecord::Schema.define(version: 2021_11_22_103723) do
   add_foreign_key "post_tag_users", "post_tags"
   add_foreign_key "post_tag_users", "users"
   add_foreign_key "post_tags", "communities"
+  add_foreign_key "roles", "communities"
   add_foreign_key "subscription_plans", "communities"
   add_foreign_key "substatus_logs", "communities"
   add_foreign_key "substatus_logs", "users"
@@ -928,6 +952,7 @@ ActiveRecord::Schema.define(version: 2021_11_22_103723) do
   add_foreign_key "user_form_properties", "users"
   add_foreign_key "user_labels", "labels"
   add_foreign_key "user_labels", "users"
+  add_foreign_key "users", "roles"
   add_foreign_key "valuations", "land_parcels"
   add_foreign_key "wallet_transactions", "communities"
   add_foreign_key "wallet_transactions", "payment_plans"

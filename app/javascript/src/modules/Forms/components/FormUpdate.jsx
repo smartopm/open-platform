@@ -1,9 +1,15 @@
+/* eslint-disable complexity */
+/* eslint-disable max-lines */
+/* eslint-disable max-statements */
 /* eslint-disable no-use-before-define */
 /* eslint-disable security/detect-object-injection */
 /* eslint-disable no-unused-expressions */
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { Fragment, useRef, useState, useEffect } from 'react';
-import { Button, Container, TextField, Typography } from '@material-ui/core';
+import { Button, Container, Grid, TextField, Typography } from '@material-ui/core';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
+import { GetApp } from '@material-ui/icons';
+import { makeStyles } from '@material-ui/core/styles';
 import { useApolloClient, useMutation, useQuery } from 'react-apollo';
 import { useHistory } from 'react-router';
 import PropTypes from 'prop-types';
@@ -49,9 +55,11 @@ export default function FormUpdate({ formUserId, userId, authState }) {
   const history = useHistory();
   const signRef = useRef(null);
   const { t } = useTranslation(['form', 'common']);
+  const classes = useStyles();
   // create form user
   const [updateFormUser] = useMutation(FormUserUpdateMutation);
   const [updateFormUserStatus] = useMutation(FormUserStatusUpdateMutation);
+  const matches = useMediaQuery('(max-width:600px)');
 
   const { data, error, loading } = useQuery(UserFormPropertiesQuery, {
     variables: { userId, formUserId },
@@ -306,23 +314,52 @@ export default function FormUpdate({ formUserId, userId, authState }) {
       ),
       file_upload: (
         <div key={formPropertiesData.formProperty.id}>
-          <br />
-          <br />
-          <div data-testid="attachment-name">{formPropertiesData.formProperty.fieldName}</div>
-          {formPropertiesData.imageUrl && (
-            <>
-              <ImageAuth
-                type={formPropertiesData.fileType?.split('/')[0]}
-                imageLink={formPropertiesData.imageUrl}
+          <div data-testid="attachment-name">
+            {formPropertiesData.formProperty.fieldName}
+          </div>
+          <Grid container direction="row" spacing={1} alignItems="flex-start" className={classes.fileUploadField}>
+            <Grid item xs={12} md={2}>
+              <UploadField
+                detail={{ type: 'file', status, detail: {  label: formPropertiesData.value } }}
+                key={formPropertiesData.id}
+                upload={evt => onChange(evt.target.files[0])}
+                editable={editable}
+                style={{ flex: 1 }}
               />
-            </>
-          )}
-          <UploadField
-            detail={{ type: 'file', status }}
-            key={formPropertiesData.id}
-            upload={evt => onChange(evt.target.files[0])}
-            editable={editable}
-          />
+            </Grid>
+            <Grid item xs={12} md={2}>
+              {formPropertiesData.imageUrl && (
+                <div className={matches ? classes.downloadButtonMobile : classes.downloadButton}>
+                  <Button
+                    variant="text"
+                    component="span"
+                    aria-label={`${formPropertiesData.formProperty.fieldName}-download-button}`}
+                    startIcon={<GetApp />}
+                  >
+                    <a
+                      href={formPropertiesData.imageUrl}
+                      download={formPropertiesData.imageUrl}
+                      style={{ textDecoration: 'none', color: '#000000DE' }}
+                    >
+                      {t('form:misc.download_file')}
+                    </a>
+                  </Button>
+                </div>
+              )}
+            </Grid>
+            <Grid item xs={12}>
+              <div>
+                {formPropertiesData.imageUrl && (
+                  <div className={matches ? classes.filePreviewMobile : classes.filePreview}>
+                    <ImageAuth
+                      type={formPropertiesData.fileType?.split('/')[0]}
+                      imageLink={formPropertiesData.imageUrl}
+                    />
+                  </div>
+                )}
+              </div>
+            </Grid>
+          </Grid>
         </div>
       ),
       signature: (
@@ -492,6 +529,30 @@ export default function FormUpdate({ formUserId, userId, authState }) {
     </>
   );
 }
+
+const useStyles = makeStyles(() => ({
+  downloadButton: {
+    display: 'flex',
+    marginTop: '12px'
+  },
+  downloadButtonMobile: {
+    marginTop: '-12px'
+  },
+  filePreview: {
+    maxWidth: '50%',
+    '& iframe': {
+      height: '400px',
+      width: '600px'
+    }
+  },
+  filePreviewMobile: {
+    maxWidth: '80%',
+    '& iframe': {
+      height: '300px',
+      width: '300px'
+    }
+  }
+}));
 
 FormUpdate.propTypes = {
   userId: PropTypes.string.isRequired,

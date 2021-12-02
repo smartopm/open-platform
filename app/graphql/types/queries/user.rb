@@ -120,7 +120,7 @@ module Types::Queries::User
     else
       Users::User.allowed_users(context[:current_user])
                  .eager_load(:labels)
-                 .search(query)
+                 .search(or: [{ query: (query.presence || '.') }, { name: { matches: query } }])
                  .order(name: :asc)
                  .limit(limit)
                  .offset(offset)
@@ -131,6 +131,8 @@ module Types::Queries::User
   # rubocop:enable Metrics/MethodLength
 
   # rubocop:disable Metrics/MethodLength
+  # rubocop:disable Metrics/CyclomaticComplexity
+  # rubocop:disable Metrics/PerceivedComplexity
   def user_search(query: '', offset: 0, limit: 50)
     raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') unless context[:current_user]
 
@@ -145,15 +147,28 @@ module Types::Queries::User
       search_method = 'search_by_contact_info'
       query = query.split(' ').last
     end
-    Users::User.allowed_users(context[:current_user])
-               .send(search_method, query)
-               .order(name: :asc)
-               .limit(limit)
-               .offset(offset)
-               .with_attached_avatar
-               .with_attached_document
+
+    if search_method == 'search'
+      Users::User.allowed_users(context[:current_user])
+                 .search(or: [{ query: (query.presence || '.') }, { name: { matches: query } }])
+                 .order(name: :asc)
+                 .limit(limit)
+                 .offset(offset)
+                 .with_attached_avatar
+                 .with_attached_document
+    else
+      Users::User.allowed_users(context[:current_user])
+                 .send(search_method, query)
+                 .order(name: :asc)
+                 .limit(limit)
+                 .offset(offset)
+                 .with_attached_avatar
+                 .with_attached_document
+    end
   end
   # rubocop:enable Metrics/MethodLength
+  # rubocop:enable Metrics/CyclomaticComplexity
+  # rubocop:enable Metrics/PerceivedComplexity
 
   def current_user
     return context[:current_user] if context[:current_user]
@@ -186,7 +201,7 @@ module Types::Queries::User
 
     Users::User.allowed_users(context[:current_user])
                .includes(:accounts)
-               .search_lite(query)
+               .search_lite(or: [{ query: (query.presence || '.') }, { name: { matches: query } }])
                .order(name: :asc)
                .limit(limit)
                .offset(offset)
@@ -221,7 +236,7 @@ module Types::Queries::User
     if query.present? && query.include?('date_filter')
       allowed_users.heavy_search(query).size
     else
-      allowed_users.search(query).size
+      allowed_users.search(or: [{ query: (query || '') }, { name: { matches: query } }]).size
     end
   end
 
@@ -284,7 +299,7 @@ module Types::Queries::User
     end
     users = context[:site_community].users
     users.where(user_type: 'visitor')
-         .search_guest("name='#{query}' OR email='#{query}' OR phone_number='#{query}'")
+         .search_guest(or: [{ query: (query.presence || '.') }, { name: { matches: query } }])
          .limit(1).with_attached_avatar.with_attached_document
   end
 
@@ -295,7 +310,8 @@ module Types::Queries::User
 
     context[:current_user].invitees
                           .includes(:guest, :host, :entry_time)
-                          .search(query)
+                          .search(or: [{ query: (query.presence || '.') },
+                                       { guest: { matches: query } }])
                           .order(created_at: :desc)
   end
 

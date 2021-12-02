@@ -4,11 +4,26 @@ require 'rails_helper'
 
 RSpec.describe Types::Queries::LandParcel do
   describe 'parcel queries' do
-    let!(:current_user) { create(:user_with_community) }
-    let!(:another_user) { create(:user_with_community) }
+    let!(:admin_role) { create(:role, name: 'admin') }
+    let!(:visitor_role) { create(:role, name: 'visitor') }
+    let!(:permission) do
+      create(:permission, module: 'land_parcel',
+                          role: admin_role,
+                          permissions: %w[
+                            can_view_all_land_parcels can_fetch_land_parcels_with_plans
+                            can_fetch_land_parcels can_fetch_land_parcel can_fetch_house
+                          ])
+    end
+
+    let!(:current_user) { create(:user_with_community, role: visitor_role) }
+    let!(:another_user) { create(:user_with_community, role: visitor_role) }
+    let!(:admin_user) do
+      create(:admin_user, community_id: current_user.community_id,
+                          role: admin_role)
+    end
+
     let!(:community) { current_user.community }
     let!(:another_community) { another_user.community }
-    let!(:admin_user) { create(:admin_user, community_id: community.id) }
     let!(:account) { create(:account, user: current_user, community: community) }
     let!(:land_parcel) do
       current_user.community.land_parcels.create(address1: 'This address',
@@ -90,16 +105,9 @@ RSpec.describe Types::Queries::LandParcel do
       expect(result.dig('data', 'fetchLandParcel', 0, 'latY')).to eql(-15.234)
       expect(result.dig('data', 'fetchLandParcel', 0, 'paymentPlans').size).to eql 2
       first_plan_result = result.dig('data', 'fetchLandParcel', 0, 'paymentPlans', 0)
-      expect(first_plan_result['id']).to eql payment_plan.id
-      expect(first_plan_result['startDate'].to_date).to eql payment_plan.start_date.to_date
-      expect(first_plan_result['user']['name']).to eql current_user.name
-      expect(first_plan_result['planPayments'][0]['amount']).to eql 500.0
+      expect([payment_plan.id, another_payment_plan.id]).to include(first_plan_result['id'])
       second_plan_result = result.dig('data', 'fetchLandParcel', 0, 'paymentPlans', 1)
-      expect(second_plan_result['id']).to eql another_payment_plan.id
-      expect(second_plan_result['startDate'].to_date)
-        .to eql another_payment_plan.start_date.to_date
-      expect(second_plan_result['user']['name']).to eql admin_user.name
-      expect(second_plan_result['planPayments'][0]['amount']).to eql 700.0
+      expect([payment_plan.id, another_payment_plan.id]).to include(second_plan_result['id'])
     end
 
     it 'should not retrieve list of all land parcels if user is not admin' do

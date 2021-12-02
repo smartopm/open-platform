@@ -1,22 +1,27 @@
 import { Button, TextField } from '@material-ui/core';
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { useMutation } from 'react-apollo';
 import PropTypes from 'prop-types';
 import { useHistory } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import PhoneInput from 'react-phone-input-2'
 import CenteredContent from '../../../../shared/CenteredContent';
 import GuestTime from '../../Components/GuestTime';
 import { initialRequestState } from '../../GuestVerification/constants';
 import InvitationCreateMutation from '../graphql/mutations';
 import { Spinner } from '../../../../shared/Loading';
 import MessageAlert from '../../../../components/MessageAlert';
-import { capitalize, formatError, objectAccessor } from '../../../../utils/helpers';
+import { capitalize, extractCountry, formatError, objectAccessor } from '../../../../utils/helpers';
 import { checkInValidRequiredFields } from '../../utils';
 import { invitationRequiredFields as requiredFields } from '../constants';
+import { useStyles } from '../styles';
+import { Context } from '../../../../containers/Provider/AuthStateProvider'
 
 export default function GuestInviteForm({ guest }) {
   const history = useHistory();
+  const authState = useContext(Context)
   const [guestData, setGuestData] = useState(initialRequestState);
+  const [phoneNumber, setPhoneNumber] = useState('')
   const [details, setDetails] = useState({ message: '', isError: false });
   const [createInvitation] = useMutation(InvitationCreateMutation);
   const { t } = useTranslation(['logbook', 'common', 'discussion']);
@@ -25,6 +30,7 @@ export default function GuestInviteForm({ guest }) {
     isSubmitting: false
   });
 
+  const classes = useStyles()
   function handleInputChange(event) {
     const { name, value } = event.target;
     setGuestData({
@@ -62,9 +68,9 @@ export default function GuestInviteForm({ guest }) {
     createInvitation({
       variables: {
         guestId: guest?.id,
-        name: guestData.name || guest.name,
+        name: guestData.name.trim() || guest.name,
         email: guestData?.email || guest?.email,
-        phoneNumber: guestData.phoneNumber || guest.phoneNumber,
+        phoneNumber: phoneNumber || guest?.phoneNumber,
         visitationDate: guestData.visitationDate,
         startsAt: guestData.startsAt,
         endsAt: guestData.endsAt,
@@ -96,6 +102,7 @@ export default function GuestInviteForm({ guest }) {
     };
     return props;
   }
+
   return (
     <>
       <MessageAlert
@@ -119,18 +126,16 @@ export default function GuestInviteForm({ guest }) {
             required
             {...validate('name')}
           />
-          <TextField
-            variant="outlined"
-            type="text"
-            value={guestData.phoneNumber}
-            label={t('common:form_fields.phone_number')}
-            onChange={handleInputChange}
-            name="phoneNumber"
+          <PhoneInput
+            value={phoneNumber}
+            containerStyle={{ width: "100%"}}
+            inputClass={classes.invitePhoneNumber}
+            inputStyle={{ width: "100%", height: "4em",  }}
+            country={extractCountry(authState.user.community?.locale)}
+            placeholder={t('common:form_placeholders.phone_number')}
+            onChange={value => setPhoneNumber(value)}
+            preferredCountries={['hn', 'ke', 'zm', 'ng', 'in', 'us']}
             inputProps={{ 'data-testid': 'guest_entry_phone_number' }}
-            margin="normal"
-            {...validate('phoneNumber')}
-            fullWidth
-            required
           />
           <TextField
             variant="outlined"
@@ -163,6 +168,7 @@ export default function GuestInviteForm({ guest }) {
           onClick={handleInviteGuest}
           data-testid="invite_button"
           startIcon={guestData.isLoading && <Spinner />}
+          disabled={guestData.isLoading}
         >
           {t('guest.invite_guest')}
         </Button>

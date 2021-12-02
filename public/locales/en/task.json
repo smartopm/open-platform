@@ -5,6 +5,8 @@
     "task_details_text": "Task Details",
     "due_date_text": "Due Date",
     "assigned_to_txt": "Assigned To",
+    "active_reminder": "Reminder",
+    "none": "None",
     "tasks_due_in_10_days": "Tasks due in 10 days",
     "tasks_due_in_30_days": "Tasks due in 30 days",
     "overdue_tasks": "Overdue Tasks",
@@ -23,9 +25,9 @@
     "task_assignee_label": "Assign this task to users",
     "task_search_placeholder": "Search Assignee",
     "task_user_label": "Task user",
-    "task_reminder_in_1_hr": "In 1 hour",
-    "task_reminder_in_24_hr": "In 24 hours",
-    "task_reminder_in_72_hr": "In 72 hours",
+    "task_reminder_in_1_hr": "Remind Me in 1 hour",
+    "task_reminder_in_24_hr": "Remind Me in 24 hours",
+    "task_reminder_in_72_hr": "Remind Me in 72 hours",
     "reminder_text": "Remind me later",
     "change_reminder_text": "Change reminder",
     "toggle_preview_tooltip": "Toggle Preview",
@@ -39,18 +41,27 @@
     "history_update_no_data": "No update available",
     "update_successful": "Task updated successfully",
     "created": "Created",
-    "assigned_to": "Assigned to",
+    "assigned_to": "Assignees",
     "due_date": "Due Date: ",
     "no_assignee": "No Assignee",
-    "date_created": "Date Created"
+    "date_created": "Date Created",
+    "complete": "Complete",
+    "open": "Open"
   },
   "document": {
     "uploaded_at": "Uploaded at",
     "download": "Download",
-    "no_documents": "No documents attached",
-    "documents": "Documents"
+    "no_documents": "Add a document",
+    "documents": "Documents",
+    "upload_error": "Document could not be uploaded"
   },
   "history": {
     "updates": "Updates"
+  },
+  "sub_task": {
+    "sub_tasks": "Sub Tasks",
+    "see_more": "See More",
+    "no_sub_tasks": "Add a subtask",
+    "due": "due: "
   }
 }

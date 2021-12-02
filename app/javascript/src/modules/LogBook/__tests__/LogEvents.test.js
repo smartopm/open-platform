@@ -110,7 +110,6 @@ describe('Log Events Component', () => {
     fireEvent.click(container.queryByTestId('menu-list'));
     expect(container.queryByText('logbook.view_details')).toBeInTheDocument();
     expect(container.queryByText('logbook.enroll_user')).toBeInTheDocument();
-    expect(container.queryByText('logbook.print_scan')).toBeInTheDocument();
     expect(container.queryByText('logbook.exit_log')).toBeInTheDocument();
 
     fireEvent.click(container.queryByText('logbook.view_details'));

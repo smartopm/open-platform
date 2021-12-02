@@ -5,6 +5,8 @@ import { MockedProvider } from '@apollo/react-testing';
 import GuestInviteForm from '../../Components/GuestInviteForm';
 import '@testing-library/jest-dom/extend-expect';
 import InvitationCreateMutation from '../../graphql/mutations';
+import { Context } from '../../../../../containers/Provider/AuthStateProvider';
+import userMock from '../../../../../__mocks__/authstate';
 
 describe('Guest Invitation Form', () => {
   const mockHistory = {
@@ -54,9 +56,11 @@ describe('Guest Invitation Form', () => {
     };
     const { getByTestId, queryAllByText } = render(
       <MemoryRouter>
-        <MockedProvider mocks={[createInviteMock]} addTypename={false}>
-          <GuestInviteForm guest={guest} />
-        </MockedProvider>
+        <Context.Provider value={userMock}>
+          <MockedProvider mocks={[createInviteMock]} addTypename={false}>
+            <GuestInviteForm guest={guest} />
+          </MockedProvider>
+        </Context.Provider>
       </MemoryRouter>
     );
 
@@ -75,14 +79,16 @@ describe('Guest Invitation Form', () => {
     fireEvent.change(email, { target: { value: 'Some@random.name' } });
     expect(email.value).toBe('Some@random.name');
 
+    expect(phoneNumber).not.toBeDisabled()
     fireEvent.change(phoneNumber, { target: { value: '090909090' } });
     expect(phoneNumber.value).toBe('090909090');
+
 
     fireEvent.click(getByTestId('invite_button'));
 
     await waitFor(() => {
       expect(queryAllByText('logbook:errors.required_field')[0]).toBeInTheDocument();
-      expect(queryAllByText('logbook:errors.required_field')).toHaveLength(2);
+      expect(queryAllByText('logbook:errors.required_field')).toHaveLength(1);
       expect(mockHistory.push).not.toBeCalled(); // due to failure in validation
     }, 10);
   });

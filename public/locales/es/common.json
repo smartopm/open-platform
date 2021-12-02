@@ -14,6 +14,7 @@
     "no_changes": "No se realizaron cambios",
     "no_result_found": "No se encontraron resultados para ‪{{searchValue}}‬",
     "no_user_selected": "Tienes que seleccionar un usuario",
+    "something_wrong_qr_code": "Se produjo un error al tratar de descargar el Código QR",
     "user_name_search_not_found": "{{username}} usuario no encontrado",
     "video_not_supported": "Este navegador no admite video"
   },
@@ -173,6 +174,7 @@
     "send_sms_to": "Enviar SMS a ",
     "settings": "Ajustes",
     "showroom": "Sala de exposición",
+    "transfer_payment": "Transferencia de Pago",
     "transfer_payment_plan": "Transferir Plan",
     "transfer_plan": "Transferir Plan",
     "transferring": "Transfiriendo ...",
@@ -316,6 +318,7 @@
     "select": "Seleccione",
     "select_category": "Seleccione una Categoría",
     "select_frequency": "Por favor seleccione frequencia",
+    "select_plan_for_payment_transfer": "Seleccione el Plan al que dese migrar este pago",
     "select_plan_type": "Seleccione un tipo de plan",
     "select_transfer_plan": "Seleccione el plan al que desea migrar este plan.",
     "send": "Enviar",
@@ -331,6 +334,7 @@
     "time_card": "Tarjeta de tiempo",
     "total_balance": "Balance Total",
     "total_transactions": "Total de transacciones realizadas",
+    "transfer_payment_acceptance": "Acepto que al hacer click en el botón de transferencia, este pago quedará cancelado y el pago será migrado al nuevo plan.",
     "transfer_plan_acceptance": "Acepto que al hacer clic en el botón de transferencia, este plan se cancelará y todos los pagos se migrarán al nuevo plan.",
     "twitter": "Twitter",
     "type_comment": "Escriba un comentario aquí",
@@ -463,6 +467,8 @@
     "prospective_client": "Futuro Cliente",
     "resident": "Residente",
     "security_guard": "Guardia de Seguridad",
+    "security_supervisor": "Supervisor de Seguridad",
+    "site_manager": "Gerente de Sitio",
     "site_worker": "Trabajador de Sitio",
     "visitor": "Visitante"
   }
