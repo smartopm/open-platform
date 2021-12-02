@@ -62,12 +62,11 @@ describe('It should test the allocate plan modal component', () => {
 
     expect(loader.queryAllByTestId('loader')[0]).toBeInTheDocument();
 
-    expect(container.queryByTestId('title')).toBeInTheDocument();
-    expect(container.queryByTestId('radio-group')).toBeInTheDocument();
-    expect(container.queryByTestId('confirmation')).toBeInTheDocument();
-
     await waitFor(
       () => {
+        expect(container.queryByTestId('title')).toBeInTheDocument();
+        expect(container.queryByTestId('radio-group')).toBeInTheDocument();
+        expect(container.queryByTestId('confirmation')).toBeInTheDocument();
         expect(container.queryByTestId('et2u32')).toBeInTheDocument();
       },
       { timeout: 200 }

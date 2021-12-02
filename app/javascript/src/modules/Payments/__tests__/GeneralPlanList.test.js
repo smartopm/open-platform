@@ -82,7 +82,7 @@ describe('General Plan List Component', () => {
     
     fireEvent.click(container.queryByText('common:menu.view_statement'));
     fireEvent.click(container.queryByText('common:menu.allocate_funds'));
-    expect(container.queryByText('common:menu.allocate_plan')).toBeInTheDocument();
+    expect(container.queryAllByText('common:menu.allocate_funds')[0]).toBeInTheDocument();
 
     fireEvent.click(container.queryByTestId('pay-menu'));
     expect(container.queryByText('common:menu.view_receipt')).toBeInTheDocument();
