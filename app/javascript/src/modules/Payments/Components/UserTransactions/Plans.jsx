@@ -115,11 +115,15 @@ export default function PaymentPlans({ userId, user, userData }) {
     loadGeneralPlans();
     loadPlans();
     loadBalance();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
     if (subtab === 'Transactions') {
       loadTransactions();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [subtab]);
 
   if (error && !data) return <CenteredContent>{formatError(error.message)}</CenteredContent>;
   if (balanceError && !balanceData)
