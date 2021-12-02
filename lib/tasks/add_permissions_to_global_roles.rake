@@ -26,9 +26,10 @@ namespace :db do
         else
           Permission.create(role: role, module: valid_module, permissions: role_permissions)
         end
-        puts 'One role processed'
       end
-      puts 'Successfully added permissions to current global roles'
+      puts 'A role processed'
+    end
+    puts 'Successfully added permissions to current global roles'
   rescue StandardError => e
     puts 'Failed to add permissions to current global roles'
     puts e.message.to_s
