@@ -34,6 +34,8 @@ import VisitView from './VisitView';
 import MessageAlert from '../../../components/MessageAlert';
 import Text from '../../../shared/Text';
 import CenteredContent from '../../../shared/CenteredContent';
+import { accessibleMenus } from '../utils'
+
 
 const limit = 20;
 // TODO: reduce the amount of props passed down here, it is hard to keep track
@@ -57,6 +59,9 @@ export default function LogBookItem({
   error
 }) {
   const authState = useContext(AuthStateContext);
+  const allUserPermissions = authState.user?.permissions || [];
+  const modulePerms = allUserPermissions.find(mod => mod.module === 'entry_request')?.permissions;
+  const permissions = new Set(modulePerms)
   const { t } = useTranslation(['logbook', 'common', 'dashboard']);
   const [open, setOpen] = useState(false);
   const [isObservationOpen, setIsObservationOpen] = useState(false);
@@ -82,12 +87,14 @@ export default function LogBookItem({
     {
       icon: <PersonIcon />,
       name: t('logbook.new_invite'),
-      handleClick: () => router.push(`/logbook/guests/invite`)
+      handleClick: () => router.push(`/logbook/guests/invite`),
+      isVisible: permissions.has('can_invite_guest')
     },
     {
       icon: <VisibilityIcon />,
       name: t('logbook.add_observation'),
-      handleClick: () => setIsObservationOpen(true)
+      handleClick: () => setIsObservationOpen(true),
+      isVisible: permissions.has('can_add_entry_request_note')
     }
   ];
 
@@ -273,7 +280,7 @@ export default function LogBookItem({
                   handleClose={() => setOpen(false)}
                   handleOpen={() => setOpen(true)}
                   direction="down"
-                  actions={actions}
+                  actions={accessibleMenus(actions)}
                 />
               </Grid>
             </Hidden>
@@ -364,7 +371,7 @@ export default function LogBookItem({
               handleClose={() => setOpen(false)}
               handleOpen={() => setOpen(true)}
               direction="down"
-              actions={actions}
+              actions={accessibleMenus(actions)}
             />
           </Grid>
         </Hidden>
