@@ -34,40 +34,39 @@ export default function CommentTextField({ data, refetch, taskId }) {
   }
   return (
     <>
-      <form onSubmit={handleSubmit} style={{ marginBottom: 0}}>
-        <Grid container>
-          <Grid item md={10} xs={8} style={{ paddingRight: '10px'}}>
-            <TextField
-              fullWidth
-              id="standard-full-width"
-              style={{ margin: 0 }}
-              placeholder={t('common:misc.type_comment')}
-              value={body}
-              onChange={e => setBody(e.target.value)}
-              multiline
-              rows={1}
-              margin="normal"
-              variant="outlined"
-              InputLabelProps={{
-                  shrink: true
-                }}
-              inputProps={{ 'data-testid': 'body_input' }}
-            />
-          </Grid>
-          <Grid item md={2} xs={4}>
-            <Button
-              variant="outlined"
-              color="primary"
-              type="submit"
-              disabled={!body.length}
-              data-testid="share"
-              style={{ height: '56px' }}
-            >
-              {t('misc.comment')}
-            </Button>
-          </Grid>
+      <Grid container>
+        <Grid item md={10} xs={8} style={{ paddingRight: '10px'}}>
+          <TextField
+            fullWidth
+            id="standard-full-width"
+            style={{ margin: 0 }}
+            placeholder={t('common:misc.type_comment')}
+            value={body}
+            onChange={e => setBody(e.target.value)}
+            multiline
+            rows={1}
+            margin="normal"
+            variant="outlined"
+            InputLabelProps={{
+                shrink: true
+              }}
+            inputProps={{ 'data-testid': 'body_input' }}
+          />
         </Grid>
-      </form>
+        <Grid item md={2} xs={4}>
+          <Button
+            variant="outlined"
+            color="primary"
+            type="submit"
+            disabled={!body.length}
+            data-testid="share"
+            style={{ height: '56px' }}
+            onClick={handleSubmit}
+          >
+            {t('misc.comment')}
+          </Button>
+        </Grid>
+      </Grid>
       <CommentCard data={data} refetch={refetch} />
       { Boolean(error.length) && (<p className="text-center">{error}</p>)}
     </>

@@ -2,31 +2,41 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
+import { useLazyQuery } from 'react-apollo';
 import { useTranslation } from 'react-i18next';
 import { makeStyles } from '@material-ui/core/styles';
 import { TaskDataList } from './RenderTaskData';
 import FileUploader from './FileUploader';
 import { objectAccessor } from '../../../utils/helpers';
 import MenuList from '../../../shared/MenuList';
+import { SubTasksQuery } from '../graphql/task_queries';
+import { LinearSpinner } from '../../../shared/Loading';
 
 export default function TodoItem({
   task,
-  query,
   handleChange,
   selectedTasks,
   isSelected,
   handleTaskDetails,
   handleCompleteNote,
   handleAddSubTask,
-  handleUploadDocument
+  handleUploadDocument,
 }) {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedTask, setSelectedTask] = useState(null);
-  const [subTasksOpen, setSubTasksOpen] = useState({});
-  const [openSubtask, setOpenSubTask] = useState(false);
+  const [tasksOpen, setTasksOpen] = useState({});
   const anchorElOpen = Boolean(anchorEl);
   const { t } = useTranslation('common');
+
+  const [
+    loadSubTasks,
+    { data, loading: isLoadingSubTasks }
+  ] = useLazyQuery(SubTasksQuery, {
+    variables: { taskId: task?.id, limit: task?.subTasks?.length },
+    fetchPolicy: 'cache-and-network',
+    errorPolicy: 'all'
+  });
 
   const menuList = [
     {
@@ -85,42 +95,45 @@ export default function TodoItem({
     handleClose(event);
   }
 
-  function renderSubtaskAsParent(taskItem) {
-    if (query?.includes('assignees')) {
-      return true;
-    }
-    return !taskItem?.parentNote;
+  function toggleTask(taskItem){
+    setTasksOpen({
+      ...tasksOpen,
+      [taskItem.id]: !objectAccessor(tasksOpen, taskItem.id)
+    });
   }
 
-  function toggleSubTasks(subTask) {
-    setSubTasksOpen({
-      ...subTasksOpen,
-      [subTask.id]: !objectAccessor(subTasksOpen, subTask.id)
-    });
+  function handleParentTaskClick(){
+    if(task && !(data?.taskSubTasks?.length > 0)){
+       loadSubTasks();
+    }
+
+    toggleTask(task)
   }
 
   return (
     <>
-      {renderSubtaskAsParent(task) && (
-        <TaskDataList
-          key={task.id}
-          task={task}
-          handleChange={handleChange}
-          handleFileInputChange={handleFileInputChange}
-          selectedTasks={selectedTasks}
-          isSelected={isSelected}
-          menuData={menuData}
-          clickable={task?.subTasks?.length > 0}
-          handleClick={() => setOpenSubTask(!openSubtask)}
-        />
+      {task && (
+        <div style={{ marginBottom: '10px' }} key={task.id}>
+          <TaskDataList
+            key={task.id}
+            task={task}
+            handleChange={handleChange}
+            handleFileInputChange={handleFileInputChange}
+            selectedTasks={selectedTasks}
+            isSelected={isSelected}
+            menuData={menuData}
+            styles={{marginBottom: 0}}
+            openSubTask={objectAccessor(tasksOpen, task.id)}
+            handleOpenSubTasksClick={handleParentTaskClick}
+          />
+          {isLoadingSubTasks && <LinearSpinner />}
+        </div>
       )}
-      {openSubtask && task?.subTasks?.length > 0 && task?.subTasks?.map(firstLevelSubTask => (
+      {objectAccessor(tasksOpen, task.id) && data?.taskSubTasks?.length > 0 && data?.taskSubTasks?.map(firstLevelSubTask => (
         <>
           <div
             className={classes.levelOne}
             key={firstLevelSubTask.id}
-            onClick={() => toggleSubTasks(firstLevelSubTask)}
-            style={firstLevelSubTask?.subTasks?.length > 0 ? {cursor: 'pointer'} : {}}
           >
             <TaskDataList
               key={firstLevelSubTask.id}
@@ -131,10 +144,12 @@ export default function TodoItem({
               isSelected={isSelected}
               menuData={menuData}
               styles={{backgroundColor: '#F5F5F4'}}
+              openSubTask={objectAccessor(tasksOpen, firstLevelSubTask.id)}
+              handleOpenSubTasksClick={() => toggleTask(firstLevelSubTask)}
             />
           </div>
           {firstLevelSubTask?.subTasks?.length > 0 &&
-            objectAccessor(subTasksOpen, firstLevelSubTask.id) && (
+            objectAccessor(tasksOpen, firstLevelSubTask.id) && (
               <>
                 {firstLevelSubTask?.subTasks?.map(secondLevelSubTask => (
                   <div className={classes.levelTwo} key={secondLevelSubTask.id}>
@@ -181,13 +196,10 @@ const Task = {
   subTasks: PropTypes.arrayOf(PropTypes.object)
 };
 
-TodoItem.defaultProps = {
-  query: ''
-};
+TodoItem.defaultProps = {};
 
 TodoItem.propTypes = {
   task: PropTypes.shape(Task).isRequired,
-  query: PropTypes.string,
   handleChange: PropTypes.func.isRequired,
   selectedTasks: PropTypes.arrayOf(PropTypes.string).isRequired,
   isSelected: PropTypes.bool.isRequired,

@@ -233,6 +233,7 @@ module Types::Queries::Note
 
     context[:site_community].notes.find(task_id)
                             .sub_tasks
+                            .includes(:sub_notes)
                             .eager_load(:assignee_notes, :assignees, :author, :user)
                             .order(created_at: :asc)
                             .limit(limit).offset(offset)
@@ -275,7 +276,7 @@ module Types::Queries::Note
       .notes
       .includes({ user: [:avatar_attachment] }, :author, :sub_notes, :assignees, :assignee_notes)
       .includes(:parent_note)
-      .where(flagged: true)
+      .where(flagged: true, parent_note_id: nil) # Return only parent tasks
       .where.not(category: 'template')
       .order(completed: :desc, created_at: :desc)
       .with_attached_documents
