@@ -38,7 +38,7 @@ module ActionFlows
         'url' => '',
         'user' => '',
         'due_at' => '',
-        'created_date' => '',
+        'updated_date' => '',
         'note_body' => '',
         'new_body' => '',
       },
