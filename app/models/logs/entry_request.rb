@@ -54,7 +54,7 @@ module Logs
     def grant!(grantor, type = 'event')
       update(
         grantor_id: grantor.id,
-        granted_state: type = 'event' ? 1 : 3,
+        granted_state: type == 'event' ? 1 : 3,
         granted_at: Time.zone.now,
         exited_at: nil,
       )

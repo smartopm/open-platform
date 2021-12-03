@@ -99,7 +99,7 @@ export default function VisitView({
                 </Typography>
                 <br />
                 <Typography variant="caption">
-                  {`${visit.guestId ? t('logbook:logbook.host'): t('logbook:log_title.guard')}: `}
+                  {`${visit.guestId && visit.grantedState === 1 ? t('logbook:logbook.host'): t('logbook:log_title.guard')}: `}
                   {' '}
                 </Typography>
                 <Text
@@ -160,7 +160,7 @@ export default function VisitView({
               </Grid>
               <Grid item md={3} xs={6} style={!matches ? { paddingTop: '15px' } : {}}>
                 {
-                  visit.guestId
+                  visit.guestId && visit.grantedState === 1
                   ? (
                     <Chip
                       label={
@@ -176,6 +176,14 @@ export default function VisitView({
                         marginRight: '16px'
                       }}
                       data-testid="guest_validity"
+                      size="small"
+                    />
+                  )
+                  : visit.grantedState === 3 ? (
+                    <Chip
+                      label={t('guest_book.scanned_entry')}
+                      style={{ backgroundColor: theme.palette.info.main, color: 'white', }}
+                      data-testid="scanned_entry"
                       size="small"
                     />
                   )
