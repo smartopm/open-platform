@@ -37,7 +37,7 @@ import { Footer } from './Footer'
 // This should be deprecated in favour of the new dashboard
 export default function Homepage({ authState, quickLinks }) {
   const { t } = useTranslation('dashboard')
-  if (authState.user.userType === 'security_guard') {
+  if (authState.user.userType === 'security_guard' || 'security_supervisor' ) {
     return <Redirect push to="/guard_home" />
   }
 
