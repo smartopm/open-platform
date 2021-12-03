@@ -23,7 +23,7 @@ module Mutations
           associate_with_entry_request(user)
           event_log = instantiate_event_log(user, note, timestamp, digital, subject)
 
-          # send_notifications(user)
+          send_notifications(user)
           return { event_log: event_log, user: user } if event_log.save
 
           raise GraphQL::ExecutionError, event_log.errors.full_messages
