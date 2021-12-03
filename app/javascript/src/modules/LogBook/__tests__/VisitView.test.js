@@ -1,3 +1,4 @@
+/* eslint-disable max-statements */
 import React from 'react';
 import { render, waitFor, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
@@ -54,7 +55,7 @@ describe('Should render Visits View Component', () => {
           },
           {
             id: 'a91dbad4-293849dasda',
-            name: 'Test User',
+            name: 'User',
             user: {
               id: '23easd',
               name: 'user x'
@@ -66,10 +67,25 @@ describe('Should render Visits View Component', () => {
             },
             accessHours: null,
             grantedAt: '2021-10-31 02:51',
-            status: 'pending',
-            exitedAt: null,
+            status: 'approved',
+            exitedAt: '2021-10-31 03:51',
             guestId: "162f7517",
             grantedState: 3
+          },
+          {
+            id: '92384932edas-293849dasda',
+            name: 'Some User',
+            user: {
+              id: 'some some',
+              name: 'user x'
+            },
+            guest: null,
+            accessHours: null,
+            grantedAt: '2021-10-31 02:51',
+            status: 'pending',
+            exitedAt: null,
+            guestId: null,
+            grantedState: 1
           },
         ]
       }
@@ -97,7 +113,7 @@ describe('Should render Visits View Component', () => {
     }
   };
   it('should render proper data', async () => {
-    const { getByAllTestId, getByText } = render(
+    const { getAllByTestId, getByText } = render(
       <Context.Provider value={authState}>
         <MockedProvider mocks={[mocks]} addTypename={false}>
           <MemoryRouter>
@@ -122,23 +138,33 @@ describe('Should render Visits View Component', () => {
       expect(getByText('Test another')).toBeInTheDocument();
       expect(getByText('Js user x')).toBeInTheDocument();
       expect(getByText('logbook:logbook.host:')).toBeInTheDocument();
-      expect(getByAllTestId('entered_at')[0]).toBeInTheDocument();
-      expect(getByAllTestId('exited_at')[0]).toBeInTheDocument();
-      expect(getByAllTestId('log_exit')[0]).toBeInTheDocument();
-      expect(getByAllTestId('guest_validity')[0]).toBeInTheDocument();
-      expect(getByAllTestId('entry_state')[0].textContent).toContain('guest_book.invalid_now');
-      expect(getByAllTestId('entry_state')[1].textContent).toContain('guest_book.scanned_entry');
-      expect(getByAllTestId('request_status')[0]).toBeInTheDocument();
-      expect(getByAllTestId('request_status')[0].textContent).toContain('guest_book.pending');
-      expect(getByAllTestId('log_exit')[0]).not.toBeDisabled();
+      expect(getAllByTestId('entered_at')[0]).toBeInTheDocument();
+      expect(getAllByTestId('request_avatar')[0].textContent).toContain('T');
+      expect(getAllByTestId('request_avatar')[1].textContent).toContain('U');
+      expect(getAllByTestId('request_avatar')[2].textContent).toContain('S');
+      expect(getAllByTestId('exited_at')[0]).toBeInTheDocument();
+      expect(getAllByTestId('exited_at')[0].textContent).toContain('logbook.log_exit');
+      expect(getAllByTestId('exited_at')[1].textContent).toContain('guest_book.exited_at');
+      expect(getAllByTestId('log_exit')[0]).toBeInTheDocument();
+      expect(getAllByTestId('guest_validity')[0]).toBeInTheDocument();
+      expect(getAllByTestId('entry_state')[0].textContent).toContain('guest_book.invalid_now');
+      expect(getAllByTestId('entry_state')[1].textContent).toContain('guest_book.scanned_entry');
+      expect(getAllByTestId('entry_state')[2].textContent).toContain('guest_book.manual_entry');
+      expect(getAllByTestId('host_title')[0].textContent).toContain('logbook:logbook.host');
+      expect(getAllByTestId('host_title')[1].textContent).toContain('logbook:log_title.guard:  ');
+      expect(getAllByTestId('host_title')[2].textContent).toContain('logbook:log_title.guard:  ');
+      expect(getAllByTestId('request_status')[0]).toBeInTheDocument();
+      expect(getAllByTestId('request_status')[0].textContent).toContain('guest_book.pending');
+      expect(getAllByTestId('request_status')[1].textContent).toContain('guest_book.approved');
+      expect(getAllByTestId('log_exit')[0]).not.toBeDisabled();
 
-      fireEvent.click(getByAllTestId('log_exit')[0]);
+      fireEvent.click(getAllByTestId('log_exit')[0]);
       expect(props.handleAddObservation).toBeCalled();
 
-      fireEvent.click(getByAllTestId('card')[0]);
+      fireEvent.click(getAllByTestId('card')[0]);
       expect(mockHistory.push).toBeCalled();
 
-      fireEvent.click(getByAllTestId('user_name')[0]);
+      fireEvent.click(getAllByTestId('user_name')[0]);
       expect(mockHistory.push).toBeCalled();
       expect(mockHistory.push).toBeCalledWith('/user/162f7517'); // check if it routes to the user page
     }, 10);
