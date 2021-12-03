@@ -78,7 +78,7 @@ RSpec.describe Mutations::ActivityLog::Add do
       # we should expect the same count of entry requests
       request = user.community.entry_requests.find_by(guest_id: user.id)
       expect(user.community.entry_requests.count).to eql 1
-      expect(request.granted_state).to eql 1
+      expect(request.granted_state).to eql 3
       expect(request.grantor.id).to eql user.id
     end
 
