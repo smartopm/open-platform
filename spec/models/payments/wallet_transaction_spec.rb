@@ -3,9 +3,16 @@
 require 'rails_helper'
 
 RSpec.describe Payments::WalletTransaction, type: :model do
-  let!(:user) { create(:user_with_community) }
+  let!(:admin_role) { create(:role, name: 'admin') }
+  let!(:resident_role) { create(:role, name: 'resident') }
+  let!(:permission) do
+    create(:permission, module: 'transaction',
+                        role: admin_role,
+                        permissions: %w[can_create_wallet_transaction])
+  end
+  let!(:user) { create(:user_with_community, role: resident_role) }
   let(:community) { user.community }
-  let!(:admin) { create(:admin_user, community_id: community.id) }
+  let!(:admin) { create(:admin_user, community_id: community.id, role: admin_role) }
   let!(:land_parcel) { create(:land_parcel, community_id: community.id) }
   let!(:payment_plan) do
     create(:payment_plan, duration: 2, installment_amount: 100, land_parcel_id: land_parcel.id,

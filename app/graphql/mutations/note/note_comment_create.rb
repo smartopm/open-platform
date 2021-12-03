@@ -19,12 +19,7 @@ module Mutations
       end
 
       def authorized?(_vals)
-        return true if context[:current_user]&.site_manager? ||
-                       ::Policy::ApplicationPolicy.new(
-                         context[:current_user], nil
-                       ).permission?(
-                         module: :note, permission: :can_create_note_comment,
-                       )
+        return true if permitted?(module: :note, permission: :can_create_note_comment)
 
         raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
       end

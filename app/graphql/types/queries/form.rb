@@ -66,38 +66,45 @@ module Types::Queries::Form
 
   def forms
     user = context[:current_user]
-    raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') if user.blank?
+    if user.blank?
+      raise GraphQL::ExecutionError,
+            I18n.t('errors.unauthorized')
+    end
 
     context[:site_community].forms.not_deprecated.by_published(user)
                             .by_role(user.user_type).order(created_at: :desc)
   end
 
   def form(id:)
-    raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') if context[:current_user].blank?
+    if context[:current_user].blank?
+      raise GraphQL::ExecutionError,
+            I18n.t('errors.unauthorized')
+    end
 
     context[:site_community].forms.find(id)
   end
 
   def form_properties(form_id:)
-    raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') if context[:current_user].blank?
+    if context[:current_user].blank?
+      raise GraphQL::ExecutionError,
+            I18n.t('errors.unauthorized')
+    end
 
     context[:site_community].forms.find(form_id).form_properties
   end
 
   def form_property(form_id:, form_property_id:)
-    raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') if context[:current_user].blank?
+    if context[:current_user].blank?
+      raise GraphQL::ExecutionError,
+            I18n.t('errors.unauthorized')
+    end
 
     context[:site_community].forms.find(form_id).form_properties.find_by(id: form_property_id)
   end
 
   def form_user(user_id:, form_user_id:)
-    unless ::Policy::ApplicationPolicy.new(
-      context[:current_user], nil
-    ).permission?(
-      admin: true,
-      module: :forms,
-      permission: :can_view_form_user,
-    ) || context[:current_user]&.id.eql?(user_id)
+    unless permitted?(module: :forms, permission: :can_view_form_user) ||
+           context[:current_user]&.id.eql?(user_id)
       raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
     end
 
@@ -135,13 +142,7 @@ module Types::Queries::Form
   end
 
   def form_submissions(start_date:, end_date:)
-    unless ::Policy::ApplicationPolicy.new(
-      context[:current_user], nil
-    ).permission?(
-      admin: true,
-      module: :forms,
-      permission: :can_view_form_form_submissions,
-    )
+    unless permitted?(module: :forms, permission: :can_view_form_form_submissions)
       raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
     end
 
@@ -188,13 +189,7 @@ module Types::Queries::Form
   #
   # @return [GraphQL::ExecutionError]
   def raise_unauthorized_error
-    return true if ::Policy::ApplicationPolicy.new(
-      context[:current_user], nil
-    ).permission?(
-      admin: true,
-      module: :forms,
-      permission: :can_view_form_entries,
-    )
+    return true if permitted?(module: :forms, permission: :can_view_form_entries)
 
     raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
   end
@@ -211,13 +206,7 @@ module Types::Queries::Form
   end
 
   def form_permissions_check?
-    ::Policy::ApplicationPolicy.new(
-      context[:current_user], nil
-    ).permission?(
-      admin: true,
-      module: :forms,
-      permission: :can_view_form_user_properties,
-    )
+    permitted?(module: :forms, permission: :can_view_form_user_properties)
   end
 
   # Returns query by concatinating status and created at

@@ -4,8 +4,18 @@ require 'rails_helper'
 
 RSpec.describe Mutations::Transaction::WalletTransactionUpdate do
   describe 'update a transaction' do
-    let!(:user) { create(:user_with_community) }
-    let!(:admin) { create(:admin_user, community_id: user.community_id) }
+    let!(:admin_role) { create(:role, name: 'admin') }
+    let!(:resident_role) { create(:role, name: 'resident') }
+    let!(:permission) do
+      create(:permission, module: 'transaction',
+                          role: admin_role,
+                          permissions: %w[can_update_wallet_transaction])
+    end
+    let!(:user) { create(:user_with_community, role: resident_role) }
+    let!(:admin) do
+      create(:admin_user, community_id: user.community_id,
+                          role: admin_role)
+    end
     let!(:user_wallet) { create(:wallet, user: user, balance: 0) }
     let!(:wallet_transaction) do
       user.community.wallet_transactions.create!(user: user, status: 1, amount: 12.0,

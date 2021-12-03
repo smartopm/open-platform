@@ -13,6 +13,7 @@ RSpec.describe Types::Queries::Note do
                             can_fetch_task_comments can_fetch_flagged_notes
                             can_fetch_task_by_id can_fetch_task_histories
                             can_get_task_count can_get_task_stats can_get_own_tasks
+                            can_fetch_all_notes can_fetch_user_notes
                           ])
     end
     let!(:site_worker_permission) do
@@ -221,7 +222,7 @@ RSpec.describe Types::Queries::Note do
                                          site_community: site_worker.community,
                                        }).as_json
       expect(result.dig('errors', 0, 'message'))
-        .to include('Must be logged in to perform this action')
+        .to include('Unauthorized')
     end
 
     it 'should retrieve list of flagged notes' do
@@ -344,7 +345,7 @@ RSpec.describe Types::Queries::Note do
                                          site_community: site_worker.community,
                                        }).as_json
       expect(result.dig('errors', 0, 'message'))
-        .to include('Must be logged in to perform this action')
+        .to include('Unauthorized')
     end
 
     it 'should retrieve note by id with site worker as current user' do
@@ -389,7 +390,7 @@ RSpec.describe Types::Queries::Note do
                                          site_community: site_worker.community,
                                        }, variables: variables).as_json
       expect(result.dig('errors', 0, 'message'))
-        .to include('Must be logged in to perform this action')
+        .to include('Unauthorized')
     end
 
     it 'should raise unauthorised error if request does not have a current user' do
@@ -397,7 +398,7 @@ RSpec.describe Types::Queries::Note do
                                          site_community: site_worker.community,
                                        }).as_json
       expect(result.dig('errors', 0, 'message'))
-        .to include('Must be logged in to perform this action')
+        .to include('Unauthorized')
     end
 
     it 'should retrieve note comments with site manager as current user' do
@@ -423,7 +424,7 @@ RSpec.describe Types::Queries::Note do
                                          site_community: site_worker.community,
                                        }).as_json
       expect(result.dig('errors', 0, 'message'))
-        .to include('Must be logged in to perform this action')
+        .to include('Unauthorized')
     end
   end
 end

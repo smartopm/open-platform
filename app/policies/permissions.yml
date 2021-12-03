@@ -17,6 +17,8 @@ admin:
       - can_get_task_count
       - can_get_task_stats
       - can_get_own_tasks
+      - can_fetch_all_notes
+      - can_fetch_user_notes
   payment_plan:
     permissions:
       - can_cancel_payment_plan
@@ -46,6 +48,9 @@ admin:
       - can_fetch_accounting_stats
       - can_fetch_transaction_summary
       - can_fetch_user_transactions
+      - can_create_wallet_transaction
+      - can_update_wallet_transaction
+      - can_revert_wallet_transaction
   entry_request:
     permissions:
       - can_see_menu_item

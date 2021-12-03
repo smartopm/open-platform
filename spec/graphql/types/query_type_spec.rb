@@ -244,7 +244,8 @@ RSpec.describe Types::QueryType do
                           role: admin_role,
                           permissions: %w[can_get_task_count can_get_task_stats
                                           can_fetch_flagged_notes can_fetch_task_histories
-                                          can_fetch_task_comments can_fetch_task_by_id ])
+                                          can_fetch_task_comments can_fetch_task_by_id
+                                          can_fetch_all_notes can_fetch_user_notes])
     end
 
     let!(:admin) { create(:user_with_community, user_type: 'admin', role: admin_role) }

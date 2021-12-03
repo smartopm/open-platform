@@ -64,7 +64,10 @@ module Types::Queries::Note
   # rubocop:enable Metrics/BlockLength
 
   def all_notes(offset: 0, limit: 50)
-    raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') unless current_user&.admin?
+    unless permitted?(module: :note, permission: :can_fetch_all_notes)
+      raise GraphQL::ExecutionError,
+            I18n.t('errors.unauthorized')
+    end
 
     context[:site_community].notes.where(flagged: false)
                             .includes(:user, :note_comments)
@@ -72,19 +75,16 @@ module Types::Queries::Note
   end
 
   def user_notes(id:)
-    raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') unless current_user&.admin?
+    unless permitted?(module: :note, permission: :can_fetch_user_notes)
+      raise GraphQL::ExecutionError,
+            I18n.t('errors.unauthorized')
+    end
 
     context[:site_community].notes.where(user_id: id, flagged: false)
   end
 
-  # rubocop:disable Metrics/MethodLength
   def flagged_notes(offset: 0, limit: 50, query: nil)
-    unless current_user&.site_manager? ||
-           ::Policy::ApplicationPolicy.new(
-             current_user, nil
-           ).permission?(
-             module: :note, permission: :can_fetch_flagged_notes,
-           )
+    unless permitted?(module: :note, permission: :can_fetch_flagged_notes)
       raise GraphQL::ExecutionError,
             I18n.t('errors.unauthorized')
     end
@@ -95,16 +95,9 @@ module Types::Queries::Note
       .for_site_manager(current_user)
       .limit(limit).offset(offset)
   end
-  # rubocop:enable Metrics/MethodLength
 
-  # rubocop:disable  Metrics/MethodLength
   def task(task_id:)
-    unless current_user&.site_manager? ||
-           ::Policy::ApplicationPolicy.new(
-             current_user, nil
-           ).permission?(
-             module: :note, permission: :can_fetch_task_by_id,
-           )
+    unless permitted?(module: :note, permission: :can_fetch_task_by_id)
       raise GraphQL::ExecutionError,
             I18n.t('errors.unauthorized')
     end
@@ -114,29 +107,17 @@ module Types::Queries::Note
                             .where(flagged: true)
                             .find(task_id)
   end
-  # rubocop:enable  Metrics/MethodLength
 
   def task_comments(task_id:)
-    unless current_user&.site_manager? ||
-           ::Policy::ApplicationPolicy.new(
-             current_user, nil
-           ).permission?(
-             module: :note, permission: :can_fetch_task_comments,
-           )
+    unless permitted?(module: :note, permission: :can_fetch_task_comments)
       raise GraphQL::ExecutionError,
             I18n.t('errors.unauthorized')
     end
     context[:site_community].notes.find(task_id).note_comments.eager_load(:user)
   end
 
-  # rubocop:disable Metrics/MethodLength
   def task_histories(task_id:)
-    unless current_user&.site_manager? ||
-           ::Policy::ApplicationPolicy.new(
-             current_user, nil
-           ).permission?(
-             module: :note, permission: :can_fetch_task_histories,
-           )
+    unless permitted?(module: :note, permission: :can_fetch_task_histories)
       raise GraphQL::ExecutionError,
             I18n.t('errors.unauthorized')
     end
@@ -147,14 +128,8 @@ module Types::Queries::Note
                             .order(created_at: :desc)
   end
 
-  # rubocop:enable Metrics/MethodLength
   def my_tasks_count
-    unless current_user&.site_manager? ||
-           ::Policy::ApplicationPolicy.new(
-             current_user, nil
-           ).permission?(
-             module: :note, permission: :can_get_task_count,
-           )
+    unless permitted?(module: :note, permission: :can_get_task_count)
       raise GraphQL::ExecutionError,
             I18n.t('errors.unauthorized')
     end
@@ -165,12 +140,7 @@ module Types::Queries::Note
   # rubocop:disable Metrics/AbcSize
   # rubocop:disable Metrics/MethodLength
   def task_stats
-    unless current_user&.site_manager? ||
-           ::Policy::ApplicationPolicy.new(
-             current_user, nil
-           ).permission?(
-             module: :note, permission: :can_get_task_stats,
-           )
+    unless permitted?(module: :note, permission: :can_get_task_stats)
       raise GraphQL::ExecutionError,
             I18n.t('errors.unauthorized')
     end
@@ -199,14 +169,8 @@ module Types::Queries::Note
     context[:current_user].tasks.by_completion(false).count
   end
 
-  # rubocop:disable Metrics/MethodLength
   def user_tasks
-    unless current_user&.site_manager? ||
-           ::Policy::ApplicationPolicy.new(
-             current_user, nil
-           ).permission?(
-             module: :note, permission: :can_get_own_tasks,
-           )
+    unless permitted?(module: :note, permission: :can_get_own_tasks)
       raise GraphQL::ExecutionError,
             I18n.t('errors.unauthorized')
     end
@@ -216,17 +180,9 @@ module Types::Queries::Note
                           .order(created_at: :desc)
                           .limit(5)
   end
-  # rubocop:enable Metrics/MethodLength
 
-  # rubocop:disable Metrics/MethodLength
-  # rubocop:disable Metrics/AbcSize
   def task_sub_tasks(task_id:, limit: 3, offset: 0)
-    unless current_user&.site_manager? ||
-           ::Policy::ApplicationPolicy.new(
-             current_user, nil
-           ).permission?(
-             module: :note, permission: :can_fetch_task_by_id,
-           )
+    unless permitted?(module: :note, permission: :can_fetch_task_by_id)
       raise GraphQL::ExecutionError,
             I18n.t('errors.unauthorized')
     end
@@ -239,8 +195,6 @@ module Types::Queries::Note
                             .limit(limit).offset(offset)
                             .with_attached_documents
   end
-  # rubocop:enable Metrics/AbcSize
-  # rubocop:enable Metrics/MethodLength
 
   private
 
