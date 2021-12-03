@@ -168,7 +168,7 @@ export default function TodoList({
       loadTasks();
     }
 
-    // TODO: Remove this quick fix after we move a modularized dashboard for each logged in user 
+    // TODO: Remove this quick fix after we move a modularized dashboard for each logged in user
     if(taskURLFilter) {
       if(taskURLFilter in taskQuery){
         setCurrentTile(taskURLFilter);
@@ -490,7 +490,7 @@ export default function TodoList({
                   'aria-label': 'search tasks'
                 }}
             />
-          </Grid> 
+          </Grid>
           <Grid item md={1} xs={4}>
             <div style={{display: 'flex'}}>
               <IconButton
@@ -568,7 +568,13 @@ export default function TodoList({
             )}
             <br />
             <CenteredContent>
-              <Paginate offSet={offset} limit={limit} active={offset >= 1} handlePageChange={paginate} />
+              <Paginate
+                count={data?.flaggedNotes.length}
+                offSet={offset}
+                limit={limit}
+                active={offset >= 1}
+                handlePageChange={paginate}
+              />
             </CenteredContent>
           </>
         )}
