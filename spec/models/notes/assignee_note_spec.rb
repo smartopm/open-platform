@@ -12,9 +12,4 @@ RSpec.describe Notes::AssigneeNote, type: :model do
     it { is_expected.to belong_to(:user).class_name('Users::User') }
     it { is_expected.to belong_to(:note) }
   end
-
-  describe 'callbacks' do
-    it { is_expected.to callback(:notify_user).after(:create) }
-    it { is_expected.to callback(:notify_user).after(:update) }
-  end
 end

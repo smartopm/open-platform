@@ -32,6 +32,7 @@ RSpec.describe ActionFlows::Actions::Sms do
 
   it 'executes action' do
     id = assign_note.note_id
+    user_note.record_note_history(user)
     flow = ActionFlows::WebFlow.new(action_flow.description, action_flow.event_type,
                                     action_flow.event_condition, action_flow.event_action)
 
