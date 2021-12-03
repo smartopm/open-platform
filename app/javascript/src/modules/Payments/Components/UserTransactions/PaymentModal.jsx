@@ -49,7 +49,8 @@ export default function PaymentModal({
   refetch,
   walletRefetch,
   userData,
-  transRefetch
+  transRefetch,
+  genRefetch
 }) {
   const classes = useStyles();
   const [inputValue, setInputValue] = useState(initialValues);
@@ -229,6 +230,7 @@ export default function PaymentModal({
         refetch();
         walletRefetch();
         transRefetch();
+        genRefetch();
         paymentPlansRefetch();
         handlePaymentData(res.data.transactionCreate.transaction.planPayments);
         setInputValue(initialValues);
@@ -607,6 +609,7 @@ PaymentDetails.propTypes = {
 PaymentModal.defaultProps = {
   transRefetch: () => {},
   walletRefetch: () => {},
+  genRefetch: () => {},
   userData: {},
   userId: null
 };
@@ -621,6 +624,7 @@ PaymentModal.propTypes = {
   refetch: PropTypes.func.isRequired,
   transRefetch: PropTypes.func,
   walletRefetch: PropTypes.func,
+  genRefetch: PropTypes.func,
   currencyData: PropTypes.shape({
     currency: PropTypes.string,
     locale: PropTypes.string

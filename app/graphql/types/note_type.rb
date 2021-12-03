@@ -33,6 +33,7 @@ module Types
     end
 
     # rubocop:disable Metrics/MethodLength
+    # rubocop:disable Metrics/AbcSize
     def attachments
       return nil unless object.documents.attached?
 
@@ -43,11 +44,15 @@ module Types
           filename: doc.blob.filename,
           url: host_url(doc),
           created_at: doc.created_at,
+          uploaded_by: ActiveStorage::Attachment.find_by(
+            blob_id: doc.blob_id, record_type: 'Users::User',
+          )&.record&.name,
         }
         urls << file
       end
       urls
     end
+    # rubocop:enable Metrics/AbcSize
     # rubocop:enable Metrics/MethodLength
   end
 end

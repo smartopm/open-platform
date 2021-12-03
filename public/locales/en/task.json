@@ -50,6 +50,7 @@
   },
   "document": {
     "uploaded_at": "Uploaded at",
+    "uploaded_by": "Uploaded by",
     "download": "Download",
     "no_documents": "Add a document",
     "documents": "Documents",

@@ -13,7 +13,7 @@ namespace :db do
                          campaign comment community contact_info discussion email_template
                          entry_request feedback forms invoice label land_parcel login
                          message settings showroom subscription_plan substatus_log
-                         temparature timesheet transaction upload user gate_access
+                         temparature timesheet transaction upload user gate_access dashboard
                          guest_list profile logout communication community_settings sos].freeze
 
       available_roles.each do |role|

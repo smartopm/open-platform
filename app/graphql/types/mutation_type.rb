@@ -144,6 +144,7 @@ module Types
     field :payment_plan_update, mutation: Mutations::PaymentPlan::PaymentPlanUpdate
     field :transfer_payment_plan, mutation: Mutations::PaymentPlan::TransferPaymentPlan
     field :payment_reminder_create, mutation: Mutations::PaymentPlan::PaymentReminderCreate
+    field :allocate_general_funds, mutation: Mutations::PaymentPlan::AllocateGeneralFunds
 
     # subscription_plan
     field :subscription_plan_create, mutation: Mutations::SubscriptionPlan::SubscriptionPlanCreate

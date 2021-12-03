@@ -36,6 +36,7 @@ module Types
     field :outstanding_days, Integer, null: true
     field :plan_status, String, null: true
     field :upcoming_installment_due_date, GraphQL::Types::ISO8601DateTime, null: true
+    field :general_payments, Float, null: false
 
     # Returns total amount paid for plan statement
     #
@@ -57,6 +58,13 @@ module Types
 
     def paid_payments_exists
       object.plan_payments.exists?(status: :paid)
+    end
+
+    # Returns total amount for general fund
+    #
+    # @return [Float]
+    def general_payments
+      object.plan_payments.paid.sum(:amount)
     end
   end
 end

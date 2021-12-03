@@ -74,7 +74,7 @@ export default function QRScan() {
     console.error(err)
   }
 
-  if (!['security_guard', 'admin', 'custodian'].includes(authState.user.userType.toLowerCase())) {
+  if (!['security_guard', 'admin', 'custodian', 'security_supervisor'].includes(authState.user.userType.toLowerCase())) {
     return <Redirect to='/' />
   }
 

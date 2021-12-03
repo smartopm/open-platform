@@ -16,7 +16,8 @@ export default function Balance({
   refetch,
   balanceData,
   balanceRefetch,
-  transRefetch
+  transRefetch,
+  genRefetch
 }) {
   const authState = useContext(AuthStateContext);
   const classes = useStyles();
@@ -100,6 +101,7 @@ export default function Balance({
         walletRefetch={refetch}
         userData={userData}
         transRefetch={transRefetch}
+        genRefetch={genRefetch}
       />
     </div>
   );
@@ -121,6 +123,7 @@ Balance.defaultProps = {
   transRefetch: () => {},
   refetch: () => {},
   balanceRefetch: () => {},
+  genRefetch: () => {},
   balanceData: {}
 };
 
@@ -146,5 +149,6 @@ Balance.propTypes = {
   }),
   refetch: PropTypes.func,
   transRefetch: PropTypes.func,
-  balanceRefetch: PropTypes.func
+  balanceRefetch: PropTypes.func,
+  genRefetch: PropTypes.func,
 };

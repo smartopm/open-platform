@@ -141,7 +141,7 @@ module Users
                         dependent: :destroy
     # rubocop:enable Rails/InverseOf
     has_one_attached :avatar
-    has_one_attached :document
+    has_many_attached :note_documents
 
     before_save :add_default_state_type_and_role
     after_create :send_email_msg
@@ -152,7 +152,7 @@ module Users
 
     VALID_USER_TYPES = %w[security_guard admin resident contractor
                           prospective_client client visitor
-                          custodian site_worker site_manager].freeze
+                          custodian site_worker site_manager security_supervisor].freeze
     VALID_STATES = %w[valid pending banned expired].freeze
     DEFAULT_PREFERENCE = %w[com_news_sms com_news_email weekly_point_reminder_email].freeze
 

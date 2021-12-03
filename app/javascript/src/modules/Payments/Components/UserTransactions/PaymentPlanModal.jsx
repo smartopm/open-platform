@@ -40,7 +40,8 @@ export default function PaymentPlanModal({
   landParcelsData,
   setMessage,
   openAlertMessage,
-  balanceRefetch
+  balanceRefetch,
+  genRefetch
 }) {
   const [landParcelId, setLandParcelId] = useState('');
   const { t } = useTranslation(['payment', 'common']);
@@ -169,6 +170,7 @@ export default function PaymentPlanModal({
     })
       .then(() => {
         cleanModal();
+        genRefetch();
         paymentPlansRefetch();
         setMessage({ isError: false, detail: 'Successfuly created payment plan' });
         openAlertMessage();
@@ -446,7 +448,10 @@ export function FrequencyButton({ frequency, handleFrequency, data }) {
 PaymentPlanModal.defaultProps = {
   landParcelsData: {
     userLandParcels: []
-  }
+  },
+  genRefetch: () => {},
+  balanceRefetch: () => {},
+  paymentPlansRefetch: () => {}
 }
 
 FrequencyButton.defaultProps = {
@@ -463,7 +468,7 @@ PaymentPlanModal.propTypes = {
     name: PropTypes.string.isRequired
   }).isRequired,
   currency: PropTypes.string.isRequired,
-  paymentPlansRefetch: PropTypes.func.isRequired,
+  paymentPlansRefetch: PropTypes.func,
   landParcelsData: PropTypes.shape({
     userLandParcels: PropTypes.arrayOf(
       PropTypes.shape({
@@ -480,7 +485,8 @@ PaymentPlanModal.propTypes = {
   }),
   setMessage: PropTypes.func.isRequired,
   openAlertMessage: PropTypes.func.isRequired,
-  balanceRefetch: PropTypes.func.isRequired
+  balanceRefetch: PropTypes.func,
+  genRefetch: PropTypes.func
 };
 
 CoOwners.propTypes = {

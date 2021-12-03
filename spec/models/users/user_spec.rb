@@ -156,7 +156,7 @@ RSpec.describe Users::User, type: :model do
         .dependent(:destroy)
     end
     it { is_expected.to have_one(:avatar_attachment) }
-    it { is_expected.to have_one(:document_attachment) }
+    it { is_expected.to have_many(:note_documents_attachments) }
     it { is_expected.to have_many(:plan_ownerships).class_name('Properties::PlanOwnership') }
   end
 
