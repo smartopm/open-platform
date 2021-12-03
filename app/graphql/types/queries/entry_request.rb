@@ -112,7 +112,7 @@ module Types::Queries::EntryRequest
 
     context[:site_community]
       .entry_requests
-      .where(granted_state: 1)
+      .where.not(granted_at: nil)
       .includes(:user, :guest)
       .search(or: [{ query: (query.presence || '.') }, { name: { matches: query } }])
       .limit(limit).offset(offset)
