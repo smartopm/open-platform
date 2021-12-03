@@ -39,6 +39,16 @@ export const TransferPaymentPlanMutation = gql`
   }
 `;
 
+export const AllocateGeneralFunds = gql`
+  mutation AllocateGeneralFunds(
+    $paymentPlanId: ID!
+  ) {
+    allocateGeneralFunds(paymentPlanId: $paymentPlanId) {
+      success
+    }
+  }
+`;
+
 export const PaymentReminderMutation = gql`
 mutation paymentReminderCreate(
   $paymentReminderFields: [PaymentReminderInput!]!

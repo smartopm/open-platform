@@ -211,6 +211,32 @@ module Properties
       start_date + frequency_based_duration(paid_installments + 1) - 1.day
     end
 
+    # rubocop:disable Metrics/AbcSize
+    # rubocop:disable Metrics/MethodLength
+    # Allocates the general fund
+    #
+    # @return [void]
+    def allocate_general_funds
+      return if !status.eql?('active') || user.payment_plans.general_plans.nil?
+
+      payments = user.general_payment_plan.plan_payments.paid.order(:amount)
+      payments.each do |payment|
+        next if pending_balance.eql?(0)
+
+        payment_amount = allocated_amount(payment.amount)
+        if payment_amount.eql?(payment.amount)
+          payment.payment_plan_id = id
+          payment.note = 'Migrated from General Funds' if payment.note.blank?
+          payment.save!
+        else
+          process_split_allocation(payment)
+        end
+        update_pending_balance(payment_amount)
+      end
+    end
+    # rubocop:enable Metrics/AbcSize
+    # rubocop:enable Metrics/MethodLength
+
     private
 
     # Assigns pending balance(product of installmemt amount & duration).
@@ -366,32 +392,6 @@ module Properties
     def plan_is_not_active?
       return true if !status.eql?('active') || start_date.to_date > Time.zone.today
     end
-
-    # rubocop:disable Metrics/AbcSize
-    # rubocop:disable Metrics/MethodLength
-    # Allocates the general fund
-    #
-    # @return [void]
-    def allocate_general_funds
-      return if !status.eql?('active') || user.payment_plans.general_plans.nil?
-
-      payments = user.general_payment_plan.plan_payments.paid.order(:amount)
-      payments.each do |payment|
-        next if pending_balance.eql?(0)
-
-        payment_amount = allocated_amount(payment.amount)
-        if payment_amount.eql?(payment.amount)
-          payment.payment_plan_id = id
-          payment.note = 'Migrated from General Funds' if payment.note.blank?
-          payment.save!
-        else
-          process_split_allocation(payment)
-        end
-        update_pending_balance(payment_amount)
-      end
-    end
-    # rubocop:enable Metrics/AbcSize
-    # rubocop:enable Metrics/MethodLength
 
     # Splits the general payment and cancels the general payment entry
     #

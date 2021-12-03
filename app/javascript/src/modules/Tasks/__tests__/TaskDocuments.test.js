@@ -15,7 +15,8 @@ describe('Task Documents', () => {
       id: '92348129',
       filename: 'picture.png',
       url: 'https://picture.png',
-      created_at: "2020-10-01"
+      created_at: "2020-10-01",
+      uploaded_by: "John Doe"
     }
   ];
 
@@ -71,6 +72,8 @@ describe('Task Documents', () => {
       expect(screen.queryByTestId('filename').textContent).toContain('picture.png');
       expect(screen.queryByTestId('uploaded_at')).toBeInTheDocument();
       expect(screen.queryByTestId('uploaded_at').textContent).toContain('2020-10-01');
+      expect(screen.queryByTestId('uploaded_by')).toBeInTheDocument();
+      expect(screen.queryByTestId('uploaded_by').textContent).toContain('John Doe');
       expect(screen.queryByTestId('more_details')).toBeInTheDocument();
       expect(screen.queryByTestId('closing_divider')).toBeInTheDocument();
     });

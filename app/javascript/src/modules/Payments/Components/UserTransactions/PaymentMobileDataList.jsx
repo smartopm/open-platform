@@ -16,7 +16,10 @@ export default function PlanMobileDataList({ keys, data }) {
             <Grid item xs={6}>
               {objectAccessor(item, keys[3].title)}
             </Grid>
-            <Grid item xs={6} style={{ textAlign: 'right' }}>
+            <Grid item xs={4} style={{ textAlign: 'right' }}>
+              {objectAccessor(item, keys[4].title)}
+            </Grid>
+            <Grid item xs={2} style={{ textAlign: 'right' }}>
               {objectAccessor(item, keys[5].title)}
             </Grid>
           </Grid>

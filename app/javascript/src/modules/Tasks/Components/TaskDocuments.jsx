@@ -9,7 +9,7 @@ import {
   ListItemText,
   Menu,
   MenuItem,
-  Typography,
+  Typography
 } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
@@ -44,19 +44,19 @@ export default function TaskDocuments({ taskId }) {
   useEffect(() => {
     if (status === 'ERROR') {
       setMessageDetails({ isError: true, message: t('document.upload_error') });
-      return
-    };
+      return;
+    }
 
-    if(status === 'DONE') {
-      taskUpdate({ variables: {  id: taskId, documentBlobId: signedBlobId }})
-      .then(() => {
-        refetch();
-      })
-      .catch((err) => {
-        setMessageDetails({ isError: true, message: err.message });
-      });
-    };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    if (status === 'DONE') {
+      taskUpdate({ variables: { id: taskId, documentBlobId: signedBlobId } })
+        .then(() => {
+          refetch();
+        })
+        .catch(err => {
+          setMessageDetails({ isError: true, message: err.message });
+        });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status, taskId, signedBlobId, taskUpdate, refetch]);
 
   const menuOpen = Boolean(anchorEl);
@@ -104,8 +104,8 @@ export default function TaskDocuments({ taskId }) {
             <input
               hidden
               type="file"
-              onChange={(event) => handleUploadDocument(event)}
-              id='task-attach-file'
+              onChange={event => handleUploadDocument(event)}
+              id="task-attach-file"
               data-testid="add_document_input"
             />
             <AddIcon />
@@ -123,15 +123,32 @@ export default function TaskDocuments({ taskId }) {
                     <ListItemText
                       disableTypography
                       primary={(
-                        <Typography variant="body1" color="primary" style={{ fontWeight: 700 }} data-testid="filename">
+                        <Typography
+                          variant="body1"
+                          color="primary"
+                          style={{ fontWeight: 700 }}
+                          data-testid="filename"
+                        >
                           {doc.filename}
                         </Typography>
-                    )}
+                      )}
                       secondary={(
-                        <Typography component="span" variant="body2" data-testid="uploaded_at">
-                          {`${t('document.uploaded_at')}: ${dateToString(doc.created_at)}`}
-                        </Typography>
-                    )}
+                        <>
+                          <Typography component="span" variant="body2" data-testid="uploaded_at">
+                            {`${t('document.uploaded_at')}: ${dateToString(doc.created_at)}`}
+                          </Typography>
+                          {doc.uploaded_by && (
+                            <Typography
+                              component="span"
+                              variant="body2"
+                              data-testid="uploaded_by"
+                              style={{ marginLeft: '20px' }}
+                            >
+                              {`${t('document.uploaded_by')}: ${doc.uploaded_by}`}
+                            </Typography>
+                          )}
+                        </>
+                      )}
                     />
                   </Grid>
                   <Grid item xs={1} className="">
@@ -155,7 +172,9 @@ export default function TaskDocuments({ taskId }) {
         </List>
       ) : (
         <>
-          <Typography data-testid="no_documents" className={classes.noDocuments}>{t('document.no_documents')}</Typography>
+          <Typography data-testid="no_documents" className={classes.noDocuments}>
+            {t('document.no_documents')}
+          </Typography>
         </>
       )}
       <Menu
@@ -178,7 +197,7 @@ export default function TaskDocuments({ taskId }) {
       </Menu>
     </div>
   );
-};
+}
 
 const useStyles = makeStyles(() => ({
   documentsSection: {
@@ -197,5 +216,5 @@ const useStyles = makeStyles(() => ({
 }));
 
 TaskDocuments.propTypes = {
-  taskId: PropTypes.string.isRequired,
+  taskId: PropTypes.string.isRequired
 };

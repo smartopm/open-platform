@@ -18,6 +18,7 @@ module Mutations
       field :note, Types::NoteType, null: true
 
       # rubocop:disable Metrics/AbcSize
+      # rubocop:disable Metrics/MethodLength
       def resolve(id:, **attributes)
         note = context[:site_community].notes.find(id)
         raise_note_not_found_error(note)
@@ -27,13 +28,17 @@ module Mutations
           raise GraphQL::ExecutionError, note.errors.full_messages
         end
 
-        attach_document(note, attributes[:document_blob_id]) if attributes[:document_blob_id]
+        if attributes[:document_blob_id]
+          attach_document(note, attributes[:document_blob_id])
+          context[:current_user].note_documents.attach(attributes[:document_blob_id])
+        end
 
         updates_hash = record_attributes(update_attributes, note)
         note.record_note_history(context[:current_user], updates_hash)
         { note: note }
       end
       # rubocop:enable Metrics/AbcSize
+      # rubocop:enable Metrics/MethodLength
 
       def record_attributes(attributes, note)
         updates_hash = {}
