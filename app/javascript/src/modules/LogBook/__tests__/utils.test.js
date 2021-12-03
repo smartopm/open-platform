@@ -40,12 +40,16 @@ describe('logbook utils', () => {
     const translate = jest.fn(() => 'invalid');
     const validity = checkRequests(request1, translate, tz);
     const validityCheck2 = checkRequests(request2, translate, tz);
+    const noRequests = checkRequests(null, translate, tz);
 
     expect(validity.valid).toBe(false);
     expect(validity.title).toEqual('invalid');
 
     expect(validityCheck2.valid).toBe(false);
     expect(validityCheck2.title).toEqual('invalid');
+
+    expect(noRequests.valid).toBe(false);
+    expect(noRequests.title).toEqual('invalid');
   });
 
   it('returns true for a valid guest', () => {

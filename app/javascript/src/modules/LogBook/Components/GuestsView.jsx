@@ -142,7 +142,7 @@ export default function GuestsView({
                 <Typography variant="caption">
                   {t('guest_book.start_of_visit', {
                     date: dateToString(
-                      visit.closestEntryTime.visitationDate
+                      visit.closestEntryTime?.visitationDate
                     )
                   })}
                 </Typography>
@@ -151,9 +151,9 @@ export default function GuestsView({
                 <Typography variant="caption">
                   {t('guest_book.visit_time', {
                     startTime: dateTimeToString(
-                      visit.closestEntryTime.startsAt
+                      visit.closestEntryTime?.startsAt
                     ),
-                    endTime: dateTimeToString(visit.closestEntryTime.endsAt)
+                    endTime: dateTimeToString(visit.closestEntryTime?.endsAt)
                   })}
                 </Typography>
               </Grid>
