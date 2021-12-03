@@ -45,7 +45,7 @@ RSpec.describe Types::Queries::Form do
     end
     let!(:form_user) do
       create(:form_user, form: form, user: current_user, status: 'approved',
-      status_updated_by: admin)
+                         status_updated_by: admin)
     end
     let(:user_form_property) do
       create(:user_form_property, form_property: form_property_text, form_user: form_user,

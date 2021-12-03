@@ -143,7 +143,7 @@ module Users
     has_one_attached :avatar
     has_one_attached :document
 
-    before_save :add_default_state_type_and_role
+    before_validation :add_default_state_type_and_role
     after_create :send_email_msg
     after_create :add_notification_preference
 
@@ -442,13 +442,11 @@ module Users
     end
 
     def add_default_state_type_and_role
-      # ap "INSIDE METHOD"
       # TODO(Nurudeen): Move these to DB level as default values
       self.state ||= 'pending'
       self.user_type ||= 'visitor'
       community_role = Role.find_by(name: self.user_type, community_id: community_id)
       self.role = (community_role || Role.find_by(name: self.user_type, community_id: nil))
-      # ap self.role.name
     end
 
     def create_new_phone_token

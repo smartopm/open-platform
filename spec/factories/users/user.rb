@@ -66,7 +66,7 @@ FactoryBot.define do
       community
     end
 
-    factory :client  do
+    factory :client do
       user_type { 'client' }
       role { create(:role, name: 'client') }
       community

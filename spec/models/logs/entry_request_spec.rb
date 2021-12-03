@@ -42,10 +42,10 @@ RSpec.describe Logs::EntryRequest, type: :model do
     let!(:guard) { create(:security_guard) }
     let!(:non_admin) { create(:user, community: guard.community) }
     let!(:admin) { create(:admin_user, community: guard.community) }
-    
+
     it 'should be able to create a basic entrylog' do
       entry_request = guard.entry_requests.create(reason: 'Visiting',
-                                                    name: 'Visitor Joe', nrc: '012345')
+                                                  name: 'Visitor Joe', nrc: '012345')
       expect(entry_request.community_id).to eql guard.community_id
       expect(entry_request.pending?).to be true
       expect(Logs::EventLog.where(ref_id: entry_request.id).count).to eql 0
@@ -62,7 +62,7 @@ RSpec.describe Logs::EntryRequest, type: :model do
 
     it 'should handle an admin granting a request' do
       entry_request = guard.entry_requests.create(reason: 'Visiting',
-                                                    name: 'Visitor Joe', nrc: '012345')
+                                                  name: 'Visitor Joe', nrc: '012345')
       entry_request.grant!(admin)
       expect(entry_request.pending?).to be false
       expect(entry_request.denied?).to be false
@@ -74,7 +74,7 @@ RSpec.describe Logs::EntryRequest, type: :model do
 
     it 'should handle a guard denying a request' do
       entry_request = guard.entry_requests.create(reason: 'Visiting',
-                                                    name: 'Visitor Joe', nrc: '012345')
+                                                  name: 'Visitor Joe', nrc: '012345')
       entry_request.deny!(guard)
       expect(entry_request.pending?).to be false
       expect(entry_request.denied?).to be true
@@ -89,7 +89,7 @@ RSpec.describe Logs::EntryRequest, type: :model do
       community.default_users = [user.id]
       community.save
       entry_request = user.entry_requests.create(reason: 'Prospective Client',
-                                                  name: 'Visitor Joe', nrc: '012345')
+                                                 name: 'Visitor Joe', nrc: '012345')
       create_task = entry_request.create_entry_task
 
       expect(create_task[:user_id]).to eql user.id
@@ -98,7 +98,7 @@ RSpec.describe Logs::EntryRequest, type: :model do
 
     it 'should not throw error when guard grants entries' do
       entry_request = guard.entry_requests.create(reason: 'Visiting',
-                                                    name: 'Visitor Joe', nrc: '012345')
+                                                  name: 'Visitor Joe', nrc: '012345')
       expect { entry_request.deny!(non_admin) }
         .not_to raise_exception
     end
