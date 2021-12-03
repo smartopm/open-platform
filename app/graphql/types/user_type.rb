@@ -27,7 +27,6 @@ module Types
     field :updated_at, GraphQL::Types::ISO8601DateTime, null: false
     field :last_activity_at, GraphQL::Types::ISO8601DateTime, null: true
     field :avatar_url, String, null: true
-    field :document_url, String, null: true
     field :source, String, null: true, visible: { roles: %i[admin security_guard], user: :id }
     field :stage, String, null: true, visible: { roles: %i[admin security_guard], user: :id }
     field :owner_id, ID, null: true, visible: { roles: %i[admin security_guard], user: :id }
@@ -58,12 +57,6 @@ module Types
       return nil unless object.avatar.attached?
 
       host_url(object.avatar)
-    end
-
-    def document_url
-      return nil unless object.document.attached?
-
-      host_url(object.document)
     end
 
     def host_url(type)
