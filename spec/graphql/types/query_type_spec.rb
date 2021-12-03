@@ -107,7 +107,7 @@ RSpec.describe Types::QueryType do
   end
 
   describe 'event logs query for a user' do
-    let!(:current_user) {  create(:security_guard) }
+    let!(:current_user) { create(:security_guard) }
     let!(:user) { create(:user, community: current_user.community) }
     before :each do
       3.times do
@@ -165,29 +165,29 @@ RSpec.describe Types::QueryType do
   end
 
   describe 'security guard list' do
-      let!(:user) { create(:security_guard) }
-      let!(:security_guard1) do
-        create(:security_guard, community_id: user.community_id, role: user.role)
-      end
-      let!(:security_guard2) do
-        create(:security_guard, community_id: user.community_id, role: user.role)
-      end
-      let!(:community) { create(:community) }
-      let!(:role) { create(:role, name: 'security_guard', community: community) }
-      let!(:security_guard_another_commuinity) do
-        create(:security_guard, community: community, role: role)
-      end
-      let!(:current_user) { user }
-    
-      let(:query) {
-        %(query {
+    let!(:user) { create(:security_guard) }
+    let!(:security_guard1) do
+      create(:security_guard, community_id: user.community_id, role: user.role)
+    end
+    let!(:security_guard2) do
+      create(:security_guard, community_id: user.community_id, role: user.role)
+    end
+    let!(:community) { create(:community) }
+    let!(:role) { create(:role, name: 'security_guard', community: community) }
+    let!(:security_guard_another_commuinity) do
+      create(:security_guard, community: community, role: role)
+    end
+    let!(:current_user) { user }
+
+    let(:query) do
+      %(query {
           securityGuards {
             id
             name
             userType
           }
         })
-      }
+    end
 
     it 'returns all security guards logs' do
       result = DoubleGdpSchema.execute(query, context: {
@@ -204,11 +204,10 @@ RSpec.describe Types::QueryType do
   end
 
   describe 'feedback' do
-    
     let!(:user) { create(:security_guard) }
     let!(:current_user) { create(:admin_user, community: user.community) }
 
-    let(:query) {
+    let(:query) do
       %(query {
               usersFeedback {
                 review
@@ -218,7 +217,7 @@ RSpec.describe Types::QueryType do
                 }
               }
           })
-    }
+    end
 
     it 'returns all user feedback' do
       result = DoubleGdpSchema.execute(query, context: {
@@ -250,8 +249,10 @@ RSpec.describe Types::QueryType do
 
     let!(:admin) { create(:user_with_community, user_type: 'admin', role: admin_role) }
     let!(:current_user) { create(:user, community_id: admin.community_id) }
-    let!(:searchable_user) { create(:user, name: 'Henry Tim', community_id: admin.community_id,
-                              role: current_user.role) }
+    let!(:searchable_user) do
+      create(:user, name: 'Henry Tim', community_id: admin.community_id,
+                    role: current_user.role)
+    end
     let!(:notes) do
       admin.community.notes.create!(
         body: 'This is a note',

@@ -5,6 +5,7 @@ require 'rails_helper'
 # rubocop:disable Layout/LineLength
 RSpec.describe UserImportJob, type: :job do
   let!(:non_admin) { create(:user_with_community) }
+  let!(:prospective_client_role) { create(:role, name: 'prospective_client') }
   let!(:user) { create(:admin_user, community_id: non_admin.community_id) }
   csv_string = "Name,Email primary,Phone number primary,Phone number secondary 1,Phone number secondary 2,User type,Labels,State,Expiration date,Notes on client\nThomas Shalongolo,thomas@gmail.com,+234979063360,,,Prospective Client,Residency program Waitlist;Some other label,valid,,some notes here\nJide Babs,jide@gmail.com,+260979013360,,,Prospective Client,Residency program Waitlist;Some other label,pending,,some notes here"
 

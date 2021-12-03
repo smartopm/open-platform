@@ -44,7 +44,7 @@ RSpec.describe Mutations::SubstatusLog::SubstatusLogUpdate do
     end
 
     it 'records who made the update' do
-      other_admin = create(:admin_user, community_id: user.community_id)
+      other_admin = create(:admin_user, community_id: user.community_id, role: admin.role)
       log = create(:substatus_log,
                    community_id: user.community_id,
                    user_id: user.id,

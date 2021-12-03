@@ -13,7 +13,7 @@ RSpec.describe Types::Queries::Payment do
       create(:payment_plan, land_parcel_id: land_parcel.id, user_id: user.id, plot_balance: 0)
     end
     let!(:invoice_one) do
-      create(:invoice, community_id:community.id, land_parcel: land_parcel,
+      create(:invoice, community_id: community.id, land_parcel: land_parcel,
                        payment_plan: payment_plan, user_id: user.id, status: 'in_progress',
                        created_by: user)
     end

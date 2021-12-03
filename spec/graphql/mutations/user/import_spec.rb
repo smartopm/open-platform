@@ -13,8 +13,11 @@ RSpec.describe Mutations::User::Import do
                           permissions: %w[can_import_users])
     end
 
-    let!(:non_admin) { create(:user_with_community, role: resident_role) }
-    let!(:user) { create(:admin_user, community_id: non_admin.community_id, role: admin_role) }
+    let!(:non_admin) { create(:user_with_community, role: resident_role, user_type: 'resident') }
+    let!(:user) do
+      create(:admin_user, community_id: non_admin.community_id, role: admin_role,
+                          user_type: 'admin')
+    end
 
     let(:query) do
       <<~GQL

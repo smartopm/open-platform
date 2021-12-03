@@ -5,7 +5,7 @@ require 'rails_helper'
 RSpec.describe Mutations::Invoice::InvoiceCreate do
   describe 'create for invoice' do
     let!(:user) { create(:user_with_community) }
-    let!(:user_with_balance) { create(:user, community_id: user.community_id) }
+    let!(:user_with_balance) { create(:user, community_id: user.community_id, role: user.role) }
     let!(:user_wallet) { create(:wallet, user: user_with_balance, balance: 100) }
     let!(:admin) { create(:admin_user, community_id: user.community_id) }
     let!(:land_parcel) { create(:land_parcel, community_id: user.community_id) }

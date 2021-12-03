@@ -15,10 +15,12 @@ RSpec.describe Mutations::Label::UserLabelCreate do
     let!(:admin_user) { create(:admin_user, user_type: 'admin', role: admin_role) }
 
     let!(:first_user) do
-      create(:user, community_id: admin_user.community_id, role: resident_role, user_type: 'resident')
+      create(:user, community_id: admin_user.community_id, role: resident_role,
+                    user_type: 'resident')
     end
     let!(:second_user) do
-      create(:user, community_id: admin_user.community_id, role: resident_role, user_type: 'resident')
+      create(:user, community_id: admin_user.community_id, role: resident_role,
+                    user_type: 'resident')
     end
 
     let!(:first_label) { create(:label, community_id: admin_user.community_id) }
