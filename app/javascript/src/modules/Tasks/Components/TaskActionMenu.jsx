@@ -97,7 +97,6 @@ export default function TaskActionMenu({
 }
 
 export function TaskQuickAction({ 
-  currentTile,
   checkedOptions,
   handleCheckOptions,
  }){
@@ -131,9 +130,9 @@ export function TaskQuickAction({
   }
 
   return (
-    <div style={{ marginRight: '0.9rem' }}>
+    <>
       <ButtonGroup color="primary" ref={anchorRef} aria-label="outlined primary button group split button">
-        <Button style={matches ? {fontSize: '9px'} : {}}>
+        <Button style={matches ? {fontSize: '9px'} : { width: '159px'}}>
           {(checkedOptions === 'none')
           ? t('misc.select')
           :  objectAccessor(options, selectedKey)}
@@ -161,7 +160,7 @@ export function TaskQuickAction({
             <Paper>
               <ClickAwayListener onClickAway={handleClose}>
                 <MenuList id="split-button-menu" data-testid="select_option">
-                  {currentTile && (Object.entries(options).map(([key, val]) => (
+                  {Object.entries(options).map(([key, val]) => (
                     <MenuItem
                       key={key}
                       selected={key === selectedKey}
@@ -170,14 +169,14 @@ export function TaskQuickAction({
                     >
                       {val}
                     </MenuItem>
-                    )))}
+                    ))}
                 </MenuList>
               </ClickAwayListener>
             </Paper>
           </Grow>
           )}
       </Popper>
-    </div>
+    </>
   )
 }
 
@@ -229,7 +228,6 @@ TaskActionMenu.propTypes = {
 
 
 TaskQuickAction.propTypes = {
-  currentTile: PropTypes.string.isRequired,
   checkedOptions: PropTypes.string.isRequired,
   handleCheckOptions: PropTypes.func.isRequired,
 }

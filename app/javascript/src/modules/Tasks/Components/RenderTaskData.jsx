@@ -312,7 +312,7 @@ export function TaskDataList({
             </Grid>
           </Grid>
         </Grid>
-        <Grid item md={2} style={{ display: 'flex', alignItems: 'center', justifyContent: 'end' }} data-testid="task_menu_section">
+        <Grid item md={1} style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }} data-testid="task_menu_section">
           <Hidden smDown>
             {task.completed
               ? <Chip size="small" label={t('task.complete')} className={classes.completed} /> 
