@@ -90,15 +90,6 @@ export default function TodoList({
   const path = useParamsQuery()
   const taskURLFilter = path.get('filter');
 
-  const taskHeader = [
-    { title: 'Select', col: 1 },
-    { title: 'Task', value: t('common:table_headers.task'), col: 4 },
-    { title: 'Created By', value: t('common:table_headers.created_by'), col: 3 },
-    { title: 'Duedate', value: t('common:table_headers.due_date'), col: 1 },
-    { title: 'Assignees',value: t('common:table_headers.assignees'), col: 2 },
-    { title: 'Menu', value: t('common:table_headers.menu'), col: 1 }
-  ];
-
   const { onChange, signedBlobId, status } = useFileUpload({
     client: useApolloClient()
   });
@@ -177,7 +168,7 @@ export default function TodoList({
       loadTasks();
     }
 
-    // TODO: Remove this quick fix after we move a modularized dashboard for each logged in user 
+    // TODO: Remove this quick fix after we move a modularized dashboard for each logged in user
     if(taskURLFilter) {
       if(taskURLFilter in taskQuery){
         setCurrentTile(taskURLFilter);
@@ -499,7 +490,7 @@ export default function TodoList({
                   'aria-label': 'search tasks'
                 }}
             />
-          </Grid> 
+          </Grid>
           <Grid item md={1} xs={4}>
             <div style={{display: 'flex'}}>
               <IconButton
@@ -561,7 +552,6 @@ export default function TodoList({
                 {data?.flaggedNotes.map(task => (
                   <TodoItem
                     key={task.id}
-                    query={joinedTaskQuery}
                     task={task}
                     handleChange={handleChange}
                     selectedTasks={selectedTasks}
@@ -570,7 +560,6 @@ export default function TodoList({
                     handleCompleteNote={handleCompleteNote}
                     handleAddSubTask={handleAddSubTask}
                     handleUploadDocument={handleUploadDocument}
-                    headers={taskHeader}
                   />
                 ))}
               </div>
@@ -579,7 +568,13 @@ export default function TodoList({
             )}
             <br />
             <CenteredContent>
-              <Paginate offSet={offset} limit={limit} active={offset >= 1} handlePageChange={paginate} />
+              <Paginate
+                count={data?.flaggedNotes.length}
+                offSet={offset}
+                limit={limit}
+                active={offset >= 1}
+                handlePageChange={paginate}
+              />
             </CenteredContent>
           </>
         )}

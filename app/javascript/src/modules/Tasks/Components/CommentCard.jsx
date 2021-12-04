@@ -110,6 +110,7 @@ export default function CommentCard({ data, refetch }) {
                       data-testid="more_details"
                       onClick={event => handleOpenMenu(event, com)}
                       size="small"
+                      color="primary"
                     >
                       <MoreVertIcon />
                     </IconButton>

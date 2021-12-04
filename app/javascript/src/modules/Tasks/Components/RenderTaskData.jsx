@@ -8,6 +8,8 @@ import MoreVertIcon from '@material-ui/icons/MoreVert';
 import AccountTreeIcon from '@material-ui/icons/AccountTree';
 import QuestionAnswerIcon from '@material-ui/icons/QuestionAnswer';
 import AttachFileIcon from '@material-ui/icons/AttachFile';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { useTheme, makeStyles } from '@material-ui/styles';
@@ -134,7 +136,9 @@ export function TaskDataList({
   menuData,
   clickable,
   handleClick,
-  styles
+  styles,
+  openSubTask,
+  handleOpenSubTasksClick
 }) {
   const classes = useStyles();
   const { t } = useTranslation('task');
@@ -160,6 +164,30 @@ export function TaskDataList({
             key={task.id}
             style={{ padding: 0 }}
           />
+          {task?.subTasks?.length > 0
+            ? (
+              <IconButton
+                aria-controls="show-task-subtasks-icon"
+                aria-haspopup="true"
+                data-testid="show_task_subtasks"
+                size="medium"
+                onClick={handleOpenSubTasksClick}
+              >
+                {openSubTask
+                  ? <KeyboardArrowUpIcon fontSize="small" color="primary" />
+                  : <KeyboardArrowDownIcon fontSize="small" color="primary" />}
+              </IconButton>
+            ) : (
+              <IconButton
+                aria-controls="show-task-subtasks-icon"
+                aria-haspopup="true"
+                data-testid="show_task_subtasks"
+                size="medium"
+                disabled
+              >
+                <KeyboardArrowDownIcon fontSize="small" />
+              </IconButton>
+          )}
           <Typography
             variant="body2"
             data-testid="task_body"
@@ -204,17 +232,12 @@ export function TaskDataList({
             </Typography>
           </Grid>
         </Hidden>
-        <Grid item md={2} xs={6} data-testid="task_assignee" style={{ display: 'flex', alignItems: 'center' }}>
-          {task.assignees.length > 0 ? (
+        <Grid item md={1} xs={6} data-testid="task_assignee" style={{ display: 'flex', alignItems: 'center' }}>
+          {task.assignees.length > 0 && (
             <Grid container>
-              <Grid item md={6} xs={6}>
-                <Typography variant={matches ? 'caption' : 'body2'} component="span" style={matches ? { paddingLeft: '3px'} : {}}>
-                  {t('task.assigned_to')}
-                </Typography>
-              </Grid>
               {/* Restrict to 2 users */}
               {task.assignees.slice(0, 2).map(user => (
-                <Grid item md={2} xs={2} key={user.id}>
+                <Grid item md={4} xs={2} key={user.id}>
                   <LinkToUserAvatar key={user.id} user={user} />
                 </Grid>
                 ))}
@@ -238,14 +261,10 @@ export function TaskDataList({
                 )}
               </Grid>
             </Grid>
-          ) : (
-            <Typography variant="body2">
-              {t('task.no_assignee')}
-            </Typography>
           )}
         </Grid>
         <Grid item data-testid="task_details_section" md={2} xs={6}>
-          <Grid container style={{ display: 'flex', justifyContent: 'center' }}>
+          <Grid container style={{ display: 'flex', justifyContent: 'end' }}>
             <Grid item md={2} xs={2}>
               <IconButton
                 aria-controls="task-subtasks-icon"
@@ -293,7 +312,7 @@ export function TaskDataList({
             </Grid>
           </Grid>
         </Grid>
-        <Grid item md={1} style={{ display: 'flex', alignItems: 'center', justifyContent: 'end'}} data-testid="task_menu_section">
+        <Grid item md={2} style={{ display: 'flex', alignItems: 'center', justifyContent: 'end' }} data-testid="task_menu_section">
           <Hidden smDown>
             {task.completed
               ? <Chip size="small" label={t('task.complete')} className={classes.completed} /> 
@@ -340,6 +359,8 @@ TaskDataList.defaultProps = {
   clickable: false,
   handleClick: null,
   styles: {},
+  openSubTask: false,
+  handleOpenSubTasksClick: null,
 }
 TaskDataList.propTypes = {
   task: PropTypes.shape(Task).isRequired,
@@ -353,6 +374,8 @@ TaskDataList.propTypes = {
   handleClick: PropTypes.func,
   // eslint-disable-next-line react/forbid-prop-types
   styles: PropTypes.object,
+  openSubTask: PropTypes.bool,
+  handleOpenSubTasksClick: PropTypes.func,
 };
 LinkToUser.propTypes = {
   userId: PropTypes.string.isRequired,
@@ -369,14 +392,14 @@ LinkToUserAvatar.propTypes = {
 
 const useStyles = makeStyles(() => ({
   taskBody: {
-    maxWidth: '53ch',
+    maxWidth: '42ch',
     overflow: 'hidden',
     whiteSpace: 'nowrap',
     textOverflow: 'ellipsis',
     paddingLeft: '3px'
   },
   taskBodyMobile: {
-    maxWidth: '21ch',
+    maxWidth: '17ch',
     overflow: 'hidden',
     whiteSpace: 'nowrap',
     textOverflow: 'ellipsis',
