@@ -5,6 +5,8 @@ import { Grid } from '@material-ui/core';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { makeStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
+import IconButton from '@material-ui/core/IconButton';
+import CloseIcon from '@material-ui/icons/Close';
 import DatePickerDialog, {
   DateAndTimePickers,
   ThemedTimePicker
@@ -31,6 +33,7 @@ export default function RenderForm({ formPropertiesData, formId, refetch, editMo
     formState,
     formProperties,
     uploadedImages,
+    setUploadedImages,
     setFormProperties,
     setFormState,
     onChange,
@@ -87,6 +90,11 @@ export default function RenderForm({ formPropertiesData, formId, refetch, editMo
     onChange(event.target.files[0]);
   }
 
+  function onImageRemove(imagePropertyId) {
+    const filteredImages = uploadedImages.filter(im => im.propertyId !== imagePropertyId);
+    setUploadedImages(filteredImages);
+  }
+
   async function handleSignatureUpload() {
     setFormState({ ...formState, signed: true });
     const url64 = signRef.current.toDataURL('image/png');
@@ -117,7 +125,7 @@ export default function RenderForm({ formPropertiesData, formId, refetch, editMo
             handleValue={event => handleValueChange(event, formPropertiesData)}
             editable={editable}
             inputValidation={{
-              error: checkRequiredFormPropertyIsFilled(formPropertiesData, formState),
+              error: checkRequiredFormPropertyIsFilled(formPropertiesData, formState)
             }}
           />
         </Grid>
@@ -135,12 +143,14 @@ export default function RenderForm({ formPropertiesData, formId, refetch, editMo
         <Grid item xs={editMode ? 10 : 12}>
           <DatePickerDialog
             id={formPropertiesData.id}
-            selectedDate={objectAccessor(formProperties, formPropertiesData.fieldName)?.value || null}
+            selectedDate={
+              objectAccessor(formProperties, formPropertiesData.fieldName)?.value || null
+            }
             handleDateChange={date => handleDateChange(date, formPropertiesData)}
             label={`${formPropertiesData.fieldName} ${formPropertiesData.required ? '*' : ''}`}
             inputValidation={{
               error: checkRequiredFormPropertyIsFilled(formPropertiesData, formState),
-              fieldName: formPropertiesData.fieldName,
+              fieldName: formPropertiesData.fieldName
             }}
           />
         </Grid>
@@ -164,7 +174,7 @@ export default function RenderForm({ formPropertiesData, formId, refetch, editMo
             style={{ width: '100%' }}
             inputValidation={{
               error: checkRequiredFormPropertyIsFilled(formPropertiesData, formState),
-              fieldName: formPropertiesData.fieldName,
+              fieldName: formPropertiesData.fieldName
             }}
           />
         </Grid>
@@ -182,12 +192,14 @@ export default function RenderForm({ formPropertiesData, formId, refetch, editMo
         <Grid item xs={editMode ? 10 : 12}>
           <DateAndTimePickers
             id={formPropertiesData.id}
-            selectedDateTime={objectAccessor(formProperties, formPropertiesData.fieldName)?.value || null}
+            selectedDateTime={
+              objectAccessor(formProperties, formPropertiesData.fieldName)?.value || null
+            }
             handleDateChange={date => handleDateChange(date, formPropertiesData)}
             label={`${formPropertiesData.fieldName} ${formPropertiesData.required ? '*' : ''}`}
             inputValidation={{
               error: checkRequiredFormPropertyIsFilled(formPropertiesData, formState),
-              fieldName: formPropertiesData.fieldName,
+              fieldName: formPropertiesData.fieldName
             }}
           />
         </Grid>
@@ -219,6 +231,13 @@ export default function RenderForm({ formPropertiesData, formId, refetch, editMo
         ) : (
           !!uploadedFile && (
             <div className={matches ? classes.filePreviewMobile : classes.filePreview}>
+              <IconButton
+                className={classes.iconButton}
+                onClick={() => onImageRemove(formPropertiesData.id)}
+                data-testid="image_close"
+              >
+                <CloseIcon className={classes.closeButton} />
+              </IconButton>
               <ImageAuth
                 type={uploadedFile.contentType.split('/')[0]}
                 imageLink={uploadedFile.url}
@@ -318,7 +337,7 @@ export default function RenderForm({ formPropertiesData, formId, refetch, editMo
             handleValue={event => handleValueChange(event, formPropertiesData)}
             editable={editable}
             inputValidation={{
-              error: checkRequiredFormPropertyIsFilled(formPropertiesData, formState),
+              error: checkRequiredFormPropertyIsFilled(formPropertiesData, formState)
             }}
           />
         </Grid>
@@ -331,6 +350,7 @@ export default function RenderForm({ formPropertiesData, formId, refetch, editMo
 const useStyles = makeStyles(() => ({
   filePreview: {
     maxWidth: '50%',
+    position: 'relative',
     '& iframe': {
       height: '400px',
       width: '600px'
@@ -338,10 +358,25 @@ const useStyles = makeStyles(() => ({
   },
   filePreviewMobile: {
     maxWidth: '80%',
+    position: 'relative',
     '& iframe': {
       height: '300px',
       width: '300px'
     }
+  },
+  iconButton: {
+    right: 2,
+    marginRight: -25,
+    marginTop: -25,
+    background: 'white',
+    position: 'absolute',
+    '&:hover': {
+      background: 'white'
+    }
+  },
+  closeButton: {
+    height: '40px',
+    width: '40px'
   }
 }));
 
