@@ -11,6 +11,13 @@ describe('Time Sheet', () => {
           permissions: ['can_fetch_user_time_sheet_logs'],
           role_id: guardRes.body.id,
         })
+        cy.factory('security_guard', {
+          name: 'A Guard',
+          phone_number: '2347065834175',
+          email: 'guard.dgdp@gmail.com',
+          community_id: commRes.body.id,
+          role_id: guardRes.body.id
+        })
       })
       cy.factory('role', {
         name: 'custodian',
@@ -32,14 +39,9 @@ describe('Time Sheet', () => {
           phone_number: '2348167740149',
           email: 'custodian@gmail.com',
           state: 'valid',
-          community_id: commRes.body.id
-        }) 
-        cy.factory('security_guard', {
-          name: 'A Guard',
-          phone_number: '2347065834175',
-          email: 'guard.dgdp@gmail.com',
           community_id: commRes.body.id,
-        })
+          role_id: custodianRoleRes.body.id
+        }) 
       }
       )
     })
@@ -60,4 +62,4 @@ describe('Time Sheet', () => {
 
     cy.get('.shift-user-name').should('contain', 'A Guard')
   })
-})
+});

@@ -48,6 +48,7 @@ describe('Properties & Co-ownership Payment Plan', () => {
           email: 'larrybird@gmail.com',
           state: 'valid',
           community_id: commRes.body.id,
+          role_id: roleRes.body.id
         })
   
         cy.factory('admin_user', {
@@ -56,6 +57,7 @@ describe('Properties & Co-ownership Payment Plan', () => {
           email: 'johndoe@gmail.com',
           state: 'valid',
           community_id: commRes.body.id,
+          role_id: roleRes.body.id
         })  
       }
       )

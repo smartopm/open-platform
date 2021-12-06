@@ -29,6 +29,7 @@ describe('Manual Gate Access', () => {
             phone_number: '2347065834175',
             email: 'guard.dgdp@gmail.com',
             community_id: commRes.body.id,
+            role_id: guardRes.body.id
           })
         })
       })
@@ -62,4 +63,4 @@ describe('Manual Gate Access', () => {
       cy.visit('/entry_logs?tab=3')
       cy.get('.exit_note').should('contain', 'Observation example')
     })
-  })
+  });

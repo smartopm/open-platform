@@ -17,6 +17,13 @@ describe('Gate Access', () => {
           permissions: ['can_view_guests'],
           role_id: guardRes.body.id,
         })
+        cy.factory('security_guard', {
+          name: 'A Guard',
+          phone_number: '2347065834175',
+          email: 'guard.dgdp@gmail.com',
+          community_id: commRes.body.id,
+          role_id: guardRes.body.id
+        })
       })
       cy.factory('role', {
         name: 'admin',
@@ -42,14 +49,9 @@ describe('Gate Access', () => {
           phone_number: '2348167740149',
           email: 'adminuser@gmail.com',
           state: 'valid',
-          community_id: commRes.body.id
-        })  
-        cy.factory('security_guard', {
-          name: 'A Guard',
-          phone_number: '2347065834175',
-          email: 'guard.dgdp@gmail.com',
           community_id: commRes.body.id,
-        })
+          role_id: roleRes.body.id
+        })  
       }
       )
     })
@@ -79,4 +81,4 @@ describe('Gate Access', () => {
     cy.visit('/entry_logs')
     cy.get('.entry-log-visitor-name').should('contain', 'An Admin User')
   })
-})
+});
