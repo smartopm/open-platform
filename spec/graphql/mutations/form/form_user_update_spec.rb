@@ -30,6 +30,7 @@ RSpec.describe Mutations::Form::FormUserUpdate do
             formUserUpdate(userId: $userId, formUserId: $formUserId, propValues: $propValues){
             formUser {
               id
+              status
               form {
                 id
               }
@@ -108,6 +109,32 @@ RSpec.describe Mutations::Form::FormUserUpdate do
                                                    user_role: another_user.role,
                                                  }).as_json
       expect(result.dig('errors', 0, 'message')).to eql 'Unauthorized'
+    end
+
+    it 'should update form-user to pending if it was previously draft' do
+      form_user.update!(status: 'draft')
+      values = {
+        user_form_properties: [
+          {
+            form_property_id: form_property.id,
+            value: 'something new',
+          },
+        ],
+      }
+      variables = {
+        formUserId: form_user.id,
+        userId: current_user.id,
+        propValues: values.to_json,
+      }
+      result = DoubleGdpSchema.execute(mutation, variables: variables,
+                                                 context: {
+                                                   current_user: current_user,
+                                                   site_community: current_user.community,
+                                                   user_role: current_user.role,
+                                                 }).as_json
+
+      expect(result.dig('data', 'formUserUpdate', 'formUser', 'status')).to eq('pending')
+      expect(result.dig('errors', 0, 'message')).to be_nil
     end
   end
 end

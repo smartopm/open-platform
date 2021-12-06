@@ -73,6 +73,9 @@ describe('Form Component', () => {
     expect(wrapper.queryByTestId('submit_form_btn').textContent).toContain(
       'common:form_actions.submit'
     );
+    expect(wrapper.queryByTestId('save_as_draft').textContent).toContain(
+      'common:form_actions.save_as_draft'
+    );
 
     await waitFor(() => {
       expect(wrapper.queryByText('Another Registry V2')).toBeInTheDocument();
