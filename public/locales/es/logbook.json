@@ -53,6 +53,7 @@
     "repeats_on": "Se repite",
     "repeats_until": "Se repite hasta",
     "revoked": "Revocado",
+    "scanned_entry": "Entrada con Código",
     "start_of_visit": "Inicio de visita ‪{{date}}‬",
     "start_on_date_time": "Inicia en ‪{{date}}‬, ‪{{time}}‬",
     "update_guest": "Actualizar Invitado",
