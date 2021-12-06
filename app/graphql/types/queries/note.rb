@@ -181,6 +181,7 @@ module Types::Queries::Note
                           .limit(5)
   end
 
+  # rubocop:disable Metrics/MethodLength
   def task_sub_tasks(task_id:, limit: 3, offset: 0)
     unless permitted?(module: :note, permission: :can_fetch_task_by_id)
       raise GraphQL::ExecutionError,
@@ -195,6 +196,7 @@ module Types::Queries::Note
                             .limit(limit).offset(offset)
                             .with_attached_documents
   end
+  # rubocop:enable Metrics/MethodLength
 
   private
 

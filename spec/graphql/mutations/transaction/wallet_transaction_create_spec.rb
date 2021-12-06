@@ -11,9 +11,15 @@ RSpec.describe Mutations::Transaction::WalletTransactionCreate do
                           role: admin_role,
                           permissions: %w[can_create_wallet_transaction])
     end
-    let!(:user) { create(:user_with_community, role: resident_role) }
+    let!(:user) do
+      create(:user_with_community, user_type: 'resident',
+                                   role: resident_role)
+    end
     let(:community) { user.community }
-    let!(:admin) { create(:admin_user, community_id: community.id) }
+    let!(:admin) do
+      create(:admin_user, community_id: community.id, user_type: 'admin',
+                          role: admin_role)
+    end
     let!(:land_parcel) { create(:land_parcel, community_id: community.id) }
     let(:payment_plan) do
       create(:payment_plan, land_parcel_id: land_parcel.id, user_id: user.id, duration: 2,

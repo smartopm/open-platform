@@ -5,7 +5,6 @@ require 'yaml'
 namespace :db do
   desc 'Add permissions to role based on yml file'
   task add_permissions_to_global_roles: :environment do
-    ActiveRecord::Base.transaction do
       permissions = YAML.load_file("#{::Rails.root}/app/policies/permissions.yml")
       permission_list = permissions.deep_transform_keys!(&:to_sym)
       available_roles = Role.where(community_id: nil)
@@ -32,9 +31,5 @@ namespace :db do
       end
       puts 'Successfully added permissions to current roles'
     end
-  rescue StandardError => e
-    puts 'Failed to add permissions to current roles'
-    puts e.message.to_s
-  end
 end
 # rubocop:enable Metrics/BlockLength

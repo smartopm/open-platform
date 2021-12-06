@@ -76,19 +76,13 @@ module Types::Queries::Form
   end
 
   def form(id:)
-    if context[:current_user].blank?
-      raise GraphQL::ExecutionError,
-            I18n.t('errors.unauthorized')
-    end
+    raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') if context[:current_user].blank?
 
     context[:site_community].forms.find(id)
   end
 
   def form_properties(form_id:)
-    if context[:current_user].blank?
-      raise GraphQL::ExecutionError,
-            I18n.t('errors.unauthorized')
-    end
+    raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') if context[:current_user].blank?
 
     context[:site_community].forms.find(form_id).form_properties
   end

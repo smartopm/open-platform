@@ -11,9 +11,12 @@ RSpec.describe Mutations::Invoice::InvoiceCancel do
                           role: admin_role,
                           permissions: %w[can_create_wallet_transaction])
     end
-    let!(:user) { create(:user_with_community, role: resident_role) }
+    let!(:user) { create(:user_with_community, user_type: 'resident', role: resident_role) }
     let(:community) { user.community }
-    let!(:admin) { create(:admin_user, community_id: community.id, role: admin_role) }
+    let!(:admin) do
+      create(:admin_user, community_id: community.id, user_type: 'admin',
+                          role: admin_role)
+    end
     let!(:land_parcel) { create(:land_parcel, community_id: community.id) }
     let!(:user_wallet) { create(:wallet, user: user, balance: 100, unallocated_funds: 100) }
     let!(:payment_plan) do
