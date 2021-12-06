@@ -21,6 +21,7 @@ export default function TodoItem({
   handleCompleteNote,
   handleAddSubTask,
   handleUploadDocument,
+  isUpdating,
 }) {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = useState(null);
@@ -126,7 +127,7 @@ export default function TodoItem({
             openSubTask={objectAccessor(tasksOpen, task.id)}
             handleOpenSubTasksClick={handleParentTaskClick}
           />
-          {isLoadingSubTasks && <LinearSpinner />}
+          {(isLoadingSubTasks || isUpdating) && <LinearSpinner />}
         </div>
       )}
       {objectAccessor(tasksOpen, task.id) && data?.taskSubTasks?.length > 0 && data?.taskSubTasks?.map(firstLevelSubTask => (
@@ -192,13 +193,15 @@ const Task = {
       id: PropTypes.string,
       name: PropTypes.string
     })
-  ),
-  subTasks: PropTypes.arrayOf(PropTypes.object)
-};
+    ),
+    subTasks: PropTypes.arrayOf(PropTypes.object)
+  };
+  
+  TodoItem.defaultProps = {
+    isUpdating:false,
+  };
 
-TodoItem.defaultProps = {};
-
-TodoItem.propTypes = {
+  TodoItem.propTypes = {
   task: PropTypes.shape(Task).isRequired,
   handleChange: PropTypes.func.isRequired,
   selectedTasks: PropTypes.arrayOf(PropTypes.string).isRequired,
@@ -206,7 +209,8 @@ TodoItem.propTypes = {
   handleTaskDetails: PropTypes.func.isRequired,
   handleCompleteNote: PropTypes.func.isRequired,
   handleAddSubTask: PropTypes.func.isRequired,
-  handleUploadDocument: PropTypes.func.isRequired
+  handleUploadDocument: PropTypes.func.isRequired,
+  isUpdating: PropTypes.bool,
 };
 
 const useStyles = makeStyles(() => ({

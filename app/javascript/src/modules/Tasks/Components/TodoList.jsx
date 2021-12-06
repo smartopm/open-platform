@@ -572,6 +572,7 @@ export default function TodoList({
                     handleCompleteNote={handleCompleteNote}
                     handleAddSubTask={handleAddSubTask}
                     handleUploadDocument={handleUploadDocument}
+                    isUpdating={taskUpdateStatus.isUpdating}
                   />
                 ))}
               </div>
