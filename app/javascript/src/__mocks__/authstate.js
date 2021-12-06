@@ -13,7 +13,8 @@ const authState = {
         Tasks: { features: [] },
         Messages: { features: [] },
         Payments: { features: [] },
-        Properties: { features: []}
+        Properties: { features: []},
+        LogBook: { features: []},
       },
       imageUrl: 'http://image.jpg'
     },
@@ -89,7 +90,7 @@ const authState = {
       },
     ]
 
-    
+
   }
 };
 export default authState;
