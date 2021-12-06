@@ -55,7 +55,6 @@ export default function TodoList({
   const [offset, setOffset] = useState(0);
   const [open, setModalOpen] = useState(false);
   const [filterOpen, setOpenFilter] = useState(false);
-  // const [message, setMessage] = useState('');
   const [query, setQuery] = useState('');
   const [currentTile, setCurrentTile] = useState('');
   const [displayBuilder, setDisplayBuilder] = useState('none');
