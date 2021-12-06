@@ -25,7 +25,6 @@ export function featureCheckHelper(features, name, subFeature) {
   const subFeatureList = objectAccessor(features, name)?.features || [];
   const isSubFeatureDisabled = subFeature ? new Set(subFeatureList).has(subFeature) : false ;
   const isFeatureEnabled = new Set(Object.keys(features)).has(name);
-
   if(isFeatureEnabled && !isSubFeatureDisabled) {
     return true
   }

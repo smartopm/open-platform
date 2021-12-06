@@ -782,5 +782,5 @@ export const entryLogsQueryBuilderInitialValue = {
   export const CommunityFeaturesWhiteList = {
     denyGateAccessButton: 'Deny Gate Access Button',
     automatedTaskReminders: 'Automated Task Reminders',
-    guestVerification: "`Guest Verification"
+    guestVerification: "Guest Verification"
   }

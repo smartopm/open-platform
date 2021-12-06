@@ -33,7 +33,7 @@ import {
 import MessageAlert from '../../../components/MessageAlert';
 import { checkInValidRequiredFields, defaultRequiredFields , checkRequests } from '../utils';
 import QRCodeConfirmation from './QRCodeConfirmation';
-import FeatureCheck from '../../Features';
+import FeatureCheck, { featureCheckHelper } from '../../Features';
 import { EntryRequestContext } from '../GuestVerification/Context';
 import { initialRequestState } from '../GuestVerification/constants'
 import AccessCheck from '../../Permissions/Components/AccessCheck';
@@ -201,7 +201,7 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
       isGuest: guestListRequest,
       visitationDate: previousRoute !== 'entry_logs' ? formData.visitationDate : null,
     }
-    if(requestContext.request.id && communityName !== 'Nkwashi'){
+    if(requestContext.request.id && featureCheckHelper(authState?.user?.community?.features, 'LogBook', CommunityFeaturesWhiteList.guestVerification)){
       handleNext()
     }
 
@@ -223,7 +223,7 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
             return false
           }
           // hardcoding this for now before we make this a community setting
-          if ((communityName === 'Nkwashi' && type !==  'deny') || type === 'grant') {
+          if ((!featureCheckHelper(authState?.user?.community?.features, 'LogBook', CommunityFeaturesWhiteList.guestVerification) && type !==  'deny') || type === 'grant') {
             return requestContext.grantAccess(response.data.result.entryRequest.id)
           }
           requestContext.updateRequest({
@@ -232,7 +232,7 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
            return response.data.result.entryRequest.id
         })
         .then(response => {
-          if (communityName !== 'Nkwashi' && type !== 'grant') {
+          if (featureCheckHelper(authState?.user?.community?.features, 'LogBook', CommunityFeaturesWhiteList.guestVerification) && type !== 'grant') {
             handleNext()
           }
           return response
@@ -408,7 +408,6 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
       return true;
     return false;
   }
-  const communityName = authState.user.community.name
   return (
     <>
       <ReasonInputModal
