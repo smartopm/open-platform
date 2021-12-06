@@ -53,7 +53,7 @@ module Notifications
       text = 'Click this link to reply to this message in our app '
       link = "https://#{HostEnv.base_url(user.community)}/message/#{id}"
       new_message = "#{sender[:name]} from #{user.community.name} said: \n" if add_prefix
-      new_message += message
+      new_message += message if message.present?
       new_message += "\n\n#{text} \n#{link}" if include_reply_link?
       Sms.send(receiver_phone_number, new_message)
     end
